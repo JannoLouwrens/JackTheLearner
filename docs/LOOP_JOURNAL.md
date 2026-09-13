@@ -13487,3 +13487,159 @@ B4 — **`D1.0`'s twin-spread probe landed**, step (1) of the two-step stamp. Cr
 **Housekeeping, honest.** `review-queue` **0 violations** before and after; **no new row and no new DUE date** — both findings went onto EXISTING rows (`sm03-heldout-split-saturated` and `aggregate-hides-worst-seed`, the latter gaining a third case that SPLITS its question: booleans-as-conjunctions aggregate CORRECTLY under `_aggregate` and a recorder arm must preserve that, while the information actually missing here was *a quantity a gate read and the row never stored*, which only arm (c)'s AST sweep could have found — statically, before a 2,936 s run). `review_queue_net_arrivals` **2 !! MOVED −3 since 09-12** — it was already at 2 when I read `run status` at the top of the slot, before I touched anything, and I added no row, so I am not the mover. `piled_on` 8 unmoved; `unreachable` **93 AT floor**; armed defaults **zero overdue** (`python -m experiments.decisions` clean). `git commit --only` with named paths on all four commits; 13 claude processes on the box, so no `git add -A`. Two detached runs this slot, **both declared** (`declared_pids`; the probe has finished, attempt 2 is live with an AWAITING row). Day CPU will land ~4,400 s of 57,600: **no first-run `cpu<2h` spec was foreclosed by it**, because `coverage` says `cpu<10min` is FILL-HELD by `D19` (decide_by 09-14) and the other three empty classes have no path in — checked before launching, not asserted after. **GPU: zero spend and no dispatch.** The live key is `2026-W37` (Sunday-start `%U`), which has just opened with a fresh 30 h exactly as the page predicted; `D1.0` attempt 3's preconditions are MET, and I still did not dispatch it, because `7cb00ea` put the SPLIT-PENDING arithmetic on the row for the Review to weigh first and *"the gate is committed"* is not *"this run will return a verdict"*.
 
 **NEXT ITERATION:** **harvest `PL.02` attempt 2** — the AWAITING row will refuse `next` until you do — and read `loss_drop_frozen` / `loss_drop_shuffled` first: they name the arm and the seed that voided attempt 1, and the gate question above becomes routable with numbers the moment they exist. Expect VOID and identical numbers otherwise; if anything else moved, the determinism claim in `7ffd3c8` is wrong and that is the finding. Then `UB.10`'s battery redesign (09-15) and `LG.10`'s sibling registration (09-16). `W1.04` needs nothing until `w1-world-edit-window`. **On `D1.0`: W37 is open with 30 h and the preconditions are discharged — but the row's SPLIT-PENDING reading is the Review's to weigh, and an unchanged re-dispatch stays forbidden.**
+
+## 2026-09-13 01:0x–01:3x UTC slot — 91st audit B1 (RANK 1) EXECUTED: the GPU dispatch path now REFUSES; and PL.02 attempt 2's VOID is attributed to FROZEN, the registered null
+
+**Model and meters, first paragraph as the page requires.** `week:Fable` is
+**pinned at 100%**, so this slot was walked to **Opus** — expected, not a fault,
+and self-announcing exactly as the page says. The gate, `week:all models`, reads
+**78%**; `--week-elapsed` **83**, so `pace_gate`'s line sits at
+`25 + (65*83+99)/100 = 79.94` and I am released with about two points of
+headroom. Session 8%. **Zero `PACING:` lines in this slot and no skip streak** —
+the 94-slot blackout the Review counted ended yesterday. GPU: the live key is
+**`2026-W37`** (Sunday-start `%U`), which opened today with **30.0 h and 0.00
+charged**. **I dispatched nothing and spent zero GPU-hours.**
+
+**UNIT 1 — the 91st audit's B1, which is the RANK 1 finding and was ordered
+"before any GPU dispatch this week".** The finding: `scripts/dispatch.sh` was 61
+lines and refused exactly two things — an unpushed HEAD and a held lock — while
+three documents said `D1.0` may not be re-dispatched unchanged and its two
+attempts had spent 33.78 GPU-h for one VOID row. `_GATES_FROZEN = True`, so
+`run()` did not refuse either. The only load-bearing member was the builder's
+conscientiousness, and it was the one member no instrument could see.
+`experiments/dispatch_guard.py` (new, 310 lines) + `scripts/dispatch.sh`
+(`c8c98d7`) turn the three written rules into branches that return non-zero.
+
+**RED-FIRST, as B1 ordered — ten cases, every branch shown FIRING before it was
+shown passing, on injectable `Budget`/`Ledger` objects so no real quota moved:**
+
+    R1 RED   31.0h vs the live W37 floor 30.00h            -> REFUSED
+    R1 RED   17.6h into a constructed week with 5.00h left -> REFUSED
+    R1 GREEN 17.6h vs the live W37 floor 30.00h            -> CLEAR
+    R1 GREEN 0.3h into that same drained week              -> CLEAR (colab route)
+    R2 RED   D1.0 with impl_sha pinned to HEAD             -> REFUSED
+    R2 RED   T2.02 VOID, no impl_sha on the row            -> REFUSED
+    R2 GREEN D1.0 as it really stands                      -> CLEAR
+    R2 GREEN SH.02, no row at all                          -> CLEAR
+    R3 RED   `dispatch.sh D1.0` with no projection         -> rc=1
+    R3 RED   unknown argument                              -> rc=2
+
+**THE JUDGEMENT B1 ASKED FOR, MADE AND WRITTEN INTO THE DOCSTRING.** R2's
+comparator is **`impl_sha`**, not "any commit touching `IMPL_DEPS` since the
+row's commit" — `run.stale_claims` already tried the commit-based form and
+recorded why it fails: a test is written, RUN, then committed, so the recorded
+commit predates the test's own first commit and **every honest row fires**,
+15 of 54 at the time. On `D1.0`: `7cb00ea` put the successor gate INSIDE
+`d1_0_control_path_bakeoff.py`, so the bytes moved and `impl_sha` moved
+(`4db15d96b0312e50 -> 08621094c15c473a`). **`7cb00ea` counts as a change and R2
+does not trip for attempt 3** — and I have written next to it, in the module and
+in the commit, that this means R2 *has nothing to say* about attempt 3, not that
+it authorises it. `d10-successor-rerun-under-adopted-gate` (DUE 09-14) does.
+
+**Why R1 does not refuse everything, which was the design risk.** Colab is
+unmetered by construction, so a job Colab can hold has a route even when Kaggle
+is dry; rationing it would be the self-inflicted foreclosure the CPU accountant
+was repaired for twice this month, and `3''` prohibits building more meter. R1
+refuses **only when Kaggle is the only backend that can hold the job**, at the
+registry's own `Budget.GPU = "gpu<2h"` boundary. `D1.0` at 17.6 h against W37's
+30.0 h does not trip, exactly as B1 predicted it should not.
+
+**Two things I did NOT hide.** (a) `impl_sha` covers only DECLARED deps — `D1.0`
+imports `TrainingPipeline` and `UnifiedBrain` and declares neither, so a change
+there is invisible to R2. The guard PRINTS that caveat on every R2 verdict,
+clear or refused, because a guard that quietly overstates its coverage is the
+failure it is a response to. (b) The guard runs **LAST**, after the push and
+lock checks, because `--record` writes a projection receipt and that log must
+mean *"was allowed to go"*, not *"was considered"*; verified — the four refused
+runs left `gpu_budget.json` byte-clean. A `JACK_REUSE_KERNEL` reattach is exempt
+and says so loudly (it buys no fresh quota; `gpu.submit` skips `afford()` for
+the same reason). `experiments/gpu.py` is deliberately untouched: `T0.12`
+declares it in `IMPL_DEPS`. **Zero certificates staled.**
+
+**UNIT 2 — the harvest the last slot owed: `PL.02` attempt 2, which finished at
+01:11:50 while I was writing the guard.** VOID, 2928.18 s, seeds 0/1/2, row
+committed as found (`d8ab3ef`). **The determinism prediction in `7ffd3c8` held
+to the last digit: all 20 metrics and all 7 controls reproduce
+byte-identically** — `reshaping_gain_R` 0.954619, `r2_raw_pixel` 0.929242 (a
+fourth independent draw clearing the unmoved 0.80 eye gate), `det_drift` 0.0,
+`weights_sha8` 41e72933. The only two values that changed are the two that were
+previously ABSENT, which is precisely what the disclosure edit added.
+
+**AND IT BOUGHT WHAT IT WAS FOR — the arm, and the arm is the NULL:**
+
+    loss_drop_ua       0.008467 ± 0.003023   worst admissible seed 0.0127
+    loss_drop_plastic  0.403300 ± 0.076860   worst admissible seed 0.5120
+    loss_drop_frozen   0.835467 ± 0.090262   worst admissible seed 0.9631  <-- over 0.90
+
+`learn_ok` is `all(last < LEARN_DROP*first)` over (U_A, PLASTIC, FROZEN), so
+**FROZEN voided it** and SHUFFLED voided `shuffled_learn_ok`. FROZEN is the
+spec's own registered null whose `R` is **zero by construction** — it cannot be
+a learner by design, and it took the run down. Routed as a **fifth instance and
+a THIRD SUB-KIND** on `gates-that-measure-something-other-than-what-they-say`
+(attached to the existing row, 90th-audit B2 precedent, `net_arrivals` still
+banner-ed): not a wrong quantity and not a dominated branch but an **over-scoped
+QUANTIFIER** — every conjunct is individually correct and the `all(...)` ranges
+over a member that was never eligible. Mechanically checkable, which makes it a
+candidate for that row's "does this become an instrument" half. **I did not
+repair it**, and the reason is on the row: dropping FROZEN makes `PL.02` easier
+to pass, on the sole registered falsifier of the PLASTIC-ONLY decree, in the
+hour after it VOIDed on that exact conjunct. Nothing moved — `LEARN_DROP` 0.90,
+`EYE_RADIUS_R2_MIN` 0.80, `learn_ok` unchanged in definition and in effect. The
+docstring edit was discharged through the doc-only amend lane
+(`781f7bd2669c52dd -> a0583f270f3a6065`, `prose_only_delta` verified), so
+**PL.02 has left STALE CLAIMS and no re-run is owed for it**.
+
+**The half-repair, recorded because it will read as discharged: the SEED is
+still unknowable.** The disclosure moved attribution exactly one level — "one of
+two arms, unknown seed" to "*this* arm, unknown seed" — and stopped, because the
+ledger stores mean ± std, the run log prints no per-seed vector, and both new
+metrics are aggregates too. Third case on `aggregate-hides-worst-seed`.
+
+**Machine better than I found it, beyond the guard:** `docs/LESSONS.md` — the
+91st audit's own lesson gains a **second instance found within the hour of
+executing it**, and it is the softer, more dangerous form. The audit's test is
+*"name the line that returns non-zero"*; `scripts/launch_detached.sh` has a
+**third answer — it PRINTS AND PROCEEDS**. Its dirty-tree warning is accurate,
+loud and advisory, and PL.02 attempt 2 walked straight through it: that row now
+carries a **permanent DIRTY STAMP**. So the taxonomy is three rungs —
+prohibition, warning, refusal — and **a warning is the more dangerous of the
+first two because it looks like enforcement in the log**. When applying the grep
+test, `echo` on the refusal path is a MISS, not a hit. Whether that warning
+should become a refusal is left open with its cost stated; over-refusing is its
+own disease and B1 did not order it.
+
+**NOT DONE, deliberately, each with its reason.** (i) PL.02 is **not** re-run to
+clear the dirty stamp: the rig is deterministic, so ~2,928 s buys a stamp and
+nothing else, and `learn_ok`'s membership is now an open question at the Review
+— fold it into whatever follows that ruling. (ii) **No GPU dispatch.** W37 is
+open with a fresh 30 h and `D1.0` attempt 3's preconditions are discharged, but
+the row's SPLIT-PENDING arithmetic is the Review's to weigh on 09-14, and B1
+itself says *"do not pre-empt it and do not dispatch attempt 3 before it
+rules."* Third consecutive refusal, and now there is finally a branch that would
+have made it for me. (iii) B2/B3/B4/B5 of the 91st audit are untouched and are
+the obvious next units.
+
+**Housekeeping, honest.** `review-queue` **0 violations** before and after; **no
+new row and no new DUE date** — both findings went onto existing rows.
+`review_queue_net_arrivals` **2, `!! MOVED -3` since 09-12** — it already read 2
+in my first `run status` of the slot, before I touched anything, and I added no
+row, so I am **not** the mover and I did not `ratchets record` someone else's
+movement under my commits. `piled_on` 8, `violations` 0, `unreachable` 93 AT
+floor, `claim_dead` 4, `T0.27` 3 — all unmoved. Armed defaults: **zero overdue**
+(`D25` is due TODAY and fires tomorrow; the overseer recommends letting it).
+`git commit --only` with named paths on all three commits; **12 claude processes
+on the box**, so no `git add -A`. **Zero leftover processes** (`pgrep -f
+experiments\.` empty at close). Day CPU ~7,080 s of 57,600 s, all of it PL.02's
+two runs — I billed none of it. `demonstrated` **108/245**, unmoved, and
+honestly so: nothing I did today was a capability claim.
+
+**NEXT ITERATION:** the 91st audit's **B2** (ratchet `champions.py`'s
+`unwinnable` class — `BASELINE_UNWINNABLE = 4`, shrink-only, counterfactual-
+checked green at 4 and red at 5) then **B3** (print the 7-member union of
+`coverage`'s 4 CLAIM-DEAD and `champions`' 4 unwinnable — the number section 8
+of every audit is really asking for) and **B4** (flag the expired
+"builder is measurably switched off" premise on the two 09-15 rows; **do not
+re-date** — dates are the Review's). Then `UB.10`'s battery redesign (09-15) and
+`LG.10`'s sibling registration (09-16). **On `D1.0`: W37 has 30.0 h, the
+preconditions are met, and the dispatch is still not yours — 09-14 is the
+Review's date and B1 says do not pre-empt it.**
