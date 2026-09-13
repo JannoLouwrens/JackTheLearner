@@ -674,6 +674,25 @@ def cmd_status(ledger: Ledger) -> int:
               f"from the record. Not back-filled — the sha of today's words "
               f"proves\n    nothing about a run from before them. A re-run "
               f"upgrades each to a real stamp.\n")
+    # The BACKING half of certificate integrity, printed beside the two
+    # staleness halves for the reason they are printed beside each other: an
+    # iteration reads this block and nothing else. The other two ask whether
+    # the certificate still describes its own code and its own words; this one
+    # asks whether the ground it stands on is still there (94th audit B1).
+    _check_unbacked_detector()
+    unbacked = unbacked_certificates(ledger)
+    if unbacked:
+        n_pass = counts[Status.PASS.value]
+        print(f"  ? UNBACKED CERTIFICATES — {len(unbacked)} of {n_pass} "
+              f"standing PASS row(s) rest on a\n    dependency that is not "
+              f"satisfied today. Legal and REPORTING-ONLY: the run happened "
+              f"and\n    nothing about it is invalidated — but `run_spec` "
+              f"would refuse to re-derive it, so the\n    certificate cannot "
+              f"be re-bought until its dependency is. The cost class is the "
+              f"bill:")
+        for sid, deps, cost in unbacked:
+            print(f"      {sid:9s} ({cost})  needs {', '.join(deps)}")
+        print()
     _check_red_delta_detector()
     red = deliberate_red_deltas(ledger)
     if red:
@@ -2409,12 +2428,22 @@ def blast_radius(spec_id: str, ledger: Ledger, assume: Status = None,
     questions and only the first had a tool.
 
     Returns `{"spec", "status", "assumed", "radius", "runnable_lost",
-    "frees", "blocks", "before", "after", "ladder"}`. `radius` is the set of
-    specs that are reachable today and are not under the counterfactual;
-    `runnable_lost` is its sharpest subset — specs whose dependencies are
-    satisfied RIGHT NOW, i.e. the dispatches that become illegal the moment
-    the run lands. `frees`/`blocks` is the terminal-blocker rank the spec
-    would take in `run blocked`.
+    "unbacked", "frees", "blocks", "before", "after", "ladder"}`. `radius` is
+    the set of specs that are reachable today and are not under the
+    counterfactual; `runnable_lost` is its sharpest subset — specs whose
+    dependencies are satisfied RIGHT NOW, i.e. the dispatches that become
+    illegal the moment the run lands. `frees`/`blocks` is the terminal-blocker
+    rank the spec would take in `run blocked`.
+
+    `unbacked` IS THE OTHER HALF OF THE PRICE, and until the 94th audit this
+    function did not have it (RANK 1, 2026-09-13). Every set above is about
+    specs that have NOT run. A graph edit also strands specs that HAVE —
+    standing PASS certificates whose dependency stops being satisfied — and
+    `unreachable` structurally cannot count them, because they are not
+    unreachable. See `unbacked_certificates`; the entries are
+    `(spec_id, [dep ids], cost class)` on the NON-PASS side of the
+    counterfactual, so the same key answers "what would fall" for a green spec
+    and "what is already down" for a red one.
 
     `assume` defaults to the informative counterfactual: `FAIL` for a spec
     that currently passes, `PASS` for one that does not — so the same command
@@ -2441,6 +2470,22 @@ def blast_radius(spec_id: str, ledger: Ledger, assume: Status = None,
     alt = _AssumeStatus(ledger, spec_id, assume)
     after, mentions, frees = _reach(alt)
     lost_runnable = _runnable(ledger) - _runnable(alt)
+
+    # The backing half. Taken as a DELTA between the two worlds rather than as
+    # "certificates that name `spec_id`", so it picks up a certificate whose
+    # dependency is satisfied in one world and not the other for any reason the
+    # ONE definition recognises — and so it cannot report a certificate that
+    # was already unbacked before this edit as a cost OF the edit.
+    def _unbacked(led) -> dict:
+        return {sid: (deps, cost)
+                for sid, deps, cost in unbacked_certificates(
+                    led, ladder=ladder, by_id=by_id)}
+
+    ub_pass, ub_fail = ((_unbacked(alt), _unbacked(ledger)) if assume is
+                        Status.PASS else (_unbacked(ledger), _unbacked(alt)))
+    unbacked = sorted((sid, ub_fail[sid][0], ub_fail[sid][1])
+                      for sid in set(ub_fail) - set(ub_pass)
+                      if sid != spec_id)
 
     # THE SUBJECT IS NEVER ITS OWN RADIUS — but it IS its own count. Both sets
     # move trivially for `spec_id` itself (a spec assumed PASS leaves the stuck
@@ -2469,12 +2514,136 @@ def blast_radius(spec_id: str, ledger: Ledger, assume: Status = None,
         "radius": sorted(named_after - named_before),
         "regained": sorted(named_before - named_after),
         "runnable_lost": sorted(lost_runnable - {spec_id}),
+        "unbacked": unbacked,
         "frees": sorted(frees.get(spec_id, [])),
         "blocks": sorted(mentions.get(spec_id, [])),
         "before": len(before),
         "after": len(after),
         "ladder": len(ladder),
     }
+
+
+def unbacked_certificates(ledger: Ledger, ladder=None, by_id=None) -> list:
+    """`(spec_id, [dep ids], cost class)` for every standing PASS certificate
+    that cannot be re-derived today, sorted by id.
+
+    THE HALF `blast_radius` WAS SILENT ABOUT, and the 94th audit's RANK 1
+    (2026-09-13). A gate edit is a graph edit, and it strands specs in two
+    different ways:
+
+      REACHABILITY   a spec that could have been run can no longer be run.
+                     `blast_radius` prices this, and `unreachable` ratchets it.
+      BACKING        a spec that has ALREADY run and holds a PASS now rests on
+                     a dependency that no longer passes. Nothing prices this,
+                     and **no ratchet can**: `unreachable` counts specs that
+                     cannot be run, and these have already run, so they are not
+                     unreachable — they are UNBACKED. The one number that moved
+                     when `T1.08` fell gave false comfort that the cost had
+                     been counted.
+
+    It cost three certificates to find. On 2026-09-13 `demonstrated` read 108
+    and `T2.03` (gpu<20min), `T2.14` (gpu<2h) and `LF.02` (cpu<10min) could not
+    be re-derived — two of them created four hours earlier by a strengthening
+    that priced its reachability half correctly and could not see this one.
+    The cost class is reported for exactly that reason: a re-buy is a GPU
+    dispatch two times in three, and "three certificates" and "three
+    certificates, two of them GPU" are different bills.
+
+    REPORTING-ONLY AND UNFLOORED, deliberately. A certificate standing on a
+    fallen dependency is a LEGAL state — the run happened, the row is honest,
+    and nothing about the past is invalidated by the present. What is true is
+    that `run_spec` would refuse to re-derive it today. That is a reading
+    somebody must be able to see, not a violation, and a ratchet on it would
+    make every honest strengthening look like damage.
+
+    THE RULE IS `Ledger.unsatisfied`, NOT `status is not PASS`. The audit
+    derived the class by hand the second way and both readings return the same
+    three specs today — but they are not the same rule, and the difference
+    binds in one direction only: a dependency that is PASS with a MOVED
+    `impl_sha` satisfies the naive test and fails this one, and a certificate
+    resting on it is equally un-re-derivable. Sharing `unsatisfied` is also the
+    `_split_foreclosed` rule (two readers of one quantity share code or they
+    drift) — this is the same question `run_spec` refuses on, so it is asked
+    through the same function.
+    """
+    ladder = LADDER if ladder is None else ladder
+    out = []
+    for s in ladder:
+        if ledger.status(s.id) is not Status.PASS:
+            continue
+        deps = sorted(d for d, _why in ledger.unsatisfied(s))
+        if deps:
+            out.append((s.id, deps, s.budget.value))
+    return sorted(out)
+
+
+def _check_unbacked_detector() -> None:
+    """Red-first: plant a certificate on a fallen dependency and require the
+    reader to name it, WITH its cost class — and plant the three shapes it must
+    stay quiet about, because a reader that flags every PASS is the screen
+    `D27` already measured crying wolf at 104 of 107.
+
+    KNOWN ANSWERS, on a graph built for this and nothing else:
+
+      UB.CERT   PASS, depends on UB.RED (FAIL)        -> REPORTED, gpu<20min
+      UB.STALE  PASS, depends on a PASS whose file
+                has moved since the run               -> REPORTED
+      UB.OK     PASS, depends on UB.GREEN (clean PASS)-> SILENT
+      UB.NOPASS FAIL, depends on UB.RED (FAIL)        -> SILENT: this class is
+                about STANDING CERTIFICATES. A red spec on a red dependency is
+                already counted by `unreachable`, and printing it here would
+                double-count the one number this reading exists to complement.
+      UB.ROOT   PASS, no dependencies                 -> SILENT
+
+    `UB.STALE` is the conjunct that separates this rule from the hand-derived
+    one it replaces. Its dependency IS in PASS; it is the freshness half of
+    `unsatisfied` that refuses it, and a deriver written as
+    `status is not Status.PASS` passes every other conjunct here and fails this
+    one. It is planted for that reason and no other.
+    """
+    from .protocol import Result, Spec, Budget
+
+    def stub(sid, deps, budget=Budget.CPU_FAST):
+        return Spec(sid, 0, sid, "h", "f", "n", "m", budget, depends_on=deps)
+
+    ladder = [stub("UB.RED", []), stub("UB.GREEN", []),
+              stub("UB.CERT", ["UB.RED"], Budget.GPU_SHORT),
+              stub("UB.OK", ["UB.GREEN"]),
+              stub("UB.NOPASS", ["UB.RED"]),
+              stub("UB.ROOT", []),
+              stub("UB.STALE", [_STALE_ID]), stub(_STALE_ID, [])]
+    by_id = {s.id: s for s in ladder}
+    # `_STALE_ID` is a REAL spec with a real file, stamped here with a hash it
+    # cannot have — that is how `_check_ranker` exercises the freshness half,
+    # and it is borrowed rather than re-invented for the same reason this
+    # module shares `unsatisfied`.
+    fixt = _fixture_ledger()
+    for sid, st in (("UB.RED", Status.FAIL), ("UB.GREEN", Status.PASS),
+                    ("UB.CERT", Status.PASS), ("UB.OK", Status.PASS),
+                    ("UB.NOPASS", Status.FAIL), ("UB.ROOT", Status.PASS),
+                    ("UB.STALE", Status.PASS)):
+        fixt.results[sid] = Result(
+            spec_id=sid, status=st, metrics={}, seeds=[0], commit="1234567",
+            ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)
+
+    got = unbacked_certificates(fixt, ladder=ladder, by_id=by_id)
+    named = {sid: (deps, cost) for sid, deps, cost in got}
+    expect = (
+        # POSITIVE — the fallen dependency is named, and so is the bill.
+        named.get("UB.CERT") == (["UB.RED"], "gpu<20min"),
+        # POSITIVE — the freshness half. A dependency in PASS is not enough.
+        "UB.STALE" in named and named["UB.STALE"][0] == [_STALE_ID],
+        # NEGATIVE — without these the reader could pass by flagging everything.
+        "UB.OK" not in named,
+        "UB.NOPASS" not in named,
+        "UB.ROOT" not in named,
+        len(named) == 2,
+    )
+    if not all(expect):
+        raise RuntimeError(
+            "unbacked-certificate fixture FAILED — the deriver got a known "
+            f"graph wrong, so no count it prints is evidence. "
+            f"conjuncts={expect} got={got}")
 
 
 def _check_blast_radius() -> None:
@@ -2509,15 +2678,33 @@ def _check_blast_radius() -> None:
                   the first version of this check. Recorded because the
                   fixture catching its own author is the only evidence that it
                   is doing anything.
+
+    AND THE BACKING HALF (94th audit B1), which is a different question on the
+    same graph. `KC` is a standing GPU certificate on `K`; `XC` is one on the
+    already-red `X`:
+
+      K -> FAIL   `unbacked == [("KC", ["K"], "gpu<2h")]` — a certificate that
+                  is not in `radius`, not in `runnable_lost` and not in any
+                  count this function printed before today, because it has
+                  already run. `L` must NOT appear: it is red, so it is priced
+                  by `radius`, and counting it twice is the ranker's founding
+                  double-count wearing the other half's clothes.
+      X -> PASS   `unbacked == [("XC", ...)]` — the SAME key read the other
+                  way. On the non-PASS side of a green counterfactual it is not
+                  a forecast at all; it is what is already down, and what
+                  repairing `X` would re-buy. That is the direction today's
+                  real reading takes (`T1.08` is FAIL), so a fixture that
+                  exercised only the red direction would leave the live case
+                  untested.
     """
     from .protocol import Result, Spec, Budget
 
-    def stub(sid, deps):
-        return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST,
-                    depends_on=deps)
+    def stub(sid, deps, budget=Budget.CPU_FAST):
+        return Spec(sid, 0, sid, "h", "f", "n", "m", budget, depends_on=deps)
 
     base, base_by = _ranker_fixture()
-    extra = [stub("K", []), stub("L", ["K"]), stub("Z2", ["K", "X"])]
+    extra = [stub("K", []), stub("L", ["K"]), stub("Z2", ["K", "X"]),
+             stub("KC", ["K"], Budget.GPU), stub("XC", ["X"], Budget.GPU)]
     ladder = list(base) + extra
     by_id = dict(base_by, **{s.id: s for s in extra})
     fixt = _fixture_ledger()
@@ -2525,9 +2712,10 @@ def _check_blast_radius() -> None:
     # implementation file and the freshness half is skipped rather than
     # accidentally exercised. The staleness branch already has its own known
     # answer in `_check_ranker` via `_STALE_ID`.
-    fixt.results["K"] = Result(spec_id="K", status=Status.PASS, metrics={},
-                               seeds=[0], commit="1234567",
-                               ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)
+    for _sid in ("K", "KC", "XC"):
+        fixt.results[_sid] = Result(
+            spec_id=_sid, status=Status.PASS, metrics={}, seeds=[0],
+            commit="1234567", ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)
 
     fail_k = blast_radius("K", fixt, assume=Status.FAIL,
                           ladder=ladder, by_id=by_id)
@@ -2553,6 +2741,16 @@ def _check_blast_radius() -> None:
         "Y" not in pass_y["regained"] and "Y" not in pass_y["radius"],
         pass_y["regained"] == [] and pass_y["radius"] == [],
         pass_y["before"] - pass_y["after"] == 1,
+        # THE BACKING HALF. A standing certificate falls with its dependency,
+        # in the direction of harm, with its cost class attached ...
+        fail_k["unbacked"] == [("KC", ["K"], "gpu<2h")],
+        # ... and a red dependent is NOT counted here as well as in `radius`.
+        "L" not in [u[0] for u in fail_k["unbacked"]],
+        # The green direction reads the same key as what is already down.
+        pass_x["unbacked"] == [("XC", ["X"], "gpu<2h")],
+        # And a counterfactual that moves no certificate says so with an empty
+        # set rather than by inheriting the previous subject's.
+        pass_y["unbacked"] == [],
     )
     if not all(expect):
         raise RuntimeError(
@@ -2585,6 +2783,7 @@ def cmd_blast_radius(ledger: Ledger, ids=()) -> int:
         return 2
 
     _check_ranker(ledger)
+    _check_unbacked_detector()
     _check_blast_radius()
 
     from .coverage import UNREACHABLE_BASELINE
@@ -2621,6 +2820,29 @@ def cmd_blast_radius(ledger: Ledger, ids=()) -> int:
                   "moment the run lands;")
             print("        `run_spec` refuses an unsatisfied dependency "
                   "(92nd audit B1).")
+        # THE OTHER HALF OF THE PRICE. Everything above is about specs that
+        # have not run; this is about certificates that have. Printed for both
+        # directions from one key, because "would fall" and "is already down"
+        # are the same sentence read from opposite sides of the counterfactual
+        # — and the red spec's side is the one a repair is priced from.
+        if r["unbacked"]:
+            verb = ("cannot be re-derived while it is non-PASS"
+                    if going_green else "would no longer be re-derivable")
+            print(f"  UNBACKED: {len(r['unbacked'])} standing PASS "
+                  f"certificate(s) declare depends_on this spec\n"
+                  f"      and {verb} —")
+            for sid, deps, cost in r["unbacked"]:
+                print(f"      {sid:9s} ({cost})  {BY_ID[sid].title}")
+            print("      — a legal state, not a violation: the run happened "
+                  "and the row is honest.\n        What is true is that "
+                  "`run_spec` would refuse to re-buy them, and the cost\n"
+                  "        class is printed because a re-buy is not free.")
+        else:
+            # "none" must be SAID here too, for the same reason it is said
+            # above: this half was invisible, and an absent line reads as an
+            # absent question rather than as a zero.
+            print("  UNBACKED: none")
+
         if r["frees"]:
             print(f"  would rank in `run blocked`: frees {len(r['frees'])} / "
                   f"blocks {len(r['blocks'])}")
