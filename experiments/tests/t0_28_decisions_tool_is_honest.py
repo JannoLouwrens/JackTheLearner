@@ -57,12 +57,20 @@ unratcheted because landing there is what the prescribed repair DOES; and the
 how `DEFAULT-ACTION-EXPIRED` shrank 1 -> 0 by declaration on `D22` rather
 than by regex-tuning. P15 carries both, in both directions.
 
-WHAT THIS SPEC DOES NOT CERTIFY, stated so no later reader repeats SYSTEM.md's
-mistake in this file's name: two of the three safety clauses — *never edits
-GOAL.md*, *never weakens a threshold* — are still enforced by nobody. They are
-properties of the COMMIT that fires a default, not of the text that arms it,
-and no battery over `decisions.py` can see them. `T0.29` (`champions.py`) is
-the companion certificate and is owed.
+WHAT THIS SPEC DOES NOT CERTIFY. This paragraph used to say that two of the
+three safety clauses — *never edits GOAL.md*, *never weakens a threshold* —
+"are still enforced by nobody", because they are properties of the COMMIT that
+fires a default rather than of the text that arms it, "and no battery over
+`decisions.py` can see them". The second half was wrong, and P16 is the
+correction: the clauses are properties of a DIFF, a diff is a string, and a
+string is exactly what a battery can be handed. `decisions.firing_diff_hazards`
+now reads one, and P16 drives it on planted diffs plus the legal shape of
+`D25`'s own armed default, which must clear.
+
+What remains uncertified is the THIRD clause — *never widens what is
+permitted* — which is a statement about the space of allowed actions and is
+decidable from no artifact this battery can construct. `T0.29` (`champions.py`)
+is the companion certificate and is owed.
 """
 from __future__ import annotations
 
@@ -72,10 +80,11 @@ import io
 import re
 
 from ..coverage import _claim_dead
-from ..decisions import (BASELINE_ACTION_EXPIRED, BASELINE_UNDECLARED, DOC,
-                         audit, blast_radius, check_rc, default_dates,
-                         expired_actions, main, owner_ask_silences, parse,
-                         same_day_actions)
+from ..decisions import (BASELINE_ACTION_EXPIRED, BASELINE_FIRING_HAZARDS,
+                         BASELINE_UNDECLARED, DOC, audit, blast_radius,
+                         check_rc, default_dates, expired_actions,
+                         firing_audit, firing_diff_hazards, main,
+                         owner_ask_silences, parse, same_day_actions)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
@@ -86,7 +95,28 @@ SPEC_ID = "T0.28"
 # hashing playground.py; T0.21 hashing coverage.py).
 IMPL_DEPS = ["experiments/decisions.py"]
 
-N_PROPERTIES = 15
+N_PROPERTIES = 16
+
+# The firing-diff shapes P16 drives. Each is the smallest diff carrying one
+# defect, and the legal one is `D25`'s own armed default: a new branch in
+# `lib_seal.sh`, a NEW constant, and a resolution record. If the guard refuses
+# that, it refuses the defaults it exists to police and gets switched off.
+DIFF_GOAL_EDIT = ("--- a/GOAL.md\n+++ b/GOAL.md\n@@ -1 +1 @@\n"
+                  "-Give him a brain, a body, and a world.\n"
+                  "+Give him a brain and a world.\n")
+DIFF_BAR_MOVED = ("--- a/experiments/tests/t2_10_retrieval_vs_recency.py\n"
+                  "+++ b/experiments/tests/t2_10_retrieval_vs_recency.py\n"
+                  "@@ -1 +1 @@\n-MIN_PARA_MARGIN = 0.10   # the bar\n"
+                  "+MIN_PARA_MARGIN = 0.05   # the bar\n")
+DIFF_BAR_GONE = ("--- a/experiments/tests/x.py\n+++ b/experiments/tests/x.py\n"
+                 "@@ -1 +0 @@\n-MIN_LEAKY_RECALL = 0.80\n")
+DIFF_LEGAL = ("--- a/scripts/lib_seal.sh\n+++ b/scripts/lib_seal.sh\n"
+              "@@ -1 +2 @@\n+  if committed_progress; then banner_complete; fi\n"
+              "--- a/experiments/coverage.py\n+++ b/experiments/coverage.py\n"
+              "@@ -1 +2 @@\n+METRIC_RECORDED_BUT_UNREAD_BASELINE = 0\n"
+              "--- a/docs/DECISIONS_RESOLVED.md\n"
+              "+++ b/docs/DECISIONS_RESOLVED.md\n"
+              "@@ -1 +1 @@\n+D25 RESOLVED BY ARMED DEFAULT\n")
 
 # The pre-2026-08-30 blocking set, verbatim. `NO-DEFAULT` is absent — that is
 # the hole, not an abbreviation.
@@ -345,6 +375,20 @@ def _silenced(progress: str, needed: str = NEEDED_ASKS, resolved: str = "",
     return {(key, how, did)
             for key, _lead, how, did in owner_ask_silences(progress, needed,
                                                            resolved)}
+
+
+def _firing(diff: str, *, safety_enforced: bool) -> list:
+    """The hazard KINDS this organ reports for a firing diff.
+
+    The control arm is `decisions.py` as it stood before 2026-09-13, when the
+    firing diff had no reader at all — reconstructed by DELETION, like the
+    safety and ask passes above it, because this pass only ever APPENDS. The
+    empty list IS the old behaviour: for fourteen days the answer to "did this
+    firing edit GOAL.md" was silence, and silence read as a pass.
+    """
+    if not safety_enforced:
+        return []
+    return [kind for kind, _path, _detail in firing_diff_hazards(diff)]
 
 
 def _hazards(text: str, rows, *, safety_enforced: bool) -> list:
@@ -693,6 +737,38 @@ DECIDE: D84
             != [_dt.date(2026, 9, 4)]):
         failed.append("p15_same_day_race_and_clock_attribution")
 
+    # P16 — THE FIRING DIFF, the clause `SYSTEM.md` and this file both said no
+    # battery could see. Four planted shapes and a wiring guard, in both
+    # directions, because a refusal that fires on everything is as useless as
+    # one that fires on nothing:
+    #   - a GOAL.md edit is refused (class 1, ENDS, fixed by the owner);
+    #   - a moved numeric bar is refused, and the planted move is `T2.10`'s own
+    #     `MIN_PARA_MARGIN 0.10 -> 0.05` — the edit that would turn a standing
+    #     FAIL green, which is precisely what an unattended calendar event may
+    #     not do;
+    #   - a DELETED bar is refused (law 4 at its smallest);
+    #   - `D25`'s own legal shape CLEARS, including a brand-new constant, which
+    #     is an addition and not a move;
+    #   - and `firing_audit` must return `checked=False` on an unreadable
+    #     history rather than an empty clean bill. That is the one way this
+    #     check could fail while reporting success, and `T0.13`'s subject.
+    hazard_kinds = (_firing(DIFF_GOAL_EDIT, safety_enforced=S),
+                    _firing(DIFF_BAR_MOVED, safety_enforced=S),
+                    _firing(DIFF_BAR_GONE, safety_enforced=S),
+                    _firing(DIFF_LEGAL, safety_enforced=S))
+    audited, audited_ok = firing_audit(
+        "aaa1|D26 FIRED by armed default\naaa2|T0.21 re-bought, no firing\n",
+        lambda sha: DIFF_BAR_MOVED)
+    if (hazard_kinds != (["GOAL-EDIT"], ["CONST-MOVED"], ["CONST-DELETED"], [])
+            or not S and hazard_kinds[0]
+            or not audited_ok
+            or [(s, [k for k, _, _ in hz]) for s, _, hz in audited]
+            != [("aaa1", ["CONST-MOVED"])]
+            or firing_audit("", lambda sha: DIFF_GOAL_EDIT) != ([], False)
+            or BASELINE_FIRING_HAZARDS != 0
+            or check_rc([("FIRING-DIFF", "aaa1", "planted")]) != 1):
+        failed.append("p16_firing_diff_is_the_known_positive")
+
     live_asks = _live_asks()
     return {
         "properties_checked": float(N_PROPERTIES),
@@ -736,8 +812,10 @@ def _control(seed: int) -> dict:
     that day with the firing itself. It must miss the `D8` known-positive
     (P2), miss the both-named case (P4), pass a document containing an
     unarmed escalation (P9), miss both owner-ask classes (P11, P12), miss
-    `D21`'s expired clock (P13) and miss the same-day race its repair left
-    behind (P15).
+    `D21`'s expired clock (P13), miss the same-day race its repair left
+    behind (P15), and miss every firing-diff hazard (P16) — for fourteen days
+    the answer to "did this firing edit GOAL.md" was silence, and silence read
+    as a pass.
     """
     return _probe(safety_enforced=False)
 
@@ -761,7 +839,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p12_vanished_owner_ask_is_the_known_positive",
                            "p13_expired_default_action_is_the_known_positive",
                            "p14_a_silenced_owner_ask_names_who_silenced_it",
-                           "p15_same_day_race_and_clock_attribution"}
+                           "p15_same_day_race_and_clock_attribution",
+                           "p16_firing_diff_is_the_known_positive"}
                       <= control_names)
     return bool(experiment_clean and control_broken)
 

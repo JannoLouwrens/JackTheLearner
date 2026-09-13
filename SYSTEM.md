@@ -143,15 +143,33 @@ task.
    governing document that names an enforcement is making a capability claim,
    and it is bound by law 1 like any other.**
 
-   What `decisions.py` enforces today is **one** of the three clauses, and it is
-   computed rather than parsed for intent: a default may not be the single
-   unattended event that leaves a `GOAL.md` commitment with nothing falsifiable
-   behind it (`SAFETY-CLAIM-DEAD`; the repair is to register a successor spec,
-   never to park or quiet). The other two — no `GOAL.md` edit, no weakened
-   threshold — are properties of the **commit that fires** a default, not of the
-   text that arms it, and the honest place to catch them is a check on the
-   firing diff. They remain on the author's word, and this sentence stays here
-   until they do not.
+   What `decisions.py` enforces today is **two** of the three clauses, and this
+   paragraph said **one** until 2026-09-13. The first is computed rather than
+   parsed for intent: a default may not be the single unattended event that
+   leaves a `GOAL.md` commitment with nothing falsifiable behind it
+   (`SAFETY-CLAIM-DEAD`; the repair is to register a successor spec, never to
+   park or quiet).
+
+   The second arrived where this paragraph said it would. *"No `GOAL.md` edit"*
+   and *"no weakened threshold"* are properties of the **commit that fires** a
+   default, not of the text that arms it, and the honest place to catch them is
+   a check on the firing diff — so that check now exists
+   (`decisions.firing_diff_hazards`, reported as the shrink-only `FIRING-DIFF`
+   ratchet on every `decisions --check`, and runnable ahead of a commit as
+   `--firing-check HEAD`). It refuses a `GOAL.md` edit and a moved-or-deleted
+   numeric bar **in either direction**, because which direction "weakens" is a
+   property of the `_check` that reads the constant and not of the diff — and
+   because a threshold move by silence is already forbidden in the general case.
+   All 25 firings in this repository's history audit clean; it shipped at floor,
+   which is the only cheap moment to ship a ratchet.
+
+   **The third clause is still on the author's word, and this sentence stays
+   here until it is not.** *"Never widens what is permitted"* is a statement
+   about the space of allowed ACTIONS; no diff decides it. Two smaller gaps are
+   named beside the check rather than left to be discovered: a firing is
+   identified by its own commit subject, so a firing that does not say it is one
+   is not audited; and the pattern reads module-level `ALL_CAPS = <number>`, not
+   every place a bar could hide.
 
    *The cost of this rule, recorded beside it as owner directives must be:* the
    loop will sometimes spend free compute running an arm the owner would have

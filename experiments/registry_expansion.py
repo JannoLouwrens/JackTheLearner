@@ -5843,7 +5843,15 @@ EXPANSION: list[Spec] = [
                     "span in NO entry reaches nothing, because on 2026-09-04 "
                     "a quotation made as EVIDENCE inside `D21`'s amendment "
                     "silenced a live ask and the only symptom was the count "
-                    "going 3 -> 2 with the ratchet green.",
+                    "going 3 -> 2 with the ratchet green; (11) the SECOND "
+                    "safety clause, which lives in the COMMIT that fires a "
+                    "default rather than in the text that arms it: a firing "
+                    "diff editing `GOAL.md` is refused, a module-level "
+                    "numeric bar that MOVES (`MIN_PARA_MARGIN 0.10 -> 0.05`, "
+                    "`T2.10`'s own) or VANISHES is refused, the legal shape "
+                    "of `D25`'s armed default CLEARS — a new branch and a NEW "
+                    "constant are additions, not moves — and an unreadable "
+                    "history reports NOT-CHECKED rather than a clean bill.",
          falsified_by="Any property failing; the battery running fewer than "
                       "N_PROPERTIES; or the live document failing to parse "
                       "into a well-formed armed set. Concretely: the safety "
@@ -5864,7 +5872,13 @@ EXPANSION: list[Spec] = [
                       "Also: an ask going quiet with no attribution printed, "
                       "an attribution naming an entry the span did not fall "
                       "in, an unnumbered decision entry failing to count as a "
-                      "desk, or a span outside every entry silencing an ask.",
+                      "desk, or a span outside every entry silencing an ask. "
+                      "Also: a firing diff that edits GOAL.md, moves a numeric "
+                      "bar or deletes one passing unreported; the LEGAL shape "
+                      "of an armed default (a new branch, a NEW constant, a "
+                      "resolution record) being refused; or `firing_audit` "
+                      "returning a clean bill when it could read no history "
+                      "at all.",
          null_baseline="THE ORGAN AS IT STOOD BEFORE 2026-08-30, kept "
                        "executable as the control: `audit()` with no safety "
                        "pass at all, and a `--check` whose blocking set omits "
@@ -5878,7 +5892,11 @@ EXPANSION: list[Spec] = [
                        "classes. And the organ as it stood before the 70th "
                        "audit's B1, when no pass asked whether a default's "
                        "action still existed on the day it fires: it must "
-                       "miss `D21`. Every hole is reconstructed by DELETION — "
+                       "miss `D21`. And the organ as it stood before "
+                       "2026-09-13, when the FIRING DIFF had no reader at all "
+                       "and the answer to \"did this default edit GOAL.md\" "
+                       "was silence: it must miss every firing-diff hazard. "
+                       "Every hole is reconstructed by DELETION — "
                        "each pass only ever APPENDS — never by paraphrase.",
          metric="properties_failed", budget=Budget.CPU, seeds=1,
          depends_on=[],
@@ -5888,7 +5906,8 @@ EXPANSION: list[Spec] = [
                  "p11_unrouted_owner_ask_is_reported, "
                  "p12_vanished_owner_ask_is_the_known_positive, "
                  "p13_expired_default_action_is_the_known_positive and "
-                 "p14_a_silenced_owner_ask_names_who_silenced_it must be "
+                 "p14_a_silenced_owner_ask_names_who_silenced_it and "
+                 "p16_firing_diff_is_the_known_positive must be "
                  "among the control's failures or the control no longer "
                  "reproduces the disease and this spec guards nothing.",
          kills="Author self-certification of the governance instruments. "

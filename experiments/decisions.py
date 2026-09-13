@@ -103,12 +103,28 @@ precisely the prescribed repair. A guard whose positive is a thing that actually
 happened, and whose green is a thing somebody actually fixed.
 
 WHAT IS STILL NOT ENFORCED, stated here so no later reader repeats SYSTEM.md's
-mistake in this file's name: **"never edits GOAL.md" and "never weakens a
-threshold" are NOT checked.** Neither is decidable from a DECIDE block - both
-are properties of the COMMIT that fires the default, not of the text that arms
-it, and the honest place to catch them is a pre-commit check on the firing diff.
-Two of three clauses remain on the author's word. Do not write a prose scanner
-for them; write the diff check.
+mistake in this file's name. The paragraph that used to sit here said **"never
+edits GOAL.md" and "never weakens a threshold" are NOT checked** and ended with
+an instruction: *"Do not write a prose scanner for them; write the diff check."*
+THE DIFF CHECK EXISTS AS OF 2026-09-13 (`firing_diff_hazards`, the block comment
+above `GOAL_DOC_PATHS`), and it is wired into `--check` as the shrink-only
+`FIRING-DIFF` ratchet, so the count is visible at floor on every run. Nineteen
+defaults fired in the fourteen days between the instruction and the check; all
+25 self-declared firings in this repository's history audit CLEAN, which is a
+fact about the organs that fired them and not about the guard.
+
+So the honest tally is now ONE of three on the author's word, plus two named
+gaps in the two that are checked:
+
+  * clause 3, "never widens what is permitted", is a statement about the space
+    of allowed ACTIONS and is not decidable from any diff. Unenforced. This
+    sentence stays until it is not.
+  * a firing is IDENTIFIED by its own commit subject (a `D<n>`, "default",
+    "fired"). A firing that does not say so is not audited, and nothing forces
+    the idiom. Identification is generous on purpose - checking an innocent
+    commit costs nothing, missing a real one costs the guard.
+  * the pattern reads module-level `ALL_CAPS = <number>` only. See the block
+    comment for what that misses.
 
 THE SECOND DOCUMENT, AND WHY THIS FILE NOW READS TWO (2026-09-04, 69th audit
 B2). Everything above polices `DECISIONS_NEEDED.md` — the file where an
@@ -585,6 +601,200 @@ def same_day_actions(default_text: str, decide_by: _dt.date) -> list:
 BASELINE_ACTION_EXPIRED = 0
 
 
+# ── THE FIRING DIFF: the two safety clauses that a DECIDE block cannot hold ──
+#
+# THE SCAR IS IN THIS FILE'S OWN DOCSTRING AND IN `SYSTEM.md`, WORD FOR WORD.
+# Both say the safety clause has three parts — a default may never edit
+# `GOAL.md`, never weaken a threshold, never widen what is permitted — and both
+# say only ONE of the three is enforced. This file's version ends with an
+# instruction rather than an excuse: *"Do not write a prose scanner for them;
+# write the diff check."* That sentence was written on 2026-08-30. Nineteen
+# defaults have fired since, none of them checked, and `D19` and `D25` fire
+# tomorrow. This is the diff check.
+#
+# WHY A DIFF AND NOT THE DECIDE BLOCK. "This default does not weaken a
+# threshold" is a claim about a commit that does not exist yet, so no reading of
+# the arming text can settle it — and every live default hand-asserts exactly
+# that sentence about itself ("no threshold moves", "GOAL.md is not touched",
+# "this is a NARROWING and only a narrowing"). Author self-certification is what
+# law 1 exists to distrust. The commit is the only artifact that can be checked,
+# and it is checkable mechanically.
+#
+# THE ONE JUDGEMENT, STATED RATHER THAN IMPLIED: a MOVED constant is a hazard in
+# EITHER DIRECTION. The clause says "weakens", and deciding whether 0.10 -> 0.05
+# loosens or tightens requires knowing the comparator's sense — which lives in
+# the `_check` that reads it, not in the diff. Rather than guess (a scanner that
+# guesses direction is the prose scanner under a different name), this refuses
+# any move. That is not over-reach: `SYSTEM.md`'s own live prohibition already
+# says so in the general case — *"`D24`'s option (ii) SHRINK THE CLAIM is a
+# THRESHOLD MOVE and may not fire by silence ... the principle stands for every
+# future armed default"*. A firing that genuinely needs a constant to move is a
+# spec amendment through the strengthen-only lane, with an author's name on it,
+# which is precisely the thing an unattended calendar event may not be.
+#
+# ADDING a constant is not a hazard; a default may build something new. Only a
+# constant that MOVES or VANISHES is.
+#
+# WHAT THIS CANNOT SEE, named here so no later reader repeats `SYSTEM.md`'s
+# mistake in this check's name:
+#   * the third clause. "Never widens what is permitted" is a statement about
+#     the space of allowed ACTIONS, not about any text, and nothing in a diff
+#     decides it. It remains on the author's word and this comment stays until
+#     it does not.
+#   * numbers that are not module-level `ALL_CAPS = <number>` — a bar inside a
+#     function body, a dict-valued gate, a `threshold=` keyword in a registry
+#     `Spec(...)`. The pattern covers where this repo actually keeps its bars
+#     (`MIN_PARA_MARGIN = 0.10`, `RANDOM_DWELL_MAX = 0.02`, `CALIB_MIN = 0.75`);
+#     it does not cover everywhere a number could hide.
+#   * a threshold moved in a DIFFERENT commit in the same slot. The check takes
+#     any rev-range for that reason — price the slot, not the commit — but it
+#     cannot know which neighbouring commits belong to the firing.
+
+#: Constitutional text. Class 1 (ENDS) in `SYSTEM.md`'s three-class split: fixed
+#: by the owner, never measured, and explicitly never edited by a default.
+GOAL_DOC_PATHS = ("GOAL.md",)
+
+#: `NAME = 3`, `NAME = 0.10`, `NAME = 1e-3`, `NAME = -5`. Indentation is
+#: allowed (a bar nested in a class is still a bar) and a trailing comment is
+#: ignored, because the comment beside a threshold is where its justification
+#: lives and moving THAT is not moving the bar.
+_DIFF_CONST = re.compile(
+    r"^\s*([A-Z][A-Z0-9_]{2,})\s*=\s*"
+    r"(-?(?:\d[\d_]*\.?\d*|\.\d+)(?:[eE][+-]?\d+)?)\s*(?:#.*)?$")
+
+_DIFF_PLUS = re.compile(r"^\+\+\+ (?:b/)?(.*)$")
+_DIFF_MINUS = re.compile(r"^--- (?:a/)?(.*)$")
+
+#: A firing commit declares itself in its own subject, in the idiom this repo
+#: has used for every one of them: a decision id, the word "default", and the
+#: word "fired". Identification is deliberately GENEROUS — a journal commit that
+#: merely mentions a firing gets checked too, and checking a clean commit costs
+#: nothing, while missing a real firing costs the whole guard.
+_FIRING_SUBJECT = (re.compile(r"\bD\d+\b"),
+                   re.compile(r"\bfired?\b", re.I),
+                   re.compile(r"\bdefaults?\b", re.I))
+
+
+def _diff_files(diff_text: str) -> dict:
+    """`{path: (added_lines, removed_lines)}` from a unified diff.
+
+    Hand-rolled rather than delegated: this must run on a constructed string in
+    a fixture, with no repository and no `git`, for the reason `safety_hazards`
+    takes injected rows — a guard whose positive can only be reproduced by
+    breaking the real repo is a guard nobody exercises.
+    """
+    out, path = {}, None
+    for raw in diff_text.splitlines():
+        m = _DIFF_PLUS.match(raw)
+        if m:
+            # `+++ /dev/null` is a deletion; the name is on the `---` side, and
+            # `_DIFF_MINUS` has already recorded it below.
+            path = None if m.group(1).strip() == "/dev/null" else m.group(1).strip()
+            if path:
+                out.setdefault(path, ([], []))
+            continue
+        m = _DIFF_MINUS.match(raw)
+        if m:
+            name = m.group(1).strip()
+            path = None if name == "/dev/null" else name
+            if path:
+                out.setdefault(path, ([], []))
+            continue
+        if path is None or not raw:
+            continue
+        if raw.startswith("+"):
+            out[path][0].append(raw[1:])
+        elif raw.startswith("-"):
+            out[path][1].append(raw[1:])
+    return out
+
+
+def firing_diff_hazards(diff_text: str) -> list:
+    """`[(kind, path, detail)]` — the safety-clause breaches visible in a
+    default's firing commit. Empty is the passing verdict.
+
+    `GOAL-EDIT`  any content line added to or removed from `GOAL.md`.
+    `CONST-MOVED`  a module-level numeric constant whose value changed.
+    `CONST-DELETED`  a module-level numeric constant that vanished — law 4's
+        "delete a failing test" wearing the smallest possible clothes.
+
+    See the block comment above for the one judgement (both directions of a
+    move are hazards) and for the three things this cannot see.
+    """
+    out = []
+    for path, (added, removed) in sorted(_diff_files(diff_text).items()):
+        base = path.rsplit("/", 1)[-1]
+        if path in GOAL_DOC_PATHS or base in GOAL_DOC_PATHS:
+            if added or removed:
+                out.append(("GOAL-EDIT", path,
+                            f"{len(added)} line(s) added, {len(removed)} "
+                            f"removed in constitutional text — a default may "
+                            f"never edit GOAL.md (SYSTEM.md, class 1: ENDS)"))
+            continue
+        if not path.endswith(".py"):
+            continue
+        def _consts(lines):
+            d = {}
+            for ln in lines:
+                m = _DIFF_CONST.match(ln)
+                if m:
+                    d[m.group(1)] = m.group(2)
+            return d
+        new, old = _consts(added), _consts(removed)
+        for name, was in sorted(old.items()):
+            if name not in new:
+                out.append(("CONST-DELETED", path,
+                            f"{name} = {was} removed and not replaced"))
+            elif new[name] != was:
+                out.append(("CONST-MOVED", path,
+                            f"{name} {was} -> {new[name]}"))
+    return out
+
+
+#: Firing-diff hazards in this repository's whole history, at the commit that
+#: shipped the check: ZERO, over 25 declared firings (measured 2026-09-13, the
+#: day before `D19` and `D25` fire). Shrink-only, in the `BASELINE_UNDECLARED`
+#: idiom. Nineteen defaults fired unchecked between the instruction to write
+#: this check and the check existing, and none of them breached the two
+#: checkable clauses — which is a fact about the organs that fired them, not
+#: about the guard, and is exactly why shipping at floor cost nothing.
+BASELINE_FIRING_HAZARDS = 0
+
+
+def firing_audit(log_text: str, diff_for) -> tuple:
+    """`(rows, checked)` — `rows` is `[(sha, subject, hazards)]` over every
+    self-declared firing; `checked` is False when the log could not be read.
+
+    `diff_for(sha) -> str` is injected for the same reason `safety_hazards`
+    takes rows: the audit must be reproducible without a repository.
+
+    `checked` exists because the ONE failure this check could have is the one
+    it would report as success — `_git` swallows a missing repository and
+    returns `""`, which parses as zero firings and prints a clean bill. A
+    detector wired to nothing is `T0.13`'s whole subject; this file will not
+    add another.
+    """
+    found = firing_commits(log_text)
+    if not found:
+        return [], False
+    return [(sha, subj, firing_diff_hazards(diff_for(sha)))
+            for sha, subj in found], True
+
+
+def firing_commits(log_text: str) -> list:
+    """`[(sha, subject)]` for the commits that declare themselves a firing.
+
+    Takes the output of `git log --format='%H|%s'` as text — injectable for the
+    same reason everything else here is.
+    """
+    out = []
+    for line in log_text.splitlines():
+        sha, _, subject = line.partition("|")
+        if sha and all(p.search(subject) for p in _FIRING_SUBJECT):
+            out.append((sha.strip(), subject.strip()))
+    return out
+
+
 # ── the owner's OTHER desk: `## FOR THE OWNER` in docs/PROGRESS.md ──────────
 #
 # Start-of-line only, like every declaration in this repo. An item is a numbered
@@ -1017,6 +1227,7 @@ RATCHETED = {
     "UNROUTED-OWNER-ASK": BASELINE_UNROUTED_ASKS,
     "VANISHED-OWNER-ASK": BASELINE_VANISHED_ASKS,
     "DEFAULT-ACTION-EXPIRED": BASELINE_ACTION_EXPIRED,
+    "FIRING-DIFF": BASELINE_FIRING_HAZARDS,
 }
 
 
@@ -1217,6 +1428,83 @@ def _safety_fixture() -> None:
     assert blast_radius("PARK BA.02 and ZZ.99", by_id) == {"BA.02"}
 
 
+def _firing_fixture() -> None:
+    """The planted positives for the firing-diff check, on the real code path.
+
+    RED FIRST, AND THE SHAPES ARE NOT INVENTED. The GOAL-EDIT case is the
+    sentence `SYSTEM.md` forbids by name. The CONST-MOVED case is `T2.10`'s own
+    live bar, `MIN_PARA_MARGIN = 0.10`, moved to `0.05` — which is exactly the
+    edit that would turn that spec's standing FAIL green, and exactly the edit
+    an unattended calendar event may not make. The CONST-DELETED case is law 4's
+    "delete a failing test" at its smallest.
+
+    The clear case matters as much: `D25`'s own armed default adds a branch to
+    `lib_seal.sh` and a new constant, and it MUST pass. A guard that refuses the
+    legal defaults would be switched off within a day, so the legal shape is
+    pinned here beside the illegal ones.
+    """
+    goal = ("--- a/GOAL.md\n+++ b/GOAL.md\n@@ -1 +1 @@\n"
+            "-Give him a brain, a body, and a world.\n"
+            "+Give him a brain and a world.\n")
+    assert [h[0] for h in firing_diff_hazards(goal)] == ["GOAL-EDIT"], \
+        firing_diff_hazards(goal)
+
+    moved = ("--- a/experiments/tests/t2_10_retrieval_vs_recency.py\n"
+             "+++ b/experiments/tests/t2_10_retrieval_vs_recency.py\n"
+             "@@ -1 +1 @@\n"
+             "-MIN_PARA_MARGIN = 0.10       # beat both controls\n"
+             "+MIN_PARA_MARGIN = 0.05       # beat both controls\n")
+    assert firing_diff_hazards(moved) == [
+        ("CONST-MOVED", "experiments/tests/t2_10_retrieval_vs_recency.py",
+         "MIN_PARA_MARGIN 0.10 -> 0.05")], firing_diff_hazards(moved)
+
+    gone = ("--- a/experiments/tests/x.py\n+++ b/experiments/tests/x.py\n"
+            "@@ -1 +0 @@\n-MIN_LEAKY_RECALL = 0.80\n")
+    assert [h[0] for h in firing_diff_hazards(gone)] == ["CONST-DELETED"], \
+        firing_diff_hazards(gone)
+
+    # THE LEGAL DEFAULT MUST CLEAR. A new branch, a NEW constant, a doc that is
+    # not GOAL.md, and a comment moved beside an untouched bar.
+    legal = ("--- a/scripts/lib_seal.sh\n+++ b/scripts/lib_seal.sh\n@@ -1 +2 @@\n"
+             "+  if git_committed_progress; then banner_complete; fi\n"
+             "--- a/experiments/coverage.py\n+++ b/experiments/coverage.py\n"
+             "@@ -1 +2 @@\n+METRIC_RECORDED_BUT_UNREAD_BASELINE = 0\n"
+             "--- a/docs/DECISIONS_RESOLVED.md\n+++ b/docs/DECISIONS_RESOLVED.md\n"
+             "@@ -1 +1 @@\n+D25 RESOLVED BY ARMED DEFAULT\n"
+             "--- a/experiments/tests/y.py\n+++ b/experiments/tests/y.py\n"
+             "@@ -1 +1 @@\n-CALIB_MIN = 0.75  # frozen 09-01\n"
+             "+CALIB_MIN = 0.75  # frozen 09-01, cited by LG.03\n")
+    assert firing_diff_hazards(legal) == [], firing_diff_hazards(legal)
+
+    # A file RENAMED into GOAL.md is still GOAL.md; a file merely NAMED like it
+    # deeper in the tree is treated the same on purpose (over-approximating is
+    # the safe direction here, as it is for `blast_radius`).
+    assert not firing_diff_hazards("--- a/GOAL.md\n+++ b/GOAL.md\n@@ -0 +0 @@\n")
+
+    # The identifier must not claim commits that are not firings, and must
+    # catch every idiom this repo has actually used for one.
+    log = ("aaa1|D26 FIRED by armed default (89th audit B1.5)\n"
+           "aaa2|D15 default FIRED (decide_by 2026-09-05 passed unanswered)\n"
+           "aaa3|D21 + D16 defaults FIRED; owner did not rule\n"
+           "aaa4|T0.21 re-bought after the UNREACHABLE_BASELINE edit\n"
+           "aaa5|LG.12 attempt 1: FAIL — the abstaining mouth\n")
+    assert [s for s, _ in firing_commits(log)] == ["aaa1", "aaa2", "aaa3"], \
+        firing_commits(log)
+
+    # The audit joins the two, and the ONE failure it could report as success —
+    # no history at all — is `checked=False`, never an empty clean bill.
+    rows, checked = firing_audit(log, lambda sha: moved if sha == "aaa2" else "")
+    assert checked and [(s, [h[0] for h in hz]) for s, _, hz in rows] == [
+        ("aaa1", []), ("aaa2", ["CONST-MOVED"]), ("aaa3", [])], rows
+    assert firing_audit("", lambda sha: "") == ([], False)
+    assert firing_audit("nothing|a commit about something else\n",
+                        lambda sha: "") == ([], False)
+
+    # And the ratchet must actually BITE: a hazard is not a printed warning.
+    assert check_rc([("FIRING-DIFF", "aaa2", "…")]) == 1
+    assert check_rc([]) == 0
+
+
 def _previous_page(path: Path) -> str | None:
     """The last committed version of `path` that is not the one on disk now.
 
@@ -1367,10 +1655,82 @@ def _ask_fixture() -> None:
     assert "3" in _unrouted(quote + needed), "outside every entry is no desk"
 
 
+def _git(*args) -> str:
+    """`git` output, or `""` when git is unavailable. A missing repository must
+    not turn this report into a crash — the check is an ADDITION."""
+    import subprocess
+    try:
+        r = subprocess.run(("git",) + args, cwd=_REPO, capture_output=True,
+                           text=True, timeout=60)
+        return r.stdout if r.returncode == 0 else ""
+    except (OSError, subprocess.SubprocessError):      # pragma: no cover
+        return ""
+
+
+def _diff_of(rev: str) -> str:
+    """The diff a rev introduces. Falls back to `git diff <rev>` so a
+    working-tree check (`--firing-check HEAD`) works before the commit exists —
+    which is the moment the firing iteration actually needs it."""
+    return (_git("show", "--format=", "--unified=0", rev)
+            or _git("diff", "--unified=0", rev))
+
+
+def firing_check(argv: list[str]) -> int:
+    """`--firing-check [REV...]`. With revs, check those. Without, audit every
+    commit in this repository's history that declares itself a firing.
+
+    Exits non-zero on a hazard. It gates nothing else: this is the check the
+    firing iteration runs before it commits, and the receipt the next auditor
+    runs over what already landed.
+    """
+    revs = [a for a in argv if not a.startswith("-")]
+    if revs:
+        print(f"\nFiring-diff check — {len(revs)} rev(s)\n")
+        rows = [(r, "", firing_diff_hazards(_diff_of(r))) for r in revs]
+        checked = True
+    else:
+        rows, checked = firing_audit(_git("log", "--all", "--format=%H|%s"),
+                                     _diff_of)
+        print(f"\nFiring-diff audit — {len(rows)} commit(s) declare a "
+              f"pre-registered default fired\n")
+        if not checked:
+            print("  NOT CHECKED: git returned no history. This is not a "
+                  "clean bill — a detector that reports success when its "
+                  "input is missing is wired to nothing.\n")
+            return 1
+    bad = 0
+    for rev, subj, hazards in rows:
+        if not hazards:
+            print(f"  ok        {rev[:9]}  {subj[:88]}")
+            continue
+        bad += 1
+        print(f"  HAZARD    {rev[:9]}  {subj[:88]}")
+        for kind, path, detail in hazards:
+            print(f"      [{kind}] {path}")
+            print(f"        {detail}")
+    print()
+    if bad:
+        print(f"  {bad} firing(s) breach the safety clause. A default may only "
+              f"pick among ALREADY-PERMITTED actions: it may never edit "
+              f"GOAL.md and never move a threshold. The repair is to REVERT "
+              f"the offending hunk and route it as an authored spec amendment "
+              f"through the strengthen-only lane — never to widen this "
+              f"check.\n")
+    else:
+        print("  no firing has edited GOAL.md or moved a numeric bar. The "
+              "THIRD clause — 'never widens what is permitted' — is not "
+              "decidable from a diff and remains on the author's word.\n")
+    return 1 if bad else 0
+
+
 def main(argv: list[str]) -> int:
     _fixture()
     _safety_fixture()
     _ask_fixture()
+    _firing_fixture()
+    if "--firing-check" in argv:
+        i = argv.index("--firing-check")
+        return firing_check(argv[i + 1:])
     text = DOC.read_text()
     today = _dt.date.today()
     progress_text = PROGRESS.read_text() if PROGRESS.exists() else None
@@ -1428,6 +1788,28 @@ def main(argv: list[str]) -> int:
                 print(f"    {key:<13} matched-by: {did} ({how})")
                 print(f"       {lead}")
             print()
+
+    # THE FIRING DIFF, JOINED TO THE RATCHET RATHER THAN LEFT AS A SUBCOMMAND.
+    # A guard nobody invokes is a guard nobody has; `--firing-check` is for the
+    # iteration that is about to fire one, and this is for everyone else. It
+    # runs only under `--check` because it costs ~3 s of `git show`, and it
+    # reports through the ratchet — visible at floor every run, in the idiom
+    # this file already insists on ("a counter that only appears when it is
+    # nonzero cannot be seen to be at floor").
+    if "--check" in argv:
+        _rows, _checked = firing_audit(_git("log", "--all", "--format=%H|%s"),
+                                       _diff_of)
+        if not _checked:
+            violations.append(("FIRING-DIFF", "(history)",
+                               "git returned no history — the firing-diff "
+                               "audit did not run, and a silent skip is not a "
+                               "pass"))
+        for _sha, _subj, _hz in _rows:
+            for _kind, _path, _detail in _hz:
+                violations.append(("FIRING-DIFF", _sha[:9],
+                                   f"[{_kind}] {_path}: {_detail} — a "
+                                   f"pre-registered default may not do this "
+                                   f"by silence"))
 
     debt = ratchet_debt(violations)
     if "--check" in argv:
