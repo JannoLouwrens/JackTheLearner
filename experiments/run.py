@@ -2316,6 +2316,299 @@ def unreachable_count(ledger: Ledger, ladder=None, by_id=None,
     return len({sid for ids in mentions.values() for sid in ids}), len(ladder)
 
 
+class _AssumeStatus:
+    """A read-only Ledger view with ONE spec's status overridden.
+
+    Exists so `blast_radius` can ask the dependency walk a counterfactual
+    without mutating the real ledger — only the runner writes that file, and a
+    tool that answers "what if X failed" by briefly making X fail is one
+    exception away from leaving it that way.
+
+    `unsatisfied`/`blocked_by` are BORROWED from `Ledger`, not restated. That
+    is the `_split_foreclosed` rule applied one level down: the freshness half
+    of the dependency rule (a PASS whose `impl_sha` moved does not satisfy)
+    lives inside `Ledger.unsatisfied`, and a re-implementation here would drift
+    from it exactly the way `_terminal_blockers`' own hand-rolled
+    `status is Status.PASS` did before `T0.22` retired it.
+    """
+
+    unsatisfied = Ledger.unsatisfied
+    blocked_by = Ledger.blocked_by
+
+    def __init__(self, ledger: Ledger, spec_id: str, status: Status):
+        self._ledger, self._sid, self._status = ledger, spec_id, status
+        self.results = ledger.results
+
+    def status(self, spec_id: str) -> Status:
+        return self._status if spec_id == self._sid else self._ledger.status(spec_id)
+
+
+def blast_radius(spec_id: str, ledger: Ledger, assume: Status = None,
+                 ladder=None, by_id=None) -> dict:
+    """What LEAVES the reachable set if `spec_id` settles non-PASS.
+
+    `protocol.BLAST_RADIUS_DECL` has required this quantity since the 54th
+    audit (2026-08-31): a `VOID-FORECLOSED:` declaration is refused unless the
+    docstring also carries *"the transitive set of specs the declaration
+    renders unreachable, by id and title"*. That contract says the set is
+    **"derivable from `depends_on`"** and then validates PRESENCE, NOT TRUTH —
+    because for thirteen days nothing derived it. This function derives it.
+
+    IT IS ALSO NEEDED WHERE NOTHING ASKS FOR IT, WHICH IS WHY IT IS HERE AND
+    NOT IN `coverage.py`. A foreclosure declaration is not the only graph edit
+    that strands downstream specs; **arming a new conjunct on a PASSing spec is
+    the same edit with no paperwork at all**, and it fired twice in
+    twenty-four hours:
+
+      2026-09-13 06:44  `T6.03` re-run under a strengthened gate -> BLOCKED.
+                        Radius `{LF.02}`. `UNREACHABLE_BASELINE` 93 -> 94.
+      2026-09-13 10:05  `T1.08` re-run under a conjunct armed four hours
+                        earlier -> FAIL. Radius **`{D1.0, T2.01, T2.02}`**,
+                        `UNREACHABLE_BASELINE` 94 -> 97 — and it made `T1.08`
+                        the project's LARGEST terminal blocker (frees 41 /
+                        blocks 45, displacing `T2.01`) while foreclosing the
+                        `D1.0` W37 dispatch that the same morning's priority
+                        block had ordered for that day.
+
+    Both radii were discovered AFTER the run, by hand, from a ratchet that had
+    already gone red. Both were computable before it, with zero seeds, from
+    the registry and the ledger alone — which is the 92nd audit's RANK 3
+    reachability rule pointed the other way. Reachability asks *"can this bar
+    clear?"*; this asks *"what falls if it does not?"* They are different
+    questions and only the first had a tool.
+
+    Returns `{"spec", "status", "assumed", "radius", "runnable_lost",
+    "frees", "blocks", "before", "after", "ladder"}`. `radius` is the set of
+    specs that are reachable today and are not under the counterfactual;
+    `runnable_lost` is its sharpest subset — specs whose dependencies are
+    satisfied RIGHT NOW, i.e. the dispatches that become illegal the moment
+    the run lands. `frees`/`blocks` is the terminal-blocker rank the spec
+    would take in `run blocked`.
+
+    `assume` defaults to the informative counterfactual: `FAIL` for a spec
+    that currently passes, `PASS` for one that does not — so the same command
+    prices a strengthening before it is armed and a repair before it is
+    bought.
+    """
+    ladder = LADDER if ladder is None else ladder
+    by_id = BY_ID if by_id is None else by_id
+    live_status = ledger.status(spec_id)
+    if assume is None:
+        assume = Status.FAIL if live_status is Status.PASS else Status.PASS
+
+    def _reach(led) -> tuple:
+        terminal = _terminal_blockers(led, ladder=ladder, by_id=by_id)
+        mentions, frees, _ = _rank_blockers(terminal, led, ladder=ladder)
+        stuck = {sid for ids in mentions.values() for sid in ids}
+        return stuck, mentions, frees
+
+    def _runnable(led) -> set:
+        return {s.id for s in ladder
+                if led.status(s.id) is not Status.PASS and not led.unsatisfied(s)}
+
+    before, _, _ = _reach(ledger)
+    alt = _AssumeStatus(ledger, spec_id, assume)
+    after, mentions, frees = _reach(alt)
+    lost_runnable = _runnable(ledger) - _runnable(alt)
+
+    # THE SUBJECT IS NEVER ITS OWN RADIUS — but it IS its own count. Both sets
+    # move trivially for `spec_id` itself (a spec assumed PASS leaves the stuck
+    # set by definition), and printing that read as a finding: the first run of
+    # this command announced "REGAINED: T6.03" under the heading "T6.03", and
+    # "T1.08 is a dispatch that becomes illegal" under "T1.08". Neither is
+    # false; both are the question restated as its own answer — the
+    # double-count `_rank_blockers` exists to kill, wearing the
+    # counterfactual's clothes.
+    #
+    # The exclusion is applied to the NAMED sets ONLY. `before`/`after` are the
+    # number `run blocked` and `coverage.unreachable_ratchet` print, and a
+    # count that quietly drops its subject would disagree with both — the
+    # `_split_foreclosed` drift, re-introduced by a cosmetic fix. T6.03 is
+    # itself unreachable today, so this distinction is load-bearing, not
+    # hypothetical.
+    named_before, named_after = before - {spec_id}, after - {spec_id}
+
+    return {
+        "spec": spec_id,
+        "status": live_status,
+        "assumed": assume,
+        # Named for the direction of HARM regardless of which way the
+        # counterfactual runs: `radius` is always "OTHER specs stranded by the
+        # assumed status, relative to today".
+        "radius": sorted(named_after - named_before),
+        "regained": sorted(named_before - named_after),
+        "runnable_lost": sorted(lost_runnable - {spec_id}),
+        "frees": sorted(frees.get(spec_id, [])),
+        "blocks": sorted(mentions.get(spec_id, [])),
+        "before": len(before),
+        "after": len(after),
+        "ladder": len(ladder),
+    }
+
+
+def _check_blast_radius() -> None:
+    """Refuse to print a radius the deriver cannot get right on a known graph.
+
+    Same rule as `_check_ranker` and for the same reason (LESSONS.md, "an
+    at-chance control must carry proof its instrument was alive"): a count
+    from an instrument that flunks its own fixture is not evidence. Runs the
+    REAL `blast_radius` over the REAL ranker fixture, not a tidied restatement.
+
+    KNOWN ANSWERS on `_ranker_fixture`'s graph, where `K` is a clean PASS with
+    two dependents and `L` depends on `K` alone while `Z2` needs `K` AND the
+    already-stuck `X`:
+
+      K -> FAIL   strands L (reachable today, not under the assumption) and
+                  must NOT claim Z2, which is stuck behind X either way — the
+                  ranker's founding double-count, in the counterfactual.
+      K -> FAIL   `runnable_lost == [L]`: L's deps are satisfied today, so it
+                  is a dispatch that becomes illegal. Z2's are not.
+      X -> PASS   the reverse direction: Y rejoins the reachable set, so
+                  `regained` is non-empty and `radius` is empty.
+      Y -> PASS   the subject names itself in NEITHER set while the
+                  `before`/`after` COUNTS still include it. Y is unreachable
+                  today (it is stuck behind X) and nothing depends on Y, so
+                  `regained` is EMPTY and the count still falls by one. A
+                  deriver that "fixed" the self-naming by dropping the subject
+                  from the count would print `before == after` here — a number
+                  `run blocked` and `coverage.unreachable_ratchet` do not
+                  print. This conjunct was written believing `X` was the case
+                  that exercised it; X is a ROOT with no dependencies, so it
+                  is never in the stuck set at all, and the fixture rejected
+                  the first version of this check. Recorded because the
+                  fixture catching its own author is the only evidence that it
+                  is doing anything.
+    """
+    from .protocol import Result, Spec, Budget
+
+    def stub(sid, deps):
+        return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST,
+                    depends_on=deps)
+
+    base, base_by = _ranker_fixture()
+    extra = [stub("K", []), stub("L", ["K"]), stub("Z2", ["K", "X"])]
+    ladder = list(base) + extra
+    by_id = dict(base_by, **{s.id: s for s in extra})
+    fixt = _fixture_ledger()
+    # K is a clean PASS: no registry entry, so `module_path_for` finds no
+    # implementation file and the freshness half is skipped rather than
+    # accidentally exercised. The staleness branch already has its own known
+    # answer in `_check_ranker` via `_STALE_ID`.
+    fixt.results["K"] = Result(spec_id="K", status=Status.PASS, metrics={},
+                               seeds=[0], commit="1234567",
+                               ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)
+
+    fail_k = blast_radius("K", fixt, assume=Status.FAIL,
+                          ladder=ladder, by_id=by_id)
+    pass_x = blast_radius("X", fixt, assume=Status.PASS,
+                          ladder=ladder, by_id=by_id)
+    pass_y = blast_radius("Y", fixt, assume=Status.PASS,
+                          ladder=ladder, by_id=by_id)
+    expect = (
+        fail_k["radius"] == ["L"],
+        "Z2" not in fail_k["radius"],
+        fail_k["runnable_lost"] == ["L"],
+        sorted(fail_k["frees"]) == ["L"],
+        fail_k["after"] > fail_k["before"],
+        fail_k["regained"] == [],
+        "Y" in pass_x["regained"],
+        pass_x["radius"] == [],
+        # The subject names itself in neither set ...
+        "X" not in pass_x["regained"] and "X" not in pass_x["radius"],
+        "K" not in fail_k["radius"] and "K" not in fail_k["runnable_lost"],
+        # ... and is still inside the COUNT it is honestly part of. Y is stuck
+        # behind X and nothing depends on Y, so `regained` is empty while the
+        # unreachable count still falls by exactly one — Y itself.
+        "Y" not in pass_y["regained"] and "Y" not in pass_y["radius"],
+        pass_y["regained"] == [] and pass_y["radius"] == [],
+        pass_y["before"] - pass_y["after"] == 1,
+    )
+    if not all(expect):
+        raise RuntimeError(
+            "blast-radius fixture FAILED — the deriver got a known graph "
+            f"wrong, so no radius it prints is evidence. conjuncts={expect} "
+            f"fail_k={fail_k} pass_x={pass_x} pass_y={pass_y}")
+
+
+def cmd_blast_radius(ledger: Ledger, ids=()) -> int:
+    """`run blast-radius <SPEC> ...` — price a graph edit BEFORE it lands.
+
+    Prints the block `protocol.BLAST_RADIUS_DECL` requires, in the form it
+    requires it (id and title, "none" said rather than implied), so a
+    `VOID-FORECLOSED:` declaration can be priced by derivation instead of by
+    assertion — and so a strengthening, which no contract prices at all, can
+    be priced by the same command.
+
+    Read-only and spends nothing: no seeds, no GPU, no ledger write.
+    """
+    ids = [i for i in ids]
+    if not ids:
+        print("Usage: run blast-radius <SPEC> [<SPEC> ...]")
+        print("  What leaves the reachable set if that spec settles non-PASS")
+        print("  (or rejoins it, if the spec is already red). Derives the")
+        print("  `BLAST RADIUS:` block protocol.py requires by hand.")
+        return 2
+    unknown = [i for i in ids if i not in BY_ID]
+    if unknown:
+        print("Refusing: unrecognised spec id(s): " + ", ".join(unknown))
+        return 2
+
+    _check_ranker(ledger)
+    _check_blast_radius()
+
+    from .coverage import UNREACHABLE_BASELINE
+
+    rc = 0
+    for sid in ids:
+        r = blast_radius(sid, ledger)
+        arrow = f"{r['status'].value} -> {r['assumed'].value}"
+        print(f"\n{sid}  {BY_ID[sid].title}")
+        print(f"  counterfactual: {arrow}")
+        print(f"  unreachable:    {r['before']} -> {r['after']} of "
+              f"{r['ladder']}  (baseline {UNREACHABLE_BASELINE})")
+
+        # Label by the DIRECTION of the counterfactual, never by which set
+        # happens to be non-empty. A green-direction question whose answer is
+        # "nothing else moves" printed `BLAST RADIUS: none` — the right word
+        # for the wrong question, which is how a reader concludes a repair is
+        # worthless when what it actually frees is the subject itself.
+        going_green = r["assumed"] is Status.PASS
+        moved = r["regained"] if going_green else r["radius"]
+        label = "REGAINED" if going_green else "BLAST RADIUS"
+        if moved:
+            print(f"  {label}: {len(moved)} spec(s) —")
+            for m in moved:
+                print(f"      {m:9s} {BY_ID[m].title}")
+        else:
+            # "none" must be SAID, not implied — protocol.BLAST_RADIUS_DECL.
+            print(f"  {label}: none")
+
+        if r["runnable_lost"]:
+            print(f"  RUNNABLE TODAY AND NOT AFTERWARDS: "
+                  f"{', '.join(r['runnable_lost'])}")
+            print("      — these are dispatches that become illegal the "
+                  "moment the run lands;")
+            print("        `run_spec` refuses an unsatisfied dependency "
+                  "(92nd audit B1).")
+        if r["frees"]:
+            print(f"  would rank in `run blocked`: frees {len(r['frees'])} / "
+                  f"blocks {len(r['blocks'])}")
+        if r["after"] > UNREACHABLE_BASELINE:
+            print(f"  !! this edit would put `unreachable` ABOVE its floor "
+                  f"({r['after']} > {UNREACHABLE_BASELINE}). The floor moves "
+                  "only in the commit that grows it, with the reason in its "
+                  "growth log, signed by whoever committed it.")
+    print()
+    # DELIBERATELY 0 EVEN WHEN THE WARNING ABOVE FIRES. Every number here is a
+    # counterfactual: nothing is wrong with the tree, the ledger or the
+    # ratchet at the moment this is asked. An advisory that exits non-zero on
+    # a hypothesis is a false alarm, and a tool that cries wolf gets ignored
+    # inside a week — the overseer's own objection to the certificate screen
+    # (`D27`, 2026-09-13). The loud line is the product; the exit code says
+    # only whether the QUESTION was well-formed (2 for usage / unknown id).
+    return rc
+
+
 def _split_foreclosed(ranked, ledger: Ledger, vf=None, vfr=None) -> tuple:
     """Partition ranked roots into (live, closed, refused): the repairable
     list, the `VOID-FORECLOSED` doors `{root: declared reason}`, and the
@@ -3134,7 +3427,14 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "stale": cmd_stale, "verify": cmd_verify,
                       "senses": cmd_senses, "coverage": cmd_coverage,
                       "review-queue": cmd_review_queue,
-                      "ratchets": cmd_ratchets}
+                      "ratchets": cmd_ratchets,
+                      # Takes spec ids, so `main` routes it one branch earlier;
+                      # it is registered HERE anyway because this dict is the
+                      # single place a command's name exists (see above) and
+                      # it is what prints the `Commands:` line on a typo. Called
+                      # with no ids it prints usage and returns 2 — never a
+                      # silent zero.
+                      "blast-radius": cmd_blast_radius}
 
 
 def main() -> int:
@@ -3226,6 +3526,14 @@ def main() -> int:
               "`champions` alone. Nothing was run.")
         return 2
 
+    # `blast-radius` is the one read-only command that takes spec ids, so it
+    # routes before the no-argument dispatch below. It is read-only in the
+    # strong sense the line under it means: no ledger write, no seeds, no GPU
+    # — it answers a counterfactual over a view (`_AssumeStatus`), so the
+    # argv-is-a-spend rule below is satisfied by construction rather than by
+    # care.
+    if args.spec and args.spec[0] == "blast-radius":
+        return cmd_blast_radius(ledger, args.spec[1:])
     # status/next/render are read-only and must not block on a running experiment.
     if args.spec and args.spec[0] in READ_ONLY_COMMANDS:
         return READ_ONLY_COMMANDS[args.spec[0]](ledger)
