@@ -31444,8 +31444,8 @@
     },
     "T0.36": {
       "amended": [],
-      "attempt": 3,
-      "commit": "f38ac1a",
+      "attempt": 4,
+      "commit": "ac5dc17",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
@@ -31459,7 +31459,7 @@
         "worst_root_is_the_scar": 1.0
       },
       "dirty_files": null,
-      "duration_s": 32.75,
+      "duration_s": 32.51,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -31530,9 +31530,43 @@
           ],
           "spec_sha": "0255a8f809a1cc0e",
           "status": "PASS"
+        },
+        {
+          "commit": "f38ac1a",
+          "control_metrics": {
+            "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
+            "ladder_size": 249.0,
+            "overstated_roots": 1.0,
+            "properties_checked": 7.0,
+            "properties_failed": 4.0,
+            "scar_root_claims": 41.0,
+            "unreachable": 97.0,
+            "worst_overstatement": 38.0,
+            "worst_root_is_the_scar": 1.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "2d013988b54f8607",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "ladder_size": 249.0,
+            "overstated_roots": 0.0,
+            "properties_checked": 7.0,
+            "properties_failed": 0.0,
+            "scar_root_claims": 3.0,
+            "unreachable": 97.0,
+            "worst_overstatement": 0.0,
+            "worst_root_is_the_scar": 0.0
+          },
+          "ran_at": "2026-09-13T19:14:59",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "0255a8f809a1cc0e",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "2d013988b54f8607",
+      "impl_sha": "481ba1ed6de58a77",
       "message": "",
       "metrics": {
         "failed_names": "",
@@ -31546,9 +31580,9 @@
         "worst_root_is_the_scar": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 225.6,
+      "peak_rss_mb": 225.7,
       "preserved_impl": null,
-      "ran_at": "2026-09-13T19:14:59",
+      "ran_at": "2026-09-13T20:16:30",
       "seeds": [
         0
       ],
