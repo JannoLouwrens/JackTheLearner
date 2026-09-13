@@ -13789,3 +13789,81 @@ in the same hour.**
   `coverage.unreachable_ratchet` about the same number — the `_split_foreclosed`
   drift, re-introduced by tidying. **Exclude from what you NAME, never from what
   you COUNT.**
+
+---
+
+## "NO BATTERY CAN SEE THEM" WAS A CLAIM ABOUT THE INPUT, AND IT WAS WRONG
+## — a governing document that names its own unenforced clause is a work
+## order, not a caveat
+## (builder, 2026-09-13, building the firing-diff check fourteen days after
+## the file that needed it wrote down the instruction; dual of the morning's
+## "a contract that names a quantity as derivable and then accepts it on
+## assertion is telling you which tool to write")
+
+**The setting.** `SYSTEM.md` and `experiments/decisions.py` both say the armed
+default's safety clause has three parts — never edits `GOAL.md`, never weakens a
+threshold, never widens what is permitted — and both said only ONE of the three
+was enforced. Both explained why, in the same words: the other two are
+properties of *the commit that fires a default*, not of the text that arms it.
+`T0.28`, the certificate over `decisions.py`, said it a third time and added the
+sentence that turned out to be the load-bearing error: *"no battery over
+`decisions.py` can see them."*
+
+**It is false, and the refutation takes one line.** Those clauses are properties
+of a DIFF. A diff is a string. A string is exactly what a fixture can hand a
+function. `firing_diff_hazards(diff_text)` refuses a `GOAL.md` edit and a
+module-level numeric bar that moves or vanishes, and `T0.28`'s P16 drives it on
+four planted diffs with no repository, no `git`, and no firing.
+
+**THE GENERAL RULE: when a document says a check is impossible, read it as a
+claim about the INPUT and go look at the input.** Nine times in ten the
+impossibility is *"the thing I would check does not exist as an artifact yet"* —
+which is a build order — rather than *"the property is undecidable"*, which is a
+real limit. The tell is that the document can describe the missing artifact
+precisely: this one named it (*"a check on the firing diff"*) in the same
+sentence that gave up on it. **A caveat specific enough to name its own repair
+has stopped being a caveat.** The morning's lesson found the same shape from the
+other side, in a contract that called a quantity "derivable" and then validated
+its presence rather than its truth; this is the version where the document does
+not even claim the quantity, it claims nobody could have it.
+
+**AND THE HONEST TALLY GOT SHORTER, NOT ZERO — which is the point.** Clause 3,
+*"never widens what is permitted"*, really is undecidable from a diff: it is a
+statement about the space of allowed ACTIONS, not about any text. So the count
+went 1 of 3 to 2 of 3 and the sentence in `SYSTEM.md` saying the last one is on
+the author's word STAYS. A repair that quietly promotes "two of three" to "the
+clause is enforced" would recreate the exact defect this file's own scar records
+— a governing document making a capability claim its mechanism does not cover.
+
+**THREE SMALLER RULES, all earned inside the same hour.**
+
+- **A refusal that fires in only one direction has not been designed.** The
+  clause says *weakens*, and which way a constant "weakens" lives in the `_check`
+  that reads it, not in the diff. Rather than guess — a scanner that guesses
+  direction is the prose scanner under another name — the check refuses a move in
+  EITHER direction and says so. That is not over-reach: a threshold move by
+  silence is already forbidden in the general case, and a firing that genuinely
+  needs one is a spec amendment with an author's name on it, which is precisely
+  what an unattended calendar event may not be. **Adding** a constant stays legal,
+  because a default may build.
+- **A check over a CLASS of commits needs the class to declare itself, and the
+  identification is part of the guard.** Firings are found by their own commit
+  subject (`D<n>` + "default" + "fired"). Nothing forces the idiom, so a firing
+  that does not say it is one is invisible — named beside the check rather than
+  discovered later. Identification is deliberately GENEROUS: auditing an innocent
+  commit costs nothing, missing a real firing costs the whole guard.
+- **The one failure a history-scanning check can have is the one it reports as
+  success.** `_git` swallows a missing repository and returns `""`, which parses
+  as zero firings and prints a clean bill. `firing_audit` therefore returns
+  `(rows, checked)` and the CLI prints `NOT CHECKED`, rc 1, on an unreadable
+  history — never an empty green. This is `T0.13`'s subject arriving in a third
+  instrument; assume every new scanner has it until the no-input branch is
+  exercised.
+
+**The measurement, recorded because a guard that has only ever printed `0` is
+not yet believable:** all 25 self-declared firings in this repository's history
+audit CLEAN. That is a fact about the organs that fired them, not about the
+guard — the guard's evidence is the planted positives and the real-commit
+demonstration (`674a759`, `UNREACHABLE_BASELINE 93 -> 94`, caught; `445b9e1`,
+which armed two NEW conjuncts in the same window, correctly clean). It is also
+why the ratchet shipped at floor, which is the only cheap moment to ship one.
