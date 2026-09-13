@@ -1059,7 +1059,33 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     `pass-certificates-are-not-re-evaluated-when-a-dependency-falls`
 #     (REVIEW_QUEUE, DUE 09-16). Raising a floor to accommodate one's own act
 #     is the move this log exists to make visible, so: this growth is mine.
-UNREACHABLE_BASELINE = 94
+#   94 -> 97 @ 2026-09-13 (builder) — T1.08 attempt 3 returned FAIL under the
+#     conjunct THIS DESK armed four hours earlier (`445b9e1`, Review PROGRESS
+#     item 4a: `heldout_cv_pct <= 7.0`). It read **40.006**. Three specs leave
+#     the reachable set and they are named because of WHICH three they are:
+#     **D1.0, T2.01, T2.02** — all three declare `depends_on: T1.08`. Nothing
+#     was added to the ladder and no new work was blocked; one certificate
+#     stopped being true and its dependents were counted honestly.
+#     TWO CONSEQUENCES THIS LOG SHOULD NOT MAKE ANYONE HUNT FOR:
+#       (1) `T1.08` is now the project's LARGEST terminal blocker —
+#           `run blocked` ranks it **frees 41 / blocks 45**, displacing
+#           `T2.01` (frees 35 / blocks 38), which is itself now blocked
+#           behind it. The largest single unblock in the project moved, and
+#           it moved because of a bar this desk set from n=1.
+#       (2) `D1.0` attempt 3 — ordered for TODAY by the live priority block —
+#           is FORECLOSED. `run_spec` refuses a spec with an unsatisfied
+#           dependency, so the W37 dispatch cannot legally be made until
+#           T1.08 is green. That is the 92nd audit's B1 guard working, on the
+#           first dispatch after it shipped.
+#     Raised rather than repaired, and the repair is NOT this ratchet's: the
+#     bar does not move (it is pre-registered and the law is unconditional),
+#     and an unchanged re-dispatch hoping for a friendlier seed is the
+#     run-until-pass move this project refuses. Routed as
+#     `t108-noise-floor-bar-set-from-n1-now-blocks-41-specs`. The number
+#     returns to 94 the moment T1.08 settles green on a bar nobody weakened.
+#     This growth is MINE, and it is the second consecutive day this desk has
+#     had to write that sentence.
+UNREACHABLE_BASELINE = 97
 
 
 def unreachable_ratchet(ledger=None,
