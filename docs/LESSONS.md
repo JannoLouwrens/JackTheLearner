@@ -14169,3 +14169,66 @@ shorter memory walked past.
 failing — the arm was disqualified, not the rig — so the cheap reading is *"bad
 arm"* and the expensive one is *"the venue has a second channel"*. Both are
 true. The second one is the only one that transfers.
+
+## A reduction over `set(...)` is a PYTHONHASHSEED lottery, and a gated metric may not be one (2026-09-13, builder)
+
+`LG.10` and `LG.12` both computed a recorded, **gated** metric this way:
+
+    modal = max(set(meanings), key=meanings.count)
+
+`set` iteration order over strings and tuples is a function of the
+interpreter's per-process hash salt, and `max` returns the FIRST maximal
+element it happens to visit. So every count TIE was broken by
+`PYTHONHASHSEED`. Ties were not the exception: at `TEMP` 1.0 over `S_DRAWS` 5
+they are the common case. Five salts, identical code, identical seeds,
+`swap_agree` — a conjunct gated at 0.90 in **both** specs:
+
+    PYTHONHASHSEED      0      1      7     42  12345
+    swap_agree     0.8889 0.8333 0.8333 0.8611 0.8889
+      per seed 0   0.8333 0.6667 0.7500 0.9167 0.8333
+      per seed 1   0.9167 1.0000 0.9167 0.9167 0.9167
+
+Seed 0 ranges 0.6667 → 0.9167 and seed 1 reaches 1.0000: the same run
+straddles the bar in both directions depending on a salt nobody set, recorded,
+or could reconstruct. **The number in the ledger was one draw of a lottery
+wearing four decimal places.**
+
+**The general form: a ladder metric must be a function of (code, seed, data)
+and of nothing else.** Anything else in that function — wall-clock, filesystem
+order, dict/set iteration order, `os.environ`, CPU count — makes the row
+unreproducible, and an unreproducible row cannot be re-derived by an auditor,
+which is the one property every certificate on this ladder is supposed to
+have. `T0.02` proves *torch* is deterministic within a process; it says
+nothing about the pure-Python reductions that turn raw draws into recorded
+numbers, and that is exactly where this lived.
+
+**The tell, and it is cheap: run it twice in two processes.** This was found
+by an unrelated edit re-running `LG.10` and getting `swap_agree` 0.8333 where
+the row said 0.861133 — while `match`, `unanimity`, `variety` and `liveness`
+reproduced to the last digit. *A subset of metrics reproducing is stronger
+evidence than none reproducing*, because it rules out the edit and indicts the
+metric. Before trusting any re-run comparison, diff EVERY metric, not the one
+you were looking at.
+
+**Fix the pattern, not the site.** `sorted(set(xs))` is deterministic and this
+repo already uses it in ten places — these three sites were the exceptions, so
+a convention was not what failed. The repair was one `_modal(xs)` =
+`max(dict.fromkeys(xs), key=xs.count)` (ties to first appearance in the seeded
+draw sequence), defined once and imported by the sibling spec, so the family
+has a single implementation and the line cannot come back by copy-paste.
+
+**Two things worth noticing about the tie-break itself.** It must not be a
+property of the CONTENT — sorting the candidates alphabetically would have been
+deterministic and would have made the modal utterance a fact about English
+spelling rather than about the mouth. First-appearance-in-the-seeded-sequence
+is the only tie-break here that stays inside (code, seed, data). And the
+determinate value came out **below** both lottery draws (0.8611 → 0.8056,
+0.8455 → 0.7849): a determinism repair that happens to pay the spec should be
+looked at twice, because the salt that produced the recorded row was selected
+by nothing, and "nothing" has no reason to have been unkind.
+
+**Where it nearly cost something.** Both verdicts were unchanged — each spec
+fails on other conjuncts by a mile — so this instance cost reproducibility
+only. But `swap_agree` was about to become an **eligibility leg** in the
+`Language routing` seat race, where a single tie decides whether an arm may
+hold a seat. A lottery is harmless right up until something reads it.
