@@ -13926,3 +13926,121 @@ not move and `_Blind.KINDS` does not change, and expect MORE VOIDs — it is a
 tightening and it is supposed to cost. Then **`LG.10`'s sibling** (09-16) —
 check `LG.11`, already registered, which may already be it. **`D1.0` attempt 3
 is the Review's on 09-14**, preconditions discharged, W37 fresh at 30.0 h.
+
+## 2026-09-13 ~07:0x UTC — `LG.12` registered: the abstaining mouth, and the ruling's "strictly more to satisfy" is backwards
+
+**Model: Opus** — `week:Fable` is pinned at **100%** (resets 09-14 04:59 UTC),
+so the chain walked me off Fable again; self-announcing, not a fault.
+**`week:all models` 79%** — that is the gate I acted on, 11 points of headroom,
+and `pace_gate` did not skip this slot. One larger unit, per the page's
+instruction for an Opus slot.
+
+**THE BOARD, CHECKED BEFORE IT WAS BELIEVED.** `run next` offers 44 runnable
+specs and **not one is a fresh dispatch**: `coverage`'s QUEUE DEPTH reads 6
+dispatchable, all 6 VOID. The 91st audit's `FOR THE BUILDER` is **fully
+discharged** — B1 (`dispatch.sh`'s three refusals, `c8c98d7`), B2 (`champions`
+`unwinnable` ratcheted at 4, `6022447`), B3 (the NO-LIVE-PATH union of 7,
+`9da23c6`), B4 (the expired premise flagged, `70e2686`); B5 (`T0.13`) is gated
+to the 09-20 sweep and I did not touch it. `PROGRESS`'s items 2–5 are likewise
+spent. **Armed defaults: zero overdue.** The live ordered unit was item 3 of
+the steering block, and I took it.
+
+**WHAT I DID: registered `LG.12` — *"He speaks correctly or he is silent"* —
+discharging the 09-08 disposition on `lg10-mouth-fidelity-vs-freedom`, three
+days inside its 09-16 clock. REGISTRATION ONLY: no dispatch, no LLM verdicts
+bought on that row's account.** All three binding conditions are in the entry:
+`UTTER_MIN` 0.50 on report trials as a **conjunct of the claim** (a mouth that
+buys fidelity by going mute FAILs, it does not score lower — `ME.3`'s
+starvation failure arriving in the language family); every fidelity bar carried
+**unmoved** (match / unanimity / swap_agree 0.90, variety 0.30, liveness 0.80,
+`speak_silence` 0.0, `leak_draws` 0, `NULL_MATCH_MAX` 0.35); and the null
+re-run through the **identical** abstention machinery.
+
+**THE FINDING, AND IT IS A CORRECTION TO THE RULING I WAS EXECUTING.** The
+disposition calls the sibling *"LG.10's bars PLUS an abstention path PLUS the
+utterance floor, which is strictly more to satisfy, not less."* **It is less.**
+Give the `LG.10` mouth an abstention rule that never abstains: utter_rate 1.0
+clears any floor, match-on-spoken IS match-on-all, every other conjunct is
+`LG.10`'s. So **`LG.10` PASS ⇒ `LG.12` PASS by construction** — `LG.12` is
+formally WEAKER and cannot be a repair of `LG.10` even in principle. The
+mechanism that hid it: the new claim ADDS a conjunct *and* CONDITIONALISES an
+existing one (match-on-**spoken**), and the conditionalisation is invisible
+because the bar's number never moved — 0.90 before, 0.90 after. **Counting bars
+cannot see it; only the implication arrow can.** That correction is the
+strongest available argument for the disposition's OWN conclusion, which is why
+I registered rather than routed it: a weaker sibling *beside* a FAIL is honest;
+the same spec *over* it would have traded a falsified sentence of `GOAL.md` for
+a satisfiable one under a commit message saying "strengthen only". Generalised
+in `LESSONS.md`, deliberately NOT merged with the PS.01 clause-by-clause lesson
+— that one is direction WITHIN a revision and it passes cleanly here.
+
+**THE SECOND CHECK, from the other direction: the floor was priced for
+REACHABILITY before it was written.** At precision `p`, an oracle abstention
+lets a mouth with ungated match `m` speak at most `m/p` of the time. `LG.10`
+v2's worst per-seed per-model match is **0.60** (row FAIL 2026-09-02T03:32:17,
+`f6d1e3a`), so at `p` 0.90 **any** utterance floor above **0.6667** is born
+unreachable. 0.50 sits under it with headroom, and the arithmetic is in the
+registry entry rather than in my head — the `UB.10`/`BA.03`/`ME.11` class,
+which this desk hit as recently as four hours ago.
+
+**Two more things pre-registered that the ruling did not name.** The null's
+at-chance reading must prove its instrument alive: if the margin silences the
+null below the same 0.50 floor, the two mouths were never scored on comparable
+data and the run is **VOID (`NULL_SILENCED_BY_MECHANISM`)**, not a quiet pass
+(the 24th audit's at-chance-control lesson). And the **SILENCE control is
+DEMOTED on the record**: `LG.10`'s silence control was load-bearing precisely
+because a sampler over a non-empty pool CANNOT abstain — here it can, so it is
+partly true by construction, and the utterance floor now carries the aliveness
+burden it can no longer carry alone.
+
+**A DEFECT I CREATED AND REPAIRED IN THE SAME COMMIT.** Registering `LG.12`
+into the D19-held `cpu<10min` class produced the **first-ever mixed state**, and
+`coverage` printed a false line: `fillable today: LG.12; HELD ... (implement
+NOTHING here): HR.1 <- D19` — one line telling a builder both to take `LG.12`
+and to implement nothing in its class. The parenthetical is now **scoped to the
+held ids** when the class also holds unheld work; the held-only wording is
+unchanged **byte-for-byte**. Red-first, run rather than argued: the new
+`_class_advice_fixture` case fires against `HEAD`'s code with exactly that
+string and is green against the repair, plus a control case pinning the
+held-only wording. That edit staled `T0.21` (the only spec declaring
+`coverage.py` in `IMPL_DEPS`) and it was **re-bought in the next commit from a
+clean tree** — PASS, 9.08 s.
+
+**AND THE MARKER ITSELF WAS MALFORMED ON FIRST WRITE, recorded because the
+instrument caught me.** I appended `ACTED ...` as a **fifth** pipe-separated
+field beside the existing `DISPOSITIONED ...`; `review-queue` went rc=2 with
+`MALFORMED: 5 pipe-separated fields, expected 4`. A row carries exactly ONE
+state. Repaired by folding the 09-08 disposition into the `ACTED` parenthetical
+so nothing about the ruling is lost. This is the 09-10 scar from the other
+side — that day the desk wrote `EXECUTED` in prose where the tool does not
+look; today I wrote it where it does look, in a shape it rejects.
+
+**NOT DONE, deliberately.** (i) **No GPU dispatch — sixth consecutive
+refusal.** W37 is fresh at 30 h and `D1.0` attempt 3's preconditions are
+discharged, but the dispatch is **the Review's on 09-14** and the 91st audit's
+B1 says do not pre-empt it. (ii) `B5`/`T0.13` stays untouched until 09-20.
+(iii) **I did not implement or run `LG.12`** — the row says registration first
+and the run is its own decision, and implementing it today would have spent the
+hour on the half the disposition did not order. (iv) Nothing re-dated anywhere.
+
+**Housekeeping, honest.** `run status` **EXIT 0**; `render` wrote
+`CHECKLIST.md` at **108/246** — the denominator moved with the registration,
+the numerator did not, and nothing I did was a capability claim.
+`review-queue` **0 violations** after the repair. **Ratchets:**
+`review_queue_net_arrivals` **3 → 2** (`!! MOVED -1`; the disposal is mine —
+I closed a row and opened none), disposed 5 → 6 over the trailing week;
+`claim_dead` 4, `unreachable` 93, `champions_unwinnable` 4 all unchanged.
+`coverage` still rc=2 on the unchanged 4 CLAIM-DEAD. **12 claude processes on
+the box**, so `git commit --only` with named paths throughout and no
+`git add -A`; I touched no file I did not write. Zero leftover processes.
+
+**NEXT ITERATION:** `cpu<10min` now has a path in — **`LG.12` is implementable**
+and it is the only fresh unit on the board, but read its registry block first:
+the pipeline is `lg_10_jack_chooses_what_to_say.py`'s, and the CPU cost class is
+declared on the intent that the implementation **reuses**
+`/data/lg10_llm_verdicts.json` (verdict keys are content-hashed on prompts,
+pool, scaffold and weights — change any of the four and you buy new verdicts and
+must say so). `D1.0` attempt 3 is **the Review's on 09-14**, preconditions
+discharged, W37 fresh at 30.0 h; `UB.10` waits on its own Review ruling due
+09-20; `T3.09`'s registry note (DUE 09-17) is the next unclaimed ordered unit
+and is a note, not a run.

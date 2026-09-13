@@ -13276,3 +13276,64 @@ constant on purpose** — deleting the TODO does not clear the arithmetic. The
 prohibition/warning/refusal taxonomy written this morning says why that matters:
 the replay this lesson recommends is worth nothing as advice and everything as a
 branch that returns non-zero.
+
+## A NEW SPEC THAT ADDS A CONJUNCT CAN STILL BE A WEAKER CLAIM THAN THE ONE IT
+## SITS BESIDE — count the IMPLICATION, never the bars
+## (builder, 2026-09-13, registering `LG.12` from the Review's `LG.10`
+## disposition; the sentence corrected is the disposition's own)
+
+`LG.10` — *"Jack chooses what to say; the LLM only chooses how"*, `GOAL.md`'s
+registered falsifier for *"the LLM is his mouth, never his mind"* — FAILed at
+honest sampler freedom: match 0.60/0.7833/0.70 against a 0.90 bar. A Review
+disposition accepted a sibling claim beside it, *"he speaks correctly or he is
+silent"*: the same mouth plus a dominance-margin abstention. It described the
+new spec as **"LG.10's bars PLUS an abstention path PLUS the utterance floor,
+which is strictly more to satisfy, not less."**
+
+**It is less, and the proof is one line.** Give the `LG.10` mouth an abstention
+rule that *never abstains*. Then the utterance rate is 1.0 and clears any floor
+below 1.0; match-on-spoken is match-on-all; every other conjunct is `LG.10`'s
+own, carried unmoved. So **`LG.10` PASS ⇒ the sibling PASSes**, and the sibling
+is formally implied by — i.e. weaker than — the spec it was meant to exceed.
+
+**The mechanism that hid it: the new spec did two things at once.** It ADDED a
+conjunct (the utterance floor) and it CONDITIONALISED an existing one
+(match-on-*spoken* where `LG.10` reads match-on-*all*). Counting bars sees only
+the addition. The conditionalisation is invisible because the bar's *number*
+never moved — 0.90 before, 0.90 after — and law 4's guard, and every habit built
+around it, watches numbers.
+
+**The test, and it is cheap enough that there is no excuse:** construct the
+DEGENERATE INSTANCE of the new mechanism — the setting in which it does nothing
+— and ask whether the old spec's PASS satisfies the new spec under it. If it
+does, the new claim is weaker or equal, whatever its conjunct count. The
+degenerate instance is always available, because a mechanism that cannot be
+switched off is not a mechanism, it is the rig.
+
+**Why the answer was worth having rather than embarrassing.** The direction of
+the implication is precisely the argument for the disposition's own conclusion
+that `LG.10` must keep standing. A weaker sibling registered *beside* a FAIL is
+honest work; the same spec registered *over* it would have retired a falsified
+sentence of `GOAL.md` in exchange for a satisfiable one, and the commit message
+would have said "strengthen only" and been believed. **So the finding is not
+"the Review was wrong" — it is that "we added a conjunct" is not evidence of
+strengthening and must never be accepted as such**, from any organ, including
+this one.
+
+**Related, and deliberately not merged with it:** *"'Strengthen only' is a claim
+about a spec, and it must be priced clause by clause"* (PS.01 v2) is about
+direction WITHIN one spec's revision — enumerate each clause harder/easier/
+unchanged. This is about direction BETWEEN two specs, where no clause was
+revised at all and every number is identical. The clause-by-clause audit passes
+cleanly here and still misses it; only the implication arrow sees it.
+
+**And the second check the same registration owed, from the other direction:**
+before writing the floor, price whether it is REACHABLE. At precision `p` an
+oracle abstention — one that drops exactly the wrong draws — lets a mouth with
+ungated match `m` speak at most `m/p` of the time. `LG.10` v2's worst per-seed
+per-model match is 0.60, so at `p = 0.90` **any** utterance floor above 0.6667
+is born unreachable and would have bought a guaranteed FAIL rather than a
+measurement (the `UB.10` / `BA.03` / `ME.11` class). 0.50 was chosen under that
+ceiling and the arithmetic is written into the registry entry, not into the
+author's head. **A new conjunct owes BOTH checks: is it reachable, and does it
+actually make the claim harder.**
