@@ -3397,6 +3397,94 @@ def _impl_age_line(root: str) -> str:
     return f"  [impl unchanged {days} d]"
 
 
+def _blocked_rows(ranked, dead_flavour, closed, held_map=None) -> list:
+    """Section each ranked terminal blocker, and carry its decision-hold.
+
+    THE SCAR IS FOUR HOURS OLD AND IT IS MINE (builder, 2026-09-13 22:xx).
+    At 21:xx this desk taught `cmd_next` to read BOTH liveness readers, wrote
+    the lesson *"the command that ADVERTISES work must read the same holds as
+    the command that AUDITS it"*, and pinned the third conjunct of
+    `_check_next_triage` on exactly this shape: *"a version that reads
+    `_liveness_state` but not `holds()` fails on exactly the `HR.1`/`D19`
+    row."* `cmd_blocked` **is** that version, one command over. It has read
+    `coverage.root_dead` since the 59th audit — PARKED, PILOT-BLOCKED,
+    VOID-FORECLOSED — and has never asked `decisions.holds()`.
+
+    Measured on the live ledger at 22:1x, before this function existed:
+
+        HR.1 = NOT_RUN  frees 3  (blocks 3)  — The voice corpus is honest ...
+
+    ranked fifth in the project, in the live repairable section, with nothing
+    beside it — while `coverage` printed, of the same spec, *"cpu<10min
+    HR.1 <- D19 (decide_by 2026-09-14) … the run IS the fetch the default
+    forbids."* Two instruments, one spec, opposite answers, and the one that
+    advertises is the one that is wrong. It is also the most attractive row on
+    the board by construction: `NOT_RUN` + `frees 3` is what a fresh unblock
+    looks like. The orientation sentence beside this command reads *"run
+    `run blocked` for a genuine candidate."*
+
+    A HOLD ANNOTATES; IT NEVER DEMOTES — and that is the difference from
+    `_next_triage`, stated because the two repairs deliberately diverge:
+
+      * `next` answers *what should I do now*, and it TRUNCATES at 12, so
+        annotating without re-laning left the corpses above the cut. There the
+        reorder was the repair.
+      * `blocked` answers *what one fix would free the most* — a property of
+        the graph, which a dated decision does not change. It prints every
+        root, so nothing is hidden by order. Re-ranking here would corrupt the
+        quantity the command exists to report, and demoting a held root into
+        the PARKED / VOID-FORECLOSED section would say *"redesign would
+        recover"* about a door that opens on its own date. `HR.1`'s opens
+        tomorrow. So the lane stays LIVE and the hold rides beside it.
+
+    `held_map` is injectable for the same reason `_next_triage`'s is: the
+    known answer must not need markers on disk (`_RANKER_FIXTURE`, T0.36).
+    """
+    if held_map is None:
+        from .decisions import holds
+        held_map = holds()
+    rows = []
+    for root, ids in ranked:
+        dead = root in closed or root in dead_flavour
+        rows.append({"root": root, "ids": ids,
+                     "lane": "DEAD" if dead else "LIVE",
+                     "hold": held_map.get(root)})
+    return rows
+
+
+def _check_blocked_holds() -> None:
+    """Refuse to advertise an unblock list that flunks a known hold graph.
+
+    Same rule as `_check_next_triage`, and the two wrong versions it must
+    reject are measured, not asserted — each fails exactly one conjunct, so
+    neither conjunct is the other wearing extra words:
+
+      A  FAIL, no hold          -> LIVE, hold None.
+      P  PARKED                 -> DEAD.
+      H  NOT_RUN, decision-held -> LIVE **and** carrying its hold. This one
+                                   row kills both wrong versions and needs
+                                   both conjuncts to do it:
+                                     - the liveness-only reader (this file
+                                       until tonight) returns lane LIVE and
+                                       hold None -> fails the hold conjunct,
+                                       passes the lane one;
+                                     - a reader that treats a decision-hold as
+                                       a closed door returns DEAD -> fails the
+                                       lane conjunct, passes the hold one.
+    """
+    ranked = [("A", ["a1"]), ("P", ["p1"]), ("H", ["h1"])]
+    rows = {r["root"]: r for r in _blocked_rows(
+        ranked, dead_flavour={"P": "PARKED"}, closed={},
+        held_map={"H": "D19 (decide_by 2026-09-14)"})}
+    got = (rows["A"]["lane"], rows["A"]["hold"],
+           rows["P"]["lane"],
+           rows["H"]["lane"], rows["H"]["hold"])
+    want = ("LIVE", None, "DEAD", "LIVE", "D19 (decide_by 2026-09-14)")
+    if got != want:
+        raise AssertionError(
+            f"_blocked_rows flunked its own fixture: {got} != {want}")
+
+
 def cmd_blocked(ledger: Ledger) -> int:
     """What can this ladder NEVER do, and why — the converse of `next`.
 
@@ -3412,8 +3500,12 @@ def cmd_blocked(ledger: Ledger) -> int:
     list for a week after the project declared it un-re-runnable, because only
     `coverage.py` read `protocol.void_foreclosed`. The two readers now share
     the same gate via `_split_foreclosed`.
+
+    Decision-HELD roots are annotated in place and keep their rank — see
+    `_blocked_rows` for why that differs from `_next_triage`'s re-laning.
     """
     _check_ranker(ledger)
+    _check_blocked_holds()
     terminal = _terminal_blockers(ledger)
     mentions, frees, groups = _rank_blockers(terminal, ledger)
 
@@ -3444,6 +3536,13 @@ def cmd_blocked(ledger: Ledger) -> int:
             _still_live.append((root, ids))
     live = _still_live
     dead_roots = set(closed) | set(_dead_flavour)
+
+    # The OTHER liveness reader, and the one this command never asked until
+    # tonight: an OPEN decision that declares a root in `blocks:`. It rides
+    # beside the root and moves nothing — `_blocked_rows` carries the reason.
+    _rows = _blocked_rows(ranked, _dead_flavour, closed)
+    live = [(r["root"], r["ids"]) for r in _rows if r["lane"] == "LIVE"]
+    _hold_of = {r["root"]: r["hold"] for r in _rows if r["hold"]}
 
     # A REPAIR path is asked the same question, and it has to be asked
     # separately: a repair spec is not a terminal blocker, so it never enters
@@ -3478,6 +3577,12 @@ def cmd_blocked(ledger: Ledger) -> int:
             return _dead_flavour[root]
         if root in _repair_flavour:
             return _repair_flavour[root]
+        if root in _hold_of:
+            # Not a flavour of dead — a dated hold, printed with the status it
+            # actually has so the reader sees both facts at once.
+            base = (ledger.status(root).value if root in BY_ID
+                    else "UNKNOWN-SPEC")
+            return f"{base}, HELD by {_hold_of[root]}"
         if root not in BY_ID:
             return "UNKNOWN-SPEC"
         st = ledger.status(root)
@@ -3498,6 +3603,13 @@ def cmd_blocked(ledger: Ledger) -> int:
         f = sorted(frees.get(root, []))
         print(f"  {root} = {_st(root)}  frees {len(f)}  (blocks {len(ids)})"
               f"{_impl_age_line(root)}  — {title}")
+        if root in _hold_of:
+            print(f"        !! HELD by {_hold_of[root]} — an OPEN decision "
+                  f"declares this spec in `blocks:`")
+            print(f"        !! its frees-count is real and its rank is honest;"
+                  f" DISPATCHING IT IS NOT. The hold")
+            print(f"        !! lifts when the owner rules or the armed default "
+                  f"fires on its own date.")
         if root in refused:
             # An unpriced foreclosure ranks as repairable, but silently ranking
             # it re-opens the B2 misroute in the other direction: somebody
@@ -3508,6 +3620,17 @@ def cmd_blocked(ledger: Ledger) -> int:
         rest = sorted(set(ids) - set(f))
         if rest:
             print(f"        also blocks (needs a co-requisite too): {', '.join(rest)}")
+        print()
+
+    if _hold_of:
+        print(f"  DECISION-HELD — {len(_hold_of)} of the {len(live)} live "
+              f"ranked blocker(s) above sit behind an OPEN\n  decision. They keep "
+              f"their rank because the mass they block is real, and they are "
+              f"NOT\n  a closed door: no redesign is owed and the hold lifts "
+              f"on its own date. Until then a\n  dispatch here walks around "
+              f"the decision:\n")
+        for root, why in sorted(_hold_of.items()):
+            print(f"    {root} <- {why}")
         print()
 
     if closed:
