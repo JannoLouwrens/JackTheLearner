@@ -14232,3 +14232,70 @@ fails on other conjuncts by a mile — so this instance cost reproducibility
 only. But `swap_agree` was about to become an **eligibility leg** in the
 `Language routing` seat race, where a single tie decides whether an arm may
 hold a seat. A lottery is harmless right up until something reads it.
+
+---
+
+## An eligibility leg must be able to fail against the arm it is aimed at — and "freedom" measured on the wrong axis cannot (LG.13, 2026-09-13)
+
+**What happened.** `LG.13` raced four decode rules for the `Language routing`
+seat on `LG.10`'s rig. Following `SO.10`'s endorsed shape, it pre-registered
+three ADMISSION legs separate from the score, and wrote beside the first one
+exactly what it was for: *"a chooser that buys meaning-match by killing the
+sampler's freedom has made LG.10's whole invariance question vacuous."* The
+leg was `variety >= VARIETY_MIN` — the fraction of trials in which 5 draws
+produce **≥ 2 distinct UTTERANCES**.
+
+The winner, `meaning-mass`, scores **1.0000 on every seed and both mouths** and
+passes that leg at **1.0000** — while being precisely the chooser the sentence
+was written to catch. It aggregates softmax mass per MEANING, picks the
+heaviest, and then samples the wording uniformly among that meaning's three
+phrasings. So it kills freedom over **meanings** and leaves freedom over
+**wordings** completely intact. The leg was measuring the axis the arm did not
+touch.
+
+**The arithmetic that makes it structural rather than lucky**, and it is worth
+doing for any leg you are about to write: the mass computation consults no rng,
+so the meaning is a deterministic function of (trial, model). Therefore
+`unanimity` = 1.0 and `swap_agree` = 1.0 **by construction**, and `variety`
+≥ 1 − 3·(1/3)^5 = 1 − 1/81 per trial **by construction** — all three hold at
+their maximum however bad the chooser is at picking the right meaning. Three
+pre-registered conjuncts, worth nothing under this arm, and all three green.
+
+**THE GENERAL FORM. A gate is evidence only about arms that could have tripped
+it. Before you write a leg, name the arm it is aimed at and compute the leg's
+value for an arm that fails in the way you fear.** If the number comes out
+green regardless, the leg is decorative against that failure mode — no matter
+how load-bearing it is against a different one. This is the 24th audit's
+*"an at-chance control must carry proof its instrument was alive"* pointed at
+the gate instead of at the control, and it is a per-ARM property: `variety`
+does real work against a temperature-sharpened chooser (it VOIDed `LG.10`
+attempt 1 at T=0.25 with 0.25/0.50/0.00) and no work at all against a
+marginalising one. **The same leg, the same threshold, the same file — live
+against one arm and dead against the next.** A bakeoff is where this bites,
+because the arms are deliberately different from each other and the legs are
+written once for all of them.
+
+**What was NOT done, and why it matters more than the finding.** The leg was
+not retro-edited and the verdict was not adjusted. `LG.13`'s own claim survives
+the gap intact — `match_both` is not true by construction, the selector is
+never told the intent, `topk-uniform` groups by admission too and scored
+0.6611, and the control failed its gate by 5 sigma — so the PASS is honest and
+stands. Changing a leg after seeing which arm it let through is the exact move
+pre-registration exists to forbid, and doing it "because the leg was obviously
+meant to catch this" is how a spec becomes an author's opinion with decimal
+places. The gap was routed
+(`lg13-champion-makes-lg10s-invariance-conjuncts-structural`, DUE 09-17,
+deliberately paired with `so10-tie-break-hands-the-seat-to-an-ineligible-arm`)
+and the seating records it on the champion's own row in `CHAMPIONS.md`.
+
+**The second, smaller lesson, free with the first: a perfect score is a
+question, not a celebration.** `1.0000` on every seed and both models is the
+shape of a construction artifact, and the only reason this one survived
+scrutiny is that a 30-second diagnostic over the SAME cached table could
+separate the two readings — the intent meaning is the heaviest meaning in
+**72 of 72** trial-model cells at **0.6166–0.7656** of total softmax mass, so a
+rule that marginalises over wording is reading a genuinely decisive signal, not
+short-circuiting one. That diagnostic also produced the run's best sentence:
+the incumbent's `0.6945` **IS** that mass share, sampled. The two numbers are
+one quantity read two ways, and the incumbent's failure was never a shortage of
+signal — it was sampling where it should have been marginalising.
