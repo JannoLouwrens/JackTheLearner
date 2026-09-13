@@ -260,6 +260,49 @@ void the whole run. Whether that is the right membership is a GATE question
 and it is NOT decided here; it is routed with the numbers attached once
 attempt 2 says which arm and which seed.
 
+REGISTERED RUN, ATTEMPT 2 — **VOID** (ran 2026-09-13T01:11:50, commit
+`7ffd3c8+dirty`, 2928.18 s CPU, seeds 0/1/2). The prediction above held
+exactly, which is the whole point of having made it: **all 20 attempt-1
+metrics and all 7 controls reproduce BYTE-IDENTICALLY** — `reshaping_gain_R`
+0.954619, R_ci [0.943936, 0.971919], `r2_plastic` 0.954440, `r2_ua`
+-0.000179333, `r2_raw_pixel` 0.929242 (a FOURTH independent draw clearing the
+unmoved 0.80 eye gate), `frozen_R` 0.0, `canary_ok` 1.0, `det_drift` 0.0,
+`shuffled_R` -0.004332, `shuffled_label_r2` 7.3e-05, `weights_sha8` 41e72933.
+The only two values that changed are the two that were previously ABSENT:
+
+    loss_drop_frozen    0.835467 ± 0.090262      (new)
+    loss_drop_shuffled  0.867767 ± 0.141941      (new)
+
+**THE ARM IS SETTLED: FROZEN.** Applying the same n=3 worst-seed bound to the
+now-complete set, `loss_drop_ua` 0.008467 ± 0.003023 (worst admissible 0.0127)
+and `loss_drop_plastic` 0.403300 ± 0.076860 (worst 0.5120) clear `LEARN_DROP`
+0.90 on every seed, while `loss_drop_frozen`'s worst admissible seed is
+**0.9631 — above the bar.** So `learn_ok` [1,1,0] is FROZEN's, and
+`shuffled_learn_ok` [1,1,0] is SHUFFLED's (the sole member of its own
+conjunct). Attempt 1 could only narrow this to "FROZEN or SHUFFLED"; it is now
+settled, and not by an argument from absence.
+
+**WHAT THE DISCLOSURE DID NOT BUY, recorded because a repair that half-works
+is the more useful fact: the SEED is still unknowable from the row.** The
+ledger stores mean ± std over seeds, the run log prints neither the per-seed
+ratios nor the failing index, and the two new metrics are aggregates like
+every other one. The attribution moved exactly one level — from "one of two
+arms, unknown seed" to "this arm, unknown seed" — and stopped. Routed as a
+third case on `aggregate-hides-worst-seed`, not repaired here: emitting a
+per-seed vector is a recorder change with its own design question, and this
+docstring is not the place to decide it.
+
+**THE GATE QUESTION IS NOW ROUTABLE AND IS STILL NOT DECIDED HERE.** FROZEN is
+the registered NULL whose `R` is zero BY CONSTRUCTION, so its contribution to
+the verdict cannot depend on its pretext loss having fallen — yet its
+membership in `learn_ok` can void the whole run, and on one seed of three it
+did. Whether a null belongs inside a rig's learning gate is a question about
+the gate, and it goes to the Review with these numbers attached. **No
+threshold moves in either direction on this row:** `LEARN_DROP` stays 0.90,
+`learn_ok`/`shuffled_learn_ok` are unchanged in definition and in effect, and
+`EYE_RADIUS_R2_MIN` stays 0.80. A VOID is not a near-miss PASS and none of the
+claim's high numbers are claimable.
+
 WEIGHTS ARE PERSISTED — the 2026-09-07 standing rule (PROGRESS item 5):
 PL.02 is an arena of the Vision-encoder seat (`experiments/champions.py`),
 so every trained A-encoder's state_dict is written to

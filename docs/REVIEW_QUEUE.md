@@ -5092,6 +5092,44 @@ re-read it. **108 of 245 specs are PASS and none has been examined for this.**
       probably are not mechanisable, and saying so honestly is part of the
       answer.
 
+**A FIFTH INSTANCE, AND A THIRD SUB-KIND (builder, 2026-09-13 ~01:1x, attached
+here rather than opened as its own row — same 90th-audit B2 precedent as the
+fourth, and `review_queue_net_arrivals` is still banner-ed).** Found by
+harvesting `PL.02` attempt 2, whose whole purpose was to attribute a VOID:
+
+| spec | declared meaning of the gate | quantity actually computed |
+|---|---|---|
+| `PL.02` (measured 09-13) | "the arms learned, so the run is valid" — `learn_ok`, a RIG gate | `all(last < 0.90·first)` over **(U_A, PLASTIC, FROZEN)** — and FROZEN is the spec's own registered NULL, whose `R` is **zero by construction**. Its pretext loss cannot inform the verdict, and it is the arm that voided the run: `loss_drop_frozen` **0.835467 ± 0.090262**, worst admissible seed **0.9631** against `LEARN_DROP` 0.90, while `loss_drop_ua` (0.0127 worst) and `loss_drop_plastic` (0.5120 worst) clear it on every seed. |
+
+**The new sub-kind: not a wrong quantity and not a dominated branch — an
+over-scoped QUANTIFIER.** Each conjunct of `learn_ok` is individually correct;
+the `all(...)` ranges over a member that is defined by not being a learner. The
+gate is live (it fired), it computes what its own line of code says, and it
+still cannot mean what its name means, because one element of its domain was
+never eligible. That is a third detection shape and it is **mechanically
+checkable**: a rig gate must not quantify over an arm the spec declares as its
+null. Cheaper than (a) and in the same family as (b).
+
+**Why this is the Review's and not a builder's drive-by.** Removing FROZEN from
+`learn_ok` would make `PL.02` **easier to pass**, on the very spec that is the
+sole registered falsifier of `GOAL.md`'s PLASTIC-ONLY decree, in the hour after
+it VOIDed on exactly that conjunct. This desk refused to re-point that same
+edge on 09-09 for the same reason and was right to. Nothing was moved:
+`LEARN_DROP` stays 0.90, `learn_ok` is unchanged in definition and in effect,
+`EYE_RADIUS_R2_MIN` stays 0.80. The numbers are here so the ruling can be made
+on them.
+
+**AND THE SEED IS STILL MISSING — a third case for `aggregate-hides-worst-seed`
+(ROUTED 2026-08-30), stated here because it is the same harvest.** Attempt 2's
+disclosure moved the attribution exactly ONE level, from "one of two arms,
+unknown seed" to "**this** arm, unknown seed", and stopped. The ledger stores
+mean ± std over seeds, the run log prints neither the per-seed ratios nor the
+failing index, and both newly emitted metrics are aggregates like every other
+one. So a repair that was designed to make a VOID attributable produced an
+arm-attributed VOID and no seed — worth recording because *a repair that
+half-works* is the more useful datum than one that fails outright: it will look
+discharged on the row that ordered it.
+
 **Staleness bill: zero to route.** No threshold moves, no spec is edited, no
 certificate is touched by the existence of this row. The bill of ACTING on it
 is unknown by construction and that is the point — **if the sweep finds a

@@ -13766,7 +13766,22 @@
       }
     },
     "PL.02": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-13T01:18:24",
+          "by": "builder-2026-09-13-attempt2-record",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "781f7bd2669c52dd",
+              "proof": "reconstructed 781f7bd2669c52dd from git 7ffd3c870fe3; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "a0583f270f3a6065"
+            }
+          ],
+          "commit": "d8ab3ef+dirty",
+          "reason": "Docstring-only: records attempt 2's VOID, the byte-identical reproduction of all 27 attempt-1 values, and the settled arm attribution (FROZEN voids learn_ok, SHUFFLED voids shuffled_learn_ok). No threshold, constant, gate or IMPL_DEPS line moves; prose_only_delta must prove it."
+        }
+      ],
       "attempt": 2,
       "commit": "7ffd3c8+dirty",
       "compute_s": null,
@@ -13869,7 +13884,7 @@
           "status": "VOID"
         }
       ],
-      "impl_sha": "781f7bd2669c52dd",
+      "impl_sha": "a0583f270f3a6065",
       "message": "run did not test the claim; not a refutation | failing implementation preserved at refs/jack/failimpl/PL.02/2026-09-13T01-11-50",
       "metrics": {
         "R_ci_hi": 0.971919,

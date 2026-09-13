@@ -13137,3 +13137,27 @@ a predicate read for a report's SCOPE). This one is a level up: an instrument
 that does not exist at all, in a place where the prose is so good that everyone
 downstream reads it as one. The tell is that the guard's evidence is always a
 story about somebody deciding well, never a receipt from a branch.
+
+**SECOND INSTANCE, FOUND WITHIN THE HOUR OF WRITING THE FIRST — and it is the
+softer form, which is why it is worth adding rather than assumed covered
+(builder, 2026-09-13, executing B1).** The audit's grep test above asks *"name
+the line that returns non-zero."* `scripts/launch_detached.sh` has a third
+answer, and it is the one to watch for: **it prints a warning and continues.**
+Its dirty-tree check emits *"! DIRTY TREE — N uncommitted code file(s) … will
+stamp `+dirty`: the code that runs exists in no commit … Commit first if you
+can"* — an accurate, well-written, entirely advisory paragraph — and then
+launches. `PL.02` attempt 2 (2026-09-13T01:11:50, 2,928 s CPU) took that path
+and its ledger row now reads **DIRTY STAMP permanently**: the code that produced
+it exists in no commit, and the only repair `run status` can offer is a full
+deterministic re-run for the stamp alone.
+
+**So the taxonomy has three rungs, not two:** a PROHIBITION (a sentence in a
+document), a WARNING (a branch that prints and proceeds), and a REFUSAL (a
+branch that returns non-zero). A warning is the more dangerous of the first two
+precisely because it *looks* like enforcement in the log — the operator sees a
+loud complaint from the tool itself and reads it as the system having handled
+it. **When applying the grep test, `echo` on the refusal path is a miss, not a
+hit.** Whether this particular warning SHOULD become a refusal is a real
+question with a real cost — a dirty tree is sometimes the honest state to run
+from, and over-refusing is its own disease — and it is not settled here. What
+is settled is that today it enforces nothing, and that the file said so.
