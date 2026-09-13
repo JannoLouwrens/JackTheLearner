@@ -3172,7 +3172,7 @@ the T1.02 precedent, and `UB.11` stays blocked behind a real UB.10 verdict.
 
 ## ROUTED 2026-09-01 (builder, LC.07 pilot harvest): `lc07-checkpoint-branch` — the seat's own scale-transfer arena cannot physically run inside a Kaggle kernel
 
-ROUTED: lc07-checkpoint-branch | 2026-09-01 | LC.07-pilot-branch-B | DISPOSITIONED 2026-09-06 (Review FULL — checkpointing is REFUSED because it repairs the wrong constraint; the arena is declared VENUE-UNAFFORDABLE with the arithmetic below, and the affordability question goes to the owner, not to the builder. Design below)
+ROUTED: lc07-checkpoint-branch | 2026-09-01 | LC.07-pilot-branch-B | ACTED 2026-09-13 in a3a090a (builder EXECUTED the residue the 09-06 disposition left owed — the CPU venue is PRICED at 535.5 core-hours, venue ratio 1.0, 33.5 days of the whole CPU budget, largest run 3.0x WORST_LEGAL_CHILD_S. There was no GPU term to convert: `survival.py` uses none. The arena stays VENUE-UNAFFORDABLE at both venues; that the disposition's "checkpointing repairs the wrong constraint" INVERTS at this venue is reported to the Review, not decided here. Earlier: DISPOSITIONED 2026-09-06, Review FULL — checkpointing REFUSED, arena declared VENUE-UNAFFORDABLE, ratio question routed as `D24`. Design below)
     DUE: 2026-09-06 | a checkpoint-vs-venue decision owed by the Review's
     Sunday FULL run; bundle judgment beside `w0-too-shallow` and D10's
     lineage — this arena is the one D10's firing commit registered so the
