@@ -3372,6 +3372,146 @@ def counts() -> tuple[int, int]:
     return sum(1 for r in rows if _claim_dead(r)), len(bad)
 
 
+def union_no_live_path(commitments: Sequence[Tuple[str, Sequence[str]]],
+                       seats: Sequence[Tuple[str, Sequence[str]]]
+                       ) -> List[dict]:
+    """Join CLAIM-DEAD commitments and unwinnable seats into ONE membership list.
+
+    Both arguments are `(name, spec_ids)` pairs: the commitment's claim specs
+    (all parked/foreclosed, which is what made it claim-dead) and the seat's
+    resolved arena members (all welded, which is what made it unwinnable).
+    Returns one dict per member — `name`, `seen_by` (the instruments that can
+    see it), `specs`, and `seat`/`commitment` cross-names where both do.
+
+    THE JOIN RULE, and it is the whole substance of this function. A commitment
+    and a seat are the SAME hole when their spec sets intersect: `smell` is
+    claim-dead because SM.02 is parked and SM.03 foreclosed, and the `Smell
+    (olfaction)` seat is unwinnable because its only arena member is SM.02 —
+    one hole, two instruments, and counting it twice would overstate how much
+    of `GOAL.md` is dark.
+
+    **Two commitments that share a falsifier are NOT merged, deliberately.**
+    `shelter/building` and `thermal (kills)` both die on exactly {SH.01,
+    SH.02}, and they are still two separate promises `GOAL.md` makes: a
+    successor spec written for one may cover only that one, and merging them
+    here would let a single registration silently appear to buy two. The same
+    holds seat-to-seat. De-duplication happens ACROSS instruments only, where
+    it is a reporting artefact, never WITHIN one, where it is a real count.
+
+    That asymmetry means the member count is an upper bound on distinct repair
+    sites and `repair_sites` below is the lower bound; `check()` prints both,
+    because printing one confident number here would be the kind of precision
+    this repo has no evidence for.
+    """
+    members: List[dict] = []
+    for name, specs in commitments:
+        members.append({"name": name, "seen_by": ["coverage"],
+                        "specs": sorted(set(specs)), "commitment": name,
+                        "seat": None})
+    for seat, specs in seats:
+        sset = set(specs)
+        hits = [m for m in members
+                if m["commitment"] and sset & set(m["specs"])]
+        if hits:
+            for m in hits:
+                m["seen_by"] = m["seen_by"] + ["champions"]
+                m["seat"] = seat
+                m["specs"] = sorted(set(m["specs"]) | sset)
+            continue
+        members.append({"name": seat, "seen_by": ["champions"],
+                        "specs": sorted(sset), "commitment": None,
+                        "seat": seat})
+    return members
+
+
+def no_live_path() -> dict:
+    """How much of `GOAL.md` has NO live path today — the union nobody printed.
+
+    WHY THIS EXISTS (91st audit, B3). `coverage` reports CLAIM-DEAD
+    commitments; `champions --check` reports `unwinnable` seats. Both numbers
+    were 4, they overlapped in exactly one member, and **the union — 7 — did
+    not exist anywhere in this repository.** Section 8 of every audit asks a
+    question whose answer required a human to read two tools and do the join by
+    hand, which means it was done from memory or not at all. A quantity that is
+    only ever computed in prose is a quantity nobody can ratchet.
+
+    This is MEASURE-ONLY and gates nothing. Both halves already fire their own
+    reds where they should (`claim_dead` here, `BASELINE_UNWINNABLE` there);
+    a third exit-code term over the same facts would be double-counting, and
+    B3 ordered a print, not a ratchet. It REFUSES rather than returning a zero
+    if either half cannot be read — a union that silently drops the champions
+    side would read as progress.
+    """
+    from .champions import audit as champ_audit, unwinnable_seats, resolve, DOC
+    from .protocol import Ledger
+    from .registry import BY_ID
+
+    rows = report()
+    reach = claim_reachability(rows)
+    dead = [(r["commitment"], [s for s, _st in reach[r["commitment"]]])
+            for r in rows if _claim_dead(r)]
+
+    led = Ledger()
+    _v, seats = champ_audit(DOC.read_text(), BY_ID,
+                            lambda sid: led.status(sid).value)
+    uw = set(unwinnable_seats(seats))
+    seat_pairs = [(s["seat"],
+                   sorted({i for r in s["arena_refs"]
+                           for i in resolve(r, BY_ID)}))
+                  for s in seats if s["seat"] in uw]
+
+    members = union_no_live_path(dead, seat_pairs)
+    both = [m for m in members if len(m["seen_by"]) > 1]
+    # Lower bound: members that share a spec set are one repair site.
+    sites = {tuple(m["specs"]) for m in members}
+    return {"members": members, "n_commitments": len(dead),
+            "n_seats": len(seat_pairs), "n_union": len(members),
+            "n_both": len(both), "repair_sites": len(sites)}
+
+
+def _no_live_path_fixture() -> List[str]:
+    """Known-answer battery for the join — every branch it can get wrong.
+
+    Written because the join IS the claim: the number is only interesting
+    because it is smaller than 4+4, and the thing that makes it smaller is one
+    set intersection that nothing else in this repo exercises.
+    """
+    fails = []
+    cases = [
+        ("disjoint", [("c1", ["A.1"])], [("s1", ["B.1"])], 2, 0),
+        # the real shape: the seat's only arena member is one of the
+        # commitment's dead claim specs -> ONE member, seen by both.
+        ("smell shape", [("smell", ["SM.02", "SM.03"])],
+         [("Smell (olfaction)", ["SM.02"])], 1, 1),
+        # the deliberate non-merge: two promises, one shared falsifier.
+        ("shared falsifier", [("shelter", ["SH.01", "SH.02"]),
+                              ("thermal", ["SH.01", "SH.02"])], [], 2, 0),
+        # a seat straddling two commitments is still ONE seat, not two members.
+        ("straddle", [("c1", ["A.1"]), ("c2", ["A.2"])],
+         [("s1", ["A.1", "A.2"])], 2, 2),
+        ("empty", [], [], 0, 0),
+        ("seats only", [], [("s1", ["A.1"]), ("s2", ["A.2"])], 2, 0),
+    ]
+    for label, cs, ss, n_union, n_both in cases:
+        got = union_no_live_path(cs, ss)
+        if len(got) != n_union:
+            fails.append(f"no-live-path/{label}: union must be {n_union} "
+                         f"member(s), got {len(got)} ({[m['name'] for m in got]})")
+        b = sum(1 for m in got if len(m["seen_by"]) > 1)
+        if b != n_both:
+            fails.append(f"no-live-path/{label}: {n_both} member(s) must be "
+                         f"seen by BOTH instruments, got {b}")
+    # The union must never be larger than the sum, nor smaller than either half.
+    got = union_no_live_path([("c1", ["A.1"])], [("s1", ["A.1"])])
+    if len(got) != 1 or got[0]["seen_by"] != ["coverage", "champions"]:
+        fails.append(f"no-live-path: a seat sharing a commitment's spec must "
+                     f"attach to it, not create a member — got {got!r}")
+    if got and got[0]["seat"] != "s1":
+        fails.append("no-live-path: a joined member must carry the seat name, "
+                     "or the print cannot say which instrument saw what")
+    return fails
+
+
 def check() -> int:
     """Print the audit; exit 2 if any commitment is UNCOVERED or CLAIM-DEAD,
     1 if only malformed declarations exist, 0 clean.
@@ -3439,6 +3579,35 @@ def check() -> int:
               "  repair is to REGISTER a successor spec — parking was the\n"
               "  right call on its evidence; leaving the commitment claim-dead\n"
               "  is the bug, and deleting the PARKED marker would be worse.")
+
+    # THE UNION NOBODY PRINTED (91st audit B3). Measure-only; see
+    # `no_live_path`'s docstring for why it is not a third exit-code term.
+    try:
+        nlp = no_live_path()
+    except Exception as exc:                      # a refusal, never a zero
+        print(f"\n  NO-LIVE-PATH (91st audit B3): the join refused "
+              f"({type(exc).__name__}: {exc}) — no union is evidence. A union "
+              f"that\n      silently drops one instrument's half would read as "
+              f"progress.")
+    else:
+        print(f"\n  NO-LIVE-PATH (91st audit B3, measure-only): "
+              f"{nlp['n_union']} distinct commitment(s)/seat(s) with no live "
+              f"path —\n      {nlp['n_commitments']} CLAIM-DEAD here + "
+              f"{nlp['n_seats']} unwinnable in `champions`, "
+              f"{nlp['n_both']} seen by both:")
+        for m in nlp["members"]:
+            both = " + ".join(m["seen_by"])
+            named = (f"{m['commitment']} = seat {m['seat']!r}"
+                     if len(m["seen_by"]) > 1 else m["name"])
+            print(f"      {named}  [{both}]  dead on "
+                  f"{', '.join(m['specs']) or '(no specs)'}")
+        print(f"  {nlp['n_union']} is an UPPER bound on distinct repairs and "
+              f"{nlp['repair_sites']} is the lower one: commitments sharing a\n"
+              "  falsifier are counted separately on purpose (two promises, and "
+              "one successor may\n  buy only one), while a commitment and a "
+              "seat dead on the same spec are ONE hole\n  reported twice. The "
+              "repair for every member is the same and it is a REGISTRATION:\n"
+              "  a successor spec, never an unpark, never a deletion.")
     if bad:
         print(f"  {len(bad)} MALFORMED marker(s) — a typo'd commitment name, "
               f"a missing kind, or a dateless PARKED; none buys anything:")
@@ -3491,7 +3660,8 @@ def check() -> int:
           + _pilot_harvested_fixture() + _void_foreclosed_fixture()
           + _claim_dead_fixture() + _welded_fixture() + _exit_code_fixture()
           + _unreachable_fixture() + _park_release_fixture()
-          + _fail_unowned_fixture() + u["refused"] + fu["refused"])
+          + _fail_unowned_fixture() + _no_live_path_fixture()
+          + u["refused"] + fu["refused"])
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
