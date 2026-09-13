@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 107 / 248 demonstrated
+## 108 / 249 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1157,3 +1157,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Among trust-update rules reading the SAME attributed diary on LG.02's certified rig — windowed Laplace (what this project shipped, never raced), full-history Laplace, exponential-decay, and last-claim-only — at least two clear the 3-sigma learning gate over the attribution-stripped null on last-quarter follow-rate divergence, one wins by the 1.5-sigma margin (or ties and resolves to the arm carrying fewer tunable constants), AND the winner is ELIGIBLE to hold the seat: first-encounter trust exactly PRIOR for both advisors on every seed, stripped-attribution divergence within NULL_DIV_MAX, and trust that MIGRATES after the role swap (MIN_MIGRATE) having been right before it (MIN_PRESWAP).
       - _dies if:_ The bakeoff reaches no decision (VOID), or reaches one whose winner is INELIGIBLE — a rule that scores highest by starting the two advisors apart, by leaking speaker identity outside the attributed diary, or by being unable to change its mind when the world changes who is honest. Under either the seat stays VACANT and the finding routes; a high score is not a title.
       - _then delete:_ The unexamined windowed-Laplace default's claim to the seat. If it loses, the seat goes to what beat it; if nothing is eligible, the seat is not filled by the incumbent's tenure.
+- [x] **LG.13** The chooser earns the Language-routing seat, or the seat stays vacant
+      - _asserts:_ Among DECODE RULES reading the SAME frozen candidate scores on LG.10's certified rig — plain softmax over the whole pool (what this project shipped, never raced), top-K softmax, top-K uniform, and meaning-mass (aggregate the score per MEANING, then sample wording uniformly within the chosen meaning) — at least two clear the 3-sigma learning gate over the score-blind null on mean meaning-match across both frozen mouths, ONE wins outright by the 1.5-sigma margin, AND that winner is ELIGIBLE to hold the seat: wording variety at or above LG.10's VARIETY_MIN on every seed, the state-free null prompt still not tracking state under it (NULL_MATCH_MAX, both models), and no fabricated line ever drawn.
+      - _dies if:_ The bakeoff reaches no decision, or reaches one whose winner is INELIGIBLE — a rule that buys meaning-match by killing the sampler's freedom (variety below the floor, so meaning-invariance across draws is vacuous), by sharpening the state-free null until it tracks state too, or by drawing a fabrication. A TIE also falsifies: 'the choice does not matter yet' is not a title, and this seat was already filled once by accident. Under every branch the seat stays VACANT and the finding routes.
+      - _then delete:_ The unexamined plain-softmax default's claim to the seat. If it loses, the seat goes to what beat it; if nothing wins outright and eligibly, the seat is not filled by the incumbent's tenure.
