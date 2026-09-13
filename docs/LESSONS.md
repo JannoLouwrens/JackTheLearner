@@ -13707,3 +13707,85 @@ implementation edit to `T2.03`, the only PASSing dependent, plus its GPU re-buy.
   needing a new one. Where the evidence was thinner I said so on the spec rather
   than smoothing it over — `T1.07`'s bar stands on two recorded values, `T1.08`'s
   on one, because attempt 1's metrics were never carried into `history`.
+
+---
+
+## REACHABILITY IS HALF THE PRICE — a strengthening is a GRAPH EDIT, and the
+## other half is what falls when the bar fires
+## (builder, 2026-09-13, harvesting `T1.08` attempt 3 four hours after arming
+## the conjunct that failed it; direct sequel to the lesson immediately above,
+## which is about the half that WAS computed)
+
+The lesson above is right and was followed. Before `T1.08` re-ran, its
+reachability statement was written with zero seeds — required `heldout_cv_pct
+<= 7.0`, recorded range 5.717, headroom 1.224x, and the caveat that the bar
+stood on **n=1** said out loud rather than left to be discovered. That work was
+correct. The bar fired anyway, at **40.006**, which is exactly what a
+pre-registered bar standing on one sample is entitled to do.
+
+**The question nobody asked is what the firing would COST, and it was equally
+free.** `T1.08` has three dependents that were reachable that morning:
+`D1.0`, `T2.01`, `T2.02`. When the row landed:
+
+- `run blocked` re-ranked `T1.08` **FIRST in the project, frees 41 / blocks
+  45**, displacing `T2.01` (frees 35 / blocks 38) — which is now blocked
+  *behind it*. The largest single unblock in the project moved, and it moved
+  because of a bar set from one sample.
+- `UNREACHABLE_BASELINE` went **94 -> 97**, the second floor this desk raised
+  for its own act in twenty-four hours.
+- **The `D1.0` attempt-3 GPU dispatch that the morning's priority block had
+  ordered for that same day became illegal** — `run_spec` refuses an
+  unsatisfied dependency.
+
+None of that needed the run. All of it is a walk over `depends_on` against the
+ledger: **ten lines, zero seeds, and available before the kernel was built.**
+
+**THE GENERAL SHAPE: A GATE EDIT IS A GRAPH EDIT.** We price a strengthening as
+if its worst case were a certificate re-buy. Its actual worst case is a slice of
+the reachable set, and the difference is not small — `T1.07` and `T1.08` were
+strengthened **in the same commit**, by the same desk, under the same review
+item, and priced afterwards they read:
+
+    run blast-radius T1.07   ->   BLAST RADIUS: none
+    run blast-radius T1.08   ->   D1.0, T2.01, T2.02
+
+One was free and one cost the project's biggest unblock, and nothing in that
+commit — or in the author — could tell them apart.
+
+**THE REPO ALREADY KNEW THIS AND COULD NOT ACT ON IT, which is the part worth
+generalising.** `protocol.BLAST_RADIUS_DECL` has refused a `VOID-FORECLOSED:`
+declaration since the 54th audit unless the docstring carries *"the transitive
+set of specs the declaration renders unreachable, by id and title"*. That
+contract calls the set **"derivable from `depends_on`"** and then validates
+**PRESENCE, NOT TRUTH** — an honest compromise, because for thirteen days
+nothing derived it. So the rule existed, applied to exactly one of the several
+edits that can strand a spec, and was unenforceable even there.
+
+> **A contract that names a quantity as derivable and then accepts it on
+> assertion is telling you which tool to write.** The gap between *"presence,
+> not truth"* and *"checked"* is usually one function, and it is usually
+> already specified in the words of the contract that gave up on it.
+
+`run blast-radius <SPEC>` (`8f3b52a`) derives it. It answers both directions —
+what falls if a PASS goes red, what rejoins if a red goes green — so the same
+command prices a strengthening before it is armed and a repair before it is
+bought. It gates nothing and exits 0 even while warning, because every number
+in it is a counterfactual and an advisory that exits non-zero on a hypothesis
+gets ignored inside a week.
+
+**TWO SMALLER RULES, both about not trusting yourself, both earned the hard way
+in the same hour.**
+
+- **The known-answer fixture caught its own author, and that is the only
+  evidence it does anything.** I asserted, as a conjunct, that the subject of a
+  counterfactual stays inside its own unreachable COUNT while leaving its own
+  NAMED set — and picked `X` to demonstrate it. `X` is a root with no
+  dependencies, so it is never in the stuck set at all, and the fixture refused
+  the tool. An instrument whose fixture has never rejected anything, including
+  its author's first draft, has not been shown to be alive.
+- **A cosmetic fix can break an arithmetic agreement.** The first version
+  excluded the subject from the radius by dropping it from the counts as well.
+  That reads better and makes `blast-radius` disagree with `run blocked` and
+  `coverage.unreachable_ratchet` about the same number — the `_split_foreclosed`
+  drift, re-introduced by tidying. **Exclude from what you NAME, never from what
+  you COUNT.**

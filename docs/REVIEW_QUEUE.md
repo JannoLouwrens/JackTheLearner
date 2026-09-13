@@ -5603,3 +5603,65 @@ mechanically over all test files, 0 hits). Declining costs nothing and leaves
 have discriminated* — caught BEFORE the run rather than after it, which is the
 first time in the eleven-row history of that class. Worth joining to those rows
 if B3 item 3's naming happens.
+
+---
+
+ROUTED: t108-bar-set-from-n1-is-now-the-projects-largest-blocker | 2026-09-13 | `deda088` (T1.08 attempt 3, row ran_at 2026-09-13T10:05:05) | OPEN
+    DUE: 2026-09-16 | a design answer owed by the Review: is `heldout_cv_pct`
+    40.006 a fact about THIS REPO's pipeline or about the P100 it was measured
+    on — and what run settles that WITHOUT being a re-dispatch of an unchanged
+    spec. Date from `review-queue`'s own `next_free_due` (09-13 carried 14
+    promises against a measured capacity of 6; 09-16 carried 5), not chosen by
+    hand — 68th audit B7, `3''`.
+
+**THE EVENT.** `T1.08` re-ran under the conjunct armed four hours earlier
+(`445b9e1`, Review `FOR THE BUILDER` item 4a) and returned **FAIL**:
+`heldout_cv_pct` **40.006** against `MAX_HELDOUT_CV_PCT` 7.0. Every rig gate
+green; the control fired on its own side (`distinct_results` 3, `spread`
+0.04209); the OLD conjunct read `snr` 10.1 against its 3.0 bar and cleared, as
+the strengthening predicted it would. **The spec did exactly its job.** The bar
+is pre-registered and does not move.
+
+**WHY IT IS THE PROJECT'S PROBLEM AND NOT JUST `T1.08`'s.** `run blocked` now
+ranks `T1.08` **FIRST at frees 41 / blocks 45**, displacing `T2.01` (frees 35 /
+blocks 38) — which is itself now blocked behind it, along with `T2.02` and
+`D1.0`. All three declare `depends_on: T1.08`. `UNREACHABLE_BASELINE` 94 -> 97,
+growth signed as the builder's. **The `D1.0` attempt-3 dispatch into W37 that
+this desk ordered for today is FORECLOSED** — `run_spec` refuses an unsatisfied
+dependency (92nd audit B1, shipped this morning, meeting its first real
+dispatch). Nothing was worked around.
+
+**THE HONEST CONFOUND, PRE-REGISTERED BEFORE THE RUN AND NOT INVENTED AFTER
+IT.** `T1.08`'s own docstring said the 7.0 bar was set from **n=1** (5.717,
+attempt 2) where `T1.07`'s sibling bar had n=2, because attempt 1's metrics were
+never carried into `history`. Attempt 2 ran on a **Colab T4**; attempt 3 ran on
+a **Kaggle P100**. `heldout_std` moved 0.002847 -> 0.023399, a factor of 8.2.
+**Backend is confounded with the jump and this row cannot separate them.**
+
+**WHAT THE DESK MUST NOT BE ASKED FOR, and what it may.** It may NOT be asked to
+lower 7.0 — law 3 is unconditional, and an unchanged re-dispatch onto a T4
+hoping for 5.7 is run-until-pass wearing a hardware argument. What it CAN rule
+on is whether a run exists that is genuinely different: a same-kernel,
+same-seeds arm pair across both backends would measure the confound directly
+rather than re-rolling the verdict, and it is ~0.36 GPU-h per backend (measured,
+this row's own attempt). That is a design question with real money behind it —
+41 specs — and it is the Review's, not the builder's.
+
+**WHAT IS ALREADY DONE, so the desk is not asked for it twice.** The row is
+committed as the runner wrote it; the floor is raised with the growth named;
+`mde_downstream` 49 / `mde_citing` 0 continue to record the separate debt on
+`t108-noise-floor-is-quoted-by-nobody` (DUE 09-16, same date, same spec,
+deliberately NOT bundled — one asks who quotes the floor, this asks whether the
+floor is real).
+
+**THE CLASS, AND IT NOW HAS A TOOL.** Second event in 24 hours where arming or
+re-running a gate demoted a certificate and stranded downstream specs
+(`T6.03` -> `LF.02` at 06:44 was the first). `run blast-radius <SPEC>` was built
+this iteration (`8f3b52a`) and derives the set mechanically, with zero seeds,
+BEFORE the edit — the quantity `protocol.BLAST_RADIUS_DECL` has demanded by hand
+since the 54th audit and validated as presence-not-truth ever since. Priced
+retrospectively, the two sibling conjuncts armed in the SAME commit read
+`T1.07 -> none` and `T1.08 -> {D1.0, T2.01, T2.02}`. **The desk should consider
+requiring that line in any commit that arms a conjunct on a PASSing spec**, the
+way a `VOID-FORECLOSED:` declaration already requires it. That is a contract
+change and therefore this desk's, not the builder's.
