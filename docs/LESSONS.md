@@ -14599,3 +14599,60 @@ annotate-but-do-not-reorder version fails on ordering and nothing else, and a
 version that reads `_liveness_state` but not `holds()` fails on exactly the
 `HR.1`/`D19` row. A pair of conjuncts where either alone would pass is one
 conjunct with extra words.
+
+---
+
+## When you sweep a class, the READER transfers and the REPAIR does not — and
+## a lesson that names a class is not discharged by fixing one member
+## (builder, 2026-09-13 22:xx, four hours after writing the lesson above)
+
+**THE INSTANCE.** At 21:xx the lesson directly above was written: *"the command
+that ADVERTISES work must read the same holds as the command that AUDITS it."*
+It names a **class** — *"`next`, anything that ranks, anything a prompt tells
+you to run first"* — and it shipped with exactly one member repaired. At 22:1x
+the second member was measured and it was broken in the same way and by the
+same hand: `run blocked` ranked
+
+    HR.1 = NOT_RUN  frees 3  (blocks 3)
+
+**fifth in the project**, in its live repairable section, with nothing beside
+it — while `coverage`, of the same spec, printed *"`HR.1 <- D19 (decide_by
+2026-09-14)` … the run IS the fetch the default forbids."* `cmd_blocked` had
+read `coverage.root_dead` since the 59th audit and had never asked
+`decisions.holds()` — which is, verbatim, the third conjunct
+`_check_next_triage` was given four hours earlier to reject.
+
+**THE FIRST HALF OF THE RULE.** A lesson whose subject is a class of
+instruments is a **finding about all of them**, and the instance in front of
+you is the one that happened to be under your hand. Writing it down does not
+sweep it; the sweep is a separate act with a separate cost, and it is cheap
+only in the hour the lesson is fresh. Name every member in the commit that
+fixes the first — which one is repaired, which is already clean, and which is
+broken-but-unbuilt-for-lack-of-a-scar — or the lesson will read as discharged
+because the file says the words.
+
+**THE SECOND HALF, AND IT IS THE ONE THAT IS NOT OBVIOUS.** The **reader**
+transfers unchanged — both commands must ask `holds()`. The **repair does
+not**, and copying it across would have damaged the second instrument:
+
+| | `next` | `blocked` |
+|---|---|---|
+| question | *what should I do now* | *what one fix frees the most* |
+| truncates? | yes, 12 of 44 | no, every root printed |
+| therefore | re-lane: annotating alone left corpses above the cut | annotate in place: re-ranking would corrupt the graph quantity the command exists to report |
+
+And the tempting over-correction is worse than the original defect: folding a
+decision-held root into the PARKED / VOID-FORECLOSED section would print
+*"redesign would recover"* beside a door that **opens on its own date** —
+`HR.1`'s opens tomorrow. A dated hold is not a closed door. The fixture holds
+both halves apart, measured rather than asserted: the liveness-only reader
+fails exactly the hold conjunct, the hold-as-dead-door reader fails exactly the
+lane conjunct, 4/5 each and never the same one.
+
+**THE TELL.** When a lesson generalises, it produces two artifacts and they
+have different scopes: a **predicate** (ask this reader) that applies to every
+member of the class, and a **presentation** (re-order, annotate, refuse) that
+is a property of the one instrument's own contract — what it answers, whether
+it truncates, what its number means. Transfer the first by default. Re-derive
+the second from scratch at every member, and if it comes out the same, say so
+on purpose rather than by inheritance.

@@ -16176,3 +16176,97 @@ owed in `declared_pids`, no process left running. One spec run (`T0.36`,
   4. **Named so an empty board is not filled by inventing something:** the
      `Person model` seat (`LG.02`, `SO.08`, `ME.9`, all three PASS) is
      contestable. `Language routing` was raced and seated today (`LG.13`).
+
+---
+
+**2026-09-13 ~22:0x–22:4x UTC — builder.** Ran on **opus** (`week:Fable` 100%,
+walked to opus as the page predicts; **the gate is `week:all models` and it read
+86%** at 22:08, resets 09-14 04:59 — pacing line at 96% elapsed is 87.4, so I am
+inside it by 1.4 points, not comfortably). No `PACING:` streak.
+
+**THE BOARD, VERIFIED IN ONE COMMAND INSTEAD OF THREE.** `run next`'s TRIAGE
+line (shipped 21:xx) reads **0 fresh · 28 settled · 16 held** — so I did not
+re-derive emptiness by hand from `coverage` + `blocked` + a docstring, which is
+what three iterations spent today doing. That is the tool paying for itself
+within an hour. Every dated item in front of me is discharged: `PROGRESS.md
+FOR THE BUILDER` 4 and 5 landed earlier today, `OVERSIGHT.md`'s items 1/3/6 are
+refuted-or-forbidden (`T2.10`'s docstring prices it at 0.0667 against an
+unmoving 0.10 bar; `D1.0` is foreclosed behind `T1.08`'s FAIL; `T6.03` is a
+prohibition), and **`D25` is still not fireable** — `decide_by 2026-09-13` gives
+the owner the day and `decisions` prints no `OVERDUE` at 22:0x. It fires at
+00:00 and it remains the first thing the next slot owes.
+
+**THE UNIT: `run blocked` reads `decisions.holds()` (`a34aa2d`).** Looking for
+work with the tool I fixed at 21:xx, I measured the tool beside it.
+`cmd_blocked` has read `coverage.root_dead` since the 59th audit — PARKED,
+PILOT-BLOCKED, VOID-FORECLOSED — and has **never** asked `holds()`. So it
+ranked `HR.1 = NOT_RUN frees 3 (blocks 3)` **fifth in the project**, in the live
+repairable section, with nothing beside it, while `coverage` said of the same
+spec *"`HR.1 <- D19 (decide_by 2026-09-14)` … the run IS the fetch the default
+forbids."* `NOT_RUN` + `frees 3` is what a fresh unblock looks like — it was the
+most attractive row on the board — and the orientation sentence beside this
+command reads *"run `run blocked` for a genuine candidate."* This is, verbatim,
+the shape `_check_next_triage`'s third conjunct was written four hours earlier
+to reject: *a version that reads `_liveness_state` but not `holds()`.*
+
+**THE REPAIR IS DELIBERATELY NOT `next`'s REPAIR.** `next` truncates at 12 and
+answers *what should I do now*, so there the re-lane WAS the fix. `blocked`
+prints every root and answers *what one fix would free the most* — a graph
+quantity a dated decision does not change. So the hold **annotates and never
+demotes**: rank kept, frees kept, and it does **not** join the PARKED /
+VOID-FORECLOSED section, which would say *"redesign would recover"* about a door
+that opens tomorrow. Reporting-only in both directions.
+
+**RED-FIRST, MEASURED.** `_check_blocked_holds` runs before any ranking prints.
+Against the two wrong versions: SHIPPED **5/5**; liveness-only **4/5, fails
+H-hold**; hold-as-a-dead-door **4/5, fails H-lane**. Different conjunct each
+time, so neither is the other wearing extra words. `held_map` injectable — known
+answer, no markers on disk.
+
+**THE SWEEP, so a class-lesson is not discharged by one member.** Read-only
+commands that ADVERTISE dispatchable work: `next` (21:xx) and `blocked` (this
+slot) — both now read both readers. `coverage` is the auditor and already did.
+**`stale` advertises RE-BUYS and does not read `holds()`: zero live instances
+today** (no held spec carries a certificate), so it is NAMED here and NOT built
+— no organ without a scar. `senses`/`ratchets`/`verify`/`blast-radius`/`status`
+report, they do not rank work. Lesson appended: the READER transfers across a
+class, the REPAIR does not.
+
+**STALENESS PAID.** `experiments/run.py` is in `T0.36`'s `IMPL_DEPS`. Committed
+the code first, then re-ran: **PASS, 32.4 s, 7/7 properties, `overstated_roots`
+0**, no `+dirty` (`2b8d78a`). CPU day meter billed in the same commit
+(4751.59 → 4784.47 s).
+
+**RATCHETS: NOTHING MOVED.** `unreachable` 97 (at floor), `champions_unwinnable`
+4, `gpu_unattributed_jobs` 21, `fail_unowned` 0, `review_queue_violations` 0,
+`review_queue_net_arrivals` 11. `status`/`next`/`blocked`/`review-queue` rc=0,
+`decisions --check` rc=0, `champions --check` rc=0, `coverage` rc=2 on its two
+owned counts. **I routed no queue row:** the defect was in my own instrument,
+made by me today, and fixed in the same slot — a commit, not a promise.
+
+**HOUSEKEEPING.** 13 claude processes on the box — named paths only, no
+`git add -A`; the tree held nothing but `experiments/run.py`, mine. No GPU
+dispatch (`W37` has ~29 free hours and `run next`/`blocked` both now say out
+loud that it has no legal buyer — do not manufacture one). No detached launch,
+nothing owed in `declared_pids`, no process left running. One spec run (`T0.36`,
+32.4 s billed).
+
+**NEXT ITERATION — derived from the tools at slot end, not copied from a page.**
+
+  1. **Fire `D25`'s default from 00:00** — option (iii) FIX THE SEAL, BUY
+     NOTHING, required wording *"the owner did not rule by 2026-09-13, so the
+     pre-registered default fired."* Pre-commit check `--firing-check WORKTREE`,
+     not `HEAD`. **`D19` is next and it is due 09-14 — and note what that
+     releases:** `HR.1` is the only decision-HELD root in `run blocked`, so
+     when `D19` rules or its NO-FETCH default fires, `blocked`'s fifth-ranked
+     row either becomes a legitimate `frees 3` unit or becomes honestly dead.
+     Read the annotation, not this line.
+  2. **The 13 rows dated 09-13 went OVERDUE at midnight** and `review-queue`
+     goes red for the first time since 09-03. Seven carry their reason already
+     (94th audit B2). A promise breaking, not an instrument fault.
+  3. **`run blocked` now annotates decision-holds in place.** A `HELD by Dxx`
+     beside a root does NOT mean the rank is wrong — the frees-count is real.
+     It means the dispatch walks around an open decision.
+  4. **Named so an empty board is not filled by inventing something:** the
+     `Person model` seat (`LG.02`, `SO.08`, `ME.9`, all three PASS) is
+     contestable; `Language routing` was raced and seated today (`LG.13`).
