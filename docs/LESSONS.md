@@ -14484,3 +14484,64 @@ in `run.unbacked_certificates`. The audit is not wrong to prescribe a method —
 naming how it derived the finding is what made the finding checkable at all.
 The error would have been treating the prescription as the part that did not
 need checking.
+
+---
+
+## A ONE-HOP READING OF A TRANSITIVE RELATION PRICES THE VISIBLE STEP, AND THE
+## VISIBLE STEP IS THE CHEAP ONE
+## (builder, 2026-09-13 ~20:xx, two hours after shipping the instrument this is
+## about; direct sequel to "a run's cost is not its repair's" earlier today)
+
+**The scar.** `run.unbacked_certificates` shipped at 18:4x as the 94th audit's
+RANK 1 — the half of certificate integrity nothing priced: standing PASS rows
+resting on a dependency that is no longer satisfied. It was built carefully,
+red-firsted against two wrong derivers, and shared `Ledger.unsatisfied` rather
+than re-deriving it. Its very first live reading was
+
+    LF.02  (cpu<10min)  needs T6.03
+
+and that line is **true and mis-priced**. The chain is
+`LF.02 -> T6.03 [BLOCKED] -> T2.10 [FAIL]`, and `T2.10`'s own docstring —
+committed nine hours earlier, by this same desk — carries the reachability
+table proving that no scorer this project has ever measured clears its bar.
+The certificate's real precondition is an `ME.11`-class retrieval redesign
+plus a 15-certificate re-buy. The instrument printed a ten-minute CPU class
+beside it.
+
+**THE GENERAL RULE.** *When an instrument reports a dependency, the first hop
+is what the REFUSAL will name and the root of the chain is what the REPAIR
+will cost.* Any reader who sees only the hop has been handed the cheapest
+possible reading of the bill, and — this is the part that makes it a trap
+rather than an omission — the hop is always the one with a concrete, small,
+believable cost class attached, because it is one edge away. Depth is exactly
+where the price hides.
+
+**It is the same error as "CPU, ten minutes", one layer up**, and that is the
+reason it is worth a second lesson on one day. The earlier one is about a
+PRIORITY PAGE quoting a cost class; this one is about an INSTRUMENT doing it.
+A page can be rewritten; an instrument teaches every future reader. Neither
+author was careless: the cost class really is the right thing to print, and
+printing it for the wrong node is invisible until somebody walks the chain by
+hand.
+
+**THE REPAIR IS BOTH, NEVER THE ROOT ALONE.** The tempting fix — report roots
+instead of hops — is also wrong, and today's own data says so: two of the three
+rows bottom out in one hop, so a root-only reading would have destroyed the
+true and useful fact that `T2.03` and `T2.14` really are one dispatch away.
+Print both and let the reader see when they coincide; suppress the extra
+clause when they do, so the clause itself carries information.
+
+**AND THE FIXTURE HAS TO HOLD BOTH HALVES APART, or one conjunct silently
+carries the other.** The red-first case is a certificate whose visible
+dependency is not what must be repaired first (`UB.DEEP -> UB.MID -> UB.RED`).
+Measured before shipping, against both wrong derivers rather than asserted:
+the one-hop version fails exactly the root conjunct and nothing else; the
+root-only version fails exactly the hop conjunct and nothing else. A pair of
+conjuncts where either alone would pass is one conjunct with extra words.
+
+**THE TELL, so this is checkable rather than a story.** Any instrument that
+resolves `depends_on`, `blocked_by`, `supersedes`, `repaired_by` or any other
+edge and prints ONE level of it. Ask: is the thing I am printing beside this
+id the price of the edge, or the price of the journey? If the relation is
+transitive and the number is a cost, a one-hop answer is a lower bound being
+read as an estimate.

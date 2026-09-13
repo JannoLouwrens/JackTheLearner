@@ -15961,3 +15961,127 @@ to declare in `declared_pids`, no process left running.
      re-derive it:** `T2.10` foreclosed, `T6.03` BLOCKED behind it, `D1.0`
      ILLEGAL behind `T1.08`'s FAIL whatever any page says about W37, and
      W37's ~29 free GPU-hours have no legal buyer. Do not manufacture one.
+
+---
+
+## 2026-09-13 ~20:0x–21:xx UTC — the board was empty, so I audited the
+## instrument built four hours earlier, and its first live reading was
+## mis-priced (builder, **OPUS** — `week:Fable` 100%, the chain walked me over)
+
+**METERS, read at the top of the slot and not taken from any page.**
+`week:all models` **85%** (the gate, 90%), `week:Fable` 100%, session 6%.
+`--week-elapsed` **95**, so `pace_gate`'s line sits at **87** and 85 < 87 — not
+skipped, and no `PACING:` streak to report. Both meters reset 09-14 05:00 UTC.
+
+**THE BOARD, VERIFIED FROM THE TOOLS RATHER THAN THE PAGES, AND IT IS EMPTY.**
+Every dated item in front of me is discharged or illegal:
+
+- **94th audit B1–B4: all four discharged** before I woke (`f38ac1a`,
+  `c7662a6`, `7e04382`, `1ca4fac`, `98a88b9`).
+- **`PROGRESS.md` FOR THE BUILDER items 4 and 5** — `T1.08`'s `heldout_cv_pct`
+  gate and `T1.07`'s `spread_ratio <= 6.0` — are **already in the code and on
+  the ledger** (`445b9e1`, `e7a79e0`, `deda088`). The metrics prove it:
+  `T1.07` PASS with `spread_ratio` 4.931 gated, `T1.08` FAIL at
+  `heldout_cv_pct` 40.006 against the 7.0 bar.
+- **Item 1, `T2.10`, is NOT a ten-minute unit and I did not run it.** Its own
+  docstring (`eb74e9e`, this morning) carries the reachability table: required
+  `para_recall_at_1 >= 0.10`, and the seven encoder configurations the `ME.11`
+  family measured **on the same fixture hash** read
+  `0.0000, 0.0000, 0.0150, 0.0310, 0.0437, 0.0667, 0.0667`. No scorer this
+  project has ever measured clears the bar. Re-running buys the FAIL already on
+  the row.
+- **Item 2, `D25`, is not fireable today.** `python -m experiments.decisions`
+  prints `due 2026-09-13` with **no `OVERDUE` marker**; the tool's rule is
+  `decide_by + 1`, so it fires at 00:00. `025f0d1` corrected two pages that
+  said otherwise. Left for the 00:0x slot, which owns it.
+- **Item 3, `D1.0` attempt 3, is illegal** — it depends on `T1.08`, which is
+  FAIL, and `run_spec` refuses an unsatisfied dependency (`f429606`).
+- `run next` offers 44 runnable, `coverage` rc=2 on the same two owned-and-
+  routed counts, five cost classes EMPTY, `cpu<10min` FILL-HELD by `D19`.
+
+**SO THE UNIT WAS THE INSTRUMENT, AND IT HAD A DEFECT VISIBLE IN ITS OWN FIRST
+OUTPUT.** `run.unbacked_certificates` shipped at 18:4x printing
+
+    LF.02  (cpu<10min)  needs T6.03
+
+A one-hop reading. The chain is `LF.02 -> T6.03 [BLOCKED] -> T2.10 [FAIL]`,
+and `T2.10` is the spec whose reachability statement the same desk wrote nine
+hours earlier. **The instrument built to price a certificate's re-buy priced
+`LF.02` at one ten-minute CPU run when its root is a retrieval redesign plus a
+15-certificate re-buy** — the day's own headline lesson (*a cost class is a
+statement about the RUN, a priority is a statement about the REPAIR*)
+reproduced inside the instrument built to prevent it.
+
+**THE REPAIR IS BOTH HOP AND ROOT, and the data is why it is not root-only.**
+Two of today's three rows bottom out in one hop, so a root-only reading would
+have destroyed the true and useful fact that `T2.03` and `T2.14` really are one
+dispatch away. The `-> root` clause prints only where the roots differ from the
+hops, so the clause itself carries information. Live reading now:
+
+    LF.02  (cpu<10min)  needs T6.03  ->  root T2.10 [FAIL] (cpu<10min)
+    T2.03  (gpu<20min)  needs T1.08
+    T2.14  (gpu<2h)     needs T1.08
+
+**RED-FIRST, AND I MEASURED THE TWO WRONG DERIVERS RATHER THAN ASSERTING
+THEM.** `_check_unbacked_detector` gains `UB.DEEP` (PASS on `UB.MID` [FAIL] on
+`UB.RED` [FAIL]) — the fixture shape of the live chain — plus a negative that
+red `UB.MID` stays `unreachable`'s to count, and a conjunct that a ONE-hop
+chain does not acquire a deeper root. Monkeypatched both wrong versions through
+the real fixture and read its conjunct tuple:
+
+    one-hop deriver    fails conjunct 3 (UB.DEEP's ROOT), nothing else
+    root-only deriver  fails conjunct 2 (UB.DEEP's HOP),  nothing else
+
+Neither half of the pair is carried by the other — which is the thing I would
+have got wrong by writing one conjunct with extra words. `_check_blast_radius`
+gained the same shape and pinned two facts I had assumed and had to correct
+against the measurement: the root carries **its own** cost class (`K FAIL
+cpu<1min`, not the certificate's `gpu<2h`) and the **live** status of the spec
+that is down (`X NOT_RUN`, not the counterfactual's PASS).
+
+**STILL REPORTING-ONLY AND UNFLOORED**, exactly as B1 ordered and as the
+open disagreement with `pass-certificates-are-not-re-evaluated-…` (DUE 09-16,
+the Review's) leaves it. Nothing is asserted, no threshold moved, no spec
+re-ran to look better. `blast-radius T2.10` correctly still reads
+`UNBACKED: none` — repairing `T2.10` alone does not re-back `LF.02`, because
+`T6.03` must run too.
+
+**STALENESS PAID.** `T0.36` is the only spec declaring `experiments/run.py` in
+`IMPL_DEPS`. Committed first, then re-ran: **PASS, 32.51 s, 7/7 properties,
+`overstated_roots` 0, clean stamp** (`245d849`, CPU meter billed in the same
+commit).
+
+**RATCHETS: NOTHING MOVED.** `unreachable` 97, `champions_unwinnable` 4,
+`gpu_unattributed_jobs` 21, `fail_unowned` 0, `review_queue_violations` 0,
+`review_queue_net_arrivals` 11 — every one unchanged and AT its declared floor.
+`status` rc=0, `decisions --check` rc=0, `champions --check` rc=0,
+`review-queue` rc=0, `coverage` rc=2 on the two owned counts. I routed no new
+queue row: the defect was mine, made today, and fixed today, which is a commit
+and not a promise.
+
+**HOUSEKEEPING.** 12 claude processes on the box — named paths only, no
+`git add -A`; the tree held nothing but `experiments/run.py`, which is mine.
+No GPU dispatch (`W37` has 29.18 free hours and no legal buyer — do not
+manufacture one). No detached launch, nothing to declare in `declared_pids`,
+no process left running. One spec run (`T0.36`, 32.51 s billed).
+
+**NEXT ITERATION — derived from the tools at slot end, not copied from a page.**
+
+  1. **`D25`'s armed default is fireable from 00:00** and it is the first
+     thing due. Option **(iii) FIX THE SEAL, BUY NOTHING** — teach
+     `lib_seal.sh` to read the dying run's own committed acts (`docs/
+     PROGRESS.md` committed AND the `PROGRESS_LOG` row appended -> say so; a
+     run that committed neither keeps today's wording BYTE-FOR-BYTE).
+     Required journal wording: *"the owner did not rule by 2026-09-13, so the
+     pre-registered default fired."* Pre-commit check
+     `--firing-check WORKTREE`, not `HEAD`. `D19` is next, due 09-14.
+  2. **The 13 rows dated 09-13 go OVERDUE at midnight** and `review-queue`
+     goes red for the first time since 09-03. Seven carry their reason
+     already (the 18:xx slot's B2). That is a promise breaking, not an
+     instrument; it needs no investigation.
+  3. **Do NOT take `T2.10` off a page that calls it "CPU, ten minutes"** —
+     read its docstring's reachability table first. Same for `T6.03`, which
+     will only return BLOCKED until `T2.10` is green.
+  4. **`run status`'s `UNBACKED CERTIFICATES` block now prints roots.** Read
+     the `-> root` clause: where it is absent, hop and root are the same spec
+     and the cost class beside the row is the whole bill.
