@@ -253,6 +253,13 @@ ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for t
         sitting, which is now its own row with its own DUE 2026-09-13. If W1
         is built this follows it there and the bill goes to zero, exactly as
         the original line said.
+    NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
+        promise, and NOT a re-date: the sitting this hold waits on did not
+        happen. The 2026-09-13 FULL sat at 06:37 and did not take up W1, so
+        `w1-world-edit-window` goes OVERDUE at 00:00 tonight and this hold ages
+        another cycle behind it. The hold itself remains CORRECT — its blocker
+        is live, dated and now visibly broken, which is what a hold with a clock
+        is for. Full record on `w1-world-edit-window`.
     Question: the 9-ray head-cone occlusion law yields knife-edged ninths a
     sleeping ragdoll cannot hold — the statically-found 0.5–0.9 band realises
     occ 0.337±0.467 overnight (slides out and freezes, or seals and cooks).
@@ -268,6 +275,11 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for t
         from `w0-too-shallow` for the same reason as the row above; the same
         world-edit window, still paying the 21-certificate mechanical bill
         once instead of three times.
+    NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
+        promise, and NOT a re-date: the 2026-09-13 FULL did not take up W1, so
+        the window this hold rides did not open and `w1-world-edit-window` goes
+        OVERDUE at 00:00 tonight. The hold stands and its substance is unchanged.
+        Full record on `w1-world-edit-window`.
     Question: Water.apply (playground.py:627) writes a body's xfrc row only
     while it is in the pool, so any body that exits keeps its last buoyancy/
     drag force forever — a phantom force in live dynamics, found by DP.05's
@@ -278,6 +290,11 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for t
     all 21 playground.py rows above.
 
 ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review FULL — the W1 SPEC-FAMILY DESIGN is published below, five specs W1.00–W1.04 with their falsifiers, controls and ordering; the builder registers them, nothing is registered by this row and no world is edited by it. GOAL.md untouched, no spec re-parented — those stay the owner's, per D21)
+    NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
+        promise, and NOT a re-date: the Sunday FULL this row's `DUE: 2026-09-13`
+        names sat at 06:37 today and did not take up W1. `W1.01`, `W1.03` and
+        `W1.04` are still NOT REGISTERED, as the ORDERED line below reports.
+        Full record on `w1-world-edit-window`.
     ORDERED: W1.00 W1.01 W1.02 W1.03 W1.04 | the five specs this disposition
         commissioned. Recorded 2026-09-06 23:xx (builder), BACKFILLED under
         the 79th-audit guard the same day the first return refuted the
@@ -860,6 +877,20 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
         be papered over.**
 
 ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
+    NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — THE FACT, NOT A NEW
+        PROMISE, AND NOT A RE-DATE. The Sunday FULL this row was dated to sat at
+        06:37 today and DID NOT TAKE UP W1. Verified against the day's commits
+        rather than taken from the audit: the FULL's output was its page
+        (`11face6`), two new champion seats (`e9c1b68`), `D27` (`83132c9`), a
+        completeness audit and a replaced priority block — no W1 design commit.
+        `run review-queue` still reads `w0-too-shallow ordered W1.01/W1.03/W1.04
+        -> NOT REGISTERED`, so the sitting this row promised has no spec to serve
+        and did not open. This row goes OVERDUE at 00:00 tonight and that is the
+        promise breaking, not the instrument. NOT re-dated: re-dating the
+        Review's own design debt is the Review's call, and the six rows below
+        and behind this one carry the same note for the same reason — the next
+        reader is tomorrow's 06:37 DAILY, looking at red rows with no cause
+        attached to any of them.
     DUE: 2026-09-13 | the single world-edit sitting that `W1.03` opens, which
         pays the 21-certificate `playground.py` mechanical bill ONCE for every
         world edit that is owed. This row exists so that the two holds that
@@ -1863,6 +1894,12 @@ only some disk in `.git`.
 ## (builder, 2026-08-30 11:33 UTC; pilot artifact `/data/sh02_pilot_seed90.json`, spec commit `8abfa70`)
 
 ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed90.json) | OPEN
+    NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
+        promise, and NOT a re-date: this row's arm pick was RE-DATED to the
+        2026-09-13 FULL precisely so it could be made IN LIGHT OF the W0/W1
+        design, and that FULL did not take up W1. The premise the re-date was
+        bought with therefore did not arrive, and the row goes OVERDUE at 00:00
+        tonight for that reason. Full record on `w1-world-edit-window`.
     DUE: 2026-09-06 | the Review picks among arms (a)/(b)/(c) — re-pointing a
         registered null is a spec redesign under the T1.02 precedent, not a
         builder's edit.
@@ -2407,6 +2444,13 @@ the seat a real ring; it does not buy it a ring that is known to be reachable
 in W0.
 
 ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1, 3.99 CPU-h, ledger row VOID) | OPEN
+    NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
+        promise, and NOT a re-date: like `sh02-null-saturation`, this row's arm
+        choice was moved onto the 2026-09-13 FULL on the stated ground that a
+        VENUE repair must be picked IN LIGHT OF the W0/W1 design. That FULL sat
+        this morning and did not take up W1, so the ground has not arrived and
+        the row goes OVERDUE at 00:00 tonight. Full record on
+        `w1-world-edit-window`.
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
         the next Review FULL run. Balance is a zero-pass GOAL.md commitment
         with three declared specs; nothing in it can move until this resolves.
@@ -2720,6 +2764,12 @@ ROUTED: me11-every-arm-hits-the-same-infeasible-branch | 2026-08-31 | 23d53c7 (5
     than they find, exactly as the registry's control note predicted.
 
 ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 3 seeds x 3000 decisions) | DISPOSITIONED 2026-09-06 (Review FULL — option (a), the re-scope specified in the C2' block below; design only, the builder implements and re-runs, and the 0.6 m bar does not move in either branch)
+    NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
+        promise, and NOT a re-date: this row was dated to be decided in the SAME
+        window as `w0-too-shallow`, on the ground that both turn on the identical
+        world-or-body fork. The 2026-09-13 FULL sat this morning and did not take
+        up W1, so the paired window did not happen and this row goes OVERDUE at
+        00:00 tonight. Full record on `w1-world-edit-window`.
     DUE: 2026-09-06 | a disposition for LT.01's C2 clause, owed by the Review's
         Sunday FULL run and decided in the SAME window as `w0-too-shallow`,
         because both turn on the identical fork (is the repair the world, or
@@ -5569,6 +5619,45 @@ ROUTED: pass-certificates-are-not-re-evaluated-when-a-dependency-falls | 2026-09
     already-owed cost is `T6.03`'s own certificate, which is bought when
     `T2.10` is repaired — tracked on `T2.10`'s own repair path, not here.
 
+    NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B3, annotating — NOT
+    re-dating, and NOT stamping this row ACTED). Two facts arrived after this
+    row was written, and the second one is mine.
+
+    (1) THE SCOPE PARAGRAPH IS OUT OF DATE BY A FACTOR OF THREE, AND IT SAYS
+    "exactly ONE" TWICE. The class reads **3** tonight — `LF.02` <- `T6.03`,
+    plus `T2.03` <- `T1.08` and `T2.14` <- `T1.08`. The two new ones were
+    created at 10:05 THIS MORNING by this same desk's `FOR THE BUILDER` item
+    4a, four hours after this row declared the class a narrow one. The row's
+    honesty about scope was correct when written and is the reason the change
+    is visible at all; recorded here so the next reader does not quote "exactly
+    one" off a page that has moved. **Two of the three are GPU** (`T2.03`
+    gpu<20min, `T2.14` gpu<2h), so the re-buy bill is a dispatch, not a
+    keystroke — which is a fact about the ASK, not just about the count.
+
+    (2) HALF THE ASK IS BUILT; THE HALF THIS ROW ACTUALLY OWNS IS NOT. The
+    94th audit's B1 ordered the same quantity into `run blast-radius` and said
+    explicitly *"this is the same quantity this row asks for as a `run status`
+    counter — build it once, read it from both places; do not build two."*
+    Done in `f38ac1a`: `run.unbacked_certificates` is the single deriver,
+    `run status` prints it as `UNBACKED CERTIFICATES` with each row's cost
+    class, `run blast-radius <SPEC>` prints the counterfactual from the same
+    key, and `_check_unbacked_detector` red-firsts it (measured against both
+    wrong derivers before shipping).
+
+    **BUT IT IS UNFLOORED, AND THIS ROW ASKS FOR IT FLOORED SHRINK-ONLY. That
+    disagreement is live and it is the Review's, not the builder's.** B1
+    ordered reporting-only with a reason — *a certificate standing on a fallen
+    dependency is a LEGAL state* — and the same order is what the owner's `D27`
+    default already settled for the sibling screen: report first, floor once
+    the false-positive rate has been measured and written down. The case
+    against flooring, in one line: a floor at 3 would turn the NEXT honest
+    strengthening into a violation by arithmetic, and this desk armed two of
+    today's three itself. The case for it: an unfloored counter is a number
+    nobody is accountable to, which is `D27`'s own stated price. **This row
+    stays OPEN on its 09-16 date for exactly that question** — the instrument
+    is no longer what is owed; the ratchet decision is. The builder does not
+    get to settle it by having shipped the easy half.
+
 ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-13 | Review FULL (completeness audit, external reference) | OPEN
     DUE: 2026-09-21 | this desk's own docket: convert the named gaps into
     registered specs or into written refusals, cheapest-first. Date is the
@@ -5681,6 +5770,22 @@ the LEDGER rather than in prose: `T1.08` now records `mde_downstream` (49) and
 that makes the conjunct armable the day a citation is real. The counter was
 shown returning 1 against a planted declaration before being trusted at 0, so it
 is not a detector wired to nothing.
+
+**NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B3, annotating — NOT
+re-dating).** The candidate named below gained a fact after this row was
+written, and it changes the arithmetic of the question rather than the question
+itself. `T2.03` declares `depends_on: T1.08`, and `T1.08` settled **FAIL** at
+10:05 today under the conjunct armed four hours earlier — so `T2.03` is now
+itself a standing certificate that cannot be re-derived (`run status`,
+`UNBACKED CERTIFICATES`, shipped tonight in `f38ac1a`). **What follows for this
+row: the GPU re-buy it prices as the cost of arming the citation conjunct is
+owed ANYWAY, whether or not the conjunct is ever armed**, because `T2.03` cannot
+be re-derived until `T1.08` is repaired. The two bills are the same dispatch.
+That does not decide the row — the question is still whether the docstring's
+*"should be quoted"* is a real requirement or an overclaim — but it removes the
+"one `t2_03_*.py` edit plus a GPU re-buy" price tag as an argument AGAINST
+arming it, which was the only cost this row had on the table. Nothing re-dated;
+09-16 stands.
 
 **THE CANDIDATE, named so the question is concrete.** `T2.03` — *pretrained
 vision features beat random features* — is the only PASSing direct dependent and
@@ -6111,3 +6216,92 @@ arm's per-seed row is in `acf63e9`'s ledger entry, eligibility legs included,
 under SYSTEM.md's SCORED-AND-INELIGIBLE rule. Re-running `LG.13` costs 1.34 s
 and buys nothing new; the artifact is content-hash keyed so a changed prompt,
 pool or scaffold VOIDs rather than silently re-purchasing.
+
+---
+
+## ROUTED: OPEN — `oversight-for-the-builder-has-no-reader`: the overseer's
+## asks live on a current-state page that three audits a day overwrite, and the
+## symmetric machinery for exactly this already exists one file over
+## (builder, 2026-09-13 ~19:xx UTC; 94th audit B4 — PROPOSE, do not implement)
+
+ROUTED: oversight-for-the-builder-has-no-reader | 2026-09-13 | 94th audit B4 (`f410abe`, RANK 3) | OPEN
+    DUE: 2026-09-17 | a ruling on whether to build the reading described below,
+    and on the objection this row raises against it. Date taken from
+    `review-queue`'s own `next_free_due` at the time of routing (the mechanical
+    answer: 09-13 carried 13 live promises and 09-14/09-15/09-16 each carried 6
+    against a measured capacity of 6; 09-17 was the first with room), not chosen
+    by hand — 68th audit B7, `3''`. **Nothing is held behind this row.**
+
+**THE QUESTION.** `docs/OVERSIGHT.md` is current-state by design: each audit
+rewrites it whole. `decisions.py` already treats that exact property as a
+hazard one file over — it reports `UNROUTED-OWNER-ASK` and `VANISHED-OWNER-ASK`
+over `docs/PROGRESS.md`'s `FOR THE OWNER`, built after `D15` and a real lost
+recommendation on 09-03. **Nothing does the same for `OVERSIGHT.md`.**
+`grep -rn OVERSIGHT experiments/*.py scripts/*.sh` returns citations in comments
+and one line in `overseer.sh` that greps the file for its verdict word. No organ
+checks whether a `FOR THE BUILDER` item was discharged, whether a
+`FOR THE OWNER` item was answered, or whether either vanished on the next
+rewrite. Proposed reading, symmetric with the existing one: an item present on
+the previous committed revision, absent from this one, and quoted nowhere else
+is `VANISHED-BUILDER-ITEM`.
+
+**THE LIVE COST, so this is a scar and not a design taste.** The 93rd audit
+deliberately declined to file a `D28` and left a conditional, dated escalation
+in its place — *"if tomorrow's DAILY discharges fewer than 6 of the fourteen,
+the next audit should escalate it formally"* — whose trigger is evaluable only
+after the 06:37 DAILY on 09-14. Audits run 6-hourly: **00:37, 06:37 and 12:37
+all rewrite the page before that instruction can be acted on.** It lives in
+exactly one place and that place is overwritten three times first.
+
+**AND A SECOND INSTANCE, MEASURED TODAY AND NOT BY THIS DESK.** The 93rd
+audit's B1 had two clauses; the first was discharged superbly, the second was
+never addressed, and the journal reported all four items complete. The 94th
+audit found it by hand. That is the same failure wearing the other face — not
+an item that VANISHED, but an item that was never discharged and had no reader
+to say so. It is also the reason this row is not simply "add a linter": the
+detector the audit proposes catches the first face and **not** the second.
+
+**THE CASE AGAINST, IN MY OWN WORDS, AS THE ITEM ORDERED.** The proposal has a
+real failure mode and I think it is the more likely one:
+
+  1. **This desk rewrites wholesale BY DESIGN.** A superseded item is the
+     normal, correct output of an audit that has moved on. A reading that
+     treats every disappearance as a loss would fire on the majority of
+     items every six hours, and it would be right about almost none of them.
+     That is `D27`'s screen — 104 of 107 flagged, 3 of 12 hand-checks real —
+     arriving in a new file. **A detector at that rate is ignored inside a
+     week, and an ignored detector is worse than none: it converts a known
+     gap into a green light.**
+  2. **The quoting rule `decisions.py` uses is what makes the owner-side
+     version survivable, and it may not transfer.** An owner-ask is quoted
+     when it is routed into `REVIEW_QUEUE.md` or answered in
+     `DECISIONS_*.md` — a small, stable set of destinations with stable
+     syntax. A builder item is discharged by a COMMIT, and commits do not
+     quote. Matching *"B2: annotate the six rows"* against
+     `docs/REVIEW_QUEUE.md`'s diff is not the same kind of check as matching
+     a quoted sentence, and a version that only reads the OVERSIGHT-side text
+     would have scored tonight's B2 as discharged the moment this page named
+     it, which is precisely the 93rd-audit failure it is meant to catch.
+  3. **The population is the author's own selection, again.** `FOR THE
+     BUILDER` items have no ids. Identifying them is heading-and-prose
+     parsing over a page one organ writes and the same organ's successor
+     rewrites. SYSTEM.md flagged this exact shape today — *a checker reading a
+     population somebody else selected, where the selector is the author's
+     word about the author's own act* — and closed it for firing commits by
+     requiring **two independent channels**. A `FOR THE BUILDER` item has one.
+
+**WHAT I WOULD ASK FOR INSTEAD, offered as an arm and not as a decision.**
+Give the items **ids and a destination** rather than giving the page a linter:
+an audit's `FOR THE BUILDER` item is routed into `REVIEW_QUEUE.md` like
+everything else, where it gets a `DUE:`, a status token and an ageing clock
+that already works — and `OVERSIGHT.md` keeps the prose. That reuses an organ
+the project has measured rather than building a second one beside it, it makes
+the two-clause failure detectable (a clause that is not discharged leaves the
+row LIVE), and its cost is honest and worth stating: **the queue's drain
+already reads UNBOUNDED at 48 live rows, and this would add ~4 rows per audit
+day to a backlog that is the Review's binding constraint.** That cost may well
+sink it. It is the Review's call, which is why both arms are here and neither
+is implemented.
+
+**STALENESS BILL. None.** Nothing above touches a spec, a threshold or a
+certificate; the row asks for a ruling.
