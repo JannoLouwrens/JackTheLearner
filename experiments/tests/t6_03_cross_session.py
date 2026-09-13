@@ -24,6 +24,51 @@ The teeth:
      history refilled INTO the MoodHistory object (len + last entry, and
      .record() still works — a restore that replaces it with a bare list
      fails here); personality name/backstory; monologue entries; global_step.
+  4. What persists is a LEARNED state and a restored FUNCTION, not a
+     round-tripped tensor. See "The 09-13 strengthening" below.
+
+The 09-13 strengthening (Review FULL, Part 2 — strictly additive, no bar moved)
+------------------------------------------------------------------------------
+Re-examined at 36 days, the oldest PASS on the board and never reconsidered.
+The claim this spec is cited for is GOAL.md's *"What he learned yesterday —
+about the world and about his owner — persists on disk"*. Every conjunct above
+was true of a session-1 brain **that never took an optimiser step**: its
+`state_dict` was the initialisation. So `weights_match` certified that
+`torch.save`/`torch.load` round-trips a tensor — which is T0.03's claim, made
+one tier lower and 300 lines cheaper — and the word "learned" in the sentence
+this spec answers had no referent anywhere in the file. A gate can be perfectly
+sound and still not be about what its spec is about.
+
+Two conjuncts are therefore ADDED (nothing existing is touched, so the passing
+set can only shrink):
+
+  train_moved_weights   session 1 trains on a fixed batch and its digest must
+                        leave initialisation. There is now something learned to
+                        persist, and `weights_match` compares against the
+                        TRAINED digest rather than the virgin one.
+  probe_dev_postload    the restored brain must reproduce session 1's loss on a
+                        held-out probe batch to <= PROBE_TOL (RNG matched by
+                        seeding immediately before each measurement), while the
+                        virgin brain's own reading must sit >= PROBE_PRE_MIN
+                        away (probe_dev_preload) and be >= PROBE_SEP_MIN times
+                        further off (probe_sep_ratio). Bytes are not behaviour:
+                        these are the first conjuncts here that read the
+                        restored brain as a FUNCTION rather than as a file.
+
+STATUS OF THE ROW, said plainly: T6.03 could not be re-bought on 2026-09-13.
+The runner demoted it to BLOCKED — `dependencies not satisfied: T2.10 (FAIL)`
+— which is the FIRST honest evaluation of its dependency state since T2.10 fell
+on 09-01 under its own paraphrase conjunct. The 08-08 PASS had been rendering
+green for twelve days on a dead dependency, because the board reports a stored
+status and nothing re-checks a dependency after the fact. The code above is
+verified to execute and to discriminate (seed 0, out-of-band, no ledger write:
+train_loss 0.39336 -> 0.238613, train_moved_weights 1, probe_dev_postload
+1.13e-6, probe_dev_preload 7.82e-3, all fourteen original conjuncts still 1),
+but the CERTIFICATE is owed and is bought only when T2.10 is repaired.
+
+`train_loss_first`/`train_loss_last` are recorded so the "learned" claim is
+inspectable rather than asserted; `train_loss_fell` is gated so a training
+block that silently no-ops cannot satisfy `train_moved_weights` with noise.
 
 NULL (fresh instance with no memory, per spec): session 2 BEFORE load_all —
 same process, same queries, empty memory. Recall must be <= 0.05.
@@ -73,6 +118,32 @@ NULL_MAX = 0.05           # fresh instance with no memory
 MIN_GAP = 0.80
 PAD_POST_TOL = 1e-5       # restored PAD must match the saved one
 PAD_PRE_MIN = 1e-3        # virgin PAD must have been measurably elsewhere
+
+# --- the 09-13 strengthening: a LEARNED state, and a restored FUNCTION ---
+TRAIN_STEPS = 24          # enough that the loss falls, so "learned" has a
+TRAIN_BS = 16             # referent, and cheap enough to keep this spec CPU
+TRAIN_POOL = 256          # sliced per step (T1.08's loop)
+TRAIN_LR = 3e-4           # T1.07/T1.08/TrainingPipeline recipe
+TRAIN_WARMUP = 4          # short: 24 steps under a 100-step warmup learn nothing
+PROBE_SEED = 77           # seeded immediately before every probe, so any
+                          # sampling inside the loss is MATCHED across processes
+# PROBE_TOL is a CALIBRATED constant and was set AFTER seeing a reading, which
+# the LG.12 lesson (2026-09-13) says must then be checked against its own
+# REACHABLE RANGE and not only against the bar. That range, measured on seed 0:
+#   noise floor  1.13e-6  restored vs trained at BIT-IDENTICAL weights — pure
+#                         inter-process float nondeterminism, not a restore
+#                         defect (weights_match reads 1 on the same run)
+#   signal       7.82e-3  virgin brain vs trained, i.e. what a restore that
+#                         silently did nothing would score
+# 1e-4 sits ~88x above the noise and ~78x below the signal, so the conjunct is
+# falsifiable from both sides rather than decorative. A first pass at 1e-6 sat
+# BELOW the noise floor and was un-clearable by construction — the LG.03 defect
+# found on 09-12, caught here before it could be registered.
+PROBE_TOL = 1e-4          # restored brain must reproduce the trained reading
+PROBE_PRE_MIN = 1e-3      # the virgin brain must be measurably elsewhere
+PROBE_SEP_MIN = 50.0      # ...and the restored reading must be at least this
+                          # many times closer than the virgin one, so the pair
+                          # cannot both collapse toward zero and still clear
 
 _CACHE: dict = {}         # seed -> tmpdir/save_path, shared with _control
 
@@ -124,6 +195,53 @@ def answer(brain, queries):
             got = brain.memory.recall(q, top_k=1)
             out[topic] = got[0] if got else None
     return out
+
+def make_batch(cfg, n, gen_seed):
+    \"\"\"A rank-8 tanh map — the construction T1.07/T1.08 use, identifiable by
+    construction. Drawn from its OWN generator so both sessions build the
+    byte-identical batch regardless of the seed their weights came from.\"\"\"
+    g = torch.Generator().manual_seed(gen_seed)
+    obs = torch.randn(n, cfg.obs_dim, generator=g)
+    A = torch.randn(cfg.obs_dim, 8, generator=g) / (cfg.obs_dim ** 0.5)
+    B = torch.randn(8, cfg.action_chunk_size * cfg.action_dim, generator=g)
+    tgt = (torch.tanh(obs @ A) @ B).view(
+        n, cfg.action_chunk_size, cfg.action_dim) * 0.3
+    return obs, tgt
+
+def probe_loss(brain, cfg):
+    \"\"\"A deterministic reading of the brain AS A FUNCTION. The loss samples
+    internally (flow matching), so the RNG is re-seeded immediately before the
+    call: identical weights on identical inputs must give an identical number,
+    and that is the whole point of the conjunct that reads it. eval() + no_grad
+    per the dropout lesson.\"\"\"
+    obs, tgt = make_batch(cfg, 8, {PROBE_SEED} + 1)
+    was_training = brain.training
+    brain.eval()
+    try:
+        torch.manual_seed({PROBE_SEED})
+        with torch.no_grad():
+            return float(brain.action_training_loss(obs, tgt)["loss"])
+    finally:
+        brain.train(was_training)
+
+def train_a_little(brain, cfg):
+    \"\"\"Give the save something LEARNED to carry. A fixed rank-8 pool, sliced
+    per step — T1.07/T1.08's loop verbatim. (Re-feeding one identical batch
+    object raises "backward through the graph a second time": the brain retains
+    graph-carrying internal state across calls, so each step gets fresh slices.)
+    \"\"\"
+    pool_o, pool_t = make_batch(cfg, {TRAIN_POOL}, {PROBE_SEED} + 2)
+    brain.train()
+    opt, step_fn = brain.make_action_optimizer(
+        lr={TRAIN_LR}, warmup_steps={TRAIN_WARMUP}, max_grad_norm=2.0)
+    bs, losses = {TRAIN_BS}, []
+    with contextlib.redirect_stdout(io.StringIO()):
+        for step in range({TRAIN_STEPS}):
+            i = (step * bs) % ({TRAIN_POOL} - bs)
+            loss = brain.action_training_loss(pool_o[i:i+bs], pool_t[i:i+bs])["loss"]
+            opt.zero_grad(); loss.backward(); step_fn()
+            losses.append(float(loss))
+    return losses
 """
 
 _SESSION1 = _COMMON + """
@@ -131,6 +249,16 @@ seed, tmpdir = int(sys.argv[1]), sys.argv[2]
 vocab = json.load(open(tmpdir + "/config.json"))
 rng = random.Random(1000 * seed + 3)
 brain = build_brain(seed)
+
+# --- he learns something FIRST, so that there is something learned to persist.
+# Before the diary/mood/name writes, matching T1.07/T1.08's arm(): those train
+# straight off construction, and this spec is not the place to discover a new
+# interaction between training and a populated companion state. ---
+from UnifiedBrain import UnifiedBrainConfig as _UBC
+_cfg = _UBC()
+digest_init = digest(brain)
+train_losses = train_a_little(brain, _cfg)
+probe_trained = probe_loss(brain, _cfg)
 
 topics = rng.sample(vocab["topics"], vocab["n_facts"])
 facts, queries = {}, {}
@@ -158,7 +286,9 @@ p = CompanionPersistence(SaveConfig(save_dir=tmpdir, save_prefix="t603"))
 path = p.save_all(brain, world_state={"jack_position": [1.0, 2.0, 0.0], "time_of_day": 14.5})
 
 report = snapshot(brain)
-report.update(save_path=path, facts=facts, queries=queries)
+report.update(save_path=path, facts=facts, queries=queries,
+              digest_init=digest_init, train_losses=train_losses,
+              probe_trained=probe_trained)
 json.dump(report, open(tmpdir + "/report1.json", "w"))
 """
 
@@ -167,7 +297,10 @@ seed, tmpdir = int(sys.argv[1]), sys.argv[2]
 r1 = json.load(open(tmpdir + "/report1.json"))
 brain = build_brain(seed + 5000)          # different draw: virgin weights differ
 
+from UnifiedBrain import UnifiedBrainConfig as _UBC
+_cfg = _UBC()
 pre = snapshot(brain)
+probe_pre = probe_loss(brain, _cfg)           # the virgin brain AS A FUNCTION
 null_answers = answer(brain, r1["queries"])   # the null: fresh instance, no memory
 brain.global_step = 0
 
@@ -177,11 +310,13 @@ with contextlib.redirect_stdout(io.StringIO()):
     p.load_all(brain, r1["save_path"])
 
 post = snapshot(brain)
+probe_post = probe_loss(brain, _cfg)          # the RESTORED brain, same reading
 # The restored history must still BE a MoodHistory: .record() must work.
 brain.emotional_state.history.record(999.0, (0.0, 0.0, 0.0), "probe", event="post-restore")
 post["record_still_works"] = len(brain.emotional_state.history.entries) == post["hist_len"] + 1
 
 json.dump({"pre": pre, "post": post, "null_answers": null_answers,
+           "probe_pre": probe_pre, "probe_post": probe_post,
            "answers": answer(brain, r1["queries"])},
           open(tmpdir + "/report2.json", "w"))
 """
@@ -253,7 +388,22 @@ def _experiment(seed: int) -> dict:
     pers_ok = (post["name"] == r1["name"] == f"Jack-{seed}"
                and post["backstory"] == r1["backstory"]
                and pre["name"] != r1["name"])
+
+    tl = r1["train_losses"]
     return {
+        # --- the 09-13 strengthening: a learned state, a restored function ---
+        "train_loss_first": round(tl[0], 6),
+        "train_loss_last": round(tl[-1], 6),
+        "train_loss_fell": int(tl[-1] < tl[0]),
+        # the saved weights left initialisation, so `weights_match` below is
+        # now a claim about a TRAINED digest and not about a virgin one
+        "train_moved_weights": int(r1["digest"] != r1["digest_init"]),
+        "probe_trained": round(r1["probe_trained"], 8),
+        "probe_dev_postload": round(abs(r2["probe_post"] - r1["probe_trained"]), 10),
+        "probe_dev_preload": round(abs(r2["probe_pre"] - r1["probe_trained"]), 8),
+        "probe_sep_ratio": round(abs(r2["probe_pre"] - r1["probe_trained"])
+                                 / max(abs(r2["probe_post"] - r1["probe_trained"]),
+                                       1e-12), 2),
         "recall_after_restart": round(recall, 4),
         "null_recall": round(null_recall, 4),
         "gap": round(recall - null_recall, 4),
@@ -285,7 +435,17 @@ def _control(seed: int) -> dict:
 
 
 def _check(m: dict, c: dict) -> bool:
-    return (m["recall_after_restart"] >= MIN_RECALL
+    return (
+            # --- 09-13: what persisted was LEARNED, and it came back as a
+            # FUNCTION and not only as bytes. Added conjuncts; nothing below
+            # this block was touched and no bar moved. ---
+            m["train_loss_fell"] == 1.0
+            and m["train_moved_weights"] == 1.0
+            and m["probe_dev_postload"] <= PROBE_TOL
+            and m["probe_dev_preload"] >= PROBE_PRE_MIN
+            and m["probe_sep_ratio"] >= PROBE_SEP_MIN
+            # --- the original fourteen ---
+            and m["recall_after_restart"] >= MIN_RECALL
             and m["null_recall"] <= NULL_MAX
             and m["gap"] >= MIN_GAP
             and m["weights_match"] == 1.0

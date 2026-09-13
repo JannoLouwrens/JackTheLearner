@@ -35000,53 +35000,73 @@
     },
     "T6.03": {
       "amended": [],
-      "attempt": 1,
-      "commit": "4a4afb3",
-      "control_metrics": {
-        "byteflip_load_raised": 1.0,
-        "byteflip_load_raised_std": 0.0,
-        "truncated_load_raised": 1.0,
-        "truncated_load_raised_std": 0.0
-      },
-      "duration_s": 66.06,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
-      "message": "",
-      "metrics": {
-        "gap": 1.0,
-        "gap_std": 0.0,
-        "gstep_restored": 1.0,
-        "gstep_restored_std": 0.0,
-        "hist_restored": 1.0,
-        "hist_restored_std": 0.0,
-        "monologue_restored": 1.0,
-        "monologue_restored_std": 0.0,
-        "n_memories_restored": 1.0,
-        "n_memories_restored_std": 0.0,
-        "null_recall": 0.0,
-        "null_recall_std": 0.0,
-        "pad_dev_postload": 0.0,
-        "pad_dev_postload_std": 0.0,
-        "pad_dev_preload": 0.067899,
-        "pad_dev_preload_std": 0.013592,
-        "personality_restored": 1.0,
-        "personality_restored_std": 0.0,
-        "recall_after_restart": 1.0,
-        "recall_after_restart_std": 0.0,
-        "weights_differ_preload": 1.0,
-        "weights_differ_preload_std": 0.0,
-        "weights_match": 1.0,
-        "weights_match_std": 0.0
-      },
-      "ran_at": "2026-08-08T11:11:58",
-      "seeds": [
-        0,
-        1,
-        2
+      "attempt": 2,
+      "commit": "03e68bc+dirty",
+      "compute_s": null,
+      "control_metrics": {},
+      "dirty_files": [
+        "experiments/tests/t6_03_cross_session.py"
       ],
+      "duration_s": 0.0,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "4a4afb3",
+          "control_metrics": {
+            "byteflip_load_raised": 1.0,
+            "byteflip_load_raised_std": 0.0,
+            "truncated_load_raised": 1.0,
+            "truncated_load_raised_std": 0.0
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "gap": 1.0,
+            "gap_std": 0.0,
+            "gstep_restored": 1.0,
+            "gstep_restored_std": 0.0,
+            "hist_restored": 1.0,
+            "hist_restored_std": 0.0,
+            "monologue_restored": 1.0,
+            "monologue_restored_std": 0.0,
+            "n_memories_restored": 1.0,
+            "n_memories_restored_std": 0.0,
+            "null_recall": 0.0,
+            "null_recall_std": 0.0,
+            "pad_dev_postload": 0.0,
+            "pad_dev_postload_std": 0.0,
+            "pad_dev_preload": 0.067899,
+            "pad_dev_preload_std": 0.013592,
+            "personality_restored": 1.0,
+            "personality_restored_std": 0.0,
+            "recall_after_restart": 1.0,
+            "recall_after_restart_std": 0.0,
+            "weights_differ_preload": 1.0,
+            "weights_differ_preload_std": 0.0,
+            "weights_match": 1.0,
+            "weights_match_std": 0.0
+          },
+          "ran_at": "2026-08-08T11:11:58",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": null,
+      "message": "dependencies not satisfied: T2.10 (FAIL)",
+      "metrics": {},
+      "peak_rss_inherited": null,
+      "peak_rss_mb": null,
+      "preserved_impl": null,
+      "ran_at": "2026-09-13T06:44:35",
+      "seeds": [],
       "spec_id": "T6.03",
-      "status": "PASS"
+      "spec_sha": "27905ccbf8c3e43c",
+      "status": "BLOCKED"
     },
     "TA.01": {
       "amended": [],
