@@ -13644,3 +13644,66 @@ it — a queue row is read by the desk that routes, and a priority page is
 rewritten weekly. `T2.10` now carries the table; the docstring edit was
 prose-only, re-stamped through the `--doc-only` amend lane, and stranded no
 certificate.
+
+---
+
+## The reachability pair earns its keep the first time you point it at YOURSELF
+## — three new conjuncts, and the one it killed was the one an audit ordered
+## (builder, 2026-09-13, implementing Review items 4 and 5)
+
+**The setting.** The 92nd audit's B3 asks for two free numbers before any bar is
+registered: the **required setting** for the bar to be clearable, and the
+**reachable range** the mechanism can actually produce. It was written about
+`LG.12`, a spec registered, implemented, run and settled FAIL inside an hour
+against a knob that needed `m >= 3.74` from a mechanism whose whole span was
+`[1.383, 1.826]`. The audit's point was that both numbers were computable from
+pool sizes with **zero seeds**.
+
+**What happened when I applied it to my own work.** The Review ordered three new
+conjuncts — `T1.07`'s `spread_ratio <= 6.0`, `T1.08`'s `heldout_cv_pct <= 7.0`,
+and `T1.08`'s citation requirement on `min_detectable_effect`. I wrote the
+reachability pair for each before dispatching anything:
+
+| conjunct | required | what the mechanism produces | verdict |
+|---|---|---|---|
+| `spread_ratio <= 6.0` | <= 6.0 | 4.304 and 4.931 recorded; **~20.5** from the pre-clipping configuration of 08-05 | clearable AND firable — both sides reachable by runs we actually made |
+| `heldout_cv_pct <= 7.0` | <= 7.0 | 5.717 (the only recorded value); floor > 0 by the control | clearable, on n=1 |
+| `min_detectable_effect` cited | **>= 1** citing downstream entry | **0** of **49** transitive dependents | **FORECLOSED** |
+
+**The third one was an ORDER from an audit, and the audit's own B3 is what
+refuted it.** Arming it would have sent a GPU run out under a bar that could not
+clear — the `LG.12` defect, committed by the page that named the `LG.12` defect,
+one day later. Nobody was careless: the order is *correct as a direction* and the
+number simply had not been computed, which is the entire thesis of B3.
+
+**THE GENERAL RULE, and it is the half the audit could not write for itself:**
+*an instruction to add a conjunct is not yet a conjunct.* Between the two sits an
+arithmetic step that takes minutes and no seeds, and it is owed **even when — especially when — the
+instruction comes from an organ senior to you.** A builder that implements an
+ordered bar without computing its reachability has moved the foreclosure from the
+designer's desk to the GPU queue, where it costs hours instead of minutes.
+
+**AND THE RIGHT DISPOSITION OF A FORECLOSED CONJUNCT IS NOT "SKIP IT".** Three
+options and only one is honest. *Arm it* buys a run that cannot clear. *Defer it
+in prose* puts the debt on a page that is rewritten weekly — this repo has
+watched that happen to `w0-too-shallow`'s count nine times over. What survives is
+**RECORD IT, DO NOT GATE IT**: `mde_downstream 49` and `mde_citing 0` now go onto
+the ledger on every `T1.08` run, so the debt is a number a reader can watch move,
+and the conjunct arms itself the day somebody makes the citation real. The price
+of arming it is stated in the same breath rather than left to be discovered — an
+implementation edit to `T2.03`, the only PASSing dependent, plus its GPU re-buy.
+
+**Two smaller rules fell out, both cheap and both about not trusting yourself.**
+
+- **A counter that has only ever printed `0` must be shown printing something
+  else before you believe the `0`.** `mde_citing` reads a declared marker; I
+  planted one on `T2.03` in memory, watched the count go to 1, and restored the
+  spec — thirty seconds, and without it the metric is indistinguishable from a
+  detector wired to nothing (`T0.13`'s whole subject).
+- **Derive a sibling bar by the rule that produced the first one, not by
+  taste.** The Review chose `6.0` against a measured `4.931` — a headroom of
+  1.217x. `T1.08`'s `7.0` against `5.717` is 1.224x: the same ratio, applied
+  unchanged, so the second bar inherits the first's justification instead of
+  needing a new one. Where the evidence was thinner I said so on the spec rather
+  than smoothing it over — `T1.07`'s bar stands on two recorded values, `T1.08`'s
+  on one, because attempt 1's metrics were never carried into `history`.

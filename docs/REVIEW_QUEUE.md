@@ -5550,3 +5550,56 @@ ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-1
     threshold. The cheapest real repair it points at is declaring an `emotion`
     COVERS domain on T2.12/T3.07, which costs one registry edit and makes the
     gap visible to `coverage` instead of only to this page.
+
+---
+
+ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.08 strengthening, Review items 4a/5) | OPEN
+    DUE: 2026-09-16 | a design answer owed by the Review: WHICH downstream spec
+    should quote the noise floor, and is it worth a GPU re-buy to make it do so.
+    Date taken from `review-queue`'s own `next_free_due` (the mechanical answer
+    at the time of routing: 09-13 carried 14 promises against a measured
+    capacity of 6, 09-16 carried 4), not chosen by hand — 68th audit B7, 3''.
+    Nothing is held behind this row; `T1.08` is being re-bought today under its
+    other new conjunct and does not wait for this.
+
+**THE ONE-LINE QUESTION.** `T1.08` exists to produce `min_detectable_effect` —
+its own docstring says *"the number this produces should be quoted whenever a
+later tier claims an improvement"* — and **49 transitive dependents quote it
+zero times.** Is the repair to make one of them genuinely compare its effect
+against the floor (a GPU certificate re-buy), or is this spec's output honestly
+advisory and the docstring's "should be quoted" overclaimed?
+
+**WHY IT IS A ROW AND NOT A COMMIT.** The Review's `FOR THE BUILDER` item 4b
+ordered the citation ARMED as a conjunct. I did not arm it, and the reason is
+item 4b's sibling, B3 item 1: required setting **>= 1** citing entry, available
+range **0 of 49** — computable with zero seeds. Arming it would have dispatched
+a GPU run under a bar foreclosed before it ran, which is the `LG.12` defect the
+same audit routed as its RANK 3. This row exists so that refusal has an owner
+and a date rather than living in a docstring.
+
+**WHAT IS ALREADY DONE, so the desk is not asked for it twice.** The debt is on
+the LEDGER rather than in prose: `T1.08` now records `mde_downstream` (49) and
+`mde_citing` (0) on every run, REPORTED and deliberately NOT gated, and
+`CITE_MARKER` (`CITES T1.08:min_detectable_effect`) is the declaration protocol
+that makes the conjunct armable the day a citation is real. The counter was
+shown returning 1 against a planted declaration before being trusted at 0, so it
+is not a detector wired to nothing.
+
+**THE CANDIDATE, named so the question is concrete.** `T2.03` — *pretrained
+vision features beat random features* — is the only PASSing direct dependent and
+is exactly the shape the floor exists to bound: an improvement claim over a null.
+The other five direct dependents are `T2.01` (FAIL), `T2.02` (VOID), `T2.13`
+(not implemented), `T2.14`, `D1.0` (VOID, forbidden to re-dispatch unchanged).
+
+**STALENESS BILL.** Arming the conjunct costs: one implementation edit to
+`t2_03_*.py` to compute and declare the comparison (**T2.03's certificate goes
+stale — GPU re-buy**), one `_check` edit and claim-field amendment on `T1.08`
+(**its certificate goes stale — GPU re-buy, ~0.55 h measured**), and nothing
+else: `experiments/registry.py` is in no spec's `IMPL_DEPS` (resolved
+mechanically over all test files, 0 hits). Declining costs nothing and leaves
+`mde_citing 0` visible on the ledger, which is the honest fallback.
+
+**THE CLASS.** This is the 92nd audit's RANK 3 shape — *a gate that could not
+have discriminated* — caught BEFORE the run rather than after it, which is the
+first time in the eleven-row history of that class. Worth joining to those rows
+if B3 item 3's naming happens.
