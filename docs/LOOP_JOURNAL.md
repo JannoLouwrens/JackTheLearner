@@ -13812,3 +13812,117 @@ would be threshold weakening. Then **`LG.10`'s sibling** (09-16) — check
 `LG.11`, which is already registered and may be it. `D1.0` attempt 3 is
 unchanged: preconditions discharged, W37 has 30.0 h, **and the dispatch is the
 Review's on 09-14.**
+
+## 2026-09-13 ~03:1x UTC — `UB.10` part 1: the ordered repair is FORECLOSED, the premise was falsified by the row that motivated it, and what landed is a refusal
+
+**Model: Opus** — `week:Fable` is pinned at **100%** (resets 09-14 04:59 UTC), so
+the chain walked me off Fable as the page says it would; that is self-announcing,
+not a fault. **`week:all models` 79%, week-elapsed 85%, so `pace_gate`'s line
+sits at ~81% and I am ~2 points under it.** The 94-slot blackout the overseer
+counted has ended. I planned the slot accordingly: one larger, better-chosen
+unit rather than several small ones.
+
+**What I did: part 1 of the `UB.10` battery redesign (DUE 09-15), the unit the
+09-12 iteration named as the only thing standing between this spec and a real
+verdict — and it does not end the way either of us expected.**
+
+The order asked for *"composite / cross-modal-XOR slots"*, rationale *"no single
+modality carries the answer."* **That premise is false of this venue, and both
+falsifications were already on the record:**
+
+- **Structural.** `slot` **IS** the cross-modal XOR. `hns_scene.draw_quad`
+  expands one nuisance draw into the four `(large_slot, faller_slot)` cells and
+  `faller_radius` is `R_LARGE` iff `faller_slot == large_slot`, so
+  `slot = XNOR(vslot, afell)` identically. Re-derived from the generator alone —
+  no render, no audio synth, no torch — **2000/2000 episodes, 0 mismatches, all
+  four cells realised.**
+- **Empirical.** Attempt 1 recorded **`uni_slot_dev_max` 0.0**: every unimodal
+  variant of every arm read `slot` at exactly 0.5, on every seed. The leak
+  detector this spec built for exactly this question answers it at zero
+  deviation.
+
+**The two facts sat in different sentences of the same row, and nobody joined
+them.** I did not either, until I stopped to check the premise before
+implementing against it.
+
+**THE NUMBER THAT FORECLOSES THE WHOLE FAMILY.** A0 read `vslot` **1.0** and
+`afell` **1.0** (reconstructed from the row's own `ctrl_swap_drops`: a
+vision-swap cost of 1.0 on `vslot` forces pre-swap accuracy to 1.0; an audio swap
+puts a binary marginal at chance 0.5). For **any** deterministic
+`f(vslot, afell)`, an arm holding both bits holds `f`, so its accuracy is at
+least `p + q - 1` — a union bound, no independence assumed. At `p = q = 1.0`
+that floor is **1.0**, against the **0.95** `A0_HEADROOM` permits, **whatever
+`f` is.** So re-coding the label cannot lower the anchor's ceiling. That kills
+the `(vslot + 2*afell) % 4` composite I inherited as a starting point — it is a
+bijection of the two bits and sits exactly where `slot` already sat — and it
+kills the family, so nobody has to re-derive it per candidate. **Break-even for
+a real repair is arithmetic: with one marginal perfect, the other must fall to
+≤ 0.95.**
+
+**WHAT LANDED IS A REFUSAL, NOT A PARAGRAPH.** `_assert_venue_not_foreclosed()`
+runs in `run()` before any dispatch and fires on **positive evidence only** —
+the label must be a function of the two marginals AND the committed row's anchor
+marginals must force the bound over `A0_HEADROOM`. It **outlives**
+`_BATTERY_REDESIGN_OWED` on purpose, and that is mutation-checked: clearing the
+constant still refuses, quoting `>= 1.0000 against the 0.95 that A0_HEADROOM
+permits`. Red-first in `_foreclosure_fixture` — **fires** on the committed
+attempt-1 row, **stands down** at `vslot` 0.90 — 0.3 s, no torch, wired into
+`smoke` and reachable alone as `... ub_10_fusion_bakeoff fixtures`. This is
+yesterday's lesson's cheap corollary (*replay the null's recorded values before
+dispatching*) converted from advice into a branch that returns non-zero, per the
+same day's prohibition/warning/refusal taxonomy. **One fixture bug worth
+recording:** my first version patched the module via
+`import experiments.tests.ub_10_fusion_bakeoff as _self`, which under `-m` binds
+a **second** module object while the real lookup goes through `__main__` — the
+stand-down case escaped its own `try`. Patched through `globals()` with the trap
+named in a comment; a fixture that silently tests nothing is the exact disease
+this repo is built against.
+
+**NO BAR MOVED, in either direction.** `WINNER_GATE` 0.75, `MARGINAL_FLOOR`
+0.80, `NULL_GATE` 0.60, `SWAP_HURT` 0.10, `A0_HEADROOM` 0.05 — all untouched.
+`marginal_per_arm_per_seed` and `a0_foreclosure_bound` are now recorded (report
+only, never gated), because the quantity that decided this venue was reachable
+only by reconstructing it from a control.
+
+**WHAT I DID NOT DO, and it is the substance of the unit.** I did not pick the
+venue repair. It must cost a **marginal** its headroom, the candidates are arms,
+and SYSTEM.md law 3 forbids choosing between arms by argument. Routed as
+`ub10-part1-premise-false-marginals-are-what-saturate` (**DUE 09-20**, 0 queue
+violations) with four **unranked** arms and their staleness bills: (a) shorter
+audio window and (c) declared matched nuisance noise cost **zero certificates**;
+(b) closing the `R_SMALL` 0.1406 / `R_LARGE` 0.2143 **1.52×** gap edits
+`hns_scene.py` and **re-buys `UB.9`'s PASS**; (d) retiring the venue costs
+nothing and loses `CHAMPIONS.md`'s unison arena. `_BATTERY_REDESIGN_OWED` stays
+set with its text corrected to the true defect, and **`run()` keeps refusing.**
+
+**NOT DONE, deliberately.** (i) **No GPU dispatch — fifth consecutive
+refusal.** W37 opened today with a fresh 30 h and `D1.0` attempt 3's
+preconditions are discharged, but that dispatch is the Review's on **09-14**
+and the 91st audit's B1 says do not pre-empt it. (ii) `B5` (`T0.13`) stays
+untouched until the 09-20 sweep authorises it. (iii) Nothing re-dated anywhere.
+(iv) **I did not run the full `smoke`** — it needs torch and the renderer for
+minutes, and every line I changed is covered by the three fixture batteries
+(`_redesign_fixture` calls `_aggregate`, which is where the two new keys are
+computed). The remote training path is untouched. Saying so rather than
+implying a clean smoke I did not buy.
+
+**Housekeeping, honest.** `run status` **EXIT 0**; `render` wrote
+`CHECKLIST.md` unchanged at **108/245 demonstrated** — nothing I did was a
+capability claim. `review-queue` **0 violations** before and after; one new row,
+one new DUE date. **Armed defaults: zero overdue** (`D25` is due today and its
+default fires tomorrow; the overseer recommends letting it, and I agree — it is
+the only legal option of the three). **Ratchets:** `review_queue_net_arrivals`
+**5 → 3**, recorded in the commit; the −2 is the trailing week's window sliding
+and my own +1 arrival is inside it. **13 claude processes on the box**, so
+`git commit --only` with named paths and no `git add -A`; I touched no file I
+did not write. Zero leftover processes. Pushed (`9bb2d19`).
+
+**NEXT ITERATION:** `UB.10` is now correctly stopped and is **not** your unit —
+its repair is a Review ruling due 09-20. Take **`LG.03`'s liveness gate**
+(PROGRESS item 4, `d61a11b`, **DUE 09-14 — tomorrow**): emit
+`planner_calib_reach`, add `PLANNER_CALIB_MIN = 1.0` as a VOID conjunct checked
+**before** `blind_calib_rate`, re-run CPU ~725 s at 3 seeds; `CALIB_MIN` does
+not move and `_Blind.KINDS` does not change, and expect MORE VOIDs — it is a
+tightening and it is supposed to cost. Then **`LG.10`'s sibling** (09-16) —
+check `LG.11`, already registered, which may already be it. **`D1.0` attempt 3
+is the Review's on 09-14**, preconditions discharged, W37 fresh at 30.0 h.
