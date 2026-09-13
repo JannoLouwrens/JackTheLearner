@@ -15399,3 +15399,142 @@ re-run changes none of them; its seating question belongs to the Review on
 seat from `1^6` item 5 — `Language routing`, ARENA `LG.10`/`LG.12`/`T2.15`, all
 three FAIL — is still unraced, and after today there is a worked example of what
 racing a seat costs: one seam parameter, two certificate re-buys, five seconds.**
+
+## 2026-09-13 ~16:1x UTC (builder, **opus** — `week:Fable` is pinned at 100% and the chain walked me there; the gate is `week:all models`, which read **84%** at 16:07 and **84%** at the end, so this slot cost under a point)
+
+**THE BOARD WAS EMPTY AND I VERIFIED IT RATHER THAN ASSUMING IT.** Every dated
+item in front of me is discharged: the 93rd audit's B1–B4 all landed earlier
+today (`a3a090a`/`d4879c0` priced the CPU venue and stamped `lc07` ACTED,
+`6ddd09c` built the `IMMINENT` forward reading, `59de4ec` proposed `WAITS-ON:`,
+`d2de64a` recorded the ratchets); `PROGRESS.md` items 4 and 5 landed in
+`445b9e1`/`e7a79e0`; `T2.10` is foreclosed at 0.0667 against 0.10 and `T6.03`
+is blocked behind it; `D1.0` is illegal behind `T1.08`'s FAIL; **`D25`'s
+default is NOT fireable today — the tool says 09-14 and `025f0d1` already
+corrected two pages that said 09-13.** `run next` offers twelve specs and every
+one is a settled FAIL/VOID with a routed repair. `coverage` says four classes
+have no path in and one is `D19`-held. So I took `1^6` item 5, which exists for
+exactly this morning: **race an open seat rather than invent a unit.**
+
+**I DID NOT GET TO THE RACE, BECAUSE THE FIRST STEP OF IT FOUND SOMETHING
+BETTER.** The seam is the cheap part — `LG.10._measure(seed, select_fn=None)`,
+default `_draw`, memo keyed by `(seed, selector)`, the `LG.02`→`SO.10` move
+from this morning applied to the mouth. I then re-ran `_measure` to prove the
+seam was inert, and it was not quite:
+
+    metric              row (attempt 2)   re-run     verdict
+    match                    0.694433   0.694433   identical
+    unanimity                  0.2222     0.2222   identical
+    variety / liveness            1.0        1.0   identical
+    swap_agree               0.861133   0.833333   ** DIFFERENT **
+    style_change             0.527767   0.638867   ** DIFFERENT **
+
+A seam that renames a function object cannot move `swap_agree`. **A SUBSET of
+metrics reproducing is much stronger evidence than none reproducing** — it
+clears the edit and indicts the metric — so I stopped and looked.
+
+**THE DEFECT: A GATED CONJUNCT WAS A `PYTHONHASHSEED` LOTTERY.** Two sites in
+`LG.10` and one in `LG.12` read `modal = max(set(xs), key=xs.count)`. `set`
+iteration order over strings and tuples is a function of the per-process hash
+salt and `max` keeps the first maximal element, so every count TIE was decided
+by the salt — and at `TEMP` 1.0 over `S_DRAWS` 5 ties are the common case, not
+the corner. `swap_agree` is gated at `SWAP_AGREE_MIN` **0.90 in both specs**.
+Five salts, same code, same seeds:
+
+    PYTHONHASHSEED      0      1      7     42  12345
+    swap_agree     0.8889 0.8333 0.8333 0.8611 0.8889
+      per seed 0   0.8333 0.6667 0.7500 0.9167 0.8333
+      per seed 1   0.9167 1.0000 0.9167 0.9167 0.9167
+      per seed 2   0.9167 0.8333 0.8333 0.7500 0.9167
+
+Seed 0 straddles the bar from 0.6667 to 0.9167 and seed 1 reaches 1.0000. No
+salt was set, recorded or reconstructible, so **the recorded figure could not
+have been re-derived by an auditor** — which is the one property every row on
+this ladder is supposed to have. The 0.861133 in the row is one draw of that.
+
+**THE REPAIR IS STRUCTURAL, AND IT COST THE SPECS RATHER THAN PAYING THEM**
+(`8f3d944`). One `_modal(xs)` = `max(dict.fromkeys(xs), key=xs.count)` — ties
+to first appearance in the seeded draw sequence — defined once in `LG.10` and
+imported by `LG.12`, which already imports the rest of the pipeline, so the
+family has ONE implementation and the line cannot come back by copy-paste.
+Identical under salts 0/1/7/42/12345. **No bar moved**; the determinate values
+are `LG.10` **0.805567** and `LG.12` **0.784867**, *below* both lottery draws.
+A repo-wide sweep found exactly these three sites — every other `set()`
+reduction in `experiments/` is already `sorted(set(...))`, so a convention was
+not what failed and fixing the sites would not have been enough.
+
+**BOTH ROWS RE-BOUGHT, BOTH STILL FAIL** (`0b1d8da`): `LG.10` attempt 3 (1.2 s)
+and `LG.12` attempt 2 (1.22 s), every other metric byte-identical. **The
+verdicts were never in danger** — each spec misses `match` (0.694 / 0.679) and
+`unanimity` (0.222 / 0.202) against 0.90 — so this instance cost
+reproducibility, not a certificate. **That is luck about which conjunct was
+slack, not a property of the defect**, and the counterfactual is one step away:
+`swap_agree` was going to be an **eligibility leg** in the very race I was
+setting up, where a single tie decides whether an arm may hold a seat.
+
+**THE TIE-BREAK ITSELF IS A JUDGEMENT AND I RECORDED WHY.** Sorting candidates
+alphabetically would also have been deterministic — and would have made the
+modal utterance a fact about English spelling rather than about the mouth.
+First-appearance-in-the-seeded-sequence is the only tie-break available that
+stays inside `(code, seed, data)`.
+
+**LESSON** (`1d58a29`): *a reduction over `set(...)` is a `PYTHONHASHSEED`
+lottery, and a gated metric may not be one* — generalised to **a ladder metric
+must be a function of (code, seed, data) and of nothing else**, with the two
+transferable sub-lessons (run it in two processes and diff EVERY metric; a
+determinism repair that happens to PAY the spec deserves a second look, since
+nothing selected the salt that produced the recorded row). `T0.02` proves
+*torch* is deterministic within a process and says nothing about the
+pure-Python reductions that turn draws into recorded numbers, which is exactly
+where this lived.
+
+**ROUTED** (`0c4f3db`): `hash-salt-lottery-in-a-gated-metric`, **DUE 09-17**
+from `review-queue`'s own `next_free_due`. It asks one question — whether this
+ladder wants a mechanical detector for *"recorded metric is not a function of
+(code, seed, data)"*, and where it would live — with the menu priced: a static
+AST screen (cheap, but `T0.13` scans `_check` of PASSING specs and this lived
+in `_measure` of FAILING ones, so it is a new detector not a new property); a
+dynamic two-salt re-run (exact, and priced out — it doubles every spec's cost
+against a day ceiling that already forecloses 38); or nothing.
+
+**AND I DID NOT BUILD THE SCREEN, WHICH IS THE ONE DECISION IN THIS SLOT WORTH
+ARGUING WITH.** `D27` is on the owner's desk with `decide_by 09-20` asking the
+same question one level up, and it carries the measurement that should stop me:
+its prototype screen flagged **104 of 107** PASS specs, 3 of 12 hand-checks
+real. Shipping a second unmeasured screen while the owner is being asked
+whether screens work would walk around an open decision and spend the
+credibility `D27` is trying to price. If it is taken, `D27`'s own default says
+reporting-only until the false-positive rate is written down.
+
+**Instruments at slot end.** `render` **107/248** unchanged (FAIL → FAIL is not
+a demotion), `review-queue` **0 violations** with the 09-13 pile at 13 and
+`IMMINENT` printing 13-undischargeable before midnight makes them violations,
+`decisions --check` rc=0 at floor (0/0 firing-diff), `champions --check` rc=0
+every ratchet at floor, `run stale` unchanged (`T2.02` only, pre-existing),
+`coverage` EXIT 2 on the same two owned-and-routed counts. **One ratchet moved
+and it was mine** (`c5d543e`): `review_queue_net_arrivals` 8 → 9 for the
+routing in `0c4f3db`. `fail_unowned` **0 AT floor** with its owned-forms
+breakdown unchanged at queue-row 23 — two re-bought FAILs added no orphan
+because both were already owned. `unreachable` **97, AT floor**.
+
+**Housekeeping.** 12 claude processes on the box, so `git commit --only` with
+named paths throughout and no `git add -A`; nothing of anyone else's is in any
+commit; tree clean after each. No detached launches, no GPU dispatch, no
+background processes, nothing to declare in `declared_pids`. CPU billed: 2.4 s
+of re-runs.
+
+**NEXT ITERATION.** **`D25`'s armed default is fireable after midnight** —
+option (iii) FIX THE SEAL, required wording *"the owner did not rule by
+2026-09-13, so the pre-registered default fired"*, pre-commit check
+`--firing-check WORKTREE`; then `D19` on 09-15. Take the count from
+`python -m experiments.decisions`, never from a page. **The 13 rows dated
+09-13 go OVERDUE at midnight and `review-queue` goes red for the first time
+since 09-03 — that is the promise breaking, not the instrument.** And the
+Language-routing seat is still unraced, but it is now cheaper than it was this
+morning: **the seam exists and is committed** (`LG.10._measure(select_fn=...)`,
+default byte-identical), the four arms are obvious from LG.10's own
+disposition (softmax-T1 incumbent, meaning-argmax, argmax, softmax-T0.25)
+against a no-chooser uniform control, every score is already cached in
+`/data/lg10_llm_verdicts.json` so it buys no LLM verdicts — **and its
+eligibility leg no longer depends on a coin nobody flipped.** Do NOT re-run
+`LG.10`/`LG.12`; their rows are fresh as of 16:17 and nothing in them will
+move without a new mechanism.
