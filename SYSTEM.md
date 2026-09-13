@@ -165,11 +165,26 @@ task.
 
    **The third clause is still on the author's word, and this sentence stays
    here until it is not.** *"Never widens what is permitted"* is a statement
-   about the space of allowed ACTIONS; no diff decides it. Two smaller gaps are
-   named beside the check rather than left to be discovered: a firing is
-   identified by its own commit subject, so a firing that does not say it is one
-   is not audited; and the pattern reads module-level `ALL_CAPS = <number>`, not
-   every place a bar could hide.
+   about the space of allowed ACTIONS; no diff decides it.
+
+   **Of the two smaller gaps named beside the check when it shipped, ONE IS
+   CLOSED AND IT COST A MEASUREMENT TO FIND (2026-09-13, later the same day).**
+   The gap read: *a firing is identified by its own commit subject, so a firing
+   that does not say it is one is not audited.* That is a checker reading a
+   population somebody else selected — and the selector was **the author's word
+   about the author's own act**, which is the precise form of evidence this
+   file's first law exists to distrust, sitting one function above the check
+   built to enforce it. It had already cost one: **`3b2e38b` completed `D22`'s
+   resolution record, named neither "default" nor "fired", and was therefore
+   never diff-audited** while every page reported the audit complete. It audits
+   clean, so the exposure was zero — which is why closing it was cheap. A
+   firing is now identified by **two independent channels**: its subject, and
+   the `RESOLVED BY ARMED DEFAULT` record it has to write whatever it calls the
+   commit. `T0.28`'s P17 is the certificate, and the control is the organ as it
+   stood that morning. The remaining gap is unchanged: the pattern reads
+   module-level `ALL_CAPS = <number>`, not every place a bar could hide. **The
+   residual on identification is now a firing that declares itself in NEITHER
+   channel — named here rather than called closed.**
 
    *The cost of this rule, recorded beside it as owner directives must be:* the
    loop will sometimes spend free compute running an arm the owner would have

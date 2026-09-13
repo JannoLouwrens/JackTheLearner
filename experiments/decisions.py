@@ -119,10 +119,20 @@ gaps in the two that are checked:
   * clause 3, "never widens what is permitted", is a statement about the space
     of allowed ACTIONS and is not decidable from any diff. Unenforced. This
     sentence stays until it is not.
-  * a firing is IDENTIFIED by its own commit subject (a `D<n>`, "default",
-    "fired"). A firing that does not say so is not audited, and nothing forces
-    the idiom. Identification is generous on purpose - checking an innocent
-    commit costs nothing, missing a real one costs the guard.
+  * a firing is IDENTIFIED by TWO independent channels as of 2026-09-13: its
+    own commit subject (a `D<n>`, "default", "fired") and - added because the
+    first one MISSED ONE - the durable record it writes, a commit that touches
+    `RESOLVED BY ARMED DEFAULT` in `docs/DECISIONS_RESOLVED.md`. The subject is
+    the author's word about their own commit, in the file whose entire subject
+    is that author self-certification is not evidence; the record is an artifact
+    the firing has to leave anyway. MEASURED, not hypothetical: `3b2e38b`
+    ("D22's record completed (89th audit B1.1) ...") wrote D22's resolution and
+    names no default and no firing, so the subject channel did not see it and it
+    was never diff-audited. It audits CLEAN - the hole was real and the exposure
+    was zero, which is the only cheap moment to close one. The residual, named
+    rather than claimed closed: a firing that declares itself in NEITHER channel
+    is still invisible. Identification stays generous on purpose - checking an
+    innocent commit costs nothing, missing a real one costs the guard.
   * the pattern reads module-level `ALL_CAPS = <number>` only. See the block
     comment for what that misses.
 
@@ -674,6 +684,18 @@ _FIRING_SUBJECT = (re.compile(r"\bD\d+\b"),
                    re.compile(r"\bfired?\b", re.I),
                    re.compile(r"\bdefaults?\b", re.I))
 
+#: THE SECOND IDENTIFICATION CHANNEL, and the reason there are two.
+#: `_FIRING_SUBJECT` asks the commit whether it is a firing, which is the
+#: author's word about their own act — the exact form of evidence this file
+#: exists to distrust. A firing also leaves an ARTIFACT it cannot skip: the
+#: `## D<n> — RESOLVED BY ARMED DEFAULT` heading on `docs/DECISIONS_RESOLVED.md`.
+#: Anchoring on that catches a firing whose subject says nothing, and it caught
+#: one on the day it shipped (`3b2e38b`, D22's record, CLEAN).
+#: Matched against the PAGE's own history rather than against the subject, so
+#: the caller passes `git log --format='%H|%s' -G<marker> -- <page>`.
+RECORD_PAGE = "docs/DECISIONS_RESOLVED.md"
+RECORD_MARKER = "RESOLVED BY ARMED DEFAULT"
+
 
 def _diff_files(diff_text: str) -> dict:
     """`{path: (added_lines, removed_lines)}` from a unified diff.
@@ -761,12 +783,15 @@ def firing_diff_hazards(diff_text: str) -> list:
 BASELINE_FIRING_HAZARDS = 0
 
 
-def firing_audit(log_text: str, diff_for) -> tuple:
+def firing_audit(log_text: str, diff_for, record_log_text: str = "") -> tuple:
     """`(rows, checked)` — `rows` is `[(sha, subject, hazards)]` over every
-    self-declared firing; `checked` is False when the log could not be read.
+    identified firing; `checked` is False when the log could not be read.
 
     `diff_for(sha) -> str` is injected for the same reason `safety_hazards`
     takes rows: the audit must be reproducible without a repository.
+    `record_log_text` is the SECOND channel (`firing_commits_all`) and defaults
+    to empty so every existing caller keeps the behaviour it had — a widening
+    of coverage may not be able to narrow it.
 
     `checked` exists because the ONE failure this check could have is the one
     it would report as success — `_git` swallows a missing repository and
@@ -774,7 +799,7 @@ def firing_audit(log_text: str, diff_for) -> tuple:
     detector wired to nothing is `T0.13`'s whole subject; this file will not
     add another.
     """
-    found = firing_commits(log_text)
+    found, _record_only = firing_commits_all(log_text, record_log_text)
     if not found:
         return [], False
     return [(sha, subj, firing_diff_hazards(diff_for(sha)))
@@ -793,6 +818,75 @@ def firing_commits(log_text: str) -> list:
         if sha and all(p.search(subject) for p in _FIRING_SUBJECT):
             out.append((sha.strip(), subject.strip()))
     return out
+
+
+def firing_commits_by_record(record_log_text: str) -> list:
+    """`[(sha, subject)]` for the commits that WROTE a firing's record.
+
+    Takes `git log --format='%H|%s' -G<RECORD_MARKER> -- <RECORD_PAGE>` as text,
+    injectable like everything else here. Every line of that log is, by
+    construction, a commit that added or removed the resolved page's
+    armed-default marker — so no subject wording is required and none is read.
+
+    Over-approximating is the safe direction, as it is for `firing_commits`: a
+    commit that merely reflows the page is checked too, and checking a clean
+    commit costs nothing.
+    """
+    out = []
+    for line in record_log_text.splitlines():
+        sha, _, subject = line.partition("|")
+        if sha.strip():
+            out.append((sha.strip(), subject.strip()))
+    return out
+
+
+def firing_commits_all(log_text: str, record_log_text: str = "") -> tuple:
+    """`(rows, record_only)` — the UNION of the two identification channels.
+
+    `rows` is `[(sha, subject)]` in the order the subject channel found them,
+    then the record-only ones; `record_only` is the sub-list the SUBJECT channel
+    missed, which is the number that says whether the second channel is earning
+    its place. It read 1 on the day it shipped and that is not a rounding error:
+    it is one firing act that went fourteen days without a diff audit while
+    every page said the audit was complete.
+
+    Dedup is by sha and the subject is taken from whichever channel saw it
+    first, because the two disagree only about the label, never about the diff.
+    """
+    rows = firing_commits(log_text)
+    seen = {sha for sha, _ in rows}
+    record_only = [(sha, subj) for sha, subj
+                   in firing_commits_by_record(record_log_text)
+                   if sha not in seen]
+    return rows + record_only, record_only
+
+
+def firing_coverage(resolved_text: str, rows: list) -> tuple:
+    """`(declared, uncovered)` — which decisions the resolved page says fired,
+    and which of those no identified commit mentions.
+
+    What it buys is COVERAGE made visible: the audit can say "20 of the 20
+    firings this project admits to are covered" instead of a bare commit count
+    that nobody can check against anything. `firing_audit` answers *were the
+    commits I found clean*; this answers *did I find them all*, against a record
+    written by a different hand at a different time.
+
+    REPORTED, NOT RATCHETED, and the reason is a false positive it can have
+    rather than modesty: attribution here reads the D-id out of the commit
+    SUBJECT, so a record-channel commit that fires a default without naming it
+    anywhere in its subject is audited but reads as uncovered. That is a wrong
+    number pointing the SAFE way — it over-reports missing coverage, never
+    under-reports it — and a floor on a counter with a known false positive is
+    how a guard gets switched off. The floor that bites stays `FIRING-DIFF`, on
+    the hazards themselves.
+    """
+    declared = sorted({m.group(1) for m in re.finditer(
+        r"^##\s+(D\d+)\s+\S*\s*RESOLVED BY ARMED DEFAULT", resolved_text, re.M)},
+        key=lambda s: int(s[1:]))
+    named = set()
+    for _sha, subj in rows:
+        named.update(re.findall(r"\bD\d+\b", subj))
+    return declared, [d for d in declared if d not in named]
 
 
 # ── the owner's OTHER desk: `## FOR THE OWNER` in docs/PROGRESS.md ──────────
@@ -1491,6 +1585,32 @@ def _firing_fixture() -> None:
     assert [s for s, _ in firing_commits(log)] == ["aaa1", "aaa2", "aaa3"], \
         firing_commits(log)
 
+    # THE SUBJECT CHANNEL'S MEASURED MISS, planted as its own positive. This is
+    # `3b2e38b`'s real subject, shortened: it completed D22's resolution record
+    # and says neither "default" nor "fired", so the channel that asks the
+    # author cannot see it. The RECORD channel does, because the firing had to
+    # write the page whatever it called the commit.
+    missed = "bbb1|D22's record completed (89th audit B1.1) + the measurement"
+    assert firing_commits(missed) == [], firing_commits(missed)
+    assert [s for s, _ in firing_commits_by_record(missed)] == ["bbb1"]
+    union, only = firing_commits_all(log, missed)
+    assert [s for s, _ in union] == ["aaa1", "aaa2", "aaa3", "bbb1"], union
+    assert [s for s, _ in only] == ["bbb1"], only
+    # ...and the union must not double-count a commit both channels see.
+    _dup, _only2 = firing_commits_all(log, "aaa1|D26 FIRED by armed default")
+    assert [s for s, _ in _dup] == ["aaa1", "aaa2", "aaa3"], _dup
+    assert _only2 == [], _only2
+    # A record-only commit is AUDITED, not merely listed: plant the hazard on it.
+    _r, _c = firing_audit(log, lambda sha: moved if sha == "bbb1" else "",
+                          missed)
+    assert _c and [(s, [h[0] for h in hz]) for s, _, hz in _r][-1] == \
+        ("bbb1", ["CONST-MOVED"]), _r
+    # Omitting the second channel may not change what the first one found — a
+    # widening of coverage that narrowed it would be a regression wearing a
+    # feature's clothes.
+    assert firing_audit(log, lambda sha: "")[0] == \
+        [(s, j, []) for s, j in firing_commits(log)]
+
     # The audit joins the two, and the ONE failure it could report as success —
     # no history at all — is `checked=False`, never an empty clean bill.
     rows, checked = firing_audit(log, lambda sha: moved if sha == "aaa2" else "")
@@ -1499,10 +1619,43 @@ def _firing_fixture() -> None:
     assert firing_audit("", lambda sha: "") == ([], False)
     assert firing_audit("nothing|a commit about something else\n",
                         lambda sha: "") == ([], False)
+    # A repository with no subject-declared firing but a recorded one is still
+    # CHECKED — `checked=False` means "no history", not "nothing matched".
+    assert firing_audit("", lambda sha: "", missed)[1] is True
+
+    # Coverage joins the resolved page to what the audit actually looked at.
+    page = ("## D22 — RESOLVED BY ARMED DEFAULT (fired 2026-09-12): x\n"
+            "## D25 — RESOLVED BY ARMED DEFAULT (fired 2026-09-14): y\n"
+            "## D2 — WINNER — resolved by ledger replay, not a firing\n")
+    assert firing_coverage(page, [("bbb1", missed.split("|", 1)[1])]) == \
+        (["D22", "D25"], ["D25"]), firing_coverage(page, [("bbb1", "")])
+    assert firing_coverage(page, []) == (["D22", "D25"], ["D22", "D25"])
 
     # And the ratchet must actually BITE: a hazard is not a printed warning.
     assert check_rc([("FIRING-DIFF", "aaa2", "…")]) == 1
     assert check_rc([]) == 0
+
+    # THE WORKING-TREE CHECK ASKS GIT FOR THE WORKING TREE. This asserts on the
+    # ARGUMENTS and not on the output, because the bug it pins was invisible in
+    # the output: `_diff_of` used to end `or _git("diff", ...)` and promise that
+    # `--firing-check HEAD` therefore read the uncommitted tree. `git show HEAD`
+    # succeeds in any repository with a commit, so the `or` never ran and the
+    # command audited the PREVIOUS COMMIT while printing `ok` — measured on the
+    # very tree that fixed it, with `N_PROPERTIES 16 -> 17` sitting uncommitted.
+    # A firing iteration would have taken that green for its own bytes.
+    calls = []
+
+    def _fake(*args):
+        calls.append(args)
+        return "--- a/x\n+++ b/x\n@@ -1 +1 @@\n-A = 1\n+A = 2\n"
+
+    assert _diff_of(WORKTREE, _fake) and calls[-1] == ("diff", "--unified=0",
+                                                       "HEAD"), calls
+    assert _diff_of("worktree", _fake) and calls[-1][0] == "diff", calls
+    assert _diff_of("HEAD", _fake) and calls[-1] == ("show", "--format=",
+                                                     "--unified=0", "HEAD"), calls
+    # ...and a rev is never silently retried as a working-tree diff: one ask.
+    assert len(calls) == 3, calls
 
 
 def _previous_page(path: Path) -> str | None:
@@ -1667,12 +1820,51 @@ def _git(*args) -> str:
         return ""
 
 
-def _diff_of(rev: str) -> str:
-    """The diff a rev introduces. Falls back to `git diff <rev>` so a
-    working-tree check (`--firing-check HEAD`) works before the commit exists —
-    which is the moment the firing iteration actually needs it."""
-    return (_git("show", "--format=", "--unified=0", rev)
-            or _git("diff", "--unified=0", rev))
+#: The pseudo-rev that means "what is on disk and not yet committed".
+#:
+#: THIS EXISTS BECAUSE THE FALLBACK IT REPLACES DID NOT WORK, and the defect was
+#: found by using the tool rather than by reading it (2026-09-13, hours after it
+#: shipped). `_diff_of` used to end `or _git("diff", "--unified=0", rev)` and its
+#: docstring promised that `--firing-check HEAD` therefore checked the working
+#: tree "before the commit exists — which is the moment the firing iteration
+#: actually needs it". `git show HEAD` SUCCEEDS on any repository with a commit,
+#: so the `or` never evaluated and the command silently audited the PREVIOUS
+#: commit instead. Demonstrated on the tree that fixed it: `--firing-check HEAD`
+#: printed `ok` while `N_PROPERTIES 16 -> 17` — a CONST-MOVED this tool exists to
+#: refuse — sat uncommitted on disk. `D19` and `D25` fire tomorrow under a
+#: standing instruction to run exactly that command first, so the green it would
+#: have printed would have been about the wrong bytes.
+WORKTREE = "WORKTREE"
+
+
+def _diff_of(rev: str, git=None) -> str:
+    """The diff a rev introduces, or the uncommitted diff for `WORKTREE`.
+
+    No silent fallback between the two: a check that quietly answers about
+    different bytes than it was asked about is worse than one that answers
+    nothing, because it answers in the shape of a pass.
+
+    `git` is injectable for the reason everything else in this file is — the
+    defect this function was written to fix was a WRONG GIT INVOCATION that no
+    amount of reading the output could reveal, so the fixture asserts on the
+    ARGUMENTS, which is the only place that class of bug is visible.
+    """
+    g = git or _git
+    if rev.strip().upper() == WORKTREE:
+        return g("diff", "--unified=0", "HEAD")
+    return g("show", "--format=", "--unified=0", rev)
+
+
+def _record_log() -> str:
+    """The second identification channel's raw log: every commit that touched
+    the armed-default marker on the resolved page.
+
+    `-G` matches the marker on either side of the hunk, so a REMOVED record is
+    identified too — a firing that is later quietly unwritten is exactly the
+    commit an audit most wants to see.
+    """
+    return _git("log", "--all", "--format=%H|%s", "-G", RECORD_MARKER,
+                "--", RECORD_PAGE)
 
 
 def firing_check(argv: list[str]) -> int:
@@ -1684,23 +1876,49 @@ def firing_check(argv: list[str]) -> int:
     runs over what already landed.
     """
     revs = [a for a in argv if not a.startswith("-")]
+    _diffs: dict = {}          # rev -> diff, only for the explicit-rev path
     if revs:
         print(f"\nFiring-diff check — {len(revs)} rev(s)\n")
-        rows = [(r, "", firing_diff_hazards(_diff_of(r))) for r in revs]
+        _diffs = {r: _diff_of(r) for r in revs}
+        rows = [(r, "", firing_diff_hazards(d)) for r, d in _diffs.items()]
         checked = True
+        # The firing iteration's own commit does not exist yet, so a check of a
+        # REV while the tree is dirty is an answer about different bytes than
+        # the ones about to land. Say so where it is read, not only in a
+        # docstring — this is the exact confusion that made the old
+        # working-tree fallback dead code for a day.
+        if (any(r.strip().upper() != WORKTREE for r in revs)
+                and _git("status", "--porcelain").strip()):
+            print("  NOTE: the working tree is DIRTY and a rev check does not "
+                  "see it. Run `--firing-check WORKTREE` for the bytes you "
+                  "are about to commit.\n")
     else:
+        _record = _record_log()
         rows, checked = firing_audit(_git("log", "--all", "--format=%H|%s"),
-                                     _diff_of)
-        print(f"\nFiring-diff audit — {len(rows)} commit(s) declare a "
-              f"pre-registered default fired\n")
+                                     _diff_of, _record)
+        _only = firing_commits_all(_git("log", "--all", "--format=%H|%s"),
+                                   _record)[1]
+        print(f"\nFiring-diff audit — {len(rows)} commit(s) identified as "
+              f"firing a pre-registered default "
+              f"({len(_only)} by the RECORD channel only — the subject said "
+              f"nothing)\n")
         if not checked:
             print("  NOT CHECKED: git returned no history. This is not a "
                   "clean bill — a detector that reports success when its "
                   "input is missing is wired to nothing.\n")
             return 1
-    bad = 0
+    bad = empty = 0
     for rev, subj, hazards in rows:
         if not hazards:
+            # An EMPTY diff is not a clean bill — a mistyped rev, a rev this
+            # repository does not have, or a clean tree all reach here, and
+            # `T0.13`'s subject is a detector that answers success when its
+            # input is missing. Name it instead of printing `ok`.
+            if not _diffs.get(rev, "x").strip():
+                empty += 1
+                print(f"  EMPTY     {rev[:9]}  nothing to check — no diff at "
+                      f"this rev. This is not a pass.")
+                continue
             print(f"  ok        {rev[:9]}  {subj[:88]}")
             continue
         bad += 1
@@ -1716,10 +1934,27 @@ def firing_check(argv: list[str]) -> int:
               f"the offending hunk and route it as an authored spec amendment "
               f"through the strengthen-only lane — never to widen this "
               f"check.\n")
+    elif empty and empty == len(rows):
+        # Every clean verdict here rests on an empty input. Saying "no firing
+        # moved a bar" would be true of the empty set and useless to the reader.
+        print(f"  {empty} of {len(rows)} rev(s) had NO DIFF, so nothing was "
+              f"examined. A clean tree reads this way and so does a mistyped "
+              f"rev; the exit code cannot tell you which.\n")
     else:
         print("  no firing has edited GOAL.md or moved a numeric bar. The "
               "THIRD clause — 'never widens what is permitted' — is not "
-              "decidable from a diff and remains on the author's word.\n")
+              "decidable from a diff and remains on the author's word."
+              + (f" ({empty} rev(s) had no diff and were not examined.)"
+                 if empty else "") + "\n")
+    if not revs:
+        _declared, _uncovered = firing_coverage(
+            RESOLVED.read_text() if RESOLVED.exists() else "",
+            [(s, j) for s, j, _ in rows])
+        print(f"  coverage: {len(_declared) - len(_uncovered)} of "
+              f"{len(_declared)} decision(s) the resolved page records as "
+              f"fired are named by an identified commit"
+              + (f" — NOT NAMED: {', '.join(_uncovered)}" if _uncovered
+                 else "") + ".\n")
     return 1 if bad else 0
 
 
@@ -1798,7 +2033,7 @@ def main(argv: list[str]) -> int:
     # nonzero cannot be seen to be at floor").
     if "--check" in argv:
         _rows, _checked = firing_audit(_git("log", "--all", "--format=%H|%s"),
-                                       _diff_of)
+                                       _diff_of, _record_log())
         if not _checked:
             violations.append(("FIRING-DIFF", "(history)",
                                "git returned no history — the firing-diff "

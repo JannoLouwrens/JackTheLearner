@@ -67,6 +67,28 @@ string is exactly what a battery can be handed. `decisions.firing_diff_hazards`
 now reads one, and P16 drives it on planted diffs plus the legal shape of
 `D25`'s own armed default, which must clear.
 
+P17 CLOSES THE HOLE P16 OPENED, and it is worth stating as a general shape:
+a checker that reads a SELECTED population inherits the honesty of whoever
+did the selecting. P16 reads firing commits honestly; identification asked
+each commit's own SUBJECT whether it was a firing, which is the author's word
+about the author's act inside the one battery built because author
+self-certification is not evidence. The measured cost, found the same day and
+not imagined: `3b2e38b` completed `D22`'s resolution record, named neither
+"default" nor "fired", and was therefore never diff-audited while every page
+reported the audit complete (it audits CLEAN — the hole was real and the
+exposure was zero). P17 requires a SECOND identification channel anchored on
+the artifact a firing cannot skip, the `RESOLVED BY ARMED DEFAULT` record, and
+requires that widening the list also widened the CHECKING.
+
+P18 IS THE SAME LESSON ON THE OTHER AXIS: P17 fixes which COMMITS are read,
+P18 fixes which BYTES. A firing iteration needs the check BEFORE its commit
+exists, and `_diff_of` promised exactly that in a docstring while `git show
+HEAD` — which succeeds in any repository with a commit — made the working-tree
+fallback unreachable. `--firing-check HEAD` printed `ok` about the PREVIOUS
+commit; it did so on the tree that fixed it, with an uncommitted `N_PROPERTIES
+16 -> 17` in plain sight. P18 asserts on the git ARGUMENTS rather than on the
+output, because a wrong invocation is invisible in a right-looking answer.
+
 What remains uncertified is the THIRD clause — *never widens what is
 permitted* — which is a statement about the space of allowed actions and is
 decidable from no artifact this battery can construct. `T0.29` (`champions.py`)
@@ -81,10 +103,12 @@ import re
 
 from ..coverage import _claim_dead
 from ..decisions import (BASELINE_ACTION_EXPIRED, BASELINE_FIRING_HAZARDS,
-                         BASELINE_UNDECLARED, DOC, audit, blast_radius,
-                         check_rc, default_dates, expired_actions,
-                         firing_audit, firing_diff_hazards, main,
-                         owner_ask_silences, parse, same_day_actions)
+                         BASELINE_UNDECLARED, DOC, WORKTREE, _diff_of, audit,
+                         blast_radius, check_rc, default_dates,
+                         expired_actions, firing_audit, firing_commits,
+                         firing_commits_all, firing_coverage,
+                         firing_diff_hazards, main, owner_ask_silences, parse,
+                         same_day_actions)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
@@ -95,7 +119,12 @@ SPEC_ID = "T0.28"
 # hashing playground.py; T0.21 hashing coverage.py).
 IMPL_DEPS = ["experiments/decisions.py"]
 
-N_PROPERTIES = 16
+N_PROPERTIES = 18
+
+# P17's log. `aaa1` declares itself a firing in this repo's usual idiom; `aaa2`
+# is an ordinary commit that must never be claimed as one.
+FIRING_LOG = ("aaa1|D26 FIRED by armed default\n"
+              "aaa2|T0.21 re-bought, no firing\n")
 
 # The firing-diff shapes P16 drives. Each is the smallest diff carrying one
 # defect, and the legal one is `D25`'s own armed default: a new branch in
@@ -389,6 +418,49 @@ def _firing(diff: str, *, safety_enforced: bool) -> list:
     if not safety_enforced:
         return []
     return [kind for kind, _path, _detail in firing_diff_hazards(diff)]
+
+
+def _identify(log: str, record_log: str, *, safety_enforced: bool) -> list:
+    """The shas this organ IDENTIFIES as firings, from both channels.
+
+    The control arm is `decisions.py` as it stood at 11:0x on 2026-09-13 —
+    hours old, not weeks — when identification asked the commit's own SUBJECT
+    whether it was a firing and nothing else. Reconstructed by deletion again:
+    drop the record channel and the answer is the subject channel's answer.
+    That is not a strawman; it is the shipped code from this morning, and the
+    commit it missed is in the repository.
+    """
+    if not safety_enforced:
+        return [sha for sha, _subj in firing_commits(log)]
+    return [sha for sha, _subj in firing_commits_all(log, record_log)[0]]
+
+
+def _diff_calls(rev: str, *, safety_enforced: bool) -> list:
+    """The git invocations this organ makes to fetch `rev`'s diff.
+
+    Asserted on the ARGUMENTS, not the output, because the defect it pins was
+    invisible in the output. The control arm is `_diff_of` as it stood at 11:0x
+    on 2026-09-13 — `show(rev) or diff(rev)` — whose docstring promised that
+    `--firing-check HEAD` read the working tree. `git show HEAD` succeeds in any
+    repository with a commit, so the `or` never evaluated, the command audited
+    the PREVIOUS COMMIT, and it printed `ok`. Reconstructed by deletion like
+    every other hole here: remove the pseudo-rev and the fallback returns.
+    """
+    calls: list = []
+
+    def _fake(*args):
+        calls.append(args)
+        # The old fallback only reached `git diff` when `git show` came back
+        # empty, which is what a real repository never does for a real rev.
+        return "" if (not safety_enforced and args[0] == "show"
+                      and rev.strip().upper() == WORKTREE) else "diff-text"
+
+    if safety_enforced:
+        _diff_of(rev, _fake)
+    else:
+        _fake("show", "--format=", "--unified=0", rev) or _fake(
+            "diff", "--unified=0", rev)
+    return calls
 
 
 def _hazards(text: str, rows, *, safety_enforced: bool) -> list:
@@ -769,6 +841,67 @@ DECIDE: D84
             or check_rc([("FIRING-DIFF", "aaa1", "planted")]) != 1):
         failed.append("p16_firing_diff_is_the_known_positive")
 
+    # P17 — WHO DECIDES WHAT A FIRING IS. P16 checks that an identified firing
+    # is read honestly; it says nothing about identification itself, which
+    # until today asked the commit's own SUBJECT — the author's word about the
+    # author's act, inside the one battery whose subject is that author
+    # self-certification is not evidence. The planted positive is REAL and is
+    # quoted from this repository: `3b2e38b` wrote `D22`'s resolution record
+    # and its subject names no default and no firing, so for fourteen days a
+    # firing act sat undiff-audited while every page reported the audit
+    # complete. The record channel anchors on the artifact a firing cannot
+    # skip — the resolved page's marker — and P17 requires, in both
+    # directions:
+    #   - the subject channel MISSES the real commit (the defect, reproduced);
+    #   - the record channel FINDS it, and the union does not double-count a
+    #     commit both channels see;
+    #   - a record-only commit is AUDITED, not merely listed — the hazard is
+    #     planted on it, so a channel that widened the list without widening
+    #     the checking would fail here;
+    #   - dropping the second channel does not narrow the first one's answer;
+    #   - and `firing_coverage` names a declared firing no commit reached,
+    #     which is the reading that says whether the audit found them ALL.
+    real_missed = "bbb1|D22's record completed (89th audit B1.1) + the measure"
+    union = _identify(FIRING_LOG, real_missed, safety_enforced=S)
+    both = _identify(FIRING_LOG, "aaa1|D26 FIRED by armed default",
+                     safety_enforced=S)
+    rec_rows, rec_ok = firing_audit(FIRING_LOG,
+                                    lambda sha: DIFF_BAR_MOVED
+                                    if sha == "bbb1" else "", real_missed)
+    page = ("## D22 — RESOLVED BY ARMED DEFAULT (fired 2026-09-12): x\n"
+            "## D25 — RESOLVED BY ARMED DEFAULT (fired 2026-09-14): y\n"
+            "## D2 — WINNER — resolved by ledger replay, not a firing\n")
+    # The expected answer is the EXPERIMENT's, written once and not branched on
+    # the arm: the control's `_identify` cannot reach `bbb1`, so it fails here
+    # because the channel is missing and not because a flag says it should.
+    if not (firing_commits(real_missed) == []
+            and union == ["aaa1", "bbb1"]
+            and both == ["aaa1"]
+            and rec_ok
+            and [(s, [k for k, _, _ in hz]) for s, _, hz in rec_rows][-1]
+            == ("bbb1", ["CONST-MOVED"])
+            and firing_audit(FIRING_LOG, lambda sha: "")[0]
+            == [(s, j, []) for s, j in firing_commits(FIRING_LOG)]
+            and firing_coverage(page, [("bbb1", "D22 record")])
+            == (["D22", "D25"], ["D25"])):
+        failed.append("p17_identification_is_not_the_authors_word")
+
+    # P18 — WHICH BYTES. P17 fixes which COMMITS get read; this fixes which
+    # BYTES. The firing iteration's own commit does not exist when it needs the
+    # check, so the tool has to be able to read the working tree — and until
+    # today it could not, while its docstring said it could and its output said
+    # `ok`. Both directions: `WORKTREE` (either case) must reach `git diff HEAD`
+    # and a named rev must reach `git show <rev>` ONCE, with no silent retry as
+    # a working-tree diff. The control arm restores the fallback and therefore
+    # asks `git show WORKTREE` first, which is the bug.
+    if (_diff_calls(WORKTREE, safety_enforced=S) != [("diff", "--unified=0",
+                                                      "HEAD")]
+            or _diff_calls("worktree", safety_enforced=S)
+            != [("diff", "--unified=0", "HEAD")]
+            or _diff_calls("HEAD", safety_enforced=S)
+            != [("show", "--format=", "--unified=0", "HEAD")]):
+        failed.append("p18_the_worktree_check_reads_the_worktree")
+
     live_asks = _live_asks()
     return {
         "properties_checked": float(N_PROPERTIES),
@@ -813,9 +946,10 @@ def _control(seed: int) -> dict:
     (P2), miss the both-named case (P4), pass a document containing an
     unarmed escalation (P9), miss both owner-ask classes (P11, P12), miss
     `D21`'s expired clock (P13), miss the same-day race its repair left
-    behind (P15), and miss every firing-diff hazard (P16) — for fourteen days
+    behind (P15), miss every firing-diff hazard (P16) — for fourteen days
     the answer to "did this firing edit GOAL.md" was silence, and silence read
-    as a pass.
+    as a pass — and identify firings by their own commit SUBJECT alone (P17),
+    which missed a real one in this repository's history.
     """
     return _probe(safety_enforced=False)
 
@@ -840,7 +974,9 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p13_expired_default_action_is_the_known_positive",
                            "p14_a_silenced_owner_ask_names_who_silenced_it",
                            "p15_same_day_race_and_clock_attribution",
-                           "p16_firing_diff_is_the_known_positive"}
+                           "p16_firing_diff_is_the_known_positive",
+                           "p17_identification_is_not_the_authors_word",
+                           "p18_the_worktree_check_reads_the_worktree"}
                       <= control_names)
     return bool(experiment_clean and control_broken)
 

@@ -13867,3 +13867,59 @@ guard — the guard's evidence is the planted positives and the real-commit
 demonstration (`674a759`, `UNREACHABLE_BASELINE 93 -> 94`, caught; `445b9e1`,
 which armed two NEW conjuncts in the same window, correctly clean). It is also
 why the ratchet shipped at floor, which is the only cheap moment to ship one.
+
+---
+
+## A checker inherits the honesty of whoever selected its input — and of whoever fetched its bytes (2026-09-13, builder, same day as the check above)
+
+The firing-diff check shipped in the morning and was certified by `T0.28` P16.
+By the afternoon it had **two defects, both in the layer nobody certifies**, and
+the general shape is worth more than either fix: **`firing_diff_hazards` is
+honest about what it reads, and until today NOTHING was honest about what it was
+handed.** A guard is not one function; it is a pipeline of *which things*,
+*which bytes*, and *what verdict*, and a certificate on the last stage says
+nothing about the first two.
+
+**Defect 1 — WHICH COMMITS. Identification was the author's word about the
+author's own act.** A firing was found by its commit SUBJECT matching `D<n>` +
+"default" + "fired". That was named as a known gap beside the check, which was
+honest but insufficient: the previous bullet-list above says *"a firing that
+does not say it is one is invisible"* and stops there. **Joining the subject
+scan to an independent record found one immediately.** `3b2e38b` — *"D22's
+record completed (89th audit B1.1) + the measurement five audits asked for"* —
+wrote `D22`'s resolution and names neither "default" nor "fired", so a real
+firing act went unaudited while every page reported the audit complete. It
+audits CLEAN: the hole was real and the exposure was zero, which is the only
+cheap moment to close one. **The repair is a second channel anchored on an
+ARTIFACT rather than on a message** — the `RESOLVED BY ARMED DEFAULT` record a
+firing has to write whatever it calls the commit. Generalised: *when a guard
+covers a class of acts, ask what the act must LEAVE BEHIND, not what its author
+chose to call it.*
+
+**Defect 2 — WHICH BYTES, and this one was live for tomorrow's two firings.**
+`_diff_of` read `git show <rev> or git diff <rev>` and its docstring promised
+that `--firing-check HEAD` therefore checked the working tree, "which is the
+moment the firing iteration actually needs it". **`git show HEAD` succeeds in
+any repository with a commit, so the `or` never evaluated and the command
+audited the PREVIOUS COMMIT.** Demonstrated on the tree that fixed it:
+`--firing-check HEAD` printed `ok` while `N_PROPERTIES 16 -> 17` — a
+`CONST-MOVED` the tool exists to refuse — sat uncommitted on disk. `D19` and
+`D25` fire tomorrow under a standing instruction to run exactly that command.
+**A fallback whose first branch always succeeds is not a fallback; it is dead
+code with a docstring.** `WORKTREE` is now an explicit pseudo-rev, a rev check
+on a dirty tree prints a NOTE saying it cannot see it, and an EMPTY diff prints
+`EMPTY ... this is not a pass` instead of `ok`.
+
+**THE RULE THAT COVERS BOTH, and it is a testing rule, not a git rule: when a
+bug is a WRONG INVOCATION, assert on the ARGUMENTS, not on the output.** No
+amount of reading `ok` reveals that `ok` was about the wrong commit. `T0.28` P18
+injects a fake `git` and pins the exact argv for `WORKTREE` and for a named rev,
+with the control arm restoring the old fallback — so the old code fails the
+property by asking `git show WORKTREE` first. Every "it fetches the right thing"
+claim in this repo is vulnerable the same way, and output assertions cannot see
+any of them.
+
+**And the honest tally did NOT move: still 2 of 3 clauses enforced.** These were
+defects in the two that are enforced, not progress on the third. Clause 3
+remains on the author's word, and a repair that let itself be written up as
+progress on the tally would be the exact disease this file records.
