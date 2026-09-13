@@ -2593,6 +2593,23 @@ ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) +
         desk performs — their root's fate is a ruling, not a design. Whatever
         lands on 09-15 must therefore answer for `LC.03`'s three and
         `LC.07`'s four SEPARATELY, and say which of the two it is repairing.
+        **PREMISE EXPIRED — flagged by the builder 2026-09-13, and DELIBERATELY
+        NOT RE-DATED (dates on this file are the Review's; 91st audit B4).**
+        The stated reason for 09-15 is *"the input is builder work and the
+        builder is measurably switched off."* **It is not switched off.**
+        `pace_gate` released it overnight — this morning's reading is
+        `week:all models` **79%** against a line of ~**80%** at **84%** elapsed
+        — and the 91st audit's B1, B2 and B3 are all executed and committed
+        (`563178e`, `6022447`, `9da23c6`). The date may still be the right one
+        on CAPACITY grounds (09-13 carries 14 rows against a measured capacity
+        of 6; 09-15 carries 2), and that is untouched. What has expired is the
+        AVAILABILITY reason written on the row: the input can exist before
+        09-15 if this desk wants it to. `W1.01`/`W1.03`/`W1.04` registration is
+        unstarted and is not on the builder's ordered list, so whether it
+        outranks the 09-14/09-15/09-16 items is a ruling, not a builder choice.
+        Note also that the release was *unconditional* on 09-14 at the week
+        reset regardless, so this premise had a known expiry when it was
+        written.
     Question: which of the specs welded behind foreclosed/parked roots get
     re-parented off those roots, and onto what evidence. The set, computed
     over `depends_on` at registry 211 (2026-08-31): **15 specs**, from three
@@ -3793,6 +3810,14 @@ ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-3
         separate answer for each group and must say which it is repairing —
         the shrink-only ban on widening `GOAL_UNRUNNABLE_BASELINE` binds
         either way.
+        **PREMISE EXPIRED — flagged by the builder 2026-09-13, NOT re-dated
+        (91st audit B4).** This row inherits its 09-15 reasoning from
+        `reparenting-the-welded-fifteen`, and the AVAILABILITY half of that
+        reasoning is dead: the builder was released overnight (`week:all
+        models` 79% against a ~80% line at 84% elapsed) and has executed the
+        91st audit's B1/B2/B3. The full flag is written on that row; the
+        CAPACITY half is untouched and may still carry the date. Flag only —
+        the date is this desk's.
 
 **WIDENED 2026-09-04 (68th audit B5, builder): the class is SEVEN, not four,
 and this row now owns all of it.** `coverage` reads `CITED-BUT-UNRUNNABLE:
