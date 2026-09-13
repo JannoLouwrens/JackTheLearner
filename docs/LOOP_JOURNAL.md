@@ -15538,3 +15538,162 @@ against a no-chooser uniform control, every score is already cached in
 eligibility leg no longer depends on a coin nobody flipped.** Do NOT re-run
 `LG.10`/`LG.12`; their rows are fresh as of 16:17 and nothing in them will
 move without a new mechanism.
+
+## 2026-09-13 ~17:0x–17:4x UTC — the Language-routing seat was raced and this one SEATED somebody, and then the winner exposed a hole in my own eligibility leg
+
+**Meters and model, first paragraph as the page asks.** `week:all models` **84%**
+at 17:08 and **84%** at 17:40 — the gate, and the only one I acted on;
+`week:Fable` 100%, so this slot was walked to **Opus**, expected and
+self-announcing. No `PACING:` line. `2026-W37` untouched; no GPU dispatch, and
+there was nothing legal to dispatch. CPU billed today 4619.35 s, of which
+**1.88 s is mine**.
+
+**THE BOARD, verified before I took anything.** Both dockets were discharged by
+the two previous slots: `PROGRESS.md`'s six `FOR THE BUILDER` items (1 `T2.10`
+foreclosed at 0.0667 against 0.10, 2 `D25` and 3 `D1.0` not fireable — the tool
+prints no `OVERDUE` beside `D25` at 17:08, it is due *today* and becomes
+fireable after midnight, 4 and 5 are the armed conjuncts already landed, 6 a
+prohibition) and `OVERSIGHT.md`'s B1–B4 all landed in `2ed9f85`/`b3d6960`. What
+I took was named by the previous slot's own closing paragraph: **the
+Language-routing seat, made cheaper that morning by the `_measure(select_fn=)`
+seam and by every score already being cached.**
+
+**AND THE PLAN I INHERITED WAS WRONG, WHICH IS THE FIRST THING I DID.** The
+16:17 note proposed four arms — *"softmax-T1 incumbent, meaning-argmax, argmax,
+softmax-T0.25"*. Three of those four are the TEMPERATURE knob, and
+`lg10-mouth-fidelity-vs-freedom`'s delivered disposition (Review DAILY 09-08)
+says in terms: ***"do not fit T — both endpoints are already paid for."*** T=0.25
+reads match 0.9833/1.0/1.0 and VOIDs on variety; T=1.0 reads variety 1.0 and
+FAILs on match. Racing them would have re-bought a measured answer and been
+knob-fitting on a failing spec. **The same disposition names the legitimate
+direction — *"the mouth needs a stronger chooser: bigger frozen model,
+structured decode"*** — and structured decode is the half that costs no
+verdicts. So every arm holds `TEMP` at LG.10's registered 1.0 and differs only
+in decode STRUCTURE. Greedy argmax is excluded for the opposite reason and
+named in the registration so the omission is not silent: variety 0 by
+construction plus the fewest constants means entering it would **manufacture
+`SO.10`'s finding** rather than measure anything.
+
+**`LG.13` REGISTERED, IMPLEMENTED AND COMMITTED BEFORE THE RUN** (`848d452`,
+pushed). Four decode rules on `LG.10`'s rig, one cached verdict table, 3 seeds,
+2 frozen mouths, `gate_mode="screen"` declared in advance with its rationale.
+Metric `match_both` (meaning-match averaged over BOTH mouths — a chooser that
+holds this seat has to work for the mouth it was not tuned against). Null:
+score-blind uniform, the chooser removed. Control: LG.10's state-free prompt.
+Eligibility separate from score, three LG.10 constants imported unmoved. **One
+new constant, `K = N_PHRASINGS = 3`, derived from the pool's granularity.**
+**A TIE IS A FAIL here** — strictly harder than `SO.10`'s cost-resolved tie,
+pre-registered before any number, because at equal declared cost `min` returns
+whichever arm sorted first and this seat was already filled once by accident.
+
+**PASS AT ATTEMPT 1, 1.34 s** (`acf63e9`):
+
+    arm             match_both   sigma    variety     null A/B    elig
+    meaning-mass       1.0000     56.00   1.0000      0.00/0.00   1/1/1   <- WINNER
+    topk-softmax       0.8500     18.13   0.92-1.00   0.00/0.03   1/1/1
+    softmax-full *     0.6945      8.59   1.0000      0.00-0.12   1/1/1
+    topk-uniform       0.6611     32.52   1.0000      0.03-0.12   1/1/1
+    uniform (null)     0.1917        —    chance 3/17 = 0.176
+    control            0.0639     -5.02   state-free prompt, gate FAIL
+    * the incumbent, entered as `lg_10._draw` itself, not a copy
+
+Outright winner by **4.13 sigma** against a 1.5 margin. **The incumbent came
+third.** Seat FILLED BY VERDICT (`6f04feb`): `HELD: BY VERDICT | VERDICT: LG.13
+| TRIGGER: LG.10, T2.15`, `champions --check` EXIT 0 with every ratchet AT
+floor.
+
+**A PERFECT SCORE IS A QUESTION, SO I ASKED IT BEFORE WRITING IT UP.** 1.0000
+on every seed and both mouths is the shape of a construction artifact. A
+30-second diagnostic over the SAME cached table (72 trial-model cells, writes
+nothing) separates the two readings: **the intent meaning is the heaviest
+meaning in 72 of 72 cells, carrying 0.6166–0.7656 of total softmax mass**
+(median 0.7280). So marginalising reads a genuinely decisive signal. **And it
+produced the run's best sentence: `softmax-full`'s 0.6945 IS that mass share,
+sampled.** The two numbers are one quantity read two ways. **The incumbent
+never failed for want of signal — intent conditioning is already decisive at
+the MEANING level, and per-candidate sampling throws it away.**
+
+**THEN THE WINNER EXPOSED A HOLE IN MY OWN ELIGIBILITY LEG, AND THAT IS THE
+PART OF THIS SLOT WORTH KEEPING.** I pre-registered `variety >= VARIETY_MIN`
+and wrote beside it what it was for: *"a chooser that buys meaning-match by
+killing the sampler's freedom has made LG.10's whole invariance question
+vacuous."* `meaning-mass` is exactly that chooser and **passes the leg at
+1.0000** — because it kills freedom over **MEANINGS** and leaves freedom over
+**WORDINGS** untouched, and `variety` counts distinct utterances. The
+arithmetic is structural, not lucky: the mass computation consults no rng, so
+the meaning is a deterministic function of (trial, model), and therefore
+`unanimity` = 1.0 and `swap_agree` = 1.0 by construction while `variety`
+≥ 1 − 1/81 per trial **however bad the chooser is**. Three pre-registered
+conjuncts worth nothing under this arm, all three green.
+
+**WHAT I DID NOT DO.** I did not retro-edit the leg and I did not adjust the
+verdict. `LG.13`'s own claim survives intact — `match_both` is not true by
+construction (the selector is never told the intent; `topk-uniform` groups by
+admission too and scored 0.6611), every rig gate fired, the control failed its
+gate by 5 sigma — so the PASS is honest and stands. Changing a leg after seeing
+which arm it let through is the move pre-registration exists to forbid, and
+doing it *"because the leg was obviously meant to catch this"* is how a spec
+becomes an author's opinion with decimal places. **What is at stake is what
+happens next: all of `LG.10`'s gates would read green under the champion** —
+match 1.0, unanimity 1.0, swap_agree 1.0, variety 1.0, null 0.0, silence 0,
+leak 0 — which is the outcome the 09-08 disposition refused when it refused
+option (b). `meaning-mass` is NOT (b) (it never reads the intent) but it
+reaches the same structural immunity by a different door. **`LG.10` stays FAIL
+and every bar it carries is untouched under every branch.**
+
+**ROUTED** (`27906d6`): `lg13-champion-makes-lg10s-invariance-conjuncts-
+structural`, **DUE 09-17** from `review-queue`'s own `next_free_due`
+(09-14/15/16 all sit AT the measured capacity of 6; 09-17 carried 4) —
+deliberately the same date as `so10-tie-break-hands-the-seat-to-an-ineligible-
+arm`, which asks the sibling question from the other side. That row asks
+whether the PRIMITIVE must know about eligibility; mine asks whether a LEG must
+prove it could have failed. Two answers owed, neither taken here.
+
+**LESSON** (`3adec1f`): *an eligibility leg must be able to fail against the arm
+it is aimed at, and "freedom" measured on the wrong axis cannot.* Generalised
+to: **a gate is evidence only about arms that could have tripped it — before
+writing a leg, name the arm it is aimed at and compute the leg's value for an
+arm that fails the way you fear.** It is a per-ARM property: `variety` did real
+work against a temperature-sharpened chooser (it VOIDed `LG.10` attempt 1 at
+0.25/0.50/0.00) and no work at all against a marginalising one. Same leg, same
+threshold, same file, live against one arm and dead against the next — and a
+bakeoff is where that bites, because the arms are deliberately unalike and the
+legs are written once for all of them. Second lesson free with the first: a
+perfect score is a question, not a celebration.
+
+**Instruments at slot end.** `render` **108/249** (`6d15fd3`) — a registration
+and a first-ever PASS in one slot, and the **first first-ever claim PASS since
+`LG.02` on 09-02**, though the kind is `rule` on purpose so no commitment's
+`n_pass` moves. `champions --check` rc=0 every ratchet AT floor — trigger debt
+held at 3 across a NEW `BY VERDICT` seating because the seat declares its
+deciding run and two live doors, not because a line was deleted.
+`decisions --check` rc=0 at floor. `review-queue` rc=0, **0 violations**, pile
+13 on 09-13 unchanged. `coverage` EXIT 2 on the same two owned-and-routed counts
+(`claim_dead` 4, `new_unrunnable_citation` 4). **One ratchet moved and it was
+mine**: `review_queue_net_arrivals` 9 → 10 for my routing — a real arrival this
+time, not a window slide. `unreachable` **97, AT floor** (LG.13's deps are
+LG.00 and ME.9, both PASS, so it entered the reachable set). `run stale` lists
+14 stale claims, **every one a settled FAIL/VOID and none of them mine** — I
+touched no file any of them names.
+
+**Housekeeping.** 12 claude processes on the box, so `git commit --only` with
+named paths on all six commits and no `git add -A`; nothing of anyone else's is
+in any commit; tree clean after each. No detached launches, no GPU dispatch, no
+background processes, nothing to declare in `declared_pids`. CPU billed 1.88 s.
+
+**NEXT ITERATION.** **`D25`'s armed default is fireable after midnight** —
+option (iii) FIX THE SEAL, required wording *"the owner did not rule by
+2026-09-13, so the pre-registered default fired"*, pre-commit check
+`--firing-check WORKTREE` (**not `HEAD`** — the `HEAD` form audits the previous
+commit); then `D19` on 09-15. Take the count from
+`python -m experiments.decisions`, never from a page. **The 13 rows dated 09-13
+go OVERDUE at midnight and `review-queue` goes red for the first time since
+09-03 — that is the promise breaking, not the instrument.** Board otherwise
+unchanged: do NOT re-run `T2.10` (foreclosed 0.0667 vs 0.10), `T6.03` (BLOCKED
+behind it), or `LG.13` (its row is 1.34 s fresh and nothing in it moves without
+a new selector). **`D1.0` attempt 3 into W37 is the one large unit still
+standing** — its two-step precondition is satisfied (`7cb00ea`), 3.0σ does not
+move, each arm scores against its OWN untrained twin, and `T2.01`'s 38
+transitively-blocked specs are behind it. **And the Person-model seat is still
+VACANT with two measured, tied, eligible candidates waiting on 09-17** — the
+same morning my row and its sibling come due.
