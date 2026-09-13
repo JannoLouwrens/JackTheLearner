@@ -5249,3 +5249,88 @@ the per-seed join changed no code (the `impl_sha` re-stamp at
 `2026-09-12T18:40:51` went through the `--doc-only` `prose_only_delta` lane,
 which refuses a moved constant by construction). The bill of ACTING is one CPU
 re-run of `LG.03` (~725 s) if (b) is answered by changing the twin.
+
+---
+
+## ROUTED 2026-09-13 (builder, executing `UB.10` part 1): `ub10-part1-premise-false-marginals-are-what-saturate` — the ordered repair is FORECLOSED by arithmetic, and the defect is one layer down
+
+ROUTED: ub10-part1-premise-false-marginals-are-what-saturate | 2026-09-13 | builder (foreclosure + venue guard, `experiments/tests/ub_10_fusion_bakeoff.py`) | OPEN
+    DUE: 2026-09-20 | the Review picks the venue-hardening ARM (or declines to
+    harden and retires the spec); this desk may not pick between arms by
+    argument (SYSTEM.md law 3) and `run()` refuses until one lands
+    BLOCKED-BY: ub10-seed-fragility-and-saturated-battery | this is part 1 of
+    that row's 09-08 disposition, returning a foreclosure instead of the
+    recoding it named; parts 2 and 3 are executed (`e85d1e5`)
+
+**THE ORDER, AND THE PREMISE IT RESTS ON.** The 09-08 disposition ordered
+*"composite / cross-modal-XOR slots"*, with the stated rationale *"no single
+modality carries the answer — the discriminating structure a fusion battery is
+supposed to have."* **This venue already has that structure**, on two
+independent readings:
+
+- **Structural.** `slot` **is** the cross-modal XOR. `hns_scene.draw_quad`
+  expands one nuisance draw into the four `(large_slot, faller_slot)` cells and
+  `HnsEpisode.faller_radius` returns `R_LARGE` iff `faller_slot == large_slot`,
+  so UB.9's `y_large_fell` satisfies `slot = XNOR(vslot, afell)` **identically**.
+  Re-derived from the generator alone (no render, no audio synth, no torch):
+  **2000/2000 episodes, 0 mismatches, all four cells realised.**
+- **Empirical, on the spec's own committed row.** Attempt 1 recorded
+  `uni_slot_dev_max` **0.0** — every unimodal variant of every arm read `slot`
+  at exactly 0.5, on every seed. The leak detector this spec built for exactly
+  this question answers it at **zero deviation**.
+
+**SO THE DEFECT IS ONE LAYER DOWN: THE TWO MARGINALS ARE WHAT SATURATE.** A0
+read `vslot` 1.0 and `afell` 1.0 (reconstructed from the row's own
+`ctrl_swap_drops`: a vision-swap cost of 1.0 on `vslot` forces pre-swap accuracy
+to 1.0, and an audio swap puts a binary marginal at chance 0.5). For **any**
+deterministic `f(vslot, afell)`, an arm holding both bits holds `f`, so its
+accuracy is at least `p + q - 1` — a union bound, no independence assumed. At
+`p = q = 1.0` that floor is **1.0**, above the **0.95** `A0_HEADROOM` permits,
+**whatever `f` is**.
+
+**THE FORECLOSURE, stated so nobody re-derives it per candidate: re-coding the
+label as a function of the two marginals cannot lower the anchor's ceiling.**
+That kills the specific composite the 09-12 builder offered as a starting point,
+`(vslot + 2*afell) % 4` — a bijection of the two bits, sitting at A0's existing
+1.0 — and it kills the family. (It would also have broken two unrelated things
+while buying nothing: the task heads are binary, and the unimodal leak gate is
+declared against chance 0.5.) **Break-even for any repair is arithmetic: with
+one marginal perfect, the other must fall to ≤ 0.95.**
+
+**WHAT LANDED INSTEAD OF THE RECODING — a refusal, not a paragraph.**
+`_assert_venue_not_foreclosed()` is called from `run()` before any dispatch and
+refuses on **positive evidence only**: the label must be a function of the two
+marginals (structural) **and** the committed row's anchor marginals must force
+the bound above `A0_HEADROOM`. It is the 2026-09-13 lesson's cheap corollary —
+*replay the null's recorded values before dispatching* — turned from a
+prohibition into a branch that returns non-zero, per the same day's
+prohibition/warning/refusal lesson. It **deliberately outlives**
+`_BATTERY_REDESIGN_OWED`: deleting that constant does not clear this one, and
+that is mutation-checked. Red-first in `_foreclosure_fixture` (0.3 s, no torch):
+it **fires** on the committed attempt-1 row and **stands down** at `vslot` 0.90.
+`marginal_per_arm_per_seed` and `a0_foreclosure_bound` are now recorded so the
+next row states this outright instead of needing reconstruction.
+
+**THE QUESTION OWED — and it is a bakeoff, not a ruling this desk may write.**
+The honest repair must cost a **marginal** its headroom, and the candidates are
+arms. Named here as inputs, explicitly NOT ranked and NOT pre-selected:
+(a) shrink the audio observation window so `afell` is genuinely uncertain;
+(b) shrink the vision signal — the radius gap `R_SMALL` 0.1406 / `R_LARGE`
+0.2143 is 1.52×, and closing it degrades `vslot` at the source;
+(c) add per-sense nuisance noise at a declared, matched level;
+(d) accept that a battery with two easy marginals cannot arbitrate trunk
+designs and **retire this venue for `UB.10`**, which is a live and possibly
+correct answer.
+**Two constraints that bind whichever arm is picked:** it must NOT be the
+training-budget cut (already refused on the parent row, and degrading the arms
+is not degrading the venue), and any arm touching `hns_scene` or
+`ub_9_heard_not_seen` pays UB.9's certificate — see the bill.
+
+**STALENESS BILL.** Today's commit: **ZERO.** `UB.10`'s row is `VOID` and was
+already listed STALE, no bar moved in either direction, and nothing else
+declares this file in `IMPL_DEPS`. The bill of **ACTING** depends on the arm:
+(a)/(c) confined to `ub_10_fusion_bakeoff.py` cost **zero certificates**;
+(b) edits `hns_scene.py` and therefore **re-buys `UB.9`'s PASS** (GPU-class, its
+rig re-renders 400 quads × 4 episodes × 3 seeds) and any other certificate whose
+`IMPL_DEPS` names it — price that before choosing (b); (d) costs nothing and
+loses the arena, so `CHAMPIONS.md`'s unison seat would need another.

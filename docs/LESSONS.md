@@ -13212,3 +13212,67 @@ Before dispatching any bakeoff, read the null's recorded per-seed values from
 the last row and ask whether the claim's inequality has room against them. That
 replay took thirty seconds here and returned `a0_slot_max` 1.0 against a 0.95
 bar, margin −0.05 — the same answer the GPU took 1,093 s to not-quite-say.
+
+## A venue built by composing two skills is only as hard as its hardest part — so relabelling what the null already holds is foreclosed, and the repair must cost a MARGINAL its headroom
+
+*(builder, 2026-09-13, executing `UB.10`'s part 1)*
+
+Yesterday's lesson in this file — *"a saturated NULL makes the claim's own
+conjunct unsatisfiable"* — says what goes wrong. It does not say what to do
+about it, and the obvious answer is wrong in a way that costs a dispatch.
+
+`UB.10`'s anchor read `slot` at **1.0** on all three seeds, so the PASS conjunct
+*"winner > A0 on every seed"* was unsatisfiable. The ordered repair was to make
+the label a **composite / cross-modal XOR** so that no single modality carries
+it — and the venue **already was** one: `slot = XNOR(vslot, afell)` identically
+in `hns_scene`'s generator (2000/2000 episodes, 0 mismatches), and the run's own
+leak detector had measured `uni_slot_dev_max` **0.0**. The premise the repair
+rested on had been falsified by the same row that motivated the repair, and
+nobody noticed because the two facts live in different sentences.
+
+**The arithmetic that forecloses the whole family.** If an arm reads `vslot`
+with accuracy `p` and `afell` with accuracy `q`, it holds both bits with
+probability at least `p + q - 1` — a union bound, no independence assumed — and
+whoever holds both bits holds **any** deterministic `f` of them. So for every
+possible re-coding of the label, the anchor's accuracy has a floor of
+`p + q - 1`. At `p = q = 1.0` that floor is `1.0`. **No composite, no
+permutation, no widening to four classes, no "harder-looking" function moves the
+anchor at all** — the specific proposal on the table, `(vslot + 2*afell) % 4`,
+is a bijection of the two bits and sits exactly where `slot` already sat.
+
+**The general rule, and it is a design rule for every bakeoff venue:**
+
+> **A task composed from sub-skills is, for any competitor that has the
+> sub-skills, no harder than acquiring them. Difficulty lives in the MARGINALS,
+> not in the function over them.** Making the composition more elaborate is
+> theatre. The only repair that moves a saturated null is one that takes
+> headroom away from a marginal — a shorter observation window, a smaller
+> signal gap, declared matched noise — or the admission that the venue cannot
+> arbitrate and should be retired.
+
+**Why this is easy to get wrong.** "Make the task harder" and "make the label
+more complicated" feel like the same move, and the second one is much cheaper to
+implement — it is a one-line change to a label function, with no re-render, no
+re-certification, and no bill. That is exactly why it gets proposed: **the
+foreclosed repair is the affordable one.** The honest repairs all cost
+something, and in this case one of them (`b`, closing the radius gap) re-buys
+`UB.9`'s certificate. A repair that costs nothing to a venue that measured
+nothing should be the tell, not the attraction.
+
+**What made it catchable in thirty seconds, and it generalises.** The
+foreclosure is computable from quantities the *previous* row already recorded —
+here the anchor's two marginal accuracies, which were not even a recorded key
+and had to be reconstructed from the swap-drop control (`vision`→`vslot` drop of
+1.0 forces pre-swap accuracy to 1.0; an audio swap puts a binary marginal at
+chance). **If a bakeoff's claim metric is a function of other metrics it
+measures, record those other metrics as first-class keys** — the composition is
+where the venue's difficulty actually lives, and reconstructing it afterwards
+from a control is luck.
+
+**And it landed as a REFUSAL, per the same day's other lesson.**
+`_assert_venue_not_foreclosed()` runs in `run()` before any dispatch, fires only
+on positive evidence from the committed row, and **outlives the "redesign owed"
+constant on purpose** — deleting the TODO does not clear the arithmetic. The
+prohibition/warning/refusal taxonomy written this morning says why that matters:
+the replay this lesson recommends is worth nothing as advice and everything as a
+branch that returns non-zero.

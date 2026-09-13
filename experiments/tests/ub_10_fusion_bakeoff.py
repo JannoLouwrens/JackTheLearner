@@ -341,13 +341,51 @@ saturated anchor. So the anchor's ceiling is repaired first, as a RIG gate.
   competing on the seeds where it did — a seed lottery wearing a conjunct's
   clothes). The disqualification is WHOLE-ARM.
 
-  PART 1 — COMPOSITE / CROSS-MODAL-XOR SLOTS — IS NOT IMPLEMENTED, and
-  `run()` REFUSES while `_BATTERY_REDESIGN_OWED` is set. Without a slot
-  label that no single modality carries, A0 is expected to saturate again
-  and part 2 will VOID the run on the rig; spending GPU hours on a
-  guaranteed rig VOID is exactly what the gate exists to prevent. The
-  refusal is part of the gate, not a nuisance beside it. `UB.11` stays
-  blocked behind a real verdict either way.
+  PART 1 — EXECUTED 2026-09-13, AND IT RETURNS A FORECLOSURE RATHER THAN
+  THE RECODING IT ORDERED. The order asked for "composite / cross-modal-XOR
+  slots", reasoning that "no single modality carries the answer" was the
+  missing discriminating structure. THAT PREMISE IS FALSE OF THIS VENUE and
+  the falsification is on this spec's own row:
+    * STRUCTURAL. `slot` IS the cross-modal XOR already. `hns_scene`
+      expands one nuisance draw into the four (large_slot, faller_slot)
+      cells and `faller_radius` is R_LARGE iff faller_slot == large_slot,
+      so `slot = XNOR(vslot, afell)` identically. Re-derived from the
+      generator alone by `_venue_label_identity()` — no render, no audio,
+      no torch — 2000/2000 episodes, 0 mismatches, all four cells realised.
+    * EMPIRICAL. Attempt 1 recorded `uni_slot_dev_max` **0.0**: every
+      unimodal variant of every arm sat at exactly 0.5 on slot, on every
+      seed. The leak detector built for this purpose says no modality
+      carries the answer, at zero deviation.
+  WHAT ACTUALLY SATURATES IS THE TWO MARGINALS. A0 read `vslot` 1.0 and
+  `afell` 1.0 (reconstructed from the row's own `ctrl_swap_drops`: a
+  vision-swap cost of 1.0 on vslot forces pre-swap accuracy to 1.0, and an
+  audio swap puts a binary marginal at chance). For ANY deterministic
+  f(vslot, afell), an arm holding both bits holds f, so its accuracy is at
+  least p + q - 1 — a union bound, no independence assumed. At p = q = 1.0
+  that floor is 1.0, above the 0.95 `A0_HEADROOM` permits, WHATEVER f is.
+  So THE WHOLE FAMILY OF LABEL RE-CODINGS IS FORECLOSED BY ARITHMETIC,
+  including the `(vslot + 2*afell) % 4` composite offered as a starting
+  point — a bijection of the two bits, sitting exactly at A0's existing 1.0
+  (and, incidentally, breaking the binary task heads and the leak gate's
+  chance-0.5 referent).
+  THE GUARD THAT LANDS INSTEAD: `_assert_venue_not_foreclosed()`, called
+  from `run()` BEFORE any dispatch, refusing on positive evidence only —
+  the label must be a function of the two marginals AND the committed row's
+  anchor marginals must force the bound above `A0_HEADROOM`. It is the
+  2026-09-13 lesson's "cheap corollary" (replay the null's recorded values
+  before dispatching) turned from a prohibition into a branch that returns
+  non-zero, and it deliberately OUTLIVES `_BATTERY_REDESIGN_OWED`: deleting
+  that constant does not clear this one. Red-first in `_foreclosure_fixture`
+  (run by `smoke`, or alone via `... ub_10_fusion_bakeoff fixtures`, 0.3 s):
+  it fires on the committed attempt-1 row and stands down at vslot 0.90.
+  `marginal_per_arm_per_seed` and `a0_foreclosure_bound` are now recorded so
+  the next row states this directly instead of needing reconstruction.
+  NO BAR MOVED, in either direction.
+  WHAT IS STILL OWED, and it is NOT this desk's to choose: a venue that
+  costs a MARGINAL its headroom (p or q below ~0.95). The candidates are
+  arms and SYSTEM.md law 3 forbids picking between them by argument, so it
+  is routed as `ub10-part1-premise-false-marginals-are-what-saturate`.
+  `run()` KEEPS REFUSING and `UB.11` stays blocked behind a real verdict.
 
 COVERS: one brain / unison (claim)
 """
@@ -435,23 +473,180 @@ WINNER_GATE = 0.75           # UB.9's fused bar, inherited
 # It does NOT move WINNER_GATE, MARGINAL_FLOOR or any bar an arm is scored on.
 A0_HEADROOM = 0.05           # A0 slot acc must be <= 1.0 - A0_HEADROOM, per seed
 
-# WHAT IS STILL OWED, and why this spec REFUSES rather than dispatching: part 1
-# of the same order — COMPOSITE / CROSS-MODAL-XOR slots, so that no single
-# modality carries the answer — is NOT implemented. Without it A0 is expected to
-# saturate again and A0_HEADROOM will VOID the run on the rig. Burning GPU hours
-# on a guaranteed rig VOID is exactly what the gate exists to prevent, so the
-# refusal below is part of the gate, not a nuisance beside it.
+# PART 1 — ORDERED AS "COMPOSITE / CROSS-MODAL-XOR SLOTS", AND ITS PREMISE IS
+# FALSE OF THIS VENUE (builder, 2026-09-13; measured, not argued). The order's
+# stated rationale is *"no single modality carries the answer — the
+# discriminating structure a fusion battery is supposed to have"*. This venue
+# ALREADY has that structure and already measured it:
+#
+#   (a) STRUCTURALLY. `slot` IS the cross-modal XOR. `hns_scene.draw_quad`
+#       expands one nuisance draw into the four (large_slot, faller_slot) cells
+#       and `faller_radius` returns R_LARGE iff faller_slot == large_slot, so
+#       `afell = 1 iff slot == vslot`, i.e. `slot = XNOR(vslot, afell)` — an
+#       identity over the generator, not a property of a trained model.
+#       `_venue_label_identity()` re-derives it from `hns_scene` alone (no
+#       render, no audio, no torch) and is asserted in `smoke`.
+#   (b) EMPIRICALLY. Attempt 1 recorded `uni_slot_dev_max` **0.0**: every
+#       unimodal variant of every arm read slot at exactly 0.5 on every seed.
+#       The leak detector this spec built for the purpose says no modality
+#       carries the answer, at zero deviation.
+#
+# SO THE SATURATION HAS A DIFFERENT CAUSE, and naming it correctly forecloses
+# the ordered repair: both MARGINALS are saturated, so their XOR is too. A0 read
+# `vslot` at 1.0 and `afell` at 1.0 on attempt 1 (reconstructed below from the
+# row's own swap drops). For ANY deterministic label f(vslot, afell), an arm
+# that reads both bits with accuracies p and q gets f right whenever it has both
+# bits right, so its accuracy is **at least p + q - 1** — a union bound, no
+# independence assumed. At p = q = 1.0 that floor is 1.0, above the 0.95 that
+# A0_HEADROOM demands, WHATEVER f is.
+#
+# That is a foreclosure, not an opinion: **re-coding the label as a function of
+# the two marginals cannot lower the anchor's ceiling.** It kills the specific
+# composite the previous iteration offered as a starting point,
+# `(vslot + 2*afell) % 4`, which is a bijection of the two bits and therefore
+# sits exactly at A0's existing 1.0 — and it kills the family, so nobody needs
+# to re-derive it per candidate. (It would also have broken two other things
+# while buying nothing: the task heads are binary, and the unimodal leak gate is
+# declared against chance 0.5.)
+#
+# THE HONEST REPAIR IS A VENUE THAT COSTS A MARGINAL ITS HEADROOM — p or q must
+# come down — and the candidates for that are ARMS, not a choice this desk may
+# make by argument (SYSTEM.md law 3). Routed to the Review as
+# `ub10-part1-premise-false-marginals-are-what-saturate`. `run()` KEEPS REFUSING
+# until that lands: a dispatch under a foreclosed label is a guaranteed rig VOID
+# and the refusal is part of the gate, not a nuisance beside it.
 _BATTERY_REDESIGN_OWED = (
-    "part 1 of 3 — composite / cross-modal-XOR slots. `_episode_tensors` still "
-    "serves UB.9's `slot` label, which A0 solved at 1.0 on every seed. Until "
-    "the discriminating structure exists, A0_HEADROOM will VOID on the rig and "
-    "a dispatch buys nothing.")
+    "part 1 of 3 — the ordered 'composite / cross-modal-XOR slots'. Its premise "
+    "is FALSE of this venue: `slot` is ALREADY the cross-modal XOR "
+    "(`slot = XNOR(vslot, afell)`, structural in `hns_scene`) and attempt 1 "
+    "measured `uni_slot_dev_max` 0.0, so no modality carries the answer. What "
+    "saturates is the two MARGINALS — A0 read vslot 1.0 and afell 1.0 — and by "
+    "the union bound any f(vslot, afell) is then at >= 1.0 for A0, so the whole "
+    "family of label re-codings is FORECLOSED and cannot restore headroom. The "
+    "repair must cost a marginal its headroom; the candidates are arms and the "
+    "choice is the Review's "
+    "(`ub10-part1-premise-false-marginals-are-what-saturate`).")
 SWAP_HURT = 0.10             # a sense's swap must cost at least this, somewhere
 SWAP_ROLL = 37               # coprime with 4-per-quad blocks: crosses quads
 DROP_MAX = 0.02              # UB.9's whole-quad drop budget
 N_BOOT = 1000
 
 TASKS = ("slot", "vslot", "afell")
+
+
+# ── part 1: the venue's label identity, and the foreclosure it implies ────
+
+def _venue_label_identity(n_quads: int = 500, seed: int = 12345) -> dict:
+    """Re-derive `slot = XNOR(vslot, afell)` from `hns_scene` alone.
+
+    Deliberately cheap and dependency-free: `draw_quad` returns dataclasses and
+    `faller_radius` is a property, so this touches no renderer, no audio synth
+    and no torch. It is a statement about the GENERATOR, which is what makes it
+    a foreclosure rather than a measurement of one trained model.
+    """
+    from ..hns_scene import draw_quad
+
+    rng = np.random.RandomState(seed)
+    n = mismatch = 0
+    cells = set()
+    for _ in range(n_quads):
+        for ep in draw_quad(rng):
+            v, s = int(ep.large_slot), int(ep.faller_slot)
+            a = int(ep.faller_radius > 0.18)      # UB.9's own `y_large_fell`
+            cells.add((v, a, s))
+            n += 1
+            mismatch += int(s != (v if a else 1 - v))
+    return {"n_episodes": n, "mismatches": mismatch,
+            "slot_is_xnor": mismatch == 0, "cells": sorted(cells)}
+
+
+def _marginal_foreclosure_bound(p: float, q: float) -> float:
+    """Union bound on an arm's accuracy over ANY deterministic f(vslot, afell).
+
+    An arm reading vslot at `p` and afell at `q` has both bits right with
+    probability >= p + q - 1, and whenever it has both bits it has f. No
+    independence is assumed and none is available. This is a FLOOR on the
+    anchor, so it is the right side of the inequality for a refusal: if the
+    floor already exceeds what A0_HEADROOM permits, no choice of f can help.
+    """
+    return max(0.0, p + q - 1.0)
+
+
+def _a0_marginals_from_row(row: dict) -> tuple[dict, str]:
+    """A0's per-sense marginal accuracies from a committed UB.10 ledger row.
+
+    Prefers `marginal_per_arm_per_seed`, which this module now records. Attempt
+    1 predates that key, so there is a documented fallback: its `ctrl_swap_drops`
+    record A0's vision-swap cost on `vslot` as 1.0 and its audio-swap cost on
+    `afell` as 0.5. A drop of 1.0 forces pre-swap accuracy to 1.0 (accuracy
+    cannot go below 0), and a swapped audio stream puts a binary marginal at
+    chance, so 0.5 + 0.5 = 1.0. The provenance string is returned so a refusal
+    can say which of the two it used rather than presenting an inference as a
+    reading.
+    """
+    m = row.get("metrics", {})
+    per = m.get("marginal_per_arm_per_seed")
+    if isinstance(per, dict) and "A0" in per:
+        a0 = per["A0"]
+        return ({t: float(min(a0[t])) for t in ("vslot", "afell")},
+                "recorded (`marginal_per_arm_per_seed`)")
+    drops = row.get("control_metrics", {}).get("ctrl_swap_drops", {})
+    d = drops.get("A0")
+    if not d:
+        return ({}, "unavailable")
+    return ({"vslot": float(d["vision"]["vslot"]),
+             "afell": float(d["audio"]["afell"]) + 0.5},
+            "reconstructed from `ctrl_swap_drops` (vision-swap cost on vslot "
+            "is a lower bound that forces pre-swap accuracy; audio swap puts a "
+            "binary marginal at chance 0.5)")
+
+
+def _assert_venue_not_foreclosed() -> None:
+    """REFUSE a dispatch whose verdict the venue has already decided.
+
+    This is the 2026-09-13 lesson (*"a saturated NULL makes the claim's own
+    conjunct unsatisfiable"*) made mechanical. That lesson's cheap corollary was
+    a REPLAY somebody has to remember to do; a prohibition nobody reads is not a
+    guard (LESSONS.md, 2026-09-13: prohibition / warning / refusal). This is the
+    branch that returns non-zero.
+
+    It fires only on POSITIVE evidence, from this spec's own committed row:
+    the label must be a deterministic function of the two marginals (structural,
+    `_venue_label_identity`) AND the anchor's recorded marginal floor must
+    already exceed what `A0_HEADROOM` permits. A venue that costs a marginal its
+    headroom clears this by arithmetic, with no bar moved in either direction.
+    """
+    ident = _venue_label_identity(n_quads=120)
+    if not ident["slot_is_xnor"]:
+        return        # the label is no longer a function of the two marginals
+    try:
+        row = json.loads(
+            (Path(__file__).resolve().parents[1] / "ledger.json").read_text()
+        )["results"].get("UB.10")
+    except Exception:
+        return        # no committed row to replay: nothing positive to refuse on
+    if not row:
+        return
+    marg, prov = _a0_marginals_from_row(row)
+    if not marg:
+        return
+    bound = _marginal_foreclosure_bound(marg["vslot"], marg["afell"])
+    if bound <= 1.0 - A0_HEADROOM:
+        return
+    raise SystemExit(
+        "UB.10 REFUSES: the venue has already decided the verdict.\n"
+        f"  `slot` = XNOR(vslot, afell) — structural in hns_scene "
+        f"({ident['n_episodes']} episodes, {ident['mismatches']} mismatches).\n"
+        f"  A0 marginals, {prov}: vslot {marg['vslot']:.4f}, "
+        f"afell {marg['afell']:.4f} (attempt {row.get('attempt')}, "
+        f"{row.get('ran_at')}).\n"
+        f"  Union bound on A0 over ANY f(vslot, afell): >= {bound:.4f}, "
+        f"against the {1.0 - A0_HEADROOM:.2f} that A0_HEADROOM permits.\n"
+        "  So no re-coding of the label can restore the anchor's headroom, and "
+        "the run would VOID on the rig. The repair must cost a MARGINAL its "
+        "headroom; the candidates are arms and the choice is the Review's "
+        "(`ub10-part1-premise-false-marginals-are-what-saturate`). No ledger "
+        "row is written by this refusal.")
 
 
 # ── data: UB.9's certified rig, re-tokenised ─────────────────────────────
@@ -1233,6 +1428,18 @@ def _aggregate() -> dict:
         "disqualified_arms": list(disq),
         "n_disqualified": float(len(disq)),
         "slot_per_arm_per_seed": slot,
+        # Redesign part 1: the two MARGINALS are what saturate, so they are now
+        # first-class recorded readouts rather than a number reachable only by
+        # reconstructing it from the swap-drop control. `a0_foreclosure_bound`
+        # is the union bound `_assert_venue_not_foreclosed` refuses on — it is
+        # REPORTED here, never gated on: the pre-dispatch refusal is where it
+        # belongs, because by the time a row exists the hours are spent.
+        "marginal_per_arm_per_seed": {
+            a: {t: [s["arms"][a]["acc"][t] for s in rows]
+                for t in ("vslot", "afell")} for a in ARMS},
+        "a0_foreclosure_bound": round(_marginal_foreclosure_bound(
+            float(min(s["arms"]["A0"]["acc"]["vslot"] for s in rows)),
+            float(min(s["arms"]["A0"]["acc"]["afell"] for s in rows))), 4),
         "slot_median": {a: round(med[a], 4) for a in ARMS},
         "arm_ranking_x_synergy_gap": round(
             (med[winner] - med["A0"]) if winner is not None else -1.0, 4),
@@ -1360,6 +1567,12 @@ def run(ledger: Ledger | None = None):
             "(2) commit SELECTED = the printed selection with its SELECTION "
             "RECORD, (3) dispatch via scripts/dispatch.sh UB.10. No ledger "
             "row is written by this refusal.")
+    # Part 1's guard, and it deliberately OUTLIVES `_BATTERY_REDESIGN_OWED`:
+    # whoever deletes that constant must still face a venue whose anchor is
+    # foreclosed, and must clear this branch with a number rather than a commit
+    # message. Ordered last of the three because it is the one that reads the
+    # ledger, and it fires only on positive evidence from a committed row.
+    _assert_venue_not_foreclosed()
     return run_spec(BY_ID["UB.10"], _experiment, _check, control_fn=_control,
                     ledger=ledger)
 
@@ -1412,6 +1625,91 @@ def _selection_fixture():
     p = _recipe_params({a: None for a in ARMS})
     assert all(p[a] == (1e-3, 0.0) for a in ARMS), p
     print("SELECTION FIXTURE OK")
+
+
+def _foreclosure_fixture():
+    """Red-first battery for part 1's venue guard (2026-09-13).
+
+    RED FIRST for the same reason as the other two gates: a refusal that has
+    never been seen to fire is a comment. Every case here is arithmetic or a
+    structural re-derivation — no torch, no render, seconds.
+    """
+    # (1) The structural identity the whole foreclosure rests on. If this ever
+    #     goes false, `hns_scene` changed and the guard correctly stands down.
+    ident = _venue_label_identity(n_quads=200)
+    assert ident["slot_is_xnor"], ident
+    assert ident["mismatches"] == 0 and ident["n_episodes"] == 800, ident
+    # All four (vslot, afell) cells are realised, so the identity is not an
+    # accident of an unbalanced draw.
+    assert {(v, a) for v, a, _ in ident["cells"]} == {(0, 0), (0, 1),
+                                                      (1, 0), (1, 1)}, ident
+
+    # (2) The union bound, at the corners and at the point that decides it.
+    assert _marginal_foreclosure_bound(1.0, 1.0) == 1.0
+    assert _marginal_foreclosure_bound(0.5, 0.5) == 0.0     # no floor at all
+    assert _marginal_foreclosure_bound(0.95, 1.0) == pytest_approx(0.95)
+    # The break-even a repair has to reach: with one marginal perfect, the
+    # other must fall to 0.95 before the bound stops forcing the anchor above
+    # A0_HEADROOM. That is the arithmetic the Review's arms are aimed at.
+    assert _marginal_foreclosure_bound(0.96, 1.0) > 1.0 - A0_HEADROOM
+    assert _marginal_foreclosure_bound(0.95, 1.0) <= 1.0 - A0_HEADROOM
+
+    # (3) Attempt 1's reconstruction, from a row shaped like the committed one.
+    row1 = {"attempt": 1, "ran_at": "2026-09-01T20:28:15",
+            "control_metrics": {"ctrl_swap_drops": {
+                "A0": {"vision": {"vslot": 1.0}, "audio": {"afell": 0.5}}}},
+            "metrics": {}}
+    marg, prov = _a0_marginals_from_row(row1)
+    assert marg == {"vslot": 1.0, "afell": 1.0}, marg
+    assert prov.startswith("reconstructed"), prov
+    # ...and the recorded key wins over the reconstruction once a row has it.
+    row2 = dict(row1, metrics={"marginal_per_arm_per_seed": {
+        "A0": {"vslot": [0.90, 0.88, 0.91], "afell": [1.0, 1.0, 1.0]}}})
+    marg2, prov2 = _a0_marginals_from_row(row2)
+    assert marg2 == {"vslot": 0.88, "afell": 1.0}, marg2   # worst seed
+    assert prov2.startswith("recorded"), prov2
+    # A row with neither is UNAVAILABLE, and the guard stands down rather than
+    # refusing on an absence — it fires on positive evidence only.
+    assert _a0_marginals_from_row({"metrics": {}})[0] == {}
+
+    # (4) The refusal itself, against the committed row. This is the case the
+    #     guard was written for and it must FIRE today.
+    fired = False
+    try:
+        _assert_venue_not_foreclosed()
+    except SystemExit as e:
+        fired = True
+        msg = str(e)
+        assert "XNOR" in msg and "1.0000" in msg, msg
+    assert fired, "the venue guard did not fire on the committed attempt-1 row"
+
+    # (5) ...and it must STAND DOWN once a marginal has headroom, so it is a
+    #     guard and not a permanent stop. Same code path, one number moved.
+    # Patch through `globals()`, NOT through an `import ... as _self`: run as
+    # `-m experiments.tests.ub_10_fusion_bakeoff` this file is `__main__` and
+    # the import would bind a SECOND module object, leaving the real lookup
+    # unpatched — a fixture that silently tests nothing.
+    g = globals()
+    real = g["_a0_marginals_from_row"]
+    try:
+        g["_a0_marginals_from_row"] = lambda row: (
+            {"vslot": 0.90, "afell": 1.0}, "fixture")
+        _assert_venue_not_foreclosed()            # must NOT raise
+    finally:
+        g["_a0_marginals_from_row"] = real
+    print("FORECLOSURE FIXTURE OK (venue guard fires on the committed row, "
+          "stands down at vslot 0.90)")
+
+
+def pytest_approx(x, tol=1e-9):
+    """Tiny float comparator so the fixture reads as arithmetic, not as a
+    dependency. (`0.95 + 1.0 - 1.0` is not exactly 0.95 in binary.)"""
+    class _A:
+        def __eq__(self, other):
+            return abs(other - x) <= tol
+        def __repr__(self):
+            return f"~{x}"
+    return _A()
 
 
 def _redesign_fixture():
@@ -1505,6 +1803,7 @@ if __name__ == "__main__":
         # generation fits one free core; production shapes are preserved.
         _selection_fixture()
         _redesign_fixture()
+        _foreclosure_fixture()
         from . import ub_9_heard_not_seen as ub9
         ub9.N_QUADS, ub9.N_TEST_QUADS = 24, 6
         globals()["EPOCHS"] = 2
@@ -1534,6 +1833,13 @@ if __name__ == "__main__":
         pilot()
     elif len(sys.argv) > 1 and sys.argv[1] == "recipe_probe":
         recipe_probe()
+    elif len(sys.argv) > 1 and sys.argv[1] == "fixtures":
+        # The three fixture batteries alone — no torch, no render, seconds.
+        # `smoke` runs them too; this entry point exists so part 1's guard can
+        # be re-checked for the price of reading a JSON file.
+        _selection_fixture()
+        _redesign_fixture()
+        _foreclosure_fixture()
     elif len(sys.argv) > 1 and sys.argv[1] == "grid_pilot":
         grid_pilot()
     else:
