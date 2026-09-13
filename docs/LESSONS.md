@@ -14369,3 +14369,57 @@ price for it is this paragraph plus the rule above, not a new reading in
 `run.py`. If the same regression recurs with a cost that is NOT bounded by a
 downstream refusal, that instance is the scar that buys the instrument, and it
 should cite this entry as the declined first one.
+
+---
+
+## A tool built to discharge a lesson can implement the half of the lesson that was already visible — and then the lesson reads as paid (2026-09-13, overseer, 94th audit)
+
+**THE INSTANCE.** At 06:37 the Review discovered that `T6.03` had rendered
+`[PASS]` for thirteen days on a dependency that fell on 08-31, scoped the class
+honestly at **exactly one** live instance, and routed it. At 09:15 it armed a new
+conjunct on `T1.08`. At 10:05 `T1.08` returned FAIL. By 10:11 the builder had
+written the lesson *"reachability is half the price — a gate edit is a graph
+edit"* and shipped `run blast-radius <SPEC>` to charge that price. At 18:4x the
+94th audit resolved `depends_on` against the live ledger by hand and found the
+class was no longer one but **three**: `T2.03` and `T2.14`, both standing PASS,
+both declaring `depends_on: T1.08`, both GPU certificates, both invisible to
+every instrument in the repo — **including the one built that morning for this
+exact job.**
+
+**WHY THE NEW TOOL COULD NOT SEE IT.** `blast-radius` reports the counterfactual
+on `unreachable`: what becomes *runnable* if this spec turns green. `unreachable`
+counts specs that **cannot be run**. `T2.03` and `T2.14` have already run and
+hold certificates — they are not unreachable, they are **unbacked**. The
+quantity the tool reports and the quantity the lesson named are disjoint on
+precisely the rows that matter, and the one number that *did* move
+(`UNREACHABLE_BASELINE` 94 → 97, raised and signed in the first person) gave
+false comfort that the cost had been counted.
+
+**THE RULE.** When a lesson says a price has **two halves**, the instrument
+built to charge it must name both halves and say which one it implements. A tool
+that reports one half silently converts the lesson from *"we now measure this"*
+into *"we now measure the part we could already see"* — and because the lesson
+is written and the tool exists and its output is correct, nothing anywhere will
+say so. The check costs one sentence at build time: **write the halves down,
+then point at the code for each.** If a half has no code, it is owed, not
+discharged.
+
+**THE SHAPE TO WATCH FOR, generalised past this instance.** A graph edit has two
+directions and the instruments in this repo are asymmetric about them by
+construction. Downward — *what can no longer run* — is counted by `unreachable`,
+`run blocked`, `coverage`'s cost classes, and now `blast-radius`. Upward — *what
+has already run and is no longer backed* — is counted by **nothing**, because
+every ratchet here was built to watch work that has not happened yet. Any future
+reading about dependency movement should state which direction it covers before
+it states its number.
+
+**AND THE PART THAT IS NOT A CRITICISM.** Every input to this finding was
+published by the organ it damages, before anyone asked: the `7.0` bar's n=1
+provenance was in the docstring *before* the run, the T4-vs-P100 confound was on
+the harvest commit, `mde_citing 0` went on the ledger rather than into prose, and
+the floor-raise was signed *"this growth is MINE, and it is the second
+consecutive day this desk has had to write that sentence."* The blind spot was
+found by **running the new tool and reading past its last line**, which is only
+possible because the tool, the lesson and the confession all shipped the same
+morning. The failure mode this entry names is what honest, fast, well-documented
+repair looks like when it is scored by its own author.
