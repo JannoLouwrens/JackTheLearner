@@ -2141,22 +2141,151 @@ def cmd_next(ledger: Ledger) -> int:
     if not avail:
         print("Nothing runnable — every unblocked spec already passes.")
         return 0
+    _check_next_triage()
+    rows = _next_triage(avail, ledger)
+    fresh = [r for r in rows if r["lane"] == "FRESH"]
+    settled = [r for r in rows if r["lane"] == "SETTLED"]
+    held = [r for r in rows if r["lane"] == "HELD"]
     # Say what is being hidden. `avail[:12]` silently dropped the rest, and the
     # cheapest unblocked work sorts LAST (ME.11.A sat behind twelve GPU specs),
     # so the one command an iteration runs to choose its work was quietly
     # answering a different question than the one it appears to answer.
-    shown = min(12, len(avail))
-    more = f" — showing {shown} of {len(avail)}" if len(avail) > shown else ""
-    print(f"\nRunnable now (dependencies satisfied){more}:\n")
-    for s in avail[:12]:
+    shown = min(12, len(rows))
+    more = f" — showing {shown} of {len(rows)}" if len(rows) > shown else ""
+    print(f"\nRunnable now (dependencies satisfied){more}:")
+    print(f"  TRIAGE (95th audit, builder): {len(fresh)} fresh · "
+          f"{len(settled)} carrying a settled verdict · {len(held)} held "
+          f"(parked / foreclosed / decision-held). FRESH sorts first.")
+    if not fresh:
+        print("  NONE of these is fresh work. Every spec below has already "
+              "returned a verdict or is held by a marker its own docstring, "
+              "a pilot or an open decision wrote. `ready()` means "
+              "'dependencies pass', never 'this is a legitimate dispatch' — "
+              "read the hold, and do not re-run a settled row to fill a slot.")
+    print()
+    for r in rows[:12]:
+        s = r["spec"]
         impl = "" if module_path_for(s.id, strict=True) else "  [needs implementing]"
         print(f"  {s.id}  {s.title}  ({s.budget.value}){impl}")
+        print(f"        state:       {r['state']}")
         print(f"        hypothesis:  {s.hypothesis}")
         print(f"        falsified by: {s.falsified_by}")
         if s.kills:
             print(f"        kills:       {s.kills}")
         print()
     return 0
+
+
+def _next_triage(avail, ledger, state_of=None, held_map=None) -> list:
+    """Split `ready()`'s output into FRESH / SETTLED / HELD, and say which.
+
+    THE SCAR IS THIS MORNING'S PRIORITY PAGE (builder, 2026-09-13 21:xx).
+    `run next` is the second command the orientation tells every iteration to
+    run, and the sentence beside it reads *"Take the FIRST one in priority
+    order and finish it."* Measured against the live ledger tonight, it listed
+    **44 specs and not one of them was a legitimate next move**: 24 FAIL,
+    11 VOID, and all 9 remaining `NOT_RUN` held — `T2.11`/`T3.10`/`SM.02`/
+    `SH.01` PARKED, `LC.07`/`SM.03`/`DP.04`/`SH.02` PILOT-BLOCKED, `HR.1`
+    decision-HELD behind `D19`. Of the twelve it actually printed, eleven were
+    settled and the twelfth (`T2.11`) was parked by its own pre-registered
+    both-fail branch. Every one rendered identically to a never-run spec.
+
+    WHAT IT COST, and it is not hypothetical. The Sunday FULL page ranked
+    `T2.10` first this morning as *"CPU, ten minutes"*; `T2.10` is a settled
+    FAIL whose own docstring — written at 20:15 the same day — records that
+    every scorer this project has ever measured tops out at 0.0667 against its
+    unmoving 0.10 bar, so *"RE-RUNNING THIS SPEC UNCHANGED RETURNS FAIL"* and
+    the repair is a 15-certificate retrieval redesign. Three iterations
+    derived "the board is empty" by hand from `coverage`, `blocked` and a
+    docstring, because the tool that advertises work could not say it.
+
+    THE READERS ALL EXISTED AND NOBODY ASKED THEM. `coverage._liveness_state`
+    returns PARKED / VOID-FORECLOSED / PILOT-BLOCKED / welded, factored into
+    one place by the 59th audit precisely so instruments cannot drift; and
+    `decisions.holds()` opens its own docstring with *"so an instrument can
+    refuse to advertise them as work."* `cmd_next` — the one command whose
+    entire job is advertising work — asked neither. This is the 65th audit's
+    lesson one file over: a blocker written as a sentence is invisible to
+    every ranker until it becomes an edge. Here the edge existed; the ranker
+    was the one organ not wired to it.
+
+    REPORTING-ONLY AND UNFLOORED. Nothing here refuses a run, moves a
+    threshold, marks a spec, or edits the ledger: `ready()` is unchanged and
+    every spec it returns is still listed. The lanes only reorder and label.
+    A settled row is still a legal thing to take — `T3.09`'s attempt 3 and
+    `T1.08`'s re-run were both correct — and the lane says what it is, never
+    that it is forbidden.
+
+    `state_of`/`held_map` are injectable so the triage can be checked against
+    a known answer without markers on disk — the seam `_terminal_blockers`
+    named and never got (`_RANKER_FIXTURE`, T0.36's founding scar), built in
+    on the first day this time rather than promised.
+    """
+    if state_of is None:
+        from .coverage import _liveness_state
+        state_of = _liveness_state([s.id for s in avail], BY_ID)
+    if held_map is None:
+        from .decisions import holds
+        held_map = holds()
+    lanes = {"FRESH": 0, "SETTLED": 1, "HELD": 2}
+    rows = []
+    for i, s in enumerate(avail):
+        st = ledger.status(s.id)
+        hold = state_of.get(s.id) or (
+            f"decision-HELD {held_map[s.id]}" if s.id in held_map else None)
+        if hold:
+            lane, state = "HELD", f"HELD — {hold}  (ledger: {st.name})"
+        elif st is Status.NOT_RUN:
+            lane, state = "FRESH", "NOT_RUN — no verdict, no hold"
+        else:
+            lane, state = "SETTLED", (
+                f"{st.name} — a verdict is already recorded; re-running it "
+                f"unchanged buys the same row")
+        rows.append({"spec": s, "lane": lane, "state": state,
+                     "hold": hold, "status": st.name})
+    # Stable: within a lane the incoming `ready()` order is preserved, so this
+    # reorders nothing that anyone reasoned about — it only lifts the lane.
+    rows.sort(key=lambda r: lanes[r["lane"]])
+    return rows
+
+
+def _check_next_triage() -> None:
+    """Refuse to advertise work from a triage that flunks a known graph.
+
+    Same rule as `_check_ranker` and `_check_blast_radius`: a lane count from
+    an instrument that cannot get a fixture right is not evidence. Four
+    known answers, one per branch, and the third is the one that matters —
+    a spec can be NOT_RUN *and* held, and the hold must win, because that is
+    exactly the shape of all nine of tonight's `NOT_RUN` rows.
+
+      N  NOT_RUN, no hold          -> FRESH, and sorts FIRST despite being
+                                      declared last in the fixture ladder.
+      X  FAIL, no hold             -> SETTLED.
+      P  NOT_RUN, PARKED           -> HELD, not FRESH. A triage that read the
+                                      ledger alone would call this a fresh
+                                      dispatch, which is the `T2.11` case.
+      H  NOT_RUN, decision-held    -> HELD via `holds()`, the reader whose own
+                                      docstring exists for this and which
+                                      `cmd_next` never asked. `D19`/`HR.1`.
+    """
+    from .protocol import Spec
+
+    def stub(sid):
+        return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST)
+
+    specs = [stub(s) for s in ("X", "P", "H", "N")]
+    fixt = _fixture_ledger()
+    fixt.results["X"] = Result(spec_id="X", status=Status.FAIL, metrics={},
+                               seeds=[0], commit="1234567",
+                               ran_at="2026-09-13T00:00:00")
+    rows = _next_triage(specs, fixt,
+                        state_of={"P": "PARKED"},
+                        held_map={"H": "D19 (decide_by 2026-09-14)"})
+    got = [(r["spec"].id, r["lane"]) for r in rows]
+    want = [("N", "FRESH"), ("X", "SETTLED"), ("P", "HELD"), ("H", "HELD")]
+    if got != want:
+        raise AssertionError(
+            f"_next_triage flunked its own fixture: {got} != {want}")
 
 
 def _terminal_blockers(ledger: Ledger, ladder=None, by_id=None) -> dict:
