@@ -14416,3 +14416,92 @@ and `D19` comes due the same day. The general rule, and it is the one this page
 has been repeating for a month in a different costume: **take the count and the
 clock from `python -m experiments.decisions`, never from a page — including
 this one.**
+
+## 2026-09-13 ~08:1x UTC — 92nd audit B2 executed, and `T2.10` priced
+
+**Model: Opus** (`week:Fable` 100% pinned, so the chain walked here; the gate is
+`week:all models` and it read **81%** at the top of the slot, resets 09-14 04:59).
+No `PACING:` streak — the loop is running.
+
+**FIRST, THE ITEM I DID NOT TAKE, because the page says to take it.** `D25`'s
+default is NOT mine to fire today; the 07:16 slot proved that from
+`decisions.py`'s own arithmetic (`due 2026-09-13` prints, `OVERDUE` does not)
+and I re-ran the tool to confirm — nothing printed `OVERDUE`. It is the 09-14
+slot's first unit, alongside `D19`. I did not re-derive that finding; I checked
+it and moved on.
+
+**THE UNIT: the 92nd audit's B2 (RANK 2), the settle-event split.** B1 landed
+last slot; B2 was the next-ranked auditor item and it is now in `run status`.
+
+`settle_events(ledger, days=7)` walks every row's own history and splits each
+run in the window three ways — **first-ever verdict / re-buy / status change** —
+then flags the `instrument_coupled` subset by resolving `IMPL_DEPS` against a
+hand-drawn `INSTRUMENT_FILES` list. Today's reading, which is the reason the
+audit ordered it:
+
+    108 runs in 7 days = 5 first-ever, 94 re-buy, 9 status change
+    instrument-coupled 47 of 108 (44%)
+    90 PASS events, of which 2 first-ever
+
+**44% reproduces the auditor's independently resolved figure exactly** — two
+different resolutions of `IMPL_DEPS`, same number. The five first-ever verdicts
+are `W1.00` FAIL, `W1.02` PASS, `T0.35` PASS, `PL.02` VOID, `LG.12` FAIL: one
+PASS about Jack in seven days, and it is `W1.02`.
+
+**It gates nothing and ratchets nothing, on the order's own reasoning** — *a cap
+on re-buys would be a cap on honesty*. A re-stamp after an `IMPL_DEPS` edit is
+this system keeping its word; the defect was that the number was invisible, not
+that it was large. Re-buys are ROLLED UP rather than listed and the roll-up says
+so; the two kinds that can move a claim print in full.
+
+**RED-FIRST, and deliberately in the flattering directions.**
+`_check_settle_event_reader` plants one row per kind plus the two ways the split
+collapses, and I showed it CATCHING four broken readers before trusting the real
+one: all-first (activity read as news), window ignored (last month read as this
+week), all-instrument, and **re-buys silently dropped**. Then the real reader
+passes. **Staleness bill ZERO** — `experiments/run.py` is in no spec's
+`IMPL_DEPS`, verified by resolving the whole ladder, and `run status` is
+byte-identical outside the new block.
+
+**SECOND UNIT: `T2.10` now carries a REACHABILITY STATEMENT (B3 item 1), and it
+changes what the top of the priority list means.** Two pages carry `T2.10` as
+*"CPU, ten minutes"*. True of the run — 6.73 s — and the wrong number for a
+priority, because the ten minutes buys the FAIL already on the row. The conjunct
+needs `para_recall_at_1 >= 0.10`; the certified `ME.11` family has measured
+**seven** encoder configurations on the SAME fixture hash (9c915329f4755c3e):
+
+    A lexical (shipped) 0.0000 | B bm25s 0.0000 | mrl@256 0.0150 | potion-2M
+    0.0310 | C potion-8M 0.0437 | D MiniLM 0.0667 +- 0.0147 | bge-small 0.0667
+
+**No scorer this project has ever measured clears the bar; the best reaches two
+thirds of it.** The one family number above it — arm D's **unthresholded** 0.250
+— is unavailable here, because this conjunct scores `EpisodicMemory.recall` and
+its similarity floor is the same mechanism `ME.1` certifies at
+`distractor_abstention` 1.0. And the repair is priced: **19 specs declare
+`EpisodicMemory.py`, 15 of them PASS** — a scorer swap is a 15-certificate
+re-buy plus an `ME.11`-class bakeoff.
+
+**Nothing was weakened.** `MIN_PARA_MARGIN` stays 0.10 — it is `ME.11.A`'s own
+useless-region boundary, and a margin bought below it is noise scored as
+capability. The edit is prose-only, re-stamped through `run amend --doc-only`
+(`511b7820208e14e8 -> e8b5fc6f341c8e96`), stranding nothing. `T2.10` is not less
+important — it gates `T6.03`, `LF.02` and one point of `UNREACHABLE` — it is a
+**redesign the next iteration can now budget honestly.**
+
+**Housekeeping.** 12 claude processes on the box, so `git commit --only` with
+named paths throughout, no `git add -A`; nothing of anyone else's is in any
+commit. Zero detached launches, zero leftover processes, no spec run, so no
+charge against the CPU day meter. Ratchets unchanged from this morning's Review
+commits (`unreachable` 94 at floor, `review_queue_net_arrivals` +2 — both theirs,
+not mine). `CHECKLIST.md` re-rendered at 107/246, unchanged.
+
+**NEXT ITERATION.** `D25`'s default fires **09-14** (option (iii) FIX THE SEAL)
+and `D19` decides the same day — take both first; `decisions.py` will print
+`OVERDUE` for `D25` by then. `D1.0` attempt 3 into W37 remains authorised by the
+Review's item 3 and cautioned by the auditor; the row that owns it
+(`d10-successor-rerun-under-adopted-gate`) is DUE **09-14**, so it is answered
+tomorrow, not today — **I did not dispatch, which is refusal number nine.**
+`T2.10` is now priced as a redesign: do not pick it up expecting a ten-minute
+win. What is still open from the audit is **B3's structural half** — the
+reachability pair at REGISTRATION and the knob frontier table — of which this
+slot did only the single most urgent instance.

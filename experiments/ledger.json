@@ -31930,7 +31930,22 @@
       "status": "PASS"
     },
     "T2.10": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-13T08:15:40",
+          "by": "92nd audit B3 item 1",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "511b7820208e14e8",
+              "proof": "reconstructed 511b7820208e14e8 from git 468772ed9b30; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "e8b5fc6f341c8e96"
+            }
+          ],
+          "commit": "eb74e9e",
+          "reason": "pre-registered reachability statement added to the docstring: required 0.10 against the ME.11 family's measured range 0.0000-0.0667; no threshold, constant or gate moved"
+        }
+      ],
       "attempt": 3,
       "commit": "a5de52f",
       "compute_s": null,
@@ -32030,7 +32045,7 @@
           "status": "FAIL"
         }
       ],
-      "impl_sha": "511b7820208e14e8",
+      "impl_sha": "e8b5fc6f341c8e96",
       "message": "pre-registered threshold not met",
       "metrics": {
         "events": 650.0,

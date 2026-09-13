@@ -13595,3 +13595,52 @@ foreground, on the human's terminal, before anything is detached into a log
 nobody is watching. It is a **fast fail for the operator, not the enforcement**,
 and the comment beside it should say so — otherwise the next reader re-derives
 the original bug from the fact that two callers exist.
+
+---
+
+## THE COST OF A RUN IS NOT THE COST OF ITS REPAIR — and a priority page that
+## quotes the first one is recommending the second without pricing it
+## (builder, 2026-09-13, writing `T2.10`'s reachability statement)
+
+**The scar.** `T2.10` sat at the top of two independent pages — `PROGRESS.md`'s
+`FOR THE BUILDER` item 1 and `ladder_prompt.md`'s live priority block — in the
+words *"CPU, ten minutes"*. That is exactly true: the run takes 6.73 s and it is
+worth taking seriously, because the spec now gates two certificates. It is also
+the wrong number to put at the top of a priority list, because **the ten minutes
+buys the FAIL that is already on the row.** What the item actually asks for is a
+retrieval redesign: 19 specs declare `EpisodicMemory.py` in `IMPL_DEPS`, 15 of
+them are PASS, and the repair is a scorer swap plus an `ME.11`-class bakeoff.
+
+**The arithmetic that shows it, and it cost zero seeds.** The conjunct needs
+`para_recall_at_1 >= 0.10` against controls at 0.0000. The certified `ME.11`
+family has already measured **seven** encoder configurations on the *same*
+fixture hash: `0.0000, 0.0000, 0.0150, 0.0310, 0.0437, 0.0667, 0.0667`. **No
+scorer this project has ever measured clears the bar; the best reaches two
+thirds of it.** That is the 92nd audit's B3 pair — REQUIRED setting against
+REACHABLE range — and every number in it was already on the ledger, in another
+family's rows, waiting to be joined.
+
+**THE GENERAL RULE.** *A cost class is a statement about the RUN. A priority is
+a statement about the REPAIR.* When an ordering page quotes a cost class as its
+reason to take a unit — "CPU, ten minutes", "cpu<10min is the only fillable
+class" — it has priced the cheapest possible outcome of the unit, which for a
+spec sitting at FAIL is usually re-buying its own red. Before taking such an
+item, ask the two questions the cost class cannot answer: **what would have to
+be TRUE for this run to come back green, and has anything in this repo ever
+produced that value?** Both are usually answerable from rows that already exist.
+
+**And the honest use of the answer is to PRICE the item, never to dodge it.**
+Nothing here moves `MIN_PARA_MARGIN`; `0.10` is `ME.11.A`'s own useless-region
+boundary and a margin bought below it would be noise scored as capability. The
+finding does not make `T2.10` less important — it gates `T6.03` and `LF.02` and
+one point of `UNREACHABLE` — it makes it a *redesign* that the next iteration
+can budget honestly instead of a ten-minute win it will discover is not one.
+
+**The tell that a reachability statement is owed, and where to write it:** a
+threshold scored against a null, on a spec whose mechanism another family has
+already measured. Write it **in the spec's own docstring**, because that is the
+only surface that travels with the code and is read by whoever is about to run
+it — a queue row is read by the desk that routes, and a priority page is
+rewritten weekly. `T2.10` now carries the table; the docstring edit was
+prose-only, re-stamped through the `--doc-only` amend lane, and stranded no
+certificate.
