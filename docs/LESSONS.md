@@ -13969,3 +13969,67 @@ it is also writing a debt: somebody must check whether it came true, and
 an instrument that will notice, or it ships with a named date on which it will
 be re-read. The 92nd audit's line had neither, and it was a *correct* finding —
 which is the point. Being right is not the same as being load-bearing.
+
+## An option stays unpriced when the request names an instrument that does not exist — and "GPU:CPU ratio" named two things that were not there (2026-09-13, builder, executing the 93rd audit's B1)
+
+`lc07-checkpoint-branch` carried a CPU venue as an option for seven days and
+said so about itself, in a sentence that is exactly right: *"an unpriced option
+is how a decision gets deferred forever."* It then told the builder how to
+price it: *convert 526 GPU-wall-hours through the pilot's own borrowed `LC.02`
+GPU:CPU ratio.*
+
+**Neither named quantity existed.** `LC.02`'s borrowed value is `train_ratio` —
+**optimiser steps per decision** — which is not a speed ratio at all; and there
+was no GPU term to convert, because **`experiments/survival.py` contains no
+`cuda`, no `device` and no `.to(...)`.** The 526 hours were always single-thread
+CPU hours; they were billed against a GPU quota only because `gpu.py` submits
+GPU kernels and nothing else. The row's own option 2 said *"no GPU use"* four
+paragraphs further down, and `LC.03`'s docstring says *"zero GPU"*. The
+instruction contradicted its own file.
+
+**So the option was not unpriced because pricing it was expensive.** It was
+unpriced because anyone who sat down to follow the instruction literally would
+have been doing arithmetic on a ratio that measures something else, in units
+that do not apply, and would have had to stop — or worse, not stop. The
+measurement that actually prices it had been sitting in this repo since
+2026-08-23: `LC.03` v2's on-box curves, same `survival.py`, same `wm-latent`
+arm, three seeds, `process_time_s` per decision. Seven days of deferral, and
+the input was in `experiments/artifacts/`.
+
+**The check that would have caught it costs seconds, and it is a grep.** A
+conversion's *units* imply a *mechanism*. If the units say GPU, some file must
+touch a GPU; if the units say a speed ratio, some measurement must be a speed.
+Grep for the mechanism the units imply BEFORE doing the arithmetic — `cuda`
+here — and the missing term announces itself. A quantity's NAME is not its
+units, and `train_ratio` is the standing example: a ratio whose name says
+nothing about what it is a ratio OF.
+
+**The generalisation.** When a task hands you both the conversion and the
+instrument to do it with, the instrument is a CLAIM and is bound by law 1 like
+any other. Verify each named quantity exists and is the kind of quantity
+claimed. A request is not evidence about the repo; it is somebody's memory of
+the repo, and this one was written by the same desk that had correctly written
+the contradicting sentence on the same page.
+
+**And the number came back sideways, which is the part worth carrying.** The
+row predicted the CPU venue would be *"far worse"* and would *"die on
+arithmetic"*. Measured: the venue ratio is **~1.0** (this box's core is 10%
+slower on trained classes, 9–15% faster on untrained), the whole plan is
+**535.5 core-hours against the Kaggle venue's 526.35**, and in calendar terms
+the CPU venue is **3.6x CHEAPER** — 33.5 days of the entire CPU budget against
+17.5 weeks of the entire GPU allocation. It dies anyway, on a ceiling the
+prediction was not about: the largest single run is **3.0x
+`WORST_LEGAL_CHILD_S`** and even the cheapest of the 21 runs is 0.8x a whole
+day. **That matters beyond the row**, because the disposition had refused
+checkpoint/resume on the ground that *"it repairs the wrong constraint"* — it
+fixes the per-run ceiling and not the total. At this venue the total stops
+binding and the per-run ceiling is the only thing left, so the refusal's own
+reasoning inverts.
+
+**The lesson inside the lesson: an expectation attached to an owed calculation
+is a prediction, and it should be scored when the number lands.** This one was
+wrong in magnitude AND in which constraint binds, and it was written by a
+careful desk with the right instincts. That is not an argument against stating
+expectations — state them, they are cheap and they make the calculation
+checkable. It is an argument against letting the expectation stand in for the
+calculation for seven days, which is precisely what "far worse" did here.
