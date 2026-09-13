@@ -283,6 +283,118 @@ def preflight(spec_id: str, projected_hours: float, *, record: bool = False,
     return True, lines
 
 
+# ---------------------------------------------------------------------------
+# THE RUNNER ENTRY (92nd audit, 2026-09-13, RANK 1 / B1). THE GUARD ABOVE WAS
+# BUILT IN THE WRONG PLACE AND THIS IS THE CORRECTION.
+#
+# Everything above this line is reached only through `scripts/dispatch.sh`. The
+# command that actually spends the quota is
+#
+#     $PY -m experiments.run <GPU-SPEC>
+#
+# and until now that path had no budget, authorisation or projection check at
+# all — `run._run_isolated` gated CPU children with `gate_cpu_child` and had no
+# `else`. `D1.0`'s own pilot went out through exactly that hole
+# (`LOOP_JOURNAL.md:9154`, 2026-09-01). The auditor's sentence for it: *the
+# cheap resource is guarded by a branch, the irreversible one by a convention.*
+#
+# So the refusals move to the act. Three decisions are baked in and each is
+# stated rather than implied.
+#
+# *R3 becomes the enforcement point, and the projection TRAVELS.* A number that
+# only the CLI knows cannot refuse anything the CLI was bypassed for, so
+# `dispatch.sh` now EXPORTS it as `JACK_PROJECTED_HOURS` and the runner refuses
+# a GPU spec that arrives without one. That single branch closes the direct-CLI
+# path and the `launch_detached.sh` path with the same code.
+#
+# *The receipt moves with it.* `dispatch.sh` no longer passes `--record`; the
+# runner records, because `record_projection`'s own contract is that the
+# receipt log means "was allowed to go" rather than "was considered", and the
+# last gate before the spend is the honest place to file that. Under the old
+# placement a clear at the CLI followed by a refusal or a crash in the runner
+# would have left a receipt for a dispatch that never left.
+#
+# *A reattach is exempt on this path too, for the same reason as in the shell.*
+# `JACK_REUSE_KERNEL` recovers a kernel that already exists, buys no fresh
+# quota, and `gpu.submit` already skips `afford()` for it. Refusing it here
+# would forbid the recovery path — the failure `gpu.submit` carries a scar for.
+# The carve-out is loud, never silent.
+#
+# WHAT THIS COSTS, named rather than discovered later: a FULL `run --gate`
+# sweep now refuses its GPU-cost PASSes instead of re-dispatching them, because
+# a stamp refresh arrives with no projection. That is the intended direction —
+# `--max-budget` exists precisely because the full gate's 16 GPU-cost PASSes
+# priced it out of ever running (46th audit, Finding 2) — but it is a
+# behaviour change and it is written down here rather than found in a log. The
+# refusal is UNRECORDED, so no certificate is demoted by it; `cmd_run` still
+# counts it as a failure, so a sweep cannot report green for stamps it did not
+# re-verify.
+# ---------------------------------------------------------------------------
+
+#: The projection, exported by `dispatch.sh` and required by the runner.
+PROJECTION_ENV = "JACK_PROJECTED_HOURS"
+
+#: The reattach carve-out, already honoured by `dispatch.sh` and `gpu.submit`.
+REATTACH_ENV = "JACK_REUSE_KERNEL"
+
+
+def runner_preflight(spec_id: str, *, env=None, budget: Budget | None = None,
+                     ledger: Ledger | None = None,
+                     record: bool = True) -> tuple:
+    """The refusal at the point of spend. Returns `(ok, reason, lines)`.
+
+    `reason` is `None` on a clear and a single sentence on a refusal, so the
+    caller can put it in a `Status.ERROR` message without parsing prose out of
+    `lines`. `env` is injectable for the same reason `budget` and `ledger` are:
+    a refusal that can only be exercised by spending the real quota is not a
+    refusal anyone has tested.
+    """
+    import os
+
+    env = os.environ if env is None else env
+    reuse = (env.get(REATTACH_ENV) or "").strip()
+    if reuse:
+        return True, None, [
+            f"gpu pre-flight SKIPPED: {REATTACH_ENV}={reuse} — a reattach "
+            f"recovers a kernel that already exists, buys no fresh quota, and "
+            f"is not a dispatch. Budget/authorisation refusals do not apply.",
+        ]
+    raw = (env.get(PROJECTION_ENV) or "").strip()
+    if not raw:
+        return False, (f"no {PROJECTION_ENV} — a GPU spec may not start "
+                       f"without a stated projection"), [
+            f"REFUSING: {spec_id} is a GPU-cost spec and no {PROJECTION_ENV} "
+            f"was set.",
+            f"          State what this run is expected to cost in GPU-hours. "
+            f"Without it the budget refusal cannot be computed and "
+            f"projected-vs-actual can never be audited.",
+            f"          Run: scripts/dispatch.sh {spec_id} "
+            f"--projected-hours <H>   (it exports the value for you)",
+            f"          A reattach is exempt: set {REATTACH_ENV}=<slug>.",
+        ]
+    try:
+        hours = float(raw)
+    except ValueError:
+        return False, (f"{PROJECTION_ENV}={raw!r} is not a number"), [
+            f"REFUSING: {PROJECTION_ENV}={raw!r} does not parse as hours. A "
+            f"projection that cannot be compared to the quota is not a "
+            f"projection.",
+        ]
+    if hours <= 0:
+        return False, (f"{PROJECTION_ENV}={hours} is not positive"), [
+            f"REFUSING: {PROJECTION_ENV}={hours} must be positive. Zero is "
+            f"what a reattach costs, and a reattach declares itself with "
+            f"{REATTACH_ENV} instead.",
+        ]
+    ok, lines = preflight(spec_id, hours, record=record, budget=budget,
+                          ledger=ledger)
+    if ok:
+        return True, None, lines
+    reason = next((x[len("REFUSING:"):].strip() for x in lines
+                   if x.startswith("REFUSING:")), "a dispatch refusal fired")
+    return False, reason, lines
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         prog="python -m experiments.dispatch_guard",

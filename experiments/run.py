@@ -2674,6 +2674,35 @@ def _run_isolated(spec_id: str, ledger: Ledger):
                   f"load={_cpu_gate.load:.2f}", file=sys.stderr, flush=True)
             return Result(spec_id=spec_id, status=Status.ERROR,
                           message=f"REFUSED before start: {_cpu_gate.reason}")
+    # 92nd audit B1: the SAME treatment for the expensive resource, at the SAME
+    # site. `dispatch_guard` was built on 09-13 and wired only into
+    # `scripts/dispatch.sh`, so `$PY -m experiments.run <GPU-SPEC>` — the
+    # command that actually spends the weekly quota, and the one `D1.0`'s pilot
+    # went out through on 09-01 — still had no budget, authorisation or
+    # projection check. "The cheap resource is guarded by a branch; the
+    # irreversible one by a convention" (OVERSIGHT, 92nd audit). This is the
+    # branch. Same UNRECORDED-refusal idiom as the CPU gate above and for the
+    # same reason: a scheduling refusal must never supersede a real verdict.
+    # The projection travels in `JACK_PROJECTED_HOURS`; a reattach is exempt.
+    # See `dispatch_guard.runner_preflight` for the three rulings.
+    _is_gpu = _spec is not None and _spec.budget.value.startswith("gpu")
+    if _is_gpu:
+        try:
+            from .dispatch_guard import runner_preflight
+            _ok, _why, _lines = runner_preflight(spec_id)
+        except Exception as e:  # pragma: no cover - defensive
+            # A guard that crashes must refuse, not wave the spend through:
+            # the failure mode it exists to prevent is irreversible and the
+            # failure mode of refusing wrongly is one lost slot.
+            _ok, _why, _lines = False, f"pre-flight raised {e!r}", [
+                f"REFUSING: {spec_id} — the GPU pre-flight itself failed "
+                f"({e!r}). A guard that cannot run does not clear a dispatch."]
+        for _line in _lines:
+            print(_line, file=sys.stderr, flush=True)
+        if not _ok:
+            print(f"gpu-refused {spec_id} {_why}", file=sys.stderr, flush=True)
+            return Result(spec_id=spec_id, status=Status.ERROR,
+                          message=f"REFUSED before start: {_why}")
 
     def _bill_cpu(t_start: float) -> None:
         # A charge failure must not destroy the result the child already

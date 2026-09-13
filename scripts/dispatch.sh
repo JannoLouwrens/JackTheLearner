@@ -92,17 +92,32 @@ if [ -e "$GPULOCK" ] && ! flock -n "$GPULOCK" true 2>/dev/null; then
 fi
 
 # REFUSALS 1 and 2 — budget, and unchanged re-dispatch. Deliberately the LAST
-# refusal: `--record` writes a projection receipt to `gpu_budget.json`, and the
-# receipt log must mean "was allowed to go", not "was considered". Running it
-# ahead of the push/lock checks would file a projection for a dispatch that
-# never left. Non-zero here means the dispatch does not happen; the guard
+# refusal, so a fast-failing precondition (push, lock) is reported before the
+# expensive one. Non-zero here means the dispatch does not happen; the guard
 # prints its own arithmetic either way.
+#
+# NOTE the missing `--record`, and it is deliberate (92nd audit B1). The
+# projection receipt is now filed by `experiments.run` itself, at the point of
+# spend, because `record_projection`'s contract is that the log means "was
+# allowed to go" — and under the old placement a CLEAR here followed by a
+# refusal or a crash in the runner would have left a receipt for a dispatch
+# that never left. This call is now a FAST FAIL for the human: it refuses in
+# the foreground, with output on the terminal, before anything is detached into
+# a log nobody is watching. The binding refusal is the runner's.
 if [ -z "$REUSE" ]; then
     if ! "$PY" -m experiments.dispatch_guard "$SPEC" \
-            --projected-hours "$PROJECTED" --record; then
+            --projected-hours "$PROJECTED"; then
         exit 1
     fi
 fi
+
+# THE PROJECTION TRAVELS (92nd audit B1). `run._run_isolated` refuses any
+# GPU-cost spec that arrives without this, which is what makes the refusal
+# binding on `$PY -m experiments.run <SPEC>` and on `launch_detached.sh` rather
+# than on this script alone. A reattach carries JACK_REUSE_KERNEL instead and
+# is exempt at both ends; `setsid` inherits the environment, so exporting here
+# is enough.
+export JACK_PROJECTED_HOURS="$PROJECTED"
 
 setsid nohup "$PY" -m experiments.run "$SPEC" >"$LOG" 2>&1 </dev/null &
 PID=$!
