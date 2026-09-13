@@ -91,11 +91,11 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ No NaN/Inf in loss or grads over 1000 steps.
       - _dies if:_ Any non-finite value.
 - [x] **T1.07** Not knife-edge on learning rate
-      - _asserts:_ Training succeeds across a 10x LR range.
-      - _dies if:_ Only one LR works.
+      - _asserts:_ Training succeeds across a 10x LR range — every LR beats mean-prediction AND the held-out error across that span stays inside a 6x band.
+      - _dies if:_ Only one LR works — or the held-out error swings by more than 6x across the span, which is a knife-edge whether or not every point clears the floor.
 - [x] **T1.08** Seed variance measured
-      - _asserts:_ Across 3 seeds the metric's std is small relative to the effect.
-      - _dies if:_ std >= the effect size being claimed.
+      - _asserts:_ Across 3 seeds the metric's std is small relative to the effect, AND the held-out metric itself reproduces across seeds to within 7% CV.
+      - _dies if:_ std >= the effect size being claimed — or the held-out metric's own seed CV exceeds 7%, which makes every single-seed number downstream unquotable.
       - _then delete:_ Any single-seed claim in this repo.
 - [x] **T1.09** Fits in P100 memory
       - _asserts:_ Peak VRAM < 14 GB at the intended batch size.

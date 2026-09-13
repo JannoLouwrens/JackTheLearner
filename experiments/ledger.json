@@ -29872,29 +29872,18 @@
       "status": "PASS"
     },
     "T1.07": {
-      "amended": [
-        {
-          "at": "2026-08-19T07:36:19",
-          "by": "overseer-17th-audit-B2",
-          "changes": [
-            {
-              "field": "hardware",
-              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
-              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
-            }
-          ],
-          "commit": "f47c372+dirty",
-          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
-        }
-      ],
-      "attempt": 2,
-      "commit": "e29bd82",
+      "amended": [],
+      "attempt": 3,
+      "commit": "445b9e1",
+      "compute_s": 1664.19,
       "control_metrics": {
         "absurd_advantage": 0.9162,
         "absurd_diverged": false,
         "absurd_lr": 1.0
       },
-      "duration_s": 1606.68,
+      "dirty_files": null,
+      "duration_s": 1673.55,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1789290929",
       "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
@@ -29922,9 +29911,50 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "amended": [
+            {
+              "at": "2026-08-19T07:36:19",
+              "by": "overseer-17th-audit-B2",
+              "changes": [
+                {
+                  "field": "hardware",
+                  "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+                  "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+                }
+              ],
+              "commit": "f47c372+dirty",
+              "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+            }
+          ],
+          "commit": "e29bd82",
+          "control_metrics": {
+            "absurd_advantage": 0.9162,
+            "absurd_diverged": false,
+            "absurd_lr": 1.0
+          },
+          "impl_sha": "a8cb322b0a3a177c",
+          "message": "",
+          "metrics": {
+            "backend": "kaggle",
+            "gpu": "Tesla P100-PCIE-16GB",
+            "lr_0.0001": 3.917,
+            "lr_0.0003": 6.804,
+            "lr_0.001": 1.38,
+            "lrs_beating_baseline": 3,
+            "reference_advantage": 7.605,
+            "spread_ratio": 4.931,
+            "worst_lr_advantage": 1.38
+          },
+          "ran_at": "2026-08-14T02:37:02",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "a8cb322b0a3a177c",
+      "impl_sha": "3194d14d6770e04b",
       "message": "",
       "metrics": {
         "backend": "kaggle",
@@ -29937,11 +29967,15 @@
         "spread_ratio": 4.931,
         "worst_lr_advantage": 1.38
       },
-      "ran_at": "2026-08-14T02:37:02",
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 209.9,
+      "preserved_impl": null,
+      "ran_at": "2026-09-13T09:43:19",
       "seeds": [
         0
       ],
       "spec_id": "T1.07",
+      "spec_sha": "a4cc1c560d52fd5b",
       "status": "PASS"
     },
     "T1.08": {

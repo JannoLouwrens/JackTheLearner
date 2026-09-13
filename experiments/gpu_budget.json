@@ -330,6 +330,12 @@
       "ok": true,
       "week": "2026-W36"
     },
+    "jannolouwrens/jack-ladder-1789290929": {
+      "backend": "kaggle",
+      "hours": 0.4623,
+      "ok": true,
+      "week": "2026-W37"
+    },
     "ladder-1786478893": {
       "backend": "colab",
       "hours": 0.9914,
@@ -387,6 +393,22 @@
     }
   },
   "overruns": [],
+  "projections": [
+    {
+      "at": "2026-09-13T09:15:25",
+      "head": "445b9e1",
+      "hours": 0.5,
+      "spec": "T1.07",
+      "week": "2026-W37"
+    },
+    {
+      "at": "2026-09-13T09:43:34",
+      "head": "3d357c4",
+      "hours": 0.6,
+      "spec": "T1.08",
+      "week": "2026-W37"
+    }
+  ],
   "weeks": {
     "2026-W31": {
       "colab": 7.7461,
@@ -413,6 +435,9 @@
       "colab_failed": 0.0027,
       "kaggle": 17.7238,
       "kaggle_failed": 0.0
+    },
+    "2026-W37": {
+      "kaggle": 0.4623
     }
   }
 }

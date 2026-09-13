@@ -14505,3 +14505,101 @@ tomorrow, not today — **I did not dispatch, which is refusal number nine.**
 win. What is still open from the audit is **B3's structural half** — the
 reachability pair at REGISTRATION and the knob frontier table — of which this
 slot did only the single most urgent instance.
+
+**2026-09-13 ~09:1x-09:5x UTC (builder, OPUS — `week:Fable` is pinned at 100%
+so the chain walked me off it; the gate is `week:all models` and it read **81%**
+at 09:11, which is why this slot planned two GPU re-buys instead of a dozen
+small acts). UNIT: the Review's `PROGRESS.md` FOR-THE-BUILDER items 5 and 4 —
+`T1.07` and `T1.08` gain the conjuncts their own titles claim. `T1.07` IS
+RE-BOUGHT (attempt 3, PASS); `T1.08` IS IN FLIGHT.**
+
+**What the board actually offered, checked rather than inherited.** Items 1-3 of
+the live priority block are all correctly NOT mine today: `T2.10` was re-priced
+by the 08:0x slot as a retrieval redesign (no scorer this project has measured
+clears its 0.10 bar; the family best is 0.0667), `D25`'s default is **not due**
+— `decisions.py` prints `due 2026-09-13`, not `OVERDUE`, and the required
+attestation *"the owner did not rule by <date>"* is not yet true — and `D1.0`
+attempt 3 is owned by `d10-successor-rerun-under-adopted-gate`, **DUE 09-14**,
+with the 92nd audit's B1 saying in terms *"do not pre-empt it"*. **That is
+refusal number ten and it cost nothing.** The overseer's B1 and B2 are executed
+(`1c0bd1a`, `80f1d28`) and B3's most urgent instance is done, so the ordered work
+left standing was `PROGRESS.md` items 4 and 5, which are new on that page and in
+no other.
+
+**THE MEASUREMENT.** `T1.07` attempt 3, kaggle P100, 1664.19 s metered
+(0.462 h of `2026-W37`'s fresh 30), clean tree at `445b9e1`, **PASS**:
+`spread_ratio` **4.931** against the new `MAX_SPREAD_RATIO` 6.0, with
+`lr_0.0001/0.0003/0.001` at 3.917 / 6.804 / 1.380, reference 7.605 and the
+absurd-LR control at 0.9162. Byte-identical to attempt 2's metrics — same seed,
+same P100, deterministic — so what was bought is not a new number, it is the
+same number finally being **read by a conjunct**. For five weeks this spec
+claimed *not knife-edge on learning rate* and gated only ABSENCE OF COLLAPSE.
+
+**THE PART WORTH INHERITING: the reachability pair, pointed at myself, killed
+one of the three conjuncts I had been ordered to add.** The 92nd audit's B3 asks
+for the required setting and the reachable range before a bar is registered. I
+wrote all three before dispatching anything:
+
+    spread_ratio <= 6.0     recorded 4.304 / 4.931; the PRE-CLIPPING config of
+                            08-05 produced ~20.5 -> both sides reachable by runs
+                            we actually made. CLEARABLE and FIRABLE.
+    heldout_cv_pct <= 7.0   recorded 5.717 and that is the ONLY value (attempt
+                            1's metrics were never carried into `history`), so
+                            n=1 where the sibling had n=2. Said out loud.
+    min_detectable_effect   required >= 1 citing downstream entry; available
+      CITED (item 4b)       **0 of 49** transitive dependents. **FORECLOSED.**
+
+Arming 4b would have sent a GPU run out under a bar that could not clear — the
+`LG.12` defect, one day after the audit that named it, ordered by that audit.
+Nobody was careless; the number simply had not been computed, which is B3's
+entire thesis. **The general rule is in `LESSONS.md`: an instruction to add a
+conjunct is not yet a conjunct, and the arithmetic in between is owed most of
+all when the instruction comes from an organ senior to you.**
+
+**The disposition, because "skip it" was not one of the honest options.**
+RECORD, DO NOT GATE: `T1.08` now writes `mde_downstream` 49 and `mde_citing` 0
+to the ledger every run, so the debt is a number that can be watched rather than
+a sentence on a page that is rewritten weekly. `CITE_MARKER`
+(`CITES T1.08:min_detectable_effect`) is the declaration protocol that arms the
+conjunct the day a citation is real, and the counter was shown returning **1**
+against a declaration planted on `T2.03` in memory before I trusted its 0 —
+otherwise it is a detector wired to nothing. Routed as
+**`t108-noise-floor-is-quoted-by-nobody`, DUE 2026-09-16** (date from
+`review-queue`'s own `next_free_due`; 09-13 carried 14 against a capacity of 6),
+naming `T2.03` as the only PASSing candidate of six direct dependents and
+pricing both branches. Queue still 0 violations, now 53 routed.
+
+**RED-FIRST, out of band, both directions, before either dispatch.** `T1.07`
+clears at 4.304, 4.931 and exactly 6.00, and FAILS at 6.01 and at the unclipped
+20.5. `T1.08` clears at 5.717 and 7.00, FAILS at 7.01, and still FAILS at
+`snr` 2.9 — the old conjunct still binds. **Registry claim fields were amended in
+the same commit** so the gate and the words it is bought under agree; both bars
+are strictly ADDITIVE and `MIN_BEAT_MEAN` / `MIN_SNR` are untouched.
+**STALENESS BILL: `T1.07` and `T1.08` only** — `experiments/registry.py` is in
+no spec's `IMPL_DEPS`, resolved mechanically over every test file, 0 hits.
+
+**Housekeeping.** 13 claude processes on the box, so `git commit --only` with
+named paths throughout and no `git add -A`; nothing of anyone else's is in any
+commit. `LESSONS.md` and `REVIEW_QUEUE.md` were committed BEFORE `T1.07`'s
+result landed **on purpose** — docs are CODE to `is_code_dirt`, and leaving two
+prose files in the tree would have stamped a fresh certificate `+dirty`. Both
+dispatches went through `scripts/dispatch.sh` with a projection, so both are
+declared in `declared_pids` and neither is a leftover. Zero CPU-spec runs, so
+nothing was billed against the CPU day meter (4238 s of 57600 at the time of
+checking, `cpu<10min` slack 13 h).
+
+**NEXT ITERATION — FIRST UNIT: commit `T1.08`'s row.** It was dispatched at
+09:43 (watcher pid 31078, log `/data/tmp/dispatch_t1_08.log`, projection 0.6 h
+against W37), attempt 2 took 1983 s, so it should land ~10:17 and **may already
+be sitting on disk uncommitted when you wake** — that is the exact failure this
+page has recorded twice. Read the log, commit the row as found, and if it FAILED
+on `heldout_cv_pct` say so plainly: the bar was pre-registered at 7.0 against a
+measured 5.717 and it does not move. Then `D25`'s default IS due (09-14) and
+`D19` decides the same day; take both before anything else. `D1.0` attempt 3
+becomes the Review's answer on `d10-successor-rerun-under-adopted-gate` the same
+day — it is still not yours to start early. **What remains open from the 92nd
+audit is B3's STRUCTURAL half** — a declared class on the eleven RANK-3 queue
+rows so the twelfth is recognised as a recurrence, and a reachability caveat on
+`coverage`'s fillable-class recommendation. I judged both to be ~an hour of
+careful instrument work with a `T0.31` or `T0.21` re-buy behind them, and
+refused to half-start one in a GPU wait.
