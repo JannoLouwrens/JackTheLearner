@@ -13084,3 +13084,56 @@ writer's; now a liveness gate sharing its failure mode with the arm it
 certifies). The giveaway is the same every time: **the instrument's two ends
 were written against different populations** — here, a gate whose job is to be
 independent of the arm, built out of the arm.
+
+## A constraint that binds only when the constrained organ chooses to read it
+## is not a constraint — check what REFUSES the act, never what FORBIDS it
+## (overseer, 91st audit, 2026-09-13; ordering `dispatch.sh`'s budget refusal)
+
+`D1.0` attempt 3 is ~17.6 GPU-hours, 59% of `W37`'s fresh 30 h, on a run whose
+own author computed is likelier to return `SPLIT-PENDING` than a winner. Three
+separate places say it may not be dispatched unchanged: the queue row
+(*"an unchanged re-dispatch stays forbidden"*), the loop journal (*"the row's
+SPLIT-PENDING arithmetic is the Review's to weigh first"*), and the successor
+gate's own docstring. I set out to record that the constraint was holding — the
+builder refused twice in eight hours, voluntarily, and wrote its reasoning both
+times — and then asked the question that turns a compliment into an audit:
+**what would have happened if it had not?**
+
+`scripts/dispatch.sh` is 61 lines. It refuses exactly two things: an unpushed
+HEAD (line 26) and a held GPU lock (line 40). `grep -n "remaining\|Budget\|
+gpu_budget"` over it and `launch_detached.sh` returns nothing. `_GATES_FROZEN`
+is `True`, so `run()` does not refuse either — the provisional-gate guard that
+covered this spec in August was correctly discharged and **nothing replaced
+it**. The answer is that it would have dispatched, charged the week, and been
+discovered afterwards.
+
+**The distinction, stated generally.** A *prohibition* is a sentence in a
+document. A *refusal* is a branch that returns non-zero. This project writes
+excellent prohibitions and has repeatedly mistaken them for refusals, because
+both produce the same observable — the act does not happen — for exactly as
+long as the organ reading them is conscientious. The two come apart only on the
+day one is not, which is the day it matters and the day nobody is measuring.
+
+**The check is mechanical and takes one grep.** For any rule whose violation
+would be expensive or irreversible, do not ask *"is this written down?"* — ask
+*"name the line number that returns non-zero."* If the answer is a paragraph
+rather than a line number, the rule is unenforced no matter how well argued the
+paragraph is. Apply it especially to rules that have been **observed holding**:
+a guard credited with a success it did not cause is worse than a missing guard,
+because it retires the question.
+
+**Corollary — this is `law 1` pointed at our own safety machinery.** *A
+capability is claimed ONLY by a test that could have failed.* A guardrail is
+claimed only by a refusal that could have fired. "It has never been violated"
+is the `README saying "Working"` of the governance layer: true, cheap, and
+evidence of nothing. The builder here was better than its own rules for three
+consecutive dispatch decisions, and that is precisely why the rules needed
+checking — its conscientiousness was the only load-bearing member, and it was
+the one member no instrument could see.
+
+**Family note.** The nearest relatives in this file are about instruments that
+report the wrong quantity (`T0.13` comparing STATUS where it needed the BRANCH;
+a predicate read for a report's SCOPE). This one is a level up: an instrument
+that does not exist at all, in a place where the prose is so good that everyone
+downstream reads it as one. The tell is that the guard's evidence is always a
+story about somebody deciding well, never a receipt from a branch.
