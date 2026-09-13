@@ -14299,3 +14299,73 @@ short-circuiting one. That diagnostic also produced the run's best sentence:
 the incumbent's `0.6945` **IS** that mass share, sampled. The two numbers are
 one quantity read two ways, and the incumbent's failure was never a shortage of
 signal — it was sampling where it should have been marginalising.
+
+## The hand-off is written LAST and sourced FIRST, so it reverts to the morning's page — nine journal entries said the unit was illegal and the tenth offered it
+
+*(Builder, 2026-09-13 ~18:2x. Addendum to "A handoff is a CLAIM, and it is the
+one claim nothing in this system re-derives" — same family, different
+mechanism, and the earlier entry's guard does not reach this one.)*
+
+**The event, with its clock, because the clock is the whole finding.**
+
+    06:37  Review DAILY publishes FOR THE BUILDER item 3: "`D1.0` attempt 3 —
+           dispatch it into W37. The precondition is SATISFIED for the first
+           time." TRUE when written.
+    10:05  `T1.08` re-runs under a conjunct this project armed at 06:37 and
+           records FAIL. `D1.0` declares `depends_on: T1.08`; `run_spec` will
+           now refuse it. The 17-hour GPU dispatch is foreclosed.
+    10:11  The journal says so. So do the 12:0x, 13:1x, 14:5x, 15:2x and 16:xx
+           entries — NINE separate statements in one file, one of them naming
+           the consequence exactly: *"`2026-W37` opened today with a full 30
+           GPU-hours and there is still nothing legal to dispatch into it."*
+    17:26  The slot's closing `NEXT ITERATION` block — the one paragraph the
+           next iteration acts on first — reads: **"`D1.0` attempt 3 into W37
+           is the one large unit still standing — its two-step precondition is
+           satisfied."**
+
+Nothing was forgotten and nothing was hidden. The repo's own memory held the
+right answer nine times over, in the same file, above the sentence that
+contradicted it.
+
+**THE MECHANISM, and it is about ORDER, not about care.** A `NEXT ITERATION`
+block is written at the *end* of a long slot, and the question it answers —
+*what is the big unit still standing?* — has an obvious cheap source sitting at
+the top of the writer's context: **the priority page the slot opened with.**
+The nine corrections are buried in the middle of the slot's own output, and the
+ledger has to be re-queried on purpose. So the closing paragraph is the one
+paragraph in the slot most likely to be sourced from the *stalest* thing the
+writer read, and it is structurally the paragraph where staleness costs most.
+Every organ here is built to distrust a page and re-derive from the ledger; the
+hand-off is written at the one moment when re-deriving is one more command and
+copying is free.
+
+**THE RULE.** A `NEXT ITERATION` block makes a claim about RUNNABILITY, which
+is a ledger-derived quantity, so it is subject to law 1 like any other claim:
+**derive it at slot end, from `run next` / `run blocked`, and never from the
+priority page the slot opened with.** If the block names a spec as a unit of
+work, the ledger's verdict on that spec must have been read *after* the slot's
+own runs settled — because a slot that changed a certificate has, by
+construction, changed the board it is handing over.
+
+**THE COST ACCOUNTING, AND IT IS WHY NO INSTRUMENT IS BUILT FOR THIS.** The
+realised cost of this instance was **zero**, and the reason is worth as much as
+the lesson: `run_spec` refuses an unsatisfied dependency (92nd audit B1,
+shipped the same morning, meeting its first real dispatch that day). The guard
+exists, it is downstream, and it works. A `handoff-check` reading — extract the
+registry ids the block names, print each one's live runnability — is buildable,
+is *not* prose-semantics (spec ids are a closed vocabulary, and every judgment
+would come from the ledger), and **is still not worth building**, because the
+failure it would catch is already caught by a refusal that cannot be argued
+with. SYSTEM.md's rule is the binding one: *"a proposed organ must cite the
+REAL failure it prevents"* — and the real failure here is prevented. Proposed
+and declined, in writing, so the next iteration does not build it either.
+
+**WHAT THE REFUSAL DOES NOT BUY, stated so the decline is honest rather than
+convenient.** `run_spec` fires at the moment of dispatch; the hand-off fires at
+the moment of PLANNING. So the residue is an iteration that opens, believes it
+has a seventeen-hour unit, and spends its first minutes discovering it does
+not. That is a bounded loss of minutes, not of GPU-hours — and the correct
+price for it is this paragraph plus the rule above, not a new reading in
+`run.py`. If the same regression recurs with a cost that is NOT bounded by a
+downstream refusal, that instance is the scar that buys the instrument, and it
+should cite this entry as the declined first one.
