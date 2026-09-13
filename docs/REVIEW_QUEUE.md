@@ -5981,3 +5981,85 @@ unmeasured screen while the owner is being asked whether screens work would
 walk around an open decision and would spend the credibility `D27` is trying
 to price. If (i) is taken, it is taken **reporting-only until its
 false-positive rate is written down**, which is `D27`'s own default.
+
+ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 | `acf63e9` (LG.13 attempt 1, PASS) | OPEN
+    DUE: 2026-09-17 | ONE design question, and it is about what a SEAT RACE may
+    conclude — deliberately dated onto the same day as
+    `so10-tie-break-hands-the-seat-to-an-ineligible-arm`, which asks the sibling
+    question from the other side, so the two are read together. Date from
+    `review-queue`'s own `next_free_due` (09-14/15/16 all sit AT the measured
+    capacity of 6; 09-17 carried 4), not chosen by hand — 68th audit B7, `3''`.
+
+**THE EVENT.** `LG.13` raced the Language-routing seat the day after
+`CHAMPIONS.md` created it, on `LG.10`'s certified rig through the
+`_measure(select_fn=)` seam, 1.34 s, 3 seeds, 2 frozen mouths, one cached
+verdict table, no model loaded and no verdict bought. Four decode rules, all at
+`LG.10`'s registered `TEMP = 1.0` — the temperature knob was excluded on this
+row's own sibling disposition (*"do not fit T — both endpoints are already paid
+for"*, `lg10-mouth-fidelity-vs-freedom`, 09-08) and greedy argmax was excluded
+for being ineligible by construction. **The winner is `meaning-mass`**
+(aggregate softmax mass per MEANING to pick the content, then draw the wording
+uniformly within it): **1.0000 on every seed and both mouths**, 4.13 sigma over
+`topk-softmax` (0.8500) against a 1.5 margin, 56.00 sigma over the score-blind
+null (0.1917, chance 3/17), eligible 3/3. The incumbent `softmax-full` — entered
+as `lg_10._draw` itself — came **third at 0.6945**. Control (the state-free
+prompt) 0.0639, gate FAIL at −5.02 sigma. The seat is **FILLED BY VERDICT**.
+
+**THE MECHANISM, worth more than the ranking and not part of the question.** A
+diagnostic over the same cached table (72 trial-model cells) finds the intent
+meaning is the **heaviest meaning in 72 of 72**, carrying **0.6166–0.7656** of
+total softmax mass (median 0.7280). `softmax-full`'s 0.6945 IS that share,
+sampled — the same quantity read two ways. Intent conditioning was never short
+of signal at the MEANING level; per-candidate sampling was throwing it away.
+
+**THE QUESTION, and it is the builder reporting a hole in its own design rather
+than a result.** Under `meaning-mass` the drawn meaning is a DETERMINISTIC
+function of (trial, model) — the mass computation consults no rng. So three of
+`LG.10`'s conjuncts go green **structurally, not by measurement**:
+
+    unanimity    1.0 by construction (all 5 draws share one meaning)
+    swap_agree   1.0 by construction whenever both mouths agree, which they do
+    variety      >= 1 - 1/81 per trial by construction (uniform over 3
+                 phrasings, 5 draws) HOWEVER BAD the chooser is
+
+`LG.13`'s own verdict is unaffected and the desk is not asked to re-open it:
+`match_both` is not true by construction (the selector is never told the
+intent, and `topk-uniform` groups by admission too and scored 0.6611), every
+rig gate fired, and the control failed its gate by 5 sigma. **What is at stake
+is what happens NEXT.** All of `LG.10`'s gates would read green under the
+champion — match 1.0, unanimity 1.0, swap_agree 1.0, variety 1.0, null 0.0,
+silence 0, leak 0 — and that is exactly the outcome the 09-08 disposition
+refused when it refused option (b): a chooser that makes the claim true by
+construction and the test decorative. `meaning-mass` is NOT option (b) (it
+never reads the intent), but it arrives at the same structural immunity by a
+different door.
+
+**Two answers are owed, and the builder has deliberately taken neither.**
+
+  1. **Is `LG.10` owed a successor under the champion, and under what aliveness
+     proof?** A successor that simply re-runs `LG.10` with `select_fn=meaning-
+     mass` would record a PASS whose three invariance conjuncts are structural.
+     The honest version needs an aliveness gate that can fail — something the
+     shape of `VARIETY_MIN` but defined over MEANINGS rather than utterances,
+     which does not exist and which this desk should name rather than the
+     builder inventing it mid-race. **`LG.10`'s FAIL and its bars are untouched
+     and stay untouched under every branch; nothing here is a licence to
+     re-run it.**
+
+  2. **Should an eligibility leg be allowed to be satisfiable by
+     construction?** `LG.13` pre-registered `variety` as the leg that would
+     catch *"a chooser that buys meaning-match by killing the sampler's
+     freedom"*, and the winner is a chooser that kills freedom over MEANINGS
+     while leaving freedom over WORDINGS untouched. The leg did what it was
+     written to do; the sentence beside it claimed more than the leg can
+     deliver. It was NOT retro-edited — that is the move pre-registration
+     exists to forbid — so the gap is here. This is the same family as
+     `so10-tie-break-hands-the-seat-to-an-ineligible-arm`'s question (2), which
+     is why they share a date: one asks whether the primitive must know about
+     eligibility, this one asks whether a leg must prove it could have failed.
+
+**WHAT IS ALREADY MEASURED, so the desk is not asked to re-derive it.** Every
+arm's per-seed row is in `acf63e9`'s ledger entry, eligibility legs included,
+under SYSTEM.md's SCORED-AND-INELIGIBLE rule. Re-running `LG.13` costs 1.34 s
+and buys nothing new; the artifact is content-hash keyed so a changed prompt,
+pool or scaffold VOIDs rather than silently re-purchasing.
