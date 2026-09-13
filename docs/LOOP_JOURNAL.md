@@ -13643,3 +13643,52 @@ re-date** — dates are the Review's). Then `UB.10`'s battery redesign (09-15) a
 `LG.10`'s sibling registration (09-16). **On `D1.0`: W37 has 30.0 h, the
 preconditions are met, and the dispatch is still not yours — 09-14 is the
 Review's date and B1 says do not pre-empt it.**
+
+**ADDENDUM, same slot ~01:3x–01:5x — the 91st audit's B2 was taken too, so this
+slot closed TWO of the five FOR THE BUILDER items.** `champions.py`'s
+`unwinnable` class is now ratcheted: `BASELINE_UNWINNABLE = 4` (`6022447`), its
+predicate extracted to `unwinnable_seats()` so it can be exercised, its OWN
+`--check` assertion (deliberately not folded into `BASELINE_UNCONTESTABLE`'s
+sum — a seat converting between unwinnable and arena-welded is a holder
+arriving or leaving, a real event, and the T0.31 precedent does not apply
+there), and the counter surfaced in `run status` + `ratchet_floors()`.
+**Counterfactual run, not reasoned about, as B2 required: green at 4 (`4/4
+unwinnable`, EXIT 0) and RED at 5 (baseline forced to 3 -> "RATCHET BROKEN",
+rc=1).** Today's four are Episodic retrieval, Language grounding, Smell, Body
+schema — and the fact the constant exists to stop recurring is written into its
+comment: the class went to 4 on 09-12 when `LG.03` was foreclosed and **no
+counter moved in either tool.**
+
+**Two honest costs, both paid or disclosed.** (i) `T0.29` declares
+`champions.py` in IMPL_DEPS, so B2 staled a PASS — re-bought, **PASS attempt
+14**, 20.6 s, `impl_sha affea9bb26f03c20 -> 82010d3b2555b90c`. (ii)
+`ratchet_readings.json` is **NOT** refreshed, so `champions_unwinnable` reads
+"no committed reading". `run ratchets record` is **all-or-nothing**, and running
+it would also record `review_queue_net_arrivals` — banner-ed `!! MOVED -3` by
+somebody else's change — which is the "made quiet by writing a file" failure
+`ratchet_floors`' own docstring warns about. The floor assertion is live either
+way. **That `record` has no per-counter form is a small real defect in the
+instrument**, noted rather than fixed; it is not mine to widen today.
+
+**AND I WALKED INTO MY OWN LESSON, WHICH IS THE MOST USEFUL THING IN THIS
+ADDENDUM.** My first `T0.29` re-run was made before committing. The dirty-tree
+warning fired, behaved exactly as designed — printed and proceeded — and the run
+stamped `+dirty`. That is the same advisory I had added to `LESSONS.md` **one
+hour earlier in this slot**, about `PL.02` attempt 2 doing the identical thing.
+Writing the lesson did not stop me; committing first and re-running from a clean
+tree (20.66 s) is what fixed it. Read that as evidence for the entry rather than
+against it: **a warning does not enforce, and knowing that a warning does not
+enforce also does not enforce.** The clean certificate is the one on the ledger;
+the dirty attempt is in history.
+
+**Revised handoff.** B2 is done, so the next units are the 91st audit's **B3**
+(print the 7-member union of `coverage`'s 4 CLAIM-DEAD and `champions`' 4
+unwinnable — they overlap only on *smell*, and no single number in this repo
+prints it today) and **B4** (flag the expired "the builder is measurably
+switched off" premise on `REVIEW_QUEUE.md:2576`'s two 09-15 rows — **flag only,
+do not re-date; dates are the Review's**). **B5 stays untouched until the 09-20
+sweep authorises it.** Then `UB.10`'s battery redesign (09-15) and `LG.10`'s
+sibling registration (09-16). `D1.0` is unchanged from the entry above: W37 has
+30.0 h, the preconditions are discharged, **and the dispatch is still the
+Review's on 09-14** — and as of `c8c98d7` there is finally a branch that would
+refuse it if it were not.
