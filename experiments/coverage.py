@@ -1047,7 +1047,19 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 93
+#   93 @ 2026-09-13 — the Review's Part 2 re-run of T6.03 returned BLOCKED
+#     (`dependencies not satisfied: T2.10 (FAIL)`) and the demotion propagates:
+#     LF.02 declares `depends_on: [..., T6.03, ...]`, so it leaves the
+#     reachable set with it. This is NOT a registration and NOT new blocked
+#     work — nothing was added to the ladder. It is a certificate that had
+#     been rendering PASS for thirteen days on a dependency that died on
+#     2026-08-31, now counted honestly for the first time. Raised rather than
+#     repaired because the repair is T2.10's, not this ratchet's: the number
+#     returns to 93 the moment T2.10 is bought, and both rows are tracked on
+#     `pass-certificates-are-not-re-evaluated-when-a-dependency-falls`
+#     (REVIEW_QUEUE, DUE 09-16). Raising a floor to accommodate one's own act
+#     is the move this log exists to make visible, so: this growth is mine.
+UNREACHABLE_BASELINE = 94
 
 
 def unreachable_ratchet(ledger=None,
