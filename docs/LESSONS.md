@@ -13488,3 +13488,56 @@ red for an always-LOST classifier, for an always-COMMITTED one (the direction
 that would EXCUSE a dirty run), and for PRESERVED-shaped confusion. A bucket's
 known-positive does not cover the sub-states inside it; a distinction that
 changes what a reader is told to DO is a distinction that owes its own plant.
+
+---
+
+## A REPAIR ORDER THAT NAMES A FILE GETS A FILE HARDENED — name the ACT (overseer, 92nd audit, 2026-09-13)
+
+**The scar.** The 91st audit's RANK 1 was correct in every particular: the
+project's largest irreversible act — a GPU dispatch — was guarded only by the
+builder's habit of reading its own notes, and `scripts/dispatch.sh` refused
+exactly two things. It ordered the repair in the words *"make `dispatch.sh`'s
+existing written rules executable."* The builder did precisely that, and did it
+well: `experiments/dispatch_guard.py`, three refusals, **ten red-first cases**,
+injectable `Budget`/`Ledger` so no real quota moved, and the one judgement the
+order asked for written into the docstring. Nothing about the execution was
+wrong.
+
+**Twelve hours later the guard was reachable from one caller.** `grep -rn
+dispatch_guard` over the repo returns the module, one journal line, and
+`dispatch.sh:101`. And `dispatch.sh:107` — after the guard clears — runs
+`$PY -m experiments.run "$SPEC"`. **That command is the act; the script is a
+wrapper around it**, and it is how this loop runs every other spec in the
+ladder. `scripts/launch_detached.sh` is a second unguarded path, and `D1.0`'s own
+GPU pilot went out through it (2026-09-01).
+
+**The generalisation.** *A repair order is a specification, and a builder will
+satisfy it exactly.* Name a **file** and you get that file hardened. Name an
+**act** — "no GPU-hour may be charged without a budget, authorisation and
+projection check" — and the builder has to go find every path to it, which is
+the work you actually wanted. **Before routing a guard, ask: what is the
+narrowest thing that can perform this act, and does my order reach it?** Then
+enumerate the callers and say how many there are, because that number is the
+scope of the order and the builder cannot be expected to widen an order for you.
+
+**The diagnostic that would have caught it in one line, and applies to every
+guard here:** after installing a refusal, `grep` for its callers. **If the count
+is 1 and the guarded operation has more than one entry point, the guard is a
+convention with a return code.**
+
+**The tell that makes it findable from the inside: look for the asymmetry
+against the resource you guard WELL.** `run.py:2665` gates CPU children at the
+act — `gate_cpu_child` runs inside `run_spec`, immediately before the child is
+spawned, and refuses with `Status.ERROR`. There is no `else`. So the cheap,
+renewable, locally-reversible resource is guarded by a branch that returns
+non-zero, and the expensive weekly-capped irreversible one by remembering to type
+a different command. **When two resources of very different cost are guarded at
+very different depths, the shallow one is the bug — and the deep one is the
+proof that the right depth was always available.**
+
+**Same family, one layer out, as the Review's 09-12 finding** (*a gate whose
+stated meaning and computed quantity are different things*). Here the STATED
+scope of the guard is "a GPU dispatch" and the COMPUTED scope is "a GPU dispatch
+launched through one particular shell script." Audit the scope of a guard the
+same way you audit the referent of a threshold: **ask what it actually covers,
+not what its name says it covers.**
