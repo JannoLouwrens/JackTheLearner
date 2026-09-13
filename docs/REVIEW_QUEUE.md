@@ -5836,3 +5836,66 @@ that risk is real and is the reason this is proposed rather than shipped. A
 cheaper variant exists if the desk prefers it — `WAITS-ON:` permitted but the
 grouped line printed only when EVERY row in a pile declares one, so a partial
 adoption prints nothing instead of a wrong number.
+
+ROUTED: so10-tie-break-hands-the-seat-to-an-ineligible-arm | 2026-09-13 | `498b8a2` (SO.10 attempt 1, FAIL) | OPEN
+    DUE: 2026-09-17 | two design answers owed by the Review: (1) which of the
+    two measured, tied, ELIGIBLE rules takes the Person-model seat — or whether
+    a seat's race must screen on ADMISSION before it scores; (2) whether
+    `bakeoff.py`'s cost tie-break needs to know about per-arm eligibility at
+    all, since this is a property of the decision primitive and not of one
+    spec. Date from `review-queue`'s own `next_free_due` (09-13 carried 13
+    promises against a measured capacity of 6; 09-17 was the first with room),
+    not chosen by hand — 68th audit B7, `3''`.
+
+**THE EVENT.** `SO.10` raced the Person-model seat the day `CHAMPIONS.md`
+created it, on `LG.02`'s certified rig, 4.67 s, 3 seeds. Four trust rules read a
+byte-identical diary. **All four cleared the 3-sigma learning gate** —
+`exp-decay-h15` 5.91, `laplace-full` 5.79, `laplace-w30` (the incumbent) 5.11,
+`last-1` 3.60 — and the POOLED-SCALAR control, a diary with no person model in
+it, scored **0.0445, which is the null to four places, 0.00 sigma, gate FAIL.**
+The rig worked.
+
+**THE VERDICT AND WHY IT DID NOT SEAT ANYBODY.** `run_bakeoff` returned **TIE**
+(0.26 sigma between the top two, margin 1.5) and resolved it by declared cost to
+**`laplace-full`**, which carries 0 tunable constants against the incumbent's 1.
+That is the decision primitive working exactly as specified. **And
+`laplace-full` is INELIGIBLE on every seed**: after the advisors swap roles its
+divergence is **negative** — −0.1333 / −0.0667 / −0.1333 against `MIN_MIGRATE`
+0.40. It goes on trusting the voice that is now lying, because a full-history
+posterior cannot forget. So `SO.10` recorded **FAIL** and the seat stays VACANT,
+which is the consequence the spec pre-registered before the run.
+
+**THE FINDING THAT IS BIGGER THAN THIS SPEC.** The bakeoff arbitrates ONE
+number. `SO.10`'s eligibility legs are pre-registered gates the primitive cannot
+see, so the cost tie-break handed the title to the arm that fails the thing the
+seat exists for — and it did so *because* that arm is cheaper, which is the
+project's own earn-your-parameters rule pointing the wrong way. Had `SO.10` not
+carried admission separately, the honest reading of `docs/DECISIONS_RESOLVED.md`
+would have been *"adopt laplace-full"*, and the repo would have replaced a rule
+that migrates with one that cannot.
+
+**WHAT IS ALREADY MEASURED, so the desk is not asked to re-derive it.** Two arms
+are eligible on all three legs on all three seeds (`prior_ok`/`noleak`/
+`migrate` = 1/1/1): `laplace-w30` at 0.6889 and `exp-decay-h15` at 0.6778. They
+are 0.16 sigma apart — a TIE by the same margin — and their declared costs are
+equal at 1 constant each (`WINDOW`; `HALF_LIFE`). **So the cost tie-break cannot
+separate them either, and this desk deliberately did NOT re-rank to "the best
+eligible arm" after seeing the numbers** — that is the move pre-registration
+exists to forbid. Naming the seating rule is the Review's call.
+
+**A SECOND MEASUREMENT, about the VENUE rather than any arm, recorded here
+because nothing else will carry it.** `last-1` failed the leak leg hard:
+stripped of attribution its divergence is **−0.70 / −0.4667 / −0.6333** against
+`NULL_DIV_MAX` 0.20. The advisors ALTERNATE, so the last pooled claim before any
+speaker's turn is always the OTHER speaker's — **turn order encodes speaker
+identity**, and a memoryless rule reads it without any diary at all. `LG.02`'s
+own null is safe (its rule integrates 30 claims, so the alternation averages
+out, and it measured 0.0667 / −0.0333 / 0.1), but the venue has a channel
+outside the attributed diary and only this run has ever looked. Any future spec
+on this rig that scores a short-memory mechanism inherits the hazard.
+
+**WHAT MAY NOT BE ASKED FOR.** No bar moves in either direction: `MIN_MIGRATE`,
+`NULL_DIV_MAX`, `PRIOR`, `MIN_DIV` are `LG.02`'s and unmoved, and the 3-sigma
+gate and 1.5-sigma margin are `run_bakeoff`'s defaults. `SO.10` is not re-run to
+get a different winner — every arm's number is already in the row, and a re-run
+changes nothing about them.
