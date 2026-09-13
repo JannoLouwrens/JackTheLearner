@@ -51,6 +51,23 @@ that is still live and still ageing is not a row the desk has finished with.
 Like P14 it is a METRIC and never a violation, and like P14 it is RATCHETED:
 re-dating, re-arming and splitting a row must each leave it unimproved.
 
+P18 is the newest scar of all (93rd audit B2, 2026-09-13) and it is P17's
+counterpart: P17 forecasts the class with NO clock, P18 the class that HAS one.
+On 2026-09-13 fourteen live dated rows came due against a measured capacity of
+six, and this instrument could print `0 violations` right up to the midnight
+that turned eight of them into broken promises — every input needed to say so
+existed at 06:25 and the pile was found by eye at 12:40 instead. The same shape
+as P14 and P17: the file owned every term and could only report after the fact.
+Like both, it is a METRIC, never a violation and NOT floored — a pile is a
+legal state, and `MEASURED_DISCHARGE_CAPACITY` is a demonstrated one-cycle
+maximum rather than a rate, so this forecasts a COLLISION, not a failure.
+Two boundaries carry the claim and both are tested in both directions: the
+predicate mirrors OVERDUE's (live rows only — a closed row is not a promise),
+and a consumer that is LATE does not push its own next sitting into the past,
+which would shrink the covered set exactly when the desk is furthest behind.
+The cycle is read from GIT — `PROGRESS_LOG.md`'s commit dates — for P15's
+reason: the table is the desk's declaration about the desk.
+
 The sixth conversion is the newest scar (60th audit, 2026-09-02): six sections
 written in the pre-declaration prose idiom — three with the declaration INSIDE
 the heading, `## ROUTED: OPEN — ...`, one `## ` away from being read — were not
@@ -131,11 +148,11 @@ import io
 
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
-from ..review_queue import (DOC_PATH, LOG_PATH, MAX_OPEN_AGE_DAYS,
-                            MEASURED_DISCHARGE_CAPACITY,
+from ..review_queue import (CONSUMER_CYCLE_DAYS, DOC_PATH, LOG_PATH,
+                            MAX_OPEN_AGE_DAYS, MEASURED_DISCHARGE_CAPACITY,
                             THROUGHPUT_WINDOW_DAYS, VIOLATIONS, audit, check,
-                            consumer_last_run, live_audit, parse, render,
-                            throughput)
+                            consumer_last_run, live_audit,
+                            next_consumer_cycle, parse, render, throughput)
 
 SPEC_ID = "T0.31"
 
@@ -145,7 +162,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 17
+N_PROPERTIES = 18
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -767,6 +784,89 @@ def _probe(blind: bool) -> dict:
     if blind or not forecast_ok:
         failed.append("p17_ageing_is_forecast_a_day_before_it_fires")
 
+    # P18 — THE DATED PROMISES ARE FORECAST BEFORE THEY BREAK (93rd audit B2:
+    # on 2026-09-13 fourteen live dated rows came due against a measured
+    # capacity of six, and this file could say `0 violations` right up to the
+    # midnight that turned eight of them into broken promises — every input
+    # existed at 06:25 and it was found by eye at 12:40). P17's counterpart:
+    # that one forecasts the class with NO clock, this one the class that has
+    # one. Both fixtures the audit asked for, plus the boundaries a forecast
+    # can quietly get wrong in the direction that flatters the desk.
+    CAP = MEASURED_DISCHARGE_CAPACITY
+    CYC = TODAY + _dt.timedelta(days=CONSUMER_CYCLE_DAYS)
+
+    def _dated(n, due, prefix, status="OPEN"):
+        return [(f"{prefix}-{i}", "2026-08-30", status,
+                 [f"DUE: {due.isoformat()} | a dated promise"]) for i in range(n)]
+
+    # (i) THE PILE EXCEEDS CAPACITY — the 09-13 shape, two rows over.
+    over = audit(_doc(_dated(CAP + 2, CYC, "due")), None, TODAY, next_cycle=CYC)
+    # (ii) THE PILE DOES NOT — the same instrument must say so, not stay silent
+    #      and not round up. A forecast that only ever alarms is not a reading.
+    under = audit(_doc(_dated(CAP - 2, CYC, "due")), None, TODAY, next_cycle=CYC)
+    # (iii) A ROW DATED PAST THE NEXT CYCLE IS NOT IMMINENT. The boundary is
+    #       the whole claim: include it and the number is just `dated rows`.
+    later = audit(_doc(_dated(CAP + 2, CYC + _dt.timedelta(days=1), "due")),
+                  None, TODAY, next_cycle=CYC)
+    # (iv) A TERMINAL ROW ON THAT DATE IS NOT A PROMISE. Mirrors OVERDUE's own
+    #      live-only predicate; counting closed rows would inflate the pile
+    #      with work already done.
+    done = audit(_doc(_dated(CAP + 2, CYC, "due", "ACTED 2026-09-01 (deadbeef)")),
+                 None, TODAY, next_cycle=CYC)
+    # (v) AN ALREADY-OVERDUE ROW IS COUNTED, AND NAMED AS SUCH. Excluding it
+    #     would make this number FALL as the desk fell further behind — the
+    #     one failure mode that would make the reading actively misleading.
+    late = audit(_doc(_dated(2, TODAY - _dt.timedelta(days=1), "late")
+                      + _dated(CAP, CYC, "due")), None, TODAY, next_cycle=CYC)
+    # (vi) NO EVIDENCE MANUFACTURES NOTHING — P10's rule for this reading: with
+    #      no consumer history the cycle is unknown, so there is no reading and
+    #      the renderer prints nothing. Silence, never a zero that reads clean.
+    blindcycle = audit(_doc(_dated(CAP + 2, CYC, "due")), None, TODAY)
+    otext, utext, btext = render(over), render(under), render(blindcycle)
+
+    # Read through a sentinel, so that DELETING the reading makes this property
+    # FAIL rather than RAISE. An instrument whose control can only be built by
+    # crashing it has no deletion control — and deletion is the sabotage that
+    # reconstructs the exact organ that stood here before this commit.
+    def _im(a, key, default=-1):
+        return (a.get("imminent") or {}).get(key, default)
+
+    imminent_ok = (
+        # (i) and (ii): the two fixtures, each with its own arithmetic
+        _im(over, "n") == CAP + 2
+        and _im(over, "undischargeable") == 2
+        and _im(over, "capacity") == CAP
+        and _im(over, "next_cycle") == CYC.isoformat()
+        and _im(under, "n") == CAP - 2
+        and _im(under, "undischargeable") == 0
+        # (iii)/(iv): the two predicates that bound it
+        and _im(later, "n") == 0
+        and _im(done, "n") == 0
+        # (v): counted, and distinguishable
+        and _im(late, "n") == CAP + 2
+        and _im(late, "already_overdue") == 2
+        and _im(late, "undischargeable") == 2
+        # (vi): absent evidence -> no reading, and nothing printed
+        and blindcycle.get("imminent") is None
+        and "IMMINENT" not in btext
+        # A METRIC, NEVER A VIOLATION: the pile does not move the exit code,
+        # and the under-capacity fixture is not quietly cleaner than the over.
+        and over["total"] == 0 and under["total"] == 0 and late["total"] == 2
+        # THE RENDERER PRINTS IT — a forecast nobody can read re-arms nothing
+        # (P17's sentence, and the reason this was found by eye).
+        and "IMMINENT" in otext and f"{CAP + 2} live dated row(s)" in otext
+        and CYC.isoformat() in otext and "2 of them" in otext
+        and "IMMINENT" in utext and "0 of them" in utext
+        # THE CYCLE DERIVATION ITSELF, pure and in both directions: a consumer
+        # that already sat today is next up TOMORROW, and a LATE consumer does
+        # not push its own next sitting into the past — which would shrink the
+        # covered set exactly when the desk is furthest behind.
+        and next_consumer_cycle([TODAY], TODAY) == CYC
+        and next_consumer_cycle([TODAY - _dt.timedelta(days=9)], TODAY) == TODAY
+        and next_consumer_cycle([], TODAY) is None)
+    if blind or not imminent_ok:
+        failed.append("p18_dated_promises_are_forecast_before_they_break")
+
     # The live desk's own numbers, recorded in the ledger row so the reading
     # that motivated P15 is dated and attributable rather than quoted from an
     # audit page. `-1` is the honest value for "no git baseline in this
@@ -802,7 +902,7 @@ def _control(seed: int) -> dict:
     and on the one sabotage it CAN see it reports the wrong sign: delete the
     rotting row and the number falls, so the backlog looks healthier.
 
-    Measured: it fails 14 of 17, and the 3 it passes are worth naming so nobody
+    Measured: it fails 15 of 18, and the 3 it passes are worth naming so nobody
     reads this as a straw man. P1 is a statement about the live DOCUMENT rather
     than about the reader, and is not asked of it. P4 and P6 it passes
     VACUOUSLY — relabelling a row `HELD` and deleting its `DUE:` both leave the
@@ -830,6 +930,15 @@ def _control(seed: int) -> dict:
     P17 it fails by construction too: a row count carries no ages, so it can
     no more forecast a row going STALE tomorrow than it could see one STALE
     today — the 84th audit's midnight cohort, executable.
+
+    P18 it fails for P17's reason one column over: a row count carries no DUE:
+    dates and no notion of the consumer's cadence, so it cannot say that
+    fourteen promises fall on one sitting that has ever discharged six. But
+    P18 does NOT rest on this control alone, and that is the point of its
+    sentinel reader: DELETING the reading from `review_queue.py` — which
+    reconstructs the organ exactly as it stood before the 93rd audit's B2 —
+    makes P18 fail rather than raise, and so does the narrower sabotage of
+    counting TERMINAL rows into the pile. Both were run against this commit.
     """
     return _probe(blind=True)
 
@@ -852,7 +961,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p12_a_disposition_is_not_an_execution",
                            "p14_a_promise_dated_onto_a_full_day_is_named",
                            "p15_the_desk_is_measured_disposing_not_only_breaking",
-                           "p16_an_ordered_specs_return_is_printed"
+                           "p16_an_ordered_specs_return_is_printed",
+                           "p18_dated_promises_are_forecast_before_they_break",
                            } <= control_names)
     return bool(experiment_clean and control_broken)
 

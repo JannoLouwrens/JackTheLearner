@@ -431,9 +431,60 @@ def throughput(doc: str, base_doc: str | None,
             "unbounded": drain is None and live_now > 0}
 
 
+def consumer_run_dates(repo: Path | None = None) -> list[_dt.date]:
+    """Every date on which the consumer committed its cycle receipt, from GIT.
+
+    The channel is git, not `PROGRESS_LOG.md`'s own table, and for the reason
+    `throughput` already gives one function up: the table is the desk's
+    declaration about the desk, it is writable, and a forecast a back-dated
+    line can move is a forecast that teaches back-dating. `consumer_last_run`
+    keeps reading the table — that is context printed in the header, not an
+    input to a reading.
+
+    `[]` when git cannot say (no repo, a detached environment). Absent
+    evidence yields no reading, never a manufactured one — `_prev_revision`'s
+    rule, which this shares.
+    """
+    root = repo or Path(__file__).resolve().parent.parent
+    try:
+        r = subprocess.run(["git", "log", "--format=%cd", "--date=short",
+                            "--", LOG_PATH.relative_to(root).as_posix()],
+                           cwd=root, capture_output=True, text=True, timeout=20)
+    except Exception:
+        return []
+    if r.returncode != 0:
+        return []
+    out: list[_dt.date] = []
+    for line in r.stdout.split():
+        d = _date(line)
+        if d is not None:
+            out.append(d)
+    return out
+
+
+def next_consumer_cycle(run_dates: list[_dt.date], today: _dt.date,
+                        cycle_days: int = CONSUMER_CYCLE_DAYS) -> _dt.date | None:
+    """The next date the consumer can discharge anything, or None.
+
+    Pure, so the properties can hold git still; `live_audit` supplies the
+    dates. `None` on no evidence, for `consumer_run_dates`' reason.
+
+    A consumer that is LATE does not push its own next opportunity back: if
+    the cycle after its last run has already passed, the answer is TODAY,
+    because today is when it can next sit. The alternative — answering with a
+    date in the past — would quietly shrink the set of rows the reading
+    covers exactly when the desk is furthest behind, which is the one
+    condition the reading exists for.
+    """
+    if not run_dates:
+        return None
+    return max(max(run_dates) + _dt.timedelta(days=cycle_days), today)
+
+
 def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
           base_doc: str | None = None, ledger: dict | None = None,
-          registered: set | None = None) -> dict:
+          registered: set | None = None,
+          next_cycle: _dt.date | None = None) -> dict:
     """Every violation in `doc`, with `prev_doc` (the previous committed
     revision) as the only baseline. Pure: no clock, no git, no filesystem —
     `main()` supplies all three, so the properties can hold the world still.
@@ -455,6 +506,10 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
     forever. A METRIC input like `ledger`: supplying or withholding it moves
     no violation; absent, the distinction is unavailable and every rowless id
     reads NO ROW YET.
+
+    `next_cycle` — the consumer's next sitting, supplied by `live_audit()`
+    from `next_consumer_cycle`, for the IMMINENT reading only. A METRIC input
+    like the two above: absent, the reading is `None` and no violation moves.
     """
     today = today or _dt.date.today()
     rows = parse(doc)
@@ -598,6 +653,37 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
                                   "age_days": (today - r["routed"]).days,
                                   "stale_in_days": left})
 
+    # THE IMMINENT READING (93rd audit B2). `ageing_in` forecasts the class
+    # with no clock; this forecasts the class that HAS one. On 2026-09-13
+    # fourteen live dated rows came due against a measured capacity of six,
+    # and this file could only say `0 violations` until after midnight turned
+    # eight of them into broken promises. Every input needed to print it
+    # existed at 06:25; it was found by eye at 12:40 instead.
+    #
+    # The predicate MIRRORS the OVERDUE class it forecasts — a live row with a
+    # DUE: — for P17's reason: a forecast whose predicate drifts from its alarm
+    # forecasts a different alarm. Rows ALREADY overdue are counted and named
+    # separately rather than excluded: they are undischarged promises falling
+    # before the same sitting, and dropping them would make the number fall as
+    # the desk got further behind.
+    #
+    # A METRIC, NEVER A VIOLATION and NOT FLOORED — `piled_on`'s discipline,
+    # cited by the audit that ordered this. A pile is a legal state (a desk may
+    # knowingly date a row onto a full day, and `cross-organ-doc-race-voids-
+    # certificates` did), so a gate here would forbid a legal move. It is also
+    # not a prediction that the rows WILL break: capacity is a demonstrated
+    # one-cycle maximum, not a rate, and a cycle may discharge more.
+    imminent = None
+    if next_cycle is not None:
+        due_soon = [r for r in live if r["due"] is not None and r["due"] <= next_cycle]
+        imminent = {
+            "next_cycle": next_cycle.isoformat(),
+            "n": len(due_soon),
+            "capacity": MEASURED_DISCHARGE_CAPACITY,
+            "undischargeable": max(0, len(due_soon) - MEASURED_DISCHARGE_CAPACITY),
+            "already_overdue": sum(1 for r in due_soon if r["due"] < today),
+            "ids": sorted(r["id"] for r in due_soon)}
+
     # THE ORDERED JOIN (79th audit): every LIVE row's commissioned spec ids,
     # each against the ledger's verdict for it — or against its absence, which
     # is the half the 78th audit's opt-in lesson says must also be visible.
@@ -619,6 +705,7 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
             "due_pile": due_pile, "piled_on": piled_on,
             "ordered_returns": ordered_returns,
             "ageing_in": ageing_in,
+            "imminent": imminent,
             "next_free_due": next_free_due,
             "throughput": throughput(doc, base_doc),
             "total": len(findings), "today": today,
@@ -719,6 +806,24 @@ def render(a: dict, last_run: str = "") -> str:
         if n48:
             out.append(f"    within 48 h: {len(n48)} further row(s) — "
                        + ", ".join(e["id"] for e in n48))
+    im = a.get("imminent")
+    if im and im["n"]:
+        out.append("")
+        out.append(f"  IMMINENT — {im['n']} live dated row(s) fall due on or before the "
+                   "consumer's next")
+        out.append(f"  cycle ({im['next_cycle']}), against a measured capacity of "
+                   f"{im['capacity']}/cycle. {im['undischargeable']} of them")
+        out.append("  cannot be discharged by that cycle.")
+        if im["already_overdue"]:
+            out.append(f"  {im['already_overdue']} of the {im['n']} is/are ALREADY "
+                       "overdue and counted here too — a broken")
+            out.append("  promise is still a promise that sitting has to carry.")
+        out.append("  A METRIC, never a violation and never floored: a pile is a legal "
+                   "state, and")
+        out.append("  capacity is a demonstrated one-cycle maximum, not a rate. "
+                   "Printed BEFORE the")
+        out.append("  dates pass, which is the only time anything can be done about "
+                   "them.")
     if a.get("ordered_returns"):
         out.append("")
         out.append("  ORDERED MEASUREMENTS — what live rows commissioned, and what "
@@ -870,7 +975,8 @@ def live_audit(doc_path: Path | None = None, today: _dt.date | None = None) -> d
     # opt-in blindness again.
     from .registry import BY_ID
     return audit(p.read_text(), _prev_revision(p), today, base_doc=base,
-                 ledger=ledger, registered=set(BY_ID))
+                 ledger=ledger, registered=set(BY_ID),
+                 next_cycle=next_consumer_cycle(consumer_run_dates(), today))
 
 
 def check(doc_path: Path | None = None) -> int:
