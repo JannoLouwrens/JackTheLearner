@@ -175,9 +175,23 @@ def _trust(mem, speaker: str | None, window: int = WINDOW) -> float:
     return (sum(tail) + 1) / (len(tail) + 2)
 
 
-def _live(seed: int, mem_path, stripped: bool = False, swap: bool = False):
+def _live(seed: int, mem_path, stripped: bool = False, swap: bool = False,
+          trust_fn=_trust):
     """One life. Returns per-round records the rig scores; the agent inside
-    sees only the diary."""
+    sees only the diary.
+
+    `trust_fn(mem, speaker) -> float` is the TRUST RULE SEAM, added 2026-09-13
+    for `SO.10` (the Person-model bakeoff) and defaulting to `_trust`, the
+    shipped rule — so LG.02's and SO.08's certified path is this function with
+    its default and nothing about it moved. The seam exists because the seat
+    *how is a person represented, and how does trust update* was picked by
+    accident when this file was written and had never been raced; swapping the
+    rule is the only thing an arm may change, and the world stream is
+    identical across arms by construction (`rng_world` is seeded from `seed`
+    alone, `rng_agent` draws exactly once per round whatever the rule returns,
+    and the diary records the CLAIM and the FINDING — never whether he
+    followed). Arms therefore read the same evidence and differ only in what
+    they make of it."""
     sys.path.insert(0, str(REPO))
     from EpisodicMemory import EpisodicMemory
 
@@ -194,7 +208,7 @@ def _live(seed: int, mem_path, stripped: bool = False, swap: bool = False):
         accurate = rng_world.random() < (TRUTH_P if truthful_now else LIE_P)
         claimed = food if accurate else _other(food)
 
-        p = _trust(mem, None if stripped else advisor)
+        p = trust_fn(mem, None if stripped else advisor)
         if advisor not in first_trust:
             first_trust[advisor] = p
         follow = rng_agent.random() < p
