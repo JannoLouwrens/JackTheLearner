@@ -389,6 +389,44 @@ def llm_pass(seeds=None, out_path: str = ARTIFACT) -> dict:
 # ─────────────────────────────────────────────────────────────────────────────
 # Scoring: deterministic seeded draws over cached verdicts
 # ─────────────────────────────────────────────────────────────────────────────
+def _modal(xs: list):
+    """The most-drawn element of `xs`, ties broken by FIRST APPEARANCE.
+
+    THE DEFECT THIS REPLACES, measured 2026-09-13 and recorded because a
+    number in this file's own ledger row was a lottery. Both call sites used
+    to read `max(set(xs), key=xs.count)`. `set` iteration order over strings
+    and tuples is a function of PYTHONHASHSEED, and `max` returns the first
+    maximal element it happens to see — so whenever two meanings tied on
+    count, which is the COMMON case at TEMP 1.0 with S_DRAWS 5, the modal
+    meaning was chosen by the interpreter's per-process hash salt. Five
+    salts, same code, same seeds, `swap_agree` (a GATED conjunct at
+    SWAP_AGREE_MIN 0.90):
+
+        PYTHONHASHSEED      0      1      7     42  12345
+        swap_agree     0.8889 0.8333 0.8333 0.8611 0.8889
+        per seed 0     0.8333 0.6667 0.7500 0.9167 0.8333
+        per seed 1     0.9167 1.0000 0.9167 0.9167 0.9167
+        per seed 2     0.9167 0.8333 0.8333 0.7500 0.9167
+
+    Seed 1 alone ranges 0.9167 -> 1.0000 and seed 0 ranges 0.6667 -> 0.9167,
+    which straddles the bar in both directions. The 0.861133 in LG.10's
+    attempt-2 row is one draw of that lottery, not a measurement.
+
+    `dict.fromkeys` preserves first-appearance order and `max` keeps the
+    first maximum, so the tie now goes to the meaning the sampler reached
+    first — a determinate fact about THIS run's seeded draw sequence, which
+    is the only tie-break available here that is not a property of the
+    content (alphabetical order of an utterance is not evidence about a
+    mouth). No bar moves and no threshold is touched; a quantity that had no
+    single value acquires one.
+
+    It lives here, as one function both call sites and LG.12 import, so the
+    pattern has ONE implementation in this family and cannot be
+    re-introduced by copying a line.
+    """
+    return max(dict.fromkeys(xs), key=xs.count)
+
+
 def _draw(scored: list, rng: random.Random):
     """One softmax(logprob/TEMP) draw. scored: [(logprob, utterance, meaning)]."""
     mx = max(s for s, _u, _m in scored)
@@ -406,9 +444,23 @@ def _draw(scored: list, rng: random.Random):
 _MEMO: dict = {}
 
 
-def _measure(seed: int) -> dict:
-    if seed in _MEMO:
-        return _MEMO[seed]
+def _measure(seed: int, select_fn=None) -> dict:
+    """`select_fn` is the SELECTOR SEAM, added 2026-09-13 for LG.13.
+
+    It defaults to `_draw` — the shipped rule, this module's own object — so
+    every number this function returns with the default is what it returned
+    before the parameter existed. Nothing else moved: not TEMP, not S_DRAWS,
+    not a bar, not a prompt, not the pool. The parameter exists because
+    CHAMPIONS.md opened the `Language routing` seat as VACANT and the chooser
+    that sits in it was never raced; a race needs to put another chooser on
+    THIS certified rig rather than copy it, and a copied rig is a different
+    rig. The memo is keyed by (seed, selector) so two choosers cannot read
+    each other's cells.
+    """
+    sel = _draw if select_fn is None else select_fn
+    key = (seed, getattr(sel, "__name__", repr(sel)))
+    if key in _MEMO:
+        return _MEMO[key]
     mem, trials = _build_trials(seed)
     store = json.loads(Path(ARTIFACT).read_text()) \
         if Path(ARTIFACT).exists() else {"_meta": {"models": {}}}
@@ -470,8 +522,8 @@ def _measure(seed: int) -> dict:
                 continue
             per_model[model_id]["live"].append(float(s_verb > s_scram))
 
-            draws = [_draw(scored,
-                           random.Random(f"lg10:{seed}:{ti}:{model_id}:{d}"))
+            draws = [sel(scored,
+                         random.Random(f"lg10:{seed}:{ti}:{model_id}:{d}"))
                      for d in range(S_DRAWS)]
             meanings = [m for _u, m in draws]
             utts = [u for u, _m in draws]
@@ -484,14 +536,14 @@ def _measure(seed: int) -> dict:
                 float(len(set(utts)) >= 2))
             per_model[model_id]["leak"] += sum(
                 1 for m in meanings if isinstance(m, tuple) and m[0] == "FAB")
-            modal = max(set(meanings), key=meanings.count)
-            modal_u = max(set(utts), key=utts.count)
+            modal = _modal(meanings)
+            modal_u = _modal(utts)
             per_model[model_id]["modal"].append(modal)
             per_model[model_id]["modal_utt"].append(modal_u)
 
-            null_draws = [_draw(null_scored,
-                                random.Random(
-                                    f"lg10null:{seed}:{ti}:{model_id}:{d}"))
+            null_draws = [sel(null_scored,
+                              random.Random(
+                                  f"lg10null:{seed}:{ti}:{model_id}:{d}"))
                           for d in range(S_DRAWS)]
             per_model[model_id]["null_match"].append(
                 sum(1 for _u, m in null_draws if m == trial["intent"])
@@ -533,16 +585,16 @@ def _measure(seed: int) -> dict:
         "null_match": round(_mean(a["null_match"]), 4),
         "null_match_swap": round(_mean(b["null_match"]), 4),
     }
-    _MEMO[seed] = out
+    _MEMO[key] = out
     return out
 
 
 def _per_seed(key: str) -> list:
-    return [_MEMO[s][key] for s in SEEDS]
+    return [_MEMO[(s, "_draw")][key] for s in SEEDS]
 
 
 def _seeds_complete() -> bool:
-    return all(s in _MEMO for s in SEEDS)
+    return all((s, "_draw") in _MEMO for s in SEEDS)
 
 
 def _experiment(seed: int) -> dict:

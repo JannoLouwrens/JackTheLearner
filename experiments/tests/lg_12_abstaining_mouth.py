@@ -206,7 +206,7 @@ from .lg_10_jack_chooses_what_to_say import (
     ARM_ASK, ARTIFACT, LIVENESS_MIN, MATCH_MIN, MODEL_A, MODEL_B, MODELS,
     N_FAB, N_REPORT, NULL_ASK, NULL_MATCH_MAX, S_DRAWS, SWAP_AGREE_MIN,
     UNANIMITY_MIN, VARIETY_MIN, _build_trials, _canonical, _core_intent,
-    _draw, _key, _pool, _scramble,
+    _draw, _key, _modal, _pool, _scramble,
 )
 
 REPO = Path(__file__).resolve().parents[2]
@@ -359,7 +359,7 @@ def _seed_trials(seed: int) -> dict:
                           / S_DRAWS) if core_ok else 0.0,
                 "unan": float(len(set(meanings)) == 1),
                 "variety": float(len(set(utts)) >= 2),
-                "modal": max(set(meanings), key=meanings.count),
+                "modal": _modal(meanings),
                 "leak": sum(1 for m in meanings
                             if isinstance(m, tuple) and m[0] == "FAB"),
                 "null_match": sum(1 for _u, m in null_draws
