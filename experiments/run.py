@@ -36,7 +36,7 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-from .protocol import (GATE_DIRTY_FLAG, Budget, Ledger, Status,
+from .protocol import (GATE_DIRTY_FLAG, Budget, Ledger, Result, Status,
                        dirty_recoverability, gate_precondition,
                        impl_deps_of, impl_sha_of, is_code_dirt,
                        module_path_for, porcelain_path, spec_drift,
@@ -2164,8 +2164,17 @@ def _terminal_blockers(ledger: Ledger, ladder=None, by_id=None) -> dict:
         for d, _why in ledger.unsatisfied(spec):
             upstream = walk(d, seen | {sid})
             # A dependency that is itself stuck resolves to ITS roots; one that
-            # is merely not-yet-run is a root of its own.
-            roots |= upstream if upstream else {d}
+            # is merely not-yet-run is a root of its own — AND a dependency can
+            # be BOTH, which is the case this line missed for a day and T0.36
+            # now pins. `T1.08` fell on 2026-09-13 and `T2.01` — a settled FAIL
+            # blocking 35 specs on its own account — was substituted away the
+            # moment it acquired an unsatisfied dependency, crediting its whole
+            # mass to the spec underneath it: `frees 41` where repairing
+            # `T1.08` alone buys 3. A dependency carrying its own settled
+            # verdict (FAIL/VOID/BLOCKED/ERROR, or a PASS gone stale) must
+            # itself be repaired, so it is a root TOO, not instead.
+            own = set() if ledger.status(d) is Status.NOT_RUN else {d}
+            roots |= (upstream | own) or {d}
         terminal[sid] = roots
         return roots
 
@@ -2338,6 +2347,28 @@ class _AssumeStatus:
     def __init__(self, ledger: Ledger, spec_id: str, status: Status):
         self._ledger, self._sid, self._status = ledger, spec_id, status
         self.results = ledger.results
+        # ASSUMING **PASS** COULD NOT BE ANSWERED HONESTLY, AND FAILED TWO
+        # DIFFERENT WAYS. `unsatisfied` is borrowed, and its PASS branch reads
+        # `self.results[d]` to ask the freshness question. Forcing the STATUS
+        # alone therefore left the real row underneath it, so a never-run root
+        # raised `KeyError` (`HR.1`, `T2.11`) and a root whose row was stale
+        # came back "PASS but stale" — still unsatisfied, so the counterfactual
+        # answered "repairing it buys nothing" for `UB.10`, `T3.06` and `LF.01`,
+        # all three CHANGED. `blast_radius` never saw either, because it only
+        # ever asked "what if X FAILS"; the other direction went unexercised
+        # until T0.36 asked what repairing X alone buys.
+        #
+        # Repaired-AND-RE-RUN is what this counterfactual MEANS, so PASS gets a
+        # stand-in row stamped with the implementation that exists now and no
+        # staleness kind fires. Still read-only: a private copy, and only the
+        # runner writes the ledger.
+        if status is Status.PASS:
+            path = module_path_for(spec_id)
+            self.results = dict(ledger.results)
+            self.results[spec_id] = Result(
+                spec_id=spec_id, status=Status.PASS, metrics={},
+                control_metrics={}, seeds=[], history=[], amended=[],
+                commit="assumed", impl_sha=impl_sha_of(path) if path else None)
 
     def status(self, spec_id: str) -> Status:
         return self._status if spec_id == self._sid else self._ledger.status(spec_id)

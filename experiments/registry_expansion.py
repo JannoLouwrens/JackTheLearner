@@ -7763,6 +7763,63 @@ EXPANSION: list[Spec] = [
                "reads it in prose too, which is by design — a word that "
                "flatters coverage must be unwritable, not merely wrong.)"),
 
+    Spec("T0.36", 0, "The blocker ranking's `frees` is the set repair buys",
+         hypothesis="For every terminal blocker `run blocked` ranks, every "
+                    "spec it lists under `frees` has nothing BROKEN left in "
+                    "the way once that root alone is repaired and re-run — "
+                    "checked by counterfactual against the live ladder, and "
+                    "against three hand-built graphs whose answers are "
+                    "written down first (the `_RANKER_FIXTURE` the shipped "
+                    "docstring has named, and nothing has ever supplied).",
+         falsified_by="A root whose `frees` list contains a spec still "
+                      "obstructed by some OTHER settled verdict after that "
+                      "root passes; a fixture whose measured `frees`/`groups` "
+                      "differ from the answer written before the run; an "
+                      "empty ranking passing vacuously; or the unreachable "
+                      "SET moving under a pure re-attribution, which would "
+                      "walk a shrink-only floor as a reporting side effect.",
+         null_baseline="The ranker as it stood at `2ed9f85` (the control): "
+                       "the shipped walk with the `own` term deleted. It "
+                       "resolves a stuck dependency to ITS roots and drops "
+                       "the dependency itself, so a settled FAIL that "
+                       "acquires an unsatisfied dependency is substituted "
+                       "away and its whole mass is credited underneath it.",
+         metric="overstated_roots", budget=Budget.CPU_FAST, seeds=1,
+         control="The legacy walk must fail P1 (it claims `T1.08` frees 41 "
+                 "where repair buys 3 — a 38-spec overstatement), P3 and P7 "
+                 "(both fixtures' known answers) and P5 (`groups` reads empty "
+                 "where the co-requisite pair belongs). It PASSES P2, P4 and "
+                 "P6 and those are NOT asked of it: P2 is an alive-proof it "
+                 "also satisfies, P4 is the never-run-intermediate case the "
+                 "repair deliberately leaves alone, and P6 asks invariance "
+                 "against a baseline the control IS.",
+         kills="The reading that `frees` is a marginal value. Until this "
+               "spec it was an attribution, and the two diverge exactly when "
+               "a blocker acquires a blocker — which is when the ranking is "
+               "consulted most.",
+         notes="Measured 2026-09-13, four hours after the event it is named "
+               "for: `T1.08` FAILed at 10:05, `T2.01` (settled FAIL, 35 "
+               "specs behind it) was substituted away, and `run blocked` "
+               "printed `T1.08 frees 41` — quoted the same morning by "
+               "PROGRESS.md, OVERSIGHT.md, coverage.py's header comment and "
+               "a REVIEW_QUEUE row that priced a design question at '41 "
+               "specs'. The tell was arithmetic: `unreachable` moved 93 -> "
+               "97 on the same event, and a root cannot gain 41 dependents "
+               "while 4 specs become stuck. THE ORACLE IS NOT 'immediately "
+               "runnable' and the first draft of P1 wrongly asked for that: "
+               "in `A = FAIL <- B <- C` with B, C never run, repairing A "
+               "leaves C waiting on B, and B is the loop's day job, not a "
+               "blocker. The predicate is repair-vs-run, and it is the same "
+               "one the walk uses to decide whether a dependency is a root "
+               "in its own right. Two `_AssumeStatus` defects surfaced with "
+               "it and are repaired in the same commit, both in the "
+               "unexercised PASS direction (`blast_radius` only ever asks "
+               "what if X FAILS): assuming PASS for a never-run spec raised "
+               "KeyError, and assuming PASS over a STALE row answered 'that "
+               "repair buys nothing' for UB.10/T3.06/LF.01. No coverage "
+               "declaration: a harness spec, not a GOAL.md commitment "
+               "claim."),
+
     # ── OWNERS_HANDS.md §6 (INTEGRATION_QUEUE row, registered 2026-09-04) ────
     # GOAL.md: "their hands may leave things in his world for him to find —
     # food where he might look, a tool he has not made yet. Never
