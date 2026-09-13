@@ -16085,3 +16085,94 @@ no process left running. One spec run (`T0.36`, 32.51 s billed).
   4. **`run status`'s `UNBACKED CERTIFICATES` block now prints roots.** Read
      the `-> root` clause: where it is absent, hop and root are the same spec
      and the cost class beside the row is the whole bill.
+
+---
+
+**2026-09-13 ~21:0x–21:3x UTC — builder.** Ran on **opus** (`week:Fable` 100%,
+walked to opus as the page predicts; **the gate is `week:all models` and it read
+85%** at 21:08, resets 09-14 04:59). No `PACING:` streak — I woke and worked.
+
+**READ THE BOARD FIRST AND IT WAS THE SAME BOARD.** Every dated item in front of
+me is discharged: the 94th audit's B1–B4 all landed at 19:14–19:19;
+`PROGRESS.md FOR THE BUILDER` items 4 (`T1.08`'s harder gate) and 5 (`T1.07`'s
+`MAX_SPREAD_RATIO = 6.0` — verified present at `t1_07:79`) were executed
+earlier today. `D25`'s armed default is **due today and I did not fire it**: it
+is 21:2x, `decide_by 2026-09-13` gives the owner the day, and `decisions` does
+not yet print `OVERDUE`. Pre-empting a pre-registered clock by three hours to
+fill a slot is the move the clock exists to prevent. **It fires at 00:00 and it
+is the first thing the next slot owes** — option (iii) FIX THE SEAL, required
+wording *"the owner did not rule by 2026-09-13, so the pre-registered default
+fired."* `D19` follows on 09-14.
+
+**I DID NOT TAKE `T2.10`, WHICH THREE PAGES RANK FIRST.** Its own docstring
+(20:15 today) prices it: seven encoder configurations measured by the certified
+`ME.11` family top out at **0.0667 against the unmoving 0.10 bar**, so
+*"RE-RUNNING THIS SPEC UNCHANGED RETURNS FAIL"* and the repair is a
+15-certificate retrieval redesign. The run cost is not the repair cost.
+
+**THE UNIT: `run next` triages what it advertises (`b62bd85`).** Looking for
+work, I measured the tool I was looking with. `ready()` returned **44 specs and
+zero legitimate next moves** — 24 FAIL, 11 VOID, and all 9 `NOT_RUN` held
+(`T2.11`/`LC.07`/`SM.03`/`DP.04`/`SH.02` PILOT-BLOCKED, `T3.10`/`SM.02`/`SH.01`
+PARKED, `HR.1` decision-HELD behind `D19`). Of the twelve it printed, eleven
+were settled and the twelfth pilot-blocked, and **every one rendered
+byte-identically to a never-run spec** under the header *"Runnable now"*, beside
+an orientation sentence reading *"Take the FIRST one."*
+
+**Every reader already existed and nobody asked them.** `coverage.
+_liveness_state` was factored by the 59th audit so instruments cannot drift;
+`decisions.holds()` opens its docstring with *"so an instrument can refuse to
+advertise them as work."* `cmd_next` asked neither. Built once, read from both
+places — no second reader. `_next_triage` lanes FRESH / SETTLED / HELD, sorts
+FRESH first (stable within lane), prints the composition, and prints one extra
+line when fresh is zero. Live reading: **0 fresh · 28 settled · 16 held.**
+
+**REPORTING-ONLY AND UNFLOORED.** `ready()` unchanged, every spec still listed,
+no threshold moved, no spec marked, no ledger write. A settled row is still
+legal to take (`T3.09` attempt 3 and `T1.08`'s re-run both were); the lane says
+what it is, never that it is forbidden.
+
+**RED-FIRST, and the fixture caught all three wrong versions on their own
+conjuncts** — ledger-status-only mislanes both held rows FRESH; reading
+`_liveness_state` but not `holds()` mislanes exactly `H` (the `HR.1`/`D19`
+half); annotate-without-reorder leaves the single FRESH row sorted last, past
+the 12-row cut, which is the harm. `state_of`/`held_map` are injectable, so the
+known answer needs no markers on disk — the `_RANKER_FIXTURE` seam `T0.36` was
+founded on, built on day one this time rather than promised.
+
+**STALENESS PAID.** `experiments/run.py` is in `T0.36`'s `IMPL_DEPS`. Committed
+first, then re-ran: **PASS, 32.26 s, 7/7 properties, `overstated_roots` 0**,
+clean `impl_sha` `d18557b2`, no `+dirty`. CPU day meter billed in the same
+commit (4718.84 → 4751.59 s).
+
+**RATCHETS: NOTHING MOVED.** `unreachable` 97, `champions_unwinnable` 4,
+`gpu_unattributed_jobs` 21, `fail_unowned` 0, `review_queue_violations` 0,
+`review_queue_net_arrivals` 11 — all unchanged and at floor. `status` rc=0,
+`decisions --check` rc=0, `champions --check` rc=0, `review-queue` rc=0,
+`coverage` rc=2 on the two owned counts. **I routed no queue row:** the defect
+was in my own instrument and is fixed in the same slot, which is a commit and
+not a promise.
+
+**HOUSEKEEPING.** 12 claude processes on the box — named paths only, no
+`git add -A`; the tree held nothing but `experiments/run.py`, mine. Pushed. No
+GPU dispatch: **`W37` has ~29 free hours and `run next` now says out loud that
+it has no legal buyer** — do not manufacture one. No detached launch, nothing
+owed in `declared_pids`, no process left running. One spec run (`T0.36`,
+32.26 s billed).
+
+**NEXT ITERATION — derived from the tools at slot end, not copied from a page.**
+
+  1. **Fire `D25`'s default from 00:00** — option (iii), the wording above,
+     pre-commit check `--firing-check WORKTREE` not `HEAD`. Then `D19` (09-14).
+  2. **`run next` now answers the empty-board question itself.** If its TRIAGE
+     line still reads `0 fresh`, you do not need to re-derive emptiness from
+     `coverage` and `blocked` by hand — three iterations spent today doing
+     exactly that. Verify the line, say so, and spend the slot on something
+     that is not a re-run.
+  3. **The 13 rows dated 09-13 go OVERDUE at midnight** and `review-queue` goes
+     red for the first time since 09-03. That is a promise breaking on the
+     Review's desk, annotated four hours early by the 94th audit's B2. It is
+     not an instrument fault and needs no investigation.
+  4. **Named so an empty board is not filled by inventing something:** the
+     `Person model` seat (`LG.02`, `SO.08`, `ME.9`, all three PASS) is
+     contestable. `Language routing` was raced and seated today (`LG.13`).

@@ -14545,3 +14545,57 @@ edge and prints ONE level of it. Ask: is the thing I am printing beside this
 id the price of the edge, or the price of the journey? If the relation is
 transitive and the number is a cost, a one-hop answer is a lower bound being
 read as an estimate.
+
+---
+
+## The command that ADVERTISES work must read the same holds as the command that AUDITS it — otherwise the ranker is the one organ not wired to the edge
+
+*(builder, 2026-09-13 21:xx — measured while looking for a unit on an "empty"
+board, not while investigating anything)*
+
+`run next` is the second command this project's own orientation tells every
+iteration to run, under the sentence *"Take the FIRST one in priority order
+and finish it."* Measured tonight against the live ledger, it returned **44
+specs and not one of them was a legitimate next move**: 24 FAIL, 11 VOID, and
+all 9 remaining `NOT_RUN` held — five PILOT-BLOCKED, three PARKED, one
+decision-HELD behind `D19`. Of the twelve it printed, eleven were settled
+verdicts and the twelfth was pilot-blocked. **Every one rendered
+byte-identically to a never-run spec.**
+
+**WHAT IT COST, and it is not hypothetical.** The Sunday FULL page that same
+morning ranked `T2.10` first as *"CPU, ten minutes"* — a settled FAIL whose own
+docstring, written at 20:15 the same day, records that all seven encoder
+configurations this project has ever measured top out at 0.0667 against its
+unmoving 0.10 bar, so a re-run returns FAIL and the repair is a 15-certificate
+retrieval redesign. Three separate iterations derived *"the board is empty"* by
+hand from `coverage`, `blocked` and a docstring, because the tool whose whole
+job is advertising work could not say it.
+
+**THE GENERAL SHAPE, and it is what makes this a lesson rather than a bug
+report: EVERY READER ALREADY EXISTED.** `coverage._liveness_state` returns
+PARKED / VOID-FORECLOSED / PILOT-BLOCKED / welded and was factored into one
+place by the 59th audit *precisely* so instruments could not drift.
+`decisions.holds()` opens its own docstring with *"so an instrument can refuse
+to advertise them as work."* `cmd_next` asked neither. This is the 65th audit's
+lesson one file over — *a blocker written as a sentence is invisible to every
+ranker until it becomes an edge* — with the twist that here **the edge existed
+and the ranker was the organ nobody wired to it.** A shared predicate is only
+shared by the callers that call it; factoring one out does not enrol anybody.
+
+**THE TELL.** For each read-only command, ask: *does it ADVERTISE work, or
+AUDIT it?* An auditing command (`coverage`, `blocked`, `champions --check`) is
+read by somebody looking for trouble and gets the holds by construction,
+because reporting holds is what it is for. An advertising command (`next`,
+anything that ranks, anything a prompt tells you to run first) is read by
+somebody looking for a unit — and it is the one that must never be cheaper to
+build. If the two disagree about the same spec, the advertiser is wrong, and
+the reader who trusts it spends the hour.
+
+**AND THE HARM IS IN THE TRUNCATION, not the labelling — so annotating alone
+is not the fix.** `next` shows 12 of 44. Annotating every row while leaving the
+order alone would have printed the same eleven corpses first and pushed any
+fresh row past the cut. The fixture pins this as its own conjunct: an
+annotate-but-do-not-reorder version fails on ordering and nothing else, and a
+version that reads `_liveness_state` but not `holds()` fails on exactly the
+`HR.1`/`D19` row. A pair of conjuncts where either alone would pass is one
+conjunct with extra words.
