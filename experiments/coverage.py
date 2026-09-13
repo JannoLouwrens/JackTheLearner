@@ -2779,8 +2779,21 @@ def _class_advice(ids, void, harv, owed, fill, heldc, blk, artifacts,
             # A held spec is named WITH its decision and date, never as work:
             # printing the bare id is how "fillable today: HR.1" earned two
             # journal hand-warnings in one day.
+            #
+            # THE PARENTHETICAL IS SCOPED, and it was not until 2026-09-13.
+            # "implement NOTHING here" is true of a class whose ONLY path in
+            # is held, and FALSE the moment the class also holds unheld work:
+            # `cpu<10min` read `fillable today: LG.12; HELD ... (implement
+            # NOTHING here): HR.1 <- D19` within minutes of LG.12 being
+            # registered — one line telling a builder both to take LG.12 and
+            # to implement nothing in its class. The mixed state had never
+            # occurred before, which is why the wording survived; the held-only
+            # wording is unchanged BYTE-FOR-BYTE so nothing that reads it moves.
             hw = held_why or {}
-            parts.append("HELD by an open decision (implement NOTHING here): "
+            lead = ("HELD (do not implement THESE, whatever else this class "
+                    "offers): " if fill else
+                    "HELD by an open decision (implement NOTHING here): ")
+            parts.append(lead
                          + ", ".join(f"{s} <- {hw.get(s, 'UNKNOWN DECISION')}"
                                      for s in heldc))
         return f"  {prefix} <- " + "; ".join(parts)
@@ -2842,6 +2855,26 @@ def _class_advice_fixture() -> List[str]:
     if "fillable today" in got:
         fails.append(f"_class_advice: a held-only class must not say "
                      f"'fillable today', got {got!r}")
+    # THE MIXED STATE (2026-09-13, first occurred when LG.12 was registered
+    # into D19-held `cpu<10min`): a class with BOTH unheld work and a held
+    # spec may not tell the reader to implement nothing here — "here" is the
+    # class, and the class has work in it. Red against the pre-repair string.
+    got = _class_advice([], [], [], [], ["LT.Y"], ["HR.A"], [], {},
+                        held_why={"HR.A": "D99 (decide_by 2026-09-14)"})
+    if "implement NOTHING here" in got:
+        fails.append(f"_class_advice: a class holding unheld work must not say "
+                     f"'implement NOTHING here', got {got!r}")
+    if "LT.Y" not in got or "HR.A" not in got:
+        fails.append(f"_class_advice: the mixed state must name BOTH the work "
+                     f"and the hold, got {got!r}")
+    # ...and the control on that repair: strip the work and the held-only
+    # wording must come back UNCHANGED, or the edit moved a string it was not
+    # supposed to touch.
+    got = _class_advice([], [], [], [], [], ["HR.A"], [], {},
+                        held_why={"HR.A": "D99 (decide_by 2026-09-14)"})
+    if "implement NOTHING here" not in got:
+        fails.append(f"_class_advice: the held-ONLY wording is unchanged and "
+                     f"still says 'implement NOTHING here', got {got!r}")
     # An occupied-but-stale row must SAY it holds no fresh dispatch, so the
     # reader cannot mistake the advice for a contradiction of the shown id.
     got = _class_advice(["BA.X"], ["BA.X"], [], [], ["LT.Y"], [], [], {})

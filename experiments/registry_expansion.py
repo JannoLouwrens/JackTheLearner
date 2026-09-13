@@ -4626,6 +4626,120 @@ EXPANSION: list[Spec] = [
                "as a live test of the swappable-LLM decree. "
                "  COVERS: language (parent) (claim)"),
 
+    # ── THE ABSTAINING MOUTH — LG.10's SIBLING, not its repair ────────────
+    # Registered 2026-09-13 by the builder, discharging the Review DAILY
+    # disposition of 2026-09-08 on `lg10-mouth-fidelity-vs-freedom`
+    # (REVIEW_QUEUE.md, DUE 2026-09-16): option (a) ACCEPTED as a NEW claim
+    # beside LG.10 and explicitly NOT as an edit to it; (b) refused on the
+    # spec's own docstring warning; (c) adopted — LG.10's 0.90 bars and its
+    # FAIL both STAND. REGISTRATION ONLY: this row authorises no dispatch and
+    # buys no LLM verdicts.
+    #
+    # THE ONE THING THE DISPOSITION GOT WRONG, recorded here because it is
+    # the strongest argument for the disposition's own conclusion. The ruling
+    # says the new claim is "LG.10's bars PLUS an abstention path PLUS the
+    # utterance floor, which is strictly more to satisfy, not less." It is
+    # LESS, and provably: take the LG.10 mouth and give it an abstention rule
+    # that never abstains. Then utter_rate 1.0 clears any floor <= 1.0,
+    # match-on-spoken IS match-on-all, and every other conjunct is LG.10's
+    # own. So LG.10 PASS => LG.12 PASS by construction, i.e. LG.12 is a
+    # formally WEAKER claim and cannot be a repair of LG.10 even in
+    # principle. That is exactly why LG.10 must keep standing: a project that
+    # retired the stronger claim for this one would be quietly trading a
+    # falsified sentence of GOAL.md for a satisfiable one. UTTER_MIN is the
+    # only thing bounding how much weaker, which is why it is mandatory.
+    #
+    # THE FLOOR IS NOT BORN UNREACHABLE, and the arithmetic is here rather
+    # than in the implementer's head (the UB.10 / BA.03 / ME.11 lesson: a bar
+    # asserted against a quantity that cannot reach it buys a guaranteed
+    # verdict, not a measurement). With precision fixed at MATCH_MIN and an
+    # ORACLE abstention — one that drops exactly the wrong draws — a mouth
+    # whose ungated match rate is m can speak at most m/MATCH_MIN of the time
+    # while clearing MATCH_MIN. LG.10 v2's worst measured per-seed, per-model
+    # match is 0.60 (arm 0.60/0.7833/0.70, swap 0.6667/0.7167/0.70; ledger
+    # row LG.10 FAIL 2026-09-02T03:32:17, commit f6d1e3a), so the ceiling on
+    # any utterance floor at MATCH_MIN 0.90 is 0.60/0.90 = 0.6667. UTTER_MIN
+    # 0.50 sits under that with real headroom on the incumbent mouth. A
+    # future implementer who raises MATCH_MIN or lowers UTTER_MIN owes this
+    # arithmetic again.
+    Spec("LG.12", 4, "He speaks correctly or he is silent — the abstaining mouth",
+         hypothesis="Given a dominance-margin abstention in the selection "
+                    "(utter only when the core's intent outscores every other "
+                    "meaning in the pool by a pre-registered margin; otherwise "
+                    "say nothing), the mouth is RIGHT WHEN IT SPEAKS AND STILL "
+                    "SPEAKS: on every seed and both frozen models, "
+                    "match-on-spoken >= 0.90, unanimity-on-spoken >= 0.90, "
+                    "swap_agree >= 0.90 on trials where both models speak — "
+                    "while the utterance rate over report trials (trials that "
+                    "DO have a fresh fact to report) stays >= 0.50. LG.10's "
+                    "other bars carry over unmoved: variety >= 0.30, liveness "
+                    ">= 0.80, speak_silence == 0.0, leak_draws == 0.",
+         falsified_by="He cannot buy fidelity with silence: match-on-spoken "
+                      "still under 0.90 once the margin is tuned to hold the "
+                      "utterance floor. OR he buys it by going mute — "
+                      "utterance rate under 0.50 on any seed, which is the "
+                      "ME.3 starvation failure arriving in the language "
+                      "family and is a FAIL, not a lower score. OR the NULL "
+                      "also clears both (law 2): an abstention rule that makes "
+                      "a mouth with no core intent right-when-it-speaks is "
+                      "measuring the rule, not the creature, and the claim is "
+                      "dead whatever the arm scored.",
+         null_baseline="LLM FREE-GENERATION WITH NO CORE-SELECTED INTENT, run "
+                       "through the IDENTICAL abstention machinery (LG.10's "
+                       "null, which must not track state). Its match-on-spoken "
+                       "must stay <= 0.35 — LG.10's NULL_MATCH_MAX, unmoved. "
+                       "AND its at-chance reading must be proved alive: the "
+                       "null must itself clear the 0.50 utterance floor, or "
+                       "the margin silenced the null rather than the null "
+                       "failing, the two mouths were never scored on "
+                       "comparable data, and the run is VOID with reason "
+                       "NULL_SILENCED_BY_MECHANISM (an at-chance control must "
+                       "carry proof its instrument was alive — LESSONS.md, "
+                       "24th audit B3).",
+         metric="match_on_spoken_at_utterance_floor",
+         budget=Budget.CPU, depends_on=["LG.00"], seeds=3,
+         control="SILENCE, carried from LG.10 (speak_silence == 0.0) — AND "
+                 "DEMOTED, deliberately, because the abstention path makes it "
+                 "partly true by construction: a mouth that can decline will "
+                 "decline on a state with nothing to report for reasons that "
+                 "have nothing to do with choosing. LG.10's silence control "
+                 "was load-bearing precisely because a sampler over a "
+                 "non-empty pool CANNOT abstain; here it can. The utterance "
+                 "floor is what carries the aliveness burden this control can "
+                 "no longer carry alone, and that transfer is why the floor is "
+                 "a conjunct of the claim rather than a reported number.",
+         kills="The abstention design itself, not the mouth. If fidelity is "
+               "unreachable even when he is allowed to stay silent, then "
+               "selection-with-abstention over a frozen mouth's phrasings is "
+               "not the repair for LG.10's finding, and the remaining paths "
+               "are the ones LG.10's disposition named — a stronger chooser: "
+               "bigger frozen model, structured decode. Nothing in Jack is "
+               "deleted by this FAIL; a proposed mechanism is.",
+         notes="SIBLING OF LG.10, NEVER ITS REPAIR — see the block above for "
+               "the proof that this claim is formally weaker and for the "
+               "arithmetic showing UTTER_MIN 0.50 is reachable (ceiling "
+               "0.6667 at LG.10 v2's worst measured seed). GOAL.md's *'the "
+               "LLM is his mouth, never his mind'* keeps LG.10 as its "
+               "registered falsifier and LG.10's FAIL stands; this asks the "
+               "different question of whether an honest mouth can be bought "
+               "with silence. depends_on is LG.00, not LG.10 — a FAIL is not "
+               "a dependency, and the real coupling is implementation-level "
+               "(IMPL_DEPS on lg_10_jack_chooses_what_to_say.py's pipeline). "
+               "COST: declared CPU on the intent that the implementation "
+               "REUSES /data/lg10_llm_verdicts.json — the verdict keys are "
+               "content-hashed on prompts, pool, scaffold and weights, so an "
+               "implementation that leaves all four alone buys zero new "
+               "verdicts, which is what makes the disposition's 'no verdicts "
+               "on this row's account' satisfiable. An implementer who "
+               "changes any of the four buys new verdicts and must say so. "
+               "REPORT-ONLY, never gated, because gating them without a "
+               "measurement would be guessing: null_utter_rate (beyond its "
+               "VOID floor), and swap_abstain_disagree — the fraction of "
+               "report trials where exactly one model speaks, since a mouth "
+               "swap that changes WHETHER he speaks is a different failure "
+               "from one that changes what he means. "
+               "  COVERS: language (parent) (claim)"),
+
     # ── THE TOLD WORLD (66th audit B1, registered 2026-09-03) ─────────────
     # GOAL.md:206-212 has said of itself "FALSIFIABLE, and it must be tested
     # rather than assumed" since 1859c8f (2026-08-09) — 25 days, 0 of 232
