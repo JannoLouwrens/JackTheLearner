@@ -14033,3 +14033,67 @@ careful desk with the right instincts. That is not an argument against stating
 expectations — state them, they are cheap and they make the calculation
 checkable. It is an argument against letting the expectation stand in for the
 calculation for seven days, which is precisely what "far worse" did here.
+
+## When one instrument prints two numbers about the same event, their arithmetic is the only free check you get — and for a day nobody did it (2026-09-13, builder)
+
+`run blocked` printed this at 10:05, and by noon PROGRESS.md, OVERSIGHT.md, a
+REVIEW_QUEUE row and `coverage.py`'s growth log had all quoted it:
+
+    T1.08 = FAIL  frees 41  (blocks 45)  — Seed variance measured
+
+**The true marginal value of repairing `T1.08` alone is 3.** `T2.01` — a
+settled FAIL with 35 specs behind it, the project's largest blocker for five
+weeks — declares `depends_on: T1.08`, and `_terminal_blockers` substituted it
+away the moment it acquired an unsatisfied dependency of its own, crediting its
+entire mass to the spec underneath. A 13x overstatement, at the top of the
+board, on the one command an iteration runs to choose its work.
+
+**The tell was printed beside the number all day, in the same command's
+output.** `unreachable` moved **93 -> 97** on the same event. A root cannot
+acquire 41 dependents while only 4 specs become stuck. Those two readings come
+out of the same walk over the same graph, so they are not independent — and
+that is exactly what makes the comparison free. It took thirty seconds of
+counterfactual (`assume T1.08 := PASS`, recount) to settle, and it was
+available to every reader who quoted the 41.
+
+**So the habit: when an instrument prints two quantities about one event, ask
+what relationship they must satisfy, and check it before quoting either.** Not
+because instruments are usually wrong — this one had been right for weeks — but
+because a single number has no self-check at all, and a *pair* of numbers from
+one computation is the cheapest oracle in the building. The counterfactual is
+the second-cheapest, and both are strictly cheaper than the hour a wrong
+priority ranking costs.
+
+**The mechanism generalises past this ranker: a substituted root is an erased
+root.** `_rank_blockers`' own docstring records that this instrument was
+already repaired once — it ranked by MENTIONS, mentions double-count, it
+reported `T2.03 blocks 11` where fixing T2.03 freed two, and *"the ranking sent
+the loop at the wrong unit."* The repair was to resolve each blocked spec to
+its deepest root. That fixed the over-count and introduced its mirror image:
+**when you fix double-counting by substituting one entity for another, ask
+whether the substituted entity had mass of its own.** `T2.01` did. The comment
+above the offending line named two cases — "itself stuck" and "merely
+not-yet-run" — and the third is what bit: a dependency can be BOTH stuck behind
+something else AND a settled verdict somebody must repair.
+
+**And the reason it survived is yesterday's lesson one file over, which makes
+it a class rather than a coincidence.** `_terminal_blockers`' docstring says
+*"the ranking below can be checked against a graph whose answer is known — see
+`_RANKER_FIXTURE`"*. `grep -rn _RANKER_FIXTURE experiments/` returns that one
+line and nothing else. The fixture was named, never written, and the injection
+seam built to admit it (`ladder`/`by_id` are parameters for this and no other
+reason) was used by nothing for its whole life. Yesterday an owed calculation
+went unpriced because the request named an instrument that did not exist; today
+a ranking went unchecked for the same reason. **A docstring that points at a
+test is a promise, and `grep` settles in one second whether it was kept.**
+
+**The correction that is NOT part of this lesson, said plainly so nobody takes
+the wrong thing from it.** `T1.08` is still the gate on 45 specs and is still
+the right thing to fix. What the inflated number hid is that it is a **PAIR**
+with `T2.01`, not a single unblock — which is what `groups` was built to say and
+what the substitution was silently collapsing. Fixing the ranking made the board
+*harder*, not easier: the top is now `LT.01` and `NE.01` at frees 7, and the
+project's largest mass is explicitly two repairs deep. Pinned by T0.36, whose
+control is that same walk reconstructed by deletion; `unreachable` is unchanged
+at 97, because an attribution repair may re-label WHO blocks a spec and must
+never change WHICH specs are stuck.
