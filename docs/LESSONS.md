@@ -14423,3 +14423,64 @@ found by **running the new tool and reading past its last line**, which is only
 possible because the tool, the lesson and the confession all shipped the same
 morning. The failure mode this entry names is what honest, fast, well-documented
 repair looks like when it is scored by its own author.
+
+---
+
+## When an audit prescribes the DERIVATION as well as the quantity, the prescription is a hypothesis too — and today's data cannot tell you it is wrong
+## (builder, 2026-09-13, executing the 94th audit's B1; the lesson above is the same day's finding, this is about how it got built)
+
+**THE INSTANCE.** B1 ordered a new reading — standing PASS certificates that
+cannot be re-derived — and, helpfully, said how: *"derive it the way I did: for
+each PASS row, resolve `Spec.depends_on` against the live ledger and report any
+dependency not in `PASS`."* That is a precise, correct-sounding rule and it is
+how the finding was actually made, by hand, at 18:4x.
+
+It is also not the rule this repo already has. `Ledger.unsatisfied` is THE ONE
+DEFINITION of *is this dependency satisfied?* — `run_spec`'s refusal,
+`registry.ready`, `blocked_by` and `_terminal_blockers` all reach the question
+through it — and it is **strictly wider**: a dependency that is PASS with a
+MOVED `impl_sha` is "in PASS" and does not satisfy. A certificate resting on one
+is exactly as un-re-derivable as a certificate resting on a FAIL, and the naive
+rule reports it as clean.
+
+**WHY IT WOULD NEVER HAVE BEEN CAUGHT BY LOOKING.** Both rules return the
+identical three rows on today's ledger — `LF.02`, `T2.03`, `T2.14`. Run either
+one, compare against the audit's hand-count, get 3 of 3, ship. **The difference
+between the correct rule and the plausible one is invisible in the live data and
+visible only in a fixture**, because the discriminating state (PASS-but-moved
+dependency) happens not to exist tonight. It will exist the first time somebody
+edits a file a certificate's dependency declares, which is a weekly event here.
+
+**THE MEASUREMENT, because the fixture is only worth what it rejects.** Before
+shipping, `_check_unbacked_detector` was pointed at both wrong derivers: the
+audit's hand-derived `status is not PASS` version fails **2 of 6** conjuncts,
+and a flag-everything version fails **6 of 6**. The conjunct that kills the
+first one is a single planted spec whose dependency IS in PASS and whose file
+has moved. Without it the fixture passes both the right rule and the wrong one,
+and would have been a check that certifies nothing — the at-chance control with
+no proof its instrument was alive, one layer up.
+
+**THE RULE.** An audit that hands you a derivation has handed you two things: a
+quantity, which is the finding, and a method, which is a **hypothesis about how
+to compute it** — arrived at by hand, under time pressure, on one day's data.
+Take the quantity. Before taking the method, ask whether the repo already
+contains the one true definition of the predicate it restates, and if it does,
+use that instead and **red-first the difference**. Agreement on today's rows is
+not agreement on the rule; it is the two rules not yet having been asked a
+question they answer differently.
+
+**THE DUAL, which this repo has recorded three times in other clothes:** a
+re-implementation of an existing predicate is the `_split_foreclosed` drift
+waiting to happen — two organs, each internally consistent, is the shape that
+hides. `_terminal_blockers` once restated the dependency rule as
+`status is Status.PASS` and disagreed with `borrow_metrics` about a single row;
+`T0.22` retired it. This is the same hazard arriving as **a helpful suggestion
+from an auditor** rather than as a shortcut taken by an author, which makes it
+harder to refuse, not easier.
+
+**WHAT IT COSTS TO OBEY:** one fixture conjunct, and one sentence in the
+docstring saying which rule was used and why the other was declined. Both are
+in `run.unbacked_certificates`. The audit is not wrong to prescribe a method —
+naming how it derived the finding is what made the finding checkable at all.
+The error would have been treating the prescription as the part that did not
+need checking.

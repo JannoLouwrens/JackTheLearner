@@ -15828,3 +15828,136 @@ rule this slot just wrote, and NOT copied from any priority page.**
   4. **W37 has 29.18 free GPU-hours expiring Sat 09-19 with no legal buyer.**
      Do not manufacture one. The fact is now on the `T1.08` row where the
      decision that owns it can see it.
+
+---
+
+## 2026-09-13 ~19:0x–19:5x UTC (builder, **Opus** — `week:Fable` pinned 100%, so the chain walked me off it; the gate is `week:all models` and it read **85%** at 19:07, fifteen points of headroom and no `PACING:` line in the slot)
+
+**The 94th audit's `FOR THE BUILDER` was four items and all four are
+discharged.** The page was untouched when I woke — `f410abe` was HEAD and
+nothing had executed against it. Priority went to the audit over
+`PROGRESS.md`'s list, per the prompt's ordering, and the two do not conflict:
+`PROGRESS` item 1 is `T2.10`, which the previous slot verified is foreclosed
+(0.0667 against a 0.10 day-meter bar), and item 2 is `D25`, whose tool says
+**09-14** and not today.
+
+**B1 — the durable one, and it is the whole unit.** `blast-radius` priced one
+half of a graph edit and stopped. The other half now has an instrument:
+`run.unbacked_certificates(ledger)` — standing PASS certificates whose own
+dependency is not satisfied, which `unreachable` **structurally cannot count**
+because these specs have already run. Tonight's reading, and it is the number
+the audit found by hand at 18:4x:
+
+    LF.02  (cpu<10min)  needs T6.03
+    T2.03  (gpu<20min)  needs T1.08
+    T2.14  (gpu<2h)     needs T1.08
+    — 3 of 108 standing PASS rows; TWO OF THE THREE ARE GPU.
+
+One deriver, two readers, as B1 required in those words (*"build it once, read
+it from both places; do not build two"*): `run status` prints the live reading
+beside the two staleness blocks, and `run blast-radius <SPEC>` prints the
+counterfactual from the same key. Because *"would fall"* and *"is already
+down"* are one sentence read from either side of the counterfactual, the same
+line serves a strengthening being priced and a repair being priced — which
+matters, because today's real reading is on a RED spec (`T1.08`) and a
+red-direction-only implementation would have left the live case untested.
+**REPORTING-ONLY AND UNFLOORED**, as ordered: a certificate on a fallen
+dependency is a legal state, and a floor would make the next honest
+strengthening read as damage.
+
+**The one judgement call in B1, and it is why there is a lesson.** The audit
+prescribed the derivation as well as the quantity — *"any dependency not in
+PASS"*. I used `Ledger.unsatisfied` instead, the repo's ONE definition, which
+is strictly wider (a PASS whose `impl_sha` has moved does not satisfy). **Both
+rules return the identical three rows tonight**, so live data could not have
+told me the difference. The fixture could: `_check_unbacked_detector` plants a
+certificate on a PASS-but-moved dependency, and measured before shipping, the
+audit's hand-derived rule fails **2 of 6** conjuncts while a flag-everything
+version fails **6 of 6**. Three negative conjuncts carry the other half (a
+clean certificate, a RED spec on the same fallen dependency — already counted
+by `unreachable`, and naming it here would be the ranker's founding
+double-count in new clothes — and a rootless PASS).
+
+**`T0.36` re-bought twice, and the second time was the point.** It declares
+`IMPL_DEPS = ["experiments/run.py"]`, so B1 staled it — verified against HEAD
+rather than assumed (recorded `2f8068408e071c1f`, reconstructs at HEAD,
+`2d013988b54f8607` after the edit). The first re-run landed while `run.py` was
+uncommitted and stamped `+dirty`; I committed and re-ran for a clean stamp.
+PASS, 32.75 s, 7/7 properties, `overstated_roots` 0.
+
+**B2, the time-critical one, done with ~4.5 hours to spare.** Seven rows
+annotated with the fact that the 2026-09-13 FULL did not take up W1 —
+**verified from the day's commits before writing it**, not taken from the
+audit: the FULL's output was its page, two champion seats, `D27`, a
+completeness audit and a replaced priority block, and `review-queue` still
+reads `w0-too-shallow ordered W1.01/W1.03/W1.04 -> NOT REGISTERED`. Annotation,
+not re-dating, and the counts prove it: **32 OPEN / 3 HELD / 13 DISPOSITIONED
+/ 10 ACTED of 58 before and after, 0 violations, no new `DUE:`.** The pair
+worth reading together is `sh02` and `ba03`: both were re-dated onto today
+*specifically* so the venue pick could be made in light of the W0/W1 design.
+The premise the re-date was bought with did not arrive. `hr5-fixture-refuted`
+is HELD behind the same blocker and was deliberately NOT annotated — it carries
+DUE 09-16 and its own date has not broken.
+
+**B3.** `pass-certificates-are-not-re-evaluated-…` says *"exactly ONE"* twice
+and the class is **3**; two of the three were created at 10:05 this morning by
+item 4a, four hours after the row called the class narrow. And the harder
+half, recorded on the row: **that row asks for the counter FLOORED shrink-only
+and B1 ordered it UNFLOORED.** I shipped the deriver and did **not** stamp the
+row ACTED. The instrument is no longer what is owed; the ratchet decision is,
+it is the Review's on 09-16, and the builder does not get to settle it by
+having shipped the easy half. On `t108-noise-floor-is-quoted-by-nobody`: its
+candidate `T2.03` is now itself unbacked, so the GPU re-buy the row prices as
+the COST of arming the citation conjunct is **owed anyway** — the two bills are
+one dispatch, which removes the only cost the row had on the table against
+arming it.
+
+**B4, proposed and not implemented, as ordered, and shipped after B1.** Routed
+`oversight-for-the-builder-has-no-reader`, **DUE 2026-09-17** from
+`next_free_due` (09-14/15/16 each carried 6 against a measured capacity of 6).
+The case AGAINST is on the row in my own words and I think it is the stronger
+half: this desk rewrites wholesale by design, so a naive reading becomes
+`D27`'s 104-of-107 screen in a new file; the quoting rule that makes the
+owner-side version survivable may not transfer, because **a builder item is
+discharged by a COMMIT and commits do not quote** — a version reading only the
+OVERSIGHT-side text would have scored tonight's B2 as discharged the moment
+the page named it, which is the exact failure it exists to catch. The
+alternative arm (route audit items into this queue, where the ageing clock
+already works) is stated with its cost: ~4 rows per audit day onto a drain that
+already reads UNBOUNDED at 48 live rows.
+
+**RATCHET MOVED AND THE ACT WAS MINE: `review_queue_net_arrivals` 10 -> 11**,
+from routing the B4 row; `run ratchets record` in the same motion. Everything
+else at floor and unchanged — `unreachable` 97, `champions_unwinnable` 4,
+`gpu_unattributed_jobs` 21, `fail_unowned` 0, `review_queue_violations` 0.
+`decisions --check` rc=0, `champions --check` rc=0, `status` rc=0, `coverage`
+rc=2 on the same two owned-and-routed counts (`claim_dead` 4,
+`new_unrunnable_citation` 4).
+
+**Housekeeping.** 13 claude processes on the box, so named paths only and no
+`git add -A`; the tree held nothing but my own files. No spec run except
+`T0.36` (CPU, 32.7 s x2 billed), no GPU dispatch, no detached launch, nothing
+to declare in `declared_pids`, no process left running.
+
+**NEXT ITERATION — derived at slot end from the tools, not copied from a page.**
+
+  1. **`D25`'s armed default becomes fireable at 00:00 tonight** — the tool
+     says `due 2026-09-13`, earliest fire is `decide_by + 1` = 09-14, and
+     `025f0d1` this morning corrected two pages that said otherwise. Option
+     (iii) FIX THE SEAL, BUY NOTHING. Required wording: *"the owner did not
+     rule by 2026-09-13, so the pre-registered default fired."* Pre-commit
+     check `--firing-check WORKTREE`, **not `HEAD`**. `D19` follows on 09-15.
+  2. **The 13 rows dated 09-13 go OVERDUE at midnight** and `review-queue`
+     goes red for the first time since 09-03. **Seven of them now carry the
+     reason** (this slot's B2). That is the promise breaking, not the
+     instrument, and it needs no investigation.
+  3. **`run status` has a new block — read it.** `UNBACKED CERTIFICATES` is
+     three rows tonight and two of them are GPU. It is REPORTING-ONLY: do not
+     treat it as a violation, do not floor it (that question is the Review's
+     on 09-16), and do not manufacture a dispatch to clear it — `T2.03` and
+     `T2.14` are re-derivable the moment `T1.08` is repaired, and `T1.08`'s
+     own row owns that on 09-16.
+  4. **The board is otherwise unchanged from the 18:xx read and I did not
+     re-derive it:** `T2.10` foreclosed, `T6.03` BLOCKED behind it, `D1.0`
+     ILLEGAL behind `T1.08`'s FAIL whatever any page says about W37, and
+     W37's ~29 free GPU-hours have no legal buyer. Do not manufacture one.
