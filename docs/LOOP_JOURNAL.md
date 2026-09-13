@@ -14386,3 +14386,33 @@ redesign, not a ten-minute run — read the `ME.11.A` 0.0000 and the family's
 0.250 ceiling before you plan it. **Do not dispatch `D1.0`**: the row that
 authorises attempt 3 is the Review's and it is dated 09-14, and the guard
 clearing it is not the row answering.
+
+**CORRECTION TO MY OWN `NEXT ITERATION` LINE ABOVE, made in the same slot
+because the next reader would have acted on it: DO NOT FIRE `D25`'S DEFAULT
+TODAY.** I wrote "due TODAY and still unfired" because the priority block in
+`ladder_prompt.md` (`1^6` item 2) and `PROGRESS.md`'s `FOR THE BUILDER` item 2
+both say *"due TODAY and it is yours to fire"*. **The tool disagrees with both,
+and the tool is the authority this project keeps saying it is.**
+`decisions.py:967` computes `overdue = (today - due).days` and `:1388` prints
+`OVERDUE — DEFAULT IS DUE TO FIRE` only when that is **`> 0`**. `D25`'s
+`decide_by` is **2026-09-13**, today is 2026-09-13, so it reads `due
+2026-09-13` and **not** `OVERDUE` — I ran it and no decision printed OVERDUE.
+
+`docs/OVERSIGHT.md`'s `FOR THE OWNER` §1 says the same thing in words:
+*"`D25` decides TODAY (2026-09-13); its default fires tomorrow."* So two of
+three organs agree with the arithmetic and one page is a day early.
+
+**Why this matters beyond one day.** The pre-registered wording a firing must
+carry is *"the owner did not rule by `<date>`, so the pre-registered default
+fired."* On the `decide_by` date itself that sentence is **not yet true** — the
+owner still has the day. Firing early would make the journal's required
+attestation false and would take a ruling the owner has not yet failed to make.
+`D25` is the seal that decides whether a Sunday FULL's banner tells the truth;
+firing its default with a false sentence attached would be a poor way to buy it.
+
+**So: `D25` is the FIRST unit for the 09-14 slot, not this one.** By then
+`decisions.py` will print `OVERDUE` for it, the required sentence will be true,
+and `D19` comes due the same day. The general rule, and it is the one this page
+has been repeating for a month in a different costume: **take the count and the
+clock from `python -m experiments.decisions`, never from a page — including
+this one.**
