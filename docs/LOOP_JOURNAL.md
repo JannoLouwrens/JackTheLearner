@@ -14713,3 +14713,137 @@ measured **0.0000** and the family's best dense ceiling was **0.250 against
 0.80**. That is a redesign, not a ten-minute run, whatever the cost class says.
 **Do NOT re-dispatch `D1.0` or `T1.08`** — the first is illegal until `T1.08` is
 green, the second until the 09-16 row answers.
+
+---
+
+## 2026-09-13, ~11:0x–12:0x UTC — the firing-diff check: the safety clause's
+## second of three stops being the author's word, one day before two defaults fire
+
+**Model and meters, first paragraph as required.** Ran on **Opus** —
+`week:Fable` is pinned at 100%, and the gate is `week:all models`, which read
+**82%** at the top of the slot and 82% at the end. `--week-elapsed` 89, so the
+`pace_gate` line sits at `25 + (65*89 + 99)/100 = 83.84` and I was under it by
+under two points. No `PACING:` line, no skip streak. One slot, one large unit,
+as the walked-to-Opus rule asks.
+
+**THE BOARD, RE-DERIVED RATHER THAN INHERITED — and every dated item in front of
+me was already discharged or illegal.** The 92nd audit's `FOR THE BUILDER` is
+CLOSED: B1 shipped in `1c0bd1a`, B2 in `80f1d28`, B3 in `3d357c4`, and B4's
+`W1.04` flag was taken by the FULL. `PROGRESS.md`'s six items: 4 and 5 landed in
+`445b9e1`/`e7a79e0`; 6 is a prohibition; **2 (`D25`) is not due until 09-14** —
+`025f0d1` settled that and `decisions` still prints `due 2026-09-13`, not
+`OVERDUE`, so the required sentence *"the owner did not rule by <date>"* is not
+yet true and I did not write it; **3 (`D1.0` into W37) is illegal**, because
+`T1.08` FAILed at 10:05 and `run_spec` refuses an unsatisfied dependency.
+
+**Item 1, `T2.10`, I did NOT run, and the reason is on the spec's own face.**
+Two pages call it *"CPU, ten minutes"*. Its `REACHABILITY` block — written by
+this desk four hours earlier in `eb74e9e` — says the conjunct requires
+`para_recall_at_1 >= 0.10` and that the ME.11 family has measured **seven**
+encoder configurations on the certified stem-disjoint fixture at
+0.0000 / 0.0000 / 0.0150 / 0.0310 / 0.0437 / 0.0667 / 0.0667. **No scorer this
+project has ever measured clears the bar and the best reaches two thirds of
+it.** Re-running buys the FAIL already on the row, and the bar does not move.
+`run blast-radius T2.10` also sharpens what a repair would buy: **`{T6.03}`
+alone**, not `{T6.03, LF.02}`. Priced, not skipped.
+
+**43 runnable non-PASS specs enumerated by hand against the ledger; not one is
+fresh science.** Every one is a settled FAIL/VOID under an explicit
+do-not-re-dispatch directive, PARKED, PILOT-BLOCKED, `VOID-FORECLOSED`, or held
+behind a decision. `coverage` agrees from the other end: five classes NEWLY
+EMPTY, `cpu<10min` FILL-HELD behind `D19`, four with **no path in**. So this was
+an empty-board slot, and the empty-board rule permits stopping. I did not,
+because there was one thing owed that is not a re-buy and not more meter.
+
+**THE UNIT: the check that `SYSTEM.md` and `decisions.py` have both been asking
+for since 2026-08-30.** Both say the armed default's safety clause has three
+parts — never edits `GOAL.md`, never weakens a threshold, never widens what is
+permitted — and both say only ONE is enforced. `decisions.py`'s docstring ends
+that paragraph with an instruction rather than an excuse: *"Do not write a prose
+scanner for them; write the diff check."* **Nineteen defaults fired in the
+fourteen days between that sentence and today. `D19` and `D25` fire tomorrow.**
+
+`firing_diff_hazards(diff_text)` refuses `GOAL-EDIT` (any content line in
+`GOAL.md`), `CONST-MOVED` and `CONST-DELETED` (a module-level `ALL_CAPS`
+numeric bar). **The one judgement, stated rather than implied: a move is a
+hazard in EITHER direction.** Which way a constant "weakens" lives in the
+`_check` that reads it, not in the diff, and a scanner that guessed direction
+would be the prose scanner under another name. That is not over-reach —
+`SYSTEM.md`'s live prohibition already says *"`D24`'s option (ii) SHRINK THE
+CLAIM is a THRESHOLD MOVE and may not fire by silence ... the principle stands
+for every future armed default."* **Adding** a constant stays legal; a default
+may build.
+
+**THE MEASUREMENT, AND IT COULD HAVE FAILED: all 25 self-declared firings in
+this repository's history audit CLEAN** — `D1 D3 D4 D7 D8 D9 D10 D11 D12 D13 D14
+D15 D16 D17 D18 D21 D22 D23 D24 D26` and the journal commits recording them.
+That is a fact about the organs that fired them, not about the guard.
+
+**RED FIRST, THREE WAYS, because a counter that has only printed `0` is not yet
+believable.** (1) Planted diffs in `_firing_fixture`: the `GOAL.md` sentence;
+`T2.10`'s own `MIN_PARA_MARGIN 0.10 -> 0.05`, the edit that would turn a
+standing FAIL green; a deleted bar; **and `D25`'s own legal shape, which MUST
+clear** — a new `lib_seal.sh` branch and a NEW constant are additions, and a
+guard that refused them would be switched off within a day. (2) On the real code
+path against a real commit: `--firing-check 674a759` catches
+`UNREACHABLE_BASELINE 93 -> 94`, while `445b9e1` — which ARMED two new conjuncts
+in the same window — reads correctly clean, because those were additions.
+(3) `T0.28`'s control arm, `decisions.py` reconstructed by DELETION, misses
+every one.
+
+**WIRED, NOT OPT-IN.** `decisions --check` now runs the whole-history audit and
+reports `FIRING-DIFF` through the shrink-only ratchet — `0/0 firing-diff` prints
+on every run, in this file's own doctrine that a counter invisible while it is
+fine cannot be seen to be at floor — and `check_rc` already exits 1 on a broken
+ratchet. The iteration about to fire one runs `--firing-check HEAD` against its
+working tree first. Cost ~3 s of `git show` under `--check` only.
+
+**THE ONE FAILURE THIS COULD HAVE HAD IS THE ONE IT WOULD REPORT AS SUCCESS.**
+`_git` swallows a missing repository and returns `""`, which parses as zero
+firings and prints a clean bill. `firing_audit` returns `(rows, checked)` and
+the CLI prints `NOT CHECKED`, rc 1, on an unreadable history — never an empty
+green. `T0.13`'s subject arriving in a third instrument.
+
+**PRICE PAID, STATED NOT DISCOVERED.** `experiments/decisions.py` is in
+`T0.28`'s `IMPL_DEPS`, so this staled that certificate — and `T0.28` is
+**STRENGTHENED**, not merely re-bought (`T1.02` precedent, strengthen-only):
+`N_PROPERTIES` 15 -> 16, `P16` added, `p16_firing_diff_is_the_known_positive`
+required among the control's failures, hypothesis clause (11), `falsified_by`
+and `null_baseline` extended. **No threshold moves in either direction.** PASS
+53.11 s `+dirty` in `a662fab`, re-bought CLEAN at 53.16 s in `768dcc7`. CPU day
+meter billed in both.
+
+**WHAT REMAINS UNENFORCED, named in three places so nobody promotes it.** Clause
+3 is a statement about the space of allowed ACTIONS and no diff decides it; the
+tally went **1 of 3 to 2 of 3 and stopped**, and `SYSTEM.md`'s sentence saying
+the last one is on the author's word STAYS. Two smaller gaps: a firing is
+identified by its own commit subject, so one that does not say it is a firing is
+not audited; and the pattern reads module-level `ALL_CAPS = <number>` only, not
+a bar inside a function, a dict-valued gate, or a registry `threshold=` kwarg.
+
+**RATCHET BANNERS REPORTED, NOT RECORDED.** `run status` still shows
+`unreachable` 93 -> 97, `review_queue_net_arrivals` 3 -> 7,
+`fail_unowned_owned_forms` queue-row 21 -> 22 and `gpu_hours_no_verdict`
++0.35 h as `!! MOVED`. Every one of those moved for the 10:0x slot's committed
+acts (`T1.08`'s FAIL and its routing), not for mine. **Recording them here would
+baseline another commit's movement, so I did not** — I report them, which is
+what the banner asks of a slot that did not cause them.
+
+**Housekeeping.** 13 claude processes on the box; named paths on every commit,
+no `git add -A`, nothing of anyone else's in any commit — `git status` showed
+only my six files. No detached launches, no GPU dispatch, no background
+processes, nothing to declare in `declared_pids`. Tree clean after every commit;
+3 commits pushed to `origin/main`.
+
+**NEXT ITERATION — FIRST UNIT: `D25`'s armed default, then `D19`.** Both come
+due **09-14** and neither was fireable today. The required wording is *"the
+owner did not rule by <date>, so the pre-registered default fired"* — take the
+count from `python -m experiments.decisions`, never from a page. **And now there
+is a step before the commit that did not exist this morning: run
+`python -m experiments.decisions --firing-check HEAD` against the working tree
+and put its verdict in the firing commit.** `D25`'s default (iii) FIX THE SEAL
+edits `lib_seal.sh` and is expected to clear; if it does not, the hazard is the
+finding and the firing waits. After that the board is what it was today — read
+`run blocked` / `coverage` yourself, and **do NOT re-run `T2.10`** (foreclosed at
+0.0667 against 0.10), **`T6.03`** (BLOCKED behind `T2.10`), **`D1.0`** (illegal
+behind `T1.08`) or **`T1.08`** (its 09-16 row owns it).
