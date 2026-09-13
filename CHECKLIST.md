@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 106 / 246 demonstrated
+## 107 / 247 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1121,6 +1121,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every registered spec's implementation module, parsed statically (never imported), declares in IMPL_DEPS every repo-root module it imports at ANY nesting depth — except a named, shrink-only grandfather set of today's 35 measured violators, which may only lose entries — and every registered module compile()s (dp_04 carried a statement above its future-import for seven days; ast.parse accepts that, compile() refuses it).
       - _dies if:_ A repo-root import absent from both IMPL_DEPS and the grandfather set (a NEW undeclared dependency, on any spec), a grandfather entry that no longer matches a live violation (stale allowlist = licence for silent regression), a registered module that does not compile, or the detector missing the lazy known-positive fixture / firing on the declarer fixture.
       - _then delete:_ The assumption that a green STALE-CLAIMS lane means the board is fresh. It means the DECLARING third of the board is fresh; this spec makes the other two thirds unable to hide.
+- [x] **T0.36** The blocker ranking's `frees` is the set repair buys
+      - _asserts:_ For every terminal blocker `run blocked` ranks, every spec it lists under `frees` has nothing BROKEN left in the way once that root alone is repaired and re-run — checked by counterfactual against the live ladder, and against three hand-built graphs whose answers are written down first (the `_RANKER_FIXTURE` the shipped docstring has named, and nothing has ever supplied).
+      - _dies if:_ A root whose `frees` list contains a spec still obstructed by some OTHER settled verdict after that root passes; a fixture whose measured `frees`/`groups` differ from the answer written before the run; an empty ranking passing vacuously; or the unreachable SET moving under a pure re-attribution, which would walk a shrink-only floor as a reporting side effect.
+      - _then delete:_ The reading that `frees` is a marginal value. Until this spec it was an attribution, and the two diverge exactly when a blocker acquires a blocker — which is when the ranking is consulted most.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

@@ -1081,8 +1081,29 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     bar does not move (it is pre-registered and the law is unconditional),
 #     and an unchanged re-dispatch hoping for a friendlier seed is the
 #     run-until-pass move this project refuses. Routed as
-#     `t108-noise-floor-bar-set-from-n1-now-blocks-41-specs`. The number
+#     `t108-bar-set-from-n1-is-now-the-projects-largest-blocker`. The number
 #     returns to 94 the moment T1.08 settles green on a bar nobody weakened.
+#     CORRECTED 2026-09-13 ~14:4x (builder), appended rather than rewritten
+#     because a growth log that edits its own past is not a record:
+#       - consequence (1) ABOVE IS WRONG, and the instrument was wrong, not
+#         the author. `frees 41` was a ranker defect fixed in `5c444cf`:
+#         `_terminal_blockers` substituted away `T2.01` — a settled FAIL with
+#         35 specs behind it — the moment it acquired an unsatisfied
+#         dependency, crediting its mass to `T1.08` underneath. The true
+#         marginal value of repairing `T1.08` alone is **3** (`D1.0`, `T2.01`,
+#         `T2.02` — the same three this entry names one paragraph up, which
+#         is the arithmetic that gives it away). `run blocked` now reads
+#         `T1.08 frees 3 / blocks 45`; the board's top is `LT.01` and `NE.01`
+#         at frees 7. T0.36 pins it. **`T1.08` is still the gate on 45 specs
+#         and still the thing to fix — it is a PAIR with `T2.01`, not a
+#         single unblock, and that is the part the number hid.**
+#       - the row id cited here resolved to NOTHING for four hours (the live
+#         row is `t108-bar-set-from-n1-is-now-the-projects-largest-blocker`,
+#         fixed above). The 59th audit's rule, in this log's own house: a
+#         pointer that resolves to nothing sends a reader nowhere.
+#       - the FLOOR does not move for this correction. 97 was correct and
+#         stays correct: the repair re-labels WHO blocks a spec, never WHICH
+#         specs are stuck (T0.36 P6 asserts exactly that invariance).
 #     This growth is MINE, and it is the second consecutive day this desk has
 #     had to write that sentence.
 UNREACHABLE_BASELINE = 97

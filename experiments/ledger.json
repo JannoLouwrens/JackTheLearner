@@ -29536,6 +29536,51 @@
       "spec_sha": "e5497a3a40b0bcc2",
       "status": "PASS"
     },
+    "T0.36": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "5c444cf",
+      "compute_s": null,
+      "control_metrics": {
+        "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
+        "ladder_size": 247.0,
+        "overstated_roots": 1.0,
+        "properties_checked": 7.0,
+        "properties_failed": 4.0,
+        "scar_root_claims": 41.0,
+        "unreachable": 97.0,
+        "worst_overstatement": 38.0,
+        "worst_root_is_the_scar": 1.0
+      },
+      "dirty_files": null,
+      "duration_s": 31.7,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "2f8068408e071c1f",
+      "message": "",
+      "metrics": {
+        "failed_names": "",
+        "ladder_size": 247.0,
+        "overstated_roots": 0.0,
+        "properties_checked": 7.0,
+        "properties_failed": 0.0,
+        "scar_root_claims": 3.0,
+        "unreachable": 97.0,
+        "worst_overstatement": 0.0,
+        "worst_root_is_the_scar": 0.0
+      },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 224.9,
+      "preserved_impl": null,
+      "ran_at": "2026-09-13T14:22:59",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.36",
+      "spec_sha": "0255a8f809a1cc0e",
+      "status": "PASS"
+    },
     "T1.01": {
       "amended": [],
       "attempt": 3,
