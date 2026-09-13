@@ -13337,3 +13337,86 @@ measurement (the `UB.10` / `BA.03` / `ME.11` class). 0.50 was chosen under that
 ceiling and the arithmetic is written into the registry entry, not into the
 author's head. **A new conjunct owes BOTH checks: is it reachable, and does it
 actually make the claim harder.**
+
+## A TUNED KNOB MUST BE CHECKED AGAINST ITS OWN REACHABLE RANGE, NOT ONLY
+## AGAINST THE BAR — a selector whose whole span is 0.44 when the claim needs
+## 3.74 was foreclosed before the first seed, and BOTH numbers are free
+## (builder, 2026-09-13, `LG.12` attempt 1 FAIL)
+
+`LG.12`'s registry block did the reachability arithmetic this file demands, and
+did it correctly: *"at precision 0.90 an ORACLE abstention lets a mouth with
+ungated match `m` speak at most `m/0.90` of the time"*, so `UTTER_MIN` 0.50 sits
+under the 0.6667 ceiling with headroom. **That arithmetic asked whether the BAR
+was reachable by an IDEAL mechanism. It never asked whether the REAL mechanism's
+knob could move the claim at all** — and that is where the spec died.
+
+**The measurement.** The mouth abstains when the core's intent leads the best
+other meaning in the pool by a margin `m`, tuned over a 16-point grid from 0.0
+to 5.0 nats/token by leave-one-seed-out. Across all 72 (trial, model) cells the
+dominance it turns on reads
+
+    dom in [1.383, 1.826]   mean 1.600   sd 0.080
+
+Twelve of the sixteen grid points are therefore **identical** (`utter` 1.000,
+`match` 0.694); the thirteenth removes 2 trials of 36; the fourteenth removes
+all 36. The knob has **two reachable operating points: speak on everything, or
+speak on nothing.** Abstaining even made fidelity slightly worse (0.694 →
+0.682), because the trials where the intent fails to lead are not the trials
+where the sampler drifts. The tuning rule was sound and worked exactly as
+pre-registered; **there was nothing for it to select between.**
+
+**And the bar's required setting was computable with ZERO seeds.** The draw is a
+softmax over CANDIDATES, not meanings — 3 phrasings of the intent against ~14
+others trailing by `m` — so `P(intent) ~ 3/(3 + 14·e^-m)`, and `MATCH_MIN` 0.90
+needs `m >= ln(14/(3·(1/0.9 − 1))) = 3.74`. That is **2.0× the largest dominance
+the mechanism ever produces and 27 sd above its mean.** No grid, no tuning rule
+and no amount of compute could have cleared it. One line of algebra off the pool
+sizes, available the day the spec was written.
+
+**The rule, and it is two numbers, both cheap.** Before running any spec whose
+verdict depends on a tuned control variable:
+
+1. **The REQUIRED setting** — invert the mechanism's own arithmetic for the
+   pre-registered bar. For a softmax selector this is pool arithmetic on paper.
+2. **The AVAILABLE range** — read the control variable's spread off data you
+   already hold (here: the cached verdicts, zero new spend). If (1) lies outside
+   (2), the mechanism is foreclosed and the run buys a guaranteed verdict.
+
+**The cheap symptom, which needs no algebra at all: print the knob's frontier
+table.** Sweep the grid and print `(setting, utter, match)` per row. *Consecutive
+grid points that are byte-identical mean the knob has no resolution there* —
+twelve identical rows out of sixteen is not a tuning result, it is a dead
+control. Nothing in this repo prints that table for you; it is three lines
+beside any tuned-knob spec and it converts an invisible foreclosure into an
+obvious one.
+
+**WHY EVERY GATE REPORTED HEALTHY WHILE THIS HAPPENED.** `LG.12`'s rig gates
+were all green — liveness 1.0, variety 1.0, `verdicts_missing` 0, `leak_draws`
+0, `n_both_speak` 10–11 of 12 — and the null was alive AND beaten
+(`null_utter_rate` 1.0, `null_match` 0.044 against 0.35), so
+`NULL_SILENCED_BY_MECHANISM` correctly did not fire. The spec even carried a
+`margin_at_grid_top` VOID for the grid being too NARROW, and it read 0.0. **The
+grid was not too narrow; it was too WIDE for a knob with no range, and the gate
+I wrote looks only at one end.** A rig can be fully instrumented against the
+failure you imagined and blind to the one you did not.
+
+**IT IS THE SAME DISEASE AS `DP.04`, ONE LAYER OVER, and joining them is the
+point.** `DP.04` is PILOT-BLOCKED because its OUTCOME metric has no resolution —
+*"0 of 3072 lives ended between the old cap and the new one, 21 distinct
+lifespans"*. `LG.12`'s CONTROL variable has no resolution. Both are *"a quantity
+this design depends on is effectively constant"*, both are invisible to every
+rig gate, and both are detectable by looking at the quantity's own spread before
+spending anything. Add the outcome metric and the control knob to the list of
+things whose RANGE — not just whose value — gets read before a run. That list
+already holds the null's headroom (*"A saturated NULL makes the claim's own
+conjunct unsatisfiable"*, and *"An assertion made against a saturated quantity
+cannot fail"*); this is its third member and the first about the mechanism
+rather than the measurement.
+
+**What it does NOT license.** Not a re-run with a different grid — the grid was
+never binding, and re-rolling it is the seed-lottery move under another name.
+Not a threshold edit: `MATCH_MIN` 0.90 and `UTTER_MIN` 0.50 both stand. The
+honest repair is always a mechanism whose control variable actually varies with
+what it is trying to predict — here, one that does not get its dominance from a
+prompt that quotes the intent verbatim, which is what makes the margin a
+constant in the first place.

@@ -7454,7 +7454,22 @@
       }
     },
     "LG.12": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-13T05:17:51",
+          "by": "lg12-abstention-knob-has-no-resolution",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "edf05d29c19d4bd2",
+              "proof": "reconstructed edf05d29c19d4bd2 from git bd4cb61ff395; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "3856a51ea4a3f48e"
+            }
+          ],
+          "commit": "1089eb2",
+          "reason": "POST-RUN RECORD added to the docstring: dominance spans 0.44 nats on a 0-5 grid and MATCH_MIN needed 3.74; prose only, no constant or gate moved"
+        }
+      ],
       "attempt": 1,
       "commit": "bd4cb61",
       "compute_s": null,
@@ -7472,7 +7487,7 @@
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "impl_sha": "edf05d29c19d4bd2",
+      "impl_sha": "3856a51ea4a3f48e",
       "message": "pre-registered threshold not met",
       "metrics": {
         "gate_rejected_fab_frac": 1.0,

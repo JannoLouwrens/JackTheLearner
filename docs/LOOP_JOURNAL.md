@@ -14044,3 +14044,152 @@ must say so). `D1.0` attempt 3 is **the Review's on 09-14**, preconditions
 discharged, W37 fresh at 30.0 h; `UB.10` waits on its own Review ruling due
 09-20; `T3.09`'s registry note (DUE 09-17) is the next unclaimed ordered unit
 and is a note, not a run.
+
+---
+
+## 2026-09-13 ~05:0x–05:2x UTC — `LG.12` IMPLEMENTED AND RUN: **FAIL**, and the finding is that the mechanism's knob has NO RESOLUTION — dominance spans 0.44 nats where `MATCH_MIN` needed 3.74
+
+**Model: Opus.** `week:Fable` is pinned at **100%** (resets 09-14 04:59), so the
+chain walked me here as the page says it would; the gate I acted on is
+**`week:all models` 79%** against the 90% hard stop, session 4%, `--week-elapsed`
+86. No pacing skip — the blackout the Review's page counts at 94 slots is over,
+and the 91st audit confirms the builder has been awake since 17:07 yesterday.
+
+**THE BOARD, re-derived rather than inherited.** No overdue armed defaults
+(`decisions` prints `D25` due TODAY, `D19` 09-14, `D20` 09-18 — none overdue, and
+`D22` was fired by the overseer yesterday). `review-queue` 0 violations.
+`coverage` rc=2 on the unchanged 4 CLAIM-DEAD, and its `cpu<10min` line reads
+**`fillable today: LG.12`** — the one fresh unit on the board, exactly where the
+05:0x journal left it. Every other class is EMPTY with no path in, FILL-HELD
+behind `D19`, or pilot-blocked on a redesign. So: `LG.12`.
+
+**PRE-REGISTRATION FIRST, AND THE HARD PART WAS THE TUNING RULE.** The registry
+pre-registered every bar; what it did NOT fix is how the abstention margin gets
+chosen, and its own `falsified_by` says the margin is *"tuned to hold the
+utterance floor"*. A rule invented after seeing numbers buys the verdict, so the
+rule was fixed and committed (`bd4cb61`) before a single `LG.12` number existed:
+a 16-point grid 0.0–5.0 nats/token, and for each (model, seed) **the largest grid
+margin whose utterance rate on the OTHER TWO SEEDS clears `UTTER_MIN` 0.50**,
+then scored on the held-out seed. **Leave-one-seed-out is load-bearing and the
+alternative is named in the file so nobody simplifies it back:** tuning on the
+seed you score makes `utter_rate >= UTTER_MIN` true BY CONSTRUCTION, and that
+floor carries this spec's entire aliveness burden because the SILENCE control was
+deliberately DEMOTED when the mouth gained the power to decline. A floor that
+cannot fail would have left the claim with no live control at all.
+
+**ZERO NEW LLM VERDICTS, which the disposition required.** `_prompts_for`,
+`_pool`, `_draw`, `_key`, `ARM_ASK`, `NULL_ASK` and both frozen mouths are
+IMPORTED from `lg_10_jack_chooses_what_to_say.py`, not re-derived, so prompts,
+pool, scaffold and weights are byte-identical and `/data/lg10_llm_verdicts.json`
+covers the run: `verdicts_missing` **0** on all three seeds. 1.24 s, clean tree,
+`run()` never loads a model.
+
+**THE VERDICT — FAIL, attempt 1, 3 conjuncts at once** (worst seed, arm / swap):
+
+    match_on_spoken      0.582 / 0.673   vs MATCH_MIN      0.90
+    unanimity_on_spoken  0.091 / 0.083   vs UNANIMITY_MIN  0.90
+    swap_agree           0.818           vs SWAP_AGREE_MIN 0.90
+    utter_rate           0.917 / 0.833   vs UTTER_MIN      0.50   CLEARED
+
+**Every rig gate green and both controls behaved**, so this is a claim verdict
+and not an apparatus fault: liveness 1.0 on both models and all seeds,
+`variety_on_spoken` 1.0, `leak_draws` 0, `gate_rejected_fab_frac` 1.0,
+`speak_silence` 0.0, `margin_at_grid_top` 0.0, `n_both_speak` 10–11 of 12. **The
+null is alive AND beaten** — `null_utter_rate` 1.0 everywhere, so
+`NULL_SILENCED_BY_MECHANISM` did not fire, and `null_match_on_spoken` 0.044 /
+0.083 against the unmoved 0.35.
+
+**AND THE FAILURE THIS SPEC WAS MOST BUILT TO CATCH DID NOT HAPPEN.** The
+utterance floor — the conjunct the Review made mandatory as the `ME.3` starvation
+lesson arriving in the language family — was cleared with room everywhere. He did
+not go mute. He spoke almost always and was wrong a third of the time, which is
+`LG.10`'s finding REPRODUCED through the abstention machinery rather than
+repaired by it (`LG.10` v2 arm match 0.60/0.783/0.70; here 0.582/0.783/0.673).
+
+**THE FINDING, worth more than the verdict: THE KNOB HAS NO RESOLUTION.** Over
+all 72 (trial, model) cells the dominance the entire design turns on reads
+**`dom in [1.383, 1.826]`, mean 1.600, sd 0.080** — a range of **0.44
+nats/token on a 0.0–5.0 grid.** Twelve of the sixteen grid points are therefore
+IDENTICAL (`utter` 1.000, `match` 0.694), the thirteenth removes 2 trials of 36,
+the fourteenth removes all 36. Measured frontier, `MODEL_A`, pooled over 3 seeds:
+
+    margin 0.0 .. 1.0    utter 1.000   match 0.694   unanimity 0.222
+    margin 1.5           utter 0.944   match 0.682   unanimity 0.206
+    margin 2.0 .. 5.0    utter 0.000     ---           ---
+
+**Abstaining made him slightly WORSE** (0.694 → 0.682): the trials where the
+intent fails to lead the pool are not the trials where the sampler drifts, so
+silence removes no error. The selection rule worked exactly as pre-registered and
+selected 1.5 on every (model, seed); there was nothing for it to select between.
+
+**AND THE BAR WAS UNREACHABLE BEFORE THE FIRST SEED RAN, from pool arithmetic
+alone.** The draw is a softmax over CANDIDATES, not meanings — 3 phrasings of the
+intent against ~14 others trailing by `m` — so `P(intent) ~ 3/(3 + 14·e^-m)`, and
+`MATCH_MIN` 0.90 needs `m >= ln(14/(3·(1/0.9−1))) = 3.74 nats/token` against a
+maximum observed dominance of **1.83**: 2.0× the largest value the mechanism ever
+produces, 27 sd above its mean. **No grid and no tuning rule could have cleared
+it.** Why it is degenerate, and it is the question a successor must answer:
+`ARM_ASK` quotes the canonical intent sentence VERBATIM, so the intent's
+phrasings collect a copying bonus of nearly constant size — *the scaffold that
+makes the intent win at all is the scaffold that makes its margin a constant.*
+
+**WHAT I DID WITH IT.** Row committed as the runner wrote it; the POST-RUN RECORD
+added to the docstring and the prose-only staleness discharged through
+`amend --doc-only` (`1089eb2`, proof line: reconstructed from `bd4cb61`,
+docstring-stripped ASTs identical). Routed as
+**`lg12-abstention-knob-has-no-resolution`** (DUE **2026-09-14**, taken from
+`review-queue`'s own `next_free_due` rather than chosen by hand — 09-13 carried
+14 promises against a measured capacity of 6). `LG.10`'s bars and its FAIL
+**STAND**, unchanged; `LG.12` remains the provably WEAKER sibling that may never
+replace it. `AbstainingMouth` is not a shipped module, so the `kills` field
+killed a *proposed mechanism* — which is what it was written for.
+
+**THE LESSON, and it is the machine-improvement this slot owes.** *"A TUNED KNOB
+MUST BE CHECKED AGAINST ITS OWN REACHABLE RANGE, NOT ONLY AGAINST THE BAR"* —
+`LG.12`'s registry block DID do the reachability arithmetic this repo demands,
+and did it correctly, but it asked whether the BAR was reachable by an IDEAL
+mechanism and never whether the REAL mechanism's knob could move the claim at
+all. Two numbers, both free: the REQUIRED setting (invert the mechanism's own
+arithmetic — here one line of algebra off the pool sizes) and the AVAILABLE range
+(read the control variable's spread off data you already hold). The cheap symptom
+needs no algebra: **print the knob's frontier table; consecutive grid points that
+are byte-identical mean the knob has no resolution there.** Joined in the lesson
+to `DP.04`, which is the same disease one layer over — there the OUTCOME metric
+has no resolution, here the CONTROL variable does — and to the existing
+saturated-null family. **Note what this says about my own rig:** I wrote a
+`margin_at_grid_top` VOID for the grid being too NARROW and it read 0.0. The grid
+was not too narrow, it was too WIDE for a knob with no range, and my gate looks
+only at one end. A rig can be fully instrumented against the failure you imagined
+and blind to the one you did not. **No code was changed in `LG.12` after the
+verdict** — adding the dual gate now would be amending after an adverse verdict,
+which is `T0.27`'s entire subject.
+
+**NOT DONE, deliberately.** (i) **No GPU dispatch — seventh consecutive
+refusal.** W37 is fresh at 30 h and `D1.0` attempt 3's preconditions are
+discharged, but the dispatch is **the Review's on 09-14** and the 91st audit's B1
+says do not pre-empt it. (ii) `B5`/`T0.13` stays untouched until the 09-20 sweep.
+(iii) Nothing re-dated anywhere. (iv) `D25`'s default is due TODAY and fires
+tomorrow — not overdue, not mine to fire early.
+
+**Housekeeping, honest.** `run status` **EXIT 0**; `render` wrote `CHECKLIST.md`
+at **108/246** — `LG.12` moved `[-]` → `[FAIL]`, the numerator did not move, and
+nothing I did was a capability claim. `review-queue` **0 violations** (my first
+write of the row was rejected for a `BLOCKED-BY: none` that names no row — the
+instrument caught it, the fix is one line and the row states the same fact in
+prose). **Ratchets:** `fail_unowned_owned_forms` queue-row **20 → 21** (my own
+FAIL, owned by my own queue row — `run ratchets record` in this commit);
+`review_queue_net_arrivals` back to its recorded **3**; `fail_unowned` 0,
+`claim_dead` 4, `unwinnable` 4, `unreachable` 93 all unchanged. **13 claude
+processes on the box**, so `git commit --only` with named paths throughout and no
+`git add -A`; `REVIEW_QUEUE.md` reported as modified-on-disk mid-edit and the
+diff was checked line-by-line before committing — pure additions, zero deletions,
+nothing of anyone else's swept in. Zero leftover processes.
+
+**NEXT ITERATION:** the board is empty again of fresh units — `coverage`'s
+`cpu<10min` had exactly one fillable spec and it is now settled. Check
+`run coverage` yourself before believing that. `D1.0` attempt 3 is **the Review's
+on 09-14** with preconditions discharged and W37 fresh at 30.0 h — do not
+pre-empt it. `UB.10` waits on its own Review ruling due 09-20; `T3.09`'s registry
+note (DUE 09-17) and this morning's `lg12-abstention-knob-has-no-resolution`
+(DUE 09-14) are both the desk's, not yours. If the board is still empty, the
+standing rule holds: **say so, write what you checked, and stop early.**

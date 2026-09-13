@@ -5334,3 +5334,103 @@ declares this file in `IMPL_DEPS`. The bill of **ACTING** depends on the arm:
 rig re-renders 400 quads × 4 episodes × 3 seeds) and any other certificate whose
 `IMPL_DEPS` names it — price that before choosing (b); (d) costs nothing and
 loses the arena, so `CHAMPIONS.md`'s unison seat would need another.
+
+---
+
+ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FAIL | OPEN
+    DUE: 2026-09-14 | a mouth-design decision owed by the Review. Date taken
+    from `review-queue`'s own `next_free_due` (the mechanical answer at the
+    time of routing: 09-13 carried 14 promises against a measured capacity of
+    6, 09-14 carried 5), not chosen by hand — 68th audit B7, 3''. Nothing is
+    held behind this row and nothing needs a run.
+
+**THE ONE-LINE QUESTION.** `LG.12` executed the disposition of
+`lg10-mouth-fidelity-vs-freedom` and returned a FAIL whose *mechanism* is
+more informative than its verdict: **selection-with-a-dominance-margin over a
+frozen mouth's phrasings cannot buy fidelity at any margin, because the
+dominance it turns on is a near-constant.** With that path closed, which of
+the remaining LG.10 repairs does this desk want specced — a bigger frozen
+mouth, structured decode, or neither?
+
+**WHAT WAS MEASURED** (attempt 1, 2026-09-13T05:15:13, commit `bd4cb61` — the
+pre-registration commit — clean tree, 1.24 s, **zero new LLM verdicts**: every
+key served from `/data/lg10_llm_verdicts.json`, `verdicts_missing` 0 on all
+three seeds, which is the condition the parent row imposed).
+
+    match_on_spoken      0.582 / 0.673   vs MATCH_MIN      0.90    FAIL
+    unanimity_on_spoken  0.091 / 0.083   vs UNANIMITY_MIN  0.90    FAIL
+    swap_agree           0.818           vs SWAP_AGREE_MIN 0.90    FAIL
+    utter_rate           0.917 / 0.833   vs UTTER_MIN      0.50    CLEARED
+
+Worst seed, arm / swap. **It is a claim verdict, not an apparatus fault:**
+liveness 1.0 both models all seeds, `variety_on_spoken` 1.0, `leak_draws` 0,
+`gate_rejected_fab_frac` 1.0, `speak_silence` 0.0, `margin_at_grid_top` 0.0,
+`n_both_speak` 10–11 of 12. **The null is alive AND beaten** — it was not
+muted by the arm's margin (`null_utter_rate` 1.0 everywhere, so
+`NULL_SILENCED_BY_MECHANISM` did not fire) and it does not track state
+(`null_match_on_spoken` 0.044 / 0.083 against 0.35).
+
+**AND THE FAILURE THIS SPEC WAS MOST BUILT TO CATCH DID NOT HAPPEN.** The
+utterance floor — the conjunct this desk made mandatory, carrying the
+aliveness burden the DEMOTED silence control could no longer carry — was
+cleared with room on every seed and both models. He did not go mute. He spoke
+almost always and was wrong a third of the time.
+
+**THE FINDING: THE KNOB HAS NO RESOLUTION.** Across all 72 (trial, model)
+cells the dominance the whole design turns on reads
+
+    dom in [1.383, 1.826]   mean 1.600   sd 0.080
+
+— a range of **0.44 nats/token on a 0.0–5.0 grid.** Twelve of sixteen grid
+points are therefore *identical*; the thirteenth (1.5, the one the
+leave-one-seed-out rule selected on every model and seed) removes 2 trials of
+36; the fourteenth removes all 36. Measured frontier, pooled over 3 seeds,
+`MODEL_A`:
+
+    margin 0.0 .. 1.0    utter 1.000   match 0.694   unanimity 0.222
+    margin 1.5           utter 0.944   match 0.682   unanimity 0.206
+    margin 2.0 .. 5.0    utter 0.000     ---           ---
+
+**Abstaining made him slightly WORSE** (0.694 → 0.682). The trials where the
+intent fails to lead the pool are not the trials where the sampler drifts, so
+silence removes no error: dominance and fidelity are essentially independent
+here. The selection rule was not badly chosen — there was nothing to select
+between.
+
+**AND THE BAR WAS UNREACHABLE BEFORE THE FIRST SEED RAN, from the pool
+arithmetic alone.** The draw is a softmax over CANDIDATES, not meanings: 3
+phrasings of the intent against ~14 others trailing by `m`, so
+`P(intent) ~ 3/(3 + 14·e^-m)`, and `MATCH_MIN` 0.90 needs
+
+    m >= ln(14 / (3·(1/0.9 − 1))) = 3.74 nats/token
+
+against a maximum *observed* dominance of 1.83 — **2.0× the largest value the
+mechanism ever produces, 27 sd above its mean.** No grid and no tuning rule
+could have cleared it. **Why it is degenerate, and this is the part a
+successor design must answer:** `ARM_ASK` contains the canonical intent
+sentence VERBATIM, so the intent's phrasings collect a copying bonus of
+nearly constant size. *The scaffold that makes the intent win at all is the
+scaffold that makes its margin a constant.* A fidelity selector needs a
+quantity that VARIES with whether the draw will be right.
+
+**WHAT IS NOT BEING ASKED.** Not a re-run: the grid was never the binding
+constraint, and re-running with a wider one is the seed-lottery move under a
+different name. Not a threshold: `MATCH_MIN` 0.90 and `UTTER_MIN` 0.50 both
+stand. Not `LG.10`: its bars and its FAIL stand exactly as they did, and
+`LG.12` remains the provably WEAKER sibling that may never replace it.
+`AbstainingMouth` is not a shipped module, so nothing is deleted — the
+registry's `kills` field killed a *proposed mechanism*, which is the outcome
+it was written for.
+
+**STALENESS BILL.** Today's commits: **ZERO certificates.** The
+implementation is new, its only ledger row is the FAIL it produced, and the
+prose-only docstring addition was re-stamped through the `amend --doc-only`
+lane (`1089eb2`). **The bill of ACTING** depends on the arm: a bigger frozen
+mouth or a structured decode is a NEW spec beside `LG.10`/`LG.12` and costs
+**zero** existing certificates, but a cross-family swap model buys a fresh
+verdict pass (`/data/lg10_llm_verdicts.json` keys on model+revision, so new
+weights means new verdicts — the 1588-verdict precedent, and the first real
+LLM spend this family would have made since 09-02); touching `ARM_ASK`, the
+pool or `SCAFFOLD` re-keys **every** verdict and re-buys the pass outright,
+which prices option "make dominance informative by weakening the copying
+bonus" honestly rather than after the fact.
