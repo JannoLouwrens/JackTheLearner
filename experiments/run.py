@@ -1010,6 +1010,17 @@ def ratchet_live(ledger: Ledger) -> dict:
                                     lambda sid: ledger.status(sid).value)
         return len(champions.unreachable_triggers(seats))
 
+    def _champions_unwinnable():
+        # 91st audit RANK 2: this class grew from 3 to 4 on 09-12 when LG.03
+        # was foreclosed and NOT ONE COUNTER MOVED, in either tool. It now has
+        # a baseline in `champions.py`; surfacing it HERE is the other half —
+        # the builder reads `run status` every slot and does not run
+        # `champions --check` every slot.
+        from . import champions
+        _v, seats = champions.audit(champions.DOC.read_text(), BY_ID,
+                                    lambda sid: ledger.status(sid).value)
+        return len(champions.unwinnable_seats(seats))
+
     def _review_queue_total():
         from . import review_queue as rq
         return rq.live_audit()["total"]
@@ -1138,6 +1149,7 @@ def ratchet_live(ledger: Ledger) -> dict:
     take("claim_dead", _claim_dead_count)
     take("park_release_pairs", _park_release_pairs)
     take("champions_trigger_debt", _champions_trigger_debt)
+    take("champions_unwinnable", _champions_unwinnable)
     take("review_queue_violations", _review_queue_total)
     take("review_queue_net_arrivals", _review_queue_net_arrivals)
     take("review_queue_piled_on", _review_queue_piled_on)
@@ -1155,10 +1167,15 @@ def ratchet_floors() -> dict:
     against the recording can be made quiet by writing a file. The floor
     cannot — so it is compared here too, in the channel no verdict silences.
     """
+    from .champions import BASELINE_UNWINNABLE
     from .coverage import FAIL_UNOWNED_BASELINE, UNREACHABLE_BASELINE
     return {"unreachable": UNREACHABLE_BASELINE,
             "fail_unowned": FAIL_UNOWNED_BASELINE,
-            "gpu_unattributed_jobs": GPU_UNATTRIBUTED_FLOOR}
+            "gpu_unattributed_jobs": GPU_UNATTRIBUTED_FLOOR,
+            # Added 2026-09-13 (91st audit B2). The floor is the channel a
+            # `ratchets record` cannot quiet, which matters most for a class
+            # that spent eleven days with no floor at all.
+            "champions_unwinnable": BASELINE_UNWINNABLE}
 
 
 def floor_status(cur, floor):

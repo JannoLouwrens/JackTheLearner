@@ -299,6 +299,43 @@ BASELINE_UNFALSIFIABLE = 3
 # banked slack of two points, locked in the hour it was measured.
 BASELINE_UNCONTESTABLE = 4
 
+# SEATS NOBODY CAN EVER **WIN** — every pending arena member welded, but no
+# unearned holder to indict, so `BASELINE_UNCONTESTABLE`'s `arena_welded`
+# requirement lets them fall straight through. Added 2026-09-13 on the 91st
+# audit's RANK 2 / B2. **The tool computed this list and PRINTED it for eleven
+# days with no baseline asserting on it** — the only class here with none — and
+# the standing instruction it violates is this file's own: *"the ratchet counts
+# every class on purpose. Three instruments here shipped counting one, and each
+# paid a 'repair' that lowered its own number."* This is the fourth instance and
+# the third of those same three tools.
+#
+# TODAY'S FOUR: Episodic retrieval · Language grounding (word -> lived skill) ·
+# Smell (olfaction) · Body schema (the model of his own body).
+#
+# THE FACT THIS CONSTANT EXISTS TO STOP RECURRING: it went to 4 on 2026-09-12
+# when `LG.03` was honestly foreclosed (`2a39208`) — `LG.04`/`LG.05`/`LG.06` all
+# `depends_on` it and are the ENTIRE declared arena of the Language grounding
+# seat — and **NO COUNTER MOVED, in either tool.** The builder verified that and
+# said so in its own commit message; it was right, and that is the defect. A
+# class with no baseline can grow to every seat in the file without one red
+# number, and `SYSTEM.md`'s invariant is that ARCHITECTURE IS ALWAYS CONTESTED.
+# Whether anyone happens to be sitting in the seat is beside that point.
+#
+# IT MAY SHRINK AND MAY NEVER GROW, and the legal shrinks are exactly the
+# neighbouring baselines': registering a runnable spec in the seat's arena, or
+# re-parenting an arena member off its foreclosed root. **Never** by deleting a
+# seat, deleting an arena reference, or re-marking a seat to dodge the
+# predicate — those lower the number while making the seat less contestable,
+# which is the precise trade the three prior instances each paid.
+#
+# NOT FOLDED INTO `BASELINE_UNCONTESTABLE`'s sum, deliberately, and this is the
+# one place the T0.31 precedent does not apply: that sum exists so a seat
+# CONVERTING between unfalsifiable and arena-unreachable shows no progress. A
+# seat converting between `unwinnable` and `arena_welded` is a real event — it
+# means a holder arrived or left — and collapsing it into the same total would
+# hide a change of kind rather than reveal one. Two assertions, each shrink-only.
+BASELINE_UNWINNABLE = 4
+
 # SEATS STILL READ BY PROSE INFERENCE. Every seat in the document was declared
 # on 2026-08-31, the hour the syntax landed, so this is 0 and a new seat that
 # arrives without a declaration turns `--check` red. That is the intended
@@ -1019,6 +1056,27 @@ def unreachable_arena(seats: Sequence[dict]) -> List[str]:
     only one of its readers was told (54th audit B2).
     """
     return [s["seat"] for s in seats if s.get("arena_welded")]
+
+
+def unwinnable_seats(seats: Sequence[dict]) -> List[str]:
+    """Seats nobody can ever WIN — every pending arena member welded, and no
+    unearned holder to indict. Ratcheted at `BASELINE_UNWINNABLE`.
+
+    The complement of `unreachable_arena` on the same predicate: that one
+    requires `arena_welded` (a holder sitting in the seat, so there is somebody
+    the report can name), this one is what falls through when the seat is
+    VACANT / UNDECIDED / BY ANALYSIS. **For eleven days this list was computed
+    in the render path and printed with the parenthetical "out of the ratchet by
+    scope, not oversight", and no baseline asserted on it** — the only class in
+    this tool with none (91st audit, RANK 2). Extracted into a function here for
+    the same reason every sibling is one: a ratcheted quantity that exists only
+    as an inline comprehension inside the printer cannot be exercised by a
+    counterfactual, and this file's whole argument is that an unexercised guard
+    is not a guard. Reads the flags `audit()` stores, no recomputation, for the
+    no-reader-drift reason `unreachable_arena` gives.
+    """
+    return [s["seat"] for s in seats
+            if s.get("arena_pending_dead") and not s.get("arena_welded")]
 
 
 def unverified_verdicts(seats: Sequence[dict]) -> List[str]:
@@ -1838,15 +1896,15 @@ def main(argv: List[str]) -> int:
         print("    (none)")
     print()
 
-    # Out of the ratchet's scope by marking, printed so the scope is a choice
-    # the reader can see: a VACANT/UNDECIDED/BY ANALYSIS seat with a welded
-    # ring is a seat nobody can ever WIN.
-    unwinnable = [s["seat"] for s in seats
-                  if s.get("arena_pending_dead") and not s.get("arena_welded")]
+    # A VACANT/UNDECIDED/BY ANALYSIS seat with a welded ring is a seat nobody
+    # can ever WIN. IN the ratchet as of 2026-09-13 (91st audit B2) — the
+    # parenthetical that used to sit in the heading below said "out of the
+    # ratchet by scope, not oversight", and it was oversight.
+    unwinnable = unwinnable_seats(seats)
     if unwinnable:
-        print("  ...and seats no one can ever WIN — every pending arena member "
-              "welded, but no\n  unearned holder to indict (out of the ratchet "
-              "by scope, not oversight):")
+        print(f"  ...and seats no one can ever WIN — every pending arena member "
+              f"welded, but no\n  unearned holder to indict "
+              f"({len(unwinnable)}/{BASELINE_UNWINNABLE}):")
         for seat in unwinnable:
             print(f"    {seat[:70]}")
         print()
@@ -1924,6 +1982,20 @@ def main(argv: List[str]) -> int:
                   f"correcting a citation —\n  never by parking, foreclosing, or "
                   f"deleting a reference.\n")
             return 1
+        # Its own assertion, NOT folded into the sum above: a seat moving
+        # between unwinnable and arena-unreachable is a holder arriving or
+        # leaving, which is a real event and must stay visible. See
+        # BASELINE_UNWINNABLE.
+        if len(unwinnable) > BASELINE_UNWINNABLE:
+            print(f"  RATCHET BROKEN: {len(unwinnable)} seat(s) nobody can ever "
+                  f"WIN — every pending arena member\n  welded, no holder to "
+                  f"indict — baseline {BASELINE_UNWINNABLE}. It may shrink, "
+                  f"never grow — and it\n  shrinks by registering a runnable "
+                  f"spec in the seat's arena or re-parenting an arena\n  member "
+                  f"off its foreclosed root, NEVER by deleting a seat, deleting "
+                  f"an arena\n  reference, or re-marking a seat to dodge the "
+                  f"predicate.\n")
+            return 1
         if missing > BASELINE_ARENA_MISSING:
             print(f"  RATCHET BROKEN: {missing} seats name a non-existent arena, "
                   f"baseline {BASELINE_ARENA_MISSING}. It may shrink, never grow —\n"
@@ -1962,7 +2034,8 @@ def main(argv: List[str]) -> int:
               f"phantom arena; {len(dead)}/{BASELINE_UNFALSIFIABLE} "
               f"unfalsifiable;\n  {len(dead)}+{len(welded)}/"
               f"{BASELINE_UNCONTESTABLE} uncontestable in total, arena-"
-              f"unreachable included;\n  {len(unv)}/"
+              f"unreachable included;\n  {len(unwinnable)}/"
+              f"{BASELINE_UNWINNABLE} unwinnable; {len(unv)}/"
               f"{BASELINE_VERDICT_UNVERIFIED} unverified verdicts; "
               f"{len(trig)}/{BASELINE_TRIGGER_UNREACHABLE} trigger debt;\n  "
               f"{len(kd)}/{BASELINE_KINDLESS_DISCHARGES} kindless "
