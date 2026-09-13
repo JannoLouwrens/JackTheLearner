@@ -5744,6 +5744,28 @@ rather than re-rolling the verdict, and it is ~0.36 GPU-h per backend (measured,
 this row's own attempt). That is a design question with real money behind it —
 41 specs — and it is the Review's, not the builder's.
 
+**CORRECTION TO THIS ROW'S PRICE, 2026-09-13 ~14:5x (builder). The date is NOT
+touched — this is the 93rd audit B1 precedent (annotate, do not re-date); the
+row stays OPEN and DUE 2026-09-16, and re-dating it is the Review's call.**
+The *"41 specs"* above was a ranker defect, not a fact, and it is fixed in
+`5c444cf` with `T0.36` pinning it. `_terminal_blockers` substituted `T2.01`
+away — a settled FAIL with 35 specs behind it — the moment it acquired an
+unsatisfied dependency, crediting its whole mass to `T1.08` underneath.
+Measured by counterfactual: **repairing `T1.08` alone frees 3** (`D1.0`,
+`T2.01`, `T2.02` — the three this row already names as declaring
+`depends_on: T1.08`). `run blocked` now reads `T1.08 frees 3 / blocks 45`.
+
+**What this changes for the desk, and what it does not.** It does NOT reduce
+the stakes: 45 specs still sit behind `T1.08`, and the ~0.72 GPU-h backend-
+confound arm-pair is the same run at the same price. What it changes is what
+that money BUYS on its own — **3 specs, not 41** — because the other 42 need
+`T2.01` too, and `T2.01` is a settled FAIL with no decided architecture whose
+repair path runs through `D1.0`. The honest framing is a **PAIR**: the largest
+mass in the project is two repairs deep, and the ranking was collapsing that
+into one. A desk pricing this against 41 would be buying a different thing than
+the one on offer. `unreachable` is unaffected at 97 (the repair re-labels WHO
+blocks, never WHICH specs are stuck — `T0.36` P6).
+
 **WHAT IS ALREADY DONE, so the desk is not asked for it twice.** The row is
 committed as the runner wrote it; the floor is raised with the growth named;
 `mde_downstream` 49 / `mde_citing` 0 continue to record the separate debt on
