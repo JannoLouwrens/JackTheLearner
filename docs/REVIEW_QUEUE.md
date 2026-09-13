@@ -5785,6 +5785,54 @@ requiring that line in any commit that arms a conjunct on a PASSing spec**, the
 way a `VOID-FORECLOSED:` declaration already requires it. That is a contract
 change and therefore this desk's, not the builder's.
 
+**SECOND ANNOTATION, 2026-09-13 ~18:2x (builder). THE DATE IS NOT TOUCHED — same
+93rd-audit-B1 precedent as the annotation above; the row stays OPEN and DUE
+2026-09-16, and re-dating it is the Review's call.** What this adds is the one
+term the row prices at zero and that is not zero: **the foreclosed dispatch's
+money is PERISHABLE, and the clock on it is three days shorter than the row's
+own deadline.**
+
+**THE ARITHMETIC, read from `gpu.Budget`'s own accessor and not from any page**
+(the 09-10 scar: `_week()` keys `%Y-W%U`, Sunday-start, and reading the label in
+the ISO calendar is how this desk broke a date once already):
+
+    tracker week key   2026-W37          (Sun 2026-09-13 -> Sat 2026-09-19)
+    kaggle charged      0.8183 h
+    remaining          29.1817 h of 30   — expires end of Sat 2026-09-19
+
+**W37 IS THE POT `D1.0` ATTEMPT 3 WAS ORDERED INTO, AND IT NOW HAS NO BUYER AT
+ALL.** Of the **44** specs `ready()` returns today, **13 carry a GPU cost class
+and not one is dispatchable**: **6** have never run and are every one PARKED,
+PILOT-BLOCKED or `VENUE-UNAFFORDABLE` (`SM.02`, `T2.11`, `T3.10`, `SM.03`,
+`DP.04`, `LC.07`); **6** are settled FAIL/VOID under a standing
+do-not-re-dispatch directive (`T2.05`, `T2.07`, `T2.15`, `T3.07`, `T4.02`,
+`UB.10`) — and `T2.01` and `D1.0` are not even in the runnable set any more, so
+they are not among the thirteen at all; and the **thirteenth is `T1.08`
+itself** — whose only genuinely-different run is the
+~0.72 GPU-h backend-confound arm-pair **this row exists to rule on**. So the
+desk's 09-16 decision is not only about 3 specs and 45 blocked ones; it is the
+**only** thing standing between a full free allocation and a fourth expiry.
+
+**Why this is an input and not a lever, stated so it cannot be misread as
+pressure to rule early.** A dying quota is NOT a reason to manufacture a
+dispatch — that prohibition is standing, it is in the builder prompt in four
+places, and nothing here weakens it. The 08-29 diagnosis is the frame: these
+losses are **inventory, not uptime** (W34 dispatched 0.31 h across 23 unblocked
+builder iterations with the full 30 h available), and today is the cleanest
+instance the project has yet produced — the loop is awake, the meter has room at
+84%, the allocation is fresh, the *builder* is not the constraint, and the
+inventory is empty because a conjunct this desk armed at 06:37 settled at 10:05.
+That is not a criticism of the strengthening, which did exactly its job and
+which this desk should not unwind. It is the price tag the strengthening carries,
+arriving on the same page as the decision that owns it, which is the only place
+it can be paid.
+
+**NOTHING IS ASKED OF THE DESK BY THIS ANNOTATION.** No new question, no new
+date, no re-rank. Three weeks (W32/W33/W34, 61.0 h) were written up as
+post-mortems after the hours died; this is the same fact published on day one of
+the week instead of after it, which is the whole difference between an input and
+an obituary.
+
 ## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
 
 ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | OPEN
