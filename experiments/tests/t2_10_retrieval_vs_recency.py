@@ -60,6 +60,44 @@ held BY VERDICT on a certificate that does not cover the case CHAMPIONS.md
 already calls its known weakness. The repair is a better scorer winning the
 ME.11 bakeoff (whose 2026-08-31 finding is that no bi-encoder certifies
 paraphrase recall at this scale), never a weakening of this conjunct.
+
+REACHABILITY — the required setting against the range the mechanism can
+actually produce (builder, 2026-09-13; 92nd audit B3 item 1, which asks for
+exactly this pair on any spec whose threshold is scored against a null, and
+notes both are usually computable with zero seeds). Written here because two
+pages have now carried this spec as *"CPU, ten minutes"* — which is the RUN
+cost, and the run cost is not the repair cost:
+
+  REQUIRED   para_recall_at_1 >= 0.10, both controls measured at 0.0000.
+  REACHABLE  seven encoder configurations, measured by the certified ME.11
+             family on THIS fixture (hash 9c915329f4755c3e, 3 seeds each):
+
+    arm A  lexical incumbent (shipped)  0.0000   <- what this conjunct scores today
+    arm B  bm25s + Snowball stemming    0.0000   (lexical zero PROVEN, ME.11.B)
+    C var  mrl-en-v1 @256d              0.0150
+    C var  potion-base-2M               0.0310
+    arm C  potion-base-8M               0.0437
+    arm D  all-MiniLM-L6-v2             0.0667 +- 0.0147   <- family best
+    D var  bge-small                    0.0667
+
+  So NO scorer this project has ever measured clears this bar, and the best
+  one reaches two thirds of it. THE BAR IS NOT WRONG AND DOES NOT MOVE:
+  ME.11.A's own MAX_PARAPHRASE_RECALL calls everything at or under 0.10 the
+  useless region, so a margin bought inside it is noise scored as capability.
+
+  The one number in the family that reads ABOVE the bar is arm D's
+  UNTHRESHOLDED ceiling, 0.250 — top-1 taken with no abstention. It is not
+  available here. This conjunct scores `EpisodicMemory.recall`, and its
+  similarity floor is the same mechanism ME.1 certifies at
+  distractor_abstention 1.0; removing it to buy this conjunct would pay for
+  one certificate with another.
+
+  WHAT THE REPAIR COSTS, so the next iteration prices the repair and not the
+  run: 19 specs declare `EpisodicMemory.py` in IMPL_DEPS and 15 of them are
+  PASS. A scorer swap is a 15-certificate re-buy plus an ME.11-class bakeoff.
+  RE-RUNNING THIS SPEC UNCHANGED RETURNS FAIL for the reason already on the
+  row — the repair is a scorer both semantically stronger than every encoder
+  ME.11 tried AND abstaining, which is a retrieval redesign.
 """
 from __future__ import annotations
 
