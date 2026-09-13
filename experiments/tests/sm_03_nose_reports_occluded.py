@@ -134,6 +134,44 @@ UNDETERMINED — and the hash gate reading 0 overlap on `vis_open` proves only
 that the open-world frames differ across layouts, not that they differ
 BY BEARING.
 
+F2 IS NO LONGER UNDETERMINED, AND IT IS NONE OF THE THREE CAUSES THE PARAGRAPH
+ABOVE ENUMERATES (probe 2026-09-13, `sm03_vis_open_probe.py`, artifact
+/data/sm03_vis_open_probe.json, ordered by the Review's 09-12 ruling on
+`sm03-heldout-split-saturated`; the probe reproduces this pilot's `acc_vis_open`
+0.1167 to the last digit from the same split, open frames only). **The cause is
+`_make_cnn`, which is bearing-blind by construction:**
+
+    prediction histogram on the 240 test rows   [240, 0, 0, 0, 0, 0, 0, 0]
+    bin 0's base rate in that split             28/240 = 0.11666... = 0.1167
+    vis_open with the MIN_SEP_M exclusion       0.1167
+    vis_open WITHOUT it (leakage allowed)       0.1042   — it goes DOWN
+    the same CNN's fit on its own 480 rows      0.1646   (chance 0.1250)
+    closed-form LINEAR ridge, 4x-pooled pixels  train 1.0000 / held-out 0.9917
+    source-coloured pixels per open panorama    mean 7.12, min 2, zero on none
+
+So `acc_vis_open` 0.1167 was never a chance-level discrimination — it is the
+base rate of whichever bin a CONSTANT readout emits, and it says nothing about
+this venue. The venue is in fact near-perfectly readable: a LINEAR map on
+4x-pooled raw pixels recovers the bearing at 99.17% on this same held-out split.
+`_make_cnn` ends `AdaptiveAvgPool2d(1) -> Flatten -> Linear(64, N_BINS)`, so it
+GLOBALLY AVERAGES the 8x8 feature map before the classifier while the label is
+the source's BEARING — a purely spatial quantity that a global average is
+invariant to. What survives the pool is which of the 4 channel-concatenated
+frames holds the ball (4-way, for an 8-way label, ceiling ~0.5); measured, not
+even that, because ~7 source pixels in 4,096 is ~0.17% of the average the
+classifier reads.
+
+TWO CONSEQUENCES, neither of them a repair made here (the arm pick is the
+Review's; `_GATES_FROZEN` stays False and `run()` keeps refusing):
+  - `vis_occ` uses the SAME `_make_cnn`, so repairing the readout makes the
+    `vis_occ <= VIS_OCC_CEIL` conjunct HARDER, not easier — the legal direction,
+    and the one that makes the occlusion claim mean something.
+  - F1 STANDS and is independently confirmed by the probe from the other side: a
+    99.17% held-out reading on a split whose median test position is 0.2822 m
+    from a training position, against 45° bins subtending ~1.7 m of arc at
+    2.2 m, is what "not a held-out sample" looks like once a competent readout
+    is pointed at it. F1 and F2 are two faults, not one.
+
 Note what the pilot did NOT find: the odour field delivered (whiff coverage
 0.8875, above the 0.80 floor), the canary held, and both controls sat at
 chance. The nose was not the thing that failed here — nothing was measured

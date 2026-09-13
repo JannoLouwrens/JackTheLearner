@@ -13010,3 +13010,77 @@ so the `&&` short-circuits and the original file survives while the command
 reads as success. It printed "rows now: 1" after a delete that did not happen.
 Check `mtime`/`md5sum`, not the exit status of a pipeline whose last useful step
 is guarded by `&&`.
+
+## AN ALIVE-PROOF BUILT FROM THE SAME READOUT AS THE ARM IT VALIDATES CANNOT
+## TELL A DEAD VENUE FROM A DEAD INSTRUMENT — and when it dies, every desk
+## looking at it will enumerate causes in the WORLD, because the readout is the
+## part everybody treats as neutral
+## (builder, 2026-09-13, answering the Review's ordered F2 probe on SM.03)
+
+**THE FACT.** `SM.03`'s pre-registered instrument-liveness leg — *"the same
+vision readout, same budget, on the SAME source positions with the panels
+removed, must land well above chance"* — read `vis_open` **0.1167** against
+`VIS_OPEN_MIN` 0.60 with chance at 0.125. The spec VOIDed rather than claiming
+anything, which is the gate working exactly as designed. But for fourteen days
+three documents and two desks then reasoned about WHY, and the candidate lists
+were unanimous in shape:
+
+- the spec's own F2 note: *"whether the cause is F1's degenerate test set, or
+  480 rows being too few, or the source ball being unresolvable at 64x64 … is
+  UNDETERMINED"* — three causes, all in the world or the data;
+- the Review's three offered repair arms (shrink `N_TRAIN_L`, widen
+  `SRC_R_RANGE`, hold out by bearing sector) — three arms, all split geometry;
+- the Review's own two reading branches for the probe it ordered: F2 is a
+  symptom of F1, **or** the venue has no live visual arm and a **venue
+  redesign** routes to `w0-too-shallow`.
+
+**Six candidate causes across two desks and not one of them was the readout.**
+Measured: the observation carries the bearing almost perfectly — a closed-form
+LINEAR ridge on 4x-pooled raw pixels recovers it at **99.17%** on the very
+held-out split the pilot called saturated — while the shipped CNN assigns
+**every** test row to one bin and cannot fit even its own 480 training rows
+(0.1646 vs 0.1250 chance). `_make_cnn` ends `AdaptiveAvgPool2d(1) -> Flatten ->
+Linear`, so it globally averages the feature map before the classifier while the
+label is the source's BEARING. A global average is translation-invariant; the
+label's own quantity is deleted on the way to the classifier.
+
+**THE RULE, and it is about the gate's independence, not about pooling.** An
+alive-proof exists to certify that a comparison is real. If it is implemented
+with the SAME readout family as the arm it certifies, then a defect in the
+readout kills both legs identically, and the proof cannot discriminate the one
+thing it was built to discriminate. **Ask of every liveness gate: what failure
+would this share with the arm it is proving alive?** If the answer is "the
+readout", the gate is honest about refusing and useless about diagnosing — and
+that is the state in which a project routes a world redesign for an instrument
+bug. `SM.03`'s F2 was called a *rider* for thirteen days and promoted to
+*blocker* on 09-12; it was in fact neither, and no desk was being careless.
+
+**THE COROLLARY THAT MADE THIS CHEAP, AND IT GENERALISES FURTHER THAN THE
+LESSON.** Before attributing an at-chance arm to the venue, fit a CLOSED-FORM
+LINEAR PROBE on a representation that preserves the structure the label is
+about. It costs seconds, it has no schedule, no seed and no optimiser, so
+nothing about the reading is contestable — and it separates *"the observation
+carries no signal"* from *"my readout cannot express it"*, which route to
+completely different desks and differ in cost by orders of magnitude. Here it
+was a 480x480 dual ridge solve inside a 141-second probe standing in front of a
+proposed world redesign.
+
+**AND THE ARITHMETIC CHECK THAT SHOULD HAVE BEEN RUN ON DAY ONE, because it
+needs no probe at all: an at-chance accuracy that EQUALS A CLASS BASE RATE is a
+constant predictor, not a chance-level one.** `acc_vis_open` 0.1167 is exactly
+28/240, bin 0's frequency in that split, and the no-exclusion reading 0.1042 is
+exactly 25/240 in its own. A constant predictor's score is a property of the
+LABEL DISTRIBUTION and carries no information about the inputs whatsoever — so
+it may not be read as evidence about the venue in either direction. Compare a
+suspicious accuracy against `max(label_hist)/n` before writing a sentence about
+what the world does or does not contain, and record the prediction histogram
+beside any at-chance number: a column is not a diagonal, and only one of the two
+is a measurement of the thing.
+
+**Family note.** This is the fourth member of the family this file has recorded
+in three weeks (`T0.13` comparing STATUS where it needed the BRANCH; a predicate
+read for a report's SCOPE; a resolver whose key space was narrower than its
+writer's; now a liveness gate sharing its failure mode with the arm it
+certifies). The giveaway is the same every time: **the instrument's two ends
+were written against different populations** — here, a gate whose job is to be
+independent of the arm, built out of the arm.

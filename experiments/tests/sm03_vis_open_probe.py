@@ -75,6 +75,97 @@ RUN IT:
     /data/venvs/jackthelearner/bin/python -m experiments.tests.sm03_vis_open_probe
 
 Artifact: /data/sm03_vis_open_probe.json
+
+--------------------------------------------------------------------------
+PROBE RESULT — RAN 2026-09-13 00:2x-00:3x UTC, seed 90, CPU, 141.2 s,
+head 8b6480a (this file, committed BEFORE the run with all three branches
+declared). THE THIRD BRANCH FIRED, AND IT IS THE ONE THE RULING DID NOT HAVE.
+--------------------------------------------------------------------------
+
+SELF-VALIDATION FIRST: `cnn_vis_open_excl` **0.1167**, the pilot's recorded
+`acc_vis_open` **0.1167**, to the last digit. The split is the pilot's and every
+number below is about the pilot's object.
+
+    chance 0.1250 | VIS_OPEN_MIN 0.60 | N_BINS 8 | n_train 480 | n_test 240
+
+  (1) `n_test` retained = **240 of 240 asked** — the retention is FIXED by
+      `_build_split`'s loop, which redraws until it has `n`. Reject rate 0.9964
+      (66,434 rejects) WITH the exclusion vs **0.2258** (70 rejects) without it,
+      the second reproducing the pilot's decomposed occlusion-only 0.2405.
+      **So the "too small" half of the ordered question is refuted by
+      construction, not by measurement: the test set is 240 rows either way.**
+      What the exclusion buys is not fewer rows, it is worse ones — nearest
+      training position per test row, median **0.2822 m**, max **0.3483 m**,
+      against 45°-wide bins that subtend ~1.7 m of arc at 2.2 m radius.
+
+  (2) THE CONFUSION IS A COLUMN, NOT A DIAGONAL. Prediction histogram
+      **[240, 0, 0, 0, 0, 0, 0, 0]** — every one of the 240 test rows is
+      assigned to bin 0. And then the arithmetic that matters: bin 0's base
+      rate in that split is 28/240 = **0.11666…**, which IS the recorded
+      0.1167. **`acc_vis_open` was never a chance-level discrimination; it is
+      the base rate of whichever bin a CONSTANT readout happens to emit.** It
+      carries no information about the venue whatsoever. (Same on the
+      no-exclusion split: predictions [240, 0, …], accuracy 0.1042 = 25/240.)
+
+  (3) THE DISCRIMINATOR: `vis_open` WITHOUT the `MIN_SEP_M` exclusion =
+      **0.1042**, against **0.1167** with it. Lifting the saturated exclusion
+      — and admitting near-duplicates, every test row now within 0.2465 m of a
+      training position, median 0.0669 m, minimum 0.0063 m — moves the reading
+      **DOWN, by less than one bin's worth of base rate**. Leakage deliberately
+      allowed and the readout still cannot use it. **F2 IS NOT A SYMPTOM OF F1.**
+
+  (4) The readout's fit ON ITS OWN 480 TRAINING ROWS = **0.1646** (chance
+      0.1250, chosen lr 1e-4 of the spec's own grid). A 28,472-parameter CNN
+      does not overfit 480 rows in 40 epochs unless it cannot express the
+      mapping at all.
+
+  (5) THE REFERENCE, AND IT IS THE WHOLE ANSWER. Closed-form ridge on 4x-pooled
+      raw pixels, lambda swept on the spec's own 1-in-5 validation split
+      (chosen 0.1, val 0.9792): **train 1.0000, held-out-WITH-exclusion
+      0.9917 (238 of 240), no-exclusion 0.9833.** The source is visible on
+      **every** layout (source-coloured pixels per panorama: train mean 7.12,
+      min 2, max 16; zero on 0.0000 of layouts). Canary 165 -> 165 colours,
+      stable.
+
+**THE ANSWER TO THE ORDERED QUESTION, stated in its own terms.** The visual
+observation at this geometry does not merely carry "a usable signal" — it
+carries the bearing almost perfectly, and a LINEAR map recovers it at 99.17% on
+the very held-out split the pilot called saturated. `vis_open` is dead because
+the SHIPPED READOUT is architecturally blind to the quantity its own label
+encodes, and for no other reason.
+
+**THE MECHANISM, algebra first because the measurement alone could not separate
+"cannot represent" from "cannot optimise".** `_make_cnn` ends
+`AdaptiveAvgPool2d(1) -> Flatten -> Linear(64, N_BINS)`: the 8x8 feature map is
+GLOBALLY AVERAGED before the classifier. A global average is translation-
+invariant, so two layouts that differ only in WHERE the ball sits — which is
+exactly what differing bearing bins are — map to near-identical pooled vectors,
+up to boundary and shading effects. The one cue that does survive is which of
+the 4 channel-concatenated frames holds the ball, i.e. 4-way quadrant
+information for an 8-way label (ceiling ~0.5, not 0.125). Measured, not even
+that is extracted, and the reason is dilution: ~7 source pixels in 4,096 per
+frame is ~0.17% of the average the classifier reads. **Two independent grounds,
+one algebraic and one measured, and they agree.**
+
+**WHAT THIS PROBE DOES NOT DO, deliberately.** It does not pick the repair —
+that is the Review's, and this file states only what is measurable. But the
+measurement does bound the pick: **none of the three offered F1 arms touches
+the cause**, which is the same finding the ruling itself made one level down,
+now reproduced one level further in. And it warns of the second-order effect
+the pick must price: `vis_occ` and `vis_open` share `_make_cnn`, so any repair
+to the readout applies to the OCCLUDED arm too and makes the
+`vis_occ <= VIS_OCC_CEIL` conjunct HARDER to satisfy, not easier. That is the
+legal direction under the never-weaken law and it is the direction that makes
+the occlusion claim mean something — but it means the repaired rig must be
+expected to be a stricter test of the claim, not a friendlier one.
+
+**F1 IS NOT EXONERATED BY ANY OF THIS — it is independently confirmed from the
+other side.** A 99.17% held-out reading on a split whose median test position is
+0.28 m from a training position, against bins ~1.7 m of arc wide, is precisely
+what "not a held-out sample of the source band" looks like when a competent
+readout is pointed at it. F1 and F2 are two faults, not one: F2's cause is the
+readout, and F1 remains a real defect in what the claim would be measuring even
+after F2 is repaired.
 """
 
 from __future__ import annotations

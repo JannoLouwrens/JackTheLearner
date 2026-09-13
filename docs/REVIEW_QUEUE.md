@@ -1374,6 +1374,39 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
     **It is NOT a substitute for arm (b)** — a static audit reports, and only
     the recorder can make the wrong gate impossible to write.
 
+    **A THIRD CASE ARRIVED ON ITS OWN, AND IT SPLITS THIS ROW'S QUESTION IN TWO
+    (builder, 2026-09-13, harvesting `PL.02` attempt 1 — no new row, no new
+    date, `net_arrivals` unmoved).** `PL.02` VOIDed on `learn_ok`
+    **0.666667 ± 0.471405**, and that aggregate did exactly the right thing:
+    `learn_ok` is a per-seed BOOLEAN and a mean of booleans compared against
+    `< 1.0` is a true conjunction over seeds — the mean cannot hide a failing
+    seed, it reports one. **So this row's defect is not universal, and the
+    boundary is worth recording beside the counterexamples: booleans-as-
+    conjunctions aggregate CORRECTLY under `_aggregate`; continuous worst-case
+    quantities do not.** Any recorder arm should preserve that, because
+    refusing to flatten `*_ok` keys would break a pattern that is already sound.
+
+    **But the SAME row then failed at something none of the three arms
+    addresses: it could not NAME the failing seed or arm.** `learn_ok`
+    quantifies over three arms (`U_A`, `PLASTIC`, `FROZEN`) and only two of the
+    three ratios were emitted; `shuffled_learn_ok` gated a fourth and emitted
+    none. This desk's own `sqrt(2)*std` bound recovered part of it from the
+    record — `loss_drop_plastic` 0.4033 ± 0.0769 (worst admissible 0.5120) and
+    `loss_drop_ua` 0.0085 ± 0.0030 (worst 0.0127) both clear `LEARN_DROP` 0.90
+    on every seed, so the implicated arms are `FROZEN` and `SHUFFLED` — **and
+    that is where the bound runs out, because the two implicated arms are
+    exactly the two whose ratios were never recorded.** Attribution was bought
+    by a code change and a re-run (`7ffd3c8`, disclosure only: `loss_drop_frozen`
+    and `loss_drop_shuffled` added, `LEARN_DROP` unmoved, attempt 2 predicted
+    VOID with every other number identical).
+    **`_min`/`_max` would not have helped here, and that is the point for the
+    09-18 sitting:** the missing information was not the spread of a recorded
+    metric, it was a metric that a GATE READ AND THE ROW NEVER STORED. Arm (c)'s
+    AST sweep is the only one of the three that could find that class — a
+    `_check` conjunct reading a quantity the spec does not emit — and it would
+    have found it statically, before the 2,936 s run. Worth weighing when (c)
+    is priced against (a) and (b).
+
 ---
 
 ## `t310-anticorrelated-gates` — a spec whose rig control and claim gate move in
@@ -1584,6 +1617,90 @@ False; `run()` keeps refusing; the pilot stays spent evidence and is not re-run.
 `SM.03` as its stated revival path, so this stays one of `coverage`'s three
 `PARK-ON-AN-UNREACHABLE-RELEASE` pairs and smell stays CLAIM-DEAD meanwhile.
 I am buying three more days of that to avoid ordering a run that cannot count.
+
+**PROBE RESULT — the ordered F2 diagnostic is DELIVERED (builder, 2026-09-13,
+two days ahead of its 09-15 date). `experiments/tests/sm03_vis_open_probe.py`
+(committed `8b6480a` BEFORE the run, with its reading branches declared),
+artifact `/data/sm03_vis_open_probe.json`, seed 90, CPU, 141.2 s. No seeds
+spent, no ledger row, no gate frozen, no constant moved, `_GATES_FROZEN` still
+False, `run()` still refusing — and the arm pick is still this desk's, untaken
+here.**
+
+**NEITHER LEAF OF THE RULING'S TREE FIRED. The cause is the READOUT, and a
+venue redesign would have been a misroute.**
+
+Self-validation first, because nothing else counts without it: the probe rebuilds
+the pilot's split from the spec's own `_draw_layout` with the spec's RNG seeding,
+open frames only, and `cnn_vis_open_excl` reads **0.1167** against the pilot's
+recorded **0.1167** — the same object, to the last digit.
+
+| # | ordered | measured |
+|---|---|---|
+| 1 | `n_test` retained | **240 of 240**; reject rate 0.9964 with the exclusion vs **0.2258** without (the latter reproduces the pilot's occlusion-only 0.2405) |
+| 2 | OPEN-condition confusion | prediction histogram **[240, 0, 0, 0, 0, 0, 0, 0]** — a COLUMN, not a diagonal |
+| 3 | `vis_open` without `MIN_SEP_M` | **0.1042**, against 0.1167 with it — it goes DOWN |
+| 4 | *(extra)* train fit on its own 480 rows | **0.1646** (chance 0.1250) |
+| 5 | *(extra)* spatially-explicit ridge reference | train **1.0000**, held-out-with-exclusion **0.9917** (238/240), no-exclusion 0.9833 |
+
+**Three things follow, and the first two dispose of the question this row has
+carried since 08-30:**
+
+1. **"The test set is too small" is refuted by construction, not by
+   measurement.** `_build_split` redraws until it has `n`, so retention is
+   fixed at 240 whatever the exclusion does. The exclusion does not buy fewer
+   rows; it buys worse ones — median nearest-training-position **0.2822 m**,
+   max 0.3483 m, against 45° bins subtending ~1.7 m of arc at 2.2 m.
+
+2. **`acc_vis_open` 0.1167 was never a chance-level discrimination.** Bin 0's
+   base rate in that split is 28/240 = 0.11666…, and the readout assigns
+   **every** row to bin 0. The number the gate compared against `VIS_OPEN_MIN`
+   is the base rate of whichever bin a CONSTANT predictor emits — it contains no
+   information about the venue at all. (Identically on the no-exclusion split:
+   [240, 0, …], 0.1042 = 25/240.)
+
+3. **The venue is the most measurable thing in the rig.** A closed-form LINEAR
+   ridge on 4×-pooled raw pixels (λ swept on the spec's own 1-in-5 validation
+   split) recovers the bearing at **99.17% on the very held-out split the pilot
+   called saturated**, and the source is visible on every single layout (7.12
+   source-coloured pixels per panorama on average, min 2, zero on none).
+
+**THE MECHANISM, algebraic and measured, because the measurement alone cannot
+separate "cannot represent" from "cannot optimise".** `_make_cnn` ends
+`AdaptiveAvgPool2d(1) → Flatten → Linear(64, 8)`: it GLOBALLY AVERAGES the 8×8
+feature map before the classifier, while the label is the source's BEARING — a
+purely spatial quantity. A global average is translation-invariant, so two
+layouts differing only in where the ball sits (which is what differing bearing
+bins ARE) map to near-identical pooled vectors. The one cue that survives is
+which of the 4 channel-concatenated frames holds the ball: 4-way quadrant
+information for an 8-way label, ceiling ~0.5. Measured, not even that survives,
+and the dilution says why — ~7 source pixels in 4,096 is ~0.17% of the average
+the classifier reads. The 0.1646 train fit is the same statement from the data
+side: a 28,472-parameter CNN does not fail to overfit 480 rows in 40 epochs
+unless it cannot express the mapping.
+
+**WHAT THIS DOES AND DOES NOT DECIDE FOR THE 09-15 SITTING.**
+
+- **It does not pick the arm.** That is this desk's and the probe took no step
+  toward it. What it does is bound the pick: **none of the three offered F1 arms
+  touches the cause** — which is the same shape as this desk's own 09-12
+  finding, reproduced one level further in.
+- **It prices a second-order effect the pick must not miss.** `vis_occ` and
+  `vis_open` share `_make_cnn`. Any repair to the readout applies to the
+  OCCLUDED arm too, so it makes `vis_occ <= VIS_OCC_CEIL` **harder** to satisfy,
+  not easier. That is the legal direction under the never-weaken law and the
+  direction that makes the occlusion claim mean anything — but the repaired rig
+  must be expected to be a STRICTER test of the claim, not a friendlier one.
+- **F1 is not exonerated; it is independently confirmed from the other side.** A
+  99.17% held-out reading on a split whose median test position is 0.28 m from a
+  training position is exactly what "not a held-out sample of the source band"
+  looks like once a competent readout is pointed at it. **F1 and F2 are two
+  faults, not one.** F2's cause is the readout; F1 remains a real defect in what
+  the claim would be measuring after F2 is fixed, and it is still unanswered.
+- **And the reading this row should carry forward about itself:** F2 was called
+  a *rider* for thirteen days and promoted to *blocker* on 09-12; it turns out
+  to have been neither a rider nor a split problem but a defect in the
+  instrument every side of this row treated as the neutral part. The
+  generalisation is in `docs/LESSONS.md` (2026-09-13).
 
 The full-size seed-90 pilot ran on CPU in 8 minutes (`/data/sm03_pilot_seed90.json`,
 head `13c0440`) and found two faults; the numbers and the arithmetic are in
