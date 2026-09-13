@@ -689,9 +689,14 @@ def cmd_status(ledger: Ledger) -> int:
               f"and\n    nothing about it is invalidated — but `run_spec` "
               f"would refuse to re-derive it, so the\n    certificate cannot "
               f"be re-bought until its dependency is. The cost class is the "
-              f"bill:")
-        for sid, deps, cost in unbacked:
-            print(f"      {sid:9s} ({cost})  needs {', '.join(deps)}")
+              f"bill, and\n    where the chain runs deeper than one hop the "
+              f"ROOT is what has to happen first:")
+        for sid, deps, cost, roots in unbacked:
+            line = f"      {sid:9s} ({cost})  needs {', '.join(deps)}"
+            if [r[0] for r in roots] != deps:
+                line += ("  ->  root " + ", ".join(
+                    f"{r} [{st}] ({c})" for r, st, c in roots))
+            print(line)
         print()
     _check_red_delta_detector()
     red = deliberate_red_deltas(ledger)
@@ -2477,13 +2482,13 @@ def blast_radius(spec_id: str, ledger: Ledger, assume: Status = None,
     # ONE definition recognises — and so it cannot report a certificate that
     # was already unbacked before this edit as a cost OF the edit.
     def _unbacked(led) -> dict:
-        return {sid: (deps, cost)
-                for sid, deps, cost in unbacked_certificates(
+        return {sid: (deps, cost, roots)
+                for sid, deps, cost, roots in unbacked_certificates(
                     led, ladder=ladder, by_id=by_id)}
 
     ub_pass, ub_fail = ((_unbacked(alt), _unbacked(ledger)) if assume is
                         Status.PASS else (_unbacked(ledger), _unbacked(alt)))
-    unbacked = sorted((sid, ub_fail[sid][0], ub_fail[sid][1])
+    unbacked = sorted((sid,) + ub_fail[sid]
                       for sid in set(ub_fail) - set(ub_pass)
                       if sid != spec_id)
 
@@ -2524,8 +2529,8 @@ def blast_radius(spec_id: str, ledger: Ledger, assume: Status = None,
 
 
 def unbacked_certificates(ledger: Ledger, ladder=None, by_id=None) -> list:
-    """`(spec_id, [dep ids], cost class)` for every standing PASS certificate
-    that cannot be re-derived today, sorted by id.
+    """`(spec_id, [dep ids], cost class, [(root, status, cost)])` for every
+    standing PASS certificate that cannot be re-derived today, sorted by id.
 
     THE HALF `blast_radius` WAS SILENT ABOUT, and the 94th audit's RANK 1
     (2026-09-13). A gate edit is a graph edit, and it strands specs in two
@@ -2565,15 +2570,60 @@ def unbacked_certificates(ledger: Ledger, ladder=None, by_id=None) -> list:
     `_split_foreclosed` rule (two readers of one quantity share code or they
     drift) — this is the same question `run_spec` refuses on, so it is asked
     through the same function.
+
+    THE ROOT IS REPORTED BESIDE THE HOP, and the first live reading is why
+    (builder, 2026-09-13 ~20:xx, two hours after this function shipped). The
+    version that shipped at 18:4x named the FIRST unsatisfied dependency and
+    stopped, so its three rows read `LF.02 (cpu<10min) needs T6.03`. But
+    `T6.03` is itself BLOCKED behind `T2.10`, whose own docstring carries a
+    pre-registered reachability table proving no scorer this project has ever
+    measured clears its bar — the repair is an `ME.11`-class retrieval
+    redesign plus a 15-certificate re-buy. The one-hop reading priced that
+    certificate at one `cpu<10min` re-run.
+
+    That is the day's own headline lesson reproduced INSIDE the instrument
+    built to prevent it: *a cost class is a statement about the RUN, a
+    priority is a statement about the REPAIR.* The first unsatisfied
+    dependency is the one you can SEE; the root of the chain is the one you
+    have to PAY. Both are printed, because the hop is what `run_spec` names
+    when it refuses and the root is what has to happen first — and a reader
+    must be able to tell when they are the same spec. Today two of the three
+    rows bottom out in one hop and exactly one does not, which is also why a
+    root-only reading would have been the wrong repair: it would have lost the
+    fact that `T2.03` and `T2.14` really are one dispatch away.
+
+    A root is a node on the chain with no unsatisfied dependency of its own;
+    the walk stops there and at any id outside `by_id`, and `seen` bounds a
+    registry that ever admits a cycle. The root's OWN status and cost class
+    travel with it for the reason the certificate's did: `T2.10 [FAIL]
+    (cpu<10min)` and `T1.08 [FAIL] (gpu<2h)` are different bills.
     """
     ladder = LADDER if ladder is None else ladder
+    by_id = BY_ID if by_id is None else by_id
+
+    def _roots(sid: str, seen: set) -> set:
+        spec = by_id.get(sid)
+        if spec is None or sid in seen:
+            return set()
+        seen.add(sid)
+        deps = sorted(d for d, _why in ledger.unsatisfied(spec))
+        if not deps:
+            return {(sid, ledger.status(sid).value, spec.budget.value)}
+        out = set()
+        for d in deps:
+            out |= _roots(d, seen)
+        return out
+
     out = []
     for s in ladder:
         if ledger.status(s.id) is not Status.PASS:
             continue
         deps = sorted(d for d, _why in ledger.unsatisfied(s))
         if deps:
-            out.append((s.id, deps, s.budget.value))
+            roots = set()
+            for d in deps:
+                roots |= _roots(d, {s.id})
+            out.append((s.id, deps, s.budget.value, sorted(roots)))
     return sorted(out)
 
 
@@ -2586,6 +2636,10 @@ def _check_unbacked_detector() -> None:
     KNOWN ANSWERS, on a graph built for this and nothing else:
 
       UB.CERT   PASS, depends on UB.RED (FAIL)        -> REPORTED, gpu<20min
+                                                         hop == root == UB.RED
+      UB.DEEP   PASS, depends on UB.MID (FAIL), which
+                depends on UB.RED (FAIL)              -> REPORTED,
+                                                         hop UB.MID, ROOT UB.RED
       UB.STALE  PASS, depends on a PASS whose file
                 has moved since the run               -> REPORTED
       UB.OK     PASS, depends on UB.GREEN (clean PASS)-> SILENT
@@ -2600,6 +2654,17 @@ def _check_unbacked_detector() -> None:
     `unsatisfied` that refuses it, and a deriver written as
     `status is not Status.PASS` passes every other conjunct here and fails this
     one. It is planted for that reason and no other.
+
+    `UB.DEEP` is the conjunct that separates the root reading from the one-hop
+    reading that shipped this afternoon, and it is planted for that reason and
+    no other. It is the fixture shape of today's `LF.02 -> T6.03 -> T2.10`:
+    a certificate whose visible dependency is NOT what has to be repaired
+    first. Both directions are gated — `UB.DEEP` must name `UB.RED` as its
+    root while `UB.CERT`, one hop deep, must name `UB.RED` as BOTH hop and
+    root rather than inventing a deeper one. Measured before shipping: the
+    one-hop deriver fails the `UB.DEEP` root conjunct only, and a deriver that
+    reports roots INSTEAD of hops fails the `UB.DEEP` hop conjunct only, so
+    neither half of the pair is carried by the other.
     """
     from .protocol import Result, Spec, Budget
 
@@ -2611,6 +2676,8 @@ def _check_unbacked_detector() -> None:
               stub("UB.OK", ["UB.GREEN"]),
               stub("UB.NOPASS", ["UB.RED"]),
               stub("UB.ROOT", []),
+              stub("UB.MID", ["UB.RED"]),
+              stub("UB.DEEP", ["UB.MID"]),
               stub("UB.STALE", [_STALE_ID]), stub(_STALE_ID, [])]
     by_id = {s.id: s for s in ladder}
     # `_STALE_ID` is a REAL spec with a real file, stamped here with a hash it
@@ -2621,23 +2688,37 @@ def _check_unbacked_detector() -> None:
     for sid, st in (("UB.RED", Status.FAIL), ("UB.GREEN", Status.PASS),
                     ("UB.CERT", Status.PASS), ("UB.OK", Status.PASS),
                     ("UB.NOPASS", Status.FAIL), ("UB.ROOT", Status.PASS),
+                    ("UB.MID", Status.FAIL), ("UB.DEEP", Status.PASS),
                     ("UB.STALE", Status.PASS)):
         fixt.results[sid] = Result(
             spec_id=sid, status=st, metrics={}, seeds=[0], commit="1234567",
             ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)
 
     got = unbacked_certificates(fixt, ladder=ladder, by_id=by_id)
-    named = {sid: (deps, cost) for sid, deps, cost in got}
+    named = {sid: (deps, cost, roots) for sid, deps, cost, roots in got}
     expect = (
         # POSITIVE — the fallen dependency is named, and so is the bill.
-        named.get("UB.CERT") == (["UB.RED"], "gpu<20min"),
+        named.get("UB.CERT")[:2] == (["UB.RED"], "gpu<20min"),
         # POSITIVE — the freshness half. A dependency in PASS is not enough.
         "UB.STALE" in named and named["UB.STALE"][0] == [_STALE_ID],
+        # POSITIVE — the chain bottoms out one hop BELOW what is visible, and
+        # the hop is still reported. Fails a one-hop deriver on the root and a
+        # root-only deriver on the hop; neither conjunct carries the other.
+        named.get("UB.DEEP", (None,))[0] == ["UB.MID"],
+        named.get("UB.DEEP", (None, None, None))[2]
+        == [("UB.RED", "FAIL", "cpu<1min")],
+        # POSITIVE — and a one-hop chain does NOT acquire a deeper root: hop
+        # and root are the same spec, said so rather than left to be inferred.
+        named.get("UB.CERT", (None, None, None))[2]
+        == [("UB.RED", "FAIL", "cpu<1min")],
         # NEGATIVE — without these the reader could pass by flagging everything.
         "UB.OK" not in named,
         "UB.NOPASS" not in named,
         "UB.ROOT" not in named,
-        len(named) == 2,
+        # NEGATIVE — `UB.MID` is RED, so it is `unreachable`'s to count, not
+        # this reading's, even though it sits on the same fallen dependency.
+        "UB.MID" not in named,
+        len(named) == 3,
     )
     if not all(expect):
         raise RuntimeError(
@@ -2683,7 +2764,11 @@ def _check_blast_radius() -> None:
     same graph. `KC` is a standing GPU certificate on `K`; `XC` is one on the
     already-red `X`:
 
-      K -> FAIL   `unbacked == [("KC", ["K"], "gpu<2h")]` — a certificate that
+      K -> FAIL   `unbacked == [("KC", ["K"], "gpu<2h", [K FAIL cpu<1min])]` —
+                  hop and root are the same spec here, said rather than
+                  inferred, and the root's cost class is `K`'s own, not the
+                  certificate's; `_check_unbacked_detector` owns the deep
+                  case. A certificate that
                   is not in `radius`, not in `runnable_lost` and not in any
                   count this function printed before today, because it has
                   already run. `L` must NOT appear: it is red, so it is priced
@@ -2743,11 +2828,15 @@ def _check_blast_radius() -> None:
         pass_y["before"] - pass_y["after"] == 1,
         # THE BACKING HALF. A standing certificate falls with its dependency,
         # in the direction of harm, with its cost class attached ...
-        fail_k["unbacked"] == [("KC", ["K"], "gpu<2h")],
+        fail_k["unbacked"] == [("KC", ["K"], "gpu<2h",
+                                [("K", "FAIL", "cpu<1min")])],
         # ... and a red dependent is NOT counted here as well as in `radius`.
         "L" not in [u[0] for u in fail_k["unbacked"]],
-        # The green direction reads the same key as what is already down.
-        pass_x["unbacked"] == [("XC", ["X"], "gpu<2h")],
+        # The green direction reads the same key as what is already down, and
+        # the root carries the LIVE status of the spec that is actually down
+        # — `NOT_RUN` here, not the counterfactual's `PASS`.
+        pass_x["unbacked"] == [("XC", ["X"], "gpu<2h",
+                                [("X", "NOT_RUN", "cpu<1min")])],
         # And a counterfactual that moves no certificate says so with an empty
         # set rather than by inheriting the previous subject's.
         pass_y["unbacked"] == [],
@@ -2831,7 +2920,7 @@ def cmd_blast_radius(ledger: Ledger, ids=()) -> int:
             print(f"  UNBACKED: {len(r['unbacked'])} standing PASS "
                   f"certificate(s) declare depends_on this spec\n"
                   f"      and {verb} —")
-            for sid, deps, cost in r["unbacked"]:
+            for sid, deps, cost, roots in r["unbacked"]:
                 print(f"      {sid:9s} ({cost})  {BY_ID[sid].title}")
             print("      — a legal state, not a violation: the run happened "
                   "and the row is honest.\n        What is true is that "
