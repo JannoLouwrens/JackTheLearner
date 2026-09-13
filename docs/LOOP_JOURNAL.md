@@ -14847,3 +14847,135 @@ finding and the firing waits. After that the board is what it was today — read
 `run blocked` / `coverage` yourself, and **do NOT re-run `T2.10`** (foreclosed at
 0.0667 against 0.10), **`T6.03`** (BLOCKED behind `T2.10`), **`D1.0`** (illegal
 behind `T1.08`) or **`T1.08`** (its 09-16 row owns it).
+
+---
+
+## 2026-09-13 ~12:0x UTC — the firing check was auditing the wrong commits and the wrong bytes; both found by USING it, one day before two defaults fire
+
+**Meters, read not inherited: `week:all models` 82% (THE GATE), `week:Fable`
+100%, session 8%.** Fable is pinned so the chain walked this slot to **Opus**;
+I say so because nothing else records the substitution. No `PACING:` line — the
+blackout is over and the streak is 0.
+
+**EVERY DATED ITEM ON THE BOARD WAS ALREADY DISCHARGED OR IS NOT YET LEGAL, and
+I verified that rather than inheriting it.** `PROGRESS.md`'s six `FOR THE
+BUILDER` items and `OVERSIGHT.md`'s four: 1 (`T2.10`) is foreclosed at **0.0667
+against a 0.10 bar** across seven measured encoder configs and the bar does not
+move; 3 (`D1.0`) is illegal behind `T1.08`'s FAIL; 4, 5 and B1–B4 landed in
+earlier slots; 6 is a prohibition. **Item 2, `D25`, is STILL NOT FIREABLE
+TODAY** — `decisions.py:222` marks a row overdue at `(today - decide_by).days
+> 0`, so the earliest firing day is `decide_by + 1` = **09-14**, and the tool
+prints `due 2026-09-13`, not `OVERDUE`. Two pages say "due TODAY and it is
+yours to fire"; the instrument says tomorrow, and the required sentence *"the
+owner did not rule by <date>"* is not yet true. `D19` is the same, one day
+later.
+
+**Board independently verified EMPTY.** `run coverage`: 5 classes NEWLY EMPTY,
+`cpu<10min` FILL-HELD behind `D19` (the run IS the fetch the default forbids),
+4 with **no path in**. `run next` offers only settled FAIL/VOID rows under
+standing do-not-re-dispatch directives, PARKED or PILOT-BLOCKED specs. The
+empty-board rule permits stopping; I did not, because the guard that ships
+tomorrow's two firings had a defect I could measure.
+
+**THE UNIT: the firing-diff check reads its diffs honestly, and NOTHING was
+honest about what it was HANDED.** A guard is three stages — *which things*,
+*which bytes*, *what verdict* — and this morning's `T0.28` P16 certifies only
+the third.
+
+**DEFECT 1, WHICH COMMITS: identification was the author's word about the
+author's own act.** A firing was found by its commit SUBJECT matching `D<n>` +
+"default" + "fired". That was NAMED as a known gap this morning, in three
+places, and named is where it stopped. **Joining the subject scan to an
+independent record found a real miss in about ninety seconds.** `3b2e38b` —
+*"D22's record completed (89th audit B1.1) + the measurement five audits asked
+for"* — wrote `D22`'s resolution and names neither "default" nor "fired". A
+firing act sat undiff-audited for fourteen days while every page reported the
+audit complete. **It audits CLEAN**: the hole was real, the exposure was zero,
+and that is the only cheap moment to close one.
+
+The second channel anchors on the ARTIFACT a firing cannot skip writing — the
+`RESOLVED BY ARMED DEFAULT` record on the resolved page — instead of on what
+its author chose to call the commit. History now reads **26 identified commits,
+1 by the record channel only, 0 hazards**; `FIRING-DIFF` stays at floor `0/0`.
+New reading: **"coverage: 20 of 20 decision(s) the resolved page records as
+fired are named by an identified commit"** — `firing_audit` answers *were the
+commits I found clean*, this answers *did I find them all*, against a record
+written by a different hand at a different time. **Reported, NOT floored**, and
+the docstring states the false positive it can have rather than pretending it
+has none: attribution reads the D-id from the subject, so a record-channel
+commit naming no id reads as uncovered — a wrong number pointing the SAFE way.
+
+**DEFECT 2, WHICH BYTES — and this one was live for tomorrow.** `_diff_of` read
+`git show <rev> or git diff <rev>` and its docstring promised that
+`--firing-check HEAD` therefore checked the working tree, *"which is the moment
+the firing iteration actually needs it"*. **`git show HEAD` succeeds in any
+repository with a commit, so the `or` never evaluated and the command audited
+the PREVIOUS COMMIT.** Demonstrated on the tree that fixed it: `--firing-check
+HEAD` printed **`ok`** while `N_PROPERTIES 16 -> 17` — a `CONST-MOVED` this
+tool exists to refuse — sat uncommitted on disk. `D19` and `D25` fire tomorrow
+under a standing instruction to run exactly that command first, and the green
+would have been about the wrong bytes. **A fallback whose first branch always
+succeeds is not a fallback; it is dead code with a docstring.** `WORKTREE` is
+now an explicit pseudo-rev; a rev check on a dirty tree prints a NOTE that it
+cannot see the tree; an empty diff prints `EMPTY … this is not a pass` rather
+than `ok`, because a mistyped rev and a clean tree reach the same place and the
+exit code cannot tell you which.
+
+**RED FIRST, ON THE REAL PATH, AGAINST MY OWN COMMIT.** `--firing-check
+WORKTREE` flags this very unit's `N_PROPERTIES 16 -> 18`. That is correct and it
+is not a violation: an authored strengthening in a commit that says so is
+exactly the strengthen-only lane the refusal message names as the legal route.
+A default firing by silence may not move a bar; a named author may.
+
+**PRICE PAID, STATED NOT DISCOVERED.** `experiments/decisions.py` is in
+`T0.28`'s `IMPL_DEPS`, so this staled that certificate — and `T0.28` is
+**STRENGTHENED**, not merely re-bought (`T1.02` precedent): `N_PROPERTIES`
+**16 -> 18**. **P17** pins identification in both directions (subject channel
+misses `3b2e38b`'s real wording, record channel finds it, no double-count on a
+commit both see, a record-only commit is AUDITED and not merely listed, and
+omitting the second channel does not narrow the first). **P18** asserts on the
+git **ARGUMENTS** rather than the output — because a wrong invocation is
+invisible in a right-looking answer — requiring `WORKTREE` to reach
+`diff --unified=0 HEAD` and a named rev to reach `show` ONCE with no silent
+retry. Both controls are reconstructed by DELETION and are **hours old, not
+weeks**: the organ as it stood at 11:0x this morning. PASS 53.87 s `+dirty` in
+`7fbe18c`, re-bought CLEAN at **52.99 s** in `5f4489e`, 0 properties failed,
+control broken on **p17 and p18**. No threshold moves in either direction;
+`hypothesis`, `falsified_by` and `null_baseline` all extended. `demonstrated`
+unchanged at **106/246** — this buys back a certificate, it does not claim a
+capability.
+
+**THE TALLY DID NOT MOVE AND I WILL NOT LET IT BE WRITTEN UP AS IF IT DID:
+still 2 of 3 safety clauses enforced.** Both defects were in the two that ARE
+checked. `SYSTEM.md`'s sentence saying *"never widens what is permitted"* is on
+the author's word STAYS, the `ALL_CAPS`-only pattern gap STAYS, and the
+identification residual is named rather than called closed: **a firing that
+declares itself in NEITHER channel is still invisible.**
+
+**RATCHET BANNERS REPORTED, NOT RECORDED.** `run status` still shows
+`unreachable` 93 -> 97, `review_queue_net_arrivals` 3 -> 7,
+`fail_unowned_owned_forms` queue-row 21 -> 22 and `gpu_hours_no_verdict`
++0.35 h as `!! MOVED`. Every one moved for the 10:0x slot's acts (`T1.08`'s
+FAIL and its routing), not for mine — recording them would baseline another
+slot's movement. Six STALE CLAIMS (`T3.06`, `T3.07`, `ME.11.B/C/D`, `UB.10`)
+are all pre-existing FAIL/VOID rows on files I did not touch.
+
+**Housekeeping.** 13 claude processes on the box; named paths on every commit,
+no `git add -A`, nothing of anyone else's in any commit. No detached launches,
+no GPU dispatch, no background processes, nothing to declare in `declared_pids`.
+Tree clean after every commit; 2 commits pushed to `origin/main`.
+
+**NEXT ITERATION — FIRST UNIT: `D25`'s armed default, THEN `D19`.** Both become
+fireable on **09-14** and the tool will print `OVERDUE — DEFAULT IS DUE TO
+FIRE`; take the count from `python -m experiments.decisions`, never from a page.
+Required wording: *"the owner did not rule by <date>, so the pre-registered
+default fired."* **And the pre-commit step is now `python -m experiments.decisions
+--firing-check WORKTREE`, NOT `--firing-check HEAD`** — the `HEAD` form audits
+the previous commit and yesterday's journal prescribed it in good faith. `D25`'s
+default (iii) FIX THE SEAL adds a `lib_seal.sh` branch and may add constants;
+both are additions and are expected to clear. If it does not clear, the hazard
+is the finding and the firing waits. After that the board is what it was today:
+**do NOT re-run `T2.10`** (foreclosed at 0.0667 against 0.10), **`T6.03`**
+(BLOCKED behind `T2.10`), **`D1.0`** (illegal behind `T1.08`) or **`T1.08`**
+(its 09-16 row owns it). `2026-W37` opened today with a full 30 GPU-hours and
+there is still nothing legal to dispatch into it.
