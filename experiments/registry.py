@@ -355,16 +355,31 @@ LADDER: list[Spec] = [
          control="An ABSURD learning rate must break it and be REPORTED non-finite. A NaN detector that has never seen a NaN is decorative — this is the positive control T0.13 exists to demand."),
 
     Spec("T1.07", 1, "Not knife-edge on learning rate",
-         hypothesis="Training succeeds across a 10x LR range.",
-         falsified_by="Only one LR works.",
+         # STRENGTHENED 2026-09-13 (Review PROGRESS FOR THE BUILDER item 5).
+         # Strengthen-only: the old text is unchanged and a conjunct is ADDED.
+         # The spec claimed robustness and gated only absence-of-collapse;
+         # spread_ratio was recorded and read by nothing. Requires a re-run to
+         # re-buy the certificate under the amended text.
+         hypothesis="Training succeeds across a 10x LR range — every LR beats mean-prediction AND the held-out error across that span stays inside a 6x band.",
+         falsified_by="Only one LR works — or the held-out error swings by more than 6x across the span, which is a knife-edge whether or not every point clears the floor.",
          null_baseline="n/a", metric="lrs_that_converged", budget=Budget.GPU,
          depends_on=["T1.01"],
          control="An ABSURD learning rate outside the claimed range must DIVERGE and lose its advantage over the mean-prediction baseline. Otherwise \"every LR worked\" is a statement about a task nothing can fail.",
-         notes="A result that survives only at one LR will not survive a new task."),
+         notes="A result that survives only at one LR will not survive a new task. "
+               "MAX_SPREAD_RATIO 6.0 pre-registered with its reachability: "
+               "recorded 4.304 and 4.931, while the pre-clipping configuration "
+               "of 2026-08-05 produced ~20.5 — both sides of the bar are "
+               "reachable by configurations this project has actually run."),
 
     Spec("T1.08", 1, "Seed variance measured",
-         hypothesis="Across 3 seeds the metric's std is small relative to the effect.",
-         falsified_by="std >= the effect size being claimed.",
+         # STRENGTHENED 2026-09-13 (Review PROGRESS FOR THE BUILDER item 4a).
+         # Strengthen-only: the old text is unchanged and a conjunct is ADDED.
+         # snr read 86.09 against a 3.0 bar and is a property of the fixed toy
+         # task; heldout_cv_pct is the seed spread of the held-out metric
+         # itself, is a property of THIS pipeline, and was read by nothing.
+         # Requires a re-run to re-buy the certificate under the amended text.
+         hypothesis="Across 3 seeds the metric's std is small relative to the effect, AND the held-out metric itself reproduces across seeds to within 7% CV.",
+         falsified_by="std >= the effect size being claimed — or the held-out metric's own seed CV exceeds 7%, which makes every single-seed number downstream unquotable.",
          null_baseline="n/a", metric="metric_std", budget=Budget.GPU, seeds=1,
          depends_on=["T1.01"],
          control="Seeds must ACTUALLY change the outcome: an arm in which the seed is ignored must show a std of zero. A small measured std is only a noise floor if the seed was plumbed through at all.",

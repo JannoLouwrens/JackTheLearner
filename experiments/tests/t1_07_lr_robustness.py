@@ -37,6 +37,31 @@ arms now train the way the pipeline trains.
 If it still fails with clipping, that is a genuine model finding rather than a
 harness artifact, and the reference arm distinguishes them: it scored 7.605, so
 the task is learnable and this is not another T1.02-style unidentifiable task.
+
+SPREAD GATED 2026-09-13 (Review PROGRESS FOR THE BUILDER item 5, 2026-09-13).
+STRENGTHENING, strictly additive: `MIN_BEAT_MEAN` is untouched and no arm is
+removed. The Review's finding, and it is about THIS file rather than about the
+model: "not knife-edge" is a claim about SPREAD, and for five weeks the gate
+read only ABSENCE OF COLLAPSE — three booleans saying no LR fell below 1.15x
+mean-prediction. `spread_ratio` was computed, recorded on the ledger, and read
+by no conjunct, while the advantage swung 1.38 -> 6.80 across the 10x span.
+A spec is not entitled to a title whose quantity it never gates.
+
+REACHABILITY, pre-registered before the re-run (92nd audit B3 item 1 — the two
+free numbers that would have caught LG.12's foreclosed knob with zero seeds):
+
+  required to clear   spread_ratio <= 6.0
+  recorded range      4.304 (attempt 1, T4, 2026-08-05, commit 1a69db6)
+                      4.931 (attempt 2, P100, 2026-08-14, commit e29bd82)
+  range the mechanism DOES produce: ~20.5 — the pre-clipping configuration of
+                      2026-08-05 scored 5.443 / 13.195 / 0.643, documented
+                      eleven lines above this block.
+
+So the bar sits INSIDE the band this project has actually measured, with both
+sides reachable: a configuration we ran clears it at 4.3-4.9, and a
+configuration we ran fires it at ~20.5. It is not a bar fitted to the only
+number we have. Headroom 6.0 / 4.931 = 1.217x — deliberately the same ratio the
+Review chose for this bar, applied unchanged to T1.08's sibling conjunct.
 """
 from __future__ import annotations
 
@@ -51,6 +76,10 @@ from ..registry import BY_ID
 LRS = [1e-4, 3e-4, 1e-3]        # a 10x span
 ABSURD_LR = 1.0                 # control: must fail
 MIN_BEAT_MEAN = 1.15            # each LR must beat mean-prediction by this factor
+MAX_SPREAD_RATIO = 6.0          # ... and the held-out spread across the span is
+                                # the knife-edge quantity itself: see REACHABILITY
+                                # in the docstring. Recorded 4.304 / 4.931;
+                                # the unclipped configuration produced ~20.5.
 MAX_GRAD_NORM = 2.0             # TrainingPipeline.py:76 — match real training
 WARMUP_STEPS = 100              # 1500-step run; warmup is the fix for the 1e-3 collapse
 
@@ -180,10 +209,13 @@ def _control(seed: int) -> dict:
 
 
 def _check(m: dict, c: dict) -> bool:
-    # Every LR in the 10x span beats mean-prediction; the reference arm proves the
-    # task is learnable at all; the absurd LR must NOT clear the same bar.
+    # Every LR in the 10x span beats mean-prediction; the held-out error across
+    # that span stays inside a 6x band — the knife-edge quantity in the title,
+    # gated from 2026-09-13; the reference arm proves the task is learnable at
+    # all; the absurd LR must NOT clear the same bar.
     return (m["lrs_beating_baseline"] == len(LRS)
             and m["worst_lr_advantage"] >= MIN_BEAT_MEAN
+            and m["spread_ratio"] <= MAX_SPREAD_RATIO
             and m["reference_advantage"] >= MIN_BEAT_MEAN
             and c["absurd_advantage"] < MIN_BEAT_MEAN)
 
