@@ -5471,3 +5471,82 @@ ROUTED: pass-certificates-are-not-re-evaluated-when-a-dependency-falls | 2026-09
     about any spec; no threshold moves and no row re-runs. The separate and
     already-owed cost is `T6.03`'s own certificate, which is bought when
     `T2.10` is repaired — tracked on `T2.10`'s own repair path, not here.
+
+ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-13 | Review FULL (completeness audit, external reference) | OPEN
+    DUE: 2026-09-21 | this desk's own docket: convert the named gaps into
+    registered specs or into written refusals, cheapest-first. Date is the
+    next FULL sitting plus one; 09-20 already carries 5 rows including the
+    `gates-that-measure...` sweep, and stacking both sweeps on one Sunday is
+    the mistake this file measures as `piled_on`.
+
+    THE METHOD, and why the number below is not reassuring. The audit is
+    against an EXTERNAL reference — the human sensory and cognitive inventory
+    plus GENERALITY.md's barriers — never against our own documents, because
+    an audit inherits every hole in its own standard. `run senses` reports
+    10/10 of the inventory spec'd and it is right; that instrument audits the
+    SENSORY half against GOAL.md's own list. Nothing in the repo audits the
+    COGNITIVE half against anything, and that is where every gap below lives.
+
+    SENSORY HALF — closed, and it stays closed. 10/10 registered, 2/10
+    (sight, voice) proven load-bearing. Body schema remains the one zero from
+    the owner's 2026-08-09 list that has never moved: 0 own specs, seated
+    2026-09-06, arena `UB.14` VOID-FORECLOSED on the venue.
+
+    COGNITIVE HALF — nine capabilities, measured one at a time:
+      attention          0 specs. UB.2/UB.8 are architecture-attention (a
+                         mechanism inside the model), not the capability
+                         (selecting among competing stimuli under limited
+                         capacity). Not a declared COVERS domain either.
+      working memory     1 spec, ME.8 (PASS) — and it tests that WM SURVIVES A
+                         RESTART, not that it holds or manipulates anything.
+                         Nothing anywhere asks WM to do cognitive work.
+      emotion            2 specs (T2.12 PASS, T3.07 FAIL) against 1,149 lines
+                         of EmotionalState.py and a BY DEFAULT seat. UNCHANGED
+                         since the 2026-08-09 scar named it. AND — the finding
+                         this audit exists to produce — `emotion` IS NOT A
+                         DECLARED `COVERS:` DOMAIN AT ALL, so `coverage` cannot
+                         report on it and `run senses` cannot see it, because
+                         GOAL.md's sensory sentence never listed it. An organ
+                         measuring against a stated standard, and the standard
+                         omits the thing. Missing outright inside it: any spec
+                         that affect changes what he LEARNS or REMEMBERS —
+                         affective salience gating consolidation is among the
+                         best-established facts in human memory and this
+                         project's own biology-as-oracle rule points straight
+                         at it.
+      imagination        0 specs for the CAPABILITY. LC.* imagine as a
+                         world-model rollout; T3.09 (creative loop) is FAIL.
+                         Nothing asks whether imagining SOLVES a novel problem
+                         without acting, though GOAL.md names "dreaming is
+                         training in imagination".
+      self-model /       GEN.07 unregistered — but NEWLY NON-ZERO and by
+      metacognition      accident: LG.12, registered at 04:14 TODAY, is this
+                         project's first metacognition spec. "He speaks
+                         correctly or he is silent" is knowing what you do not
+                         know. Recorded because a gap that closes unnoticed is
+                         as invisible as one that opens unnoticed.
+      theory of mind     GEN.02, GEN.03 registered 09-01, both NOT_RUN since.
+      teaching           0 specs. GEN.02 is Jack as STUDENT ("a second Jack is
+                         a teacher"). Nothing in 246 specs has JACK teach, and
+                         GOAL.md's culture claim (generation 3 knows what
+                         generation 1 never knew) needs transmission in that
+                         direction to mean anything.
+      tool use           1 declared spec (CU.6, affordances, 0 PASS); GEN.05
+                         ("he cannot make tools") unregistered.
+      symbols / number   GEN.11 unregistered, 0 specs.
+
+    GENERALITY.md's BARRIERS — recomputed, not quoted: 14 named, 4 registered
+    (GEN.02, GEN.03, GEN.06, GEN.09), 0 RUN, 0 PASS. That is byte-identical to
+    the 2026-09-06 reading one week ago. Zero movement on generality in a week
+    is the honest headline of this audit and it is not a spec gap — all four
+    registered barriers are reachable-on-paper and none has been dispatched.
+
+    A NAMED GAP IS A DECISION; AN UNNAMED GAP IS A BLIND SPOT. Nothing above is
+    a demand to build. Several of these Jack may never need. The bill this row
+    owes is a WRITTEN DISPOSITION for each — a spec or a refusal with a reason
+    — not nine new registrations.
+
+    STALENESS BILL. None: the audit asserts nothing about any spec and moves no
+    threshold. The cheapest real repair it points at is declaring an `emotion`
+    COVERS domain on T2.12/T3.07, which costs one registry edit and makes the
+    gap visible to `coverage` instead of only to this page.
