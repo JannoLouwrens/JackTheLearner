@@ -298,6 +298,57 @@ tmpdir copy is ephemeral; kaggle kernels output re-fetches it). Do NOT
 re-dispatch UB.10 unchanged — the marginal VOID will re-fire at the seeds'
 pleasure and a clean draw would land on the saturated-anchor FAIL.
 
+BATTERY REDESIGN — PARTS 2 AND 3 LANDED 2026-09-13; PART 1 IS STILL OWED
+(ordered on `ub10-seed-fragility-and-saturated-battery`, 2026-09-08, DUE
+2026-09-15). The order lists the defects in the wrong order of importance:
+repairing seed fragility alone buys a run that still returns no verdict,
+because the PASS conjunct "winner > A0 on every seed" cannot fire against a
+saturated anchor. So the anchor's ceiling is repaired first, as a RIG gate.
+
+  PART 2 — `A0_HEADROOM` = 0.05, PRE-REGISTERED HERE BEFORE ANY RUN. A0's
+  slot accuracy must read <= 0.95 on EVERY registered seed or the run is
+  VOID on the rig, checked immediately after `params_ok` and BEFORE any arm
+  is read. Same shape as `D1.0`'s learning gate: a property of the VENUE,
+  decided before competitors are scored. The margin is DECLARED, not fitted
+  — 0.05 is comfortably above the ~0.028 s.e. of a 320-example test accuracy,
+  so 0.95 is distinguishable from ceiling. No arm-facing bar moves:
+  `WINNER_GATE` 0.75, `MARGINAL_FLOOR` 0.80, `NULL_GATE` 0.60, `SWAP_HURT`
+  0.10 are all untouched, in both directions.
+
+  REPLAY AGAINST THE RECORDED ROW, so the gate is not merely asserted:
+  attempt 1 (impl_sha 890f99a0d7844095) recorded A0 slot [1.0, 1.0, 1.0],
+  so `a0_slot_max` 1.0 vs the 0.95 bar, margin -0.05 -> the gate FIRES on
+  the row as it stands, and fires EARLIER than `marginal_ok` (0.0), which
+  is what actually voided that attempt. The run that "returned no verdict"
+  would now refuse on the venue and say which venue fact it refused on.
+
+  PART 3 — PER-ARM STABILITY, a SCORED DISQUALIFICATION. An arm must train
+  on ALL registered seeds to hold a seat. Attempt 1's `learn_ok` was one
+  all-arms-all-seeds conjunct, so one arm failing one seed VOIDed the whole
+  run and the ledger named nobody: basin fragility HID the finding instead
+  of being one. Now `arm_trained_all_seeds` is per arm, a failing arm is
+  named in `disqualified_arms`, it is still measured and recorded, and it
+  cannot win or carry a conjunct. `learn_ok` keeps its original population
+  and meaning and is REPORTED; only its consequence changed. The ANCHOR is
+  the one exception — if A0 does not train there is no null and the run is
+  VOID, because a claim needs something to be better than. On attempt 1's
+  row `learn_ok` was 1.0, so part 3 disqualifies nobody there; it is written
+  for the fragility the row's own note predicts on re-draw.
+  REFUSED, and named so nobody re-proposes them: the TRAINING-BUDGET CUT
+  (it makes every arm worse so the picture looks interesting, and silently
+  rewrites the claim to "fusion helps when undertrained") and SEED-LEVEL
+  scored-and-ineligible (it lets an arm that failed a registered seed keep
+  competing on the seeds where it did — a seed lottery wearing a conjunct's
+  clothes). The disqualification is WHOLE-ARM.
+
+  PART 1 — COMPOSITE / CROSS-MODAL-XOR SLOTS — IS NOT IMPLEMENTED, and
+  `run()` REFUSES while `_BATTERY_REDESIGN_OWED` is set. Without a slot
+  label that no single modality carries, A0 is expected to saturate again
+  and part 2 will VOID the run on the rig; spending GPU hours on a
+  guaranteed rig VOID is exactly what the gate exists to prevent. The
+  refusal is part of the gate, not a nuisance beside it. `UB.11` stays
+  blocked behind a real verdict either way.
+
 COVERS: one brain / unison (claim)
 """
 from __future__ import annotations
@@ -367,6 +418,34 @@ SELECTED: dict | None = {"A0": "base", "A1": "base", "A2": "lolr_warm",
 MARGINAL_FLOOR = 0.80        # learning gate on the unimodally-decodable tasks
 NULL_GATE = 0.60             # UB.9's chance + ~3.5 sigma at n_test = 320
 WINNER_GATE = 0.75           # UB.9's fused bar, inherited
+
+# ── the battery redesign (ordered 2026-09-08 on
+# `ub10-seed-fragility-and-saturated-battery`; parts 2 and 3 land here) ──
+#
+# A0_HEADROOM — the ANCHOR must read strictly below ceiling on EVERY registered
+# seed, or the run VOIDs ON THE RIG before any arm is scored. Attempt 1 recorded
+# A0 slot = 1.0 on all three seeds, which makes the PASS conjunct "winner > A0 on
+# every seed" UNSATISFIABLE BY ARITHMETIC: nothing can exceed a saturated
+# anchor, so the battery certified nothing and said so nowhere. That is the same
+# shape as `D1.0`'s learning gate — a property of the VENUE, checked before any
+# competitor is read — and it is a strengthening: the run now refuses loudly
+# where it used to return a quiet no-verdict. The margin is DECLARED, not fitted:
+# 0.05 is one part in twenty of the scale, comfortably above the ~0.028 s.e. of a
+# 320-example test accuracy, so a seed at 0.95 is distinguishable from ceiling.
+# It does NOT move WINNER_GATE, MARGINAL_FLOOR or any bar an arm is scored on.
+A0_HEADROOM = 0.05           # A0 slot acc must be <= 1.0 - A0_HEADROOM, per seed
+
+# WHAT IS STILL OWED, and why this spec REFUSES rather than dispatching: part 1
+# of the same order — COMPOSITE / CROSS-MODAL-XOR slots, so that no single
+# modality carries the answer — is NOT implemented. Without it A0 is expected to
+# saturate again and A0_HEADROOM will VOID the run on the rig. Burning GPU hours
+# on a guaranteed rig VOID is exactly what the gate exists to prevent, so the
+# refusal below is part of the gate, not a nuisance beside it.
+_BATTERY_REDESIGN_OWED = (
+    "part 1 of 3 — composite / cross-modal-XOR slots. `_episode_tensors` still "
+    "serves UB.9's `slot` label, which A0 solved at 1.0 on every seed. Until "
+    "the discriminating structure exists, A0_HEADROOM will VOID on the rig and "
+    "a dispatch buys nothing.")
 SWAP_HURT = 0.10             # a sense's swap must cost at least this, somewhere
 SWAP_ROLL = 37               # coprime with 4-per-quad blocks: crosses quads
 DROP_MAX = 0.02              # UB.9's whole-quad drop budget
@@ -1071,8 +1150,25 @@ def _aggregate() -> dict:
     # Matched-tuning-budget eligibility (unpark disposition, 2026-08-25):
     # every arm is scored, but only grid-eligible arms carry the verdict
     # conjuncts or may win — a dead instrument's 0.5 certifies nothing.
-    elig = tuple(a for a in ARMS if SELECTED.get(a))
-    elig_trunk = tuple(a for a in TRUNK_ARMS if SELECTED.get(a))
+    selected = tuple(a for a in ARMS if SELECTED.get(a))
+
+    # PER-ARM STABILITY (redesign part 3, ordered 2026-09-08). An arm must train
+    # on ALL registered seeds to hold a seat. Attempt 1's `learn_ok` was a single
+    # all-arms-all-seeds conjunct, so one arm failing to find a basin on one seed
+    # VOIDed the entire run and the ledger recorded no arm's name — basin
+    # fragility hid the finding instead of being one. It is now a SCORED
+    # DISQUALIFICATION: the arm is measured, its numbers are recorded, it is
+    # named in `disqualified_arms`, and it cannot win or carry a conjunct.
+    #
+    # The disqualification is WHOLE-ARM, never per-seed. Seed-level
+    # scored-and-ineligible was offered and REFUSED on the order: it lets an arm
+    # that failed to train on a registered seed keep competing on the seeds where
+    # it did, which is a seed lottery wearing a conjunct's clothes.
+    trained = {a: all(s["arms"][a]["loss_last"] < s["arms"][a]["loss_first"]
+                      for s in rows) for a in ARMS}
+    elig = tuple(a for a in selected if trained[a])
+    elig_trunk = tuple(a for a in TRUNK_ARMS if a in elig)
+    disq = tuple(a for a in selected if not trained[a])
 
     slot = {a: [s["arms"][a]["acc"]["slot"] for s in rows] for a in ARMS}
     med = {a: float(np.median(slot[a])) for a in ARMS}
@@ -1083,8 +1179,13 @@ def _aggregate() -> dict:
     marginal_ok = all(
         s["arms"][a]["acc"][t] >= MARGINAL_FLOOR
         for s in rows for a in elig for t in ("vslot", "afell"))
+    # `learn_ok` keeps its ORIGINAL population (every SELECTED arm) and its
+    # original meaning, so the recorded number stays comparable across attempts.
+    # What changed is its CONSEQUENCE: it no longer VOIDs the run — part 3 routes
+    # that failure to `disqualified_arms` instead — and the anchor's own training
+    # carries the VOID, because without a null there is no claim to make.
     learn_ok = all(s["arms"][a]["loss_last"] < s["arms"][a]["loss_first"]
-                   for s in rows for a in elig)
+                   for s in rows for a in selected)
     ens_max = max(s["arms"][a]["ens_slot"] for s in rows for a in ARMS)
     uni_dev_max = max(
         (abs(s["arms"][a][k] - 0.5)
@@ -1121,6 +1222,16 @@ def _aggregate() -> dict:
                              for a in ARMS},
         "a0_eligible": float("A0" in elig),
         "n_eligible_trunk": float(len(elig_trunk)),
+        # Redesign part 2: the anchor's headroom, per seed, checked on the RIG.
+        "a0_slot_max": round(float(max(slot["A0"])), 4),
+        "a0_headroom_ok": float(max(slot["A0"]) <= 1.0 - A0_HEADROOM),
+        "a0_headroom_margin": round(float(1.0 - A0_HEADROOM - max(slot["A0"])),
+                                    4),
+        # Redesign part 3: who trained everywhere, and who lost a seat for not.
+        "arm_trained_all_seeds": {a: float(trained[a]) for a in ARMS},
+        "a0_trained": float(trained["A0"]),
+        "disqualified_arms": list(disq),
+        "n_disqualified": float(len(disq)),
         "slot_per_arm_per_seed": slot,
         "slot_median": {a: round(med[a], 4) for a in ARMS},
         "arm_ranking_x_synergy_gap": round(
@@ -1180,6 +1291,18 @@ def _check(m: dict, c: dict):
         return Status.VOID          # class balance no longer by construction
     if m["params_ok"] != 1.0:
         return Status.VOID          # the match failed; ranking measures size
+    if m["a0_headroom_ok"] != 1.0:
+        return Status.VOID          # redesign part 2: the ANCHOR is at ceiling
+                                    # on some registered seed, so "winner > A0
+                                    # on every seed" cannot fire against
+                                    # anything. A property of the BATTERY, so it
+                                    # is checked here with the other rig facts —
+                                    # before any arm is read, let alone scored.
+    if m["a0_trained"] != 1.0:
+        return Status.VOID          # the anchor did not train: no null, no
+                                    # claim. This is the ONE training failure
+                                    # that still VOIDs; every other arm's is a
+                                    # scored disqualification (part 3).
     # Matched-budget floors (unpark disposition, 2026-08-25). Below here,
     # every arm-local conjunct is computed over ELIGIBLE arms only; an
     # ineligible arm's rows are recorded, never certifying.
@@ -1187,8 +1310,12 @@ def _check(m: dict, c: dict):
         return Status.VOID          # no null, no claim
     if m["n_eligible_trunk"] < 1.0:
         return Status.VOID          # non-learners cannot arbitrate (T2.02)
-    if m["marginal_ok"] != 1.0 or m["learn_ok"] != 1.0:
-        return Status.VOID          # a non-learner cannot arbitrate (T2.02)
+    if m["marginal_ok"] != 1.0:
+        return Status.VOID          # a non-learner cannot arbitrate (T2.02).
+                                    # `learn_ok` is REPORTED here, not gating:
+                                    # part 3 moved that failure to
+                                    # `disqualified_arms` so the run names the
+                                    # fragile arm instead of hiding it in a VOID.
     if m["uni_marginal_ok"] != 1.0 or m["uni_learn_ok"] != 1.0:
         return Status.VOID          # a dead unimodal variant blinds the
                                     # leak gate below: a constant predictor
@@ -1211,6 +1338,16 @@ def _check(m: dict, c: dict):
 
 
 def run(ledger: Ledger | None = None):
+    if _BATTERY_REDESIGN_OWED:
+        raise SystemExit(
+            "UB.10 REFUSES: the battery redesign ordered on "
+            "`ub10-seed-fragility-and-saturated-battery` (2026-09-08, DUE "
+            "2026-09-15) is INCOMPLETE. Parts 2 (A0_HEADROOM) and 3 (per-arm "
+            "stability) are implemented and committed; " +
+            _BATTERY_REDESIGN_OWED +
+            " Implement part 1, delete this constant in the same commit, then "
+            "dispatch via scripts/dispatch.sh UB.10. No ledger row is written "
+            "by this refusal.")
     if SELECTED is None:
         raise SystemExit(
             "UB.10 REFUSES: the matched-tuning-budget grid pilot has not "
@@ -1277,6 +1414,89 @@ def _selection_fixture():
     print("SELECTION FIXTURE OK")
 
 
+def _redesign_fixture():
+    """Red-first battery for the two gates the 2026-09-08 redesign added.
+
+    RED FIRST, because the whole point of both gates is that attempt 1 was a
+    quiet no-verdict: a gate that has never been seen to FIRE is a comment. Each
+    case below constructs the exact defect the gate was ordered for, asserts
+    VOID, and then asserts the same rig passes the gate once the defect is gone.
+    `_check`'s later conjuncts are held green throughout so that the returned
+    VOID is attributable to the gate under test and to nothing else.
+    """
+    N_EX = 40                                     # 10 test quads x 4 episodes
+
+    def _correct(acc):
+        k = int(round(acc * N_EX))
+        return [1.0] * k + [0.0] * (N_EX - k)
+
+    def rows(a0_slot, a0_trains=True, a1_trains=True):
+        return [{"seed": sd,
+                 "quads_test": [q for q in range(10) for _ in range(4)],
+                 "arms": {a: {"loss_first": 1.0,
+                              "loss_last": (0.1 if (a != "A0" or a0_trains)
+                                            and (a != "A1" or a1_trains)
+                                            else 2.0),
+                              "acc": {"slot": a0_slot if a == "A0" else 0.90,
+                                      "vslot": 1.0, "afell": 1.0},
+                              "ens_slot": 0.5,
+                              # Per-example correctness for the paired
+                              # bootstrap, consistent with `acc["slot"]` above.
+                              # The trunk arms lead A0 example-for-example, so
+                              # the claim conjuncts are green throughout and any
+                              # VOID below is attributable to the gate under
+                              # test and to nothing else.
+                              "slot_correct": _correct(
+                                  a0_slot if a == "A0" else 0.90),
+                              "uni_vision_slot": 0.5, "uni_audio_slot": 0.5,
+                              "uni_vision_vslot": 1.0, "uni_audio_afell": 1.0,
+                              "uni_vision_loss": [1.0, 0.1],
+                              "uni_audio_loss": [1.0, 0.1],
+                              "swap_drop": {"vision": {t: 0.5 for t in TASKS},
+                                            "audio": {t: 0.5 for t in TASKS}}}
+                          for a in ARMS},
+                 "canary_ok": True, "dropped_frac": 0.0}
+                for sd in SEEDS]
+
+    def agg(**kw):
+        _CACHE.clear()
+        _CACHE.update({"seeds": rows(**kw), "gpu": "fixture",
+                       "backend": "fixture",
+                       "widths": {a: (D_BASE, 1000) for a in ARMS}})
+        return _aggregate()
+
+    ctrl_ok = {"ctrl_swap_ok": 1.0}
+
+    # A0_HEADROOM — the defect it was ordered for: the anchor at ceiling.
+    m = agg(a0_slot=1.0)
+    assert m["a0_headroom_ok"] == 0.0 and m["a0_slot_max"] == 1.0, m
+    assert _check(m, ctrl_ok) is Status.VOID, "A0 at ceiling must VOID the rig"
+    # ...and at exactly the declared margin it is satisfied, not off-by-one.
+    m = agg(a0_slot=1.0 - A0_HEADROOM)
+    assert m["a0_headroom_ok"] == 1.0, m["a0_headroom_margin"]
+    # ...and one step above it fires again: the bar is where it is declared.
+    m = agg(a0_slot=1.0 - A0_HEADROOM + 0.01)
+    assert m["a0_headroom_ok"] == 0.0, m
+    assert _check(m, ctrl_ok) is Status.VOID
+
+    # PER-ARM STABILITY — a trunk arm that fails a seed is DISQUALIFIED and
+    # NAMED; it must not VOID the run, which is what attempt 1 did.
+    m = agg(a0_slot=0.60, a1_trains=False)
+    assert m["disqualified_arms"] == ["A1"], m["disqualified_arms"]
+    assert m["learn_ok"] == 0.0, "the number keeps its original meaning"
+    assert m["arm_trained_all_seeds"]["A1"] == 0.0
+    assert _check(m, ctrl_ok) is not Status.VOID, \
+        "a fragile TRUNK arm is a scored disqualification, never a rig VOID"
+    assert ARMS[int(m["winner"])] != "A1", "a disqualified arm cannot win"
+    # ...but the ANCHOR failing to train still VOIDs: no null, no claim.
+    m = agg(a0_slot=0.60, a0_trains=False)
+    assert m["a0_trained"] == 0.0 and "A0" in m["disqualified_arms"], m
+    assert _check(m, ctrl_ok) is Status.VOID, "no null, no claim"
+
+    _CACHE.clear()
+    print("REDESIGN FIXTURE OK (A0_HEADROOM fires; stability disqualifies)")
+
+
 if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == "smoke":
@@ -1284,6 +1504,7 @@ if __name__ == "__main__":
         # Patches the UB.9 rig's quad count DOWN (never the gates) so data
         # generation fits one free core; production shapes are preserved.
         _selection_fixture()
+        _redesign_fixture()
         from . import ub_9_heard_not_seen as ub9
         ub9.N_QUADS, ub9.N_TEST_QUADS = 24, 6
         globals()["EPOCHS"] = 2
