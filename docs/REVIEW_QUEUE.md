@@ -5762,3 +5762,55 @@ retrospectively, the two sibling conjuncts armed in the SAME commit read
 requiring that line in any commit that arms a conjunct on a PASSing spec**, the
 way a `VOID-FORECLOSED:` declaration already requires it. That is a contract
 change and therefore this desk's, not the builder's.
+
+## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
+
+ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | OPEN
+    DUE: 2026-09-17 | a GRAMMAR decision, and therefore this desk's: may a live
+    non-`HELD` row declare `WAITS-ON: <row id>`? Taken from `review-queue`'s own
+    `next_free_due` rather than chosen by hand. PROPOSED, deliberately NOT
+    implemented — the 93rd audit ordered it in that shape ("Propose it; do not
+    implement it ahead of B2"), B2 shipped in `6ddd09c`, and this changes the
+    format the Review itself writes in, so imposing it unilaterally would be
+    the builder editing the desk's own grammar.
+    BILL: zero certificates if refused. If adopted: `experiments/review_queue.py`
+    is `T0.31`'s only `IMPL_DEPS`, so implementing it stales and re-buys `T0.31`
+    (~1.6 s, and it would arrive as a strengthening, 18 -> 19 properties).
+
+**THE MEASUREMENT, which is the whole case.** Fourteen live dated rows came due
+on 2026-09-13 against a measured capacity of six. **Six of them share one root**
+— the `w0-too-shallow` W1 design — and they say so ONLY in body prose, in
+sentences like *"in light of the `w0-too-shallow` design"*. `review_queue.py`
+reads DECLARED fields and never prose, deliberately and correctly (`champions.py`
+learned on `901f7fc` what a regex over prose costs). So the pile histogram can
+print *"14 rows"* and cannot print *"14 rows, 6 of them behind one root"* —
+which is a different and much more actionable sentence, because six rows behind
+one decision is ONE sitting's work misread as six, and the other eight are the
+real overflow.
+
+**THE PROPOSAL.** Allow a third optional body line beside `DUE:` and
+`BLOCKED-BY:`, in the same idiom:
+
+    WAITS-ON: <another row id> | why this row's answer depends on that one
+
+**Why not `BLOCKED-BY:`, which already exists.** `BLOCKED-BY:` buys
+ageing-exemption, and that is exactly wrong here: **these rows SHOULD age.**
+They are live promises with dates, and the desk is answerable for them on those
+dates whether or not their root has been decided. `WAITS-ON:` would buy nothing
+at all — no exemption, no re-dating, no change to OVERDUE or STALE. It is
+declaration-only, so that a reading which already exists can group by it.
+
+**What it would buy, stated as the one line it makes printable:**
+
+    14 rows due on or before 2026-09-14, 6 of them behind one root
+    (`w0-too-shallow`) — the pile is 9 decisions, not 14.
+
+**WHAT THIS DESK SHOULD DECIDE, and the honest case against.** Adopting it
+means every future router owes a judgment about coupling, and a declared field
+that is optional and unenforced drifts into being written by whoever remembers
+— at which point the grouped count is confidently wrong rather than absent,
+which is worse than today. The builder's own view, offered and not acted on:
+that risk is real and is the reason this is proposed rather than shipped. A
+cheaper variant exists if the desk prefers it — `WAITS-ON:` permitted but the
+grouped line printed only when EVERY row in a pile declares one, so a partial
+adoption prints nothing instead of a wrong number.
