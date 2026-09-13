@@ -5434,3 +5434,40 @@ LLM spend this family would have made since 09-02); touching `ARM_ASK`, the
 pool or `SCAFFOLD` re-keys **every** verdict and re-buys the pass outright,
 which prices option "make dominance informative by weakening the copying
 bonus" honestly rather than after the fact.
+
+ROUTED: pass-certificates-are-not-re-evaluated-when-a-dependency-falls | 2026-09-13 | Review FULL Part 2 (`d44d21a`) | OPEN
+    DUE: 2026-09-16 | a small instrument owed by the builder: a printed,
+    floored count. Date taken from `review-queue`'s own `next_free_due` (the
+    mechanical answer at the time of routing: 09-13 carried 14 promises
+    against a measured capacity of 6, 09-16 was the first date with room),
+    not chosen by hand.
+
+    THE QUESTION. `T2.10` fell to FAIL on 2026-08-31 under the paraphrase
+    conjunct this desk ordered. `T6.03` declares `depends_on: [T2.10, T0.05]`
+    and went on rendering `[PASS]` in `run status` for THIRTEEN DAYS, until a
+    Part 2 re-run demoted it to BLOCKED this morning. Nothing was wrong with
+    the runner: it refuses a blocked spec correctly, and it did. The gap is
+    that the BOARD reports a STORED status, and no organ re-evaluates a
+    standing PASS when a spec beneath it dies. A certificate is a claim that
+    could be re-derived today; `T6.03`'s could not be, and the ladder said
+    otherwise every hour for a fortnight.
+
+    SCOPE, MEASURED AND HONEST — this is a narrow class, not a sweep. Over all
+    246 registry entries: at 06:37 today exactly ONE PASS stood on a non-PASS
+    declared dependency (`T6.03` <- `T2.10 FAIL`), and after the re-run exactly
+    one does (`LF.02` <- `T6.03 BLOCKED`, the second-order casualty). The
+    finding is the MECHANISM and its silence, not a backlog. Said plainly
+    because the temptation was to report the mechanism at sweep scale.
+
+    THE ASK. Print `pass_on_dead_dependency` in `run status` alongside the
+    other ratchet counters and floor it SHRINK-ONLY at its measured value.
+    It is the same shape as `fail_unowned`: a quantity that is zero when the
+    board is honest, that nothing today computes, and whose first non-zero
+    reading is a certificate the project believes and cannot re-derive. Its
+    natural home is `experiments/coverage.py`, which already walks
+    `depends_on`.
+
+    STALENESS BILL. None. The instrument reads the ledger and asserts nothing
+    about any spec; no threshold moves and no row re-runs. The separate and
+    already-owed cost is `T6.03`'s own certificate, which is bought when
+    `T2.10` is repaired — tracked on `T2.10`'s own repair path, not here.
