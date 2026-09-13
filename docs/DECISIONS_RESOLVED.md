@@ -1196,3 +1196,40 @@ Evidence: `docs/DECISIONS_NEEDED.md` D26 entry + its three EVIDENCE ADDENDA
 append; `scripts/usage_attribution.py`; `scripts/lib_usage.sh` `pace_gate`;
 `/data/jack-logs/usage_ledger.jsonl`; `docs/OVERSIGHT.md` 89th audit B1, B2,
 RANK 1.
+
+## SO.10 — TIE — laplace-full
+laplace-full leads laplace-w30 by only 0.26 sigma (margin 1.5). The choice does not matter yet; taking the cheapest tied arm (laplace-full, cost 0).
+
+metric: `div_lastq`  ·  null 0.044 ± 0.069  ·  gate mode: `screen`
+
+> **screen rationale** (why these arms are observables, not learners): The arms are OBSERVABLES, not learners, and the rig makes that structural rather than asserted: every arm is a deterministic function of one already-recorded evidence stream that no arm can perturb (the diary holds the claim and the finding; the follow decision is never recorded, and `rng_agent` draws once per round whatever the rule returns). A low score is therefore a property of the RULE — full-history Laplace cannot migrate, last-claim-only is memoryless — and not evidence that its run was broken, which is exactly the case `validity` mode would mis-VOID. The gate itself is unmoved at 3 sigma and MIN_FINISHERS still applies.
+
+| arm | mean | sigma over null | gate | cost |
+|---|---|---|---|---|
+| laplace-full | 0.722 | 5.79 | pass | 0.0 |
+| laplace-w30 | 0.689 | 5.11 | pass | 1.0 |
+| exp-decay-h15 | 0.678 | 5.91 | pass | 1.0 |
+| last-1 | 0.544 | 3.60 | pass | 2.0 |
+| control:pooled-scalar | 0.044 | 0.00 | FAIL | 0.0 |
+
+**THE ARM THIS TIE NAMES DID NOT TAKE THE SEAT, AND THE ROW IS THE AUTHORITY**
+(builder, 2026-09-13, appended by hand under the machine-written verdict above
+so nobody adopts `laplace-full` off this table). `run_bakeoff` arbitrates the
+METRIC. `SO.10` recorded **FAIL**, because the spec pre-registered a second
+gate the decision primitive cannot see: the winner must be ELIGIBLE to hold the
+seat, and `laplace-full` **cannot migrate** — after the advisors swap roles its
+divergence is **negative on every seed** (−0.133 / −0.067 / −0.133 against
+`MIN_MIGRATE` 0.40). It goes on trusting the voice that is now lying. The
+cheapest arm won the headline number by being unable to forget.
+
+Per-arm eligibility, all three seeds (`prior_ok` / `noleak` / `migrate`):
+`laplace-w30` 1/1/1 · `exp-decay-h15` 1/1/1 · `laplace-full` 1/1/**0** ·
+`last-1` 1/**0**/1 · control `pooled-scalar` **0**/1/**0**.
+
+**The Person-model seat therefore stays VACANT** — that is the spec's
+pre-registered consequence, not a judgement made after seeing the number, and
+re-ranking to the best *eligible* arm after the fact is exactly the move
+pre-registration exists to forbid. Two eligible candidates are now measured and
+tied; which of them the seat goes to, and whether a seat's race should screen on
+admission BEFORE it scores, is routed to the Review as
+`so10-tie-break-hands-the-seat-to-an-ineligible-arm`.
