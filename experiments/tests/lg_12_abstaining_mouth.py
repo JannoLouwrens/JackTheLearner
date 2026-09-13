@@ -124,6 +124,72 @@ exactly one of the two models speaks, because a mouth swap that changes
 WHETHER he speaks is a different failure from one that changes what he means.
 The selected margins themselves are recorded per (model, seed).
 
+POST-RUN RECORD — attempt 1, 2026-09-13T05:15:13, commit bd4cb61 (the
+pre-registration commit), clean tree, 1.24 s, zero new verdicts. **FAIL**,
+and the verdict is the least interesting thing in it.
+
+WHAT FAILED, worst seed, arm / swap:
+
+    match_on_spoken      0.582 / 0.673   vs MATCH_MIN      0.90
+    unanimity_on_spoken  0.091 / 0.083   vs UNANIMITY_MIN  0.90
+    swap_agree           0.818           vs SWAP_AGREE_MIN 0.90
+    utter_rate           0.917 / 0.833   vs UTTER_MIN      0.50   (CLEARED)
+
+Every rig gate green (liveness 1.0, variety 1.0, verdicts_missing 0,
+leak_draws 0, gate_rejected_fab_frac 1.0, speak_silence 0.0,
+margin_at_grid_top 0.0, n_both_speak 10-11 of 12) and the null alive and
+beaten (null_utter_rate 1.0 — it was NOT silenced — null_match_on_spoken
+0.044 / 0.083 against 0.35). So this is a verdict about the mechanism.
+
+THE MEASUREMENT THAT MATTERS: THE ABSTENTION KNOB HAS NO RESOLUTION. Over
+all 72 (trial, model) cells the dominance the whole design turns on spans
+
+    dom  in  [1.383, 1.826]   mean 1.600, sd 0.080
+
+— a range of 0.44 nats/token on a 0.0-5.0 grid. Twelve of the sixteen grid
+points are therefore IDENTICAL (utter_rate 1.000, match 0.694), the
+thirteenth removes two trials of thirty-six, and the fourteenth removes all
+of them. The selection rule was not badly chosen and the leave-one-seed-out
+calibration worked exactly as designed; there was simply nothing for it to
+select BETWEEN. Measured frontier, pooled over 3 seeds, MODEL_A:
+
+    margin   0.0 .. 1.0   utter 1.000   match 0.694   unanimity 0.222
+    margin   1.5          utter 0.944   match 0.682   unanimity 0.206
+    margin   2.0 .. 5.0   utter 0.000   match   ---   unanimity   ---
+
+Abstaining made him very slightly WORSE (0.694 -> 0.682): the trials where
+the intent fails to lead the pool are not the trials where the sampler
+drifts, so silence removes no error. Dominance and fidelity are, here,
+essentially independent.
+
+AND THE BAR WAS UNREACHABLE BY ARITHMETIC, WHICH IS COMPUTABLE WITHOUT A
+SINGLE SEED. The draw is a softmax over CANDIDATES, not meanings: 3
+phrasings of the intent against ~14 other candidates trailing by the margin
+m, so P(intent draw) ~ 3 / (3 + 14 e^-m), and MATCH_MIN 0.90 needs
+
+    m >= ln(14 / (3 * (1/0.9 - 1))) = 3.74 nats/token
+
+against a scaffold whose maximum observed dominance is 1.83 — the required
+margin is 2.0x the largest value this mechanism ever produces and 27 sd
+above its mean. No setting of MARGIN, and no tuning rule over any grid,
+could have cleared MATCH_MIN. The mechanism was foreclosed before it ran.
+
+WHY IT IS DEGENERATE, for whoever designs the successor: `ARM_ASK` contains
+the canonical intent sentence VERBATIM, so the intent's phrasings collect a
+copying bonus that is nearly the same size on every trial. The scaffold that
+makes the intent win at all is the same scaffold that makes its margin a
+constant. A fidelity selector needs a quantity that VARIES with whether the
+draw will be right; this one does not.
+
+WHAT THIS KILLS AND WHAT IT DOES NOT (the registry's `kills` field, executed):
+selection-with-a-dominance-margin over a frozen mouth's phrasings is not the
+repair for LG.10's finding. Nothing in Jack is deleted. LG.10's bars and its
+FAIL both STAND, as they did before this run, and the remaining paths are the
+ones LG.10's disposition named — a stronger chooser: a bigger frozen model, or
+structured decode. Routed to the Review as `lg12-abstention-knob-has-no-
+resolution`; do not re-run this spec with a different grid, because the grid
+was never the binding constraint.
+
 COVERS: language (parent) (claim).
 """
 from __future__ import annotations
