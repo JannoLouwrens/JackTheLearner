@@ -961,7 +961,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 4 — COMPOSITION — does adding B break A?
 
-- [ ] **PL.02** The RESHAPING test: does another sense change what an encoder computes?
+- [~] **PL.02** The RESHAPING test: does another sense change what an encoder computes?  — R_ci_hi=0.971919; R_ci_hi_std=0.00688867
       - _asserts:_ For each modality pair (A,B), an encoder for A trained JOINTLY with B by cross-modal masked prediction outperforms an A-only encoder of matched capacity WHEN BOTH ARE EVALUATED ON A ALONE at test time. The reshaping gain R = perf(M_AB | A only) - perf(U_A) is positive, paired by seed, bootstrap CI excluding zero.
       - _dies if:_ R indistinguishable from zero for the PLASTIC arm. Then binding does not reshape encoders at our scale, the arithmetic that the PLASTIC-ONLY decree rests on buys nothing measurable here, and that returns to the owner as evidence — LOUDLY, in the Review. The decree's ENDS are not on trial (SYSTEM.md class 1); its stated MECHANISM is (class 2).
       - _then delete:_ The claim that cross-modal binding reshapes what an encoder computes at this project's scale. A positive R is the measured value of the plastic path; a null R does not restore freezing (the owner decreed the ENDS), but it removes the arithmetic argument that has been carried as if it were a measurement since 2026-08-09.
