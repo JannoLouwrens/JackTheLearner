@@ -15697,3 +15697,134 @@ move, each arm scores against its OWN untrained twin, and `T2.01`'s 38
 transitively-blocked specs are behind it. **And the Person-model seat is still
 VACANT with two measured, tied, eligible candidates waiting on 09-17** — the
 same morning my row and its sibling come due.
+
+---
+
+## 2026-09-13 ~18:0x–18:4x UTC — the board was empty and verified three ways, and the one defect I found was in the sentence the next iteration reads first
+
+**Model and meter, read at the top of the slot from `scripts/claude_usage.py`
+and not from any page.** `week:Fable` **100%** (pinned, so the chain walked me
+to **Opus** — that is expected and self-announcing, not a fault);
+`week:all models` **84%**, which is the gate, with the hard stop at 90%. No
+`PACING:` line in this slot and no skip streak. Ran on Opus; planned the unit
+accordingly — one thing, chosen rather than scattered.
+
+**THE BOARD IS EMPTY AND I VERIFIED IT FROM THREE INSTRUMENTS RATHER THAN
+INHERITING IT.** `run next` returns **44** runnable specs; every one is settled
+FAIL/VOID under a standing do-not-re-dispatch directive, PARKED, PILOT-BLOCKED,
+or decision-HELD (`HR.1 <- D19`). `run blocked` ranks `T1.08` with **45** specs
+behind it. `run coverage` says the same from the other end without being asked:
+5 cost classes NEWLY EMPTY, 4 of them with **no path in**, 1 FILL-HELD by `D19`.
+Zero fresh dispatchable units. Enumerated with `ready(ledger)` directly so the
+`avail[:12]` truncation could not hide the cheap end.
+
+Every dated item this desk was handed is already discharged — 93rd audit B1
+(`a3a090a`), B2 (`6ddd09c`), B3 proposed (`59de4ec`), B4 (`d2de64a`); PROGRESS
+items 4 and 5 (`445b9e1`, `e7a79e0`). Item 1 (`T2.10`) is foreclosed at 0.0667
+against 0.10. Item 2 (`D25`) is **not fireable today** — `decisions.main()`
+marks overdue at `(today - decide_by).days > 0`, so the earliest firing day is
+`decide_by + 1` = **09-14**, as `025f0d1` already established this morning
+against two pages that said otherwise. Item 6 (`T6.03`) stays un-run.
+
+**THE FINDING, and it is about this file.** PROGRESS item 3 and the prompt's
+`1^6` item 3 both order **`D1.0` attempt 3 into W37** — true when written at
+06:37. At **10:05** `T1.08` recorded FAIL under a conjunct armed at 06:37;
+`D1.0` declares `depends_on: T1.08`; the dispatch became illegal. **Nine
+separate journal entries between 10:11 and 16:xx say so**, one of them naming
+the consequence exactly (*"W37 opened today with a full 30 GPU-hours and there
+is still nothing legal to dispatch into it"*). **The 17:26 closing hand-off
+then reads: "`D1.0` attempt 3 into W37 is the one large unit still standing —
+its two-step precondition is satisfied."**
+
+Nothing was forgotten. The mechanism is ORDER, not care: a `NEXT ITERATION`
+block is written LAST, and the cheapest source for *what is the big unit* is
+the priority page the slot opened with — which sits at the top of the writer's
+context while the nine corrections sit in the middle of its own output. So the
+one paragraph the next iteration acts on first is structurally the one most
+likely to be sourced from the stalest thing the slot read. Lesson written
+(`docs/LESSONS.md`, addendum to *"A handoff is a CLAIM"*), with the rule:
+**a hand-off's runnability claims are ledger-derived and must be re-derived at
+slot end, never copied from the morning's page.**
+
+**NO INSTRUMENT WAS BUILT FOR IT, AND THE DECLINE IS IN WRITING.** A
+`handoff-check` reading is buildable and is not prose-semantics — spec ids are
+a closed vocabulary and every judgment would come from the ledger — but the
+realised cost of this instance was **zero**, because `run_spec` refuses an
+unsatisfied dependency (92nd audit B1, shipped the same morning and meeting its
+first real dispatch that day). SYSTEM.md binds: an organ must cite the real
+failure it prevents, and this one is prevented downstream. The residue is
+honest and named — the refusal fires at DISPATCH, the hand-off fires at
+PLANNING, so the loss is an iteration's first few minutes, not GPU-hours. If
+the regression recurs with a cost the refusal does not bound, THAT instance
+buys the instrument and should cite this declined one.
+
+**THE ONE THING I ADDED TO THE DESK'S PAGE: the foreclosed dispatch has
+PERISHABLE money and nobody had priced it.** Second annotation on
+`t108-bar-set-from-n1-is-now-the-projects-largest-blocker` — **the date is NOT
+touched**, 93rd-audit-B1 precedent, row stays OPEN and DUE 2026-09-16.
+Arithmetic read from `gpu.Budget`'s own accessor, never from a page (the 09-10
+scar: `_week()` is `%Y-W%U`, Sunday-start):
+
+    tracker week key   2026-W37       (Sun 09-13 -> Sat 09-19)
+    kaggle charged      0.8183 h
+    remaining          29.1817 h of 30, expiring end of Sat 2026-09-19
+
+Of the 44 runnable specs, **13 carry a GPU cost class and not one is
+dispatchable**: 6 never-run and every one PARKED / PILOT-BLOCKED /
+VENUE-UNAFFORDABLE (`SM.02`, `T2.11`, `T3.10`, `SM.03`, `DP.04`, `LC.07`), 6
+settled FAIL/VOID under standing directives (`T2.05`, `T2.07`, `T2.15`,
+`T3.07`, `T4.02`, `UB.10`), and the thirteenth is `T1.08` itself, whose only
+genuinely-different run is the ~0.72 GPU-h backend-confound arm-pair **that row
+exists to rule on**. So the 09-16 decision is the only thing between a full
+free allocation and a fourth expiry. **This is an INPUT, not pressure to rule
+early, and it weakens no prohibition: a dying quota is still not a reason to
+manufacture a dispatch.** The frame is the 08-29 diagnosis — *inventory, not
+uptime* — and today is its cleanest instance yet: loop awake, meter at 84%,
+allocation fresh, builder not the constraint, inventory empty because a
+conjunct armed at 06:37 settled at 10:05. Three weeks (61.0 h) were written up
+as post-mortems after the hours died; this is the same fact published on day
+one of the week instead of after it.
+
+**Instruments at slot end.** `render` **108/249**, unchanged — I ran no spec and
+wrote no ledger row, by design. `run status`: no `!! MOVED` ratchets, no
+DRIFTED claims, and the 2 stale pre-`impl_sha` entries are the same benign pair
+as this morning. `decisions --check` rc=0, **every ratchet at floor**
+(0/10 undeclared, 0/3 unrouted-owner-ask, 0/0 default-action-expired, 0/0
+firing-diff). `champions --check` rc=0 at floor. `review-queue` rc=0, **0
+violations**, pile 13 on 09-13 unchanged — my annotation adds no `DUE:` and no
+`ROUTED:` line, so it moves no count, which was the point of annotating rather
+than routing. `coverage` EXIT 2 on the same two owned-and-routed counts
+(`claim_dead` 4, `new_unrunnable_citation` 4). **No ratchet moved in this slot
+and none should have.**
+
+**Housekeeping.** 12 claude processes on the box, so `git commit` with named
+paths only and no `git add -A`; the tree held nothing but my own two files
+before I started and nothing of anyone else's is in the commits. No spec run,
+no GPU dispatch, no detached launch, no background process, nothing to declare
+in `declared_pids`. CPU billed: none — no registered run.
+
+**NEXT ITERATION — derived at slot end from `run next` / `run blocked`, per the
+rule this slot just wrote, and NOT copied from any priority page.**
+
+  1. **`D25`'s armed default is fireable from 00:00 tonight** (decide_by
+     09-13, earliest fire `decide_by + 1` = 09-14) — option (iii) FIX THE SEAL,
+     BUY NOTHING. Required wording: *"the owner did not rule by 2026-09-13, so
+     the pre-registered default fired."* Pre-commit check
+     `--firing-check WORKTREE`, **not `HEAD`** (the `HEAD` form audits the
+     previous commit). `D19` follows on 09-15, not 09-14. **Take the count from
+     `python -m experiments.decisions`, never from a page** — that instruction
+     has now been right against two pages in two days.
+  2. **The 13 rows dated 09-13 go OVERDUE at midnight** and `review-queue` goes
+     red for the first time since 09-03. That is the promise breaking, not the
+     instrument, and `IMMINENT` (`6ddd09c`) forecast it this morning.
+  3. **The board is otherwise EMPTY and I checked it, so do not go hunting.**
+     Verified this slot: `run next` 44 runnable / 0 dispatchable; `run blocked`
+     `T1.08` first at frees 3 / blocks 45; `coverage` 4 empty classes with no
+     path in. Do **NOT** re-run `T2.10` (foreclosed 0.0667 vs 0.10), `T6.03`
+     (BLOCKED behind it), `LG.13` (nothing moves without a new selector), or
+     `T1.08` (its 09-16 row owns it). **`D1.0` is ILLEGAL — `run_spec` refuses
+     it behind `T1.08`'s FAIL — whatever any page says about W37.** That
+     sentence is the whole point of this entry.
+  4. **W37 has 29.18 free GPU-hours expiring Sat 09-19 with no legal buyer.**
+     Do not manufacture one. The fact is now on the `T1.08` row where the
+     decision that owns it can see it.
