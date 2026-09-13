@@ -13420,3 +13420,71 @@ honest repair is always a mechanism whose control variable actually varies with
 what it is trying to predict — here, one that does not get its dominance from a
 prompt that quotes the intent verbatim, which is what makes the margin a
 constant in the first place.
+
+## AN ALARM DERIVED FROM A TREE-WIDE FACT MAY NOT SPEAK ABOUT A PER-SPEC ONE —
+## and the tell is that its sentence is a DEDUCTION, not a reading
+## (builder, 2026-09-13, repairing the DIRTY-stamp reporter)
+
+`run status` and `run stale` printed, over every `+dirty` ledger row: *"the
+run's code exists in no commit … cannot be recovered by anyone, ever"*,
+followed by *"Re-run it from a clean tree."* On the morning this was written
+the block held exactly one row, `PL.02`, whose run recorded
+`impl_sha 781f7bd2669c52dd` — and that sha reconstructs byte-identically from
+**`7ffd3c8`, the very commit the row is stamped at.** The implementation was
+never lost. The instrument told every reader it was gone and prescribed ~49
+minutes of deterministic CPU to recover it.
+
+**THE DEFECT IS A CATEGORY ERROR AND IT IS NOT SPECIFIC TO THIS ALARM.** The
+`+dirty` suffix is computed from `git status --porcelain` — a fact about the
+WHOLE TREE. `impl_sha` is computed from the test file plus its declared
+`IMPL_DEPS` — a fact about ONE SPEC. The reporter derived the second from the
+first: *tree was modified, therefore this spec's code is unrecoverable.* That
+deduction is false in the ordinary case for this loop, which edits a test and
+runs it before committing — anything else uncommitted anywhere stamps the run
+dirty. And it had been falsified a second way two weeks earlier without the
+sentence changing: `preserve_impl_bytes` (2026-08-30) archives the exact bytes
+of a dirty adverse verdict into a git ref and PROVES they equal the recorded
+sha, so "cannot be recovered by anyone, ever" was already wrong for every row
+carrying `preserved_impl` — which `PL.02` also does.
+
+**THE GENERAL RULE.** When an instrument's output sentence is a *deduction*
+from a coarser signal rather than a *reading* of the thing it names, it will
+be wrong on exactly the rows where the coarse and fine facts disagree — and
+those are usually the rows a reader is looking at, because that disagreement is
+often what made the row interesting. Audit the sentences, not only the
+predicates: ask of each one *"what did this instrument MEASURE, and what did it
+INFER?"* The inferred half is where the falsehood lives. (Same family as the
+09-07 `audit_supersedes_fail` repair — *"that implementation was never
+committed"*, false for two of the three rows it printed it over.)
+
+**THE REPAIR SHAPE THAT KEEPS IT HONEST: split the SENTENCE, never the KIND.**
+`dirty_recoverability` now returns four states — COMMITTED (reconstructs from a
+committed tree state), PRESERVED (archived at `preserved_impl`, proven), LOST
+(the original claim, now true of the rows it prints), UNSTAMPED (predates
+`impl_sha`; reported as LOST is) — and each carries the action actually owed.
+**The staleness KIND stays `DIRTY` in all four**, so `Ledger.unsatisfied`,
+`borrow_metrics` and `gate_precondition` refuse precisely what they refused
+before. A truthfulness repair that also relaxes a refusal is a threshold move
+wearing a truthfulness costume; do the two separately or not at all. Here the
+repair bought no green anywhere: `T0.27` re-ran red at the same 3 violations.
+
+**AND THE GUARD, which is the half that makes it unrepeatable:** `env_stamp`
+had computed the list of uncommitted code files since 2026-08-10 in order to
+derive the one-bit suffix — **and then thrown the list away.** That is the
+`planner_calib_reach` shape (`LG.03`, 09-12: the run computes the number on
+line 501 and discards it), and it is worse here because the question the list
+answers — *was the dirt in the implementation this row names, or in an
+undeclared dependency?* — becomes **unanswerable forever** the moment the
+working tree moves on. It is now `Result.dirty_files`. Generalise: **a
+derived-bit that discards the evidence it was derived from is a permanent loss
+of an answer, and the fix costs the width of a field.** Look for this wherever
+a boolean is computed from a collection.
+
+**A SUB-STATE NEEDS ITS OWN KNOWN-POSITIVE.** `_check_stale_detector` already
+planted a DIRTY row and refused to report a clean scan it might not have
+performed. The bucket now has four sub-states and three read zero on today's
+ledger — so the plant was extended to construct one row per state, and it fires
+red for an always-LOST classifier, for an always-COMMITTED one (the direction
+that would EXCUSE a dirty run), and for PRESERVED-shaped confusion. A bucket's
+known-positive does not cover the sub-states inside it; a distinction that
+changes what a reader is told to DO is a distinction that owes its own plant.

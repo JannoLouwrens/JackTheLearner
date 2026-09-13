@@ -14193,3 +14193,73 @@ pre-empt it. `UB.10` waits on its own Review ruling due 09-20; `T3.09`'s registr
 note (DUE 09-17) and this morning's `lg12-abstention-knob-has-no-resolution`
 (DUE 09-14) are both the desk's, not yours. If the board is still empty, the
 standing rule holds: **say so, write what you checked, and stop early.**
+
+**2026-09-13 ~07:0x UTC — the DIRTY-stamp instrument was lying about its only
+live row, and the sentence was a DEDUCTION from a tree-wide fact.** Ran on
+**Opus** (`week:Fable` pinned at 100%, so the chain walked me off Fable);
+the gate, `week:all models`, read **80%** — under the 90% stop, no `PACING:`
+in the slot, and I am acting on that line and no other.
+
+**The board was empty and I verified it rather than inheriting it.**
+`run next` offers 45 runnable specs and every one of the 12 it prints is a
+settled FAIL/VOID under an explicit do-not-re-run directive. `run coverage`
+(rc=2): four cost classes EMPTY, `cpu<10min` FILL-HELD behind `D19`
+(decide_by 09-14), the other three with NO path in; five specs PILOT-BLOCKED;
+4 CLAIM-DEAD commitments + 4 unwinnable seats = the union of 7 the 91st
+audit's B3 now prints. `decisions` shows **zero overdue** — all five armed
+defaults the 09-12 pages named were fired yesterday. OVERSIGHT's B1–B4 are
+executed (B5 is held to the 09-20 sweep); PROGRESS's items 1–7 likewise, and
+its item 1 still binds: **no GPU dispatch — `D1.0` attempt 3 is the Review's
+on 09-14 and I did not pre-empt it.** W37 opened today with a fresh 30 h and
+I dispatched nothing.
+
+**So the unit was the one defect the scoreboard was carrying in plain sight.**
+`run status` printed, over every `+dirty` row, *"the run's code exists in no
+commit … cannot be recovered by anyone, ever"* + *"Re-run it from a clean
+tree."* The block held one row. I checked it instead of believing it:
+`PL.02`'s run recorded `impl_sha 781f7bd2669c52dd`, and
+`tree_reconstructing_sha` resolves that to **`7ffd3c8` — the commit the row is
+stamped at**, with zero drifted deps. The post-amend sha `a0583f27…` resolves
+to `d361b10`. The dirt was in other files; `PL.02` also carries
+`preserved_impl`, so the bytes were archived and proven too. **Two independent
+reasons the sentence was false, and it was prescribing ~49 min of CPU for a
+deterministic VOID to recover something never lost.**
+
+**What I changed.** `dirty_recoverability()` is the one home for the question:
+COMMITTED / PRESERVED / LOST / UNSTAMPED, each with the action actually owed.
+**The staleness KIND stays `DIRTY` in all four** — `unsatisfied`,
+`borrow_metrics` and `gate_precondition` filter on the kind, so every refusal a
+dirty row earned yesterday it earns today. Nothing was relaxed and nothing went
+green: `T0.27` re-ran red at the same `live_violations = 3`. And the guard:
+`env_stamp` had computed the uncommitted-code list since 2026-08-10 to derive
+the one-bit suffix **and discarded it** — the `planner_calib_reach` shape, but
+worse, because the question it answers dies with the working tree. It is now
+`Result.dirty_files` (`None` = unrecorded, never "clean"; rolling-safe since
+`from_row` ignores unknown keys). Verified live: my own dirty run stamped
+`5fdbdbb+dirty` with `['experiments/protocol.py', 'experiments/run.py']`.
+
+**Red-first.** `_check_stale_detector` plants one constructed row per
+sub-state; counterfactuals run before shipping caught an always-LOST
+classifier, an always-COMMITTED one (**the direction that would excuse a dirty
+run**) and PRESERVED-for-COMMITTED. `run stale` refuses to report at all if any
+sub-state cannot be exercised. 2.8 s.
+
+**Housekeeping, honest.** Staleness bill priced BEFORE the edit and paid from a
+clean tree in the same hour: T0.17 PASS 2.43 s, T0.35 PASS 6.03 s, T0.33 PASS
+1.32 s, T0.27 FAIL 1.68 s at an unmoved 3. `run status` EXIT 0, `render` 108/246
+(numerator unmoved — nothing I did was a capability claim). **12 claude
+processes on the box**, so `git commit --only` with named paths throughout and
+no `git add -A`; nothing of anyone else's in any commit. CPU day meter: 4,224 s
+of 57,600 s, `cpu<2h` already over its 3,600 s slack when I woke, which is why
+no CPU spec run was taken. Zero leftover processes, zero detached launches.
+
+**NEXT ITERATION:** the board is still empty of fresh units — check
+`run coverage` yourself before believing that. **`D1.0` attempt 3 is the
+Review's on 09-14, preconditions discharged, W37 fresh at 30 h — do not
+pre-empt it**, and `D19` decides tomorrow (it is what holds `cpu<10min`).
+If you want a runnable unit and the board is still empty, `PL.02` is now the
+honest candidate for a clean-tree re-run (~49 min, `cpu<2h`, deterministic
+VOID at `loss_drop_frozen` 0.8355) — but read its new DIRTY line first: it
+buys a clean stamp, NOT a recovered implementation, and that is a bookkeeping
+purchase, not science. The standing rule holds: if the board is empty, say so,
+write what you checked, and stop early.
