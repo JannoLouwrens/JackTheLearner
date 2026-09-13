@@ -14097,3 +14097,75 @@ project's largest mass is explicitly two repairs deep. Pinned by T0.36, whose
 control is that same walk reconstructed by deletion; `unreachable` is unchanged
 at 97, because an attribution repair may re-label WHO blocks a spec and must
 never change WHICH specs are stuck.
+
+## A cost tie-break scores ABSENCE, and the absent thing is sometimes the capability (2026-09-13, builder)
+
+`SO.10` raced four trust rules for the Person-model seat. The verdict was a TIE
+at 0.26 sigma, and `bakeoff.py` resolved it the way this project's own
+earn-your-parameters rule says to — toward the arm carrying fewer tunable
+constants:
+
+    laplace-full   mean 0.7222   cost 0 constants   <- the title
+    laplace-w30    mean 0.6889   cost 1 (WINDOW)       (the incumbent)
+
+**`laplace-full` is cheaper precisely BECAUSE it omits the window, and the
+window is the entire migration mechanism.** When the two advisors swap roles,
+its divergence is **negative on every seed** (−0.133 / −0.067 / −0.133 against a
+0.40 bar): it goes on trusting the voice that is now lying, because a posterior
+over the whole history cannot forget. The parameter the tie-break charged it for
+is the one that lets a person model change its mind.
+
+**The general shape, and it is not about this spec.** A decision primitive
+arbitrates the ONE number it was handed. A cost tie-break then rewards an arm
+for what it does NOT have — and a missing parameter is sometimes a missing
+capability rather than a saving. So the rule is: **if a capability is not in the
+metric, a cost tie-break will actively select against it.** `run_bakeoff`'s
+margin-then-cost machinery is correct and did its job; what it cannot know is
+that an arm is ineligible for the seat it just won.
+
+**What stopped it here was structure, not vigilance.** `SO.10` carried three
+pre-registered eligibility legs beside the score (first-encounter trust exactly
+at the prior; no divergence once attribution is stripped; migration after the
+role swap), so the spec recorded **FAIL** and the seat stayed VACANT. Without
+them the honest reading of `docs/DECISIONS_RESOLVED.md` would have been *"adopt
+laplace-full"* and the repo would have replaced a rule that migrates with one
+that cannot — on a correctly-run, correctly-reported bakeoff. **A bakeoff that
+can only see its metric should be assumed to be selecting on the metric's
+complement too.** Write the admission test as its own pre-registered gate, and
+write it BEFORE the number, because after it the same gate is a post-hoc
+re-rank.
+
+**Corollary, recorded because it was tempting and refused:** with the winner
+ineligible, two eligible arms were left, tied, at equal declared cost. Picking
+between them after seeing the numbers is exactly the move pre-registration
+exists to forbid, however obvious the answer looks. The seat stays empty and the
+seating rule is routed (`so10-tie-break-hands-the-seat-to-an-ineligible-arm`).
+
+## Stripping a field does not remove the information if the SCHEDULE carries it (2026-09-13, builder)
+
+`LG.02`'s null is *attribution stripped at record time*: the speaker becomes
+"someone" and the name is scrubbed from the text, so no record says who spoke.
+It has been the declared null for this rig and for `SO.08`, and it measures
+clean — the shipped rule's stripped divergence is 0.0667 / −0.0333 / 0.1 against
+a 0.20 bar.
+
+`SO.10` ran a memoryless arm (`last-1`: trust the last verified claim) through
+the same null and it diverged at **−0.70 / −0.4667 / −0.6333** — enormously,
+with no record of who said anything. **The advisors ALTERNATE**, so the last
+pooled claim before any speaker's turn is always the OTHER speaker's, and a
+rule with a one-step memory reads speaker identity straight out of the turn
+order. The information the null deleted from the *record* was still in the
+*schedule*.
+
+**The general form: a null removes a CHANNEL, never a FACT.** Ask what else in
+the venue is correlated with the deleted field — ordering, timing, position,
+length, who-goes-first — because a mechanism sensitive enough will find it. The
+incumbent rule was safe here only by accident of its own window: integrating 30
+claims averages the alternation away, so this venue has carried an identity side
+channel for eleven days and no instrument has looked at it until an arm with a
+shorter memory walked past.
+
+**And note which way the evidence pointed.** The leak showed up as a CONTROL
+failing — the arm was disqualified, not the rig — so the cheap reading is *"bad
+arm"* and the expensive one is *"the venue has a second channel"*. Both are
+true. The second one is the only one that transfers.
