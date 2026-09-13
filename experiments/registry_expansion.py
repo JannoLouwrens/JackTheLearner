@@ -8106,4 +8106,109 @@ EXPANSION: list[Spec] = [
                "unlogged placement from unreported to arithmetically "
                "impossible. "
                "  COVERS: social/other agents (rule)"),
+
+    # ── SO.10 — the Person-model seat, raced (builder, 2026-09-13) ───────────
+    # WHY THIS EXISTS. `docs/CHAMPIONS.md` opened the seat *Person model
+    # (trust, attribution, and whose advice proved true)* on 2026-09-13 and
+    # recorded it VACANT with the sentence that commissions this spec: *"how a
+    # person is represented and how trust updates is a MECHANISM with real
+    # arms (per-source Bayesian reliability, recency-weighted track record, a
+    # single scalar, no model at all), and the repo has picked one by
+    # accident."* CHAMPIONS rule 3 says the builder runs the match, and
+    # SYSTEM.md law 3 says a fork whose arms can all be run is not an
+    # escalation but an experiment nobody has written yet. This is that
+    # experiment. The seat is class-2 ARCHITECTURE — contestable by
+    # construction — and the incumbent has held it since LG.02 was written
+    # without ever being raced.
+    #
+    # WHY IT IS CHEAP, AND WHY THAT IS A PROPERTY OF THE RIG RATHER THAN LUCK.
+    # LG.02's world stream is arm-independent: `rng_world` is seeded from the
+    # seed alone, `rng_agent` draws exactly once per round whatever the rule
+    # returns, and the diary records the CLAIM and the FINDING — never whether
+    # he followed. So four rules see byte-identical evidence and differ only in
+    # what they make of it. That is also what licenses `gate_mode="screen"`.
+    #
+    # NOT ONE BAR IN THIS SPEC WAS CHOSEN BY ITS AUTHOR. The learning gate
+    # (3 sigma) and the margin (1.5 sigma) are `run_bakeoff`'s defaults; every
+    # eligibility bar is an LG.02 constant imported unmoved (PRIOR 0.5,
+    # NULL_DIV_MAX 0.20, MIN_MIGRATE 0.40, MIN_PRESWAP 0.40, MIN_DIV 0.40,
+    # TRUTH_BAND, LIE_BAND, NULL_TRUST_BAND). There is therefore nothing here a
+    # preview of the numbers could have tuned.
+    #
+    # SIZING: LG.02's 3-seed run is 1.93 s for ~9 lives => ~0.21 s/life. SO.10
+    # runs 5 rules x 3 seeds x 3 lives (claim, stripped, swap) + 3 null lives
+    # = 48 lives ~ 10 s. Declared cpu<1min on that arithmetic, ~6x headroom.
+    Spec("SO.10", 3, "The trust rule earns its seat, or the seat stays vacant",
+         hypothesis="Among trust-update rules reading the SAME attributed "
+                    "diary on LG.02's certified rig — windowed Laplace (what "
+                    "this project shipped, never raced), full-history Laplace, "
+                    "exponential-decay, and last-claim-only — at least two "
+                    "clear the 3-sigma learning gate over the "
+                    "attribution-stripped null on last-quarter follow-rate "
+                    "divergence, one wins by the 1.5-sigma margin (or ties and "
+                    "resolves to the arm carrying fewer tunable constants), "
+                    "AND the winner is ELIGIBLE to hold the seat: "
+                    "first-encounter trust exactly PRIOR for both advisors on "
+                    "every seed, stripped-attribution divergence within "
+                    "NULL_DIV_MAX, and trust that MIGRATES after the role swap "
+                    "(MIN_MIGRATE) having been right before it (MIN_PRESWAP).",
+         falsified_by="The bakeoff reaches no decision (VOID), or reaches one "
+                      "whose winner is INELIGIBLE — a rule that scores highest "
+                      "by starting the two advisors apart, by leaking speaker "
+                      "identity outside the attributed diary, or by being "
+                      "unable to change its mind when the world changes who is "
+                      "honest. Under either the seat stays VACANT and the "
+                      "finding routes; a high score is not a title.",
+         null_baseline="LG.02's declared null, reused unchanged: attribution "
+                       "stripped at record time (speaker 'someone', the name "
+                       "scrubbed from the text), same rule, same world stream, "
+                       "same metric — scored per arm, and entered into the "
+                       "bakeoff as the incumbent's stripped run.",
+         metric="div_lastq", budget=Budget.CPU_FAST, seeds=3,
+         depends_on=["LG.02", "ME.9"],
+         control="POOLED SCALAR — one global trust over every speaker at once: "
+                 "a diary with no person model in it at all. Entered through "
+                 "`run_bakeoff(controls=)`, so it is scored on the same ruler "
+                 "and never competes; if it CLEARS the 3-sigma gate the "
+                 "verdict inverts to VOID, because the advisors alternate and "
+                 "a rule that cannot tell them apart must not be able to "
+                 "diverge. Its per-seed divergence must also sit below "
+                 "LG.02's MIN_DIV.",
+         kills="The unexamined windowed-Laplace default's claim to the seat. "
+               "If it loses, the seat goes to what beat it; if nothing is "
+               "eligible, the seat is not filled by the incumbent's tenure.",
+         gate_mode="screen",
+         screen_rationale="The arms are OBSERVABLES, not learners, and the rig "
+                          "makes that structural rather than asserted: every "
+                          "arm is a deterministic function of one already-"
+                          "recorded evidence stream that no arm can perturb "
+                          "(the diary holds the claim and the finding; the "
+                          "follow decision is never recorded, and `rng_agent` "
+                          "draws once per round whatever the rule returns). A "
+                          "low score is therefore a property of the RULE — "
+                          "full-history Laplace cannot migrate, last-claim-only "
+                          "is memoryless — and not evidence that its run was "
+                          "broken, which is exactly the case `validity` mode "
+                          "would mis-VOID. The gate itself is unmoved at 3 "
+                          "sigma and MIN_FINISHERS still applies.",
+         notes="THE SEAM IT RUNS ON: `lg_02_liar_loses_him._live(trust_fn=)`, "
+               "added with this spec and defaulting to the shipped `_trust`, "
+               "so LG.02's and SO.08's certified path is unchanged (both "
+               "re-bought PASS on attempt 1 in the seam commit, which is the "
+               "evidence). ARMS MAY SWAP ONLY THE RULE — the world, the diary, "
+               "the decision rule (follow with probability = trust) and the "
+               "scoring are LG.02's, imported, never re-derived, per the "
+               "SO.08 Laplace-import precedent. "
+               "ELIGIBILITY IS NOT THE SCORE, and the separation is "
+               "deliberate: SYSTEM.md's SCORED-AND-INELIGIBLE rule says an arm "
+               "that cannot be seated is still measured and still recorded. So "
+               "every arm's number goes in the row whatever its eligibility, "
+               "and the seat is a second gate on top. "
+               "WHAT A PASS BUYS AND WHAT IT DOES NOT: it seats a champion in "
+               "`docs/CHAMPIONS.md` BY VERDICT with this row as the deciding "
+               "run. It does NOT re-open LG.02, whose gates are untouched, and "
+               "it does NOT claim any new capability for Jack — the kind is "
+               "`rule` on purpose, so nothing here can move a commitment's "
+               "`n_pass`. "
+               "  COVERS: social/other agents (rule)"),
 ]
