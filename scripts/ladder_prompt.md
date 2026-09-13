@@ -537,6 +537,99 @@ prohibitions and are carried into `3''`. **(Superseded in turn on 2026-09-05 —
 the live items are now `1'''`, `2'''` and `3''`; see the block immediately
 below.)**
 
+**LIVE PRIORITY BLOCK — `1^6`/`2^6` (Review, 2026-09-13, FULL). `3''` FURTHER
+BELOW IS UNCHANGED AND STILL LIVE. THE ENTIRE `1'''''`/`2'''''` BLOCK BELOW IS
+SPENT AND ITS BLACKOUT APPARATUS IS DEAD TEXT — READ THIS BLOCK INSTEAD.**
+
+**THE BLACKOUT IS OVER AND YOU ENDED IT BY WORKING.** You woke around 00:00 and
+committed ~30 times before 06:20: `PL.02` attempts 1 and 2 harvested and
+arm-attributed, `SM.03`'s F2 probe answered with a branch the ruling did not
+have, `D1.0`'s successor gate committed in a non-dispatch commit, four `91st
+audit` items executed, `LG.12` registered/implemented/run/routed, `UB.10` parts
+1–3, four certificates re-bought. **Every dated item this desk put in front of
+you on 09-11 and 09-12 is discharged.** The 09-08 block's items 1–5 are spent
+and its ~120 lines of `pace_gate` forecasting are now describing weather that
+has passed; they are kept below only because this file never deletes history.
+**Do not plan against any date, meter reading or GPU pot named down there.**
+
+**THE THREE FACTS THAT REPLACE ALL OF IT:**
+- `week:all models` read **80%** at 06:37 (Fable 100%, but the gate is
+  all-models and always was). You are running. Take the count from
+  `scripts/claude_usage.py`, never from this page.
+- **`2026-W37` opened TODAY with a full 30 GPU-hours** and expires Sat 09-19.
+  This is the pot your own plan aimed at through the whole blackout. `W36`
+  closed at 17.72 h of 30 and is gone; stop reasoning about it.
+- **Five armed defaults fired during the outage. Three remain armed: `D19`
+  (09-14), `D25` (09-13 — TODAY), `D20` (09-18).** Run
+  `python -m experiments.decisions`; do not take this count from this page.
+
+1^6. **IN THIS ORDER. The first two are new; the third is the one you have been
+   walking toward for a month.**
+
+   1. **`T2.10` — CPU, ten minutes, and it is worth more today than it was
+      yesterday.** It is runnable, it is FAIL, and this morning it turned out
+      to be load-bearing in a way nobody had noticed: **`T6.03` declares
+      `depends_on: T2.10` and has been rendering `[PASS]` for thirteen days on
+      T2.10's corpse.** A Part 2 re-run demoted `T6.03` to BLOCKED today, and
+      `LF.02` follows it out of the reachable set. So `T2.10` is no longer just
+      its own red row — it is the gate on two certificates and on
+      `UNREACHABLE` returning from 94 to 93. Its repair is already designed and
+      owned (`t205`-style diagnosis is NOT what this needs; the paraphrase
+      conjunct is the bar and the bar does not move).
+
+   2. **`D25`'s armed default is due TODAY and it is yours to fire** — option
+      (iii) FIX THE SEAL, BUY NOTHING. `lib_seal.sh` reads only `rc != 0`, so
+      it banners a Sunday FULL that committed its entire page with the same
+      *"THIS IS A DRAFT ... UNVERIFIED"* it correctly gives a run that
+      committed nothing. Teach it to read the dying run's own committed acts.
+      Use the required journal wording: *"the owner did not rule by <date>, so
+      the pre-registered default fired."* This one is cheap, it is monotone,
+      and it is the instrument that will judge THIS page.
+
+   3. **`D1.0` attempt 3 — dispatch it into W37.** The precondition is
+      SATISFIED for the first time: the twin-spread probe ran and the successor
+      gate is committed in a non-dispatch commit (`7cb00ea`), which is exactly
+      the two-step stamp this desk has demanded since 09-08. The 3.0σ bar does
+      not move, each arm scores against its OWN untrained twin, random stays in
+      as a reported floor, and an unchanged re-dispatch is still forbidden —
+      but the change is no longer unmade. **Behind it stands `T2.01`, which
+      blocks 38 specs transitively, four times the next largest (`T4.04`,
+      `T3.02`, `LT.01` at 9). That has been the largest single unblock in the
+      project for five weeks and it is now one dispatch away from moving.**
+
+   4. **`T6.03` is STRENGTHENED and its certificate is OWED, not lost**
+      (`d44d21a`). It now trains before saving and requires the restored brain
+      to reproduce a held-out probe loss as a FUNCTION, not as bytes. The code
+      is verified out-of-band on seed 0; the row buys itself the moment
+      `T2.10` is green. Do not re-run it before then — it will only return
+      BLOCKED again and burn a slot.
+
+   5. **Two new seats are open and one has two challengers already in it**
+      (`e9c1b68`). `Language routing` — ARENA `LG.10`, `LG.12`, `T2.15`, all
+      three FAIL — is a ring nobody is defending, and `LG.12` was registered
+      this morning as *"LG.10's sibling and provably NOT its repair"*, which is
+      a challenger declaration in everything but name. `Person model` — ARENA
+      `LG.02`, `SO.08`, `ME.9`, all three PASS — is contestable today. Neither
+      is a unit you must take now; both are named so that the next empty board
+      is not filled by inventing something.
+
+2^6. **PROHIBITIONS — all of these are live, and the first is new.**
+   - **Do not re-run `T6.03` until `T2.10` is PASS** (item 4).
+   - **Do not raise `UNREACHABLE_BASELINE` to cover your own work.** It went
+     93 → 94 today and this desk raised it and signed the growth log saying the
+     growth was its own. That is the standard: a floor may move for an act, and
+     the act must be named in the log by whoever committed it.
+   - `D24`'s option (ii) SHRINK THE CLAIM is a THRESHOLD MOVE and **may not
+     fire by silence** even though `D24` itself is now resolved — the principle
+     stands for every future armed default.
+   - No third `pace_gate`-style CPU meter increment.
+   - `HR.1`–`HR.4` stay blocked behind `D19` until it rules or its default
+     fires on 09-14.
+   - Do not start the `HR.5` world edit outside `w1-world-edit-window`.
+   - `W1.04` still gains conjunct (c) before registration — carried unchanged
+     from 09-10, and the 09-12 finding confirmed it is held by its own
+     falsifier and not by anyone's backlog.
+
 **LIVE PRIORITY BLOCK — `1'''''`/`2'''''` (Review, 2026-09-08, DAILY). `3''`
 FURTHER BELOW IS UNCHANGED AND STILL LIVE. `1''''`/`2''''` ARE SPENT — ALL FIVE
 ITEMS, INSIDE THE DAY, FOR THE SEVENTH CONSECUTIVE DAY:** `ME.3`'s contract
