@@ -699,6 +699,7 @@ def cmd_status(ledger: Ledger) -> int:
                 print(f"      {sid}  {metric} = {cur}  (unchanged since "
                       f"{prev_at})")
         print()
+    print_settle_block(ledger)
     print_ratchet_block(ledger)
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
@@ -762,6 +763,242 @@ def _check_red_delta_detector() -> None:
         raise RuntimeError(
             f"the red-delta reader returned {got}, expected {want} — "
             "refusing to report a scan it may not have performed")
+
+
+# Files that are MEASUREMENT MACHINERY: code that decides, records, schedules
+# or accounts for a verdict. Deliberately NOT "everything under experiments/" —
+# `playground.py`, `w0.py`, `drives.py`, `hearing.py`, `odour.py`, `thermal.py`,
+# `render.py` are Jack, his body and his world, and an edit to one of those is
+# work ON THE CREATURE even when it costs a certificate. The line is drawn by
+# hand, in one place, so a reader can dispute it: everything below sits between
+# a run and the ledger row it writes, and none of it is ever a sense, a body
+# part or a world rule.
+#
+# The 92nd audit (2026-09-13, B2) resolved seven of these against the live
+# registry: protocol, cpu_budget, coverage, champions, review_queue, gpu, and
+# `run.py` (declared by nothing, which is why B1's repair cost no staleness).
+# Three more are added here on the same principle and flagged as additions so
+# the auditor's 44% figure stays reconstructible: `decisions.py` (the armed-
+# default ledger), and the two loop scripts, which schedule runs and are
+# declared by `T0.33`.
+INSTRUMENT_FILES = (
+    "experiments/protocol.py",
+    "experiments/run.py",
+    "experiments/coverage.py",
+    "experiments/champions.py",
+    "experiments/review_queue.py",
+    "experiments/cpu_budget.py",
+    "experiments/gpu.py",
+    "experiments/decisions.py",          # added beyond the 92nd audit's map
+    "scripts/ladder_loop.sh",            # added beyond the 92nd audit's map
+    "scripts/launch_detached.sh",        # added beyond the 92nd audit's map
+)
+
+
+def settle_events(ledger, days: int = 7, now=None, instrument_files=None,
+                  deps_of=None) -> dict:
+    """Trailing-window ledger settle events, split into three kinds.
+
+    The 92nd audit's B2 (2026-09-13), and the question it exists to make
+    answerable: `run status` prints *"107 demonstrated"* and a reader counting
+    activity sees twelve PASS events in six days. Every one of those twelve was
+    a Tier-0 harness certificate being RE-BOUGHT because an instrument edit
+    this project ordered had invalidated it — not one was about Jack. Both
+    facts are true, both are already in the record, and nothing prints the
+    difference. This does.
+
+    Three kinds, and the split is computed, not judged:
+
+    - ``first``  — the spec's FIRST-EVER verdict. The only kind that can move
+      `demonstrated`, and the only kind that is news about the creature.
+    - ``rebuy``  — same spec, same resulting status as its previous run. Real
+      work and usually owed work (a stamp is a promise about code that moved),
+      but it buys back a claim that already stood.
+    - ``change`` — the status differs from the previous run: a PASS falling to
+      FAIL, a FAIL becoming a PASS, a VOID resolving.
+
+    ``instrument_coupled`` marks a spec that declares a measurement-machinery
+    file in `IMPL_DEPS` (`INSTRUMENT_FILES`). That is exactly the population
+    whose certificates go stale when this project edits its own tools, so it
+    is the mechanism behind a week of re-buys — computable, not a judgement
+    call about motive.
+
+    MEASURE AND REPORT. This gates nothing, ratchets nothing and refuses
+    nothing, and the audit that ordered it said why: *a cap on re-buys would
+    be a cap on honesty*. A re-stamp after an `IMPL_DEPS` edit is the system
+    keeping its word. The defect is that the number is invisible, not that it
+    is large.
+
+    Two limits, stated rather than discovered later. `Result.history` is
+    trimmed to the last 20 rows, so a spec running more than 20 times inside
+    the window loses its oldest events here (no spec has come close). And
+    AMENDMENTS ARE NOT COUNTED: an amend is not a run, it writes `amended`
+    rather than a verdict, and folding it in would let paperwork read as
+    measurement — the precise confusion this counter exists to end.
+    """
+    from datetime import datetime, timedelta
+    instrument_files = tuple(INSTRUMENT_FILES if instrument_files is None
+                             else instrument_files)
+    now = datetime.now() if now is None else now
+    cutoff = now - timedelta(days=days)
+
+    def _instrumented(spec_id: str) -> bool:
+        if deps_of is not None:
+            deps = deps_of(spec_id) or ()
+        else:
+            from .protocol import impl_deps_of, module_path_for
+            path = module_path_for(spec_id)
+            if path is None:
+                return False
+            deps, _problem = impl_deps_of(path)
+        return any(str(d).replace("\\", "/") in instrument_files for d in deps)
+
+    events, unparsed = [], 0
+    for spec_id, row in sorted(getattr(ledger, "results", {}).items()):
+        seq = [{"ran_at": r.get("ran_at"),
+                "status": getattr(r.get("status"), "value", r.get("status"))}
+               for r in (getattr(row, "history", None) or [])]
+        seq.append({"ran_at": getattr(row, "ran_at", None),
+                    "status": getattr(getattr(row, "status", None), "value",
+                                      getattr(row, "status", None))})
+        coupled = None
+        for i, ev in enumerate(seq):
+            if not ev["ran_at"]:
+                continue
+            try:
+                when = datetime.fromisoformat(str(ev["ran_at"]))
+            except ValueError:
+                unparsed += 1
+                continue
+            if when.tzinfo is not None:
+                when = when.astimezone().replace(tzinfo=None)
+            if when < cutoff or when > now:
+                continue
+            kind = ("first" if i == 0
+                    else "rebuy" if ev["status"] == seq[i - 1]["status"]
+                    else "change")
+            if coupled is None:
+                coupled = _instrumented(spec_id)
+            events.append({"spec_id": spec_id, "ran_at": ev["ran_at"],
+                           "status": ev["status"], "kind": kind,
+                           "instrument_coupled": coupled})
+    events.sort(key=lambda e: (e["ran_at"], e["spec_id"]))
+    kinds = {k: [e for e in events if e["kind"] == k]
+             for k in ("first", "rebuy", "change")}
+    passes = [e for e in events if e["status"] == Status.PASS.value]
+    return {"days": days, "events": events, "kinds": kinds,
+            "passes": passes,
+            "instrument_coupled": [e for e in events if e["instrument_coupled"]],
+            "pass_instrument_coupled": [e for e in passes
+                                        if e["instrument_coupled"]],
+            "unparsed_ran_at": unparsed}
+
+
+def _check_settle_event_reader() -> None:
+    """Known-positive plant for `settle_events` — one row per kind, plus the
+    two ways the split can silently collapse.
+
+    The scar this copies: `_check_stale_detector` refuses to report a clean
+    scan it may not have performed, and the 09-13 DIRTY lesson adds that a
+    bucket's plant does not cover the sub-states inside it. Here the whole
+    value of the counter IS the sub-states — a reader who is told `12 PASS`
+    and shown no split learns nothing new — so every kind gets a planted row
+    that must come back labelled, including the two directions that would
+    flatter the record: a re-buy read as a first-ever verdict (activity read
+    as news), and an out-of-window event counted (an old week's work read as
+    this one's).
+    """
+    from datetime import datetime, timedelta
+    from types import SimpleNamespace as NS
+    now = datetime(2026, 1, 20, 12, 0, 0)
+
+    def at(d):
+        return (now - timedelta(days=d)).isoformat()
+
+    planted = NS(results={
+        # first-ever verdict, in window, instrument-coupled
+        "ZZ.FIRST": NS(ran_at=at(1), status="PASS", history=[]),
+        # same status as the previous run: a re-buy, not news
+        "ZZ.REBUY": NS(ran_at=at(2), status="PASS",
+                       history=[{"ran_at": at(30), "status": "PASS"}]),
+        # status moved
+        "ZZ.CHANGE": NS(ran_at=at(3), status="FAIL",
+                        history=[{"ran_at": at(31), "status": "PASS"}]),
+        # every event older than the window: must contribute nothing
+        "ZZ.OLD": NS(ran_at=at(40), status="PASS",
+                     history=[{"ran_at": at(90), "status": "FAIL"}]),
+        # two runs inside the window: the first is a change, the second a re-buy
+        "ZZ.TWICE": NS(ran_at=at(1), status="VOID",
+                       history=[{"ran_at": at(60), "status": "PASS"},
+                                {"ran_at": at(4), "status": "VOID"}]),
+    })
+    got = settle_events(planted, days=7, now=now,
+                        deps_of=lambda sid: (["experiments/protocol.py"]
+                                             if sid == "ZZ.FIRST" else
+                                             ["playground.py"]))
+    want = [("ZZ.TWICE", "change"), ("ZZ.CHANGE", "change"),
+            ("ZZ.REBUY", "rebuy"), ("ZZ.FIRST", "first"),
+            ("ZZ.TWICE", "rebuy")]
+    saw = [(e["spec_id"], e["kind"]) for e in got["events"]]
+    coupled = [e["spec_id"] for e in got["instrument_coupled"]]
+    if saw != want or coupled != ["ZZ.FIRST"] or len(got["passes"]) != 2:
+        raise RuntimeError(
+            f"the settle-event reader returned {saw} / coupled={coupled} / "
+            f"{len(got['passes'])} PASS, expected {want} / ['ZZ.FIRST'] / 2 — "
+            "refusing to report a split it may not have computed")
+
+
+def print_settle_block(ledger, days: int = 7) -> None:
+    """The B2 counter as `run status` prints it. Reporting only."""
+    _check_settle_event_reader()
+    s = settle_events(ledger, days=days)
+    n = len(s["events"])
+    k = s["kinds"]
+    print(f"  SETTLE EVENTS — last {days} days: {n} run(s) recorded = "
+          f"{len(k['first'])} first-ever verdict, {len(k['rebuy'])} re-buy "
+          f"(same\n    status as the run before it), {len(k['change'])} status "
+          f"change. Amendments are not runs and\n    are not counted. "
+          f"Measure-and-report: nothing here gates, ratchets or refuses.")
+    if n:
+        ic, pc = s["instrument_coupled"], s["pass_instrument_coupled"]
+        print(f"      instrument-coupled  {len(ic)} of {n} "
+              f"({100.0 * len(ic) / n:.0f}%) — the spec declares a measurement"
+              f"-machinery\n      file in IMPL_DEPS, so this project's own tool "
+              f"edits are what staled its certificate.")
+        if s["passes"]:
+            print(f"      PASS events         {len(s['passes'])}, of which "
+                  f"{len(pc)} instrument-coupled and "
+                  f"{len([e for e in s['passes'] if e['kind'] == 'first'])} "
+                  f"first-ever.")
+        # The two kinds that can move what this ladder claims are listed in
+        # full; re-buys are ROLLED UP, never dropped, and the roll-up says so
+        # (no silent caps — a truncation that reads as coverage is the defect
+        # this counter exists to end).
+        for e in k["first"] + k["change"]:
+            tag = "FIRST-EVER" if e["kind"] == "first" else "CHANGED"
+            mark = "  [instrument]" if e["instrument_coupled"] else ""
+            print(f"      {e['ran_at'][:16]}  {e['spec_id']:<8} "
+                  f"{e['status']:<7} {tag}{mark}")
+        if k["rebuy"]:
+            tally = {}
+            for e in k["rebuy"]:
+                tally[e["spec_id"]] = tally.get(e["spec_id"], 0) + 1
+            top = sorted(tally.items(), key=lambda x: (-x[1], x[0]))
+            shown = ", ".join(f"{sid}x{c}" if c > 1 else sid
+                              for sid, c in top[:12])
+            more = f", +{len(top) - 12} more spec(s)" if len(top) > 12 else ""
+            print(f"      {len(k['rebuy'])} re-buy(s) across {len(tally)} "
+                  f"spec(s), rolled up rather than listed:\n"
+                  f"        {shown}{more}")
+        print("    A re-buy is honest, usually owed work — a stamp is a promise "
+              "about code that moved.\n    The point is that a reader counting "
+              "PASS events cannot otherwise see how many of them\n    were "
+              "about Jack. Only `first` and `change` can move what this ladder "
+              "claims.")
+    if s["unparsed_ran_at"]:
+        print(f"    ! {s['unparsed_ran_at']} row(s) carry an unparseable "
+              f"`ran_at` and are excluded — reported, not swallowed.")
+    print()
 
 
 def gpu_attribution(lines) -> tuple:
