@@ -14979,3 +14979,141 @@ is the finding and the firing waits. After that the board is what it was today:
 (BLOCKED behind `T2.10`), **`D1.0`** (illegal behind `T1.08`) or **`T1.08`**
 (its 09-16 row owns it). `2026-W37` opened today with a full 30 GPU-hours and
 there is still nothing legal to dispatch into it.
+
+---
+
+**2026-09-13 ~13:0x UTC (builder, OPUS — `week:Fable` is pinned at 100% so the
+chain walked me; the gate is `week:all models` and it read 83% at the top of the
+slot and 83% at the end).** The 93rd audit's FOR THE BUILDER landed at ~12:40
+and was unexecuted when I woke. **All four items are done: B1 ACTED, B2 shipped
+and gated, B3 proposed, B4 recorded.** `PROGRESS.md`'s competing list is stale
+by construction — its item 1 (`T2.10`) is foreclosed at 0.0667 against a 0.10
+bar and its item 2 (`D25` "due TODAY") is not fireable until **09-14**, because
+`decisions.py:222` marks a row overdue at `(today - decide_by).days > 0`. The
+tool prints `due 2026-09-13`, not `OVERDUE`, and the required sentence *"the
+owner did not rule by <date>"* is not yet true. I fired nothing.
+
+**B1 — THE CPU VENUE IS PRICED, AND THE INSTRUCTION FOR PRICING IT NAMED TWO
+QUANTITIES THAT DO NOT EXIST.** `lc07-checkpoint-branch` asked for 526
+GPU-wall-hours converted through *"the pilot's own borrowed `LC.02` GPU:CPU
+ratio"*. `LC.02`'s borrowed value is `train_ratio` — **optimiser steps per
+decision**, not a speed ratio — and **there is no GPU term at all**:
+`experiments/survival.py` contains no `cuda`, no `device`, no `.to(...)`. The
+row's own option 2 says *"no GPU use"* four paragraphs lower and `LC.03`'s
+docstring says *"zero GPU"*. The 526 hours were always single-thread CPU hours
+billed against a GPU quota because `gpu.py` submits GPU kernels and nothing
+else. **So the option was not unpriced because pricing was expensive — the
+instruction pointed at an instrument that was not there**, while the input that
+does price it had sat in `experiments/artifacts/` since 08-23: `LC.03` v2's
+on-box curves, same `survival.py`, same `wm-latent` arm, three seeds. Like-for-
+like on both axes that could have broken it — the pilot's own wall-vs-process
+gap is **≤0.11%** on all seven classes, and the train ratios are **0.1238 vs
+0.1250**.
+
+    venue ratio box/Kaggle   arm 0.897  wiped 0.927  twin 1.143  null 1.092
+                             ctl_null 1.146 — this box IS a Kaggle CPU core
+    whole plan (21 runs)     1,927,842 core-s = 535.5 core-h vs 526.35
+
+**It dies, but on the ceiling the prediction was not about, and that is the part
+that matters beyond the row.** Day budget: **33.5 days of the ENTIRE ladder's
+CPU budget** against the GPU venue's **17.5 weeks** — the CPU venue is **3.6x
+CHEAPER in calendar terms**, not *"far worse"*. Per-run: the largest run is
+**45.6 h = 3.0x `WORST_LEGAL_CHILD_S`** and even the **cheapest of the 21 is
+13.0 h = 0.8x an entire day**, so `T0.33` refuses every one before it starts.
+**The disposition refused checkpoint/resume because *"it repairs the wrong
+constraint"* — it fixes the per-run ceiling and not the total. At this venue the
+total stops binding and the per-run ceiling is the only thing left, so that
+reasoning inverts.** Reported to the Review, explicitly not decided by me: I am
+not reopening a disposition, I am recording that its arithmetic moved. Nothing
+else moved — no threshold, no envelope, no constant, no dispatch, no seeds;
+`LC.07` still refuses and the arena is `VENUE-UNAFFORDABLE` at BOTH venues now.
+Row stamped `ACTED 2026-09-13 in a3a090a`; the 09-13 pile went **14 -> 13**.
+
+**B2 — `IMMINENT`, AND IT REPRODUCED THE AUDITOR'S HAND-COMPUTED NUMBER TO THE
+DIGIT BEFORE I WROTE ITS PROPERTY.** `review_queue.py` already computed every
+term and could only say `0 violations` until after midnight made the promises
+violations. **Known-answer control first** (`W0.DIAG`'s discipline): replayed
+against the queue file as of `5fdbdbb` with the consumer's last receipt at
+09-12, it prints **`IMMINENT 14 against 6, 8 undischargeable`** — exactly what
+the 93rd audit computed by eye at 12:40 and said would have printed at 06:25.
+**Live now: 19 against 6, 13 undischargeable** (today's 13 plus tomorrow's 6;
+the next sitting is 09-14). The cycle comes from **git** — `PROGRESS_LOG.md`'s
+commit dates — for `throughput`'s reason: the desk's own table is writable and a
+forecast a back-dated line can move teaches back-dating. **Reporting-only and
+unfloored as ordered**: not in `VIOLATIONS`, does not move `total`, cannot gate.
+
+`T0.31` is **STRENGTHENED 17 -> 18** (`T1.02` precedent), and **P18 has a
+DELETION control, not only the blind one.** Reading through a sentinel means
+removing the reading from `review_queue.py` — which reconstructs the organ as it
+stood this morning — makes P18 **FAIL rather than raise**; the narrower sabotage
+of counting TERMINAL rows into the pile fails it too. Both run against this
+commit. Both fixtures the audit asked for are in (pile over capacity, pile
+under), plus the boundaries a forecast can get wrong in the flattering
+direction: rows dated past the cycle are silent, closed rows are not promises,
+**an already-overdue row is COUNTED and named separately** (excluding it would
+make the number FALL as the desk fell further behind), and **a LATE consumer
+does not push its own next sitting into the past**. No evidence -> no reading
+and nothing printed (P10's rule). PASS 1.6 s `+dirty` in `6ddd09c`, re-bought
+**CLEAN at 1.62 s** in `0de955d`, 18/18, control fails **15 of 18** including
+p18. `demonstrated` unchanged — this buys back a certificate, it claims no
+capability.
+
+**B3 — PROPOSED, NOT IMPLEMENTED, and the audit ordered it in that shape.**
+`waits-on-declared-field` routed (`59de4ec`), **DUE 2026-09-17 taken from
+`review-queue`'s own `next_free_due`** rather than chosen by hand. Six of
+today's fourteen share one root and say so only in prose; the histogram can
+print *"14 rows"* and not *"14 rows, 6 of them behind one root"*, which is one
+sitting's work misread as six. Deliberately NOT `BLOCKED-BY:` — that buys
+ageing-exemption and **these rows should age**. The case AGAINST is on the row
+in my own words, because an optional unenforced field drifts into being written
+by whoever remembers, and a confidently wrong grouped count is worse than an
+absent one; a cheaper variant is offered. This changes the grammar the Review
+writes in, so shipping it unilaterally would be the builder editing the desk's
+own format.
+
+**B4 — five readings recorded, not three** (`d2de64a`). The audit named
+`fail_unowned_owned_forms` 21->22 (its four routings), `gpu_hours_no_verdict`
+48.07->48.42 h (`T1.08`'s dispatch) and `unreachable` 93->97 (`T1.08`'s FAIL and
+routing, AT the declared floor 97). **Two more moved for MY acts and I recorded
+them as mine**: `review_queue_net_arrivals` 3->7->**6** and
+`review_queue_piled_on` 8->**7**, both because the `lc07` `ACTED` disposed a row
+and took it off a full day. No floor moved.
+
+**LESSON ADDED** (`3e5fc4f`), and it is deliberately NOT the one the 93rd audit
+already wrote about forecasts: *an option stays unpriced when the request names
+an instrument that does not exist.* The check that catches it is a grep and
+costs seconds — **a conversion's UNITS imply a MECHANISM, so grep for the
+mechanism before doing the arithmetic** (`cuda`, here). A quantity's name is not
+its units, and `train_ratio` is the standing example. It also scores the row's
+prediction: *"far worse"* was wrong in magnitude and wrong about which
+constraint binds, written by a careful desk — which is an argument for stating
+expectations and against letting one stand in for the calculation for seven
+days.
+
+**Instruments at slot end.** `decisions --check` rc=0, `champions --check` rc=0,
+`review-queue` **EXIT 0 / 0 violations**, `render` rc=0, `run stale` 1
+pre-`impl_sha` claim (`T2.02`, pre-existing, file I did not touch). `T0.31` is
+`review_queue.py`'s ONLY dependent — verified by grep, not assumed — so nothing
+else staled.
+
+**Housekeeping.** 13 claude processes on the box; named paths on every commit,
+no `git add -A`, nothing of anyone else's in any commit. No detached launches,
+no GPU dispatch, no background processes, nothing to declare in `declared_pids`.
+Tree clean after every commit; 6 commits pushed.
+
+**NEXT ITERATION — FIRST UNIT: `D25`'s armed default, THEN `D19`.** Both become
+fireable **today (09-14)** and `python -m experiments.decisions` will print
+`OVERDUE — DEFAULT IS DUE TO FIRE`; take the count from the tool, never from a
+page. Required wording: *"the owner did not rule by <date>, so the
+pre-registered default fired."* **The pre-commit step is
+`--firing-check WORKTREE`, NOT `HEAD`** — the `HEAD` form audits the previous
+commit. `D25`'s (iii) FIX THE SEAL adds a `lib_seal.sh` branch and may add
+constants; both are additions and should clear, and if they do not, the hazard
+is the finding and the firing waits. **Second thing you will see: the 13 rows
+dated 09-13 went OVERDUE at midnight**, so `review-queue` will be red for the
+first time since 09-03 — that is the promise breaking, not the instrument
+breaking, and `IMMINENT` said so before it happened. The board is otherwise what
+it was: do NOT re-run `T2.10` (foreclosed 0.0667 vs 0.10), `T6.03` (BLOCKED
+behind it), `D1.0` (illegal behind `T1.08`'s FAIL) or `T1.08` (its 09-16 row owns
+it). `2026-W37` has 0.82 of 30 GPU-h charged and there is still nothing legal to
+dispatch into it.
