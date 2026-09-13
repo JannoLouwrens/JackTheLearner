@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 107 / 247 demonstrated
+## 107 / 248 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1150,3 +1150,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every provisioning event is logged, and any run that claims learning reports hand_share (the fraction of need-restoration events causally downstream of a hand inside a declared window) and hand_contact_frac (the fraction of placements made within body-contact distance) against a ceiling the spec declared BEFORE the run; a run over its ceiling is REFUSED by the runner, not reported with a caveat.
       - _dies if:_ The accountant passing a deliberately puppeteered run (C-GIVE), OR refusing a clean one, OR a provisioning event reaching the world without a log line.
       - _then delete:_ The practice of reading a provisioned run as a learning result because the hand 'only helped a little'.
+
+### Tier 3 — ABLATION — does it earn its parameters?
+
+- [!] **SO.10** The trust rule earns its seat, or the seat stays vacant  — ctl_pooled-scalar_gate=0.0; ctl_pooled-scalar_gate_std=0.0
+      - _asserts:_ Among trust-update rules reading the SAME attributed diary on LG.02's certified rig — windowed Laplace (what this project shipped, never raced), full-history Laplace, exponential-decay, and last-claim-only — at least two clear the 3-sigma learning gate over the attribution-stripped null on last-quarter follow-rate divergence, one wins by the 1.5-sigma margin (or ties and resolves to the arm carrying fewer tunable constants), AND the winner is ELIGIBLE to hold the seat: first-encounter trust exactly PRIOR for both advisors on every seed, stripped-attribution divergence within NULL_DIV_MAX, and trust that MIGRATES after the role swap (MIN_MIGRATE) having been right before it (MIN_PRESWAP).
+      - _dies if:_ The bakeoff reaches no decision (VOID), or reaches one whose winner is INELIGIBLE — a rule that scores highest by starting the two advisors apart, by leaking speaker identity outside the attributed diary, or by being unable to change its mind when the world changes who is honest. Under either the seat stays VACANT and the finding routes; a high score is not a title.
+      - _then delete:_ The unexamined windowed-Laplace default's claim to the seat. If it loses, the seat goes to what beat it; if nothing is eligible, the seat is not filled by the incumbent's tenure.
