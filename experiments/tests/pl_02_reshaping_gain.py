@@ -213,6 +213,53 @@ corruption from a poisoned display is what `canary_ok` exists to catch and
 it read 1 on this run (PG.6's discipline, and the reason the renderers are
 held for the process lifetime in the first place).
 
+REGISTERED RUN, ATTEMPT 1 — **VOID** (ran 2026-09-13T00:17:57, commit
+`c150187`, 2936.14 s CPU, seeds 0/1/2, peak RSS 1345.1 MB). The re-aimed eye
+gate CLEARED on the registered seeds — `r2_raw_pixel` **0.929242 ± 0.003954**
+vs 0.80, a third draw agreeing with the smoke's 0.924963 and the
+decomposition's 0.9327 — and the run then died on the FIRST conjunct of
+`_check`, the LEARN gate:
+
+    learn_ok          0.666667 ± 0.471405   -> [1,1,0]
+    shuffled_learn_ok 0.666667 ± 0.471405   -> [1,1,0]
+
+Everything else read green and the claim's own instruments read high —
+`reshaping_gain_R` 0.954619 with CI [0.943936, 0.971919] above zero and
+`claim_ci_above_zero` 1.0 on every seed, `r2_plastic` 0.954440 vs `r2_ua`
+-0.000179, `frozen_exact_zero` 1.0, control `shuffled_R` -0.004332 with its
+CI excluding zero from BELOW and `control_reshapes_too` 0, canary 1,
+`det_drift` 0.0, audio teacher 0.999616, `shuffled_label_r2` 7.3e-05. **None
+of that is claimable: the run is VOID, and a VOID is not a near-miss PASS.**
+
+WHICH ARM MISSED — deduced, because attempt 1's row could not say. `learn_ok`
+is `all(last < LEARN_DROP*first)` over (U_A, PLASTIC, FROZEN) and only two of
+those three ratios were recorded. At n=3 the worst seed obeys
+|x-mu| <= sigma*sqrt(2), so `loss_drop_plastic` 0.4033 ± 0.0769 (worst
+admissible 0.5120) and `loss_drop_ua` 0.0085 ± 0.0030 (worst 0.0127) both
+clear 0.90 on EVERY seed. The implicated arms are therefore FROZEN and
+SHUFFLED — precisely the two whose ratios were not emitted. Which seed, and
+whether it is the same seed in both, is unknowable from that row.
+
+**THE REPAIR IS DISCLOSURE, NOT A THRESHOLD** (builder, 2026-09-13, same shape
+as the 09-12 `LG.03` ruling on `planner_calib_reach`: emit the number the run
+already computes and throws away). `loss_drop_frozen` and `loss_drop_shuffled`
+are now recorded. `LEARN_DROP` stays **0.90**, `learn_ok` and
+`shuffled_learn_ok` are unchanged in definition and in effect, no verdict
+threshold moves in either direction, and **attempt 2 is predicted VOID with
+every attempt-1 number reproduced to the last digit** — `det_drift` 0.0 says
+this rig is deterministic, and the two added metrics consume no RNG and enter
+no gate. That prediction is the point: this re-run cannot be a run-until-pass,
+because nothing in it can change the verdict. What it buys is an ATTRIBUTED
+VOID instead of an anonymous one, and it discharges the staleness this edit
+creates rather than leaving it for someone else.
+
+Why the attribution matters more than it looks: FROZEN is the registered null
+whose `R` is **zero by construction**, so its contribution to the verdict does
+not depend on its loss having fallen — while its membership in `learn_ok` can
+void the whole run. Whether that is the right membership is a GATE question
+and it is NOT decided here; it is routed with the numbers attached once
+attempt 2 says which arm and which seed.
+
 WEIGHTS ARE PERSISTED — the 2026-09-07 standing rule (PROGRESS item 5):
 PL.02 is an arena of the Vision-encoder seat (`experiments/champions.py`),
 so every trained A-encoder's state_dict is written to
@@ -662,6 +709,14 @@ def _experiment(seed: int) -> dict:
         "loss_drop_ua": round(ua["last_loss"] / max(ua["first_loss"], 1e-12), 4),
         "loss_drop_plastic": round(
             plastic["last_loss"] / max(plastic["first_loss"], 1e-12), 4),
+        # DISCLOSURE, added 2026-09-13 after attempt 1 VOIDed on `learn_ok`
+        # with no way to say WHICH arm missed: `learn_ok` quantifies over three
+        # arms and only two of their ratios were recorded, so the run's own
+        # verdict was unattributable from its own row. Emitting the third costs
+        # nothing (it is computed above) and moves no gate — LEARN_DROP stays
+        # 0.90 and `learn_ok` is unchanged.
+        "loss_drop_frozen": round(
+            frozen["last_loss"] / max(frozen["first_loss"], 1e-12), 4),
         "weights_artifact": str(art), "weights_sha8": art_sha,
     }
 
@@ -692,6 +747,11 @@ def _control(seed: int) -> dict:
             "shuffled_ci_lo": round(lo, 6), "shuffled_ci_hi": round(hi, 6),
             "r2_ua_ctrl": round(r2_ua, 6), "r2_shuffled": round(r2_sh, 6),
             "control_reshapes_too": reshapes_too,
+            # Same disclosure as the experiment's `loss_drop_frozen`: attempt 1
+            # VOIDed with `shuffled_learn_ok` 0.667 and no recorded ratio to
+            # say by how much or on which seed. The gate is unchanged.
+            "loss_drop_shuffled": round(
+                shuf["last_loss"] / max(shuf["first_loss"], 1e-12), 4),
             "shuffled_learn_ok": int(
                 shuf["last_loss"] < LEARN_DROP * shuf["first_loss"])}
 
