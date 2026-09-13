@@ -3243,6 +3243,103 @@ option dies on arithmetic — but *"CPU venue"* has been an unpriced option on
 this row for five days, and an unpriced option is how a decision gets deferred
 forever. This is a calculation, not a run: no dispatch, no seeds, no budget.
 
+**PRICED 2026-09-13 (builder, 93rd audit B1). THE NUMBER IS 535.5 CORE-HOURS,
+AND THE EXPECTATION ABOVE IS WRONG: THE CPU VENUE IS NOT "FAR WORSE" — IT IS
+THE SAME PRICE, AND IN CALENDAR TERMS IT IS 3.6x CHEAPER. IT STILL DIES, BUT ON
+A DIFFERENT CEILING, AND THAT CHANGES WHICH CONSTRAINT IS BINDING.**
+
+*First, the conversion the instruction asked for does not exist, and saying so
+is half the answer.* This paragraph asks me to convert 526 GPU-wall-hours
+through "the pilot's own borrowed `LC.02` GPU:CPU ratio". There are two errors
+in that sentence and they point the same way. `LC.02`'s borrowed quantity is
+`train_ratio` — **optimiser steps per decision** (`lc_07`:36), not a venue
+speed ratio; and there is no GPU term to convert, because **`experiments/
+survival.py` contains no `cuda`, no `device` and no `.to(...)`** — this row's
+own option 2 already says it (*"the runs are single-thread CPU (27–38 dec/s, no
+GPU use)"*), and `LC.03`'s docstring says *"zero GPU"*. The 526 hours were
+never GPU-hours. They are single-thread CPU hours that were **billed against a
+GPU quota** because `gpu.py` submits GPU kernels only. So the venue transfer is
+not a conversion at all; it is a core-for-core comparison, and the audit's
+restatement — *"through the pilot's own measured dec/s"* — is the instruction I
+executed.
+
+*What I priced it against.* `LC.03` v2's on-box curves
+(`experiments/artifacts/lc03_curves_seed{0,1,2}.json`) measure **the same
+`survival.py`, the same `wm-latent` arm `LC.07` holds the seat for, on this
+box, at three seeds**. The comparison is like-for-like on both axes that could
+have broken it: the pilot's own wall-vs-process gap is **≤ 0.11%** on every
+one of the seven classes, so Kaggle wall-hours and on-box `process_time_s`
+core-seconds are the same unit here; and the train ratios match — pilot arm
+**0.1238** opt/dec against `LC.03` `wm-latent`'s **0.1250**, 1% apart. Note
+where this datum came from: `LC.03` v2 spent ~190 core-hours in the detached
+lane *before the accountant existed*, which is why there is anything on this
+box to price against.
+
+    class     Kaggle dec/s   this box dec/s (3 seeds)   ratio box/Kaggle
+    arm           27.19        24.39  [23.80–25.13]        0.897
+    wiped         27.69        25.68  [25.05–26.82]        0.927
+    twin          34.24        39.15  [36.76–41.19]        1.143
+    null          38.48        42.01  [38.40–45.66]        1.092
+    ctl_null      37.22        42.65  [40.52–45.06]        1.146
+    (statue borrows `null_random`, randrew borrows `wm-latent` — both
+     are the matching class by wiring, and the Kaggle pair agrees: statue
+     38.34 vs null 38.48, randrew 27.82 vs arm 27.19.)
+
+**The venue ratio is ~1.0.** This box's core is 10% slower on the trained
+classes and 9–15% faster on the untrained ones. A Kaggle CPU allocation and a
+free-tier ARM core are the same machine for this workload.
+
+    full-scale run, this box, one core      core-s      h
+      arm       4.0M dec / 24.39 dec/s      164,031    45.56
+      wiped     4.0M / 25.68               155,760    43.27
+      null      4.0M / 42.01                95,218    26.45
+      randrew   2.0M / 24.39                82,015    22.78
+      twin      2.0M / 39.15                51,090    14.19
+      statue    2.0M / 42.01                47,609    13.22
+      ctl_null  2.0M / 42.65                46,891    13.03
+
+    WHOLE PLAN (7 classes x 3 seeds = 21 runs, 60.0M decisions):
+      1,927,842 core-s = 535.5 core-hours   (vs 526.35 h at the Kaggle venue)
+
+**Against the two ceilings that actually decide it:**
+
+- **The day budget.** 1,927,842 s / `CPU_DAY_CEILING_S` 57,600 s = **33.5 days
+  of the ENTIRE ladder's CPU budget** — every certificate re-buy, every gate
+  sweep, every CPU spec, for a month. Set that beside the GPU venue's **17.5
+  weeks = 122 days** of the entire free allocation. **The CPU venue is 3.6x
+  cheaper in calendar terms.** That is the opposite of what this row expected,
+  and it follows directly from the ratio being 1.0 while the two budgets are
+  not: 16 core-h/day is simply more than 30 GPU-h/week.
+- **The per-run ceiling, and this is what kills it.** The largest run is
+  **45.6 h = 3.0x `WORST_LEGAL_CHILD_S` (54,000 s) and 2.8x a whole day's
+  ceiling.** Even the **CHEAPEST of the 21 runs is 13.0 h = 0.8x an entire
+  day's CPU budget.** `T0.33` refuses every one of them before it starts. For
+  completeness and not as an option: ignoring the meter entirely, at the 3
+  nice-19 workers `LC.03` v2 actually measured, the plan is ~178 h ≈ **7.4 days
+  of wall clock** — the physics is unremarkable; it is the accounting that
+  forbids it.
+
+**THE CONSEQUENCE, ROUTED AND EXPLICITLY NOT DECIDED HERE.** This disposition
+refused checkpointing because *"it repairs the wrong constraint"* — it fixes
+the 8.5 h per-run kernel ceiling and leaves the ~526 h total untouched. **At
+the CPU venue that reasoning inverts.** The total stops being the binding
+constraint (33.5 days, not 17.5 weeks) and the **per-run ceiling becomes the
+only thing in the way** — which is precisely what checkpoint/resume repairs,
+and `LF.02`'s PASS already proves the surgery is feasible one level below
+`survival.py`. So **option 2 does not escape option 1; it meets it from the
+other side**, and the live question is no longer *checkpoint OR venue* but
+*checkpoint AND venue, for 33.5 days of CPU budget*. Whether that is worth
+buying is a resource judgment with the same shape as `D24` and it belongs to
+the Review and the owner. I am not reopening the disposition, I am reporting
+that its arithmetic moved.
+
+**What did NOT move.** No threshold, no envelope, no constant, no gate. No
+dispatch, no seeds, no budget spent — this is the calculation the row asked
+for and nothing else. `LC.07`'s `run()` still refuses, `_GATES_FROZEN` is
+still False, the 10x scale-transfer reading is untouched, and the arena is
+still `VENUE-UNAFFORDABLE` at both venues. The row asked for a number "whichever
+way it falls"; it fell sideways.
+
 **To the owner, as `D24` (see `docs/DECISIONS_NEEDED.md`).** The affordability
 of this arena is a resource decision and it is not mine.
 
