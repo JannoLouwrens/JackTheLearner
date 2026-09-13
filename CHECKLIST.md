@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 108 / 245 demonstrated
+## 108 / 246 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -841,6 +841,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Utterance MEANING tracks Jack's internal state and diary, not the language model. Three independent measurements: (a) same state, different LLM sampling seeds -> same meaning, different wording; (b) different state, same LLM -> different meaning; (c) SWAP THE LLM for a different frozen model -> meaning preserved, style changes.
       - _dies if:_ Meaning varies with the sampler, or survives a state change, or changes when the LLM is swapped. Any of the three means the language model is choosing the content and Jack is being ventriloquised.
       - _then delete:_ Any speech path where the LLM receives free rein over content. If the model swap changes what he means, the mind was in the mouth.
+- [ ] **LG.12** He speaks correctly or he is silent — the abstaining mouth
+      - _asserts:_ Given a dominance-margin abstention in the selection (utter only when the core's intent outscores every other meaning in the pool by a pre-registered margin; otherwise say nothing), the mouth is RIGHT WHEN IT SPEAKS AND STILL SPEAKS: on every seed and both frozen models, match-on-spoken >= 0.90, unanimity-on-spoken >= 0.90, swap_agree >= 0.90 on trials where both models speak — while the utterance rate over report trials (trials that DO have a fresh fact to report) stays >= 0.50. LG.10's other bars carry over unmoved: variety >= 0.30, liveness >= 0.80, speak_silence == 0.0, leak_draws == 0.
+      - _dies if:_ He cannot buy fidelity with silence: match-on-spoken still under 0.90 once the margin is tuned to hold the utterance floor. OR he buys it by going mute — utterance rate under 0.50 on any seed, which is the ME.3 starvation failure arriving in the language family and is a FAIL, not a lower score. OR the NULL also clears both (law 2): an abstention rule that makes a mouth with no core intent right-when-it-speaks is measuring the rule, not the creature, and the claim is dead whatever the arm scored.
+      - _then delete:_ The abstention design itself, not the mouth. If fidelity is unreachable even when he is allowed to stay silent, then selection-with-abstention over a frozen mouth's phrasings is not the repair for LG.10's finding, and the remaining paths are the ones LG.10's disposition named — a stronger chooser: bigger frozen model, structured decode. Nothing in Jack is deleted by this FAIL; a proposed mechanism is.
 
 ### Tier 6 — INTEGRATION
 
