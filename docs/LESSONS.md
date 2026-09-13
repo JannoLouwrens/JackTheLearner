@@ -13541,3 +13541,57 @@ scope of the guard is "a GPU dispatch" and the COMPUTED scope is "a GPU dispatch
 launched through one particular shell script." Audit the scope of a guard the
 same way you audit the referent of a threshold: **ask what it actually covers,
 not what its name says it covers.**
+
+## A GUARD IS ONLY AS DEEP AS ITS INPUTS REACH — moving a refusal to the act
+## means moving the numbers it refuses on, and the receipt it writes, with it
+## (builder, 2026-09-13, executing the 92nd audit's B1; sequel to the lesson
+## immediately above, which diagnosed the defect this one is about repairing)
+
+**The lesson above ends at the diagnosis: a refusal wired to one wrapper is a
+convention with a return code, and the repair is to put it at the act. This is
+what that repair actually costs, because it was not one line and the surprise
+is generalisable.**
+
+`dispatch_guard` had three refusals. Two of them — R1 budget, R2 unchanged
+re-dispatch — computed everything they needed from files on disk
+(`gpu_budget.json`, `ledger.json`, a module's `impl_sha`), so moving their call
+site into `run._run_isolated` was genuinely one branch. **R3 did not move,
+because R3 was not a function.** It was `required=True` on an argparse argument.
+
+**A rule enforced by argument parsing is enforced only against callers who
+parse arguments.** `$PY -m experiments.run D1.0` never sees that parser, so
+there was nothing to move — the projection had to be *created* at the new depth,
+which meant giving it a channel that survives `setsid` (`JACK_PROJECTED_HOURS`,
+exported by the wrapper, required by the runner). Only then does one branch
+close the direct-CLI path and the `launch_detached.sh` path together.
+
+**So the check that follows the previous lesson's check.** Having found that
+your guard sits at a wrapper, ask, for each refusal separately: *where does this
+refusal's INPUT come from?*
+
+- **From disk or from the repo** — it moves for free; call it deeper and you are
+  done.
+- **From the caller's argv, its cwd, its flags, an interactive prompt** — it does
+  NOT move. At the deeper site that input does not exist, and a guard whose
+  input does not exist either refuses everything (and gets switched off) or
+  clears everything (and is decorative). **You must build it a channel first.**
+
+The tell is cheap and mechanical: **a refusal you cannot call as a function is a
+refusal that lives in the CLI, not in the module** — whatever file it is written
+in. `budget_refusal(hours)` and `redispatch_refusal(spec_id)` were callable, so
+they were portable. R3 was three lines of `argparse` config, so it was not.
+
+**And the receipt travels with the enforcement, or it starts lying.**
+`record_projection`'s own contract is that the log means *"was allowed to go"*,
+not *"was considered"*. Leave the write at the shallow site while the binding
+refusal moves deep and a CLEAR upstream followed by a refusal (or a crash)
+downstream files a receipt for a dispatch that never left — the log's stated
+meaning and its computed meaning come apart, which is the 09-12 family again.
+**Whichever site can say NO last is the site that gets to write the receipt.**
+
+*Corollary for the shallow call that remains.* Keeping the wrapper's copy is
+still worth it, and worth being honest about what it now is: it refuses in the
+foreground, on the human's terminal, before anything is detached into a log
+nobody is watching. It is a **fast fail for the operator, not the enforcement**,
+and the comment beside it should say so — otherwise the next reader re-derives
+the original bug from the fact that two callers exist.

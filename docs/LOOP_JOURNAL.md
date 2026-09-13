@@ -14263,3 +14263,126 @@ VOID at `loss_drop_frozen` 0.8355) — but read its new DIRTY line first: it
 buys a clean stamp, NOT a recovered implementation, and that is a bookkeeping
 purchase, not science. The standing rule holds: if the board is empty, say so,
 write what you checked, and stop early.
+
+---
+
+## 2026-09-13 ~07:1x — 92nd audit B1 / RANK 1 executed: the GPU refusal moves
+## from the wrapper to the act. 8/8 constructed cases + 3 end-to-end refusals,
+## zero GPU-hours spent, zero certificates staled, `week:all models` 81% (the
+## gate), `week:Fable` 100% so this slot ran on **Opus**.
+
+**What I took and why.** The auditor's `FOR THE BUILDER` B1 is RANK 1 and it is
+dated *before any GPU dispatch this week*, which puts it in front of the
+Review's item 3 (`D1.0` attempt 3) rather than beside it. The Review's item 1
+(`T2.10`) I did not take, and the reason is worth recording rather than leaving
+as a silence: it is described as "CPU, ten minutes", but its bar is the
+**paraphrase conjunct on the `ME.11` certified stem-disjoint fixture**, where
+this exact scorer is measured **0.0000** (`ME.11.A`, 08-30) and where the whole
+`ME.11` family's best dense ceiling was **0.250 against an 0.80 bar**. Ten
+minutes is the runtime, not the unit. It is a retrieval redesign and it should
+be taken as one, not as a slot's cheap green.
+
+**The defect, in one sentence, and it is the auditor's.** `dispatch_guard.py`
+was built yesterday and wired into `scripts/dispatch.sh` only, while the command
+that actually charges the weekly quota is `$PY -m experiments.run <GPU-SPEC>` —
+`run._run_isolated` gated CPU children with `gate_cpu_child` and had **no
+`else`**. *The cheap resource was guarded by a branch; the irreversible one by a
+convention.* `D1.0`'s own pilot went out through that hole on 09-01.
+
+**What I built, as the three parts B1 ordered.** (1) `runner_preflight()` in
+`dispatch_guard.py`, returning `(ok, reason, lines)` so the caller gets a reason
+without parsing prose, called from `_run_isolated` for any spec whose budget
+starts `gpu`, with the CPU gate's **UNRECORDED** idiom (`Status.ERROR`,
+`"REFUSED before start: ..."`) — a scheduling refusal may never supersede a real
+verdict. A pre-flight that *raises* refuses rather than waving the spend
+through. (2) **The projection travels**: `dispatch.sh` exports
+`JACK_PROJECTED_HOURS`, the runner refuses a GPU spec that arrives without one,
+so R3 is enforced at the act and one branch closes the direct-CLI path and
+`launch_detached.sh` together. (3) **The reattach carve-out is made at both ends
+and loudly** — `JACK_REUSE_KERNEL` recovers an existing kernel, buys no fresh
+quota, `gpu.submit` already skips `afford()` for it, and refusing it would
+forbid the recovery path `gpu.submit` carries a scar for.
+
+**One thing I decided that B1 did not ask for, so it is flagged rather than
+buried: the RECEIPT moved too.** `dispatch.sh` drops `--record` and the runner
+records instead. `record_projection`'s own contract is that the log means *"was
+allowed to go"*; leaving the write upstream of the binding refusal would file a
+receipt for a dispatch that a downstream refusal or crash stopped. The CLI call
+stays, and its comment now says what it now is — **a foreground fast-fail for
+the operator, not the enforcement**.
+
+**Priced BEFORE the edit, as B1 asked.** `experiments/run.py` is in no spec's
+`IMPL_DEPS` (`run.py:2326` says so itself), `experiments/dispatch_guard.py` is a
+day old and declared by nothing, `scripts/dispatch.sh` likewise. **Staleness
+bill: ZERO certificates.** `experiments/gpu.py` — `T0.12`'s `IMPL_DEPS` — was
+deliberately not touched.
+
+**RED-FIRST, and B1's specific complaint was that the existing ten cases were
+all wrapper-entry.** Constructed, injected `env`/`Budget`/`Ledger`,
+`record=False`, nothing dispatched, **8/8 in the pre-registered direction**: no
+projection / `'seventeen'` / `0` / `-1` all REFUSE; reattach CLEARS with no
+projection; R1 refuses `D1.0` at 17.61 h against a constructed 2.00 h floor; R2
+refuses `T4.02` (settled FAIL, `impl_sha 803cafd075f5e93c` unmoved); `D1.0` at
+17.61 h against `W37`'s real 30.00 h floor CLEARS. Then **three end-to-end, the
+way the loop actually runs a spec**, each refusing in 0.0 s: `run T4.02` with no
+projection (R3), `run D1.0` with no projection (R3, with 17.6 GPU-h at stake),
+and `JACK_PROJECTED_HOURS=0.3 run T4.02` (**R2** — proving the second brake
+binds at the runner entry, which is the case that would otherwise have spent).
+Order was deliberate: the cheap spec proved the branch is *reached* before the
+expensive one was pointed at it.
+
+**Verified afterwards, not assumed:** `T4.02` still `FAIL` attempt 4 at its
+original `ran_at`, `D1.0` still `VOID` attempt 2 — **the refusals recorded
+nothing**; `projections` still length 0 — **no receipt for a dispatch that did
+not go**; `2026-W37` kaggle **0.00 h used**; tree clean; `run status` EXIT 0.
+
+**THE COST, named here rather than discovered in a log later.** A **full**
+`run --gate` sweep now refuses its GPU-cost PASSes instead of re-dispatching
+them, because a stamp refresh arrives with no projection. That is the intended
+direction — `--max-budget` exists precisely because those 16 GPU-cost PASSes
+priced the full gate out of ever running (46th audit, Finding 2) — the refusal
+is UNRECORDED so no certificate is demoted, and `cmd_run` still counts it a
+failure so a bounded sweep cannot report green for stamps it did not re-verify.
+A bounded `--gate --max-budget cpu<...>` is unaffected. **If a future slot finds
+the full gate red on GPU rows, that is this branch, and it is not a regression.**
+
+**The lesson, and it is deliberately NOT a restatement of the auditor's.** The
+92nd audit already generalised the *diagnosis* (a refusal wired to one wrapper
+is a convention with a return code). What executing it earned is the *cost of
+the repair*: **a guard is only as deep as its inputs reach.** R1 and R2 computed
+from disk and moved for free. **R3 did not move, because R3 was not a function —
+it was `required=True` on an argparse argument**, and a rule enforced by
+argument parsing is enforced only against callers who parse arguments. It had to
+be given a channel that survives `setsid`. The mechanical tell: *a refusal you
+cannot call as a function lives in the CLI, not in the module, whatever file it
+is written in.* Plus the corollary about the receipt. Written up in
+`docs/LESSONS.md`.
+
+**Refusal number eight.** This commit does **not** decide the `D1.0` dispatch
+question and deliberately does not pre-empt it — `d10-successor-rerun-under-
+adopted-gate` is DUE **09-14** and it is the Review's. Note what R2 says about
+it out loud, because it is easy to misread as permission: `7cb00ea` moved
+`d1_0_control_path_bakeoff.py`'s bytes, so `impl_sha` moved
+(`4db15d96b0312e50 -> 08621094c15c473a`) and **R2 has nothing to say about
+attempt 3 — which is not the same as authorising it.**
+
+**Housekeeping, honest.** **12 claude processes on the box**, so
+`git commit --only` with named paths throughout and no `git add -A`; nothing of
+anyone else's is in either commit. `CHECKLIST.md` moved **108 -> 107** and that
+is **not mine** — it is `T6.03`'s honest demotion behind `T2.10 (FAIL)` from
+this morning's Review commits, rendered here because the render had not caught
+up. Ratchets read `unreachable` **94** (at floor; the Review raised it this
+morning and signed the growth log) and `review_queue_net_arrivals` **+2 since
+09-13** — also this morning's routings, not mine. Zero detached launches, zero
+leftover processes, no CPU spec run so no charge against the day meter.
+
+**NEXT ITERATION.** `D19` decides **tomorrow, 09-14**, and its NO-FETCH default
+is what keeps `coverage`'s `cpu<10min` empty. **`D25`'s default is due TODAY and
+is still unfired** — option (iii) FIX THE SEAL, teach `lib_seal.sh` to read a
+dying run's own committed acts; it is cheap, monotone, spends nothing, and the
+auditor has now recommended it twice. **Take that first if the owner has not
+ruled.** After it, `T2.10` is the honest big unit and it is a retrieval
+redesign, not a ten-minute run — read the `ME.11.A` 0.0000 and the family's
+0.250 ceiling before you plan it. **Do not dispatch `D1.0`**: the row that
+authorises attempt 3 is the Review's and it is dated 09-14, and the guard
+clearing it is not the row answering.
