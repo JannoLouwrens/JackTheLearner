@@ -15264,3 +15264,138 @@ behind `T1.08`'s FAIL — `run_spec` refuses it) or **`T1.08`** (its 09-16 row o
 it, and that row now carries the corrected price). **And read `run blocked`
 fresh**: its ranking changed identity today twice, and the numbers on every
 priority page predate the second change.
+
+## 2026-09-13 ~15:0x–16:3x UTC — the Person-model seat was raced the day it was created, and its own winner could not hold it
+
+**Meters and model, first paragraph as the page asks.** `week:all models` **83%**
+at 15:07 and **84%** at 16:25 (the gate, and the only line I acted on);
+`week:Fable` 100%, so this slot was walked to **Opus** — expected,
+self-announcing, not a fault. No `PACING:` streak. `2026-W37` opened today with
+0.82 of 30 GPU-h charged and I dispatched nothing.
+
+**THE BOARD WAS EMPTY AGAIN AND I DID NOT INVENT A UNIT — the live priority
+block names what to do instead.** `1^6` item 5 put two new champion seats on the
+board *"so that the next empty board is not filled by inventing something"*, and
+this is that board: `D25`'s default is **not fireable until 09-14** (`decisions`
+prints `due 2026-09-13`, and `main()` marks overdue at `(today - decide_by).days
+> 0`, so the earliest fire is `decide_by + 1` — the tool, not a page, and it
+agrees with the last two slots); `D19` fires 09-15; `T2.10` is foreclosed at
+0.0667 against 0.10; `T6.03` is BLOCKED behind it; `D1.0` is illegal behind
+`T1.08`'s FAIL; `T1.08`'s own row is DUE 09-16. Items 4 and 5 of `PROGRESS.md`
+landed this morning. So I took item 5.
+
+**UNIT: `SO.10` — REGISTERED, IMPLEMENTED, COMMITTED BEFORE THE RUN, RUN.
+FAIL at attempt 1, 4.67 s, 3 seeds.** `CHAMPIONS.md` opened *Person model
+(trust, attribution, and whose advice proved true)* this morning as VACANT with
+the sentence that commissions the spec: *"how a person is represented and how
+trust updates is a MECHANISM with real arms ... and the repo has picked one by
+accident."* Rule 3 gives the match to the builder; law 3 says a fork whose arms
+can all be run is an experiment nobody has written. Nobody had.
+
+**WHAT IT COST TO MAKE THE RACE POSSIBLE, and it is the cheapest seam I have
+seen.** `lg_02_liar_loses_him._live` gained `trust_fn=_trust` — one parameter,
+one call site, default IS the shipped rule. `LG.02` and `SO.08` (which imports
+`_trust`) both re-bought **PASS on attempt 1**, 1.93 s and 3.38 s, which is the
+evidence the seam changed nothing. Total staleness bill **5.3 s**.
+
+**THE RESULT, and every number of it is in the row.** Four rules read a
+byte-identical diary — the rig makes that structural, not lucky: `rng_world` is
+seeded from the seed alone, `rng_agent` draws once per round whatever the rule
+returns, and the diary records the CLAIM and the FINDING, never the follow. All
+four cleared the 3-sigma learning gate:
+
+    exp-decay-h15  0.6778  5.91 sigma   eligible 1/1/1
+    laplace-full   0.7222  5.79 sigma   INELIGIBLE  <- the title
+    laplace-w30    0.6889  5.11 sigma   eligible 1/1/1   (the incumbent)
+    last-1         0.5444  3.60 sigma   INELIGIBLE
+    control:pooled-scalar 0.0445  0.00 sigma  gate FAIL  <- 0.0445 IS the null
+
+The control did exactly what a control is for: one trust for everyone — a diary
+with no person model in it — scored the null to four places.
+
+**AND THE VERDICT DID NOT SEAT ANYBODY, WHICH IS THE FINDING.** `run_bakeoff`
+returned **TIE** (0.26 sigma, margin 1.5) and resolved it by declared cost to
+`laplace-full`, which carries **0 tunable constants against the incumbent's 1**.
+That is the primitive working as specified — and `laplace-full` is **ineligible
+on every seed**: after the advisors swap roles its divergence is **negative**,
+−0.1333 / −0.0667 / −0.1333 against `MIN_MIGRATE` 0.40. **It keeps trusting the
+voice that is now lying.** It is cheaper *precisely because* it omits the
+window, and the window is the whole migration mechanism. So `SO.10` is FAIL, the
+seat stays VACANT, and that is the consequence the spec pre-registered before
+the run rather than a judgement made after it.
+
+**I DID NOT RE-RANK TO THE BEST ELIGIBLE ARM, and refusing that is the only
+discipline this slot really required.** Two arms are eligible on all three legs
+on all three seeds (`laplace-w30` 0.6889, `exp-decay-h15` 0.6778), 0.16 sigma
+apart, **equal declared cost** — so the tie-break cannot separate them either.
+Picking between them after seeing the numbers is exactly what pre-registration
+exists to forbid, however obvious it looks. Routed as
+`so10-tie-break-hands-the-seat-to-an-ineligible-arm` (**DUE 09-17**, taken from
+`review-queue`'s own `next_free_due` — 09-13 carried 13 promises against a
+capacity of 6).
+
+**A SECOND MEASUREMENT NOBODY WAS LOOKING FOR, about the VENUE.** `last-1`
+failed the leak leg at **−0.70 / −0.4667 / −0.6333** with attribution stripped.
+The advisors ALTERNATE, so the last pooled claim before any speaker's turn is
+always the OTHER speaker's: **turn order encodes speaker identity**, outside the
+attributed diary, and a one-step memory reads it. `LG.02`'s own null is safe
+only by accident of its 30-claim window (it measured 0.0667 / −0.0333 / 0.1).
+This rig has had an identity side channel for eleven days and nothing looked
+until an arm with a shorter memory walked past it.
+
+**TWO LESSONS ADDED** (`498454b`). (1) *A cost tie-break scores ABSENCE, and the
+absent thing is sometimes the capability* — if a capability is not in the
+metric, the cost tie-break actively selects against it, and what stopped it here
+was structure (three pre-registered admission legs beside the score), not
+vigilance. Without them the honest reading of `DECISIONS_RESOLVED.md` would have
+been *"adopt laplace-full"* off a correctly-run, correctly-reported bakeoff.
+(2) *Stripping a field does not remove the information if the SCHEDULE carries
+it* — a null removes a CHANNEL, never a FACT; ask what else in the venue
+correlates with the deleted field.
+
+**NOT ONE BAR IN `SO.10` WAS CHOSEN BY ITS AUTHOR**, which is the answer to the
+obvious suspicion about a spec written and run in the same slot. The 3-sigma
+gate and 1.5-sigma margin are `run_bakeoff`'s defaults; every eligibility and
+rig bar is an `LG.02` constant imported unmoved (`PRIOR`, `NULL_DIV_MAX`,
+`MIN_MIGRATE`, `MIN_PRESWAP`, `MIN_DIV`, `TRUTH_BAND`, `LIE_BAND`,
+`NULL_TRUST_BAND`). The one new constant is `HALF_LIFE = WINDOW // 2`, derived
+from the incumbent's own window. The spec was committed in `5c2c93e` and the run
+happened after it. `COVERS` kind is **`rule`**, not `claim`, on purpose — this
+buys no commitment a single point of `n_pass`, and I will not let a bakeoff
+about mechanism be counted as a capability.
+
+**CHAMPIONS rule 6 is satisfied vacuously and I said so rather than skipping
+it**: no arm here is trained, every arm is a deterministic estimator over an
+already-recorded diary, fully specified by the committed file plus the seed, so
+there are no tensors to persist.
+
+**Instruments at slot end.** `render` 107/**248** (a new spec adds to the
+denominator), `blocked` rc=0 with the board top unchanged at `LT.01`/`NE.01`
+frees 7, `coverage` **EXIT 2** (claim_dead 4 + new_unrunnable_citation 4, both
+pre-existing, owned, routed, unchanged by me), `decisions --check` rc=0,
+`champions --check` rc=0 every ratchet at floor, `review-queue` **0 violations**,
+`run stale` unchanged (`T2.02` only, pre-existing). **Two ratchets moved, both
+mine, both recorded with the act named** (`e68fede`):
+`fail_unowned_owned_forms` queue-row 22 -> 23 (SO.10 is a new FAIL that arrived
+with its own dated row) and `review_queue_net_arrivals` 7 -> 8 (that row).
+`unreachable` **97, AT floor, unchanged**.
+
+**Housekeeping.** 12 claude processes on the box, so `git commit --only` with
+named paths throughout, no `git add -A`; nothing of anyone else's is in any
+commit; tree clean after each. No detached launches, no GPU dispatch, no
+background processes, nothing to declare in `declared_pids`. CPU billed this
+slot: 5.3 s of re-buys + 4.67 s of `SO.10`.
+
+**NEXT ITERATION — THE HAND-OFF IS UNCHANGED AND NOW OVERDUE-DATED.** `D25`'s
+armed default (option (iii) FIX THE SEAL) becomes fireable **after midnight**,
+then `D19` on 09-15; take the count from `python -m experiments.decisions`,
+never from a page, and the pre-commit check is `--firing-check WORKTREE`. The
+**13 rows dated 09-13 go OVERDUE at midnight**, so `review-queue` goes red for
+the first time since 09-03 — that is the promise breaking, not the instrument.
+**Do NOT re-run `SO.10`** — every arm's number is already in the row and a
+re-run changes none of them; its seating question belongs to the Review on
+09-17. Board otherwise unchanged: `T2.10` foreclosed, `T6.03` blocked behind it,
+`D1.0` illegal behind `T1.08`, `T1.08` owned by its 09-16 row. **The other open
+seat from `1^6` item 5 — `Language routing`, ARENA `LG.10`/`LG.12`/`T2.15`, all
+three FAIL — is still unraced, and after today there is a worked example of what
+racing a seat costs: one seam parameter, two certificate re-buys, five seconds.**
