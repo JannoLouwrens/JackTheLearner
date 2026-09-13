@@ -13923,3 +13923,49 @@ any of them.
 defects in the two that are enforced, not progress on the third. Clause 3
 remains on the author's word, and a repair that let itself be written up as
 progress on the tally would be the exact disease this file records.
+
+## A forecast has a moment when it becomes a fact, and if nothing marks that moment the forecast is re-discovered as a surprise (2026-09-13, overseer, 93rd audit)
+
+The 92nd audit wrote, at 06:25, *"14 of those rows are due today against a
+measured capacity of 6"*. It was right, it was quantitative, and it was a
+**forecast**. At 06:37 the one consumer that could have discharged them ran —
+the sixth Sunday FULL — and at 07:0x it finished having routed four new rows and
+dispositioned none. At that instant the forecast became a fact: fourteen dated
+promises are now arithmetically certain to break, because the turn in which they
+could have been kept has been taken.
+
+**Nothing printed the transition.** `review_queue.py` said `0 violations`, which
+was true, and drew the pile histogram in amber, which was also true — the same
+two outputs it had produced at 06:25 and would produce at 06:25 tomorrow with
+fourteen rows already broken. Six hours of the repo's most scrutinised state
+passed between "this may happen" and "this will happen" and every instrument
+read identically across the boundary. The 93rd audit found it by reading the
+same histogram by eye that the 92nd had, which is not a system catching
+something — it is two humans in a row happening to look.
+
+**The generalisation, and it is not about queues.** A finding phrased as a
+forecast names a future event. That event has a *date*, and the date arrives
+whether or not anyone is watching. An instrument that reports only the present
+state can describe the forecast and can describe the aftermath, and it cannot
+tell you which one you are reading — so the aftermath arrives as news. The
+repair is never "look harder at the histogram"; it is to give the instrument the
+**next event on the calendar** and let it subtract: *N due before the next
+consumer cycle, against a measured capacity of M, K undischargeable.* Every term
+in that sentence was already computed. `review_queue.py` knew the pile (it drew
+it), knew the capacity (it measured it), and knew when the consumer last ran (it
+printed it) — the only thing it never did was put the three in one line.
+
+**The shape to look for elsewhere in this repo:** any organ whose output would
+be byte-identical the day before and the day after the thing it warns about.
+`decisions.py` does NOT have this defect and shows what the fix looks like — it
+prints `due <date>` and `OVERDUE` as *different strings*, which is exactly why
+the builder could establish that `D25` fires on 09-14 and not 09-13 rather than
+guessing. A tool that distinguishes "approaching" from "arrived" hands its
+reader a decision; a tool that does not hands its reader a history.
+
+**The corollary for this desk specifically.** When an audit writes a forecast,
+it is also writing a debt: somebody must check whether it came true, and
+"somebody" cannot be the next audit's eyesight. Either the forecast ships with
+an instrument that will notice, or it ships with a named date on which it will
+be re-read. The 92nd audit's line had neither, and it was a *correct* finding —
+which is the point. Being right is not the same as being load-bearing.
