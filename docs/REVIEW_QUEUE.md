@@ -5899,3 +5899,85 @@ on this rig that scores a short-memory mechanism inherits the hazard.
 gate and 1.5-sigma margin are `run_bakeoff`'s defaults. `SO.10` is not re-run to
 get a different winner — every arm's number is already in the row, and a re-run
 changes nothing about them.
+
+ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.12 determinism repair) | OPEN
+    DUE: 2026-09-17 | ONE design question, and it is about an INSTRUMENT, not
+    about either spec: does this ladder want a mechanical detector for
+    "recorded metric is not a function of (code, seed, data)", and if so where
+    does it live? The three instances found today are FIXED and the class is at
+    zero — this row is not asking for a repair, it is asking whether the repo
+    should be able to see the NEXT one. Date from `review-queue`'s own
+    `next_free_due` (09-13 already carried 13 promises against a measured
+    capacity of 6), not chosen by hand — 68th audit B7, `3''`.
+
+**THE EVENT, and it was found by USING the rig rather than reading it.** An
+inert seam was added to `LG.10._measure` for the VACANT `Language routing`
+seat. Re-running the rig to prove the seam changed nothing produced
+`swap_agree` **0.8333** where LG.10's attempt-2 row said **0.861133** — while
+`match`, `unanimity`, `variety`, `liveness`, `leak_draws` and `speak_silence`
+all reproduced to the last digit. A seam that only renames a function object
+cannot move `swap_agree`, so the row had to be wrong.
+
+**THE MEASUREMENT.** `modal = max(set(meanings), key=meanings.count)`, at two
+sites in `LG.10` and one in `LG.12`. `set` iteration order over strings and
+tuples is a function of `PYTHONHASHSEED` and `max` keeps the first maximal
+element, so every count tie was broken by the interpreter's per-process salt —
+and at `TEMP` 1.0 over `S_DRAWS` 5, ties are the common case, not the corner.
+`swap_agree` is gated at `SWAP_AGREE_MIN` **0.90 in both specs**:
+
+    PYTHONHASHSEED      0      1      7     42  12345
+    swap_agree     0.8889 0.8333 0.8333 0.8611 0.8889
+      per seed 0   0.8333 0.6667 0.7500 0.9167 0.8333
+      per seed 1   0.9167 1.0000 0.9167 0.9167 0.9167
+      per seed 2   0.9167 0.8333 0.8333 0.7500 0.9167
+
+Seed 0 straddles the bar 0.6667 → 0.9167; seed 1 reaches 1.0000. No salt was
+set, recorded, or reconstructible, so the recorded figure could not have been
+re-derived by an auditor — which is the one property every row on this ladder
+is for.
+
+**ALREADY DONE, so the desk is not asked to order it.** One `_modal(xs)` =
+`max(dict.fromkeys(xs), key=xs.count)` (ties to first appearance in the seeded
+draw sequence) defined once in `LG.10` and imported by `LG.12`, so the family
+has a single implementation. Verified identical under salts 0/1/7/42/12345.
+Both rows re-bought: `LG.10` attempt 3 FAIL, `LG.12` attempt 2 FAIL, every
+other metric byte-identical. **No bar moved and the repair COST the specs
+rather than paying them** — deterministic `swap_agree` is 0.805567 and
+0.784867, below both lottery draws. A repo-wide sweep found exactly these
+three sites; every other `set()` reduction in `experiments/` is already
+`sorted(set(...))`.
+
+**WHAT IS ACTUALLY OWED, stated narrowly.** The verdicts were unchanged here
+because both specs miss `match` and `unanimity` by a mile, so `swap_agree` was
+never binding. That is luck about which conjunct happened to be slack, not a
+property of the defect. **The same lottery was one tie away from deciding a
+SEAT**: `swap_agree` was to be an eligibility leg in the `Language routing`
+race, where a single tie decides whether an arm may be seated. The open
+question is whether "not a function of (code, seed, data)" gets an instrument.
+The honest menu, priced:
+
+  - **(i) A STATIC AST SCREEN** over `experiments/tests/`, flagging
+    order-sensitive reductions over `set(...)`/unsorted iteration that reach a
+    recorded metric. Cheap to run, no spec re-runs, and `T0.13` already owns
+    the AST-over-test-sources idiom — but `T0.13` scans `_check` functions of
+    PASSING specs, and this defect lives in `_measure` of FAILING ones, so it
+    is a new detector rather than a new property on that one.
+  - **(ii) A DYNAMIC CHECK** — re-run `_experiment` under a second
+    `PYTHONHASHSEED` and diff. Exact, no false positives, and **priced out**:
+    it doubles every spec's cost against a `CPU_DAY_CEILING_S` that already
+    forecloses 38 specs today.
+  - **(iii) NOTHING — the class is at zero and the lesson is written.** Three
+    sites existed, three are fixed, and the repo's ten other `set()`
+    reductions were already `sorted(...)`. Defensible; it also means the next
+    instance is found the way this one was, by accident, by an unrelated edit.
+
+**WHY I DID NOT JUST BUILD (i) TODAY, said plainly so the restraint is on the
+record rather than implied.** `D27` is on the owner's desk with
+`decide_by 2026-09-20` asking *exactly* this question one level up — keep
+hand-sampling certificates, or buy a mechanical screen — and it carries a
+measured warning this row must not ignore: the prototype screen flagged **104
+of 107** PASS specs, 3 of 12 hand-checks were real. Shipping a second
+unmeasured screen while the owner is being asked whether screens work would
+walk around an open decision and would spend the credibility `D27` is trying
+to price. If (i) is taken, it is taken **reporting-only until its
+false-positive rate is written down**, which is `D27`'s own default.
