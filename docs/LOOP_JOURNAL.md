@@ -15117,3 +15117,150 @@ it was: do NOT re-run `T2.10` (foreclosed 0.0667 vs 0.10), `T6.03` (BLOCKED
 behind it), `D1.0` (illegal behind `T1.08`'s FAIL) or `T1.08` (its 09-16 row owns
 it). `2026-W37` has 0.82 of 30 GPU-h charged and there is still nothing legal to
 dispatch into it.
+
+## 2026-09-13 ~14:0x–15:0x UTC — the board was empty, so I audited the instrument that says so, and `frees 41` was 3
+
+**Meters and model, first paragraph as the page asks.** `week:all models` **83%**
+at 14:08 (the gate, and the only one I acted on); `week:Fable` 100%, so this slot
+was walked to **Opus** — expected, self-announcing, not a fault. `2026-W37`
+opened today with **0.82 of 30 GPU-h** charged. No `PACING:` streak.
+
+**THE BOARD IS GENUINELY EMPTY AND I VERIFIED IT MECHANICALLY BEFORE BELIEVING
+IT.** Of 246 registered specs, **9** have all dependencies PASS and no ledger
+row, and all 9 are held — PARKED (`SH.01`, `SM.02`, `T2.11`, `T3.10`),
+PILOT-BLOCKED (`SH.02`, `SM.03`, `DP.04`, `LC.07`), decision-HELD
+(`HR.1 <- D19`). Every spec `run next` offers carries a settled row owned by a
+REVIEW_QUEUE row on the Review's desk. Both builder dockets are discharged: the
+93rd audit's B1–B4 all landed in the previous slot, and of PROGRESS.md's six
+items, 4 and 5 are the armed conjuncts, 1 (`T2.10`) is foreclosed at 0.0667
+against 0.10, 6 is a prohibition, and **2 (`D25`) and 3 (`D1.0`) are not
+fireable yet** — `decisions` prints no `OVERDUE` beside `D25` at 14:08, which is
+the tool agreeing with the previous slot that both become fireable after
+midnight. I did not fire them and did not pre-stage them.
+
+**SO I TOOK THE INSTRUMENT THAT TELLS ME THE BOARD IS EMPTY, AND IT WAS WRONG.**
+`run blocked` printed `T1.08 = FAIL frees 41 (blocks 45)` this morning and four
+documents quoted it within the hour — PROGRESS.md item 1/3, OVERSIGHT.md,
+`coverage.py`'s `UNREACHABLE_BASELINE` growth log, and the REVIEW_QUEUE row
+`t108-bar-set-from-n1-is-now-the-projects-largest-blocker`, which priced a
+design question at *"41 specs"*.
+
+**The tell was printed beside the number all day: `unreachable` moved 93 -> 97
+on the same event.** A root cannot acquire 41 dependents while 4 specs become
+stuck. Measured by counterfactual against the ledger at `2ed9f85`: **repairing
+`T1.08` alone frees 3** — `D1.0`, `T2.01`, `T2.02`, the same three the growth
+log names one paragraph above its own 41. The other 38 fall straight back, 35
+onto `T2.01` and 3 onto `T2.02`. **A 13x overstatement at the top of the board.**
+
+**THE DEFECT, one term in `_terminal_blockers.walk`.** `roots |= upstream if
+upstream else {d}` resolves a stuck dependency to ITS roots and drops the
+dependency. So `T2.01` — settled FAIL, 35 specs behind it, the project's largest
+blocker for five weeks — was substituted away the moment it acquired an
+unsatisfied dependency, and its whole mass was credited to the spec underneath.
+The comment above that line named the two cases it handled ("itself stuck" /
+"merely not-yet-run") and the third is what bit: **a dependency can be BOTH.**
+Fixed in `5c444cf`; `run blocked` now reads `T1.08 frees 3 (blocks 45)` with the
+42 in *"needs a co-requisite too"*, which is what `groups` was built to say and
+was being silently collapsed. Board top is now `LT.01` and `NE.01` at frees 7.
+
+**WHY IT SURVIVED, and it is yesterday's lesson one file over.**
+`_terminal_blockers`' docstring says *"can be checked against a graph whose
+answer is known — see `_RANKER_FIXTURE`"*. `grep -rn _RANKER_FIXTURE
+experiments/` returns that one line. Named, never written; the injection seam
+(`ladder`/`by_id` are parameters for this and no other reason) was used by
+nothing for its whole life. `3e5fc4f` is the same class in `lc07`'s pricing.
+
+**`T0.36` REGISTERED, IMPLEMENTED, RUN — PASS attempt 1, 31.7 s, 7/7
+properties** (`5c444cf`, `ec7d735`). `overstated_roots` 0.0, `scar_root_claims`
+3.0, `unreachable` 97.0 of 247. **The control is the walk at `2ed9f85`
+reconstructed BY DELETION** of the added term and fails 4 of 7 —
+`worst_overstatement` **38.0**, `worst_root_is_the_scar` **1.0**, so the disease
+is reproduced by name and not merely by a red count. It passes P2/P4/P6 and
+`_check` does not ask those of it: P2 is an alive-proof it also satisfies, P4 is
+the never-run-intermediate case the repair deliberately leaves alone, and P6 is
+invariance against a baseline the control IS. `_RANKER_FIXTURE` now exists.
+
+**THE ORACLE IS NOT "IMMEDIATELY RUNNABLE", AND MY FIRST DRAFT OF P1 WRONGLY
+ASKED FOR IT — worth carrying, because it would have shipped a false property.**
+In `A = FAIL <- B <- C` with B and C never run, repairing A leaves C waiting on
+B, and running B is the loop's day job, not a blocker. The predicate is
+**repair-vs-run**, and it is the same one the walk now uses from the other end.
+The draft failed on the LIVE ladder with 10 roots overstating — which looked
+like the fix being incomplete and was the test being wrong.
+
+**TWO `_AssumeStatus` DEFECTS FELL OUT, both in the PASS direction nothing had
+ever exercised** (`blast_radius` only asks *what if X FAILS*): assuming PASS for
+a never-run spec raised `KeyError` (`HR.1`, `T2.11`), and assuming PASS over a
+STALE row came back *"PASS but stale"*, so the counterfactual answered
+*"repairing it buys nothing"* for `UB.10`, `T3.06` and `LF.01` — all three
+CHANGED. Assume-PASS now means repaired AND re-run, stamped against the code
+that exists now. Both repaired in the same commit.
+
+**NO FLOOR MOVED AND NO CERTIFICATE WAS LOST TO THE RANKER FIX.** `unreachable`
+is unchanged at **97, AT its declared floor** — T0.36's P6 asserts exactly that
+invariance, because an attribution repair that walked a shrink-only ratchet as a
+side effect would be the reporting fix buying itself room. Nothing declares
+`experiments/run.py` in `IMPL_DEPS` (checked by grep, not assumed). The ONE
+certificate I did stale is `T0.21`, because correcting the growth log edits
+`coverage.py` — **re-bought CLEAN in `5469032`, PASS 9.18 s, 0 uncovered
+commitments.** `demonstrated` is unchanged by every commit in this slot.
+
+**THREE RECORD CORRECTIONS, and the shape of each was chosen on precedent.**
+(a) The growth log's consequence (1) is corrected by **APPENDING**, not
+rewriting — a growth log that edits its own past is not a record; it also cited
+`t108-noise-floor-bar-set-from-n1-now-blocks-41-specs`, which resolves to
+nothing, and the live id is now in its place (59th audit's rule in this log's
+own house). (b) The REVIEW_QUEUE row is **annotated, NOT re-dated** — 93rd audit
+B1 precedent; it stays OPEN and DUE 09-16 and re-dating is the Review's call.
+(c) PROGRESS.md and OVERSIGHT.md also carry the 41 and **I did not touch them**;
+they are other organs' pages, and the correction is on the row and here.
+
+**WHAT THE CORRECTION DOES NOT DO, said plainly so nobody takes the wrong thing
+from it.** It does not soften the finding. `T1.08` still gates **45** specs and
+is still the right thing to fix; the ~0.72 GPU-h backend-confound arm pair is the
+same run at the same price. What changed is what that money buys ALONE — **3
+specs, not 41** — because the other 42 need `T2.01` too, and `T2.01` is a settled
+FAIL with no decided architecture. **The honest framing is a PAIR two repairs
+deep.** Fixing the ranking made the board harder, not easier.
+
+**`review_queue_net_arrivals` 6 -> 7, and NO act moved it** (`1e825d2`). The
+trailing 7-day window now starts 09-06, so 09-06's disposals aged out. Recorded
+with the cause named rather than left as a standing false alarm; it read 7
+before I touched anything.
+
+**LESSON ADDED** (`6eceb30`): *when one instrument prints two numbers about the
+same event, their arithmetic is the only free check you get.* `frees 41` and
+`unreachable +4` came out of the same walk over the same graph and contradicted
+each other in the same command's output for a day. The general form of the
+defect is also in it: **when you fix a double-count by substituting one entity
+for another, ask whether the substituted entity had mass of its own.** This
+ranker was repaired once before for double-counting (`T2.03 blocks 11`, freed
+two, *"the ranking sent the loop at the wrong unit"*) and today's defect is that
+repair's mirror image.
+
+**Instruments at slot end.** `run blocked` rc=0, `coverage` **EXIT 2**
+(claim_dead 4 + new_unrunnable_citation 4 — both pre-existing, owned, routed;
+unchanged by me), `decisions --check` rc=0, `champions --check` rc=0,
+`review-queue` **EXIT 0 / 0 violations**, `render` rc=0, `run stale` lists 6
+non-PASS stale rows + `T2.02`, every one pre-existing and none a file I touched.
+
+**Housekeeping.** 12 claude processes on the box; named paths on every commit,
+no `git add -A`, nothing of anyone else's in any commit, tree clean after each.
+No detached launches, no GPU dispatch, no background processes, nothing to
+declare in `declared_pids`.
+
+**NEXT ITERATION — FIRST UNIT IS UNCHANGED FROM THE PREVIOUS SLOT'S HAND-OFF:
+`D25`'s armed default, THEN `D19`.** Both become fireable after midnight; take
+the count from `python -m experiments.decisions`, never from a page — the
+previous slot warned there are more overdue than any page says, and it was
+right. Pre-commit check is `--firing-check WORKTREE`, not `HEAD`. Required
+wording: *"the owner did not rule by <date>, so the pre-registered default
+fired."* **Second thing you will see: the 13 rows dated 09-13 go OVERDUE at
+midnight**, so `review-queue` goes red for the first time since 09-03 — that is
+the promise breaking, not the instrument breaking, and `IMMINENT` said so before
+it happened. **Board otherwise unchanged: do NOT re-run `T2.10`** (foreclosed
+0.0667 vs 0.10), **`T6.03`** (BLOCKED behind it), **`D1.0`** (still illegal
+behind `T1.08`'s FAIL — `run_spec` refuses it) or **`T1.08`** (its 09-16 row owns
+it, and that row now carries the corrected price). **And read `run blocked`
+fresh**: its ranking changed identity today twice, and the numbers on every
+priority page predate the second change.
