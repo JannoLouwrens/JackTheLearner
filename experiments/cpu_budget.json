@@ -119,11 +119,19 @@
     "2026-09-12": {
       "by_spec": {
         "LG.03": 728.86,
+        "PL.02": 1859.14,
         "T0.21": 18.63,
         "detached:pl02_smoke_rawgate_seed90.log": 977.07,
         "probe:d10_twin_spread": 1839.92
       },
-      "used_s": 3564.48
+      "used_s": 5423.62
+    },
+    "2026-09-13": {
+      "by_spec": {
+        "PL.02": 4008.07,
+        "detached:sm03_vis_open_probe.log": 143.24
+      },
+      "used_s": 4151.31
     }
   },
   "overruns": []
