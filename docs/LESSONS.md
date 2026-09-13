@@ -13161,3 +13161,54 @@ hit.** Whether this particular warning SHOULD become a refusal is a real
 question with a real cost — a dirty tree is sometimes the honest state to run
 from, and over-refusing is its own disease — and it is not settled here. What
 is settled is that today it enforces nothing, and that the file said so.
+
+## A saturated NULL makes the claim's own conjunct unsatisfiable — and nothing in this repo counts a conjunct that cannot SUCCEED
+
+*(builder, 2026-09-13, implementing `UB.10`'s battery redesign)*
+
+This file already carries **"An assertion made against a saturated quantity
+cannot fail"** and six of its relatives. Every one of them is about the
+*failing* direction: a gate that can never go red, a control that can never
+trip, an extremum over an empty window. `UB.10` is the DUAL, and no lesson here
+had named it.
+
+`UB.10`'s PASS requires *"winner > A0 on every seed"*, where `A0` is the
+matched-param anchor. Attempt 1 recorded `A0` slot **1.0 on all three seeds**.
+Nothing can exceed 1.0, so that conjunct was not merely hard — it was
+**unsatisfiable by arithmetic**, and the spec could not have passed however good
+the fusion arms were. The run cost a P100 dispatch and returned `VOID`, and it
+voided on a *different* gate (`marginal_ok` 0.0), so the ledger row does not
+mention the saturation at all. It is in the docstring because a human noticed.
+
+**Why this is worse than the failing direction.** A gate that cannot fire red is
+a missing guard — bad, but the ladder still records what happened. A conjunct
+that cannot fire green **turns the whole spec into a non-instrument while every
+rig gate reports healthy**: the arms train, the controls behave, the numbers are
+real, and the verdict was decided by the venue before any arm was read. It looks
+exactly like an honest negative result.
+
+**Rule:** a bakeoff must gate on its NULL's HEADROOM, as a rig fact, checked
+BEFORE any arm is scored — *the anchor must read strictly below ceiling on every
+registered seed, by a declared margin, or the run VOIDs on the rig*. Declare the
+margin from the measurement's own noise (`UB.10`: 0.05 against the ~0.028 s.e.
+of a 320-example accuracy), never fit it to the observed anchor, and never
+repair a saturated anchor by lowering the winner's bar — that is threshold
+weakening with extra steps. The honest repair is always to the VENUE: a task
+the null cannot already solve.
+
+**It is a CLASS, not an incident — three instances already on the ledger, found
+independently and never joined up.** `SH.02`'s pilot: every arm without a live
+policy gradient held the roof at exactly 1.0000 against `HEADROOM_MAX` 0.85 —
+*"the null already holds the roof it was placed under and no choice can show
+above it."* `BA.03`: the blind twin holds 98.9% of the horizon, leaving 0.132 s
+for a claim needing 1.336 s. `UB.10`: the anchor at 1.0. Two of the three were
+caught by a headroom gate somebody wrote for that one spec; `UB.10` had none and
+burned the dispatch. **The generalisation nobody made is that this is not three
+specs' bad luck — it is a missing STANDING conjunct**, and a saturated null is
+the single most likely way for a well-built rig to measure nothing.
+
+**Corollary, and it is the cheap half:** the check is free and it is a REPLAY.
+Before dispatching any bakeoff, read the null's recorded per-seed values from
+the last row and ask whether the claim's inequality has room against them. That
+replay took thirty seconds here and returned `a0_slot_max` 1.0 against a 0.95
+bar, margin −0.05 — the same answer the GPU took 1,093 s to not-quite-say.

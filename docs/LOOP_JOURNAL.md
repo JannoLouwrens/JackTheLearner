@@ -13692,3 +13692,123 @@ sibling registration (09-16). `D1.0` is unchanged from the entry above: W37 has
 30.0 h, the preconditions are discharged, **and the dispatch is still the
 Review's on 09-14** — and as of `c8c98d7` there is finally a branch that would
 refuse it if it were not.
+
+**2026-09-13 ~07:0x UTC — first slot after the blackout ended; four dated units
+closed, the 91st audit's FOR-THE-BUILDER list is now empty except the one item
+it holds to 09-20.** Model: **opus** (`week:Fable` pinned at 100%, so the chain
+walked me off it, exactly as the steering page says it will). Meters read at the
+top of the slot: **`week:all models` 79%** — the gate — against elapsed 84% and a
+`pace_gate` line of ~80%, so I am released by ~1 point and the week's own reset
+at 09-14T04:59 releases unconditionally regardless. **The skip streak is
+over**: the 01:3x slot already ran (91st audit B1 + B2), so the 94-slot count
+the Review asked me to record was recorded by that slot, not this one; I am not
+re-recording it.
+
+**B3 — the union nobody printed (`9da23c6`).** `coverage` saw 4 CLAIM-DEAD
+commitments, `champions --check` saw 4 unwinnable seats, and **the union existed
+nowhere in this repository** — section 8 of every audit asks that question and
+the answer required a human to read two tools and do the join from memory.
+`run coverage` now prints it: **7 distinct commitments/seats with no live path**,
+1 seen by both — *smell* = seat `Smell (olfaction)` (SM.02, SM.03), *balance*,
+*thermal (kills)*, *shelter/building*, and the three champions-side ones,
+*Episodic retrieval* (ME.11.A–F), *Language grounding* (LG.04–06), *Body schema*
+(UB.14). The join rule is the substance and it is deliberately ASYMMETRIC: a
+commitment and a seat are the same hole when their spec sets intersect, but two
+COMMITMENTS sharing a falsifier are NOT merged — `shelter/building` and
+`thermal (kills)` both die on exactly {SH.01, SH.02} and are still two promises
+`GOAL.md` makes, one of which a single successor may not buy. So 7 is an upper
+bound on distinct repairs and **6** is the lower one, and both are printed;
+one confident number here would be precision I have no evidence for.
+MEASURE-ONLY on purpose — both halves already fire their own reds and a third
+exit-code term over the same facts would double-count. It REFUSES rather than
+returning a zero if either half cannot be read. Red-first in BOTH directions the
+join can break: a no-dedup variant fails 6 fixture cases by name, an over-merge
+variant fails 5. `_no_live_path_fixture` is wired into `qf`, so a broken join
+turns coverage red instead of printing a wrong number. **Cost paid, not
+absorbed:** `T0.21` hashes `coverage.py`, so this staled its certificate —
+re-bought PASS in 8.88 s from a CLEAN tree (`37d230e`), committing B3 first.
+That is last night's dirty-tree lesson enacted rather than merely written.
+
+**B4 — the expired premise, flagged and NOT re-dated (`70e2686`).**
+`REVIEW_QUEUE.md` dates two rows to 09-15 because *"the input is builder work
+and the builder is measurably switched off."* It is not. I flagged both rows
+with the meter reading and the three executed B-items, and **separated the two
+halves of the reason rather than lumping them**: the AVAILABILITY half is dead
+(and had a known expiry when written — the 09-14 reset releases
+unconditionally); the CAPACITY half is untouched and may still carry the date
+(09-13 carries 14 rows against a measured capacity of 6, 09-15 carries 2). No
+date moved, no row added. `review-queue` 0 violations before and after.
+
+**UB.10's battery redesign, parts 2 and 3 of 3 (`e85d1e5`) — committed BEFORE
+any re-dispatch, as the order requires.** `A0_HEADROOM` = 0.05 is now a RIG
+gate: the anchor must read slot <= 0.95 on EVERY registered seed or the run
+VOIDs before any arm is read, the same shape as `D1.0`'s learning gate. **I
+replayed it against the recorded row rather than asserting it:** attempt 1
+(impl_sha 890f99a0d7844095) recorded A0 slot **[1.0, 1.0, 1.0]**, so
+`a0_slot_max` 1.0 vs the 0.95 bar, **margin −0.05** — the gate fires on the row
+as it stands, and fires EARLIER than `marginal_ok` (0.0), which is what actually
+voided that attempt. Part 3 turns basin fragility from a rig VOID that hides the
+finding into a **scored disqualification**: `arm_trained_all_seeds` is per arm,
+a failing arm is NAMED in `disqualified_arms`, still measured, and cannot win or
+carry a conjunct; `learn_ok` keeps its original population and meaning and is
+now REPORTED, not gating. The ANCHOR is the one exception — no null, no claim.
+Both refusals in the order are implemented as refusals and named in the
+docstring so nobody re-proposes them (training-budget cut; seed-level
+scored-and-ineligible). **No arm-facing bar moved in either direction.**
+Red-first via `_redesign_fixture` (wired into `smoke`) and mutation-checked both
+ways: forcing `a0_headroom_ok` green fails the fixture by name, and restoring
+attempt 1's all-arms `learn_ok` VOID fails it by name.
+
+**PART 1 IS NOT DONE AND THIS ENTRY DOES NOT PRETEND IT IS.** The
+composite/cross-modal-XOR slot redesign is the design-heavy half and it is the
+one that makes `A0_HEADROOM` satisfiable; without it A0 saturates again and the
+new gate VOIDs the run on the rig. So `_BATTERY_REDESIGN_OWED` is set and
+**`run()` REFUSES**, which is the point: spending GPU hours on a guaranteed rig
+VOID is exactly what the gate exists to prevent, so the refusal is part of the
+gate rather than a nuisance beside it. The order is DUE 09-15; one slot's design
+work remains.
+
+**The lesson, and it is a CLASS this repo has now hit three times without
+joining it up** (`docs/LESSONS.md`, *"A saturated NULL makes the claim's own
+conjunct unsatisfiable"*). This file carries seven lessons about assertions that
+cannot FAIL; `UB.10` is the dual and nobody had named it — a conjunct that
+cannot SUCCEED turns the whole spec into a non-instrument while every rig gate
+reports healthy, which looks exactly like an honest negative result. Three
+instances are already on the ledger: `SH.02` (every gradient-free arm holds the
+roof at exactly 1.0000 vs `HEADROOM_MAX` 0.85), `BA.03` (blind twin holds 98.9%
+of the horizon, 0.132 s left for a claim needing 1.336 s), `UB.10` (anchor at
+1.0). Two were caught by a headroom gate somebody wrote for that one spec;
+`UB.10` had none and burned the dispatch. The cheap corollary: the check is a
+REPLAY of the null's recorded per-seed values and it costs thirty seconds.
+
+**NOT DONE, deliberately.** (i) **No GPU dispatch, fourth consecutive refusal.**
+W37 opened today with a fresh 30 h and `D1.0` attempt 3's preconditions are
+discharged, but the dispatch is the Review's on **09-14** and B1 says do not
+pre-empt it. `UB.10` is now refused in code as well. (ii) `B5` (`T0.13`) stays
+untouched until the 09-20 sweep authorises it — the order is explicit.
+(iii) Nothing re-dated anywhere.
+
+**Housekeeping, honest.** `review-queue` **0 violations** before and after; no
+new row, no new DUE date. Armed defaults: **zero overdue** (`D25` is due today
+and fires tomorrow; the overseer recommends letting it). `run status` EXIT 0,
+`coverage` rc=2 unchanged (the same 4 CLAIM-DEAD). `git commit --only` with
+named paths on all five commits; **13 claude processes on the box**, so no
+`git add -A`, and I touched no file I did not write. Zero leftover processes.
+`demonstrated` unmoved — nothing I did today was a capability claim, and the
+one number that DID move is a new readout, not a new certificate.
+
+**NEXT ITERATION:** **`UB.10` part 1 — the composite / cross-modal-XOR slot
+label (DUE 09-15)**, and it is now the only thing standing between this spec and
+a real verdict. The shape I got as far as, offered as a starting point and not a
+decision: `_episode_tensors` serves UB.9's `slot` label, which A0 solves at 1.0;
+a composite built from the two unimodally-decodable labels — e.g.
+`(vslot + 2*afell) % 4` — puts vision-alone at 0.5 and audio-alone at 0.25
+against a fused ceiling of 1.0, so neither modality carries the answer and the
+anchor has room. **Check that against `uni_slot_dev_max`'s leak gate before
+adopting it** — that gate VOIDs when a unimodal model reads off chance, and a
+vision-alone ceiling of 0.5 on a 4-class task is exactly the number it watches;
+the two may need reconciling, and reconciling them by loosening the leak gate
+would be threshold weakening. Then **`LG.10`'s sibling** (09-16) — check
+`LG.11`, which is already registered and may be it. `D1.0` attempt 3 is
+unchanged: preconditions discharged, W37 has 30.0 h, **and the dispatch is the
+Review's on 09-14.**
