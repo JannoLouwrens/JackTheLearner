@@ -36,10 +36,12 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-from .protocol import (GATE_DIRTY_FLAG, Budget, Ledger, Status, gate_precondition,
+from .protocol import (GATE_DIRTY_FLAG, Budget, Ledger, Status,
+                       dirty_recoverability, gate_precondition,
                        impl_deps_of, impl_sha_of, is_code_dirt,
                        module_path_for, porcelain_path, spec_drift,
-                       staleness_of, working_tree_porcelain)
+                       staleness_of, tree_reconstructing_sha,
+                       working_tree_porcelain)
 from .registry import BY_ID, LADDER, ready, tier
 
 TESTS_DIR = Path(__file__).parent / "tests"
@@ -448,10 +450,20 @@ def stale_claims(ledger: Ledger) -> list:
     not a guard", in its second form: a SIGNAL that no organ reads is not a
     guard either. CHANGED says the file moved after the run, so the code that
     ran is still recoverable from the recorded commit. DIRTY says the run
-    executed HEAD *plus* uncommitted edits, so the code that produced the entry
-    exists in no commit at all and cannot be recovered by anyone, ever. It is
-    reported ALONGSIDE the impl_sha verdict rather than instead of it: an entry
-    can be both, and they are different facts about it.
+    executed HEAD *plus* uncommitted edits, so the recorded commit does not
+    name what ran. It is reported ALONGSIDE the impl_sha verdict rather than
+    instead of it: an entry can be both, and they are different facts about it.
+
+    THIS PARAGRAPH USED TO END "exists in no commit at all and cannot be
+    recovered by anyone, ever", and that was an inference from the stamp, not
+    a measurement of the row (corrected 2026-09-13). The stamp is tree-wide
+    while `impl_sha` is per-spec, so a run whose own test file and IMPL_DEPS
+    were committed still stamps `+dirty` when anything else in the tree is
+    modified — which is the ordinary case for this loop. `PL.02` was exactly
+    that, and `preserve_impl_bytes` (2026-08-30) had already falsified the
+    "ever" for a second class of rows. `dirty_recoverability` decides which of
+    the four states a dirty row is in; the DIRTY kind still fires in all of
+    them, and every consumer still refuses on it.
     """
     out = []
     for s in LADDER:
@@ -588,10 +600,15 @@ def cmd_status(ledger: Ledger) -> int:
     if dirty:
         # Above the CHANGED block deliberately: this is the more serious of the
         # two and the scoreboard's top lines are what an iteration actually reads.
-        print("  ! DIRTY STAMPS — the run's code exists in no commit:")
+        # The header and the prescription both used to be unconditional — "the
+        # run's code exists in no commit", then "Re-run it from a clean tree"
+        # — and on 2026-09-13 that was false for the only row in the block
+        # (PL.02's implementation reconstructs at the very commit the row is
+        # stamped at). `dirty_recoverability` now writes the detail AND the
+        # owed action, per row, so this prints neither on its own authority.
+        print("  ! DIRTY STAMPS — the runner could not name what it executed:")
         for sid, st, _, detail in dirty:
-            print(f"      {sid}  recorded {st}; {detail}. Re-run it from a "
-                  f"clean tree.")
+            print(f"      {sid}  recorded {st}; {detail}.")
         print()
     if changed:
         print("  ! STALE CLAIMS — the test changed after the run that recorded it:")
@@ -1511,6 +1528,58 @@ def _check_stale_detector(ledger: Ledger) -> None:
                 f"the stale detector did not flag a planted {kind} on {victim}; "
                 "refusing to report a clean scan it may not have performed")
 
+    # THE DIRTY BUCKET HAS FOUR SUB-STATES AND THREE OF THEM READ ZERO TODAY
+    # (2026-09-13: one live dirty row, COMMITTED). That is the same shape this
+    # function's docstring already argues about the bucket as a whole — a
+    # sub-state whose known-positive has never been seen is not evidence of
+    # anything, and the sub-state is what decides whether a re-run is OWED.
+    # Each plant is a constructed case, and each is RED-FIRST in the only
+    # sense available to a classifier: it asserts the state the row cannot be
+    # in unless the branch that names it actually ran.
+    victim_path = _module_path_for(victim)
+    committed_sha, where = None, None
+    for sid in (victim, *(s.id for s in LADDER)):
+        e, p = ledger.results.get(sid), _module_path_for(sid)
+        rec = getattr(e, "impl_sha", None) if e is not None else None
+        if not rec or p is None:
+            continue
+        if tree_reconstructing_sha(p, rec)[1]:
+            committed_sha, where = rec, p
+            break
+    if committed_sha is None:
+        raise RuntimeError(
+            "no ledger row's impl_sha reconstructs from any commit, so the "
+            "COMMITTED branch of dirty_recoverability cannot be exercised — "
+            "refusing to report a dirty scan whose commonest verdict is untested")
+    for want, entry, p in (
+            ("COMMITTED", _DirtyProbe("abc1234+dirty", committed_sha), where),
+            ("PRESERVED", _DirtyProbe("abc1234+dirty", "f" * 16,
+                                      preserved_impl="refs/jack/failimpl/X"),
+             victim_path),
+            ("LOST",      _DirtyProbe("abc1234+dirty", "f" * 16), victim_path),
+            ("UNSTAMPED", _DirtyProbe("abc1234+dirty", None), victim_path)):
+        got = dirty_recoverability(entry, p)[0]
+        if got != want:
+            raise RuntimeError(
+                f"dirty_recoverability returned {got} for a constructed "
+                f"{want} row; the dirty report's sub-states are not the states "
+                "it names, and a re-run prescription derived from them is noise")
+
+
+class _DirtyProbe:
+    """A constructed dirty ledger row, for the known-positive plants above.
+
+    Deliberately not a `Result`: the plants must be readable as "these four
+    fields are all the classifier may look at", and a real Result would let a
+    future edit quietly start reading a fifth.
+    """
+
+    def __init__(self, commit, impl_sha, preserved_impl=None, dirty_files=None):
+        self.commit = commit
+        self.impl_sha = impl_sha
+        self.preserved_impl = preserved_impl
+        self.dirty_files = dirty_files
+
 
 def cmd_stale(ledger: Ledger) -> int:
     _check_stale_detector(ledger)
@@ -1523,12 +1592,13 @@ def cmd_stale(ledger: Ledger) -> int:
     dirty = [r for r in rows if r[2] == "DIRTY"]
     declare = _unstamped_deps_denominator(unstamped_changed, intact, unknown)
     if dirty:
-        print(f"\n{len(dirty)} claim(s) recorded from a MODIFIED tree — the code "
-              f"that ran is in no commit:\n")
+        print(f"\n{len(dirty)} claim(s) recorded from a MODIFIED tree — the "
+              f"runner could not name\nwhat it executed:\n")
         for sid, st, _, detail in dirty:
             print(f"  {sid:8} {st:7} {detail}")
-        print("\nRe-run each from a clean tree. This is worse than CHANGED: "
-              "there is no commit\nto go back to.")
+        print("\nStill worse than CHANGED: CHANGED names a commit by "
+              "construction, and a dirty\nstamp only sometimes does. Each row "
+              "above says which case it is and what it owes.")
     if not changed:
         print("\nNo stale claims — every verifiable entry names the test as it "
               "stands today.")

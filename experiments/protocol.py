@@ -454,6 +454,24 @@ class Result:
     `inherited == False` rows only, or one hungry spec in a sweep indicts
     every spec recorded after it. `None` iff `peak_rss_mb` is `None`."""
 
+    dirty_files: Optional[list] = None
+    """Every uncommitted CODE path at run time, when the stamp says `+dirty`.
+
+    `env_stamp` has computed this list since 2026-08-10 to decide the one-bit
+    `+dirty` suffix, and then discarded it — the `planner_calib_reach` shape
+    (`LG.03`, 09-12: the run computes the number and throws it away). The bit
+    says the tree was modified; only the list can say WHETHER the modification
+    was in the implementation this row names, and that is the question every
+    reader of a dirty row actually has. Answering it post-hoc is impossible:
+    the working tree is gone.
+
+    `None` means the row predates this field — UNRECORDED, never "nothing was
+    dirty" (the `Arm.cost` lesson: a sentinel that is also a valid value cannot
+    be detected). `[]` cannot occur on a `+dirty` row and is not a clean stamp;
+    a clean run records `None` because the key is only written when dirt was
+    found. Read it through `dirty_recoverability`, which is the one home for
+    what a dirty row's recoverability actually is."""
+
     unknown_keys = ()
     """Row keys this version's dataclass does not define, set by `from_row`.
 
@@ -502,7 +520,7 @@ class Result:
         return obj
 
     @staticmethod
-    def env_stamp() -> Dict[str, str]:
+    def env_stamp() -> Dict[str, Any]:
         root = Path(__file__).parent.parent
         try:
             commit = subprocess.run(
@@ -532,16 +550,24 @@ class Result:
         # `run stale`, and BLOCK its dependents — an evidence log that
         # invalidates the evidence. The rule the set encodes: a file the runner
         # writes cannot be a file the runner audits itself against.
+        # AND IT RECORDS THE LIST, not only the bit it derives from it. The
+        # list was computed here and discarded from 2026-08-10 until
+        # 2026-09-13, which made "was the dirt in the implementation this row
+        # names?" unanswerable the moment the working tree moved on — and that
+        # is the only question a reader of a dirty row has. See
+        # `Result.dirty_files` and `dirty_recoverability`. Costs nothing: the
+        # subprocess already runs and the paths are already parsed.
+        dirty: list = []
         try:
             porcelain = subprocess.run(
                 ["git", "status", "--porcelain"],
                 capture_output=True, text=True, cwd=root, timeout=10,
             ).stdout.splitlines()
-            dirty = [ln for ln in porcelain if is_code_dirt(ln)]
+            dirty = code_dirt(porcelain)
             if dirty and commit not in ("", "unknown"):
                 commit += "+dirty"
         except Exception:
-            pass
+            dirty = []
         hw = f"{platform.machine()}/{platform.system()}"
         try:
             import torch
@@ -552,7 +578,13 @@ class Result:
                 hw += "/cpu"
         except Exception:
             pass
-        return {"commit": commit, "hardware": hw}
+        stamp: Dict[str, Any] = {"commit": commit, "hardware": hw}
+        # Only when the stamp is dirty, so a clean row keeps `dirty_files=None`
+        # — "unrecorded" and "nothing was dirty" must not share a value, and a
+        # clean run has the commit to speak for it.
+        if commit.endswith("+dirty"):
+            stamp["dirty_files"] = sorted(dirty)
+        return stamp
 
 
 class Ledger:
@@ -2501,14 +2533,106 @@ def blob_sha_at_run(path, ran_at, repo_root=None, grace_min=30) -> tuple:
     return _done(hashlib.sha256(s.stdout).hexdigest(), "")
 
 
+def dirty_recoverability(entry: "Result", path) -> tuple:
+    """For a `+dirty` row: is the implementation it ran ACTUALLY unrecoverable?
+
+    Returns `(state, sentence)`. The state is one of:
+
+      COMMITTED  the recorded `impl_sha` reconstructs from a committed tree
+                 state, so this spec's own implementation — test file plus
+                 every path in its `IMPL_DEPS` — WAS committed, byte for byte.
+                 The working tree was dirty somewhere this spec does not
+                 declare.
+      PRESERVED  it reconstructs from no commit, but `preserved_impl` names a
+                 git ref holding the exact bytes, proven equal to the recorded
+                 sha by `preserve_impl_bytes` before the ref was written.
+      LOST       neither. The original claim, and now the only case it is true
+                 of.
+      UNSTAMPED  the row predates `impl_sha`; nothing can be compared, so it
+                 is reported as LOST is, never as clean.
+
+    WHY THIS EXISTS. `staleness_of` printed one sentence for all four — *"the
+    code that ran was never committed"*, and `run status` followed it with
+    *"Re-run it from a clean tree"*. On 2026-09-13 the only live DIRTY row was
+    `PL.02`, whose run recorded `impl_sha 781f7bd2669c52dd`, and that sha
+    reconstructs byte-identically from **`7ffd3c8` — the very commit the row is
+    stamped at**. The dirt was in other files. So a standing instrument told
+    every reader that an implementation was gone while it sat in the history
+    the same row names, and prescribed ~49 minutes of deterministic CPU to
+    recover something that was never lost. That is the `audit_supersedes_fail`
+    shape (09-07: a red instrument whose sentence is false for most rows it
+    prints), and it is repaired the same way — the sentence changes, the alarm
+    does not.
+
+    WHAT DOES NOT CHANGE, deliberately and by construction: the KIND stays
+    `DIRTY` in every state. `Ledger.unsatisfied`, `borrow_metrics` and
+    `gate_precondition` all filter on the kind, so every refusal a dirty row
+    earns today it still earns. This is not a lane for excusing dirty runs —
+    a `+dirty` stamp still means the runner could not name what it executed,
+    and COMMITTED means only that the part this spec DECLARES was committed.
+    What ran outside that declaration is exactly the residual hazard, which is
+    why `Result.dirty_files` now records it at run time rather than computing
+    it and throwing it away (`env_stamp`).
+    """
+    stamp = str(getattr(entry, "commit", "") or "")
+    base = stamp.split("+")[0] or "?"
+    files = getattr(entry, "dirty_files", None)
+    if files is None:
+        where = ("what else ran modified is unrecorded — this row predates "
+                 "`dirty_files`")
+    else:
+        declared, _ = impl_deps_of(path)
+        try:
+            rel = str(Path(path).resolve().relative_to(
+                Path(__file__).resolve().parent.parent))
+        except ValueError:
+            rel = str(path)
+        own = sorted(set(files) & ({rel} | set(declared or [])))
+        where = (f"{len(files)} uncommitted code file(s) at run time"
+                 + (f", INCLUDING this spec's own {', '.join(own)}"
+                    if own else ", none of them this spec's own"))
+
+    recorded = getattr(entry, "impl_sha", None)
+    if not recorded:
+        return ("UNSTAMPED",
+                f"ran from a modified tree at {base} and predates `impl_sha`, "
+                f"so nothing can say what it executed ({where}). Re-run it "
+                f"from a clean tree")
+    _fb, commit, _drifted, _problem = tree_reconstructing_sha(path, recorded)
+    if commit:
+        return ("COMMITTED",
+                f"ran from a modified tree at {base}, but the implementation it "
+                f"names IS committed: `impl_sha {recorded[:12]}` reconstructs "
+                f"byte-identically at {commit[:8]} (test file + IMPL_DEPS), so "
+                f"the uncommitted edits were outside what this spec declares "
+                f"({where}). A re-run buys a clean stamp, not a recovered "
+                f"implementation")
+    ref = getattr(entry, "preserved_impl", None)
+    if ref:
+        return ("PRESERVED",
+                f"ran from a modified tree at {base}; no commit reconstructs "
+                f"`impl_sha {recorded[:12]}`, but the exact bytes are archived "
+                f"at {ref} and were proven equal to that sha before the ref was "
+                f"written ({where}). Recover with `git cat-file -p {ref}`; a "
+                f"re-run from a clean tree is what puts them in history")
+    return ("LOST",
+            f"ran from a modified tree at {base}; the code that ran was never "
+            f"committed, reconstructs from no commit and was not preserved "
+            f"({where}) — it cannot be recovered by anyone. Re-run it from a "
+            f"clean tree")
+
+
 def staleness_of(entry: "Result", path) -> List[tuple]:
     """Every reason this entry is not a claim about the code that exists now.
 
     Returns a list of `(kind, detail)` — empty means the entry still describes
     the current implementation. Kinds:
 
-      DIRTY        the run's commit stamp ends in `+dirty`, so the code that
-                   produced it exists in no commit and cannot be recovered.
+      DIRTY        the run's commit stamp ends in `+dirty`, so the runner could
+                   not name what it executed. WHETHER the implementation is
+                   still recoverable is a second question with four answers —
+                   see `dirty_recoverability`, which writes this kind's detail.
+                   The kind fires in all four; only the sentence differs.
       UNSTAMPED_CHANGED  the entry predates `impl_sha`, but git can answer
                    anyway: the file's content at HEAD differs from the blob
                    that stood at run time (`blob_sha_at_run`). This is STALE
@@ -2547,8 +2671,7 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
     out: List[tuple] = []
     stamp = str(getattr(entry, "commit", "") or "")
     if stamp.endswith("+dirty"):
-        out.append(("DIRTY", f"ran from a modified tree at {stamp.split('+')[0]}; "
-                             f"the code that ran was never committed"))
+        out.append(("DIRTY", dirty_recoverability(entry, path)[1]))
     recorded = getattr(entry, "impl_sha", None)
     if not recorded:
         import hashlib
