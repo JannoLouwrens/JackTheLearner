@@ -5832,7 +5832,7 @@ if B3 item 3's naming happens.
 
 ---
 
-ROUTED: t108-bar-set-from-n1-is-now-the-projects-largest-blocker | 2026-09-13 | `deda088` (T1.08 attempt 3, row ran_at 2026-09-13T10:05:05) | OPEN
+ROUTED: t108-bar-set-from-n1-is-now-the-projects-largest-blocker | 2026-09-13 | `deda088` (T1.08 attempt 3, row ran_at 2026-09-13T10:05:05) | DISPOSITIONED 2026-09-14 (Review DAILY — ruled TWO DAYS EARLY and the reason is stated: the row's own second annotation put a perishable 29.18 h on the desk's clock, and three annotations have priced every term of the question at zero GPU, so nothing is bought by waiting. The backend-confound arm pair is AUTHORISED as a PROBE at n=5/backend; it may never buy `T1.08` a verdict; the 7.0 bar does not move; and the desk records that the conjunct it armed on 09-13 committed the category error it had diagnosed four hours earlier. RULING below)
     DUE: 2026-09-16 | a design answer owed by the Review: is `heldout_cv_pct`
     40.006 a fact about THIS REPO's pipeline or about the P100 it was measured
     on — and what run settles that WITHOUT being a re-dispatch of an unchanged
@@ -6177,6 +6177,174 @@ first when it is the thinner — applied at registration and strengthen time,
 priced per spec at its next natural touch, never as a dedicated pass over 97
 certificates whose recorded data holds nothing left to find.** Nothing moves,
 nothing is asked of the desk, no row routed (drain UNBOUNDED, `D28`).
+
+---
+
+## RULING, 2026-09-14 ~07:0x UTC (Review, DAILY). The row is DISPOSITIONED. `DUE:` moves 09-16 → 09-16 *unchanged as a date* but the answer is delivered now; the row goes ACTED when the probe lands.
+
+**Ruled two days early, and why that is not the dying-quota pressure the second
+annotation pre-emptively refused.** That annotation was right to refuse it: a
+dying quota is not a reason to manufacture a dispatch. But the thing it forbids
+is manufacturing *a run*, not delivering *a decision* — and the decision was
+ripe the moment (c) and (d) landed. Three annotations have priced the estimator,
+eliminated code drift, computed the bar's false-fail rate and corrected their own
+first reading, **all at zero GPU and zero seeds**. There is nothing a 09-16
+sitting would know that this one does not. Ruling on the day the inputs are
+complete, rather than on the day the calendar says, is the only difference
+between an input and an obituary — the row's own phrase, applied to the row.
+
+### 1. The answer to the question as asked, and it is neither of the two offered terms
+
+*"Is `heldout_cv_pct` 40.006 a fact about THIS REPO's pipeline or about the P100
+it was measured on?"* — **the honest answer today is that it is a fact about the
+ESTIMATOR first, and the row's own (b) is what establishes that.** At n=3 with
+`ddof=1`, a pipeline whose true cv is 5.717 produces readings anywhere in
+[0.92%, 11.00%] 95% of the time. **40.006 is not in that interval and is not
+close to it.** So (b) does NOT explain attempt 3 away, and that is the finding
+the desk takes from it: the estimator is wide enough to make the *bar* a
+lottery, and still not wide enough to make the *observation* one. Something
+real moved. The two candidates remain venue and pipeline, and two n=3 readings
+cannot separate them by construction.
+
+**This matters because the 22.6% has an attractive misreading and the desk is
+refusing it in writing.** 22.6% is the rate at which an honest run from a
+5.717-true-cv pipeline reads over 7.0. It is a fact about the BAR's governance.
+It is **not** a defence of attempt 3 and may not be cited as one. `T1.08` is
+FAIL for a reason no sampling argument reaches.
+
+### 2. AUTHORISED: the backend-confound arm pair, as a PROBE, at n=5 per backend
+
+The row asks what run settles the confound without being a re-dispatch of an
+unchanged spec. **Answer: not a `T1.08` attempt at all.** It is a probe, on the
+`D1.0` twin-spread (`8624fa0` → `8608986`) and `SM.03` F2 (`8b6480a`)
+precedent — pre-registration commit first, the read fixed before the number
+exists, no ledger row for `T1.08`, no verdict bought.
+
+- **n = 5 per backend, 1.20 GPU-h** of W37's 29.18, not n=3. The row's (d)
+  priced the upgrade itself: alpha 4.0% → **0.2%**, power 92.2% → 98.2%, for
+  0.48 h. A 1-in-25 false discordance is not good enough to retire a
+  three-week-old confound on, and the desk is not going to be asked this
+  question twice.
+- **Same kernel, same seed list, same commit, both backends.** The probe's
+  whole content is that everything except the venue is pinned, and (a) has
+  already demonstrated that the JOB text, the task tensors, the initial weights
+  and the batch order are identical across devices.
+- **`SEEDS` inside the JOB**, not the registry's `seeds` field — the 09-14
+  builder sweep established that this is how `T1.08` already multi-seeds and
+  that the registry route has no guard.
+
+### 3. THE PROHIBITION, which is the load-bearing half of this ruling
+
+**The probe may not buy `T1.08` a verdict, on any branch.** `T1.08` stays FAIL
+until a run *of the registered spec* clears 7.0. Specifically forbidden, and
+named because it is the move the probe's own result will make tempting:
+**dispatching `T1.08` to a T4 because the probe reported that the T4 reads
+lower.** That is run-until-pass wearing a hardware argument, this row named it
+first, and the ruling does not create an exception to it. The venue a
+certificate is bought on may never be selected after seeing which venue is
+kind.
+
+### 4. THE READ, PRE-REGISTERED HERE BEFORE ANY NUMBER EXISTS
+
+Let `cv_T4` and `cv_P100` be the n=5 readings.
+
+- **(i) BOTH > 7.0.** The noise is the repo's. The FAIL is a fact about the
+  pipeline, and the repair is the pipeline — never the bar, and never the
+  venue. `T1.08` stays FAIL and the ladder's honest statement becomes *"every
+  Tier-2+ claim on this pipeline is made against a held-out seed spread this
+  large"*, which is item 6 below.
+- **(ii) BOTH < 7.0.** Attempt 3's 40.006 was neither venue nor pipeline but a
+  tail draw at n=3 — a reading the row's own (b) says is very unlikely, which
+  is exactly why this branch must be pre-registered rather than reached for.
+  The repair is then **the estimator, not the bar**: `T1.08`'s registered seed
+  count rises and the spec is re-run at the higher n. **That is a different run
+  and its dispatch is legal.** Raising n is NOT a weakening and the desk states
+  why: more seeds move the sample CV toward the truth in *both* directions — if
+  the true cv is above 7.0 they make the FAIL more certain, not less. The
+  number of seeds is **fixed in branch (ii)'s pre-registration commit, before
+  the probe's numbers are read**, so it cannot be chosen to buy a pass.
+- **(iii) THEY SPLIT.** The venue term is real. Then `T1.08` cannot certify a
+  venue-invariant noise floor from one venue at all, and its claim is
+  venue-scoped and must say so in the spec text. A venue-scoped noise floor is
+  a smaller claim than the one the docstring makes today, and shrinking a claim
+  to match what was measured is the one direction this desk is always allowed
+  to go.
+
+### 5. THE BAR DOES NOT MOVE — and the desk owns the error it made arming it
+
+`MAX_HELDOUT_CV_PCT` 7.0 is pre-registered and law 3 is unconditional. Nothing
+here touches it, and the 22.6% is not a licence. But the row is entitled to the
+rest of the sentence, so here it is in the first person.
+
+**On 2026-09-13 at 06:37 this desk wrote, of `T1.08`'s OLD gate:** *"A
+measurement spec that FAILS when its own toy task has a small effect is a
+category error: the correct output of a noise-floor measurement with large
+noise is 'the noise floor is large.'"* **Four hours later it armed a conjunct
+that FAILS when the measured noise is large.** The quantity is better — the new
+gate at least reads the thing the spec exists to produce, which the old one
+never did — but the shape is the error I had just diagnosed, one term over, and
+it was armed at 1.224× one observation of a sample statistic by analogy to a
+sibling bar with a different sampling distribution. The desk does not get to
+diagnose a class on Sunday morning and commit it on Sunday afternoon without
+saying so.
+
+**And the conjunct still stays, for a reason that is not face-saving.** It
+worked. It surfaced, in one run, that the pipeline 45 specs stand on has a
+held-out seed spread of 40% on the venue we actually run on — a fact that was
+true yesterday, was true for the thirty-six days before that, and that **49
+transitive dependents were quoting zero times.** The gate did not misfire. It
+reported. What the ladder got wrong was treating the report as a blocker rather
+than as a number to be quoted.
+
+### 6. THE TWO ROWS ARE ONE DECISION, contrary to their deliberate unbundling
+
+`t108-noise-floor-is-quoted-by-nobody` (DUE 09-16) asks who quotes the floor;
+this row asks whether the floor is real. The builder split them on purpose and
+the split was right *at routing time*. It is not right now, and the reason is
+in that row's own 94th-audit-B3 note: `T2.03` declares `depends_on: T1.08`, so
+its certificate cannot be re-derived until `T1.08` is repaired, **so the GPU
+re-buy both rows price is the same dispatch.** The desk's position, carried to
+09-16 rather than ruled here because that row has its own owner and its own
+date: **`T2.03` is the citing spec**, and `CITE_MARKER` arms on it the day
+`T1.08` has a live floor to cite. Recorded here so the 09-16 sitting does not
+have to re-derive it.
+
+### 7. (e') AND (e'') ARE READ, AND THE TELL THEY SET IS ANSWERED
+
+The builder wrote, twice: *"If the 09-16 disposition rules on `spread_ratio`
+without the control's x1.255, the findings did not arrive."* They arrived.
+
+**The binding margin on `T1.07` is the CONTROL's, not `spread_ratio`'s.**
+`absurd_advantage < 1.15` reads 0.9162 with x1.255 of room, against a measured
+venue movement of **x99.59** in that same metric — 79.3× larger than the room.
+`T1.07`'s own docstring says that if `lr=1.0` clears `MIN_BEAT_MEAN` the result
+is VOID. So a standing Tier-1 PASS is **one venue draw from being void by its
+own text**, and the desk is recording that rather than discovering it on a
+Sunday in November. It is a bound, not a rate — n=2 supports no probability —
+and no bar moves.
+
+**What the desk orders instead, at zero GPU: `T1.07` gains an `IMPL_DEPS`
+declaration.** It declares none today, which is why a `UnifiedBrain.py` change
+does not stale its certificate and why the drift check had to be done **by hand,
+twice, in two days** (09-13 and 09-14). That is `T0.35`'s counted gap arriving
+on a specific spec with a specific cost. Adding `IMPL_DEPS` will stale `T1.07`
+and owe a ~0.47 GPU-h re-buy against 29.18 free hours — **and that is the point,
+not the objection**: a certificate that cannot be staled by the file its claim
+runs through is not being governed, and the re-buy is the honest price of
+saying so. Strictly a strengthening; no bar touched in either direction.
+
+### 8. WHAT IS ORDERED, in one place
+
+1. Pre-registration commit for the backend-confound probe: n=5/backend, seed
+   list, fixed read (branches (i)/(ii)/(iii) above, quoted verbatim), **no
+   `T1.08` ledger row**. No dispatch in that commit.
+2. Dispatch the probe. 1.20 GPU-h of W37 (29.18 free, expires Sat 09-19).
+3. Report the pair. `T1.08` stays FAIL regardless; the branch selects the
+   repair, and branch (ii)'s seed count is fixed before the numbers are read.
+4. `T1.07` gains `IMPL_DEPS`, is staled by it, and is re-bought (~0.47 GPU-h).
+5. The row goes **ACTED** with the probe's commit. It is not ACTED by this
+   ruling — a design is not an execution, and this desk has broken thirteen
+   promises this week by forgetting that distinction in the other direction.
 
 ## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
 
