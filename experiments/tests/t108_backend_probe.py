@@ -135,7 +135,7 @@ import os
 import time
 from pathlib import Path
 
-from ..gpu import build_job, submit
+from ..gpu import Budget, build_job, submit
 from . import t1_08_seed_variance as T
 
 #: n=5 per backend, fixed in the pre-registration commit. See the docstring.
@@ -188,12 +188,30 @@ def _save_state(state: dict) -> None:
     OUT.write_text(json.dumps(state, indent=1))
 
 
-def _arm_record(intended: str) -> dict:
+class _KaggleAlreadyRead(Budget):
+    """Refuses kaggle so `submit`'s fallback cannot buy a DUPLICATE reading.
+
+    Used only when the kaggle arm is already filled and the colab arm is being
+    attempted: colab's last two real attempts (2026-09-07) failed in ~5 s, and
+    a fast colab failure would otherwise fall back to kaggle and spend ~0.6 h
+    on a venue whose n=5 reading already exists. This is the documented use of
+    `submit(budget=...)` — routing control without touching the accounting
+    file — and it never blocks the FIRST kaggle purchase.
+    """
+
+    def afford(self, backend: str, est_hours: float) -> bool:  # noqa: D102
+        if backend == "kaggle":
+            return False
+        return super().afford(backend, est_hours)
+
+
+def _arm_record(intended: str, *, block_kaggle: bool = False) -> dict:
     """One submission of the spec's own kernel. Returns the record keyed by
     the venue that ACTUALLY ran, which may differ from `intended`."""
     job = build_job(T.JOB.replace("__SEEDS__", repr(PROBE_SEEDS)))
     res = submit(job, prefer=intended, est_hours=EST_HOURS,
-                 timeout_s=TIMEOUT_S, fetch=["t108.json"])
+                 timeout_s=TIMEOUT_S, fetch=["t108.json"],
+                 budget=_KaggleAlreadyRead() if block_kaggle else None)
     if not res.ok:
         return {"ok": False, "intended": intended,
                 "message": res.message, "backend": res.backend}
@@ -253,6 +271,12 @@ def main() -> int:
     # recorded "pilot" phase so it is summable separately from registered runs.
     os.environ["JACK_SPEC_ID"] = "T1.08"
     os.environ["JACK_SPEC_PHASE"] = "probe"
+    # The deadline guard protects watchers that are CHILDREN of a builder
+    # session; this process is detached by its launch contract and outlives
+    # any slot. Launched from a slot, the env leaks in and silently reroutes
+    # the colab arm to kaggle — measured on this probe's first invocation
+    # (2026-09-14 07:15: intended=colab, attempt row backend=kaggle).
+    os.environ.pop("JACK_ITER_DEADLINE", None)
 
     lock_fh = open(GPU_LOCK, "w")
     try:
@@ -273,7 +297,9 @@ def main() -> int:
         if state["arms"].get(intended):
             continue
         print(f"--- submitting n={len(PROBE_SEEDS)} arm, intended={intended}", flush=True)
-        rec = _arm_record(intended)
+        rec = _arm_record(intended,
+                          block_kaggle=(intended == "colab"
+                                        and state["arms"]["kaggle"] is not None))
         if not rec.get("ok"):
             state["failures"].append({"ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
                                       **rec})
