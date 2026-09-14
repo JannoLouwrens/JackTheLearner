@@ -6462,3 +6462,129 @@ Evidence: `scripts/lib_seal.sh` (the fourth case, `_seal_stamp_emissions`,
 `scripts/test_lib_liveness.sh` (`--- seal_output: the tail receipt ---`);
 `cf18320` and `docs/PROGRESS_LOG.md:26` (the 2026-09-06 scar); 76th audit B4
 (the `INCOMPLETE` fallback row).
+
+---
+
+## D28 — The Review desk's arrival rate has exceeded its disposal rate for seven days, its drain is UNBOUNDED, and at midnight it broke 13 dated promises — the first violations this queue has ever carried. Every repair costs something only you may spend. (2026-09-14, overseer, 95th audit)
+
+**The measurement, from `experiments/run.py review-queue` at 00:4x, not from
+anyone's report.**
+
+| | reading |
+|---|---|
+| live rows | **49** (33 OPEN, 3 HELD, 13 DISPOSITIONED) of 59 routed |
+| oldest live | 21 d |
+| arrivals, trailing 7 d | **15** (2.14/cycle) |
+| disposals, trailing 7 d | **7** (1.00/cycle) |
+| designs (DISPOSITIONED — still live, still ageing, NOT drain) | 10 (1.43/cycle) |
+| drain | **UNBOUNDED — the backlog has no projected end** |
+| measured one-cycle capacity | **6** |
+| due on or before the next cycle | **19**, of which **13 cannot be discharged** |
+| `review_queue_violations` | **0 → 13** (0 since 2026-09-03, and 0 for this queue's whole recorded life) |
+| settled FAILs whose ONLY repair owner is a row here (`D23`) | **23** |
+
+The 13 that broke were all promised 2026-09-13: `w0-too-shallow`,
+`w1-world-edit-window`, `t215-router-under-lexical-null`, `sh02-null-saturation`,
+`two-eyes-one-certified`, `ba03-null-saturates-the-horizon`,
+`t306-matched-magnitude-noise-buys-coverage`, `lt01-c2-body-cannot-rise`,
+`cross-organ-doc-race-voids-certificates`,
+`xl01-death-and-retry-has-no-reachable-repair-path`,
+`t205-world-model-loses-to-the-ridge-reference`,
+`t402-touch-drowns-audio-at-the-fusion-boundary`, and
+`t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall`.
+
+**Nobody was deceived and nobody lied.** The 93rd audit's `IMMINENT` reading
+forecast this exactly and printed it before the dates passed; the Review wrote on
+09-13 *"I said for a week it would not clear, and it did not"*; the builder
+reported the ratchet movement at 00:12 and correctly declined to record it as its
+own act. Every instrument did its job. The desk cannot pay.
+
+**Why this reaches the ledger and is not merely a busy desk.** `fail_unowned`
+reads **0, AT its floor** — a green number — because 23 settled FAILs are
+"owned" by rows on this desk. `coverage` already prints the caveat in full:
+*"a queue-row owner is a dated promise, not a repair; read the queue's own drain
+before calling it handled."* As of midnight that desk has defaulted on 13 dated
+promises, so for those 23 FAILs **ownership is nominal**. Four of the project's
+seven CLAIM-DEAD / no-live-path commitments — smell, balance, thermal, shelter —
+sit behind redesigns owed by the same desk. So does `T1.08`, which went FAIL
+yesterday and now **blocks 45 specs**, the largest blocker number ever recorded
+here, with 29.18 free Kaggle hours in the pot and no legal buyer for them.
+
+**Why the desk cannot be argued out of this, and why it is not a bakeoff.** Each
+individual routing is the *correct* act: `D23` established that routing IS the
+repair for an orphaned FAIL, and refusing to route would convert a visible
+backlog into an invisible one. The Review has diagnosed itself accurately for
+seven days — `PROGRESS_LOG` 09-07, its own words: *"the bottleneck is not
+compute, not credits and not the builder — 40 live queue rows, UNBOUNDED
+drain"* — and live rows have gone **40 → 49** since. This is a capacity fork, not
+a judgement anyone has got wrong.
+
+Rule 3 checked explicitly, because a means-fork on this desk would be the `D1`
+disease: the arms are (i) more Review wall clock, (ii) fewer routings, (iii) a
+second consumer organ, (iv) the builder drains its own queue. Arm (i) spends the
+**shared all-models usage meter**, whose exhaustion took every organ dark for 4.3
+days in August and which read 86% against a 90% stop last night. Arms (iii) and
+(iv) reallocate design authority that `D22` placed with the Review by armed
+default six days ago. **Every arm turns on what is PERMITTED rather than on what
+WORKS**, which is the narrow case SYSTEM.md still reserves for the owner — and no
+bakeoff can be run on desk-hours without first being granted them.
+
+**What the overseer is NOT asking for and did not do.** No row was deleted,
+re-dated, relabelled `HELD`, or stripped of a `DUE:`. The 13 violations stand as
+violations. Disposing them is the desk's act — ACT, DECLINE, or re-date with a
+reason — and the reader's `next_free_due` is 2026-09-18. One observation offered
+rather than ordered: re-dating 13 rows onto a single cycle of capacity 6 rebuilds
+the pile and breaks it again, and **DECLINE is an honest disposition that is
+entirely unused — 0 of 59 rows have ever been declined.**
+
+DECIDE: D28
+  class:     goal
+  blocks:    no spec id directly, which is why no `blocked` ranking can see it.
+             What it blocks is the REPAIR of 23 settled FAILs whose only owner
+             is a row on this desk, four CLAIM-DEAD commitments (smell,
+             balance, thermal, shelter) whose successors are redesigns owed
+             here, and `T1.08`, which blocks 45 specs and holds 29.18 free
+             Kaggle hours idle. The cost is realised, not forecast: 13 dated
+             promises broke at midnight and live rows went 40 -> 49 in the
+             seven days after the desk correctly diagnosed itself.
+  default:   (a) OVERDUE FIRST. The Review's daily sitting spends its first
+             act disposing the OVERDUE class — ACT, DECLINE, or re-date with
+             a reason — before routing anything new. Nothing else changes: no
+             row is deleted, no `DUE:` is dropped, no row is relabelled HELD,
+             no disposition is chosen on anyone's behalf, and the desk keeps
+             every routing right it has today. This picks only already-
+             permitted actions (a desk may order its own work; ordering is
+             not a new authority), moves no threshold in either direction,
+             edits no GOAL.md text, widens nothing, spends no GPU, commits no
+             budget, fails no spec, refuses no run, stales no certificate,
+             and leaves no commitment claim-dead. It is MONOTONE on the thing
+             at issue: it can only move disposal EARLIER in a sitting, never
+             later. Options (i) more wall clock and (iii) a second consumer
+             are deliberately NOT the default because each spends the shared
+             usage meter by silence, and a default may not commit a budget
+             that is already failing — the precise reasoning `D27` used to
+             refuse its own option (ii). Option (iv) builder-drains is not
+             the default because it reassigns design authority that `D22`
+             settled six days ago, and a default may not widen what an organ
+             is permitted to do. Option (ii) fewer routings is not the
+             default because it would suppress findings, converting a visible
+             backlog into an invisible one — the opposite of the repair.
+             The price, stated rather than buried: on a day carrying both a
+             broken promise and a fresh finding, the finding gets routed
+             later in the same sitting, and if a sitting dies at its wall
+             clock the finding may not get routed at all that day. That is a
+             real cost and it is the reason this is (a) and not something
+             stronger. Reversal: delete one sentence from the Review's
+             prompt; no code, no threshold, no ledger row.
+  decide_by: 2026-09-21
+
+Evidence: `experiments/run.py review-queue` (THROUGHPUT, IMMINENT and the 13
+OVERDUE rows, all at 00:4x 2026-09-14); `run status` ratchet block
+(`review_queue_violations` 0 -> 13, `fail_unowned` 0 AT floor with 23 queue-row
+owners); `run blocked` (`T1.08 = FAIL frees 3 (blocks 45)`);
+`experiments/gpu_budget.json` (`2026-W37` 0.82 of 30); `docs/PROGRESS_LOG.md:27`
+(the desk's own 09-07 self-diagnosis) and `:33` (09-13, "I said for a week it
+would not clear"); `docs/OVERSIGHT.md` RANK 2 and RANK 4, 95th audit; `D23`
+(routing IS the repair for an orphaned FAIL); `D22` (design authority stays with
+the Review); `D27` (the precedent for refusing a default that commits a failing
+budget).

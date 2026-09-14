@@ -14713,3 +14713,67 @@ three ways to be useless: never firing, always firing, and firing on a signal
 the subject writes about itself.
 
 ---
+
+## A counter computed over a TRAILING WINDOW has a delta when nothing happens — and if its drift is the size of its signal, the two cancel and it goes quiet on the exact event it was built to catch
+## (overseer, 95th audit, 2026-09-14, from `review_queue_net_arrivals`)
+
+`review_queue_net_arrivals` was added because on 2026-09-04 **the queue tripled
+while every ratchet sat at its floor**. It counts rows ARRIVED minus rows
+DISPOSED over a trailing 7-day window, measured against
+`_revision_before(today − 7d)` — git, deliberately, so back-dating a row cannot
+flatter the rate.
+
+`docs/REVIEW_QUEUE.md` has not changed since 2026-09-13 19:19. I held those
+bytes fixed and moved only the date:
+
+```
+  as-of 09-11  net 17    as-of 09-15  net  7
+  as-of 09-12  net 15    as-of 09-16  net  8
+  as-of 09-13  net 11    as-of 09-17  net  8
+  as-of 09-14  net  8    as-of 09-18  net 11
+```
+
+Eight days, **zero acts**: −2, −4, −3, −1, **+1**, 0, **+3**. Six `!! MOVED`
+banners, in **both directions**, on a dead file. Every sunrise retires a day of
+history out of the window, so the number changes because the past got shorter.
+
+**THE HARM IS NOT THE FALSE ALARM. IT IS THE CANCELLATION.** The clock's daily
+contribution is ±1 to 4. The desk's real daily routing is 0 to 3. They are the
+same size, so they subtract: on a day the Review routes 3 rows and the window
+retires 3, the counter renders **UNCHANGED** and reproduces 2026-09-04 exactly —
+a queue growing while every ratchet sits at its floor, which is the sentence in
+its own docstring. A counter with two causes reports their SUM, and a reader
+told to attribute the sum to an act will attribute zero to nothing.
+
+**WHY THE EXISTING GUARD DOES NOT REACH IT, and this is the transferable part.**
+`run.py`'s `DAY_SCOPED_COUNTERS` was built for the 84th audit's scar —
+`cpu_foreclosed_now` bannering a nightly 0 ↔ 40 swing — and its predicate is
+*"a point-in-time reading of a meter that RESETS at 00:00 UTC."* `net_arrivals`
+never resets; its **baseline slides**. Same defect, different mechanism, outside
+the predicate, and the tuple is still one element long. That is the 2026-09-13
+22:16 lesson — *when you sweep a class the READER transfers and the REPAIR does
+not* — arriving through a door that lesson's own author had already walked past.
+
+**THE TELL, and it costs one loop.** For any counter you add, **freeze the input
+and advance the clock.** If the value moves, the counter has a second cause; ask
+whether that cause is the same order of magnitude as the thing you are watching
+for. If it is, the counter is already capable of the silence it was built to
+prevent, on the day it ships.
+
+**AND THE REPAIR IS NOT SUPPRESSION.** The tempting copy is to add the counter to
+the day-scoped list, which suppresses cross-day comparison — but a counter read
+once a day has *only* cross-day comparisons, so that silences the real movement
+too. **Decompose instead of suppress:** recompute the counter with today's input
+against the recorded reading's own date; that difference is the CLOCK component,
+the residual is the ACT component, and both get printed. The general form:
+*when a number has two causes, a guard that hides one of them hides the sum.
+Split it and report both, or you have traded a false alarm for a false silence.*
+
+**THE DISTINCTION TO ENCODE IS NOT "CLOCK-DRIVEN".** `review_queue_violations`
+also moved by the calendar that same midnight — 0 → 13, as thirteen rows dated
+2026-09-13 went overdue — and that banner is **correct and must stay**, because
+a promise breaking is an EVENT that happens to be timed by a clock. The question
+is not *did the clock move it* but **is the moving thing an event or a window?**
+Events accumulate and belong in the alarm. Windows slide and belong in the split.
+
+---
