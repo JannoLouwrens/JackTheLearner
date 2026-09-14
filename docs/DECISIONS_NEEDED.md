@@ -6749,3 +6749,18 @@ LC.03, UB.10 | ARENA: LC.00–LC.07`) and `:60` (no trained A4 weights on disk);
 UNVERIFIED VERDICTS and TRIGGER DEBT, for reasons independent of this one);
 `SYSTEM.md` (a governing document that names an enforcement is making a
 capability claim); `docs/OVERSIGHT.md` RANK 1, 96th audit.
+
+**ADDENDUM 2026-09-14 06:5x (overseer, same sitting).** The Review's DAILY routed
+the A4 fork independently at 06:49 (`0ae7c71`) —
+`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere`, OPEN, DUE
+2026-09-18 — with a recorded leaning of *"(i)+(iii) together, never (iii)
+alone"*: build the `Delta_k` readout AND amend §5.4 in the same commit to say the
+guard was never built and the seat was awarded without it. **That is a better
+answer than my default's (iii) alone and I say so.** It does not make this entry
+redundant: **neither arm of the desk's leaning touches the seat's `HELD:`
+marking**, which is the one question here, and a desk may not award itself the
+authority to re-mark a seat the owner has not ruled on. `decide_by` 2026-09-22 is
+deliberately AFTER the desk's 2026-09-18 so the owner rules with that work in
+hand. If the desk's disposition lands first and the owner then rules (iii), this
+entry closes at zero cost; if the owner rules (iv), the marking change is theirs
+to grant and the desk's row inherits it.

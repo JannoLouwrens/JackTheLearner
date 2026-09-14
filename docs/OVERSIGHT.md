@@ -12,6 +12,27 @@
 > 09-13 06:37; `docs/PROGRESS.md` still carries it; the next Review sitting is
 > a DAILY, today.
 
+> **TWO CORRECTIONS, both landing during the sitting and both against me.**
+>
+> **(a) RANK 1's headline fact expired 52 minutes after I measured it.** The
+> Review's DAILY sat at 06:45–06:50, consumed the field watch (`f34d366`) and
+> **routed the A4 finding itself** — `a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere`,
+> OPEN, **DUE 2026-09-18** (`0ae7c71`), the same date my B2 named, reached
+> independently. The finding is **no longer homeless**; B2 is discharged before
+> it was read. RANK 1 is corrected in place below and its *reader* half stands
+> unchanged — see the corrected text for what survives and why I did not retract
+> the whole rank.
+>
+> **(b) This audit's three files were swept into another organ's commit.** My
+> `OVERSIGHT.md`, `D29` and the lesson were staged at 06:49:30 and committed at
+> 06:49:48 inside **`6698fc8`**, whose message is about a blast-radius contract
+> and mentions none of them. Nothing was lost and nothing was corrupted — I
+> diffed all three. But the git log of this page now attributes the 96th audit
+> to a Review commit, so **`cross-organ-doc-race-voids-certificates` has a fresh
+> instance, produced on the overseer, while that row is itself OVERDUE** (promised
+> 2026-09-13, 1 d). It is dated evidence for a live row and it is recorded here
+> rather than filed as a new finding.
+
 ## VERDICT: DRIFTING
 
 **The clean part first, and it is most of the audit. Every number below I
@@ -131,11 +152,33 @@ findings are consumed by one hand-written line in the Review's Part 2.5
 
 The builder's 06:07 slot said so in the open and was not hiding it: *"The §6
 A4-diagnostic finding is a three-way decision fork the FULL will read directly
-from the field watch; **I routed nothing there.**"* The next FULL is Sunday
-**2026-09-20**, six days out; that sitting has **died at max turns on four of
-four attempts**; and `D28`'s armed default, if it fires, orders it to spend its
-first act on a 13-row OVERDUE pile. The expected outcome is that it is not read
-on 09-20 either.
+from the field watch; **I routed nothing there.**"*
+
+**CORRECTED AT 06:50 — the finding was routed while I was writing this, and I
+was wrong about the outcome.** I predicted it would wait for Sunday's FULL and
+not be read there either. Instead the Review's **DAILY** consumed the field
+watch in full (`f34d366`) and routed
+`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere` at 06:49
+(`0ae7c71`), OPEN, **DUE 2026-09-18** from `next_free_due` — the same date my B2
+was about to name. It reproduced both greps independently, recorded a leaning of
+*"(i)+(iii) together, never (iii) alone"*, and wrote the sentence that makes the
+routing honest: *"an amendment that records its own scar is a repair; one that
+quietly matches text to code is how a capability claim disappears."* It also
+indicted itself in the same commit for the identical failure one week earlier.
+**That is the desk working well and my forecast was simply wrong.**
+
+**What survives the correction, and it is the part I would not retract.** The
+finding was discharged **because a Review sitting happened to run within the
+hour and happened to read a page nothing obliges it to read** — Part 2.5's
+*"Field watch — nothing to consume"* is a hand-written habit. `grep -rn
+"FIELD_WATCH" --include=*.py experiments/ scripts/` still returns **zero**. The
+habit held this morning; it is not a mechanism, it is not counted anywhere, and
+nothing would have gone red had the sitting been the one that dies at its wall
+clock. **B1 is unchanged and is now better-evidenced, not worse:** the gap
+between a finding landing and an instrument being able to see it was **52
+minutes of luck**, and the measurement of that gap is exactly what an
+`UNROUTED-FIELD-FINDING` counter would have made visible instead of leaving to a
+forecast — mine, which was wrong.
 
 **This is `D15` one organ over.** `decisions.py` was taught to print
 `UNROUTED-OWNER-ASK`/`VANISHED-OWNER-ASK` after the 09-03 loss, precisely because
@@ -388,18 +431,18 @@ Ordered. None of these is a GPU unit and none needs the desk's permission.
    the test red — the same trick you used on the steering reader this morning.
    Count every class, per `T0.31`: a reader that counts one class pays a repair
    that lowers its own number.
-2. **Route `§6` today, with a clock.** It is the oldest homeless finding on the
-   board at six hours and it is about the Learning-core seat. Take the date from
-   `review-queue`'s own `next_free_due` (**2026-09-18**), not from Sunday and not
-   by hand. In the same commit record the fact **on the seat** where
-   `champions.py` and every future reader will meet it — `CHAMPIONS.md`'s
-   Learning-core cell already carries the single-arm caveat and the
-   `VENUE-UNAFFORDABLE` label; this is a second caveat of the same kind.
-   **Do not change the seat's `HELD:` marking** — downgrading `BY VERDICT` would
-   move `champions --check`'s UNVERIFIED-VERDICTS count 2 → 1 and shrink a
-   ratchet by re-labelling instead of by repair, which is the `ARENA-MISSING`
+2. **~~Route `§6` today, with a clock.~~ DISCHARGED 06:49 by the Review
+   (`0ae7c71`), before this page was committed** — same date (09-18), reached
+   independently. One thing remains and it is small: the Review's row lives in
+   `REVIEW_QUEUE.md`, so **`champions.py` and `CHAMPIONS.md` still cannot see
+   it.** When the row is disposed, record the fact **on the Learning-core seat
+   cell**, beside the single-arm caveat and the `VENUE-UNAFFORDABLE` label it
+   already carries. **Do not change the seat's `HELD:` marking** — downgrading
+   `BY VERDICT` would move `champions --check`'s UNVERIFIED-VERDICTS count 2 → 1
+   and shrink a ratchet by re-labelling instead of by repair, the `ARENA-MISSING`
    anti-pattern wearing a different hat. The marking question is `D29`'s and it
-   is the owner's.
+   is the owner's; the Review's stated leaning ((i)+(iii)) does not touch it, so
+   the two are not duplicates.
 3. **Make `ME.9` and `ME.10` distinguishable from the three you repaired.**
    They render `[PASS]` today exactly as `ME.1`/`ME.3`/`ME.5` do, and nothing
    prints that their `distractor_abstention = 1.0` sits on m = 15 and m = 36,
@@ -464,7 +507,18 @@ claim four separate ways and it held every time. It is that **every exit from
 the empty board is dated on a desk that broke 13 promises**, and 29.18 free
 GPU-hours expire on Saturday with no legal buyer. `D28` is the lever.
 
-**5. NO-DECISION — liveness, nothing to rule on.** Builder alive, 24 iterations,
+**5. NO-DECISION — `D29` is not a duplicate of the Review's new row, and here is
+the boundary so nobody has to guess.** The Review routed the A4 *fork* at 06:49
+(`a4-...-computed-nowhere`, DUE 09-18): build the readout, and/or amend §5.4 to
+record its own scar. `D29` asks the one question that fork does not touch and
+that no desk may settle for you — **whether an architecture seat may hold
+`CHAMPIONS.md`'s strongest marking while its declared guard was never armed.**
+If you rule (iv), the Review's row inherits a marking change it currently has no
+mandate for; if you rule (iii), its leaning and my default agree and the entry
+closes cheaply. Either way `decide_by` 09-22 sits after the desk's 09-18, on
+purpose, so you rule with its work in hand.
+
+**6. NO-DECISION — liveness, nothing to rule on.** Builder alive, 24 iterations,
 23 `rc=0`, last 06:24. Field watch fired on cadence this morning (wk7, 05:57) and
 **declared its own degraded coverage rather than hiding it** — the arXiv API 429'd
 on six attempts across two paths, so it ran none of the 40-entry enumerations
