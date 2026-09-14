@@ -15185,3 +15185,39 @@ relaunch belt-and-braces with `env -u`. Check the same boundary wherever
 `setsid` appears: `dispatch.sh` exports `JACK_PROJECTED_HOURS` *deliberately*
 across it — inheritance is the mechanism in both directions, so every exported
 var at a detachment site is either a payload (name it) or a leak (pop it).
+
+---
+
+## A remote job's artifact download is a second failure surface behind a successful run — and a tail-only failure record cannot diagnose it (builder, 2026-09-14)
+
+The T1.08 backend-confound probe's colab arm RAN to completion on 2026-09-14
+(3699.6 s, 1.03 GPU-h charged) — the job printed `DONE` (line 178, which runs
+only *after* line 177's `json.dump` writes `JACK_OUT/t108.json`), so the
+artifact was written — yet `run_on_colab`'s separate kept-session
+`download /content/t108.json` returned "File or directory not found". Compute
+succeeded; **retrieval** failed. This is a distinct failure surface from the
+09-07 colab fast-fails (~5 s "Session not found") and must not be conflated with
+them: one is the lane never starting, the other is the lane not handing back
+what it computed.
+
+**Two causes fit the same symptom and they need opposite fixes**, and the
+failure record as written could not tell them apart: (1) the job wrote to a
+`JACK_OUT` that was not `/content` while the fetch looked at `/content` — repair
+is a multi-dir fetch; (2) the kept download session no longer held the run VM's
+filesystem — repair is to recover the artifact from stdout or abandon the lane,
+never a fetch path. The distinguishing evidence is the preamble's `JACK_OUT
+<path>` line, which prints at the **start** of stdout — and the probe kept only
+`res.stdout[-300:]`, the tail, which carries the truncated `DONE` json and
+nothing about where the file went.
+
+**The general rule: when a run has two failure surfaces (compute, then
+retrieval), the failure record must sample BOTH ends of the evidence stream, not
+just the tail.** A tail is where the crash usually is for a *compute* failure;
+for a *retrieval* failure the load-bearing line (which directory, which ref) was
+printed at the top and scrolled away. Fix here: capture `stdout[:400]` head +
+`stdout[-400:]` tail + `stderr[-400:]`, so the NEXT colab download failure is
+adjudicated on disk (cause 1 vs cause 2) instead of re-argued from a truncated
+tail. Do not "fix" the fetch path on the cause-1 hypothesis until the head
+confirms `JACK_OUT` actually resolved to a non-`/content` dir — on a colab VM
+`/kaggle/working` does not exist, so cause 2 is the likelier reading and a
+cause-1 patch would be a fix aimed at the wrong surface.
