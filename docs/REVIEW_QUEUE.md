@@ -349,7 +349,7 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
         (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`) and four
         gate-provisional specs are behind it. Re-arm it with a new DUE: and a
         reason if the next FULL run cannot carry it; do not delete this line.
-    DUE: 2026-09-13 | DELIVERED AND SUPERSEDED. The design owed on 2026-09-06
+    DUE: 2026-09-23 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. The DESIGN IS DELIVERED and this row is DISPOSITIONED: what this date owes is EXECUTION by the builder, not a decision by this desk. Dated where a builder slot can plausibly reach it rather than onto the Review's own calendar. | DELIVERED AND SUPERSEDED. The design owed on 2026-09-06
         was written and committed by the Review's FULL run that morning (the
         W1 DESIGN block below, five specs with falsifiers, controls and an
         ordering) — the fifth Sunday bet, and the first one that paid. What
@@ -915,7 +915,7 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
         and behind this one carry the same note for the same reason — the next
         reader is tomorrow's 06:37 DAILY, looking at red rows with no cause
         attached to any of them.
-    DUE: 2026-09-13 | the single world-edit sitting that `W1.03` opens, which
+    DUE: 2026-09-18 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | the single world-edit sitting that `W1.03` opens, which
         pays the 21-certificate `playground.py` mechanical bill ONCE for every
         world edit that is owed. This row exists so that the two holds that
         were `BLOCKED-BY: w0-too-shallow` have a LIVE blocker after that row
@@ -1194,7 +1194,7 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
         read, is how a seat gets carved with the wrong boundary. The 09-09
         desk refused a comparable last-ten-minutes ruling on `pl02` for the
         same reason and that refusal stands as precedent.
-    DUE: 2026-09-13 | **the ANATOMY AUDIT item, and it is deliberately ON the
+    DUE: 2026-09-26 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. The DESIGN IS DELIVERED and this row is DISPOSITIONED: what this date owes is EXECUTION by the builder, not a decision by this desk. Dated where a builder slot can plausibly reach it rather than onto the Review's own calendar. | **the ANATOMY AUDIT item, and it is deliberately ON the
         Sunday pile rather than off it** — seat creation is FULL-mode work
         and no other sitting can do it. Two conjuncts owed: (1) does the
         language-ROUTING mechanism get its own seat, or is it inside
@@ -1936,7 +1936,7 @@ ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated;
     its heading carried the declaration one `## ` away from being read.)
-    DUE: 2026-09-13 | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
+    DUE: 2026-09-19 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. THIRD BREAK FOR THIS ROW (09-06 -> 09-09 -> 09-13 -> now), and it was bundled to a Sunday FULL that sat on 09-13 and did not reach it. STOP-RULE, binding on this desk: if this date breaks too the row is DECLINED and the finding is carried to the owner as a class, because a promise renewed four times is not a promise and a row nobody will ever rule on should not be occupying a clock. | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
     09-09). This row, `ba03-null-saturates-the-horizon` and
     `t306-matched-magnitude-noise-buys-coverage` are the SAME QUESTION wearing
     three spec ids: a null or anchor that saturates, so the gate cannot resolve
@@ -2249,7 +2249,7 @@ anyone wants it.
 ## 2026-09-07, per the 82nd audit B3)
 
 ROUTED: two-eyes-one-certified | 2026-09-07 | 2b3e8a6 (82nd audit B3; eye adopted in b7324ba) | OPEN
-    DUE: 2026-09-13 | the Review rules whether existing visual certificates
+    DUE: 2026-09-26 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | the Review rules whether existing visual certificates
         migrate to the adopted coarse eye, stay grandfathered under the eye
         they were bought with, or get a crossing test — Sunday FULL.
 
@@ -2528,7 +2528,7 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
     constants BA.03 imports by reference) if the kick model itself moves.
     Full record: VOID RECORD in `ba_03_braces_against_a_surface.py`, and the
     machine-readable reason in that file's `VOID-FORECLOSED:` declaration.
-    DUE: 2026-09-13 | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
+    DUE: 2026-09-20 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. THIRD BREAK FOR THIS ROW (09-06 -> 09-09 -> 09-13 -> now), and it was bundled to a Sunday FULL that sat on 09-13 and did not reach it. STOP-RULE, binding on this desk: if this date breaks too the row is DECLINED and the finding is carried to the owner as a class, because a promise renewed four times is not a promise and a row nobody will ever rule on should not be occupying a clock. | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
     09-09). This row, `sh02-null-saturation` and
     `t306-matched-magnitude-noise-buys-coverage` are the SAME QUESTION wearing
     three spec ids: a null or anchor that saturates, so the gate cannot resolve
@@ -2608,7 +2608,7 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
     policy covers W0 as well as curiosity (the wk5 reading) re-buys the same
     unattributable contrast; any (a) redesign must gate on the random-action
     comparator too, or state why the wk5 number no longer applies.
-    DUE: 2026-09-13 | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
+    DUE: 2026-09-21 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. THIRD BREAK FOR THIS ROW (09-06 -> 09-09 -> 09-13 -> now), and it was bundled to a Sunday FULL that sat on 09-13 and did not reach it. STOP-RULE, binding on this desk: if this date breaks too the row is DECLINED and the finding is carried to the owner as a class, because a promise renewed four times is not a promise and a row nobody will ever rule on should not be occupying a clock. | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
     09-09). This row, `sh02-null-saturation` and
     `ba03-null-saturates-the-horizon` are the SAME QUESTION wearing
     three spec ids: a null or anchor that saturates, so the gate cannot resolve
@@ -2848,7 +2848,7 @@ ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 
     Staleness bill: NONE for (a) — LT.01 has one FAIL row and no certificate
     cites it. (b) and (c) bill nothing either; (c) defers to whatever bill
     `w0-too-shallow` chooses.
-    DUE: 2026-09-13 | IMPLEMENTATION of `C2'` below plus LT.01 attempt 2,
+    DUE: 2026-09-24 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. The DESIGN IS DELIVERED and this row is DISPOSITIONED: what this date owes is EXECUTION by the builder, not a decision by this desk. Dated where a builder slot can plausibly reach it rather than onto the Review's own calendar. | IMPLEMENTATION of `C2'` below plus LT.01 attempt 2,
         owed by the BUILDER. This row stays LIVE until a commit carries the
         adversarial height-seeking arm; a re-run without that arm is NOT this
         disposition and must not be stamped against it.
@@ -4203,7 +4203,7 @@ ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | D
     "prose dirt" from "instrument dirt" as two stamps with different
     consequences. Until one lands the trap stays armed: the next audit that
     commits during a sweep VOIDs certificates again.
-    DUE: 2026-09-13 | DESIGN DELIVERED 2026-09-06 (fork (c), below); what is
+    DUE: 2026-09-25 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. The DESIGN IS DELIVERED and this row is DISPOSITIONED: what this date owes is EXECUTION by the builder, not a decision by this desk. Dated where a builder slot can plausibly reach it rather than onto the Review's own calendar. | DESIGN DELIVERED 2026-09-06 (fork (c), below); what is
         now owed is IMPLEMENTATION in `protocol.py` by the BUILDER, and it
         does NOT land without the mutation falsifier described below. A bare
         `DOC_OUTPUTS` widening committed against this row is fork (a) wearing
@@ -4903,7 +4903,7 @@ which stands as history). **MECHANICAL bill: none outside `LG.03`'s own
 re-run** — no other certificate cites this file.
 
 ROUTED: xl01-death-and-retry-has-no-reachable-repair-path | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
-    DUE: 2026-09-13 | a reachable repair path for the death-and-retry commitment — the question is "what buys it one", NOT "re-run XL.01". Date is `next_free_due` per B4, not Sunday.
+    DUE: 2026-09-25 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a reachable repair path for the death-and-retry commitment — the question is "what buys it one", NOT "re-run XL.01". Date is `next_free_due` per B4, not Sunday.
 
 **The claim and the silence:** `XL.01` — *"Death does not erase what he
 learned"*, filed by its own `COVERS:` under both **death & retry** and
@@ -4929,7 +4929,7 @@ XL.01's own row shows lives, not seeds, carry the variance). Strengthen-only
 binds any successor; XL.01's FAIL stands as history either way.
 
 ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
-    DUE: 2026-09-13 | a disposition for the fast/slow world-model fixture: what does the DP family require of a world model that beats every null but loses to a linear probe? Date is `next_free_due` per B4.
+    DUE: 2026-09-23 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for the fast/slow world-model fixture: what does the DP family require of a world model that beats every null but loses to a linear probe? Date is `next_free_due` per B4.
 
 **Measured, twice, consistently.** `T2.05` v1 (2026-08-14) VOIDed itself
 honestly — the persistence ruler leaked marginal statistics (shuffled
@@ -4948,7 +4948,7 @@ linear reference as the champion (SCORED-AND-INELIGIBLE idiom) is a design
 call. The bar does not move; T1.02 precedent binds.
 
 ROUTED: t402-touch-drowns-audio-at-the-fusion-boundary | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
-    DUE: 2026-09-13 | the fusion-balancing redesign the priority head has pointed at "the Review, not an argument" since 08-21 — now with a row and a clock instead of a standing sentence. Date is `next_free_due` per B4.
+    DUE: 2026-09-22 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | the fusion-balancing redesign the priority head has pointed at "the Review, not an argument" since 08-21 — now with a row and a clock instead of a standing sentence. Date is `next_free_due` per B4.
 
 **Measured, twice (`T4.02` attempts 3 and 4, 2026-08-21).** Worst-seed
 `max_modality_grad_ratio` **30.12** against the exogenous 10× gate, zero
@@ -4967,7 +4967,7 @@ design, not an argument to have. `UB.10`'s recipe-sensitivity finding
 treats unequal senses unequally. Couple them if one design answers both.
 
 ROUTED: t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall | 2026-09-05 | 72nd-audit-B4 + builder (the FAIL-UNOWNED detector's 4th member — the audit's own count missed it) | OPEN
-    DUE: 2026-09-13 | a disposition for T2.15's FAIL: route the memorisation-route finding somewhere an instrument can see it, or dispose it explicitly. Date is `next_free_due` per B4.
+    DUE: 2026-09-24 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for T2.15's FAIL: route the memorisation-route finding somewhere an instrument can see it, or dispose it explicitly. Date is `next_free_due` per B4.
 
 **Why this row exists at all:** the 72nd audit measured FAIL-UNOWNED at 3;
 the detector built to its own B1 conjunction finds **4**. `T2.15`
