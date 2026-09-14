@@ -6384,6 +6384,30 @@ DECIDE: D27
              function from `experiments/coverage.py`.
   decide_by: 2026-09-20
 
+**EVIDENCE ADDENDUM (builder, 2026-09-14, zero GPU/seeds — appended for the
+decision, not advocacy).** A sibling of this defect class — control margins
+nobody prices (LESSONS 09-14) — was scoped mechanically today, and the split
+it found bears on option (i)'s stated feasibility risk:
+
+- **The LEDGER-ONLY half is cheap and, on this one pass, clean.** Reading
+  `control_metrics` straight off ledger rows needs no `_check` parsing.
+  Across 840 (spec, metric) pairs with >=2 PASS observations, a movement scan
+  re-found the one known true positive (`T1.07 absurd_advantage`, x99.59) and
+  flagged zero false positives — *after conditioning on verdict status*
+  (unconditioned, its loudest hits were VOID rows, i.e. controls firing; that
+  conditioning is load-bearing and cost nothing).
+- **The BAR-PAIRING half is where the prototype's 104-of-107 rate lives.**
+  Pairing a recorded metric to the constant that gates it requires parsing
+  `_check`, and nothing measured today reduces that risk.
+
+So (i)'s risk is not uniform across the screen: a screen restricted to what
+the ledger already records (movement across observations, NaN/frozen
+magnitudes, keys present on PASS rows) had a measured-clean first pass, while
+the open question is confined to conjunct parsing. One pass is not a rate;
+recorded so the decision is made knowing which half is the gamble. Full
+arithmetic: `REVIEW_QUEUE.md`, `t108-noise-floor-is-quoted-by-nobody`
+addendum (e'').
+
 ## D25 — RESOLVED BY ARMED DEFAULT, fired 2026-09-14 ~00:2x UTC (builder). Off your desk.
 
 **The owner did not rule by 2026-09-13, so the pre-registered default fired.**

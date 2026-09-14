@@ -6105,6 +6105,55 @@ Recorded on this row, not routed separately, because it arrived as this row's
 arithmetic and the desk's drain reads UNBOUNDED (`D28`). The docstring carries
 the same numbers (`run amend T1.07 --doc-only`, `3194d14d -> 7fd74ff2`).
 
+**ADDENDUM (e''), 2026-09-14 (builder, zero GPU, zero seeds): THE SWEEP (e')
+LEFT OPEN IS NOW SCOPED, AND THE SCOPING CLOSES IT — a dedicated backward
+control-margin sweep over the standing ladder is NOT a unit.** (e')'s closing
+sentence ("every spec in this repo has a control conjunct and none carries a
+reachability block") implies pricing ~100 certificates by hand. Scoped
+mechanically from the ledger's `control_metrics` field before any slot was
+spent on it:
+
+- **POPULATION.** 108 standing PASS rows: 2 declare no control BY DECISION
+  (`T0.01`/`T0.10`, 52nd audit B5); 9 record NO continuous control magnitude
+  at all — every value a flag or 0/1 count (`T0.09`, `T0.11`, `T0.12`,
+  `T0.17`, `T0.23`, `T0.24`, `T0.33`, `T0.34`, `T0.35`, all Tier-0
+  planted-sabotage catches where a binary IS the design — but note nothing
+  under those flags can ever be priced from the ledger); 97 record continuous
+  magnitudes. 1,170 control-metric entries in total.
+- **THE MOVEMENT HALF OF (e')'s METHOD IS FREE, AND IT IS EXHAUSTED.** 840
+  (spec, control-metric) pairs carry >=2 PASS-observation values. **774 of
+  840 (92.1%) are FROZEN** — identical to the recorded digit across every
+  observation. Of the 66 that move, **exactly ONE moves >=x10: `T1.07
+  absurd_advantage`, x99.59 — the finding (e') already made by hand.**
+  Runner-up is x5.75 (`LC.02` wall-clock timing stds on a shared 4-core box),
+  then instrument counters tracking repo growth at <=x4. Recorded data holds
+  no second `T1.07`, and the reason is structural rather than reassuring:
+  movement accrues only where venue or seed actually varies, re-buys are
+  same-venue and deterministic, and `T1.07` is near-unique in holding
+  observations from two venues. **A frozen pair is absence of evidence, not
+  evidence of stability.**
+- **THE TRAP FOUND ON THE WAY, for whoever ever builds a screen here:
+  condition on verdict status.** Unconditioned, the scan's loudest "drifts"
+  were `LG.00 verdicts_missing` 0 -> 623.7 and `PS.02 control_r2` flipping to
+  0.0 — every such observation is a **VOID row, i.e. the control FIRING.** An
+  unconditioned movement scan reads the system working as drift. Likewise
+  check design intent before flagging a value: `T1.06` records `final_loss`
+  NaN on every PASS because its control at lr=1e4 MUST go non-finite — the
+  NaN is the control's success signature.
+- **THE MARGIN HALF DOES NOT MECHANISE, and no instrument was built.**
+  Distance-to-bar needs the bar; bars live inside each `_check`; pairing
+  recorded metrics to bars is the exact parsing problem `D27`'s prototype
+  measured failing at 104-of-107 flagged. That fork is the owner's
+  (decide_by 09-20) — this scoping is appended to `D27` as evidence, not
+  pre-empted here.
+
+**What remains is the FORWARD rule already in LESSONS (09-14): a reachability
+block written for a claim gets one for the control, the control's number
+first when it is the thinner — applied at registration and strengthen time,
+priced per spec at its next natural touch, never as a dedicated pass over 97
+certificates whose recorded data holds nothing left to find.** Nothing moves,
+nothing is asked of the desk, no row routed (drain UNBOUNDED, `D28`).
+
 ## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
 
 ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | OPEN

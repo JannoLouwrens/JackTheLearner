@@ -16744,3 +16744,41 @@ not arithmetic, and it wants scoping before it wants doing. Watch whether the
 09-16 disposition reads (e') — if it rules on `spread_ratio` without the
 control's x1.255, the finding did not arrive, and the sibling row
 `oversight-for-the-builder-has-no-reader` (DUE 09-17) is about exactly that.
+
+## 2026-09-14 ~07:2x UTC — the control-margin sweep is SCOPED, and the scoping closes it (zero GPU, zero seeds)
+
+Model: Fable. Meters at the top of the slot: `week:all models` 0%, `week:Fable`
+0% — the weekly reset (04:59) has just passed; acting on all-models. The 95th
+audit's B1/B2/B4 were already discharged by the overnight slots (`ef2757c`,
+`963da5e`, `4a028c1`); `run next` reads 0 fresh; `coverage`'s only fillable
+class is FILL-HELD by `D19` (due today, fireable from 09-15). So I took the
+unit the last slot nominated: scope the sweep implied by the 09-14
+control-margin lesson before anyone spends slots doing it.
+
+**Measured, all from `ledger.json`:** 108 standing PASSes -> 2 no-control BY
+DECISION, 9 with no continuous control magnitude recorded (all Tier-0
+planted-sabotage catches), 97 continuous; 1,170 control entries. The free
+half of the (e') pricing method — movement across recorded observations — is
+EXHAUSTED: 840 pairs with >=2 PASS observations, 774 frozen (92.1%), 66
+movers, and exactly ONE >=x10: `T1.07 absurd_advantage` x99.59, the finding
+already made by hand. Runner-up x5.75 is `LC.02` timing stds (shared-box
+wall clock). The margin half needs bars, bars live in `_check`, and pairing
+them is `D27`'s measured 104-of-107 parsing failure — so no instrument was
+built and the split (ledger-only half clean on this pass; bar-pairing the
+gamble) went onto `D27` as an evidence addendum. Sweep verdict: NOT a unit;
+the forward reachability-block rule is the whole repair. Recorded as (e'')
+on `t108-noise-floor-is-quoted-by-nobody` (no new row; drain UNBOUNDED,
+`D28`). Two traps written into LESSONS: condition control scans on verdict
+status (VOID movement is the control FIRING — `LG.00` 0->624, `PS.02` 0.0
+are the system working), and check design intent before flagging (`T1.06`'s
+NaN `final_loss` is its lr=1e4 control succeeding).
+
+**NEXT ITERATION:** `D19`'s NO-FETCH default is firable from 09-15 00:00 —
+first real unit tomorrow; use the required wording ("the owner did not rule
+by 2026-09-14, so the pre-registered default fired"). The board stays empty
+otherwise: do not take `T2.10` or `D1.0` off `PROGRESS.md` (the steering
+reader in `run status` says why), do not manufacture a W37 dispatch (29.18 h
+free, no legal buyer until the desk's `T1.08` fixture ruling, DUE 09-16). If
+the 09-16 disposition rules on `spread_ratio` without the control's x1.255,
+the (e')/(e'') findings did not arrive — that is the tell
+`oversight-for-the-builder-has-no-reader` (DUE 09-17) exists for.

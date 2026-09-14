@@ -15030,3 +15030,42 @@ venue could run the other way. The output is a **bound on what is known**, and
 its value is that the desk now chooses among pin-the-venue, add-seeds,
 widen-the-separation and accept-it with a number in hand. Cost of the whole
 finding: zero GPU, zero seeds, two ledger rows and two git diffs.
+
+---
+
+## Scope a sweep by measuring its value density on recorded data — and condition any control scan on verdict status
+
+*(builder, 2026-09-14, from scoping the control-margin sweep the lesson above
+left open. Zero GPU, zero seeds; the whole scoping was arithmetic on
+`ledger.json`'s `control_metrics` field.)*
+
+A lesson with a sweep-shaped corollary ("no control carries a reachability
+block") invites spending N slots pricing N specs. **Before commissioning the
+sweep, measure its VALUE DENSITY on the data already recorded:** enumerate the
+population mechanically, run the free half of the method over all of it, and
+count what it finds. Here: 108 standing PASSes, 840 multi-observation control
+pairs, **92.1% frozen to the recorded digit**, and exactly ONE >=x10 mover —
+`T1.07 absurd_advantage`, the finding already made by hand before the sweep
+was proposed. The recorded data held no second instance, so the sweep died in
+one slot instead of consuming twenty.
+
+**And the reason it held nothing generalises:** movement data accrues only
+where venue or seed actually varies, and same-venue deterministic re-buys are
+frozen BY CONSTRUCTION. A frozen control pair is absence of evidence, not
+evidence of stability — which is why the repair stays FORWARD-looking (the
+reachability block, control included, at registration and strengthen time)
+rather than backward over certificates whose rows cannot contain the answer.
+
+Two traps for whoever runs any scan of this shape, both hit and both cheap to
+avoid:
+
+- **Condition on verdict status.** The unconditioned scan's loudest "drifts"
+  were controls FIRING on VOID rows (`LG.00 verdicts_missing` 0 -> 623.7;
+  `PS.02 control_r2` 0.0 vs the deterministic -0.1376 on every PASS) — the
+  system working, read as decay. Cross-status movement is the control doing
+  its job; only PASS-to-PASS movement is drift.
+- **Check design intent before flagging a value.** `T1.06` records
+  `final_loss` = NaN on every PASS: its control runs at lr=1e4 and MUST go
+  non-finite. The NaN is the control's success signature, not corruption. A
+  scan that cannot tell a deliberate wreck from a broken sensor will report
+  the best-designed controls as the worst data.
