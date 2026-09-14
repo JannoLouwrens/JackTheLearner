@@ -16270,3 +16270,95 @@ nothing owed in `declared_pids`, no process left running. One spec run (`T0.36`,
   4. **Named so an empty board is not filled by inventing something:** the
      `Person model` seat (`LG.02`, `SO.08`, `ME.9`, all three PASS) is
      contestable; `Language routing` was raced and seated today (`LG.13`).
+
+## 2026-09-14 ~00:0x–00:4x UTC — `D25`'s armed default fired, and the default's
+## own letter turned out to be false of the run it was written about (builder,
+## **OPUS** — `week:Fable` pinned 100%, the chain walked me over; the gate is
+## `week:all models` and it read **86%** at 00:07 against a `pace_gate` line of
+## **89** at 97% week-elapsed, so three points of headroom and no `PACING:` line)
+
+**THE OWNER DID NOT RULE BY 2026-09-13, SO THE PRE-REGISTERED DEFAULT FIRED** —
+`D25`, option **(iii) FIX THE SEAL, BUY NOTHING**. `696bfcb`, pushed.
+`decisions` now lists three armed entries (`D19` 09-14, `D20` 09-18, `D27`
+09-20) and `D25` is off the desk.
+
+**I INHERITED THE WORK, I DID NOT WRITE IT.** The 23:07 slot wrote the
+`lib_seal.sh` / `review.sh` / `test_lib_liveness.sh` edits (mtimes 23:14–23:16)
+and died before committing — correctly, because the default could not fire
+until 00:00. Three files dirty, no ledger touched, 13 claude processes on the
+box; named paths only, no `git add -A`. What I added: verification, the firing
+record, the lesson, the push.
+
+**WHAT THE FIX IS.** `seal_output` takes two new optional args — a **tail
+receipt** file and pattern, the last item on the dying organ's own checklist —
+and when a matching line is present the banner, the `git log` subject, the
+swept-file provenance stamps and the swept ledger rows all say *CHECKLIST
+COMPLETE — KILLED ON THE TAIL* instead of *THIS IS A DRAFT, NOT A FINDING*.
+`review.sh` passes `docs/PROGRESS_LOG.md` and today's row pattern. Without a
+receipt every byte is as it was, which is what the default required. The library
+stays organ-agnostic: the overseer and the field watch pass nothing and are
+untouched.
+
+**THE NUMBER THAT MATTERS, AND IT IS A DATE, NOT A METRIC.** The default's
+letter reads *"if this run committed `docs/PROGRESS.md` AND appended its
+`PROGRESS_LOG` row"*. I replayed that against the incident it was written for
+and **the first conjunct is FALSE**: `git log -- docs/PROGRESS.md` shows the
+2026-09-06 FULL never committed the page — it left it dirty and `lib_seal.sh`
+committed it at **07:17:11, `cf18320`**, which is the very act the banner was
+complaining about. `docs/PROGRESS_LOG.md:26` carries that run's real row.
+**Implemented literally, the branch would never have fired on its own scar and
+would have shipped all-green.** So the gate is the receipt ALONE and the page's
+custody is reported rather than required — deviation declared in the firing
+record, in `lib_seal.sh`'s comment, and in the commit, per the `D24` precedent.
+
+**THE TRAP IT DOES NOT WALK INTO.** `review.sh` writes its own `PROGRESS_LOG`
+row when the agent died before the append (76th audit B4), and that row matches
+the date pattern exactly. A receipt an organ's own dead-run fallback can satisfy
+is the organ certifying itself — `lib_seal.sh` refuses any candidate containing
+`INCOMPLETE`, and the suite asserts it directly.
+
+**VERIFIED, NOT ASSERTED.** `test_lib_liveness.sh` **all green**, **14 new
+assertions** across all four cases (fires with a receipt; does not fire without
+one; refuses the `INCOMPLETE` fallback; an organ with no receipt configured is
+byte-unchanged). `--firing-check WORKTREE` EXIT 0 — no `GOAL.md` edit, no
+numeric bar moved. `decisions --check` rc=0, `champions --check` rc=0. No new
+stale or drifted claim in `run status`: `lib_seal.sh` is in no spec's
+`IMPL_DEPS`.
+
+**THE LESSON (`71eb183`), and it is this repo's founding disease one level up.**
+*A pre-registered remedy can name a condition its own motivating case does not
+satisfy — and then it is a control that could never fire.* The author
+reconstructed AGENCY from an OUTCOME (the page was committed, therefore the run
+committed it); the reconstruction is always plausible because the outcome is
+real. The tell costs one command: **replay the remedy's trigger against the
+incident that motivated it, from the record, before implementing it.** A branch
+that cannot fire is a test that could not have failed. Nearest existing guard is
+*"an at-chance control must carry proof its instrument was alive"* — same shape,
+opposite polarity.
+
+**RATCHET COUNTERS MOVED, and I am saying so because `status` told me to.**
+`review_queue_violations` **0 → +13** — the 13 rows dated 09-13 went overdue at
+midnight, which the 23:07 slot predicted; a promise breaking, not an instrument
+fault, and it is the Review's backlog, not mine to pay.
+`review_queue_net_arrivals` **11 → 8**. Neither is justified by anything I
+committed, so I recorded nothing.
+
+**HOUSEKEEPING.** No GPU dispatch — `W37` opened 09-13 with 30 h and still has
+no legal buyer; do not manufacture one. No detached launch, nothing owed in
+`declared_pids`, no process left running. No spec run, so no CPU billed.
+
+**NEXT ITERATION.**
+
+  1. **`D19` is due TODAY (09-14) and fires 09-15**, not today — `decisions`
+     prints `due`, not `OVERDUE`, and the check is `(today - decide_by).days
+     > 0`. Do not fire it early. When it does fire (NO FETCH), `HR.1` stops
+     being `run blocked`'s decision-HELD fifth row and becomes either a
+     legitimate `frees 3` unit or honestly dead.
+  2. **`T2.10` is still item 1 of the live priority block** and it now gates
+     two certificates — `T6.03` was demoted to BLOCKED on its corpse and
+     `LF.02` follows it out of the reachable set. Read `T2.10`'s own docstring
+     (20:15 on 09-13) before touching it: seven encoder configurations top out
+     at 0.0667 against an unmoving 0.10 bar, so this is a retrieval redesign,
+     not a re-run.
+  3. **Do not re-run `T6.03` until `T2.10` is PASS** — it returns BLOCKED and
+     burns the slot.
