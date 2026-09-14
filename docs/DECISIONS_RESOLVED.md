@@ -1248,3 +1248,72 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 | softmax-full | 0.694 | 8.59 | pass | 1.0 |
 | topk-uniform | 0.661 | 32.52 | pass | 1.0 |
 | control:state-free-prompt | 0.064 | -5.02 | FAIL | 1.0 |
+
+## D25 — RESOLVED BY ARMED DEFAULT (fired 2026-09-14 ~00:2x UTC, builder): (iii) FIX THE SEAL, BUY NOTHING. `lib_seal.sh` learns to tell "died with nothing done" from "died having committed everything". No wall clock was bought; (i) and (ii) were NOT taken.
+
+**The owner did not rule by 2026-09-13, so the pre-registered default fired.**
+Transcribed here from the firing record in `docs/DECISIONS_NEEDED.md`, which
+carries the full evidence list (95th audit B4 — this was the only one of the
+last five fired defaults with no entry on this page).
+
+**The question** (2026-09-07, Review, DAILY): five Sunday FULL runs scheduled,
+five deaths — four at `Reached max turns (60)`, and the fifth, on 2026-09-06, at
+`timeout(1)`'s 40-minute wall with `rc=124`. But that fifth run died having
+already committed everything: both `d10-*` gate adoptions, the `w0-too-shallow`
+disposition, `D24`, two `CHAMPIONS` seats, `docs/PROGRESS.md` in full and its
+`PROGRESS_LOG` row at 07:12, five minutes before the kill. **It lost its exit,
+not its work.** `lib_seal.sh` reads only `rc != 0`, so it gave that finished page
+the same *"THIS IS A DRAFT, NOT A FINDING ... UNVERIFIED"* it correctly gives a
+run that wrote nothing. The cost was already realised: the builder spent a full
+day executing seven of that page's nine `FOR THE BUILDER` items off a document
+formally marked unverified, and was right to.
+
+**The default that fired.** `scripts/lib_seal.sh` gained a fourth case: a dying
+organ may pass a **tail receipt** — the last item on its own checklist, in a file
+the seal can read — and with that receipt present the banner reads *"CHECKLIST
+COMPLETE — THE RUN WAS KILLED ON THE TAIL, NOT MID-REPORT"*. `scripts/review.sh`
+passes `docs/PROGRESS_LOG.md` and today's row pattern. **A run with no receipt
+keeps the old wording BYTE-FOR-BYTE**, and an organ that configures no receipt
+at all (overseer, field watch) is untouched. Strictly monotone: it can only put
+a truer banner where a false one stood.
+
+**THE DEVIATION, declared at firing rather than taken silently.** The default's
+letter required *"committed `docs/PROGRESS.md` AND appended its `PROGRESS_LOG`
+row"*. Git says **the first conjunct is false of the very run the decision
+cites** — the 09-06 agent left the page dirty and `lib_seal.sh` committed it
+(`cf18320`, 07:17:11), which is the act the banner was complaining about.
+Implemented literally, the branch **would never have fired on its own scar**. So
+the gate is the receipt ALONE and the page's custody is reported rather than
+required. This is the source of the 09-13 lesson: *a pre-registered remedy can
+name a condition its own motivating case does not satisfy.*
+
+**The trap it does not walk into.** `review.sh` writes its own `PROGRESS_LOG`
+row when the agent died before the append (76th audit B4), and that row matches
+the date pattern exactly — a receipt an organ's dead-run fallback can satisfy is
+the organ certifying itself. `lib_seal.sh` refuses any candidate containing
+`INCOMPLETE`, and `test_lib_liveness.sh` asserts it directly.
+
+**THE LOSERS, recorded as this page requires.** **(i) RAISE THE WALL CLOCK** —
+refused as an illegal default before it was refused on merit: it spends credits
+against the shared `week:all models` meter by silence, and that meter's
+exhaustion took every organ dark for 4.3 days and expired three consecutive GPU
+allocations. An outlay that size may not fire because nobody answered.
+**(ii) CHANGE NOTHING** — writes off a measured falsehood and leaves it standing
+every Sunday. Both remain the owner's to rule at any later date, at no cost, and
+this firing is not a step toward either.
+
+**The price, restated because the entry priced it.** Sunday FULLs keep exiting
+`rc=124` and keep looking unhealthy to anything that reads exit codes alone.
+This desk takes a truthful banner over a green exit code on purpose.
+
+**Verified at firing, not asserted:** `scripts/test_lib_liveness.sh` all green
+with 14 new assertions across all four cases; `--firing-check WORKTREE` exit 0
+(no `GOAL.md` edit, no numeric bar moved in either direction); `decisions
+--check` and `champions --check` rc=0; no certificate staled — `lib_seal.sh` is
+in no spec's `IMPL_DEPS`. **To reverse:** stop passing arguments 7 and 8 to
+`seal_output` in `scripts/review.sh` — one line.
+
+Evidence: `docs/DECISIONS_NEEDED.md` (the firing record in full);
+`scripts/lib_seal.sh`; `scripts/review.sh:106-115`;
+`scripts/test_lib_liveness.sh`; `cf18320` and `docs/PROGRESS_LOG.md:26`;
+commits `696bfcb`, `71eb183`, `958c5ec`.

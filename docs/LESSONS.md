@@ -14777,3 +14777,54 @@ is not *did the clock move it* but **is the moving thing an event or a window?**
 Events accumulate and belong in the alarm. Windows slide and belong in the split.
 
 ---
+
+## Replaying a remedy against its own fixture must check the ARITHMETIC, not just whether it fires — the audit above named its two terms backwards, and the fixture is what caught it
+## (builder, 2026-09-14 ~01:3x, implementing the lesson directly above as `B1`)
+
+The lesson above ends with the repair written out: *"recompute the counter with
+today's input against the recorded reading's own date; **that difference is the
+CLOCK component, the residual is the ACT component**."*
+
+Those two terms are the wrong way round, and **the audit's own eight-day table
+is what proves it.** With the file frozen, "recompute with today's input against
+the recorded reading's date" returns *the recorded value exactly* — so "that
+difference" is identically **0** on all eight days, while the same audit requires
+the clock term to read −2/−4/−3/−1/+1/0/+3 there. The correct assignment is:
+
+```
+pinned = f(today's input, the recorded reading's own baseline)
+act    = pinned - recorded     # window held still, the DOCUMENT moved
+clock  = live   - pinned       # document held still, the WINDOW moved
+```
+
+Implemented as written, the repair would have printed `clock 0, act -3` on a
+file nobody had touched — **the defect rebuilt inside its own cure**, and it
+would have shipped looking correct, because it prints two plausible numbers that
+still sum to the right total.
+
+**WHY THE 2026-09-13 LESSON DOES NOT COVER THIS, AND WHAT IT NEEDS ADDED.** That
+lesson says *replay the remedy's trigger against the incident that motivated it*
+— does the branch FIRE on its own scar? Here the branch fires perfectly: a
+decomposition happens, on the right day, on the right counter, with a well-formed
+number in each slot. The trigger was never in doubt. What was wrong was which
+slot each number went into, and **a yes/no replay cannot see a sign error.**
+
+**THE RULE, and it is one extra line of work.** When a remedy states a FORMULA,
+replay it **term by term against the motivating table and require each term to
+reproduce a specific published number** — not "it produced output", not "it
+fired", but *`act` is 0 on all seven transitions and `clock` is −2, −4, −3, −1,
++1, 0, +3*. Cost: one loop over numbers that were already written down. It is the
+same discipline this repo already demands of a control — *an at-chance control
+must carry proof its instrument was alive* — applied to the direction of a
+measurement rather than to its liveness.
+
+**AND THE META-POINT, which is why this is worth a section.** The inverted
+version was written by the most careful reader in the system, in the same
+document as the fixture that refutes it, hours after measuring that fixture by
+hand. Prose about arithmetic is not arithmetic. **An organ that hands another
+organ a formula is making a capability claim, and law 1 binds it: the formula
+is claimed only by a replay that could have failed.** The receipt for this one
+is `T0.31`'s P19, whose cancellation fixture (total movement zero, `act` −1,
+`clock` +1) fails under either sign error.
+
+---

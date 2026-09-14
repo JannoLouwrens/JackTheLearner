@@ -16362,3 +16362,108 @@ no legal buyer; do not manufacture one. No detached launch, nothing owed in
      not a re-run.
   3. **Do not re-run `T6.03` until `T2.10` is PASS** — it returns BLOCKED and
      burns the slot.
+
+## 2026-09-14 ~01:0x–01:4x UTC — B1: the backlog ratchet's delta is split into CLOCK and ACT, and the audit that ordered it had the two terms swapped
+
+**Model: Opus** (`week:Fable` pinned 100%, so the slot refused Fable in ~3 s and
+walked to opus, as designed). `week:all models` **86% at 01:07, 87% at 01:3x**
+against the 90% stop; the week resets 04:59 today. The gate is all-models and
+that is the line I acted on. No `PACING:` streak — the loop is running.
+
+**UNIT: the 95th audit's `FOR THE BUILDER` B1**, which the overseer called *"the
+durable repair and the only one I would call urgent"*. `OVERSIGHT.md` outranks
+`PROGRESS.md` in the reading order, and B1 outranks `T2.10` for today because it
+is the instrument that decides whether anything else gets seen.
+
+**WHAT I DID FIRST, AND IT CHANGED THE IMPLEMENTATION: I replayed the audit's
+fixture before writing a line.** The eight numbers reproduce exactly from git
+with `docs/REVIEW_QUEUE.md` frozen — 17 / 15 / 11 / 8 / 7 / 8 / 8 / 11 across
+09-11..18. **Then the remedy's own arithmetic failed on them.** B1 reads
+*"recompute with today's bytes against the recorded reading's baseline date; the
+difference is the CLOCK component and the residual is the ACT component."* With
+the file frozen that recomputation returns the recorded value, so "the
+difference" is **0 on all eight days** — while the audit requires the clock term
+to read −2/−4/−3/−1/+1/0/+3 there. **The terms are swapped.** Implemented
+literally, B1 would have printed `clock 0, act -3` on a dead file: the defect
+rebuilt inside its own cure, shipping green. Corrected, recorded in the
+function's docstring and in `DECISIONS_RESOLVED`-grade prose in the commit —
+not quietly fixed.
+
+**THE SPLIT, and it is lossless.** `net_arrivals_split` (pure; both baselines
+supplied as strings so a property can hold git still) + `live_net_arrivals_split`
+(git-backed, the single entry point, for `live_audit`'s reason). `act = pinned −
+recorded`, `clock = live − pinned`, `act + clock == live − recorded` by
+construction. Replayed term by term across all seven transitions of the audit's
+table: **act +0 on every one; clock −2, −4, −3, −1, +1, +0, +3.** `run status`
+now prints `review_queue_net_arrivals = 8 !! MOVED -3 (clock -3, act +0)` with a
+line saying no commit can justify recording it — and, on the shape that matters
+more, an `UNCHANGED` hiding a non-zero act is bannered as **UNCHANGED IS A
+CANCELLATION**, which is the counter going quiet on the one event it exists for.
+
+**THE SWEEP, measured rather than asserted** (B1's second half, and the 22:16
+lesson `caa4257`). `DAY_SCOPED_COUNTERS` was a 1-tuple for a class with three
+members. `CLOCK_SENSITIVE_COUNTERS` now names the whole class, and the axis is
+**event vs window**, not "clock-driven": `cpu_foreclosed_now` window,
+`review_queue_net_arrivals` window, `review_queue_violations` **event** (a
+promise breaking must keep bannering). Membership measured with bytes frozen and
+only `today` varied 09-11..18: violations 0/0/0/13/19/25/31/37, net_arrivals
+17→11, **`piled_on` held at 7 on all eight days.** So `review_queue_piled_on` is
+**NOT** a member — the audit named it as one on inspection, and `audit()`
+computes it from row order and declared dates with no clock input at all. That is
+a correction to the audit, measured. `coverage.py` and `champions.py` read no
+clock, so nothing they feed is in the class either. Suppression stays scoped to
+the one counter read many times a day; the once-a-day counter is decomposed.
+
+**CERTIFICATES.** `T0.31` gains **P19** (18 → 19): frozen file → act 0; frozen
+window → clock 0; **the cancellation** → `live == recorded` with act −1 and clock
++1; the sum identity on every fixture; an absent baseline in either slot returns
+`None`, never a zero that reads clean. The blind control (`grep -c '^ROUTED:'`)
+fails it by construction and P19 is in `_check`'s required-failure set.
+`T0.31` **PASS 19/19** and `T0.36` **PASS 7/7**, both re-bought from a **clean**
+tree after the code commit (the first T0.31 run was `+dirty` and is superseded).
+`run.py`'s four printed shapes are pinned in `_check_ratchet_reader`, which every
+`run status` executes before printing. CPU billed 34.2 s.
+
+**ALSO DONE — B4, the small owed item the audit flagged so it would not roll
+off.** `D25` is transcribed to `docs/DECISIONS_RESOLVED.md` with its losers
+recorded ((i) RAISE THE WALL CLOCK — illegal as a default, it spends the shared
+meter by silence; (ii) CHANGE NOTHING) and its declared deviation named. It was
+the only one of the last five fired defaults with no entry on that page.
+`decisions --check` rc=0, ratchet clean (0/10 undeclared, 0/0 firing-diff).
+
+**THE LESSON (`docs/LESSONS.md`, appended under the overseer's own).** *Replaying
+a remedy against its fixture must check the ARITHMETIC, not just whether it
+fires.* The 09-13 lesson asks whether the branch FIRES on its own scar; here it
+fired perfectly and put the right numbers in the wrong slots. A yes/no replay
+cannot see a sign error. The rule: when a remedy states a FORMULA, replay it
+**term by term against the motivating table and require each term to reproduce a
+specific published number.** One loop over numbers already written down.
+
+**RATCHET COUNTERS.** `review_queue_net_arrivals` 11 → 8, and for the first time
+the instrument says why itself: **clock −3, act +0.** Nothing committed justifies
+it, so nothing recorded — and that sentence is now printed by the tool rather
+than reasoned out by the reader. `review_queue_violations` 0 → 13 stands
+UNCHANGED-since-09-03 in the recording and is the Review's backlog (13 rows dated
+09-13 broke at midnight); an event, correctly still bannering.
+
+**HOUSEKEEPING.** No GPU dispatch — `W37` opened 09-13 with 30 h and still has no
+legal buyer; do not manufacture one. No detached launch, nothing owed in
+`declared_pids`, no process left running. 13 `claude` processes on the box; I
+named every path I committed and touched nothing I did not write.
+
+**NEXT ITERATION.**
+
+  1. **`D19` fires 09-15, not today.** `decisions` prints `due`, and the check is
+     `(today - decide_by).days > 0`. Do not fire it early — two pages now say
+     this because it is the third slot in a row where the temptation is live.
+  2. **`T2.10` is item 1 of the live priority block** and gates two certificates
+     (`T6.03` BLOCKED on its corpse, `LF.02` out of the reachable set). Read its
+     docstring first: seven encoder configurations top out at 0.0667 against an
+     unmoving 0.10 bar, so it is a retrieval redesign, not a re-run.
+  3. **Do not re-run `T6.03` until `T2.10` is PASS.**
+  4. **Watch the 09-18 prediction.** The overseer pre-registered that
+     `net_arrivals` would banner `+3` on or about 09-18 with nothing behind it.
+     It now will banner `+3 (clock +3, act +0)` if the file stays frozen — which
+     is the same prediction, plus the attribution that makes it harmless. If
+     `act` is non-zero that day, the audit's finding was wrong in the way it
+     asked to be told about.
