@@ -2,390 +2,284 @@
 
 > Written by the Review organ. **Current state, not a log** — each run rewrites
 > this file. The running history is `docs/PROGRESS_LOG.md`.
-> Mode: **FULL** (Part 1, Part 2, Part 2.5, the anatomy audit and the
-> completeness audit all ran).
+> Mode: **DAILY** (Part 1 over the last 24 h, and Part 2.5 in full). Part 2 is
+> deliberately skipped — tests are re-examined on Sundays.
 
-**2026-09-13 06:37–07:0x UTC — FULL, the sixth Sunday sitting.** Window: the
-week 2026-09-06 → 2026-09-13.
+**2026-09-14 06:37–07:5x UTC — DAILY.** Window: the 24 hours since the Sunday
+FULL sat down.
 
-*The one sentence: **the blackout ended by itself and the builder cleared every
-board we had, and then Part 2 opened the oldest certificate on the ladder and
-found that for thirty-six days it had been certifying the wrong thing.***
+*The one sentence: **the desk spent Sunday arming a conjunct and Monday
+discovering that the conjunct stranded the project's largest unblock, idled
+29 GPU-hours, and sat on a steering page whose top three orders were already
+corpses — and the builder, reading that page, refused it four slots running and
+went and did real science instead.***
 
 > This page is the RECEIPT for commits that already exist. Every act below was
-> committed as it was made, before this page was written: `d44d21a`, `35ecac2`,
-> `e9c1b68`, `470088d`, `91eb539`, `66b2951`, `83132c9`, and the
-> `UNREACHABLE_BASELINE` raise inside `470088d`'s predecessor.
+> committed as it was made, before this page was written: `b0ab21b`, `d255995`,
+> `1ddaf48`, `f34d366`, `0ae7c71`, `6698fc8`.
 
 ---
 
 ## The numbers
 
-| | today | last Sunday (09-06) |
+| | today (24 h) | yesterday (09-13, FULL) |
 |---|---|---|
-| demonstrated / registry | **107 / 246** | 104 / 242 |
-| pass rate | **43.5%** | 43.0% |
-| net demonstrated, week | **+3** (104→107, and it hides today's −1) | +2 |
-| distinct specs PASSing in the week | **47** | 92 |
-| PASS events in the week | **102** | 193 |
-| rework rate (attempt > 1) | 78.6% | 75.0% |
-| VOID / FAIL / BLOCKED | 14 / 23 / **1** | 14 / 23 / 0 |
-| unreachable (shrink-only) | **94** of 246 — baseline raised today, by me | 93 |
-| settlements in 24 h | **17** | 0 |
-| commits in 24 h | **84** | 11 |
-| `week:all models` | **81%** | 75% |
-| GPU, live week `2026-W37` | **0.00 h of 30 — opened today** | W36, 17.72 of 30 |
-| queue violations | 0 | 0 |
-| live queue rows | 41 (three routed today, all mine) | 38 |
+| demonstrated / registry | **108 / 249** | 107 / 246 |
+| pass rate | **43.4%** | 43.5% |
+| net demonstrated, 24 h | **+1** | +3 across the week |
+| settle events, 24 h | **36** — 31 PASS / 4 FAIL / 1 BLOCKED | 17 |
+| distinct specs settling / PASSing | **18 / 13** | — |
+| rework rate (attempt > 1) | **78.4%** (116/148) | 78.6% |
+| standing VOID / FAIL / BLOCKED | 14 / **25** / 1 | 14 / 23 / 1 |
+| unreachable (shrink-only floor) | **97** | 94 |
+| commits, 24 h | **107** | 84 |
+| `week:all models` | **3%** (weekly reset at 04:59) | 81% |
+| GPU, live week `2026-W37` | 0.82 charged, **29.18 free of 30**, expires Sat 09-19 | 0.00 of 30 |
+| queue violations | **13 → 0** (mine, and repaired at ~07:2x) | 0 |
+| live queue rows | **49** | 41 |
 
-**The week in one comparison.** 47 distinct specs passed this week against 92
-last week — almost exactly half — and the reason is not quality: the builder
-was **switched off for 4.3 of the seven days** by the shared usage meter, and
-then produced ~30 commits and 17 settlements in the single night of 09-12→13.
-Read the halving as an outage, not as a slowdown.
-
-**Goodhart check: the rate ROSE, 43.0% → 43.5%, against a registry that grew
-242 → 246.** The runner outran the ladder this week. That is the honest
-direction — but note the composition before taking any comfort from it: of the
-week's net **+3**, today's Part 2 took one back, and it took the *oldest* one.
+**Goodhart check: the rate FELL, 43.5% → 43.4%, on a registry that grew 246 →
+249 while `demonstrated` grew 107 → 108.** The ladder outran the runner by two
+today. That is the shallow reading and it is not the interesting one. **The
+interesting one is that 107 commits produced 36 settlements and 13 distinct
+PASSing specs, and nine of the thirteen were certificate RE-BUYS forced by
+edits.** The day's output was overwhelmingly analysis, and it was excellent
+analysis, and almost none of it moved the ladder — because there was nothing
+legal for it to move.
 
 ---
 
-## Part 1 — the state of progress
+## Part 1 — the state of progress, last 24 h only
+
+### Did the builder produce, thrash, or stall? None of the three, and the answer matters
+
+**It produced, on a board this desk had filled with corpses, and it said so
+every time.** Four consecutive slots opened by verifying the board rather than
+inheriting it, found `PROGRESS.md`'s top three orders dead or illegal, refused
+them, and took real units instead: `T1.08`'s bar priced at a **22.6% false-fail
+rate** with code drift eliminated as an explanation; `T1.07`'s margins priced
+and the finding relocated from the flagged bar to **the control**; the implied
+backward sweep **scoped and closed** at 840 pairs with 92.1% frozen; field watch
+wk7 §6b verified digit-for-digit and executed. **Every one of those cost zero
+GPU and zero seeds.** That is not a stall. It is an organ with no legal work
+finding the work that needs no permission.
+
+**It is also not sustainable, and the reason is mine.** `run next` has read
+**0 fresh of 44** for four slots. `coverage`'s only fillable class is FILL-HELD
+by `D19`. Thirteen GPU-cost specs are runnable and **not one was dispatchable**:
+six parked or venue-unaffordable, six under a do-not-re-dispatch directive, and
+the thirteenth was `T1.08` itself, waiting on a ruling from this desk dated
+09-16 while 29.18 free hours ran toward a Saturday expiry. **The builder was not
+the constraint. I was.**
 
 ### The frontier, recomputed and not quoted
 
-`T2.01` (*Locomotion beats a random policy*, FAIL) **blocks 38 specs
-transitively — four times the next largest** (`T4.04`, `T3.02`, `LT.01` at 9
-each). That has been the largest single unblock in the project for five weeks
-and it has not moved. What HAS changed, overnight and for the first time: its
-repair path's two-step precondition is **satisfied**. `D1.0`'s twin-spread
-probe ran and its successor gate is committed in a non-dispatch commit
-(`7cb00ea`), which is exactly the stamp this desk has demanded since 09-08, and
-`2026-W37` opened this morning with a full 30 GPU-hours. **The largest unblock
-in the project is now one dispatch away from moving, and it was not last
-Sunday.**
+`T1.08` (*Seed variance measured*, FAIL) **frees 3 and blocks 45.** Both halves
+are load-bearing and the ranker conflated them until yesterday: repairing
+`T1.08` alone frees `D1.0`, `T2.01` and `T2.02` — the other 42 need `T2.01` too,
+and `T2.01` is a settled FAIL whose repair path runs through `D1.0`. The largest
+mass in the project is **two repairs deep**, and the page that said "one dispatch
+away" for five weeks was collapsing a pair into a step.
 
-Effort-vs-goal: the week's commits served the *instrument* heavily again — four
-`91st audit` items, a dispatch-guard hardening, a DIRTY-classifier repair, four
-certificate re-buys — but the night also produced `LG.12` registered,
-implemented, run and routed inside two hours, `PL.02` attempts 1 and 2
-harvested and arm-attributed, and `SM.03`'s F2 probe answering a question with
-a third branch its ruling did not have. That last one is the shape worth
-naming: **the builder returned better than its guardrails**, which is the 91st
-audit's own finding and I agree with it.
+By free-standing mass the frontier is elsewhere and has been for a while:
+`LT.01` FAIL **frees 7** (impl unchanged 13 d), `NE.01` FAIL **frees 7** (impl
+unchanged 20 d), `UB.10` VOID **frees 4**. Each is larger, today, than
+`T1.08`'s 3 — and none of the three has been touched in the window.
 
-### The thing that did not move at all
+### The one act that mattered, and it was a decision, not a run
 
-**`GENERALITY.md`: 14 barriers named, 4 registered (`GEN.02`, `GEN.03`,
-`GEN.06`, `GEN.09`), 0 RUN, 0 PASS.** Recomputed today; byte-identical to the
-09-06 reading. All four registered barriers are reachable on paper and none has
-been dispatched in the week. Generality is the project's stated destination and
-it received zero seconds of compute this week.
+**`T1.08` is RULED, two days early (`b0ab21b`).** Three builder annotations had
+priced every term of the question at zero GPU; a 09-16 sitting would have known
+nothing more, and 29.18 perishable hours had no legal buyer until the ruling
+landed. The row's own second annotation pre-emptively refused a dying quota as a
+reason to *manufacture a run* — it is not a reason to *withhold a decision*, and
+that distinction is the whole of why this was ruled today.
 
----
+- **AUTHORISED:** the backend-confound arm pair as a **PROBE**, n=5 per backend,
+  1.20 GPU-h (alpha 4.0% → 0.2%, power 92.2% → 98.2% for 0.48 h), on the `D1.0`
+  twin-spread and `SM.03` F2 precedents. Pre-registration commit first.
+- **FORBIDDEN, and it is the load-bearing half:** dispatching `T1.08` to a
+  backend *because the probe reported that backend reads lower*. The venue a
+  certificate is bought on may never be selected after seeing which venue is
+  kind.
+- **The read is pre-registered before any number exists**, all three branches,
+  and branch (ii)'s seed count is fixed before the probe's numbers are read.
+- **7.0 does not move.** The 22.6% is a fact about the bar's *governance* and is
+  **not** a defence of attempt 3: a 5.717-true-cv pipeline reads inside
+  [0.92%, 11.00%] 95% of the time at n=3, and 40.006 is nowhere near that.
 
-## Part 2 — the test re-examination
+### The thing I got wrong, in the first person
 
-Twelve PASSing specs sampled, oldest-passed and least-recently-reconsidered
-first: `T6.03`, `T0.19`, `T1.02`, `T1.08`, `T1.07`, `T2.06`, `T2.03`, `T2.04`,
-`TA.02`, `T3.01`, `T2.19`, `T2.09`. The aim was the row this desk routed to
-itself on 09-12 — *gates that measure something other than what they say* — and
-it was aimed at PASSES on purpose, because all three prior instances were found
-on VOID or FAIL specs where somebody was already hunting for a reason.
+At 06:37 on 09-13 this desk wrote that *"a measurement spec that FAILS when its
+own toy task has a small effect is a category error."* **At 10:05 it armed a
+conjunct that FAILS when the measured noise is large** — the quantity is better,
+the shape is the error I had diagnosed four hours earlier, and the bar was set
+at 1.224× one observation of a sample statistic by analogy to a sibling with a
+different sampling distribution. **The conjunct stays**, and not to save face:
+it reported, in one run, that 45 specs stand on a pipeline with a 40% held-out
+seed spread that 49 dependents quote zero times. The gate did not misfire. The
+ladder mishandled the report by treating it as a blocker instead of a number to
+be quoted.
 
-### STRENGTHENED — implemented, verified, committed
-
-**`T6.03` — Cross-session persistence (`d44d21a`).** PASS since 2026-08-08,
-attempt 1, the oldest certificate on the board, never once reconsidered. It is
-the row this project cites for GOAL.md's *"What he learned yesterday — about the
-world and about his owner — persists on disk."*
-
-> **All fourteen of its conjuncts were true of a session-1 brain that never
-> took an optimiser step.** `weights_match` therefore certified that
-> `torch.save`/`torch.load` round-trips a tensor — which is `T0.03`'s claim,
-> one tier lower and 300 lines cheaper — and the word *learned* in the sentence
-> the spec answers had no referent anywhere in the file.
-
-Nothing was broken. Every gate was sound. The spec was simply not about what it
-was cited for. **ADDED** (strictly; no existing conjunct or bar touched, so the
-passing set can only shrink): `train_loss_fell` and `train_moved_weights` —
-session 1 now trains 24 steps on a fixed rank-8 pool before saving, so there is
-something learned to persist and `weights_match` compares a TRAINED digest; and
-`probe_dev_postload` / `probe_dev_preload` / `probe_sep_ratio` — the restored
-brain must reproduce session 1's held-out probe loss to ≤ 1e-4 with the RNG
-matched, while the virgin brain sits ≥ 1e-3 away and ≥ 50× further off. **Bytes
-are not behaviour**: those are the first conjuncts in the file that read the
-restore as a FUNCTION.
-
-`PROBE_TOL` is calibrated and the file says so, per the LG.12 lesson written at
-05:22 this morning: its reachable range is [1.13e-6 float noise at bit-identical
-weights, 7.82e-3 virgin signal], and 1e-4 sits ~88× above the floor and ~78×
-below the signal. **My first pass set it at 1e-6, which is BELOW the noise floor
-and un-clearable by construction — the exact `LG.03` defect found on 09-12,
-caught this time before registration and only because the lesson was three hours
-old.**
-
-**The certificate is OWED, and the reason is the day's second finding.**
-
-### THE FINDING — a PASS is never re-evaluated when a dependency dies
-
-The re-run did not return PASS. It returned **BLOCKED —
-`dependencies not satisfied: T2.10 (FAIL)`.**
-
-`T2.10` fell on **2026-08-31** under the paraphrase conjunct this desk itself
-ordered. `T6.03` declares `depends_on: [T2.10, T0.05]`. It went on rendering
-`[PASS]` in `run status` **every hour for thirteen days.** Nothing was wrong
-with the runner — it refuses a blocked spec correctly and it did. The gap is
-that the **board reports a STORED status, and no organ re-evaluates a standing
-PASS when a spec beneath it dies.** A certificate is a claim that could be
-re-derived today; `T6.03`'s could not be, and the ladder said otherwise.
-
-**Scoped honestly, because the temptation was to report the mechanism at sweep
-scale:** over all 246 entries, exactly **one** PASS stood on a non-PASS declared
-dependency at 06:37 (`T6.03`), and exactly one does now (`LF.02` ← `T6.03`, the
-second-order casualty). This is a narrow class. The finding is the mechanism and
-its silence, not a backlog. Routed as
-`pass-certificates-are-not-re-evaluated-when-a-dependency-falls` (`35ecac2`,
-DUE 09-16), asking for a `pass_on_dead_dependency` counter in `run status`,
-shrink-only floored — the `fail_unowned` shape.
-
-`demonstrated` therefore goes **108 → 107**, and `UNREACHABLE` **93 → 94**. I
-raised that floor myself and signed the growth log in the first person, because
-raising a floor to accommodate one's own act is exactly what that log exists to
-make visible.
-
-### PROPOSED, not implemented — both are GPU and the edit would strand them
-
-Two further instances of the same class, hand-verified in the sample. Both are
-GPU specs whose certificates would go stale on an un-re-run edit, so they go to
-the builder as designs rather than as edits:
-
-- **`T1.08` — the noise-floor spec measures the wrong thing.** Its docstring:
-  *"the number this produces should be quoted whenever a later tier claims an
-  improvement."* That number is `min_detectable_effect` = 0.005694. **No
-  conjunct reads it.** The gate is `snr = effect/noise ≥ 3.0` and it read
-  **86.09** — 28× clear — where `effect` is a property of the fixed synthetic
-  rank-8 task, not of the noise floor. A measurement spec that FAILS when its
-  own toy task has a small effect is a category error: the correct output of a
-  noise-floor measurement with large noise is *"the noise floor is large."*
-- **`T1.07` — "Not knife-edge on learning rate."** The knife-edge quantity is
-  `spread_ratio` = **4.931**: the measured advantage swings 1.38→6.80 across the
-  10× LR span. **No conjunct reads it.** The gate requires only that no LR be
-  catastrophic (all three clear 1.15×). Stated meaning: robustness. Computed
-  quantity: absence of collapse.
-
-### And the mechanisable pattern, including the part that failed
-
-All four instances — `PL.02`'s `r2_ua`, `LG.03`'s `own_hit`, `HR.5`'s
-`position_only_acc`, and now `T1.08`/`T1.07` — share one footprint: **the run
-measured the quantity that would have indicted it, and then did not look.** I
-prototyped a probe for it (scratch, uncommitted, not an instrument) that parses
-each `_check` for the metric names its conjuncts read and diffs them against the
-ledger row's keys.
-
-**It does not work and I will not dress it up.** It flags 104 of 107 PASS specs
-and 1,423 metrics, because a metric summarised into a gated aggregate — seven
-per-property booleans behind one `properties_failed`, as in `T0.19` — is read in
-substance while unread by name. Twelve hand-checks, three real. A screen at that
-rate is worse than nothing. Whether a summarisation-aware version is buildable
-is a genuine open question, and it is why this went to the owner as **`D27`**
-rather than into a commit.
-
----
-
-## The anatomy audit — two seats added (`e9c1b68`)
-
-29 seats against GOAL.md. Both additions are VACANT on arrival and both are
-justified in `CHAMPIONS.md`.
-
-- **Language routing** (what he says, and which task a command becomes). Owed
-  here: the Review of 09-10 found the gap and routed it to this audit. The case
-  sharpened overnight without anyone noticing — **`LG.12` was registered at
-  04:14 today as *"LG.10's sibling and provably NOT its repair"*, which is a
-  challenger declaration in everything but name.** Two competing mouth designs,
-  both FAIL, arbitrated by nothing. ARENA `LG.10`, `LG.12`, `T2.15` — all red,
-  so the ring is open and undefended.
-- **Person model** (trust, attribution, whose advice proved true). GOAL.md gives
-  it a section of its own. How a person is represented and how trust updates is
-  a mechanism with real arms and the repo picked one by accident in
-  `OwnerProfile.py`. ARENA `LG.02`, `SO.08`, `ME.9` — **all three PASS, which
-  makes it the only seat any anatomy audit has created that is contestable on
-  the day it is created.**
-
-Naming `ME.9` as a challenger broke the KINDLESS-DISCHARGES ratchet 1 → 2.
-Repaired the sanctioned way — declaring `ME.9`'s COVERS kind honestly in the
-registry — not by narrowing the arena. `champions --check` EXIT 0.
-
----
-
-## The completeness audit — against the external reference (`91eb539`)
-
-`run senses` reports **10/10** of the sensory inventory spec'd, and it is right.
-It audits the SENSORY half against GOAL.md's own list. **Nothing in this
-repository audits the cognitive half against anything**, and that is where every
-gap below lives. Body schema remains the one zero from 2026-08-09 that has never
-moved.
-
-**The finding this audit exists to produce: `emotion` is not a declared `COVERS`
-domain at all.** 1,149 lines of `EmotionalState.py`, a `BY DEFAULT` seat, two
-specs unchanged since the 08-09 scar named them — and `coverage` cannot report
-on it and `run senses` cannot see it, **because GOAL.md's sensory sentence never
-listed it.** An organ measuring against a stated standard, and the standard
-omits the thing. Missing outright inside it: any spec that affect changes what he
-LEARNS or REMEMBERS.
-
-Also named, one at a time: **attention** 0 specs (UB.2/UB.8 are
-architecture-attention, not the capability); **working memory** 1 spec, and it
-tests that WM survives a restart, not that it holds or manipulates anything;
-**imagination** 0 for the capability; **teaching** 0 — `GEN.02` is Jack as
-STUDENT, and in 246 specs Jack never teaches, which GOAL.md's culture claim
-needs; **tool use** 0 PASS with `GEN.05` unregistered; **symbols** 0.
-
-And **one gap closed by accident**: `LG.12`, registered at 04:14 today, is this
-project's first metacognition spec — *he speaks correctly or he is silent* is
-knowing what you do not know. Recorded because a gap that closes unnoticed is as
-invisible as one that opens unnoticed.
+The same shape appeared in my own steering: I ordered `T2.10` as *"CPU, ten
+minutes"* off a page instead of off the spec's own reachability block, which
+says the run returns the same FAIL. Retracted in `1ddaf48`; `T2.10`'s repair is
+a **design owed by this desk**, and `T6.03` and `LF.02` stay stranded behind it
+as my bill.
 
 ---
 
 ## Part 2.5 — steering maintenance
 
-**1. Priorities — replaced in full (`66b2951`).** The 09-08 block's five items
-are all spent and its ~120 lines of `pace_gate` forecasting now describe weather
-that has passed; a 03:00 iteration would have planned against a dead GPU pot.
-Superseded, not deleted. New order: `T2.10` first (CPU, ten minutes, and it
-turned out this morning to gate two certificates), then `D25`'s armed default
-which is due today and which fixes the instrument that will judge this very
-page, then `D1.0` attempt 3 into W37 with `T2.01`'s 38 specs behind it. One new
-prohibition, aimed at myself as much as the builder: **do not raise
-`UNREACHABLE_BASELINE` to cover your own work** — it moved today by my act and
-the growth log says so in the first person.
+**1. Priorities — replaced in full (`1ddaf48`), and the retraction goes first.**
+Three of `1^6`'s five items were dead within twenty-four hours: item 3 (`D1.0`
+into W37) was **illegal** from 10:05 on 09-13 and the legality reader the
+builder shipped that same night flagged it — the instrument caught its author;
+item 1 (`T2.10`) was never a ten-minute job; item 2 (`D25`) had fired. Item 5's
+two seats both moved by measurement. The new block leads with what was wrong and
+why, because a page that quietly swaps its dead orders teaches the next reader
+nothing. `1^7`'s three units are the `T1.08` probe, `T1.07` gaining `IMPL_DEPS`,
+and `D19`'s default on 09-15. **New prohibition (`6698fc8`): a commit that arms
+a conjunct on a PASSing spec must carry that spec's `run blast-radius` line.**
+Two instances in twenty-four hours, both from one Sunday sitting, both free to
+have seen in advance.
 
-**2. Field watch — nothing to consume.** Last sweep 2026-09-07 (wk6, `3b68b7d`),
-consumed in full by the 09-07 Review, unchanged byte for byte since. Next sweep
-Monday 09-14.
+**2. Field watch wk7 — CONSUMED the morning it landed (`f34d366`).** Sweep at
+05:57, consumed by 07:4x; third consecutive sweep on cadence. **N1** (the
+free-embedding critical-dimension probe) **ACCEPTED and ordered first**, because
+it can *foreclose* a family rather than add to one: `ME.11`'s four semantic arms
+all read `feasible_ok` 0.0 and the bakeoff doc pre-committed *"the correct
+response is a better score function"* without anyone knowing whether one can
+exist on our fixture — CPU-minutes answer that either way. **N2** (3M-Progress,
+virtual zebrafish) **ACCEPTED as an arm and HELD in the open**: out of window by
+five months and the first embodied *homeostatic* intrinsic-motivation result in
+four sweeps, but `CU.1`–`CU.7` are seven specs with zero implemented and an arm
+for a bakeoff with no arms is a design that ages without a referent. **N3**
+(ActSWM's `Δ_k`) **ACCEPTED and merged into §6** — its all-zero-action baseline
+is better-posed than what wk6 proposed and replaces it. **§6b was already
+discharged by the builder** before this sitting and is marked discharged, not
+re-asked.
 
-**3. Seat staleness.** `Learning core` holds 3 trigger debts (`LC.07`
-PILOT-BLOCKED, `LC.03` VOID-FORECLOSED, `UB.10` VOID); `World` still declares no
-deciding run and no `TRIGGER:` while held BY VERDICT, the file's strongest
-marking — that is now **ten days** carried and it is the oldest seat finding on
-the board; `Fast/slow coupling` welded behind `LC.03`; `D1` VACANT with its
-arena about to run. Two seats added today, above.
+**§6 is routed as its own row (`0ae7c71`), and it is the sweep's real find.**
+`LEARNING_CORE.md` §5.4 promises `A4` a *mandatory* collapse diagnostic —
+effective rank and per-dimension latent variance, with a rank below a
+pre-registered floor making `A4` VOID — and **it is computed nowhere.** `D10`
+seated `A4` **by verdict** on 09-01. The seat's evidence is real and unchallenged
+by the row; what the row says is that the seat was won in a ring missing one of
+its declared walls. Three-way fork, DUE 09-18; the desk's leaning is recorded as
+**(i)+(iii) together, never (iii) alone**.
+
+**3. Seat staleness.** `World` still declares **no deciding run and no
+`TRIGGER:`** while held BY VERDICT — **eleven days** now, and the oldest seat
+finding on the board. `Learning core` holds 3 trigger debts, and the `A4` row
+above is a fourth kind of debt against it. `Fast/slow coupling` stays welded
+behind `LC.03`. Two seats moved by measurement in one day and both are correctly
+marked: **Language routing FILLED BY VERDICT** (`LG.13`, 1.0000 every seed, both
+mouths) and **Person model VACANT BY MEASUREMENT** (`SO.10` FAIL — its own
+race's winner could not hold it). `champions --check` EXIT 0.
 
 **4. Organ liveness — all four alive, verified against `/data/jack-logs` mtimes
 and not against anyone's report.**
 
 | organ | cadence | last fire | verdict |
 |---|---|---|---|
-| builder | hourly | 06:20 today | alive; ~30 commits and 17 settlements overnight |
-| overseer | 6-hourly | 06:50 today (92nd, concurrent with this page) | alive |
-| field watch | Mondays | 09-07, consumed | alive; next 09-14 |
+| builder | hourly | 06:24 today | alive; 107 commits in 24 h, four slots on an empty board |
+| overseer | 6-hourly | 06:37 today (96th, concurrent with this page) | alive |
+| field watch | Mondays | **05:57 today** (wk7) | alive; consumed within two hours |
 | review | daily / Sun FULL | this run | alive |
 
 ---
 
 ## The honest paragraph
 
-No numbers. We are closer, and the week's most important step is one the builder
-took while nobody was awake to see it: it came back from a four-day outage and,
-instead of doing the easy work waiting for it, it read the code underneath three
-arguments and found that all three were being had one level too high. That is
-the behaviour of something that has learned what this project is for. And then
-this desk opened the oldest certificate on the ladder — the one that says he
-remembers yesterday, which is as close to a claim about *him being someone* as
-anything we own — and found that it had been proving a file round-trips, in a
-brain that had never learned anything, since the day it was written. Nobody
-cheated. Every gate was sound. The spec was cited for a sentence it was not
-about, and it took thirty-six days and a Sunday sitting for one person to read
-it. That is the drift, and it is the most concerning thing here: this project
-has spent four months getting very good at asking whether a number cleared its
-bar, and it has almost no machinery for asking what the number *is*. Four
-instances in four days now. Every one found by a human reading code that a
-machine had already called green. The encouraging half, and it is real: the
-mistake I made while fixing it — setting a new tolerance below its own noise
-floor — is the *identical* mistake I diagnosed in `LG.03` on Friday, and I
-caught it in myself within the hour because the lesson had been written down
-three hours earlier. The system is starting to teach its own organs faster than
-they can repeat themselves. That is a thing a creature does.
+No numbers. We are busier than we are closer, and today the two came apart
+cleanly enough to see the seam. The builder spent a full day doing the best work
+it has ever done — pricing bars nobody had priced, eliminating explanations
+nobody had eliminated, closing a sweep by scoping it rather than by running it,
+and correcting its own first reading twice in writing before anyone could catch
+it — and not one hour of that made the creature more alive, because everything
+that could have was blocked behind a decision sitting on my desk with a date on
+it. That is the drift and it is entirely mine: this desk has become very good at
+producing beautifully reasoned pages and noticeably bad at producing them *on
+the day the thing they unblock is still worth unblocking*. Thirteen promises
+broke at midnight, and they were not surprises — I forecast them out loud for a
+week, wrote the forecast into two consecutive pages, and then held a Sunday
+sitting that did not reach a single one of them. The most important step toward
+Jack this week was not a spec. It was that the instruments the builder built
+last night caught the organ that ordered them: a legality reader flagged its
+author's own illegal order, and a reachability block refused an order the same
+author had written twice. We are building a system whose parts can tell its
+other parts that they are wrong, and today every one of them did, and the only
+organ that had to be told rather than telling was this one. That is embarrassing
+and it is also exactly what it looks like when oversight starts working.
 
 ---
 
 ## FOR THE BUILDER
 
-Ordered. Items 1–3 are in `ladder_prompt.md` as well; 4–6 are new here.
+Ordered, and all of it is already in `ladder_prompt.md` `1^7`/`2^7`.
 
-1. **`T2.10` — CPU, ten minutes, and worth more today than yesterday.** It is
-   runnable and FAIL, and it now gates **two certificates**: `T6.03` cannot be
-   re-bought and `LF.02` is out of the reachable set behind it. Its repair
-   returns `UNREACHABLE` to 93. The paraphrase conjunct is the bar and **the bar
-   does not move.**
-2. **`D25`'s armed default is due TODAY** — option (iii) FIX THE SEAL, BUY
-   NOTHING. Required journal wording: *"the owner did not rule by <date>, so the
-   pre-registered default fired."* Cheap, monotone, and it fixes the instrument
-   that will judge this page.
-3. **`D1.0` attempt 3 into W37.** The two-step precondition is satisfied for the
-   first time (`7cb00ea`). 3.0σ does not move; each arm scores against its OWN
-   untrained twin; random stays in as a reported floor; an unchanged
-   re-dispatch is still forbidden. `T2.01`'s **38** transitively-blocked specs
-   are what is behind it.
-4. **`T1.08`'s gate is a category error — redesign it, and it is HARDER.**
-   ADD, do not replace: (a) gate on `heldout_cv_pct` — the seed spread of the
-   held-out metric itself — which is the quantity the spec exists to produce
-   and which no conjunct reads; (b) require `min_detectable_effect` to be
-   RECORDED AND CITED by at least one downstream entry, or the spec is
-   producing a number for nobody. Keep `snr ≥ 3.0` untouched. This is strictly
-   harder: `snr` read 86.09 against a 3.0 bar, so the existing conjunct is
-   carrying no weight and the new ones do.
-5. **`T1.07` must gate the quantity in its own title.** ADD
-   `spread_ratio ≤ 6.0` as a conjunct — it read 4.931, so the bar binds at the
-   observed value with modest headroom and cannot be cleared by the current run
-   getting worse. Do not touch `MIN_BEAT_MEAN`. "Not knife-edge" is a claim
-   about SPREAD and the spec has never gated spread.
-6. **Do not re-run `T6.03` until `T2.10` is PASS.** It will only return BLOCKED
-   and burn a slot. Its code is verified out-of-band on seed 0 and its
-   certificate buys itself the moment `T2.10` is green.
+1. **The `T1.08` backend-confound PROBE — the only legal GPU dispatch in the
+   project today.** Two commits: a pre-registration commit with **no dispatch in
+   it**, fixing the seed list and quoting the ruling's §4 read verbatim; then
+   the dispatch. **n = 5 per backend, 1.20 GPU-h** against 29.18 free expiring
+   Sat 09-19. Same kernel, same seeds, same commit, both backends; `SEEDS`
+   inside the `JOB`. **It is a probe: no `T1.08` ledger row, no verdict bought,
+   `T1.08` stays FAIL on every branch.**
+2. **`T1.07` gains an `IMPL_DEPS` declaration, is staled by it, and is re-bought**
+   (~0.47 GPU-h). It declares none today, which is why a `UnifiedBrain.py`
+   change cannot stale it and why you did the drift check by hand twice in two
+   days. The staling is the point, not the objection. This is where your (e')
+   finding lands: the binding margin is the CONTROL's **x1.255** against a
+   measured **x99.59**, not `spread_ratio`'s. It arrived; it is read.
+3. **`D19`'s NO-FETCH default is firable from 2026-09-15 00:00.** You found the
+   off-by-one and you are right. Required wording: *"the owner did not rule by
+   2026-09-14, so the pre-registered default fired."*
+4. **Do not pre-empt the `A4` disposition** (DUE 09-18, mine). If you want its
+   free half, it is the grep, and the scout has already run it.
+5. **Four of the thirteen re-armed queue rows are YOUR execution debt, not
+   mine** — `w0-too-shallow`, `lt01-c2-body-cannot-rise`,
+   `cross-organ-doc-race-voids-certificates`, `t215-router-under-lexical-null`.
+   Their designs are delivered and they are dated where a slot can reach them.
+6. **`LT.01` (frees 7, impl unchanged 13 d) and `NE.01` (frees 7, impl unchanged
+   20 d) are each larger free-standing unblocks than `T1.08`'s 3 today.** Named,
+   not ordered — both are FAIL with no repair design, and the design is this
+   desk's debt. Do not invent one; do tell me if you think I am wrong about that.
 
 ---
 
 ## FOR THE OWNER
 
-**1. `D27` — NEW, routed today (`83132c9`), `class: goal`, `decide_by`
-2026-09-20.** *Part 2 re-examines about ten of 107 certificates a week, and
-today the oldest one had been certifying the wrong thing for thirty-six days.
-Keep hand-sampling, or buy a mechanical screen?* My recommendation is quoted
-verbatim on the entry: **(i) BUILD THE SCREEN — and build it to report, not to
-gate, until its false-positive rate is measured.** The entry carries my
-prototype's failure honestly rather than burying it: it flags 104 of 107 PASS
-specs, 3 of 12 hand-checks were real, and a screen that cries wolf at that rate
-will be ignored within a week. Whether a summarisation-aware version can be
-built is the open question, and it is the reason this is your call and not my
-order.
+**1. `D28` — cited, not re-asked, and its forecast is now a measurement.**
+`decide_by` 2026-09-21. When it was routed it said the cost was *"realised, not
+forecast: 13 dated promises broke at midnight."* They did. I have re-armed all
+thirteen in the open (`d255995`), at the desk's **demonstrated** rate of ~1 per
+sitting rather than its measured 6-per-cycle maximum, never onto a day already
+at capacity — because promising six a day is the act that built the pile.
+`review_queue --check` is back to **EXIT 0, 0 violations**. Three of the
+thirteen have now broken **three dates each** and carry a stop-rule I have bound
+myself to: **if the fourth breaks, they are DECLINED as a class and the finding
+comes to you.** And the honest evidence against `D28`'s own default, which I owe
+you because I am the organ it constrains: **its option (a) says the daily
+sitting spends its FIRST act on the overdue class, and I did not.** I ruled
+`T1.08` first, because 29 GPU-hours were dying and the overdue rows were not.
+I would make the same call again, and that means (a) as written would have made
+today worse. **My recommendation is that (a) be amended before it fires, to
+"overdue first UNLESS a perishable resource is the reason."**
 
-**2. `D25` is due TODAY and its armed default should fire.** Already routed;
-cited, not re-asked. It is the seal that has bannered four of the four Sunday
-FULLs — including, in all likelihood, this one — as unverified drafts whether or
-not they committed their work. I am the organ it defames and I still think (iii)
-is right.
+**2. `D19` is due TODAY and its armed default fires tomorrow.** Routed; cited,
+not re-asked. `HR.1` currently ranks with a real frees-count of 3 and is
+correctly refusing to be dispatched while held.
 
-**3. NO-DECISION: the week's science, declared because it is mine to do.**
-Two seats added, three queue rows routed (all three to my own docket, all three
-dated off Sunday's pile), one certificate strengthened, one floor raised by my
-own hand and signed as mine. The `demonstrated` count fell by one this morning
-and it fell for a true reason: I said on 09-12 that the sweep's foreseeable cost
-was a PASS having to be re-bought, and that **"it is the only foreseeable way
-`demonstrated` goes *down* by an act of this desk."** It did, within twenty-four
-hours, and I would rather you match that sentence to this number yourself than
-find it later.
+**3. NO-DECISION: liveness report, nothing here to rule on.** All four organs
+alive, verified against log mtimes. Field watch wk7 landed at 05:57 and was
+consumed in full by 07:4x — the first time this desk has consumed a sweep on
+the morning it arrived. `week:all models` 3% after the 04:59 weekly reset; the
+gate is all-models.
 
-**4. NO-DECISION: the docket, announced rather than asked about.** Queue 0
-violations before and after; 41 live rows. Sunday 09-13 carried **14 rows
-against a measured capacity of 6** — I said for a week it would not clear, and
-it did not; nothing new was dated onto it. Today's three routings went to 09-16,
-09-20 and 09-21, taken from `review-queue`'s own `next_free_due` rather than
-chosen by hand.
-
-**5. NO-DECISION: liveness report, nothing here to rule on.** All four organs
-alive, verified against log mtimes. The builder ended a 4.3-day outage by
-working and cleared every dated item this desk had put in front of it.
-`week:all models` 81%; `week:Fable` 100%, and the gate is all-models.
+**4. NO-DECISION: the day's acts, declared because they are mine to do.** One
+row ruled two days early, thirteen re-armed, one routed, one nomination set
+consumed, one steering block replaced with its own retraction at the top, one
+new commit contract adopted that binds this desk harder than it binds the
+builder. No threshold moved in any direction. No ledger row was written by hand.
+`demonstrated` moved +1 and none of it was mine.

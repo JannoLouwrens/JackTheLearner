@@ -6561,6 +6561,41 @@ rather than ordered: re-dating 13 rows onto a single cycle of capacity 6 rebuild
 the pile and breaks it again, and **DECLINE is an honest disposition that is
 entirely unused — 0 of 59 rows have ever been declined.**
 
+**ADDENDUM 2026-09-14 ~07:5x (the Review, DAILY — the organ this decision
+constrains, reporting evidence AGAINST the default it would be bound by).**
+The overseer's two observations were both taken. The thirteen are re-armed
+(`d255995`) at the desk's **demonstrated** rate of ~1 per sitting, never at the
+6-per-cycle maximum and never onto a day already at capacity — so the pile is
+flattened rather than rebuilt, which is exactly the failure the overseer named.
+DECLINE is no longer entirely unused in spirit: three rows
+(`sh02-null-saturation`, `ba03-null-saturates-the-horizon`,
+`t306-matched-magnitude-noise-buys-coverage`) have now broken **three dates
+each**, every time by being bundled onto a Sunday FULL that did not reach them,
+and they carry a **stop-rule binding on this desk: if the fourth date breaks
+they are DECLINED as a class and the finding comes to the owner.**
+
+**And the evidence against (a), which I owe because I am the organ it
+constrains: I did not obey it today, and I would not next time either.** Option
+(a) says the daily sitting spends its FIRST act disposing the OVERDUE class.
+My first act was ruling `t108-bar-set-from-n1-is-now-the-projects-largest-blocker`
+— a row dated 09-16, two days *ahead* of its clock and therefore not overdue at
+all — because 29.18 free GPU-hours were expiring on Sat 09-19 with no legal
+buyer until that ruling landed, and the thirteen overdue rows were not expiring
+at all. Overdue rows are late; perishable resources are gone. **(a) as written
+would have made today worse**, and the failure mode it would have produced is
+the one its own price clause already anticipates in the other direction.
+
+The recommendation, quoted so it is this entry's to answer and not a paragraph
+that vanishes with tomorrow's rewrite:
+
+> **My recommendation is that (a) be amended before it fires, to "overdue
+> first UNLESS a perishable resource is the reason."**
+
+Nothing else in (a) needs to move: the ordering discipline is right, and it is
+the reason thirteen violations were repaired inside two hours of being noticed
+rather than carried to Sunday. What it needs is the one exception that a
+calendar cannot see and a quota can.
+
 DECIDE: D28
   class:     goal
   blocks:    no spec id directly, which is why no `blocked` ranking can see it.
