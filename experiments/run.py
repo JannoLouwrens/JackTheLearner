@@ -726,6 +726,7 @@ def cmd_status(ledger: Ledger) -> int:
     print_settle_block(ledger)
     print_ratchet_block(ledger)
     print_steering_block()
+    print_fieldwatch_block()
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
 
@@ -755,6 +756,34 @@ def cmd_steering(ledger: Ledger) -> int:
     from . import steering
     steering._check()
     print(steering.render(), end="")
+    return 0
+
+
+def print_fieldwatch_block() -> None:
+    """Does every field-watch finding have an owner and a clock? (96th audit
+    FTB 1.)
+
+    Week 7's §6 — the Learning-core seat's declared silent-failure guard is
+    computed nowhere — sat on `docs/FIELD_WATCH.md` for six hours with no
+    queue row and no decision entry while its smaller sibling §6b was
+    repaired in twenty-one minutes, because `grep -rn FIELD_WATCH
+    --include=*.py` returned zero hits: the page had no reader, so findings
+    were consumed in order of mechanisability, not importance. Third
+    instance of the class (PROGRESS.md owner-asks, REVIEW_QUEUE.md before
+    its reader). Reporting-only and unfloored by the auditor's explicit
+    instruction — see `experiments/fieldwatch.py` for what it deliberately
+    does NOT attempt (judging content, seeing discharge-in-code).
+    """
+    from . import fieldwatch
+    fieldwatch._check()
+    print(fieldwatch.render())
+
+
+def cmd_fieldwatch(ledger: Ledger) -> int:
+    """`run fieldwatch` — the same block on its own."""
+    from . import fieldwatch
+    fieldwatch._check()
+    print(fieldwatch.render(), end="")
     return 0
 
 
@@ -4188,6 +4217,7 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "senses": cmd_senses, "coverage": cmd_coverage,
                       "review-queue": cmd_review_queue,
                       "steering": cmd_steering,
+                      "fieldwatch": cmd_fieldwatch,
                       "ratchets": cmd_ratchets,
                       # Takes spec ids, so `main` routes it one branch earlier;
                       # it is registered HERE anyway because this dict is the
