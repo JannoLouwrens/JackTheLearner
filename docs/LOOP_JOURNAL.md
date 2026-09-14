@@ -16903,3 +16903,42 @@ failures[] before anything else. D19's NO-FETCH default fires from 09-15
 00:00 (required wording: "the owner did not rule by 2026-09-14, so the
 pre-registered default fired"). 1^7 item 2 (T1.07 IMPL_DEPS + re-buy,
 ~0.47 GPU-h) remains untaken — the probe holds the GPU lock, so it waits.
+
+**2026-09-14 ~10:1x slot (fable; `week:all models` 23% — the gate, read at
+10:1x; session 40%, Fable 32%; both printed, acting on all-models).** One unit:
+T1.08 probe, colab arm — continued and instrumented. Read the state: kaggle arm
+COMPLETE (cv_P100 36.577, well above the 7.0 bar); colab arm still `null` after
+the 08:07 relaunch's run FAILED — but not the 09-07 fast-fail shape. This time
+colab RAN to completion (job ladder-1789373334, head 3077d9c, 3699.6 s, 1.03
+GPU-h charged to W37 colab=1.0277) and the job printed `DONE` (so line 177's
+`json.dump` wrote `JACK_OUT/t108.json`), yet the kept-session
+`download /content/t108.json` returned "File not found". Compute worked;
+RETRIEVAL failed. Committed the charge receipts as found (bd753c6). Did NOT
+patch the fetch path on the wrong-dir hypothesis: the distinguishing evidence
+(preamble's `JACK_OUT <path>`, printed at the START of stdout) was thrown away —
+the failure record kept only `stdout[-300:]`. So I INSTRUMENTED instead
+(521d33e): the no-artifact record now captures stdout head+tail+stderr, so the
+next failure is adjudicated on disk (cause 1 wrong-dir vs cause 2 kept-session
+retrieval) rather than re-argued. On a colab VM `/kaggle/working` does not exist
+→ `JACK_OUT` should be `/content` → cause 2 (retrieval) is the likelier reading;
+LESSON added (c249f82). Kernel unchanged (T.JOB from t1_08_seed_variance.py
+untouched; `build_job` checks out literal `main`), so kernel_sha256 stays
+byte-identical to the kaggle arm — "same kernel" holds. Pushed; relaunched the
+colab arm detached (setsid + `env -u JACK_ITER_DEADLINE`, pid 405151, declared
+in declared_pids, liveness confirmed — log shows "--- submitting n=5 arm,
+intended=colab"). **T1.08 STAYS FAIL, no bar moved, no branch taken (still one
+venue).** **NEXT ITERATION — HARVEST:** read /data/t108_backend_probe.json +
+tail /data/tmp/t108_backend_probe.log; `pgrep -f t108_backend_probe`.
+(a) Both arms present → `_finalise` writes the pre-registered branch; commit (b)
+per ruling §8.5 with cv_T4/cv_P100, row → ACTED, and it is FORBIDDEN to dispatch
+T1.08 to whichever venue read lower (§3). (b) Colab still missing → read
+`failures[]`'s new `stdout_head`: if it shows `JACK_OUT /kaggle/working` the fix
+is a multi-dir fetch (cause 1); if `JACK_OUT /content` with the file written and
+still not downloadable, the colab lane's kept-session retrieval is structurally
+dead on this box — annotate the T1.08 row as a FACT, do NOT substitute a venue,
+and route the harvest-robustness (stdout recovery needs the JOB's `[:600]`
+truncation lifted, which stales T1.08's kernel — a Review call, not a builder
+patch). Also still open: `1^7` item 2 (T1.07 IMPL_DEPS + ~0.47 GPU-h re-buy) —
+the probe holds the GPU lock, so it waits. D19's NO-FETCH default fires from
+09-15 00:00 (wording: "the owner did not rule by 2026-09-14, so the
+pre-registered default fired").
