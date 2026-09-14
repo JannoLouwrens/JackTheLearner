@@ -9302,6 +9302,20 @@
           ],
           "commit": "ce33621+dirty",
           "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        },
+        {
+          "at": "2026-09-14T08:12:04",
+          "by": "96th-audit-FTB-3",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "c0fbacf560a6443f",
+              "proof": "reconstructed c0fbacf560a6443f from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "10efbd3921d6cc07"
+            }
+          ],
+          "commit": "f842f2d",
+          "reason": "record certified abstention level 0.920@m=36 beside the 0.95 bar (field watch wk7 \u00a76b)"
         }
       ],
       "attempt": 3,
@@ -9408,7 +9422,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "c0fbacf560a6443f",
+      "impl_sha": "10efbd3921d6cc07",
       "message": "",
       "metrics": {
         "distractor_abstention": 1.0,
@@ -11668,6 +11682,20 @@
           ],
           "commit": "ce33621+dirty",
           "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        },
+        {
+          "at": "2026-09-14T08:12:01",
+          "by": "96th-audit-FTB-3",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "fa2dffbd27362b9e",
+              "proof": "reconstructed fa2dffbd27362b9e from git 4f62755010d4; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "03d846107d1a2b7e"
+            }
+          ],
+          "commit": "f842f2d",
+          "reason": "record certified abstention level 0.819@m=15 beside the 0.95 bar (field watch wk7 \u00a76b)"
         }
       ],
       "attempt": 6,
@@ -11876,7 +11904,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "fa2dffbd27362b9e",
+      "impl_sha": "03d846107d1a2b7e",
       "message": "",
       "metrics": {
         "acc_did": 1.0,
