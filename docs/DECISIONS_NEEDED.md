@@ -6383,3 +6383,82 @@ DECIDE: D27
              gets floored or deleted once it exists. Reversal: delete one
              function from `experiments/coverage.py`.
   decide_by: 2026-09-20
+
+## D25 — RESOLVED BY ARMED DEFAULT, fired 2026-09-14 ~00:2x UTC (builder). Off your desk.
+
+**The owner did not rule by 2026-09-13, so the pre-registered default fired.**
+
+Default **(iii) FIX THE SEAL, BUY NOTHING.** `scripts/lib_seal.sh` gained a
+fourth case: a dying organ may pass its own **tail receipt** — the last item on
+its checklist, in a file the seal can read — and when that receipt is present
+the banner says *"CHECKLIST COMPLETE — THE RUN WAS KILLED ON THE TAIL, NOT
+MID-REPORT"* instead of *"THIS IS A DRAFT, NOT A FINDING"*. `scripts/review.sh`
+passes `docs/PROGRESS_LOG.md` and today's row pattern, because that append is
+the last item on the Review's checklist. **A run with no receipt keeps today's
+wording BYTE-FOR-BYTE**, which is what the default requires; an organ that
+configures no receipt at all (the overseer, the field watch) is untouched.
+
+**The scar this fired against, re-verified from git rather than quoted.** The
+2026-09-06 Sunday FULL appended its own substantive `PROGRESS_LOG` row —
+*"The fifth Sunday FULL, and the first that did not die owing its design"*, six
+dated rows disposed, `ME.1` demoted, two seatless capabilities named — and
+`timeout(1)` killed it five minutes later at the 40-minute wall. `cf18320`
+(2026-09-06 07:17:11) is the seal giving that finished page the banner it
+correctly gives a run that wrote nothing. The builder then executed seven of
+that page's nine `FOR THE BUILDER` items off a document formally marked
+UNVERIFIED, and was right to.
+
+**ONE DEVIATION FROM THE DEFAULT'S LETTER, declared rather than silently
+taken.** The default reads *"if this run committed `docs/PROGRESS.md` AND
+appended its `PROGRESS_LOG` row"*. **Git says the first conjunct is false of the
+very run the decision cites** — the 09-06 agent never committed the page; it
+left it dirty and `lib_seal.sh` itself committed it (`cf18320`, above). Taken
+literally the new branch would never fire on its own scar. So the gate is the
+**receipt alone**, and the page's custody is REPORTED rather than required: in
+this branch the page is the run's complete product and is committed in the same
+breath, by the run or by the seal. Strictly monotone either way — it can only
+replace a false banner with a truer one.
+
+**The trap this could have walked into, and the assertion that stops it.**
+`review.sh` writes its OWN `PROGRESS_LOG` row when the agent died before the
+append (76th audit B4), and that row matches the date pattern exactly. A receipt
+an organ's own dead-run fallback can satisfy is not a receipt — it is the organ
+certifying itself. `lib_seal.sh` refuses any candidate line containing
+`INCOMPLETE`, and `test_lib_liveness.sh` asserts it directly.
+
+**Verified at firing rather than asserted.** `scripts/test_lib_liveness.sh` is
+**all green** with **14 new assertions** covering all four cases — receipt
+present (COMPLETE, draft wording absent, receipt row quoted as evidence,
+`UNAUDITED` still said, `git log` subject says COMPLETE, page committed, no
+second banner stacked), receipt absent (INCOMPLETE wording unchanged), the
+`INCOMPLETE` fallback row refused, and an organ with no receipt configured
+unchanged. `--firing-check WORKTREE` exits 0: no `GOAL.md` edit, no numeric bar
+moved. `decisions --check` and `champions --check` rc=0.
+
+**What the new banner is careful NOT to say**, because a truer banner that
+overclaims is the same defect with the sign flipped: it does not say the page
+has been verified by anyone else (it says **UNAUDITED** explicitly), and it does
+not say that anything AFTER the receipt in the organ's checklist ran.
+
+**The price, restated rather than buried, because the entry priced it:** Sunday
+FULLs keep exiting `rc=124` and keep looking unhealthy to anything that reads
+exit codes alone. This desk takes a truthful banner over a green exit code on
+purpose — (i) RAISE THE WALL CLOCK would have spent credits against the shared
+all-models meter by silence, and that meter's exhaustion is what took every
+organ dark for 4.3 days.
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved in
+either direction, no control loosened, no new permission taken, nothing re-run,
+no certificate staled, no spec failed, no run refused, no commitment claim-dead.
+`lib_seal.sh` is in no spec's `IMPL_DEPS`.
+
+**To reverse:** stop passing arguments 7 and 8 to `seal_output` in
+`scripts/review.sh` — one line, and every organ returns to the single banner.
+The owner may rule (i) or (ii) at any later date at no cost, and that ruling is
+unaffected by this default having fired.
+
+Evidence: `scripts/lib_seal.sh` (the fourth case, `_seal_stamp_emissions`,
+`_seal_stamp_ledger`, `seal_output`); `scripts/review.sh:106-115`;
+`scripts/test_lib_liveness.sh` (`--- seal_output: the tail receipt ---`);
+`cf18320` and `docs/PROGRESS_LOG.md:26` (the 2026-09-06 scar); 76th audit B4
+(the `INCOMPLETE` fallback row).

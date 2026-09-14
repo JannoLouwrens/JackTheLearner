@@ -252,6 +252,104 @@ chk "the stamp names the organ, the rc and the seal" \
 chk "nothing but the key changed: status and attempt are the runner's" \
   "$(/data/venvs/jackthelearner/bin/python -c "import json;d=json.load(open('$W3/experiments/ledger.json'));r=d['results']['B.2'];print(r['status'],r['attempt'])")" "PASS 3"
 
+printf '\n--- seal_output: the tail receipt (D25, armed default 2026-09-14) ---\n'
+
+# THE 2026-09-06 SCAR, re-enacted. The Sunday FULL wrote its whole page,
+# committed its dispositions as it made them, appended its own PROGRESS_LOG row
+# at 07:12 — the last item on its checklist — and `timeout` killed it at 07:17.
+# The seal, reading only rc!=0, gave that finished page the banner it correctly
+# gives a run that wrote nothing. The discriminator is the organ's own tail
+# receipt, and all four cases below are asserted because three of them are the
+# ways this branch could go wrong: firing when there is no receipt, refusing to
+# fire when there is one, and — the one that would quietly undo it — accepting
+# the organ's OWN dead-run fallback row as if the agent had written it.
+mkrepo() {  # <dir> -> a repo with a committed report and history file
+  local d="$1"
+  mkdir -p "$d/docs"; git -C "$d" init -q
+  git -C "$d" config user.email t@t; git -C "$d" config user.name t
+  printf 'report v1\n' > "$d/docs/R.md"
+  { echo "| date | mode | one line |"; echo "|---|---|---|"; } > "$d/docs/HIST.md"
+  git -C "$d" add -A; git -C "$d" commit -q -m init
+  printf 'report v1\nthe whole page, written\n' >> "$d/docs/R.md"
+}
+TODAY=$(date -u +%F)
+PAT="^\| $TODAY "
+
+# (a) The run finished its checklist: its own row is in the history file.
+W4="$TMP/repo4"; mkrepo "$W4"
+printf '| %s | FULL | the desk read the board and ruled |\n' "$TODAY" >> "$W4/docs/HIST.md"
+( cd "$W4" && seal_output 124 docs/R.md review say 25 "$(( $(date +%s) - 60 ))" \
+    docs/HIST.md "$PAT" ) >/dev/null 2>&1
+chk "a run with its tail receipt is sealed COMPLETE, not a draft" \
+  "$(head -3 "$W4/docs/R.md" | grep -c 'CHECKLIST COMPLETE')" "1"
+chk "and the DRAFT wording is nowhere on the page" \
+  "$(grep -c 'THIS IS A DRAFT, NOT A FINDING' "$W4/docs/R.md")" "0"
+chk "and the banner quotes the receipt row as its evidence" \
+  "$(head -8 "$W4/docs/R.md" | grep -c 'the desk read the board and ruled')" "1"
+chk "and it still says the page is UNAUDITED" \
+  "$(head -12 "$W4/docs/R.md" | grep -c 'UNAUDITED')" "1"
+chk "and git log says COMPLETE, so a log reader need not open the file" \
+  "$(git -C "$W4" log -1 --format=%s -- docs/R.md | grep -c 'sealed as COMPLETE')" "1"
+chk "and the page is committed, not left dirty" \
+  "$(git -C "$W4" status --porcelain -- docs/R.md | wc -l)" "0"
+# A second dying run must not stack a second banner on top of the first.
+printf 'a later run appended this\n' >> "$W4/docs/R.md"
+( cd "$W4" && seal_output 124 docs/R.md review say 25 "$(( $(date +%s) - 60 ))" \
+    docs/HIST.md "$PAT" ) >/dev/null 2>&1
+chk "a second call does not stack a second COMPLETE banner" \
+  "$(grep -c 'CHECKLIST COMPLETE' "$W4/docs/R.md")" "1"
+
+# (b) NO receipt — today's wording, byte-for-byte. This is what D25's default
+# requires of a run that committed neither, and it is the 09-05 death.
+W5="$TMP/repo5"; mkrepo "$W5"
+( cd "$W5" && seal_output 1 docs/R.md review say 25 "$(( $(date +%s) - 60 ))" \
+    docs/HIST.md "$PAT" ) >/dev/null 2>&1
+chk "no receipt: the INCOMPLETE RUN banner is unchanged" \
+  "$(head -3 "$W5/docs/R.md" | grep -c 'INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING')" "1"
+chk "no receipt: nothing claims the checklist completed" \
+  "$(grep -c 'CHECKLIST COMPLETE' "$W5/docs/R.md")" "0"
+
+# (c) THE ONE THAT WOULD QUIETLY UNDO IT: review.sh writes an INCOMPLETE row
+# itself when the agent died before its own append (76th audit B4). That row
+# matches the date pattern exactly. A receipt an organ's own dead-run fallback
+# can satisfy is not a receipt — it is the organ certifying itself.
+W6="$TMP/repo6"; mkrepo "$W6"
+printf '| %s | FULL | — | INCOMPLETE — the FULL run exited rc=124 before appending its own row |\n' \
+  "$TODAY" >> "$W6/docs/HIST.md"
+( cd "$W6" && seal_output 124 docs/R.md review say 25 "$(( $(date +%s) - 60 ))" \
+    docs/HIST.md "$PAT" ) >/dev/null 2>&1
+chk "an INCOMPLETE fallback row is NOT a completion receipt" \
+  "$(head -3 "$W6/docs/R.md" | grep -c 'INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING')" "1"
+
+# (d) An organ that passes no receipt at all (the overseer, the field watch)
+# must behave exactly as it did before this branch existed.
+W7="$TMP/repo7"; mkrepo "$W7"
+( cd "$W7" && seal_output 1 docs/R.md overseer say 7 "$(( $(date +%s) - 60 ))" ) >/dev/null 2>&1
+chk "an organ with no receipt configured is untouched by this branch" \
+  "$(head -3 "$W7/docs/R.md" | grep -c 'INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING')" "1"
+
+# (e) The swept artefacts must not contradict the page. A dying run's routed
+# decision used to be stamped "its report is sealed as an INCOMPLETE RUN draft"
+# unconditionally — the same falsehood, one file over.
+W8="$TMP/repo8"
+mkdir -p "$W8/docs"; git -C "$W8" init -q
+git -C "$W8" config user.email t@t; git -C "$W8" config user.name t
+printf 'report v1\n' > "$W8/docs/R.md"
+{ echo "| date | mode | one line |"; echo "|---|---|---|"; } > "$W8/docs/HIST.md"
+printf '# decisions\n\n## D98 — an older entry\n\n- class: goal\n' > "$W8/docs/DECISIONS_NEEDED.md"
+git -C "$W8" add -A; git -C "$W8" commit -q -m init
+printf 'report v1\nthe whole page, written\n' >> "$W8/docs/R.md"
+printf '| %s | FULL | ruled |\n' "$TODAY" >> "$W8/docs/HIST.md"
+printf '\n## D99 — a live decision this run routed\n\n- class: goal\n' >> "$W8/docs/DECISIONS_NEEDED.md"
+( cd "$W8" && seal_output 124 docs/R.md review say 25 "$(( $(date +%s) - 60 ))" \
+    docs/HIST.md "$PAT" ) >/dev/null 2>&1
+chk "a swept decision entry is stamped, as always" \
+  "$(grep -c 'PROVENANCE' "$W8/docs/DECISIONS_NEEDED.md")" "1"
+chk "and its provenance does NOT call the complete page a draft" \
+  "$(grep -c 'INCOMPLETE RUN draft' "$W8/docs/DECISIONS_NEEDED.md")" "0"
+chk "and it still says the entry is unverified" \
+  "$(grep -c 'unverified until an audit re-measures them' "$W8/docs/DECISIONS_NEEDED.md")" "1"
+
 printf '\n--- review_liveness: the paused organ ---\n'
 
 # A paused organ is a DECISION, not a fault. Shouting about it would train the

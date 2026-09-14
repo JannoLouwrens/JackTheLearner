@@ -102,7 +102,17 @@ usage_ledger review end "$MODEL"      # D15 (d): after any retry, one line whate
 # current state -> stamp it STALE, but only once it is older than this organ's
 # 24 h cadence (both branches in scripts/lib_seal.sh; the 08-30 FULL death is
 # the scar for the second one).
-seal_output "$RC" docs/PROGRESS.md review say 25 "$RUN_START"
+# THE TAIL RECEIPT (D25's armed default, fired 2026-09-14). The append to
+# docs/PROGRESS_LOG.md below is the LAST item on this organ's checklist, so its
+# presence is the one honest signal available at seal time that the run reached
+# the end of its own list before the wall clock killed it — the 2026-09-06
+# FULL's row landed at 07:12 and `timeout` killed it at 07:17, and the seal
+# called that finished page a draft. Passed as a pattern rather than hard-coded
+# in lib_seal.sh so the library stays organ-agnostic. NOTE THE ORDER: this call
+# precedes the INCOMPLETE-row fallback below, so a row found here is the
+# agent's own — and lib_seal.sh refuses an INCOMPLETE row as a receipt anyway.
+seal_output "$RC" docs/PROGRESS.md review say 25 "$RUN_START" \
+  docs/PROGRESS_LOG.md "^\| $(date -u +%F) "
 # The trend row must not die with the run (76th audit B4). The append to
 # docs/PROGRESS_LOG.md sits at the END of the agent's checklist, and the last
 # two runs both died before reaching it — so the file that exists "so trends

@@ -59,7 +59,45 @@
 # `git commit` otherwise writes the whole index and these organs share a tree
 # with a builder that may have staged anything.
 
-# _seal_stamp_emissions <path> <organ> <rc> <stamp>
+# THE FOURTH CASE, added 2026-09-14 (D25's armed default, option (iii) FIX THE
+# SEAL, BUY NOTHING — the owner did not rule by 2026-09-13, so the
+# pre-registered default fired).
+#
+# THE SCAR: 2026-09-06. The Sunday FULL wrote its whole page, committed its
+# dispositions as it made them, and appended its own `PROGRESS_LOG` row at
+# 07:12 — the LAST item on its checklist. `timeout(1)` killed it at the
+# 40-minute wall five minutes later, and this file, reading only `rc != 0`,
+# gave that page the identical banner it correctly gives a run that died having
+# written nothing: *"THIS IS A DRAFT, NOT A FINDING ... any verdict ... any
+# instrument table in it are UNVERIFIED."* The builder then spent twenty-four
+# hours executing seven of that page's nine `FOR THE BUILDER` items off a
+# document formally marked unverified — and was right to. One verdict for two
+# opposite events is how a seal teaches its readers to skip banners, which is
+# the one failure mode a seal cannot survive.
+#
+# THE DISCRIMINATOR is the organ's own TAIL RECEIPT: the last item on its
+# checklist, written by the agent, in a file the seal can read. The caller
+# passes it (`receipt_file` + `receipt_pat`); if a matching line is there when
+# the seal runs, the run reached the end of its own list and died on the tail,
+# and the banner says THAT instead of calling the page a draft. A line that
+# declares itself INCOMPLETE is never a completion receipt — `review.sh` writes
+# exactly such a row for a run that died before its own append (76th audit B4),
+# and a receipt an organ's own dead-run fallback can satisfy is not a receipt.
+#
+# ONE DEVIATION FROM THE DEFAULT'S LETTER, recorded because it is a deviation.
+# `D25`'s default reads *"if this run committed `docs/PROGRESS.md` AND appended
+# its `PROGRESS_LOG` row"*. Git says the first conjunct is false of the very run
+# the decision cites: on 2026-09-06 the agent never committed the page — it left
+# it dirty and `lib_seal.sh` itself committed it at 07:17:11 (`cf18320`). Taken
+# literally the new branch would never fire on its own scar. So the gate is the
+# RECEIPT, and the page's custody is REPORTED rather than required: in this
+# branch the page is this run's complete product and is committed in the same
+# breath, by the run or by the seal. Strictly monotone either way — it can only
+# replace a false banner with a truer one, it moves no threshold, refuses no
+# run, fails no spec and stales no certificate. A run with no receipt keeps
+# today's wording BYTE-FOR-BYTE, which is what the default requires.
+
+# _seal_stamp_emissions <path> <organ> <rc> <stamp> [tail_complete]
 #
 # THE SCAR (76th audit 9.3, 2026-09-06): `D23` — an armed owner decision with a
 # default that fires by silence — was written by the 09-05 Review run that died
@@ -78,12 +116,20 @@
 # provenance via `_seal_stamp_ledger` below (79th audit 1.1). Idempotent: a
 # header already followed by a PROVENANCE line is left alone.
 _seal_stamp_emissions() {
-  local p="$1" organ="$2" rc="$3" stamp="$4" hdr note
+  local p="$1" organ="$2" rc="$3" stamp="$4" tail_complete="${5:-}" hdr note
   case "$p" in
     docs/DECISIONS_NEEDED.md|docs/REVIEW_QUEUE.md|docs/CHAMPIONS.md) ;;
     *) return 0;;
   esac
-  note="> PROVENANCE (scripts/lib_seal.sh, ${stamp}): this entry was written by a ${organ} run that exited rc=${rc} without completing its own checklist — its report is sealed as an INCOMPLETE RUN draft. The entry's facts are that dead run's, unverified until an audit re-measures them; nothing here is re-dated, weakened or un-armed by this line."
+  if [ -n "$tail_complete" ]; then
+    # D25: the run finished its checklist and was killed on the tail. The entry
+    # is still a dead run's artefact and still unaudited — but saying its report
+    # is "sealed as an INCOMPLETE RUN draft" would be the same falsehood this
+    # decision fired to remove, one file over.
+    note="> PROVENANCE (scripts/lib_seal.sh, ${stamp}): this entry was written by a ${organ} run that reached the last item on its own checklist and was then killed at its wall clock (rc=${rc}); its report is sealed as COMPLETE, not as a draft. The entry's facts are that run's, unverified until an audit re-measures them; nothing here is re-dated, weakened or un-armed by this line."
+  else
+    note="> PROVENANCE (scripts/lib_seal.sh, ${stamp}): this entry was written by a ${organ} run that exited rc=${rc} without completing its own checklist — its report is sealed as an INCOMPLETE RUN draft. The entry's facts are that dead run's, unverified until an audit re-measures them; nothing here is re-dated, weakened or un-armed by this line."
+  fi
   # Added headers only: the diff is unstaged working-tree vs HEAD, taken before
   # the sweep's `git add`, so `+## ...` lines are exactly what this run created.
   while IFS= read -r hdr; do
@@ -123,16 +169,21 @@ _seal_stamp_emissions() {
 # custody. Any failure inside returns 0 — the seal must never make the
 # dying-run path worse than an unstamped commit.
 _seal_stamp_ledger() {
-  local p="$1" organ="$2" rc="$3" stamp="$4"
+  local p="$1" organ="$2" rc="$3" stamp="$4" tail_complete="${5:-}"
   [ "$p" = "experiments/ledger.json" ] || return 0
   SEAL_ORGAN="$organ" SEAL_RC="$rc" SEAL_STAMP="$stamp" \
+  SEAL_TAIL="${tail_complete:+1}" \
   /data/venvs/jackthelearner/bin/python - "$p" <<'PYEOF' || return 0
 import fcntl, json, os, subprocess, sys, tempfile
 path = sys.argv[1]
 organ = os.environ["SEAL_ORGAN"]; rc = os.environ["SEAL_RC"]
 stamp = os.environ["SEAL_STAMP"]
+tail = os.environ.get("SEAL_TAIL", "")
+died = (f"run that reached the last item on its own checklist and was then "
+        f"killed at its wall clock (rc={rc})" if tail else
+        f"run that exited rc={rc} without completing its own checklist")
 note = (f"committed by scripts/lib_seal.sh at {stamp}, swept from a {organ} "
-        f"run that exited rc={rc} without completing its own checklist. The "
+        f"{died}. The "
         "row is as the runner wrote it, unmodified apart from this key — "
         "provenance, not an amendment. The next real run of this spec "
         "supersedes it.")
@@ -251,7 +302,8 @@ withdrawn. The banner clears itself the next time the organ completes." -- "$fil
 # given, nothing is swept and everything dirty is named: an unbounded sweep
 # would be the ddbe6b7 scar with a banner on it.
 seal_output() {
-  local rc="$1" file="$2" organ="$3" sayfn="${4:-:}" max_clean_age="${5:-25}" run_start="${6:-}"
+  local rc="$1" file="$2" organ="$3" sayfn="${4:-:}" max_clean_age="${5:-25}" run_start="${6:-}" \
+        receipt_file="${7:-}" receipt_pat="${8:-}"
   [ "$rc" -eq 0 ] && return 0
   [ -f "$file" ] || return 0
   # Dirty means THIS dying run wrote it (or an earlier one did and nobody
@@ -286,11 +338,28 @@ seal_output() {
       left_names="${left_names:+$left_names, }$_p"
     fi
   done < <(git status --porcelain 2>/dev/null)
+  # D25's TAIL RECEIPT (see the fourth case above): did this run reach the last
+  # item on its own checklist? Read BEFORE the banner is chosen, and read from
+  # the tree rather than from git, because an agent that appended its row and
+  # died before committing still finished the list — the sweep below commits it.
+  # A row that declares itself INCOMPLETE is the organ's own dead-run fallback
+  # and is never a receipt.
+  local tail_complete="" receipt_line=""
+  if [ -n "$receipt_file" ] && [ -n "$receipt_pat" ] && [ -f "$receipt_file" ]; then
+    receipt_line=$(grep -E "$receipt_pat" "$receipt_file" 2>/dev/null \
+                   | grep -v 'INCOMPLETE' | tail -1)
+    if [ -n "$receipt_line" ]; then
+      tail_complete=1
+      "$sayfn" "tail receipt found in $receipt_file — this run finished its checklist and was killed on the tail"
+    else
+      "$sayfn" "no tail receipt in $receipt_file — sealing as an INCOMPLETE RUN draft"
+    fi
+  fi
   # Never stamp twice — but still commit. A second dying run that appended to
   # an already-sealed draft leaves the same uncommitted file the seal exists to
   # prevent, and one banner is enough to say the same thing.
-  if head -3 "$file" | grep -q "INCOMPLETE RUN"; then
-    "$sayfn" "$file already carries a draft banner — committing as it stands"
+  if head -3 "$file" | grep -qE "INCOMPLETE RUN|CHECKLIST COMPLETE"; then
+    "$sayfn" "$file already carries a seal banner — committing as it stands"
     if [ -n "$swept_names$left_names" ] && ! grep -q "also left dirty" "$file"; then
       {
         printf '\n> Files this run also left dirty'
@@ -303,6 +372,23 @@ seal_output() {
     local stamp
     stamp="$(date -Iseconds)"
     {
+      if [ -n "$tail_complete" ]; then
+        # D25 (iii). The page is a finished product whose run lost its exit,
+        # not its work. Two things this banner is careful NOT to say: that the
+        # page has been verified by anyone else, and that anything AFTER the
+        # receipt in the organ's checklist ran.
+        printf '> **CHECKLIST COMPLETE — THE RUN WAS KILLED ON THE TAIL, NOT MID-REPORT.**\n'
+        printf '> The %s run that wrote this file exited rc=%s (%s), and\n' "$organ" "$rc" "$stamp"
+        printf '> before it died it reached the LAST item on its own checklist: %s\n' "$receipt_file"
+        printf '> carries this run'"'"'s own row —\n'
+        printf '>     %s\n' "$receipt_line"
+        printf '> So this page is that run'"'"'s finished product and is committed as\n'
+        printf '> such: what the run lost was its exit, not its work. It is still\n'
+        printf '> UNAUDITED — no other organ has checked it — and any checklist item\n'
+        printf '> that comes AFTER the row above did not run. Sealed by\n'
+        printf '> scripts/lib_seal.sh (D25, armed default fired 2026-09-14); the exit\n'
+        printf '> code is in the log, and this banner is what joins the two.\n'
+      else
       printf '> **INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING.**\n'
       printf '> The %s run that wrote this file exited rc=%s and did not\n' "$organ" "$rc"
       printf '> complete its own checklist (%s). Everything below was\n' "$stamp"
@@ -310,6 +396,7 @@ seal_output() {
       printf '> "no findings", and any instrument table in it are UNVERIFIED.\n'
       printf '> Sealed automatically by scripts/lib_seal.sh; the exit code is in\n'
       printf '> the log, and this banner is what joins the two.\n'
+      fi
       [ -n "$swept_names" ] && \
         printf '> Files this run also left dirty, committed unbannered by the seal: %s.\n' "$swept_names"
       [ -n "$left_names" ] && \
@@ -317,17 +404,37 @@ seal_output() {
       printf '\n'
       cat "$file"
     } > "$file.sealed" && mv "$file.sealed" "$file"
-    "$sayfn" "sealed $file as an INCOMPLETE RUN draft (rc=$rc)"
+    if [ -n "$tail_complete" ]; then
+      "$sayfn" "sealed $file as COMPLETE — killed on the tail (rc=$rc)"
+    else
+      "$sayfn" "sealed $file as an INCOMPLETE RUN draft (rc=$rc)"
+    fi
   fi
   git add -- "$file" 2>/dev/null
-  git commit -q -m "$organ: run exited rc=$rc mid-report — $file sealed as a draft
+  # The subject line is what `git log` shows, so it carries the same
+  # distinction the banner does (D25): a page whose run finished its checklist
+  # is not "sealed as a draft", and a reader of the log should not have to open
+  # the file to learn which of the two happened.
+  local _msg
+  if [ -n "$tail_complete" ]; then
+    _msg="$organ: run killed at its wall clock on the tail (rc=$rc) — $file sealed as COMPLETE
+
+Committed by scripts/lib_seal.sh, not by the organ's agent. The run reached the
+last item on its own checklist ($receipt_file carries its row) and was then
+killed, so what it lost was its exit, not its work. The page is preserved as a
+finished — and still unaudited — product, which is what D25's armed default
+fired to make this instrument able to say."
+  else
+    _msg="$organ: run exited rc=$rc mid-report — $file sealed as a draft
 
 Committed by scripts/lib_seal.sh, not by the organ's agent. The run wrote this
 file and then died before finishing its checklist, so its verdict is unearned.
 Preserved rather than discarded: the content is real work; only its status is
-in doubt." -- "$file" 2>/dev/null \
-    && "$sayfn" "committed the sealed draft" \
-    || "$sayfn" "WARNING: could not commit the sealed draft — it is dirty in the tree"
+in doubt."
+  fi
+  git commit -q -m "$_msg" -- "$file" 2>/dev/null \
+    && "$sayfn" "committed the sealed report" \
+    || "$sayfn" "WARNING: could not commit the sealed report — it is dirty in the tree"
   # The run's ACTS — dispositions, decisions, steering — committed in one
   # path-scoped commit that names the rc, the organ and the sealed report, so
   # `git log` joins them the way the banner joins the report to the log.
@@ -339,18 +446,25 @@ in doubt." -- "$file" 2>/dev/null \
     local _sp _stamp
     _stamp="$(date -Iseconds)"
     for _sp in "${swept[@]}"; do
-      _seal_stamp_emissions "$_sp" "$organ" "$rc" "$_stamp"
-      _seal_stamp_ledger "$_sp" "$organ" "$rc" "$_stamp"
+      _seal_stamp_emissions "$_sp" "$organ" "$rc" "$_stamp" "$tail_complete"
+      _seal_stamp_ledger "$_sp" "$organ" "$rc" "$_stamp" "$tail_complete"
     done
     git add -- "${swept[@]}" 2>/dev/null
+    local _how
+    if [ -n "$tail_complete" ]; then
+      _how="whose report was sealed as COMPLETE (rc=$rc) — it reached the last
+item on its own checklist and was then killed at its wall clock"
+    else
+      _how="whose report was sealed as an INCOMPLETE RUN draft (rc=$rc) — its
+author never finished its own checklist"
+    fi
     git commit -q -m "$organ: rc=$rc run's other dirty files, committed unbannered — see the sealed $file
 
-These paths were left dirty by the same $organ run whose report was sealed as
-an INCOMPLETE RUN draft (rc=$rc). They are that run's acts, kept rather than
-discarded — an uncommitted disposition in a shared tree is one git clean from
-gone — but their author never finished its own checklist, and the sealed
-report names them (74th audit B1). Swept only because their mtime postdates
-the run's start; committed by scripts/lib_seal.sh, not by the organ's agent." \
+These paths were left dirty by the same $organ run $_how. They are that run's
+acts, kept rather than discarded — an uncommitted disposition in a shared tree
+is one git clean from gone — and the sealed report names them (74th audit B1).
+Swept only because their mtime postdates the run's start; committed by
+scripts/lib_seal.sh, not by the organ's agent." \
       -- "${swept[@]}" 2>/dev/null \
       && "$sayfn" "committed ${#swept[@]} other dirty file(s) from the dying run: $swept_names" \
       || "$sayfn" "WARNING: could not commit the run's other dirty files: $swept_names"
