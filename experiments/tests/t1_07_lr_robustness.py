@@ -86,9 +86,12 @@ exhibited is VENUE, and there are two observations of it on the ledger.
   silent CNN downgrade), which `use_pretrained_vision=False` never reaches. The
   CNN fallback branch that this job does construct is byte-identical, so RNG
   consumption at build time is identical too. Same computation, both runs.
-  NOTE this had to be done BY HAND: T1.07 declares no `IMPL_DEPS`, so a
-  `UnifiedBrain.py` change does not stale its certificate (`protocol._impl_sha`
+  NOTE this had to be done BY HAND: T1.07 declared no `IMPL_DEPS`, so a
+  `UnifiedBrain.py` change did not stale its certificate (`protocol._impl_sha`
   hashes the module plus declared deps only — the gap T0.35 exists to count).
+  REPAIRED 2026-09-14 (t108 ruling §7): `IMPL_DEPS = ["UnifiedBrain.py"]` is
+  declared below. This staled the certificate and the re-buy was ordered with
+  the declaration (~0.47 GPU-h); no bar moved in either direction.
 
   "venue" here is three things confounded and NOT separable from two rows:
   Colab/T4/sm_75/Colab-torch versus Kaggle/P100/sm_60/torch 2.5.1+cu121.
@@ -154,6 +157,13 @@ MAX_SPREAD_RATIO = 6.0          # ... and the held-out spread across the span is
                                 # the unclipped configuration produced ~20.5.
 MAX_GRAD_NORM = 2.0             # TrainingPipeline.py:76 — match real training
 WARMUP_STEPS = 100              # 1500-step run; warmup is the fix for the 1e-3 collapse
+
+# Ordered by the t108 ruling §7 (Review DAILY, 2026-09-14): the claim runs
+# through UnifiedBrain's training path (every arm but the plain-MLP reference),
+# and the drift check had to be done by hand twice in two days because nothing
+# here declared it. Declaring it stales this certificate — that is the point,
+# not the objection — and the re-buy is the honest price.
+IMPL_DEPS = ["UnifiedBrain.py"]
 
 JOB = r'''
 import json, torch, torch.nn.functional as F
