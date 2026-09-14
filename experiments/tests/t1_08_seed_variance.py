@@ -61,6 +61,32 @@ REACHABILITY, pre-registered before the re-run (92nd audit B3 item 1):
                       Review chose for T1.07's 6.0 against its measured 4.931.
                       The conjunct fires if the held-out seed spread grows by
                       more than ~22%.
+  false-fail rate     22.6% — ADDED 2026-09-14 (builder), measured, no run.
+                      The line above prices the headroom and stops there, and
+                      the term it stops short of is the largest one: this is a
+                      SAMPLE cv at n=3 with ddof=1 (`_stats`), so it carries
+                      chi^2_2 sampling spread. Drawn from a pipeline whose TRUE
+                      cv is exactly the 5.717 this bar was set from, an honest
+                      3-seed run reads anywhere in [0.92%, 11.00%] 95% of the
+                      time — a 12x span straddling the bar — and exceeds 7.0
+                      **22.6%** of the time. Steep in an unknown: 4.8% at true
+                      cv 4.0, 14.1% at 5.0, 37.1% at 7.0. Seeds are the
+                      expensive fix because the tightness is the HEADROOM, not
+                      the sample (n=30 still leaves 4.2%, at 0.12 GPU-h/seed).
+                      Monte Carlo, 200k trials, seed 20260914, agreeing with
+                      the closed form to four decimals; it assumes the held-out
+                      metric is normal across seeds, and the likely violation
+                      (right skew) makes 22.6% an UNDER-estimate.
+
+                      THIS MOVES NOTHING. 7.0 is pre-registered, law 3 is
+                      unconditional, and a known false-fail rate is a better-
+                      governed bar than an unknown one, not a licence to lower
+                      it. Which repair is right — more seeds, more headroom, a
+                      different statistic, or accepting the rate — is the
+                      design question dated 2026-09-16 on
+                      `t108-bar-set-from-n1-is-now-the-projects-largest-
+                      blocker`, where the full arithmetic and the elimination
+                      of code drift as a third explanation are recorded.
 
 ITEM 4b IS NOT ARMED, AND THE REASON IS ITEM 4b'S OWN LESSON. The Review also
 ordered `min_detectable_effect` to be "RECORDED AND CITED by at least one

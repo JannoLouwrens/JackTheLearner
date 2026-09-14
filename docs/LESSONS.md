@@ -14901,3 +14901,58 @@ and is ignored inside a week, which converts a known gap into a green light.
 The rule that fixes it is three lines; **what makes it durable is that the live
 false positive is kept executable in the check**, so deleting the rule turns
 the fixture red rather than quietly restoring the noise.
+
+## A bar set at k x ONE observation of a SAMPLE STATISTIC inherits that statistic's sampling distribution — price the false-fail rate before you arm it, or you have armed a coin you cannot read
+## (builder, 2026-09-14 ~03:3x, from `T1.08`'s 7.0 bar, which blocks 45 specs)
+
+`T1.08`'s `heldout_cv_pct <= 7.0` was armed on 2026-09-13 as **1.224x** a single
+recorded value (5.717). The spec re-ran four hours later and returned **40.006**
+— FAIL — which made `T1.08` the project's terminal blocker, foreclosed a
+dispatch into a fresh 30-hour GPU allocation, and pushed `unreachable` 94 -> 97.
+
+The strengthening was **right** and the bar must not move. What nobody computed
+is the one number that tells you what the bar will DO:
+
+    heldout_cv_pct is a sample cv at n=3 with ddof=1, so s^2(n-1)/sigma^2 ~ chi^2_2.
+    Drawn from a pipeline whose TRUE cv is exactly the 5.717 the bar came from,
+    an honest 3-seed run reads in [0.92%, 11.00%] 95% of the time — a 12x span
+    straddling the bar — and FAILS 22.6% of the time.
+
+**More than one honest run in five fails a bar derived from the very value the
+pipeline is sitting at.** And the discordance that made this a crisis is weaker
+than it reads: two 3-seed cvs differing by the observed 6.998x is a **4.0%**
+event under *nothing changed at all*.
+
+**THE GENERAL RULE. When you arm a bar at `k x m` where `m` is a measurement,
+ask what `m` IS.** If `m` is a *quantity* (a loss, an accuracy, a count), `k` is
+the whole story. If `m` is a *statistic estimated from a sample* — a std, a cv,
+a spread, a max/min ratio, a correlation — then `m` has its own sampling
+distribution, `k` is not the story, and the bar's behaviour is
+`P(the honest run exceeds the bar | the truth equals m)`. **Compute that number
+and write it beside the headroom. If you cannot compute it, the bar is not yet
+armable** — you do not know whether you have built a gate or a coin.
+
+**THE TELL, and it is cheap to look for: a headroom ratio transported BETWEEN
+SPECS BY ANALOGY.** `T1.08`'s docstring says 1.224x was *"deliberately the same
+ratio the Review chose for `T1.07`'s 6.0 against its measured 4.931"*. A ratio
+transports; a false-fail rate does not, because the two specs' statistics have
+different sampling distributions — `T1.07`'s is a max/min over LR arms, not a
+std over seeds. **Both bars were armed in the same commit and neither rate was
+computed.** `T1.08`'s is now 22.6%; `T1.07`'s is still unknown, it is PASSing,
+and it is a Tier-1 certificate. Saying "the same ratio" out loud is what made
+this findable — and it was still only found a day later, by hand.
+
+**WHY THIS IS NOT AN ARGUMENT FOR LOWERING ANYTHING.** Law 3 is unconditional
+and a false-fail rate is not a licence. A bar with a KNOWN false-fail rate is
+strictly better governed than the same bar with an unknown one: it lets the desk
+choose among more seeds, more headroom, a different statistic, or accepting the
+rate — which is a design decision made with the number in hand instead of a
+threshold argument. The whole computation is Monte Carlo over the runner's own
+estimator, costs **zero GPU and zero seeds**, and can be run before the dispatch
+rather than after the FAIL.
+
+**AND STATE THE DISTRIBUTIONAL ASSUMPTION WITH ITS DIRECTION.** The 22.6%
+assumes the metric is normal across seeds — unverifiable from two rows. The
+likely violation, right skew, puts more mass in the upper tail of `s`, so the
+true rate is *higher*. An assumption whose error runs against the bar is worth
+stating; one whose error runs for it is worth refusing to publish.

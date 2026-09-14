@@ -5938,6 +5938,123 @@ post-mortems after the hours died; this is the same fact published on day one of
 the week instead of after it, which is the whole difference between an input and
 an obituary.
 
+**THIRD ANNOTATION, 2026-09-14 ~03:3x (builder). THE DATE IS NOT TOUCHED — same
+93rd-audit-B1 precedent as the two above; the row stays OPEN and DUE 2026-09-16.
+No bar is moved and nothing new is asked.** This row poses a two-way question —
+*is `heldout_cv_pct` 40.006 a fact about THIS REPO's pipeline or about the P100
+it was measured on* — and there is a **third term it never names: the
+ESTIMATOR.** `heldout_cv_pct` is a sample CV computed from **n=3** with
+`ddof=1` (`t1_08_seed_variance.py:220-223, 237`). A sample std at n=3 has a
+sampling distribution so wide that it is the largest single term in this row,
+and pricing it is arithmetic on the two rows already committed — **zero GPU,
+zero seeds, no run.**
+
+**(a) CODE DRIFT IS ELIMINATED, so the row's confound is now genuinely
+two-way rather than three-way.** The row says backend is confounded with the
+jump; it did not establish that nothing else was. Checked between the two runs'
+own commits (`d74e1bd` -> `3d357c4`):
+
+    t1_08_seed_variance.py   116 insertions, 0 deletions — the JOB text is
+                             byte-identical; every added line is docstring,
+                             `_downstream_ids`/`_citations`, two recorded
+                             metrics and one conjunct, all host-side
+    UnifiedBrain.py          the ONLY change in the window (`a1c2f9d`) is an
+                             extract-function refactor of the grounding
+                             fallback tokenizer — a path this JOB never calls
+    the task                 `torch.Generator().manual_seed(900)` on CPU, so
+                             the tensors are identical on any device
+    the init                 `UnifiedBrain(cfg)` is built on CPU and `.to(DEV)`
+                             after, so the initial weights are identical too
+    the batch order          `i = (step * BS) % (N_TRAIN - BS)` — deterministic
+
+So identical data, identical initial weights, identical batch order. What is
+left to differ across venues is CUDA-RNG draws (dropout during `train()`,
+sampling inside `generate_actions_flow_matching`) and kernel nondeterminism.
+**The row's framing survives the check and is now backed rather than asserted.**
+
+**(b) THE ESTIMATOR'S OWN SPREAD, AND IT IS BIGGER THAN THE EFFECT BEING
+ARGUED ABOUT.** With `s^2(n-1)/sigma^2 ~ chi^2_2`, a 3-seed CV drawn from a
+pipeline whose TRUE cv is exactly the 5.717 the bar was set from lands, 95% of
+the time, anywhere in:
+
+    [0.92%, 11.00%]        a 12x span — and it straddles the 7.0 bar
+
+And the discordance this row is built on is correspondingly weaker than it
+looks: **P(two 3-seed CVs differ by >= 6.998x | SAME pipeline, nothing changed)
+= 4.0%** (Monte Carlo 0.0402 at 200k trials; closed form `2/(1+r^2)` = 0.0400 —
+they agree to four decimals, which validates the arithmetic, not the
+normality assumption below). That is unlikely, so a venue effect stays the
+leading hypothesis — but it is a 1-in-25 event, not the impossibility a 7x
+ratio reads as, and **one 3-seed reading per venue cannot do better than that
+by construction.**
+
+**(c) THE BAR'S FALSE-FAIL RATE WAS NEVER PRICED, AND IT IS 22.6%.** This is
+the finding the desk most needs on 09-16 and it is about the BAR, not the
+confound. `MAX_HELDOUT_CV_PCT` 7.0 sits **1.224x** above a single n=3
+measurement. Against the estimator above:
+
+    true cv of the pipeline   P(an HONEST 3-seed run reads > 7.0 and FAILS)
+        3.0%                       0.4%
+        4.0%                       4.8%
+        5.0%                      14.1%
+        5.717%  (the bar's own    22.6%
+                 source value)
+        7.0%                      37.1%
+
+**If the pipeline's true cv is exactly the number the bar was derived from,
+better than one honest run in five FAILS.** And the rate is a steep function of
+a quantity nobody knows — both readings are n=3, so the true cv is unestimated.
+**Seeds do not rescue this cheaply, because the tightness is the headroom and
+not the sample:** at true cv 5.717, n=20 still leaves 7.5% (2.4 GPU-h) and n=30
+leaves 4.2% (3.6 GPU-h), at the measured 0.12 GPU-h/seed. The 1.224x headroom
+was chosen *by analogy* to `T1.07`'s 6.0-against-4.931 (the docstring says so:
+*"deliberately the same ratio"*), and the two are different statistics with
+different sampling distributions, so the analogy transported a ratio and not a
+false-fail rate.
+
+**(d) THE ARM-PAIR THIS ROW ALREADY PROPOSES IS ADEQUATE — this CORRECTS my own
+first reading of it, which was that n=3-per-backend could not settle anything.**
+It can, marginally, and n=5 makes it comfortable:
+
+    seeds/backend   P(>=6.998x | same pipeline)   power to SEE a real 2x   cost
+        3                4.0%                          92.2%             0.72 h
+        5                0.2%                          98.2%             1.20 h
+        8                0.0%                          99.7%             1.92 h
+
+So the desk's own design holds, and **1.20 GPU-h against 29.18 free hours
+expiring Sat 09-19 buys alpha 0.2% instead of 4.0%.** That is a cheap
+strengthening of a proposal this row already owns, not a new proposal.
+
+**(e) `T1.07`'s SIBLING BAR SHARES THE CONSTRUCTION AND IS UNPRICED. FLAGGED,
+NOT FIXED, AND DELIBERATELY NOT GIVEN A NUMBER.** `spread_ratio <= 6.0` was
+armed in the same commit from a single measurement (4.931) at the same ~1.22x
+headroom, and `T1.07` is **PASS** — a Tier-1 certificate. Its statistic is a
+max/min over LR arms, **not** a sample std over seeds, so its sampling
+distribution is not the chi-square above and **the 22.6% MUST NOT be
+transported onto it.** Computing it needs the per-arm seed noise, which nobody
+has measured. What is transportable is the *class*: a bar set at k x one
+observation of a sample statistic, with no false-fail rate computed. Whether
+that is worth a row is the desk's call; it is recorded here rather than routed
+separately because it arrived as this row's arithmetic.
+
+**METHOD AND ITS ONE ASSUMPTION, stated rather than buried.** All figures are
+Monte Carlo (120k-400k trials, seed 20260914) simulating the runner's own
+estimator — `s = sqrt(sum((x-mean)^2)/(n-1))`, `cv = 100*s/mean` — cross-checked
+against closed forms where they exist. **The assumption is that the held-out
+metric is normal across seeds**, which is unverified and unverifiable from two
+rows. The likely violation is right-skew (held-out MSE is positive and
+occasionally has a bad seed), and skew puts more mass in the upper tail of `s`,
+so **22.6% is if anything an UNDER-estimate.** That direction is stated because
+it is the one that matters: the error runs against the bar, not for it.
+
+**NOTHING IS ASKED OF THE DESK BY THIS ANNOTATION.** No new question, no new
+date, no re-rank, and — explicitly — **no suggestion that 7.0 should move.**
+Law 3 is unconditional and a false-fail rate is not a licence; a bar with a
+known false-fail rate is strictly better governed than the same bar with an
+unknown one, and which of the two repairs (more seeds, more headroom, a
+different statistic, or accept the rate) is correct is exactly the design
+question already dated 09-16.
+
 ## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
 
 ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | OPEN
