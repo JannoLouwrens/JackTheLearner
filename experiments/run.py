@@ -1488,6 +1488,39 @@ def committed_ratchet_readings() -> tuple:
     return {}, "MISSING"
 
 
+#: EVERY counter whose value can move with NO COMMIT — because the wall clock
+#: is one of its inputs — and what such a movement MEANS. Named as a class
+#: rather than discovered one member at a time: `DAY_SCOPED_COUNTERS` below was
+#: a ONE-ELEMENT TUPLE for a class that had at least three members, and the
+#: 95th audit's RANK 1 found the second one two hours after the builder wrote
+#: the lesson *"when you sweep a class the READER transfers and the REPAIR does
+#: not"* (`caa4257`).
+#:
+#: The distinction the members carry is NOT "clock-driven" — all of them are —
+#: but **is the moving thing an EVENT or a WINDOW?**
+#:
+#:   event   the clock reaching a known instant IS the thing being reported.
+#:           A promise breaking at midnight is a real event with a real owner;
+#:           it must keep bannering and must never be suppressed.
+#:   window  the clock moved the MEASURING APPARATUS, not the subject. The
+#:           reading changed; nothing happened. This is the class that trains
+#:           readers to skim.
+#:
+#: Membership is MEASURED, not asserted: with `docs/REVIEW_QUEUE.md` held at
+#: frozen bytes and only `today` varied across 2026-09-11..18,
+#: `review_queue_violations` moved 0/0/0/13/19/25/31/37 (OVERDUE arriving) and
+#: `review_queue_net_arrivals` moved 17/15/11/8/7/8/8/11 (the baseline revision
+#: sliding), while `review_queue_piled_on` held at 7 on all eight days.
+#: `piled_on` is therefore NOT a member — the 95th audit named it as one on
+#: inspection, and it reads no clock at all (`audit()` computes it from row
+#: order and declared dates alone). `coverage.py` and `champions.py` read no
+#: clock, so nothing they feed is in this class.
+CLOCK_SENSITIVE_COUNTERS = {
+    "cpu_foreclosed_now": "window",
+    "review_queue_net_arrivals": "window",
+    "review_queue_violations": "event",
+}
+
 #: Counters whose value is a point-in-time reading of a meter that RESETS at
 #: 00:00 UTC. A delta across that boundary is the clock, not a change: the
 #: `!! MOVED` banner fired four times for `cpu_foreclosed_now`'s nightly
@@ -1496,6 +1529,13 @@ def committed_ratchet_readings() -> tuple:
 #: trains its readers to skim — the exact failure the 64th audit's block was
 #: built to prevent, arriving from the opposite direction. Same-day movement
 #: still banners; only the cross-day comparison is suppressed, out loud.
+#:
+#: THIS IS A SUBSET OF THE `window` CLASS ABOVE AND NOT THE WHOLE OF IT, which
+#: is the 95th audit's point: suppression is only the right repair when the
+#: counter is read MANY times a day, so that suppressing the cross-day
+#: comparison still leaves the counter legible. `review_queue_net_arrivals` is
+#: read ONCE a day, so suppressing its cross-day comparison would silence its
+#: real movement too — it gets DECOMPOSED instead, never suppressed.
 DAY_SCOPED_COUNTERS = ("cpu_foreclosed_now",)
 
 
@@ -1538,6 +1578,72 @@ def ratchet_deltas(live: dict, recorded: dict, today: str = "",
     return out
 
 
+def ratchet_splits(rows: list) -> dict:
+    """`name -> clock/act decomposition` for the counters that have one.
+
+    Only `review_queue_net_arrivals` does today, and deliberately so: a
+    decomposition is only meaningful for a `window` member of
+    `CLOCK_SENSITIVE_COUNTERS`, and the other window member
+    (`cpu_foreclosed_now`) is already suppressed because it is read many times
+    a day. A refusal is RECORDED as a refusal rather than swallowed — an
+    instrument that goes quiet is a fault, not a clean reading (the rule
+    `review_queue.py` already applies to its own absent baseline).
+    """
+    import datetime as _dt
+    out: dict = {}
+    for name, _kind, _cur, prev, prev_at, _note in rows:
+        if name != "review_queue_net_arrivals" or not isinstance(prev, int):
+            continue
+        try:
+            from . import review_queue as rq
+            out[name] = rq.live_net_arrivals_split(
+                prev, _dt.date.fromisoformat(str(prev_at)))
+        except Exception as exc:
+            out[name] = {"refused": f"{type(exc).__name__}: {exc}"}
+    return out
+
+
+def clock_act_lines(kind: str, split: dict | None) -> tuple:
+    """`(headline suffix, extra lines)` for a counter whose movement has been
+    decomposed into a CLOCK and an ACT component. Pure, so the self-check can
+    pin every shape.
+
+    Two shapes carry the whole repair and they point in opposite directions:
+
+      MOVED with `act 0`   — the banner is the calendar. One clause to report
+                             it, instead of an iteration spent looking for the
+                             commit that did it (three have been).
+      UNCHANGED with an
+      `act` that is not 0  — **the dangerous one.** A real routing cancelled by
+                             an equal-and-opposite clock drift. Before this, it
+                             printed the same `(unchanged since …)` as a quiet
+                             day, which is the 2026-09-04 blindness the counter
+                             was built to end, reproduced by the counter.
+    """
+    if split is None:
+        return "", []
+    if "refused" in split:
+        return "", [f"        (clock/act split refused: {split['refused']} — "
+                    f"no split is evidence; the delta above is undecomposed)"]
+    clock, act = split["clock"], split["act"]
+    if kind == "MOVED":
+        suffix = f" (clock {clock:+d}, act {act:+d})"
+        if act == 0:
+            return suffix, [
+                "        the whole movement is the sliding trailing window — "
+                "no act, nothing to\n        investigate, and no commit can "
+                "justify recording it."]
+        return suffix, []
+    if kind == "UNCHANGED" and act != 0:
+        return "", [
+            f"        !! UNCHANGED IS A CANCELLATION: act {act:+d} against "
+            f"clock {clock:+d}. The desk moved\n        and the calendar "
+            f"moved it back. This line is the counter going quiet on exactly "
+            f"the\n        event it exists to report — read the act, not the "
+            f"total."]
+    return "", []
+
+
 def _check_ratchet_reader() -> None:
     """Plant one counter per class and require the classifier to name each.
     The moved number is the scar (89-vs-85, read by nobody across five
@@ -1574,6 +1680,33 @@ def _check_ratchet_reader() -> None:
         raise RuntimeError(
             f"the floor classifier returned {fgot} — refusing to report a "
             "floor comparison it may not have performed")
+    # 95th audit B1. The two shapes that decide whether this repair works at
+    # all: a MOVED that is pure calendar must SAY it is pure calendar, and an
+    # UNCHANGED hiding a real act must stop reading like a quiet day.
+    pure_clock = clock_act_lines("MOVED", {"clock": -3, "act": 0})
+    cancelled = clock_act_lines("UNCHANGED", {"clock": -3, "act": 3})
+    quiet = clock_act_lines("UNCHANGED", {"clock": 0, "act": 0})
+    if (pure_clock[0] != " (clock -3, act +0)" or not pure_clock[1]
+            or cancelled[0] != "" or "CANCELLATION" not in cancelled[1][0]
+            or quiet != ("", [])
+            or clock_act_lines("MOVED", None) != ("", [])
+            or not clock_act_lines("MOVED", {"refused": "boom"})[1]):
+        raise RuntimeError(
+            "the clock/act reader mis-classified one of its four pinned "
+            "shapes — refusing to report a decomposition it may not have "
+            "performed")
+    # The class map is the thing that was a 1-tuple. Keep it honest about
+    # itself: every suppressed counter must be a declared `window`, and no
+    # member may carry a kind this file does not know how to act on.
+    unknown = {n: k for n, k in CLOCK_SENSITIVE_COUNTERS.items()
+               if k not in ("event", "window")}
+    undeclared = [n for n in DAY_SCOPED_COUNTERS
+                  if CLOCK_SENSITIVE_COUNTERS.get(n) != "window"]
+    if unknown or undeclared:
+        raise RuntimeError(
+            f"clock-sensitive counters {unknown or ''}{undeclared or ''} are "
+            "undeclared or wrongly classed — a suppression whose class is not "
+            "declared is the 1-tuple again")
 
 
 def print_ratchet_block(ledger: Ledger) -> None:
@@ -1586,15 +1719,17 @@ def print_ratchet_block(ledger: Ledger) -> None:
     rows = ratchet_deltas(ratchet_live(ledger), recorded,
                           today=time.strftime("%Y-%m-%d", time.gmtime()))
     floors = ratchet_floors()
+    splits = ratchet_splits(rows)
     print("  RATCHET COUNTERS — standing-red tools' numbers, printed here so "
           "a blessed red\n    can never silence them (64th audit B2). "
           f"Committed readings from {prov}:")
     for name, kind, cur, prev, prev_at, note in rows:
+        suffix, extra = clock_act_lines(kind, splits.get(name))
         if kind == "MOVED":
             d = (f"{cur - prev:+d}" if isinstance(cur, int)
                  and isinstance(prev, int) else f"was {prev}")
-            print(f"      {name} = {cur}  !! MOVED {d} since {prev_at} "
-                  f"(was {prev}). Say so in your report;\n      if a "
+            print(f"      {name} = {cur}  !! MOVED {d}{suffix} since "
+                  f"{prev_at} (was {prev}). Say so in your\n      report; if a "
                   f"committed change justifies it, `run ratchets record` in "
                   f"that commit.")
         elif kind == "DAY-ROLLED":
@@ -1615,6 +1750,8 @@ def print_ratchet_block(ledger: Ledger) -> None:
             print(f"      {name}  !! recorded {prev} at {prev_at} and no "
                   f"longer computed at all — a counter\n      does not "
                   f"retire by disappearing.")
+        for line in extra:
+            print(line)
         if name == "fail_unowned" and cur is not None:
             # 73rd audit B2: the count went 4 -> 0 in three minutes by
             # routing into a queue whose own drain reads UNBOUNDED, and

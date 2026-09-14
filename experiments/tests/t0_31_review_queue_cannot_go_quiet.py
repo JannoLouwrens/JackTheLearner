@@ -68,6 +68,23 @@ which would shrink the covered set exactly when the desk is furthest behind.
 The cycle is read from GIT — `PROGRESS_LOG.md`'s commit dates — for P15's
 reason: the table is the desk's declaration about the desk.
 
+P19 is the newest scar of all (95th audit RANK 1 / B1, 2026-09-14) and it is
+the PRICE of P15, found by the organ P15 was built to watch. Reading the
+baseline from git BY DATE is right — a rate that improves when you back-date a
+row teaches back-dating — and it means the baseline REVISION SLIDES: every
+sunrise retires a day of history out of the window and `net_arrivals` moves
+with nobody having touched the file. Measured on frozen bytes across
+2026-09-11..18 the counter read 17, 15, 11, 8, 7, 8, 8, 11 — six `!! MOVED`
+banners in BOTH directions on a dead file. The daily clock term (±1..4) is the
+same magnitude as the desk's real daily routing (0..3), so the two CANCEL: on a
+day the desk routed three rows, a −3 drift renders `UNCHANGED` and the counter
+reproduces exactly the 2026-09-04 blindness it was built to end. Suppression is
+the wrong repair (this counter is read once a day, so suppressing the cross-day
+comparison suppresses everything); the repair is a lossless SPLIT — hold the
+window still at the recorded reading's own anchor, and `act + clock` sums to
+the whole movement. The cancellation fixture is the one that matters: total
+movement zero, `act` non-zero and naming the act.
+
 The sixth conversion is the newest scar (60th audit, 2026-09-02): six sections
 written in the pre-declaration prose idiom — three with the declaration INSIDE
 the heading, `## ROUTED: OPEN — ...`, one `## ` away from being read — were not
@@ -152,7 +169,8 @@ from ..review_queue import (CONSUMER_CYCLE_DAYS, DOC_PATH, LOG_PATH,
                             MAX_OPEN_AGE_DAYS, MEASURED_DISCHARGE_CAPACITY,
                             THROUGHPUT_WINDOW_DAYS, VIOLATIONS, audit, check,
                             consumer_last_run, live_audit,
-                            next_consumer_cycle, parse, render, throughput)
+                            net_arrivals_split, next_consumer_cycle, parse,
+                            render, throughput)
 
 SPEC_ID = "T0.31"
 
@@ -162,7 +180,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 18
+N_PROPERTIES = 19
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -867,6 +885,73 @@ def _probe(blind: bool) -> dict:
     if blind or not imminent_ok:
         failed.append("p18_dated_promises_are_forecast_before_they_break")
 
+    # P19 — THE DESK'S MOVEMENT IS SEPARABLE FROM THE CALENDAR'S (95th audit
+    # RANK 1 / B1, 2026-09-14). P15 reads the baseline from git BY DATE, which
+    # is right (a rate you can improve by back-dating a row teaches
+    # back-dating) and has a price nobody had priced: the baseline REVISION
+    # SLIDES, so `net_arrivals` changes every sunrise with nobody having
+    # touched the file. Measured on frozen bytes across 09-11..18: 17, 15, 11,
+    # 8, 7, 8, 8, 11 — six `!! MOVED` banners in both directions on a dead
+    # file, with a daily clock term (±1..4) the same magnitude as the desk's
+    # real daily routing (0..3). The two therefore CANCEL, and a cancelled
+    # reading is this counter reproducing the 2026-09-04 blindness it was
+    # built to end.
+    #
+    # Pure, and the fixtures hold git still by supplying both baselines as
+    # strings — the same discipline P15 gave `throughput`.
+    _p19_base = _doc([("a", "2026-08-01", "OPEN", []),
+                      ("b", "2026-08-02", "OPEN", [])])
+    # One row ARRIVED since the window's baseline: net_arrivals is +1 higher.
+    _p19_wider = _doc([("a", "2026-08-01", "OPEN", [])])
+    _p19_now = _doc([("a", "2026-08-01", "OPEN", []),
+                     ("b", "2026-08-02", "OPEN", []),
+                     ("c", "2026-08-03", "OPEN", [])])
+    # An ACT on the live document: one row disposed, so net falls by 1.
+    _p19_acted = _doc([("a", "2026-08-01", "OPEN", []),
+                       ("b", "2026-08-02", "OPEN", []),
+                       ("c", "2026-08-03", "ACTED 2026-09-01 (deadbeef)", [])])
+
+    def _net(doc, base):
+        return throughput(doc, base)["net_arrivals"]
+
+    # (i) THE FILE IS FROZEN AND ONLY THE WINDOW MOVES -> act is 0, and the
+    #     clock carries the whole delta. This is the audit's own eight-day
+    #     table in miniature, and it is the fixture that decides the ORDER of
+    #     the two terms: the audit's prose named them the other way round, and
+    #     implemented literally would report `act` on a dead file.
+    _rec_i = _net(_p19_now, _p19_base)
+    split_clock = net_arrivals_split(_rec_i, _p19_now, _p19_base, _p19_wider)
+    # (ii) THE WINDOW IS FROZEN AND ONLY THE FILE MOVES -> clock is 0.
+    _rec_ii = _net(_p19_now, _p19_base)
+    split_act = net_arrivals_split(_rec_ii, _p19_acted, _p19_base, _p19_base)
+    # (iii) THE CANCELLATION, which is the whole reason this exists: the desk
+    #       acted, the calendar moved the same distance the other way, and the
+    #       counter's own delta is ZERO. `live == recorded` — indistinguishable
+    #       from a quiet day to every reader that subtracts — while `act` is
+    #       not zero and names the act.
+    split_cancel = net_arrivals_split(_rec_ii, _p19_acted, _p19_base,
+                                      _p19_wider)
+    # (iv) ABSENT BASELINE MANUFACTURES NOTHING, in either slot. P10's rule and
+    #      P15's: no reading, never a zero that reads clean.
+    split_ok = (
+        split_clock["act"] == 0
+        and split_clock["clock"] == split_clock["live"] - _rec_i
+        and split_clock["clock"] != 0
+        and split_act["clock"] == 0
+        and split_act["act"] == -1
+        and split_act["live"] - _rec_ii == split_act["act"]
+        # the cancellation: total movement zero, act non-zero and correct
+        and split_cancel["live"] == split_cancel["recorded"]
+        and split_cancel["act"] == -1
+        and split_cancel["clock"] == 1
+        # the identity that makes the split lossless, on every fixture
+        and all(s["act"] + s["clock"] == s["live"] - s["recorded"]
+                for s in (split_clock, split_act, split_cancel))
+        and net_arrivals_split(0, _p19_now, None, _p19_base) is None
+        and net_arrivals_split(0, _p19_now, _p19_base, None) is None)
+    if blind or not split_ok:
+        failed.append("p19_the_desks_movement_is_separable_from_the_calendars")
+
     # The live desk's own numbers, recorded in the ledger row so the reading
     # that motivated P15 is dated and attributable rather than quoted from an
     # audit page. `-1` is the honest value for "no git baseline in this
@@ -931,6 +1016,12 @@ def _control(seed: int) -> dict:
     no more forecast a row going STALE tomorrow than it could see one STALE
     today — the 84th audit's midnight cohort, executable.
 
+    P19 it fails for a reason that is almost the definition of it: separating
+    the desk's movement from the calendar's needs two evaluations of a rate
+    against two different baseline revisions, and a count of the lines in one
+    file has no baseline, no rate and no second reading. The blind instrument
+    cannot even express the question.
+
     P18 it fails for P17's reason one column over: a row count carries no DUE:
     dates and no notion of the consumer's cadence, so it cannot say that
     fourteen promises fall on one sitting that has ever discharged six. But
@@ -963,6 +1054,7 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p15_the_desk_is_measured_disposing_not_only_breaking",
                            "p16_an_ordered_specs_return_is_printed",
                            "p18_dated_promises_are_forecast_before_they_break",
+                           "p19_the_desks_movement_is_separable_from_the_calendars",
                            } <= control_names)
     return bool(experiment_clean and control_broken)
 

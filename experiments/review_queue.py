@@ -181,6 +181,26 @@ git-baselined violation classes above refuse to ACCUSE without a baseline; this
 one refuses to EXONERATE without one. `throughput` is `None`, the ratchet
 counter `review_queue_net_arrivals` goes LOST in `run status`, and LOST is a
 fault there, not a quiet day.
+
+**AND THE FIFTH PROPERTY, added 2026-09-14 by the 95th audit's B1 (RANK 1),
+which is the price of the second one.** Reading the baseline from GIT-BY-DATE
+means the baseline revision SLIDES with the calendar: every sunrise retires a
+day of history out of the window and `net_arrivals` changes with nobody having
+touched the file. Measured by the overseer and reproduced here against frozen
+bytes (`docs/REVIEW_QUEUE.md` unchanged since `7e04382`, 09-13 19:19):
+
+    as-of 09-11  net 17 | 09-12  15 | 09-13  11 | 09-14   8
+    as-of 09-15   net 7 | 09-16   8 | 09-17   8 | 09-18  11
+
+Eight days, zero acts, six `!! MOVED` banners in BOTH directions. The clock's
+daily contribution is ±1..4 and the desk's real daily routing is 0..3, so the
+two are the same magnitude and **cancel**: on a day the desk routed 3 rows, a
+−3 clock drift renders `UNCHANGED` and the counter reproduces exactly the
+blindness of 2026-09-04 that it was built for. Suppression is the wrong repair
+(this counter is read once a day, so suppressing cross-day comparison
+suppresses everything). `net_arrivals_split` is the repair: hold the window
+still at the recorded reading's own anchor and the movement separates into an
+ACT component and a CLOCK component that sum to the whole.
 """
 from __future__ import annotations
 
@@ -429,6 +449,76 @@ def throughput(doc: str, base_doc: str | None,
             "designed_per_cycle": designed / cycles,
             "drain_cycles": drain,
             "unbounded": drain is None and live_now > 0}
+
+
+def net_arrivals_split(recorded: int, doc: str, base_at_recorded: str | None,
+                       base_now: str | None,
+                       window_days: int = THROUGHPUT_WINDOW_DAYS,
+                       cycle_days: int = CONSUMER_CYCLE_DAYS) -> dict | None:
+    """Separate a `net_arrivals` movement into the part an ACT caused and the
+    part the CALENDAR caused. `None` when either baseline is absent — an absent
+    baseline yields no reading, never a manufactured one.
+
+    The whole trick is one extra evaluation with the window HELD STILL:
+
+        pinned = throughput(today's bytes, the recorded reading's own baseline)
+        act    = pinned - recorded      # same window, the document moved
+        clock  = live   - pinned        # same document, the window moved
+
+    and `act + clock == live - recorded` by construction, so nothing is lost in
+    the split. Both limits are the obvious ones: freeze the file and `act` is 0
+    however far the calendar runs; read twice on one day and `clock` is 0
+    however much the desk routed.
+
+    **THE ORDER OF THOSE TWO LINES IS NOT WHAT THE AUDIT THAT ORDERED THIS SAID,
+    and it is recorded here rather than quietly fixed.** The 95th audit's B1
+    reads: *"recompute the counter with today's bytes against the recorded
+    reading's baseline date; the difference is the CLOCK component and the
+    residual is the ACT component."* That names them the wrong way round — and
+    its own eight-day fixture is what proves it, because with the file frozen
+    the recomputation returns the recorded value exactly, so "the difference"
+    is identically 0 on all eight days while the audit requires the clock term
+    to read −2/−4/−3/−1/+1/0/+3 there. Implemented literally, the repair would
+    have reported `clock 0, act -3` on a dead file — i.e. it would have
+    bannered the calendar as an act, which is the defect it was written to
+    remove. The replay costs one command and it is the guard the 09-13 lesson
+    asks for: *replay the remedy's trigger against the incident that motivated
+    it, from the record, before implementing it.*
+
+    Pure — `live_net_arrivals_split` supplies the two revisions, so the
+    properties can hold git still.
+    """
+    if base_at_recorded is None or base_now is None:
+        return None
+    pinned = throughput(doc, base_at_recorded, window_days, cycle_days)
+    live = throughput(doc, base_now, window_days, cycle_days)
+    if pinned is None or live is None:
+        return None
+    return {"recorded": recorded,
+            "pinned": pinned["net_arrivals"],
+            "live": live["net_arrivals"],
+            "act": pinned["net_arrivals"] - recorded,
+            "clock": live["net_arrivals"] - pinned["net_arrivals"]}
+
+
+def live_net_arrivals_split(recorded: int, recorded_at: _dt.date,
+                            doc_path: Path | None = None,
+                            today: _dt.date | None = None) -> dict | None:
+    """`net_arrivals_split` on the real file with both baselines from git.
+
+    The single entry point for the ratchet block, for `live_audit`'s reason:
+    two readers that pick their own baselines will eventually disagree about
+    which baselines they picked.
+    """
+    p = doc_path or DOC_PATH
+    today = today or _dt.date.today()
+    w = _dt.timedelta(days=THROUGHPUT_WINDOW_DAYS)
+    out = net_arrivals_split(recorded, p.read_text(),
+                             _revision_before(p, recorded_at - w),
+                             _revision_before(p, today - w))
+    if out is not None:
+        out["recorded_at"] = recorded_at.isoformat()
+    return out
 
 
 def consumer_run_dates(repo: Path | None = None) -> list[_dt.date]:
