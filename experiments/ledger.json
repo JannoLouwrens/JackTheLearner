@@ -28804,24 +28804,24 @@
     },
     "T0.31": {
       "amended": [],
-      "attempt": 19,
-      "commit": "6ddd09c",
+      "attempt": 21,
+      "commit": "ef2757c",
       "compute_s": null,
       "control_metrics": {
-        "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires,p18_dated_promises_are_forecast_before_they_break",
+        "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires,p18_dated_promises_are_forecast_before_they_break,p19_the_desks_movement_is_separable_from_the_calendars",
         "fixture_violations": 5.0,
-        "live_arrived": 13.0,
+        "live_arrived": 15.0,
         "live_disposed": 7.0,
-        "live_net_arrivals": 6.0,
+        "live_net_arrivals": 8.0,
         "live_oldest_days": 8.0,
-        "live_open": 28.0,
-        "live_rows": 54.0,
+        "live_open": 33.0,
+        "live_rows": 59.0,
         "live_violations": 0.0,
-        "properties_checked": 18.0,
-        "properties_failed": 15.0
+        "properties_checked": 19.0,
+        "properties_failed": 16.0
       },
       "dirty_files": null,
-      "duration_s": 1.62,
+      "duration_s": 1.63,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -29466,27 +29466,103 @@
           ],
           "spec_sha": "adba85e6f8c5d773",
           "status": "PASS"
+        },
+        {
+          "commit": "6ddd09c",
+          "control_metrics": {
+            "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires,p18_dated_promises_are_forecast_before_they_break",
+            "fixture_violations": 5.0,
+            "live_arrived": 13.0,
+            "live_disposed": 7.0,
+            "live_net_arrivals": 6.0,
+            "live_oldest_days": 8.0,
+            "live_open": 28.0,
+            "live_rows": 54.0,
+            "live_violations": 0.0,
+            "properties_checked": 18.0,
+            "properties_failed": 15.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "71abd510b8471468",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "fixture_violations": 5.0,
+            "live_arrived": 13.0,
+            "live_disposed": 7.0,
+            "live_net_arrivals": 6.0,
+            "live_oldest_days": 8.0,
+            "live_open": 28.0,
+            "live_rows": 54.0,
+            "live_violations": 0.0,
+            "properties_checked": 18.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-13T13:17:23",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "adba85e6f8c5d773",
+          "status": "PASS"
+        },
+        {
+          "commit": "9d9a99c+dirty",
+          "control_metrics": {
+            "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires,p18_dated_promises_are_forecast_before_they_break,p19_the_desks_movement_is_separable_from_the_calendars",
+            "fixture_violations": 5.0,
+            "live_arrived": 15.0,
+            "live_disposed": 7.0,
+            "live_net_arrivals": 8.0,
+            "live_oldest_days": 8.0,
+            "live_open": 33.0,
+            "live_rows": 59.0,
+            "live_violations": 0.0,
+            "properties_checked": 19.0,
+            "properties_failed": 16.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "52eb09d6bd0b4866",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "fixture_violations": 5.0,
+            "live_arrived": 15.0,
+            "live_disposed": 7.0,
+            "live_net_arrivals": 8.0,
+            "live_oldest_days": 8.0,
+            "live_open": 33.0,
+            "live_rows": 59.0,
+            "live_violations": 0.0,
+            "properties_checked": 19.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-14T01:14:20",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "adba85e6f8c5d773",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "71abd510b8471468",
+      "impl_sha": "52eb09d6bd0b4866",
       "message": "",
       "metrics": {
         "failed_names": "",
         "fixture_violations": 5.0,
-        "live_arrived": 13.0,
+        "live_arrived": 15.0,
         "live_disposed": 7.0,
-        "live_net_arrivals": 6.0,
+        "live_net_arrivals": 8.0,
         "live_oldest_days": 8.0,
-        "live_open": 28.0,
-        "live_rows": 54.0,
+        "live_open": 33.0,
+        "live_rows": 59.0,
         "live_violations": 0.0,
-        "properties_checked": 18.0,
+        "properties_checked": 19.0,
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 217.7,
+      "peak_rss_mb": 219.1,
       "preserved_impl": null,
-      "ran_at": "2026-09-13T13:17:23",
+      "ran_at": "2026-09-14T01:14:55",
       "seeds": [
         0
       ],
@@ -31444,8 +31520,8 @@
     },
     "T0.36": {
       "amended": [],
-      "attempt": 6,
-      "commit": "a34aa2d",
+      "attempt": 7,
+      "commit": "ef2757c",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
@@ -31459,7 +31535,7 @@
         "worst_root_is_the_scar": 1.0
       },
       "dirty_files": null,
-      "duration_s": 32.4,
+      "duration_s": 32.56,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -31632,9 +31708,43 @@
           ],
           "spec_sha": "0255a8f809a1cc0e",
           "status": "PASS"
+        },
+        {
+          "commit": "a34aa2d",
+          "control_metrics": {
+            "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
+            "ladder_size": 249.0,
+            "overstated_roots": 1.0,
+            "properties_checked": 7.0,
+            "properties_failed": 4.0,
+            "scar_root_claims": 41.0,
+            "unreachable": 97.0,
+            "worst_overstatement": 38.0,
+            "worst_root_is_the_scar": 1.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "3525c9fafa59f75c",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "ladder_size": 249.0,
+            "overstated_roots": 0.0,
+            "properties_checked": 7.0,
+            "properties_failed": 0.0,
+            "scar_root_claims": 3.0,
+            "unreachable": 97.0,
+            "worst_overstatement": 0.0,
+            "worst_root_is_the_scar": 0.0
+          },
+          "ran_at": "2026-09-13T22:15:31",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "0255a8f809a1cc0e",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "3525c9fafa59f75c",
+      "impl_sha": "a7b2ea9fdf59c2c1",
       "message": "",
       "metrics": {
         "failed_names": "",
@@ -31650,7 +31760,7 @@
       "peak_rss_inherited": false,
       "peak_rss_mb": 225.3,
       "preserved_impl": null,
-      "ran_at": "2026-09-13T22:15:31",
+      "ran_at": "2026-09-14T01:15:28",
       "seeds": [
         0
       ],
