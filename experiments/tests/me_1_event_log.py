@@ -35,8 +35,8 @@ cues whose target was absent while finding only 6.67% of those present:
 because ME.1's absent-target cue shares no vocabulary with anything stored.
 
 So ME.1 now carries `distractor_abstention` as a REQUIRED conjunct, built to
-ME.11's design: 60 events are HELD OUT of the store, their cues are issued
-against the 940 that remain, and the store must abstain — the cue's content
+ME.11's design: 130 events are HELD OUT of the store, their cues are issued
+against the 870 that remain, and the store must abstain — the cue's content
 words are all present in the corpus, in other events, just never together in
 one that exists. The bar is ME.1's OWN existing 0.95, applied to a harder
 control; no threshold moved in either direction. Rig-aliveness: a cue is
@@ -44,6 +44,17 @@ excluded from the denominator if a RETAINED event happens to carry all three
 of its picked content words (then a hit is correct retrieval, not
 confabulation), and the excluded count is recorded so the filter cannot go
 quiet.
+
+STRENGTHENED 2026-09-14 (field watch wk7 §6b; MEMORY_RETRIEVAL_BAKEOFF §1.8):
+the distractor denominator is raised 60 -> 130 held-out events and the
+aliveness floor 30 -> 59 evaluated. §1.8's arithmetic: a PERFECT run over m
+negatives certifies only a_L = γ^(1/m) at confidence 1-γ, so m >= 59 is the
+minimum at γ=0.05 that can certify the 0.95 bar at all — the prior 40 ± 4.5
+evaluated certified 0.928, i.e. every recorded 1.0 was statistically
+compatible with a true abstention rate below its own bar. The 0.95 bar is
+UNTOUCHED in both directions; only the denominator that makes it meaningful
+grew. (The main experiment is unaffected: the distractor control builds its
+own store.)
 
 Synthetic-life generation notes, because the test is only as honest as its
 data: events are templated from disjoint content-word pools (objects, places,
@@ -71,8 +82,10 @@ IMPL_DEPS = ["EpisodicMemory.py"]
 N_EVENTS = 1000
 N_QUERIES = 120
 N_FABRICATED = 60
-N_DISTRACTOR = 60          # events held OUT of the store, then cued for
-MIN_DISTRACTOR_EVAL = 30   # aliveness: below this the control has gone quiet
+N_DISTRACTOR = 130         # events held OUT of the store, then cued for
+                           # (60 -> 130, 2026-09-14: §1.8 certification)
+MIN_DISTRACTOR_EVAL = 59   # aliveness: §1.8's γ=0.05 minimum — below 59 a
+                           # perfect run cannot certify the 0.95 bar
 MIN_RECALL = 0.80
 MIN_ABSTENTION = 0.95
 
@@ -116,7 +129,7 @@ def _build_life(seed: int, mem_path: Path, skip: set[int] | None = None):
         colour, act = rng.choice(COLOURS), rng.choice(ACTIONS)
         words = (obj, place, colour, act)
         # Draw identically whether or not the event is stored, so the held-out
-        # run sees the SAME 940 retained events as the full run's first 940.
+        # run's retained events are exactly the full run's, minus the held.
         imp = rng.uniform(0.5, 5.0)
         if i in skip:
             held_out.append(words)

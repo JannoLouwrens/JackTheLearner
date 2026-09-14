@@ -50,6 +50,14 @@ by rejection against the stored set; at each decade the store must abstain on
 log. A candidate is excluded (and counted) at decades where one of its words
 has not yet been stored — then it is the easy unknown-word case, not this
 control; the denominator carries an aliveness floor. Nothing above moved.
+
+STRENGTHENED 2026-09-14 (field watch wk7 §6b; MEMORY_RETRIEVAL_BAKEOFF §1.8):
+absent 4-tuples raised 60 -> 130 and the per-decade aliveness floor 30 -> 59
+evaluated. §1.8: a perfect run over m negatives certifies a_L = γ^(1/m) at
+confidence 1-γ, so m >= 59 is the γ=0.05 minimum that can certify the 0.95
+bar — the prior smallest decade (52 evaluated at store 100) certified only
+0.944. The 0.95 bar is UNTOUCHED; rejection sampling has 480k - 100k absent
+tuples to draw from, so 130 costs ~165 expected tries against the 2000 cap.
 """
 from __future__ import annotations
 
@@ -76,8 +84,10 @@ MIN_MATCH = 0.95         # ambiguous top-1 must still match all 3 cue words
 MIN_ABSTENTION = 0.95
 MAX_LATENCY_MS = 1000.0  # mean per query at 100k events
 # Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only).
-N_DISTRACTOR = 60        # absent 4-tuples, fixed before the decades run
-MIN_DISTRACTOR_EVAL = 30 # aliveness floor on the per-decade denominator
+N_DISTRACTOR = 130       # absent 4-tuples, fixed before the decades run
+                         # (60 -> 130, 2026-09-14: §1.8 certification)
+MIN_DISTRACTOR_EVAL = 59 # aliveness floor on the per-decade denominator —
+                         # §1.8's γ=0.05 minimum to certify the 0.95 bar
 
 # Pairwise-disjoint pools; 40*30*20*20 = 480,000 distinct 4-tuples, so 100k
 # events can each carry a unique tuple. No word appears in _STOP, in another

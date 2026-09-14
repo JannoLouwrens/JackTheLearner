@@ -42,6 +42,14 @@ denominator when some stored event carries all three words (a hit would be
 retrieval, not confabulation), and the excluded count is recorded with a floor
 on the denominator. Nothing above moved.
 
+STRENGTHENED 2026-09-14 (field watch wk7 §6b; MEMORY_RETRIEVAL_BAKEOFF §1.8):
+distractor candidates raised 60 -> 130 and the aliveness floor 30 -> 59
+evaluated. §1.8: a perfect run over m negatives certifies a_L = γ^(1/m) at
+confidence 1-γ, so m >= 59 is the γ=0.05 minimum that can certify the 0.95
+bar — the prior 39.3 ± 2.9 evaluated certified only 0.927. The 0.95 bar is
+UNTOUCHED; the distractor cues are extra reads on the same store, so nothing
+in the main experiment changes.
+
 REDESIGNED 2026-09-07 — THE CONTRACT SPLIT (ordered by the Review's DAILY
 disposition of `me1-similarity-floor-never-abstains`, verdict A5 of
 me1_floor_probe.py; a harness redesign, not a module or threshold change).
@@ -99,8 +107,10 @@ MIN_REFLECT = 0.90
 MIN_GAIN = 0.15               # aggregation_qa_gain = reflect - raw
 MIN_CONTROL_DROP = 0.30       # reflect minus wrong-agent accuracy
 # Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only).
-N_DISTRACTOR = 60             # candidate absent combinations, fixed up front
-MIN_DISTRACTOR_EVAL = 30      # aliveness: below this the control has gone quiet
+N_DISTRACTOR = 130            # candidate absent combinations, fixed up front
+                              # (60 -> 130, 2026-09-14: §1.8 certification)
+MIN_DISTRACTOR_EVAL = 59      # aliveness: §1.8's γ=0.05 minimum — below 59 a
+                              # perfect run cannot certify the 0.95 bar
 MIN_ABSTENTION = 0.95
 # Added 2026-09-07 (contract split; strictly harder — see docstring). The
 # starved-null failure mode must announce itself even when partial: the raw
