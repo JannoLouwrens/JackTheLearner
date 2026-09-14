@@ -16868,3 +16868,38 @@ venue read lower (§3). Colab arm missing with fast failures → relaunch once
 found" shape), that is a FACT FOR THE ROW — annotate, do not substitute a
 venue. Also open: `1^7` item 2 (`T1.07` gains IMPL_DEPS, ~0.47 GPU-h re-buy)
 is untaken; `D19`'s default fires from 09-15 00:00 with the required wording.
+
+**2026-09-14 08:07 slot (fable; `week:all models` 9% — the gate, read at
+08:08; Fable 12%; both lines printed, acting on all-models).** Three units.
+(1) T1.08 probe, continued: invocation 1's kaggle arm LANDED (n=5, P100,
+heldout_cv_pct 36.577, job jack-ladder-1789370135, 0.5607 h, W37 1.379/30 —
+receipts committed 9d3bbd4) but the 07:07 slot's session watcher for
+invocation 2 died with its session and never fired — the third instance of
+the watcher-dies-with-session scar, this time in a watcher the journal
+explicitly promised. Relaunched invocation 2 myself at 08:09 (setsid +
+env -u JACK_ITER_DEADLINE, pid 377050, declared in declared_pids, 15 s
+liveness check passed): attempt row reads backend=colab — the e3eb376 fix
+holds, no reroute — and the colab submission survived the ~5 s fast-fail
+window. _KaggleAlreadyRead guard active. HARVEST when it exits: read
+/data/t108_backend_probe.json; both arms → commit (b) with cv_T4/cv_P100 and
+the PRE-REGISTERED branch, row → ACTED (ruling §8.5); colab fast-failures →
+relaunch once; structurally dead colab → annotate the row, never substitute
+a venue. §3 stands: no venue selection, no bar move, T1.08 stays FAIL.
+(2) 96th audit FTB 1 executed: experiments/fieldwatch.py — FIELD_WATCH.md
+finally has a reader (UNROUTED-FIELD-FINDING in run status + run fieldwatch,
+29220f9). Two channels (week-anchored citation; 6-gram quotation imported
+from decisions._shingles), report-only/unfloored per D27, every class
+counted per T0.31, wk7's §6/§6b scar executable in the fixture. Live read:
+2 findings, both cited (§6 → a4-mandatory-collapse row; §6b → me1 row's wk7
+addendum), 0 UNROUTED — an honest clean bill on day one. T0.36 (IMPL_DEPS
+hashes run.py) re-bought PASS 32.19 s (39ac3cb). (3) 96th audit FTB 3 cheap
+half: ME.9/ME.10 docstrings now record their certified abstention level
+(0.819@m=15 / 0.920@m=36, γ^(1/m) arithmetic) beside the unmoved 0.95 bar;
+both re-stamped via run amend --doc-only (f842f2d, 2801c0b). Ratchet moves
+seen in status and owned elsewhere: review_queue_net_arrivals 11→9,
+piled_on 7→0 — the Review's d255995 re-arming, not this slot's commits.
+**NEXT ITERATION:** if the probe JSON still lacks the colab arm, read
+failures[] before anything else. D19's NO-FETCH default fires from 09-15
+00:00 (required wording: "the owner did not rule by 2026-09-14, so the
+pre-registered default fired"). 1^7 item 2 (T1.07 IMPL_DEPS + re-buy,
+~0.47 GPU-h) remains untaken — the probe holds the GPU lock, so it waits.
