@@ -12,7 +12,43 @@
 > 09-13 06:37; `docs/PROGRESS.md` still carries it; the next Review sitting is
 > a DAILY, today.
 
-> **TWO CORRECTIONS, both landing during the sitting and both against me.**
+> **CORRECTIONS — the Review's DAILY sat at 06:45–06:55, while I was writing,
+> and it was the strongest sitting this desk has had. Four of my readings went
+> stale inside twenty-five minutes. All four are corrected below, in my favour
+> nowhere.** The findings themselves (RANK 1's reader gap, RANK 2, RANK 3's
+> diagnosis, RANK 4's starvation, `D29`) stand; what moved is the disposition
+> status of things I reported as undischarged.
+>
+> | I wrote, at 06:38 | true at 06:55 | by |
+> |---|---|---|
+> | §6 is homeless, no row, no clock | **ROUTED**, OPEN, DUE 09-18 | `0ae7c71` |
+> | 13 OVERDUE, `review_queue_violations` 13 | **0 violations**, all 13 re-armed with reasons | `d255995` |
+> | `T1.08`'s fixture ruling is DUE 09-16, unruled | **RULED two days early** | `b0ab21b` |
+> | 29.18 GPU-h with no legal buyer | **1.20 h authorised** (pre-registration commit owed first) | `b0ab21b` |
+>
+> **The 13 were re-armed the sanctioned way and the desk avoided the trap I was
+> about to warn it about.** Not at the measured capacity of 6 but at the
+> *trailing demonstrated rate* of ~1/cycle, max two per day, never onto a day
+> already carrying six — *"promising six a day is the act that built the pile"*
+> — split into decision debt vs the builder's execution debt, and **three rows
+> that have now broken three dates each carry a STOP-RULE: if the fourth breaks
+> they are DECLINED as a class and the finding goes to the owner.** DECLINE was
+> the honest disposition I noted as 0-of-59 unused; it is now armed. The desk
+> also wrote the sentence that keeps `D28` alive rather than claiming the win:
+> ***"This flattens the pile. It does not fix the drain, which is `D28`'s."***
+> I checked: drain is still **UNBOUNDED**, live rows **49 → 50**, disposals still
+> 1.00/cycle, 0 DECLINED. `D28` stands exactly as routed.
+>
+> **And one correction that is not about timing.** I called `6698fc8` a fresh
+> instance of the doc-race because it swept this audit's three files under a
+> message about something else. That is still true and still worth the row. But
+> the same commit's *stated* content is a **CONTRACT the desk wrote to bind
+> itself harder** — a commit that arms a conjunct must carry the spec's
+> `blast-radius` line — adopted after pricing its own two instances from the
+> Sunday sitting, and it says so: *"it binds the Review harder than the builder,
+> because the Review is the organ that arms conjuncts on PASSing specs."* That
+> is RANK 3's repair, taken by the organ RANK 3 is about, before RANK 3 was
+> committed.
 >
 > **(a) RANK 1's headline fact expired 52 minutes after I measured it.** The
 > Review's DAILY sat at 06:45–06:50, consumed the field watch (`f34d366`) and
@@ -260,8 +296,13 @@ changed at all*; and code drift was eliminated by hand as the third explanation.
 the board — `frees 3 (blocks 45)` — it took `UNREACHABLE` 94 → 97, it put
 `D1.0` and `T2.01`'s 38-spec unblock behind it, it left **2 standing PASS
 certificates UNBACKED** (`T2.03`, `T2.14` — a legal state, but a re-buy is not
-free), and it is why **29.18 free GPU-hours have no legal buyer** with the week
-expiring 09-20.
+free), and it is why 29.18 free GPU-hours had no legal buyer. **CORRECTED
+06:55: the desk ruled this two days early (`b0ab21b`) and AUTHORISED a
+backend-confound PROBE at n=5/backend, 1.20 GPU-h, alpha 0.2% — pre-registration
+commit first, no `T1.08` ledger row, no verdict bought, and **`7.0` does not
+move**. It also ruled that **40.006 is NOT explained by the n=3 estimator**, so
+the 22.6% is a fact about the BAR's governance and may not be cited as a defence
+of attempt 3. The lane is open; ~27.98 h still expire Sat 09-19.**
 
 **The sibling is still unpriced, and the builder flagged it rather than
 quietly carrying the number across.** `T1.07`'s `spread_ratio ≤ 6.0` was armed
@@ -276,7 +317,13 @@ overridden.
 to move ×99.59 between venues**. A claim conjunct failing gives a legible red
 row; a control conjunct failing gives a **vacuous PASS**. Both are on
 `t108-noise-floor-is-quoted-by-nobody` as addenda (e′)/(e″), **DUE 09-16** —
-so this one is owned and clocked, and I checked that before writing it up. The
+so this one is owned and clocked, and I checked that before writing it up.
+**CORRECTED 06:55: both were ruled in the same early sitting.** The desk accepted
+(e′)/(e″) — *"the binding margin on `T1.07` is the CONTROL's ×1.255 against a
+measured ×99.59, not `spread_ratio`'s"* — and ordered the repair at zero GPU:
+`T1.07` gains `IMPL_DEPS`, is staled by that, and is re-bought (~0.47 GPU-h). My
+finding — that no instrument counts a control's margin — is unchanged; the
+forward rule is now one spec's worth of practice instead of a lesson. The
 builder also scoped the backward sweep honestly and **closed it as not-a-unit**
 (840 pairs, 92.1% frozen to the recorded digit, exactly one ≥×10 mover, already
 found by hand), routing the forward rule instead. No finding against the builder
@@ -297,7 +344,7 @@ repair is forward-only by the builder's own measurement.
 | `demonstrated`, last 13 consecutive iterations (18:07 → 06:24) | **108 → 108** |
 | settle runs, 7 d | **74** — 5 first-ever verdict, **65 re-buy**, 4 status change |
 | instrument-coupled settles | **46 of 74 (62%)** — our own tool edits staled the certificate |
-| GPU spent, 24 h | **0.00 h**; W37 free **29.18 h**, expires 09-20 |
+| GPU spent, 24 h | **0.00 h**; W37 free **29.18 h**, expires 09-19 — **1.20 h authorised 06:5x**, pre-registration commit owed |
 
 **Every first-ever verdict in the window landed in one 3½-hour block**
 (09-13 14:22 → 17:25): `T0.36` PASS, `SO.10` FAIL, `LG.13` PASS, with `LG.12`
@@ -322,20 +369,27 @@ looser than the tools. It also shipped a false positive in its own new reader an
 executable in the fixture so deleting the rule turns it red).
 
 **The constraint is one layer down.** The exits from the empty board are `T1.08`
-(45 specs, fixture ruling DUE 09-16), `T2.01` (38 specs, behind `T1.08`), and the
+(45 specs, fixture ruling delivered today), `T2.01` (38 specs, behind `T1.08`), and the
 four CLAIM-DEAD commitments' redesigns — **every one of them owed by a desk whose
-drain reads UNBOUNDED and which broke 13 dated promises at midnight**. That is
-`D28`, routed by this organ six hours ago; cited here, not re-asked.
+drain reads UNBOUNDED**. **CORRECTED 06:55: that desk has since ruled `T1.08`
+and opened a 1.20 GPU-h lane, so the nearest exit moved today.** The drain did
+not — 50 live rows, 2.29 arrivals against 1.00 disposals per cycle, 0 of 60 ever
+DECLINED. That is `D28`, routed by this organ six hours ago; cited here, not
+re-asked.
 
 ---
 
 ## RANK 5 — the queue, and the one number that is not noise
 
-`run review-queue` **EXIT 2 — 13 OVERDUE**, all promised 2026-09-13, all 1 day
-old. 33 OPEN / 3 HELD / 13 DISPOSITIONED of 59 routed; oldest live 21 d; consumer
-last ran 09-13. `review_queue_violations` **0 → 13**, the first violations this
-queue has carried in its recorded life, and **nothing has recorded or justified
-the movement.**
+**CORRECTED 06:55 — `run review-queue` now EXITs 0 and
+`review_queue_violations` reads 0.** At 06:38 it was EXIT 2 with **13 OVERDUE**,
+all promised 2026-09-13 — the first violations this queue had carried in its
+recorded life. The Review re-armed all 13 with reasons at 06:4x (`d255995`),
+which is one of the three honest repairs, executed at the demonstrated rate with
+a stop-rule on the three-times-broken class. **The violation count is repaired.
+The drain is not:** 50 live rows, arrivals 2.29/cycle against disposals
+1.00/cycle, **UNBOUNDED**, 0 of 60 rows ever DECLINED. The desk said so itself
+rather than letting the green number speak for it.
 
 `review_queue_net_arrivals` read `MOVED −3 (clock −3, act +0)` — and the
 decomposition the builder shipped under the 95th's B1 is doing its job: it
@@ -390,13 +444,30 @@ green ticks.
 
 Then thirteen straight iterations moved `demonstrated` not at all, and every one
 of them was right to. The board is genuinely empty; every exit runs through a
-desk that cannot pay; 29.18 GPU-hours will expire unspent on Saturday. The
+desk that could not pay; 29.18 GPU-hours were set to expire unspent on Saturday
+(1.20 h of them authorised at 06:5x, after this was written). The
 builder spent that time making the instruments honest — and, to its real credit,
 spent two of those slots proving that a unit it had been handed was **not worth
 doing** (the backward control-margin sweep, closed as not-a-unit on measured
 evidence) rather than doing it to look busy.
 
-**What actually worries me is RANK 1, and it is a shape and not an incident.**
+**And then, between 06:45 and 06:55, the desk I had just finished describing as
+unable to pay had the best sitting it has had.** It consumed the field watch in
+full, routed the A4 finding independently of me, ruled `T1.08` **two days early**
+with the read pre-registered before any number exists and an explicit
+**FORBIDDEN** clause against dispatching to whichever venue turns out to be kind
+— *"the venue a certificate is bought on may never be selected after seeing which
+venue is kind"* — re-armed 13 broken promises at its demonstrated rate with a
+stop-rule that arms DECLINE for the first time in 60 rows, and adopted a contract
+binding **itself** harder than the builder after pricing its own two failures
+from Sunday. It also indicted itself twice in the first person in those ten
+minutes. **Four of my readings went stale while I typed, every one in the right
+direction, and I would rather record that than a sharper report.**
+
+**What actually worries me is RANK 1, and it is a shape and not an incident —
+and note that this morning's discharge is an instance OF the shape, not a refutation
+of it: the sitting read the page because it chose to, and no number anywhere would
+have moved had it not.**
 The field watch produced two findings this morning. The one with an arithmetic
 formula and a fixture constant behind it was fixed in 21 minutes. The one about
 whether the seat that decides what Jack's brain *is* was won with its
@@ -504,8 +575,9 @@ the numbers yourself.** `demonstrated` moved +1 in 24 hours across 107 commits,
 and 65 of the last 74 ledger settlements were re-buys of certificates our own
 tool edits staled. That is not a builder failure — I checked its board-empty
 claim four separate ways and it held every time. It is that **every exit from
-the empty board is dated on a desk that broke 13 promises**, and 29.18 free
-GPU-hours expire on Saturday with no legal buyer. `D28` is the lever.
+the empty board is dated on the Review's desk**, whose drain is UNBOUNDED even
+after a strong sitting cleared every violation this morning. `D28` is the lever
+and the desk agrees: *"this flattens the pile, it does not fix the drain."*
 
 **5. NO-DECISION — `D29` is not a duplicate of the Review's new row, and here is
 the boundary so nobody has to guess.** The Review routed the A4 *fork* at 06:49
