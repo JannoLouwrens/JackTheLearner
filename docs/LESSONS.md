@@ -14656,3 +14656,60 @@ is a property of the one instrument's own contract — what it answers, whether
 it truncates, what its number means. Transfer the first by default. Re-derive
 the second from scratch at every member, and if it comes out the same, say so
 on purpose rather than by inheritance.
+## A pre-registered REMEDY can name a condition its own motivating case does not satisfy — and then it is a control that could never fire
+## (builder, 2026-09-14 00:2x, firing `D25`'s armed default; the disease is the ladder's founding one, one level up)
+
+`D25` was armed on 2026-09-07 with default **(iii) FIX THE SEAL**, and its
+letter was precise: *"if this run committed `docs/PROGRESS.md` AND appended its
+`PROGRESS_LOG` row, the banner says so."* Two conjuncts, both about the dying
+run's committed acts, written by the desk that had just watched the
+2026-09-06 Sunday FULL get defamed by its own seal.
+
+**Git says the first conjunct is FALSE of that exact run.** The 09-06 agent
+never committed `docs/PROGRESS.md`. It left the page dirty and `lib_seal.sh`
+itself committed it at 07:17:11 (`cf18320`) — the very act the banner was
+complaining about. Implemented literally, the new branch **would never have
+fired on the scar it was written for**, and would have shipped green: the test
+would have been written from the same reconstruction, the suite would have gone
+all-green, and the next Sunday would have produced the identical false banner
+with a fix in place and a decision marked resolved.
+
+**WHY IT HAPPENED, because the mechanism is general and cheap to repeat.** The
+author reconstructed the case from the OUTCOME — *the page was committed, the
+row was there, therefore the run committed them* — rather than from the log.
+`git log -- docs/PROGRESS.md` is one command and answers it in three seconds.
+The reconstruction is always plausible, because the outcome is real; what is
+invented is the AGENCY. Every remedy conditioned on *"if the actor did X"* is
+exposed to it, and the failure is silent by construction: a remedy that cannot
+fire looks exactly like a remedy whose case has not recurred.
+
+**THE TELL, and it costs one command.** Before implementing any pre-registered
+remedy, **replay its trigger condition against the incident that motivated
+it**, from the record rather than from the write-up. If the condition does not
+evaluate TRUE on the original case, you have found one of two things and both
+are worth the three seconds: either the condition is wrong, or the incident is
+not what the entry says it was. Here it was the first, and the repair was to
+drop the unsatisfiable conjunct to a REPORTED fact — the receipt alone gates,
+the page's custody is stated rather than required — with the deviation declared
+in the firing record, in `lib_seal.sh`'s own comment, and in the commit.
+
+**THIS IS THIS REPO'S FOUNDING DISEASE AT ONE REMOVE.** The governing rule says
+*a capability may only be claimed by a test that could have failed*. A remedy is
+a capability of the instrument, and **a branch that cannot fire is a test that
+could not have failed** — a README status table reading "Working", rendered in
+shell. The ladder already forces `_control` to fail; nothing forces a remedy's
+condition to FIRE. The nearest existing guard is *"an at-chance control must
+carry proof its instrument was alive"* (B3 sweep, 08-21) — same shape, opposite
+polarity: there, prove the instrument could have moved; here, prove the branch
+could have triggered.
+
+**WHAT THE FIXTURE MUST THEREFORE ASSERT, and it is the half that gets
+skipped.** `test_lib_liveness.sh` asserts the receipt branch FIRES (banner says
+COMPLETE, draft wording absent, `git log` subject carries it) *and* that it
+does NOT fire without a receipt *and* that it does not fire on the organ's own
+`INCOMPLETE` dead-run fallback row — a receipt an organ's own fallback can
+satisfy is the organ certifying itself. Three assertions, because a remedy has
+three ways to be useless: never firing, always firing, and firing on a signal
+the subject writes about itself.
+
+---
