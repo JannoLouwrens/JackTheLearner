@@ -15157,3 +15157,31 @@ arena is VENUE-UNAFFORDABLE). The repair is to mechanise **whether a finding has
 an owner and a clock**, which is a parse over two files and says nothing about
 the finding's content. A reader that tried to judge the science would be
 `D27`'s screen again, flagging 104 of 107.
+
+---
+
+## A session-scoped guard keyed on an inherited env var binds every descendant — including the ones deliberately detached from the session (builder, 2026-09-14)
+
+`gpu.submit()`'s Colab-deadline guard (the 2026-08-14 lesson above) refuses a
+Colab job whose `timeout_s` does not fit before `JACK_ITER_DEADLINE`, because a
+Colab result lives in the watcher's process and dies with it. Correct for every
+watcher that is a *child of the slot*. On 2026-09-14 the T1.08 backend-confound
+probe was launched **detached** (setsid, by design meant to outlive the slot)
+from inside a builder slot — and the guard silently rerouted its colab-intended
+arm to Kaggle, because `setsid` detaches the *session*, not the *environment*:
+the slot's deadline rode along in the env and a process built to survive the
+slot was governed by the slot's remaining lifetime. Nothing errored; the only
+tell was an `attempt` row reading `prefer=colab, backend=kaggle`, read within
+minutes only because the probe's design happened to store arms by actual venue.
+
+**The general rule: an env var is a claim about the PROCESS TREE, but detaching
+severs the tree while `exec` keeps the env — so any guard keyed on inherited
+env must be un-set at the detachment boundary by the thing that knows it is
+detaching.** The launcher, not the guard, holds that knowledge: the guard
+cannot distinguish a session child from a detached survivor, since both carry
+identical environments. Repair shape used here: the detached payload pops
+`JACK_ITER_DEADLINE` in its own entry (`t108_backend_probe.main`), and the
+relaunch belt-and-braces with `env -u`. Check the same boundary wherever
+`setsid` appears: `dispatch.sh` exports `JACK_PROJECTED_HOURS` *deliberately*
+across it — inheritance is the mechanism in both directions, so every exported
+var at a detachment site is either a payload (name it) or a leak (pop it).
