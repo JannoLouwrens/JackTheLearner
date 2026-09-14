@@ -16835,3 +16835,36 @@ front of it: the §6 A4 fork, the me1-row addendum (ME.9/ME.10 fixture
 redesigns), and `T1.08`'s fixture ruling owed 09-16. The board otherwise stays
 empty — do not manufacture a W37 dispatch (30 h, no legal buyer until the
 T1.08 ruling).
+
+**2026-09-14 07:07 slot (fable; `week:all models` 4% — the gate, read at
+07:07; Fable 4%; both lines printed, acting on all-models).** Unit: the
+`T1.08` backend-confound PROBE, ruling §8 orders (1)+(2), executed in order.
+Pre-registration commit `1652a62` — `PROBE_SEEDS=[0,1,2,3,4]` (contains the
+n=3 lists that read 40.006/P100 and 5.717/T4), the §4 read quoted verbatim,
+`BRANCH_II_SEEDS=20` fixed from the row's own (c) table BEFORE any number
+(false-fail 22.6% n=3 → 7.5% n=20 at 2.4 GPU-h), and the branch-(ii) re-run's
+venue routing pinned to the spec's existing `prefer=colab` — then the
+dispatch, detached in the dispatch.sh idiom (NOT launch_detached.sh: its
+wrapper bills remote-kernel waiting as box CPU, the exact case cpu_budget's
+header exempts). FOUND ON INVOCATION 1: the slot's `JACK_ITER_DEADLINE` leaked
+through setsid into the detached probe and `submit()`'s colab-deadline guard
+silently rerouted the colab-intended arm to Kaggle (attempt 07:15:35, head
+`1652a62`) — kept as the kaggle arm, byte-identical kernel, zero waste; fix
+`e3eb376` (probe pops the var; `_KaggleAlreadyRead(Budget)` refuses a
+duplicate-venue purchase when only colab is missing, because colab's last two
+real attempts, 09-07, died in ~5 s); lesson `4f3df24` (setsid severs the
+session, not the environment — every exported var at a detachment site is a
+payload or a leak). Kaggle n=5 kernel in flight (~0.6 h, attributed
+JACK_SPEC_ID=T1.08/PHASE=probe — `gpu_hours_no_verdict[T1.08]` WILL move, said
+here first); a session watcher relaunches invocation 2 (`env -u`, idempotent
+state /data/t108_backend_probe.json) for the colab arm when invocation 1
+exits. **NEXT ITERATION:** read /data/t108_backend_probe.json + tail
+/data/tmp/t108_backend_probe.log, `pgrep -f t108_backend_probe`. Both arms
+present → HARVEST: commit (b) reports cv_T4/cv_P100 and the pre-registered
+branch on the row, row goes ACTED (ruling §8.5); `T1.08` STAYS FAIL on every
+branch, no bar moves, and it is FORBIDDEN to dispatch `T1.08` to whichever
+venue read lower (§3). Colab arm missing with fast failures → relaunch once
+(idempotent); if the colab lane is structurally dead (09-07 "Session not
+found" shape), that is a FACT FOR THE ROW — annotate, do not substitute a
+venue. Also open: `1^7` item 2 (`T1.07` gains IMPL_DEPS, ~0.47 GPU-h re-buy)
+is untaken; `D19`'s default fires from 09-15 00:00 with the required wording.
