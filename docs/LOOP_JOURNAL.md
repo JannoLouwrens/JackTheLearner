@@ -16590,3 +16590,72 @@ named every path I committed and touched nothing I did not write.
      The reader does NOT flag it and cannot; that limit is deliberate.
   4. **Do not re-run `T6.03` until `T2.10` is PASS** — the ledger now agrees
      with that order in print, which is the CONFIRMED line.
+
+2026-09-14 ~03:0x-03:3x (builder, **opus** — `week:Fable` pinned 100%, and the
+gate is `week:all models`, which read **87%** against the 90% stop with
+`--week-elapsed` 99, so the pace line was above the meter and I ran; the week
+resets 05:00 today). **Board verified empty three ways before I chose anything**
+— `run next` TRIAGE `0 fresh / 28 settled / 16 held`, `coverage` 4 empty classes
+with NO path in plus 1 FILL-HELD (`cpu<10min` <- `D19`), `blocked`'s terminal
+blockers all owed as redesigns by the Review. Every item on both steering pages
+is discharged or dead: `PROGRESS` 1 (`T2.10`) and 3 (`D1.0`) were already killed
+by the 95th audit's RANK 3, 2 fired, 4 and 5 shipped (`T1.07` carries
+`spread_ratio <= 6.0` since 09-13), 6 is a prohibition; overseer B1/B2/B4 are
+committed and B3 is the desk's, dated 09-16. **`D19` is NOT firable today** —
+`decisions.py` marks overdue at `(today - decide_by).days > 0`, so its earliest
+firing day is 09-15; the steering page's "fires on 09-14" is loose and the tool
+is the authority. Did not fire it.
+
+**So I took the one thing on an empty board that costs nothing and is worth
+something: I priced `T1.08`'s bar.** It blocks 45 specs, its repair is dated
+09-16, and the row asks a TWO-way question — is `heldout_cv_pct` 40.006 about
+the pipeline or about the P100 — while never naming the third term. It is a
+sample cv at **n=3, ddof=1**, so `s^2(n-1)/sigma^2 ~ chi^2_2` and the estimator
+is the largest term in the row. Monte Carlo over the runner's own `_stats`
+(120k-400k trials, seed 20260914, matching closed forms to four decimals):
+**a 3-seed cv drawn from a pipeline whose TRUE cv is exactly the 5.717 the bar
+was set from reads in [0.92%, 11.00%] 95% of the time — a 12x span straddling
+7.0 — and FAILS 22.6% of the time.** 4.8% at true cv 4.0, 14.1% at 5.0, 37.1%
+at 7.0. Seeds are the expensive fix because the tightness is the HEADROOM:
+n=30 still leaves 4.2% at 0.12 GPU-h/seed. And the discordance the row is built
+on is a **4.0%** event under *nothing changed at all*.
+
+**I also eliminated code drift, which the row left open.** Between the two runs'
+commits the `t1_08` diff is 116 insertions / 0 deletions with the JOB
+byte-identical; `UnifiedBrain`'s only change (`a1c2f9d`) is an extract-function
+refactor of the grounding fallback tokenizer, a path this job never calls; the
+task tensors come from a CPU generator at fixed seed 900; and the model is built
+on CPU before `.to(DEV)`. Identical data, identical initial weights, identical
+batch order — so the row's venue framing is now backed rather than asserted.
+
+**I was wrong once and the arithmetic caught me.** My first reading was that the
+row's proposed cross-backend arm-pair could not settle anything at n=3. It can:
+alpha 4.0%, power 92.2%. `n=5`/backend buys alpha 0.2% and 98.2% power for
+**1.20 GPU-h** against 29.18 free hours expiring 09-19. That strengthens the
+desk's own proposal rather than refuting it, and I rewrote the annotation to say
+so before committing it.
+
+**Nothing moved.** 7.0 is pre-registered, no bar touched, no run bought, no GPU
+spent, no ratchet moved (`net_arrivals` stayed at `act +0` — an annotation is
+not a `ROUTED:` line). The docstring edit went through `run amend T1.08
+--doc-only`, whose AST comparison proved it prose-only and re-stamped
+`dd30cd06 -> 34997643`, so `T1.08` left STALE CLAIMS instead of joining the five
+already there. Verdict unchanged: FAIL, 40.006, attempt 3.
+
+**FLAGGED, NOT FIXED, and deliberately given no number: `T1.07`.** Its
+`spread_ratio <= 6.0` was armed in the SAME commit at the same ~1.22x headroom
+from a single measurement, and it is **PASS** — a Tier-1 certificate. Its
+statistic is a max/min over LR arms, not a std over seeds, so the 22.6% must not
+be transported onto it; computing its rate needs per-arm seed noise nobody has
+measured. Recorded on the row as the desk's call.
+
+**NEXT ITERATION:** the board will still be empty of fresh specs — do not go
+hunting. `D19`'s default IS firable from 09-15 (NO FETCH; `HR.1`-`HR.4` stay
+blocked). The lesson this landed (*a bar set at k x one observation of a sample
+statistic inherits that statistic's sampling distribution*) has an obvious next
+instance and I deliberately did not take it: **someone should price `T1.07`'s
+bar**, which needs a seed-noise estimate for the LR arms and is therefore a real
+unit rather than arithmetic. Check whether the 09-16 disposition reads this
+annotation — if it rules without the 22.6%, the finding did not arrive and the
+sibling row `oversight-for-the-builder-has-no-reader` (DUE 09-17) is about
+exactly that failure mode.

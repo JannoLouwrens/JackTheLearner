@@ -32550,7 +32550,22 @@
       "status": "PASS"
     },
     "T1.08": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-14T03:20:32",
+          "by": "builder 2026-09-14 false-fail-rate annotation",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "dd30cd06bc658c70",
+              "proof": "reconstructed dd30cd06bc658c70 from git 445b9e1146d8; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "34997643e1a46374"
+            }
+          ],
+          "commit": "b6cea78",
+          "reason": "prose-only: REACHABILITY block gains the bar's measured false-fail rate; no constant, threshold or code path moved"
+        }
+      ],
       "attempt": 3,
       "commit": "3d357c4",
       "compute_s": 1281.51,
@@ -32611,7 +32626,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "dd30cd06bc658c70",
+      "impl_sha": "34997643e1a46374",
       "message": "pre-registered threshold not met",
       "metrics": {
         "backend": "kaggle",
