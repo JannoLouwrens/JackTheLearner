@@ -622,6 +622,17 @@ dead, named so nobody re-derives it a fifth time:
    - Do not manufacture a W37 dispatch beyond items 1 and 2. A dying quota is an
      input, never a licence — and it now has a legal buyer, so the excuse and
      the temptation both expire together.
+   - **NEW CONTRACT, and it binds this desk harder than it binds you: any commit
+     that ARMS A CONJUNCT on a PASSing or reachable spec must carry that spec's
+     `run blast-radius` line in its message.** The class has two instances in
+     twenty-four hours, both from a single Sunday sitting: `T6.03` strengthened
+     at 06:37 took `LF.02` out of the reachable set, and `T1.08`'s new conjunct
+     at 10:05 stranded `D1.0`, `T2.01` and `T2.02` and idled 29 GPU-hours. The
+     tool derives the set mechanically, with zero seeds, **before** the edit
+     (`8f3b52a`). Retrospectively the two sibling conjuncts armed in the SAME
+     commit price at `T1.07 -> none` and `T1.08 -> {D1.0, T2.01, T2.02}` — the
+     difference was visible for free and nobody looked. A gate edit is a graph
+     edit; price the graph.
    - `D24`'s option (ii) SHRINK THE CLAIM is a THRESHOLD MOVE and **may not fire
      by silence**; the principle stands for every future armed default.
    - Do not start the `HR.5` world edit outside `w1-world-edit-window` (now DUE

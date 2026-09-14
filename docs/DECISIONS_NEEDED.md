@@ -6612,3 +6612,140 @@ would not clear"); `docs/OVERSIGHT.md` RANK 2 and RANK 4, 95th audit; `D23`
 (routing IS the repair for an orphaned FAIL); `D22` (design authority stays with
 the Review); `D27` (the precedent for refusing a default that commits a failing
 budget).
+
+---
+
+## D29 — The Learning-core seat is held under the file's strongest marking by an arm whose declared mandatory kill-switch was never implemented, and can never now be run on the evidence that seated it. (2026-09-14, overseer, 96th audit)
+
+**What the governing document promises.** `docs/research/LEARNING_CORE.md:1935`,
+verbatim:
+
+> *"Collapse is the failure mode and it is silent, so A4 carries a **mandatory
+> diagnostic: effective rank and per-dimension variance of the latent must be
+> reported every 1,000 decisions**, and a collapse (rank below a pre-registered
+> floor) is `Status.VOID` for A4, not a good loss curve."*
+
+**What exists**, re-derived by this desk rather than quoted from the field watch
+that found it:
+
+```
+$ grep -rn "effective rank\|effective_rank\|RankMe\|per-dimension variance" \
+       --include=*.py experiments/
+experiments/registry.py:892             "...per-layer effective rank every cycle. "
+experiments/registry_expansion.py:4242  "...fraction and effective rank stay near their early-life "
+```
+
+Both hits are **prose inside other specs' `hypothesis` strings** — one a
+plasticity spec, one the sleep-downscaling spec. Neither is an implementation.
+No effective rank, no singular spectrum, no per-dimension latent variance is
+computed anywhere in `experiments/`. `LC.03`'s committed row confirms it from the
+other side: **50 metrics recorded for `wm-latent`, not one of them a rank or a
+per-dimension variance, on any of five arms.**
+
+**What is at stake.** `A4` = `wm-latent` **holds the Learning-core seat**, seated
+2026-09-01 by `D10`'s armed default, marked **BY VERDICT (single-arm)** —
+`CHAMPIONS.md`'s strongest marking. That seat determines what Jack's brain *is*.
+The document's guard against the one failure mode it calls *silent* was never
+computable, so the seating run could not have detected a collapsed latent had
+there been one. The seat's evidence (`life_gain` t_null 4.65 / t_twin 4.00) is
+real and is **not** what this entry questions. `SYSTEM.md`'s own rule, written
+2026-08-30 about `decisions.py`, applies here unchanged: *"A governing document
+that names an enforcement is making a capability claim, and it is bound by law 1
+like any other."*
+
+**RULE 3 CHECKED EXPLICITLY, because a means-fork on your desk is the `D1`
+disease.** The settling measurement — effective rank of `wm-latent`'s latent on
+the run that seated it — is **unavailable at any price this project can pay**,
+and here are the three independent closures rather than an assertion:
+
+| closure | source |
+|---|---|
+| the trained `A4` weights **do not exist on disk** (`process_time_s` and no tensors) | field watch wk6, cited at `docs/CHAMPIONS.md:60` |
+| `LC.03` v2 is **VOID-FORECLOSED** — no v3, no envelope growth, no re-roll | its own pre-registered fork (ii), fired 2026-08-23 |
+| `LC.07`, the seat's only live arena, is **VENUE-UNAFFORDABLE** — ~526 wall-hours ≈ **17.5 weeks of every GPU hour this project has** | `D24`'s armed default, fired 2026-09-12 |
+
+No bakeoff this system can write would settle it. That is why it reaches you and
+is not a builder unit.
+
+**The arms.**
+
+- **(i) BUILD THE DIAGNOSTIC AND BIND IT TO THE SEAT'S ARENA.** Implement the
+  §5.4 reading and require it of `LC.07`. Honest, but buys nothing today: it
+  cannot re-examine the seating run, and `LC.07` cannot be entered.
+- **(ii) CORRECT `LEARNING_CORE.md` §5.4** — strike or soften the mandatory
+  diagnostic so document and implementation agree.
+- **(iii) RECORD THE DEBT, CHANGE NO MARKING.** The fact goes on the
+  Learning-core cell as a second stated caveat beside the single-arm one and the
+  `VENUE-UNAFFORDABLE` label; the promise in §5.4 stands, unfulfilled and
+  visible; `champions --check` keeps printing the seat as an UNVERIFIED VERDICT
+  with TRIGGER DEBT, which it already does for independent reasons.
+- **(iv) DOWNGRADE THE SEAT'S MARKING** — `wm-latent` is held BY DEFAULT, or the
+  seat is UNDECIDED, until the guard exists.
+
+DECIDE: D29
+  class:     goal
+  blocks:    no spec id, which is exactly why no `blocked` ranking, no
+             `coverage` class and no `champions` check can see it. What is at
+             stake is whether an ARCHITECTURE seat — the class SYSTEM.md's
+             three-class invariant says is ALWAYS contested — may hold the
+             file's strongest marking while the silent-failure guard its own
+             governing document calls mandatory was never armed. The cost is
+             realised, not forecast: the seat has been held this way since
+             2026-09-01, and the gap was found by an organ nothing in this
+             repository reads.
+  default:   (iii) RECORD THE DEBT, CHANGE NO MARKING. The A4-diagnostic gap
+             is written onto `CHAMPIONS.md`'s Learning-core cell as a caveat
+             in the same idiom as the single-arm caveat already on its face,
+             and `LEARNING_CORE.md` §5.4 is left standing verbatim as an
+             unfulfilled promise rather than corrected away. This picks only
+             already-permitted actions — recording a measured fact on a seat
+             is what the anatomy audit does every week — moves no threshold
+             in either direction, edits no GOAL.md text, widens nothing,
+             spends no GPU, commits no budget, fails no spec, refuses no run,
+             stales no certificate, and leaves no commitment claim-dead. It
+             is MONOTONE on the thing at issue: a caveat can only weaken what
+             the seat claims, never strengthen it, and it moves no ratchet
+             counter in either direction.
+             Option (ii) CORRECT THE DOCUMENT is deliberately NOT the default
+             because a default may not narrow what this project has promised
+             itself: striking §5.4 converts a VISIBLE unfulfilled guard into
+             NO guard, which is precisely the move `champions.py` forbids
+             when it says the ARENA-MISSING ratchet shrinks by REGISTERING
+             the spec and never by deleting the arena reference.
+             Option (iv) DOWNGRADE THE SEAT is deliberately NOT the default,
+             and this one is counter-intuitive so it is spelled out: moving
+             `HELD: BY VERDICT` to anything weaker would take
+             `champions --check`'s UNVERIFIED-VERDICTS count from 2 to 1 —
+             a ratchet shrinking by RE-LABELLING rather than by repair, the
+             exact defect `T0.31` was gated to prevent after three
+             instruments each paid a "repair" that lowered its own number.
+             A tightening that fires by silence and pays itself a greener
+             number is still a number bought rather than earned.
+             Option (i) BUILD THE DIAGNOSTIC is deliberately NOT the default
+             because it commits GPU on an arena `D24` already measured as
+             unaffordable, and a default may not commit a budget that is
+             already failing — the reasoning `D27` used to refuse its own
+             option (ii) and `D28` used to refuse its (i) and (iii).
+             The price, stated rather than buried: (iii) leaves the seat
+             held, leaves the promise unkept, and buys nothing but honesty.
+             If you believe an architecture seat must carry its declared
+             guards to hold its marking at all, then (iv) is your answer and
+             it is the reason this is on your desk instead of being recorded
+             and closed. Reversal: delete one caveat sentence from
+             `CHAMPIONS.md`; no code, no threshold, no ledger row, no
+             re-run.
+  decide_by: 2026-09-22
+
+Evidence: `docs/research/LEARNING_CORE.md:1935` (the mandatory diagnostic,
+verbatim); the repo-wide grep above, re-run by this desk at 06:4x 2026-09-14 —
+2 hits, both prose in `hypothesis` strings; `experiments/ledger.json` `LC.03`
+(50 `wm-latent` metrics, no rank, no per-dim variance, five arms);
+`docs/CHAMPIONS.md:73` (the Learning-core cell, BY VERDICT single-arm) and `:306`
+(`SEAT: Learning core | HELD: BY VERDICT | VERDICT: LC.03 | TRIGGER: LC.07,
+LC.03, UB.10 | ARENA: LC.00–LC.07`) and `:60` (no trained A4 weights on disk);
+`docs/DECISIONS_RESOLVED.md` `D10` (the seating), `D24` (VENUE-UNAFFORDABLE);
+`docs/FIELD_WATCH.md` §6, 2026-09-14 wk7, which found it;
+`experiments/champions.py --check` (Learning core already printed under
+UNVERIFIED VERDICTS and TRIGGER DEBT, for reasons independent of this one);
+`SYSTEM.md` (a governing document that names an enforcement is making a
+capability claim); `docs/OVERSIGHT.md` RANK 1, 96th audit.

@@ -15106,3 +15106,54 @@ And where the fixture CANNOT reach the certifiable m by construction (ME.9's
 36-pair ceiling, ME.10's load-bearing held set), the honest state is a
 recorded gap on the owning row — not a silent bar, and not a botched fixture
 rebuild inside a maintenance slot.
+
+---
+
+## An organ with no reader has its hardest finding dropped and its easiest one repaired (2026-09-14, overseer, 96th audit)
+
+Week 7's field watch produced two findings in the same commit, at 05:57.
+
+**§6b** — five ME specs certify 0.819–0.944 against a 0.95 bar — carried an
+arithmetic formula and a fixture constant. It was diagnosed, three of five
+were repaired, and all three were re-bought PASS **by 06:24, twenty-one
+minutes later**, with the remainder attached to a row that already had a clock.
+
+**§6** — the mandatory collapse diagnostic under the arm holding the
+**Learning-core seat** was never implemented, so that seat's declared
+silent-failure guard was unarmed when `D10` seated it BY VERDICT — got nothing.
+No queue row, no `DUE:`, no decision entry. Six hours later:
+
+```
+$ grep -rn "effective rank\|§5.4\|collapse diagnostic" \
+       docs/REVIEW_QUEUE.md docs/DECISIONS_NEEDED.md docs/PROGRESS.md scripts/ladder_prompt.md
+  (no hits)
+$ grep -rn "FIELD_WATCH" --include=*.py experiments/ scripts/
+  (no hits)
+```
+
+Nobody hid it. The builder wrote *"I routed nothing there"* in its own summary
+and named the page it expected to be read from.
+
+**The general rule: a system allocates attention by what an instrument can
+print, so findings are consumed in order of how MECHANISABLE they are, not how
+much they MATTER — and the ordering is invisible from inside, because every
+individual disposition looks correct.** The §6b repair was correct. The §6
+non-routing was defensible. What is not visible from either desk is that the
+*larger* finding lost to the *smaller* one on a property neither has anything to
+do with: whether a tool could resolve it.
+
+**The tell costs one command:** for every page an organ writes findings to,
+`grep -rn "<PAGE>" --include=*.py`. Zero hits means that page's findings survive
+on somebody's habit. This project has now hit it three times —
+`PROGRESS.md`'s owner-asks (`D15`, repaired by `UNROUTED-OWNER-ASK`),
+`REVIEW_QUEUE.md` (repaired by its own reader, 08-31 B4), and now
+`FIELD_WATCH.md`, which is the one that looks OUTWARD and so is the one whose
+findings cannot be re-derived from the ledger by anybody else.
+
+**The boundary, so this is not read as a demand for more instruments.** The
+repair is not "mechanise the finding" — §6's fork is precisely the kind no
+bakeoff can settle (`D29`: the weights are gone, the run is VOID-FORECLOSED, the
+arena is VENUE-UNAFFORDABLE). The repair is to mechanise **whether a finding has
+an owner and a clock**, which is a parse over two files and says nothing about
+the finding's content. A reader that tried to judge the science would be
+`D27`'s screen again, flagging 104 of 107.
