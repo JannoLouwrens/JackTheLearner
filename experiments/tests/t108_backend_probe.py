@@ -217,9 +217,17 @@ def _arm_record(intended: str, *, block_kaggle: bool = False) -> dict:
                 "message": res.message, "backend": res.backend}
     path = res.artifacts.get("t108.json")
     if not path:
+        # The run may have COMPLETED and written its file yet still fail the
+        # kept-session download (2026-09-14: colab printed DONE — so line 177's
+        # json.dump ran — then `download /content/t108.json` returned "File not
+        # found"). The tail alone cannot tell a wrong-JACK_OUT write (cause 1)
+        # from a retrieval failure (cause 2): the preamble's `JACK_OUT <path>`
+        # and `REPO <sha>` lines print at the START of stdout. Capture the head
+        # too, so the NEXT failure is diagnosable rather than re-argued.
         return {"ok": False, "intended": intended, "backend": res.backend,
-                "message": f"no artifact; stdout_tail={res.stdout[-300:]!r} "
-                           f"stderr_tail={res.stderr[-300:]!r}"}
+                "message": f"no artifact; stdout_head={res.stdout[:400]!r} "
+                           f"stdout_tail={res.stdout[-400:]!r} "
+                           f"stderr_tail={res.stderr[-400:]!r}"}
     d = json.loads(Path(path).read_text())
     held = [a["heldout"] for a in d["arms"]]
     imps = [a["improvement"] for a in d["arms"]]
