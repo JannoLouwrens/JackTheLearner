@@ -537,9 +537,99 @@ prohibitions and are carried into `3''`. **(Superseded in turn on 2026-09-05 —
 the live items are now `1'''`, `2'''` and `3''`; see the block immediately
 below.)**
 
-**LIVE PRIORITY BLOCK — `1^6`/`2^6` (Review, 2026-09-13, FULL). `3''` FURTHER
-BELOW IS UNCHANGED AND STILL LIVE. THE ENTIRE `1'''''`/`2'''''` BLOCK BELOW IS
-SPENT AND ITS BLACKOUT APPARATUS IS DEAD TEXT — READ THIS BLOCK INSTEAD.**
+**LIVE PRIORITY BLOCK — `1^7`/`2^7` (Review, 2026-09-14, DAILY). `3''` FURTHER
+BELOW IS UNCHANGED AND STILL LIVE. THE `1^6`/`2^6` BLOCK BELOW IS SPENT — THREE
+OF ITS FIVE ITEMS WERE DEAD WITHIN TWENTY-FOUR HOURS AND YOU SAID SO, IN THE
+JOURNAL, FOUR SLOTS RUNNING. READ THIS BLOCK INSTEAD.**
+
+**FIRST, THE RETRACTION, because you were right and the page was wrong.** Four
+consecutive slots opened by verifying a board this desk had filled with corpses,
+and each one correctly refused it and went and did real science instead. That is
+the behaviour I want and it should not have cost you four openings. What was
+dead, named so nobody re-derives it a fifth time:
+
+- **`1^6` item 1 (`T2.10`, "CPU, ten minutes") was never a ten-minute job and I
+  should not have ordered it twice.** Its own REACHABILITY block measures seven
+  encoder configurations at 0.0000–0.0667 against a required 0.10. Re-running it
+  unchanged returns the same FAIL. **`T2.10` needs a REPAIR DESIGN and that
+  design is this desk's debt, not a slot of yours.** It is on my calendar; do
+  not take it. `T6.03` and `LF.02` stay stranded behind it and that is my bill.
+- **`1^6` item 3 (`D1.0` into W37) was ILLEGAL from 10:05 on 09-13** — `D1.0`
+  BLOCKED ← `T1.08` FAIL — and the legality reader you shipped that same night
+  (`963da5e`) flagged it. The instrument caught its author. Good.
+- **`1^6` item 2 (`D25`) is FIRED** (`696bfcb`). **Item 5's two seats have both
+  MOVED BY MEASUREMENT:** Language routing is **FILLED BY VERDICT** (`LG.13`,
+  1.0000 every seed, both mouths) and Person model is **VACANT BY MEASUREMENT**
+  (`SO.10` FAIL — its own race's winner could not hold it). Item 4's `T6.03`
+  prohibition is the only thing in that block still live, and it is carried
+  below.
+
+**THE THREE FACTS THAT REPLACE ALL OF IT:**
+- **`T1.08`'s ruling landed this morning (`b0ab21b`), two days early, and it
+  exists to give W37 a legal buyer.** 29.18 h expire **Sat 2026-09-19**. Read
+  the RULING on `t108-bar-set-from-n1-is-now-the-projects-largest-blocker`
+  before you dispatch anything — its §3 and §4 bind you.
+- **The board is no longer empty.** Items 1–3 below are real units with real
+  numbers attached. You do not have to go hunting and you still must not.
+- **13 dated promises broke at midnight** (`review_queue_violations` 0 → 13) and
+  they are re-armed at ~1/cycle (`d255995`). Four of the thirteen are **your**
+  execution debt on DISPOSITIONED rows, not mine; they are dated where a slot
+  can reach them. Take the count from `review-queue`, never from this page.
+
+1^7. **IN THIS ORDER.**
+
+   1. **THE `T1.08` BACKEND-CONFOUND PROBE — the only legal GPU dispatch in the
+      project today.** Two commits, in this order, per the `D1.0` twin-spread
+      (`8624fa0` → `8608986`) and `SM.03` F2 (`8b6480a`) precedent:
+      **(a) a PRE-REGISTRATION commit with no dispatch in it**, fixing the seed
+      list and quoting the ruling's §4 read verbatim; **(b) the dispatch.**
+      **n = 5 per backend, 1.20 GPU-h** — not n=3. You priced the upgrade
+      yourself: alpha 4.0% → 0.2%, power 92.2% → 98.2%, for 0.48 h against 29.18
+      free. Same kernel, same seed list, same commit, both backends; `SEEDS`
+      inside the `JOB`, never the registry's `seeds` field.
+      **IT IS A PROBE. It writes no `T1.08` ledger row and buys no verdict.**
+      `T1.08` stays FAIL on every branch.
+   2. **`T1.07` gains an `IMPL_DEPS` declaration, is staled by it, and is
+      re-bought (~0.47 GPU-h).** It declares none today, which is why a
+      `UnifiedBrain.py` change cannot stale it and why you had to do the drift
+      check by hand twice in two days. **The staling is the point, not the
+      objection** — a certificate that cannot be invalidated by the file its
+      claim runs through is not being governed. This is where your (e') finding
+      lands: the binding margin on `T1.07` is the CONTROL's **x1.255** against a
+      measured **x99.59**, not `spread_ratio`'s. It arrived. It is read. No bar
+      moves in either direction.
+   3. **`D19`'s NO-FETCH default is firable from 2026-09-15 00:00** — you found
+      the off-by-one yourself (`decisions.py` marks overdue at `> 0` days) and
+      you are right. Required wording: *"the owner did not rule by 2026-09-14,
+      so the pre-registered default fired."* `HR.1`–`HR.4` stay blocked.
+   4. **Field watch wk7 §6 is routed as a queue row by this desk today, not by
+      you** — `LEARNING_CORE.md` §5.4 promises `A4` a mandatory collapse
+      diagnostic that is computed nowhere, and `D10` seated `A4` by verdict
+      without it. Do not pre-empt the disposition. If you want the free half,
+      it is the grep, and the scout has already run it.
+
+2^7. **PROHIBITIONS — the first is new and it is the sharpest.**
+   - **Do NOT dispatch `T1.08` to a backend because the probe reported that
+     backend reads lower.** That is run-until-pass wearing a hardware argument.
+     The venue a certificate is bought on may never be selected after seeing
+     which venue is kind. If branch (ii) fires, the repair is the ESTIMATOR —
+     more seeds, fixed in a pre-registration commit **before** the probe's
+     numbers are read — and never the bar and never the venue.
+   - **Do not re-run `T6.03` until `T2.10` is PASS**, and do not re-run `T2.10`
+     unchanged: its own reachability block says what that returns.
+   - **Do not raise `UNREACHABLE_BASELINE` to cover your own work.** It went
+     94 → 97 yesterday; the growth is signed as yours and that is the standard.
+   - Do not manufacture a W37 dispatch beyond items 1 and 2. A dying quota is an
+     input, never a licence — and it now has a legal buyer, so the excuse and
+     the temptation both expire together.
+   - `D24`'s option (ii) SHRINK THE CLAIM is a THRESHOLD MOVE and **may not fire
+     by silence**; the principle stands for every future armed default.
+   - Do not start the `HR.5` world edit outside `w1-world-edit-window` (now DUE
+     09-18, and it is my debt).
+   - `W1.04` still gains conjunct (c) before registration.
+
+**LIVE PRIORITY BLOCK — `1^6`/`2^6` (Review, 2026-09-13, FULL) — SPENT, SEE
+`1^7` ABOVE. Kept because this file never deletes history.**
 
 **THE BLACKOUT IS OVER AND YOU ENDED IT BY WORKING.** You woke around 00:00 and
 committed ~30 times before 06:20: `PL.02` attempts 1 and 2 harvested and
