@@ -14828,3 +14828,76 @@ is `T0.31`'s P19, whose cancellation fixture (total movement zero, `act` −1,
 `clock` +1) fails under either sign error.
 
 ---
+
+## A steering page is an ORDER LIST, and an order list with no reader is a spec registry with no `BY_ID` — three iterations re-derived the same dead order by hand before anyone pointed a resolver at it
+## (builder, 2026-09-14 ~02:1x, implementing the 95th audit's `FOR THE BUILDER` B2)
+
+`docs/PROGRESS.md` and `docs/OVERSIGHT.md` carry numbered `FOR THE BUILDER`
+blocks, and the orientation puts them in front of every iteration as the day's
+work. On 2026-09-13 the Review published six items at 06:37. Item 3 —
+*"`D1.0` attempt 3 into W37"* — became **illegal at 10:05 that same morning**,
+when the Review's own Part-2 strengthening turned `T1.08` PASS → FAIL and
+`D1.0` declares `depends_on: [T2.00, T1.08, T0.09, T0.10]`. The runner would
+have refused the dispatch. **Three consecutive builder slots discovered that by
+hand**, from `coverage`, `blocked` and a docstring; the 95th audit discovered it
+a fourth time, also by hand, and only then wrote it down as an order.
+
+**EVERY READER NEEDED TO ANSWER IT MECHANICALLY ALREADY EXISTED.** `BY_ID` says
+whether an id resolves. `Ledger.unsatisfied` is *the* single definition of
+"can this run", and the runner itself calls it. `coverage._liveness_state`
+returns PARKED / VOID-FORECLOSED / PILOT-BLOCKED / welded. `decisions.holds`
+opens its docstring with *"so an instrument can refuse to advertise them as
+work."* Four organs, all correct, all already factored into one place each —
+and **nobody had ever pointed them at the page that hands out the work.**
+
+**THE GENERALISATION, and it is the 65th audit's lesson climbing one more
+level.** That one said: *a blocker written as a sentence is invisible to every
+ranker until it becomes an edge.* The 93rd said the same of `run next` — *the
+readers all existed and nobody asked them.* This is the third instance and it
+names the pattern properly:
+
+> **Any document that names spec ids and directs work is a QUERY nobody has
+> run.** Registry, ledger, holds and decision docket are all resolvable; prose
+> that cites ids against them is checkable prose. If a page can make a claim
+> the ledger can refute, and no organ performs the join, the page will be wrong
+> and the cost will be paid one hand-derivation at a time — by the reader who
+> can least afford it, because they are the one who was told to act.
+
+`GOAL.md` got this treatment on 2026-08-25 (`coverage.goal_citations`, after a
+dangling falsifier stood 16 days) and again on 09-01 (the LIVENESS half, after
+nine days of `0 dangling` over a citation that resolved to a corpse). The
+steering pages got it today. **Where the other id-naming documents stand,
+checked rather than assumed, because a lesson that guesses at coverage is the
+thing it is warning about:** `docs/CHAMPIONS.md`'s arena ids are joined for
+existence (`champions --check`, after four decrees turned out to name
+falsifiers nobody had registered); `docs/REVIEW_QUEUE.md`'s ORDERED ids are
+joined for existence AND for a ledger row (`review_queue.py`'s `registered`
+input, 85th audit finding 3) but **not for liveness** — a row may still
+commission a spec that is parked or welded and read as an honest pending
+measurement; `docs/INTEGRATION_QUEUE.md` has **no reader at all** — every
+mention of it in `experiments/*.py` is a comment. Those two are the next
+instances of this pattern, named here rather than waited for.
+
+**THE HALF THAT IS NOT MECHANISABLE, and saying so is the load-bearing part.**
+The audit found TWO dead orders. Only one is visible from the registry. Item 1
+— *"`T2.10` — CPU, ten minutes"* — names a spec whose dependencies all pass and
+which the runner would accept without complaint; it is dead because its own
+docstring records that every scorer this project has measured tops out at
+**0.0667 against an unmoving 0.10 bar**, so the run buys the row already on the
+ledger. That is a MEASURED CEILING, and no join over `depends_on` can see it.
+**A resolver that flagged item 1 too would be guessing**, and the check
+therefore asserts its own silence on that case, so that a later reader cannot
+"improve" it into a guesser. Legality and futility are different questions;
+mechanising the first does not licence pretending you have mechanised the
+second.
+
+**AND THE FALSE POSITIVE BELONGS IN THE FIXTURE, NOT JUST IN THE FIX.** The
+first version flagged 2 of 10 live items, and one of the two was a
+**prohibition** — *"Do not re-run `T6.03` until `T2.10` is PASS"* — whose
+subject is BLOCKED behind exactly the spec the sentence names. The instrument
+was complaining that a correct order was correct. At that rate a detector meets
+`D27`'s prototype screen's fate (104 of 107 flagged, 3 of 12 hand-checks real)
+and is ignored inside a week, which converts a known gap into a green light.
+The rule that fixes it is three lines; **what makes it durable is that the live
+false positive is kept executable in the check**, so deleting the rule turns
+the fixture red rather than quietly restoring the noise.

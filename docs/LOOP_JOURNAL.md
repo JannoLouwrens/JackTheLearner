@@ -16467,3 +16467,126 @@ named every path I committed and touched nothing I did not write.
      is the same prediction, plus the attribution that makes it harmless. If
      `act` is non-zero that day, the audit's finding was wrong in the way it
      asked to be told about.
+
+---
+
+## 2026-09-14 ~02:0x–02:3x UTC — the 95th audit's B2: I built the reader that would have told me two of my own steering page's orders were dead, and it found one of them
+
+**MODEL: Opus** — `week:Fable` is pinned at 100% and the chain walked me here,
+which is expected and self-announcing. **THE GATE I ACTED ON: `week:all models`
+= 87%**, read at 02:07 and again at 02:16 (unchanged across the unit; do not
+model the meter). `--week-elapsed` 98%, so `pace_gate`'s line is ~88.7 and I am
+released with about three points of room and a weekly reset at 04:59.
+
+**WHAT I TOOK, AND WHY IT WAS NOT ITEMS 1 OR 3.** `PROGRESS.md`'s
+`FOR THE BUILDER` ranks `T2.10` first and `D1.0` attempt 3 third. **Both are
+un-executable and the 95th audit says so in RANK 3**, having checked the spec
+rather than the page: `T2.10`'s own docstring records seven encoder
+configurations topping out at **0.0667 against an unmoving 0.10 bar**, and
+`D1.0` has declared `depends_on: T1.08` since the Review's Part-2 strengthening
+turned `T1.08` PASS → FAIL at 10:05 on 09-13. Item 2 (`D25`) fired last night;
+items 4, 5 were executed; item 6 is a prohibition. `OVERSIGHT.md`'s
+`FOR THE BUILDER` has four: **B1 and B4 are done** (`ef2757c`, `4a028c1`), B3 is
+`T1.08` and is dated 09-16 on the Review's desk with *"I am not re-dating it"*
+written beside it. **B2 was the one open, executable order on either page.**
+
+**THE UNIT: `experiments/steering.py` (`963da5e`) — a legality reader for the
+steering pages' order lists.** It resolves every spec-shaped id under a
+`## FOR THE BUILDER` heading on `PROGRESS.md` and `OVERSIGHT.md` against four
+organs that already existed and that nobody had ever pointed at the page which
+hands out the work: `BY_ID` (UNKNOWN), `coverage._liveness_state` (HELD —
+parked / foreclosed / pilot-blocked / welded), `decisions.holds`
+(DECISION-HELD), and `Ledger.unsatisfied` (BLOCKED — the one that catches
+`D1.0`, and the same call the runner makes when it refuses a dispatch). It is
+`coverage.goal_citations` pointed at a different document, deliberately in that
+idiom and reading the shared predicates, so it cannot drift from `run blocked`.
+
+**THE NUMBER, measured on the live pages at `4a028c1`: 10 items across 2 pages,
+1 order whose subject the runner would refuse today** — `D1.0` BLOCKED behind
+`T1.08` (FAIL), with `T2.01` printed beneath it as a mention for the same
+reason. That is exactly the finding three consecutive builder slots derived by
+hand and the audit derived by hand a fourth time. It now prints in `run status`,
+which is where the hand-derivation was happening, and as `run steering`.
+
+**WHAT I REFUSED TO MECHANISE, AND THE CHECK ASSERTS THE SILENCE.** The audit
+found TWO dead orders and only one is visible from the registry. `T2.10`'s
+dependencies all pass — the runner would accept it without complaint — and it
+is dead because of a **measured ceiling in its own docstring**, which no join
+over `depends_on` can see. A reader that flagged it would be guessing, so
+`_check` fails if item 1 ever renders, with the reason written in the assertion.
+**Legality is mechanisable; futility is not, and mechanising the first does not
+licence pretending you have mechanised the second.**
+
+**THE FALSE POSITIVE I SHIPPED AND THEN CAUGHT, WITH ITS ARITHMETIC.** Version
+one flagged **2 of 10**, and one of the two was `PROGRESS.md` item 6 — *"Do not
+re-run `T6.03` until `T2.10` is PASS"* — whose subject is BLOCKED behind exactly
+the spec the sentence names. **The instrument was complaining that a correct
+prohibition was correct**, and at 50% that is `D27`'s screen (104 of 107
+flagged, 3 of 12 hand-checks real) arriving in a new file: ignored inside a
+week, and an ignored detector converts a known gap into a green light.
+`_PROHIBITION` renders it as CONFIRMED instead — **1 flag, 1 real, 1
+confirmation.** Per yesterday's lesson the live false positive is kept
+executable in the fixture, so deleting the three-line rule turns the check red
+rather than quietly restoring the noise.
+
+**WHAT THE FIXTURE IS.** A frozen verbatim snapshot of the 09-13 page, not the
+live one — asserting against today's `PROGRESS.md` would make the check pass or
+fail on what the Review wrote this morning, which is the opposite of a control.
+Four known answers with their reasons: item 3 flagged with `BLOCKED — T1.08
+(FAIL)` exactly, item 1 silent, item 6 CONFIRMED not flagged, and an item under
+`## FOR THE OWNER` not parsed at all. One thing the fixture taught me while
+being written: item 6 bolds **both** ids, so both are SUBJECTs and `T2.10`
+simply drops out at the verdict stage — the parser is not allowed to be clever
+about which of two bolded ids a sentence is "really" about, and the fixture now
+records that cost rather than hiding it.
+
+**HONEST LIMITS, in the module and not discovered later.** No discharge check
+(that is `oversight-for-the-builder-has-no-reader`, DUE 09-17, and the case
+against it in that row is right — building the easy half did not make the hard
+half easier, which I annotated onto the row as new evidence). No gate, no floor,
+per B2's explicit instruction: an order may legitimately be aspirational.
+No intent — SUBJECT vs MENTION is a heuristic about which span is bold and says
+so everywhere it prints. And the population is still the author's own selection
+(`FOR THE BUILDER` items have no ids — SYSTEM.md's 09-13 hazard); what keeps it
+honest is that **the page selects which ids get looked at and the ledger decides
+what is said about them.**
+
+**LESSON.** *A steering page is an ORDER LIST, and an order list with no reader
+is a spec registry with no `BY_ID`.* Third instance of the same shape — the 65th
+audit (a blocker written as a sentence is invisible to every ranker), the 93rd
+(`run next`: the readers all existed and nobody asked them), and now this. I
+checked the other id-naming documents rather than guessing: `CHAMPIONS.md`
+joined for existence, `REVIEW_QUEUE.md`'s ORDERED ids joined for existence and a
+ledger row but **not for liveness**, `INTEGRATION_QUEUE.md` **no reader at all**.
+Those two are the next instances, named now rather than waited for.
+
+**STALENESS BILL, PAID.** `T0.36` declares `experiments/run.py` in IMPL_DEPS —
+re-bought in `e0494ca`, **PASS, 32.25 s, 7/7 properties, 0 overstated roots**.
+Nothing else staled; `run stale` lists no other PASS.
+
+**RATCHET COUNTERS.** `review_queue_net_arrivals` 8, `MOVED -3 (clock -3,
+act +0)` — and I re-read it after annotating the queue row precisely to check
+that an annotation is not an arrival. It reads `act +0`, which is B1's
+decomposition being correct about my own edit hours after shipping.
+`review_queue_violations` 13, unchanged, still the Review's backlog.
+`unreachable` 97, AT floor. Nothing recorded.
+
+**HOUSEKEEPING.** No GPU dispatch — `W37` has 30 h and still no legal buyer;
+`D1.0` is the named one and it is BLOCKED behind `T1.08`, which is now printed
+by an instrument instead of re-derived. No detached launch, nothing owed in
+`declared_pids`, no process left running. 12 `claude` processes on the box; I
+named every path I committed and touched nothing I did not write.
+
+**NEXT ITERATION.**
+
+  1. **`D19` fires 09-15, not today.** `decisions` prints `due 2026-09-14` and
+     the check is `(today - decide_by).days > 0`. Fourth slot running that this
+     temptation is live; do not fire it early.
+  2. **Run `run steering` (or read the block in `run status`) BEFORE taking an
+     order off `PROGRESS.md` or `OVERSIGHT.md`.** That is the whole point of
+     the unit and it costs one line. Today it says item 3 is illegal.
+  3. **`T2.10` is still item 1 on the live page and is still a retrieval
+     redesign, not a ten-minute re-run** — 0.0667 against an unmoving 0.10.
+     The reader does NOT flag it and cannot; that limit is deliberate.
+  4. **Do not re-run `T6.03` until `T2.10` is PASS** — the ledger now agrees
+     with that order in print, which is the CONFIRMED line.

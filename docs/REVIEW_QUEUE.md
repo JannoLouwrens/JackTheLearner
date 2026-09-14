@@ -6305,3 +6305,55 @@ is implemented.
 
 **STALENESS BILL. None.** Nothing above touches a spec, a threshold or a
 certificate; the row asks for a ruling.
+
+    NOTE 2026-09-14 ~02:2x UTC (builder, executing the 95th audit's
+    `FOR THE BUILDER` B2, which names this row as its sibling and says
+    *"attach it to that row rather than opening a new one if the desk
+    prefers"* — ANNOTATING, not re-dating, and NOT stamping this row ACTED.
+    The ruling this row asks for is untouched.)
+
+    **THE SIBLING IS BUILT AND IT IS THE OTHER QUESTION.** `experiments/
+    steering.py` (`963da5e`) resolves every spec-shaped id in `PROGRESS.md`'s
+    and `OVERSIGHT.md`'s `FOR THE BUILDER` sections against `BY_ID`,
+    `Ledger.unsatisfied`, `coverage._liveness_state` and `decisions.holds`,
+    and prints the illegal ones in `run status` and as `run steering`.
+    Reporting-only and unfloored, per B2's explicit instruction. **It asks
+    whether an order COULD be executed. This row still owns whether one WAS**
+    — the harder half, and the one the case-against above is right about.
+
+    **THREE FACTS FROM BUILDING IT THAT BEAR ON THIS ROW'S RULING.**
+
+    (1) **The case-against's false-positive argument is confirmed, at a
+    measurable rate, on the easy half.** The first version flagged 2 of 10
+    live items and one of the two was `PROGRESS.md` item 6 — *"Do not re-run
+    `T6.03` until `T2.10` is PASS"* — an instrument complaining that a correct
+    prohibition was correct. On the LEGALITY question that was fixable in
+    three start-anchored lines because the verdict comes from the ledger. On
+    the DISCHARGE question there is no such backstop: the verdict would come
+    from prose, and case (1) predicts `D27`'s 104-of-107 rate. Building the
+    easy half did not make the hard half easier and this row should not be
+    ruled as though it did.
+
+    (2) **Live reading, for the record:** 10 items across the two pages, ONE
+    illegal — `D1.0` BLOCKED behind `T1.08` (FAIL), the order the 95th audit's
+    RANK 3 derived by hand after three builder slots had each derived it by
+    hand. The audit's OTHER dead order, item 1's `T2.10`, is deliberately NOT
+    flagged and the check asserts that silence: its dependencies pass and its
+    deadness is a measured ceiling in its own docstring. **Legality is
+    mechanisable; futility is not.** That distinction is new evidence for the
+    arm this row itself prefers (route items into this queue and give them a
+    `DUE:`), because a routed row can carry a reason a resolver cannot compute.
+
+    (3) **A gap this desk may want to price, raised as a question and not an
+    ask.** `steering.py` self-checks on every `run status` — parse, all four
+    verdicts, and each of the three render classes, against a frozen snapshot
+    of the 09-13 page — but it carries **no ledger certificate**, where its
+    two nearest siblings do (`T0.31` gates `review_queue.py`, `T0.36` gates
+    `run.py`). Registering a `T0.3x` for it is a real option and it is also
+    more instrument surface, which `3''` is wary of on measured grounds. I am
+    not choosing; the reader is honest about it either way, and the reason
+    that is tolerable is that it gates nothing.
+
+    **STALENESS BILL OF THIS NOTE. Paid, not none:** `T0.36` declares
+    `experiments/run.py` in IMPL_DEPS and was re-bought in `e0494ca` —
+    PASS, 32.25 s, 7/7 properties, 0 overstated roots.
