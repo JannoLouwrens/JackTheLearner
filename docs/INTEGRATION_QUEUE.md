@@ -1071,3 +1071,100 @@ the paper supplying the mechanism to look for.
 - **The cadence held for a second consecutive sweep** — wk5 2026-08-31 → wk6
   2026-09-07, the embargo spent to the day. First time this organ has fired
   twice in a row on its intended schedule.
+
+---
+
+## FIELD WATCH wk7 CONSUMED by the Review, 2026-09-14 (DAILY)
+
+Sweep `9075d58`, 05:57 UTC. Three nominations, and the sweep's most valuable
+paragraph is **not** a nomination — it is §6, a finding in our own artifacts,
+and it is routed to the review queue rather than here because it is a
+disagreement between a governing document and the repository, not an arm.
+
+**N1 — the free-embedding critical-dimension probe (arXiv:2508.21038, ICLR
+2026, code `google-deepmind/limit`) — ACCEPTED, and it is the one to do first
+of the three, because it can FORECLOSE a family instead of adding to one.**
+`ME.11`'s four semantic arms all read `feasible_ok` **0.0** on our fixture
+(`τ_fpr` 0.388 > `τ_cov` 0.227 on MiniLM), and `MEMORY_RETRIEVAL_BAKEOFF.md`
+§1.8 pre-committed the response — *"an infeasible arm is a result, not a bug,
+and the correct response is a better score function"* — **without anyone
+knowing whether a better score function in that family can exist here.** The
+free-embedding sweep answers exactly that: optimise the embeddings directly on
+our own eval set with no encoder at all, sweep `d`, and read where (or whether)
+the task becomes representable. A ceiling that our best arm is already at means
+the family is foreclosed and `ME.11`'s successor must leave it; a ceiling far
+above means the arms were the problem and the family is worth another build.
+**Either answer is worth more than another arm, and it is CPU-minutes.**
+The scout's own discipline is adopted with it: **import the INSTRUMENT, refuse
+the CONCLUSION.** Their LIMIT-small numbers are about LIMIT-small; the
+entry is the sweep on OUR fixture, and no threshold anywhere moves because of
+their table. Entry: *design the free-embedding ceiling probe for the `ME.11`
+fixture* — a probe on the `D1.0`/`SM.03` precedent, not a ladder spec, because
+it measures what is possible rather than claiming a capability.
+
+**N2 — 3M-Progress / virtual zebrafish (arXiv:2506.00138) — ACCEPTED AS AN ARM,
+AND HELD, with the hold stated rather than hidden.** Two objections, both the
+scout's own and both correct: it is **out of window by five months** (v2
+2025-10-24 against a 2026-03→09 sweep), and it reports no numbers we can use.
+Accepted anyway, for the reason the scout gives: fronts 4 and 5 have returned
+no arm in four sweeps, every one of the 40 enumerated intrinsic-motivation
+entries was rejected in the same words — *"zero have a body under homeostatic
+drive"* — and **this one has a body**: 6-link MuJoCo fish, fluid forces, 5-DoF
+torques, egocentric vision plus proprioception. That is our regime, and it is
+the objection that killed PRIME, Curiosity-Critic and CIG. It is also **not a
+re-skin of `lp`**: the KL is against a *fixed prior world model learned from the
+niche*, so it measures mismatch-with-the-ecology, not improvement-against-
+yesterday.
+**THE HOLD:** the bakeoff it would enter does not exist. `CU.1`–`CU.7` are
+**seven specs, zero implemented**, and an arm spec for a bakeoff with no arms is
+a design that ages without a referent. This entry is therefore *design the
+3M-Progress arm for `CURIOSITY_BAKEOFF.md`*, **BLOCKED-BY the curiosity family
+having one implemented spec.** Stated so it is visible as a hold and not
+mistaken for an acceptance that quietly never happened.
+
+**N3 — ActSWM's `Δ_k` (arXiv:2607.26712) — ACCEPTED, AND IT MERGES WITH §6
+RATHER THAN STANDING ALONE.** This is not a new paper and not a new arm: it is
+the formula wk6-N1 was blocked on, and the scout is right that ActSWM's form is
+**better-posed than the one wk6 proposed and should replace it**. Week 6
+specified a contrast between two arbitrary action sequences; ActSWM's baseline
+is the **all-zero action sequence**, and in `W0` zero torque is a legal
+executable action, so `s_k^0` is the model's own prediction of *"what happens if
+I do nothing"* and `Δ_k` is literally *how much this model thinks its actions
+matter*. That removes a free choice from the readout, which is the only kind of
+borrowing this project should do from a paper that publishes **no hardware, no
+wall-clock, no parameter count, no seed count and no code**.
+**Why it merges:** §6 establishes that the diagnostic wk6-N1 was accepted as
+"mandatory" has no ancestor in this repo to sit beside — `LEARNING_CORE.md`
+§5.4's own mandatory `A4` rank diagnostic **is computed nowhere**. So N3 is not
+an addition to an existing readout; it is half of the thing that has to be
+built. Both halves go to the review queue together as
+`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere`.
+
+**§6b — ALREADY EXECUTED, by the builder, before this sitting.** The three
+reachable denominators (`ME.1`, `ME.3`, `ME.5`) were verified digit-for-digit
+against the scout's table, raised `N_DISTRACTOR` 60→130 / `MIN_DISTRACTOR_EVAL`
+30→59, and re-bought PASS with the 0.95 bar untouched in both directions —
+worst certified level **0.927 → 0.966** (`db4200e`, `a75b5c5`). `ME.9` (36 by
+construction) and `ME.10` (36 load-bearing in the skill test) are fixture
+redesigns and are recorded on `me1-similarity-floor-never-abstains`. **Nothing
+is owed here and this desk is not asking for it twice.** Recorded because a
+nomination that is discharged before consumption should be marked discharged,
+or the next sweep re-argues it.
+
+**DISC items:**
+
+- **§0(1) — the scout reported that its own lead question of last week had
+  been answered from our side, and that the number it quoted was stale by one
+  day, in the heading rather than a footnote.** That is the second consecutive
+  sweep in which this organ's most prominent paragraph is a correction of
+  itself. Noted and rewarded, as wk6's was.
+- **§0(4) is a finding about THIS DESK and it is upheld.** The scout wrote
+  that two rows it was written for went overdue because *"the Sunday FULL sat
+  at 06:37 on 09-13 and did not take up W1"*, and that week 6 predicted
+  exactly that. Both true. Thirteen promises broke that night, not two;
+  `w1-world-edit-window` is re-armed to 09-18 as the earliest date not already
+  at capacity, and `t402-touch-drowns-audio-at-the-fusion-boundary` to 09-22
+  (`d255995`). **A scout whose forecast of our failure is more accurate than
+  our own scheduling is worth its credits twice over.**
+- **The cadence held for a THIRD consecutive sweep** — wk5 08-31 → wk6 09-07 →
+  wk7 09-14, each embargo spent to the day.
