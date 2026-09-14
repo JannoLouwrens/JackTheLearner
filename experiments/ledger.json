@@ -8895,30 +8895,16 @@
       "status": "FAIL"
     },
     "ME.1": {
-      "amended": [
-        {
-          "at": "2026-09-07T10:10:02",
-          "by": "PROGRESS-FTB-2-2026-09-07",
-          "changes": [
-            {
-              "field": "impl_sha",
-              "from": "a721df40d4d6011e",
-              "proof": "reconstructed a721df40d4d6011e from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
-              "to": "1511dae37b8a12bc"
-            }
-          ],
-          "commit": "ce33621+dirty",
-          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
-        }
-      ],
-      "attempt": 8,
-      "commit": "80f8c80",
+      "amended": [],
+      "attempt": 10,
+      "commit": "db4200e",
       "compute_s": null,
       "control_metrics": {
         "recency_only_recall": 0.0,
         "recency_only_recall_std": 0.0
       },
-      "duration_s": 1.93,
+      "dirty_files": null,
+      "duration_s": 2.0,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -9184,19 +9170,103 @@
           ],
           "spec_sha": "0bef0b2f1432595f",
           "status": "PASS"
+        },
+        {
+          "amended": [
+            {
+              "at": "2026-09-07T10:10:02",
+              "by": "PROGRESS-FTB-2-2026-09-07",
+              "changes": [
+                {
+                  "field": "impl_sha",
+                  "from": "a721df40d4d6011e",
+                  "proof": "reconstructed a721df40d4d6011e from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+                  "to": "1511dae37b8a12bc"
+                }
+              ],
+              "commit": "ce33621+dirty",
+              "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+            }
+          ],
+          "commit": "80f8c80",
+          "control_metrics": {
+            "recency_only_recall": 0.0,
+            "recency_only_recall_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "1511dae37b8a12bc",
+          "message": "",
+          "metrics": {
+            "cued_recall": 0.85,
+            "cued_recall_std": 0.0136355,
+            "distractor_abstention": 1.0,
+            "distractor_abstention_std": 0.0,
+            "distractor_evaluated": 40.0,
+            "distractor_evaluated_std": 4.546061,
+            "distractor_excluded": 20.0,
+            "distractor_excluded_std": 4.546061,
+            "events": 1000.0,
+            "events_std": 0.0,
+            "fabricated_abstention": 1.0,
+            "fabricated_abstention_std": 0.0,
+            "recall_after_reload": 0.85,
+            "recall_after_reload_std": 0.0136355
+          },
+          "ran_at": "2026-09-06T14:19:16",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "0bef0b2f1432595f",
+          "status": "PASS"
+        },
+        {
+          "commit": "9075d58+dirty",
+          "control_metrics": {
+            "recency_only_recall": 0.0,
+            "recency_only_recall_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "9cc0803e128f8d34",
+          "message": "",
+          "metrics": {
+            "cued_recall": 0.85,
+            "cued_recall_std": 0.0136355,
+            "distractor_abstention": 1.0,
+            "distractor_abstention_std": 0.0,
+            "distractor_evaluated": 94.666667,
+            "distractor_evaluated_std": 4.921608,
+            "distractor_excluded": 35.333333,
+            "distractor_excluded_std": 4.921608,
+            "events": 1000.0,
+            "events_std": 0.0,
+            "fabricated_abstention": 1.0,
+            "fabricated_abstention_std": 0.0,
+            "recall_after_reload": 0.85,
+            "recall_after_reload_std": 0.0136355
+          },
+          "ran_at": "2026-09-14T06:18:35",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "0bef0b2f1432595f",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "1511dae37b8a12bc",
+      "impl_sha": "9cc0803e128f8d34",
       "message": "",
       "metrics": {
         "cued_recall": 0.85,
         "cued_recall_std": 0.0136355,
         "distractor_abstention": 1.0,
         "distractor_abstention_std": 0.0,
-        "distractor_evaluated": 40.0,
-        "distractor_evaluated_std": 4.546061,
-        "distractor_excluded": 20.0,
-        "distractor_excluded_std": 4.546061,
+        "distractor_evaluated": 94.666667,
+        "distractor_evaluated_std": 4.921608,
+        "distractor_excluded": 35.333333,
+        "distractor_excluded_std": 4.921608,
         "events": 1000.0,
         "events_std": 0.0,
         "fabricated_abstention": 1.0,
@@ -9205,9 +9275,9 @@
         "recall_after_reload_std": 0.0136355
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 215.1,
+      "peak_rss_mb": 215.5,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T14:19:16",
+      "ran_at": "2026-09-14T06:18:59",
       "seeds": [
         0,
         1,
@@ -9720,30 +9790,16 @@
       "status": "PASS"
     },
     "ME.11.A": {
-      "amended": [
-        {
-          "at": "2026-09-07T10:10:16",
-          "by": "PROGRESS-FTB-2-2026-09-07",
-          "changes": [
-            {
-              "field": "impl_sha",
-              "from": "991869b8ff2550a2",
-              "proof": "reconstructed 991869b8ff2550a2 from git ded4219c0d25; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
-              "to": "2d49e2010071d5d4"
-            }
-          ],
-          "commit": "ce33621+dirty",
-          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
-        }
-      ],
-      "attempt": 4,
-      "commit": "ded4219",
+      "amended": [],
+      "attempt": 5,
+      "commit": "db4200e",
       "compute_s": null,
       "control_metrics": {
         "templated_recall": 0.85,
         "templated_recall_std": 0.0136355
       },
-      "duration_s": 3.23,
+      "dirty_files": null,
+      "duration_s": 3.3,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -9897,9 +9953,76 @@
           ],
           "spec_sha": "a68aa19944eadc1f",
           "status": "PASS"
+        },
+        {
+          "amended": [
+            {
+              "at": "2026-09-07T10:10:16",
+              "by": "PROGRESS-FTB-2-2026-09-07",
+              "changes": [
+                {
+                  "field": "impl_sha",
+                  "from": "991869b8ff2550a2",
+                  "proof": "reconstructed 991869b8ff2550a2 from git ded4219c0d25; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+                  "to": "2d49e2010071d5d4"
+                }
+              ],
+              "commit": "ce33621+dirty",
+              "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+            }
+          ],
+          "commit": "ded4219",
+          "control_metrics": {
+            "templated_recall": 0.85,
+            "templated_recall_std": 0.0136355
+          },
+          "gpu_job_id": null,
+          "impl_sha": "2d49e2010071d5d4",
+          "message": "",
+          "metrics": {
+            "abstain_N1": 1.0,
+            "abstain_N1_std": 0.0,
+            "abstain_N2": 1.0,
+            "abstain_N2_std": 0.0,
+            "abstain_N3": 1.0,
+            "abstain_N3_std": 0.0,
+            "abstain_N4": 1.0,
+            "abstain_N4_std": 0.0,
+            "abstention_certify": 1.0,
+            "abstention_certify_std": 0.0,
+            "abstention_family_min": 1.0,
+            "abstention_family_min_std": 0.0,
+            "fixture_hash_seed_only": "9c915329f4755c3e",
+            "headline_cues": 160.0,
+            "headline_cues_std": 0.0,
+            "n_certify": 300.0,
+            "n_certify_std": 0.0,
+            "paraphrase_answer_rate": 0.0,
+            "paraphrase_answer_rate_std": 0.0,
+            "paraphrase_recall_at_1": 0.0,
+            "paraphrase_recall_at_1_std": 0.0,
+            "recall_R1": 0.0,
+            "recall_R1_std": 0.0,
+            "recall_R2": 0.0,
+            "recall_R2_std": 0.0,
+            "recall_R3": 0.0,
+            "recall_R3_std": 0.0,
+            "recall_R4": 0.0,
+            "recall_R4_std": 0.0,
+            "recency_null_recall": 0.0,
+            "recency_null_recall_std": 0.0
+          },
+          "ran_at": "2026-09-07T08:19:47",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "a68aa19944eadc1f",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "2d49e2010071d5d4",
+      "impl_sha": "7ea96fe5c132697b",
       "message": "",
       "metrics": {
         "abstain_N1": 1.0,
@@ -9935,9 +10058,9 @@
         "recency_null_recall_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 219.6,
+      "peak_rss_mb": 220.3,
       "preserved_impl": null,
-      "ran_at": "2026-09-07T08:19:47",
+      "ran_at": "2026-09-14T06:20:53",
       "seeds": [
         0,
         1,
@@ -10600,30 +10723,16 @@
       "status": "PASS"
     },
     "ME.3": {
-      "amended": [
-        {
-          "at": "2026-09-07T10:10:04",
-          "by": "PROGRESS-FTB-2-2026-09-07",
-          "changes": [
-            {
-              "field": "impl_sha",
-              "from": "8cf93829dfa86712",
-              "proof": "reconstructed 8cf93829dfa86712 from git a59363a2f56c; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
-              "to": "3c18ee4f0675baa9"
-            }
-          ],
-          "commit": "ce33621+dirty",
-          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
-        }
-      ],
-      "attempt": 5,
-      "commit": "a59363a",
+      "amended": [],
+      "attempt": 6,
+      "commit": "db4200e",
       "compute_s": null,
       "control_metrics": {
         "wrong_agent_acc": 0.25,
         "wrong_agent_acc_std": 0.0900051
       },
-      "duration_s": 3.21,
+      "dirty_files": null,
+      "duration_s": 3.23,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -10763,9 +10872,105 @@
           ],
           "spec_sha": "03e5978bfbe4be32",
           "status": "FAIL"
+        },
+        {
+          "amended": [
+            {
+              "at": "2026-09-07T10:10:04",
+              "by": "PROGRESS-FTB-2-2026-09-07",
+              "changes": [
+                {
+                  "field": "impl_sha",
+                  "from": "8cf93829dfa86712",
+                  "proof": "reconstructed 8cf93829dfa86712 from git a59363a2f56c; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+                  "to": "3c18ee4f0675baa9"
+                }
+              ],
+              "commit": "ce33621+dirty",
+              "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+            }
+          ],
+          "commit": "a59363a",
+          "control_metrics": {
+            "wrong_agent_acc": 0.25,
+            "wrong_agent_acc_std": 0.0900051
+          },
+          "gpu_job_id": null,
+          "impl_sha": "3c18ee4f0675baa9",
+          "message": "",
+          "metrics": {
+            "aggregation_qa_gain": 0.343733,
+            "aggregation_qa_gain_std": 0.0449794,
+            "base_rate": 0.25,
+            "base_rate_std": 0.0,
+            "distractor_abstention": 1.0,
+            "distractor_abstention_std": 0.0,
+            "distractor_evaluated": 39.333333,
+            "distractor_evaluated_std": 2.867442,
+            "distractor_excluded": 20.666667,
+            "distractor_excluded_std": 2.867442,
+            "n_beliefs": 64.0,
+            "n_beliefs_std": 0.0,
+            "n_questions": 96.0,
+            "n_questions_std": 0.0,
+            "raw_acc": 0.625,
+            "raw_acc_std": 0.0224666,
+            "raw_answer_rate": 1.0,
+            "raw_answer_rate_std": 0.0,
+            "raw_tokens_mean": 40.0,
+            "raw_tokens_mean_std": 0.0,
+            "reflect_acc": 0.968733,
+            "reflect_acc_std": 0.0225129,
+            "reflect_answer_rate": 1.0,
+            "reflect_answer_rate_std": 0.0,
+            "reflect_tokens_mean": 36.0,
+            "reflect_tokens_mean_std": 0.0
+          },
+          "ran_at": "2026-09-07T09:11:36",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "03e5978bfbe4be32",
+          "status": "PASS",
+          "supersedes_fail": {
+            "commit": "80f8c80",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "1d3316f12869e0c9",
+            "metrics": {
+              "aggregation_qa_gain": 0.708333,
+              "aggregation_qa_gain_std": 0.0371075,
+              "base_rate": 0.25,
+              "base_rate_std": 0.0,
+              "distractor_abstention": 1.0,
+              "distractor_abstention_std": 0.0,
+              "distractor_evaluated": 39.333333,
+              "distractor_evaluated_std": 2.867442,
+              "distractor_excluded": 20.666667,
+              "distractor_excluded_std": 2.867442,
+              "n_beliefs": 64.0,
+              "n_beliefs_std": 0.0,
+              "n_questions": 96.0,
+              "n_questions_std": 0.0,
+              "raw_acc": 0.291667,
+              "raw_acc_std": 0.0371075,
+              "raw_tokens_mean": 0.0,
+              "raw_tokens_mean_std": 0.0,
+              "reflect_acc": 1.0,
+              "reflect_acc_std": 0.0,
+              "reflect_tokens_mean": 15.8,
+              "reflect_tokens_mean_std": 0.0816497
+            },
+            "ran_at": "2026-09-06T14:19:19",
+            "spec_changed": false,
+            "spec_sha": "03e5978bfbe4be32",
+            "status": "FAIL"
+          }
         }
       ],
-      "impl_sha": "3c18ee4f0675baa9",
+      "impl_sha": "dd758eaf40cbc141",
       "message": "",
       "metrics": {
         "aggregation_qa_gain": 0.343733,
@@ -10774,10 +10979,10 @@
         "base_rate_std": 0.0,
         "distractor_abstention": 1.0,
         "distractor_abstention_std": 0.0,
-        "distractor_evaluated": 39.333333,
-        "distractor_evaluated_std": 2.867442,
-        "distractor_excluded": 20.666667,
-        "distractor_excluded_std": 2.867442,
+        "distractor_evaluated": 87.666667,
+        "distractor_evaluated_std": 3.399346,
+        "distractor_excluded": 42.333333,
+        "distractor_excluded_std": 3.399346,
         "n_beliefs": 64.0,
         "n_beliefs_std": 0.0,
         "n_questions": 96.0,
@@ -10796,9 +11001,9 @@
         "reflect_tokens_mean_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 213.3,
+      "peak_rss_mb": 214.3,
       "preserved_impl": null,
-      "ran_at": "2026-09-07T09:11:36",
+      "ran_at": "2026-09-14T06:19:03",
       "seeds": [
         0,
         1,
@@ -10806,41 +11011,7 @@
       ],
       "spec_id": "ME.3",
       "spec_sha": "03e5978bfbe4be32",
-      "status": "PASS",
-      "supersedes_fail": {
-        "commit": "80f8c80",
-        "dirty": false,
-        "impl_changed": true,
-        "impl_sha": "1d3316f12869e0c9",
-        "metrics": {
-          "aggregation_qa_gain": 0.708333,
-          "aggregation_qa_gain_std": 0.0371075,
-          "base_rate": 0.25,
-          "base_rate_std": 0.0,
-          "distractor_abstention": 1.0,
-          "distractor_abstention_std": 0.0,
-          "distractor_evaluated": 39.333333,
-          "distractor_evaluated_std": 2.867442,
-          "distractor_excluded": 20.666667,
-          "distractor_excluded_std": 2.867442,
-          "n_beliefs": 64.0,
-          "n_beliefs_std": 0.0,
-          "n_questions": 96.0,
-          "n_questions_std": 0.0,
-          "raw_acc": 0.291667,
-          "raw_acc_std": 0.0371075,
-          "raw_tokens_mean": 0.0,
-          "raw_tokens_mean_std": 0.0,
-          "reflect_acc": 1.0,
-          "reflect_acc_std": 0.0,
-          "reflect_tokens_mean": 15.8,
-          "reflect_tokens_mean_std": 0.0816497
-        },
-        "ran_at": "2026-09-06T14:19:19",
-        "spec_changed": false,
-        "spec_sha": "03e5978bfbe4be32",
-        "status": "FAIL"
-      }
+      "status": "PASS"
     },
     "ME.4": {
       "amended": [
@@ -11028,24 +11199,9 @@
       "status": "PASS"
     },
     "ME.5": {
-      "amended": [
-        {
-          "at": "2026-09-07T10:10:08",
-          "by": "PROGRESS-FTB-2-2026-09-07",
-          "changes": [
-            {
-              "field": "impl_sha",
-              "from": "634155e62f0c09f8",
-              "proof": "reconstructed 634155e62f0c09f8 from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
-              "to": "ceafed31f6d61033"
-            }
-          ],
-          "commit": "ce33621+dirty",
-          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
-        }
-      ],
-      "attempt": 3,
-      "commit": "80f8c80",
+      "amended": [],
+      "attempt": 4,
+      "commit": "db4200e",
       "compute_s": null,
       "control_metrics": {
         "rec_p1_100": 0.01,
@@ -11057,7 +11213,8 @@
         "rec_p1_1000_std": 0.0,
         "rec_p1_100_std": 0.0
       },
-      "duration_s": 54.33,
+      "dirty_files": null,
+      "duration_s": 60.28,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -11198,9 +11355,111 @@
           ],
           "spec_sha": "fd1076a8c8a4bf78",
           "status": "PASS"
+        },
+        {
+          "amended": [
+            {
+              "at": "2026-09-07T10:10:08",
+              "by": "PROGRESS-FTB-2-2026-09-07",
+              "changes": [
+                {
+                  "field": "impl_sha",
+                  "from": "634155e62f0c09f8",
+                  "proof": "reconstructed 634155e62f0c09f8 from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+                  "to": "ceafed31f6d61033"
+                }
+              ],
+              "commit": "ce33621+dirty",
+              "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+            }
+          ],
+          "commit": "80f8c80",
+          "control_metrics": {
+            "rec_p1_100": 0.01,
+            "rec_p1_1000": 0.0,
+            "rec_p1_10000": 0.0,
+            "rec_p1_100000": 0.0,
+            "rec_p1_100000_std": 0.0,
+            "rec_p1_10000_std": 0.0,
+            "rec_p1_1000_std": 0.0,
+            "rec_p1_100_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "ceafed31f6d61033",
+          "message": "",
+          "metrics": {
+            "a_match_100": 1.0,
+            "a_match_1000": 1.0,
+            "a_match_10000": 1.0,
+            "a_match_100000": 1.0,
+            "a_match_100000_std": 0.0,
+            "a_match_10000_std": 0.0,
+            "a_match_1000_std": 0.0,
+            "a_match_100_std": 0.0,
+            "a_p1_100": 0.996667,
+            "a_p1_1000": 0.966667,
+            "a_p1_10000": 0.773333,
+            "a_p1_100000": 0.206667,
+            "a_p1_100000_std": 0.046428,
+            "a_p1_10000_std": 0.0235702,
+            "a_p1_1000_std": 0.0169967,
+            "a_p1_100_std": 0.00471405,
+            "abstain_100": 1.0,
+            "abstain_1000": 1.0,
+            "abstain_10000": 1.0,
+            "abstain_100000": 1.0,
+            "abstain_100000_std": 0.0,
+            "abstain_10000_std": 0.0,
+            "abstain_1000_std": 0.0,
+            "abstain_100_std": 0.0,
+            "distractor_abstain_100": 1.0,
+            "distractor_abstain_1000": 1.0,
+            "distractor_abstain_10000": 1.0,
+            "distractor_abstain_100000": 1.0,
+            "distractor_abstain_100000_std": 0.0,
+            "distractor_abstain_10000_std": 0.0,
+            "distractor_abstain_1000_std": 0.0,
+            "distractor_abstain_100_std": 0.0,
+            "distractor_eval_100": 52.0,
+            "distractor_eval_1000": 60.0,
+            "distractor_eval_10000": 60.0,
+            "distractor_eval_100000": 60.0,
+            "distractor_eval_100000_std": 0.0,
+            "distractor_eval_10000_std": 0.0,
+            "distractor_eval_1000_std": 0.0,
+            "distractor_eval_100_std": 2.160247,
+            "events": 100000.0,
+            "events_std": 0.0,
+            "lat_ms_100": 0.03,
+            "lat_ms_1000": 0.223333,
+            "lat_ms_10000": 2.3,
+            "lat_ms_100000": 27.173333,
+            "lat_ms_100000_std": 0.596955,
+            "lat_ms_10000_std": 0.0616441,
+            "lat_ms_1000_std": 0.00471405,
+            "lat_ms_100_std": 0.0,
+            "u_p1_100": 1.0,
+            "u_p1_1000": 1.0,
+            "u_p1_10000": 1.0,
+            "u_p1_100000": 1.0,
+            "u_p1_100000_std": 0.0,
+            "u_p1_10000_std": 0.0,
+            "u_p1_1000_std": 0.0,
+            "u_p1_100_std": 0.0,
+            "u_p1_reload_100000": 1.0,
+            "u_p1_reload_100000_std": 0.0
+          },
+          "ran_at": "2026-09-06T14:22:03",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "fd1076a8c8a4bf78",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "ceafed31f6d61033",
+      "impl_sha": "6f07d24456b09e15",
       "message": "",
       "metrics": {
         "a_match_100": 1.0,
@@ -11235,22 +11494,22 @@
         "distractor_abstain_10000_std": 0.0,
         "distractor_abstain_1000_std": 0.0,
         "distractor_abstain_100_std": 0.0,
-        "distractor_eval_100": 52.0,
-        "distractor_eval_1000": 60.0,
-        "distractor_eval_10000": 60.0,
-        "distractor_eval_100000": 60.0,
+        "distractor_eval_100": 110.333333,
+        "distractor_eval_1000": 130.0,
+        "distractor_eval_10000": 130.0,
+        "distractor_eval_100000": 130.0,
         "distractor_eval_100000_std": 0.0,
         "distractor_eval_10000_std": 0.0,
         "distractor_eval_1000_std": 0.0,
-        "distractor_eval_100_std": 2.160247,
+        "distractor_eval_100_std": 1.247219,
         "events": 100000.0,
         "events_std": 0.0,
         "lat_ms_100": 0.03,
         "lat_ms_1000": 0.223333,
-        "lat_ms_10000": 2.3,
-        "lat_ms_100000": 27.173333,
-        "lat_ms_100000_std": 0.596955,
-        "lat_ms_10000_std": 0.0616441,
+        "lat_ms_10000": 2.296667,
+        "lat_ms_100000": 26.706667,
+        "lat_ms_100000_std": 0.454924,
+        "lat_ms_10000_std": 0.0601849,
         "lat_ms_1000_std": 0.00471405,
         "lat_ms_100_std": 0.0,
         "u_p1_100": 1.0,
@@ -11265,9 +11524,9 @@
         "u_p1_reload_100000_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 443.6,
+      "peak_rss_mb": 443.9,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T14:22:03",
+      "ran_at": "2026-09-14T06:20:08",
       "seeds": [
         0,
         1,

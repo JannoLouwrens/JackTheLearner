@@ -16782,3 +16782,56 @@ free, no legal buyer until the desk's `T1.08` fixture ruling, DUE 09-16). If
 the 09-16 disposition rules on `spread_ratio` without the control's x1.255,
 the (e')/(e'') findings did not arrive — that is the tell
 `oversight-for-the-builder-has-no-reader` (DUE 09-17) exists for.
+
+## 2026-09-14 ~06:2x UTC — field watch wk7 §6b executed: three ME denominators raised to certify their own bar; ME.9/ME.10 recorded as construction-capped
+
+Model: Fable. Meters at the top of the slot: `week:all models` 2%, `week:Fable`
+2% (fresh weekly reset); acting on all-models. Board verified before choosing:
+`run next` 0 fresh, `coverage` 1 FILL-HELD class (`D19`, firable 09-15, not
+today — fourth slot running), steering reader flags PROGRESS item 3 illegal
+(`D1.0` BLOCKED <- `T1.08`), `T2.10` dead on its own docstring. The one thing
+NEWER than the last builder slot was the 05:57 field watch (`9075d58`), and its
+§6b is checkable arithmetic against our own ledger, so I verified it and then
+executed its mechanical half.
+
+**Verified first, digit for digit:** the five distractor denominators in the
+ledger match the field watch table (ME.9 15, ME.10 36, ME.3 39.3±2.9, ME.1
+40.0±4.5, ME.5 52-60), and §1.8's algebra says a perfect run over m negatives
+certifies γ^(1/m) at 1-γ, so m>=59 at γ=0.05 is the floor that can certify the
+0.95 bar at all. Also reproduced §6's A4 greps (two prose hits, zero
+implementations) — that finding is a decision fork (build the diagnostic /
+re-examine the seat / amend LEARNING_CORE §5.4) and today's Sunday FULL reads
+the field watch directly, so I routed nothing and touched nothing there.
+
+**THE UNIT (`db4200e` + runner rows):** ME.1/ME.3/ME.5 `N_DISTRACTOR` 60->130,
+`MIN_DISTRACTOR_EVAL` 30->59; the 0.95 bar untouched in both directions; main
+experiments untouched (ME.1's control builds its own store, ME.3's cues are
+extra reads, ME.5's sampler has 380k absent tuples for 130 draws). Verified
+offline via `_experiment` before any ledger write, then re-bought on committed
+code: **ME.1 PASS a10 (evaluated 94.7±4.9), ME.3 PASS a6 (87.7±3.4), ME.5 PASS
+a4 (110-130 per decade), abstention 1.0 everywhere — worst certified level
+0.966, up from 0.927.** Staleness bill: ME.11.A (PASS, declares
+me_1_event_log.py in IMPL_DEPS) re-bought PASS in the same slot. ME.11.B/C/D
+went stale transitively (they declare ME.11.A) — settled FAILs, no certificate
+to re-buy, no re-run owed per the T3.01 precedent; the flags are honest and
+they are mine. UB.10's stale VOID predates this slot.
+
+**NOT executed, and recorded instead of improvised:** ME.9 is capped at 36 BY
+CONSTRUCTION (3 speakers x 12 topics; full censorship degenerates the control
+store) and ME.10's 36 held pairs are load-bearing in the skill test (N_SEEN 84
+of 120 feeds the net against an unmoved MIN_SKILL 0.85). Reaching m>=59 there
+is a fixture redesign. Both went as an evidence addendum onto
+`me1-similarity-floor-never-abstains` — the row that shipped the conjunct,
+DISPOSITIONED, DUE TODAY, so the desk reads it at today's sitting. An addendum
+is not an arrival (`net_arrivals` discipline held). Lesson generalised in
+LESSONS.md: *a transplanted control inherits the donor's design but not its
+denominator — re-run the certification arithmetic at the destination's fixture
+size*, with the cheap scan tell (`m < ln γ / ln B` cannot certify B).
+
+**NEXT ITERATION:** `D19`'s NO-FETCH default is firable from 09-15 00:00 (the
+required wording: "the owner did not rule by 2026-09-14, so the pre-registered
+default fired"). Watch what today's FULL does with three things it now has in
+front of it: the §6 A4 fork, the me1-row addendum (ME.9/ME.10 fixture
+redesigns), and `T1.08`'s fixture ruling owed 09-16. The board otherwise stays
+empty — do not manufacture a W37 dispatch (30 h, no legal buyer until the
+T1.08 ruling).

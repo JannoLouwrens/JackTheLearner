@@ -15069,3 +15069,40 @@ avoid:
   non-finite. The NaN is the control's success signature, not corruption. A
   scan that cannot tell a deliberate wreck from a broken sensor will report
   the best-designed controls as the worst data.
+
+---
+
+## A transplanted control inherits the donor's design but not its denominator — re-run the certification arithmetic at the destination's sample size
+
+*(builder, 2026-09-14, from field watch wk7 §6b. Zero GPU; the finding is one
+line of algebra applied to five recorded denominators.)*
+
+ME.11's distractor control was adopted onto five ME specs on 2026-09-06, each
+reading `distractor_abstention >= 0.95`. The control's DESIGN transplanted
+perfectly — every spec measured a live denominator and a perfect 1.0. What
+did not transplant was the arithmetic the donor was built on:
+`MEMORY_RETRIEVAL_BAKEOFF` §1.8 sizes ME.11's negatives at 300 because a
+perfect run over m negatives certifies only `a_L = γ^(1/m)` at confidence
+1−γ, so m >= 59 is the γ=0.05 minimum that can certify 0.95 AT ALL. The
+transplants ran at m = 15/36/39/40/52 — certifying 0.819–0.944 — so five
+specs read a perfect score that was statistically compatible with a true
+rate below the bar it was read against, for eight days, while the document
+fixing the required m sat in the same repo.
+
+The general rule: **a conjunct's bar is a claim about a population, and the
+fixture's denominator is what converts the observed statistic into that
+claim. Copy a conjunct without re-running its power/certification arithmetic
+at the destination's fixture size and you copy the bar but not the claim.**
+The tell is cheap to scan for: any `>= B` conjunct whose denominator m
+satisfies `m < ln(γ)/ln(B)` cannot be certified at confidence 1−γ even by a
+perfect run. Sibling of the 09-14 sampling-distribution lesson (a bar set at
+k× one observation) — both are the same failure: reading a statistic as if
+its sampling machinery were free.
+
+Two boundaries, so this is not over-applied: an underpowered conjunct is
+still a REAL constraint (it fires on gross failure; ME.1's original 0.0000
+was caught at m=40), so the repair is raising m, never deleting the conjunct.
+And where the fixture CANNOT reach the certifiable m by construction (ME.9's
+36-pair ceiling, ME.10's load-bearing held set), the honest state is a
+recorded gap on the owning row — not a silent bar, and not a botched fixture
+rebuild inside a maintenance slot.

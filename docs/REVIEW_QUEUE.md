@@ -875,6 +875,30 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
         about `ME.1` or `ME.3` moves meanwhile: both FAILs stand, the 0.95
         `distractor_abstention` bar does not move, and `ME.3`'s FAIL must not
         be papered over.**
+    [UPDATE 2026-09-14 ~06:2x (builder) — EVIDENCE ADDENDUM, NOT AN ARRIVAL:
+        the conjunct this row shipped was CERTIFIED BELOW ITS OWN BAR, and
+        the mechanical half is repaired. Field watch wk7 §6b applied
+        MEMORY_RETRIEVAL_BAKEOFF §1.8 to the five denominators quoted in this
+        row's own verification note (2): a perfect run over m negatives
+        certifies a_L = γ^(1/m) at confidence 1-γ, so m >= 59 at γ=0.05 is
+        the minimum that can certify 0.95 — and the shipped denominators were
+        ME.9 15 (certifies 0.819), ME.10 36 (0.920), ME.3 39.3 (0.927), ME.1
+        40.0 (0.928), ME.5 52 at its smallest decade (0.944). Every recorded
+        1.0 on those five was statistically compatible with a true rate below
+        the bar it was read against. EXECUTED TODAY (db4200e + runner rows):
+        ME.1/ME.3/ME.5 raised to N_DISTRACTOR 130 / MIN_DISTRACTOR_EVAL 59
+        (bars untouched both directions) and re-bought PASS — evaluated now
+        94.7 ± 4.9 / 87.7 ± 3.4 / 110-130 per decade, abstention 1.0
+        everywhere, worst certified level 0.966. NOT EXECUTED, and the desk
+        should rule rather than the builder improvise: ME.9's denominator is
+        capped at 36 BY CONSTRUCTION (3 askable speakers x 12 topics, and
+        full censorship degenerates the control store), and ME.10's 36 held
+        pairs are LOAD-BEARING in the main claim (N_SEEN 84 of the 120-pair
+        grid feeds the skill net; holding out >= 59 either starves training
+        against the unmoved MIN_SKILL 0.85 or grows the grid, which moves
+        chance floors). Both need a fixture redesign to reach a certifiable
+        denominator; until then their 1.0 readings certify 0.819 / 0.920 and
+        should be read as such. ME.11 runs at m=300 and is clear.]
 
 ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — THE FACT, NOT A NEW
