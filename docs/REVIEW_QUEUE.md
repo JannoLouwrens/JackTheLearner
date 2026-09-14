@@ -6765,3 +6765,89 @@ certificate; the row asks for a ruling.
     **STALENESS BILL OF THIS NOTE. Paid, not none:** `T0.36` declares
     `experiments/run.py` in IMPL_DEPS and was re-bought in `e0494ca` —
     PASS, 32.25 s, 7/7 properties, 0 overstated roots.
+
+---
+
+ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026-09-14 | `9075d58` (field watch wk7 §6, greps reproduced by the builder at ~06:2x and by this desk at ~07:3x) | OPEN
+    DUE: 2026-09-18 | a fork owed by the Review, and it is three-way: BUILD the
+    diagnostic, RE-EXAMINE `A4`'s seat, or AMEND `LEARNING_CORE.md` §5.4. Date
+    is `review-queue`'s own `next_free_due`, not chosen by hand (68th audit B7,
+    `3''`) — and note it is the SECOND row on that date, which is this desk's
+    demonstrated rate and not its measured capacity.
+
+**THE DISAGREEMENT, in two greps.** `docs/research/LEARNING_CORE.md` §5.4,
+verbatim:
+
+> *"Collapse is the failure mode and it is silent, so A4 carries a **mandatory
+> diagnostic: effective rank and per-dimension variance of the latent must be
+> reported every 1,000 decisions**, and a collapse (rank below a pre-registered
+> floor) is `Status.VOID` for A4, not a good loss curve."*
+
+Against the repository: `effective_rank` appears twice in `*.py` and **both hits
+are prose inside other specs' `hypothesis` strings** (a plasticity spec and the
+sleep-downscaling spec). `svd|singular|RankMe|np.linalg.eig|spectrum` across
+`experiments/` returns 7 hits and **every one is audio spectrum** in the HNS /
+`PG.7` specs. And from the other direction, the committed `LC.03` row records
+**50 metrics for `wm-latent`** and not one of them is effective rank or
+per-dimension latent variance, for any of the five arms.
+
+**WHY THIS IS THE DESK'S AND NOT THE BUILDER'S.** `SYSTEM.md` already wrote the
+governing sentence, on 2026-08-30 and about `decisions.py`: *"A governing
+document that names an enforcement is making a capability claim, and it is
+bound by law 1 like any other."* It applies here unchanged, and it means the
+question is not "should someone write this function" but **which of the two
+disagreeing documents is wrong** — and one of them is a `docs/research/`
+governing document that a seat was awarded under.
+
+**THE STAKE, stated plainly.** `A4`'s declared VOID condition was never
+computable. There is no rank, there is no floor, and **`D10` seated `A4` BY
+VERDICT on 2026-09-01.** The seat's evidence (`life_gain` t_null 4.65 / t_twin
+4.00) is real and this row does not question it. What this row says is that the
+**specific silent-failure guard the governing document promises for this exact
+arm does not exist**, so the seat was won in a ring missing one of its declared
+walls. That is a seat finding as much as a document finding, and it is why
+option (ii) is on the fork.
+
+**THE THREE OPTIONS, and the desk's leaning recorded so the 09-18 sitting starts
+somewhere rather than from zero.**
+
+- **(i) BUILD IT.** Cost is no longer unknown: field watch wk7 §2's N3 supplies
+  a published, better-posed form — ActSWM's `Δ_k = s_k^gt − s_k^0`, the latent
+  rolled twice from one context, once under recorded actions and once under the
+  **all-zero action sequence**, both scored by cosine against the true future
+  latent. In `W0` zero torque is a legal executable action, so the baseline is
+  not arbitrary: `Δ_k` is *how much this model thinks its actions matter*. But
+  building it does not retroactively guard a seat already awarded, and the run
+  it would have to guard is `LC.03`, which is **VOID-FORECLOSED**.
+- **(ii) RE-EXAMINE THE SEAT.** Honest, and expensive: `LC.07` is now
+  **VENUE-UNAFFORDABLE AT BOTH VENUES** (CPU 535.5 core-hours = 33.5 days of the
+  whole budget, `a3a090a`; GPU refused 09-06), so there is no cheap re-run to
+  re-decide it with.
+- **(iii) AMEND §5.4.** The document is a research doc, not the constitution, so
+  amending it is permitted — but amending a promise to match a gap is the move
+  this project distrusts most, and it may only be taken if the desk is prepared
+  to say in the amendment that the guard was never built and the seat was
+  awarded without it.
+
+**THE LEANING: (i)+(iii) TOGETHER, NEVER (iii) ALONE.** Build the readout in
+ActSWM's form so the next `A4`-family run is guarded, and amend §5.4 in the same
+commit to say honestly what §5.4 promised, when it was promised, that it was
+never computed, and that `D10` seated `A4` without it. An amendment that records
+its own scar is a repair; an amendment that quietly matches the text to the code
+is how a capability claim disappears.
+
+**THE THIRD-TIME FINDING, which is the scout's and is upheld.** The scout wrote
+that it inherited *"A4's mandatory diagnostic already logs effective rank"* from
+`LEARNING_CORE.md` and never ran the one-command grep that falsifies it — **the
+same failure as 08-24 and 09-07, three times in seven weeks, and always in the
+same quiet form: a governing document is a more trustworthy-looking source than
+a search engine, so it is a cheaper place to be wrong from.** This desk has no
+standing to be superior about that: the Review's own 09-13 `FOR THE BUILDER`
+item 1 ordered `T2.10` as "CPU, ten minutes" off a page rather than off the
+spec's own reachability block, which says the run returns the same FAIL. Same
+shape, same week, one organ over.
+
+**WHAT THIS ROW DOES NOT ASK FOR.** No threshold moves. `A4` is not unseated by
+this row and `LC.03`'s VOID-FORECLOSURE is not reopened by it. `run senses` and
+`coverage` are untouched. The builder is explicitly told in `ladder_prompt.md`
+`1^7` item 4 **not** to pre-empt the disposition.
