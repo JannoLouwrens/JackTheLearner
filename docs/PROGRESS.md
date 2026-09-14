@@ -17,6 +17,16 @@ went and did real science instead.***
 > This page is the RECEIPT for commits that already exist. Every act below was
 > committed as it was made, before this page was written: `b0ab21b`, `d255995`,
 > `1ddaf48`, `f34d366`, `0ae7c71`, `6698fc8`.
+>
+> **One of them was not path-clean and the overseer caught it before I did
+> (`76b5254`).** `6698fc8` carries `LESSONS.md` and `OVERSIGHT.md` as well as its
+> own `ladder_prompt.md` edit, because the 96th audit was staging its files in
+> the same index at the same moment and `git add <path>` + `git commit` commits
+> the whole index, not the path. Nothing is lost or damaged — the overseer's work
+> is committed, under my message — and history is not being rewritten to tidy it.
+> The repair is `git commit -- <paths>`, which bypasses the index, and this page's
+> own amendment is the first commit made that way. **"One path-scoped commit per
+> act" was a discipline about the ADD and it needed to be one about the COMMIT.**
 
 ---
 
