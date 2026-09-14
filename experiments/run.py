@@ -725,7 +725,36 @@ def cmd_status(ledger: Ledger) -> int:
         print()
     print_settle_block(ledger)
     print_ratchet_block(ledger)
+    print_steering_block()
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
+    return 0
+
+
+def print_steering_block() -> None:
+    """Can today's steering-page orders be executed? (95th audit B2.)
+
+    `docs/PROGRESS.md`'s `FOR THE BUILDER` list shipped on 2026-09-13 with two
+    dead items — one naming a spec whose measured ceiling forecloses it, one
+    (`D1.0`) illegal since 10:05 that morning because `T1.08` went PASS ->
+    FAIL beneath it — and three consecutive iterations discovered that by
+    hand. It prints HERE, in the command the orientation makes every iteration
+    run, because that is where the discovery was being made by hand.
+
+    Reporting-only and unfloored, by the auditor's explicit instruction: an
+    order can be legitimately aspirational and a gate here would forbid a
+    legal move. See `experiments/steering.py` for what it deliberately does
+    NOT attempt (discharge, intent).
+    """
+    from . import steering
+    steering._check()
+    print(steering.render())
+
+
+def cmd_steering(ledger: Ledger) -> int:
+    """`run steering` — the same block on its own, for a page-edit loop."""
+    from . import steering
+    steering._check()
+    print(steering.render(), end="")
     return 0
 
 
@@ -4158,6 +4187,7 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "stale": cmd_stale, "verify": cmd_verify,
                       "senses": cmd_senses, "coverage": cmd_coverage,
                       "review-queue": cmd_review_queue,
+                      "steering": cmd_steering,
                       "ratchets": cmd_ratchets,
                       # Takes spec ids, so `main` routes it one branch earlier;
                       # it is registered HERE anyway because this dict is the
