@@ -45,6 +45,21 @@ measured, whatever outcome it happens to name. The diary must ABSTAIN on
 construction (each lived episode names exactly one pair, so no seen event
 carries both cue words), which the code checks and records rather than
 assumes. Nothing above moved.
+
+CERTIFICATION LEVEL, RECORDED 2026-09-14 (96th audit FTB 3, from field watch
+wk7 §6b; doc-only, no certificate staled). The recorded rows read
+`distractor_abstention` 1.0 on m = 36 held-out pairs (zero excluded, zero
+variance). A perfect run over m negatives certifies a true abstention rate
+of only gamma^(1/m) at confidence 1-gamma (MEMORY_RETRIEVAL_BAKEOFF §1.8):
+at gamma = 0.05, m = 36 certifies 0.920, below the 0.95 this conjunct
+names, which no run can certify under m = 59 — and here m is a CONSTRUCTION
+ceiling, not a knob: the held set is load-bearing (it is the XOR
+generalisation set), so raising m means rebuilding the fixture, which is
+owned by `me1-similarity-floor-never-abstains` (docs/REVIEW_QUEUE.md) and
+must not happen inside a maintenance slot. The conjunct is still a real
+constraint and THE 0.95 BAR DOES NOT MOVE in either direction; the honest
+reading of the PASS is "1.0 observed, >= 0.920 certified", not "0.95
+certified".
 """
 from __future__ import annotations
 

@@ -79,6 +79,21 @@ the denominator if the speaker's retained heard events still carry the topic
 the retained corpus entirely (then the cue is ME.1's easy all-unknown case,
 not this control); both counts are recorded and the denominator has a floor.
 Nothing above moved.
+
+CERTIFICATION LEVEL, RECORDED 2026-09-14 (96th audit FTB 3, from field watch
+wk7 §6b; doc-only, no certificate staled). The recorded rows read
+`distractor_abstention` 1.0 on a denominator of m = 15 censored pairs per
+seed (3 askable speakers x N_CENSOR_TOPICS = 5, zero excluded, zero
+variance). A perfect run over m negatives certifies a true abstention rate
+of only gamma^(1/m) at confidence 1-gamma (MEMORY_RETRIEVAL_BAKEOFF §1.8,
+the arithmetic ME.11's own 300-negative fixture was sized by): at
+gamma = 0.05, m = 15 certifies 0.819, below the 0.95 this conjunct names,
+which no run can certify under m = 59. The conjunct is still a real
+constraint — it fires on gross failure, and THE 0.95 BAR DOES NOT MOVE in
+either direction — but the honest reading of the PASS is "1.0 observed,
+>= 0.819 certified", not "0.95 certified". The fixture redesign that raises
+m is owned by `me1-similarity-floor-never-abstains` (docs/REVIEW_QUEUE.md);
+this note exists so the gap is visible where the conjunct lives until then.
 """
 from __future__ import annotations
 
