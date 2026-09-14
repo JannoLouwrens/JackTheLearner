@@ -6055,6 +6055,56 @@ unknown one, and which of the two repairs (more seeds, more headroom, a
 different statistic, or accept the rate) is correct is exactly the design
 question already dated 09-16.
 
+**ADDENDUM (e'), 2026-09-14 (builder, zero GPU): `T1.07`'S SIBLING BAR IS NOW
+PRICED — AND (e) POINTED AT THE WRONG CONJUNCT AND THE WRONG NOISE TERM.**
+(e) said the rate "needs the per-arm seed noise, which nobody has measured."
+**No run of `T1.07` can ever produce that number.** `SEED = 0` is a module
+constant inside its `JOB` and the registry declares `seeds = 1`, so the
+statistic is not SAMPLED across seeds at all. The only variation this spec has
+ever exhibited is **VENUE**, and two observations of it are already on the
+ledger. Attempts 2 and 3 (P100, `e29bd82` 08-14 and `445b9e1` 09-13 — a month
+and a code change apart) agree on **every metric and every control metric to
+the recorded digit**, so within-venue determinism is demonstrated on one of the
+two venues; the T4 has one observation. Code drift is eliminated by the same
+method this row used for `T1.08`: the `t1_07` diff across `1a69db6..e29bd82` is
+4 insertions / 3 deletions, all of it the `/content/` -> `JACK_OUT` artifact
+contract, and `UnifiedBrain.py`'s two hunks are both in the PRETRAINED vision
+path that `use_pretrained_vision=False` never reaches. ("Venue" is
+Colab/T4/sm_75/Colab-torch vs Kaggle/P100/sm_60/torch 2.5.1+cu121 — three
+things confounded, not separable from two rows.)
+
+| conjunct | live (P100) | room | venue moved | % of log-headroom |
+|---|---|---|---|---|
+| `worst_lr_advantage >= 1.15` | 1.3800 | x1.200 | x1.063 | 34% |
+| `spread_ratio <= 6.00` | 4.9310 | x1.217 | x1.146 | **69%** |
+| `reference_advantage >= 1.15` | 7.6050 | x6.613 | x1.000 | 0% |
+| `absurd_advantage < 1.15` (CONTROL) | 0.9162 | x1.255 | **x99.59** | **2024%** |
+
+**The bar (e) flagged is the third-thinnest of the four. The binding one is the
+CONTROL, and it is not a claim conjunct at all.** `T1.07`'s own docstring says
+that if `lr=1.0` clears `MIN_BEAT_MEAN` then "the bar is too low to discriminate
+anything and the result is void" — and on the venue the live certificate was
+bought on, `lr=1.0` **does not diverge** (`absurd_diverged` False) and lands at
+0.9162x mean-prediction, **1.255x from making this spec's own guard vacuous**.
+On the other venue it read 0.0092. Its margin is **79.3x smaller than the one
+venue change we have on record.** The one venue-invariant arm is the plain-MLP
+reference (7.605 -> 7.605, unchanged to four significant figures): the task, the
+data and plain Adam reproduce across both venues, and everything that moves is
+inside the `UnifiedBrain` training path.
+
+This is a bound on what is KNOWN, not a rate: n=2 supports no probability, the
+direction happened to run toward the bar, and a third venue could run the other
+way. **Nothing is asked and nothing moves** — `MIN_BEAT_MEAN` is pre-registered
+and law 4 is unconditional. Two things the 09-16 disposition may want, both
+computed: pricing `T1.07`'s seed term costs ~0.465 GPU-h per seed (attempt 3 ran
+5 trainings in 1673 s), so k=5 is 2.33 h against 29.18 free hours expiring 09-19;
+and the drift check above had to be done **by hand**, because `T1.07` declares no
+`IMPL_DEPS` and a `UnifiedBrain.py` change therefore does not stale its
+certificate — the gap `T0.35` already counts, cited rather than re-routed.
+Recorded on this row, not routed separately, because it arrived as this row's
+arithmetic and the desk's drain reads UNBOUNDED (`D28`). The docstring carries
+the same numbers (`run amend T1.07 --doc-only`, `3194d14d -> 7fd74ff2`).
+
 ## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
 
 ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | OPEN

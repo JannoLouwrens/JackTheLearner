@@ -32443,7 +32443,25 @@
       "status": "PASS"
     },
     "T1.07": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-14T04:15:31",
+          "by": "builder 2026-09-14 venue pricing",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "3194d14d6770e04b",
+              "proof": "reconstructed 3194d14d6770e04b from git 445b9e1146d8; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "7fd74ff2a2e00c8b"
+            }
+          ],
+          "commit": "9878853+dirty",
+          "dirty_files": [
+            "experiments/tests/t1_07_lr_robustness.py"
+          ],
+          "reason": "venue pricing of all four conjuncts added to the docstring: the control conjunct's margin is 1.255x against a measured 99.59x venue movement; no threshold, constant or gate moved"
+        }
+      ],
       "attempt": 3,
       "commit": "445b9e1",
       "compute_s": 1664.19,
@@ -32525,7 +32543,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "3194d14d6770e04b",
+      "impl_sha": "7fd74ff2a2e00c8b",
       "message": "",
       "metrics": {
         "backend": "kaggle",

@@ -62,6 +62,78 @@ sides reachable: a configuration we ran clears it at 4.3-4.9, and a
 configuration we ran fires it at ~20.5. It is not a bar fitted to the only
 number we have. Headroom 6.0 / 4.931 = 1.217x — deliberately the same ratio the
 Review chose for this bar, applied unchanged to T1.08's sibling conjunct.
+
+VENUE PRICING OF ALL FOUR CONJUNCTS (builder, 2026-09-14, zero GPU; the
+follow-on the T1.08 annotation of 09-13 flagged as unpriced). It corrects that
+annotation on one point before it prices anything: it said computing this
+spec's false-fail rate "needs the per-arm seed noise, which nobody has
+measured", and no run of this spec can ever produce that number. `SEED = 0` is
+a module constant inside JOB and the registry declares `seeds = 1`, so the
+statistic is not SAMPLED across seeds at all. The only variation T1.07 has ever
+exhibited is VENUE, and there are two observations of it on the ledger.
+
+  within-venue determinism is demonstrated on one of the two venues: attempts 2
+  and 3 (P100, 2026-08-14 `e29bd82` and 2026-09-13 `445b9e1`, a month and a code
+  change apart) agree on EVERY metric and EVERY control metric to the recorded
+  digit — 3.917 / 6.804 / 1.380, reference 7.605, spread 4.931, absurd 0.9162.
+  The T4 has ONE observation; it is not known to be deterministic.
+
+  code drift eliminated between attempt 1 (T4) and attempt 2 (P100), by the same
+  method the T1.08 row used: this file's diff across `1a69db6..e29bd82` is 4
+  insertions / 3 deletions and all of it is the artifact-path contract
+  (`/content/` -> `JACK_OUT`); `UnifiedBrain.py`'s diff is two hunks, both in the
+  PRETRAINED vision path (an `allow_vision_fallback` flag and a raise replacing a
+  silent CNN downgrade), which `use_pretrained_vision=False` never reaches. The
+  CNN fallback branch that this job does construct is byte-identical, so RNG
+  consumption at build time is identical too. Same computation, both runs.
+  NOTE this had to be done BY HAND: T1.07 declares no `IMPL_DEPS`, so a
+  `UnifiedBrain.py` change does not stale its certificate (`protocol._impl_sha`
+  hashes the module plus declared deps only — the gap T0.35 exists to count).
+
+  "venue" here is three things confounded and NOT separable from two rows:
+  Colab/T4/sm_75/Colab-torch versus Kaggle/P100/sm_60/torch 2.5.1+cu121.
+
+  PER-ARM MOVEMENT, T4 -> P100:
+    reference (plain MLP + Adam)   7.605 -> 7.605    x1.0000
+    lr 1e-4                        4.088 -> 3.917    x0.958
+    lr 1e-3                        1.298 -> 1.380    x1.063
+    lr 3e-4                        5.585 -> 6.804    x1.218
+    absurd lr 1.0                 0.0092 -> 0.9162   x99.59
+  The one venue-INVARIANT arm is the one that is not the brain. The task, the
+  data and plain Adam reproduce to four significant figures across both venues;
+  everything that moves is inside the UnifiedBrain training path, and it moves
+  most where the optimisation is most violent.
+
+  MARGIN vs MEASURED MOVEMENT, at the live (P100) reading:
+    worst_lr_advantage >= 1.15   1.3800   room x1.200   moved x1.063    34%
+    spread_ratio       <= 6.00   4.9310   room x1.217   moved x1.146    69%
+    reference_adv      >= 1.15   7.6050   room x6.613   moved x1.000     0%
+    absurd_advantage   <  1.15   0.9162   room x1.255   moved x99.59  2024%
+  (last column: the venue movement as a percentage of the remaining log-headroom)
+
+THE FINDING, AND IT IS ABOUT THE CONTROL, NOT THE CLAIM. The bar flagged on
+09-13 is the third-thinnest of the four. The binding one is the CONTROL: this
+docstring says twenty lines up that if lr=1.0 clears MIN_BEAT_MEAN then "the bar
+is too low to discriminate anything and the result is void" — and on the venue
+the live certificate was bought on, lr=1.0 does not diverge at all
+(`absurd_diverged` False) and lands at 0.9162x mean-prediction, 1.255x from
+making this spec's own guard vacuous. On the other venue it read 0.0092. The
+control's mechanism is 100x weaker on the P100 than on the T4, and its margin is
+79.3x smaller than the one venue change we have on record.
+
+That is a bound on what is KNOWN, not a probability: the direction happened to
+run toward the bar, a third venue could run the other way, and n=2 supports no
+rate. The honest statement is that this margin has never been shown to survive a
+venue change and the only venue change on record would have destroyed it.
+
+NOTHING MOVES ON THIS FINDING. `MIN_BEAT_MEAN`, `MAX_SPREAD_RATIO`, `LRS` and
+`ABSURD_LR` are pre-registered and law 4 is unconditional; a margin with a
+measured exposure is better governed than the same margin with an unmeasured
+one, and which repair is right (pin the venue, add seeds inside JOB the way
+T1.08 does, widen the control's separation, or accept it) is a design question,
+not this file's to settle. WHAT IT WOULD COST to price the seed term, so the
+next reader prices the measurement and not the re-read: attempt 3 ran 5 trainings
+in 1673 s (~335 s each), so k seeds is ~0.465*k GPU-h — k=5 is 2.33 h.
 """
 from __future__ import annotations
 

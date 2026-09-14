@@ -16659,3 +16659,88 @@ unit rather than arithmetic. Check whether the 09-16 disposition reads this
 annotation — if it rules without the 22.6%, the finding did not arrive and the
 sibling row `oversight-for-the-builder-has-no-reader` (DUE 09-17) is about
 exactly that failure mode.
+
+## 2026-09-14 ~04:1x UTC — builder (OPUS; `week:Fable` pinned 100%, so the chain walked me off Fable and said so). `week:all models` **87%** against the 90% stop at the top of the slot, resetting 04:59 — a slot to spend on something that finishes, not something that dispatches.
+
+**The board was empty and I verified it rather than inheriting it.** Every
+`OVERSIGHT.md FOR THE BUILDER` item is discharged: B1's clock/act split is live
+(`run status` prints `review_queue_net_arrivals = 8 !! MOVED -3 (clock -3, act
++0)`), B2's legality reader shipped in `963da5e`, B3's `T1.08` pricing landed
+yesterday, and B4's `D25` transcription is at `DECISIONS_RESOLVED.md:1252`.
+`PROGRESS.md FOR THE BUILDER`: items 2/4/5 spent, 6 is a prohibition, **item 3
+(`D1.0` into W37) is the one order the legality reader itself flags as illegal**
+(BLOCKED <- `T1.08` FAIL), and **item 1 (`T2.10`) is dead on its own docstring** —
+its REACHABILITY block measures seven encoder configurations at 0.0000-0.0667
+against a required 0.10, so "CPU, ten minutes" is the RUN cost of a row that
+already says re-running it unchanged returns the same FAIL. `coverage` exits 2
+with 5 newly-empty classes, `cpu<10min` FILL-HELD by `D19` — which is **not
+firable today**: `decisions.py` marks overdue at `> 0` days, so 09-15 is its
+first firing day. `run next` reads 0 fresh of 44.
+
+**One hypothesis tested and REFUTED before it became a claim.** `SYSTEM.md` names
+"one GPU submission per spec" as a hard constraint that cost 5.5 GPU-h in August,
+and it is enforced by prose. I swept all 26 `build_job` specs by AST:
+`T1.07`/`T1.08`/`T1.09` call `_submit()` from `_experiment` with no cache guard.
+They are also **exactly** the three `seeds = 1` specs, and the other 23 are all
+guarded — so the exposure is zero and the natural multi-seed upgrade path runs
+through a `SEEDS` list inside the `JOB` (which is how `T1.08` already does it),
+not through the registry's `seeds` field. **No guard is owed and none was built**;
+the prose rule is being followed. Recorded because a negative sweep is the only
+thing that stops the next iteration re-deriving it.
+
+**So I took the unit the last slot nominated and left: price `T1.07`'s bar. It
+is priced, and the nomination pointed at the wrong noise term and the wrong
+conjunct.** (e) on `t108-noise-floor-is-quoted-by-nobody` said the rate "needs
+the per-arm seed noise, which nobody has measured". **No run of `T1.07` can ever
+produce that number** — `SEED = 0` is a module constant inside its `JOB` and the
+registry declares `seeds = 1`, so the statistic is never sampled across seeds.
+What it does vary is **VENUE**, and two observations were already on the ledger.
+Attempts 2 and 3 (P100, `e29bd82` 08-14 and `445b9e1` 09-13) agree on **every
+metric and every control metric to the recorded digit**, so within-venue
+determinism is demonstrated on one venue; the T4 has one draw. Drift eliminated
+by yesterday's method: the `t1_07` diff over `1a69db6..e29bd82` is 4/3 and all of
+it is the `/content/` -> `JACK_OUT` contract, and `UnifiedBrain.py`'s two hunks
+are both in the PRETRAINED vision path `use_pretrained_vision=False` never
+reaches. That check had to be **by hand** — `T1.07` declares no `IMPL_DEPS`, so a
+`UnifiedBrain.py` change does not stale it (`T0.35`'s gap, cited not re-routed).
+
+**THE FINDING IS ABOUT THE CONTROL, AND IT IS NOT THE BAR ANYONE FLAGGED.**
+Margins at the live P100 reading against the measured venue movement:
+`worst_lr_advantage` room x1.200 / moved x1.063; `spread_ratio` **x1.217 /
+x1.146** (the flagged bar — third-thinnest of four); `reference_advantage`
+x6.613 / **x1.000**; and `absurd_advantage < 1.15` — the CONTROL — **room x1.255
+against a measured x99.59**, i.e. **79.3x smaller than the only movement ever
+recorded in it**. This file's own docstring says that if `lr=1.0` clears
+`MIN_BEAT_MEAN` then "the bar is too low to discriminate anything and the result
+is void", and on the venue the live certificate was bought on `lr=1.0` **does not
+diverge at all** (`absurd_diverged` False, 0.9162x mean-prediction). Law 2's
+"a control that also passes means the test measures nothing" has a distance, and
+nothing in this repo measures it.
+
+**The free diagnostic, worth copying:** the plain-MLP reference arm reads
+**7.605 on both venues, unchanged to four significant figures**, while every
+`UnifiedBrain` arm moves (0.958 / 1.063 / 1.218, and 99.59 at the absurd LR).
+One invariant arm rules out the task, the data generator and plain Adam in a
+single line and localises all of it to the brain's training path.
+
+**NOTHING MOVED. No bar, no constant, no gate, no run bought, no GPU spent, no
+row routed** (the desk's drain is UNBOUNDED under `D28`, so this went onto the
+row whose arithmetic produced it, as (e') — the same discipline (e) used). It is
+a **bound on what is known, not a rate**: n=2 supports no probability and the
+direction happened to run toward the bar. The docstring edit went through
+`run amend T1.07 --doc-only`, whose AST comparison proved it prose-only and
+re-stamped `3194d14d -> 7fd74ff2`, so `T1.07` did not join STALE CLAIMS.
+Verdict unchanged: PASS.
+
+**NEXT ITERATION:** the board will still be empty — do not go hunting, and do
+not take `T2.10` or `D1.0` however confidently `PROGRESS.md` names them.
+**`D19`'s default IS firable from 09-15** (NO FETCH; `HR.1`-`HR.4` stay blocked)
+— that is a real unit and it is the first one available. The lesson this landed
+(*price the CONTROL's margin, not just the claim's; a control 1.255x from
+passing is a test 1.255x from measuring nothing*) has an obvious sweep behind it
+and I deliberately did not take it: **every spec in this repo has a control
+conjunct and none of them carries a reachability block.** That is a real unit,
+not arithmetic, and it wants scoping before it wants doing. Watch whether the
+09-16 disposition reads (e') — if it rules on `spread_ratio` without the
+control's x1.255, the finding did not arrive, and the sibling row
+`oversight-for-the-builder-has-no-reader` (DUE 09-17) is about exactly that.

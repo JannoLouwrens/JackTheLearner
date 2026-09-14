@@ -14956,3 +14956,77 @@ assumes the metric is normal across seeds — unverifiable from two rows. The
 likely violation, right skew, puts more mass in the upper tail of `s`, so the
 true rate is *higher*. An assumption whose error runs against the bar is worth
 stating; one whose error runs for it is worth refusing to publish.
+
+---
+
+## A control's margin is the one nobody prices — and it is the margin that can make a PASS vacuous
+
+*(builder, 2026-09-14, from pricing `T1.07`'s bar — the follow-on the lesson
+immediately above left open. That lesson said `T1.07`'s rate "needs the per-arm
+seed noise, which nobody has measured". That was the wrong term AND the wrong
+conjunct, and finding out why is the lesson.)*
+
+**FIRST, THE CHEAP HALF: before you price a statistic's noise, check that the
+spec SAMPLES it.** `T1.07` declares `seeds = 1` and pins `SEED = 0` as a module
+constant inside its `JOB`. No run of it can ever produce a seed-noise number.
+A day was nearly spent designing a measurement for a term that does not exist in
+this spec's design. **Read the spec's `seeds` and its job's seed handling before
+naming the noise term** — the two live in different places and only one of them
+is in the registry.
+
+What `T1.07` *does* vary is **VENUE**, and it had two observations of it sitting
+on the ledger, unread, for a month. Attempts 2 and 3 (both P100, a month and a
+code change apart) agree on **every metric and every control metric to the
+recorded digit**; attempt 1 (T4) differs. So the ledger's own history was already
+a two-point noise measurement in a term nobody had named.
+
+**THE FINDING, AND IT IS THE GENERAL ONE. The reachability discipline has been
+applied to claim conjuncts only, and the control is where the thin margin was.**
+`T1.07` gained a REACHABILITY block on 09-13 — required setting against the range
+the mechanism produces — for its claim bars. Its `control` got none. Priced
+against the same two venues:
+
+| conjunct | room left | venue moved it | |
+|---|---|---|---|
+| `worst_lr_advantage >= 1.15` | x1.200 | x1.063 | |
+| `spread_ratio <= 6.00` | x1.217 | x1.146 | the bar that was flagged |
+| `reference_advantage >= 1.15` | x6.613 | x1.000 | |
+| `absurd_advantage < 1.15` | x1.255 | **x99.59** | **the control** |
+
+The flagged bar was the third-thinnest of four. The control's margin is **79.3x
+smaller than the only movement ever measured in it.**
+
+**WHY A CONTROL'S MARGIN IS WORTH MORE THAN A CLAIM'S, stated as the rule:** a
+claim conjunct failing produces a FAIL — a legible red row that the ladder is
+built to carry. A CONTROL conjunct failing produces a *vacuous PASS* or a VOID,
+and it does so by the spec's own words — `T1.07`'s docstring says that if
+`lr=1.0` clears the bar then "the bar is too low to discriminate anything and
+the result is void." **Law 2 says a control that also passes means the test
+measures nothing. A control that is 1.255x from also passing is a test that is
+1.255x from measuring nothing, and no instrument in this repo looks at that
+distance.** So: when you write a reachability block, write one for the control,
+and put the control's number FIRST if it is the thinner one.
+
+**THE TELL, and it is as cheap as the last one: a control whose mechanism is
+qualitatively different across the runs you already have.** `T1.07`'s absurd arm
+reads `absurd_diverged` **False** on both venues — on the T4 it lands at 0.0092x
+mean-prediction (destroyed, as intended) and on the P100 at 0.9162x (merely
+slightly worse than predicting the mean). Same flag, same code, 100x apart. **A
+boolean that says "the control behaved" while the continuous number under it
+moves two orders of magnitude is a guard reporting on itself.** Read the
+control's magnitude, never only its verdict.
+
+**AND THE DIAGNOSTIC THAT CAME FREE, worth copying:** decompose the movement
+per-arm before attributing it. `T1.07`'s plain-MLP reference arm reads **7.605 on
+both venues, unchanged to four significant figures**, while every `UnifiedBrain`
+arm moves. That single invariant arm rules out the task, the data generator and
+plain Adam in one line and localises the entire venue sensitivity to the brain's
+own training path — a conclusion two rows could not otherwise support. **A
+control arm that does NOT move is evidence; budget for one that shouldn't.**
+
+**WHAT THIS DOES NOT LICENCE.** Nothing moves on it. Law 4 is unconditional and
+n=2 supports no rate — the direction happened to run toward the bar and a third
+venue could run the other way. The output is a **bound on what is known**, and
+its value is that the desk now chooses among pin-the-venue, add-seeds,
+widen-the-separation and accept-it with a number in hand. Cost of the whole
+finding: zero GPU, zero seeds, two ledger rows and two git diffs.
