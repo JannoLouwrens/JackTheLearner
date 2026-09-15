@@ -1599,7 +1599,7 @@ ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pi
         `PARK-ON-AN-UNREACHABLE-RELEASE` pairs `coverage` prints, and smell
         stays a commitment with a spec and no measurement for five more days.
 
-    DUE: 2026-09-15 | RULED 2026-09-12 (Review, DAILY) — the owed unit CHANGES
+    DUE: 2026-09-22 | RE-DATED 2026-09-15 (Review DAILY), BEFORE the break rather than after it, and that is the point. This row is the BUILDER's execution debt and the builder has been PACE-DARK for 18 consecutive hourly slots since 2026-09-14T12:07 ('week:all models' 37% against a 35% pace line; this project's own attributed share of that meter is 25% — 28 of 37 points, 75%, are NOT THIS PROJECT). Leaving a builder-owned row dated on a day the builder provably cannot run is KNOWINGLY MANUFACTURING a violation, and re-dating it at 07:00 with a measured cause is strictly more honest than re-dating it at 07:00 tomorrow with the same cause and a red ratchet in between. Dated AFTER the 2026-09-21 05:00 UTC meter reset. This is the desk declining to let its own calendar launder someone else's outage. Routed to the owner as `D30`. ORIGINAL TEXT FOLLOWS, unchanged. | RULED 2026-09-12 (Review, DAILY) — the owed unit CHANGES
         HANDS AND KIND: what is owed on 09-15 is the builder's F2 diagnostic
         probe, not this desk's F1 arm pick. Dated 09-15 (5 live rows, measured
         capacity 6) and not 09-13 (14 rows). Design in the RULING below.
@@ -3129,7 +3129,7 @@ ROUTED: ub10-seed-fragility-and-saturated-battery | 2026-09-01 | UB.10-attempt-1
     bakeoff has its own lineage (recipe-sensitivity → the executed 08-25
     disposition → this measurement) and no dependence on the W0/W1 design;
     the bundle it names is a reading order, not a sitting.
-    DUE: 2026-09-15 | DECISION DELIVERED 2026-09-08 (Review DAILY): harden the
+    DUE: 2026-09-23 | RE-DATED 2026-09-15 (Review DAILY), BEFORE the break rather than after it, and that is the point. This row is the BUILDER's execution debt and the builder has been PACE-DARK for 18 consecutive hourly slots since 2026-09-14T12:07 ('week:all models' 37% against a 35% pace line; this project's own attributed share of that meter is 25% — 28 of 37 points, 75%, are NOT THIS PROJECT). Leaving a builder-owned row dated on a day the builder provably cannot run is KNOWINGLY MANUFACTURING a violation, and re-dating it at 07:00 with a measured cause is strictly more honest than re-dating it at 07:00 tomorrow with the same cause and a red ratchet in between. Dated AFTER the 2026-09-21 05:00 UTC meter reset. This is the desk declining to let its own calendar launder someone else's outage. Routed to the owner as `D30`. ORIGINAL TEXT FOLLOWS, unchanged. | DECISION DELIVERED 2026-09-08 (Review DAILY): harden the
     TASK (composite / cross-modal-XOR slots) and gate the anchor's headroom;
     the per-arm stability conjunct adopted; the training-budget cut and the
     seed-level SCORED-AND-INELIGIBLE retirement both REFUSED as weakenings —
