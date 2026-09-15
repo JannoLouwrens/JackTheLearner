@@ -6346,6 +6346,72 @@ saying so. Strictly a strengthening; no bar touched in either direction.
    ruling — a design is not an execution, and this desk has broken thirteen
    promises this week by forgetting that distinction in the other direction.
 
+### 9. ADDENDUM 2026-09-15 (Review DAILY) — the colab lane's cause is SETTLED on disk, by the instrument built to settle it, and it sat unread for nineteen hours
+
+**What happened, in receipts.** The probe was pre-registered (`1652a62`) and
+dispatched on 09-14. The **kaggle arm landed**: `jack-ladder-1789370135`, P100,
+n=5, 0.5607 h — `heldout_cv_pct` **36.577**, mean 0.06355, sd 0.023246, effect
+0.23138, `snr` 9.95. The **colab arm ran twice and retrieved nothing both
+times**: `ladder-1789373334` (1.0277 h) and `ladder-1789381054` (1.0832 h).
+**2.1109 GPU-h charged for zero retrieved results.**
+
+**The 09-14 LESSON named two causes and deliberately refused to choose between
+them; the head capture shipped at `521d33e` was built to adjudicate them; it
+did, on the very next failure, and the answer is unambiguous.**
+`/data/t108_backend_probe.json`'s second failure record opens
+**`stdout_head='JACK_OUT /content\nREPO 521d33e...'`**. The job wrote to
+`/content` and `run_on_colab` fetched `/content`. **Cause (1) — the job wrote
+somewhere the fetch did not look — is ELIMINATED. Cause (2) — the kept download
+session no longer holds the run VM's filesystem — is the cause.** The LESSON's
+own standing instruction is therefore in force and is not a judgement call any
+more: **do not edit the fetch path**; recover the artifact from stdout, or
+abandon the lane. One 400-character capture, added for free, closed a question
+that a third GPU dispatch would not have closed.
+
+**9b. THREE OF THE FIVE COLAB SEEDS ARE ON DISK AND MUST BE TREATED AS READ.**
+The same failure records carry `stdout_tail`, and the tail is 400 characters of
+the result array: seeds **2, 3, 4** heldout complete — **0.047148, 0.098334,
+0.035367** — under a `mean_baseline` of **0.29492783546447754** identical to the
+kaggle arm's (0.085438 + 0.20949 = 0.294928), which is the arithmetic check that
+both arms ran the same job. Seeds 0 and 1 scrolled past the head and are lost,
+twice. **This is a DISCLOSURE, not a reading.** The read pre-registered in §4 is
+over n=5 and may not be taken on a three-seed subset selected by what a
+truncation happened to preserve — that is the seed-selection form of the
+venue-selection prohibition in §2. But the sitting that finally takes the branch
+will take it already knowing three of its five numbers, and **it must say so on
+the record when it fires**. Pre-registration survives disclosure only if the
+disclosure is written down.
+
+**9c. One observation that is NOT a branch read.** The kaggle arm's n=5
+`heldout_cv_pct` **36.577** stands beside attempt 3's n=3 **40.006** on the same
+backend. That is a within-backend reproduction and it removes "40.006 was an n=3
+fluke" from the table. It says nothing about the between-backend contrast, which
+is the entire question this probe exists to answer, and no branch is taken here.
+
+**9d. WHAT IS AUTHORISED NOW — and what is forbidden.** The probe's
+authorisation in §2 was **1.20 GPU-h**. As executed it has charged **2.6716 h**
+(kaggle 0.5607 + colab 2.1109) — **2.2× its authorisation, with every hour of
+the overrun in a lane that returned nothing.** A third dispatch under the same
+retrieval mechanism is the third identical spend and is **FORBIDDEN**.
+
+AUTHORISED instead, ~1.05 GPU-h against **26.51 free expiring Sat 2026-09-19**,
+strictly in this order:
+
+  (a) **Zero GPU first.** The job prints its result JSON to stdout on one
+      delimited line (`JACKRESULT {...}`), and the failure record captures the
+      WHOLE stdout rather than a 400-char tail. **The tail bound is what lost
+      seeds 0 and 1** — the 09-14 repair sampled both ends of the stream and was
+      still too narrow to carry the payload it had correctly decided to recover
+      from. Widening the sample was the repair; carrying the artifact is.
+      **No fetch-path edit lands under this authorisation.**
+  (b) **Then** one colab dispatch, same commit, same seed list, n=5.
+
+**If (a) cannot be made to work, the colab arm is ABANDONED** and the probe
+reports as a single-backend reading with that stated plainly. A smaller finding
+honestly labelled costs less than a fourth charge on a lane that has already
+paid 2.1 h for nothing. **`MAX_HELDOUT_CV_PCT` 7.0 does not move under any
+branch of this addendum, and `T1.08` stays FAIL.**
+
 ## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
 
 ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | OPEN
