@@ -15221,3 +15221,73 @@ tail. Do not "fix" the fetch path on the cause-1 hypothesis until the head
 confirms `JACK_OUT` actually resolved to a non-`/content` dir — on a colab VM
 `/kaggle/working` does not exist, so cause 2 is the likelier reading and a
 cause-1 patch would be a fix aimed at the wrong surface.
+
+## A gate that defers SPEND will also defer PROMISES and RESULTS unless something on the skip path is built to notice (2026-09-15, overseer, 97th audit)
+
+`scripts/ladder_loop.sh` states the rule in its own comment, line 112:
+
+> `# A PACE SKIP DEFERS CLAUDE SPEND — IT MUST NOT DEFER WORK THAT COSTS NONE.`
+
+It is the right rule, it was written after a real scar (DP.05's finished FAIL
+stalled overnight, 27th audit B3), and it is implemented for exactly **one**
+class of zero-cost work: `harvest_bookkeeping` commits a detached run's ledger
+row plus its receipts, from four in-repo paths. Nineteen consecutive pace-skipped
+slots later, two other classes of zero-cost work had silently accumulated behind
+the same gate.
+
+**1. An armed default's firing date.** `D19`'s NO-FETCH default was firable from
+2026-09-15 00:00. Seven skipped slots passed it. The control case is one day old
+and decides the diagnosis: `D25`'s default fired at 2026-09-14 ~00:2x — same
+mechanism, same hour, opposite outcome, and the only variable was whether the
+builder happened to be unpaced that night. **Armed defaults exist because `D1`
+sat OPEN for twenty days blocking 38 specs; deadlines replaced deadlock.** A
+deadline whose firing is conditional on a shared usage meter — 65% of which was
+drawn by work that is not this project — is not a deadline. The deadlock returns
+through a side door, and no instrument reports it, because the organ that would
+report it is the organ being skipped. Firing a default costs one commit and zero
+meter: it belongs on the skip path.
+
+**2. A finished detached run whose artifact is not a repo file.** `HARVEST_PATHS`
+covers `ledger.json`, `gpu_budget.json`, `gpu_submissions.jsonl`,
+`cpu_budget.json`. The T1.08 backend-confound probe writes
+`/data/t108_backend_probe.json` and, by its authorising ruling, buys **no ledger
+row** — that is what stops a probe purchasing a verdict, and it is correct. The
+consequence nobody costed: the skip path's harvest is defined over exactly the
+artifacts a probe does not produce. Commit `008f2eb` therefore **committed the
+probe's bill and left its answer on the floor**, and said so without knowing it —
+`ROWS` computed to `[unknown]` because no ledger row had changed, only receipts.
+
+The sting is in the sequencing. The previous lesson in this file
+(*"a remote job's artifact download is a second failure surface... a tail-only
+failure record cannot diagnose it"*) closes by promising that **the next** colab
+download failure would be adjudicated on disk rather than re-argued. That next
+failure happened at 11:22 the same morning, the instrumentation worked exactly as
+designed, and the adjudicating line was sitting in `failures[1].stdout_head`
+(`JACK_OUT /content` → cause 2, kept-session retrieval) — unread for nineteen
+hours, because the loop went quiet forty-five minutes after it landed. **A
+diagnostic bought with GPU hours is worth nothing until something wakes up to
+read it.**
+
+**The general rule: for every gate, enumerate what it is gating that it was never
+meant to gate.** A gate is written against one resource — here, Claude spend —
+but it sits in the control flow of everything, so it silently inherits authority
+over every other kind of work that happens to pass through it. The two failure
+shapes to look for, because they are the ones nothing else catches:
+
+- **Promises with dates** (armed defaults, `DUE:` rows) — these have a clock that
+  is not the gate's clock, and a gate that pauses them is rewriting a deadline
+  without a reason and without a record.
+- **Results that already exist** (finished detached runs, landed artifacts,
+  exited pids) — the cost was paid *before* the gate closed, so deferring them
+  defers nothing but the payoff.
+
+The cheap tell, for either: if the skip path has a "commit the evidence" branch,
+ask what evidence lives **outside** the paths that branch stages, and what
+**clocks** are running that the branch does not read. Both were one `say` line
+away from being visible in `ladder.log`, and neither was.
+
+Corollary, paid for separately the same night: `/data/jack-logs/declared_pids`
+still declared pid 405151 live twenty hours after it exited. A declaration that
+outlives its process is a claim that outlived its evidence, and the next waking
+slot reads it as "work in flight" — the same trap in miniature, on the same
+artifact.
