@@ -862,7 +862,7 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
         input is complete, the work is one harness edit plus a re-run, and
         09-13 carries ten rows against a measured consumer capacity of ~1 per
         cycle while 09-11 carried one.
-    DUE: 2026-09-14 | RE-DATED (Review DAILY 2026-09-11), and the reason is the
+    DUE: 2026-09-22 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE. CAUSE, MEASURED AND NOT GUESSED: the builder has been PACE-DARK for 18 consecutive hourly slots since 2026-09-14T12:07 — `week:all models` 37% against a pace line of 35% at 15% of the week, with this project's own attributed share of that meter measured at 25% (builder 7 + desks 2 of 37 points; 28 points, 75%, NOT THIS PROJECT). A row owed by the BUILDER cannot be honestly dated inside a week the builder cannot run in, so this date is set AFTER the 2026-09-21 05:00 UTC meter reset rather than onto another dark day. Routed to the owner as `D30`. THIRD BREAK FOR THIS ROW. STOP-RULE, binding on this desk and on the same terms as the sh02/ba03/t306 class: if this date breaks too, the row is DECLINED and the finding goes to the owner — a promise renewed four times is not a promise. This row is the BUILDER's execution debt (the ME.1 similarity-floor repair), not a decision owed by this desk. ORIGINAL TEXT FOLLOWS, unchanged. | RE-DATED (Review DAILY 2026-09-11), and the reason is the
         one thing the pull-forward above did not check: **it was dated on
         DESK capacity for work that is entirely the BUILDER's.** "One harness
         edit plus a re-run" is a builder slot, and the builder has fired and
@@ -3504,7 +3504,7 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
     gate is adopted Sunday, this consequence is stamped Tuesday, and W36 runs
     to 09-13 so the attempt-2 dispatch loses nothing. The clock and owner
     this row exists for are intact.
-    DUE: 2026-09-14 | DECISION DELIVERED 2026-09-08 (Review DAILY):
+    DUE: 2026-09-26 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE, and for this row the pacing blackout is NOT the cause and must not be allowed to stand in for it: this row is UNREACHABLE BY CONSTRUCTION. `D1.0` is BLOCKED <- `T1.08` FAIL, so the successor re-run it owes cannot be dispatched at any budget, on any meter, in any week. Three dates (09-06 -> 09-08 -> 09-14) have now been set on a run that no awake builder could have bought. STOP-RULE, and it is a different one because the defect is different: if `T1.08` is still FAIL on 2026-09-26, this row is NOT re-dated a fourth time — it is RE-PARENTED behind `T1.08`'s repair, because a clock on an unreachable run is a promise the calendar cannot keep and the queue should say so in its structure rather than in its prose. ORIGINAL TEXT FOLLOWS, unchanged. | DECISION DELIVERED 2026-09-08 (Review DAILY):
     VOID-FORECLOSED refused, the twin-denominator successor gate adopted, and
     the twin-spread probe pre-registered in BOTH branches — full design in the
     DISPOSITION block at the foot of this row. What is now owed is the
@@ -4692,7 +4692,7 @@ it is (ii)/(iii) that would edit `experiments/cpu_budget.py` (T0.33 ~2 s, T0.34
 
 ROUTED: lg03-blind-twin-cannot-prove-itself-alive | 2026-09-04 | LG.03-attempt-1 | DISPOSITIONED 2026-09-12 (Review DAILY — RULED: none of the four options as written. The gate's own maximum achievable value is `planner_own`, not 1.0, because the calibration tape is recorded from the privileged planner's MISSES as well as its hits; the repair is a NEW conjunct on the teacher, with CALIB_MIN untouched. See RULING below)
     DUE: 2026-09-12 | a liveness-gate redesign owed by the Review. Deliberately NOT 09-06/09-07: `review-queue` names 09-12 as the next date carrying no promise, and this row has no money and no clock on it — nothing expires and no quota dies while it waits. Coupled to `champions-language-grounding-arena` (DUE 09-07) as an INPUT, not a decision beside it: that row asks whether the language-grounding seat has an arena at all, and the answer is now "it has one, registered, and its certifier cannot yet certify itself".
-    DUE: 2026-09-14 | DISPOSITIONED 2026-09-12 (Review DAILY): the design is
+    DUE: 2026-09-23 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE. CAUSE, MEASURED AND NOT GUESSED: the builder has been PACE-DARK for 18 consecutive hourly slots since 2026-09-14T12:07 — `week:all models` 37% against a pace line of 35% at 15% of the week, with this project's own attributed share of that meter measured at 25% (builder 7 + desks 2 of 37 points; 28 points, 75%, NOT THIS PROJECT). A row owed by the BUILDER cannot be honestly dated inside a week the builder cannot run in, so this date is set AFTER the 2026-09-21 05:00 UTC meter reset rather than onto another dark day. Routed to the owner as `D30`. SECOND break for this row (09-12 -> 09-14 -> now). This row is the BUILDER's execution debt — the liveness-gate design was DELIVERED 2026-09-12 and what is owed is implementation. ORIGINAL TEXT FOLLOWS, unchanged. | DISPOSITIONED 2026-09-12 (Review DAILY): the design is
         RULED and lives in the RULING block at the end of this row. What is
         owed now is EXECUTION by the builder — one constant
         (`PLANNER_CALIB_MIN = 1.0`), one emitted metric
@@ -4987,7 +4987,7 @@ which case write the coupling and a `FAIL-DISPOSED:` marker on T2.15 naming
 that decision, or it needs its own successor spec. Nothing here re-runs.
 
 ROUTED: so07-recording-worlds-fail-the-reference-bar | 2026-09-05 | builder (SO.07 attempt-1 harvest, 9bd3114) | OPEN
-    DUE: 2026-09-14 | a disposition for SO.07's VOID: what re-validates the reference arm on the recording worlds — re-frozen fixture, a wider design-world set, or a world/body redesign. Date is `next_free_due` per the router's own print (every earlier day is at or over measured capacity).
+    DUE: 2026-09-18 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE — FIRST break for this row, and it is this desk's own decision debt, not the builder's. Re-dated ONCE at the desk's DEMONSTRATED disposal rate (~1/cycle), onto a date with measured room under the 6/day capacity, never onto a day already at it. The Review is NOT pace-gated (its 06:37 slot is exempt), so unlike the builder-execution rows in this batch, this desk has no excuse available to it and is not offering one. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for SO.07's VOID: what re-validates the reference arm on the recording worlds — re-frozen fixture, a wider design-world set, or a world/body redesign. Date is `next_free_due` per the router's own print (every earlier day is at or over measured capacity).
 
 **The verdict:** SO.07 attempt 1 (2026-09-05T02:41:48, 9201.5 s, worlds 3/4/5)
 recorded **VOID at the first pre-registered VOID lane**: the REF arm —
@@ -5052,7 +5052,7 @@ ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02
     in the last ten minutes of a DAILY, in the direction that would let the
     falsifier run, is that same act wearing a deadline. Nothing is weakened by
     the delay: the registered run stays blocked under either reading.
-    DUE: 2026-09-14 | RULED (Review DAILY 2026-09-11), and the implementation
+    DUE: 2026-09-24 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE. CAUSE, MEASURED AND NOT GUESSED: the builder has been PACE-DARK for 18 consecutive hourly slots since 2026-09-14T12:07 — `week:all models` 37% against a pace line of 35% at 15% of the week, with this project's own attributed share of that meter measured at 25% (builder 7 + desks 2 of 37 points; 28 points, 75%, NOT THIS PROJECT). A row owed by the BUILDER cannot be honestly dated inside a week the builder cannot run in, so this date is set AFTER the 2026-09-21 05:00 UTC meter reset rather than onto another dark day. Routed to the owner as `D30`. THIRD BREAK FOR THIS ROW. STOP-RULE, binding on this desk and on the same terms as the sh02/ba03/t306 class: if this date breaks too, the row is DECLINED and the finding goes to the owner — a promise renewed four times is not a promise. This row is the BUILDER's execution debt — RULED 2026-09-11 and what is owed is implementation. ORIGINAL TEXT FOLLOWS, unchanged. | RULED (Review DAILY 2026-09-11), and the implementation
     is the BUILDER's — the spec edit below, then a smoke, then the registered
     run under the ordinary blocking rules. 09-14 and not 09-12 because the
     builder is forecast released 09-12T08:40–23:40 and this needs a waking day;
@@ -5509,7 +5509,7 @@ loses the arena, so `CHAMPIONS.md`'s unison seat would need another.
 ---
 
 ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FAIL | OPEN
-    DUE: 2026-09-14 | a mouth-design decision owed by the Review. Date taken
+    DUE: 2026-09-19 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE — FIRST break for this row, and it is this desk's own decision debt, not the builder's. Re-dated ONCE at the desk's DEMONSTRATED disposal rate (~1/cycle), onto a date with measured room under the 6/day capacity, never onto a day already at it. The Review is NOT pace-gated (its 06:37 slot is exempt), so unlike the builder-execution rows in this batch, this desk has no excuse available to it and is not offering one. ORIGINAL TEXT FOLLOWS, unchanged. | a mouth-design decision owed by the Review. Date taken
     from `review-queue`'s own `next_free_due` (the mechanical answer at the
     time of routing: 09-13 carried 14 promises against a measured capacity of
     6, 09-14 carried 5), not chosen by hand — 68th audit B7, 3''. Nothing is
