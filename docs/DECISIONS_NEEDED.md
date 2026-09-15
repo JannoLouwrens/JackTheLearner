@@ -6799,3 +6799,248 @@ deliberately AFTER the desk's 2026-09-18 so the owner rules with that work in
 hand. If the desk's disposition lands first and the owner then rules (iii), this
 entry closes at zero cost; if the owner rules (iv), the marking change is theirs
 to grant and the desk's row inherits it.
+
+## D30 — The builder has been dark for 18 consecutive hourly slots on a meter three-quarters of which this project did not spend, and 26.51 free GPU-hours expire on Saturday with nobody awake to dispatch them. (2026-09-15, Review DAILY)
+
+**The measurement, taken this morning and not quoted from anyone.**
+
+```
+$ scripts/claude_usage.py
+week:all models  [#######             ]  37%   resets Sep 21, 5am (UTC)
+week:Fable       [##########          ]  52%   (not the gate)
+
+$ scripts/usage_attribution.py
+total 37   builder 7 (18%)   desks 2 (5%)   both 0   NOT THIS PROJECT 28 (75%)
+dark_slots 18   dark_known True
+```
+
+The builder's last real iteration ended **2026-09-14T12:07**. Every hourly slot
+since has printed `PACING: ... skipping, budget held for later in the week`. The
+overseer's 12:37, 18:37 and 00:37 audits were paced out too; only its 06:37 slot
+ran, under `D15` clause (c)'s exemption.
+
+**This is the failure `lib_usage.sh` was written to prevent, arriving through the
+mechanism written to prevent it.** That file's own header, August:
+
+> *"THE CAUSE IS NOT OVERSPENDING. `week:all models` is a SHARED pool... So the
+> loop is stopped by consumption it does not control, and being the only consumer
+> with a gate, it is the one that starves."*
+
+It then fixed that with a rising line rather than a lower ceiling — and the line
+is a pure function of the clock, **0.3869 points/hour, zero variance**. This
+week's shared meter has been consumed at **37 points in 25.6 hours ≈ 1.45
+points/hour**. Even with the builder dark and its own 18% removed, the outside
+consumers alone run at **≈1.09 points/hour — 2.8× the rate at which the line
+rises.** The gap therefore **widens monotonically**: the builder does not come
+back this week by waiting, and the 90% hard stop is reachable Wednesday evening
+on a week in which this project will have run **zero** iterations.
+
+**The perishable half of the cost.** `2026-W37` has charged 3.4899 GPU-h of 30;
+**26.51 free hours expire Sat 2026-09-19**. The precedent is on the record in the
+same header: W32 lost 8.82 h and W33 lost 22.11 h to exactly this, *"with no
+agent awake to dispatch them — on a project whose owner has ruled free compute
+only."* There is a legal, authorised buyer waiting for those hours today (the
+`T1.08` colab-arm repair, ~1.05 h, authorised this morning at §9d of its ruling)
+and no awake organ to spend it.
+
+**RULE 3 CHECKED EXPLICITLY, because a means-fork on your desk is the `D1`
+disease.** This is `class: goal`, not `means`, and the test is whether a bakeoff
+could settle it. It could not: every option turns on a resource that is **yours
+and not measurable inside this repo** — how much of the shared Claude meter your
+own interactive work will consume in a given week, and whether you are willing to
+pay for a second account. No experiment this project can run produces that
+number, and the one thing a bakeoff *could* compare (which pacing formula yields
+more iterations) is answerable only by spending the very budget at issue.
+
+**Why this is yours and not the desk's.** `D26`'s armed default fired on
+2026-09-12 as **(iv) MEASURE ONLY, GATE NOTHING, RELAX NOTHING** — explicitly
+refusing option (i), pacing against our own attributed spend, on the ground that
+*a default may not loosen a gate*. That reasoning was right and it is why the
+measurement exists at all. But the measurement it commissioned has now returned,
+and it says the organ with a gate is being starved by consumers without one.
+Every remaining repair either loosens a gate or spends something outside this
+repo, and this desk may do neither.
+
+DECIDE: D30
+  class:     goal
+  blocks:    no spec id directly. What it blocks is EVERY spec, because it
+             blocks the organ that runs them: 18 consecutive dark slots, 1
+             settle event in 24 h against 36 the day before, `T1.07`'s
+             certificate deliberately staled at 11:13 on 09-14 and still
+             unbought, `D19`'s armed default OVERDUE and unfired since 00:00
+             today, and 26.51 free GPU-h expiring Sat 09-19 with an
+             authorised buyer and no dispatcher.
+  default:   (v) REPORT THE STREAK, GATE NOTHING, RELAX NOTHING. The pace
+             line, PACE_FLOOR, PACE_CAP and the 90% hard stop are all left
+             exactly as they are. What changes is that a dark streak past 2x
+             the builder's cadence becomes a standing FOR-THE-OWNER finding
+             on the Review's page, printed beside the week's GPU-expiry
+             forecast, so a blackout is never again discovered by a human
+             reading a log tail. This picks only already-permitted actions
+             (reporting is what this desk does), moves no threshold in either
+             direction, edits no GOAL.md text, widens nothing, spends no GPU,
+             commits no budget, fails no spec, refuses no run, stales no
+             certificate, and leaves no commitment claim-dead. It is MONOTONE
+             on the thing at issue: it can only ADD information, never permit
+             a spend. Option (i) — pace against this project's own attributed
+             share instead of the shared total — is deliberately NOT the
+             default because it loosens a gate by silence, which is the exact
+             reasoning `D26` used twelve hours before this blackout began and
+             which this desk is not entitled to overturn on its own behalf.
+             Option (ii) raising PACE_FLOOR is not the default for the same
+             reason and is strictly blunter. Option (iii) separating the
+             meters is not the default because it spends money and acts
+             outside this repo, and no default may do either.
+             THE PRICE, STATED RATHER THAN BURIED, AND IT IS UNUSUALLY HIGH:
+             (v) fixes nothing. It makes the next blackout visible on the day
+             it starts instead of on day two. The 26.51 perishable GPU-hours
+             are NOT recoverable by any ruling made after Sat 2026-09-19, and
+             the default's own firing date is after that — so the default
+             cannot save this week's quota and is not offered as though it
+             could. It can only stop the next one being invisible.
+             Reversal: delete one paragraph from the Review's prompt; no
+             code, no threshold, no ledger row, no re-run.
+  decide_by: 2026-09-18
+
+**The options in full, with what each costs.**
+
+| # | ruling | what it changes | what it costs |
+|---|---|---|---|
+| (i) | **pace against our OWN attributed spend** (`usage_attribution.py`'s builder+desks share) instead of `week:all models` | `pace_gate` reads a meter this project controls; the **90% all-models hard stop is untouched**, because `pace_gate` is checked only AFTER `usage_gate` has already said yes | the builder can now reach the 90% shared stop in a heavy outside week — i.e. it spends the shared pool faster when others are also spending it. Bounded by the unchanged hard stop. |
+| (ii) | **raise `PACE_FLOOR` 25 → 45** | a higher starting allowance, same shape | blunt: helps this week, and re-introduces the early-burnout the line was built to stop |
+| (iii) | **separate the meters** — your interactive sessions move to a different account/plan | the gate reads only the builder, permanently | money, and setup outside this repo |
+| (iv) | **accept it** | nothing | in weeks with heavy outside consumption the builder is dark and free GPU expires. This has now happened three times (W32 8.82 h, W33 22.11 h, W37 26.51 h pending) |
+| (v) | **report the streak** (the default) | the blackout becomes visible on day one | fixes nothing; see above |
+
+**RECOMMENDATION, and it is the desk recommending against its own default:**
+*"Rule (i): pace against this project's OWN attributed spend, not the shared
+total — the 90% all-models hard stop is untouched by it, because `pace_gate` is
+checked only after `usage_gate` has already said yes, so this changes which meter
+the smoothing line reads and raises no ceiling anywhere."*
+
+The reason I will not take (i) myself is the reason `D26` gave and I still
+believe: a default may not loosen a gate, and an organ may not vote itself more
+budget. But `D26` refused (i) **without the measurement**, and the measurement is
+now in: 75% of the meter that darkened this project belongs to something else.
+A smoothing line that paces us against consumption we do not control does not
+smooth our spend — it converts our throughput into a function of your calendar.
+
+**Sources.** `scripts/lib_usage.sh` lines 34–119 (the pacing design and its own
+header); `scripts/claude_usage.py`; `scripts/usage_attribution.py`;
+`/data/jack-logs/ladder.log` 2026-09-14T13:07 → 2026-09-15T06:07 (18 PACING
+lines, no iteration); `/data/jack-logs/overseer.log` (12:37/18:37/00:37 paced);
+`experiments/gpu_budget.json` (`2026-W37` 3.4899 charged of 30);
+`docs/DECISIONS_RESOLVED.md` `D26` (armed default (iv), fired 2026-09-12);
+`docs/REVIEW_QUEUE.md` `t108-bar-set-from-n1-is-now-the-projects-largest-blocker`
+§9d (the authorised 1.05 h buyer with nobody awake to spend it).
+
+## D30 — The colab GPU lane has no ceiling, no overrun mark and no refusal: `remaining()` returns infinity for it, and two 1-GPU-h retrieval failures in one morning could have been ten. (2026-09-15, overseer, 97th audit)
+
+**What the code does**, read at `008f2eb` and not quoted from anyone's report:
+
+```python
+# experiments/gpu.py:424
+def remaining(self, backend: str) -> float:
+    if backend != "kaggle":
+        return float("inf")
+    return max(0.0, KAGGLE_WEEKLY_HOURS - self.used_hours("kaggle"))
+
+# experiments/gpu.py:538
+def afford(self, backend: str, est_hours: float) -> bool:
+    return self.remaining(backend) >= est_hours
+
+# experiments/gpu.py:521
+if backend == "kaggle" and used > KAGGLE_WEEKLY_HOURS:
+    self.data["overruns"].append({...})
+```
+
+`afford("colab", anything)` is **always True**. The overrun mark is hard-coded to
+one backend. `KAGGLE_WEEKLY_HOURS = 30.0` is the only ceiling constant in the
+file. Colab hours *are* billed — `weeks["2026-W37"]["colab"] = 2.1109` — to a
+counter that constrains nothing and is compared to nothing.
+
+**The realised cost, not a forecast.** On 2026-09-14 the T1.08 backend-confound
+probe ran its colab arm twice:
+
+| job | declared `est_hours` | billed | outcome |
+|---|---|---|---|
+| `ladder-1789373334` | 0.7 | **1.0277** | computed; `fetch failed: /content/t108.json` |
+| `ladder-1789381054` | 0.7 | **1.0832** | computed; `fetch failed: /content/t108.json` |
+
+Both overran their own declared estimate by 47% and 55%. Neither left a mark.
+`"overruns": []`. Against the authorising ruling's **1.20 GPU-h** for the whole
+probe, actual spend across both backends was **2.6716 h — 223%** — and the colab
+arm still has no committed reading. The builder's retry path prefers colab
+(`prefer=colab` is pinned in the spec so no venue can be chosen after seeing
+which is kind — correct, and unrelated to this). **Nothing in this repository
+would have refused a third, fourth or tenth attempt**, because each attempt is
+small on its own and `afford()` sees one job at a time against a ceiling that,
+for this lane, does not exist.
+
+**Why this is yours and not the loop's.** The number is a budget. An organ that
+sets its own budget has not been constrained; `D26`'s own reasoning refused
+option (i) precisely because pacing against our own spend *widens* what the
+builder may take. The builder can build the mark; it may not pick the ceiling.
+It is also genuinely possible the honest answer is "colab is free and unmetered,
+leave it" — in which case the repair is one comment stating so, and this entry
+closes at zero cost. I cannot tell from inside the repo which it is.
+
+**Options:** (i) MARK BUT DO NOT CAP — `charge()` marks and prints a per-job
+overrun on **every** backend whenever billed hours exceed declared `est_hours`
+past a stated margin; `remaining("colab")` keeps returning infinity and the
+ceiling question is answered "there is none, deliberately", recorded in the
+file. (ii) GIVE COLAB A WEEKLY CEILING of `N` hours (you name `N`), enforced by
+`afford()` and marked by `charge()` exactly as kaggle's is. (iii) DECLINE — the
+lane stays exactly as it is today, uncapped and unmarked, and this entry records
+that the state is chosen rather than overlooked.
+
+DECIDE: D30
+  class:     goal
+  blocks:    no spec id — which is why no `blocked` ranking, no `coverage`
+             class and no `champions` check can see it, and why it needed an
+             organ reading `gpu.py` against `gpu_budget.json` by hand. What is
+             at stake is whether this project's stated GPU ration is a
+             constraint or a habit: one of its two lanes is rationed and the
+             other is not, and the unrationed one is the one the retry path
+             prefers. The cost is realised, not forecast: 2.11 colab-hours in
+             one morning across two attempts that retrieved nothing, inside a
+             probe that spent 223% of its authorised budget with no number
+             anywhere turning red.
+  default:   (i) MARK BUT DO NOT CAP. `charge()` gains a per-job overrun mark
+             and stderr print on EVERY backend when billed hours exceed the
+             declared `est_hours` past a stated margin; no ceiling is invented
+             for colab, `remaining()` is not touched, and no dispatch is
+             refused that is permitted today. This picks only already-permitted
+             actions — marking an overrun is what this file has done for kaggle
+             since week 31 closed at 37.4554 of 30.0 with T0.12 green
+             throughout, and extending an existing observation to a second lane
+             creates no new authority. It moves no threshold in either
+             direction (it introduces no threshold at all: the comparison is
+             against a number the dispatcher already declares for itself),
+             edits no GOAL.md text, widens nothing, spends no GPU, commits no
+             budget, fails no spec, refuses no run, stales no certificate, and
+             leaves no commitment claim-dead. It is MONOTONE on the thing at
+             issue: a mark can only make spend MORE visible, never permit more
+             of it. Option (ii) GIVE COLAB A CEILING is deliberately NOT the
+             default because a default may not invent a budget number on the
+             owner's behalf — a ceiling picked by the organ it constrains is
+             not a constraint, which is the exact reasoning `D26` used to
+             refuse its own option (i). Option (iii) DECLINE is deliberately
+             NOT the default because it writes off a measured 2.11-hour loss
+             and leaves the next one equally invisible; a default may record a
+             debt but should not discard a measurement. The price, stated
+             rather than buried: (i) buys VISIBILITY and nothing else. A marked
+             overrun still spent the hour, and if nobody reads the mark the
+             lane is exactly as uncapped tomorrow as it is today — which is why
+             (ii) is on this list and why this is on your desk rather than
+             recorded and closed. Reversal: delete one `if` from
+             `experiments/gpu.py`; no threshold, no ledger row, no re-run.
+  decide_by: 2026-09-25
+
+`decide_by` 2026-09-25 is deliberately AFTER `D27` (09-20), `D28` (09-21) and
+`D29` (09-22), so this does not land on a desk-week already carrying three
+decisions and four consecutive at-capacity queue days. The lane is uncapped today
+and will be uncapped on the 25th; the default costs nothing to wait for, and the
+one thing that could not wait — the builder reaching for a third colab attempt
+without reading the two it already paid for — is handled by the 97th audit's
+`FOR THE BUILDER` item 1, which orders the harvest before any re-dispatch.
