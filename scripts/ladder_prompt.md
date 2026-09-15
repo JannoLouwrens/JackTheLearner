@@ -537,10 +537,34 @@ prohibitions and are carried into `3''`. **(Superseded in turn on 2026-09-05 —
 the live items are now `1'''`, `2'''` and `3''`; see the block immediately
 below.)**
 
-**LIVE PRIORITY BLOCK — `1^7`/`2^7` (Review, 2026-09-14, DAILY). `3''` FURTHER
-BELOW IS UNCHANGED AND STILL LIVE. THE `1^6`/`2^6` BLOCK BELOW IS SPENT — THREE
-OF ITS FIVE ITEMS WERE DEAD WITHIN TWENTY-FOUR HOURS AND YOU SAID SO, IN THE
-JOURNAL, FOUR SLOTS RUNNING. READ THIS BLOCK INSTEAD.**
+**LIVE PRIORITY BLOCK — `1^8`/`2^8` (Review, 2026-09-15, DAILY). `3''` FURTHER
+BELOW IS UNCHANGED AND STILL LIVE. `1^7`/`2^7` BELOW IS SUPERSEDED — its four
+items are not dead, they are PART-EXECUTED, and the difference matters. READ
+THIS BLOCK INSTEAD.**
+
+**READ THIS FIRST: YOU HAVE BEEN DARK FOR 18 CONSECUTIVE SLOTS AND IT IS NOT
+YOUR FAULT.** Your last iteration ended `2026-09-14T12:07`. Every slot since has
+paced out: `week:all models` 37% against a 35% line — and of the 37 points on
+that meter, **28 (75%) are NOT THIS PROJECT** (builder 7, desks 2). The line
+rises at a fixed 0.3869 pts/h; the meter is being consumed at ~1.45 pts/h. **The
+gap widens on its own, so you do not come back this week by waiting.** Routed to
+the owner as **`D30`**, `decide_by` 09-18, with the desk recommending against its
+own default. Two consequences that change how you should spend a slot if you get
+one:
+
+- **ASSUME THIS SLOT IS YOUR LAST ONE THIS WEEK.** Do not open a unit you cannot
+  finish inside it. Do not start a design.
+- **PERISHABLE WORK OUTRANKS PORTABLE WORK.** `2026-W37` has **26.51 free GPU-h
+  expiring Sat 2026-09-19**; zero-GPU work keeps perfectly until next week and
+  those hours do not. The ordering below is built on that and on nothing else.
+
+**AND THE ONE THING THAT WENT UNREAD FOR NINETEEN HOURS.** The `stdout` HEAD
+capture you shipped at `521d33e` **worked, and it settled the question it was
+built for, on the very next failure**: `JACK_OUT /content`. The job wrote where
+the fetch looked. **Cause (1) is eliminated; cause (2) — the kept download
+session losing the run VM — is the cause.** Your own LESSON's instruction is
+therefore binding rather than advisory: **do not touch the fetch path.** Full
+addendum at §9 of the `t108-bar-set-from-n1-...` row (`8c85e71`).
 
 **FIRST, THE RETRACTION, because you were right and the page was wrong.** Four
 consecutive slots opened by verifying a board this desk had filled with corpses,
@@ -576,7 +600,47 @@ dead, named so nobody re-derives it a fifth time:
   execution debt on DISPOSITIONED rows, not mine; they are dated where a slot
   can reach them. Take the count from `review-queue`, never from this page.
 
-1^7. **IN THIS ORDER.**
+1^8. **IN THIS ORDER, and the order is priced in perishable hours, not in
+importance.**
+
+   1. **FIRE `D19`'s NO-FETCH DEFAULT. It has been overdue since 00:00 today**
+      and `run decisions` prints it `OVERDUE — DEFAULT IS DUE TO FIRE`. Minutes,
+      zero GPU, and it lifts the hold on `HR.1` (frees 3). An armed default left
+      unfired past its own date is a governance defect, not a backlog item.
+      Required wording: *"the owner did not rule by 2026-09-14, so the
+      pre-registered default fired."* `HR.1`–`HR.4` stay blocked behind the rest.
+   2. **THE `T1.08` COLAB REPAIR, in two steps, and step (a) spends nothing.**
+      Authorised at §9d of the ruling, ~1.05 GPU-h against 26.51 expiring Sat.
+      **(a) ZERO GPU FIRST:** the job prints its result JSON to stdout on one
+      delimited line (`JACKRESULT {...}`) and the failure record captures the
+      **WHOLE** stdout, not a 400-char tail. **The tail bound is what lost seeds
+      0 and 1.** Sampling both ends was the right repair on 09-14 and it was
+      still too narrow to carry the payload it had correctly decided to recover.
+      **(b) THEN** one colab dispatch, same commit, same seed list, n=5.
+      **A THIRD DISPATCH UNDER THE UNCHANGED RETRIEVAL MECHANISM IS FORBIDDEN** —
+      the colab lane has charged **2.1109 h for zero retrieved results** and the
+      probe as executed stands at **2.6716 h against a 1.20 h authorisation**.
+      If (a) cannot be made to work, **ABANDON the colab arm** and report the
+      probe as a single-backend reading saying so. That is a smaller finding
+      honestly labelled and it costs less than a fourth charge.
+      **DISCLOSURE YOU MUST CARRY:** seeds 2, 3, 4 of the colab arm survive in
+      the truncated tail (0.047148, 0.098334, 0.035367). **You may NOT take the
+      pre-registered branch on that subset** — seed selection is the venue-
+      selection prohibition wearing different clothes — but whoever takes the
+      branch knows three of its five numbers and **must say so on the record.**
+   3. **`T1.07`'s re-buy is OWED and unbought (~0.47 GPU-h).** You landed the
+      `IMPL_DEPS` declaration at `300480d` 11:13 and went dark at 12:07, so the
+      certificate is **deliberately staled and standing staled** — `run stale`
+      lists it first. This is the cheapest ladder-moving unit on the board and
+      it is funded by hours that expire Saturday. The binding margin is the
+      CONTROL's **x1.255** against a measured **x99.59**. No bar moves.
+   4. **Do not pre-empt the `A4` disposition** (DUE 09-18, mine) or the `T2.10`
+      repair design (mine). Unchanged from `1^7`.
+
+1^7. **SUPERSEDED BY `1^8` ABOVE — kept because this file never deletes history.
+ITEM 1 IS PART-EXECUTED (both arms dispatched; kaggle landed, colab's retrieval
+failed twice and its cause is now settled); ITEM 2 IS HALF-EXECUTED (declaration
+landed, re-buy owed); ITEM 3 IS NOW OVERDUE; ITEM 4 STANDS.**
 
    1. **THE `T1.08` BACKEND-CONFOUND PROBE — the only legal GPU dispatch in the
       project today.** Two commits, in this order, per the `D1.0` twin-spread
@@ -607,6 +671,22 @@ dead, named so nobody re-derives it a fifth time:
       diagnostic that is computed nowhere, and `D10` seated `A4` by verdict
       without it. Do not pre-empt the disposition. If you want the free half,
       it is the grep, and the scout has already run it.
+
+2^8. **PROHIBITIONS — `2^7` below is carried IN FULL and still binds. These are
+ADDITIONS, not a replacement.**
+   - **Do NOT dispatch the `T1.08` colab arm a third time under the unchanged
+     retrieval mechanism.** Two charges, 2.1109 h, zero results. §9d of the
+     ruling authorises the stdout-carry repair and nothing else, and it
+     authorises ABANDONING the lane as a legitimate outcome.
+   - **Do NOT edit `run_on_colab`'s fetch path.** The head capture eliminated
+     cause (1) on evidence. A fetch-path patch is now a fix aimed at a surface
+     that has been measured innocent.
+   - **Do NOT read the probe's branch off the three recovered seeds.** Disclose
+     them; do not use them.
+   - **Do not date your own work onto a day you cannot run.** If a queue row you
+     own comes due and the slot is paced out, say so in the journal — this desk
+     re-dated five of yours today on measured cause, and it can only do that if
+     the cause is in writing.
 
 2^7. **PROHIBITIONS — the first is new and it is the sharpest.**
    - **Do NOT dispatch `T1.08` to a backend because the probe reported that
