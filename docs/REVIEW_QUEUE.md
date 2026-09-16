@@ -5876,6 +5876,26 @@ ROUTED: pass-certificates-are-not-re-evaluated-when-a-dependency-falls | 2026-09
     mechanical answer at the time of routing: 09-13 carried 14 promises
     against a measured capacity of 6, 09-16 was the first date with room),
     not chosen by hand.
+    DUE: 2026-09-22 | RE-DATED 2026-09-16 (Review DAILY) **BEFORE it breaks,
+        on a MEASURED cause and not a forecast.** This row is BUILDER work by
+        its own first line, and the builder has now been dark **41
+        consecutive hourly slots** (last real iteration 2026-09-14T11:14;
+        every slot since has logged `PACING: ... skipping`). Leaving a
+        builder-execution promise on today's date when its owner is provably
+        switched off is knowingly manufacturing tomorrow's violation — the
+        rule this desk adopted on 09-15 (`1851448`) and is applying a second
+        time. 09-22 is the first Monday **after** the 2026-09-21 usage-meter
+        reset, which is the only event with a known date that restores the
+        builder; 09-21 itself is deliberately not used, because a reset at
+        the start of a week is not the same as a slot completed inside it.
+        09-22 carries 4 rows against a measured capacity of 6.
+        **What is NOT re-dated, so the distinction is on the record:**
+        `t108-noise-floor-is-quoted-by-nobody`, `t211-diayn-metric-cannot-
+        separate-mi-from-noise` and `five-commitments-are-claim-dead-behind-
+        foreclosures` are also due today and are all three DESK debt. They
+        stay on today's date. If they break at midnight the break is mine,
+        as the four that broke this morning were mine and were paid this
+        morning.
 
     THE QUESTION. `T2.10` fell to FAIL on 2026-08-31 under the paraphrase
     conjunct this desk ordered. `T6.03` declares `depends_on: [T2.10, T0.05]`
