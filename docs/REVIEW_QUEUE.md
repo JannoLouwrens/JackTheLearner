@@ -4400,7 +4400,7 @@ the acceptance test. MECHANICAL — the 21 PASS certificates citing
 `playground.py`, plus `HR.7`. **Item (5) adds nothing to either bill:** it is a
 conjunct inside `HR.5`'s own check, and `HR.5` re-runs regardless.
 
-ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | DISPOSITIONED 2026-09-10 (Review DAILY — sub-question (b) ANSWERED YES on evidence that did not exist when this row was written, and the row's own declared bill CORRECTED from zero to real. Sub-question (a) re-dated to 09-15 with its premise materially weakened. See ANSWER (b) below)
+ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | ACTED 2026-09-16 (Review DAILY — sub-question (a) ANSWERED NO on the reading the 09-15 DUE line itself demanded, and the answer is the OPPOSITE of the one that line was leaning toward. Both sub-questions are now settled; the row does not return. See ANSWER (a) below)
     DUE: 2026-09-10 | two build questions owed by the Review — dated OFF the
     09-06 pile deliberately (the 65th/66th audits both flag that docket at 7
     rows vs measured capacity 1/cycle); only the re-parent sub-question rides
@@ -4472,6 +4472,111 @@ ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | DISPOSIT
         Dated 09-15 beside the two weld-root rows: same builder-dark
         constraint (`D26` addendum, 09-10), and 09-13 carries 13 rows against
         a capacity of 6.
+
+    ANSWER (a), 2026-09-16 (Review DAILY) — **NO. The matched fact sets
+        cannot be honestly built today, and the reading the line above
+        demanded is what settles it — against the direction that line was
+        leaning.** The 09-15 DUE text named the decisive test in advance:
+        *"settling it requires reading how `LG.00` SOURCES its life corpus —
+        whether from lived `W0` episodes or from synthesised diary entries —
+        and a wrong answer there licenses a told-world rung built on a corpus
+        nobody lived."* That reading was done. **The corpus is synthesised.**
+        `lg_00_not_a_puppet.py:156` imports `_build_life` from `LG.01`, and
+        `lg_01_*.py:229` is an RNG draw over word pools written straight into
+        `EpisodicMemory` — `rng.sample(RESOURCES, N_GEN)`,
+        `rng.sample(PLACES, N_GEN)`, `mem.record("did", "jack", f"jack found
+        {res} at {place}")`. No simulator steps. No W0 episode. No body. Its
+        own docstring is candid about the scope of the thing it does claim
+        (*"the arm run here is diary + LLM, and the learned core contributes
+        nothing"*), and **that claim is true and is not touched by this
+        answer** — `LG.00` certifies that Jack's DIARY beats an LLM without
+        it. It does not certify that anything in the diary was lived. The
+        "counter-example in the making" this desk flagged on 09-15 does not
+        survive the test this desk wrote for it, and is refused for the
+        reason it wrote down.
+
+        **The second ground, and it is the larger one: the vocabulary is not
+        there either.** `GOAL.md:186-188` names seven primitives as what
+        survival earns — *hot, heavy, far, tiring, dangerous, worth-it,
+        that-person-lied*. Measured against `coverage`'s commitment register
+        and the ledger this morning:
+
+        | primitive | commitment | certified lived? |
+        |---|---|---|
+        | dangerous | `damage/nociception` | **YES** — `PS.03` PASS |
+        | that-person-lied | `social/other agents` | **YES** — `LG.02` PASS |
+        | hot | `thermal (kills)` | **NO — CLAIM-DEAD**, 0 pass, every claim spec parked or foreclosed |
+        | heavy | **no commitment entry** | no registered claim |
+        | far | **no commitment entry** | no registered claim |
+        | tiring | **no commitment entry** | no registered claim (nearest `NE.02`, unimplemented behind `NE.01` FAIL) |
+        | worth-it | **no commitment entry** | no registered claim |
+
+        **Two of seven.** And the two that landed are the two least usable
+        for this design: `LG.02` is a social inference, `PS.03` is
+        nociception; neither is a sensorimotor ground of the kind *"anchored
+        to primitives he has lived"* needs, and `LG.11`'s hypothesis names
+        five and gets one of them (`dangerous`). A few dozen anchored facts
+        cannot be drawn from one usable primitive, and a set drawn from
+        UNCERTIFIED primitives makes `LG.11`'s own control vacuous: the
+        stripped agent would show no gap because there was no lived ground to
+        strip, and the run would read FAIL-by-construction against a claim
+        that was never tested.
+
+        **CONSEQUENCE for the registration, stated so the later edit is not a
+        drift.** `LG.11`'s `depends_on=["LG.00", "LF.01"]` is wrong in KIND,
+        not only in reachability. `LG.00` cannot be the lived-ground
+        dependency — its life is synthesised — and `LF.01` is VOID on
+        `cause=integrity`. The re-parent declared at registration
+        (*"when Sunday's W1 design registers the survival world this
+        re-parents to the surviving W1 line"*) is therefore not bookkeeping:
+        it is the only thing that can give this spec a source at all.
+        `LG.00` stays in `depends_on` as the **probe apparatus** — ANSWER (b)
+        above is unaffected and the reuse is still free to assume — and the
+        lived-ground slot is **empty until W1 lands**. Whoever executes the
+        re-parent writes that distinction into the entry.
+
+        **NOT DEFERRED, ROUTED:** the four primitives with no commitment
+        entry are a `coverage` register gap, not an `LG.11` problem, and they
+        get their own row (`goal-187-names-seven-primitives-four-have-no-
+        commitment`, DUE 2026-09-18) rather than riding out of sight on a
+        row that is now closed. This row is ACTED and does not return.
+
+ROUTED: goal-187-names-seven-primitives-four-have-no-commitment | 2026-09-16 | Review-DAILY-09-16 (told-world-has-no-rung ANSWER (a)) | OPEN
+    DUE: 2026-09-18 | first date with room under the measured capacity of 6
+        (09-18 carries 4; 09-16 and 09-17 carry 6 each, 09-20 carries 6). Not
+        dated onto the Sunday FULL despite being Completeness-Audit-shaped,
+        because piling a seventh row onto a date already at capacity is the
+        defect `review_queue_piled_on` exists to count.
+    Question: `GOAL.md:186-188` justifies the ENTIRE survival programme with
+    one sentence — *"Survival earns him the primitives that make anything
+    else mean something — hot, heavy, far, tiring, dangerous, worth-it,
+    that-person-lied"* — and `coverage.py`'s commitment register contains
+    **three of the seven** (`thermal (kills)`, `damage/nociception`,
+    `social/other agents`). **`heavy`, `far`, `tiring` and `worth-it` have no
+    commitment entry at all**, so no instrument in this repo can report them
+    missing, and the four are invisible to the exact check built in August to
+    catch *"the goal names it and nothing tests it"*. The mechanism is known
+    and is not a bug: `coverage` parses BOLDED commitments, and these seven
+    live in a prose sentence. This is the 2026-08-09 smell/taste/voice shape
+    recurring inside the file written to prevent it.
+    Two halves, and they go to different desks:
+    (i) BUILDER, mechanical and monotone: add the four to the commitment
+        register. Adding a commitment can only RAISE `claim_dead` /
+        no-declared-spec counts and never lower one, so it is shrink-only in
+        the safe direction and needs no ruling. Expect `claim_dead` 4 -> up
+        to 8 on the first read; that rise is the gap becoming visible, not a
+        regression, and the executing commit says so.
+    (ii) REVIEW, then possibly the OWNER: once visible, does this project
+        COMMIT to a falsifiable claim for heavy / far / tiring / worth-it, or
+        is `GOAL.md`'s sentence corrected to name only what it intends to
+        test? A default may not narrow what this project has promised itself
+        (the `D29` reasoning), so striking the words is not this desk's to
+        choose — if (ii) resolves toward correction it routes to the owner as
+        a `D`, quoting the recommendation verbatim.
+    SEMANTIC bill: none. No spec is edited, no threshold moves, no
+    certificate stales.
+    MECHANICAL bill: `T0.21` audits `coverage.py` and will owe a re-stamp
+    when (i) lands; `T0.36` hashes `run.py` and does not.
 
 ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | ACTED 2026-09-10 (Review DAILY, executing commit `1a0e413` — the reading this row asked for, delivered, and it is a PARTIAL: see READING below. `1a0e413` carries both halves: the reading, and the consequence it forces — `W1.04` gains conjunct (c) in the design block on the `w0-too-shallow` row, which is what the builder registers from)
     DUE: 2026-09-06 | direct evidence owed INTO the W1 design the Review
