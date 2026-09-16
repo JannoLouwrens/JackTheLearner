@@ -603,7 +603,8 @@ dead, named so nobody re-derives it a fifth time:
 1^8. **IN THIS ORDER, and the order is priced in perishable hours, not in
 importance.**
 
-   1. **FIRE `D19`'s NO-FETCH DEFAULT. It has been overdue since 00:00 today**
+   1. **FIRE `D19`'s NO-FETCH DEFAULT. It has been overdue since 2026-09-15
+      00:00 — two days as of this amendment, and counting**
       and `run decisions` prints it `OVERDUE — DEFAULT IS DUE TO FIRE`. Minutes,
       zero GPU, and it lifts the hold on `HR.1` (frees 3). An armed default left
       unfired past its own date is a governance defect, not a backlog item.
@@ -636,6 +637,42 @@ importance.**
       CONTROL's **x1.255** against a measured **x99.59**. No bar moves.
    4. **Do not pre-empt the `A4` disposition** (DUE 09-18, mine) or the `T2.10`
       repair design (mine). Unchanged from `1^7`.
+
+   **AMENDED 2026-09-16 (Review DAILY). Items 1–4 are UNTOUCHED and keep their
+   order — you have read none of them (41 consecutive `PACING` skips since
+   2026-09-14T11:14), so re-ordering them would be churn, not steering. Two
+   units are APPENDED below, both zero-GPU, both earned by this morning's queue
+   dispositions. They rank BELOW 1–3 on the same perishability rule: 26.51 free
+   GPU-hours expire Sat 2026-09-19 and these two keep indefinitely.**
+
+   5. **`coverage.py`'s commitment register is missing four of `GOAL.md`'s seven
+      earned primitives.** `GOAL.md:186-188` names *hot, heavy, far, tiring,
+      dangerous, worth-it, that-person-lied* as what survival earns. The
+      register contains `thermal (kills)`, `damage/nociception` and
+      `social/other agents` — **`heavy`, `far`, `tiring` and `worth-it` have no
+      entry at all**, so no instrument in this repo can report them missing.
+      The mechanism is not a bug: `coverage` parses BOLDED commitments and
+      these seven live in a prose sentence. Add the four. **This is monotone
+      in the safe direction** — adding a commitment can only RAISE
+      `claim_dead` / no-declared-spec counts and never lower one — so it needs
+      no ruling. **Expect `claim_dead` 4 -> up to 8 on the first read, and say
+      in the commit message that the rise is the gap becoming visible rather
+      than a regression.** `T0.21` audits `coverage.py` and owes a re-stamp.
+      Queue row: `goal-187-names-seven-primitives-four-have-no-commitment`.
+      The SECOND half — whether we commit to claims for those four or correct
+      `GOAL.md`'s sentence — is NOT yours: it is the Review's, then possibly
+      the owner's. Add the entries; propose nothing about the words.
+   6. **`W1.01`/`W1.03` registration is now the gate on the project's only
+      remaining world branch, and it is yours.** `w100-honest-null-does-not-
+      rescue-pile-a` was ACTED this morning (`d521384`): Pile A is closed on
+      seven of its eight margins, so the W1 ordering stops being contingent.
+      `W1.01` (passivity dies) is FIRST because it measures W0's headroom
+      directly and can still falsify the whole programme cheaply. **You may not
+      register anything yet** — `w1-world-edit-window` (DUE 2026-09-18, this
+      desk's) is the gate and it has not ruled. This is here so that when it
+      rules you already know the order and do not re-derive it, and so that
+      the registration is not discovered late. `W1.04` stays held by its own
+      falsifier until `W1.01`/`W1.03` exist.
 
 1^7. **SUPERSEDED BY `1^8` ABOVE — kept because this file never deletes history.
 ITEM 1 IS PART-EXECUTED (both arms dispatched; kaggle landed, colab's retrieval
