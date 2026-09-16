@@ -7044,3 +7044,99 @@ and will be uncapped on the 25th; the default costs nothing to wait for, and the
 one thing that could not wait — the builder reaching for a third colab attempt
 without reading the two it already paid for — is handled by the 97th audit's
 `FOR THE BUILDER` item 1, which orders the harvest before any re-dispatch.
+
+---
+
+## DUPLICATE-ID NOTICE — **two different open decisions are both numbered `D30`, and `experiments/decisions.py` silently keeps only the second.** (2026-09-16, overseer, 98th audit)
+
+**Not a decision. No `DECIDE:` block, deliberately** — adding one would deepen
+the hole this notice documents. This is evidence attached to a register defect,
+appended under the same permission the 87th/88th audits used for their OVERDUE
+and PREMISE-CORRECTION notices.
+
+**The measurement.**
+
+```
+$ grep -n '^## D30' docs/DECISIONS_NEEDED.md
+6803:## D30 — The builder has been dark for 18 consecutive hourly slots ...
+                                        (2026-09-15, Review DAILY)
+6937:## D30 — The colab GPU lane has no ceiling, no overrun mark and no refusal ...
+                                        (2026-09-15, overseer, 97th audit)
+
+$ grep '^DECIDE: ' docs/DECISIONS_NEEDED.md | sort | uniq -c | sort -rn | head -1
+      2 D30          # 28 DECIDE blocks in the file, 27 distinct ids
+
+$ grep -n 'decide_by' docs/DECISIONS_NEEDED.md | tail -2
+6903:  decide_by: 2026-09-18        # the blackout entry
+7038:  decide_by: 2026-09-25        # the colab entry
+
+$ $PY -m experiments.decisions --check | grep -E '^\s+D30'
+    D30    costs   0 specs   due 2026-09-25
+$ $PY -m experiments.decisions --check | tail -1
+  ratchet ok (0/10 undeclared, 0/3 unrouted-owner-ask, 0/0 vanished-owner-ask,
+              0/0 default-action-expired, 0/0 firing-diff).
+```
+
+**The mechanism, read out of the source rather than inferred.** `parse()` walks
+every `DECIDE:` block in document order and assigns `decls[did] = d`
+(`experiments/decisions.py:360-381`). Last write wins. There is no `if did in
+decls` anywhere in the module. The header scan immediately below it *does*
+accumulate duplicates correctly (`headers.setdefault(key, []).append(title)`,
+line 391) — so the same parser holds the evidence of the collision in one
+structure and discards it in the other.
+
+**This is not concurrent-write damage.** Both blocks entered in a single commit,
+`1466035` (Review DAILY, 2026-09-15). The Review read the 97th audit's `FOR THE
+OWNER` item 3 — which had explicitly declined to append the colab finding itself
+— routed it correctly, routed its own blackout finding correctly, and allocated
+"the next free id" twice. No lock would have prevented it. The missing thing is a
+uniqueness assertion.
+
+**What is lost.** Every field of the blackout entry's `DECIDE` block: its
+`class: goal`, its `blocks:` text, its `default: (v) REPORT THE STREAK, GATE
+NOTHING, RELAX NOTHING`, and its `decide_by: 2026-09-18`. Consequently:
+
+- it can never print `OVERDUE — DEFAULT IS DUE TO FIRE`, and its default can
+  never fire — the deadlock-breaking machinery `SYSTEM.md` spends four
+  paragraphs on does not reach it;
+- its default has never been safety-checked: `safety_hazards`,
+  `SAFETY-CLAIM-DEAD` and `firing_diff_hazards` all read `decls`, so they have
+  only ever seen the colab text;
+- the owner is given two dates for one id — `PROGRESS.md` `FOR THE OWNER` 1 says
+  `D30` is due **2026-09-18**; the tool says **2026-09-25**;
+- the tool lists **6** open decisions where the file holds **7** distinct open
+  armed entries, and nothing prints the difference.
+
+The shadowed entry's own `blocks:` field reads: *"no spec id directly. What it
+blocks is EVERY spec, because it blocks the organ that runs them."*
+
+**The repair, and what is not a repair.** RENUMBER the **colab** entry to `D31`
+and leave the blackout entry as `D30` — `D30` is the id `PROGRESS.md` gave the
+owner, and reassigning an id under the owner is not the desk's to do. Then make
+`parse()` **raise** on a repeated id, and make `--check` report the number of
+`DECIDE:` blocks READ beside the number of decisions RESOLVED, so the two can
+never differ in silence again. **Deleting either entry is not a repair**, and
+neither is letting the colab entry keep the id because it happens to be the one
+the tool already shows. A register keyed by a hand-typed id must assert its own
+uniqueness; a count reported from the size of a dict is a count of what survived
+parsing, not of what was written.
+
+Routed to the builder as `OVERSIGHT.md` `FOR THE BUILDER` item 1, and — because
+the builder has been dark 42 consecutive slots and the Review has not — to the
+Review's next sitting as well. The overseer may not edit an existing entry, so
+the renumber is not mine to make.
+
+**ADDENDUM, same morning (2026-09-16 07:2x): the collision has already moved a
+real date, with no author.** The Review's `PROGRESS.md` of **2026-09-15** told the
+owner: *"`D30` — NEW, routed this morning (`1466035`), **`decide_by` 2026-09-18**,
+and it is the only item on this page that you alone can settle."* The Review's
+`PROGRESS.md` of **2026-09-16** (`201912f`), describing the same entry —
+*"the builder is now dark 41 consecutive slots ... the desk still recommends
+against its own default"* — tells the owner **`decide_by` 2026-09-25**.
+
+Same desk, same decision, seven days later, and nobody extended anything. The
+desk read its own entry back out of `decisions --check` and was handed the other
+`D30`. `SYSTEM.md` says *"a deadline that moves when it is reached is the
+deadlock it replaced"*; this one moved without being reached and without being
+decided. **The live date for the blackout question is 2026-09-18**, and it will
+stay unenforceable until the renumber above is made.

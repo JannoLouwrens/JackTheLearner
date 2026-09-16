@@ -15291,3 +15291,79 @@ still declared pid 405151 live twenty hours after it exited. A declaration that
 outlives its process is a claim that outlived its evidence, and the next waking
 slot reads it as "work in flight" — the same trap in miniature, on the same
 artifact.
+
+## A REGISTER KEYED BY A HAND-TYPED ID MUST ASSERT ITS OWN UNIQUENESS — last-wins parsing turns a duplicate id into a SILENT DELETION, and the instrument goes on reporting clean
+## (overseer, 2026-09-16, 98th audit, from two open owner decisions both numbered `D30`)
+
+`docs/DECISIONS_NEEDED.md` carried **two different open decisions with the same
+id**, written by one author in one commit (`1466035`). `experiments/decisions.py`
+parses declarations into a dict keyed by that id — `decls[did] = d`, line 381 —
+with no `if did in decls` anywhere in the module. The second block overwrote the
+first. `decisions --check` then printed one `D30`, exited **0**, and reported
+**`ratchet ok`** over a file holding an armed decision it had never read.
+
+What vanished was not a stray row. It was the escalation whose own `blocks:`
+field reads *"no spec id directly. What it blocks is EVERY spec, because it
+blocks the organ that runs them"* — dated `decide_by 2026-09-18`, announced to
+the owner on `PROGRESS.md` under that date, and thereafter unable to go OVERDUE,
+unable to fire its default, and never once safety-checked, because every check in
+the module reads `decls`.
+
+**Three properties turned a typo into a deletion, and each is common:**
+
+1. **The key is hand-typed.** Ids are allocated by a human or an agent reading
+   the file for "the next free number". Two allocations in one sitting is not a
+   race and no lock prevents it.
+2. **The parse is last-wins.** A dict assignment is the default way anyone writes
+   this, and it is indistinguishable from correct behaviour on every file that
+   happens to be well-formed.
+3. **The count is reported from the survivors.** `--check` printed the size of
+   the dict it built, not the number of blocks it read. Those two numbers are
+   equal exactly when nothing was lost, which is precisely when you do not need
+   them.
+
+Property 3 is the one that made it *silent*. The same parser held the evidence in
+its other half — the header scan five lines below accumulates duplicates
+correctly with `setdefault(...).append(...)` — and threw it away.
+
+**Rule: wherever a register is keyed by an identifier a human writes, the parser
+must FAIL LOUD on a repeat, and the tool must report `blocks read` beside
+`entries resolved` so the two can never differ in silence.** This generalises
+past decisions to every `<KEY>:` register in this repo — `COVERS:`, `DECIDE:`,
+`ROUTED:`, `SEAT:`/`ARENA:` — and past this repo to anything that resolves
+hand-written names against a dict.
+
+**And the repair rule, because the cheap fix is the wrong one.** The tempting
+move is to keep whichever entry the tool already shows and drop the other; that
+is a register shrinking its own problem by deleting data, the same defect
+`T0.31` was gated to prevent after three instruments each paid a "repair" that
+lowered its own number. **Renumber, never delete** — and keep the id that was
+already published outward, because an id the owner has been given is no longer
+the desk's to reassign.
+
+**The meta-point, which is why this sits beside the coverage and champions
+scars.** This system has spent weeks building organs that can see a thing nobody
+was watching: a missing spec, an uncontested seat, a deadlocked decision, a
+backlog with no reader. This failure is one layer above all of them. The organ
+could see everything it parsed. What it could not see was **whether it had
+parsed the whole file** — and it reported `ok` for the part it read.
+
+**And the second instance landed the same morning, in a different organ, which
+is what makes this a class rather than an anecdote.** `experiments/coverage.py`
+resolves `GOAL.md`'s constitutional commitments against the ladder — and it
+resolves them against `COMMITMENTS`, a list a human typed. `GOAL.md:187` names
+seven primitives (*hot, heavy, far, tiring, dangerous, worth-it,
+that-person-lied*); **`heavy`, `far` and `worth-it` were never in the list.** So
+the tool built specifically to catch *"a commitment with no falsifiable claim,
+invisible to every instrument this system owns"* reported **0 uncovered
+commitments** — truthfully, about a narrower question than its headline asks.
+Ninety-seven audits reported that 0 as the project's highest-priority reading.
+
+**So the rule has a second half. A checker whose SUBJECT LIST is transcribed from
+a source must also check the transcription** — diff the list against the source,
+or derive it from the source, or at minimum print `N entries checked` beside the
+source's own count so a divergence is visible. A count computed from what you
+successfully parsed equals the truth exactly when nothing was lost, which is
+exactly when you did not need it. **Both failures are the same sentence: the
+organ could not see whether it had read the whole source, and it reported clean
+for the part it read.**
