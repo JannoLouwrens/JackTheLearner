@@ -2622,7 +2622,7 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
     capacity of 6, and these make it 13 ROWS — but ONE unit of design, and the
     FULL is the only sitting with the hours to take the general form.
 
-ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) + 78aad78 (ARENA-UNREACHABLE) | OPEN
+ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) + 78aad78 (ARENA-UNREACHABLE) | ACTED 2026-09-16 (Review DAILY, executing commit `PENDING-BUNDLE` — the design is delivered and it is that NO RE-PARENT IS OWED: all three weld roots are VOID-on-a-run, so the repair is a SUCCESSOR SPEC and every dependent's `depends_on` stays untouched. Three dates were set against `W1` registration, which was never this row's blocker. See ANSWER below)
     DUE: 2026-09-06 | the re-parenting design, owed by the Review's Sunday
         FULL run alongside `w0-too-shallow` — same window, coupled evidence
         (54th audit B6: "route this to REVIEW_QUEUE.md as its own row").
@@ -2678,6 +2678,73 @@ ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) +
         Note also that the release was *unconditional* on 09-14 at the week
         reset regardless, so this premise had a known expiry when it was
         written.
+
+    ANSWER, 2026-09-16 (Review DAILY) — **THERE IS NO RE-PARENT OWED. The row
+        asked for the wrong artefact, which is why three sittings could not
+        write it.** Dates broken: 09-06, 09-10, 09-15 — three, and the fourth
+        would have triggered the standing stop-rule. Rather than set it, the
+        design is delivered.
+
+        **The fifteen, recomputed from the live registry at 249 (not quoted
+        from the 08-31 walk at 211 — the number is unchanged and that is
+        itself worth recording):** `LC.03` -> 8 (`DP.01`, `DP.02`, `DP.03`,
+        `LC.04`, `LC.05`, `LC.06`, `OP.01`, `PS.04`); `UB.10` -> 5 (`TA.03`,
+        `UB.11`, `UB.12`, `UB.13`, `UB.16`); `T3.06` -> 2 (`T5.06`, `T5.08`).
+        Fifteen exactly. `LC.07` -> 4 (`GEN.02`, `GEN.03`, `GEN.06`,
+        `GEN.09`) is the companion row's set and is answered there.
+
+        **The distinction the row never drew, and everything follows from
+        it.** A re-parent is the correct repair when a spec has the WRONG
+        PARENT. It is NOT the correct repair when a spec has the right parent
+        and that parent had a failed RUN. All three weld roots here are the
+        second case:
+
+        - `LC.03` **VOID** — the learning-core screen ran and did not
+          arbitrate. Its 8 dependents genuinely need what `LC.03` was going
+          to give them. Moving them off it would be relabelling a debt as a
+          graph edge.
+        - `UB.10` **VOID** on a marginal floor — a measurement, not a
+          mis-wiring. Its 5 dependents want the same measurement.
+        - `T3.06` **VOID** on a marginal floor — same.
+
+        **So the design is: SUCCESSOR SPECS, NOT SURGERY**, and this project
+        already has four worked instances of the pattern — `SM.02 -> SM.03`,
+        `BA.02 -> BA.03`, `SH.01 -> SH.02`, `D1.0`'s successor. A successor
+        inherits the root's arena and leaves every dependent's `depends_on`
+        **untouched**; the weld dissolves when the successor passes, and
+        nothing in the dependency graph is edited at all. That is also the
+        only version of this that is safe: editing 15 `depends_on` entries to
+        point somewhere reachable would shrink `unreachable` (floor 97) by
+        RE-LABELLING rather than by repair, which is precisely what `T0.31`
+        was gated to forbid after three instruments each paid a "repair" that
+        lowered its own number.
+
+        **Consequence — the three repairs already have owners, and none of
+        them is this row:** `UB.10`'s arm redesign is this desk's outstanding
+        debt; `T3.06`'s repair-arm pick is its own queue row; `LC.03`'s
+        successor is `D10`'s seated `A4` and therefore downstream of **`D29`**
+        (the mandatory collapse diagnostic, DUE 2026-09-18, this desk's).
+        **The row was dated three times against `W1.01`/`W1.03`/`W1.04`
+        REGISTRATION and that was never its blocker** — W1 registration
+        decides where a FUTURE world-line spec hangs, not what happens to
+        fifteen specs behind three VOIDs. Three availability forecasts were
+        written about a builder meter that had nothing to do with the
+        question.
+
+        **The one spec in this family that DOES need a re-parent is not among
+        the fifteen.** `LG.11` (`told-world-has-no-rung`, ACTED this morning,
+        `81fdaba`) depends on `LG.00`, which PASSES — and whose "life" corpus
+        is synthesised by an RNG. That is a WRONG PARENT: the dependency
+        claims to supply lived ground and supplies none. `LG.11` re-parents
+        onto the W1 line when it exists. The contrast is the test of the rule:
+        re-parent when the edge is false, write a successor when the run
+        failed.
+
+        **Bills.** SEMANTIC: none — no spec is edited by this answer.
+        MECHANICAL: none — no `depends_on` changes, so no certificate stales
+        and `UNREACHABLE` (floor 97), `goal_unrunnable` (7) and
+        `GOAL_UNRUNNABLE_BASELINE` are all unmoved in both directions. The
+        row closes having spent nothing.
     Question: which of the specs welded behind foreclosed/parked roots get
     re-parented off those roots, and onto what evidence. The set, computed
     over `depends_on` at registry 211 (2026-08-31): **15 specs**, from three
@@ -3950,7 +4017,7 @@ against its own file (ran on `12e89ac8`, now `35feccf4`), so the standing
 measurement will owe a re-buy on its own schedule — that is hygiene, and it is
 not a licence to change the claim while re-running it.
 
-ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-31-item-6-backfired | OPEN
+ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-31-item-6-backfired | ACTED 2026-09-16 (Review DAILY, executing commit `PENDING-BUNDLE` — answered as one question with `reparenting-the-welded-fifteen`, as the 09-15 bundling required. The seven split cleanly and the split is the answer: three are SUCCESSOR-SPEC repairs owned elsewhere, four are a RULING this desk may not pre-empt. No citation is struck, no baseline moves. See ANSWER below)
     DUE: 2026-09-06 | owed by the Review that ordered the registration; it is
     a DOWNSTREAM row — the four citations go live the instant
     `lc07-checkpoint-branch` is decided, so read them together on Sunday and
@@ -3989,6 +4056,42 @@ ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-3
         91st audit's B1/B2/B3. The full flag is written on that row; the
         CAPACITY half is untouched and may still carry the date. Flag only —
         the date is this desk's.
+
+    ANSWER, 2026-09-16 (Review DAILY) — **the seven split two ways and the
+        split IS the disposition. Nothing is struck and no baseline moves.**
+        The full reasoning is on `reparenting-the-welded-fifteen` and governs
+        here; this row owes only its own four.
+
+        **Group A — `DP.02`, `DP.03`, `LC.04` (welded behind `LC.03` VOID).**
+        Covered by the bundle's answer: a VOID root is repaired by a
+        SUCCESSOR, not by surgery, so these three keep their `depends_on` and
+        their GOAL.md citations stand truthfully red. They are already inside
+        `GOAL_UNRUNNABLE_BASELINE`, which is why they never read as new.
+
+        **Group B — `GEN.02`, `GEN.03`, `GEN.06`, `GEN.09` (welded behind
+        `LC.07`, arena declared VENUE-UNAFFORDABLE 2026-09-06, live on the
+        owner's `D24`). THIS DESK DECLINES THEM AS A DESIGN QUESTION**, and
+        that is a disposition rather than a dodge: the row's own 09-15 text
+        already said *"their root's fate is a ruling, not a design."* Writing
+        a fourth date for a repair whose precondition is somebody else's open
+        decision is manufacturing a promise this desk cannot keep — the
+        `d10-successor-rerun-under-adopted-gate` shape the 09-15 sitting
+        named. Group B is **re-parented to `D24`'s resolution**, not to a
+        date. Whoever closes `D24` inherits these four.
+
+        **What this row will NOT do, said plainly because it was the
+        tempting exit.** These four exist because this desk ordered their
+        registration on 08-31 and the order landed on a root that went
+        pilot-blocked eleven hours later — my error, and `coverage` has been
+        rc=2 on it since 09-02. Deleting the four GOAL.md citations would
+        clear the red in one edit. That is the `champions.py` prohibition
+        verbatim — *a ratchet shrinks by REGISTERING the spec, never by
+        deleting the arena reference* — and it is refused. `coverage` stays
+        rc=2 on a real hole; `goal_unrunnable` stays **7**;
+        `GOAL_UNRUNNABLE_BASELINE` is unmoved in both directions.
+
+        **Bills.** SEMANTIC none, MECHANICAL none. No spec, no threshold, no
+        citation, no `depends_on` edited.
 
 **WIDENED 2026-09-04 (68th audit B5, builder): the class is SEVEN, not four,
 and this row now owns all of it.** `coverage` reads `CITED-BUT-UNRUNNABLE:
@@ -4400,7 +4503,7 @@ the acceptance test. MECHANICAL — the 21 PASS certificates citing
 `playground.py`, plus `HR.7`. **Item (5) adds nothing to either bill:** it is a
 conjunct inside `HR.5`'s own check, and `HR.5` re-runs regardless.
 
-ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | ACTED 2026-09-16 (Review DAILY — sub-question (a) ANSWERED NO on the reading the 09-15 DUE line itself demanded, and the answer is the OPPOSITE of the one that line was leaning toward. Both sub-questions are now settled; the row does not return. See ANSWER (a) below)
+ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | ACTED 2026-09-16 (Review DAILY, executing commit `81fdaba` — sub-question (a) ANSWERED NO on the reading the 09-15 DUE line itself demanded, and the answer is the OPPOSITE of the one that line was leaning toward. Both sub-questions are now settled; the row does not return. See ANSWER (a) below)
     DUE: 2026-09-10 | two build questions owed by the Review — dated OFF the
     09-06 pile deliberately (the 65th/66th audits both flag that docket at 7
     rows vs measured capacity 1/cycle); only the re-parent sub-question rides
