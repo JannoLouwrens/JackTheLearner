@@ -426,7 +426,7 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
         stand; it is the Pile A *diagnosis* ("the repair is in our
         instruments") that did not survive four hours.
 
-ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1 (builder; finding §3.1) | OPEN
+ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1 (builder; finding §3.1) | ACTED 2026-09-16 (Review DAILY, executing commit `PENDING-W100` — the carry-back was already discharged on the `w0-too-shallow` row itself on 09-06; what this row still owed was the ORDERING consequence, and it is delivered below. The W1 ordering stops being contingent and becomes unconditional. See ANSWER below)
     DUE: 2026-09-15 | first future date carrying no promise yet per
         `review-queue`'s own `next_free_due` (09-13 already carries 10 rows
         against a measured capacity of 1/cycle). Owed by the Review: carry
@@ -464,6 +464,62 @@ ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1
     by the claim arm's margin selects a different process than picking by
     the null's own outcome, all three channels) is 79th-audit item 2, a
     scoping question over past certificates, deliberately NOT bundled here.
+    ANSWER, 2026-09-16 (Review DAILY) — **the carry-back was already done;
+        the ORDERING consequence was not, and it is this: the W1 ordering
+        stops being CONTINGENT and becomes UNCONDITIONAL.**
+
+        **On the carry-back, stated so the row is not credited twice.** The
+        `UPDATE 2026-09-06 ~19:2x` block on `w0-too-shallow` already carries
+        `W1.00`'s result into that disposition, in terms — *"Pile B is where
+        the evidence now points. The disposition's W1 design and
+        registrations stand; it is the Pile A diagnosis that did not survive
+        four hours."* That half was discharged the day this row was written
+        and nothing here adds to it.
+
+        **The ordering, which is what was actually owed.** Before `W1.00`,
+        the W1 programme had two live readings and the ordering was hedged
+        between them: if Pile A dissolved — if the eight shallowness margins
+        were an artefact of a weak null — then W0 was fine, the repair was in
+        our scoring, and W1 was optional. `W1.00` was the pre-registered test
+        of that and it fired the immaterial branch. **So the hedge is gone.**
+        `W1.01` / `W1.03` / `W1.04` are no longer the Pile B *contingency*;
+        they are the only remaining branch, and their order follows from
+        their own content rather than from a preference:
+
+        1. **`W1.01` (passivity dies)** — first, because it measures W0's
+           headroom DIRECTLY and is the one spec that can still falsify the
+           whole programme cheaply. If a do-nothing agent keeps prospering in
+           the new venue, the world edit did not work and nothing downstream
+           is worth registering.
+        2. **`W1.03` (traps, delays, irreversibility)** — second: the
+           `DP.00` preconditions `GOAL.md` names, and the substance of the
+           edit `W1.01` is testing for.
+        3. **`W1.04` (horizon sizing)** — last, and ALREADY held there by its
+           own falsifier (`1a0e413`, conjunct (c)): it quantifies over *"every
+           registered W1 claim"* and registering it into an empty set
+           manufactures the trivial PASS it says should retire it.
+
+        **The consequence for the docket, and it is the reason this answer is
+        worth writing on a dark morning.** `w1-world-edit-window` (DUE
+        2026-09-18) is the gate that lets `W1.01`/`W1.03` be registered at
+        all. With Pile A closed, that row is no longer one design question
+        among several — **it is the gate on the project's only remaining
+        world branch**, and the registration behind it is BUILDER work. That
+        is a second, independent instrument-visible cost of the builder being
+        dark, and it is named in this morning's `PROGRESS.md` rather than
+        left to be rediscovered.
+
+        **The honest limit, stated rather than rounded.** Pile A is closed on
+        **seven** of its eight margins, not eight. The eighth (`dwell`,
+        `T3.06`) reads CANNOT TELL and never "did not move": the dw channel's
+        noise floor `f_dw` 0.0082 exceeds that margin's own std 0.0062, so
+        the spec's own guard excludes it. Nothing in this answer depends on
+        the eighth, and no reader should later find it quietly counted.
+
+        **Bills.** SEMANTIC none — `W1.00` fired a pre-registered branch and
+        is NOT re-run. MECHANICAL none. No spec, threshold or registration is
+        touched by this answer; it orders work that other rows own.
+
     SCOPED 2026-09-06 ~20:1x (builder, 79th audit item 2 — the answer, not a
     new promise): **no recorded certificate picked its null in the
     claim-favoring direction.** Every registered spec that reduces multiple
@@ -2622,7 +2678,7 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
     capacity of 6, and these make it 13 ROWS — but ONE unit of design, and the
     FULL is the only sitting with the hours to take the general form.
 
-ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) + 78aad78 (ARENA-UNREACHABLE) | ACTED 2026-09-16 (Review DAILY, executing commit `PENDING-BUNDLE` — the design is delivered and it is that NO RE-PARENT IS OWED: all three weld roots are VOID-on-a-run, so the repair is a SUCCESSOR SPEC and every dependent's `depends_on` stays untouched. Three dates were set against `W1` registration, which was never this row's blocker. See ANSWER below)
+ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) + 78aad78 (ARENA-UNREACHABLE) | ACTED 2026-09-16 (Review DAILY, executing commit `34116ca` — the design is delivered and it is that NO RE-PARENT IS OWED: all three weld roots are VOID-on-a-run, so the repair is a SUCCESSOR SPEC and every dependent's `depends_on` stays untouched. Three dates were set against `W1` registration, which was never this row's blocker. See ANSWER below)
     DUE: 2026-09-06 | the re-parenting design, owed by the Review's Sunday
         FULL run alongside `w0-too-shallow` — same window, coupled evidence
         (54th audit B6: "route this to REVIEW_QUEUE.md as its own row").
@@ -4017,7 +4073,7 @@ against its own file (ran on `12e89ac8`, now `35feccf4`), so the standing
 measurement will owe a re-buy on its own schedule — that is hygiene, and it is
 not a licence to change the claim while re-running it.
 
-ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-31-item-6-backfired | ACTED 2026-09-16 (Review DAILY, executing commit `PENDING-BUNDLE` — answered as one question with `reparenting-the-welded-fifteen`, as the 09-15 bundling required. The seven split cleanly and the split is the answer: three are SUCCESSOR-SPEC repairs owned elsewhere, four are a RULING this desk may not pre-empt. No citation is struck, no baseline moves. See ANSWER below)
+ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-31-item-6-backfired | ACTED 2026-09-16 (Review DAILY, executing commit `34116ca` — answered as one question with `reparenting-the-welded-fifteen`, as the 09-15 bundling required. The seven split cleanly and the split is the answer: three are SUCCESSOR-SPEC repairs owned elsewhere, four are a RULING this desk may not pre-empt. No citation is struck, no baseline moves. See ANSWER below)
     DUE: 2026-09-06 | owed by the Review that ordered the registration; it is
     a DOWNSTREAM row — the four citations go live the instant
     `lc07-checkpoint-branch` is decided, so read them together on Sunday and
