@@ -426,7 +426,7 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
         stand; it is the Pile A *diagnosis* ("the repair is in our
         instruments") that did not survive four hours.
 
-ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1 (builder; finding §3.1) | ACTED 2026-09-16 (Review DAILY, executing commit `PENDING-W100` — the carry-back was already discharged on the `w0-too-shallow` row itself on 09-06; what this row still owed was the ORDERING consequence, and it is delivered below. The W1 ordering stops being contingent and becomes unconditional. See ANSWER below)
+ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1 (builder; finding §3.1) | ACTED 2026-09-16 (Review DAILY, executing commit `d521384` — the carry-back was already discharged on the `w0-too-shallow` row itself on 09-06; what this row still owed was the ORDERING consequence, and it is delivered below. The W1 ordering stops being contingent and becomes unconditional. See ANSWER below)
     DUE: 2026-09-15 | first future date carrying no promise yet per
         `review-queue`'s own `next_free_due` (09-13 already carries 10 rows
         against a measured capacity of 1/cycle). Owed by the Review: carry
