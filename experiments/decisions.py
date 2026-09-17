@@ -344,7 +344,37 @@ _DID = re.compile(r"^(D\d+)\b")
 # marker must name the DECISION's fate, never an entry's freshness.
 _SETTLED = re.compile(r"RESOLVED|off your desk|BY THE CALENDAR", re.I)
 
-CLASSES = ("means", "goal")
+# THREE CLASSES, NOT TWO (owner, 2026-09-17: "dont we have enough philosophy and
+# structure for an agent to solve these things?").
+#
+# THE MEASUREMENT THAT FORCED THIS. On 2026-09-17 SEVEN decisions sat open, all
+# classed `goal`, all routed to the owner. SIX OF THEM BLOCKED ZERO SPECS. They
+# were the Review's sitting order (D28), whether a PASS gets re-examined by more
+# than one desk on a Sunday (D27), a legal cost class nothing uses yet (D20), a
+# seat's silent-failure guard (D29), the blackout escalation (D30). Real
+# questions, every one — and not one of them is about what Jack must BECOME.
+# They are the desks asking permission to improve their own paperwork.
+#
+# The cause was this tuple having two values. `means` goes to a bakeoff; anything
+# a measurement cannot settle had exactly one other place to go, so process
+# amendments inherited the owner's desk by default and queued behind the
+# questions that actually matter. That is the D1 disease in new clothes: a class
+# with no resolution path silently becomes an escalation, and escalations
+# deadlock.
+#
+#   means    - a measurement settles it. Write the bakeoff. NEVER ask.
+#   conduct  - HOW THE ORGANS WORK: sitting order, review cadence, cost classes,
+#              what gets re-checked by whom. The desks EXECUTE these themselves
+#              under the same default+deadline discipline and REPORT rather than
+#              ask — provided the change weakens no gate, moves no threshold,
+#              edits no GOAL.md text and widens nothing the owner has forbidden.
+#              A conduct amendment that would do any of those is not conduct; it
+#              is `goal`, and misfiling it that way is the one thing this class
+#              must never be used for.
+#   goal     - what Jack must BECOME, or a boundary only the owner may widen
+#              (D19: may the builder write outside the repo?). These are the
+#              owner's, and ONLY these.
+CLASSES = ("means", "conduct", "goal")
 
 # Ratchet, not gate. Eight decisions are open today and none carries a default;
 # a guard that fails everywhere on day one is one nobody keeps green, and a guard
@@ -1212,7 +1242,7 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
     tested the moment somebody fixes the repo.
     """
     decls, candidates, dupes = parse(text)
-    violations, rows = [], []
+    violations, rows, misfiled = [], [], []
 
     # Reported FIRST and unconditionally: a duplicate id means every other line
     # of this report was computed over a register the tool could not read whole.
@@ -1258,6 +1288,16 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
                                "owner — write the bakeoff and delete this entry"))
             continue
 
+        if cls == "conduct":
+            # Not a violation and NOT the owner's. Reported so the desks can see
+            # what they owe themselves, and so a conduct entry that has gone
+            # stale is still visible rather than silently self-approving.
+            violations.append(("CONDUCT-DESK", did,
+                               f"desk-executable, not the owner's (due {d.get('decide_by')}) "
+                               "— execute it, report it, do not ask. Listed so a stale "
+                               "conduct entry cannot silently self-approve."))
+            continue
+
         missing = [k for k in ("default", "decide_by") if not d.get(k)]
         if missing:
             violations.append(("NO-DEFAULT", did,
@@ -1301,6 +1341,32 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
                 "enforce it, so the firing slot must know it is in a race"))
 
         blocks = [b.strip() for b in (d.get("blocks") or "").split(",") if b.strip()]
+        # A GOAL decision that blocks nothing is usually CONDUCT wearing goal's
+        # clothes. Not proof — D19 blocks four specs and is genuinely the
+        # owner's, while a real END (what Jack must become) could legitimately
+        # block none. But on 2026-09-17 six of seven open `goal` entries blocked
+        # zero specs and every one was about how the desks work. Soft-reported
+        # on a ratchet: the owner's desk is a scarce resource and this is the
+        # only instrument that can see it filling with paperwork.
+        # Resolve against the REGISTRY, not against the prose. The first version
+        # string-matched prefixes like "no spec" and missed every real case,
+        # because a `blocks:` field in this file is usually a sentence — "no spec
+        # id directly. What it blocks is EVERY spec, because it blocks the organ
+        # that runs them" — which splits into fragments that match nothing. The
+        # honest question is not how the field is worded but whether a single
+        # token in it names a spec that exists. Same principle as `cost_of`:
+        # computed from the live registry, never typed.
+        try:
+            from .registry import BY_ID as _by_id
+        except Exception:
+            _by_id = {}
+        names_a_spec = any(b.strip().strip('`.,') in _by_id for b in blocks)
+        if _by_id and not names_a_spec:
+            # Deferred, and only raised if nothing ELSE is wrong with this entry.
+            # A question about which desk owns a decision is noise beside a
+            # missing default or an expired action, and appending it inline let
+            # it clobber a hard finding in any consumer that keys by id.
+            misfiled.append(did)
         n, _which = cost_of(blocks)
         rows.append({"id": did, "due": due, "overdue": (today - due).days,
                      "blocks": blocks, "cost": n,
@@ -1326,6 +1392,15 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
     if progress_text is not None:
         violations.extend(owner_ask_findings(progress_text, prev_progress_text,
                                              text, resolved_text))
+    flagged = {did for _k, did, _m in violations}
+    for did in misfiled:
+        if did in flagged:
+            continue
+        violations.append(("CONDUCT-MISFILED?", did,
+                           "class `goal` but blocks no spec id — if this is about how "
+                           "the ORGANS work rather than what Jack must BECOME, reclass "
+                           "to `conduct`, execute it at the desk, and report instead of "
+                           "asking. Soft: a question about routing, never a blocker."))
     return violations, rows
 
 
@@ -1412,6 +1487,21 @@ DECIDE: D93
   class:     goal
   default:   keep the conservative arm, journal the firing
   decide_by: 2099-01-01
+  blocks:    T2.01
+
+## D96 — goal-class but blocks nothing: probably the desks' own paperwork (OPEN)
+
+DECIDE: D96
+  class:     goal
+  default:   leave the sitting order as it stands
+  decide_by: 2099-01-01
+
+## D97 — conduct: the desks execute this themselves (OPEN)
+
+DECIDE: D97
+  class:     conduct
+  default:   the Review spends its first act disposing the OVERDUE class
+  decide_by: 2099-01-01
 
 ## D94 — RESOLVED, must NOT be reported as open
 ## D95 — THE OPTION SET IS STALE: an option contradicts a later decree
@@ -1424,10 +1514,24 @@ DECIDE: D93
     assert kinds.get("D91") == "MEANS-ESCALATED", kinds
     assert kinds.get("D92") == "NO-DEFAULT", kinds
     assert "D93" not in kinds and "D94" not in kinds, kinds
+    # A goal decision that blocks no spec is usually conduct misfiled. SOFT:
+    # flagged, never blocking — D93 proves a goal entry WITH blocks stays clean,
+    # D96 that one without them is questioned.
+    # D93 names T2.01, a spec that REALLY exists, so it stays clean; D96 names
+    # nothing that resolves. A made-up id must read the same as naming nothing —
+    # that is the point of resolving against BY_ID instead of against the prose.
+    assert kinds.get("D96") == "CONDUCT-MISFILED?", kinds
+    assert "CONDUCT-MISFILED?" not in BLOCKING
+    # Conduct is listed, never routed to the owner, and never blocks.
+    assert kinds.get("D97") == "CONDUCT-DESK", kinds
+    assert "CONDUCT-DESK" not in BLOCKING
     # The regression that shipped for one run: a header calling an OPTION stale
     # must not read as the DECISION being settled. D95 is D1's real shape.
     assert kinds.get("D95") == "UNDECLARED", kinds
-    assert [r["id"] for r in rows] == ["D93"], rows
+    # D96 is QUESTIONED, not disqualified: a soft flag asks whether the entry
+    # is on the right desk, so the entry keeps its deadline and stays tracked.
+    # D97 is conduct and must NOT be tracked as owner-owed work at all.
+    assert [r["id"] for r in rows] == ["D93", "D96"], rows
     # An entry with neither bullets nor a block is plain UNDECLARED — the
     # near-miss text must NOT appear (83rd audit B1's negative control).
     assert "NEAR-MISS" not in msgs["D90"], msgs["D90"]

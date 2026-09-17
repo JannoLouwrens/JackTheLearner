@@ -102,6 +102,25 @@ task.
    > **3. CONDUCT — fixed, and not up for measurement either.**
    >    Pre-registration, controls that must fail, never weakening a threshold,
    >    free compute only, tenant safety. The method is not an arm.
+   >
+   >    **AND THE DESKS AMEND THEIR OWN CONDUCT** (owner, 2026-09-17: *"dont we
+   >    have enough philosophy and structure for an agent to solve these
+   >    things?"*). Sitting order, review cadence, cost classes, what gets
+   >    re-checked by whom — the organs change these themselves, under the same
+   >    default-and-deadline discipline, and **report rather than ask**. The
+   >    permission is bounded exactly as a default is: it weakens no gate, moves
+   >    no threshold, edits no GOAL.md text, and widens nothing the owner has
+   >    forbidden. A change that would do any of those is not conduct.
+   >
+   >    This was missing, and it cost exactly what D1 cost. On 2026-09-17 SEVEN
+   >    decisions sat open, all classed `goal`, all routed to the owner — and
+   >    **six of them blocked zero specs.** They were the Review's sitting order,
+   >    whether a PASS is re-examined by more than one desk, a cost class nothing
+   >    uses yet. Real questions, none of them about what Jack must become. A
+   >    class with no resolution path silently becomes an escalation, and
+   >    escalations deadlock; `decisions.py` now carries `conduct` as a first
+   >    class and flags a `goal` entry that names no live spec as probably
+   >    misfiled.
 
    **A measurement may choose among class 2. It may never rewrite class 1 or 3.**
 
