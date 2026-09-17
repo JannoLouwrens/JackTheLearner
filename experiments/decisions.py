@@ -356,6 +356,7 @@ BASELINE_UNDECLARED = 10
 def parse(text: str) -> tuple[dict, list]:
     """Return ({id: declaration}, [candidate open decisions from headers])."""
     decls: dict = {}
+    dupes: list = []
     lines = text.splitlines()
     for m in _DECIDE.finditer(text):
         did = m.group(1)
@@ -378,7 +379,29 @@ def parse(text: str) -> tuple[dict, list]:
             if ln.strip() == "":
                 continue
             break
-        decls[did] = d
+        # DUPLICATE IDS ARE A HARD VIOLATION, NOT A LAST-WRITE-WINS (98th audit,
+        # 2026-09-17). This line used to be a bare `decls[did] = d`. Two open
+        # decisions were both numbered D30 (DECISIONS_NEEDED.md:6803 and :6937,
+        # same commit 1466035), so the second silently overwrote the first and
+        # `--check` printed one D30 and `ratchet ok` over a file holding an armed
+        # decision it had never read — the Review's blackout escalation, whose
+        # own `blocks:` field says it blocks EVERY spec because it blocks the
+        # organ that runs them.
+        #
+        # It corrupted the record within a day: PROGRESS.md 09-15 told the owner
+        # D30 was due 2026-09-18; 09-16, same desk, same entry, said 2026-09-25.
+        # The desk read its entry back out of this tool and was handed the other
+        # one. A deadline moved seven days with nobody extending it — precisely
+        # the deadlock-by-silence this module exists to make impossible.
+        #
+        # So: keep BOTH, key the loser under a synthetic id so nothing is lost,
+        # and raise. An audit tool may report a mess; it may never resolve one by
+        # discarding half of it.
+        if did in decls:
+            dupes.append((did, decls[did].get("line"), d.get("line")))
+            decls[f"{did}#dup@{d['line']}"] = d
+        else:
+            decls[did] = d
 
     headers: dict = {}
     for m in _HEADER.finditer(text):
@@ -390,7 +413,7 @@ def parse(text: str) -> tuple[dict, list]:
             continue
         headers.setdefault(key, []).append(title)
     candidates = [k for k, ts in headers.items() if not any(_SETTLED.search(t) for t in ts)]
-    return decls, sorted(candidates)
+    return decls, sorted(candidates), dupes
 
 
 def near_miss_lines(text: str, did: str) -> list[int]:
@@ -463,7 +486,7 @@ def holds(by_id=None, path: Path = DOC) -> dict:
     """
     if by_id is None:
         from .registry import BY_ID as by_id
-    decls, open_ids = parse(Path(path).read_text())
+    decls, open_ids, _dupes = parse(Path(path).read_text())
     out: dict = {}
     for did in open_ids:
         d = decls.get(did) or {}
@@ -1188,8 +1211,19 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
     can only be exercised while the repo is broken is a guard that stops being
     tested the moment somebody fixes the repo.
     """
-    decls, candidates = parse(text)
+    decls, candidates, dupes = parse(text)
     violations, rows = [], []
+
+    # Reported FIRST and unconditionally: a duplicate id means every other line
+    # of this report was computed over a register the tool could not read whole.
+    for did, first_line, second_line in dupes:
+        violations.append((
+            "DUPLICATE-ID", did,
+            f"two DECIDE blocks share this id (lines {first_line} and "
+            f"{second_line}). Renumber one. Until then any consumer reading a "
+            f"decision back out of this tool may be handed the other one — that "
+            f"is how a deadline moved seven days on 2026-09-16 with nobody "
+            f"extending it."))
 
     for did in candidates:
         d = decls.get(did)
@@ -1308,7 +1342,10 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
 # the 40th audit found in `champions.py` (`ARENA-MISSING` only) and that
 # `T0.21 P2` closed in `coverage.py`. Live count when it was closed: zero, so
 # the strengthening cost nothing — which is the only cheap moment to do it.
-BLOCKING = ("MEANS-ESCALATED", "CLASS", "DATE", "SAFETY-CLAIM-DEAD",
+BLOCKING = (
+    # A register the tool could not read whole invalidates every other line of
+    # its own report, so this blocks before anything else is believed.
+    "DUPLICATE-ID", "MEANS-ESCALATED", "CLASS", "DATE", "SAFETY-CLAIM-DEAD",
             "NO-DEFAULT")
 
 
