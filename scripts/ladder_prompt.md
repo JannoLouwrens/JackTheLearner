@@ -603,13 +603,20 @@ dead, named so nobody re-derives it a fifth time:
 1^8. **IN THIS ORDER, and the order is priced in perishable hours, not in
 importance.**
 
-   1. **FIRE `D19`'s NO-FETCH DEFAULT. It has been overdue since 2026-09-15
-      00:00 — two days as of this amendment, and counting**
-      and `run decisions` prints it `OVERDUE — DEFAULT IS DUE TO FIRE`. Minutes,
-      zero GPU, and it lifts the hold on `HR.1` (frees 3). An armed default left
-      unfired past its own date is a governance defect, not a backlog item.
-      Required wording: *"the owner did not rule by 2026-09-14, so the
-      pre-registered default fired."* `HR.1`–`HR.4` stay blocked behind the rest.
+   1. **`D19` IS RULED. DO NOT FIRE ITS DEFAULT — the owner answered first, on
+      2026-09-17, and answered WIDER than the question: *"yes may download
+      anything to /data"*.** The NO-FETCH default is superseded and unfired; an
+      armed default is overtaken by a ruling, never applied on top of one.
+      `/data` is now a permitted write target for anything the work needs —
+      corpora, weights, caches. **`HR.1` is unblocked and has no unsatisfied
+      dependency: it is runnable now**, and `HR.2`/`HR.3`/`HR.4` follow it.
+      **The bound that survives is a TENANT bound, not a Jack bound:** `/data`
+      is 100 GB shared with the WorldTwin aggregator, its SQLite WAL and the
+      jackandjill backup, on a box serving four paying customers, and it has
+      been filled before (a 45 GB WAL once took it down). So: refuse a fetch
+      that would take `/data` below **15 GB free**, state the size before you
+      download, and delete intermediates in the iteration that made them. That
+      is the standing tenant-safety rule applied, not a narrowing of the ruling.
    2. **THE `T1.08` COLAB REPAIR, in two steps, and step (a) spends nothing.**
       Authorised at §9d of the ruling, ~1.05 GPU-h against 26.51 expiring Sat.
       **(a) ZERO GPU FIRST:** the job prints its result JSON to stdout on one

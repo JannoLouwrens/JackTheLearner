@@ -4341,6 +4341,39 @@ DECIDE: D18
              constitutional constraint staying unenforced, now with a number
              printed beside it)
 
+## D19 — RESOLVED 2026-09-17 by the owner. Off your desk, and wider than it was asked.
+
+**The ruling, verbatim:** *"yes may download anything to /data"*.
+
+Asked: may the builder fetch speech corpora to `/data` for HR.1-HR.4. Granted:
+**anything, to `/data`.** Recorded as given, not as narrowed to the question —
+the owner answered a broader question than the one filed and that is their
+right. The armed default was NO FETCH; it is superseded, unfired.
+
+**What this changes.** `SYSTEM.md`'s "nothing outside /home/opc/jackthelearner
+changes" no longer covers `/data`: it is now a permitted write target for the
+builder, for any artefact the work needs — corpora, model weights, caches,
+intermediates. HR.1 ("The voice corpus is honest before anyone is scored") has
+no unsatisfied spec dependency and was blocked only by this rule; it is runnable
+now, and HR.2/HR.3/HR.4 follow it.
+
+**THE PRICE, recorded beside the decree as owner directives require.** `/data`
+is NOT this project's volume. It is 100 GB shared with the WorldTwin aggregator,
+its SQLite WAL, and the jackandjill nightly backup, on a box serving four paying
+customer agents. It stood at 22 G used / 79 G free when this was granted. The
+volume has been filled before — a 45 GB WAL once took it down — and a full
+`/data` is a tenant outage, not a Jack inconvenience.
+
+**This is not a narrowing of the ruling.** "This box serves paying tenants" is a
+separate standing constraint the owner has not lifted, and it binds the same way
+it did yesterday. Its conservative reading for fetches, which the builder now
+follows: refuse a fetch that would take `/data` below **15 GB free**, state the
+size before downloading, and delete intermediates in the same iteration that
+made them. If the owner wants that floor gone too, that is one more line and it
+is not being asked for here.
+
+*Superseded entry retained below, as this file's convention requires.*
+
 ## D19 — The hearing programme's speech half needs disk that is not this project's to take (2026-09-03, builder, from HEARING_BAKEOFF.md §8.2 — staged there since 08-09, never filed)
 
 **What is blocked:** `HR.1` (the voice corpus fixture) and therefore `HR.2`

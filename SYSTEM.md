@@ -322,8 +322,18 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 - **This box serves paying tenants.** Never `systemctl restart docker` or any
   daemon-wide restart. Act on a single container or not at all. Stay at
   `nice 19`, under ~1.5 GB RAM, and leave no process running.
-- **Nothing outside `/home/opc/jackthelearner` changes.** Deleting components
-  and spending money are the owner's — escalate them. **Architecture calls are
+- **Nothing outside `/home/opc/jackthelearner` changes — EXCEPT `/data`, which
+  is now yours to write** (owner ruling 2026-09-17, verbatim: *"yes may download
+  anything to /data"*, resolving D19). Corpora, weights, caches, intermediates:
+  fetch what the work needs. **The price, and it is a tenant price, not a Jack
+  price:** `/data` is 100 GB shared with the WorldTwin aggregator, its SQLite
+  WAL and the jackandjill backup, on a box serving four paying customer agents,
+  and it has been filled before — a 45 GB WAL once took it down. A full `/data`
+  is a customer outage. "This box serves paying tenants" is a separate standing
+  constraint the owner has NOT lifted, so: **refuse a fetch that would take
+  `/data` below 15 GB free, state the size before downloading, and delete
+  intermediates in the iteration that made them.** Deleting components
+  and spending money are still the owner's — escalate them. **Architecture calls are
   NOT on that list any more** (owner ruling, 2026-08-24): if the arms can be
   run, rule 3 governs and you write the bakeoff. Escalate an architecture call
   only when the fork turns on what is *permitted* rather than on what *works* —
