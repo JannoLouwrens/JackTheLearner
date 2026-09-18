@@ -121,6 +121,17 @@ FAILED_SUFFIX = "_failed"
 # to find its own id, and that happens within hours of the original push.
 MAX_TRACKED_JOBS = 500
 
+# Per-job overrun mark (99th audit B4; D31 pending on the ceiling question —
+# this marks, it caps NOTHING). A job whose billed hours exceed its own declared
+# `est_hours` by more than this fraction gets an `overruns` entry and a stderr
+# print, on EVERY backend. 0.25 is stated, not derived: comfortably below the
+# two measured colab overruns that motivated the mark (47% and 55%, 2026-09-14)
+# and above poll-granularity jitter. The comparison is against a number the
+# dispatcher already declares for itself — no new threshold gates anything,
+# `remaining("colab")` still returns infinity, and no dispatch is refused that
+# was permitted before this constant existed.
+PER_JOB_OVERRUN_MARGIN = 0.25
+
 # Colab VMs start in /content, and `colab download` will not resolve a relative
 # remote path. Verified 2026-08-04.
 COLAB_CWD = "/content"
@@ -471,8 +482,13 @@ class Budget:
         return list(self.data.get("overruns", []))
 
     def charge(self, backend: str, seconds: float, *,
-               ok: bool = True, job_id: str = "") -> bool:
+               ok: bool = True, job_id: str = "",
+               est_hours: float = 0.0) -> bool:
         """Bill `seconds` of `backend`. Returns True if this call actually billed.
+
+        `est_hours` is the dispatcher's own declared estimate; 0.0 means
+        undeclared (reattach harvests, hand charges) and no per-job overrun
+        can be marked for the job.
 
         `job_id` makes billing idempotent per unit of remote compute. Without it,
         `JACK_REUSE_KERNEL` — which reattaches to a kernel that is already
@@ -517,6 +533,22 @@ class Budget:
             # overrun that leaves no mark is how week 31 closed at 37.4554 of a
             # 30.0 h ceiling with T0.12 green throughout, and denied T1.02 its
             # 0.7 h.
+            # Per-job overrun (99th audit B4): every backend, observe-only.
+            # The weekly-ceiling mark below stays kaggle-only — colab has no
+            # ceiling and inventing one is D31, the owner's, not this code's.
+            billed_h = seconds / 3600.0
+            if est_hours > 0 and billed_h > est_hours * (1.0 + PER_JOB_OVERRUN_MARGIN):
+                self.data["overruns"].append({
+                    "kind": "per_job", "week": self._week(), "backend": backend,
+                    "job_id": job_id, "est_hours": round(est_hours, 4),
+                    "billed_hours": round(billed_h, 4),
+                    "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                })
+                print(f"!! PER-JOB OVERRUN: {backend} job {job_id or '<no id>'} "
+                      f"billed {billed_h:.4f}h against a declared "
+                      f"{est_hours:.4f}h ({billed_h / est_hours:.0%}) — "
+                      f"marked, not refused (D31 owns the ceiling question)",
+                      file=sys.stderr, flush=True)
             used = self.used_hours(backend)
             if backend == "kaggle" and used > KAGGLE_WEEKLY_HOURS:
                 self.data["overruns"].append({
@@ -1169,7 +1201,8 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
         _SUBMITTED_CHARGE_S.append(res.charge_seconds)
         # Charge the metered window, labelled by outcome, once per remote job.
         # All three of those qualifiers were missing until 2026-08-09.
-        budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id)
+        budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id,
+                      est_hours=est_hours)
         if res.ok:
             res.message = (res.message + f" | attempts: {attempts}") if attempts else res.message
             # Carry the dispatch head out on the result, so a multi-kernel
