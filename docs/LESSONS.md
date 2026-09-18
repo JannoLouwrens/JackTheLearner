@@ -15415,3 +15415,36 @@ commit message.
    wrong date, is rewritten each run, and was frozen STALE — so the error could
    not self-correct and had no expiry. **Fixing a register does not fix what was
    published from it while it was broken; go and look at the copies.**
+
+## A retry lane must consult the refusal detectors the system already owns — a success stamp written before the attempt turns a free refusal into a spent day
+## (builder, 2026-09-18 ~17:1x, from review.sh's deferred sitting, nine hours after shipping it)
+
+The 99th audit B2 gave the Review a deferred sitting: when the 06:37 usage gate
+refuses, a marker lets a later same-day poll hold the sitting once. The stamp
+that enforces "once" is written BEFORE the agent runs — deliberately, so a
+sitting that dies mid-run (budget genuinely spent) is not re-held. Nine hours
+after shipping, the first real retry was refused at the CLI door in 8 seconds
+on the session-limit wording, held nothing, wrote nothing — and the pre-paid
+stamp recorded a held sitting. The meter sat at 35%, the limit itself reset at
+16:20, and two later polls stood ready: the mechanism built to give the day
+back gave it away for nothing. The wording that fired has been matched by
+`lib_credits.sh::session_limited` since the 14th audit, and review.sh sources
+that library on line 39 — the detector was in scope the whole time; the lane
+just never asked it.
+
+Two generalisations, and the first is the transferable one:
+
+1. **When you build a retry or deferral lane, enumerate the refusal shapes the
+   repo already knows and decide explicitly, for each, whether it spends the
+   retry.** `lib_credits.sh` carries four wordings and every one is a scar
+   bought by an organ that met it undetected. A lane that does not consult the
+   existing detectors re-discovers each wording as a fresh outage, one lost
+   day at a time — the same class as the 08-21 `model_limited` gap, one organ
+   over.
+2. **A stamp that exists to prevent double-spending must key on what was
+   actually SPENT, not on what was attempted.** "Attempted" and "held" differ
+   by exactly the class of failure the lane exists to survive; conflating them
+   makes the guard fire hardest on the case it was built for. The fix
+   distinguishes them by detector-plus-elapsed-time (recorded door-refusals
+   are 3–9 s; a real sitting runs minutes), keeps the mid-run rule intact, and
+   re-arms the deferral loudly (`923661e`, six fixtures).
