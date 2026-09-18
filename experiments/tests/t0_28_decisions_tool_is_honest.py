@@ -119,7 +119,7 @@ SPEC_ID = "T0.28"
 # hashing playground.py; T0.21 hashing coverage.py).
 IMPL_DEPS = ["experiments/decisions.py"]
 
-N_PROPERTIES = 18
+N_PROPERTIES = 19
 
 # P17's log. `aaa1` declares itself a firing in this repo's usual idiom; `aaa2`
 # is an ordinary commit that must never be claimed as one.
@@ -179,10 +179,28 @@ DECIDE: D93
   class:     goal
   default:   keep the conservative arm, journal the firing
   decide_by: 2099-01-01
+  blocks:    T2.01
 
 ## D94 — RESOLVED, must NOT be reported as open
 ## D95 — THE OPTION SET IS STALE: an option contradicts a later decree
 ## D95 — the original question (OPEN, owner)
+"""
+
+# The conduct advisory's positive (owner ruling 2026-09-17): a goal-class entry
+# that is fully armed but puts NO spec in its radius. `D93` above carries
+# `blocks: T2.01` for the same reason `decisions.py`'s own selfcheck D93 does —
+# under the 09-17 rule a goal entry with an empty radius is probably conduct
+# misfiled, and the exemplar of "correctly armed" must be exemplary under
+# current law. Its absence here cost this certificate: the advisory's arrival
+# staled the PASS, and the 2026-09-18 re-buy FAILed P1 on a fixture that was
+# correct when written (attempt 23 in the ledger is that honest FAIL).
+DOC_MISFILED = """
+## D96 — goal-class but blocks nothing: probably the desks' own paperwork (OPEN)
+
+DECIDE: D96
+  class:     goal
+  default:   leave the sitting order as it stands
+  decide_by: 2099-01-01
 """
 
 # `D8` as it actually stood on 2026-08-29, reduced to the sentence that names
@@ -499,6 +517,8 @@ def _probe(safety_enforced: bool) -> dict:
     # flags everything is as useless as one that flags nothing, so the negative
     # (D93 armed, D94 resolved) is half the property. D95 is D1's real shape:
     # a header calling an OPTION stale is not a resolution of the DECISION.
+    # D93 stays clean only because its radius names a real spec — the 09-17
+    # conduct advisory's negative half. Its positive half is P19.
     v, rows = audit(DOC_PARSE, TODAY, rows_for_safety=[], by_id=FIXTURE_BY_ID)
     kinds = {did: kind for kind, did, _ in v}
     if (kinds.get("D90") != "UNDECLARED"
@@ -901,6 +921,23 @@ DECIDE: D84
             or _diff_calls("HEAD", safety_enforced=S)
             != [("show", "--format=", "--unified=0", "HEAD")]):
         failed.append("p18_the_worktree_check_reads_the_worktree")
+
+    # P19 — the conduct advisory (owner ruling 2026-09-17), both ways, and it
+    # is SOFT. A goal-class entry whose radius names no live spec draws exactly
+    # `CONDUCT-MISFILED?` and STAYS ARMED — a routing question must not unarm a
+    # default — and the advisory must never move the exit code: it is not in
+    # today's blocking set and not in the legacy one, so `_rc` reads 0 on a
+    # document whose only finding it is. The negative half (a spec-backed goal
+    # entry stays clean) is D93 in P1's fixture. This property exists because
+    # its absence cost a certificate: the advisory shipped 09-17, the PASS went
+    # stale, and the 09-18 re-buy failed P1 on a fixture the organ had outgrown.
+    v19, rows19 = audit(DOC_MISFILED, TODAY, rows_for_safety=[],
+                        by_id=FIXTURE_BY_ID)
+    kinds19 = {did: kind for kind, did, _ in v19}
+    if (kinds19.get("D96") != "CONDUCT-MISFILED?"
+            or [r["id"] for r in rows19] != ["D96"]
+            or _rc(v19, safety_enforced=S) != 0):
+        failed.append("p19_conduct_advisory_is_soft_and_leaves_the_arm")
 
     live_asks = _live_asks()
     return {
