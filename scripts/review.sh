@@ -5,7 +5,8 @@
 # the overseer independently audits every spec diff, so the powers check each
 # other. Runs DAILY at 06:37; FULL (Part 2, the test re-examination) on Sundays.
 #
-# Install:  37 6 * * *  /home/opc/jackthelearner/scripts/review.sh
+# Install:  37 6 * * *          /home/opc/jackthelearner/scripts/review.sh
+#           22 9,12,15,18 * * * /home/opc/jackthelearner/scripts/review.sh --retry
 # Read:     docs/PROGRESS.md
 # Stop:     touch /home/opc/jackthelearner/.review-paused
 set -uo pipefail
@@ -13,6 +14,28 @@ REPO=/home/opc/jackthelearner
 LOG=/data/jack-logs/review.log
 PAUSE="$REPO/.review-paused"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
+
+# --- THE DEFERRED SITTING (99th audit B2, RANK 2) ---------------------------
+# One poll a day meant one usage_gate refusal cost this desk a full day even
+# when the meter reset hours later: on 09-17 and 09-18 the 06:37 slot was
+# refused at 91-100%, the weekly reset landed mid-morning, budget sat abundant
+# all afternoon, and the queue went 0 -> 11 OVERDUE with no sitting either day.
+# A refused sitting now writes a deferral marker; later same-day polls
+# (--retry, crontab above) hold the sitting AT MOST ONCE if and only if it has
+# not happened yet. THE 90% STOP IS NOT TOUCHED: every retry passes through
+# the same pause/disk/load/usage gates below — this changes only WHEN the
+# question is asked, never what it answers, and a paused or over-budget desk
+# stays paused or refused. A retry poll with nothing deferred exits in
+# milliseconds before any gate or CLI call.
+DEFER=/data/jack-logs/review-deferred
+SAT=/data/jack-logs/review-last-sitting
+TODAY=$(date -u +%F)
+if [ "${1:-}" = "--retry" ]; then
+  [ -f "$DEFER" ] && [ "$(cat "$DEFER" 2>/dev/null)" = "$TODAY" ] || exit 0
+  if [ "$(cat "$SAT" 2>/dev/null)" = "$TODAY" ]; then rm -f "$DEFER"; exit 0; fi
+  say "retry poll: the 06:37 sitting was deferred and has not been held — attempting it now (99th audit B2)"
+fi
+
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
 . "$REPO/scripts/lib_pause.sh"
@@ -27,7 +50,11 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenant
 # proxy. Nothing else is throttled — this is the only limit.
 # UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
 # open is not a limit.
-usage_gate say || exit 0
+usage_gate say || {
+  echo "$TODAY" > "$DEFER"
+  say "sitting DEFERRED — the usage gate refused it; a later --retry poll today may hold it once the meter allows (99th audit B2)"
+  exit 0
+}
 cd "$REPO" || exit 0
 # Declare this run to procwatch (65th audit B5) — same reason as overseer.sh:
 # an auditor's instrument call must not read as a builder leftover. Children
@@ -69,6 +96,12 @@ MODEL="${JACK_REVIEW_MODEL:-opus}"
 TURNS_PER_MIN=6
 if [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=40m; MINUTES=40; else MODE=DAILY; TMOUT=20m; MINUTES=20; fi
 MAXTURNS=$(( MINUTES * TURNS_PER_MIN ))
+# The sitting is now HAPPENING: stamp it and consume any deferral, so retry
+# polls stop attempting today. Stamped before the agent runs, not after — a
+# sitting that dies mid-run spent its budget and must not be re-held; the
+# seal/INCOMPLETE-row machinery below already reports that death honestly.
+echo "$TODAY" > "$SAT"
+rm -f "$DEFER"
 say "review start — mode ${MODE}, model ${MODEL}, ${TMOUT} / ${MAXTURNS} turns"
 # The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
 # after this moment are this run's own acts. Captured before the agent starts.
