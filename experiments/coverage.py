@@ -151,6 +151,18 @@ COMMITMENTS: Dict[str, Tuple[str, str]] = {
     "plasticity":         (r"\b(plastic\w*|frozen|does not die|forgetting)\b", "PLASTIC ONLY decree"),
     "generality":         (r"\b(generalis\w*|generaliz\w*|held.out|unseen|transfer\w*)\b", "GEN.00, the final exam"),
     "fast/slow":          (r"\b(deliberat\w*|habit|slow path|lookahead)\b", "owner 2026-08-10"),
+    # GOAL.md:186-188 names SEVEN primitives survival earns — "hot, heavy,
+    # far, tiring, dangerous, worth-it, that-person-lied" — and they live in a
+    # prose sentence this parser's bolded-commitment sweep never sees. Three
+    # were already here under other names (hot -> `thermal (kills)`, dangerous
+    # -> `damage/nociception`, that-person-lied -> `social/other agents` via
+    # LG.02's liar test); these FOUR had no entry at all, so no instrument
+    # could report them missing (98th audit / Review 2026-09-16; the LESSONS
+    # rule: a checker's transcribed subject list is itself a failure surface).
+    "heavy":              (r"\b(heavy|weight|mass|lift\w*|carry\w*|drag\w*)\b", "GOAL 187: survival-earned primitive"),
+    "far":                (r"\b(far|distance|distant|navigat\w*|wayfind\w*)\b", "GOAL 187: survival-earned primitive"),
+    "tiring":             (r"\b(tiring|fatigue\w*|exhaust\w*|stamina|effortful)\b", "GOAL 187: survival-earned primitive"),
+    "worth-it":           (r"\b(worth|payoff|cost.benefit|trade.?off|forgo\w*)\b", "GOAL 187: survival-earned primitive"),
 }
 
 # `COVERS: a, b` — consumes to end of line, sentence, or string. A spec may

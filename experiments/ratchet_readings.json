@@ -8,8 +8,8 @@
     "value": 4
   },
   "claim_dead": {
-    "at": "2026-09-03",
-    "value": 4
+    "at": "2026-09-18",
+    "value": 8
   },
   "cpu_foreclosed_now": {
     "at": "2026-09-15",
@@ -55,16 +55,16 @@
     "value": 3
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-16",
-    "value": 6
+    "at": "2026-09-18",
+    "value": 9
   },
   "review_queue_piled_on": {
     "at": "2026-09-15",
     "value": 0
   },
   "review_queue_violations": {
-    "at": "2026-09-03",
-    "value": 0
+    "at": "2026-09-18",
+    "value": 11
   },
   "unreachable": {
     "at": "2026-09-13",
