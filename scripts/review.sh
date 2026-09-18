@@ -22,7 +22,11 @@ say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 # all afternoon, and the queue went 0 -> 11 OVERDUE with no sitting either day.
 # A refused sitting now writes a deferral marker; later same-day polls
 # (--retry, crontab above) hold the sitting AT MOST ONCE if and only if it has
-# not happened yet. THE 90% STOP IS NOT TOUCHED: every retry passes through
+# not happened yet. The once-a-day cap is on sittings actually HELD: a run the
+# CLI refuses at the door in seconds (a limit wording, nothing spent, no page
+# touched) is not a held sitting and re-arms the deferral — see the
+# door-refusal block after the run chain below, and its scar of 2026-09-18.
+# THE 90% STOP IS NOT TOUCHED: every retry passes through
 # the same pause/disk/load/usage gates below — this changes only WHEN the
 # question is asked, never what it answers, and a paused or over-budget desk
 # stays paused or refused. A retry poll with nothing deferred exits in
@@ -130,6 +134,25 @@ elif [ "$RC" -ne 0 ] && api_overloaded; then
 fi
 usage_ledger review end "$MODEL"      # D15 (d): after any retry, one line whatever RC says;
                                       # MODEL tracks the retry branch so this names what RAN
+# A LIMIT REFUSAL AT THE DOOR IS NOT A HELD SITTING (2026-09-18). The SAT stamp
+# above deliberately treats a mid-run death as spent budget — right, and kept.
+# But on 2026-09-18 the 15:22 retry was refused by the CLI in 8 seconds on the
+# session-limit wording, spent nothing, wrote nothing — and the stamp still
+# consumed the day's one deferred sitting while the meter sat at 35% and the
+# limit itself reset at 16:20. lib_credits.sh has recognised that wording since
+# the 14th audit; this script sourced it and never acted on it. So: rc!=0 AND a
+# limit wording in this run's OWN log bytes (bounded read, after the last
+# mark_log) AND the whole chain over inside 120 s — every recorded door-refusal
+# is 3–9 s, a real sitting runs minutes — restores the deferral and un-stamps,
+# so a later --retry poll may still hold the day's sitting through the same
+# gates. A day whose every poll is refused ends with the deferral armed and no
+# sitting, which the INCOMPLETE trend row below still reports as a labelled
+# hole. The 90% stop and the once-a-day cap on HELD sittings are unchanged.
+if [ "$RC" -ne 0 ] && limit_hit && [ $(( $(date +%s) - RUN_START )) -le 120 ]; then
+  echo "$TODAY" > "$DEFER"
+  rm -f "$SAT"
+  say "sitting REFUSED at the door by a usage limit in $(( $(date +%s) - RUN_START ))s — nothing was held; deferral restored so a later --retry poll may hold today's sitting (door-refusal is not a sitting)"
+fi
 # A run that dies LATE has already written its report -> stamp it a DRAFT. A run
 # that dies BEFORE writing leaves a clean file that is nonetheless no longer
 # current state -> stamp it STALE, but only once it is older than this organ's
