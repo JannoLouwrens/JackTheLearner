@@ -175,12 +175,28 @@ PY
   fi
 }
 
+# 99th audit B6: HARVEST_PATHS are four in-repo files, but detached runs write
+# their artifacts to /data — a finished dispatch is invisible to the harvest
+# above. The EXITED stamp (same audit, B3) is written for exactly this reader:
+# say the finished dispatch loudly, every skipped slot it stands, so a skip
+# streak cannot swallow it. NOTICING ONLY — committing the interpretation
+# still belongs to an unpaced iteration, and the add -A ban stands.
+notice_exited_dispatches() {
+  local decl="${JACK_PROC_DECL:-/data/jack-logs/declared_pids}"
+  [ -r "$decl" ] || return 0
+  while IFS="$(printf '\t')" read -r key ts desc exited; do
+    case "$exited" in EXITED*) ;; *) continue ;; esac
+    case "$desc" in *dispatch*|*run_spec*|*detached*) ;; *) continue ;; esac
+    say "PACE-SKIP NOTICE: declared dispatch '${desc}' (${key}) is ${exited} — a finished detached run may hold artifacts outside the harvest paths (/data); the next unskipped iteration should read them"
+  done < "$decl"
+}
+
 # ...and spread what is left across the week, so the loop is still awake on the
 # Sunday that Kaggle's free quota expires. Builder ONLY: it is ~82% of all organ
 # runs (168/wk against the overseer's 28, review's 7, field watch's 1), so
 # pacing it captures nearly all the benefit while the oversight organs — the
 # machinery that catches drift — keep the plain 90% gate at full strength.
-pace_gate say || { harvest_bookkeeping; exit 0; }
+pace_gate say || { harvest_bookkeeping; notice_exited_dispatches; exit 0; }
 cd "$REPO" || exit 0
 BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
