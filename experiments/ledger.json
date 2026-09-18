@@ -32764,37 +32764,15 @@
       "status": "PASS"
     },
     "T1.07": {
-      "amended": [
-        {
-          "at": "2026-09-14T04:15:31",
-          "by": "builder 2026-09-14 venue pricing",
-          "changes": [
-            {
-              "field": "impl_sha",
-              "from": "3194d14d6770e04b",
-              "proof": "reconstructed 3194d14d6770e04b from git 445b9e1146d8; docstring-stripped ASTs identical (prose_only_delta)",
-              "to": "7fd74ff2a2e00c8b"
-            }
-          ],
-          "commit": "9878853+dirty",
-          "dirty_files": [
-            "experiments/tests/t1_07_lr_robustness.py"
-          ],
-          "reason": "venue pricing of all four conjuncts added to the docstring: the control conjunct's margin is 1.255x against a measured 99.59x venue movement; no threshold, constant or gate moved"
-        }
-      ],
-      "attempt": 3,
-      "commit": "445b9e1",
-      "compute_s": 1664.19,
-      "control_metrics": {
-        "absurd_advantage": 0.9162,
-        "absurd_diverged": false,
-        "absurd_lr": 1.0
-      },
+      "amended": [],
+      "attempt": 4,
+      "commit": "56954e0",
+      "compute_s": 3014.31,
+      "control_metrics": {},
       "dirty_files": null,
-      "duration_s": 1673.55,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1789290929",
-      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "duration_s": 3021.34,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1789737292",
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
           "commit": "1a69db6",
@@ -32862,31 +32840,68 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "amended": [
+            {
+              "at": "2026-09-14T04:15:31",
+              "by": "builder 2026-09-14 venue pricing",
+              "changes": [
+                {
+                  "field": "impl_sha",
+                  "from": "3194d14d6770e04b",
+                  "proof": "reconstructed 3194d14d6770e04b from git 445b9e1146d8; docstring-stripped ASTs identical (prose_only_delta)",
+                  "to": "7fd74ff2a2e00c8b"
+                }
+              ],
+              "commit": "9878853+dirty",
+              "dirty_files": [
+                "experiments/tests/t1_07_lr_robustness.py"
+              ],
+              "reason": "venue pricing of all four conjuncts added to the docstring: the control conjunct's margin is 1.255x against a measured 99.59x venue movement; no threshold, constant or gate moved"
+            }
+          ],
+          "commit": "445b9e1",
+          "control_metrics": {
+            "absurd_advantage": 0.9162,
+            "absurd_diverged": false,
+            "absurd_lr": 1.0
+          },
+          "gpu_job_id": "jannolouwrens/jack-ladder-1789290929",
+          "impl_sha": "7fd74ff2a2e00c8b",
+          "message": "",
+          "metrics": {
+            "backend": "kaggle",
+            "gpu": "Tesla P100-PCIE-16GB",
+            "lr_0.0001": 3.917,
+            "lr_0.0003": 6.804,
+            "lr_0.001": 1.38,
+            "lrs_beating_baseline": 3,
+            "reference_advantage": 7.605,
+            "spread_ratio": 4.931,
+            "worst_lr_advantage": 1.38
+          },
+          "ran_at": "2026-09-13T09:43:19",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "a4cc1c560d52fd5b",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "7fd74ff2a2e00c8b",
-      "message": "",
-      "metrics": {
-        "backend": "kaggle",
-        "gpu": "Tesla P100-PCIE-16GB",
-        "lr_0.0001": 3.917,
-        "lr_0.0003": 6.804,
-        "lr_0.001": 1.38,
-        "lrs_beating_baseline": 3,
-        "reference_advantage": 7.605,
-        "spread_ratio": 4.931,
-        "worst_lr_advantage": 1.38
-      },
+      "impl_sha": "761de2c4be75331e",
+      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: skipped \u2014 timeout_s 3000s exceeds the 2486s left before JACK_ITER_DEADLINE; a Colab result cannot outlive its watcher; kaggle: status=queued",
+      "metrics": {},
       "peak_rss_inherited": false,
-      "peak_rss_mb": 209.9,
+      "peak_rss_mb": 210.0,
       "preserved_impl": null,
-      "ran_at": "2026-09-13T09:43:19",
+      "ran_at": "2026-09-18T14:05:10",
       "seeds": [
         0
       ],
       "spec_id": "T1.07",
       "spec_sha": "a4cc1c560d52fd5b",
-      "status": "PASS"
+      "status": "ERROR"
     },
     "T1.08": {
       "amended": [
