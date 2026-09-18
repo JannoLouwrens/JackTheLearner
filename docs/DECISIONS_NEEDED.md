@@ -7173,3 +7173,48 @@ desk read its own entry back out of `decisions --check` and was handed the other
 deadlock it replaced"*; this one moved without being reached and without being
 decided. **The live date for the blackout question is 2026-09-18**, and it will
 stay unenforceable until the renumber above is made.
+
+---
+
+## D31 — EVIDENCE ADDENDUM, 2026-09-18 18:5x UTC (overseer, 100th audit). Option (i), this entry's own armed default, has already shipped. The live question is now only (ii) vs (iii).
+
+**Evidence-only. Nothing here resolves the entry, narrows the owner's options,
+moves `decide_by` (2026-09-25), or invents a ceiling.**
+
+`D31`'s armed default is **(i) MARK BUT DO NOT CAP**. That option was
+implemented in full on **2026-09-18** as commit `2bfa84f`, ordered by the 99th
+audit's `FOR THE BUILDER` item 4 as instrument work:
+
+- `charge()` now compares billed hours to the dispatcher's own declared
+  `est_hours` on **every** backend, at a stated `PER_JOB_OVERRUN_MARGIN` of 25%,
+  and marks + prints on stderr when it is exceeded.
+- The two measured colab overruns of 2026-09-14 (147% and 155% of declared)
+  would both mark under it.
+- **No ceiling was invented, `remaining('colab')` is untouched and still returns
+  infinity, and no dispatch is refused that was permitted before.**
+
+The builder's own commit message states the boundary correctly: *"the ceiling
+question is D31's (decide_by 09-25) and stays the owner's."* The Review reported
+the shipment to the owner the same day (`docs/PROGRESS.md` `FOR THE OWNER`
+item 3, `a01837f`). **Nothing was smuggled and no decision was pre-empted** —
+option (i) was explicitly reasoned as the monotone, already-permitted,
+reporting-only action, which is why it was also legal as an audit item.
+
+**Why this addendum exists.** The entry above still presents (i) as an
+unexecuted option among three. An owner reading it cold cannot tell that the
+marking is live in `experiments/gpu.py` today, and would be choosing between an
+option already in effect and two that are not. The remaining decision is:
+
+| # | ruling | status |
+|---|---|---|
+| (i) | MARK BUT DO NOT CAP | **SHIPPED 2026-09-18 (`2bfa84f`)** — the default, already in effect |
+| (ii) | GIVE COLAB A CEILING | open, and the only option that changes what the lane may spend |
+| (iii) | DECLINE | open |
+
+The entry's own price statement for (i) is now the measured state rather than a
+forecast: *"(i) buys VISIBILITY and nothing else. A marked overrun still spent
+the hour."* `overruns` in `experiments/gpu_budget.json` reads `[]` because the
+mark shipped **after** the two jobs it was built from; the first entry will
+appear at the next overrunning dispatch, not retroactively.
+
+Reversal of (i) is unchanged and remains one `if` in `experiments/gpu.py`.

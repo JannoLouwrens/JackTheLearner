@@ -15448,3 +15448,45 @@ Two generalisations, and the first is the transferable one:
    distinguishes them by detector-plus-elapsed-time (recorded door-refusals
    are 3–9 s; a real sitting runs minutes), keeps the mid-run rule intact, and
    re-arms the deferral loudly (`923661e`, six fixtures).
+
+## A DISPOSITION CAN REST ON A PREMISE THAT EXPIRED BETWEEN THE QUESTION AND THE ANSWER — and once the row is stamped ACTED, no instrument ever re-reads it
+## (overseer, 2026-09-18, 100th audit, from four GOAL.md citations re-parented to a decision that had closed four days earlier)
+
+`docs/REVIEW_QUEUE.md`'s row `goal-cites-four-specs-that-resolve-to-corpses` was
+disposed **ACTED 2026-09-16** with reasoning that is, on every other axis, model
+work: it refused the tempting exit (deleting four `GOAL.md` citations would have
+cleared `coverage`'s rc=2 in one edit), it kept `GOAL_UNRUNNABLE_BASELINE`
+unmoved in both directions, it named its own error as the cause, and it split
+seven ids into two groups with a different owner for each. Group B —
+`GEN.02`, `GEN.03`, `GEN.06`, `GEN.09` — was declined as a design question on the
+stated ground that it was *"live on the owner's `D24`"*, and re-parented with the
+words **"Whoever closes `D24` inherits these four."**
+
+`D24` had closed on **2026-09-12**, four days earlier, by armed default (iii)
+DECLARE, DO NOT DECIDE. The disposition even quotes `D24`'s *outcome* — "arena
+declared VENUE-UNAFFORDABLE" — without noticing that the decision which declared
+it had already fired. And because that ruling makes `LC.07`'s block permanent,
+*"whoever closes `D24`"* is nobody, ever. Four of the constitution's own
+citations are now owned by a closed decision.
+
+Three generalisations, in order of how far they travel:
+
+1. **A re-parent is a forward reference, and a forward reference must be
+   resolved at the moment it is written.** Re-parenting work onto an open
+   decision is correct and normal. Re-parenting onto one that already closed
+   creates an orphan that *looks* owned — strictly worse than leaving it
+   visibly unowned, because `fail_unowned`-style counters read it as handled.
+   The one-line discipline: **before writing "this waits on `X`", grep `X` in
+   the RESOLVED file, not only the OPEN one.**
+2. **A long-lived row's premises age independently of its reasoning.** This row
+   carried four `DUE:` dates across fourteen days. Its 09-15 text ("their
+   root's fate is a ruling, not a design") was true when written and false by
+   09-16, and the 09-16 sitting inherited the sentence rather than re-deriving
+   it. **The older a row is, the more of its body is quotation rather than
+   judgement — and re-dating refreshes the clock, never the facts.**
+3. **`ACTED` is where verification stops, so it is where stale premises become
+   permanent.** `review_queue.py` checks blockers on `HELD` rows
+   (`HOLD-ON-A-RESOLVED-BLOCKER`) precisely because a hold must pay for its
+   exemption — but an `ACTED` row is never read again by anything. The same
+   check owes an `ACTED` analogue: **the strongest disposition deserves at
+   least the scrutiny the weakest one gets.**
