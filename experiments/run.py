@@ -1119,6 +1119,43 @@ def gpu_attribution(lines) -> tuple:
     return attributed, named
 
 
+def gpu_probe_hours(lines, charged: dict) -> dict:
+    """phase label -> {"hours", "jobs"} for charged jobs whose submission
+    records carry a non-empty `spec_phase` (99th audit B5).
+
+    A probe buys no ledger row by definition, so `gpu_hours_verdictless` —
+    which joins through `ledger.results` — reads probe spend as zero waste:
+    2.11 colab hours that retrieved nothing were invisible on the page that
+    exists to show hours against verdicts. This reads the OTHER receipt the
+    dispatcher already writes. Job ids join through the record's own
+    `job_id` or through result lines sharing its `attempt_id`, the same two
+    paths `gpu_attribution` walks. REPORTING-ONLY AND UNFLOORED, per D27's
+    reasoning: probe spend is legitimate and gating it would punish the
+    honest thing."""
+    att_to_jobs = {}
+    for l in lines:
+        if l.get("job_id") and l.get("attempt_id"):
+            att_to_jobs.setdefault(l["attempt_id"], set()).add(l["job_id"])
+    seen = {}   # job id -> phase (first non-empty label wins)
+    for l in lines:
+        phase = (l.get("spec_phase") or "").strip()
+        if not phase:
+            continue
+        jobs = set()
+        if l.get("job_id"):
+            jobs.add(l["job_id"])
+        jobs |= att_to_jobs.get(l.get("attempt_id"), set())
+        for j in jobs:
+            if j in charged:
+                seen.setdefault(j, phase)
+    out = {}
+    for j, phase in seen.items():
+        b = out.setdefault(phase, {"hours": 0.0, "jobs": 0})
+        b["hours"] = round(b["hours"] + charged[j], 4)
+        b["jobs"] += 1
+    return out
+
+
 def gpu_hours_verdictless(results, charged: dict, attributed=None) -> dict:
     """Compute bought against verdicts returned (82nd audit `2b3e8a6` B2;
     attribution path 83rd audit `85d435b` B1).
@@ -1288,6 +1325,26 @@ def _check_gpu_hours_reader() -> None:
         raise RuntimeError(
             f"the unattributed reader returned {orphan}, expected the orphan "
             "job alone — refusing to report a residue it may not have read")
+    # Probe-bucket shapes (99th audit B5): a result line naming its phase and
+    # job_id (counted); an attempt line whose phase reaches the job only
+    # through a shared attempt_id (counted); an uncharged probe job (absent);
+    # a phase-less registered run (absent).
+    probe_lines = [
+        {"phase": "result", "attempt_id": "a1", "job_id": "k/j2",
+         "spec_phase": "probe"},
+        {"phase": "attempt", "attempt_id": "a2", "spec_phase": "pilot"},
+        {"phase": "result", "attempt_id": "a2", "job_id": "k/j3"},
+        {"phase": "result", "attempt_id": "a3", "job_id": "k/uncharged",
+         "spec_phase": "probe"},
+        {"phase": "result", "attempt_id": "a4", "job_id": "k/j1",
+         "spec_phase": ""}]
+    got_probe = gpu_probe_hours(probe_lines, charged)
+    want_probe = {"probe": {"hours": 2.25, "jobs": 1},
+                  "pilot": {"hours": 4.0, "jobs": 1}}
+    if got_probe != want_probe:
+        raise RuntimeError(
+            f"the probe-hours reader returned {got_probe}, expected "
+            f"{want_probe} — refusing to report a bucket it may not have read")
 
 
 # ── Ratchet counters, read independently of every verdict (64th audit B2) ──
@@ -1458,6 +1515,15 @@ def ratchet_live(ledger: Ledger) -> dict:
                                    named)
         out["UNATTRIBUTED"] = (f"{sum(orphans.values()):.2f} h / "
                                f"{len(orphans)} job(s)")
+        # 99th audit B5: probe/pilot spend buys no ledger row by definition,
+        # so it must be named here or it reads as zero waste forever.
+        # Reporting-only and unfloored (D27's reasoning).
+        path = _REPO / "experiments" / "gpu_submissions.jsonl"
+        if path.exists():
+            lines = [_json.loads(l) for l in path.read_text().splitlines()
+                     if l.strip()]
+            for phase, b in sorted(gpu_probe_hours(lines, charged).items()):
+                out[phase.upper()] = f"{b['hours']:.2f} h / {b['jobs']} job(s)"
         return out
 
     def _gpu_unattributed_jobs():

@@ -32,9 +32,11 @@
     "value": 7
   },
   "gpu_hours_no_verdict": {
-    "at": "2026-09-13",
+    "at": "2026-09-18",
     "value": {
       "D1.0": "33.78 h / 2 attempt(s) / 0 verdict(s)",
+      "PILOT": "2.00 h / 2 job(s)",
+      "PROBE": "3.59 h / 4 job(s)",
       "T1.08": "0.36 h / 1 attempt(s) / 1 verdict(s)",
       "T2.01": "11.16 h / 2 attempt(s) / 2 verdict(s)",
       "T2.05": "1.93 h / 4 attempt(s) / 1 verdict(s)",
