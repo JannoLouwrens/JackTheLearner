@@ -126,6 +126,29 @@ artifact check), NOT via launch_detached.sh: its cpu_budget wrapper bills wall
 clock, and this process's wall is remote-kernel waiting — the exact case
 cpu_budget.py's own header exempts ("billing waiting as box CPU would make
 the meter read harm where there is none").
+
+--------------------------------------------------------------------------
+§9d REPAIR (2026-09-18) — the artifact rides stdout
+--------------------------------------------------------------------------
+Two colab attempts (09-14, 2.1109 h) computed to completion and lost their
+artifact both times to the kept-session download. The head capture adjudicated
+the cause on the second failure: `JACK_OUT /content` — the job wrote where the
+fetch looked, so cause (1) wrong-dir is ELIMINATED and cause (2), the kept
+download session losing the run VM, is the cause. The fetch path is measured
+innocent and is NOT edited (ruling §9, binding). Instead the JOB prints the
+whole result on one delimited `JACKRESULT {...}` line — the run session's
+stdout pipe is the channel that demonstrably survives — and the harvest parses
+it whenever the artifact is missing (`recovered_from` on the arm record).
+Failure records now carry the WHOLE stdout: the 400-char tail bound is what
+lost seeds 0 and 1. ONE further colab dispatch is authorised under this
+mechanism (~1.05 h against W37); if it too returns nothing, the colab arm is
+ABANDONED and the probe reports as a single-backend reading saying so — a
+third dispatch under the OLD mechanism is forbidden (§9d). The dispatch under
+this repair runs at a different head than the kaggle arm's (1652a62): the
+kernels differ ONLY in the final print lines; task tensors, init, batch order
+and training are byte-identical, and `_finalise` records that as
+`kernel_note`. §9b disclosure (three surviving colab seeds) is stamped into
+the state at read time.
 """
 from __future__ import annotations
 
@@ -205,6 +228,18 @@ class _KaggleAlreadyRead(Budget):
         return super().afford(backend, est_hours)
 
 
+def _payload_from_stdout(stdout: str) -> dict | None:
+    """§9d stdout-carry: the JOB prints the whole result on one delimited
+    `JACKRESULT {...}` line. Scanned from the end — it prints last."""
+    for line in reversed((stdout or "").splitlines()):
+        if line.startswith("JACKRESULT "):
+            try:
+                return json.loads(line[len("JACKRESULT "):])
+            except json.JSONDecodeError:
+                return None
+    return None
+
+
 def _arm_record(intended: str, *, block_kaggle: bool = False) -> dict:
     """One submission of the spec's own kernel. Returns the record keyed by
     the venue that ACTUALLY ran, which may differ from `intended`."""
@@ -213,27 +248,34 @@ def _arm_record(intended: str, *, block_kaggle: bool = False) -> dict:
                  timeout_s=TIMEOUT_S, fetch=["t108.json"],
                  budget=_KaggleAlreadyRead() if block_kaggle else None)
     if not res.ok:
-        return {"ok": False, "intended": intended,
-                "message": res.message, "backend": res.backend}
-    path = res.artifacts.get("t108.json")
-    if not path:
-        # The run may have COMPLETED and written its file yet still fail the
-        # kept-session download (2026-09-14: colab printed DONE — so line 177's
-        # json.dump ran — then `download /content/t108.json` returned "File not
-        # found"). The tail alone cannot tell a wrong-JACK_OUT write (cause 1)
-        # from a retrieval failure (cause 2): the preamble's `JACK_OUT <path>`
-        # and `REPO <sha>` lines print at the START of stdout. Capture the head
-        # too, so the NEXT failure is diagnosable rather than re-argued.
+        # Failure records carry the WHOLE stdout: the 400-char tail bound is
+        # what lost colab seeds 0 and 1 on 2026-09-14 (ruling §9d).
         return {"ok": False, "intended": intended, "backend": res.backend,
-                "message": f"no artifact; stdout_head={res.stdout[:400]!r} "
-                           f"stdout_tail={res.stdout[-400:]!r} "
-                           f"stderr_tail={res.stderr[-400:]!r}"}
-    d = json.loads(Path(path).read_text())
+                "message": res.message,
+                "stdout_full": res.stdout, "stderr_tail": res.stderr[-800:]}
+    path = res.artifacts.get("t108.json")
+    recovered = False
+    if path:
+        d = json.loads(Path(path).read_text())
+    else:
+        # A run can COMPLETE and still lose its artifact to the kept-session
+        # download (adjudicated 2026-09-14: stdout_head showed `JACK_OUT
+        # /content`, so the job wrote where the fetch looked — cause 2, the
+        # download session losing the run VM. The fetch path is measured
+        # innocent and is NOT edited here). The run session's stdout pipe is
+        # the channel that survives; recover the payload from it.
+        d = _payload_from_stdout(res.stdout)
+        if d is None:
+            return {"ok": False, "intended": intended, "backend": res.backend,
+                    "message": "no artifact and no JACKRESULT line in stdout",
+                    "stdout_full": res.stdout,
+                    "stderr_tail": res.stderr[-800:]}
+        recovered = True
     held = [a["heldout"] for a in d["arms"]]
     imps = [a["improvement"] for a in d["arms"]]
     h_mean, h_std = T._stats(held)
     eff, noise = T._stats(imps)
-    return {
+    rec = {
         "ok": True, "intended": intended, "backend": res.backend,
         "gpu": d["gpu"], "job_id": res.job_id, "head": res.head,
         "duration_s": round(res.duration_s or 0.0, 1),
@@ -248,6 +290,9 @@ def _arm_record(intended: str, *, block_kaggle: bool = False) -> dict:
         "seed_noise": round(noise, 6),
         "snr": round(eff / max(noise, 1e-9), 2),
     }
+    if recovered:
+        rec["recovered_from"] = "stdout JACKRESULT line (ruling §9d)"
+    return rec
 
 
 def _finalise(state: dict) -> None:
@@ -267,9 +312,24 @@ def _finalise(state: dict) -> None:
     state["cv_T4"] = cv_t4
     state["cv_P100"] = cv_p100
     state["discordance_ratio"] = round(hi / max(lo, 1e-9), 3)
+    # Ruling §9b: pre-registration survives disclosure only if the disclosure
+    # is written down. Three of the colab arm's five heldout values survived
+    # the 09-14 stdout truncation and were on the record before this read.
+    state["disclosure_9b"] = (
+        "branch taken already knowing colab seeds 2/3/4 heldout (0.047148, "
+        "0.098334, 0.035367) from the 09-14 failure records' stdout_tail; "
+        "the read is over the full n=5 as pre-registered (ruling §9b)")
+    k, c = state["arms"]["kaggle"], state["arms"]["colab"]
+    if k["head"] != c["head"]:
+        state["kernel_note"] = (
+            f"arms ran at different heads ({k['head']} vs {c['head']}): the "
+            f"§9d repair changed only the JOB's final print lines (JACKRESULT "
+            f"stdout-carry); task tensors, init, batch order and training "
+            f"loop are byte-identical across the two kernels")
     print("\n" + "=" * 70)
     print(f"cv_T4 (colab) = {cv_t4}   cv_P100 (kaggle) = {cv_p100}   bar = {BAR}")
     print(f"BRANCH (pre-registered): {state['branch']}")
+    print(f"DISCLOSURE (§9b): {state['disclosure_9b']}")
     print(f"T1.08 STAYS FAIL — this probe buys no verdict (ruling §3).")
     print("=" * 70)
 

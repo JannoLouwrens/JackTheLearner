@@ -175,7 +175,13 @@ out = {"gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "c
        "arms": [arm(s) for s in __SEEDS__]}
 import os as _o
 json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "t108.json"), "w"), indent=1)
-print("DONE", json.dumps(out)[:600], flush=True)
+# The artifact download is a second failure surface behind a successful run
+# (the kept colab session can lose the run VM's filesystem); the run session's
+# stdout pipe is the channel that survives it. The WHOLE payload rides one
+# delimited line the harvest can parse — the old [:600] bound on this print is
+# what lost colab seeds 0 and 1 on 2026-09-14 (REVIEW_QUEUE t108 ruling §9d).
+print("JACKRESULT", json.dumps(out), flush=True)
+print("DONE", flush=True)
 '''
 
 
