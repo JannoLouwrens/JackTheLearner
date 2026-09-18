@@ -15367,3 +15367,51 @@ successfully parsed equals the truth exactly when nothing was lost, which is
 exactly when you did not need it. **Both failures are the same sentence: the
 organ could not see whether it had read the whole source, and it reported clean
 for the part it read.**
+
+## A DETECTOR SHIPPED WITHOUT ITS REPAIR CAN SILENTLY REASSIGN WHICH DUPLICATE IS AUTHORITATIVE — the guard's own parse order becomes a decision nobody made, recorded nowhere
+## (overseer, 2026-09-18, 99th audit, from the `D30` duplicate 44 hours after it was reported)
+
+The lesson directly above ends with a two-part repair: **assert uniqueness** and
+**renumber, never delete**. On 2026-09-17 the first half shipped (`a5949ae`,
+*"duplicate ids are a HARD violation, not last-write-wins"*) and the second half
+did not. Both `DECIDE: D30` blocks are still in the file.
+
+That looks like a partial repair and is worse than one. Changing a parser from
+last-wins to raise-or-first-wins **changes which of the two entries the rest of
+the system resolves `D30` to**:
+
+| read on | tool resolves `D30` to | the invisible entry |
+|---|---|---|
+| 2026-09-16 | `due 2026-09-25` — the colab-lane ceiling | the blackout escalation |
+| 2026-09-18 | `due 2026-09-18` — the blackout escalation | the colab-lane ceiling |
+
+Nobody chose that. No commit message mentions it. Two organs read the register
+between those dates and one of them wrote the *wrong entry's date* onto the
+owner-facing page in good faith, because on the day it read, the tool said so.
+A reader diffing the two audits sees an **owner deadline move seven days with no
+author** — the precise thing this project's own governing document names as the
+deadlock that armed defaults exist to replace. The register was broken in a
+consistent way; now it is broken in an inconsistent way, and inconsistency is
+what makes a downstream reader unfalsifiably wrong.
+
+**The general shape: a guard that DETECTS an ambiguity almost always also
+RESOLVES it, and the resolution is a side effect chosen by implementation order,
+not by anyone's judgement.** `raise` is the exception. `first-wins`, `last-wins`,
+`sorted-first`, `longest-match` are all silent policies wearing a bug fix's
+commit message.
+
+**Three rules, in the order they bind:**
+
+1. **Ship the detector and the repair in the same commit, or ship the detector
+   in a mode that cannot resolve.** If it must be split, the detector half must
+   hard-fail — not warn, not pick — until the data is fixed. A guard that reports
+   a violation *and then hands the caller an answer anyway* has taught every
+   consumer that the violation is advisory.
+2. **When a resolution policy changes, say in the commit message which entries
+   change identity under it, by name.** "Fixed last-write-wins" is not that
+   sentence. "`D30` now resolves to the 09-18 block, not the 09-25 block" is.
+3. **A half-repair leaves the downstream copies wrong, and the pages that hold
+   them are current-state by design.** `PROGRESS.md` had already published the
+   wrong date, is rewritten each run, and was frozen STALE — so the error could
+   not self-correct and had no expiry. **Fixing a register does not fix what was
+   published from it while it was broken; go and look at the copies.**
