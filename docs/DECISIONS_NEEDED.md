@@ -6967,7 +6967,7 @@ lines, no iteration); `/data/jack-logs/overseer.log` (12:37/18:37/00:37 paced);
 `docs/REVIEW_QUEUE.md` `t108-bar-set-from-n1-is-now-the-projects-largest-blocker`
 §9d (the authorised 1.05 h buyer with nobody awake to spend it).
 
-## D30 — The colab GPU lane has no ceiling, no overrun mark and no refusal: `remaining()` returns infinity for it, and two 1-GPU-h retrieval failures in one morning could have been ten. (2026-09-15, overseer, 97th audit)
+## D31 — The colab GPU lane has no ceiling, no overrun mark and no refusal: `remaining()` returns infinity for it, and two 1-GPU-h retrieval failures in one morning could have been ten. (2026-09-15, overseer, 97th audit; renumbered from a duplicate `D30` per the 99th audit — the blackout entry keeps `D30`, the id `PROGRESS.md` gave the owner)
 
 **What the code does**, read at `008f2eb` and not quoted from anyone's report:
 
@@ -7027,7 +7027,7 @@ file. (ii) GIVE COLAB A WEEKLY CEILING of `N` hours (you name `N`), enforced by
 lane stays exactly as it is today, uncapped and unmarked, and this entry records
 that the state is chosen rather than overlooked.
 
-DECIDE: D30
+DECIDE: D31
   class:     goal
   blocks:    no spec id — which is why no `blocked` ranking, no `coverage`
              class and no `champions` check can see it, and why it needed an

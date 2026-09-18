@@ -224,8 +224,16 @@ echo "== housekeeping =="
 proc_declare "$VENV_PID" "alive"
 printf '%s\t%s\t%s\n' "999999:1" "$(date -Iseconds)" "long-dead" >> "$JACK_PROC_DECL"
 proc_prune_declarations
-chk "pruning drops the dead declaration" "$(grep -c '^999999:' "$JACK_PROC_DECL")" 0
+# Stamp-then-drop (99th audit B3): the FIRST prune after a death stamps the
+# row EXITED so a paced-out reader can tell a finished run from a live one;
+# the SECOND drops it. One-step deletion erased exactly that distinction.
+chk "first prune STAMPS the dead declaration EXITED, not drops it" \
+    "$(grep -c $'^999999:1\t.*\tEXITED ' "$JACK_PROC_DECL")" 1
 chk "pruning keeps the live one" "$(cut -f1 "$JACK_PROC_DECL" | grep -cxF "$(proc_key "$VENV_PID")")" 1
+proc_prune_declarations
+chk "second prune drops the stamped dead declaration" "$(grep -c '^999999:' "$JACK_PROC_DECL")" 0
+chk "  ...and still keeps the live one unstamped" \
+    "$(grep -c $'\tEXITED ' "$JACK_PROC_DECL")" 0
 chk "declaring a dead pid fails loudly" \
     "$(proc_declare 999999 x 2>/dev/null; echo "rc=$?")" "rc=1"
 

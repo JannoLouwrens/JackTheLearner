@@ -209,6 +209,7 @@ on_exit() {
   [ "$ITER_ENDED" = 1 ] && return 0
   # A killed shell is the MOST likely way to strand compute — the agent's
   # children outlive it. Check here too, before the KILLED line.
+  proc_prune_declarations   # stamp EXITED on rows whose process died this slot (99th audit B3)
   leftover_report
   say "iteration end rc=KILLED — the shell died before recording an end (timeout, signal or OOM). Work may still have been committed; the log body is the only record.${LEFTOVER_NOTE}"
 }
@@ -347,6 +348,11 @@ usage_ledger builder end "$MODEL"    # D15 (d): one line whatever RC says (KILLE
                                # the 76th audit caught it billing (9.1, defect 4)
 # The end line may not be silent about stranded compute: `rc=0` next to a
 # 99.7%-CPU orphan is the "Working" README in one line.
+# And the declaration file may not be silent about compute that FINISHED: a
+# pid declared and exited inside this slot stays bare-declared for up to an
+# hour under a start-only prune, and a paced-out observer cannot tell it from
+# a live run (99th audit B3, third asking). The prune stamps it EXITED now.
+proc_prune_declarations
 leftover_report
 say "iteration end rc=${RC} — ${BEFORE} -> ${AFTER} demonstrated${LEFTOVER_NOTE}"
 

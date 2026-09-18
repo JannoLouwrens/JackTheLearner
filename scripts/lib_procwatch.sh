@@ -194,18 +194,34 @@ _proc_attributed() {
   return 1
 }
 
-# Drop declarations whose process is gone, so the file cannot grow without
-# bound and cannot accumulate keys that a recycled pid might one day match.
-# (It cannot — the starttime differs — but a file nobody prunes is a file
-# nobody reads.)
+# Stamp-then-drop declarations whose process is gone, so the file cannot grow
+# without bound and cannot accumulate keys that a recycled pid might one day
+# match. (It cannot — the starttime differs — but a file nobody prunes is a
+# file nobody reads.)
+#
+# TWO STEPS, NOT ONE (99th audit B3, third asking). A dead row is first
+# STAMPED `EXITED <ts>` and only dropped on the NEXT prune. The one-step
+# delete left a window in which a reader could not tell a live detached run
+# from a stale row — `run_spec T0.21` exited at 12:18 and was still declared
+# bare at 12:37 — and it erased the very fact a paced-out slot would need to
+# notice a finished dispatch (a run that ENDED is information, not garbage).
+# The prune now also runs on the iteration's exit paths, so the stamp appears
+# within the slot that saw the death, not an hour later.
 proc_prune_declarations() {
-  local tmp
+  local tmp now
   [ -f "$JACK_PROC_DECL" ] || return 0
   tmp=$(mktemp) || return 0
+  now=$(date -Iseconds)
   while IFS=$'\t' read -r key rest; do
     [ -n "$key" ] || continue
-    [ "$(proc_key "${key%%:*}" 2>/dev/null)" = "$key" ] || continue
-    printf '%s\t%s\n' "$key" "$rest"
+    if [ "$(proc_key "${key%%:*}" 2>/dev/null)" = "$key" ]; then
+      printf '%s\t%s\n' "$key" "$rest"                       # alive: keep
+    else
+      case "$rest" in
+        *"	EXITED "*) ;;                                     # dead+stamped: drop
+        *) printf '%s\t%s\tEXITED %s\n' "$key" "$rest" "$now" ;;  # dead: stamp
+      esac
+    fi
   done < "$JACK_PROC_DECL" > "$tmp"
   mv "$tmp" "$JACK_PROC_DECL" 2>/dev/null || rm -f "$tmp"
 }
