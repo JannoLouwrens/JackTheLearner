@@ -16942,3 +16942,40 @@ patch). Also still open: `1^7` item 2 (T1.07 IMPL_DEPS + ~0.47 GPU-h re-buy) —
 the probe holds the GPU lock, so it waits. D19's NO-FETCH default fires from
 09-15 00:00 (wording: "the owner did not rule by 2026-09-14, so the
 pre-registered default fired").
+
+**2026-09-18 ~12:0x slot (fable; `week:all models` 22% — the gate, printed
+beside Fable 24% and session 2%, acting on all-models; pace line ~44 at 29%
+elapsed, so the 41-slot blackout is over — the week reset).** Three units, all
+ordered by `1^8`. (1) T1.08 probe §9d repair, step (a) ZERO GPU (`425a7e3`):
+the JOB now prints the whole result on one `JACKRESULT {...}` line (the
+run-session stdout pipe is the channel the 09-14 head capture proved survives;
+the old `[:600]` bound is what lost colab seeds 0/1), the harvest recovers the
+payload from that line when the artifact fetch fails (`recovered_from` on the
+arm record), failure records carry WHOLE stdout, `_finalise` stamps the §9b
+three-seed disclosure (0.047148/0.098334/0.035367 known before any branch
+read) and a `kernel_note` when heads differ. Verified offline: roundtrip
+parses n=5, malformed/absent lines degrade honestly, state loads with kaggle
+arm intact. Fetch path NOT touched (measured innocent, §9). Step (b)
+dispatched detached: pid 1529308 (setsid, `env -u JACK_ITER_DEADLINE`,
+declared in declared_pids — first declaration caught my own shell via a
+mangled `$!`, fixed and pruned), submission receipt committed. (2) coverage:
+GOAL.md:187's `heavy`/`far`/`tiring`/`worth-it` entered COMMITMENTS
+(`claim_dead` 4 -> 8, the gap becoming visible, ratchet recorded in the same
+commit); T0.21 re-bought PASS (9.21 s, commitments 29, uncovered 4). (3) D19:
+NOTHING fired — the owner RULED on 09-17 wider than asked (`ab17202`); an
+armed default is overtaken by a ruling. OVERSIGHT item 6 (declared_pids prune)
+found already discharged; the 4-day-old pgrep "live probe" was my own
+compound-command self-match, the exact notifications-can-be-spoofed shape.
+**NEXT ITERATION — HARVEST FIRST:** read /data/t108_backend_probe.json +
+/data/tmp/t108_backend_probe.log. (a) Both arms present -> `_finalise` already
+took the pre-registered branch with the §9b disclosure; commit the JSON +
+charge receipts, row -> ACTED per ruling §8.5; venue selection stays FORBIDDEN
+(§3). (b) Colab missing AGAIN (check `failures[]` — a new failure now carries
+`stdout_full`; if the JACKRESULT line is present in it the recovery code has a
+bug, fix and re-read from disk WITHOUT re-dispatching) -> the colab arm is
+ABANDONED per §9d: annotate the probe JSON + queue row as a single-backend
+reading, NO further colab dispatch under any mechanism. THEN: T1.07 re-buy
+(~0.47 GPU-h, `run stale` lists it first) — the GPU lock is held by the probe
+this slot; the hours expire Sat 09-19, so it is the FIRST unit of the next
+slot once the lock frees. Do not pre-empt the A4 disposition or the T2.10
+repair design (both the Review's).
