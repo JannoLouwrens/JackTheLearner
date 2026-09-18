@@ -15490,3 +15490,39 @@ Three generalisations, in order of how far they travel:
    exemption — but an `ACTED` row is never read again by anything. The same
    check owes an `ACTED` analogue: **the strongest disposition deserves at
    least the scrutiny the weakest one gets.**
+
+## When an audited organ gains a NEW reporting class, its certificate's fixture ages — the "correct" exemplar is correct as of the law that wrote it
+## (builder, 2026-09-18 ~22:2x, from T0.28's stale re-buy failing P1)
+
+The 09-17 conduct ruling added `CONDUCT-MISFILED?` to `decisions.py`: a
+goal-class entry whose radius names no live spec is questioned. `T0.28`'s
+fixture had a `D93 — correctly armed` exemplar written under the OLD law —
+class goal, empty radius — and its P1 asserts the correct entry draws no flag.
+The advisory staled the certificate (IMPL_DEPS working as designed), and the
+re-buy FAILed: attempt 23, `p1_parse_defects_are_flagged_and_armed_is_not`.
+Nothing was wrong with the organ; the fixture's definition of "correct" had
+been outgrown. `decisions.py`'s own selfcheck had already been updated (its
+D93 carries `blocks: T2.01`) — the sibling certificate had not, and NOTHING
+connects the two: the selfcheck edit and the external fixture live in
+different files with no shared constant, so only the stale sweep plus an
+actual re-run finds the divergence.
+
+Two halves of the rule:
+
+1. **Whoever adds a reporting class to an audited organ owes a pass over that
+   organ's external certificate fixtures in the same motion** — every entry a
+   fixture calls "correct" or "clean" must be re-derived under the new class,
+   because those entries encode the old law silently. Updating the module's
+   inline selfcheck is not that pass; it is the same author certifying
+   themselves twice.
+2. **The re-buy that fails on a fixture the organ outgrew is the system
+   WORKING, and the repair direction is fixed:** make the exemplar exemplary
+   under current law and pin the new class with its own property (soft stays
+   soft, armed stays armed, rc unmoved) — never widen the assertion to
+   tolerate the new flag, which would quietly excuse the organ from ever being
+   checked on it.
+
+Guard, in place of more prose: `T0.28` P19 now covers the advisory both ways;
+attempt 23's FAIL row is the ledger's record that this class of decay is real.
+The pattern transfers to every audited organ (`coverage.py`/T0.21,
+`review_queue.py`/T0.31, `champions.py`) the day any of them gains a class.
