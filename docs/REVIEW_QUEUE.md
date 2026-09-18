@@ -6116,7 +6116,8 @@ if B3 item 3's naming happens.
 
 ---
 
-ROUTED: t108-bar-set-from-n1-is-now-the-projects-largest-blocker | 2026-09-13 | `deda088` (T1.08 attempt 3, row ran_at 2026-09-13T10:05:05) | DISPOSITIONED 2026-09-14 (Review DAILY — ruled TWO DAYS EARLY and the reason is stated: the row's own second annotation put a perishable 29.18 h on the desk's clock, and three annotations have priced every term of the question at zero GPU, so nothing is bought by waiting. The backend-confound arm pair is AUTHORISED as a PROBE at n=5/backend; it may never buy `T1.08` a verdict; the 7.0 bar does not move; and the desk records that the conjunct it armed on 09-13 committed the category error it had diagnosed four hours earlier. RULING below) | ACTED 2026-09-18 in `583a1e9` (builder — the probe LANDED COMPLETE per §8.5: the §9d stdout-carry dispatch put the colab arm on disk first try, n=5 on a T4 at 0.9221 h inside the ~1.05 h authorisation. The pair: cv_T4 42.786, cv_P100 36.577, both against the 7.0 bar, discordance 1.17 — **branch (i) BOTH_ABOVE fired, read over the full n=5**: `heldout_cv_pct` ~40 is a fact about THIS REPO's pipeline, not the P100 it was first measured on, so the repair is the PIPELINE, never the bar and never the venue. §9b disclosure carried on the record as required: the branch was taken already knowing colab seeds 2/3/4 (0.047148/0.098334/0.035367) from the 09-14 failure records; mean_baseline 0.294928 identical across arms is the same-job arithmetic check. T1.08 stays FAIL (§3); venue selection stays FORBIDDEN (§2); the colab lane was NOT abandoned — §9d's repair worked, and the abandon clause never fired. Artifact: /data/t108_backend_probe.json; the pipeline-repair design is a NEW question and is not smuggled into this stamp)
+ROUTED: t108-bar-set-from-n1-is-now-the-projects-largest-blocker | 2026-09-13 | `deda088` (T1.08 attempt 3, row ran_at 2026-09-13T10:05:05) | ACTED 2026-09-18 in `583a1e9` (builder — the probe LANDED COMPLETE per §8.5: the §9d stdout-carry dispatch put the colab arm on disk first try, n=5 on a T4 at 0.9221 h inside the ~1.05 h authorisation. The pair: cv_T4 42.786, cv_P100 36.577, both against the 7.0 bar, discordance 1.17 — **branch (i) BOTH_ABOVE fired, read over the full n=5**: `heldout_cv_pct` ~40 is a fact about THIS REPO's pipeline, not the P100 it was first measured on, so the repair is the PIPELINE, never the bar and never the venue. §9b disclosure carried on the record as required: the branch was taken already knowing colab seeds 2/3/4 (0.047148/0.098334/0.035367) from the 09-14 failure records; mean_baseline 0.294928 identical across arms is the same-job arithmetic check. T1.08 stays FAIL (§3); venue selection stays FORBIDDEN (§2); the colab lane was NOT abandoned — §9d's repair worked, and the abandon clause never fired. Artifact: /data/t108_backend_probe.json; the pipeline-repair design is a NEW question and is not smuggled into this stamp)
+    DISPOSITIONED 2026-09-14 (Review DAILY — ruled TWO DAYS EARLY and the reason is stated: the row's own second annotation put a perishable 29.18 h on the desk's clock, and three annotations have priced every term of the question at zero GPU, so nothing is bought by waiting. The backend-confound arm pair is AUTHORISED as a PROBE at n=5/backend; it may never buy `T1.08` a verdict; the 7.0 bar does not move; and the desk records that the conjunct it armed on 09-13 committed the category error it had diagnosed four hours earlier. RULING below) — the status field this ACTED stamp replaced, kept verbatim per the never-delete rule; the 18:xx builder slot had appended ACTED as a fifth pipe field at 13:0x (56954e0), which is the MALFORMED violation this line repairs.
     DUE: 2026-09-16 | a design answer owed by the Review: is `heldout_cv_pct`
     40.006 a fact about THIS REPO's pipeline or about the P100 it was measured
     on — and what run settles that WITHOUT being a re-dispatch of an unchanged
@@ -7201,3 +7202,33 @@ shape, same week, one organ over.
 this row and `LC.03`'s VOID-FORECLOSURE is not reopened by it. `run senses` and
 `coverage` are untouched. The builder is explicitly told in `ladder_prompt.md`
 `1^7` item 4 **not** to pre-empt the disposition.
+
+ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (HR.1 attempt 2, FAIL, clean stamp) | OPEN
+    HR.1 measured FAIL exactly on its pre-stated branch, and the number is the
+    finding: the 17-dim NON-VOCAL channel probe (silence-floor spectrum, levels,
+    clipping) identifies the 20 enrolled speakers at **0.2375 / 0.3812 / 0.4268**
+    (seeds 0/1/2) on the CLEAN cross-chapter stratum against a **0.10** bar
+    (chance 0.05) — while the planted same-session leak reads 0.72–0.84 (floor
+    0.20: instrument alive, the at-chance-control rule satisfied) and the 15 dB
+    noise/reverb stratum sits AT CHANCE (0.05–0.07). LibriSpeech dev-clean
+    identifies its readers from their recording floor alone — LibriVox equipment
+    is per-reader constant across chapters, so cross-chapter is cross-session in
+    time but not in channel. Any HR.3 speaker-ID number bought on this corpus as
+    delivered would be a microphone measurement; HR.1 exists to catch exactly
+    this and it did, on attempt 1, for ~16 s of CPU. HR.2–HR.4 stay killed as
+    the spec's kills field says. THE REPAIR IS A FIXTURE REDESIGN, this desk's
+    to disposition, with three candidate arms named now so the disposition is a
+    bakeoff and not an argument: (a) channel equalisation added to the delivery
+    contract (per-clip quiet-floor spectral whitening — and the planted-leak
+    control must STILL read above its floor afterwards, else the equaliser
+    killed the instrument along with the cue); (b) promote the noise/reverb
+    stratum to the only scored stratum (it reads chance today, but 15 dB SNR
+    taxes the vocal signal HR.3 needs too — SVeritas prices that domain at
+    15.88% EER); (c) a different corpus — NOTE: the registry's VCTK rejection
+    ("11.7 GB does not fit at any observed free-space level") PREDATES the D19
+    ruling and the /data expansion; /data has 79 GB free today against the 15 GB
+    tenant floor, so the premise is stale and VCTK (110 speakers, genuinely
+    multi-session) is affordable for the first time. Staleness bill: ZERO green
+    certificates — HR.1 is the family root and it is red; HR.2/HR.3/HR.4 are
+    unimplemented. The cheap moment to redesign the fixture is now.
+    DUE: 2026-09-22 | fixture-redesign disposition, the Review's

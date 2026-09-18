@@ -1035,7 +1035,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **HR.1** The voice corpus is honest before anyone is scored
+- [!] **HR.1** The voice corpus is honest before anyone is scored  — chance_s0=0.05; chance_s0_std=6.93889e-18
       - _asserts:_ A speaker corpus exists on this box with >=8 enrolled and >=8 held-out UNKNOWN speakers, disjoint enrolment/test utterances, CROSS-SESSION test material, and a NOISE/REVERB stratum, such that no non-vocal channel cue can identify a speaker in either stratum.
       - _dies if:_ A probe on non-vocal features alone (silence-segment spectrum, DC offset, noise floor, clip loudness) identifies the speaker above chance+5% — then every speaker-ID number downstream is a microphone measurement, not a voice measurement.
       - _then delete:_ HR.2, HR.3, HR.4. A speaker experiment on a leaky corpus measures the leak.
