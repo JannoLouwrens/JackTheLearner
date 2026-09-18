@@ -32930,14 +32930,18 @@
     },
     "T1.07": {
       "amended": [],
-      "attempt": 4,
-      "commit": "56954e0",
-      "compute_s": 3014.31,
-      "control_metrics": {},
+      "attempt": 5,
+      "commit": "0e8747f",
+      "compute_s": 3266.82,
+      "control_metrics": {
+        "absurd_advantage": 0.0007,
+        "absurd_diverged": false,
+        "absurd_lr": 1.0
+      },
       "dirty_files": null,
-      "duration_s": 3021.34,
+      "duration_s": 27.15,
       "gpu_job_id": "jannolouwrens/jack-ladder-1789737292",
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "commit": "1a69db6",
@@ -33052,21 +33056,45 @@
           ],
           "spec_sha": "a4cc1c560d52fd5b",
           "status": "PASS"
+        },
+        {
+          "commit": "56954e0",
+          "control_metrics": {},
+          "gpu_job_id": "jannolouwrens/jack-ladder-1789737292",
+          "impl_sha": "761de2c4be75331e",
+          "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: skipped \u2014 timeout_s 3000s exceeds the 2486s left before JACK_ITER_DEADLINE; a Colab result cannot outlive its watcher; kaggle: status=queued",
+          "metrics": {},
+          "ran_at": "2026-09-18T14:05:10",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "a4cc1c560d52fd5b",
+          "status": "ERROR"
         }
       ],
       "impl_sha": "761de2c4be75331e",
-      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: skipped \u2014 timeout_s 3000s exceeds the 2486s left before JACK_ITER_DEADLINE; a Colab result cannot outlive its watcher; kaggle: status=queued",
-      "metrics": {},
+      "message": "",
+      "metrics": {
+        "backend": "kaggle",
+        "gpu": "Tesla T4",
+        "lr_0.0001": 4.588,
+        "lr_0.0003": 5.921,
+        "lr_0.001": 1.796,
+        "lrs_beating_baseline": 3,
+        "reference_advantage": 7.605,
+        "spread_ratio": 3.296,
+        "worst_lr_advantage": 1.796
+      },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 210.0,
+      "peak_rss_mb": 210.2,
       "preserved_impl": null,
-      "ran_at": "2026-09-18T14:05:10",
+      "ran_at": "2026-09-18T14:12:00",
       "seeds": [
         0
       ],
       "spec_id": "T1.07",
       "spec_sha": "a4cc1c560d52fd5b",
-      "status": "ERROR"
+      "status": "PASS"
     },
     "T1.08": {
       "amended": [
