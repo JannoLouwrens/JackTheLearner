@@ -749,6 +749,12 @@ def print_steering_block() -> None:
     from . import steering
     steering._check()
     print(steering.render())
+    # 100th audit B1: the same parse pointed at DECISION deadlines. The
+    # register was repaired at ~13:0x on 2026-09-18 and the page published
+    # from it at 18:22 still carried the broken date — a written lesson did
+    # not survive five hours and one organ boundary, so the check lives here,
+    # where a sitting cannot finish without reading it.
+    print(steering.render_dates())
 
 
 def cmd_steering(ledger: Ledger) -> int:

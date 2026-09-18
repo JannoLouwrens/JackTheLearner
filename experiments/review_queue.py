@@ -571,10 +571,97 @@ def next_consumer_cycle(run_dates: list[_dt.date], today: _dt.date,
     return max(max(run_dates) + _dt.timedelta(days=cycle_days), today)
 
 
+# ── dispositions parented on a closed decision (100th audit B2) ─────────────
+#
+# THE SCAR: `goal-cites-four-specs-that-resolve-to-corpses` was ACTED on
+# 2026-09-16 with a disposition re-parenting `GEN.02/03/06/09` to "`D24`'s
+# resolution … whoever closes `D24` inherits these four" — and `D24` had
+# closed four days earlier, on 2026-09-12, with a ruling under which the
+# inherit event can never occur. Nothing owns those four now, and because the
+# row is ACTED (terminal), `HOLD-ON-A-RESOLVED-BLOCKER` — which checks only
+# HELD rows' `BLOCKED-BY:` — will never look at it again. This is that check's
+# ACTED-row analogue, over prose instead of a declared field.
+#
+# A READING, never a violation and never floored: re-parenting to a decision
+# that later resolves is normal and correct (the closure inherits the work);
+# what was invisible is a disposition whose parent is closed NOW. Whether the
+# closure honoured the re-parent — or preceded it, as the scar did — is a
+# human's judgement over the printed pair; the reader locates, it does not
+# date-order prose.
+#
+# "Re-parenting position" is a HEURISTIC over the disposition's own idiom: a
+# decision id in the same sentence as a `re-parent*` cue. A re-parent phrased
+# any other way is missed (silent, the safe direction for a reader whose
+# false-positive budget is D27's lesson).
+_REPARENT_CUE = re.compile(r"\bre-?parent\w*\b", re.I)
+_DECISION_REF = re.compile(r"\bD(\d{1,3})\b(?!\.\d)")
+
+
+def closed_decisions(resolved_text: str) -> dict:
+    """{decision id -> ISO date it closed, or ""} from `DECISIONS_RESOLVED.md`
+    headings (`## D<n> — …`). The date is the first ISO date on the heading
+    line; absent, the closure is still real and reads date-unrecorded."""
+    out: dict = {}
+    for ln in (resolved_text or "").splitlines():
+        m = re.match(r"^##\s+(D\d+)\b(.*)$", ln)
+        if m:
+            d = re.search(r"\b(20\d{2}-\d{2}-\d{2})\b", m.group(2))
+            out[m.group(1)] = d.group(1) if d else ""
+    return out
+
+
+def closed_decision_reparents(doc: str, resolved_text: str) -> list[dict]:
+    """ACTED rows whose disposition re-parents work to a decision that is
+    closed in `DECISIONS_RESOLVED.md`. One entry per (row, decision)."""
+    closed = closed_decisions(resolved_text)
+    out: list[dict] = []
+    seen: set = set()
+    rid: str | None = None
+    status = ""
+    body: list[str] = []
+
+    def _flush():
+        if rid is None or status != "ACTED":
+            return
+        flat = re.sub(r"\s+", " ", "\n".join(body))
+        for sent in re.split(r"(?<=[.!?])\s+", flat):
+            if not _REPARENT_CUE.search(sent):
+                continue
+            for m in _DECISION_REF.finditer(sent):
+                did = "D" + m.group(1)
+                if did not in closed or (rid, did) in seen:
+                    continue
+                seen.add((rid, did))
+                out.append({"row": rid, "decision": did,
+                            "closed": closed[did] or "date unrecorded",
+                            "sentence": sent[:160]})
+
+    for raw in doc.splitlines():
+        m = _ROUTED.match(raw)
+        if m:
+            _flush()
+            fields = [f.strip() for f in m.group(1).split("|")]
+            rid = fields[0] if fields else ""
+            tail = fields[3] if len(fields) == 4 else ""
+            status = tail.split()[0].upper() if tail.split() else ""
+            body = [tail]
+            continue
+        if rid is None:
+            continue
+        if raw.strip() and not raw[:1].isspace():
+            _flush()
+            rid, status, body = None, "", []
+            continue
+        body.append(raw)
+    _flush()
+    return out
+
+
 def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
           base_doc: str | None = None, ledger: dict | None = None,
           registered: set | None = None,
-          next_cycle: _dt.date | None = None) -> dict:
+          next_cycle: _dt.date | None = None,
+          resolved_doc: str | None = None) -> dict:
     """Every violation in `doc`, with `prev_doc` (the previous committed
     revision) as the only baseline. Pure: no clock, no git, no filesystem —
     `main()` supplies all three, so the properties can hold the world still.
@@ -600,6 +687,11 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
     `next_cycle` — the consumer's next sitting, supplied by `live_audit()`
     from `next_consumer_cycle`, for the IMMINENT reading only. A METRIC input
     like the two above: absent, the reading is `None` and no violation moves.
+
+    `resolved_doc` — `DECISIONS_RESOLVED.md`'s text, supplied by
+    `live_audit()`, for the `closed_decision_reparents` READING only (100th
+    audit B2). A METRIC input like the three above: absent, the reading is
+    `[]` and no violation moves either way.
     """
     today = today or _dt.date.today()
     rows = parse(doc)
@@ -794,6 +886,11 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
     return {"rows": rows, "findings": findings, "counts": counts,
             "due_pile": due_pile, "piled_on": piled_on,
             "ordered_returns": ordered_returns,
+            # A READING like `ordered_returns`: supplied text or [] — never a
+            # violation, never counted, never floored (100th audit B2).
+            "closed_decision_reparents": (
+                closed_decision_reparents(doc, resolved_doc)
+                if resolved_doc is not None else []),
             "ageing_in": ageing_in,
             "imminent": imminent,
             "next_free_due": next_free_due,
@@ -936,6 +1033,21 @@ def render(a: dict, last_run: str = "") -> str:
                 came = "NO ROW YET"
             out.append(f"    {e['row']} ({e['row_status']})  ordered "
                        f"{e['spec']} -> {came}")
+    if a.get("closed_decision_reparents"):
+        cdr = a["closed_decision_reparents"]
+        out.append("")
+        out.append(f"  DISPOSITION-ON-A-CLOSED-DECISION — {len(cdr)} ACTED "
+                   "row(s) re-parent work to a decision")
+        out.append("  that is CLOSED (100th audit B2: a terminal row is never "
+                   "re-read, so a parent that")
+        out.append("  closed before — or without — inheriting leaves the work "
+                   "owned by nobody). A")
+        out.append("  READING, never a violation and never floored: whether "
+                   "the closure honoured the")
+        out.append("  re-parent is a human's judgement over the printed pair:")
+        for e in cdr:
+            out.append(f"    {e['row']} -> {e['decision']} "
+                       f"(closed {e['closed']})")
     if a["due_pile"]:
         out.append("")
         out.append("  DUE-DATE PILE — live rows per promised date (65th audit "
@@ -1064,9 +1176,12 @@ def live_audit(doc_path: Path | None = None, today: _dt.date | None = None) -> d
     # registry raising is honest, converting it into "NO ROW YET" is the
     # opt-in blindness again.
     from .registry import BY_ID
+    resolved = p.parent / "DECISIONS_RESOLVED.md"
     return audit(p.read_text(), _prev_revision(p), today, base_doc=base,
                  ledger=ledger, registered=set(BY_ID),
-                 next_cycle=next_consumer_cycle(consumer_run_dates(), today))
+                 next_cycle=next_consumer_cycle(consumer_run_dates(), today),
+                 resolved_doc=(resolved.read_text() if resolved.exists()
+                               else None))
 
 
 def check(doc_path: Path | None = None) -> int:

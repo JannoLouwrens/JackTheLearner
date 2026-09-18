@@ -168,6 +168,7 @@ from ..registry import BY_ID
 from ..review_queue import (CONSUMER_CYCLE_DAYS, DOC_PATH, LOG_PATH,
                             MAX_OPEN_AGE_DAYS, MEASURED_DISCHARGE_CAPACITY,
                             THROUGHPUT_WINDOW_DAYS, VIOLATIONS, audit, check,
+                            closed_decision_reparents, closed_decisions,
                             consumer_last_run, live_audit,
                             net_arrivals_split, next_consumer_cycle, parse,
                             render, throughput)
@@ -180,7 +181,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 19
+N_PROPERTIES = 20
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -952,6 +953,51 @@ def _probe(blind: bool) -> dict:
     if blind or not split_ok:
         failed.append("p19_the_desks_movement_is_separable_from_the_calendars")
 
+    # P20 — A TERMINAL ROW'S CLOSED PARENT IS PRINTED (100th audit B2,
+    # 2026-09-18). The scar: an ACTED disposition re-parented four of
+    # GOAL.md's citations to "`D24`'s resolution" four days AFTER D24 had
+    # closed — under a ruling in which the inherit event can never occur — and
+    # because ACTED is terminal, HOLD-ON-A-RESOLVED-BLOCKER (HELD rows only,
+    # P7) would never look at the row again. The reading is the ACTED-row
+    # analogue of P7 over prose, and it is a READING like P16's: never a
+    # violation, never counted, never floored. Four boundaries, each in both
+    # directions: terminal-vs-live (a DISPOSITIONED row is still re-read, so
+    # it is silent here), open-vs-closed parent, cue-vs-mention (a closed
+    # decision named WITHOUT a re-parent cue is a mention, not a parent), and
+    # decision-id-vs-spec-id (the `D1` inside `D1.0` must not resolve as D1
+    # even when D1 is closed).
+    _p20_resolved = "\n".join([
+        "## D90 — RESOLVED BY ARMED DEFAULT (fired 2026-09-12, builder): x",
+        "## D91 — RESOLVED, its heading carrying no date at all",
+        "## D1 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): y",
+        ""])
+    _p20_doc = _doc([
+        ("cdr-hit", "2026-08-01", "ACTED 2026-09-16 (deadbeef)",
+         ["The four are re-parented to D90's resolution, not to a date;",
+          "whoever closes D90 inherits them."]),
+        ("cdr-open-parent", "2026-08-01", "ACTED 2026-09-16 (deadbeef)",
+         ["re-parented to D77's resolution, beside D1.0's arena."]),
+        ("cdr-live-row", "2026-08-02", "DISPOSITIONED 2026-09-16",
+         ["re-parented to D90's resolution."]),
+        ("cdr-no-cue", "2026-08-03", "ACTED 2026-09-16 (deadbeef)",
+         ["executed under D90, which is closed; nothing is moved to it."]),
+    ])
+    got20 = closed_decision_reparents(_p20_doc, _p20_resolved)
+    pairs20 = [(e["row"], e["decision"], e["closed"]) for e in got20]
+    a20 = audit(_p20_doc, None, TODAY, resolved_doc=_p20_resolved)
+    a20_none = audit(_p20_doc, None, TODAY)
+    ok20 = (pairs20 == [("cdr-hit", "D90", "2026-09-12")]
+            and a20["closed_decision_reparents"] == got20
+            # the reading moves NO violation in either direction, and absent
+            # the resolved doc it is [] — never a manufactured zero elsewhere
+            and a20["total"] == a20_none["total"]
+            and a20["counts"] == a20_none["counts"]
+            and a20_none["closed_decision_reparents"] == []
+            and closed_decisions(_p20_resolved)["D91"] == ""
+            and "cdr-hit -> D90" in render(a20))
+    if blind or not ok20:
+        failed.append("p20_a_terminal_rows_closed_parent_is_printed")
+
     # The live desk's own numbers, recorded in the ledger row so the reading
     # that motivated P15 is dated and attributable rather than quoted from an
     # audit page. `-1` is the honest value for "no git baseline in this
@@ -1055,6 +1101,7 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p16_an_ordered_specs_return_is_printed",
                            "p18_dated_promises_are_forecast_before_they_break",
                            "p19_the_desks_movement_is_separable_from_the_calendars",
+                           "p20_a_terminal_rows_closed_parent_is_printed",
                            } <= control_names)
     return bool(experiment_clean and control_broken)
 

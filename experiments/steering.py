@@ -69,6 +69,7 @@ order that names no spec is one this reader correctly says nothing about.
 
 from __future__ import annotations
 
+import datetime as _dt
 import re
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -282,6 +283,131 @@ def render(items: Optional[List[dict]] = None, indent: str = "  ") -> str:
     return "".join(lines)
 
 
+# ── decision deadlines quoted on a steering page (100th audit B1) ───────────
+#
+# THE SCAR: the duplicate-D30 bug was fixed in the register at ~13:0x on
+# 2026-09-18, and at 18:22 the same day the Review's page told the owner the
+# decision expired 2026-09-25 — a sentence carried forward from the broken
+# register, published five hours AFTER the lesson about exactly this
+# ("fixing a register does not fix what was published from it"). The owner
+# was handed seven days on a question that expired that night. A written
+# lesson did not survive one organ boundary; this reader is the instrument
+# form of it, in `run status` where a sitting cannot finish without it.
+#
+# A decision id, as distinct from a spec id: `D30` yes, the `D1` inside
+# `D1.0` no — the lookahead is what keeps the two citation grammars from
+# colliding on the same page.
+DECISION_CITATION = re.compile(r"\bD(\d{1,3})\b(?!\.\d)")
+_ISO = re.compile(r"\b(20\d{2}-\d{2}-\d{2})\b")
+# Approximate sentence split over paragraph-flattened prose. A HEURISTIC in
+# the same declared class as the bold-lead split: a false boundary costs a
+# missed pairing (silent, the safe direction), never an invented one.
+_SENT = re.compile(r"(?<=[.!?])\s+")
+
+
+def open_register(path: Optional[Path] = None) -> Dict[str, str]:
+    """{open decision id -> its `decide_by` ISO date}, from the register.
+
+    Only OPEN decisions: a resolved decision's dates are history and a page
+    discussing them is narrating, not steering. Only parseable ISO
+    `decide_by` values: an undated open decision has no deadline to misquote.
+    """
+    from .decisions import DOC, parse
+    decls, open_ids, _dupes = parse(Path(path or DOC).read_text())
+    out: Dict[str, str] = {}
+    for did in open_ids:
+        db = ((decls.get(did) or {}).get("decide_by") or "").strip()
+        if re.fullmatch(r"20\d{2}-\d{2}-\d{2}", db):
+            out[did] = db
+    return out
+
+
+def date_mismatches(pages=STEERING_PAGES, repo: Optional[Path] = None,
+                    register: Optional[Dict[str, str]] = None) -> List[dict]:
+    """Sentences on a steering page that cite an OPEN decision beside a full
+    ISO date agreeing with NEITHER its `decide_by` NOR the day after it.
+
+    The day-after allowance is deliberate and asymmetric: an armed default
+    FIRES the day after its deadline (`decisions.py` marks overdue at
+    `> 0` days), so *"`D30`'s default fires on 2026-09-19"* is a correct
+    sentence about a 2026-09-18 deadline and flagging it would put a false
+    positive beside the one real finding — the D27 fate. A sentence carrying
+    ANY agreeing date is silent, so a page that quotes the wrong date while
+    correcting it (as an audit does) stays quiet.
+
+    Whole page, not just `FOR THE BUILDER`: the known positive lived under
+    `FOR THE OWNER`. Reporting-only and unfloored, per D27's reasoning — a
+    page may cite a date for another reason, and this reader does not read
+    intent; the register is the authority it compares against, never the
+    judge of why the page said what it said.
+    """
+    repo = _REPO if repo is None else repo
+    if register is None:
+        register = open_register()
+    out: List[dict] = []
+    for rel in pages:
+        p = repo / rel
+        if p.exists():
+            out.extend(text_date_mismatches(p.read_text(), register, rel))
+    return out
+
+
+def text_date_mismatches(text: str, register: Dict[str, str],
+                         page: str = "") -> List[dict]:
+    """`date_mismatches` over one page's text — the pure half, so the fixture
+    can replay the known answer without touching disk."""
+    out: List[dict] = []
+    seen = set()
+    for para in re.split(r"\n\s*\n", text or ""):
+        flat = re.sub(r"\s+", " ", para).strip()
+        for sent in _SENT.split(flat):
+            dates = _ISO.findall(sent)
+            if not dates:
+                continue
+            for m in DECISION_CITATION.finditer(sent):
+                did = "D" + m.group(1)
+                db = register.get(did)
+                if db is None:
+                    continue
+                fire = (_dt.date.fromisoformat(db)
+                        + _dt.timedelta(days=1)).isoformat()
+                if any(d in (db, fire) for d in dates):
+                    continue
+                key = (did, tuple(sorted(set(dates))))
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append({"page": page, "id": did,
+                            "page_says": sorted(set(dates)),
+                            "register_says": db,
+                            "sentence": sent[:160]})
+    return out
+
+
+def render_dates(mis: Optional[List[dict]] = None,
+                 indent: str = "  ") -> str:
+    """The `STEERING-DATE-MISMATCH` block printed by `run status`."""
+    if mis is None:
+        mis = date_mismatches()
+    if not mis:
+        return (f"{indent}STEERING-DATE-MISMATCH — none: every open-decision "
+                f"deadline quoted on a steering page\n"
+                f"{indent}  agrees with the register (or with its fire day, "
+                f"deadline + 1).\n")
+    lines = [f"{indent}STEERING-DATE-MISMATCH — {len(mis)} open-decision "
+             f"deadline(s) misquoted on a steering page.\n"
+             f"{indent}  Reporting-only, unfloored: the register is the "
+             f"authority; a page may cite a date\n"
+             f"{indent}  for another reason, and this reader does not read "
+             f"intent.\n"]
+    for m in mis:
+        lines.append(f"{indent}    {m['id']}  {m['page']} says "
+                     f"{', '.join(m['page_says'])} — register says decide_by "
+                     f"{m['register_says']}\n")
+        lines.append(f"{indent}      \"{m['sentence']}\"\n")
+    return "".join(lines)
+
+
 # ── the known answer ────────────────────────────────────────────────────────
 #
 # Verbatim from `docs/PROGRESS.md` at `d44d21a` (Review DAILY, 2026-09-13
@@ -408,7 +534,49 @@ def _check() -> None:
         raise AssertionError("steering: a prohibition the ledger agrees with "
                              "must be printed, and printed as agreement")
 
+    # ── the date-mismatch known answer (100th audit B1) ─────────────────────
+    # Verbatim from `docs/PROGRESS.md` at `a01837f` (Review DAILY, 2026-09-18
+    # 18:22) — the paragraph that told the owner a decision expiring that
+    # night expired in seven days, published five hours after the register
+    # was repaired and after the lesson about exactly this was written.
+    # Frozen on purpose, like `_FIXTURE_PAGE`: the live page will be
+    # corrected, and this must keep failing if the reader forgets how to see
+    # it. The register here is what `DECISIONS_NEEDED.md` held that night.
+    _DATE_FIXTURE = """
+**1. `D30` — cited, not re-asked (`decide_by` 2026-09-25), with one new
+fact.** The blackout that motivated it has ended — the builder ran 26 commits
+today — so the *cost* half of that entry is no longer accruing. What is new
+is procedural: `D30`'s own armed default fires on 2026-09-19 at an hour no
+date-granular slot can enforce.
+
+**2. `D28` — cited, not re-asked (`decide_by` 2026-09-21), and today is the
+fourth piece of evidence.**
+
+Both `D20` and `D30` carry `decide_by: 2026-09-18`. `D24`, which closed
+2026-09-12, is not open and says nothing here. `D1.0` attempt 3 waited for
+W37 (opened 2026-09-13); a spec id is not a decision id.
+"""
+    _reg = {"D30": "2026-09-18", "D28": "2026-09-21", "D20": "2026-09-18"}
+    mis = text_date_mismatches(_DATE_FIXTURE, _reg, "fixture")
+    want_mis = [("D30", ["2026-09-25"], "2026-09-18")]
+    got_mis = [(m["id"], m["page_says"], m["register_says"]) for m in mis]
+    if got_mis != want_mis:
+        raise AssertionError(
+            f"steering: date fixture flunked: {got_mis} != {want_mis} — the "
+            f"one real misquote must flag; the fire-day sentence (09-19), the "
+            f"agreeing citations (D28, D20/D30), the closed decision (D24) "
+            f"and the spec id (D1.0) must all stay silent")
+    txt = render_dates(mis, indent="")
+    if "D30" not in txt or "2026-09-25" not in txt or "2026-09-18" not in txt:
+        raise AssertionError("steering: the mismatch render must name the id "
+                             "and both dates")
+    if "none:" not in render_dates([], indent=""):
+        raise AssertionError("steering: a clean read must still print — an "
+                             "absent block is indistinguishable from an "
+                             "absent check")
+
 
 if __name__ == "__main__":  # pragma: no cover
     _check()
     print(render(), end="")
+    print(render_dates(), end="")
