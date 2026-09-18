@@ -37,7 +37,11 @@ admit_msg=$("$PYBIN" -m experiments.cpu_budget admit "$LABEL" 2>&1) || {
     echo "REFUSED by the CPU day budget (T0.34): $admit_msg" >&2
     exit 3
 }
-setsid nice -n 19 "$PYBIN" -m experiments.cpu_budget wrap "$LABEL" "$@" >> "$LOG" 2>&1 < /dev/null &
+# env -u: a setsid child survives the session, so the session's iteration
+# deadline must not bind it — an inherited JACK_ITER_DEADLINE silently
+# reroutes or refuses colab work in any GPU-touching child (same fix as
+# dispatch.sh; the 09-17 slot had to do this by hand and said so).
+setsid nice -n 19 env -u JACK_ITER_DEADLINE "$PYBIN" -m experiments.cpu_budget wrap "$LABEL" "$@" >> "$LOG" 2>&1 < /dev/null &
 pid=$!
 # DECLARE IT. A detached run is compute this system MEANT to leave behind, and
 # the loop's leftover check (scripts/lib_procwatch.sh, 52nd audit B2) must be

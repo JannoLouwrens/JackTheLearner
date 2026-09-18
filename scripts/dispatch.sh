@@ -119,7 +119,17 @@ fi
 # is enough.
 export JACK_PROJECTED_HOURS="$PROJECTED"
 
-setsid nohup "$PY" -m experiments.run "$SPEC" >"$LOG" 2>&1 </dev/null &
+# THE SESSION DEADLINE DOES NOT BIND A DETACHED WATCHER. `JACK_ITER_DEADLINE`
+# exists because a watcher that is a CHILD of a session dies with it, so
+# `gpu.submit` refuses colab work that cannot return before the session does.
+# This watcher is setsid-detached — surviving the session is its whole job —
+# so an inherited deadline is a false premise that silently reroutes a
+# colab-preferring spec to kaggle (T1.08's probe arm, 09-14; T1.07's re-buy,
+# 09-18) or refuses it outright. The 09-13 lesson names the class: a
+# session-scoped guard keyed on an inherited env var binds every descendant,
+# including the ones deliberately detached from the session. Strip it here so
+# no caller has to remember `env -u` by hand again.
+setsid nohup env -u JACK_ITER_DEADLINE "$PY" -m experiments.run "$SPEC" >"$LOG" 2>&1 </dev/null &
 PID=$!
 # Declared, so the loop's leftover check reads this watcher (and the runner it
 # forks) as intended compute rather than a stranded orphan — see
