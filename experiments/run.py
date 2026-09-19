@@ -1399,6 +1399,15 @@ def ratchet_live(ledger: Ledger) -> dict:
         from .coverage import _claim_dead, report
         return sum(1 for r in report() if _claim_dead(r))
 
+    def _commitments_uncovered():
+        # 101st audit RANK 2: this class went 0 -> 4 on 2026-09-18 and no
+        # machine-readable signal could say so — coverage's exit code was
+        # already red on claim_dead, and the number was recorded only as an
+        # unread metric on T0.21's ledger row. Same predicate as `check()`'s
+        # printer, factored so the two readers cannot drift.
+        from .coverage import uncovered_commitments
+        return len(uncovered_commitments())
+
     def _park_release_pairs():
         from .coverage import park_release
         return len(park_release()["violations"])
@@ -1555,6 +1564,7 @@ def ratchet_live(ledger: Ledger) -> dict:
     take("gpu_hours_no_verdict", _gpu_hours_no_verdict)
     take("gpu_unattributed_jobs", _gpu_unattributed_jobs)
     take("claim_dead", _claim_dead_count)
+    take("commitments_uncovered", _commitments_uncovered)
     take("park_release_pairs", _park_release_pairs)
     take("champions_trigger_debt", _champions_trigger_debt)
     take("champions_unwinnable", _champions_unwinnable)
@@ -1576,14 +1586,19 @@ def ratchet_floors() -> dict:
     cannot — so it is compared here too, in the channel no verdict silences.
     """
     from .champions import BASELINE_UNWINNABLE
-    from .coverage import FAIL_UNOWNED_BASELINE, UNREACHABLE_BASELINE
+    from .coverage import (COMMITMENTS_UNCOVERED_BASELINE,
+                           FAIL_UNOWNED_BASELINE, UNREACHABLE_BASELINE)
     return {"unreachable": UNREACHABLE_BASELINE,
             "fail_unowned": FAIL_UNOWNED_BASELINE,
             "gpu_unattributed_jobs": GPU_UNATTRIBUTED_FLOOR,
             # Added 2026-09-13 (91st audit B2). The floor is the channel a
             # `ratchets record` cannot quiet, which matters most for a class
             # that spent eleven days with no floor at all.
-            "champions_unwinnable": BASELINE_UNWINNABLE}
+            "champions_unwinnable": BASELINE_UNWINNABLE,
+            # Added 2026-09-19 (101st audit RANK 2 / FTB 1) — the class the
+            # coverage charter ranks above every other finding grew 0 -> 4
+            # with no counter anywhere to move.
+            "commitments_uncovered": COMMITMENTS_UNCOVERED_BASELINE}
 
 
 def floor_status(cur, floor):
@@ -1837,6 +1852,24 @@ def _check_ratchet_reader() -> None:
             f"clock-sensitive counters {unknown or ''}{undeclared or ''} are "
             "undeclared or wrongly classed — a suppression whose class is not "
             "declared is the 1-tuple again")
+    # 101st audit FTB 1, the `_exit_code_fixture` idiom one level up: pin the
+    # floored-counter set BY NAME, so deleting any single entry from
+    # `ratchet_floors()` fails here by name rather than silently dropping the
+    # floor line from the print. (Deleting the counter's `take()` in
+    # `ratchet_live` is the other disconnection channel; `print_ratchet_block`
+    # asserts floors ⊆ scanned rows against the LIVE scan, and a recorded
+    # counter that stops being computed banners VANISHED.) A new floor is
+    # added HERE in the same commit that declares its constant — that cost is
+    # the point.
+    FLOORED = {"unreachable", "fail_unowned", "gpu_unattributed_jobs",
+               "champions_unwinnable", "commitments_uncovered"}
+    got_floors = set(ratchet_floors())
+    if got_floors != FLOORED:
+        raise RuntimeError(
+            f"ratchet_floors() returned {sorted(got_floors)}, expected "
+            f"{sorted(FLOORED)} — a floor that vanishes from the map is a "
+            "disconnected ratchet, and one added without pinning here is the "
+            "next one")
 
 
 def print_ratchet_block(ledger: Ledger) -> None:
@@ -1849,6 +1882,17 @@ def print_ratchet_block(ledger: Ledger) -> None:
     rows = ratchet_deltas(ratchet_live(ledger), recorded,
                           today=time.strftime("%Y-%m-%d", time.gmtime()))
     floors = ratchet_floors()
+    # 101st audit FTB 1: a floored counter that vanishes from the scan gets no
+    # floor line and no banner — `if name in floors` below simply never fires.
+    # Assert the join on the LIVE scan, so deleting a `take()` line in
+    # `ratchet_live` after its reading is scrubbed refuses by name instead of
+    # printing a block that quietly lost a ratchet. (While a reading is still
+    # committed the same deletion banners VANISHED; this covers the remainder.)
+    unscanned = sorted(set(floors) - {r[0] for r in rows})
+    if unscanned:
+        raise RuntimeError(
+            f"floored counter(s) {unscanned} missing from the ratchet scan "
+            "entirely — refusing to print a block that lost a ratchet")
     splits = ratchet_splits(rows)
     print("  RATCHET COUNTERS — standing-red tools' numbers, printed here so "
           "a blessed red\n    can never silence them (64th audit B2). "

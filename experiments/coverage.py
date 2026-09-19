@@ -3616,6 +3616,35 @@ def _no_live_path_fixture() -> List[str]:
     return fails
 
 
+# Shrink-only floor for `uncovered_commitments` (101st audit RANK 2 / FTB 1).
+# The class this charter calls "the only kind of hole that cannot be found by
+# looking harder at the ledger" went 0 -> 4 on 2026-09-18 and NO machine-
+# readable signal moved: the exit code was already held red by claim_dead, no
+# ratchet counter existed, and the number lived only as an unread metric on
+# T0.21's ledger row. This constant is the floor `run status`'s RATCHET
+# COUNTERS block compares against — the channel a `ratchets record` cannot
+# quiet. It may FALL (lower it in the same commit that registers a spec for an
+# uncovered commitment) and may NEVER rise without a named justification
+# appended here. The only legal shrink is a REGISTERED spec; deleting a
+# commitment from the register is the repair that lowers its own number
+# (the T0.31 disease) and is forbidden.
+#   2026-09-19  baseline declared at 4: heavy, far, tiring, worth-it —
+#               GOAL.md:187's prose primitives, entered into the register
+#               deliberately (2fd7de5) to make this exact gap countable.
+#               Registration-vs-rewording fork is the owner's
+#               (goal-187-names-seven-primitives-four-have-no-commitment).
+COMMITMENTS_UNCOVERED_BASELINE = 4
+
+
+def uncovered_commitments(rows=None) -> list:
+    """Commitments with ZERO declared specs (and not parked) — the class this
+    tool exists for, factored out of `check()`'s printer so `run status`'s
+    ratchet counter and the audit here read the SAME predicate and cannot
+    drift (the `_split_foreclosed` pattern)."""
+    rows = report() if rows is None else rows
+    return [r for r in rows if r["n_specs"] == 0 and not r["parked"]]
+
+
 def check() -> int:
     """Print the audit; exit 2 if any commitment is UNCOVERED or CLAIM-DEAD,
     1 if only malformed declarations exist, 0 clean.
@@ -3633,7 +3662,7 @@ def check() -> int:
     reach = claim_reachability(rows)
     parked_notes = parked()[0]
     width = max(len(r["commitment"]) for r in rows)
-    uncovered = [r for r in rows if r["n_specs"] == 0 and not r["parked"]]
+    uncovered = uncovered_commitments(rows)
     dead = [r for r in rows if _claim_dead(r)]
     unproven = [r for r in rows if r["n_specs"] and not r["n_pass"]
                 and not _claim_dead(r)]

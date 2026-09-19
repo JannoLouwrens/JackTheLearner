@@ -1341,6 +1341,13 @@ the class. `launch_detached.sh` is byte-untouched; nothing is re-run; the
 foreclosure stays VISIBLE as the 68th-audit B3 printed number
 (`cpu_foreclosed_now`, reading 0 today).
 
+**ENFORCEMENT, stated so nobody discovers it by violating it (101st audit FTB
+3):** the no-new-`cpu<48h`-registration constraint is held by NOTHING but this
+note — no code in `registry.py`, `registry_expansion.py`, `protocol.py` or
+`cpu_budget.py` refuses or flags a new `Budget.CPU_DAYS` registration, and no
+instrument reads this file for standing constraints. Read by: whoever
+registers a spec, by eye; nothing computes it.
+
 **ONE PREMISE CORRECTED AT FIRING, declared rather than glossed (the D25
 precedent: a pre-registered remedy can name a condition its own case does not
 satisfy).** The decision text says *"no spec is registered in it today"* and
