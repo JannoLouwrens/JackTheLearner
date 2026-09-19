@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 109 / 250 demonstrated
+## 109 / 251 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -729,6 +729,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ W0 charges for traversal, in the currency the needs already speak: a scripted traversal policy driven to identical resources placed at >= 4 pre-registered distances pays a need-cost (integrated drive drain read off the existing needs.py channels — no new instrument) that increases MONOTONICALLY in distance on every seed; the near-vs-far cost gap exceeds the venue's outcome-metric quantum (the DP.04/W1.02 resolution lesson applied at registration, not discovered by a pilot); and distance-to-resource is LEGIBLE beforehand — a probe on the sensory vector predicts it well above chance while the agent is still en route (PS.02's legibility gate, reused because it is the same question).
       - _dies if:_ Cost flat or non-monotone in distance (travel is effectively free at W0's decay rates); or the near-vs-far gap reads below the outcome quantum, so no learner could ever be selected on it; or the probe cannot beat chance, so far is a price paid blind. Any of the three means 'far' is not learnable in this venue and GOAL.md:187's promise has no mechanism behind it.
       - _then delete:_ On FAIL: 'far' is struck from what W0 can teach, every distance-discounting or foraging-efficiency claim is inadmissible in this venue, and the repair is a world edit routed through the W1 window — never a quiet decay-rate retune until the price appears.
+- [ ] **PS.06** Tiring is a price: sustained exertion drains the body's capability before anyone has to learn it
+      - _asserts:_ W0's needs layer charges for work in a currency the body must repay: a scripted sustained-exertion policy drives fatigue f (needs.py:528 — f rises with mechanical power p_mean, falls with rest, taus 60 s/60 s so steady-state f* = P/p_max) high enough on every seed that the weakness gate gear_scale = 0.5 + 0.5*(1-f)*min(e,i) (needs.py:382, GEAR_FLOOR 0.5) measurably cuts what the SAME ctrl commands achieve — the spent-vs-fresh capability gap, read as achieved mechanical output under identical ctrl, exceeds the venue's outcome-metric quantum (the DP.04/W1.02 resolution lesson applied at registration); rest REPAYS it at the pre-registered TAU_F_FALL timescale, distinguishing tiredness from damage; and the imminent droop is LEGIBLE beforehand — a probe on the sensory vector (the NEED_DIM block carries f) predicts the next-window capability deficit well above chance while the body is still fresh enough to act on it (PS.02's legibility gate, reused because it is the same question).
+      - _dies if:_ At the body's actually-sustainable power fraction, f never accrues enough to move gear_scale (tiredness is decorative at W0's rates — f* = P/p_max may sit near 0 for a body that cannot sustain power); or the spent-vs-fresh gap reads below the outcome quantum, so no learner could ever be selected on pacing; or rest does not restore capability on the registered timescale (then the price is damage wearing fatigue's name, already covered by PS.03); or the probe cannot beat chance, so tiring is a price paid blind. Any of the four means 'tiring' is not learnable in this venue and GOAL.md:187's promise has no mechanism behind it.
+      - _then delete:_ On FAIL: 'tiring' is struck from what W0 can teach, every pacing, effort-budgeting or rest-scheduling claim is inadmissible in this venue, and the repair is a world/body edit routed through the W1 window or NE.01's constants lane under ITS binding constraints — never a quiet TAU_F/GEAR_FLOOR retune until tiredness appears.
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
