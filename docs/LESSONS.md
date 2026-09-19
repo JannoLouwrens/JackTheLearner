@@ -3847,6 +3847,38 @@ later. A lesson is a memory, not a control — the enforcement is
 an EXITED run loudly at the top of every slot instead of relying on the next
 reader to have read this paragraph.
 
+**Corollary, sixth and seventh occurrences (2026-09-19 09:5x and 10:1x, the
+PS.06 registered run, SAME DAY as the fifth lesson) — and the enforcement the
+paragraph above points to was wired BLIND, so this entry now carries two
+rules, one about lanes and one about controls.** Both slots did the deadline
+arithmetic, both launched the run as a session-child background task, both
+ended their turn on a wake-up promise (*"the waiter is armed"*; *"the harness
+will wake me when it exits"*), and both runs died within seconds of `claude
+-p` returning — a 109-byte header log frozen at 10:10 was the seventh's whole
+residue. The 11:0x slot found them by the standing verify-on-disk rule and
+recovered the run by holding its own session open (the LT.01 07:0x pattern).
+Six and seven prove the fifth entry's own closing sentence wrong in the way
+Law 1 predicts: *"the enforcement is `notice_exited_dispatches` now wired on
+the live path"* was a capability claim, and it had never been claimed by a
+test that could have failed. Both losses were declared (protocol.py:3142
+self-declares every `run_spec`) and both were stamped EXITED by their slots'
+exit prunes — the write side of the lifecycle worked end to end — and the
+notice still said nothing at 10:07 or 11:07, because the live path called
+`proc_prune_declarations` (which DROPS dead+stamped rows) one line BEFORE the
+notice read the file. The wiring commit's own message says *"now called after
+proc_prune_declarations"*: the blindness was chosen at the call site, in the
+open, and no fixture could object because the fixture tested the FUNCTION
+(filter, silence cases) and never the SEQUENCE. Two generalisations, both now
+pinned in `test_lib_procwatch.sh`: **(1) a reader that shares a file with a
+janitor must run before it — announce-before-drop — or the janitor's
+correctness becomes the reader's blindness; (2) "fixture-verified" of a
+function is not verification of a control, because a control's efficacy claim
+lives at its call site — the fixture must exercise the call ordering, and the
+pre-repair order must be kept in the fixture as the control-that-must-fail.**
+The function now lives in `lib_procwatch.sh` beside the prune it is coupled
+to, the live path calls notice-then-prune, and the fixture asserts both the
+repaired order (announces) and the defective order (provably silent).
+
 ## An absent field is honest; a field that silently records the RECORDER is a false one
 
 *(17th overseer audit, 2026-08-14)*

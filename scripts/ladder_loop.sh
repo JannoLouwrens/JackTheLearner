@@ -175,26 +175,12 @@ PY
   fi
 }
 
-# 99th audit B6: HARVEST_PATHS are four in-repo files, but detached runs write
-# their artifacts to /data — a finished dispatch is invisible to the harvest
-# above. The EXITED stamp (same audit, B3) is written for exactly this reader:
-# say the finished dispatch loudly, every skipped slot it stands, so a skip
-# streak cannot swallow it. NOTICING ONLY — committing the interpretation
-# still belongs to an unpaced iteration, and the add -A ban stands.
-notice_exited_dispatches() {
-  # $1 names the lane so the log line is honest about who is speaking:
-  # PACE-SKIP (the original wiring) or LIVE (102nd audit RANK 2 / Review
-  # 1^9 item 2 — a slot that RUNS never called this, so the 06:09 LT.01
-  # death produced no notice anywhere and was found by a human reading ps).
-  local lane="${1:-PACE-SKIP}"
-  local decl="${JACK_PROC_DECL:-/data/jack-logs/declared_pids}"
-  [ -r "$decl" ] || return 0
-  while IFS="$(printf '\t')" read -r key ts desc exited; do
-    case "$exited" in EXITED*) ;; *) continue ;; esac
-    case "$desc" in *dispatch*|*run_spec*|*detached*) ;; *) continue ;; esac
-    say "${lane} NOTICE: declared dispatch '${desc}' (${key}) is ${exited} — a finished detached run may hold artifacts outside the harvest paths (/data); the next unskipped iteration should read them"
-  done < "$decl"
-}
+# notice_exited_dispatches lives in scripts/lib_procwatch.sh (moved 2026-09-19
+# 11:0x): it is the READ side of the B3 EXITED-stamp lifecycle and belongs
+# beside the prune that writes and sweeps those stamps, where
+# test_lib_procwatch.sh can exercise the two of them IN SEQUENCE — the defect
+# it had here was pure call-site ordering, which no fixture of the function
+# alone could catch.
 
 # ...and spread what is left across the week, so the loop is still awake on the
 # Sunday that Kaggle's free quota expires. Builder ONLY: it is ~82% of all organ
@@ -244,11 +230,24 @@ trap on_exit EXIT
 # check that scans for one known pid provably cannot see an unknown one.
 # scripts/lib_procwatch.sh holds the scar; scripts/test_lib_procwatch.sh proves
 # the detector still works.
-proc_prune_declarations
 notice_exited_dispatches LIVE   # live path too, before the iteration's work is
                                 # chosen (Review 1^9 item 2): an EXITED
                                 # run_spec/dispatch row is said loudly whether
                                 # or not the slot is paced. Noticing only.
+                                # ANNOUNCE BEFORE PRUNE (103rd-day repair,
+                                # 2026-09-19 11:0x): the prune below DROPS
+                                # dead+stamped rows, and the slot-END prune has
+                                # already stamped anything that died with the
+                                # last session — so a notice called after it
+                                # reads a swept file and is structurally blind
+                                # to every prior-slot death, the exact class it
+                                # was wired to announce. Measured, not argued:
+                                # the 09:5x and 10:1x PS.06 losses (both
+                                # declared, both stamped at their slots' exits)
+                                # produced no notice at the 10:07 or 11:07
+                                # starts. A control must run before its own
+                                # janitor.
+proc_prune_declarations
 PROC_BEFORE=$(proc_snapshot)
 LEFTOVER_NOTE=""
 leftover_report() {

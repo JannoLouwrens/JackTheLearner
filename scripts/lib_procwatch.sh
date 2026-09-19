@@ -226,6 +226,40 @@ proc_prune_declarations() {
   mv "$tmp" "$JACK_PROC_DECL" 2>/dev/null || rm -f "$tmp"
 }
 
+# ---------------------------------------------------------------- notice ---
+# notice_exited_dispatches [LANE] — the READ side of the EXITED-stamp
+# lifecycle (99th audit B6; moved here from ladder_loop.sh 2026-09-19).
+# HARVEST_PATHS are four in-repo files, but detached runs write their
+# artifacts to /data — a finished dispatch is invisible to the harvest, so
+# every EXITED-stamped dispatch/run_spec/detached row is said loudly.
+# NOTICING ONLY — committing the interpretation belongs to an unpaced
+# iteration, and the add -A ban stands.
+#
+# THE ORDERING CONTRACT, and it is the reason this function lives beside
+# proc_prune_declarations: THE NOTICE MUST RUN BEFORE THE PRUNE AT EVERY
+# CALL SITE. The prune's second pass DROPS dead+stamped rows, and the
+# slot-END prune has already stamped anything that died with the previous
+# session — so a notice called after a prune reads a swept file and is
+# structurally blind to every prior-slot death, the exact class it exists
+# to announce. Measured, not argued (2026-09-19): the 09:5x and 10:1x
+# PS.06 losses, both declared and both stamped at their slots' exits,
+# produced no notice at the 10:07 or 11:07 starts because the live path
+# called prune first. test_lib_procwatch.sh pins the sequence both ways.
+notice_exited_dispatches() {
+  # $1 names the lane so the log line is honest about who is speaking:
+  # PACE-SKIP (the original wiring) or LIVE (102nd audit RANK 2 / Review
+  # 1^9 item 2 — a slot that RUNS never called this, so the 06:09 LT.01
+  # death produced no notice anywhere and was found by a human reading ps).
+  local lane="${1:-PACE-SKIP}"
+  local decl="${JACK_PROC_DECL:-/data/jack-logs/declared_pids}"
+  [ -r "$decl" ] || return 0
+  while IFS="$(printf '\t')" read -r key ts desc exited; do
+    case "$exited" in EXITED*) ;; *) continue ;; esac
+    case "$desc" in *dispatch*|*run_spec*|*detached*) ;; *) continue ;; esac
+    say "${lane} NOTICE: declared dispatch '${desc}' (${key}) is ${exited} — a finished detached run may hold artifacts outside the harvest paths (/data); the next unskipped iteration should read them"
+  done < "$decl"
+}
+
 # ------------------------------------------------------------- snapshot ----
 # proc_snapshot -> one "pid:starttime" per line, sorted.
 proc_snapshot() {

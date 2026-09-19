@@ -237,6 +237,67 @@ chk "  ...and still keeps the live one unstamped" \
 chk "declaring a dead pid fails loudly" \
     "$(proc_declare 999999 x 2>/dev/null; echo "rc=$?")" "rc=1"
 
+echo "== notice-before-prune: the slot-start ORDERING is load-bearing (2026-09-19) =="
+
+# The two-slot lifecycle as ladder_loop.sh actually runs it. A run_spec child
+# dies with its session; the slot-END prune stamps it EXITED. What the NEXT
+# slot's start does with that stamp is pure call ordering:
+#   notice -> prune   announces the death once, then sweeps the stamp  (correct)
+#   prune -> notice   sweeps the stamp first, the notice reads a clean file,
+#                     and the death is never said — the 09-19 defect: the
+#                     09:5x and 10:1x PS.06 losses, both declared and both
+#                     stamped, produced no notice at the 10:07/11:07 starts.
+: > "$JACK_PROC_DECL"
+printf '%s\t%s\t%s\n' "888888:1" "$(date -Iseconds)" "run_spec FAKE.01" >> "$JACK_PROC_DECL"
+proc_prune_declarations           # the slot-END prune: stamps the dead run
+chk "slot-end prune stamped the dead run_spec" \
+    "$(grep -c $'^888888:1\t.*\tEXITED ' "$JACK_PROC_DECL")" 1
+
+# The repaired live path: notice first, prune second.
+LOGLINE=""
+notice_exited_dispatches LIVE
+proc_prune_declarations
+chk "notice-then-prune ANNOUNCES the prior-slot death" \
+    "$(printf '%s' "$LOGLINE" | grep -c "LIVE NOTICE: declared dispatch 'run_spec FAKE.01'")" 1
+chk "  ...and the stamp is swept after being said" \
+    "$(grep -c '^888888:' "$JACK_PROC_DECL")" 0
+
+# THE CONTROL, and it must come out silent: rebuild the stamped state and run
+# the PRE-repair order. If this ever announces, the prune has stopped dropping
+# and the two-step lifecycle is broken in the other direction — either way a
+# human looks.
+printf '%s\t%s\t%s\tEXITED %s\n' "888888:1" "$(date -Iseconds)" \
+    "run_spec FAKE.01" "$(date -Iseconds)" >> "$JACK_PROC_DECL"
+LOGLINE=""
+proc_prune_declarations
+notice_exited_dispatches LIVE
+chk "prune-then-notice is provably BLIND (the defect, kept as the control)" \
+    "$(printf '%s' "$LOGLINE" | grep -c "NOTICE")" 0
+
+# B6's original silence cases, made durable: a non-dispatch exit stays quiet.
+# (The label must not CONTAIN dispatch/run_spec/detached — the filter is a
+# substring match, and a first draft of this fixture labelled the row
+# "not-a-dispatch" and correctly got announced.)
+: > "$JACK_PROC_DECL"
+printf '%s\t%s\t%s\tEXITED %s\n' "777777:1" "$(date -Iseconds)" \
+    "editor-probe" "$(date -Iseconds)" >> "$JACK_PROC_DECL"
+LOGLINE=""
+notice_exited_dispatches LIVE
+chk "an EXITED non-dispatch row is not announced" \
+    "$(printf '%s' "$LOGLINE" | grep -c NOTICE)" 0
+
+# The call-site pin, grep-level on purpose: the defect was one line of call
+# ordering in ladder_loop.sh that no fixture of the function alone could see.
+# The first LIVE notice must sit after the pace gate and before the first
+# slot-start prune.
+LOOP="$REAL_REPO/scripts/ladder_loop.sh"
+G_LINE=$(grep -n 'pace_gate say' "$LOOP" | head -1 | cut -d: -f1)
+N_LINE=$(grep -n '^notice_exited_dispatches LIVE' "$LOOP" | head -1 | cut -d: -f1)
+P_LINE=$(grep -n '^proc_prune_declarations' "$LOOP" | awk -F: -v g="$G_LINE" '$1 > g {print $1; exit}')
+chk "ladder_loop.sh live path calls the notice BEFORE the slot-start prune" \
+    "$([ -n "$G_LINE" ] && [ -n "$N_LINE" ] && [ -n "$P_LINE" ] && \
+       [ "$N_LINE" -gt "$G_LINE" ] && [ "$N_LINE" -lt "$P_LINE" ] && echo yes || echo no)" yes
+
 rm -f "$JACK_PROC_DECL"
 LOGLINE=""
 chk "a missing declaration file is not a crash" \
