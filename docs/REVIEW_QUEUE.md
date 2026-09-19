@@ -6699,8 +6699,20 @@ branch of this addendum, and `T1.08` stays FAIL.**
 
 ## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
 
-ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | OPEN
-    DUE: 2026-09-17 | a GRAMMAR decision, and therefore this desk's: may a live
+ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | DISPOSITIONED 2026-09-19 (Review DAILY — ADOPT the cheaper variant, STRENGTHENED: `WAITS-ON:` is declaration-only and buys no exemption, and the grouped line prints only when every live row on the date carries an EXPLICIT declaration, with `WAITS-ON: none` permitted as that declaration; design only, the builder implements and re-buys T0.31)
+    DUE: 2026-09-21 | RE-DATED 2026-09-19 (Review DAILY) BECAUSE THE DEBT
+    CHANGED HANDS, not because it was missed again. The 2026-09-17 date broke on
+    this desk and the break stands in the record. What this row owed was a
+    GRAMMAR RULING owed by the Review, and that ruling is delivered below
+    (DISPOSITION 2026-09-19 — adopt the cheaper variant, strengthened with
+    `WAITS-ON: none`). What remains is an IMPLEMENTATION owed by the builder,
+    which is a different debt with a different owner, and dating it to the day
+    the design landed would be dating work nobody could yet have done. Date is
+    `review-queue`'s own `next_free_due` print (2026-09-21, 3 live rows against
+    the measured capacity of 6) — taken from the tool, never chosen by hand, and
+    never onto a day already at capacity. The design half of this row is
+    DISCHARGED; only the build is outstanding. ORIGINAL TEXT FOLLOWS, unchanged.
+    | a GRAMMAR decision, and therefore this desk's: may a live
     non-`HELD` row declare `WAITS-ON: <row id>`? Taken from `review-queue`'s own
     `next_free_due` rather than chosen by hand. PROPOSED, deliberately NOT
     implemented — the 93rd audit ordered it in that shape ("Propose it; do not
@@ -6748,6 +6760,70 @@ that risk is real and is the reason this is proposed rather than shipped. A
 cheaper variant exists if the desk prefers it — `WAITS-ON:` permitted but the
 grouped line printed only when EVERY row in a pile declares one, so a partial
 adoption prints nothing instead of a wrong number.
+
+**DISPOSITION 2026-09-19 (Review, DAILY) — ADOPT THE CHEAPER VARIANT, WITH ONE
+STRENGTHENING THAT CLOSES A HOLE IN IT.** Answering the grammar question first,
+because it is the one that was asked: **yes, a live non-`HELD` row may declare
+`WAITS-ON: <row id>`.** The proposal's central judgment is right and is the
+reason this is adoptable at all — coupling and ageing-exemption are different
+things, and `BLOCKED-BY:` conflates them. These rows *should* age. A desk that
+owes six answers behind one root still owes six answers on their dates; what it
+does not owe is six sittings. `WAITS-ON:` buys **nothing** — no exemption, no
+re-dating, no change to OVERDUE or STALE — and that emptiness is the feature.
+
+**The builder's case against is correct and is why the base proposal is
+REFUSED.** An optional, unenforced declared field gets written by whoever
+remembers, and a grouped count assembled from partial declarations is
+*confidently wrong*, which is strictly worse than the absent line we have today.
+The cheaper variant is the right shape: make the reading refuse to print rather
+than print a number it cannot stand behind.
+
+**But the variant as written cannot ever fire, and that is the hole.** "Print
+only when EVERY row in a pile declares one" is unsatisfiable for a pile
+containing a genuinely independent row — an uncoupled row has no root to name,
+so it can never declare, so the line never prints, so the whole feature is
+inert. **The repair: permit `WAITS-ON: none` as an explicit declaration of
+independence, and gate the grouped line on every live row for that date carrying
+an EXPLICIT declaration — a row id or `none`.** Partial adoption still prints
+nothing; full adoption now prints something.
+
+**Why this is stronger than what was proposed, in the project's own idiom.** It
+converts "did the router remember?" — unanswerable — into a *completeness*
+question the instrument answers mechanically, which is the same move
+`experiments/decisions.py` makes when it refuses to guess which `FOR THE OWNER`
+items are asks and demands a written `NO-DECISION:` instead. **Silence is
+reported; exemption is written down.** The identical rule, applied to a second
+desk file. A router who declines to judge coupling now leaves a visible hole in
+a printed reading instead of a silent gap in a count.
+
+**What the builder implements, and what it may not do.**
+- `WAITS-ON: <row id> | <why>` and `WAITS-ON: none | <why not>` as a third
+  optional body line beside `DUE:` and `BLOCKED-BY:`, same idiom.
+- **Declaration-only.** It may not touch OVERDUE, STALE, ageing, `next_free_due`,
+  the disposal-rate measurement or the capacity histogram's row counts. If
+  implementing it changes any number already printed other than by ADDING the
+  grouped line, the implementation is wrong.
+- A `WAITS-ON:` naming a row id that does not exist is a VIOLATION, in the same
+  class as the MALFORMED-fields check — an undeclared coupling is a gap, but a
+  coupling declared against a corpse is a false statement.
+- The grouped line prints per due-date, gated as above, and when the gate is
+  unmet it prints **why it is unmet** (`n of m rows undeclared`), never nothing
+  at all. A reading that is silently absent is how this row's own problem
+  started.
+- **BILL, as routed:** `experiments/review_queue.py` is `T0.31`'s only
+  `IMPL_DEPS`, so this stales `T0.31` and it is re-bought in the same motion
+  (~1.6 s). It arrives as a STRENGTHENING — 18 -> 19 properties minimum, and the
+  corpse-reference violation is a 20th if it is asserted separately. No
+  threshold moves; nothing is weakened.
+
+**The cost, stated rather than buried.** Every future router now owes a judgment
+about coupling on every row it writes, including the judgment "this one is
+independent". That is real work and it is being imposed on this desk by this
+desk. It is worth it because the alternative measured itself: fourteen rows came
+due against a capacity of six and nobody could tell — including the desk that
+wrote all fourteen — that it was nine decisions and not fourteen. **Reversal:
+delete the reading; the declared lines are inert prose and harm nothing if the
+grouped line is never printed again.**
 
 ROUTED: so10-tie-break-hands-the-seat-to-an-ineligible-arm | 2026-09-13 | `498b8a2` (SO.10 attempt 1, FAIL) | OPEN
     DUE: 2026-09-17 | two design answers owed by the Review: (1) which of the
