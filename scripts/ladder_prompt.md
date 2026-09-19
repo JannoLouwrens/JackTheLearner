@@ -537,8 +537,86 @@ prohibitions and are carried into `3''`. **(Superseded in turn on 2026-09-05 —
 the live items are now `1'''`, `2'''` and `3''`; see the block immediately
 below.)**
 
-**LIVE PRIORITY BLOCK — `1^8`/`2^8` (Review, 2026-09-15, DAILY). `3''` FURTHER
-BELOW IS UNCHANGED AND STILL LIVE. `1^7`/`2^7` BELOW IS SUPERSEDED — its four
+**LIVE PRIORITY BLOCK — `1^9`/`2^9` (Review, 2026-09-19, DAILY). `3''` FURTHER
+BELOW IS UNCHANGED AND STILL LIVE. `1^8`/`2^8` BELOW IS SUPERSEDED — READ THIS
+BLOCK INSTEAD. `2^8` AND `2^7`'s PROHIBITIONS ARE CARRIED IN FULL BY `2^9`.**
+
+**FIRST, THE CORRECTION, because `1^8` opened on a fact that has been false for
+four days.** `1^8` began *"YOU HAVE BEEN DARK FOR 18 CONSECUTIVE SLOTS"* and
+priced its whole ordering in W37 hours *"expiring Sat 2026-09-19"*. **The
+blackout ended on 09-18** — you ran 26 commits that day and five slots before
+06:10 today — and **W37's hours died overnight with no legal buyer, audited
+correct.** Every item of `1^8` is discharged or dead: `D19` was ruled by the
+owner (09-17) and its default correctly not fired; `T1.07` was re-bought PASS at
+attempt 5 by reattach (`22c5c9b`); `D19`'s firing window closed; the field-watch
+wk7 §6 row is routed and live. **This block owed you a rewrite for a day and
+this desk is the reason it is a day late** — that is the debt the 09-18 sitting
+named and this is it paid.
+
+**THE STATE OF THE BOARD, from the instruments and not from this page: `run
+next` reports 0 fresh of 44 runnable.** 29 carry a settled verdict, 15 are held.
+**That is not your failure and it is not a hunting licence.** Every path off it
+runs through a design answer owed by THIS desk, and `review-queue` will tell you
+how many of those are overdue — take the count from the tool, never from here.
+
+1^9. **IN THIS ORDER. Item 1 is the whole board; items 2–3 are what you do if
+item 1 is already landed when you read this.**
+
+   1. **`LT.01` ATTEMPT 2 NEVER RAN, AND YOU SHOULD ASSUME IT IS STILL OWED
+      UNTIL THE LEDGER SAYS OTHERWISE.** The C2' implementation is committed and
+      clean at `b16de57` and its pilot is green (`adv_rise` 0.7142 against the
+      0.6 m bar, 0 ladder engagements). The 05:18 slot handed attempt 2 forward;
+      the 06:07 slot declared `run_spec LT.01` as pid `1825829` at 06:08:31 and
+      the slot ended `rc=0` at **06:09:57** — the run was stamped `EXITED` in the
+      same second, **86 s into a job whose attempt 1 took 1374 s.** It died with
+      its parent. **That is the FIFTH occurrence of the dies-with-parent class,
+      and it happened 51 minutes after the 05:18 slot wrote the fourth one into
+      `LESSONS.md`.** Writing the lesson did not enforce it.
+      **RUN IT IN THE FOREGROUND.** ~23 min of CPU fits inside a slot with room
+      to spare; the detachment bought nothing and cost the unit. Check
+      `experiments/ledger.json` for `LT.01` first — if `attempt` is still 1 at
+      `28a232e`, it is still owed. On landing, read the branch that fired, commit
+      the row by name, stamp `lt01-c2-body-cannot-rise` ACTED with the executing
+      commit, and journal. **The 0.6 m bar does not move in either branch** — the
+      09-06 disposition said so and nothing since has changed it.
+
+   2. **`notice_exited_dispatches()` CANNOT SEE TODAY'S LOSS, AND THAT IS THE
+      REPAIR.** You shipped it under the 99th audit's B6 and it is correct — but
+      `scripts/ladder_loop.sh:199` wires it behind `pace_gate say || { ... }`,
+      so **it fires only on a PACE-SKIPPED slot.** A slot that runs never calls
+      it. The 06:09 death therefore produced no notice anywhere, and would have
+      been found by a human reading a log tail — which is precisely the failure
+      mode B6 existed to end. The fix is one line of wiring, not a new reader:
+      call it on the live path too, before the iteration's work is chosen, so an
+      `EXITED` `run_spec`/`dispatch` row is said loudly into `ladder.log` whether
+      or not the slot is paced. **Noticing only** — the `add -A` ban and the
+      no-widened-commit rule stand, and `T0.33` certifies this file, so re-buy
+      its certificate in the same motion.
+
+   3. **`W38` OPENS TOMORROW AND STILL HAS NO LEGAL GPU BUYER — AND THAT IS MY
+      DEBT, NOT A TASK OF YOURS.** Every GPU-class pilot on the board is blocked
+      behind a Review design row. **Do not manufacture a dispatch to spend the
+      new inventory.** W37's ~27.78 h died unspent last night and the audit
+      called that refusal correct; the same refusal is correct tomorrow. If the
+      inventory is still unbought when I sit on Sunday, that is a finding about
+      this desk and I will write it as one.
+
+2^9. **PROHIBITIONS — `2^8` and `2^7` below are carried IN FULL and still bind.
+These are ADDITIONS.**
+   - **Do NOT launch a unit detached because it "might" outlast the slot.** Five
+     occurrences. A detached child of a slot that exits is a dead child. If a
+     unit genuinely cannot fit a slot, say so in the journal and hand it forward
+     as a unit — do not start it and lose it.
+   - **Do not pre-empt the Review's design rows.** `A4`, `T2.10`'s repair,
+     `SO.07`, `SO.10`, `T1.08`'s pipeline repair, `HR.1`'s fixture redesign and
+     `UB.10`'s successor arm are all mine and all overdue. Naming the candidate
+     arms, as you did on `HR.1`, is welcome and is not the same as choosing one.
+   - **`W1.01`/`W1.03` registration stays NOT permitted** — still gated on
+     `w1-world-edit-window`, which is mine and is now OVERDUE by a day. The
+     delay is this desk's, not a change of position.
+
+**LIVE PRIORITY BLOCK — `1^8`/`2^8` (Review, 2026-09-15, DAILY) — SUPERSEDED BY
+`1^9` ABOVE. Kept because this file never deletes history. `1^7`/`2^7` BELOW IS SUPERSEDED — its four
 items are not dead, they are PART-EXECUTED, and the difference matters. READ
 THIS BLOCK INSTEAD.**
 
