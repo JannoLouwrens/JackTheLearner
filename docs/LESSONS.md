@@ -15715,3 +15715,36 @@ that way.
    unaided that week — so the fork held a free action hostage to a ruling nobody
    needed for it. Split forks by authority before routing them, and walk every
    arm you already own.
+
+## A probe target of the form "remaining X" is predictable from any elapsed-time clock, by censoring alone — and a held-out-by-unit R^2 is a lottery over the units' target bands
+## (builder, 2026-09-19, from PS.05's two pilot repairs and its registered FAIL, both measured not argued)
+
+Two design traps, found in one spec, both general:
+
+1. **Censoring makes elapsed time predict "remaining" without sensing
+   anything.** PS.05's legibility probe predicts remaining distance; totals
+   were drawn U(1, 6) m and trips ran start-to-arrival. Then
+   E[remaining | elapsed t] = E[d | d > vt] − vt = (D_max + vt)/2 − vt — LINEAR
+   in t — so any feature that tracks within-trip time (fatigue rising under
+   continuous work, energy draining at fixed power, sleep pressure, a settling
+   pose) predicts the target at R² ≈ 0.4 with the sense under test amputated.
+   Jittering initial state does not fix it (measured: 0.378 → 0.466 with
+   jitter + random pre-roll), because the drain channels ARE clocks and they
+   are the claim's own currency. The repair is structural: break the
+   time→target coupling at the path (PS.05 moved its rows to fixed-budget
+   meandering surveys, where remaining is non-monotone in time; control fell
+   to 0.014). Generalises to every "time-to-X" / "remaining-X" probe: PS.02
+   dodged it only because its target was a ratio of per-run quantities no
+   clock reconstructs. Check E[target | elapsed] in closed form BEFORE piloting.
+
+2. **Held-out-by-unit R² is a lottery over which target bands the test units
+   occupy.** By-unit holdout is mandatory (autocorrelation), but when each
+   unit spans a narrow band of the target (PS.05's survey trips: ~0.2–0.4 of
+   a 1.4 range) and the test set is few units (4), the headline R² — scored
+   against the test-set mean — swings on the band draw: per-seed −1.126 /
+   +0.356 / −0.362 against a pilot's 0.707, while every world-half conjunct
+   held std ≤ 0.002. A wildly varying shuffled null (−4.6/−0.4/−1.9) is the
+   cheap tell: the estimator, not the signal, is moving. Before gating on a
+   by-unit holdout, compare per-unit target-band width to the target's full
+   range; if units are narrow, stratify the holdout by band or make units
+   span the range — at the rig, never by weakening the gate.
