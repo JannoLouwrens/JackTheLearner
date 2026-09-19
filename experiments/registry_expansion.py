@@ -3486,6 +3486,68 @@ EXPANSION: list[Spec] = [
                "(experiments/survival.py) rather than a second loop - the "
                "two-kernels lesson."),
 
+    Spec("PS.05", 2, "Far is a price: distance costs need-currency before "
+                     "anyone has to learn it",
+         hypothesis="W0 charges for traversal, in the currency the needs "
+                    "already speak: a scripted traversal policy driven to "
+                    "identical resources placed at >= 4 pre-registered "
+                    "distances pays a need-cost (integrated drive drain read "
+                    "off the existing needs.py channels — no new instrument) "
+                    "that increases MONOTONICALLY in distance on every seed; "
+                    "the near-vs-far cost gap exceeds the venue's "
+                    "outcome-metric quantum (the DP.04/W1.02 resolution "
+                    "lesson applied at registration, not discovered by a "
+                    "pilot); and distance-to-resource is LEGIBLE beforehand — "
+                    "a probe on the sensory vector predicts it well above "
+                    "chance while the agent is still en route (PS.02's "
+                    "legibility gate, reused because it is the same "
+                    "question).",
+         falsified_by="Cost flat or non-monotone in distance (travel is "
+                      "effectively free at W0's decay rates); or the "
+                      "near-vs-far gap reads below the outcome quantum, so "
+                      "no learner could ever be selected on it; or the probe "
+                      "cannot beat chance, so far is a price paid blind. Any "
+                      "of the three means 'far' is not learnable in this "
+                      "venue and GOAL.md:187's promise has no mechanism "
+                      "behind it.",
+         null_baseline="A TELEPORT twin: the same resource schedule with "
+                       "traversal made instantaneous. Its cost-vs-distance "
+                       "curve must be FLAT — a monotone cost that survives "
+                       "teleportation is a clock artifact, not a price of "
+                       "distance. And a shuffled probe pairing, at chance.",
+         metric="distance_cost_monotone_and_gap_vs_quantum",
+         budget=Budget.CPU, seeds=3, depends_on=["PS.01"],
+         control="THE SENSORY AMPUTATION (PS.02's control, reused): the same "
+                 "traversals with the distance-bearing channels removed from "
+                 "the probe's input — the probe must FAIL there, or it was "
+                 "reading the episode clock (every trip ends when it ends) "
+                 "rather than a sense. RIG GATE, pre-registered: the "
+                 "scripted policy must actually REACH its targets on every "
+                 "registered seed (alive-proof) — a body that cannot "
+                 "traverse the registered distances VOIDs the run on the "
+                 "rig and records a BODY finding, never a world verdict.",
+         kills="On FAIL: 'far' is struck from what W0 can teach, every "
+               "distance-discounting or foraging-efficiency claim is "
+               "inadmissible in this venue, and the repair is a world edit "
+               "routed through the W1 window — never a quiet decay-rate "
+               "retune until the price appears.",
+         notes="COVERS: far (claim).\n"
+               "Registered under the 102nd audit RANK 1 / FOR THE BUILDER "
+               "item 1 (2026-09-19): GOAL.md:187 names seven survival-earned "
+               "primitives and 'far' had NO spec at all — not blocked, not "
+               "parked, absent, invisible to every id-ranking instrument. "
+               "Shape stolen from PS.02/PS.03 deliberately: a world-prices-it "
+               "claim that needs NO trained champion (scripted traversal + "
+               "probe), so it does not queue behind the learning-core "
+               "redesigns. The learned-preference half — a trained forager "
+               "prefers near at equal value — is a SIBLING to register when "
+               "a learner exists; do not fold it in here (the ME.11 "
+               "per-partition lesson). Distances, the decay accounting and "
+               "the quantum source are pre-registered in the test docstring "
+               "before its first run (T3.06 extreme-value lesson), and the "
+               "0-cost teleport twin plus the amputated probe are the two "
+               "controls that MUST fail."),
+
     Spec("SH.01", 5, "Under cold, he shelters - and prefers the shelter that works",
          hypothesis="With a thermal drive active, time spent sheltered rises "
                     "far above an otherwise identical agent whose thermal drive "

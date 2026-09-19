@@ -3633,7 +3633,11 @@ def _no_live_path_fixture() -> List[str]:
 #               deliberately (2fd7de5) to make this exact gap countable.
 #               Registration-vs-rewording fork is the owner's
 #               (goal-187-names-seven-primitives-four-have-no-commitment).
-COMMITMENTS_UNCOVERED_BASELINE = 4
+#   2026-09-19  4 -> 3 (builder, 102nd audit FOR THE BUILDER item 1): `far`
+#               covered by REGISTRATION — PS.05, a world-prices-distance
+#               claim in the PS.02/PS.03 shape, COVERS: far (claim),
+#               runnable. heavy / tiring / worth-it remain uncovered.
+COMMITMENTS_UNCOVERED_BASELINE = 3
 
 
 def uncovered_commitments(rows=None) -> list:
