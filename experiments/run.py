@@ -4334,61 +4334,99 @@ def cmd_render(ledger: Ledger) -> int:
 LANE_WAIVER_ENV = "JACK_LANE_WAIVER"
 
 
-def _lane_reasons() -> list:
-    """Why this process is NOT in a session foreground; empty = it is.
+#: The one soft signal's exact words, named once — the guard prints it, the
+#: fixture asserts it, and cmd_lane reuses it. See _lane_verdict for why it
+#: is a WARNING and not a refusal.
+LANE_SOFT_WARNING = (
+    "LANE WARNING: stdin is /dev/null. On this harness that is EITHER a "
+    "backgrounded\nlaunch (run_in_background, `&`, nohup, cron) — which DIES "
+    "with its session —\nOR an ordinary sandboxed foreground call; the two "
+    "are indistinguishable from\nhere (measured 2026-09-19, both lanes "
+    "byte-identical in tree/sid/fds/env).\nIf you backgrounded this on a "
+    "wake-up promise, kill it and run it in the\nforeground of a session "
+    "that stays open until the row is on the ledger.")
+
+
+def _lane_verdict(settle: bool = True) -> tuple:
+    """(refusals, warnings) for this launch; ([], []) = clean foreground.
 
     The dies-with-parent class, seven occurrences (LESSONS.md): a registered
     run launched as a session-child background task dies the second its
-    `claude -p` parent returns — occurrences 4-7 all on 2026-09-19, three of
-    them AFTER the lesson naming the lane was written. A lesson is a memory,
-    not a control; this function is the control (103rd audit, item 2).
+    parent returns — occurrences 4-7 all on 2026-09-19, three of them AFTER
+    the lesson naming the lane was written. A lesson is a memory, not a
+    control; this function is the control (103rd audit, item 2).
 
-    The discriminator was MEASURED on this harness (2026-09-19, three probe
-    lanes side by side): a foreground Bash call holds stdin on a live socket;
-    `run_in_background` and `( cmd & )` both get stdin=/dev/null, and the
-    orphan lane additionally reparents to pid 1. `setsid` (the lane D20
-    closed for registered specs) makes the child its own session leader.
-    An interactive terminal (stdin=/dev/pts/N) and a pipe both pass — the
+    What is MEASURED on this harness (2026-09-19, both lanes probed twice,
+    then re-probed after the first version of this guard false-positived on
+    its own re-buy):
+
+    - REFUSABLE, stable: `( cmd & )` orphans to ppid=1 within ms of the
+      wrapping shell exiting (a settle recheck below closes the fork race);
+      `setsid` makes the child its own session leader — the lane D20 closed
+      for registered runs. Both are abandonment BY CONSTRUCTION.
+    - NOT refusable, and the first version of this guard got it wrong:
+      stdin=/dev/null. A foreground Bash call sometimes holds stdin on a
+      live socket and sometimes on /dev/null (sandboxed calls), while a
+      `run_in_background` task is byte-identical to the sandboxed foreground
+      in everything observable at launch: same tree shape, sid = own shell,
+      stdout a harness tasks-file in BOTH lanes, identical env. A refusal
+      here blocks legitimate re-buys (it blocked this guard's own T0.36
+      re-buy, same day), so the signal is a LOUD MARK instead — and the
+      residue (a run_in_background launch the runner cannot see) stays
+      covered by notice_exited_dispatches on the live path and by the
+      foreground conduct rule.
+
+    An interactive terminal (stdin=/dev/pts/N) and a pipe pass clean — the
     guard refuses ABANDONMENT, not any particular launcher.
     """
-    reasons = []
+    refusals, warnings = [], []
+    if os.getppid() == 1:
+        refusals.append("orphaned at launch (ppid=1) — the launching session "
+                        "is already gone")
+    elif settle:
+        # `cmd &`: the launching shell may still be mid-exit at our first
+        # read. One short settle turns "usually caught" into "caught".
+        time.sleep(0.5)
+        if os.getppid() == 1:
+            refusals.append("orphaned within 0.5s of launch — the launcher "
+                            "exited without waiting (`&`-style background)")
+    try:
+        if os.getsid(0) == os.getpid():
+            refusals.append("session leader (setsid) — detached at birth; "
+                            "D20 closed this lane for registered runs")
+    except OSError:
+        pass
     try:
         st0 = os.stat(0)
         if (stat_mod.S_ISCHR(st0.st_mode)
                 and st0.st_rdev == os.stat(os.devnull).st_rdev):
-            reasons.append("stdin is /dev/null — a backgrounded launch "
-                           "(`&`, run_in_background, nohup </dev/null, cron)")
+            warnings.append(LANE_SOFT_WARNING)
     except OSError:
-        reasons.append("stdin is CLOSED — no live caller is holding this run")
-    if os.getppid() == 1:
-        reasons.append("orphaned at launch (ppid=1) — the launching session "
-                       "is already gone")
-    try:
-        if os.getsid(0) == os.getpid():
-            reasons.append("session leader (setsid) — detached at birth; "
-                           "D20 closed this lane for registered runs")
-    except OSError:
-        pass
-    return reasons
+        warnings.append("LANE WARNING: stdin is CLOSED — if no live caller "
+                        "holds this run, it dies with its session.")
+    return refusals, warnings
 
 
 def cmd_lane(ledger) -> int:
-    """Read-only diagnosis of the launch lane; rc 0 = foreground, 3 = the
-    spend path would refuse this launch. Exists so the guard's verdict can be
-    exercised by a fixture (and by a curious human) without touching a spec."""
+    """Read-only diagnosis of the launch lane; rc 0 = the spend path would
+    allow this launch (possibly with a loud mark), 3 = it would refuse.
+    Exists so the guard's verdict can be exercised by a fixture (and by a
+    curious human) without touching a spec."""
     try:
         stdin_desc = os.readlink("/proc/self/fd/0")
     except OSError:
         stdin_desc = "<unreadable>"
     print(f"stdin={stdin_desc} ppid={os.getppid()} "
           f"sid={os.getsid(0)} pid={os.getpid()}")
-    reasons = _lane_reasons()
-    if not reasons:
-        print("lane: session foreground — a registered run may be launched.")
+    refusals, warnings = _lane_verdict()
+    for w in warnings:
+        print(w)
+    if not refusals:
+        print("lane: launchable — the spend path would not refuse this "
+              "launch." + (" (with the warning above)" if warnings else ""))
         return 0
-    print("lane: NOT a session foreground — the spend path refuses this "
-          "launch:")
-    for r in reasons:
+    print("lane: ABANDONED launch — the spend path refuses this lane:")
+    for r in refusals:
         print(f"    {r}")
     return 3
 
@@ -4518,27 +4556,31 @@ def main() -> int:
         return cmd_status(ledger)
 
     # THE LANE GUARD (103rd audit item 2). Everything below this line can
-    # start an experiment, and an experiment launched outside a session
-    # foreground dies with its parent — seven occurrences, four of them
-    # (2026-09-19, 04:1x/06:09/09:5x/10:1x) AS session-child background tasks
-    # ended on a wake-up promise. Every prior remedy told someone AFTERWARDS;
-    # this one refuses AT LAUNCH. It sits BEFORE argv validation deliberately,
-    # so `test_lane_guard.sh` can hit this exact call site with an argv that
+    # start an experiment, and an experiment launched into an abandoned lane
+    # dies with its parent — seven occurrences, four of them (2026-09-19,
+    # 04:1x/06:09/09:5x/10:1x) as session-child background launches ended on
+    # a wake-up promise. Every prior remedy told someone AFTERWARDS; this one
+    # refuses AT LAUNCH what it can prove abandoned (orphan, setsid) and
+    # loudly marks what it cannot distinguish (see _lane_verdict for the
+    # measurement). It sits BEFORE argv validation deliberately, so
+    # `test_lane_guard.sh` can hit this exact call site with an argv that
     # cannot spend (the sixth/seventh occurrence proved a fixture that tests
     # the function but not the call ordering verifies nothing). The waiver is
     # for `dispatch.sh`'s setsid GPU watcher only, and it is a LOUD MARK, not
     # a silence.
-    _lane = _lane_reasons()
-    if _lane:
+    _refusals, _warnings = _lane_verdict()
+    for _w in _warnings:
+        print(_w)
+    if _refusals:
         _waiver = os.environ.get(LANE_WAIVER_ENV, "").strip()
         if _waiver:
             print(f"LANE WAIVER ({LANE_WAIVER_ENV}): {_waiver}")
-            for _r in _lane:
+            for _r in _refusals:
                 print(f"    waived: {_r}")
         else:
-            print("Refusing to run: this launch is not in a session "
-                  "foreground:")
-            for _r in _lane:
+            print("Refusing to run: this launch is ABANDONED — no session "
+                  "will outlive it:")
+            for _r in _refusals:
                 print(f"    {_r}")
             print("A registered run's only local lane is the FOREGROUND of a "
                   "session that\nstays open until the row is on the ledger. "

@@ -3879,27 +3879,43 @@ The function now lives in `lib_procwatch.sh` beside the prune it is coupled
 to, the live path calls notice-then-prune, and the fixture asserts both the
 repaired order (announces) and the defective order (provably silent).
 
-**The class is now GUARDED, not only noticed (103rd audit item 2, same day).**
-Every remedy through occurrence seven told someone about the loss AFTERWARDS;
-none could refuse it. `experiments/run.py` now refuses AT LAUNCH any spend
-(spec run, `--gate`, `--tier`) that is not in a session foreground, on a
-discriminator MEASURED on the live harness (2026-09-19, three lanes probed
-side by side): a foreground Bash call holds stdin on a live socket, while
-`run_in_background` and `( cmd & )` both arrive with stdin=/dev/null — the
-guard also refuses ppid=1 orphans and setsid session leaders, which
+**The class is now GUARDED, not only noticed (103rd audit item 2, same day) —
+and the guard's own first hour supplied the lesson's next clause.** Every
+remedy through occurrence seven told someone about the loss AFTERWARDS; none
+could refuse it. `experiments/run.py` now refuses AT LAUNCH any spend (spec
+run, `--gate`, `--tier`) whose launch is PROVABLY ABANDONED: reparented to
+pid 1 (an `&`-style launcher that exited without waiting, closed with a 0.5 s
+settle recheck against the fork race) or a setsid session leader — which
 mechanically enforces D20's closure of the detached lane for registered runs.
 `run lane` is the read-only probe of the same verdict; the one sanctioned
 exception is `dispatch.sh`'s setsid GPU watcher, whose `JACK_LANE_WAIVER`
-prints a banner rather than passing silently. `scripts/test_lane_guard.sh`
-pins it in the procwatch idiom, INCLUDING the call ordering (the spend-path
-cases go through the real argv with an id that cannot spend, so moving the
-guard below argv validation fails the fixture by message) and the pre-repair
-order as the control-that-must-fail (the waived launch sails through to the
-argv gate, proving nothing else at that boundary catches the lane). What the
-guard cannot fix, named honestly: a FOREGROUND run whose slot hits its
-deadline still dies with the session — the fourth occurrence's arithmetic
-rule (projected runtime vs `JACK_ITER_DEADLINE - now`, or hand it forward as
-a unit) is still the only defense on that side.
+prints a banner rather than passing silently.
+
+**The clause the first hour bought (v1 shipped in `b4fd863`, falsified within
+minutes, corrected the same slot): a discriminator measured on N=1 launches
+per lane is a hypothesis, not a measurement.** v1 also refused on
+stdin=/dev/null, because one probe of each lane had shown foreground=socket,
+background=/dev/null. The very next foreground invocation — the guard's own
+`T0.36` re-buy — arrived with stdin=/dev/null and was refused: this harness
+gives /dev/null stdin to some ordinary foreground calls (sandboxed ones), and
+re-probing showed a `run_in_background` task is byte-identical to a sandboxed
+foreground call in EVERYTHING observable at launch (tree shape, sid = own
+shell, stdout a harness tasks-file in both lanes, identical env). So the
+run_in_background lane — the likely lane of occurrences 5–7 — is genuinely
+NOT refusable at this boundary without false-positiving the main lane, and
+the honest design is: orphan/setsid REFUSE, stdin=/dev/null prints a LOUD
+LANE WARNING naming the ambiguity, and the residue stays covered by
+`notice_exited_dispatches` on the live path plus the foreground conduct rule.
+`scripts/test_lane_guard.sh` (ALL GREEN, 17 cases) pins all of it in the
+procwatch idiom, INCLUDING the call ordering (the spend-path cases go through
+the real argv with an id that cannot spend, so moving the guard below argv
+validation fails the fixture by message) and the pre-repair order as the
+control-that-must-fail (the waived launch sails through to the argv gate,
+proving nothing else at that boundary catches the lane). What the guard
+cannot fix, named honestly: a FOREGROUND run whose slot hits its deadline
+still dies with the session — the fourth occurrence's arithmetic rule
+(projected runtime vs `JACK_ITER_DEADLINE - now`, or hand it forward as a
+unit) is still the only defense on that side.
 
 ## An absent field is honest; a field that silently records the RECORDER is a false one
 
