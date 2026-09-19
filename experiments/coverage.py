@@ -1118,7 +1118,15 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #         specs are stuck (T0.36 P6 asserts exactly that invariance).
 #     This growth is MINE, and it is the second consecutive day this desk has
 #     had to write that sentence.
-UNREACHABLE_BASELINE = 97
+#   2026-09-19 97 -> 96 (builder, 08:0x slot, SHRINK — the floor follows the
+#     number down per this ratchet's own stale_baseline message). The act:
+#     LT.01 attempt 2 PASS (4091066, 07:43 today, Branch G-adv) satisfied
+#     LT.02's last unmet dependency (deps LT.01 + PG.4, both PASS), so LT.02
+#     left the unreachable set — verified by running unreachable_count at
+#     this commit (96 of 251) and by `run next` now offering LT.02 at
+#     cpu<2h `[needs implementing]`. Exactly -1 because the rest of the LT
+#     chain waits on LT.02 itself, which is unrun, not settled-blocked.
+UNREACHABLE_BASELINE = 96
 
 
 def unreachable_ratchet(ledger=None,
@@ -3637,7 +3645,14 @@ def _no_live_path_fixture() -> List[str]:
 #               covered by REGISTRATION — PS.05, a world-prices-distance
 #               claim in the PS.02/PS.03 shape, COVERS: far (claim),
 #               runnable. heavy / tiring / worth-it remain uncovered.
-COMMITMENTS_UNCOVERED_BASELINE = 3
+#   2026-09-19  3 -> 2 (builder, same audit item, sibling 2 of 3): `tiring`
+#               covered by REGISTRATION — PS.06, exertion-drains-capability
+#               in the PS.05 shape (f dynamics + gear_scale are already in
+#               needs.py; the claim is whether the price is real, repaid by
+#               rest, above quantum and legible), COVERS: tiring (claim),
+#               runnable (deps: NE.00 PASS). heavy / worth-it remain
+#               uncovered.
+COMMITMENTS_UNCOVERED_BASELINE = 2
 
 
 def uncovered_commitments(rows=None) -> list:
