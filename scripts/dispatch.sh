@@ -129,7 +129,15 @@ export JACK_PROJECTED_HOURS="$PROJECTED"
 # session-scoped guard keyed on an inherited env var binds every descendant,
 # including the ones deliberately detached from the session. Strip it here so
 # no caller has to remember `env -u` by hand again.
-setsid nohup env -u JACK_ITER_DEADLINE "$PY" -m experiments.run "$SPEC" >"$LOG" 2>&1 </dev/null &
+# THE LANE WAIVER (103rd audit item 2). `experiments.run` now REFUSES any
+# launch whose stdin is /dev/null or that is detached at birth — the guard
+# against the dies-with-parent class. This watcher is the one sanctioned
+# exception (surviving the session is its whole job; the GPU kernel computes
+# remotely either way), and the waiver is a LOUD MARK: the runner prints a
+# banner into $LOG naming this line. Do not copy this export to background a
+# LOCAL run — that is the exact move the guard exists to refuse.
+setsid nohup env -u JACK_ITER_DEADLINE JACK_LANE_WAIVER="dispatch.sh setsid watcher for $SPEC (sanctioned GPU lane)" \
+    "$PY" -m experiments.run "$SPEC" >"$LOG" 2>&1 </dev/null &
 PID=$!
 # Declared, so the loop's leftover check reads this watcher (and the runner it
 # forks) as intended compute rather than a stranded orphan — see

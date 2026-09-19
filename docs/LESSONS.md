@@ -3879,6 +3879,28 @@ The function now lives in `lib_procwatch.sh` beside the prune it is coupled
 to, the live path calls notice-then-prune, and the fixture asserts both the
 repaired order (announces) and the defective order (provably silent).
 
+**The class is now GUARDED, not only noticed (103rd audit item 2, same day).**
+Every remedy through occurrence seven told someone about the loss AFTERWARDS;
+none could refuse it. `experiments/run.py` now refuses AT LAUNCH any spend
+(spec run, `--gate`, `--tier`) that is not in a session foreground, on a
+discriminator MEASURED on the live harness (2026-09-19, three lanes probed
+side by side): a foreground Bash call holds stdin on a live socket, while
+`run_in_background` and `( cmd & )` both arrive with stdin=/dev/null — the
+guard also refuses ppid=1 orphans and setsid session leaders, which
+mechanically enforces D20's closure of the detached lane for registered runs.
+`run lane` is the read-only probe of the same verdict; the one sanctioned
+exception is `dispatch.sh`'s setsid GPU watcher, whose `JACK_LANE_WAIVER`
+prints a banner rather than passing silently. `scripts/test_lane_guard.sh`
+pins it in the procwatch idiom, INCLUDING the call ordering (the spend-path
+cases go through the real argv with an id that cannot spend, so moving the
+guard below argv validation fails the fixture by message) and the pre-repair
+order as the control-that-must-fail (the waived launch sails through to the
+argv gate, proving nothing else at that boundary catches the lane). What the
+guard cannot fix, named honestly: a FOREGROUND run whose slot hits its
+deadline still dies with the session — the fourth occurrence's arithmetic
+rule (projected runtime vs `JACK_ITER_DEADLINE - now`, or hand it forward as
+a unit) is still the only defense on that side.
+
 ## An absent field is honest; a field that silently records the RECORDER is a false one
 
 *(17th overseer audit, 2026-08-14)*

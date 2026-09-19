@@ -30,6 +30,7 @@ import fcntl
 import hashlib
 import importlib
 import os
+import stat as stat_mod
 import subprocess
 import sys
 import time
@@ -4324,6 +4325,74 @@ def cmd_render(ledger: Ledger) -> int:
     return 0
 
 
+#: The env var that waives the lane guard, LOUDLY. The only sanctioned setter
+#: is `scripts/dispatch.sh` (its setsid watcher's whole job is surviving the
+#: session; the GPU kernel computes remotely either way). Setting it by hand to
+#: background a LOCAL registered run is the exact move the guard exists to
+#: refuse — the waiver prints a banner precisely so that doing so leaves a
+#: mark the next reader cannot miss.
+LANE_WAIVER_ENV = "JACK_LANE_WAIVER"
+
+
+def _lane_reasons() -> list:
+    """Why this process is NOT in a session foreground; empty = it is.
+
+    The dies-with-parent class, seven occurrences (LESSONS.md): a registered
+    run launched as a session-child background task dies the second its
+    `claude -p` parent returns — occurrences 4-7 all on 2026-09-19, three of
+    them AFTER the lesson naming the lane was written. A lesson is a memory,
+    not a control; this function is the control (103rd audit, item 2).
+
+    The discriminator was MEASURED on this harness (2026-09-19, three probe
+    lanes side by side): a foreground Bash call holds stdin on a live socket;
+    `run_in_background` and `( cmd & )` both get stdin=/dev/null, and the
+    orphan lane additionally reparents to pid 1. `setsid` (the lane D20
+    closed for registered specs) makes the child its own session leader.
+    An interactive terminal (stdin=/dev/pts/N) and a pipe both pass — the
+    guard refuses ABANDONMENT, not any particular launcher.
+    """
+    reasons = []
+    try:
+        st0 = os.stat(0)
+        if (stat_mod.S_ISCHR(st0.st_mode)
+                and st0.st_rdev == os.stat(os.devnull).st_rdev):
+            reasons.append("stdin is /dev/null — a backgrounded launch "
+                           "(`&`, run_in_background, nohup </dev/null, cron)")
+    except OSError:
+        reasons.append("stdin is CLOSED — no live caller is holding this run")
+    if os.getppid() == 1:
+        reasons.append("orphaned at launch (ppid=1) — the launching session "
+                       "is already gone")
+    try:
+        if os.getsid(0) == os.getpid():
+            reasons.append("session leader (setsid) — detached at birth; "
+                           "D20 closed this lane for registered runs")
+    except OSError:
+        pass
+    return reasons
+
+
+def cmd_lane(ledger) -> int:
+    """Read-only diagnosis of the launch lane; rc 0 = foreground, 3 = the
+    spend path would refuse this launch. Exists so the guard's verdict can be
+    exercised by a fixture (and by a curious human) without touching a spec."""
+    try:
+        stdin_desc = os.readlink("/proc/self/fd/0")
+    except OSError:
+        stdin_desc = "<unreadable>"
+    print(f"stdin={stdin_desc} ppid={os.getppid()} "
+          f"sid={os.getsid(0)} pid={os.getpid()}")
+    reasons = _lane_reasons()
+    if not reasons:
+        print("lane: session foreground — a registered run may be launched.")
+        return 0
+    print("lane: NOT a session foreground — the spend path refuses this "
+          "launch:")
+    for r in reasons:
+        print(f"    {r}")
+    return 3
+
+
 #: The read-only sub-commands, named ONCE. They used to be a tuple in the
 #: dispatch test and a dict in the dispatch itself; a word present in one and
 #: absent from the other is how a command silently becomes "not a command".
@@ -4335,6 +4404,7 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "steering": cmd_steering,
                       "fieldwatch": cmd_fieldwatch,
                       "ratchets": cmd_ratchets,
+                      "lane": cmd_lane,
                       # Takes spec ids, so `main` routes it one branch earlier;
                       # it is registered HERE anyway because this dict is the
                       # single place a command's name exists (see above) and
@@ -4446,6 +4516,37 @@ def main() -> int:
         return READ_ONLY_COMMANDS[args.spec[0]](ledger)
     if not args.spec and not args.gate and args.tier is None:
         return cmd_status(ledger)
+
+    # THE LANE GUARD (103rd audit item 2). Everything below this line can
+    # start an experiment, and an experiment launched outside a session
+    # foreground dies with its parent — seven occurrences, four of them
+    # (2026-09-19, 04:1x/06:09/09:5x/10:1x) AS session-child background tasks
+    # ended on a wake-up promise. Every prior remedy told someone AFTERWARDS;
+    # this one refuses AT LAUNCH. It sits BEFORE argv validation deliberately,
+    # so `test_lane_guard.sh` can hit this exact call site with an argv that
+    # cannot spend (the sixth/seventh occurrence proved a fixture that tests
+    # the function but not the call ordering verifies nothing). The waiver is
+    # for `dispatch.sh`'s setsid GPU watcher only, and it is a LOUD MARK, not
+    # a silence.
+    _lane = _lane_reasons()
+    if _lane:
+        _waiver = os.environ.get(LANE_WAIVER_ENV, "").strip()
+        if _waiver:
+            print(f"LANE WAIVER ({LANE_WAIVER_ENV}): {_waiver}")
+            for _r in _lane:
+                print(f"    waived: {_r}")
+        else:
+            print("Refusing to run: this launch is not in a session "
+                  "foreground:")
+            for _r in _lane:
+                print(f"    {_r}")
+            print("A registered run's only local lane is the FOREGROUND of a "
+                  "session that\nstays open until the row is on the ledger. "
+                  "If it cannot fit the slot,\nhand it forward as a unit — do "
+                  "not start it and lose it. Multi-hour GPU\ndispatches go "
+                  "through scripts/dispatch.sh (which sets the waiver).\n"
+                  "Nothing was run.")
+            return 3
 
     # ARGV IS A SPEND. Everything below this line can start an experiment, and
     # for a `gpu<*>` spec that means charging the weekly quota, so an argv this
