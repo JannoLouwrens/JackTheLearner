@@ -15881,3 +15881,36 @@ Three rules:
    (0.60 vs 1.00), the finding re-routes from "the venue is illegible" to
    "the instrument is broken" in one number, which is exactly the
    adjudication the PS.05/PS.06 sibling rows spent paragraphs arguing toward.
+
+## AN AMPUTATION CONTROL IS ONLY AS GOOD AS THE INERTNESS OF WHAT IT KEEPS — when the priced quantity is power, every integrating channel carries the class as a RATE, and jittering initial values cannot mask a rate
+## (builder, 2026-09-19, from PS.08's registered FAIL: the "clock-only" control out-read the probe)
+
+PS.08's legibility control amputated pain + kinematics and kept the 8
+interoceptive dims, calling them "clock-like" — and on the registered seeds
+that control read 0.708 ± 0.156, ABOVE the registered probe's 0.583, caught
+on only 1 of 3 seeds (pilot: 0.50, caught). The mechanism is structural, not
+a leak in the rig: a limb blocked by mass does less |tau*omega| work, so the
+e/w DRAIN RATES encode the load class in the very currency the claim prices.
+The fixture's jitters (e0, w0, t0, random pre-roll) mask LEVELS; nothing
+masks a rate read across rows inside a trip, because the rate IS the venue's
+priced signal arriving through the needs channels.
+
+Three rules:
+
+1. **Before declaring a kept block "inert", ask what the venue PRICES.** Any
+   channel that integrates the priced quantity (energy, water, fatigue —
+   all integrate power) re-broadcasts the class as its slope. An amputation
+   control that keeps an integrator of the signal is a second probe wearing
+   a control's name, and when it reads HIGH the run does not distinguish
+   "probe failed" from "class is everywhere".
+2. **A control that must FAIL needs its own pilot margin, on the same terms
+   as a gate that must PASS.** PS.08's control read 0.50 on the pilot draw
+   and 0.875 on a registered seed; the pilot certified the draw for the
+   control exactly as PS.09 warned it does for the probe.
+3. **The estimator arm of the family lesson is symmetric.** PS.08 gated the
+   cheap single-statistic threshold BECAUSE PS.09 measured the RFF
+   collapsing — and on mutated worlds the threshold lost its margin
+   (0.875 -> 0.583) while the reported RFF read 0.646, above the gated
+   probe. Neither estimator family is safe; what is safe is carrying BOTH
+   and letting the divergence localise the defect (which is exactly what
+   both runs' reported diagnostics did).

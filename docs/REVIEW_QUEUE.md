@@ -7516,3 +7516,45 @@ ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-
     certificates — PS.09 is red on attempt 1 and nothing cites it.
     DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
     two sibling rows already dated there)
+
+ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2026-09-19 | `8f7d1dc` (PS.08 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
+    PS.08 measured the `heavy` commitment (GOAL.md:187) and split it the way
+    all three siblings split `far`, `tiring` and `worth-it` this same week.
+    THE WORLD HALF IS GREEN ON EVERY SEED: cost per registered 0.4 m of
+    displacement is STRICTLY MONOTONE in object mass on every seed
+    (0.00977 / 0.01525 / 0.02320 / 0.03143 at 0.2/0.9/1.7/3.0 kg, mono_ok
+    std 0.0), the equalised-mass twin — same schedule, same paired ctrl
+    draws, true mass pinned light — is FLAT (spread 9.3e-05 vs the live gap
+    0.0217), the same thrash buys 8.65 m at 0.2 kg and 2.76 m at 3.0 kg,
+    and the rig is green everywhere (displaced/still/stray std 0.0,
+    fresh_frac 0.995). Moving mass costs need-currency and costs more per
+    kilogram — measured, not asserted. WHAT FAILED: probe_bal_acc 0.583 ±
+    0.059 against the 0.70 bar (disjoint seed-90 pilot: 0.875), shuffled
+    0.517. AND THE FAILURE MECHANISM IS NEW — THE FOURTH SIBLING BREAKS THE
+    CONTROL, NOT JUST THE PROBE: the amputated "clock-only" control READ
+    0.708 ± 0.156, ABOVE the registered probe, and was caught on only 1 of
+    3 seeds (pilot: 0.50, caught). The 8 interoceptive dims are not
+    clock-like in this venue: a limb blocked by mass does less |tau*omega|
+    work, so the e/w DRAIN RATES encode the load class in the very currency
+    the claim prices — the venue's cost signal leaks into every channel
+    that integrates power, and no jitter of e0/w0/t0 can mask a RATE. The
+    family's amputation-control idiom ("drop the load-bearing sense, the
+    probe must fail") assumes the remaining channels are inert; PS.08
+    measures that assumption false where the priced quantity IS power.
+    Second datum, PS.09's lesson recurring in mirror image: the registered
+    single-statistic |qvel| threshold — chosen BECAUSE PS.09 measured the
+    RFF collapsing — lost its pilot margin on mutated worlds (0.875 ->
+    0.583) while the reported RFF diagnostic read 0.646, ABOVE the gated
+    probe this time. A pilot certifies the draw, whichever estimator is
+    gated. SHARED CLASS, dispose together with
+    ps05-legibility-holdout-is-a-band-lottery,
+    ps06-legibility-probe-collapses-on-one-mutated-world and
+    ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign (all
+    DUE 09-24): one disposition should cover all four or say why not, and
+    THIS row adds the control-side defect to the estimator-side one — a
+    redesign that fixes the probe but keeps the inert-channel assumption
+    will pass instruments and still measure nothing. NO bar moves; NO
+    re-run unchanged (a redraw is a seed lottery). Staleness bill: ZERO
+    green certificates — PS.08 is red on attempt 1 and nothing cites it.
+    DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
+    three sibling rows already dated there)
