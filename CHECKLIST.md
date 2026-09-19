@@ -725,7 +725,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **PS.05** Far is a price: distance costs need-currency before anyone has to learn it
+- [!] **PS.05** Far is a price: distance costs need-currency before anyone has to learn it  — borrow_ok=1.0; borrow_ok_std=0.0
       - _asserts:_ W0 charges for traversal, in the currency the needs already speak: a scripted traversal policy driven to identical resources placed at >= 4 pre-registered distances pays a need-cost (integrated drive drain read off the existing needs.py channels — no new instrument) that increases MONOTONICALLY in distance on every seed; the near-vs-far cost gap exceeds the venue's outcome-metric quantum (the DP.04/W1.02 resolution lesson applied at registration, not discovered by a pilot); and distance-to-resource is LEGIBLE beforehand — a probe on the sensory vector predicts it well above chance while the agent is still en route (PS.02's legibility gate, reused because it is the same question).
       - _dies if:_ Cost flat or non-monotone in distance (travel is effectively free at W0's decay rates); or the near-vs-far gap reads below the outcome quantum, so no learner could ever be selected on it; or the probe cannot beat chance, so far is a price paid blind. Any of the three means 'far' is not learnable in this venue and GOAL.md:187's promise has no mechanism behind it.
       - _then delete:_ On FAIL: 'far' is struck from what W0 can teach, every distance-discounting or foraging-efficiency claim is inadmissible in this venue, and the repair is a world edit routed through the W1 window — never a quiet decay-rate retune until the price appears.

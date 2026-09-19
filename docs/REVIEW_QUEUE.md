@@ -7431,3 +7431,47 @@ ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd
     on attempt 1 and nothing cites it.
     DUE: 2026-09-24 | redesign disposition, the Review's (09-22 already
     carries A4 + T2.10 + hr1; first free day per the router's own capacity rule)
+
+ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.05 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
+    PS.05 measured the `far` commitment (GOAL.md:187) and split it exactly the
+    way its sibling PS.06 split `tiring`, five hours earlier, same day. THE
+    WORLD HALF IS GREEN ON EVERY SEED: traversal cost monotone in distance on
+    all 3 seeds (cost 0.0159 -> 0.0693 across the registered 1.5/3.0/4.5/6.0 m,
+    per-distance stds <= 0.0024); near-vs-far gap 0.0534 ± 0.0022 against
+    max(0.015, 2x quantum 0.0027) — ~20x the within-distance repeat spread;
+    the teleport twin's meter alive (0.0112) and DEAD-FLAT across distances
+    (spread 3.6e-6, four orders under the quantum); reach_ok 1.0 everywhere
+    (the power-coupled alive-proof fired nowhere); zero deaths. Distance is
+    priced in the needs' own currency, above the outcome quantum, and the
+    price does not survive teleportation. `far` moves from unmeasured to
+    MEASURED. WHAT FAILED: the legibility conjunct, on TWO of three seeds —
+    per-seed probe_r2 (re-derived, the ledger stores means): seed 0 -1.126,
+    seed 1 +0.356 (all gates green), seed 2 -0.362, vs the disjoint seed-90
+    pilot's 0.707; control caught on ALL seeds (amputated probe never beat
+    its cap after two rig repairs measured in at the pilot). THE MECHANISM IS
+    VISIBLE IN THE ROWS, which is what distinguishes this from the sibling:
+    each meandering survey trip occupies a NARROW BAND of remaining-distance
+    (~0.2-0.4 wide on a 0-1.4 target), the holdout is by-trip with 4 test
+    trips, and R^2 is scored against the test-set mean — so when the test
+    draw lands far-heavy (seed 0's test bands 0.61-1.21, where C = e^(-d/2)
+    reads 0.03-0.05 and between-trip nuisance variation dominates), the probe
+    misses the test mean and the headline goes strongly negative. The
+    shuffled null's own wild variance (-4.6/-0.4/-1.9 per seed) says the same
+    thing about the estimator. Candidate readings for the disposition, named
+    so it is a bakeoff and not an argument: (a) the estimator — trip-level
+    holdout with 4 test units makes the headline a lottery over which bands
+    the test trips occupy; a band-stratified holdout or more/shorter trips
+    is a rig redesign, zero new physics; (b) genuine range limit — odour
+    legibility may honestly die past ~5 m at this LAMBDA_M and noise floor,
+    and the claim's D_LEG (1, 6) m simply spans past the sense's edge, in
+    which case the spec should measure WHERE legibility ends rather than
+    average over it; (c) probe capacity, exactly the sibling's reading (a).
+    SHARED CLASS, dispose together: this row and
+    ps06-legibility-probe-collapses-on-one-mutated-world are the same defect
+    family (PS-family legibility conjunct collapsing on a seed subset while
+    the world half is green on every seed); one disposition should cover
+    both or say why not. NO bar moves; NO re-run unchanged (a redraw is a
+    seed lottery). Staleness bill: ZERO green certificates — PS.05 is red on
+    attempt 1 and nothing cites it.
+    DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
+    sibling row already dated there)
