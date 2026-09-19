@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 108 / 249 demonstrated
+## 109 / 250 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -722,6 +722,16 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A learner in W0 acquires food CONTINGENT on its sensed energy state: feeding events concentrate at low sensed energy (the need->behaviour coupling beats a need-blind account of the same behaviour by >= 3 sigma across seeds), and a SATIETY-CLAMPED twin - hunger channel pinned to 'full' while the body drains identically - measurably reduces its food acquisition. The sensed need, not the food's mere presence, is what moves him.
       - _dies if:_ Feeding is uncorrelated with sensed need, or the satiety-clamped twin forages just as much. Then food acquisition is a fixed policy the drive layer merely narrates, 'hunger' is bookkeeping rather than a drive, and the needs-are-the-curriculum premise (GOAL.md) has no mechanism in him.
       - _then delete:_ The claim that W0's needs teach anything. If feeding is not need-contingent, cold and hunger are punishments, not curriculum, and the survival-world directive is running on an agent that cannot be pressured by it.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **PS.05** Far is a price: distance costs need-currency before anyone has to learn it
+      - _asserts:_ W0 charges for traversal, in the currency the needs already speak: a scripted traversal policy driven to identical resources placed at >= 4 pre-registered distances pays a need-cost (integrated drive drain read off the existing needs.py channels — no new instrument) that increases MONOTONICALLY in distance on every seed; the near-vs-far cost gap exceeds the venue's outcome-metric quantum (the DP.04/W1.02 resolution lesson applied at registration, not discovered by a pilot); and distance-to-resource is LEGIBLE beforehand — a probe on the sensory vector predicts it well above chance while the agent is still en route (PS.02's legibility gate, reused because it is the same question).
+      - _dies if:_ Cost flat or non-monotone in distance (travel is effectively free at W0's decay rates); or the near-vs-far gap reads below the outcome quantum, so no learner could ever be selected on it; or the probe cannot beat chance, so far is a price paid blind. Any of the three means 'far' is not learnable in this venue and GOAL.md:187's promise has no mechanism behind it.
+      - _then delete:_ On FAIL: 'far' is struck from what W0 can teach, every distance-discounting or foraging-efficiency claim is inadmissible in this venue, and the repair is a world edit routed through the W1 window — never a quiet decay-rate retune until the price appears.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
 - [ ] **SH.01** Under cold, he shelters - and prefers the shelter that works
       - _asserts:_ With a thermal drive active, time spent sheltered rises far above an otherwise identical agent whose thermal drive is disabled, sheltering BEGINS before the lethal threshold rather than after it, and when offered two shelters he prefers the one that actually retains heat.
       - _dies if:_ No difference from the drive-disabled agent; or sheltering only starts after the threshold (a reflex to dying, not anticipation); or he is indifferent between a working shelter and a cosmetic one.
@@ -972,8 +982,8 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [!] **LT.01** The Ladder Test is measurable: null floor and un-gameable rise  — body_weight_n=321.77; body_weight_n_std=0.0
-      - _asserts:_ A free-roaming random climber-rover produces ZERO engaged ladder attempts, while reaching >=0.6 m of torso RISE by non-ladder routes; and from the ladder base a genuine weight-bearing hang occurs in 1-5% of 3 s random bursts — so ladder-supported rise (contact AND airborne AND held >=0.5 s AND load-bearing) discriminates, raw torso z does not, and the first success is reachable by chance.
+- [x] **LT.01** The Ladder Test is measurable: null floor and un-gameable rise
+      - _asserts:_ A free-roaming random climber-rover produces ZERO engaged ladder attempts; C2' resolves which side of the 0.6 m gameability bar this body is on and RECORDS the branch — GAMEABLE (a null, or a privileged adversarial height-seeker with adhesion ENABLED and the ladder forbidden, reaches >=0.6 m of non-ladder torso rise, so h(t) is necessary) or UN-GAMEABLE, EARNED (both fail; h(t) stays, and a future body that can rise re-opens G) — per the 2026-09-06 re-scope (lt01-c2-body-cannot-rise, T1.02 precedent; the bar unchanged in both branches); and from the ladder base a genuine weight-bearing hang occurs in 1-5% of 3 s random bursts — so ladder-supported rise (contact AND airborne AND held >=0.5 s AND load-bearing) discriminates where raw torso z is shown not to, and the first success is reachable by chance.
       - _dies if:_ A free-roaming random agent produces engaged attempts (the null floor is not zero), or a non-ladder route reaches the platform, or P(hang from the base) is 0 in 800 bursts (no bootstrap exists and no learning-progress method can work without an archive).
       - _then delete:_ The entire Ladder Test, before a single arm is trained. Costs 20 CPU-minutes; every threshold in the programme is set from it.
 - [ ] **LT.02** The self-generated-chaos detector works (PG.4's blind spot)
