@@ -7,9 +7,28 @@ target reachable. Four questions, all measured, none argued:
   1. NULL FLOOR IS ZERO: a free-roaming random climber-rover produces zero
      ENGAGED attempts (ladder-supported rise >= 0.25 m under the full h(t)
      conjunction) in 3 seeds x 3,000 decisions (600 s of life each).
-  2. RAW HEIGHT IS GAMEABLE: the same random agent reaches >= 0.6 m of torso
-     rise with NO ladder involvement (stairs, ramp, tumbles) — so absolute
-     torso z cannot be the metric, and the three-clause h(t) is load-bearing.
+  2. WHICH SIDE OF THE 0.6 m GAMEABILITY BAR IS THIS BODY ON (C2', the
+     2026-09-06 re-scope — `lt01-c2-body-cannot-rise`, Review FULL, T1.02
+     precedent; the 0.6 m bar is unchanged in both branches and the branch
+     taken is RECORDED on the ledger row):
+       Branch G — GAMEABLE: a null reaches >= 0.6 m of non-ladder torso rise
+       (C2 exactly as originally written), OR a privileged ADVERSARIAL
+       height-seeking arm does (G-adv). Raw torso z is gameable, h(t) is
+       necessary.
+       Branch U — UN-GAMEABLE, and it must be EARNED, never inferred from a
+       null's silence: the null's ceiling is < 0.6 m AND an adversarial arm
+       with adhesion ENABLED, explicitly optimised to maximise raw torso
+       height while never engaging the ladder, ALSO fails to reach 0.6 m at
+       the same seeds. h(t) STAYS under Branch U — un-gameability is a
+       property of THIS body measured today, and a future body that can rise
+       re-opens Branch G.
+     Attempt 1 (2026-08-31, FAIL) died on C2 as written: it demanded, as a
+     precondition of the claim, an observation (nonladder_rise_max
+     0.084 +/- 0.067 m on a body that tips within seconds) whose absence is
+     the claim's own title. C2 had no adversarial arm at all — it inferred
+     gameability from a random agent and would have inferred un-gameability
+     from that same agent's silence. C2' requires a run to defeat a
+     deliberate gamer before it may claim the metric is safe.
   3. THE BOOTSTRAP EXISTS: from the ladder base, a genuine weight-bearing hang
      (contact AND airborne, held >= 0.5 s, ladder bearing >= 0.5 x body
      weight, rise >= 0.25 m) occurs in 1-5%% of 3 s random bursts — so the
@@ -73,13 +92,25 @@ PRE-REGISTERED GATES, in test order:
     V4 the oracle control never gains >= 0.25 m of rise in some seed — an
        optimiser that never moved uphill cannot certify the absence of an
        alternate route.                             "oracle never climbed"
+    V5 (conditional — only when Branch U would be read, i.e. the null's
+       ceiling is < 0.6 m in every seed): the adversarial arm ENGAGED the
+       ladder on its real trajectory (its "non-ladder" ceiling is
+       contaminated), or in some seed it read BELOW the random null's own
+       non-ladder ceiling (an optimiser explicitly maximising height that
+       cannot beat random wandering is a dead arm, and a dead arm's silence
+       may not earn "un-gameable" — the at-chance-control lesson). When
+       Branch G fires off the null the adversary's reading is moot and V5
+       does not gate.
 
-  CLAIM — PASS iff ALL FOUR, else FAIL with `claim_branch` naming the first
-  falsified clause (the BA.03 one-bit-verdict lesson):
+  CLAIM — PASS iff C1, C3, C4 hold AND C2' resolves to a recorded branch;
+  else FAIL with `claim_branch` naming the first falsified clause (the BA.03
+  one-bit-verdict lesson):
     C1 null_engaged_attempts == 0 on every seed (mean of a non-negative
        count is 0 iff every seed is 0)
-    C2 >= 0.6 m of non-ladder torso rise reached in at least one seed
-       (per-seed indicator; the pooled-max reading of the hypothesis)
+    C2' the two-branch gameability measurement above. It resolves to G,
+       G-adv or U (recorded in `c2_branch`); its evidence being incomplete
+       is V5's VOID, not a FAIL — the 09-06 ruling: attempt 1's C2 failure
+       carried zero information about whether the Ladder Test is measurable.
     C3 pooled P(hang | 3 s burst) within [0.01, 0.05] under the adopted
        persistent+load-bearing definition (equal bursts per seed, so the
        mean of per-seed rates IS the pooled rate)
@@ -96,6 +127,23 @@ forced to zero everywhere, 20 s of decisions from each of four sites (ladder
 base, stairs base, ramp base, seesaw/object field). Site starts are the
 strongest honest attack on "no alternate route": a myopic optimiser is not
 asked to cross the arena, it is handed each candidate route's doorstep.
+
+ADVERSARY (C2' Branch U's earner; part of the CLAIM, not the control): the
+same greedy machinery with two differences that make it the deliberate gamer
+the ruling demands. (1) The adhesion channels are FREE — it may grip stairs,
+objects, the pool wall, anything but the ladder — so it is strictly more
+privileged than the oracle. (2) The ladder is FORBIDDEN as a vehicle: any
+candidate whose lookahead makes CLIMB x LADDER contact scores -inf (checked
+at every rollout decision boundary), and if every candidate is banned the
+arm stands still with adhesion off rather than touch the ladder. Its real
+trajectory IS metered, so `nonladder_z_max` excludes laddered substeps by
+construction (the same accounting the null gets), a load-bearing ENGAGED
+attempt on the real path voids the run (V5), and incidental brushes are
+reported as `adv_ladder_attempts`. Sites are the oracle's three non-ladder
+doorsteps — the ladder-base site is excluded because every plan from there
+is banned by construction. Its rng stream (30_000 + seed) is disjoint from
+the free-roam/burst stream (10_000 + seed), so phases 1-4 reproduce
+attempt 1's numbers exactly and the adversary is the only new physics.
 
 PILOT RECORD (seed 90, disjoint from recorded seeds 0-2; mechanics and
 runtime only — every claim bar above was frozen 2026-08-09, nothing here
@@ -120,6 +168,25 @@ tuned one; 2026-08-31, this commit):
   branch is a real measurement feeding the body-has-no-chair fork
   (PROGRESS.md 08-31, FOR THE OWNER §1). Runtime: ~11 min/seed both phases,
   inside CPU_LONG.
+
+C2' ADVERSARY PILOT (seed 90, rng 30_090, reduced envelope 30 decisions/site;
+2026-09-19, mechanics only — bars frozen, branch semantics fixed by the
+09-06 disposition before any number was read): the adhesion-enabled
+height-seeker read adv_rise_max 0.7142 m — OVER the 0.6 m bar at a THIRD of
+the registered envelope — with adv_engaged 0, adv_ladder_attempts 0,
+adv_finite 1.0, in 97.4 s (vs the gripless oracle's 0.2761 m in 124.4 s at
+the same scale, and the null's 0.0099 m). Mechanics verified: the ladder ban
+held on every real substep, the meter excluded nothing it shouldn't, and the
+arm is alive by a wide margin. What this pilots (not decides): the full run
+will likely resolve C2' to Branch G-adv — raw height gameable by a
+deliberate gamer even on a body whose random null cannot rise — which is the
+necessity argument for h(t) restored as a MEASUREMENT. All four earlier
+phases reproduced the 08-31 pilot byte-for-byte at the same reduced envelope
+(free 0 engaged / 0.0099 m, bursts p_load 0.0333, oracle 0.2761 m, hang
+engaged 1.0), confirming the disjoint rng stream claim: the adversary is the
+only new physics. Full-envelope runtime projection from phase timings:
+~34 min for 3 seeds incl. control — inside CPU_LONG, fits a single slot if
+launched first.
 """
 from __future__ import annotations
 
@@ -520,6 +587,61 @@ def _scripted_hang(rig: _Rig) -> dict:
             "hang_finite": float(rig.finite())}
 
 
+def _adversary(rig: _Rig, rng: np.random.RandomState) -> dict:
+    """C2' Branch U must be EARNED (`lt01-c2-body-cannot-rise`, Review FULL
+    2026-09-06): a privileged arm, adhesion ENABLED, explicitly optimised to
+    maximise raw torso height while never engaging the ladder. Only if this
+    deliberate gamer also fails the 0.6 m bar may a run record un-gameable."""
+    a_size = rig.params.arena_size
+    sites = [
+        (1.7, 2.2),                                        # stairs base
+        (-3.4, 2.0),                                       # ramp base
+        (-2.0, -0.6),                                      # seesaw / objects
+    ]
+    stand = np.array([0., 0., 0., 0., -1., -1., 0., 0.])   # adhesion OFF
+    best_rise = -np.inf
+    engaged = 0
+    brushes = 0
+    finite = 1.0
+    for sx, sy in sites:
+        sx = float(np.clip(sx, -a_size + 0.4, a_size - 0.4))
+        sy = float(np.clip(sy, -a_size + 0.4, a_size - 0.4))
+        rig.teleport(sx, sy)
+        rig.reset_meter()
+        prev = stand
+        for _ in range(ORACLE_DECISIONS):
+            snap = rig.snapshot()
+            best_a, best_s = None, -np.inf
+            cands = [prev] + [rng.uniform(-1.0, 1.0, size=8)
+                              for _ in range(ORACLE_K)]
+            for a in cands:
+                rig.restore(snap)
+                score = -np.inf
+                for _ in range(ORACLE_HORIZON):
+                    rig.decide(a, meter=False)
+                    if rig._any_pair(rig._pairs(), rig.climb, rig.ladder):
+                        score = -np.inf                    # ladder: banned
+                        break
+                    score = max(score,
+                                float(rig.data.geom_xpos[rig.torso_gid][2]))
+                if score > best_s:
+                    best_s, best_a = score, a
+            if best_a is None:              # every plan reached the ladder
+                best_a = stand
+            rig.restore(snap)
+            rig.decide(best_a)
+            prev = best_a
+        best_rise = max(best_rise, float(rig.nonladder_z_max - rig.z_rest))
+        engaged += rig.engaged()            # finalizes rig.attempts
+        brushes += len(rig.attempts)
+        finite = min(finite, float(rig.finite()))
+    return {"adv_rise_max": round(best_rise, 4),
+            "adv_ge_bar": float(best_rise >= NONLADDER_RISE_BAR),
+            "adv_engaged": float(engaged),
+            "adv_ladder_attempts": float(brushes),
+            "adv_finite": finite}
+
+
 def _oracle(rig: _Rig, rng: np.random.RandomState) -> dict:
     """The control: greedy height maximisation, adhesion DISABLED."""
     a_size = rig.params.arena_size
@@ -580,6 +702,12 @@ def _experiment(seed: int) -> dict:
     out.update(_free_roam(rig, rng))
     out.update(_bursts(rig, rng))
     out.update(_scripted_hang(rig))
+    out.update(_adversary(rig, np.random.RandomState(30_000 + seed)))
+    # V5's per-seed aliveness indicator: a height-maximising optimiser that
+    # cannot beat random wandering's own ceiling is a dead arm (mean is 1.0
+    # iff every seed's adversary outclimbed its null).
+    out["adv_outclimbed_null"] = float(
+        out["adv_rise_max"] >= out["nonladder_rise_max"])
     return out
 
 
@@ -599,6 +727,7 @@ def _check(m: dict, c: dict):
     # V1 — physics finite in every phase, every seed
     if (m.get("free_finite", 0.0) != 1.0 or m.get("burst_finite", 0.0) != 1.0
             or m.get("hang_finite", 0.0) != 1.0
+            or m.get("adv_finite", 0.0) != 1.0
             or c.get("oracle_finite", 0.0) != 1.0):
         return _void(m, "non-finite physics")
     # V2 — the force instrument reproduced body weight at rest
@@ -612,15 +741,39 @@ def _check(m: dict, c: dict):
     if c.get("oracle_alive", 0.0) != 1.0:
         return _void(m, "oracle never climbed; absence of an alternate route "
                         "is unmeasured")
-    # THE CLAIM — four clauses, first falsified branch named
+    # V5 — conditional: Branch U may only be read from a live, uncontaminated
+    # gamer. When the null itself games the bar (Branch G) the adversary's
+    # reading is moot and this gate does not fire.
+    if m["nonladder_rise_ge_bar"] <= 0.0:
+        if m["adv_engaged"] != 0.0:
+            return _void(m, "adversarial arm ENGAGED the ladder on its real "
+                            "trajectory; its non-ladder ceiling is "
+                            "contaminated and cannot earn un-gameable")
+        if m["adv_outclimbed_null"] < 1.0:
+            return _void(m, "adversarial arm read below the random null's own "
+                            "ceiling in some seed; a dead optimiser's silence "
+                            "cannot earn un-gameable")
+    # THE CLAIM — C1, C2' (two-branch, recorded), C3, C4; first falsified
+    # clause named
     if m["null_engaged_attempts"] != 0.0:
         m["claim_branch"] = "null floor is not zero: random action produced " \
                             "engaged attempts"
         return False
-    if m["nonladder_rise_ge_bar"] <= 0.0:
-        m["claim_branch"] = "no non-ladder route reached 0.6 m rise: raw " \
-                            "torso z is less gameable than the pilot measured"
-        return False
+    # C2' — the 2026-09-06 re-scope (lt01-c2-body-cannot-rise): the branch is
+    # RECORDED, the 0.6 m bar unchanged in both, and h(t) stays either way.
+    if m["nonladder_rise_ge_bar"] > 0.0:
+        m["c2_branch"] = "G: raw height GAMEABLE — a null reached 0.6 m by " \
+                         "a non-ladder route; h(t) necessary (C2 as " \
+                         "originally written)"
+    elif m["adv_ge_bar"] > 0.0:
+        m["c2_branch"] = "G-adv: raw height GAMEABLE — the null could not " \
+                         "game it but the privileged adhesion-enabled " \
+                         "height-seeker did; h(t) necessary"
+    else:
+        m["c2_branch"] = "U: UN-GAMEABLE, earned — neither the null nor an " \
+                         "adversarial height-seeking arm with adhesion " \
+                         "reached 0.6 m; h(t) STAYS, and a future body that " \
+                         "can rise re-opens Branch G"
     if m["p_hang"] <= 0.0:
         m["claim_branch"] = "no bootstrap: P(hang) = 0 across all bursts"
         return False
@@ -630,8 +783,9 @@ def _check(m: dict, c: dict):
     if m["platform_nonladder"] != 0.0 or c["oracle_platform"] != 0.0:
         m["claim_branch"] = "alternate route reached the platform"
         return False
-    m["claim_branch"] = "null floor zero, raw z gameable, bootstrap in band, " \
-                        "no alternate route"
+    m["claim_branch"] = "null floor zero, C2' resolved (" \
+                        + m["c2_branch"].split(":")[0] \
+                        + "), bootstrap in band, no alternate route"
     return True
 
 
@@ -672,6 +826,9 @@ def _pilot():
         t0 = _time.time()
         out["oracle"] = _oracle(rig, rng)
         out["t_oracle_s"] = round(_time.time() - t0, 1)
+        t0 = _time.time()
+        out["adversary"] = _adversary(rig, np.random.RandomState(30_090))
+        out["t_adversary_s"] = round(_time.time() - t0, 1)
     finally:
         N_DECISIONS, N_BURSTS, ORACLE_DECISIONS = full_nd, full_nb, full_od
     print(json.dumps(out, indent=2, default=str))

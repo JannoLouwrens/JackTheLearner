@@ -6479,12 +6479,21 @@ EXPANSION: list[Spec] = [
 
     Spec("LT.01", 2, "The Ladder Test is measurable: null floor and un-gameable rise",
          hypothesis="A free-roaming random climber-rover produces ZERO engaged "
-                    "ladder attempts, while reaching >=0.6 m of torso RISE by "
-                    "non-ladder routes; and from the ladder base a genuine "
+                    "ladder attempts; C2' resolves which side of the 0.6 m "
+                    "gameability bar this body is on and RECORDS the branch — "
+                    "GAMEABLE (a null, or a privileged adversarial "
+                    "height-seeker with adhesion ENABLED and the ladder "
+                    "forbidden, reaches >=0.6 m of non-ladder torso rise, so "
+                    "h(t) is necessary) or UN-GAMEABLE, EARNED (both fail; "
+                    "h(t) stays, and a future body that can rise re-opens G) — "
+                    "per the 2026-09-06 re-scope (lt01-c2-body-cannot-rise, "
+                    "T1.02 precedent; the bar unchanged in both branches); "
+                    "and from the ladder base a genuine "
                     "weight-bearing hang occurs in 1-5% of 3 s random bursts — "
                     "so ladder-supported rise (contact AND airborne AND held "
-                    ">=0.5 s AND load-bearing) discriminates, raw torso z does "
-                    "not, and the first success is reachable by chance.",
+                    ">=0.5 s AND load-bearing) discriminates where raw torso z "
+                    "is shown not to, and the first success is reachable by "
+                    "chance.",
          falsified_by="A free-roaming random agent produces engaged attempts "
                       "(the null floor is not zero), or a non-ladder route "
                       "reaches the platform, or P(hang from the base) is 0 in "
@@ -6505,7 +6514,19 @@ EXPANSION: list[Spec] = [
                "(broken - z_rest already clears the bar), 0.063 instantaneous, "
                "0.026 persistent, 0.021 +- 0.009 persistent AND load-bearing; "
                "random rise ceiling 0.83 m. Those four numbers ARE the "
-               "definition of h(t) and every threshold in LT.03."),
+               "definition of h(t) and every threshold in LT.03. "
+               "C2 RE-SCOPED to C2' 2026-09-19 per the Review FULL 2026-09-06 "
+               "disposition on lt01-c2-body-cannot-rise: attempt 1 (FAIL, "
+               "2026-08-31) measured nonladder_rise_max 0.084+-0.067 m on the "
+               "as-built rover — the clause demanded, as a precondition of "
+               "the claim, an observation whose absence is the claim's own "
+               "title, and carried no adversarial arm at all. C2' is the "
+               "two-branch necessity test (branch recorded on the row; 0.6 m "
+               "unchanged; Branch U earned only by defeating a deliberate "
+               "adhesion-enabled height-seeker). Attempt 1's row stays in "
+               "history. The D9/D8 body deadlock is ROUTED AROUND, not "
+               "dissolved — a green LT.01 is not evidence the body question "
+               "was answered."),
 
     Spec("LT.02", 2, "The self-generated-chaos detector works (PG.4's blind spot)",
          hypothesis="A curiosity agent can farm irreducible surprise from its "
