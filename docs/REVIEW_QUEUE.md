@@ -7475,3 +7475,44 @@ ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.0
     attempt 1 and nothing cites it.
     DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
     sibling row already dated there)
+
+ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-09-19 | `7012e84` (PS.09 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
+    PS.09 measured the `worth-it` commitment (GOAL.md:187) and split it the
+    way its two siblings split `far` and `tiring`, earlier the same week.
+    THE WORLD HALF IS GREEN ON EVERY SEED: across the four registered
+    (payoff, distance) offers the net need-gain is +0.0394/+0.0594 on the
+    positive side and -0.0397/-0.0634 on the negative, per-offer stds
+    <= 0.0035 across three mutated worlds, weakest witness ~12x the 0.0032
+    quantum; the free-lunch twin (teleport + identical eat dwell) is
+    POSITIVE on every offer and every seed (min +0.0462) so the negative
+    branch is a price-vs-payoff trade, not an accounting artifact; every
+    trip ate exactly k through the layer's own mouth gate; rig std 0.0 on
+    every gate. W0 pays and charges in one currency and some trips do not
+    pay — measured. WHAT FAILED: probe_bal_acc 0.547 ± 0.075 against the
+    0.65 bar (disjoint seed-90 pilot: 0.78), shuffled 0.499, amputated
+    control 0.35 (caught on every seed). AND THE DIAGNOSIS IS SHARPER THAN
+    EITHER SIBLING'S, because the venue signal was measured SEPARATELY from
+    the registered estimator on seed 1: a bare threshold on the odour
+    concentration channel alone, learned on the train trips, reads the
+    held-out sign at balanced accuracy 1.00 — while the registered
+    RFF+ridge probe on the same rows reads 0.60, train 0.89, calling four
+    of five clear positives negative (C = 0.070, 0.164, 0.048 — far outside
+    the k-d ambiguity band). The mechanism: 5 near-duplicate pre-departure
+    sniff rows per trip x 54 pose/interoception features that individuate
+    the trip = the fit memorizes trip identity, and at test its predictions
+    collapse toward the train mean. So this is not a range limit and not a
+    band lottery: THE SIGN IS PERFECTLY LEGIBLE IN THE SENSE AND THE
+    REGISTERED INSTRUMENT CANNOT READ IT. That is the strongest evidence
+    yet that the family's legibility conjunct is measuring the estimator,
+    not the venue. SHARED CLASS, dispose together with
+    ps05-legibility-holdout-is-a-band-lottery and
+    ps06-legibility-probe-collapses-on-one-mutated-world (both already DUE
+    09-24): one disposition should cover all three or say why not. The
+    legal repairs are the ones the 103rd audit item 5 already named — the
+    estimator, the probe draw, or measuring where legibility ends — and the
+    seed-1 threshold datum says the estimator arm now has a measured
+    known-answer control any redesign must pass. NO bar moves; NO re-run
+    unchanged (a redraw is a seed lottery). Staleness bill: ZERO green
+    certificates — PS.09 is red on attempt 1 and nothing cites it.
+    DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
+    two sibling rows already dated there)

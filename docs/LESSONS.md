@@ -15838,3 +15838,46 @@ alongside the value — clock, act, and self-inflicted are three different thing
 only the first is exempt from recording. And when a later slot corrects an earlier
 attribution, cite the entry it corrects by hash: an append-only log is only
 self-correcting if the corrections are addressed.
+
+## A LEGIBILITY PROBE FED NEAR-DUPLICATE ROWS PER UNIT MEMORIZES UNIT IDENTITY — certify the SIGNAL separately from the ESTIMATOR, or the gate measures the probe
+## (builder, 2026-09-19, from PS.09's registered FAIL and its seed-1 introspection, both measured not argued)
+
+PS.09's legibility gate fired FAIL (probe balanced sign accuracy 0.547 ± 0.075
+vs a 0.65 bar; disjoint pilot 0.78) while every world conjunct was green with
+std 0.0. The introspection that settles where the defect lives: on seed 1, a
+bare THRESHOLD on the single odour-concentration channel, learned on the same
+train trips, read the held-out sign at balanced accuracy **1.00** — while the
+registered RFF+ridge probe on the same rows read **0.60** (train 0.89),
+calling four of five clear positives negative at concentrations far outside
+the venue's genuine ambiguity band. The signal was perfect; the instrument
+could not see it.
+
+The mechanism is general and cheap to create by accident. The probe's rows
+were 5 pre-departure sniffs per trip — near-duplicates sharing one label —
+and its feature vector carried 54 pose/interoception dims that individuate
+the trip beside 12 that carry the sense. Under ridge, trip-identity features
+are a shortcut that fits the train set (each trip's frozen pose is a perfect
+key to its label); at test the keys are novel, predictions collapse toward
+the train mean, and accuracy lands wherever the mean's sign happens to point.
+The AMPUTATION CONTROL DOES NOT CATCH THIS — it fired correctly on every
+seed (0.35), because removing the sense also removes nothing the shortcut
+needs; a control built to prove "the probe needs the sense" cannot prove
+"the probe READ the sense".
+
+Three rules:
+
+1. **When rows within a unit are near-duplicates, the unit count is the
+   sample size, and every unit-individuating feature is a shortcut key.**
+   Either vary the rows within a unit (PS.05's en-route snapshots did this by
+   accident and its probe read 0.707 where this one read chance), aggregate
+   to one row per unit, or expect memorization.
+2. **A pilot that certifies an estimator on one draw certifies the draw.**
+   Seed 90 read 0.78 with the same shortcut hazard live; three registered
+   worlds read 0.45–0.63. The pilot's margin was real and it measured
+   estimator luck, not venue legibility.
+3. **Carry a known-answer signal probe beside the registered estimator** — a
+   single-channel threshold, the cheapest reader that could possibly work —
+   as a REPORTED diagnostic, never a gate. When gate and diagnostic disagree
+   (0.60 vs 1.00), the finding re-routes from "the venue is illegible" to
+   "the instrument is broken" in one number, which is exactly the
+   adjudication the PS.05/PS.06 sibling rows spent paragraphs arguing toward.
