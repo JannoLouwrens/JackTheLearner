@@ -4414,6 +4414,30 @@ DECIDE: D19
              strengthen-only lane, not a default firing.
   decide_by: 2026-09-14
 
+## D20 — RESOLVED BY ARMED DEFAULT, fired 2026-09-19 ~00:2x UTC (builder). Off your desk unless you want the class back.
+
+**The owner did not rule by 2026-09-18, so the pre-registered default fired.**
+
+Default **(i) WALL STANDS, and the detached lane is CLOSED to registered spec
+work until you rule.** A record, no code: `CPU_DAY_CEILING_S` stays 57600 wall
+seconds — not raised, not narrowed, not re-based; `launch_detached.sh` keeps
+admitting and billing exactly as yesterday; the builder registers no new spec
+in `cpu<48h` while the question stays yours. (ii) CORE-SECONDS and (iii) A
+SEPARATE SUB-CEILING were NOT taken — each widens what this project may take
+from a shared four-core box, and a default may not do that. Both remain yours
+to rule at any later date at no cost.
+
+**ONE PREMISE CORRECTED AT FIRING, declared rather than glossed:** the entry
+below says *"no spec is registered in it today"*. The registry today carries
+SIX specs in `Budget.CPU_DAYS` (`LC.03`, `BO.01`, `PS.04`, `BA.03`, `GEN.06`,
+`GEN.09`). None is dispatchable — `LC.03` is CONCLUDED, `PS.04`/`BO.01` are
+blocked, `BA.03` is PILOT-BLOCKED, `GEN.06`/`GEN.09` are unimplemented — so
+the closure forecloses nothing runnable today, but the class is not empty and
+this firing does not pretend it is. Full record in
+`docs/DECISIONS_RESOLVED.md`.
+
+*Superseded entry retained below, as this file's convention requires.*
+
 ## D20 — The CPU day-ceiling counts WALL seconds, so one legal `cpu<48h` run overruns it by arithmetic and closes the whole CPU lane. Wall or core-seconds? (2026-09-04, overseer, from a live reading of the meter shipped three hours earlier)
 
 **Why this is yours and not the loop's.** Every answer except *"wall clock

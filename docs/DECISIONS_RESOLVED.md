@@ -1317,3 +1317,63 @@ Evidence: `docs/DECISIONS_NEEDED.md` (the firing record in full);
 `scripts/lib_seal.sh`; `scripts/review.sh:106-115`;
 `scripts/test_lib_liveness.sh`; `cf18320` and `docs/PROGRESS_LOG.md:26`;
 commits `696bfcb`, `71eb183`, `958c5ec`.
+
+## D20 — RESOLVED BY ARMED DEFAULT (fired 2026-09-19 ~00:2x UTC, builder): (i) WALL STANDS. The 57600 s wall ceiling is untouched, the detached lane is CLOSED to registered spec work, and no new spec registers in `cpu<48h` until the owner rules. A record, no code.
+
+**The owner did not rule by 2026-09-18, so the pre-registered default fired.**
+
+**The question** (2026-09-04, overseer, from a live reading taken three hours
+after the meter shipped): `cpu_budget.CPU_DAY_CEILING_S = 57600.0` (16 h) is
+charged in **wall clock**, while `rtf.BUDGET_SECONDS["cpu<48h"] = 172800` (48 h)
+is a registered, legal cost class served by `scripts/launch_detached.sh` — so
+one legal `cpu<48h` run overruns the day by arithmetic (1.50x; 3.00x under the
+since-fixed double-billing), and a single overrun day makes `admit_detached`
+refuse every detached launch AND `gate_cpu_child` refuse every runner CPU
+child. Every answer except "wall clock stands" increases how much of a shared
+machine this project may take — `SYSTEM.md` class 3 (CONDUCT), the owner's
+alone, which is why no bakeoff could settle it and why it sat armed.
+
+**What fired, and it is a record with no code.** The ceiling means "this
+project may hold the box for 16 h of any day, whoever is running". `cpu<48h`
+is not a class this box can serve under that reading; the detached lane is
+declared CLOSED to registered spec work; the builder registers no new spec in
+the class. `launch_detached.sh` is byte-untouched; nothing is re-run; the
+foreclosure stays VISIBLE as the 68th-audit B3 printed number
+(`cpu_foreclosed_now`, reading 0 today).
+
+**ONE PREMISE CORRECTED AT FIRING, declared rather than glossed (the D25
+precedent: a pre-registered remedy can name a condition its own case does not
+satisfy).** The decision text says *"no spec is registered in it today"* and
+its `blocks:` line repeats it. Read live at firing, the registry carries **six
+specs in `Budget.CPU_DAYS`**: `LC.03` (CONCLUDED — the ~190 core-hour run that
+motivated the meter), `BO.01` (blocked behind the DP.05 world gate), `PS.04`
+(blocked behind LC.03), `BA.03` (PILOT-BLOCKED), `GEN.06`/`GEN.09`
+(unimplemented; the `goal-cites-four-specs-that-resolve-to-corpses` row).
+None is dispatchable, so the closure forecloses nothing runnable today and no
+commitment goes claim-dead by this firing — but the class is NOT empty, and
+the honest consequence the option named (retiring or re-scoping the class) is
+therefore a real future decision touching six registered ids, which is exactly
+why it stays the owner's and is not taken here.
+
+**THE LOSERS, recorded as this page requires.** **(ii) CORE-SECONDS against 4
+cores** — the change that raises what the project may take; refused as an
+illegal default before being refused on merit. **(iii) A SEPARATE DETACHED
+SUB-CEILING** — invents a budget number on the owner's behalf; a ceiling
+picked by the organ it constrains is not a constraint (`D26`'s reasoning).
+Both remain the owner's to rule at any later date, at no cost; this firing is
+not a step toward either.
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved in
+either direction, no control loosened, no new permission taken, nothing
+re-run, no certificate staled (no code file touched at all), no spec failed,
+no run refused that was permitted yesterday, no commitment claim-dead.
+`decisions --check` rc=0 and `--firing-check WORKTREE` run before the commit.
+
+**To reverse:** the owner rules (ii) or (iii) — one line in this file and the
+class re-opens; no code was written that would need unwinding.
+
+Evidence: `docs/DECISIONS_NEEDED.md` (the full entry and its arithmetic table,
+read live at `8d623b3`); `experiments/cpu_budget.py` (`CPU_DAY_CEILING_S`);
+`experiments/rtf.py` (`BUDGET_SECONDS`); `experiments/protocol.py:254`
+(`CPU_DAYS = "cpu<48h"`); the registry's six `Budget.CPU_DAYS` ids, read live
+at firing.
