@@ -7262,3 +7262,118 @@ mark shipped **after** the two jobs it was built from; the first entry will
 appear at the next overrunning dispatch, not retroactively.
 
 Reversal of (i) is unchanged and remains one `if` in `experiments/gpu.py`.
+
+---
+
+## D28 — RECLASSIFICATION NOTICE, ARMED, 2026-09-19 00:5x UTC (overseer, 101st audit). This entry is CONDUCT, it is MINE, and the owner's 2026-09-17 ruling already authorises the desks to take it. Reclass fires 2026-09-21 unless the owner says otherwise.
+
+**No option is added, removed or narrowed. `decide_by` (2026-09-21) does not
+move. No threshold, no ledger row, no re-run, no `GOAL.md` text. What changes if
+this fires is WHO decides, and the owner ruled on that two days ago.**
+
+### The measurement
+
+`decisions --check` this morning:
+
+```
+4 decision(s) not armed:
+  [CONDUCT-MISFILED?] D27   [CONDUCT-MISFILED?] D28
+  [CONDUCT-MISFILED?] D29   [CONDUCT-MISFILED?] D31
+
+$ grep -c 'class:     conduct' docs/DECISIONS_NEEDED.md
+0
+```
+
+Four open entries on the owner's desk. All four classed `goal`, all four
+`costs 0 specs`, all four flagged. **Zero entries have been reclassified in the
+40 hours since the class was created** — and `D20` (about a *cost class*, one of
+the three examples `SYSTEM.md`'s conduct clause names by name) sat through that
+whole window and resolved at 00:13 today by its deadline expiring.
+
+### Why `D28` specifically
+
+`SYSTEM.md` class 3, amended 2026-09-17 on the owner's own question
+(*"dont we have enough philosophy and structure for an agent to solve these
+things?"*):
+
+> **AND THE DESKS AMEND THEIR OWN CONDUCT.** *Sitting order*, review cadence,
+> cost classes, what gets re-checked by whom — the organs change these
+> themselves, under the same default-and-deadline discipline, and **report
+> rather than ask**. The permission is bounded exactly as a default is: it
+> weakens no gate, moves no threshold, edits no `GOAL.md` text, and widens
+> nothing the owner has forbidden.
+
+`D28` asks whether the Review may dispose the OVERDUE class before routing new
+findings. That is **sitting order**, the clause's first named example. Its own
+armed default `(a) OVERDUE FIRST` already argues the boundary in the entry's own
+words: *"picks only already-permitted actions (a desk may order its own work;
+ordering is not a new authority), moves no threshold in either direction, edits
+no GOAL.md text, widens nothing, spends no GPU, commits no budget, fails no
+spec, refuses no run, stales no certificate."* Every clause of the conduct
+boundary is satisfied by the entry's own pre-registered reasoning.
+
+### The authorship correction, because it is what moves the duty
+
+The 100th audit (2026-09-18) examined this exact flag and declined, writing:
+*"`SYSTEM.md` puts the class on the author, and four of these five are the
+Review's entries, not mine."* Resolving each heading against the file:
+
+| entry | heading says | author |
+|---|---|---|
+| `D20` | (2026-09-04, overseer, …) | **overseer** |
+| `D27` | (2026-09-13, Review, FULL) | Review |
+| `D28` | (2026-09-14, overseer, 95th audit) | **overseer** |
+| `D29` | (2026-09-14, overseer, 96th audit) | **overseer** |
+| `D31` | (2026-09-15, overseer, 97th audit; renumbered …) | **overseer** |
+
+**Four of the five are this organ's own entries. Exactly one is the Review's.**
+The audit used the author rule to route the duty away from itself and had the
+authorship backwards. `D28` has been mine to reclass since Thursday morning.
+
+### What is deliberately NOT reclassified, and why a blanket move would be the mirror error
+
+- **`D29` stays `goal`.** It turns on whether an ARCHITECTURE seat may hold the
+  file's strongest marking while its own governing document's mandatory guard is
+  unarmed, and its option (iv) would strip a seat's marking. `SYSTEM.md` makes
+  architecture class 2 — **always contested, never a desk's to settle by fiat**.
+  Not paperwork.
+- **`D31` stays `goal`.** Its live question is (ii) GIVE COLAB A CEILING —
+  inventing a budget number on a shared four-core box with paying tenants. The
+  entry's own text refuses to let a default invent it, and conduct's boundary is
+  *"widens nothing the owner has forbidden"*. The number is the owner's.
+- **`D27` is CONDUCT and is the Review's**, not mine to move. Routed to them in
+  `docs/OVERSIGHT.md` (101st audit, `FOR THE REVIEW`).
+
+The advisory is SOFT on purpose. Saying "wrong here" about two of four is the
+use it was built for; reclassing all four because a flag printed would be the
+blanket escalation in a new direction.
+
+### THE ARMED ACTION
+
+```
+RECLASS: D28
+  from:      class: goal   (owner's desk)
+  to:        class: conduct (the authoring desk executes and REPORTS)
+  authority: SYSTEM.md class 3, amended 2026-09-17 (owner's ruling, c7052fa)
+  author:    overseer, 95th audit — this desk
+  fires:     2026-09-21, at the 101st+ audit following that date
+  default on firing: UNCHANGED — the entry's own (a) OVERDUE FIRST, executed at
+             the desk and reported, not re-decided
+```
+
+**This picks only an already-permitted action.** The owner created the class for
+exactly this kind of entry; using it is not a new authority, and the action it
+unlocks is the entry's own pre-registered default, which was already reasoned as
+monotone. It **shrinks** the owner's desk and grows nothing.
+
+**The price, stated rather than buried.** `D28`'s default fires on 2026-09-22
+anyway, so reclassifying buys **days, not capability**. What it buys that matters
+is the habit: the owner asked a direct question about their own workload on
+2026-09-17, the system answered by building a detector, and the detector has
+printed the answer on every run since with no desk acting on it. The next twenty
+entries are the cost, not this one.
+
+**Reversal: change one word on one line (`conduct` → `goal`), and the entry is
+back on the owner's desk with its options, default and `decide_by` untouched.**
+The owner may also simply rule `D28` at any time before 2026-09-21, which
+supersedes this notice entirely.

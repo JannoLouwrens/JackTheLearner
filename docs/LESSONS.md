@@ -15526,3 +15526,64 @@ Guard, in place of more prose: `T0.28` P19 now covers the advisory both ways;
 attempt 23's FAIL row is the ledger's record that this class of decay is real.
 The pattern transfers to every audited organ (`coverage.py`/T0.21,
 `review_queue.py`/T0.31, `champions.py`) the day any of them gains a class.
+
+## A fired default can be perfectly legal and still leave an obligation no instrument can check — prose is the cheapest discharge, and it is how declared-but-uncomputed debt grows
+## (overseer, 101st audit, 2026-09-19 00:4x, from auditing D20's and D30's firings six hours after both landed)
+
+Two armed defaults fired at 00:13 and 00:15 on 2026-09-19. Both were executed
+textbook-correctly: the register was checked first for a late owner ruling (the
+`D19` lesson), both printed `OVERDUE — DEFAULT IS DUE TO FIRE`, both carry the
+required *"the owner did not rule by <date>, so the pre-registered default
+fired"*, both name a one-step reversal, `firing-diff` reads 0/0, and `D20`'s
+firing **corrected a false premise inside its own entry** rather than glossing
+it. Nothing about either is dishonest and the audit found no violation.
+
+And both left behind a duty that nothing in this repository can check:
+
+- **`D20` → "no new spec registers in `cpu<48h` until you rule."** Its own text
+  says *"A record, no code."* Verified: no guard in `registry.py`,
+  `registry_expansion.py`, `protocol.py` or `cpu_budget.py` refuses or flags a
+  new `Budget.CPU_DAYS` registration, and nothing anywhere reads
+  `DECISIONS_RESOLVED.md` for standing constraints. **The constraint is enforced
+  by the builder remembering it.**
+- **`D30` → a paragraph in `scripts/review_prompt.md`** telling the Review to
+  *"count the consecutive dark slots … yourself"* — a number `ladder_loop.sh`'s
+  pace gate **already computes and prints on every skipped slot**
+  (`… 49 consecutive dark slot(s) — skipping`). The duty was added to the one
+  organ measured `UNBOUNDED`, which had missed 09-17 entirely and missed twice
+  on 09-18.
+
+**Why this is structural and not a slip.** A default may only pick among
+already-permitted actions: it may not move a threshold, invent a number, widen
+an authority or commit a failing budget. After those exclusions, *"write it
+down"* is very often the only legal option left — which means **the armed-default
+mechanism systematically selects for prose discharges.** The safety property that
+makes defaults trustworthy is the same property that makes them a debt engine.
+
+**What it costs.** This repository already carries three open items for exactly
+this class: `a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere`,
+`gates-that-measure-something-other-than-what-they-say`, and `D29` — whose entire
+subject is a guard its own governing document calls *mandatory* and nobody armed.
+Today the system added two more instances of it, by firing defaults, correctly.
+`D27` (*is a recorded metric ever read?*) is the general form of the same
+question and was routed six days earlier.
+
+**The rule, and it is cheap:**
+
+1. **A firing commit that discharges into prose must name its reader.** One
+   line — *"read by: the Review's 06:37 prompt, by eye; nothing computes it"* —
+   turns an invisible obligation into a countable one. A discharge with **no**
+   reader nameable is a finding at the moment of firing, not a surprise three
+   weeks later.
+2. **Before writing a new hand-count into a prompt, grep for the number.** `D30`
+   asked a desk to re-derive by eye a figure the loop had been printing on every
+   dark slot for four days. When the datum already exists, the missing piece is a
+   *reader*, and a reader is code.
+3. **Prose discharge is legitimate and often the only legal move — it is the
+   silence about its unenforceability that is the defect.** The repair is never
+   to refuse the default; it is to write down, in the same motion, that the thing
+   now standing is a record held up by nothing.
+
+Guard, in place of more prose: `FOR THE BUILDER` item 4 of the 101st audit asks
+for the reader-naming line in every firing commit, and item 3 asks `D20`'s
+resolved entry to say plainly that it is a record with no enforcement behind it.
