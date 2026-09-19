@@ -2910,7 +2910,7 @@ ROUTED: me11-every-arm-hits-the-same-infeasible-branch | 2026-08-31 | 23d53c7 (5
     0.250 recall ceiling: this venue's semantic scorers invent more easily
     than they find, exactly as the registry's control note predicted.
 
-ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 3 seeds x 3000 decisions) | ACTED 2026-09-19 in 4091066 (builder EXECUTED the 09-06 disposition: C2' implemented at b16de57 with the adversarial adhesion-enabled height-seeker, and LT.01 attempt 2 ran to PASS at 4091066 — 2017 s, 3 seeds, FOREGROUND in-session after the 06:09 background attempt died with its slot. C2' resolved to branch **G-adv**: the null could not game raw torso height (nonladder_rise_max 0.084 +/- 0.067 m) but the privileged height-seeker DID — adv_rise_max 0.6157 m, adv_ge_bar 0.667 over the UNMOVED 0.6 m bar, adv_engaged 0.0. Raw height is GAMEABLE, h(t) necessary, the original C2 claim restored as a measurement. The disposition required exactly this arm; the re-run carries it. LT.02 and the LT.03-LT.07/LT.09 chain — the Curiosity-signal seat's arena — unblock behind this PASS. Staleness bill NONE as the disposition stated: LT.01 had one FAIL row and no certificate cited it.) | DISPOSITIONED 2026-09-06 (Review FULL — option (a), the re-scope specified in the C2' block below; design only, the builder implements and re-runs, and the 0.6 m bar does not move in either branch)
+ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 3 seeds x 3000 decisions) | ACTED 2026-09-19 in 4091066 (builder EXECUTED the 09-06 disposition: C2' implemented at b16de57 with the adversarial adhesion-enabled height-seeker, and LT.01 attempt 2 ran to PASS at 4091066 — 2017 s, 3 seeds, FOREGROUND in-session after the 06:09 background attempt died with its slot. C2' resolved to branch **G-adv**: the null could not game raw torso height (nonladder_rise_max 0.084 +/- 0.067 m) but the privileged height-seeker DID — adv_rise_max 0.6157 m, adv_ge_bar 0.667 over the UNMOVED 0.6 m bar, adv_engaged 0.0. Raw height is GAMEABLE, h(t) necessary, the original C2 claim restored as a measurement. The disposition required exactly this arm; the re-run carries it. LT.02 and the LT.03-LT.07/LT.09 chain — the Curiosity-signal seat's arena — unblock behind this PASS. Staleness bill NONE as the disposition stated: LT.01 had one FAIL row and no certificate cited it. Supersedes the prior status, preserved verbatim per the t108 repair precedent of 09-18: DISPOSITIONED 2026-09-06, Review FULL — option (a), the re-scope specified in the C2' block below; design only, the builder implements and re-runs, and the 0.6 m bar does not move in either branch)
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
         promise, and NOT a re-date: this row was dated to be decided in the SAME
         window as `w0-too-shallow`, on the ground that both turn on the identical
@@ -7395,3 +7395,39 @@ ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (
     certificates — HR.1 is the family root and it is red; HR.2/HR.3/HR.4 are
     unimplemented. The cheap moment to redesign the fixture is now.
     DUE: 2026-09-22 | fixture-redesign disposition, the Review's
+
+ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd96a7` (PS.06 attempt 1, FAIL, seeds 0/1/2, clean stamp at 9b40588) | OPEN
+    PS.06 measured the `tiring` commitment (GOAL.md:187) and split it cleanly
+    in two. THE WORLD HALF IS GREEN ON EVERY SEED: fatigue_gap 0.295 ± 0.003
+    against max(0.10, 2× quantum 0.032) — 9.3× the quantum; f_spent 0.529
+    (floor 0.35); the fatigue-frozen twin near-flat (frozen_spent_ratio 0.862
+    vs 0.75, twin_f_max 0.0); rest repays twin-differenced (rec_gain_diff
+    0.272 vs 0.08 — live +0.174, frozen −0.099); tau_fit 59.9 s in the
+    (45, 75) band with std ~0; rig_ok 1.0, zero deaths; the sensory-amputation
+    control failed as required (control_r2 0.033 vs 0.30 cap, margin 0.449 vs
+    0.15). Exertion is priced, above the outcome quantum, and repaid by rest —
+    tiring is real in W0, distinguished from PS.03's damage by the repayment
+    clock. WHAT FAILED, and it is exactly one conjunct: seed_gates_ok 0.667 —
+    one seed's PROBE_R2 fell under the 0.35 per-seed floor. probe_r2 reads
+    0.482 ± 0.343 over 3 seeds while every other per-seed conjunct has
+    std ≤ 0.01, which puts the worst seed's legibility near ZERO against the
+    disjoint seed-90 pilot's 0.674 (shuffled null −0.116 ± 0.019, clean on all
+    seeds). NOTE, and it is a live instance of `aggregate-hides-worst-seed`
+    (OVERDUE on this desk): the ledger stores means/stds only, so the worst
+    seed's exact value is arithmetic, not a recorded number. The finding:
+    whether the imminent droop is legible beforehand from interoception is
+    WORLD-DEPENDENT (seed>0 mutates PlaygroundParams), and the claim's
+    all-seeds bar refused to average over that — correctly. Candidate readings
+    for the disposition, named so it is a bakeoff and not an argument:
+    (a) probe capacity — one fixed RFF draw (N_RFF 200, RFF_SEED) may be a
+    per-world lottery; a small pre-registered draw ensemble would separate
+    probe variance from world variance at zero new physics; (b) data
+    starvation — ~52 train rows per world with session-level holdout may be
+    under-powered exactly where the world's fatigue dynamics are least
+    redundant; (c) the honest reading: interoceptive legibility genuinely
+    varies by world and the spec should measure WHICH world property predicts
+    it before any bar is touched. NO bar moves; NO re-run unchanged (a redraw
+    is a seed lottery). Staleness bill: ZERO green certificates — PS.06 is red
+    on attempt 1 and nothing cites it.
+    DUE: 2026-09-24 | redesign disposition, the Review's (09-22 already
+    carries A4 + T2.10 + hr1; first free day per the router's own capacity rule)
