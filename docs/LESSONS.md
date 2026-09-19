@@ -3821,6 +3821,32 @@ leaves an uncommitted tree also skips its journal entry, so the inheritance
 tax compounds: the next reader gets a diff with no stated intent — semantic
 diff before trusting it (the standing concurrency rule), then finish it.
 
+**Corollary, fifth occurrence (2026-09-19 06:09, LT.01 attempt 2) — the clock
+rule above was SATISFIED by the slot that then lost the run, so the lesson
+must name the LANE, not only the deadline.** The 06:0x slot did the
+arithmetic the fourth occurrence demands: 06:09 + ~34 min projected = 06:43,
+inside its deadline. Then it launched `run_spec LT.01` as a background task
+and ended its turn, writing into the log: *"The run's completion will
+re-invoke me directly … so no extra monitor is needed."* The session's
+`claude -p` returned at 06:09:57 — `rc=0`, 48 seconds in — and the run died
+with it. Four independent instruments confirmed the loss 28 minutes later
+(102nd audit RANK 2): no process under the venv, no artifact newer than
+13:09 the previous day, zero commits, clean tree. **"I will be re-invoked
+when it finishes" is not a lane.** Once the agent ends its final turn,
+`ladder.sh` closes the iteration and nothing wakes; a background Bash task,
+a `&`, a setsid-less child — all of them are session children in disguise.
+With the detached lane closed by `D20`, the ONLY lane for local computation
+is **the foreground of a slot that stays open**: launch the run, keep the
+session alive (do other slot work, poll, wait), and do not end the turn
+until the row is on the ledger. If the run cannot fit even a whole slot,
+hand it forward as a UNIT — never start it and lose it. And note what this
+occurrence proves about this file: the fourth entry was committed at 05:18
+and the fifth occurrence happened at 06:09, by the same loop, 51 minutes
+later. A lesson is a memory, not a control — the enforcement is
+`notice_exited_dispatches` now wired on the live path (same day), which says
+an EXITED run loudly at the top of every slot instead of relying on the next
+reader to have read this paragraph.
+
 ## An absent field is honest; a field that silently records the RECORDER is a false one
 
 *(17th overseer audit, 2026-08-14)*

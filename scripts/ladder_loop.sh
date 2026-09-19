@@ -182,12 +182,17 @@ PY
 # streak cannot swallow it. NOTICING ONLY — committing the interpretation
 # still belongs to an unpaced iteration, and the add -A ban stands.
 notice_exited_dispatches() {
+  # $1 names the lane so the log line is honest about who is speaking:
+  # PACE-SKIP (the original wiring) or LIVE (102nd audit RANK 2 / Review
+  # 1^9 item 2 — a slot that RUNS never called this, so the 06:09 LT.01
+  # death produced no notice anywhere and was found by a human reading ps).
+  local lane="${1:-PACE-SKIP}"
   local decl="${JACK_PROC_DECL:-/data/jack-logs/declared_pids}"
   [ -r "$decl" ] || return 0
   while IFS="$(printf '\t')" read -r key ts desc exited; do
     case "$exited" in EXITED*) ;; *) continue ;; esac
     case "$desc" in *dispatch*|*run_spec*|*detached*) ;; *) continue ;; esac
-    say "PACE-SKIP NOTICE: declared dispatch '${desc}' (${key}) is ${exited} — a finished detached run may hold artifacts outside the harvest paths (/data); the next unskipped iteration should read them"
+    say "${lane} NOTICE: declared dispatch '${desc}' (${key}) is ${exited} — a finished detached run may hold artifacts outside the harvest paths (/data); the next unskipped iteration should read them"
   done < "$decl"
 }
 
@@ -240,6 +245,10 @@ trap on_exit EXIT
 # scripts/lib_procwatch.sh holds the scar; scripts/test_lib_procwatch.sh proves
 # the detector still works.
 proc_prune_declarations
+notice_exited_dispatches LIVE   # live path too, before the iteration's work is
+                                # chosen (Review 1^9 item 2): an EXITED
+                                # run_spec/dispatch row is said loudly whether
+                                # or not the slot is paced. Noticing only.
 PROC_BEFORE=$(proc_snapshot)
 LEFTOVER_NOTE=""
 leftover_report() {
