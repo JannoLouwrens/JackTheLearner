@@ -3652,7 +3652,25 @@ def _no_live_path_fixture() -> List[str]:
 #               rest, above quantum and legible), COVERS: tiring (claim),
 #               runnable (deps: NE.00 PASS). heavy / worth-it remain
 #               uncovered.
-COMMITMENTS_UNCOVERED_BASELINE = 2
+#   2026-09-19  2 -> 1 (builder, 103rd audit FOR THE BUILDER item 1):
+#               `heavy` covered by REGISTRATION — PS.08, moving-mass-costs
+#               in the PS.05/PS.06 shape (the playground's existing
+#               object_mass_range 0.2-3.0 kg is the venue; drain via
+#               M_BASAL + kappa_act*p_mech with a measured-p_mech
+#               tautology guard at the rig), COVERS: heavy (claim),
+#               runnable (deps: NE.00 PASS). PG.2's nomination NOT
+#               declared — buoyancy/density keyword artifact, per both
+#               audits. worth-it remains uncovered.
+#   2026-09-19  1 -> 0 (builder, same audit item, closing the GOAL.md:187
+#               series): `worth-it` covered by REGISTRATION — PS.09,
+#               payoff-and-price-in-one-currency: NU_FLOORFOOD 0.08 sits
+#               inside PS.05's measured price span 0.016-0.069, so the
+#               break-even exists in-world and the claim (both trade
+#               signs present, above quantum, sign legible pre-departure)
+#               is falsifiable in both directions. COVERS: worth-it
+#               (claim), runnable (deps: PS.01 PASS). All seven GOAL:187
+#               primitives now carry a declared falsifiable claim.
+COMMITMENTS_UNCOVERED_BASELINE = 0
 
 
 def uncovered_commitments(rows=None) -> list:

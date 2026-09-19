@@ -9,11 +9,11 @@
   },
   "claim_dead": {
     "at": "2026-09-19",
-    "value": 6
+    "value": 4
   },
   "commitments_uncovered": {
     "at": "2026-09-19",
-    "value": 2
+    "value": 0
   },
   "cpu_foreclosed_now": {
     "at": "2026-09-15",
