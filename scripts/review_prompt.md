@@ -121,6 +121,18 @@ owner asked "who fixes the to-do lists?" (2026-08-09):
    Mon, you Sun). An organ silent past 2x its cadence is a FOR THE OWNER
    finding; silence is never success.
 
+   D30's fired default (2026-09-19) makes the builder's case STANDING, not
+   one-off: count the consecutive dark slots (PACING or refusal, no
+   iteration) in /data/jack-logs/ladder.log yourself, and whenever the
+   streak exceeds 2x the builder's hourly cadence, print it as a FOR THE
+   OWNER finding BESIDE the week's GPU-expiry forecast — free hours left in
+   the current %Y-W%U week of experiments/gpu_budget.json and the Saturday
+   they expire — so a blackout is visible on its first day with its
+   perishable cost priced in the same sentence, never again discovered by a
+   human reading a log tail. Report only: the pace line, PACE_FLOOR,
+   PACE_CAP and the 90% hard stop are exactly as they were; this paragraph
+   is D30's default and deleting it is the reversal.
+
 ## Part 3 — Output
 
 **COMMIT EACH DISPOSITION AS YOU MAKE IT — never hold your acts dirty until

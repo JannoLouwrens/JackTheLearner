@@ -6857,6 +6857,26 @@ hand. If the desk's disposition lands first and the owner then rules (iii), this
 entry closes at zero cost; if the owner rules (iv), the marking change is theirs
 to grant and the desk's row inherits it.
 
+## D30 — RESOLVED BY ARMED DEFAULT, fired 2026-09-19 ~00:2x UTC (builder), inside its own SAME-DAY RACE — before the 06:37 sitting that must read it. Off your desk; your recommended option (i) remains yours to rule at any time.
+
+**The owner did not rule by 2026-09-18, so the pre-registered default fired.**
+
+Default **(v) REPORT THE STREAK, GATE NOTHING, RELAX NOTHING.** One paragraph
+added to `scripts/review_prompt.md` Part 2.5 §4: a builder dark streak past 2x
+its hourly cadence is a STANDING FOR THE OWNER finding, counted from
+`ladder.log` and printed beside the week's GPU-expiry forecast from
+`gpu_budget.json`, so a blackout is visible on day one with its perishable
+cost priced in the same sentence. `PACE_FLOOR`, `PACE_CAP`, the pace line and
+the 90% hard stop are byte-identical — no code was touched at all. Options
+(i)/(ii) loosen a gate by silence (`D26`'s reasoning), (iii) spends money
+outside the repo — none was taken. The desk's recommendation — **(i) pace
+against this project's OWN attributed spend** — is quoted in the full record
+and stays open to you at no cost; the default's own text priced its firing
+honestly: it fixes nothing and could not save W37's hours. Reversal: delete
+the one paragraph. Full record in `docs/DECISIONS_RESOLVED.md`.
+
+*Superseded entry retained below, as this file's convention requires.*
+
 ## D30 — The builder has been dark for 18 consecutive hourly slots on a meter three-quarters of which this project did not spend, and 26.51 free GPU-hours expire on Saturday with nobody awake to dispatch them. (2026-09-15, Review DAILY)
 
 **The measurement, taken this morning and not quoted from anyone.**

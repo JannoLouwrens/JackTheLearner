@@ -1377,3 +1377,64 @@ read live at `8d623b3`); `experiments/cpu_budget.py` (`CPU_DAY_CEILING_S`);
 `experiments/rtf.py` (`BUDGET_SECONDS`); `experiments/protocol.py:254`
 (`CPU_DAYS = "cpu<48h"`); the registry's six `Budget.CPU_DAYS` ids, read live
 at firing.
+
+## D30 — RESOLVED BY ARMED DEFAULT (fired 2026-09-19 ~00:2x UTC, builder): (v) REPORT THE STREAK, GATE NOTHING, RELAX NOTHING. A builder dark streak past 2x cadence is now a standing FOR THE OWNER finding on the Review's page, printed beside the week's GPU-expiry forecast. The pace line, PACE_FLOOR, PACE_CAP and the 90% stop are byte-identical.
+
+**The owner did not rule by 2026-09-18, so the pre-registered default fired —
+inside its own SAME-DAY RACE.** `decisions.py` flagged this entry
+DEFAULT-ACTION-SAME-DAY: its firing day (2026-09-19) is also the day of the
+06:37 sitting that must read the paragraph, so the deadline had an HOUR, not a
+date. Fired at ~00:2x, six hours ahead of the sitting.
+
+**The question** (2026-09-15, Review DAILY): the builder was 18 consecutive
+hourly slots dark — later 41 — on `week:all models`, a meter
+`usage_attribution.py` measured as **75% not this project** (total 37: builder
+7, desks 2, outside 28), while the pace line rises at a fixed 0.3869 pts/h
+against consumption arriving at ~1.45 pts/h. The gap widens on its own: the
+builder does not come back by waiting, and 26.51 free W37 GPU-hours were
+expiring with an authorised buyer (`T1.08` §9d, ~1.05 h) and nobody awake to
+dispatch it. The blackout ended on 09-17 when the week reset — the default's
+own text said plainly that firing after Saturday could not save the quota and
+was not offered as though it could.
+
+**What fired.** One paragraph in `scripts/review_prompt.md` Part 2.5 §4 (the
+organ-liveness duty): the Review now counts the builder's consecutive dark
+slots (PACING or refusal, no iteration) from `/data/jack-logs/ladder.log`
+itself, and whenever the streak exceeds 2x the hourly cadence it prints a FOR
+THE OWNER finding BESIDE the week's GPU-expiry forecast (free hours left in
+the current `%Y-W%U` week of `experiments/gpu_budget.json` and the Saturday
+they expire) — a blackout becomes visible on its first day, with its
+perishable cost priced in the same sentence. Report only; no code, no meter,
+no gate was touched.
+
+**THE LOSERS, recorded as this page requires.** **(i) pace against this
+project's OWN attributed spend** — the desk's explicit RECOMMENDATION, and
+still refused as a default: it loosens a gate by silence, the exact reasoning
+`D26` used twelve hours before the blackout began, and an organ may not vote
+itself more budget. It remains the owner's to rule at any later date at no
+cost, and the measurement that would inform it (75% outside share) is now in
+this record. **(ii) raise PACE_FLOOR 25 → 45** — same defect, strictly
+blunter. **(iii) separate the meters** — spends money and acts outside the
+repo; no default may do either. **(iv) accept it** — a third GPU-expiry class
+(W32 8.82 h, W33 22.11 h, W37 pending at firing) written off as weather.
+
+**The price, restated because the entry priced it, and it is unusually
+high:** (v) fixes nothing. It makes the next blackout visible on the day it
+starts instead of on day two. That is all it buys, and it was fired knowing
+that.
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved in
+either direction, no control loosened, no new permission taken, nothing
+re-run, no certificate staled (`review_prompt.md` is in no spec's
+`IMPL_DEPS`), no spec failed, no run refused, no commitment claim-dead.
+`decisions --check` rc=0 and `--firing-check WORKTREE` run before the commit.
+
+**To reverse:** delete the one paragraph from `scripts/review_prompt.md`; no
+code, no threshold, no ledger row, no re-run.
+
+Evidence: `docs/DECISIONS_NEEDED.md` (the full entry, its measurement block
+and its options table); `scripts/review_prompt.md` Part 2.5 §4 (the
+paragraph); `scripts/lib_usage.sh` (pace line, untouched);
+`scripts/usage_attribution.py` (the 75% reading);
+`experiments/gpu_budget.json` (`2026-W37`); `docs/DECISIONS_RESOLVED.md` `D26`
+(the reasoning (i) was refused under, twice).
