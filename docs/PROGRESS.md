@@ -5,242 +5,281 @@
 > Mode: **DAILY** (Part 1 over the last 24 h, and Part 2.5 in full). Part 2 is
 > deliberately skipped — tests are re-examined on Sundays.
 
-**2026-09-18 18:22–18:4x UTC — DAILY, held on the third attempt.** Window: the
-24 hours since 2026-09-17 18:00. This sitting is the *retry* poll: the 06:37
-run exited rc=1, the 15:22 retry was refused by the CLI at the door in 8 s on
-session-limit wording and was wrongly stamped as a spent sitting, and the
-builder's own 17:12 repair (`923661e`) is the only reason a third poll existed.
+**2026-09-19 06:37–07:0x UTC — DAILY, held on the first attempt.** Window: the
+24 hours since 2026-09-18 18:00.
 
-*The one sentence: **the builder had its best day in ten — 26 commits, 7 settle
-events, three audit findings shipped with their staled certificates re-bought,
-and a brand-new spec that FAILED exactly where its author pre-registered it
-would — while this desk, arriving twelve hours late with minutes on the clock,
-disposed not one of the 47 live rows whose drain its own instrument now calls
-UNBOUNDED.***
+*The one sentence: **the builder wrote the dies-with-parent lesson into
+`LESSONS.md` at 05:18 and broke it at 06:09 — and the organ built to notice
+exactly that was wired behind a branch that never runs on a live slot — while
+this desk finally did the two things it has been promising for three days:
+rewrote the steering block whose opening sentence had been false for four days,
+and disposed two overdue rows, the first reduction it has made to its own
+violation count since the thirteen broke together on 09-13.***
 
-> This page is the RECEIPT for commits that already exist. The trend row
-> (`docs/PROGRESS_LOG.md`) was committed before this page was written:
-> `4136753`. This sitting made no other act, and that is the finding about it.
+> This page is the RECEIPT for commits that already exist, every one of them
+> made before this page was written: `c124fad` (steering `1^9`/`2^9`),
+> `5206753` (`waits-on-declared-field` DISPOSITIONED), `75acde7`
+> (`hash-salt-lottery-in-a-gated-metric` DISPOSITIONED), `d2a6580` (ratchets
+> record), `8b10fd7` (the trend row).
 
 ---
 
 ## Part 1 — the numbers, then the honesty
 
-**Velocity.** 108/249 demonstrated, **43.4%** — flat against 09-16's 108/249,
-the **third consecutive zero-net day**. Ledger composition: PASS 108, FAIL 26,
-VOID 14, BLOCKED 1 across 149 rows carrying an attempt. Rework **78.5%**
-(up 0.1 from 78.4% — one more spec crossed into attempt > 1, which is what a
-day of re-buys does and is not a regression). 26 commits in the window, 54
-ledger-touching commits over 7 days.
+**Velocity.** 108/249 demonstrated, **43.4%** — the **fourth consecutive
+zero-net day**. Ledger composition: PASS 108, FAIL 26, VOID 14, BLOCKED 1 across
+149 rows carrying an attempt. Rework **78.5%** (117 of 149, unchanged). 33
+commits in the window, 28 of them the builder's, 6 touching the ledger.
 
-**But the flat 108 is misleading in the builder's favour, not against it.**
-Zero net does not mean zero work here: the window contains `T1.07` re-bought
-PASS at attempt 5 by reattaching to a Kaggle kernel the watcher had already
-timed out on (`worst_lr_advantage` 1.796, control absurd_advantage 0.0007,
-failed as required), `T0.12`/`T0.36`/`T0.33`/`T0.21` all re-bought clean after
-their instruments were edited underneath them, and the `T1.08` backend probe
-landing COMPLETE first try on the §9d stdout-carry. Four of those five are
-certificates being kept *current* rather than capabilities being added — real
-work that the demonstrated count is structurally unable to show.
+**The frontier.** `run next`: **44 runnable, 0 fresh** — 29 carry a settled
+verdict, 15 are held by a park, a foreclosure or an open decision. Unchanged in
+shape from yesterday, and the reason is unchanged: every path off that board
+runs through a design answer owed by **this desk**.
 
-**The frontier.** `run next` is blunt about it: **44 runnable, 0 fresh** — 29
-carry a settled verdict, 15 are held by a park, a foreclosure or an open
-decision. The single most important unblocked item is not on that list at all,
-because it is a *design* answer this desk owes: the `T1.08` pipeline repair.
-Branch (i) BOTH_ABOVE fired on 09-18 (`cv_T4` 42.786, `cv_P100` 36.577,
-discordance 1.17), which settles that `heldout_cv_pct` ~40 is a fact about this
-repo's pipeline rather than the P100 it was first measured on — so the repair
-is the pipeline, the 7.0 bar does not move, and venue selection stays
-forbidden. The builder correctly refused to smuggle that new question into the
-probe's ACTED stamp. It is now the largest unowned design question on the board
-and it has no queue row of its own yet.
+**The day's finding, and it is a clean one.** The 05:18 slot committed `LT.01`'s
+C2' implementation clean at `b16de57` — two-branch gameability with an
+adversarial height-seeker, pilot `adv_rise` **0.7142 m** over the 0.6 m bar,
+null 0.0099, 0 ladder engagements — and in the same motion wrote the **fourth**
+occurrence of the dies-with-parent class into `LESSONS.md`. Fifty-one minutes
+later the 06:07 slot declared `run_spec LT.01` as pid `1825829` at **06:08:31**,
+ended `rc=0` at **06:09:57**, and stamped the child `EXITED` in that same
+second — **86 s into a job whose attempt 1 took 1374 s.** Fifth occurrence.
+`LT.01` is still `attempt: 1` at `28a232e`; attempt 2 was never bought.
+
+**And the part that matters more than the lost run: nobody was told.**
+`notice_exited_dispatches()` was shipped under the 99th audit's B6 for precisely
+this event — it reads `declared_pids` for `EXITED` rows naming a
+`dispatch`/`run_spec`/`detached` launch and says each loudly into `ladder.log`.
+But `scripts/ladder_loop.sh:199` wires it as
+`pace_gate say || { harvest_bookkeeping; notice_exited_dispatches; exit 0; }` —
+**it is called only when the slot is PACE-SKIPPED.** A slot that actually runs
+never calls it. So today's death, on a fully awake builder, produced no notice
+anywhere, and would have been found the way the last four were: by a human
+reading a log tail. That is B6's own stated failure mode, occurring inside B6.
+Both are ordered to the builder as items 1 and 2 of `1^9`.
+
+*Checked and not claimed:* `D20` fired at ~00:2x today declaring the detached
+lane CLOSED to registered spec work, which reads at first glance like a
+same-day violation. It is not one — `D20`'s closure is scoped to the `cpu<48h`
+class and the `launch_detached.sh` lane, and `LT.01` is neither. The honest
+adjacency is worth more than the false hit: the **sanctioned** detached lane has
+a wall, a stamp and a ruling, and on the same morning an **ad-hoc** backgrounded
+run with none of those quietly lost a unit.
 
 **Transitive-block mass, recomputed.** `unreachable = 97` (at its declared floor
-since 09-13), `goal_unrunnable = 7`, `claim_dead = 8` (up from 4 on purpose —
-the builder registered `GOAL.md:187`'s four missing survival primitives, which
-made an existing hole countable; the commit says so). `fail_unowned = 0`, but
-read D23's warning on that zero: **24 of the 26 owned FAILs are owned by a
-queue row**, i.e. by a dated promise from *this desk*, not by a repair. The
-queue's drain and the ladder's block mass are the same number viewed twice.
+since 09-13), `goal_unrunnable = 7`, `claim_dead = 8`, `commitments_uncovered =
+4` (at floor). `fail_unowned = 0` — and `D23`'s warning on that zero now reads
+harder than yesterday: **24 of the 26 owned FAILs are owned by a queue row**,
+i.e. by a dated promise from this desk. `gpu_hours_no_verdict` **48.42 h TOTAL**.
+The ladder's block mass and this desk's backlog are one number seen twice.
 
-**Goodhart check.** Rate flat at 43.4% on a flat registry (249) for the third
-day. That is neither the ladder holding ground nor outrunning itself — it is a
-registry that did not grow and a demonstrated count that did not move, while
-underneath it seven specs settled. The honest reading: today the *rate* carried
-no information, and the composition did.
+**Goodhart check.** Rate flat at 43.4% on a flat registry (249) for the fourth
+day. **This is neither the ladder holding ground nor outrunning itself — the
+rate carried no information again today, and it is the fourth day in a row it
+has not.** Four consecutive readings that cannot move is itself the signal: a
+metric that is structurally unable to register certificate maintenance, design
+disposal or a refused-corpus finding is not measuring this project's weeks any
+more. I am not proposing to change it — a demonstrated count that cannot be
+inflated is worth more than one that moves — but a chief scientist who quotes it
+a fifth time without saying that would be quoting a number he knows is inert.
 
-**Effort vs goal.** Of the window's 26 commits, by subject: ~18 served the
-instrument (audit findings B4/B5/B6, the review retry lane, the GPU overrun
-mark, the coverage register, certificate re-buys), ~5 served the ladder's
-science (`T1.07` re-buy, the `T1.08` probe and its ruling, `HR.1`'s
-implementation and run), 3 were journal/lesson. That is the same instrument-heavy
-ratio the desk has flagged for a week — with one difference worth naming: today
-the instrument work was *ordered by an audit and closed by it*, not discovered
-by the desk looking at its own files.
+**Effort vs goal.** Of the window's 33 commits: ~20 served the instrument
+(`T3.09`'s registry stamp, the ratchet-counter edit, `T0.21`/`T0.36` re-buys,
+`D20`/`D30`'s firings, my five), ~6 served the ladder's science (`LT.01`'s C2'
+implementation and pilot, the attempt-2 launch that died), ~7 journal and
+lesson. The instrument-heavy ratio the desk has flagged for a week persists.
 
 ### The honest paragraph (no numbers)
 
-Today the ladder did the thing it exists to do, and it did it cheaply. A new
-spec was built to ask whether a voice corpus could honestly support the speaker
-work stacked behind it, its author wrote down in advance which way he expected
-it to fail, and it failed that way — the microphone, not the voice, was doing
-the identifying, and it was caught for seconds of CPU before one hour of GPU
-reached the family that would have quoted the number. That is a creature's
-project behaving like a creature's project: a claim that could have been
-believed, refused before it was paid for. It is also the only part of the day
-that was about Jack. Everything else — and it was good work, honestly done —
-was the machine tending the machine: fixing the organ that audits the organ
-that fixes it, re-buying certificates that instruments invalidated by being
-improved. The drift to name is not laziness and it is not dishonesty, it is
-*gravity*: a system this well-instrumented generates enough real, legitimate,
-findable work about itself to fill every slot forever, and the queue is now
-formally losing, which means the desk that decides what the builder should do
-next is falling behind the rate at which it is asked. A creature is not built
-out of findings about files. The single most important step toward Jack today
-was the fixture that refused to let a corpus lie to us; the most concerning
-drift is that the desk which was supposed to convert findings into decisions
-sat out two of three days and today disposed nothing at all.
+The most striking thing about today is not that a run was lost — runs are lost —
+but that the system wrote down the exact lesson that would have prevented it,
+and then, inside the hour, with the ink wet, did the thing again. That is worth
+sitting with, because it is a finding about what kind of organ `LESSONS.md` is.
+It is a memory, and the system has been treating it as a control. A memory that
+is read by a fresh agent at the top of every slot is a real and valuable thing,
+but it competes for attention with everything else on the page, and attention is
+exactly the resource a tired loop at six in the morning does not have. The
+control surface is code, and the code that was supposed to catch this was built
+correctly and then attached to the one branch where the event cannot happen — a
+watchman posted at the door nobody uses. Against that, the honest credit: the
+builder ran every slot it was given, fired two armed defaults with the required
+wording and without touching a threshold, and the C2' implementation it produced
+is a genuinely good piece of adversarial science that would have cleared its bar
+if it had been allowed to finish. And this desk, for the first time since its
+promises broke, actually reduced its own debt instead of writing about it — two
+rulings that go beyond the menus they were offered, one of which found that the
+option the builder called cheapest could never have fired at all. The drift to
+name is unchanged and it is mine: a creature is not built out of findings about
+files, and the reason the perishable hours died again last night with nothing
+legal to spend them on is that the answers that would have unblocked them are
+sitting on my desk with dates on them that have already passed.
 
 ---
 
 ## Part 2.5 — steering maintenance
 
-**Organ liveness.** Ladder 18:07 (hourly — alive, and the 18:07 slot produced
-`HR.1`). Overseer 12:48 (6-hourly — alive, next ~18:48). Field watch 09-14
-05:57 (Monday weekly — on cadence, next 09-21; week 7's two findings are both
-ROUTED and cited by queue rows, 0 UNROUTED-FIELD-FINDING). **The Review is the
-only organ that missed, and it missed twice today** — the cause is known, is
-fixed in `923661e`, and this sitting is the proof the fix works.
+**Organ liveness.** Ladder **06:07** — alive, and **7 of 7 hourly slots ran
+today** (00:07 through 06:07, no PACING, no ABORT). Overseer **06:37** —
+alive, running concurrently with this sitting as it does every morning. Field
+watch **09-14 05:57** — on cadence (Monday weekly, next 09-21). Review — this
+sitting, held first attempt, the repaired lane's second clean day.
 
-**`FIELD_WATCH.md`** is unchanged since 09-14 (`9075d58`); nothing new to
-consume. Nominations from week 7 remain routed as
-`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere` and
-`me1-similarity-floor-never-abstains`.
+**`ladder_prompt.md` PRIORITY — REWRITTEN (`c124fad`), the first act of this
+sitting exactly as the 09-18 page promised.** `1^9`/`2^9` supersedes `1^8`,
+whose opening sentence (*"YOU HAVE BEEN DARK FOR 18 CONSECUTIVE SLOTS"*) and
+whose entire ordering (priced in W37 hours *"expiring Sat 2026-09-19"*) had been
+false for four days. All four of `1^8`'s items were discharged or dead. The new
+block points at living sources — it quotes `run next` as *"0 fresh of 44"* with
+the standing instruction to take counts from the tool, never from the page. Its
+three items: run `LT.01` attempt 2 **in the foreground**; fix the
+`notice_exited_dispatches()` wiring and re-buy `T0.33`; refuse `W38`'s opening
+inventory in advance, because the absence of a legal buyer is my debt.
 
-**`ladder_prompt.md` PRIORITY** — **not edited this sitting, deliberately.**
-Items 1–4 of the last block (fire `D19`, the `T1.08` §9d repair, `T1.07`'s
-re-buy, the coverage register) are all discharged as of today; item 5
-(`W1.01`/`W1.03` registration) is still correctly gated on
-`w1-world-edit-window`, which is *mine* and is due today and unruled. Rewriting
-the block to point at the `T1.08` pipeline-repair design before I have written
-that design would be the 09-10 mistake repeated — steering the builder at a
-question the desk has not answered. The block is stale in the sense that it
-names finished work; it is not *wrong*, and the builder has demonstrated four
-days running that it reads past discharged items. This is a named debt, not an
-oversight: **the first act of the next sitting is this block.**
+**`FIELD_WATCH.md`** unchanged since 09-14 (`9075d58`) — nothing to consume.
+Week 7's two findings remain ROUTED and cited, 0 `UNROUTED-FIELD-FINDING`.
 
-**Seat staleness.** Not re-read this sitting. `champions_trigger_debt = 3`
-(unchanged since 09-03) and `champions_unwinnable = 4` (at floor, unchanged
-since 09-13) — both stand where they stood, neither moved today.
+**Seat staleness.** `champions_trigger_debt = 3` (unchanged since 09-03),
+`champions_unwinnable = 4` (at floor since 09-13). Neither moved; both remain
+this desk's standing debt and neither is due today.
 
-**Queue.** 32 OPEN, 3 HELD, 12 DISPOSITIONED, 15 ACTED of 62 routed; 47 live;
-oldest live 29 d; **drain UNBOUNDED**, arrivals 16 vs disposals 7 over the
-trailing 7 cycles. `review_queue_violations` fell 11 → 10 today — not by this
-desk, but by the builder repairing its own MALFORMED five-field stamp on the
-`t108` row (`467cf1b`), keeping the superseded DISPOSITIONED text verbatim as
-the never-delete rule requires. One row arrived:
-`hr1-clean-stratum-is-a-microphone-measurement` (DUE 09-22, three candidate
-repair arms already named by the builder, including the observation that the
-registry's VCTK rejection on disk-space grounds predates `D19` and the `/data`
-expansion and is therefore stale).
+**Queue — the first real movement in the desk's favour.** Started the sitting at
+**14 OVERDUE**, ends at **12**. `review_queue_violations` 10 → 12 recorded in
+`d2a6580`, with both movers named: **+4** the midnight rollover of four more
+DUE-09-18 rows (a clock movement, the fourth consecutive night this desk has
+paid it) and **−2** the two disposals below. `review_queue_net_arrivals` 8
+(clock +0, act −1) — **not mine**, it already read 8 before my first commit, and
+it is recorded rather than claimed.
+
+---
+
+## DISPOSED THIS SITTING
+
+**1. `waits-on-declared-field` → DISPOSITIONED (`5206753`), re-dated 09-21.**
+The grammar question is answered **yes**: a live non-`HELD` row may declare
+`WAITS-ON: <row id>`. The proposal's core judgment is right — coupling and
+ageing-exemption are different things and `BLOCKED-BY:` conflates them. These
+rows *should* age; `WAITS-ON:` buys nothing, and that emptiness is the feature.
+The **base** proposal is refused on the builder's own case against it: an
+optional unenforced field is written by whoever remembers, and a grouped count
+from partial declarations is *confidently wrong*, worse than today's absent
+line. **The cheaper variant is adopted with one repair, because as written it
+could never have fired**: *"print only when EVERY row in a pile declares one"*
+is unsatisfiable for a genuinely independent row, which has no root to name — so
+the line never prints and the feature is inert. `WAITS-ON: none` becomes an
+explicit declaration of independence, and the grouped line gates on every live
+row carrying an **explicit** declaration. That converts *"did the router
+remember?"* into a completeness question the instrument answers mechanically —
+the same move `decisions.py` makes when it refuses to guess which owner items
+are asks and demands a written `NO-DECISION:`. **Silence is reported; exemption
+is written down.** Strengthen-only: declaration-only, may touch no number
+already printed, a `WAITS-ON:` naming a nonexistent row is a new VIOLATION, and
+an unmet gate must print *why* it is unmet. Stales and re-buys `T0.31` as a
+strengthening (18 → 19 properties).
+
+**2. `hash-salt-lottery-in-a-gated-metric` → DISPOSITIONED (`75acde7`),
+re-dated 09-21. None of the three options offered.** `(iii) NOTHING` is refused
+on the row's own evidence: the verdicts survived only because both specs miss
+`match` and `unanimity` by a mile, so `swap_agree` was never binding — luck
+about which conjunct was slack, and the same lottery was one tie from deciding a
+**seat**. `(i) THE STATIC AST SCREEN` is refused too, and **the builder's
+restraint around `D27` was right**: shipping a second unmeasured heuristic while
+`D27` asks whether screens work at all — carrying 104-of-107 flagged, 3-of-12
+hand-checks real — would spend the exact credibility `D27` is pricing. **But
+the menu carries a false constraint.** `(ii)` was priced out for one reason,
+*"it doubles every spec's cost"*, and **it does not need to run on every spec**.
+So: **(iv) run the exact second-salt differential, but only where the metric
+DECIDES** — BINDING (within a declared margin of its gate) or ELIGIBILITY (a leg
+in a seat race or `bakeoff.py` tie-break, unconditionally, since a tie-break is
+decided at zero margin by construction). **(iv) is stronger than (i) and does
+not collide with `D27` at all**: a static screen is a heuristic with a
+false-positive rate to calibrate; a differential re-run is a **measurement** —
+exact, zero false positives, nothing to write down — so it may ship whichever
+way `D27` falls. Ordered: **measure the deciding set and its cost against
+`CPU_DAY_CEILING_S` and report before implementing**; if it does not fit, do not
+trim the rule to fit — the ELIGIBILITY half ships alone. Margin declared in
+source before scanning, never tuned after seeing what it captures. **No bar
+moves in either direction**: a salt-dependent binding metric is repaired to
+determinism, never covered by its gate. CPU classes only.
 
 ---
 
 ## FOR THE BUILDER
 
-Short, because four of yesterday's seven items are discharged and I will not
-re-issue finished work.
+Ordered, and the order is in `scripts/ladder_prompt.md` `1^9` as the binding
+copy — this is the summary, that is the instruction.
 
-1. **`D30`'s default is in a same-day race — tomorrow, 2026-09-19.**
-   `decisions` flags it `DEFAULT-ACTION-SAME-DAY`: the default names 09-19,
-   which is its own earliest firing day, and the deadline has an *hour* that
-   nothing date-granular can enforce. **The slot that fires it must know it is
-   in a race and must check the hour, not the date.** This is the single
-   time-critical item on the board.
-2. **`W1.01`/`W1.03` registration stays NOT permitted.** Unchanged and still
-   gated on `w1-world-edit-window`, which is mine, is due today, and is unruled
-   because I sat down at 18:22. Register nothing; the delay is my fault, not a
-   change of position.
-3. **Do not pre-empt the `HR.1` fixture-redesign disposition (DUE 09-22).**
-   You named the three arms correctly and routing it rather than picking one
-   was the right call. The choice among (a) channel equalisation, (b) promoting
-   the noise stratum, (c) a different corpus is mine, and it will be decided as
-   a bakeoff, not an argument. Likewise unchanged: the `A4` disposition, the
-   `T2.10` repair design, and `UB.10`'s successor arm.
-4. **When a slot pages out, say so in the journal.** Third asking, and today it
-   cost nothing only because the log tail happened to be legible.
+1. **`LT.01` attempt 2, IN THE FOREGROUND.** Check `LT.01`'s `attempt` first; if
+   it is still 1 at `28a232e`, it is still owed. ~23 min of CPU fits a slot with
+   room. On landing: read the branch, commit the row by name, stamp
+   `lt01-c2-body-cannot-rise` ACTED with the executing commit, journal. **The
+   0.6 m bar does not move in either branch.**
+2. **Wire `notice_exited_dispatches()` onto the live path**, not only behind
+   `pace_gate`. One line of wiring, noticing only, `add -A` ban intact; `T0.33`
+   certifies `ladder_loop.sh`, so re-buy it in the same motion.
+3. **Refuse `W38`'s opening inventory.** No legal buyer exists and manufacturing
+   one is not the repair. If it is still unbought on Sunday, that is a finding
+   about **me** and I will write it as one.
+4. **Implement the two dispositions above when their dates come (09-21)** —
+   `WAITS-ON:` with `none` permitted, and the `(iv)` measurement **before** the
+   `(iv)` implementation. Do not start either early and do not fold them
+   together.
+5. **Still do not pre-empt** `A4`, `T2.10`'s repair, `SO.07`, `SO.10`, `T1.08`'s
+   pipeline repair, `HR.1`'s fixture redesign, or `UB.10`'s successor arm. All
+   mine, all overdue. Naming candidate arms, as you did on `HR.1`, remains
+   welcome and is not the same as choosing one.
 
 ---
 
 ## FOR THE OWNER
 
-**1. `D30` — cited, not re-asked (`decide_by` 2026-09-25), with one new fact.**
-The blackout that motivated it has ended — the builder ran 26 commits today —
-so the *cost* half of that entry is no longer accruing. What is new is
-procedural and it is on the builder's list above: `D30`'s own armed default
-fires on 2026-09-19 at an hour no date-granular slot can enforce. Recommendation
-on the entry unchanged. Nothing new is asked of you here.
+**1. NO-DECISION: liveness and the standing `D30` report, nothing here to rule
+on.** All four organs are alive and on cadence: ladder **7 of 7 slots today**,
+overseer 06:37, field watch 09-14 (next 09-21), Review this sitting. **Dark-slot
+streak: 0** — `D30`'s standing report, counted from `/data/jack-logs/ladder.log`
+and not from anyone's summary; nothing exceeds 2× the hourly cadence and there
+is no blackout to declare. **Beside it, as `D30`'s default requires, the
+perishable price:** `2026-W37` closed overnight with **~27.78 free Kaggle hours
+expired unspent** and **no legal buyer**, which the 02:0x audit confirmed
+correct. **`2026-W38` opens tomorrow, 2026-09-20, with 30 free hours that expire
+Saturday 2026-09-26.** There is still no legal buyer, because every GPU-class
+pilot is blocked behind a Review design row. That is a fact about item 2, not a
+new ask.
 
-**2. `D28` — cited, not re-asked (`decide_by` 2026-09-21), and today is the
-fourth piece of evidence.** The amendment I asked for —
-*"overdue first UNLESS a perishable resource is the reason"* — would today have
-produced the right order for a reason none of the first three days showed: the
-perishable resource was **the sitting itself**. Arriving at 18:22 with minutes
-of wall-clock, the honest act was to secure the trend row and declare the
-backlog untouched, rather than start a ruling I could not finish and leave it
-dirty. The scar that rule exists to prevent (74th audit: five dirty files, four
-acts unmarked) is the same scar. Unchanged ask, stronger case.
+**2. `D28` — cited, not re-asked (`decide_by` 2026-09-21), with the piece of
+evidence it did not have.** `D28` measures this desk's drain as UNBOUNDED and
+asks you to price the repair. What today adds is **what the drain actually
+costs in a currency that perishes**: the backlog is not merely embarrassing
+paperwork, it is the reason ~27.78 GPU-hours died last night with nothing legal
+to spend them on, and the reason the same will happen to 30 more next Saturday
+unless it changes. The queue and the idle quota are the same problem billed to
+two different accounts. I note also, in fairness to the entry rather than to
+myself, the first counter-evidence in its favour: this sitting disposed **two**
+rows against a demonstrated rate of ~1, so the capacity `D28` doubts is not
+zero — it is just far below the arrival rate. Recommendation on the entry
+unchanged. I also note the overseer's armed reclassification notice (fires
+2026-09-21 absent your word), and I do not object to it.
 
-**3. `D31` — cited, not re-asked (`decide_by` 2026-09-25).** The per-job GPU
-overrun mark shipped today on every backend (`2bfa84f`, observe-only, no
-ceiling invented, no dispatch refused). The ceiling question stays yours exactly
-as the entry frames it. I note only that `gpu_hours_no_verdict` now reads
-**48.42 h TOTAL** with the two new buckets the same audit added — `PROBE` 3.59 h
-over 4 jobs and `PILOT` 2.00 h over 2 — hours that previously read as zero
-waste and now read as what they are.
+**3. `D27` — cited, not re-asked (`decide_by` 2026-09-20, tomorrow), and today
+this desk voted on it with its hands.** `D27` asks whether this repo should buy
+mechanical screens, against a measured 104-of-107 false-positive showing. Faced
+with a live instance of exactly that trade in
+`hash-salt-lottery-in-a-gated-metric`, I **declined the screen and chose a
+measurement instead** — a differential re-run has no false-positive rate because
+it does not guess. That is one data point, not an argument for your answer, and
+it cuts in a specific direction worth naming: the reason `(iv)` was available at
+all is that the question was narrow enough to measure exhaustively. Where a
+question is not narrow enough, `D27`'s trade is still live and still yours.
 
-**4. NO-DECISION: liveness report, nothing here to rule on.** Ladder, overseer
-and field watch all alive and on cadence. The Review missed 09-17 entirely and
-missed twice on 09-18; the cause is diagnosed (`99c745b`) and fixed
-(`923661e`), and this page exists because the fix worked on its first live test.
-
-**5. NO-DECISION: the day's acts, declared because the absence of them is the
-report.** This sitting made **one** act — the `PROGRESS_LOG.md` trend row
-(`4136753`) — and disposed **zero** queue rows. Four rows came due today
-(`w1-world-edit-window`, `aggregate-hides-worst-seed`,
-`so07-recording-worlds-fail-the-reference-bar`,
-`goal-187-names-seven-primitives-four-have-no-commitment`) and four more were
-already overdue; **all eight stand, none re-dated**. I am not re-dating a
-promise I did not attempt — a blind re-date is how a queue turns into
-decoration. No threshold moved in any direction, no ledger row was written by
-hand, no spec was re-run, no seat was re-marked, no steering block was
-rewritten.
-
-**6. The fork I flagged on 09-16 is still open and still not ripe, and I am
-carrying it forward so it does not vanish. NO-DECISION today: it is on the
-queue with a date, and the desk owes the ruling before it reaches you.**
-`GOAL.md:186-188` names seven primitives survival is supposed to earn — *hot,
-heavy, far, tiring, dangerous, worth-it, that-person-lied*. The builder has now
-done the monotone half: all four unregistered ones entered `coverage.py`'s
-commitment register, and `claim_dead` rose 4 → 8, which is the gap becoming
-visible rather than a regression. **The fork — commit to falsifiable claims for
-those four, or correct `GOAL.md`'s sentence to name only what we intend to
-test — remains yours**, and if it resolves toward correcting the words it will
-reach you as a `D` entry with the recommendation quoted verbatim. Queue row:
-`goal-187-names-seven-primitives-four-have-no-commitment`, DUE today, unruled.
-
-**7. THE ONE I WOULD PUT IN FRONT OF YOU IF YOU READ ONLY ONE ITEM.
-NO-DECISION: reported, not asked — the remedy is mine to attempt first, and
-asking you before I have tried would be handing you my own job.**
-`review-queue` now reports **drain UNBOUNDED** — 47 live rows, arrivals
-exceeding disposals by 9 over seven cycles, oldest live row 29 days, and 24 of
-the ladder's 26 owned FAILs owned by nothing but a dated promise from this
-desk. The instrument is explicit that a slow week is legal and that this is a
-metric and never a violation. It is still the truest sentence on this page:
-**the organ that decides what the builder does next is structurally behind, and
-a dated promise that is never paid is indistinguishable from a FAIL that nobody
-owns.** Sunday's FULL is where I attempt the remedy — and I will state the
-attempt now so it can be checked against: *dispose the overdue class first and
-in bulk, ruling rather than re-dating, before Part 2 opens a single
-certificate.* If that fails to bend the drain, the question becomes whether the
-Review's cadence or its jurisdiction is wrong, and **that** one is yours.
+**4. NO-DECISION: a defect class at five occurrences, reported because it is
+about how this system learns, not because there is a fork in it.** The
+dies-with-parent class has now recurred five times, and the response each time
+has been to write a better `LESSONS.md` entry. Today gives the cleanest possible
+measurement of what that response is worth: the fourth entry was written at
+05:18 and the fifth occurrence happened at 06:09, by the same loop, 51 minutes
+later. **`LESSONS.md` is a memory, and it has been doing duty as a control.** I
+am not asking you to rule on this — the specific fix is cheap and is already
+ordered to the builder as item 2, and one clean instance does not justify a
+structural change to how this project records what it learns. I am putting it on
+your desk because if a sixth occurrence follows a fifth lesson, the conclusion
+will not be about `ladder_loop.sh` any more, and I would rather you had seen the
+fifth than met it at the sixth.
