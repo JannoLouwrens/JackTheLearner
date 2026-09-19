@@ -3799,6 +3799,28 @@ multi-hour-consequence dispatch even when the kernel is short, because the
 sizing decision downstream of it waits on the fetch — detach its watcher like
 any other, or accept that harvesting it is the next session's first chore.
 
+**Corollary, fourth occurrence (2026-09-19, the LT.01 C2' pilot) — when the
+COMPUTATION is local and the detached lane is closed, the deadline is part of
+the launch decision.** The 04:0x slot implemented the C2' adversary, launched
+its pilot as a session-child background command at 04:17, and hit its own
+`JACK_ITER_DEADLINE` at 04:18 — the harness killed the session and the pilot
+with it, leaving two 0-byte artifacts and an uncommitted working tree for the
+next slot to inherit by archaeology. Nothing was wrong with the pilot; the
+slot had ~90 seconds of runway and spent it starting a ~4.5-minute job. This
+is not the watcher class above wearing new clothes, because there was no
+durable remote half: with D20's firing closing the detached lane to
+registered-spec work, a local run's ONLY lifetime is the session's, so the
+launch rule inverts — you may not launch what you cannot outlive. Before
+starting any local computation, compare its projected runtime (the pilot
+record exists to carry exactly this number) against
+`JACK_ITER_DEADLINE - now`, and if it does not fit with margin for the
+commit, the correct act is what the inheriting slot did: commit the
+implementation clean, write the projection into the handoff, and let the next
+slot spend its full budget on the run as its first act. A timed-out slot that
+leaves an uncommitted tree also skips its journal entry, so the inheritance
+tax compounds: the next reader gets a diff with no stated intent — semantic
+diff before trusting it (the standing concurrency rule), then finish it.
+
 ## An absent field is honest; a field that silently records the RECORDER is a false one
 
 *(17th overseer audit, 2026-08-14)*
