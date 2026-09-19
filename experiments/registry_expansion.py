@@ -1685,7 +1685,22 @@ EXPANSION: list[Spec] = [
                "control cleared the claim's margin (shuf_gain +12.47 vs "
                "MARGIN_AFF 11.0) — under the corrected lane ordering that "
                "row is a VOID, the kills clause was NOT executed, and the "
-               "row is routed as t309-control-clears-the-claims-own-margin."),
+               "row is routed as t309-control-clears-the-claims-own-margin.\n"
+               "DISPOSITION STAMP 2026-09-19 (builder, executing "
+               "t309-control-clears-the-claims-own-margin, DISPOSITIONED "
+               "2026-09-08, decision (a)): the attempt-3 row IS a VOID under "
+               "the corrected lane and is NOT a kills-executing verdict — a "
+               "control that clears the claim's own margin voids the run "
+               "whichever way the claim went (law 2 class-3, unconditional). "
+               "The kills clause stays UNEXECUTED, and any future execution "
+               "must rest on a run whose controls behave: T3.09 re-runs ONLY "
+               "under a redesigned venue that can make advice distinguishable "
+               "from perturbation (likely downstream of w0-too-shallow). "
+               "(b) deletion-on-the-record was REFUSED; (c) re-siting the "
+               "consult survives as the constructive path, downstream of the "
+               "venue design. AlphaGeometryLoop.py stays. A note, not a run: "
+               "no threshold moved, nothing re-run, no certificate staled "
+               "(notes are deliberately outside SPEC_CLAIM_FIELDS)."),
 
     Spec("T3.10", 3, "Trunk knowledge survives action training",
          hypothesis="Linear probes on frozen-trunk features (object class, "
