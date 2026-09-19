@@ -6873,7 +6873,7 @@ EXPANSION: list[Spec] = [
          null_baseline="The random policy, which DEFINES the ruler: theta is its "
                        "90th-percentile irreducible error, so it reads "
                        "chaos_occupancy = 1.0 by construction.",
-         metric="chaos_detector_separation", budget=Budget.CPU_LONG,
+         metric="chaos_detector_separation", budget=Budget.CPU,
          depends_on=["LT.01", "PG.4"], seeds=3,
          control="Cross-check: the ICM agent WITH the panel present must be "
                  "flagged by BOTH detectors (panel_dwell > 0.4 AND "
@@ -6889,7 +6889,21 @@ EXPANSION: list[Spec] = [
                "pooled-fit forward model, out-of-fold, high error AND no "
                "reducibility when the training data doubles (LPM criterion, "
                "arXiv:2509.25438, used as a diagnostic not a reward). "
-               "thrash_ratio is reported as the model-free second signal."),
+               "thrash_ratio is reported as the model-free second signal. "
+               "SIZING RECORD (104th audit item 2, measured in the 18:0x "
+               "pilot 2026-09-19 on this box at load ~0.2): final pilot "
+               "ragdoll 3 lives 33.5 s + detector 1.3 s, slider 2 lives "
+               "28.1 s + detector 4.6 s — 68 s total; full-envelope "
+               "projection ~2.1 min/seed experiment + ~1.9 min/seed control "
+               "=> ~12-15 min for the whole 3-seed run. Re-declared "
+               "cpu<10min on that measurement (~4.8x headroom per "
+               "experiment under the 10 min label; child-kill window "
+               "10,800 s vs ~900 s projected). The struck class, cpu<2h, "
+               "enumerated at 54,000 s admission — ~60x the projected cost "
+               "— and refused this spec by 292 s on 2026-09-19 while the "
+               "day held 53,708 s. This edit loosens admission and "
+               "TIGHTENS the child-kill window (54,000 s -> 10,800 s); it "
+               "moves no threshold (SO.08's precedent, one block up)."),
 
     Spec("LT.03", 5, "THE LADDER TEST: curiosity alone climbs the ladder",
          hypothesis="With the environment returning reward identically zero, at "

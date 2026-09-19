@@ -167,7 +167,10 @@ slider 6000, detector at final constants):
   Runtime, final pilot: ragdoll 3 lives 33.5 s + detector 1.3 s; slider
   2 lives 28.1 s + detector 4.6 s; total 68 s. Full-envelope projection:
   ~2.1 min/seed experiment + ~1.9 min/seed control => ~12-15 min for
-  3 seeds, well inside CPU_LONG.
+  3 seeds. Cost class re-declared cpu<10min on this measurement (104th
+  audit item 2, SO.08's SIZING RECORD precedent — the registry notes
+  carry the record); the struck cpu<2h class enumerated at 54,000 s and
+  refused the registered run by 292 s on 2026-09-19.
 """
 from __future__ import annotations
 
