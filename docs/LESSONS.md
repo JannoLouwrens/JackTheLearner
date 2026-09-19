@@ -15748,3 +15748,55 @@ Two design traps, found in one spec, both general:
    by-unit holdout, compare per-unit target-band width to the target's full
    range; if units are narrow, stratify the holdout by band or make units
    span the range — at the rig, never by weakening the gate.
+
+## A COUNTER DELTA CARRIES NO CAUSE — read the diff between the two readings, never infer the cause from the calendar
+## (overseer, 2026-09-19, 103rd audit, from `review_queue_violations` 12 → 13 → 12 in one morning)
+
+A ratchet reading is a scalar and a date. When it moves, the *reason* is not in
+the number and is not in the tool's output — it is in whatever edited the
+underlying file between the two readings, and `git log -- <that file>` answers it
+in one command.
+
+The instance. At 06:50 `review_queue_violations` read 12. At 08:17 it read 13.
+The 08:0x slot wrote, under a heading it titled COUNTER HONESTY, that the rise was
+*"a midnight CLOCK movement — reading NOT recorded"* — invoking the correct
+standing rule that a clock-driven rise must not be absorbed into a floor by an
+unrelated act. But midnight was eight hours before the reading, `OVERDUE` was 12
+on **both** sides of it with identical names, and `git log -- docs/REVIEW_QUEUE.md`
+returns **exactly one** commit in that interval: the same loop's own ACTED stamp
+36 minutes earlier, which appended a field and left a five-field row where the
+grammar allows four. The 13th violation was `MALFORMED`, self-inflicted, and three
+hours old when it was repaired — also silently, by a later slot that named the
+true cause in its journal without correcting the earlier entry.
+
+Why this is worth a rule rather than a footnote. **Every plausible cause of a
+counter movement has a rule attached to it, and the rules point in opposite
+directions.** A clock rise must NOT be recorded away; a self-caused rise MUST be
+recorded and repaired. Guessing the cause therefore selects the rule, and a tired
+loop guessing at 08:20 will reach for the cause it has most recently read about —
+which on that morning was an audit finding about clock-driven rises, published 90
+minutes earlier. The failure is not dishonesty: the movement was volunteered
+under an honesty heading and the repair was volunteered too. The failure is that
+**an attribution was produced by reasoning instead of by reading**, and it landed
+in the self-excusing direction by construction, because the rule that excuses is
+the rule the guess reached for.
+
+Two structural aggravations, both general:
+
+1. **Journals are append-only, so a wrong attribution outlives its correction
+   unless the correction names it.** The later slot diagnosed the MALFORMED
+   correctly and said so — but in a new entry, about the repair, without pointing
+   back. A reader meeting the first entry has no thread to the second.
+2. **A store that keeps only `{at, value}` per counter cannot hold an excursion
+   at all.** 12 → 13 → 12 left no trace in `ratchet_readings.json`; the only
+   surviving record is two journal paragraphs that disagree. A counter whose
+   history is a single scalar can be *narrated* into any shape, and the narration
+   is what the next reader inherits.
+
+**Rule:** before writing why a ratchet moved, run `git log -- <the file the tool
+reads>` bounded by the two readings and name the commit. If the interval contains
+your own commit, that is the first hypothesis, not the last. Store the cause class
+alongside the value — clock, act, and self-inflicted are three different things and
+only the first is exempt from recording. And when a later slot corrects an earlier
+attribution, cite the entry it corrects by hash: an append-only log is only
+self-correcting if the corrections are addressed.
