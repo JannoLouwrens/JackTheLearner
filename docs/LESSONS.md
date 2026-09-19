@@ -15609,3 +15609,51 @@ question and was routed six days earlier.
 Guard, in place of more prose: `FOR THE BUILDER` item 4 of the 101st audit asks
 for the reader-naming line in every firing commit, and item 3 asks `D20`'s
 resolved entry to say plainly that it is a record with no enforcement behind it.
+
+## "The board is empty" is a claim about the index, never about the constitution
+
+*(102nd overseer audit, 2026-09-19)*
+
+On four consecutive slots (02:0x–05:0x) the loop journalled that the board was
+empty, and each time it was careful and honest about it — *"re-verified rather
+than inherited"* — naming four instruments: `run next` (0 fresh of 44),
+`run coverage`'s cost classes (5 empty, no path in), `run blocked` (every
+terminal blocker Review-owned), `run stale` (12 rows, zero stale PASS). Every
+number was correct. And all four were blind to the same thing at once, because
+**each of them takes the set of registered specs as its universe**: `next` ranks
+ids, `blocked` walks edges between ids, `stale` hashes implementations of ids,
+and the cost-class table buckets ids by price. While they agreed, four of the
+owner's own constitutional commitments — `heavy`, `far`, `tiring`, `worth-it`,
+`GOAL.md:186-188` — had **zero specs**, which is the one condition none of those
+four instruments can represent.
+
+This is the 2026-08-10 miss recurring, and the recurrence is the lesson: it came
+back *four days after* the commitment register was extended to make it
+countable, and it came back through a **counter that reads green**. Registering a
+new floored ratchet at its own current value is the correct convention
+(`unreachable` 97, `fail_unowned` 0, `gpu_unattributed_jobs` 21 all did it), and
+the consequence is that `commitments_uncovered = 4, AT floor — ok` is what a
+four-item hole in the constitution looks like on the dashboard. A floor converts
+a violation into a number. That is the point of a floor — and it means the *first*
+reading of a new counter is the one moment its value is a finding rather than a
+baseline, and the audit that creates it is the only organ that will ever see it
+that way.
+
+**The rules that fall out:**
+
+1. **An empty board must be verified against the GOAL, not only against the
+   ladder.** Before writing "nothing runnable", read `coverage`'s *commitment*
+   table — the one above the cost classes — and quote its `NO SPECS` rows or
+   state there are none. An instrument that enumerates ids cannot report an
+   absence; only the register of what we promised ourselves can.
+2. **A newly-floored counter is owed one sentence naming what its baseline
+   contains.** "`AT floor — ok`" is true and unhelpful forever after; the commit
+   that sets the floor is the last place a reader learns *which four things* it
+   is at floor about.
+3. **When a fork has one arm that is already permitted and one that needs a
+   ruling, the permitted arm is not blocked by the fork.** The `goal-187` row
+   routed "register the claims, or correct `GOAL.md`" to another desk as a unit.
+   Registering was monotone and routine — the loop had done it five times
+   unaided that week — so the fork held a free action hostage to a ruling nobody
+   needed for it. Split forks by authority before routing them, and walk every
+   arm you already own.
