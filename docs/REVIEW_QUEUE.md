@@ -6888,8 +6888,14 @@ gate and 1.5-sigma margin are `run_bakeoff`'s defaults. `SO.10` is not re-run to
 get a different winner — every arm's number is already in the row, and a re-run
 changes nothing about them.
 
-ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.12 determinism repair) | OPEN
-    DUE: 2026-09-17 | ONE design question, and it is about an INSTRUMENT, not
+ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.12 determinism repair) | DISPOSITIONED 2026-09-19 (Review DAILY — none of (i)/(ii)/(iii): option (iv) NARROW THE DYNAMIC CHECK TO WHERE IT DECIDES, specified in the DISPOSITION block below; exact, zero false positives, no collision with D27, and the builder measures the target-set size and reports it BEFORE implementing)
+    DUE: 2026-09-21 | RE-DATED 2026-09-19 (Review DAILY) BECAUSE THE DEBT
+    CHANGED HANDS. The 2026-09-17 date broke on this desk and that break stands
+    in the record. What was owed was a DESIGN ANSWER about an instrument, owed
+    by the Review; it is delivered below. What remains is a MEASUREMENT (the
+    size of the binding set) and then an implementation, both the builder's.
+    Date is `review-queue`'s own `next_free_due` print, not chosen by hand.
+    ORIGINAL TEXT FOLLOWS, unchanged. | ONE design question, and it is about an INSTRUMENT, not
     about either spec: does this ladder want a mechanical detector for
     "recorded metric is not a function of (code, seed, data)", and if so where
     does it live? The three instances found today are FIXED and the class is at
@@ -6969,6 +6975,87 @@ unmeasured screen while the owner is being asked whether screens work would
 walk around an open decision and would spend the credibility `D27` is trying
 to price. If (i) is taken, it is taken **reporting-only until its
 false-positive rate is written down**, which is `D27`'s own default.
+
+**DISPOSITION 2026-09-19 (Review, DAILY) — NONE OF THE THREE. The answer is
+(iv): RUN THE EXACT CHECK, BUT ONLY WHERE THE METRIC DECIDES SOMETHING.**
+
+**Yes, this ladder wants the instrument.** Option (iii) is refused, and the row
+itself supplies the refutation: the verdicts survived here *because both specs
+miss `match` and `unanimity` by a mile, so `swap_agree` was never binding.* That
+is luck about which conjunct happened to be slack. The same lottery was one tie
+away from deciding a SEAT, where `swap_agree` was to be an eligibility leg and a
+single tie decides whether an arm may be seated. **A defect whose blast radius
+is "whichever conjunct is currently slack" is not at zero just because its three
+known sites are fixed.** "Found by accident, by an unrelated edit" is not a
+detection strategy; it is the absence of one, and it is how this one was found.
+
+**And the builder's restraint around `D27` was right, which is why (i) is also
+refused.** `D27` (`decide_by` 2026-09-20) asks one level up whether the repo
+should buy mechanical screens, carrying the measurement that the prototype
+flagged **104 of 107** PASS specs with **3 of 12** hand-checks real. Shipping a
+second unmeasured heuristic screen into that question would spend exactly the
+credibility `D27` is trying to price. Holding was correct and is commended.
+
+**But the menu has a false constraint in it, and removing it dissolves the whole
+dilemma.** Option (ii) — re-run under a second `PYTHONHASHSEED` and diff — was
+priced out for one reason and one reason only: *"it doubles every spec's cost."*
+**It does not need to run on every spec.** The defect only matters where the
+recorded metric actually decides something. Everywhere else, a salt-dependent
+digit is a blemish on a number nobody is standing on.
+
+**(iv), stated as the rule the builder implements.** Run the second-salt
+differential on a metric only when it is **DECIDING**, which is exactly two
+cases:
+  - **BINDING** — the recorded value sits within a declared margin of its own
+    threshold. A metric that misses its gate by a mile, as `swap_agree` did
+    here, is not deciding anything and is not checked.
+  - **ELIGIBILITY** — the metric is a leg in a seat race or any `bakeoff.py`
+    admission or tie-break, **unconditionally and regardless of margin**. This
+    is the case that nearly cost a seat, and margin is no defence in it, because
+    a tie-break is decided at zero margin by construction.
+
+**Why (iv) is strictly stronger than (i), and why it does not collide with
+`D27` at all.** A static AST screen is a *heuristic*: it has a false-positive
+rate, which is why `D27`'s default would make it reporting-only until that rate
+is written down. **A differential re-run is not a screen, it is a MEASUREMENT.**
+It answers "is this recorded number a function of (code, seed, data)?" by
+running the experiment and diffing — **exact, with zero false positives and
+nothing to calibrate.** There is no rate to write down because there is no
+guessing. `D27` asks whether the repo should trust screens; (iv) does not ask
+the repo to trust anything, so it may ship whichever way `D27` falls, and it
+carries none of `D27`'s credibility cost. That is the point of routing around
+the menu rather than picking from it.
+
+**THE ONE THING THE BUILDER MUST DO FIRST, and it is not the implementation.**
+`CPU_DAY_CEILING_S` already forecloses 38 specs, and this desk will not order a
+cost it has not seen. **Measure the DECIDING set and report it before writing
+the check**: how many live specs have at least one metric within margin of its
+gate, how many carry an eligibility leg, and what the doubled cost of that set
+is against the ceiling. That number is a finding in its own right whatever it
+says — if the deciding set turns out to be most of the ladder, that is a fact
+about how finely this ladder is calibrated and I want to know it. **If the
+measured cost does not fit under the ceiling, do not implement and do not
+trim the rule to fit — bring the number back and the ELIGIBILITY half ships
+alone**, because seat races are few, are the case that nearly broke, and are
+cheap.
+
+**Bindings and prohibitions.**
+- **The margin is DECLARED, not tuned.** Write it down once, in the source, with
+  its reasoning, before any spec is scanned. A margin chosen after seeing which
+  specs it captures is the venue-selection defect wearing a threshold.
+- **No bar moves, in either direction, ever, as a result of this check.** A
+  salt-dependent binding metric is a spec that must be REPAIRED to determinism —
+  as `_modal` already was — never a spec whose gate is adjusted to cover the
+  spread. The repair is always the code, never the number.
+- **Reporting-only on arrival.** It names the affected spec and metric; it does
+  not fail a spec, void a row, or refuse a run in its first form.
+- **Do not re-run GPU-class specs under a second salt.** The deciding set is
+  filtered to CPU cost classes; a GPU re-run for a determinism check is not a
+  spend this desk authorises, and `D31` is already live on GPU ceilings.
+- `_modal`'s repair stands exactly as shipped and is not reopened. The three
+  sites are fixed, both rows were re-bought honestly at FAIL, and the repair
+  costing the specs rather than paying them is the strongest evidence in this
+  file that it was done for the right reason.
 
 ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 | `acf63e9` (LG.13 attempt 1, PASS) | OPEN
     DUE: 2026-09-17 | ONE design question, and it is about what a SEAT RACE may
