@@ -7558,3 +7558,54 @@ ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2
     green certificates — PS.08 is red on attempt 1 and nothing cites it.
     DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
     three sibling rows already dated there)
+
+ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19 | `6fff04f` (LT.02 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
+    LT.02 exists to certify the instrument that can see the noisy-TV-is-your-
+    own-body failure (PG.4's blind spot) before CU.3 and the LT.03+ arms may
+    claim "his curiosity is not trapped". The registered run FAILed on C1
+    ALONE: the deliberate body-chaos farmer — PG.4's textbook construction
+    transplanted onto the LT.01 rover with the panel deleted, clutter zeroed
+    and adhesion off, so its own contact dynamics are the only irreducible
+    surprise on offer — read chaos_occupancy 0.145 +/- 0.122 against the
+    registry's 3.0 bar. Every other conjunct held: the known-positive control
+    fired BOTH detectors (chaos_occupancy 6.198 >= 3.0 AND panel_dwell 0.667
+    > 0.4), the hard-working climber was exercised and cleared (rise 0.786 m,
+    100 falls, occupancy 0.083 <= 1.0), C2 held (reward_ratio 5.32), C3 held
+    (dwell 0.000), and all four VOID lanes were green (OOF median 0.088 vs
+    persistence 1.802; theta 1.205; random occupancy exactly 1.0). So the
+    DETECTOR is measured alive on the one agent this project has proven
+    trapped, and the pre-registered branch that fired is the registry's own
+    words: "the detector is blind — no arm's immunity may be reported and
+    the LT.03+ chain stays honest."
+    THE MECHANISM IS THE PILOT'S DISCLOSED FORECAST, CONFIRMED: on this body,
+    at this obs resolution, self-generated contact chaos is REDUCIBLE —
+    e_mean(icm) 0.148 vs e_mean(random) 0.552, reducibility_gain(icm) 0.134,
+    thrash_ratio(icm) 0.385 (the farmer moves LESS than random) — while the
+    panel's chaos is genuinely irreducible (pilot gain 0.0134). A policy that
+    farms a spot concentrates data exactly where the pooled model then
+    masters it: self-surprise is SELF-EXTINGUISHING unless the source is
+    genuinely stochastic. The docstring's founding premise ("ragdoll contact
+    dynamics are an inexhaustible source of irreducible prediction error")
+    is falsified by measurement. The venue cannot produce the threat the
+    detector exists to catch — a detector with no reachable true positive in
+    its own certification venue cannot be certified there, however alive its
+    controls prove it.
+    DESIGN INPUT, one line: this is the curiosity-side sibling of the
+    body-instrument list already named on w0-too-shallow (LT.01's
+    nonladder_rise 0.084 m, UB.14's eye at 0.159, W0.BAL's 0.002-0.004
+    upright, BA.03's blind twin) — the body is too LEARNABLE to be a noise
+    trap, one more reading that the substrate under the curiosity ladder is
+    shallower than its specs assume. Counted there, not here.
+    THE REPAIR IS A REDESIGN, the Review's, and the fork is narrow: (a) give
+    the certification venue a genuinely stochastic self-carried noise source
+    (the body-mounted analogue of the panel — a true positive the detector
+    MUST flag, with the climber and known-positive kept as-is), or (b)
+    accept the registry's falsified_by as final for this venue and re-scope
+    what LT.03+ may cite (they inherit "no immunity may be reported", which
+    is the honest reading the branch already enforces). NO bar moves; NO
+    re-run unchanged (a redraw is a seed lottery against a mechanism three
+    independent diagnostics localise). Staleness bill: ZERO green
+    certificates — LT.02 is red on attempt 1 and nothing cites it. Block
+    mass, live at routing: frees 6 (LT.03-LT.07, LT.09) / blocks 8, the
+    third-largest FAIL mass on the board.
+    DUE: 2026-09-24 | redesign disposition, the Review's
