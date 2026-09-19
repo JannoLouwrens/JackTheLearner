@@ -33202,8 +33202,8 @@
     },
     "T0.36": {
       "amended": [],
-      "attempt": 13,
-      "commit": "d730ff9",
+      "attempt": 14,
+      "commit": "1a78862+dirty",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
@@ -33216,8 +33216,11 @@
         "worst_overstatement": 38.0,
         "worst_root_is_the_scar": 1.0
       },
-      "dirty_files": null,
-      "duration_s": 34.24,
+      "dirty_files": [
+        "experiments/ratchet_readings.json",
+        "experiments/run.py"
+      ],
+      "duration_s": 34.2,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -33628,9 +33631,43 @@
           ],
           "spec_sha": "0255a8f809a1cc0e",
           "status": "PASS"
+        },
+        {
+          "commit": "d730ff9",
+          "control_metrics": {
+            "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
+            "ladder_size": 253.0,
+            "overstated_roots": 1.0,
+            "properties_checked": 7.0,
+            "properties_failed": 4.0,
+            "scar_root_claims": 41.0,
+            "unreachable": 96.0,
+            "worst_overstatement": 38.0,
+            "worst_root_is_the_scar": 1.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "de285f1cd3c98484",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "ladder_size": 253.0,
+            "overstated_roots": 0.0,
+            "properties_checked": 7.0,
+            "properties_failed": 0.0,
+            "scar_root_claims": 3.0,
+            "unreachable": 96.0,
+            "worst_overstatement": 0.0,
+            "worst_root_is_the_scar": 0.0
+          },
+          "ran_at": "2026-09-19T14:25:52",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "0255a8f809a1cc0e",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "de285f1cd3c98484",
+      "impl_sha": "b1b2b3fc6a51eaee",
       "message": "",
       "metrics": {
         "failed_names": "",
@@ -33644,9 +33681,9 @@
         "worst_root_is_the_scar": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 226.0,
+      "peak_rss_mb": 225.5,
       "preserved_impl": null,
-      "ran_at": "2026-09-19T14:25:52",
+      "ran_at": "2026-09-19T23:13:23",
       "seeds": [
         0
       ],

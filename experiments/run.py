@@ -1484,6 +1484,21 @@ def ratchet_live(ledger: Ledger) -> dict:
         from . import review_queue as rq
         return len(rq.live_audit()["piled_on"])
 
+    def _review_queue_violation_forms():
+        # 103rd audit item 3: `review_queue_violations` stored only its TOTAL,
+        # so the 09-19 excursion 12 -> 13 -> 12 (a MALFORMED row written and
+        # repaired by the builder's own commits, three hours apart) left no
+        # trace in `ratchet_readings.json`, and a composition change that
+        # cancels in the total reads UNCHANGED. The components are the store:
+        # counts by violation class, nonzero only (`fail_unowned_owned_forms`'
+        # idiom — the count ratchet above is the number, this is the map).
+        # Each class carries a declared cause bucket in
+        # VIOLATION_CAUSE_BUCKETS; the printer attributes every component
+        # delta there. Reporting-only: no floor, gates nothing.
+        from . import review_queue as rq
+        counts = rq.live_audit()["counts"]
+        return {k: v for k, v in sorted(counts.items()) if v}
+
     def _goal_unrunnable():
         # 73rd audit B3: `new_unrunnable_citation` is RED in coverage's exit
         # code, but the class grew 3 -> 7 under an exit code ALREADY held red
@@ -1570,6 +1585,7 @@ def ratchet_live(ledger: Ledger) -> dict:
     take("champions_trigger_debt", _champions_trigger_debt)
     take("champions_unwinnable", _champions_unwinnable)
     take("review_queue_violations", _review_queue_total)
+    take("review_queue_violation_forms", _review_queue_violation_forms)
     take("review_queue_net_arrivals", _review_queue_net_arrivals)
     take("review_queue_piled_on", _review_queue_piled_on)
     return out
@@ -1749,6 +1765,81 @@ def ratchet_splits(rows: list) -> dict:
     return out
 
 
+#: 103rd audit item 3 — the cause bucket each violation class's ARRIVAL
+#: belongs to, so a `review_queue_violation_forms` delta names WHY it moved
+#: instead of leaving the next reader to guess (the 09-19 guess was "a
+#: midnight CLOCK movement" and the truth was the builder's own MALFORMED
+#: row). Three buckets, per the audit, because the 102nd's clock/act pair
+#: could not hold that case:
+#:
+#:   clock          the calendar reached a date or an age. OVERDUE and STALE
+#:                  arrive this way and no commit is to blame.
+#:   act            an edit ELSEWHERE moved the row's ground: the one member
+#:                  is HOLD-ON-A-RESOLVED-BLOCKER, where someone resolved the
+#:                  blocker and the row did not follow.
+#:   self-inflicted the writing commit itself created the violation — every
+#:                  grammar class. Its author is in `git log` on the queue
+#:                  file, which is where the 09-19 correction had to be dug
+#:                  from after the wrong cause was journalled.
+#:
+#: SHRINK in any class is always an ACT: no violation unbreaks at midnight —
+#: OVERDUE clears by a re-date or disposal, grammar clears by a repair, all
+#: of them commits. Direction is handled in `violation_form_lines`, not here.
+#: Completeness is pinned in `_check_ratchet_reader` against the queue's own
+#: VIOLATIONS tuple, so a new class without a bucket refuses by name.
+VIOLATION_CAUSE_BUCKETS = {
+    "OVERDUE": "clock",
+    "STALE": "clock",
+    "HOLD-ON-A-RESOLVED-BLOCKER": "act",
+    "MALFORMED": "self-inflicted",
+    "HOLD-WITHOUT-A-CLOCK": "self-inflicted",
+    "VANISHED": "self-inflicted",
+    "CLOCK-REMOVED": "self-inflicted",
+    "ACTED-WITHOUT-A-COMMIT": "self-inflicted",
+    "UNDECLARED-ROW": "self-inflicted",
+}
+
+
+def violation_form_lines(cur, prev) -> list:
+    """Attribution lines for a `review_queue_violation_forms` movement —
+    one per component delta, each naming its cause bucket. Pure, so the
+    self-check can pin the shapes. Empty when either side is not a dict
+    (an UNRECORDED first reading has no delta to attribute) or nothing
+    moved. Growth takes the class's declared arrival bucket; shrink is
+    always an act (see VIOLATION_CAUSE_BUCKETS — nothing unbreaks at
+    midnight). An undeclared class is reported, never guessed."""
+    if not isinstance(cur, dict) or not isinstance(prev, dict):
+        return []
+    out = []
+    for cls in sorted(set(cur) | set(prev)):
+        d = cur.get(cls, 0) - prev.get(cls, 0)
+        if d == 0:
+            continue
+        if d < 0:
+            out.append(f"        {cls} {d:+d} — ACT: a violation only "
+                       f"clears by a commit (re-date, disposal or repair).")
+            continue
+        bucket = VIOLATION_CAUSE_BUCKETS.get(cls)
+        if bucket == "clock":
+            out.append(f"        {cls} {d:+d} — CLOCK: the calendar reached "
+                       f"a date; a real event with a real owner,\n        "
+                       f"and no commit is to blame for the rise.")
+        elif bucket == "act":
+            out.append(f"        {cls} {d:+d} — ACT: an edit elsewhere "
+                       f"moved this row's ground.")
+        elif bucket == "self-inflicted":
+            out.append(f"        {cls} {d:+d} — SELF-INFLICTED: this class "
+                       f"is only ever created by the writing\n        "
+                       f"commit; its author is in `git log` on the queue "
+                       f"file, not in the calendar.")
+        else:
+            out.append(f"        {cls} {d:+d} — UNDECLARED CLASS: no cause "
+                       f"bucket in VIOLATION_CAUSE_BUCKETS.\n        "
+                       f"Declare one; a guessed cause is the 09-19 error "
+                       f"again.")
+    return out
+
+
 def clock_act_lines(kind: str, split: dict | None) -> tuple:
     """`(headline suffix, extra lines)` for a counter whose movement has been
     decomposed into a CLOCK and an ACT component. Pure, so the self-check can
@@ -1841,6 +1932,34 @@ def _check_ratchet_reader() -> None:
             "the clock/act reader mis-classified one of its four pinned "
             "shapes — refusing to report a decomposition it may not have "
             "performed")
+    # 103rd audit item 3: the cause-bucket map must cover the queue's own
+    # VIOLATIONS tuple exactly — a class added there without a bucket here
+    # would be attributed by guesswork, which is the error the store exists
+    # to end. Refuses by name, the FLOORED pin's idiom.
+    from .review_queue import VIOLATIONS as _RQ_VIOLATIONS
+    if set(VIOLATION_CAUSE_BUCKETS) != set(_RQ_VIOLATIONS):
+        raise RuntimeError(
+            f"VIOLATION_CAUSE_BUCKETS covers {sorted(VIOLATION_CAUSE_BUCKETS)} "
+            f"but review_queue.VIOLATIONS is {sorted(_RQ_VIOLATIONS)} — a "
+            "violation class without a declared cause bucket gets its cause "
+            "guessed, which is the 09-19 error this store exists to end")
+    # And the attribution shapes, pinned: the 09-19 excursion's growth leg
+    # (MALFORMED +1 must read SELF-INFLICTED, not clock), a clock arrival,
+    # a shrink (always an act), an undeclared class (reported, not guessed),
+    # and the non-dict / no-delta quiet shapes.
+    vf = violation_form_lines({"OVERDUE": 13, "MALFORMED": 1},
+                              {"OVERDUE": 12, "STALE": 1})
+    if (len(vf) != 3
+            or "SELF-INFLICTED" not in vf[0] or "MALFORMED +1" not in vf[0]
+            or "CLOCK" not in vf[1] or "OVERDUE +1" not in vf[1]
+            or "ACT" not in vf[2] or "STALE -1" not in vf[2]
+            or "UNDECLARED CLASS" not in violation_form_lines(
+                {"NEW-CLASS": 1}, {})[0]
+            or violation_form_lines(None, {}) != []
+            or violation_form_lines({"OVERDUE": 12}, {"OVERDUE": 12}) != []):
+        raise RuntimeError(
+            "the violation-forms attributor mis-classified one of its pinned "
+            "shapes — refusing to report a cause it may not have derived")
     # The class map is the thing that was a 1-tuple. Keep it honest about
     # itself: every suppressed counter must be a declared `window`, and no
     # member may carry a kind this file does not know how to act on.
@@ -1927,6 +2046,11 @@ def print_ratchet_block(ledger: Ledger) -> None:
                   f"retire by disappearing.")
         for line in extra:
             print(line)
+        if name == "review_queue_violation_forms" and kind == "MOVED":
+            # 103rd audit item 3: the delta names its own cause bucket, so
+            # the next reader is not left to guess it (and journal the guess).
+            for line in violation_form_lines(cur, prev):
+                print(line)
         if name == "fail_unowned" and cur is not None:
             # 73rd audit B2: the count went 4 -> 0 in three minutes by
             # routing into a queue whose own drain reads UNBOUNDED, and
