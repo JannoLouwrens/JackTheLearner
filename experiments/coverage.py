@@ -1126,7 +1126,31 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     this commit (96 of 251) and by `run next` now offering LT.02 at
 #     cpu<2h `[needs implementing]`. Exactly -1 because the rest of the LT
 #     chain waits on LT.02 itself, which is unrun, not settled-blocked.
-UNREACHABLE_BASELINE = 96
+#   2026-09-20 96 -> 98 (Review, FULL, Part 2 re-examination — GROWTH, and it
+#     is MINE). The act: T2.06's CLAIM 2 was strengthened from a strict `>` to
+#     an exogenous MARGIN_LANG = 0.07 (2*sqrt(2*0.25/400), from n and the
+#     binomial, not from the observed spread). That staled T2.06's certificate,
+#     and T2.07 and T2.15 declare `depends_on: T2.06` — so exactly those two
+#     left the reachable set. Verified by inspection of the dependency graph,
+#     not inferred from the delta: nothing else depends on T2.06, and +2 is the
+#     whole movement.
+#     WHY THE FLOOR IS RAISED RATHER THAN THE STRENGTHENING REVERTED: a gate
+#     that certified a margin of 0.0001 on a comparison whose standard error is
+#     ~0.035 was a coin flip dressed as a threshold, and the one law binding
+#     this desk is that it may strengthen and may never weaken. The debt is the
+#     price of the repair, and it is stated rather than hidden.
+#     THIS GROWTH IS DECLARED TRANSIENT AND CARRIES A RESTORATION OBLIGATION,
+#     which is the part that matters and the part a future reader should hold
+#     me to. Unlike every prior entry in this log, the +2 clears MECHANICALLY
+#     the moment T2.06 is re-bought: the re-buy is `gpu<20min`, its dependency
+#     T1.01 is PASS, and it is ordered to the builder as item 5 of the `1^10`
+#     priority block. **When T2.06 re-buys, this baseline returns to 96 in that
+#     same commit.** It is not to be left at 98 on the ground that 98 is now
+#     "the number" — that is how a floor stops being a ratchet. If T2.06's
+#     re-buy FAILS, the floor still returns to 96 and the two specs become
+#     blocked-by-a-FAIL rather than unreachable-by-a-stale-certificate, which
+#     is a different and more honest kind of debt.
+UNREACHABLE_BASELINE = 98
 
 
 def unreachable_ratchet(ledger=None,
