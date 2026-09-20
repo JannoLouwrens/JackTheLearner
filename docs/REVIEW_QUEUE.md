@@ -982,6 +982,33 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
         (W1.03 in particular) before a world edit has a spec to serve; editing
         the world first would be the 21-certificate bill paid for a change
         nothing yet measures.
+    DUE: 2026-09-23 | RE-DATED 2026-09-20 (Review FULL), and the reason is a
+        finding against THIS DESK, written plainly rather than as a scheduling
+        note. **The 2026-09-18 date BROKE and this is the row's fourth slip.**
+        `D21` was RESOLVED BY ARMED DEFAULT on 2026-09-06 with the instruction
+        that the FULL take the W1 design as its FIRST design item; **three FULL
+        sittings have now passed — 09-06, 09-13 and today — and the design does
+        not exist.** I am not re-dating this quietly. Two things make today
+        different from the previous two slips and both are recorded against me:
+        **(1) I took the `sh02`/`ba03`/`t306` bundle first today, not W1** — a
+        defensible choice, because those three carried a STOP-RULE that had
+        fired and W1 does not, and because ruling three rows beats designing
+        none; but it IS the choice I made and it is the third consecutive FULL
+        at which W1 lost. **(2) Today's ruling put TWO MORE repairs behind this
+        window** — `SH.02`'s adopted arm (b) and the newly-split
+        `ba03-vestibular-channel-is-never-load-bearing-under-one-kick` — so my
+        own act this morning increased the load on the one thing I did not do.
+        Three rows now queue behind an undesigned window. **Re-dated to
+        2026-09-23, the earliest date carrying capacity, and DELIBERATELY NOT
+        to the next FULL**, because a fourth consecutive Sunday would be this
+        desk betting on the sitting that has lost this race three times.
+        **STOP-RULE, binding, and on harder terms than the sh02 class because
+        this row has already outlived that class's stop-rule: if 2026-09-23
+        breaks, W1 is not re-dated again by this desk — it goes to the owner as
+        a decision about whether the Review is capable of producing it at all,
+        with the recommendation that design authority for the world edit be
+        moved.** Routed to the owner today as `D33`. ORIGINAL TEXT FOLLOWS,
+        unchanged.
     Question: which world edits ride this single sitting, and in what order?
     Known passengers as of routing: `W1.03`'s traps/delays/irreversibility;
     `ne01-occlusion-knife-edge`; `water-apply-phantom-force` (Water.apply
@@ -6305,6 +6332,72 @@ ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-1
     threshold. The cheapest real repair it points at is declaring an `emotion`
     COVERS domain on T2.12/T3.07, which costs one registry edit and makes the
     gap visible to `coverage` instead of only to this page.
+
+    ### ADDENDUM — COMPLETENESS AUDIT 2026-09-20 (Review FULL). RECOMPUTED, not
+    ### quoted. Two corrections to last week and one gap nobody has named.
+
+    **FIRST, TWO CORRECTIONS AGAINST MY OWN FIRST PASS, because an audit that
+    hides its errors is worth less than one that never ran.** Grepping the
+    registry by keyword told me `pain` had zero specs and that `voice` was
+    still the 2026-08-09 zero. Both are WRONG and `run senses` — which audits
+    the sensory half against `GOAL.md`'s own list — is right: **pain is `PS.03`
+    (*Damage is a signal, not just an ending*), PASS**, and **voice is
+    `VO.01`/`VO.02`, with `VO.02` LOAD-BEARING.** Voice was one of the four
+    zeros the owner found in an evening on 2026-08-09; it is now one of only
+    **two** channels in the whole inventory that clears the standard `GOAL.md`
+    actually sets. That is the single best piece of news in this audit and the
+    keyword sweep would have buried it.
+
+    **AND THE GAP THAT SURVIVES BOTH PASSES, which is not a missing spec.**
+    `run senses` reads `10/10 of the inventory has a registered spec`, and last
+    week's audit called the sensory half *"closed, and it stays closed"* on
+    that basis. Read the per-channel lines instead of the total and one channel
+    does not say what the other nine say:
+
+        pain (nociception)        sensor: PS.03
+                                  load-bearing: NO SPEC would prove it
+
+    Every other unproven channel reads `load-bearing awaits: <spec>` — smell
+    awaits `SM.02`/`UB.11`, taste `TA.03`, touch `UB.5`, hearing `UB.4`,
+    balance `T3.02`, temperature `SH.01`, interoception `UB.11`. **Pain alone
+    reads NO SPEC.** `GOAL.md` does not make ablation optional — *"we PROVE each
+    one is load-bearing — ablate a sense, something measurable must degrade"* —
+    so pain is the one sense in the inventory for which the goal's own standard
+    is currently **unreachable by construction**, not merely unmet. A channel
+    with no path to its proof is a different object from a channel with an
+    unrun spec, and the `10/10` headline cannot distinguish them. **That is the
+    thing nobody wrote down**, and it is exactly the shape this audit exists to
+    find: an organ measuring against a stated standard where the standard's
+    total hides a structural zero inside it.
+
+    Cheapest honest repair, and it is a REGISTRATION not a run: an ablation
+    venue for nociception — the natural passenger is `UB.11`, which already
+    carries the load-bearing leg for four other channels, and adding pain to it
+    costs one registry edit rather than a new rig. **Not ordered here** — this
+    row's bill is a written disposition per gap, and this is the disposition:
+    NAMED, cheapest-repair identified, owed by the same docket.
+
+    **GENERALITY — second consecutive week of byte-identical zero.** 14 barriers
+    named in `GENERALITY.md`, **4 registered** (`GEN.02`, `GEN.03`, `GEN.06`,
+    `GEN.09`), **0 implemented, 0 run, 0 PASS**. Identical to the 09-13 reading
+    and to the 09-06 reading before it. Three weeks, three identical readings.
+    Last week called zero movement *"the honest headline"*; a third identical
+    reading makes it a TREND rather than a reading, and it is reported to the
+    owner in that form today rather than as a fourth restatement here. The four
+    are reachable-on-paper and none has been dispatched — so this is not a spec
+    gap and no new registration would touch it.
+
+    **COGNITIVE HALF — unchanged from 09-13 except where this week moved it.**
+    `self-model / metacognition` is still non-zero only through `LG.12`, which
+    settled **FAIL** on 09-13 — so the gap that closed by accident re-opened by
+    measurement, and nothing else has entered. `tool use`, `attention`,
+    `symbols/number`, `teaching (Jack as teacher)` and `imagination as a
+    problem-solver` are all unmoved at their 09-13 readings. **What DID move is
+    not on the cognitive list at all:** the week's four first-ever FAILs
+    (`PS.05` far, `PS.06` tiring, `PS.08` heavy, `PS.09` worth-it) are the
+    lived-primitive half of `GOAL.md`'s own sentence, and they failed honestly —
+    which is the first time this project has measured, rather than assumed, that
+    its world does not yet charge for distance, exertion or mass.
 
 ---
 
