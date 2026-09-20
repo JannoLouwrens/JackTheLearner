@@ -3880,7 +3880,12 @@ to, the live path calls notice-then-prune, and the fixture asserts both the
 repaired order (announces) and the defective order (provably silent).
 
 **The class is now GUARDED, not only noticed (103rd audit item 2, same day) —
-and the guard's own first hour supplied the lesson's next clause.** Every
+and the guard's own first hour supplied the lesson's next clause.**
+*(Corrected 2026-09-20: the guard's first DAY then supplied two more
+occurrences — 8 and 9, record below — through the one lane its fixture never
+exercised; "guarded" was true of the shapes the fixture wrote by hand and
+false of the launcher this repo actually uses. See the entry at the foot of
+this file.)* Every
 remedy through occurrence seven told someone about the loss AFTERWARDS; none
 could refuse it. `experiments/run.py` now refuses AT LAUNCH any spend (spec
 run, `--gate`, `--tier`) whose launch is PROVABLY ABANDONED: reparented to
@@ -3901,7 +3906,8 @@ gives /dev/null stdin to some ordinary foreground calls (sandboxed ones), and
 re-probing showed a `run_in_background` task is byte-identical to a sandboxed
 foreground call in EVERYTHING observable at launch (tree shape, sid = own
 shell, stdout a harness tasks-file in both lanes, identical env). So the
-run_in_background lane — the likely lane of occurrences 5–7 — is genuinely
+run_in_background lane — the likely lane of occurrences 5–7 (8 and 9 took
+other lanes; record below, appended 2026-09-20) — is genuinely
 NOT refusable at this boundary without false-positiving the main lane, and
 the honest design is: orphan/setsid REFUSE, stdin=/dev/null prints a LOUD
 LANE WARNING naming the ambiguity, and the residue stays covered by
@@ -3916,6 +3922,40 @@ cannot fix, named honestly: a FOREGROUND run whose slot hits its deadline
 still dies with the session — the fourth occurrence's arithmetic rule
 (projected runtime vs `JACK_ITER_DEADLINE - now`, or hand it forward as a
 unit) is still the only defense on that side.
+
+**OCCURRENCE RECORD, 8 AND 9 (both 2026-09-19; appended 2026-09-20 — owed by
+the 21:0x slot's own written promise and found unpaid by the 105th audit).**
+
+- **Occurrence 8, ~19:11.** The 19:0x slot committed `LT.02`'s cost-class
+  re-declaration (`da07ede`) and launched its registered run, declaring it
+  `foreground (19:0x slot, session held open)`. The run died ~19:11, two to
+  three minutes in, with no ledger row — while the slot was still open (it
+  ran to 19:14:57 and ended rc=0 without noticing or journalling the loss).
+  **The cause of this death is NOT ESTABLISHED by any surviving record.** It
+  died mid-slot, so plain dies-with-parent is not proven for this one; the
+  105th audit counts it in the class and the count is kept here, with the
+  cause written as unestablished rather than guessed.
+- **Occurrence 9, 20:13.** The 20:0x slot found the loss, relaunched `LT.02`,
+  and the relaunch died at 20:13:45 — the second its slot ended (20:13:46).
+  Dies-with-parent in its classic form, one hour after occurrence 8, by the
+  same loop, with the guard's fixture reading 17 green cases.
+- **The group-kill / single-pid asymmetry, promised into this file by the
+  21:0x slot and not written until now.** The 20:0x slot's hand kill of the
+  first launch's remnants reached only the SUPERVISOR pid; a worker child
+  survived it and had to be found and killed separately before it could race
+  the ledger. The harness's slot-end cleanup kills the process GROUP; a hand
+  kill targets one pid. So the two directions of the asymmetry: to stop a
+  supervised tree by hand, kill the group, or you orphan the workers you
+  meant to stop — and a `setsid` tree survives slot-end group-kill precisely
+  because it left the group, which is why the 21:0x slot's
+  `launch_detached.sh` launch (21:11:01) was the one that finally landed the
+  row (21:21:54, FAIL, 652.35 s, eight minutes after its slot died at
+  21:13:25).
+- Status of the class after the 2026-09-20 repair: the fixture is 22 cases
+  and now invokes the REAL launcher (see the foot of this file); the wrapped
+  lane declares itself (`JACK_DETACHED_LANE`) and the guard prints a loud
+  DECLARED notice into the launch log. Refuse/permit for that lane is
+  deliberately unchanged — that line is `D32`'s, the owner's.
 
 ## An absent field is honest; a field that silently records the RECORDER is a false one
 
