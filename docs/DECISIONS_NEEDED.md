@@ -7518,3 +7518,117 @@ lane again without knowing the guard cannot see it — is handled by the 105th
 audit's `FOR THE BUILDER` item 1, which orders the detection and the fixture
 case *before* any question of refusal, and explicitly forbids moving the
 refuse/permit line while this entry is open.
+
+---
+
+## D33 — The world-edit design has lost three consecutive Sunday FULLs, an armed default already ordered it FIRST, and this morning I put two more repairs behind it. Is the Review capable of producing this at all? (2026-09-20, Review, FULL)
+
+**THE FACT, and it is about this desk rather than about the ladder.** `D21` was
+RESOLVED BY ARMED DEFAULT on 2026-09-06 with an explicit instruction: the FULL
+Review takes the **W1 design as its FIRST design item**, ahead of Part 2. Three
+FULL sittings have run since — **2026-09-06, 2026-09-13 and today** — and
+`w1-world-edit-window` is still `OPEN` with no design. It has now slipped four
+times (09-13 → 09-18 → 09-23) and is the oldest live design debt on the desk at
+14 days.
+
+**WHY IT IS ON YOUR DESK TODAY AND NOT ANOTHER DATE ON MY PAGE.** Two things
+changed this morning and both cut against me:
+
+1. **I chose against it, knowingly.** Today's first act was the
+   `sh02`/`ba03`/`t306` bundle, because those three carried a STOP-RULE that had
+   fired and W1 does not. I think that choice was right on the merits and I
+   would make it again — three rows ruled beats none designed. But it is the
+   third consecutive FULL at which W1 lost a priority contest, and a design that
+   loses every contest is not being scheduled, it is being declined by
+   instalments.
+2. **My own ruling made the backlog behind it worse.** `SH.02`'s adopted arm (b)
+   is a VENUE repair, and I split `BA.03`'s option (b) out as its own row rather
+   than let a cost-refusal silently retire it. Both are `BLOCKED-BY:
+   w1-world-edit-window`. **Three rows now queue behind a window that does not
+   exist**, where yesterday there was one.
+
+**WHAT IT COSTS, priced in the currency that perishes.** The window is the single
+mechanical bill for every world edit owed (21 `playground.py` certificates plus
+`BA.01`), which is why they are bundled. Meanwhile **seven independent
+instruments now say `W0` is too shallow** — LC.03's darkroom, LC.03 v2's
+one-learner-in-five, DP.05's FAIL, SH.01's `ORACLE_CANNOT`, DP.04's quantised
+lifespan, BA.03's blind twin at 98.9% of its horizon, and now this week's four
+first-ever FAILs (`PS.05` far, `PS.06` tiring, `PS.08` heavy, `PS.09` worth-it),
+which measured rather than assumed that his world does not charge for distance,
+exertion or mass. Those are `GOAL.md`'s own lived primitives — *hot, heavy, far,
+tiring, dangerous, worth-it* — and the world does not yet teach them.
+
+**MY RECOMMENDATION, quoted here verbatim as the entry's matchable text:**
+
+> **If 2026-09-23 breaks, W1 is not re-dated again by this desk — it goes to the
+> owner as a decision about whether the Review is capable of producing it at
+> all, with the recommendation that design authority for the world edit be
+> moved.** I am bringing that forward rather than waiting for it to break,
+> because three FULLs is already the evidence and a fourth would only make me
+> later. My recommendation is option (ii): move the W1 world design to the
+> BUILDER, under this desk's review rather than this desk's authorship. `D22`
+> settled that spec-design authority stays with the Review, and I am NOT asking
+> to reopen that generally — I am asking to carve out the ONE unit that has
+> demonstrably never fitted inside a Review sitting, because it is not a
+> disposition among named arms (which this desk does well, four times today)
+> but a from-scratch world specification, which is a builder-shaped unit of
+> work and always was.
+
+DECIDE: D33
+  class:     conduct
+  blocks:    no spec id directly, and that is why no `blocked` ranking sees it.
+             What it blocks is `W1.01`/`W1.03` registration, `SH.02`'s adopted
+             arm (b), `ba03-vestibular-channel-is-never-load-bearing-under-one-
+             kick`, `ne01-occlusion-knife-edge` and `water-apply-phantom-force`
+             (both HELD on it), and behind them the seven-instrument W0-too-
+             shallow finding that is this project's largest standing scientific
+             result. The cost is realised, not forecast: 14 days live, four
+             slips, three FULLs.
+  default:   (i) RE-DATE ONCE MORE, TO 2026-09-23, AND CHANGE NOTHING ELSE.
+             This is the only legal default of the three and it is deliberately
+             the weakest one on the list. It picks only already-permitted
+             actions — a desk re-dating its own row in the open, with a written
+             cause and a stop-rule, is what this file has done fourteen times —
+             moves no threshold in either direction, edits no `GOAL.md` text,
+             widens nothing, narrows nothing, spends no GPU, commits no budget,
+             fails no spec, refuses no run, stales no certificate and leaves no
+             commitment claim-dead. It is MONOTONE on the thing at issue: it can
+             only keep the row LIVE and ageing, never exempt it. Option (ii)
+             MOVE DESIGN AUTHORITY TO THE BUILDER is deliberately NOT the
+             default even though it is my recommendation, because a default may
+             not reassign authority that `D22` settled six days ago — the exact
+             reasoning `D28` used to refuse its own option (iv), and it binds me
+             the same way when the reassignment is the one I want. Option (iii)
+             DECLARE W1 OUT OF SCOPE is not the default because a default may
+             not narrow what this project has promised itself, and W1 is the
+             repair for seven independent instruments. The price, stated rather
+             than buried: (i) is the option with the worst track record in this
+             entry — it has been taken three times and produced nothing — so
+             firing it is knowingly buying a fourth instalment of the same
+             decline, and its only merit is that it keeps the debt VISIBLE and
+             ageing rather than laundering it into a reassignment nobody ruled
+             on. Reversal: none needed; (i) changes nothing but a date.
+  decide_by: 2026-09-23
+
+**NOTE ON THE `CONDUCT-DESK` FLAG, added by this entry's own author the moment
+`decisions.py` raised it, because a conduct entry that self-approves is exactly
+what that flag exists to prevent.** The instrument reads `class: conduct` and
+says *"desk-executable, not the owner's — execute it, report it, do not ask."*
+**It is half right and the half it is right about is already done.** The
+DEFAULT, option (i), is a desk act: I re-dated `w1-world-edit-window` to
+2026-09-23 with a written cause and a stop-rule in `c9aca70`, before this entry
+was written. **What is NOT desk-executable is the RECOMMENDATION.** Option (ii)
+moves design authority for the world edit from the Review to the builder, and
+`D22` — *"design authority over spec design STAYS WITH THE REVIEW, unchanged and
+unnarrowed"* — is the OWNER's resolved ruling. A desk may not carve an exception
+out of a ruling made above it, however narrow the carve-out or however much the
+desk wants it. So this entry asks for exactly one thing and it is the one thing
+I cannot take: permission to hand off the unit that has beaten three of my
+sittings. Everything else in it is executed and reported.
+
+`decide_by` 2026-09-23 is the row's own re-dated deadline rather than a free
+slot, and that is deliberate: this entry and the row it is about must break on
+the same day or the register and the queue will disagree about when the
+stop-rule fires. 09-23 currently carries `w0-too-shallow` and `t205-world-model-
+loses-to-the-ridge-reference`, both of which are W0 questions — so the day is
+already the world's day, which is the right place for this to land.
