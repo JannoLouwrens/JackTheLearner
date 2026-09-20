@@ -18,11 +18,12 @@ more repairs behind it.***
 > This page is the RECEIPT for commits that already exist, every one of them
 > made before this page was written: `b138c38` (THE BUNDLED RULING —
 > `sh02`/`ba03`/`t306`), `0a1b7f1` (`t108-noise-floor` disposed), `af21fe0`
-> (steering `1^10`/`2^10`), `5e32894` (`T2.06` STRENGTHENED), `87c8f04`
+> (steering `1^10`/`2^10`), `acad758` (`T2.06` STRENGTHENED), `87c8f04`
 > (steering item 5 corrected in-sitting), `99cc44e` (ANATOMY — seat 31→32),
 > `c9aca70` (COMPLETENESS addendum + `w1` re-dated), `53f4bee` (`D33` routed),
 > `44d61c4` (`UNREACHABLE_BASELINE` 96→98, mine, transient), `b9703df` (the
-> trend row).
+> trend row), `f1177fb` (the two dates re-placed where the instrument reads
+> them, after the 106th audit).
 
 ---
 
@@ -131,7 +132,7 @@ seven that predate `spec_sha` — `T0.19`, `T1.02`, `T2.06`, `T2.03`, `T2.04`,
 
 **ONE REAL DEFECT IN TWELVE, and it is a threshold with no width.**
 
-- **`T2.06` — STRENGTHENED (`5e32894`).** `CLAIM 2` read
+- **`T2.06` — STRENGTHENED (`acad758`).** `CLAIM 2` read
   `acc_lang > acc_tfidf_name` — strictly greater by **any epsilon**. At
   `n_test = 400` the standard error of that difference is ~0.035, so the gate
   would have certified a margin of **0.0001**: a coin flip dressed as a
@@ -210,11 +211,29 @@ and no act is owed. Week 7's two findings remain ROUTED and cited, with
 this desk's standing debt and neither is due today. The ANATOMY audit added a
 seat rather than re-marking one — see below.
 
-**Queue.** Started the sitting at **15 OVERDUE** of 50 live; ends at **14**, and
-the composition is what matters: `review_queue_violations` 14, the whole movement
-from 12 being **+3 clock / −1 act** yesterday and **+2 clock** overnight.
-68 routed: 32 OPEN, 3 HELD, 16 DISPOSITIONED, 17 ACTED. **Five acts this sitting
-against a demonstrated rate of ~1.29/cycle.**
+**Queue.** Started the sitting at **15 OVERDUE** of 50 live; ends at **12**.
+`review_queue_violations` 15 → 14 (clock) → **12 by ACT**. 68 routed: 32 OPEN,
+3 HELD, 16 DISPOSITIONED, 17 ACTED. **Six acts this sitting against a
+demonstrated rate of ~1.29/cycle**, and it is the first sitting since the
+thirteen broke together on 09-13 to end below where it started.
+
+**AND THE PART OF THAT NUMBER I DID NOT EARN UNTIL THE OVERSEER MADE ME
+(`f1177fb`).** The 106th audit, running concurrently as it does every Sunday,
+read `sh02-null-saturation` as **still OVERDUE** after my ruling marked it
+DISPOSITIONED, and called the mechanical effect **nil**. It was right, and so
+was the instrument. `review_queue.py` stops reading a row at its first
+unindented line, and I wrote the new `DUE:` first below a `###` heading and
+then, on the retry, below a non-indented paragraph. **The ruling was real both
+times and its date was invisible both times**, on `sh02` and on
+`t108-noise-floor` alike — so the violations counter correctly refused to move
+while the file said the work was done. This is the 09-09 scar's family (six DUE
+clauses written above the line the tool takes), and **twice in one morning is
+not bad luck** — it is a property of writing long rulings into a format whose
+parser stops at column 0. Both dates now sit inside the contiguous `DUE:` block
+and both read 2026-09-27. Nothing about either ruling changed; only its
+position. **I am recording this as the day's sharpest finding about this desk,
+because the failure mode is that a desk can rule correctly, write it down
+truthfully, commit it, and still have changed nothing an instrument can see.**
 
 ---
 
@@ -284,7 +303,11 @@ trigger is declared now in `registry.py`, which this row established mechanicall
 is in **no** spec's `IMPL_DEPS` and therefore bills nothing. **The bar goes UP:**
 a future `T1.08` PASS now owes a citation a past one did not.
 
-**3. `w1-world-edit-window` → RE-DATED 09-18 → 09-23 (`c9aca70`), fourth slip,
+**3. `sh02` and `t108-noise-floor` — DATES RE-PLACED (`f1177fb`).** See Part
+2.5. The rulings stand; only their position in the row changed, and
+`review_queue_violations` fell 14 → 12 as a result.
+
+**4. `w1-world-edit-window` → RE-DATED 09-18 → 09-23 (`c9aca70`), fourth slip,
 with the finding written against this desk** — and routed to the owner as `D33`
 rather than re-dated quietly. Stop-rule on harder terms than the `sh02` class:
 if 09-23 breaks, it is not re-dated again.
