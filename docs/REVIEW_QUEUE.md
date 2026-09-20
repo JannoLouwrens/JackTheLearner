@@ -1973,7 +1973,7 @@ only some disk in `.git`.
 ## ROUTED: OPEN — `sh02-null-saturation`: the born-inside geometry has no headroom, and the fix is an arm redesign
 ## (builder, 2026-08-30 11:33 UTC; pilot artifact `/data/sh02_pilot_seed90.json`, spec commit `8abfa70`)
 
-ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed90.json) | OPEN
+ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed90.json) | DISPOSITIONED 2026-09-20 (Review FULL — option (b), the matched outward impulse at spawn; (a) and (c) refused on the record; VENUE repair, so execution is bound to `w1-world-edit-window`. THE STOP-RULE FIRED AND IS DISCHARGED BY A RULING, NOT A DECLINE. See THE BUNDLED RULING below)
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
         promise, and NOT a re-date: this row's arm pick was RE-DATED to the
         2026-09-13 FULL precisely so it could be made IN LIGHT OF the W0/W1
@@ -2041,6 +2041,229 @@ LC.03's darkroom control, LC.03 v2's one-learner-in-five, DP.05's FAIL and
 SH.01's ORACLE_CANNOT that **W0, not the core, is the measured bottleneck** —
 and it is `D10` evidence. Do NOT authorise an envelope growth: the pilot's
 failure is not a budget.
+
+
+    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL). THE DESIGN IS
+        DELIVERED and what this date owes is EXECUTION by the builder, not a
+        decision by this desk. **The STOP-RULE above FIRED** — the 2026-09-19
+        date broke at midnight, the fourth break for this row — and I am
+        recording that it fired and then DECLINING TO DECLINE, on the
+        stop-rule's own stated ground: it exists because "a row nobody will
+        ever rule on should not be occupying a clock", and ruling on it is
+        strictly better than the remedy it was built to force. The stop-rule is
+        DISCHARGED, not weakened, and is NOT re-armed, because after today this
+        row is an execution debt and no longer a decision debt. The same
+        applies to `ba03-null-saturates-the-horizon` (DUE today) and
+        `t306-matched-magnitude-noise-buys-coverage` (DUE tomorrow), both ruled
+        in the same sitting below. All three carried the same stop-rule; none
+        of the three is declined; the bundle is discharged on time for two of
+        three and one day late for the third.
+
+### THE BUNDLED RULING — 2026-09-20, Review FULL. Read this block once; `ba03`
+### and `t306` cite it rather than repeating it.
+
+**The bundle's premise is HALF RIGHT, and finding that is the ruling's first
+act.** These three rows were bundled on 09-09 as "the SAME QUESTION wearing
+three spec ids: a null or anchor that saturates". Designing them separately
+was said to guarantee three incompatible local repairs. Read together with
+fresh eyes they are **two diseases, not one**, and treating them as one would
+have guaranteed the opposite error — one repair applied where it cannot work.
+
+- **Disease A — THE BOUNDED STATISTIC.** The claim statistic has a ceiling and
+  BOTH arms reach it. `BA.03`: time-to-topple, twin at 11.868 of a 12.0 s
+  horizon. `DP.04`: lifespan at 76.7% of its cap. `UB.10`: anchor at ceiling.
+  The signature is that every legal repair inside the file — more seeds, more
+  eval episodes, more budget — only SHRINKS the standard error and LOWERS the
+  bar, and none of them raises the headroom, because headroom is arithmetic
+  here and not noise. **Repair: change the STATISTIC to an unbounded one.**
+- **Disease B — THE FREE-WIN NULL.** The statistic is fine; the VENUE hands
+  the null the ceiling. `SH.02`: born inside the hut, staying still is free, so
+  the motionless twin, the privileged oracle and the both-cosmetic control all
+  hold 1.0000 while the learner reads 0.0136. Changing the statistic cannot
+  help, because any monotone function of 1.0000 still saturates. **Repair: make
+  the free action COST something, in every arm equally.**
+- **`T3.06` IS NEITHER, and belongs in this bundle only by adjacency.** Its
+  control did not saturate — it PASSED (`delta_shuf` +0.1072 +/- 0.0311 over
+  DELTA_MIN 0.05 on every seed). Nothing is at a ceiling. The defect is
+  ATTRIBUTION: matched-magnitude uninformative reward recovers the coverage,
+  so the contrast cannot say the bonus's INFORMATION bought anything. That is
+  the `t211` disease (a metric that cannot separate signal from matched noise),
+  not the saturation disease. Ruling it as a saturation case is precisely the
+  incompatible-repair the bundle was formed to prevent, arriving from the
+  inside.
+
+**THE GENERAL RULE, adopted today and binding on new registrations
+(strengthen-only — it forbids something previously allowed, requires a
+declaration that did not exist, and moves no threshold in any direction).**
+
+> **THE UNSATURATED-NULL RULE.** A claim gate may not be REGISTERED on a
+> statistic whose NULL or ANCHOR sits within the claim's own required margin of
+> that statistic's bound. Every new claim spec must declare, in source before
+> it runs, either `STATISTIC_BOUND: none` or the bound together with the null's
+> measured or piloted distance from it. If the null is AT the bound, the gate
+> is not registerable and the repair is a change of STATISTIC or of VENUE — it
+> is never a change of ENVELOPE. Growing the envelope against a saturated null
+> is the one repair that is arithmetically guaranteed not to work, and this
+> project has now paid for that lesson on four rigs.
+
+**AND THE SEQUENCING RULE THAT GOES WITH IT, because it is what actually
+decides these three:** repairs are taken in ascending mechanical bill —
+**statistic (zero) before scoring (zero) before venue (bills every
+`playground.py` certificate) before envelope (forbidden above)**. A world edit
+is the most expensive instrument this project owns and it is currently
+UNDESIGNED (`w1-world-edit-window`, OPEN, +2 d). Nothing may be sent to it that
+a statistic change can fix.
+
+**RULING ON `SH.02` — option (b), THE MATCHED OUTWARD IMPULSE AT SPAWN.**
+
+Disease B, so the statistic is not the lever. Rejecting the other two on the
+record, because the rejections carry the reasoning:
+
+- **(a) score against the RANDOM walk (0.3639) is REFUSED.** It does buy
+  headroom, and it is the tempting cheap answer. But it changes only the
+  COMPARATOR while leaving the born-inside geometry intact: the twin would
+  still hold 1.0000, the oracle would still hold 1.0000, and the spec would
+  then be claiming *"the learner shelters better than a wanderer"* — a claim
+  whose own privileged oracle beats it and which therefore cannot be evidence
+  that MAINTENANCE was learned. A contrast that leaves three degenerate arms at
+  the ceiling and looks away from them is not repaired, it is re-aimed.
+- **(c) score only lives in which the agent left at least once is REFUSED, and
+  the reason is a defect worth naming.** It is cheap and it does remove the
+  saturation — but it removes it by CONDITIONING THE SAMPLE ON THE BEHAVIOUR
+  BEING MEASURED. The twin never leaves, so it contributes zero scored lives:
+  the null is not beaten, it is DELETED, and a claim with no null is not a
+  claim. This is the selection-effect shape the ladder exists to catch, and it
+  would have entered through a repair.
+- **(b) is ADOPTED.** Give every arm a matched outward impulse at spawn so
+  "stay" costs the same in every arm. This removes the free win at its source
+  rather than at the scoreboard: the twin's 1.0000 becomes impossible BY
+  CONSTRUCTION, the oracle stays a real oracle, and the both-cosmetic control
+  stays a real control. It is the only one of the three under which all three
+  degenerate arms remain in the comparison and stop winning it.
+
+**Its price, stated rather than buried: (b) is a VENUE repair and the
+sequencing rule above therefore BINDS IT TO `w1-world-edit-window`**, which is
+open and overdue — so this row's execution is blocked behind a window this desk
+also owes. I will not launder that by picking the cheap arm instead. Declared
+as `BLOCKED-BY: w1-world-edit-window` in substance; the date above is the
+builder's execution date if the window lands first, and if it does not, this
+row re-dates ON THE WINDOW, not on a guess.
+
+**The one thing the builder MAY do meanwhile, and its limits.** `SH.02` may be
+run under (a) as a **DIAGNOSTIC ONLY** — scored against the random walk,
+reported in the run record, and **NEVER as the registered gate**. It costs CPU
+this project has spare, it measures whether the learner clears a non-degenerate
+comparator at all, and it tells us before the expensive window opens whether
+(b) is worth the certificates it will bill. A diagnostic that is labelled a
+diagnostic is not a re-pointed null. If it is run, the registered `HEADROOM`
+VOID stands untouched and no ledger status may move on it.
+
+**RULING ON `BA.03` — option (c), CHANGE THE METRIC. (b) is re-routed, not
+dropped.**
+
+Disease A. `claim_headroom_ratio` 0.236 +/- 0.184 against `HEADROOM_MIN_MULT`
+2.0 is not a seed problem — the claim needs 1.336 s and the world has 0.132 s,
+and the row's own arithmetic shows every in-file repair shrinks `gain_se` and
+lowers the bar without touching that gap.
+
+- **(a) RAISE THE HORIZON is REFUSED, and it is the important refusal.** It is
+  an ENVELOPE growth against a saturated statistic, which the general rule above
+  now forbids outright. Concretely: the twin survives to 12 s, so it will
+  survive to 15 s, and the repair buys one horizon and re-arms the identical
+  failure at the new cap — at full CPU cost, with a VOID at the end of it. The
+  `sh02` row already declared "the pilot's failure is not a budget"; this makes
+  that declaration general.
+- **(b) HARDEN THE PERTURBATION is the right SCIENCE and the wrong ACT TODAY.**
+  The spec's own ANATOMY table points at it — the winning vest policy reads
+  PLANTAR TOUCH and nothing vestibular; deleting touch costs it 7.3 s, deleting
+  any true vestibular block costs it nothing — so one kick per episode is
+  survivable by a route that makes the graviceptive channel unnecessary, and
+  that is the question BALANCE actually needs answered. But it touches
+  `playground.py`, bills the 21 listed certificates plus `BA.01`, and belongs
+  in the undesigned world-edit window. **It is re-routed as its own row**
+  (`ba03-vestibular-channel-is-never-load-bearing-under-one-kick`), bound to the
+  window, so that adopting (c) does not quietly retire the finding. A cheap
+  repair that erases an expensive question is not a repair.
+- **(c) is ADOPTED**, with the statistic named rather than left open:
+  **INTEGRATED ABSOLUTE TILT over a FIXED 12 s window** (fall back to RECOVERY
+  COUNT only if integrated tilt is shown degenerate in pilot, and say so in the
+  record). It is unbounded above, it is defined for every life including the
+  ones that never topple — which is exactly where time-to-topple threw its
+  information away — and it carries no staleness bill: `HORIZON`, `N_EVAL` and
+  the metric all live in `ba_03_braces_against_a_surface.py`, which no other
+  certificate imports.
+
+**STRENGTHENING BINDING ON THE `BA.03` REDESIGN, and it is not optional.** The
+new bar is set from the RANDOM walk's measured distribution, not from the blind
+twin — the twin is retained as a REPORTED arm but may no longer be the thing
+the claim clears, because a null that survives to the horizon carries no
+information about tilt. All SIX currently-green rig conjuncts are carried
+forward UNCHANGED (random topples on 94.7% and survives 2.30 s; best trained
+arm beats it by 9.56 s; no-surface control 0.0094 s against the 0.30 cap;
+`gripboth` 4.29 s behind the twin; the noise control at `gain_noise` -7.011).
+**A change of claim statistic may not drop a control that is currently
+passing** — that is the line between a redesign and a rescue, and the T1.02
+precedent puts this redesign on the legitimate side only because the
+EXPERIMENT is demonstrably wrong: a 12 s ceiling cannot measure durability.
+
+**RULING ON `T3.06` — (a) AND (b), BOTH, and NOT (c).**
+
+Not a saturation case, as established above. Two independent defects, so two
+independent repairs, and they do not interact:
+
+- **(b) RE-DERIVE `RANDOM_DWELL_MAX` AS AN n-AWARE ORDER-STATISTIC BOUND —
+  ADOPTED.** This is what actually VOIDed the run: `random_dwell_worst_life`
+  0.0227 against a 0.02 cap frozen on a 16-life pilot and READ AT 48 LIVES. An
+  extreme-value instrument whose exceedance grows with n by construction is
+  measuring n, not the world. The replacement is an exogenous quantile of the
+  ANALYTIC chance dwell at the read n. **It is explicitly permitted to come out
+  LOWER at n=16 and HIGHER at n=48, and that is not a weakening** — it is the
+  same bound correctly evaluated, and the direction is not to be chosen after
+  seeing which way it falls. Derived in source before the run, from the
+  analytic distribution, with the derivation in the file. This also discharges
+  `aggregate-hides-worst-seed`'s instance on this row (the gate fired on a
+  mean+1.5s bound over seeds; the actual worst seed is unanswerable from the
+  aggregate at <= 0.0223) — **the new bound must be read against the ACTUAL
+  worst seed, never an aggregate**. The parent row keeps its own general
+  question.
+- **(a) RESCORE AGAINST THE NOISE ARM — ADOPTED, WITH THE RANDOM-ACTION
+  COMPARATOR BINDING, and I expect it to FAIL.** The new gate requires BOTH
+  `cov(curious) - cov(shuftask) >= 0.05` (recorded-but-not-counting at +0.1385,
+  t = 3.94 — ample) AND `cov(curious) - cov(random) >=` the C-RANDREW clearance
+  `CURIOSITY_BAKEOFF.md` §O1 already demands (>= 1.5 vs the random-reward arm).
+  Field watch wk5 measured `curious - random` at **+0.0124 +/- 0.0317,
+  t = 0.39 — no clearance at all.** So the honest forecast is that T3.06 fails
+  its redesigned gate, and **that is why the redesign is legitimate**: a
+  conjunct is being ADDED that the spec is currently expected to fail, against
+  a standard this project's own bakeoff document already wrote down and this
+  spec was not being held to. The new gate is strictly HARDER than the old one
+  — old: `delta_coverage` against a no-bonus null (green at +0.2458, 5.8 sigma);
+  new: that, AND matched-magnitude noise, AND a random-action policy. Any
+  redesign that beats only `shuftask` re-buys the same unattributable contrast
+  and is refused in advance.
+- **(c) THE WORLD ARM IS REFUSED.** (b) demonstrates the breach is instrument
+  n-dependence, so spending the project's single most expensive instrument on
+  it would be spending the world-edit window on the cheapest defect in the
+  bundle. The goal-attractor question is not dismissed — if (b) lands and the
+  ACTUAL worst seed STILL breaches an n-correct bound, then and only then is
+  it a world question, and it is re-routed at that point with a measurement
+  behind it instead of a suspicion.
+- **AND THE `kills:` FIELD IS REPAIRED IN THE SAME MOTION.** As frozen, `_check`
+  maps control-red to FAIL, which fires `kills: IntrinsicCuriosityModule` off a
+  run whose own control says the instrument cannot attribute. A spec may not
+  execute a capital sentence on the strength of a contrast it has just declared
+  uninterpretable. Control-red must map to VOID, not FAIL. **This is a
+  strengthening and not a rescue: it removes a FALSE kill, it cannot save a
+  true one** (a green control with a red claim still FAILs and still kills),
+  and it is the same defect `t211-diayn-metric-cannot-separate-mi-from-noise`
+  routed one commitment over. Ordered on T3.06 only; `t211` keeps its own row.
+
+**WHAT THIS RULING DOES NOT DO.** It does not design the world-edit window —
+two of these three repairs now queue behind it and the third does not need it,
+which is itself the argument for designing it, and that argument goes to the
+owner rather than into another date on this page. It does not move a single
+threshold downward. It does not touch `SH.02`'s, `BA.03`'s or `T3.06`'s
+recorded VOID rows, all three of which stand exactly as run.
 
 ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
     DUE: 2026-09-20 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
@@ -2523,7 +2746,7 @@ designed to be able to come back red as a *venue* verdict. Naming `LG.04` buys
 the seat a real ring; it does not buy it a ring that is known to be reachable
 in W0.
 
-ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1, 3.99 CPU-h, ledger row VOID) | OPEN
+ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1, 3.99 CPU-h, ledger row VOID) | DISPOSITIONED 2026-09-20 (Review FULL — option (c), integrated absolute tilt at a FIXED horizon; (a) refused as a forbidden envelope growth, (b) re-routed to the world-edit window rather than dropped. See THE BUNDLED RULING on `sh02-null-saturation`)
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
         promise, and NOT a re-date: like `sh02-null-saturation`, this row's arm
         choice was moved onto the 2026-09-13 FULL on the stated ground that a
@@ -2598,7 +2821,24 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
     capacity of 6, and these make it 13 ROWS — but ONE unit of design, and the
     FULL is the only sitting with the hours to take the general form.
 
-ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | OPEN
+
+    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL), ON TIME, on the
+        Sunday FULL this row was re-dated onto. THE DESIGN IS DELIVERED; what
+        this date owes is EXECUTION by the builder. **RULED: option (c), CHANGE
+        THE METRIC** — integrated absolute tilt over a FIXED 12 s horizon, bar
+        set from the RANDOM walk rather than the blind twin, all six green rig
+        conjuncts carried forward unchanged, zero staleness bill. **(a) RAISE
+        THE HORIZON is REFUSED** as an envelope growth against a saturated
+        statistic, which THE UNSATURATED-NULL RULE adopted today forbids
+        outright. **(b) HARDEN THE PERTURBATION is the right science and is
+        NOT dropped** — it is re-routed as its own row, bound to the world-edit
+        window, because it bills 21 `playground.py` certificates plus `BA.01`.
+        The stop-rule on this row is DISCHARGED by the ruling, not by a
+        decline. Full reasoning, the general rule and the refusals are in THE
+        BUNDLED RULING on `sh02-null-saturation` above; it is not repeated here
+        because a ruling copied three times is a ruling that drifts three ways.
+
+ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | DISPOSITIONED 2026-09-20 (Review FULL — (a) AND (b) both, (c) refused; MISBUNDLED, this is the t211 attribution disease and not the saturation disease; the random-action comparator becomes binding and the `kills:` field is repaired. See THE BUNDLED RULING on `sh02-null-saturation`)
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
         the next Review FULL run. Curiosity is the commitment with the most
         declared specs in the project after unison (12, 2 passing), and T3.06
@@ -2677,6 +2917,27 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
     Declared cost, honestly: 09-13 already carried 10 rows against a measured
     capacity of 6, and these make it 13 ROWS — but ONE unit of design, and the
     FULL is the only sitting with the hours to take the general form.
+
+
+    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL), ONE DAY EARLY.
+        THE DESIGN IS DELIVERED; what this date owes is EXECUTION by the
+        builder. **RULED: (a) AND (b), BOTH, and NOT (c)** — and the first
+        finding is that THIS ROW WAS MISBUNDLED. Its control did not saturate,
+        it PASSED; the defect is ATTRIBUTION, not saturation, which makes it
+        the `t211` disease and not `sh02`'s. (b) re-derives `RANDOM_DWELL_MAX`
+        as an n-aware order-statistic bound from the analytic chance dwell,
+        read against the ACTUAL worst seed and never an aggregate. (a)
+        rescores against the noise arm with the RANDOM-ACTION comparator
+        BINDING per `CURIOSITY_BAKEOFF.md` §O1 — strictly harder than the old
+        gate, and on the wk5 reading (`curious - random` +0.0124 +/- 0.0317,
+        t = 0.39) T3.06 is EXPECTED TO FAIL it, which is the point. (c) the
+        world arm is REFUSED as the cheapest defect in the bundle being sent to
+        the most expensive instrument. The `kills:` field is repaired in the
+        same motion: control-red maps to VOID, not FAIL, so the spec stops
+        executing `IntrinsicCuriosityModule` off a contrast it has itself
+        declared uninterpretable. The stop-rule on this row is DISCHARGED by
+        the ruling, not by a decline. Full reasoning in THE BUNDLED RULING on
+        `sh02-null-saturation`.
 
 ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) + 78aad78 (ARENA-UNREACHABLE) | ACTED 2026-09-16 (Review DAILY, executing commit `34116ca` — the design is delivered and it is that NO RE-PARENT IS OWED: all three weld roots are VOID-on-a-run, so the repair is a SUCCESSOR SPEC and every dependent's `depends_on` stays untouched. Three dates were set against `W1` registration, which was never this row's blocker. See ANSWER below)
     DUE: 2026-09-06 | the re-parenting design, owed by the Review's Sunday
@@ -7609,3 +7870,44 @@ ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19
     mass, live at routing: frees 6 (LT.03-LT.07, LT.09) / blocks 8, the
     third-largest FAIL mass on the board.
     DUE: 2026-09-24 | redesign disposition, the Review's
+
+## ROUTED 2026-09-20 (Review FULL): `ba03-vestibular-channel-is-never-load-bearing-under-one-kick`
+## — split out of `ba03-null-saturates-the-horizon` so that adopting the cheap
+## metric repair does not quietly retire the expensive scientific question
+
+ROUTED: ba03-vestibular-channel-is-never-load-bearing-under-one-kick | 2026-09-20 | 9e7cc86 (BA.03 attempt 1 ANATOMY table) | OPEN
+    **Why this row exists.** Today's bundled ruling adopted `BA.03` option (c)
+    — change the saturating statistic — and refused option (b), hardening the
+    perturbation, on COST grounds alone: (b) touches `playground.py`, bills the
+    21 certificates listed at the head of this file plus `BA.01`, and belongs
+    in a world-edit window that is itself undesigned. A refusal on cost is not
+    a refusal on merit, and a question refused on cost with no row left behind
+    is a question this project has silently decided. This row is the
+    non-silence.
+
+    **The measurement, carried verbatim from the parent row so it survives
+    independently.** `BA.03`'s own ANATOMY table reads: the winning vest policy
+    uses PLANTAR TOUCH and nothing vestibular — deleting touch costs it 7.3 s,
+    deleting any true vestibular block costs it NOTHING. One kick per episode
+    is survivable by a purely plantar route. So BALANCE — a zero-pass GOAL.md
+    commitment with three declared specs — currently has no venue in which a
+    graviceptive channel can earn its parameters, and the metric repair adopted
+    today does not change that: integrated tilt under one kick is still
+    survivable by touch.
+
+    **What is owed, and by whom.** This is a VENUE question, so it is owed BY
+    THE WORLD-EDIT WINDOW, not by a builder slot: a repeated or larger
+    disturbance regime under which the plantar route is insufficient, so that
+    an ablation of the vestibular block has somewhere to show a cost. It is
+    NOT a request to weaken `BA.03` and it moves no bar — it asks for a harder
+    world, which is the direction this desk is permitted to move things.
+
+    **Sequencing, declared:** do NOT start this before `BA.03`'s (c) redesign
+    lands. If integrated tilt under the EXISTING one-kick regime already
+    separates the vestibular ablation, this row is discharged for free and the
+    21-certificate bill is never paid. Measure first.
+    BLOCKED-BY: w1-world-edit-window
+    DUE: 2026-09-27 | pick the disturbance regime, in the world-edit window and
+        not before it, and only if BA.03's (c) re-run has not already answered
+        it. Dated onto the same day as the three rows it was split from so the
+        world-edit bill is read as ONE bill, per the bundling rule.
