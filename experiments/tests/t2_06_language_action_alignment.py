@@ -54,7 +54,22 @@ question one tier early.
 PRE-REGISTERED GATES (all exogenous, per seed, before first run):
   CLAIM 1  z_binomial(retrieval_acc vs 1/8, n_test) >= 5 on EVERY seed
            (T2.01's sigma precedent; n_test=400 -> acc >= 0.208).
-  CLAIM 2  acc_lang > acc_tfidf_name on EVERY seed.
+  CLAIM 2  acc_lang - acc_tfidf_name >= MARGIN_LANG on EVERY seed.
+           STRENGTHENED 2026-09-20 (Review FULL, Part 2 re-examination). As
+           first written this read `acc_lang > acc_tfidf_name` — strictly
+           greater by ANY epsilon. At n_test=400 the standard error of that
+           difference is ~0.035 (binomial, p~0.5), so the original gate would
+           have certified a margin of 0.0001: a coin flip dressed as a
+           threshold, and the `hash-salt-lottery-in-a-gated-metric` class
+           (queue, disposed 2026-09-19) in a second costume. MARGIN_LANG is
+           EXOGENOUS — derived from n and the binomial alone, 2 * sqrt(2 *
+           0.25 / 400) = 0.0707, declared as 0.07 — and NOT from the observed
+           spread. Disclosed for audit rather than buried: the registered run
+           (f47c372) recorded per-seed margins 0.1050 / 0.1425 / 0.1250, so it
+           clears the new bar with room; the bar was not tuned to them, and
+           the arithmetic above is checkable without them. Strengthen-only:
+           the bar moves UP, the comparison is unchanged, no conjunct is
+           dropped.
   CONTROL  (registry: shuffled pairing collapses to chance) — a twin trained
            with actions shuffled across samples: its joint retrieval_acc must
            NOT beat 1/8 by 3 sigma on any seed. If it does, the ruler leaks
@@ -115,6 +130,12 @@ Z_CLAIM = 5.0                  # per-seed binomial sigma vs chance (claim)
 Z_CONTROL = 3.0                # the shuffled twin must stay under this
 Z_REFERENCE = 5.0              # the centroid reference must clear this
 MIN_TOKENIZABLE_CATS = 6
+# CLAIM 2's margin, EXOGENOUS: two standard errors of a difference of two
+# proportions at n_test = 400, p ~ 0.5 -> 2 * sqrt(2 * 0.25 / 400) = 0.0707.
+# Declared at 0.07. Added 2026-09-20 by the Review's Part 2 re-examination,
+# replacing a strict `>` that decided at zero margin. See the docstring's
+# CLAIM 2 entry for the full reasoning and the disclosure.
+MARGIN_LANG = 0.07
 
 # ── the committed action family (drawn once; the literal seed is the spec) ──
 _S = np.random.RandomState(260814)
@@ -380,7 +401,9 @@ def _experiment(seed: int) -> dict:
         "n_cats_tokenizable": _CACHE["n_cats_tokenizable"],
         "min_per_cat": min(r["min_per_cat"] for r in rows),
         "beats_chance_all": all(r["z_joint"] >= Z_CLAIM for r in rows),
-        "beats_tfidf_all": all(r["acc_lang"] > r["acc_tfidf_name"]
+        "beats_tfidf_all": all(r["acc_lang"] - r["acc_tfidf_name"]
+                               >= MARGIN_LANG for r in rows),
+        "margin_lang_min": min(r["acc_lang"] - r["acc_tfidf_name"]
                                for r in rows),
         "ref_ok_all": all(r["z_ref"] >= Z_REFERENCE for r in rows),
         "det_ok_all": all(r["det_ok"] for r in rows),
