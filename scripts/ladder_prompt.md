@@ -577,7 +577,9 @@ envelope (forbidden).** Nothing goes to the world-edit window that a statistic
 change can fix.
 
 1^10. **IN THIS ORDER. Items 1 and 2 are real runnable science and they are the
-first such items on this board in a week. Do not skip them for paperwork.**
+first such items on this board in a week. Do not skip them for paperwork.
+Item 5 was REWRITTEN later in the same sitting — read it, it now carries a GPU
+dispatch the earlier version of this block told you did not exist.**
 
    1. **`BA.03` OPTION (c) — CHANGE THE SATURATING METRIC. Zero staleness bill,
       CPU, and it is yours to implement now.** Ruled today: the claim statistic
@@ -640,14 +642,30 @@ first such items on this board in a week. Do not skip them for paperwork.**
       the `(iv)` implementation. Unchanged from `1^9` item 4. Do not fold them
       together and do not start either early.
 
-   5. **`W38`'s 30 FREE GPU HOURS STILL HAVE NO LEGAL BUYER, AND THAT IS STILL
-      MY DEBT.** Today's rulings produced real work but **all of it is CPU** —
-      `BA.03` and `T3.06` are both `cpu<2h` and neither can honestly spend a
-      Kaggle hour. The only GPU-class unblock on the board runs through `T1.08`'s
-      PIPELINE REPAIR, which has no design, which is mine, and which the owner is
-      reading about this week. **Do not manufacture a dispatch to spend the
-      inventory.** W37's ~27.78 h died unspent and the audit called that refusal
-      correct; the same refusal is correct until a design lands.
+   5. **`T2.06` RE-BUY — `W38` HAS A LEGAL GPU BUYER FOR THE FIRST TIME, AND
+      THIS ITEM CORRECTS THE ONE I WROTE EARLIER IN THIS SAME SITTING.** When
+      `1^10` was first committed, item 5 read *"W38's 30 free GPU hours still
+      have no legal buyer ... all of it is CPU"*. **That is now false, and it
+      was my own next act that made it false** — I am rewriting it rather than
+      leaving you steering by it, which is the whole reason this block exists.
+      Part 2's re-examination STRENGTHENED `T2.06`: `CLAIM 2` read
+      `acc_lang > acc_tfidf_name`, strictly greater by any epsilon, on a
+      comparison whose standard error at n_test=400 is ~0.035 — a gate that
+      would have certified a margin of 0.0001. It now requires
+      `acc_lang - acc_tfidf_name >= MARGIN_LANG = 0.07`, exogenous from n and
+      the binomial. **The certificate is STALE and the re-buy is `gpu<20min`
+      with `T1.01` PASS behind it — a legal, dependency-satisfied, honestly-owed
+      GPU dispatch.** Take it. The registered run recorded per-seed margins
+      0.1050 / 0.1425 / 0.1250, so it should clear the new bar; if it does not,
+      **record the FAIL and do not touch `MARGIN_LANG`** — the margin is
+      arithmetic and is not negotiable against its own result.
+      **What is still true from the old item 5:** this is ~20 GPU-minutes
+      against 30 hours, so the inventory is still overwhelmingly unbought, and
+      the reason is unchanged — the only LARGE GPU unblock runs through
+      `T1.08`'s PIPELINE REPAIR, which has no design, which is mine, and which
+      the owner is reading about this week. **Beyond the `T2.06` re-buy, do not
+      manufacture a dispatch to spend the inventory.** W37's ~27.78 h died
+      unspent and the audit called that refusal correct.
 
 2^10. **PROHIBITIONS — `2^9`, `2^8` and `2^7` below are carried IN FULL and
 still bind. These are ADDITIONS.**
