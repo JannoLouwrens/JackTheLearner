@@ -6308,7 +6308,7 @@ ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-1
 
 ---
 
-ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.08 strengthening, Review items 4a/5) | OPEN
+ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.08 strengthening, Review items 4a/5) | DISPOSITIONED 2026-09-20 (Review FULL — the docstring is a REAL REQUIREMENT, not an overclaim; the conjunct is ARMED but BOUND to the T1.08 pipeline-repair dispatch and forbidden before it. See RULING below)
     DUE: 2026-09-16 | a design answer owed by the Review: WHICH downstream spec
     should quote the noise floor, and is it worth a GPU re-buy to make it do so.
     Date taken from `review-queue`'s own `next_free_due` (the mechanical answer
@@ -6374,6 +6374,73 @@ mechanically over all test files, 0 hits). Declining costs nothing and leaves
 have discriminated* — caught BEFORE the run rather than after it, which is the
 first time in the eleven-row history of that class. Worth joining to those rows
 if B3 item 3's naming happens.
+
+    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL), **four days
+        late, and the lateness is this desk's**. THE DESIGN IS DELIVERED; what
+        this date owes is a one-line DECLARATION by the builder, not a
+        decision by this desk and not a dispatch.
+
+### THE RULING — 2026-09-20, Review FULL
+
+**THE QUESTION IS ANSWERED YES: `"should be quoted"` IS A REAL REQUIREMENT AND
+NOT AN OVERCLAIM.** `T1.08` exists to produce `min_detectable_effect`. A noise
+floor that 49 transitive dependents quote **zero** times is not an advisory
+number, it is a number in a drawer — and the whole Tier-2-and-above surface of
+this ladder is improvement claims, which is precisely the population a floor
+bounds. Calling it advisory would be the cheap answer and it would retire, by
+redefinition, the only instrument this project has for asking *"is that
+improvement bigger than this pipeline's own noise?"* I decline to buy relief
+that way. The docstring stands.
+
+**BUT THE CONJUNCT IS NOT ARMED TODAY, AND THE REASON IS NOT COST.** The row
+offers one price tag (a `t2_03_*.py` edit plus a GPU re-buy) and the 09-13 note
+correctly removes it as an argument, since `T2.03` is an UNBACKED CERTIFICATE
+and its re-buy is owed anyway. **The blocker is ORDER, not money.** Editing
+`t2_03_*.py` today stales a STANDING PASS whose dependency `T1.08` is FAIL — so
+`run_spec` would refuse to re-derive it, and the edit would manufacture a stale
+claim that provably CANNOT BE CLEARED by anyone, for an unbounded time, to
+express a requirement. Creating unclearable debt is not how a requirement gets
+recorded in this repo. That is the same defect in a new costume as arming a bar
+against `0 of 49` available: an act whose outcome is decided before it runs.
+
+**WHAT IS ORDERED, and it costs nothing today.**
+
+1. **The citation conjunct is ARMED IN THE SAME DISPATCH THAT RE-BUYS `T1.08`
+   AFTER ITS PIPELINE REPAIR — never before, never separately.** One dispatch,
+   one bill, no orphan stale claim. `T2.03`'s edit and re-buy ride that same
+   dispatch, because `T2.03` cannot be re-derived until `T1.08` passes anyway;
+   the two bills the 09-13 note observed are one bill and this is the sentence
+   that makes them one act.
+2. **The TRIGGER is declared in source now, so it cannot be forgotten when the
+   repair lands.** `T1.08`'s spec carries a machine-readable note that
+   `CITE_MARKER` arming is OWED at its next PASS-bound re-buy, naming `T2.03`
+   as the first citer. This is a declaration, not a gate: it moves no
+   threshold, arms no bar, refuses no run, and — per this row's own mechanical
+   finding that `experiments/registry.py` appears in **no** spec's `IMPL_DEPS`
+   (0 hits over all test files) — it bills **no** certificate if it is written
+   there. Write it where it is free.
+3. **`mde_citing` stays REPORTED and ungated until a citation is real**, and it
+   is to be read as the completeness reading it already is: `mde_citing 0 of
+   mde_downstream 49` on every `T1.08` run is the honest fallback the row
+   itself named, and it stays visible for exactly as long as the requirement is
+   unmet.
+
+**THE STRENGTHENING THIS ROW BUYS, stated so it is not mistaken for a deferral.**
+Before today, `"should be quoted"` was a docstring sentence with no owner, no
+date and no mechanism — 49 dependents were free to ignore it forever and the
+only trace was a counter nobody was accountable to. After today it is a
+REQUIREMENT with a named first citer, a named triggering event, and a
+declaration in source that fires at that event. The bar goes UP: a future
+`T1.08` PASS now owes a citation that a past `T1.08` PASS did not.
+
+**WHAT THIS RULING DOES NOT DO.** It does not design `T1.08`'s pipeline repair
+— `heldout_cv_pct` ~40 against a 7.0 bar is a fact about this repo's pipeline
+(branch (i) BOTH_ABOVE, n=5, `583a1e9`) and its repair is a separate question
+this desk still owes. It does not authorise a GPU dispatch. It moves neither
+the 7.0 bar nor any `T2.03` threshold. And it does not make `T1.08` any less
+the project's largest blocker: 45 specs and ~29 idle Kaggle hours still stand
+behind a pipeline repair that has no design, which is the item the owner is
+reading about this week.
 
 ---
 
