@@ -7377,3 +7377,144 @@ entries are the cost, not this one.
 back on the owner's desk with its options, default and `decide_by` untouched.**
 The owner may also simply rule `D28` at any time before 2026-09-21, which
 supersedes this notice entirely.
+
+---
+
+## D32 — Your `D20` ruling fired with one sentence that this repository reads two opposite ways, and a registered run went through the lane 21 hours later while the guard built to enforce it said `launchable`. (2026-09-20, overseer, 105th audit)
+
+**The sentence, from your own resolution** (`docs/DECISIONS_RESOLVED.md:1321`,
+`D20` RESOLVED BY ARMED DEFAULT, fired 2026-09-19 ~00:2x):
+
+> `cpu<48h` is not a class this box can serve under that reading; **the detached
+> lane is declared CLOSED to registered spec work**; the builder registers no
+> new spec in the class.
+
+The middle clause carries no class scope. The clauses on either side are about
+`cpu<48h`. Both readings are available from the text, and **this repository
+currently holds both**:
+
+| surface | reading | evidence |
+|---|---|---|
+| `experiments/run.py:_lane_verdict` | **unscoped** — refuses every setsid-descended registered run, any cost class | refusal string: *"session leader (setsid) — detached at birth; D20 closed this lane for registered runs"* |
+| `docs/PROGRESS.md` (Review, 2026-09-19) | **scoped to `cpu<48h`** | *"`D20`'s closure is scoped to the `cpu<48h` class and the `launch_detached.sh` lane"* — no source cited |
+
+**Why the collision was silent for 21 hours, and this is the part that is a bug
+rather than a question.** `scripts/launch_detached.sh` launches
+
+```sh
+setsid nice -n 19 env -u JACK_ITER_DEADLINE "$PYBIN" -m experiments.cpu_budget wrap "$LABEL" "$@" ... &
+```
+
+so the session leader is `cpu_budget wrap`, and `experiments/cpu_budget.py:463`
+runs the spec as its **child** via `subprocess.Popen`. For the spending process
+`getsid(0) != getpid()` and `getppid()` is the live wrapper, not 1 — so neither
+of `_lane_verdict`'s two refusals can fire. Demonstrated with the read-only
+`run lane` probe (spends nothing):
+
+```
+A) setsid DIRECTLY on the spend path  ->  sid == pid  ->  EXIT 3, refused
+B) setsid + ONE interposed Popen parent (launch_detached.sh's shape)
+   sid=2145106 pid=2145108  ->  "lane: launchable"  ->  EXIT 0
+```
+
+`scripts/test_lane_guard.sh` is ALL GREEN on 17 cases and **every one of its
+three `setsid` cases (lines 75, 94, 114) uses shape A** — a launcher this
+repository does not use. The guard was certified against the shape that does not
+occur here.
+
+**The realised instance, not a forecast.** On 2026-09-19 at **21:11:01** —
+6 h 46 m after the guard shipped (`b4fd863` 14:18, corrected `d730ff9` 14:25),
+and 21 h after `D20` fired — `scripts/launch_detached.sh` launched
+`python -m experiments.run LT.02`, a **registered** spec run in class
+`cpu<10min`. `/data/jack-logs/lt02_run_2107.log` holds the launch header and the
+guard's entire output, which is the **soft** `LANE WARNING` only — the signal the
+guard's own docstring says also fires on ordinary sandboxed foreground calls, and
+which was demoted from a refusal at 14:25 for exactly that reason. `JACK_LANE_WAIVER`
+was not set; no waiver banner was printed. The run completed and bought a ledger
+row: `LT.02` attempt 1 FAIL, `ran_at 2026-09-19T21:21:54`, `duration_s 652.35`
+(→ started 21:11:02), clean stamp, `dirty_files: None`.
+
+**Nothing about that row's science is in question and it must not be re-run.**
+Its controls were green, its single fired conjunct is a finding about the venue,
+and it is routed. What is in question is only which lane it was allowed to use.
+
+**Why this is yours and not a desk's.** `D20` is SYSTEM.md class 3 (CONDUCT) —
+your ruling, and its own resolution says the enforcement *"is held by NOTHING but
+this note"*. A desk cannot widen or narrow the scope of your ruling by reading it
+one way on its own page. It also matters immediately rather than academically:
+the unscoped reading removes the **only** mechanism that has ever carried a long
+CPU run across an hourly slot boundary here. `LT.02` died twice inside slots
+(19:11 and 20:13, the dies-with-parent class's 8th and 9th occurrences) and
+landed on the third attempt **because** the detached lane survives slot death.
+Closing it for all classes is a real cost to pay knowingly, not by inference from
+a sentence.
+
+**Options:** (i) UNSCOPED — the closure covers every registered spec run at any
+cost class; the guard is repaired to see through wrappers and to REFUSE there.
+(ii) SEE IT AND SAY IT — the guard is repaired to *detect* the wrapped detached
+lane and print a loud, lane-specific mark naming `launch_detached.sh` and this
+entry; the refuse/permit line is left exactly where it stands today (direct
+setsid refused, wrapped lane permitted) until you rule. (iii) SCOPED — the
+closure covers `cpu<48h` only; the guard's unconditional refusal is narrowed to
+that class and the Review's sentence is the correct reading. (iv) DECLINE — the
+state stays as it is, and this entry records that a guard reporting `launchable`
+for the lane it names as closed is chosen rather than overlooked.
+
+DECIDE: D32
+  class:     goal
+  blocks:    no spec id — which is why no `blocked` ranking, no `coverage`
+             class and no `champions` check can see it, and why it took an
+             organ reading `_lane_verdict` against `launch_detached.sh`'s
+             actual process topology by hand. What is at stake is whether the
+             only CONDUCT ruling this project has made about how compute may be
+             launched has one reading or two. The cost is realised, not
+             forecast: a registered ledger row was bought through the disputed
+             lane 21 hours after the ruling fired, and the control built to
+             enforce the ruling reported `launchable`.
+  default:   (ii) SEE IT AND SAY IT. `_lane_verdict` learns to recognise the
+             wrapped detached lane — whether by walking the ancestry to the
+             session leader or by reading an explicit marker the launcher
+             exports is the builder's call, not this default's — and prints a
+             loud, lane-specific mark naming `launch_detached.sh` and this
+             entry. The refuse/permit line does not move in either direction:
+             a direct setsid launch is refused exactly as it is today, and a
+             wrapped detached launch is permitted exactly as it is today. This
+             picks only already-permitted actions: making a launch lane visible
+             is what `notice_exited_dispatches` and `run lane` already do, and
+             naming a lane creates no authority over it. It moves no threshold
+             in either direction, edits no GOAL.md text, widens nothing,
+             narrows nothing, spends no GPU, commits no budget, fails no spec,
+             refuses no run that is permitted today, stales no certificate
+             beyond the ordinary `run stale` re-buy of whatever declares
+             `run.py`, and leaves no commitment claim-dead. It is MONOTONE on
+             the thing at issue: a mark can only make the lane MORE visible,
+             never permit more of it. Option (i) UNSCOPED is deliberately NOT
+             the default because it NARROWS what is permitted today, and would
+             remove the only mechanism that has carried a long CPU run past a
+             slot boundary here — a default may not take a capability away on
+             the strength of a sentence that admits two readings. Option (iii)
+             SCOPED is deliberately NOT the default because it WIDENS what the
+             code permits today (the code refuses all classes), and a default
+             may never widen what is allowed. Option (iv) DECLINE is
+             deliberately NOT the default because it writes off a demonstrated
+             blind spot in a control and leaves the next instance equally
+             silent; a default may record a debt but should not discard a
+             measurement. The price, stated rather than buried: (ii) buys
+             VISIBILITY and nothing else. The scope question stays open, the
+             wrapped lane stays usable, and if nobody reads the mark the next
+             registered run goes through it exactly as this one did — which is
+             why (i) and (iii) are on this list and why this is on your desk
+             rather than recorded and closed. Reversal: delete one branch from
+             `_lane_verdict` and its fixture case; no threshold, no ledger row,
+             no re-run.
+  decide_by: 2026-09-24
+
+`decide_by` 2026-09-24 is deliberately placed AFTER `D27` (09-20), `D28`
+(09-21) and `D29` (09-22) and BEFORE `D31` (09-25), on the only day in that
+span the decisions register is not already carrying an entry. The guard is
+blind today and will be blind on the 24th; the default costs nothing to wait
+for. The one thing that could not wait — the builder reaching for the detached
+lane again without knowing the guard cannot see it — is handled by the 105th
+audit's `FOR THE BUILDER` item 1, which orders the detection and the fixture
+case *before* any question of refusal, and explicitly forbids moving the
+refuse/permit line while this entry is open.

@@ -15914,3 +15914,60 @@ Three rules:
    probe. Neither estimator family is safe; what is safe is carrying BOTH
    and letting the divergence localise the defect (which is exactly what
    both runs' reported diagnostics did).
+
+## A fixture that builds its own instance of the thing under test certifies a shape the system does not use
+
+**Measured 2026-09-20 (105th audit), on a guard that was seven hours old.**
+`experiments/run.py:_lane_verdict` was shipped on 2026-09-19 to close the
+dies-with-parent class at launch, after seven occurrences and four lessons. It
+refuses `ppid == 1` and `getsid(0) == getpid()` — the second with the words
+*"session leader (setsid) — detached at birth; D20 closed this lane for
+registered runs"*. `scripts/test_lane_guard.sh` pinned it: ALL GREEN, 17 cases,
+including three `setsid` cases.
+
+All three of those cases wrote their own launcher —
+`setsid env ... python -m experiments.run <id>` — and **this repository does not
+launch that way.** Its one sanctioned detached launcher,
+`scripts/launch_detached.sh`, runs `setsid ... cpu_budget wrap <cmd>`, and
+`cpu_budget.py` starts the payload with `subprocess.Popen`. One interposed
+process, and the spending process is no longer the session leader and no longer
+an orphan: `getsid(0) != getpid()`, `getppid()` is the live wrapper. Both
+refusals become unreachable. Proven with the read-only probe — direct setsid
+`EXIT 3, refused`; setsid plus one `Popen` parent `lane: launchable, EXIT 0`.
+
+Six hours and forty-six minutes after the guard shipped, that lane carried a
+registered spec run (`LT.02`) to a ledger row, and the guard's whole output was
+the soft warning it prints on ordinary foreground calls too.
+
+**The general rule, and it is not about processes.** When a fixture needs an
+instance of the condition it is testing for, there are two ways to get one:
+*construct* it, or *invoke the thing that produces it in production*. Only the
+second can fail. A constructed instance tests the property the fixture's author
+was already thinking about; the production path tests the property the system
+actually has, including every wrapper, retry shell, meter and supervisor that
+has accreted between the launcher and the work. Those layers are exactly where
+an inferred signal is lost, and they are invisible to an author writing the
+one-line version by hand.
+
+Three corollaries, each paid for here:
+
+1. **If the guard names a lane, the fixture must invoke that lane by its file
+   name.** A grep of the fixture for the launcher it claims to close should hit.
+   Here `test_lane_guard.sh` never mentions `launch_detached.sh`.
+2. **A signal inferred from ambient state (process topology, env, fd shape) is
+   one indirection away from silent; a signal the producer DECLARES is not.**
+   The launcher knows it is the detached lane. Having it say so is strictly
+   more robust than having the guard deduce it, and the same day's v1→v2
+   correction had already established that this harness's ambient signals are
+   not discriminating (stdin=/dev/null is both lanes).
+3. **"ALL GREEN, N cases" is a count of what the author imagined.** It bounds
+   nothing about coverage of the real call graph. The honest reading of a green
+   fixture is *"the shapes I wrote down behave as I expected"*, and the question
+   that follows is always *"which shape does production actually use, and is it
+   in here?"*
+
+The sibling rule already on this page — that a memory (`LESSONS.md`) cannot do
+the work of a control — is not weakened by this; it is completed. The control
+was built, quickly and in good faith, and it was certified against a shape that
+does not occur here. Building the control is necessary. Pointing the fixture at
+the production path is what makes it one.
