@@ -1,7 +1,8 @@
 #!/bin/bash
 # Self-test for the LANE GUARD in experiments/run.py — the refusal that ends
-# the dies-with-parent class (seven occurrences; LESSONS.md "dispatch watcher"
-# entry and its corollaries 4-7; 103rd audit item 2).
+# the dies-with-parent class (nine occurrences; LESSONS.md "dispatch watcher"
+# entry and its corollaries 4-9; 103rd audit item 2; wrapped-lane visibility
+# per the 105th audit item 1).
 #
 # WHY THIS FILE EXISTS. Law 1 applies to conduct code: the capability claimed
 # is "a registered run launched into a PROVABLY ABANDONED lane is REFUSED at
@@ -45,10 +46,12 @@ cd "$REAL_REPO" || exit 1
 TMP=$(mktemp -d) || exit 1
 trap 'rm -rf "$TMP"' EXIT
 
-# Every invocation strips an inherited waiver: this fixture may itself be run
-# from a dispatch.sh descendant one day, and an inherited waiver would turn
-# every refusal case green-by-accident.
-RUN() { env -u JACK_LANE_WAIVER "$VENV_PY" -m experiments.run "$@"; }
+# Every invocation strips an inherited waiver AND an inherited lane marker:
+# this fixture may itself be run from a dispatch.sh or launch_detached.sh
+# descendant one day, and an inherited waiver would turn every refusal case
+# green-by-accident just as an inherited marker would put the DECLARED notice
+# in every case's output.
+RUN() { env -u JACK_LANE_WAIVER -u JACK_DETACHED_LANE "$VENV_PY" -m experiments.run "$@"; }
 
 # Poll a detached case's output file for its EXIT receipt (the runner's last
 # stdout line is always `EXIT <rc>`, T0.23 P8) — a fixed sleep would flake.
@@ -107,7 +110,39 @@ chk "  ...carrying the loud mark on the way through" \
 echo x | RUN ZZ.99 >"$TMP/clean" 2>&1
 chk "a clean foreground reaches the argv gate (rc)" "$?" 2
 chk "  ...with no lane text at all" \
-    "$(grep -cE 'LANE WARNING|ABANDONED' "$TMP/clean")" 0
+    "$(grep -cE 'LANE WARNING|LANE NOTICE|ABANDONED' "$TMP/clean")" 0
+
+echo "== the lane that DECLARES itself: scripts/launch_detached.sh, the REAL launcher =="
+
+# The 105th audit's defect, pinned so it cannot regrow: every setsid case
+# above hand-rolls its own launcher, and this repository does not launch that
+# way — launch_detached.sh interposes `cpu_budget wrap` between setsid and
+# the spend, so the session-leader refusal NEVER fires on the spending
+# process, and a fixture of hand-rolled setsids certifies a shape the system
+# does not use (LESSONS.md, foot). This case invokes the launcher ITSELF.
+# Cost: ~1 s of the CPU day meter (admit + a sub-second read-only probe) and
+# the launcher's 15 s liveness sleep. On an exhausted day the admit gate
+# refuses the launch and this case fails LOUDLY with the admit message —
+# that is a real refusal doing its job, not a fixture fault.
+DLOG="$TMP/detached.log"
+env -u JACK_LANE_WAIVER -u JACK_DETACHED_LANE \
+    scripts/launch_detached.sh "$DLOG" "$VENV_PY" -m experiments.run lane \
+    >"$TMP/dlaunch" 2>&1
+# The launcher's own rc is 1 here BY DESIGN — a payload that finishes under
+# 15 s is reported DEAD by its documented contract. The verdict is in $DLOG.
+chk "the wrapped lane is VISIBLE — the payload names its declared lane" \
+    "$(grep -c 'DETACHED LANE, DECLARED — launch_detached.sh' "$DLOG")" 1
+chk "  ...and refuse/permit stays where D32 found it: PERMITTED" \
+    "$(grep -c 'lane: launchable' "$DLOG")" 1
+chk "  ...not refused" "$(grep -c 'ABANDONED' "$DLOG")" 0
+# Prove this case exercised the WRAPPED shape, not a direct setsid: the
+# probe prints its own sid/pid, and through the wrapper they must differ
+# (the wrapper is the session leader, the spend is its child).
+psid=$(grep -m1 '^stdin=' "$DLOG" | sed 's/.*sid=\([0-9]*\).*/\1/')
+ppid_=$(grep -m1 '^stdin=' "$DLOG" | sed 's/.*pid=\([0-9]*\)$/\1/')
+chk "  ...through the wrapper (spend is NOT the session leader)" \
+    "$([ -n "$psid" ] && [ -n "$ppid_" ] && [ "$psid" != "$ppid_" ] && echo distinct || echo same)" \
+    "distinct"
 
 echo "== the CONTROL THAT MUST FAIL: the pre-repair order, via the waiver =="
 

@@ -4458,6 +4458,21 @@ def cmd_render(ledger: Ledger) -> int:
 LANE_WAIVER_ENV = "JACK_LANE_WAIVER"
 
 
+#: The env var by which a detached launcher DECLARES its lane; the only
+#: sanctioned setter is `scripts/launch_detached.sh`. It exists because the
+#: guard's topology tests are one interposed process away from blind: the
+#: launcher setsids `cpu_budget wrap`, which Popen()s the spend, so the
+#: spending process is never the session leader and never orphaned — measured
+#: live (105th audit RANK 1) when LT.02's registered row was bought through
+#: that lane 6 h 46 m after the guard shipped, and the guard said
+#: `launchable`. The launcher knows what it is; the guard must not have to
+#: infer it from a topology it can be one Popen away from losing. This marker
+#: is a LOUD MARK, never a refusal: whether D20's closure covers the wrapped
+#: lane is D32's question (the owner's), and until it rules the refuse/permit
+#: line stays exactly where the audit found it.
+DETACHED_LANE_ENV = "JACK_DETACHED_LANE"
+
+
 #: The one soft signal's exact words, named once — the guard prints it, the
 #: fixture asserts it, and cmd_lane reuses it. See _lane_verdict for why it
 #: is a WARNING and not a refusal.
@@ -4502,6 +4517,16 @@ def _lane_verdict(settle: bool = True) -> tuple:
 
     An interactive terminal (stdin=/dev/pts/N) and a pipe pass clean — the
     guard refuses ABANDONMENT, not any particular launcher.
+
+    - VISIBLE BY DECLARATION, not refusable here (105th audit item 1): the
+      wrapped detached lane. `launch_detached.sh` setsids `cpu_budget wrap`,
+      which Popen()s the spend, so NEITHER topology refusal can fire on the
+      spending process — occurrences 8 and 9 (2026-09-19 19:11 and 20:13)
+      happened while the fixture read 17 green cases, and LT.02's row was
+      bought through this lane at 21:11 with the guard saying `launchable`.
+      The launcher now declares itself via DETACHED_LANE_ENV and the verdict
+      carries a LOUD notice naming it. Refuse/permit is deliberately
+      unchanged: that line is D32's (the owner's).
     """
     refusals, warnings = [], []
     if os.getppid() == 1:
@@ -4520,6 +4545,16 @@ def _lane_verdict(settle: bool = True) -> tuple:
                             "D20 closed this lane for registered runs")
     except OSError:
         pass
+    decl = os.environ.get(DETACHED_LANE_ENV, "").strip()
+    if decl:
+        warnings.append(
+            f"LANE NOTICE: DETACHED LANE, DECLARED — {decl}.\n"
+            "setsid sits one wrapper (cpu_budget wrap) above this process, "
+            "where the\nsession-leader test cannot see it, so this launch "
+            "survives its slot BY\nCONSTRUCTION. Whether D20's closure covers "
+            "this lane is D32's question (the\nowner's); until it rules the "
+            "lane stays PERMITTED, and this notice is the\nrecord — in the "
+            "launch log and on the spend path — that it was used.")
     try:
         st0 = os.stat(0)
         if (stat_mod.S_ISCHR(st0.st_mode)

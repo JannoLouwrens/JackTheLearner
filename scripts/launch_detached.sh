@@ -41,7 +41,15 @@ admit_msg=$("$PYBIN" -m experiments.cpu_budget admit "$LABEL" 2>&1) || {
 # deadline must not bind it — an inherited JACK_ITER_DEADLINE silently
 # reroutes or refuses colab work in any GPU-touching child (same fix as
 # dispatch.sh; the 09-17 slot had to do this by hand and said so).
-setsid nice -n 19 env -u JACK_ITER_DEADLINE "$PYBIN" -m experiments.cpu_budget wrap "$LABEL" "$@" >> "$LOG" 2>&1 < /dev/null &
+# JACK_DETACHED_LANE: THE LANE DECLARES ITSELF (105th audit item 1). The
+# lane guard in experiments/run.py cannot infer this lane from topology —
+# setsid lands on `cpu_budget wrap`, one Popen above the spend, so the
+# session-leader refusal never fires (that blindness bought LT.02's row
+# undetected on 2026-09-19). The marker makes every spend launched through
+# here SAY it is detached, loudly, in its own log. Visibility only:
+# whether D20's closure covers this lane is D32 (the owner's), and the
+# guard does not refuse on this marker.
+setsid nice -n 19 env -u JACK_ITER_DEADLINE JACK_DETACHED_LANE="launch_detached.sh $LOG" "$PYBIN" -m experiments.cpu_budget wrap "$LABEL" "$@" >> "$LOG" 2>&1 < /dev/null &
 pid=$!
 # DECLARE IT. A detached run is compute this system MEANT to leave behind, and
 # the loop's leftover check (scripts/lib_procwatch.sh, 52nd audit B2) must be
