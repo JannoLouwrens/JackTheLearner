@@ -71,12 +71,12 @@
   "review_queue_violation_forms": {
     "at": "2026-09-20",
     "value": {
-      "OVERDUE": 14
+      "OVERDUE": 12
     }
   },
   "review_queue_violations": {
     "at": "2026-09-20",
-    "value": 14
+    "value": 12
   },
   "unreachable": {
     "at": "2026-09-20",

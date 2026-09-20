@@ -2032,6 +2032,29 @@ ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed
     Declared cost, honestly: 09-13 already carried 10 rows against a measured
     capacity of 6, and these make it 13 ROWS — but ONE unit of design, and the
     FULL is the only sitting with the hours to take the general form.
+    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL). THE DESIGN IS
+        DELIVERED; what this date owes is EXECUTION by the builder, not a
+        decision by this desk. **The STOP-RULE above FIRED** — the 2026-09-19
+        date broke at midnight, the fourth break for this row — and I am
+        recording that it fired and then DECLINING TO DECLINE, on the
+        stop-rule's own stated ground: it exists because "a row nobody will
+        ever rule on should not be occupying a clock", and ruling on it is
+        strictly better than the remedy it was built to force. The stop-rule is
+        DISCHARGED, not weakened, and is NOT re-armed, because after today this
+        row is an execution debt, not a decision debt. The full ruling, the
+        UNSATURATED-NULL RULE and the refusals of arms (a) and (c) are in THE
+        BUNDLED RULING below.
+        **PLACED INSIDE THE `DUE:` BLOCK 2026-09-20 ~07:0x, SAME SITTING, after
+        the 106th audit's RANK 2 read this row as still OVERDUE. The audit was
+        RIGHT and so was the instrument** — my first two attempts wrote this
+        date below a `###` heading and then below a non-indented paragraph, and
+        `review_queue.py` stops reading a row at the first unindented line. The
+        ruling was real both times and its date was invisible both times, so
+        `review_queue_violations` correctly refused to move. Same family as the
+        09-09 scar where six DUE clauses sat above the line the tool takes:
+        **the desk keeps writing the truth in a place the instrument does not
+        look, and twice in one morning is not bad luck.** Nothing about the
+        ruling changes; only its position does.
 
 **The measurement.** `SH.02`'s seed-90 pilot (N=3000/arm, 6 arms, ~19 min)
 fired the spec's own pre-registered `HEADROOM` VOID. Every arm without a live
@@ -2070,21 +2093,6 @@ and it is `D10` evidence. Do NOT authorise an envelope growth: the pilot's
 failure is not a budget.
 
 
-    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL). THE DESIGN IS
-        DELIVERED and what this date owes is EXECUTION by the builder, not a
-        decision by this desk. **The STOP-RULE above FIRED** — the 2026-09-19
-        date broke at midnight, the fourth break for this row — and I am
-        recording that it fired and then DECLINING TO DECLINE, on the
-        stop-rule's own stated ground: it exists because "a row nobody will
-        ever rule on should not be occupying a clock", and ruling on it is
-        strictly better than the remedy it was built to force. The stop-rule is
-        DISCHARGED, not weakened, and is NOT re-armed, because after today this
-        row is an execution debt and no longer a decision debt. The same
-        applies to `ba03-null-saturates-the-horizon` (DUE today) and
-        `t306-matched-magnitude-noise-buys-coverage` (DUE tomorrow), both ruled
-        in the same sitting below. All three carried the same stop-rule; none
-        of the three is declined; the bundle is discharged on time for two of
-        three and one day late for the third.
 
 ### THE BUNDLED RULING — 2026-09-20, Review FULL. Read this block once; `ba03`
 ### and `t306` cite it rather than repeating it.
@@ -2291,6 +2299,31 @@ which is itself the argument for designing it, and that argument goes to the
 owner rather than into another date on this page. It does not move a single
 threshold downward. It does not touch `SH.02`'s, `BA.03`'s or `T3.06`'s
 recorded VOID rows, all three of which stand exactly as run.
+
+    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL). THE DESIGN IS
+        DELIVERED and what this date owes is EXECUTION by the builder, not a
+        decision by this desk. **The STOP-RULE above FIRED** — the 2026-09-19
+        date broke at midnight, the fourth break for this row — and I am
+        recording that it fired and then DECLINING TO DECLINE, on the
+        stop-rule's own stated ground: it exists because "a row nobody will
+        ever rule on should not be occupying a clock", and ruling on it is
+        strictly better than the remedy it was built to force. The stop-rule is
+        DISCHARGED, not weakened, and is NOT re-armed, because after today this
+        row is an execution debt and no longer a decision debt. The same
+        applies to `ba03-null-saturates-the-horizon` (DUE today) and
+        `t306-matched-magnitude-noise-buys-coverage` (DUE tomorrow), both ruled
+        in the same sitting below. All three carried the same stop-rule; none
+        of the three is declined; the bundle is discharged on time for two of
+        three and one day late for the third.
+        **RE-PLACED 2026-09-20 ~07:0x, SAME SITTING, after the 106th audit's
+        RANK 2 read this row as still OVERDUE. The audit was RIGHT and so was
+        the instrument:** the `DUE:` line was written ABOVE a `###` heading,
+        where `review_queue.py` stops reading the row — so the ruling was real
+        and its date was invisible, and `review_queue_violations` correctly did
+        not move. Same family as the 09-09 scar where six DUE clauses sat above
+        the line the tool takes: **the desk keeps writing the truth in a place
+        the instrument does not look.** Nothing about the ruling changes; only
+        its position does.
 
 ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
     DUE: 2026-09-20 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
@@ -6409,6 +6442,23 @@ ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.
     capacity of 6, 09-16 carried 4), not chosen by hand — 68th audit B7, 3''.
     Nothing is held behind this row; `T1.08` is being re-bought today under its
     other new conjunct and does not wait for this.
+    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL), **four days
+        late, and the lateness is this desk's**. THE DESIGN IS DELIVERED; what
+        this date owes is a one-line DECLARATION by the builder, not a decision
+        by this desk and not a dispatch. The docstring's "should be quoted" is
+        a REAL REQUIREMENT; the conjunct arms in the SAME DISPATCH as T1.08's
+        post-pipeline-repair re-buy, never separately. Full ruling below.
+        **PLACED INSIDE THE `DUE:` BLOCK 2026-09-20 ~07:0x, SAME SITTING, after
+        the 106th audit's RANK 2 read this row as still OVERDUE. The audit was
+        RIGHT and so was the instrument** — my first two attempts wrote this
+        date below a `###` heading and then below a non-indented paragraph, and
+        `review_queue.py` stops reading a row at the first unindented line. The
+        ruling was real both times and its date was invisible both times, so
+        `review_queue_violations` correctly refused to move. Same family as the
+        09-09 scar where six DUE clauses sat above the line the tool takes:
+        **the desk keeps writing the truth in a place the instrument does not
+        look, and twice in one morning is not bad luck.** Nothing about the
+        ruling changes; only its position does.
 
 **THE ONE-LINE QUESTION.** `T1.08` exists to produce `min_detectable_effect` —
 its own docstring says *"the number this produces should be quoted whenever a
@@ -6468,10 +6518,6 @@ have discriminated* — caught BEFORE the run rather than after it, which is the
 first time in the eleven-row history of that class. Worth joining to those rows
 if B3 item 3's naming happens.
 
-    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL), **four days
-        late, and the lateness is this desk's**. THE DESIGN IS DELIVERED; what
-        this date owes is a one-line DECLARATION by the builder, not a
-        decision by this desk and not a dispatch.
 
 ### THE RULING — 2026-09-20, Review FULL
 
@@ -6534,6 +6580,20 @@ the 7.0 bar nor any `T2.03` threshold. And it does not make `T1.08` any less
 the project's largest blocker: 45 specs and ~29 idle Kaggle hours still stand
 behind a pipeline repair that has no design, which is the item the owner is
 reading about this week.
+
+    DUE: 2026-09-27 | DISPOSITIONED 2026-09-20 (Review FULL), **four days
+        late, and the lateness is this desk's**. THE DESIGN IS DELIVERED; what
+        this date owes is a one-line DECLARATION by the builder, not a
+        decision by this desk and not a dispatch.
+        **RE-PLACED 2026-09-20 ~07:0x, SAME SITTING, after the 106th audit's
+        RANK 2 read this row as still OVERDUE. The audit was RIGHT and so was
+        the instrument:** the `DUE:` line was written ABOVE a `###` heading,
+        where `review_queue.py` stops reading the row — so the ruling was real
+        and its date was invisible, and `review_queue_violations` correctly did
+        not move. Same family as the 09-09 scar where six DUE clauses sat above
+        the line the tool takes: **the desk keeps writing the truth in a place
+        the instrument does not look.** Nothing about the ruling changes; only
+        its position does.
 
 ---
 
