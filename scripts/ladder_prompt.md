@@ -537,9 +537,142 @@ prohibitions and are carried into `3''`. **(Superseded in turn on 2026-09-05 —
 the live items are now `1'''`, `2'''` and `3''`; see the block immediately
 below.)**
 
-**LIVE PRIORITY BLOCK — `1^9`/`2^9` (Review, 2026-09-19, DAILY). `3''` FURTHER
-BELOW IS UNCHANGED AND STILL LIVE. `1^8`/`2^8` BELOW IS SUPERSEDED — READ THIS
-BLOCK INSTEAD. `2^8` AND `2^7`'s PROHIBITIONS ARE CARRIED IN FULL BY `2^9`.**
+**LIVE PRIORITY BLOCK — `1^10`/`2^10` (Review, 2026-09-20, FULL). `3''` FURTHER
+BELOW IS UNCHANGED AND STILL LIVE. `1^9`/`2^9` BELOW IS SUPERSEDED — READ THIS
+BLOCK INSTEAD. `2^9`, `2^8` AND `2^7`'s PROHIBITIONS ARE CARRIED IN FULL BY
+`2^10`.**
+
+**FIRST, THE CREDIT, because `1^9` is the first priority block in this file's
+history that you discharged COMPLETELY.** All three items are done: `LT.01`
+attempt 2 ran **in the foreground** and PASSED (`4091066`, 2017 s, 3 seeds,
+branch G-adv, `adv_rise_max` 0.6157 over the UNMOVED 0.6 m bar);
+`notice_exited_dispatches` is wired on the LIVE path at `ladder_loop.sh:233`,
+not only behind `pace_gate`; and `W38`'s inventory was refused with the reason
+written down. You were also told to expect nothing fresh and you correctly
+refused to manufacture work for six consecutive slots rather than re-run a
+settled row to look busy. **That refusal was right and it is not to be read as a
+reason to loosen now.**
+
+**AND NOW THE PART THAT CHANGES YOUR BOARD. For the first time in a week there
+is FRESH, LEGAL, UNBLOCKED science on it, and it exists because this desk ruled
+rather than because anything about the ladder changed.** Today's FULL disposed
+the `sh02`/`ba03`/`t306` bundle and the `t108` noise-floor row. Three of those
+rulings hand you EXECUTION. **Take the state of the board from `run next` and
+`run review-queue`, never from this page — the counts here would be a cache and
+a cache is what makes this block go stale.**
+
+**THE ONE RULE ADOPTED TODAY THAT BINDS EVERY SPEC YOU TOUCH FROM NOW ON —
+THE UNSATURATED-NULL RULE.** A claim gate may NOT be registered on a statistic
+whose NULL or ANCHOR sits within the claim's own required margin of that
+statistic's bound. Every new claim spec declares, in source before it runs,
+either `STATISTIC_BOUND: none` or the bound together with the null's measured
+distance from it. If the null is AT the bound, the gate is not registerable, and
+the repair is a change of STATISTIC or of VENUE — **never a change of ENVELOPE.**
+Growing the envelope against a saturated null is the one repair arithmetically
+guaranteed not to work, and this project has now paid for that on four rigs
+(`SH.02`, `BA.03`, `DP.04`, `UB.10`). Its companion, which decides most cases:
+repairs are taken in **ascending mechanical bill — statistic (zero) before
+scoring (zero) before venue (bills every `playground.py` certificate) before
+envelope (forbidden).** Nothing goes to the world-edit window that a statistic
+change can fix.
+
+1^10. **IN THIS ORDER. Items 1 and 2 are real runnable science and they are the
+first such items on this board in a week. Do not skip them for paperwork.**
+
+   1. **`BA.03` OPTION (c) — CHANGE THE SATURATING METRIC. Zero staleness bill,
+      CPU, and it is yours to implement now.** Ruled today: the claim statistic
+      becomes **integrated absolute tilt over a FIXED 12 s window** (fall back to
+      recovery count ONLY if integrated tilt pilots degenerate, and say so in the
+      record). **The bar is set from the RANDOM walk's measured distribution, NOT
+      from the blind twin** — the twin is retained as a REPORTED arm but may no
+      longer be the thing the claim clears, because a null that survives to the
+      horizon carries no information about tilt. **ALL SIX currently-green rig
+      conjuncts are carried forward UNCHANGED** (random topples on 94.7% and
+      survives 2.30 s; best trained arm beats it by 9.56 s; no-surface control
+      0.0094 s against the 0.30 cap; `gripboth` 4.29 s behind the twin; the noise
+      control at `gain_noise` -7.011). **A change of claim statistic may not drop
+      a control that is currently passing** — that line is what separates a
+      redesign from a rescue. **DO NOT raise the horizon** (refused today as a
+      forbidden envelope growth) and **do not touch the perturbation** — that is
+      re-routed as `ba03-vestibular-channel-is-never-load-bearing-under-one-kick`
+      and is bound to the world-edit window, which is mine and is overdue.
+
+   2. **`T3.06` — (a) AND (b), BOTH, IN THAT DEPENDENCY ORDER: (b) FIRST.**
+      `cpu<2h`, measured at ~40 min, no GPU, no dispatch.
+      **(b) first, because it is what actually VOIDed the run:** re-derive
+      `RANDOM_DWELL_MAX` as an **n-aware order-statistic bound** — an exogenous
+      quantile of the ANALYTIC chance dwell at the n it is READ at, derived in
+      source before the run, with the derivation in the file. `0.0227` against a
+      0.02 cap frozen on a 16-life pilot and read at 48 lives is an instrument
+      measuring its own n. **It is explicitly permitted to come out LOWER at
+      n=16 and HIGHER at n=48, and that is not a weakening** — but the direction
+      is NOT to be chosen after seeing which way it falls, and the new bound is
+      read against the **ACTUAL worst seed, never an aggregate.**
+      **(a) second:** rescore against the noise arm, and **the RANDOM-ACTION
+      comparator is BINDING** per `CURIOSITY_BAKEOFF.md` §O1. The new gate needs
+      BOTH `cov(curious) - cov(shuftask) >= 0.05` (recorded-but-not-counting at
+      +0.1385, t = 3.94 — ample) AND the C-RANDREW clearance vs the random-action
+      arm, which field watch wk5 measured at **+0.0124 +/- 0.0317, t = 0.39 — no
+      clearance at all.** **SO EXPECT T3.06 TO FAIL ITS NEW GATE. That is the
+      point and it is not a reason to hesitate.** A conjunct is being ADDED that
+      the spec is expected to fail, against a standard this project already wrote
+      down and was not holding it to. **Any redesign that beats only `shuftask`
+      is refused in advance.**
+      **And repair the `kills:` field in the same motion:** as frozen, `_check`
+      maps control-red to FAIL, firing `kills: IntrinsicCuriosityModule` off a
+      run whose own control says the contrast cannot attribute. **Control-red
+      maps to VOID, not FAIL.** This removes a FALSE kill and cannot save a true
+      one — a green control with a red claim still FAILs and still kills.
+      **Do NOT take option (c), the world arm.** Refused today.
+
+   3. **THE `T1.08` TRIGGER DECLARATION — one line, free, and do it in the slot
+      you read this.** Ruled today: `T1.08`'s `"should be quoted"` is a REAL
+      REQUIREMENT. Declare, machine-readably in `experiments/registry.py` (which
+      that row established mechanically is in **no** spec's `IMPL_DEPS`, 0 hits,
+      so it bills no certificate), that `CITE_MARKER` arming is OWED at `T1.08`'s
+      next PASS-bound re-buy, naming `T2.03` as the first citer. **DO NOT edit
+      `t2_03_*.py` and DO NOT arm the conjunct now** — `T2.03` is a standing PASS
+      whose dependency `T1.08` is FAIL, so the edit would manufacture a stale
+      claim nobody can clear. Declaration only; arms no bar, refuses no run.
+
+   4. **THE TWO 09-21 DISPOSITIONS, when their date comes and not before** —
+      `WAITS-ON:` with `none` permitted, and the `(iv)` **measurement** before
+      the `(iv)` implementation. Unchanged from `1^9` item 4. Do not fold them
+      together and do not start either early.
+
+   5. **`W38`'s 30 FREE GPU HOURS STILL HAVE NO LEGAL BUYER, AND THAT IS STILL
+      MY DEBT.** Today's rulings produced real work but **all of it is CPU** —
+      `BA.03` and `T3.06` are both `cpu<2h` and neither can honestly spend a
+      Kaggle hour. The only GPU-class unblock on the board runs through `T1.08`'s
+      PIPELINE REPAIR, which has no design, which is mine, and which the owner is
+      reading about this week. **Do not manufacture a dispatch to spend the
+      inventory.** W37's ~27.78 h died unspent and the audit called that refusal
+      correct; the same refusal is correct until a design lands.
+
+2^10. **PROHIBITIONS — `2^9`, `2^8` and `2^7` below are carried IN FULL and
+still bind. These are ADDITIONS.**
+   - **Do NOT grow an envelope against a saturated null.** More seeds, more eval
+     episodes, more budget, a longer horizon — all of them shrink the standard
+     error and LOWER the bar without touching the headroom. If the null is at the
+     ceiling, the answer is a different statistic or a different venue, and the
+     UNSATURATED-NULL RULE above says which.
+   - **Do NOT send to the world-edit window anything a statistic change can
+     fix.** It is the most expensive instrument this project owns, it bills 21
+     `playground.py` certificates, and it is UNDESIGNED. Three rows now queue
+     behind it and that is three too many.
+   - **A redesign may not drop a control that is currently passing.** Carrying
+     the green conjuncts forward unchanged is the test that separates a legitimate
+     redesign from a rescue, and it binds `BA.03` item 1 explicitly.
+   - **Do not pre-empt the Review's remaining design rows.** `A4`, `T2.10`'s
+     repair, `SO.07`, `SO.10`, `T1.08`'s **pipeline** repair, `HR.1`'s fixture
+     redesign, `UB.10`'s successor arm and the **world-edit window** are all mine.
+     Naming candidate arms remains welcome and is not the same as choosing one.
+   - **`W1.01`/`W1.03` registration stays NOT permitted** — still gated on
+     `w1-world-edit-window`, mine, now OVERDUE by two days. Unchanged position,
+     longer delay, and the delay is mine.
+
+**LIVE PRIORITY BLOCK — `1^9`/`2^9` (Review, 2026-09-19, DAILY) — SUPERSEDED BY
+`1^10`/`2^10` ABOVE; READ THAT BLOCK. TEXT PRESERVED BELOW, UNCHANGED.**
 
 **FIRST, THE CORRECTION, because `1^8` opened on a fact that has been false for
 four days.** `1^8` began *"YOU HAVE BEEN DARK FOR 18 CONSECUTIVE SLOTS"* and
