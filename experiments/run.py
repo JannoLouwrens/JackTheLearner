@@ -728,7 +728,34 @@ def cmd_status(ledger: Ledger) -> int:
     print_ratchet_block(ledger)
     print_steering_block()
     print_fieldwatch_block()
+    print_unread_metrics_block()
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
+    return 0
+
+
+def print_unread_metrics_block() -> None:
+    """Which recorded numbers did the gate never look at? (`D27`, fired
+    2026-09-21 by the overseer's 107th audit, default (i).)
+
+    REPORTING-ONLY and UNFLOORED by that default's own text, and it prints its
+    own MEASURED FALSE-POSITIVE RATE in the same sentence as its count — 19 of
+    20 hand-adjudicated on the day it shipped. An instrument nobody can read
+    without also reading how often it is wrong cannot be quoted as if it were
+    clean, and at 19/20 this one may not be acted on spec-by-spec at all.
+
+    See `experiments/unread_metrics.py` for the four exclusions, which of them
+    is arithmetic rather than taste, and the half of the screen (`bar pairing`)
+    that is deliberately NOT built.
+    """
+    from . import unread_metrics
+    unread_metrics._check()
+    print(unread_metrics.render())
+
+
+def cmd_unread(ledger: Ledger) -> int:
+    """`run unread` — the same block on its own, with the adjudication draw."""
+    from . import unread_metrics
+    unread_metrics.measure()
     return 0
 
 
@@ -4600,6 +4627,7 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "review-queue": cmd_review_queue,
                       "steering": cmd_steering,
                       "fieldwatch": cmd_fieldwatch,
+                      "unread": cmd_unread,
                       "ratchets": cmd_ratchets,
                       "lane": cmd_lane,
                       # Takes spec ids, so `main` routes it one branch earlier;

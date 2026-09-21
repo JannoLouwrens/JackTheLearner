@@ -8198,3 +8198,60 @@ ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field 
         three candidate closures and this desk endorses measuring before
         picking. What is owed by then: the false-positive rate re-measured
         after the fix, written down, and the shared-helper caution honoured.
+
+## ROUTED 2026-09-21 (builder): `d27-screen-measures-95-percent-false` — the
+## armed default ordered a screen, the screen is built, and its own measured
+## false-positive rate says it cannot be floored
+
+ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overseer, 107th audit) + `experiments/unread_metrics.py` | OPEN
+    **What happened, in one line.** `D27`'s armed default (i) BUILD THE SCREEN,
+    REPORTING ONLY fired on 2026-09-21 and is now discharged in code:
+    `metric_recorded_but_unread` is in `run status`, unfloored, first reading
+    **580 metrics on 62 of 96 decidable certificates**. The entry's own text
+    binds the firing to a rate measurement — *"the counter gets floored or
+    deleted once it exists"* — and the rate is **19 false / 1 true in a
+    deterministic 20-draw, 95%**. The full adjudication table is in
+    `docs/DECISIONS_RESOLVED.md` under `D27`.
+
+    **Why this is a decision and not a slot's errand.** At 19/20 the counter
+    **cannot be floored**, which leaves exactly two dispositions and both are
+    this desk's: narrow it, or delete it. Deleting an instrument that the
+    owner's own armed decision ordered built, on the builder's own evidence,
+    is not a builder's call — that is the shape of a desk quietly reversing a
+    default it did not like. So it is routed with the number attached.
+
+    **The fact that should decide it.** The single true positive is **not an
+    instance of `D27`'s cited class.** `T0.06 steps_ok` is the literal `5`
+    written into a metrics dict and never read — a *decorative metric*, not
+    *"the run measured the quantity that would have indicted it and then did
+    not look at it."* In a 20-draw the screen found **zero** instances of the
+    class it was built for. `T6.03`, `T1.07 spread_ratio` and
+    `T1.08 min_detectable_effect` — the four instances in four days that
+    motivated the fork — are not in the residual: `T1.07` was repaired on
+    09-13, `T1.08` is a FAIL and out of scope, and the rest read as summarised.
+
+    **The narrowing that is visible in the data and was deliberately NOT
+    taken.** The one true positive was found by a property no filter uses: the
+    recorded value is a LITERAL in the source. A decorative-metric detector is
+    mechanical and has no false positives by construction. It is also a
+    DIFFERENT screen from the one `D27` ordered, and the builder declined to
+    substitute it — that would be answering a question nobody asked while the
+    asked one goes unreported.
+
+    **The known miss shape, named so it is not rediscovered.** Two of the three
+    pairs that looked real were read in substance through a SUBSCRIPT
+    (`rb["refused"]`, `m["synth_lo_refused"]`) rather than a bare identifier,
+    so the syntactic dataflow filter has no shared `ast.Name` to join on. Any
+    narrowing proposal should price that first: following subscripts and helper
+    calls is the difference between 62 flagged specs and an unknown smaller
+    number, and nothing here has measured it.
+
+    **What is NOT owed.** No bar moves, no certificate is invalidated, nothing
+    re-runs. The screen refuses nothing today and will refuse nothing under any
+    disposition — `D27`'s default is reporting-only and this row does not ask
+    to change that.
+    DUE: 2026-09-28 | narrow the screen (naming which channel — subscripts,
+        helper calls, or a different question entirely), or DELETE it and say
+        so in `DECISIONS_RESOLVED.md` under `D27`. A third sitting that leaves
+        a 95%-false counter printing in `run status` with no disposition is the
+        outcome this row exists to prevent.

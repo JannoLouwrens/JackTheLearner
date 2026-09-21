@@ -1445,3 +1445,133 @@ paragraph); `scripts/lib_usage.sh` (pace line, untouched);
 `scripts/usage_attribution.py` (the 75% reading);
 `experiments/gpu_budget.json` (`2026-W37`); `docs/DECISIONS_RESOLVED.md` `D26`
 (the reasoning (i) was refused under, twice).
+
+## D27 — RESOLVED BY ARMED DEFAULT (fired 2026-09-21 ~06:5x UTC by the OVERSEER, 107th audit, one day late): (i) BUILD THE SCREEN, REPORTING ONLY. Built, measured, and its measured false-positive rate is 19/20. Options (ii) RAISE THE SAMPLE and (iii) CHANGE NOTHING were NOT taken.
+
+**The owner did not rule by 2026-09-20, so the pre-registered default fired.**
+Transcribed here by the builder, 2026-09-21 ~11:3x UTC, per the `D22`
+precedent (an overseer may fire, the builder transcribes) and the overseer's
+`FOR THE BUILDER` item 2. **The firing itself is the overseer's act, not
+mine** — `docs/DECISIONS_NEEDED.md` carries it — and I did not re-fire it.
+`ladder_prompt.md` ITEM 0 ordered me to fire it at 06:42; the stamp was
+already at HEAD when I read it at ~11:1x, so I checked and did not
+double-fire, which is what both pages told me to do.
+
+**WHY IT FIRED LATE, and the lateness has a named cause rather than an
+excuse.** The builder handed itself this act in its own journal (*"the first
+slot on 09-21 fires `D27`'s default if still armed"*) and **the first slot on
+2026-09-21 could not exec**, nor could the five before it back to 2026-09-20
+07:07 — `scripts/ladder_prompt.md` had crossed `MAX_ARG_STRLEN` and
+`ladder_loop.sh` passes it as one argv. That is `D34`. A default that fires
+silently late reads identically in the record to one that fired on time, so
+it is written down here.
+
+**WHAT WAS BUILT.** `experiments/unread_metrics.py` — a
+`metric_recorded_but_unread` scan over every standing PASS row, printed by
+`run status` (and `run unread`), **REPORTING-ONLY and UNFLOORED**. It refuses
+nothing, stales no certificate, reddens nothing. First reading: **580 metrics
+on 62 of 96 decidable certificates; 34 clean; 13 UNDECIDABLE.**
+
+Only the **name half** is built. Pairing a metric to the *constant that gates
+it* — the bar-pairing half, where the Review's prototype's 104-of-107 rate
+lives — is deliberately NOT built, per the builder's 2026-09-14 evidence
+addendum and the overseer's build order. Four exclusions bring the naive
+flag rate from **107/109 specs and 3310 metrics** down to 62/96 and 580:
+
+| stage | specs flagged | metrics |
+|---|---|---|
+| naive "name not in `_check`" | 107 / 109 | 3310 |
+| + recorder-minted `_std` siblings dropped | 107 / 109 | 935 |
+| + provenance keys, + once-in-source | 86 / 96 | 678 |
+| + syntactic summarisation dataflow | 61 / 96 | 576 |
+
+Only the first exclusion is arithmetic rather than taste: `protocol._aggregate`
+mints `f"{k}_std"` for every numeric key at >= 2 seeds, so no spec author ever
+wrote those names and they do not exist at one seed. A `_check` that subscripts
+with an f-string or a variable reads **UNDECIDABLE and is never flagged** —
+unknown is not zero.
+
+**THE RATE, WHICH THE FIRING BINDS TO THE BUILD AND WHICH DOES NOT FLATTER
+IT.** `D27`'s text: *"Firing this default therefore also owes the rate
+measurement, and the counter gets floored or deleted once it exists."* Twenty
+flagged `(spec, metric)` pairs were drawn deterministically
+(`unread_metrics.sample()`, seed 27 — reproducible by anyone) and adjudicated
+by hand against each spec's `_check`:
+
+| pair | verdict | why |
+|---|---|---|
+| `LC.01 wm-efe/needs_loss_share` | FALSE | folded into `unison_admission_conjunction`, which the gate reads |
+| `LC.01 wm-efe/u4` | FALSE | same conjunction |
+| `LC.01 wm-latent/deterministic` | FALSE | same conjunction |
+| `LC.01 wm-latent/needs_loss_share` | FALSE | same conjunction |
+| `LC.02 wm-latent/clears@1.0` | FALSE | read by `committed_ratio(m, arm)`, a HELPER the scan does not follow |
+| `LG.00 grounded_knowledge_advantage_s0` | FALSE | the numerator of `sigma_life`, which IS the gated conjunct |
+| `LG.02 follow_liar_lastq` | FALSE | component of the gated `div_lastq` |
+| `LG.02 null_abs_div` | FALSE | the gate reads `null_abs_div_s0/_s1/_s2` — the substance |
+| `ME.1 events` | FALSE | event-log size; context |
+| `ME.10 n_train_episodes` | FALSE | fixture size; context |
+| `PG.2 bob_rho0.2` | FALSE | per-density component of the gated error |
+| `PG.2 expected_rho0.3` | FALSE | an INPUT, not a measurement |
+| `PS.02 death_s_max` | FALSE | descriptive statistic; the claim is `probe_r2` |
+| `SM.01 peak_over_mean_2m` | FALSE | per-distance detail under the gated falloff discriminant |
+| `SO.06 seen_n_rays_changed` | FALSE | feeds `provision_channel_ok`, which the gate reads |
+| `SO.09 synth_lo_refused` | FALSE | consumed at `so_09_hands_accountant.py:400` into the gated `hand_share_audited` |
+| `T0.26 deg_tf_abs_spread` | FALSE | folded into the gated `p2_degeneracy_isolated` |
+| `T0.33 n_foreclosed_now` | FALSE | the accountant's live count; context |
+| `UB.9 n_test` | FALSE | fixture size |
+| **`T0.06 steps_ok`** | **TRUE** | the literal `5`, written into the metrics dict at `t0_06_dimension_contract.py:62`, never computed and never read |
+
+**19 FALSE / 1 TRUE = a 95% false-positive rate**, and the single survivor is
+**not an instance of `D27`'s cited class**. `T0.06 steps_ok` is a *decorative
+metric* — a constant recorded as a measurement — not *"the run measured the
+quantity that would have indicted it and then did not look at it."* **In a
+20-draw this screen found ZERO instances of the defect class it was built
+for.**
+
+Two of the three pairs that looked real were read IN SUBSTANCE and this module
+could not see it, both for the same mechanical reason: the value travels
+through a **subscript** (`rb["refused"]`, `m["synth_lo_refused"]`) rather than
+a bare identifier, so the dataflow filter has no shared `ast.Name` to join on.
+That is a known, named miss shape, not a surprise to be discovered later.
+
+**WHAT THE INSTRUMENT DOES ABOUT ITS OWN RATE, and this is the part worth
+keeping whatever happens to the counter.** `render()` **cannot print the count
+without the rate** — it is one sentence, and the fixture's `P8` asserts
+exactly that, so a later edit that quietly drops the rate turns the battery
+red. The Review's own warning was *"a screen with that false-positive rate is
+worse than nothing — it is a red light nobody can act on, which is how
+ratchets die."* At 19/20 that warning applies to this screen, so the number is
+shipped welded to its own error bar rather than shipped clean.
+
+**WHAT IS ROUTED RATHER THAN DECIDED HERE.** `D27` says the counter gets
+*floored or deleted* once it exists. **At 19/20 it cannot be floored**, and
+deleting a default the owner's own armed decision ordered built is not the
+builder's call on the builder's own evidence. It goes to the Review as
+`d27-screen-measures-95-percent-false`. One narrowing is visible in the data
+and is recorded rather than taken: the single true positive was found by a
+property no filter here uses — **the recorded value is a LITERAL in the
+source.** A decorative-metric detector is mechanical and has no false
+positives by construction, but it is a DIFFERENT screen from the one `D27`
+ordered, and substituting it would be this desk answering a question it was
+not asked.
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved in
+either direction, no control loosened, no seed count changed, no new
+permission taken, no spec failed, no run refused, no commitment claim-dead.
+No ledger row was written by this work. `experiments/run.py` IS in `T0.36`'s
+`IMPL_DEPS`, so its certificate is re-bought in the same commit — the bill is
+disclosed, not avoided.
+
+**To reverse:** delete `experiments/unread_metrics.py` and its two call sites
+in `experiments/run.py` (`print_unread_metrics_block`, the `unread` entry in
+`READ_ONLY_COMMANDS`). No threshold, no ledger row, no re-run. The owner's
+option (ii) — raise Part 2's sample — remains theirs to rule at any time and
+is unaffected by this default having fired.
+
+Evidence: `docs/DECISIONS_NEEDED.md` `## D27 — RESOLVED BY ARMED DEFAULT` (the
+overseer's firing, which is the authority for the act); the superseded entry
+below it (the Review's 2026-09-13 fork and its 104-of-107 prototype); the
+builder's 2026-09-14 EVIDENCE ADDENDUM (the ledger-only/bar-pairing split that
+set the build order); `experiments/unread_metrics.py` (the four exclusions, the
+fixture, and `sample()` — the draw is reproducible);
+`docs/OVERSIGHT.md` `FOR THE BUILDER` item 2 (the order).

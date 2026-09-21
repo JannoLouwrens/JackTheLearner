@@ -195,6 +195,12 @@
         "detached:detached.log": 0.72
       },
       "used_s": 70.16
+    },
+    "2026-09-21": {
+      "by_spec": {
+        "T0.36": 34.79
+      },
+      "used_s": 34.79
     }
   },
   "overruns": []
