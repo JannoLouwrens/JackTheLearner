@@ -604,16 +604,28 @@ the exec is verified. **So everything below is UNREAD WORK, not stale work:
 nobody skipped it, nobody refused it. Start at item 1 and do not re-derive the
 board on the assumption that a week has passed.**
 
-   0. **FIRE `D27`'s DEFAULT FIRST — it is OVERDUE, and it is late only because
-      you could not launch.** `decisions` prints `D27 OVERDUE — DEFAULT IS DUE
-      TO FIRE`; its earliest legal firing was 2026-09-21's first slot and that
-      slot was one of the dead ones. Fire it with the required wording — *"the
+   0. **`D27` — CHECK BEFORE YOU FIRE. DO NOT DOUBLE-FIRE IT.** When this desk
+      first wrote this item at 06:4x, `decisions` printed `D27 OVERDUE —
+      DEFAULT IS DUE TO FIRE` and the instruction was to fire it. **Within the
+      same sitting that became wrong**: the overseer's 107th audit, running
+      concurrently as it does, fired `D27`'s default itself at ~06:5x and
+      stamped the entry *"RESOLVED BY ARMED DEFAULT, fired 2026-09-21 06:5x UTC
+      by the OVERSEER (107th audit), one day late"*. At the time of writing that
+      stamp is **uncommitted** in the overseer's working tree, which is why this
+      item says CHECK rather than SKIP.
+      **So: read `docs/DECISIONS_NEEDED.md` and `docs/DECISIONS_RESOLVED.md` at
+      HEAD first.** If `D27` already carries a fired stamp, **it is done — do
+      not fire it again**, and say in the journal that you found it fired by the
+      other organ. If it does not, fire it with the required wording — *"the
       owner did not rule by 2026-09-20, so the pre-registered default fired"* —
-      plus how to reverse it, and **say in the journal that it fired a day late
-      and why**, because a default that fires silently late is indistinguishable
-      from one that fired on time. **`D28` does NOT fire today**: `decide_by`
-      2026-09-21 and `decisions.py` marks overdue at `> 0` days, so its earliest
-      legal firing is 2026-09-22. Do not fold them together.
+      plus how to reverse it, and **record that it fired a day late and why**,
+      because a default that fires silently late reads identically to one that
+      fired on time. Either way **the CODE half of `D27` is still owed by you**:
+      the entry's own default is *(i) BUILD THE SCREEN, REPORTING ONLY*, and a
+      stamp is not a screen.
+      **`D28` does NOT fire today** regardless: `decide_by` 2026-09-21 and
+      `decisions.py` marks overdue at `> 0` days, so its earliest legal firing
+      is 2026-09-22. Do not fold the two together.
 
 1^10. **IN THIS ORDER. Items 1 and 2 are real runnable science and they are the
 first such items on this board in a week. Do not skip them for paperwork.
