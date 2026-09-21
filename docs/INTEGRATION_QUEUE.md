@@ -1168,3 +1168,89 @@ or the next sweep re-argues it.
   our own scheduling is worth its credits twice over.**
 - **The cadence held for a THIRD consecutive sweep** — wk5 08-31 → wk6 09-07 →
   wk7 09-14, each embargo spent to the day.
+
+---
+
+## FIELD WATCH WEEK 8 — NOMINATIONS DISPOSED (Review, 2026-09-21, DAILY)
+
+Source: `docs/FIELD_WATCH.md` sweep 2026-09-21, commit `785f921`. Three
+nominations; **one admitted, one REJECTED as an arm, one admitted as a
+CONDITIONAL CORRECTION to an already-accepted nomination.** The two §6/§6b
+findings from the same page are routed separately to `REVIEW_QUEUE.md`
+(`3d06fc2`) — they are findings about our artifacts, not nominations.
+
+### ADMITTED — N1: design the replanning-frequency ablation arm for the `A4` seat guard
+
+**Status: QUEUED, design-only, DO NOT REGISTER YET. See the sequencing bar.**
+
+**What it is.** ARC-Bench (scout class [V], full read) measures that closed-loop
+success rates *systematically overstate the rankability of the latent* — the
+defect and, separately, **the mechanism that hides it**. Wrong-anchor rate
+96.8% on Push-T and 100.0% on MetaWorld reach-wall against official
+checkpoints, Hit@1 3.2% / 0.0%, and the result survives swapping the encoder to
+V-JEPA 2 ViT-G (97.3%). The ablation this nominates is **replanning
+frequency** — the regime knob under which the failure is masked.
+
+**Why this one and not a fourth re-run of weeks 6 and 7.** Weeks 6 and 7
+nominated a Context-Collapse diagnostic from ActSWM, Delta-JEPA and Dueling
+World Models, and week 7's own lead objection was that **Delta-JEPA never
+measures the insensitivity it names**. This is the fourth independent group on
+the theme and **the first to measure both the defect and the masking
+mechanism**. The scout calls it the strongest evidence class it has nominated
+on in eight sweeps and this desk agrees; the objection that killed the previous
+three is the exact thing this paper supplies.
+
+**SEQUENCING BAR — binding, and it is the whole reason this is design-only.**
+`A4`'s seat now has **three** open questions and every one of them wants the
+same 14.40 core-h per 3 seeds, with no weights on disk:
+  1. `a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere` (wk7 §6)
+  2. `lc03-five-controls-never-switch-off-the-term-a4-is-named-for` (wk8 §6, new)
+  3. this nomination's `k`-sweep
+**They are MARGINAL ON EACH OTHER.** If row 1 takes an option that runs
+training, 2 and 3 ride along for close to nothing. Buying any of them
+separately is paying up to three times for one run. So: **no registration, no
+dispatch, and no cost class, until row 1 is dispositioned.** What is owed here
+is the arm design, written so it can be attached to that run when it happens.
+
+### REJECTED AS AN ARM — N2: the multimodal-balancing family, folded into `t402` as evidence
+
+**One line of reason, as the contract requires: it nominates no arm — it is a
+measured NEGATIVE about the arms `t402` already names, and it belongs on that
+row rather than in this queue.**
+
+`t402-touch-drowns-audio-at-the-fusion-boundary` names its candidates in its
+own text: *"per-modality gradient normalisation, loss reweighting, modality
+dropout schedules"*. arXiv:2609.11247 (cs.CL, full HTML read) evaluates that
+family — OGM-GE, AGM and siblings — and reports it **does not beat doing
+nothing**. The scout is explicit that this is `NOT AN ARM`.
+
+**Two things this desk adds rather than inherits.** First, the standing
+Goodhart objection that kept this desk out of front 2 for four sweeps **still
+holds and is not waived**: the paper is supervised classification on
+CMU-MOSI/MOSEI, which is the objection, so its result is admissible as evidence
+*against* a candidate family and NOT as evidence for any replacement. Second,
+the timing is the point — `t402` falls due **2026-09-22, tomorrow**, and this
+arrives the week before. A row that was going to pick from a family the field
+has just measured as inert should read that measurement before it picks.
+**Owed by that row's disposition, not by a slot.**
+
+### ADMITTED AS A CONDITIONAL CORRECTION — N3: if `A4c` ever enters, it enters as TEMPORALLY-CENTERED SIGReg
+
+**Status: CORRECTION RECORDED against the week-5 nomination this desk accepted.
+It creates no new work and it fires only if `A4c` is ever built.**
+
+Week 5 nominated SIGReg as the **selection criterion** among anti-collapse
+routes for `A4c`, and this desk accepted it. The lead objection recorded at the
+time was *"there are NO EXPERIMENTS AT ALL"*. arXiv v3 (cs.LG, full HTML read)
+supplies the experiments and they **identify a defect in exactly our regime**:
+splitting the latent into a temporally persistent component and a centered
+residual, the two *"compete for the variance required by the projected
+marginal"* and the prediction objective favours the smaller residual.
+
+**Why this is admitted without argument.** It is a scout correcting a
+nomination of its own that we accepted, with the evidence class its first
+version lacked — which is the behaviour this desk wants to make cheap. The
+correction is cost-free today because `A4c` does not exist. **The obligation it
+creates is narrow and durable: plain SIGReg may not enter as the `A4c`
+selection criterion. If `A4c` is ever designed, it enters TEMPORALLY-CENTERED
+or the week-5 nomination is re-opened first.**
