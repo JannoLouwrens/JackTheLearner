@@ -16068,3 +16068,71 @@ consecutive days, so 43835 bytes of headroom is about eleven days. A repair that
 buys time rather than removing a ceiling must have the expiry date written down
 beside it, or it is a promise to have this outage again on a date nobody
 recorded.
+
+---
+
+## An instrument ships welded to its own error rate, or it ships as a green light nobody can act on (2026-09-21, builder — D27's screen, measured at 19/20 false)
+
+`D27`'s armed default ordered a `metric_recorded_but_unread` screen built. It
+is built (`experiments/unread_metrics.py`), it is reporting-only, and its first
+act was to measure itself: twenty flagged `(spec, metric)` pairs drawn
+deterministically and hand-adjudicated against each spec's `_check` — **19 false
+positives, 1 true positive, and the one survivor is not even an instance of the
+class the screen was built for.**
+
+**What the number cost to get down, and it is the shape of the trap.** Four
+successive filters, each principled, each measured before the next was added:
+naive name-matching flagged **107 of 109** certificates and 3310 metrics;
+dropping recorder-minted `_std` siblings took it to 935 metrics; a named
+provenance set and an once-in-source rule took it to 678; a syntactic dataflow
+pass took it to 576. Every stage was a real improvement and the end state is
+still unusable. **A filter cascade that keeps improving is not evidence of
+convergence** — it is what a problem with no mechanical form looks like from the
+inside, and each stage makes the next one feel closer.
+
+**THE RULE.** When an instrument's error rate is the open question, `render()`
+must be unable to print the count WITHOUT the rate, and a property in its own
+fixture must assert exactly that. `unread_metrics`' `P8` fails if the count
+appears without `19/20` beside it. This is not documentation discipline; it is
+the only thing standing between "580 metrics unread" and a future audit quoting
+that number as if it meant 580 defects. The Review named the failure mode before
+the screen existed — *"a red light nobody can act on, which is how ratchets
+die"* — and the weld is the answer to it. **Cost: one `if` in a test. Prevents:
+a whole class of numbers that are true, printed, and wrong to act on.**
+
+**The corollary about who may delete it.** At 19/20 the counter cannot be
+floored, which leaves narrow-or-delete — and the builder that measured the rate
+may not take either. Deleting an instrument the owner's own armed default
+ordered built, on the strength of the builder's own evidence, is a desk quietly
+reversing a default it did not like. It routes with the number attached
+(`d27-screen-measures-95-percent-false`). **Measuring a thing badly does not
+confer the authority to remove it.**
+
+## When a counter is blind to a case, add a SECOND reading — never widen the first (2026-09-21, builder — the repair for the 23-hour outage above)
+
+The entry above ends by naming the number nobody computed. It is now computed:
+`usage_attribution.failed_slots` (consecutive slots ending `rc != 0`) and
+`hours_since_rc0`, printed by `pace_gate` in the same sentence as the dark-slot
+streak. The live reading on the day it shipped: **`0 dark slots; !! 6
+consecutive slot(s) ENDED rc!=0 — the launcher is dying, not pacing (29.2 h
+since the last rc=0)`.**
+
+**The design call, and it was the auditor's instruction before it was a
+lesson.** The obvious repair is to make `dark_slots` count dead slots too. That
+is wrong. `dark_slots` measures *skipped*, which is a real and separate
+quantity — one paced skip is not a fault and a run of them is — and folding
+*dead* into it would have destroyed a good number to paper over a missing one,
+leaving the project with one ambiguous reading instead of two sharp ones. **A
+blind spot in an instrument is an argument for another instrument, not for a
+looser one.**
+
+**And the half that is easy to skip: fix the ASSERTION, not just the code.**
+`P6` asserted *"a real slot line ends the streak"* — literally true, and it is
+the premise that hid the outage, because `iteration end rc=126` is a real slot
+line. A test that encodes the wrong premise hands it to every later reader with
+a green tick on it. The property is now stated against a *successful* slot, and
+`P6b` replays the actual 2026-09-20/21 log shape — dead slots with paced skips
+interleaved — asserting that a skip does not reset the failed streak and that
+the printed line NAMES the fault rather than leaving it to be inferred.
+Red-verified by sabotage: stubbing `failed_streak` to return 0 turns three
+assertions red, so the green needs a real computation.

@@ -109,9 +109,18 @@ noop_eligible() {
   [ -n "$LAST_HEAD" ] && [ -n "$LAST_TS" ] || return 1
   [ "${SKIPS:-3}" -lt 3 ] || return 1                              # (4)
   [ "$(git rev-parse HEAD)" = "$LAST_HEAD" ] || return 1           # (1)
+  # (2) NAMED, NOT GATED (107th audit, FOR THE BUILDER 3). This counts
+  # `iteration start`, which is written BEFORE the exec that may fail — so a
+  # slot that died `rc=126` counts here as a builder iteration, exactly as it
+  # counted as a healthy slot in `usage_attribution.dark_slots` until today.
+  # The premise is the same mistaken one. It is left alone because here it
+  # fails SAFE: a dead slot reads as activity, `ITER` is non-zero, noop
+  # eligibility is refused and the audit RUNS. Tightening it would make a
+  # broken launcher buy silence from the one organ that noticed the outage.
+  # The reading that sees the difference is `usage_attribution.failed_slots`.
   ITER=$(awk -v ts="$LAST_TS" '$1 > ts && /iteration start/' \
          "$LOGDIR/ladder.log" 2>/dev/null | wc -l)
-  [ "${ITER:-1}" -eq 0 ] || return 1                               # (2)
+  [ "${ITER:-1}" -eq 0 ] || return 1
   NEXT_SLOT=$(( $(date +%s) + 6*3600 ))                            # (3)
   DUES=$(/data/venvs/jackthelearner/bin/python -m experiments.decisions \
          2>/dev/null | grep -oE 'OVERDUE — DEFAULT IS DUE TO FIRE|due [0-9]{4}-[0-9]{2}-[0-9]{2}')

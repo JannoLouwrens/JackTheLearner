@@ -49,11 +49,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
+import time
 from pathlib import Path
 
 LEDGER = Path("/data/jack-logs/usage_ledger.jsonl")
 LADDER_LOG = Path("/data/jack-logs/ladder.log")
+
+#: `iteration end rc=N — ...`. The only line in `ladder.log` that says what
+#: happened to a slot that actually attempted to run.
+_END_RE = re.compile(r"^(\S+)\s+iteration end rc=(\d+)")
 
 #: The organs that are NOT the builder. `pace_gate` applies to the builder
 #: alone — `scripts/review.sh` calls `usage_gate` without `pace_gate`, so the
@@ -140,7 +146,63 @@ def _alive(sessions: dict[str, list[tuple[str, str]]], organs, lo: str, hi: str)
     return False
 
 
-def attribution(text: str | None = None, log_text: str | None = None) -> dict:
+def slot_outcomes(log_text: str) -> list[tuple[str, int]]:
+    """`[(timestamp, rc)]` for every slot that ENDED, oldest first.
+
+    A `PACING:` line is not a slot outcome — it is a slot that never started.
+    Nothing here conflates the two; see `failed_streak` for why that matters.
+    """
+    out = []
+    for raw in log_text.splitlines():
+        m = _END_RE.match(raw.strip())
+        if m:
+            out.append((m.group(1), int(m.group(2))))
+    return out
+
+
+def failed_streak(outcomes: list[tuple[str, int]]) -> int:
+    """Consecutive slot ENDINGS with `rc != 0`, newest backwards.
+
+    `PACING:` lines are transparent here ON PURPOSE. On 2026-09-20/21 six
+    slots died `rc=126` (`Argument list too long` — the steering file crossed
+    `MAX_ARG_STRLEN`) with eighteen paced skips interleaved between them. The
+    honest reading of that log is *"every slot that tried to run, died"*, and
+    a counter that let a skip reset it would have printed 1 six times instead
+    of 6 once.
+    """
+    n = 0
+    for _ts, rc in reversed(outcomes):
+        if rc == 0:
+            break
+        n += 1
+    return n
+
+
+def hours_since_ok(outcomes: list[tuple[str, int]],
+                   now: str | None = None) -> float | None:
+    """Hours since the last slot that ended `rc=0`. None if there is none.
+
+    This is the reading the outage had no instrument for. `dark_slots` was 0,
+    `iteration start` lines were being counted one file over, and the ledger
+    was clean — every liveness surface in the project read healthy while the
+    builder had not completed an iteration in 23 hours. A number that only
+    goes up while nothing works cannot be satisfied by a log line.
+    """
+    last = next((ts for ts, rc in reversed(outcomes) if rc == 0), None)
+    if last is None:
+        return None
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S+00:00", time.gmtime())
+    try:
+        import datetime as _dt
+        a = _dt.datetime.fromisoformat(last)
+        b = _dt.datetime.fromisoformat(now)
+    except Exception:
+        return None
+    return round((b - a).total_seconds() / 3600.0, 2)
+
+
+def attribution(text: str | None = None, log_text: str | None = None,
+                now: str | None = None) -> dict:
     """Where this usage week's meter rise fell, in meter points.
 
     Returns `{"known", "total", "builder", "desks", "both", "unattributed",
@@ -150,7 +212,8 @@ def attribution(text: str | None = None, log_text: str | None = None) -> dict:
     """
     out = {"known": False, "total": None, "builder": None, "desks": None,
            "both": None, "unattributed": None,
-           "dark_slots": None, "dark_known": False}
+           "dark_slots": None, "dark_known": False,
+           "failed_slots": None, "hours_since_rc0": None}
 
     # The dark-slot streak is independent of the ledger: it is the one fault
     # `pace_gate` cannot report about itself, because the organ that would
@@ -171,6 +234,18 @@ def attribution(text: str | None = None, log_text: str | None = None) -> dict:
                 break
         out["dark_slots"] = streak
         out["dark_known"] = True
+        # THE SECOND READING, and it is a SEPARATE quantity (107th audit,
+        # RANK 2 / FOR THE BUILDER 3). `dark_slots` counts slots that were
+        # SKIPPED, which is a real thing and is left alone. It cannot see a
+        # slot that STARTED AND DIED: the `break` above fires on any line
+        # beginning with four digits, so `iteration end rc=126` reads as a
+        # healthy slot and resets the streak to zero. On 2026-09-21 at 07:07
+        # this printed `0 dark slots` with the builder 23 hours idle and six
+        # consecutive slots dead. Widening the streak would have destroyed a
+        # good number to paper over a missing one; this adds the missing one.
+        outcomes = slot_outcomes(log_text)
+        out["failed_slots"] = failed_streak(outcomes)
+        out["hours_since_rc0"] = hours_since_ok(outcomes, now=now)
 
     if text is None:
         try:
@@ -197,14 +272,34 @@ def attribution(text: str | None = None, log_text: str | None = None) -> dict:
     return out
 
 
+def _failed_phrase(a: dict) -> str:
+    """The dead-launcher half of the liveness sentence. Never silent: a dash
+    is not a reading, and `0` must be distinguishable from `unknown`."""
+    f, h = a.get("failed_slots"), a.get("hours_since_rc0")
+    if f is None:
+        return "failed slots unknown"
+    age = (f"{h:.1f} h since the last rc=0" if h is not None
+           else "NO rc=0 in this log at all")
+    if f:
+        return (f"!! {f} consecutive slot(s) ENDED rc!=0 — the launcher is "
+                f"dying, not pacing ({age})")
+    return f"0 failed slots ({age})"
+
+
 def line(a: dict) -> str:
-    """The compact form `pace_gate` appends to its skip line."""
+    """The compact form `pace_gate` appends to its skip line.
+
+    SKIPPED and DEAD print in the same sentence, by the 107th audit's explicit
+    instruction: the outage was invisible because the only liveness phrase on
+    this line was `0 dark slots`, which was TRUE and useless.
+    """
     if a["dark_known"] and a["dark_slots"]:
         dark = f"{a['dark_slots']} consecutive dark slot(s)"
     elif a["dark_known"]:
         dark = "0 dark slots"
     else:
         dark = "dark slots unknown"
+    dark += "; " + _failed_phrase(a)
     if not a["known"]:
         return f"attribution unreadable (this project's own share unknown, NOT zero); {dark}"
     t = a["total"] or 0
@@ -292,15 +387,27 @@ def _selftest() -> int:
     if "unreadable" not in line(a):
         fails.append("unknown: the printed line must say so in words")
 
-    # P6 — the dark-slot streak, and that it STOPS at the last real slot.
+    # P6 — the dark-slot streak, and that it STOPS at the last SUCCESSFUL
+    # slot. THE PREMISE OF THIS PROPERTY WAS WRONG UNTIL 2026-09-21 and the
+    # comment said so out loud: "a real slot line ends the streak". It does,
+    # and that is correct for a counter of SKIPS — but the assertion was the
+    # only thing anyone checked, so nothing in this project noticed that a
+    # slot line saying `rc=126` also ended it. The streak's arithmetic is
+    # UNCHANGED (widening it would destroy a good number). What changed is
+    # that the property is now stated against a successful slot, and P6b
+    # below asserts the reading that covers the case this one cannot see.
     log = ("2026-09-08T08:23:00+00:00 iteration end rc=0\n"
            "2026-09-08T09:07:00+00:00 PACING: skipping\n"
            "2026-09-08T10:07:00+00:00 PACING: skipping\n")
-    a = attribution("", log_text=log)
+    a = attribution("", log_text=log, now="2026-09-08T10:23:00+00:00")
     if not a["dark_known"] or a["dark_slots"] != 2:
         fails.append(f"dark: the streak is the TRAILING run of PACING lines "
                      f"and must end at the last real slot — expected 2, got "
                      f"{a['dark_slots']}")
+    if a["failed_slots"] != 0 or a["hours_since_rc0"] != 2.0:
+        fails.append(f"dark: a healthy loop being paced must read 0 failed "
+                     f"slots and an HONEST age — got failed="
+                     f"{a['failed_slots']} hours={a['hours_since_rc0']}")
     a = attribution("", log_text="2026-09-08T08:23:00+00:00 iteration end rc=0\n")
     if not a["dark_known"] or a["dark_slots"] != 0:
         fails.append("dark: a loop that just ran is 0 dark slots, and 0 must "
@@ -308,6 +415,50 @@ def _selftest() -> int:
     a = attribution("", log_text=None) if not LADDER_LOG.exists() else {"dark_known": True}
     if not a["dark_known"]:
         pass  # no log on this box is a legitimate unknown, not a failure
+
+    # P6b — THE OUTAGE, REPLAYED. This is the real 2026-09-20/21 shape: dead
+    # slots with paced skips interleaved. `dark_slots` reads 1 — TRUE, and
+    # useless. The two new readings must both fire, and the printed line must
+    # SAY the launcher is dying rather than leaving a reader to infer it.
+    log = ("2026-09-20T06:07:00+00:00 iteration end rc=0 — 109 -> 109\n"
+           "2026-09-20T07:07:00+00:00 iteration end rc=126 — 109 -> 109\n"
+           "2026-09-20T08:07:00+00:00 iteration end rc=126 — 109 -> 109\n"
+           "2026-09-20T09:07:00+00:00 PACING: acting on 'week:all models'\n"
+           "2026-09-21T06:07:00+00:00 iteration end rc=126 — 109 -> 109\n"
+           "2026-09-21T07:07:00+00:00 PACING: acting on 'week:all models'\n")
+    a = attribution("", log_text=log, now="2026-09-21T08:07:00+00:00")
+    if a["dark_slots"] != 1:
+        fails.append(f"outage: `dark_slots` must keep its own meaning — "
+                     f"expected 1 trailing PACING line, got {a['dark_slots']}")
+    if a["failed_slots"] != 3:
+        fails.append(f"outage: three slots ended rc!=0 with a paced skip "
+                     f"BETWEEN them; a skip must not reset the failed streak "
+                     f"— expected 3, got {a['failed_slots']}")
+    if a["hours_since_rc0"] != 26.0:
+        fails.append(f"outage: 26 hours since the last rc=0 — got "
+                     f"{a['hours_since_rc0']}")
+    txt = line(a)
+    if "0 dark slots" in txt and "ENDED rc!=0" not in txt:
+        fails.append("outage: the line printed a reassuring dark-slot count "
+                     "with no word about the dead launcher — that is the "
+                     "exact sentence that hid a 23-hour outage")
+    if "the launcher is dying, not pacing" not in txt:
+        fails.append(f"outage: the line must NAME the fault, not leave it to "
+                     f"be inferred — got {txt!r}")
+
+    # P6c — UNKNOWN IS NOT ZERO, for the new readings too. A log with no
+    # successful slot in it must not report a comfortable age.
+    a = attribution("", log_text="2026-09-21T06:07:00+00:00 iteration end rc=126\n")
+    if a["failed_slots"] != 1 or a["hours_since_rc0"] is not None:
+        fails.append(f"no-rc0: a log with no successful slot must report age "
+                     f"None, never 0 — got {a['hours_since_rc0']}")
+    if "NO rc=0 in this log at all" not in line(a):
+        fails.append("no-rc0: the printed line must say so in words")
+    a = attribution("", log_text=None)
+    if a["failed_slots"] is not None and not LADDER_LOG.exists():
+        fails.append("no-log: an unreadable log must report None, not 0")
+    if "unknown" not in _failed_phrase({"failed_slots": None}):
+        fails.append("no-log: the printed line must say failed slots unknown")
 
     for f in fails:
         print(f"  FAIL {f}")
