@@ -6333,6 +6333,66 @@ Evidence: `scripts/usage_attribution.py` (+ `--selftest`, 6 arms);
 (164 rows); `docs/OVERSIGHT.md` 89th audit B1 + B2 + RANK 1.
 
 
+## D27 — RESOLVED BY ARMED DEFAULT, fired 2026-09-21 06:5x UTC by the OVERSEER (107th audit), one day late and the lateness has a named cause. Off your desk; the CODE half is owed by the builder's next live slot — see `D34`.
+
+**The owner did not rule by 2026-09-20, so the pre-registered default fired.**
+
+Default **(i) BUILD THE SCREEN, REPORTING ONLY.** A summarisation-aware
+`metric_recorded_but_unread` reading is added to `run status` alongside the
+other ratchet counters and is **NOT floored** until its false-positive rate has
+been measured and written down. Options (ii) RAISE THE SAMPLE and (iii) CHANGE
+NOTHING were not taken, for the reasons the entry pre-registered: (ii) commits a
+wall-clock budget that has died at max turns on four of four Sunday FULLs, and a
+default may not commit a budget that is already failing; (iii) writes off a
+defect class with four instances in four days.
+
+**WHY THIS FIRING IS A RECORD AND NOT A COMMIT, and why that is not a choice.**
+The `D22` precedent is exact — an overseer may fire, the builder transcribes —
+and this organ may not write code. But the reason the firing is *late* is a
+measured fact and not an excuse: the builder handed itself this act in its own
+journal (*"the first slot on 09-21 fires D27's default if still armed"*), and
+**the first slot on 09-21 could not exec** — nor could the five before it, back
+to 2026-09-20 07:07 UTC. That is `D34`. The launcher was repaired at 06:41 this
+morning by the Review, so the builder is expected live at 07:07 and the code
+half is owed by its next slot rather than blocked indefinitely.
+
+**TO THE BUILDER, BECAUSE TWO ORGANS ORDERED THE SAME ACT WITHIN TEN MINUTES:**
+`scripts/ladder_prompt.md` ITEM 0 (`a7233b2`, 06:42) tells you to fire this
+default. **It is already fired — here, by me, at 06:5x, in this commit.** Do
+**not** fire it a second time; a default that fires twice is indistinguishable
+in the record from one that fired under two different readings. What is owed is
+the *rest* of it: the `metric_recorded_but_unread` reading, its false-positive
+rate measured and written down, and the transcription of this entry into
+`docs/DECISIONS_RESOLVED.md`.
+
+**The obligation the firing creates, stated so it cannot be quietly dropped.**
+The entry's own text binds it: *"Firing this default therefore also owes the
+rate measurement, and the counter gets floored or deleted once it exists."* An
+unfloored counter nobody is accountable to is the failure mode this entry was
+written against. The builder's 2026-09-14 evidence addendum splits the risk and
+should govern the build order: the **ledger-only half** (movement across
+observations, NaN/frozen magnitudes, keys present on PASS rows) had a
+measured-clean first pass at 840 pairs and re-found the one known true positive;
+the **bar-pairing half** (parsing `_check` to pair a metric to the constant that
+gates it) is where the prototype's 104-of-107 false-positive rate lives. Build
+the first, measure it, and do not ship the second on faith.
+
+**Nothing else moves.** No threshold, no ledger row, no re-run, no `GOAL.md`
+text, no spec refused, no certificate staled, no GPU spent. The counter is
+reporting-only and unfloored, so it cannot turn anything red.
+
+**Reversal: delete one function from `experiments/coverage.py`.** Until that
+function exists there is nothing to reverse, which is itself the honest status
+of this firing today.
+
+**Owed to the builder, blocked on `D34`:** the transcription of this entry into
+`docs/DECISIONS_RESOLVED.md` under a `## D27 — RESOLVED BY ARMED DEFAULT`
+heading, in the same motion as the code. Until then `firing_coverage` will not
+list `D27` as declared — reported, not ratcheted, and stated here rather than
+discovered later.
+
+*Superseded entry retained below, as this file's convention requires.*
+
 ## D27 — Part 2 re-examines about ten of 107 certificates a week. Today it found the oldest one had been certifying the wrong thing for thirty-six days. Keep hand-sampling, or buy a mechanical screen? (2026-09-13, Review, FULL)
 
 **THE INSTANCE, and it is not a near-miss.** `T6.03` — *Cross-session
@@ -6654,7 +6714,7 @@ rather than carried to Sunday. What it needs is the one exception that a
 calendar cannot see and a quota can.
 
 DECIDE: D28
-  class:     goal
+  class:     conduct
   blocks:    no spec id directly, which is why no `blocked` ranking can see it.
              What it blocks is the REPAIR of 23 settled FAILs whose only owner
              is a row on this desk, four CLAIM-DEAD commitments (smell,
@@ -7632,3 +7692,242 @@ the same day or the register and the queue will disagree about when the
 stop-rule fires. 09-23 currently carries `w0-too-shallow` and `t205-world-model-
 loses-to-the-ridge-reference`, both of which are W0 questions — so the day is
 already the world's day, which is the right place for this to land.
+
+---
+
+## D28 — RECLASSIFICATION FIRED, 2026-09-21 06:5x UTC (overseer, 107th audit). `class: goal` → `class: conduct`. The entry stays open; only WHO decides has changed.
+
+**The owner did not rule by 2026-09-21, so the pre-registered reclassification
+fired.** It was armed by this same organ on 2026-09-19 (101st audit) with a
+stated firing date of 2026-09-21 *"at the 101st+ audit following that date"*.
+This is that audit.
+
+**What changed:** one word, on one line, in `D28`'s `DECIDE` block. `decide_by`
+is untouched at 2026-09-21, so the entry's own default `(a) OVERDUE FIRST` still
+fires on 2026-09-22 exactly as pre-registered. No option was added, removed or
+narrowed. No threshold, no ledger row, no re-run, no `GOAL.md` text.
+
+**Authority:** `SYSTEM.md` class 3 as amended 2026-09-17 on the owner's own
+question — *sitting order* is the clause's first named example, and `D28` asks
+whether the Review may dispose the OVERDUE class before routing new findings.
+The entry's own armed default already argued every clause of the conduct
+boundary in its own words.
+
+**Author rule satisfied:** `D28`'s heading reads *(2026-09-14, overseer, 95th
+audit)*. It is this desk's entry, and the 100th audit's decline — *"four of
+these five are the Review's entries, not mine"* — had the authorship backwards,
+as the 101st audit measured against the headings one by one.
+
+**The honest price, restated at firing rather than only at arming.** `D28`'s
+default fires on 2026-09-22 regardless, so this buys **days, not capability**.
+What it is actually for is the habit: the owner asked a direct question about
+their own workload, the system answered by building a detector, and the detector
+printed `CONDUCT-MISFILED?` on every run for ten days with no desk acting on it.
+Today one desk acted. `D29` and `D31` deliberately stay `goal` for the reasons
+the arming notice gave — `D29` touches an ARCHITECTURE seat's marking, which
+`SYSTEM.md` makes class 2 and never a desk's by fiat; `D31` would have a default
+invent a budget number on a shared box with paying tenants.
+
+**And the reading that is worse today than when this was armed.** The arming
+notice said the reclass "shrinks the owner's desk and grows nothing". That is
+still true, and it is now also nearly beside the point: `D28` measures the
+Review's drain as UNBOUNDED, and this morning the queue's OVERDUE class stands
+at **17, up 5 overnight**, with **four of the five breaks on rows this desk
+dated onto the very Sunday it was sitting**. Reclassifying the entry does not
+dispose a single row. I am recording that so the act is not read as a repair.
+
+**Reversal: change one word on one line (`conduct` → `goal`).** The owner may
+also rule `D28` at any time, which supersedes this entirely.
+
+---
+
+## D34 — The builder loop could not start a single iteration for 23 hours because one file crossed one kernel limit. The Review found and trimmed it at 06:41 this morning, independently and before I finished; the outage is over and the DESIGN that caused it is not. (2026-09-21, overseer, 107th audit)
+
+> **STATUS AT WRITING, because an entry that describes a world that has already
+> changed is the disease this register exists to prevent.** The Review's DAILY
+> sitting diagnosed this at **06:41 UTC** (`b8e807b`) — the same cause, from the
+> same log, reached independently and roughly fifteen minutes before I reached
+> the end of my own derivation — and trimmed `scripts/ladder_prompt.md` from
+> **140331 → 85548 bytes**. I verified the repair by exec rather than by
+> reading it: passing the live file as a single argv to `/bin/true` under `nice`
+> now succeeds. **The builder is expected to run at 07:07 and the outage is
+> closed.** My option (ii) below was therefore executed by another desk before
+> this entry was committed, and it is recorded as theirs. What remains open is
+> option (i) and the growth curve underneath it, which a trim does not touch.
+
+**THE MEASUREMENT, from `/data/jack-logs/ladder.log` and `git cat-file`, not
+from anyone's report.**
+
+```
+2026-09-20T06:10:38  iteration end rc=0     <- the last iteration that ever ran
+2026-09-20T07:07:24  iteration end rc=126   ladder_loop.sh: line 278: /usr/bin/nice: Argument list too long
+2026-09-20T08:07:24  iteration end rc=126   (same)
+2026-09-20T09:07:23  iteration end rc=126   (same)
+2026-09-20T10:07:24  iteration end rc=126   (same)
+2026-09-20T11:07:23  iteration end rc=126   (same)
+2026-09-20T12:07 .. 2026-09-21T05:07        17 consecutive PACING skips
+2026-09-21T06:07:22  iteration end rc=126   (same)
+```
+
+**THE CAUSE, derived and then confirmed by experiment.** `ladder_loop.sh:270`
+reads the whole steering file into a shell variable and line 278–282 passes it
+as a **single argv string**: `PROMPT=$(cat scripts/ladder_prompt.md)` … `nice
+-n 19 … claude -p "$PROMPT"`. Linux caps one argument at `MAX_ARG_STRLEN` = 32
+pages = **131072 bytes**. Measured on this box just now, against `/bin/true` so
+nothing was spent:
+
+```
+129855 bytes: OK          <- scripts/ladder_prompt.md at c124fad4, 2026-09-19 06:39
+131000 bytes: OK
+131072 bytes: E2BIG       <- the cliff, exactly where the kernel constant says
+139002 bytes: E2BIG       <- af21fe0d, 2026-09-20 06:44
+140331 bytes: E2BIG       <- 87c8f04b, 2026-09-20 06:48, and HEAD today
+```
+
+`git cat-file -s` on every revision of the file dates the crossing to the hour:
+the 09-19 steering rewrite left **1217 bytes of headroom**; the Sunday FULL's
+`af21fe0` at 06:44 spent all of it and 7930 bytes more. The 06:07 slot on 09-20
+read the file at 129855 and ran normally, ending 06:10. The 07:07 slot was the
+first to read it after 06:44, and it is the first `rc=126`. There is no gap in
+the chain and no other candidate.
+
+**WHY THIS WAS A DEADLOCK, and how it broke.** The fast repair needed no code
+at all, but the *durable* repair is four characters of shell in
+`scripts/ladder_loop.sh` — and the organ that reads `FOR THE BUILDER` could not
+start, and could not start *because of* the file it would have to be running to
+fix. For twenty-three hours the routing rule and the fault were the same object.
+It broke the only way it could have: a **third** organ, with write authority
+over the offending page and no dependency on the dead one, noticed. That is an
+argument for keeping more than one desk able to read `ladder.log`, and it is
+luck rather than design — the Review found this by reading the log during a
+sitting that had no instrument telling it to. My own permissions end at
+`OVERSIGHT.md`, `DECISIONS_NEEDED.md` and `LESSONS.md`; `scripts/ladder_loop.sh`
+is not among them, and `D13` is the standing precedent that an organ does not
+edit the scripts it is governed by.
+
+**THE COST, priced rather than asserted.** In the 24 hours since 06:10 on
+09-20: **0 iterations, 0 spec attempts, 0 ledger events**, against a demonstrated
+rate of roughly 9–11 settlements a day in a good week and 7-of-7 slots on the
+morning it died. `2026-W38` opened on 09-20 with **30 free Kaggle GPU-hours
+expiring Saturday 2026-09-26** and **0.00 h drawn so far** — and for the first
+time in three weeks a legal buyer exists, the `T2.06` `gpu<20min` re-buy the
+Sunday FULL created and ordered as its builder item 3. The buyer exists and the
+only organ that may spend it cannot exec. W37 expired with ~24.75 of 30 hours
+unspent; W38 is on the same path for a different reason. Four other ordered
+builder items (`BA.03` (c), `T3.06` (b)+(a), the `T1.08` trigger declaration,
+the two 09-21 dispositions) are equally undeliverable, and `D27`'s default —
+fired by me this morning — owes code that cannot be written.
+
+**THE THREE OPTIONS.**
+
+  (i) **STOP PASSING A GROWING FILE THROUGH `argv`** — the durable repair.
+      Feed the steering file on **stdin** instead: `claude -p` reads a prompt
+      from stdin, so `… timeout 50m claude -p --model "$1" … < "$REPO/scripts/
+      ladder_prompt.md"` removes the ceiling entirely rather than moving it.
+      Cost: one line in `scripts/ladder_loop.sh`, and a verification that this
+      harness's `claude -p` accepts stdin in the non-interactive lane, which I
+      could not test without spending a slot. Risk: if stdin is *not* read, the
+      loop starts with an empty prompt, which is a worse failure than a loud
+      one — so this option must be verified before it is trusted, and that is
+      the honest argument against firing it unattended.
+  (ii) **TRIM THE FILE BELOW THE CLIFF** — the fast repair, and the one that
+      needs no code at all. **ALREADY EXECUTED, 2026-09-21 06:41, by the
+      Review** (`b8e807b`), which owns this page and rewrites it every morning:
+      140331 → 85548 bytes, **43835 bytes of headroom**, exec verified. Cost:
+      nothing. What it does NOT buy, and this is the whole reason the entry
+      stays open: the file has grown from 52850 bytes on 08-29 to 140331 on
+      09-20 — **~3976 bytes/day, monotone, 22 consecutive days** — so a trim is
+      a repair with a computable expiry date. **At the measured rate today's
+      headroom is about ELEVEN DAYS**, i.e. roughly 2026-10-02, and nothing in
+      this repository will say so when it arrives.
+  (iii) **BOTH, in that order** — the trim first so the loop runs today (done),
+      and the stdin repair landed from a running builder that can verify it.
+
+**MY RECOMMENDATION IS (iii), and (ii) is already done by another desk.** What I
+am asking you for is (i): whether to change how the builder is launched, which
+touches the lane `D32` is already about, and which I will not have a desk decide
+by silence while `D32` is open. **The reason to rule rather than let the trim
+stand** is the arithmetic above — a fix that expires in eleven days, against a
+failure mode that just cost 23 hours and 19 slots and that no instrument in this
+repository detected. The next crossing will look exactly like this one.
+
+**WHAT I AM NOT ASKING.** I am not asking to raise a limit, weaken a gate, or
+spend anything. No threshold moves under any option. `GOAL.md` is untouched.
+
+**`decisions --check` flags this entry `CONDUCT-MISFILED?`, and the flag is
+answered here rather than around it.** Half of it IS conduct and I have taken
+that half at the desk without asking: option (ii), the trim, is the Review
+editing the Review's own page, and it is already ordered in `OVERSIGHT.md`. The
+half that stays yours is option (i), because changing **how the builder is
+launched** is the same object `D32` is open on — and `D32`'s own reasoning is
+that a launch lane admits two readings and a default may not settle which. A
+desk that reclassified this whole entry to `conduct` would be deciding, by
+silence and on its own initiative, a lane question the owner is already holding.
+`D28` was reclassified this morning precisely because it was *sitting order*;
+this is not that.
+
+**AND THE FINDING THAT OUTLIVES THE OUTAGE, because the outage will be fixed
+and this will not.** Three instruments look at the builder's liveness and all
+three read a crashed slot as a healthy one:
+
+  1. `usage_attribution.py:164` — the dark-slot streak counts trailing
+     `PACING:` lines and **breaks on any line starting with four digits**,
+     which `2026-09-20T07:07:24 iteration end rc=126` does. Five consecutive
+     dead slots printed `0 dark slots` at 12:07. It reads `0 dark slots`
+     **right now**, with the builder 24 hours dead.
+  2. `overseer.sh:112` — the no-op gate counts `iteration start` lines, and a
+     slot that dies at exec writes one.
+  3. The Review's Part 2.5 organ-liveness paragraph counted `7 of 7 hourly
+     slots ran` at 06:37 on 09-20 — true when written, and the first failure
+     was 30 minutes later.
+
+`D30`'s armed default fired on **2026-09-19** to build (1), for a blackout
+entry titled *"The builder has been dark for 18 consecutive hourly slots."* It
+was **two days old** when the builder went dark in a way it cannot see. The
+counter is not wrong about what it measures; it measures *skipped* and the
+project read it as *dark*. A liveness instrument that cannot distinguish "chose
+not to run" from "could not run" is measuring intent, not life.
+
+DECIDE: D34
+  class:     goal
+  blocks:    every spec the builder would have attempted. Not expressible as a
+             spec id, which is why no `blocked` ranking, no `coverage` class and
+             no `champions` check can see it — the same blind spot `D32` was
+             routed for six days ago. The cost is REALISED, not forecast: 24
+             hours, 0 iterations, 0 ledger events, and 30 perishable GPU-hours
+             with a legal buyer and no organ able to spend them.
+  options:   (i) stdin instead of argv — durable, needs verification from a
+                 running builder
+             (ii) trim `ladder_prompt.md` below 131072 — free, expires in ~5 d
+                  at the measured growth rate; inside the Review's own
+                  authority and already routed there, not waiting on you
+             (iii) both, in that order
+  default:   (iii) BOTH, IN THAT ORDER. If unanswered, the Review's trim (ii)
+             stands as executed desk conduct over its own page, and the
+             builder — once running — lands the stdin change (i) ONLY after
+             verifying in the same slot that `claude -p` reads stdin on this
+             harness, by launching one throwaway prompt and confirming a
+             non-empty response; if that verification fails, (i) is NOT taken
+             and the entry returns to you with the measurement attached.
+             This picks only already-permitted actions: a desk editing its own
+             steering page is what the Review does every morning, and repairing
+             the launcher so it can exec restores a capability rather than
+             widening one. It moves NO threshold in either direction, edits no
+             `GOAL.md` text, weakens no gate, refuses no run that is permitted
+             today, permits no run that is refused today, spends no GPU, commits
+             no budget, fails no spec, and stales no certificate. It is MONOTONE
+             on the thing at issue: the builder can only go from unable-to-start
+             to able-to-start. Option (i) ALONE is deliberately not the default
+             because an unverified stdin change can fail SILENTLY with an empty
+             prompt, and a default may not replace a loud failure with a quiet
+             one. Option (ii) ALONE is deliberately not the default because it
+             is a repair with a computable expiry and would put this project
+             back here inside a week. The price, stated rather than buried:
+             (iii) leaves the growth itself unaddressed — the steering page will
+             keep growing at ~4 KB/day under either repair, and neither option
+             asks the harder question of whether a 140 KB steering page is a
+             sensible thing to hand a builder every hour. That question is real
+             and it is NOT in this entry.
+             Reversal: `git revert` the one-line launcher change and re-grow the
+             page; no threshold, no ledger row, no re-run.
+  decide_by: 2026-09-24

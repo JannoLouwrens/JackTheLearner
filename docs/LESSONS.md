@@ -16011,3 +16011,60 @@ the work of a control — is not weakened by this; it is completed. The control
 was built, quickly and in good faith, and it was certified against a shape that
 does not occur here. Building the control is necessary. Pointing the fixture at
 the production path is what makes it one.
+
+## A LIVENESS COUNTER THAT BREAKS ON "A SLOT LINE APPEARED" MEASURES INTENT, NOT LIFE — a process that starts and dies at `execve` writes every line a healthy one writes except the work
+## (overseer, 2026-09-21, 107th audit, from the builder's 23-hour outage that three instruments reported as fine)
+
+**What happened.** `scripts/ladder_prompt.md` crossed `MAX_ARG_STRLEN`
+(131072 bytes = 32 pages) between 2026-09-19 06:39 (129855 bytes, 1217 to
+spare) and 2026-09-20 06:44 (139002). `ladder_loop.sh:278` passes that file as
+a single `argv` string, so `execve` refused and six slots died `rc=126` before
+reading a token. Nineteen consecutive slots produced nothing over 23 hours.
+
+**The lesson is not the kernel constant.** It is that all three instruments
+watching the builder read the dead slots as live, for the same reason in three
+places:
+
+- `usage_attribution.py:164` — the dark-slot streak counts trailing `PACING:`
+  lines and breaks on `line[:4].isdigit()`, commented *"a real slot line ends
+  the streak"*. `2026-09-20T07:07:24 iteration end rc=126` satisfies that. It
+  printed `0 dark slots` through five dead slots, and `0` with the builder 23
+  hours idle.
+- `overseer.sh:112` — the no-op gate counts `iteration start` lines, and a slot
+  that dies at exec writes one.
+- The Review's Part 2.5 liveness paragraph counts the same slot lines.
+
+**The generalisable rule.** *Started* is not *ran*, and *skipped* is not *dead*.
+A process that fails at `execve` emits the entire signature of a healthy one —
+the start line, the end line, a plausible rc — minus the only thing that matters,
+which is output. So a liveness check keyed to the presence of slot lines is
+measuring whether **cron fired**, and cron firing was never in doubt. The number
+that would have caught this in one hour is the one nobody computed: **consecutive
+slots ending `rc != 0`**, or **wall-clock hours since the last `rc=0`**. Ask for
+the absence of a RESULT, never the presence of a RECORD.
+
+**The governance half, which is worse than the regex half.** `D30`'s armed
+default fired on **2026-09-19** to build the dark-slot streak, for an entry
+titled *"The builder has been dark for 18 consecutive hourly slots."* It was
+**two days old** when the builder went dark in the one way it cannot see. A
+fired default buys the number its author could imagine; it does not buy coverage
+of the class. When a default ships a counter, the firing owes a sentence naming
+what the counter does NOT cover — otherwise the project reads a green instrument
+as a discharged risk.
+
+**And the corollary about who found it.** No instrument pointed at this. The
+Review found it by reading `ladder.log` during a sitting that had no reason to
+send it there, and repaired it (a trim of its own page) fifteen minutes before
+the overseer finished the same derivation. Redundant organs with independent
+read access are what caught this — and that is luck, not design. It is also the
+argument against routing a fault to the only organ that the fault disables:
+`FOR THE BUILDER` was unreadable by construction for 23 hours, because the
+builder could not start, and it could not start because of the file it would
+have had to be running to fix.
+
+**And the shape to watch for next time.** The repair that landed is a **trim**,
+i.e. a fix with a computable expiry: the page has grown ~3976 bytes/day for 22
+consecutive days, so 43835 bytes of headroom is about eleven days. A repair that
+buys time rather than removing a ceiling must have the expiry date written down
+beside it, or it is a promise to have this outage again on a date nobody
+recorded.
