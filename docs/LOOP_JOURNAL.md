@@ -17039,3 +17039,90 @@ repair design (both the Review's).
 - 2026-09-20 04:0x slot (fable; `week:all models` 56% — the gate, acted on; `week:Fable` 86%, not the gate; week-elapsed 52%, pace line ~59, running): **BOARD RE-VERIFIED EMPTY, fourth consecutive; verify-and-end slot per the standing rule.** `run next` 0 fresh of 48 (33 settled, 15 held); `coverage` 5 classes EMPTY with no path in (exit 2 is the standing `goal_unrunnable = 7` — the GEN four, the Review's RANK 4, first actionable at its 06:37 FULL ~2.5 h after this slot); `decisions` prints D27 `due 2026-09-20` armed, NOT overdue — nothing fires today (earliest legal firing 09-21; verified previously, not re-litigated). Both FOR THE BUILDER sections re-read at this HEAD: OVERSIGHT items 1–4 executed by the 01:0x slot, 5–7 obeyed, 8 needs only correct citation going forward; PROGRESS items 1–2 landed (LT.01 PASS banked, notice wiring shipped and repaired at c33a8fa), item 3 obeyed (W38's 30 fresh h refused again — no legal buyer, manufacturing one stays forbidden, `1^9` item 3), item 4 dated 09-21. RATCHETS SAID, NOT RECORDED (same reading as 00:1x/02:0x/03:0x, still true at this HEAD): `review_queue_violations` 12→15 CLOCK (three Review rows hit 09-19 dues at midnight), `net_arrivals` 12→10 trailing window sliding — no commit can justify recording either. Hygiene: `lost_iterations.log` 0 bytes, no stray jack pids, no live detached runs, no fresh tmp residue (the old /data/tmp scratch files predate this window and are not this slot's to sweep), tree clean, HEAD pushed, /data 79G free. render 109/253 unchanged — a verification slot claims nothing about Jack. NEXT ITERATION: (1) the Review's Sunday FULL sits 06:37 TODAY — the 07:0x slot should diff PROGRESS.md/OVERSIGHT.md for fresh FOR THE BUILDER items it leaves, and any slot overlapping it must `git add` by name; (2) first slot on 09-21 checks `python -m experiments.decisions` FIRST, fires D27's default if still armed (required wording: "the owner did not rule by 2026-09-20, so the pre-registered default fired"), then takes the two 09-21 dispositions IN ORDER without folding (WAITS-ON with `none` permitted; the (iv) MEASUREMENT before the (iv) implementation); (3) remaining 09-20 slots: board empty and four-times-verified — re-verify against the tools and end, do not manufacture work; (4) do not re-run LT.02, do not pre-empt the 09-24 dispositions, D32 is the owner's.
 - 2026-09-20 05:0x slot (fable; `week:all models` 56% — the gate, acted on; `week:Fable` 86%, not the gate; week-elapsed 53%, pace line ~59, running; session 3%): **BOARD RE-VERIFIED EMPTY, fifth consecutive; verify-and-end slot per the standing rule.** `run next` 0 fresh of 48 (33 settled, 15 held); `coverage` exit 2 is the standing `goal_unrunnable = 7` red (the GEN four — the Review's RANK 4, first actionable at its 06:37 Sunday FULL, ~90 min after this slot); `decisions` prints D27 `due 2026-09-20` armed, NOT overdue — nothing fires today (earliest legal firing 09-21; verified previously, not re-litigated per the 105th audit item 7); armed register D27/D28/D29/D32/D31 matches the audit's, exit 0. `run stale` unchanged: 2 dirty-tree rows (T6.03 BLOCKED — re-buy prohibited until T2.10 PASS; PL.02 VOID — do not pre-empt its 09-24 disposition), 12 stale claims all FAIL/VOID behind Review redesigns. Hygiene: the 02:07 LIVE NOTICEs confirmed harvested by the 02:0x slot, no new notices since, no stray jack pids (pgrep matched nothing), `lost_iterations.log` 0 bytes, no live detached runs, tree clean, HEAD pushed, /data 79G free. W38's 30 fresh GPU-h refused again — no legal buyer, manufacturing one stays forbidden (`1^9` item 3, fourth consecutive week, the Review says the finding is its own). RATCHETS SAID, NOT RECORDED (same reading as 00:1x–04:0x, still true at this HEAD): `review_queue_violations` 12→15 CLOCK, `net_arrivals` 12→10 window sliding — no commit of mine justifies recording either. render 109/253 unchanged — a verification slot claims nothing about Jack. NEXT ITERATION: (1) the Review's Sunday FULL sits 06:37 TODAY — the 06:0x slot may overlap it: `git add` by name, and the 07:0x slot should diff PROGRESS.md/OVERSIGHT.md for fresh FOR THE BUILDER items it leaves; (2) first slot on 09-21 checks `python -m experiments.decisions` FIRST, fires D27's default if still armed (required wording: "the owner did not rule by 2026-09-20, so the pre-registered default fired"), then takes the two 09-21 dispositions IN ORDER without folding (WAITS-ON with `none` permitted; the (iv) MEASUREMENT before the (iv) implementation); (3) remaining 09-20 slots: board empty and five-times-verified — re-verify against the tools and end, do not manufacture work; (4) do not re-run LT.02, do not pre-empt the 09-24 dispositions, D32 is the owner's.
 - 2026-09-20 06:0x slot (fable; `week:all models` 56% — the gate, acted on; `week:Fable` 87%; session 6% at start): **board re-verified empty, sixth consecutive, and every dated item on it belongs to another desk — a verify-and-end slot per the standing empty-board rule.** Re-derived rather than inherited: `run next` offers only settled verdicts (FAIL/VOID rows whose unchanged re-run buys the same row); `run coverage` reads 5 empty classes with NO path in (cpu<1min, cpu<10min, cpu<48h, gpu<20min, gpu<8h), UNREACHABLE 96 AT floor, FAIL-UNOWNED 0 AT floor, 28 owned-FAILs draining UNBOUNDED on the Review's desk; `run status` EXIT 0 with both ratchet movements CLOCK-only (`review_queue_violations` 12→15, +3 OVERDUE by calendar; `net_arrivals` 12→10, trailing-window slide — no act, nothing recorded). **`LT.01` attempt 2 is confirmed LANDED in the ledger (attempt 2, commit 414a1b1, 2017 s) — `1^9` item 1 / PROGRESS FTB item 1 is discharged; no re-run owed.** `experiments.decisions`: D27 armed, due TODAY, earliest legal firing the first 09-21 slot — read in the standard sweep, nothing fires from this desk today; D28 (09-21) and D29 (09-22) likewise not mine. Stale/dirty block read and unchanged: T1.08/T3.06/T3.07 stale, T2.02 stale-by-content, T6.03/PL.02 dirty — every one is Review-owned or held behind a standing prohibition (T6.03 waits on T2.10; T1.08's pipeline repair is the Review's), so no re-run was bought. Hygiene: zero leftover jack processes (every surviving pid is another tenant), `/data/jack-logs/lost_iterations.log` 0 bytes since 09-18 with all subsequent slots rc=0 — the correct reading, not a missed detection. W38's 30 fresh GPU hours still have no legal buyer; the refusal stands (PROGRESS FTB item 3 — the Review said an unbought Sunday is ITS finding to write, and today is that Sunday). Committed before 06:37 so the Sunday FULL and overseer collision meets a clean tree; added by name. NEXT: the 07:0x slot diffs OVERSIGHT.md/PROGRESS.md against what the 06:37 FULL leaves (it faces 15 OVERDUE + D28's default arming); the first 09-21 slot fires D27's default with the required wording — "the owner did not rule by 2026-09-20, so the pre-registered default fired" — build the screen reporting-only, unfloored, and owes the false-positive-rate measurement with it, then takes the two 09-21 dispositions in order, never folded.
+
+- 2026-09-21 ~11:0x-12:1x UTC (builder, **OPUS** — `week:Fable` is pinned at 100% so the
+  06:07 and 11:07 slots both printed `REFUSING fable ... 95% model floor` and the chain
+  walked me to opus; the gate I acted on is **`week:all models` 71% -> 72%**, well under
+  the 90% stop, session 3% -> 6%. **No PACING streak on my slot**, but see the liveness
+  paragraph: the eighteen PACING skips and six `rc=126` deaths since 2026-09-20 07:07 are
+  real and are what this iteration was handed.)
+  **THREE THINGS LANDED AND ONE IS STILL IN FLIGHT.**
+
+  (1) **`D27` CHECKED, NOT DOUBLE-FIRED — and then discharged in code.**
+  `ladder_prompt.md` ITEM 0 (06:42) ordered me to fire `D27`'s default; the overseer's
+  107th audit had already fired it at ~06:5x and the stamp was at HEAD when I read it at
+  ~11:1x. I checked `DECISIONS_NEEDED.md` first, as both pages told me to, and **did not
+  re-fire it.** What I owed was the rest: the screen, its rate, and the transcription.
+  `experiments/unread_metrics.py` is built — `metric_recorded_but_unread` over every
+  standing PASS row, printed by `run status` and `run unread`, **REPORTING-ONLY and
+  UNFLOORED.** First reading **580 metrics on 62 of 96 decidable certificates; 34 clean;
+  13 UNDECIDABLE** (dynamic keys in `_check` — unknown is not zero, never flagged).
+  Only the NAME half is built; the bar-pairing half, where the Review's prototype's
+  104-of-107 lives, is deliberately not built.
+  **THE RATE, AND IT DOES NOT FLATTER THE INSTRUMENT: 19 FALSE / 1 TRUE = 95%**, hand-
+  adjudicated on a deterministic 20-draw (`unread_metrics.sample()`, seed 27). Two that
+  looked real are read IN SUBSTANCE through a SUBSCRIPT the dataflow filter cannot join
+  on (`SO.09 synth_lo_refused` -> `hand_share_audited` at `so_09_hands_accountant.py:400`;
+  `LG.00 grounded_knowledge_advantage` -> the gated `sigma_life`). The lone survivor,
+  `T0.06 steps_ok`, is the literal `5` at `t0_06_dimension_contract.py:62` — a decorative
+  metric, **not `D27`'s class. In a 20-draw the screen found ZERO instances of the defect
+  class it was built for.** Filter cascade, measured at each stage: naive 107/109 specs
+  and 3310 metrics -> 935 (drop recorder-minted `_std`) -> 678 (provenance + once-in-
+  source) -> 580 (syntactic dataflow). Transcribed into `DECISIONS_RESOLVED.md` with the
+  full 20-row table; `decisions --check` rc=0, `0/0 firing-diff`. **Routed, not decided:**
+  `d27-screen-measures-95-percent-false`, DUE 2026-09-28 — at 19/20 the counter cannot be
+  floored, which leaves narrow-or-delete, and both are the Review's. Deleting an
+  instrument the owner's armed default ordered built, on my own evidence, is a desk
+  reversing a default it did not like. Bill disclosed: `run.py` is in `T0.36`'s
+  `IMPL_DEPS`, re-bought PASS 34.33 s in the same commit (`b8cca42`).
+
+  (2) **THE LIVENESS READING THE OUTAGE HAD NO INSTRUMENT FOR** (107th RANK 2 / FTB 3,
+  `0006792`). `pace_gate`'s line now reads, live: `0 dark slots; !! 6 consecutive slot(s)
+  ENDED rc!=0 — the launcher is dying, not pacing (29.2 h since the last rc=0)`. The left
+  half is what hid the outage and it was TRUE. **`dark_slots` was NOT widened** — it
+  measures SKIPPED, a real separate quantity, and folding DEAD into it destroys a good
+  number to paper over a missing one. `failed_slots` treats PACING lines as transparent on
+  purpose: the 09-20/21 log is six dead slots with eighteen paced skips interleaved, and
+  the honest reading is *every slot that tried to run, died*, not 1 printed six times.
+  **`P6`'s assertion was fixed in the same motion** — it asserted *"a real slot line ends
+  the streak"*, literally true and the premise that hid this. `P6b` now replays the actual
+  09-20/21 log shape; `P6c` asserts unknown-is-not-zero for both new readings.
+  **Red-verified by sabotage:** stubbing `failed_streak` to return 0 turns three
+  assertions red. `--selftest` 0 failures, `test_lib_usage.sh` ALL GREEN.
+  `overseer.sh:112` NAMED, NOT GATED as instructed — same mistaken premise, but it fails
+  SAFE (a dead slot reads as activity, the audit RUNS), and tightening it would let a
+  broken launcher buy silence from the organ that noticed.
+
+  (3) **`T2.06`'s `gpu<20min` RE-BUY IS DISPATCHED AND STILL RUNNING AS I WRITE THIS** —
+  the first legal GPU buyer in three weeks. `scripts/dispatch.sh T2.06 --projected-hours
+  0.4`, pre-flight CLEAR, watcher **pid 2632381 detached (setsid)**, runner pid 2632405
+  auto-declared in `declared_pids`, kernel **`jannolouwrens/jack-ladder-1789988933`
+  verified RUNNING server-side via the Kaggle CLI at 11:2x** — not a claim, a status
+  read. `W38`: 0.00 h of 30 drawn at dispatch, projection 0.40 h, expires Sat 2026-09-26.
+  The watcher is session-independent, so the row lands whether or not this slot survives.
+
+  **NEXT ITERATION — THE TWO THINGS THAT ARE OWED THE MOMENT `T2.06`'s ROW EXISTS, and
+  one of them is easy to drop on the floor:**
+  (a) **Commit the `T2.06` row AND restore `UNREACHABLE_BASELINE` 98 -> 96 in the SAME
+  commit** (`experiments/coverage.py:1153`). The overseer's FTB 4 binds this *"whichever
+  way the run falls"*, and it is owed by whoever commits the row — which will NOT be me,
+  because the detached watcher writes it after my slot ends. If the row is already on the
+  ledger and uncommitted when you wake, that is the normal case: commit it as found.
+  (b) If it FAILs, **record the FAIL and do NOT touch `MARGIN_LANG`** — 0.07 is
+  exogenous from n and the binomial and is not negotiable against its own result. The
+  registered run's per-seed margins were 0.1050 / 0.1425 / 0.1250, so it should clear.
+  **THEN take, in this order, from `1^10`, all of it still UNREAD:** `BA.03` option (c)
+  (integrated absolute tilt over a fixed 12 s window, bar from the RANDOM walk not the
+  blind twin, all six green rig conjuncts carried forward, no horizon growth); `T3.06`
+  **(b) before (a)** (n-aware order-statistic `RANDOM_DWELL_MAX` derived in source before
+  the run, then the binding C-RANDREW comparator — expect it to FAIL, that is the point —
+  and map control-red to VOID not FAIL in the same motion); the `T1.08` `CITE_MARKER`
+  trigger declaration in `registry.py` (one line, declaration only, do NOT edit
+  `t2_03_*.py`). **Also still owed and NOT done by me:** PROGRESS FTB 4 — print
+  `scripts/ladder_prompt.md`'s byte count in `run status` with the 131072 cliff and the
+  headroom in DAYS (reporting-only, unfloored). The page is **88072 bytes** today, under
+  the 125000 rule, so it is not urgent this slot; it is the honest mechanical repair for
+  a ceiling that currently exists only as a sentence.
+  **Bookkeeping:** tree clean at both commits, `git add` by name (12 `claude` processes in
+  `ps`, no foreign files found in the tree), both commits pushed. One declared detached
+  process left running on purpose — the `T2.06` watcher, pid 2632381, in `declared_pids`.
