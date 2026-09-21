@@ -8131,3 +8131,70 @@ ROUTED: ba03-vestibular-channel-is-never-load-bearing-under-one-kick | 2026-09-2
         not before it, and only if BA.03's (c) re-run has not already answered
         it. Dated onto the same day as the three rows it was split from so the
         world-edit bill is read as ONE bill, per the bundling rule.
+
+ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-21 | `785f921` (field watch week 8, §6) | OPEN
+    **The question, and it is a SEAT question before it is a spec question.**
+    `A4` (`wm-latent`) holds the Learning-core seat. The machinery it is NAMED
+    for is the `latent_pred` head — 149,312 params, 17.3% of the arm. The scout
+    measured at HEAD that all five of `LC.03`'s controls switch that term off
+    only as part of switching EVERYTHING off (untrained twin, frozen control),
+    so **no control isolates the latent-prediction objective.** The seat's
+    margins (`lg_margin_null` t = 4.64, `lg_margin_twin` t = 4.00) are therefore
+    equally consistent with an RSSM actor-critic having produced the entire
+    number and 17.3% of the seated arm being dead weight.
+    This is NOT week 7's §6 restated: that one found `A4`'s declared COLLAPSE
+    diagnostic does not exist (row `a4-mandatory-collapse-diagnostic-is-declared-
+    and-computed-nowhere`). This is about what its CONTROLS remove. Same seat,
+    different hole, and the two should be read together, not merged.
+    **Why the Review owns it rather than the builder:** the candidate repair is
+    an `A4` variant with `l_bind` dropped — a paired comparator this seat has
+    never had — and choosing an arm is this desk's, never a slot's.
+    **The staleness bill.** `LC.03` is a VOID and the seat is held `BY VERDICT`
+    off it (`champions --check` VERDICT-IS-A-VOID, 2 of 2, at floor), so no PASS
+    certificate is invalidated by acting here. The cost is compute, not
+    re-certification: 14.40 core-h per 3 seeds, no weights on disk [scout, M].
+    That is the whole reason this is a decision and not a slot's errand.
+    **Sequencing, declared:** if the `a4-…-computed-nowhere` row takes an option
+    that runs training, this comparator and field watch N1's `k`-sweep are both
+    MARGINAL on that run. Do not buy 14.40 core-h twice. Read that row first.
+    DUE: 2026-09-28 | a design answer owed by the Review: does the Learning-core
+        seat get an `l_bind`-dropped comparator, and is it bought on its own or
+        marginal on the `a4-…-computed-nowhere` run. Dated a week out and BEHIND
+        that row deliberately — buying this separately is the expensive mistake.
+
+ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field watch week 8, §6b) | OPEN
+    **The instrument built last week to read `FIELD_WATCH.md` returns a FALSE
+    GREEN, and the scout measured it rather than writing around it.**
+    `experiments/fieldwatch.py`'s quotation channel reported both week-8
+    findings as ROUTED. All five routings are spurious: four are stock English
+    six-grams shared by two desks writing in the same house style (*"it is the
+    same shape as"*, *"why this is not a one"*, *"so it is not mistaken for"*),
+    and the fifth is the row's own slug — `_queue_chunks` starts each chunk at
+    `ROUTED: <slug> |`, so **naming the row you are distinguishing yourself FROM
+    marks you as owned BY it.** Quotation channel: **0 for 5** at n = 5.
+    **The direction is the dangerous one.** The 96th audit predicted the
+    false-POSITIVE shape would be a finding discharged in code reading UNROUTED.
+    The measured shape is the opposite: a finding with **no owner at all**
+    reading ROUTED. `0 UNROUTED-FIELD-FINDING` in `run status` is currently a
+    green light sitting on top of the exact scar the module was built to end.
+    **The citation channel is NOT implicated** — `_cites` is week-anchored and
+    slug-independent, and week 7's two findings both routed through it
+    correctly. Do not repair what is working.
+    **Named by the scout, whose call it is not:** a minimum-overlap count;
+    stripping the `ROUTED:` header line from the chunk; subtracting shingles
+    that also occur in the previous sweep's page.
+    **The staleness bill.** `fieldwatch.py` is reporting-only and unfloored by
+    the 96th audit's explicit instruction, so no gate, no threshold and no
+    verdict moves. Bill is whatever `T0.31`-class re-buys the edit stales —
+    ordinary, and named in the commit that makes it.
+    **A caution this desk adds on top of the scout's report:** the shingle rule
+    is IMPORTED from `decisions.owner_asks`, deliberately, so the two readers
+    cannot drift. A repair here that edits the shared helper therefore silently
+    re-tunes the OWNER-ASK reader — the instrument that audits this desk's own
+    `FOR THE OWNER` section. **Fix it behind a parameter at the fieldwatch call
+    site, or measure the owner-ask channel's false-positive rate in the same
+    commit.** Do not change the shared rule blind.
+    DUE: 2026-09-23 | a BUILDER repair, not a Review design — the scout named
+        three candidate closures and this desk endorses measuring before
+        picking. What is owed by then: the false-positive rate re-measured
+        after the fix, written down, and the shared-helper caution honoured.
