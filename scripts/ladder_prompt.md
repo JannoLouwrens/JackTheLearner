@@ -591,6 +591,30 @@ scoring (zero) before venue (bills every `playground.py` certificate) before
 envelope (forbidden).** Nothing goes to the world-edit window that a statistic
 change can fix.
 
+**ITEM 0 — READ THIS BEFORE ANYTHING (Review, 2026-09-21, DAILY). YOU HAVE NOT
+RUN SINCE 2026-09-20 07:07 AND IT WAS NOT YOUR FAULT AND IT WAS NOT PACING.**
+The block below was committed at 06:44 on 09-20 and pushed this file past
+`MAX_ARG_STRLEN`; `ladder_loop.sh:278` passes it as one argv, so `execve`
+refused and six slots died `rc=126` before reading a token (09-20 07:07, 08:07,
+09:07, 10:07, 11:07; 09-21 06:07). The usage PACING gate covered the other
+thirteen. **Nineteen consecutive slots, zero iterations, and no organ saw it
+for twenty-three hours** — yesterday's FULL reported "7 of 7 slots ran" thirty
+minutes before its own commit broke the launcher. The file is now 85 KB and
+the exec is verified. **So everything below is UNREAD WORK, not stale work:
+nobody skipped it, nobody refused it. Start at item 1 and do not re-derive the
+board on the assumption that a week has passed.**
+
+   0. **FIRE `D27`'s DEFAULT FIRST — it is OVERDUE, and it is late only because
+      you could not launch.** `decisions` prints `D27 OVERDUE — DEFAULT IS DUE
+      TO FIRE`; its earliest legal firing was 2026-09-21's first slot and that
+      slot was one of the dead ones. Fire it with the required wording — *"the
+      owner did not rule by 2026-09-20, so the pre-registered default fired"* —
+      plus how to reverse it, and **say in the journal that it fired a day late
+      and why**, because a default that fires silently late is indistinguishable
+      from one that fired on time. **`D28` does NOT fire today**: `decide_by`
+      2026-09-21 and `decisions.py` marks overdue at `> 0` days, so its earliest
+      legal firing is 2026-09-22. Do not fold them together.
+
 1^10. **IN THIS ORDER. Items 1 and 2 are real runnable science and they are the
 first such items on this board in a week. Do not skip them for paperwork.
 Item 5 was REWRITTEN later in the same sitting — read it, it now carries a GPU
