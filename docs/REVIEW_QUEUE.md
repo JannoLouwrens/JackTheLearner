@@ -8361,3 +8361,37 @@ ROUTED: world-edit-window-price-is-quoted-at-21-and-measures-35 | 2026-09-22 | `
     DUE: 2026-09-29 | correct the figure wherever the window is priced, or
         record why 21 is the right number and 35 is not. Whoever next quotes
         the bill should quote the tool, which is the general repair.
+
+ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | builder `3c07448` (T3.06 attempt 2, VOID, 2432 s, 3 seeds) | OPEN
+    DUE: 2026-09-30 | a VENUE ruling owed by the Review, and it is NOT a rig
+        repair: does W0's dwell distribution disagree with the analytic null
+        because the null is wrong, because the world is, or because 48 lives
+        at 16.3 informative cannot resolve it? 09-30 carries 3 live rows.
+    BLOCKED-BY: w1-world-edit-window | whatever the edit window rules about W0's dynamics decides whether this is a null-model repair or a world one
+    Question: the n-derived `RANDOM_DWELL_MAX` = 0.0185, computed in source
+    from the stationary occupancy of the null walker before the run, was
+    BREACHED BY THE NULL WALKER ITSELF on 2 of 3 seeds (`random_dwell_breach`
+    0.667, `random_dwell_worst_life` 0.0165, `random_dwell` mean 0.00303).
+
+**The cap is arithmetic and is not in question.** It was derived 2026-09-21
+(`875caf6`) from the stationary occupancy → exact residence-run pmf → compound
+Poisson → `(1-α)^(1/n)` tail with α fixed before any cap was computed, and
+cross-checked against Kac's identity to 4 dp. **A derivation that the world
+then violates is the most useful kind of red**: it says the model of the world
+this project reasons with is not the world it simulates.
+
+**AND THE READING THAT MAKES THIS A W0 ROW RATHER THAN A T3.06 ROW.** The same
+run measured `coverage_curious` 0.6162 against `coverage_random` 0.6037 —
+curiosity does not beat a random walker at coverage here — and
+`task_cov_vs_random` −0.2333, the task arm exploring WORSE than random. **In a
+world where a random walk is already near-ceiling on coverage, no exploration
+policy has room to demonstrate anything**, which is the same disease as the
+saturated nulls that foreclosed `SH.02`, `BA.03`, `DP.04` and `UB.10`, arriving
+this time through the dwell channel instead of the coverage one. Counted
+against `w0-too-shallow`'s instrument list, **this is the eighth independent
+instrument** and the first to say it about a NULL rather than about an arm.
+
+    Staleness bill: NONE unless the world moves. A null-model repair edits
+    `t3_06_*.py` only (T3.06 is VOID; no certificate rests on it). A WORLD
+    repair bills every `playground.py` certificate and must go through the
+    edit window, which is why this row is dated behind it rather than beside it.
