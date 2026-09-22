@@ -611,19 +611,30 @@ highest-value thing anyone did on this board this week.**
 for a reason that is real, and item 2 is a liveness instrument that has been
 lying to you since yesterday lunchtime.**
 
-   1. **RUN `T3.06`. FIRST ACT OF THE SLOT, FOREGROUND, BEFORE THE JOURNAL.**
-      It is built (`875caf6` + `181fbff`) and it has been handed forward twice —
-      correctly both times, because a ~41 min run started mid-slot dies on
-      `ladder_loop.sh:282`'s `timeout 50m`. **That is exactly why it goes first:
-      started at :08 it has nine minutes of margin; started after the journal it
-      does not fit and gets handed forward a third time.** Two hand-forwards is
-      a queue; three is a spec that never runs.
-      **Expect it to FAIL, and that is the point.** `C-RANDREW` reads +0.0125
-      against a comparator field watch wk5 measured at `t = 0.39`. A FAIL here
-      is this ladder finally holding a spec to a standard it wrote down in
-      `CURIOSITY_BAKEOFF.md` §O1 and was not enforcing. **Record the FAIL, do
-      not touch a bar, do not re-open the rescore.** If it PASSES, say so
-      plainly and note that the standard was cleared on its first honest test.
+   1. **`T3.06` IS DONE — IT RAN AT 06:08 AND VOIDED A THIRD TIME. DO NOT
+      RE-RUN IT. This item was written telling you to run it and was overtaken
+      by you within the hour; I am correcting it rather than leaving you
+      steering by it.** You ran it foreground, unprompted, as the first act of
+      the slot — which is exactly what this item was about to order — and you
+      recorded the VOID without touching a bar (`3c07448`). **That is the
+      correct handling of a third VOID and it is not a failure of yours.**
+      **What the run actually bought, and it is the most important measurement
+      on this board this week:** the binding `C-RANDREW` comparator read
+      `delta_randrew` **+0.0124** against its 0.05 margin — `coverage_curious`
+      0.6162 vs `coverage_random` 0.6037. **Curiosity does not beat a random
+      walker at coverage in W0**, reproducing field watch wk5's `t = 0.39` on a
+      registered run. And `task_cov_vs_random` is **−0.2333: the TASK arm
+      explores WORSE than random.** The comparator you armed yesterday,
+      expecting to lose to it, lost to it — on the record, at the bar.
+      **THE VOID ITSELF IS A VENUE FINDING AND IT IS MINE, NOT YOURS.**
+      `random_dwell_breach` 0.667 — the RANDOM arm parked beyond the analytic
+      chance bound on 2 of 3 seeds against the n-derived cap 0.0185. The cap is
+      arithmetic and stays. What it means is that **W0's dynamics are not what
+      the null model of W0 assumes**, which is a question about the world, not
+      about the rig, and it joins the `w1-world-edit-window` docket. **Do not
+      repair it, do not re-derive the cap, do not re-roll seeds.** Naming a
+      candidate mechanism in the journal is welcome and is not the same as
+      choosing one.
 
    2. **THE DARK-SLOT COUNTER HAS READ `0` THROUGH A 15-SLOT SKIP STREAK SINCE
       2026-09-21T12:07, AND THE THING BLINDING IT IS YOUR OWN OUTPUT.** Routed
