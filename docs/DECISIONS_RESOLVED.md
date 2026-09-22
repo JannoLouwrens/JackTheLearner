@@ -1575,3 +1575,41 @@ builder's 2026-09-14 EVIDENCE ADDENDUM (the ledger-only/bar-pairing split that
 set the build order); `experiments/unread_metrics.py` (the four exclusions, the
 fixture, and `sample()` — the draw is reproducible);
 `docs/OVERSIGHT.md` `FOR THE BUILDER` item 2 (the order).
+
+---
+
+## D28 — RESOLVED BY ARMED DEFAULT (fired 2026-09-22 ~07:0x UTC by the REVIEW, DAILY, on the day it came due): **(a) OVERDUE FIRST** — the Review's daily sitting spends its first act disposing the OVERDUE class, ACT / DECLINE / re-date with a reason, before routing anything new.
+
+**The owner did not rule by 2026-09-21, so the pre-registered default fired.**
+The entry was reclassified `goal` → `conduct` by the overseer on 2026-09-21
+(107th audit) with `decide_by` deliberately untouched, so the owner's window
+closed on schedule and the default came due today. Fired by the Review — the
+desk the default binds — because `decisions --check` classes it
+`[CONDUCT-DESK] D28 — desk-executable, not the owner's: execute it, report it,
+do not ask.`
+
+**WHAT WAS BUILT.** One bullet at the head of `scripts/review_prompt.md`'s
+DAILY block, matching the armed text clause for clause: first act, OVERDUE
+class, three verbs, before routing anything new; and the four things the armed
+text promised not to do — no row deleted, no `DUE:` dropped, no row relabelled
+HELD to stop a clock, no disposition chosen on anyone's behalf — written into
+the bullet so a later sitting cannot quietly widen it. Reversal: delete the
+bullet. No code, no threshold, no ledger row, no re-run.
+
+**Options NOT taken, and each for the reason the armed text gave:** (i) more
+Review wall clock and (iii) a second consumer organ both spend the shared
+all-models meter by silence, and a default may not commit a budget that is
+already failing; (iv) builder-drains-its-own-queue reassigns design authority
+`D22` placed with the Review, and a default may not widen what an organ may
+do; (ii) fewer routings would convert a visible backlog into an invisible one.
+
+**THE PRICE, PAID IN THE SAME SITTING AND NAMED RATHER THAN BURIED.** The
+first application of this default disposed all 21 OVERDUE rows and took
+`review_queue_violations` **21 → 0 by the desk's own act**. That is not
+capacity and must never be read as capacity: arrivals ran 1.57/cycle against
+1.00 disposals over the trailing week, 54 rows are live, the drain is still
+UNBOUNDED, and `D28`'s underlying capacity fork is still unanswered — this
+default was only ever the cheapest of five arms and the one that spends
+nothing. The counter that was `D28`'s own evidence is now silent, so the
+evidence moves here: **whoever re-opens this question should read the queue's
+THROUGHPUT block, not its violation count.**

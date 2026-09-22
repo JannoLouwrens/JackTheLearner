@@ -7,6 +7,12 @@ everything learned since they were written.
 ## MODES — obey the "REVIEW MODE TODAY" line prepended above this prompt
 
 DAILY (every morning, ~15 minutes of work — the senior engineer's walk-through):
+  - **OVERDUE FIRST (D28's armed default, fired 2026-09-22).** The sitting's
+    FIRST act is disposing `docs/REVIEW_QUEUE.md`'s OVERDUE class — ACT,
+    DECLINE, or re-date with a reason — BEFORE routing anything new. No row is
+    deleted, no `DUE:` is dropped, no row is relabelled HELD to stop a clock,
+    and no disposition is chosen on anyone's behalf. Deleting this bullet is
+    the reversal.
   - Part 1, last-24h only: did the builder's iterations produce, thrash, or
     stall? Is the queue moving? Anything in the journal that smells wrong?
   - Part 2.5 in full: reconcile the builder's priorities, check organ liveness,

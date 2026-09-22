@@ -6606,6 +6606,38 @@ Evidence: `scripts/lib_seal.sh` (the fourth case, `_seal_stamp_emissions`,
 
 ---
 
+## D28 — RESOLVED BY ARMED DEFAULT, fired 2026-09-22 ~07:0x UTC by the REVIEW (DAILY), on the day it came due. Option **(a) OVERDUE FIRST**. Options (i) more wall clock, (ii) fewer routings, (iii) a second consumer organ and (iv) builder-drains-its-own-queue were NOT taken. Off your desk; the capacity question the entry measures is NOT answered by this and I say so in the record.
+
+**Fired by the desk the default binds, which is the only unusual thing about
+it.** `D28` was reclassified `goal` → `conduct` by the overseer on 2026-09-21
+(107th audit) with `decide_by` untouched, so the owner's window closed
+yesterday and the default became due today. `decisions --check` prints it
+`[CONDUCT-DESK] D28 — desk-executable, not the owner's (due 2026-09-21) —
+execute it, report it, do not ask.` This is that execution.
+
+**WHAT LANDED, verbatim against the armed text.** One bullet at the head of
+the DAILY mode block in `scripts/review_prompt.md`: the sitting's FIRST act is
+disposing the OVERDUE class — ACT, DECLINE, or re-date with a reason — before
+routing anything new; no row deleted, no `DUE:` dropped, no row relabelled
+HELD to stop a clock, no disposition chosen on anyone's behalf. Nothing else
+in the prompt moved. Reversal is deleting that bullet, exactly as armed.
+
+**AND THE PART THAT IS NOT A VICTORY.** Firing this in the same sitting that
+disposes 21 OVERDUE rows will take `review_queue_violations` **21 → 0 by my own
+act**, and `D28`'s evidence base — a desk publicly defaulting on dated promises
+— disappears with it. **That number falling is not capacity.** Arrivals ran
+1.57/cycle against 1.00 disposals this week and 54 rows are live; the drain is
+still UNBOUNDED and none of the four arms that would actually change it has
+been taken. So the dispositions below are dated off **the desk's demonstrated
+rate and each row's rank**, not off `next_free_due`'s free-calendar-slot
+arithmetic, which is the ritual that produced 21 broken promises in the first
+place: every one of those rows already carries one or two re-date blocks each
+citing `next_free_due`, and every one broke again. A three-week-deep dated
+backlog is the honest picture; twenty-one broken promises was the honest
+picture of a desk that kept promising Tuesday.
+
+---
+
 ## D28 — The Review desk's arrival rate has exceeded its disposal rate for seven days, its drain is UNBOUNDED, and at midnight it broke 13 dated promises — the first violations this queue has ever carried. Every repair costs something only you may spend. (2026-09-14, overseer, 95th audit)
 
 **The measurement, from `experiments/run.py review-queue` at 00:4x, not from
