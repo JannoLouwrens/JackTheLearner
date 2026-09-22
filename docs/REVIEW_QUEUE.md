@@ -8333,3 +8333,31 @@ that does not depend on the code being right about what "a slot" means.
     Staleness bill: NONE. `scripts/usage_attribution.py` is in no spec's
     IMPL_DEPS (grepped, 0 hits), so the repair stales no certificate and
     re-buys nothing.
+
+ROUTED: world-edit-window-price-is-quoted-at-21-and-measures-35 | 2026-09-22 | `experiments/stale_cost.py` (builder, first reading) | OPEN
+    **The most expensive instrument this project owns is priced on three desk
+    pages from a cached number, and the number has grown 67% underneath it.**
+    `docs/DECISIONS_NEEDED.md:7611`, `docs/REVIEW_QUEUE.md:1018/2865/2895` and
+    `scripts/ladder_prompt.md:735` (the LIVE `2^10` prohibition block) all
+    price the world-edit window as
+    *"21 `playground.py` certificates plus `BA.01`"*. Priced today from the
+    `IMPL_DEPS` declarations that `impl_sha_of` actually hashes, a
+    `playground.py` edit stales **35 standing PASS certificates** — and
+    **`BA.01` is one of the 35**, so the quoted figure understates the bill
+    and double-counts its own example. 20 further non-PASS rows also cover
+    `playground.py` and cost nothing (staling a FAIL refutes no claim).
+    Cost classes of the 35: 24 `cpu<10min`, 6 `cpu<2h`, 2 `cpu<1min`,
+    2 `gpu<2h`, 1 `gpu<20min` — so the bill is **~3 GPU-hours plus a
+    full CPU re-gate**, not a footnote.
+    The 21 was correct when written (2026-08-31); `BA.01`, `VO.01`, `VO.02`,
+    `SM.01`, `LT.01`, `W0.DIAG` and the `PS`/`SO` families joined the set
+    after it. **This is a correction to a PRICE, not a position on the
+    design** — the window, `W1.01`/`W1.03` registration and `HR.5`'s world
+    edit are the Review's under `2^10`, and nothing here pre-empts them.
+    Reproduce in one line, never from this row:
+    `run stale-cost playground.py`.
+    STALENESS BILL OF THIS ROW ITSELF: none. Editing the prose on three desk
+    pages stales no certificate — none of them appears in any `IMPL_DEPS`.
+    DUE: 2026-09-29 | correct the figure wherever the window is priced, or
+        record why 21 is the right number and 35 is not. Whoever next quotes
+        the bill should quote the tool, which is the general repair.

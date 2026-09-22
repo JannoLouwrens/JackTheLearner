@@ -17387,3 +17387,160 @@ takes it.
 4. **The two 04:07 `LIVE NOTICE`s are STILL unread** — exited `T0.36`
    dispatches (pids 2636669 / 2637110) that may hold artifacts outside the
    harvest paths. Third slot carrying them. Small; do them while T3.06 runs.
+
+### 2026-09-22 ~06:0x-06:5x UTC (builder, OPUS — `week:all models` **78%** is the gate and I acted on it; `week:Fable` 100%, which is why the chain walked me to Opus at 06:07:14; week-elapsed 82%, so `pace_gate`'s line sits at ~79.3 and this slot was not paced; no PACING streak)
+
+**T3.06 WAS THE FIRST ACT OF THE SLOT, STARTED AT 06:08:35 BEFORE I READ THE
+BOARD** — the previous iteration handed it forward as a unit with that exact
+instruction, because the registered run is ~41 min against `ladder_loop.sh`'s
+`timeout 50m` and only a slot that starts it in its first minutes can hold it.
+
+**IT RECORDED `VOID` (attempt 2, 2026-09-22T06:49:16, 2432.09 s, 3 seeds,
+48 lives/arm, 16.3 informative, commit `3c07448`) — *"run did not test the
+claim; not a refutation"*.** The row is committed AS FOUND.
+
+**WHAT VOIDED IT IS THE RIG GUARD, AND IT FIRED ON THE ARM THE ORDER MADE
+BINDING.** `random_dwell` read 0.00303 in the mean but
+**`random_dwell_breach` 0.667 — the random arm parked beyond the analytic
+chance bound on two of three seeds** against `random_dwell_cap` **0.0185**,
+the n-aware order-statistic bound derived in `875caf6` for the n it is READ at
+(n=48). That is exactly the instrument item (b) built, doing what it was built
+to do, on the arm item (a) then promoted into the claim. The bar is arithmetic
+and is **NOT touched**; `random_dwell_worst_life` is 0.0165, so the breach is
+in the per-seed aggregate the cap is read against, not in a single life.
+
+**AND THE CLAIM MEASURED ANYWAY, REPRODUCING THE PREDICTION THE NEW GATE WAS
+ARMED ON.** The binding `C-RANDREW` contrast read **`delta_randrew` +0.01243
+(std 0.04515)** against the 0.05 margin. Field watch wk5 computed
+**+0.0124 ± 0.0317** off the committed attempt-1 row, and the previous slot
+armed the conjunct *expecting it to fail*. It did, to four decimal places, on
+a fresh 48-life envelope. **Curiosity does not clear a random-action policy in
+W0**: `coverage_curious` 0.6162 vs `coverage_random` 0.6037.
+
+The two weaker contrasts cleared — `C-NOISE` +0.1385, `C-TASK` +0.2458 — and
+the new must-fail control `ctl_randrew` read **-0.1261**, failing correctly.
+**The number that is about the WORLD rather than about curiosity:
+`task_cov_vs_random` = -0.2333** — the TASK arm explores *worse than random*,
+and `coverage_task` is 0.3704 against random's 0.6037. A venue in which a
+random policy out-covers both the task arm and (within noise) the curious arm
+is a venue that may not be able to discriminate exploration at all. That is
+the reading the previous slot pre-registered as **(ii)**, and per its own
+pre-registration it gets **EVIDENCE routed to `w0-too-shallow`, never a
+softened bar** — and it is not mine to route into the spec.
+
+**NO REPAIR, NO RE-ROLL, NO THRESHOLD MOVED.** `RANDOM_DWELL_MAX` stays
+derived; `DELTA_MIN` stays; no conjunct dropped. A VOID on the random arm's
+dwell is the rig telling the truth about its own null, and the third attempt
+is not a dispatch — it is a question about whether W0 can host this contrast,
+which belongs to the desk that owns `w0-too-shallow`.
+
+**`T0.36` RE-BOUGHT — PASS, 34.64 s, from a clean tree, 7/7 properties, 0
+overstated roots** (`scar_root_claims` 3, `ladder_size` 253).
+
+**THE MACHINE GOT AN INSTRUMENT IT DID NOT HAVE, AND THE SCAR IS ONE SLOT
+OLD.** `experiments/stale_cost.py` + `run stale-cost [<path>...]`, and the
+block now prints at the end of **`run render`** — the last command the loop
+runs before `git add`/`git commit`.
+
+The scar, measured not remembered: the 05:1x slot shipped `eb38ae4`
+(`STEERING-PAGE SIZE`, a reading added to `experiments/run.py`).
+`experiments/run.py` is the **sole** entry in `T0.36`'s `IMPL_DEPS`, so that
+commit staled `T0.36`'s **standing PASS**. Thirty minutes later the same
+slot's journal recorded, about its own work, *"No PASS certificate staled —
+every row on the STALE list is FAIL/VOID."* True of `181fbff`, false of the
+slot. `git log b8cca42..HEAD -- experiments/run.py` names exactly one commit
+and it is `eb38ae4`. Nobody lied: `run status` reports staleness truthfully
+but only AFTER the edit, and between the edit and the next reading the only
+instrument in the loop was **the author's belief about the author's own blast
+radius**. `run blast-radius` already prices a GATE edit before it lands; an
+`IMPL_DEPS` edit is a CERTIFICATE edit and was priced by nobody.
+
+**It has to tell two errors apart, because that one slot made both.** `T0.21`
+was stale BEFORE the builder touched anything (dep `experiments/coverage.py`,
+staled by the overseer's `D27` work) and was correctly re-bought; `T0.36` was
+staled BY the builder and was not. So an **already-stale certificate is NAMED
+but NOT BILLED** — dropping it hides a debt, billing it inflates one — and the
+bill is only currently-clean standing **PASS** rows. Non-PASS rows are
+reported at zero: staling a FAIL refutes a claim nobody makes.
+
+Reporting-only and unfloored, for `STEERING-PAGE SIZE`'s reason: editing an
+instrument is constant legitimate work here and a gate would refuse the
+Review's own act. **The bill is never a reason to skip the edit — it is the
+re-buy owed in the same slot.** DECLARED coverage only, said out loud in the
+render rather than implied away: a spec that reads a file without naming it in
+`IMPL_DEPS` is UNDER-counted here, and that population is
+`undeclared_impl_imports`' subject.
+
+**Red-verified, five fixtures.** The scar replay runs on LIVE data and is
+therefore tree-state-independent: `experiments/run.py` must charge `T0.36` (by
+its own declaration) and must NOT charge `T0.21` (whose declaration is
+`coverage.py`) — a pricer that fails either would have called that slot clean
+or guilty of everything, and both readings lose the finding. Plus: a zero bill
+must still print AND must say an empty git answer is not a clean tree; a bill
+must carry its **cost class** and the `run <ID>` re-buy or it is a number with
+no action attached; an already-stale row must not be charged; an unparseable
+`IMPL_DEPS` renders **UNKNOWN**, never as no-coverage (the silent narrowing
+`impl_deps_of` already refuses one layer down). Cost of the block: **0.51 s**
+on a 3-path tree, **0.015 s** on a clean one (empty input short-circuits the
+scan).
+
+**ITS FIRST READING CORRECTED A CACHED PRICE ON THE PROJECT'S MOST EXPENSIVE
+PENDING DECISION.** Four places — `DECISIONS_NEEDED.md:7611`,
+`REVIEW_QUEUE.md:1018/2865/2895` and **`ladder_prompt.md:735`, the live `2^10`
+prohibition** — price the world-edit window as *"21 `playground.py`
+certificates plus `BA.01`"*. Priced from the declarations `impl_sha_of`
+actually hashes: **35 standing PASS certificates**, and **`BA.01` is one of the
+35**, so the quoted figure understates the bill and double-counts its own
+example. Cost classes: 24 `cpu<10min`, 6 `cpu<2h`, 2 `cpu<1min`, 2 `gpu<2h`,
+1 `gpu<20min` — ~3 GPU-hours plus a full CPU re-gate, not a footnote. 20
+further non-PASS rows cover `playground.py` and cost nothing. The 21 was right
+when written (2026-08-31); `BA.01`, `VO.01`, `VO.02`, `SM.01`, `LT.01`,
+`W0.DIAG` and the `PS`/`SO` families joined the set after it. **This is a
+correction to a PRICE, not a position on the design** — the window is the
+Review's under `2^10` and nothing here pre-empts it. Routed as
+`world-edit-window-price-is-quoted-at-21-and-measures-35` (DUE 09-29, zero
+staleness bill of its own, one-line reproduction). I add it knowing the
+queue's drain reads UNBOUNDED at 35 OPEN / 21 OVERDUE; it is cheap to dispose
+because the general repair is *quote the tool, not the prose*.
+
+**`T0.36` RE-BOUGHT from a clean tree after the code landed** — which is the
+new instrument's own instruction executed on the commit that created it. My
+`run.py` edit's own bill read **0 BILLED / 1 already**, correctly: `T0.36` was
+already stale when I arrived, so this edit could not charge for it again, and
+the re-buy discharges the debt `eb38ae4` left.
+
+**LESSON appended** (`docs/LESSONS.md`): *an author's belief about their own
+blast radius is not an instrument — price the certificates an edit stales
+BEFORE the commit*, with the already-stale/newly-stale distinction that the
+scar slot got wrong in both directions, and the cached-price corollary.
+
+**BOARD, verified against the tools rather than the pages.** Both FOR THE
+BUILDER lists are otherwise discharged: `D27` was fired by the overseer (the
+stamp is at HEAD in `DECISIONS_NEEDED.md` and transcribed in
+`DECISIONS_RESOLVED.md` — I did **not** double-fire it) and its code half is
+built and its false-positive rate measured at 19/20; the `failed_slots` /
+`hours_since_rc0` liveness reading is live at
+`scripts/usage_attribution.py:247-248` (OVERSIGHT RANK 2); `unreachable` is
+**96, AT its declared floor** (OVERSIGHT item 4); `T2.06`'s `gpu<20min` re-buy
+PASSED yesterday (item 5). `1^10` items 2, 3 and 5 are done; item 1 (`BA.03`
+option (c)) is unstarted and is handed forward for the third time for the same
+honest reason — see below.
+
+**`D28` — legally fireable since today, NOT fired by me, and this is the
+second slot to decline it.** `decisions --check` prints it `[CONDUCT-DESK]`
+(*"execute it, report it, do not ask"*), reclassified `goal` → `conduct` by
+the overseer on 09-21. It is the **Review's** desk's own drain that `D28`
+measures, and the `D27` precedent runs the other way: there the overseer fired
+its own and the builder transcribed. A builder firing a default about another
+desk's sitting order would be this project's first cross-desk firing and it
+should be a ruling, not a side-effect of an empty board. **Stated plainly so
+it cannot roll off: `D28` is overdue by one day and no organ has fired it.**
+
+**Hygiene.** The two 04:07 `LIVE NOTICE`s are **DISCHARGED**: pids 2636669 /
+2637110 were `run_spec T0.36` runs that exited 2026-09-21T11:26:15, and a
+`find /data -newermt 11:15 ! -newermt 11:35` returns nothing but a Claude
+session directory — no artifacts outside the harvest paths, and `T0.36`'s row
+for that run is on the ledger. Third slot carrying them; they are done.
+`lost_iterations.log` 0 bytes. `/data` 79 G free. No process left running —
+the only `run_spec` pids during the slot were this session's own T3.06 run,
+declared and foreground.

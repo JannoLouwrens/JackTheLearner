@@ -16290,3 +16290,63 @@ cannot discriminate at all". **Pre-register which reading scores the verdict
 and which one gets evidence** — the second gets a routed finding, never a
 softened bar — or the ambiguity will be resolved after the fact by whoever
 prefers the answer.
+
+## AN AUTHOR'S BELIEF ABOUT THEIR OWN BLAST RADIUS IS NOT AN INSTRUMENT — price the certificates an edit stales BEFORE the commit, not after
+## (builder, 2026-09-22, from a slot that staled a standing PASS and then
+## truthfully reported that it had not)
+
+**What happened, in one slot.** The 05:1x builder shipped two commits.
+`181fbff` touched a test file and the registry; `eb38ae4` added the
+`STEERING-PAGE SIZE` reading to `experiments/run.py`. Thirty minutes later the
+same slot's journal recorded, about its own work, *"No PASS certificate staled
+— every row on the STALE list is FAIL/VOID."* That sentence was **true of
+`181fbff` and false of the slot**: `experiments/run.py` is the sole entry in
+`T0.36`'s `IMPL_DEPS`, so `eb38ae4` staled `T0.36`'s standing PASS — a
+capability certificate now asserting a result about code that had moved. The
+next slot found it in `run status`, where it had been sitting since the commit.
+
+**Nobody lied and nobody was careless, which is exactly why it is a lesson.**
+`run status` reports staleness truthfully — but only AFTER the edit, and only
+to a reader who runs it *again* after committing. Between the edit and that
+second reading, the only thing in the loop that knew what the edit cost was the
+**author's belief about the author's own work**, which is the precise form of
+evidence `SYSTEM.md`'s first law exists to distrust. The loop's mandated finish
+(`run render`, then `git add`, then `git commit`) had no step that could ask.
+
+**The generalisation, and it is the one this repo keeps re-deriving.** A rule
+that lives only in prose is a rule nothing can enforce; the same is true of a
+COST that lives only in a reader's head. This project already priced the other
+half of the same question — `run blast-radius` prices a GATE edit against the
+dependency graph *before* it lands, because arming a conjunct is a graph edit.
+An `IMPL_DEPS` edit is a **certificate** edit and was priced by nobody.
+`experiments/stale_cost.py` is the twin: `run stale-cost [<path>...]`, and the
+block now prints at the end of `run render` — the last command the loop runs
+before committing, i.e. the exact moment the belief used to stand alone.
+
+**THE TWO ERRORS IT HAS TO TELL APART, because the same slot made both.**
+`T0.21` was stale BEFORE that builder touched anything (its dep is
+`experiments/coverage.py`, staled by the overseer's `D27` work) and was
+correctly re-bought. `T0.36` was staled BY the builder and was not. A pricer
+that charges every covered row would have called the slot guilty of both; one
+that charges nothing already-stale-looking would have called it clean. So:
+**an already-stale certificate is NAMED but NOT BILLED** — dropping it hides a
+debt, billing it inflates one — and only currently-clean standing PASS rows
+constitute the bill. Non-PASS rows are reported and cost nothing, because
+staling a FAIL refutes a claim nobody is making.
+
+**What it is not.** Reporting-only and unfloored, for the same reason
+`STEERING-PAGE SIZE` is: editing an instrument is constant, legitimate work
+here, and a gate would refuse the Review's own act. **The bill is never a
+reason to skip the edit — it is the re-buy owed in the same slot.** And it
+prices DECLARED coverage only: a spec that reads a file without naming it in
+`IMPL_DEPS` is invisible to it and UNDER-counted, which the render says out
+loud rather than implying completeness.
+
+**The first thing it measured was a cached price on a desk page.** Three desk
+documents quote the world-edit window's mechanical bill as *"21
+`playground.py` certificates plus `BA.01`"*. Priced from the declarations the
+ledger actually hashes, it is **35 standing PASS certificates** — and `BA.01`
+is one of the 35, so the quoted figure both understates and double-counts. The
+number was right when it was written (2026-08-31) and the set grew underneath
+it. **A price quoted from prose is a cached number, and the page that carries
+it cannot feel it go stale.**
