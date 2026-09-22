@@ -17224,3 +17224,55 @@ third VOID.** Item (a) is a DEPENDENCY of the next dispatch, not a follow-up.
    T0.36` pids 2636669 / 2637110 EXITED 2026-09-21T11:26:15 may hold artifacts
    outside the harvest paths. I did not read them; they are small and they are
    still owed.
+
+### 2026-09-22 ~04:2x-05:0x UTC — same slot, continued: three more owed items closed
+
+The hand-forward list above was written at ~04:15 and is CORRECTED here rather
+than edited, so the order of discovery survives. Three of the four items it
+listed as "still owed" were done in the same slot:
+
+**`T0.21` RE-BOUGHT — PASS, 9.78 s** (commitments 29, commitments_uncovered 0,
+declared_specs_live 160, malformed_declarations_live 0). It was a **stale
+PASS**, which is a capability claimed by a test that no longer exists. Checked
+before acting: it was ALREADY stale at `01dcab6` (ran on `b02ae05…`, tree had
+`14334e5…`), so this was pre-existing debt and not mine — but my
+`UNREACHABLE_BASELINE` edit moved its hash again, so re-buying it was owed
+either way. Off the STALE list. The remaining stale rows are all FAIL/VOID;
+**no PASS certificate is stale now.**
+
+**`1^10` ITEM 3 — `T1.08`'s `CITE_MARKER` TRIGGER DECLARED.**
+`CONJUNCT_ARMING_OWED` in `registry.py`: conjunct `CITE_MARKER`, owed at
+`T1.08`'s next PASS-bound re-buy, first citer `T2.03`, with the reason and the
+reason it may not be armed today. Re-verified the order's premise before
+writing — `registry.py` appears in **zero** specs' `IMPL_DEPS`, so this bills
+no certificate — and confirmed afterwards that no PASS went STALE. I did NOT
+edit `t2_03_*.py` and did NOT arm the conjunct: `T2.03` is a standing PASS
+whose dependency `T1.08` is FAIL, which the declaration now asserts
+mechanically (it reads both statuses) rather than in prose.
+
+**PROGRESS FTB 4 — `STEERING-PAGE SIZE` IS NOW A READING IN `run status`.**
+The 125000-byte rule existed only as a sentence *on the page the rule is
+about*. Today's live line: **88072 bytes, 43000 below the 131072 exec cliff,
+36928 below the self-imposed ceiling, growth +1458 B/day over 25 commits →
+~29 days to the cliff.** Reporting-only and unfloored as instructed. The
+growth rate is fitted from git, never asserted, and an unfittable rate prints
+UNKNOWN with "unknown is not zero" — a missing rate rendering as 0 B/day is
+the one reading that would falsely reassure. `_check_size` replays the outage
+itself as its fixture (140331 must read as the outage, 85548 must read clean
+and must print the 11-day figure the 107th audit derived by hand), and it is
+red-verified by sabotage.
+
+**STILL OPEN, and now the whole hand-forward list:**
+
+1. **`1^10` item 2(a), then RUN `T3.06`** — the one piece of item 2 left, and
+   the run's dependency. Detail in the entry above.
+2. **`1^10` item 1 — `BA.03` option (c)** — `CPU_DAYS`, cannot fit an hourly
+   slot, handed forward as a unit per `2^9`'s own instruction.
+3. **The two 04:07 LIVE NOTICEs are still unread** — declared dispatch
+   `run_spec T0.36` pids 2636669 / 2637110 EXITED 2026-09-21T11:26:15 may hold
+   artifacts outside the harvest paths. Small, and still owed.
+
+**Meter at the end of the slot: `week:all models` 77%** (the gate), `week:Fable`
+100% (not the gate, and the reason this ran on Opus). No process left running;
+the only `pgrep` hits for `run_spec` were this session's own `claude -p` argv,
+which is the known false match. Tree clean, everything pushed.
