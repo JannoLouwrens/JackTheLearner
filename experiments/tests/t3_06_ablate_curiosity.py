@@ -139,20 +139,36 @@ PILOT RECORD v2 (SM.02's idiom, T2.09's precedent).
         construction check: the world is reachable and coverage is not
         saturated at the horizon, so there is room for an arm to be worse.
 
-  CLAIM (all three), every coverage scored over the INFORMATIVE lives only:
-    delta_coverage = mean over informative lives of
-        [cov(curious, life) - cov(task, life)] >= DELTA_MIN
-    delta_coverage - 1.5 * std > 0 — the all-seeds rule, exact: for n=3 and
-        the recorder's ddof=0 std the extreme deviation is <= sqrt(2)*std, so
+  CLAIM (all NINE, v5 2026-09-22 — three contrasts x three conjuncts; the
+  C-TASK triple is the v2 claim carried forward with no bar moved, and the
+  other six are ADDED under Review `1^10` item 2(a). See THE TWO-COMPARATOR
+  RESCORE). Every coverage is scored over the INFORMATIVE lives only and
+  paired per-life on the shared sub-seed:
+    C-TASK    delta_coverage = mean over informative lives of
+                  [cov(curious, life) - cov(task, life)]
+    C-NOISE   delta_noise    = same fold over [cov(curious) - cov(shuftask)]
+    C-RANDREW delta_randrew  = same fold over [cov(curious) - cov(random)]
+  and for EACH of the three:
+    delta >= DELTA_MIN — the anti-collapse floor, 24 of 484 cells.
+    delta - 1.5 * std > 0 — the all-seeds rule, exact: for n=3 and the
+        recorder's ddof=0 std the extreme deviation is <= sqrt(2)*std, so
         1.5 guarantees every seed's delta is positive (T2.08's idiom).
-    delta_coverage * sqrt(3) / std >= 3.0 — the house 3-sigma learning gate on
-        the paired delta. Paired is the right ruler: both arms run on the SAME
+    delta * sqrt(3) / std >= 3.0 — the house 3-sigma learning gate on the
+        paired delta. Paired is the right ruler: the arms run on the SAME
         sub-seed worlds with the SAME goal cells.
 
-  CONTROL (must fail): delta_shuf = mean over the SAME informative lives of
-    [cov(shuftask, life) - cov(task, life)] < DELTA_MIN. The control inherits
-    the claim's life subset exactly — it is selected by the `task` arm, which
-    both share — so a control cannot be scored on an easier set of worlds.
+  CONTROL (must fail), v5: ctl_randrew = mean over the SAME informative lives
+    of [cov(shuftask, life) - cov(random, life)] < DELTA_MIN — the
+    information-destroyed twin in the claim's seat against the claim's
+    hardest comparator. If it clears, the C-RANDREW clearance measures "any
+    reward shaping beats a random walk" rather than curiosity and the run is
+    VOID. The control inherits the claim's life subset exactly — it is
+    selected by the `task` arm, which every arm shares — so a control cannot
+    be scored on an easier set of worlds.
+    RETIRED AS A VETO, KEPT AS A REPORTED NUMBER: delta_shuf =
+    [cov(shuftask) - cov(task)] < DELTA_MIN. It was red on every seed and is
+    not a passing control; its function moved into C-NOISE, which asks the
+    same question harder. Full reasoning in THE TWO-COMPARATOR RESCORE.
 
 WHERE THE v2 NUMBERS COME FROM — every one of them exogenous, because the v1
 pilot's warning was precisely that a bar anchored to its own pilot's bulk
@@ -275,6 +291,132 @@ is the one with a bound-adjacent null, and it is handled the way the rule
 demands — by changing the STATISTIC's derivation, at zero mechanical bill, not
 by growing the envelope.
 
+THE TWO-COMPARATOR RESCORE (v5, 2026-09-22, Review `1^10` item 2(a)). THE
+CLAIM NOW HAS THREE CONTRASTS AND THE NEW ONE IS EXPECTED TO FAIL.
+
+The order: *"rescore against the noise arm, and the RANDOM-ACTION comparator
+is BINDING per `CURIOSITY_BAKEOFF.md` §O1. The new gate needs BOTH
+`cov(curious) - cov(shuftask) >= 0.05` AND the C-RANDREW clearance vs the
+random-action arm ... SO EXPECT T3.06 TO FAIL ITS NEW GATE. That is the point
+and it is not a reason to hesitate."*
+
+What the claim was: ONE contrast, `curious` against the ablated `task` arm,
+with the noise arm held off to the side as a veto. What it is now: THREE
+contrasts, every one of them scored on the same informative lives, paired
+per-life on the shared sub-seed, and every one of them carrying the file's
+existing three-conjunct form — margin, every-seed floor, 3-sigma:
+
+    C-TASK     cov(curious) - cov(task)      the ablation itself   CARRIED
+    C-NOISE    cov(curious) - cov(shuftask)  vs matched noise      NEW
+    C-RANDREW  cov(curious) - cov(random)    vs a random walk      NEW
+
+  Why the same three conjuncts on each, and not a bare margin on the new two.
+  An asymmetric gate — 3 sigma where the spec already passes, a bare
+  inequality where it is expected to fail — is a gate that is strict exactly
+  where strictness is free. The form is the file's own and is applied
+  uniformly; no new statistic is invented and no bar is chosen.
+
+  Why DELTA_MIN on all three. It is the SAME exogenous anti-collapse floor
+  already registered here — T2.08's `MARGIN_MIN`, 0.05 x 484 = 24 cells, on
+  this rig, in these units, fixed before this spec existed and with no
+  knowledge of any of these three numbers. It is explicitly NOT derived from
+  the wk5 readings below, in either direction. A margin picked to sit above
+  or below an already-measured contrast is the lottery disease with the sign
+  flipped.
+
+WHAT IS RETIRED, AND WHY IT IS NOT A DROPPED PASSING CONTROL. The veto
+`delta_shuf < DELTA_MIN` is retired AS A VETO and kept as a REPORTED number.
+The 09-20 prohibition is *"a redesign may not drop a control that is
+currently passing"* — `delta_shuf` is not passing. It is RED on every seed by
+the exact n=3 bound (0.1072, floor 0.0632, against < 0.05), which is the
+whole reason this spec cannot record a measurement and the whole reason the
+Review ordered a redesign rather than a re-run.
+
+  And its FUNCTION is not dropped, it is promoted and strengthened. The veto
+  existed to stop the effect being attributed to reward MAGNITUDE rather than
+  to the bonus's INFORMATION. C-NOISE asks that same question inside the
+  claim, and asks it harder: the veto required the noise arm to stay near the
+  task arm, whereas C-NOISE requires the curious arm to BEAT the noise arm by
+  the same 24 cells. On attempt 1's own numbers that implies
+  `delta_coverage >= 0.1072 + 0.05 = 0.1572` — **3.1x the bar the old claim
+  had to clear** — and it keeps its meaning in the world attempt 1 actually
+  found, one where the information-free bonus genuinely helps. A veto that
+  can only be satisfied when noise is useless is an instrument that stops
+  working in precisely the world it was built to police.
+
+THE NEW CONTROL (must fail): `ctl_randrew = cov(shuftask) - cov(random) <
+DELTA_MIN`. Put the information-destroyed twin in the claim's seat against
+the claim's own hardest comparator. If the noise arm ALSO clears the
+C-RANDREW bar, then clearing it measures "any reward shaping beats a random
+walk" and not curiosity, the contrast cannot attribute, and the run is VOID —
+the same shape as the veto it replaces, relocated to the conjunct that now
+carries the load. Attempt 1's numbers: 0.4776 - 0.6037 = **-0.1261**, failing
+correctly with 0.18 of headroom. This control is ADDED, not swapped: the
+count of must-fail arms in this spec does not fall.
+
+  The C-NOISE conjunct has no non-degenerate sabotage of its own — substitute
+  the twin for `curious` and the statistic is identically zero — so the
+  control burden sits entirely on the randrew substitution, and that is said
+  here rather than left for a reader to discover.
+
+STATISTIC_BOUND FOR THE TWO NEW CONJUNCTS (the unsaturated-null rule, which
+binds this commit because this commit registers new claim gates). Both are
+differences of coverage fractions, so the bound is 1.0 and the anchor is the
+comparator arm's own coverage:
+
+    conjunct    anchor            measured          distance    vs margin
+    C-NOISE     cov(shuftask)     0.4776 (att. 1)   0.5224      10.4x
+                                  0.4351 / 0.4298   0.56-0.57   11.3x
+    C-RANDREW   cov(random)       0.6037 (att. 1)   0.3963       7.9x
+                                  0.5988 / 0.7474   0.25-0.40    5.1x
+
+The worst anchor any of the three families has ever produced sits **5.1x the
+required margin** from the bound. Neither gate is registered on a saturated
+null and both are registerable. The repair the rule forbids — growing the
+envelope — is not taken and is not needed.
+
+  **AND THE HONEST CAVEAT, recorded BEFORE the run because afterwards it
+  would read as an excuse.** C-RANDREW's anchor is far from the ARITHMETIC
+  bound and near the CURIOUS ARM: field watch wk5, computed from attempt 1's
+  own committed row, read `curious - random` at **+0.0124 +/- 0.0317,
+  t = 0.39** on the aggregate per-seed ruler. So a red C-RANDREW is consistent
+  with two readings and this file will not pre-choose between them:
+
+    (i) curiosity earns nothing over a random walk here — the ablation
+        verdict, and the registry's `kills: IntrinsicCuriosityModule` fires;
+    (ii) COVERAGE IN W0 CANNOT DISCRIMINATE EXPLORATION STRATEGIES AT ALL,
+        because a random policy already saturates it — which is a statement
+        about the venue, and is field watch wk5's own second consequence
+        (a seventh `w0-too-shallow` instrument).
+
+  The verdict is scored under (i), as the order requires and as the gate is
+  written: a green rig plus a green control plus a red claim is a FAIL and it
+  kills. The `kills:` repair below removes a FALSE kill — one fired off a
+  contrast the spec itself declared uninterpretable — and it may not be
+  stretched into a reason to withhold a TRUE one. What this file owes reading
+  (ii) is EVIDENCE, not a veto, and the evidence is already in the row and
+  needs no new metric: `delta_randrew` beside `coverage_random` and
+  `task_cov_vs_random`. If the run FAILs on C-RANDREW, that trio is the
+  datum, and it routes to `w0-too-shallow` as a finding — never back into
+  this spec as a bar.
+
+WHY THE ROW CAN NOW SAY WHICH CLAUSE FIRED. The VOID RECORD's finding 1 is
+that a four-way conjunction returning one bit cannot name its own branch.
+Item (b) fixed that for the rig conjunct it bit on; this rescore would have
+tripled the claim side of the same problem. Every operand of all nine claim
+conjuncts is recorded as its own metric with its own `_std` —
+`delta_coverage`, `delta_noise`, `delta_randrew` — so each clause is
+replayable offline from the committed row by someone who is not its author,
+exactly as attempt 1 had to be replayed by hand.
+
+WHAT THIS RESCORE DOES NOT TOUCH, said explicitly because the order named it:
+not one RIG conjunct, not the horizon, not `LIVES_PER_ARM`, not the seeds,
+not `DELTA_MIN`, not the perturbation, and not the world. Option (c), the
+world arm, was REFUSED by the Review on 2026-09-20. The mechanical bill is
+zero — no `playground.py` certificate is billed, nothing outside this file
+and this spec's registry `control` text changes, and T3.06 has no PASS to
+stale.
+
 VOID-FORECLOSED: one rig conjunct fired and it is the extreme-value instrument
     `random_dwell_worst_life`, read at 48 lives/arm against a cap frozen by a
     16-life pilot — worst-seed bound 0.0227 vs RANDOM_DWELL_MAX 0.02 — while
@@ -295,20 +437,32 @@ FORECLOSURE ARITHMETIC: no multiplier on N clears both fired gates at the
     task/curious/shuftask arms, so no repair expressible as a sample size on
     the random arm touches it at all. A re-run unchanged is deterministic.
 
-    STILL BINDING AFTER THE v4 RIG REPAIR — read this before dispatching.
-    The 2026-09-22 work above repaired the RIG half only: the dwell cap is now
-    n-aware and read on the actual worst seed, and control-red now maps to
-    VOID instead of firing a false `kills`. **Neither touches the control
-    conjunct, and this paragraph's second sentence is exactly why.**
-    `delta_shuf` is red on every seed by the exact n=3 bound and is scored on
-    the task/curious/shuftask arms, none of which the rig repair alters — so
-    **a run dispatched with only item (b) landed is deterministic and buys a
-    third VOID.** It would now VOID on the control rather than FAIL on it,
-    which is the honest verdict and a strictly better record, but it is still
-    not a measurement. The claim-side rescoring — item (a): contrast against
-    the NOISE arm plus the binding C-RANDREW clearance vs the random-action
-    arm — is a DEPENDENCY of the next dispatch, not a follow-up to it. Do not
-    spend 40 minutes of CPU to re-buy a VOID this file already predicts.
+    DISCHARGED 2026-09-22 BY THE v5 RESCORE — and the discharge is the
+    foreclosure's own pre-registered exit, not a waiver of it. This block said
+    a run with only item (b) landed *"is deterministic and buys a third VOID"*
+    because `delta_shuf`'s veto was red on every seed and no sample size
+    touches it. THE VETO IS GONE — retired on the record, with the reason and
+    the arithmetic, in THE TWO-COMPARATOR RESCORE above — and the arm it
+    scored is now a CLAIM COMPARATOR. So the sentence that foreclosed the
+    dispatch no longer has a referent: there is no conjunct left that a run
+    cannot reach.
+
+    WHAT THE NEXT DISPATCH IS NOW ALLOWED TO BUY, stated before it runs so
+    that no outcome can be narrated as the expected one after the fact:
+    **a MEASUREMENT, most likely a FAIL, and PASS is not foreclosed but is
+    not expected.** On attempt 1's committed numbers C-TASK (+0.2458) and
+    C-NOISE (+0.1386) clear their margins with room; C-RANDREW (+0.0125,
+    t = 0.39 on the aggregate ruler) does not clear 0.05 and does not reach
+    3 sigma. Two things stop that from being a foregone conclusion and they
+    are why the run is worth 40 minutes rather than being written down as a
+    verdict: the three contrasts are now scored PAIRED PER LIFE on the shared
+    sub-seed, which is a different and stricter ruler than the aggregate
+    per-seed one wk5 used, and the rig gate itself moved under item (b), so
+    the informative subset a v5 run scores on is not guaranteed to be the one
+    attempt 1 scored on. A FAIL here is a real Tier-3 result about whether
+    `IntrinsicCuriosityModule` earns its parameters in a world with a need,
+    and it fires this spec's `kills` field honestly. That is the outcome this
+    redesign was ordered to make reachable.
 
 BLAST RADIUS: 2 specs rendered unreachable while T3.06 is their parent
     (computed transitively over `depends_on`, 2026-08-31, registry at 211):
@@ -854,11 +1008,19 @@ def _mean(xs: list) -> float:
 
 
 def _experiment(seed: int) -> dict:
-    arms = {name: _arm(seed, name) for name in ("task", "curious", "random")}
+    # v5 (Review 1^10 item 2(a)): `shuftask` is now a CLAIM COMPARATOR and not
+    # only the control's arm, so `_experiment` reads all four. It costs
+    # nothing — `_arm` is cached and `_control` already paid for this arm.
+    arms = {name: _arm(seed, name) for name in _ARMS}
     live = _informative_lives(seed)
 
     # Paired per-life deltas on the shared sub-seed: same world, same goal.
+    # THE THREE CONTRASTS, all on the same fold and the same ruler.
     paired = [arms["curious"][s][0] - arms["task"][s][0] for s in live]
+    paired_noise = [arms["curious"][s][0] - arms["shuftask"][s][0]
+                    for s in live]
+    paired_randrew = [arms["curious"][s][0] - arms["random"][s][0]
+                      for s in live]
     n_pos = sum(1 for d in paired if d > 0.0)
 
     def cov(name):
@@ -874,9 +1036,17 @@ def _experiment(seed: int) -> dict:
         "n_informative": float(len(live)),
         "lives_per_arm": float(LIVES_PER_ARM),
         "delta_coverage": round(_mean(paired), 4),
+        # THE TWO CONJUNCTS ADDED BY THE v5 RESCORE. Each is recorded as its
+        # own metric so `_aggregate` gives it its own `_std` and every one of
+        # the nine claim conjuncts is replayable offline from the committed
+        # row — the VOID RECORD's finding 1 ("one bit over a conjunction
+        # cannot name its own branch"), closed on the claim side.
+        "delta_noise": round(_mean(paired_noise), 4),
+        "delta_randrew": round(_mean(paired_randrew), 4),
         "coverage_curious": round(cov("curious"), 4),
         "coverage_task": round(cov("task"), 4),
         "coverage_random": round(cov("random"), 4),
+        "coverage_shuftask_claim": round(cov("shuftask"), 4),
         # RIG instruments.
         "task_dwell": round(dwell("task"), 4),
         # Tautological on the informative subset by construction — kept as a
@@ -905,6 +1075,14 @@ def _experiment(seed: int) -> dict:
         "delta_paired_worst_life": round(min(paired, default=0.0), 4),
         "delta_paired_best_life": round(max(paired, default=0.0), 4),
         "n_lives_curious_wins": float(n_pos),
+        # Reported, not gated: the same paired sign count for the two new
+        # contrasts, so a reader can see whether a mean is carried by a few
+        # lives or by most of them.
+        "n_lives_curious_beats_noise": float(
+            sum(1 for d in paired_noise if d > 0.0)),
+        "n_lives_curious_beats_random": float(
+            sum(1 for d in paired_randrew if d > 0.0)),
+        "delta_randrew_worst_life": round(min(paired_randrew, default=0.0), 4),
         "curious_cov_worst_life": round(
             min([arms["curious"][s][0] for s in live], default=0.0), 4),
         "task_cov_best_life": round(
@@ -930,20 +1108,37 @@ def _experiment(seed: int) -> dict:
 
 
 def _control(seed: int) -> dict:
-    """Extrinsic + a time-permuted, magnitude-matched bonus. Must NOT recover
-    the coverage the ablation cost: if it does, the effect is reward
-    magnitude, not curiosity.
+    """THE SABOTAGE: put the information-destroyed twin in the claim's seat.
+
+    v5 (Review `1^10` item 2(a)). `shuftask` is extrinsic + a time-permuted,
+    magnitude-matched bonus — the same reward DISTRIBUTION as the curious arm
+    with the information destroyed. The gated quantity is now
+    `ctl_randrew = cov(shuftask) - cov(random)` against the claim's own
+    C-RANDREW bar: if matched NOISE also clears the random-action comparator,
+    then clearing it measures "any reward shaping beats a random walk" and
+    not curiosity, the contrast cannot attribute, and `_check` VOIDs.
+
+    `delta_shuf` is still computed and still recorded — it is the v2 veto,
+    RETIRED as a veto (it was red on every seed, so it was not a passing
+    control) and kept as a reported number. Its function moved into the claim
+    as C-NOISE, which asks the same question with a harder bar. Reasoning in
+    THE TWO-COMPARATOR RESCORE.
 
     Scored on the SAME informative lives as the claim — the subset is selected
-    by the `task` arm, which both share — so the control can never be measured
-    on an easier set of worlds than the arm it is supposed to shadow.
+    by the `task` arm, which every arm shares — so the control can never be
+    measured on an easier set of worlds than the arm it is supposed to shadow.
     """
     shuf, task = _arm(seed, "shuftask"), _arm(seed, "task")
+    rand = _arm(seed, "random")
     live = _informative_lives(seed)
     paired = [shuf[s][0] - task[s][0] for s in live]
+    paired_randrew = [shuf[s][0] - rand[s][0] for s in live]
     return {"coverage_shuftask": round(_mean([shuf[s][0] for s in live]), 4),
             "shuftask_dwell": round(_mean([shuf[s][1] for s in live]), 4),
             "control_n_informative": float(len(live)),
+            # THE GATED CONTROL (v5).
+            "ctl_randrew": round(_mean(paired_randrew), 4),
+            # Reported, not gated: the retired v2 veto.
             "delta_shuf": round(_mean(paired), 4)}
 
 
@@ -987,22 +1182,38 @@ def _check(m: dict, c: dict):
 
     # A RED CONTROL IS AN APPARATUS OUTCOME, NOT A REFUTATION — repaired
     # 2026-09-22 under Review 1^10 item 2(b). As frozen, `_check` fell through
-    # to the FAIL branch when `delta_shuf >= DELTA_MIN`, which fires this
+    # to the FAIL branch when the control came back red, which fires this
     # spec's `kills: IntrinsicCuriosityModule` off a run whose own control
     # says the contrast CANNOT ATTRIBUTE the effect to curiosity rather than
-    # to reward magnitude. That is a FALSE kill, and it fired on attempt 1
-    # (delta_shuf 0.1072, red on every seed). Mapping control-red to VOID
-    # removes it and cannot save a true one: a GREEN control with a red claim
-    # still reaches the return below, still FAILs, and still kills.
-    if c["delta_shuf"] >= DELTA_MIN:
+    # to reward magnitude. That is a FALSE kill, and it fired on attempt 1.
+    # Mapping control-red to VOID removes it and cannot save a true one: a
+    # GREEN control with a red claim still reaches the return below, still
+    # FAILs, and still kills.
+    #
+    # v5 (item 2(a)) MOVES WHICH CONTROL THIS IS, not what it does. The gated
+    # sabotage is now the twin in the claim's seat against the claim's own
+    # hardest comparator, because the conjunct that now carries the load is
+    # C-RANDREW. `delta_shuf` — the v2 veto — is recorded and no longer gates;
+    # it was red on every seed (0.1072, floor 0.0632, vs < 0.05), so it was
+    # not a passing control, and its function moved into C-NOISE with a
+    # harder bar. THE TWO-COMPARATOR RESCORE has the full reasoning.
+    if c["ctl_randrew"] >= DELTA_MIN:
         return Status.VOID
 
-    std = m.get("delta_coverage_std", 0.0)
-    delta_floor = m["delta_coverage"] - SEED_SPREAD_FACTOR * std
-    delta_t = m["delta_coverage"] * (3 ** 0.5) / max(std, 1e-9)
-    return bool(m["delta_coverage"] >= DELTA_MIN
-                and delta_floor > 0.0
-                and delta_t >= DELTA_TSTAT_MIN)
+    # THE CLAIM: three contrasts, each carrying the same three conjuncts.
+    # C-TASK is the v2 claim with no bar moved; C-NOISE and C-RANDREW are the
+    # v5 additions, and C-RANDREW is the one the Review expects to fail —
+    # which is the point of arming it and is not a reason to soften it.
+    def contrast_ok(key):
+        std = m.get(key + "_std", 0.0)
+        return bool(m[key] >= DELTA_MIN
+                    and m[key] - SEED_SPREAD_FACTOR * std > 0.0
+                    and m[key] * (3 ** 0.5) / max(std, 1e-9)
+                    >= DELTA_TSTAT_MIN)
+
+    return bool(contrast_ok("delta_coverage")        # C-TASK
+                and contrast_ok("delta_noise")       # C-NOISE
+                and contrast_ok("delta_randrew"))    # C-RANDREW
 
 
 def _assert_dwell_cap_current() -> None:
