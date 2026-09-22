@@ -971,6 +971,46 @@ LADDER.extend(EXPANSION)
 BY_ID = {s.id: s for s in LADDER}
 
 
+# ===================================================================
+# CONJUNCTS OWED AT A FUTURE RE-BUY — declarations, not bars.
+# ===================================================================
+# Nothing here arms a conjunct, moves a threshold or refuses a run. Each entry
+# records that a gate edit is OWED, and WHEN it becomes legal to make, so the
+# obligation survives in a place an instrument can read instead of in a
+# steering page that is rewritten weekly. `registry.py` appears in NO spec's
+# `IMPL_DEPS` (0 hits, verified 2026-09-22), so writing here bills no
+# certificate and stales nothing — which is the whole reason this list lives
+# in this file and not in the test files it talks about.
+#
+# THE RULE THAT PUT THE FIRST ENTRY HERE RATHER THAN IN THE TEST FILE: a
+# conjunct may not be armed on a spec whose own dependency is FAIL. Arming it
+# early manufactures a claim nobody can clear — the certificate goes stale the
+# moment it is written, and the next reader inherits a red they cannot act on.
+# So the edit waits for the dependency's PASS-bound re-buy, and the WAITING is
+# what gets written down.
+CONJUNCT_ARMING_OWED = {
+    "T1.08": {
+        "conjunct": "CITE_MARKER",
+        "owed_at": "T1.08's next PASS-bound re-buy",
+        "first_citer": "T2.03",
+        "authority": "Review 2026-09-20, priority block 1^10 item 3",
+        "declared": "2026-09-22",
+        "why_not_now": (
+            "T2.03 is a standing PASS whose dependency T1.08 is FAIL. Editing "
+            "t2_03_*.py to arm the marker now would manufacture a stale claim "
+            "no run can clear until T1.08 itself passes. Declaration only."),
+        "reason": (
+            "T1.08's registered text says the held-out metric's seed CV "
+            "'should be quoted', and the Review ruled that a REAL "
+            "REQUIREMENT rather than a courtesy: a single-seed number quoted "
+            "downstream without its seed spread is exactly what T1.08's "
+            "`kills: Any single-seed claim in this repo` exists to stop. "
+            "T2.03 is named first citer because it is the nearest standing "
+            "PASS that quotes a T1.08-governed number."),
+    },
+}
+
+
 def tier(n: int) -> list[Spec]:
     return [s for s in LADDER if s.tier == n]
 
