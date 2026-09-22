@@ -552,8 +552,9 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^10`/`2^10` (Review, 2026-09-20, FULL; prohibitions
-consolidated 2026-09-21). `3''` FURTHER BELOW IS UNCHANGED AND STILL LIVE.
+**LIVE PRIORITY BLOCK — `1^11`/`2^10` (items Review 2026-09-22, DAILY;
+prohibitions consolidated 2026-09-21 and UNCHANGED today).
+`3''` FURTHER BELOW IS UNCHANGED AND STILL LIVE.
 `2^10` NOW RESTATES THE COMPLETE LIVE PROHIBITION SET IN FULL — it references
 no superseded block and nothing binds you that is not written out below.**
 
@@ -591,132 +592,106 @@ scoring (zero) before venue (bills every `playground.py` certificate) before
 envelope (forbidden).** Nothing goes to the world-edit window that a statistic
 change can fix.
 
-**ITEM 0 — READ THIS BEFORE ANYTHING (Review, 2026-09-21, DAILY). YOU HAVE NOT
-RUN SINCE 2026-09-20 07:07 AND IT WAS NOT YOUR FAULT AND IT WAS NOT PACING.**
-The block below was committed at 06:44 on 09-20 and pushed this file past
-`MAX_ARG_STRLEN`; `ladder_loop.sh:278` passes it as one argv, so `execve`
-refused and six slots died `rc=126` before reading a token (09-20 07:07, 08:07,
-09:07, 10:07, 11:07; 09-21 06:07). The usage PACING gate covered the other
-thirteen. **Nineteen consecutive slots, zero iterations, and no organ saw it
-for twenty-three hours** — yesterday's FULL reported "7 of 7 slots ran" thirty
-minutes before its own commit broke the launcher. The file is now 85 KB and
-the exec is verified. **So everything below is UNREAD WORK, not stale work:
-nobody skipped it, nobody refused it. Start at item 1 and do not re-derive the
-board on the assumption that a week has passed.**
+**ITEM 0 — THE CREDIT, AND IT IS EARNED (Review, 2026-09-22, DAILY).
+`1^10` IS DISCHARGED EXCEPT FOR ONE RUN AND ONE ITEM YOU DECLINED FOR A REASON
+I AM ABOUT TO CORRECT.** Three live slots in the 24 h since the launcher came
+back (11:07, 04:07, 05:07) and every one of them produced: `T2.06`'s GPU re-buy
+PASSED at `margin_lang_min` 0.105 against the exogenous 0.07 — the first legal
+GPU buy in three weeks; `UNREACHABLE_BASELINE` restored 98 → 96 in the same
+commit as ordered; `T3.06`'s dwell cap DERIVED from n rather than typed, with
+the order's own half-wrong diagnosis recorded rather than quietly shipped
+around; `T1.08`'s `CITE_MARKER` trigger declared; `STEERING-PAGE SIZE` printing
+in `run status` (88072 B, 43000 below the cliff, ~29 days). **And the item I
+want to name specifically: you removed a FALSE `kills:` — control-red now maps
+to VOID, not FAIL — and you armed `C-RANDREW`, a comparator your own arm is
+expected to LOSE to. Arming the contrast that can kill your result is the
+highest-value thing anyone did on this board this week.**
 
-   0. **`D27` — CHECK BEFORE YOU FIRE. DO NOT DOUBLE-FIRE IT.** When this desk
-      first wrote this item at 06:4x, `decisions` printed `D27 OVERDUE —
-      DEFAULT IS DUE TO FIRE` and the instruction was to fire it. **Within the
-      same sitting that became wrong**: the overseer's 107th audit, running
-      concurrently as it does, fired `D27`'s default itself at ~06:5x and
-      stamped the entry *"RESOLVED BY ARMED DEFAULT, fired 2026-09-21 06:5x UTC
-      by the OVERSEER (107th audit), one day late"*. At the time of writing that
-      stamp is **uncommitted** in the overseer's working tree, which is why this
-      item says CHECK rather than SKIP.
-      **So: read `docs/DECISIONS_NEEDED.md` and `docs/DECISIONS_RESOLVED.md` at
-      HEAD first.** If `D27` already carries a fired stamp, **it is done — do
-      not fire it again**, and say in the journal that you found it fired by the
-      other organ. If it does not, fire it with the required wording — *"the
-      owner did not rule by 2026-09-20, so the pre-registered default fired"* —
-      plus how to reverse it, and **record that it fired a day late and why**,
-      because a default that fires silently late reads identically to one that
-      fired on time. Either way **the CODE half of `D27` is still owed by you**:
-      the entry's own default is *(i) BUILD THE SCREEN, REPORTING ONLY*, and a
-      stamp is not a screen.
-      **`D28` does NOT fire today** regardless: `decide_by` 2026-09-21 and
-      `decisions.py` marks overdue at `> 0` days, so its earliest legal firing
-      is 2026-09-22. Do not fold the two together.
+1^11. **IN THIS ORDER. Item 1 is a RUN that has now been handed forward twice
+for a reason that is real, and item 2 is a liveness instrument that has been
+lying to you since yesterday lunchtime.**
 
-1^10. **IN THIS ORDER. Items 1 and 2 are real runnable science and they are the
-first such items on this board in a week. Do not skip them for paperwork.
-Item 5 was REWRITTEN later in the same sitting — read it, it now carries a GPU
-dispatch the earlier version of this block told you did not exist.**
+   1. **RUN `T3.06`. FIRST ACT OF THE SLOT, FOREGROUND, BEFORE THE JOURNAL.**
+      It is built (`875caf6` + `181fbff`) and it has been handed forward twice —
+      correctly both times, because a ~41 min run started mid-slot dies on
+      `ladder_loop.sh:282`'s `timeout 50m`. **That is exactly why it goes first:
+      started at :08 it has nine minutes of margin; started after the journal it
+      does not fit and gets handed forward a third time.** Two hand-forwards is
+      a queue; three is a spec that never runs.
+      **Expect it to FAIL, and that is the point.** `C-RANDREW` reads +0.0125
+      against a comparator field watch wk5 measured at `t = 0.39`. A FAIL here
+      is this ladder finally holding a spec to a standard it wrote down in
+      `CURIOSITY_BAKEOFF.md` §O1 and was not enforcing. **Record the FAIL, do
+      not touch a bar, do not re-open the rescore.** If it PASSES, say so
+      plainly and note that the standard was cleared on its first honest test.
 
-   1. **`BA.03` OPTION (c) — CHANGE THE SATURATING METRIC. Zero staleness bill,
-      CPU, and it is yours to implement now.** Ruled today: the claim statistic
-      becomes **integrated absolute tilt over a FIXED 12 s window** (fall back to
-      recovery count ONLY if integrated tilt pilots degenerate, and say so in the
-      record). **The bar is set from the RANDOM walk's measured distribution, NOT
-      from the blind twin** — the twin is retained as a REPORTED arm but may no
-      longer be the thing the claim clears, because a null that survives to the
-      horizon carries no information about tilt. **ALL SIX currently-green rig
-      conjuncts are carried forward UNCHANGED** (random topples on 94.7% and
-      survives 2.30 s; best trained arm beats it by 9.56 s; no-surface control
-      0.0094 s against the 0.30 cap; `gripboth` 4.29 s behind the twin; the noise
-      control at `gain_noise` -7.011). **A change of claim statistic may not drop
-      a control that is currently passing** — that line is what separates a
-      redesign from a rescue. **DO NOT raise the horizon** (refused today as a
-      forbidden envelope growth) and **do not touch the perturbation** — that is
-      re-routed as `ba03-vestibular-channel-is-never-load-bearing-under-one-kick`
-      and is bound to the world-edit window, which is mine and is overdue.
+   2. **THE DARK-SLOT COUNTER HAS READ `0` THROUGH A 15-SLOT SKIP STREAK SINCE
+      2026-09-21T12:07, AND THE THING BLINDING IT IS YOUR OWN OUTPUT.** Routed
+      today as `dark-slot-counter-is-blinded-by-the-loops-own-notice-lines`;
+      read the row, the mechanism is replayed there rather than argued.
+      One line does it: `scripts/usage_attribution.py`'s backwards walk breaks
+      on `line[:4].isdigit()` as "a real slot line", and every `PACE-SKIP
+      NOTICE:` line you write after a `PACING:` line starts with a timestamp.
+      **The repair is to identify a slot line the way `slot_outcomes()` already
+      does — by `iteration start`/`iteration end` — not by "starts with a
+      digit".** Replay the real log truncated to 2026-09-21T13:07, 18:07 and
+      2026-09-22T03:07 and show it reading 1, 6 and 15; the current code reads
+      0, 0, 0. **Add the fixture that would have caught it** — a log whose
+      PACING lines are each followed by a timestamped non-slot line — because
+      the existing self-test passes today. **Zero staleness bill: this file is
+      in no spec's `IMPL_DEPS` (0 grep hits), so it re-buys nothing.**
+      This is the SAME root cause the 107th audit repaired one layer over
+      yesterday; do not repair only this instance if the two readers can be
+      made one.
 
-   2. **`T3.06` — (a) AND (b), BOTH, IN THAT DEPENDENCY ORDER: (b) FIRST.**
-      `cpu<2h`, measured at ~40 min, no GPU, no dispatch.
-      **(b) first, because it is what actually VOIDed the run:** re-derive
-      `RANDOM_DWELL_MAX` as an **n-aware order-statistic bound** — an exogenous
-      quantile of the ANALYTIC chance dwell at the n it is READ at, derived in
-      source before the run, with the derivation in the file. `0.0227` against a
-      0.02 cap frozen on a 16-life pilot and read at 48 lives is an instrument
-      measuring its own n. **It is explicitly permitted to come out LOWER at
-      n=16 and HIGHER at n=48, and that is not a weakening** — but the direction
-      is NOT to be chosen after seeing which way it falls, and the new bound is
-      read against the **ACTUAL worst seed, never an aggregate.**
-      **(a) second:** rescore against the noise arm, and **the RANDOM-ACTION
-      comparator is BINDING** per `CURIOSITY_BAKEOFF.md` §O1. The new gate needs
-      BOTH `cov(curious) - cov(shuftask) >= 0.05` (recorded-but-not-counting at
-      +0.1385, t = 3.94 — ample) AND the C-RANDREW clearance vs the random-action
-      arm, which field watch wk5 measured at **+0.0124 +/- 0.0317, t = 0.39 — no
-      clearance at all.** **SO EXPECT T3.06 TO FAIL ITS NEW GATE. That is the
-      point and it is not a reason to hesitate.** A conjunct is being ADDED that
-      the spec is expected to fail, against a standard this project already wrote
-      down and was not holding it to. **Any redesign that beats only `shuftask`
-      is refused in advance.**
-      **And repair the `kills:` field in the same motion:** as frozen, `_check`
-      maps control-red to FAIL, firing `kills: IntrinsicCuriosityModule` off a
-      run whose own control says the contrast cannot attribute. **Control-red
-      maps to VOID, not FAIL.** This removes a FALSE kill and cannot save a true
-      one — a green control with a red claim still FAILs and still kills.
-      **Do NOT take option (c), the world arm.** Refused today.
+   3. **`BA.03` OPTION (c) — AND I AM CORRECTING THE REASON YOU DECLINED IT.**
+      You handed it forward as "`CPU_DAYS` (~6 h), can't fit an hourly slot, and
+      `2^9` forbids detaching a unit that will outlast the slot." **The
+      prohibition is right and your reading of the ITEM is not: `1^10` item 1
+      ordered the IMPLEMENTATION, not the run** — *"change the saturating
+      metric. Zero staleness bill, CPU, and it is yours to implement now."*
+      Changing the claim statistic to integrated absolute tilt over a fixed 12 s
+      window, setting the bar from the RANDOM walk's measured distribution, and
+      carrying all six green rig conjuncts forward **is a source edit that fits
+      a slot with room to spare.** The 6 h is what the RUN costs, and nobody has
+      asked you to start it. **So: implement it, commit it, and say in the
+      journal that the DISPATCH is unscheduled and why.** If after implementing
+      you judge that no organ on this box can ever execute a ~6 h CPU unit
+      inside an hourly slot, **say that in the journal in those words** — it is
+      a structural finding and I will carry it to the owner, which is not
+      something a hand-forward line can do.
+      Constraints unchanged and all still binding: bar from the random walk and
+      NOT the blind twin; **a change of claim statistic may not drop a control
+      that is currently passing**; do NOT raise the horizon; do not touch the
+      perturbation.
 
-   3. **THE `T1.08` TRIGGER DECLARATION — one line, free, and do it in the slot
-      you read this.** Ruled today: `T1.08`'s `"should be quoted"` is a REAL
-      REQUIREMENT. Declare, machine-readably in `experiments/registry.py` (which
-      that row established mechanically is in **no** spec's `IMPL_DEPS`, 0 hits,
-      so it bills no certificate), that `CITE_MARKER` arming is OWED at `T1.08`'s
-      next PASS-bound re-buy, naming `T2.03` as the first citer. **DO NOT edit
-      `t2_03_*.py` and DO NOT arm the conjunct now** — `T2.03` is a standing PASS
-      whose dependency `T1.08` is FAIL, so the edit would manufacture a stale
-      claim nobody can clear. Declaration only; arms no bar, refuses no run.
+   4. **`fieldwatch-quotation-channel-is-0-for-5` — DUE TOMORROW (2026-09-23)
+      and it is yours.** Unchanged from `1^10` item 5's successor: **measure
+      before picking a closure.** The shingle rule is IMPORTED from
+      `decisions.owner_asks`, so a naive repair silently re-tunes the instrument
+      that audits this desk's own `FOR THE OWNER` section. Parameterise at the
+      fieldwatch call site, or measure both channels' false-positive rates in
+      the same commit. **Do not change the shared rule blind.**
 
-   4. **THE TWO 09-21 DISPOSITIONS, when their date comes and not before** —
-      `WAITS-ON:` with `none` permitted, and the `(iv)` **measurement** before
-      the `(iv)` implementation. Unchanged from `1^9` item 4. Do not fold them
-      together and do not start either early.
+   5. **THE TWO 09-21 DISPOSITIONS, now dated and now yours.** Both got their
+      DESIGN answers on 09-19 and both were re-dated today because the debt
+      changed hands to you: `waits-on-declared-field` (implement `WAITS-ON:`,
+      `none` permitted, then re-buy `T0.31`) is DUE **09-25**;
+      `hash-salt-lottery-in-a-gated-metric` (option (iv), and the **measurement
+      of the binding set reported BEFORE the implementation**) is DUE **09-26**.
+      Dated a sitting apart on purpose — two instrument edits in one slot is how
+      one of them goes unverified. Do not start either early and do not fold
+      them together.
 
-   5. **`T2.06` RE-BUY — `W38` HAS A LEGAL GPU BUYER FOR THE FIRST TIME, AND
-      THIS ITEM CORRECTS THE ONE I WROTE EARLIER IN THIS SAME SITTING.** When
-      `1^10` was first committed, item 5 read *"W38's 30 free GPU hours still
-      have no legal buyer ... all of it is CPU"*. **That is now false, and it
-      was my own next act that made it false** — I am rewriting it rather than
-      leaving you steering by it, which is the whole reason this block exists.
-      Part 2's re-examination STRENGTHENED `T2.06`: `CLAIM 2` read
-      `acc_lang > acc_tfidf_name`, strictly greater by any epsilon, on a
-      comparison whose standard error at n_test=400 is ~0.035 — a gate that
-      would have certified a margin of 0.0001. It now requires
-      `acc_lang - acc_tfidf_name >= MARGIN_LANG = 0.07`, exogenous from n and
-      the binomial. **The certificate is STALE and the re-buy is `gpu<20min`
-      with `T1.01` PASS behind it — a legal, dependency-satisfied, honestly-owed
-      GPU dispatch.** Take it. The registered run recorded per-seed margins
-      0.1050 / 0.1425 / 0.1250, so it should clear the new bar; if it does not,
-      **record the FAIL and do not touch `MARGIN_LANG`** — the margin is
-      arithmetic and is not negotiable against its own result.
-      **What is still true from the old item 5:** this is ~20 GPU-minutes
-      against 30 hours, so the inventory is still overwhelmingly unbought, and
-      the reason is unchanged — the only LARGE GPU unblock runs through
-      `T1.08`'s PIPELINE REPAIR, which has no design, which is mine, and which
-      the owner is reading about this week. **Beyond the `T2.06` re-buy, do not
-      manufacture a dispatch to spend the inventory.** W37's ~27.78 h died
-      unspent and the audit called that refusal correct.
+   6. **GPU: W38 EXPIRES SATURDAY 2026-09-26 WITH ~29.5 OF 30 FREE HOURS
+      UNBOUGHT, AND THE ANSWER IS STILL "DO NOT MANUFACTURE A DISPATCH."**
+      `T2.06` took 0.48 h of it, legally, and that was the only legal buyer on
+      the board. The large unblock still runs through `T1.08`'s PIPELINE REPAIR,
+      which has no design, which is mine, and which is overdue. **W37 died with
+      ~27.8 h unspent and the audit called that refusal correct; the same
+      refusal is correct this week.** If `T3.06` or anything else develops a
+      dependency-satisfied GPU re-buy before Saturday, take it and say so — but
+      an unbought free hour is a smaller loss than a manufactured run.
 
 2^10. **THE COMPLETE LIVE PROHIBITION SET. Consolidated 2026-09-21: what
 used to read *"`2^9`, `2^8` and `2^7` below are carried IN FULL"* is now
