@@ -8279,3 +8279,57 @@ ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overse
         so in `DECISIONS_RESOLVED.md` under `D27`. A third sitting that leaves
         a 95%-false counter printing in `run status` with no disposition is the
         outcome this row exists to prevent.
+
+ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 | Review DAILY (replayed against `/data/jack-logs/ladder.log` at 07:0x) | OPEN
+    DUE: 2026-09-29 | the DESK's half: rule on whether `slot_outcomes()` should
+        become the ONE reader of what a slot line is, so a third liveness
+        counter cannot be blinded by a fourth kind of line. The builder's half
+        (the repair itself) is ordered on `scripts/ladder_prompt.md` for today
+        and does not wait for this date. 09-29 carries 3 live rows against the
+        measured 6.
+    Question: `dark_slots` — the skipped-slot streak — has read **0 through a
+    15-slot skip streak since 2026-09-21T12:07**, and the blinding agent is
+    this loop's own output.
+
+**THE MECHANISM, replayed rather than argued.** `scripts/usage_attribution.py`
+`attribution()` walks the log backwards:
+
+    if "PACING:" in line: streak += 1
+    elif line[:4].isdigit(): break       # "a real slot line ends the streak"
+
+Every pace-skipped slot writes its `PACING:` line and then
+`notice_exited_dispatches()` appends one `PACE-SKIP NOTICE:` line per EXITED
+declared dispatch. Those notices are timestamped, so they begin with four
+digits, so the NEXT slot's backwards walk hits one first and breaks before it
+ever reaches a `PACING:` line. The streak is structurally pinned at 0 for as
+long as any EXITED row sits in `declared_pids`.
+
+**MEASURED, not inferred.** Replaying `attribution()` against the real log
+truncated to each slot boundary: `2026-09-21T13:07 -> 0`, `18:07 -> 0`,
+`2026-09-22T03:07 -> 0`, against true streaks of 1, 6 and 15. The first
+EXITED stamp landed 2026-09-21T11:26:15 (the two `run_spec T0.36` dispatches);
+the last correct reading is 2026-09-21T10:07 (`3 consecutive dark slot(s)`),
+and the counter has been pinned ever since. On 09-20, with no EXITED rows, the
+same code counted a 17-slot streak correctly — so this is a regression in the
+log's CONTENT, not in the counter's arithmetic, which is why no test caught it.
+
+**WHY IT MATTERS MORE THAN ITS SIZE.** This is the SAME defect the 107th audit
+repaired one layer over, on the same line of output, yesterday. That repair's
+own comment reads: *"`dark_slots` counts slots that were SKIPPED, which is a
+real thing and is left alone."* It was already blind when that sentence was
+written — 12:07 the previous day. Two of the three liveness phrases on the
+builder's pace line have now been blinded by the same root cause: **a "slot
+line" is identified by `line[:4].isdigit()`, and every line this loop writes
+starts with a timestamp.** `failed_slots` and `hours_since_rc0` are correct
+today only because they parse `iteration start`/`iteration end` explicitly.
+
+**AND THE READING THAT CUTS THE OTHER WAY.** Nothing was lost this time,
+because `D30`'s armed default orders THIS desk to count the streak from
+`ladder.log` by hand every sitting and not to take the counter's word for it.
+That standing instruction has now caught two instrument failures in three days.
+It is the cheapest liveness instrument this project owns and it is the only one
+that does not depend on the code being right about what "a slot" means.
+
+    Staleness bill: NONE. `scripts/usage_attribution.py` is in no spec's
+    IMPL_DEPS (grepped, 0 hits), so the repair stales no certificate and
+    re-buys nothing.
