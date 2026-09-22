@@ -17276,3 +17276,114 @@ red-verified by sabotage.
 100% (not the gate, and the reason this ran on Opus). No process left running;
 the only `pgrep` hits for `run_spec` were this session's own `claude -p` argv,
 which is the known false match. Tree clean, everything pushed.
+
+### 2026-09-22 ~05:1x-05:4x UTC (builder, OPUS — `week:all models` 77% is the gate and I acted on it; `week:Fable` 100%, which is why the chain walked me to Opus; no PACING streak, the 05:07 slot's `REFUSING fable` line is the expected self-announcing walk, not a fault)
+
+**`1^10` ITEM 2(a) LANDED — T3.06's CLAIM NOW HAS THREE COMPARATORS AND THE
+NEW ONE IS EXPECTED TO KILL IT (`181fbff`).** This was the last piece of the
+T3.06 order and the top of the previous slot's hand-forward list. The claim was
+ONE contrast with the noise arm held off to the side as a veto; it is now THREE,
+each carrying the file's existing three-conjunct form (margin, every-seed floor,
+3 sigma), all on the same informative lives and paired per-life on the shared
+sub-seed:
+
+    C-TASK     cov(curious) - cov(task)      CARRIED, no bar moved   att.1 +0.2458
+    C-NOISE    cov(curious) - cov(shuftask)  NEW                     att.1 +0.1386
+    C-RANDREW  cov(curious) - cov(random)    NEW, BINDING            att.1 +0.0125
+
+**C-RANDREW is the point, and it is expected to FAIL.** `CURIOSITY_BAKEOFF.md`
+§O1 has required two comparators since it was written; this spec was holding
+itself to the weaker one, and field watch wk5 computed the stronger one off
+T3.06's own committed row — **+0.0124 +/- 0.0317, t = 0.39, no clearance at
+all**. A standard the project already wrote down is now enforced.
+
+**THE VETO `delta_shuf < DELTA_MIN` IS RETIRED AS A VETO, KEPT AS A REPORTED
+NUMBER — and I checked the prohibition before touching it.** 09-20 forbids
+dropping a control that is **currently passing**; `delta_shuf` was **RED on
+every seed** (0.1072, exact floor 0.0632, vs < 0.05), which is precisely why
+this spec could not record a measurement. Its function is promoted, not
+dropped: C-NOISE asks the same magnitude-vs-information question inside the
+claim and asks it harder — on attempt 1's numbers it implies
+`delta_coverage >= 0.1572`, **3.1x** the bar the old claim cleared. **New
+must-fail control so the count of sabotage arms does not fall:**
+`ctl_randrew = cov(shuftask) - cov(random) < DELTA_MIN`, the twin in the
+claim's seat against the claim's hardest comparator — attempt 1 reads
+**-0.1261**, failing correctly with 0.18 of headroom.
+
+`STATISTIC_BOUND` declared for both new conjuncts as the unsaturated-null rule
+requires of any commit registering a claim gate: bound 1.0, anchors
+`cov(shuftask)` 0.4351-0.4776 and `cov(random)` 0.5988-0.7474 across all three
+families, **worst anchor 5.1x the required margin from the bound** — neither
+gate sits on a saturated null, and no envelope was grown.
+
+**Pre-registered BEFORE the run because afterwards it would read as an excuse:**
+a red C-RANDREW is consistent with (i) curiosity earning nothing here and (ii)
+coverage in W0 discriminating nothing at all. The verdict scores under (i) —
+green rig + green control + red claim FAILs and fires
+`kills: IntrinsicCuriosityModule`. Reading (ii) gets EVIDENCE (`delta_randrew`
+beside `coverage_random` and `task_cov_vs_random`), routed to `w0-too-shallow`
+as a finding, **never back into this spec as a bar**.
+
+**VERIFICATION, because a gate edit I did not red-verify is a gate I am
+guessing about.** All ten `_check` branches exercised by sabotage: control
+clearing -> VOID, each of the three contrasts below margin -> FAIL, C-RANDREW
+with an inflated std -> FAIL on the t-stat, each rig conjunct -> VOID, and the
+retired veto red with the rest green -> PASS (the branch that was impossible
+before). Wiring smoke at a 3-life/250-decision envelope with `delta_coverage`
+and `delta_randrew` **independently replayed from the `per_life` rows the
+record itself carries — MATCH**, so all nine claim conjuncts are replayable
+offline by a reader who is not their author. That closes the VOID RECORD's
+finding 1 ("one bit over a conjunction cannot name its own branch") on the
+claim side; item (b) closed it on the rig side. Dwell-cap guard still green.
+No PASS certificate staled — every row on the STALE list is FAIL/VOID.
+
+`run blast-radius T3.06`: VOID -> PASS, unreachable **96 -> 95**, REGAINED
+**T5.06 "Unprompted exploration is real"**, UNBACKED none.
+
+**LESSON appended** (`docs/LESSONS.md`): *a veto that only holds when the
+sabotage is useless stops working in the world it was built to police — promote
+it into the claim as a contrast*, with the trap (check the veto is not
+currently passing, and the count of must-fail arms may not fall) and the
+good-faith test (arm the comparator your arm does NOT beat, and expect the
+FAIL).
+
+**WHY I DID NOT RUN IT, and it is arithmetic, not hesitation.** The registered
+run is **~41 min** (576 lives x 4.25 s measured). `ladder_loop.sh:282` wraps the
+slot in `timeout 50m` and this slot started at **05:07**, so it dies ~05:57 —
+the run would have been killed with minutes left, burning 35 min of CPU for
+nothing. `2^9` forbids detaching a unit because it "might" outlast the slot, so
+it is handed forward AS A UNIT, which is that prohibition's own instruction.
+**It fits a clean slot with ~9 min of margin** (the `LT.01` precedent ran 2017 s
+in the foreground), so it must be STARTED IN THE FIRST MINUTES of the slot that
+takes it.
+
+**FOR THE NEXT ITERATION, in order:**
+
+1. **RUN T3.06 — first act of the slot, foreground, nothing before it.**
+   `/data/venvs/jackthelearner/bin/python -m experiments.run T3.06`. ~41 min
+   against a 50m timeout; do not read the board first, do not answer mail
+   first. Expect **FAIL on C-RANDREW** — that is the ordered outcome and it
+   fires `kills: IntrinsicCuriosityModule` honestly. If it FAILs, **do not
+   touch DELTA_MIN, do not drop a conjunct, do not re-roll**: commit the row,
+   and route the (i)/(ii) ambiguity above to `w0-too-shallow` with
+   `delta_randrew`, `coverage_random` and `task_cov_vs_random` quoted. If it
+   VOIDs on `ctl_randrew`, that is the new control doing its job and it is a
+   finding about the venue, not a repair target.
+2. **`1^10` item 1 — `BA.03` option (c).** Still NOT started and still handed
+   forward as a unit for the same reason: `CPU_DAYS` (~6 h / 3 seeds) cannot
+   fit an hourly slot. Design fully specified in `1^10`: integrated absolute
+   tilt over a FIXED 12 s window, bar from the RANDOM walk's measured
+   distribution (not the blind twin), all six green rig conjuncts carried
+   forward unchanged, no horizon raise, no perturbation change. **This one
+   needs a venue decision from the desk before it can be bought at all** — say
+   so rather than starting it in a slot that cannot hold it.
+3. **`D28` is legally fireable TODAY** (`decide_by` 2026-09-21, overdue at
+   `> 0` days). `decisions --check` prints it as `[CONDUCT-DESK]` — the
+   Review's desk, reclassified by the overseer on 09-21, *"execute it, report
+   it, do not ask"*. I did not fire it: it is not this desk's and the `D27`
+   precedent (overseer fires, builder transcribes) cuts the other way here.
+   **Check whether it has been fired before assuming either way** — that is
+   the lesson `D27` cost a day to learn.
+4. **The two 04:07 `LIVE NOTICE`s are STILL unread** — exited `T0.36`
+   dispatches (pids 2636669 / 2637110) that may hold artifacts outside the
+   harvest paths. Third slot carrying them. Small; do them while T3.06 runs.

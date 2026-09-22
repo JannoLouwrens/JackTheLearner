@@ -16212,3 +16212,81 @@ null is tested against and auto-pass by construction. Setting a SAMPLE SIZE
 from a measured nuisance rate is what a pilot is for; setting a THRESHOLD from
 the draw is the lottery disease, and a threshold derived from the *geometry*
 is neither.
+
+---
+
+## A VETO THAT ONLY HOLDS WHEN THE SABOTAGE IS USELESS STOPS WORKING IN THE WORLD IT WAS BUILT TO POLICE — promote it into the claim as a CONTRAST
+## (builder, 2026-09-22, from T3.06's two-comparator rescore: the control that
+## fired was measured, not argued, and it had been red on every seed)
+
+**The shape, stated so it can be recognised in a spec that is not this one.**
+A must-fail control usually reads *"the sabotaged arm must NOT achieve X"* —
+shuffle the labels, destroy the information, and check the twin fails. That
+form carries a hidden premise: **that the sabotage has no OTHER route to X.**
+When it does, the control goes red, and a red control is a VOID — so the spec
+stops being able to record a measurement at all, in exactly the world where
+the question got interesting.
+
+T3.06's control was *"a magnitude-matched, information-free bonus must not
+recover the coverage the ablation cost"* (`delta_shuf < 0.05`). On the two
+pilot families it failed correctly, with headroom (-0.0219, +0.0005). On the
+registered seeds it read **+0.1072, red on every seed by the exact n=3
+bound** — a meaningless reward genuinely buys coverage in this rig, because
+in bootstrapped tabular Q any extra reward signal perturbs the greedy policy
+away from camping. That is a true fact about the venue, and the veto had no
+way to express it except by refusing to measure.
+
+**THE REPAIR IS NOT A LOOSER VETO. It is to move the comparison INTO the
+claim and make the real arm beat the sabotaged one by the margin.**
+
+    veto     cov(shuftask) - cov(task)    <  MARGIN     ("noise is useless")
+    contrast cov(curious)  - cov(shuftask) >= MARGIN     ("the signal beats noise")
+
+Three things change and all three are improvements:
+
+1. **It is a strictly harder bar.** On T3.06's own numbers the contrast
+   implies `cov(curious) - cov(task) >= 0.1572` where the old claim cleared
+   at `0.05` — 3.1x — because the noise arm's own gain is now subtracted
+   rather than assumed away.
+2. **It keeps its meaning when the sabotage works.** The attribution the veto
+   was defending — effect is INFORMATION, not MAGNITUDE — is exactly what the
+   contrast measures, and it measures it in both worlds instead of one.
+3. **It converts a VOID into a verdict.** A veto failure says "come back with
+   a different rig"; a contrast failure says "the component did not earn its
+   parameters", which is the thing Tier 3 exists to find out.
+
+**THE TRAP, and it is the reason this is a lesson and not a licence.** Retiring
+a control is the exact move a rescue looks like, so the discipline is the
+09-20 prohibition read literally: **a redesign may not drop a control that is
+currently PASSING.** Check that first and write the number down. T3.06's veto
+was red — not passing — which is what made the promotion legitimate; had it
+been green, dropping it would have been a rescue wearing a redesign's clothes.
+And the count of must-fail arms **may not fall**: a new sabotage takes the
+retired one's seat at whichever conjunct now carries the load (here, the twin
+put in the claim's seat against the claim's hardest comparator,
+`cov(shuftask) - cov(random) < MARGIN`, failing correctly at -0.1261).
+
+**THE OTHER HALF, and this project has now paid for it twice in one file.**
+When you add a comparator, add it because a standard you already wrote down
+requires it — never because it is the one the spec can clear.
+`CURIOSITY_BAKEOFF.md` §O1 has demanded **two** comparators since it was
+written (*"≥ 2.0 vs NULL and ≥ 1.5 vs the RANDOM-REWARD arm"*), and T3.06 was
+holding itself to the weaker one for a month while the stronger comparator's
+number — `curious - random` **+0.0124, t = 0.39** — sat unread in its own
+committed row until a field-watch sweep computed it. **A rescore that reaches
+for the comparator the arm beats is run-until-pass with extra conjuncts.** The
+test of good faith is whether the new gate is expected to FAIL: this one is,
+and it was armed anyway. That is the whole point of arming it.
+
+**And declare the new conjunct's STATISTIC_BOUND before the run, even when the
+comparator is an ARM rather than a ceiling.** The unsaturated-null rule binds
+any commit that registers a claim gate. For a difference of bounded scores the
+anchor is the comparator arm's own value, and the distance to the bound must
+exceed the required margin — here 5.1x at the worst family, so registerable.
+It is also where the honest caveat gets written down: C-RANDREW's anchor is
+far from the arithmetic bound but *near the arm under test*, which means a red
+C-RANDREW is ambiguous between "the component earns nothing" and "this venue
+cannot discriminate at all". **Pre-register which reading scores the verdict
+and which one gets evidence** — the second gets a routed finding, never a
+softened bar — or the ambiguity will be resolved after the fact by whoever
+prefers the answer.
