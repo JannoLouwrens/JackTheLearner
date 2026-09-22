@@ -221,6 +221,60 @@ budget also moves which queue-depth class this spec stocks, and a spec whose
 `run()` still refuses stocks nothing. Do not spend Kaggle hours on it; the
 expiring free hours belong to specs that need a GPU.
 
+THE n-AWARE DWELL CAP (v4, 2026-09-22, Review `1^10` item 2(b)) — AND A
+CORRECTION TO THE ORDER THAT ASKED FOR IT.
+
+The order read: *"re-derive RANDOM_DWELL_MAX as an n-aware order-statistic
+bound ... `0.0227` against a 0.02 cap frozen on a 16-life pilot and read at 48
+lives is an instrument measuring its own n."* The re-derivation is done and is
+in `_derive_random_dwell_cap()` above. **It also shows the diagnosis in that
+sentence is not the whole cause, and the difference decides whether the repair
+works, so it is recorded rather than absorbed.**
+
+The cap at each n, from the derivation (alpha = 0.01 family-wise, worst
+admissible goal geometry), against the frozen 0.02:
+
+    n =  16 (the pilot's own n)        cap 0.01500
+    n =  48 (one seed's lives)         cap 0.01675
+    n = 144 (48 lives x 3 seeds)       cap 0.01850   <- the n it is READ at
+    frozen, hand-typed, n-free                 0.02
+
+So at the n it is actually read the honest cap is **0.0185, which is TIGHTER
+than the frozen 0.02** — the frozen bar was not too tight at 144 lives, it was
+too LOOSE. The n-freeze alone therefore cannot explain attempt 1's VOID, and a
+repair that only re-derived the number would have left the fault in place.
+
+**WHAT ACTUALLY FIRED IT WAS THE READING, NOT THE BAR.** `_check` compared
+`mean + 1.5*std` ACROSS SEEDS (0.0227) to the cap, i.e. it bounded an
+extreme-value statistic by the spread OF extreme values. `random_dwell_worst_
+life` is already a max over 48 lives; adding a seed-spread allowance on top
+double-counts the same tail and can VOID on spread alone — which is finding 1
+of the VOID RECORD below, `aggregate-hides-worst-seed`, biting the row it was
+found on. Both halves are repaired, and they move in opposite directions,
+which is stated here so neither can be read as the other's alibi:
+
+  - THE BAR IS TIGHTER: 0.02 -> 0.0185, derived, not chosen.
+  - THE READING IS EXACT: the per-seed comparison now happens in
+    `_experiment` (`random_dwell_breach`), so `_check` reads the ACTUAL worst
+    seed with no slack in either direction, as the order requires.
+
+Whether attempt 1's numbers would clear the repaired gate is **genuinely
+undetermined from the recorded row** and deliberately not resolved here: the
+worst seed's actual value is unknowable from a mean of 0.0165 with a
++1.5*std bound of 0.0227 (it lies somewhere at or below 0.0223). A run
+decides it. That is the correct state for a pre-registration to be left in.
+
+STATISTIC_BOUND (the unsaturated-null rule, adopted 2026-09-20; declared here
+because this commit touches the gates). The claim statistic is
+`delta_coverage`, a difference of two coverage fractions, so its bound is
+1.0. The null it is measured against is the `task` arm's coverage, measured at
+0.4570 / 0.4292 on the two pilot families — a distance of **~0.55 from the
+bound**, against a required margin `DELTA_MIN` of 0.05. The null is nowhere
+near saturation and the gate is registerable. The RIG statistic repaired above
+is the one with a bound-adjacent null, and it is handled the way the rule
+demands — by changing the STATISTIC's derivation, at zero mechanical bill, not
+by growing the envelope.
+
 VOID-FORECLOSED: one rig conjunct fired and it is the extreme-value instrument
     `random_dwell_worst_life`, read at 48 lives/arm against a cap frozen by a
     16-life pilot — worst-seed bound 0.0227 vs RANDOM_DWELL_MAX 0.02 — while
@@ -240,6 +294,21 @@ FORECLOSURE ARITHMETIC: no multiplier on N clears both fired gates at the
     0.1072 vs < 0.05, floor 0.0632 by the exact bound) involves only the
     task/curious/shuftask arms, so no repair expressible as a sample size on
     the random arm touches it at all. A re-run unchanged is deterministic.
+
+    STILL BINDING AFTER THE v4 RIG REPAIR — read this before dispatching.
+    The 2026-09-22 work above repaired the RIG half only: the dwell cap is now
+    n-aware and read on the actual worst seed, and control-red now maps to
+    VOID instead of firing a false `kills`. **Neither touches the control
+    conjunct, and this paragraph's second sentence is exactly why.**
+    `delta_shuf` is red on every seed by the exact n=3 bound and is scored on
+    the task/curious/shuftask arms, none of which the rig repair alters — so
+    **a run dispatched with only item (b) landed is deterministic and buys a
+    third VOID.** It would now VOID on the control rather than FAIL on it,
+    which is the honest verdict and a strictly better record, but it is still
+    not a measurement. The claim-side rescoring — item (a): contrast against
+    the NOISE arm plus the binding C-RANDREW clearance vs the random-action
+    arm — is a DEPENDENCY of the next dispatch, not a follow-up to it. Do not
+    spend 40 minutes of CPU to re-buy a VOID this file already predicts.
 
 BLAST RADIUS: 2 specs rendered unreachable while T3.06 is their parent
     (computed transitively over `depends_on`, 2026-08-31, registry at 211):
@@ -500,7 +569,30 @@ INFORMATIVE_DWELL_MIN = TASK_DWELL_MIN   # ONE threshold, not two: the life
                                 # a laxer rule than the one that certifies the
                                 # arm learned. See THE LIFE PROTOCOL.
 MIN_INFORMATIVE_LIVES = 6       # fewer -> VOID, not FAIL. Sign-test floor.
-RANDOM_DWELL_MAX = 0.02         # ~10x chance; a random walk must not camp.
+
+# --- RANDOM_DWELL_MAX, re-derived 2026-09-22 as an n-AWARE ORDER-STATISTIC
+# --- BOUND (Review 1^10 item 2(b)). The old value was `0.02  # ~10x chance`.
+# See THE n-AWARE DWELL CAP in the docstring for the full derivation and for
+# what it replaces. Three inputs, all fixed before any cap was computed:
+RANDOM_DWELL_ALPHA = 0.01       # family-wise false-VOID rate ACROSS THE WHOLE
+                                # RUN. Exogenous: a rig gate that VOIDs a
+                                # healthy run more than 1 time in 100 is an
+                                # instrument, not a guard. Chosen before the
+                                # derivation was run, and not revisited after.
+RANDOM_DWELL_N_LIVES = LIVES_PER_ARM * BY_ID["T3.06"].seeds   # 48 * 3 = 144
+                                # THE REPAIR, in one line: the cap is now a
+                                # function of the n it is READ at. The frozen
+                                # 0.02 was certified on a 16-life pilot and
+                                # read over 144 lives, so it was measuring its
+                                # own sample size. Derived from the registry's
+                                # own seed count, so changing either LIVES_PER_
+                                # ARM or `seeds` moves the cap with it and
+                                # `run()` refuses a stale constant.
+RANDOM_DWELL_MAX = 0.0185       # = _derive_random_dwell_cap() at n = 144,
+                                # alpha = 0.01, worst admissible goal cell.
+                                # VERIFIED AGAINST ITS OWN DERIVATION ON EVERY
+                                # RUN — see `run()`. Do not hand-edit: change
+                                # the derivation or the inputs, never this.
 RANDOM_COV_LO = 0.40            # T2.08 measured random 0.602-0.638 at this
 RANDOM_COV_HI = 0.95            # horizon; the band is wide on purpose — it is
                                 # a construction check, not a performance bar.
@@ -513,6 +605,129 @@ DELTA_TSTAT_MIN = 3.0
 _ACTIONS = [(0.0, 0.0)] + [
     (math.cos(k * math.pi / 4), math.sin(k * math.pi / 4)) for k in range(8)
 ]
+
+# --- the n-aware dwell cap's derivation, in source -------------------------
+# Rig quantities this derivation reads, and NOTHING else. Every one is a
+# property of PG.4's certified world or of this file's own constants; not one
+# of them is an outcome of any arm, so the cap cannot bend to the draw.
+_WORLD_DT = 0.005               # playground.py's integrator timestep, asserted
+                                # against the built model in `run()`.
+_DECISION_STEP = SPEED * SUBSTEPS * _WORLD_DT    # 0.30 m per decision
+_CAP_SUBGRID = 5                # position resolution inside a cell, per axis
+
+
+def _derive_random_dwell_cap(n_lives: int = RANDOM_DWELL_N_LIVES,
+                             alpha: float = RANDOM_DWELL_ALPHA) -> float:
+    """The chance ceiling on `max over n lives of the random arm's goal dwell`.
+
+    Deterministic — no seeds, no MuJoCo, no agent, ~9 s of numpy. Four steps,
+    each exact given the one stated surrogate (the rover's motion is the
+    clamped 9-action step map `x -> clip(x + DELTA*a, GRID_LO, GRID_HI)`,
+    which the measured world reproduces to 0.5%: 0.2985 m of the nominal
+    0.30 m, the velocity servo's one-decision lag):
+
+      1. STATIONARY OCCUPANCY of the null walker, by power iteration on a
+         110x110 sub-position chain. It is NOT uniform — the clamped walls
+         concentrate it — so `1/N_CELLS` understates the ceiling for exactly
+         the cells the goal is drawn from. Measured: 0.002021 at the centre,
+         0.002530 in a corner, against 1/484 = 0.002066.
+      2. EXACT RESIDENCE-RUN DISTRIBUTION for the target cell: push the entry
+         flux forward under the chain restricted to the cell. This replaces a
+         geometric-run assumption whose thinner tail costs 0.0030 of cap
+         (0.0155 vs 0.0185) — the assumption was doing real work, so it is
+         removed rather than declared harmless. Cross-check: E[R] from this
+         pmf reproduces Kac's occupancy/entry-rate identity to 4 decimals
+         (3.7555 in the corner, 1.8145 at the centre).
+      3. PER-LIFE DWELL DISTRIBUTION as a compound Poisson: entries ~
+         Poisson(rate*N_DECISIONS), each contributing an exact run length.
+      4. ORDER STATISTIC over `n_lives`: the per-life tail
+         `1 - (1-alpha)**(1/n)`, so the FAMILY-WISE false-VOID rate over every
+         life the gate reads is `alpha`. THIS is the n-awareness the frozen
+         0.02 lacked.
+
+    WHICH CELL. The cap is taken at the WORST geometry the goal may occupy —
+    a corner — because `_goal_cell` draws uniformly from the 423 cells at
+    Manhattan distance >= GOAL_MIN_CELLS from the start, and a gate that fires
+    because the goal landed in a corner is reading geometry, not attraction,
+    which is the very confusion this instrument exists to prevent. Swept over
+    all 423 admissible cells on 2026-09-22, the corner maximises the cap
+    (0.01850; edge-midpoint 0.01125, centre 0.00850), so the single-cell
+    derivation below is the sweep's argmax and is checked as such.
+
+    WHICH DIRECTION IT MOVED, recorded because the order that asked for it
+    said the direction may not be chosen after seeing it: at the n it is
+    actually read (144) the cap comes out 0.0185, i.e. BELOW the frozen 0.02 —
+    a STRENGTHENING of the bar. At the pilot's n=16 the same derivation gives
+    a lower number still. The loosening is elsewhere and is stated plainly in
+    `_check`: the gate now reads the ACTUAL worst seed instead of a
+    mean + 1.5*std bound over seeds, because bounding an extreme-value
+    statistic by the spread of extreme values double-counts the tail.
+    """
+    import numpy as np
+
+    m = GRID_N * _CAP_SUBGRID
+    step = CELL_M / _CAP_SUBGRID
+    xs = GRID_LO + (np.arange(m) + 0.5) * step
+
+    def axis_map(d):
+        v = np.clip(xs + d, GRID_LO, GRID_HI)
+        return np.clip(((v - GRID_LO) / step).astype(int), 0, m - 1)
+
+    maps = [(axis_map(_DECISION_STEP * cx), axis_map(_DECISION_STEP * cy))
+            for cx, cy in _ACTIONS]
+
+    def push(v):
+        out = np.zeros((m, m))
+        for jx, jy in maps:                      # rows = y, cols = x
+            np.add.at(out, (jy[:, None], jx[None, :]), v / len(_ACTIONS))
+        return out
+
+    pi = np.full((m, m), 1.0 / (m * m))
+    for _ in range(8000):
+        nxt = push(pi)
+        if np.abs(nxt - pi).sum() < 1e-14:
+            pi = nxt
+            break
+        pi = nxt
+    pi /= pi.sum()
+
+    # The worst admissible geometry: a corner. `_goal_cell` can draw it
+    # (Manhattan distance 22 >= GOAL_MIN_CELLS), and the sweep names it argmax.
+    cell_of = np.repeat(np.arange(GRID_N), _CAP_SUBGRID)
+    inside = np.zeros((m, m), bool)
+    inside[cell_of == 0, :] = True
+    inside &= (cell_of == 0)[None, :]
+
+    entry = np.where(inside, push(np.where(inside, 0.0, pi)), 0.0)
+    rate = float(entry.sum())                    # entries per decision
+    v, surv = entry / rate, [1.0]
+    for _ in range(400):
+        v = np.where(inside, push(v), 0.0)
+        surv.append(float(v.sum()))
+        if surv[-1] < 1e-16:
+            break
+    surv = np.array(surv)
+    run_pmf = np.zeros(len(surv))
+    run_pmf[1:] = surv[:-1] - surv[1:]           # P(run length = k)
+
+    kmax = 900
+    g = np.zeros(kmax + 1)
+    g[:min(len(run_pmf), kmax + 1)] = run_pmf[:kmax + 1]
+    lam = rate * N_DECISIONS                     # expected entries per life
+    total = np.zeros(kmax + 1)
+    total[0] = math.exp(-lam)
+    cur = np.zeros(kmax + 1)
+    cur[0] = 1.0
+    for k in range(1, 400):
+        cur = np.convolve(cur, g)[:kmax + 1]
+        w = math.exp(-lam) * lam ** k / math.factorial(k)
+        total += w * cur
+        if w < 1e-20 and k > lam + 15:
+            break
+
+    tail = 1.0 - (1.0 - alpha) ** (1.0 / n_lives)
+    surv_total = 1.0 - np.cumsum(total)
+    return float(np.flatnonzero(surv_total <= tail)[0]) / N_DECISIONS
 
 _ARMS = ("task", "curious", "shuftask", "random")
 
@@ -674,6 +889,18 @@ def _experiment(seed: int) -> dict:
         # everywhere it is read.
         "random_dwell_worst_life": round(
             max(arms["random"][s][1] for s in all_seeds), 4),
+        # THE GATE ITSELF, decided per seed and BEFORE `_aggregate` means
+        # anything (Review 1^10 item 2(b): "read against the ACTUAL worst
+        # seed, never an aggregate"). `_check` sees metrics already meaned, so
+        # a cap applied there can only ever be applied to a mean; comparing
+        # HERE and aggregating the verdict makes the mean of this field the
+        # FRACTION of seeds that breached, and `> 0` is then exactly "some
+        # actual seed breached" with no spread slack either way. This is the
+        # `aggregate-hides-worst-seed` repair (ROUTED 2026-08-30) applied to
+        # the row that finding was found on.
+        "random_dwell_breach": float(
+            max(arms["random"][s][1] for s in all_seeds) > RANDOM_DWELL_MAX),
+        "random_dwell_cap": RANDOM_DWELL_MAX,
         # Reported, not gated.
         "delta_paired_worst_life": round(min(paired, default=0.0), 4),
         "delta_paired_best_life": round(max(paired, default=0.0), 4),
@@ -745,9 +972,29 @@ def _check(m: dict, c: dict):
            # NOT bounded to the worst seed, because a conservative bound on a
            # per-seed tautology VOIDs on spread alone. See DEVIATION 2.
            and m["task_dwell_worst_life"] >= TASK_DWELL_MIN
-           and worst_hi("random_dwell_worst_life") <= RANDOM_DWELL_MAX
+           # The per-seed comparison already happened in `_experiment`; the
+           # mean of an indicator is the FRACTION of seeds that breached, so
+           # `== 0` is "no actual seed breached". Replaces the old
+           # `worst_hi("random_dwell_worst_life") <= RANDOM_DWELL_MAX`, which
+           # bounded an extreme-value statistic by the spread OF extreme
+           # values and so could VOID on seed spread alone — the reading that
+           # fired on attempt 1 at 0.0227, where the actual worst seed was
+           # unknowable from the recorded row (VOID RECORD, finding 1).
+           and m["random_dwell_breach"] == 0.0
            and RANDOM_COV_LO <= m["coverage_random"] <= RANDOM_COV_HI)
     if not rig:
+        return Status.VOID
+
+    # A RED CONTROL IS AN APPARATUS OUTCOME, NOT A REFUTATION — repaired
+    # 2026-09-22 under Review 1^10 item 2(b). As frozen, `_check` fell through
+    # to the FAIL branch when `delta_shuf >= DELTA_MIN`, which fires this
+    # spec's `kills: IntrinsicCuriosityModule` off a run whose own control
+    # says the contrast CANNOT ATTRIBUTE the effect to curiosity rather than
+    # to reward magnitude. That is a FALSE kill, and it fired on attempt 1
+    # (delta_shuf 0.1072, red on every seed). Mapping control-red to VOID
+    # removes it and cannot save a true one: a GREEN control with a red claim
+    # still reaches the return below, still FAILs, and still kills.
+    if c["delta_shuf"] >= DELTA_MIN:
         return Status.VOID
 
     std = m.get("delta_coverage_std", 0.0)
@@ -755,8 +1002,42 @@ def _check(m: dict, c: dict):
     delta_t = m["delta_coverage"] * (3 ** 0.5) / max(std, 1e-9)
     return bool(m["delta_coverage"] >= DELTA_MIN
                 and delta_floor > 0.0
-                and delta_t >= DELTA_TSTAT_MIN
-                and c["delta_shuf"] < DELTA_MIN)
+                and delta_t >= DELTA_TSTAT_MIN)
+
+
+def _assert_dwell_cap_current() -> None:
+    """Refuse to run on a cap that no longer matches its own derivation.
+
+    THE BUG THIS MAKES UNREPEATABLE. Attempt 1 VOIDed on a rig bar certified
+    at 16 lives and read over 144 — `LIVES_PER_ARM` moved 16 -> 48 and the cap
+    silently did not, because it was a hand-typed number whose relationship to
+    n lived only in a comment. Nothing in the repo could see that. Now the
+    derivation IS the authority and the constant is its cached value: move
+    `LIVES_PER_ARM`, the registry's `seeds`, `N_DECISIONS`, `SPEED`,
+    `SUBSTEPS`, the world's timestep or the grid, and this refuses to run
+    until the cap is re-derived. ~9 s against a ~40 min run.
+
+    It is deliberately an equality check and not a floor. A cap that is looser
+    than its derivation is a weakened bar; a cap that is tighter is a bar with
+    an unstated justification. Both are the thing this spec was VOIDed for.
+    """
+    from .pg_4_noisy_tv import _build
+
+    model, _data, _p, _r, _a = _build()
+    dt = float(model.opt.timestep)
+    if abs(dt - _WORLD_DT) > 1e-12:
+        raise RuntimeError(
+            f"T3.06's dwell cap is derived on a {_WORLD_DT} s timestep; the "
+            f"built world reports {dt} s. The world contract moved under the "
+            "cap — re-derive it (`_derive_random_dwell_cap()`) before running.")
+    derived = _derive_random_dwell_cap()
+    if abs(derived - RANDOM_DWELL_MAX) > 1e-9:
+        raise RuntimeError(
+            f"T3.06's RANDOM_DWELL_MAX is {RANDOM_DWELL_MAX} but its own "
+            f"derivation at n = {RANDOM_DWELL_N_LIVES} lives, alpha = "
+            f"{RANDOM_DWELL_ALPHA} now yields {derived}. A rig bar and the "
+            "argument for it have come apart — fix the constant FROM the "
+            "derivation, never the other way round.")
 
 
 def run(ledger: Ledger | None = None):
@@ -764,5 +1045,6 @@ def run(ledger: Ledger | None = None):
         raise RuntimeError(
             "T3.06 gates are provisional — pilot first, freeze the bars in "
             "this file, then run (SM.02's _GATES_FROZEN idiom).")
+    _assert_dwell_cap_current()
     return run_spec(BY_ID["T3.06"], _experiment, _check, control_fn=_control,
                     ledger=ledger)

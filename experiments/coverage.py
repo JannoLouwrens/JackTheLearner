@@ -1150,7 +1150,19 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     re-buy FAILS, the floor still returns to 96 and the two specs become
 #     blocked-by-a-FAIL rather than unreachable-by-a-stale-certificate, which
 #     is a different and more honest kind of debt.
-UNREACHABLE_BASELINE = 98
+# RETURNED TO 96, 2026-09-22, exactly as the paragraph above instructed and on
+# the branch it named for the PASS case: T2.06's `gpu<20min` re-buy ran on a
+# T4 (kernel jack-ladder-1789988933, 2026-09-21T11:37:42, 1732.59 s) and
+# recorded **PASS** against the strengthened CLAIM 2 — `margin_lang_min` 0.105
+# vs the exogenous `MARGIN_LANG` 0.07, per-seed 0.1050 / 0.1425 / 0.1250. The
+# certificate is current again and the two specs it stranded are reachable, so
+# the live count fell 98 -> 96 and the floor follows it down in this commit.
+# Late by one iteration, and the reason is on the record rather than inferred:
+# the re-buy's row was committed mechanically by `ladder_loop.sh`'s pace-skip
+# bookkeeping (01dcab6) while the builder was gated, so no iteration held both
+# halves at once. `run status` carried it as BELOW ITS DECLARED FLOOR in the
+# interval, which is the ratchet working.
+UNREACHABLE_BASELINE = 96
 
 
 def unreachable_ratchet(ledger=None,
