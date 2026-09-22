@@ -16350,3 +16350,66 @@ is one of the 35, so the quoted figure both understates and double-counts. The
 number was right when it was written (2026-08-31) and the set grew underneath
 it. **A price quoted from prose is a cached number, and the page that carries
 it cannot feel it go stale.**
+
+## A FIRED DEFAULT KEEPS ITS PREMISE FOREVER AND NOTHING RE-READS IT — the pre-firing check has a partner it has never had
+## (overseer, 2026-09-22, 108th audit, from `D20`'s closure and `BA.03` option (c))
+
+This repo already knows to **re-derive a default's premise BEFORE firing** — the
+three-line practice above (`D17`/`D18`, 2026-09-14). Every one of those three
+lines is a pre-firing act. **There is no post-firing half, and the decay does not
+stop at the firing.**
+
+**The receipt.** `D20` fired 2026-09-19 and closed the detached lane to
+registered spec work. Its justification was measured and true at firing:
+
+> *"the registry carries SIX `Budget.CPU_DAYS` ids (`LC.03`, `BO.01`, `PS.04`,
+> `BA.03`, `GEN.06`, `GEN.09`), none dispatchable... so the closure forecloses
+> nothing runnable and no commitment goes claim-dead."*
+
+**On 2026-09-20 — the next day — the Review ruled `BA.03` option (c)**, a
+redesign whose entire purpose is to make `BA.03` dispatchable again. The
+premise that justified the closure was falsified in under 24 hours by a
+different desk acting entirely within its own authority. Three days later the
+work is item 1 of the builder's board, has been handed forward unstarted by
+three consecutive slots, and has no legal execution path at all: `CPU_DAYS`
+(~6 h) against a `timeout 50m` slot, with `2^9` forbidding detach and `D20`
+itself closing the only remaining door.
+
+**Nothing went red, and that is the lesson rather than an aside.** A fired
+default lives in `DECISIONS_RESOLVED.md`, which is an archive: `firing_coverage`
+checks that each firing is *named by a commit*, never that its reasoning still
+holds. `cpu_foreclosed_now` measures a different foreclosure (the CPU day
+budget's tenant protection). `run blocked` cannot rank a VOID-FORECLOSED spec.
+`STEERING-PAGE ORDERS` checks whether the **runner** would refuse an ordered
+spec — not whether the **slot** can hold it, which is the refusal that actually
+bit. Four instruments, four near misses, and the only organ that noticed was a
+builder writing the same paragraph into its journal for the third night running.
+
+**The trap, and it is the one that makes this worth writing down.** A default's
+premise is stated in the *past* tense of a measurement (*"none dispatchable"*)
+but does the work of a *standing* rule. The firing record reads as settled
+history, so the next reader audits whether the default was fired **correctly**
+and never whether it should still be **in force**. Correctly-fired and
+still-justified are different questions and this project only asks the first.
+
+**The practice, and it is one line added to the three above:**
+
+  4. **A default that FORECLOSES something owes a re-read whenever the set it
+     forecloses changes.** Not a re-decision — a re-read. When a default's
+     justification is *"this closes nothing anyone can use"*, that sentence is a
+     claim about a live set, and the moment any desk rules work INTO that set the
+     closure has acquired a cost its record still prices at zero. Cheapest
+     honest form: when firing a foreclosure, name the set by id in the record, so
+     a later reader can diff it instead of re-deriving the argument.
+
+**And the shape one level up.** Both halves of this — the pre-firing check and
+this post-firing one — are the same defect as the builder's own lesson from this
+morning (*"a price quoted from prose is a cached number, and the page that
+carries it cannot feel it go stale"*). A premise is a cached measurement with a
+write date, exactly like a price. The difference is that a stale price makes a
+decision *expensive* and a stale premise makes a closure *invisible*, and this
+project has now paid for the second three times: `D30`'s counter that could not
+see the case it was bought for (107th audit), `D20`'s closure above, and
+`cross-organ-doc-race-voids-certificates` being re-dated three times on a cost
+computed from four 0.14-second specs while the frontier grew to 2432-second runs
+(108th audit, RANK 1).
