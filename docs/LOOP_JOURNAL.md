@@ -17126,3 +17126,101 @@ repair design (both the Review's).
   **Bookkeeping:** tree clean at both commits, `git add` by name (12 `claude` processes in
   `ps`, no foreign files found in the tree), both commits pushed. One declared detached
   process left running on purpose — the `T2.06` watcher, pid 2632381, in `declared_pids`.
+
+## 2026-09-22 ~04:1x-05:0x UTC — T3.06 item (b): the dwell cap derived from n, the false kill removed, and a correction to the order that asked for it
+
+**Ran on OPUS** — `week:Fable` is pinned at 100% so the chain walked past it
+(`REFUSING fable ... at or past the 95% model floor`, 04:07:14); the gate I
+acted on is **`week:all models` 77%**, under the 90% stop, and `pace_gate`'s
+line at 81% week-elapsed is ~78, so this slot was not paced.
+
+**FIRST, THE HARVEST THIS SLOT OWED** (01dcab6 committed T2.06's row
+mechanically while the builder was gated and said the next unskipped iteration
+owes the write-up). **`T2.06` re-buy PASSED** — Kaggle/T4, kernel
+`jack-ladder-1789988933`, 2026-09-21T11:37:42, 1732.59 s, 3 seeds. It cleared
+the strengthened CLAIM 2: `margin_lang_min` **0.105** against the exogenous
+`MARGIN_LANG` 0.07, per-seed 0.1050 / 0.1425 / 0.1250, with `acc_lang`
+0.6425/0.68/0.69 vs `acc_tfidf_name` 0.5375/0.5375/0.565. Every rig gate green
+(`z_ref_min` 49.4, `z_joint_min` 31.0, det_ok, finite, 7 tokenizable cats).
+That is the first legal GPU buy in three weeks and it landed. **`W38` remains
+overwhelmingly unbought (~0.5 h of 30, expiring Saturday) and I did NOT
+manufacture a dispatch for the rest** — the only large unblock still runs
+through `T1.08`'s pipeline repair, which is the Review's.
+
+**UNREACHABLE_BASELINE 98 -> 96** (OVERSIGHT FTB 4), owed "in the same commit
+as the T2.06 re-buy" — impossible as written, because the re-buy's row was
+committed by `ladder_loop.sh`, not by an iteration. `run status` carried it
+BELOW ITS DECLARED FLOOR in the gap, which is the ratchet doing its job. Now
+AT floor, 96 of 253.
+
+**THE UNIT: `1^10` item 2(b).** `RANDOM_DWELL_MAX` is no longer a typed number.
+`_derive_random_dwell_cap()` is in source and deterministic (~9 s, no seeds,
+no MuJoCo): stationary occupancy of the null walker by power iteration on a
+110x110 sub-position chain -> **exact** residence-run pmf for the target cell
+-> compound Poisson over entries -> the `(1-alpha)^(1/n)` per-life tail,
+alpha = 0.01 family-wise and fixed before any cap was computed. Taken at the
+worst geometry the goal may occupy (a corner), swept and confirmed argmax over
+all 423 admissible cells. E[R] cross-checks Kac's identity to 4 dp.
+
+    n =  16 (the pilot's n)   cap 0.01500
+    n =  48                   cap 0.01675
+    n = 144 (the n as READ)   cap 0.01850     frozen, hand-typed: 0.02
+
+**THE CORRECTION, and it is the finding worth carrying.** The order diagnosed
+attempt 1's VOID as a cap frozen at one n and read at another. The
+n-dependence is real — but at the n it is actually read the honest cap is
+**0.0185, TIGHTER than the frozen 0.02**, so the frozen bar was too LOOSE and
+the n-freeze cannot have fired the gate. **What fired it was the READING**:
+`_check` compared `mean + 1.5*std` across seeds (0.0227) on a statistic that
+is already a max over 48 lives — bounding the tail by the spread of the tail.
+Both halves are repaired and they move in opposite directions, which the
+docstring and commit both say so neither can alibi the other. The per-seed
+comparison now happens in `_experiment` (`random_dwell_breach`), so `_check`
+reads the ACTUAL worst seed with no slack — `aggregate-hides-worst-seed`
+(ROUTED 2026-08-30) fixed on the row it was found on.
+
+**THE GUARD (this is the part that makes it unrepeatable).** `run()` calls
+`_assert_dwell_cap_current()` and REFUSES to dispatch if the constant does not
+equal its own derivation at the current n, or if the world's timestep has
+moved off the 0.005 s the derivation assumes. Equality, not a floor.
+
+**FALSE KILL REMOVED.** Control-red mapped to FAIL, firing `kills:
+IntrinsicCuriosityModule` off a run whose own control says the contrast cannot
+attribute. It now maps to VOID. Replay-verified: control-red -> VOID, and a
+GREEN control with a red claim still FAILs and still kills, so no true kill is
+saved.
+
+**NOT DISPATCHED, deliberately, and the file now says why in FORECLOSURE
+ARITHMETIC.** (b) repairs the RIG half only. `delta_shuf` is red on every seed
+by the exact n=3 bound on the task/curious/shuftask arms, which the rig repair
+does not touch — **a run with only (b) landed is deterministic and buys a
+third VOID.** Item (a) is a DEPENDENCY of the next dispatch, not a follow-up.
+
+**FOR THE NEXT ITERATION, in order:**
+
+1. **`1^10` item 2(a) — then run T3.06.** Rescore the claim against the NOISE
+   arm (`cov(curious) - cov(shuftask) >= 0.05`; recorded-but-not-counting at
+   +0.1385, t = 3.94) AND add the binding C-RANDREW clearance vs the
+   random-action arm (field watch wk5: **+0.0124 +/- 0.0317, t = 0.39 — no
+   clearance**). **Expect T3.06 to FAIL the new gate; that is the point.** All
+   four arms already exist in `_life`, so this is scoring work, not rig work.
+   The run is ~40 min CPU and fits a slot. `run blast-radius T3.06`:
+   VOID -> PASS regains T5.06, unreachable 96 -> 95.
+2. **`1^10` item 1 — `BA.03` option (c).** NOT started, and not because it was
+   skipped: it is `CPU_DAYS` (~6 h / 3 seeds), its run cannot fit an hourly
+   slot, and `2^9` forbids detaching a unit that will outlast the slot. Handed
+   forward AS A UNIT per that prohibition's own instruction. The design is
+   fully specified in `1^10`: integrated absolute tilt over a FIXED 12 s
+   window, bar from the RANDOM walk's measured distribution (not the blind
+   twin), all six green rig conjuncts carried forward unchanged, no horizon
+   raise, no perturbation change.
+3. **Still owed and untouched by me:** the `T1.08` `CITE_MARKER` trigger
+   declaration in `registry.py` (`1^10` item 3 — one line, and I confirmed
+   `CITE_MARKER` does not yet appear there), and PROGRESS FTB 4, the
+   `ladder_prompt.md` byte count in `run status` with the 131072 cliff and
+   headroom in days (reporting-only, unfloored). The steering page is at
+   88072 bytes today, under its own 125000 rule.
+4. **Two LIVE NOTICEs are unread** (04:07:11): declared dispatch `run_spec
+   T0.36` pids 2636669 / 2637110 EXITED 2026-09-21T11:26:15 may hold artifacts
+   outside the harvest paths. I did not read them; they are small and they are
+   still owed.

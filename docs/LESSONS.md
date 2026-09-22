@@ -16136,3 +16136,79 @@ interleaved — asserting that a skip does not reset the failed streak and that
 the printed line NAMES the fault rather than leaving it to be inferred.
 Red-verified by sabotage: stubbing `failed_streak` to return 0 turns three
 assertions red, so the green needs a real computation.
+
+## A BAR WHOSE CORRECTNESS DEPENDS ON n MUST BE DERIVED FROM n IN SOURCE — and an extreme-value statistic may never be bounded by the spread OF extreme values
+## (builder, 2026-09-22, from T3.06's repaired rig gate: the fault was measured, and the diagnosis it was ordered under turned out to be half wrong)
+
+T3.06 VOIDed on a rig conjunct reading `random_dwell_worst_life` — a MAX over
+48 lives of a random walker's dwell in the goal cell — against
+`RANDOM_DWELL_MAX = 0.02  # ~10x chance`. The bar was certified on a 16-life
+pilot and read over 144 lives. The diagnosis, and the repair order, was: an
+extreme-value cap frozen at one n and read at another is *"an instrument
+measuring its own n"*. That is true, it is the right generalisation, and
+**re-deriving the number disproved it as the cause of this particular fire.**
+
+**Derive it and both halves become visible.** The honest cap — stationary
+occupancy of the null walker, exact residence-run distribution, compound
+Poisson over entries, `(1-alpha)^(1/n)` per-life tail at alpha = 0.01 — comes
+out **0.01500 at n=16, 0.01675 at n=48, 0.01850 at n=144**. The n-dependence
+is real and is exactly the predicted shape. But the frozen bar was **0.02**,
+i.e. *looser* than correct at every n, so freezing it at the wrong n did not
+fire the gate. **What fired it was the READING**: `_check` compared
+`mean + 1.5*std` across seeds (0.0227) to the cap. The statistic is already a
+maximum; adding a seed-spread allowance on top bounds the tail by the spread
+of the tail and **double-counts it**. The gate VOIDed on spread, on a rig that
+was inside its own chance ceiling.
+
+**Three rules, in the order they bind.**
+
+1. **A bar that is a function of n gets written as a function of n.** Not a
+   number with the relationship in a comment — nothing in a repo can read a
+   comment. `_derive_random_dwell_cap()` is in source, deterministic, ~9 s,
+   and `run()` refuses to dispatch when the frozen constant does not equal its
+   own derivation at the current n, or when the world's timestep has drifted
+   off the one the derivation assumes. Move `LIVES_PER_ARM`, the registry's
+   `seeds`, the horizon or the geometry, and the spec **stops**. It is an
+   EQUALITY check, not a floor: a looser cap is a weakened bar, a tighter one
+   is a bar with an unstated justification, and this spec was VOIDed for the
+   first while nobody could see the second.
+
+2. **Never bound an extreme value by the spread of extreme values.** If the
+   recorded metric is already a max, the per-seed comparison belongs
+   **upstream of aggregation** — compare inside `_experiment`, emit the
+   verdict as an indicator, and let the mean of that indicator be the
+   *fraction of seeds that breached*. Then `> 0` is exactly "some actual seed
+   breached", with no slack in either direction. `_check` sees metrics already
+   meaned across seeds, so any bar applied there is applied to a mean; the
+   only way to read the ACTUAL worst seed is to decide it before the mean
+   exists. (This is `aggregate-hides-worst-seed`, ROUTED 2026-08-30, fixed on
+   the very row it was first found on — which is how long a routed finding can
+   sit while the row that carries it is re-read as settled.)
+
+3. **When the repair disproves the order's diagnosis, write that down in the
+   commit and the docstring — do not quietly ship the better fix.** The order
+   named the frozen-n as the cause; the derivation says the frozen-n made the
+   bar too loose and the aggregate reading fired it. Both were repaired, they
+   move in OPPOSITE directions (bar tighter 0.02 -> 0.0185, reading stricter),
+   and stating that is what stops one from being read as the other's alibi. A
+   silently-correct repair leaves the next reader holding the wrong causal
+   story with a green tick on it — the same failure shape as `P6` asserting
+   the premise that hid the 23-hour outage, one level up.
+
+**And the piece that is easy to skip because it looks like modelling
+fastidiousness.** The first derivation used a geometric run-length
+approximation and gave 0.0155; the exact run-length distribution gives 0.0185.
+The approximation was worth **0.0030 of cap** — larger than the gap that
+VOIDed the spec. A null model's *tail assumption* is load-bearing whenever the
+quantity read from it is a maximum, so it gets computed, not assumed. The
+cross-check that it is right is free and was taken: `E[R]` from the exact pmf
+reproduces Kac's occupancy/entry-rate identity to four decimals.
+
+**What the bar may not be derived from.** Only the world contract and the
+spec's own constants — here the clamped 9-action step map, the grid, the
+horizon and the seed count. Not one arm's outcome, and in particular not the
+random arm's observed dwells, which would calibrate the null on the data the
+null is tested against and auto-pass by construction. Setting a SAMPLE SIZE
+from a measured nuisance rate is what a pilot is for; setting a THRESHOLD from
+the draw is the lottery disease, and a threshold derived from the *geometry*
+is neither.
