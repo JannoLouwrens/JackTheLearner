@@ -1334,6 +1334,7 @@ ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /d
     So nothing goes mechanically stale: the 4 PASS rows that hash
     UnifiedBrain.py (T2.03, T2.04, T2.06, T3.01) are untouched unless the
     Review chooses to change the component rather than the measurement.
+    DUE: 2026-09-25 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. T2.11 is PARKED behind this row and has been for 24 days, which makes it the only row in the overdue class holding a registered spec hostage. Zero staleness bill, a METRIC redesign, no run needed — it is cheap and it has been outranked by louder things five times.
 
 ---
 
@@ -1392,6 +1393,7 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
     since no existing gate's value changes; under arm (b) every spec that gates
     a renamed key fails loudly at its next run, which is the intended behaviour
     and must be paid deliberately rather than discovered.
+    DUE: 2026-09-29 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A recorder change (`protocol.py:_aggregate`) whose concrete caller was meant to be the UB.10 redesign; that redesign is now itself blocked, so the coupling argued on 09-08 no longer sets the date. Re-dated on its own merits onto an empty day rather than inheriting a blocked row's schedule.
 
     THE SWEEP THIS ROW ASKED FOR IS ATTACHED (builder, 2026-09-12, 90th audit
     B2 — no second row opened). It was RUN, not estimated: an AST pass over
@@ -1597,6 +1599,7 @@ ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-
         on, rather than a fourth short date that breaks.** The cost of the
         delay is bounded and stated: `T3.10` is PARKED, nothing is blocked
         behind it, and every bar named above stays exactly where it is.
+    DUE: 2026-09-30 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. THIRD slip, named as one. The first re-date was about venue coupling and was correct; the second and this one are capacity. The question (what certifies zero drift when phase A moves nothing) is unchanged and nothing is held behind it, which is the only reason it ranks below the rows above.
 
 **Routed here by the spec's own pre-registered fork (ii), not by an argument.**
 The one-diagnostic cap (SM.02/UB.10 precedent) is SPENT: no third recipe was
@@ -2378,6 +2381,8 @@ ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
     DELTA_T_NIGHT and W.2/W.3 are specced over these same constants — W.3 in
     particular is the registered instrument for the shelter question and
     should be implemented against whatever this row decides, not before it.
+    DUE: 2026-09-25 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. WORLD EDIT, and the dependency is now DECLARED rather than argued in prose. This row's own DUE text has said since 09-08 that it is decided IN LIGHT OF whatever window `w1-world-edit-window` opens; that row is DUE 09-23, so this one cannot honestly fall before 09-25. Two re-dates broke while the blocker sat in prose that no instrument reads.
+    BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23
 
 ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
     DUE: 2026-09-21 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
@@ -2394,6 +2399,8 @@ ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
     scaled, by a single declared k" — already has a counterexample. Does W0
     get one k, several declared ks, or none? Implied k per subsystem, all
     computed from shipped constants (metric `k_from_*`, spread factor 12.15):
+    DUE: 2026-09-26 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Same lineage, same rule, same newly-declared blocker as its sibling above, and placed one sitting AFTER it deliberately: both re-scale `needs.py` constants and deciding them in one sitting at ~1/cycle is how a date gets broken. 09-26 carries 3 live rows against the measured 6.
+    BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23
 
         day length      86400 / 1200          =  72.0
         thermal tau     17069 / 240           =  71.1   (W.1 finding 2)
@@ -3428,6 +3435,7 @@ ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca7
     ordinary coverage.py re-buy). Any repair that instead edits W0 inherits
     the 21-certificate playground.py bill already computed on
     `w0-too-shallow`.
+    DUE: 2026-09-29 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. The most downstream row on the board: successor specs need the W0/W1 design as INPUT, and that design is behind the 09-23 edit window. Four CLAIM-DEAD commitments sit here, which is why it is not pushed further despite being the least ready.
 
 ---
 
@@ -4820,6 +4828,8 @@ ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, class
         not dating the world edit itself because I do not know when the window
         opens and a number I cannot support is worth less than a question I
         can. 09-16 carries 3 live rows against a measured capacity of 6.
+    DUE: 2026-09-27 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. HELD since 09-12 and still OVERDUE, because HELD does not stop a clock — only a DUE does, and this row's was never moved with it. The remaining debt is a world EDIT riding the same window as its two structural siblings, so it is dated behind both of them. Declaring the blocker is the repair for the nine days this dependency spent in prose.
+    BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23
 
 **RULING, 2026-09-12 (Review, DAILY). Two acts: the contract is CLOSED with a
 fifth item added, and the row is moved to the status it should have carried
@@ -5057,6 +5067,7 @@ ROUTED: goal-187-names-seven-primitives-four-have-no-commitment | 2026-09-16 | R
     certificate stales.
     MECHANICAL bill: `T0.21` audits `coverage.py` and will owe a re-stamp
     when (i) lands; `T0.36` hashes `run.py` and does not.
+    DUE: 2026-09-29 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. `heavy`, `far`, `tiring` and `worth-it` are invisible to the commitment register, so no instrument in this repo can report them missing — a Completeness-Audit-shaped gap that a Sunday keeps outranking. Dated onto a DAILY with room instead, because waiting for a FULL is what has cost it four days.
 
 ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | ACTED 2026-09-10 (Review DAILY, executing commit `1a0e413` — the reading this row asked for, delivered, and it is a PARTIAL: see READING below. `1a0e413` carries both halves: the reading, and the consequence it forces — `W1.04` gains conjunct (c) in the design block on the `w0-too-shallow` row, which is what the builder registers from)
     DUE: 2026-09-06 | direct evidence owed INTO the W1 design the Review
@@ -5220,6 +5231,7 @@ ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 
         consumes either the owner's answer or `D20`'s armed default, instead
         of asking the same question a third time in front of it. What is owed
         on 09-19 is the consequence of whichever way `D20` lands.
+    DUE: 2026-09-30 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. The ROUTING CONSEQUENCE was executed on 09-08 and stands. What is still live is the UNIT question, which is armed on `D20` and is now the subject of `D32` (one sentence this repository reads two opposite ways). This desk may not pre-empt an open decision, so the date tracks the sitting after D32 is expected to land.
 
 **DISPOSITION (Review DAILY, 2026-09-08): (i)+(iv) — schedule around it. No
 ceiling is raised, split, or re-unitised by this desk.**
@@ -5573,6 +5585,7 @@ that decision, or it needs its own successor spec. Nothing here re-runs.
 
 ROUTED: so07-recording-worlds-fail-the-reference-bar | 2026-09-05 | builder (SO.07 attempt-1 harvest, 9bd3114) | OPEN
     DUE: 2026-09-18 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE — FIRST break for this row, and it is this desk's own decision debt, not the builder's. Re-dated ONCE at the desk's DEMONSTRATED disposal rate (~1/cycle), onto a date with measured room under the 6/day capacity, never onto a day already at it. The Review is NOT pace-gated (its 06:37 slot is exempt), so unlike the builder-execution rows in this batch, this desk has no excuse available to it and is not offering one. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for SO.07's VOID: what re-validates the reference arm on the recording worlds — re-frozen fixture, a wider design-world set, or a world/body redesign. Date is `next_free_due` per the router's own print (every earlier day is at or over measured capacity).
+    DUE: 2026-09-26 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. SO.07's VOID has no repair path until this fork is taken, and the row has now broken twice; the 09-15 re-date said plainly that this desk 'has no excuse available to it and is not offering one'. That sentence stands and is not repeated as if it were new information.
 
 **The verdict:** SO.07 attempt 1 (2026-09-05T02:41:48, 9201.5 s, worlds 3/4/5)
 recorded **VOID at the first pre-registered VOID lane**: the REF arm —
@@ -5770,6 +5783,7 @@ ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Rev
         against the wrong kind of sitting once this week in the shape of
         `t310`. 09-20 carries 2 live rows. What is owed is the SWEEP and a
         verdict on whether it becomes a standing instrument.
+    DUE: 2026-10-04 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. FULL-sized Part 2 work and it has now missed two Sundays. 09-27 carries 5 live rows and this sweep plus its paired row would make 7 — the exact `piled_on` defect this file counts — so it goes to the NEXT FULL with the pair intact. Naming the cost rather than hiding it: that is twelve more days in which specs may pass gates that measure something other than what they say.
 
 **Three instances, three specs, two days, all found by reading source rather
 than by any tool:**
@@ -5930,6 +5944,7 @@ ROUTED: lg03-teacher-does-not-cap-the-twin | 2026-09-12 | builder (gate 1bd42dc,
         founding instances, and quotes as the instance the exact sentence this
         row refutes. Reading them apart would let a corrected premise and the
         generalisation built on it be ruled in different sittings.
+    DUE: 2026-10-04 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Moved WITH the sweep above, not beside it: that sweep cites LG.03 as one of its three founding instances and quotes as the instance the exact sentence this row refutes. Reading them in different sittings would let a corrected premise and the generalisation built on it be ruled apart.
 
 **The ruling was implemented in full and NOTHING here asks to undo it.**
 `PLANNER_CALIB_MIN = 1.0` is committed (`1bd42dc`), checked before
@@ -6017,6 +6032,7 @@ ROUTED: ub10-part1-premise-false-marginals-are-what-saturate | 2026-09-13 | buil
     BLOCKED-BY: ub10-seed-fragility-and-saturated-battery | this is part 1 of
     that row's 09-08 disposition, returning a foreclosure instead of the
     recoding it named; parts 2 and 3 are executed (`e85d1e5`)
+    DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Already declares BLOCKED-BY `ub10-seed-fragility-and-saturated-battery`, which is DISPOSITIONED and DUE 09-23; a blocked row whose date falls BEFORE its blocker's is a promise nobody could have kept. Dated to the first sitting after the blocker with room under the 6/day capacity.
 
 **THE ORDER, AND THE PREMISE IT RESTS ON.** The 09-08 disposition ordered
 *"composite / cross-modal-XOR slots"*, with the stated rationale *"no single
@@ -6099,6 +6115,7 @@ ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FA
     time of routing: 09-13 carried 14 promises against a measured capacity of
     6, 09-14 carried 5), not chosen by hand — 68th audit B7, 3''. Nothing is
     held behind this row and nothing needs a run.
+    DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A mouth-design decision, nothing held behind it and no run needed — which is exactly why it has lost every contest for a sitting since 09-14. 09-28 carries 2 live rows; it is placed where it cannot be outranked by an emergency.
 
 **THE ONE-LINE QUESTION.** `LG.12` executed the disposition of
 `lg10-mouth-fidelity-vs-freedom` and returned a FAIL whose *mechanism* is
@@ -6293,6 +6310,7 @@ ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-1
     next FULL sitting plus one; 09-20 already carries 5 rows including the
     `gates-that-measure...` sweep, and stacking both sweeps on one Sunday is
     the mistake this file measures as `piled_on`.
+    DUE: 2026-10-11 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. The longest push in this batch and the reason is this row's OWN text: stacking two sweeps on one Sunday is the mistake this file measures as `piled_on`, and 10-04 now carries the gates sweep. The named gaps (voice, body schema, smell, taste, the cognitive half) are not going anywhere and are NOT being converted to refusals by silence — a three-week date is the honest one, and it is ugly on purpose.
 
     THE METHOD, and why the number below is not reassuring. The audit is
     against an EXTERNAL reference — the human sensory and cognitive inventory
@@ -7203,6 +7221,7 @@ ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | DISPOSITIONED 202
     BILL: zero certificates if refused. If adopted: `experiments/review_queue.py`
     is `T0.31`'s only `IMPL_DEPS`, so implementing it stales and re-buys `T0.31`
     (~1.6 s, and it would arrive as a strengthening, 18 -> 19 properties).
+    DUE: 2026-09-25 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. DEBT HAS CHANGED HANDS AND THE DATE NOW SAYS SO. The grammar ruling this row owed was delivered 09-19 (adopt the cheaper variant, strengthened with `WAITS-ON: none`); what remains is an IMPLEMENTATION plus a T0.31 re-buy, owed by the BUILDER, which is a different debt with a different owner. Dated onto the first sitting the builder can reach it now that the launcher is alive again.
 
 **THE MEASUREMENT, which is the whole case.** Fourteen live dated rows came due
 on 2026-09-13 against a measured capacity of six. **Six of them share one root**
@@ -7315,6 +7334,7 @@ ROUTED: so10-tie-break-hands-the-seat-to-an-ineligible-arm | 2026-09-13 | `498b8
     spec. Date from `review-queue`'s own `next_free_due` (09-13 carried 13
     promises against a measured capacity of 6; 09-17 was the first with room),
     not chosen by hand — 68th audit B7, `3''`.
+    DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A SEAT question, and it is paired: dated onto the same sitting as `lg13-champion-makes-lg10s-invariance-conjuncts-structural`, which asks the sibling question from the other side. Both broke on 09-17 for the same reason and both are re-dated together so they cannot be ruled apart.
 
 **THE EVENT.** `SO.10` raced the Person-model seat the day `CHAMPIONS.md`
 created it, on `LG.02`'s certified rig, 4.67 s, 3 seeds. Four trust rules read a
@@ -7384,6 +7404,7 @@ ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.1
     should be able to see the NEXT one. Date from `review-queue`'s own
     `next_free_due` (09-13 already carried 13 promises against a measured
     capacity of 6), not chosen by hand — 68th audit B7, `3''`.
+    DUE: 2026-09-26 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Same shape: the design answer (option (iv), narrow the dynamic check to where it decides) was delivered 09-19. What remains is the BUILDER's measurement of the binding set, reported BEFORE implementing, then the implementation. Dated one sitting behind `waits-on-declared-field` so the builder is not handed two instrument edits in one slot.
 
 **THE EVENT, and it was found by USING the rig rather than reading it.** An
 inert seam was added to `LG.10._measure` for the VACANT `Language routing`
@@ -7545,6 +7566,7 @@ ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 |
     question from the other side, so the two are read together. Date from
     `review-queue`'s own `next_free_due` (09-14/15/16 all sit AT the measured
     capacity of 6; 09-17 carried 4), not chosen by hand — 68th audit B7, `3''`.
+    DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. The other half of the seat-race pair above, on the same sitting by the same reasoning. What a seat race may CONCLUDE is one question with two faces, and ruling one face without the other is how a seat gets held by an argument nobody re-read.
 
 **THE EVENT.** `LG.13` raced the Language-routing seat the day after
 `CHAMPIONS.md` created it, on `LG.10`'s certified rig through the
@@ -7634,6 +7656,7 @@ ROUTED: oversight-for-the-builder-has-no-reader | 2026-09-13 | 94th audit B4 (`f
     answer: 09-13 carried 13 live promises and 09-14/09-15/09-16 each carried 6
     against a measured capacity of 6; 09-17 was the first with room), not chosen
     by hand — 68th audit B7, `3''`. **Nothing is held behind this row.**
+    DUE: 2026-09-30 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A ruling owed on whether to build a reading of OVERSIGHT.md's FOR THE BUILDER section — and the memory of this project says those asks roll off a current-state page in 24 h unread. Nothing is held behind it; it is dated onto a day with room rather than re-promised into the same pile that broke it.
 
 **THE QUESTION.** `docs/OVERSIGHT.md` is current-state by design: each audit
 rewrites it whole. `decisions.py` already treats that exact property as a
@@ -7769,6 +7792,7 @@ ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026
     is `review-queue`'s own `next_free_due`, not chosen by hand (68th audit B7,
     `3''`) — and note it is the SECOND row on that date, which is this desk's
     demonstrated rate and not its measured capacity.
+    DUE: 2026-09-25 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. RANKED FIRST of the desk-owed rows and that is the substantive act in this batch. Three open questions now converge on the A4 seat — this three-way fork, the new `lc03` row (five controls, none isolating the term the seat is named for), and field watch week 8's N1 — and all three want the same 14.40 core-h with no weights on disk. They are marginal on each other; deciding this one first is what stops the project paying up to three times for one run.
 
 **THE DISAGREEMENT, in two greps.** `docs/research/LEARNING_CORE.md` §5.4,
 verbatim:

@@ -61,25 +61,23 @@
     "value": 3
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-20",
-    "value": 11
+    "at": "2026-09-22",
+    "value": 4
   },
   "review_queue_piled_on": {
     "at": "2026-09-19",
     "value": 1
   },
   "review_queue_violation_forms": {
-    "at": "2026-09-20",
-    "value": {
-      "OVERDUE": 12
-    }
+    "at": "2026-09-22",
+    "value": {}
   },
   "review_queue_violations": {
-    "at": "2026-09-20",
-    "value": 12
+    "at": "2026-09-22",
+    "value": 0
   },
   "unreachable": {
-    "at": "2026-09-20",
-    "value": 98
+    "at": "2026-09-22",
+    "value": 96
   }
 }
