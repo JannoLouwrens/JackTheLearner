@@ -783,6 +783,15 @@ def print_steering_block() -> None:
     # not survive five hours and one organ boundary, so the check lives here,
     # where a sitting cannot finish without reading it.
     print(steering.render_dates())
+    # PROGRESS FOR THE BUILDER item 4, 2026-09-21. The 125000-byte ceiling
+    # shipped as a SENTENCE in `ladder_prompt.md` — which is the failure this
+    # project keeps re-learning, since the page that carries the rule is the
+    # page the rule is about and nothing could read it. The outage it guards
+    # against cost nineteen slots and twenty-three hours. Reporting-only and
+    # unfloored on the Review's explicit instruction: the judgement stays a
+    # human's, the visibility is an instrument's.
+    steering._check_size()
+    print(steering.render_size())
 
 
 def cmd_steering(ledger: Ledger) -> int:

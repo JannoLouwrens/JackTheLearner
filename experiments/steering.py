@@ -71,6 +71,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import re
+import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -81,6 +82,27 @@ _REPO = Path(__file__).resolve().parent.parent
 # by the overseer — which is precisely why an order on either can go stale
 # between being written and being read.
 STEERING_PAGES = ("docs/PROGRESS.md", "docs/OVERSIGHT.md")
+
+# --- the launcher's hard ceiling (PROGRESS FOR THE BUILDER item 4) ---------
+# `ladder_loop.sh` passes this page's ENTIRE TEXT as a single argv to
+# `claude -p "$PROMPT"`, so it is bounded by Linux's MAX_ARG_STRLEN. On
+# 2026-09-20 at 06:44 a steering rewrite pushed it past that constant and
+# every slot from 07:07 died `rc=126` at `execve`, before a token was read —
+# nineteen consecutive slots, twenty-three hours, and the builder's whole
+# capacity was zero while three liveness instruments read it as healthy.
+#
+# The Review's repair was a 125000-byte ceiling written into
+# `ladder_prompt.md` AS A SENTENCE. That is the failure shape this project
+# keeps paying for: a desk rules correctly, writes it down truthfully, commits
+# it, and nothing an instrument can see has changed. This is the sentence
+# given a reader.
+LAUNCH_PAGE = "scripts/ladder_prompt.md"
+LAUNCH_CLIFF = 131072           # Linux MAX_ARG_STRLEN. NOT ours to choose:
+                                # past it the builder does not read a degraded
+                                # prompt, it does not start at all, and the
+                                # failure looks like an ordinary rc=126 slot.
+LAUNCH_CEILING = 125000         # the Review's self-imposed margin below it.
+LAUNCH_GROWTH_DAYS = 21         # window over which the growth rate is fitted.
 
 # Start-of-line only, like every declaration in this repo: `OVERSIGHT.md`
 # discusses its own `FOR THE BUILDER` section in prose three times and none of
@@ -576,7 +598,153 @@ W37 (opened 2026-09-13); a spec id is not a decision id.
                              "absent check")
 
 
+def launch_size(repo: Optional[Path] = None, days: int = LAUNCH_GROWTH_DAYS,
+                _git=None) -> dict:
+    """How close is the steering page to the ceiling that stops the builder?
+
+    Returns `{bytes, cliff, ceiling, headroom_cliff, headroom_ceiling,
+    per_day, days_to_cliff, days_to_ceiling, samples}`. `per_day` is fitted
+    from git — the size at HEAD against the size `days` ago on the same path —
+    because a growth rate asserted from memory is the cached number this
+    module exists to replace. `None` where git cannot answer (shallow clone,
+    file younger than the window); a missing rate prints as unknown rather
+    than as zero, since zero growth is the one reading that would falsely
+    reassure.
+    """
+    repo = _REPO if repo is None else repo
+    path = repo / LAUNCH_PAGE
+    if not path.exists():
+        return {"bytes": None}
+    size = len(path.read_bytes())
+
+    per_day = samples = None
+    try:
+        run = _git or (lambda *a: subprocess.run(
+            ("git", "-C", str(repo)) + a, capture_output=True, text=True,
+            timeout=30).stdout)
+        since = run("log", f"--since={days} days ago", "--format=%H",
+                    "--", LAUNCH_PAGE).split()
+        # The OLDEST commit in the window is the baseline; its PARENT state is
+        # not needed — we want the size AT that commit, so the rate is over
+        # the span actually observed, not an assumed one.
+        if len(since) >= 2:
+            old = since[-1]
+            blob = run("show", f"{old}:{LAUNCH_PAGE}")
+            when = run("log", "-1", "--format=%ct", old).strip()
+            now = run("log", "-1", "--format=%ct", since[0]).strip()
+            span = (int(now) - int(when)) / 86400.0
+            if blob and span > 0.5:
+                per_day = (size - len(blob.encode())) / span
+                samples = len(since)
+    except Exception:                                  # pragma: no cover
+        per_day = samples = None                       # git silent -> unknown
+
+    def to_go(limit):
+        gap = limit - size
+        if per_day is None or per_day <= 0:
+            return None
+        return gap / per_day
+
+    return {"bytes": size, "cliff": LAUNCH_CLIFF, "ceiling": LAUNCH_CEILING,
+            "headroom_cliff": LAUNCH_CLIFF - size,
+            "headroom_ceiling": LAUNCH_CEILING - size,
+            "per_day": per_day, "samples": samples,
+            "days_to_cliff": to_go(LAUNCH_CLIFF),
+            "days_to_ceiling": to_go(LAUNCH_CEILING)}
+
+
+def render_size(st: Optional[dict] = None, indent: str = "  ") -> str:
+    """The `STEERING-PAGE SIZE` block printed by `run status`.
+
+    REPORTING-ONLY and UNFLOORED, by the Review's explicit instruction: a
+    steering page has legitimate reasons to grow, and a gate here would let an
+    instrument refuse the Review's own act. The judgement stays a human's; the
+    VISIBILITY is an instrument's. It prints every time, including when there
+    is plenty of room — an absent block is indistinguishable from an absent
+    check, which is this module's standing rule.
+    """
+    st = launch_size() if st is None else st
+    if st.get("bytes") is None:
+        return (f"{indent}STEERING-PAGE SIZE — {LAUNCH_PAGE} not found; the "
+                f"launcher's ceiling cannot be read.\n")
+    rate = ("unknown" if st["per_day"] is None
+            else f"{st['per_day']:+.0f} B/day")
+    lines = [
+        f"{indent}STEERING-PAGE SIZE — {LAUNCH_PAGE} is {st['bytes']} bytes; "
+        f"{st['headroom_cliff']} below the {st['cliff']} EXEC CLIFF "
+        f"(MAX_ARG_STRLEN), {st['headroom_ceiling']} below the "
+        f"{st['ceiling']} self-imposed ceiling.",
+        f"{indent}  Reporting-only, unfloored: a steering page has legitimate "
+        f"reasons to grow and a gate here could refuse the Review's own act. "
+        f"Past the cliff the builder does not read a degraded prompt — it "
+        f"does not start, and the slot looks like an ordinary rc=126.",
+        f"{indent}  growth {rate}"
+        + (f" over {st['samples']} commit(s)" if st["samples"] else ""),
+    ]
+    # Keyed off the RATE, not off the derived day counts: a caller that
+    # supplies stale day counts with no rate must still read as unknown.
+    if st["per_day"] is not None and st.get("days_to_cliff") is not None:
+        lines[-1] += (f"; at that rate the cliff is "
+                      f"{st['days_to_cliff']:.0f} day(s) away, the ceiling "
+                      f"{max(st['days_to_ceiling'], 0):.0f}.")
+    else:
+        lines[-1] += ("; headroom in DAYS is UNKNOWN — git could not date the "
+                      "growth, and unknown is not zero.")
+    if st["headroom_ceiling"] < 0:
+        lines.append(f"{indent}  !! OVER the self-imposed {st['ceiling']} "
+                     f"ceiling. Not a refusal; a fact for whoever edits next.")
+    if st["headroom_cliff"] < 0:
+        lines.append(f"{indent}  !! OVER THE EXEC CLIFF — the builder cannot "
+                     f"launch. This is not a warning, it is the outage.")
+    return "\n".join(lines) + "\n"
+
+
+def _check_size() -> None:
+    """Refuse to report from a size reader that flunks the known answer.
+
+    THE FIXTURE IS THE OUTAGE, replayed — same contract as `_check` above.
+    The known answers are the two measured states of 2026-09-20: 140331 bytes
+    (over the cliff; the builder could not exec) and 85548 (the post-excision
+    size the Review verified). A reader that does not call the first an outage
+    is the reader that let nineteen slots die.
+    """
+    over = {"bytes": 140331, "cliff": LAUNCH_CLIFF, "ceiling": LAUNCH_CEILING,
+            "headroom_cliff": LAUNCH_CLIFF - 140331,
+            "headroom_ceiling": LAUNCH_CEILING - 140331,
+            "per_day": 3976.0, "samples": 9,
+            "days_to_cliff": (LAUNCH_CLIFF - 140331) / 3976.0,
+            "days_to_ceiling": (LAUNCH_CEILING - 140331) / 3976.0}
+    txt = render_size(over, indent="")
+    if "OVER THE EXEC CLIFF" not in txt or "it is the outage" not in txt:
+        raise AssertionError(
+            "steering: the 2026-09-20 size (140331) must render as the "
+            "outage it was, not as a warning")
+    ok = dict(over, bytes=85548, headroom_cliff=LAUNCH_CLIFF - 85548,
+              headroom_ceiling=LAUNCH_CEILING - 85548,
+              days_to_cliff=(LAUNCH_CLIFF - 85548) / 3976.0,
+              days_to_ceiling=(LAUNCH_CEILING - 85548) / 3976.0)
+    txt = render_size(ok, indent="")
+    if "OVER" in txt:
+        raise AssertionError(
+            "steering: the post-excision size (85548) is inside both limits "
+            "and must not render as a breach")
+    if "11 day(s)" not in txt:
+        raise AssertionError(
+            "steering: headroom must print in DAYS at the measured rate — "
+            "(131072-85548)/3976 = 11, the figure the 107th audit derived by "
+            f"hand. Got: {txt!r}")
+    # Unknown must not read as zero, and must not read as safe.
+    txt = render_size(dict(ok, per_day=None, samples=None), indent="")
+    if "UNKNOWN" not in txt or "unknown is not zero" not in txt:
+        raise AssertionError("steering: an unfitted growth rate must say so")
+    # And the live read must actually reach the file.
+    if launch_size().get("bytes") is None:
+        raise AssertionError(f"steering: {LAUNCH_PAGE} is unreadable")
+
+
 if __name__ == "__main__":  # pragma: no cover
     _check()
+    _check_size()
     print(render(), end="")
     print(render_dates(), end="")
+    print(render_size(), end="")
