@@ -4482,6 +4482,18 @@ def cmd_render(ledger: Ledger) -> int:
             out.append(f"      - _then delete:_ {s_.kills}")
     Path("CHECKLIST.md").write_text("\n".join(out) + "\n")
     print(f"wrote CHECKLIST.md — {done}/{total} demonstrated")
+    # THE PRE-COMMIT BILL (2026-09-22). `render` is the last command the
+    # loop runs before `git add`/`git commit`, so it is the one moment at
+    # which knowing what this edit stales can still change what happens.
+    # The scar: `eb38ae4` staled `T0.36`'s standing PASS by adding a
+    # reading to this very file, and the same slot's journal truthfully
+    # reported that no PASS had staled — the author's belief about the
+    # author's own blast radius was the only instrument in the loop.
+    # Reporting-only and unfloored: editing an instrument is legitimate
+    # work here and a gate would refuse the Review's own act.
+    from . import stale_cost
+    stale_cost._check()
+    print(stale_cost.render(), end="")
     return 0
 
 
@@ -4626,6 +4638,25 @@ def cmd_lane(ledger) -> int:
     return 3
 
 
+def cmd_stale_cost(ledger: Ledger, paths=None) -> int:
+    """`run stale-cost [<path>...]` — what would THIS edit cost the scoreboard?
+
+    `run stale` asks which certificates are stale NOW; this asks the same
+    question one commit EARLIER, which is the only moment at which the answer
+    can change what you do. With no arguments it prices the working tree per
+    git. See `experiments/stale_cost.py` for the 2026-09-22 scar it was built
+    from and for what it deliberately does not attempt.
+
+    Read-only in the strong sense `blast-radius` is: no ledger write, no seeds,
+    no GPU — it parses declarations and hashes nothing.
+    """
+    from . import stale_cost
+    stale_cost._check()
+    paths = list(paths or []) or stale_cost.changed_paths()
+    print(stale_cost.render(stale_cost.price(paths, ledger)), end="")
+    return 0
+
+
 #: The read-only sub-commands, named ONCE. They used to be a tuple in the
 #: dispatch test and a dict in the dispatch itself; a word present in one and
 #: absent from the other is how a command silently becomes "not a command".
@@ -4645,7 +4676,12 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       # it is what prints the `Commands:` line on a typo. Called
                       # with no ids it prints usage and returns 2 — never a
                       # silent zero.
-                      "blast-radius": cmd_blast_radius}
+                      "blast-radius": cmd_blast_radius,
+                      # Same shape as `blast-radius`: it takes PATHS, so
+                      # `main` routes it one branch earlier too. Listed
+                      # here because this dict is where a command's name
+                      # exists and what prints on a typo.
+                      "stale-cost": cmd_stale_cost}
 
 
 def main() -> int:
@@ -4745,6 +4781,11 @@ def main() -> int:
     # care.
     if args.spec and args.spec[0] == "blast-radius":
         return cmd_blast_radius(ledger, args.spec[1:])
+    # `stale-cost` takes PATHS for the same reason, and is read-only in
+    # the same strong sense: it parses `IMPL_DEPS` declarations and
+    # writes nothing.
+    if args.spec and args.spec[0] == "stale-cost":
+        return cmd_stale_cost(ledger, args.spec[1:])
     # status/next/render are read-only and must not block on a running experiment.
     if args.spec and args.spec[0] in READ_ONLY_COMMANDS:
         return READ_ONLY_COMMANDS[args.spec[0]](ledger)
