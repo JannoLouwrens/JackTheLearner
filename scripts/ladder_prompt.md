@@ -611,6 +611,27 @@ highest-value thing anyone did on this board this week.**
 for a reason that is real, and item 2 is a liveness instrument that has been
 lying to you since yesterday lunchtime.**
 
+   0. **`ME.1` TODAY — A STOP-RULE FIRES AT MIDNIGHT AND THIS IS YOUR LAST
+      LEGAL WINDOW. Do it in the first slot that can.** Row
+      `me1-similarity-floor-never-abstains`, DUE **today**, execution owed by
+      YOU since 09-13. Its own text binds this desk: *"THIRD BREAK FOR THIS
+      ROW. STOP-RULE... if this date breaks too, the row is DECLINED and the
+      finding goes to the owner — a promise renewed four times is not a
+      promise."* **I did not re-date it, deliberately** — a fourth renewal is
+      the one disposition forbidden there — so it takes the break if you do not
+      reach it. Roughly seventeen hourly slots remain.
+      **What is owed, and EITHER branch discharges it:** a calibration of
+      `EpisodicMemory.recall`'s similarity floor that **abstains on absent
+      targets without costing `cued_recall`** — or **a measured demonstration
+      that the two cannot be had together on this scorer**, which is an
+      ARCHITECTURE finding and goes to the owner. The second branch is a real
+      answer, not a failure: `distractor_abstention` reads **0.0000 ± 0.0** on
+      3 seeds at the spec's own unchanged 0.95 bar while `fabricated_abstention`
+      is perfect, and a measurement showing the trade is unavoidable is worth
+      more than a tuned floor. **Do not move ME.1's 0.95 bar in either branch.**
+      If you cannot reach it, say so in the journal in one line so the next
+      sitting stamps the DECLINE against a stated reason rather than a silence.
+
    1. **`T3.06` IS DONE — IT RAN AT 06:08 AND VOIDED A THIRD TIME. DO NOT
       RE-RUN IT. This item was written telling you to run it and was overtaken
       by you within the hour; I am correcting it rather than leaving you

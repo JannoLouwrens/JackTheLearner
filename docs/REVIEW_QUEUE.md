@@ -837,6 +837,7 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
     is done: the row asked for a calibration or a demonstration, and it got
     the demonstration that no calibration of this scorer exists PLUS the
     measured mechanism that does.]
+    STOP-RULE ARMED FOR MIDNIGHT TONIGHT, 2026-09-22 (Review DAILY). NO NEW `DUE:` IS WRITTEN HERE AND THAT IS THE POINT — this row's own text binds this desk: *"THIRD BREAK FOR THIS ROW. STOP-RULE, binding on this desk... if this date breaks too, the row is DECLINED and the finding goes to the owner — a promise renewed four times is not a promise."* A fourth re-date is the one disposition forbidden here, so the row keeps its date and takes the break if it comes. The debt is the BUILDER's execution of the `EpisodicMemory` similarity-floor repair, and it has been ordered onto `scripts/ladder_prompt.md` as `1^11` ITEM 0 for today — its last legal window, roughly seventeen hourly slots. If it is unexecuted at midnight, the NEXT sitting stamps `DECLINED` and routes `distractor_abstention = 0.0000 +/- 0.0` to the owner as an ARCHITECTURE finding, which is the branch this row named for itself on 09-06: *a measured demonstration that the two cannot be had together on this scorer belongs on the owner's desk.*
 
     **DISPOSITIONED 2026-09-07 (Review, DAILY) — THE CONTRACT SPLIT IS
     ADOPTED AS THE MECHANISM, AND `ME.3`'s HARNESS REDESIGN IS ORDERED WITH
@@ -1689,6 +1690,7 @@ ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pi
         HANDS AND KIND: what is owed on 09-15 is the builder's F2 diagnostic
         probe, not this desk's F1 arm pick. Dated 09-15 (5 live rows, measured
         capacity 6) and not 09-13 (14 rows). Design in the RULING below.
+    DUE: 2026-09-30 | DISPOSED 2026-09-22 (Review DAILY) — the 108th audit's RANK 3 caught this one three minutes after I committed a pass that routed me away from it, and it is right: D28's (a) OVERDUE FIRST looks only at rows that have ALREADY broken, so a binding stop-rule falling due TODAY was outside its field of view. Acting on it inside the same sitting. The owed act is an arm PICK this desk REFUSED on 09-12 rather than slipped, and a refusal that is never revisited is a slip with better manners. Re-dated once, onto a day carrying 3 live rows, and ranked below the A4-seat convergence because nothing is held behind it. If 09-30 breaks this becomes a third break and the desk should DECLINE it to the owner rather than renew it a fourth time.
 
 **Status: DISPOSITIONED. Gates provisional, `run()` still refuses, nothing
 dispatched, `_GATES_FROZEN` still False.**
@@ -2699,6 +2701,8 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
     claim and its `fast/slow` coverage) and `run coverage` says so with the
     reason attached. Seeds 90/91/94 are spent; 92/93 are NOT to be spent on
     this envelope.
+    DUE: 2026-09-29 | DISPOSED 2026-09-22 (Review DAILY) — the 108th audit's RANK 3 caught this one three minutes after I committed a pass that routed me away from it, and it is right: D28's (a) OVERDUE FIRST looks only at rows that have ALREADY broken, so a binding stop-rule falling due TODAY was outside its field of view. Acting on it inside the same sitting. This row is the same shape as `w1-cold-is-not-lethal-at-night` and `w2-needs-have-no-single-k` and gets the same treatment they got this morning: its option (ii) is a WORLD EDIT, so the blocker moves out of prose and into a declared field, and the date follows the blocker instead of the calendar. 09-29 carries 3 live rows against the measured 6.
+    BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23 decides whether option (ii) is even available
 
 ## ROUTED: OPEN — `champions-language-grounding-arena`: the 51st audit ordered a
 ## seat to name `LG.00` as its ring, and naming it is the move this file's own
