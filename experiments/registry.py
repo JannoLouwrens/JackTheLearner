@@ -851,6 +851,30 @@ LADDER: list[Spec] = [
          budget=Budget.GPU_SHORT, seeds=3, depends_on=["T4.02"],
          kills="CrossModalFusion. Distinguishes real integration from concat-and-project.",
          notes="COVERS: one brain / unison (claim)"),
+    Spec("T4.06", 4, "Fusion balancing bakeoff: three arms vs the shipped brain",
+         hypothesis="A balancing mechanism at the fusion boundary restores per-modality "
+                    "gradient balance (<=10x, T4.02's unmoved exogenous gate) while "
+                    "STRICTLY improving the worst sense's latent recovery from the fused "
+                    "representation over the incumbent's own measured value, at no cost "
+                    "to held-out task loss.",
+         falsified_by="Every arm either fails the 10x worst-seed gate, or clears it "
+                      "while leaving min-modality latent R2 at or below the incumbent's "
+                      "— balance in the bookkeeping, not in the creature.",
+         null_baseline="The incumbent: T4.02's shipped rig re-run unchanged as arm "
+                       "zero, first in the same submission; its worst-modality latent "
+                       "R2 IS the bar, pre-registered as a rule before any number "
+                       "exists.",
+         control="The incumbent evaluated under the winner rule MUST NOT win (it "
+                 "cannot strictly exceed its own R2 bar, and its worst-seed ratio is "
+                 "a twice-measured 30x). If it wins, or its ratio arrives <=10, the "
+                 "rig changed under the bakeoff: control-green maps to VOID, not FAIL.",
+         metric="n_winning_arms", budget=Budget.GPU_SHORT, seeds=3,
+         depends_on=["T1.03"],
+         notes="Designed by the Review 2026-09-23 "
+               "(t402-touch-drowns-audio-at-the-fusion-boundary, DISPOSITIONED). "
+               "Arms: per-modality grad normalisation / frozen loss reweighting off "
+               "attempt 4's norms / modality dropout p=0.2. T4.02's VOID lanes all "
+               "bind every arm. COVERS: one brain / unison (rule)"),
     Spec("T4.04", 4, "Task interference",
          hypothesis="Training task B does not degrade task A beyond a set tolerance.",
          falsified_by="A drops >10% while learning B.",
