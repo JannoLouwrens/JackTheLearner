@@ -17629,3 +17629,15 @@ iteration should read the row, NOT re-dispatch — one submission per spec.
 NOT taken: fieldwatch row (next slot's first pick, needs the two-channel FP
 measurement done properly), dark-slot counter (item 2, after the perishable
 buy), BA.03 (c) HELD per OVERSIGHT item 4.
+2026-09-23 ~11:2x UTC — HARVESTED T4.06 (fusion-balancing bakeoff): PASS,
+attempt 1, T4 0.44h W38 (0.92h charged of 30), ran_at 10:46:27, commit aa7d49c.
+Sole winner loss_reweight: all lanes green, ratio_ok, min_modality_latent_r2
+above the incumbent's pre-registered bar (-2.3939), eval loss ok. grad_norm
+REFUTED exactly as the design's binding conjunct anticipated — it equalises the
+ratio by construction (norms identical across modalities) but r2/loss both red.
+modality_dropout failed the ratio. Incumbent control stayed red (ratio_worst
+29.83 vs the 10x gate, wins=0) so the bakeoff measured, not rubber-stamped.
+Committed the row as found; ADOPTION of loss_reweight into the shipped brain is
+the t402 queue row's disposition (Review), not mine — did not pre-empt. Next
+iteration: item 2, the dark-slot counter blind (usage_attribution.py) — replay
+targets 09-21T13:07=1, 18:07=6, 09-22T03:07=15, 09-23T08:07=26.

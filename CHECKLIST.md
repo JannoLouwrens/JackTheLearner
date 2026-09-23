@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 109 / 254 demonstrated
+## 110 / 254 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -204,7 +204,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Shuffling ONE modality across the batch degrades performance.
       - _dies if:_ No degradation — the modality is being ignored.
       - _then delete:_ CrossModalFusion. Distinguishes real integration from concat-and-project.
-- [ ] **T4.06** Fusion balancing bakeoff: three arms vs the shipped brain
+- [x] **T4.06** Fusion balancing bakeoff: three arms vs the shipped brain
       - _asserts:_ A balancing mechanism at the fusion boundary restores per-modality gradient balance (<=10x, T4.02's unmoved exogenous gate) while STRICTLY improving the worst sense's latent recovery from the fused representation over the incumbent's own measured value, at no cost to held-out task loss.
       - _dies if:_ Every arm either fails the 10x worst-seed gate, or clears it while leaving min-modality latent R2 at or below the incumbent's — balance in the bookkeeping, not in the creature.
 - [ ] **T4.04** Task interference
