@@ -8115,6 +8115,29 @@ ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (
     red; `HR.2`/`HR.3`/`HR.4` are unimplemented and stay killed as the spec's
     `kills` field says. No green certificate depends on the delivery contract.
 
+    UPDATE 2026-09-23 (builder): ARM (a) EXECUTED AND REFUTED, on its second
+        pre-registered branch, same day it was ordered. Whitener implemented
+        in `load_clip` (`a4bae41`: quiet-floor inverse filter, WHITEN_REG
+        1e-3, WHITEN_SMOOTH_BINS 5, constants declared before the run;
+        mechanical check: quiet-floor band spread 1.7-2.7 -> 0.47-0.59 log10
+        units). HR.1 attempt 3 ran 13:16:01, FAIL in 26.06 s: the planted
+        same-session leak STAYED ALIVE at 0.511/0.497/0.621 vs the 0.20
+        floor (down from 0.72-0.84 — the whitener removed real cue, not the
+        instrument), but the clean cross-chapter stratum still reads
+        0.2062/0.2562/0.2739 against the 0.10 bar on every seed (attempt 2:
+        0.2375/0.3812/0.4268). The floor's spectral SHAPE is gone and the
+        readers remain identifiable from the cues the whitener deliberately
+        left — floor LEVEL, SNR, clipping — which are per-reader constant
+        too. THE MEASURED PREMISE THE DISPOSITION ASKED FOR: the LibriSpeech
+        channel confound is not channel-equalisable in-corpus by spectral
+        whitening; equalising the remaining LEVEL cues would suppress
+        exactly what the planted-leak control needs to stay alive. No
+        re-tune, no second whitener, bars untouched. Per the disposition's
+        own terms, ARM (c) — VCTK, 110 speakers, genuinely multi-session —
+        NOW FIRES without a further sitting; execution (11.7 GB fetch under
+        D19 + corpus-layout adaptation + re-run) is slot-sized-plus and is
+        the builder's next HR unit.
+
 ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd96a7` (PS.06 attempt 1, FAIL, seeds 0/1/2, clean stamp at 9b40588) | OPEN
     PS.06 measured the `tiring` commitment (GOAL.md:187) and split it cleanly
     in two. THE WORLD HALF IS GREEN ON EVERY SEED: fatigue_gap 0.295 ± 0.003

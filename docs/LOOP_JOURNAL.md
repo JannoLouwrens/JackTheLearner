@@ -17629,7 +17629,9 @@ iteration should read the row, NOT re-dispatch — one submission per spec.
 NOT taken: fieldwatch row (next slot's first pick, needs the two-channel FP
 measurement done properly), dark-slot counter (item 2, after the perishable
 buy), BA.03 (c) HELD per OVERSIGHT item 4.
-2026-09-23 ~11:2x UTC — HARVESTED T4.06 (fusion-balancing bakeoff): PASS,
+## 2026-09-23 11:07 slot (builder, fable — header + stamps added by the 13:07 slot per OVERSIGHT FTB 4: entries below were appended under the 10:07 header with estimated stamps that postdated the slot's own end, 11:13:12)
+
+2026-09-23 11:09 UTC (stamped from commit 159e165) — HARVESTED T4.06 (fusion-balancing bakeoff): PASS,
 attempt 1, T4 0.44h W38 (0.92h charged of 30), ran_at 10:46:27, commit aa7d49c.
 Sole winner loss_reweight: all lanes green, ratio_ok, min_modality_latent_r2
 above the incumbent's pre-registered bar (-2.3939), eval loss ok. grad_norm
@@ -17641,7 +17643,7 @@ Committed the row as found; ADOPTION of loss_reweight into the shipped brain is
 the t402 queue row's disposition (Review), not mine — did not pre-empt. Next
 iteration: item 2, the dark-slot counter blind (usage_attribution.py) — replay
 targets 09-21T13:07=1, 18:07=6, 09-22T03:07=15, 09-23T08:07=26.
-2026-09-23 ~11:4x UTC — 1^12 ITEM 2 DONE: dark-slot counter unblinded
+2026-09-23 11:12 UTC (stamped from commit e0786a0) — 1^12 ITEM 2 DONE: dark-slot counter unblinded
 (usage_attribution.py). The walk now identifies a slot line the way
 slot_outcomes() does — one shared _SLOT_RE on `iteration start/end` — instead
 of `line[:4].isdigit()`; PACING: and `STOPPED at N% weekly usage` both count
@@ -17658,7 +17660,9 @@ from 13:07 inclusive and missed the 12:07 skip. Target 4 (26) matches exactly.
 I did not tune the reader to reproduce the ordered numbers. Zero staleness
 bill confirmed (no IMPL_DEPS names this file). Next: fieldwatch-quotation
 row (item 3, OVERDUE — measure both channels' FP rates before any closure).
-2026-09-23 ~12:5x UTC — 1^12 ITEM 3 DONE (fieldwatch-quotation-channel-is-0-for-5,
+## 2026-09-23 12:07 slot (builder, fable — header + stamp added by the 13:07 slot per OVERSIGHT FTB 4; slot ended 12:16:51)
+
+2026-09-23 12:16 UTC (stamped from commit d901cb4) — 1^12 ITEM 3 DONE (fieldwatch-quotation-channel-is-0-for-5,
 was OVERDUE): measured EVERY (finding x desk-chunk) overlap on the live corpus
 before picking — 20 pairs, 18 spurious capping at 4 shingles once ROUTED:
 headers are stripped, true quotes at 12/18/66. Closure (a)+(b): header
@@ -17680,3 +17684,31 @@ a floored counter. net_arrivals 5->6 is that arrival. Meters at slot start:
 week:all-models 0% (the gate, week reset today), week:Fable 0%, ran on Fable.
 Next: item 4 (BA.03 (c) implement — but read the STEERING-PAGE ORDERS note
 that the runner would refuse BA.03 today) or item 6 (HR.1 arm (a), ~16 s).
+
+## 2026-09-23 13:07 slot (builder, fable — `week:all models` 6% at slot start, the line I am acting on; `week:Fable` 8%)
+
+2026-09-23 13:2x UTC (final stamp from the closing commit) — THREE UNITS, all
+ordered. (1) D29 TRANSCRIBED (OVERSIGHT FTB 1, `096a8ab`): the §5.4 caveat
+verbatim onto CHAMPIONS.md's Learning-core cell, DECISIONS_RESOLVED.md entry
+opened; champions --check UNVERIFIED-VERDICTS verified 2/2 before AND after —
+no ratchet moved, HELD: BY VERDICT untouched, option (iv) stays the owner's.
+Also FTB 3: fieldwatch row now names d901cb4 + 12:16:51 so tomorrow's sweep
+stamps ACTED in one read. (2) T4.06 STATISTIC_BOUND arrival note (OVERSIGHT
+FTB 2, `f7900b5`): anchor -2.3939, winner margin 0.0187 = 6.9% of incumbent
+seed spread 0.2699 — ratio result demonstrated, latent-recovery conjunct NOT;
+doc-only amend re-stamped impl_sha, certificate stands. (3) 1^12 ITEM 6 —
+HR.1 ARM (a) EXECUTED AND REFUTED on its second pre-registered branch
+(`a4bae41` + ledger row): quiet-floor spectral whitening in load_clip
+(constants declared pre-run), attempt 3 FAIL 26.06 s — planted leak ALIVE at
+0.511/0.497/0.621 vs floor 0.20 (down from 0.72-0.84), clean stratum STILL
+0.2062/0.2562/0.2739 vs the 0.10 bar on all seeds. The spectrum cue is dead
+(band spread 1.7-2.7 -> ~0.5); identification persists on floor LEVEL/SNR/
+clipping, per-reader constant too. Not a tuning opportunity: no second
+whitener. ARM (c) VCTK NOW FIRES per the disposition, no sitting needed —
+NEXT ITERATION'S HR UNIT: fetch VCTK (~11.7 GB, D19 permits, /data has ~79 GB
+free vs 15 GB tenant floor), adapt _index_corpus to VCTK layout, re-run.
+Deliberately NOT started here: the fetch+adaptation+run does not fit the
+remainder of this slot and the detach prohibition stands. Also OVERSIGHT
+FTB 4: 11:07/12:07 journal headers added, drifted stamps corrected from
+commits. BA.03 (c) still refused per OVERSIGHT FTB 5 (runner agrees:
+VOID-FORECLOSED). Items 5 (09-25/09-26 dispositions) not started early.
