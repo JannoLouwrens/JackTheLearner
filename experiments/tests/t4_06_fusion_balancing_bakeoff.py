@@ -42,6 +42,22 @@ STATISTIC_BOUND (the unsaturated-null rule, adopted 2026-09-23):
     satisfiable within noise and the gate is not registerable — the run
     returns VOID with `anchor_saturated`, and the repair is a change of
     statistic or venue, never envelope.
+  - RECORDED AFTER ATTEMPT 1 (PASS, 2026-09-23; 109th audit RANK 1 — a
+    correction of the claim's REACH, the certificate itself stands): the
+    anchor ARRIVED at min_modality_latent_r2 = -2.3939, nowhere near the
+    1.0 bound the saturation lane guards — but the winner (loss_reweight)
+    cleared it by 0.0187 against the incumbent's own seed-to-seed spread of
+    0.2699 (margin = 6.9% of the spread), with one of three seeds regressing.
+    The saturation lane could not see this failure mode: the risk was never
+    the bound, it was a margin small against the anchor's own noise. So read
+    conjunct (2) honestly: the RATIO result (29.83x -> 2.45x vs the exogenous
+    10x gate) is the demonstrated thing; the latent-recovery conjunct
+    certified the winner INSIDE the anchor's noise and must not be quoted as
+    demonstrated. Adoption remains the Review's under the t402 row. In every
+    arm including the winner, four of five senses read latent R2 in
+    [-2.38, -0.17] from the fused representation, and only proprioception is
+    positive — whether that is the brain or a ridge probe fitting 513 params
+    to 768 rows is not answerable from this run and is now askable.
 
 THE ARMS (mechanisms declared before the run; nothing tuned against a gate):
   incumbent — the shipped brain, T4.02's rig byte-identical. Establishes the

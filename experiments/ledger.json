@@ -41015,7 +41015,25 @@
       }
     },
     "T4.06": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-23T13:13:24",
+          "by": "109th-audit-RANK-1",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "911d44740a659d56",
+              "proof": "reconstructed 911d44740a659d56 from git aa7d49c9e7dd; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "430bcf820548cbde"
+            }
+          ],
+          "commit": "096a8ab+dirty",
+          "dirty_files": [
+            "experiments/tests/t4_06_fusion_balancing_bakeoff.py"
+          ],
+          "reason": "STATISTIC_BOUND arrival note: anchor -2.3939, winner margin 0.0187 = 6.9% of incumbent seed spread 0.2699; conjunct (2) not to be quoted as demonstrated (OVERSIGHT FTB 2)"
+        }
+      ],
       "attempt": 1,
       "commit": "aa7d49c",
       "compute_s": 1579.41,
@@ -41032,7 +41050,7 @@
       "gpu_job_id": "jannolouwrens/jack-ladder-1790158802",
       "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
-      "impl_sha": "911d44740a659d56",
+      "impl_sha": "430bcf820548cbde",
       "message": "",
       "metrics": {
         "all_ctrl_dominance_ok": 1.0,
