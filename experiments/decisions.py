@@ -1292,8 +1292,19 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
             # Not a violation and NOT the owner's. Reported so the desks can see
             # what they owe themselves, and so a conduct entry that has gone
             # stale is still visible rather than silently self-approving.
+            # The staleness must be COMPUTED, not implied by listing: until
+            # 2026-09-23 this branch fired before decide_by was ever compared
+            # to today, so the line read identically before and after the date
+            # passed — a constant cannot be a check (110th audit FTB 3).
+            due_txt = d.get("decide_by")
+            try:
+                overdue = (today - _dt.date.fromisoformat(due_txt or "")).days
+            except ValueError:
+                overdue = 0
+            when = (f"due {due_txt}, STALE by {overdue} day(s)"
+                    if overdue > 0 else f"due {due_txt}")
             violations.append(("CONDUCT-DESK", did,
-                               f"desk-executable, not the owner's (due {d.get('decide_by')}) "
+                               f"desk-executable, not the owner's ({when}) "
                                "— execute it, report it, do not ask. Listed so a stale "
                                "conduct entry cannot silently self-approve."))
             continue
