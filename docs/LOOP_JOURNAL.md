@@ -17592,3 +17592,40 @@ process left running; nothing detached. NOT taken, deliberately:
 unit per iteration, and it needs the two-channel false-positive measurement
 done properly; it is the next slot's first pick. BA.03 (c) stays per
 OVERSIGHT item 4's prohibition (`run status` confirms HELD).
+
+## 2026-09-23 10:07 slot (builder, fable — `week:all models` 5% post-reset, the line I am acting on; `week:Fable` 2%)
+
+**THE UNIT: `1^12` item 1 — the `T4.06` fusion-balancing bakeoff is
+IMPLEMENTED, REGISTERED, SMOKED AND DISPATCHED** (`aa7d49c`, pushed; kernel
+submitted 10:20:02 on head `aa7d49c`, watcher pid 3293119 detached via
+`scripts/dispatch.sh` — the sanctioned GPU lane, self-declared with a lane
+waiver; log `/data/tmp/dispatch_t4_06.log`; pre-flight CLEAR, projection
+0.75 h recorded against `2026-W38`'s 29.52 h remaining, expiring Saturday).
+The 09:07 slot's hand-forward named `fieldwatch-quotation-channel-is-0-for-5`
+as first pick; the Review's `1^12` says "IN THIS ORDER" and item 1 is a
+perishable GPU buy — the order wins, the fieldwatch row stays next.
+
+**What was built, per the DISPOSITIONED design verbatim:** new spec `T4.06`
+beside `T4.02` (rig IMPORTED from `t4_02_no_modality_collapse`, both files in
+IMPL_DEPS so the certificate stales if either moves). Incumbent runs FIRST in
+the same submission; its `min_modality_latent_r2` (worst modality's ridge-probe
+R² from the CrossModalFusion CLS output, min over seeds) IS the bar — the RULE
+pre-registered, the number established in-run. Winner rule: worst-seed ratio
+<= 10 (T4.02's gate, unmoved) AND min R² STRICTLY > incumbent AND paired
+held-out eval loss <= incumbent's AND every T4.02 VOID lane green, plant
+control measured THROUGH each arm's mechanism. Arm (b)'s weights frozen off
+attempt 4's recorded norms by declared rule (geo-mean-1 inverse: audio 6.43,
+touch 0.27). UNSATURATED-NULL declared: ratio bound 1.0 / anchor 30.12;
+R² bound 1.0 with a runtime `anchor_saturated` VOID lane at 0.99.
+Control-green (incumbent wins, or its ratio arrives <= 10) maps to VOID.
+Smoke seed 90 CPU: all four arms fired_ok, plant dominance > 10x through every
+mechanism, grad_norm ratio ~1.0 vs incumbent-smoke 126.6, probe returns R²s.
+
+**Liveness at close:** watcher pid alive (`experiments.run T4.06`), submission
+row in `gpu_submissions.jsonl` (`1790158802789-3293160-kaggle`), log fresh.
+If the watcher dies: `JACK_REUSE_KERNEL=<slug from gpu_submissions.jsonl>
+scripts/dispatch.sh T4.06`. The harvest lands via the watcher/loop; the next
+iteration should read the row, NOT re-dispatch — one submission per spec.
+NOT taken: fieldwatch row (next slot's first pick, needs the two-channel FP
+measurement done properly), dark-slot counter (item 2, after the perishable
+buy), BA.03 (c) HELD per OVERSIGHT item 4.
