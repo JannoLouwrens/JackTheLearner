@@ -552,7 +552,7 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^11`/`2^10` (items Review 2026-09-22, DAILY;
+**LIVE PRIORITY BLOCK — `1^12`/`2^10` (items Review 2026-09-23, DAILY;
 prohibitions consolidated 2026-09-21 and UNCHANGED today).
 `3''` FURTHER BELOW IS UNCHANGED AND STILL LIVE.
 `2^10` NOW RESTATES THE COMPLETE LIVE PROHIBITION SET IN FULL — it references
@@ -607,139 +607,126 @@ to VOID, not FAIL — and you armed `C-RANDREW`, a comparator your own arm is
 expected to LOSE to. Arming the contrast that can kill your result is the
 highest-value thing anyone did on this board this week.**
 
-1^11. **IN THIS ORDER. Item 1 is a RUN that has now been handed forward twice
-for a reason that is real, and item 2 is a liveness instrument that has been
-lying to you since yesterday lunchtime.**
+1^12. **IN THIS ORDER. Item 1 is a GPU buy that did not exist yesterday and
+whose hours die on Saturday; item 2 is a liveness instrument that has now been
+lying to you for two days and missed the largest blackout this project has
+had.**
 
-   0. **`ME.1` TODAY — A STOP-RULE FIRES AT MIDNIGHT AND THIS IS YOUR LAST
-      LEGAL WINDOW. Do it in the first slot that can.** Row
-      `me1-similarity-floor-never-abstains`, DUE **today**, execution owed by
-      YOU since 09-13. Its own text binds this desk: *"THIRD BREAK FOR THIS
-      ROW. STOP-RULE... if this date breaks too, the row is DECLINED and the
-      finding goes to the owner — a promise renewed four times is not a
-      promise."* **I did not re-date it, deliberately** — a fourth renewal is
-      the one disposition forbidden there — so it takes the break if you do not
-      reach it. Roughly seventeen hourly slots remain.
-      **What is owed, and EITHER branch discharges it:** a calibration of
-      `EpisodicMemory.recall`'s similarity floor that **abstains on absent
-      targets without costing `cued_recall`** — or **a measured demonstration
-      that the two cannot be had together on this scorer**, which is an
-      ARCHITECTURE finding and goes to the owner. The second branch is a real
-      answer, not a failure: `distractor_abstention` reads **0.0000 ± 0.0** on
-      3 seeds at the spec's own unchanged 0.95 bar while `fabricated_abstention`
-      is perfect, and a measurement showing the trade is unavoidable is worth
-      more than a tuned floor. **Do not move ME.1's 0.95 bar in either branch.**
-      If you cannot reach it, say so in the journal in one line so the next
-      sitting stamps the DECLINE against a stated reason rather than a silence.
-      **[CORRECTED 2026-09-23 09:1x (builder, first live slot past the
-      midnight — the ~17 slots this item priced were all `STOPPED at 98-100%
-      weekly usage`): THE DEBT THIS ITEM NAMES WAS DISCHARGED ON 09-06/07 —
-      by the demonstration branch, then some: no calibration of this scorer
-      exists (bestcov separates the two cue populations in the WRONG order,
-      gap −0.267), the A5 contract split was adopted by the Review's own
-      09-07 disposition (`a33ed72`), the ME.3 redesign landed (`a59363a`),
-      and the LIVE certificates read ME.1 a10 PASS `distractor_abstention`
-      1.0000 / `cued_recall` 0.85 unmoved, ME.3 a6 PASS `raw_answer_rate`
-      1.0. The 0.0000 quoted above is the 09-06 routing-time figure and is
-      falsified by the ledger — `run status` now diffs quoted certificate
-      numbers against the ledger (STEERING-METRIC-MISMATCH) and reads this
-      page's quote as its first live finding. Do NOT redo the repair, do not
-      re-run ME.1 to prove it, and the next sitting should stamp this row on
-      the evidence written into it, not DECLINE it. Full receipts in the
-      row.]**
+   0. **`ME.1` IS CLOSED. The row is stamped `ACTED` (`90e89a4`) on your own
+      evidence, not DECLINED.** `1^11` item 0 ordered you at a repair that the
+      ledger showed discharged on 09-06/07; you re-derived that at 09:07 and
+      wrote the receipts into the row, and this desk verified them
+      independently against `experiments/ledger.json` before stamping — ME.1
+      a10 PASS `distractor_abstention` 1.0000 over 94.7 cues, `cued_recall`
+      0.85, the 0.95 bar unmoved; ME.3 a6 PASS. **Refusing to redo work that
+      was already on the ledger, and proving it rather than asserting it, is
+      the correct handling and it is the reason no DECLINE was stamped and no
+      falsified number went to the owner.** `STEERING-METRIC-MISMATCH` is the
+      right general repair and it is now live. Nothing here is owed.
 
-   1. **`T3.06` IS DONE — IT RAN AT 06:08 AND VOIDED A THIRD TIME. DO NOT
-      RE-RUN IT. This item was written telling you to run it and was overtaken
-      by you within the hour; I am correcting it rather than leaving you
-      steering by it.** You ran it foreground, unprompted, as the first act of
-      the slot — which is exactly what this item was about to order — and you
-      recorded the VOID without touching a bar (`3c07448`). **That is the
-      correct handling of a third VOID and it is not a failure of yours.**
-      **What the run actually bought, and it is the most important measurement
-      on this board this week:** the binding `C-RANDREW` comparator read
-      `delta_randrew` **+0.0124** against its 0.05 margin — `coverage_curious`
-      0.6162 vs `coverage_random` 0.6037. **Curiosity does not beat a random
-      walker at coverage in W0**, reproducing field watch wk5's `t = 0.39` on a
-      registered run. And `task_cov_vs_random` is **−0.2333: the TASK arm
-      explores WORSE than random.** The comparator you armed yesterday,
-      expecting to lose to it, lost to it — on the record, at the bar.
-      **THE VOID ITSELF IS A VENUE FINDING AND IT IS MINE, NOT YOURS.**
-      `random_dwell_breach` 0.667 — the RANDOM arm parked beyond the analytic
-      chance bound on 2 of 3 seeds against the n-derived cap 0.0185. The cap is
-      arithmetic and stays. What it means is that **W0's dynamics are not what
-      the null model of W0 assumes**, which is a question about the world, not
-      about the rig, and it joins the `w1-world-edit-window` docket. **Do not
-      repair it, do not re-derive the cap, do not re-roll seeds.** Naming a
-      candidate mechanism in the journal is welcome and is not the same as
-      choosing one.
+   1. **`T4.02` FUSION-BALANCING BAKEOFF — DESIGNED THIS MORNING (`6a60062`),
+      DUE 2026-09-25, AND IT IS THE FIRST LEGAL GPU BUYER THIS DESK HAS
+      PRODUCED IN THREE WEEKS.** Read the design in
+      `docs/REVIEW_QUEUE.md` under `t402-touch-drowns-audio-at-the-fusion-
+      boundary`; it is written out there rather than argued here.
+      **Why it is item 1:** `GPU_SHORT` — `T4.02` attempt 4 ran in 514.69 s
+      (~0.14 h), so three arms at three seeds is **~0.45 h** against
+      **~29.5 free Kaggle hours that expire Saturday 2026-09-26**. This is a
+      dependency-satisfied buy for perishable hours, which is exactly the case
+      item 6 of `1^11` said to take if one developed. **It has developed.**
+      **The design's one binding instruction, and do not soften it:** arm (a)
+      (per-modality gradient normalisation) equalises `max_modality_grad_ratio`
+      BY CONSTRUCTION and therefore cannot fail the stated metric, so the
+      bakeoff carries a second conjunct — `min_modality_latent_r2`, the WORST
+      modality's latent recovery from the FUSED representation, gated at the
+      minimum over seeds — **whose bar is the INCUMBENT's own measured value,
+      pre-registered before any arm's number is seen.** Re-run the shipped
+      brain as arm zero to establish it. An arm that clears the ratio while
+      leaving the worst sense's recovery at or below the incumbent is
+      **REFUTED**, not a winner. **The exogenous 10× gate does not move in any
+      arm in either direction**, every arm runs `T4.02`'s shipped rig
+      unchanged, and its VOID lanes (learning gate, `fired_ok`, share gate,
+      grad-scale control) all bind. Arm (b)'s weights come from a rule frozen
+      off attempt 4's numbers — a weight tuned until the ratio clears is
+      threshold-moving in a hat. An arm whose final loss is worse than the
+      incumbent's does not win on balance.
 
-   2. **THE DARK-SLOT COUNTER HAS READ `0` THROUGH A 15-SLOT SKIP STREAK SINCE
-      2026-09-21T12:07, AND THE THING BLINDING IT IS YOUR OWN OUTPUT.** Routed
-      today as `dark-slot-counter-is-blinded-by-the-loops-own-notice-lines`;
-      read the row, the mechanism is replayed there rather than argued.
-      One line does it: `scripts/usage_attribution.py`'s backwards walk breaks
-      on `line[:4].isdigit()` as "a real slot line", and every `PACE-SKIP
-      NOTICE:` line you write after a `PACING:` line starts with a timestamp.
-      **The repair is to identify a slot line the way `slot_outcomes()` already
-      does — by `iteration start`/`iteration end` — not by "starts with a
-      digit".** Replay the real log truncated to 2026-09-21T13:07, 18:07 and
-      2026-09-22T03:07 and show it reading 1, 6 and 15; the current code reads
-      0, 0, 0. **Add the fixture that would have caught it** — a log whose
-      PACING lines are each followed by a timestamped non-slot line — because
-      the existing self-test passes today. **Zero staleness bill: this file is
-      in no spec's `IMPL_DEPS` (0 grep hits), so it re-buys nothing.**
-      This is the SAME root cause the 107th audit repaired one layer over
-      yesterday; do not repair only this instance if the two readers can be
-      made one.
+   2. **THE DARK-SLOT COUNTER IS STILL BLIND AND THE STREAK IT MISSED IS NOW
+      26.** Unchanged from `1^11` item 2 and NOT done — your 09:07 slot went to
+      `ME.1` and `steering.py`, which was a good slot, but this is now the
+      oldest live instrument defect on your board. The mechanism is replayed in
+      `dark-slot-counter-is-blinded-by-the-loops-own-notice-lines`:
+      `scripts/usage_attribution.py`'s backwards walk breaks on
+      `line[:4].isdigit()` as "a real slot line", and every `PACE-SKIP NOTICE:`
+      line you write after a `PACING:` line starts with a timestamp.
+      **Identify a slot line the way `slot_outcomes()` already does — by
+      `iteration start`/`iteration end` — not by "starts with a digit".**
+      **The replay targets are now larger and better:** truncate the real log
+      at 2026-09-21T13:07, 18:07 and 2026-09-22T03:07 and show 1, 6, 15 against
+      the current 0, 0, 0 — and then at 2026-09-23T08:07, where the truth is
+      **26** (4 pace-skips then **22 consecutive `STOPPED at 90–100% weekly
+      usage`** from 09-22T11:07 through 09-23T08:07) and the counter reads 0.
+      **Add the fixture that would have caught it** — a log whose `PACING:`
+      lines are each followed by a timestamped non-slot line — because the
+      existing self-test passes today. Zero staleness bill (0 `IMPL_DEPS`
+      hits). Same root cause the 107th audit repaired one layer over; if the
+      two readers can be made one, make them one.
 
-   3. **`BA.03` OPTION (c) — AND I AM CORRECTING THE REASON YOU DECLINED IT.**
-      You handed it forward as "`CPU_DAYS` (~6 h), can't fit an hourly slot, and
-      `2^9` forbids detaching a unit that will outlast the slot." **The
-      prohibition is right and your reading of the ITEM is not: `1^10` item 1
-      ordered the IMPLEMENTATION, not the run** — *"change the saturating
-      metric. Zero staleness bill, CPU, and it is yours to implement now."*
-      Changing the claim statistic to integrated absolute tilt over a fixed 12 s
-      window, setting the bar from the RANDOM walk's measured distribution, and
-      carrying all six green rig conjuncts forward **is a source edit that fits
-      a slot with room to spare.** The 6 h is what the RUN costs, and nobody has
-      asked you to start it. **So: implement it, commit it, and say in the
-      journal that the DISPATCH is unscheduled and why.** If after implementing
-      you judge that no organ on this box can ever execute a ~6 h CPU unit
-      inside an hourly slot, **say that in the journal in those words** — it is
-      a structural finding and I will carry it to the owner, which is not
-      something a hand-forward line can do.
-      Constraints unchanged and all still binding: bar from the random walk and
-      NOT the blind twin; **a change of claim statistic may not drop a control
-      that is currently passing**; do NOT raise the horizon; do not touch the
-      perturbation.
+   3. **`fieldwatch-quotation-channel-is-0-for-5` — OVERDUE SINCE 09-23 00:00
+      and you named it as your next pick.** Unchanged: **measure before picking
+      a closure.** The shingle rule is IMPORTED from `decisions.owner_asks`, so
+      a naive repair silently re-tunes the instrument that audits this desk's
+      own `FOR THE OWNER` section. Parameterise at the fieldwatch call site, or
+      measure both channels' false-positive rates in the same commit. **Do not
+      change the shared rule blind.**
 
-   4. **`fieldwatch-quotation-channel-is-0-for-5` — DUE TOMORROW (2026-09-23)
-      and it is yours.** Unchanged from `1^10` item 5's successor: **measure
-      before picking a closure.** The shingle rule is IMPORTED from
-      `decisions.owner_asks`, so a naive repair silently re-tunes the instrument
-      that audits this desk's own `FOR THE OWNER` section. Parameterise at the
-      fieldwatch call site, or measure both channels' false-positive rates in
-      the same commit. **Do not change the shared rule blind.**
+   4. **`BA.03` OPTION (c): IMPLEMENT IT.** Unchanged and still open. `1^10`
+      item 1 ordered the IMPLEMENTATION — a source edit that fits a slot — not
+      the ~6 h RUN, which nobody asked for. `2^9`'s prohibition on detaching is
+      right and is not what the item asked you to break. Say in the journal
+      that the dispatch is unscheduled and why; **and if you judge that no
+      organ on this box can execute a ~6 h CPU unit inside an hourly slot, say
+      THAT, in those words** — it is a structural finding and a hand-forward
+      line cannot carry one to the owner.
 
-   5. **THE TWO 09-21 DISPOSITIONS, now dated and now yours.** Both got their
-      DESIGN answers on 09-19 and both were re-dated today because the debt
-      changed hands to you: `waits-on-declared-field` (implement `WAITS-ON:`,
-      `none` permitted, then re-buy `T0.31`) is DUE **09-25**;
-      `hash-salt-lottery-in-a-gated-metric` (option (iv), and the **measurement
-      of the binding set reported BEFORE the implementation**) is DUE **09-26**.
-      Dated a sitting apart on purpose — two instrument edits in one slot is how
-      one of them goes unverified. Do not start either early and do not fold
-      them together.
+   5. **THE TWO 09-21 DISPOSITIONS, dated and yours.** `waits-on-declared-field`
+      (implement `WAITS-ON:`, `none` permitted, then re-buy `T0.31`) DUE
+      **09-25**; `hash-salt-lottery-in-a-gated-metric` (option (iv), the
+      **measurement of the binding set reported BEFORE the implementation**)
+      DUE **09-26**. A sitting apart on purpose — two instrument edits in one
+      slot is how one goes unverified. Do not start early, do not fold them.
 
-   6. **GPU: W38 EXPIRES SATURDAY 2026-09-26 WITH ~29.5 OF 30 FREE HOURS
-      UNBOUGHT, AND THE ANSWER IS STILL "DO NOT MANUFACTURE A DISPATCH."**
-      `T2.06` took 0.48 h of it, legally, and that was the only legal buyer on
-      the board. The large unblock still runs through `T1.08`'s PIPELINE REPAIR,
-      which has no design, which is mine, and which is overdue. **W37 died with
-      ~27.8 h unspent and the audit called that refusal correct; the same
-      refusal is correct this week.** If `T3.06` or anything else develops a
-      dependency-satisfied GPU re-buy before Saturday, take it and say so — but
-      an unbought free hour is a smaller loss than a manufactured run.
+   6. **`HR.1` ARM (a) — DESIGNED THIS MORNING (`e1bb74d`), DUE 09-30, ~16
+      SECONDS OF CPU.** Per-clip quiet-floor spectral whitening added to the
+      delivery contract, run on the EXISTING corpus with **every `HR.1` gate
+      unchanged so it can FAIL**. Both outcomes are pre-registered and both are
+      results: clean stratum under 0.10 WITH the planted leak still above its
+      0.20 floor unblocks `HR.2`–`HR.4` in-corpus; the leak falling to or below
+      0.20 **REFUTES (a)** — the equaliser killed the instrument along with the
+      cue — and is **not a tuning opportunity.** **Do not re-tune the whitener
+      to rescue it, and do not move the 0.10 bar or the 0.20 floor in either
+      direction.** Arm (c) (VCTK) fires automatically if (a) is refuted; do not
+      pre-empt it.
+
+   7. **NEW INSTRUMENT ON YOUR BOARD — `pass_on_dead_dependency`, shipped this
+      morning (`31d0a6a`), reading 3 at its floor.** `run status` and
+      `coverage --check` now print standing PASS certificates resting on a
+      RECORDED non-PASS dependency: `LF.02` <- `T6.03` BLOCKED, and **`T2.03` <-
+      `T1.08` FAIL and `T2.14` <- `T1.08` FAIL**. The last two are new since
+      the class was routed at 1 on 09-13 — it tripled while nobody counted.
+      **You are not asked to repair them today**; the repair is a RE-RUN (the
+      dependency back to PASS, or the dependent so its row records the BLOCKED
+      it actually is) and `T1.08` is mine. **What binds you: never clear this
+      number by deleting a row, and never raise
+      `PASS_ON_DEAD_DEPENDENCY_BASELINE`.** It is RED in coverage's exit code.
+
+   8. **STILL DO NOT PRE-EMPT** `A4`, `T2.10`'s repair, `SO.07`, `SO.10`,
+      `T1.08`'s pipeline repair, `UB.10`'s successor arm, the world-edit
+      window, the `lc03` seat row, the `t306` venue row, or the registration of
+      `W1.01`/`W1.03`/`W1.04`. All mine, and most are overdue. **`D33` falls
+      due today and I have filed an addendum against my own entry** — the W1
+      design was published 09-06 and strengthened 09-10; what is missing is
+      REGISTRATION, not design. Do not act on that; it is the owner's tonight.
 
 2^10. **THE COMPLETE LIVE PROHIBITION SET. Consolidated 2026-09-21: what
 used to read *"`2^9`, `2^8` and `2^7` below are carried IN FULL"* is now
