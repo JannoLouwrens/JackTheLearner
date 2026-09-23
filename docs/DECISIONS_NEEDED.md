@@ -8056,3 +8056,90 @@ DECIDE: D34
              Reversal: `git revert` the one-line launcher change and re-grow the
              page; no threshold, no ledger row, no re-run.
   decide_by: 2026-09-24
+
+## D29 — RESOLVED BY ARMED DEFAULT, fired 2026-09-23 ~12:5x UTC by the OVERSEER (109th audit), one day late and the lateness has a named cause. Off your desk; option (iv) remains yours to rule at any time.
+
+**THE OWNER DID NOT RULE BY 2026-09-22, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(iii) RECORD THE DEBT, CHANGE NO MARKING**. Options (i) BUILD THE
+DIAGNOSTIC, (ii) CORRECT `LEARNING_CORE.md` §5.4 and (iv) DOWNGRADE THE SEAT'S
+MARKING were **NOT** taken.
+
+**What the firing does, in full, and nothing else.** The Learning-core cell of
+`docs/CHAMPIONS.md` gains a second stated caveat, in the same idiom as the
+single-arm caveat and the `VENUE-UNAFFORDABLE` label already on its face:
+
+> *`LEARNING_CORE.md` §5.4 declares a MANDATORY collapse diagnostic — effective
+> rank and per-dimension latent variance every 1,000 decisions, a rank below a
+> pre-registered floor being `Status.VOID` for A4. It was never implemented.
+> `LC.03`'s committed row records 50 `wm-latent` metrics across five arms and not
+> one is a rank or a per-dimension variance. This seat was awarded without the
+> guard its own governing document calls mandatory against the failure mode that
+> document calls silent, and the guard can never now be run on the evidence that
+> seated it: the trained A4 weights are not on disk, `LC.03` v2 is
+> VOID-FORECLOSED, and `LC.07` is VENUE-UNAFFORDABLE at ~526 wall-hours.*
+
+`LEARNING_CORE.md` §5.4 **stands verbatim**, unfulfilled and visible. The `HELD:`
+marking is **untouched**. No threshold moves in either direction. `GOAL.md` is
+not touched. No spec is failed, no run refused, no certificate staled, no GPU
+spent, no budget committed. `champions --check` keeps printing the Learning-core
+seat under UNVERIFIED VERDICTS and TRIGGER DEBT, which it already does for
+independent reasons, and **no ratchet counter moves in either direction** — which
+is the point: a default that fires by silence may not pay itself a greener
+number.
+
+**HOW TO REVERSE IT.** Delete the caveat sentence from `CHAMPIONS.md`'s
+Learning-core cell. No code, no threshold, no ledger row, no re-run. If you want
+option (iv) instead, say so and the marking change is yours to grant — it is
+deliberately not mine, and the entry says why: moving `HELD: BY VERDICT` to
+anything weaker would take `champions --check`'s UNVERIFIED-VERDICTS count from
+2 to 1, a ratchet shrinking by RE-LABELLING rather than by repair.
+
+**TRANSCRIPTION IS OWED BY THE BUILDER, per the `D13` rule and the `D22`
+precedent.** The overseer fires and records; the overseer may not edit
+`CHAMPIONS.md` or `DECISIONS_RESOLVED.md`. The builder's next live slot writes
+the caveat above onto the Learning-core cell verbatim and opens the
+`DECISIONS_RESOLVED.md` entry. Until that lands, THIS BLOCK IS THE FIRING RECORD
+and the decision is closed by it, not by the transcription.
+
+**THE LATENESS, NAMED RATHER THAN GLOSSED.** `decide_by` was 2026-09-22. The
+108th audit (2026-09-22 06:37) correctly declined to fire — the deadline had not
+passed at the moment it read the file, so its earliest legal firing was
+2026-09-23. The four overseer slots between then and now (09-22 12:37, 09-22
+18:37, 09-23 00:37, 09-23 06:37) were each `STOPPED at 92–100% weekly usage`, so
+this is the FIRST audit that could fire it. One day late, caused by the same
+26-slot blackout that stopped the builder — not by an audit declining to act.
+
+**AND THE THING THIS FIRING IS NOT CLEAN ABOUT, stated because burying it would
+repeat the defect the entry itself was written against.** `D29`'s own addendum
+of 2026-09-14 set `decide_by` at 2026-09-22 **deliberately**, in these words:
+*"`decide_by` 2026-09-22 is deliberately AFTER the desk's 2026-09-18 so the owner
+rules with that work in hand."* The desk's work is
+`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere`, routed
+2026-09-14, `DUE: 2026-09-18`. **It did not land.** That date broke, and the row
+was re-dated to **2026-09-25** by `D28`'s `(a) OVERDUE FIRST` sweep on 09-22 —
+onto a day already carrying its measured capacity of six, which
+`run review-queue` prints today under DATED ONTO A FULL DAY. So the deadline
+arrived on schedule while the condition it was scheduled around did not, and the
+default fires on a premise its own author declared insufficient.
+
+**This is the third recorded instance of one shape and it is now structural.**
+`D20`'s fired premise was falsified the next day by the Review's `BA.03` ruling
+(108th audit, RANK 4). `me1-similarity-floor-never-abstains` armed a midnight
+stop-rule on a premise sixteen days dead (builder, `1965146`, today). And now a
+`decide_by` was placed to follow a deliverable, the deliverable slipped seven
+days, and nothing re-checked the placement. **Nothing in this project re-reads a
+deadline's stated precondition at the moment the deadline fires.**
+
+I fired anyway, and the reason is in the charter: *"Do not silently extend the
+deadline; a deadline that moves when it is reached is the deadlock it replaced."*
+A premise defect is an argument for firing the WEAKEST option, which (iii) is by
+construction — it records a fact and changes nothing. It is not an argument for
+moving the date a fourth time.
+
+**Evidence:** `experiments/decisions.py --check` at 2026-09-23 12:4x prints `D29`
+under **`OVERDUE — DEFAULT IS DUE TO FIRE`**; `docs/DECISIONS_NEEDED.md` `D29`
+`decide_by: 2026-09-22` and the 2026-09-14 addendum quoted above;
+`experiments/run review-queue` at the same minute lists
+`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere -> 2026-09-25
+(6 already promised there)`; `/data/jack-logs/overseer.log` lines for 09-22
+12:37 / 18:37 and 09-23 00:37 / 06:37, all `STOPPED at 92–100% weekly usage`.

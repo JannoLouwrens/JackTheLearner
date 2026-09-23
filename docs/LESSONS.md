@@ -16453,3 +16453,53 @@ silent, measured at first shipping as 1 real finding (this incident's 0.0000
 on the builder's own prompt page) and 1 dismissible false positive. Rule (1)
 has no instrument yet; deadlines priced in slots that a gate can zero remain
 a hole an arming desk must check by hand.
+
+## AN ANTI-SATURATION RULE ARMED ONLY AGAINST THE CEILING LEAVES THE FLOOR OPEN — and a bakeoff conjunct with no declared margin certifies far more cheaply than it refutes
+## (overseer, 2026-09-23, 109th audit, from `T4.06`'s first-ever PASS: the guard that
+## disqualified the Goodhart arm certified the winner at 6.9% of its own seed noise)
+
+`T4.06` was designed carefully and against exactly the right risk. Arm (a)
+equalises `max_modality_grad_ratio` **by construction**, so the design added a
+second, harder conjunct — `min_modality_latent_r2`, the worst sense's latent
+recovery from the fused representation, barred at the incumbent's own in-run
+value, the rule pre-registered before any number existed. It worked: arm (a)
+cleared the ratio, failed the guard at **−0.1529**, and was refuted exactly as
+the design anticipated. That half is a model of how to write a bakeoff.
+
+**The winner cleared the same guard by +0.0187, against a seed-to-seed spread of
+the same statistic of 0.2699 — 6.9% — with one of three paired seeds
+REGRESSING (−0.0012).** The conjunct is a bare `s["min_r2"] > bar_r2`. No
+margin, no seed agreement, no test. A guard that discriminates a bad arm at 8×
+the margin it certifies a good one is not one instrument; it is a refuter that
+was read as a certifier.
+
+**Two general rules, and the second is the one that has no precedent here yet.**
+
+**1. A statistic needs an unsaturated-null rule at BOTH ends.** The spec declared
+`STATISTIC_BOUND` and a runtime VOID lane for the anchor being too HIGH — *"if
+the incumbent's `min_modality_latent_r2 >= 0.99` the exceed-the-anchor conjunct
+is not satisfiable within noise"*. Correct, and armed on the wrong side of the
+live number: the anchor arrived at **−2.3939**, where strictly exceeding is
+cheapest and noisiest, and no lane looks there. "An assertion made against a
+saturated quantity cannot fail" has a twin this file did not carry — **an
+assertion made against a DEGENERATE anchor cannot meaningfully pass.** Whenever
+the bar is established in-run rather than typed, both ends need a lane.
+
+**2. Check the regime the statistic is computed in, not only its value.** The
+R² came from a ridge probe fitting **513 free parameters to 768 rows at
+λ = 1e-3**, scored on 384. At p/n = 0.67 with regularisation that small, a
+held-out R² near −2 is what variance alone produces — so the winner rule compared
+two numbers whose magnitudes are probe artefacts using `>`. The tell was in the
+row and nobody read it: **four of five modalities read −0.17 to −2.38 in EVERY
+arm, and only the one modality that enters the brain almost directly reads
+positive.** When every arm's statistic sits in the same implausible regime, the
+first question is whether the instrument is measuring, and only the second is
+which arm won.
+
+**The transferable check, cheap enough to run on any bakeoff before it records:**
+put the winning margin next to the within-arm seed spread of the same statistic.
+If the margin is a small fraction of the spread, the conjunct did not decide —
+and `SO.10`'s precedent already says what to do about it: a result inside the
+noise margin leaves the seat **vacant** rather than handing it to the arm that
+happened to be ahead. That precedent was available and was not applied, because
+nothing computes the ratio and prints it.
