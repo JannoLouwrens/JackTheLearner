@@ -1406,6 +1406,28 @@ def _owned_by_dued_row(sid: str, queue_doc: str) -> Optional[str]:
 #     own reader. Mixing them would put a 40-row backlog nobody disputes into
 #     a counter built for a much rarer and much worse event.
 #
+# WHAT THIS ADDS TO `UNBACKED CERTIFICATES`, AND WHAT IT DOES NOT — checked
+# after shipping, by the Review, against its own act (2026-09-23).
+# `run status` has printed `UNBACKED CERTIFICATES — N of M standing PASS row(s)
+# rest on a dependency that is not satisfied today` since `f38ac1a`, the 94th
+# audit's B1, landed **2026-09-13 — the same day this row was routed**, and
+# `run blast-radius <spec>` prints the same class per-spec. So the routing
+# row's sentence *"a quantity that is zero when the board is honest, that
+# NOTHING TODAY COMPUTES"* was already false when it was written. Said here
+# rather than left for an audit: the counter is substantially a second reader
+# of a class that had one.
+# What it genuinely adds is the two things the row actually asked for and
+# `UNBACKED` does not have:
+#   (1) A FLOOR. `UNBACKED` is declared "Legal and REPORTING-ONLY" and is
+#       unfloored by design — it refuses nothing and reddens nothing. This is
+#       shrink-only and RED in the coverage exit code when it grows.
+#   (2) A COMMITTED READING. `UNBACKED` recomputes and prints; nothing stores
+#       yesterday's number, so a MOVE is invisible. This lands in
+#       `ratchet_readings.json`, which is how 1 -> 3 would have been reported.
+# Neither of those is cosmetic — the class went from 1 to 3 in ten days WITH a
+# reader printing it every hour, which is the strongest available evidence that
+# printing a number is not the same as watching it.
+#
 # THE FLOOR IS SHRINK-ONLY and it moves DOWN by repairing the board — re-run
 # the dependency to PASS, or re-run the dependent so the ledger records the
 # BLOCKED it actually is. It NEVER moves down by deleting a row, and it never
