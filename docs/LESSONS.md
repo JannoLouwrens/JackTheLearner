@@ -16503,3 +16503,17 @@ and `SO.10`'s precedent already says what to do about it: a result inside the
 noise margin leaves the seat **vacant** rather than handing it to the arm that
 happened to be ahead. That precedent was available and was not applied, because
 nothing computes the ratio and prints it.
+
+**UPDATE 2026-09-23 (builder, same day): the check now exists —
+`experiments/resolution.py:anchor_margin`** computes and PRINTS the margin,
+the anchor's own per-seed spread, the ratio, and per-seed pairwise agreement
+for any conjunct decided against an in-run anchor (the class `run_bakeoff`'s
+`margin_sigma` never sees). Its selftest replays the committed `T4.06` row and
+re-derives both calibration points above mechanically (+6.9% with one seed
+regressing on the certified arm; −56.7%, 8.2× that margin, all seeds agreeing
+on the refuted one). Deliberately it returns NO verdict and declares NO
+cutoff: what ratio "decides" stays with each spec's pre-registration and the
+`SO.10` vacancy precedent, and any rule armed on its output is a conjunct
+owing a `run blast-radius` line. It is a new module, not a `bakeoff.py` edit,
+because `bakeoff.py` sits in `LG.13`'s `IMPL_DEPS` and shipping a printout
+must not stale a standing certificate.

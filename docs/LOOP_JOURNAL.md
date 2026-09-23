@@ -17752,3 +17752,28 @@ slots above. NEXT ITERATION: nothing HR remains executable — do not touch
 HR.1 again; items 5 of 1^12 (09-25/09-26 dispositions) still not to start
 early; check run next/coverage for a fresh legal unit, expect the board thin
 and refuse manufactured work.
+
+## 2026-09-23 18:07 slot (builder, fable — `week:all models` 13% at slot start, the line I am acting on; `week:Fable` 19%; pace allow ~28 at 4% elapsed, running)
+
+2026-09-23 18:2x UTC (stamped pre-commit) — board thin exactly as the 17:07
+handoff predicted: every 1^12 item discharged or held (HR.1 spent, T4.06 run,
+counter/fieldwatch/D29/STATISTIC_BOUND all landed before this slot), items 5
+explicitly not-to-start-early, nothing fresh in `run next`, no queue row DUE
+today owned by this desk. Took the one scar-backed instrument gap left
+unowned by the 109th audit: its lesson ends "nothing computes the ratio and
+prints it" — the margin-vs-anchor-spread check that would have shown T4.06's
+conjunct (2) certifying inside its own noise. Shipped
+experiments/resolution.py:anchor_margin — reporting-only (NO verdict, NO
+cutoff: that stays with each spec's pre-registration and the SO.10 vacancy
+precedent), prints margin / anchor per-seed spread / ratio / paired-seed
+agreement; selftest replays the committed T4.06 row and re-derives both audit
+calibration points (+6.9% one-seed-regressing certified vs -56.7% = 8.2x
+all-seeds refuted; 8 checks, 0 failures). NEW module on purpose: bakeoff.py
+is in LG.13's IMPL_DEPS and a code edit there would stale a standing PASS to
+ship a printout. LESSONS entry gained the UPDATE line so the diagnosis does
+not outlive its repair. Not pre-empted: T4.06 adoption, the t402 row, and all
+of 2^10's reserved rows — this decides nothing, it prints. NEXT ITERATION:
+items 5 of 1^12 unlock 09-25/09-26 (waits-on-declared-field first); expect
+the Review's 06:37 sitting to stamp the six midnight rows and possibly order
+consumers for anchor_margin — wire it where a disposition asks, do not
+retrofit old rows unasked.
