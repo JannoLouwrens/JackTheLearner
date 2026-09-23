@@ -1514,6 +1514,21 @@ def ratchet_live(ledger: Ledger) -> dict:
             raise RuntimeError("; ".join(f["refused"]))
         return f["count"]
 
+    def _pass_on_dead_dependency():
+        # Review FULL 2026-09-13, built 2026-09-23 by the Review executing its
+        # own overdue row. T2.10 fell to FAIL on 08-31; T6.03 declares it in
+        # depends_on and went on rendering [PASS] here for THIRTEEN DAYS,
+        # because the board reports a STORED status and nothing re-evaluates a
+        # standing PASS when a spec beneath it dies. Counted in PAIRS so one
+        # certificate on two dead feet is two repairs, not one. Floored
+        # shrink-only at its measured value: growth means another certificate
+        # outlived its foundation, which is the entire event.
+        from .coverage import pass_on_dead_dependency_ratchet
+        f = pass_on_dead_dependency_ratchet()
+        if f["count"] is None:
+            raise RuntimeError("; ".join(f["refused"]))
+        return f["count"]
+
     def _review_queue_piled_on():
         # 73rd audit B1: the batch blindness. `piled_on` ordered rows by a
         # day-granularity `routed` date, so N rows routed in one commit onto
@@ -1618,6 +1633,7 @@ def ratchet_live(ledger: Ledger) -> dict:
     take("unreachable", _unreachable)
     take("fail_unowned", _fail_unowned)
     take("fail_unowned_owned_forms", _fail_unowned_owned_forms)
+    take("pass_on_dead_dependency", _pass_on_dead_dependency)
     take("goal_unrunnable", _goal_unrunnable)
     take("cpu_foreclosed_now", _cpu_foreclosed_now)
     take("gpu_hours_no_verdict", _gpu_hours_no_verdict)
@@ -1647,9 +1663,17 @@ def ratchet_floors() -> dict:
     """
     from .champions import BASELINE_UNWINNABLE
     from .coverage import (COMMITMENTS_UNCOVERED_BASELINE,
-                           FAIL_UNOWNED_BASELINE, UNREACHABLE_BASELINE)
+                           FAIL_UNOWNED_BASELINE,
+                           PASS_ON_DEAD_DEPENDENCY_BASELINE,
+                           UNREACHABLE_BASELINE)
     return {"unreachable": UNREACHABLE_BASELINE,
             "fail_unowned": FAIL_UNOWNED_BASELINE,
+            # Added 2026-09-23 (Review DAILY, executing `pass-certificates-
+            # are-not-re-evaluated-when-a-dependency-falls`, routed 09-13).
+            # The floor is the channel a `ratchets record` cannot quiet, which
+            # is the whole point for a class whose failure mode is a number
+            # that looks unchanged because nobody computes it.
+            "pass_on_dead_dependency": PASS_ON_DEAD_DEPENDENCY_BASELINE,
             "gpu_unattributed_jobs": GPU_UNATTRIBUTED_FLOOR,
             # Added 2026-09-13 (91st audit B2). The floor is the channel a
             # `ratchets record` cannot quiet, which matters most for a class
@@ -2024,7 +2048,8 @@ def _check_ratchet_reader() -> None:
     # counter that stops being computed banners VANISHED.) A new floor is
     # added HERE in the same commit that declares its constant — that cost is
     # the point.
-    FLOORED = {"unreachable", "fail_unowned", "gpu_unattributed_jobs",
+    FLOORED = {"unreachable", "fail_unowned", "pass_on_dead_dependency",
+               "gpu_unattributed_jobs",
                "champions_unwinnable", "commitments_uncovered"}
     got_floors = set(ratchet_floors())
     if got_floors != FLOORED:

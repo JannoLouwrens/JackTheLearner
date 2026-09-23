@@ -1374,6 +1374,240 @@ def _owned_by_dued_row(sid: str, queue_doc: str) -> Optional[str]:
     return None
 
 
+# ── PASS-ON-DEAD-DEPENDENCY: a certificate that could not be re-derived ──
+#
+# Routed 2026-09-13 by the Review's FULL Part 2 as
+# `pass-certificates-are-not-re-evaluated-when-a-dependency-falls`, built
+# 2026-09-23 by the Review executing its own overdue row.
+#
+# THE INCIDENT. `T2.10` fell to FAIL on 2026-08-31 under a paraphrase conjunct
+# this project ordered. `T6.03` declares `depends_on: [T2.10, T0.05]` and went
+# on rendering `[PASS]` in `run status` for THIRTEEN DAYS, until a Part 2
+# re-run demoted it to BLOCKED. Nothing was wrong with the runner — it refuses
+# a blocked spec correctly, and it did. The gap is that the BOARD reports a
+# STORED status, and no organ re-evaluates a standing PASS when a spec beneath
+# it dies. A certificate is a claim that could be re-derived today; `T6.03`'s
+# could not be, and the ladder said otherwise every hour for a fortnight.
+#
+# WHAT THIS COUNTS, and what it deliberately does not. A spec is
+# PASS-ON-DEAD-DEPENDENCY when its ledger row is `PASS` and at least one id in
+# its declared `depends_on` holds a RECORDED non-PASS verdict — `FAIL`, `VOID`,
+# `BLOCKED`, `ERROR`. It is a SUPERSET check of `protocol.unsatisfied` on one
+# axis and a SUBSET on another, on purpose:
+#   - a dependency with NO ledger row at all (never run) is NOT counted. The
+#     class is about a foundation that DIED under a standing claim, which is an
+#     event with a date and a verdict; a never-run dependency is the ordinary
+#     state of a ladder being climbed bottom-up and would drown the signal.
+#     Measured before the exclusion was written, not assumed: on 2026-09-23 the
+#     never-run arm was EMPTY, so the choice costs nothing today and is
+#     recorded here so a future non-zero is a decision and not an accident.
+#   - STALENESS is NOT counted either. `unsatisfied()` also blocks on a
+#     `PASS but stale` dependency; that is `run stale`'s class and it has its
+#     own reader. Mixing them would put a 40-row backlog nobody disputes into
+#     a counter built for a much rarer and much worse event.
+#
+# THE FLOOR IS SHRINK-ONLY and it moves DOWN by repairing the board — re-run
+# the dependency to PASS, or re-run the dependent so the ledger records the
+# BLOCKED it actually is. It NEVER moves down by deleting a row, and it never
+# moves UP: growth means another certificate outlived its foundation, which is
+# the whole event this exists to catch.
+#
+# GROWTH LOG (shrink-only; every raise needs an entry here and a reason in the
+# commit that makes it):
+#   2026-09-23  baseline 3, the measured value at first print (Review DAILY,
+#               executing `pass-certificates-are-not-re-evaluated-when-a-
+#               dependency-falls`). The three: `LF.02` <- `T6.03` BLOCKED (the
+#               second-order casualty the routing Review named on 09-13);
+#               `T2.03` <- `T1.08` FAIL and `T2.14` <- `T1.08` FAIL. **The
+#               routing sitting measured this class at ONE and said so in the
+#               row — "the finding is the MECHANISM and its silence, not a
+#               backlog". It was 1 on 09-13 and it is 3 on 09-23: it TRIPLED
+#               in the ten days the row sat unbuilt, and nothing anywhere
+#               reported the move.** Two of the three rest on `T1.08`, which
+#               is simultaneously the project's largest blocker (45 specs
+#               behind it). That is the argument for the counter, made by the
+#               interval between routing it and building it.
+PASS_ON_DEAD_DEPENDENCY_BASELINE = 3
+
+#: Verdicts that are RECORDED and are not PASS. `None` (no ledger row) is
+#: deliberately absent — see the note above.
+_DEAD_VERDICTS = ("FAIL", "VOID", "BLOCKED", "ERROR")
+
+
+def pass_on_dead_dependency(by_id: Optional[dict] = None,
+                            results: Optional[dict] = None) -> dict:
+    """Standing PASS certificates resting on a RECORDED non-PASS dependency.
+
+    Returns `{"pairs": [(dependent, dependency, verdict)], "specs": [ids],
+    "count": int}` — `count` counts PAIRS, not specs, because two dead
+    foundations under one certificate are two separate things to repair and a
+    spec-level count would let one of them be fixed while the number read
+    unchanged.
+    """
+    if by_id is None:
+        from .registry import BY_ID
+        by_id = BY_ID
+    if results is None:
+        results = {}
+        p = Path(__file__).resolve().parent / "ledger.json"
+        if p.is_file():
+            results = json.load(open(p)).get("results", {})
+    out: dict = {"pairs": [], "specs": [], "count": 0}
+    for sid in sorted(results):
+        if results[sid].get("status") != "PASS" or sid not in by_id:
+            continue
+        for dep in getattr(by_id[sid], "depends_on", None) or []:
+            st = results.get(dep, {}).get("status")
+            if st in _DEAD_VERDICTS:
+                out["pairs"].append((sid, dep, st))
+                if sid not in out["specs"]:
+                    out["specs"].append(sid)
+    out["count"] = len(out["pairs"])
+    return out
+
+
+def pass_on_dead_dependency_ratchet(
+        baseline: int = PASS_ON_DEAD_DEPENDENCY_BASELINE,
+        count_fn=None) -> dict:
+    """Live PASS-ON-DEAD-DEPENDENCY count against its shrink-only baseline.
+
+    Same contract as `fail_unowned_ratchet`: `{"count", "pairs", "specs",
+    "baseline", "grown", "stale_baseline", "refused"}`, the last three message
+    lists, empty when healthy. A detector that raises REFUSES the count rather
+    than classifying it — no count is evidence.
+    """
+    out: dict = {"count": None, "pairs": None, "specs": None,
+                 "baseline": baseline, "grown": [], "stale_baseline": [],
+                 "refused": []}
+    if count_fn is None:
+        count_fn = pass_on_dead_dependency
+    try:
+        f = count_fn()
+    except Exception as exc:
+        out["refused"].append(
+            f"pass-on-dead-dependency ratchet: the detector refused "
+            f"({type(exc).__name__}: {exc}) — no count is evidence")
+        return out
+    out.update(count=f["count"], pairs=f["pairs"], specs=f["specs"])
+    if f["count"] > baseline:
+        pairs = ", ".join(f"{a} <- {b} {v}" for a, b, v in f["pairs"])
+        out["grown"].append(
+            f"PASS-ON-DEAD-DEPENDENCY GREW: {f['count']} vs baseline "
+            f"{baseline} ({pairs}). A standing PASS now rests on a foundation "
+            f"the ledger says is dead, so the board is rendering a claim that "
+            f"could not be re-derived today. The repair is to RE-RUN — the "
+            f"dependency back to PASS, or the dependent so its row records "
+            f"the BLOCKED it actually is — never to delete a row and never to "
+            f"raise PASS_ON_DEAD_DEPENDENCY_BASELINE.")
+    elif f["count"] < baseline:
+        out["stale_baseline"].append(
+            f"PASS-ON-DEAD-DEPENDENCY fell to {f['count']}; "
+            f"PASS_ON_DEAD_DEPENDENCY_BASELINE still reads {baseline} and "
+            f"must be lowered in the same commit — the ratchet only ratchets "
+            f"if the floor follows the number down.")
+    return out
+
+
+def _pass_on_dead_dependency_fixture() -> List[str]:
+    """Known-answer battery for the detector and its ratchet.
+
+    Every shape is one the live board has held or could hold tomorrow. Built
+    with the detector, because the row this discharges exists precisely
+    because a class went ten days without a reader.
+    """
+    bad: List[str] = []
+
+    class _S:
+        def __init__(self, deps):
+            self.depends_on = list(deps)
+
+    by_id = {"A": _S(["B"]), "B": _S([]), "C": _S(["B", "D"]),
+             "D": _S([]), "E": _S(["Z"]), "F": _S([])}
+
+    def _r(**kw):
+        return {k: {"status": v} for k, v in kw.items()}
+
+    # 1. the T6.03 shape: a PASS on a FAIL dependency fires.
+    f = pass_on_dead_dependency(by_id, _r(A="PASS", B="FAIL"))
+    if f["count"] != 1 or f["pairs"] != [("A", "B", "FAIL")]:
+        bad.append(f"pass-on-dead fixture 1: PASS-on-FAIL read {f['pairs']}")
+
+    # 2. the LF.02 shape: BLOCKED is a dead verdict too — the second-order
+    #    casualty is exactly what the 09-13 routing measured.
+    f = pass_on_dead_dependency(by_id, _r(A="PASS", B="BLOCKED"))
+    if f["count"] != 1:
+        bad.append(f"pass-on-dead fixture 2: BLOCKED not counted, "
+                   f"read {f['pairs']}")
+
+    # 3. VOID counts. VOID blocks exactly like NOT_RUN for satisfaction (D2),
+    #    and a certificate standing on one is the same lie.
+    f = pass_on_dead_dependency(by_id, _r(A="PASS", B="VOID"))
+    if f["count"] != 1:
+        bad.append(f"pass-on-dead fixture 3: VOID not counted, "
+                   f"read {f['pairs']}")
+
+    # 4. a healthy board is silent.
+    f = pass_on_dead_dependency(by_id, _r(A="PASS", B="PASS"))
+    if f["count"] != 0:
+        bad.append(f"pass-on-dead fixture 4: clean board read {f['pairs']}")
+
+    # 5. the dependent is not PASS -> not this class. A FAIL on a FAIL is
+    #    `fail_unowned`'s business; this counter is about CERTIFICATES.
+    f = pass_on_dead_dependency(by_id, _r(A="FAIL", B="FAIL"))
+    if f["count"] != 0:
+        bad.append(f"pass-on-dead fixture 5: non-PASS dependent counted, "
+                   f"read {f['pairs']}")
+
+    # 6. PAIRS, not specs: one certificate on two dead feet counts twice, so
+    #    repairing one of them moves the number.
+    f = pass_on_dead_dependency(by_id, _r(C="PASS", B="FAIL", D="VOID"))
+    if f["count"] != 2 or f["specs"] != ["C"]:
+        bad.append(f"pass-on-dead fixture 6: pair counting read "
+                   f"count={f['count']} specs={f['specs']}")
+
+    # 7. a NEVER-RUN dependency does NOT fire. This is the documented
+    #    exclusion and it is pinned, so relaxing it is a visible edit.
+    f = pass_on_dead_dependency(by_id, _r(E="PASS"))
+    if f["count"] != 0:
+        bad.append(f"pass-on-dead fixture 7: never-run dependency counted, "
+                   f"read {f['pairs']} — the exclusion is documented and "
+                   f"must be deliberate")
+
+    # 8. a spec absent from the registry cannot be judged and is skipped
+    #    rather than guessed at.
+    f = pass_on_dead_dependency(by_id, _r(GHOST="PASS", B="FAIL"))
+    if f["count"] != 0:
+        bad.append(f"pass-on-dead fixture 8: unregistered id judged, "
+                   f"read {f['pairs']}")
+
+    # 9-11. the ratchet's three classifications, on injected counts.
+    r = pass_on_dead_dependency_ratchet(
+        baseline=1, count_fn=lambda: {"count": 2, "pairs": [("A", "B",
+                                      "FAIL"), ("C", "D", "VOID")],
+                                      "specs": ["A", "C"]})
+    if not r["grown"] or r["stale_baseline"]:
+        bad.append("pass-on-dead fixture 9: growth above the floor not caught")
+    r = pass_on_dead_dependency_ratchet(
+        baseline=3, count_fn=lambda: {"count": 1, "pairs": [], "specs": []})
+    if not r["stale_baseline"] or r["grown"]:
+        bad.append("pass-on-dead fixture 10: a floor that did not follow the "
+                   "number down not caught")
+    r = pass_on_dead_dependency_ratchet(
+        baseline=2, count_fn=lambda: {"count": 2, "pairs": [], "specs": []})
+    if r["grown"] or r["stale_baseline"]:
+        bad.append("pass-on-dead fixture 11: AT floor misclassified")
+
+    # 12. a detector that raises must REFUSE, never return a comfortable zero.
+    def _broken():
+        raise RuntimeError("ledger unreadable")
+    r = pass_on_dead_dependency_ratchet(baseline=3, count_fn=_broken)
+    if r["count"] is not None or not r["refused"]:
+        bad.append("pass-on-dead fixture 12: a refusing detector did not "
+                   "refuse — a count of None must not read as clean")
+
+    return bad
+
+
 def fail_unowned(by_id: Optional[dict] = None,
                  results: Optional[dict] = None,
                  queue_doc: Optional[str] = None) -> dict:
@@ -3861,13 +4095,15 @@ def check() -> int:
 
     u = unreachable_ratchet()
     fu = fail_unowned_ratchet()
+    podd = pass_on_dead_dependency_ratchet()
     qf = (_queue_fixture() + _gates_frozen_fixture()
           + _pilot_blocked_fixture() + _pilot_owed_fixture()
           + _pilot_harvested_fixture() + _void_foreclosed_fixture()
           + _claim_dead_fixture() + _welded_fixture() + _exit_code_fixture()
           + _unreachable_fixture() + _park_release_fixture()
           + _fail_unowned_fixture() + _no_live_path_fixture()
-          + u["refused"] + fu["refused"])
+          + _pass_on_dead_dependency_fixture()
+          + u["refused"] + fu["refused"] + podd["refused"])
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -4069,6 +4305,29 @@ def check() -> int:
     for m in fu["stale_baseline"]:
         print(f"  {m}")
 
+    # Review FULL 2026-09-13, built 2026-09-23. The class is the INVERSE of
+    # FAIL-UNOWNED and sits beside it on purpose: that one is a negative
+    # verdict nobody owns, this one is a POSITIVE verdict nothing supports.
+    print(f"\n  PASS-ON-DEAD-DEPENDENCY (Review FULL 09-13): "
+          f"{podd['count']} standing PASS certificate(s) resting on a "
+          f"RECORDED\n      non-PASS dependency — the claim the board renders "
+          f"could not be re-derived today —\n      baseline "
+          f"{podd['baseline']}, shrink-only, counted in PAIRS."
+          + ("" if podd["pairs"] else " None."))
+    for dependent, dep, verdict in podd["pairs"] or []:
+        print(f"      {dependent} <- {dep} {verdict}")
+    if podd["pairs"]:
+        print("  The repair is a RE-RUN: the dependency back to PASS, or the "
+              "dependent so its row\n  records the BLOCKED it actually is. "
+              "Never by deleting a row. T6.03 rendered [PASS]\n  for thirteen "
+              "days on a FAILed T2.10 because the board reports a STORED "
+              "status and\n  nothing re-evaluated it — that silence is what "
+              "this number is for.")
+    for m in podd["grown"]:
+        print(f"  !! {m}")
+    for m in podd["stale_baseline"]:
+        print(f"  {m}")
+
     # D23's fired default (2026-09-12): the composition beside the count. Gates
     # nothing, has no baseline, and cannot move an exit code — see the block
     # comment on `fail_owned_but_undrained`.
@@ -4151,6 +4410,7 @@ def check() -> int:
              "queue_fixture_failure": qf,
              "unreachable_grew": u["grown"],
              "fail_unowned_grew": fu["grown"],
+             "pass_on_dead_dependency_grew": podd["grown"],
              "malformed_fail_disposed": fu["malformed"] or [],
              "pilot_undeclared": q["pilot_undeclared"],
              "new_park_release": pr_new,
@@ -4161,6 +4421,8 @@ def check() -> int:
                "stale_queue_baseline": q["stale_baseline"],
                "stale_unreachable_baseline": u["stale_baseline"],
                "stale_fail_unowned_baseline": fu["stale_baseline"],
+               "stale_pass_on_dead_dependency_baseline":
+                   podd["stale_baseline"],
                "stale_park_release_baseline": pr_stale})
 
 
@@ -4200,13 +4462,15 @@ def _exit_code_fixture() -> List[str]:
     RED = ["uncovered", "claim_dead", "new_dangling_citation",
            "new_empty_class", "new_unrunnable_citation",
            "queue_fixture_failure", "unreachable_grew",
-           "fail_unowned_grew", "malformed_fail_disposed",
+           "fail_unowned_grew", "pass_on_dead_dependency_grew",
+           "malformed_fail_disposed",
            "pilot_undeclared", "new_park_release",
            "park_release_undeclared"]
     AMBER = ["malformed_declaration", "stale_citation_baseline",
              "stale_unrunnable_baseline",
              "stale_queue_baseline", "stale_unreachable_baseline",
              "stale_fail_unowned_baseline",
+             "stale_pass_on_dead_dependency_baseline",
              "stale_park_release_baseline"]
     fails = []
     clean_red = {k: [] for k in RED}
