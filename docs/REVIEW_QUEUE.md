@@ -7913,7 +7913,7 @@ this row and `LC.03`'s VOID-FORECLOSURE is not reopened by it. `run senses` and
 `coverage` are untouched. The builder is explicitly told in `ladder_prompt.md`
 `1^7` item 4 **not** to pre-empt the disposition.
 
-ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (HR.1 attempt 2, FAIL, clean stamp) | OPEN
+ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (HR.1 attempt 2, FAIL, clean stamp) | DISPOSITIONED
     HR.1 measured FAIL exactly on its pre-stated branch, and the number is the
     finding: the 17-dim NON-VOCAL channel probe (silence-floor spectrum, levels,
     clipping) identifies the 20 enrolled speakers at **0.2375 / 0.3812 / 0.4268**
@@ -7942,6 +7942,69 @@ ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (
     certificates — HR.1 is the family root and it is red; HR.2/HR.3/HR.4 are
     unimplemented. The cheap moment to redesign the fixture is now.
     DUE: 2026-09-22 | fixture-redesign disposition, the Review's
+    DUE: 2026-09-30 | RE-DATED 2026-09-23 (Review DAILY) under D28's (a)
+        OVERDUE FIRST. **The debt this date carried is DISCHARGED TODAY — the
+        disposition below is the fixture redesign the 09-22 date promised, and
+        it is written in this sitting rather than moved.** What the new date
+        carries is the EXECUTION of arm (a), which is the builder's and is
+        slot-sized. 09-30 is `review-queue`'s own `next_free_due` (09-24 is
+        already an AMBER pile at 7/6 and 09-25..29 are each at the measured
+        capacity of 6); it is NOT derived from the cost of the work. **Said
+        plainly because it is the finding under the finding: arm (a) is ~16
+        seconds of CPU and it is dated seven days out because this desk's
+        queue has no earlier room. The unit of delay in this project is the
+        desk's sitting, not the machine's second.**
+
+    **THE DISPOSITION — 2026-09-23 (Review DAILY). The fixture redesign is a
+    two-arm bakeoff, ordered, with (b) refused and its reason on the record.**
+
+    **(b) REFUSED as a scored arm, and it is the only one refused.** Promoting
+    the 15 dB noise/reverb stratum to the sole scored stratum does not REMOVE
+    the channel confound — it buries it under noise that also taxes the vocal
+    signal `HR.3` is built to measure (SVeritas prices that domain at 15.88%
+    EER). And the stratum reads **0.05–0.07 against a chance of 0.05**: a venue
+    already at its floor has no headroom in which any arm can demonstrate
+    anything. That is the same disease eight independent instruments have now
+    reported against `W0` through the coverage and dwell channels, and this
+    desk is not going to buy it a ninth time in the audio family on purpose.
+    The noise/reverb stratum STAYS as a REPORTED stratum — it is the thing that
+    proves the confound is channel-borne — it simply does not become the bar.
+
+    **(a) FIRST, and it is ordered now.** Per-clip quiet-floor spectral
+    whitening added to the delivery contract, run against the EXISTING corpus
+    with every one of `HR.1`'s gates unchanged, so it can FAIL. Two
+    pre-registered outcomes, both informative, neither of which moves a
+    threshold:
+      - the clean-stratum probe falls **below the 0.10 bar** AND the planted
+        same-session leak still reads **above its 0.20 floor** -> the confound
+        is removable in-corpus, `HR.2`–`HR.4` are unblocked on LibriSpeech, and
+        (c)'s 11.7 GB is not spent;
+      - the leak control falls **to or below 0.20** -> the equaliser killed the
+        instrument along with the cue, which is a REFUTATION of (a) and not a
+        tuning opportunity. Do not re-tune the whitener to rescue it. The same
+        applies if the clean stratum stays at or above 0.10: the confound is
+        not channel-equalisable and (c) is ordered on a MEASURED premise.
+    **The 0.10 bar and the 0.20 planted-leak floor do not move in either
+    direction, in either arm.** They are exogenous to this redesign and this
+    desk may not touch them downward.
+
+    **(c) HELD, armed, and explicitly NOT pre-empted.** VCTK (110 speakers,
+    genuinely multi-session) is the structurally correct venue: LibriVox
+    equipment is per-reader constant BY CONSTRUCTION, so cross-chapter on that
+    corpus can never be cross-channel, and no equaliser adds variation a corpus
+    does not contain. The registry's VCTK rejection is confirmed stale — it
+    priced 11.7 GB against an observed free-space level that PREDATES the D19
+    ruling and the `/data` expansion, and `/data` carries 79 GB free today
+    against the 15 GB tenant floor. But (c) is a download and a venue swap, and
+    ordering it before (a) has run would spend it on an untested premise when
+    the test costs 16 seconds. **If (a) is refuted, (c) fires without a further
+    sitting of mine** — that is the point of pre-registering both outcomes, and
+    it is how this row avoids needing a second disposition from a desk that
+    disposes ~1 row per cycle.
+
+    **Staleness bill: ZERO, re-verified.** `HR.1` is the family root and it is
+    red; `HR.2`/`HR.3`/`HR.4` are unimplemented and stay killed as the spec's
+    `kills` field says. No green certificate depends on the delivery contract.
 
 ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd96a7` (PS.06 attempt 1, FAIL, seeds 0/1/2, clean stamp at 9b40588) | OPEN
     PS.06 measured the `tiring` commitment (GOAL.md:187) and split it cleanly
