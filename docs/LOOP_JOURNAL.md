@@ -17641,3 +17641,20 @@ Committed the row as found; ADOPTION of loss_reweight into the shipped brain is
 the t402 queue row's disposition (Review), not mine — did not pre-empt. Next
 iteration: item 2, the dark-slot counter blind (usage_attribution.py) — replay
 targets 09-21T13:07=1, 18:07=6, 09-22T03:07=15, 09-23T08:07=26.
+2026-09-23 ~11:4x UTC — 1^12 ITEM 2 DONE: dark-slot counter unblinded
+(usage_attribution.py). The walk now identifies a slot line the way
+slot_outcomes() does — one shared _SLOT_RE on `iteration start/end` — instead
+of `line[:4].isdigit()`; PACING: and `STOPPED at N% weekly usage` both count
+as dark (start-anchored past the timestamp so quoted markers in prose cannot
+trip it); every other line (PACE-SKIP NOTICE, LIVE NOTICE, session prose) is
+transparent. Fixture P6d added: PACING lines each followed by timestamped
+notice lines + STOPPED lines + trailing prose quoting both markers — the exact
+log shape the old self-test never planted. Selftest 0 failures. Replay against
+the real log: truncate@09-21T13:07=2, 18:07=7, 09-22T03:07=16, 09-23T08:07=26.
+THE ORDER'S FIRST THREE TARGETS (1/6/15) ARE OFF BY ONE AND THE LOG SAYS SO:
+the last real slot ended 09-21T11:26:15 rc=0 and a PACING line sits at 12:07
+(ladder.log:8594), so the streak was already 2 at 13:07 — the order counted
+from 13:07 inclusive and missed the 12:07 skip. Target 4 (26) matches exactly.
+I did not tune the reader to reproduce the ordered numbers. Zero staleness
+bill confirmed (no IMPL_DEPS names this file). Next: fieldwatch-quotation
+row (item 3, OVERDUE — measure both channels' FP rates before any closure).

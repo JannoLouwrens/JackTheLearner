@@ -57,9 +57,22 @@ from pathlib import Path
 LEDGER = Path("/data/jack-logs/usage_ledger.jsonl")
 LADDER_LOG = Path("/data/jack-logs/ladder.log")
 
-#: `iteration end rc=N — ...`. The only line in `ladder.log` that says what
-#: happened to a slot that actually attempted to run.
-_END_RE = re.compile(r"^(\S+)\s+iteration end rc=(\d+)")
+#: `iteration start — ...` / `iteration end rc=N — ...`. The ONLY lines in
+#: `ladder.log` the loop writes about a slot that actually attempted to run,
+#: and the ONLY definition of "a real slot line" in this file — both readers
+#: (`slot_outcomes` and the dark-slot walk in `attribution`) share it. The
+#: walk used to test `line[:4].isdigit()` instead, and every timestamped
+#: non-slot line (`PACE-SKIP NOTICE:`, `LIVE NOTICE:`, `STOPPED at ...`)
+#: read as a healthy slot: the counter printed 0 through the 26-slot
+#: 2026-09-22/23 blackout it existed to report.
+_SLOT_RE = re.compile(r"^(\S+)\s+iteration (start|end)\b(?:\s+rc=(\d+))?")
+
+#: A slot the loop DECLINED to run: `pace_gate`'s `PACING:` skip or the hard
+#: usage stop's `STOPPED at N% weekly usage`. Anchored to the char after the
+#: timestamp so prose QUOTING either marker (a notice line, a session's final
+#: message echoed into the log) cannot count as a skip — `lib_credits.sh`'s
+#: start-anchor rule, one surface over.
+_SKIP_RE = re.compile(r"^\S+\s+(?:PACING:|STOPPED at )")
 
 #: The organs that are NOT the builder. `pace_gate` applies to the builder
 #: alone — `scripts/review.sh` calls `usage_gate` without `pace_gate`, so the
@@ -154,9 +167,9 @@ def slot_outcomes(log_text: str) -> list[tuple[str, int]]:
     """
     out = []
     for raw in log_text.splitlines():
-        m = _END_RE.match(raw.strip())
-        if m:
-            out.append((m.group(1), int(m.group(2))))
+        m = _SLOT_RE.match(raw.strip())
+        if m and m.group(2) == "end" and m.group(3) is not None:
+            out.append((m.group(1), int(m.group(3))))
     return out
 
 
@@ -225,13 +238,18 @@ def attribution(text: str | None = None, log_text: str | None = None,
             log_text = None
     if log_text is not None:
         streak = 0
-        for line in reversed(log_text.splitlines()):
-            if not line.strip():
+        for raw in reversed(log_text.splitlines()):
+            raw = raw.strip()
+            if not raw:
                 continue
-            if "PACING:" in line:
+            if _SKIP_RE.match(raw):        # PACING: or STOPPED at — a dark slot
                 streak += 1
-            elif line[:4].isdigit():       # a real slot line ends the streak
-                break
+            elif _SLOT_RE.match(raw):      # only an iteration start/end line
+                break                      # ends the streak — nothing else.
+            # Anything else — a PACE-SKIP NOTICE, a LIVE NOTICE, a session's
+            # prose — is neither a slot nor a skip and is TRANSPARENT. The
+            # old `line[:4].isdigit()` break here treated every timestamped
+            # non-slot line as a healthy slot and read a 26-slot blackout as 0.
         out["dark_slots"] = streak
         out["dark_known"] = True
         # THE SECOND READING, and it is a SEPARATE quantity (107th audit,
@@ -459,6 +477,43 @@ def _selftest() -> int:
         fails.append("no-log: an unreadable log must report None, not 0")
     if "unknown" not in _failed_phrase({"failed_slots": None}):
         fails.append("no-log: the printed line must say failed slots unknown")
+
+    # P6d — THE BLINDNESS, REPLAYED (1^12 item 2; 109th-audit shape). In the
+    # real log every `PACING:` line is FOLLOWED by timestamped `PACE-SKIP
+    # NOTICE:` lines, and a hard-stop blackout writes `STOPPED at N%` lines —
+    # 26 consecutive dark slots on 2026-09-22/23 that the old walk counted as
+    # 0, because each notice/STOPPED line started with a digit and "ended the
+    # streak". A slot line is an `iteration start/end` line; nothing else may
+    # end it, and prose QUOTING the markers must not extend it.
+    log = ("2026-09-22T06:07:00+00:00 iteration start — 109/253 demonstrated\n"
+           "2026-09-22T06:49:00+00:00 iteration end rc=0 — 109 -> 109\n"
+           "2026-09-22T07:07:00+00:00 PACING: acting on 'week:all models'\n"
+           "2026-09-22T07:07:00+00:00 PACE-SKIP NOTICE: declared dispatch "
+           "'run_spec T3.06' is EXITED — read the artifacts\n"
+           "2026-09-22T08:07:00+00:00 PACING: acting on 'week:all models'\n"
+           "2026-09-22T08:07:00+00:00 PACE-SKIP NOTICE: declared dispatch "
+           "'run_spec T3.06' is EXITED — read the artifacts\n"
+           "2026-09-22T11:07:00+00:00 STOPPED at 90% weekly usage — all "
+           "agents paused until the owner resumes\n"
+           "2026-09-22T12:07:00+00:00 STOPPED at 91% weekly usage — all "
+           "agents paused until the owner resumes\n"
+           "Done. TLDR: a line quoting PACING: or STOPPED at is prose, "
+           "not a skip\n")
+    a = attribution("", log_text=log, now="2026-09-22T12:49:00+00:00")
+    if a["dark_slots"] != 4:
+        fails.append(f"blind: 2 PACING + 2 STOPPED with notices interleaved "
+                     f"and trailing prose must read 4 dark slots — got "
+                     f"{a['dark_slots']} (0 here is the exact reading that "
+                     f"hid the 26-slot blackout)")
+    if a["failed_slots"] != 0 or a["hours_since_rc0"] != 6.0:
+        fails.append(f"blind: the gated loop is dark, not dying — expected "
+                     f"failed=0 age=6.0, got failed={a['failed_slots']} "
+                     f"age={a['hours_since_rc0']}")
+    a = attribution("", log_text=log +
+                    "2026-09-22T13:07:00+00:00 iteration start — 109/253\n")
+    if a["dark_slots"] != 0:
+        fails.append(f"blind: a slot RUNNING RIGHT NOW (trailing `iteration "
+                     f"start`) must end the streak — got {a['dark_slots']}")
 
     for f in fails:
         print(f"  FAIL {f}")
