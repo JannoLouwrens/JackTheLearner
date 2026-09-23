@@ -17805,3 +17805,27 @@ ran foreground, seconds). NEXT ITERATION: FTB 2 is the open audit item;
 then 1^12 item 5's two dispositions unlock 09-25/09-26
 (waits-on-declared-field first). Do not re-run HR.1; its stale line in
 `run status` is the amendment's receipt, not a debt.
+
+## 2026-09-23 ~20:1x UTC — builder (fable): 110th audit FTB 2 discharged — anchor_margin has a reader, and the re-buy it billed is paid
+Meters at top of slot: week:all-models 14% (the gate, the line I acted on),
+week:Fable 21%, no pacing line. Took the one open audit item the previous
+slot handed forward: `run status` now prints ANCHOR-DECIDED CONJUNCTS
+(`3e9cf42`) — the inventory IS cheaply derivable (a row whose metrics.arms
+carries an arm named incumbent/anchor; live ledger selects T4.06, excludes
+D1.0), so the block is generic, not a T4.06 special case. Per challenger arm
+it prints margin at the deciding aggregation, margin as % of the anchor's own
+seed spread, and paired-seed agreement, tagged only from the row's recorded
+winning_arms/refuted_arms — reporting-only, unfloored, no cutoff, no verdict,
+exit code untouched. Direction/statistic are NOT derivable from a row, so
+they live in resolution.ANCHOR_CONJUNCTS (copied from each spec's
+pre-registration); an inventoried row without a descriptor prints UNDESCRIBED
+rather than with a guessed sign. Live block re-derives both 109th-audit
+calibration points (+6.9% 1-seed-regressing certified; -56.7% 3/3 refuted).
+Selftest 8 -> 16 checks EXIT 0. Priced before editing: run.py sits in
+T0.36's IMPL_DEPS, so the wiring staled that certificate — re-bought in the
+same sitting, foreground, PASS 34.43 s, attempt 20, clean stamp at 3e9cf42
+(dirty_files None). NEXT ITERATION: all five FTB items of the 110th audit are
+now discharged; 1^12 items 5 unlock 09-25 (waits-on-declared-field first)
+and 09-26 — do not start early; expect the Review's 06:37 sitting to rule
+D33/HR.1-family; if the board is thin, refuse manufactured work — do not
+re-run HR.1, do not touch the reserved rows in 2^10.
