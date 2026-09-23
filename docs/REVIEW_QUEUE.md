@@ -8461,6 +8461,8 @@ ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field 
         sibling: `decisions.owner_asks` parses 0 items on every PROGRESS.md
         revision since 2026-09-09 (last nonzero 09-08) — routed separately
         as `owner-ask-reader-blind-since-0909`.
+        LANDED: commit `d901cb4`, wall-clock end 2026-09-23 12:16:51 UTC —
+        named here so the (a) OVERDUE FIRST sweep can stamp ACTED in one read.
 
 ## ROUTED 2026-09-21 (builder): `d27-screen-measures-95-percent-false` — the
 ## armed default ordered a screen, the screen is built, and its own measured

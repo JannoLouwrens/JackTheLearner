@@ -1613,3 +1613,44 @@ default was only ever the cheapest of five arms and the one that spends
 nothing. The counter that was `D28`'s own evidence is now silent, so the
 evidence moves here: **whoever re-opens this question should read the queue's
 THROUGHPUT block, not its violation count.**
+
+## D29 — RESOLVED BY ARMED DEFAULT (fired 2026-09-23 ~12:5x UTC by the OVERSEER, 109th audit, one day late — the four intervening overseer slots were `STOPPED at 92–100% weekly usage`, so this was the first audit that could fire it): (iii) RECORD THE DEBT, CHANGE NO MARKING. Options (i) BUILD THE DIAGNOSTIC, (ii) CORRECT `LEARNING_CORE.md` §5.4 and (iv) DOWNGRADE THE SEAT'S MARKING were NOT taken; (iv) remains the owner's to rule at any time.
+
+**WHAT THE FIRING DOES, IN FULL, AND NOTHING ELSE.** The Learning-core cell of
+`docs/CHAMPIONS.md` gains a second stated caveat, in the same idiom as the
+single-arm caveat and the `VENUE-UNAFFORDABLE` label already on its face:
+
+> *`LEARNING_CORE.md` §5.4 declares a MANDATORY collapse diagnostic — effective
+> rank and per-dimension latent variance every 1,000 decisions, a rank below a
+> pre-registered floor being `Status.VOID` for A4. It was never implemented.
+> `LC.03`'s committed row records 50 `wm-latent` metrics across five arms and not
+> one is a rank or a per-dimension variance. This seat was awarded without the
+> guard its own governing document calls mandatory against the failure mode that
+> document calls silent, and the guard can never now be run on the evidence that
+> seated it: the trained A4 weights are not on disk, `LC.03` v2 is
+> VOID-FORECLOSED, and `LC.07` is VENUE-UNAFFORDABLE at ~526 wall-hours.*
+
+`LEARNING_CORE.md` §5.4 stands verbatim, unfulfilled and visible. The `HELD: BY
+VERDICT` marking is untouched. No threshold moves in either direction. No spec
+is failed, no run refused, no certificate staled, no GPU spent. `champions
+--check`'s UNVERIFIED-VERDICTS count stays 2/2 — verified before and after the
+transcription — because a default that fires by silence may not pay itself a
+greener number.
+
+**REVERSAL:** delete the caveat sentence from `CHAMPIONS.md`'s Learning-core
+cell. No code, no threshold, no ledger row, no re-run.
+
+**THE LATENESS AND THE PREMISE DEFECT, carried rather than glossed.** The
+`decide_by` of 2026-09-22 was placed deliberately AFTER the desk deliverable
+`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere` (DUE
+09-18) so the owner would rule with that work in hand; the deliverable slipped
+to 2026-09-25 and nothing re-checked the placement, so the default fired on a
+premise its own author called insufficient — the third recorded instance of
+the "premise dies under a deadline" shape (D20; `me1-similarity-floor-never-
+abstains`). The overseer fired anyway, per the charter: a deadline that moves
+when it is reached is the deadlock it replaced; a premise defect argues for
+firing the WEAKEST option, which (iii) is by construction.
+
+**TRANSCRIPTION:** builder, 2026-09-23, this commit — the overseer fires and
+records (firing block: last section of `docs/DECISIONS_NEEDED.md`); the
+overseer may not edit `CHAMPIONS.md` or `DECISIONS_RESOLVED.md`.
