@@ -109,6 +109,54 @@ a threshold:
     not a tuning opportunity. Do NOT re-tune the whitener; arm (c) — VCTK,
     genuinely multi-session — fires automatically per the disposition,
     without a further Review sitting.
+
+ARM (c) OF THE SAME DISPOSITION — THE VENUE SWAP (builder, 2026-09-23,
+declared BEFORE the run). Arm (a) was REFUTED on its second pre-registered
+branch (attempt 3: planted leak alive at 0.511/0.497/0.621, clean stratum
+still 0.2062/0.2562/0.2739 vs the 0.10 bar): the LibriSpeech confound lives
+in floor LEVEL/SNR/clipping, per-reader constant, and is not
+channel-equalisable in-corpus. Per the disposition's own terms (c) fires
+without a further sitting. THE VENUE: VCTK-Corpus-0.92, 110 speakers,
+fetched 2026-09-23 under D19 (Content-Length 11,747,302,977 as served by
+datashare.ed.ac.uk post-DSpace-migration; the registry's 2026-08-09
+verification recorded 11,749,118,645 for the pre-migration hosting — the
+zip was verified byte-exact against the LIVE server's declaration, and the
+delta is recorded here rather than silently reconciled). Zip deleted after
+extraction per the tenant rule; census in the manifest.
+
+THE LAYOUT ADAPTATION, declared before any number was seen. VCTK documents
+no session boundaries; what it documents is TWO SIMULTANEOUS MICROPHONES
+per utterance (mic1 = DPA 4035, mic2 = Sennheiser MKH 800, same booth).
+The disposition's premise "genuinely multi-session" is therefore delivered
+as genuinely multi-CHANNEL — which is the sharper venue for THIS claim,
+because the claim is about CHANNEL cues: enrol and the planted-leak control
+are drawn from ENROL_MIC (mic1), the scored clean stratum from TEST_MIC
+(mic2), and all three sets are utterance-disjoint by a single per-seed draw
+without replacement. A probe that identifies speakers on non-vocal cues
+ACROSS microphones is reading speaker-borne cues, not equipment. Constants
+declared now: UTT_CAP 100 (first 100 utterance ids per speaker indexed —
+cost control, deterministic), both mics required per utterance at
+MIN_CLIP_S, VCTK_SR 48000 resampled to SR by scipy.signal.resample_poly
+(integer factor 3, zero-phase polyphase) INSIDE load_clip before the
+unchanged contract (DC removal, RMS normalisation, arm (a)'s quiet-floor
+whitening — carried verbatim, not re-tuned).
+
+EVERY GATE IS UNCHANGED so the run can FAIL: 0.10 clean bar (chance+0.05,
+20 enrolled), 0.20 planted-leak floor (chance+0.15), the noise/reverb
+stratum, the 17 features, the probe, seeds 0/1/2. Three pre-registered
+outcomes, all results, none moving a threshold:
+  - PASS: both scored strata at/below the bar on every seed AND the planted
+    same-mic leak at/above its floor -> the VCTK fixture is honest;
+    HR.2-HR.4 unblock on VCTK with the cross-mic discipline part of the
+    delivery contract.
+  - FAIL (clean stratum at/above 0.10): the cues identify speakers ACROSS
+    equipment, so they are speaker-borne (level/SNR/vocal effort), not
+    channel-borne — the "different corpus removes the confound" premise is
+    refuted and the finding routes to the Review; no arm (d) is invented
+    here.
+  - VOID (leak below 0.20): VCTK's shared-booth channel is too uniform for
+    a leak to be plantable — the instrument cannot testify on this venue;
+    routes to the Review.
 """
 from __future__ import annotations
 
@@ -119,8 +167,8 @@ from pathlib import Path
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
-CORPUS_ROOT = Path("/data/jack_corpora/librispeech/LibriSpeech/dev-clean")
-MANIFEST = Path("/data/jack_corpora/librispeech/hr1_manifest.json")
+CORPUS_ROOT = Path("/data/jack_corpora/vctk/VCTK-Corpus-0.92/wav48_silence_trimmed")
+MANIFEST = Path("/data/jack_corpora/vctk/hr1_manifest.json")
 
 SEEDS = (0, 1, 2)                 # registry: seeds=3
 SR = 16000
@@ -147,6 +195,10 @@ PROBE_LR = 0.05
 PROBE_WD = 1e-3
 WHITEN_REG = 1e-3                 # arm (a): rel. regularisation of the floor
 WHITEN_SMOOTH_BINS = 5            # arm (a): floor-spectrum smoothing window
+VCTK_SR = 48000                   # arm (c): corpus native rate, resampled /3
+UTT_CAP = 100                     # arm (c): first N utterance ids indexed
+ENROL_MIC = "mic1"                # arm (c): enrolment + planted-leak channel
+TEST_MIC = "mic2"                 # arm (c): scored cross-channel stratum
 
 _FEAT_CACHE: dict[str, "object"] = {}   # path -> clean delivered features
 _BUNDLE: dict | None = None
@@ -157,13 +209,19 @@ _BUNDLE: dict | None = None
 def load_clip(path: str | Path, max_s: float = CLIP_S):
     """The ONLY sanctioned reader for this corpus. DC-removed, RMS-normalised
     float32, first `max_s` seconds, QUIET-FLOOR SPECTRALLY WHITENED (arm (a),
-    2026-09-23). HR.2/HR.3/HR.4 must use this."""
+    2026-09-23), 48 kHz resampled to SR by zero-phase polyphase (arm (c)).
+    HR.2/HR.3/HR.4 must use this."""
     import numpy as np
     import soundfile as sf
-    x, sr = sf.read(str(path), frames=int(max_s * SR), dtype="float32",
+    x, sr = sf.read(str(path), frames=int(max_s * VCTK_SR), dtype="float32",
                     always_2d=False)
-    if sr != SR:
-        raise RuntimeError(f"{path}: sample rate {sr} != {SR}")
+    if sr == VCTK_SR:
+        from scipy.signal import resample_poly
+        x = resample_poly(np.asarray(x, dtype=np.float64), 1, VCTK_SR // SR)
+    elif sr == SR:
+        x = np.asarray(x[:int(max_s * SR)], dtype=np.float64)
+    else:
+        raise RuntimeError(f"{path}: sample rate {sr} not in ({SR}, {VCTK_SR})")
     x = np.asarray(x, dtype=np.float64)
     return deliver(_whiten_quiet_floor(deliver(x)))
 
@@ -294,70 +352,83 @@ def _noisy_features(path, rir, rng):
 # ── corpus indexing and the per-seed split ─────────────────────────────────
 
 def _index_corpus():
-    """speaker -> chapter -> [paths], duration-filtered; plus a census."""
+    """speaker -> utt_id -> {mic: path} (VCTK layout, arm (c)): only the
+    first UTT_CAP utterance ids per speaker are duration-checked (declared
+    cost control), and an utterance enters the index only when BOTH mics
+    exist and clear MIN_CLIP_S. The census (file count + bytes) covers the
+    WHOLE audio tree, uncapped, so a later run can detect the corpus changed
+    under the certificate."""
     import soundfile as sf
     idx, n_files, n_bytes = {}, 0, 0
     for spk in sorted(os.listdir(CORPUS_ROOT)):
         sdir = CORPUS_ROOT / spk
         if not sdir.is_dir():
             continue
-        for chap in sorted(os.listdir(sdir)):
-            cdir = sdir / chap
-            if not cdir.is_dir():
+        by_utt = {}
+        for f in sorted(os.listdir(sdir)):
+            if not f.endswith(".flac"):
                 continue
-            for f in sorted(os.listdir(cdir)):
-                if not f.endswith(".flac"):
-                    continue
-                p = cdir / f
-                n_files += 1
-                n_bytes += p.stat().st_size
-                if sf.info(str(p)).duration >= MIN_CLIP_S:
-                    idx.setdefault(spk, {}).setdefault(chap, []).append(str(p))
+            p = sdir / f
+            n_files += 1
+            n_bytes += p.stat().st_size
+            parts = f[:-5].split("_")              # pXXX_YYY_micZ
+            if len(parts) != 3:
+                continue
+            by_utt.setdefault(parts[1], {})[parts[2]] = p
+        picked = {}
+        for utt in sorted(by_utt)[:UTT_CAP]:
+            mics = by_utt[utt]
+            if ENROL_MIC not in mics or TEST_MIC not in mics:
+                continue
+            try:
+                if all(sf.info(str(mics[m])).duration >= MIN_CLIP_S
+                       for m in (ENROL_MIC, TEST_MIC)):
+                    picked[utt] = {m: str(p) for m, p in mics.items()}
+            except RuntimeError:
+                continue
+        if picked:
+            idx[spk] = picked
     return idx, n_files, n_bytes
 
 
 def _split(idx, seed):
-    """Deterministic per-seed split. Returns None if construction fails."""
+    """Deterministic per-seed split (VCTK layout, arm (c)): enrolment and
+    the planted-leak control on ENROL_MIC, the scored stratum on TEST_MIC,
+    all three utterance-disjoint by one draw without replacement.
+    Returns None if construction fails."""
     import numpy as np
     rng = np.random.default_rng(seed)
-    eligible = sorted(s for s, ch in idx.items() if len(ch) >= 2)
-    others = sorted(s for s in idx if s not in eligible)
+    need = N_ENROL_CLIPS + N_CTRL_CLIPS + N_TEST_CLIPS
+    eligible = sorted(s for s, utts in idx.items() if len(utts) >= need)
     eligible = list(np.array(eligible)[rng.permutation(len(eligible))])
 
     enrolled, per_spk = [], {}
     for spk in eligible:
         if len(enrolled) == N_ENROLLED_TARGET:
             break
-        chaps = list(np.array(sorted(idx[spk]))[rng.permutation(len(idx[spk]))])
-        enrol_ch, pool = [], []
-        for c in chaps[:-1]:                       # >=1 chapter stays for test
-            enrol_ch.append(c)
-            pool = sum((idx[spk][c] for c in enrol_ch), [])
-            if len(pool) >= N_ENROL_CLIPS + CTRL_SPK_MIN:
-                break
-        test_ch = [c for c in chaps if c not in enrol_ch]
-        test_pool = sum((idx[spk][c] for c in test_ch), [])
-        if len(pool) < PER_SPK_MIN or len(test_pool) < PER_SPK_MIN:
-            continue
-        pool = list(np.array(pool)[rng.permutation(len(pool))])
-        enrol = pool[:N_ENROL_CLIPS]
-        ctrl = pool[N_ENROL_CLIPS:N_ENROL_CLIPS + N_CTRL_CLIPS]
-        test = list(np.array(test_pool)[rng.permutation(len(test_pool))])[:N_TEST_CLIPS]
-        per_spk[spk] = {"enrol": enrol, "ctrl": ctrl, "test": test,
-                        "enrol_chapters": enrol_ch, "test_chapters": test_ch}
+        utts = list(np.array(sorted(idx[spk]))[rng.permutation(len(idx[spk]))])
+        e_u = utts[:N_ENROL_CLIPS]
+        c_u = utts[N_ENROL_CLIPS:N_ENROL_CLIPS + N_CTRL_CLIPS]
+        t_u = utts[N_ENROL_CLIPS + N_CTRL_CLIPS:need]
+        per_spk[spk] = {"enrol": [idx[spk][u][ENROL_MIC] for u in e_u],
+                        "ctrl": [idx[spk][u][ENROL_MIC] for u in c_u],
+                        "test": [idx[spk][u][TEST_MIC] for u in t_u],
+                        "enrol_utts": e_u, "ctrl_utts": c_u, "test_utts": t_u}
         enrolled.append(spk)
 
     unknown = [s for s in idx if s not in enrolled][:2 * N_ENROLLED_TARGET]
     if len(enrolled) < N_ENROLLED_MIN or len(unknown) < N_UNKNOWN_MIN:
         return None
 
-    # Disjointness + cross-chapter, verified rather than assumed.
+    # Disjointness + cross-channel, verified rather than assumed.
     for spk, d in per_spk.items():
-        if set(d["enrol"]) & set(d["test"]) or set(d["enrol"]) & set(d["ctrl"]):
+        u = (set(d["enrol_utts"]), set(d["ctrl_utts"]), set(d["test_utts"]))
+        if u[0] & u[1] or u[0] & u[2] or u[1] & u[2]:
             return None
-        for p in d["test"]:
-            if Path(p).parent.name in d["enrol_chapters"]:
-                return None
+        if any(f"_{TEST_MIC}." in p for p in d["enrol"] + d["ctrl"]):
+            return None
+        if any(f"_{ENROL_MIC}." in p for p in d["test"]):
+            return None
     return {"enrolled": enrolled, "unknown": unknown, "per_spk": per_spk}
 
 
@@ -405,6 +476,9 @@ def _bundle() -> dict:
     idx, n_files, n_bytes = _index_corpus()
     manifest = {"contract": {"sr": SR, "clip_s": CLIP_S, "target_rms": TARGET_RMS,
                              "dc_removed": True, "loader": "hr_1_voice_corpus_honest.load_clip",
+                             "corpus": "VCTK-Corpus-0.92",
+                             "native_sr": VCTK_SR, "utt_cap": UTT_CAP,
+                             "enrol_mic": ENROL_MIC, "test_mic": TEST_MIC,
                              "whiten": {"reg": WHITEN_REG,
                                         "smooth_bins": WHITEN_SMOOTH_BINS,
                                         "quiet_frac": QUIET_FRAC,
