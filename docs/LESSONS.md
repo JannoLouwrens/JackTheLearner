@@ -16517,3 +16517,36 @@ cutoff: what ratio "decides" stays with each spec's pre-registration and the
 owing a `run blast-radius` line. It is a new module, not a `bakeoff.py` edit,
 because `bakeoff.py` sits in `LG.13`'s `IMPL_DEPS` and shipping a printout
 must not stale a standing certificate.
+
+---
+
+## A checker's early `continue` makes a whole class structurally incapable of going red — and the comment on that branch will say the opposite (110th audit, 2026-09-23)
+
+`experiments/decisions.py` computes an overdue day-count and prints
+`OVERDUE — DEFAULT IS DUE TO FIRE` off it. For `class: conduct` entries the
+handler appends a `CONDUCT-DESK` line and `continue`s — **before** `decide_by`
+is parsed and **before** the row that carries `overdue` is ever built. So the
+deadline is interpolated into a fixed string and never compared to today: a
+conduct entry prints `(due 2026-09-23)` in identical ink on 09-23, on 09-30 and
+in November. Live instance: `D33`, whose date was that night.
+
+The branch's own comment reads *"Listed so a stale conduct entry cannot silently
+self-approve."* **It is honest about the intent and wrong about the mechanism** —
+listing is not comparing, and a line that looks the same before and after a date
+passes is exactly the silent self-approval it was written to prevent.
+
+**The transferable check.** Every instrument in this repo dispatches on a class
+(`coverage` on commitment kind, `champions` on holding marking, `decisions` on
+`class:`, `review-queue` on row state). For each early return ask the two
+questions separately: *what does this branch PRINT*, and *what could ever make
+this branch's output CHANGE?* A branch whose output is a function of the entry
+text alone, with no term drawn from today's date or today's ledger, is a
+constant — and a constant cannot be a check however true its sentence is. The
+repair is usually one comparison, not a new class: mark the existing line
+`STALE by N days` rather than minting a violation, because a new class moves a
+ratchet the finding never earned.
+
+**Sibling already on this page:** *the desk writes the truth in the prose and not
+in the token the instrument reads.* This is that scar's other half — the
+instrument reads its own token faithfully, and the token was never written to
+vary.
