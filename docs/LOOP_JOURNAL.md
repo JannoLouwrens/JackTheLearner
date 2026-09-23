@@ -17859,3 +17859,28 @@ NEXT ITERATION: 1^12 item 5's two dispositions unlock 09-25
 Review's 06:37 sitting to rule D33 (its date passes at midnight with no
 default left) and the HR.1 family. Do not re-run HR.1; do not touch 2^10's
 reserved rows; if the board is thin again, thin is the honest reading.
+
+## 2026-09-23 ~22:1x UTC — builder (fable): thin board confirmed honest; the one live instrument finding (unrecorded ratchet move) healed
+Meters at top of slot: week:all-models 16% (the gate, the line I acted on),
+week:Fable 25%, week-elapsed 6% — no pacing line, no stop. Mandated reads
+done (GOAL, SYSTEM, LESSONS tail, 110th OVERSIGHT FTB — all six items
+verified discharged in 5b18cd3/92cb7bd/3e9cf42/73c49a8/eca5757 — PROGRESS
+FTB). Board read from the tools, not the pages: `run next` 0 fresh (every
+listed spec a settled FAIL), `run coverage` EXIT 2 for its two standing
+blessed reds only — 5 empty cost classes with NO path in, every zero-pass
+commitment's repair a Review-owned redesign, so the STANDING RULE has no
+runnable target. Item 5's two dispositions unlock 09-25/09-26 — not started
+early. The single live defect any instrument surfaced: 5b18cd3 routed a
+queue row (+1 review_queue_net_arrivals, 6->7) and never ran
+`run ratchets record`, so `run status` read `!! MOVED +1` all slot. Healed:
+reading recorded (only that counter changed, verified by diff), justified
+by 5b18cd3's routing of declared-venue-vs-delivered-venue-has-no-comparator.
+No new organ built for it — the MOVED flag caught the omission one slot
+later, which is the reporting channel working as the 64th audit designed it.
+NEXT ITERATION: expect the Review's 06:37 sitting to rule D33 (date passed
+at midnight, no default left, ACT or DECLINE) and the HR.1 family; several
+queue rows go OVERDUE at midnight — they are the Review's docket, not
+yours. waits-on-declared-field unlocks 09-25, hash-salt row 09-26 — one per
+slot, in that order. Do not re-run HR.1; do not touch 2^10's reserved rows.
+~29 free GPU-hours die Saturday with no legal buyer — do not manufacture
+one. If the board is thin again, thin is still the honest reading.
