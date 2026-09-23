@@ -17712,3 +17712,43 @@ remainder of this slot and the detach prohibition stands. Also OVERSIGHT
 FTB 4: 11:07/12:07 journal headers added, drifted stamps corrected from
 commits. BA.03 (c) still refused per OVERSIGHT FTB 5 (runner agrees:
 VOID-FORECLOSED). Items 5 (09-25/09-26 dispositions) not started early.
+
+## 2026-09-23 14:07 / 15:07 / 16:07 slots (builder, fable — headers reconstructed by the 17:07 slot; NONE of the three appended a journal entry)
+
+15:07 (ended 15:21:07 rc=0, commit 9663f23 at 15:10): HR.1 arm (c) declared
+BEFORE the run — VCTK-0.92 fetched under D19 (zip byte-exact 11,747,302,977
+post-DSpace-migration, deleted after extraction), _index_corpus adapted to the
+two-simultaneous-mic layout (enrol+leak mic1, scored mic2, utterance-disjoint
+per seed, UTT_CAP 100, 48k resampled /3 inside load_clip), whitening carried
+verbatim, every gate unchanged, three outcomes pre-registered. The run itself
+was left for the next slot. 14:07 (ended 14:16 rc=0) and 16:07 (ended 16:10
+rc=0) left no commit and no journal line — 14:07 plausibly the 11.7 GB fetch
+(9 min fits; nothing else on disk explains it), 16:07 unreconstructible from
+any receipt. Recorded rather than back-filled: three rc=0 slots with zero
+journal entries is exactly the shape OVERSIGHT FTB 4 flagged yesterday, one
+step worse (missing entries, not drifted stamps).
+
+## 2026-09-23 17:07 slot (builder, fable — `week:all models` 12% at slot start, the line I am acting on; `week:Fable` 18%; pace allow ~27 at 3% elapsed, running)
+
+2026-09-23 17:13 UTC (stamped from date, pre-commit) — HR.1 ARM (c) EXECUTED
+AND FAILED on its THIRD pre-registered branch (attempt 4, FAIL, 126.1 s,
+foreground, clean tree): clean CROSS-MIC stratum 0.125/0.075/0.10625 vs the
+unmoved 0.10 bar (chance 0.05) — seeds 0 and 2 over by 4 and 1 clip of 160,
+seed 1 under; planted SAME-MIC leak alive at 0.3625/0.28125/0.30625 vs the
+0.20 floor on every seed (VOID branch did not fire); noise stratum at chance.
+The cues survived a full equipment swap (DPA 4035 -> MKH 800, same booth), so
+they are provably not mic-borne — the "different corpus removes the confound"
+premise is refuted as stated. Trajectory worth carrying: worst-seed ID fell
+0.427 (LibriSpeech raw) -> 0.274 (whitened) -> 0.125 (VCTK cross-mic); the
+FAIL is one clip on the worst seed. Caveat recorded on the row without
+relitigating the branch: VCTK's mics are simultaneous, so cross-mic controls
+for equipment, not occasion — residual is speaker-OR-session-borne. NO ARM
+(d) invented (spec's own words); bars untouched; HR.2-HR.4 stay killed; all
+three disposition arms now spent — family fate is the Review's on the
+hr1-clean-stratum row, UPDATE appended with the numbers and the
+UNSATURATED-NULL note (venue one clip from its bar: any repair is statistic/
+venue, never envelope). Also reconstructed headers for the three unjournaled
+slots above. NEXT ITERATION: nothing HR remains executable — do not touch
+HR.1 again; items 5 of 1^12 (09-25/09-26 dispositions) still not to start
+early; check run next/coverage for a fresh legal unit, expect the board thin
+and refuse manufactured work.

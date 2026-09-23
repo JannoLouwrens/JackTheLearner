@@ -8138,6 +8138,44 @@ ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (
         D19 + corpus-layout adaptation + re-run) is slot-sized-plus and is
         the builder's next HR unit.
 
+    UPDATE 2026-09-23 (builder): ARM (c) EXECUTED AND FAILED, on its third
+        pre-registered branch — the last arm of this disposition is spent
+        and the family's fate is this desk's next call on the row. The
+        venue swap was declared BEFORE the run (`9663f23`, 15:07 slot:
+        VCTK-Corpus-0.92 fetched under D19, zip byte-exact at
+        11,747,302,977 as served post-DSpace-migration; enrol + planted
+        leak on mic1, scored stratum on mic2, utterance-disjoint per seed;
+        UTT_CAP 100; 48 kHz resampled /3 zero-phase inside load_clip; arm
+        (a) whitening carried verbatim, not re-tuned; every gate
+        unchanged). HR.1 attempt 4 ran 17:11:38, FAIL in 126.1 s:
+          - clean CROSS-MIC stratum 0.125 / 0.075 / 0.10625 vs the unmoved
+            0.10 bar (chance 0.05) — seeds 0 and 2 at/above the bar by
+            4 clips and 1 clip of 160; seed 1 under it. margins
+            -0.025 / +0.025 / -0.00625, min_channel_leak_margin -0.00208.
+          - planted SAME-MIC leak 0.3625 / 0.28125 / 0.30625 vs the 0.20
+            floor — alive on every seed, so the VOID branch (leak
+            unplantable on a shared booth) did NOT fire; this is a
+            measurement, not a dead probe.
+          - noise/reverb stratum 0.050–0.069, at chance, as reported.
+        THE MEASURED PREMISE: the identifying cues survive a full
+        equipment swap (DPA 4035 -> Sennheiser MKH 800, same booth), so
+        they are provably NOT mic-equipment-borne — the disposition's
+        "a different corpus removes the confound" premise is refuted AS
+        STATED, per the pre-registered branch. Magnitude, because it is
+        the design input: worst-seed identification fell 0.427 (LibriSpeech
+        raw) -> 0.274 (whitened) -> 0.125 (VCTK cross-mic) — 8.5x chance
+        down to 2.5x chance; the FAIL is by one clip on seed 2. One honest
+        caveat recorded WITHOUT relitigating the branch: VCTK's two mics
+        are SIMULTANEOUS in one booth, so cross-mic controls for equipment
+        but not for the recording occasion — the residual excess is
+        speaker-OR-session-borne; what is proven is only that it is not
+        the microphone. NO ARM (d) IS INVENTED HERE, per the spec's own
+        FAIL branch. Bars untouched; HR.2–HR.4 stay killed as the kills
+        field says. What this desk now owns on this row: the family fate —
+        and note before any next design that the venue is one clip from
+        its bar on the worst seed, i.e. any repair is a STATISTIC or VENUE
+        question under the UNSATURATED-NULL rule, never an envelope one.
+
 ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd96a7` (PS.06 attempt 1, FAIL, seeds 0/1/2, clean stamp at 9b40588) | OPEN
     PS.06 measured the `tiring` commitment (GOAL.md:187) and split it cleanly
     in two. THE WORLD HALF IS GREEN ON EVERY SEED: fatigue_gap 0.295 ± 0.003
