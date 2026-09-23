@@ -7727,6 +7727,99 @@ already the world's day, which is the right place for this to land.
 
 ---
 
+**ADDENDUM 2026-09-23 (Review DAILY, the morning this entry falls due) — A
+CORRECTION TO MY OWN ENTRY'S CENTRAL FACT, MEASURED AGAINST THE REPOSITORY AND
+NOT AGAINST MY MEMORY OF IT. THE RECOMMENDATION ABOVE IS UNCHANGED AND STILL
+QUOTED VERBATIM; what follows is the evidence the owner should rule against,
+and it cuts AGAINST my own recommendation. Read this before ruling.**
+
+**The entry says "three FULL sittings have now passed — 09-06, 09-13 and today
+— and the design does not exist." That sentence is FALSE, and it is falsified
+by a commit made at the first of those three sittings.**
+
+  - The W1 spec-family design was PUBLISHED on **2026-09-06** in commit
+    **`9eddb52`**, whose own subject line reads *"the W1 spec-family design is
+    published (W1.00-W1.04, falsifiers, controls, ordering)"*. It is an
+    11,211-character block in `docs/REVIEW_QUEUE.md` under the heading
+    `THE W1 DESIGN (Review FULL, 2026-09-06)`, carrying a stated *Claim* for
+    all five specs, an explicit *Control* for four of them, named falsifiers,
+    and a written ORDERING with its reasons.
+  - It was **STRENGTHENED on 2026-09-10** — `W1.04` gained conjunct (c), *the
+    life is longer than the horizon*, with its own twin control, on the
+    reading owed by `w0-kills-a-forager-by-integrity-at-25-minutes`.
+  - **Two of its five specs were REGISTERED AND RUN the same day it was
+    written**: `W1.00` (attempt 1, **FAIL**, 2026-09-06T10:30:12) and `W1.02`
+    (attempt 1, **PASS**, 2026-09-06T11:32:50) — which are exactly the two the
+    design's own ordering put first and second, and are exactly the two that
+    need no world edit.
+
+**WHAT IS ACTUALLY MISSING, stated narrowly.** `W1.01`, `W1.03` and `W1.04` are
+`NOT REGISTERED` — `run review-queue` prints those three words against each of
+them, and that print is the whole of the outstanding debt on the design side.
+The `w1-world-edit-window` row says so in its own `BLOCKED-BY:` field: *"the W1
+design above must be REGISTERED (`W1.03` in particular) before a world edit has
+a spec to serve"*. **The row points AT a published design and asks for its
+REGISTRATION. My entry above says the design does not exist. Those are two
+different debts and I conflated them into one.**
+
+**WHY THE CORRECTION MATTERS TO THE RULING AND NOT ONLY TO THE RECORD.** This
+entry's argument for moving authority is one sentence: *"it is not a
+disposition among named arms (which this desk does well, four times today) but
+a from-scratch world specification, which is a builder-shaped unit of work and
+always was."* **The from-scratch world specification is the thing that already
+exists.** `W1.03` has a claim, three named conjuncts (DISCOVERABLE,
+CONSEQUENTIAL, and actually-what-it-says, each defined operationally), and the
+control the design itself flags as the one that matters — *"a twin world with
+the three features REMOVED must fail all three conjuncts under the identical
+measurement. Without that twin this spec would certify a world by describing
+it."* That is a specification, not a gesture at one. So the premise of my own
+recommendation does not hold, and **I am reporting that rather than letting the
+owner rule on it tonight.**
+
+**THE HONEST RE-STATEMENT OF THE DEBT, which is smaller and differently
+shaped than this entry claims.** Two units remain and they have different
+owners under `D22` as it already stands:
+  1. **Registering `W1.03`/`W1.01`/`W1.04` as `Spec` entries from design text
+     that already exists.** Desk-shaped, small, and mine — and it carries a
+     priced cost I am NOT hiding: each registers as unreachable behind
+     `W1.00`'s FAIL, so `unreachable` rises above its declared floor of 96 and
+     the raise needs a growth-log entry and a justification in the commit that
+     makes it. That cost is the reason to do it deliberately, not the reason
+     to keep not doing it.
+  2. **The world EDIT itself** — a `playground.py` change paying the
+     21-certificate mechanical bill once. **That is an IMPLEMENTATION, and
+     under `D22` implementation was never this desk's to hold.** It has been
+     sitting inside a row this desk owns, which is why it has looked like desk
+     work that the desk keeps failing to do.
+
+**MY RECOMMENDATION, REVISED, and it asks for LESS than the one above.** Do
+NOT move design authority — nothing in the record supports it, and this entry's
+case for it rested on a fact that is not true. Instead rule on the narrow
+thing: **confirm that the world EDIT (the `playground.py` change and its
+21-certificate re-buy) is builder work under `D22` as already written, so it
+can be ordered onto `scripts/ladder_prompt.md` without a carve-out**, and hold
+this desk to the registration of `W1.03`/`W1.01`/`W1.04` as its own act with
+the `unreachable` raise stated in the open. If the owner prefers the original
+option (ii), it is still on the table and still quoted verbatim above — but it
+should be chosen knowing the design it would reassign was written seventeen
+days ago.
+
+**AND THE FINDING UNDER THE FINDING, because this is the SECOND time in ONE
+SITTING.** This morning's first act found `me1-similarity-floor-never-abstains`
+carrying a midnight stop-rule armed against a debt the ledger had shown
+discharged sixteen days earlier. This entry is the same shape: a desk
+instrument armed against a premise that the desk's own committed work had
+already falsified, with the falsifying evidence adjacent to the arming. Twice
+in one morning is not two accidents. **It is this desk reading its own DATE
+LINES and not its own BODIES** — and the repair that generalises is the one
+shipped in `31d0a6a` this morning for a neighbouring case
+(`STEERING-METRIC-MISMATCH`, quoted certificate numbers diffed against the
+ledger): claims asserted on desk pages should be checked against the artifact
+by an instrument, because this desk demonstrably does not check them by
+reading.
+
+---
+
 ## D28 — RECLASSIFICATION FIRED, 2026-09-21 06:5x UTC (overseer, 107th audit). `class: goal` → `class: conduct`. The entry stays open; only WHO decides has changed.
 
 **The owner did not rule by 2026-09-21, so the pre-registered reclassification
