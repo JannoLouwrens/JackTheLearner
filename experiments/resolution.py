@@ -14,6 +14,14 @@ diagnosis: *"nothing computes the ratio and prints it."*
 
 WHAT THIS MODULE IS: that check, computed and printed. Nothing more.
 
+AND ITS READER (110th audit FTB 2, same day): the module shipped with zero
+callers, so `run status` now prints `status_lines()` — the same numbers for
+every RECORDED row in the in-run-anchor inventory, derived from the ledger
+(see `anchor_rows` for the one-line derivation) in the `UNBACKED
+CERTIFICATES` idiom: unfloored, reporting-only, reddening nothing. A row the
+inventory finds but `ANCHOR_CONJUNCTS` does not describe prints as
+UNDESCRIBED rather than with a guessed direction.
+
 WHAT IT IS NOT — deliberately. It declares NO cutoff and returns NO verdict.
 Whether a given margin-over-spread ratio "decides" is a design decision that
 belongs to each spec's pre-registration (and, for seats, to the `SO.10`
@@ -138,6 +146,125 @@ def anchor_margin(challenger_scores: Sequence[float],
     }
 
 
+# ---------------------------------------------------------------------------
+# The reader (110th audit, FTB 2). `anchor_margin` shipped with zero callers —
+# "the next bakeoff decided against an in-run anchor will be decided exactly
+# as T4.06 was, unless a human remembers to invoke a module by hand." This is
+# the caller: `run status` prints the block below for every RECORDED row the
+# inventory derives. REPORTING-ONLY in the `UNBACKED CERTIFICATES` idiom —
+# unfloored, no cutoff, no verdict, reddening nothing, refusing nothing.
+# A rule armed on this output is a conjunct and owes `run blast-radius`.
+# ---------------------------------------------------------------------------
+
+ANCHOR_ARM_NAMES = ("incumbent", "anchor")
+
+# THE DESCRIPTOR TABLE, and why it exists rather than auto-derivation. The
+# INVENTORY is cheaply derivable from the record (a row whose `metrics.arms`
+# dict carries an arm named in ANCHOR_ARM_NAMES — checked against the live
+# ledger 2026-09-23: selects T4.06, excludes D1.0, whose arms have no anchor).
+# The CONJUNCT is not: which per-seed statistic the `_check` compared, at
+# which aggregation, and in which direction live in the spec's pre-registered
+# rule, not in the row. Guessing the direction would print wrong-signed
+# margins, so an inventoried row with no entry here is reported LOUDLY as
+# undescribed instead of being described wrongly. One entry per spec, copied
+# from the spec's own pre-registration at the time its row first lands.
+ANCHOR_CONJUNCTS: Dict[str, Dict[str, object]] = {
+    # t4_06_fusion_balancing_bakeoff._check: s["min_r2"] > bar_r2 where
+    # bar_r2 = min over seeds of the incumbent's min-modality latent R^2.
+    "T4.06": {"stat": "r2_per_seed", "decided_at": "min",
+              "higher_is_better": True, "label": "min_modality_latent_r2"},
+}
+
+
+def _field(row: object, name: str) -> object:
+    """One row shape for dicts (raw ledger JSON, selftest fixtures) and
+    `protocol.Result` objects (what `run status` actually holds)."""
+    if isinstance(row, dict):
+        return row.get(name)
+    return getattr(row, name, None)
+
+
+def anchor_rows(results) -> List[tuple]:
+    """The in-run-anchor inventory: (spec_id, row, anchor_arm_name, arms).
+
+    Derivation, named because FTB 2 asked for it: a recorded row belongs iff
+    its `metrics.arms` is a dict containing an arm named in ANCHOR_ARM_NAMES.
+    That is the whole rule — no spec list is consulted, so a future bakeoff
+    that records an anchor arm enters this inventory the day its row lands.
+    """
+    out = []
+    for sid in sorted(results):
+        metrics = _field(results[sid], "metrics")
+        arms = metrics.get("arms") if isinstance(metrics, dict) else None
+        if not isinstance(arms, dict):
+            continue
+        anchor = next((a for a in ANCHOR_ARM_NAMES if a in arms), None)
+        if anchor is None:
+            continue
+        out.append((sid, results[sid], anchor, arms))
+    return out
+
+
+def status_lines(results) -> List[str]:
+    """The `run status` block. Empty list when the inventory is empty."""
+    rows = anchor_rows(results)
+    if not rows:
+        return []
+    lines = [
+        f"  ? ANCHOR-DECIDED CONJUNCTS — {len(rows)} recorded row(s) decide a "
+        "conjunct against an IN-RUN\n    anchor arm (derivation: metrics.arms "
+        "carries an arm named 'incumbent'/'anchor').\n    Legal and "
+        "REPORTING-ONLY: no cutoff, no verdict, nothing reddens — whether a "
+        "margin\n    this size DECIDES stays with each spec's pre-registration "
+        "(SO.10 vacancy precedent):"]
+    for sid, row, anchor_name, arms in rows:
+        status = _field(row, "status")
+        status = getattr(status, "value", status)
+        head = f"      {sid} ({status}, attempt {_field(row, 'attempt')})"
+        desc = ANCHOR_CONJUNCTS.get(sid)
+        if desc is None:
+            lines.append(
+                f"{head}  anchor arm '{anchor_name}' RECORDED but the conjunct "
+                f"is UNDESCRIBED —\n        the statistic and direction live "
+                f"in the spec's pre-registration, not the row;\n        add "
+                f"the ANCHOR_CONJUNCTS entry rather than letting this reader "
+                f"guess a sign.")
+            continue
+        stat = str(desc["stat"])
+        anch_scores = arms.get(anchor_name, {}).get(stat)
+        lines.append(f"{head}  {desc['label']} vs '{anchor_name}' at "
+                     f"{desc['decided_at']}:")
+        metrics = _field(row, "metrics") or {}
+        winning = set(metrics.get("winning_arms") or [])
+        refuted = set(metrics.get("refuted_arms") or [])
+        for arm_name in sorted(arms):
+            if arm_name == anchor_name:
+                continue
+            chal = arms[arm_name].get(stat)
+            if not (isinstance(chal, list) and isinstance(anch_scores, list)):
+                lines.append(f"        {arm_name:<16s} '{stat}' missing on "
+                             f"one side — unreadable from the row")
+                continue
+            rep = anchor_margin(
+                chal, anch_scores, quiet=True,
+                higher_is_better=bool(desc["higher_is_better"]),
+                decided_at=str(desc["decided_at"]))
+            tag = ("CERTIFIED" if arm_name in winning
+                   else "refuted" if arm_name in refuted else "recorded")
+            if rep["paired_diffs"] is None:
+                seeds = "seeds unpaired"
+            else:
+                seeds = (f"seeds {rep['n_improving']} improving / "
+                         f"{rep['n_regressing']} "
+                         + ("REGRESSING" if rep["n_regressing"]
+                            else "regressing"))
+            lines.append(
+                f"        {arm_name:<16s} {tag:<9s} margin "
+                f"{rep['margin']:+.4f} = {100.0 * rep['margin_over_spread']:+.1f}% "
+                f"of anchor seed spread {rep['anchor_spread']:.4f}; {seeds}")
+    return lines
+
+
 def _selftest() -> int:
     """Replay the committed T4.06 row (attempt 1, `159e165`) as the fixture.
 
@@ -153,8 +280,11 @@ def _selftest() -> int:
     modality_dropout = [-2.4162, -2.6808, -2.5041]
 
     failures: List[str] = []
+    n_checks = 0
 
     def check(name: str, ok: bool, got: object) -> None:
+        nonlocal n_checks
+        n_checks += 1
         if not ok:
             failures.append(f"{name}: got {got!r}")
 
@@ -194,13 +324,54 @@ def _selftest() -> int:
     except ValueError:
         pass
 
+    # The reader (110th audit FTB 2), on a fixture shaped exactly like the
+    # committed rows: T4.06's arms (same literals as above) must enter the
+    # inventory and re-derive both calibration points in the printed block;
+    # D1.0's arms dict carries NO anchor-named arm and must be excluded; an
+    # anchor row with no ANCHOR_CONJUNCTS entry must be reported UNDESCRIBED
+    # rather than described with a guessed sign.
+    def _arms(scores):
+        return {n: {"r2_per_seed": s} for n, s in scores.items()}
+    fixture = {
+        "T4.06": {"status": "PASS", "attempt": 1, "metrics": {
+            "arms": _arms({"incumbent": incumbent,
+                           "loss_reweight": loss_reweight,
+                           "grad_norm": grad_norm,
+                           "modality_dropout": modality_dropout}),
+            "winning_arms": ["loss_reweight"],
+            "refuted_arms": ["grad_norm"]}},
+        "D1.0": {"status": "VOID", "attempt": 2, "metrics": {
+            "arms": _arms({"aprime": [0.1], "c_e2e": [0.2]})}},
+        "X.99": {"status": "FAIL", "attempt": 1, "metrics": {
+            "arms": _arms({"anchor": [0.0], "arm_a": [0.1]})}},
+    }
+    inv = [sid for sid, *_ in anchor_rows(fixture)]
+    check("inventory selects anchor rows, excludes D1.0",
+          inv == ["T4.06", "X.99"], inv)
+    block = "\n".join(status_lines(fixture))
+    check("block re-derives the certified point (+6.9%, 1 REGRESSING)",
+          "+6.9% of anchor seed spread 0.2699" in block
+          and "1 REGRESSING" in block, block)
+    check("block re-derives the refuted point (-56.7%)",
+          "-56.7% of anchor seed spread 0.2699" in block, block)
+    def _line_with(text: str, word: str) -> str:
+        return next((l for l in text.splitlines() if word in l), "")
+    check("winner/refuter tagged from the row's own verdict fields",
+          "CERTIFIED" in _line_with(block, "loss_reweight")
+          and "refuted" in _line_with(block, "grad_norm")
+          and "recorded" in _line_with(block, "modality_dropout"), block)
+    check("undescribed anchor row reported, not guessed",
+          "UNDESCRIBED" in block and "X.99" in block, block)
+    check("empty inventory prints nothing",
+          status_lines({"T0.01": {"status": "PASS", "metrics": {}}}) == [], "")
+
     if failures:
         print(f"SELFTEST FAILED ({len(failures)}):", file=sys.stderr)
         for f in failures:
             print(f"  {f}", file=sys.stderr)
         return 1
-    print("selftest: 8 checks, 0 failures — fixture is the committed "
-          "T4.06 row (159e165)")
+    print(f"selftest: {n_checks} checks, 0 failures — fixture is the "
+          "committed T4.06 row (159e165)")
     return 0
 
 

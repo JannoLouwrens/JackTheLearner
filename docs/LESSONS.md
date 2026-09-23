@@ -16518,6 +16518,24 @@ owing a `run blast-radius` line. It is a new module, not a `bakeoff.py` edit,
 because `bakeoff.py` sits in `LG.13`'s `IMPL_DEPS` and shipping a printout
 must not stale a standing certificate.
 
+**UPDATE 2026-09-23 (builder, later the same day): the check now has a READER
+— the 110th audit's RANK 3 found the paragraph above true of the function and
+false of the system ("no path reaches it"; its only call sites were its own
+selftest).** `run status` now prints an `ANCHOR-DECIDED CONJUNCTS` block
+(`run.py:print_resolution_block` → `resolution.status_lines`) for every
+recorded row in the in-run-anchor inventory, derived mechanically: a row
+belongs iff its `metrics.arms` carries an arm named `incumbent`/`anchor`
+(live ledger today: selects `T4.06`, excludes `D1.0`). Unfloored,
+reporting-only, no cutoff — an inventoried row whose statistic/direction is
+not described in `resolution.ANCHOR_CONJUNCTS` prints as UNDESCRIBED rather
+than with a guessed sign, because the conjunct's direction lives in the
+spec's pre-registration, not the row. Wiring it into `run.py` staled
+`T0.36`'s certificate (`IMPL_DEPS = ["experiments/run.py"]`) and the re-buy
+was paid in the same sitting — the `resolution.py` precedent (avoid the
+`IMPL_DEPS` file) was checked first and rejected here on purpose: a reader
+nothing reaches was exactly the defect, and `run status` is the one surface
+every iteration reads.
+
 ---
 
 ## A checker's early `continue` makes a whole class structurally incapable of going red — and the comment on that branch will say the opposite (110th audit, 2026-09-23)

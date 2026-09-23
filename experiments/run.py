@@ -729,8 +729,29 @@ def cmd_status(ledger: Ledger) -> int:
     print_steering_block()
     print_fieldwatch_block()
     print_unread_metrics_block()
+    print_resolution_block(ledger)
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
+
+
+def print_resolution_block(ledger: Ledger) -> None:
+    """Anchor-decided conjuncts: margin vs the anchor's own seed spread.
+
+    The 109th audit's margin-vs-spread check (`T4.06` certified an arm at 6.9%
+    of its anchor's seed noise) got its arithmetic in
+    `experiments/resolution.py` and, per the 110th audit's FTB 2, gets its
+    reader here — the one block every iteration actually reads. REPORTING-ONLY
+    and UNFLOORED: no cutoff, no verdict, nothing reddens; whether a margin
+    decides stays with each spec's pre-registration (`SO.10` vacancy
+    precedent), and a rule armed on this output is a conjunct owing
+    `run blast-radius`. Inventory derivation lives in
+    `resolution.anchor_rows`, not here.
+    """
+    from .resolution import status_lines
+    lines = status_lines(ledger.results)
+    if lines:
+        print("\n".join(lines))
+        print()
 
 
 def print_unread_metrics_block() -> None:
