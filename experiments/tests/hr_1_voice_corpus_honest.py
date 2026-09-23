@@ -1,9 +1,14 @@
 """HR.1 — the voice corpus is honest before anyone is scored.
 
-THE CLAIM (registry, verbatim intent): a speaker corpus exists ON THIS BOX with
+THE CLAIM (registry, verbatim intent; the registry hypothesis was amended
+2026-09-23 per the 110th audit FTB 1 — CROSS-SESSION became CROSS-MICROPHONE,
+recording the condition arm (c) actually delivered, with the caveat that
+cross-mic controls for equipment and NOT for occasion): a speaker corpus
+exists ON THIS BOX with
 >=8 enrolled and >=8 held-out UNKNOWN speakers, disjoint enrolment/test
 utterances, CROSS-SESSION test material (cross-CHAPTER for LibriSpeech — the
-registry notes say why), and a NOISE/REVERB stratum — such that no NON-VOCAL
+registry notes say why; superseded by the amendment above), and a
+NOISE/REVERB stratum — such that no NON-VOCAL
 channel cue can identify a speaker in either stratum. If a probe on channel
 features alone reads a speaker above chance+5%, every speaker-ID number
 downstream (HR.3, HR.4) is a microphone measurement, not a voice measurement,
@@ -567,7 +572,14 @@ def _bundle() -> dict:
 def _experiment(seed: int) -> dict:
     b = _bundle()
     r = b[seed]
-    out = {"min_channel_leak_margin": r.get("margin", float("nan")),
+    # The headline must be the number _check gates on: the WORST seed's
+    # margin. Returning this seed's own margin here made the ledger's
+    # headline the seed-MEAN under a `min_` name — attempt 4 led with
+    # -0.00208 while the gate decided on -0.025, a factor of twelve
+    # (110th audit FTB 5). Per-seed values stay visible as margin_s{N}.
+    margins = [float(b[s].get("margin", float("nan"))) for s in SEEDS]
+    worst = float("nan") if any(v != v for v in margins) else min(margins)
+    out = {"min_channel_leak_margin": worst,
            "clean_probe_acc": r.get("clean_acc", float("nan")),
            "noise_probe_acc": r.get("noise_acc", float("nan"))}
     for s in SEEDS:
