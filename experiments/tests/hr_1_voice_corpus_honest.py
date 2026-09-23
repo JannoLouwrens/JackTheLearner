@@ -81,6 +81,34 @@ Artifact: /data/jack_corpora/librispeech/hr1_manifest.json — the split (per
 seed), the delivery contract constants, and a corpus census (file count +
 total bytes) so a later run can detect the corpus changed under the
 certificate.
+
+ARM (a) OF THE FIXTURE-REDESIGN DISPOSITION (Review DAILY 2026-09-23, row
+`hr1-clean-stratum-is-a-microphone-measurement`; implemented by the builder
+the same day). Attempt 2 FAILed on its pre-stated branch: the clean
+cross-chapter stratum read 0.2375/0.3812/0.4268 against the 0.10 bar —
+LibriVox equipment is per-reader constant, so cross-chapter is cross-session
+in time but not in channel. The ordered repair: PER-CLIP QUIET-FLOOR SPECTRAL
+WHITENING added to the delivery contract. `load_clip` now estimates the
+noise-floor power spectrum from the quietest QUIET_FRAC of frames (the same
+framing the probe uses), builds the zero-phase inverse filter (smoothed
+WHITEN_SMOOTH_BINS bins, regularised WHITEN_REG relative to the mean floor
+power — both constants declared here BEFORE the run and not revisited), and
+applies it to the whole clip, then re-delivers. This flattens the
+silence-segment SPECTRUM by construction; it deliberately does NOT touch the
+floor LEVEL, the SNR, or the clipping fraction — those cues stay measurable,
+which is what should keep the planted same-session leak control alive.
+EVERY GATE IS UNCHANGED so the run can FAIL: the 0.10 clean bar, the 0.20
+planted-leak floor (chance+0.15), the noise stratum, the 17 features, the
+probe, the seeds. Two pre-registered outcomes, both results, neither moving
+a threshold:
+  - clean stratum below the 0.10 bar AND the planted leak still above its
+    0.20 floor -> the confound is removable in-corpus; HR.2-HR.4 unblock on
+    LibriSpeech and VCTK's 11.7 GB is not spent;
+  - the leak control at or below 0.20 (the run returns VOID: instrument
+    dead), OR the clean stratum still at/above 0.10 -> arm (a) is REFUTED,
+    not a tuning opportunity. Do NOT re-tune the whitener; arm (c) — VCTK,
+    genuinely multi-session — fires automatically per the disposition,
+    without a further Review sitting.
 """
 from __future__ import annotations
 
@@ -117,6 +145,8 @@ FRAME, HOP = 400, 160             # 25 ms / 10 ms at 16 kHz
 PROBE_STEPS = 600
 PROBE_LR = 0.05
 PROBE_WD = 1e-3
+WHITEN_REG = 1e-3                 # arm (a): rel. regularisation of the floor
+WHITEN_SMOOTH_BINS = 5            # arm (a): floor-spectrum smoothing window
 
 _FEAT_CACHE: dict[str, "object"] = {}   # path -> clean delivered features
 _BUNDLE: dict | None = None
@@ -126,7 +156,8 @@ _BUNDLE: dict | None = None
 
 def load_clip(path: str | Path, max_s: float = CLIP_S):
     """The ONLY sanctioned reader for this corpus. DC-removed, RMS-normalised
-    float32, first `max_s` seconds. HR.2/HR.3/HR.4 must use this."""
+    float32, first `max_s` seconds, QUIET-FLOOR SPECTRALLY WHITENED (arm (a),
+    2026-09-23). HR.2/HR.3/HR.4 must use this."""
     import numpy as np
     import soundfile as sf
     x, sr = sf.read(str(path), frames=int(max_s * SR), dtype="float32",
@@ -134,7 +165,38 @@ def load_clip(path: str | Path, max_s: float = CLIP_S):
     if sr != SR:
         raise RuntimeError(f"{path}: sample rate {sr} != {SR}")
     x = np.asarray(x, dtype=np.float64)
-    return deliver(x)
+    return deliver(_whiten_quiet_floor(deliver(x)))
+
+
+def _whiten_quiet_floor(x):
+    """Arm (a): flatten the clip's own silence-floor spectrum. Estimates the
+    noise-floor power spectrum from the quietest QUIET_FRAC of frames (the
+    probe's framing), builds a smoothed, regularised zero-phase inverse
+    filter, applies it to the whole clip. Touches the floor's SHAPE only —
+    level, SNR and clipping cues are left for the probe to measure."""
+    import numpy as np
+    n = (len(x) - FRAME) // HOP + 1
+    if n < 10:
+        return x
+    idx = np.arange(FRAME)[None, :] + HOP * np.arange(n)[:, None]
+    frames = x[idx]
+    energy = np.mean(frames * frames, axis=1)
+    order = np.argsort(energy)
+    n_quiet = max(5, int(QUIET_FRAC * n))
+    win = np.hanning(FRAME)
+    spec = np.abs(np.fft.rfft(frames[order[:n_quiet]] * win, axis=1)) ** 2
+    floor = np.mean(spec, axis=0)
+    kernel = np.ones(WHITEN_SMOOTH_BINS) / WHITEN_SMOOTH_BINS
+    floor = np.convolve(floor, kernel, mode="same")
+    mean_floor = float(np.mean(floor))
+    if mean_floor <= 0.0:
+        return x
+    gain = np.sqrt(mean_floor / (floor + WHITEN_REG * mean_floor))
+    freqs_frame = np.fft.rfftfreq(FRAME, 1.0 / SR)
+    freqs_clip = np.fft.rfftfreq(len(x), 1.0 / SR)
+    X = np.fft.rfft(x) * np.interp(freqs_clip, freqs_frame, gain)
+    y = np.fft.irfft(X, len(x))
+    return y if np.all(np.isfinite(y)) else x
 
 
 def deliver(x):
@@ -342,7 +404,11 @@ def _bundle() -> dict:
 
     idx, n_files, n_bytes = _index_corpus()
     manifest = {"contract": {"sr": SR, "clip_s": CLIP_S, "target_rms": TARGET_RMS,
-                             "dc_removed": True, "loader": "hr_1_voice_corpus_honest.load_clip"},
+                             "dc_removed": True, "loader": "hr_1_voice_corpus_honest.load_clip",
+                             "whiten": {"reg": WHITEN_REG,
+                                        "smooth_bins": WHITEN_SMOOTH_BINS,
+                                        "quiet_frac": QUIET_FRAC,
+                                        "frame": FRAME, "hop": HOP}},
                 "census": {"n_files": n_files, "n_bytes": n_bytes},
                 "seeds": {}}
     out = {}
