@@ -8436,6 +8436,31 @@ ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field 
         three candidate closures and this desk endorses measuring before
         picking. What is owed by then: the false-positive rate re-measured
         after the fix, written down, and the shared-helper caution honoured.
+    UPDATE 2026-09-23 (builder): EXECUTED, measured first as ordered. Every
+        (finding x desk-chunk) overlap on the live corpus was enumerated and
+        adjudicated before a closure was picked: 20 overlapping pairs; the 18
+        spurious ones cap at 4 shingles once `ROUTED:` header lines are
+        stripped (stock phrases 1-2, row-title mentions 3-4 — bounded by
+        slug/title length), the true quotations read 12 (fixture), 18 and 66.
+        Closure = scout's (a)+(b): strip the header line, then require
+        `MIN_QUOTE_OVERLAP = 6` shared shingles (~11 consecutive words — more
+        than any slug or title carries, half the smallest true quote). (c)
+        (previous-sweep subtraction) NOT taken: no measured FP needed it and
+        it costs a git-history read every render. POST-FIX RATE, written
+        down: 0 spurious of 18 sub-threshold pairs route; both true pairs
+        route (and are superseded by their own citations, so the live block
+        reads 2 cited / 0 quoted / 0 unrouted — now honestly). Shared-helper
+        caution honoured by construction: `decisions._shingles` untouched,
+        threshold and stripping live in `fieldwatch.py` only; the false-
+        negative trade (a one-clause re-worded routing now reads UNROUTED)
+        is recorded in the module docstring as the safe direction for a
+        reporting-only counter. Fixture `_FIXTURE_QUEUE_SPURIOUS` replays
+        all three FP mechanisms at once and asserts the old one-shingle rule
+        WOULD have tripped on it (raw >= 6 > stripped > 0), so neither half
+        of the repair can silently rot. Measuring first also caught a
+        sibling: `decisions.owner_asks` parses 0 items on every PROGRESS.md
+        revision since 2026-09-09 (last nonzero 09-08) — routed separately
+        as `owner-ask-reader-blind-since-0909`.
 
 ## ROUTED 2026-09-21 (builder): `d27-screen-measures-95-percent-false` — the
 ## armed default ordered a screen, the screen is built, and its own measured
@@ -8609,3 +8634,43 @@ instrument** and the first to say it about a NULL rather than about an arm.
     `t3_06_*.py` only (T3.06 is VOID; no certificate rests on it). A WORLD
     repair bills every `playground.py` certificate and must go through the
     edit window, which is why this row is dated behind it rather than beside it.
+
+## ROUTED 2026-09-23 (builder): `owner-ask-reader-blind-since-0909` — the
+## UNROUTED-OWNER-ASK class has read empty for 15 days because the page's
+## item format moved out from under its parser
+
+ROUTED: owner-ask-reader-blind-since-0909 | 2026-09-23 | measurement in the `fieldwatch-quotation-channel-is-0-for-5` execution (builder) | OPEN
+    **What was measured, incidentally, while honouring that row's shared-helper
+    caution.** `decisions.owner_asks` parses **0 items** on `docs/PROGRESS.md`
+    at every revision from 2026-09-09 through today — the live page carries
+    FIVE items under `## FOR THE OWNER`. Last nonzero parse: 3, on the
+    2026-09-08 revision. Replay:
+    `for c in $(git log --format=%h -- docs/PROGRESS.md); do git show
+    $c:docs/PROGRESS.md | python -c "...print(len(owner_asks(stdin)))"; done`.
+    **The mechanism, one line.** `decisions._ITEM` is `^(\d{1,2})\.\s+(.*)$` —
+    the digit at column 0 — and the Review has written its owner items as
+    `**1. NO-DECISION: ...**` (bold marker before the number) since 09-09.
+    Same class as the fieldwatch 0-for-5 and the dark-slot counter: a reader
+    whose population selector quietly stopped matching, reporting an empty
+    class as a green one. `BASELINE_UNROUTED_ASKS = 3` cannot fire on a page
+    that parses as zero asks, so `UNROUTED-OWNER-ASK` and `VANISHED-OWNER-ASK`
+    have both been structurally silent for 15 days — including through the
+    09-22 blackout sitting, when the page carried a `D33` addendum and three
+    NO-DECISION items nothing verified.
+    **Why this is routed and not fixed in the same commit.** Two instrument
+    edits in one slot is how one goes unverified (this desk's own standing
+    reasoning), and this reader audits the Review's `FOR THE OWNER` section —
+    re-arming it changes what counts against a floored ratchet, which the
+    executing slot should verify in isolation. The repair looks like one line
+    (`_ITEM` admits `\*{0,2}` before the digit, or `_tokens`-style markdown
+    blindness at the line head) plus a fixture in the `**N.** ` shape the live
+    page actually uses — and a re-read of what the re-armed counter says
+    about the CURRENT page before it lands, because it may go red > 3 the
+    moment it can see again, and that red is information, not a bug.
+    DUE: 2026-10-01 | builder repair; cheap, but it re-arms a floored counter
+        and must land with its first honest reading written in the commit.
+        Dated by `next_free_due` (read at routing: 2026-10-01, every day
+        through 09-29 already carrying 6-8 promises) rather than by the
+        repair's size — a cheap fix on a piled day is still a promise that
+        breaks. Nothing forbids an earlier slot taking it if the board is
+        empty; the date is a ceiling on silence, not a floor on work.

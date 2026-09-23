@@ -17658,3 +17658,25 @@ from 13:07 inclusive and missed the 12:07 skip. Target 4 (26) matches exactly.
 I did not tune the reader to reproduce the ordered numbers. Zero staleness
 bill confirmed (no IMPL_DEPS names this file). Next: fieldwatch-quotation
 row (item 3, OVERDUE — measure both channels' FP rates before any closure).
+2026-09-23 ~12:5x UTC — 1^12 ITEM 3 DONE (fieldwatch-quotation-channel-is-0-for-5,
+was OVERDUE): measured EVERY (finding x desk-chunk) overlap on the live corpus
+before picking — 20 pairs, 18 spurious capping at 4 shingles once ROUTED:
+headers are stripped, true quotes at 12/18/66. Closure (a)+(b): header
+stripping + MIN_QUOTE_OVERLAP=6, both inside fieldwatch.py; decisions._shingles
+UNTOUCHED (the caution honoured by construction, not by a parallel
+measurement). Post-fix FP rate written into the row: 0 spurious route, both
+true pairs route and are superseded by their citations — live block reads
+2 cited / 0 quoted / 0 unrouted, now honestly. Fixture _FIXTURE_QUEUE_SPURIOUS
+replays slug+stock-phrase+title-mention at once and asserts raw>=6>stripped>0
+so neither half can rot silently. Scout's (c) not taken: no measured FP needed
+it. THE MEASUREMENT ALSO CAUGHT A SIBLING: decisions.owner_asks parses 0 items
+on every PROGRESS.md revision since 09-09 (last nonzero 09-08: 3) — the Review
+writes owner items as `**1.` and _ITEM demands the digit at column 0, so
+UNROUTED-OWNER-ASK has been structurally silent 15 days, through the blackout
+sitting. Routed as owner-ask-reader-blind-since-0909, DUE 2026-10-01 (dated by
+next_free_due — 09-24..29 all carry 6-8 promises), NOT fixed here: two
+instrument edits in one slot is how one goes unverified, and this one re-arms
+a floored counter. net_arrivals 5->6 is that arrival. Meters at slot start:
+week:all-models 0% (the gate, week reset today), week:Fable 0%, ran on Fable.
+Next: item 4 (BA.03 (c) implement — but read the STEERING-PAGE ORDERS note
+that the runner would refuse BA.03 today) or item 6 (HR.1 arm (a), ~16 s).

@@ -25,7 +25,32 @@ a `REVIEW_QUEUE.md` row or a `DECISIONS_NEEDED.md` entry either CITES it by
 section (the live row's own form: *"field watch wk7 §6"*) or QUOTES a
 verbatim span of it (the same 6-gram shingle rule `decisions.owner_asks`
 uses on the facing problem, imported from there so the two readers cannot
-drift apart).
+drift apart — but see the threshold below: ONE shared shingle stopped being
+enough the day it was measured).
+
+THE QUOTATION THRESHOLD, AND THE MEASUREMENT THAT SET IT (builder,
+2026-09-23, executing `fieldwatch-quotation-channel-is-0-for-5`). At one
+shared shingle the channel measured 0-true-for-5 routings at n = 5 — every
+hit was stock house-style English (*"it is the same shape as"*) or the row's
+own slug, because `_queue_chunks` starts each chunk at `ROUTED: <slug>`, so a
+finding that NAMES the row it is distinguishing itself from reads as owned by
+it. Measured over every (finding x desk-chunk) pair on the live 2026-09-23
+corpus, with `ROUTED:` header lines stripped from chunks before shingling:
+every spurious pair overlaps by <= 4 shingles (stock phrases 1-2; a row
+TITLE mentioned in a finding's body 3-4, bounded because slugs and titles
+are ~8-10 words), while every true quotation measured >= 12 (fixture 12,
+live 18 and 66). `MIN_QUOTE_OVERLAP = 6` sits between with ~2x margin on
+both sides: it demands the verbatim-span equivalent of >= 11 consecutive
+words, which is more than any slug or title can carry and less than half the
+smallest real quote observed. Post-fix rate on the same corpus: 0 spurious
+of 18 sub-threshold pairs suppressed, 1 genuine quotation retained (and
+superseded by its own citation). The trade is deliberate and in the safe
+direction for a reporting-only counter: a re-worded routing that keeps only
+one clause now reads UNROUTED (a human looks at a false red), instead of a
+no-owner finding reading ROUTED (nobody looks at a false green — the exact
+scar of the 96th audit). The threshold and the stripping both live HERE, not
+in `decisions._shingles`: the shared helper also serves the owner-ask
+reader, and re-tuning it blind was explicitly forbidden by the routing row.
 
 WHAT A FINDING IS, and why that is a heuristic. Sections whose heading
 declares itself one — `## 6. A FINDING IN OUR OWN ARTIFACTS — …` — i.e. any
@@ -88,6 +113,16 @@ _WEEK = re.compile(r"field watch,?\s+week\s+(\d+)", re.I)
 # as `review_queue._ROUTED`, restated here only because that module's parser
 # returns typed fields and this one needs the raw text for quotation checks.
 _ROW = re.compile(r"^ROUTED:\s*([a-z0-9][a-z0-9-]*)\s*\|", re.M)
+
+# Stripped from a chunk before the quotation match: the header line carries the
+# row's slug, and a finding naming the row it is distinguishing itself FROM
+# must not read as quoted BY that row (the measured self-match class).
+_ROW_HEADER = re.compile(r"^ROUTED:[^\n]*$", re.M)
+
+# Minimum shared shingles for the quotation channel. Measured 2026-09-23:
+# spurious pairs (stock phrases, slug/title mentions) cap at 4 after header
+# stripping; true quotations start at 12. See the module docstring.
+MIN_QUOTE_OVERLAP = 6
 
 
 def findings(text: str) -> List[dict]:
@@ -167,6 +202,8 @@ def resolve(finds: List[dict], queue_text: str,
     desks: List[Tuple[str, str, str]] = (
         [("queue-row", k, v) for k, v in sorted(_queue_chunks(queue_text).items())]
         + [("decision", k, v) for k, v in sorted(_entries_of(decisions_text).items())])
+    quotable = [(kind, key, _shingles(_ROW_HEADER.sub("", text)))
+                for kind, key, text in desks]
     for f in finds:
         f["routed"] = None
         for kind, key, text in desks:
@@ -176,8 +213,8 @@ def resolve(finds: List[dict], queue_text: str,
         if f["routed"]:
             continue
         sh = _shingles(f["text"])
-        for kind, key, text in desks:
-            if sh & _shingles(text):
+        for kind, key, desk_sh in quotable:
+            if len(sh & desk_sh) >= MIN_QUOTE_OVERLAP:
                 f["routed"] = (f"quoted by {kind}", key)
                 break
     return finds
@@ -282,6 +319,17 @@ ROUTED: some-other-slug | 2026-09-14 | anywhere | OPEN
     the latent must be reported every 1,000 decisions, and nothing does.
 """
 
+# The 0-for-5 scar (routed 2026-09-21, fixed 2026-09-23), executable: a chunk
+# that touches §6 through every measured spurious mechanism at once — the
+# finding's own words as the row SLUG (4 shingles, dies to header stripping),
+# a stock house-style 6-gram, and a short title-length mention (2 shingles) —
+# and still MUST NOT route, because none of that is a desk quoting a finding.
+_FIXTURE_QUEUE_SPURIOUS = """\
+ROUTED: effective-rank-and-per-dimension-variance-of-the-latent | 2026-09-23 | anywhere | OPEN
+    The collapse is the failure mode and the diary already knows it; a floor
+    that must be reported every 1,000 decisions is someone else's row.
+"""
+
 
 def _check() -> None:
     """Refuse to report from a reader that flunks the known answer.
@@ -320,6 +368,24 @@ def _check() -> None:
     if q[0]["routed"] != ("quoted by queue-row", "some-other-slug"):
         raise AssertionError(f"fieldwatch: verbatim quotation must route: "
                              f"{q[0]['routed']}")
+
+    # the 0-for-5 scar: slug + stock phrase + title mention must NOT route,
+    # and the fixture must actually exercise both halves of the repair —
+    # over threshold with the header, under it (but non-empty) without.
+    from .decisions import _shingles
+    sh6 = _shingles(finds[0]["text"])
+    raw = len(sh6 & _shingles(_FIXTURE_QUEUE_SPURIOUS))
+    stripped = len(sh6 & _shingles(_ROW_HEADER.sub("", _FIXTURE_QUEUE_SPURIOUS)))
+    if not (raw >= MIN_QUOTE_OVERLAP > stripped > 0):
+        raise AssertionError(
+            f"fieldwatch: spurious fixture drifted — raw={raw} "
+            f"stripped={stripped} vs threshold {MIN_QUOTE_OVERLAP}; it must "
+            f"trip the old one-shingle rule and clear neither repair alone")
+    fp = resolve([dict(f) for f in finds], _FIXTURE_QUEUE_SPURIOUS, "")
+    if fp[0]["routed"] is not None:
+        raise AssertionError(
+            f"fieldwatch: a slug/stock-phrase chunk routed §6 again — the "
+            f"0-for-5 false green is back: {fp[0]['routed']}")
 
     # a stale citation (wrong week) must not route a fresh finding
     stale = _FIXTURE_QUEUE_CITED.replace("wk7", "wk6")
