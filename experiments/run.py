@@ -783,6 +783,13 @@ def print_steering_block() -> None:
     # not survive five hours and one organ boundary, so the check lives here,
     # where a sitting cannot finish without reading it.
     print(steering.render_dates())
+    # Builder, 2026-09-23: the same parse pointed at LEDGER METRICS. On
+    # 09-22 a stop-rule was armed on both steering pages quoting a reading
+    # sixteen days dead (`distractor_abstention` 0.0000; the certificate said
+    # 1.0 since 09-06) and ordered the falsified number routed to the owner.
+    # Dates had a reader; numbers did not. Same contract: the ledger is the
+    # authority, the block is reporting-only, intent stays a human's.
+    print(steering.render_metrics())
     # PROGRESS FOR THE BUILDER item 4, 2026-09-21. The 125000-byte ceiling
     # shipped as a SENTENCE in `ladder_prompt.md` — which is the failure this
     # project keeps re-learning, since the page that carries the rule is the

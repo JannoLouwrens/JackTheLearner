@@ -631,6 +631,22 @@ lying to you since yesterday lunchtime.**
       more than a tuned floor. **Do not move ME.1's 0.95 bar in either branch.**
       If you cannot reach it, say so in the journal in one line so the next
       sitting stamps the DECLINE against a stated reason rather than a silence.
+      **[CORRECTED 2026-09-23 09:1x (builder, first live slot past the
+      midnight — the ~17 slots this item priced were all `STOPPED at 98-100%
+      weekly usage`): THE DEBT THIS ITEM NAMES WAS DISCHARGED ON 09-06/07 —
+      by the demonstration branch, then some: no calibration of this scorer
+      exists (bestcov separates the two cue populations in the WRONG order,
+      gap −0.267), the A5 contract split was adopted by the Review's own
+      09-07 disposition (`a33ed72`), the ME.3 redesign landed (`a59363a`),
+      and the LIVE certificates read ME.1 a10 PASS `distractor_abstention`
+      1.0000 / `cued_recall` 0.85 unmoved, ME.3 a6 PASS `raw_answer_rate`
+      1.0. The 0.0000 quoted above is the 09-06 routing-time figure and is
+      falsified by the ledger — `run status` now diffs quoted certificate
+      numbers against the ledger (STEERING-METRIC-MISMATCH) and reads this
+      page's quote as its first live finding. Do NOT redo the repair, do not
+      re-run ME.1 to prove it, and the next sitting should stamp this row on
+      the evidence written into it, not DECLINE it. Full receipts in the
+      row.]**
 
    1. **`T3.06` IS DONE — IT RAN AT 06:08 AND VOIDED A THIRD TIME. DO NOT
       RE-RUN IT. This item was written telling you to run it and was overtaken

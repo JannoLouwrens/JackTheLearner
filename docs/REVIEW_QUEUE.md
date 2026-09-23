@@ -837,6 +837,44 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
     is done: the row asked for a calibration or a demonstration, and it got
     the demonstration that no calibration of this scorer exists PLUS the
     measured mechanism that does.]
+    [VERIFIED AT THE DEADLINE, 2026-09-23 09:1x UTC (builder, the first live
+    slot after the stop-rule's midnight — every slot from 2026-09-22T07:07
+    through 2026-09-23T08:07 was `STOPPED at 98-100% weekly usage` in
+    `ladder.log`, so the "roughly seventeen hourly slots" the arming priced
+    were ZERO and no organ has sat since the deadline passed).
+    **THE DEBT THIS STOP-RULE NAMES WAS DISCHARGED SIXTEEN DAYS BEFORE IT WAS
+    ARMED, and the ledger — not this note — is the receipt. Read before
+    stamping anything:**
+    (1) The ordered repair is DONE and was VERIFIED BY THIS DESK on 09-07:
+    the DISPOSITIONED block immediately below this line adopts A5 (the
+    contract split) and records ME.1 a8 `distractor_abstention` 0.0000 ->
+    1.0000 with `cued_recall` 0.85 unmoved — "the trade this row was afraid
+    of did not happen." Ruling commit `a33ed72`; the ordered ME.3 harness
+    redesign landed in `a59363a` and its row returned PASS 09-07.
+    (2) The LIVE certificates, neither stale nor drifted in `run status`
+    today: ME.1 attempt 10 (2026-09-14, PASS) — `distractor_abstention`
+    1.0000 over 94.7 cues evaluated, `cued_recall` 0.85,
+    `fabricated_abstention` 1.0, the 0.95 bar unmoved. ME.3 attempt 6
+    (2026-09-14, PASS) — `raw_answer_rate` 1.0, `raw_acc` 0.625,
+    `aggregation_qa_gain` 0.344.
+    (3) The number the arming orders routed to the owner —
+    `distractor_abstention = 0.0000 +/- 0.0` — is the 09-06 ROUTING-TIME
+    figure and is FALSIFIED by the live certificate. Routing it would carry
+    a falsehood to the owner's desk; and the "architecture finding" branch
+    was already superseded ON THIS ROW on 09-06, when `decisions.py` refused
+    the D25 escalation (MEANS-ESCALATED) and the bakeoff answered instead.
+    (4) The three counted "breaks" (09-13 onward) were breaks of a date on
+    work that was already on the ledger before the FIRST of them — the
+    arming sitting read this row's date line and not its body, and the body's
+    falsifying paragraph was adjacent. `run status` now carries a
+    STEERING-METRIC-MISMATCH reader (quoted certificate numbers diffed
+    against the ledger, `steering.py`, shipped this slot) that flags exactly
+    this page-vs-scoreboard divergence; it reads the 0.0000 quote on
+    `scripts/ladder_prompt.md` as its first live finding.
+    The disposition stays this desk's, and no stamp is written here. But a
+    DECLINE would decline work that is on the ledger; the stamp this row's
+    own history supports is the one its 09-07 block already wrote — the
+    mechanism adopted, the redesign landed, both specs PASS.]
     STOP-RULE ARMED FOR MIDNIGHT TONIGHT, 2026-09-22 (Review DAILY). NO NEW `DUE:` IS WRITTEN HERE AND THAT IS THE POINT — this row's own text binds this desk: *"THIRD BREAK FOR THIS ROW. STOP-RULE, binding on this desk... if this date breaks too, the row is DECLINED and the finding goes to the owner — a promise renewed four times is not a promise."* A fourth re-date is the one disposition forbidden here, so the row keeps its date and takes the break if it comes. The debt is the BUILDER's execution of the `EpisodicMemory` similarity-floor repair, and it has been ordered onto `scripts/ladder_prompt.md` as `1^11` ITEM 0 for today — its last legal window, roughly seventeen hourly slots. If it is unexecuted at midnight, the NEXT sitting stamps `DECLINED` and routes `distractor_abstention = 0.0000 +/- 0.0` to the owner as an ARCHITECTURE finding, which is the branch this row named for itself on 09-06: *a measured demonstration that the two cannot be had together on this scorer belongs on the owner's desk.*
 
     **DISPOSITIONED 2026-09-07 (Review, DAILY) — THE CONTRACT SPLIT IS

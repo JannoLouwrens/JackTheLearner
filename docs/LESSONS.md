@@ -16413,3 +16413,43 @@ see the case it was bought for (107th audit), `D20`'s closure above, and
 `cross-organ-doc-race-voids-certificates` being re-dated three times on a cost
 computed from four 0.14-second specs while the frontier grew to 2432-second runs
 (108th audit, RANK 1).
+
+## A STOP-RULE CAN BE ARMED ON A PREMISE ALREADY DEAD AT ARMING — a row's date line is not the row, and a deadline priced in slots must check the slots exist
+## (builder, 2026-09-23, from `me1-similarity-floor-never-abstains`: armed at midnight on a reading sixteen days falsified, over a window that held zero live slots)
+
+On 2026-09-22 06:55 the Review armed a binding midnight stop-rule on
+`me1-similarity-floor-never-abstains` — DECLINE at the next sitting, and route
+`distractor_abstention = 0.0000 ± 0.0` to the owner as an architecture finding.
+Every part of that order was dead before it was written:
+
+- **The debt was discharged 09-06/07.** The demonstration branch fired (no
+  calibration of this scorer exists — the two cue populations separate in the
+  wrong order on `bestcov`), the A5 contract split was adopted by the Review's
+  own DISPOSITIONED block (`a33ed72`), the ordered ME.3 redesign landed
+  (`a59363a`), and the certificates read ME.1 PASS `distractor_abstention`
+  1.0000 / `cued_recall` 0.85 unmoved, ME.3 PASS `raw_answer_rate` 1.0. The
+  falsifying paragraph sat IMMEDIATELY BELOW the line where the stop-rule was
+  inserted. Three "breaks" were counted against a promise that had no
+  outstanding work behind it from before its first due date.
+- **The number ordered routed to the owner was the routing-time figure**,
+  sixteen days falsified by the scoreboard. Copies of it propagated to two
+  steering pages the same morning, because no organ that quotes a certificate
+  number ever diffs it against the certificate.
+- **The "~17 hourly slots remain" the deadline was priced in were zero:** 4
+  pace-skips then 22 slots `STOPPED at 98–100% weekly usage`, first live slot
+  09:07 the next day — nine hours past the deadline. A deadline denominated in
+  slots is a liveness claim, and nothing checked it.
+
+The general rules, and this is the arming-time half of the 108th audit's
+"a fired default keeps its premise forever" (one entry up): **(1) an arming
+desk must re-read the ROW BODY and the LEDGER, not the date line — a
+stop-rule is a firing scheduled in advance, so the pre-firing check is owed
+at arming; (2) a certificate number quoted on a steering page is a cached
+read of the one scoreboard and rots like every other cache.** Rule (2) now
+has an instrument: `run status` prints `STEERING-METRIC-MISMATCH`
+(`steering.py`), diffing quoted metric values beside their spec ids against
+the live ledger — precision-aware rounding, arrow transitions and bar quotes
+silent, measured at first shipping as 1 real finding (this incident's 0.0000
+on the builder's own prompt page) and 1 dismissible false positive. Rule (1)
+has no instrument yet; deadlines priced in slots that a gate can zero remain
+a hole an arming desk must check by hand.

@@ -430,6 +430,187 @@ def render_dates(mis: Optional[List[dict]] = None,
     return "".join(lines)
 
 
+# ── metric values quoted on a steering page (builder, 2026-09-23) ───────────
+#
+# THE SCAR: on 2026-09-22 06:55 (`51c9d13`) the Review armed a midnight
+# stop-rule on `me1-similarity-floor-never-abstains` and wrote it onto both
+# steering pages quoting `distractor_abstention` **0.0000 ± 0.0** as the live
+# reading — the 09-06 routing figure, sixteen days after the repair landed
+# and eight days after `ME.1`'s attempt-10 certificate recorded the same
+# metric at 1.0. The stop-rule ordered the falsified number routed to the
+# owner as an architecture finding, and the discharge evidence sat one
+# paragraph below the arming line. Quoted DATES already had this reader
+# (100th audit B1); quoted NUMBERS did not, and the ledger — the one
+# scoreboard — was never consulted by any organ that copied the figure
+# forward. Same contract as the date reader: the ledger is the authority;
+# the page may cite a number for another reason; this reader does not read
+# intent.
+#
+# Three declared heuristics, each choosing the silent (missed-pairing)
+# direction over the false alarm:
+#   * only metric keys containing an underscore — `events` as a bare English
+#     word beside an unrelated number is the false-positive shape;
+#   * only quoted numbers containing a decimal point — "on 3 seeds" beside a
+#     key is prose, and certificate values on these pages are written with
+#     their decimals;
+#   * a number led by a comparison operator is a BAR, not a reading —
+#     "`raw_answer_rate` >= 0.95" describes the gate, and flagging it against
+#     the measured 1.0 would put a false positive beside every real finding.
+# − is the Unicode minus these pages actually write negatives with —
+# reading "−0.2333" as 0.2333 flagged two correct sentences on the first
+# live pass of this reader, which is exactly the D27 fate it must not earn.
+_NUM = re.compile(r"[-+−]?\d+\.\d+")
+_METRIC_WINDOW = 60
+# The metric reader ALSO scans the builder's own prompt page — that is where
+# today's dead number actually lived (`1^11` item 0), and the page every
+# hourly slot reads is the one whose quoted readings most need to be true.
+# The date and order readers deliberately do not: `ladder_prompt.md` carries
+# superseded blocks as provenance BY DESIGN, and dates/orders inside history
+# are narration. Metric quotes are different — the union-agree rule keeps an
+# honest historical quote silent whenever the certificate's value appears
+# anywhere in the same paragraph, and a paragraph quoting ONLY the dead
+# reading is exactly the finding.
+# MEASURED on the live pages at first shipping (2026-09-23): 2 findings,
+# 1 real (`distractor_abstention` 0.0000 vs the certificate's 1.0 — the
+# incident this reader exists for), 1 false (`construction_ok` catching its
+# neighbour `memorisers 0.0` inside the window) — a rate a human dismisses
+# in one line, recorded here so the next reader knows the error shape.
+METRIC_PAGES = STEERING_PAGES + (LAUNCH_PAGE,)
+
+
+def ledger_metrics(path: Optional[Path] = None) -> Dict[str, Dict[str, float]]:
+    """{spec id -> {underscore metric key -> value}} from CURRENT entries.
+
+    `metrics` and `control_metrics` both — pages quote either. Numeric values
+    only. History is deliberately excluded: a page quoting an old attempt
+    writes it beside an arrow to the new one, and the union-agree rule keeps
+    such sentences silent without this reader pretending to know which
+    attempt a bare number means.
+    """
+    import json
+    p = Path(path) if path else _REPO / "experiments" / "ledger.json"
+    entries = json.loads(p.read_text()).get("results", {})
+    out: Dict[str, Dict[str, float]] = {}
+    for sid, e in entries.items():
+        if not isinstance(e, dict):
+            continue
+        vals: Dict[str, float] = {}
+        for src in ("metrics", "control_metrics"):
+            for k, v in (e.get(src) or {}).items():
+                if (isinstance(v, (int, float)) and not isinstance(v, bool)
+                        and "_" in k):
+                    vals[k] = float(v)
+        if vals:
+            out[sid] = vals
+    return out
+
+
+def _rounds_to(quoted: str, value: float) -> bool:
+    """Could `quoted` be `value` rounded at the quoted precision?
+
+    `0.344` agrees with 0.343733 (three decimals, tolerance 0.0005);
+    `0.0000` does not agree with 1.0. Precision-aware on purpose: an exact
+    comparison would flag every honest rounding on the page.
+    """
+    quoted = quoted.replace("−", "-")
+    q = float(quoted)
+    dec = len(quoted.split(".")[1]) if "." in quoted else 0
+    return abs(q - value) <= 0.5 * 10.0 ** -dec + 1e-12
+
+
+def metric_mismatches(pages=None, repo: Optional[Path] = None,
+                      metrics: Optional[dict] = None) -> List[dict]:
+    """Paragraphs on a steering page that name a spec and quote one of that
+    spec's ledger metrics beside a number agreeing with NO value the current
+    certificate records under that key."""
+    repo = _REPO if repo is None else repo
+    if pages is None:
+        pages = METRIC_PAGES
+    if metrics is None:
+        metrics = ledger_metrics()
+    out: List[dict] = []
+    for rel in pages:
+        p = repo / rel
+        if p.exists():
+            out.extend(text_metric_mismatches(p.read_text(), metrics, rel))
+    return out
+
+
+def text_metric_mismatches(text: str, metrics: Dict[str, Dict[str, float]],
+                           page: str = "") -> List[dict]:
+    """`metric_mismatches` over one page's text — the pure half, so the
+    fixture can replay the known answer without touching disk.
+
+    Paragraph-scoped, not sentence-scoped: the live miss quoted its number
+    two sentences after naming the spec. Where a paragraph names several
+    specs carrying the same key, agreement with ANY of them is silence —
+    the reader may not guess whose number the sentence "really" quotes.
+    """
+    out: List[dict] = []
+    seen = set()
+    for para in re.split(r"\n\s*\n", text or ""):
+        flat = re.sub(r"\s+", " ", para).strip()
+        if not flat:
+            continue
+        sids = sorted(s for s in set(SPEC_CITATION.findall(flat))
+                      if s in metrics)
+        if not sids:
+            continue
+        keys: Dict[str, Dict[str, float]] = {}
+        for sid in sids:
+            for k, v in metrics[sid].items():
+                keys.setdefault(k, {})[sid] = v
+        for k, by_sid in sorted(keys.items()):
+            quoted: List[str] = []
+            for m in re.finditer(r"\b%s\b" % re.escape(k), flat):
+                window = flat[m.end():m.end() + _METRIC_WINDOW]
+                for nm in _NUM.finditer(window):
+                    lead = window[:nm.start()].rstrip()[-2:]
+                    if lead.endswith("->"):
+                        pass            # an arrow TRANSITION: a reading
+                    elif any(c in lead for c in "<>="):
+                        continue        # a bar, not a reading
+                    quoted.append(nm.group(0))
+            if not quoted:
+                continue
+            if any(_rounds_to(q, v)
+                   for q in quoted for v in by_sid.values()):
+                continue
+            dedup = (page, k, tuple(sorted(set(quoted))))
+            if dedup in seen:
+                continue
+            seen.add(dedup)
+            out.append({
+                "page": page, "key": k,
+                "page_says": sorted(set(quoted)),
+                "ledger_says": {sid: by_sid[sid] for sid in sorted(by_sid)},
+            })
+    return out
+
+
+def render_metrics(mis: Optional[List[dict]] = None,
+                   indent: str = "  ") -> str:
+    """The `STEERING-METRIC-MISMATCH` block printed by `run status`."""
+    if mis is None:
+        mis = metric_mismatches()
+    if not mis:
+        return (f"{indent}STEERING-METRIC-MISMATCH — none: every ledger "
+                f"metric quoted beside its spec on a steering\n"
+                f"{indent}  page agrees with the current certificate (at the "
+                f"quoted precision).\n")
+    lines = [f"{indent}STEERING-METRIC-MISMATCH — {len(mis)} quoted "
+             f"metric(s) disagree with the live certificate.\n"
+             f"{indent}  Reporting-only, unfloored: the ledger is the "
+             f"authority; a page may quote a number for\n"
+             f"{indent}  another reason (a routing-time figure, a foreign "
+             f"attempt), and this reader does not read intent.\n"]
+    for m in mis:
+        led = ", ".join(f"{sid} {v}" for sid, v in m["ledger_says"].items())
+        lines.append(f"{indent}    {m['key']}  {m['page']} says "
+                     f"{', '.join(m['page_says'])} — ledger says {led}\n")
+    return "".join(lines)
+
+
 # ── the known answer ────────────────────────────────────────────────────────
 #
 # Verbatim from `docs/PROGRESS.md` at `d44d21a` (Review DAILY, 2026-09-13
@@ -595,6 +776,60 @@ W37 (opened 2026-09-13); a spec id is not a decision id.
     if "none:" not in render_dates([], indent=""):
         raise AssertionError("steering: a clean read must still print — an "
                              "absent block is indistinguishable from an "
+                             "absent check")
+
+    # ── the metric-mismatch known answer (builder, 2026-09-23) ──────────────
+    # Paragraph 1 is verbatim from `docs/PROGRESS.md` at `51c9d13` (Review
+    # DAILY, 2026-09-22 06:55) — the stop-rule arming that quoted a
+    # sixteen-day-dead reading as live and ordered it routed to the owner.
+    # Ledger truth at the time of arming AND of this fixture: 1.0.
+    # Paragraphs 2-5 are the four sentence shapes that must stay SILENT:
+    # the arrow transition (the old number beside the agreeing new one), the
+    # honest rounding, the bar quote, and the integer count. Frozen on
+    # purpose, like the two fixtures above: the live page will be corrected,
+    # and this must keep failing if the reader forgets how to see it.
+    _METRIC_FIXTURE = """
+0. **`ME.1` TODAY — a stop-rule fires at midnight.** The second branch is a
+   real answer, not a failure: `distractor_abstention` reads **0.0000 ± 0.0**
+   on 3 seeds at the spec's own unchanged 0.95 bar while
+   `fabricated_abstention` is perfect.
+
+`ME.1` a8: `distractor_abstention` 0.0000 -> 1.0000 while `cued_recall` is
+0.85 ± 0.0136 — byte-identical to the failing attempt.
+
+`ME.3`'s gain: `aggregation_qa_gain` 0.344 against the registered bar.
+
+One conjunct is strictly harder on `ME.3`: `raw_answer_rate` >= 0.95.
+
+`ME.1`'s `cued_recall` did not move on 3 seeds.
+
+`T3.06`'s `task_cov_vs_random` −0.2333 — the TASK arm explores WORSE than
+random.
+"""
+    _mreg = {
+        "ME.1": {"distractor_abstention": 1.0, "fabricated_abstention": 1.0,
+                 "cued_recall": 0.85, "cued_recall_std": 0.0136355},
+        "ME.3": {"aggregation_qa_gain": 0.343733, "raw_answer_rate": 1.0},
+        "T3.06": {"task_cov_vs_random": -0.233333},
+    }
+    mmis = text_metric_mismatches(_METRIC_FIXTURE, _mreg, "fixture")
+    got_mm = [(m["key"], m["page_says"]) for m in mmis]
+    want_mm = [("distractor_abstention", ["0.0", "0.0000"])]
+    if got_mm != want_mm:
+        raise AssertionError(
+            f"steering: metric fixture flunked: {got_mm} != {want_mm} — the "
+            f"one dead reading must flag; the arrow transition (0.0000 -> "
+            f"1.0000, its new number agrees), the rounding (0.344 vs "
+            f"0.343733), the bar (>= 0.95 vs measured 1.0) and the bare "
+            f"count (on 3 seeds) must all stay silent")
+    mtxt = render_metrics(mmis, indent="")
+    if "distractor_abstention" not in mtxt or "0.0000" not in mtxt \
+            or "1.0" not in mtxt:
+        raise AssertionError("steering: the metric mismatch render must name "
+                             "the key and both numbers")
+    if "none:" not in render_metrics([], indent=""):
+        raise AssertionError("steering: a clean metric read must still print "
+                             "— an absent block is indistinguishable from an "
                              "absent check")
 
 

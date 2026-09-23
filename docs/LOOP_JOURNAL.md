@@ -17544,3 +17544,51 @@ for that run is on the ledger. Third slot carrying them; they are done.
 `lost_iterations.log` 0 bytes. `/data` 79 G free. No process left running —
 the only `run_spec` pids during the slot were this session's own T3.06 run,
 declared and foreground.
+
+## 2026-09-23 09:07 slot (builder, fable — `week:all models` 0% post-reset, the line I am acting on; `week:Fable` 0%)
+
+**First live slot in 26: 4 pace-skips (07:07–10:07 at 81%) then 22 slots
+`STOPPED at 98–100%` (09-22 11:07 → 09-23 08:07).** That matters because
+`1^11` item 0's midnight stop-rule on `me1-similarity-floor-never-abstains`
+priced its "last legal window" at ~17 slots, and the window held zero.
+
+**THE UNIT: item 0 is discharged by EVIDENCE, not by repair — the debt it
+names was already done, sixteen days before the stop-rule was armed.** The
+ledger, not the pages: ME.1 attempt 10 (09-14) PASS, `distractor_abstention`
+1.0000 over 94.7 cues, `cued_recall` 0.85 unmoved, bar 0.95 untouched; ME.3
+attempt 6 (09-14) PASS, `raw_answer_rate` 1.0. The repair was the 09-06
+demonstration + A5 contract split, adopted by the Review's own 09-07
+DISPOSITIONED block (`a33ed72`), implemented in `a59363a` — all of it
+recorded IN THE SAME ROW the stop-rule was inserted into, one paragraph
+below the insertion point. The 0.0000 the rule orders routed to the owner is
+the 09-06 routing-time figure, falsified since 09-06 12:15. I did NOT re-run
+ME.1 (a re-buy proves nothing the certificate doesn't), did NOT stamp the row
+(dispositions are the Review's), and did NOT re-date it (forbidden fourth
+renewal). I wrote the verification into the row above the stop-rule line with
+receipts, and a signed correction under `1^11` item 0. **Next sitting: stamp
+this row on the evidence in it — a DECLINE would decline work that is on the
+ledger, and routing 0.0000 to the owner would carry a falsehood.**
+
+**The guard (this bug made unrepeatable where an instrument can reach):**
+`run status` now prints `STEERING-METRIC-MISMATCH` — quoted certificate
+numbers beside spec ids on PROGRESS/OVERSIGHT/`ladder_prompt.md`, diffed
+against the live ledger (`steering.py`: `ledger_metrics`,
+`text_metric_mismatches`, precision-aware `_rounds_to`; fixture replays the
+live miss plus four silent shapes: arrow transition, honest rounding, bar
+quote, integer count). First live read: the real `distractor_abstention`
+0.0000 finding on the builder's own page, plus exactly one documented false
+positive (`construction_ok` catching neighbouring `memorisers 0.0`). Unicode
+minus (−) handled — its absence flagged two correct sentences on the first
+pass and both were fixed before shipping. Zero staleness bill: no spec
+declares `steering.py`. Lesson appended (arming-time half of the 108th
+audit's fired-default lesson).
+
+**Hygiene.** The two 09:07 LIVE NOTICEs (`run_spec T3.06` 2900044,
+`run_spec T0.36` 2918318, both EXITED 09-22 06:51) are DISCHARGED: both rows
+are on the ledger (T3.06 VOID 06:49:16, T0.36 PASS 06:50:25, committed) and
+the 09-22 journal's `/data` sweep already found no orphan artifacts. No
+process left running; nothing detached. NOT taken, deliberately:
+`fieldwatch-quotation-channel-is-0-for-5` (DUE today, `1^11` item 4) — one
+unit per iteration, and it needs the two-channel false-positive measurement
+done properly; it is the next slot's first pick. BA.03 (c) stays per
+OVERSIGHT item 4's prohibition (`run status` confirms HELD).
