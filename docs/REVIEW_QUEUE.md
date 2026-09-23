@@ -5586,8 +5586,26 @@ models; whether the repair is a better WM, a harder venue, or accepting the
 linear reference as the champion (SCORED-AND-INELIGIBLE idiom) is a design
 call. The bar does not move; T1.02 precedent binds.
 
-ROUTED: t402-touch-drowns-audio-at-the-fusion-boundary | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
+ROUTED: t402-touch-drowns-audio-at-the-fusion-boundary | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | DISPOSITIONED
     DUE: 2026-09-22 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | the fusion-balancing redesign the priority head has pointed at "the Review, not an argument" since 08-21 — now with a row and a clock instead of a standing sentence. Date is `next_free_due` per B4.
+    DUE: 2026-09-25 | RE-DATED 2026-09-23 (Review DAILY) under D28's (a)
+        OVERDUE FIRST. **The debt this date carried — the bakeoff DESIGN — is
+        discharged below, in this sitting.** The new date carries the RUN,
+        which is the builder's. **The date is derived from a PERISHABLE
+        RESOURCE and not from calendar room, and I am saying so because it
+        knowingly piles on**: `2026-W38` holds 30 free Kaggle GPU-hours of
+        which **0.4789 h** is drawn; **~29.5 h expire on Saturday 2026-09-26**
+        and `T2.06`'s re-buy was the only legal buyer this project had. The
+        three-arm bakeoff below is `GPU_SHORT` — `T4.02` attempt 4 ran in
+        **514.69 s ≈ 0.14 h**, so three arms at three seeds is **~0.45 h** —
+        and it is the first legal buyer for those hours that this desk has
+        been able to produce in three weeks. 09-25 carries 6 rows against a
+        measured capacity of 6, so this raises `review_queue_piled_on` 1 -> 2.
+        **That is a deliberate act with a named reason, reported on today's
+        page rather than left for an audit to find**: a date derived from an
+        expiry beats a date derived from an empty square when the resource
+        dies on Saturday. 09-25 and not 09-26 so a one-day slip does not burn
+        the hours.
 
 **Measured, twice (`T4.02` attempts 3 and 4, 2026-08-21).** Worst-seed
 `max_modality_grad_ratio` **30.12** against the exogenous 10× gate, zero
@@ -5604,6 +5622,97 @@ loss reweighting, modality dropout schedules — so this is a bakeoff to
 design, not an argument to have. `UB.10`'s recipe-sensitivity finding
 (`recipe-sensitivity`, this queue) is adjacent: both say uniform training
 treats unequal senses unequally. Couple them if one design answers both.
+
+    **THE DISPOSITION — 2026-09-23 (Review DAILY). The bakeoff is designed,
+    the gate does NOT move, and the arm that would win it trivially is
+    disqualified in the design rather than after the run.**
+
+    **THE INCUMBENT IS REAL AND ALREADY MEASURED.** `T4.02` attempt 4 is the
+    DEFAULT arm and it carries a number, not an impression:
+    `max_modality_grad_ratio` **30.1197**, `std` **3.55e-15** across seeds —
+    zero variance, so this is architecture and not a seed lottery. Touch
+    (~2.9e-3) over audio (~1e-4) at the `CrossModalFusion` boundary, against
+    the registry's own exogenous **10×** gate written 2026-08-04. **That 10×
+    does not move in any arm, in either direction.** Every arm runs `T4.02`'s
+    SHIPPED rig unchanged — same fixture, same equal-variance latents, same
+    hooks, same learning gate, same grad-scale control — and is read by
+    `T4.02`'s own metric. An arm that needs the rig changed to look good is
+    not an arm.
+
+    **THE DESIGN'S ONE REAL DECISION, and it is a disqualification.**
+    Arm (a), per-modality gradient normalisation, **equalises
+    `max_modality_grad_ratio` BY CONSTRUCTION.** It cannot fail the stated
+    metric. Certifying it on that metric alone would be the purest Goodhart
+    this ladder has ever been offered: we would buy a green tick for an
+    arm whose mechanism IS the measurement. So the bakeoff carries a SECOND,
+    STRICTLY HARDER conjunct that no arm can satisfy by construction, and it
+    comes from `T4.02`'s own docstring rather than from my taste: *"a sense
+    whose fusion token is ignored is a sense the other senses cannot teach
+    (GOAL.md: what he hears must be able to teach what he sees)"*.
+
+    **THE ADDED CONJUNCT — `min_modality_latent_r2`.** The fixture already
+    makes this free: each modality carries an independent k=8 latent `z_m`,
+    and `target_actions` is a sum of per-dim STANDARDISED readouts of the five
+    `z_m` divided by sqrt(5), so every sense contributes an equal ~1/5
+    variance share BY CONSTRUCTION. After training, probe each `z_m` from the
+    FUSED representation on held-out draws and report per-modality recovery;
+    the statistic is the **WORST** modality's R², per seed, gated at the
+    minimum over seeds — `T4.02`'s own "report per partition, gate the
+    minimum" discipline, unchanged. **The bar is the INCUMBENT's own measured
+    worst-modality recovery, and an arm must EXCEED it.** That number does not
+    exist yet, so the incumbent is re-run as the bakeoff's first arm to
+    establish it; it is pre-registered before any arm's number is seen, and it
+    is not a threshold this desk chose — it is whatever the shipped brain
+    already achieves. **An arm that equalises the gradient ratio while leaving
+    the worst sense's latent recovery at or below the incumbent's is
+    REFUTED — it moved the bookkeeping and not the creature.** That is the
+    sentence the whole design exists for, and it is strictly harder than the
+    row's original ask, which was the 10× gate alone.
+
+    **THE THREE ARMS, unchanged from the row's own naming (this desk is
+    designing the contest, not picking the winner).**
+      (a) **per-modality gradient normalisation** at the fusion boundary. The
+          arm most likely to pass the ratio and fail the recovery conjunct.
+          That outcome is a RESULT, not a failure of the bakeoff: it would
+          say the imbalance is a symptom and normalising it treats the
+          symptom.
+      (b) **loss reweighting** — per-modality weights on the shipped
+          `action_training_loss`. Weights must be set by a DECLARED rule
+          (e.g. inverse of the incumbent's measured boundary norms, computed
+          once from attempt 4's numbers and frozen), never tuned against the
+          gate. A weight tuned until the ratio clears is threshold-moving
+          wearing a different hat.
+      (c) **modality dropout schedule** — each sense's fusion token randomly
+          masked during training, so no sense can be relied on. The only arm
+          of the three whose mechanism does not mention the measured quantity
+          at all, which makes it the cleanest test of whether the metric
+          tracks anything.
+
+    **VOID LANES, inherited and NOT relaxed.** `T4.02`'s learning gate (mean
+    loss over the last quarter below the first, every seed), its
+    `fired_ok` hook-attachment assertion (2 fires/step), its rig-health share
+    gate (each modality's realised variance share in [0.10, 0.30]), and its
+    grad-scale control are all conditions on every arm. **One addition:** an
+    arm whose final loss is WORSE than the incumbent's does not get to win on
+    balance — balance bought by breaking the task is not balance. Report it;
+    do not certify it.
+
+    **THE UB.10 COUPLING: REFUSED, with the reason, because the row asked.**
+    `recipe-sensitivity` and this row do rhyme — both say uniform training
+    treats unequal senses unequally — but `UB.10` is **VOID** on attempt 1 and
+    its Part-1 premise is itself under challenge in this queue
+    (`ub10-part1-premise-false-marginals-are-what-saturate`, OPEN). Coupling a
+    designed, runnable, GPU_SHORT bakeoff to a VOID spec whose premise has an
+    open row would make this design inherit that row's clock, and this row has
+    already broken twice waiting for things. They stay separate. **If (c)
+    wins here, that result is an INPUT to `UB.10`'s successor arm and should
+    be cited there** — a one-directional citation costs nothing and creates no
+    dependency.
+
+    **STALENESS BILL: ZERO.** Nothing above edits `T4.02` or any shipped
+    module; the arms are new spec(s) registered beside it, and `T4.02`'s FAIL
+    stands as a true measurement until an arm returns under the declared
+    shape. No certificate anywhere hashes a file this disposition touches.
 
 ROUTED: t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall | 2026-09-05 | 72nd-audit-B4 + builder (the FAIL-UNOWNED detector's 4th member — the audit's own count missed it) | OPEN
     DUE: 2026-09-24 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for T2.15's FAIL: route the memorisation-route finding somewhere an instrument can see it, or dispose it explicitly. Date is `next_free_due` per B4.
