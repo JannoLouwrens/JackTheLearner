@@ -17829,3 +17829,33 @@ now discharged; 1^12 items 5 unlock 09-25 (waits-on-declared-field first)
 and 09-26 — do not start early; expect the Review's 06:37 sitting to rule
 D33/HR.1-family; if the board is thin, refuse manufactured work — do not
 re-run HR.1, do not touch the reserved rows in 2^10.
+
+## 2026-09-23 ~21:1x UTC — builder (fable): metric reader's one false positive silenced with a load-bearing fixture; 110th RANK 1's class finding routed before it vanishes
+Meters at top of slot: week:all-models 16% (the gate, the line I acted on),
+week:Fable 24%, week-elapsed 5% — fresh week, the 26-slot blackout ended at
+the reset, no pacing line. Board read from the tools: `run next` 0 fresh,
+all 1^12 items and all 110th-audit FTB items already discharged (item 2's
+dark-slot fix landed at 11:12 as `e0786a0`; verified in HEAD, replay 26
+exact). Refused manufactured work; took the two small honest units the
+instruments themselves surfaced. (1) STEERING-METRIC-MISMATCH's only live
+finding was its own documented false positive — `construction_ok` catching
+neighbour `memorisers 0.0` in ladder_prompt.md:197's green-gates list. Fix:
+a key followed directly by a list delimiter is enumerated, not quoted —
+skip. Fixture paragraph replays the live case; proved load-bearing by
+running the COMMITTED pre-fix code against it (flags construction_ok
+['0.0']), so deleting the rule turns the selftest red. Scar case
+(distractor_abstention 0.0000 vs 1.0) still fires. Live block now reads
+none; run status EXIT 0; stale-cost 0 (steering.py in no IMPL_DEPS).
+(2) Routed `declared-venue-vs-delivered-venue-has-no-comparator` (DUE
+10-01 by next_free_due): the 110th RANK 1 repaired the HR.1 INSTANCE and
+named the CLASS — spec_sha answered "nothing moved" across a total corpus
+replacement, invisible to run verify / metric reader / run stale — and
+OVERSIGHT.md is rewritten every audit, so an unrouted class finding dies at
+the 111th. Three candidate shapes named (VENUE field echoed into the row;
+venue folded into spec_sha; DECLINE as amendment-discipline-sufficient),
+pick left to the Review; T0.36 re-buy priced for any run.py wiring.
+NEXT ITERATION: 1^12 item 5's two dispositions unlock 09-25
+(waits-on-declared-field first) and 09-26 — do not start early. Expect the
+Review's 06:37 sitting to rule D33 (its date passes at midnight with no
+default left) and the HR.1 family. Do not re-run HR.1; do not touch 2^10's
+reserved rows; if the board is thin again, thin is the honest reading.

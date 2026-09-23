@@ -8737,3 +8737,49 @@ ROUTED: owner-ask-reader-blind-since-0909 | 2026-09-23 | measurement in the `fie
         repair's size — a cheap fix on a piled day is still a promise that
         breaks. Nothing forbids an earlier slot taking it if the board is
         empty; the date is a ceiling on silence, not a floor on work.
+
+## ROUTED: OPEN — `declared-venue-vs-delivered-venue-has-no-comparator`: no
+## instrument compares the venue a run actually used against the venue its
+## spec declares, and `spec_sha` answered "did the claim move?" WRONGLY across
+## a total corpus replacement (builder, 2026-09-23, per the 110th audit RANK 1)
+
+ROUTED: declared-venue-vs-delivered-venue-has-no-comparator | 2026-09-23 | 3395c8b (110th audit RANK 1, "the instrument gap under it") | OPEN
+    DUE: 2026-10-01 | Dated by `next_free_due` (read at routing: 2026-10-01;
+        every day through 09-30 already carries promises, and the tool's own
+        line says 7 rows share 09-25 against a capacity of 6). Routing is the
+        whole order — nothing is built, re-run or amended by this row.
+
+**The finding, in the audit's own words:** *"nothing in this project compares
+the venue a run actually used against the venue its spec declares. `run
+verify` checks the gate replays and the control ran; `STEERING-METRIC-MISMATCH`
+checks quoted numbers; `run stale` checks code shas. A corpus swap is invisible
+to all three."* The audit ordered the INSTANCE repaired (the `HR.1` registry
+amendment — executed, `955b9ef`, `spec_sha` MOVED `769b55d0` -> `ea53ae2e`)
+and named the CLASS without routing it. OVERSIGHT.md is rewritten every audit,
+so without this row the class finding vanishes at the 111th.
+
+**The live instance that proves the class, now closed but exemplary:** `HR.1`
+attempts 1-4 carried `spec_sha 769b55d0` byte-identical while the experiment
+under it moved LibriSpeech -> VCTK, cross-SESSION -> cross-MICROPHONE,
+20/20 -> 20/40. Every delta was disclosed — docstring, journal, queue row,
+commit message — and none of it in the one field an auditor greps. The
+project's own integrity hook reported "the claim text did not move" across a
+total venue replacement, for seventeen days, until a human read both texts
+side by side.
+
+**What is asked of the Review (a DESIGN question, not an implement order):**
+decide whether this class gets a comparator, and if so what shape. Candidate
+shapes, named so the disposition has something to accept or refuse, not to
+pre-empt the pick: (i) a structured `VENUE:` (or `FIXTURE:`) field in the Spec
+that `_experiment` must echo into the recorded row, compared mechanically by
+`run verify` — mismatch prints, reporting-only first (the SO.10 vacancy
+precedent); (ii) fold venue text into what `spec_sha` hashes so a venue edit
+is at least FORCED to move the sha (weaker: detects nothing when the registry
+is simply not amended, which was the actual failure); (iii) declare the
+amendment discipline sufficient and DECLINE — the 110th's repair path worked,
+at the cost of needing a human to notice. Whichever way: `run.py` sits in
+`T0.36`'s `IMPL_DEPS`, so any wiring into `run verify`/`run status` bills a
+`T0.36` re-buy (~35 s foreground, priced from attempt 20); `WAITS-ON`
+declaration work (`waits-on-declared-field`, DUE 09-25) is adjacent surface
+and the two should probably be ruled in the same sitting rather than grown
+separately.

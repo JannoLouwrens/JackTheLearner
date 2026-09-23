@@ -475,6 +475,10 @@ _METRIC_WINDOW = 60
 # incident this reader exists for), 1 false (`construction_ok` catching its
 # neighbour `memorisers 0.0` inside the window) — a rate a human dismisses
 # in one line, recorded here so the next reader knows the error shape.
+# That false positive is now SILENCED by a fourth heuristic (same sitting,
+# after the count above was written): a key followed directly by a list
+# delimiter is enumerated, not quoted — see the skip in
+# `text_metric_mismatches` and the fixture paragraph that replays it.
 METRIC_PAGES = STEERING_PAGES + (LAUNCH_PAGE,)
 
 
@@ -564,6 +568,13 @@ def text_metric_mismatches(text: str, metrics: Dict[str, Dict[str, float]],
             quoted: List[str] = []
             for m in re.finditer(r"\b%s\b" % re.escape(k), flat):
                 window = flat[m.end():m.end() + _METRIC_WINDOW]
+                # A key followed directly by a list delimiter is being
+                # ENUMERATED — "green (construction_ok, memorisers 0.0/0.0"
+                # names the key in a list and the number belongs to its
+                # neighbour. The first live pass measured exactly this false
+                # positive; silence is the declared error direction.
+                if window.lstrip("`*'\")]")[:1] in (",", ";"):
+                    continue
                 for nm in _NUM.finditer(window):
                     lead = window[:nm.start()].rstrip()[-2:]
                     if lead.endswith("->"):
@@ -783,11 +794,14 @@ W37 (opened 2026-09-13); a spec id is not a decision id.
     # DAILY, 2026-09-22 06:55) — the stop-rule arming that quoted a
     # sixteen-day-dead reading as live and ordered it routed to the owner.
     # Ledger truth at the time of arming AND of this fixture: 1.0.
-    # Paragraphs 2-5 are the four sentence shapes that must stay SILENT:
+    # Paragraphs 2-6 are the five sentence shapes that must stay SILENT:
     # the arrow transition (the old number beside the agreeing new one), the
-    # honest rounding, the bar quote, and the integer count. Frozen on
-    # purpose, like the two fixtures above: the live page will be corrected,
-    # and this must keep failing if the reader forgets how to see it.
+    # honest rounding, the bar quote, the integer count, and the enumeration
+    # neighbour (the live `construction_ok` false positive from
+    # `ladder_prompt.md` — the key named in a list, the number belonging to
+    # the word beside it). Frozen on purpose, like the two fixtures above:
+    # the live page will be corrected, and this must keep failing if the
+    # reader forgets how to see it.
     _METRIC_FIXTURE = """
 0. **`ME.1` TODAY — a stop-rule fires at midnight.** The second branch is a
    real answer, not a failure: `distractor_abstention` reads **0.0000 ± 0.0**
@@ -805,12 +819,16 @@ One conjunct is strictly harder on `ME.3`: `raw_answer_rate` >= 0.95.
 
 `T3.06`'s `task_cov_vs_random` −0.2333 — the TASK arm explores WORSE than
 random.
+
+`T2.07` replayed offline against the recorded row: every rig gate green
+(construction_ok, memorisers 0.0/0.0, NB reference 5/5, seen-fit 11/11).
 """
     _mreg = {
         "ME.1": {"distractor_abstention": 1.0, "fabricated_abstention": 1.0,
                  "cued_recall": 0.85, "cued_recall_std": 0.0136355},
         "ME.3": {"aggregation_qa_gain": 0.343733, "raw_answer_rate": 1.0},
         "T3.06": {"task_cov_vs_random": -0.233333},
+        "T2.07": {"construction_ok": 1.0},
     }
     mmis = text_metric_mismatches(_METRIC_FIXTURE, _mreg, "fixture")
     got_mm = [(m["key"], m["page_says"]) for m in mmis]
@@ -820,8 +838,9 @@ random.
             f"steering: metric fixture flunked: {got_mm} != {want_mm} — the "
             f"one dead reading must flag; the arrow transition (0.0000 -> "
             f"1.0000, its new number agrees), the rounding (0.344 vs "
-            f"0.343733), the bar (>= 0.95 vs measured 1.0) and the bare "
-            f"count (on 3 seeds) must all stay silent")
+            f"0.343733), the bar (>= 0.95 vs measured 1.0), the bare "
+            f"count (on 3 seeds) and the enumeration neighbour "
+            f"(construction_ok, memorisers 0.0) must all stay silent")
     mtxt = render_metrics(mmis, indent="")
     if "distractor_abstention" not in mtxt or "0.0000" not in mtxt \
             or "1.0" not in mtxt:
