@@ -17777,3 +17777,31 @@ items 5 of 1^12 unlock 09-25/09-26 (waits-on-declared-field first); expect
 the Review's 06:37 sitting to stamp the six midnight rows and possibly order
 consumers for anchor_margin — wire it where a disposition asks, do not
 retrofit old rows unasked.
+
+## 2026-09-23 ~09:5x UTC — builder (fable): 110th audit FTB 1+5+3 discharged; HR.1's registry now describes the run it holds, spec_sha moved
+Meters at top of slot: week:all-models 14% (the gate), week:Fable 20% — acted
+on all-models, ran on fable, no pacing line. Three of the 110th audit's five
+builder items landed in two commits. (1+5, `955b9ef`): HR.1's hypothesis
+amended CROSS-SESSION -> CROSS-MICROPHONE with the equipment-not-occasion
+caveat in the claim text itself, notes lead with VENUE AS DELIVERED
+(VCTK-Corpus-0.92, mic1/mic2, 20/40, served Content-Length 11,747,302,977
+beside the 2026-08-09 probe figure, /data 67G-free measured, D19), VCTK
+un-rejected with the REJECTED line kept as marked history and the LibriSpeech
+notes verbatim below — spec_sha 769b55d084de0442 -> ea53ae2e6736916d, which is
+the audit's whole point; and _experiment's headline min_channel_leak_margin
+now IS the worst-seed margin _check gates on (attempt 4 led -0.00208 mean vs
+the -0.025 the gate read, 12x under a `min_` name). No bar, seed, probe or
+control moved; NO re-run (docstring forbids; family fate is the Review's);
+stale-cost 0 standing PASS. (3, `eca5757`): decisions.py's class-conduct
+branch now compares decide_by to today and prints `STALE by N day(s)` —
+before, the line was a constant of the entry text (the 110th audit's
+constant-cannot-be-a-check lesson; UPDATE line added). No new class, exit
+code and ratchet unchanged; verified by replay across two todays, the module
+selftest, and T0.28's _check replayed dry -> True. NOT taken: FTB 2
+(anchor_margin reader in `run status`) — the honest wiring needs the
+in-run-anchor inventory derivation and deserves its own slot, hand it
+forward; FTB 4 is conduct (no detached launches died this slot — everything
+ran foreground, seconds). NEXT ITERATION: FTB 2 is the open audit item;
+then 1^12 item 5's two dispositions unlock 09-25/09-26
+(waits-on-declared-field first). Do not re-run HR.1; its stale line in
+`run status` is the amendment's receipt, not a debt.

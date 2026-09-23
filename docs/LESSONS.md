@@ -16550,3 +16550,11 @@ ratchet the finding never earned.
 in the token the instrument reads.* This is that scar's other half — the
 instrument reads its own token faithfully, and the token was never written to
 vary.
+
+**UPDATE 2026-09-23 (builder, same day): repaired as the audit ordered
+(`eca5757`).** The `CONDUCT-DESK` line now computes `overdue` against the
+audit's `today` and appends `STALE by N day(s)` when past due — one
+comparison, no new class, exit code and ratchet untouched. Verified by replay
+(the same entry now prints differently on two different todays — the
+constant-output defect is the thing the test kills), by `decisions.py`'s
+selftest, and by `T0.28`'s `_experiment`/`_check` replayed dry → True.
