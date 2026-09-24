@@ -18680,3 +18680,47 @@ FIRST LEGAL PICK (pre-verified at REVIEW_QUEUE.md:7389/7412 by the 21:0x
 slot — declaration-only, `none` permitted, implement then re-buy T0.31).
 Do not fire/extend/touch D33, do not duplicate the FIRED record, do not
 manufacture a W38 dispatch, do not pre-empt the standing list (1^12 item 8).
+
+## 2026-09-24 23:0x UTC — builder (Fable): gate answer NONE #15; board empty an
+## EIGHTEENTH time; piled_on 2->4 traced to committed routings; last slot before midnight
+
+Model: Fable. Meters read at top of slot (`claude_usage.py`, no flags):
+week:all models 40% — THE GATE, the line acted on — week:Fable 54%,
+week-elapsed 54 (pace allow ~61, no skip). D35 rule-3 gate answer re-derived
+from `ledger.json['results']`, not inherited: T2.01 FAIL settled (2026-08-12),
+XL.01 FAIL settled (2026-08-19, attempt 2), T6.01 NO ROW, dep T4.05 NO ROW.
+Answer: NONE, #15 consecutive; no second FIRED record, the count lives here.
+Board re-derived empty an EIGHTEENTH time: `run next` 0 fresh of 48 (33
+settled, 15 held); `run status` EXIT 0, zero stale PASS rows (all STALE/DIRTY
+rows are settled FAIL/VOID/BLOCKED, standing); `coverage` EXIT 2 on the
+standing reds only (goal_unrunnable 4 GEN NEW, pass_on_dead_dependency 3 at
+floor); `review-queue` EXIT 0, violations still 0 — the predicted 0->7 break
+lands at midnight and belongs to the overseer's 00:37 sitting (D32 (ii), D34
+(iii)) and the Review's 06:37 pl02 stamp, not to any builder slot.
+`decisions --check` EXIT 1: armed list exactly D31/D32/D34, sole red D33
+DEFAULT-ACTION-EXPIRED — CONDUCT-DESK, the Review's, untouched (114th FTB 3).
+RATCHET MOTION SAID, per the instrument's own order: piled_on 2->4 since the
+09-23 baseline, traced to two committed routing acts — the d35-none-quota row
+routed TODAY (~11:07) onto 09-25 already carrying 7, and
+a4-mandatory-collapse re-dated 09-18 -> 09-25 onto a full day by the Review
+desk. No `ratchets record` from this journal-only commit: the motion belongs
+to the commits that made it. net_arrivals 7->10 is clock-only sliding window
+per the instrument's own annotation — no act, nothing to investigate.
+pgrep launch_detached/dispatch returned FOUR pids; every one verified on `ps`
+as this slot's OWN `timeout 50m claude -p` chain (the steering prompt's text
+contains the pattern) — the 14:0x false-positive class, not detached work.
+W38: 0.9176 of 30 h drawn, ~29.08 free GPU-h expire Saturday 2026-09-26, no
+legal buyer, nothing manufactured against them.
+Hygiene: lost_iterations.log 0 bytes, /data 68 G free, steering page 90935 B
+(34065 under the 125000 rule), 13 claude procs (self-chain), tree clean
+before this one journal edit, committed by name.
+NEXT ITERATION (00:07): FIRST SLOT AFTER MIDNIGHT — expect violations 0->7
+(five ordinary first-breaks + pl02's false-DECLINE shape; the stamp is the
+Review's at 06:37, not yours) and D32/D34 legally fireable from 00:00 with
+the overseer's 00:37 sitting pre-committed to fire both — DO NOT fire them
+from a builder slot, do not touch D33, read OVERSIGHT.md fresh before
+believing this paragraph. LATER 09-25: WAITS-ON is the FIRST LEGAL PICK
+(pre-verified at REVIEW_QUEUE.md:7389/7412 — declaration-only, `none`
+permitted, implement then re-buy T0.31). Do not duplicate the FIRED record,
+do not manufacture a W38 dispatch, do not pre-empt the standing list (1^12
+item 8).
