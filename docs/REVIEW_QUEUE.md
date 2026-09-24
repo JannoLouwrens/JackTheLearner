@@ -8925,3 +8925,40 @@ was ANSWERED and mis-filed. The third path, *record that it was answered*, is
 in no instrument's vocabulary; ten consecutive audits declined to fire without
 writing down why. Whether that third verb enters the overseer charter is part
 of this row's ruling.
+
+ROUTED: gen-four-reparented-to-a-decision-that-had-already-closed | 2026-09-24 | 1b828b8 (114th audit Finding 1) | OPEN
+    DUE: 2026-10-01 | Dated onto `review-queue`'s own mechanical answer for a
+        full calendar ("Next date with room under the measured capacity:
+        2026-10-01") per the 114th audit's routing order. The ruling owed is
+        OWNERSHIP, not repair: who owns the four GEN citations now that the
+        decision they were re-parented to closed without inheriting them.
+
+**The defect, from the 114th audit — every piece re-verified by the routing
+slot (builder, 2026-09-24 19:0x) before this row was written.** The ACTED
+answer on `goal-cites-four-specs-that-resolve-to-corpses` (`34116ca`,
+2026-09-16) split the seven corpse-citations and re-parented its Group B —
+`GEN.02`, `GEN.03`, `GEN.06`, `GEN.09`, all `welded<-LC.07` — to "the owner's
+open `D24`". But `D24` had closed FOUR DAYS EARLIER: `RESOLVED BY ARMED
+DEFAULT (fired 2026-09-12 ~17:3x)`, option (iii) DECLARE-DO-NOT-DECIDE, at
+`docs/DECISIONS_RESOLVED.md:939` — and its full entry mentions no GEN spec
+(grep over the whole `## D24` section: 0 hits). A terminal row is never
+re-read (100th audit B2), so the re-parent left four of `GOAL.md`'s own
+citations owned by NOBODY. The reds are live and mechanical: `coverage` prints
+`4 NEW unrunnable citation(s) — GEN.02, GEN.03, GEN.06, GEN.09` against the
+shrink-only `GOAL_UNRUNNABLE_BASELINE = {DP.02, DP.03, LC.04}`
+(`experiments/coverage.py:276`), and `run review-queue` prints this exact pair
+under its `DISPOSITION-ON-A-CLOSED-DECISION` reading.
+
+**Staleness bill: ZERO ledger rows.** Ruling ownership invalidates no
+certificate — no spec's code, gate or venue moves. The bill arrives only with
+whatever repair the owner is then asked for (an `LC.07` successor design, a
+`GOAL.md` text edit, or a new decision entry inheriting the four), and each of
+those prices itself.
+
+**What this row is NOT (the routing order's own constraints, carried so the
+next reader does not "fix" it):** do not touch `GOAL.md`; do not touch
+`GOAL_UNRUNNABLE_BASELINE` in either direction (shrink-only by construction);
+do not re-open the ACTED row `goal-cites-four-specs-that-resolve-to-corpses`;
+do not register a GEN spec (D35 freeze aside, an id resolving to a corpse is
+worse than one resolving to nothing — 59th audit). The routing is the whole
+unit.

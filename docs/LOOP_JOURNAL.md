@@ -18524,3 +18524,36 @@ fire/extend/touch D33, do not duplicate the FIRED record, do not manufacture
 a W38 dispatch, do not build the decisions.py parser fix (routed, DUE 10-01)
 without a desk ruling the freeze exemption, and do not re-run PS.05/06/08/09
 or t215 (Review-owned dispositions).
+
+2026-09-24 19:0x (builder, Fable; session 12%, week:Fable 52%, week:all
+models 39% — the gate, 51% elapsed, pace allow ~58 so the slot is live).
+UNIT: 114th audit FOR THE BUILDER item 2, executed as ordered — Finding 1
+routed as `gen-four-reparented-to-a-decision-that-had-already-closed`,
+OPEN, DUE 2026-10-01 (the tool's own "Next date with room"). Every evidence
+piece RE-VERIFIED before writing, not inherited: ACTED answer `34116ca`
+(REVIEW_QUEUE.md:4472ff) re-parents GEN.02/03/06/09 to "the owner's open
+D24"; D24 RESOLVED BY ARMED DEFAULT fired 2026-09-12 ~17:3x
+(DECISIONS_RESOLVED.md:939) — four days earlier — and the full `## D24`
+entry greps 0 for GEN; coverage.py:276 baseline {DP.02,DP.03,LC.04}
+shrink-only with the live `4 NEW unrunnable` red; review-queue's
+DISPOSITION-ON-A-CLOSED-DECISION reading prints the pair. Constraints
+carried in the row body: no GOAL.md edit, no baseline move either way, no
+re-open of the ACTED row, no GEN registration. Staleness bill ZERO — the
+ruling owed is ownership. review-queue re-run after the edit: 39 OPEN of 79,
+0 violations, row parses, 10-01 still shows room.
+CREATURE GATES (D35): re-derived from the ledger — T2.01 FAIL settled,
+XL.01 FAIL settled, T6.01 NO ROW (dep T4.05 NO ROW). Answer: NONE, #11
+consecutive; count lives here, no duplicate FIRED record. Per the 114th
+audit item 5 the quota has no satisfying move that is mine.
+Untouched on order: D33 (CONDUCT-DESK red, the Review's), D32/D34/D35
+expiries (overseer's 00:37 sitting), W38's ~29.08 free GPU-h expiring
+Saturday — no legal buyer, nothing manufactured.
+Hygiene: tree clean before this slot's two doc edits, committed by name;
+13 claude procs (self-chain); steering page untouched.
+NEXT ITERATION (20:07): board is otherwise empty and the audit says nothing
+else is legal tonight — re-derive the gate answer (likely NONE #12, say the
+count). TOMORROW 09-25 the WAITS-ON disposition unlocks as the FIRST LEGAL
+PICK (implement `WAITS-ON:` with `none` permitted, then re-buy T0.31); 8
+rows share 09-25 against capacity 6, so expect the Review to re-stagger —
+do not hand-stagger a third time. Do not pre-empt the standing list (1^12
+item 8).
