@@ -349,7 +349,7 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
         (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`) and four
         gate-provisional specs are behind it. Re-arm it with a new DUE: and a
         reason if the next FULL run cannot carry it; do not delete this line.
-    DUE: 2026-09-23 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. The DESIGN IS DELIVERED and this row is DISPOSITIONED: what this date owes is EXECUTION by the builder, not a decision by this desk. Dated where a builder slot can plausibly reach it rather than onto the Review's own calendar. | DELIVERED AND SUPERSEDED. The design owed on 2026-09-06
+    DUE: 2026-10-01 | RE-DATED 2026-09-24 (Review DAILY). The 2026-09-23 date BROKE — third break for this row. What is NEW and what is not: the 09-14 re-date blamed the pile and the 09-15-era re-dates blamed the builder's blackout, and BOTH causes are gone this morning — `week:all models` 19%, six consecutive `rc=0` builder slots, and `review-queue` reports 0 fresh work on the board for a sixth day. **The row is DISPOSITIONED and what it owes is EXECUTION: the registration of `W1.01`, `W1.03` and `W1.04`.** `review-queue`'s own ORDERED MEASUREMENTS block confirms it row by row — W1.00 -> FAIL 09-06, W1.02 -> PASS 09-06, and the other three NOT REGISTERED, seventeen days after the design was published in `9eddb52`. **This desk will not hand that execution to the idle builder today, and the reason is a rule rather than a preference:** the 09-23 sitting's own addendum (`d9f568f`) recommended to the owner that this desk be held to registering the three specs ITSELF, `D33` is the open entry on who authors this unit, and ordering it onto the builder's board while that entry sits unanswered would pre-empt the ruling I asked for — `D22` binds the desk that wants the carve-out exactly as hard as it binds anyone else. So the date moves and the authorship does not. Dated 2026-10-01, which is `review-queue`'s own printed "next date with room under the measured capacity" (2 promised against 6), and deliberately AFTER `w1-world-edit-window`'s 09-27 Sunday date, because registering these three is downstream of the world-edit window they run in. ORIGINAL TEXT FOLLOWS, unchanged. | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. The DESIGN IS DELIVERED and this row is DISPOSITIONED: what this date owes is EXECUTION by the builder, not a decision by this desk. Dated where a builder slot can plausibly reach it rather than onto the Review's own calendar. | DELIVERED AND SUPERSEDED. The design owed on 2026-09-06
         was written and committed by the Review's FULL run that morning (the
         W1 DESIGN block below, five specs with falsifiers, controls and an
         ordering) — the fifth Sunday bet, and the first one that paid. What
@@ -1021,7 +1021,32 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
         (W1.03 in particular) before a world edit has a spec to serve; editing
         the world first would be the 21-certificate bill paid for a change
         nothing yet measures.
-    DUE: 2026-09-23 | RE-DATED 2026-09-20 (Review FULL), and the reason is a
+    DUE: 2026-09-27 | RE-DATED 2026-09-24 (Review DAILY), and this is the FOURTH
+        break of this row's date. A bare fifth re-date on the old cause would be
+        dishonest, so here is what is NEW today and measurable. (1) **The cause
+        every previous re-date cited is GONE.** 09-15 and 09-20 both re-dated on
+        "the builder is PACE-DARK"; `week:all models` reads **19%** this morning
+        and the builder has run `rc=0` in six consecutive hourly slots
+        (02:1x–06:1x). Nothing is dark. (2) **The cause that remains is this
+        desk's own sitting length, and it is now measured rather than suspected.**
+        Every one of this row's four breaks happened inside a 20-minute DAILY
+        walk-through; `scripts/review.sh:80-94` records **7 max-turns deaths
+        across the three organs**, and **four of four Sunday FULL runs ever fired
+        on cron died at max turns** — including the 09-23 sitting, whose own
+        `PROGRESS.md` still carries the INCOMPLETE-RUN banner. A from-scratch
+        world specification has never once fitted in the time this desk is given,
+        and that is not a fact about any one morning. (3) **`D33` is the entry
+        that asks about exactly this, its `decide_by` was 2026-09-23, and it is
+        one day STALE on the owner's desk.** Its default (i) — re-date once more
+        and change nothing else — has now fired and produced nothing for the
+        fourth time, which is precisely the price the entry stated when it armed
+        it. Dated onto **Sunday 2026-09-27**, deliberately: not because Sunday is
+        free (the pile reads 6 there) but because the FULL sitting is the only
+        one with twice the clock, and a unit that has lost four 20-minute
+        sittings should not be given a fifth. **STOP-RULE, stated in the open: if
+        2026-09-27 breaks, this desk does not re-date this row again — it
+        DECLINES the authorship and says so on the owner's page, `D33` answered
+        or not.** ORIGINAL TEXT FOLLOWS, unchanged. | RE-DATED 2026-09-20 (Review FULL), and the reason is a
         finding against THIS DESK, written plainly rather than as a scheduling
         note. **The 2026-09-18 date BROKE and this is the row's fourth slip.**
         `D21` was RESOLVED BY ARMED DEFAULT on 2026-09-06 with the instruction
@@ -5568,7 +5593,7 @@ XL.01's own row shows lives, not seeds, carry the variance). Strengthen-only
 binds any successor; XL.01's FAIL stands as history either way.
 
 ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
-    DUE: 2026-09-23 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for the fast/slow world-model fixture: what does the DP family require of a world model that beats every null but loses to a linear probe? Date is `next_free_due` per B4.
+    DUE: 2026-10-04 | RE-DATED 2026-09-24 (Review DAILY). The 2026-09-23 date BROKE — second break. This row is NOT part of the W1 docket and must not inherit its excuse: what it owes is a disposition of the fast/slow world-model fixture — *what does the DP family require of a world model that beats every null but loses to a linear probe?* — and no world edit, no registration and no GPU hour gates it. The honest cause of this break is therefore the plainest one available and it is this desk's alone: **at a DEMONSTRATED disposal rate of ~1 row per sitting, three Review-owned designs cannot share one morning, and this one ranked third of three.** It is dated LAST of today's three for a stated reason rather than by accident — `w1-world-edit-window` blocks five other rows and `w0-too-shallow` holds the project's largest standing result, while this one blocks a FAIL-UNOWNED diagnosis and nothing downstream of it. Dated 2026-10-04 (2 promised against a measured 6), one sitting clear of 10-01 so the two are not made to share a morning the way these three just were. ORIGINAL TEXT FOLLOWS, unchanged. | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for the fast/slow world-model fixture: what does the DP family require of a world model that beats every null but loses to a linear probe? Date is `next_free_due` per B4.
 
 **Measured, twice, consistently.** `T2.05` v1 (2026-08-14) VOIDed itself
 honestly — the persistence ruler leaked marginal statistics (shuffled
