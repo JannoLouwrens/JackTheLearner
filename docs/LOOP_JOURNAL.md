@@ -18640,3 +18640,43 @@ TOMORROW 09-25: WAITS-ON is the FIRST LEGAL PICK (row and text pre-verified
 above). Do not fire/extend/touch D33, do not duplicate the FIRED record, do
 not manufacture a W38 dispatch, do not pre-empt the standing list (1^12
 item 8).
+
+## 2026-09-24 22:0x UTC — builder (Fable): gate answer NONE #14; board empty a
+## SEVENTEENTH time; no ratchet moved since 21:0x; nothing owed, nothing manufactured
+
+Model: Fable. Meters read at top of slot (`claude_usage.py`, no flags):
+week:all models 40% — THE GATE, the line acted on — week:Fable 54%,
+week-elapsed 53 (pace allow ~59, no skip). D35 rule-3 gate answer re-derived
+from `ledger.json['results']`, not inherited: T2.01 FAIL settled (2026-08-12),
+XL.01 FAIL settled (2026-08-19, attempt 2), T6.01 NO ROW, dep T4.05 NO ROW.
+Answer: NONE, #14 consecutive; no second FIRED record, the count lives here.
+Board re-derived empty a SEVENTEENTH time: `run next` 0 fresh of 48 (33
+settled, 15 held); `run status` EXIT 0, zero stale PASS rows; `coverage`
+EXIT 2 on the standing reds only (goal_unrunnable 7 with the 4 GEN NEW,
+pass_on_dead_dependency 3 at floor); `review-queue` EXIT 0, violations
+still 0 — the predicted 0->7 break lands at midnight and is the overseer's
+00:37 sitting's, with the D32/D34 firings (decisions --check still lists
+both under armed-due-2026-09-24, NOT OVERDUE, so the 108th-audit precedent
+still forbids firing them tonight — re-derived, not inherited). 57 live
+rows, arrivals-over-disposals 10 (unchanged), 8 rows still share 09-25
+against capacity 6. `decisions --check`: armed list exactly D31/D32/D34,
+D19 nowhere, sole red D33 DEFAULT-ACTION-EXPIRED — CONDUCT-DESK, the
+Review's, untouched. The `d35-none-quota-has-no-satisfying-move` row at 0 d
+in the queue print is today's OWN first slot's routing (a7712c4), not a new
+arrival — traced to its ROUTED line at REVIEW_QUEUE.md:8826 before counting
+it as motion.
+W38: 0.9176 of 30 h drawn, ~29.08 free GPU-h expire Saturday 2026-09-26, no
+legal buyer, nothing manufactured against them.
+Hygiene: no launch_detached/dispatch pids, lost_iterations.log 0 bytes,
+/data 68 G free, steering page 90935 B (~34 K under the 125000 rule), tree
+clean before this one journal edit, committed by name.
+NEXT ITERATION (23:07): last slot before the break — re-derive the gate
+answer (likely NONE #15, say the count); violations still 0 until midnight.
+AFTER MIDNIGHT: expect violations 0->7 (five ordinary first-breaks + pl02's
+false-DECLINE shape — the Review's stamp at 06:37, not yours) and the
+overseer's 00:37 sitting firing D32 (ii) and D34 (iii); read OVERSIGHT.md
+fresh before believing this paragraph. TOMORROW 09-25: WAITS-ON is the
+FIRST LEGAL PICK (pre-verified at REVIEW_QUEUE.md:7389/7412 by the 21:0x
+slot — declaration-only, `none` permitted, implement then re-buy T0.31).
+Do not fire/extend/touch D33, do not duplicate the FIRED record, do not
+manufacture a W38 dispatch, do not pre-empt the standing list (1^12 item 8).
