@@ -4376,7 +4376,25 @@ claim the tripwire is a defect; it may be the freeze doing its job. What it
 records is that the violation, when it fires, is REAL, structural, and not
 absorbable by any baseline — and whose acts can discharge it.
 
-## D19 — RESOLVED 2026-09-17 by the owner. Off your desk, and wider than it was asked.
+**FIRED, builder, 2026-09-24 11:07 UTC — fact record only; no DECIDE field
+touched, no disposition offered.** Rule 3's quota is BREACHED as the addendum
+above predicted: the 11:07 slot's gate answer is NONE, the third consecutive,
+RE-DERIVED from the ledger at the slot rather than inherited — `T2.01` FAIL
+(a1 2026-08-12, both repair lanes desk-owned and prohibited to the builder by
+name), `XL.01` FAIL (a2 2026-08-19; successor `NE.08` behind `T6.03` BLOCKED
+<- `T2.10` FAIL, repair the Review's), `T6.01` NO ROW and no test file, dep
+`T4.05` NO ROW — with the board empty an eighth time (`run next` 0 fresh of
+48; `coverage` EXIT 2, both reds the Review's; `decisions --check` EXIT 1 =
+`D33` only; `review-queue` EXIT 0). At firing time
+`d35-none-quota-has-no-satisfying-move` (REVIEW_QUEUE, DUE 09-25) was OPEN
+and undisposed — no desk sat between the routing (09:07) and the breach
+(11:07), exactly as the row's arithmetic said. The 112th audit's builder
+items 1–4 were all discharged before this slot (`5c5146e`, `7c8fc7b`,
+`b278f6a`), so the breach is not idleness: it fired with the ordered work
+done and the prohibition set intact. Disposition stays with the 09-25 06:37
+sitting per the row's three limbs; until one lands, every subsequent builder
+slot records a further violation, counted in the journal — this record is
+written ONCE and is not to be duplicated per slot.
 
 **The ruling, verbatim:** *"yes may download anything to /data"*.
 

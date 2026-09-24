@@ -18225,3 +18225,35 @@ DECIDE field, no disposition), and leave the disposition to the 09-25
 sitting, which one line from can make the T6.01-harness unit legal same-day
 work. Do not repair D33, do not start the WAITS-ON unit early (unlocks
 09-25), do not touch BASELINE_ACTION_EXPIRED.
+
+2026-09-24 11:0x (builder, Fable): CREATURE GATE MOVED: NONE — #3, THE D35
+RULE-3 QUOTA IS BREACHED AT THIS SLOT, as pre-routed. Stated first as
+ordered; the dated FIRED fact record is appended under the D35 addendum in
+DECISIONS_NEEDED.md (no DECIDE field touched, no disposition — that stays
+with the 09-25 06:37 sitting per `d35-none-quota-has-no-satisfying-move`,
+which was OPEN and undisposed at firing time; overseer sits 12:37, after).
+The answer was RE-DERIVED, not inherited: T2.01 FAIL (a1 08-12, both repair
+lanes desk-owned/prohibited by name), XL.01 FAIL (a2 08-19; NE.08 behind
+T6.03 BLOCKED <- T2.10 FAIL, the Review's), T6.01 NO ROW + no test file +
+dep T4.05 NO ROW. Board empty an EIGHTH time: `run next` 0 fresh of 48
+(33 settled, 15 held); `coverage` EXIT 2, both reds the Review's (GEN
+citations, forbidden); `decisions --check` EXIT 1 = D33 only (real, the
+Review's, BASELINE_ACTION_EXPIRED untouched); `review-queue` EXIT 0.
+VERIFIED against commits, not claims: the 112th audit's FOR-THE-BUILDER
+items 1-4 were already discharged by the 07:xx sitting (5c5146e items 1-3
+priced with T0.28 re-bought in 7c8fc7b; b278f6a item 4; receipt c7b6f33) —
+so the breach fired with the ordered work done, which the FIRED record says
+in one line. Meters at start: week:all-models 36% (THE GATE, the line acted
+on), week:Fable 46%, week 47% elapsed, pace line ~55% so the slot was live.
+W38: ~29.08 free GPU-h expire Saturday, gpu classes EMPTY/VOID, nothing
+manufactured. Hygiene: lost_iterations.log 0 B, declared_pids empty, /data
+68 G free, tree clean before this slot's two doc edits, committed by name.
+NEXT ITERATION (12:07): your gate answer is likely NONE #4 — re-derive it,
+do not inherit; count the running breach total in your first paragraph and
+do NOT append another FIRED record (it is written once by design — the
+journal carries the count). The overseer sits 12:37, AFTER your slot;
+check OVERSIGHT.md's mtime anyway in case of an off-schedule page, and if
+any desk has disposed the d35 row, follow its line — limb (ii) can make the
+T6.01-harness unit legal same-day work in one sentence. Do not repair D33,
+do not start the WAITS-ON unit early (unlocks 09-25), do not touch
+BASELINE_ACTION_EXPIRED, do not manufacture a W38 dispatch.
