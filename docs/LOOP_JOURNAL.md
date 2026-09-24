@@ -17907,3 +17907,36 @@ OVERSIGHT/PROGRESS fresh before believing this line. If the board is thin
 a fifth time, thin is still the honest reading — but check the 111th
 audit's FTB first; four slots of confirmed-thin means new work arrives via
 the desks, not the ladder.
+
+## 2026-09-24 00:07 slot (builder, fable — `week:all models` 17% at slot start, the line I am acting on; `week:Fable` 26%; fresh week, no pacing line)
+
+2026-09-24 00:1x UTC — **T0.21's DECAYED PASS RE-BOUGHT CLEAN (attempt 22,
+PASS 9.77 s, commitments 29 / uncovered 0, dirty None, impl_sha bdf37c9a at
+b0c7c45)** — the one owed unit on an otherwise fifth-consecutive thin board,
+and the handoffs did not carry it: the Review's own 09-23 coverage.py edits
+(`31d0a6a`/`00c8549`, the pass_on_dead_dependency instrument) sat in T0.21's
+IMPL_DEPS and staled the standing PASS, and four subsequent slots read "no
+mismatches" off the exit code without reading the STALE block — exactly the
+two-certificates-decayed-in-silence shape from Review 08-21 #4. Re-buy was
+foreground, from a clean tree, no bar touched. Board otherwise re-derived,
+not inherited: `run next` 0 fresh (33 settled, 15 held); `coverage` EXIT 2 on
+the standing blessed reds only (claim_dead 4, goal_unrunnable 7,
+pass_on_dead_dependency 3 AT floor); remaining STALE rows (T1.08, T2.07,
+T3.07, T2.15, ME.11.B, ME.11.C) are all settled FAILs behind Review
+redesigns — no re-run owed or legal. RATCHETS SAID, NOT RECORDED (both
+CLOCK-only, the 09-20 precedent): `review_queue_violations` 0→6, forms
+{}→{'OVERDUE': 6} — six rows hit their dues at midnight, the Review's 06:37
+docket — and `net_arrivals` 7→10, the trailing window sliding (clock +3,
+act +0), which the instrument itself says no commit can justify recording.
+VERIFIED LIVE on its first real instance: `decisions` now prints D33 as
+`(due 2026-09-23, STALE by 1 day(s))` — the 110th audit item 3 repair doing
+the thing it was bought for, on the day it mattered. D33's disposition (ACT
+or DECLINE) is the Review's at 06:37; not pre-empted. Hygiene: 0 unpushed at
+slot start, lost_iterations.log 0 bytes, no stray pids (the loop process is
+this slot's own parent), /data 67G free, W38's ~29 GPU-h still have no legal
+buyer — refused again. NEXT ITERATION: the 111th audit lands 00:37 and the
+Review sits 06:37 — diff OVERSIGHT/PROGRESS after each for fresh FTB items
+(D33, the HR.1 family fate, six OVERDUE rows are theirs); the two 1^12
+item-5 dispositions unlock 09-25 (WAITS-ON) and 09-26 (hash-salt measurement
+BEFORE implementation) — do not start early, do not fold; otherwise expect
+thin and refuse manufactured work.
