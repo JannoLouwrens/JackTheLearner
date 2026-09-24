@@ -16576,3 +16576,62 @@ comparison, no new class, exit code and ratchet untouched. Verified by replay
 (the same entry now prints differently on two different todays — the
 constant-output defect is the thing the test kills), by `decisions.py`'s
 selftest, and by `T0.28`'s `_experiment`/`_check` replayed dry → True.
+
+---
+
+## An instrument that prices "what would THIS edit cost" cannot read the working tree — the edit is already in it (111th audit, 2026-09-24)
+
+`experiments/stale_cost.py` was built on 2026-09-22 for one reason, in its own
+words: *"`run stale` answers 'which certificates are stale NOW'. That is the same
+question one commit too late."* Its founding scar is a pair it exists to tell
+apart — *"`T0.21` was stale before the builder touched anything (and was
+correctly re-bought), `T0.36` was staled BY the builder (and was not)."*
+
+Two days later it put `T0.28` in the wrong half of that pair, in the same
+direction, and the answer was quoted into the staling commit as authority.
+
+**The mechanism.** `price()` decides "already stale" from
+`staleness_of(entry, path)`, and `impl_sha_of` hashes the file **and its declared
+deps off disk**. By the time anyone asks what an edit would cost, the edit is on
+the disk — so a certificate staled BY this edit reads `CHANGED`, `CHANGED` is in
+`ALREADY_KINDS`, and the row falls out of `bill` into `already` with the render
+string *"a debt, but not this edit's bill"*. The default invocation makes it
+unavoidable rather than unlucky: `render()` calls `price(changed_paths())`, and
+`changed_paths()` is `git diff --name-only HEAD` plus untracked — **it can only
+ever name paths that have already been edited.** In that lane the `BILLED` branch
+is reachable only for rows whose staleness kind sits outside `ALREADY_KINDS`,
+i.e. only the pre-`impl_sha` rows. For every properly stamped certificate the
+default bill is structurally zero.
+
+The same tool bills correctly when the path is genuinely unedited —
+`run stale-cost experiments/coverage.py` → `BILLED T0.21`,
+`run stale-cost experiments/run.py` → `BILLED T0.36`,
+`run stale-cost experiments/decisions.py` → `0 billed` — so this is an ORDERING
+trap, not a broken computation. `3e9cf42` paid its bill and its message says why
+it could: *"priced **before** the edit."* `eca5757` did not, and its message says
+*"its standing stale-ness **predates** this edit."* The two sentences look
+identical to a reader and mean opposite things.
+
+**The transferable check.** For any instrument that answers a question about a
+PRIOR state — what did this cost, what changed, what was true before — ask where
+the "before" comes from. If it comes from the filesystem, the instrument is
+reading the after and calling it the before, and it will be silent in exactly the
+case it was built for. The fix is not new hashing: reconstruct the prior state
+from git and feed it through the SAME code path
+(`impl_sha_of`'s `file_bytes`/`dep_bytes` overrides, `tree_reconstructing_sha`) —
+two functions computing "the same" hash is the thing this repo already removed
+once.
+
+**Sibling on this page:** *a checker's early `continue` makes a whole class
+structurally incapable of going red — and the comment on that branch will say the
+opposite* (110th audit, directly above). Same shape one level up: there the
+branch's output was a constant of the entry text; here the bill is a constant
+zero. In both cases the prose was honest about the intent and the mechanism could
+not deliver it, and in both cases the repair is one comparison against a term the
+function never drew in — today's date there, the pre-edit tree here.
+
+**Its instance, for the record:** `T0.28` — the honesty fixture for
+`decisions.py`, the instrument standing over eleven pre-registered constitutional
+defaults — held a PASS about older code for five slots, and the slot that found
+and paid `T0.21`'s identical bill journalled *"the remaining STALE rows are all
+settled FAILs"* three lines below `T0.28 recorded PASS`.
