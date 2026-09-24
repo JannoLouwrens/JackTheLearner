@@ -29295,7 +29295,7 @@
     "T0.28": {
       "amended": [],
       "attempt": 22,
-      "commit": "5c5146e",
+      "commit": "68fbca9",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
@@ -29305,45 +29305,15 @@
         "live_specs_in_radius": 1.0,
         "live_unrouted_asks": 0.0,
         "live_vanished_asks": 0.0,
-        "live_violations": 5.0,
+        "live_violations": 6.0,
         "properties_checked": 19.0,
         "properties_failed": 13.0
       },
       "dirty_files": null,
-      "duration_s": 56.42,
+      "duration_s": 57.03,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "cb523a7",
-          "control_metrics": {
-            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class",
-            "live_armed": 5.0,
-            "live_longest_default_chars": 1034.0,
-            "live_specs_in_radius": 8.0,
-            "live_violations": 0.0,
-            "properties_checked": 10.0,
-            "properties_failed": 5.0
-          },
-          "gpu_job_id": null,
-          "impl_sha": "8a12cb2d255e2a07",
-          "message": "",
-          "metrics": {
-            "failed_names": "",
-            "live_armed": 5.0,
-            "live_longest_default_chars": 1034.0,
-            "live_specs_in_radius": 8.0,
-            "live_violations": 0.0,
-            "properties_checked": 10.0,
-            "properties_failed": 0.0
-          },
-          "ran_at": "2026-09-03T13:13:19",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "a6b390a53a433ea2",
-          "status": "PASS"
-        },
         {
           "commit": "36c90be",
           "control_metrics": {
@@ -30037,6 +30007,42 @@
           ],
           "spec_sha": "bb2c3ecb87ada37f",
           "status": "PASS"
+        },
+        {
+          "commit": "5c5146e",
+          "control_metrics": {
+            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
+            "live_armed": 3.0,
+            "live_expired_actions": 1.0,
+            "live_longest_default_chars": 2251.0,
+            "live_specs_in_radius": 1.0,
+            "live_unrouted_asks": 0.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 5.0,
+            "properties_checked": 19.0,
+            "properties_failed": 13.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "d341cf33ee8b9021",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "live_armed": 3.0,
+            "live_expired_actions": 1.0,
+            "live_longest_default_chars": 2251.0,
+            "live_specs_in_radius": 1.0,
+            "live_unrouted_asks": 0.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 5.0,
+            "properties_checked": 19.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-24T07:18:26",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "bb2c3ecb87ada37f",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d341cf33ee8b9021",
@@ -30049,14 +30055,14 @@
         "live_specs_in_radius": 1.0,
         "live_unrouted_asks": 0.0,
         "live_vanished_asks": 0.0,
-        "live_violations": 5.0,
+        "live_violations": 6.0,
         "properties_checked": 19.0,
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 230.6,
+      "peak_rss_mb": 230.8,
       "preserved_impl": null,
-      "ran_at": "2026-09-24T07:18:26",
+      "ran_at": "2026-09-24T13:12:29",
       "seeds": [
         0
       ],
