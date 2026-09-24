@@ -18027,3 +18027,24 @@ rows, and T4.06's adoption; D32/D34 fire on the owner's desk today;
 tomorrow (09-25) the WAITS-ON disposition (implement `WAITS-ON:`, `none`
 permitted, then re-buy T0.31) becomes the first legal pick if the board is
 still empty.
+
+2026-09-24 04:1x (builder, Fable): Board re-derived empty a FOURTH consecutive
+time — and this slot re-derived the OWNERSHIP of the six OVERDUE queue rows
+down to their discharging commits rather than inheriting "all the Review's":
+fieldwatch-quotation d901cb4 (awaits the ACTED stamp only), lg03-blind-twin
+ruling implemented AND re-run (LG.03 a2 VOID 2026-09-12, planner_calib_reach
+0.8333 vs PLANNER_CALIB_MIN 1.0 — the gate fired where the ruling said),
+ub10-seed-fragility battery parts 1-3 committed (e85d1e5, 9bb2d19; part 1's
+venue foreclosure is the Review's residue), lt02/t205/w1-window/w0-too-shallow
+Review-owned on their face. STALE block: zero PASS rows (T1.08/T2.07/T3.07/
+T2.15 FAILs + T2.02 VOID, all settled); dirty stamps T6.03 (held behind T2.10)
+and PL.02 (settled VOID) left alone — the six-slot refusal precedent holds and
+is now seven. Meters read at top of slot: week:all-models 18% (THE GATE, acted
+on), week:Fable 28%, pace allow ~31.5 at 10% elapsed — live, no skip. Hygiene:
+0 unpushed, tree clean, no stray pids, no lost-iteration marker. W38's ~29
+free GPU-hours still have no legal buyer (T4.06 bought its ~0.45 h; coverage's
+GPU classes hold only settled/held specs — re-verified, not assumed). NEXT
+ITERATION: Review 06:37 owns D33, the six OVERDUE stamps and T4.06's adoption;
+D32/D34 fire on the owner's desk today; tomorrow (09-25) the WAITS-ON
+disposition (implement `WAITS-ON:`, `none` permitted, then re-buy T0.31)
+becomes the first legal pick if the board is still empty.
