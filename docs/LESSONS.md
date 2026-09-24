@@ -16577,6 +16577,44 @@ comparison, no new class, exit code and ratchet untouched. Verified by replay
 constant-output defect is the thing the test kills), by `decisions.py`'s
 selftest, and by `T0.28`'s `_experiment`/`_check` replayed dry → True.
 
+**UPDATE 2026-09-24 (overseer, 112th audit): the repair was right and the
+question was too narrow — the `continue` is still there, and a SECOND class was
+sitting behind it the whole time.** `eca5757` made the `CONDUCT-DESK` line vary
+with today, which is what was ordered. It did not remove the `continue` at
+`decisions.py:1309`, so for `class: conduct` entries the loop body still never
+reaches `NO-DEFAULT` (`:1311`), **`DEFAULT-ACTION-EXPIRED` (`:1326`)** or the
+same-day race (`:1342`). Live instance, one day later and the same entry: `D33`
+pre-registers *"(i) RE-DATE ONCE MORE, TO 2026-09-23"* under `decide_by:
+2026-09-23`, so by this module's own arithmetic the action is in the past on every
+day the default could fire. Calling the module's own `expired_actions()` by hand
+against its own parse of the live file returns `[2026-09-23]` — **the detector
+agrees; `main()` never asks it** — while `--check` prints `0/0
+default-action-expired`, at floor, green.
+
+**So the transferable check above is missing its other half.** For every early
+return, ask BOTH:
+
+1. *What does this branch PRINT, and what could make its output change?* — the
+   110th audit's question, and it found a constant.
+2. *What does this branch SKIP?* — enumerate every check between the `continue`
+   and the end of the loop body, and for each one ask whether the exempted class
+   can actually exhibit that defect. **A class exemption is a claim that N
+   separate defects are impossible for that class, and nobody writes down the N.**
+
+Question 1 is answered by reading the branch. Question 2 can only be answered by
+reading everything BELOW the branch, which is why it does not get asked. The
+mechanical version: for each early `continue`, list the violation kinds appended
+after it and justify the exemption per kind, or move the class-independent checks
+above the fan-out. Here the honest answer is that a conduct entry can have every
+defect a goal entry can have except being the owner's — the exemption was about
+*whose desk it is*, and it silently became an exemption from *what can be wrong
+with it*.
+
+**And the fixture could not catch either half.** `decisions.py:1573`'s
+`DEFAULT-ACTION-EXPIRED` replay builds its `D21` entry with `class: goal`; the
+conduct lane is exercised only by the soft conduct advisory (P19). A class
+exemption needs a property per exempted check, not a property on the class.
+
 ---
 
 ## An instrument that prices "what would THIS edit cost" cannot read the working tree — the edit is already in it (111th audit, 2026-09-24)
