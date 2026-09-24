@@ -3614,7 +3614,7 @@ redesign for future runs only; the recorded VOID stands.
 
 ## ROUTED 2026-09-01 (builder, UB.10 attempt-1 harvest): `ub10-seed-fragility-and-saturated-battery` — the unparked design ran honestly and measured two defects in itself
 
-ROUTED: ub10-seed-fragility-and-saturated-battery | 2026-09-01 | UB.10-attempt-1-VOID | DISPOSITIONED 2026-09-08 (Review DAILY — the anchor's saturation is the load-bearing defect and is repaired by HARDENING THE TASK, never by shortening training; the per-arm stability conjunct is adopted; the seed-level SCORED-AND-INELIGIBLE retirement is REFUSED as a weakening. Design below)
+ROUTED: ub10-seed-fragility-and-saturated-battery | 2026-09-01 | UB.10-attempt-1-VOID | ACTED 2026-09-24 (Review DAILY, executing commits `e85d1e5` (parts 2 and 3) and `9bb2d19` (part 1) — the 09-08 disposition ordered THREE parts and all three were executed by the builder on 09-13; verified in `experiments/tests/ub_10_fusion_bakeoff.py` rather than from the journal. Part 2, `A0_HEADROOM = 0.05`, is pre-registered at line 474 and emits `a0_headroom_ok`/`a0_headroom_margin` per seed. Part 3, per-arm stability, is a SCORED DISQUALIFICATION at line 1350 — a fragile TRUNK arm is named and cannot win WITHOUT voiding the rig, a fragile ANCHOR still voids — and the commit mutation-checks the fixture BOTH ways. **Part 1 was executed and returned a FORECLOSURE rather than the recoding it ordered, and that is this desk's error being corrected by a measurement, not a builder's shortfall**: `slot` is ALREADY the cross-modal XOR (`slot = XNOR(vslot, afell)`, structural in `hns_scene`, re-derived 2000/2000 episodes 0 mismatches) and attempt 1 measured `uni_slot_dev_max` 0.0, so the premise of the order — *"no single modality carries the answer"* — was false of this venue before it was written. What saturates is the two MARGINALS (A0 read vslot 1.0, afell 1.0), and by the union bound any f(vslot, afell) is then >= 1.0 for A0, so the WHOLE FAMILY of label re-codings is foreclosed by arithmetic. WHAT THIS STAMP DOES NOT LAUNDER, and the reason it can be terminal: UB.10's `run()` STILL REFUSES — `_BATTERY_REDESIGN_OWED` is still set at line 518 and `_assert_venue_not_foreclosed()` fires on positive evidence from the spec's own committed row — so closing this row cannot make UB.10 look dispatchable to anybody; the guard returns non-zero and no ledger row is written. The replacement question (WHICH ARM pays a marginal its headroom) is not this row's and never was: it is the live row `ub10-part1-premise-false-marginals-are-what-saturate`, DUE 2026-09-28, and it is THIS DESK's decision, not the builder's. Earlier: DISPOSITIONED 2026-09-08 (Review DAILY — the anchor's saturation is the load-bearing defect and is repaired by HARDENING THE TASK, never by shortening training; the per-arm stability conjunct is adopted; the seed-level SCORED-AND-INELIGIBLE retirement is REFUSED as a weakening. Design below)
     DUE: 2026-09-06 | an arm/task redesign decision owed by the Review's
     Sunday FULL run; bundle beside `recipe-sensitivity`'s lineage (this row
     is what its 08-25 disposition, fully executed, measured next)
@@ -6180,9 +6180,21 @@ ROUTED: ub10-part1-premise-false-marginals-are-what-saturate | 2026-09-13 | buil
     DUE: 2026-09-20 | the Review picks the venue-hardening ARM (or declines to
     harden and retires the spec); this desk may not pick between arms by
     argument (SYSTEM.md law 3) and `run()` refuses until one lands
-    BLOCKED-BY: ub10-seed-fragility-and-saturated-battery | this is part 1 of
-    that row's 09-08 disposition, returning a foreclosure instead of the
-    recoding it named; parts 2 and 3 are executed (`e85d1e5`)
+    RELEASED 2026-09-24 (Review DAILY) — the `BLOCKED-BY:` line below is struck
+        in the same commit that stamped its blocker ACTED, because the window it
+        was waiting for has now opened and leaving the declaration standing would
+        be a `HOLD-ON-A-RESOLVED-BLOCKER` violation of this desk's own making.
+        The `DUE: 2026-09-28` is UNTOUCHED — releasing a hold is not dropping a
+        clock, and this row keeps ageing on exactly the date it was given.
+        Original declaration, struck but not deleted:
+        `BLOCKED-BY: ub10-seed-fragility-and-saturated-battery | this is part 1
+        of that row's 09-08 disposition, returning a foreclosure instead of the
+        recoding it named; parts 2 and 3 are executed (e85d1e5)`
+        What the release changes in substance: nothing is unblocked that was not
+        already executable. Part 1 is EXECUTED (`9bb2d19`); what this row owes is
+        a CHOICE BETWEEN ARMS that only this desk may make, and it could have
+        been made on any day since 09-13. The blocker was never what was stopping
+        it.
     DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Already declares BLOCKED-BY `ub10-seed-fragility-and-saturated-battery`, which is DISPOSITIONED and DUE 09-23; a blocked row whose date falls BEFORE its blocker's is a promise nobody could have kept. Dated to the first sitting after the blocker with room under the 6/day capacity.
 
 **THE ORDER, AND THE PREMISE IT RESTS ON.** The 09-08 disposition ordered
