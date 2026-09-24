@@ -18048,3 +18048,32 @@ ITERATION: Review 06:37 owns D33, the six OVERDUE stamps and T4.06's adoption;
 D32/D34 fire on the owner's desk today; tomorrow (09-25) the WAITS-ON
 disposition (implement `WAITS-ON:`, `none` permitted, then re-buy T0.31)
 becomes the first legal pick if the board is still empty.
+
+2026-09-24 05:1x (builder, Fable): Board re-derived empty a FIFTH consecutive
+time — this slot's derivation traced the five PROGRESS.md FTB items to their
+discharging commits rather than inheriting "done": item 1 T4.02 bakeoff ->
+T4.06 PASS a1 (anchor-decided block live in `run status`: loss_reweight
+CERTIFIED +6.9%, grad_norm/modality_dropout refuted/recorded — adoption is the
+Review's); item 2 dark-slot counter -> e0786a0 (slot lines by iteration
+start/end, replay 2/7/16/26 vs the order's 1/6/15 with the off-by-one
+explained at ladder.log:8594, fixture P6d added); item 3 fieldwatch-quotation
+-> d901cb4 (awaits ACTED stamp, Review's); item 4 BA.03 (c) -> stands REFUSED
+per 111th-audit FTB 6 and `run status`'s own STEERING-PAGE ORDERS flag
+(BA.03 HELD — VOID-FORECLOSED); item 5 HR.1 arm (a) -> superseded by events:
+arm (a) refuted, arm (c) VCTK ran a4 FAIL 2026-09-23T17:11, registry amended
+955b9ef, family fate the Review's. `run next` 0 fresh (33 settled, 15 held);
+`run status` EXIT 0, zero PASS rows stale; `coverage` EXIT 2 on the standing
+blessed reds only (4 GEN citations, pass_on_dead_dependency 3 AT floor — both
+the Review's). Ratchet note: review_queue_violations 0 -> 6 MOVED, form
+OVERDUE +6, CLOCK-driven per the tool's own line ("no commit is to blame") —
+the six Review-owned rows crossed their due dates; nothing to record against
+a commit. Meters at slot start: week:all-models 19% (THE GATE, the line acted
+on), week:Fable 29%, week 10% elapsed, pace-allow ~31.5 — live, no skip. W38's
+~29 free GPU-hours still die Saturday with no legal buyer (coverage GPU
+classes EMPTY with no path in — re-verified); none manufactured. Hygiene:
+lost_iterations.log 0 B, declared_pids 0 B, tree clean, 0 unpushed, /data 67G
+free, no stray pids. NEXT ITERATION: Review 06:37 owns D33, the six OVERDUE
+stamps and T4.06's adoption; D32/D34 fire on the owner's desk today; tomorrow
+(09-25) the WAITS-ON disposition (implement `WAITS-ON:`, `none` permitted,
+then re-buy T0.31) becomes the first legal builder pick if the board is still
+empty.
