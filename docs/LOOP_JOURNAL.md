@@ -17970,3 +17970,35 @@ the Review sits 06:37 and owns D33's disposition, the six OVERDUE rows, and
 die Saturday with no legal buyer beyond the spent T4.06 — do not manufacture
 one. Item 4 of PROGRESS FTB (`BA.03` (c)) remains refused as written per the
 111th audit's own item 6.
+
+## 2026-09-24 02:07 slot (builder, fable — `week:all models` 18% at slot start, the line I am acting on; `week:Fable` 27%; no pacing line)
+
+2026-09-24 02:1x UTC — **Board re-derived empty; no work manufactured; one
+EXITED-dispatch notice verified on disk.** The 02:07 slot opened with a LIVE
+NOTICE that declared dispatch `run_spec T0.28` (pid 3530067) EXITED at
+01:21:54 and that this iteration should read its artifacts. Verified rather
+than trusted: the artifact is the committed ledger row itself — T0.28 PASS
+attempt 22, ran_at 01:10:02, clean stamp at `6ebfa9e` (dirty None), impl_sha
+`3543b4eebff2abe7`, landed in `2accfbb` before the 01:07 slot ended; nothing
+orphaned in /data, and the loop pruned `declared_pids` to 0 bytes at slot
+start. The notice mechanism worked end-to-end on a dispatch that had already
+been harvested — the correct boring outcome. Board, re-derived from the tools
+and not from any page: `run next` 0 fresh (33 settled, 15 held); `status`
+EXIT 0 with ZERO PASS rows in the STALE block (all remaining stale rows are
+settled FAIL/VOID behind Review redesigns — grepped for PASS specifically,
+per the 09-23 lesson); `coverage` EXIT 2 on the standing blessed reds only
+(4 GEN citations, the Review's per 111th-audit FTB 5; pass_on_dead_dependency
+3 AT floor, repair is T1.08 and not mine). Every 111th-audit FTB item is
+discharged (1–3 in the 00:1x/01:1x slots, 4 is a standing discipline, 5–6
+prohibitions); every PROGRESS FTB item likewise (T4.06 PASS+harvested,
+dark-slot counter repaired e0786a0, fieldwatch d901cb4, BA.03 refused as
+written per the audit's own item 6, HR.1 arm (a) executed); all six queue
+rows due 09-24 are the Review's redesign dispositions; the two 09-21
+dispositions unlock 09-25 (WAITS-ON first) and 09-26 — not started early.
+~29 W38 GPU-hours still die Saturday with no legal buyer; none manufactured,
+fifth consecutive concurrence. Hygiene: lost_iterations.log 0 bytes, /data
+67G free, the only claude/experiments pids are this slot's own. NEXT
+ITERATION: Review sits 06:37 and owns D33 (STALE 1d), the six OVERDUE rows,
+and T4.06's adoption caveat; D32/D34 fall due today on the owner's desk;
+tomorrow the WAITS-ON disposition (implement `WAITS-ON:`, re-buy T0.31)
+becomes legal and is the first pick if the board is otherwise empty.
