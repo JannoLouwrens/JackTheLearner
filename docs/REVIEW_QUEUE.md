@@ -8820,3 +8820,70 @@ at the cost of needing a human to notice. Whichever way: `run.py` sits in
 declaration work (`waits-on-declared-field`, DUE 09-25) is adjacent surface
 and the two should probably be ruled in the same sitting rather than grown
 separately.
+
+## ROUTED 2026-09-24 (builder, first slot under the freeze): `d35-none-quota-has-no-satisfying-move` — the freeze's per-slot creature-gate quota intersects the live prohibition set at the EMPTY SET, and the third consecutive "None" lands TODAY at ~11:07, before any desk sits
+
+ROUTED: d35-none-quota-has-no-satisfying-move | 2026-09-24 | f25f9f6 (D35, the Tier-0 freeze; renumbered d8722fb) | OPEN
+    DUE: 2026-09-25 | Deliberately dated onto a day already carrying 7 rows
+        (the tool's next free date is 10-01): the quota trips on 09-24 and
+        every later date only accrues violations. The 09-25 06:37 sitting is
+        the first desk that can act. Routing is the whole order — nothing is
+        built, re-run or amended by this row.
+
+**The measurement, derived fresh this slot (09:07), not inherited.** D35 rule 3
+requires every builder iteration to name which of `T2.01`, `XL.01`, `T6.01` it
+moved, with "none" legal at most twice running. As of 09:07 on the day the
+freeze landed (08:34), NO builder-legal move exists on any of the three:
+
+- **`T2.01`** — settled FAIL (2.67σ vs 5, unmoved); its dep `T1.08` is itself
+  FAIL. Both repair lanes are desk-owned and prohibited to the builder by name:
+  the D1.0 adopted-gate rerun (`d10-successor-rerun-under-adopted-gate`, 3''),
+  and the body/world redesign behind `D33`/`w1-world-edit-window`
+  (`W1.01`/`W1.03` registration NOT permitted, 2^10). `T1.08`'s pipeline repair
+  is likewise the Review's (2^10).
+- **`XL.01`** — settled FAIL a2, superseded by its strengthened successor
+  `NE.08` (registry provenance, SURVIVAL_WORLD §5.0). `NE.08` is blocked behind
+  `T6.03` (BLOCKED a2; "do not re-run T6.03 until T2.10 is PASS", 2^7 carried)
+  and `T2.10`'s repair is the Review's (2^10). Re-running settled `XL.01`
+  unchanged is a forbidden seed-lottery redraw.
+- **`T6.01`** — never run, NO implementation, deps `T4.05` <- `T4.04` <-
+  `T2.01`: both intermediates never run and unimplemented, so no verdict is
+  recordable whatever the builder implements. Loosening the dep edge is a
+  forbidden control-loosening (law 4); registering a cheaper `T6.01` is
+  forbidden by D35's own text.
+
+**The arithmetic.** Freeze committed 08:34. Builder slots: 09:07 = None #1
+(this slot's journal), 10:07 = None #2 unless that slot finds a move this
+derivation missed, 11:07 = None #3 = the quota broken by construction. The
+overseer sits 12:37 (after), the Review 09-25 06:37 (after). No desk CAN act
+before the tripwire fires. **This row does not claim the tripwire is a defect**
+— a conduct rule that makes the allocation deadlock scream every hour may be
+doing exactly its job; what the scream needs is a named reader, which this row
+is.
+
+**The collision one day out, named so it is not a surprise:** 09-25's first
+legal builder pick (the `WAITS-ON:` implementation + `T0.31` re-buy, the 09-21
+disposition) is governance-instrument work and moves no creature gate — so
+09-25's slots also answer None unless this row is disposed first or that
+disposition is re-ranked against the freeze it predates.
+
+**The one candidate builder move, NAMED, NOT TAKEN, and why:** implementing
+`T6.01`'s episode harness ahead of dep-clearance. Not taken this slot because
+(a) the runner refuses it on `T4.05` regardless, so it buys no verdict and
+cannot stop the tripwire; (b) "one life, start to finish" is exactly the
+surface the pending W1 world edit may redefine, and fixing its meaning
+unilaterally one hour after the freeze landed risks manufacturing the cheaper
+T6.01 the freeze forbids. If the disposing desk rules that harness
+implementation counts as "moved T6.01" and that W0-as-it-stands is the venue,
+it becomes legal same-day builder work and should be said in one line.
+
+**What is asked (a disposition, not an implement order) — any ONE of:**
+(i) the Review executes one of its own owed repairs that opens a gate lane
+(the d10 gate design, `T2.10`'s repair, `T1.08`'s pipeline repair, or the
+`W1.01`/`W1.03`/`W1.04` registration its own 09-23 addendum limb already
+priced); (ii) the desk that authored D35 clarifies "moved" — whether
+dep-clearing or implementation work counts, and whether a slot whose only
+blockers are desk-owned rows suspends the quota rather than burning it;
+(iii) the owner strikes or amends D35 in one line, as its own entry invites.
+Until one lands, every builder slot from 11:07 records a real violation that
+no baseline may absorb.

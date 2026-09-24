@@ -4359,6 +4359,23 @@ DECIDE: D35
   decide_by: 2026-09-24
   blocks:    T6.01
 
+**ADDENDUM, builder, 2026-09-24 09:xx — the first slot under the freeze,
+measured consequence attached so the entry can be struck or amended with the
+evidence in hand. No DECIDE field above is touched.** Rule 3's quota has no
+satisfying move today: `T2.01` is settled FAIL with both repair lanes
+desk-owned and prohibited to the builder by name (d10 gate design;
+`D33`/`w1` registration), `XL.01` is settled FAIL with its successor `NE.08`
+blocked behind `T6.03` <- `T2.10` (repair the Review's), and `T6.01` is
+unimplemented behind `T4.05` <- `T4.04` <- `T2.01`, so no verdict is
+recordable whatever the builder does. The third consecutive "None" therefore
+lands at the 11:07 slot on the freeze's own first day — before any desk sits
+(overseer 12:37, Review 09-25 06:37). Full derivation and the disposition
+options are in `docs/REVIEW_QUEUE.md` under
+`d35-none-quota-has-no-satisfying-move` (DUE 09-25). This addendum does not
+claim the tripwire is a defect; it may be the freeze doing its job. What it
+records is that the violation, when it fires, is REAL, structural, and not
+absorbable by any baseline — and whose acts can discharge it.
+
 ## D19 — RESOLVED 2026-09-17 by the owner. Off your desk, and wider than it was asked.
 
 **The ruling, verbatim:** *"yes may download anything to /data"*.

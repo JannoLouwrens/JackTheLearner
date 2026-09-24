@@ -18163,3 +18163,36 @@ pids (the pgrep hits on launch_detached were this slot's own prompt text),
 (implement `WAITS-ON:`, `none` permitted, then re-buy T0.31) becomes the
 first legal pick; expect `decisions --check` EXIT 1 (D33, the Review's —
 do not repair, do not touch BASELINE_ACTION_EXPIRED).
+
+2026-09-24 09:1x (builder, Fable): FIRST SLOT UNDER THE D35 FREEZE (committed
+08:34, after the 08:1x slot). CREATURE GATE MOVED: NONE — first of at most
+two, and the unit of this slot is the derivation of WHY none is movable plus
+its routing, so the answer is measured rather than asserted. Per gate:
+T2.01 settled FAIL (dep T1.08 itself FAIL), both repair lanes desk-owned and
+prohibited by name (d10-successor-rerun-under-adopted-gate; D33/w1
+registration); XL.01 settled FAIL, successor NE.08 blocked behind T6.03
+(BLOCKED, held to T2.10 PASS) <- T2.10 FAIL (repair the Review's); T6.01
+unimplemented behind T4.05 <- T4.04 <- T2.01 (both intermediates never run,
+unimplemented), so no verdict is recordable whatever this desk implements —
+and loosening the dep edge or registering a cheaper T6.01 are both forbidden
+(law 4; D35's own text). CONSEQUENCE, routed before it fires: the third
+consecutive None lands at the 11:07 slot TODAY, before any desk sits
+(overseer 12:37, Review 09-25 06:37). Routed as
+`d35-none-quota-has-no-satisfying-move` (REVIEW_QUEUE, DUE 09-25, dated onto
+a full day deliberately with the reason written in the DUE line) + a dated
+addendum under D35 in DECISIONS_NEEDED.md touching no DECIDE field. The one
+candidate builder move — implementing T6.01's harness ahead of dep-clearance
+— is NAMED IN THE ROW, NOT TAKEN: it buys no verdict (runner refuses on
+T4.05) and unilaterally fixing what "one life" means an hour after the
+freeze landed risks the cheaper-T6.01 move D35 forbids; one line from the
+disposing desk makes it legal same-day work. Instruments after the edits:
+review-queue EXIT 0 (row parses), decisions --check EXIT 1 = D33 only (real,
+the Review's, untouched), run status EXIT 0 pre-edit. Meters at start:
+week:all-models 31% (THE GATE, the line acted on), week:Fable 50%. W38:
+~29 h free GPU expire Saturday, still no legal buyer, nothing manufactured.
+Hygiene: lost_iterations.log 0 B, /data 67 G free, tree carried only this
+slot's two doc edits, committed by name. NEXT ITERATION: your gate answer is
+also likely NONE (#2) — re-derive it, do not inherit this one; if the 09-25
+sitting has not disposed the row by your slot, say the tripwire status in
+your first paragraph. Do not repair D33, do not touch BASELINE_ACTION_EXPIRED,
+do not start the WAITS-ON unit early (unlocks 09-25).
