@@ -29295,55 +29295,25 @@
     "T0.28": {
       "amended": [],
       "attempt": 22,
-      "commit": "1f32522",
+      "commit": "6ebfa9e",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
-        "live_armed": 6.0,
+        "live_armed": 3.0,
         "live_expired_actions": 0.0,
-        "live_longest_default_chars": 2416.0,
-        "live_specs_in_radius": 2.0,
+        "live_longest_default_chars": 2251.0,
+        "live_specs_in_radius": 1.0,
         "live_unrouted_asks": 0.0,
         "live_vanished_asks": 0.0,
-        "live_violations": 6.0,
+        "live_violations": 4.0,
         "properties_checked": 19.0,
         "properties_failed": 13.0
       },
       "dirty_files": null,
-      "duration_s": 65.3,
+      "duration_s": 56.34,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "fba9ecf",
-          "control_metrics": {
-            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class",
-            "live_armed": 5.0,
-            "live_longest_default_chars": 1034.0,
-            "live_specs_in_radius": 8.0,
-            "live_violations": 0.0,
-            "properties_checked": 10.0,
-            "properties_failed": 5.0
-          },
-          "gpu_job_id": null,
-          "impl_sha": "8a12cb2d255e2a07",
-          "message": "",
-          "metrics": {
-            "failed_names": "",
-            "live_armed": 5.0,
-            "live_longest_default_chars": 1034.0,
-            "live_specs_in_radius": 8.0,
-            "live_violations": 0.0,
-            "properties_checked": 10.0,
-            "properties_failed": 0.0
-          },
-          "ran_at": "2026-09-03T09:19:19",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "a6b390a53a433ea2",
-          "status": "PASS"
-        },
         {
           "commit": "299e735",
           "control_metrics": {
@@ -30003,54 +29973,90 @@
           ],
           "spec_sha": "bb2c3ecb87ada37f",
           "status": "FAIL"
+        },
+        {
+          "commit": "1f32522",
+          "control_metrics": {
+            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
+            "live_armed": 6.0,
+            "live_expired_actions": 0.0,
+            "live_longest_default_chars": 2416.0,
+            "live_specs_in_radius": 2.0,
+            "live_unrouted_asks": 0.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 6.0,
+            "properties_checked": 19.0,
+            "properties_failed": 13.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "cffb8b1b90d5546d",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "live_armed": 6.0,
+            "live_expired_actions": 0.0,
+            "live_longest_default_chars": 2416.0,
+            "live_specs_in_radius": 2.0,
+            "live_unrouted_asks": 0.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 6.0,
+            "properties_checked": 19.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-18T22:17:25",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "bb2c3ecb87ada37f",
+          "status": "PASS",
+          "supersedes_fail": {
+            "commit": "be26c26",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "dc20b687e15e3b62",
+            "metrics": {
+              "failed_names": "p1_parse_defects_are_flagged_and_armed_is_not",
+              "live_armed": 6.0,
+              "live_expired_actions": 0.0,
+              "live_longest_default_chars": 2416.0,
+              "live_specs_in_radius": 2.0,
+              "live_unrouted_asks": 0.0,
+              "live_vanished_asks": 0.0,
+              "live_violations": 6.0,
+              "properties_checked": 18.0,
+              "properties_failed": 1.0
+            },
+            "ran_at": "2026-09-18T22:11:23",
+            "spec_changed": false,
+            "spec_sha": "bb2c3ecb87ada37f",
+            "status": "FAIL"
+          }
         }
       ],
-      "impl_sha": "cffb8b1b90d5546d",
+      "impl_sha": "3543b4eebff2abe7",
       "message": "",
       "metrics": {
         "failed_names": "",
-        "live_armed": 6.0,
+        "live_armed": 3.0,
         "live_expired_actions": 0.0,
-        "live_longest_default_chars": 2416.0,
-        "live_specs_in_radius": 2.0,
+        "live_longest_default_chars": 2251.0,
+        "live_specs_in_radius": 1.0,
         "live_unrouted_asks": 0.0,
         "live_vanished_asks": 0.0,
-        "live_violations": 6.0,
+        "live_violations": 4.0,
         "properties_checked": 19.0,
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 232.8,
+      "peak_rss_mb": 232.4,
       "preserved_impl": null,
-      "ran_at": "2026-09-18T22:17:25",
+      "ran_at": "2026-09-24T01:10:02",
       "seeds": [
         0
       ],
       "spec_id": "T0.28",
       "spec_sha": "bb2c3ecb87ada37f",
-      "status": "PASS",
-      "supersedes_fail": {
-        "commit": "be26c26",
-        "dirty": false,
-        "impl_changed": true,
-        "impl_sha": "dc20b687e15e3b62",
-        "metrics": {
-          "failed_names": "p1_parse_defects_are_flagged_and_armed_is_not",
-          "live_armed": 6.0,
-          "live_expired_actions": 0.0,
-          "live_longest_default_chars": 2416.0,
-          "live_specs_in_radius": 2.0,
-          "live_unrouted_asks": 0.0,
-          "live_vanished_asks": 0.0,
-          "live_violations": 6.0,
-          "properties_checked": 18.0,
-          "properties_failed": 1.0
-        },
-        "ran_at": "2026-09-18T22:11:23",
-        "spec_changed": false,
-        "spec_sha": "bb2c3ecb87ada37f",
-        "status": "FAIL"
-      }
+      "status": "PASS"
     },
     "T0.29": {
       "amended": [],
