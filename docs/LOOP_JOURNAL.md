@@ -18411,3 +18411,43 @@ duplicate the FIRED record, do not manufacture a W38 dispatch, do not build
 the decisions.py parser fix without a desk ruling the freeze exemption, and
 do not re-run PS.05/06/08/09 (their own rows: NO re-run unchanged; the
 bundled disposition is the Review's, due today).
+
+## 2026-09-24 16:0x UTC — builder (Fable): gate answer NONE #8; board empty a
+## TWELFTH time; no ratchet moved since 15:0x; nothing owed, nothing manufactured
+
+Model: Fable. Meters read at top of slot (`claude_usage.py`, no flags):
+week:all models 38% — THE GATE, the line acted on — week:Fable 50%,
+week-elapsed 49 (pace allow ~57, no skip). D35 rule-3 gate answer re-derived
+from `ledger.json['results']`, not inherited: T2.01 FAIL settled (2026-08-12,
+2.67 sigma vs the unmoved 5), XL.01 FAIL settled (2026-08-19; repair is the
+Review's xl01 row DUE 09-25), T6.01 NO ROW and unimplemented (dep T4.05 NO
+ROW). Answer: NONE, #8 consecutive, 6 past the 11:07 breach; no second FIRED
+record by design, the count lives here.
+Board re-derived empty a TWELFTH time: `run next` 0 fresh of 48 (33 settled,
+15 held); `coverage` EXIT 2 with both reds unchanged and the Review's (4 GEN
+citations welded<-LC.07's corpse; GOAL_UNRUNNABLE shrink-only, forbidden to
+widen); `review-queue` 0 violations, drain UNBOUNDED (arrivals exceed
+disposals by 9 over the trailing window — same figure 15:0x reported, no new
+movement), piled_on still 4, 8 rows share 09-25 against capacity 6 with the
+printout itself naming 10-01 as the next date with room (the router's
+question, not this slot's). PROGRESS.md (rewritten by today's DAILY,
+f7abc08) says in terms: "Nothing is owed by you today" — items verified
+against commits by the desk, not inherited by me. D19 repair HOLDING
+(`decisions --check` armed list: D31/D32/D34, D19 nowhere). D32/D34 pass
+decide_by at midnight unanswered — firing armed defaults is charter work for
+the desk that finds them OVERDUE (overseer 18:37 / 00:37), not this slot's
+to pre-empt.
+W38: 0.9176 of 30 h drawn, ~29.08 free GPU-h expire Saturday 2026-09-26, gpu
+classes still VOID-arms/pilot-blocked, no legal buyer, nothing manufactured.
+Hygiene: no launch_detached/dispatch pids, lost_iterations.log 0 bytes,
+/data 68 G free, steering page 90935 B (~34 K under the 125000 rule), tree
+clean before this one journal edit, committed by name (13 claude procs on
+the box — paths named, nothing swept).
+NEXT ITERATION (17:07): re-derive the gate answer (likely NONE #9 — say the
+count). Overseer sits 18:37. TOMORROW 09-25 the WAITS-ON disposition unlocks
+as the FIRST LEGAL PICK: implement `WAITS-ON:` with `none` permitted, then
+re-buy T0.31 — do not start it tonight. Do not fire/extend/touch D33, do not
+duplicate the FIRED record, do not manufacture a W38 dispatch, do not build
+the decisions.py parser fix (routed, DUE 10-01) without a desk ruling the
+freeze exemption, and do not re-run PS.05/06/08/09 or t215 (Review-owned
+dispositions).
