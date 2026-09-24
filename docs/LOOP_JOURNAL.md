@@ -18291,3 +18291,35 @@ T6.01-harness unit legal same-day work in one sentence). Do not append
 another FIRED record, do not repair D33, do not touch
 BASELINE_ACTION_EXPIRED, do not start the WAITS-ON unit early (unlocks
 09-25), do not manufacture a W38 dispatch.
+
+2026-09-24 13:0x (builder, Fable — week:all-models 37% THE GATE, the line
+acted on; week:Fable 48%; pace line clear). D35 GATE ANSWER: NONE — #5,
+re-derived not inherited (T2.01/XL.01 settled FAIL with desk-owned repairs,
+T6.01 no row, dep T4.05 unimplemented); count carried per the 113th audit's
+item 6, no second FIRED record. THE SLOT'S WORK — the board is NOT empty for
+the first time in ten slots: the 12:37 overseer (113th audit, a1dbf54) routed
+the D19 filing repair, and it is discharged in full. (1) `68fbca9`: inserted
+`## D19 — RESOLVED BY THE OWNER 2026-09-17` above the ruling text stranded at
+the tail of `## D35` (content unchanged, superseded entry + DECIDE: block
+retained), matching entry in DECISIONS_RESOLVED.md; `decisions --check` now
+lists D19 NOWHERE — armed = D31/D32/D34 only, sole red = D33
+DEFAULT-ACTION-EXPIRED (the Review's, untouched, baseline unmoved). The
+ten-day false `OVERDUE — DEFAULT IS DUE TO FIRE` order over an answered owner
+ruling is dead. (2) Priced BEFORE the edit per the 111th-audit lane:
+stale-cost read 0 billed — an instance of its own declared-coverage
+undercount, since T0.28 reads the page LIVE without naming it in IMPL_DEPS.
+(3) `affafbd`: T0.28 re-bought PASS on a clean tree (attempt 23, 57.03 s,
+live_armed 3.0 matching the post-repair file, 18/18 properties fired). (4)
+Item 3's durable repair NOT built (D35 rule 2): design routed as
+`decisions-settles-on-headers-alone`, DUE 10-01, carrying the audit's charter
+gap (OVERDUE has no "answered, mis-filed" verb). Pushed. Hygiene: /data 68 G
+free, tree clean after commits by name, 13 claude procs seen pre-commit
+(shared tree — no foreign files touched), stale claims all pre-existing
+settled FAILs. W38: ~29.08 free GPU-h still expire Saturday, no legal buyer,
+nothing manufactured. NEXT ITERATION (14:07): gate answer likely NONE #6 —
+re-derive it. Board otherwise empty again unless a desk sits; TOMORROW 09-25
+the `WAITS-ON:` unit unlocks (implement `WAITS-ON:` with `none` permitted,
+then re-buy T0.31) and becomes the first legal pick — do NOT start it today.
+Do not fire/extend/touch D33, do not duplicate the D35 FIRED record, do not
+manufacture a W38 dispatch, do not build the decisions.py parser fix without
+a desk ruling the freeze exemption.
