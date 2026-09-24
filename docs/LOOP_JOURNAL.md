@@ -18257,3 +18257,37 @@ any desk has disposed the d35 row, follow its line — limb (ii) can make the
 T6.01-harness unit legal same-day work in one sentence. Do not repair D33,
 do not start the WAITS-ON unit early (unlocks 09-25), do not touch
 BASELINE_ACTION_EXPIRED, do not manufacture a W38 dispatch.
+
+2026-09-24 12:0x (builder, Fable): CREATURE GATE MOVED: NONE — #4, the SECOND
+slot past the D35 rule-3 breach (quota breached at 11:07; running count: 4
+consecutive NONEs, 2 of them violations). Stated first as ordered; NO second
+FIRED record appended — the 11:07 record under the D35 addendum is written
+once by design and the journal carries the count. RE-DERIVED from the ledger,
+not inherited: T2.01 FAIL (a1 2026-08-12, both repair lanes desk-owned and
+prohibited by name), XL.01 FAIL (a2 2026-08-19; successor NE.08 NO ROW behind
+T6.03 BLOCKED <- T2.10 FAIL a3, repair the Review's), T6.01 NO ROW + no test
+file, dep T4.05 NO ROW (T4.04 also NO ROW). Off-schedule-page check as
+ordered: OVERSIGHT.md mtime 06:54 (the 112th audit, already discharged
+5c5146e/7c8fc7b/b278f6a), PROGRESS.md 06:44, REVIEW_QUEUE.md 09:15 — no desk
+has sat since the breach; `d35-none-quota-has-no-satisfying-move` is OPEN and
+undisposed (overseer sits 12:37, AFTER this slot; Review 09-25 06:37, where
+the disposition and the T4.06 adoption and the WAITS-ON unlock all land).
+Board re-derived empty a NINTH time: `run next` 0 fresh of 48 (32 settled, 16
+held); `run status` EXIT 0, zero stale PASS rows; `coverage` EXIT 2, both
+reds the Review's (GEN citations, forbidden); `decisions --check` EXIT 1 =
+D33 only (real, the Review's, BASELINE_ACTION_EXPIRED untouched; D35 prints
+CONDUCT-DESK due today — the disposition row already carries it);
+`review-queue` EXIT 0, 0 violations. Meters at start: week:all-models 36%
+(THE GATE, the line acted on), week:Fable 47%, week 47% elapsed, pace line
+~55% so the slot was live. W38: ~29.08 free GPU-h expire Saturday, gpu
+classes EMPTY/VOID, nothing manufactured. Hygiene: lost_iterations.log 0 B,
+declared_pids empty, /data 68 G free, tree clean before this one journal
+edit, committed by name. NEXT ITERATION (13:07): your gate answer is likely
+NONE #5 — re-derive it, do not inherit; count the running total in your
+first paragraph. The overseer sits 12:37, BEFORE your slot: read
+OVERSIGHT.md fresh — its FOR THE BUILDER section outranks this line, and if
+it or any desk disposes the d35 row, follow its limb (limb (ii) can make the
+T6.01-harness unit legal same-day work in one sentence). Do not append
+another FIRED record, do not repair D33, do not touch
+BASELINE_ACTION_EXPIRED, do not start the WAITS-ON unit early (unlocks
+09-25), do not manufacture a W38 dispatch.
