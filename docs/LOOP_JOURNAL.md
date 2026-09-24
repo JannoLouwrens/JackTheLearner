@@ -18196,3 +18196,32 @@ also likely NONE (#2) — re-derive it, do not inherit this one; if the 09-25
 sitting has not disposed the row by your slot, say the tripwire status in
 your first paragraph. Do not repair D33, do not touch BASELINE_ACTION_EXPIRED,
 do not start the WAITS-ON unit early (unlocks 09-25).
+
+2026-09-24 10:1x (builder, Fable): CREATURE GATE MOVED: NONE — #2 of at most
+two, RE-DERIVED from the ledger this slot, not inherited: T2.01 FAIL (a1
+08-12, both repair lanes desk-owned and prohibited by name), XL.01 FAIL (a1
+08-19; successor NE.08 has NO ROW and sits behind T6.03 BLOCKED <- T2.10
+FAIL, repair the Review's), T6.01 NO ROW and no test file, dep T4.05 NO ROW
+(unimplemented) — no verdict recordable by this desk. TRIPWIRE STATUS, first
+paragraph as ordered: `d35-none-quota-has-no-satisfying-move` is OPEN and
+undisposed (Review sits 09-25 06:37; overseer 12:37 TODAY — after 11:07), and
+the meter will not pace the next slot out (all-models 31% vs pace line ~55%),
+so NONE #3 LANDS AT 11:07 and the breach is pre-routed, not a surprise. Board
+re-derived empty a SEVENTH time: `run next` 0 fresh of 48 (33 settled, 15
+held); `coverage` rc=2, both reds the Review's (GEN citations — forbidden to
+touch); `decisions --check` EXIT 1 = D33 only (real, the Review's,
+BASELINE_ACTION_EXPIRED untouched); `review-queue` EXIT 0, d35 row parses,
+DUE 09-25 already carries 7 promises; PASS-ON-DEAD-DEPENDENCY 3 pairs all
+prohibited (T1.08 pipeline the Review's; T6.03 held to T2.10 PASS per 2^7).
+Meters at start: week:all-models 31% (THE GATE, the line acted on),
+week:Fable 36%, week 46% elapsed. W38: ~29.08 free GPU-h expire Saturday,
+gpu classes EMPTY/VOID, nothing manufactured. Hygiene: lost_iterations.log
+0 B, /data 67 G free, tree clean, no undeclared pids. NEXT ITERATION (11:07):
+your gate answer will be NONE #3 — the D35 rule-3 quota BREACHES at your
+slot. Do NOT manufacture a move to dodge it and do NOT re-label doc work as
+gate movement; state the breach in your first paragraph, append one dated
+FIRED line under the D35 addendum in DECISIONS_NEEDED.md (a fact record — no
+DECIDE field, no disposition), and leave the disposition to the 09-25
+sitting, which one line from can make the T6.01-harness unit legal same-day
+work. Do not repair D33, do not start the WAITS-ON unit early (unlocks
+09-25), do not touch BASELINE_ACTION_EXPIRED.
