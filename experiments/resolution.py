@@ -165,14 +165,46 @@ ANCHOR_ARM_NAMES = ("incumbent", "anchor")
 # The CONJUNCT is not: which per-seed statistic the `_check` compared, at
 # which aggregation, and in which direction live in the spec's pre-registered
 # rule, not in the row. Guessing the direction would print wrong-signed
-# margins, so an inventoried row with no entry here is reported LOUDLY as
-# undescribed instead of being described wrongly. One entry per spec, copied
-# from the spec's own pre-registration at the time its row first lands.
-ANCHOR_CONJUNCTS: Dict[str, Dict[str, object]] = {
-    # t4_06_fusion_balancing_bakeoff._check: s["min_r2"] > bar_r2 where
-    # bar_r2 = min over seeds of the incumbent's min-modality latent R^2.
-    "T4.06": {"stat": "r2_per_seed", "decided_at": "min",
-              "higher_is_better": True, "label": "min_modality_latent_r2"},
+# margins, so an undescribed anchor-relative conjunct is reported LOUDLY as
+# UNDESCRIBED instead of being described wrongly. One LIST per spec, one
+# descriptor per anchor-relative conjunct, copied from the spec's own
+# pre-registration at the time its row first lands. This used to read "One
+# entry per spec", and that sentence was the defect the 112th audit named:
+# T4.06 pre-registered TWO anchor-relative conjuncts, one was described, and
+# the row printed as fully described while conjunct (3) was printed by
+# nothing. A descriptor may carry `strict: False` for a conjunct decided at
+# `<=` with zero required margin — marked in the printed line because
+# strictness is the one part of the rule a reader cannot infer from the row.
+# A descriptor may instead carry `not_a_conjunct: <reason>` for a per-seed
+# list the anchor arm records that is NOT decided against the anchor (an
+# exogenous gate, a diagnostic) — described-as-not-a-conjunct is the honest
+# third state between rendered and UNDESCRIBED, and the reason is copied
+# from the spec's pre-registration like everything else here.
+ANCHOR_CONJUNCTS: Dict[str, List[Dict[str, object]]] = {
+    # t4_06_fusion_balancing_bakeoff: `_winner_lanes` is the pre-registered
+    # rule. Its two anchor-relative conjuncts:
+    # (2) s["min_r2"] > bar_r2 where bar_r2 = min over seeds of the
+    #     incumbent's min-modality latent R^2 — strict.
+    # (3) s["eval_loss_mean"] <= the incumbent's mean eval loss — NON-STRICT
+    #     (`<=`, zero required margin; docstring line 94).
+    # Conjunct (1), ratio_ok, is decided against the EXOGENOUS RATIO_MAX
+    # (the 10x gate), not the anchor; the other two per-seed lists are
+    # diagnostics that decide nothing.
+    "T4.06": [
+        {"stat": "r2_per_seed", "decided_at": "min",
+         "higher_is_better": True, "label": "min_modality_latent_r2"},
+        {"stat": "eval_loss_per_seed", "decided_at": "mean",
+         "higher_is_better": False, "label": "eval_loss_mean",
+         "strict": False},
+        {"stat": "ratio_per_seed",
+         "not_a_conjunct": "decided against the exogenous 10x gate "
+                           "RATIO_MAX, not the anchor"},
+        {"stat": "latent_r2_per_seed",
+         "not_a_conjunct": "per-modality diagnostic behind min_r2; "
+                           "decides nothing"},
+        {"stat": "norms_per_seed",
+         "not_a_conjunct": "raw per-modality grad norms; diagnostic only"},
+    ],
 }
 
 
@@ -221,47 +253,68 @@ def status_lines(results) -> List[str]:
         status = _field(row, "status")
         status = getattr(status, "value", status)
         head = f"      {sid} ({status}, attempt {_field(row, 'attempt')})"
-        desc = ANCHOR_CONJUNCTS.get(sid)
-        if desc is None:
+        descs = ANCHOR_CONJUNCTS.get(sid) or []
+        conjuncts = [d for d in descs if "not_a_conjunct" not in d]
+        non_conjuncts = [d for d in descs if "not_a_conjunct" in d]
+        described = {str(d["stat"]) for d in descs}
+        # The candidate anchor-relative conjuncts are derived from the ROW:
+        # every per-seed list the anchor arm itself carries is a statistic
+        # a challenger can be decided against. UNDESCRIBED fires per STAT,
+        # not per row (112th audit item 4): a row with one described and one
+        # undescribed conjunct used to print as fully described.
+        anchor_stats = {k for k, v in arms.get(anchor_name, {}).items()
+                        if isinstance(v, list)}
+        for stat in sorted(anchor_stats - described):
             lines.append(
-                f"{head}  anchor arm '{anchor_name}' RECORDED but the conjunct "
-                f"is UNDESCRIBED —\n        the statistic and direction live "
-                f"in the spec's pre-registration, not the row;\n        add "
-                f"the ANCHOR_CONJUNCTS entry rather than letting this reader "
-                f"guess a sign.")
-            continue
-        stat = str(desc["stat"])
-        anch_scores = arms.get(anchor_name, {}).get(stat)
-        lines.append(f"{head}  {desc['label']} vs '{anchor_name}' at "
-                     f"{desc['decided_at']}:")
+                f"{head}  anchor arm '{anchor_name}' records '{stat}' but "
+                f"that conjunct is UNDESCRIBED —\n        its direction and "
+                f"aggregation live in the spec's pre-registration, not the "
+                f"row;\n        add the ANCHOR_CONJUNCTS descriptor rather "
+                f"than letting this reader guess a sign.")
+        noted = [d for d in non_conjuncts if str(d["stat"]) in anchor_stats]
+        if noted:
+            lines.append(
+                f"{head}  recorded but NOT anchor-relative: "
+                + "; ".join(f"{d['stat']} ({d['not_a_conjunct']})"
+                            for d in noted))
         metrics = _field(row, "metrics") or {}
         winning = set(metrics.get("winning_arms") or [])
         refuted = set(metrics.get("refuted_arms") or [])
-        for arm_name in sorted(arms):
-            if arm_name == anchor_name:
-                continue
-            chal = arms[arm_name].get(stat)
-            if not (isinstance(chal, list) and isinstance(anch_scores, list)):
-                lines.append(f"        {arm_name:<16s} '{stat}' missing on "
-                             f"one side — unreadable from the row")
-                continue
-            rep = anchor_margin(
-                chal, anch_scores, quiet=True,
-                higher_is_better=bool(desc["higher_is_better"]),
-                decided_at=str(desc["decided_at"]))
-            tag = ("CERTIFIED" if arm_name in winning
-                   else "refuted" if arm_name in refuted else "recorded")
-            if rep["paired_diffs"] is None:
-                seeds = "seeds unpaired"
-            else:
-                seeds = (f"seeds {rep['n_improving']} improving / "
-                         f"{rep['n_regressing']} "
-                         + ("REGRESSING" if rep["n_regressing"]
-                            else "regressing"))
-            lines.append(
-                f"        {arm_name:<16s} {tag:<9s} margin "
-                f"{rep['margin']:+.4f} = {100.0 * rep['margin_over_spread']:+.1f}% "
-                f"of anchor seed spread {rep['anchor_spread']:.4f}; {seeds}")
+        for desc in conjuncts:
+            stat = str(desc["stat"])
+            anch_scores = arms.get(anchor_name, {}).get(stat)
+            strictness = ("" if desc.get("strict", True)
+                          else "  [non-strict <=, zero required margin]")
+            lines.append(f"{head}  {desc['label']} vs '{anchor_name}' at "
+                         f"{desc['decided_at']}:{strictness}")
+            for arm_name in sorted(arms):
+                if arm_name == anchor_name:
+                    continue
+                chal = arms[arm_name].get(stat)
+                if not (isinstance(chal, list)
+                        and isinstance(anch_scores, list)):
+                    lines.append(f"        {arm_name:<16s} '{stat}' missing "
+                                 f"on one side — unreadable from the row")
+                    continue
+                rep = anchor_margin(
+                    chal, anch_scores, quiet=True,
+                    higher_is_better=bool(desc["higher_is_better"]),
+                    decided_at=str(desc["decided_at"]))
+                tag = ("CERTIFIED" if arm_name in winning
+                       else "refuted" if arm_name in refuted else "recorded")
+                if rep["paired_diffs"] is None:
+                    seeds = "seeds unpaired"
+                else:
+                    seeds = (f"seeds {rep['n_improving']} improving / "
+                             f"{rep['n_regressing']} "
+                             + ("REGRESSING" if rep["n_regressing"]
+                                else "regressing"))
+                lines.append(
+                    f"        {arm_name:<16s} {tag:<9s} margin "
+                    f"{rep['margin']:+.4f} = "
+                    f"{100.0 * rep['margin_over_spread']:+.1f}% "
+                    f"of anchor seed spread {rep['anchor_spread']:.4f}; "
+                    f"{seeds}")
     return lines
 
 
@@ -332,12 +385,25 @@ def _selftest() -> int:
     # rather than described with a guessed sign.
     def _arms(scores):
         return {n: {"r2_per_seed": s} for n, s in scores.items()}
+    # The eval-loss literals are also copied from the committed T4.06 row —
+    # conjunct (3), the one the row's first descriptor table never printed.
+    eval_loss = {"incumbent": [0.4842, 0.4943, 0.49],
+                 "loss_reweight": [0.4831, 0.4936, 0.4891],
+                 "grad_norm": [0.4973, 0.4938, 0.4989],
+                 "modality_dropout": [0.5047, 0.5027, 0.5159]}
+    t406_arms = _arms({"incumbent": incumbent,
+                       "loss_reweight": loss_reweight,
+                       "grad_norm": grad_norm,
+                       "modality_dropout": modality_dropout})
+    for n, s in eval_loss.items():
+        t406_arms[n]["eval_loss_per_seed"] = s
+    # Committed literals again: the anchor also records the exogenous-gated
+    # ratio, which must render as described-not-anchor-relative, not as
+    # UNDESCRIBED and not with a guessed margin.
+    t406_arms["incumbent"]["ratio_per_seed"] = [29.8302, 13.6677, 27.7323]
     fixture = {
         "T4.06": {"status": "PASS", "attempt": 1, "metrics": {
-            "arms": _arms({"incumbent": incumbent,
-                           "loss_reweight": loss_reweight,
-                           "grad_norm": grad_norm,
-                           "modality_dropout": modality_dropout}),
+            "arms": t406_arms,
             "winning_arms": ["loss_reweight"],
             "refuted_arms": ["grad_norm"]}},
         "D1.0": {"status": "VOID", "attempt": 2, "metrics": {
@@ -362,6 +428,33 @@ def _selftest() -> int:
           and "recorded" in _line_with(block, "modality_dropout"), block)
     check("undescribed anchor row reported, not guessed",
           "UNDESCRIBED" in block and "X.99" in block, block)
+    # 112th audit item 4: BOTH T4.06 conjuncts must render. Conjunct (3) is
+    # decided at the mean, lower-is-better, and NON-STRICT — the marker and
+    # the +8.9%-of-spread / 3-improving reading are the parts the 112th
+    # audit found printed by nothing.
+    t406_lines = [l for l in block.splitlines() if "T4.06" in l]
+    check("both T4.06 conjunct headers render",
+          any("min_modality_latent_r2" in l for l in t406_lines)
+          and any("eval_loss_mean" in l for l in t406_lines), t406_lines)
+    eloss_head = _line_with(block, "eval_loss_mean")
+    check("conjunct (3) marked non-strict in the printed line",
+          "[non-strict <=, zero required margin]" in eloss_head, eloss_head)
+    eloss_idx = block.splitlines().index(eloss_head)
+    eloss_block = "\n".join(block.splitlines()[eloss_idx:eloss_idx + 4])
+    check("conjunct (3) re-derives +8.9% of anchor spread 0.0101, 3 improving",
+          "+8.9% of anchor seed spread 0.0101" in eloss_block
+          and "3 improving / 0 regressing" in eloss_block, eloss_block)
+    # T4.06 is now FULLY described, so it must fire no UNDESCRIBED line —
+    # only X.99's genuinely undescribed conjunct does.
+    check("described row fires no UNDESCRIBED",
+          not any("UNDESCRIBED" in l for l in t406_lines), t406_lines)
+    # The third state: a stat the anchor records but the pre-registration
+    # decides elsewhere (the exogenous 10x gate) renders as described-not-
+    # anchor-relative, with no margin computed against the anchor for it.
+    ratio_line = _line_with(block, "ratio_per_seed")
+    check("exogenous-gated stat described, not UNDESCRIBED, no margin",
+          "NOT anchor-relative" in ratio_line and "RATIO_MAX" in ratio_line
+          and "margin" not in ratio_line, ratio_line)
     check("empty inventory prints nothing",
           status_lines({"T0.01": {"status": "PASS", "metrics": {}}}) == [], "")
 
