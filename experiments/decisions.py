@@ -1307,12 +1307,27 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
                                f"desk-executable, not the owner's ({when}) "
                                "— execute it, report it, do not ask. Listed so a stale "
                                "conduct entry cannot silently self-approve."))
-            continue
+            # NO `continue` — and the absence is the 112th audit's repair. The
+            # `continue` that stood here until 2026-09-24 exempted conduct from
+            # every check below it, and a class exemption is a claim that N
+            # separate defects are impossible for that class, with nobody
+            # writing down the N. Enumerated, per kind: NO-DEFAULT applies —
+            # SYSTEM.md puts conduct amendments "under the same default-and-
+            # deadline discipline", so an unarmed conduct entry is the same
+            # deadlock generator (reachable for conduct DELIBERATELY, at a
+            # live cost of zero: both live conduct entries are armed). DATE,
+            # DEFAULT-ACTION-EXPIRED and DEFAULT-ACTION-SAME-DAY are pure
+            # date arithmetic with no term drawn from whose desk it is —
+            # `D33` pre-registered an action on its own decide_by and read
+            # green here for a day while `expired_actions()` agreed by hand.
+            # The exemption was about WHOSE desk the entry is; it had
+            # silently become an exemption from what can be wrong with it.
+            # The genuinely class-dependent tail (goal-only) continues below.
 
         missing = [k for k in ("default", "decide_by") if not d.get(k)]
         if missing:
             violations.append(("NO-DEFAULT", did,
-                               f"goal-class decision missing {', '.join(missing)} — "
+                               f"{cls}-class decision missing {', '.join(missing)} — "
                                "an escalation without a default is a deadlock generator"))
             continue
 
@@ -1350,6 +1365,16 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
                 "default must fire BEFORE the event it commands, on the same "
                 "day. The deadline has an HOUR; nothing date-granular can "
                 "enforce it, so the firing slot must know it is in a race"))
+
+        if cls == "conduct":
+            # The tail below is the only part conduct is still exempt from,
+            # and each piece earns it: the CONDUCT-MISFILED? heuristic asks
+            # whether a GOAL entry is conduct in disguise — definitionally
+            # inapplicable here — and `rows` is the owner's armed-decisions
+            # report and owner-owed tracking, which a conduct entry must never
+            # join (its visibility lane is CONDUCT-DESK; the selftest asserts
+            # D97 stays out of rows).
+            continue
 
         blocks = [b.strip() for b in (d.get("blocks") or "").split(",") if b.strip()]
         # A GOAL decision that blocks nothing is usually CONDUCT wearing goal's
@@ -1582,6 +1607,20 @@ DECIDE: D21
 """
     kinds21 = {did: kind for kind, did, _ in audit(d21, _dt.date(2026, 9, 4))[0]}
     assert kinds21.get("D21") == "DEFAULT-ACTION-EXPIRED", kinds21
+    # The 112th audit's property: the SAME entry, one word changed
+    # (`goal` -> `conduct`), must draw the SAME action-date finding. Until
+    # 2026-09-24 the conduct branch `continue`d before the check ran, so this
+    # exact document drew only CONDUCT-DESK while its default named a date
+    # already past on the earliest firing day — the live instance was `D33`,
+    # whose default pre-registered an action ON its own decide_by and whose
+    # violation `expired_actions()` confirmed by hand while `--check` printed
+    # the class at floor. Both kinds must be present: the desk line survives
+    # the fall-through, and the arithmetic now runs behind it.
+    kindsc = [kind for kind, _, _ in
+              audit(d21.replace("class:     goal", "class:     conduct"),
+                    _dt.date(2026, 9, 4))[0]]
+    assert "DEFAULT-ACTION-EXPIRED" in kindsc, kindsc
+    assert "CONDUCT-DESK" in kindsc, kindsc
     # ...and the repair the 70th audit performed — SHORTEN the clock so the
     # firing lands the morning before the action — silences EXPIRED and leaves
     # exactly the SAME-DAY race behind, because the shortened clock puts the
