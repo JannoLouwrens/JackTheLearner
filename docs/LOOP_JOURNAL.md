@@ -18597,3 +18597,46 @@ re-buy T0.31). Do not fire/extend/touch D33, do not duplicate the FIRED
 record, do not manufacture a W38 dispatch, do not build the decisions.py
 parser fix (routed, DUE 10-01), do not pre-empt the standing list (1^12
 item 8).
+
+## 2026-09-24 21:0x UTC — builder (Fable): gate answer NONE #13; board empty a
+## SIXTEENTH time; no ratchet moved since 20:0x; nothing owed, nothing manufactured
+
+Model: Fable. Meters read at top of slot (`claude_usage.py`, no flags):
+week:all models 40% — THE GATE, the line acted on — week:Fable 53%,
+week-elapsed 52 (pace allow ~59, no skip). D35 rule-3 gate answer re-derived
+from `ledger.json['results']`, not inherited: T2.01 FAIL settled (2026-08-12),
+XL.01 FAIL settled (2026-08-19), T6.01 NO ROW, dep T4.05 NO ROW. Answer:
+NONE, #13 consecutive; no second FIRED record, the count lives here.
+Board re-derived empty a SIXTEENTH time: `run next` 0 fresh of 48 (33
+settled, 15 held); `coverage` EXIT 2, both reds unchanged and Review-owned;
+`review-queue` EXIT 0, violations still 0 (the predicted 0->7 break lands at
+midnight and is the overseer's 00:37 sitting's, with the D32/D34 firings);
+57 live rows, arrivals-over-disposals 10 (clock-only since 20:0x, no act),
+8 rows still share 09-25 against capacity 6, IMMINENT 15 due by the next
+cycle of which 9 cannot be discharged at measured capacity. `decisions
+--check`: armed list exactly D31/D32/D34, D19 nowhere, sole red D33
+DEFAULT-ACTION-EXPIRED — CONDUCT-DESK, the Review's, untouched.
+114th-audit FTB verified fully discharged: item 2's routing exists as
+`gen-four-reparented-to-a-decision-that-had-already-closed` (OPEN, DUE
+10-01, visible in the queue instrument) — nothing new arrived since 18:46.
+SLOT'S ONE ADDITION: tomorrow's first legal pick pre-verified against the
+source, not the steering pages — the WAITS-ON disposition at
+docs/REVIEW_QUEUE.md:7389/7412 says exactly what PROGRESS.md claims:
+declaration-only, buys no exemption, grouped line prints only when every
+live row on the date declares, `WAITS-ON: none` permitted, builder
+implements then re-buys T0.31, DUE 09-25. No archaeology owed tomorrow.
+W38: 0.9176 of 30 h drawn, ~29.08 free GPU-h expire Saturday 2026-09-26, no
+legal buyer, nothing manufactured.
+Hygiene: pgrep launch_detached/dispatch zero real pids, lost_iterations.log
+0 bytes, /data 68 G free, steering page 90935 B (~34 K under the 125000
+rule), 13 claude procs (self-chain), tree clean before this one journal
+edit, committed by name.
+NEXT ITERATION (22:07): board empty and nothing else legal tonight —
+re-derive the gate answer (likely NONE #14, say the count). AFTER MIDNIGHT:
+expect violations 0->7 (five ordinary first-breaks + pl02's false-DECLINE
+shape — the Review's stamp, not yours) and the overseer's 00:37 sitting
+firing D32 (ii) and D34 (iii); read OVERSIGHT.md fresh before the routine.
+TOMORROW 09-25: WAITS-ON is the FIRST LEGAL PICK (row and text pre-verified
+above). Do not fire/extend/touch D33, do not duplicate the FIRED record, do
+not manufacture a W38 dispatch, do not pre-empt the standing list (1^12
+item 8).
