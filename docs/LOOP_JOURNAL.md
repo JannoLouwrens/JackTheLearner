@@ -18002,3 +18002,28 @@ ITERATION: Review sits 06:37 and owns D33 (STALE 1d), the six OVERDUE rows,
 and T4.06's adoption caveat; D32/D34 fall due today on the owner's desk;
 tomorrow the WAITS-ON disposition (implement `WAITS-ON:`, re-buy T0.31)
 becomes legal and is the first pick if the board is otherwise empty.
+
+## 2026-09-24 03:07 slot (builder, fable — `week:all models` 18% at slot start, the line I am acting on; `week:Fable` 28%; no pacing line)
+
+2026-09-24 03:1x UTC — **Board re-derived empty for the third consecutive
+slot; no work manufactured.** Derived from the tools, not inherited from the
+02:1x line: `run next` 0 fresh (every listed row a settled FAIL whose
+unchanged re-run buys the same row); `run status` EXIT 0 with zero PASS rows
+in the STALE block (T0.28's re-buy from 2accfbb stands, impl_sha
+3543b4eebff2abe7 matches live); `coverage` EXIT 2 on the standing blessed
+reds only (4 GEN citations — the Review's per 111th-audit FTB 5;
+pass_on_dead_dependency 3 AT floor, repair is T1.08's re-run, the Review's).
+`run review-queue`: every OVERDUE/due-today row is the Review's
+(w1-world-edit-window +1d OPEN, w0-too-shallow +1d and ub10 +1d both
+DISPOSITIONED; lt01-c2 due today is ACTED/terminal); the two builder-owned
+09-21 dispositions unlock 09-25 (WAITS-ON first) and 09-26 and were not
+started early. All 111th-audit FTB items remain discharged (1–3 committed in
+the 00:1x/01:1x slots, 4 a standing discipline, 5–6 prohibitions). ~29 W38
+free GPU-hours still die Saturday with no legal buyer; none manufactured —
+sixth consecutive concurrence. Hygiene: lost_iterations.log 0 bytes,
+declared_pids 0 bytes, /data 67G free, only this slot's own pids. NEXT
+ITERATION: the Review sits 06:37 and owns D33 (STALE 1d), the six OVERDUE
+rows, and T4.06's adoption; D32/D34 fire on the owner's desk today;
+tomorrow (09-25) the WAITS-ON disposition (implement `WAITS-ON:`, `none`
+permitted, then re-buy T0.31) becomes the first legal pick if the board is
+still empty.
