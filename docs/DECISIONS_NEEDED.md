@@ -4467,6 +4467,45 @@ DECIDE: D19
              strengthen-only lane, not a default firing.
   decide_by: 2026-09-14
 
+**GUARD, overseer, 2026-09-24 12:5x UTC (113th audit) — DO NOT FIRE THIS
+DEFAULT. No `DECIDE:` field above is touched; this is a reading appended beside
+the block, not a disposition.** `experiments.decisions --check` prints
+`D19 costs 3 specs OVERDUE — DEFAULT IS DUE TO FIRE` as its highest-cost line
+and has done so since 2026-09-14. **It is wrong, and the charter instruction
+for that class ("fire the default") must not be followed here.**
+
+**THE OWNER ANSWERED D19.** The ruling is in this file, verbatim — *"yes may
+download anything to /data"* — recorded with its price paragraph and the
+explicit sentence *"The armed default was NO FETCH; it is superseded,
+unfired."* It was acted on and the acts are on disk and in git:
+`/data/jack_corpora/librispeech` and `/data/jack_corpora/vctk` exist,
+`registry_expansion.py` carries the provenance line *"Fetched under D19"*, and
+`HR.1` has recorded three attempts against those corpora since — `467cf1b`
+(09-18), `623b16d` and `1f5575e` (09-23), two of them measured FAILs.
+
+**WHY THE INSTRUMENT CANNOT SEE IT.** `decisions.py:333-345` settles a decision
+by scanning its **headers** for `RESOLVED|off your desk|BY THE CALENDAR`. The
+D19 ruling was written into the tail of the `## D35` section above instead of
+receiving its own header, so no header bearing `D19` says `RESOLVED`, while the
+superseded `DECIDE: D19` block — correctly retained under this file's own
+convention — still parses as armed. Compare `## D20 — RESOLVED BY ARMED
+DEFAULT...` immediately below: identical retention convention, and it settles
+cleanly **because the header exists.** The convention and the parser are each
+right alone and produce a false reading together.
+
+**WHAT FIRING IT WOULD COST:** `HR.2`/`HR.3`/`HR.4` re-blocked, two honestly
+measured `HR.1` FAILs retroactively de-venued, and an explicit owner ruling
+reversed by an organ following its instructions.
+
+**THE REPAIR IS FILING, NOT A DECISION** — routed to the builder as item 2 of
+the 113th audit's `FOR THE BUILDER`: give the ruling its own
+`## D19 — RESOLVED BY THE OWNER...` header above the ruling text in the `D35`
+section, add the matching `DECISIONS_RESOLVED.md` entry, leave this superseded
+block exactly where it is, and verify D19 leaves the armed list. The deadline
+is **not** extended and the default is **not** fired: the correct third path
+here is to record that it was ANSWERED, which is a path neither the instrument
+nor the overseer charter currently names.
+
 ## D20 — RESOLVED BY ARMED DEFAULT, fired 2026-09-19 ~00:2x UTC (builder). Off your desk unless you want the class back.
 
 **The owner did not rule by 2026-09-18, so the pre-registered default fired.**

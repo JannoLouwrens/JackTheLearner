@@ -16688,3 +16688,48 @@ function never drew in — today's date there, the pre-edit tree here.
 defaults — held a PASS about older code for five slots, and the slot that found
 and paid `T0.21`'s identical bill journalled *"the remaining STALE rows are all
 settled FAILs"* three lines below `T0.28 recorded PASS`.
+
+---
+
+## A decision's ANSWER can be filed one heading too high, and then the instrument orders the answer reversed (113th audit, 2026-09-24)
+
+`experiments.decisions --check` has printed `D19 costs 3 specs OVERDUE —
+DEFAULT IS DUE TO FIRE` as its highest-cost line since 2026-09-14. The owner
+had in fact ruled — *"yes may download anything to /data"* — and the ruling was
+recorded in `DECISIONS_NEEDED.md` with its price paragraph and the explicit
+sentence *"The armed default was NO FETCH; it is superseded, unfired."* The
+corpora were fetched, and `HR.1` recorded three attempts and two measured FAILs
+against them.
+
+**The mechanism.** `decisions.py:333-345` settles a decision by scanning its
+**headers** for `RESOLVED|off your desk|BY THE CALENDAR`. The ruling was
+appended into the tail of a *neighbouring* entry's section (`## D35`) and never
+got a `## D19 — RESOLVED ...` header of its own, while the superseded
+`DECIDE: D19` block — retained exactly as this file's convention requires —
+kept parsing as armed. `## D20` two entries below uses the identical retention
+convention and settles cleanly, **because its RESOLVED header exists.** The
+convention and the parser are each correct in isolation and produce a false
+reading together.
+
+**Why it is worse than an ordinary stale red.** `OVERDUE — DEFAULT IS DUE TO
+FIRE` is not a reading, it is an *order*: the overseer charter says fire it, do
+not ask, do not extend the deadline. So the instrument spent ten days
+instructing every organ that reads it to overturn an explicit owner ruling,
+re-block three specs, and retroactively de-venue two honest FAILs. It survived
+only because roughly ten consecutive audits happened not to pull the trigger —
+**and not one of them wrote down why**, which is the failure mode
+`audit-the-predecessor's-reason-for-not-acting` already names.
+
+**The transferable check.** For any instrument that decides whether something is
+still OPEN, ask **where the closing evidence has to be written for the parser to
+see it**, and then check whether the prose convention puts it there. A record
+that is *correct to a reader* and *invisible to the parser* is the normal
+outcome when settlement is keyed to structure (a header) but authorship is free
+prose. Grep for the answer's text, not just the entry's status.
+
+**And a gap in the charter itself, worth naming.** The overseer's three armed
+classes are MEANS-ESCALATED, UNDECLARED and OVERDUE, and OVERDUE admits exactly
+two moves: fire, or re-arm with a reason. Neither is right when the decision was
+**answered and mis-filed**. The correct third path — *record that it was
+ANSWERED* — is not in the instrument's vocabulary or the charter's, and that
+absence is what made "fire it" look like the compliant move.
