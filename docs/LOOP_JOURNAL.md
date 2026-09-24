@@ -18127,3 +18127,39 @@ GEN citations, BASELINE_ACTION_EXPIRED, everything in FTB 7. NEXT
 ITERATION: expect decisions --check EXIT 1 (D33, the Review's — do not
 repair); tomorrow 09-25 the WAITS-ON disposition (implement `WAITS-ON:`,
 `none` permitted, then re-buy T0.31) becomes the first legal pick.
+
+2026-09-24 08:1x (builder, Fable): Board re-derived, still honestly empty —
+`run next` 0 fresh (33 settled, 15 held), `run status` EXIT 0 (zero stale
+PASS), `coverage` EXIT 2 on the two standing blessed reds only, `decisions
+--check` EXIT 1 with default-action-expired 1/0 = D33 (real, the Review's,
+NOT repaired), review-queue EXIT 0. Meters at start: week:all-models 26%
+(THE GATE, acted on), week:Fable 41%. The 07:24 LIVE NOTICE (exited declared
+dispatch `run_spec T0.28`) is accounted for: its row landed PASS with a
+clean stamp (7c8fc7b) before exit; nothing to harvest. THE UNIT — the
+discharge trace for the SEVEN queue rows DUE TODAY, so the 09-25 sitting
+can stamp rather than re-date (the 04:1x precedent):
+`pl02-eye-gate-reads-the-encoder-not-the-eye` (DISPOSITIONED, the builder's
+execution debt, STOP-RULE armed: a fourth break = DECLINED to the owner) is
+DISCHARGED IN FULL and a DECLINE would be false — the 09-11 ruling ordered
+spec edit -> smoke -> registered run, and all three are on disk/ledger:
+a4132c8 (09-12: VOID gate re-aimed to the raw-pixel ridge,
+EYE_RADIUS_R2_MIN 0.80 UNMOVED, r2_ua kept first-class); c150187 (smoke
+PASS under the re-aimed gate, r2_raw_pixel 0.924963 vs 0.80); registered
+run executed twice — attempt 1 VOID harvested 25c78c1 (eye gate CLEARED on
+registered seeds, r2_raw_pixel 0.929242 +/- 0.003954; died on the LEARN
+gate), attempt 2 VOID d8ab3ef, arm-attributed FROZEN d361b10, missing loss
+ratios recorded 7ffd3c8; live ledger row: VOID a2 2026-09-13T01:11:50,
+r2_raw_pixel 0.929242. What an ACTED stamp must NOT swallow: PL.02 is
+still VOID — the PLASTIC-ONLY falsifier is unblocked but has NO verdict;
+ACTED means the execution the DUE bought was delivered, not that PL.02 is
+alive. The other six due today (t215-heldout-language-routing-diagnosis,
+ps05/ps06/ps08/ps09 legibility rows, lt02-the-venue-has-no-true-positive)
+are Review-authored redesign dispositions — no builder commit can
+discharge them and none claims to. GPU W38: 0.9176 of 30 drawn, ~29 h
+expire Saturday, no legal buyer (gpu classes EMPTY/VOID) — nothing
+manufactured. Housekeeping: tree clean, lost_iterations.log 0 B, no stray
+pids (the pgrep hits on launch_detached were this slot's own prompt text),
+/data 67 G free. NEXT ITERATION: tomorrow 09-25 the WAITS-ON disposition
+(implement `WAITS-ON:`, `none` permitted, then re-buy T0.31) becomes the
+first legal pick; expect `decisions --check` EXIT 1 (D33, the Review's —
+do not repair, do not touch BASELINE_ACTION_EXPIRED).
