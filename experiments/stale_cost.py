@@ -38,14 +38,31 @@ WHAT IT DELIBERATELY DOES NOT DO.
   one. That distinction is the one the scar got wrong in BOTH directions in a
   single slot: `T0.21` was stale before the builder touched anything (and was
   correctly re-bought), `T0.36` was staled BY the builder (and was not).
+
+THE SECOND SCAR (111th audit, 2026-09-24), because the first version of this
+module put `T0.28` in the wrong half of exactly that pair, in the same
+direction, two days after being built to tell them apart. "Already stale" was
+decided by `staleness_of`, which hashes the file and its declared deps OFF
+DISK — and by the time anyone asks what an edit would cost, the edit is on
+the disk. So a certificate staled BY the edit read `CHANGED`, `CHANGED` is in
+`ALREADY_KINDS`, and the row fell out of `bill` into `already` with the
+render string calling it somebody else's debt; `eca5757` quoted that answer
+as authority for declining the re-buy. The default invocation made it
+unavoidable rather than unlucky: `render()` -> `price(changed_paths())` can
+only ever name paths that have already been edited, so in that lane the
+`BILLED` branch was reachable only for pre-`impl_sha` rows. The repair is
+`kinds_before_edit`: "before" is reconstructed from HEAD's blobs and fed
+through the SAME hash (`impl_sha_of`'s overrides), never read off disk.
 """
 from __future__ import annotations
 
+import hashlib
 import subprocess
 from pathlib import Path
 from typing import Iterable, List, Optional
 
-from .protocol import Ledger, Status, impl_deps_of, module_path_for, staleness_of
+from .protocol import (Ledger, Status, blob_sha_at_run, impl_deps_of,
+                       impl_sha_of, module_path_for, staleness_of)
 from .registry import BY_ID, LADDER
 
 _REPO = Path(__file__).resolve().parent.parent
@@ -89,18 +106,115 @@ def covered_paths(spec_id: str):
     return frozenset([_rel(path), *(_rel(d) for d in deps)]), problem
 
 
-def price(paths: Iterable[str], ledger: Optional[Ledger] = None) -> dict:
+def _head_blob(rel: str) -> Optional[bytes]:
+    """`rel`'s bytes as committed at HEAD; None when HEAD carries no such path.
+
+    None is a REAL answer (absent at HEAD -> `impl_sha_of`'s `missing:` rule,
+    which is what "this path did not exist at the pre-edit tree" hashes as).
+    A git that cannot answer at all raises instead of returning it, so the
+    caller's stated bias decides that case rather than a silent default.
+    """
+    r = subprocess.run(("git", "-C", str(_REPO), "show", f"HEAD:{rel}"),
+                       capture_output=True, timeout=30)
+    return r.stdout if r.returncode == 0 else None
+
+
+def kinds_before_edit(entry, path, want, head_bytes=_head_blob) -> list:
+    """Staleness kinds at HEAD-MINUS-THIS-EDIT — the working tree cannot answer.
+
+    (111th audit, RANK 1.) `staleness_of` reads the file and its declared deps
+    off disk, and by the time anyone asks what an edit would cost, the edit is
+    on the disk — so it answers "is this stale AFTER the edit", which every
+    covered certificate is. The question this module owes is whether the row
+    was stale BEFORE: for every path in `want` the read is HEAD's blob,
+    everything else reads from disk, which IS the pre-edit state for a path
+    this edit does not touch. No new hashing — the sha flows through
+    `impl_sha_of`'s `file_bytes`/`dep_bytes` overrides, the same one code path
+    `tree_reconstructing_sha` uses for the same question about older trees.
+
+    Bias, inherited from `ALREADY_KINDS`' own comment: a pre-edit state that
+    cannot be reconstructed (git down, test file itself uncommitted) yields no
+    `CHANGED`, so the row stays billable — an unknown that read as
+    already-broken would quietly zero the bill.
+    """
+    kinds = []
+    if str(getattr(entry, "commit", "") or "").endswith("+dirty"):
+        # A property of the ROW (the runner could not name what it executed),
+        # not of the tree — no edit changes it, so it is "already" in any lane.
+        kinds.append("DIRTY")
+    rel = _rel(path)
+    recorded = getattr(entry, "impl_sha", None)
+    if recorded:
+        try:
+            if rel in want:
+                fb = head_bytes(rel)
+                if fb is None:
+                    # The test file itself has no committed state: there is no
+                    # pre-edit tree in which this row was clean or stale, and
+                    # an undecidable "before" must not zero the bill.
+                    return kinds
+            else:
+                fb = None
+            src = fb if fb is not None else Path(path).read_bytes()
+            deps, _ = impl_deps_of(path, source=src)
+            overrides = {d: head_bytes(d) for d in deps if _rel(d) in want}
+            pre = impl_sha_of(path, file_bytes=fb,
+                              dep_bytes=overrides or None)
+        except Exception:
+            return kinds
+        if pre is not None and pre != recorded:
+            kinds.append("CHANGED")
+        return kinds
+    # Pre-`impl_sha` rows: every kind `staleness_of` derives there is a row
+    # property or comes from COMMIT HISTORY (`deps_moved_since`,
+    # `blob_sha_at_run`'s baseline) — except the "now" side of
+    # `UNSTAMPED_CHANGED`, which is a disk read. When this edit touches the
+    # test file itself, re-ask that one comparison with HEAD's blob: a
+    # mismatch that exists only in the working tree is this edit's bill, not
+    # an old debt.
+    kinds += [k for k, _ in staleness_of(entry, path) if k != "DIRTY"]
+    if "UNSTAMPED_CHANGED" in kinds and rel in want:
+        try:
+            fb = head_bytes(rel)
+            base, problem = blob_sha_at_run(path,
+                                            getattr(entry, "ran_at", None))
+            if fb is not None and not problem \
+                    and hashlib.sha256(fb).hexdigest() == base:
+                kinds.remove("UNSTAMPED_CHANGED")
+        except Exception:
+            pass
+    return kinds
+
+
+def price(paths: Iterable[str], ledger: Optional[Ledger] = None,
+          _head_bytes=None) -> dict:
     """Which certificates would an edit to `paths` stale, and what is the bill?
 
     Returns `{paths, bill, already, noncert, unknown}`. `bill` is the list that
-    costs something: standing **PASS** rows, currently clean, whose declared
-    coverage this edit touches. Each entry is
-    `{id, status, budget, hits}` — `budget` because the bill is a cost class,
-    not a count, and `hits` because a reader must be able to check the charge
-    against the declaration rather than trust it.
+    costs something: standing **PASS** rows, clean at HEAD-MINUS-THIS-EDIT,
+    whose declared coverage this edit touches. `already` is decided at that
+    same pre-edit state — never off disk, where the edit under pricing is
+    already sitting (`kinds_before_edit`, the 111th-audit repair). Each entry
+    is `{id, status, budget, hits}` — `budget` because the bill is a cost
+    class, not a count, and `hits` because a reader must be able to check the
+    charge against the declaration rather than trust it.
     """
     ledger = Ledger() if ledger is None else ledger
     want = {_rel(p) for p in paths}
+    reader, _cache = (_head_bytes or _head_blob), {}
+
+    def _head(rel):
+        # One git read per path per pricing, whatever LADDER's size; a reader
+        # that raises stays raising (the bias in `kinds_before_edit` decides).
+        if rel not in _cache:
+            try:
+                _cache[rel] = ("ok", reader(rel))
+            except Exception as e:
+                _cache[rel] = ("err", e)
+        tag, v = _cache[rel]
+        if tag == "err":
+            raise v
+        return v
     out = {"paths": sorted(want), "bill": [], "already": [], "noncert": [],
            "unknown": []}
     if not want:
@@ -127,13 +241,14 @@ def price(paths: Iterable[str], ledger: Optional[Ledger] = None) -> dict:
                "hits": hits}
         entry = ledger.results.get(spec.id)
         path = module_path_for(spec.id)
-        kinds = [k for k, _ in staleness_of(entry, path)] if entry else []
-        stale_now = [k for k in kinds if k in ALREADY_KINDS]
+        kinds = kinds_before_edit(entry, path, want, head_bytes=_head) \
+            if entry else []
+        stale_before = [k for k in kinds if k in ALREADY_KINDS]
         if st is not Status.PASS:
             row["kinds"] = kinds
             out["noncert"].append(row)
-        elif stale_now:
-            row["kinds"] = stale_now
+        elif stale_before:
+            row["kinds"] = stale_before
             out["already"].append(row)
         else:
             out["bill"].append(row)
@@ -267,6 +382,49 @@ def _check() -> None:
     if "unknown is not zero" not in render(unk, indent=""):
         raise AssertionError("stale_cost: an unparseable declaration must "
                              "report as UNKNOWN, not as no-coverage")
+
+    # THE SECOND SCAR (111th audit): a PASS row, clean at HEAD, whose declared
+    # dep carries an UNCOMMITTED edit must land in `bill`, never in `already`.
+    # The pre-fix pricer read the dep off disk — i.e. read the very edit it
+    # was being asked about — saw CHANGED, and filed `T0.28`'s re-buy as a
+    # pre-existing debt; `eca5757` quoted that answer as authority. Replayed
+    # exactly, on live declarations: the row's sha is minted against
+    # fabricated PRE-EDIT dep bytes, the injected HEAD reader serves those
+    # bytes back, and the disk — which the pricer must NOT consult for a path
+    # in `want` — plays the edit. The committed pre-fix code fails this case
+    # (verified 2026-09-24: bill=[], already=[('T0.21', ['CHANGED'])]).
+    t21 = module_path_for("T0.21")
+    dep = "experiments/coverage.py"
+    pre_dep = b"# coverage.py as it stood before the edit under pricing\n"
+    minted = impl_sha_of(t21, dep_bytes={dep: pre_dep})
+    if minted is None:
+        raise AssertionError("stale_cost: could not mint the scar fixture's "
+                             "pre-edit sha for T0.21")
+    entry = type("E", (), {"commit": "fixture0", "impl_sha": minted,
+                           "ran_at": None})()
+    fake = type("L", (), {"results": {"T0.21": entry},
+                          "status": lambda self, sid:
+                          Status.PASS if sid == "T0.21" else Status.NOT_RUN})()
+    head = lambda rel: pre_dep if rel == dep else None
+    pr = price([dep], ledger=fake, _head_bytes=head)
+    if [r["id"] for r in pr["bill"]] != ["T0.21"] or pr["already"]:
+        raise AssertionError(
+            "stale_cost: a certificate staled BY the edit under pricing must "
+            "be BILLED, not filed as an old debt — the pricer is reading the "
+            "edit off disk and calling it the before. Got "
+            f"bill={[r['id'] for r in pr['bill']]} "
+            f"already={[(r['id'], r['kinds']) for r in pr['already']]}")
+    # And the no-double-charge rule under the SAME reader: a row whose sha
+    # matches the pre-edit tree of NOTHING was stale before this edit and
+    # stays un-billed, exactly as before.
+    entry.impl_sha = "0" * 16
+    pr = price([dep], ledger=fake, _head_bytes=head)
+    if [r["id"] for r in pr["already"]] != ["T0.21"] or pr["bill"]:
+        raise AssertionError(
+            "stale_cost: a certificate already stale at HEAD-minus-this-edit "
+            "must stay in `already`; billing it would charge twice. Got "
+            f"bill={[r['id'] for r in pr['bill']]} "
+            f"already={[r['id'] for r in pr['already']]}")
 
     # And the live read must actually reach git rather than silently returning
     # the empty list that looks identical to a clean tree.
