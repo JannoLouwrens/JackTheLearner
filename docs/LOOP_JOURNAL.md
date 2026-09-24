@@ -18360,3 +18360,54 @@ fire/extend/touch D33 or BASELINE_ACTION_EXPIRED, do not append another
 FIRED record, do not manufacture a W38 dispatch, do not build the
 decisions.py parser fix (routed as decisions-settles-on-headers-alone, DUE
 10-01) without a desk ruling the freeze exemption.
+
+## 2026-09-24 15:0x UTC — builder (Fable): gate answer NONE #7; board empty an
+## ELEVENTH time; two review-queue ratchets MOVED and are reported, not recorded
+
+Model: Fable. Meters read at top of slot (`claude_usage.py`, no flags):
+week:all models 38% — THE GATE, the line acted on — week:Fable 49%,
+week-elapsed 49 (pace allow ~57, no skip). D35 rule-3 gate answer re-derived
+from `ledger.json['results']`, not inherited: T2.01 FAIL settled
+(2026-08-12, 2.67 sigma vs the unmoved 5), XL.01 FAIL settled (2026-08-19;
+repair path is the xl01 queue row DUE 09-25, the Review's), T6.01 NO ROW and
+unimplemented (dep T4.05 NO ROW). Answer: NONE, #7 consecutive, 5 past the
+11:07 breach; no second FIRED record by design, the count lives here.
+Board re-derived empty an ELEVENTH time: `run next` 0 fresh of 48 (33
+settled, 15 held); `run status` EXIT 0; `coverage` EXIT 2 with both reds
+unchanged and the Review's (4 GEN citations welded<-LC.07's corpse,
+GOAL_UNRUNNABLE shrink-only, forbidden to widen). All five OPEN queue rows
+DUE today verified in the file to be Review-owned redesign dispositions:
+ps05/ps06/ps08/ps09 (the four GOAL.md:187 price-commitment FAILs whose world
+halves are green on every seed and whose legibility conjunct is the shared
+defect — 'one disposition should cover all four or say why not') and t215
+(fold into the LG grounding design or write a successor; nothing re-runs).
+RATCHETS THAT MOVED, said here per the printout's own instruction:
+review_queue_net_arrivals 7 -> 9 (clock +3, act -1) and review_queue_piled_on
+2 -> 4 — cause is the calendar reaching the 09-19 PS-family batch's shared
+09-24 due date (4 rows + t215 + pl02 on one day against measured capacity
+6/cycle) plus today's DAILY re-dates; review_queue_violations still 0, so
+this is the router's arithmetic ageing, not a new violation class. NOT
+recorded by me: the justifying commits are the Review's routing, and
+`ratchets record` belongs in the commit that justifies a move.
+VERIFIED discharged on disk, not from claims: 1^12 item 2's dark-slot
+counter repair is COMMITTED (`e0786a0`, 09-23: slot lines by iteration
+start/end via shared _SLOT_RE, PACING+STOPPED both counted, fixture P6d,
+replay reads the missed streak 26 EXACT) — the steering page's 'still blind,
+oldest live instrument defect' line is now stale, the Review's page to fix,
+noted here so 15:07's reader does not re-fix a fixed instrument. 113th-audit
+D19 repair still HOLDING (`decisions --check`: armed list carries
+D31/D32/D34/D35-adjacent entries, D19 nowhere). D32 and D34 pass decide_by
+at midnight tonight unanswered — firing armed defaults is charter work for
+the desk that finds them OVERDUE, not this slot's to pre-empt by hours.
+W38: 0.9176 of 30 h drawn, ~29.08 free GPU-h expire Saturday 2026-09-26, gpu
+classes still VOID-arms/pilot-blocked, no legal buyer, nothing manufactured.
+Hygiene: no launch_detached/dispatch pids, lost_iterations untouched, /tmp
+scratch only, tree clean before this one journal edit, committed by name.
+NEXT ITERATION (16:07): re-derive the gate answer (likely NONE #8 — say the
+count). Overseer sits 18:37. TOMORROW 09-25 the WAITS-ON disposition unlocks
+as the FIRST LEGAL PICK: implement `WAITS-ON:` with `none` permitted, then
+re-buy T0.31 — do not start it tonight. Do not fire/extend/touch D33, do not
+duplicate the FIRED record, do not manufacture a W38 dispatch, do not build
+the decisions.py parser fix without a desk ruling the freeze exemption, and
+do not re-run PS.05/06/08/09 (their own rows: NO re-run unchanged; the
+bundled disposition is the Review's, due today).
