@@ -4341,6 +4341,24 @@ DECIDE: D18
              constitutional constraint staying unenforced, now with a number
              printed beside it)
 
+## D31 — CONDUCT: the Tier-0 freeze, until one life runs end to end (desk, 2026-09-17)
+
+Executed at the desk under SYSTEM.md class 3 and REPORTED, not asked. Listed
+here so it is visible, dated, and strikeable in one line by the owner.
+
+DECIDE: D31
+  class:     conduct
+  default:   In force until T6.01 records a verdict (PASS, FAIL or VOID): no new
+             Tier-0 spec may be registered (Tier 0 closed at 39); no new audit
+             organ, checker or ratchet may be built (coverage/decisions/champions
+             keep running, nothing joins them); every iteration names which of
+             T2.01, XL.01 or T6.01 it moved, and "none" is legal at most twice
+             running. Weakens no gate, moves no threshold, edits no GOAL.md,
+             widens nothing forbidden. Cannot be lifted by re-labelling or by
+             registering a cheaper T6.01 than its title names.
+  decide_by: 2026-09-24
+  blocks:    T6.01
+
 ## D19 — RESOLVED 2026-09-17 by the owner. Off your desk, and wider than it was asked.
 
 **The ruling, verbatim:** *"yes may download anything to /data"*.

@@ -607,6 +607,49 @@ to VOID, not FAIL — and you armed `C-RANDREW`, a comparator your own arm is
 expected to LOSE to. Arming the contrast that can kill your result is the
 highest-value thing anyone did on this board this week.**
 
+## STANDING FREEZE — read before the numbered order below, every iteration
+
+**THERE IS NO JACK. There are 108 certified parts and no creature, and nothing
+has ever run end to end.** `T6.01 Full episode completes`: NOT_RUN. `T6.04
+Everything at once, end to end`: NOT_RUN. Tier 6 is **1 of 11**, and the one
+PASS — `SO.04 "Being watched does not change him"` — is a property of
+observation, not a capability of Jack.
+
+**The measurement that forced this freeze** (owner review, 2026-09-17). Commits
+over the preceding 30 days: **465 touched only docs and scripts, 352 touched
+experiment infrastructure, 258 touched a spec or the registry.** Under a third
+of the work was about Jack. Tier 0 is now **39 specs, 16% of the ladder**, and
+**50 of the 108 passes are Tier 0+1 plumbing**. The ladder grew 169 -> 249 in a
+month (+80) while passes grew 84 -> 108 (+24): the denominator is winning. The
+system has begun writing specs that test its own governance — `T0.28` the
+escalation tool, `T0.29` the seat tool, `T0.31` the backlog reader.
+
+**None of that was dishonest and some of it was essential** — the audits caught
+`DP.00` drifting from a gridworld into a claim about Jack's world, caught the
+clause that made one-brain unfalsifiable, caught six championship arenas that
+did not exist. The method is not the problem. The ALLOCATION is.
+
+**THE FREEZE, in force until `T6.01` has run once and recorded a verdict —
+PASS, FAIL or VOID, any of the three:**
+
+1. **No new Tier-0 spec may be REGISTERED.** Tier 0 is closed at 39. A harness
+   defect you find gets a LESSONS entry and a note in the queue, not a spec.
+2. **No new audit organ, checker, ratchet or governance instrument.** The three
+   that exist — `coverage`, `decisions`, `champions` — keep running. Nothing
+   joins them.
+3. **Every iteration must name, in its journal line, which of the three
+   creature gates it moved:** `T2.01` (he can move), `XL.01` (what he learned
+   survives his death), `T6.01` (one life, start to finish). "None" is a legal
+   answer at most twice in a row.
+
+**This is a CONDUCT amendment, made at the desk under SYSTEM.md class 3 and
+reported rather than asked** — it weakens no gate, moves no threshold, edits no
+`GOAL.md` text and widens nothing forbidden. It is an allocation rule, and
+allocation is exactly what conduct governs. **Lifting it requires only that
+`T6.01` runs** — it cannot be lifted by re-labelling, by declaring the freeze
+satisfied, or by registering `T6.01` as something cheaper than the full episode
+its title names. If the freeze is wrong, the owner strikes it in one line.
+
 1^12. **IN THIS ORDER. Item 1 is a GPU buy that did not exist yesterday and
 whose hours die on Saturday; item 2 is a liveness instrument that has now been
 lying to you for two days and missed the largest blackout this project has
