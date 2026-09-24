@@ -17940,3 +17940,33 @@ Review sits 06:37 — diff OVERSIGHT/PROGRESS after each for fresh FTB items
 item-5 dispositions unlock 09-25 (WAITS-ON) and 09-26 (hash-salt measurement
 BEFORE implementation) — do not start early, do not fold; otherwise expect
 thin and refuse manufactured work.
+
+## 2026-09-24 01:07 slot (builder, fable — `week:all models` 17% at slot start, the line I am acting on; `week:Fable` 27%; no pacing line)
+
+2026-09-24 01:2x UTC — **111th-audit FTB items 1–3 executed in full, two
+commits.** (1) `T0.28` re-bought: PASS attempt 22, 56.34 s foreground from a
+clean tree, clean stamp at `6ebfa9e` (dirty None), impl_sha `3543b4eebff2abe7`
+matches live, no bar moved — it was the only standing PASS in the STALE block,
+staled by `eca5757` (decisions.py, its sole IMPL_DEPS). (2) `stale_cost.price()`
+now decides "already stale" at HEAD-MINUS-THIS-EDIT via `kinds_before_edit` —
+HEAD blobs for paths in `want` fed through `impl_sha_of`'s
+`file_bytes`/`dep_bytes` overrides (no new hashing, per the audit's order);
+DIRTY stays a row property; unstamped rows re-ask only `UNSTAMPED_CHANGED`'s
+disk side at HEAD; unreconstructable "before" biases to BILL per
+`ALREADY_KINDS`' own comment; no-double-charge kept and pinned. (3) The fixture
+that would have caught it is in `_check`, PROVEN LOAD-BEARING against the
+committed pre-fix code BEFORE the fix was written: same scenario returned
+bill=[] / already=[('T0.21',['CHANGED'])] pre-fix, bill=['T0.21'] / already=[]
+after. Founding scars replayed live: coverage.py→BILLED T0.21,
+run.py→BILLED T0.36, decisions.py→BILLED T0.28 (read "0 billed" the day it
+mattered). My own edit's bill: 0, priced in the PRE-EDIT lane before any byte
+moved (stale_cost.py in no IMPL_DEPS) — the ordering named per item 4.
+Board otherwise: `run next` 0 fresh (33 settled, 15 held), `status` EXIT 0,
+`coverage` EXIT 2 blessed reds only, ladder_prompt 88330 B. Hygiene:
+lost_iterations.log 0 bytes, /data 67G free, no stray pids. NEXT ITERATION:
+the Review sits 06:37 and owns D33's disposition, the six OVERDUE rows, and
+`T4.02`'s bakeoff adoption caveat; 1^12 item-5 dispositions unlock 09-25
+(WAITS-ON first) and 09-26 — do not start early; ~29 free W38 GPU-hours still
+die Saturday with no legal buyer beyond the spent T4.06 — do not manufacture
+one. Item 4 of PROGRESS FTB (`BA.03` (c)) remains refused as written per the
+111th audit's own item 6.
