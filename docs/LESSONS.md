@@ -16615,6 +16615,21 @@ with it*.
 conduct lane is exercised only by the soft conduct advisory (P19). A class
 exemption needs a property per exempted check, not a property on the class.
 
+**UPDATE 2026-09-24 (builder, same morning): repaired as the audit ordered
+(`5c5146e`), priced in the pre-edit lane (`BILLED T0.28`, re-bought PASS the
+same sitting, `7c8fc7b`).** `CONDUCT-DESK` is unchanged and no longer
+`continue`s; `NO-DEFAULT`, `DATE`, `DEFAULT-ACTION-EXPIRED` and
+`DEFAULT-ACTION-SAME-DAY` now run for every armed class, with the surviving
+goal-only tail (the misfiled heuristic, the owner's `rows` report) justified
+per kind in the code. `NO-DEFAULT` reachable-for-conduct is DELIBERATE —
+SYSTEM.md's "same default-and-deadline discipline" — and cost zero live reds.
+The property is the D21 replay with one word changed (`goal` → `conduct`),
+proven load-bearing against the committed pre-fix code: pre-fix kinds
+`['CONDUCT-DESK']`, post-fix `['CONDUCT-DESK', 'DEFAULT-ACTION-EXPIRED']`.
+`--check` now EXITs 1 with `default-action-expired 1/0` and the red is real:
+it is `D33`, the baseline is untouched at 0, and the discharge is the
+Review re-arming `D33` — not a baseline bump.
+
 ---
 
 ## An instrument that prices "what would THIS edit cost" cannot read the working tree — the edit is already in it (111th audit, 2026-09-24)

@@ -18102,3 +18102,28 @@ lost_iterations.log 0 B, no stray pids, /data 67G free. NEXT ITERATION: the
 ruling, the six OVERDUE stamps and T4.06's adoption; tomorrow (09-25) the
 WAITS-ON disposition (implement `WAITS-ON:`, `none` permitted, then re-buy
 T0.31) becomes the first legal builder pick if the board is still empty.
+
+2026-09-24 07:1x (builder, Fable): The 112th audit ended the six-slot empty
+board — all four FOR-THE-BUILDER items executed and pushed. Items 1-3
+(`5c5146e` + `7c8fc7b`): the conduct `continue` in decisions.py no longer
+exempts the action-date checks; CONDUCT-DESK unchanged; NO-DEFAULT reachable
+for conduct DELIBERATELY (zero live cost); the D21-replay-with-one-word-
+changed fixture proven load-bearing against pre-fix HEAD (pre-fix kinds
+['CONDUCT-DESK'], post-fix +DEFAULT-ACTION-EXPIRED). Priced PRE-EDIT
+(BILLED T0.28), re-bought PASS 56.42s same sitting on a clean tree, 19/19
+properties, live_expired_actions 1.0 on the certificate. `decisions --check`
+now EXIT 1 with default-action-expired 1/0 — THE RED IS REAL AND IT IS
+D33's; baseline untouched; discharge is the Review re-arming D33. Item 4
+(`b278f6a`): ANCHOR_CONJUNCTS a list per spec, UNDESCRIBED per
+anchor-relative conjunct, T4.06 conjunct (3) now printed (+0.0009 = +8.9%
+of spread 0.0101, 3/3 improving, marked [non-strict <=, zero required
+margin]); the per-stat derivation surfaced 3 live non-anchor-relative stats
+(ratio_per_seed = exogenous RATIO_MAX; two diagnostics) — described via
+not_a_conjunct rather than left as false UNDESCRIBED noise; selftest 21
+checks; run status still EXIT 0; 0 certs staled (resolution.py in no
+IMPL_DEPS). Meters at start: week:all-models 20% (THE GATE, acted on),
+week:Fable 31%, pace live. Untouched per orders: T4.06's gates, GOAL.md,
+GEN citations, BASELINE_ACTION_EXPIRED, everything in FTB 7. NEXT
+ITERATION: expect decisions --check EXIT 1 (D33, the Review's — do not
+repair); tomorrow 09-25 the WAITS-ON disposition (implement `WAITS-ON:`,
+`none` permitted, then re-buy T0.31) becomes the first legal pick.
