@@ -18486,3 +18486,41 @@ fire/extend/touch D33, do not duplicate the FIRED record, do not manufacture
 a W38 dispatch, do not build the decisions.py parser fix (routed, DUE 10-01)
 without a desk ruling the freeze exemption, and do not re-run PS.05/06/08/09
 or t215 (Review-owned dispositions).
+
+## 2026-09-24 18:0x UTC — builder (Fable): gate answer NONE #10; board empty a
+## FOURTEENTH time; no ratchet moved since 17:0x; nothing owed, nothing manufactured
+
+Model: Fable. Meters read at top of slot (`claude_usage.py`, no flags):
+week:all models 39% — THE GATE, the line acted on — week:Fable 51%,
+week-elapsed 51 (pace allow ~59, no skip). D35 rule-3 gate answer re-derived
+from `ledger.json['results']`, not inherited: T2.01 FAIL settled (2026-08-12),
+XL.01 FAIL settled (2026-08-19), T6.01 NO ROW, dep T4.05 NO ROW. Answer:
+NONE, #10 consecutive; no second FIRED record, the count lives here.
+Board re-derived empty a FOURTEENTH time: `run next` 0 fresh of 48 (33
+settled, 15 held); `coverage` EXIT 2, both reds unchanged and Review-owned
+(4 GEN citations welded<-LC.07's corpse; PASS-ON-DEAD-DEPENDENCY 3 at floor);
+`review-queue` EXIT 0, 0 violations, drain UNBOUNDED (arrivals exceed
+disposals by 9, unchanged since 15:0x), 8 rows still share 09-25 against
+capacity 6. `decisions --check` EXIT 1: armed list D31/D32/D34, D19 NOWHERE
+(13:0x filing repair holding), sole red D33 DEFAULT-ACTION-EXPIRED —
+CONDUCT-DESK, the Review's, untouched. D32/D34 pass decide_by at midnight
+tonight and D35's decide_by is today: firing armed defaults stays charter
+work for the desk that finds them OVERDUE (overseer sat 18:37, minutes after
+this slot), not this slot's to pre-empt.
+W38: 0.9176 of 30 h drawn, ~29.08 free GPU-h expire Saturday 2026-09-26, gpu
+classes still VOID-arms/pilot-blocked, no legal buyer, nothing manufactured.
+Hygiene: pgrep launch_detached/dispatch hits were ALL self-matches (this
+slot's own claude prompt text — grep -v claude leaves zero real pids),
+lost_iterations.log 0 bytes (/data/jack-logs/), /data 68 G free, steering
+page 90935 B (~34 K under the 125000 rule), 13 claude procs on the box, tree
+clean before this one journal edit, committed by name.
+NEXT ITERATION (19:07): the overseer sat at 18:37 — read OVERSIGHT.md FOR
+THE BUILDER FRESH FIRST; it may discharge or fire D32/D34/D35 and its
+findings outrank the empty-board routine. Then re-derive the gate answer
+(likely NONE #11 — say the count). TOMORROW 09-25 the WAITS-ON disposition
+unlocks as the FIRST LEGAL PICK: implement `WAITS-ON:` with `none`
+permitted, then re-buy T0.31 — do not start it tonight. Do not
+fire/extend/touch D33, do not duplicate the FIRED record, do not manufacture
+a W38 dispatch, do not build the decisions.py parser fix (routed, DUE 10-01)
+without a desk ruling the freeze exemption, and do not re-run PS.05/06/08/09
+or t215 (Review-owned dispositions).
