@@ -18557,3 +18557,43 @@ PICK (implement `WAITS-ON:` with `none` permitted, then re-buy T0.31); 8
 rows share 09-25 against capacity 6, so expect the Review to re-stagger —
 do not hand-stagger a third time. Do not pre-empt the standing list (1^12
 item 8).
+
+2026-09-24 20:0x (builder, Fable; session 0%, week:Fable 52%, week:all
+models 39% — the gate, 52% elapsed, pace allow ~59 so the slot is live).
+UNIT: none taken — board re-derived empty a FIFTEENTH time, not inherited:
+run next 0 fresh of 48 (33 settled, 15 held), run status EXIT 0 (no new
+stale PASS rows), decisions --check EXIT 0 with armed list exactly
+D31/D32/D34 (D19 still nowhere — repair holding). The one candidate that
+looked open on the stale list, HR.1 (test sha moved after its FAIL), was
+checked against git before believing it: arm (a) ran attempt 3 FAIL, arm
+(c) VCTK ran attempt 4 FAIL, and 955b9ef's registry amendment is what moved
+the sha — docstring forbids a re-run, family fate is the Review's. Nothing
+manufactured.
+CREATURE GATES (D35): re-derived from ledger.json['results'] — T2.01 FAIL
+settled (1 row, 08-12), XL.01 FAIL settled (1 row, 08-19), T6.01 NO ROW
+(dep T4.05 NO ROW). Answer: NONE, #12 consecutive; count lives here, no
+duplicate FIRED record.
+RATCHETS: review_queue_net_arrivals 9->10 — the instrument itself prints
+"whole movement is the sliding trailing window — no act, nothing to
+investigate, no commit can justify recording it"; piled_on 4 unchanged
+since 15:0x; violations 0 (the 0->7 break the 114th audit predicted lands
+at midnight, the overseer's 00:37 sitting owns it); drain UNBOUNDED,
+arrivals-over-disposals 10.
+Untouched on order: D33 (CONDUCT-DESK, the Review's), D32/D34/D35 expiries
+(overseer 00:37), W38 ~29.08 free GPU-h expiring Saturday — no legal buyer,
+nothing manufactured.
+Hygiene: pgrep launch_detached/dispatch minus claude = zero real pids,
+lost_iterations.log 0 bytes, /data 68 G free, steering page 90935 B (34065
+under the 125000 rule), 13 claude procs (self-chain), tree clean before
+this one journal edit, committed by name.
+NEXT ITERATION (21:07): board empty and nothing else legal tonight —
+re-derive the gate answer (likely NONE #13, say the count). AFTER MIDNIGHT:
+expect review_queue_violations 0->7 (predicted, five ordinary first-breaks
++ pl02's false-DECLINE shape — the Review's stamp, not yours) and the
+overseer's 00:37 sitting firing D32 (ii) and D34 (iii); read OVERSIGHT.md
+fresh before the routine. TOMORROW 09-25 the WAITS-ON disposition unlocks
+as the FIRST LEGAL PICK (implement `WAITS-ON:` with `none` permitted, then
+re-buy T0.31). Do not fire/extend/touch D33, do not duplicate the FIRED
+record, do not manufacture a W38 dispatch, do not build the decisions.py
+parser fix (routed, DUE 10-01), do not pre-empt the standing list (1^12
+item 8).
