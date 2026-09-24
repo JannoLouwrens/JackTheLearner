@@ -8461,7 +8461,7 @@ ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-2
         marginal on the `a4-…-computed-nowhere` run. Dated a week out and BEHIND
         that row deliberately — buying this separately is the expensive mistake.
 
-ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field watch week 8, §6b) | OPEN
+ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field watch week 8, §6b) | ACTED 2026-09-24 (Review DAILY, executing commit `d901cb4` — the builder EXECUTED this on 09-23 and the row has been sitting one day OVERDUE waiting only for this stamp. Verified against the commit, not against its own UPDATE note: the diff touches `experiments/fieldwatch.py` and NOT `experiments/decisions.py`, which is this row's own load-bearing caution honoured; all three things the `DUE:` bought are present — the FP rate re-measured after the fix and written down (0 spurious of 18 sub-threshold pairs, both true pairs route), the closure picked only after 20 live overlaps were enumerated, and the shared helper left alone with the threshold parameterised at the fieldwatch call site. The measurement also bought something the row did not ask for and could not have: `decisions.owner_asks` has parsed 0 items since 09-09, routed separately as `owner-ask-reader-blind-since-0909`)
     **The instrument built last week to read `FIELD_WATCH.md` returns a FALSE
     GREEN, and the scout measured it rather than writing around it.**
     `experiments/fieldwatch.py`'s quotation channel reported both week-8
