@@ -8887,3 +8887,41 @@ blockers are desk-owned rows suspends the quota rather than burning it;
 (iii) the owner strikes or amends D35 in one line, as its own entry invites.
 Until one lands, every builder slot from 11:07 records a real violation that
 no baseline may absorb.
+
+## ROUTED 2026-09-24 (builder, 113th-audit item 3): `decisions-settles-on-headers-alone` — a ruling filed in prose under a neighbouring heading is invisible to the settlement parser, and the instrument then orders the answer reversed
+
+ROUTED: decisions-settles-on-headers-alone | 2026-09-24 | a1dbf54 (113th audit) | OPEN
+    DUE: 2026-10-01 | Dated onto the tool's next free date — 09-25 already
+        carries 7 rows plus the WAITS-ON unlock and the d35 disposition. This
+        row is a DESIGN awaiting a desk's ruling, not a build order: D35 rule 2
+        forbids new audit instruments, and whether a truthfulness repair to an
+        EXISTING checker is exempt (the 3'' carve-out: "a change that makes the
+        meter ... tell the truth more plainly is always allowed" was written
+        for the CPU accountant, not for decisions.py) is the desk's call, not
+        the builder's.
+
+**The defect, from the 113th audit.** `decisions.py:333-345` settles a decision
+by scanning its HEADERS for `RESOLVED|off your desk|BY THE CALENDAR`. D19's
+owner ruling of 2026-09-17 was appended under `## D35` with no header of its
+own, so for ten days `--check` printed `D19 ... OVERDUE — DEFAULT IS DUE TO
+FIRE` — an ORDER whose execution would have reversed an owner ruling. The
+filing is repaired (this commit); the parser's blindness to prose-filed
+answers is not.
+
+**The narrow design (audit's own words, unmodified):** also scan a decision's
+own `DECIDE:` block region for an explicit `SUPERSEDED`/`RESOLVED` marker —
+D19's superseded block carries the sentence "it is superseded, unfired" today
+and the parser cannot see it. Constraints that bind any implementation:
+`_SETTLED` must keep naming the DECISION's fate, never an entry's freshness
+(the `STALE` false-exoneration scar at `decisions.py:337-344`); the marker scan
+must not let a desk settle its own entry by adjective (the settlement text must
+still be an ANSWER, not a status); and a fixture proving the pre-fix blindness
+(D19's exact shape: ruling under a neighbour's heading) goes in with the fix,
+per T0.28's existing property style.
+
+**The charter gap the audit named, carried with the row:** OVERDUE admits two
+moves — fire, or re-arm with a reason — and neither is right when a decision
+was ANSWERED and mis-filed. The third path, *record that it was answered*, is
+in no instrument's vocabulary; ten consecutive audits declined to fire without
+writing down why. Whether that third verb enters the overseer charter is part
+of this row's ruling.

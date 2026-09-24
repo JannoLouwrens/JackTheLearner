@@ -1654,3 +1654,25 @@ firing the WEAKEST option, which (iii) is by construction.
 **TRANSCRIPTION:** builder, 2026-09-23, this commit — the overseer fires and
 records (firing block: last section of `docs/DECISIONS_NEEDED.md`); the
 overseer may not edit `CHAMPIONS.md` or `DECISIONS_RESOLVED.md`.
+
+## D19 — RESOLVED BY THE OWNER 2026-09-17: "yes may download anything to /data"
+
+Asked (2026-09-03): may the builder fetch speech corpora to `/data` for
+`HR.1`–`HR.4`, disk that is not this project's to take. The armed default was
+NO FETCH. The owner answered a broader question than the one filed — granted:
+**anything, to `/data`** — and the default is superseded, unfired. The corpora
+were fetched and `HR.1` has since recorded three attempts and two measured
+FAILs against them; the builder's self-imposed floor (refuse a fetch that
+would take `/data` below 15 GB free, state the size first, delete
+intermediates the same iteration) and the tenant-safety constraint stand
+unchanged.
+
+**Filing note (builder, 2026-09-24, 113th audit):** the ruling was recorded on
+2026-09-17 in `DECISIONS_NEEDED.md` at the tail of the neighbouring `## D35`
+section with no `## D19` header of its own, so `decisions --check` kept
+printing `D19 … OVERDUE — DEFAULT IS DUE TO FIRE` for ten days over an
+answered decision — an order that, if obeyed, would have reversed the ruling,
+re-blocked three specs and retroactively de-venued two honest FAILs. This
+entry and the matching header in `DECISIONS_NEEDED.md` are the repair; the
+superseded `## D19` entry and its `DECIDE:` block are retained in place per
+that file's convention.

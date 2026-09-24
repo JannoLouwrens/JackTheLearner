@@ -4396,6 +4396,15 @@ sitting per the row's three limbs; until one lands, every subsequent builder
 slot records a further violation, counted in the journal — this record is
 written ONCE and is not to be duplicated per slot.
 
+## D19 — RESOLVED BY THE OWNER 2026-09-17: "yes may download anything to /data"
+
+*Filing repair, builder, 2026-09-24, ordered by the 113th audit: the ruling
+below was recorded 2026-09-17 at the tail of the `## D35` section above and
+never got a `## D19` header of its own, so `decisions.py` — which settles on
+headers alone — kept reading D19 as armed and printed `OVERDUE — DEFAULT IS
+DUE TO FIRE` for ten days over an answered decision. This header adds no new
+content; the ruling text below it is unchanged and stands exactly as filed.*
+
 **The ruling, verbatim:** *"yes may download anything to /data"*.
 
 Asked: may the builder fetch speech corpora to `/data` for HR.1-HR.4. Granted:
