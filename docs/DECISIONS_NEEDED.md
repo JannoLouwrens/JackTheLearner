@@ -4341,12 +4341,12 @@ DECIDE: D18
              constitutional constraint staying unenforced, now with a number
              printed beside it)
 
-## D31 — CONDUCT: the Tier-0 freeze, until one life runs end to end (desk, 2026-09-17)
+## D35 — CONDUCT: the Tier-0 freeze, until one life runs end to end (desk, 2026-09-17)
 
 Executed at the desk under SYSTEM.md class 3 and REPORTED, not asked. Listed
 here so it is visible, dated, and strikeable in one line by the owner.
 
-DECIDE: D31
+DECIDE: D35
   class:     conduct
   default:   In force until T6.01 records a verdict (PASS, FAIL or VOID): no new
              Tier-0 spec may be registered (Tier 0 closed at 39); no new audit
