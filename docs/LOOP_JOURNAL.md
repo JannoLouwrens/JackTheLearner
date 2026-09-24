@@ -18323,3 +18323,40 @@ then re-buy T0.31) and becomes the first legal pick — do NOT start it today.
 Do not fire/extend/touch D33, do not duplicate the D35 FIRED record, do not
 manufacture a W38 dispatch, do not build the decisions.py parser fix without
 a desk ruling the freeze exemption.
+
+2026-09-24 14:0x (builder, Fable — week:all-models 37% THE GATE, the line
+acted on; week:Fable 49%; week 48% elapsed, pace line ~56% so the slot was
+live). D35 GATE ANSWER: NONE — #6, re-derived from the ledger this slot, not
+inherited: T2.01 FAIL (a1 2026-08-12, both repair lanes desk-owned and
+prohibited by name), XL.01 FAIL (a2 2026-08-19T18:35; successor NE.08 NO ROW
+behind T6.03 BLOCKED <- T2.10 FAIL, repair the Review's), T6.01 NO ROW + no
+test file (only t6_03 exists in experiments/tests/), deps T4.04/T4.05 both NO
+ROW. Running count: 6 consecutive NONEs, 4 past the 11:07 breach; NO second
+FIRED record (written once by design, the journal carries the count).
+VERIFIED against instruments, not claims: the 113th audit's items 1-2 are
+discharged and HOLD — `decisions --check` lists D19 NOWHERE (armed list
+empty; unarmed = D33 CONDUCT-DESK/DEFAULT-ACTION-EXPIRED the Review's,
+D35 CONDUCT-DESK due today, D31/D32/D34 soft-misfiled), sole ratchet red =
+D33, baseline untouched. Board re-derived empty a TENTH time: `run next` 0
+fresh of 48 (33 settled, 15 held); `run status` EXIT 0, zero stale PASS rows,
+steering page +1035 B/day with the cliff 39 days out; `coverage` EXIT 2,
+both reds the Review's (GEN citations, forbidden to touch); `review-queue`
+EXIT 0, 0 violations — but 7 rows DUE today and 8 tomorrow against measured
+capacity 6/cycle, the pile the 113th audit's Finding 3 already routed to the
+owner (PL.02's stop-rule DECLINE would be false; the stamp is the Review's
+first act at 06:37, not mine). W38: 0.9176 of 30 h drawn, ~29.08 free GPU-h
+expire Saturday 2026-09-26, gpu classes EMPTY/VOID, no legal buyer, nothing
+manufactured. Hygiene: lost_iterations.log 0 B, declared_pids empty —
+`pgrep -f launch_detached` returned 3 pids and ALL were this slot's own
+claude/timeout chain self-matched through the prompt argv (verified on ps
+before believing it, per the spoofed-signal lesson); /data 68 G free,
+origin/main up to date, tree clean before this one journal edit, committed
+by name. NEXT ITERATION (15:07): gate answer likely NONE #7 — re-derive it,
+do not inherit. No desk sits before the overseer at 18:37; the Review's
+09-25 06:37 sitting owns the d35 disposition, the PL.02 stamp, and the
+WAITS-ON unlock (implement `WAITS-ON:` with `none` permitted, then re-buy
+T0.31 — first legal pick TOMORROW, do not start it today). Do not
+fire/extend/touch D33 or BASELINE_ACTION_EXPIRED, do not append another
+FIRED record, do not manufacture a W38 dispatch, do not build the
+decisions.py parser fix (routed as decisions-settles-on-headers-alone, DUE
+10-01) without a desk ruling the freeze exemption.
