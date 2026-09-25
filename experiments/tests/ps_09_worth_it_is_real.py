@@ -140,6 +140,52 @@ concentration overlap where a static exponential field is genuinely
 ambiguous (|grad C|/C = 1/LAMBDA regardless of strength, so no local sniff
 separates a big far offer from a small near one — only the offer
 distribution's statistics do).
+
+## THE KNOWN-ANSWER CONTROL (PS-family legibility ruling, Review DAILY
+## 2026-09-25 — pre-registered 2026-09-25, before any registered run of
+## this code; added AFTER attempt 1 FAIL and unable to rescue it)
+
+Attempt 1 (2026-09-19, seeds 0/1/2) FAILed on probe_bal_acc 0.547 +/- 0.075
+vs the 0.65 bar — and the diagnosis, measured on seed 1, is that THE
+INSTRUMENT failed, not the venue: a bare threshold on the food-concentration
+scalar alone (mean of the L/R nostril food channels), learned on the train
+trips, read the held-out sign at balanced accuracy **1.00**, while the
+registered RFF+ridge probe on THE SAME ROWS read **0.60** (train 0.89),
+calling four of five clear positives negative at concentrations far outside
+the disclosed k-d ambiguity band. Mechanism: 5 near-duplicate sniff rows per
+trip x 54 trip-individuating pose/interoception features — the fit memorises
+trip identity and its test predictions collapse toward the train mean.
+
+The ruling's rule of evidence: *an instrument that cannot read a signal
+known by construction to be present does not get its readings interpreted —
+in either direction.* So this spec now carries a known-answer conjunct the
+legibility reading must clear BEFORE it is admissible:
+
+  * KA REFERENCE — the seed-1 diagnostic, promoted verbatim: a bare
+    threshold on the food-concentration scalar (the ONE channel the venue's
+    physics makes legible by construction: the offer emits odour at
+    strength k from distance d, C = k*exp(-d/LAMBDA)), direction and cut
+    learned on the train rows, balanced sign accuracy read on the SAME
+    held-out trips the probe is judged on. `ka_ref_acc`.
+  * SIGNAL PRESENT — `ka_ref_acc >= KA_SIGNAL_MIN` (0.90; the seed-1 datum
+    read 1.00). Below it the known answer is absent in this draw (a mutated
+    world can genuinely bury the channel in the ambiguity band), the
+    control cannot certify the estimator, and nothing it reads is bankable.
+  * THE CONJUNCT — with the signal present, the REGISTERED probe (full
+    feature vector, exact scorer, same split, same RFF draw) must read it:
+    `probe_bal_acc >= ka_ref_acc - KA_GAP_MAX` (0.10; the seed-1 gap was
+    0.40). An estimator leaving more than 0.10 of a present signal unread
+    is measuring its own fit, not the venue.
+
+Either miss -> the run reports **UNREADABLE** — Status.VOID naming the
+instrument — never FAIL naming the creature. This is strictly HARDER than
+what stood before: PASS now requires `ka_ok` on every seed ON TOP of every
+existing gate, and no bar moves (ACC_MIN 0.65, SHUF_ACC_MAX, CONTROL_*,
+NET_ABS_MIN, TWIN_NET_MIN, QUANTUM_MULT all untouched). The world half's
+FAIL branches fire exactly as before — a world with no negative offer is
+still a FAIL whatever the probe's state — and the legibility FAIL branch
+("worth-it is decided blind") is now reachable only through a VALIDATED
+instrument, which is the first time it would mean what it says.
 """
 from __future__ import annotations
 
@@ -223,6 +269,16 @@ N_RFF = 200
 RFF_SEED = 20260919
 RIDGE_LAMBDA = 1.0
 N_SHUFFLE = 20
+
+# ── THE KNOWN-ANSWER CONTROL (PS-family legibility ruling, 2026-09-25;
+#    floors set from the seed-1 attempt-1 datum — threshold 1.00, probe
+#    0.60 — before any registered run of this code) ─────────────────────
+KA_SIGNAL_MIN = 0.90         # bare threshold on the food-conc scalar must
+                             # read the held-out sign at least this well,
+                             # or the known answer is absent in this draw
+                             #                       (seed-1 datum: 1.00)
+KA_GAP_MAX = 0.10            # ...and the registered probe must then land
+                             # within this of it     (seed-1 gap: 0.40)
 
 _CACHE: dict = {}
 
@@ -513,6 +569,39 @@ def _score(trips, n_cols: int, shuffle: bool = False) -> float:
     return float(np.mean(scores))
 
 
+def _ka_scalar(rows) -> np.ndarray:
+    """The one by-construction-legible channel: mean of the L/R nostril
+    food-concentration dims (odour block sits LAST; food is channel 0)."""
+    base = KIN_DIM + needs.NEED_DIM
+    f = odour.CHANNEL_INDEX["food"]
+    a = np.asarray(rows)
+    return 0.5 * (a[:, base + f] + a[:, base + odour.C + f])
+
+
+def _ka_ref_acc(trips) -> float:
+    """The known-answer instrument, verbatim from the seed-1 diagnostic: a
+    bare threshold on the food-concentration scalar — direction and cut
+    chosen to maximise balanced accuracy on the TRAIN rows — read on the
+    same held-out trips the registered probe is judged on. Deterministic:
+    candidate cuts are the midpoints of consecutive sorted unique train
+    values plus one cut below and above everything; first best wins."""
+    tr, te = trips[:-N_TEST_TRIPS], trips[-N_TEST_TRIPS:]
+    xtr = _ka_scalar([r for t in tr for r in t[0]])
+    ytr = np.array([t[1] for t in tr for _ in t[0]])
+    xte = _ka_scalar([r for t in te for r in t[0]])
+    yte = np.array([t[1] for t in te for _ in t[0]])
+    xs = np.unique(xtr)
+    cuts = np.concatenate([[xs[0] - 1.0], (xs[:-1] + xs[1:]) / 2.0,
+                           [xs[-1] + 1.0]])
+    best, best_dir, best_cut = -1.0, 1.0, float(cuts[0])
+    for direction in (1.0, -1.0):
+        for cut in cuts:
+            acc = _bal_acc(ytr, direction * (xtr - cut))
+            if acc > best:
+                best, best_dir, best_cut = acc, direction, float(cut)
+    return _bal_acc(yte, best_dir * (xte - best_cut))
+
+
 def _collect(seed: int) -> dict:
     """Every simulation this spec needs, once. Cached: the control re-scores
     the same rows minus the odour suffix (PS.05)."""
@@ -613,6 +702,9 @@ def _experiment(seed: int) -> dict:
                    and min(n_pos_te, n_neg_te) >= MIN_CLASS_TEST)
     acc = _score(trips, n_cols) if leg_ok else 0.0
     acc_shuf = _score(trips, n_cols, shuffle=True) if leg_ok else 0.0
+    ka_ref = _ka_ref_acc(trips) if leg_ok else 0.0
+    ka_signal_present = float(ka_ref >= KA_SIGNAL_MIN)
+    ka_ok = float(ka_signal_present == 1.0 and acc >= ka_ref - KA_GAP_MAX)
 
     m = {
         "borrow_ok": 1.0,
@@ -640,6 +732,10 @@ def _experiment(seed: int) -> dict:
         "probe_bal_acc": acc,
         "shuffled_bal_acc": acc_shuf,
         "n_features": float(n_cols),
+        # the known-answer control (PS-family legibility ruling, 2026-09-25)
+        "ka_ref_acc": ka_ref,
+        "ka_signal_present": ka_signal_present,
+        "ka_ok": ka_ok,
     }
     m["rig_ok"] = float(
         m["fresh_frac"] >= FRESH_FRAC_MIN
@@ -650,6 +746,7 @@ def _experiment(seed: int) -> dict:
         and m["sign_split_ok"] == 1.0
         and m["twin_net_min"] >= TWIN_NET_MIN
         and m["leg_ok"] == 1.0
+        and m["ka_ok"] == 1.0
         and m["probe_bal_acc"] >= ACC_MIN
         and m["shuffled_bal_acc"] <= SHUF_ACC_MAX)
     return m
@@ -690,6 +787,15 @@ def _check(m: dict, c: dict):
     if m.get("leg_ok", 0.0) != 1.0:
         # The world half held but the probe's row set starved a class — the
         # legibility instrument could not run. VOID, never FAIL (T0.22).
+        return Status.VOID
+    if m.get("ka_ok", 0.0) != 1.0:
+        # UNREADABLE (the known-answer control, PS-family legibility ruling
+        # 2026-09-25): either the by-construction-legible channel's signal
+        # is absent in this draw (ka_signal_present 0 — the control cannot
+        # certify the estimator), or it is present and the registered probe
+        # cannot read it (the seed-1 mechanism: the fit memorises trip
+        # identity). Either way the legibility reading is inadmissible — a
+        # red that names the INSTRUMENT, never FAIL naming the creature.
         return Status.VOID
     return bool(
         m["seed_gates_ok"] == 1.0
