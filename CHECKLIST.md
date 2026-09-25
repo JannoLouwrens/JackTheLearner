@@ -1008,7 +1008,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
-- [ ] **LT.03** THE LADDER TEST: curiosity alone climbs the ladder
+- [~] **LT.03** THE LADDER TEST: curiosity alone climbs the ladder  — disagree_chaos_occ=0.978767; disagree_chaos_occ_std=0.694027
       - _asserts:_ With the environment returning reward identically zero, at least one candidate arm produces >=20 engaged ladder attempts, a distance-matched post-fall return lift >= 2.0, an ascent gain >= 0.35 m with Spearman rho >= 0.35 (p<0.01) and a final-quintile mean rise >= 0.85 m (above the measured random ceiling of 0.83 m), and at least one topping-out, in >=2 of 3 seeds — while dwelling <= 0.15 at the noise panel in every seed and never tripping the self-generated-chaos check.
       - _dies if:_ No arm produces a single engaged attempt (exploration never reaches the ladder), or attempts occur with no ascent trend (credit assignment, not curiosity, is the bottleneck), or every arm that climbs also fixates on the panel or farms its own body noise.
       - _then delete:_ The 'intrinsic motivation is enough' thesis for structured vertical behaviour. If it fails, GOAL.md's ladder image needs a goal/skill layer (PEG 2303.13002, or a Go-Explore archive over h(t)-bearing states — PG.3 already certified the state restore it needs at resume_max_dev 0.0), and that pivot is decided by this result, not by preference.

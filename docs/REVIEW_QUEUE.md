@@ -9472,3 +9472,68 @@ re-derive it before registering a floor against it.
 **Staleness bill: ZERO.** No spec file edited; PS.09 is red (FAIL a1, VOID
 a2), nothing cites it. No bar moved, no re-run owed — attempt 2 is spent
 evidence, not a lottery ticket.
+
+ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09-25T22:00:21, 16,580.6 s, seeds 0/1/2, clean stamp at `c1114ae`), harvested and _check-replayed this slot | OPEN
+    WAITS-ON: none | the finding is about the LT rig's own panel trap (PG.4
+        construction), not about W0's depth — no live row's answer changes
+        what these three seeds measured, and LT.04 stays blocked behind an
+        LT.03 PASS under every disposition.
+
+**THE VERDICT IS VOID, and it is the exact branch the harvest guidance armed**
+("icm_fixates VOID = rig finding"): `icm_fixates` 0.0 on ALL THREE seeds
+against the 0.66 floor — the ICM control, whose registered contract says it
+MUST fixate on the panel (dwell > 0.4), read `icm_dwell` 0.043 ± 0.058,
+indistinguishable from the candidates (lp 0.074, disagree 0.043, metra 0.044)
+and the random ruler (0.013). NOTE the row landed as a false PASS via the
+check-return-type defect (see `check-return-type-defect-swept-and-repaired`)
+and was hand-repaired to VOID in the harvesting commit, metrics untouched.
+
+**THE WIDER READING, which is why this is a rig finding and not a trap-tuning
+miss:** EVERY arm read `engaged` 0.0 against ENGAGED_MIN 20 — candidates,
+controls, and null alike sit at LT.01's null floor at the FULL 10x2500
+envelope, with every rig gate green (`rig_ok` 1.0, `ruler_occ` 1.0, finite
+1.0, chaos_void 0 on all candidates). The pilot could not see engagement
+either (its record says zero engagement at the reduced envelope "is LT.01's
+null floor as expected") and validated the dwell DETECTOR by a teleport probe
+— so no measurement before this run ever showed an arm reaching the panel
+region under its own policy. The trap the VOID names as dead was never
+observed alive in-flight; the pilot validated the instrument, not the venue.
+Two artifact gaps for any attempt 2: per-seed `icm_dwell` is not persisted
+(the harvest guidance asked for it per seed; only mean/std exist), and
+`metra_chaos_ratio` recorded -147,365 ± 100,816 — chaos_void stayed 0, but a
+ratio five orders beyond every sibling is an instrument smell worth a look
+before the next buy. Redesign is the Review's per the standing rule
+(CONTROL_DWELL_MIN untouchable, no re-roll, FAIL-kills clause did not fire —
+VOID does not decide the pivot). Staleness bill: ZERO certificates — no green
+row cites `lt_03_ladder_test.py`, and the attempt-1 row is already adverse.
+
+ROUTED: check-return-type-defect-swept-and-repaired | 2026-09-25 | LT.03 attempt-1 harvest, this slot: recorded PASS contradicted its own metrics under offline _check replay | OPEN
+    WAITS-ON: none | the repair is EXECUTED in the routing commit (run_spec
+        type gate + lt_03 return-type fix + disclosed ledger hand-repair);
+        what is owed is the auditor's ratification of a builder editing a
+        ledger status, which must never pass unreviewed even in the honest
+        direction.
+
+**THE DEFECT:** `run_spec`'s verdict handling mapped any truthy non-Status
+return from `_check` to PASS. LT.03's `_check` — alone in the ladder —
+returned `(Status.VOID, reason)` / `(False, reason)` / `(True, reason)`
+tuples, so it COULD NOT FAIL on any branch: the 16,580.6 s attempt-1 run
+recorded PASS while its own recorded metrics replay to VOID. Repairs in the
+routing commit: `CheckReturnInvalid` raised on non-bool/non-Status returns
+(exact 0/1 numbers coerced — see sweep), `lt_03`'s `_check` moved to the
+`void_reason` idiom, and the ledger row hand-repaired PASS -> VOID with the
+replay quoted in its message, metrics byte-untouched (T2.02 precedent).
+
+**THE SWEEP (full-ledger offline `_check` replay, every non-BLOCKED/ERROR
+row):** exactly ONE verdict-inverting row — LT.03. T2.04 (PASS) and T2.05
+(FAIL) return float flags (`m["all_seeds_beat_null"]`), badly typed but
+verdict-CORRECT (1.0/0.0 coerce to the recorded statuses); the guard coerces
+exact 0/1 so neither certificate needs a re-buy over a type. CAVEAT FOR THE
+REVIEW'S OWN "replay _check offline" LANE: LG.10 and LG.12 replay VOID
+against honest recorded FAILs on MATCHING impl_sha because their `_check`s
+are IMPURE (they read module globals populated only while `_experiment` runs
+in-process — LG.12's `_seeds_complete()` reads `_MEMO`). A replay mismatch is
+a lead, not a verdict; check purity first. 33 rows were unreplayable offline
+in the sweep (render-path imports under a wrong GL env, drifted impls reading
+absent keys, renamed modules) — listed in the journal slot; none carries a
+tuple-idiom `_check` by grep.

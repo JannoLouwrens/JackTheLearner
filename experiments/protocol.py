@@ -1207,6 +1207,17 @@ class VoidStatusMismatch(RuntimeError):
     """
 
 
+class CheckReturnInvalid(RuntimeError):
+    """A `_check` returned something that is neither a bool nor a Status.
+
+    Python truthiness silently converts any such value into a verdict:
+    LT.03's `_check` returned `(Status.VOID, reason)` tuples, every branch
+    was truthy, and the runner recorded PASS for a run whose recorded
+    metrics replay to VOID (2026-09-25). Raised so the run lands as ERROR —
+    visibly unfinished — rather than as a verdict the check never gave.
+    """
+
+
 class UndeclaredControl(RuntimeError):
     """A spec runs a control it never declared, so `Spec.control` reads None.
 
@@ -3176,6 +3187,28 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
         metrics = _aggregate(runs)
         control_metrics = _aggregate([control_fn(s) for s in seeds]) if control_fn else {}
         ok = check(metrics, control_metrics)
+        # A verdict channel whose type is not validated cannot fail
+        # (LT.03, 2026-09-25): its `_check` returned `(Status.VOID, reason)`
+        # and `(False, reason)` TUPLES on every branch, a non-empty tuple is
+        # truthy, and the else-arm below mapped all of them — VOID and False
+        # alike — to PASS. A 16,580 s run whose own recorded metrics replay
+        # to VOID landed on the ledger as a confident PASS with an empty
+        # message. Exact 0/1 numbers are coerced rather than refused because
+        # T2.04/T2.05 already recorded CORRECT verdicts through float flags
+        # (`return m["all_seeds_beat_null"]`), and an ERROR here would price
+        # a type repair as a certificate re-buy. Everything else — tuple,
+        # str, None, 0.5 — raises and lands ERROR: visibly unfinished
+        # beats confidently wrong (VoidStatusMismatch's principle, one type
+        # over).
+        if not isinstance(ok, (Status, bool)):
+            if isinstance(ok, (int, float)) and ok in (0, 1):
+                ok = bool(ok)
+            else:
+                raise CheckReturnInvalid(
+                    f"{spec.id}: _check returned {type(ok).__name__} "
+                    f"({ok!r}); return a bool or a Status. Any other truthy "
+                    "value records PASS regardless of its content — put a "
+                    "VOID reason in metrics['void_reason'], not in a tuple.")
         # `check` may return a Status directly to signal VOID — a run that
         # could not test the claim at all (an arm that never learned, a leaky
         # fixture). Bare bools keep their old meaning, so no existing test

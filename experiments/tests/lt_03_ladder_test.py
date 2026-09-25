@@ -832,7 +832,16 @@ def _control(seed: int) -> dict:
 
 
 def _void(m: dict, reason: str):
-    return Status.VOID, f"run did not test the claim; not a refutation — {reason}"
+    """Name the firing branch in the recorded metrics (the LC.03-v2 /
+    LG.12 / W0.DIAG idiom). THIS FUNCTION USED TO RETURN A TUPLE
+    `(Status.VOID, reason)` — and run_spec's verdict handling mapped any
+    non-Status, non-bool truthy value to PASS, so the attempt-1 registered
+    run (2026-09-25T22:00:21, 16,580.6 s) landed on the ledger as PASS
+    while its own recorded metrics replay to VOID (icm_fixates 0.0 against
+    the 0.66 floor). run_spec now raises CheckReturnInvalid on such a
+    return; the reason belongs in metrics, not in a tuple."""
+    m["void_reason"] = reason
+    return Status.VOID
 
 
 def _check(m: dict, c: dict):
@@ -866,28 +875,24 @@ def _check(m: dict, c: dict):
             claimant = n
             break
     if claimant is None:
-        return False, ("no candidate arm climbed: engaged/trend/return/"
-                       "quintile/topout conjuncts unmet in >=2 of 3 seeds "
-                       "(the pivot branch: GOAL.md's ladder image needs a "
-                       "goal/skill layer)")
+        # The pivot branch: no candidate arm climbed — engaged/trend/return/
+        # quintile/topout conjuncts unmet in >=2 of 3 seeds; GOAL.md's ladder
+        # image needs a goal/skill layer.
+        return False
 
     # Control (2): randrew must not match the winner's visitation.
     if m.get("randrew_below", 0.0) < 1.0:
-        return False, ("randrew matched the winner's visitation lift — "
-                       "optimisation pressure alone explains the exploration")
+        # Optimisation pressure alone explains the exploration.
+        return False
 
     # Control (3): the shuffled twin must show no ascent trend.
     if c.get("shuffled_trend", 1.0) > 0.0:
-        return False, ("the goal-shuffled twin shows an ascent trend — the "
-                       "trend is not the arm's state-contingent signal")
+        # The trend is not the arm's state-contingent signal.
+        return False
 
-    return True, (f"{claimant} climbed: engaged "
-                  f"{m.get(claimant + '_engaged'):.0f}, gain "
-                  f"{m.get(claimant + '_gain'):.2f} m, final-quintile "
-                  f"{m.get(claimant + '_final_q'):.2f} m, return lift "
-                  f"{m.get(claimant + '_return_lift'):.2f}, dwell "
-                  f"{m.get(claimant + '_dwell'):.3f} — curiosity alone, "
-                  "reward identically zero")
+    # The claim: <claimant> climbed on curiosity alone, reward identically
+    # zero — the per-arm numbers are all in the recorded metrics.
+    return True
 
 
 def run(ledger: Ledger | None = None):

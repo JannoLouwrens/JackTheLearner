@@ -16962,3 +16962,41 @@ artifact a reader actually opens. (3) An organ that dies partway through can be
 MORE dangerous than one that does not run at all, because its committed acts
 make the system look reported-on. Check what a dead run committed before
 deciding what its silence cost.
+
+## A pre-registered verdict is only as binding as the runner's parsing of it — a truthy tuple recorded a 4.6-hour VOID as PASS (builder, 2026-09-25)
+
+LT.03 — the constitutional ladder test, GOAL.md's own image — landed its
+attempt-1 registered run at 22:00:21 and the ledger said PASS with an empty
+message. The pre-registered `_check`, replayed offline against the row's OWN
+recorded metrics, says VOID: `icm_fixates` 0.0 against the 0.66 floor — the
+exact branch the Review's harvest guidance had armed ("icm_fixates VOID = rig
+finding"). Both were the same code (`impl_sha` matched the tree byte-for-byte).
+The contradiction lived one layer down: this `_check` alone returned
+`(Status.VOID, reason)` and `(False, reason)` TUPLES where every sibling
+returns a bare `Status`/`bool` with the reason in `metrics["void_reason"]`,
+and `run_spec`'s verdict handling — `isinstance(ok, Status)` else truthiness —
+maps every non-empty tuple to PASS. So this `_check` COULD NOT FAIL, on any
+branch, for any data: the strongest spec-side battery is worthless if the
+channel that carries its answer discards it. The claim's own governing rule —
+"a capability may only be claimed by a test that could have failed" — was
+violated by the harness, not the spec, and no instrument watched that layer:
+the runner prints the status it computed, the ledger records it, and every
+downstream ratchet trusts the field.
+
+The general rules. (1) A verdict channel needs a TYPE GATE at the boundary:
+`run_spec` now raises `CheckReturnInvalid` on anything that is not a bool or a
+Status (exact 0/1 numbers are coerced — T2.04/T2.05 recorded CORRECT verdicts
+through float flags, and an ERROR would have priced a type repair as a
+certificate re-buy). Visibly unfinished beats confidently wrong —
+`VoidStatusMismatch`'s principle, one type over. (2) Replaying `_check`
+offline against the recorded row is the audit that caught this, and it should
+follow every harvest of a first-attempt row — it costs seconds. But know its
+limit, measured the same night: an IMPURE `_check` (LG.10/LG.12 read module
+globals populated only while `_experiment` runs in-process) replays VOID
+offline while its recorded FAIL is honest. A replay mismatch is a lead, not a
+verdict; check purity before crying tamper. (3) The full-ledger replay sweep
+found exactly one verdict-inverting row (LT.03, hand-repaired PASS -> VOID in
+the same commit that fixed the channel, metrics untouched, disclosed in the
+row's message — the T2.02 precedent). A hand-repair that DEMOTES a false
+claim, quoted against the replay, is maintenance of the ledger's honesty; the
+prohibited direction is and stays promotion.
