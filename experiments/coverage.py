@@ -1162,7 +1162,14 @@ QUEUE_EMPTY_BASELINE = frozenset()
 # bookkeeping (01dcab6) while the builder was gated, so no iteration held both
 # halves at once. `run status` carried it as BELOW ITS DECLARED FLOOR in the
 # interval, which is the ratchet working.
-UNREACHABLE_BASELINE = 96
+# LOWERED 96 -> 95, 2026-09-25: LT.02 attempt 2 recorded PASS (d377874,
+# ran_at 13:25:19), which regained LT.03 exactly as priced in 88762a2's
+# `run blast-radius` line ("unreachable 96 -> 95 ... REGAINED LT.03"). The
+# harvest commit owed this constant in the same breath and did not lower it;
+# `run status` carried the gap as BELOW ITS DECLARED FLOOR for one slot —
+# again the ratchet working — and this commit pays it. Shrink-only, floor
+# follows the number down.
+UNREACHABLE_BASELINE = 95
 
 
 def unreachable_ratchet(ledger=None,

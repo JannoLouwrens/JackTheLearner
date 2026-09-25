@@ -24,10 +24,10 @@
     "value": 0
   },
   "fail_unowned_owned_forms": {
-    "at": "2026-09-19",
+    "at": "2026-09-25",
     "value": {
       "disposed": 1,
-      "queue-row": 28,
+      "queue-row": 26,
       "repaired_by": 1
     }
   },
@@ -65,12 +65,12 @@
     "value": 3
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-23",
-    "value": 7
+    "at": "2026-09-25",
+    "value": 12
   },
   "review_queue_piled_on": {
-    "at": "2026-09-23",
-    "value": 2
+    "at": "2026-09-25",
+    "value": 4
   },
   "review_queue_violation_forms": {
     "at": "2026-09-22",
@@ -81,7 +81,7 @@
     "value": 0
   },
   "unreachable": {
-    "at": "2026-09-22",
-    "value": 96
+    "at": "2026-09-25",
+    "value": 95
   }
 }
