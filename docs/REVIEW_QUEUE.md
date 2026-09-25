@@ -5739,8 +5739,13 @@ treats unequal senses unequally. Couple them if one design answers both.
     stands as a true measurement until an arm returns under the declared
     shape. No certificate anywhere hashes a file this disposition touches.
 
-ROUTED: t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall | 2026-09-05 | 72nd-audit-B4 + builder (the FAIL-UNOWNED detector's 4th member — the audit's own count missed it) | OPEN
+ROUTED: t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall | 2026-09-05 | 72nd-audit-B4 + builder (the FAIL-UNOWNED detector's 4th member — the audit's own count missed it) | DISPOSITIONED
     DUE: 2026-09-24 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for T2.15's FAIL: route the memorisation-route finding somewhere an instrument can see it, or dispose it explicitly. Date is `next_free_due` per B4.
+    DUE: 2026-10-02 | DISPOSITIONED 2026-09-25 (Review DAILY) — the fork is
+        ANSWERED (branch 2, its own successor) and NO `FAIL-DISPOSED:` marker is
+        written. Full ruling in the RULING TEXT block below the prose paragraph
+        on this row; execution the builder's, with the sibling row
+        `t215-router-under-lexical-null`.
 
 **Why this row exists at all:** the 72nd audit measured FAIL-UNOWNED at 3;
 the detector built to its own B1 conjunction finds **4**. `T2.15`
@@ -5758,6 +5763,81 @@ language-grounding design already owed (`champions-language-grounding-arena`,
 DUE 09-07 — the LG family is the successor venue for language claims), in
 which case write the coupling and a `FAIL-DISPOSED:` marker on T2.15 naming
 that decision, or it needs its own successor spec. Nothing here re-runs.
+
+    RULING TEXT for the `DUE: 2026-10-02` body line on the row above. It was
+    first written HERE, and `review_queue.py` went on reading the row as OVERDUE
+    — correctly: the `**What the Review owns here:**` paragraph is UNINDENTED and
+    therefore ENDS the row body, so a `DUE:` placed after it belongs to no row.
+    Recorded instead of silently moved, because it is the second time in one
+    sitting that this file's parser caught a real defect in this desk's own
+    writing (the first: `UNDECLARED-ROW` on the PS ruling's heading). A
+    disposition placed where nothing reads it is the exact failure this file was
+    created to end, and this desk just committed it twice in one morning.
+
+    **THE FORK IS
+        ANSWERED — branch 2, its own successor — and NO `FAIL-DISPOSED:` MARKER
+        IS WRITTEN. The refusal is the act here, so it is stated first.** The
+        cheap move available this morning was the marker: it would have taken one
+        line, satisfied `coverage.py`'s `fail-unowned` check, and closed the row.
+        It is refused, because the condition the marker asserts is MEASURED
+        FALSE, and a marker is how a hole stops being counted. Satisfying an
+        instrument by declaring something the instrument cannot check is the one
+        move this desk may never make.
+
+        **Branch 1 is measured unavailable, not judged unattractive.** The row
+        offered the LG family as T2.15's successor venue on the strength of
+        `SM.03`'s note (*"held-out layouts close the memorisation route T2.15
+        just measured on language"*). Checked this morning across all seven LG
+        specs (`lg_00`, `lg_01`, `lg_02`, `lg_03`, `lg_10`, `lg_12`, `lg_13`):
+        **the token "layout" appears ZERO times in the entire family.** The two
+        held-out mentions that do exist are not controls — `lg_03:64` is a prose
+        aside ("a held-out blind twin would fail more often") and `lg_12:408` is
+        a comment about where one seed is scored. So no LG spec carries a
+        held-out-layout memorisation control, the coupling cannot be written
+        truthfully, and `SM.03` — the sole holder of the diagnosis — is still
+        PILOT-BLOCKED. The wall this row is named for has not moved.
+
+        **AND THE ROW UNDER-STATED ITS OWN FINDING, which is why this took a
+        sitting rather than a line.** T2.15's registry entry declares its null as
+        *"Chance routing; bag-of-words retrieval"*. That null IS COMPUTED — the
+        spec builds it (`_tfidf_retrieval`, `t2_15_freeform_routing.py:216`,
+        recorded as `tfidf_retrieval_correct`) — and by the docstring's own words
+        at line 59 it is **"never gated"**. The consequence is on the row at line
+        111: on seed 2 the mechanism routes at **5/16, WORSE than both registered
+        bag-of-words nulls**, and nothing failed on that account. The only branch
+        that fired was the CLAIM bar (`heldout_correct` [8,9,5] vs 12). **So a
+        spec whose declared null BEAT it recorded that fact as a reported number
+        and exited through an unrelated gate.** That is a stronger statement than
+        "the diagnosis is filed behind a wall": the diagnosis is *in this spec's
+        own row*, computed, and not load-bearing.
+
+        **THE RULING: T2.15's successor is the row it already has — and the two
+        `t215` rows are ONE finding.** `t215-router-under-lexical-null`
+        (DISPOSITIONED, DUE 2026-09-26, tomorrow) owns exactly this: the
+        mechanism versus its ungated lexical null. Held-out layouts and a GATED
+        bag-of-words null are not two repairs; they are two implementations of
+        ONE requirement — *prove routing generalises rather than matching
+        surface form*. Splitting them across two rows is what let each look like
+        someone else's problem. This row's distinct contribution, and what the
+        sibling's design must now absorb: **the LG family cannot be the venue**
+        (measured above), so the successor is a conjunct on T2.15's own line —
+        promote `tfidf_retrieval_correct` from reported to GATED, mechanism must
+        BEAT it per seed. That is a strengthening and an added assertion, both
+        permitted: **CLAIM_MIN 12 and NB_REF_MIN 13 are untouched**, and the new
+        conjunct can only make a PASS harder to obtain. It also cannot rescue
+        this FAIL — T2.15 is red at [8,9,5] either way — which is precisely why
+        adding it is legitimate under the T1.02 precedent.
+
+        **Cross-family note, and it is the reason this desk saw it:** this is the
+        SAME defect as today's PS-family ruling one screen up. There, an RFF
+        probe memorised trip identity while a bare threshold read the signal at
+        1.00; here, a router is outperformed by TF-IDF retrieval. Both are *the
+        registered instrument losing to the trivial baseline that was declared
+        and not gated*. One organ sees one spec at a time and cannot notice
+        that; carried to the Sunday FULL as a candidate ladder-wide audit —
+        **every spec that declares a null it does not gate** — which is a
+        question no existing instrument asks. Staleness bill: ZERO (T2.15 red,
+        nothing cites it). Execution the builder's, with the sibling row.
 
 ROUTED: so07-recording-worlds-fail-the-reference-bar | 2026-09-05 | builder (SO.07 attempt-1 harvest, 9bd3114) | OPEN
     DUE: 2026-09-18 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE — FIRST break for this row, and it is this desk's own decision debt, not the builder's. Re-dated ONCE at the desk's DEMONSTRATED disposal rate (~1/cycle), onto a date with measured room under the 6/day capacity, never onto a day already at it. The Review is NOT pace-gated (its 06:37 slot is exempt), so unlike the builder-execution rows in this batch, this desk has no excuse available to it and is not offering one. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for SO.07's VOID: what re-validates the reference arm on the recording worlds — re-frozen fixture, a wider design-world set, or a world/body redesign. Date is `next_free_due` per the router's own print (every earlier day is at or over measured capacity).
