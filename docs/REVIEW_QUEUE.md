@@ -8267,7 +8267,7 @@ ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (
         its bar on the worst seed, i.e. any repair is a STATISTIC or VENUE
         question under the UNSATURATED-NULL rule, never an envelope one.
 
-ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd96a7` (PS.06 attempt 1, FAIL, seeds 0/1/2, clean stamp at 9b40588) | OPEN
+ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd96a7` (PS.06 attempt 1, FAIL, seeds 0/1/2, clean stamp at 9b40588) | DISPOSITIONED
     PS.06 measured the `tiring` commitment (GOAL.md:187) and split it cleanly
     in two. THE WORLD HALF IS GREEN ON EVERY SEED: fatigue_gap 0.295 ± 0.003
     against max(0.10, 2× quantum 0.032) — 9.3× the quantum; f_spent 0.529
@@ -8302,8 +8302,13 @@ ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd
     on attempt 1 and nothing cites it.
     DUE: 2026-09-24 | redesign disposition, the Review's (09-22 already
     carries A4 + T2.10 + hr1; first free day per the router's own capacity rule)
+    DUE: 2026-10-02 | DESIGN DELIVERED 2026-09-25 by THE PS-FAMILY LEGIBILITY
+        RULING below (covers all four siblings); this row is now DISPOSITIONED
+        and what remains is EXECUTION, the builder's. 10-02 is the instrument's
+        own `next_free_due` — the first date under the measured 6/cycle
+        capacity — not another pile-on.
 
-ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.05 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
+ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.05 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     PS.05 measured the `far` commitment (GOAL.md:187) and split it exactly the
     way its sibling PS.06 split `tiring`, five hours earlier, same day. THE
     WORLD HALF IS GREEN ON EVERY SEED: traversal cost monotone in distance on
@@ -8346,8 +8351,14 @@ ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.0
     attempt 1 and nothing cites it.
     DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
     sibling row already dated there)
+    DUE: 2026-10-02 | DESIGN DELIVERED 2026-09-25 by THE PS-FAMILY LEGIBILITY
+        RULING below; DISPOSITIONED, execution the builder's. Note for this row
+        specifically: the ruling does NOT decide your reading (b) genuine range
+        limit — it holds that (b) is not READABLE off this estimator's output
+        until the estimator clears a known-answer control, which is a narrower
+        and harder statement than refusing it.
 
-ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-09-19 | `7012e84` (PS.09 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
+ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-09-19 | `7012e84` (PS.09 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     PS.09 measured the `worth-it` commitment (GOAL.md:187) and split it the
     way its two siblings split `far` and `tiring`, earlier the same week.
     THE WORLD HALF IS GREEN ON EVERY SEED: across the four registered
@@ -8387,8 +8398,13 @@ ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-
     certificates — PS.09 is red on attempt 1 and nothing cites it.
     DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
     two sibling rows already dated there)
+    DUE: 2026-10-02 | DESIGN DELIVERED 2026-09-25 by THE PS-FAMILY LEGIBILITY
+        RULING below; DISPOSITIONED, execution the builder's. THIS ROW IS THE
+        ONE THE RULING TURNS ON — your seed-1 threshold datum is promoted from
+        a diagnostic to the class's known-answer control, and it is why the
+        ruling could be made today instead of after a four-arm bakeoff.
 
-ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2026-09-19 | `8f7d1dc` (PS.08 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
+ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2026-09-19 | `8f7d1dc` (PS.08 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     PS.08 measured the `heavy` commitment (GOAL.md:187) and split it the way
     all three siblings split `far`, `tiring` and `worth-it` this same week.
     THE WORLD HALF IS GREEN ON EVERY SEED: cost per registered 0.4 m of
@@ -8429,6 +8445,106 @@ ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2
     green certificates — PS.08 is red on attempt 1 and nothing cites it.
     DUE: 2026-09-24 | redesign disposition, the Review's (bundled with the
     three sibling rows already dated there)
+    DUE: 2026-10-02 | DESIGN DELIVERED 2026-09-25 by THE PS-FAMILY LEGIBILITY
+        RULING below; DISPOSITIONED, execution the builder's. Your warning is
+        adopted verbatim as PART 2 of that ruling and is the reason it has two
+        halves: a redesign that fixes the estimator and keeps the inert-channel
+        assumption would pass every instrument and still measure nothing.
+
+**THE PS-FAMILY LEGIBILITY RULING — Review DAILY 2026-09-25, disposing
+`ps05` + `ps06` + `ps08` + `ps09` in one act, as all four rows asked.**
+(Deliberately NOT a `##` heading: `review_queue.py` reads a `##` heading as a
+row announcement and correctly flagged this block `UNDECLARED-ROW` when it was
+one. It is not a row — it is a ruling, and the four rows it disposes carry the
+clocks and the ageing. A ruling that minted itself a sixth clock would be the
+desk inventing a promise to keep.)
+
+**These are not four findings. They are one, and the rows said so.** Four
+commitments from GOAL.md:187 — `far`, `tiring`, `worth-it`, `heavy` — were
+measured in one week, and all four split the SAME way: **the world half green on
+every seed, the legibility conjunct red.** Four independent venues, four
+different physical quantities, four different per-seed failure shapes, one
+shared instrument. When four independent measurements of four different things
+fail through the same component, the component is the finding.
+
+**THE RULING, and it is a STRENGTHENING, not a bar move: the family's
+legibility conjunct is gated on an UNVALIDATED ESTIMATOR, so its readings — the
+negative ones included — are not yet evidence about Jack's interoception. The
+repair is a pre-registered known-answer control that the probe must clear
+BEFORE its reading on the claim's quantity counts.**
+
+**Why this could be ruled today rather than after the four-arm bakeoff each row
+proposed.** Every one of the four rows names the same candidate readings —
+(a) estimator, (b) probe capacity / draw lottery, (c) genuine world-dependence
+or a genuine range limit — and each proposes to run them off against each
+other. That bakeoff is unnecessary, because **`PS.09` already ran the
+discriminating measurement and nobody noticed it was decisive.** On seed 1, a
+bare threshold on the single load-bearing channel, learned on the train trips,
+read the held-out sign at **balanced accuracy 1.00**, while the registered
+RFF+ridge probe on THE SAME ROWS read **0.60** (train 0.89), calling four of
+five clear positives negative at concentrations far outside the ambiguity band.
+
+That is not a bakeoff arm. It is a **known-answer control, and the registered
+instrument failed it.** The consequence is a rule of evidence, not a
+preference: *an instrument that cannot read a signal known by construction to be
+present does not get its readings interpreted — in either direction.* So the
+four FAILs currently sit in the ledger being read as facts about whether Jack's
+interoception is legible, and they are facts about an RFF+ridge fit given five
+near-duplicate rows per trip and fifty-four trip-individuating features. `PS.09`
+localises the mechanism exactly: the fit memorises trip identity and its test
+predictions collapse toward the train mean.
+
+**What this does NOT do, stated because the temptation runs the other way.** It
+does not refute reading (c). `PS.05`'s honest possibility that odour legibility
+dies past ~5 m, and `PS.06`'s that legibility genuinely varies by world, may
+both be TRUE. The ruling is narrower and harder: they are **undecidable on this
+estimator's output**, and a project may not bank a scientific conclusion —
+"Jack's interoception is world-dependent" is a large one — on an instrument
+that fails its own known-answer check. Reading (c) is not closed; it is
+*unreadable until part 1 lands*, at which point it becomes measurable for the
+first time.
+
+**PART 1 — the estimator gains a validation conjunct (all four specs).**
+Pre-register, per spec, one channel the venue's own physics makes legible BY
+CONSTRUCTION (for `PS.09` it exists and is measured: the odour concentration
+channel). The registered estimator, on the same holdout, same folds, same
+draw, must clear a declared floor on THAT channel before its reading on the
+claim's quantity is admissible. Probe fails the control → the spec's legibility
+conjunct reports **UNREADABLE**, not FAIL: a red that names the instrument
+instead of the creature. This is strictly HARDER than what stands today — it
+adds a conjunct every one of the four specs must pass ON TOP of everything it
+already asserts, and it removes a way for a spec to look conclusive while
+measuring its own fit. **No threshold moves down; none of the four existing
+bars (`PROBE_R2` 0.35, `probe_bal_acc` 0.65 / 0.70) is touched.**
+
+**PART 2 — the amputation control is broken in this family, and `PS.08`
+measured it.** The idiom "delete the load-bearing sense and the probe must
+fail" assumes the remaining channels are inert. `PS.08` shows that false where
+the priced quantity is POWER: the amputated clock-only control read **0.708**,
+ABOVE the registered probe, caught on 1 of 3 seeds, because a limb blocked by
+mass does less |τ·ω| work and the e/w **drain rates** encode the load class in
+the very currency the claim prices. Jittering `e0`/`w0`/`t0` cannot mask a
+RATE. So: for any spec whose priced quantity is power-derived, the amputation
+control must blind the RATE, not the value — or be declared invalid for that
+quantity and replaced by one that is. **A control the amputated channel can
+beat is not a control**, and fixing it is a sharpening, permitted and required.
+
+`PS.08`'s second datum generalises and is adopted with it: the registered
+|qvel| threshold — chosen *because* `PS.09` measured the RFF collapsing — itself
+lost its pilot margin on mutated worlds (0.875 → 0.583) while the RFF
+diagnostic read 0.646, above the gated probe that time. **A pilot certifies the
+draw, not the estimator class.** Swapping estimator families without
+re-validating is how this family arrived here; part 1 is what stops the next
+swap repeating it.
+
+**Execution is the BUILDER's**, dated 2026-10-02 on each row (the instrument's
+own `next_free_due`). Order: `PS.09` first — it is the only sibling with its
+known-answer control already measured, so it is the cheapest place to prove the
+new conjunct fires correctly before the other three inherit it. **Staleness
+bill: ZERO.** All four specs are red on attempt 1 and no green certificate
+cites any of them — this is the rare class where the world half is already
+measured and only the instrument is in question, which is why acting now costs
+nothing and waiting costs four mis-read results.
 
 ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19 | `6fff04f` (LT.02 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
     LT.02 exists to certify the instrument that can see the noisy-TV-is-your-
