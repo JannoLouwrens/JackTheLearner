@@ -32,10 +32,32 @@ gates on is DECLARED, at the start of a line, in the `DECIDE:`/`COVERS:` idiom:
     ROUTED: <id> | <YYYY-MM-DD> | <source> | <STATUS ...>
         DUE: <YYYY-MM-DD> | what is owed, and by whom
         BLOCKED-BY: <another row id> | what releases this hold
+        WAITS-ON: <another row id> | why this answer depends on that one
+        WAITS-ON: none | why this row is independent
 
 The `ROUTED:` line's four-field shape is the file's own published contract and is
-unchanged; `DUE:` and `BLOCKED-BY:` are new indented body lines, so every reader
-that greps `^ROUTED:` keeps working. Prose dates are NOT read. `w0-too-shallow`'s
+unchanged; `DUE:`, `BLOCKED-BY:` and `WAITS-ON:` are indented body lines, so
+every reader that greps `^ROUTED:` keeps working.
+
+`WAITS-ON:` IS DECLARATION-ONLY AND BUYS NOTHING (93rd audit B3, routed
+2026-09-13; Review disposition 2026-09-19 — the cheaper variant, strengthened).
+On 2026-09-13 fourteen live dated rows came due against a measured capacity of
+six, and SIX of them shared one root (`w0-too-shallow`) only in body prose —
+so the pile histogram could print "14 rows" and never "9 decisions, not 14".
+`BLOCKED-BY:` cannot carry this fact because it buys ageing-exemption, and
+coupled rows SHOULD age: a desk that owes six answers behind one root still
+owes six answers on their dates; what it does not owe is six sittings. So
+`WAITS-ON:` touches nothing — not OVERDUE, not STALE, not ageing, not
+`next_free_due`, not throughput, not the pile's row counts — and the grouped
+reading it feeds prints for a date ONLY when every live row on that date
+carries an EXPLICIT declaration (a row id or the literal `none`), because a
+group count assembled from partial declarations is confidently wrong, which
+is worse than absent. An unmet gate prints WHY it is unmet, never nothing.
+A `WAITS-ON:` naming a row id that does not exist is MALFORMED, the same
+class as a phantom `BLOCKED-BY:` — an undeclared coupling is a gap, but a
+coupling declared against a corpse is a false statement. A TERMINAL root is
+NOT a violation: the root resolving does not release the row from anything,
+because there was never anything to release. Prose dates are NOT read. `w0-too-shallow`'s
 prose date was migrated into a `DUE:` line by hand, once, in the commit that
 added this module — a migration is a human act, an inference is a bug.
 
@@ -289,7 +311,7 @@ _ROUTED = re.compile(r"^ROUTED:\s*(.*)$")
 #: this file legitimately holds prose that is not a row.
 _CANDIDATE = re.compile(r"^##\s*(?:ROUTED\b|`)")
 _HEADING = re.compile(r"^#{1,6}\s")
-_DECL = re.compile(r"^(DUE|BLOCKED-BY|ORDERED):\s*(.*)$")
+_DECL = re.compile(r"^(DUE|BLOCKED-BY|ORDERED|WAITS-ON):\s*(.*)$")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _LOG_ROW = re.compile(r"^\|\s*(\d{4}-\d{2}-\d{2})\s*\|")
 #: An executing commit: >=7 hex chars WITH at least one letter. The letter is
@@ -325,6 +347,7 @@ def parse(doc: str) -> list[dict]:
                    "id": fields[0] if fields else "",
                    "routed": None, "source": "", "status": "", "status_text": "",
                    "due": None, "due_text": "", "blocked_by": "", "blocked_text": "",
+                   "waits_on": "", "waits_text": "",
                    "ordered": []}
             if len(fields) != 4:
                 cur["bad"].append(f"{len(fields)} pipe-separated fields, expected 4")
@@ -372,6 +395,17 @@ def parse(doc: str) -> list[dict]:
             if not ids:
                 cur["bad"].append("ORDERED: names no spec ids")
             cur["ordered"].extend(ids)
+        elif key == "WAITS-ON":
+            # Declaration-only (module docstring). Backticks shed as ORDERED
+            # sheds them; a later line overwrites an earlier one, as a re-armed
+            # DUE: does. `none` is itself a declaration — of independence —
+            # and an empty head is neither a coupling nor an independence.
+            if not head.strip("`"):
+                cur["bad"].append("WAITS-ON: declares nothing — a row id, or the "
+                                  "explicit `none`")
+            else:
+                cur["waits_on"] = head.strip("`")
+                cur["waits_text"] = rest
         else:
             if not head:
                 cur["bad"].append("BLOCKED-BY: names no row")
@@ -725,6 +759,15 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
                 findings.append(("HOLD-ON-A-RESOLVED-BLOCKER", rid,
                                  f"held behind {tgt['id']}, which is {tgt['status']} — "
                                  "the window it was waiting for has opened"))
+        if (r["waits_on"] and r["waits_on"].lower() != "none"
+                and r["waits_on"] not in by_id):
+            # The phantom-BLOCKED-BY rule, applied to the coupling field
+            # (disposition 2026-09-19): an undeclared coupling is a gap, but a
+            # coupling declared against a corpse is a false statement. A
+            # TERMINAL root is legal — WAITS-ON buys nothing, so a resolved
+            # root releases nothing and falsifies nothing.
+            findings.append(("MALFORMED", rid,
+                             f"WAITS-ON names {r['waits_on']!r}, which is not a row here"))
         if r["due"] is not None and r["due"] < today:
             findings.append(("OVERDUE", rid,
                              f"promised {r['due'].isoformat()} ({(today - r['due']).days} d ago): "
@@ -814,6 +857,46 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
             break
         d += _dt.timedelta(days=1)
 
+    # THE WAITS-ON GROUPING (93rd audit B3; Review disposition 2026-09-19 —
+    # the cheaper variant, strengthened with `none`). The pile histogram above
+    # counts ROWS; this reading counts DECISIONS, which on 2026-09-13 were 9
+    # where the rows were 14 and nothing could print the difference. Per due
+    # date carrying at least two live rows (one row has no grouping question):
+    # if EVERY live row on the date declares (a row id or `none`), the group
+    # arithmetic prints — n rows, k decisions, each shared root named with its
+    # count; if ANY row is undeclared the count is WITHHELD and the reason
+    # prints instead, because a group count assembled from partial
+    # declarations is confidently wrong, which is worse than absent. A
+    # READING, never a violation, and it moves nothing above: `due_pile`,
+    # `piled_on`, `next_free_due` and every violation class are computed
+    # before this line runs and do not read `waits_on`.
+    waits_on_groups: list[dict] = []
+    dated: dict = {}
+    for r in live:
+        if r["due"] is not None:
+            dated.setdefault(r["due"].isoformat(), []).append(r)
+    for d in sorted(dated):
+        grp = dated[d]
+        if len(grp) < 2:
+            continue
+        undeclared = sum(1 for r in grp if not r["waits_on"])
+        if undeclared:
+            waits_on_groups.append({"due": d, "n": len(grp),
+                                    "undeclared": undeclared,
+                                    "roots": {}, "independent": 0,
+                                    "decisions": None})
+            continue
+        roots: dict = {}
+        independent = 0
+        for r in grp:
+            if r["waits_on"].lower() == "none":
+                independent += 1
+            else:
+                roots[r["waits_on"]] = roots.get(r["waits_on"], 0) + 1
+        waits_on_groups.append({"due": d, "n": len(grp), "undeclared": 0,
+                                "roots": roots, "independent": independent,
+                                "decisions": len(roots) + independent})
+
     # THE AGEING FORECAST (84th audit B2). At 2026-09-08T00:00 four un-clocked
     # rows — a single cohort routed 2026-08-30 — crossed the consumer cycle in
     # the same second, and the organ that found them was whichever happened to
@@ -885,6 +968,7 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
 
     return {"rows": rows, "findings": findings, "counts": counts,
             "due_pile": due_pile, "piled_on": piled_on,
+            "waits_on_groups": waits_on_groups,
             "ordered_returns": ordered_returns,
             # A READING like `ordered_returns`: supplied text or [] — never a
             # violation, never counted, never floored (100th audit B2).
@@ -1097,6 +1181,33 @@ def render(a: dict, last_run: str = "") -> str:
                        "has room under the measured")
             out.append("  capacity. There is no honest re-date left: the "
                        "repair is to ACT or to DECLINE.")
+    if a.get("waits_on_groups"):
+        out.append("")
+        out.append("  WAITS-ON GROUPING — the pile above counts rows; this "
+                   "counts DECISIONS (93rd")
+        out.append("  audit B3: 14 rows due together were 9 decisions and "
+                   "nothing could print it).")
+        out.append("  Declaration-only — it buys no exemption and moves no "
+                   "number above. A date's")
+        out.append("  count prints only when EVERY live row on it declares "
+                   "(`WAITS-ON: <row id>` or")
+        out.append("  `none`); a partial day says why it is withheld — a "
+                   "confidently wrong group")
+        out.append("  count is worse than an absent one:")
+        for g in a["waits_on_groups"]:
+            if g["undeclared"]:
+                out.append(f"    {g['due']}  WITHHELD — {g['undeclared']} of "
+                           f"{g['n']} rows undeclared")
+                continue
+            shared = ", ".join(f"{n} behind `{root}`"
+                               for root, n in sorted(g["roots"].items(),
+                                                     key=lambda kv: -kv[1])
+                               if n >= 2)
+            line = (f"    {g['due']}  {g['n']} rows are "
+                    f"{g['decisions']} decision(s)")
+            if shared:
+                line += f" — {shared}"
+            out.append(line)
     if a["total"]:
         out.append("")
         out.append(f"  {a['total']} VIOLATION(S) — "

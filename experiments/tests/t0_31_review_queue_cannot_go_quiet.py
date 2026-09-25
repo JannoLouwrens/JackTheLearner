@@ -181,7 +181,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 20
+N_PROPERTIES = 22
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -998,6 +998,112 @@ def _probe(blind: bool) -> dict:
     if blind or not ok20:
         failed.append("p20_a_terminal_rows_closed_parent_is_printed")
 
+    # P21 — WAITS-ON IS DECLARATION-ONLY, AND THE GROUP COUNT IS GATED ON A
+    # COMPLETE DAY (93rd audit B3, routed 2026-09-13; Review disposition
+    # 2026-09-19 — the cheaper variant, strengthened with `none`). The scar:
+    # fourteen live dated rows came due together and six shared one root only
+    # in prose, so the pile histogram could print "14 rows" and never "9
+    # decisions". Conjuncts, both directions: (i) a fully-declared date prints
+    # its arithmetic — n rows, k decisions, the shared root named with its
+    # count, `none` counted as its own decision; (ii) THE GATE — one
+    # undeclared row WITHHOLDS the count and prints why (`n of m rows
+    # undeclared`), never nothing, because a group count assembled from
+    # partial declarations is confidently wrong, which is worse than absent;
+    # (iii) DECLARATION-ONLY — adding the declarations moves no violation, no
+    # class count, no due_pile, no piled_on and no next_free_due against the
+    # same document bare; (iv) IT BUYS NO EXEMPTION — a declared row's passed
+    # DUE: is exactly as OVERDUE as an undeclared one's; (v) a single-row
+    # date has no grouping question and prints nothing either way.
+    _w_shared = ["DUE: 2026-09-10 | owed", "WAITS-ON: `w-root` | same root"]
+    w_rows = [
+        ("w-root", "2026-08-30", "OPEN", []),
+        ("w-a", "2026-08-20", "OPEN", list(_w_shared)),
+        ("w-b", "2026-08-20", "OPEN", list(_w_shared)),
+        ("w-c", "2026-08-20", "OPEN", list(_w_shared)),
+        ("w-d", "2026-08-20", "OPEN",
+         ["DUE: 2026-09-10 | owed", "WAITS-ON: none | independent"]),
+        ("w-solo", "2026-08-21", "OPEN",
+         ["DUE: 2026-09-11 | its own day", "WAITS-ON: none | independent"]),
+    ]
+    w_bare = [(rid, rt, st, [d for d in ds if not d.startswith("WAITS-ON")])
+              for rid, rt, st, ds in w_rows]
+    wa, wb = audit(_doc(w_rows), None, TODAY), audit(_doc(w_bare), None, TODAY)
+    # Read through a sentinel (P18's rule): DELETING the reading from
+    # `review_queue.py` must make this property FAIL rather than RAISE.
+    w_groups = {g["due"]: g for g in wa.get("waits_on_groups") or []}
+    partial = audit(_doc([(rid, rt, st,
+                           [d for d in ds if not d.startswith("WAITS-ON")])
+                          if rid == "w-d" else (rid, rt, st, ds)
+                          for rid, rt, st, ds in w_rows]), None, TODAY)
+    p_groups = {g["due"]: g for g in partial.get("waits_on_groups") or []}
+    late_rows = [(rid, rt, st,
+                  [("DUE: 2026-08-30 | owed" if d.startswith("DUE") else d)
+                   for d in ds])
+                 for rid, rt, st, ds in w_rows]
+    late_bare = [(rid, rt, st, [d for d in ds if not d.startswith("WAITS-ON")])
+                 for rid, rt, st, ds in late_rows]
+    wl, wlb = (audit(_doc(late_rows), None, TODAY),
+               audit(_doc(late_bare), None, TODAY))
+    wtext, ptext = render(wa), render(partial)
+    g10 = w_groups.get("2026-09-10", {})
+    waits_ok = (
+        # (i) the arithmetic on a complete day
+        g10.get("n") == 4 and g10.get("decisions") == 2
+        and g10.get("roots") == {"w-root": 3}
+        and g10.get("independent") == 1
+        and "2026-09-10  4 rows are 2 decision(s) — 3 behind `w-root`" in wtext
+        # (ii) the gate, and the reason printed rather than silence
+        and p_groups.get("2026-09-10", {}).get("decisions") is None
+        and p_groups.get("2026-09-10", {}).get("undeclared") == 1
+        and "2026-09-10  WITHHELD — 1 of 4 rows undeclared" in ptext
+        # (iii) declaration-only: nothing above the reading moves
+        and wa["total"] == wb["total"] == 0
+        and wa["counts"] == wb["counts"]
+        and wa["due_pile"] == wb["due_pile"]
+        and wa["piled_on"] == wb["piled_on"]
+        and wa["next_free_due"] == wb["next_free_due"]
+        # (iv) no exemption: the declared and bare OVERDUE sets are identical
+        and {rid for c, rid, _ in wl["findings"] if c == "OVERDUE"}
+            == {rid for c, rid, _ in wlb["findings"] if c == "OVERDUE"}
+            == {"w-a", "w-b", "w-c", "w-d", "w-solo"}
+        and wl["total"] == wlb["total"]
+        # (v) one row is no group
+        and "2026-09-11" not in w_groups)
+    if blind or not waits_ok:
+        failed.append("p21_a_group_count_is_gated_on_a_complete_day")
+
+    # P22 — A COUPLING DECLARED AGAINST A CORPSE IS A FALSE STATEMENT (the
+    # disposition's own words). The phantom-BLOCKED-BY rule applied to the
+    # coupling field, with the boundary drawn in both directions: (i) a live
+    # row's WAITS-ON naming a row id that does not exist is MALFORMED, naming
+    # the row, and the total RISES — the false statement cannot read as tidy;
+    # (ii) a TERMINAL root is NOT a violation, because WAITS-ON buys nothing,
+    # so a resolved root releases nothing and falsifies nothing; (iii) `none`
+    # is never a corpse; (iv) an empty WAITS-ON: declares nothing and is
+    # MALFORMED like any empty declaration; (v) a TERMINAL row's own corpse
+    # reference is not re-read — terminal rows are exempt from everything,
+    # symmetrically with BLOCKED-BY.
+    corpse = audit(_doc([
+        ("cw-root-acted", "2026-01-01", "ACTED 2026-01-02 (deadbeef)", []),
+        ("cw-bad", "2026-08-30", "OPEN",
+         ["WAITS-ON: no-such-row | coupled to a corpse"]),
+        ("cw-terminal-root", "2026-08-30", "OPEN",
+         ["WAITS-ON: cw-root-acted | a resolved root, legally"]),
+        ("cw-none", "2026-08-30", "OPEN", ["WAITS-ON: none | independent"]),
+        ("cw-empty", "2026-08-30", "OPEN", ["WAITS-ON:"]),
+        ("cw-closed", "2026-01-01", "ACTED 2026-01-02 (deadbeef)",
+         ["WAITS-ON: also-no-such-row | closed rows are never re-read"]),
+    ]), None, TODAY)
+    c_mal = {rid for c, rid, _ in corpse["findings"] if c == "MALFORMED"}
+    corpse_ok = (c_mal == {"cw-bad", "cw-empty"}
+                 and corpse["total"] == 2
+                 and any(rid == "cw-bad" and "no-such-row" in why
+                         for c, rid, why in corpse["findings"]
+                         if c == "MALFORMED")
+                 and "cw-bad" in render(corpse))
+    if blind or not corpse_ok:
+        failed.append("p22_a_coupling_against_a_corpse_is_a_false_statement")
+
     # The live desk's own numbers, recorded in the ledger row so the reading
     # that motivated P15 is dated and attributable rather than quoted from an
     # audit page. `-1` is the honest value for "no git baseline in this
@@ -1068,6 +1174,12 @@ def _control(seed: int) -> dict:
     file has no baseline, no rate and no second reading. The blind instrument
     cannot even express the question.
 
+    P21 and P22 it fails by construction as well: a row count parses no
+    `WAITS-ON:` declaration, so it can neither group a day of promises into
+    decisions nor notice a coupling declared against a row that does not
+    exist — the 93rd audit's "14 rows or 9 decisions?" question is not even
+    expressible to it.
+
     P18 it fails for P17's reason one column over: a row count carries no DUE:
     dates and no notion of the consumer's cadence, so it cannot say that
     fourteen promises fall on one sitting that has ever discharged six. But
@@ -1102,6 +1214,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p18_dated_promises_are_forecast_before_they_break",
                            "p19_the_desks_movement_is_separable_from_the_calendars",
                            "p20_a_terminal_rows_closed_parent_is_printed",
+                           "p21_a_group_count_is_gated_on_a_complete_day",
+                           "p22_a_coupling_against_a_corpse_is_a_false_statement",
                            } <= control_names)
     return bool(experiment_clean and control_broken)
 
