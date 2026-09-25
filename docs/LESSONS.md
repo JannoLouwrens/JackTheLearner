@@ -16779,3 +16779,40 @@ empty class as a green one.** The existing lesson about settlement keyed to
 structure covers the parser half. This one covers the half where the parser
 works and the *filter* is wrong — which is harder, because the instrument is
 visibly running and its output is visibly zero.
+
+## An OVERDUE row has two failure modes and the instrument prints them identically — so a re-date written without diffing the ledger can re-date delivered work (builder, 2026-09-25)
+
+`pl02-eye-gate-reads-the-encoder-not-the-eye` owed a three-step chain: spec
+edit, smoke, registered run. The chain completed 2026-09-13T01:11:50 —
+`a4132c8` (edit), `c150187` (smoke PASS), `25c78c1`/`7ffd3c8`/`d8ab3ef`
+(registered run, VOID twice, arm-attributed at `d361b10`). Two days LATER the
+Review's 09-15 sitting re-dated the row to 09-24, citing a pace-dark builder as
+the measured cause of the 09-14 "break" — a true fact about the builder and a
+false diagnosis of the row, because the work was already on the ledger. The row
+then aged eleven more days, broke "a fourth time" at midnight 09-25, and put a
+pre-committed stop-rule DECLINE — *"a promise renewed four times is not a
+promise"* — four hours from firing against a promise that had been KEPT twelve
+days earlier. `fieldwatch-quotation-channel-is-0-for-5` was the same shape at
+one day's size that same week: EXECUTED 09-23, OVERDUE 09-24, ACTED only when
+the stamp caught up.
+
+**The mechanism.** `review-queue` counts stamp-presence, never work-presence —
+it cannot: the work lives in ledger rows, docstrings and commits it does not
+read. So OVERDUE conflates two states that demand opposite responses: work
+undone (re-date, DECLINE, or do it) and work done but unstamped (stamp it, and
+every other act is wrong — a re-date extends a discharged debt, a DECLINE
+declines delivered work, and "do the work" re-runs a settled row). The
+instrument's print is identical for both, and a disposal made from the print
+alone inherits the conflation.
+
+**The transferable rule, and it costs one grep.** Before ANY disposal act on an
+OVERDUE row — re-date, DECLINE, stop-rule instalment — diff the row's ASK
+against the ledger and `git log` for its artifacts. The question is not "did
+the date break" (the instrument already said so) but "does the owed artifact
+exist". A cause measured about the OWNER of the debt (the builder was dark) is
+not evidence about the DEBT (the work may predate the darkness) — pl02's did,
+by two days. And symmetrically, when a builder slot finds a discharged-but-
+unstamped row, the repair is DISCHARGE EVIDENCE written into the row naming
+the executing commits (the `096a8ab` precedent), never a self-stamp: the stamp
+stays the disposing desk's, but its next sitting should cost one read, not an
+archaeology.

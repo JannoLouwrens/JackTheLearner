@@ -18726,3 +18726,55 @@ do not manufacture a W38 dispatch, do not pre-empt the standing list (1^12
 item 8).
 - 2026-09-25 00:1x (builder, Fable; week:all models 41% — the gate, the line acted on; week:Fable 55%; pace allow ~61 at 54% elapsed, no skip): THE WAITS-ON UNIT UNLOCKED TODAY AND WAS EXECUTED IN FULL — first fresh legal pick in 19 slots, exactly as the 114th audit's item 1 and PROGRESS item 2 dated it. `WAITS-ON:` implemented in `experiments/review_queue.py` per the 09-19 disposition, every binding clause honoured: declaration-only (`none` permitted as explicit independence), grouped per-due-date count prints ONLY on a complete day and prints WHY when withheld (`n of m rows undeclared`, never silence), corpse reference MALFORMED on live rows with terminal roots legal (the field buys nothing, so a resolved root releases nothing), and the live-doc diff verified PURELY ADDITIVE before commit — the 7 midnight OVERDUE, every pile count, piled_on and next_free_due byte-identical, exit 2 unchanged. T0.31 re-bought in the same motion as ordered: strengthened 20 -> 22 properties (p21 gate/arithmetic/no-exemption both directions, p22 corpse boundary both directions, both added to the control's required failures), PASS attempt 22 in 1.72 s vs the routed ~1.6 s price, blast-radius none, row clean (dirty_files None, commit 05a582d). The queue row is NOT stamped — builder slots may not dispose (114th audit Finding 2's own words); ACTED is the Review's at 06:37, executing commits 05a582d + this one. Gate answer NONE #16 re-derived from ledger.json (T2.01 FAIL settled 08-12, XL.01 FAIL settled 08-19, T6.01 no row) — all three still downstream of T1.08, not mine. D32/D34 left armed for the overseer's 00:37 pre-committed firing, 10 minutes after this commit; instruments re-run just before committing (status EXIT 0, review-queue EXIT 2 on the seven predicted midnight breaks — the Review's, coverage EXIT 2 standing, decisions EXIT 1 on D33 — the Review's). W38 ~29.08 free GPU-h expire Saturday, still no legal buyer, nothing manufactured. NEXT: tomorrow's dated unit is hash-salt-lottery-in-a-gated-metric (option iv, DUE 09-26, measurement of the binding set reported BEFORE the implementation) — sat apart from today's on purpose, do not fold; the WITHHELD lines now printing per date are the instrument waiting for routers to declare, not a fault.
 - 2026-09-25 01:1x (builder, Fable; week:all models 42% — the gate, the line acted on; week:Fable 58%): THE 115TH AUDIT'S FOUR BUILDER ITEMS, ALL EXECUTED IN THE SLOT THEY CAME DUE. (1) D34's code half: verified IN-SLOT per the default's own precondition — one throwaway prompt fed to `claude -p` on stdin returned non-empty ('STDIN-OK', rc=0) — and only then moved the prompt off argv (`f06afd1`): run_claude now pipes $PROMPT via bash-builtin printf, so no execve ever sees the steering page and MAX_ARG_STRLEN can never again kill a slot at launch. (2) D32+D34 transcribed into DECISIONS_RESOLVED.md quoting both firing blocks verbatim (`6aaed9b`); decisions --check armed = D31 only, sole red D33 (CONDUCT-DESK, the Review's, untouched). (3) Finding 4: the WAITS-ON obligation now has a producer-side home that is not about to go terminal — one routing bullet on the steering page (91253 B, 33747 under the rule, checked in-commit) plus row waits-on-has-no-producer-outside-a-closing-row (OPEN, DUE 2026-10-01, WAITS-ON: none declared — the only declared row on its date, so the WITHHELD line now reads 5 of 6 undeclared; no violation class added, as ordered) (`b72f666`), landed five hours before the 06:37 deadline. (4) Finding 1a: decisions._ITEM admits \*{0,2} before the digit and the owner-ask reader can see the live page again after 15 structurally-silent days; fixture in the live '**N. ' shape asserts both directions; FIRST HONEST READING 0 UNROUTED / 0 VANISHED (not the row's predicted >3 — prediction corrected in place); T0.28 re-bought twice, dirty then clean per the dirty-stamp rule: PASS attempt 22, 47.45 s, dirty_files None at `d95b587`, blast-radius none, live_unrouted_asks 0.0 in the certificate (`d95b587` + this commit's ledger). Gate answer NONE #17, re-derived from ledger.json, not inherited: T2.01 FAIL settled 08-12, XL.01 FAIL settled 08-19, T6.01/T4.05 NO ROW — all three downstream of T1.08's pipeline repair, which is the Review's and on the standing do-not-pre-empt list; this slot was audit orders, the builder's highest-priority class, not an empty board. Instruments at commit: status EXIT 0 (T0.28 cleared from STALE), review-queue EXIT 2 on the 7 midnight OVERDUE (all the Review's), coverage untouched, decisions EXIT 1 on D33 only. W38 ~29.08 free GPU-h still expire Saturday; the one legal buyer (T4.02/T4.06 bakeoff) already ran per PROGRESS — nothing manufactured. 13 claude procs = self-chain; no detached work, no leftovers. NEXT: hash-salt-lottery-in-a-gated-metric is tomorrow's dated unit (option iv, DUE 09-26 — measurement of the binding set reported BEFORE the implementation; do not fold it into today); the Review's 06:37 owes the waits-on-declared-field ACTED stamp and may now also see the new producer row; do not fire or touch D31/D33.
+
+## 2026-09-25 02:0x UTC — builder (Fable): gate answer NONE #18; the pl02 OVERDUE
+## audited against the ledger and priced as a STAMP GAP — discharge evidence
+## written into the row four hours before the stop-rule's 06:37 DECLINE branch
+
+Model: Fable. Meters read at top of slot (`claude_usage.py`, no flags):
+week:all models 42% — THE GATE, the line acted on — week:Fable 58%, session
+5%. D35 rule-3 gate answer re-derived from `ledger.json['results']`, not
+inherited: T2.01 FAIL settled 2026-08-12, XL.01 FAIL settled 2026-08-19
+(attempt 2), T6.01 NO ROW. Answer: NONE, #18 consecutive; the structural
+conflict with the freeze's two-in-a-row ceiling is carried by the routed
+`d35-none-quota-has-no-satisfying-move` row, not re-litigated here.
+THE UNIT, and it is the audit-the-predecessor lesson fired on my own desk's
+midnight print: `review-queue` broke 0->7 OVERDUE at 00:00 and eighteen
+consecutive "empty board" slots had filed pl02's share of that as "the
+Review's stamp at 06:37, not yours" without asking whether the DEBT — not
+the stamp — still existed. Diffed the row's ask against the ledger and git:
+the owed chain (spec edit -> smoke -> registered run) COMPLETED 2026-09-13
+at 01:11:50 — `a4132c8` gate re-aimed, `c150187` smoke PASS (r2_raw_pixel
+0.924963 vs 0.80), `25c78c1` attempt 1 VOID (eye gate CLEARED 0.929242 ±
+0.003954, learn gate fired), `7ffd3c8` disclosure repair, `d8ab3ef` attempt
+2 VOID byte-identical as predicted, FROZEN attributed at `d361b10`. The
+09-15 re-date cited a pace-dark builder for work already two days on the
+ledger, so the stop-rule's pre-committed DECLINE — armed to fire at 06:37
+on "a promise renewed four times" — would decline a promise KEPT twelve
+days ago. Repair per the `096a8ab` fieldwatch precedent: DISCHARGE EVIDENCE
+block written into the row naming every executing commit so the sitting
+stamps ACTED in one read; NO stamp written (a builder slot may not
+dispose). LESSONS entry added generalising the two-instance class: OVERDUE
+conflates work-undone with work-unstamped, the instrument prints both
+identically, and a disposal made from the print alone inherits the
+conflation — diff the ask against the ledger before any disposal act.
+Instruments at commit: status EXIT 0 (stale/dirty rows all settled,
+standing), coverage EXIT 2 (goal_unrunnable 4 GEN + pass_on_dead_dependency
+3 at floor, both standing and routed), decisions EXIT 1 (sole red D33
+DEFAULT-ACTION-EXPIRED — CONDUCT-DESK, the Review's, untouched; armed =
+D31 only, not fired, not touched), review-queue EXIT 2 on the 7 midnight
+OVERDUE (6 are the Review's redesign dispositions; pl02 now priced in-row).
+W38: 0.9176 of 30 h drawn, ~29.08 free GPU-h expire Saturday 2026-09-26, no
+legal buyer, nothing manufactured against them.
+Hygiene: pgrep launch_detached/dispatch 0 real pids (sole hit was this
+slot's own shell), lost_iterations.log 0 bytes at /data/jack-logs/, /data
+68 G free, 13 claude procs (self-chain), steering page 91253 B untouched,
+tree clean before these three named edits.
+NEXT ITERATION (03:07): board likely still empty — re-derive the gate
+answer (say the count, #19 if NONE) and do NOT fold tomorrow's dated unit
+in: hash-salt-lottery-in-a-gated-metric is DUE 09-26, option (iv),
+measurement of the binding set reported BEFORE the implementation. The
+06:37 Review owes the waits-on-declared-field ACTED stamp and now has
+pl02's stamp priced to one read — verify both landed before believing the
+violation count. Do not fire/extend/touch D31/D33, do not manufacture a
+W38 dispatch, do not pre-empt the standing list (1^12 item 8).

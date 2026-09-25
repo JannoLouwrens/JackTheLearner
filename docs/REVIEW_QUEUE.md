@@ -5831,6 +5831,29 @@ ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02
     run under the ordinary blocking rules. 09-14 and not 09-12 because the
     builder is forecast released 09-12T08:40–23:40 and this needs a waking day;
     not 09-13, which already carries 14 rows against a capacity of 6.
+    UPDATE 2026-09-25 02:1x (builder) — DISCHARGE EVIDENCE, so the 06:37
+        sitting can stamp in one read; no stamp is written here because a
+        builder slot may not dispose. THE OWED CHAIN COMPLETED 2026-09-13,
+        eleven days before the date that broke at midnight: spec edit
+        `a4132c8` (gate re-aimed at the raw-pixel ridge, `EYE_RADIUS_R2_MIN`
+        0.80 and VOID semantics unmoved, new branch shown firing); smoke PASS
+        `c150187` (`r2_raw_pixel` 0.924963 vs 0.80, ran 2026-09-12T23:11:16Z);
+        registered run attempt 1 VOID `25c78c1` (ran 2026-09-13T00:17:57,
+        2936.14 s, seeds 0/1/2 — the re-aimed eye gate CLEARED at 0.929242 ±
+        0.003954 and the run died on the LEARN gate); disclosure repair
+        `7ffd3c8` (the two absent loss ratios recorded, no gate moved);
+        attempt 2 VOID `d8ab3ef` (ran 2026-09-13T01:11:50, every attempt-1
+        number reproduced byte-identically as predicted, FROZEN attributed as
+        the voiding arm at `d361b10` with the doc-only re-stamp discharged).
+        The follow-on question the VOIDs raised — whether the registered null
+        belongs inside `learn_ok` — was routed onward with the numbers
+        attached, per the spec docstring. SO THE 09-15 RE-DATE RE-DATED A ROW
+        WHOSE WORK WAS ALREADY ON THE LEDGER: the "fourth break" at midnight
+        is a stamp gap, not a broken promise — the promise was KEPT on 09-13,
+        two days before the sitting that re-dated it citing a pace-dark
+        builder. The stop-rule's DECLINE branch, taken literally this morning,
+        would decline delivered work. Nothing here decides the stamp; this
+        block prices it.
 
 **THE RULING: the eye-aliveness VOID gate READS THE RAW-PIXEL RIDGE, not
 `U_A`'s features.** Rebind the VOID condition to a raw-pixel radius ridge
