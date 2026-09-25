@@ -152,6 +152,10 @@ from .lg_10_jack_chooses_what_to_say import (LIVENESS_MIN, N_PHRASINGS,
 
 IMPL_DEPS = ["EpisodicMemory.py",
              "experiments/tests/lg_10_jack_chooses_what_to_say.py",
+             # Transitive, via lg_10's own import of lg_01: T0.35's
+             # `no_new_transitive` fired on this edge 2026-09-25 (attempt 12)
+             # — this certificate must stale when the probe pool changes.
+             "experiments/tests/lg_01_lived_necessary_probes.py",
              "experiments/bakeoff.py"]
 
 SEEDS = (0, 1, 2)
