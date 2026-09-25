@@ -9406,3 +9406,69 @@ expired one. What is NOT correct is that this is the second consecutive week the
 same 29 hours have gone idle behind the same undesigned repair. **The hours are
 not the scarce resource — the DESIGN SITTING is**, and that is the fork now on
 the owner's desk.
+
+## ROUTED 2026-09-25 (builder): `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`
+## — the legibility ruling's central datum (1.00) does not reproduce under a
+## train-learned threshold; it reproduces EXACTLY under a cut chosen on the
+## held-out rows
+
+ROUTED: ps09-known-answer-floor-was-calibrated-on-an-oracle-cut | 2026-09-25 | PS.09 attempt 2 VOID (2026-09-25T08:18:29, 567.19 s, seeds 0/1/2, clean stamp at `d186c07`) + deterministic seed-1 reproduction, this slot | OPEN
+    DUE: 2026-10-03 | `review-queue`'s own next-date-with-room, read off the
+        tool this slot. Recalibration of `KA_SIGNAL_MIN` is a THRESHOLD
+        decision on a conjunct the 09-25 ruling registered — the Review's,
+        never this desk's; the 1^13 rule ("wanting to move a bar to make one
+        of these pass — stop and route it back") is exactly this row.
+    WAITS-ON: none | no live row's answer changes what is measured here; the
+        SIBLING inheritance (1^13 units 2-3, PS.05/PS.06/PS.08) waits on THIS
+        row by the ruling's own sequencing ("prove the new conjunct fires
+        correctly here before the siblings inherit"), not the reverse.
+
+**WHAT RAN.** PS.09 attempt 2, the registered verification the `d186c07` commit
+promised, foreground-equivalent lane, clean tree, no dirty stamp. Verdict:
+**VOID "run did not test the claim; not a refutation"** — the new known-answer
+conjunct fired on its SIGNAL-PRESENT arm: `ka_ref_acc` 0.8067 ± 0.0573 across
+seeds 0/1/2 against `KA_SIGNAL_MIN` 0.90, so `ka_signal_present` 0.0,
+`ka_ok` 0.0, `seed_gates_ok` 0.0. World half byte-identical to attempt 1
+(nets +0.0394/+0.0594/−0.0397/−0.0634, twin min +0.0462, quantum 0.0032,
+rig green on every gate) — the fixture is deterministic, so the trips the
+conjunct read are THE SAME TRIPS the 09-19 diagnostic read.
+
+**THE FINDING, reproduced this slot on those same trips (seed 1, script in
+/tmp, no ledger write).** A bare threshold on the food-concentration channel
+with direction+cut learned on the TRAIN rows reads the held-out sign at
+**0.80** — under every natural reading of the 09-19 diagnostic: L nostril
+only 0.80, R only 0.84, mean L/R 0.80, max 0.80, per-trip aggregation 0.80.
+A cut chosen ON THE HELD-OUT ROWS reads **1.0000 exactly, in every variant**
+— which is the quoted calibration datum. So the ruling's *"the sign is
+PERFECTLY LEGIBLE in the sense"* was an ORACLE number: the diagnostic's
+threshold leaked the rows it was quoted on, and `KA_SIGNAL_MIN` 0.90 sits
+above anything an honestly-fit single-channel reference can read at this
+venue (measured 0.75–0.87 by seed).
+
+**WHAT SURVIVES AND WHAT DOES NOT.** The ruling's DIRECTION survives on
+today's honest numbers: the train-learned bare channel (0.807) still beats
+the registered RFF+ridge probe (0.547) by 0.26 — 2.6× `KA_GAP_MAX` — and
+0.807 clears the spec's own `ACC_MIN` 0.65, so a probe merely as good as one
+channel would have passed the original bar. The estimator, not the venue, is
+still the bottleneck. What does NOT survive: "perfectly legible" (honest
+ceiling ~0.81, part of the probe's miss may be genuine venue noise), and the
+0.90 floor as calibrated. NOTE the attempt-2 VOID itself is the right verdict
+EITHER WAY: with an honestly-calibrated floor the gap arm (0.547 < 0.807 −
+0.10) fires instead of the signal arm — same Status.VOID UNREADABLE, naming
+the estimator. What changes is which arm fires and whether the conjunct can
+EVER read "signal present" at this venue: at 0.90 it cannot, by measurement.
+
+**WHAT THE REVIEW OWNS HERE.** (a) Recalibrate `KA_SIGNAL_MIN` from an
+honestly-fit reference — and decide the calibration VENUE, because reading
+the floor off the same registered rows it will gate is the same leak one
+level up; (b) rule whether the siblings' pre-registered controls (1^13 units
+2-3) are calibrated the same oracle way before any of them inherits the
+conjunct — PS.05/PS.06/PS.08 inheritance is ON HOLD by the ruling's own
+sequencing until then; (c) the LESSONS generalisation is already written
+(this slot): a diagnostic number becomes a calibration constant the moment a
+ruling quotes it — record its fit/eval split when it is measured, or
+re-derive it before registering a floor against it.
+
+**Staleness bill: ZERO.** No spec file edited; PS.09 is red (FAIL a1, VOID
+a2), nothing cites it. No bar moved, no re-run owed — attempt 2 is spent
+evidence, not a lottery ticket.

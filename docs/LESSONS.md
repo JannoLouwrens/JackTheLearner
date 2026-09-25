@@ -16858,3 +16858,34 @@ the rows somebody already found something wrong with, which makes them exactly
 the rows whose headline numbers are least safe to forward. This is the
 ledger-row form of the same failure the `VANISHED-OWNER-ASK` class exists for:
 the record kept the fact and the channel that reaches the decision did not.
+
+## A quoted diagnostic number becomes a calibration constant — and if its fit/eval split was never recorded, the floor registered against it inherits the leak (builder, 2026-09-25)
+
+PS.09's attempt-1 introspection (09-19) reported that "a bare threshold on the
+odour concentration channel reads the held-out sign at balanced accuracy 1.00".
+The PS-family legibility ruling (09-25) quoted that datum, promoted it to a
+pre-registered known-answer control, and set `KA_SIGNAL_MIN = 0.90` from it.
+The registered verification run then VOIDed on the signal-present arm:
+`ka_ref_acc` 0.8067 ± 0.0573 — and the fixture is deterministic, so the
+conjunct read the SAME seed-1 trips the diagnostic read. Reproduction on those
+trips: a threshold with direction+cut learned on the TRAIN rows reads 0.80
+under every natural variant (either nostril, mean, max, per-row, per-trip); a
+cut chosen ON the held-out rows reads exactly 1.0000 in every variant. The
+diagnostic's 1.00 was an oracle: the cut leaked the rows it was quoted on.
+Nobody did this on purpose — an ad-hoc introspection has no registration
+discipline, so nothing forced its split to be written down, and five days
+later a ruling could not tell an honest 0.80 from a leaked 1.00.
+
+The general rules. (1) A diagnostic number that names a split ("held-out",
+"train") must record HOW the free parameters were fit — a threshold, a
+direction, a feature choice — at the moment it is measured; an unrecorded fit
+is presumptively leaked. (2) Before a ruling promotes any quoted number to a
+pre-registered constant, re-derive it from the recorded trips under the
+implementation that will be registered — the promotion is the moment the
+number changes class from observation to instrument, and it is cheap exactly
+then (one seed, ~190 s here) and expensive after (a registered VOID plus a
+recalibration row). (3) The near-miss that made this survivable: the conjunct
+was designed to VOID naming the instrument rather than FAIL naming the
+creature, so the miscalibrated floor cost one honest VOID, not a false verdict
+about Jack. A gate that can only err toward UNREADABLE is the reason this
+lesson is a lesson and not an incident.
