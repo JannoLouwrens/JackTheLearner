@@ -3957,6 +3957,43 @@ the 21:0x slot's own written promise and found unpaid by the 105th audit).**
   DECLARED notice into the launch log. Refuse/permit for that lane is
   deliberately unchanged — that line is `D32`'s, the owner's.
 
+**OCCURRENCE RECORD, 10 THROUGH 13 (all 2026-09-25, one morning; appended by
+the 13:0x slot on the 117th audit's order). These four carry a clause the
+first nine do not: THE SLOT BUDGET WAS NEVER THE CONSTRAINT — the voluntary
+early exit is what killed the run, every time.**
+
+- **Occurrence 10, 07:17:54 — recovered.** The 07:0x slot's `PS.09`
+  registered launch (pid 4071144) is stamped `EXITED` at its own slot's end
+  second. The 08:0x slot re-ran it **inside the slot** (567.19 s, row landed
+  08:18:29, clean stamp). The only one of the morning's four with a ledger
+  row to show, and the difference was the lane, not the science.
+- **Occurrence 11, 09:20:53.** The 09:0x slot committed `LT.02`'s attempt-2
+  redesign (`88762a2`, ending *"Registered run follows on this clean tree"*),
+  launched that run backgrounded at ~09:19 on a wake-up promise, and ended
+  the slot ~95 s later. Slot-end cleanup killed it.
+  `/tmp/lt02_attempt2.log` stops at the banner — with the `LANE WARNING`
+  naming this exact mistake printed above it.
+- **Occurrence 12, 11:10:29.** The 11:0x slot relaunched the same way at
+  ~11:09 (`/tmp/lt02_attempt2_run.log`, 530 B, same banner, the warning read
+  past a second time), asserted the worker healthy ("64 s CPU in 61 s wall"),
+  and exited at 11:10:29 — ~80 s after launch, ~46 minutes of its own budget
+  unspent.
+- **Occurrence 13, 12:10:05.** The 12:0x slot launched at 12:08:39
+  (`declared_pids`: 4149955 `run_spec LT.02` `EXITED 2026-09-25T12:10:04`),
+  asserted "76 s CPU in 73 s wall" of a process that had **85 seconds left to
+  live**, and exited at 12:10:05, killing it.
+- **The new clause, and the conduct rule it forces.** `LT.02` attempt 1 took
+  652.35 s against a 2940 s `JACK_ITER_DEADLINE` — it fits four times over,
+  and the 08:0x slot proved the foreground pattern the same morning. All
+  three losing slots exited about three minutes in. The guard cannot refuse
+  this lane (a backgrounded launch is byte-identical to a sandboxed
+  foreground call at launch — measured 2026-09-19), so the defence is
+  conduct: **do not end a slot while a registered run you launched is still
+  breathing.** A wake-up promise is not a lane — the notification arrives to
+  a session whose exit already killed the thing it promised to harvest. If
+  the run genuinely cannot fit the slot, `scripts/launch_detached.sh` is the
+  sanctioned form of leaving it behind; a bare background launch never is.
+
 ## An absent field is honest; a field that silently records the RECORDER is a false one
 
 *(17th overseer audit, 2026-08-14)*
