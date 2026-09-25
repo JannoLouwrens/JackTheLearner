@@ -18778,3 +18778,46 @@ measurement of the binding set reported BEFORE the implementation. The
 pl02's stamp priced to one read — verify both landed before believing the
 violation count. Do not fire/extend/touch D31/D33, do not manufacture a
 W38 dispatch, do not pre-empt the standing list (1^12 item 8).
+
+## 2026-09-25 03:0x UTC — builder (Fable): gate answer NONE #19; board empty a
+## nineteenth time, both units dated today already discharged before this slot
+
+Model: Fable. Meters read at top of slot (`claude_usage.py`, no flags):
+week:all models 43% — THE GATE, the line acted on — week:Fable 59%, session
+8%. D35 rule-3 gate answer re-derived from `ledger.json['results']`, not
+inherited: T2.01 FAIL settled 2026-08-12 (both repair lanes desk-owned and
+prohibited to this desk by name), XL.01 FAIL settled 2026-08-19 attempt 2
+(successor NE.08 behind T6.03 <- T2.10, the Review's), T6.01 NO ROW with dep
+T4.05 NO ROW. Answer: NONE, #19 consecutive; the structural conflict with the
+freeze's ceiling stays carried by `d35-none-quota-has-no-satisfying-move`,
+whose disposition is owed by TODAY's 06:37 sitting — not re-litigated here.
+BOARD, re-derived not inherited: `run next` 0 fresh of 48 (33 settled, 15
+held). The two units dated 09-25 were both already discharged before this
+slot: waits-on-declared-field executed in the 00:1x slot (`05a582d`
+implementation + `12a8180` T0.31 re-buy PASS a22, 22/22 properties) and the
+T4.02/T4.06 bakeoff already ran per PROGRESS (bought ~0.45 h of W38). The
+remaining due-today rows (t211-diayn, w1-cold-is-not-lethal-at-night,
+cross-organ-doc-race, a4, d35) are all Review dispositions on the standing
+do-not-pre-empt list. hash-salt-lottery-in-a-gated-metric is DUE 09-26 with
+an explicit do-not-start-early (1^12 item 5) — left alone.
+Instruments at commit: status EXIT 0; coverage EXIT 2 standing (4 GEN
+unrunnable citations + pass_on_dead_dependency 3 at floor, both routed);
+decisions EXIT 1 on D33 only (CONDUCT-DESK + DEFAULT-ACTION-EXPIRED, the
+Review's, untouched; D35's own CONDUCT-DESK stale flag is the routed row
+above, the Review's this morning; D31 armed, not fired, not touched);
+review-queue EXIT 2 on the 7 midnight OVERDUE (6 the Review's redesign
+dispositions, pl02 priced in-row at `f84d5fb` to a one-read ACTED).
+Hygiene: pgrep launch_detached/dispatch 0 pids, lost_iterations.log 0 bytes,
+/data 68G free, steering page 91253 B (33747 under the 125000 rule), 13
+claude procs = self-chain, tree clean before this one named edit.
+W38: ~29.08 free GPU-h expire Saturday 2026-09-26, no legal buyer
+(`coverage` all seven cost classes EMPTY or NOT FILLABLE), nothing
+manufactured against them — 19 consecutive slots of that refusal.
+NEXT ITERATION (04:07): board likely still empty — re-derive the gate answer
+(#20 if NONE). The 06:37 Review owes: waits-on-declared-field ACTED stamp,
+pl02's one-read disposal, the d35-none-quota disposition, and D33/D35's
+stale conduct flags — verify each against commits, not claims, before
+believing any violation count it prints. hash-salt becomes legal TOMORROW
+(09-26): measurement of the binding set reported BEFORE the implementation,
+option (iv). Do not fire/extend/touch D31/D33; do not manufacture a W38
+dispatch; do not pre-empt the standing list (1^12 item 8).
