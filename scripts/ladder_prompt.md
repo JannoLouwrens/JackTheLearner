@@ -552,7 +552,82 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^12`/`2^10` (items Review 2026-09-23, DAILY;
+**LIVE PRIORITY BLOCK — `1^13`/`2^10` (item `1^13` Review 2026-09-25, DAILY;
+`1^12` items retained below and still live where not discharged;
+prohibitions consolidated 2026-09-21 and UNCHANGED today).
+
+## `1^13` — WHY YOUR BOARD READ EMPTY FOR 22 SLOTS WHILE THIS PAGE SAID YOU HAD
+## EXECUTION, AND THE SIX UNITS THAT ARE ACTUALLY YOURS RIGHT NOW
+## (Review 2026-09-25, DAILY — read this before `run next`)
+
+**FIRST, THE STRUCTURAL FINDING, because it is not your fault and you have been
+behaving correctly.** `1^12` told you on 09-23 that three rulings handed you
+EXECUTION. Since then you have logged **22 consecutive empty boards (0 fresh of
+48)** and refused 22 times to manufacture work. Both things were true at once,
+and this desk — not you — is why: **`run next` ranks DISPATCHABLE SPECS, and a
+`DISPOSITIONED` queue row hands you IMPLEMENTATION.** Editing a spec to add a
+conjunct is not a dispatch, so it has no row in `run next` and never will. Your
+board therefore reads *emptiest* exactly when this desk has handed you the most
+work. `run next`'s own triage line is honest — "0 fresh · 33 carrying a settled
+verdict · 15 held" is a true reading of DISPATCHES — and it is not the whole
+board. **So: `run next` and `run review-queue` together are the board; neither
+alone is. For implementation units, `review-queue`'s `DISPOSITIONED` class is
+the authoritative list, and this item names today's.**
+
+**SECOND, AND IT UNBLOCKS YOU TODAY: a `DUE:` DATE IS A DEADLINE, NOT A
+START-GATE.** Every unit below is dated `2026-10-02` because that is
+`review-queue`'s own `next_free_due` and this desk may not pile promises onto a
+full day. **None of them is start-gated and you may begin any of them now.**
+Only a disposition that says so IN WORDS forbids an early start (the 09-21
+`WAITS-ON:` row did, and that prohibition was real and is now discharged). If
+you find yourself idle with these outstanding, start one.
+
+**THE SIX UNITS, all spec-local, ZERO GPU, ZERO certificate bill** (every one is
+red on attempt 1 with no green certificate citing it, so nothing re-certifies):
+
+1. **`PS.09` FIRST** — add the pre-registered known-answer conjunct from THE
+   PS-FAMILY LEGIBILITY RULING. `PS.09` leads because it is the only sibling
+   whose known-answer control is ALREADY MEASURED (seed 1: a bare threshold on
+   the odour concentration channel reads the held-out sign at balanced accuracy
+   **1.00** where the registered RFF+ridge reads 0.60, train 0.89). Prove the new
+   conjunct fires correctly here before the siblings inherit it.
+2. **`PS.05`, `PS.06`, `PS.08`** — the same conjunct, one spec at a time, each
+   with its own by-construction-legible channel pre-registered. Probe fails the
+   control → the legibility conjunct reports **UNREADABLE**, not FAIL.
+3. **`PS.08` ALSO carries part 2** — the amputation control is broken where the
+   priced quantity is POWER (its clock-only control read **0.708**, ABOVE the
+   registered probe, because drain RATES encode load and no jitter of
+   `e0`/`w0`/`t0` masks a rate). Blind the RATE, or replace the control. Do not
+   ship part 1 for `PS.08` without part 2: a redesign that fixes the estimator
+   and keeps the inert-channel assumption passes every instrument and measures
+   nothing.
+4. **`LT.02`** — add a genuinely stochastic BODY-CARRIED noise source **in the
+   spec's own rig, NOT in `playground.py`.** The rig already builds the action
+   prototypes and already overrides the body there (`protos[:, 4:6] = -1.0`), so
+   this bills **zero** of the 21 `playground.py` certificates and waits for no
+   world-edit window. Carry the GUARD in the disclosure: the new source
+   certifies the DETECTOR, it does NOT restore the THREAT — body chaos is
+   measured REDUCIBLE here and stays falsified, so no arm may report immunity to
+   a threat this venue cannot produce.
+5. **`T2.15`** — promote `tfidf_retrieval_correct` from REPORTED to **GATED**;
+   the mechanism must BEAT its own declared bag-of-words null per seed. It is
+   already computed (`_tfidf_retrieval`, `t2_15_freeform_routing.py:216`) and the
+   docstring says at line 59 it is "never gated" — which is how seed 2 routed
+   **5/16, WORSE than both nulls**, and nothing failed on that account.
+
+**BARS: none of the above moves one.** `PROBE_R2` 0.35, `probe_bal_acc`
+0.65/0.70, `LT.02`'s 3.0 and 0.4, `CLAIM_MIN` 12 and `NB_REF_MIN` 13 are ALL
+untouched, and every change above is an ADDED conjunct or a SHARPENED control.
+None can rescue its spec's FAIL — which is exactly why each is legitimate under
+the `T1.02` precedent. **If you find yourself wanting to move a bar to make one
+of these pass, stop and route it back here.**
+
+**WHAT IS STILL NOT YOURS:** `T1.08`'s pipeline repair design (this desk's, now
+a real row — `t108-pipeline-repair-has-no-design` — and its Sunday-vs-10-02
+sequencing is on the owner's desk as **`D36`**), and everything in `2^10`'s
+prohibition set below, unchanged.
+
+**LIVE PRIORITY BLOCK — `1^12` (items Review 2026-09-23, DAILY;
 prohibitions consolidated 2026-09-21 and UNCHANGED today).
 `3''` FURTHER BELOW IS UNCHANGED AND STILL LIVE.
 `2^10` NOW RESTATES THE COMPLETE LIVE PROHIBITION SET IN FULL — it references
