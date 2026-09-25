@@ -6859,17 +6859,27 @@ EXPANSION: list[Spec] = [
                "was answered."),
 
     Spec("LT.02", 2, "The self-generated-chaos detector works (PG.4's blind spot)",
-         hypothesis="A curiosity agent can farm irreducible surprise from its "
-                    "OWN body with zero noise-panel dwell, and the chaos "
-                    "detector sees it: ragdoll-ICM (panel deleted, adhesion 0) "
-                    "scores chaos_occupancy >= 3.0 and chaos_reward_ratio >= "
-                    "2.0 while PG.4's dwell metric reads 0.000, and the "
-                    "scripted climber — which moves hard and falls repeatedly — "
-                    "scores chaos_occupancy <= 1.0.",
-         falsified_by="Ragdoll-ICM is NOT flagged (the detector is blind and no "
-                      "arm's immunity may be reported), or the scripted climber "
-                      "IS flagged (the detector penalises coordinated motion and "
-                      "falling, i.e. the behaviour GOAL.md asks for).",
+         hypothesis="A curiosity agent can farm BODY-CARRIED irreducible "
+                    "surprise with zero noise-panel dwell, and the chaos "
+                    "detector sees it: ragdoll-ICM-noise (panel deleted, "
+                    "adhesion 0, genuinely stochastic actuation noise executed "
+                    "while the commanded action is logged — attempt 2's "
+                    "Review-ruled true positive, 2026-09-25) scores "
+                    "chaos_occupancy >= 3.0 while PG.4's dwell metric reads "
+                    "0.000; the NOISE-FREE farmer still satisfies "
+                    "chaos_reward_ratio >= 2.0 and dwell 0.000 (attempt 1's "
+                    "passing controls, kept); and the scripted climber — which "
+                    "moves hard and falls repeatedly — scores chaos_occupancy "
+                    "<= 1.0. GUARD: attempt 1 measured noise-free body chaos "
+                    "REDUCIBLE (occupancy 0.145 vs 3.0); that stays falsified, "
+                    "is re-reported every run, and a PASS certifies the "
+                    "DETECTOR, never that his own body is a noise trap.",
+         falsified_by="Ragdoll-ICM-noise — a by-construction irreducible "
+                      "body-carried source — is NOT flagged (the detector is "
+                      "blind and no arm's immunity may be reported), or the "
+                      "scripted climber IS flagged (the detector penalises "
+                      "coordinated motion and falling, i.e. the behaviour "
+                      "GOAL.md asks for).",
          null_baseline="The random policy, which DEFINES the ruler: theta is its "
                        "90th-percentile irreducible error, so it reads "
                        "chaos_occupancy = 1.0 by construction.",
@@ -6882,9 +6892,12 @@ EXPANSION: list[Spec] = [
          kills="Every 'his curiosity is not trapped' claim that rests on panel "
                "dwell alone — which is all of them, including CU.3 as currently "
                "written.",
-         notes="separation = chaos_occupancy(ragdoll-icm) - "
-               "chaos_occupancy(scripted-climber), with panel_dwell(ragdoll-icm) "
-               "asserted == 0.0. That number pair IS the gap: a total curiosity "
+         notes="separation = chaos_occupancy(ragdoll-icm-noise) - "
+               "chaos_occupancy(scripted-climber), with "
+               "panel_dwell(ragdoll-icm-noise) asserted == 0.0 (attempt 2; "
+               "attempt 1's noise-free separation stays reported as "
+               "chaos_detector_separation_reducible). That number pair IS the "
+               "gap: a total curiosity "
                "failure that PG.4 scores as perfectly clean. Detector = "
                "pooled-fit forward model, out-of-fold, high error AND no "
                "reducibility when the training data doubles (LPM criterion, "

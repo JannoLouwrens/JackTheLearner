@@ -38,7 +38,8 @@ arXiv:2509.25438, used as a diagnostic not a reward"):
   an out-of-fold model that cannot beat "next = current" on the median
   pooled transition is a dead instrument and its "high error" means nothing.
 
-THE FOUR ARMS:
+THE FOUR ARMS (attempt 2 adds a FIFTH — ragdoll-ICM-noise, the body-carried
+true positive; see the REDESIGN RECORD at the end of this docstring):
 
   ragdoll-ICM   (experiment) The LT.01 rover body in a per-seed mutated
                 playground with the noise panel DELETED (noise_panel=False —
@@ -75,7 +76,9 @@ THE FOUR ARMS:
                 is recoverable from the recorded std (the PG.4 disclosure
                 precedent).
 
-PRE-REGISTERED BARS (registry, 2026-08-09 — none moved here):
+PRE-REGISTERED BARS (registry, 2026-08-09 — none moved here; attempt 2
+re-scopes C1's ARM to ragdoll-ICM-noise and adds C1b/V5, bars identical —
+see the REDESIGN RECORD):
   C1  chaos_occupancy(ragdoll-ICM)  >= 3.0
   C2  chaos_reward_ratio(ragdoll-ICM) >= 2.0   (late-half intrinsic reward
       on detector-flagged transitions vs unflagged: the fixation is FED by
@@ -171,6 +174,91 @@ slider 6000, detector at final constants):
   audit item 2, SO.08's SIZING RECORD precedent — the registry notes
   carry the record); the struck cpu<2h class enumerated at 54,000 s and
   refused the registered run by 292 s on 2026-09-19.
+
+REDESIGN RECORD (attempt 2; Review DAILY 2026-09-25 disposition on
+`lt02-the-venue-has-no-true-positive-body-chaos-is-reducible`, ruled (a),
+spec-local, executed by the builder the same day):
+
+  Attempt 1 (2026-09-19, FAIL, seeds 0/1/2) fired C1 ALONE: the deliberate
+  body-chaos farmer read chaos_occupancy 0.145 +/- 0.122 against the 3.0
+  bar while every control held. The mechanism is the pilot's disclosed
+  forecast, confirmed by measurement: on this body, at this obs resolution,
+  self-generated contact chaos is REDUCIBLE (e_mean icm 0.148 vs random
+  0.552, reducibility_gain 0.134, thrash_ratio 0.385) — self-surprise is
+  self-extinguishing unless its source is genuinely stochastic. The venue
+  had NO reachable body-carried true positive, so the detector could not be
+  certified there, however alive its controls proved it.
+
+  THE RULING, executed here: give the certification venue a genuinely
+  stochastic BODY-CARRIED noise source, injected in THIS SPEC'S RIG — not
+  in playground.py (the rig already builds the action prototypes and
+  already overrides the body there; actuation noise is a property of the
+  agent's actuation, so this bills ZERO world certificates). Concretely: a
+  fourth ragdoll arm, ragdoll-ICM-noise — the SAME textbook farmer, same
+  agent streams, but its EXECUTED action is the commanded action plus
+  white noise (sigma ACT_NOISE_SIGMA, dedicated rng stream 60_000+seed,
+  adhesion channels clamped back to -1 so noise can never grant a
+  capability), while the LOGGED action — what the detector and the agent's
+  own forward model see — is the COMMANDED one. The noise is therefore
+  irreducible BY CONSTRUCTION (no model predicts white noise from inputs
+  that do not contain it), it travels with the body, and an agent can farm
+  it: exactly the object the detector exists to flag.
+
+  WHAT CHANGED IN THE GATES — additions and one re-scope, no bar moved:
+    C1' (claim)  chaos_occupancy(ragdoll-ICM-noise) >= 3.0   [bar unmoved]
+    C1b (new)    panel_dwell(ragdoll-ICM-noise) == 0.000     (the gap pair
+                 — flagged AND positionally invisible — now lives on the
+                 claim arm)
+    C2, C3       unchanged, still gated on the NOISE-FREE farmer (both
+                 held in attempt 1; a redesign may not drop a passing
+                 control)
+    C4, C5       unchanged (climber <= 1.0; known positive, both
+                 detectors, 3.0/0.4 untouched)
+    V5 (new)     e_mean(ragdoll-ICM-noise) <= e_mean(random) -> VOID
+                 "noise source never exercised" — the T3.09
+                 site-under-exercise lane: if the injected source does not
+                 even register above the clean null, the true positive was
+                 never present and a FAIL would name the wrong culprit.
+                 Comparison against the null's own live reading; no fitted
+                 constant (the PS.09 oracle-cut lesson, 2026-09-25).
+    REPORTED     chaos_occupancy(noise-free farmer) stays recorded every
+                 run as the guard's live disclosure (0.145 at attempt 1);
+                 reward_ratio/lpm/reducibility/e_mean for the noise arm.
+
+  THE GUARD (the load-bearing half of the disposition, quoted so it cannot
+  be lost): the new source certifies the DETECTOR; it does NOT restore the
+  THREAT. Attempt 1's finding stays falsified: on this body ragdoll
+  contact dynamics are NOT an inexhaustible irreducible source — the
+  docstring's founding premise above is measured WRONG in this venue, and
+  the panel-deleted noise-free farmer's occupancy is reported every run to
+  keep that measurement live. LT.03+ and CU.3 may cite an attempt-2 PASS
+  for "the instrument can see body-carried irreducible surprise" and may
+  NOT cite it for "his own body is a noise trap he had to escape"; an arm
+  claiming immunity to a threat this venue cannot produce is claiming a
+  free pass. If the noise-free farmer ever reads >= 3.0 here, that is a
+  FINDING (the reducibility mechanism overturned), not a fault — route it,
+  do not gate it.
+
+  NOISE PILOT RECORD (seed 90, reduced envelope n=1200, disjoint from
+  recorded seeds 0-2; two draws, sigma frozen BEFORE any registered seed
+  ran; every claim bar is the registry's and none moved):
+  (1) sigma 0.5: TOO WEAK — occupancy 0.9417, e_mean 0.755 vs random
+      0.705, theta 1.408. The position servo absorbs +/-0.5 target jitter
+      over a 0.2 s decision; the source barely registered (V5 would have
+      read the margin at 1.07x). A rig fault of the same class as draws
+      1-2 above: the true positive was not exercised.
+  (2) sigma 1.0, FROZEN: occupancy 5.75 (1.9x the unmoved 3.0 bar),
+      e_mean 1.852 vs random 0.724 (V5 margin 2.6x), theta 1.448,
+      lpm_occupancy 1.64, dwell 0.0, thrash 0.385, finite; icm/random/
+      climber unchanged (0.267/1.0/0.375), beats_persistence 1.0. A
+      sigma-1.5 probe read occupancy 8.16 but leaves the executed action
+      nearly decoupled from the commanded one; 1.0 is the smallest probed
+      intervention clearing the bar with ~2x margin, so the farmer
+      construction (commanded actions still steer) survives. Probes ran
+      from /tmp, wrote nothing, and are quoted here with their fit
+      recorded — the source's strength was chosen on seed 90 ONLY (the
+      2026-09-25 oracle-cut lesson: the fit venue is disclosed, and the
+      registered seeds 0-2 never contributed a number to it).
 """
 from __future__ import annotations
 
@@ -198,6 +286,10 @@ RAG_DECISIONS = 4000        # ragdoll life: 800 s at 0.2 s/decision
 RAG_SUBSTEPS = 40           # w0.py's decision quantum (LT.01's)
 MUTATE_STRENGTH = 0.15      # per-seed world mutation, LT.01's documented value
 N_PROTO = 16                # ICM prototype actions (+ stand) — adhesion OFF
+ACT_NOISE_SIGMA = 1.0       # attempt-2 body-carried source: white actuation
+                            # noise std on the EXECUTED action (commanded
+                            # action logged; adhesion clamped). Rig parameter
+                            # frozen with the noise pilot (seed 90), not a bar.
 DWELL_RADIUS = 2.0          # m, PG.4's dwell zone, metered against the
                             # panel's LOCATION (geom deleted in the ragdoll rig)
 
@@ -377,12 +469,22 @@ def _rag_state(rig: _RagRig) -> int:
 
 
 def _rag_life(rig: _RagRig, policy: str, seed: int,
-              n_dec: int = None) -> dict:
+              n_dec: int = None, act_noise: float = 0.0) -> dict:
     """One unbroken life. Returns transitions + trajectory statistics.
 
     rng streams are disjoint by construction: icm 40_000+seed,
-    random 10_000+seed (LT.01's null stream family), climber none."""
+    random 10_000+seed (LT.01's null stream family), climber none,
+    actuation noise 60_000+seed (attempt 2's body-carried source).
+
+    act_noise > 0 is the redesign's true positive: the EXECUTED action is
+    the commanded action plus white noise (adhesion clamped back to -1 so
+    noise never grants a capability), while the LOGGED action — what both
+    the detector's pooled model and the agent's own forward model see — is
+    the COMMANDED one. next_obs is therefore unpredictable from (obs,
+    action) by construction: genuinely stochastic, body-carried,
+    farmable."""
     n_dec = RAG_DECISIONS if n_dec is None else n_dec
+    nrng = np.random.RandomState(60_000 + seed) if act_noise > 0.0 else None
     sx, sy, _ = rig.params.spawn()
     rig.teleport(sx, sy)
 
@@ -484,7 +586,13 @@ def _rag_life(rig: _RagRig, policy: str, seed: int,
             a = cycle[k]
             climber_rise_max = max(climber_rise_max, torso_rise())
 
-        rig.decide(a)
+        if nrng is not None:
+            a_exec = np.clip(a + nrng.normal(0.0, act_noise, size=8),
+                             -1.0, 1.0)
+            a_exec[4:6] = -1.0          # noise may not switch adhesion on
+            rig.decide(a_exec)
+        else:
+            rig.decide(a)
         o2 = rig.obs()
 
         if policy == "icm":
@@ -727,26 +835,40 @@ def _experiment(seed: int) -> dict:
     icm = _rag_life(rig, "icm", seed)
     rnd = _rag_life(rig, "random", seed)
     clm = _rag_life(rig, "climber", seed)
-    det = _detector({"icm": icm, "random": rnd, "climber": clm},
-                    ruler="random", seed=seed)
+    # attempt 2's true positive, appended LAST so the three attempt-1 arms'
+    # trajectories stay byte-identical (shared rig, disjoint rng streams,
+    # every life starts from mj_resetData)
+    icn = _rag_life(rig, "icm", seed, act_noise=ACT_NOISE_SIGMA)
+    det = _detector({"icm": icm, "random": rnd, "climber": clm,
+                     "icmnoise": icn}, ruler="random", seed=seed)
     pa = det["per_arm"]
     thr_rnd = max(1e-9, rnd["thrash"])
     return {
+        "chaos_occupancy_icmnoise": pa["icmnoise"]["occupancy"],
         "chaos_occupancy_icm": pa["icm"]["occupancy"],
         "chaos_occupancy_climber": pa["climber"]["occupancy"],
         "chaos_occupancy_random": pa["random"]["occupancy"],
         "chaos_detector_separation": round(
+            pa["icmnoise"]["occupancy"] - pa["climber"]["occupancy"], 4),
+        "chaos_detector_separation_reducible": round(
             pa["icm"]["occupancy"] - pa["climber"]["occupancy"], 4),
         "chaos_reward_ratio": _reward_ratio(icm, det["flags"]["icm"],
                                             det["sub_idx"]["icm"]),
+        "reward_ratio_icmnoise": _reward_ratio(
+            icn, det["flags"]["icmnoise"], det["sub_idx"]["icmnoise"]),
         "panel_dwell_icm": icm["panel_dwell"],
+        "panel_dwell_icmnoise": icn["panel_dwell"],
         "lpm_occupancy_icm": pa["icm"]["lpm_occupancy"],
+        "lpm_occupancy_icmnoise": pa["icmnoise"]["lpm_occupancy"],
         "lpm_occupancy_climber": pa["climber"]["lpm_occupancy"],
         "reducibility_gain_icm": pa["icm"]["reducibility_gain"],
+        "reducibility_gain_icmnoise": pa["icmnoise"]["reducibility_gain"],
         "e_mean_icm": round(pa["icm"]["e_mean"], 6),
+        "e_mean_icmnoise": round(pa["icmnoise"]["e_mean"], 6),
         "e_mean_random": round(pa["random"]["e_mean"], 6),
         "e_mean_climber": round(pa["climber"]["e_mean"], 6),
         "thrash_ratio_icm": round(icm["thrash"] / thr_rnd, 4),
+        "thrash_ratio_icmnoise": round(icn["thrash"] / thr_rnd, 4),
         "thrash_ratio_climber": round(clm["thrash"] / thr_rnd, 4),
         "det_beats_persistence": det["beats_persistence"],
         "det_theta": det["theta"],
@@ -757,7 +879,8 @@ def _experiment(seed: int) -> dict:
         "climber_falls": clm["climber_falls"],
         "icm_upright_frac": icm["upright_frac"],
         "icm_visited_frac": icm["visited_frac"],
-        "rag_finite": min(icm["finite"], rnd["finite"], clm["finite"]),
+        "rag_finite": min(icm["finite"], rnd["finite"], clm["finite"],
+                          icn["finite"]),
     }
 
 
@@ -804,10 +927,27 @@ def _check(m: dict, c: dict):
             or abs(c["chaos_occupancy_random"] - 1.0) > RULER_TOL):
         return _void(m, "degenerate ruler: theta <= 0 or the random arm's "
                         "own occupancy is off 1.0 (ties)")
+    # V5 — the true positive must be EXERCISED (T3.09's lane): if the
+    # injected noise does not even register above the clean null's own
+    # live error, a low occupancy would name the detector for a source
+    # that was never present. Comparison, not a fitted constant.
+    if m["e_mean_icmnoise"] <= m["e_mean_random"]:
+        return _void(m, "body-carried noise source never exercised: the "
+                        "noise arm's OOF error does not exceed the clean "
+                        "random arm's — the true positive was absent, so "
+                        "occupancy says nothing about the detector")
     # THE CLAIM — first falsified clause named (the BA.03 one-bit lesson)
-    if m["chaos_occupancy_icm"] < OCC_ICM_MIN:
-        m["claim_branch"] = ("detector blind: ragdoll-ICM occupancy below "
-                             "3.0 — no arm's immunity may be reported")
+    if m["chaos_occupancy_icmnoise"] < OCC_ICM_MIN:
+        m["claim_branch"] = ("detector blind to body-carried irreducible "
+                             "surprise: the by-construction true positive "
+                             "is not flagged (occupancy below 3.0) — no "
+                             "arm's immunity may be reported")
+        return False
+    if m["panel_dwell_icmnoise"] != 0.0:
+        m["claim_branch"] = ("the noise farmer dwelled at the deleted "
+                             "panel's location; the flagged-yet-"
+                             "positionally-invisible gap pair is "
+                             "confounded")
         return False
     if m["chaos_reward_ratio"] < REWARD_RATIO_MIN:
         m["claim_branch"] = ("fixation not fed by chaos: flagged-vs-unflagged "
@@ -827,8 +967,10 @@ def _check(m: dict, c: dict):
         m["claim_branch"] = ("the two detectors do not agree on the known "
                              "positive (PG.4's trapped agent)")
         return False
-    m["claim_branch"] = ("ragdoll farmer flagged at zero dwell, climber "
-                         "clean, both detectors agree on the known positive")
+    m["claim_branch"] = ("body-carried noise farmer flagged at zero dwell, "
+                         "reducible-chaos farmer reported for the guard, "
+                         "climber clean, both detectors agree on the known "
+                         "positive")
     return True
 
 
@@ -856,10 +998,11 @@ def _pilot():
     icm = _rag_life(rig, "icm", 90, n_dec=n)
     rnd = _rag_life(rig, "random", 90, n_dec=n)
     clm = _rag_life(rig, "climber", 90, n_dec=n)
+    icn = _rag_life(rig, "icm", 90, n_dec=n, act_noise=ACT_NOISE_SIGMA)
     out["t_rag_lives_s"] = round(_time.time() - t0, 1)
     t0 = _time.time()
-    det = _detector({"icm": icm, "random": rnd, "climber": clm},
-                    ruler="random", seed=90)
+    det = _detector({"icm": icm, "random": rnd, "climber": clm,
+                     "icmnoise": icn}, ruler="random", seed=90)
     out["t_rag_det_s"] = round(_time.time() - t0, 1)
     out["rag"] = {
         "per_arm": det["per_arm"], "theta": det["theta"],
@@ -867,13 +1010,17 @@ def _pilot():
         "beats_persistence": det["beats_persistence"],
         "reward_ratio": _reward_ratio(icm, det["flags"]["icm"],
                                       det["sub_idx"]["icm"]),
+        "reward_ratio_icmnoise": _reward_ratio(
+            icn, det["flags"]["icmnoise"], det["sub_idx"]["icmnoise"]),
         "icm_dwell": icm["panel_dwell"], "icm_upright": icm["upright_frac"],
         "icm_visited": icm["visited_frac"],
+        "icmnoise_dwell": icn["panel_dwell"],
         "thrash": {"icm": icm["thrash"], "random": rnd["thrash"],
-                   "climber": clm["thrash"]},
+                   "climber": clm["thrash"], "icmnoise": icn["thrash"]},
         "climber": {k: clm[k] for k in
                     ("climber_falls", "climber_rise_max", "climber_rung_ok")},
-        "finite": [icm["finite"], rnd["finite"], clm["finite"]],
+        "finite": [icm["finite"], rnd["finite"], clm["finite"],
+                   icn["finite"]],
     }
 
     t0 = _time.time()
