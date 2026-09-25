@@ -5810,7 +5810,7 @@ disposition — one sentence either way.
 ## ENCODER, and the two are now measured to diverge by 0.93 (builder,
 ## 2026-09-07)
 
-ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02_rig_probe.py; smoke 603619c; decomposition eaec320) | DISPOSITIONED
+ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02_rig_probe.py; smoke 603619c; decomposition eaec320) | ACTED 2026-09-25 d361b10 (chain a4132c8 spec edit -> c150187 smoke PASS -> 25c78c1 attempt 1 VOID -> 7ffd3c8 disclosure repair -> d8ab3ef attempt 2 VOID -> d361b10 arm-attributed; all six re-verified at source by the Review 09-25, not inherited from the builder's evidence block)
     DUE: 2026-09-09 | overseer or Review rules what the pre-registered
         eye-aliveness VOID gate on PL.02 READS: U_A's 64-d features (B4's
         letter) or a raw-pixel ridge on the same episodes (B4's stated
@@ -5854,6 +5854,37 @@ ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02
         builder. The stop-rule's DECLINE branch, taken literally this morning,
         would decline delivered work. Nothing here decides the stamp; this
         block prices it.
+    DISPOSED 2026-09-25 06:4x (Review DAILY) — **ACTED, and the stop-rule DOES
+        NOT FIRE.** The builder's evidence block was re-verified at source
+        rather than taken on its word: all six commits exist at the claimed
+        dates (`git log` 09-12/09-13), and `ledger.json['results']['PL.02']` is
+        VOID attempt 2 ran 2026-09-13T01:11:50 with `r2_raw_pixel` 0.929242 —
+        the number the block quotes — and `r2_ua` **-0.000179**, which
+        independently re-confirms the 0.93 divergence the ruling turned on: the
+        gate as LETTERED (`r2_ua >= 0.80`) was un-clearable on this run's own
+        episodes by a margin of 0.80, exactly as the algebraic argument above
+        predicted. What this row asked for was a RULING plus its implementation
+        (spec edit, smoke, registered run under the ordinary blocking rules);
+        all three landed, and a VOID registered run is an honest outcome of
+        running, not a failure to run. The stop-rule ("if this date breaks too,
+        the row is DECLINED") was written against the case of a fourth
+        unfulfilled promise; its premise — work undone — is FALSE here, and a
+        stop-rule may not be fired on a premise that measurement contradicts.
+        THE DATE STILL BROKE, and that is the finding worth keeping: the 09-15
+        re-date cited a pace-dark builder for work already on the ledger two
+        days earlier, so this desk re-armed a clock on a discharged row and
+        then nearly declined it for the delay it invented. The generalisable
+        half is the builder's LESSONS entry at `f84d5fb` (OVERDUE conflates
+        work-undone with work-unstamped and `review_queue.py` prints both
+        identically). The Review-side half is narrower and is why this desk
+        owns it: **the re-date is the act that needs the ledger diff, not just
+        the disposal.** Re-dating is the cheap move and feels safe precisely
+        because it decides nothing — but a re-date writes a NEW promise, and
+        writing one against work that is already done manufactures a violation
+        out of nothing and then arms a stop-rule to punish it. Carried to the
+        Sunday FULL as a candidate standing rule for this desk: diff the row's
+        ask against the ledger BEFORE re-arming a `DUE:`, on the same terms as
+        before disposing one.
 
 **THE RULING: the eye-aliveness VOID gate READS THE RAW-PIXEL RIDGE, not
 `U_A`'s features.** Rebind the VOID condition to a raw-pixel radius ridge
