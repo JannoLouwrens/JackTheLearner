@@ -350,7 +350,7 @@ Every line here is backed by an experiment that could have failed;
       - _dies if:_ A lookup table (NN retrieval) matches the model.
 - [!] **T2.15** Free-form language routes to the right task  — backend=kaggle; construction_ok=1.0
       - _asserts:_ Novel paraphrases of known commands map to the correct command cluster above chance (the LLM->task handoff).
-      - _dies if:_ Held-out phrasings route at chance.
+      - _dies if:_ Held-out phrasings route at chance; OR the router ties or loses to the registered TF-IDF bag-of-words retrieval null on any seed (null-beat conjunct, promoted from reported 2026-09-25, 1^13 unit 5 — strictly harder, cannot rescue attempt 2's FAIL).
 - [ ] **T2.16** Hindsight goal-reaching (the flow-matching weld)
       - _asserts:_ Hindsight-relabeled flow regression reaches commanded outcomes above chance with zero RL machinery.
       - _dies if:_ Reach-rate <= a policy trained on shuffled goal labels.

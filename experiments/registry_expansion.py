@@ -818,7 +818,11 @@ EXPANSION: list[Spec] = [
     Spec("T2.15", 2, "Free-form language routes to the right task",
          hypothesis="Novel paraphrases of known commands map to the correct "
                     "command cluster above chance (the LLM->task handoff).",
-         falsified_by="Held-out phrasings route at chance.",
+         falsified_by="Held-out phrasings route at chance; OR the router "
+                      "ties or loses to the registered TF-IDF bag-of-words "
+                      "retrieval null on any seed (null-beat conjunct, "
+                      "promoted from reported 2026-09-25, 1^13 unit 5 — "
+                      "strictly harder, cannot rescue attempt 2's FAIL).",
          null_baseline="Chance routing; bag-of-words retrieval.",
          metric="paraphrase_routing_accuracy", budget=Budget.GPU_SHORT, seeds=3,
          depends_on=["T2.06"],

@@ -60,10 +60,20 @@ never gated: TF-IDF cosine nearest-TRAINED-phrasing, token-overlap nearest
 sequence, and the NB reference are all computed on the held-out set. On a
 grid DESIGNED to be lexically resolvable a bag-of-words learner may sit at
 the ceiling; a comparator the mechanism can at best tie is not a threshold
-(T2.06's acc_tfidf_train precedent). If the mechanism routes WORSE than
-bag-of-words, that number is in the row and it is the Review's routing-seat
-evidence — T2.07 already proved that outcome possible, which is what makes
-this claim falsifiable rather than decorative.
+(T2.06's acc_tfidf_train precedent) — so CLAIM_MIN stays the threshold and
+does not move. PROMOTED TO GATED, 2026-09-25 (1^13 unit 5, Review DAILY):
+the TF-IDF retrieval null is now a per-seed LOWER BOUND — the shipped router
+must STRICTLY BEAT the in-run tfidf_retrieval_correct on EVERY seed, else
+the run FAILs naming that branch. It is a lower-bound conjunct, never the
+claim threshold; the tieable-comparator reasoning above still binds the
+threshold role. What forced the promotion: attempt 2's seed 2 routed 5/16 —
+worse than BOTH bag-of-words nulls (TF-IDF 11/16, NB 14/16) — and nothing
+failed on that account; a mechanism that loses to its own declared null was
+a quiet row entry where it must be a named verdict. Strictly harder: the
+conjunct cannot rescue attempt 2's FAIL (its worst seed loses to the null
+by 6). Token-overlap NN stays reported; the NB reference keeps its existing
+VOID resolvability-floor role. Comparison, not a fitted constant: the bound
+is measured in-run on the same held-out set the router is scored on.
 
 PRE-REGISTERED GATES (exogenous, written before first run):
   CLAIM    heldout_correct >= 12 of the 16 unique held-out sequences on
@@ -71,6 +81,13 @@ PRE-REGISTERED GATES (exogenous, written before first run):
            Exact binomial at chance 1/7: P(>=12/16) = 7.5e-8, beyond the
            one-sided 5-sigma convention (2.87e-7) of T2.01/T2.06, computed
            and recorded in-row as null_p_claim.
+  NULL-BEAT (added 2026-09-25, 1^13 unit 5 — an ADDED conjunct, strictly
+           harder, cannot rescue the standing FAIL): heldout_correct must
+           EXCEED the in-run tfidf_retrieval_correct on EVERY seed. A
+           router that ties or loses to its own declared bag-of-words
+           null FAILs on that named branch — it fires before the claim
+           line so the first falsified clause is named (BA.03's one-bit
+           lesson). CLAIM_MIN is untouched.
   CONTROL  label-shuffle twin (LAW 2): the grid lookup composed with the
            fixed derangement cat -> (cat+1) mod 8 at the single supervision
            site. Held-out accuracy vs TRUE clusters must stay under the
@@ -527,6 +544,18 @@ def _check(m: dict, c: dict):
     if c["ctrl_heldout_max"] >= CLAIM_MIN:
         return Status.VOID          # label-shuffled twin reaches the claim
                                     # bar: the ruler leaks (LAW 2)
+    # NULL-BEAT, gated (promoted from reported 2026-09-25, 1^13 unit 5):
+    # the router must STRICTLY BEAT the registered TF-IDF bag-of-words
+    # null on every seed. Attempt 2's seed 2 routed 5/16 vs TF-IDF 11/16
+    # and nothing failed on that account — a mechanism that ties or loses
+    # to its own declared null is a FAIL named here, never a quiet row
+    # entry. Lower-bound conjunct, measured in-run; CLAIM_MIN unmoved.
+    if m["heldout_correct_min"] <= m["tfidf_retrieval_correct"]:
+        m["claim_branch"] = (
+            "router ties or loses to its own bag-of-words null: worst-seed "
+            "heldout_correct does not exceed tfidf_retrieval_correct — the "
+            "shipped anchor-argmax path is beaten by lexical retrieval")
+        return False
     # The claim, on the worst seed.
     return m["heldout_correct_min"] >= CLAIM_MIN
 
