@@ -8476,3 +8476,125 @@ is the conditional stdin change above.
 `wc -c scripts/ladder_prompt.md` = 90935; `scripts/ladder_loop.sh:270,282` as
 quoted; `/data/jack-logs/ladder.log` — 45 `iteration end rc=0` lines after
 2026-09-21T06:07:22, 45 of 45.
+
+---
+
+## D36 — Two 45-spec designs want the same Sunday, four of four Sunday FULLs have died at max turns, and an armed default already ordered one of them FIRST. Which one gets 2026-09-27? (2026-09-25, Review, DAILY)
+
+**The situation, and it is a scheduling fact before it is a strategic one.**
+This morning's sitting cleared the whole OVERDUE class (7 of 7 — `review_queue`
+exits clean for the first time since the midnight breaks) and, in doing so,
+found that the project's largest blocker is held by a debt with no row. That
+debt is now `t108-pipeline-repair-has-no-design` (`46d4b60`), and what it owes is
+a mechanism that takes `heldout_cv_pct` from **40.006** to under **7.0** —
+`T1.08`, `frees 3 / blocks 45`, the spec whose own `falsified_by` makes *"every
+single-seed number downstream"* unquotable.
+
+**Why this is yours and not mine.** The design is a FULL-sitting job: a 5.7x
+variance reduction is not writable in the last minutes of a DAILY, and this
+desk's own `pl02` scar this morning was exactly what manufacturing one looks
+like. But Sunday 2026-09-27 is already taken. `w1-world-edit-window` sits there
+under **`D33`'s armed default (i)**, which has fired four times and which
+ORDERED that row first; and this desk has publicly pre-committed that **if
+2026-09-27 breaks, it stops re-dating W1 and DECLINES the authorship**. So the
+two candidates for one sitting are W1 and T1.08's pipeline repair, and **a desk
+may not reverse the ordering an armed default produced** — the same reasoning
+`D33` used to refuse its own option (ii) and `D28` its option (iv). Hence this
+entry.
+
+**The measurement that makes "put both on Sunday" not an option.**
+`scripts/review.sh` records seven max-turns deaths across the three organs, and
+**four of four Sunday FULL runs ever fired on cron died at max turns**, the most
+recent being 09-20's, whose page went out bannered INCOMPLETE. A sitting that has
+never once completed a single from-scratch design of this size will not complete
+two. Choosing which one breaks is strictly better than discovering it on Monday.
+
+> **RECOMMENDATION: give Sunday 2026-09-27's FULL sitting to
+> `t108-pipeline-repair-has-no-design`, and let `w1-world-edit-window`'s
+> pre-committed stop-rule fire as written.**
+
+**Why, in three lines.** (1) MASS: T1.08 blocks 45 specs and gates the
+quotability of nine empirical single-seed PASS certificates (`PG.1`, `PG.2`,
+`SO.09`, `T1.07`, `T1.09`–`T1.11`, `T1.13`, `T2.00`); W1's live blocked set is
+smaller and its largest dependents are already HELD behind it by design.
+(2) THE STOP-RULE IS NOT A LOSS: if 09-27 breaks for W1 the pre-commitment
+routes its authorship to you — an outcome this desk designed, wrote down in
+advance, and called "the fifth instalment pre-committed to being the last". A
+question reaching your desk by a rule written in the open is a working
+mechanism, not a failure. (3) ASYMMETRY OF EVIDENCE: W1 has beaten four
+sittings, so a fifth attempt is the option with the worst track record in this
+project; T1.08's repair has had **zero** sittings and its confound is already
+settled (`583a1e9`, branch (i) BOTH_ABOVE, cv_T4 42.786 / cv_P100 36.577), so
+its design starts from a measured fact rather than from scratch.
+
+DECIDE: D36
+  class:     conduct
+  blocks:    no spec id directly, which is why no `blocked` ranking can see it.
+             What it blocks is the SEQUENCING of the only two 45-spec-class
+             designs this desk owes, and behind them `T1.08` (frees 3 / blocks
+             45) and `W1.01`/`W1.03`/`W1.04` (nineteen days unregistered). The
+             cost is realised, not forecast: ~29.08 free Kaggle GPU-hours expire
+             tomorrow, 2026-09-26, unbought behind the undesigned T1.08 repair,
+             for the SECOND consecutive week — the hours are not the scarce
+             resource, the design sitting is.
+  default:   (i) CHANGE NOTHING — W1 keeps 2026-09-27 (CLOCK: w1-world-edit-window
+             — that row's own re-dated deadline, set by `D33`'s armed default;
+             this default does not command it, it declines to move it) under
+             `D33`'s standing order, and
+             `t108-pipeline-repair-has-no-design` stays at its
+             `next_free_due` of 2026-10-02. This is the only legal default and
+             it is deliberately NOT my recommendation. It picks only
+             already-permitted actions — both rows keep dates they already
+             carry, written in the open with stated causes — moves no threshold
+             in either direction, edits no `GOAL.md` text, widens nothing,
+             narrows nothing, spends no GPU, commits no budget, fails no spec,
+             refuses no run, stales no certificate and leaves no commitment
+             claim-dead. It is MONOTONE on the thing at issue: it can only leave
+             both rows LIVE and ageing, never exempt either. Option (ii) SWAP —
+             my recommendation above — is deliberately NOT the default because a
+             default may not reverse the ordering an armed default produced
+             (`D33` ordered W1 first), exactly the reasoning `D33` used to refuse
+             its own option (ii) when the reassignment was the one it wanted.
+             Option (iii) DECLINE W1 OUTRIGHT is not the default because a
+             default may not narrow what this project has promised itself. The
+             price, stated rather than buried: (i) knowingly buys a FIFTH
+             instalment of a design that has beaten four sittings, and on the
+             measured record (four of four Sunday FULLs dead at max turns) its
+             most likely product is another INCOMPLETE banner plus a T1.08
+             repair still undesigned on 10-02 — i.e. a third idle week for the
+             expiring hours. Its only merit, and it is real, is that it keeps
+             both debts VISIBLE and ageing rather than letting this desk
+             re-order its own docket to suit itself.
+  decide_by: 2026-09-26
+
+**NOTE ON THE `CONDUCT-DESK` FLAG, added by this entry's own author the moment
+`decisions.py` raised it — the `D33` precedent, and it binds me the same way.**
+The instrument reads `class: conduct` and says *"desk-executable, not the
+owner's — execute it, report it, do not ask."* **It is half right, and the half
+it is right about is already done.** The DEFAULT, option (i), is a desk act and
+it is the state I have LEFT the world in: both rows carry the dates they already
+carried, `t108-pipeline-repair-has-no-design` is minted and dated 10-02 in
+`46d4b60`, and I re-ordered nothing. **What is NOT desk-executable is the
+RECOMMENDATION.** Option (ii) reverses the ordering that `D33`'s armed default
+produced — and an armed default that has fired is a ruling this file made, not a
+draft this desk may revise because it now prefers a different docket. A desk may
+not re-order its own queue to move its own hardest unit off the only sitting big
+enough to hold it; that is indistinguishable, from the outside and often from the
+inside, from a desk avoiding the work. **Which is exactly why this is the one
+thing I will not take at the desk, even though I think it is right.** Everything
+else in this entry is executed and reported.
+
+**Why `decide_by` is tomorrow and not Sunday.** A ruling that arrives during the
+06:37 sitting cannot change what that sitting works on. 2026-09-26 is also the
+day the W38 hours expire, so the entry and the cost it prices break on the same
+date rather than on a date chosen for this desk's convenience.
+
+**Evidence:** `experiments/run review-queue` at 2026-09-25 06:5x — 0 violations,
+81 routed, 35 OPEN; `REVIEW_QUEUE.md` `t108-pipeline-repair-has-no-design`
+(`46d4b60`) and `t108-noise-floor-is-quoted-by-nobody:6915` for the quoted
+"still owes" / "has no design" paragraph; `ledger.json['results']['T1.08']` —
+`FAIL`, attempt 3, `heldout_cv_pct` 40.006, `snr` 10.1, `mde_downstream` 49,
+`mde_citing` 0; `583a1e9` for the settled backend probe; `gpu_budget.json`
+`2026-W38` `kaggle` 0.9176 of 30.0; `docs/PROGRESS.md` FOR THE OWNER item 3
+(2026-09-24) for this desk's own W1 stop-rule pre-commitment and the "four of
+four Sunday FULL runs" count.
