@@ -8767,6 +8767,15 @@ ROUTED: owner-ask-reader-blind-since-0909 | 2026-09-23 | measurement in the `fie
     page actually uses — and a re-read of what the re-armed counter says
     about the CURRENT page before it lands, because it may go red > 3 the
     moment it can see again, and that red is information, not a bug.
+    **PREDICTION CORRECTED AT EXECUTION (builder, 2026-09-25 01:x, per the
+    115th audit's 1a, which licensed the early slot this row itself invited):
+    the re-armed counter's first honest reading is 0 UNROUTED / 0 VANISHED,
+    not > 3** — the live page's four items are two `NO-DECISION:` exemptions
+    and two cite-attributed reports (PROGRESS #2 by D22, #4 by D31), so no
+    red fired when the reader could see again. The floored ratchets re-armed
+    without moving. Repair executed exactly as this row sketched: `_ITEM`
+    admits `\*{0,2}` before the digit; fixture in the live `**N. ` shape
+    asserts parse, exemption and cite in both directions; T0.28 re-bought.
     DUE: 2026-10-01 | builder repair; cheap, but it re-arms a floored counter
         and must land with its first honest reading written in the commit.
         Dated by `next_free_due` (read at routing: 2026-10-01, every day

@@ -949,7 +949,12 @@ def firing_coverage(resolved_text: str, rows: list) -> tuple:
 # section. `---` and the next `## ` both close the section, because the Review
 # writes both.
 _OWNER_HEADING = re.compile(r"^##\s+FOR THE OWNER\s*$", re.M)
-_ITEM = re.compile(r"^(\d{1,2})\.\s+(.*)$")
+# `\*{0,2}` before the digit: the Review has written its owner items as
+# `**1. ...**` (bold marker at column 0) since 2026-09-09, and the bare-digit
+# version of this pattern parsed the live page as 0 items for 15 days —
+# UNROUTED/VANISHED both structurally silent over a page carrying five items
+# (`owner-ask-reader-blind-since-0909`, repaired per the 115th audit's 1a).
+_ITEM = re.compile(r"^\*{0,2}(\d{1,2})\.\s+(.*)$")
 _SECTION_END = re.compile(r"^(##\s|---\s*$)")
 
 # The exemption, and it must carry a reason: an escape hatch nobody has to
@@ -1997,6 +2002,32 @@ def _ask_fixture() -> None:
     # what the confinement buys — 17 lines of the live 5,261 — and it is stated
     # here at its real size rather than at the size B2 assumed.
     assert "3" in _unrouted(quote + needed), "outside every entry is no desk"
+
+    # THE `**N. ` SHAPE THE LIVE PAGE ACTUALLY USES (115th audit 1a). The
+    # Review has bolded its owner items since 2026-09-09 and the bare-digit
+    # `_ITEM` parsed every such page as 0 items for 15 days — a population
+    # selector that quietly stopped matching, reporting an empty class as a
+    # green one, the same class as the fieldwatch 0-for-5. This fixture is the
+    # page shape that went dark, asserted in both directions: the items parse,
+    # the exemption still reads (`_NO_DECISION` carries re.M so `NO-DECISION:`
+    # inside a bold head line still anchors), and the cite still routes.
+    bold_page = """
+## FOR THE OWNER
+
+**1. NO-DECISION: liveness, and it is unambiguously good.** 0 dark slots,
+45 consecutive `rc=0` iterations.
+
+**2. `D20` — CITED, NOT RE-ASKED.** Its default fired and the record stands.
+
+**3. A bolded ask with nowhere to live.** Nothing points at this one.
+"""
+    bold = owner_asks(bold_page)
+    assert [a["n"] for a in bold] == [1, 2, 3], bold
+    assert bold[0]["exempt"] and not bold[1]["exempt"], bold
+    assert "D20" in bold[1]["cites"], bold
+    assert {key.split("#")[1] for k, key, _ in
+            owner_ask_findings(bold_page, None, needed)
+            if k == "UNROUTED-OWNER-ASK"} == {"3"}, "bold page must be seen"
 
 
 def _git(*args) -> str:
