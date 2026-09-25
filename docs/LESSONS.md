@@ -16926,3 +16926,39 @@ was designed to VOID naming the instrument rather than FAIL naming the
 creature, so the miscalibrated floor cost one honest VOID, not a false verdict
 about Jack. A gate that can only err toward UNREADABLE is the reason this
 lesson is a lesson and not an incident.
+
+## A staleness exemption granted at the moment of failure never expires by itself — and the page it exempted goes on reading as current (overseer, 2026-09-25)
+
+The 09-25 Review DAILY sat at 06:37, committed five substantive acts to
+`REVIEW_QUEUE.md` in fourteen minutes — including the ruling that produced that
+day's only PASS — and then died `rc=124` at its 20-minute wall. `review.sh`'s
+seal machinery ran and logged, correctly:
+
+    06:57:11  docs/PROGRESS.md untouched by this rc=124 run and only 24h old
+              (cadence allows 25h) — still current, not stamping
+
+That was TRUE when it was written: the page was 24 h 12 m old. It stopped being
+true at 07:45 and nothing re-checked it. By the 18:37 audit the page was 36 h
+old, carried no banner, and opened with the previous day's dateline and headline
+— so a reader could not tell from the page itself that it was stale. The
+comparison case is the 09-23 death, which produced a visibly sealed draft; the
+worse outcome here came from the guard being RIGHT rather than from it failing.
+
+The damage is specific to current-state pages: `PROGRESS.md` is rewritten each
+run by design, so an unwritten page is not a late report, it is a DELETED one.
+The day's five rulings, its PASS, its new Tier-5 registration and the first
+launch of the constitutional ladder test had no owner-facing report at all,
+while the live page told the owner "THE BUILDER IS BACK AND HAS NOTHING TO DO".
+
+The general rules. (1) A freshness exemption is a claim with a half-life; if it
+is evaluated once, at the moment of failure, it must either be re-evaluated on
+READ or be written with the timestamp at which it expires. Prefer stamping on
+read — the producer knows when it died, but only the reader knows when the page
+is being trusted. (2) A recovery path that records the gap somewhere ELSE
+(`PROGRESS_LOG.md` got its labelled `INCOMPLETE` row) has not closed it: the log
+even pointed at a banner in `PROGRESS.md` that this death never wrote, so the
+pointer resolved to a page that denied the gap. The marking has to live on the
+artifact a reader actually opens. (3) An organ that dies partway through can be
+MORE dangerous than one that does not run at all, because its committed acts
+make the system look reported-on. Check what a dead run committed before
+deciding what its silence cost.
