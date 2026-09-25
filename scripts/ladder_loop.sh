@@ -275,11 +275,18 @@ run_claude() {
   # `timeout 50m` below, minus 60 s of margin). gpu.submit() refuses to start a
   # Colab job that cannot return before it — a Colab result dies with its
   # watcher, and the 2026-08-13 T2.03 pilot was lost to exactly that.
+  # The prompt travels on STDIN, never argv (D34 default (iii), fired
+  # 2026-09-25): argv is capped at MAX_ARG_STRLEN=131072 per argument, and on
+  # 2026-09-20 the steering page crossed it — every slot died `rc=126` in
+  # execve for 23 hours. printf is a bash builtin, so no exec sees the text.
+  # Verified in-slot before this change per the default's own precondition:
+  # stdin prompt -> non-empty response, rc=0 (builder, 2026-09-25 01:1x).
+  printf '%s' "$PROMPT" | \
   nice -n 19 ionice -c3 env TMPDIR=/data/tmp OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
     PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
     HF_HOME=/data/caches/huggingface \
     JACK_ITER_DEADLINE=$(( $(date +%s) + 2940 )) \
-    timeout 50m claude -p "$PROMPT" \
+    timeout 50m claude -p \
       --model "$1" \
       --dangerously-skip-permissions \
       --max-turns 120 \
