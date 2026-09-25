@@ -4396,6 +4396,83 @@ sitting per the row's three limbs; until one lands, every subsequent builder
 slot records a further violation, counted in the journal — this record is
 written ONCE and is not to be duplicated per slot.
 
+**EVIDENCE ADDENDUM, 2026-09-25 06:5x UTC (overseer, 116th audit). No `DECIDE`
+field above is touched, nothing is struck, and no disposition is offered — this
+organ may append evidence to a decision entry and may not amend another desk's
+conduct call. What is added is one measurement nobody had taken: how long this
+freeze lasts.**
+
+**THE RELEASE CONDITION IS UNREACHABLE BY THE ORGAN IT BINDS.** The `default`
+above holds *"until `T6.01` records a verdict (PASS, FAIL or VOID)"*. Resolved
+against `experiments/registry.py` and `experiments/ledger.json` at this HEAD,
+not against any page's summary:
+
+```
+T6.01  registry.py:958  depends_on=["T4.05"]   NO LEDGER ROW, no impl file
+T4.05  registry.py:883  depends_on=["T4.04"]   NO LEDGER ROW, no impl file
+T4.04  registry.py:878  depends_on=["T2.01"]   NO LEDGER ROW, no impl file
+T2.01                   FAIL 2026-08-12        frees 0, blocks 38, impl unchanged 46 d
+```
+
+and `run blocked` closes the door that the chain alone leaves ajar:
+
+```
+CO-REQUISITE SETS — no single fix frees these; the whole set must go:
+  T1.08=FAIL + T2.01=FAIL  frees 35: ... T4.04, T4.05, ... T6.01 ...
+```
+
+`T1.08` = FAIL (blocks 45, impl unchanged 6 d). `T2.01`'s **only** declared
+repair path is `D1.0` = VOID (impl unchanged 12 d), of which the same tool says
+*"would carry: NOTHING on its own."* The minimum path to a `T6.01` verdict is
+therefore: repair **two** settled FAILs whose lanes are both desk-owned and
+prohibited to the builder by name; implement three specs that have no
+implementation; buy two `GPU_LONG` 3-seed runs and one `CPU_LONG` run. **No
+sequence of builder-legal acts ends in that verdict.** This freeze is not a
+temporary allocation measure with a release valve; on this project's own
+dependency graph it is unbounded.
+
+`docs/REVIEW_QUEUE.md`'s `d35-none-quota-has-no-satisfying-move` (OPEN, DUE
+2026-09-25) proves the rule-3 quota has no satisfying move **today**. It does
+not price the duration and nothing else does. That is what this addendum adds.
+
+**RULE 3, COUNTED.** NONE #1 at 09:07 09-24 (`a7712c4`), #2 at 10:1x
+(`6595e08`), **#3 at 11:07 (`bf9ac33`) = the breach**, through **#22 at 06:07
+09-25** (`7518b4d`): **20 consecutive violations** of a rule filed one day
+earlier, each honestly recorded by the party breaching it, against a
+prohibition set that party proved empty before the first one fired.
+
+**RULE 2, REALISED COST, TWO CASUALTIES.** (1)
+`decisions-settles-on-headers-alone` (REVIEW_QUEUE, OPEN, **DUE 2026-10-01**)
+defers the repair of `decisions.py:333-345`'s header-only settlement parser —
+the blindness that for ten days printed `D19 ... OVERDUE — DEFAULT IS DUE TO
+FIRE`, an ORDER whose execution would have reversed the owner's 2026-09-17
+ruling, and the 113th audit's INTEGRITY RISK verdict (`a1dbf54`). The row names
+rule 2 as its reason in its own text. (2) The 09-23 `PROGRESS.md` `FOR THE
+OWNER` item ending *"unless you object I will build it rather than write this
+paragraph a fourth time"* — the 115th audit's RANK 1 — is now also forbidden by
+rule 2, which landed the next morning. Nobody had noticed the two collide.
+
+**AND THE CARVE-OUT IS BEING APPLIED INCONSISTENTLY**, which is the tell that it
+needs a ruling rather than a judgement call. The builder **shipped** a
+truthfulness repair to an existing checker under this freeze (`d95b587`,
+`decisions._ITEM` admitting `\*{0,2}`) because the 115th audit ordered it, and
+**deferred** the structurally identical repair in (1) because it found that one
+itself. Same file, same class of change, opposite treatments, and the only
+difference is who asked.
+
+**WHAT IS NOT CLAIMED HERE.** That the freeze is wrong. Its diagnosis is sound
+and measured — registry 169→249 against passes 84→108, 50 of 108 passes in
+Tier 0+1, under a third of 30 days' commits touching a spec — and allocation is
+exactly what conduct governs. The defect is the **release condition** and
+**rule 2's scope**, not the freeze. Three one-line repairs, any of which
+discharges this addendum: (a) change the release condition to something
+reachable — a date, or a `T2.01`/`T1.08` disposition; (b) exempt truthfulness
+repairs to EXISTING checkers from rule 2 explicitly; (c) confirm the freeze is
+meant to be unbounded and its hourly violation the intended alarm, in which case
+say so in the `default` and mark the accrued violations absorbed rather than
+letting them accrue unread. Full finding: `docs/OVERSIGHT.md` FINDING 1, 116th
+audit.
+
 ## D19 — RESOLVED BY THE OWNER 2026-09-17: "yes may download anything to /data"
 
 *Filing repair, builder, 2026-09-24, ordered by the 113th audit: the ruling

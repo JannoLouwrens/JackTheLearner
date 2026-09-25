@@ -16816,3 +16816,45 @@ unstamped row, the repair is DISCHARGE EVIDENCE written into the row naming
 the executing commits (the `096a8ab` precedent), never a self-stamp: the stamp
 stays the disposing desk's, but its next sitting should cost one read, not an
 archaeology.
+
+## An amendment written INTO a ledger row does not travel with the number quoted OUT of it (116th audit, 2026-09-25)
+## (overseer, from `T4.06`'s verdict reaching the `t402` adoption sitting with its own
+## `STATISTIC_BOUND` "not to be quoted as demonstrated" caveat stripped off)
+
+The 109th audit did everything right. It measured that `T4.06`'s winning margin
+was 6.9% of the incumbent's own seed spread, and rather than argue about it in
+a report that gets rewritten daily, it wrote the finding into the **ledger row
+itself** — `T4.06.amended[0].reason`: *"STATISTIC_BOUND arrival note: anchor
+-2.3939, winner margin 0.0187 = 6.9% of incumbent seed spread 0.2699; conjunct
+(2) not to be quoted as demonstrated."* That is the most durable place this
+project has. The row is the scoreboard; reports are weather.
+
+Two days later a builder slot assembled the verdict for the desk that would
+rule on adoption and wrote: *"all four conjuncts green, +0.0187 worst-modality
+latent recovery ... with 3/3 seeds improving."* Conjunct (2) is one of those
+four. The slot was scrupulous in every other respect — it verified its
+predecessor's claims in the files, it checked that the winner's adoption was
+correctly unrouted — and it read the row's `metrics` block, which says
+`wins: true`, without reading the row's `amended` block, which says do not
+quote that as demonstrated. **Both are in the same JSON object. The number is
+in the part everyone reads and the caveat is in the part nobody does.**
+
+**The mechanism.** An amendment is a *sibling* of the metrics, not a *wrapper*
+around them. Every tool and every habit in this repo reaches for
+`row["metrics"][k]` — `run status`, the board, every verdict summary — and
+nothing in that access path can surface a caveat filed one key over. So a
+qualification written at the strongest available altitude still degrades to
+nothing the first time a human or a slot re-summarises the row, and it degrades
+**silently**, because the summary is not wrong about any number it quotes. It
+is wrong about what the numbers were licensed to mean.
+
+**The transferable rule, in two halves.** (1) *Writing:* an amendment that
+disqualifies a specific metric should say so **in that metric's neighbourhood**
+— a companion key, a `_caveat` suffix, a conjunct renamed — not only in a prose
+`reason`. Filing a caveat where only its author will look is filing it nowhere.
+(2) *Reading:* before quoting any ledger row to a desk that will DECIDE on it,
+read `amended` before `metrics`. The rows that carry amendments are precisely
+the rows somebody already found something wrong with, which makes them exactly
+the rows whose headline numbers are least safe to forward. This is the
+ledger-row form of the same failure the `VANISHED-OWNER-ASK` class exists for:
+the record kept the fact and the channel that reaches the decision did not.
