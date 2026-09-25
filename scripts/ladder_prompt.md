@@ -1302,6 +1302,10 @@ and prints the `JACK_REUSE_KERNEL` reattach command for the failure case.
   there), fix the CODE, re-run. A failing test is the loop working, not a setback.
 - Every few iterations run `--gate` to re-run everything passing, catching
   regressions.
+- ROUTING A QUEUE ROW: every new `docs/REVIEW_QUEUE.md` row carries a coupling
+  declaration — `WAITS-ON: <row id> | why` or `WAITS-ON: none | why not` —
+  declaration-only, buys nothing, never silence (09-19 disposition; the reader
+  WITHHOLDS per-date decision counts until every live row on the date declares).
 - Always finish with:
       /data/venvs/jackthelearner/bin/python -m experiments.run render
       git add <the paths you actually touched> && git commit

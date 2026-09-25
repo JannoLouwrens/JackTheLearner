@@ -8962,3 +8962,39 @@ do not re-open the ACTED row `goal-cites-four-specs-that-resolve-to-corpses`;
 do not register a GEN spec (D35 freeze aside, an id resolving to a corpse is
 worse than one resolving to nothing — 59th audit). The routing is the whole
 unit.
+
+ROUTED: waits-on-has-no-producer-outside-a-closing-row | 2026-09-25 | 115th audit Finding 4 (builder slot 01:1x) | OPEN
+    DUE: 2026-10-01 | Dated onto `review-queue`'s mechanical next_free_due per
+        the 115th audit's routing order. What is owed is one sentence in the
+        Review's OWN sitting order; the ruling is whether and where that desk
+        carries it.
+    WAITS-ON: none | this row asks a desk to adopt a sentence; no other open
+        row's answer changes what that sentence says.
+
+**The defect (115th audit Finding 4).** The only written instruction telling a
+ROUTER to declare coupling lives in the body of `waits-on-declared-field`,
+which is `DUE: 2026-09-25` and is about to be stamped `ACTED` — and a terminal
+row is never re-read (100th audit B2). The moment that stamp lands, the
+obligation's sole producer-side home is a closed row: the READER
+(`experiments/review_queue.py`, T0.31 p21/p22) enforces completeness per date
+by WITHHOLDING the grouped count, but nothing any router actually reads says
+to write the field in the first place. An obligation whose only statement is
+in a terminal row is a rule that exists for exactly as long as nobody needs it.
+
+**Half the repair is done in the routing commit and binds the builder:**
+`scripts/ladder_prompt.md`'s loop instructions now carry the line — a new
+`REVIEW_QUEUE.md` row declares `WAITS-ON: <row id> | why` or `WAITS-ON: none |
+why not`, declaration-only, never silence. **The ask of this row: the Review
+carries the same sentence into its own sitting order**, because the Review
+routes rows too (most of the current OVERDUE pile is its own routing) and the
+builder's steering page binds no other desk.
+
+**Constraint carried from the audit, so the next reader does not "improve"
+this:** do NOT add a violation class for an undeclared coupling — the 09-19
+disposition refused that deliberately (`WAITS-ON:` buys nothing, exempts
+nothing); the reader's WITHHELD line is the entire enforcement, and it is the
+Review's grammar, not the builder's.
+
+**Staleness bill: ZERO ledger rows.** A sentence in a sitting order and a
+bullet on a steering page invalidate no certificate; T0.31's re-buy already
+happened with the implementation (attempt 22, PASS, `05a582d`/`12a8180`).
