@@ -120,6 +120,47 @@ Budget.CPU_LONG until measured otherwise.
 
 Creature-gate note: this spec moves none of T2.01/XL.01/T6.01 directly; it
 is the constitutional ladder image itself (GOAL.md:29-34), Tier 5.
+
+PILOT RECORD (2026-09-25 17:0x slot, seed 90, foreground, 85.8 s wall,
+records nothing — the record whose paste flips _PILOT_VALIDATED):
+{
+  "build_s": 0.2, "z_rest": 0.3896, "calib_ok": 1.0, "obs_dim": 68,
+  "t_random_s": 25.1, "t_icm_s": 29.4, "t_lp_s": 28.9, "t_det_s": 1.0,
+  "random": {"engaged": 0, "gain": 0.0, "final_q": 0.0, "n_falls": 0,
+             "dwell": 0.0, "topout": 0, "occ": 1.0, "finite": 1.0},
+  "icm":    {"engaged": 0, "gain": 0.0, "final_q": 0.0, "n_falls": 0,
+             "dwell": 0.0, "topout": 0, "occ": 0.2625, "finite": 1.0},
+  "lp":     {"engaged": 0, "gain": 0.0, "final_q": 0.0, "n_falls": 0,
+             "dwell": 0.0, "topout": 0, "occ": 0.3, "finite": 1.0},
+  "projected_full_seed_s": 6219.0
+}
+READING, in the order of the pilot's three jobs:
+  MECHANICS — green: build 0.2 s, calib_ok 1.0, z_rest 0.3896 (matches the
+  micro-smoke), obs 68-dim, finite 1.0 on all three arms, detector runs in
+  1.0 s against the pilot logs.
+  CONTROL ALIVENESS — zero engagement and zero dwell at 800 decisions/arm is
+  the EXPECTED null-floor reading (LT.01 measured random at 0 engaged in
+  9,000 decisions), NOT proof the instruments are dead, so a supplementary
+  teleport probe (records nothing) answered what the reduced envelope could
+  not: body 1.0 m from the panel -> the dwell distance test FIRES; 50
+  repeated obs() there -> 5 retina rays stochastic (panel tex std up to
+  0.3029) while every non-panel geom's texture std is EXACTLY 0.0; at
+  10.9 m (still under MAX_RANGE) 1 ray reads the panel at std 0.1045,
+  matching the R_RESOLVE/dist amplitude arithmetic (0.37 x 0.289) — so the
+  noise is the panel's alone, it reaches every forward model through obs,
+  and a forward-error gradient toward the trap exists at range. The trap is
+  live in THIS rig; whether icm follows the gradient into it over 25,000
+  decisions is control (1)'s question and stays the run's to answer.
+  SIZING — measured ~31-36 ms/decision (physics-dominated: random 25.1 s vs
+  lp 28.9 s per 800 dec, so learner overhead is ~13% for lp; the metra/
+  disagree heads ride the same physics). projected_full_seed_s 6219
+  (~1.73 h/seed for all 7 arm-runs) — UNDER the cpu<2h label per experiment,
+  so Budget.CPU_LONG stands and the ENVELOPE IS FROZEN AS DECLARED
+  (10 x 2500, unchanged). Full 3-seed run projects ~5.2 h against the
+  runner's 43,200 s child allowance (7200 x 3 seeds x 2 slack) — but it
+  CANNOT fit an hourly slot (2940 s deadline), so the registered run goes
+  through scripts/launch_detached.sh, the sanctioned T0.34-gated lane, per
+  OVERSIGHT 2026-09-25 item 1 and occurrences 10-13.
 """
 from __future__ import annotations
 
@@ -182,7 +223,8 @@ CHAOS_RATIO = 2.0
 CANDIDATES = ("lp", "disagree", "metra")
 
 # Flipped only by a commit that pastes the pilot's JSON into this docstring.
-_PILOT_VALIDATED = False
+# Flipped 2026-09-25: PILOT RECORD above (seed 90, 85.8 s + teleport probe).
+_PILOT_VALIDATED = True
 
 
 # ═════════════════════════════ static audit ════════════════════════════════
