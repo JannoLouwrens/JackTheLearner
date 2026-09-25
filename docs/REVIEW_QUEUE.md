@@ -9319,3 +9319,90 @@ Review's grammar, not the builder's.
 **Staleness bill: ZERO ledger rows.** A sentence in a sitting order and a
 bullet on a steering page invalidate no certificate; T0.31's re-buy already
 happened with the implementation (attempt 22, PASS, `05a582d`/`12a8180`).
+
+## ROUTED 2026-09-25 (Review DAILY): `t108-pipeline-repair-has-no-design`
+## — the project's largest blocker is held by a debt with no row, and the debt
+## is this desk's own
+
+ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting the 09-20 FULL ruling's own `WHAT THIS RULING DOES NOT DO` paragraph (`REVIEW_QUEUE.md:6915`) | OPEN
+    DUE: 2026-10-02 | the design answer owed by THIS DESK: what pipeline change
+        takes `heldout_cv_pct` from ~40 to under 7.0, stated as a mechanism and
+        not as a hope, plus the re-buy order it implies. 10-02 is
+        `review-queue`'s own `next_free_due`; the reason it is not Sunday is
+        argued below and is on the owner's desk, not decided here.
+    WAITS-ON: none | no other live row's answer changes what the pipeline
+        mechanism has to be. The Sunday-versus-10-02 SEQUENCING does depend on
+        `w1-world-edit-window` (both want the same sitting), but that is a
+        docket question routed to the owner, not an input to this row's answer.
+
+**WHY THIS ROW EXISTS, and it is the cleanest instance of this file's founding
+defect since the file was created.** On 2026-09-20 this desk wrote, in the
+`t108-noise-floor-is-quoted-by-nobody` ruling:
+
+> *It does not design `T1.08`'s pipeline repair — `heldout_cv_pct` ~40 against a
+> 7.0 bar is a fact about this repo's pipeline (branch (i) BOTH_ABOVE, n=5,
+> `583a1e9`) and its repair is a separate question **this desk still owes**. [...]
+> 45 specs and ~29 idle Kaggle hours still stand behind a pipeline repair that
+> **has no design**, which is the item the owner is reading about this week.*
+
+Five days later that is still true, and **the debt has no `ROUTED:` row.** So:
+`review_queue.py` cannot age it, cannot call it STALE, cannot call it OVERDUE,
+and cannot count it among the live set. It appears in this file only as prose
+inside a DIFFERENT row's ruling — and that row (`t108-bar-set-from-n1...`) is
+stamped `ACTED`, i.e. **terminal, and a terminal row is never re-read (100th
+audit B2)**. The project's largest blocker was therefore being held by an
+acknowledged debt whose only home was a closed row's prose. That is precisely
+the failure this file was created on 2026-08-24 to end — *"routed to Review"
+was a phrase in commit messages with no file, so the backlog was invisible* —
+reproduced by the desk that owns the file, in the file, about its own largest
+debt. It is also the same shape as the `waits-on-declared-field` row directly
+above this one: **an obligation whose sole statement sits in a terminal row is a
+rule that exists for exactly as long as nobody needs it.** Two instances now,
+found four days apart, which makes it a class and not an accident.
+
+Nothing here is new science and nothing here is a new ask of anyone else. The
+row's entire content is a clock on work this desk already said aloud it owed.
+Minting it is the honest act available this morning; designing it is not — a
+mechanism for a 5.7x variance reduction is a FULL-sitting job and writing one in
+the last minutes of a DAILY is how the `pl02` re-date got manufactured.
+
+**THE MEASUREMENT, carried here so it survives independently of the ACTED row.**
+`T1.08` attempt 3 (`deda088`, ran 2026-09-13T10:05:05, kaggle P100): `FAIL`,
+`heldout_cv_pct` **40.006** against `MAX_HELDOUT_CV_PCT` **7.0**, while the OLD
+conjunct `snr` read **10.1** against its 3.0 bar and cleared. Every rig gate
+green; the control fired on its own side (`distinct_results` 3, `spread`
+0.04209). The backend confound is SETTLED, not open: the `§9d` probe
+(`583a1e9`, n=5, 0.9221 h on a T4 inside its ~1.05 h authorisation) read
+**cv_T4 42.786 / cv_P100 36.577**, both above 7.0, discordance 1.17 — branch (i)
+BOTH_ABOVE. So ~40 is a property of **this repo's pipeline**, not of the
+hardware it was first measured on, and per `T1.08`'s own `falsified_by` the
+consequence is that *"every single-seed number downstream"* is unquotable.
+
+**THE EXPOSURE, sized rather than asserted — and it is smaller than the raw
+count suggests, which is why it is stated here.** 44 of the 110 PASS rows carry
+`seeds=1`. Thirty-five of those are `T0.*` instrument certificates — tool tests
+where a seed means nothing and `T1.08`'s `kills` clause ("any single-seed claim
+in this repo") was never aimed. The honest exposure is the EMPIRICAL single-seed
+PASSes: **`PG.1`, `PG.2`, `SO.09`, `T1.07`, `T1.09`, `T1.10`, `T1.11`, `T1.13`,
+`T2.00` — nine.** Those nine are the certificates whose headline numbers sit
+under a measured 40% seed CV on the held-out metric. NOT a claim that they are
+wrong, and NOT grounds to touch one of them today: `mde_downstream` reads 49 and
+`mde_citing` reads **0**, so no certificate currently DECLARES a dependence on
+`T1.08`'s noise floor, which is the separate defect the noise-floor row already
+owns and dated 09-27. Recorded here so the pipeline-repair design is made
+knowing what a repair would re-qualify, per this file's bill-before-deciding
+contract.
+
+**Staleness bill: ZERO today.** No spec file is edited by minting a row.
+The bill on the eventual REPAIR is the thing worth forecasting and is deferred
+to the design with the nine rows above named as its floor, not its ceiling.
+
+**The perishable price, stated because `D30` requires it in the same breath and
+because it is about to be paid.** `2026-W38` holds 30 free Kaggle GPU-hours with
+**0.9176** drawn; **~29.08 hours expire Saturday 2026-09-26 — tomorrow.** They
+will expire unbought and that is the correct outcome, not a failure: the repair
+has no design, and a GPU hour spent on a run nothing asked for is worse than an
+expired one. What is NOT correct is that this is the second consecutive week the
+same 29 hours have gone idle behind the same undesigned repair. **The hours are
+not the scarce resource — the DESIGN SITTING is**, and that is the fork now on
+the owner's desk.
