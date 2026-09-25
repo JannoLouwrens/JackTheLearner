@@ -90,10 +90,15 @@ or fixture, not mass — the twin's cost-vs-nominal-mass curve must be FLAT
    to chance, and the registry's control — THE SENSORY AMPUTATION — drops
    the load-bearing channels: the KINEMATIC block (pose+velocity: the limbs
    feeling the object resist) AND the PAIN channel (impact against more
-   mass is a real nociceptive signal), leaving the 8 clock-like
-   interoceptive dims, on which the IDENTICAL probe form must FAIL.
-   Feature order is therefore [intero-sans-pain 8 | pain 1 | kin 45] so the
-   amputation is a clean prefix keep.
+   mass is a real nociceptive signal), leaving the 8 interoceptive dims
+   **FROZEN AT THEIR TRIP-START READING** — captured after the reset,
+   before the pre-roll, before any contact with the object — on which the
+   IDENTICAL probe form must FAIL. The freeze is part 2 of the PS-family
+   legibility ruling and it is load-bearing, not decoration: attempt 1
+   measured "clock-like" FALSE of the live values (see the PART 2 RECORD
+   below). Feature order for the LIVE rows stays
+   [intero-sans-pain 8 | pain 1 | kin 45]; the control's rows are the
+   frozen 8-dim block alone, so CLOCK_SLICE is the identity there.
 
 ## THE PS.09 LESSON, CARRIED (LESSONS.md 2026-09-19, binding on this probe)
 
@@ -170,6 +175,75 @@ paid for by earlier pilot iterations and kept as constants' comments:
 OFFSET 1.42 left contact too rare (6 hit-bouts in 21) and PUSH_SCALE
 0.4 delivered lottery kicks plus injury deaths inside one trip. The
 mass-spacing fork was decided by piloting BOTH arms (see MASSES).
+
+## PART 2 RECORD — the amputation control is rate-blind as of 2026-09-25
+## (PS-family legibility ruling part 2, Review DAILY 2026-09-25; executed
+## by the builder under the 1^13 priority block, DUE 2026-10-02)
+
+WHAT ATTEMPT 1 MEASURED (registered run 2026-09-19T17:32, seeds 0/1/2,
+clean stamp at 8f7d1dc): the amputated "clock-only" control read
+control_bal_acc 0.708 +/- 0.156 — ABOVE the registered probe's 0.583 —
+and was caught on only 1 of 3 seeds (pilot seed 90 had read 0.50,
+caught). The mechanism, adopted verbatim into the ruling: a limb blocked
+by mass does less |tau*omega| work, so the e/w DRAIN RATES (fatigue
+rides the same p_mean) encode the load class in the very currency the
+claim prices. The family's amputation idiom assumed the retained
+channels are inert; this venue measures that assumption false wherever
+the priced quantity IS power, and no jitter of e0/w0/t0 can mask a
+RATE. A control the amputated channel can beat is not a control.
+
+THE REPAIR (the ruling's "blind the RATE, not the value", implemented
+as deletion rather than masking): the control's rows are the retained
+8-dim interoceptive block captured at TRIP START — after _reset_trip,
+before the pre-roll, before the body can touch the object — broadcast
+once per live row, scored through the IDENTICAL fixed-form threshold
+probe. By construction the frozen block is a function of (seed, world,
+t0, e0, w0) only: nothing mass-coupled has run when it is read, and
+obs() reads no model mass. What the control retains is exactly the
+clock hypothesis it exists to test — the jittered start offsets — and
+what it loses is every rate the push writes. Elapsed-time-within-trip
+is deliberately NOT added as a feature: the row schedule (decisions 4/8
+of bouts 1-3) is fixed and identical across trips, so it carries no
+trip or class information and omitting it hides nothing.
+
+WHAT DID NOT MOVE: every bar. ACC_MIN 0.70, SHUF_ACC_MAX 0.60,
+CONTROL_ACC_MAX 0.60, CONTROL_MARGIN_MIN 0.10, the world-half gates and
+all VOID lanes are byte-identical. The live probe, its features, the
+shuffle null and the diag_rff_acc reporting are untouched. This CANNOT
+rescue attempt 1's FAIL and was checked rather than asserted: replaying
+_check offline against the recorded row, probe_bal_acc 0.583 < ACC_MIN
+0.70 fails the claim conjunct regardless of any control reading — the
+verdict is FAIL under both the old and new control, and the repair only
+makes the control side HARDER to pass off as sensed (a broken control
+that outscores the probe can never again satisfy control_caught by
+accident of which seed it leaked on).
+
+DELIBERATELY NOT INCLUDED: part 1 of the same ruling (the known-answer
+legibility conjunct). Its sequencing binds — PS.09 proves the conjunct
+first, and PS.09's attempt 2 (VOID, 2026-09-25T08:18) exposed that the
+conjunct's calibration floor was quoted from an oracle cut
+(ps09-known-answer-floor-was-calibrated-on-an-oracle-cut, OPEN, DUE
+2026-10-03). Until that row is disposed, no sibling inherits the
+conjunct. Part 2 does not depend on it: the ruling's own text orders
+"do not ship part 1 for PS.08 without part 2", which binds part 1 to
+part 2 and leaves part 2 free to land first. Attempt 2 of this spec
+waits for part 1; nothing here re-runs today.
+
+PILOT (part 2, seed 90, leg-only — the cost half is untouched by this
+edit and was not re-run; /tmp/ps08_part2_pilot.json, 24/24 trips, 0
+deaths, every shape/identity assertion green): rate-blind control reads
+0.500 — chance, caught at CONTROL_ACC_MAX 0.60 — and that number is
+EXACT for any future run on this seed, not a draw: the frozen block is
+a pure function of the per-trip (t0, e0, w0) resets and the fixed probe
+form, with no dependence on the layer's RNG stream. The live probe and
+the unfrozen control on the same pilot read 0.125 and 0.500, DISCLOSED
+AS A DIFFERENT DRAW from the full pipeline's 0.875/0.50: NeedLayer
+consumes its own rng per decision (microsleep, needs.py:602), so a
+leg-only pilot sees a different microsleep stream than a full run in
+which the cost half spends thousands of draws first. Those two numbers
+verify plumbing only and calibrate nothing — no bar was chosen on them
+(the probe's fragility across draws is already the registered FAIL's
+own finding and the family row's subject).
 """
 from __future__ import annotations
 
@@ -282,7 +356,9 @@ QUANTUM_MULT = 2.0           # ...and >= this x the measured quantum
 ACC_MIN = 0.70               # the headline: load legible early    (0.875)
 SHUF_ACC_MAX = 0.60          # trip-level shuffled pairing, mean of 20
                              #                              (pilot 0.425)
-CONTROL_ACC_MAX = 0.60       # amputated probe must fail...  (pilot 0.50)
+CONTROL_ACC_MAX = 0.60       # amputated probe must fail... (pilot 0.50;
+                             # rate-blind form, part-2 pilot: 0.500 exact
+                             # — stream-independent, see PART 2 RECORD)
 CONTROL_MARGIN_MIN = 0.10    # ...and by a margin           (pilot 0.375)
 MIN_CLASS_TRAIN = 6          # leg trips per class, train            (8/8)
 MIN_CLASS_TEST = 3           # ...and test                           (4/4)
@@ -478,6 +554,14 @@ def _push_trip(model, data, water, layer, joints, mass_idx: int,
     _set_mass(model, data, bid, orig_m, orig_I, true_m)
     _reset_trip(model, data, layer, joints,
                 needs.DAY_S if t0 is None else t0, e0, w0)
+    # PART 2 (PS-family legibility ruling, Review DAILY 2026-09-25): the
+    # amputation control's retained block is captured HERE — after the
+    # reset, before the pre-roll, before any contact with the object — so
+    # every drain RATE the push will write is deleted from the control's
+    # input BY CONSTRUCTION, not assumed inert (see _control). Nothing the
+    # object's mass can touch has run yet, and obs() reads no model mass.
+    ob_start = (np.asarray(layer.obs()[:INTERO_CLOCK_DIM],
+                           dtype=float).copy() if leg else None)
     ate0 = sum(layer.ate_total.values())
     drank0 = layer.drank_total
 
@@ -544,6 +628,10 @@ def _push_trip(model, data, water, layer, joints, mass_idx: int,
             "stray_eats": float(sum(layer.ate_total.values()) - ate0),
             "stray_drinks": float(layer.drank_total - drank0),
             "rows": rows,
+            # One frozen copy per live row: the control scores the same
+            # trips with the same row multiplicity, through the identical
+            # probe form — only the rate content is gone (part 2).
+            "rows_blind": ([ob_start.copy() for _ in rows] if leg else []),
             "heavy": float(mass_idx >= HEAVY_MIN_IDX)}
 
 
@@ -598,7 +686,10 @@ def _score(trips, n_cols: int, shuffle: bool = False) -> float:
 
 
 QVEL_SLICE = slice(INTERO_CLOCK_DIM + PAIN_DIM + 22, None)   # the 23 qvel
-CLOCK_SLICE = slice(0, INTERO_CLOCK_DIM)                     # amputated form
+CLOCK_SLICE = slice(0, INTERO_CLOCK_DIM)   # amputated form; the control's
+                                           # rate-blind rows ARE this block
+                                           # (frozen at trip start), so the
+                                           # slice is the identity there
 
 
 def _speed_score(trips, sl: slice, shuffle: bool = False) -> float:
@@ -785,17 +876,28 @@ def _experiment(seed: int) -> dict:
 
 
 def _control(seed: int) -> dict:
-    """THE SENSORY AMPUTATION (PS.02's control, reused): the same rows with
-    the load-bearing channels — pain and the kinematic block — deleted,
-    keeping only the 8 clock-like interoceptive dims. If the probe still
-    reads the class it was reading the episode clock, and the senses earned
-    nothing."""
+    """THE SENSORY AMPUTATION, RATE-BLIND (part 2 of the PS-family
+    legibility ruling, Review DAILY 2026-09-25): the same trips through the
+    IDENTICAL probe form, with the load-bearing channels — pain and the
+    kinematic block — deleted AND the retained 8-dim interoceptive block
+    FROZEN at its trip-start reading (captured after the reset, before the
+    pre-roll, before any contact with the object). Attempt 1 measured the
+    unfrozen version invalid AS a control: a limb blocked by mass does less
+    |tau*omega| work, so the e/w drain RATES (fatigue rides the same
+    p_mean) encode the load class in the very currency the claim prices,
+    and the "clock-only" control read 0.708 +/- 0.156 — ABOVE the 0.583
+    registered probe, caught on 1 of 3 seeds. No jitter of e0/w0/t0 can
+    mask a RATE, so the rate is deleted rather than masked: the control's
+    rows carry exactly the clock content the trips were built to randomise
+    (the jittered t0/e0/w0 start offsets) and nothing the push wrote. If
+    the probe reads the class from THAT, it was reading the episode clock
+    or trip identity, and the senses earned nothing."""
     d = _collect(seed)
     if ("refused" in d or d.get("no_object") or d.get("bad_lane")
             or d["dead"] > 0.0):
         return {"control_bal_acc": 0.0, "control_caught": 0.0}
-    trips = [(t["rows"], 1.0 if t["heavy"] == 1.0 else -1.0)
-             for t in d["leg"] if t["rows"]]
+    trips = [(t["rows_blind"], 1.0 if t["heavy"] == 1.0 else -1.0)
+             for t in d["leg"] if t["rows_blind"]]
     if len(trips) < N_TEST_TRIPS + 2:
         return {"control_bal_acc": 0.0, "control_caught": 0.0}
     acc_c = _speed_score(trips, CLOCK_SLICE)

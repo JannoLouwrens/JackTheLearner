@@ -3679,10 +3679,20 @@ EXPANSION: list[Spec] = [
                        "at chance.",
          metric="mass_cost_monotone_and_gap_vs_quantum",
          budget=Budget.CPU, seeds=3, depends_on=["NE.00"],
-         control="THE SENSORY AMPUTATION (PS.02's control, reused): the "
+         control="THE SENSORY AMPUTATION (PS.02's control, reused), "
+                 "RATE-BLIND since 2026-09-25 (PS-family legibility ruling "
+                 "part 2, Review DAILY — a SHARPENING, no bar moved): the "
                  "same pushes with the load-bearing channels removed from "
-                 "the probe's input — the probe must FAIL there, or it was "
-                 "reading the episode clock rather than a sense. RIG GATE, "
+                 "the probe's input AND the retained interoceptive block "
+                 "FROZEN at its trip-start reading — the probe must FAIL "
+                 "there, or it was reading the episode clock rather than a "
+                 "sense. Attempt 1 measured the unfrozen version invalid "
+                 "AS a control: where the priced quantity is power, the "
+                 "e/w drain RATES encode the load class in the claim's own "
+                 "currency (control 0.708 ABOVE the probe 0.583, caught 1 "
+                 "of 3 seeds), and no jitter of initial values can mask a "
+                 "rate — so the rate is deleted by construction, not "
+                 "assumed inert. RIG GATE, "
                  "pre-registered: the scripted policy must actually "
                  "DISPLACE every registered mass the registered distance "
                  "on every registered seed (alive-proof — PS.03's pilot "
