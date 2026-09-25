@@ -16733,3 +16733,49 @@ two moves: fire, or re-arm with a reason. Neither is right when the decision was
 **answered and mis-filed**. The correct third path — *record that it was
 ANSWERED* — is not in the instrument's vocabulary or the charter's, and that
 absence is what made "fire it" look like the compliant move.
+
+---
+
+## An exemption written for one check silences every check that shares its parser (115th audit, 2026-09-25)
+
+`decisions.owner_ask_findings` has two classes over `docs/PROGRESS.md`'s
+`FOR THE OWNER` section: `UNROUTED-OWNER-ASK` (an ask that reached no decision
+file) and `VANISHED-OWNER-ASK` (an ask that rolled off a current-state page
+unanswered). Both loops open with the same guard:
+
+```python
+if a["exempt"] or ...:
+    continue
+```
+
+`exempt` means the item's lead carries `NO-DECISION:`. That is **correct** for
+the first class — a desk writing "this needs no ruling from you" is exactly what
+the label exists to say — and it was never decided for the second. The label
+came to mean *needs no ruling* AND *needs no memory*, and nobody chose the
+second meaning.
+
+**The cost was realised the day after it was written.** The 2026-09-23 page's
+item 3 was `**3. NO-DECISION: ...**` and ended *"That is the next instrument I
+would build, and unless you object I will build it rather than write this
+paragraph a fourth time."* The 2026-09-24 page dropped the item. The instrument
+does not exist, no queue row carries it, no decision file mentions it, and
+`VANISHED-OWNER-ASK` could not fire — not because the parser was blind (it was,
+separately, and that was already routed), but because **a repaired parser would
+have skipped it too.**
+
+**The transferable check.** When one predicate gates two findings, ask whether
+the *reason* the predicate was written is true of both. An exemption is an
+argument, and an argument that justifies suppressing "you never answered this"
+does not automatically justify suppressing "this disappeared". Grep every
+`continue` that a shared flag guards and name, per call site, what it is
+excusing.
+
+**And the shape this belongs to, now three deep in eight days.** `fieldwatch`'s
+quotation channel read 0-for-5 (09-21), the dark-slot counter was blinded by the
+loop's own notice lines (09-22), and `owner_asks` has parsed zero items since
+09-09 because the Review writes `**1. ` and `_ITEM` wants a digit at column 0.
+Every one is a **population selector that quietly stopped matching, reporting an
+empty class as a green one.** The existing lesson about settlement keyed to
+structure covers the parser half. This one covers the half where the parser
+works and the *filter* is wrong — which is harder, because the instrument is
+visibly running and its output is visibly zero.

@@ -8244,3 +8244,158 @@ under **`OVERDUE — DEFAULT IS DUE TO FIRE`**; `docs/DECISIONS_NEEDED.md` `D29`
 `a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere -> 2026-09-25
 (6 already promised there)`; `/data/jack-logs/overseer.log` lines for 09-22
 12:37 / 18:37 and 09-23 00:37 / 06:37, all `STOPPED at 92–100% weekly usage`.
+
+---
+
+## D32 — RESOLVED BY ARMED DEFAULT, fired 2026-09-25 ~00:4x UTC by the OVERSEER (115th audit), on the first legal day. Off your desk; options (i), (iii) and (iv) remain yours to rule at any time.
+
+**THE OWNER DID NOT RULE BY 2026-09-24, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(ii) SEE IT AND SAY IT**. Options (i) UNSCOPED, (iii) SCOPED and
+(iv) DECLINE were **NOT** taken.
+
+**AND THE ONE THING THIS FIRING MUST SAY BEFORE ANYTHING ELSE: THE DEFAULT IS
+ALREADY IMPLEMENTED ON DISK, SO THIS FIRING ORDERS NO WORK.** I verified it
+rather than inferring it from the journal:
+
+```
+scripts/launch_detached.sh:44   # JACK_DETACHED_LANE: THE LANE DECLARES ITSELF (105th audit item 1)
+scripts/launch_detached.sh:50   # whether D20's closure covers this lane is D32 (the owner's)
+scripts/launch_detached.sh:52   setsid ... env -u JACK_ITER_DEADLINE JACK_DETACHED_LANE="launch_detached.sh $LOG" ...
+experiments/run.py:4574         DETACHED_LANE_ENV = "JACK_DETACHED_LANE"
+experiments/run.py:4590         def _lane_verdict(settle: bool = True) -> tuple:
+experiments/run.py:4656         "this lane is D32's question (the\nowner's); until it rules the ..."
+```
+
+The builder landed it on 2026-09-20 under the 105th audit's `FOR THE BUILDER`
+item 1, with four new cases in `scripts/test_lane_guard.sh` (declared-lane
+notice present; `lane: launchable` pinned; `sid != pid` proving the WRAPPED
+shape was exercised rather than a hand-rolled `setsid`). **This entry's own
+closing paragraph anticipated exactly that** — *"The one thing that could not
+wait ... is handled by the 105th audit's `FOR THE BUILDER` item 1, which orders
+the detection and the fixture case BEFORE any question of refusal"* — so the
+firing is a RECORDING act, not a build order.
+
+**What the firing does, in full, and nothing else.** It closes the entry on the
+option the code already satisfies, and it states in the open what that option
+bought and what it did not. The refuse/permit line is **untouched in both
+directions**: a direct `setsid` launch is refused exactly as it was yesterday, a
+wrapped detached launch is permitted exactly as it was yesterday. No threshold
+moves. `GOAL.md` is not touched. No spec is failed, no run refused, no
+certificate staled, no GPU spent, no budget committed, and **no ratchet counter
+moves in either direction** — a default that fires by silence may not pay itself
+a greener number.
+
+**WHAT REMAINS OPEN, AND IT IS THE PART THAT MATTERED.** (ii) bought VISIBILITY
+and nothing else, which the entry said in advance. **The scope question — does
+`D20`'s closure cover the wrapped detached lane at every cost class, or only at
+`cpu<48h`? — is NOT answered by this firing and is still yours.** The lane
+stays usable. If nobody reads the mark, the next registered run goes through it
+exactly as the one that prompted this entry did. Options (i) and (iii) are still
+on the table and neither is mine to take: (i) NARROWS what is permitted today
+and (iii) WIDENS what the code permits today, and a default may do neither.
+
+**HOW TO REVERSE IT.** Delete the `DETACHED_LANE_ENV` branch from
+`_lane_verdict` and its fixture case in `scripts/test_lane_guard.sh`, and drop
+the `JACK_DETACHED_LANE=` assignment from `scripts/launch_detached.sh:52`. No
+threshold, no ledger row, no re-run.
+
+**TRANSCRIPTION IS OWED BY THE BUILDER, per the `D13` rule and the `D22`/`D29`
+precedent.** The overseer fires and records; the overseer may not edit
+`docs/DECISIONS_RESOLVED.md`. The builder's next live slot opens the
+`DECISIONS_RESOLVED.md` entry quoting this block. Until that lands, **THIS BLOCK
+IS THE FIRING RECORD** and the decision is closed by it, not by the
+transcription. **No code change is owed by that slot** — the work is done and
+this record says so.
+
+**THE PREMISE, RE-CHECKED BEFORE FIRING RATHER THAN AFTER.** `D29`'s firing
+record named "the premise dies under a deadline" as a structural shape, three
+instances deep. `D32`'s premise is *"the control built to enforce the ruling
+reported `launchable`"*. That is **still true today** and I re-derived it:
+`_lane_verdict` prints a lane-specific NOTICE and still returns the wrapped lane
+as permitted, by design and by this entry's own instruction. The premise did not
+die; the entry simply got its cheapest option delivered four days early.
+
+**Evidence:** `experiments/decisions.py --check` at 2026-09-25 00:4x prints
+`D32` under **`OVERDUE — DEFAULT IS DUE TO FIRE`**; `decide_by: 2026-09-24`;
+the file paths and line numbers quoted above, all read at this HEAD; the
+2026-09-20 01:0x builder journal entry recording the landing and the 22-case
+green fixture run.
+
+---
+
+## D34 — RESOLVED BY ARMED DEFAULT, fired 2026-09-25 ~00:4x UTC by the OVERSEER (115th audit), on the first legal day. Off your desk; options (i)-alone and (ii)-alone remain yours to rule at any time.
+
+**THE OWNER DID NOT RULE BY 2026-09-24, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(iii) BOTH, IN THAT ORDER**. Options (i) STDIN ALONE and (ii) TRIM
+ALONE were **NOT** taken.
+
+**HALF OF IT IS ALREADY DELIVERED AND THE OTHER HALF IS NOT. Both halves
+verified at this HEAD, not taken from a page.**
+
+```
+(ii) the trim   DONE   scripts/ladder_prompt.md = 90935 bytes
+                       (131072 exec cliff; 125000 self-imposed ceiling)
+(i)  stdin      NOT DONE
+                scripts/ladder_loop.sh:270   PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
+                scripts/ladder_loop.sh:282   timeout 50m claude -p "$PROMPT" \
+```
+
+So `(ii)` stands as executed desk conduct over the Review's own page, exactly as
+the default provides, and `(i)` is what this firing hands forward.
+
+**WHAT IS ORDERED, WITH THE DEFAULT'S OWN PRECONDITION CARRIED VERBATIM.** The
+builder, in one live slot, **first** verifies in that same slot that `claude -p`
+reads stdin on this harness — by launching one throwaway prompt through stdin
+and confirming a non-empty response — and **only then** changes
+`ladder_loop.sh:282` to feed the prompt on stdin instead of argv. **If the
+verification fails, `(i)` is NOT taken**, the change is not made, and the entry
+returns to the owner with the measurement attached. That conditional is the
+default's, not mine, and it exists because an unverified stdin change can fail
+SILENTLY with an empty prompt — a default may not replace a loud failure with a
+quiet one.
+
+**THE COST LINE IN THIS ENTRY IS STALE IN THE BUILDER'S FAVOUR, AND THE FIRING
+SAYS SO RATHER THAN INHERITING IT.** `D34` prices its urgency on *"24 hours, 0
+iterations, 0 ledger events"* and on the steering page growing *"~3976
+bytes/day, monotone"* with *"about ELEVEN DAYS"* of headroom. Measured today:
+the builder has run **45 consecutive `rc=0` iterations** — every slot since the
+last non-zero exit at 2026-09-21T06:07 (`rc=126`), 25 of them in the last 24
+hours, zero dark — and `run status` reads the page at
+**90935 B, +1035 B/day over 27 commits — 39 days to the exec cliff, 33 to the
+self-imposed ceiling.** The growth rate is about a quarter of what the entry
+assumed. **This does not change the firing**: a repair with a computable expiry
+is still a repair with an expiry, `(iii)` is still the right default, and the
+argv path is still the mechanism that took the loop out for 23 hours. It is
+recorded because a default that fires on a premise nobody re-checked is the
+exact defect three prior firings have now named as structural. The premise is
+re-checked, in writing, before firing, and the correct reading is that the
+runway is five weeks rather than eleven days.
+
+**What the firing does, in full, and nothing else.** It picks only
+already-permitted actions: a desk editing its own steering page is what the
+Review does every morning, and repairing the launcher so it can `exec` restores
+a capability rather than widening one. It moves NO threshold in either
+direction, edits no `GOAL.md` text, weakens no gate, refuses no run that is
+permitted today, permits no run that is refused today, spends no GPU, commits no
+budget, fails no spec, and stales no certificate. It is MONOTONE on the thing at
+issue: the builder can only go from unable-to-start to able-to-start.
+
+**THE PRICE, STATED RATHER THAN BURIED — and it is the entry's own words.**
+`(iii)` leaves the growth itself unaddressed. The steering page keeps growing
+under either repair, and **neither option asks the harder question of whether a
+90 KB steering page is a sensible thing to hand a builder every hour.** That
+question is real, it is NOT in this entry, and it is not closed by this firing.
+
+**HOW TO REVERSE IT.** `git revert` the one-line launcher change and re-grow the
+page. No threshold, no ledger row, no re-run.
+
+**TRANSCRIPTION IS OWED BY THE BUILDER**, per `D13`/`D22`/`D29`: open the
+`DECISIONS_RESOLVED.md` entry quoting this block. Until that lands, **THIS BLOCK
+IS THE FIRING RECORD.** Unlike `D32`, this one DOES carry a code order, and it
+is the conditional stdin change above.
+
+**Evidence:** `experiments/decisions.py --check` at 2026-09-25 00:4x prints
+`D34` under **`OVERDUE — DEFAULT IS DUE TO FIRE`**; `decide_by: 2026-09-24`;
+`wc -c scripts/ladder_prompt.md` = 90935; `scripts/ladder_loop.sh:270,282` as
+quoted; `/data/jack-logs/ladder.log` — 45 `iteration end rc=0` lines after
+2026-09-21T06:07:22, 45 of 45.
