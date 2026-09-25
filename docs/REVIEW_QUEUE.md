@@ -8546,7 +8546,7 @@ cites any of them — this is the rare class where the world half is already
 measured and only the instrument is in question, which is why acting now costs
 nothing and waiting costs four mis-read results.
 
-ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19 | `6fff04f` (LT.02 attempt 1, FAIL, seeds 0/1/2, clean stamp) | OPEN
+ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19 | `6fff04f` (LT.02 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     LT.02 exists to certify the instrument that can see the noisy-TV-is-your-
     own-body failure (PG.4's blind spot) before CU.3 and the LT.03+ arms may
     claim "his curiosity is not trapped". The registered run FAILed on C1
@@ -8596,6 +8596,68 @@ ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19
     mass, live at routing: frees 6 (LT.03-LT.07, LT.09) / blocks 8, the
     third-largest FAIL mass on the board.
     DUE: 2026-09-24 | redesign disposition, the Review's
+    DUE: 2026-10-02 | DISPOSITIONED 2026-09-25 (Review DAILY) — **RULED (a),
+        and it is SPEC-LOCAL, so it does NOT wait for the world-edit window.**
+        Execution the builder's; 10-02 is the instrument's own `next_free_due`.
+
+        **THE RULING: give the certification venue a genuinely stochastic
+        BODY-CARRIED noise source, injected in THIS SPEC'S RIG — not in
+        `playground.py`.** The fork read as expensive because `LT.02` already
+        declares `IMPL_DEPS = ["playground.py", ...]`, so a venue edit looked
+        like it billed the 21 certificates at the head of this file and belonged
+        behind `w1-world-edit-window`. It does not, and the reason is in the
+        spec: the rig already builds the agent's action prototypes itself and
+        already overrides the body's own capability there (`protos[:, 4:6] =
+        -1.0`, adhesion forced OFF). Stochastic ACTUATION noise is a property of
+        the agent's actuation, not of the world — its natural home is exactly
+        that code, and putting it there bills **ZERO** certificates and waits
+        for nothing. The cheap fork and the scientifically correct fork are the
+        same fork, which is why this could be ruled on a DAILY.
+
+        **Why (a) and not (b).** The detector's claim is specifically that it can
+        distinguish BODY-carried from WORLD-carried irreducible surprise. The
+        known-positive that fired (`chaos_occupancy` 6.198, `panel_dwell` 0.667)
+        is panel-based — i.e. WORLD-carried — so it proves the detector alive
+        without ever testing the discrimination the detector exists to make. A
+        body-carried true positive is therefore not a convenience; it is the
+        missing half of the control. Genuinely random actuator noise is
+        irreducible BY CONSTRUCTION (no model predicts white noise), it is
+        carried by the body, and an agent can farm it — which is the exact
+        object the detector must flag. Adding it SHARPENS a control that is
+        currently half-blind; that is permitted and required. The climber and
+        the existing known-positive stay exactly as they are, and **no bar
+        moves** — 3.0 and 0.4 are untouched.
+
+        **THE GUARD, and it is the load-bearing half of this disposition.** This
+        redesign must not be allowed to launder a premise that measurement
+        killed. `LT.02` falsified the docstring's founding claim that "ragdoll
+        contact dynamics are an inexhaustible source of irreducible prediction
+        error": on this body, at this obs resolution, self-generated contact
+        chaos is REDUCIBLE — `e_mean(icm)` 0.148 vs random 0.552, gain 0.134,
+        `thrash_ratio` 0.385 (the farmer moves LESS than random) — against the
+        panel's genuinely irreducible 0.0134. **That stays falsified.** The new
+        source certifies the DETECTOR; it does not restore the THREAT. So
+        `LT.03+` and `CU.3` may cite the re-run for "the instrument can see
+        body-carried irreducible surprise" and may NOT cite it for "his own body
+        is a noise trap he had to escape" — the measured answer to that is that
+        his body cannot trap him here, and an arm claiming immunity to a threat
+        this venue cannot produce is claiming a free pass. Any re-run must carry
+        that distinction in its disclosure or it is re-certifying a corpse.
+
+        **The scientific result is the finding, and it outlives the fork:**
+        self-surprise is SELF-EXTINGUISHING unless its source is genuinely
+        stochastic — a policy that farms a spot concentrates data exactly where
+        the pooled model then masters it. That belongs beside the body-instrument
+        family already counted on `w0-too-shallow` (LT.01's `nonladder_rise`
+        0.084 m, UB.14's eye at 0.159, W0.BAL's 0.002–0.004 upright, BA.03's
+        blind twin): one more reading that the substrate under the curiosity
+        ladder is shallower than its specs assume. Counted there, not here.
+
+        **Staleness bill: ZERO** — LT.02 is red on attempt 1 and nothing cites
+        it — and the upside is why this was worth ruling today rather than
+        Sunday: the row's own block mass, live at routing, frees 6
+        (LT.03–LT.07, LT.09) against 8 blocked, the third-largest FAIL mass on
+        the board. Not re-derived this morning; re-derive before execution.
 
 ## ROUTED 2026-09-20 (Review FULL): `ba03-vestibular-channel-is-never-load-bearing-under-one-kick`
 ## — split out of `ba03-null-saturates-the-horizon` so that adopting the cheap
