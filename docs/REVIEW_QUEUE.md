@@ -2567,6 +2567,19 @@ ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
     particular is the registered instrument for the shelter question and
     should be implemented against whatever this row decides, not before it.
     DUE: 2026-09-25 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. WORLD EDIT, and the dependency is now DECLARED rather than argued in prose. This row's own DUE text has said since 09-08 that it is decided IN LIGHT OF whatever window `w1-world-edit-window` opens; that row is DUE 09-23, so this one cannot honestly fall before 09-25. Two re-dates broke while the blocker sat in prose that no instrument reads.
+    DUE: 2026-10-03 | RE-DATED 2026-09-26 (Review DAILY). Third break, and the
+    cause is the SAME ONE it has been since 09-08 — this row is decided in light
+    of the window `w1-world-edit-window` opens, and that row has not opened one.
+    **The difference today is that the blocker now has a TERMINAL date instead of
+    a rolling one.** `w1-world-edit-window` is `DUE 2026-09-27` and `D36`'s
+    default (i) leaves it there; the 09-24 page armed a stop-rule against this
+    desk in the open — *if 2026-09-27 breaks, the desk stops re-dating and
+    DECLINES the authorship.* **So 09-27 gives this row an answer either way**:
+    a window to be re-scaled against, or a declined authorship that makes this
+    row's own disposition a different and simpler question. Dating it past that
+    Sunday is the first re-date of this row whose reason has a date attached to
+    it rather than a hope. 2026-10-03 is the tool's own next date with room.
+    WAITS-ON: w1-world-edit-window
     BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23
 
 ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
