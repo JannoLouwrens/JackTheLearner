@@ -26703,7 +26703,7 @@
     "T0.17": {
       "amended": [],
       "attempt": 22,
-      "commit": "b4df9bb",
+      "commit": "51d21a5",
       "compute_s": null,
       "control_metrics": {
         "claim_rule_sees_amended_claim": true,
@@ -26712,57 +26712,10 @@
         "impl_sha_rule_sees_amended_claim": false
       },
       "dirty_files": null,
-      "duration_s": 17.55,
+      "duration_s": 17.74,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "aabced4",
-          "control_metrics": {
-            "claim_rule_sees_amended_claim": true,
-            "detector_sees_amendment": false,
-            "hand_edit_took_effect": true,
-            "impl_sha_rule_sees_amended_claim": false
-          },
-          "gpu_job_id": null,
-          "impl_sha": "40c147f13e16ed35",
-          "message": "",
-          "metrics": {
-            "amendment_is_attributable": true,
-            "claim_hash_covers_every_claim_field": true,
-            "claim_hash_ignores_bookkeeping": true,
-            "content_check_fires_on_postrun_edit": true,
-            "content_check_reports_unanswerable": true,
-            "content_check_spares_unedited_file": true,
-            "detector_flags_moved_dependency": true,
-            "detector_sees_amendment": true,
-            "detector_spares_unmoved_dependency": true,
-            "drift_sees_amended_claim": true,
-            "drift_spares_unamended_claim": true,
-            "history_absence_preserved": true,
-            "history_carries_evidence": true,
-            "history_keeps_amendment": true,
-            "pass_rows_claim_unstamped": 57,
-            "pass_rows_claim_verified": 37,
-            "pass_rows_with_drifted_claim": 0,
-            "refuses_pass_and_fail": true,
-            "refuses_unattributed": true,
-            "run_spec_leaves_amended_empty": true,
-            "run_spec_stamps_the_claim": true,
-            "unknown_attempt_is_sticky": true,
-            "unprotected_pass_certificates": 0,
-            "unstamped_answered_by_content": 18,
-            "unstamped_claim_is_not_clean": true,
-            "unstamped_records_examined": 18,
-            "unstamped_unanswerable": 0
-          },
-          "ran_at": "2026-08-31T15:18:01",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "a237619e332e8397",
-          "status": "PASS"
-        },
         {
           "commit": "e1543e5+dirty",
           "control_metrics": {
@@ -27665,10 +27618,78 @@
           ],
           "spec_sha": "a237619e332e8397",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "b4df9bb",
+          "compute_s": null,
+          "control_metrics": {
+            "claim_rule_sees_amended_claim": true,
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true,
+            "impl_sha_rule_sees_amended_claim": false
+          },
+          "dirty_files": null,
+          "duration_s": 17.55,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "c89f600a18e519fd",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 6 deciding metric(s) reproduced exactly in a fresh process (+18.1s)",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "claim_hash_covers_every_claim_field": true,
+            "claim_hash_ignores_bookkeeping": true,
+            "code_is_still_dirt_under_every_declaration": true,
+            "content_check_fires_on_postrun_edit": true,
+            "content_check_reports_unanswerable": true,
+            "content_check_spares_unedited_file": true,
+            "declared_doc_is_dirt": true,
+            "detector_flags_moved_dependency": true,
+            "detector_sees_amendment": true,
+            "detector_spares_unmoved_dependency": true,
+            "drift_sees_amended_claim": true,
+            "drift_spares_unamended_claim": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "mutation_catches_planted_reader": true,
+            "mutation_spares_declared_reader": true,
+            "mutation_spares_prose_mention": true,
+            "no_spec_context_is_conservative": true,
+            "pass_rows_claim_unstamped": 6,
+            "pass_rows_claim_verified": 104,
+            "pass_rows_with_drifted_claim": 0,
+            "prose_doc_is_never_dirt": true,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "run_spec_stamps_the_claim": true,
+            "runner_output_beats_declaration": true,
+            "spec_fields_all_classified": true,
+            "specs_scanned_for_doc_reads": 164,
+            "undeclared_doc_is_clean": true,
+            "undeclared_doc_readers": 0,
+            "unknown_attempt_is_sticky": true,
+            "unprotected_pass_certificates": 0,
+            "unstamped_answered_by_content": 2,
+            "unstamped_claim_is_not_clean": true,
+            "unstamped_records_examined": 2,
+            "unstamped_unanswerable": 0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 231.4,
+          "preserved_impl": null,
+          "ran_at": "2026-09-26T12:23:54",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "a237619e332e8397",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "c89f600a18e519fd",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 6 deciding metric(s) reproduced exactly in a fresh process (+18.1s)",
+      "impl_sha": "d921e54dd020a3c9",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 6 deciding metric(s) reproduced exactly in a fresh process (+18.2s)",
       "metrics": {
         "amendment_is_attributable": true,
         "claim_hash_covers_every_claim_field": true,
@@ -27685,7 +27706,27 @@
         "drift_spares_unamended_claim": true,
         "history_absence_preserved": true,
         "history_carries_evidence": true,
+        "history_exempt_fields": [
+          "history",
+          "spec_id"
+        ],
+        "history_fields_altered": [],
+        "history_fields_dropped": [],
+        "history_fields_dropped_by_pre_repair_projection": [
+          "attempt",
+          "compute_s",
+          "dirty_files",
+          "duration_s",
+          "hardware",
+          "peak_rss_inherited",
+          "peak_rss_mb",
+          "preserved_impl"
+        ],
+        "history_fields_partition_result": true,
+        "history_fixture_fields_unset": [],
         "history_keeps_amendment": true,
+        "history_loses_no_field": true,
+        "mutation_catches_dropped_field": true,
         "mutation_catches_planted_reader": true,
         "mutation_spares_declared_reader": true,
         "mutation_spares_prose_mention": true,
@@ -27713,7 +27754,7 @@
       "peak_rss_inherited": false,
       "peak_rss_mb": 231.4,
       "preserved_impl": null,
-      "ran_at": "2026-09-26T12:23:54",
+      "ran_at": "2026-09-26T13:22:00",
       "seeds": [
         0
       ],
@@ -33462,59 +33503,17 @@
     "T0.33": {
       "amended": [],
       "attempt": 22,
-      "commit": "b4df9bb",
+      "commit": "51d21a5",
       "compute_s": null,
       "control_metrics": {
         "alive": true,
         "leak_visible": true
       },
       "dirty_files": null,
-      "duration_s": 1.28,
+      "duration_s": 1.29,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "9e847cf",
-          "control_metrics": {
-            "alive": true,
-            "leak_visible": true
-          },
-          "gpu_job_id": null,
-          "impl_sha": "bb7d2094bbc65fd0",
-          "message": "",
-          "metrics": {
-            "affords_small": true,
-            "charged_moves": true,
-            "cpu_foreclosed": [],
-            "cpu_quota_enforced": 1.0,
-            "detached_routed": true,
-            "exhausted_refused": true,
-            "fresh_admits_worst": true,
-            "gpu_unbound": true,
-            "isolation_ok": true,
-            "live_load": 0.41,
-            "live_remaining_s": 51661.8,
-            "load_refused": true,
-            "loop_load_agrees": true,
-            "n_foreclosed_now": 53,
-            "overrun_marked": true,
-            "persists": true,
-            "receipt_committable": true,
-            "refuses_oversized": true,
-            "remaining_mid_s": 57000.0,
-            "shipped_refusal": true,
-            "shipped_refusal_s": 0.011,
-            "stale_writer_safe": true,
-            "starts_full": true,
-            "wiring_ok": true
-          },
-          "ran_at": "2026-09-04T08:15:27",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "fac47af5bb0e9d36",
-          "status": "PASS"
-        },
         {
           "commit": "9c5e74a",
           "control_metrics": {
@@ -34893,9 +34892,91 @@
           ],
           "spec_sha": "5fa065bb96101742",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "b4df9bb",
+          "compute_s": null,
+          "control_metrics": {
+            "alive": true,
+            "leak_visible": true
+          },
+          "dirty_files": null,
+          "duration_s": 1.28,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "e4c68c4447f1a608",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+0.2s)",
+          "metrics": {
+            "affords_small": true,
+            "charged_moves": true,
+            "class_slack": [
+              {
+                "budget": "cpu<2h",
+                "n": 59,
+                "n_foreclosed": 37,
+                "slack_s": 3600.0,
+                "used_s": 8675.06
+              },
+              {
+                "budget": "cpu<10min",
+                "n": 86,
+                "n_foreclosed": 0,
+                "slack_s": 46800.0,
+                "used_s": 8675.06
+              },
+              {
+                "budget": "cpu<1min",
+                "n": 26,
+                "n_foreclosed": 0,
+                "slack_s": 56547.56,
+                "used_s": 8675.06
+              }
+            ],
+            "corrupt_ledger_fails_closed": true,
+            "cpu_foreclosed": [],
+            "cpu_quota_enforced": 1.0,
+            "detached_routed": true,
+            "empty_ledger_falls_back": true,
+            "est_above_enum": [],
+            "exhausted_refused": true,
+            "fresh_admits_worst": true,
+            "gpu_unbound": true,
+            "isolation_ok": true,
+            "live_load": 0.66,
+            "live_remaining_s": 48924.94,
+            "load_refused": true,
+            "loop_load_agrees": true,
+            "n_foreclosed_enum": 57,
+            "n_foreclosed_now": 37,
+            "n_foreclosed_unmeasured": 36,
+            "overrun_marked": true,
+            "persists": true,
+            "projection_binds": true,
+            "projection_only_tightens": true,
+            "receipt_committable": true,
+            "refuses_oversized": true,
+            "remaining_mid_s": 57000.0,
+            "shipped_refusal": true,
+            "shipped_refusal_s": 0.018,
+            "slack_predicts_refusal": true,
+            "stale_writer_safe": true,
+            "starts_full": true,
+            "wiring_ok": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 219.5,
+          "preserved_impl": null,
+          "ran_at": "2026-09-26T12:24:14",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "5fa065bb96101742",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "e4c68c4447f1a608",
+      "impl_sha": "bce2bcf78ee21544",
       "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+0.2s)",
       "metrics": {
         "affords_small": true,
@@ -34906,21 +34987,21 @@
             "n": 59,
             "n_foreclosed": 37,
             "slack_s": 3600.0,
-            "used_s": 8675.06
+            "used_s": 8840.6
           },
           {
             "budget": "cpu<10min",
             "n": 86,
             "n_foreclosed": 0,
             "slack_s": 46800.0,
-            "used_s": 8675.06
+            "used_s": 8840.6
           },
           {
             "budget": "cpu<1min",
             "n": 26,
             "n_foreclosed": 0,
             "slack_s": 56547.56,
-            "used_s": 8675.06
+            "used_s": 8840.6
           }
         ],
         "corrupt_ledger_fails_closed": true,
@@ -34933,8 +35014,8 @@
         "fresh_admits_worst": true,
         "gpu_unbound": true,
         "isolation_ok": true,
-        "live_load": 0.66,
-        "live_remaining_s": 48924.94,
+        "live_load": 0.5,
+        "live_remaining_s": 48759.4,
         "load_refused": true,
         "loop_load_agrees": true,
         "n_foreclosed_enum": 57,
@@ -34955,9 +35036,9 @@
         "wiring_ok": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 219.5,
+      "peak_rss_mb": 219.7,
       "preserved_impl": null,
-      "ran_at": "2026-09-26T12:24:14",
+      "ran_at": "2026-09-26T13:22:32",
       "seeds": [
         0
       ],
@@ -35305,8 +35386,8 @@
     },
     "T0.35": {
       "amended": [],
-      "attempt": 16,
-      "commit": "b4df9bb",
+      "attempt": 17,
+      "commit": "51d21a5",
       "compute_s": null,
       "control_metrics": {
         "full_instrument_sees_violator": true,
@@ -35316,7 +35397,7 @@
         "transitive_sees_chain": true
       },
       "dirty_files": null,
-      "duration_s": 6.66,
+      "duration_s": 6.79,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -35958,10 +36039,64 @@
           ],
           "spec_sha": "e5497a3a40b0bcc2",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 16,
+          "commit": "b4df9bb",
+          "compute_s": null,
+          "control_metrics": {
+            "full_instrument_sees_violator": true,
+            "onehop_violations_on_chain": 0,
+            "optin_examined": 1,
+            "optin_violations": 0,
+            "transitive_sees_chain": true
+          },
+          "dirty_files": null,
+          "duration_s": 6.66,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "faaed60a280dcd28",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 7 deciding metric(s) reproduced exactly in a fresh process (+4.1s)",
+          "metrics": {
+            "compile_failures": 0,
+            "compile_failures_named": [],
+            "control_onehop_reads_clean": true,
+            "control_optin_reads_clean": true,
+            "detector_fires_on_lazy_undeclared": true,
+            "detector_silent_on_declarer": true,
+            "failed_properties": [],
+            "grandfather_stale": 0,
+            "grandfather_stale_named": {},
+            "grandfathered": 8,
+            "late_future_import_parse_compile_split": true,
+            "mutation_stales_me11a": true,
+            "new_transitive": 0,
+            "new_transitive_named": {},
+            "new_undeclared": 0,
+            "new_undeclared_named": {},
+            "properties_failed": 0,
+            "transitive_fires_where_onehop_blind": true,
+            "transitive_grandfather_stale": 0,
+            "transitive_grandfather_stale_named": {},
+            "transitive_grandfathered": 17,
+            "transitive_silent_on_declarer": true,
+            "transitive_undeclared": 17,
+            "undeclared_importers": 8
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 221.1,
+          "preserved_impl": null,
+          "ran_at": "2026-09-26T12:24:21",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "e5497a3a40b0bcc2",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "faaed60a280dcd28",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 7 deciding metric(s) reproduced exactly in a fresh process (+4.1s)",
+      "impl_sha": "658acac2cc373a86",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 7 deciding metric(s) reproduced exactly in a fresh process (+4.2s)",
       "metrics": {
         "compile_failures": 0,
         "compile_failures_named": [],
@@ -35989,9 +36124,9 @@
         "undeclared_importers": 8
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 221.1,
+      "peak_rss_mb": 220.9,
       "preserved_impl": null,
-      "ran_at": "2026-09-26T12:24:21",
+      "ran_at": "2026-09-26T13:22:40",
       "seeds": [
         0
       ],
