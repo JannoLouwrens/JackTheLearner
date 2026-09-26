@@ -10207,3 +10207,77 @@ ROUTED: t022-p9-reads-a-specs-own-row-as-someone-elses | 2026-09-26 | `T0.22` of
     Staleness bill: ZERO for the diagnosis. Option (i) or (ii) bills one
     `T0.22` re-buy at cpu<10min; `T0.22` is cited by no other certificate
     (`run blast-radius T0.22` before the edit, per the arming contract).
+
+ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run status` and `run stale` both EXIT 0 on 24 staleness rows, 2 of which are standing PASS certificates (builder, this slot, measured immediately after discharging the 121st audit's FTB 3 on the neighbouring class) | OPEN
+    DUE: 2026-10-04 | `review-queue`'s own `next_free_due`, read off the tool
+        this slot (09-27, 09-29 and 10-02 all read AMBER at 7 against a measured
+        capacity of 6). Nothing is dispatched behind it and no number moves
+        until the desk rules, so it takes the mechanical date.
+    WAITS-ON: none | no live row's answer changes what is measured here. It is
+        adjacent to `t022-p9-reads-a-specs-own-row-as-someone-elses` (DUE
+        10-04, routed this morning) in the sense that both are standing PASS
+        certificates that are red-in-waiting, and it is filed separately
+        because that row is one instrument with a one-line repair while this
+        one is a SEVERITY question across a whole reporting class.
+    Question: the 121st audit's FTB 3 ordered floor state into `run status`'s
+    exit code, and this slot shipped it (`8cd37d0`: status 0 -> 2 on
+    `decisions_default_action_expired` = 1 vs floor 0). Immediately visible
+    once that seam was opened: **floor state was not the only alarm in that
+    tool reaching no exit code.** Three `!`-marked classes in `cmd_status`
+    assert an OWED REPAIR in their own printed words and reach no exit code at
+    all, and `run stale` — the tool whose whole subject they are — exits 0 on
+    the same population.
+    MEASURED this slot, at `2f84077`:
+      `! DIRTY STAMPS`             2 rows (T6.03, PL.02)
+      `! STALE CLAIMS`            22 rows, each printing *"Re-run it — the
+                                  entry is about older code"*
+      `! STALE PRE-impl_sha`       1 row  (T2.02)
+      `run status` EXIT 2 — for the FLOOR BREACH only; remove that one breach
+      and the same 25 rows print under EXIT 0.
+      `run stale`  EXIT 0 — with all 25 on its own page.
+    **The two that matter are `T0.21` (PASS) and `T0.31` (PASS).** Twenty of
+    the remaining twenty-three are FAIL/VOID rows, several under an explicit
+    do-not-re-dispatch directive, and a stale FAIL is a much weaker statement
+    than a stale PASS: the ladder is not claiming anything on it. A standing
+    PASS whose test file has moved IS a live capability claim about code that
+    no longer exists — the exact shape of the 2026-08-21 Review's finding that
+    two certificates decayed in silence inside a 55-commit window because three
+    lean passes watched processes and never the scoreboard.
+    Why this is the desk's and not the builder's: it is a SEVERITY call, and
+    the hazard of getting it wrong is the one LESSONS.md records this same day
+    — an exit code that is red every slot for reasons nobody can act on teaches
+    the next iteration to ignore it, which is worse than the silence. Choosing
+    which of 25 rows may redden a mandated per-slot check is conduct, and the
+    implementer should not make it in the same hour they opened the seam.
+    Options, priced:
+    (i)   REDDEN ON STALE **PASS** ROWS ONLY — the population that is a live
+          capability claim about older code. Today that is 2, so the tool would
+          go red today and green the moment both are re-bought. Cheapest, and
+          it is the narrowest statement that is still true. Cost: one predicate
+          in `cmd_status`/`cmd_stale`, plus the `T0.36` re-buy (sole `IMPL_DEPS`
+          on `run.py`) — and the two re-buys themselves, `T0.21` and `T0.31`,
+          both cpu-class.
+    (ii)  REDDEN ON THE WHOLE CLASS — honest and immediately self-defeating:
+          22 of the 25 are settled non-PASS rows whose re-run is FORBIDDEN by
+          standing directives, so the exit code would be permanently red with
+          no legal action available. Priced, not recommended, and named because
+          it is the obvious move.
+    (iii) PRINT THE LIMIT INSTEAD — one sentence in the block stating that
+          staleness is reporting-only here and naming the tool that gates it.
+          The audit offered exactly this shape as its option (b) for the floor
+          class. **It cannot be written honestly today: NO tool in this repo
+          gates staleness by exit code** (`run stale` EXIT 0 on the same 25
+          rows, verified above), so the sentence would have to read "nothing
+          gates this", which is worth printing but is a disclosure, not a
+          repair.
+    (iv)  A FLOORED RATCHET on the count of stale standing-PASS certificates —
+          the repo's own convention for exactly this shape
+          (`PASS_ON_DEAD_DEPENDENCY_BASELINE` is its nearest sibling and would
+          sit beside it). **PRE-REFUSED HERE BY THE STANDING FREEZE**, not on
+          merit: `ladder_prompt.md`'s freeze item 2 forbids a new ratchet or
+          governance instrument until `T6.01` has recorded a verdict. Named so
+          the desk can see that the most idiomatic repair is currently illegal,
+          and so nobody quietly ships it as "just a counter".
+    Staleness bill: ZERO for the diagnosis. Option (i) bills `T0.36`
+    (cpu<1min) plus whatever the desk decides about `T0.21`/`T0.31`; option
+    (iii) bills `T0.36` alone.
