@@ -10772,6 +10772,108 @@ for an exemption. What is asked is narrower and is the Review's: whether the
 EXISTING `--gate` sweep should have a declared cadence, and if so whose. No
 bar moved, no spec file edited, no threshold touched.
 
+**ADDENDUM 2026-09-26 (builder, 23:0x slot) — LAYER 3 IS A DIFFERENT TIER AND
+IT ANSWERS THE CADENCE QUESTION WITH A RANKING. No re-date, no new ask.**
+Same method, applied to the cheap TIER-1 population — the first non-Tier-0
+certificates this sweep has touched:
+
+    cheap TIER-0   30 certificates   25 hold   5 do not   (17%)
+    cheap TIER-1    6 certificates    6 hold   0 do not   ( 0%)
+      T1.13 PASS 3.8 s · T1.11 PASS 6.3 s · T1.05 PASS 23.8 s
+      T1.03 PASS 44.5 s · T1.04 PASS 259.3 s   (offline, guarded, no ledger write)
+      T1.12 PASS (attempt 3, 1141.31 s, clean tree at `49f71eb`, no dirty
+            stamp) — taken as a REGISTERED re-buy instead of an offline
+            re-derivation, because the same 19-minute run also pays the bill
+            for declaring its undeclared `UnifiedBrain.py` edge. Its three
+            gated metrics reproduce the standing certificate: conditioning
+            ratio 1578.0, reconstruction improvement 867.9, final train loss
+            0.00297.
+
+**Three explanations die before the useful one.** AGE does not explain the
+green: five of the six rows are 20 days old and `T1.12` is 24, inside the band
+of the three oldest Tier-0 latent reds (`T0.18` 27 d, `T0.22` 23 d, `T0.32`
+22 d). COST does not: `T1.04` re-derives in 259 s and `T1.12` trains a flow
+model. STALENESS does not separate them at all — both populations are
+overwhelmingly non-stale, and three of the five Tier-0 reds held a valid
+`impl_sha` the whole time they were red.
+
+**What does separate them is the churn of the SUBJECT, measured over the same
+24-day window:** commits touching Tier-0's subject (this repo's own nine
+instrument modules) **122**; commits touching Tier-1's subject
+(`UnifiedBrain.py`, `TrainingPipeline.py`, `MoCapLoader.py`, `playground.py`)
+**0**, out of 957 commits total. **So the answer to this row's cadence
+question has a ranking in it, and the ranking is not cost and not age: sweep
+by how often the code a gate OBSERVES changes.** For any spec whose subject is
+the measuring apparatus that rate is daily, which is why the self-referential
+population is the one that pays. Still NOTHING PROPOSED and still no exemption
+requested — this narrows the Review's question, it does not answer it.
+
+**The alive-proof, because 6/6 green is also what a channel pinned to PASS
+prints** (`LT.03` recorded exactly that on 2026-09-25 off a truthy tuple): the
+same children re-run with every numeric metric zeroed and the committed
+`_check` untouched returned **non-PASS 4/4** (`T1.13`, `T1.11`, `T1.05`,
+`T1.03`). Layer 1 had a natural positive control in `T0.22`; an all-green
+population has none, so one was planted.
+
+**And the reading this desk should not have to ask for.** The Tier-1
+certificates are green because their subject has not moved, and their subject
+is Jack. Zero of 957 commits in 24 days touched the four files that are his
+brain, body and world; widening to *any* repo-root module of his, the count is
+**2 of 957** and both are the same file (`EpisodicMemory.py`). That green is
+not health, it is stillness — `D35`'s
+allocation finding re-measured on an independent instrument nine days later,
+and sharper than the count that forced the freeze. Reported, not routed: the
+freeze is already open on the owner's desk (122nd audit, FOR THE OWNER 1) and
+a second row would be the same question wearing a new id.
+
+## ROUTED 2026-09-26 (builder, 23:0x slot): `gpu-job-strings-carry-undeclared-
+## edges-that-no-ast-walk-can-see` — a THIRD evasion of `T0.35`'s domain, and
+## unlike the two its docstring names, this one is in the tree three times
+
+ROUTED: gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see | 2026-09-26 | static read of `t1_02_shuffled_control.py:48`, `t1_08_seed_variance.py:133`, `t1_09_fits_in_t4.py:42` — each a `from UnifiedBrain import ...` inside a `JOB = r'''...'''` string, none declared, none grandfathered, `T0.35` PASS throughout (builder, this slot; no run, no ledger write) | OPEN
+    DUE: 2026-10-06 | `review-queue`'s own `next_free_due`, read off the tool
+        this slot (2026-09-27 already holds 7 against a measured capacity of
+        6). Nothing is dispatched behind it.
+    WAITS-ON: none | the measurement is static and complete, and no live row's
+        answer changes it. It is adjacent to
+        `standing-pass-certificates-are-falsifiable-only-by-running-them`
+        (DUE 10-06) — same file, same class of blindness — but that row asks a
+        CADENCE question and this one asks a DOMAIN question, and neither
+        answer constrains the other.
+
+**WHAT IS TRUE.** `T0.35` gates "every registered spec declares in `IMPL_DEPS`
+every repo-root module it imports at ANY nesting depth", and its notes name
+its own known evasions: *"importlib.import_module strings and exec are
+invisible to an AST walk; neither appears in the tree today."* A third member
+of that family does appear in the tree today, three times in Tier 1 alone:
+`build_job` ships a source STRING to a GPU backend that clones this repo at a
+pinned ref, so the string's `from UnifiedBrain import ...` executes against
+this repo's `UnifiedBrain.py` and the certificate's verdict turns on that
+file's bytes — while the AST walk sees a string literal and is correct to.
+`T1.02` and `T1.09` are standing PASS certificates on this footing; `T1.08` is
+FAIL and carries the same edge.
+
+**WHAT IS NOT CLAIMED.** No certificate is red, and nothing here says one is.
+`UnifiedBrain.py` has 0 commits in 24 days, which is exactly why this has cost
+nothing yet — and exactly why it is worth a row now: it fires on the first day
+somebody edits Jack's brain, which is the work the whole project is blocked
+on. A trap that is harmless only while the project is stalled is not harmless.
+
+**THE MENU, priced, nothing taken.** (i) Declare the three edges and re-buy —
+`T1.02` and `T1.09` are `gpu<20min` (27 s each of P100 time, but each needs a
+push and a Kaggle round-trip), `T1.08` is FAIL and re-buys nothing. (ii) Widen
+`T0.35`'s domain to parse string literals assigned to a module-level `JOB`
+name — an ADDED conjunct on an existing spec, which is the legal shape, but it
+is detector work and it bills `T0.35`'s certificate. (iii) Grandfather the
+three by name so the class is at least COUNTED — note this set is shrink-only
+and additions are explicitly "the widening move `UNREACHABLE_BASELINE`'s
+header forbids", so (iii) may not be taken as written without the desk saying
+so. (iv) Nothing, on the ground that a job string is a delivery mechanism and
+not an import. **This desk declines to pick**: (ii) and (iii) both touch an
+integrity instrument's domain in the hour that measured it, which is the
+`t022-p9` rule adopted two slots ago. No bar moved, no spec file edited for
+this row, no threshold touched.
+
 ## ROUTED 2026-09-26 (builder, 21:0x slot): `t018-explicit-no-control-reads-as-
 ## an-unrun-promise` — the 52nd audit's own repair broke the spec that gates
 ## it, because one instrument reads the field's TRUTH and the other its MEANING

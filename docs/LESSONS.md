@@ -17993,3 +17993,85 @@ detector that walks imports will report a clean tree in a codebase whose
 verdicts turn on file reads, and it will be telling the truth about imports the
 entire time. **When a detector says clean, ask what KIND of thing it counts, not
 just which population.**
+
+---
+
+## A CERTIFICATE DECAYS AT THE CHURN RATE OF WHAT IT OBSERVES, NOT OF WHAT IT IS — so rank a re-derivation sweep by the SUBJECT's churn, never by the spec's cost or the row's age (builder, 2026-09-26; layer 3, the cheap Tier-1 population against Tier-0's completed 30)
+
+**The measurement, two populations re-derived the same way** — `_aggregate`
+over the declared seeds, the committed `_check`, `coerce_check_return`,
+offline, child process per spec, no ledger write:
+
+    cheap TIER-0   30 certificates   25 hold   5 do not   (17%)
+    cheap TIER-1    6 certificates    6 hold   0 do not   ( 0%)
+
+**Three explanations die before the interesting one.** *Age* does not explain
+it: five of the six Tier-1 rows are 20 days old and `T1.12` is 24, inside the
+same band as the three oldest Tier-0 latent reds — `T0.18` 27 d, `T0.22` 23 d,
+`T0.32` 22 d. *Cost* does not: these are not toys — `T1.04` re-derives in 259 s
+and `T1.12` trains a flow model for 19 minutes. *Staleness* does not separate
+them either, and that is the important one: **both populations are
+overwhelmingly non-stale**, and three of the five Tier-0 reds carried a
+perfectly valid `impl_sha` the entire time they were red.
+
+**The variable that does separate them is the churn of the SUBJECT, and it is
+not close.** Commits in the same 24-day window touching each population's
+subject surface:
+
+    Tier-0's subject — this repo's own instruments
+      (run/protocol/verify/registry/coverage/decisions/
+       champions/review_queue/steering.py)                    122 commits
+    Tier-1's subject — Jack
+      (UnifiedBrain.py, TrainingPipeline.py, MoCapLoader.py,
+       playground.py)                                           0 commits
+                                            (of 957 commits total)
+
+A Tier-0 certificate asserts something about the measuring apparatus, and the
+apparatus is edited several times a day by the organs that own the
+certificates. A Tier-1 certificate asserts something about a model, and the
+model is not being edited at all. **Nothing about the SPEC predicts its decay;
+the thing it points at does.**
+
+**THE RULE.** When you cannot afford to re-derive everything, do not rank the
+sweep by what is cheap to run or by what is oldest on the page. Rank it by *how
+often does the code this gate OBSERVES change* — and for any spec whose subject
+is the repo's own instruments, that rate is daily, so the self-referential
+population is always the one to sweep first. Cost picks the sweep you can
+afford; subject churn picks the sweep that finds something.
+
+**AN ALL-GREEN SWEEP MUST CARRY PROOF ITS VERDICT CHANNEL CAN RETURN RED.**
+Layer 1 got this for free — `T0.22` was a known red and reproduced, a natural
+positive control. Layer 3's population is all green, and 6/6 PASS is exactly
+what a channel pinned to PASS also prints. Not hypothetical: `LT.03` recorded a
+confident PASS on 2026-09-25 because `(Status.VOID, reason)` is a truthy tuple.
+So: re-run the same children with every numeric metric zeroed and the committed
+`_check` untouched — **4/4 returned non-PASS**. Generalised: *when a sweep's
+population contains no known red, plant one. The alive-proof is the same
+obligation an at-chance control carries, and an all-green report without one is
+a claim about the sweep, not about the population.*
+
+**THE UNCOMFORTABLE HALF, and it is the one worth carrying.** The Tier-1
+certificates are green because their subject has not moved — and their subject
+is Jack. In 24 days and 957 commits, **zero** touched `UnifiedBrain.py`,
+`TrainingPipeline.py`, `MoCapLoader.py` or `playground.py` — and on the widest
+fair reading, *any* repo-root module of Jack's, the count is **2 of 957**, both
+of them the same file (`EpisodicMemory.py`). That green is not a
+measurement of health; it is a measurement of stillness. Read the two lines
+together and the rule above has a sting in it: **the population whose
+certificates never decay is the population nobody is working on.** This is
+`D35`'s allocation finding re-measured on an independent instrument nine days
+later, and sharper than the count that forced the freeze — that one said under
+a third of the work was about Jack; this one says that of the four files which
+ARE Jack's brain, body and world, the number of commits is none.
+
+**A COROLLARY THAT IS ALREADY BITING AND HAS A ROW.** The same stillness is
+why an undeclared-dependency trap has cost nothing yet: three Tier-1 specs ship
+`from UnifiedBrain import ...` inside a `JOB = r'''...'''` string that a GPU
+backend executes against a clone of this repo, so the verdict turns on that
+file's bytes while `T0.35`'s AST walk sees a string literal and is correct to.
+`T0.35`'s notes already name two evasions of this kind (`importlib` strings,
+`exec`) and say neither appears in the tree; a job string is the third and it
+appears three times. **A trap that is harmless only while the project is
+stalled is not harmless** — it fires on the first day somebody edits Jack's
+brain, which is the work everything else is blocked on. Routed as
+`gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see`.
