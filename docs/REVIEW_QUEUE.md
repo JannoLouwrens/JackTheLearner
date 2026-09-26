@@ -1357,7 +1357,7 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
         no challenger registered and no Review disposition, DECLINE") is not
         met: a Review disposition is what this is.
 
-ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | OPEN
+ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | DISPOSITIONED 2026-09-26 (Review DAILY — the METRIC ruling: adopt (a), the objective's own held-out information content, as a NEW deciding conjunct; retain all four existing CLAIM conjuncts UNCHANGED; no third rig, no arm added, no bar lowered, and the one move that could weaken anything is NAMED and deliberately NOT made)
     DUE: 2026-09-16 | RE-ARMED 2026-09-07 (builder): the row went STALE at 9 d
     with no DUE — the one live queue violation. 2026-09-16 is `next_free_due`,
     the tool's own mechanically-named first date carrying no promise (09-07
@@ -1399,6 +1399,126 @@ ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /d
     UnifiedBrain.py (T2.03, T2.04, T2.06, T3.01) are untouched unless the
     Review chooses to change the component rather than the measurement.
     DUE: 2026-09-25 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. T2.11 is PARKED behind this row and has been for 24 days, which makes it the only row in the overdue class holding a registered spec hostage. Zero staleness bill, a METRIC redesign, no run needed — it is cheap and it has been outranked by louder things five times.
+    DUE: 2026-09-29 | RE-DATED 2026-09-26 (Review DAILY) BECAUSE THE DEBT
+    CHANGED HANDS, and the 09-25 break stands in the record unexcused — it was
+    this desk's sixth deferral of the cheapest row on the page. **The METRIC
+    RULING this row owed is DELIVERED below, in this sitting.** What the new
+    date carries is an IMPLEMENTATION plus a ZERO-COST READ, both the builder's,
+    which is a different debt with a different owner. Date is one clear sitting
+    out; 09-29 carries 6 live rows against the measured capacity of 6, so it is
+    AT capacity and not over it. WAITS-ON: none — this row's answer depends on
+    no other row, which is exactly why six deferrals of it were indefensible.
+    ORDERED: T2.11
+    WAITS-ON: none
+
+**DISPOSITION (Review DAILY, 2026-09-26): ADOPT (a) — gate on the OBJECTIVE's
+held-out information content — as a NEW conjunct. Retain all four existing
+CLAIM conjuncts unchanged. (b) is folded in not as a new arm but as the thing
+that CALIBRATES the new bar, because the rig ALREADY CONTAINS IT.**
+
+**First, the finding that decides this, and it is MEASURED off spent evidence
+at zero cost rather than argued.** Both v2 pilot artifacts
+(`/data/t2_11_pilot2_seed{7,90}.json`, four arms x two seeds, ~18 core-minutes
+already paid) record `disc_loss_last` — the discriminator's cross-entropy in
+nats, against chance `ln 8 = 2.0794`. Reading `Î = ln(n_skills) − H(z|s)` off
+them, beside the accuracy channel this spec currently decides by:
+
+| arm | Î seed 7 | Î seed 90 | held-out acc s7 | held-out acc s90 |
+|---|---|---|---|---|
+| `diayn` | **1.1002** | **1.2184** | 0.9141 | 0.7812 |
+| `shuffled` (control) | **0.0213** | **0.0118** | 0.9141 | **0.8984** |
+| `zero` (floor) | 0.1428 | 0.1599 | 0.1484 | 0.1328 |
+| `oracle` (learner-alive) | 0.8864 | 0.8934 | 0.9766 | 1.0000 |
+
+**In one line: on the metric this spec currently decides by, the control BEATS
+the claim on the worst seed by 0.1172; on the objective's own information
+content, the claim beats the control by a factor of ~100 on BOTH seeds.**
+Worst-seed margins: `beats_shuffled` **−0.1172** (fails), MI **+1.0789 nats**.
+The two channels do not merely disagree in degree, they disagree in SIGN, and
+the mechanism the row diagnosed predicts exactly that — `shuffled`'s
+discriminator is provably uninformative (`Î` 0.01-0.02, pinned at `ln 8`), yet
+`compute_diayn_reward` still reads a state-and-skill-varying field off it, and
+a shared conditioned policy chasing a random field separates its skills as well
+as one chasing MI. **The rig was never broken. The quantity read off it was.**
+
+**THE NEW CONJUNCT, pre-registered in full before any held-out number exists.**
+`mi_beats_field`: the `diayn` discriminator's **HELD-OUT** conditional
+log-likelihood of `z` given `s`, expressed as `Î = ln(n_skills) − H_heldout(z|s)`,
+must exceed the `shuffled` arm's `Î` by `MI_MARGIN_MIN` nats on the **WORST
+registered seed**, never the mean — the same worst-seed discipline the four
+existing CLAIM conjuncts already carry. It is read on the SAME held-out rollout
+set the classifier already materialises, with the SAME `hash_overlap 0`
+train/held-out separation the rig already gates (`no_leakage`).
+
+**`MI_MARGIN_MIN` IS DERIVED FROM THE NULL ARMS AND NEVER FROM `diayn`'s
+NUMBER, and the reason is in the table above.** A margin calibrated against
+chance would be fitted to a saturated null: `zero` is a *provably stationary*
+policy — `q_absmax` exactly 0.0, `floor_is_uniform` green — and its
+discriminator still extracts **0.1428 / 0.1599 nats** from the state
+distribution of a uniform random walk. So the floor of this channel is not
+zero, and anything below ~0.16 nats measures the world's geometry rather than
+the objective. **`MI_MARGIN_MIN = 0.50 nats**, which is 3.1x `zero`'s worst
+measured extraction and ~23x `shuffled`'s — set from the two nulls, written
+down here BEFORE the held-out read, and PROVISIONAL like every other bar on
+this spec.
+
+**FOUR THINGS THIS RULING DELIBERATELY DOES NOT DO.**
+  1. **It does not write a third rig, and that is a constraint rather than a
+     preference.** This spec's own pre-registered tree (THE REPAIR, clause "IF
+     THE REDESIGNED RIG ALSO SHOWS THE CONTROL PASSING... park the spec, record
+     the finding, do not write a third rig") has FIRED, and it binds this desk
+     too. Arms, world, learner, budget, discriminator, embedding, head init and
+     every existing bar stay **byte-identical**. A new READ on an existing rig
+     is not a new rig — which is the whole reason the row was routed here as a
+     METRIC redesign and "not in a bakeoff".
+  2. **It moves no bar and demotes no gate.** `ABOVE_CHANCE_MIN`, `MARGIN_MIN`,
+     `PER_CLASS_MIN`, `SHUFFLE_FIT_FLOOR`, `SHUFFLE_BAND`, `FLOOR_COVERAGE`,
+     `ORACLE_MIN` all stand. `beats_shuffled` stays a binding CLAIM conjunct.
+     The spec gets strictly HARDER: five claim conjuncts where there were four.
+  3. **It does not unpark `T2.11` and it forecasts no PASS.** Adding a conjunct
+     to a spec whose control passes cannot make it pass, and saying otherwise
+     would be the exact thing this desk is forbidden. `_GATES_FROZEN` stays
+     False, `run()` keeps refusing, and it keeps refusing AFTER this lands.
+     What the ruling buys is not a green tick — it is that the project will
+     finally know whether `SkillDiscovery`'s objective carries information
+     about `z`, a question 24 days of parking has not answered and which the
+     spent evidence says is answerable for free.
+  4. **THE ONE MOVE THAT COULD WEAKEN SOMETHING IS NAMED AND NOT MADE.**
+     `beats_shuffled` is now measured to read the POLICY's response to any
+     structured reward rather than the OBJECTIVE's information content, which
+     is a live argument for demoting it from a deciding CLAIM gate to a
+     reported diagnostic. **This desk is not making that demotion**, today or
+     by implication: demoting a control gate is the one direction the Review's
+     one law forbids, and letting it ride into the ladder on the back of a
+     genuine strengthening is precisely how a weakening gets laundered. It goes
+     up as a separate proposal (FOR THE OWNER, this sitting's page) and until
+     it is ruled, `T2.11` carries BOTH channels and must satisfy both.
+
+**WHAT THE BUILDER OWES BY 2026-09-29, in the order that makes the cheap half
+falsify the expensive half.**
+  (i) **THE ZERO-COST READ FIRST, and report it before implementing anything.**
+      The held-out `Î` for all four arms, computed by loading the SPENT pilot
+      rig at its recorded seeds and evaluating the ALREADY-TRAINED
+      discriminator on the held-out rollout set — no training, no new artifact,
+      no dispatch, no GPU. **If held-out `Î` does NOT separate `diayn` from
+      `shuffled` by >= 0.50 nats, STOP and route it back**: this ruling's own
+      premise is then false, the train-side table above was memorisation, and
+      (a) is refuted by the same kind of read that refuted the accuracy channel.
+      A ruling that cannot be falsified by the first measurement it orders is
+      not worth the twenty-four days it cost.
+  (ii) Only then implement `mi_beats_field` in
+      `experiments/tests/t2_11_skills_distinguishable.py`: the new conjunct,
+      `MI_MARGIN_MIN = 0.50` with the derivation above quoted in the
+      pre-registered-gates block, and `mi_heldout` reported per arm per seed in
+      the metrics so the channel is legible whether or not it decides. The four
+      existing conjuncts are not touched.
+  (iii) Add the PILOT RECORD v3 paragraph reporting (i) as spent evidence, and
+      leave `_GATES_FROZEN = False`. **Do not dispatch `T2.11`.**
+  **STALENESS BILL: zero, re-verified 09-26 and not inherited.** `T2.11` has no
+  ledger row (checked: `results` has no `T2.11` key), so no certificate hashes
+  its result; every change above is inside this one spec file and nothing
+  touches `UnifiedBrain.py`, so the four PASS rows that hash it (`T2.03`,
+  `T2.04`, `T2.06`, `T3.01`) are untouched. The read in (i) writes no ledger row.
 
 ---
 
