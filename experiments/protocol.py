@@ -3963,7 +3963,39 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # a potentially long re-run can race an edit. Wrapped so the instrument
     # can NEVER turn a verdict into an ERROR: a broken meter is disclosed in
     # the message, not priced as a lost run.
-    if Path(ledger.path).resolve() == LEDGER_PATH.resolve():
+    #
+    # THE CONDITION IS NOW INSIDE THAT PROMISE, AND FOR THE FIRST EIGHT HOURS
+    # OF THIS INSTRUMENT'S LIFE IT WAS NOT (`5ee32ff` this morning; repaired
+    # 2026-09-26 22:2x, found by an offline re-derivation of the Tier-0 PASS
+    # population). `ledger.path` was read OUTSIDE the `try` AND outside
+    # `run_spec`'s own `except` — this block sits after it — so a Ledger
+    # DOUBLE with no `.path` raised `AttributeError` straight out of
+    # `run_spec`. That is precisely the event the comment above promises
+    # cannot happen, and the promise was one line too low to cover the line
+    # that decides whether to keep it.
+    #
+    # IT COST A CERTIFICATE THE SAME DAY. `T0.15`'s `_experiment` drives a
+    # NESTED `run_spec` against `_MemoryLedger` — a double that exists so the
+    # probe can never write the real ledger — so the raise escaped the inner
+    # call, and the OUTER `run_spec` caught it and recorded `ERROR`. `T0.15`
+    # is a standing PASS from 2026-09-02 and would have recorded `ERROR` on
+    # its next run, with nothing in the ladder positioned to notice: it
+    # declares no `IMPL_DEPS`, so `run stale` cannot see its edge to this
+    # file.
+    #
+    # `getattr` rather than a wider `try` BECAUSE THE QUESTION HAS A CORRECT
+    # ANSWER FOR A DOUBLE. "Is this the real scoreboard?" is *no* for anything
+    # without a path, so skipping is the declared behaviour ("real-scoreboard
+    # rows only"), not a degradation of it. A wider `try` would reach the same
+    # verdict by swallowing an error, which reads identically to a meter that
+    # broke. And it fixes the CLASS: this call may not reach for an attribute
+    # outside the interface it declares, because a test double implements an
+    # interface by coincidence and the coincidence ends at the next ADDITION —
+    # which is the second time this exact double has died that way (see its
+    # own docstring on the 2026-08-11 `blocked_by`->`unsatisfied` rename, dead
+    # 18 days with the row reading PASS).
+    _led_path = getattr(ledger, "path", None)
+    if _led_path is not None and Path(_led_path).resolve() == LEDGER_PATH.resolve():
         try:
             _salt_note = _hash_salt_differential(
                 spec, fn, check, control_fn, seeds, status, metrics,
