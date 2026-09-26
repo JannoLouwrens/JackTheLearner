@@ -17286,3 +17286,58 @@ thirteen days:**
   entry"* is true and vacuous over a field null on 761 of 762 rows. **A count
   is only a check if the field can be non-zero; always print the denominator of
   rows that COULD have carried the value, not the denominator of rows.**
+
+---
+
+## A PARTITION ASSERTION IS DEFEATED BY ITS OWN EXEMPTION LIST — pin the list, or the repair is the defect with a signature on it
+
+*(builder, 2026-09-26, discharging the 121st audit's FINDING 1. Measured while
+writing the test, before the commit; the first version of the guard had the
+hole.)*
+
+The repair for "an allow-list archive silently drops every field added after
+it" (entry above) is to DERIVE the archive from the dataclass and name the
+omissions: `HISTORY_FIELDS = every Result field not in HISTORY_EXEMPT_FIELDS`.
+The obvious property to assert is the PARTITION — carried ∪ exempt == all
+fields, carried ∩ exempt == ∅. It is the right property and **on its own it is
+worthless**, because the defect it exists to catch can satisfy it.
+
+Falsified live, two mutations against the same guard:
+
+| mutation | partition | "loses no field" | caught? |
+|---|---|---|---|
+| drop `dirty_files` from the projection | **False** | **False** | yes |
+| drop it AND add it to the exemption list | True | True | **NO** |
+
+The second mutation is not a hypothetical — it is what a hurried repair
+*looks like*. A field is inconvenient, it goes in the exemption tuple with a
+plausible one-line reason, every assertion stays green, and the archive starts
+losing it again. The escape hatch is in the same file as the thing it excuses,
+which is exactly where nobody reads it as a change of policy.
+
+**THE RULE: when a guard is "everything except a named list", the LIST is the
+gate, not the everything.** Assert it as a SET EQUALITY against a literal in
+the TEST file — `history_exempt_fields == ["history", "spec_id"]` — so widening
+it has to be argued twice, in two files, one of which a reviewer is reading
+*because* it is a test. This is `T0.17` P10's idiom (`SPEC_CLAIM_FIELDS`
+asserted as a set equality against the perturbation table, so widening the
+hashed set without showing the new field matters goes red) applied one layer
+over, and the two cases are the same shape: a derived set whose complement is
+hand-written.
+
+**The corollary, which is how this generalises past this file:** every
+`X_EXEMPT`, `X_BASELINE`, `X_ALLOWED`, `WRITE_ONLY_*` and `_FROZEN = False` in
+this repo is a shrink-only quantity wearing a constant's clothes, and the ones
+that are safe are safe because something asserts their CONTENTS, not merely
+their existence. `UNREACHABLE_BASELINE` and `PASS_ON_DEAD_DEPENDENCY_BASELINE`
+are ratcheted; `WRITE_ONLY_DOCS` carries its reason in the class comment and
+`FLOORED_CLASS_UNJOINED` was built precisely to make "staying unjoined" a
+visible decision. An exemption list with none of that is an unratcheted
+baseline that nobody has noticed is a baseline.
+
+**And the sequencing that made it visible, which is the cheap half of the
+lesson:** the mutation was run BEFORE the commit, against the guard's own
+legs, as a table. Writing the two mutations out and printing which legs flip
+took about ninety seconds and cost nothing; believing the partition because it
+is obviously the right property would have shipped a guard that certifies the
+next occurrence of the bug it was written for.

@@ -10147,3 +10147,63 @@ ROUTED: doc-declarations-restale-three-tier0-certificates-daily | 2026-09-26 | f
         already 35 of 49).
     Cost of deciding: zero — no run, no seeds. The builder's re-buys are already
     on the ledger either way.
+
+ROUTED: t022-p9-reads-a-specs-own-row-as-someone-elses | 2026-09-26 | `T0.22` offline `_check(_experiment(0), _control(0))` = **False** (builder, this slot, dirty-tree run with NO ledger write) | OPEN
+    DUE: 2026-10-04 | `review-queue`'s own `next_free_due`, read off the tool
+        this slot (09-27, 09-29 and 10-02 are all AMBER at 7 against a measured
+        6). Not urgent by compute — nothing is dispatched behind it — but it is
+        a STANDING PASS certificate that has been latently red for 23 days, so
+        it should not sit past the next free date.
+    WAITS-ON: none | no live row's answer changes what is measured here. The
+        row belongs to the same class as `gates-that-measure-something-other-
+        than-what-they-say` (DUE 10-04, same date, deliberately) and is filed
+        separately because that row is about gates in general and this one is a
+        single instrument with a one-line repair and a measured date.
+    Question: `T0.22`'s property 9 — *"No test in the ladder may read another
+    spec's metrics off the ledger directly"* — is implemented as a regex over
+    every file in `experiments/tests/` for `results["<any real spec id>"]`, and
+    it cannot tell ANOTHER spec's row from the file's OWN. The sole offender
+    today is `lf_01_life_to_natural_end.py:463`, `ledger.results.get("LF.01")`
+    — `LF.01` reading `LF.01`. By the property's own words that is not a
+    violation: nothing is borrowed, there is no cross-spec coupling, and the
+    guard `borrow_metrics` exists to police does not apply to a spec managing
+    its own row. The check's own comment already draws this distinction for
+    `T0.08`'s synthetic `X.01` rows ("deliberately not a spec, so the check
+    separates borrowing from a test managing its own fixtures") — the same
+    reasoning covers a real spec reading itself, and the regex does not.
+    MEASURED, with dates, because the interesting part is the SILENCE:
+    `T0.22`'s standing certificate is PASS at `ran_at 2026-09-02T18:39:31`
+    (`c7325c2`). The offending line landed in `54d7841`, **2026-09-03T19:15:39**
+    — the day AFTER. So `T0.22` has been a certificate that would FAIL on its
+    next run for 23 days, and no instrument said so: the spec declares
+    `coverage.py`-adjacent deps, not `experiments/tests/*.py`, so the staleness
+    reader has no edge to walk, and `pass_on_dead_dependency` watches
+    DEPENDENCIES, not a spec's own scan population. A class-closer that scans
+    the whole ladder has the whole ladder as its input and declares none of it.
+    HOW IT WAS FOUND, and the honest disclosure: NOT by looking for it. It fell
+    out of running `T0.22`/`T0.30` offline as collateral checks on the 121st
+    audit's `PROSE_DOCS` widening (`51d21a5`), because `T0.22` imports
+    `DOC_OUTPUTS` by name. `T0.30` came back True; `T0.22` came back False on a
+    leg the widening does not touch. Had the audit item not existed nobody
+    would have run it.
+    Options, none of which the builder took this slot (a detector that starts
+    refusing fewer things is exactly where a guard quietly stops guarding, and
+    that call is not the implementer's to make inside the same hour):
+    (i)  NARROW THE REGEX to a cross-spec read — skip a hit whose spec id is the
+         id the scanned file implements (`module_path_for` already gives the
+         map, both directions). Exact, and it restores the property's own
+         words. Cost: one re-buy of `T0.22` (cpu<10min).
+    (ii) WIDEN THE PROPERTY deliberately — rule that a spec reading its OWN row
+         off the ledger is also forbidden, and repair `LF.01` instead. This is
+         defensible: `LF.01`'s read is a live-state leg of the kind this morning
+         already routed twice (`t028-p10`, `doc-declarations-restale-*`), and a
+         spec that consults its own prior verdict is one edit from
+         run-until-pass. Cost: an `LF.01` source change plus a `T0.22` re-buy;
+         `LF.01` has no PASS certificate, so nothing is staled.
+    (iii) EXEMPT `LF.01` by name in `T0.22` — refused here in advance. A named
+         exemption inside the class-closer is the escape hatch that the same
+         audit cycle just caught one file over (`HISTORY_EXEMPT_FIELDS`, which
+         is why it is now a PINNED set equality in `T0.17` P12).
+    Staleness bill: ZERO for the diagnosis. Option (i) or (ii) bills one
+    `T0.22` re-buy at cpu<10min; `T0.22` is cited by no other certificate
+    (`run blast-radius T0.22` before the edit, per the arming contract).
