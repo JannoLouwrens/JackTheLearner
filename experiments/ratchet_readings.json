@@ -8,8 +8,8 @@
     "value": 4
   },
   "claim_dead": {
-    "at": "2026-09-19",
-    "value": 4
+    "at": "2026-09-26",
+    "value": 3
   },
   "commitments_uncovered": {
     "at": "2026-09-19",
@@ -65,20 +65,22 @@
     "value": 3
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-25",
-    "value": 12
+    "at": "2026-09-26",
+    "value": 14
   },
   "review_queue_piled_on": {
     "at": "2026-09-25",
     "value": 4
   },
   "review_queue_violation_forms": {
-    "at": "2026-09-22",
-    "value": {}
+    "at": "2026-09-26",
+    "value": {
+      "OVERDUE": 8
+    }
   },
   "review_queue_violations": {
-    "at": "2026-09-22",
-    "value": 0
+    "at": "2026-09-26",
+    "value": 8
   },
   "unreachable": {
     "at": "2026-09-25",
