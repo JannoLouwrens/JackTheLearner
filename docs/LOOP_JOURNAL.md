@@ -19659,3 +19659,140 @@ today** — option (iii) is instrument scope and `D35` clause 2 owns it.
   `UB.10`'s successor arm, `T1.08`'s pipeline design, the `w1-world-edit-window`
   docket, the `lc03` seat row, the `t306` venue row, `A4`'s three-way fork, the
   PS-family part-1 inheritance, and the `adverse-verdicts` disposition.
+
+- 2026-09-26 22:0x (builder, **opus** — `JACK_LOOP_MODEL=fable` pinned at
+  **95%** and the chain walked me up; `week:all models` **66%** is the gate and
+  the line I acted on; session 0% at open): **THE 27th EMPTY BOARD, AND I SPENT
+  IT FINISHING THE MEASUREMENT THE LAST SLOT COULD NOT — 11 of 11, AND IT
+  RETURNED TWO REDS, ONE OF THEM MINE FROM THIS MORNING.**
+  Board re-derived, not inherited: `run next` **0 fresh of 51** (37 settled, 14
+  held), `run review-queue`'s `DISPOSITIONED` class read for assigned units.
+  `1^13` units 4/5 settled, unit 3 part 2 done, units 1-3 part 1 **HELD** behind
+  `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` — verified **at
+  source** (its `WAITS-ON` says the siblings wait on it by the ruling's own
+  sequencing) and not on trust. `OVERSIGHT.md` FTB re-read: item 2 (the
+  slot-summary template) is **already discharged** — `run status` now derives
+  the SLOT LINE itself, so I quote the tool below rather than composing prose.
+  Nothing assigned; nothing manufactured.
+  **THE UNIT: the 11 `cpu<10min` Tier-0 PASS certificates the 21:0x sweep left
+  UNMEASURED.** Same method, rewritten in `/tmp`, again NOT committed (`D35`
+  clause 2 — this is a measurement, not an organ). **One guard added over the
+  first sweep:** `git status --porcelain` captured around every child as well as
+  the two sha256'd files, because the first sweep could prove `ledger.json` and
+  `gpu_budget.json` had not moved and could say nothing about the tree. And the
+  lane error the last slot named was obeyed: **this slot bought nothing until
+  the sweep had exited.** 11/11 measured, no abort, guard **UNMOVED** and tree
+  **UNMOVED** at the end. `T0.14` PASS · `T0.15` **ERROR** · `T0.16` PASS ·
+  `T0.26` PASS · `T0.29` PASS · `T0.30` PASS · `T0.31` PASS · `T0.32` **FAIL** ·
+  `T0.33` PASS · `T0.34` PASS · `T0.35` PASS.
+  **THE POPULATION IS NOW COMPLETE FOR BOTH CHEAP TIER-0 CLASSES: 30
+  certificates, 25 hold, 5 do not** (`cpu<1min` 13/16, `cpu<10min` 12/14).
+  **5/30 = 17% of the cheapest sixteenth of the ladder, and NOT a rate over
+  108** — Tiers 1-6 and both expensive Tier-0 classes are still untouched by any
+  sweep. What the class now has that it did not yesterday is a **denominator**:
+  it is not three accidents, it is five in thirty, and today's two were found by
+  looking.
+  **`T0.15` IS MINE AND IT WAS EIGHT HOURS OLD.** `5ee32ff` this morning —
+  option (iv) of the `hash-salt-lottery-in-a-gated-metric` disposition — put
+  `if Path(ledger.path).resolve() == LEDGER_PATH.resolve():` into `run_spec`
+  directly under a comment reading *"Wrapped so the instrument can NEVER turn a
+  verdict into an ERROR."* **The `try` covers the call and not the `if` that
+  gates it**, and that block sits AFTER `run_spec`'s own
+  `except -> Status.ERROR`, so the raise escapes `run_spec` entirely. `T0.15`'s
+  `_experiment` drives a NESTED `run_spec` against `_MemoryLedger` — a double
+  that exists so the probe can never write the real ledger — and the double has
+  no `.path`. **REPAIRED** (`297fc55`): `getattr` rather than a wider `try`,
+  because *"is this the real scoreboard?"* has a CORRECT answer for a double
+  (no), so skipping is the declared behaviour and not a swallowed error. No bar
+  moved, no conjunct touched. Offline: ERROR 1.5 s -> PASS 1.7 s; re-bought by
+  the runner, **not** by my script.
+  **`T0.32` IS 22 DAYS OLD AND I DID NOT REPAIR IT.** Sole failing conjunct
+  `single_source_ok`; every other gated property green and the instrument
+  demonstrably alive (`rtf` 15.034, projection error 0.0106 vs 0.25,
+  `fit_admitted` True, `over_admitted`/`ceiling_admitted` False, probe spread
+  0.0043 so the VOID lane did not fire, control refused at slowdown 11.11x).
+  **Cause bisected, not guessed** — quoted `cpu<`/`gpu<` literals in `run.py`:
+  **0** at `af323fc` (its PASS, 09-03), **1** at `a3d2c9e` (09-04, 68th audit
+  B4, `s.budget.value != "cpu<48h"`), **4** by `ac5dc17^`, **8** at `ac5dc17`
+  (09-13). The later seven are `blast-radius`'s **own self-test expectations**
+  and a docstring — a tuple asserting what a tool PRINTED holds no seconds and
+  defines no budget. Repairing it narrows a conjunct on a spec in the hour that
+  measured it red, which is law 4's territory and the same call the 21:0x slot
+  declined on `T0.23`. **Routed with a four-way fork and the arithmetic quoted.**
+  **THE FINDING WORTH MORE THAN EITHER RED: both came in through an edge the
+  spec READS and does not DECLARE, which makes three of the five.** `T0.18` <-
+  `registry.py` (27 d) · `T0.32` <- `run.py` (22 d, `read_text()` of the source,
+  **no import at all**) · `T0.15` <- `protocol.py` (8 h, package-relative
+  import). `run stale` walks DECLARED edges and says so honestly; **`T0.35`
+  exists for the undeclared case and its domain is undeclared repo-ROOT module
+  IMPORTS**, so both of today's edges are outside it in two different
+  directions. Checked rather than assumed: neither spec is in `GRANDFATHERED` or
+  `TRANSITIVE_GRANDFATHERED`. **Inside my lane I declared the two edges**
+  (`4b073f0`) — `T0.32`'s latent red is now VISIBLE, `run stale` naming
+  `experiments/run.py` where it printed nothing before, and the spec stays FAIL
+  because declaring fixes the invisibility and not the red. **Widening `T0.35`
+  I did NOT do and did not ask for**: it is unmistakably governance surface nine
+  days into `D35` clause 2, which is the 122nd audit's FINDING 1.
+  **THREE ROWS, TWO NEW AND ONE ADDENDUM, NO INSTRUMENT PROPOSED, NO EXEMPTION
+  REQUESTED.** `t032-single-source-proxy-fires-on-self-test-literals` and
+  `impl-deps-domain-misses-a-read-and-a-relative-import`, both **DUE 10-06** —
+  the tool's own next-date-with-room, which carried 1 of 6; deliberately **not**
+  10-05, which is at 6 and is the date the 21:0x slot piled onto. `piled_on`
+  **unchanged at 3**. Plus an ADDENDUM to the population row recording the
+  completed denominator with its DUE **untouched**. **Two LESSONS entries**,
+  both generalised past their specs: *a safety wrapper must contain the
+  expression that decides whether to run* — with the sharper test (call a new
+  reporting-only instrument with the wrong-shaped CONTEXT: the double, the stub,
+  the `None`), and the companion that explains the RECURRENCE (the same double
+  died on 2026-08-11 to a RENAME, that was generalised as a lesson about
+  renames, and this time an ADDITION killed it; name the invariant — *the caller
+  touches only what it declared* — not the mechanism that bit you) — and *an
+  implementation dependency is any file whose contents can change your verdict;
+  a `read_text()` is an edge and no import walk will ever see it*, with the
+  free tell: **grep the docstrings against the declarations.** `T0.32` named
+  `run.py` in its docstring and not in `IMPL_DEPS`, in the same file, for 22
+  days.
+  **INSTRUMENTS AFTER, all re-derived bare:** `verify` **0**, `status` **2**,
+  `coverage` **2**, `decisions --check` **1**, `champions` **0**,
+  `review-queue` **2**. And the DELTA, quoted from `run status` rather than
+  composed beside those levels: *ratchets vs committed readings (HEAD): 1 MOVED
+  (`review_queue_net_arrivals` 23 -> 25); no counter refused to compute; floors:
+  2 ABOVE (`decisions_default_action_expired`, `pass_on_dead_dependency`),
+  0 BELOW, 0 UNVERIFIED.* The one move is MINE and it is this slot's two rows.
+  **No floor was raised**; both breaches are pre-existing and owned elsewhere
+  (`D33`; the `T0.13` pair plus `T1.08`'s two). Demonstrated **108/254**,
+  unchanged — `T0.15` was PASS and is PASS, and `T0.32`'s row is a standing PASS
+  that is now honestly STALE rather than a fresh red I bought.
+  **CREATURE GATE MOVED: NONE (#52).** Recorded as a real breach per the `d35`
+  disposition. Chain re-derived from `registry.py`: `T6.01` <- `T4.05` <-
+  `T4.04` <- `T2.01` (FAIL) <- `T1.08` (FAIL, pipeline repair the Review's,
+  `t108-pipeline-repair-has-no-design` DUE 10-02); `XL.01` FAIL <- `PS.02` /
+  `XL.00`, repair row OPEN to 10-03. Unchanged and still structural.
+  **GPU: `2026-W39`, 30 free Kaggle hours, 0 charged.** `coverage` still reads
+  every GPU cost class `NOT FILLABLE — the repair is a REDESIGN`. Nothing
+  manufactured — **refusal #52.**
+  **HYGIENE.** `git add` by name throughout, tree checked CLEAN before every
+  re-buy, no foreign files, sweep left in `/tmp` and NOT committed, no processes
+  left running, pushed. Staleness bill paid IN SLOT and priced BEFORE each edit:
+  the `protocol.py` repair billed **3** certificates declaring it
+  (`T0.17`/`T0.33`/`T0.35`; `T0.27` also declares it and is FAIL) plus `T0.15`
+  itself — all four re-bought PASS at `297fc55`, clean, chain to 0; the
+  `IMPL_DEPS` declarations billed `T0.15` again (PASS a8 at `4b073f0`) and
+  nothing for `T0.32` (already FAIL); the `REVIEW_QUEUE.md` edit bills `T0.21`
+  and `T0.31`, paid below.
+  **NEXT ITERATION (23:07):** **06:37 tomorrow is the Sunday FULL** on which the
+  Review has pre-committed to DECLINE the `W1` authorship if the date breaks a
+  fifth time — do not pre-empt it; diff `PROGRESS.md`/`OVERSIGHT.md` for fresh
+  FOR THE BUILDER items first. **The obvious next unit is the population's next
+  layer, and it is now a CHOICE rather than a leftover:** the two expensive
+  Tier-0 classes, or the cheapest TIER-1 certificates — 30 of 30 cheap Tier-0
+  are done, so a third sweep is a new denominator and not a continuation. Run it
+  **in a slot that buys nothing**, and carry the tree guard forward. Do NOT
+  repair `T0.32`, `T0.18` or `T0.23` — three conjunct-scope menus, all the
+  desk's, dated 10-05/10-06. Do NOT re-run `T0.13`. Do NOT widen `T0.35`
+  unless a desk orders it, and if one does, **name `D35` clause 2 in the journal
+  line** per the 122nd audit's FTB 1. Still not yours: `W1.01`/`W1.03`/`W1.04`,
+  `D33`/`D35`/`D36`, `UB.10`'s successor arm, `T1.08`'s pipeline design, the
+  `w1-world-edit-window` docket, the `lc03` seat row, the `t306` venue row,
+  `A4`'s three-way fork, the PS-family part-1 inheritance, and the
+  `adverse-verdicts` disposition.

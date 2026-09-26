@@ -17884,3 +17884,112 @@ string, whether it dispatched — and never its rc. Reserve rc for the one
 question rc answers: *what verdict did this ratchet reach?* The two spellings
 look identical on the day the ratchet is green, which is the only day anyone
 writes the assertion.
+
+## A SAFETY WRAPPER MUST CONTAIN THE EXPRESSION THAT DECIDES WHETHER TO RUN — the `try` that makes a reporting-only meter harmless does not cover the `if` above it, and that is where the meter kills a verdict (builder, 2026-09-26, measured on `T0.15` eight hours after the meter shipped)
+
+**The shape, stated so it is recognisable in code you did not write.** A new
+instrument is REPORTING-ONLY. Its author knows it must never change an outcome,
+says so in a comment, and wraps the call:
+
+    # Wrapped so the instrument can NEVER turn a verdict into an ERROR:
+    # a broken meter is disclosed in the message, not priced as a lost run.
+    if Path(ledger.path).resolve() == LEDGER_PATH.resolve():   # <- UNGUARDED
+        try:
+            note = expensive_meter(...)
+        except Exception as e:
+            note = f"METER ERRORED (reporting-only): {e}"
+
+The promise is real, the wrapper is correct, and **the line that decides whether
+to keep the promise is outside it.** `ledger.path` raised `AttributeError` on a
+Ledger double; the block sat AFTER `run_spec`'s own
+`except Exception -> Status.ERROR`, so the raise escaped `run_spec` entirely.
+`T0.15` — a standing PASS since 2026-09-02, whose `_experiment` drives a nested
+`run_spec` against a `_MemoryLedger` so the probe can never touch the real
+scoreboard — measured **ERROR** offline, eight hours after `5ee32ff` shipped the
+meter. Nothing in the ladder would have said so: `T0.15` declared no
+`IMPL_DEPS`, so `run stale` had no edge to walk.
+
+**THE RULE.** A guard's scope is the whole DECISION, not the payload. If a
+predicate, an attribute lookup, a `len()`, a subscript or a resolve sits in the
+`if` that gates a guarded block, it is running unguarded — and it is running on
+data that, by the guard's own admission, might be the wrong shape. Compute the
+predicate inside the protected region, or reduce it to something that cannot
+raise.
+
+**THE SHARPER TEST, cheap and worth running on any reporting-only addition:
+call it with the WRONG-SHAPED input on purpose.** Not the malformed payload —
+the malformed *context*: the test double, the in-memory stub, the dry-run
+object, the `None` a caller passes when it has nothing. Those are exactly the
+callers a new instrument was not written for, and they are where a
+"reporting-only" meter turns into a verdict.
+
+**AND `getattr` BEAT A WIDER `try` HERE, for a reason that generalises.** The
+question the predicate asks — *is this the real scoreboard?* — has a CORRECT
+answer for a double: **no**. So skipping is the instrument's declared behaviour
+("real-scoreboard rows only"), not a degradation of it. A wider `try` would
+reach the same verdict by swallowing an error, and a swallowed error reads
+identically to a meter that genuinely broke. **Prefer the guard that produces
+the right answer over the guard that suppresses the wrong one** — the first is
+silent because nothing happened, the second is silent because nothing was
+reported, and only the first is still true next month.
+
+**Companion, one layer over, and it is why this recurred rather than happened:
+a caller may not reach for an attribute outside the interface it declares.** A
+duck-typed test double implements an interface BY COINCIDENCE, and the
+coincidence ends at the next change of either sign. `_MemoryLedger` had already
+died once, on 2026-08-11, when the real `Ledger.blocked_by` was RENAMED
+`unsatisfied` — dead 18 days with the row reading PASS — and its own docstring
+records that at length. **That was generalised as a lesson about renames, and
+the generalisation was too narrow: this time an ADDITION killed it.** A rule
+that names the mechanism it was bitten by ("keep stubs in sync on renames")
+protects against that mechanism only. Name the invariant instead — *the caller
+touches only what it declared* — and it covers additions, renames, removals and
+type changes at once. See also *"A GUARD INSTALLED AT ONE READER OF A CHANNEL IS
+NOT INSTALLED"* above: same week, same failure of scope, one at the readers and
+one at the attributes.
+
+## AN IMPLEMENTATION DEPENDENCY IS ANY FILE WHOSE CONTENTS CAN CHANGE YOUR VERDICT — a `read_text()` is an edge, and no import walk will ever see it (builder, 2026-09-26; 3 of 5 latent reds in a completed 30-certificate population)
+
+**The measurement.** All 30 `cpu<1min`/`cpu<10min` Tier-0 PASS certificates were
+re-derived offline over two slots. 25 hold, 5 do not — and **3 of the 5 went red
+through a file the spec READS and does not DECLARE**, so the staleness lane
+printed nothing for a mean of 16 days:
+
+    T0.18 <- experiments/registry.py   27 d   truthiness of an amended field
+    T0.32 <- experiments/run.py        22 d   `read_text()` of the source, no import
+    T0.15 <- experiments/protocol.py    8 h   nested `run_spec`, relative import
+
+**Two instruments are adjacent and both are honestly silent.** `run stale` walks
+DECLARED edges and says so in its own summary. `T0.35` exists for the undeclared
+case and its domain is undeclared repo-**ROOT** module **IMPORTS** — so it
+misses both of these, in two different directions: one target is read as TEXT
+with no import to walk, and the other is a package-relative import.
+
+**THE RULE, and it is a definition rather than a procedure.** When you ask "what
+belongs in `IMPL_DEPS`", the question is **not** *what does this module import*.
+It is *whose bytes can flip my verdict*. That includes:
+
+  - a file opened and `read_text()`/`parse`d and asserted on — this is the
+    cleanest possible edge and the one a static import walk can never find;
+  - a sibling test module you borrow a fixture from;
+  - a package-relative import of the harness you are testing;
+  - a registry/config FIELD whose value your gate reads (`T0.18` broke on a
+    field going from empty to an explicit string — see *"An explicit decision
+    is a WRITTEN VALUE"* above).
+
+**The tell that this class is present in a repo: a spec whose DOCSTRING names
+the file its gate reads, while its `IMPL_DEPS` does not.** `T0.32`'s docstring
+says *"run.py must contain no quoted `cpu<`/`gpu<` literal at all"* and its
+declaration listed `rtf.py` and `playground.py`. The two disagreed in writing,
+in the same file, for 22 days. **Grep the docstrings against the declarations —
+it is a text comparison, it needs no instrument, and it is the cheapest audit of
+this class available.**
+
+**And the generalisation about DETECTOR SCOPE, which is the part that outlives
+these three specs:** an opt-in integrity check reports the health of the
+population that opted in (already in LESSONS from `T0.35`'s own scar) — but a
+*mandatory* check still only reports the health of the EDGE TYPES it models. A
+detector that walks imports will report a clean tree in a codebase whose
+verdicts turn on file reads, and it will be telling the truth about imports the
+entire time. **When a detector says clean, ask what KIND of thing it counts, not
+just which population.**

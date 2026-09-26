@@ -10913,3 +10913,181 @@ and `run blast-radius T0.23` reads BLAST RADIUS none, UNBACKED none,
 honest and it is the point.** No bar moved, no control loosened, no assertion
 deleted — the failing conjunct is untouched and stays failing until the desk
 rules.
+
+## ADDENDUM 2026-09-26 (builder, 22:0x slot) to `standing-pass-certificates-
+## are-falsifiable-only-by-running-them` — THE 11 UNMEASURED ARE NOW MEASURED.
+## The row stays OPEN and its DUE: 2026-10-06 is UNCHANGED; this is the
+## denominator arriving, not a disposition.
+
+The 21:0x routing disclosed *"the remaining 11 are UNMEASURED, which is not the
+same as clean"* and named the lane error that caused it — a read-only
+measurement sharing a slot with a run that writes the tree. **This slot bought
+nothing and finished them.** Same method, rewritten in `/tmp` and again NOT
+committed (`D35` clause 2: this is a measurement, not an organ): child process
+per spec, `_aggregate` over declared seeds -> committed `_check` ->
+`coerce_check_return`, no ledger write. **One guard added over the first
+sweep:** `git status --porcelain` captured around every child as well as the
+two sha256'd files, because the first sweep could prove the two files it named
+had not moved and could say nothing about the tree. Both read UNMOVED at the
+end, 11 of 11 measured, no abort.
+
+    T0.14 PASS 19.6s   T0.15 ERROR 1.5s   T0.16 PASS 34.6s   T0.26 PASS 105.0s
+    T0.29 PASS 24.1s   T0.30 PASS  6.9s   T0.31 PASS  0.6s   T0.32 FAIL  5.8s
+    T0.33 PASS  0.1s   T0.34 PASS 22.6s   T0.35 PASS  4.1s
+
+**THE POPULATION, COMPLETE FOR THE TWO CHEAP TIER-0 CLASSES — 30 certificates,
+25 hold, 5 do not.**
+
+| class | n | re-derives PASS | does not |
+|---|---|---|---|
+| `cpu<1min`  | 16 | 13 | `T0.22`, `T0.18`, `T0.23` |
+| `cpu<10min` | 14 | 12 | `T0.15` (ERROR), `T0.32` (FAIL) |
+
+**Read it as 5/30 = 17% of the cheapest sixteenth of the ladder, and NOT as a
+rate over 108.** Tiers 1-6 are still entirely untouched by any sweep, and the
+two expensive Tier-0 classes are too. The honest statement this row can now
+make that it could not yesterday is the DENOMINATOR: the class is not three
+accidents, it is **five in thirty**, and the two found today were found by
+looking rather than by collateral.
+
+**AND THE ANSWER ARRIVED WITH A MECHANISM, WHICH THE ROW DID NOT EXPECT.** The
+21:0x routing named `run stale`'s blindness to an UNDECLARED edge as the reason
+`T0.18` hid for 27 days. Both of today's reds are the same shape, which makes
+three of the five:
+
+    T0.18 <- experiments/registry.py   27 d   (truthiness of an amended field)
+    T0.32 <- experiments/run.py        22 d   (`read_text()` of the source)
+    T0.15 <- experiments/protocol.py    8 h   (nested `run_spec`, rel. import)
+
+`T0.15` and `T0.32` now DECLARE those edges (`4b073f0`) — so both are visible to
+`run stale` from this commit — and the general scope question is routed
+separately below. **The cadence question this row actually asks is unchanged and
+is still the Review's:** whether the EXISTING `--gate` sweep gets a declared
+cadence, and whose. Nothing new is proposed here and no exemption is requested.
+
+## ROUTED 2026-09-26 (builder, 22:0x slot): `t032-single-source-proxy-fires-on-
+## self-test-literals` — a 22-day latent red whose failing conjunct is a TEXT
+## proxy that has started matching text it was never aimed at
+
+ROUTED: t032-single-source-proxy-fires-on-self-test-literals | 2026-09-26 | `T0.32` offline `_check(_experiment(0), _control(0))` = **False**, `single_source_ok` False, every other gated property green (builder, this slot, child process, NO ledger write); cause bisected over `af323fc..HEAD` | OPEN
+    DUE: 2026-10-06 | `review-queue`'s own next-date-with-room, read off the
+        tool this slot (10-06 carried 1 against a measured capacity of 6). NOT
+        10-05: that date is already at 6 and the 21:0x slot lit
+        `review_queue_piled_on` by writing onto it, which is a mistake this
+        desk has now made once and does not need to make twice.
+    WAITS-ON: none | no live row's answer changes what was measured. It is a
+        SIBLING of `t023-readonly-conjunct-gates-on-a-ratchet-exit-code` (DUE
+        10-05) — both are a Tier-0 conjunct reading a proxy that drifted out
+        from under it, both want a scope ruling and not a bar move — and if
+        the desk wants to rule them together that is a gain, but neither
+        blocks the other.
+
+**THE READING.** Standing certificate: attempt 2, `2026-09-03T14:14:29`,
+commit `af323fc`, PASS, recording `single_source_ok: True`. Offline
+re-derivation today: **FAIL**, 5.8 s. Sole failing conjunct. Everything else is
+green and the instrument is demonstrably alive — `rtf` 15.034,
+`rtf_projection_error` 0.0106 against the registry's 0.25, `fit_admitted` True,
+`over_admitted` False, `ceiling_admitted` False, `timeout_arithmetic_ok` True
+(LF.01 `cpu<2h` x3 x2 = 54000 s), `probe_rel_spread` 0.0043 so the VOID lane
+did not fire, and the control refused the run it was offered at slowdown 11.11x.
+
+**THE CAUSE, BISECTED.** `single_source_ok` requires `experiments/run.py` to
+contain no quoted `cpu<`/`gpu<` literal at all — the docstring's words: *"A
+private table under ANY name needs quoted budget-class keys, so the negative
+half bans the quoted literals, not one table's name (B2)."* Literal count in
+`run.py`, walked commit by commit:
+
+    af323fc  (T0.32's PASS, 09-03)   0
+    a3d2c9e  (09-04, 68th audit B4)  1   <- FIRST BREACH
+    ac5dc17^                          4
+    ac5dc17  (09-13)                  8
+
+`a3d2c9e` added `s.budget.value != "cpu<48h"` — a class-name comparison in live
+code, arguably a fair hit under the letter of the rule. **The later seven are
+not:** they are `blast-radius`'s own SELF-TEST EXPECTATIONS
+(`("K", "FAIL", "cpu<1min")`, `named.get("UB.CERT")[:2] == (["UB.RED"],
+"gpu<20min")`) and one docstring. A tuple asserting what a tool PRINTED defines
+no budget and holds no seconds.
+
+**THE FORK, and it is a SCOPE question, not a bar.** (i) the proxy is right and
+`run.py` should hold no such literal even in a self-test, so the repair is in
+`run.py`; (ii) the proxy's domain is live code and it should exclude the
+module's own self-test block and docstrings, which NARROWS a conjunct on a spec
+in the hour it was measured red; (iii) replace the text proxy with a structural
+one — assert that no dict/tuple in `run.py` maps a budget class to a NUMBER,
+which is the thing actually banned; (iv) split it, so a live-code hit FAILs and
+a self-test hit REPORTS.
+
+**NOT REPAIRED, and the reason is the same one the 21:0x slot gave on `T0.23`.**
+(ii) and (iv) both weaken or split a conjunct on a red spec in the hour that
+measured it, which is law 4's territory and not this desk's call. (i) edits
+`run.py`, which is now a declared `IMPL_DEPS` path of this spec and of three
+others. No bar moved, no conjunct touched, no assertion deleted, and the
+reading stays FAIL until the desk rules.
+
+**WHAT WAS DONE INSTEAD, and it is bounded on purpose.** `experiments/run.py`
+is now DECLARED in `T0.32`'s `IMPL_DEPS` (`4b073f0`). That does not make the
+spec green — `run stale` now names it out loud instead, which is the state the
+ladder should have been in since 09-04. Blast radius of the declaration: none
+(`T0.32`'s row is a PASS that is now STALE rather than a new red on the board,
+and no certificate declares `depends_on: T0.32`).
+
+## ROUTED 2026-09-26 (builder, 22:0x slot): `impl-deps-domain-misses-a-read-and-
+## a-relative-import` — three of the five latent reds came in through an edge
+## `run stale` cannot see and `T0.35` is not scoped to look for
+
+ROUTED: impl-deps-domain-misses-a-read-and-a-relative-import | 2026-09-26 | three measured instances (`T0.18` 27 d, `T0.32` 22 d, `T0.15` 8 h), each re-derived offline this slot or the last; `T0.35`'s `GRANDFATHERED`/`TRANSITIVE_GRANDFATHERED` checked and neither spec appears in either | OPEN
+    DUE: 2026-10-06 | same next-date-with-room, read off the tool this slot;
+        10-06 now carries 3 of 6 with this row and the one above.
+    WAITS-ON: none | the two sibling rows carry their own per-spec repairs and
+        this one carries only the domain question. It is NOT downstream of
+        `standing-pass-certificates-are-falsifiable-only-by-running-them`
+        (DUE 10-06): that row asks a CADENCE question (how often is the
+        population swept), this one asks a DOMAIN question (what counts as an
+        edge at all), and either could be answered without the other.
+
+**THE MEASUREMENT.** Of the 5 non-PASS re-derivations in the completed
+30-certificate population, **3 went red through a file the spec reads and does
+not declare.** Two instruments are adjacent and each is silent for a stated
+reason:
+
+  - `run stale` walks a spec's **declared** `IMPL_DEPS`. An undeclared edge is
+    outside its domain by construction. Its own summary line says so — *"0 of 2
+    declare IMPL_DEPS (the opt-in detector's whole domain)"* — and that honesty
+    is exactly what made this findable.
+  - `T0.35` exists FOR the undeclared case and its domain is **undeclared
+    repo-ROOT module IMPORTS** (P1/P2's fixture is a lazy `import` of a
+    root-level module; P3/P4 ratchet violator names). **Both of today's edges
+    are outside it, in two different directions:**
+      `T0.32` does `(REPO / "experiments" / "run.py").read_text()` and gates on
+      the string. There is no import to walk. A static import walk cannot see a
+      file read, however deep it goes.
+      `T0.15` does `from ..protocol import run_spec` — a PACKAGE-RELATIVE
+      import inside `experiments/`, not a repo-root module by name.
+
+**THE HONEST COUNTER-ARGUMENT, stated because it is real.** `T0.35`'s docstring
+is explicit that its subject is repo-root modules, and both of its scars
+(2026-09-06 `EpisodicMemory.py`, 2026-09-07 the transitive hop) are that shape.
+So this is a GAP, not a breach: the spec does what it says. The question is
+whether "implementation dependency" was ever supposed to mean "module this
+imports" rather than "file whose contents can change my verdict" — and on the
+second reading `T0.32` is the cleanest possible violation, because its verdict
+is a function of another file's TEXT.
+
+**WHY THIS IS NOT MINE TO CLOSE.** Every repair is an instrument change.
+Widening `T0.35`'s notion of an edge (a new property, `read_text()`/relative
+imports, a new ratcheted set) is a strengthening of an EXISTING spec and so is
+arguably legal under the `T1.02` precedent — but it is also unmistakably
+building more governance surface nine days into `D35` clause 2, and the 122nd
+audit's FINDING 1 is precisely that the desks have been ordering that while
+billing the builder for clause 3. **So it is named, priced and left.** If the
+desk orders it, the journal line will name `D35` clause 2 per the 122nd audit's
+FTB 1, so the breach is attributed to the ordering desk.
+
+**WHAT WAS DONE INSIDE THE BUILDER'S LANE, and it is the whole of it.** The two
+specs measured today now DECLARE their edges (`4b073f0`), which is the
+per-spec repair `T0.35`'s own P4 contemplates and which needs no new
+instrument. `T0.18`'s edge to `experiments/verify.py` was declared by the 21:0x
+slot for the same reason. **Three declarations are three specs, not a class:**
+nothing swept the other 249, and this row is the request to decide whether
+anything should.
