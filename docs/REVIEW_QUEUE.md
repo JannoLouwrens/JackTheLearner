@@ -7936,6 +7936,33 @@ the salt set in its environment — a `run_spec`-layer change that bills
 that bill at three cpu<10min re-buys). Reporting-only on arrival; the margin
 constant carries verbatim from this report; no bar moves.
 
+**IMPLEMENTED 2026-09-26 02:xx (builder, `5ee32ff`) — the full
+BINDING+ELIGIBILITY form, on the report's own numbers, one sitting after the
+report per `1^12` item 5's dating.** `run_spec` now runs the differential on
+every real-ledger row of a REGISTERED CPU-class spec whose fresh row is
+DECIDING (perturb-replay of the spec's own `_check`, margins verbatim:
+`HASH_SALT_MARGIN_REL` 0.10 / `HASH_SALT_ZERO_ABS` 0.10) or whose module
+imports `run_bakeoff` (eligibility, unconditional; an `ast` import binding,
+so LT.03's comment mention does not qualify). The re-run is per-seed in a
+fresh subprocess under a second `PYTHONHASHSEED`, aggregated by the same
+`_aggregate`, verdict-replayed, and diffed; the note lands in the row's
+message. Reporting-only, exactly as disposed: no verdict, bar, or refusal
+changes anywhere; `duration_s` is frozen before the differential so the
+instrument's cost never inflates a run's price (it discloses its own).
+Two write-guards, fixture-proven: a differential subprocess cannot write the
+real `ledger.json` (refused at `Ledger.record`), and its `run_bakeoff`
+receipts redirect to `$TMPDIR` (`JACK_SALT_DIFF_DECISIONS`) — the
+LG.13-duplicate class the 119th audit annotated, made impossible here.
+First four live flights, on the staleness bill itself: `T0.17` CLEAN
+(5 deciding metrics, +3.2 s), `T0.33` all-deciding-clean with ONE
+non-deciding divergence honestly classed as a blemish (`shipped_refusal_s`,
+a wall-clock), `T0.35` CLEAN (7, +4.1 s), `LG.13` CLEAN (49 deciding
+metrics + eligibility legs; its 6 subprocess bakeoff receipts landed in
+`/data/tmp`, the real record gained only the parent re-buy's one, annotated).
+Bill paid same slot from a clean tree: T0.17/T0.33/T0.35/LG.13 all PASS at
+`5ee32ff`. What remains for this desk: nothing owed by the builder; the row
+is ready for ACTED on its own terms.
+
 ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 | `acf63e9` (LG.13 attempt 1, PASS) | OPEN
     DUE: 2026-09-17 | ONE design question, and it is about what a SEAT RACE may
     conclude — deliberately dated onto the same day as

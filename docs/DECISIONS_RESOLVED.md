@@ -1955,3 +1955,30 @@ was permitted yesterday. Reversal: delete one `if` from `experiments/gpu.py`
 > `D32`/`D34` precedent (`6aaed9b`, 2026-09-25 01:12). Until that lands,
 > `decisions.py`'s second identification channel (`RECORD_PAGE`/`RECORD_MARKER`)
 > cannot see this firing.
+
+## LG.13 — WINNER — meaning-mass
+
+> **STALENESS RE-BUY, not a third verdict (annotated 2026-09-26 by the
+> builder, in the same slot that appended it).** Attempt 3's deterministic
+> re-run of the `## LG.13 — WINNER` records above — appended 2026-09-26
+> 02:33 by the re-buy owed after the `bakeoff.py` receipt-redirect edit
+> (`5ee32ff`, the hash-salt differential's write-guard) staled LG.13's
+> certificate. Byte-identical verdict for the same reason as attempt 2's:
+> every arm is a deterministic function of the frozen verdict table. The
+> row's own hash-salt differential read CLEAN (49 deciding metrics +
+> eligibility legs reproduced exactly). A reader counting bakeoff verdicts
+> should count ONE.
+
+meaning-mass beats topk-softmax by 4.13 sigma and clears the null by 56.00 sigma.
+
+metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
+
+> **screen rationale** (why these arms are observables, not learners): The arms are OBSERVABLES, not learners, and the rig makes that structural rather than asserted: every arm is a deterministic function of ONE already-cached verdict table (1588 frozen log-probabilities, content-hash keyed) that no arm can perturb, and no arm has a parameter fitted to anything. A low score is therefore a property of the RULE and not evidence that its run broke, which is exactly the case `validity` mode would mis-VOID. The gate is unmoved at 3 sigma and MIN_FINISHERS still applies. Declared in advance and not expected to bind: LG.10's published incumbent reads match 0.60-0.78 against a 0.18 null, so the mode is on the record before any arm number exists rather than switched on after a VOID.
+
+| arm | mean | sigma over null | gate | cost |
+|---|---|---|---|---|
+| meaning-mass | 1.000 | 56.00 | pass | 1.0 |
+| topk-softmax | 0.850 | 18.13 | pass | 2.0 |
+| softmax-full | 0.694 | 8.59 | pass | 1.0 |
+| topk-uniform | 0.661 | 32.52 | pass | 1.0 |
+| control:state-free-prompt | 0.064 | -5.02 | FAIL | 1.0 |
