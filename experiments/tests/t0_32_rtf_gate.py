@@ -89,7 +89,22 @@ from ..rtf import (BUDGET_SECONDS, TENANT_WALL_CEILING_S, gate_long_run,
 
 REPO = Path(__file__).resolve().parents[2]
 
-IMPL_DEPS = ["experiments/rtf.py", "playground.py"]
+# `experiments/run.py` DECLARED 2026-09-26, and it is the repair for a red this
+# spec had been carrying silently for 22 days. `single_source_ok` does
+# `(REPO / "experiments" / "run.py").read_text()` at line ~197 and gates on what
+# it finds; the docstring above says so in words ("run.py must contain no quoted
+# `cpu<`/`gpu<` literal at all"). So `run.py` is an implementation dependency by
+# the plainest possible reading, and it went undeclared — which is why
+# `a3d2c9e` (2026-09-04, 68th audit B4: `s.budget.value != "cpu<48h"`) flipped
+# this conjunct to False and no instrument said a word. `run stale` walks
+# DECLARED edges; `T0.35`'s detector walks undeclared repo-root IMPORTS, and a
+# `read_text()` of a source file is neither.
+#
+# NOTE FOR WHOEVER RULES ON THE CONJUNCT: declaring the edge makes the staleness
+# VISIBLE; it does not make the spec green, and it is deliberately not meant to.
+# The reading is still FAIL and the repair is a scope decision on the proxy,
+# routed as `t032-single-source-proxy-fires-on-self-test-literals`.
+IMPL_DEPS = ["experiments/rtf.py", "playground.py", "experiments/run.py"]
 
 # --- pre-registered constants -------------------------------------------------
 PROJ_TOL = 0.25            # the registry's falsified_by bar, verbatim

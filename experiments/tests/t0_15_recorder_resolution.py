@@ -47,6 +47,21 @@ from __future__ import annotations
 from ..protocol import Budget, Ledger, Spec, run_spec
 from ..registry import BY_ID
 
+# DECLARED 2026-09-26, and the declaration is the repair for a measured latent
+# red rather than hygiene. This spec's `_experiment` drives a NESTED `run_spec`
+# (see `_live_spec_check`) — so `protocol.py` is not a library it borrows, it is
+# the thing under test on half of its properties. It declared nothing, and
+# `5ee32ff` that morning added a `ledger.path` read to `run_spec` that
+# `_MemoryLedger` could not answer: this certificate would have recorded ERROR
+# on its next run and `run status`'s staleness lane printed nothing, because an
+# undeclared edge is invisible to a detector that walks declarations.
+#
+# `T0.35` cannot cover this edge and that is not its fault: its domain is
+# undeclared repo-ROOT module IMPORTS, and this is a package-relative one. Two
+# of the three latent reds this sweep found sit outside that domain (the other
+# reads a source file as TEXT), which is routed as its own row.
+IMPL_DEPS = ["experiments/protocol.py"]
+
 MAGNITUDES = [10.0 ** -e for e in range(1, 19)]
 TRUE_DRIFT = 3e-7           # below the pre-fix 5e-7 rounding floor
 FAITHFUL_REL_TOL = 1e-5
