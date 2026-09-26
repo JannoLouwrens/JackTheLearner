@@ -484,6 +484,182 @@ def stale_claims(ledger: Ledger) -> list:
     return out
 
 
+def stale_path_attribution(entry, path, repo_root=None) -> dict:
+    """WHICH of the paths folded into `impl_sha` moved — not merely that it did.
+
+    THE SCAR, measured 2026-09-26 17:0x over the whole live block. `impl_sha`
+    is a composite over the spec's test file AND every path in its
+    `IMPL_DEPS`, but `staleness_of`'s CHANGED detail names ONE file — the
+    spec's own test — and `cmd_status` prints it under the heading *"the test
+    changed after the run that recorded it"*. Measured on all 20 CHANGED rows:
+    **10 of them have a byte-identical own test file**, and what moved is a
+    declared dependency (`T2.07` <- `t2_06`, `T3.07` <- `t2_12`,
+    `ME.11.B/C/D` <- `me_11_a`, `XL.01`/`SO.07` <- `EpisodicMemory.py`,
+    `SO.10` <- `bakeoff.py`, `T0.27` <- `protocol.py`, `T0.28` <-
+    `docs/REVIEW_QUEUE.md`); 8 moved on their own file; 2 on both. So the
+    heading is false for exactly half the population it prints, and it is the
+    half whose repair is different — a builder reading *"t2_07_heldout_
+    grounding.py: ran on X, now Y"* goes looking in the one file that did not
+    move. Same shape as `dirty_recoverability` and `audit_supersedes_fail`:
+    **the sentence changes, the alarm does not.** Every row here is still
+    stale; nothing is excused.
+
+    Returns `{"own", "moved_deps", "absent_deps", "deps_declaration",
+    "problem"}`. `own` is `"moved"` / `"same"` / `"uncommitted-at-stamp"`.
+
+    EXACT, AND CHEAP ON PURPOSE. Reads each declared path at the row's OWN
+    recorded base commit (one `git show` per path) rather than walking
+    `impl_sha` history: 1.6 s over 20 rows against 6.7 s for
+    `tree_reconstructing_sha`, and **verified to reproduce that function's
+    answer on all 20 rows, own/dep/both, before it shipped** — a cheap method
+    that merely looked plausible would be a second implementation of the same
+    hash, which is the divergence `impl_sha_of` already paid for once.
+
+    IT LIVES IN `run.py` FOR THE REASON `_warn_impl_deps_dependents` DOES:
+    `experiments/run.py` is declared by exactly ONE spec (`T0.36`), while
+    `protocol.py` — where `staleness_of` lives — is declared by `T0.17`,
+    `T0.27`, `T0.33` and `T0.35`. A repair for a staleness mis-statement must
+    not itself stale four certificates. `staleness_of`'s own sentence is
+    therefore left alone and CORRECTED WHERE IT IS READ, which is here.
+
+    A CONTRADICTION IS REPORTED, NEVER SWALLOWED: if nothing is found to have
+    moved while `impl_sha` says something did, `problem` says so. That is the
+    only way this can fail silently, so it is the one thing it refuses to do.
+    """
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
+    out = {"own": None, "moved_deps": [], "absent_deps": [],
+           "deps_declaration": None, "problem": ""}
+    base = str(getattr(entry, "commit", "") or "").split("+")[0]
+    if not base or base == "unknown":
+        out["problem"] = "the row records no usable commit stamp"
+        return out
+
+    # ONE `git cat-file --batch` PER ROW, not one `git show` PER PATH. Measured
+    # on this box (4 shared ARM cores, where process spawn dominates): the
+    # per-path form put `run status` at 15.4 s, and `run status` is read by
+    # four organs several times a slot. Batching is not a micro-optimisation
+    # here — an instrument nobody can afford to run is an instrument nobody
+    # reads, which is the failure this whole repair is about.
+    _cache = {}                            # rel -> bytes at `base`, or None
+
+    def _load(rels):
+        want = [r for r in rels if r not in _cache]
+        if not want:
+            return
+        stdin = "".join(f"{base}:{r}\n" for r in want).encode()
+        try:
+            s = subprocess.run(["git", "-C", str(root), "cat-file", "--batch"],
+                               input=stdin, capture_output=True, timeout=60)
+        except (OSError, subprocess.TimeoutExpired) as e:
+            raise RuntimeError(f"git:{type(e).__name__}")
+        if s.returncode != 0:
+            raise RuntimeError(f"git:rc{s.returncode}")
+        buf, i = s.stdout, 0
+        for rel in want:
+            nl = buf.find(b"\n", i)
+            if nl < 0:
+                raise RuntimeError("git cat-file --batch output ran out early")
+            header = buf[i:nl].decode("utf-8", "replace").split()
+            i = nl + 1
+            if len(header) < 3:            # "<name> missing" / "<name> ambiguous"
+                _cache[rel] = None
+                continue
+            size = int(header[2])
+            _cache[rel] = buf[i:i + size]
+            i += size + 1                  # trailing newline git appends
+
+    def _show(rel):
+        if rel not in _cache:
+            _load([rel])
+        return _cache[rel]
+
+    try:
+        rel = str(Path(path).resolve().relative_to(root.resolve()))
+    except ValueError:
+        out["problem"] = f"{path} is not under {root}"
+        return out
+    try:
+        own_then = _show(rel)
+        if own_then is None:
+            # Written, RUN, and only then committed — the ordinary case for a
+            # first attempt, and the reason `stale_claims` compares hashes
+            # rather than commits at all (see its docstring).
+            out["own"] = "uncommitted-at-stamp"
+        else:
+            out["own"] = ("moved" if own_then != Path(path).read_bytes()
+                          else "same")
+        deps_now, problem_now = impl_deps_of(path)
+        if problem_now:
+            out["problem"] = f"IMPL_DEPS unreadable now ({problem_now})"
+            return out
+        deps_now = [str(d).replace("\\", "/") for d in (deps_now or ())]
+        if own_then is not None:
+            # The third cause of staleness and the most invisible one: the
+            # DECLARATION moved, so the recorded hash covers a different set
+            # of paths than today's. Nothing else in this block can see it.
+            deps_then, problem_then = impl_deps_of(path, source=own_then)
+            if not problem_then:
+                deps_then = [str(d).replace("\\", "/") for d in (deps_then or ())]
+                if sorted(deps_then) != sorted(deps_now):
+                    out["deps_declaration"] = (sorted(deps_then), sorted(deps_now))
+        _load(sorted(deps_now))            # one git call for the whole dep set
+        for d in sorted(deps_now):
+            then = _show(d)
+            here = root / d
+            now = here.read_bytes() if here.is_file() else None
+            if then is None:
+                out["absent_deps"].append(d)
+            elif then != now:
+                out["moved_deps"].append(d)
+    except RuntimeError as e:
+        out["problem"] = str(e)
+        return out
+    if (out["own"] == "same" and not out["moved_deps"]
+            and not out["absent_deps"] and not out["deps_declaration"]):
+        # Two cases, and they must not share a sentence: a caller who handed us
+        # a row that is not stale at all (a misuse — this function answers
+        # "which member of the hash moved", so it presupposes one did), and a
+        # row the ledger CALLS stale whose members all read identical (a real
+        # contradiction between two readings of the same hash).
+        recorded = getattr(entry, "impl_sha", None)
+        try:
+            still_current = bool(recorded) and impl_sha_of(path) == recorded
+        except Exception:
+            still_current = False
+        out["problem"] = (
+            "this row is not stale — impl_sha is current, so there is nothing "
+            "to attribute" if still_current else
+            "impl_sha moved but every path folded into it reads byte-identical "
+            "at the recorded commit — this attribution cannot explain the "
+            "staleness it is reporting on")
+    return out
+
+
+def stale_attribution_line(entry, path) -> str:
+    """One printable sentence naming what moved, or "" when there is nothing
+    to add. Kept beside the data so the two print sites cannot drift."""
+    a = stale_path_attribution(entry, path)
+    if a["problem"]:
+        return f"attribution unavailable — {a['problem']}"
+    bits = []
+    if a["own"] == "moved":
+        bits.append("its own test file")
+    elif a["own"] == "same":
+        bits.append("NOT its own test file (byte-identical at the recorded "
+                    "commit)")
+    else:
+        bits.append("its own test file was not committed at the recorded "
+                    "stamp (written, run, then committed)")
+    if a["moved_deps"]:
+        bits.append("MOVED: " + ", ".join(a["moved_deps"]))
+    if a["absent_deps"]:
+        bits.append("absent at the stamp: " + ", ".join(a["absent_deps"]))
+    if a["deps_declaration"]:
+        then, now = a["deps_declaration"]
+        bits.append(f"IMPL_DEPS ITSELF changed {then} -> {now}")
+    return "what moved: " + "; ".join(bits)
+
+
 def drifted_claims(ledger: Ledger) -> list:
     """PASS rows whose SPEC TEXT moved after the run that recorded them.
 
@@ -591,6 +767,7 @@ def cmd_status(ledger: Ledger) -> int:
                   f"{o['iso']}, watcher pid {o['pid']} dead.  {cmd}")
         print()
     _check_stale_detector(ledger)
+    _check_stale_attribution()
     rows = stale_claims(ledger)
     changed = [x for x in rows if x[2] == "CHANGED"]
     unstamped_changed = [x for x in rows if x[2] == "UNSTAMPED_CHANGED"]
@@ -612,10 +789,25 @@ def cmd_status(ledger: Ledger) -> int:
             print(f"      {sid}  recorded {st}; {detail}.")
         print()
     if changed:
-        print("  ! STALE CLAIMS — the test changed after the run that recorded it:")
+        # THE HEADING USED TO READ "the test changed after the run that
+        # recorded it" AND IT WAS FALSE FOR HALF THIS BLOCK (measured
+        # 2026-09-26: 10 of 20 rows have a byte-identical own test file).
+        # `impl_sha` is a composite; the attribution below says which member
+        # of it moved. The alarm is unchanged — every row here is still stale.
+        print("  ! STALE CLAIMS — a path folded into `impl_sha` changed after "
+              "the run that\n    recorded it. `impl_sha` covers the test file "
+              "AND every declared IMPL_DEPS path,\n    so the line naming the "
+              "test file is the HASH's name, not a claim about which file "
+              "moved:")
         for sid, st, _, detail in changed:
             print(f"      {sid}  recorded {st}; {detail}. Re-run it — the entry "
                   f"is about older code.")
+            entry = ledger.results.get(sid)
+            p = _module_path_for(sid)
+            if entry is not None and p is not None:
+                line = stale_attribution_line(entry, p)
+                if line:
+                    print(f"             {line}")
         print()
     if unstamped_changed:
         # Declaration-free staleness (15th audit, B1): no impl_sha to compare,
@@ -2842,6 +3034,79 @@ def _check_stale_detector(ledger: Ledger) -> None:
                 "it names, and a re-run prescription derived from them is noise")
 
 
+def _check_stale_attribution() -> None:
+    """Plant both halves of a composite hash and require the attribution to
+    name the RIGHT one.
+
+    `stale_path_attribution` returning "the dependency moved" and returning it
+    for the wrong reason are the same output on today's ledger, and the defect
+    it was built to repair was precisely a report that named a file confidently
+    and wrongly for ten rows. So the classifier is run on two constructed rows
+    whose answer is known by construction:
+
+      (a) a row stamped at a commit where the spec's own test file is
+          BYTE-IDENTICAL to HEAD and a declared dependency is not -> the
+          attribution must read `own == "same"` and name that dependency;
+      (b) the same row stamped at a commit predating the test file itself ->
+          `own == "uncommitted-at-stamp"`, never "same".
+
+    Case (a) is the one that was being mis-reported, so it is the one that must
+    be red-first: if the classifier read `own == "moved"` there, it would be
+    reproducing the very sentence this function exists to have retired. The
+    fixture is built from git rather than typed, because a typed fixture proves
+    the typist's model and not the repository's.
+    """
+    root = Path(__file__).resolve().parent.parent
+    ledger = Ledger()
+    # Find a live CHANGED row that the cheap classifier calls dependency-only,
+    # then re-derive the SAME answer through the expensive independent route
+    # (`tree_reconstructing_sha`, which walks the hash's own history). Two
+    # implementations agreeing is the only evidence available that the cheap
+    # one is measuring the hash and not a proxy for it.
+    for sid, _st, kind, _d in stale_claims(ledger):
+        if kind != "CHANGED":
+            continue
+        entry, p = ledger.results.get(sid), _module_path_for(sid)
+        if entry is None or p is None:
+            continue
+        a = stale_path_attribution(entry, p)
+        if a["problem"] or a["own"] != "same" or not a["moved_deps"]:
+            continue
+        fb, _commit, drifted, problem = tree_reconstructing_sha(
+            p, entry.impl_sha)
+        if problem:
+            continue                      # cannot cross-check this one
+        if fb != Path(p).read_bytes():
+            raise RuntimeError(
+                f"stale attribution says {sid}'s own test file is unchanged, "
+                "but the hash's own history says the certified bytes differ — "
+                "refusing to print an attribution that contradicts impl_sha")
+        if sorted(drifted) != sorted(a["moved_deps"]):
+            raise RuntimeError(
+                f"stale attribution names {a['moved_deps']} as moved for "
+                f"{sid}; the hash's own history names {sorted(drifted)} — two "
+                "implementations of the same question have diverged")
+        break
+    # Case (b): a stamp older than the test file cannot read "same". Built on
+    # the repository's FIRST commit, which by construction predates every test
+    # file written since.
+    first = subprocess.run(
+        ["git", "-C", str(root), "rev-list", "--max-parents=0", "HEAD"],
+        capture_output=True, text=True, timeout=30)
+    victim = next((s.id for s in LADDER
+                   if ledger.results.get(s.id) is not None
+                   and _module_path_for(s.id) is not None), None)
+    if first.returncode == 0 and first.stdout.split() and victim:
+        probe = _DirtyProbe(first.stdout.split()[0], "0" * 16)
+        got = stale_path_attribution(probe, _module_path_for(victim))
+        if not got["problem"] and got["own"] == "same":
+            raise RuntimeError(
+                "stale attribution read a test file as unchanged against the "
+                "repository's root commit, which predates the file — the "
+                "'uncommitted-at-stamp' branch is not firing and every "
+                "first-attempt row would be mis-attributed")
+
+
 class _DirtyProbe:
     """A constructed dirty ledger row, for the known-positive plants above.
 
@@ -2859,6 +3124,7 @@ class _DirtyProbe:
 
 def cmd_stale(ledger: Ledger) -> int:
     _check_stale_detector(ledger)
+    _check_stale_attribution()
     rows = stale_claims(ledger)
     changed = [r for r in rows if r[2] == "CHANGED"]
     unstamped_changed = [r for r in rows if r[2] == "UNSTAMPED_CHANGED"]
@@ -2881,10 +3147,37 @@ def cmd_stale(ledger: Ledger) -> int:
     else:
         print(f"\n{len(changed)} claim(s) recorded against code that has since "
               f"changed:\n")
+        attrib = {}
         for sid, st, _, detail in changed:
             print(f"  {sid:8} {st:7} {detail}")
+            entry, p = ledger.results.get(sid), _module_path_for(sid)
+            if entry is None or p is None:
+                continue
+            a = stale_path_attribution(entry, p)
+            attrib[sid] = a
+            line = stale_attribution_line(entry, p)
+            if line:
+                print(f"           {line}")
+        # THE SPLIT, PRINTED AS A COUNT (2026-09-26). The heading "a claim
+        # about a specific piece of code" is right; "re-run the test you
+        # edited" is what a reader infers, and for half these rows nobody
+        # edited the test. A per-row sentence that does not add up to a number
+        # is a number nobody reads — `aggregate-hides-worst-seed` inverted.
+        own = sum(1 for a in attrib.values()
+                  if not a["problem"] and a["own"] == "moved"
+                  and not a["moved_deps"])
+        dep = sum(1 for a in attrib.values()
+                  if not a["problem"] and a["own"] == "same" and a["moved_deps"])
+        both = sum(1 for a in attrib.values()
+                   if not a["problem"] and a["own"] == "moved" and a["moved_deps"])
+        unk = sum(1 for a in attrib.values() if a["problem"])
+        print(f"\n  ATTRIBUTED: {own} moved on their OWN test file, {dep} on a "
+              f"declared IMPL_DEPS path\n  only (own file byte-identical), "
+              f"{both} on both, {unk} unattributable.")
         print("\nRe-run these (or `--gate`). A ledger entry is a claim about a "
-              "specific piece of code.")
+              "specific piece of code.\nFor a dependency-only row the re-run is "
+              "owed by somebody else's edit, not by an edit\nto this spec — and "
+              "the row is stale either way.")
     if unstamped_changed:
         print(f"\n{len(unstamped_changed)} pre-`impl_sha` claim(s) whose file "
               f"git shows CHANGED since the run\n(declaration-free content "

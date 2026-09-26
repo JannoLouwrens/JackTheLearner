@@ -17527,3 +17527,51 @@ of the earlier finding that a `_check` can read a quantity the spec never emits
 seam are invisible to a scanner that only perturbs recorded-and-read metrics.**
 When a gate is a boolean summary, the margin you must report is the one in the
 quantity underneath it.
+
+## A composite hash's name is not an attribution, and half a report was wrong for it (builder, 2026-09-26 17:0x)
+
+`impl_sha` is a hash over the spec's test file **and every path in its
+`IMPL_DEPS`**. `staleness_of`'s CHANGED detail names the test file — because
+that is the hash's *name* — and `run status` printed it under the heading *"the
+test changed after the run that recorded it"*. **Measured over the whole live
+block, all 20 rows: 10 had a byte-identical own test file** (`T2.07` ← `t2_06`,
+`T3.07` ← `t2_12`, `ME.11.B/C/D` ← `me_11_a`, `XL.01`/`SO.07` ←
+`EpisodicMemory.py`, `SO.10` ← `bakeoff.py`, `T0.27` ← `protocol.py`, `T0.28` ←
+`docs/REVIEW_QUEUE.md`), 8 moved on their own file, 2 on both. So the heading
+was false for exactly half the population it printed, and false about the half
+whose repair is somebody else's edit.
+
+**The generalisable rule: when an instrument reports on a COMPOSITE, the name
+of the composite is not a finding about its members.** A reader acts on the
+member, so the member is what has to be named. This is the third instance of
+the same shape in this repo — `dirty_recoverability` (a tree-wide stamp read as
+a per-spec claim), `audit_supersedes_fail` (a red whose sentence is false for
+most rows it prints), and now this — and all three had the same repair: **the
+sentence changes, the alarm does not.** Nothing here was excused; every one of
+the 21 rows is still stale.
+
+**Two method notes worth more than the fix.**
+
+1. **The cheap method was verified against the expensive one before it
+   shipped.** Attribution by reading each declared path at the row's own
+   recorded commit (one `git cat-file --batch` per row, 0.42 s over 21 rows)
+   was required to reproduce `tree_reconstructing_sha`'s answer — which walks
+   the hash's own history, 6.7 s — on **all 20 rows, own/dep/both**, and the
+   cross-check is now a permanent guard. A cheap method that merely *looks*
+   like it measures the same thing is a second implementation of the same hash,
+   and this repo has already paid once for two `impl_sha`s diverging in silence.
+2. **The repair went in `run.py`, not in `protocol.py` where the sentence is
+   generated.** `experiments/run.py` is declared by exactly one spec (`T0.36`,
+   `cpu<1min`); `protocol.py` is declared by four (`T0.17`, `T0.27`, `T0.33`,
+   `T0.35`). **A repair for a staleness mis-statement must not itself stale
+   four certificates** — the same reasoning `_warn_impl_deps_dependents` used
+   in this file in September, applied a second time. Correct a sentence where
+   it is READ when correcting it where it is WRITTEN costs certificates.
+
+**The residual, named rather than routed** (it is inside
+`cross-organ-doc-race-voids-certificates`, DISPOSITIONED, DUE 10-03): `T0.28`
+declares `docs/REVIEW_QUEUE.md`, `docs/DECISIONS_NEEDED.md` and
+`docs/PROGRESS.md` in `IMPL_DEPS`, so **its certificate is staled by every
+Review sitting** — 7 of its re-buys fell in the last 7 days. A spec that
+declares another organ's output file can never hold a stable certificate, and
+that is a fact about the declaration, not about the spec.
