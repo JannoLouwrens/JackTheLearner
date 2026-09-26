@@ -64,6 +64,7 @@ the run.
 """
 from __future__ import annotations
 
+import os
 import statistics as st
 import time
 from dataclasses import dataclass, field
@@ -328,7 +329,15 @@ def _append_decision(res: BakeoffResult, path: Optional[Path] = None,
     Same shape as `submit()` hard-coding `gpu_budget.json`. A test must be able
     to reach the code without reaching the record.
     """
-    DECISIONS_FILE = path or DECISIONS
+    # A hash-salt differential subprocess (protocol.py, option iv) re-executes
+    # `_experiment` functions verbatim; when one reaches run_bakeoff, its
+    # receipt must not append to the real record — that is how LG.13's
+    # attempt-2 re-buy wrote the duplicate winner block the 119th audit had to
+    # annotate. The differential sets this env var to a /tmp path; a normal
+    # registered run never has it set.
+    DECISIONS_FILE = path or (
+        Path(os.environ["JACK_SALT_DIFF_DECISIONS"])
+        if os.environ.get("JACK_SALT_DIFF_DECISIONS") else DECISIONS)
     DECISIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not DECISIONS_FILE.exists():
         DECISIONS_FILE.write_text(

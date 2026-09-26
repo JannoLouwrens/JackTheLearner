@@ -629,6 +629,12 @@ class Ledger:
     def record(self, result: Result) -> None:
         """Merge ONE result into the ledger under an exclusive lock.
 
+        A hash-salt differential subprocess (JACK_SALT_DIFF=1) may never
+        write the REAL scoreboard: the instrument is reporting-only by its
+        disposition, and it re-executes `_experiment` functions whose future
+        edits this guard cannot foresee. Temp/fixture ledgers keep working —
+        the refusal is on this path only.
+
         Naive save() lost data: each Ledger held an in-memory copy and wrote the
         whole file, so a writer with a stale view silently erased results it had
         never seen. Measured, two interleaved writers kept 11 of 15 records
@@ -661,6 +667,11 @@ class Ledger:
         instance then adopts the merged file wholesale, so it cannot stay stale
         after a write either.
         """
+        if (os.environ.get("JACK_SALT_DIFF")
+                and self.path.resolve() == LEDGER_PATH.resolve()):
+            raise RuntimeError(
+                "hash-salt differential subprocess may not write the real "
+                "ledger — the instrument is reporting-only (option iv)")
         self.results[result.spec_id] = result
         self.path.parent.mkdir(parents=True, exist_ok=True)
         lock_path = self.path.with_suffix(self.path.suffix + ".lock")
@@ -3120,6 +3131,266 @@ def _declare_to_procwatch(label: str) -> None:
         pass                # no /proc or no /data: nothing watches here
 
 
+# ---------------------------------------------------------------------------
+# HASH-SALT DIFFERENTIAL — option (iv) of `hash-salt-lottery-in-a-gated-metric`
+# (docs/REVIEW_QUEUE.md, disposition 2026-09-19; the deciding set was measured
+# and REPORTED on 2026-09-26, `19aab39`, before this was written, per the
+# disposition's own ordering: DECIDING 98 of 129 replayable CPU specs, doubled
+# cost 25,888 s = 44.9% of the day ceiling — it fits).
+#
+# THE SCAR: LG.10/LG.12 recorded `swap_agree` values that were a function of
+# `PYTHONHASHSEED` — an unrecorded, unreconstructible per-process salt — and
+# the same statistic was one count-tie away from deciding a SEAT. The general
+# question this answers mechanically: is a recorded metric a FUNCTION OF
+# (code, seed, data)? A differential re-run is a MEASUREMENT, not a screen:
+# exact, zero false positives, nothing to calibrate — which is why it does
+# not collide with D27 (which prices heuristic screens).
+#
+# THE RULE (verbatim from the disposition): run the second-salt differential
+# on a metric only when it is DECIDING, which is exactly two cases —
+#   BINDING:     the recorded value sits within the declared margin of its own
+#                threshold (detected by perturb-replay of the spec's own
+#                `_check`, not by name-pairing);
+#   ELIGIBILITY: the spec is a `bakeoff.py` seat race / admission / tie-break
+#                — unconditionally and regardless of margin, because a
+#                tie-break is decided at zero margin by construction.
+# Reporting-only on arrival: it names the affected spec and metric in the
+# row's message; it never fails a spec, voids a row, refuses a run, or moves
+# a bar. A salt-dependent DECIDING metric is a spec that must be REPAIRED to
+# determinism (the `_modal` precedent) — never a gate adjusted to cover the
+# spread. GPU cost classes are excluded unconditionally.
+#
+# THE DECLARED MARGIN — carried VERBATIM from the measurement report, with its
+# reasoning, per the disposition's first binding ("a margin chosen after
+# seeing which specs it captures is the venue-selection defect wearing a
+# threshold"): the one measured instance of the defect moved aggregate
+# `swap_agree` by 0.0556 across salts {0,1,7,42,12345} = 6.2% of its 0.90
+# bar; 10% relative covers that with ~1.6x headroom without being fit to this
+# ladder. ZERO_ABS probes a metric recorded exactly 0.0 on the same unit
+# scale as its siblings rather than skipping it.
+HASH_SALT_MARGIN_REL = 0.10
+HASH_SALT_ZERO_ABS = 0.10
+HASH_SALT_CPU_BUDGETS = ("cpu<1min", "cpu<10min", "cpu<2h", "cpu<48h")
+
+
+def _salt_verdict(ok: Any) -> str:
+    """Normalize a `_check` return the way `run_spec`'s verdict arm reads it."""
+    if isinstance(ok, Status):
+        return ok.name
+    if isinstance(ok, bool):
+        return "PASS" if ok else "FAIL"
+    if isinstance(ok, (int, float)) and float(ok) in (0.0, 1.0):
+        return "PASS" if ok else "FAIL"
+    return f"OTHER:{type(ok).__name__}"
+
+
+def _salt_deciding_keys(check: Callable, metrics: Dict[str, Any],
+                        control_metrics: Dict[str, Any],
+                        base: str) -> List[tuple]:
+    """The BINDING half: (dict_tag, key) pairs whose ±margin perturbation
+    flips the replayed verdict. Detected against the spec's own gate logic —
+    perturb ONE numeric metric at a time, replay `_check`, diff the verdict —
+    never by pairing metric names to threshold constants. Replays that raise
+    are skipped: an exception is not a flip. Never raises."""
+    import copy
+    out = []
+    for tag, d0 in (("m", metrics), ("c", control_metrics)):
+        for k, v in list(d0.items()):
+            if isinstance(v, bool) or not isinstance(v, (int, float)):
+                continue
+            if not math.isfinite(v):
+                continue
+            delta = HASH_SALT_MARGIN_REL * abs(v) if v != 0.0 else HASH_SALT_ZERO_ABS
+            for sgn in (1.0, -1.0):
+                m1 = copy.deepcopy(metrics)
+                c1 = copy.deepcopy(control_metrics)
+                (m1 if tag == "m" else c1)[k] = v + sgn * delta
+                try:
+                    got = _salt_verdict(check(m1, c1))
+                except Exception:
+                    continue
+                if got != base:
+                    out.append((tag, k))
+                    break
+    return out
+
+
+def _salt_uses_bakeoff(fn: Callable) -> bool:
+    """The ELIGIBILITY half: the experiment's module carries an actual import
+    binding of `run_bakeoff` (an `ast.Import`/`ImportFrom`, never a mention in
+    prose — LT.03 names it in a comment and is correctly excluded). Never
+    raises; False on any doubt."""
+    try:
+        import ast
+        import inspect
+        src_file = inspect.getsourcefile(fn)
+        if not src_file:
+            return False
+        tree = ast.parse(Path(src_file).read_text())
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom) and any(
+                    a.name == "run_bakeoff" for a in node.names):
+                return True
+        return False
+    except Exception:
+        return False
+
+
+def _salt_importable(f: Optional[Callable]) -> Optional[tuple]:
+    """(module, name) when `f` round-trips through its own module — the only
+    form a fresh subprocess can re-run. Closures, lambdas and partials return
+    None and are DISCLOSED as skipped, never silently dropped."""
+    if f is None:
+        return None
+    mod = getattr(f, "__module__", None)
+    name = getattr(f, "__name__", None)
+    if not mod or not name or not name.isidentifier():
+        return None
+    try:
+        import importlib
+        if getattr(importlib.import_module(mod), name, None) is not f:
+            return None
+    except Exception:
+        return None
+    return mod, name
+
+
+_SALT_RUNNER_CODE = (
+    "import importlib,json,sys\n"
+    "def _d(o):\n"
+    "    try: return float(o)\n"
+    "    except Exception: return str(o)\n"
+    "m=importlib.import_module(sys.argv[1])\n"
+    "r=getattr(m,sys.argv[2])(int(sys.argv[3]))\n"
+    "sys.stdout.write('\\nJACK_SALT_DIFF_RESULT:'+json.dumps(r,default=_d)+'\\n')\n"
+)
+
+
+def _salt_rerun(mod: str, name: str, seeds: List[int], timeout_s: float,
+                env: Dict[str, str]) -> Dict[str, Any]:
+    """Re-run `mod.name(seed)` for every seed in a FRESH subprocess under the
+    env's salt (PYTHONHASHSEED is fixed at interpreter start, so an in-process
+    re-run cannot vary it) and aggregate exactly as the runner did."""
+    runs = []
+    for s in seeds:
+        p = subprocess.run(
+            [sys.executable, "-c", _SALT_RUNNER_CODE, mod, name, str(s)],
+            env=env, cwd=str(Path(__file__).resolve().parent.parent),
+            capture_output=True, text=True, timeout=timeout_s)
+        if p.returncode != 0:
+            raise RuntimeError(
+                f"seed {s} rc={p.returncode}: {p.stderr.strip()[-160:]}")
+        marks = [l for l in p.stdout.splitlines()
+                 if l.startswith("JACK_SALT_DIFF_RESULT:")]
+        if not marks:
+            raise RuntimeError(f"seed {s}: no result marker on stdout")
+        runs.append(json.loads(marks[-1][len("JACK_SALT_DIFF_RESULT:"):]))
+    return _aggregate(runs)
+
+
+def _hash_salt_differential(spec: Spec, fn: Callable, check: Callable,
+                            control_fn: Optional[Callable], seeds: List[int],
+                            status: Status, metrics: Dict[str, Any],
+                            control_metrics: Dict[str, Any],
+                            elapsed_s: float) -> Optional[str]:
+    """The whole instrument. Returns a one-line reporting-only note for the
+    row's message, or None when the row is not DECIDING. Never raises out of
+    `run_spec`'s wrapper; never touches metrics, control_metrics, or the
+    verdict. Scope guards, each disclosed by absence rather than by note:
+    CPU cost classes only; registered specs only (fixture specs inside T0.x
+    harness tests must not balloon or grow notes their assertions never
+    declared); the REAL ledger only (a temp-ledger run is not a row on the
+    scoreboard); and never inside another differential (JACK_SALT_DIFF)."""
+    if os.environ.get("JACK_SALT_DIFF"):
+        return None
+    budget = getattr(spec.budget, "value", str(spec.budget))
+    if budget not in HASH_SALT_CPU_BUDGETS:
+        return None
+    if status not in (Status.PASS, Status.FAIL, Status.VOID):
+        return None
+    try:
+        from .registry import BY_ID
+        if BY_ID.get(spec.id) is None:
+            return None
+    except Exception:
+        return None
+    deciding = _salt_deciding_keys(check, metrics, control_metrics, status.name)
+    eligibility = _salt_uses_bakeoff(fn)
+    if not deciding and not eligibility:
+        return None
+    why = (f"{len(deciding)} deciding metric(s)" if deciding else "") + \
+          (" + " if deciding and eligibility else "") + \
+          ("bakeoff eligibility legs" if eligibility else "")
+    imp = _salt_importable(fn)
+    if imp is None:
+        return (f"HASH-SALT DIFFERENTIAL SKIPPED ({why}): experiment fn is "
+                "not an importable module-level function; salt dependence "
+                "unmeasured for this row")
+    t0 = time.time()
+    cimp = _salt_importable(control_fn)
+    env = dict(os.environ)
+    env["PYTHONHASHSEED"] = "1" if os.environ.get("PYTHONHASHSEED") != "1" else "2"
+    env["JACK_SALT_DIFF"] = "1"
+    # A re-run that reaches run_bakeoff must not append to the real decisions
+    # record (the LG.13 duplicate precedent) — bakeoff.py honors this.
+    env["JACK_SALT_DIFF_DECISIONS"] = os.path.join(
+        tempfile.gettempdir(), "jack_salt_diff_decisions.md")
+    ncalls = len(seeds) * (2 if control_fn is not None else 1)
+    tmo = max(120.0, 3.0 * float(elapsed_s) / max(1, ncalls))
+    try:
+        m2 = _salt_rerun(imp[0], imp[1], seeds, tmo, env)
+        c2 = _salt_rerun(cimp[0], cimp[1], seeds, tmo, env) if cimp else {}
+    except Exception as e:
+        return (f"HASH-SALT DIFFERENTIAL ERRORED ({why}; reporting-only): "
+                f"{type(e).__name__}: {e}"[:280])
+    # Replay the verdict on the re-run's numbers BEFORE diffing, so keys the
+    # spec's own `_check` writes into metrics (void_reason siblings, derived
+    # conjuncts) exist on both sides — and so a verdict flip is reported as
+    # such, which is the strongest form of the finding.
+    try:
+        verdict2 = _salt_verdict(check(m2, c2))
+    except Exception as e:
+        verdict2 = f"REPLAY-ERROR:{type(e).__name__}"
+    deciding_set = set(deciding)
+    div_dec, div_other = [], []
+    control_unchecked = (control_fn is not None and cimp is None)
+    for tag, d_rec, d_new in (("m", metrics, m2), ("c", control_metrics, c2)):
+        if tag == "c" and control_unchecked:
+            continue
+        for k, v in d_rec.items():
+            if isinstance(v, bool) or not isinstance(v, (int, float)):
+                continue
+            if not math.isfinite(v):
+                continue
+            nv = d_new.get(k)
+            same = (isinstance(nv, (int, float)) and not isinstance(nv, bool)
+                    and float(nv) == float(v))
+            if not same:
+                (div_dec if (tag, k) in deciding_set else div_other).append(
+                    (tag, k, v, nv))
+    dt = time.time() - t0
+    salt = env["PYTHONHASHSEED"]
+    tail = (f"; control_fn not importable, its metrics unchecked"
+            if control_unchecked else "") + f" (+{dt:.1f}s)"
+    if div_dec:
+        head = ", ".join(f"{k} {v!r}->{nv!r}" for _, k, v, nv in div_dec[:3])
+        return (f"HASH-SALT DIVERGENCE (salt {salt}, reporting-only): "
+                f"{len(div_dec)} DECIDING metric(s) are not a function of "
+                f"(code, seed, data): {head}"
+                + (f"; +{len(div_other)} non-deciding diverged" if div_other else "")
+                + (f"; verdict replays {status.name}->{verdict2}"
+                   if verdict2 != status.name else "")
+                + " — repair the code, never the bar" + tail)
+    if div_other:
+        names = ", ".join(k for _, k, _, _ in div_other[:3])
+        return (f"HASH-SALT DIFFERENTIAL (salt {salt}): all DECIDING metrics "
+                f"reproduced exactly; {len(div_other)} non-deciding metric(s) "
+                f"diverged ({names}) — a blemish on numbers nothing gated "
+                "stands on" + tail)
+    return (f"HASH-SALT DIFFERENTIAL CLEAN (salt {salt}): {why} reproduced "
+            "exactly in a fresh process" + tail)
+
+
 def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
              check: Callable[[Dict[str, Any], Dict[str, Any]], bool],
              control_fn: Optional[Callable[[int], Dict[str, Any]]] = None,
@@ -3278,6 +3549,11 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                  f"{str(_mm.get('local_sha'))[:16]} — impl_sha names code that "
                  f"did not run remotely; see gpu_submissions.jsonl")
         message = f"{message} | {_note}" if message else _note
+
+    # Duration frozen BEFORE the hash-salt differential below: `duration_s`
+    # prices THE RUN (it sizes envelopes and future dispatch decisions); the
+    # instrument's own cost is disclosed inside its note instead.
+    dur_s = round(time.time() - t0, 2)
     # The stamp names the machine that RAN the work, not the dispatcher: nine
     # GPU records read aarch64/…/cpu while the truth sat in metrics["gpu"]
     # (overseer B3). The dispatcher stays visible because it is also true.
@@ -3309,6 +3585,23 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                  "tree before you edit it or the FAIL becomes unauditable")
         message = f"{message} | {_note}" if message else _note
 
+    # HASH-SALT DIFFERENTIAL (option iv) — reporting-only, real-scoreboard
+    # rows only. Runs AFTER `ran_at_s` and byte-preservation so the row is
+    # stamped with the run's own end and the failing tree is captured before
+    # a potentially long re-run can race an edit. Wrapped so the instrument
+    # can NEVER turn a verdict into an ERROR: a broken meter is disclosed in
+    # the message, not priced as a lost run.
+    if Path(ledger.path).resolve() == LEDGER_PATH.resolve():
+        try:
+            _salt_note = _hash_salt_differential(
+                spec, fn, check, control_fn, seeds, status, metrics,
+                control_metrics, dur_s)
+        except Exception as _se:
+            _salt_note = (f"HASH-SALT DIFFERENTIAL ERRORED (reporting-only): "
+                          f"{type(_se).__name__}: {_se}"[:200])
+        if _salt_note:
+            message = f"{message} | {_salt_note}" if message else _salt_note
+
     # Stamped on every path through the try — PASS, FAIL, VOID and ERROR all
     # spent memory. The ERROR case especially: an OOM-adjacent crash is the
     # row whose peak the next reader most needs.
@@ -3322,7 +3615,10 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                  control_metrics=control_metrics, seeds=seeds,
                  preserved_impl=preserved,
                  peak_rss_mb=rss_after, peak_rss_inherited=rss_inherited,
-                 duration_s=round(time.time() - t0, 2), message=message,
+                 # frozen before the hash-salt differential ran: duration_s
+                 # prices THE RUN; the instrument discloses its own cost in
+                 # its note
+                 duration_s=dur_s, message=message,
                  compute_s=(round(compute_s, 2) if compute_s is not None else None),
                  impl_sha=impl_sha,
                  # Stamped from the Spec object THIS run was handed, not from a
