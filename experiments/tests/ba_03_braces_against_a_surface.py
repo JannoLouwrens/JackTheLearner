@@ -330,8 +330,16 @@ anywhere (no pilot, no probe, no artifact carries one): the old design's
 magnitudes on the old ruler were — required claim signal T_GAIN_MIN *
 gain_se = 3 * 2.4674/sqrt(120) = 0.676 s against a random-arm episode spread
 of ~2.7 s -> 0.25; VEST_OVER_NOISE_MIN 0.20 s / ~2.7 s -> 0.074. Rounded
-toward the demanding side for the claim floor and the lenient side for the
-noise floor: `TILT_GAIN_MIN_FRAC = 0.20`, `TILT_VEST_OVER_NOISE_FRAC = 0.05`.
+PERMISSIVE on both floors — the label that stood here until 2026-09-26 read
+"demanding side" for the claim floor and was WRONG (120th audit, FINDING 1):
+a floor is easier to clear the lower it sits, and the registered constants
+sit BELOW their own derivation — the claim floor 20% below (0.20 vs 0.25),
+the noise floor 32% below (0.05 vs 0.074). No stronger reason than
+rounding-down was recorded at writing and none is invented now. The NUMBERS
+do not move with this correction, in either direction, because the freeze in
+the next sentence binds and the pilot has been read; the repair is the label
+(the audit's option (b)): `TILT_GAIN_MIN_FRAC = 0.20`,
+`TILT_VEST_OVER_NOISE_FRAC = 0.05`.
 Neither may move after the pilot's numbers are read, in either direction.
 
 STALENESS BILL OF THIS EDIT, priced pre-edit (`run stale-cost`): 0 standing
@@ -602,7 +610,10 @@ HEADROOM_MIN_MULT = 2.0       # strengthen-only: the room between the NULL
 # Pre-registered 2026-09-26 BEFORE any tilt number exists; derived from the
 # old design's magnitudes on the old ruler (0.676 s needed signal / ~2.7 s
 # random spread -> 0.25; 0.20 s noise floor / ~2.7 s -> 0.074), rounded
-# demanding-side for the claim, lenient-side for the noise contrast. They do
+# PERMISSIVE on both: the claim floor sits 20% below its derived 0.25 and
+# the noise floor 32% below its derived 0.074 ("demanding-side" stood here
+# until 2026-09-26 and was false — 120th audit FINDING 1, label corrected,
+# values frozen). They do
 # not move after the pilot's numbers are read, in either direction. Both are
 # FRACTIONS OF tilt_sd_random, the random walk's in-run measured episode sd —
 # "the new bar is set from the RANDOM walk's measured distribution".
