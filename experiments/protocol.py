@@ -70,7 +70,23 @@ RUNNER_OUTPUTS = ("experiments/ledger.json",
                   # log that invalidates the evidence"; the guard is T0.33's
                   # receipt_committable property, which parses this tuple.
                   "experiments/cpu_budget.json",
-                  "experiments/cpu_budget.json.tmp")
+                  "experiments/cpu_budget.json.tmp",
+                  # `docs/DECISIONS_RESOLVED.md` joined 2026-09-26 (119th audit
+                  # FINDING 4) — the FOURTH occurrence of "the evidence log that
+                  # invalidates the evidence", in a file this comment block
+                  # already documented three times without adding. `bakeoff.py`
+                  # appends the winner record DURING a registered run, so the
+                  # next spec to record is stamped `+dirty` by the previous
+                  # spec's own receipt: T0.35 attempt 13 (`d1cf88d+dirty`,
+                  # dirty_files ['docs/DECISIONS_RESOLVED.md']) recorded seven
+                  # seconds after LG.13's clean bakeoff PASS. RUNNER_OUTPUTS,
+                  # not DOC_OUTPUTS, per the ledger.json precedent: a file the
+                  # runner itself writes is never evidence that CODE moved.
+                  # Checked before excluding (the audit's caveat): decisions.py
+                  # parses this page, but the only spec-side reader is T0.28's
+                  # `_live_asks`, which is recorded-only ("Never gated") and
+                  # try/except-wrapped — no verdict reads the live file.
+                  "docs/DECISIONS_RESOLVED.md")
 
 #: Files the LOOP writes around a run — rendered status and the journal. Also
 #: not code, and the evidence is a stamp this project already paid for: T2.00's
