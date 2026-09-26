@@ -166,7 +166,7 @@ table_liveness() {
 # /data/jack-logs and the confident page lives in docs/, and until this call
 # nothing joined them.
 review_liveness() {
-  local sayfn="${1:-:}" reason rc=0
+  local sayfn="${1:-:}" reason page_age rc=0
   # A PAUSED organ is not a DEAD organ. The owner's pause file is a decision;
   # shouting about it would train the reader to ignore the banner.
   if [ -f "${REPO:-.}/.review-paused" ]; then
@@ -175,7 +175,31 @@ review_liveness() {
   fi
   reason=$(table_liveness docs/PROGRESS_LOG.md 1 FULL 7) || rc=1
   if [ "$rc" -eq 0 ]; then
-    "$sayfn" "review liveness: OK — $(history_newest_date docs/PROGRESS_LOG.md) daily, $(history_newest_mode_date docs/PROGRESS_LOG.md FULL) FULL"
+    # SECOND, INDEPENDENT ASSERTION (119th audit, FINDING 3). The table above
+    # is satisfied by a row the DYING run writes itself: the 76th-audit B4
+    # fallback appends an INCOMPLETE row on the death path, so on exactly the
+    # deaths this function exists for, the honest disclosure in PROGRESS_LOG.md
+    # keeps the table fresh and the stale_output branch below unreachable.
+    # That stood for 42 hours — docs/PROGRESS.md opened "2026-09-24" as a
+    # finished report while this function said OK. So the PAGE asserts its own
+    # age too: hours since the last commit touching it (the same clock
+    # lib_seal.sh uses; mtime is a checkout artifact) against the 25 h daily
+    # cadence. A mid-write sitting leaves the page DIRTY, and stale_output
+    # already refuses dirty files, so a live sitting cannot be stamped by this.
+    page_age=$(_seal_file_age_hours docs/PROGRESS.md)
+    if [ "$page_age" -gt 25 ]; then
+      reason="docs/PROGRESS.md itself last moved ${page_age}h ago against a 25h cadence; PROGRESS_LOG.md's fresh row is the dying run's own B4 disclosure and cannot vouch for the page"
+      rc=1
+    elif head -8 docs/PROGRESS.md 2>/dev/null | grep -q "STALE — "; then
+      # The stamp commit refreshes the page's git age, so after a stamp this
+      # branch — not the age test — is what keeps the alarm honest: a banner
+      # only clears when the Review completes a run and rewrites the file.
+      "$sayfn" "review liveness: STILL STALE — docs/PROGRESS.md carries its banner; the Review has not completed a run since it was stamped"
+      return 1
+    fi
+  fi
+  if [ "$rc" -eq 0 ]; then
+    "$sayfn" "review liveness: OK — $(history_newest_date docs/PROGRESS_LOG.md) daily, $(history_newest_mode_date docs/PROGRESS_LOG.md FULL) FULL, page ${page_age}h old"
     return 0
   fi
   "$sayfn" "REVIEW LIVENESS FAILED — $reason"

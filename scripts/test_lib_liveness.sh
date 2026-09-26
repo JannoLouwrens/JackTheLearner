@@ -350,6 +350,55 @@ chk "and its provenance does NOT call the complete page a draft" \
 chk "and it still says the entry is unverified" \
   "$(grep -c 'unverified until an audit re-measures them' "$W8/docs/DECISIONS_NEEDED.md")" "1"
 
+printf '\n--- review_liveness: the page asserts its own age (119th audit F3) ---\n'
+
+# THE 119th-AUDIT SCAR: the Review died after writing its own B4 INCOMPLETE
+# disclosure row into PROGRESS_LOG.md. That row is dated TODAY, so
+# table_liveness read the organ as alive while docs/PROGRESS.md sat 42 h old,
+# unbannered, headlined as a finished report. The honest disclosure in one
+# file suppressed the alarm that owns the other. The check must read the page
+# it stamps, not only the table the dying run writes.
+W9="$TMP/repo9"; mkdir -p "$W9/docs"
+git -C "$W9" init -q
+git -C "$W9" config user.email t@t; git -C "$W9" config user.name t
+printf '# PROGRESS\n\n**2026-09-24 DAILY.** THE BUILDER HAS NOTHING TO DO.\n' > "$W9/docs/PROGRESS.md"
+{ echo "| date | mode | one line |"; echo "|---|---|---|"
+  printf '| %s | FULL | ruled |\n' "$(date -u -d '3 days ago' +%F)"
+  printf '| %s | DAILY | — INCOMPLETE — the run exited rc=124 before appending its own row |\n' "$(date -u +%F)"
+} > "$W9/docs/PROGRESS_LOG.md"
+git -C "$W9" add -A
+GIT_COMMITTER_DATE="$(date -u -d '2 days ago' -Iseconds)" \
+  git -C "$W9" commit -q -m old
+( cd "$W9" && REPO="$W9" review_liveness say ) >/dev/null 2>&1
+chk "a fresh B4 disclosure row does NOT vouch for a 48h-old page" "$?" "1"
+chk "and the page got its banner" \
+  "$(head -1 "$W9/docs/PROGRESS.md" | grep -c 'STALE — ')" "1"
+chk "and the banner is committed" \
+  "$(git -C "$W9" status --porcelain | wc -l)" "0"
+
+# The stamp commit itself refreshes the page's git age. A banner nobody has
+# cleared is still a missed schedule — the check must not read its own stamp
+# as the Review coming back.
+( cd "$W9" && REPO="$W9" review_liveness say ) >/dev/null 2>&1
+chk "after the stamp, the check still reports the miss (not OK)" "$?" "1"
+chk "and no second banner is stacked" \
+  "$(grep -c 'STALE — ' "$W9/docs/PROGRESS.md")" "1"
+
+# A page rewritten by a COMPLETED run (fresh commit, no banner) is healthy.
+W10="$TMP/repo10"; mkdir -p "$W10/docs"
+git -C "$W10" init -q
+git -C "$W10" config user.email t@t; git -C "$W10" config user.name t
+printf '# PROGRESS\n\ncurrent state, written today\n' > "$W10/docs/PROGRESS.md"
+{ echo "| date | mode | one line |"; echo "|---|---|---|"
+  printf '| %s | FULL | ruled |\n' "$(date -u -d '3 days ago' +%F)"
+  printf '| %s | DAILY | wrote the page |\n' "$(date -u +%F)"
+} > "$W10/docs/PROGRESS_LOG.md"
+git -C "$W10" add -A; git -C "$W10" commit -q -m fresh
+( cd "$W10" && REPO="$W10" review_liveness say ) >/dev/null 2>&1
+chk "a fresh row AND a fresh page is healthy" "$?" "0"
+chk "and the healthy page is not stamped" \
+  "$(head -1 "$W10/docs/PROGRESS.md" | grep -c 'STALE — ')" "0"
+
 printf '\n--- review_liveness: the paused organ ---\n'
 
 # A paused organ is a DECISION, not a fault. Shouting about it would train the
