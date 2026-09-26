@@ -1,3 +1,11 @@
+> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
+> the Review has missed its schedule: docs/PROGRESS.md itself last moved 42h ago against a 25h cadence; PROGRESS_LOG.md's fresh row is the dying run's own B4 disclosure and cannot vouch for the page
+> So everything below is the PREVIOUS run of the review and is a RECORD,
+> not current state: its counts, its "current state" framing and any
+> claim about what has or has not moved describe an older world.
+> Stamped 2026-09-26T01:11:31+00:00 by scripts/lib_seal.sh. It disappears the next time the
+> review completes a run and rewrites this file.
+
 # PROGRESS.md — the Review's current-state page
 
 > Written by the Review organ. **Current state, not a log** — each run rewrites
