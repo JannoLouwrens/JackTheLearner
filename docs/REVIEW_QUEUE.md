@@ -10583,7 +10583,7 @@ ROUTED: adverse-verdicts-are-re-derived-by-nobody | 2026-09-26 | one-off fresh-p
         PASS set, or declaring `_check` purity a contract — and under `D35`
         clause 2 no checker may join the three that exist. That makes the
         disposition the desk's and not this one's.
-    WAITS-ON: `lg12-abstention-knob-has-no-resolution` (DUE 2026-09-28) | not
+    WAITS-ON: lg12-abstention-knob-has-no-resolution | DUE 2026-09-28, and not
         for its ANSWER but for its ORDER: that row is due two days before this
         one and it prices a redesign against `LG.12`'s FAIL. Whoever sits it
         should know the FAIL reconstructs by hand and does NOT replay
