@@ -5641,7 +5641,32 @@ models; whether the repair is a better WM, a harder venue, or accepting the
 linear reference as the champion (SCORED-AND-INELIGIBLE idiom) is a design
 call. The bar does not move; T1.02 precedent binds.
 
-ROUTED: t402-touch-drowns-audio-at-the-fusion-boundary | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | DISPOSITIONED
+ROUTED: t402-touch-drowns-audio-at-the-fusion-boundary | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | ACTED 2026-09-26 aa7d49c (T4.06 PASS attempt 1, ran_at 2026-09-23T10:46:27, 1588.66 s, kaggle Tesla T4, clean stamp — the three-arm bakeoff this row's 09-23 disposition designed, run in full and re-verified at the ledger by the Review 09-26 rather than inherited from the velocity line that cited it)
+    ACTED-EVIDENCE, read off `ledger.json:results.T4.06.metrics`, not off a
+    commit message. **The incumbent arm ran FIRST and the recovery floor was
+    established before any challenger's number was seen**, exactly as the
+    disposition pre-registered it: `incumbent_ratio_worst` 29.8302,
+    `incumbent_min_r2_bar` -2.3939, `incumbent_eval_loss_mean` 0.4895. Three
+    challengers ran; `n_winning_arms` 1. `loss_reweight` WINS on all three
+    pre-registered conjuncts at once — gradient ratio 2.4528 against the
+    incumbent's 29.8302 (the fusion imbalance this row was routed for, cut
+    12-fold), worst-modality recovery -2.3752 which EXCEEDS the incumbent bar
+    -2.3939, and eval loss 0.4886 which is BELOW the incumbent's 0.4895, so it
+    did not buy balance by getting worse. `grad_norm` is in `refuted_arms`:
+    `ratio_ok` True, `loss_ok` False, `r2_ok` False — **the disposition named
+    that outcome in advance** ("the arm most likely to pass the ratio and fail
+    the recovery conjunct... a RESULT, not a failure of the bakeoff") and the
+    run delivered it. `modality_dropout` failed all three. Learning and
+    control lanes green on every arm (`all_learned` 1.0, `all_finite` 1.0,
+    `all_ctrl_dominance_ok` 1.0, `anchor_saturated` 0.0).
+    **THE DESK'S OWN FINDING AGAINST ITSELF, recorded because it is the
+    disposal lesson here:** this run landed 2026-09-23 10:46, **two days BEFORE
+    the 09-25 date it discharged**, and the 09-24 page counted it twice — once
+    in the velocity line (`T4.06` PASS a1) and once in the owner section (~0.45
+    h of W38 drawn) — while leaving this row unstamped. A row can go OVERDUE
+    on work the desk has already put in its own numbers. The gap is not
+    capacity; it is that nothing joins a ledger PASS to the queue row that
+    ordered it. Routed as its own finding below.
     DUE: 2026-09-22 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | the fusion-balancing redesign the priority head has pointed at "the Review, not an argument" since 08-21 — now with a row and a clock instead of a standing sentence. Date is `next_free_due` per B4.
     DUE: 2026-09-25 | RE-DATED 2026-09-23 (Review DAILY) under D28's (a)
         OVERDUE FIRST. **The debt this date carried — the bakeoff DESIGN — is
