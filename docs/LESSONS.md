@@ -17173,3 +17173,68 @@ pre-committed number (`>= 0.50 nats or route it back`). The test did not fire �
 the adoption survived at +0.6268 on the worst seed — but it caught the
 derivation on the way past. A ruling that orders its own falsifier first gets
 to be wrong about its arithmetic without being wrong in the ledger.
+
+---
+
+## A HAND-WRITTEN MAP FROM FILES TO SPECS IS PROSE — AND THE SCAN THAT REPLACES IT WILL CATCH THE RULING THAT ORDERED IT (2026-09-26, `cross-organ-doc-race` fork (c), `b4df9bb`)
+
+A Review disposition split seven docs into two classes — PROSE (never dirt, for
+anyone) and INSTRUMENT-INPUT (dirt only for a spec that declares it) — and named
+the members of each. It also, to its great credit, made a mutation falsifier a
+condition of the fork landing at all: *"a map that cannot be falsified by
+mutation is prose."* **The first thing the falsifier falsified was the
+disposition's own list.** `docs/PROGRESS.md` was ruled prose, *"consulted by no
+instrument"*; `decisions.py:314` binds it as a path and `T0.28`'s import closure
+reaches it, so shipping the list as written would have blinded a live reader on
+day one — in the one class where the error is unrepairable, because a doc that is
+prose "for anyone" cannot be rescued by a declaration. The same scan found a
+sixth instrument input the ruling's two lists did not mention at all
+(`docs/OVERSIGHT.md`, read by `steering.py`, by no spec).
+
+**The general rule: when a design hands you a hand-written partition of a
+mechanically-enumerable population, the first act of implementation is to
+MEASURE the partition, not to type it in.** The desk that wrote the list reads
+this code every day and still got a member wrong, because "which files does an
+instrument consult" is a question about import closures and path bindings, and no
+amount of familiarity substitutes for the scan. The measurement cost about
+fifteen minutes and it ran BEFORE any of the classifier code was written, which
+is why the correction was free.
+
+**Two calibration notes, both of which changed the answer:**
+
+- **Exact match, never substring — the same rule the predicate being repaired
+  already states one screen up.** A substring scan read **166** modules as
+  readers of `DECISIONS_RESOLVED.md` (because the classifier's own class tuples
+  name it) and read every registry `control="… see LESSONS.md"` citation as a
+  read. With equality against the path or its basename, the same scan reads
+  1/3/1/1/1 across the five instrument docs — small enough that a human will
+  actually check it, which is the only reason anybody will.
+- **Exclude the classifier from its own population.** `protocol.py` names every
+  doc it classifies, so four specs that declare `protocol.py` in `IMPL_DEPS` read
+  as readers of all seven docs: 35 violations with it in, 7 with it out. A
+  classifier is not evidence that its declarers consult what it classifies.
+
+**AND THE FIXTURE JOINED THE POPULATION IT MEASURES.** The battery wrote the doc
+path as a literal in its own plants and the scanner promptly flagged the battery
+— `undeclared_doc_readers` 0 -> 1, on `T0.17` itself. The detector was right by
+its own rule and the code was misleading: `T0.17`'s verdict does not read the
+queue, so declaring it would have bought a daily staleness flag for a dependency
+that does not exist. The fix is the one that stays true: **a test fixture derives
+the identifier it plants FROM the class under test, rather than typing it.** The
+plants now read `Q = INSTRUMENT_INPUT_DOCS[0]`, which also means they follow the
+class if it is ever reordered. Generalised: *a battery that names its subject as
+a literal is a member of the population it audits* — the same shape as a detector
+on a shared log that must bound itself to its own writes.
+
+**One cost to carry forward, because it is the price of the "one mechanism"
+clause and not a defect anyone introduced.** Joining the dirt map to `IMPL_DEPS`
+— which the disposition required, to avoid a second declaration list — means
+`impl_sha_of` folds those docs' bytes, so three Tier-0 certificates now re-stale
+every time the desk edits its own queue. The flag is TRUE (their verdicts read
+the live doc) and the harm is the one `impl_sha_of`'s own docstring names: a
+standing red teaches readers to skim the block. **A declaration surface with two
+consumers imports each consumer's consequences**, and that is worth pricing
+BEFORE choosing to share it, not after. Routed as
+`doc-declarations-restale-three-tier0-certificates-daily`; it was not
+self-served at the builder's desk, because exempting docs from the hash would be
+the second mechanism the ruling refused.

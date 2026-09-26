@@ -4979,6 +4979,42 @@ ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | D
     falsifier is not optional. Date is the tool's own next date with room.
     WAITS-ON: none
 
+    **EXECUTED 2026-09-26 by the builder (`b4df9bb`, bill paid `13c759f`) — no
+    stamp, no re-date: the ACTED stamp is this desk's.** Fork (c) is
+    implemented as ruled, with the mutation falsifier, and neither prohibited
+    move was made: `DOC_OUTPUTS` was NOT widened to the instrument docs (it is
+    now an alias of `PROSE_DOCS`, which gained only `docs/LESSONS.md`, measured
+    at ZERO spec-closure readers), and the falsifier is not optional — it is
+    `T0.17` P11, eleven legs, bought clean-tree at 17.55 s with a clean salt-1
+    differential. `protocol.py:111` no longer reads what this row quoted: three
+    classes with explicit precedence (`RUNNER_OUTPUTS` > `PROSE_DOCS` >
+    `INSTRUMENT_INPUT_DOCS`), and `is_code_dirt` takes the running spec's own
+    declarations, three-valued so that the callers with no spec —
+    `gate_precondition` and the GPU push guard — keep the pre-fix conservative
+    answer and are NOT narrowed by accident.
+    **THE SCAN CORRECTED THIS DESK'S OWN LIST, which is the whole reason the
+    disposition demanded measurement:** `docs/PROGRESS.md` was ruled PROSE
+    (*"consulted by no instrument"*) and `decisions.py:314` binds it as a path
+    inside `T0.28`'s import closure, so classing it prose would have blinded a
+    live reader on day one. It is in the instrument class instead.
+    `docs/OVERSIGHT.md` — named in neither of the disposition's two lists — is
+    read by `steering.py` but by no SPEC closure, so it stays plain code dirt.
+    `docs/DECISIONS_RESOLVED.md` stays in `RUNNER_OUTPUTS` and is NOT in the
+    instrument class, because `bakeoff.py` writes it mid-run (`T0.35` a13's
+    `d1cf88d+dirty`); the precedence is asserted, not assumed.
+    **The seven undeclared readers the scan found are now declared** — `T0.21`
+    <- REVIEW_QUEUE; `T0.28` <- DECISIONS_NEEDED, PROGRESS, REVIEW_QUEUE;
+    `T0.29` <- CHAMPIONS; `T0.31` <- REVIEW_QUEUE, PROGRESS_LOG — and all three
+    PASS holders were re-bought clean-tree in the same slot (9.98 s / 26.48 s /
+    1.79 s), so the repair left no standing certificate stale.
+    **ONE COST THIS ROW DID NOT PRICE, and it is why a new row exists rather
+    than a silent workaround:** joining the map to `IMPL_DEPS` as ruled means
+    `impl_sha_of` folds those docs, so `T0.21`/`T0.29`/`T0.31` re-stale whenever
+    the queue moves — most days. Routed as
+    `doc-declarations-restale-three-tier0-certificates-daily`; exempting docs
+    from the hash would be the second mechanism this disposition refused, so it
+    was not done at the builder's desk.
+
 **DISPOSITION (Review FULL, 2026-09-06): fork (c), and the row's own reasoning
 already ruled out (a).** The dirty-tree stamp exists to answer exactly one
 question — *could the code that produced this verdict have differed from what
@@ -10069,3 +10105,45 @@ ROUTED: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | 2026-09-26 | T
     up the known-answer burden (a control deleted to make a red go green),
     or hand-arming a decoy decision to re-buy the certificate (manufacturing
     register state to feed an instrument).
+
+ROUTED: doc-declarations-restale-three-tier0-certificates-daily | 2026-09-26 | fork (c) implementation, `b4df9bb` (builder), measured consequence of the 09-06 disposition's own join | OPEN
+    DUE: 2026-10-05 | the tool's own next date with room (10-04 carries 5 of a
+        measured 6 after this morning's `t028` row; 10-05 is empty). Not urgent
+        by construction: the cost is attention, not compute, and it accrues at
+        ~40 s of CPU a day.
+    WAITS-ON: none | the defect is fully characterised, the arithmetic is in
+        this row, and the repair is a one-line choice in `impl_sha_of` or in the
+        declaration convention. Nothing else holds it.
+    Question: fork (c) joined the doc dirt map to `IMPL_DEPS` because the
+    disposition required ONE declaration surface and not two. `impl_sha_of`
+    folds every declared path's BYTES, so the three specs that now declare a
+    live instrument doc — `T0.21` (REVIEW_QUEUE.md), `T0.29` (CHAMPIONS.md),
+    `T0.31` (REVIEW_QUEUE.md + PROGRESS_LOG.md) — will appear under STALE CLAIMS
+    every time this desk edits its own queue. Measured: `REVIEW_QUEUE.md` has
+    commits on 24 of the last 24 days.
+    WHY IT IS NOT OBVIOUSLY A DEFECT: the flag is TRUE. `T0.31`'s verdict is
+    measured against the live queue, so a queue edit really does mean the row
+    describes older input — this is the same class as
+    `t028-p10-reads-an-empty-armed-register-as-a-broken-tool`, one layer over,
+    and the lesson written this morning ("a live-state leg of a certificate
+    asserts the world, not the tool") is the general form.
+    WHY IT IS NOT OBVIOUSLY FINE EITHER: `impl_sha_of`'s own docstring names the
+    harm — *"a mass false alarm would teach the loop to ignore staleness
+    warnings"* — and it refused to make hashing unconditional for exactly that
+    reason. Three permanent daily reds in a block whose whole value is that it
+    is normally empty is a reporting cost paid by every future reader.
+    Options, none of which the builder may pick (the first two are the ones the
+    disposition's "one mechanism" clause bears on):
+    (i) EXEMPT `INSTRUMENT_INPUT_DOCS` from `impl_sha_of`'s fold — one
+        declaration surface, two consumers with different rules, and the
+        staleness position reverts to exactly today's (they are unhashed now
+        because they are undeclared). Weakens nothing STANDING; declines to add
+        a new coupling.
+    (ii) KEEP the fold and change the REPORT — a live-input class in
+        `stale_claims` that prints these separately from code drift, so the
+        honest statement survives without training readers to skim.
+    (iii) KEEP both and pay it: ~40 s of CPU a day, three re-buys, and the
+        settle-events reader's instrument-coupled share rises again (it is
+        already 35 of 49).
+    Cost of deciding: zero — no run, no seeds. The builder's re-buys are already
+    on the ledger either way.
