@@ -1755,6 +1755,110 @@ def ratchet_floors() -> dict:
             "decisions_firing_diff": BASELINE_FIRING_HAZARDS}
 
 
+# 120th audit item 3 — the DURABLE half of FINDING 2, whose instance was the
+# five `decisions.py` joins one commit earlier (6a15ad4). The finding was not
+# "five take() lines were missing"; it was that NOTHING asserts `ratchet_live`
+# covers the tools' own floored-class declarations, so any instrument can ship
+# a shrink-only class that no committed reading ever dates — exactly how
+# DEFAULT-ACTION-EXPIRED sat red for three days with no `at` and no `!! MOVED`,
+# and exactly the stage `champions.py` was at before the 91st audit's repair.
+#
+# The population is enumerated from the tools' OWN source by the idiom all
+# four declare in prose ("Ratchets ... in the BASELINE_UNDECLARED idiom"):
+# module-level `BASELINE_*` / `*_BASELINE` constants. A hand-kept list here
+# would itself be the drift channel this exists to close. RESIDUAL, named
+# rather than called closed (the SYSTEM.md discipline): a tool that floors a
+# class under a constant matching NEITHER name form is invisible to this scan
+# — `run.py`'s own GPU_UNATTRIBUTED_FLOOR shows the form exists. The four
+# audited tools use the idiom without exception today.
+FLOORED_CLASS_TOOLS = ("coverage", "champions", "review_queue", "decisions")
+
+# Every declared class maps to the `ratchet_live` counter that carries it.
+# Names here are asserted against the LIVE scan in `print_ratchet_block`, so
+# an entry pointing at a counter nobody computes refuses by name.
+FLOORED_CLASS_JOIN = {
+    "coverage.UNREACHABLE_BASELINE": "unreachable",
+    "coverage.FAIL_UNOWNED_BASELINE": "fail_unowned",
+    "coverage.PASS_ON_DEAD_DEPENDENCY_BASELINE": "pass_on_dead_dependency",
+    "coverage.COMMITMENTS_UNCOVERED_BASELINE": "commitments_uncovered",
+    "coverage.GOAL_UNRUNNABLE_BASELINE": "goal_unrunnable",
+    "coverage.PARK_RELEASE_BASELINE": "park_release_pairs",
+    "champions.BASELINE_UNWINNABLE": "champions_unwinnable",
+    "champions.BASELINE_TRIGGER_UNREACHABLE": "champions_trigger_debt",
+    "decisions.BASELINE_UNDECLARED": "decisions_undeclared",
+    "decisions.BASELINE_UNROUTED_ASKS": "decisions_unrouted_owner_ask",
+    "decisions.BASELINE_VANISHED_ASKS": "decisions_vanished_owner_ask",
+    "decisions.BASELINE_ACTION_EXPIRED": "decisions_default_action_expired",
+    "decisions.BASELINE_FIRING_HAZARDS": "decisions_firing_diff",
+}
+
+# Pinned UNJOINED, each with its reason — measured at pin time, 2026-09-26.
+# Every entry is declared and gated TOOL-SIDE (`--check` exits non-zero on
+# growth) but carries NO committed reading in `run status`: no `at` date, no
+# `!! MOVED` banner, no attributable cause when it moves. That is the exact
+# deficiency FINDING 2 measured, and this pin does not call it good — it makes
+# staying in it a VISIBLE DECISION instead of an accident. Joining any entry
+# is one `take()` line in `ratchet_live` plus deleting its pin line in the
+# same commit. A NEW floored class may not land here as a reflex: join it, or
+# write here why not — either way the author of the constant pays the cost in
+# this file, which is the FLOORED pin's own contract one block down.
+FLOORED_CLASS_UNJOINED = {
+    "coverage.GOAL_DANGLING_BASELINE":
+        "empty frozenset since 09-01; a NEW dangler is a red exit in "
+        "coverage.check, never a re-seed",
+    "coverage.QUEUE_EMPTY_BASELINE":
+        "empty frozenset since 09-04; an emptied cost class reads amber/red "
+        "in coverage.check on its own",
+    "champions.BASELINE_ARENA_MISSING":
+        "at 0 since 09-25 (phantom arenas closed by REGISTRATION, the only "
+        "non-laundering repair); growth is rc=1 tool-side",
+    "champions.BASELINE_UNFALSIFIABLE":
+        "at 3; sibling of the two joined champions classes — the 91st-audit "
+        "repair joined the two the audits had watched move unseen",
+    "champions.BASELINE_UNCONTESTABLE":
+        "at 4; the SUM class (unfalsifiable + arena-unreachable), asserted "
+        "tool-side so conversions between flavours stay neutral",
+    "champions.BASELINE_UNDECLARED":
+        "at 0; every seat declares SEAT:/HELD:/ARENA: today",
+    "champions.BASELINE_VERDICT_UNVERIFIED":
+        "at 2; growth is rc=1 tool-side",
+    "champions.BASELINE_KINDLESS_DISCHARGES":
+        "at 1; growth is rc=1 tool-side",
+}
+
+
+def declared_floored_classes() -> dict:
+    """`{"tool.CONSTANT": value}` for every shrink-only class the four audit
+    tools declare in their own source, enumerated by the declared idiom
+    (module-level `BASELINE_*` / `*_BASELINE` names) rather than by a
+    hand-kept list. `review_queue` contributes zero today — scanned anyway,
+    so its first floored class is caught the day it ships."""
+    import importlib
+    out = {}
+    for tool in FLOORED_CLASS_TOOLS:
+        mod = importlib.import_module(f".{tool}", __package__)
+        for name, val in vars(mod).items():
+            if name.startswith("BASELINE_") or name.endswith("_BASELINE"):
+                out[f"{tool}.{name}"] = val
+    return out
+
+
+def floored_class_gaps(declared, join, unjoined) -> list:
+    """Every way the join map and the tools' declarations can disagree, named.
+    Pure, so the self-check can plant known shapes (T0.31's assert-on-the-
+    TOTAL discipline: the population is the tools' whole declaration set,
+    never a filtered view of it)."""
+    gaps = []
+    dec = set(declared)
+    for k in sorted(dec - set(join) - set(unjoined)):
+        gaps.append(f"UNJOINED+UNPINNED: {k}")
+    for k in sorted((set(join) | set(unjoined)) - dec):
+        gaps.append(f"STALE MAPPING: {k}")
+    for k in sorted(set(join) & set(unjoined)):
+        gaps.append(f"JOINED AND PINNED AT ONCE: {k}")
+    return gaps
+
+
 def floor_status(cur, floor):
     """ABOVE / BELOW / AT, or None when there is no live value — pure, so
     the self-check can pin all four shapes."""
@@ -2132,6 +2236,37 @@ def _check_ratchet_reader() -> None:
             f"{sorted(FLOORED)} — a floor that vanishes from the map is a "
             "disconnected ratchet, and one added without pinning here is the "
             "next one")
+    # 120th audit item 3: the join must cover the TOOLS' OWN declarations,
+    # not just its own map — a floored class shipped in any of the four audit
+    # tools that neither joins `ratchet_live` nor pins its reason above
+    # refuses HERE, by name, on every status print, instead of sitting red
+    # for days with no committed reading (DEFAULT-ACTION-EXPIRED, 09-23 ->
+    # 09-26). Planted control first, in this guard's own idiom: the checker
+    # must name a class neither map covers, accept a covered population, and
+    # name a mapping whose constant is gone — or nothing below is a check.
+    _fx = {"toolx.BASELINE_NEW": 0, "toolx.OLD_BASELINE": frozenset()}
+    if (floored_class_gaps(_fx, {"toolx.BASELINE_NEW": "n"}, {})
+            != ["UNJOINED+UNPINNED: toolx.OLD_BASELINE"]
+            or floored_class_gaps(_fx, {"toolx.BASELINE_NEW": "n"},
+                                  {"toolx.OLD_BASELINE": "why"}) != []
+            or floored_class_gaps({}, {"gone.X_BASELINE": "n"}, {})
+            != ["STALE MAPPING: gone.X_BASELINE"]
+            or floored_class_gaps({"t.B_BASELINE": 0},
+                                  {"t.B_BASELINE": "n"},
+                                  {"t.B_BASELINE": "why"})
+            != ["JOINED AND PINNED AT ONCE: t.B_BASELINE"]):
+        raise RuntimeError(
+            "the floored-class join checker mis-classified one of its four "
+            "planted shapes — refusing to report a coverage it may not have "
+            "derived")
+    gaps = floored_class_gaps(declared_floored_classes(),
+                              FLOORED_CLASS_JOIN, FLOORED_CLASS_UNJOINED)
+    if gaps:
+        raise RuntimeError(
+            "floored-class join broken: " + "; ".join(gaps) + " — a "
+            "shrink-only class must be joined into ratchet_live (one take() "
+            "line) or pinned in FLOORED_CLASS_UNJOINED with its reason, in "
+            "the same commit that declares its constant")
 
 
 def print_ratchet_block(ledger: Ledger) -> None:
@@ -2155,6 +2290,17 @@ def print_ratchet_block(ledger: Ledger) -> None:
         raise RuntimeError(
             f"floored counter(s) {unscanned} missing from the ratchet scan "
             "entirely — refusing to print a block that lost a ratchet")
+    # 120th audit item 3, the live-scan half: a FLOORED_CLASS_JOIN entry that
+    # names a counter nobody computes is a join in name only — the class
+    # would read "covered" in the guard while no reading ever lands. Same
+    # channel as the floors ⊆ rows assertion above, same reason.
+    ghost_joins = sorted(set(FLOORED_CLASS_JOIN.values())
+                         - {r[0] for r in rows})
+    if ghost_joins:
+        raise RuntimeError(
+            f"FLOORED_CLASS_JOIN maps tool classes onto counter(s) "
+            f"{ghost_joins} that the live ratchet scan does not compute — "
+            "a paper join is the unjoined class wearing a name")
     splits = ratchet_splits(rows)
     print("  RATCHET COUNTERS — standing-red tools' numbers, printed here so "
           "a blessed red\n    can never silence them (64th audit B2). "
