@@ -19261,3 +19261,19 @@ seat row, the `t306` venue row, `A4`'s three-way fork, the
 `ba03-registered-run-foreclosed-by-d20` options, `SM.03`'s F1 arm pick, the
 `PL.02` gate disposition, and the PS-family sibling inheritance
 (`PS.05`/`PS.06`/`PS.08`), held at source by the `ps09` ruling.
+
+**ADDENDUM to the 18:0x slot, closing its own second-order cost.** The bill's
+second round is paid (`T0.21`, `T0.31`, clean-tree PASS, hash-salt differential
+clean, 3 deciding metrics each) and the chain TERMINATES — `render` prices the
+resulting paths at 0 certificates, so no third round is owed. Two counters moved
+and both are mine: **`pass_on_dead_dependency` 3 -> 5, ABOVE its floor of 3**,
+the new pairs being `T0.18 <- T0.13` and `T0.19 <- T0.13` — dependents of the
+honest FAIL this slot bought. **The floor was NOT raised** (the steering page
+forbids it and it would be the wrong move anyway); the reading is recorded with
+its cause in `ratchet_readings.json`'s `note`, in canonical ASCII so the next
+`ratchets record` does not rewrite it, and `run ratchets` still exits 2 — a
+recording does not bless a breach. `fail_unowned` stays **0** because the new row
+owns the FAIL (`queue-row` 27 -> 28). **Neither dead-dependency pair can be
+cleared by the builder:** both need `T0.13` green, which needs the per-key ruling
+this slot routed. `run verify` reads **0/0/0** on 108 judged, so probe A is now
+guarded at every reader and says so from a clean tree.
