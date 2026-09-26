@@ -17575,3 +17575,66 @@ declares `docs/REVIEW_QUEUE.md`, `docs/DECISIONS_NEEDED.md` and
 Review sitting** — 7 of its re-buys fell in the last 7 days. A spec that
 declares another organ's output file can never hold a stable certificate, and
 that is a fact about the declaration, not about the spec.
+
+---
+
+## A GUARD INSTALLED AT ONE READER OF A CHANNEL IS NOT INSTALLED — count the readers before you believe the repair (2026-09-26, builder; the LT.03 verdict-channel defect, one day later)
+
+**The scar.** On 2026-09-25 this project found that `_check` returns were never
+type-validated: `LT.03`'s check answered `(Status.VOID, reason)` on every
+branch, non-empty tuples are truthy, and a 16,580 s run whose own recorded
+metrics replay to VOID was recorded as a confident PASS. The repair — a
+`CheckReturnInvalid` guard — went into `run_spec`, the reader that RECORDS a
+verdict. It was correct and it was one third of the job. This ladder has
+**three** readers of a spec's `_check`:
+
+    protocol.run_spec              records the verdict          GUARDED 09-25
+    verify._verdict                re-derives every PASS (T0.18)  NOT guarded
+    t0_13_gates_are_live._verdict  asks whether a gate can move   NOT guarded
+
+Measured on the real row rather than argued: `verify._verdict` read the
+pre-fix `LT.03` check's tuple as `("BOOL", True)` — *"this PASS still
+re-derives"* — so the instrument whose entire claim is that every PASS is
+re-derivable from the record reported `verdicts that no longer re-derive 0`
+about the only verdict-inverting row this ledger has held.
+
+**THE GENERALISATION, and it has two halves.**
+
+1. **A guard belongs to a CHANNEL, not to a call site.** Grep for every reader
+   of the value before believing a type repair. If there is more than one,
+   the repair is a shared function and the other readers import it — because
+   the next reader written will copy whichever neighbour it found first. This
+   is the second time in three days that a guard was rebuilt one line away
+   from where it had just been installed (121st audit FTB 3: floor state
+   silenced one line upstream of the exit code it had just been wired into).
+
+2. **A SILENT audit reader is worse than an absent one, and a MIS-DIAGNOSING
+   reader is worse still.** `verify`'s probe B asks whether deleting the
+   control moves the verdict. A constant-truthy return is unmoved, so the same
+   row would have surfaced as *"this gate IGNORES ITS CONTROL"* — a red, at the
+   right row, naming the wrong defect. An auditor reading that would have gone
+   looking for a missing control conjunct in a spec whose control was fine.
+   When a refusal is available, route the unaudited case to the
+   *"this scan did not audit that gate"* bucket, never to a verdict bucket.
+
+**AND THE FIRST ATTEMPT AT THE REPAIR BLUNTED THE DETECTOR IT WAS FIXING —
+recorded because it is the part that generalises furthest.** Validating
+`t0_13`'s PERTURBATION replays as well as its baseline took
+`disarmed_conjunct_keys` **28 -> 15**. A gate shaped
+`return m["a"] > 0.5 and m["b"]` returns a bool at the recorded values and a
+bare float once `m["b"]` is perturbed to 0.7; the refusal then differs from the
+baseline, which the detector reads as *"the key moved the verdict"*. **The
+verdict never moved, the TYPE did, at a value no run ever produced.** So:
+**when a probe compares two evaluations, a type refusal is not a difference** —
+validate the answer a RUN would record, and leave the counterfactuals on the
+mapping the detector was calibrated against. A detector that reports fewer
+defects because its own probe crashed is the failure this whole file exists to
+refuse, and it arrived wearing the costume of a guard.
+
+**A third thing fell out of it, cheap and worth copying.** `T0.18` declared NO
+`IMPL_DEPS` at all, so `experiments/verify.py` — the instrument the certificate
+is ABOUT — could be edited without staling it: `run stale-cost` priced this very
+repair at 4 certificates before the declaration and 5 after. **Ask of every
+instrument-certifying spec whether it declares the instrument.** A certificate
+that cannot be staled by a change to the thing it certifies is a certificate
+about nothing.

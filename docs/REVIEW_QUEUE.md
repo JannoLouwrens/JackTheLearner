@@ -10504,3 +10504,70 @@ routing. `PL.02` is VOID on both attempts and nothing cites it. The `T0.21`
 byte-identically (`det_drift` 0.0) so an unchanged re-run buys the same VOID
 and 2,928 s, and a re-run under a changed gate is downstream of this
 disposition.
+
+## ROUTED 2026-09-26 (builder, 18:0x slot): `t013-latently-red-28-disarmed-keys`
+## — the certificate that says no gate in this ladder is decorative has been
+## unmeasured for 24 days, and on today's ladder it reads 28 disarmed conjunct
+## keys against the 0 it recorded
+
+ROUTED: t013-latently-red-28-disarmed-keys | 2026-09-26 | `f096f29` (the three-readers repair, which staled T0.13 and forced the re-buy) + the T0.13 attempt row recorded this slot, FAIL, 2.0 s | OPEN
+    DUE: 2026-10-05 | per `review-queue`'s own `next_free_due` — 09-27
+        through 10-04 are all at or above the measured capacity of 6, and this
+        row is a per-key ADJUDICATION across five specs, not a one-sitting
+        ruling. `WAITS-ON: none` | nothing else's answer changes what these 28
+        keys measure; the repair is per-spec and can start the moment the desk
+        rules on how a disarmed key is disposed.
+
+**WHAT HAPPENED, and the re-buy was owed rather than chosen.** `T0.13`'s last
+run is **2026-09-02T23:11:49** at **90 gates scanned, `disarmed_conjunct_keys`
+0**. The ladder is now **109 gates**. This slot's repair to the `_check`
+readers staled its certificate (`run stale-cost` billed it), the re-buy ran in
+slot, and it recorded **FAIL — `disarmed_conjunct_keys` 28**:
+
+    LT.01   m['adv_ge_bar'], m['c2_branch'], m['nonladder_rise_ge_bar']
+    SO.02   m['null_acc'], m['null_base_rate'], m['null_mi'],
+            m['null_mi_p95'], m['null_r2_level']
+    T0.17   m['history_fields_altered'], m['history_fields_dropped'],
+            m['history_fixture_fields_unset']
+    T0.32   m['longrun_stale_exemptions'], m['longrun_unbound']
+    T0.33   m['cpu_foreclosed'], m['est_above_enum']
+    T0.18   13 keys — SEE THE DECOMPOSITION BELOW; these are not the finding
+
+**THE FINDING IS 15 KEYS, NOT 28, AND THE DIFFERENCE IS MY OWN EDIT.** `T0.18`'s
+13 keys are an artifact of the same slot: its `_check` gained the `FIX.tuple`
+conjuncts, so its 2026-09-25 row no longer satisfies its own code, and a gate
+whose BASELINE verdict is already False cannot be moved by any perturbation —
+so every key it reads scores disarmed. `stale_gates` and
+`disarmed_conjunct_keys` are therefore NOT independent, which is worth the
+desk's attention on its own: **one stale row inflates the disarmed count by its
+entire key set.** The standing residual is the five specs above at **15 keys**,
+independently confirmed with the PRE-REPAIR reader (same 28 on today's ladder,
+so the number is not an artifact of the coercion change).
+
+**AND THE T0.18 HALF CANNOT BE CLEARED BY ME TODAY: it is a re-buy deadlock.**
+`T0.18` `depends_on` `T0.13`, so `run T0.18` now answers **BLOCKED by T0.13
+(FAIL)** — the row is un-re-buyable until `T0.13` is green, and `T0.13` cannot
+be green while the 15 standing keys stand. `T0.18` keeps a standing PASS on a
+dead dependency (the `pass_on_dead_dependency` class, floored at 3 — I did not
+touch the floor). The order does not help: re-buying `T0.18` first requires
+`verdict_disagreements == 0`, which `T0.13`'s own stale row denied. **Two
+Tier-0 specs that certify each other's instruments cannot both be re-bought
+after either one is edited**, and that is a structural fact about this pair,
+not a step anyone skipped.
+
+**WHAT IS OWED, and it is a RULING not a run.** Each of the 15 keys is either
+(i) genuinely decorative — the conjunct cannot fail, and the spec's gate is
+repaired; or (ii) honestly redundant with a stricter neighbour, in which case
+`T0.13` needs the disposal idiom it already has for dynamic keys
+(`DYNAMIC_ADJUDICATED`, adjudicated once and frozen) and does NOT have for this
+class — deliberately, because disarmed IS the defect. Adding an adjudication
+list here is a loosening of the project's sharpest gate-liveness instrument and
+**this desk must not do it at the floor.** Two of the five are the audit tools'
+own (`T0.32`, `T0.33`) and one is TODAY's (`T0.17`'s P12 partition conjunct,
+`51d21a5`), so the class is being GROWN by this loop's own instrument work,
+which is the allocation question the freeze already names.
+
+**Staleness bill for this routing: `T0.21` (cpu<1min) and `T0.31` (cpu<10min)
+against `docs/REVIEW_QUEUE.md`, paid in the same slot.** No spec file is edited
+by this row. No bar moves and no re-run of the five specs is implied — a
+disarmed key is a statement about their `_check`, not about their numbers.

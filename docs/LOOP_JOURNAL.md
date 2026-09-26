@@ -19141,3 +19141,123 @@ design, the `w1-world-edit-window` docket, the `lc03` seat row, the `t306` venue
 row, `A4`'s three-way fork, the `ba03-registered-run-foreclosed-by-d20` options,
 `SM.03`'s F1 arm pick, the `PL.02` gate disposition, and the PS-family sibling
 inheritance (`PS.05`/`PS.06`/`PS.08`), which is held at source.
+
+## 2026-09-26 18:0x UTC — builder (OPUS; `week:Fable` **95%** and pinned so the
+## chain walked me up, expected and self-announcing; acting on
+## `week:all models` **65%**, the gate, under the 90 stop; `--week-elapsed` 80
+## so `pace_gate`'s line is ~76.6 and did not fire; session 2% -> 5%). Board
+## re-derived from `run next` AND `run review-queue` per `1^13`: **0 fresh
+## dispatches** (twenty-fourth time), 121st-audit FTB **fully discharged before
+## this slot** (items 1a/b/c + the durable T0.17 P12 property, 2, 3, 4 — I
+## verified each at source rather than inheriting the claim).
+
+**THE UNIT: yesterday's verdict-channel guard was installed at ONE of the THREE
+readers of `_check`, and the reader it was missing from is the one whose entire
+claim is that every PASS re-derives from the record.** Not argued — measured on
+the real row. Feeding `LT.03`'s own recorded metrics through its pre-fix
+`_check` (`git show c1114ae:`) returns `(Status.VOID, reason)`;
+`run_spec`'s new guard REFUSES it and
+
+    verify._verdict -> ('BOOL', True)    _is_pass: True
+
+so `run verify`, gated as `T0.18`, would have printed *"verdicts that no longer
+re-derive **0**"* about the one verdict-inverting row this ledger has ever held.
+**Probe B was worse than silent:** a constant-truthy return is also unmoved when
+the control is deleted, so that row would have surfaced as *"this gate IGNORES
+ITS CONTROL"* — a red at the right row naming the wrong defect.
+
+**REPAIR (`f096f29`):** one function, `protocol.coerce_check_return`, and all
+three readers go through it (`run_spec`, `verify._verdict`,
+`t0_13._verdict`). Semantics byte-identical to yesterday's guard — bool/Status
+pass, exact 0/1 coerce (`T2.04`/`T2.05` record correct verdicts through float
+flags), everything else raises. In the two AUDIT readers a refused return lands
+in `unevaluable_gates` ("this scan did not audit that gate"), never in a verdict
+bucket. **Fixtures, because both batteries passed on the day they certified the
+false PASS:** `FIX.tuple` in `verify.fixture()` (`T0.18` pins it BY NAME, and
+pins that it is not reported control-blind) and `F5_tuple` in `T0.13`'s control
+fixture (`unevaluable_gates >= 1`, `gates_scanned` 4 -> 5). Both falsified by
+mutation: the old truthiness reader makes the verify battery report
+*"control-blindness probe found 2 of 1 … the tuple-returner was reported as
+control-blind"*, and dropping baseline validation puts `T0.13`'s
+`control_caught` False.
+
+**THE MISTAKE I MADE AND KEPT IN WRITING:** validating PERTURBATION replays as
+well as baseline ones cost `T0.13` thirteen of its own findings
+(`disarmed_conjunct_keys` **28 -> 15**) — a gate shaped `m["a"] > 0.5 and
+m["b"]` returns a bool at recorded values and a bare float once perturbed, so
+the refusal read as *"the key moved the verdict"*. The verdict never moved, the
+TYPE did, at a value no run produced. Hence `validate=False` on perturbations
+only. LESSONS entry written for the channel-vs-call-site rule, the
+mis-diagnosing-reader rule and this one.
+
+**THE BILL, AND IT BOUGHT AN HONEST RED I DID NOT GO LOOKING FOR.** `run
+stale-cost` billed 5: `T0.17` **PASS**, `T0.33` **PASS**, `T0.35` **PASS** (all
+clean-tree, hash-salt differential clean), and:
+
+- **`T0.13` re-bought to an honest FAIL — 28 disarmed conjunct keys.** Its last
+  run was **2026-09-02** at 90 gates and `disarmed_conjunct_keys` **0**; the
+  ladder is now 109 gates and the number is 28. **It was latently red for 24
+  days and only a staleness bill made anybody look.** Decomposed honestly: 13 of
+  the 28 are `T0.18`'s own keys, an artifact of the same slot (its row no longer
+  satisfies its edited `_check`, and a gate whose baseline verdict is already
+  False cannot be moved by any perturbation — **so one stale row inflates the
+  disarmed count by its whole key set; `stale_gates` and
+  `disarmed_conjunct_keys` are not independent**). The standing residual is
+  **15 keys across five specs** — `LT.01` 3, `SO.02` 5, `T0.17` 3 (today's own
+  P12 conjunct), `T0.32` 2, `T0.33` 2 — and the PRE-repair reader reads the same
+  28, so the number is not an artifact of the coercion change.
+- **`T0.18` cannot be re-bought at all: `run T0.18` answers BLOCKED by T0.13
+  (FAIL).** It keeps a standing PASS on a dead dependency. The order does not
+  rescue it — re-buying `T0.18` first needs `verdict_disagreements == 0`, which
+  `T0.13`'s stale row denied. **Two Tier-0 specs that certify each other's
+  instruments cannot both be re-bought after either is edited**, and that is
+  structural, not a step skipped. Disclosed in the row, floors untouched.
+
+**`T0.18` NOW DECLARES THE INSTRUMENT IT CERTIFIES.** It had no `IMPL_DEPS` at
+all, so `experiments/verify.py` could be edited without staling the one
+certificate that claims `verify` works: this repair priced at 4 certificates
+before the declaration and 5 after. Ask it of every instrument-certifying spec.
+
+**ROUTED, one row, not two:** `t013-latently-red-28-disarmed-keys` (DUE
+**2026-10-05**, `review-queue`'s own `next_free_due`; `WAITS-ON: none`). What is
+owed is a RULING: each of the 15 keys is either genuinely decorative (repair the
+spec's gate) or honestly redundant — and the second case wants an adjudication
+list `T0.13` deliberately does NOT have for this class, which is a loosening of
+the sharpest gate-liveness instrument here and **not mine to add at the floor**.
+Two of the five specs are the audit tools' own and one is today's, so the class
+is being grown by this loop's instrument work — the allocation question the
+freeze already names. **No 91st-row duplicate:** the `_check`-type half belongs
+to `check-return-type-defect-swept-and-repaired` (OPEN, awaiting the auditor's
+ratification of the ledger hand-repair) and this row is the T0.13 half only.
+
+**Instruments after, all re-run this slot, none inherited:** `verify` **0** (108
+judged, 0 disagreements, 0 unevaluable, 0 control-blind), `status` 2
+(pre-existing `decisions_default_action_expired` 1 — D33, the Review's),
+`coverage` 2, `decisions` 1, `champions` 0, `review-queue` 2. Demonstrated
+**110 -> 109**, and the `-1` is the honest thing in this slot.
+
+**CREATURE GATE MOVED: NONE (#48).** Recorded as a real breach per the `d35`
+disposition. `T2.01` FAIL (both repair lanes Review-owned), `XL.01` FAIL
+(successor behind `T6.03` BLOCKED <- `T2.10` FAIL), `T6.01` NO ROW
+(`T4.04`/`T4.05` unimplemented behind `T1.08`/`T2.01`; a cheaper registration is
+forbidden by `D35`). Both live routes still run through `T1.08`, whose pipeline
+repair is the Review's (`t108-pipeline-repair-has-no-design`, DUE 10-02).
+
+**W38 GPU REFUSAL #48 — and the hours are GONE.** `2026-W38` charged 0.9176 h of
+30; **~29.08 free Kaggle hours expired 2026-09-27 00:00 UTC**, second
+consecutive week, both behind the same undesigned `T1.08` repair. Nothing
+manufactured against them for the twenty-second consecutive slot.
+
+**NEXT ITERATION (19:07):** board will still read 0 fresh — re-derive from BOTH
+tools. **`T0.13` is now a settled FAIL and its row is owned**; do NOT re-run it
+to try to recover the PASS, and do NOT add a disarmed-key adjudication list to
+make it green — that is the ruling this desk asked for and it is the Review's.
+`T0.18`'s re-buy is OWED AND BLOCKED; it unblocks only when `T0.13` is green.
+**06:37 tomorrow is the Sunday FULL** on which the Review has pre-committed to
+DECLINE the W1 authorship if the date breaks a fifth time. Do NOT pre-empt:
+`W1.01`/`W1.03`/`W1.04` registration, `D33`/`D35`/`D36`, `UB.10`'s successor
+arm, `T1.08`'s pipeline design, the `w1-world-edit-window` docket, the `lc03`
+seat row, the `t306` venue row, `A4`'s three-way fork, the
+`ba03-registered-run-foreclosed-by-d20` options, `SM.03`'s F1 arm pick, the
+`PL.02` gate disposition, and the PS-family sibling inheritance
+(`PS.05`/`PS.06`/`PS.08`), held at source by the `ps09` ruling.
