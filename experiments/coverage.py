@@ -3409,15 +3409,29 @@ def _void_foreclosed_fixture() -> List[str]:
     if void_foreclosed("NO.SUCH.SPEC") is not None:
         fails.append("void_foreclosed: an unimplemented spec has no file and "
                      "no declaration -> None")
-    # THE LIVE FILE this instrument was built for, read end to end — the
-    # `_gates_frozen_fixture` precedent. `BA.03` VOIDed on 2026-08-31 with six
-    # of seven rig conjuncts green; if its declaration ever stops parsing, the
-    # readout goes back to calling a four-hour foreclosed run a cheap repair.
+    # THE LIVE FILE this instrument was built for — with its ASSERTION
+    # INVERTED 2026-09-26, because the world legitimately changed. `BA.03`'s
+    # 2026-08-31 VOID-FORECLOSED declaration was SUPERSEDED by the 2026-09-20
+    # Review ruling's option (c) (`702aa56`: statistic moved to integrated
+    # tilt, the declaration demoted to marked history, `void_foreclosed ->
+    # None` verified in that commit) and the seed-90 tilt pilot then
+    # validated the new statistic (`4761d60`), so the live truth is "does not
+    # declare" and the old assertion here went red on a false premise for
+    # three slots. The danger direction inverted with the world: if the
+    # marked-history block ever parses as a LIVE declaration again, this
+    # readout would call a runnable spec foreclosed — welding a door the
+    # ruling opened. The positive parse guarantee on the idiom itself lives
+    # in the planted cases above, which do not drift with the tree.
     from .protocol import module_path_for
-    if module_path_for("BA.03") and not void_foreclosed("BA.03"):
-        fails.append("void_foreclosed: BA.03 uses the VOID-FORECLOSED idiom "
-                     "in the tree and the reader read it as 'does not "
-                     "declare' — the state this reader exists for, unread")
+    if module_path_for("BA.03"):
+        if void_foreclosed("BA.03"):
+            fails.append("void_foreclosed: BA.03's SUPERSEDED (2026-09-26) "
+                         "foreclosure history parsed as a LIVE declaration — "
+                         "a runnable spec would read as welded shut")
+        if void_foreclosed_refusal("BA.03"):
+            fails.append("void_foreclosed_refusal: BA.03's superseded "
+                         "history triggered a refusal — marked history must "
+                         "declare nothing and refuse nothing")
     return fails
 
 
