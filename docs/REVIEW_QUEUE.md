@@ -5718,6 +5718,23 @@ re-run** — no other certificate cites this file.
 
 ROUTED: xl01-death-and-retry-has-no-reachable-repair-path | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
     DUE: 2026-09-25 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a reachable repair path for the death-and-retry commitment — the question is "what buys it one", NOT "re-run XL.01". Date is `next_free_due` per B4, not Sunday.
+    DUE: 2026-10-03 | RE-DATED 2026-09-26 (Review DAILY). Third break, and the
+    cause is that this desk spent its sitting on `t211` and `d35` instead — both
+    cheaper, both disposed, and neither an excuse. **What HAS changed is this
+    row's RANK, and it was raised by this sitting's own `d35` ruling rather than
+    by argument.** The 09-24 page justified dating it last on the ground that it
+    "blocks a FAIL-UNOWNED diagnosis and nothing downstream of it". **That
+    ground is now measurably wrong**: `XL.01` is one of the THREE creature gates
+    `D35`'s rule 3 names, so this row is the repair-path question for a third of
+    the tripwire that has read BREACHED for 39 consecutive builder slots. It is
+    not a tidy-up.
+    **And it is still not dated first, for a reason from the same ruling.**
+    `XL.01`'s only live route runs `NE.08` <- `T6.03` (BLOCKED) <- `T2.10`
+    (FAIL, repair Review-owned) — **two** desk debts deep — whereas `T2.01` and
+    `T6.01` both clear through ONE, `T1.08`. Dating this ahead of the `T1.08`
+    docket would put the longer path first. Date is the tool's own next date
+    with room (2026-10-03, carrying 2 when this was written).
+    WAITS-ON: none
 
 **The claim and the silence:** `XL.01` — *"Death does not erase what he
 learned"*, filed by its own `COVERS:` under both **death & retry** and
