@@ -19796,3 +19796,150 @@ today** — option (iii) is instrument scope and `D35` clause 2 owns it.
   `w1-world-edit-window` docket, the `lc03` seat row, the `t306` venue row,
   `A4`'s three-way fork, the PS-family part-1 inheritance, and the
   `adverse-verdicts` disposition.
+
+- 2026-09-26 23:0x (builder, **opus** — `JACK_LOOP_MODEL=fable` pinned at
+  **95%** and the chain walked me up; `week:all models` **66%** is the gate and
+  the line I acted on, under the 90 stop; session 2%): **THE 28th EMPTY BOARD,
+  SPENT ON LAYER 3 OF THE LATENT-RED POPULATION — THE FIRST TIER OUTSIDE TIER 0
+  — AND IT RETURNED 6/6 GREEN WITH A MECHANISM THAT MAKES THE GREEN WORSE NEWS
+  THAN A RED WOULD HAVE BEEN.**
+  Board re-derived, not inherited: `run next` **0 fresh of 51**, `coverage`
+  every cost class `NOT FILLABLE`, `run review-queue`'s `DISPOSITIONED` class
+  read for assigned units — `1^13`'s six PS/LT/T2.15 units are all settled or
+  HELD behind `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`, and
+  `OVERSIGHT.md` FTB item 2 (the slot-summary template) was discharged by the
+  22:0x slot at `7b6b437`, verified at source. Nothing assigned; nothing
+  manufactured.
+  **THE UNIT.** Layers 1-2 completed the 30 cheap Tier-0 certificates (25 hold,
+  5 do not). Layer 3 takes the cheap TIER-1 population by the same method
+  (`_aggregate` over declared seeds -> committed `_check` ->
+  `coerce_check_return`, child per spec, `ledger.json`/`gpu_budget.json`
+  sha256-guarded AND `git status --porcelain` guarded around every child, no
+  ledger write), rewritten in `/tmp` and again **NOT committed** — a
+  measurement, not an organ (`D35` clause 2). **T1.13 PASS 3.8 s · T1.11 PASS
+  6.3 s · T1.05 PASS 23.8 s · T1.03 PASS 44.5 s · T1.04 PASS 259.3 s** offline;
+  **T1.12 PASS attempt 3, 1141.31 s** as a REGISTERED clean-tree re-buy (see
+  the declaration below). **6 hold, 0 do not.** DISCLOSED as unmeasured, with
+  the reason: `T1.01` (2083 s) and `T1.06` (3761 s) are CPU but do not fit an
+  hourly slot; `T1.02`/`T1.07`/`T1.09`/`T1.10` are GPU class and a sweep may
+  not spend GPU hours. **6 of 8 cheap-CPU Tier-1, not 6 of 13.**
+  **THREE EXPLANATIONS DIE BEFORE THE USEFUL ONE.** AGE does not explain the
+  green — five rows are 20 d old, `T1.12` 24 d, the band of the three oldest
+  Tier-0 latent reds (`T0.18` 27 d, `T0.22` 23 d, `T0.32` 22 d). COST does not
+  — `T1.04` is 259 s and `T1.12` trains a flow model. STALENESS does not
+  separate them at all: **both populations are overwhelmingly non-stale**, and
+  3 of the 5 Tier-0 reds held a valid `impl_sha` the whole time they were red.
+  **The variable that does separate them is the churn of the SUBJECT**, same
+  24-day window: **122** commits to Tier-0's subject (this repo's nine
+  instrument modules) against **0** to Tier-1's (`UnifiedBrain.py`,
+  `TrainingPipeline.py`, `MoCapLoader.py`, `playground.py`), of **957** total.
+  Nothing about the SPEC predicts its decay; the thing it points at does — so
+  a sweep should be ranked by subject churn, never by cost or by row age, and
+  that is the narrowing this measurement hands the population row's cadence
+  question.
+  **THE ALIVE-PROOF, because 6/6 green is also what a channel pinned to PASS
+  prints.** Layer 1 had a natural positive control (`T0.22`, a known red that
+  reproduced); an all-green population has none, and `LT.03` recorded a
+  confident PASS on 09-25 off a truthy tuple. So I planted one: same children,
+  every numeric metric zeroed, committed `_check` untouched — **non-PASS 4/4**
+  (`T1.13`/`T1.11`/`T1.05`/`T1.03`).
+  **THE READING THAT MATTERS MORE THAN THE SWEEP.** These certificates are
+  green because their subject has not moved, and their subject is Jack. On the
+  widest fair reading — *any* repo-root module of his — **2 of 957 commits in
+  24 days**, both the same file (`EpisodicMemory.py`). The green is stillness,
+  not health. That is `D35`'s allocation finding re-measured on an independent
+  instrument nine days later and sharper than the count that forced the freeze.
+  **Reported in the addendum, deliberately NOT routed as a second row:** the
+  freeze is already open on the owner's desk (122nd audit, FOR THE OWNER 1) and
+  a duplicate id would be the same question wearing a new name.
+  **WHAT I EDITED, and it is the one repair this slot bought.** `T1.12`'s
+  `_build()` imports `UnifiedBrain` lazily at function scope, so every seed's
+  verdict turns on that file while `impl_sha` hashed the test file alone. It
+  was one of `T0.35`'s four expensive grandfather entries whose own comment
+  says *"declare each ONLY in a slot that re-runs it"*. This slot re-ran it:
+  `IMPL_DEPS = ['UnifiedBrain.py']` declared and **both** grandfather entries
+  deleted in the same commit (`GRANDFATHERED` 8 -> 7, `TRANSITIVE` 20 -> 19) —
+  deletion is the only legal edit to either set, and nothing was added or
+  widened. Bill priced BEFORE the edit at **2 certificates** (`T1.12` itself,
+  `T0.35` itself; no spec declares either file, and `T2.19`'s `depends_on
+  T1.12` is not a staleness edge) and **paid in slot**: `T0.35` PASS a21 6.71 s,
+  `T1.12` PASS a3 1141.31 s, both clean tree at `49f71eb`, no dirty stamp. The
+  second-order `REVIEW_QUEUE.md` bill was `T0.21` (PASS 10.0 s) and `T0.31`
+  (PASS 1.85 s), both salt-clean on 3 deciding metrics; **`render` then prices
+  0 certificates, so the chain terminates.**
+  **ONE ROW ROUTED:** `gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-
+  can-see` (DUE 2026-10-06 = `next_free_due` off the tool, `WAITS-ON: none`).
+  `t1_02:48`, `t1_08:133`, `t1_09:42` each carry `from UnifiedBrain import ...`
+  inside a `JOB = r'''...'''` string that a backend executes against a clone of
+  this repo, so the verdict turns on that file's bytes while the AST walk sees
+  a string literal and is correct to. `T0.35`'s notes name two evasions of this
+  family (`importlib` strings, `exec`) and say neither is in the tree; a job
+  string is the third and it is here three times. **Nothing is red and nothing
+  is claimed red** — it costs nothing precisely while nobody edits Jack's
+  brain, which is why it is worth a row: it fires on the first day somebody
+  does. Four options priced, **none taken** ((ii) and (iii) both touch an
+  integrity instrument's domain in the hour that measured it — the `t022-p9`
+  rule adopted two slots ago).
+  **MY OWN ERROR, caught at source before anything shipped.** My first pass
+  grepped Tier-1 imports against declarations and read **six** undeclared edges
+  as a find. Three (`T1.01`/`T1.06`/`T1.12`) were already in `T0.35`'s NAMED,
+  shrink-only grandfather set — known and tracked, not discovered — and the
+  other three were false positives of a naive line-regex that cannot tell a
+  module import from a string literal, which is exactly the distinction `T0.35`
+  gets right. Checking the detector before believing my grep turned a wrong
+  report into the row above. **A grep is not an instrument; the instrument was
+  already there and was already correct.**
+  **A CORRECTION TO THE LAST TWO JOURNAL LINES: the GPU week is `2026-W38`,
+  not `W39`.** Derived, not read off a page (`%Y-W%U`, the 08-28 rule):
+  `gpu_budget.json` shows `2026-W38` with **0.9176 h drawn of 30**, so **~29.08
+  h expire at 00:00 UTC tonight** and W39 opens the same instant. The 21:0x and
+  22:0x lines both said `2026-W39, 0 charged`, and the steering page's own rule
+  is that a week number is derived and never read off prose. Nothing was staked
+  on it; correcting it so the next slot does not inherit it.
+  **INSTRUMENTS AFTER, all six re-derived bare and none inherited:** `verify`
+  **0**, `status` **2**, `coverage` **2**, `champions` **0**, `review-queue`
+  **2**, `decisions --check` **1**, `render` **0** — every one at the level the
+  22:0x slot recorded. And the DELTA, quoted from `run status` rather than
+  composed beside those levels: *ratchets vs committed readings (HEAD): 1 MOVED
+  (`review_queue_net_arrivals` 25 -> 26); no counter refused to compute; floors:
+  2 ABOVE (`decisions_default_action_expired`, `pass_on_dead_dependency`), 0
+  BELOW, 0 UNVERIFIED.* The single move is MINE and it is this slot's one row;
+  **no floor was raised**, and both breaches are pre-existing and owned
+  elsewhere (`D33`; the `T0.13` pair plus `T1.08`'s two). Demonstrated
+  **108/254**, unchanged — `T1.12` was PASS and is PASS.
+  **CREATURE GATE MOVED: NONE (#53).** Recorded as a real breach per the `d35`
+  disposition. Chain re-derived from `registry.py` this slot, not inherited:
+  `T6.01` NO ROW <- `T4.05` NO ROW <- `T4.04` NO ROW <- `T2.01` FAIL <- `T1.08`
+  FAIL (pipeline repair the Review's, `t108-pipeline-repair-has-no-design` DUE
+  10-02); `XL.01` FAIL <- `PS.02`/`XL.00`. Unchanged and still structural —
+  **and this slot measured why the answer is always NONE:** 2 of 957 commits.
+  **GPU: `2026-W38`, ~29.08 free Kaggle hours expiring at midnight — refusal
+  #53, and this one is different from the last 52 and I want that on the
+  record.** For the first time there IS a conceivable legal buyer: declaring
+  `T1.02`/`T1.09`'s job-string edges would bill two `gpu<20min` re-buys at ~27 s
+  of P100 each. I did not take it, for two reasons that are both binding on
+  their own — it is option (i) of a menu I routed to the desk in this same
+  slot, and a dispatch launched at 23:5x against a quota that dies at 00:00 is
+  the manufactured buy this page has forbidden since 08-29. **The constraint
+  tonight was not inventory. It was that I had just made it somebody else's
+  decision.**
+  **HYGIENE.** `git add` by name throughout, tree verified CLEAN before every
+  re-buy and before every commit, no foreign files, both sweep scripts left in
+  `/tmp` and NOT committed, the offline `T1.12` child killed and confirmed gone
+  when I switched it to a registered run, no processes left running, pushed.
+  **NEXT ITERATION (00:07).** **06:37 is the Sunday FULL** on which the Review
+  has pre-committed to DECLINE the `W1` authorship if the date breaks a fifth
+  time — do not pre-empt it; diff `PROGRESS.md`/`OVERSIGHT.md` for fresh FOR
+  THE BUILDER items first (`PROGRESS.md` is still the stale 09-24 page).
+  **W39 opens at 00:00 with a fresh 30 h**, so the two `gpu<20min` declaration
+  re-buys above become affordable in a slot with round-trip room — but they are
+  option (i) of a routed menu and stay the desk's until it rules. **Layer 4 of
+  the population is `T1.01` (35 min) and `T1.06` (63 min)**, the two cheap-CPU
+  Tier-1 certificates this slot could not fit; `T1.06` does not fit an hourly
+  slot at all and that is a structural fact worth saying rather than working
+  around. Do NOT repair `T0.18`, `T0.23`, `T0.32` or `T0.13` — all desk menus,
+  dated 10-04/10-05. Still not yours: `W1.01`/`W1.03`/`W1.04`, `D33`/`D35`/
+  `D36`, `UB.10`'s successor arm, `T1.08`'s pipeline design, the
+  `w1-world-edit-window` docket, the `lc03` seat row, the `t306` venue row,
+  `A4`'s three-way fork, the PS-family part-1 inheritance, and the
+  `adverse-verdicts` disposition.
