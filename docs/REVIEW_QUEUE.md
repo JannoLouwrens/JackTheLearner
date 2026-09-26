@@ -7575,7 +7575,39 @@ branch of this addendum, and `T1.08` stays FAIL.**
 
 ## ROUTED 2026-09-13 (builder, 93rd audit B3): `waits-on-declared-field` — six of the fourteen rows that came due today share one root, and the only place that fact lives is prose
 
-ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | DISPOSITIONED 2026-09-19 (Review DAILY — ADOPT the cheaper variant, STRENGTHENED: `WAITS-ON:` is declaration-only and buys no exemption, and the grouped line prints only when every live row on the date carries an EXPLICIT declaration, with `WAITS-ON: none` permitted as that declaration; design only, the builder implements and re-buys T0.31)
+ROUTED: waits-on-declared-field | 2026-09-13 | 93rd-audit-B3 | ACTED 2026-09-26 05a582d (builder, 2026-09-25 00:16 — the implementation this row's 09-19 grammar ruling ordered, re-verified at source by the Review 09-26: parser, gate, corpse boundary and T0.31 re-buy each checked on disk, not read off the commit message)
+    ACTED-EVIDENCE, four checks, each against the artefact rather than the
+    claim. (1) **The grammar is in the parser, not just the docs**:
+    `review_queue.py:314` admits `WAITS-ON` into `_DECL`, `:398-407` parses it
+    with "declares nothing" as MALFORMED, and `:35-56` states the no-exemption
+    letter this desk's ruling required verbatim — `WAITS-ON:` touches "not
+    OVERDUE, not STALE, not ageing". (2) **The strengthened grouped reading is
+    the one that shipped**: `:860-884` prints a date's decision count ONLY when
+    every live row on it declares, and today's live run prints nine WITHHELD
+    lines naming their own reason (`2026-09-25 WITHHELD — 8 of 8 rows
+    undeclared`) — never silence, which was the half of the ruling most easily
+    dropped. (3) **The corpse boundary is implemented in both directions**:
+    `:762-770` makes a `WAITS-ON` naming a nonexistent row MALFORMED on live
+    rows while explicitly permitting a TERMINAL root, with the field's own
+    no-exemption rule cited as the reason it is legal. (4) **The staleness bill
+    was paid from a clean tree**: `T0.31` PASS attempt 22, `ran_at`
+    2026-09-25T00:16:44, `dirty_files` None, strengthened 20 -> 22 properties
+    (p21 gate+arithmetic+no-exemption, p22 corpse boundary) with the control
+    failing 19 including both new ones — **an added property is the only
+    direction this desk may move a re-buy in, and it moved that way**.
+    **What this ACTED does NOT close, said plainly:** the field is implemented
+    and almost nothing uses it. Every one of the nine dates above is WITHHELD,
+    and the live rows that DO declare are the four the builder wrote after the
+    field existed. A declaration-only field that buys nothing has no incentive
+    to be filled, which is `waits-on-has-no-producer-outside-a-closing-row`
+    (OPEN, DUE 2026-10-01) — a LIVE successor with its own date, so this stamp
+    launders nothing.
+    PRIOR MARKER, PRESERVED VERBATIM AND NOT DELETED — DISPOSITIONED 2026-09-19
+    (Review DAILY — ADOPT the cheaper variant, STRENGTHENED: `WAITS-ON:` is
+    declaration-only and buys no exemption, and the grouped line prints only
+    when every live row on the date carries an EXPLICIT declaration, with
+    `WAITS-ON: none` permitted as that declaration; design only, the builder
+    implements and re-buys T0.31). The four checks above are what promoted it.
     DUE: 2026-09-21 | RE-DATED 2026-09-19 (Review DAILY) BECAUSE THE DEBT
     CHANGED HANDS, not because it was missed again. The 2026-09-17 date broke on
     this desk and the break stands in the record. What this row owed was a
