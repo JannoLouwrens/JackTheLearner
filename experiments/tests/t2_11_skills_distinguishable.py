@@ -328,6 +328,118 @@ continuous-control policy. A FAIL says the shipped objective does not produce
 distinguishable behaviour in this world with a skill-conditioned value policy
 over PG.4's cell grid; it does not say no policy class could. That
 distinction belongs in the record before the run, not after it.
+
+
+PILOT RECORD v3 — THE HELD-OUT READ ORDERED BY THE METRIC RULING (2026-09-26
+~11:1x UTC). THE RULING SURVIVES ITS OWN FALSIFICATION TEST; ITS DERIVATION
+DOES NOT. T2.11 STAYS PARKED.
+
+The t211 METRIC ruling (Review DAILY, 2026-09-26) adopted `mi_beats_field` and
+ordered the cheap half FIRST, so it could kill the expensive half: *"If
+held-out Î does NOT separate `diayn` from `shuffled` by >= 0.50 nats, STOP and
+route it back."* This is that read. Two seeds, 7 and 90 — the SAME two spent on
+v1 and v2, so no seed-shopping was possible across the measurement change.
+Artifacts /data/t2_11_pilot3_seed{7,90}.json, 525.6 s and 527.5 s wall, two
+concurrent on 4 shared ARM cores, run in the foreground inside one slot.
+
+DETERMINISM RECEIPT FIRST, because the whole read rests on the reconstruction
+being the same rig. The ruling's step (i) asked for the ALREADY-TRAINED
+discriminator; no checkpoint of one exists, so the rig was re-trained at its
+recorded seeds and the reconstruction checked against the spent v2 artifacts on
+every channel they share. **All 8 arm-seed cells reproduce `disc_loss_last` AND
+`heldout_acc` to the recorded 4 dp, exactly.** Nothing about the rig moved; the
+only new quantity is the new read.
+
+  arm       Î HELD-OUT s7 / s90    Î TRAIN-SIDE s7 / s90   held-out acc s7 / s90
+  diayn      0.7385 /  0.6169       1.1002 / 1.2184        0.9141 / 0.7812
+  shuffled  -0.0115 / -0.0099       0.0213 / 0.0118        0.9141 / 0.8984
+  zero      -0.2149 / -0.2158       0.1428 / 0.1599        0.1484 / 0.1328
+  oracle     0.9954 /  0.8270       0.8864 / 0.8934        0.9766 / 1.0000
+  Î = ln(8) − H(z|s) in nats, ln 8 = 2.0794. Train-side column is
+  `ln 8 − disc_loss_last`, i.e. the ruling's own table, restated for contrast.
+
+  worst-seed mi_margin (diayn − shuffled) = +0.6268 nats  (s7 +0.7500)
+  worst-seed margin_vs_shuffled           = −0.1172       (s7  0.0000)
+
+THE STOP RULE DID NOT FIRE: +0.6268 against the pre-registered 0.50, on the
+worst seed, so `mi_beats_field` is implemented below. And the two channels
+still disagree in SIGN on seed 90 — the objective carries information about z
+while the downstream accuracy metric scores the control ABOVE the claim — which
+is the row's diagnosis holding up on the other split.
+
+THREE THINGS THE HELD-OUT READ CHANGED, and the first one matters most because
+it is the ruling's own arithmetic coming apart.
+
+  1. **`MI_MARGIN_MIN`'s DERIVATION IS FALSIFIED; THE NUMBER STAYS.** The
+     ruling set 0.50 as "3.1x `zero`'s worst measured extraction (0.16 nats)
+     and ~23x `shuffled`'s", reasoning that the channel's floor is not zero
+     because even a provably stationary policy's discriminator extracts 0.16
+     nats from a random walk's state distribution. **Out of sample it extracts
+     −0.2149 / −0.2158.** The floor is not 0.16; it is below zero. The
+     variational quantity is a LOWER BOUND and goes negative when the posterior
+     is miscalibrated off its training states, so the 0.16 was memorisation and
+     it does not survive the split — the same disease, one layer down, that
+     step (i) was written to catch on `diayn`. The corrected derivation would
+     put the bar LOWER, which is precisely why it may not move it: a bar is not
+     loosened because its justification improved. 0.50 stands where it was
+     written before any held-out number existed, and it is now MORE demanding
+     relative to its nulls than the ruling intended.
+  2. **`diayn`'s Î FELL 33-49% ACROSS THE SPLIT (1.1002 -> 0.7385, 1.2184 ->
+     0.6169) AND THE WORST-SEED MARGIN FELL 42% (+1.0789 -> +0.6268).** The
+     train-side table WAS partly memorisation, exactly as the ruling suspected
+     when it ordered this read first. It was not enough to kill the adoption —
+     but had the bar been set at, say, 0.70 off the same train-side reasoning,
+     it would have been, and nobody would have known which of the bar or the
+     claim was wrong.
+  3. **THE `oracle`/`diayn` ORDERING INVERTS OUT OF SAMPLE, and this is a NEW
+     fact about the objective rather than about the rig.** Train-side, `diayn`
+     reads ABOVE the learner-alive control (1.1002/1.2184 vs 0.8864/0.8934);
+     held-out it reads BELOW it on both seeds (0.7385/0.6169 vs 0.9954/0.8270).
+     The `oracle`'s reward is a FIXED partition of the arena, so its
+     discriminator is learning a stationary, generalisable function; `diayn`'s
+     target moves with its own policy, and its discriminator overfits the
+     states that policy happened to visit. That is a real property of the
+     shipped objective and it is REPORTED, not gated — the ruling permits one
+     new conjunct and adding a second here would be this desk writing its own
+     disposition.
+
+RESIDUAL, NAMED RATHER THAN CALLED CLOSED. `mi_margin` is a difference of two
+variational LOWER bounds, which is not itself a bound on a difference of mutual
+informations, and (2) above shows the bias is not negligible. It is the right
+COMPARATIVE quantity here — both arms share rig, budget, state space and
+discriminator architecture, so the bias is common-mode — but it is not an
+absolute measurement of I(S;Z) and no later reader should quote it as one.
+
+NOTHING ELSE MOVED. `ABOVE_CHANCE_MIN`, `MARGIN_MIN`, `PER_CLASS_MIN`,
+`SHUFFLE_FIT_FLOOR`, `SHUFFLE_BAND`, `FLOOR_COVERAGE`, `ORACLE_MIN` are
+byte-unchanged; `beats_shuffled` stays a binding CLAIM conjunct and was NOT
+demoted (the ruling routed that separately and forbade it riding in on the back
+of a strengthening); arms, world, learner, budget, discriminator, embedding and
+head init are byte-identical, so this is a new READ on the existing rig and not
+the third rig the pre-registered tree forbids. The spec is strictly HARDER:
+five claim conjuncts where there were four.
+
+STILL PARKED. `_GATES_FROZEN` stays False, `run()` keeps refusing, T2.11 is NOT
+dispatched and no ledger row was written by this read. Adding a conjunct to a
+spec whose control passes cannot make it pass, and the held-out read does not
+change that: seed 90's `margin_vs_shuffled` is still −0.1172. What the project
+bought here is the answer to a question 24 days of parking did not answer —
+**SkillDiscovery's objective DOES carry information about z (+0.6268 nats over
+its own permuted twin, worst seed, held out), and the metric this spec decides
+by cannot see it.** Do NOT relaunch these pilots: spent evidence, four arms x
+two seeds, ~17.5 core-minutes.
+
+THE CONJUNCT'S BRANCHES ARE PROVEN TO FIRE, because `run()` refuses and so no
+dispatch can exercise them: `experiments/tests/t211_mi_battery.py` replays
+seven hand-built folds through the REAL `_check` — 7/7 on their pre-registered
+sides, including the two that matter (`mi_margin` one hundredth under the bar
+is the SOLE cause of a False, and v3's measured worst-seed shape with the
+accuracy channel red and MI green stays False, so the new conjunct cannot
+rescue the red this spec is parked on). Falsified before it was trusted:
+deleting the conjunct makes the battery misfire loudly at exactly that
+sole-cause case. The generalised lesson from the derivation correction is in
+docs/LESSONS.md ("A BAR DERIVED FROM A NULL'S TRAIN-SIDE READING IS DERIVED
+FROM MEMORISATION").
 """
 from __future__ import annotations
 
@@ -448,6 +560,38 @@ SHUFFLE_FIT_FLOOR = 0.60        # placeholder: the classifier can fit 8 labels
 SHUFFLE_BAND = 0.10             # placeholder: shuffled held-out <= 0.225
 FLOOR_COVERAGE = 0.05           # placeholder: the random-walk twin moves
 ORACLE_MIN = 0.60               # placeholder: the LEARNER's positive control
+
+# `mi_beats_field` — the FIFTH claim conjunct, adopted by the t211 METRIC
+# ruling (Review DAILY, 2026-09-26; docs/REVIEW_QUEUE.md
+# `t211-diayn-metric-cannot-separate-mi-from-noise`). The `diayn`
+# discriminator's HELD-OUT conditional log-likelihood of z given s, as
+# Î = ln(N_SKILLS) − H_heldout(z|s) in nats, must beat the `shuffled` arm's
+# by this margin on the WORST registered seed — the same worst-seed discipline
+# the four existing CLAIM conjuncts carry. It exists because held-out
+# classification accuracy measures the POLICY's response to any structured
+# reward field, not the OBJECTIVE's information content: `shuffled`'s
+# discriminator is provably uninformative yet still pays a (s, z)-varying
+# random field, and a shared conditioned policy chasing that field separates
+# its skills as well as one chasing MI. Read on the SAME held-out rollout set
+# the classifier consumes, under the SAME `hash_overlap == 0` split.
+#
+# THE DERIVATION, AND THE CORRECTION THE READ FORCED ON IT — see PILOT RECORD
+# v3. The ruling set 0.50 as "3.1x `zero`'s worst measured extraction (0.16
+# nats) and ~23x `shuffled`'s", both read off the TRAIN side. The held-out
+# read the ruling itself ordered first falsifies that arithmetic: out of
+# sample `zero` reads **−0.2149 / −0.2158** and `shuffled` **−0.0115 /
+# −0.0099**. The floor is not 0.16 nats, it is BELOW ZERO — the variational
+# bound is a lower bound and goes negative when the posterior is miscalibrated
+# off its training states, so the 0.16 was memorisation of a random walk's
+# state distribution and it does not survive the split.
+#
+# **The number does not move, and the direction is why.** A derivation that
+# now reads lower would make this bar EASIER, and a bar may not be lowered
+# because its own justification improved. 0.50 stays where the ruling wrote
+# it, BEFORE any held-out number existed, and it is now the more demanding
+# choice relative to its nulls rather than the less — which is the only
+# direction a correction is allowed to leave a threshold.
+MI_MARGIN_MIN = 0.50            # nats, worst registered seed; see above
 
 
 # ── the shared skill-conditioned policy ──────────────────────────────────
@@ -682,6 +826,7 @@ def _train_arm(seed: int, arm: str) -> dict:
 
     q = np.stack([_table(z) for z in range(N_SKILLS)])
     return {"q": q, "model": model, "data": data, "retina": retina,
+            "disc": disc,
             "disc_loss_first": loss_first, "disc_loss_last": loss_last,
             "pol_loss_first": pol_first, "pol_loss_last": pol_last,
             "q_absmax": float(np.abs(q).max()),
@@ -698,6 +843,7 @@ def _eval_arm(seed: int, arm: str, trained: dict) -> dict:
     retina = trained["retina"]
     feats = {"train": [], "test": []}
     labels = {"train": [], "test": []}
+    ho_states, ho_z = [], []
     covs = []
     cent = np.zeros((N_SKILLS, 2))
     for z in range(N_SKILLS):
@@ -710,6 +856,8 @@ def _eval_arm(seed: int, arm: str, trained: dict) -> dict:
                 covs.append(roll["coverage"])
                 if split == "test":
                     cent[z] += np.mean(roll["xy"], axis=0) / EVAL_ROLLOUTS
+                    ho_states.extend(roll["states"])
+                    ho_z.extend([z] * len(roll["states"]))
 
     xtr = np.stack(feats["train"]); ytr = np.array(labels["train"])
     xte = np.stack(feats["test"]); yte = np.array(labels["test"])
@@ -719,6 +867,23 @@ def _eval_arm(seed: int, arm: str, trained: dict) -> dict:
     htr = {hash(v.tobytes()) for v in xtr}
     hte = {hash(v.tobytes()) for v in xte}
     overlap = len(htr & hte)
+
+    # `mi_beats_field`'s channel (t211 METRIC ruling, Review DAILY 2026-09-26):
+    # the TRAINED discriminator's held-out conditional log-likelihood of z
+    # given s, expressed as Î = ln(N_SKILLS) − H_heldout(z|s), in nats — the
+    # OBJECTIVE's own information content, not the policy's response to a
+    # reward field. Read on the identical held-out rollout set the classifier
+    # consumes (base 900_000, per-state rather than per-trajectory), under the
+    # same `hash_overlap == 0` split the rig already gates. Same quantity as
+    # the train-side `disc_loss_last` (`get_discriminator_loss` IS mean
+    # cross-entropy in nats), on the other split.
+    _disc = trained["disc"]
+    _dev = next(_disc.parameters()).device
+    with torch.no_grad():
+        hs = torch.as_tensor(np.stack(ho_states), device=_dev)
+        hz = torch.as_tensor(np.array(ho_z), dtype=torch.long, device=_dev)
+        disc_h_heldout = float(_disc.get_discriminator_loss(hs, hz))
+    mi_heldout = round(math.log(N_SKILLS) - disc_h_heldout, 4)
 
     def _fit(x, y, y_eval_true, seed_off: int) -> tuple:
         torch.manual_seed(seed * 977 + seed_off)
@@ -757,6 +922,8 @@ def _eval_arm(seed: int, arm: str, trained: dict) -> dict:
         "shuffled_clf_train_acc": round(sh_tr_acc, 4),
         "shuffled_clf_heldout_acc": round(sh_acc, 4),
         "hash_overlap": overlap,
+        "mi_heldout": mi_heldout,
+        "disc_h_heldout": round(disc_h_heldout, 4),
         "mean_coverage": round(float(np.mean(covs)), 4),
         "centroid_sep_mean": round(float(off.mean()), 3),
         "disc_loss_first": round(trained["disc_loss_first"] or 0.0, 4),
@@ -854,6 +1021,9 @@ def _seed_view(row: dict) -> dict:
         "claim_per_class_min": cl["per_class_min"],
         "margin_vs_shuffled": round(cl["heldout_acc"] - ctl["heldout_acc"], 4),
         "margin_vs_zero": round(cl["heldout_acc"] - zero["heldout_acc"], 4),
+        # mi_beats_field (t211 METRIC ruling, 2026-09-26): the objective's own
+        # held-out information content, claim minus control, in nats
+        "mi_margin": round(cl["mi_heldout"] - ctl["mi_heldout"], 4),
         # rig
         "shuffle_clf_fit": min(row[a]["shuffled_clf_train_acc"] for a in _ARMS),
         "shuffle_clf_heldout": max(row[a]["shuffled_clf_heldout_acc"]
@@ -864,6 +1034,10 @@ def _seed_view(row: dict) -> dict:
         "oracle_acc": orc["heldout_acc"],
         "zero_q_absmax": zero["q_absmax"],
         # reported, ungated
+        "claim_mi_heldout": cl["mi_heldout"],
+        "ctrl_mi_heldout": ctl["mi_heldout"],
+        "zero_mi_heldout": zero["mi_heldout"],
+        "oracle_mi_heldout": orc["mi_heldout"],
         "ctrl_acc": ctl["heldout_acc"],
         "ctrl_per_class_min": ctl["per_class_min"],
         "zero_acc": zero["heldout_acc"],
@@ -903,6 +1077,7 @@ def _fold(rows: list) -> dict:
         "claim_per_class_min": w("claim_per_class_min", False),
         "margin_vs_shuffled": w("margin_vs_shuffled", False),
         "margin_vs_zero": w("margin_vs_zero", False),
+        "mi_margin": w("mi_margin", False),
         # rig, worst seed
         "shuffle_clf_fit": w("shuffle_clf_fit", False),
         "shuffle_clf_heldout": w("shuffle_clf_heldout", True),
@@ -912,6 +1087,10 @@ def _fold(rows: list) -> dict:
         "oracle_acc": w("oracle_acc", False),
         "zero_q_absmax": w("zero_q_absmax", True),
         # reported
+        "claim_mi_heldout": w("claim_mi_heldout", False),
+        "ctrl_mi_heldout": w("ctrl_mi_heldout", True),
+        "zero_mi_heldout": w("zero_mi_heldout", True),
+        "oracle_mi_heldout": w("oracle_mi_heldout", False),
         "ctrl_acc": w("ctrl_acc", True),
         "zero_acc": w("zero_acc", True),
         "oracle_per_class_min": w("oracle_per_class_min", False),
@@ -1003,8 +1182,17 @@ def _check(m: dict, c: dict):
            and m["zero_q_absmax"] == 0.0)
     if not rig:
         return Status.VOID
+    # Five claim conjuncts, not four (t211 METRIC ruling, 2026-09-26).
+    # `margin_vs_shuffled` and `mi_beats_field` are BOTH binding and are asked
+    # of the run only: like a margin, neither can be asked of the control
+    # without wiring it to a tautology (see `_fold_control`). They read
+    # different channels of the same rig — the POLICY's separability and the
+    # OBJECTIVE's information content — and the ruling deliberately declined to
+    # demote the first even though it is now measured to answer a different
+    # question than this spec asks. Both must hold.
     return bool(_claim_holds(m)
                 and m["margin_vs_shuffled"] >= MARGIN_MIN
+                and m["mi_margin"] >= MI_MARGIN_MIN
                 and not _claim_holds(c))
 
 

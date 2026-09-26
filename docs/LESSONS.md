@@ -17115,3 +17115,61 @@ sign: there the instrument could be dead while the control read clean; here the
 world being clean reads as the instrument dead. Routed as
 `t028-p10-reads-an-empty-armed-register-as-a-broken-tool` (DUE 10-04); the FAIL
 row stands as recorded — nothing here re-litigates a pre-registered verdict.
+
+## A BAR DERIVED FROM A NULL'S TRAIN-SIDE READING IS DERIVED FROM MEMORISATION — and when the corrected derivation points the bar DOWNWARD, the bar still may not move (builder, 2026-09-26, from T2.11's `mi_beats_field`)
+
+The t211 METRIC ruling adopted a new claim conjunct — the DIAYN
+discriminator's held-out information content `Î = ln(N) − H(z|s)` — and sized
+its bar off the two null arms, explicitly and correctly refusing to size it off
+the claim arm's number. The stated arithmetic: `MI_MARGIN_MIN = 0.50` nats is
+"3.1x `zero`'s worst measured extraction (0.16 nats) and ~23x `shuffled`'s",
+the point being that the channel's FLOOR is not zero, because even a provably
+stationary policy (`q_absmax` exactly 0.0) has a discriminator that extracts
+0.16 nats from a random walk's state distribution.
+
+Every one of those null readings was taken off the TRAIN side — they were
+`ln(N) − disc_loss_last`, the last training minibatch. The ruling then ordered
+the held-out read first, as a falsification test of its own premise. On the
+held-out split `zero` reads **−0.2149 / −0.2158** and `shuffled` **−0.0115 /
+−0.0099**. The floor is not 0.16 nats; it is below zero. The 0.16 was the null
+arm's discriminator memorising the states its own random walk happened to
+visit, and it does not survive the split — the *same* disease the read was
+written to catch on the claim arm, one level down, in the quantity that sets
+the bar the claim is judged against.
+
+**The general rule, and it is the cheap half: a bar sized against a null
+inherits the null's measurement conditions.** If the bar will be evaluated on
+held-out data, the null that sizes it must be read on held-out data. A
+train-side null is not a conservative approximation of a held-out one — here it
+was wrong by 0.38 nats and by SIGN, and the error direction is systematic
+(memorisation inflates a null's apparent floor, which inflates the bar) rather
+than random. Sister lesson one row up: "A quoted diagnostic number becomes a
+calibration constant" (09-25) is the same family — an unrecorded fit leaking
+into a promoted constant — but that one leaks the CLAIM's number; this one
+leaks the NULL's, which is the number nobody re-reads because sizing off the
+null is itself the good practice.
+
+**And the expensive half, which is the part with teeth. The corrected
+derivation made the bar look TOO HIGH, and it still may not move.** With the
+floor below zero rather than at 0.16, the ruling's own "3.1x the floor" logic
+would now produce something well under 0.50. That is an argument for loosening
+a threshold, arriving one measurement after the threshold was written, and it
+is exactly the shape a laundered weakening takes: not "the bar is
+inconvenient", but "the bar's justification has been improved upon". **A
+threshold is not a function of its derivation that gets recomputed when the
+derivation is corrected. It is a commitment made before the number was seen.**
+The correction is recorded in full beside the constant, the constant stays at
+0.50, and the honest statement is that the bar is now MORE demanding relative
+to its nulls than its author intended — which is the only direction a
+correction is permitted to leave a threshold that has already been
+pre-registered. Had the correction pointed the other way (floor higher than
+believed, bar too low), it would have been mandatory to raise it: the asymmetry
+is the whole rule, and it is the same asymmetry the 120th audit's FINDING 1
+applied to `BA.03`'s two fractions the same week.
+
+**What made all of this visible was the ruling ordering its cheap falsification
+test BEFORE the implementation it authorised**, with a written STOP rule and a
+pre-committed number (`>= 0.50 nats or route it back`). The test did not fire —
+the adoption survived at +0.6268 on the worst seed — but it caught the
+derivation on the way past. A ruling that orders its own falsifier first gets
+to be wrong about its arithmetic without being wrong in the ledger.
