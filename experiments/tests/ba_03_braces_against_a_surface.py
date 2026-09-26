@@ -21,7 +21,16 @@ STATISTIC_BOUND: 0.0 rad*s from below (perfect uprightness; the CLAIM ARM
     sqrt(N_EVAL)` — the same headroom gate that correctly killed attempt 1,
     re-expressed on the unsaturated statistic. The seed-90 tilt pilot must
     record the measured distance here before the registered run:
-    PILOTED DISTANCE: not yet measured — `_PILOT_OWED`.
+    PILOTED DISTANCE (seed 90, harvested 2026-09-26 ~06:1x, artifact
+    /data/ba03_tilt_pilot_seed90.json): the null (blind twin) sits
+    6.3262 rad*s from the 0.0 bound; tilt_sd_random 2.8186, so gate 9's
+    requirement is 2.0 x 3.0 x 2.8186/sqrt(120) = 1.5438 rad*s and the
+    measured tilt_headroom_ratio is 8.196 against HEADROOM_MIN_MULT 2.0.
+    DEGENERACY VERDICT, verbatim from the artifact: {"degenerate": false,
+    "tilt_sd_random": 2.8185654233887862, "tilt_headroom_ratio":
+    8.195627370845527, "tilt_means_spread": 10.670787340856812,
+    "null_distance_from_bound_rad_s": 6.326171420343428}. The statistic is
+    VALIDATED; the ruling's RECOVERY COUNT fallback does not fire.
 
 WHY THIS SPEC EXISTS AND WHY IT IS NOT BA.02 AGAIN. BA.02 VOIDed its rig three
 times at ~46 min a run, and its diagnosis (docstring, 2026-08-14) was not a
@@ -332,6 +341,59 @@ IMPL_DEPS names this file. `run blast-radius BA.03`: counterfactual
 VOID -> PASS; unreachable 95 -> 95 of 254 (baseline 95); REGAINED none;
 UNBACKED none.
 
+## TILT PILOT RECORD — seed 90, ran 2026-09-26 03:37-05:57 UTC (8389.1 s wall,
+## one seed, full envelope: N_EVAL 120, CEM 12x24), artifact
+## /data/ba03_tilt_pilot_seed90.json, dispatched via launch_detached.sh (lane
+## row 222332:1332185225, EXITED stamped by notice_exited_dispatches).
+## GATES NOW FROZEN — nothing was sized from this pilot and no constant moved.
+
+THE PRE-REGISTERED VERDICT: NOT DEGENERATE. All three degeneracy conditions
+on their healthy side — sd(tilt_random) 2.8186 finite and positive,
+tilt_headroom_ratio 8.196 >= HEADROOM_MIN_MULT 2.0, arm-means spread 10.67
+rad*s >> 1e-9. The RECOVERY COUNT fallback does not fire; the registered run
+proceeds on integrated absolute tilt.
+
+THE HEADROOM THE STATISTIC CHANGE BOUGHT, measured on one run: the SAME
+episodes read on the TIME ruler give claim_headroom_ratio 1.769 < 2.0
+(up_deprived 11.0717 s of the 12.0 s horizon — 92.3%, even more saturated
+than the 2026-08-30 pilot's 88.6%), so the OLD gate would have VOIDed this
+seed again; on TILT the same twin sits 6.3262 rad*s off the bound at ratio
+8.196. The ruling's option (c) — statistic, not envelope — is what made the
+claim decidable here, and that is now a measurement, not a design argument.
+
+THE CLAIM FORECASTS FAIL AT SEED 90, recorded before the registered run so
+the outcome cannot be narrated afterwards (the 2026-08-30 precedent): the
+tilt gain is NEGATIVE — tilt_vest 7.3835 vs tilt_deprived 6.3262, tilt_gain
+-1.0574 rad*s at tilt_gain_se 0.1881 (t ~ -5.6), tilt_gain_positive 0.0 —
+and the time ruler agrees (gain -0.3467 s). The bars it would have needed:
+claim floor 0.20 x 2.8186 = 0.5637 rad*s, 3-sigma signal 3 x 0.1881 =
+0.5642 rad*s — both ~11x inside the 6.3262 headroom, so a registered FAIL
+here would be the sense buying nothing, not the ceiling deciding. Seed 90
+may size and may not decide; the registered 0/1/2 decide.
+
+THE REST OF THE RIG, all on pre-registered sides: matched-noise control
+emphatic (tilt_gain_noise -4.9133 — the noise arm loses 4.9 rad*s to the
+twin; time gain_noise -4.5367 s); brace replicates Trap 1 on the new ruler
+(brace_consistency 0.7583 vs floor 0.70, decisive_frac 0.7583,
+side_accuracy 0.0 — perfectly consistent whenever decisive, always the HIGH
+side); surface load-bearing (nosurface tilt 18.18/18.10, both arms collapse
+toward the ~18.85 lying-flat magnitude, time gain_nosurface 0.0083 s vs
+NOSURF_GAIN_MAX 0.30); selection alive (fit curves vest 37.3 -> 50.8,
+deprived 27.0 -> 56.1, noise last 38.5); toppled_frac_random 0.9833,
+up_random 1.795 s, drift_recheck 0.0, seed_rig_ok 1.0, site_legal 1.0.
+
+ANATOMY (reported, never gated), same finding as the TIME pilot, now on the
+claim's own ruler: pinning plantar TOUCH costs the vest policy +7.36 rad*s
+of tilt (7.3835 -> 14.7427); pinning any true vestibular block costs ~zero
+(grav 7.4285, canals 7.2019, otoliths 7.4187, vx/vy 7.3318 — canals reads
+BETTER than unablated). The winning policy reads touch, not the vestibular
+channel, and the deprived twin — touch intact — finds a slightly better
+solution by another route. That is the mechanism behind the negative gain.
+
+SIZING NOTE for the registered dispatch (re-costs nothing): 8389 s for one
+seed at the full envelope -> ~7.0 h for seeds 0/1/2, inside CPU_DAYS. The
+~1.9 h estimate under-read by ~23%.
+
 VOID-FORECLOSED (SUPERSEDED 2026-09-26 by the redesign above — kept verbatim
     as marked history; it priced the TIME statistic and it was right):
     the blind twin holds 11.868 s of the 12.0 s horizon (98.9%),
@@ -480,20 +542,19 @@ CEM_SIG_FLOOR = 0.05
 
 # ── gates. The TIME-metric gates were frozen against the seed-90 pilot
 # (2026-08-30; see PILOT RECORD) and none of them moves. PROVISIONAL again
-# 2026-09-26 for ONE reason only: the 2026-09-20 ruling's own fallback clause
-# requires the seed-90 TILT pilot to validate the new claim statistic
-# (non-degenerate, null off its bound) before the registered run. ──
-_GATES_FROZEN = False
+# 2026-09-26 03:xx for ONE reason only: the 2026-09-20 ruling's own fallback
+# clause requires the seed-90 TILT pilot to validate the new claim statistic
+# (non-degenerate, null off its bound) before the registered run. FROZEN
+# 2026-09-26 ~06:1x: the TILT pilot landed NOT DEGENERATE (see TILT PILOT
+# RECORD) — nothing was sized from it and no constant moved. ──
+_GATES_FROZEN = True
 _PILOT_OWED = (
-    "the seed-90 TILT pilot (2026-09-20 ruling, option (c)): run "
-    "`python -m experiments.tests.ba_03_braces_against_a_surface pilot`, "
-    "read /data/ba03_tilt_pilot_seed90.json, record the pre-registered "
-    "DEGENERACY verdict and the null's measured distance from the 0.0 rad*s "
-    "bound into the STATISTIC_BOUND block, then set _GATES_FROZEN = True in "
-    "a commit. It can succeed because every constant is already declared: "
-    "the two fractions are pre-registered in source and the bars are derived "
-    "IN-RUN from the random arm's own distribution — nothing is frozen FROM "
-    "the pilot, the pilot only validates the statistic (~2 h CPU, one seed).")
+    "HARVESTED 2026-09-26 ~06:1x (kept as history; nothing is owed): the "
+    "seed-90 TILT pilot landed at 05:57 (8389.1 s wall) and its "
+    "pre-registered degeneracy verdict read degenerate=false, so "
+    "_GATES_FROZEN went True in the harvest commit. Nothing was sized FROM "
+    "the pilot: the two fractions were pre-registered in source and the bars "
+    "derive in-run from the random arm. See TILT PILOT RECORD.")
 # The 2026-08-30 TIME pilot stays on disk at /data/ba03_pilot_seed90.json —
 # history, not this pilot. `pilot_harvested` must read the TILT artifact:
 _PILOT_ARTIFACT = "/data/ba03_tilt_pilot_seed90.json"
