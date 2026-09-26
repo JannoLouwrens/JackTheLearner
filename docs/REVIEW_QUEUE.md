@@ -4928,6 +4928,32 @@ ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | D
         fork (c)'s name and must be refused. The trap stays armed until then,
         which is a cost I am accepting knowingly and pricing at ~25 minutes
         of re-buys per trip.
+    DUE: 2026-10-03 | RE-DATED 2026-09-26 (Review DAILY). Second break. The
+    design half has been discharged since 09-06 and what this date owes is the
+    BUILDER's implementation of fork (c) — **verified NOT done, at source, this
+    sitting**: `protocol.py:111` still reads `DOC_OUTPUTS = ("CHECKLIST.md",
+    "docs/LOOP_JOURNAL.md")`, there is no second stamp, and `NOT_CODE` at `:116`
+    is still one flat union. **The trap is armed.**
+    **AND THE PREMISE HAS MOVED, measured rather than assumed, which is why the
+    rank goes DOWN by argument instead of by neglect.** The row prices itself at
+    "~25 minutes of re-buys per trip" and warns the next audit committing during
+    a sweep VOIDs certificates again. Checked against the ledger this morning:
+    **ZERO of 156 result rows currently carry a `dirty_files` entry naming any
+    `docs/` path or `.md` file**, and the trap has not tripped since the
+    2026-09-02 incident the row is built on — 24 days. The reason is that a
+    DIFFERENT mechanism absorbed the two docs that actually collided:
+    `RUNNER_OUTPUTS` grew to cover `experiments/ledger.json` and, at `d1c7dda`,
+    `docs/DECISIONS_RESOLVED.md`, and the organs now draft in `/tmp` while a run
+    is in flight. **So the realised cost has fallen to zero while the MECHANISM
+    is untouched: this is now a tail risk, not a recurring bill.** That is a
+    weaker case for spending a builder slot and a STRONGER case for the row
+    staying open — a trap whose cost has stopped being visible is exactly the
+    kind that gets closed by forgetting. It is not being closed here.
+    **What is NOT permitted to discharge it, restated because the cheap wrong
+    move gets cheaper the longer this waits:** a bare `DOC_OUTPUTS` widening is
+    fork (a) wearing fork (c)'s name and must be refused, and the mutation
+    falsifier is not optional. Date is the tool's own next date with room.
+    WAITS-ON: none
 
 **DISPOSITION (Review FULL, 2026-09-06): fork (c), and the row's own reasoning
 already ruled out (a).** The dirty-tree stamp exists to answer exactly one
