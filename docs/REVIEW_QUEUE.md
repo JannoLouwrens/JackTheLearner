@@ -10345,3 +10345,162 @@ ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run st
     Staleness bill: ZERO for the diagnosis. Option (i) bills `T0.36`
     (cpu<1min) plus whatever the desk decides about `T0.21`/`T0.31`; option
     (iii) bills `T0.36` alone.
+
+---
+
+## ROUTED 2026-09-26 (builder): `pl02-void-gate-quantifies-over-its-own-nulls`
+## — the gate that VOIDed the PLASTIC-ONLY decree's sole falsifier requires the
+## two arms that cannot be required to learn to learn, and those are exactly the
+## two sitting inside its own noise of the bar. Declared "routed onward" on
+## 2026-09-13 and never given a row.
+
+ROUTED: pl02-void-gate-quantifies-over-its-own-nulls | 2026-09-26 | `PL.02` attempt 2 VOID (2026-09-13T01:11:50, commit `7ffd3c8+dirty`, 2928.18 s, seeds 0/1/2), read off `ledger.json:results.PL.02` this slot | OPEN
+    DUE: 2026-10-05 | `review-queue`'s own `next_free_due`, read off the tool
+        this slot (2026-09-27 already carries 7 against a measured capacity of
+        6). This is a GATE-SEMANTICS decision on a registered VOID lane and the
+        only repairs on the menu REMOVE an arm from a gate or RE-AIM it — a
+        loosening under any reading, therefore the Review's and never this
+        desk's. `1^13`'s rule ("if you find yourself wanting to move a bar to
+        make one of these pass, stop and route it back here") is exactly this
+        row, and no bar is touched here in either direction.
+    WAITS-ON: none | no live row's answer changes the arithmetic below. The
+        sibling question — WHICH SEED missed — is `aggregate-hides-worst-seed`
+        (OPEN, DUE 2026-09-29) and is about the RECORDER; this row is about
+        WHOSE learning the gate reads, and each is decidable without the other.
+
+**THE HOLE THIS ROW CLOSES FIRST, and it is a routing defect rather than a
+science one.** `pl_02_reshaping_gain.py`'s attempt-2 record block (2026-09-13)
+says in terms: *"THE GATE QUESTION IS NOW ROUTABLE AND IS STILL NOT DECIDED
+HERE... it goes to the Review with these numbers attached."* The ACTED row
+`pl02-eye-gate-reads-the-encoder-not-the-eye` then records that the question
+*"was routed onward with the numbers attached, per the spec docstring."*
+**There is no row. Thirteen days.** Grep of this file for `learn_ok` returns
+three sites and not one of them owns the question: line ~1703 is a paragraph
+inside `aggregate-hides-worst-seed` about per-seed ATTRIBUTION, line ~231 is
+`UB.10`'s unrelated `uni_learn_ok`, and line ~6284 is the sentence above
+asserting the routing that does not exist.
+
+**And no instrument can see it, which is the part worth the Review's
+attention.** `fail_unowned` skips any row whose status is not `FAIL`
+(`coverage.py:1740`), so all 16 VOID rows are invisible to it by construction.
+Widening it would not help here and I measured that rather than assuming it:
+running `fail_unowned`'s own ownership predicate over the 16 VOIDs this slot
+returns **0 unowned — all 16 read `queue-row`**, `PL.02` among them, on the
+strength of two rows that are both ACTED and both about other questions. This
+is the docstring's own declared caveat (*"a prose mention is a weak owner...
+weak ownership is a routing-quality question for the Review, not a hole this
+counter can see"*) biting a live case: **ownership-by-mention cannot
+distinguish a question that was answered from a question that was announced.**
+NOTHING IS PROPOSED HERE — the freeze's item 2 forbids a new instrument and
+this desk is not asking for one; the observation is filed because the next
+"routed onward" will be invisible the same way.
+
+**THE ARITHMETIC, and it is the whole case.** `learn_ok`
+(`pl_02_reshaping_gain.py:716`) is `all(last_loss < LEARN_DROP * first_loss)`
+over the arms `(U_A, PLASTIC, FROZEN)`, with `shuffled_learn_ok` the same test
+on SHUFFLED; `LEARN_DROP` is **0.90** and either one reading 0 VOIDs the run.
+All four ratios are now recorded (the `7ffd3c8` disclosure). Distance from the
+0.90 bar, in the gate's own across-seed spread:
+
+    arm        loss_drop            distance to 0.90    in sd     worst-seed*
+    U_A        0.008467 ± 0.003023        +0.891533     295 sd     0.0127
+    PLASTIC    0.403300 ± 0.076860        +0.496700     6.5 sd     0.5120
+    FROZEN     0.835467 ± 0.090262        +0.064533    0.72 sd     0.9631  <-- VOIDs
+    SHUFFLED   0.867767 ± 0.141941        +0.032233    0.23 sd     1.0685  <-- VOIDs
+    * m + sqrt(2)*s, this desk's own n=3 worst-admissible-seed bound.
+
+**The two arms that carry the claim clear the gate by 6.5 and 295 sigma. The
+two arms that are NULLS BY CONSTRUCTION sit inside one sigma of it, and both
+of their worst admissible seeds are over the bar.** The run's readability is
+therefore decided by a coin-flip on the pretext loss of arms whose
+contribution to the verdict is fixed in advance: `FROZEN`'s `R` is **zero
+exactly, by construction** — its A-encoder IS `U_A`'s tensor, deep-copied and
+excluded from the optimiser (`:687-691`), measured `frozen_R` 0.0 and
+`frozen_feat_diff` 0.0 — and `SHUFFLED` is the declared control that must
+fail, measured `shuffled_R` −0.004332. Neither arm's learning can make the
+claim more or less tested. On attempt 2 the gate nevertheless discarded a run
+whose claim arm read `reshaping_gain_R` **0.954619**, CI **[0.943936,
+0.971919]**, `r2_plastic` 0.954440 against `r2_ua` −0.000179, with every other
+rig gate green (`canary_ok` 1.0, `det_drift` 0.0, `r2_raw_pixel` 0.929242
+against the unmoved 0.80, `shuffled_label_r2` 7.3e-05).
+
+**WHY THE ASYMMETRY IS STRUCTURAL AND NOT A SEED ACCIDENT, read off the source
+rather than inferred.** `_pretrain` (`:588-`) optimises `enc_a + dec` for
+`U_A`; `enc_a + enc_b + aud_head + dec` for `PLASTIC`; and for `FROZEN`
+**everything except `enc_a`**. A *relative* drop bar is not comparable across
+arms with different trainable surfaces: `FROZEN` must reconstruct through an
+encoder fitted to a different input distribution (`U_A` trains with `zb`
+identically zero) and cannot adapt it, so its reachable loss ratio is bounded
+away from zero by the design of the null itself. The measurement agrees — a
+100x gap between `U_A`'s 0.0085 and `FROZEN`'s 0.8355 is not noise — but the
+two readings it admits are the Review's to pick between, not this desk's.
+
+**THIS IS THE UNSATURATED-NULL RULE'S SHAPE ON A RIG GATE.** The rule adopted
+2026-09-23 forbids registering a CLAIM gate on a statistic whose null sits
+within the claim's own margin of that statistic's bound. Nothing in this repo
+says the same of a VOID gate, and the consequence here is worse in one
+specific way: a claim gate that a saturated null spoils returns an honest
+FAIL, whereas this one returns a **VOID — "the run did not test the claim"** —
+about a run that tested the claim on every arm that carries it, and it costs
+2,928 s of CPU per attempt to find out.
+
+**CANDIDATE READINGS, named so it is a decision and not an argument, priced in
+this repo's ascending mechanical bill (statistic, then scoring, then venue;
+envelope forbidden):**
+  - **(a) STATISTIC — restrict `learn_ok` to the arms whose learning the claim
+    depends on** (`U_A`, `PLASTIC`), and give the nulls their own gate aimed at
+    what they are actually for: `FROZEN` is already certified by
+    `frozen_exact_zero` (`frozen_R` 0, `frozen_feat_diff` 0) and `SHUFFLED` by
+    `control_reshapes_too` 0.0 and `shuffled_label_r2` 7.3e-05. Zero cost, no
+    re-run of anything green — **but it is a LOOSENING of a VOID lane and this
+    desk will not take it.** State the guard if it is adopted: a null removed
+    from the learning gate must keep a gate of its own, or a dead null becomes
+    indistinguishable from a working one, which is the 23rd audit's `uni_*`
+    scar (`docs/REVIEW_QUEUE.md:231`) one family over.
+  - **(b) STATISTIC — make the bar ARM-RELATIVE rather than uniform**: each
+    arm's drop compared against what its own trainable surface can reach,
+    derived before any arm's number is read. Honest, and it is the repair the
+    asymmetry argues for — but the derivation itself needs a venue and would be
+    fitted to three recorded seeds unless it is pre-registered off something
+    else.
+  - **(c) THE HONEST READING — the gate is right and PL.02's null is wrong.**
+    If a null that cannot learn is a null that cannot certify the rig, the
+    repair is the null's construction, not the gate. Most expensive, and it is
+    a real possibility rather than a straw option.
+  **NO BAR MOVES under any of them.** `LEARN_DROP` 0.90 and
+  `EYE_RADIUS_R2_MIN` 0.80 stay exactly where they are; (a) and (b) change
+  WHICH ARMS a gate quantifies over and WHAT it is compared against, and
+  neither may be reached for by adjusting a number. `T1.02` precedent binds any
+  successor and both VOID rows stay in history.
+
+**A SECOND, SEPARABLE FINDING — THE DECIDING-SET SCAN CALLS THIS SPEC `clean`,
+AND IT IS THE ONLY LIVE COUNTEREXAMPLE TO THAT SCAN I HAVE.** The 2026-09-26
+hash-salt measurement (`/data/hash_salt_deciding_set.json`, reported under
+`hash-salt-lottery-in-a-gated-metric`) classified 98 of 129 CPU specs as
+DECIDING by perturb-replay of each recorded metric. **`PL.02` is in `clean`**
+— the scan found no recorded metric within margin of changing its verdict — on
+a run whose verdict was decided at **0.72 sd**. The blind spot is exact and
+mechanical, not a calibration miss: the conjunct `_check` reads is the
+aggregated BOOLEAN `learn_ok` 0.6667, which is already failing so perturbing it
+±10% flips nothing; the near-margin quantity `loss_drop_frozen` 0.8355 IS
+recorded but is **disclosure-only and read by no gate**, so no flip can fire on
+it. This is the exact mirror of the 09-13 finding under
+`aggregate-hides-worst-seed` (*a `_check` conjunct reading a quantity the spec
+does not emit*): here the spec emits the quantity and the check does not read
+it. Both directions of the same seam. For scale rather than as a proposal: of
+203 flips that can produce a VOID across 43 specs, **47 across 23 specs sit on
+a NULL- or CONTROL-named metric**, and 40 of those 47 are `equality_like`
+flags at exactly 1.0 — so null-arm quantities gating VOID lanes is this
+ladder's common idiom, and `PL.02` is the one case measured where the null's
+quantity is CONTINUOUS and NEAR ITS BAR. **No instrument is proposed** (freeze
+item 2); the number is here so the desk can see whether this is one spec or a
+class.
+
+**Staleness bill: ZERO new certificates.** No spec file is edited by this
+routing. `PL.02` is VOID on both attempts and nothing cites it. The `T0.21`
+(cpu<1min) and `T0.31` (cpu<10min) re-buys this edit bills against
+`docs/REVIEW_QUEUE.md` are paid in the same slot, per `run stale-cost`.
+**No re-run of `PL.02` is owed or implied**: attempts 1 and 2 reproduce
+byte-identically (`det_drift` 0.0) so an unchanged re-run buys the same VOID
+and 2,928 s, and a re-run under a changed gate is downstream of this
+disposition.

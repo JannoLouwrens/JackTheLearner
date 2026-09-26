@@ -17454,3 +17454,76 @@ venue-shopping wearing a parsimony argument. **Pre-register the rule that
 maximises the quantity most dangerous to your own claim, commit it before the
 run, and write down which rule you did NOT take and why.** Parsimony is a real
 virtue and it is exactly the disguise this failure mode wears.
+
+---
+
+## A rig gate that quantifies over the NULL arm decides the run by lottery, and "routed onward" is not a routing
+
+*(builder, 2026-09-26, from `PL.02` attempt 2 — the sole registered falsifier of
+the PLASTIC-ONLY decree, VOID for 13 days. Full arithmetic in
+`docs/REVIEW_QUEUE.md` under `pl02-void-gate-quantifies-over-its-own-nulls`.)*
+
+**The shape.** `PL.02`'s rig gate `learn_ok` requires all of `U_A`, `PLASTIC`
+and `FROZEN` to drop their pretext loss below `0.90 x` its initial value, and
+`shuffled_learn_ok` requires the same of `SHUFFLED`. Distance from that bar in
+the gate's own across-seed spread:
+
+    U_A       0.0085   295 sd below the bar   <- claim arm
+    PLASTIC   0.4033   6.5 sd below           <- claim arm
+    FROZEN    0.8355   0.72 sd below          <- NULL, worst seed 0.9631, VOIDS
+    SHUFFLED  0.8678   0.23 sd below          <- CONTROL, worst seed 1.0685, VOIDS
+
+**The two arms carrying the claim clear by 6.5 and 295 sigma; the two arms that
+are nulls by construction sit inside one sigma and are what the gate actually
+decides on.** So the run's READABILITY was a coin-flip on the pretext loss of
+arms whose contribution to the verdict is fixed in advance — `FROZEN`'s
+reshaping gain is zero *exactly*, its encoder being `U_A`'s own tensor with
+`requires_grad_(False)` — and the coin came up VOID on a run whose claim arm
+read `reshaping_gain_R` 0.9546, CI [0.9439, 0.9719], every other rig gate
+green. 2,928 s of CPU per attempt to learn that.
+
+**Rule 1 — the unsaturated-null rule applies to VOID gates, not only to claim
+gates, and the VOID case is worse.** The rule adopted 2026-09-23 forbids
+registering a CLAIM gate on a statistic whose null sits within the claim's
+margin of that statistic's bound. Nothing said the same of a rig gate. A claim
+gate spoiled by a saturated null still returns an honest FAIL; a rig gate
+spoiled the same way returns **"the run did not test the claim"** about a run
+that tested it. **Before you register a rig or VOID conjunct, ask which arms it
+quantifies over, and for each one ask what its expected value of that statistic
+IS.** A null built to be inert has a structurally smaller reachable drop than an
+arm free to fit — a *relative* bar is not comparable across arms with different
+trainable surfaces, and applying one uniformly hands the gate to the arm with
+the least headroom.
+
+**The guard on the obvious repair, because the obvious repair has its own
+scar.** Dropping the null out of the learning gate is a LOOSENING and needs the
+Review — and if it is taken, the null must keep a gate of its own. A dead null
+that no gate watches reads identically to a working one; that is the 23rd
+audit's `uni_marginal_ok`/`uni_learn_ok` finding, one family over.
+
+**Rule 2 — "routed onward" is a sentence, not a row, and no instrument can
+tell the difference.** `pl_02_reshaping_gain.py`'s own record block declared
+the gate question *"routable... it goes to the Review with these numbers
+attached"*, and an ACTED queue row later recorded that it *"was routed onward"*.
+No row was ever written. Thirteen days, and nothing could see it: `fail_unowned`
+skips every status that is not `FAIL`, so all 16 VOID rows are outside it by
+construction — and widening it would not have helped, measured rather than
+assumed (running its own ownership predicate over the 16 VOIDs returns **0
+unowned**; `PL.02` reads owned on two rows that are both ACTED and both about
+other questions). **Ownership-by-mention cannot distinguish a question that was
+ANSWERED from a question that was ANNOUNCED.** So: if a docstring says a
+question goes to the Review, the same commit writes the row with a `DUE:`, or
+the question does not exist.
+
+**Rule 3 — a boolean conjunct hides its own margin from every scanner.** The
+2026-09-26 deciding-set scan perturbs each RECORDED metric and asks whether the
+verdict flips; it classified `PL.02` as **`clean`** — nothing within margin of
+deciding anything — on a run decided at 0.72 sd. The reason is mechanical: the
+conjunct `_check` reads is the aggregated boolean `learn_ok` 0.6667, already
+failing, so perturbing it flips nothing; the near-margin continuous quantity
+`loss_drop_frozen` is recorded but **read by no gate**. This is the exact mirror
+of the earlier finding that a `_check` can read a quantity the spec never emits
+— here the spec emits it and the check never reads it. **Both halves of that
+seam are invisible to a scanner that only perturbs recorded-and-read metrics.**
+When a gate is a boolean summary, the margin you must report is the one in the
+quantity underneath it.
