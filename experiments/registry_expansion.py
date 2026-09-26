@@ -5446,11 +5446,16 @@ EXPANSION: list[Spec] = [
                      "direction still has authority",
          hypothesis="In a scenario where a graspable surface is within reach, "
                     "a learner given BA.01's vestibular channel PLACES ITS "
-                    "SUPPORT ON THE LEAN SIDE and stays upright measurably "
-                    "longer than an identical learner trained with the channel "
-                    "deleted (>= 3 sigma across seeds), and the gain vanishes "
-                    "when the channel is replaced by matched-statistics noise.",
-         falsified_by="No upright-time gain from having the channel even with "
+                    "SUPPORT ON THE LEAN SIDE and holds himself measurably "
+                    "more upright — LOWER integrated absolute tilt over the "
+                    "fixed 12 s window, the 2026-09-20 Review FULL ruling's "
+                    "statistic (option (c), `ba03-null-saturates-the-"
+                    "horizon`; time-to-topple saturated: the blind twin held "
+                    "98.9% of the horizon) — than an identical learner "
+                    "trained with the channel deleted (>= 3 sigma across "
+                    "seeds), and the gain vanishes when the channel is "
+                    "replaced by matched-statistics noise.",
+         falsified_by="No tilt gain from having the channel even with "
                       "a surface in reach. Then D8's open-ground finding "
                       "generalises — balance is decoded and never acted on in "
                       "ANY scenario this body affords — and the honest status "
@@ -5461,15 +5466,19 @@ EXPANSION: list[Spec] = [
                       "refutes the mechanism while the number passes; "
                       "brace-side accuracy is therefore a REPORTED gate, not "
                       "a footnote.",
-         null_baseline="The channel-deprived twin's upright time; a random "
+         null_baseline="The channel-deprived twin's integrated tilt; a random "
                        "policy in the same rig; AND — the null D8's probes "
                        "prove is the binding one — THE BEST FIXED BLIND "
                        "POSTURE. On open ground a constant 'both hands up' "
                        "bought +0.275 s over random, so a sensing arm that "
                        "only beats random has demonstrated nothing about "
                        "sensing. The contrast is against the blind twin "
-                       "allowed to find its own best fixed posture.",
-         metric="upright_gain_vs_deprived_with_surface",
+                       "allowed to find its own best fixed posture; the BAR "
+                       "is sized from the random walk's in-run measured "
+                       "distribution, never from the twin (2026-09-20 "
+                       "ruling's binding — the twin may not set the bar the "
+                       "claim clears).",
+         metric="integrated_tilt_gain_vs_deprived_with_surface",
          # TIER RE-COST 2026-08-30, on the seed-90 pilot's measured wall time
          # (6299 s/seed at N_EVAL 48; ~2.0 h/seed at the pilot-derived 120, so
          # ~6 h for three seeds). CPU_LONG's label is a 2 h timeout that
@@ -5522,7 +5531,21 @@ EXPANSION: list[Spec] = [
                "TWO CHANNELS SEPARATELY (BA.01's note, ME.11's lesson): "
                "report the linear-acceleration and angular-velocity "
                "contributions apart. A brace carried wholly by one channel "
-               "is a finding."),
+               "is a finding.\n"
+               "REDESIGNED 2026-09-26 (builder, executing the 2026-09-20 "
+               "Review FULL ruling, THE BUNDLED RULING on `sh02-null-"
+               "saturation`, option (c)): claim statistic moved from "
+               "time-to-topple (saturated — attempt 1 VOID, twin at 98.9% of "
+               "the horizon, VOID-FORECLOSED and superseded) to INTEGRATED "
+               "ABSOLUTE TILT over the fixed 12 s window; bar sized from the "
+               "random walk's in-run distribution; the twin stays the "
+               "contrast, demoted from bar-setting; all six green rig "
+               "conjuncts carried byte-unchanged; the headroom VOID gate "
+               "re-expressed on the new statistic at the same "
+               "HEADROOM_MIN_MULT. T_GAIN_MIN 3.0 and every carried "
+               "threshold unmoved. Registered run gated behind the seed-90 "
+               "TILT pilot's pre-registered degeneracy verdict "
+               "(_GATES_FROZEN; fallback RECOVERY COUNT, per the ruling)."),
 
     # ── THE SURVIVAL WORLD (docs/research/SURVIVAL_WORLD.md §5) ──────────
     # Owner directive 2026-08-09: Jack gets human needs and is thrown into as

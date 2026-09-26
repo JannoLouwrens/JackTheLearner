@@ -1,11 +1,27 @@
 """BA.03 — He braces against a surface: balance is used where direction still
 has authority.
 
-HYPOTHESIS (registry, unchanged). In a scenario where a graspable surface is
-within reach, a learner given BA.01's vestibular channel PLACES ITS SUPPORT ON
-THE LEAN SIDE and stays upright measurably longer than an identical learner
-trained with the channel deleted (>= 3 sigma across seeds), and the gain
-vanishes when the channel is replaced by matched-statistics noise.
+HYPOTHESIS (registry, RE-SCOPED 2026-09-26 under the 2026-09-20 Review FULL
+ruling — see THE REDESIGN below; the contrast and controls are unchanged, the
+STATISTIC moved). In a scenario where a graspable surface is within reach, a
+learner given BA.01's vestibular channel PLACES ITS SUPPORT ON THE LEAN SIDE
+and holds himself measurably more upright — LOWER integrated absolute tilt
+over the fixed 12 s window — than an identical learner trained with the
+channel deleted (>= 3 sigma across seeds), and the gain vanishes when the
+channel is replaced by matched-statistics noise.
+
+STATISTIC_BOUND: 0.0 rad*s from below (perfect uprightness; the CLAIM ARM
+    approaches this bound, lower = better; the upper bound pi * 12 rad*s is
+    unreachable-adjacent, a body lying flat for the whole window reads
+    ~pi/2 * 12 = 18.85). THE NULL'S DISTANCE FROM THE BOUND is what THE
+    UNSATURATED-NULL RULE (2026-09-20) requires declared: it is measured
+    IN-RUN per seed as `tilt_headroom_s` (the blind twin's mean integrated
+    tilt, its distance from 0.0) and VOID-gated per seed at
+    `tilt_headroom_s >= HEADROOM_MIN_MULT * T_GAIN_MIN * sd(tilt_random) /
+    sqrt(N_EVAL)` — the same headroom gate that correctly killed attempt 1,
+    re-expressed on the unsaturated statistic. The seed-90 tilt pilot must
+    record the measured distance here before the registered run:
+    PILOTED DISTANCE: not yet measured — `_PILOT_OWED`.
 
 WHY THIS SPEC EXISTS AND WHY IT IS NOT BA.02 AGAIN. BA.02 VOIDed its rig three
 times at ~46 min a run, and its diagnosis (docstring, 2026-08-14) was not a
@@ -84,16 +100,29 @@ arms are equally out-of-distribution there, and the gate is on their
 DIFFERENCE, which is what makes the transfer eval a fair test of the confound
 rather than of the policies.
 
-## GATES (PROVISIONAL until the seed-90 pilot freezes them — `_GATES_FROZEN`)
+## GATES (PROVISIONAL until the seed-90 TILT PILOT validates the statistic —
+## `_GATES_FROZEN`; the time-metric gates were frozen 2026-08-30 and the six
+## green rig conjuncts carry forward byte-unchanged)
 
-CLAIM (Status.FAIL when unmet):
-  1. `gain_positive` == 1.0 and `t_gain` >= `T_GAIN_MIN` (3.0). The registry's
-     own bar; it does not move.
-  2. The matched-noise gain vanishes: `gain_noise` <= `NOISE_GAIN_FRAC_MAX` x
-     `gain`, and `gain - gain_noise` >= `VEST_OVER_NOISE_MIN`.
+CLAIM (Status.FAIL when unmet) — ON INTEGRATED ABSOLUTE TILT, lower = better,
+`tilt_gain` = tilt_deprived - tilt_vest (positive = the channel helped):
+  1. `tilt_gain_positive` == 1.0 and `t_tilt` >= `T_GAIN_MIN` (3.0). The
+     registry's own bar (>= 3 sigma across seeds); it does not move.
+  1b. `tilt_gain` >= `TILT_GAIN_MIN_FRAC` x `tilt_sd_random` — THE BAR SET
+     FROM THE RANDOM WALK'S MEASURED DISTRIBUTION, per the 2026-09-20 ruling's
+     binding ("the new bar is set from the RANDOM walk's measured
+     distribution, not from the blind twin"). `tilt_sd_random` is the
+     per-episode sd of the random arm's integrated tilt, measured IN-RUN —
+     never a fitted constant. The fraction is pre-registered in source before
+     any tilt number exists (see the constants block for its derivation from
+     the old design's magnitudes on the old ruler).
+  2. The matched-noise tilt gain vanishes: `tilt_gain_noise` <=
+     `NOISE_GAIN_FRAC_MAX` x `tilt_gain`, and `tilt_gain - tilt_gain_noise`
+     >= `TILT_VEST_OVER_NOISE_FRAC` x `tilt_sd_random` (the same random-walk
+     ruler; the old 0.20 sim-s absolute floor's role, transposed).
   3. `brace_consistency` >= `BRACE_CONSISTENCY_MIN` — the braced side is a
      function of the lean side. Registry: brace-side accuracy is a REPORTED
-     GATE, not a footnote.
+     GATE, not a footnote. UNCHANGED.
 
 RIG (Status.VOID — the world could not test the claim):
   4. The random policy topples on >= `TOPPLED_FRAC_MIN` of eval episodes and
@@ -103,6 +132,18 @@ RIG (Status.VOID — the world could not test the claim):
      `up_gripboth - up_deprived` <= `DEPRIVED_SHORTFALL_MAX`. (Trap 2.)
   7. The surface is load-bearing: `gain_nosurface` <= `NOSURF_GAIN_MAX`.
   8. A refused PS.01 borrow, or a non-finite statistic.
+  9. THE UNSATURATED-NULL GATE, re-expressed on the claim statistic
+     (2026-09-20 ruling; successor of the time-headroom gate that fired on
+     attempt 1): per seed, the blind twin's distance from the statistic's
+     bound must be at least `HEADROOM_MIN_MULT` x the signal the claim needs —
+     `tilt_headroom_s >= HEADROOM_MIN_MULT * T_GAIN_MIN * tilt_sd_random /
+     sqrt(N_EVAL)`, with `tilt_sd_random` finite and > 0 (a degenerate
+     statistic is VOID, and per the ruling its repair is the RECOVERY COUNT
+     fallback, said in the open — never a bar move). The TIME headroom
+     (`claim_headroom_s`/`claim_headroom_ratio`) is still computed and
+     REPORTED for continuity but no longer gates: it guards a statistic the
+     claim no longer rides, and at this horizon it is permanently red — that
+     is the measured fact the redesign answers, not a loosened control.
 
 ANATOMY, REPORTED NEVER GATED (registry: "TWO CHANNELS SEPARATELY"). The
 trained vest policy is re-evaluated on the paired eval packs with one
@@ -232,14 +273,76 @@ against ~5760 already run, so ~2.0 h/seed and ~6 h for three. That is outside
 timeout, so leaving the label alone would have destroyed the run rather than
 mislabelled it. Budget becomes `CPU_DAYS`.
 
-VOID-FORECLOSED: the blind twin holds 11.868 s of the 12.0 s horizon (98.9%),
+## THE REDESIGN — 2026-09-26, builder, EXECUTING the 2026-09-20 Review FULL
+## ruling (THE BUNDLED RULING on `sh02-null-saturation`; queue row
+## `ba03-null-saturates-the-horizon`, DISPOSITIONED, option (c) ADOPTED,
+## "THE DESIGN IS DELIVERED; what this date owes is EXECUTION by the builder")
+
+The foreclosure below is SUPERSEDED BY REDESIGN, not overturned: every word of
+it stays true OF THE TIME STATISTIC AT THIS HORIZON. The ruling's option (c)
+changes the STATISTIC — Disease A's one zero-bill repair — and this section
+maps each binding clause of the ruling to the code that implements it:
+
+- "INTEGRATED ABSOLUTE TILT over a FIXED 12 s window" -> `_episode(...,
+  full_window=True)`: eval episodes simulate THROUGH topple to the fixed
+  horizon with the policy still acting, and return
+  `sum_t arccos(clip(up_t, -1, 1)) * SIM_S_PER_DECISION` (rad*s, lower =
+  better). Defined for every life including the ones that never topple —
+  exactly where time-to-topple threw its information away. Training, the
+  stats pre-pass and CEM fitness keep `full_window=False` and are
+  byte-identical to attempt 1: the redesign changes what the claim READS,
+  never how the arms are trained.
+- "The new bar is set from the RANDOM walk's measured distribution, not from
+  the blind twin" -> two bars, both on the random arm's IN-RUN per-episode
+  tilt sd (`tilt_sd_random`), never on the twin-paired deltas that set
+  attempt 1's bar: the claim's absolute floor (`TILT_GAIN_MIN_FRAC`) and the
+  noise-contrast floor (`TILT_VEST_OVER_NOISE_FRAC`). The twin remains the
+  registry's CONTRAST comparator (the hypothesis is a channel claim and an
+  arm with the mechanism deleted must remain the thing the gain is measured
+  AGAINST, or the deprived control could pass the claim and law 2 is violated
+  by construction) — what the twin may no longer do is set the bar.
+- "The twin is retained as a REPORTED arm" on the old ruler -> every up_*
+  time metric is still computed and recorded; `claim_headroom_*` (time) is
+  reported, ungated.
+- "All SIX currently-green rig conjuncts are carried forward UNCHANGED" ->
+  `_rig` conjuncts 1-6 are byte-identical on the same time statistics. The
+  seventh (time headroom, the one that fired) is re-expressed on the new
+  statistic as gate 9 above, same `HEADROOM_MIN_MULT`, same purpose.
+- "fall back to RECOVERY COUNT only if integrated tilt is shown degenerate in
+  pilot, and say so in the record" -> `_pilot` (seed 90, disjoint from the
+  registered 0/1/2) records a pre-registered DEGENERACY verdict:
+  degenerate iff sd(tilt_random) is 0/non-finite, OR the twin's distance from
+  the bound fails gate 9's arithmetic at the pilot, OR all arms' tilt means
+  are indistinguishable (< 1e-9 spread). The registered run is REFUSED
+  (`_GATES_FROZEN = False`) until that pilot is harvested in a commit.
+
+PRE-REGISTRATION OF THE TWO FRACTIONS, written before any tilt number exists
+anywhere (no pilot, no probe, no artifact carries one): the old design's
+magnitudes on the old ruler were — required claim signal T_GAIN_MIN *
+gain_se = 3 * 2.4674/sqrt(120) = 0.676 s against a random-arm episode spread
+of ~2.7 s -> 0.25; VEST_OVER_NOISE_MIN 0.20 s / ~2.7 s -> 0.074. Rounded
+toward the demanding side for the claim floor and the lenient side for the
+noise floor: `TILT_GAIN_MIN_FRAC = 0.20`, `TILT_VEST_OVER_NOISE_FRAC = 0.05`.
+Neither may move after the pilot's numbers are read, in either direction.
+
+STALENESS BILL OF THIS EDIT, priced pre-edit (`run stale-cost`): 0 standing
+PASS certificates — BA.03's only row is the attempt-1 VOID (covered; no
+capability claim is lost by staling a non-PASS row), and no other spec's
+IMPL_DEPS names this file. `run blast-radius BA.03`: counterfactual
+VOID -> PASS; unreachable 95 -> 95 of 254 (baseline 95); REGAINED none;
+UNBACKED none.
+
+VOID-FORECLOSED (SUPERSEDED 2026-09-26 by the redesign above — kept verbatim
+    as marked history; it priced the TIME statistic and it was right):
+    the blind twin holds 11.868 s of the 12.0 s horizon (98.9%),
     leaving 0.132 s of room for a claim that needs 1.336 s — headroom ratio
     0.236 +/- 0.184 against HEADROOM_MIN_MULT 2.0, no seed within 3x. Six of
     the seven rig conjuncts were GREEN on every seed. The ceiling does not
     move by re-running; the repair is a REDESIGN, routed to the Review as
     `ba03-null-saturates-the-horizon`.
 
-FORECLOSURE ARITHMETIC: no multiplier on N clears the bar, and the direction
+FORECLOSURE ARITHMETIC (HISTORY, superseded with the block above): no
+    multiplier on N clears the bar, and the direction
     of every legal repair is WRONG: the bar is `2 * T_GAIN_MIN * gain_se`, so
     more seeds, more eval episodes or a longer CEM budget all shrink `gain_se`
     and LOWER the bar — but the binding quantity is the 0.132 s of room above
@@ -248,7 +351,8 @@ FORECLOSURE ARITHMETIC: no multiplier on N clears the bar, and the direction
     requires the twin's ceiling share to fall from 98.9% to <= 88.9% — a
     redesign of the world or the horizon, not a sample size.
 
-BLAST RADIUS: none — no registered spec depends on BA.03 (computed
+BLAST RADIUS (HISTORY, superseded with the block above): none — no registered
+    spec depends on BA.03 (computed
     transitively over `depends_on`, 2026-08-31, registry at 211). This
     declaration welds no downstream door.
 
@@ -374,9 +478,25 @@ CEM_ITERS = 12
 CEM_SIG_INIT = 0.5
 CEM_SIG_FLOOR = 0.05
 
-# ── gates. FROZEN against the seed-90 pilot (2026-08-30; see PILOT RECORD) ──
-_GATES_FROZEN = True
-_PILOT_ARTIFACT = "/data/ba03_pilot_seed90.json"
+# ── gates. The TIME-metric gates were frozen against the seed-90 pilot
+# (2026-08-30; see PILOT RECORD) and none of them moves. PROVISIONAL again
+# 2026-09-26 for ONE reason only: the 2026-09-20 ruling's own fallback clause
+# requires the seed-90 TILT pilot to validate the new claim statistic
+# (non-degenerate, null off its bound) before the registered run. ──
+_GATES_FROZEN = False
+_PILOT_OWED = (
+    "the seed-90 TILT pilot (2026-09-20 ruling, option (c)): run "
+    "`python -m experiments.tests.ba_03_braces_against_a_surface pilot`, "
+    "read /data/ba03_tilt_pilot_seed90.json, record the pre-registered "
+    "DEGENERACY verdict and the null's measured distance from the 0.0 rad*s "
+    "bound into the STATISTIC_BOUND block, then set _GATES_FROZEN = True in "
+    "a commit. It can succeed because every constant is already declared: "
+    "the two fractions are pre-registered in source and the bars are derived "
+    "IN-RUN from the random arm's own distribution — nothing is frozen FROM "
+    "the pilot, the pilot only validates the statistic (~2 h CPU, one seed).")
+# The 2026-08-30 TIME pilot stays on disk at /data/ba03_pilot_seed90.json —
+# history, not this pilot. `pilot_harvested` must read the TILT artifact:
+_PILOT_ARTIFACT = "/data/ba03_tilt_pilot_seed90.json"
 
 # PILOT-SIZED (the registry's sizing requirement; see the PILOT RECORD).
 CEM_K_FIT = 6                 # kept: the pilot MEASURED selection working
@@ -392,8 +512,15 @@ N_EVAL = 120                  # was 48. Derived from the pilot's own sigma and
 T_GAIN_MIN = 3.0
 # Claim gates (FAIL). FROZEN 2026-08-30 — every one UNCHANGED from its
 # pre-pilot candidate value; the pilot cleared each and moved none.
-NOISE_GAIN_FRAC_MAX = 0.50    # gain_noise <= this fraction of gain (BA.02's)
-VEST_OVER_NOISE_MIN = 0.20    # sim-s: gain - gain_noise floor      (BA.02's)
+NOISE_GAIN_FRAC_MAX = 0.50    # tilt_gain_noise <= this fraction of tilt_gain
+#                               (BA.02's; unitless, carried across the
+#                               2026-09-26 statistic change unmoved)
+VEST_OVER_NOISE_MIN = 0.20    # sim-s: gain - gain_noise floor (BA.02's).
+#                               SUPERSEDED 2026-09-26 with the statistic it
+#                               was denominated in — its role now lives in
+#                               TILT_VEST_OVER_NOISE_FRAC below (docstring,
+#                               THE REDESIGN). Kept: deleting a bar is not
+#                               how a bar is retired here.
 BRACE_CONSISTENCY_MIN = 0.70  # the braced side is a function of the lean side
 ADH_SEP_MIN = 0.5             # |a[4] - a[5]| below this is "no side chosen"
 # Rig gates (VOID, not FAIL — a world that could not test the claim).
@@ -402,12 +529,24 @@ RANDOM_UP_FRAC_MAX = 0.80     # ...but not survive ~the horizon
 IMPROVE_MARGIN_MIN = 0.20     # sim-s: best trained arm over random
 DEPRIVED_SHORTFALL_MAX = 1.0  # sim-s: blind twin vs the hand-written gripboth
 NOSURF_GAIN_MAX = 0.30        # sim-s: D8's open-ground ceiling is ~0.0-0.1
-HEADROOM_MIN_MULT = 2.0       # NEW, strengthen-only: the room above the NULL
-# TWIN must be at least this multiple of the signal the claim needs to clear
-# T_GAIN_MIN. 2.0 is chosen on principle — a claim decided by the ceiling
-# rather than by the sense is not a measurement — and NOT fitted: N_EVAL was
-# then derived FROM it, which is why the pilot reads 2.02x rather than
-# something comfortable. See RESOLUTION in `_rig` and LESSONS.md.
+HEADROOM_MIN_MULT = 2.0       # strengthen-only: the room between the NULL
+# TWIN and the statistic's bound must be at least this multiple of the signal
+# the claim needs to clear T_GAIN_MIN. 2.0 is chosen on principle — a claim
+# decided by the ceiling rather than by the sense is not a measurement — and
+# NOT fitted. Since 2026-09-26 it gates the TILT statistic (gate 9): the
+# twin's distance from 0.0 rad*s vs T_GAIN_MIN * tilt_sd_random / sqrt(N).
+# The TIME version it replaced fired on attempt 1 and is reported, ungated.
+
+# ── THE 2026-09-20 REDESIGN'S TWO FRACTIONS (see THE REDESIGN, docstring).
+# Pre-registered 2026-09-26 BEFORE any tilt number exists; derived from the
+# old design's magnitudes on the old ruler (0.676 s needed signal / ~2.7 s
+# random spread -> 0.25; 0.20 s noise floor / ~2.7 s -> 0.074), rounded
+# demanding-side for the claim, lenient-side for the noise contrast. They do
+# not move after the pilot's numbers are read, in either direction. Both are
+# FRACTIONS OF tilt_sd_random, the random walk's in-run measured episode sd —
+# "the new bar is set from the RANDOM walk's measured distribution".
+TILT_GAIN_MIN_FRAC = 0.20         # claim floor: tilt_gain >= this x sd_random
+TILT_VEST_OVER_NOISE_FRAC = 0.05  # noise-contrast floor, same ruler
 
 _CACHE: dict = {}
 
@@ -519,12 +658,26 @@ def _obs_row(w: W0, v_prev: np.ndarray) -> tuple:
 
 
 def _episode(w: W0, pack: dict, act_fn, hold: np.ndarray, site: tuple,
-             horizon: int = HORIZON) -> tuple:
-    """One brace attempt. Returns (decisions upright, rows, first_action).
+             horizon: int = HORIZON, full_window: bool = False) -> tuple:
+    """One brace attempt. Returns (decisions upright, rows, first_action,
+    integrated absolute tilt).
 
     `first_action` is the 6-vector commanded at the FIRST decision after the
     kick — the brace decision, which `brace_side_accuracy` reads. `respawn`
     resets pose, arms, velocities and the drive state (a fresh body, gear 1.0).
+
+    `full_window=False` (training, stats pre-pass, CEM fitness) ends the
+    rollout at the first toppled decision EXACTLY as attempt 1 did — the
+    upright count, the mu/sd rows and every carried rig statistic are
+    unchanged, and the tilt integral is NaN (never a claim input there).
+    `full_window=True` (eval only; THE REDESIGN, docstring) simulates THROUGH
+    topple to the fixed horizon with the policy still acting — a policy that
+    could right a fallen body is rewarded by the statistic, which is what
+    RECOVERY COUNT would have measured discretely — and returns
+    `sum_t arccos(clip(up_t, -1, 1)) * SIM_S_PER_DECISION` in rad*s, lower =
+    better, defined for every life including the ones that never topple.
+    `rows` and `first_action` keep their attempt-1 semantics in both modes:
+    rows are pre-topple only, `first_action` only before the first topple.
     """
     mujoco = w.mujoco
     qa, da = w.ix["root_qposadr"], w.ix["root_dofadr"]
@@ -542,18 +695,25 @@ def _episode(w: W0, pack: dict, act_fn, hold: np.ndarray, site: tuple,
 
     v_prev = w.data.qvel[da:da + 3].copy()
     rows, first = [], None
+    t_up, tilt_sum = None, 0.0
     for t in range(horizon):
         row, v_prev, up = _obs_row(w, v_prev)
-        if up < TOPPLE_UP:
-            return t, rows, first
-        rows.append(row)
+        toppled = up < TOPPLE_UP
+        if toppled and t_up is None:
+            t_up = t
+        if toppled and not full_window:
+            return t, rows, first, float("nan")
+        tilt_sum += math.acos(max(-1.0, min(1.0, up)))
+        if not toppled:
+            rows.append(row)
         u = act_fn(row)
-        if first is None:
+        if first is None and t_up is None:
             first = np.asarray(u, dtype=float).copy()
         a = np.array(hold)
         a[:6] = u
         w.decide(a)
-    return horizon, rows, first
+    return (horizon if t_up is None else t_up), rows, first, (
+        tilt_sum * SIM_S_PER_DECISION if full_window else float("nan"))
 
 
 # ── the policy class and its conditions ─────────────────────────────────
@@ -617,8 +777,8 @@ def _cem_step(w: W0, st: dict, hold: np.ndarray, site: tuple, mu, sd,
             nr = (np.random.RandomState(
                 seed * 1_000_003 + it * 10_007 + ci * 101 + ei)
                   if cond == "noise" else None)
-            up, _, _ = _episode(w, pack, _policy(th, mu, sd, cond, nr),
-                                hold, site, horizon)
+            up, _, _, _ = _episode(w, pack, _policy(th, mu, sd, cond, nr),
+                                   hold, site, horizon)
             ups.append(up)
         fits.append(float(np.mean(ups)))
     order = np.argsort(fits)[::-1]
@@ -654,9 +814,9 @@ def _collect(seed: int, iters=CEM_ITERS, pop=CEM_POP, elite=CEM_ELITE,
     rows_all = []
     for i in range(n_stats):
         pack = _draw_pack(srng, left=(i % 2 == 0))
-        _, rows, _ = _episode(w, pack,
-                              lambda r: srng.uniform(-1, 1, ACT_DIM),
-                              hold, site, horizon)
+        _, rows, _, _ = _episode(w, pack,
+                                 lambda r: srng.uniform(-1, 1, ACT_DIM),
+                                 hold, site, horizon)
         rows_all.extend(rows)
     X = np.asarray(rows_all)
     mu, sd = X.mean(0), X.std(0) + 1e-8
@@ -707,21 +867,28 @@ def _collect(seed: int, iters=CEM_ITERS, pop=CEM_POP, elite=CEM_ELITE,
     econds = ["vest", "deprived", "noise", "random", "gripboth",
               "vest_os", "deprived_os"] + [f"anat:{n}" for n in blocks]
     ups: dict = {c: [] for c in econds}
+    tilts: dict = {c: [] for c in econds}
     braces = []
     for ei, pack in enumerate(packs):
         r = ei % len(econds)
         for c in econds[r:] + econds[:r]:
             s = open_site if c.endswith("_os") else site
-            up, _, first = _episode(w, pack, _act_for(c, ei), hold, s, horizon)
+            # full_window: eval episodes carry the claim statistic (THE
+            # REDESIGN) — they run through topple to the fixed horizon.
+            up, _, first, ti = _episode(w, pack, _act_for(c, ei), hold, s,
+                                        horizon, full_window=True)
             ups[c].append(up * SIM_S_PER_DECISION)
+            tilts[c].append(ti)
             if c == "vest":
                 braces.append((bool(pack["left"]), None if first is None
                                else float(first[4] - first[5])))
 
     ev = {c: np.asarray(ups[c], dtype=float) for c in econds}
+    tl = {c: np.asarray(tilts[c], dtype=float) for c in econds}
     toppled_random = float(np.mean(ev["random"] <
                                    horizon * SIM_S_PER_DECISION - 1e-9))
     anatomy = {n: float(ev[f"anat:{n}"].mean()) for n in blocks}
+    anatomy_tilt = {n: float(tl[f"anat:{n}"].mean()) for n in blocks}
 
     # THE BRACE SIDE (Trap 1). `d = adh_L - adh_R` at the first post-kick
     # decision. handL sits at body x = -0.10, so a LEFT (-x) lean is handL's
@@ -740,7 +907,8 @@ def _collect(seed: int, iters=CEM_ITERS, pop=CEM_POP, elite=CEM_ELITE,
                        horizon)[0] * SIM_S_PER_DECISION for ei in range(n_re)]
     drift_recheck = float(np.mean(re_ups) - float(np.mean(ups["vest"][:n_re])))
 
-    _CACHE[key] = {"ev": ev, "curves": curves, "anatomy": anatomy,
+    _CACHE[key] = {"ev": ev, "tl": tl, "curves": curves, "anatomy": anatomy,
+                   "anatomy_tilt": anatomy_tilt,
                    "toppled_random": toppled_random, "prov": prov,
                    "drift_recheck": drift_recheck, "site": list(site),
                    "site_legal": bool(site_legal), "open_site": list(open_site),
@@ -778,6 +946,19 @@ def _rig(c: dict) -> dict:
     se_gain = float(delta.std(ddof=1)) / math.sqrt(n_d)
     headroom = h_s - up_deprived
     need = T_GAIN_MIN * se_gain
+    # THE REDESIGN (2026-09-26): the headroom gate moves onto the claim's own
+    # statistic. The TIME headroom above stays REPORTED for continuity — at
+    # this horizon it is permanently red (the attempt-1 measurement) and it
+    # guards a statistic the claim no longer rides. Gate 9: the null twin's
+    # distance from the tilt bound (0.0 rad*s) must be >= HEADROOM_MIN_MULT x
+    # the signal the claim needs, with the signal's scale set from the RANDOM
+    # walk's measured distribution — never from the twin-paired deltas.
+    tl = c["tl"]
+    tilt_dep = float(tl["deprived"].mean())
+    tilt_sd_random = float(tl["random"].std(ddof=1))
+    n_ev = max(int(c["n_eval"]), 2)
+    tilt_need = T_GAIN_MIN * tilt_sd_random / math.sqrt(n_ev)
+    tilt_finite = all(bool(np.isfinite(a).all()) for a in tl.values())
     ok = (c["site_legal"]
           and c["toppled_random"] >= TOPPLED_FRAC_MIN
           and up_random <= RANDOM_UP_FRAC_MAX * h_s
@@ -786,7 +967,12 @@ def _rig(c: dict) -> dict:
           # makes any "gain" an optimiser artifact wearing a sense's name.
           and up_gripboth - up_deprived <= DEPRIVED_SHORTFALL_MAX
           and gain_os <= NOSURF_GAIN_MAX
-          and headroom >= HEADROOM_MIN_MULT * need)
+          # Gate 9 — the unsaturated-null gate on the claim statistic. A
+          # degenerate statistic (sd 0 or non-finite) is VOID here too; per
+          # the ruling its repair is the RECOVERY COUNT fallback, said in the
+          # open, never a bar move.
+          and tilt_finite and tilt_sd_random > 0.0
+          and tilt_dep >= HEADROOM_MIN_MULT * tilt_need)
     return {"toppled_frac_random": c["toppled_random"],
             "up_random": up_random, "up_gripboth": up_gripboth,
             "best_trained": best_trained,
@@ -794,6 +980,10 @@ def _rig(c: dict) -> dict:
             "gain_nosurface": gain_os,
             "claim_headroom_s": headroom,
             "claim_headroom_ratio": headroom / need if need > 0 else float("inf"),
+            "tilt_headroom_s": tilt_dep,
+            "tilt_headroom_ratio": (tilt_dep / tilt_need if tilt_need > 0
+                                    else float("inf")),
+            "tilt_sd_random": tilt_sd_random,
             "site_legal": 1.0 if c["site_legal"] else 0.0,
             "seed_rig_ok": 1.0 if ok else 0.0}
 
@@ -801,17 +991,32 @@ def _rig(c: dict) -> dict:
 def _experiment(seed: int, **env) -> dict:
     c = _collect(seed, **env)
     if "refused" in c:
-        return {"probe": "VOID", "gain": float("nan"), **c["refused"]}
-    ev = c["ev"]
+        return {"probe": "VOID", "gain": float("nan"),
+                "tilt_gain": float("nan"), **c["refused"]}
+    ev, tl = c["ev"], c["tl"]
     up_v, up_d = float(ev["vest"].mean()), float(ev["deprived"].mean())
     delta = ev["vest"] - ev["deprived"]
     n = max(len(delta), 2)
     sig_pair = float(delta.std(ddof=1))
+    # THE CLAIM STATISTIC (THE REDESIGN, 2026-09-26): integrated absolute
+    # tilt, lower = better; the gain is the twin's tilt minus the vest arm's.
+    tilt_v, tilt_d = float(tl["vest"].mean()), float(tl["deprived"].mean())
+    tdelta = tl["deprived"] - tl["vest"]
+    tilt_sig_pair = float(tdelta.std(ddof=1))
     out = {"up_vest": up_v, "up_deprived": up_d, "gain": up_v - up_d,
            "gain_positive": 1.0 if up_v - up_d > 0 else 0.0,
+           "tilt_vest": tilt_v, "tilt_deprived": tilt_d,
+           "tilt_gain": tilt_d - tilt_v,
+           "tilt_gain_positive": 1.0 if tilt_d - tilt_v > 0 else 0.0,
+           "tilt_random": float(tl["random"].mean()),
+           "tilt_gripboth": float(tl["gripboth"].mean()),
+           "tilt_vest_nosurface": float(tl["vest_os"].mean()),
+           "tilt_deprived_nosurface": float(tl["deprived_os"].mean()),
            # The sizing evidence the registry demands, measured on the TRAINED
-           # arms rather than borrowed from the probe's oracles.
+           # arms rather than borrowed from the probe's oracles — both rulers.
            "sigma_pair_eval": sig_pair, "gain_se": sig_pair / math.sqrt(n),
+           "tilt_sigma_pair_eval": tilt_sig_pair,
+           "tilt_gain_se": tilt_sig_pair / math.sqrt(n),
            "brace_side_accuracy": c["brace"]["accuracy"],
            "brace_consistency": c["brace"]["consistency"],
            "brace_decisive_frac": c["brace"]["decisive_frac"],
@@ -825,24 +1030,31 @@ def _experiment(seed: int, **env) -> dict:
            "drift_recheck": c["drift_recheck"], "wall_s": c["wall_s"]}
     for k, v in c["anatomy"].items():
         out[f"up_ablate_{k}"] = v
+    for k, v in c["anatomy_tilt"].items():
+        out[f"tilt_ablate_{k}"] = v
     return out
 
 
 def _control(seed: int, **env) -> dict:
     """The declared control: matched-statistics noise in the channel. Its gain
-    over the deprived twin must vanish."""
+    over the deprived twin must vanish — on the claim's ruler (tilt), with the
+    time version reported for continuity."""
     c = _collect(seed, **env)
     if "refused" in c:
-        return {"probe": "VOID", "gain_noise": float("nan"), **c["refused"]}
+        return {"probe": "VOID", "gain_noise": float("nan"),
+                "tilt_gain_noise": float("nan"), **c["refused"]}
     up_n = float(c["ev"]["noise"].mean())
     up_d = float(c["ev"]["deprived"].mean())
+    tilt_n = float(c["tl"]["noise"].mean())
+    tilt_d = float(c["tl"]["deprived"].mean())
     return {"up_noise": up_n, "gain_noise": up_n - up_d,
+            "tilt_noise": tilt_n, "tilt_gain_noise": tilt_d - tilt_n,
             "noise_fit_last": c["curves"]["noise"][-1],
             "seed_rig_ok": _rig(c)["seed_rig_ok"]}
 
 
 def _declared_void(m: dict) -> bool:
-    v = m.get("gain", m.get("gain_noise", float("nan")))
+    v = m.get("tilt_gain", m.get("tilt_gain_noise", float("nan")))
     return m.get("probe") == "VOID" or not np.isfinite(v)
 
 
@@ -853,16 +1065,23 @@ def _check(m: dict, c: dict):
     # when EVERY seed's world could have tested the claim.
     if m["seed_rig_ok"] < 1.0:
         return Status.VOID
-    # The registry's bar: >= 3 sigma across seeds, every seed positive.
-    # `_aggregate` hands the POPULATION std over n=3 seeds; the t statistic
-    # wants the SAMPLE std over the seed mean: t = mean / (s/sqrt(n)) with
-    # s = std_pop*sqrt(n/(n-1)), which reduces to mean*sqrt(2)/std_pop at n=3.
-    t_gain = m["gain"] * math.sqrt(2.0) / max(m.get("gain_std", 0.0), 1e-9)
-    ok = (m["gain_positive"] == 1.0
-          and t_gain >= T_GAIN_MIN
-          # the control must FAIL: the matched-noise gain vanishes
-          and c["gain_noise"] <= NOISE_GAIN_FRAC_MAX * m["gain"]
-          and m["gain"] - c["gain_noise"] >= VEST_OVER_NOISE_MIN
+    # The registry's bar: >= 3 sigma across seeds, every seed positive — on
+    # the redesign's statistic. `_aggregate` hands the POPULATION std over n=3
+    # seeds; the t statistic wants the SAMPLE std over the seed mean:
+    # t = mean / (s/sqrt(n)) with s = std_pop*sqrt(n/(n-1)), which reduces to
+    # mean*sqrt(2)/std_pop at n=3.
+    t_tilt = (m["tilt_gain"] * math.sqrt(2.0)
+              / max(m.get("tilt_gain_std", 0.0), 1e-9))
+    ok = (m["tilt_gain_positive"] == 1.0
+          and t_tilt >= T_GAIN_MIN
+          # THE BAR SET FROM THE RANDOM WALK'S MEASURED DISTRIBUTION (the
+          # 2026-09-20 ruling's binding): an absolute floor in units of the
+          # random arm's own in-run episode spread, never the twin's noise.
+          and m["tilt_gain"] >= TILT_GAIN_MIN_FRAC * m["tilt_sd_random"]
+          # the control must FAIL: the matched-noise tilt gain vanishes
+          and c["tilt_gain_noise"] <= NOISE_GAIN_FRAC_MAX * m["tilt_gain"]
+          and (m["tilt_gain"] - c["tilt_gain_noise"]
+               >= TILT_VEST_OVER_NOISE_FRAC * m["tilt_sd_random"])
           # the registry's REPORTED GATE: the brace has a side, and that side
           # is a function of the lean side. Its SIGN is a finding, not a gate.
           and m["brace_consistency"] >= BRACE_CONSISTENCY_MIN)
@@ -872,14 +1091,17 @@ def _check(m: dict, c: dict):
 def run(ledger: Ledger | None = None):
     if not _GATES_FROZEN:                                  # pragma: no cover
         raise RuntimeError(
-            "BA.03 gates are PROVISIONAL. Run the seed-90 pilot "
-            "(`python -m experiments.tests.ba_03_braces_against_a_surface "
-            f"pilot`), read {_PILOT_ARTIFACT}, size CEM_K_FIT/N_EVAL against "
-            "the measured `sigma_pair_eval` per the registry's sizing "
-            "requirement, freeze BRACE_CONSISTENCY_MIN / "
-            "DEPRIVED_SHORTFALL_MAX / NOSURF_GAIN_MAX against it in a commit, "
-            "then set _GATES_FROZEN = True. A gate fitted to the run it judges "
-            "is not a gate.")
+            "BA.03's claim statistic is PROVISIONAL pending the seed-90 TILT "
+            "pilot (2026-09-20 ruling, option (c)). Run `python -m "
+            "experiments.tests.ba_03_braces_against_a_surface pilot`, read "
+            f"{_PILOT_ARTIFACT}, record the pre-registered DEGENERACY verdict "
+            "and the null's measured distance from the 0.0 rad*s bound into "
+            "the STATISTIC_BOUND block, then set _GATES_FROZEN = True in a "
+            "commit. No constant is sized FROM the pilot — the fractions are "
+            "pre-registered and the bars derive in-run from the random arm — "
+            "the pilot only validates the statistic. If it reads DEGENERATE, "
+            "the ruling's fallback is RECOVERY COUNT, said in the record, "
+            "never a bar move.")
     return run_spec(BY_ID["BA.03"], _experiment, _check, control_fn=_control,
                     ledger=ledger)
 
@@ -894,20 +1116,42 @@ def _smoke():
     c = _control(0, **env)
     print("smoke experiment:", json.dumps(m, indent=1, default=float))
     print("smoke control:", json.dumps(c, indent=1, default=float))
-    print("smoke check path:", _check({**m, "gain_std": 1.0}, c))
+    print("smoke check path:", _check({**m, "tilt_gain_std": 1.0}, c))
 
 
 def _pilot():
-    """Seed 90 (disjoint from the registered 0/1/2), full envelope, JSON to
-    stdout AND to `_PILOT_ARTIFACT`. Writes no ledger row."""
+    """The seed-90 TILT pilot (disjoint from the registered 0/1/2), full
+    envelope, JSON to stdout AND to `_PILOT_ARTIFACT`. Writes no ledger row.
+
+    Records the DEGENERACY verdict the 2026-09-20 ruling pre-registers (see
+    THE REDESIGN): integrated tilt is DEGENERATE iff (i) sd(tilt_random) is
+    0 or non-finite, (ii) the twin's distance from the 0.0 bound fails gate
+    9's arithmetic at the pilot, or (iii) all eval arms' tilt means are
+    indistinguishable (< 1e-9 spread). DEGENERATE -> the fallback is RECOVERY
+    COUNT, said in the record — never a bar move, never a re-tune.
+    """
     t0 = time.time()
     m = _experiment(90)
     c = _control(90)
+    tilt_means = [m["tilt_vest"], m["tilt_deprived"], m["tilt_random"],
+                  m["tilt_gripboth"], c["tilt_noise"]]
+    degenerate = (not np.isfinite(m["tilt_sd_random"])
+                  or m["tilt_sd_random"] <= 0.0
+                  or m["tilt_headroom_ratio"] < HEADROOM_MIN_MULT
+                  or (max(tilt_means) - min(tilt_means)) < 1e-9)
     out = {"seed": 90, "experiment": m, "control": c,
+           "degeneracy_verdict": {
+               "degenerate": bool(degenerate),
+               "tilt_sd_random": m["tilt_sd_random"],
+               "tilt_headroom_ratio": m["tilt_headroom_ratio"],
+               "tilt_means_spread": float(max(tilt_means) - min(tilt_means)),
+               "null_distance_from_bound_rad_s": m["tilt_deprived"]},
            "constants": {"iters": CEM_ITERS, "pop": CEM_POP,
                          "elite": CEM_ELITE, "k_fit": CEM_K_FIT,
                          "n_eval": N_EVAL, "horizon": HORIZON,
-                         "standoff_m": STANDOFF},
+                         "standoff_m": STANDOFF,
+                         "tilt_gain_min_frac": TILT_GAIN_MIN_FRAC,
+                         "tilt_vest_over_noise_frac": TILT_VEST_OVER_NOISE_FRAC},
            "pilot_wall_s": time.time() - t0}
     txt = json.dumps(out, default=float, indent=1)
     try:

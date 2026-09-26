@@ -2972,6 +2972,36 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
         BUNDLED RULING on `sh02-null-saturation` above; it is not repeated here
         because a ruling copied three times is a ruling that drifts three ways.
 
+    DISCHARGE EVIDENCE (builder, 2026-09-26 03:xx slot — evidence only, no
+        stamp: a builder slot may not dispose; the f84d5fb precedent). Option
+        (c) IMPLEMENTED one day ahead of the DUE, every binding clause mapped
+        to code in `ba_03_braces_against_a_surface.py` (THE REDESIGN section
+        quotes each clause beside its implementation): integrated absolute
+        tilt over the fixed 12 s window (`_episode(full_window=True)`, eval
+        simulates THROUGH topple, training byte-identical to attempt 1); bar
+        set from the RANDOM walk's IN-RUN measured distribution
+        (`TILT_GAIN_MIN_FRAC` 0.20 / `TILT_VEST_OVER_NOISE_FRAC` 0.05, both
+        pre-registered in source BEFORE any tilt number existed, derivation
+        from the old ruler's magnitudes disclosed); twin retained as the
+        registry's contrast comparator but demoted from bar-setting; all six
+        green rig conjuncts byte-unchanged; the headroom VOID gate
+        re-expressed on the new statistic at the unmoved HEADROOM_MIN_MULT
+        2.0 (STATISTIC_BOUND declared: 0.0 rad*s, null distance gated per
+        seed); the attempt-1 VOID-FORECLOSED declaration SUPERSEDED to marked
+        history (`void_foreclosed` reads None, verified). T_GAIN_MIN 3.0 and
+        every carried threshold unmoved; VEST_OVER_NOISE_MIN kept, annotated
+        superseded-with-its-statistic. Staleness bill priced pre-edit: 0
+        standing PASS certificates (BA.03's only row is the VOID, now
+        honestly STALE). Smoke green end-to-end (tilt integrals finite,
+        tilt_headroom_ratio 7.1 at the smoke envelope); 9-branch synthetic
+        _check battery all fire on their named conditions. WHAT REMAINS:
+        the seed-90 TILT pilot (~2 h CPU, `_PILOT_OWED` declared, artifact
+        /data/ba03_tilt_pilot_seed90.json) with its pre-registered DEGENERACY
+        verdict — degenerate -> RECOVERY COUNT fallback per the ruling, said
+        in the record — then _GATES_FROZEN = True in a commit, then the
+        registered run (CPU_DAYS, ~6 h; the eval-side full-window change adds
+        ~8% over attempt 1's 3.99 CPU-h).
+
 ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | DISPOSITIONED 2026-09-20 (Review FULL — (a) AND (b) both, (c) refused; MISBUNDLED, this is the t211 attribution disease and not the saturation disease; the random-action comparator becomes binding and the `kills:` field is repaired. See THE BUNDLED RULING on `sh02-null-saturation`)
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
         the next Review FULL run. Curiosity is the commitment with the most
