@@ -17738,3 +17738,66 @@ clauses, then count which ones have a reading somewhere.** Rank the unread ones
 by who they bind. The clause with no counter is not the unimportant one — it is
 the one whose author is the party it would indict, and it will have been
 breached silently for exactly as long as it has existed.
+
+---
+
+## AN INTEGRITY SCAN THAT SCOPES ITSELF TO THE GREEN ROWS CAN ONLY AUDIT A GATE AFTER THAT GATE HAS STOPPED NEEDING IT (builder, 2026-09-26; measured on the 47 adverse rows nothing had ever replayed)
+
+**The scar.** Two instruments in this repo re-derive verdicts from the record:
+`verify` probe A (`T0.18`'s certificate — *"every PASS is re-derivable from the
+record"*) and `T0.13` (*"no gate in the ladder is decorative"*). Both scope
+themselves to `Status.PASS` in one line — `verify.py:242`,
+`t0_13_gates_are_live.py:748` — which is why `T0.13` reports `gates_scanned`
+**109**, exactly the PASS count. The reasoning is sound as far as it goes: a
+PASS is the capability claim, so a PASS is what must re-derive.
+
+Replaying all **47** adverse rows once, by hand, in a fresh process found the
+hole: **41 agree, 3 disagree, 2 RAISE, 1 has no `_check` verdict at all.** Three
+of the five are benign and already visible in `run stale` (a gate legitimately
+strengthened after its run). Two are not: `LG.10` and `LG.12` are stored FAIL,
+are `impl_sha`-clean, and replay to **VOID** — because their `_check`s decide on
+`_per_seed()`/`_seeds_complete()`, which read a module-global `_MEMO` that
+`_measure()` fills during the run. In a fresh process the memo is empty and the
+first rig lane fires. `_check` is not a function of `(m, c)` for those two
+specs, and every automated reader of a `_check` in this repo assumes it is.
+
+**THE GENERALISATION, three parts, ordered by how far each reaches.**
+
+1. **A safeguard that only inspects PASSing rows becomes available to a gate
+   exactly when that gate has already been trusted.** The defect here is not
+   that the two FAILs are wrong — they are almost certainly right, and they
+   reconstruct BY HAND from `mean +/- std` under an `n=3` spread bound. It is
+   that the gates are *structurally unauditable* and nothing says so, and that
+   their first audit would arrive in the same run that first records a claim on
+   them. Ask of every integrity scan: **what does its scope EXCLUDE, and would
+   the excluded set be the last place a defect could hide?** Count the
+   denominator against the ledger — `gates_scanned 109` against 156 rows was
+   visible for free and read as completeness.
+2. **A gate that reads state outside `(m, c)` is not decorative, it is
+   INVISIBLE — and the instruments will mis-name it rather than miss it.**
+   `T0.13` perturbs keys the gate references; `LG.10`'s gate subscripts `m` and
+   `c` zero times, so no perturbation can move it and it scores perfectly
+   clean. `verify` probe B deletes the control and demands the verdict move;
+   `LG.10` takes `null_match` from the memo, so probe B would report *"this
+   gate IGNORES its control"* — a red, at the right row, naming a defect that
+   is not there. That is the `LT.03` mis-naming scar
+   (`protocol.py:1439-1445`) arriving through a second, unrelated mechanism,
+   which is the evidence that **"the verdict must be a pure function of the
+   recorded metrics" is a CONTRACT and not a coincidence.** A gate whose inputs
+   are not in the record cannot be replayed, perturbed, or blinded, and those
+   are all three of this project's gate-integrity probes.
+3. **A row's verdict and a row's REPRODUCIBLE verdict are different warrants,
+   and a redesign priced against the first is priced against an assertion.**
+   `lg12-abstention-knob-has-no-resolution` falls due two days before this was
+   found. "The row says FAIL" was true; "the gate reproduces FAIL" was not
+   checkable. Where a spec's gate decides on per-seed minima and the ledger
+   records means, **record the per-seed values** — the aggregate is not merely
+   coarser than the gate, it is a different quantity, and the branch that fired
+   is unrecoverable without it.
+
+**The cheap habit that falls out.** Replaying the adverse rows cost one script
+and seconds of CPU, needed no GPU, no re-run and no ledger write, and it is the
+same free backward check `verify` was built on — just pointed at the half of the
+ledger `verify` declines. When an instrument declares a scope, the one-off
+measurement OUTSIDE that scope is usually the cheapest audit available, because
+nobody has ever taken it.

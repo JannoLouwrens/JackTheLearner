@@ -10571,3 +10571,124 @@ which is the allocation question the freeze already names.
 against `docs/REVIEW_QUEUE.md`, paid in the same slot.** No spec file is edited
 by this row. No bar moves and no re-run of the five specs is implied — a
 disarmed key is a statement about their `_check`, not about their numbers.
+
+## ROUTED 2026-09-26 (builder): `adverse-verdicts-are-re-derived-by-nobody`
+## — the 47 non-PASS rows have never had their verdict replayed, and two of
+## them are decided by a module-global memo rather than by their own record
+
+ROUTED: adverse-verdicts-are-re-derived-by-nobody | 2026-09-26 | one-off fresh-process replay of all 47 adverse ledger rows through their committed `_check` (this slot, script in /tmp, no ledger write, clean tree) | OPEN
+    DUE: 2026-10-05 | `review-queue`'s own `next_free_due`, read off the tool
+        this slot (09-27 already carries 7 against a measured capacity of 6).
+        The repair is INSTRUMENT SCOPE — widening `verify`/`T0.13` past the
+        PASS set, or declaring `_check` purity a contract — and under `D35`
+        clause 2 no checker may join the three that exist. That makes the
+        disposition the desk's and not this one's.
+    WAITS-ON: `lg12-abstention-knob-has-no-resolution` (DUE 2026-09-28) | not
+        for its ANSWER but for its ORDER: that row is due two days before this
+        one and it prices a redesign against `LG.12`'s FAIL. Whoever sits it
+        should know the FAIL reconstructs by hand and does NOT replay
+        mechanically (arithmetic below), because "the row says FAIL" and "the
+        gate reproduces FAIL" are different warrants and this row is about the
+        second. No number here changes what `LG.12` measured.
+
+**WHAT NOBODY HAS EVER LOOKED AT.** Both gate-integrity instruments in this
+repo are PASS-scoped by construction, and the scope is one line each:
+`verify.collect()` does `if r.status is not Status.PASS: continue`
+(`experiments/verify.py:242`), and `T0.13._passing()` yields only
+`Status.PASS` rows (`experiments/tests/t0_13_gates_are_live.py:748`) — which is
+why `T0.13` reports `gates_scanned` **109**, exactly the PASS count. So the
+**47 adverse rows (30 FAIL, 16 VOID, 1 BLOCKED)** have never had their verdicts
+re-derived from their own records by anything. The choice is defensible on its
+face — a PASS is the capability claim — and `LT.03` (2026-09-25) is the
+counterexample it cannot see: the `_check`->verdict mapping is capable of
+inverting a verdict, the repair guarded the FORWARD path, and nothing asks the
+backward question about a row that came out red.
+
+**THE MEASUREMENT, all 47 replayed in a fresh process through
+`verify._verdict` (so `coerce_check_return` applies, per the 09-26 repair):**
+
+    agree with the stored verdict        41
+    DISAGREE                              3
+    unevaluable (gate RAISED)             2
+    no `_check` verdict to replay         1   T6.03, recorded BLOCKED
+
+**THREE OF THE FIVE ARE BENIGN AND ALREADY VISIBLE — they are STALE rows whose
+gates were legitimately strengthened after the run, which is `run stale`'s job
+and it is doing it:** `T3.09` FAIL -> VOID (the `c["shuf_gain"] >= MARGIN_AFF`
+lane was armed after the run, under the ACTED row
+`t309-control-clears-the-claims-own-margin`); `D1.0` RAISED
+`KeyError 'untrained_aprime_excess'` and `UB.10` RAISED
+`KeyError 'a0_headroom_ok'` — a strengthened gate reading a key the old run
+never emitted. Nothing is owed on those three by anyone.
+
+**THE TWO THAT ARE THE FINDING ARE CLEAN, NOT STALE: `LG.10` and `LG.12`.**
+Both stored **FAIL**; both replay **VOID**; both `impl_sha` match, so the test
+files are byte-identical to the runs that produced the rows and the metrics fed
+back are the recorded ones. The cause is read off the source, not inferred:
+both `_check`s decide on `_per_seed(key)` / `_seeds_complete()`
+(`lg_12_abstaining_mouth.py:498-503`, gate at `:524-565`;
+`lg_10_jack_chooses_what_to_say.py:615-636`), and those read the module-global
+`_MEMO` that `_measure()` fills DURING THE RUN. In a fresh process `_MEMO` is
+empty, `_seeds_complete()` is False, and the first rig lane returns VOID.
+**For these two specs `_check` is not a function of `(m, c)`** — and the
+runner's contract, `verify` probe A, `verify` probe B and `T0.13`'s
+perturbation all assume that it is.
+
+**WHAT IS *NOT* CLAIMED HERE, stated before the consequences so the row cannot
+be over-read.** The stored FAILs are almost certainly the CORRECT verdicts: at
+run time `_MEMO` held real per-seed data. Worse, for the desk's purposes, they
+are reconstructible BY HAND — with `n=3` the per-seed spread is bounded by
+`std*sqrt(2)`, and on `LG.12` that clears every rig lane and the declared
+mute-mouth FAIL at `:543` (`utter_rate` 0.9445 +/- 0.0393 so min >= 0.889;
+`utter_rate_swap` 0.9167 +/- 0.0681 so min >= 0.820; both against `UTTER_MIN`
+0.50), leaving the claim conjunct as the only site that can have fired — and
+the recorded means say it missed wide (`match_on_spoken_at_utterance_floor`
+0.679 and `unanimity_on_spoken` 0.202 against 0.90; `swap_agree` 0.785 against
+0.90) with both controls clean (`null_match_on_spoken` 0.044 against
+`NULL_MATCH_MAX` 0.35). **So the ledger does not hold a wrong verdict.** What
+it holds is an UNVERIFIABLE one: the reconstruction above needs an `n=3` spread
+argument that no instrument in this repo applies and that the gate itself does
+not use.
+
+**THREE CONSEQUENCES, each mechanical.**
+
+1. **`T0.13` would certify these gates as live and would be wrong.** It
+   perturbs the keys a `_check` REFERENCES in `m`/`c`. `LG.10`'s gate
+   subscripts `m` and `c` **zero times** — every quantity arrives through
+   `_per_seed` — so no perturbation of any recorded metric can move its
+   verdict. `T0.13` currently reports `keyless_gates 0`; neither spec appears
+   in `disarmed_detail` or `keyless_detail`, because it has never been shown
+   either row.
+2. **`verify` probe B would MIS-NAME the defect the moment either went PASS.**
+   `LG.10` takes its control quantities (`null_match`, `null_match_swap`) from
+   `_MEMO`, never from `c`, so deleting `c` leaves the verdict unmoved and
+   probe B would report *"a gate that IGNORES its control"* — false; the gate
+   reads its control through a back channel. This is the `LT.03` mis-naming
+   scar (`experiments/protocol.py:1439-1445`) repeating on a different
+   mechanism, which is the argument for treating it as a class and not as two
+   specs.
+3. **The exposure is zero today and that is measured, not assumed.** `run
+   verify` re-derived all 108 judgeable PASS rows this slot at EXIT 0 —
+   0 disagreements, 0 unevaluable — so nothing green rests on this shape. The
+   hole is that the shape is INVISIBLE while a spec is red, and both `LG.10`
+   and `LG.12` are live specs with repairs owed
+   (`lg10-mouth-fidelity-vs-freedom` ACTED, `lg12-abstention-knob-has-no-
+   resolution` OPEN DUE 09-28). A gate becomes auditable only by passing,
+   which is the wrong direction for a safeguard to point.
+
+**THE MENU, priced in ascending mechanical bill, and NONE of it taken here.**
+(i) declare `_check` purity a contract and repair the two specs to read
+`(m, c)` — spec-local, two files, zero certificates staled (`LG.10`/`LG.12`
+are both red and nothing cites them), but it changes what two gates read and
+therefore what they can decide, which is not this desk's call at the floor;
+(ii) have the two specs RECORD their per-seed values so the record carries what
+the gate decides on — additive, no gate touched, and it is the same repair
+`aggregate-hides-worst-seed` (OPEN, DUE 2026-09-29) asks for one family over,
+so these two should probably be folded into that row rather than repaired
+twice; (iii) widen `verify`/`T0.13` past the PASS set — the only option that
+makes the class self-reporting, and the one `D35` clause 2 forbids this loop
+from building. **NO INSTRUMENT PROPOSED and no exemption requested.**
+
+**No bar moved, no spec file edited, no ledger write, no re-run bought or
+implied.** Staleness bill for this routing: whatever `run stale-cost` prices
+`docs/REVIEW_QUEUE.md` and `docs/LESSONS.md` at, paid in this same slot.
