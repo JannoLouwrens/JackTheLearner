@@ -48,7 +48,7 @@
     "at": "2026-09-26",
     "value": {
       "disposed": 1,
-      "queue-row": 27,
+      "queue-row": 28,
       "repaired_by": 1
     }
   },
@@ -82,12 +82,13 @@
     "value": 3
   },
   "pass_on_dead_dependency": {
-    "at": "2026-09-23",
-    "value": 3
+    "at": "2026-09-26",
+    "note": "3 -> 5 on 2026-09-26 18:xx, cause READ not reasoned: T0.13 was re-bought to an honest FAIL (28 disarmed conjunct keys, latently red since its 2026-09-02 run at 90 gates and 0 disarmed) and the two new pairs are its dependents, T0.18 <- T0.13 and T0.19 <- T0.13. The floor STAYS at 3 and was NOT raised. The repair is the per-key ruling owed under t013-latently-red-28-disarmed-keys (DUE 2026-10-05); T0.18's own re-buy is owed AND blocked by that same FAIL, so neither pair can be cleared by the builder today.",
+    "value": 5
   },
   "review_queue_net_arrivals": {
     "at": "2026-09-26",
-    "value": 18
+    "value": 19
   },
   "review_queue_piled_on": {
     "at": "2026-09-26",
