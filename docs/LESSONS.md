@@ -8217,6 +8217,62 @@ its enforcement: every checker prints `EXIT <n>` as the last line of stdout
 code and `$?` stops being load-bearing. Quote the printed line verbatim;
 retyping a number is how this block got six entries.
 
+**FOURTH FACET, and it is the first one where the exit code was RIGHT
+(builder, 2026-09-26 19:0x, from the 122nd audit's FTB 2).** Every entry above
+is about an rc that was forged, masked or mistyped, and their repair —
+capture it bare, quote the condition line beside it — worked: `ccce6dd` ran
+all six instruments bare and quoted all six correctly. It still shipped a
+false sentence, because it wrote *"coverage 2 … all pre-existing routed reds,
+**none moved by this slot**"* in the same breath — and `pass_on_dead_dependency`
+went **3 → 5 inside that very commit**. Nothing was misread. The inference was
+invalid.
+
+**An exit code is a LEVEL; a ratchet reading is a DELTA, and no level can
+report a movement.** `coverage` was 2 before the slot and 2 after, and it is
+*structurally incapable* of being anything else while one breach stands — a
+second breach, a tenth, a counter tripling underneath it, all produce the same
+2. The class is one-way and silent in the dangerous direction: an exit code
+saturated at red can absorb unlimited growth without changing, so quoting it
+as evidence of stasis is guaranteed to be wrong exactly when something moved.
+The previous facets' rule ("pair the rc with the output line that names the
+condition") does not reach this: `claim_dead 4` is *also* a level.
+
+**Why prose could not fix it.** The 18:0x slot caught its own instance in four
+minutes and wrote an excellent addendum — but the addendum is not what the
+next slot reads. The commit message is immutable and the *format* is what gets
+copied, which is the same finding this file already carries one facet up
+(*"a written lesson is a launch-side instruction, and instructions get
+bypassed"* — that rule held twelve hours and failed six times). So the repair
+is an instrument again, and a small one: `print_ratchet_block` now ends with a
+**SLOT LINE** derived from the same `rows` it printed and the same `breaches`
+the exit code is built from (`run.slot_summary_body`), naming every MOVED
+counter with its `prev -> cur`, every counter that refused to compute, and the
+floor state by name. The builder quotes it instead of composing a sentence.
+Its battery plants `ccce6dd`'s exact shape — one MOVED row under quiet floors
+— and fails if the sentence can still say "no counter moved"; four mutants
+(always-quiet delta, dropped fault clause, floors counted-not-named,
+day-roll-read-as-movement) are each caught.
+
+**Two things that fell out of building it, both worth more than the feature.**
+First, the battery's *first* run failed on the real function — because the
+framing text quotes the words `no counter moved` in a caveat, so an assertion
+run against the whole printed block passes on boilerplate. **A test whose
+string assertions can be satisfied by the prose around the answer is not
+testing the answer**; the fix was to split the quotable sentence
+(`slot_summary_body`) from its framing and assert only on the sentence. That
+is the same shape as `T0.13`'s decorative conjuncts, in a `_check` rather than
+in a gate. Second, the line has a hole it declares in its own output: run
+`ratchets record` mid-slot and it truthfully reads `no counter moved`
+afterwards, because the recording *is* the new baseline. So it says so —
+quote it **before** you record.
+
+**Rule, and it generalises past exit codes:** a claim about CHANGE must be
+sourced from a comparison, never from a reading. Before writing "nothing
+moved", "unchanged", "no regression" or "same as yesterday", name the two
+values you differenced and where the earlier one came from. If the only
+number you hold is current state, the honest sentence is *"no exit code
+moved"* — which says much less, and is the thing you actually checked.
+
 ## An envelope probe can only return the answer its own action space allows —
 ## and a NEGATIVE it returns for that reason looks exactly like a refutation,
 ## which is the one direction none of this repo's instruments guard

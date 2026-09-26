@@ -2717,12 +2717,157 @@ def _check_ratchet_exit_wiring() -> None:
             + "; ".join(fails))
 
 
+# 122nd audit FTB 2 — and the audit asked for the TEMPLATE, not another
+# addendum, so the template is DERIVED here instead of composed in prose.
+#
+# THE SCAR: `ccce6dd`'s slot summary read *"coverage 2 ... all pre-existing
+# routed reds, none moved by this slot"*. That is true of the six exit codes
+# it quoted and false of the machine — `pass_on_dead_dependency` went 3 -> 5
+# in that very commit. An exit code is a LEVEL and a ratchet reading is a
+# DELTA: a code that was already 2 cannot report a counter growing underneath
+# it, so "none moved" is not a sentence the quoted evidence can support. The
+# builder caught it unprompted four minutes later (`7dacbf3`) — but the
+# immutable commit message still carries the format, and the next slot reaches
+# for the format, not for the addendum.
+#
+# So: same `rows` the block just printed, same `breaches` the exit code is
+# built from, one quotable line, and a battery below that fails if the line
+# can say "no counter moved" while a row says MOVED. It computes NOTHING new
+# — no class, no floor, no exit-code path — which is why it is a rendering of
+# `D35` clause 2's existing instruments rather than a new one. (Ordered by the
+# 122nd audit; named per its own FTB 1.)
+def slot_summary_body(rows, breaches, prov="HEAD") -> str:
+    """The ONE sentence a slot summary quotes. Pure.
+
+    Split from its framing on purpose: the framing below says the words
+    "no counter moved" in a caveat, and the battery's whole job is to check
+    that this string does not say them when a row says MOVED. A test that
+    can be satisfied by boilerplate is not testing the claim — it caught
+    exactly that on its first run.
+
+    Every non-quiet kind is NAMED rather than counted away, including the
+    three fault kinds (`LOST` / `VANISHED` / `UNRECORDED`), because an
+    instrument going quiet is the one movement a level cannot show at all.
+    `DAY-ROLLED` is reported separately and is not "moved" — the delta there
+    is the clock, which `ratchet_deltas` already decided.
+    """
+    moved, rolled = [], []
+    faults = {"LOST": [], "VANISHED": [], "UNRECORDED": []}
+    for name, kind, cur, prev, _at, _note in rows:
+        if kind == "MOVED":
+            moved.append(f"{name} {prev} -> {cur}")
+        elif kind == "DAY-ROLLED":
+            rolled.append(name)
+        elif kind in faults:
+            faults[kind].append(name)
+
+    def _named(count_word, names):
+        return f"{len(names)} {count_word}" + (
+            f" ({', '.join(names)})" if names else "")
+
+    delta = (_named("MOVED", moved) if moved
+             else "no counter moved")
+    fault_names = [f"{k} {n}" for k in ("LOST", "VANISHED", "UNRECORDED")
+                   for n in faults[k]]
+    body = [f"ratchets vs committed readings ({prov}): {delta}"]
+    if rolled:
+        body.append(f"{len(rolled)} day-rolled ({', '.join(rolled)}) — "
+                    f"the clock, not a change")
+    body.append("no counter refused to compute" if not fault_names
+                else f"{len(fault_names)} REFUSED/VANISHED "
+                     f"({', '.join(fault_names)})")
+    body.append("floors: " + ", ".join(
+        (_named("ABOVE", breaches["above"]),
+         _named("BELOW", breaches["below"]),
+         _named("UNVERIFIED", breaches["unverified"]))))
+    return "; ".join(body) + "."
+
+
+def slot_summary_line(rows, breaches, prov="HEAD") -> list:
+    """`slot_summary_body` wrapped in the framing a reader needs, as lines."""
+    return [
+        "    SLOT LINE — the ratchet half of a slot summary, derived here so "
+        "it is not composed in",
+        "    prose (122nd audit FTB 2: an exit code is a LEVEL, a ratchet "
+        "reading is a DELTA, and",
+        '    "nothing moved" is not a thing an exit code can say). Quote it '
+        "BESIDE the exit codes:",
+        "      " + slot_summary_body(rows, breaches, prov),
+        "    A `run ratchets record` LATER IN THIS SLOT makes this read `no "
+        "counter moved` — after",
+        "    recording, the delta lives only in that commit's diff, so quote "
+        "this line BEFORE you record.",
+    ]
+
+
+def _check_slot_summary_line() -> None:
+    """Known answers for the line, because its whole job is a claim ("this
+    reports movement") and law 1 binds a claim to a test that could fail.
+
+    The load-bearing plant is case 2: a row that says MOVED while the floors
+    are quiet is EXACTLY `ccce6dd`'s shape — every exit code already where it
+    was, one counter growing underneath. If the sentence can still say "no
+    counter moved" there, it has reproduced the defect it exists to end.
+
+    Asserted on `slot_summary_body`, never on the framed block: the framing
+    quotes both phrases in its caveat, so a battery run against the whole
+    print passes on boilerplate. It did, on the first run, and that is the
+    reason the two functions are separate.
+    """
+    quiet = {"above": [], "below": [], "unverified": []}
+    cases = []
+
+    # 1. everything unchanged, floors clean -> the only legal "nothing moved"
+    rows = [("a", "UNCHANGED", 1, 1, "2026-09-01", "")]
+    cases.append(("all quiet", rows, quiet,
+                  ["no counter moved", "no counter refused", "0 ABOVE"],
+                  ["MOVED (", "REFUSED"]))
+    # 2. the scar: a MOVED counter under unmoved floors
+    rows = [("pass_on_dead_dependency", "MOVED", 5, 3, "2026-09-23", ""),
+            ("b", "UNCHANGED", 0, 0, "2026-09-01", "")]
+    cases.append(("ccce6dd shape", rows, quiet,
+                  ["1 MOVED (pass_on_dead_dependency 3 -> 5)"],
+                  ["no counter moved"]))
+    # 3. an instrument going quiet is not a quiet day
+    rows = [("c", "LOST", None, 2, "2026-09-01", "boom"),
+            ("d", "VANISHED", None, 1, "2026-09-01", ""),
+            ("e", "UNRECORDED", 7, None, None, "")]
+    cases.append(("faults", rows, quiet,
+                  ["3 REFUSED/VANISHED", "LOST c", "VANISHED d",
+                   "UNRECORDED e"],
+                  ["no counter refused"]))
+    # 4. a day-scoped reset is the clock and must not read as movement
+    rows = [("cpu_foreclosed_now", "DAY-ROLLED", 4, 37, "2026-09-25", "")]
+    cases.append(("day roll", rows, quiet,
+                  ["no counter moved", "day-rolled"], ["1 MOVED"]))
+    # 5. floor breaches are named, not just counted
+    rows = [("f", "UNCHANGED", 5, 5, "2026-09-01", "")]
+    cases.append(("floors named", rows,
+                  {"above": ["f"], "below": [], "unverified": ["g"]},
+                  ["1 ABOVE (f)", "0 BELOW", "1 UNVERIFIED (g)"], []))
+
+    fails = []
+    for label, rows, breaches, want, must_not in cases:
+        text = slot_summary_body(rows, breaches, prov="TEST")
+        for w in want:
+            if w not in text:
+                fails.append(f"{label}: missing {w!r}")
+        for w in must_not:
+            if w in text:
+                fails.append(f"{label}: said {w!r} anyway")
+    if fails:
+        raise RuntimeError(
+            "the slot-summary line failed its own battery — refusing to "
+            "print a template a slot would quote: " + "; ".join(fails))
+
+
 def print_ratchet_block(ledger: Ledger) -> dict:
     """Prints the block and RETURNS its floor breaches, so the caller can put
     them in an exit code (121st audit FTB 3). The return is a dict of lists
     keyed `above` / `below` / `unverified`, feeding `ratchet_exit_code`."""
     _check_ratchet_reader()
     _check_ratchet_exit_wiring()
+    _check_slot_summary_line()
     recorded, prov = committed_ratchet_readings()
     # gmtime, not localtime: the DAY-ROLLED print asserts "resets at 00:00
     # UTC", and a local-time `today` makes that a lie on any box whose TZ
@@ -2852,6 +2997,11 @@ def print_ratchet_block(ledger: Ledger) -> dict:
               f"{len(breaches['below'])} BELOW, "
               f"{len(breaches['unverified'])} UNVERIFIED — this tool exits "
               f"{ratchet_exit_code(**breaches)}.")
+    # 122nd audit FTB 2. Printed from the SAME `rows` and the SAME `breaches`
+    # the block above emitted and the exit code is built from — a second
+    # derivation would be a second opinion, which is the objection
+    # `_check_ratchet_exit_wiring` already makes one function over.
+    print("\n".join(slot_summary_line(rows, breaches, prov)))
     print()
     return breaches
 
