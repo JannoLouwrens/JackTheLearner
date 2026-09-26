@@ -1419,6 +1419,48 @@ class CheckReturnInvalid(RuntimeError):
     """
 
 
+def coerce_check_return(ok, who: str = ""):
+    """THE one place a `_check` return becomes a verdict. Every reader of a
+    spec's `_check` must route through here; a reader that applies its own
+    truthiness is a reader that cannot fail.
+
+    THE SCAR, and it is why this is a function rather than four copies of an
+    `isinstance` (2026-09-26, builder; the LT.03 defect one layer out). On
+    2026-09-25 this repo found that `run_spec` mapped any truthy non-`Status`
+    return to PASS, and a 16,580 s `LT.03` run whose own recorded metrics
+    replay to VOID landed as a confident PASS. The guard was installed in
+    `run_spec` — and NOWHERE ELSE, while the ladder had **three** readers of
+    `_check`:
+
+      1. `run_spec` below — records the verdict.  Guarded 2026-09-25.
+      2. `verify._verdict` — re-derives every PASS from the record (`T0.18`).
+      3. `t0_13_gates_are_live._verdict` — asks whether a gate can move at all.
+
+    Measured before this repair, on the real row: feeding `LT.03`'s recorded
+    metrics back through its pre-fix `_check` (`git show c1114ae:...`) returns
+    `(Status.VOID, reason)`; `run_spec`'s guard REFUSES it, and
+    `verify._verdict` read `("BOOL", True)` — *"the verdict still
+    re-derives"*. The instrument whose entire purpose is re-deriving verdicts
+    from the record could not see the one verdict-inverting row the ledger has
+    ever held, and reported `verdicts that no longer re-derive  0`.
+
+    Exact 0/1 numbers coerce rather than refuse: `T2.04`/`T2.05` recorded
+    CORRECT verdicts through float flags (`return m["all_seeds_beat_null"]`),
+    and pricing a type repair as a certificate re-buy would buy nothing.
+    Everything else — tuple, str, None, 0.5 — raises, because visibly
+    unfinished beats confidently wrong.
+    """
+    if isinstance(ok, (Status, bool)):
+        return ok
+    if isinstance(ok, (int, float)) and ok in (0, 1):
+        return bool(ok)
+    raise CheckReturnInvalid(
+        f"{who or 'a spec'}: _check returned {type(ok).__name__} "
+        f"({ok!r}); return a bool or a Status. Any other truthy value "
+        "records PASS regardless of its content — put a VOID reason in "
+        "metrics['void_reason'], not in a tuple.")
+
+
 class UndeclaredControl(RuntimeError):
     """A spec runs a control it never declared, so `Spec.control` reads None.
 
@@ -3820,22 +3862,12 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
         # truthy, and the else-arm below mapped all of them — VOID and False
         # alike — to PASS. A 16,580 s run whose own recorded metrics replay
         # to VOID landed on the ledger as a confident PASS with an empty
-        # message. Exact 0/1 numbers are coerced rather than refused because
-        # T2.04/T2.05 already recorded CORRECT verdicts through float flags
-        # (`return m["all_seeds_beat_null"]`), and an ERROR here would price
-        # a type repair as a certificate re-buy. Everything else — tuple,
-        # str, None, 0.5 — raises and lands ERROR: visibly unfinished
-        # beats confidently wrong (VoidStatusMismatch's principle, one type
-        # over).
-        if not isinstance(ok, (Status, bool)):
-            if isinstance(ok, (int, float)) and ok in (0, 1):
-                ok = bool(ok)
-            else:
-                raise CheckReturnInvalid(
-                    f"{spec.id}: _check returned {type(ok).__name__} "
-                    f"({ok!r}); return a bool or a Status. Any other truthy "
-                    "value records PASS regardless of its content — put a "
-                    "VOID reason in metrics['void_reason'], not in a tuple.")
+        # message. The rule lives in `coerce_check_return` and NOT inline
+        # here, because installing it at this reader alone left the identical
+        # hole in the two OTHER readers of `_check` — one of them the
+        # instrument built to re-derive verdicts from the record (see that
+        # function's scar, 2026-09-26).
+        ok = coerce_check_return(ok, spec.id)
         # `check` may return a Status directly to signal VOID — a run that
         # could not test the claim at all (an arm that never learned, a leaky
         # fixture). Bare bools keep their old meaning, so no existing test

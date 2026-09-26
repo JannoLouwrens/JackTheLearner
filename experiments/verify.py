@@ -67,7 +67,7 @@ import importlib
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional
 
-from .protocol import Ledger, Status
+from .protocol import Ledger, Status, coerce_check_return
 
 #: Marker for the one entry a scan may legitimately not judge: its own.
 SELF_EXCLUDED = "self-excluded"
@@ -106,12 +106,25 @@ class Entry:
     unavailable: str = ""      # non-empty = this entry could not be audited
 
 
-def _verdict(fn: Callable, m: dict, c: dict):
+def _verdict(fn: Callable, m: dict, c: dict, spec_id: str = ""):
     """Deep-copied every call: some checks WRITE to their metrics (T2.02 sets
     m["verdict"]), and a probe that let that leak would score the second
-    evaluation against a mutated first."""
+    evaluation against a mutated first.
+
+    THE RETURN TYPE IS VALIDATED THROUGH `protocol.coerce_check_return`, the
+    same function the runner uses, and this line is the whole point of that
+    function existing (2026-09-26). `bool(out)` used to stand here, and a
+    `_check` returning `(Status.VOID, reason)` — `LT.03`, the one
+    verdict-inverting row this ledger has held — read `("BOOL", True)`, i.e.
+    *"the recorded PASS still re-derives"*. Probe A was silent and probe B was
+    worse than silent: with the control deleted the constant-truthy tuple is
+    unmoved, so the entry would have been reported as a gate that IGNORES ITS
+    CONTROL — a red naming the wrong defect. A refused return lands in
+    `unevaluable_gates` instead: this scan did not re-derive that verdict, and
+    says so.
+    """
     try:
-        out = fn(copy.deepcopy(m), copy.deepcopy(c))
+        out = coerce_check_return(fn(copy.deepcopy(m), copy.deepcopy(c)), spec_id)
     except Exception as e:
         return ("RAISED", type(e).__name__)
     if isinstance(out, Status):
@@ -157,7 +170,7 @@ def scan(entries: List[Entry]) -> dict:
             undeclared_ran.append(e.spec_id)
 
         # ── A. re-verdict ────────────────────────────────────────────────────
-        base = _verdict(e.check, e.metrics, e.control_metrics)
+        base = _verdict(e.check, e.metrics, e.control_metrics, e.spec_id)
         if base[0] == "RAISED":
             # Counted, not swallowed: a gate that cannot be replayed is a
             # verdict this scan did not re-derive.
@@ -285,6 +298,21 @@ def _fixture_control_blind(m, c):
     return m["score"] > 0.5
 
 
+def _fixture_tuple_return(m, c):
+    """The LT.03 shape, planted (2026-09-26). A `_check` that answers with
+    `(Status, reason)` instead of a verdict: every branch is truthy, so the
+    recorded PASS re-derives no matter what the numbers say, AND the answer
+    cannot move when the control is deleted.
+
+    THIS FIXTURE IS THE REASON THE CLASS IS NOT INVISIBLE AGAIN. The scan
+    passed its own known-answer battery on the day it certified `LT.03`'s
+    false PASS, because no planted entry returned anything but a bool: a
+    detector's fixture set is exactly the list of defects it can still see.
+    """
+    return (Status.VOID, "the panel trap is not live") if m["score"] > 0.5 \
+        else (False, "below bar")
+
+
 def fixture() -> List[Entry]:
     good = {"score": 0.8}
     ctrl = {"score": 0.1}
@@ -296,6 +324,10 @@ def fixture() -> List[Entry]:
         Entry("FIX.promised", _fixture_control_blind, dict(good), {}, "a control"),
         # The 19-entry debt shape: control ran, spec declares none.
         Entry("FIX.undeclared", _fixture_healthy, dict(good), dict(ctrl), None),
+        # The verdict channel that cannot fail (LT.03, 2026-09-25). Must land
+        # in `unevaluable_gates` — never in `judged`, and never in the
+        # control-blind bucket, where it would name the wrong defect.
+        Entry("FIX.tuple", _fixture_tuple_return, dict(good), dict(ctrl), "a control"),
     ]
 
 
@@ -319,6 +351,15 @@ def assert_detector_works() -> dict:
         bad.append(f"declared-never-ran probe found {r['declared_control_never_ran']} of 1")
     if r["undeclared_control_ran"] != 1:
         bad.append(f"undeclared probe found {r['undeclared_control_ran']} of 1")
+    # The planted tuple-returner must be REFUSED, not judged — and it must be
+    # refused under its own name. `unevaluable_gates == 1` alone would also be
+    # satisfied by a scan that choked on the healthy fixture.
+    if r["unevaluable_detail"] != "FIX.tuple(CheckReturnInvalid)":
+        bad.append("the tuple-return probe read "
+                   f"{r['unevaluable_detail']!r}, not FIX.tuple(CheckReturnInvalid)")
+    if "FIX.tuple" in r["control_blind_detail"]:
+        bad.append("the tuple-returner was reported as control-blind — the "
+                   "wrong defect, which is how LT.03 would have been read")
     for key in ("control_blind_detail", "disagreement_detail",
                 "declared_never_ran_detail", "undeclared_ran_detail"):
         if "FIX.healthy" in r[key]:

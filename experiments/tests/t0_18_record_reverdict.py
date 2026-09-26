@@ -53,6 +53,16 @@ from ..verify import UNDECLARED_CONTROL_BUDGET, collect, fixture, scan
 
 SPEC_ID = "T0.18"
 
+#: THE INSTRUMENT THIS CERTIFICATE IS ABOUT, declared 2026-09-26 — it was not
+#: declared at all before, so `experiments/verify.py` could be edited without
+#: staling this PASS, and `run stale-cost` priced such an edit at ZERO
+#: certificates. Measured on this slot's own repair: the edit that closed a
+#: hole IN probe A billed `T0.13`, `T0.17`, `T0.33` and `T0.35` and did NOT
+#: bill the one spec whose entire claim is that probe A works. A certificate
+#: that cannot be staled by a change to the thing it certifies is a
+#: certificate about nothing.
+IMPL_DEPS = ["experiments/verify.py"]
+
 #: A scan of almost nothing is not a clean scan. Both floors are well under
 #: today's numbers (55 judged, 50 controls probed) and exist so that a future
 #: ledger-loading or import regression that silently empties the population
@@ -145,7 +155,7 @@ def _check(m: dict, c: dict) -> bool:
 
     # ── and the scan must find exactly the planted defects, and no others ──
     control_caught = (
-        c["entries_seen"] == 5
+        c["entries_seen"] == 6
         and c["verdict_disagreements"] == 1
         and c["control_blind_specs"] == 1
         and c["declared_control_never_ran"] == 1
@@ -165,7 +175,22 @@ def _check(m: dict, c: dict) -> bool:
         and c["disagreement_detail"] == "FIX.disagree(BOOL:False)"
         and c["declared_never_ran_detail"] == "FIX.promised"
         and c["undeclared_ran_detail"] == "FIX.undeclared"
-        and c["unevaluable_gates"] == 0
+        # THE VERDICT CHANNEL THAT CANNOT FAIL, planted 2026-09-26 (`FIX.tuple`).
+        # `unevaluable_gates` on the CONTROL side used to be asserted at 0 here
+        # — which was honest about the fixture set as it stood and is exactly
+        # why the class was invisible: no planted entry returned anything but a
+        # bool, so probe A's `bool(out)` was never under test. `LT.03` returned
+        # `(Status.VOID, reason)`, read `("BOOL", True)`, and this scan reported
+        # `verdicts that no longer re-derive  0` about the one verdict-inverting
+        # row in the ledger. Pinned by NAME for the reason stated above: a scan
+        # that choked on the healthy fixture would also read 1.
+        and c["unevaluable_gates"] == 1
+        and c["unevaluable_detail"] == "FIX.tuple(CheckReturnInvalid)"
+        # ...and `control_blind_detail == "FIX.blind"` above is what keeps it
+        # from being MIS-diagnosed: a constant-truthy return is also unmoved by
+        # deleting the control, so the pre-repair scan would have filed LT.03
+        # under "this gate ignores its control" — the wrong defect, at the one
+        # moment a reader was looking.
         and c["unavailable_entries"] == 0
     )
     return record_clean and scanned_enough and guard_works and control_caught

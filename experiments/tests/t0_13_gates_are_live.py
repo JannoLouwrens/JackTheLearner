@@ -130,7 +130,7 @@ import importlib
 import inspect
 from typing import Any, Callable
 
-from ..protocol import Ledger, Status, run_spec
+from ..protocol import Ledger, Status, coerce_check_return, run_spec
 from ..registry import BY_ID
 
 # The pre-fix T0.09 gate, preserved verbatim as the control fixture. Do not
@@ -183,11 +183,30 @@ def _check(m, c):
 DYNAMIC_M = {"real": True, "decorative": True}
 DYNAMIC_C = {"unused": 0}
 
+# F5 — the verdict channel that cannot fail: `LT.03`'s shape, preserved as a
+# fixture (2026-09-26). A `_check` answering `(Status, reason)` is truthy on
+# EVERY branch, so this detector's perturbations can never move it and the
+# recorded verdict can never be contradicted. Before the type was validated
+# this gate read like an ordinary PASS whose keys happened to be decorative;
+# now it lands in `unevaluable_gates`, which is the honest statement — the
+# scan did not audit it. Every other detector on this page is blind to the
+# class by construction: each of them starts from a verdict it can compare.
+TUPLE_SRC = '''
+def _check(m, c):
+    from experiments.protocol import Status
+    if m["score"] <= 0.5:
+        return (Status.VOID, "below bar")
+    return (True, "clear")
+'''
+TUPLE_M = {"score": 0.8}
+TUPLE_C = {"score": 0.1}
+
 _FIXTURES = (
     ("T0.09_prefix", CONTROL_SRC, CONTROL_M, CONTROL_C),
     ("F2_constant", CONSTANT_SRC, CONSTANT_M, CONSTANT_C),
     ("F3_keyless", KEYLESS_SRC, KEYLESS_M, KEYLESS_C),
     ("F4_dynamic", DYNAMIC_SRC, DYNAMIC_M, DYNAMIC_C),
+    ("F5_tuple", TUPLE_SRC, TUPLE_M, TUPLE_C),
 )
 
 # ── the dynamic-key backlog, adjudicated once and frozen ────────────────────
@@ -387,17 +406,43 @@ class _Recording(dict):
         dict.__setitem__(self, key, value)
 
 
-def _verdict(fn: Callable, m: dict, c: dict, log: list | None = None):
+def _verdict(fn: Callable, m: dict, c: dict, log: list | None = None,
+             validate: bool = True):
     """Deep-copied every call: some checks WRITE to their metrics (T2.02 sets
     m["verdict"]), and a detector that let that leak would score the next
     perturbation against a mutated baseline.
 
     `log`, when given, receives the (tag, key, "get"/"set") trace of the call.
+
+    THE RETURN TYPE IS VALIDATED THROUGH `protocol.coerce_check_return` — the
+    same function the runner and `verify` use, and the third of the three
+    readers that had to be fixed (2026-09-26). A `_check` answering
+    `(Status, reason)` is CONSTANT-truthy, so every perturbation this detector
+    applies leaves the verdict unmoved: the gate would be reported as one
+    whose every key is decorative, which is true but is not the defect, and it
+    would never reach `stale_gates` at all. A refused return is `("RAISED",
+    "CheckReturnInvalid")`, which `_scan` counts under `unevaluable_gates` —
+    the class whose whole job is "this scan did not audit that gate".
+
+    `validate=False` IS FOR PERTURBATION PROBES ONLY, and the flag exists
+    because validating them cost this detector THIRTEEN of its own findings on
+    the first attempt at this repair (measured in slot, before the flag:
+    disarmed 28 -> 15). A gate shaped `return m["a"] > 0.5 and m["b"]` returns
+    a bool at the RECORDED values and a bare float once `m["b"]` is perturbed
+    to 0.7; refusing that return makes the probe read `("RAISED", ...)`, which
+    differs from the baseline, so the key scores as ARMED. The verdict never
+    moved — the TYPE did, at a value no run ever produced. A detector that
+    reports fewer defects because its own probe crashed is precisely the
+    disease this file exists to catch, so perturbations keep the truthiness
+    mapping they were calibrated against and only the BASELINE answer — the
+    one a run would actually record — is validated.
     """
     trace = [] if log is None else log
     try:
         out = fn(_Recording(copy.deepcopy(m), trace, "m"),
                  _Recording(copy.deepcopy(c), trace, "c"))
+        if validate:
+            out = coerce_check_return(out)
     except Exception as e:
         return ("RAISED", type(e).__name__)
     if isinstance(out, Status):
@@ -509,7 +554,10 @@ def _key_classes(fn: Callable, src: str | None, m: dict, c: dict) -> dict:
             for alt in _perturbations(store[k]):
                 probe = dict(store)
                 probe[k] = alt
-                got = _verdict(fn, probe, c) if tag == "m" else _verdict(fn, m, probe)
+                # validate=False: see `_verdict`. A perturbation that breaks
+                # the RETURN TYPE is not a perturbation that moved the verdict.
+                got = (_verdict(fn, probe, c, validate=False) if tag == "m"
+                       else _verdict(fn, m, probe, validate=False))
                 if got != base:
                     moved = True
                     break
@@ -743,11 +791,15 @@ def _check(m: dict, c: dict) -> bool:
     # cuda_available, matmul_finite) and one precedence hazard; F2 contributes
     # the fourth disarmed key (a constant asserting against itself, which the
     # COMPUTED exemption must refuse); F3 contributes the keyless gate.
+    # F5 contributes the unevaluable gate: a `_check` whose return type is not
+    # a verdict at all. It is asserted on the CONTROL side only — the real
+    # ladder's `unevaluable_gates` stays gated at 0 above, unchanged.
     control_caught = (c["disarmed_conjunct_keys"] >= 4
                       and c["precedence_hazards"] >= 1
                       and c["keyless_gates"] >= 1      # added 2026-08-29 (F3)
                       and c["dynamic_inert_keys"] >= 1  # added 2026-08-29 (F4)
-                      and c["gates_scanned"] == 4      # was 1, before F2-F4
+                      and c["unevaluable_gates"] >= 1  # added 2026-09-26 (F5)
+                      and c["gates_scanned"] == 5      # was 1, then 4 (F2-F4)
                       and c["unreadable_gates"] == 0)
     # A scan of nothing is not a clean scan.
     scanned_enough = m["gates_scanned"] >= 30
