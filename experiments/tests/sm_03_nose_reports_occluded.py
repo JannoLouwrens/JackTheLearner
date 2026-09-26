@@ -161,8 +161,9 @@ frames holds the ball (4-way, for an 8-way label, ceiling ~0.5); measured, not
 even that, because ~7 source pixels in 4,096 is ~0.17% of the average the
 classifier reads.
 
-TWO CONSEQUENCES, neither of them a repair made here (the arm pick is the
-Review's; `_GATES_FROZEN` stays False and `run()` keeps refusing):
+TWO CONSEQUENCES, neither of them a repair made at the time of that probe (the
+arm pick is the Review's; `_GATES_FROZEN` stays False and `run()` keeps
+refusing):
   - `vis_occ` uses the SAME `_make_cnn`, so repairing the readout makes the
     `vis_occ <= VIS_OCC_CEIL` conjunct HARDER, not easier — the legal direction,
     and the one that makes the occlusion claim mean something.
@@ -171,6 +172,63 @@ Review's; `_GATES_FROZEN` stays False and `run()` keeps refusing):
     from a training position, against 45° bins subtending ~1.7 m of arc at
     2.2 m, is what "not a held-out sample" looks like once a competent readout
     is pointed at it. F1 and F2 are two faults, not one.
+
+F2 IS REPAIRED — `HEAD_POOL` 1 -> 8 (builder, 2026-09-26). The diagnosis above
+stood for thirteen days untested; a sweep is the only thing that can falsify an
+ALGEBRAIC claim, so the repair was decided by one, pre-registered and committed
+BEFORE the run with its selection rule and all three reading branches declared
+(`sm03_readout_sweep_probe.py`, `3d922c6`; artifact /data/sm03_readout_sweep.json,
+seed 90, CPU, 631.6 s, canary 165 -> 165 stable). The knob is the head's spatial
+resolution on the 8x8 feature map — one scalar, because the diagnosis names one
+mechanism. `p = 1` is the shipped head (verified at import by parameter-shape
+equality against `_make_cnn`) and is the self-validation leg, not a candidate.
+
+    pool  params   vis_open   vis_occ   open train fit   open pred hist
+      1   28,472     0.1167    0.1167          0.1646    [240,0,0,0,0,0,0,0]  <- was
+      2   30,008     0.1167    0.1167          0.1646    [240,0,0,0,0,0,0,0]
+      4   36,152     0.2042    0.1167          0.3917    [15,200,0,0,0,20,0,5]
+      8   60,728   **0.8375**  0.1250          0.8917    [28,62,0,36,28,31,19,36]
+
+SELF-VALIDATION: `vis_open` and `vis_occ` at p=1 BOTH reproduce the pilot's
+0.1167 to the last digit, so the sweep is about the pilot's object.
+
+BRANCH (A) FIRED: p=8 reads the alive-proof at **0.8375 against VIS_OPEN_MIN
+0.60**, and it is the argmax under the pre-registered rule. The 09-13 algebra is
+CONFIRMED and sharply localised — a 2x2 head is still exactly as blind as the
+global average (0.1167, the same constant column), 4x4 only half-escapes
+(0.2042), and the leg comes alive only when the full spatial map reaches the
+classifier. Selecting by argmax `vis_open` was deliberate and is the one rule
+that cannot be run-until-pass: the two vision arms share this readout, so the
+rule picks the candidate that makes `vis_occ <= VIS_OCC_CEIL` HARDEST. The
+alternative — "the cheapest head that clears 0.60" — reads identically on the
+alive-proof and would have picked the weakest competent readout, i.e. the one
+keeping `vis_occ` lowest. That is venue-shopping wearing a parsimony argument.
+
+AND THE SECOND RESULT, which this sweep existed to be able to report and which
+is worth more than the repair: **THE OCCLUSION PREMISE HOLDS.** The same readout
+that reads the OPEN panorama at 0.8375 reads the OCCLUDED one at **0.1250 —
+exactly chance — with a train fit of 0.1833 on its own 480 rows.** So the panels
+really do hide the source from a competent eye; `vis_occ` 0.1167 was NOT merely
+the blind readout's constant, and the 0.22 ceiling is not breached by the repair
+(it rose 0.1167 -> 0.1250, the predicted direction, and stayed 0.07 under the
+bar). Before this run, nothing distinguished "occlusion works" from "the readout
+cannot see anything anywhere" — the pilot's two vision numbers were IDENTICAL
+and both were the constant predictor's base rate. The comparison the claim is
+made of is now instrumented on both sides.
+
+NO BAR MOVED in either direction: `VIS_OPEN_MIN` 0.60, `VIS_OCC_CEIL` 0.22,
+`CTRL_CEIL` 0.22, `ODOUR_OCC_MIN` 0.25, `MIN_SEP_M` 0.25, `N_TRAIN_L` 480 and
+`SRC_R_RANGE` are untouched. The repaired vision arm is a STRICTER test of this
+spec's claim than the one the pilot ran, which is the legal direction. All four
+candidate heads sit UNDER `_make_mlp`'s 70,344 parameters, so the vision control
+is not handed more capacity than the nose it controls for.
+
+WHAT IS STILL NOT REPAIRED, and it is the reason `_GATES_FROZEN` stays False:
+**F1.** The held-out split is still the residue of a saturated domain, the arm
+pick is still the Review's (`sm03-heldout-split-saturated`, DUE 2026-09-30), and
+this repair touches none of the three offered arms. Nothing here licenses a
+dispatch: `run()` refuses, and F2's repair only means that whichever arm wins
+will now be measured by an instrument that is alive.
 
 Note what the pilot did NOT find: the odour field delivered (whiff coverage
 0.8875, above the 0.80 floor), the canary held, and both controls sat at
@@ -244,6 +302,16 @@ MIN_SEP_M = 0.25               # test source ≥ this from EVERY train source
 # ── training budget, identical for every arm (T3.01's protocol) ──────────
 LR_GRID = (1e-4, 3e-4, 1e-3)
 EPOCHS = 40
+# Spatial resolution the vision head is allowed to see, on the 8x8 feature map.
+# Was 1 — a GLOBAL average, translation-invariant, hence blind by construction
+# to the BEARING its own label encodes; that is F2 (see the F2 REPAIR section of
+# the docstring). 8 is not a preference: it is the argmax of a pre-registered
+# sweep over (1, 2, 4, 8) on the pilot's own split, under a rule that maximises
+# the alive-proof and therefore ALSO maximises `vis_occ`, i.e. picks the
+# candidate hardest for this spec's own claim to survive
+# (`sm03_readout_sweep_probe.py`, 2026-09-26). Adaptive, so it is independent of
+# IMG. A change here re-opens F2 and owes the sweep again.
+HEAD_POOL = 8
 BATCH = 64
 WEIGHT_DECAY = 1e-4
 
@@ -262,13 +330,18 @@ _PILOT_BLOCKED = (
     "sampled: MIN_SEP_M 0.25 against N_TRAIN_L 480 asks up to 94.2 m2 of "
     "exclusion discs inside an 11.06 m2 source annulus (8.5x oversubscribed), "
     "occlusion+separation rejects 0.9958, and every retained test position sits "
-    "exactly at the 0.25 floor. F2 — the alive-proof is dead: vis_open 0.1167 "
-    "against VIS_OPEN_MIN 0.60 with chance at 0.125, so the registered run "
-    "would have been VOID by this spec's own tree and vis_occ proves nothing "
-    "about occlusion. The nose was never measured; the comparison never became "
-    "valid. The repair is a REDESIGN with at least three runnable arms (shrink "
-    "N_TRAIN_L, widen SRC_R_RANGE, or hold out by BEARING SECTOR), routed to "
-    "the Review — not another pilot."
+    "exactly at the 0.25 floor. F2 — the alive-proof was dead (vis_open 0.1167 "
+    "against VIS_OPEN_MIN 0.60, chance 0.125) and is now REPAIRED (builder, "
+    "2026-09-26, HEAD_POOL 1 -> 8 off a pre-registered sweep, "
+    "sm03_readout_sweep_probe.py): the cause was a translation-invariant head, "
+    "the repaired readout reads the OPEN panorama at 0.8375, and the same "
+    "readout reads the OCCLUDED one at 0.1250 = chance, so the occlusion "
+    "premise HOLDS and VIS_OCC_CEIL 0.22 is not breached. No bar moved; the "
+    "vision arm is now a STRICTER test of the claim. THIS SPEC STAYS BLOCKED ON "
+    "F1 ALONE: the split is still saturated and the repair is a REDESIGN with "
+    "at least three runnable arms (shrink N_TRAIN_L, widen SRC_R_RANGE, or hold "
+    "out by BEARING SECTOR), the pick owed by the Review "
+    "(`sm03-heldout-split-saturated`, DUE 2026-09-30) — not another pilot."
 )
 
 CHANCE = 1.0 / N_BINS
@@ -506,8 +579,8 @@ def _make_cnn(torch, nn, seed: int, dev):
         nn.Conv2d(12, 16, 5, stride=2, padding=2), nn.ReLU(),
         nn.Conv2d(16, 32, 3, stride=2, padding=1), nn.ReLU(),
         nn.Conv2d(32, 64, 3, stride=2, padding=1), nn.ReLU(),
-        nn.AdaptiveAvgPool2d(1), nn.Flatten(),
-        nn.Linear(64, N_BINS)).to(dev)
+        nn.AdaptiveAvgPool2d(HEAD_POOL), nn.Flatten(),
+        nn.Linear(64 * HEAD_POOL * HEAD_POOL, N_BINS)).to(dev)
 
 
 def _train_one(torch, make, seed: int, lr: float, X, y, dev):

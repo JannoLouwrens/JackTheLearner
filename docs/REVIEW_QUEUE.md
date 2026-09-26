@@ -2028,6 +2028,70 @@ unless it cannot express the mapping.
   instrument every side of this row treated as the neutral part. The
   generalisation is in `docs/LESSONS.md` (2026-09-13).
 
+**F2'S REPAIR IS DELIVERED (builder, 2026-09-26). `HEAD_POOL` 1 -> 8 in
+`sm_03_nose_reports_occluded.py`, decided by a pre-registered sweep committed
+BEFORE the run (`sm03_readout_sweep_probe.py`, `3d922c6`; artifact
+/data/sm03_readout_sweep.json, seed 90, CPU, 631.6 s, canary 165 -> 165 stable).
+No ledger row, no seed, no gate frozen, no bar moved in either direction, no
+dispatch; `_GATES_FROZEN` stays False and `run()` still refuses. THE F1 ARM PICK
+IS UNTOUCHED AND REMAINS THIS DESK'S, DUE 09-30 — this repair takes no step
+toward it and forecloses none of the three arms.**
+
+Why a sweep and not an edit: the 09-13 finding was ALGEBRAIC, it had sat
+thirteen days untested, and only a sweep over the mechanism's own knob can
+falsify one. One scalar — the head's spatial resolution on the 8x8 feature map —
+because the diagnosis names one mechanism. `p = 1` IS the shipped head (verified
+at import by parameter-shape equality against `_make_cnn`) and is therefore the
+self-validation leg, not a candidate: **`vis_open` AND `vis_occ` at `p = 1` both
+reproduce the pilot's 0.1167 to the last digit.**
+
+| pool | params | `vis_open` | `vis_occ` | open train fit | open pred hist |
+|---|---|---|---|---|---|
+| 1 | 28,472 | 0.1167 | 0.1167 | 0.1646 | `[240,0,0,0,0,0,0,0]` |
+| 2 | 30,008 | 0.1167 | 0.1167 | 0.1646 | `[240,0,0,0,0,0,0,0]` |
+| 4 | 36,152 | 0.2042 | 0.1167 | 0.3917 | `[15,200,0,0,0,20,0,5]` |
+| 8 | 60,728 | **0.8375** | 0.1250 | 0.8917 | `[28,62,0,36,28,31,19,36]` |
+
+**BRANCH (A) fired:** `p = 8` clears `VIS_OPEN_MIN` 0.60 at 0.8375 and is the
+argmax under the pre-registered rule. The algebra is CONFIRMED and sharply
+localised in a way no argument would have produced — **a 2x2 head is exactly as
+blind as the global average**, the same constant column, and the leg comes alive
+only when the full spatial map reaches the classifier. All four heads sit under
+`_make_mlp`'s 70,344 parameters, so the vision control is not handed more
+capacity than the nose it controls for.
+
+**THE SELECTION RULE, pre-registered and stated with the rule it REFUSED.**
+Argmax `vis_open`, ties to fewer params. Both vision arms share this readout, so
+that rule picks the candidate making `vis_occ <= VIS_OCC_CEIL` HARDEST — it runs
+against this spec's own interest by construction. The rule not taken, which reads
+identically on the failing leg: *"the cheapest head that clears 0.60"*, which
+picks the weakest competent readout, i.e. the one keeping `vis_occ` lowest. That
+is venue-shopping wearing a parsimony argument and `2^7` already forbids it. It
+was also pre-registered that a selected head breaching 0.22 would be a FINDING
+about the occlusion premise and never a licence to pick weaker.
+
+**AND THE SECOND RESULT, which is worth more than the repair and which this desk
+should read before picking F1's arm: THE OCCLUSION PREMISE HOLDS, MEASURED FOR
+THE FIRST TIME.** The same readout that reads the OPEN panorama at 0.8375 reads
+the OCCLUDED one at **0.1250 — exactly chance, train fit 0.1833 on its own 480
+rows.** `VIS_OCC_CEIL` 0.22 is not breached; `vis_occ` rose 0.1167 -> 0.1250, the
+direction the 09-12 ruling predicted, and stopped 0.07 short of the bar. Until
+this run the two vision conjuncts were the SAME number and both were a constant
+predictor's base rate, so the spec had **no evidence at all** that its panels
+hide anything — it could not distinguish *"occlusion works"* from *"the eye sees
+nothing anywhere"*, which is the branch it exists to decide. The ruling's own
+warning that the repaired rig would be *"a stricter test, not a friendlier one"*
+is confirmed and priced: it is stricter by 0.0083 of occluded accuracy, not by
+enough to foreclose the claim.
+
+**What that changes for the 09-30 pick, and it is a narrowing rather than a
+push:** every remaining objection to `SM.03` is now F1 alone. The three offered
+arms can be judged on split geometry without the confound that whichever one won
+would have been graded by a blind instrument. The generalisation is in
+`docs/LESSONS.md` (2026-09-26): when two conjuncts that ought to diverge read the
+same number, that is evidence about the shared instrument and it voids the
+green-looking conjunct too.
+
 The full-size seed-90 pilot ran on CPU in 8 minutes (`/data/sm03_pilot_seed90.json`,
 head `13c0440`) and found two faults; the numbers and the arithmetic are in
 `sm_03_nose_reports_occluded.py`'s PILOT section and in `LESSONS.md`. In short:

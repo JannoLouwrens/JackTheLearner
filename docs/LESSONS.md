@@ -17393,3 +17393,64 @@ edge belongs to `T0.13` and to git.
 `print_*_block` in this repo is a candidate. A block that can print an alarm
 and leave the process's exit code at 0 is not reporting to the loop, it is
 reporting to whoever reads the whole page — and the organs read exit codes.
+
+---
+
+## When two conjuncts that should DIFFER read the same number, suspect the shared instrument before you believe either
+
+`SM.03`'s claim rests on a contrast: the nose finds the occluded source
+(`odour_occ >= 0.25`) while the eye does not (`vis_occ <= 0.22`), with an
+instrument-liveness leg proving the eye works at all when the panels come off
+(`vis_open >= 0.60`). Its seed-90 pilot recorded
+
+    vis_occ 0.1167    vis_open 0.1167
+
+— the *same* number, and the fault tree fired on the second one. For thirteen
+days the row's reading was "the alive-proof is dead"; a probe then found that
+0.1167 is bin 0's base rate under a readout that emits a **constant**, because
+`AdaptiveAvgPool2d(1)` globally averages the feature map while the label is a
+BEARING. That was the correct diagnosis of `vis_open`. What nobody said out loud
+is what it implied about the OTHER conjunct: **`vis_occ` 0.1167 was the same
+constant, so the spec had no evidence whatsoever that its occlusion worked.**
+Two conjuncts, one blind instrument, and the design could not distinguish *"the
+panels hide the source"* from *"the eye sees nothing anywhere"* — the branch it
+was built to decide.
+
+The repair settled it in one run. At a head that can express position
+(`HEAD_POOL` 8), `vis_open` goes to **0.8375** and `vis_occ` stays at **0.1250,
+exactly chance, train fit 0.1833** — so the occlusion premise was true all along
+and had simply never been tested. That result is worth more than the repair, and
+a point-fix aimed only at the failing leg would not have produced it.
+
+**Rule 1:** when a claim's conjuncts share an instrument and two of them that
+*ought to diverge* land on the same value, that coincidence is evidence about
+the instrument, not about the world — and it silently voids every conjunct
+downstream of it, including the ones that look green. Check the shared path
+before reading any of them.
+
+**Rule 2, and it is the reason this took a sweep rather than an edit: A CORRECT
+DIAGNOSIS DOES NOT SIZE ITS OWN REPAIR.** The algebra said translation-
+invariance destroys the label, and it was right. It also predicted a surviving
+~0.5 ceiling from "which of 4 frames holds the ball", and implied, to anyone
+reading it, that giving *some* spatial resolution back would help. Measured over
+one pre-registered knob, `(1, 2, 4, 8)`:
+
+    pool 1  0.1167   the constant column
+    pool 2  0.1167   the SAME constant column — 2x2 restores nothing
+    pool 4  0.2042   half-escapes
+    pool 8  0.8375   alive
+
+A 2x2 head is exactly as blind as a global average, which no amount of algebra
+would have told you. **An algebraic finding is a hypothesis about a mechanism;
+only a sweep over the mechanism's own knob can falsify it, and the sweep is what
+prices the repair.** Ship the knob, not the argument.
+
+**Rule 3 — the selection rule is where this kind of repair goes wrong.** Both
+vision arms share the readout, so a stronger head raises `vis_occ` as well as
+`vis_open`. Two rules were available and they read IDENTICALLY on the failing
+leg: *argmax `vis_open`* and *the cheapest head that clears 0.60*. The second
+picks the weakest competent readout, i.e. the one that keeps `vis_occ` lowest —
+venue-shopping wearing a parsimony argument. **Pre-register the rule that
+maximises the quantity most dangerous to your own claim, commit it before the
+run, and write down which rule you did NOT take and why.** Parsimony is a real
+virtue and it is exactly the disguise this failure mode wears.

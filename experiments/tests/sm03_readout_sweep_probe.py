@@ -42,8 +42,10 @@ the classifier head is allowed to see.**
 Everything else in `_make_cnn` is the parent's, unchanged: the same three conv
 layers, the same `torch.manual_seed`, the same `_fit_arm` protocol (the spec's
 own LR grid on its own 1-in-5 validation split), the same `EPOCHS`, `BATCH` and
-`WEIGHT_DECAY`. **`p = 1` IS THE SHIPPED READOUT** and is therefore the
-self-validation leg, not a candidate: it must reproduce the pilot's 0.1167.
+`WEIGHT_DECAY`. **`p = 1` WAS THE SHIPPED READOUT at run time** and is therefore
+the self-validation leg, not a candidate: it must reproduce the pilot's 0.1167.
+(Present tense would be false now — this sweep's own result moved the parent to
+`HEAD_POOL = 8`. See the RESULT section.)
 
 This shape is deliberate. The 09-13 probe's finding was ALGEBRAIC — a claim that
 accuracy is destroyed by translation-invariance — and a one-knob sweep is the
@@ -53,7 +55,7 @@ the repair. An architecture zoo could not say that.
 
 Parameter counts, computed not asserted (the conv stack is 27,952 of them):
 
-    p=1    520 head    28,472 total   <- SHIPPED
+    p=1    520 head    28,472 total   <- shipped AT RUN TIME
     p=2  2,056 head    30,008 total
     p=4  8,200 head    36,152 total
     p=8 32,776 head    60,728 total
@@ -147,6 +149,68 @@ RUN IT:
     /data/venvs/jackthelearner/bin/python -m experiments.tests.sm03_readout_sweep_probe
 
 Artifact: /data/sm03_readout_sweep.json
+
+--------------------------------------------------------------------------
+RESULT — RAN 2026-09-26 15:1x-15:26 UTC, seed 90, CPU, 631.6 s, head 3d922c6
+(this file, committed BEFORE the run with the rule and all three branches
+declared). BRANCH (A) FIRED.
+--------------------------------------------------------------------------
+
+SELF-VALIDATION FIRST: at `p = 1`, `vis_open` **0.1167** and `vis_occ`
+**0.1167** — the pilot's recorded values for BOTH vision arms, to the last
+digit. The split is the pilot's and every number below is about the pilot's
+object. Canary 165 -> 165 colours, stable.
+
+    chance 0.1250 | VIS_OPEN_MIN 0.60 | VIS_OCC_CEIL 0.22 | n_train 480 | n_test 240
+
+    pool  params   vis_open   vis_occ   open train fit   open pred hist
+      1   28,472     0.1167    0.1167          0.1646    [240,0,0,0,0,0,0,0]  <- shipped
+      2   30,008     0.1167    0.1167          0.1646    [240,0,0,0,0,0,0,0]
+      4   36,152     0.2042    0.1167          0.3917    [15,200,0,0,0,20,0,5]
+      8   60,728   **0.8375**  0.1250          0.8917    [28,62,0,36,28,31,19,36]
+
+  SELECTED `p = 8` (argmax `vis_open`; no tie). Clears the alive-proof; does NOT
+  breach `VIS_OCC_CEIL`.
+
+**(A) — F2's cause IS the head's spatial resolution, and the 09-13 algebra is
+confirmed.** But it is confirmed in a shape the algebra could not have given:
+**a 2x2 head is EXACTLY as blind as the global average** — the identical
+constant column, the identical 0.1646 train fit — 4x4 only half-escapes, and
+the leg comes alive only when the full 8x8 map reaches the classifier. The
+predicted ~0.5 "which of 4 frames holds the ball" ceiling never materialised at
+any pool below 8. An algebraic finding names a mechanism; only a sweep over that
+mechanism's knob prices the repair.
+
+**THE SECOND RESULT, and it is worth more than the repair: THE OCCLUSION PREMISE
+HOLDS.** The readout that reads the OPEN panorama at 0.8375 reads the OCCLUDED
+one at **0.1250 — exactly chance — with a train fit of 0.1833 on its own 480
+rows.** So the panels genuinely hide the source from a competent eye, and
+`vis_occ` 0.1167 was never evidence of that: it was the same constant. Until this
+run `SM.03`'s two vision conjuncts were the SAME number and the spec could not
+distinguish *"occlusion works"* from *"the eye sees nothing anywhere"* — the
+branch it exists to decide. The 09-12 ruling's warning that a repaired rig would
+be *"a stricter test, not a friendlier one"* is confirmed AND priced: stricter by
+0.0083 of occluded accuracy, stopping 0.07 short of the 0.22 ceiling.
+
+**WHAT WAS SHIPPED, AND WHAT WAS NOT.** `HEAD_POOL` 1 -> 8 in the parent, with
+these numbers beside the constant. No bar moved in either direction;
+`_GATES_FROZEN` stays False; `run()` still refuses; no ledger row, no seed, no
+dispatch. **F1 — the saturated held-out split — is untouched and its arm pick
+remains the Review's, DUE 2026-09-30.** This repair forecloses none of the three
+arms; it only means whichever one wins will be graded by an instrument that is
+alive.
+
+**THIS PROBE IS NOW SPENT EVIDENCE AND WILL REFUSE TO RE-RUN, by construction
+and on purpose.** `_shipped_is_pool_one` compares `INCUMBENT_POOL` against the
+parent's live head, and the parent's head is 8 as of this run's own result — so
+the guard raises rather than silently re-measuring a *different* incumbent and
+reporting it under this file's self-validation story. That is the
+`lg03_blind_twin_probe.py` scar: an approximation that quietly changes which
+object it is measuring turns a probe into a second opinion about a different rig.
+To sweep the knob again — after an F1 arm lands, or if the conv stack changes —
+raise `INCUMBENT_POOL` to the then-current `S.HEAD_POOL`, and expect the pilot
+reproduction checks above to stop applying, because they are about a readout that
+no longer ships.
 """
 
 from __future__ import annotations
@@ -162,10 +226,14 @@ from . import sm_03_nose_reports_occluded as S
 ARTIFACT = "/data/sm03_readout_sweep.json"
 
 # The one knob. `nn.AdaptiveAvgPool2d(p)` on the parent's 8x8 feature map:
-# p=1 is the shipped global average (SELF-VALIDATION, not a candidate), p=8 is
-# the identity, i.e. the full spatial map flattened into the classifier.
+# p=1 was the shipped global average (SELF-VALIDATION leg, not a candidate), p=8
+# is the identity, i.e. the full spatial map reaching the classifier.
 HEAD_POOL_GRID = (1, 2, 4, 8)
-SHIPPED_POOL = 1
+# The parent's head AT THE TIME OF THIS RUN. Not read live from `S.HEAD_POOL`:
+# this file is the record of one sweep, and the pilot reproduction checks below
+# are claims about THAT incumbent. The guard raises if the parent has moved —
+# which it has, to 8, as this run's own result. See the RESULT section.
+INCUMBENT_POOL = 1
 
 # The parent's recorded pilot readings for the two vision arms on this split.
 # Both must reproduce; they are the same number by coincidence of the constant
@@ -198,14 +266,15 @@ def _head_factory(pool: int):
 
 
 def _shipped_is_pool_one(torch) -> bool:
-    """Guard: this file claims `p=1` IS the shipped readout. Check it.
+    """Guard: this file claims `INCUMBENT_POOL` IS the parent's shipped readout.
 
     A sweep whose self-validation leg is not actually the incumbent proves
-    nothing about the incumbent. Compared by parameter shapes and count, which
-    is what distinguishes the heads.
+    nothing about the incumbent, and silently re-pointing a probe at a different
+    object is the `lg03_blind_twin_probe.py` scar. Compared by parameter shapes,
+    which is what distinguishes the heads.
     """
     a = S._make_cnn(torch, torch.nn, 0, "cpu")
-    b = _head_factory(SHIPPED_POOL)(torch, torch.nn, 0, "cpu")
+    b = _head_factory(INCUMBENT_POOL)(torch, torch.nn, 0, "cpu")
     sa = [tuple(p.shape) for p in a.parameters()]
     sb = [tuple(p.shape) for p in b.parameters()]
     return sa == sb
@@ -267,9 +336,13 @@ def probe(seed: int = S.PILOT_SEED) -> dict:
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     if not _shipped_is_pool_one(torch):
         raise RuntimeError(
-            "p=1 is NOT the shipped `_make_cnn` head — the self-validation leg "
-            "of this sweep is invalid and the parent must have moved. Read the "
-            "parent before trusting any number here.")
+            f"INCUMBENT_POOL={INCUMBENT_POOL} is NOT the parent's shipped "
+            f"`_make_cnn` head (S.HEAD_POOL={S.HEAD_POOL}) — the "
+            "self-validation leg of this sweep is invalid. This is EXPECTED "
+            "after 2026-09-26: the sweep's own result moved the parent to 8, so "
+            "this file is spent evidence. To sweep again, set INCUMBENT_POOL to "
+            "the current S.HEAD_POOL and know that the pilot reproduction "
+            "checks in the docstring no longer apply.")
 
     m_can, d_can, r_can = S._world(True)
     colors0, canary0 = S._canary(r_can, m_can, d_can)
@@ -336,9 +409,9 @@ def probe(seed: int = S.PILOT_SEED) -> dict:
         "pilot_vis_open": PILOT_VIS_OPEN,
         "pilot_vis_occ": PILOT_VIS_OCC,
         "reproduces_pilot_vis_open": bool(
-            abs(arms[SHIPPED_POOL]["vis_open"] - PILOT_VIS_OPEN) < REPRO_TOL),
+            abs(arms[INCUMBENT_POOL]["vis_open"] - PILOT_VIS_OPEN) < REPRO_TOL),
         "reproduces_pilot_vis_occ": bool(
-            abs(arms[SHIPPED_POOL]["vis_occ"] - PILOT_VIS_OCC) < REPRO_TOL),
+            abs(arms[INCUMBENT_POOL]["vis_occ"] - PILOT_VIS_OCC) < REPRO_TOL),
         "head_pool_grid": list(HEAD_POOL_GRID),
         "arms": {str(k): v for k, v in arms.items()},
         "vis_open_by_pool": {str(p): arms[p]["vis_open"]
@@ -365,7 +438,7 @@ def main() -> None:
     out = probe()
     Path(ARTIFACT).write_text(json.dumps(out, indent=1))
     print()
-    print("SELF-VALIDATION — p=1 IS the shipped `_make_cnn` head:")
+    print("SELF-VALIDATION — INCUMBENT_POOL IS the parent's shipped `_make_cnn` head:")
     print(f"  vis_open[p=1] {out['arms']['1']['vis_open']:.4f} vs pilot "
           f"{out['pilot_vis_open']} -> "
           f"{'REPRODUCES' if out['reproduces_pilot_vis_open'] else 'DOES NOT REPRODUCE — read no further'}")
@@ -378,7 +451,7 @@ def main() -> None:
     print("  pool   n_params   vis_open   vis_occ   open_train_fit  pred_hist(open)")
     for p in out["head_pool_grid"]:
         a = out["arms"][str(p)]
-        tag = "  <- SHIPPED" if p == SHIPPED_POOL else ""
+        tag = "  <- INCUMBENT" if p == INCUMBENT_POOL else ""
         print(f"  {p:>4d}   {a['n_params']:>8d}   {a['vis_open']:>8.4f}   "
               f"{a['vis_occ']:>7.4f}   {a['vis_open_train_fit']:>14.4f}  "
               f"{a['vis_open_pred_hist']}{tag}")
