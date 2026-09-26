@@ -16,7 +16,27 @@
     "value": 0
   },
   "cpu_foreclosed_now": {
-    "at": "2026-09-20",
+    "at": "2026-09-26",
+    "value": 37
+  },
+  "decisions_default_action_expired": {
+    "at": "2026-09-26",
+    "value": 1
+  },
+  "decisions_firing_diff": {
+    "at": "2026-09-26",
+    "value": 0
+  },
+  "decisions_undeclared": {
+    "at": "2026-09-26",
+    "value": 0
+  },
+  "decisions_unrouted_owner_ask": {
+    "at": "2026-09-26",
+    "value": 0
+  },
+  "decisions_vanished_owner_ask": {
+    "at": "2026-09-26",
     "value": 0
   },
   "fail_unowned": {
@@ -66,21 +86,21 @@
   },
   "review_queue_net_arrivals": {
     "at": "2026-09-26",
-    "value": 14
+    "value": 13
   },
   "review_queue_piled_on": {
-    "at": "2026-09-25",
-    "value": 4
+    "at": "2026-09-26",
+    "value": 3
   },
   "review_queue_violation_forms": {
     "at": "2026-09-26",
     "value": {
-      "OVERDUE": 8
+      "OVERDUE": 1
     }
   },
   "review_queue_violations": {
     "at": "2026-09-26",
-    "value": 8
+    "value": 1
   },
   "unreachable": {
     "at": "2026-09-25",

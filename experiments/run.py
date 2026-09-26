@@ -1651,6 +1651,32 @@ def ratchet_live(ledger: Ledger) -> dict:
         return len(gpu_unattributed(charged,
                                     _ledger_job_ids(ledger.results), named))
 
+    _decisions_debt = {}
+
+    def _decisions_class(kind):
+        # 120th audit FINDING 2: `decisions.py` ratchets five classes
+        # shrink-only (`RATCHETED`) and none of them was joined here —
+        # DEFAULT-ACTION-EXPIRED went 0 -> 1 on 2026-09-23 (D33) and sat red
+        # for three days with no committed reading, no `at` date and no
+        # `!! MOVED` banner, because `ratchet_readings.json` had no key to
+        # hold one. Same stage `champions.py` was at before the 91st audit's
+        # repair, one comment up. Counted from `decisions.check_violations()`
+        # — the SAME population `--check` exits on, factored there so the two
+        # readers cannot drift. Computed once per scan (the firing audit
+        # costs ~3 s of `git show`); a failure is cached and re-raised so
+        # all five report LOST rather than one line paying five retries.
+        if not _decisions_debt:
+            from . import decisions as dec
+            try:
+                _decisions_debt["debt"] = dec.ratchet_debt(
+                    dec.check_violations()[0])
+            except Exception as exc:
+                _decisions_debt["err"] = exc
+        if "err" in _decisions_debt:
+            raise _decisions_debt["err"]
+        n, _base = _decisions_debt["debt"][kind]
+        return n
+
     take("unreachable", _unreachable)
     take("fail_unowned", _fail_unowned)
     take("fail_unowned_owned_forms", _fail_unowned_owned_forms)
@@ -1668,6 +1694,16 @@ def ratchet_live(ledger: Ledger) -> dict:
     take("review_queue_violation_forms", _review_queue_violation_forms)
     take("review_queue_net_arrivals", _review_queue_net_arrivals)
     take("review_queue_piled_on", _review_queue_piled_on)
+    take("decisions_undeclared",
+         lambda: _decisions_class("UNDECLARED"))
+    take("decisions_unrouted_owner_ask",
+         lambda: _decisions_class("UNROUTED-OWNER-ASK"))
+    take("decisions_vanished_owner_ask",
+         lambda: _decisions_class("VANISHED-OWNER-ASK"))
+    take("decisions_default_action_expired",
+         lambda: _decisions_class("DEFAULT-ACTION-EXPIRED"))
+    take("decisions_firing_diff",
+         lambda: _decisions_class("FIRING-DIFF"))
     return out
 
 
@@ -1687,6 +1723,9 @@ def ratchet_floors() -> dict:
                            FAIL_UNOWNED_BASELINE,
                            PASS_ON_DEAD_DEPENDENCY_BASELINE,
                            UNREACHABLE_BASELINE)
+    from .decisions import (BASELINE_ACTION_EXPIRED, BASELINE_FIRING_HAZARDS,
+                            BASELINE_UNDECLARED, BASELINE_UNROUTED_ASKS,
+                            BASELINE_VANISHED_ASKS)
     return {"unreachable": UNREACHABLE_BASELINE,
             "fail_unowned": FAIL_UNOWNED_BASELINE,
             # Added 2026-09-23 (Review DAILY, executing `pass-certificates-
@@ -1703,7 +1742,17 @@ def ratchet_floors() -> dict:
             # Added 2026-09-19 (101st audit RANK 2 / FTB 1) — the class the
             # coverage charter ranks above every other finding grew 0 -> 4
             # with no counter anywhere to move.
-            "commitments_uncovered": COMMITMENTS_UNCOVERED_BASELINE}
+            "commitments_uncovered": COMMITMENTS_UNCOVERED_BASELINE,
+            # Added 2026-09-26 (120th audit FINDING 2): decisions.py's five
+            # shrink-only classes, joined the day DEFAULT-ACTION-EXPIRED had
+            # sat red for three days with no committed reading to date it.
+            # The baselines live in decisions.py beside their growth logs
+            # (`RATCHETED` is the same five constants keyed by class name).
+            "decisions_undeclared": BASELINE_UNDECLARED,
+            "decisions_unrouted_owner_ask": BASELINE_UNROUTED_ASKS,
+            "decisions_vanished_owner_ask": BASELINE_VANISHED_ASKS,
+            "decisions_default_action_expired": BASELINE_ACTION_EXPIRED,
+            "decisions_firing_diff": BASELINE_FIRING_HAZARDS}
 
 
 def floor_status(cur, floor):
@@ -2071,7 +2120,11 @@ def _check_ratchet_reader() -> None:
     # the point.
     FLOORED = {"unreachable", "fail_unowned", "pass_on_dead_dependency",
                "gpu_unattributed_jobs",
-               "champions_unwinnable", "commitments_uncovered"}
+               "champions_unwinnable", "commitments_uncovered",
+               # 120th audit FINDING 2: decisions.py's five ratcheted classes.
+               "decisions_undeclared", "decisions_unrouted_owner_ask",
+               "decisions_vanished_owner_ask",
+               "decisions_default_action_expired", "decisions_firing_diff"}
     got_floors = set(ratchet_floors())
     if got_floors != FLOORED:
         raise RuntimeError(

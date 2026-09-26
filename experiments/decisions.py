@@ -380,7 +380,12 @@ CLASSES = ("means", "conduct", "goal")
 # a guard that fails everywhere on day one is one nobody keeps green, and a guard
 # nobody keeps green is decoration (LESSONS.md, citations.py precedent). This
 # number may SHRINK and may never GROW.
-BASELINE_UNDECLARED = 10
+# SHRUNK 10 -> 0, 2026-09-26: the backlog drained to zero over the weeks (every
+# open entry now carries a DECIDE block) and the constant never followed —
+# caught the day the class was joined into `run.py:ratchet_live()` (120th audit
+# FINDING 2), whose floor reader banners BELOW as loudly as ABOVE. At 0 any
+# future undeclared entry is a red, which is what the drained backlog earned.
+BASELINE_UNDECLARED = 0
 
 
 def parse(text: str) -> tuple[dict, list]:
@@ -990,7 +995,11 @@ SHINGLE_N = 6
 # the moment it writes `NO-DECISION:` on them; the third is the draft-then-
 # ratify recommendation, which is a real unrouted ask — the SAME defect `D21`
 # was created for, recurring the next day on the same page.
-BASELINE_UNROUTED_ASKS = 3
+# SHRUNK 3 -> 0, 2026-09-26: all three routed long ago and the constant never
+# followed — caught by the same `ratchet_live()` join as BASELINE_UNDECLARED's
+# shrink (120th audit FINDING 2, BELOW-floor banner). At 0 any future unrouted
+# owner-ask is a red the day it is written.
+BASELINE_UNROUTED_ASKS = 0
 # VANISHED was 1 (the 09-03 `run blocked` recommendation, which the overseer
 # ruled builder-work and the builder implemented, with no durable record on any
 # owner-readable page) and is 0 once that disposition is recorded.
@@ -1497,6 +1506,51 @@ def check_rc(violations: list) -> int:
     if any(n > base for n, base in ratchet_debt(violations).values()):
         return 1
     return 1 if any(v[0] in BLOCKING for v in violations) else 0
+
+
+def firing_violations() -> list:
+    """The FIRING-DIFF appendage `--check` adds to the violation list —
+    factored out of `main()` (120th audit FINDING 2) so the ratchet join in
+    `run.py:ratchet_live()` and the gate count the same population. Costs
+    ~3 s of `git show`, which is why `main()` pays it only under `--check`."""
+    out = []
+    rows, checked = firing_audit(_git("log", "--all", "--format=%H|%s"),
+                                 _diff_of, _record_log())
+    if not checked:
+        out.append(("FIRING-DIFF", "(history)",
+                    "git returned no history — the firing-diff "
+                    "audit did not run, and a silent skip is not a "
+                    "pass"))
+    for sha, _subj, hz in rows:
+        for kind, path, detail in hz:
+            out.append(("FIRING-DIFF", sha[:9],
+                        f"[{kind}] {path}: {detail} — a "
+                        f"pre-registered default may not do this "
+                        f"by silence"))
+    return out
+
+
+def check_violations(today: _dt.date | None = None,
+                     firing: bool = True) -> tuple[list, list]:
+    """`(violations, rows)` over the LIVE repository — the population
+    `--check` gates on, `firing_violations()` included by default.
+
+    Factored out of `main()` (120th audit FINDING 2): `DEFAULT-ACTION-EXPIRED`
+    went 0 -> 1 on 2026-09-23 and sat red for three days with no committed
+    reading, no `at` date and no `!! MOVED` banner, because `run status`'s
+    ratchet block joined none of this file's five floored classes. The join
+    reads THIS function rather than assembling `audit()`'s arguments a second
+    time — two assemblies is how a joined counter drifts from the exit code
+    it claims to mirror."""
+    today = today or _dt.date.today()
+    violations, rows = audit(
+        DOC.read_text(), today,
+        progress_text=PROGRESS.read_text() if PROGRESS.exists() else None,
+        prev_progress_text=_previous_page(PROGRESS),
+        resolved_text=RESOLVED.read_text() if RESOLVED.exists() else "")
+    if firing:
+        violations.extend(firing_violations())
+    return violations, rows
 
 
 def _fixture() -> None:
@@ -2192,11 +2246,9 @@ def main(argv: list[str]) -> int:
     today = _dt.date.today()
     progress_text = PROGRESS.read_text() if PROGRESS.exists() else None
     resolved_text = RESOLVED.read_text() if RESOLVED.exists() else ""
-    violations, rows = audit(
-        text, today,
-        progress_text=progress_text,
-        prev_progress_text=_previous_page(PROGRESS),
-        resolved_text=resolved_text)
+    # The firing appendage is deferred to the `--check` branch below so a
+    # plain report stays cheap; the assembly itself is the factored one.
+    violations, rows = check_violations(today, firing=False)
 
     print(f"\nOpen decisions — {DOC.relative_to(DOC.parent.parent)}\n")
     if rows:
@@ -2254,19 +2306,7 @@ def main(argv: list[str]) -> int:
     # this file already insists on ("a counter that only appears when it is
     # nonzero cannot be seen to be at floor").
     if "--check" in argv:
-        _rows, _checked = firing_audit(_git("log", "--all", "--format=%H|%s"),
-                                       _diff_of, _record_log())
-        if not _checked:
-            violations.append(("FIRING-DIFF", "(history)",
-                               "git returned no history — the firing-diff "
-                               "audit did not run, and a silent skip is not a "
-                               "pass"))
-        for _sha, _subj, _hz in _rows:
-            for _kind, _path, _detail in _hz:
-                violations.append(("FIRING-DIFF", _sha[:9],
-                                   f"[{_kind}] {_path}: {_detail} — a "
-                                   f"pre-registered default may not do this "
-                                   f"by silence"))
+        violations.extend(firing_violations())
 
     debt = ratchet_debt(violations)
     if "--check" in argv:
