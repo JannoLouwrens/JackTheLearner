@@ -8,7 +8,7 @@ Both edits were substantively right. The defect is that the file asserted a
 distinction it had no field to carry, so a reader could not tell a
 runner-recorded verdict from an agent-restated one.
 
-Seven properties, each with a way to fail:
+Twelve properties, each with a way to fail:
 
   1. An amendment is attributable: author, reason, prior value, commit, time.
   2. An amendment cannot reach PASS or FAIL — only statuses that assert
@@ -115,6 +115,34 @@ Seven properties, each with a way to fail:
      found `decisions.py:314` binding it as a path inside `T0.28`'s closure. It
      is in the instrument class instead. The map is scanned because typing it
      was already wrong once.
+
+ 12. A SUPERSEDED ROW LOSES NO FIELD THE LIVE ROW CARRIED (121st audit
+     FINDING 1, 2026-09-26). Property 7 above says history carries the
+     EVIDENCE and names four fields; the projection that implements it was a
+     hand-typed allow-list of ten, so a field added to `Result` and not to the
+     list was dropped in silence — and an assertion that enumerates the list
+     agrees with the defect instead of catching it. `Result.dirty_files`
+     shipped 2026-09-13 and was erased from every row it superseded:
+     **606 history entries, zero carrying the key**, while 36 live rows carried
+     it. Nineteen of the twenty `+dirty` rows recorded since then read
+     `dirty_files: None`, and `dirty_recoverability` told each of them it
+     *"predates `dirty_files`"* — a false sentence about a field they postdate,
+     printed by a standing instrument. `attempt` and `duration_s` were being
+     dropped by the same line for six weeks longer and nobody had noticed
+     either.
+
+     The repair is DERIVATION plus a partition, not an eleventh name:
+     `HISTORY_FIELDS` is computed from `Result`, and what it omits must be
+     named in `HISTORY_EXEMPT_FIELDS` with a reason. Five sub-properties, the
+     mutation first: the pre-repair ten-name projection is replayed and must be
+     CAUGHT dropping `dirty_files` (a `dropped == []` over a comparison that
+     looks nowhere is property 9's empty domain again); the carried and exempt
+     sets PARTITION `Result`'s fields exactly; the fixture populates every
+     non-exempt field, asserted rather than assumed, so the totality is over a
+     full row and not a convenient one; and a superseded row comes back out of
+     history with every field the live row held, unchanged in value. The
+     absence half is property 7's and still binds — a row that never had a
+     field does not acquire one.
 
 CONTROL — the pre-fix path: the literal `9b92d14` edit (read the JSON, set
 `status`, write it back) replayed on a temp ledger. Under the same audit it
@@ -399,6 +427,89 @@ def _doc_dirt_battery() -> dict:
     }
 
 
+def _history_totality_battery() -> dict:
+    """P12 — a superseded row loses no field the live row carried.
+
+    Property 7 asserts four NAMED fields ride into history. That shape cannot
+    see the defect it was written against: the projection was a hand-typed
+    allow-list, so a field added to `Result` and not to the list was dropped in
+    silence, and the assertion enumerating the list agreed with it. Asserted on
+    the TOTAL instead (`T0.31`'s idiom): the union of what rides along and a
+    NAMED exemption list must BE `Result`'s field set, and a row carrying every
+    non-exempt field must come back out of history carrying every one of them.
+    """
+    from dataclasses import fields as _fields
+
+    from ..protocol import HISTORY_EXEMPT_FIELDS, HISTORY_FIELDS
+
+    all_fields = {f.name for f in _fields(Result)}
+    carried, exempt = set(HISTORY_FIELDS), set(HISTORY_EXEMPT_FIELDS)
+    partitions = (carried | exempt) == all_fields and not (carried & exempt)
+
+    # A row with EVERY non-exempt field populated, and populated distinctly, so
+    # a projection that copies the wrong key cannot pass by coincidence.
+    loaded = dict(
+        status=Status.FAIL, metrics={"m": 1.5}, control_metrics={"c": 0.5},
+        seeds=[3, 4], duration_s=12.5, compute_s=34.5, commit="abc1234+dirty",
+        hardware="aarch64/Linux/cpu", ran_at="2026-01-01T00:00:00",
+        message="the failing verdict", attempt=7,
+        amended=[{"by": "T0.14", "reason": "r", "at": "t", "commit": "c",
+                  "changes": [{"field": "status", "from": "PASS",
+                               "to": "FAIL"}]}],
+        gpu_job_id="job-9", impl_sha="f" * 16, spec_sha="e" * 16,
+        preserved_impl="refs/jack/preserved/x", peak_rss_mb=321.0,
+        peak_rss_inherited=False,
+        dirty_files=["experiments/tests/t_x.py", "docs/OTHER.md"],
+    )
+    missing_from_fixture = sorted((all_fields - exempt) - set(loaded))
+
+    with tempfile.TemporaryDirectory() as td:
+        path = Path(td) / "ledger.json"
+        Ledger(path).record(Result(spec_id="X.23", **loaded))
+        live = json.loads(path.read_text())["results"]["X.23"]
+        Ledger(path).record(Result(spec_id="X.23", status=Status.PASS,
+                                   ran_at="2026-02-02T00:00:00"))
+        h = json.loads(path.read_text())["results"]["X.23"]["history"]
+
+    entry = h[0] if len(h) == 1 else {}
+    # The comparison is against what the LIVE row actually held, not against
+    # the fixture: the recorder is allowed to normalise a value (`status` is
+    # stored as its `.value`), and re-deriving the expectation from the live
+    # row is what makes this a "loses nothing" test rather than a second copy
+    # of the recorder's own logic.
+    dropped = sorted(f for f in (all_fields - exempt)
+                     if f in live and f not in entry)
+    changed = sorted(f for f in (all_fields - exempt)
+                     if f in live and f in entry and live[f] != entry[f])
+
+    # THE MUTATION. A projection missing one field must be CAUGHT — otherwise
+    # `dropped == []` is a statement about a test that looks nowhere. This is
+    # the pre-repair projection replayed FAITHFULLY: the ten-name allow-list
+    # AND the hand-written `amended` rescue that sat beside it, because
+    # replaying only the list would charge the old code with a loss it did not
+    # cause. Even so it drops EIGHT fields of this row, `dirty_files` among
+    # them — which is the defect, measured rather than described.
+    PRE_REPAIR = ("status", "ran_at", "commit", "message", "metrics",
+                  "control_metrics", "impl_sha", "spec_sha", "seeds",
+                  "gpu_job_id")
+    mutant = {k: live[k] for k in PRE_REPAIR if k in live}
+    if live.get("amended"):
+        mutant["amended"] = live["amended"]
+    mutant_dropped = sorted(f for f in (all_fields - exempt)
+                            if f in live and f not in mutant)
+
+    return {
+        "history_fields_partition_result": partitions,
+        "history_exempt_fields": sorted(exempt),
+        "history_fixture_fields_unset": missing_from_fixture,
+        "history_fields_dropped": dropped,
+        "history_fields_altered": changed,
+        "history_loses_no_field": len(h) == 1 and not dropped and not changed,
+        "mutation_catches_dropped_field": "dirty_files" in mutant_dropped,
+        "history_fields_dropped_by_pre_repair_projection": mutant_dropped,
+    }
+
+
 def _experiment(seed: int) -> dict:
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "ledger.json"
@@ -604,9 +715,13 @@ def _experiment(seed: int) -> dict:
         # ── P11. the per-spec dirt map, measured (fork (c)) ────────────────
         doc_dirt = _doc_dirt_battery()
 
+        # ── P12. the history projection loses nothing (121st audit FTB 1) ──
+        totality = _history_totality_battery()
+
         return {
             **_claim_battery(real),
             **doc_dirt,
+            **totality,
             "content_check_fires_on_postrun_edit": content_check_fires,
             "content_check_spares_unedited_file": content_check_spares,
             "content_check_reports_unanswerable": content_check_reports_unanswerable,
@@ -725,6 +840,28 @@ def _check(m: dict, c: dict) -> bool:
         m["prose_doc_is_never_dirt"],
         m["runner_output_beats_declaration"],
         m["code_is_still_dirt_under_every_declaration"],
+        # P12: the history projection loses NOTHING. The partition leg is the
+        # durable half — a field added to `Result` tomorrow is carried, or it
+        # is named in `HISTORY_EXEMPT_FIELDS` with a reason, and there is no
+        # third option in which it quietly vanishes from every superseded row.
+        # The mutation leg comes first in intent, as in P11: `dropped == []`
+        # means nothing until the same comparison is shown catching the exact
+        # allow-list that erased `dirty_files` from 606 history entries.
+        m["mutation_catches_dropped_field"],
+        m["history_fields_partition_result"],
+        # ...and the exemption list is PINNED, not merely named. Measured while
+        # writing this: dropping `dirty_files` from the projection AND adding it
+        # to `HISTORY_EXEMPT_FIELDS` passed every other leg here — the partition
+        # holds either way, so the escape hatch was the whole defect wearing a
+        # justification. Same idiom as P10's set equality: widening the
+        # exemption has to be argued in THIS file, in this list, where a
+        # reviewer sees it, and not only in `protocol.py` where it reads as
+        # housekeeping.
+        m["history_exempt_fields"] == ["history", "spec_id"],
+        m["history_fixture_fields_unset"] == [],
+        m["history_loses_no_field"],
+        m["history_fields_dropped"] == [],
+        m["history_fields_altered"] == [],
         # the control must fail: the hand-edit lands and stays invisible
         c["hand_edit_took_effect"],
         not c["detector_sees_amendment"],

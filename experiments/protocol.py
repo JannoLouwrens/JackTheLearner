@@ -79,7 +79,17 @@ RUNNER_OUTPUTS = ("experiments/ledger.json",
                   # next spec to record is stamped `+dirty` by the previous
                   # spec's own receipt: T0.35 attempt 13 (`d1cf88d+dirty`,
                   # dirty_files ['docs/DECISIONS_RESOLVED.md']) recorded seven
-                  # seconds after LG.13's clean bakeoff PASS. RUNNER_OUTPUTS,
+                  # seconds after LG.13's clean bakeoff PASS. THAT VALUE IS NO
+                  # LONGER IN THE LIVE ROW and the 121st audit was right to ask
+                  # where it went: the attempt was superseded on 2026-09-26 and
+                  # the history projection dropped the field (FINDING 1, fixed
+                  # in the same commit as this line). It IS re-derivable, and
+                  # from the ledger itself rather than from anyone's memory —
+                  # `git show d0ff118:experiments/ledger.json` holds T0.35 live
+                  # at `ran_at 2026-09-25T22:29:12`, `commit d1cf88d+dirty`,
+                  # `dirty_files ['docs/DECISIONS_RESOLVED.md']`. Quoted with
+                  # its source because a citation nobody can re-derive is the
+                  # thing this whole file exists to refuse. RUNNER_OUTPUTS,
                   # not DOC_OUTPUTS, per the ledger.json precedent: a file the
                   # runner itself writes is never evidence that CODE moved.
                   # Checked before excluding (the audit's caveat): decisions.py
@@ -113,7 +123,21 @@ RUNNER_OUTPUTS = ("experiments/ledger.json",
 #: prose by the same rule the falsifier gates on: ZERO spec import-closures
 #: name it as a live path. Its 56 code mentions are all `control=`/`notes=`
 #: citations inside registry strings, which is a MENTION, not a read.
-PROSE_DOCS = ("CHECKLIST.md", "docs/LOOP_JOURNAL.md", "docs/LESSONS.md")
+#:
+#: WIDENED AGAIN 2026-09-26 to `docs/OVERSIGHT.md` (121st audit FINDING 3), and
+#: the measurement was re-run here rather than inherited: of the **164** specs
+#: with a resolvable module path, **zero** name `docs/OVERSIGHT.md` anywhere in
+#: their closure — same evidence, same rule, same scanner as `docs/LESSONS.md`
+#: above. The comment under `INSTRUMENT_INPUT_DOCS` used to say it "stays plain
+#: code dirt" on the ground that `steering.py` reads it; that ground was never
+#: the rule. THE CLASS IS ABOUT SPECS, and an organ reading a page is exactly
+#: what fork (c) exists to stop being dirt — leaving it as code dirt let the
+#: overseer's own in-progress report `+dirty` a concurrent registered run,
+#: which is the scar the fork was built for. The move cannot rot silently:
+#: `undeclared_doc_readers` gates `PROSE_DOCS` minus `WRITE_ONLY_DOCS`, so if
+#: any spec ever starts reading this page, `T0.17` P11 goes red.
+PROSE_DOCS = ("CHECKLIST.md", "docs/LOOP_JOURNAL.md", "docs/LESSONS.md",
+              "docs/OVERSIGHT.md")
 
 #: The old name for the prose class, kept because two specs and the gate import
 #: it: `T0.22` and `T0.30` assert on it by name.
@@ -145,8 +169,10 @@ DOC_OUTPUTS = PROSE_DOCS
 #: reaches it, so classing it prose would have blinded a live reader on the
 #: first day of the repair. That correction is the falsifier below earning its
 #: keep before it ever shipped, and it is why the map is scanned rather than
-#: typed. `docs/OVERSIGHT.md` is read by `steering.py` but by NO spec closure,
-#: so it stays plain code dirt: this class is about specs, not organs.
+#: typed. `docs/OVERSIGHT.md` is read by `steering.py` but by NO spec closure —
+#: this class is about specs, not organs — and it is therefore NOT here but in
+#: `PROSE_DOCS` (121st audit FINDING 3, corrected 2026-09-26 the same day this
+#: sentence first said it "stays plain code dirt"; measured, see there).
 #:
 #: `docs/DECISIONS_RESOLVED.md` is NOT here and must not be added: it is in
 #: `RUNNER_OUTPUTS` (119th audit FINDING 4) because `bakeoff.py` appends to it
@@ -711,6 +737,47 @@ class Result:
         return stamp
 
 
+#: The two `Result` fields a superseded verdict does NOT carry into `history`,
+#: and the reason each is exempt. Everything else rides along BY DERIVATION —
+#: see `HISTORY_FIELDS` and `Ledger.record`.
+#:
+#:   `spec_id`  — the key the history list already sits under. A per-entry copy
+#:                could only ever disagree with its container.
+#:   `history`  — recursion. A superseded row's own history is the list the new
+#:                entry is being appended to; copying it in would square the
+#:                file on every re-run.
+HISTORY_EXEMPT_FIELDS = ("spec_id", "history")
+
+#: Every field a superseded verdict carries into `history`, DERIVED from
+#: `Result` rather than typed.
+#:
+#: THE SCAR (121st audit FINDING 1, 2026-09-26). This was a hand-typed
+#: allow-list of ten names, and a field added to `Result` did not join it — so
+#: the projection silently erased `dirty_files` from every row it superseded.
+#: Measured before the repair: 606 history entries, **zero** carrying the key,
+#: while the live rows carried it on 36. Twenty `+dirty` rows have been
+#: recorded since the field shipped (`8a97fd9`, 2026-09-13T06:17:47Z) and
+#: nineteen of them read `dirty_files: None` — which `dirty_recoverability`
+#: then reported to every reader as *"this row predates `dirty_files`"* about
+#: rows that POSTDATE it. `attempt` and `duration_s` were being dropped by the
+#: same line, unnoticed for six weeks longer.
+#:
+#: Derivation is the repair, not another name in the list: the next field added
+#: to `Result` rides along without anyone remembering, and `T0.17` P12 asserts
+#: the partition (every `Result` field is carried or named above) so a future
+#: exemption has to be argued in this file rather than happen by omission.
+HISTORY_FIELDS = tuple(f.name for f in fields(Result)
+                       if f.name not in HISTORY_EXEMPT_FIELDS)
+
+#: When `Result.dirty_files` began being recorded — the commit that shipped the
+#: field, to the second. Read by `dirty_recoverability` to tell a row that
+#: PREDATES the field from one whose value was recorded and then dropped by the
+#: history projection above. A date alone is not enough: `PL.02` ran
+#: 2026-09-13T01:11:50 and genuinely predates it; `T6.03` ran the same day at
+#: 06:44:35 and carries its list.
+DIRTY_FILES_SINCE = "2026-09-13T06:17:47"
+
+
 class Ledger:
     """Append-only record of what has actually been demonstrated.
 
@@ -814,24 +881,23 @@ class Ledger:
                     # amend-after-FAIL auditable by nobody but its author. The
                     # 163 entries written before this date stay evidence-free;
                     # back-filling them would invent numbers nobody recorded.
+                    #
+                    # WHICH fields ride along is DERIVED (`HISTORY_FIELDS`), not
+                    # typed here. The ten-name allow-list this replaces dropped
+                    # `dirty_files` from every row it superseded — see the scar
+                    # on that constant. `if k in prev` is what keeps absence
+                    # absent: a pre-B1 verdict-only row acquires no invented
+                    # keys, which is `T0.17`'s `history_absence_preserved`.
+                    #
+                    # `amended` is in the derived set and needs no special case:
+                    # an amendment is part of what that verdict WAS, and
+                    # dropping it would let a re-run launder a hand-set status
+                    # back into an unqualified historical record.
                     prev = on_disk.get(rid)
                     hist = list(prev.get("history", [])) if prev else []
                     if prev and prev.get("ran_at") != r.ran_at:
-                        row_h = {k: prev.get(k) for k in
-                                 ("status", "ran_at", "commit", "message",
-                                  "metrics", "control_metrics", "impl_sha",
-                                  # `spec_sha` rides along for the same reason
-                                  # `impl_sha` does: auditing a superseded
-                                  # verdict needs the WORDS it was bought
-                                  # under as much as the code (46th audit B1).
-                                  "spec_sha",
-                                  "seeds", "gpu_job_id")
+                        row_h = {k: prev.get(k) for k in HISTORY_FIELDS
                                  if k in prev}
-                        if prev.get("amended"):
-                            # An amendment is part of what that verdict WAS.
-                            # Dropping it here would let a re-run launder a
-                            # hand-set status back into an unqualified record.
-                            row_h["amended"] = prev["amended"]
                         for sk in ("supersedes_fail", "supersedes_void"):
                             if prev.get(sk):
                                 # Same reason as `amended`: the pairing with
@@ -2866,8 +2932,26 @@ def dirty_recoverability(entry: "Result", path) -> tuple:
     base = stamp.split("+")[0] or "?"
     files = getattr(entry, "dirty_files", None)
     if files is None:
-        where = ("what else ran modified is unrecorded — this row predates "
-                 "`dirty_files`")
+        # THREE-VALUED, not two (121st audit FINDING 1b). This branch used to
+        # tell every unrecorded row it "predates `dirty_files`", and 19 of the
+        # 20 `+dirty` rows it says that about POSTDATE the field: their value
+        # was recorded at run time and then dropped by `Ledger.record`'s
+        # history projection when a later attempt superseded them. Same shape
+        # as `audit_supersedes_fail` and the same repair — the sentence
+        # changes, the alarm does not. A reader sent to git by the second
+        # sentence can still get the list back; a reader told the field did not
+        # exist yet cannot.
+        if str(getattr(entry, "ran_at", "") or "") < DIRTY_FILES_SINCE:
+            where = ("what else ran modified is unrecorded — this row predates "
+                     "`dirty_files`, which shipped at 8a97fd9 on "
+                     f"{DIRTY_FILES_SINCE}Z")
+        else:
+            where = ("what else ran modified WAS recorded at run time and is "
+                     "absent from this projection of the row — superseded "
+                     "attempts were written through an allow-list that dropped "
+                     "the field until the 121st audit; recover it from the "
+                     "ledger's own git history at the commit that last held "
+                     "this row live")
     else:
         declared, _ = impl_deps_of(path)
         try:
