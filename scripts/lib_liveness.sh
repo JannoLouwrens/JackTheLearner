@@ -186,6 +186,15 @@ review_liveness() {
     # lib_seal.sh uses; mtime is a checkout artifact) against the 25 h daily
     # cadence. A mid-write sitting leaves the page DIRTY, and stale_output
     # already refuses dirty files, so a live sitting cannot be stamped by this.
+    # _seal_file_age_hours is defined in lib_seal.sh, which this file does not
+    # source — overseer.sh sources both in order (:31-32), but a caller taking
+    # this file alone got `command not found`, then `[: : integer expression
+    # expected`, then a bare return 1. Still fails closed; this line makes the
+    # failure name its cause instead (120th audit item 4).
+    command -v _seal_file_age_hours >/dev/null 2>&1 || {
+      "$sayfn" "review liveness: _seal_file_age_hours undefined — source lib_seal.sh before lib_liveness.sh"
+      return 1
+    }
     page_age=$(_seal_file_age_hours docs/PROGRESS.md)
     if [ "$page_age" -gt 25 ]; then
       reason="docs/PROGRESS.md itself last moved ${page_age}h ago against a 25h cadence; PROGRESS_LOG.md's fresh row is the dying run's own B4 disclosure and cannot vouch for the page"
