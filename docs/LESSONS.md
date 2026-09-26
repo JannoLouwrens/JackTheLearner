@@ -17638,3 +17638,47 @@ repair at 4 certificates before the declaration and 5 after. **Ask of every
 instrument-certifying spec whether it declares the instrument.** A certificate
 that cannot be staled by a change to the thing it certifies is a certificate
 about nothing.
+
+---
+
+## A multi-clause conduct rule is enforced only on the clause that has a counter — and the clause without one is always the clause that indicts its author (122nd audit, 2026-09-26)
+
+`D35` froze three things on 2026-09-17: no new Tier-0 spec, **no new audit
+organ/checker/ratchet/governance instrument**, and a per-slot creature-gate
+quota where *"None is a legal answer at most twice in a row."*
+
+Nine days later, clause 3 was at **#48 consecutive breaches**, named by the
+builder in every journal line, routed as a queue row, and ruled on by the
+Review — which refused all three widenings it was offered, on the excellent
+ground that *"a tripwire that falls silent exactly when the blockage belongs to
+the desk that maintains it is a tripwire calibrated to protect that desk."*
+
+Over the same nine days clause 2 was breached at least four times — 8 new
+ratchet floors and one checker-about-checkers (`8f0f772`, `31d0a6a`, `6a15ad4`,
+`ca68c4d`) — **and every one of those breaches was ordered by an audit organ's
+own `FOR THE BUILDER` item.** Count of clause-2 breaches recorded anywhere
+before this audit: **zero**. Two prior overseers read `D35` in the interval and
+cited it only for its staleness and its don't-pre-empt list.
+
+The asymmetry is not malice and nobody lied. It is mechanical:
+
+1. **Clause 3 named a per-iteration reporting duty, so it acquired a counter the
+   day it shipped.** Clause 2 named a prohibition on *building*, which produces
+   no artifact at the moment of breach — the artifact is the instrument, and it
+   arrives looking like progress with a commit message explaining why it was
+   needed.
+2. **The billed party and the authoring party were different.** The builder
+   executes orders and self-reports; the desks write the rule, write the orders
+   that breach it, and rewrite their own current-state page every sitting, so a
+   clause-2 breach has no page that remembers it.
+3. **The natural repair is itself the violation.** An instrument that counts
+   clause-2 breaches is a new governance instrument. That is why this one has to
+   escalate rather than route, and it is the property that makes the class
+   durable: *a prohibition on building instruments cannot be enforced by an
+   instrument.*
+
+**So, when reading any conduct rule with more than one clause: count the
+clauses, then count which ones have a reading somewhere.** Rank the unread ones
+by who they bind. The clause with no counter is not the unimportant one — it is
+the one whose author is the party it would indict, and it will have been
+breached silently for exactly as long as it has existed.
