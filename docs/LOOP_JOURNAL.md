@@ -19015,3 +19015,129 @@ registration, `D33`/`D35`/`D36`, `UB.10`'s successor arm, `T1.08`'s pipeline
 design, the `w1-world-edit-window` docket, the `lc03` seat row, the `t306` venue
 row, `A4`'s three-way fork, the `ba03-registered-run-foreclosed-by-d20` options,
 `SM.03`'s F1 arm pick, **and the `PL.02` gate disposition routed today.**
+
+## 2026-09-26 17:0x — the 24th empty board, and the unit was a REPORT that had been naming the wrong file for half its rows
+
+**Model: OPUS.** `week:Fable` 95% tripped the 95% model floor (D14 option (b)) and
+the chain walked me to opus in ~3 s, self-announcing in `ladder.log` exactly as
+the steering page says. `week:all models` **65%** — that is the gate, it is 25
+points under the 90% stop, and no pacing skip fired. `lost_iterations.log` 0
+bytes, which is correct: a declared model-floor refusal that succeeds on the next
+model is not a lost iteration. Two `LIVE NOTICE` lines named the 16:0x slot's
+`T0.21`/`T0.31` detached re-buys as EXITED with artifacts possibly outside the
+harvest paths — **nothing owed: both rows are already on the ledger at `9c06769`,
+verified before I moved on.**
+
+**BOARD, re-derived from BOTH tools rather than inherited.** `run next`: 0 fresh ·
+35 settled · 14 held. `run review-queue`: 42 OPEN / 20 DISPOSITIONED, drain still
+UNBOUNDED. `run coverage`: the only `cpu<10min` entry is `PS.09` (VOID), the four
+zero-pass PS commitments are held by the PS-family ruling's own sequencing behind
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` (OPEN, DUE 10-03 — I
+verified that hold at source again), every GPU class is a settled arm or
+pilot-blocked. **All four OVERSIGHT `FOR THE BUILDER` items are DISCHARGED and I
+checked each at source, not by claim:** `HISTORY_FIELDS` is now derived from
+`Result` (item 1a/the durable half), `dirty_recoverability`'s branch is
+three-valued (1b), the `T0.35` a13 citation is re-derived from
+`git show d0ff118:experiments/ledger.json` (1c), `docs/OVERSIGHT.md` is in
+`PROSE_DOCS` (item 4), and `cmd_status` now returns `ratchet_exit_code` (item 3).
+`1^12` item 2 (the dark-slot counter) is also done, with the fixture.
+
+**THE UNIT — `run status`'s STALE CLAIMS block was making a false statement about
+half the rows it printed, and the number is 10 of 20.** `impl_sha` is a composite
+over the spec's test file AND every `IMPL_DEPS` path; `staleness_of`'s CHANGED
+detail names the test file because that is the hash's NAME, and the heading read
+*"the test changed after the run that recorded it"*. Measured, two independent
+methods agreeing on all 20 rows: **8 moved on their own test file, 10 on a
+declared dependency ONLY with the own file byte-identical** (`T2.07`←`t2_06`,
+`T3.07`←`t2_12`, `T0.27`←`protocol.py`, `ME.11.B/C/D`←`me_11_a`,
+`XL.01`/`SO.07`←`EpisodicMemory.py`, `SO.10`←`bakeoff.py`,
+`T0.28`←`docs/REVIEW_QUEUE.md`), **2 on both** (`T2.15`, `UB.10`). A builder
+reading *"t2_07_heldout_grounding.py: ran on X, now Y"* goes looking in the one
+file that did not move. Third instance of the `dirty_recoverability` /
+`audit_supersedes_fail` shape, same repair: **the sentence changes, the alarm does
+not** — all 20 rows are still stale, nothing excused, no bar or control touched.
+
+**What shipped (`d0a6f20`):** `stale_path_attribution` + `stale_attribution_line`
+in `run.py`, wired into `run stale` AND `run status`, naming the moved member per
+row; the ATTRIBUTED split printed as a count; and a third cause nothing could see
+before — **the `IMPL_DEPS` DECLARATION itself moving**, so the recorded hash
+covers a different path set than today's.
+
+**Three things I would want a successor to check rather than trust.**
+1. **The cheap method was verified against the expensive one BEFORE it shipped**
+   and the cross-check is now a permanent guard. One `git cat-file --batch` per
+   row at the row's own recorded commit: **0.42 s over 21 rows** vs **6.7 s** for
+   `tree_reconstructing_sha`, which walks the hash's own history — required to
+   reproduce that function's answer on all 20 rows, own/dep/both. Two
+   implementations of the same hash diverging in silence is a bill this repo has
+   already paid once.
+2. **Both guards are RED-FIRST PROVEN, not asserted.** Patching the cheap method
+   to name a wrong dep makes `_check_stale_attribution` raise; a row stamped at
+   the repository's ROOT commit may not read "same" about a test file written
+   later (or every first-attempt row is mis-attributed); and "nothing moved while
+   `impl_sha` says something did" is REPORTED, worded apart from the
+   not-stale-at-all misuse (checked on `T0.01`).
+3. **It went in `run.py`, not `protocol.py` where the sentence is generated.**
+   `run.py` is declared by ONE spec (`T0.36`, `cpu<1min`); `protocol.py` by four
+   (`T0.17`, `T0.27`, `T0.33`, `T0.35`). A repair for a staleness mis-statement
+   must not itself stale four certificates. Cost +1.36 s on a ~15 s tool,
+   profiled per piece rather than guessed.
+
+**STALENESS BILL PAID IN SLOT, clean tree.** `run stale-cost` priced it at one
+certificate BEFORE the commit — `T0.36` PASS, `cpu<1min`. Re-bought after:
+**`T0.36` PASS attempt 4, 34.97 s, HASH-SALT DIFFERENTIAL CLEAN** (salt 1, 3
+deciding metrics reproduced in a fresh process), `properties_failed` 0 of 7,
+`overstated_roots` 0, `ladder_size` 254. `stale-cost` now reads 0 standing PASS
+certificates and the stale block is back to 20 rows at the 8/10/2 split.
+**NO RATCHET MOVED** — claim_dead 3, unreachable 95, pass_on_dead_dependency 3,
+fail_unowned 0, review_queue_violations 1, net_arrivals 18, piled_on 3,
+commitments_uncovered 0, cpu_foreclosed_now 37, all unchanged; the single
+`!! ABOVE` floor breach is `decisions_default_action_expired` 1 (D33, the
+Review's, untouched). Instruments after, all re-run rather than inherited: status
+**rc=2**, coverage **rc=2**, review-queue **rc=2**, `decisions --check` **rc=1**,
+champions **rc=0**, render **rc=0**, stale **rc=0** — every red pre-existing and
+routed. `git add` by name, 12 claude procs = self-chain, no foreign files in the
+tree.
+
+**RESIDUAL NAMED, NOT ROUTED — deliberately, because it already has a home.**
+`T0.28` declares `docs/REVIEW_QUEUE.md`, `docs/DECISIONS_NEEDED.md` and
+`docs/PROGRESS.md` in `IMPL_DEPS`, so **its certificate is staled by every Review
+sitting** — 7 of its re-buys fell in the last 7 days, and this slot's attribution
+is what makes that visible per row for the first time. **A spec that declares
+another organ's output file can never hold a stable certificate, and that is a
+fact about the declaration, not about the spec.** It sits inside
+`cross-organ-doc-race-voids-certificates` (DISPOSITIONED, DUE 10-03). I did NOT
+write a 91st row for it: the drain is UNBOUNDED at 65 live rows and a duplicate
+row is a cost with no reader.
+
+**CREATURE GATE MOVED: NONE (#47).** Recorded as a real breach per the `d35`
+disposition delivered this morning, which refused every widening and refused to
+suspend the quota when the only blockers are desk-owned: *"a tripwire that falls
+silent exactly when the blockage belongs to the desk that maintains it is a
+tripwire calibrated to protect that desk."* Both live routes to a creature gate
+pass through `T1.08`, whose pipeline repair is the Review's
+(`t108-pipeline-repair-has-no-design`, DUE 10-02) and whose sequencing is `D36`,
+due today. I did not re-derive that arithmetic — it is the disposition's, and it
+is the Review's to act on.
+
+**W38 GPU REFUSAL #47, and the hours die in ~7 hours.** `2026-W38` holds 0.9176 h
+charged of 30; **~29.08 free Kaggle hours expire 2026-09-27 00:00 UTC** and there
+is still no legal buyer (`coverage`: every GPU class a settled arm, a VOID arm or
+pilot-blocked; three classes EMPTY with NO PATH IN). Nothing manufactured against
+them for the twenty-first consecutive slot. Second consecutive week the full
+allocation dies, both behind the same undesigned `T1.08` repair — named in the
+overseer's `FOR THE OWNER` #1, not mine to fix and I did not try.
+
+**NEXT ITERATION (18:07):** board will still read 0 fresh — re-derive it from
+BOTH tools, and note `run next` ranks DISPATCHES while `review-queue`'s
+`DISPOSITIONED` class is where implementation units live. **06:37 tomorrow is the
+Sunday FULL** that `D36` decides the contents of and on which the Review has
+pre-committed to DECLINE the W1 authorship if the date breaks a fifth time; 14
+live dated rows fall due by it against a measured capacity of 6. **If you are
+idle, the honest answer is still that the board is empty — do not re-run a
+settled row to look busy.** Do NOT pre-empt: `W1.01`/`W1.03`/`W1.04`
+registration, `D33`/`D35`/`D36`, `UB.10`'s successor arm, `T1.08`'s pipeline
+design, the `w1-world-edit-window` docket, the `lc03` seat row, the `t306` venue
+row, `A4`'s three-way fork, the `ba03-registered-run-foreclosed-by-d20` options,
+`SM.03`'s F1 arm pick, the `PL.02` gate disposition, and the PS-family sibling
+inheritance (`PS.05`/`PS.06`/`PS.08`), which is held at source.
