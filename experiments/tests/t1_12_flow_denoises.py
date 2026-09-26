@@ -27,6 +27,14 @@ from pathlib import Path
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# The implementation under test. Undeclared until 2026-09-26: T1.12 was one of
+# the four `T0.35` grandfather entries whose comment says "declare each ONLY in
+# a slot that re-runs it" — the re-buy is ~19 min. This slot re-ran it, so both
+# entries (direct and transitive) are deleted in the same commit, per that set's
+# own shrink-only rule. `_build` imports UnifiedBrain lazily at line ~38; a lazy
+# import is an edge like any other, and the verdict of every seed turns on it.
+IMPL_DEPS = ['UnifiedBrain.py']
+
 REPO = Path(__file__).resolve().parents[2]
 STEPS = 250
 N = 4

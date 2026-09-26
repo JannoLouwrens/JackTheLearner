@@ -148,7 +148,8 @@ GRANDFATHERED = {
     "LF.01": ("EpisodicMemory",),
     "T1.01": ("UnifiedBrain",),
     "T1.06": ("UnifiedBrain",),
-    "T1.12": ("UnifiedBrain",),
+    # T1.12 deleted 2026-09-26: declared in the same commit and re-bought in
+    # the same slot, which is what this set's comment asks for.
     "T2.00": ("TrainingPipeline",),
     "T2.10": ("EpisodicMemory",),
     "T3.09": ("EpisodicMemory",),
@@ -187,7 +188,7 @@ TRANSITIVE_GRANDFATHERED = {
     "T0.26": ("experiments/tests/ba_01_feels_the_fall.py",),
     "T1.01": ("UnifiedBrain.py",),
     "T1.06": ("UnifiedBrain.py",),
-    "T1.12": ("UnifiedBrain.py",),
+    # T1.12 deleted 2026-09-26 — see the direct set above.
     "T2.00": ("TrainingPipeline.py",),
     "T2.10": ("EpisodicMemory.py", "experiments/tests/me_1_event_log.py"),
     "T3.09": ("EpisodicMemory.py",),
