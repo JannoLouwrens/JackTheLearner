@@ -19391,3 +19391,157 @@ seat row, the `t306` venue row, `A4`'s three-way fork, the
 `ba03-registered-run-foreclosed-by-d20` options, `SM.03`'s F1 arm pick, the
 `PL.02` gate disposition, and the PS-family sibling inheritance
 (`PS.05`/`PS.06`/`PS.08`), held at source by the `ps09` ruling.
+
+## 2026-09-26 20:0x — the 25th empty board, and the unit was the half of the ledger no instrument has ever replayed
+
+**METERS AND MODEL.** `week:Fable` **95%** and pinned, so the chain walked me to
+**OPUS** — expected, self-announcing, not a fault. Acting on **`week:all
+models` 66%**, which is the gate, under the 90 stop. `--week-elapsed` **80**, so
+`pace_gate`'s line is `25 + ((90-25)*80+99)/100 = ~77.99` and did not fire; no
+`PACING:` line in `ladder.log`. Session 7% -> 8%. Dark slots **0** —
+`lost_iterations.log` 0 bytes and the last four slots all ended `rc=0`.
+
+**BOARD, re-derived from BOTH tools per `1^13`.** `run next`: **0 fresh** of 50
+(36 carrying a settled verdict, 14 held) — the twenty-fifth consecutive empty
+board. `run review-queue`: 20 DISPOSITIONED, and **all six `1^13` units are
+discharged**, verified at source rather than inherited: unit 1 (`PS.09`'s
+known-answer conjunct) shipped and its attempt 2 recorded VOID on the new
+conjunct's own signal arm; units 2-3 (`PS.05`/`PS.06`/`PS.08`) are ON HOLD by
+the ruling's own sequencing behind `ps09-known-answer-floor-was-calibrated-on-
+an-oracle-cut`; unit 4 (`LT.02`'s body-carried noise source) is `88762a2` plus a
+registered **PASS** on the ledger at 2026-09-25T13:25:19; unit 5 (`T2.15`'s
+`tfidf_retrieval_correct` promoted to GATED) is in the registry's own
+`falsified_by`. `1^12` item 2 (the dark-slot counter) is `e0786a0`. Nothing was
+owed and nothing was manufactured.
+
+**THE UNIT: `run verify` and `T0.13` are both PASS-scoped in one line, so the 47
+adverse rows on this ledger have never had a verdict re-derived — and two of
+them are decided by a module-global memo rather than by their own record.**
+`verify.collect()` does `if r.status is not Status.PASS: continue`
+(`experiments/verify.py:242`); `T0.13._passing()` yields only PASS rows
+(`t0_13_gates_are_live.py:748`), which is why it reports `gates_scanned` **109**
+— exactly the PASS count, against 156 rows. Replayed all 47 in a fresh process
+through `verify._verdict` so `coerce_check_return` applies (one-off script in
+/tmp, no ledger write, clean tree): **41 agree, 3 DISAGREE, 2 RAISE, 1 (`T6.03`,
+BLOCKED) has no `_check` verdict to replay.**
+
+Three of the five are benign and already visible in `run stale` — strengthened
+gates on STALE rows: `T3.09` FAIL -> VOID (its `c["shuf_gain"] >= MARGIN_AFF`
+lane was armed after the run), `D1.0` RAISED `KeyError
+'untrained_aprime_excess'`, `UB.10` RAISED `KeyError 'a0_headroom_ok'`.
+
+**The finding is the two CLEAN ones.** `LG.10` and `LG.12` are stored **FAIL**,
+replay **VOID**, and are `impl_sha`-clean — byte-identical test files, recorded
+metrics fed back. Cause read off source, not inferred: both `_check`s decide on
+`_per_seed()`/`_seeds_complete()`, which read the module-global `_MEMO` that
+`_measure()` fills DURING the run (`lg_12:498-503`, gate `:524-565`;
+`lg_10:615-636`). Fresh process -> memo empty -> the first rig lane returns
+VOID. **`_check` is not a function of `(m, c)` for these two**, and the runner,
+`verify` probe A, `verify` probe B and `T0.13`'s perturbation all assume it is.
+
+**WHAT I DID NOT CLAIM, and I checked before writing the row.** The stored FAILs
+are almost certainly CORRECT and they reconstruct BY HAND: at `n=3` the per-seed
+spread is bounded by `std*sqrt(2)`, which on `LG.12` clears every rig lane and
+the declared mute-mouth FAIL at `:543` (`utter_rate` 0.9445 +/- 0.0393 -> min
+>= 0.889; swap 0.9167 +/- 0.0681 -> min >= 0.820; `UTTER_MIN` 0.50), leaving the
+claim conjunct as the only site that can have fired — and it missed wide
+(`match_on_spoken_at_utterance_floor` 0.679, `unanimity_on_spoken` 0.202 vs
+0.90; `swap_agree` 0.785 vs 0.90) with both controls clean (`null_match_on_
+spoken` 0.044 vs `NULL_MATCH_MAX` 0.35). **The ledger holds no wrong verdict; it
+holds an unverifiable one** — that reconstruction needs an `n=3` argument no
+instrument applies and the gate does not use.
+
+**Three consequences, each mechanical.** (1) `T0.13` would certify these gates
+LIVE and be wrong: `LG.10`'s gate subscripts `m` and `c` **zero** times, so no
+perturbation of any recorded metric can move it; it appears in neither
+`disarmed_detail` nor `keyless_detail` and `keyless_gates` reads 0. (2) `verify`
+probe B would MIS-NAME the defect the moment either passed — `LG.10` takes
+`null_match` from the memo, so deleting `c` leaves the verdict unmoved and probe
+B reports *"gate IGNORES its control"*, which is false; that is the `LT.03`
+mis-naming scar (`protocol.py:1439-1445`) arriving through a second, unrelated
+mechanism, which is the argument for a CLASS rather than two spec fixes. (3)
+**Exposure today is ZERO and it is measured, not assumed:** `run verify` EXIT 0
+this slot, 108 PASS rows re-derived, 0 disagreements, 0 unevaluable. The hole is
+that the shape is invisible while a spec is RED — a gate becomes auditable only
+by passing, which is the wrong direction for a safeguard to point.
+
+**ROUTED, NOT DECIDED.** `adverse-verdicts-are-re-derived-by-nobody`, **DUE
+2026-10-05** (the tool's own `next_free_due`; 09-27 already carries 7 against a
+measured capacity of 6), **WAITS-ON `lg12-abstention-knob-has-no-resolution`**
+(DUE 09-28) for its ORDER and not its answer — that row prices a redesign
+against `LG.12`'s FAIL and its sitter should know the warrant. Menu priced in
+ascending mechanical bill and **none of it taken**: (i) `_check` purity as a
+contract plus a two-file spec repair; (ii) record the per-seed values, probably
+a FOLD into `aggregate-hides-worst-seed` (OPEN, DUE 09-29) rather than a second
+repair of one seam; (iii) widen `verify`/`T0.13` past the PASS set — the only
+self-reporting option and **the one `D35` clause 2 forbids this loop from
+building. NO INSTRUMENT PROPOSED and no exemption requested.** LESSONS entry
+added: an integrity scan scoped to the green rows can only audit a gate after
+that gate has stopped needing it.
+
+**STALENESS BILL PAID IN SLOT, AND IT BIT ME.** `stale-cost` priced the
+`REVIEW_QUEUE.md` edit at `T0.21` + `T0.31` before the commit. From the clean
+tree at `a530666`, both `dirty_files None`: `T0.21` **PASS a22** 9.94 s,
+HASH-SALT DIFFERENTIAL CLEAN — and **`T0.31` came back FAIL a22** on
+`p1_live_document_is_in_contract`. **The cause was my own row**: `audit()`
+returned `MALFORMED 1` naming
+``WAITS-ON names 'lg12-...` (DUE 2026-09-28)', which is not a row here`` — I had
+written the coupling declaration as ``WAITS-ON: `<id>` (DUE ...) | why``, and
+the parser takes everything left of the `|` as the id, so the backticks and the
+parenthetical became part of it. **Fixed the DOCUMENT, not the fixture** (bare
+id, date moved right of the pipe); `audit()` re-reads `n_rows 92, MALFORMED 0`;
+`T0.31` **PASS a23** 1.77 s, salt-clean. Nothing loosened, no threshold moved,
+the FAIL stays in history. `stale-cost` now prices 0. A declaration field with a
+strict parser refuses YOUR formatting before anyone else's.
+
+**INSTRUMENTS AFTER, all six re-derived bare and none inherited:** `verify`
+**0**, `status` **2**, `coverage` **2**, `decisions` **1**, `champions` **0**,
+`review-queue` **2**, `render` **0**. And the DELTA, quoted from the tool rather
+than composed beside those levels: *ratchets vs committed readings (HEAD): 1
+MOVED (`review_queue_net_arrivals` 19 -> 20); no counter refused to compute;
+floors: 2 ABOVE (`decisions_default_action_expired`, `pass_on_dead_dependency`),
+0 BELOW, 0 UNVERIFIED.* The move is MINE — act +1, clock +0, this slot's routing
+— cause READ off `T0.31`'s own `live_net_arrivals 20.0`, recorded with
+`ratchets record --reason` in this commit. **No floor was raised.** Both floor
+breaches are pre-existing and owned elsewhere: `decisions_default_action_expired`
+1 is `D33`, the Review's; `pass_on_dead_dependency` 5 is the `T0.13` pair plus
+`T1.08`'s two, and the repair is the per-key ruling under
+`t013-latently-red-28-disarmed-keys` (DUE 10-05).
+
+**CREATURE GATE MOVED: NONE (#50).** Recorded as a real breach per the `d35`
+disposition. Chain re-derived from `registry.py` this slot rather than
+inherited: `T6.01` <- `T4.05` <- `T4.04` <- **`T2.01`** (FAIL, both repair lanes
+Review-owned), and `T2.01` <- `T1.08` (FAIL, pipeline repair the Review's,
+`t108-pipeline-repair-has-no-design` DUE 10-02); `XL.01` FAIL <- `PS.02`/`XL.00`
+with its repair-path row OPEN to 10-03. **So the freeze's own release condition
+runs through the blocker the freeze was declared over**, and the NONE streak is
+structural arithmetic, not a builder declining to look. I did not touch that
+edge — `D35` forbids registering `T6.01` as anything cheaper than the episode
+its title names.
+
+**GPU: `2026-W39` open with a full 30 free Kaggle hours, 0 charged.** W38's
+~29.08 expired at 00:00 — second consecutive week lost, ~58 hours, both behind
+the same undesigned `T1.08` repair. `coverage` still reads every GPU cost class
+`NOT FILLABLE — the repair is a REDESIGN`, so W39 has no legal buyer either and
+I manufactured nothing against it — **refusal #50.**
+
+**HYGIENE.** Tree clean at commit, `git add` by name across 5 paths, 13 claude
+procs = the self-chain, no foreign files in the tree, /data 68G free, steering
+page 96212 B (28788 under the 125000 rule), no detached runs, no stray pids,
+pushed.
+
+**NEXT ITERATION (21:07):** the board will read 0 fresh a twenty-sixth time —
+re-derive from BOTH tools and **quote the slot line from `run ratchets` rather
+than composing one from the exit codes.** **06:37 tomorrow is the Sunday FULL**
+on which the Review has pre-committed to DECLINE the `W1` authorship if the date
+breaks a fifth time; do not pre-empt it, and the 07:0x slot should diff
+`PROGRESS.md`/`OVERSIGHT.md` for fresh FOR THE BUILDER items. If you are idle,
+the `1^13` PS-family hold is REAL and verified at source — it is not an excuse
+to invent work. Do NOT re-run `T0.13` to recover its PASS and do NOT add a
+disarmed-key adjudication list; `T0.18`'s re-buy stays OWED AND BLOCKED behind
+it. Still not yours: `W1.01`/`W1.03`/`W1.04` registration, `D33`/`D35`/`D36`,
+`UB.10`'s successor arm, `T1.08`'s pipeline design, the `w1-world-edit-window`
+docket, the `lc03` seat row, the `t306` venue row, `A4`'s three-way fork, the
+`ba03-registered-run-foreclosed-by-d20` options, `SM.03`'s F1 arm pick, the
+`PL.02` gate disposition, **and the `adverse-verdicts` disposition routed
+today** — option (iii) is instrument scope and `D35` clause 2 owns it.
