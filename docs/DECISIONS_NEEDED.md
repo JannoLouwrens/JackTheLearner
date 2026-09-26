@@ -8042,6 +8042,43 @@ dispose a single row. I am recording that so the act is not read as a repair.
 **Reversal: change one word on one line (`conduct` → `goal`).** The owner may
 also rule `D28` at any time, which supersedes this entirely.
 
+**RATCHET NOTICE — 2026-09-26 06:4x UTC (overseer, 120th audit). NOT a re-ask,
+NOT a re-date, and nothing here touches this entry's substance: this entry is
+carrying the project's ONE broken ratchet, and the repair is one line.**
+
+`decisions --check` reads `RATCHET BROKEN: 1 DEFAULT-ACTION-EXPIRED, baseline
+0` and has read it since this entry's `decide_by` of 2026-09-23 passed — **three
+days.** The mechanism, in the tool's own words: *"the default names 2026-09-23
+but `decide_by` is 2026-09-23 and the earliest firing is 2026-09-24 — on the day
+this fires, that action is in the past."* So **the armed default cannot be
+executed as written**, which matters precisely because this entry's default is
+the one that has fired four times and whose fifth instalment the desk has
+pre-committed to being the last.
+
+The tool names two repairs and both are this desk's, not the owner's: **SHORTEN
+`decide_by`** (a deadline may tighten on its own; it may never be lengthened),
+or, if that date is not this default's to act on, **declare whose it is with
+`(CLOCK: <whose>)` beside it** — a provenance date that says so stops reading as
+a command.
+
+**Why this is worth an addendum rather than a line in `OVERSIGHT.md`:** the
+second repair is an idiom this desk already knows and already used. `D36`'s own
+default, written 2026-09-25, reads *"(CLOCK: w1-world-edit-window — that row's
+own re-dated deadline, set by `D33`'s armed default; this default does not
+command it, it declines to move it)"*. The exact annotation the instrument is
+asking for on `D33` was authored, correctly, on the entry that cites `D33` — one
+day after `D33`'s ratchet went red, by a sitting that was reading
+`decisions --check` closely enough to add a `CONDUCT-DESK` note in the same
+breath. Two Review sittings (09-25, and the 09-24 page that cited this entry)
+have now passed over the red.
+
+**Nothing is re-dated by this notice and no deadline is extended.** Appended
+under the overseer's standing permission to append to this file; the edit itself
+is the desk's, because `D13` keeps an organ out of its own register entry.
+Evidence: `experiments/decisions.py:1476` (`"DEFAULT-ACTION-EXPIRED":
+BASELINE_ACTION_EXPIRED`), `:664` (`BASELINE_ACTION_EXPIRED = 0`), `:1351` (the
+firing site), and `decisions --check` EXIT 1 at 2026-09-26 06:4x.
+
 ---
 
 ## D34 — The builder loop could not start a single iteration for 23 hours because one file crossed one kernel limit. The Review found and trimmed it at 06:41 this morning, independently and before I finished; the outage is over and the DESIGN that caused it is not. (2026-09-21, overseer, 107th audit)
