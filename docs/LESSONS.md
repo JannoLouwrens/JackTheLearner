@@ -17238,3 +17238,51 @@ BEFORE choosing to share it, not after. Routed as
 `doc-declarations-restale-three-tier0-certificates-daily`; it was not
 self-served at the builder's desk, because exempting docs from the hash would be
 the second mechanism the ruling refused.
+
+## A FIELD ADDED TO MAKE A ROW AUDITABLE IS ONLY AS DURABLE AS THE PROJECTION THAT ARCHIVES THE ROW — 19 of 20 dirty rows lost it on the next re-buy (overseer, 121st audit, 2026-09-26)
+
+On 2026-09-13, `8a97fd9` made `env_stamp` record the dirty file LIST and not
+only the `+dirty` bit derived from it. Its stated reason was exact and correct:
+the list *"was computed here and discarded from 2026-08-10 until 2026-09-13,
+which made 'was the dirt in the implementation this row names?' unanswerable the
+moment the working tree moved on — and that is the only question a reader of a
+dirty row has."*
+
+**The list is still discarded, one layer down, by the ledger's own history
+projection.** `Ledger.record` archives a superseded row through a fixed
+allow-list of keys (`status`, `ran_at`, `commit`, `message`, `metrics`,
+`control_metrics`, `impl_sha`, `spec_sha`, `seeds`, `gpu_job_id`). A field not
+named there survives exactly as long as the row is the CURRENT one. Measured
+thirteen days later: **20 rows stamped `+dirty` since the recorder shipped, 19
+carrying `dirty_files: None`.** The single survivor is BLOCKED and has not been
+re-run. Across the whole file the field is populated on **1 row of 762**.
+
+**The general rule: a WRITE-side repair is not complete until the ARCHIVE side
+is checked, and an allow-list archive silently drops every field added after
+it.** A deny-list would have carried the new field by default and required an
+argument to drop it; an allow-list requires an argument to keep it, and nobody
+is there to make that argument at the moment a different commit adds a field.
+Two other fields — `attempt` and `duration_s` — are dropped by the same line and
+nobody noticed either.
+
+**Three ways it bit, all of them second-order, which is why it survived
+thirteen days:**
+
+- **The reader tells the rows a false thing about themselves.**
+  `dirty_recoverability` branches on `files is None` and prints *"this row
+  predates `dirty_files`"*. Nineteen rows postdate it and were stripped. The
+  same function's docstring names this exact shape — a red instrument whose
+  sentence is false for most rows it prints — as the defect it was itself
+  repaired against. A two-valued branch on a field with three histories
+  (never recorded / recorded / recorded-then-stripped) will always mislabel the
+  third.
+- **A source comment cites a value the record can no longer produce.** The
+  classifier's justification for moving a file into `RUNNER_OUTPUTS` quotes a
+  specific row's `dirty_files` contents. The row holds `None`. The *decision*
+  was sound and independently checkable in source; the *citation* rotted, and a
+  citation is what a later reader actually reaches for.
+- **A verification was performed against the empty field and read as
+  confirmation.** *"0 of 156 ledger rows carry a `docs/.md` `dirty_files`
+  entry"* is true and vacuous over a field null on 761 of 762 rows. **A count
+  is only a check if the field can be non-zero; always print the denominator of
+  rows that COULD have carried the value, not the denominator of rows.**
