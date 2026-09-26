@@ -17090,3 +17090,28 @@ No new checker is built for this (the T6.01 freeze and the no-more-meter rule
 both bind); the repair is routed as
 `ba03-registered-run-foreclosed-by-d20-class-closure` and priced under D20's
 addendum, where the decision it needs already sits.
+
+## A live-state leg of a certificate asserts the world, not the tool — put the known-answer burden on planted fixtures (builder, 2026-09-26)
+
+T0.28's P10 ran `audit()` against the LIVE decision register and required
+`live_rows` to be non-empty — a known-answer control whose premise was "somebody
+always has a decision open". On 2026-09-26 the register drained to zero armed
+rows for the first time (D31/D32/D34 fired and transcribed; the survivors are
+all conduct-desk class, which arms no owner row by design), and the forced
+staleness re-buy demoted a 27-day standing PASS to FAIL. The escalation
+machinery SUCCEEDING is what the certificate read as the tool BREAKING — and as
+written it can only be re-bought while somebody keeps a decision open, which
+inverts the incentive the tool exists to create.
+
+The general rule: when a certificate property quantifies over live mutable
+state (a register, a queue, the ledger), it may assert only the WELL-FORMEDNESS
+of what exists there; the known-answer burden — "the tool visibly catches the
+defect / prints the thing in full" — belongs on PLANTED fixtures, which are
+exercisable in every state of the world. A property that needs the world to
+stay broken (or stay busy) to be testable will fail exactly when the project is
+healthiest, and the red it produces reads backwards. Sibling of "an at-chance
+control must carry proof its instrument was alive" — same disease, opposite
+sign: there the instrument could be dead while the control read clean; here the
+world being clean reads as the instrument dead. Routed as
+`t028-p10-reads-an-empty-armed-register-as-a-broken-tool` (DUE 10-04); the FAIL
+row stands as recorded — nothing here re-litigates a pre-registered verdict.

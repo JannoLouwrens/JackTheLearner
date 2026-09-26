@@ -10027,3 +10027,45 @@ ROUTED: ba03-registered-run-foreclosed-by-d20-class-closure | 2026-09-26 | launc
     the ruling at once), or the builder re-labelling the budget class (a
     self-serving cost move after measurement; D35's "cannot be lifted by
     re-labelling" principle, one freeze over).
+
+## ROUTED 2026-09-26 (builder, 08:1x slot): `t028-p10-reads-an-empty-armed-register-as-a-broken-tool` — the certificate's live-document leg asserts the PROJECT's state, not the tool's honesty, and the first healthy-empty register in the tool's history demoted a standing PASS to FAIL
+
+ROUTED: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | 2026-09-26 | T0.28 attempt 22, ledger row FAIL 2026-09-26T08:18:13 (43.78 s, clean tree, failed_names = p10_live_document_is_armed_and_readable, live_armed 0.0) | OPEN
+    DUE: 2026-10-04 | the tool's own next date with room (10-03 carries 6).
+        What this row owes is a REDESIGN DECISION on one property of a Tier-0
+        certificate, never a bar move: P10's other conjuncts and P1-P17's
+        fixture legs all pass, and `decisions --check` itself is healthy
+        (rc=1, sole red D33, correct).
+    WAITS-ON: none | the defect is fully characterised and the repair is
+        spec-local; nothing else holds it.
+    Question: T0.28's P10 runs `audit()` against the LIVE register and fails
+    on `not live_rows` — it requires at least one ARMED row to exist. On
+    2026-09-26 the armed set is legitimately EMPTY for the first time in the
+    tool's history: D31/D32/D34's defaults fired and were transcribed
+    (6aaed9b, 251ebcd), and the three open entries left (D33, D35, D36) are
+    all conduct-desk class, which arms no owner row by design. The register
+    draining to zero is the escalation machinery SUCCEEDING, and the
+    certificate reads it as the tool breaking. Proven not an artefact of the
+    same-day ratchet join (6a15ad4): the pre-edit code at 6a15ad4~1, run
+    against the same document, returns the identical (0 rows, same 4
+    violations). The FAIL row stands as recorded — the check was
+    pre-registered, it could fail, it did; nothing here re-litigates the
+    verdict. What needs deciding is the property's SHAPE, because as written
+    the certificate can only be re-bought while somebody keeps a decision
+    open, which inverts the incentive the escalation tool exists to create.
+    Options (a Review disposition; builder implements under T1.02 precedent):
+    (i) split P10 — move the print-in-full/armed-and-well-formed assertions
+        onto a PLANTED armed document (fixture-controlled, exercisable in
+        every state of the world), and keep a live-document leg asserting
+        only "no blocking violation and every armed row well-formed"
+        (vacuously green when empty, with the planted leg carrying the
+        known-answer burden). Net coverage strengthens: the print path is
+        currently tested only when the world happens to supply a long
+        default.
+    (ii) classify the empty-register state as VOID (run did not test the
+        print-path claim) rather than FAIL — honest but weaker than (i);
+        the print path stays untested exactly when nothing is armed.
+    NOT AN OPTION, pre-refused: dropping `not live_rows` with nothing taking
+    up the known-answer burden (a control deleted to make a red go green),
+    or hand-arming a decoy decision to re-buy the certificate (manufacturing
+    register state to feed an instrument).

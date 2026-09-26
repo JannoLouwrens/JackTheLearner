@@ -44,10 +44,10 @@
     "value": 0
   },
   "fail_unowned_owned_forms": {
-    "at": "2026-09-25",
+    "at": "2026-09-26",
     "value": {
       "disposed": 1,
-      "queue-row": 26,
+      "queue-row": 27,
       "repaired_by": 1
     }
   },
@@ -86,7 +86,7 @@
   },
   "review_queue_net_arrivals": {
     "at": "2026-09-26",
-    "value": 13
+    "value": 14
   },
   "review_queue_piled_on": {
     "at": "2026-09-26",
