@@ -7881,6 +7881,61 @@ cheap.
   costing the specs rather than paying them is the strongest evidence in this
   file that it was done for the right reason.
 
+**MEASUREMENT REPORT 2026-09-26 00:0x (builder) — THE DECIDING SET, MEASURED
+AND REPORTED BEFORE ANY IMPLEMENTATION, per this disposition's own ordering.**
+
+Method, exact w.r.t. the gate logic rather than a name-pairing heuristic:
+offline `_check` replay against each CPU-class spec's latest recorded row (the
+09-25 sweep idiom), perturbing ONE numeric metric at a time and reading whether
+the normalized verdict (PASS/FAIL/VOID) changes. The margin was DECLARED in the
+script header, with its reasoning, before the scan ran, per the first binding
+above: `MARGIN_REL = 0.10` (the one measured instance of the defect moved
+aggregate `swap_agree` by 0.0556 across salts = 6.2% of its 0.90 bar; 10%
+covers that with ~1.6x headroom without being fit to this ladder), `ZERO_ABS =
+0.10` for metrics recorded exactly 0.0 (equals the relative delta at unit
+scale; most gated metrics here are unit-scaled). Script at
+`scripts/hash_salt_deciding_set.py` (on-demand only, wired to nothing); full
+per-spec flip table at `/data/hash_salt_deciding_set.json`.
+
+The numbers:
+- **Population:** 177 CPU-class specs; **129 replayable with a recorded row**;
+  47 have no row yet (they join or leave the set on their own future numbers);
+  1 unreplayable (`T6.03`, `KeyError: train_loss_fell` — impl drifted from its
+  row); 3 baseline mismatches excluded and each traced rather than dropped:
+  `LG.10`/`LG.12` impure `_check` (the known caveat), `T3.09` replay-VOID by
+  the 09-02 lane-ordering repair `19461c4` (row stands, T3.01 precedent).
+- **DECIDING: 98 of 129 (76%)** — 82 PASS rows, 14 FAIL, 2 VOID. **Doubled
+  cost 25,888 s = 44.9% of `CPU_DAY_CEILING_S` 57,600 s. It fits.**
+- **The decomposition that changes the reading:** 509 flipping metrics =
+  **217 one-sided** (a genuine inequality bar within 10% of the recorded
+  value) + **292 equality/band** (the flip fires in BOTH directions: the value
+  sits AT its bound, distance zero — `properties_checked == 22`,
+  `first_trust_liar == 0.5`, flags recorded at exactly their required value).
+  **52 specs carry >=1 one-sided flip (doubled cost 10,103 s = 17.5%)**; 46
+  flip only through equality gates; 11 only on at-bound zeros.
+- **The calibration fact this disposition said it wanted to know:** the
+  deciding set IS most of the ladder, but NOT because continuous bars are
+  finely cut — more than half the deciding mass is this ladder's idiom of
+  gating flags and counts by exact equality, which is distance-zero BINDING by
+  construction. The near-margin-inequality core is 52 specs / 17.5% of the
+  ceiling. (An equality gate is also where a salt lottery flips hardest — a
+  tie has no margin — so this is a finding about where the check bites, not a
+  reason to trim it. The rule is not trimmed.)
+- **ELIGIBILITY half, priced:** bakeoff/seat specs are `LG.13`, `SO.10`,
+  `T0.19` (CPU; doubled cost **7.2 s total** — free) plus `T4.06`, `UB.10`
+  (GPU classes, excluded by this disposition's own GPU prohibition). Seat
+  races are few and cheap, exactly as predicted.
+
+Implementation NOT started this slot — the ordering says the report comes
+first, and it now exists. The measured cost fits under the ceiling, so the
+full BINDING+ELIGIBILITY form is legal. One design fact for the implementing
+slot, found while measuring: `PYTHONHASHSEED` is fixed at interpreter start,
+so the second-salt differential must run `_experiment` in a SUBPROCESS with
+the salt set in its environment — a `run_spec`-layer change that bills
+`protocol.py`'s IMPL_DEPS certificates (the 09-25 verdict-gate edit priced
+that bill at three cpu<10min re-buys). Reporting-only on arrival; the margin
+constant carries verbatim from this report; no bar moves.
+
 ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 | `acf63e9` (LG.13 attempt 1, PASS) | OPEN
     DUE: 2026-09-17 | ONE design question, and it is about what a SEAT RACE may
     conclude — deliberately dated onto the same day as
