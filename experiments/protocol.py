@@ -108,12 +108,70 @@ RUNNER_OUTPUTS = ("experiments/ledger.json",
 #: excluding them cannot mask a real change to anything executable. The genuine
 #: positive is preserved and was checked, not assumed: T0.25's `1ddcd27+dirty`
 #: came from an uncommitted `TrainingPipeline.py`, and still stamps.
-DOC_OUTPUTS = ("CHECKLIST.md", "docs/LOOP_JOURNAL.md")
+#:
+#: WIDENED 2026-09-26 to `docs/LESSONS.md` (fork (c), below). It is measured
+#: prose by the same rule the falsifier gates on: ZERO spec import-closures
+#: name it as a live path. Its 56 code mentions are all `control=`/`notes=`
+#: citations inside registry strings, which is a MENTION, not a read.
+PROSE_DOCS = ("CHECKLIST.md", "docs/LOOP_JOURNAL.md", "docs/LESSONS.md")
+
+#: The old name for the prose class, kept because two specs and the gate import
+#: it: `T0.22` and `T0.30` assert on it by name.
+DOC_OUTPUTS = PROSE_DOCS
+
+#: INSTRUMENT-INPUT DOCS — a doc at least one SPEC's verdict reads. Dirt for a
+#: run of a spec that DECLARES it in `IMPL_DEPS`, and clean for everybody else.
+#:
+#: THE SCAR, 2026-09-02 19:0x (`cross-organ-doc-race-voids-certificates`, 64th
+#: audit B3, fork (c) of the Review's 09-06 disposition). An audit's in-progress
+#: doc writes made a concurrent runner sweep stamp `+dirty`, VOIDing four PASS
+#: certificates by accident — `PS.01`, `PS.02`, `PS.03`, `BA.01`, 0.14 s each —
+#: growing `unreachable` 85 -> 89 and billing four clean-tree re-buys (~25 min
+#: of compute plus three builder slots). An uncommitted line in
+#: `REVIEW_QUEUE.md` cannot change a physics verdict, and the stamp saying
+#: otherwise was the meter refusing runs it had no business refusing.
+#:
+#: WHY NOT SIMPLY WIDEN `PROSE_DOCS` (fork (a), refused by the disposition and
+#: by the row that raised it): `run decisions`, `run review-queue` and the
+#: ratchet readers CONSUME these files, so for the specs that gate them an
+#: uncommitted line genuinely CAN change a verdict. Fork (a) buys quiet by
+#: blinding the one place the stamp is load-bearing. Fork (b) — serialising four
+#: cron-driven organs against runner sweeps — is a distributed-locking design on
+#: a free-tier box that narrows the window rather than removing it.
+#:
+#: `docs/PROGRESS.md` IS IN THIS CLASS AND THE DISPOSITION PUT IT IN THE PROSE
+#: CLASS. Measured, not argued (2026-09-26): `decisions.py:314` binds
+#: `PROGRESS = _REPO / "docs" / "PROGRESS.md"` and `T0.28`'s import closure
+#: reaches it, so classing it prose would have blinded a live reader on the
+#: first day of the repair. That correction is the falsifier below earning its
+#: keep before it ever shipped, and it is why the map is scanned rather than
+#: typed. `docs/OVERSIGHT.md` is read by `steering.py` but by NO spec closure,
+#: so it stays plain code dirt: this class is about specs, not organs.
+#:
+#: `docs/DECISIONS_RESOLVED.md` is NOT here and must not be added: it is in
+#: `RUNNER_OUTPUTS` (119th audit FINDING 4) because `bakeoff.py` appends to it
+#: DURING a registered run, so the next spec to record was stamped `+dirty` by
+#: the previous spec's own receipt. A file the runner writes can never be
+#: evidence that code moved, whoever declares it — see the precedence in
+#: `is_code_dirt`.
+INSTRUMENT_INPUT_DOCS = ("docs/DECISIONS_NEEDED.md",
+                         "docs/REVIEW_QUEUE.md",
+                         "docs/CHAMPIONS.md",
+                         "docs/PROGRESS_LOG.md",
+                         "docs/PROGRESS.md")
+
+#: The one named exemption from the reader gate (`T0.17` P11e). `CHECKLIST.md`
+#: is WRITTEN by `run.render`, and the four specs whose closures name it
+#: (`T0.13`, `T0.22`, `T0.23`, `T0.36`, all via `run.py`) name the render
+#: TARGET. The scanner cannot tell a read from a write, so the exemption is
+#: declared here rather than hidden in the scanner — staying exempt is a visible
+#: decision, exactly as `FLOORED_CLASS_UNJOINED` made staying unjoined one.
+WRITE_ONLY_DOCS = ("CHECKLIST.md",)
 
 #: The whole answer to "does this uncommitted file mean CODE moved". One list,
 #: because the two organs that ask it — the `+dirty` stamp and the GPU push
 #: guard — were two lists, and they diverged by exactly one entry.
-NOT_CODE = RUNNER_OUTPUTS + DOC_OUTPUTS
+NOT_CODE = RUNNER_OUTPUTS + PROSE_DOCS
 
 
 def porcelain_path(porcelain_line: str) -> str:
@@ -130,7 +188,7 @@ def porcelain_path(porcelain_line: str) -> str:
     return parts[1].strip() if len(parts) == 2 else ""
 
 
-def is_code_dirt(porcelain_line: str) -> bool:
+def is_code_dirt(porcelain_line: str, declared_docs=None) -> bool:
     """Does this `git status --porcelain` line mean CODE is uncommitted?
 
     Pulled out of the `+dirty` stamp so the question can be asked of a fixture
@@ -138,6 +196,25 @@ def is_code_dirt(porcelain_line: str) -> bool:
     exercised by dirtying the repo it audits is a predicate nothing will ever
     test. T0.22 P13 is the test; the pre-2026-08-11 version (`ledger.json`
     alone) is its control.
+
+    `declared_docs` is the SPEC CONTEXT: the `INSTRUMENT_INPUT_DOCS` the run's
+    own spec declares in `IMPL_DEPS`. Three-valued on purpose, and the
+    distinction is the same one `Result.dirty_files` draws between `None` and
+    `[]` — a sentinel that is also a valid value cannot be detected:
+
+      `None`  — NO SPEC CONTEXT. Every instrument-input doc counts as dirt,
+                which is the pre-2026-09-26 answer, unchanged. The GPU push
+                guard and `gate_precondition` ask without a spec and must keep
+                the conservative answer: a GATE run over an uncommitted
+                `REVIEW_QUEUE.md` really would dirty `T0.31`'s certificate.
+      `()`    — a spec that declares NOTHING. Instrument docs are clean for it.
+      tuple   — dirt for exactly the docs it names.
+
+    PRECEDENCE, and it is not negotiable: `RUNNER_OUTPUTS` wins over every
+    declaration. `docs/DECISIONS_RESOLVED.md` is written by `bakeoff.py` mid-run,
+    so if a declaring spec could be dirtied by it, `T0.35` attempt 13's
+    `d1cf88d+dirty` comes straight back — the evidence log invalidating the
+    evidence, for the fifth time.
     """
     path = porcelain_path(porcelain_line)
     if not path:
@@ -145,12 +222,37 @@ def is_code_dirt(porcelain_line: str) -> bool:
     # Exact repo-relative match, never `endswith`: a suffix match would grant
     # the exclusion to any `*ledger.json` anywhere in the tree (overseer B4,
     # 10th/11th audits). Porcelain paths are repo-relative, so the entries are.
-    return path not in NOT_CODE
+    if path in NOT_CODE:
+        return False
+    if path in INSTRUMENT_INPUT_DOCS:
+        return True if declared_docs is None else path in tuple(declared_docs)
+    return True
 
 
-def code_dirt(porcelain_lines) -> list:
+def code_dirt(porcelain_lines, declared_docs=None) -> list:
     """Every uncommitted CODE path in a `git status --porcelain` listing."""
-    return [porcelain_path(ln) for ln in porcelain_lines if is_code_dirt(ln)]
+    return [porcelain_path(ln) for ln in porcelain_lines
+            if is_code_dirt(ln, declared_docs=declared_docs)]
+
+
+def declared_instrument_docs(spec_id: str):
+    """The `INSTRUMENT_INPUT_DOCS` this spec declares — `None` when unknowable.
+
+    The join the disposition asked for: ONE declaration surface (`IMPL_DEPS`),
+    not a second list nobody maintains. `None` on any doubt — no module, an
+    unparsable declaration — so the unknown case inherits the conservative
+    answer rather than the permissive one.
+    """
+    try:
+        path = module_path_for(spec_id)
+        if path is None:
+            return None
+        deps, problem = impl_deps_of(path)
+        if problem:
+            return None
+        return tuple(d for d in deps if d in INSTRUMENT_INPUT_DOCS)
+    except Exception:
+        return None
 
 
 def working_tree_porcelain(root=None) -> list:
@@ -536,7 +638,13 @@ class Result:
         return obj
 
     @staticmethod
-    def env_stamp() -> Dict[str, Any]:
+    def env_stamp(declared_docs=None) -> Dict[str, Any]:
+        """`declared_docs` is the running spec's declared instrument docs.
+
+        Defaulted to `None` — no spec context, every instrument-input doc counts
+        as dirt — so the two callers that legitimately have no spec (`amend`,
+        `bakeoff`) keep the conservative answer without saying anything.
+        """
         root = Path(__file__).parent.parent
         try:
             commit = subprocess.run(
@@ -579,7 +687,7 @@ class Result:
                 ["git", "status", "--porcelain"],
                 capture_output=True, text=True, cwd=root, timeout=10,
             ).stdout.splitlines()
-            dirty = code_dirt(porcelain)
+            dirty = code_dirt(porcelain, declared_docs=declared_docs)
             if dirty and commit not in ("", "unknown"):
                 commit += "+dirty"
         except Exception:
@@ -1309,6 +1417,148 @@ def impl_deps_of(path, source: Optional[bytes] = None) -> tuple:
             return (), "IMPL_DEPS is not a list of paths"
         return tuple(value), ""
     return (), ""
+
+
+def doc_paths_named_in_code(path, source: Optional[bytes] = None) -> frozenset:
+    """Docs a module names as a LIVE PATH, not in prose.
+
+    The measurement half of fork (c). A doc is NAMED when a string constant
+    outside every docstring is EXACTLY its repo-relative path or its basename.
+    Exact equality, and it is the same rule `is_code_dirt` states one screen up
+    for the same reason: a substring rule read 166 modules as readers of
+    `DECISIONS_RESOLVED.md` because `protocol.py`'s own class tuple mentions it,
+    and read every registry `control=` citation of `LESSONS.md` as a read. With
+    equality the same scan reads 1, 3, 1, 1 and 1 across the five
+    instrument-input docs — small enough to check by hand, which is the only
+    reason anybody will.
+
+    Docstrings are excluded because this repo documents its scars in prose and a
+    scanner that counts citations measures the writing, not the reading.
+    Comments never reach the AST at all.
+
+    NAMED EVASION: a module that builds the path by concatenation
+    (`"docs/" + name`), or reaches it through a helper that takes it as an
+    argument, is invisible here. That is a residual, not a closed hole — the
+    property that consumes this reports its denominator so the domain cannot be
+    silently empty (T0.17 P9's rule).
+    """
+    import ast
+    try:
+        tree = ast.parse(source if source is not None
+                         else Path(path).read_bytes())
+    except (OSError, SyntaxError):
+        return frozenset()
+    doc_nodes = set()
+    for node in ast.walk(tree):
+        body = getattr(node, "body", None)
+        if not isinstance(node, (ast.Module, ast.FunctionDef,
+                                 ast.AsyncFunctionDef, ast.ClassDef)):
+            continue
+        if (body and isinstance(body[0], ast.Expr)
+                and isinstance(body[0].value, ast.Constant)
+                and isinstance(body[0].value.value, str)):
+            doc_nodes.add(id(body[0].value))
+    live = {n.value for n in ast.walk(tree)
+            if isinstance(n, ast.Constant) and isinstance(n.value, str)
+            and id(n) not in doc_nodes}
+    named = set()
+    for doc in INSTRUMENT_INPUT_DOCS + PROSE_DOCS:
+        if doc in live or Path(doc).name in live:
+            named.add(doc)
+    return frozenset(named)
+
+
+def _imported_experiments_modules(path, source: Optional[bytes] = None) -> list:
+    """`experiments/*.py` modules this module imports directly.
+
+    Scoped deliberately and the scope is the point: the instruments that read
+    the docs are `decisions.py`, `review_queue.py`, `coverage.py` and
+    `champions.py`, and a spec reaches them by importing them. `protocol.py` is
+    excluded because it is the CLASSIFIER — its own class tuples name every doc,
+    so counting it would make all 156 modules readers of everything.
+    """
+    import ast
+    try:
+        tree = ast.parse(source if source is not None
+                         else Path(path).read_bytes())
+    except (OSError, SyntaxError):
+        return []
+    names = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module and node.level:
+            names.append(node.module.split(".")[0])
+        elif isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name.startswith("experiments."):
+                    names.append(alias.name.split(".")[1])
+    root = Path(__file__).resolve().parents[1]
+    out = []
+    for name in names:
+        if name == "protocol":
+            continue
+        cand = root / "experiments" / f"{name}.py"
+        if cand.is_file():
+            out.append(cand)
+    return out
+
+
+def undeclared_doc_readers(spec_ids=None, overlay=None) -> tuple:
+    """Specs whose closure READS a doc they do not DECLARE.
+
+    THE FALSIFIER the 09-06 disposition made non-optional, and its exact words:
+    *"A map that cannot be falsified by mutation is prose."* The whole risk of
+    fork (c) is that the doc->spec map is ASSERTED — a spec that reads an
+    instrument doc without declaring it silently stops being stamped, and
+    nothing would ever say so.
+
+    Closure: the test module, every file it declares in `IMPL_DEPS`, and every
+    `experiments/*.py` module it imports directly. Returns
+    `(violations, examined)` — `violations` is a sorted list of
+    `(spec_id, doc)` pairs, `examined` the number of implemented specs scanned,
+    because a detector that reports a count must report its denominator.
+
+    `PROSE_DOCS` are gated here TOO, minus `WRITE_ONLY_DOCS`: "never dirty for
+    anyone" is the more dangerous of the two classifications, since it cannot be
+    repaired by a declaration.
+    """
+    from .registry import LADDER
+    overlay = overlay or {}
+    root = Path(__file__).resolve().parents[1]
+    gated = set(INSTRUMENT_INPUT_DOCS) | (set(PROSE_DOCS) - set(WRITE_ONLY_DOCS))
+    violations, examined = [], 0
+    ids = spec_ids if spec_ids is not None else [s.id for s in LADDER]
+    for sid in ids:
+        path = module_path_for(sid)
+        if path is None:
+            continue
+        rel = Path(path).resolve().relative_to(root).as_posix() \
+            if Path(path).is_absolute() else str(path)
+        src = overlay.get(rel)
+        deps, problem = impl_deps_of(path, source=src)
+        if problem:
+            continue
+        examined += 1
+        closure = [(path, src)]
+        # `protocol.py` is skipped however it is REACHED, declared or imported.
+        # It is the classifier: its own class tuples name every doc, so counting
+        # it read `T0.17`, `T0.27`, `T0.33` and `T0.35` — the four specs that
+        # declare it — as readers of all seven docs. Measured before excluding:
+        # with it in, 35 violations; with it out, the 7 that are real.
+        closure += [(root / d, overlay.get(d)) for d in deps
+                    if d != "experiments/protocol.py"
+                    and ((root / d).is_file() or d in overlay)]
+        closure += [(p, overlay.get(p.relative_to(root).as_posix()))
+                    for p in _imported_experiments_modules(path, source=src)]
+        named = set()
+        for cpath, csrc in closure:
+            named |= doc_paths_named_in_code(cpath, source=csrc)
+        for doc in sorted(named & gated):
+            # A runner output is never dirt for anybody, declared or not, so a
+            # reader of one owes no declaration (`is_code_dirt`'s precedence).
+            if doc in RUNNER_OUTPUTS or doc in deps:
+                continue
+            violations.append((sid, doc))
+    return sorted(violations), examined
 
 
 def undeclared_impl_imports(path, source: Optional[bytes] = None) -> tuple:
@@ -3431,7 +3681,9 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                      # holes. Found by T0.17 P10's round trip, which recorded
                      # BLOCKED and read back `spec_sha: null`.
                      spec_sha=spec_sha_of(spec),
-                     **Result.env_stamp(), ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"))
+                     **Result.env_stamp(
+                         declared_docs=declared_instrument_docs(spec.id)),
+                     ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"))
         ledger.record(res)
         return res
 
@@ -3453,7 +3705,11 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # while it was mid-flight. Any run longer than the interval between commits
     # is exposed, the error is silent and plausible, and it grows with
     # duration. One line moved fixes the whole class.
-    stamp = Result.env_stamp()
+    # PER-SPEC DOC DIRT (fork (c), 2026-09-26): the stamp asks the dirt question
+    # with this spec's own `IMPL_DEPS` in hand, so an audit's uncommitted
+    # `REVIEW_QUEUE.md` dirties `T0.31` — which reads it — and leaves a physics
+    # certificate alone. See `INSTRUMENT_INPUT_DOCS`.
+    stamp = Result.env_stamp(declared_docs=declared_instrument_docs(spec.id))
     # Read BEFORE the runs so ownership of the peak is decidable: the kernel's
     # high-water mark is monotone and unresettable, so "did it move during
     # THIS spec" is the only attribution question the number can ever answer

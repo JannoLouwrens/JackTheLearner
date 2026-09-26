@@ -85,6 +85,37 @@ Seven properties, each with a way to fail:
      same" hash diverged silently here once already (`impl_sha_of`). Both
      options reproduce a named scar in this repo; this one reproduces neither.
 
+ 11. THE DIRT STAMP IS PER-SPEC, AND ITS DOC->SPEC MAP IS MEASURED RATHER THAN
+     ASSERTED (fork (c) of `cross-organ-doc-race-voids-certificates`, Review
+     disposition 2026-09-06, implemented 2026-09-26). On 2026-09-02 an audit's
+     in-progress doc writes made a concurrent runner sweep stamp `+dirty`,
+     VOIDing `PS.01`/`PS.02`/`PS.03`/`BA.01` by accident — four physics
+     certificates killed by an uncommitted line in `REVIEW_QUEUE.md`, which
+     cannot change a physics verdict. The repair narrows the stamp: an
+     instrument-input doc is dirt only for a spec that DECLARES it.
+
+     A narrowing is where a stamp quietly stops stamping, so the disposition
+     made a mutation falsifier a condition of the fork landing at all — *"a map
+     that cannot be falsified by mutation is prose"*. Eight sub-properties:
+     a declared doc IS dirt; an undeclared one is not; NO SPEC CONTEXT keeps the
+     pre-fix conservative answer, so the GPU guard and the gate cannot be
+     narrowed by accident; prose is clean under every declaration; a
+     `RUNNER_OUTPUTS` path beats any declaration (`bakeoff.py` writes
+     `DECISIONS_RESOLVED.md` mid-run — `T0.35` attempt 13's `d1cf88d+dirty`);
+     real code still stamps (`T0.25`'s `1ddcd27+dirty`, the genuine positive);
+     the REAL ladder holds ZERO specs that read an instrument doc without
+     declaring it, with the scanned denominator recorded; and the scanner
+     itself fires on a planted reader, spares a planted PROSE mention, and
+     spares a planted reader that declares — three overlay mutations, because a
+     scan gated at zero over a domain it cannot see is property 9's empty
+     domain wearing a new name.
+
+     WHAT IT ALREADY CAUGHT, before it shipped: the disposition classed
+     `docs/PROGRESS.md` as prose *"consulted by no instrument"*, and the scan
+     found `decisions.py:314` binding it as a path inside `T0.28`'s closure. It
+     is in the instrument class instead. The map is scanned because typing it
+     was already wrong once.
+
 CONTROL — the pre-fix path: the literal `9b92d14` edit (read the JSON, set
 `status`, write it back) replayed on a temp ledger. Under the same audit it
 must be INDISTINGUISHABLE from a recorded verdict. Without it this spec would
@@ -299,6 +330,75 @@ def _audit(path: Path, spec_id: str) -> bool:
     return False
 
 
+def _doc_dirt_battery() -> dict:
+    """P11 — the per-spec doc-dirt map, and the mutation that falsifies it."""
+    from ..protocol import (INSTRUMENT_INPUT_DOCS, PROSE_DOCS, RUNNER_OUTPUTS,
+                            is_code_dirt, module_path_for,
+                            undeclared_doc_readers)
+
+    def dirt(path, declared):
+        return is_code_dirt(f" M {path}", declared_docs=declared)
+
+    declared_is_dirt = all(dirt(d, (d,)) for d in INSTRUMENT_INPUT_DOCS)
+    undeclared_is_clean = not any(dirt(d, ()) for d in INSTRUMENT_INPUT_DOCS)
+    # The narrowing must not reach the callers that have no spec to ask about —
+    # `gpu.assert_ref_is_current` and `gate_precondition`. A gate run over an
+    # uncommitted `REVIEW_QUEUE.md` really would overwrite `T0.31`'s clean stamp.
+    no_context_is_conservative = all(dirt(d, None)
+                                     for d in INSTRUMENT_INPUT_DOCS)
+    prose_never_dirt = not any(dirt(p, ctx) for p in PROSE_DOCS
+                              for ctx in (None, (), (p,)))
+    # Precedence: a file the runner writes is never evidence that code moved,
+    # whoever declares it.
+    runner_beats_declaration = not any(dirt(p, (p,)) for p in RUNNER_OUTPUTS)
+    # The genuine positive, preserved and checked rather than assumed.
+    # THE FIXTURE'S DOC PATH IS TAKEN FROM THE CLASS, NEVER TYPED — and the
+    # scanner is why. Written as a literal, this battery's own fixture strings
+    # made THIS spec read as an undeclared reader of `REVIEW_QUEUE.md`
+    # (measured: `undeclared_doc_readers` 0 -> 1 the moment the plants were
+    # added). The detector was right by its own rule and the code was
+    # misleading: T0.17's verdict does not read the queue, so declaring it
+    # would have bought a daily staleness flag for nothing. Deriving it also
+    # means the plants follow the class if it is ever reordered.
+    Q = INSTRUMENT_INPUT_DOCS[0]
+    code_still_dirt = all(dirt("TrainingPipeline.py", ctx)
+                          for ctx in (None, (), (Q,)))
+
+    # THE MUTATION. Three planted modules through the overlay, so the scanner's
+    # domain cannot rot when the real ladder's violators drain to zero (P9's
+    # rule). `T0.17` is the carrier id only because its module path resolves.
+    me = Path(module_path_for("T0.17"))
+    rel = me.resolve().relative_to(Path(__file__).resolve().parents[2]).as_posix()
+    PLANT_READER = f'IMPL_DEPS = []\nPAGE = "{Q}"\n'.encode()
+    PLANT_PROSE = (f'IMPL_DEPS = []\n\ndef f():\n'
+                   f'    """see {Q} for the row."""\n').encode()
+    PLANT_DECLARED = f'IMPL_DEPS = ["{Q}"]\nPAGE = "{Q}"\n'.encode()
+
+    def scan(src):
+        v, n = undeclared_doc_readers(spec_ids=["T0.17"], overlay={rel: src})
+        return v, n
+
+    v_read, n_read = scan(PLANT_READER)
+    v_prose, _ = scan(PLANT_PROSE)
+    v_decl, _ = scan(PLANT_DECLARED)
+    real_violations, real_examined = undeclared_doc_readers()
+
+    return {
+        "declared_doc_is_dirt": declared_is_dirt,
+        "undeclared_doc_is_clean": undeclared_is_clean,
+        "no_spec_context_is_conservative": no_context_is_conservative,
+        "prose_doc_is_never_dirt": prose_never_dirt,
+        "runner_output_beats_declaration": runner_beats_declaration,
+        "code_is_still_dirt_under_every_declaration": code_still_dirt,
+        "mutation_catches_planted_reader":
+            v_read == [("T0.17", Q)] and n_read == 1,
+        "mutation_spares_prose_mention": v_prose == [],
+        "mutation_spares_declared_reader": v_decl == [],
+        "undeclared_doc_readers": len(real_violations),
+        "specs_scanned_for_doc_reads": real_examined,
+    }
+
+
 def _experiment(seed: int) -> dict:
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "ledger.json"
@@ -501,8 +601,12 @@ def _experiment(seed: int) -> dict:
             else:            # zero or several base kinds: the scan is broken
                 n_unanswerable += 1
 
+        # ── P11. the per-spec dirt map, measured (fork (c)) ────────────────
+        doc_dirt = _doc_dirt_battery()
+
         return {
             **_claim_battery(real),
+            **doc_dirt,
             "content_check_fires_on_postrun_edit": content_check_fires,
             "content_check_spares_unedited_file": content_check_spares,
             "content_check_reports_unanswerable": content_check_reports_unanswerable,
@@ -605,6 +709,22 @@ def _check(m: dict, c: dict) -> bool:
         m["unstamped_claim_is_not_clean"],
         m["run_spec_stamps_the_claim"],
         m["pass_rows_with_drifted_claim"] == 0,
+        # P11: the dirt stamp is per-spec and its map is measured. The three
+        # mutation legs come FIRST in intent — a zero on the real ladder means
+        # nothing unless the scanner is shown catching a planted reader, and the
+        # denominator is asserted non-empty so the scan cannot pass by scanning
+        # nothing (property 9's empty domain, one layer over).
+        m["mutation_catches_planted_reader"],
+        m["mutation_spares_prose_mention"],
+        m["mutation_spares_declared_reader"],
+        m["undeclared_doc_readers"] == 0,
+        m["specs_scanned_for_doc_reads"] > 100,
+        m["declared_doc_is_dirt"],
+        m["undeclared_doc_is_clean"],
+        m["no_spec_context_is_conservative"],
+        m["prose_doc_is_never_dirt"],
+        m["runner_output_beats_declaration"],
+        m["code_is_still_dirt_under_every_declaration"],
         # the control must fail: the hand-edit lands and stays invisible
         c["hand_edit_took_effect"],
         not c["detector_sees_amendment"],

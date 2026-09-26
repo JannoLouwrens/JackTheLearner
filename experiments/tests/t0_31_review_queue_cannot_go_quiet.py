@@ -179,7 +179,15 @@ SPEC_ID = "T0.31"
 # certificate that survives edits to its own subject is a certificate about
 # nothing (PG.6 hashing playground.py; T0.21 coverage.py; T0.28 decisions.py;
 # T0.29 champions.py).
-IMPL_DEPS = ["experiments/review_queue.py"]
+# THE DOCS THIS SPEC'S VERDICT READS, declared 2026-09-26 as fork (c)'s other
+# half (`cross-organ-doc-race-voids-certificates`). The declaration is what
+# makes an uncommitted line in them stamp THIS run `+dirty` while leaving a
+# physics certificate alone — `protocol.INSTRUMENT_INPUT_DOCS`, gated by
+# `T0.17` P11e, which refuses any spec that reads one of these without saying
+# so. Before this, these docs dirtied this spec only as a side effect of
+# dirtying EVERYTHING, which is the right answer for the wrong reason.
+IMPL_DEPS = ["experiments/review_queue.py", "docs/REVIEW_QUEUE.md",
+             "docs/PROGRESS_LOG.md"]
 
 N_PROPERTIES = 22
 

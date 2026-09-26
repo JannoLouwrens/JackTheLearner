@@ -72,7 +72,14 @@ SPEC_ID = "T0.21"
 # The battery is ABOUT coverage.py, so its certificate must die when that file
 # changes (same reasoning as PG.6 hashing playground.py: a claim about X that
 # survives edits to X is a certificate about nothing).
-IMPL_DEPS = ["experiments/coverage.py"]
+# THE DOCS THIS SPEC'S VERDICT READS, declared 2026-09-26 as fork (c)'s other
+# half (`cross-organ-doc-race-voids-certificates`). The declaration is what
+# makes an uncommitted line in them stamp THIS run `+dirty` while leaving a
+# physics certificate alone — `protocol.INSTRUMENT_INPUT_DOCS`, gated by
+# `T0.17` P11e, which refuses any spec that reads one of these without saying
+# so. Before this, these docs dirtied this spec only as a side effect of
+# dirtying EVERYTHING, which is the right answer for the wrong reason.
+IMPL_DEPS = ["experiments/coverage.py", "docs/REVIEW_QUEUE.md"]
 
 # The four commitments the 2026-08-10 hand audit found at ZERO specs. They are
 # why coverage.py exists, so the battery asserts the list still NAMES them

@@ -117,7 +117,15 @@ SPEC_ID = "T0.28"
 # A claim about decisions.py must die when decisions.py changes: a certificate
 # that survives edits to its own subject is a certificate about nothing (PG.6
 # hashing playground.py; T0.21 hashing coverage.py).
-IMPL_DEPS = ["experiments/decisions.py"]
+# THE DOCS THIS SPEC'S VERDICT READS, declared 2026-09-26 as fork (c)'s other
+# half (`cross-organ-doc-race-voids-certificates`). The declaration is what
+# makes an uncommitted line in them stamp THIS run `+dirty` while leaving a
+# physics certificate alone — `protocol.INSTRUMENT_INPUT_DOCS`, gated by
+# `T0.17` P11e, which refuses any spec that reads one of these without saying
+# so. Before this, these docs dirtied this spec only as a side effect of
+# dirtying EVERYTHING, which is the right answer for the wrong reason.
+IMPL_DEPS = ["experiments/decisions.py", "docs/DECISIONS_NEEDED.md",
+             "docs/PROGRESS.md", "docs/REVIEW_QUEUE.md"]
 
 N_PROPERTIES = 19
 
