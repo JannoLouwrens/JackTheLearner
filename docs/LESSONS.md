@@ -17000,3 +17000,53 @@ the same commit that fixed the channel, metrics untouched, disclosed in the
 row's message — the T2.02 precedent). A hand-repair that DEMOTES a false
 claim, quoted against the replay, is maintenance of the ledger's honesty; the
 prohibited direction is and stays promotion.
+
+## A rig-validity VOID placed ahead of the claim can make the claim's own kills clause unreachable (overseer, 119th audit, 2026-09-26)
+
+`LT.03` is the constitutional ladder test and it carries the most consequential
+`dies if:` clause in the repository: *"No arm produces a single engaged attempt
+(exploration never reaches the ladder)"* fires a pre-committed architectural
+pivot — `GOAL.md`'s ladder image needs a goal/skill layer. Attempt 1 measured
+**exactly that**: `lp_engaged`, `disagree_engaged`, `metra_engaged`,
+`icm_engaged`, `randrew_engaged`, `null_engaged`, `winner_engaged` — **all 0.0,
+std 0.0, over 3 seeds × 10 lives × 2500 decisions**, against `ENGAGED_MIN` 20.
+The verdict was VOID and the pivot did not fire, correctly under
+pre-registration: `_check` orders four rig gates before the claim, and the
+fourth — `icm_fixates < 0.66`, the requirement that the NOISE PANEL be
+behaviourally sticky — fired first.
+
+The ordering is defensible in isolation (the claim conjoins *climbed* with *did
+not fixate on the panel*, and you cannot certify the second half against a dead
+distractor). What it does structurally is the lesson: **the climbing half of the
+claim is gated behind a precondition that belongs only to the dwell half, so
+while the panel trap is behaviourally dead the spec cannot return FAIL for any
+ladder data whatsoever.** Every humanoid-body measurement this project owns of
+ICM panel dwell reads 0.0 — `LT.02` attempts 1 and 2 (3 seeds each, std 0.0),
+the `LT.03` pilot, and now `LT.03` attempt 1 — so the pivot is not merely
+unfired, it is **unreachable in this venue**, and 4.61 CPU-hours bought a VOID
+that no amount of ladder evidence could have converted into the FAIL the
+`dies if` clause was written to catch.
+
+The general rules. (1) When a claim is a CONJUNCTION of independent halves,
+audit which rig preconditions gate the WHOLE verdict versus which gate only one
+conjunct — a precondition scoped wider than the conjunct it protects silently
+converts refutations into VOIDs. Write down, at pre-registration time, *"under
+what measured world can this spec return FAIL?"*; if the answer is "none that we
+have ever observed", the kills clause is decoration. (2) `rig_ok` is not
+reachability. `LT.03` recorded `rig_ok` 1.0, `ruler_occ` 1.0, `finite` 1.0 and
+every chaos gate green in a venue where **no policy, including the random
+walker and the null, touched the object under test**. A rig-health gate that
+certifies calibration and finiteness while the behaviour under test is
+unreachable will certify a venue that cannot answer the question. (3) The repair
+direction is fixed and narrow: split the venue or the claim so the reachable
+half can be decided, or state in the open that the pivot is parked — **never
+lower `CONTROL_DWELL_MIN` to let the trap "pass"**, which would buy the FAIL by
+weakening the control that makes the dwell half meaningful. Routed as an
+extension of `lt03-icm-trap-not-live-in-flight`.
+
+Sibling instance, same week, different organ: this is the third venue-inertness
+finding in the LT family (`lt02-the-venue-has-no-true-positive-body-chaos-is-
+reducible`, `t306-random-arm-breaches-the-analytic-chance-dwell-bound`) and the
+ninth instrument on `w0-too-shallow`. The pattern is not "our arms are weak"; it
+is "our worlds do not produce the behaviour we are gating on", and a VOID is how
+that arrives.

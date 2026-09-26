@@ -8598,3 +8598,60 @@ date rather than on a date chosen for this desk's convenience.
 `2026-W38` `kaggle` 0.9176 of 30.0; `docs/PROGRESS.md` FOR THE OWNER item 3
 (2026-09-24) for this desk's own W1 stop-rule pre-commitment and the "four of
 four Sunday FULL runs" count.
+
+---
+
+## D31 — RESOLVED BY ARMED DEFAULT, fired 2026-09-26 ~00:5x UTC by the OVERSEER (119th audit), on the first legal day. Off your desk; options (ii) and (iii) remain yours to rule at any time.
+
+**THE OWNER DID NOT RULE BY 2026-09-25, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(i) MARK BUT DO NOT CAP**. Options **(ii) GIVE COLAB A CEILING** and
+**(iii) DECLINE** were **NOT** taken.
+
+**AND THE FIRST THING THIS FIRING MUST SAY: THE DEFAULT WAS ALREADY IMPLEMENTED
+ON DISK EIGHT DAYS AGO, SO THIS FIRING ORDERS NO WORK AND CHANGES NO BEHAVIOUR.**
+Verified at source this audit rather than inherited from the 100th audit's
+addendum or from the journal:
+
+```
+experiments/gpu.py:133   PER_JOB_OVERRUN_MARGIN = 0.25
+experiments/gpu.py:540   if est_hours > 0 and billed_h > est_hours * (1.0 + PER_JOB_OVERRUN_MARGIN):
+experiments/gpu_budget.json  "overruns": []
+```
+
+The mark shipped as `2bfa84f` on 2026-09-18 under the 99th audit's `FOR THE
+BUILDER` item 4, as instrument work, and the 100th audit's EVIDENCE ADDENDUM
+above put that on the record without touching `decide_by`. `overruns` reads `[]`
+because no GPU job has been dispatched since the mark landed — the two colab
+overruns it was built from (147% and 155% of declared, 2026-09-14) predate it and
+were never back-filled, which is the addendum's own stated behaviour and not a
+silent failure.
+
+**So what this firing actually settles, stated narrowly.** It closes the QUESTION,
+not a code gap: the entry has presented (i) as one unexecuted option among three
+since 09-15, and an owner reading it cold would have been choosing between an
+option already in effect and two that are not. After this firing the record says
+what the repository does. `remaining('colab')` still returns infinity, the colab
+lane still has no ceiling, and **no dispatch is refused today that was permitted
+yesterday.**
+
+**The price, restated because a firing may not quietly drop it.** (i) buys
+VISIBILITY and nothing else — the entry's own words, and now the measured state:
+*"A marked overrun still spent the hour, and if nobody reads the mark the lane is
+exactly as uncapped tomorrow as it is today."* The realised loss this entry was
+opened on — 2.11 colab-hours across two retrievals that returned nothing, inside a
+probe that spent 223% of its authorised budget with no number turning red — is
+written off by this firing and is not recovered by it. **Option (ii) is still the
+only option that changes what the lane may spend, and it is still yours.** A
+default may record a debt; it may not invent a budget number on the owner's
+behalf (`D26`'s reasoning, cited by this entry when it armed).
+
+**Reversal, unchanged:** delete one `if` from `experiments/gpu.py` (line 540).
+No threshold moves, no ledger row is touched, no re-run is owed, no certificate
+stales.
+
+**Filing debt this firing creates, owed by the builder's next live slot:** the
+`## D31 — RESOLVED BY ARMED DEFAULT` transcription onto `docs/DECISIONS_RESOLVED.md`,
+per the `D13` rule that the overseer stays inside its own file set and the
+`D32`/`D34` precedent (`6aaed9b`, 2026-09-25 01:12). Until that lands,
+`decisions.py`'s second identification channel (`RECORD_PAGE`/`RECORD_MARKER`)
+cannot see this firing.
