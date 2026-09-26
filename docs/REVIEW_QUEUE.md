@@ -3135,6 +3135,30 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
         registered run (CPU_DAYS, ~6 h; the eval-side full-window change adds
         ~8% over attempt 1's 3.99 CPU-h).
 
+    EXECUTION BLOCKED (builder, 2026-09-26 07:1x slot — evidence only, no
+        stamp, no re-date; the dating desk needs the cause in writing). The
+        registered run was dispatched through the sanctioned lane
+        (`launch_detached.sh`, day meter ADMITTED at 49,172 s remaining,
+        AWAITING row written) and REFUSED before start by `gate_cpu_child`:
+        *"cpu<48h is the detached lane, not a runner child"* — unrecorded by
+        design, log kept at /data/jack-logs/ba03_registered_run_0710.log.
+        The refusal is CORRECT and it is D20's: the 2026-09-19 armed default
+        closed the detached lane to registered spec work and the runner-child
+        gate refuses `Budget.CPU_DAYS` unconditionally, so BA.03 — CPU_DAYS
+        by declaration, ~25.2k s wall by measurement (pilot 8389.1 s/seed x
+        3 seeds, 44% of one day's 57,600 s ceiling) — has NO permitted lane.
+        D20's firing record predicted exactly this ("the class is NOT
+        empty... a real future decision touching six registered ids...
+        stays the owner's") and listed BA.03 as PILOT-BLOCKED then; the
+        06:1x pilot harvest made it the FIRST runnable spec in the closed
+        class, 22 hours after the disposition ordered its execution. NOT
+        bypassed: a direct `run(Ledger())` payload would take a permission
+        the fired default withheld, and the builder re-labelling the budget
+        class after the envelope was measured is the move D35's own text
+        forbids one freeze over. Routed as
+        `ba03-registered-run-foreclosed-by-d20-class-closure` (DUE 10-03);
+        evidence appended under D20 in DECISIONS_NEEDED.md.
+
 ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | DISPOSITIONED 2026-09-20 (Review FULL — (a) AND (b) both, (c) refused; MISBUNDLED, this is the t211 attribution disease and not the saturation disease; the random-action comparator becomes binding and the `kills:` field is repaired. See THE BUNDLED RULING on `sh02-null-saturation`)
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
         the next Review FULL run. Curiosity is the commitment with the most
@@ -9958,3 +9982,48 @@ a lead, not a verdict; check purity first. 33 rows were unreplayable offline
 in the sweep (render-path imports under a wrong GL env, drifted impls reading
 absent keys, renamed modules) — listed in the journal slot; none carries a
 tuple-idiom `_check` by grep.
+
+## ROUTED 2026-09-26 (builder, 07:1x slot): `ba03-registered-run-foreclosed-by-d20-class-closure` — the first runnable spec in the cpu<48h class landed 22 hours after an armed default closed the class's only lane, and the dispatch was planned by three organs without any of them reading the closure
+
+ROUTED: ba03-registered-run-foreclosed-by-d20-class-closure | 2026-09-26 | launch log /data/jack-logs/ba03_registered_run_0710.log (gate_cpu_child refusal, unrecorded by design; day meter had ADMITTED at 49,172 s remaining) | OPEN
+    DUE: 2026-10-03 | the tool's own next date with room. What this row owes
+        is a RULING on the lane, never a run: the run itself is ordered,
+        implemented and disposed (`ba03-null-saturates-the-horizon`, DUE
+        09-27, whose owed execution this row blocks).
+    WAITS-ON: none | the blocker is an owner-class decision (D20's reversal,
+        or the re-scope of the six CPU_DAYS ids its firing reserved), tracked
+        under D20's addendum in DECISIONS_NEEDED.md — no live queue row holds
+        it, and this row exists so the foreclosure ages in public rather than
+        inside a resolution record nobody re-reads.
+    Question: BA.03's registered run (seeds 0/1/2, ~25.2k s wall as measured
+    by the seed-90 pilot; `Budget.CPU_DAYS` by declaration) has no permitted
+    lane. `gate_cpu_child` refuses cpu<48h as a runner child unconditionally
+    (experiments/cpu_budget.py:287), and D20's armed default (fired
+    2026-09-19) closed the detached lane to registered spec work "until the
+    owner rules". At firing that foreclosed nothing runnable — all six
+    CPU_DAYS ids were concluded/blocked/pilot-blocked/unimplemented, BA.03
+    among them — and the record said the consequent decision "stays the
+    owner's". The future arrived 2026-09-26 06:1x: the tilt pilot harvest
+    froze BA.03's gates and made it runnable, dispositioned and DUE 09-27;
+    the 07:1x dispatch through the sanctioned lane was refused before start.
+    THE MISMATCH THIS ROW IS ABOUT: the class was closed on its LABEL's worst
+    case (172,800 s vs the 57,600 s day ceiling, 3.0x by arithmetic), while
+    this spec's MEASURED envelope is ~25,167 s — 44% of one day, and the
+    same lane legally bought LT.03's ~5.2 h wall registered run this week
+    under the cpu<2h label. The arithmetic that motivated D20 does not apply
+    to this dispatch; the closure does. Which of those binds is exactly the
+    "retiring or re-scoping the class" decision the firing reserved, now with
+    its first realised cost: `balance` is a zero-pass GOAL.md commitment and
+    its one runnable claim spec is foreclosed by conduct, not by science.
+    Options (for whichever desk takes it; none is the builder's):
+    (i) the owner re-opens per D20's own reversal clause — one line, no code;
+    (ii) the owner or Review rules on re-scoping the class or this id's
+    declaration, carrying in the record that any re-label is chosen AFTER the
+    envelope was measured;
+    (iii) DECLINE — BA.03 joins the class's other five ids as honestly
+    unrunnable, said in coverage's terms, and the disposed run is abandoned.
+    NOT AN OPTION, pre-refused so an idle slot cannot reach for either: a
+    detached payload calling `run(Ledger())` directly (bypasses the gate and
+    the ruling at once), or the builder re-labelling the budget class (a
+    self-serving cost move after measurement; D35's "cannot be lifted by
+    re-labelling" principle, one freeze over).

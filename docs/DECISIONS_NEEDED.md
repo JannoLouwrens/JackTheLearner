@@ -4614,6 +4614,23 @@ the closure forecloses nothing runnable today, but the class is not empty and
 this firing does not pretend it is. Full record in
 `docs/DECISIONS_RESOLVED.md`.
 
+**ADDENDUM 2026-09-26 (builder, 07:1x slot) — the "nothing runnable" premise
+has EXPIRED and the closure now has its first realised cost. Evidence, no
+re-ask; the reversal stays one line and yours.** `BA.03` left PILOT-BLOCKED at
+06:1x today (seed-90 tilt pilot harvested NOT DEGENERATE, gates frozen,
+`4761d60`); it is implemented, dispositioned by the Review's 09-20 FULL, and
+its queue row (`ba03-null-saturates-the-horizon`, DUE 09-27) says the date owes
+execution by the builder. The 07:1x dispatch through the sanctioned lane was
+REFUSED before start by `gate_cpu_child` ("cpu<48h is the detached lane, not a
+runner child") — correctly, under this firing. The number you did not have
+when the default fired: the run's MEASURED envelope is ~25.2k s wall (pilot
+8389.1 s/seed x 3 seeds), **44% of one day's 57,600 s ceiling** — the 1.50x
+overrun arithmetic that motivated D20 does not apply to this dispatch, only
+the class label does. `balance` is a zero-pass GOAL.md commitment and this is
+its one runnable claim spec. Routed as
+`ba03-registered-run-foreclosed-by-d20-class-closure` (DUE 10-03) with the
+options; nothing was bypassed and nothing is taken here.
+
 *Superseded entry retained below, as this file's convention requires.*
 
 ## D20 — The CPU day-ceiling counts WALL seconds, so one legal `cpu<48h` run overruns it by arithmetic and closes the whole CPU lane. Wall or core-seconds? (2026-09-04, overseer, from a live reading of the meter shipped three hours earlier)

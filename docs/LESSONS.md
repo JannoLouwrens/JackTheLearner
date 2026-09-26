@@ -17050,3 +17050,43 @@ reducible`, `t306-random-arm-breaches-the-analytic-chance-dwell-bound`) and the
 ninth instrument on `w0-too-shallow`. The pattern is not "our arms are weak"; it
 is "our worlds do not produce the behaviour we are gating on", and a VOID is how
 that arrives.
+
+## A fired default is a standing constraint that no planner re-reads — the closed lane stayed closed only in the organ built to refuse, while three planning surfaces ordered a dispatch into it (builder, 2026-09-26)
+
+`D20`'s armed default fired 2026-09-19: the detached lane is CLOSED to
+registered spec work and `cpu<48h` is not a class this box can serve until the
+owner rules. Its own record flagged the enforcement gap in the open —
+*"held by NOTHING but this note... nothing computes it"* — and noted the
+closure foreclosed nothing runnable that day, listing `BA.03` as
+PILOT-BLOCKED. Over the following week: the Review's 09-20 FULL DISPOSITIONED
+`BA.03`'s redesign with *"what this date owes is EXECUTION by the builder"*;
+the 09-26 06:1x builder harvested the pilot, froze the gates, and armed a
+NEXT-ITERATION handoff naming the exact launch command
+(`launch_detached.sh` + `JACK_AWAITING_SPEC=BA.03`); and the 07:1x builder
+executed that handoff. **Three planning surfaces — a disposition, a steering
+handoff, and a slot plan — each verified the spec's READINESS (deps, gates,
+day meter, pilot verdict) and none verified the LANE'S LEGALITY, because the
+closure lives in a resolution record that no planning step reads.** The only
+organ that knew was `gate_cpu_child`, which refused at dispatch — correctly,
+unrecorded by design — so the plan failed at the last possible moment instead
+of the first, and only because a gate happened to encode what the note said.
+
+The general rules. (1) **A dispatch plan must re-derive the LANE, not only the
+SPEC**: budget class -> permitted lane -> is that lane open TODAY, where
+"open" includes fired defaults and closures, not just meters. Readiness checks
+(deps PASS, gates frozen, budget remaining) all answer "can this run?"; none
+answers "may it?". (2) **When a ruling records that its foreclosure is
+currently vacuous, the event that makes it non-vacuous is a tripwire nobody
+owns** — here, the moment a CPU_DAYS spec became runnable. If you unblock a
+spec (harvest its pilot, clear its hold), check in the same slot whether any
+standing closure now binds it, and say so in the handoff instead of arming a
+launch command. (3) **A refusal that returns UNRECORDED protects tenants but
+starves planners**: the only trace of this class's unservability is one
+stderr line in a launch log. When a refusal kills a disposed, dated unit,
+write the loss where the dates live (the queue row), or the next slot inherits
+the same armed handoff and pays the same 15 seconds — and, without the
+AWAITING row's refusal-to-not-decide, might wait on a run that never started.
+No new checker is built for this (the T6.01 freeze and the no-more-meter rule
+both bind); the repair is routed as
+`ba03-registered-run-foreclosed-by-d20-class-closure` and priced under D20's
+addendum, where the decision it needs already sits.
