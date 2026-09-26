@@ -48,7 +48,7 @@
     "at": "2026-09-26",
     "value": {
       "disposed": 1,
-      "queue-row": 28,
+      "queue-row": 29,
       "repaired_by": 1
     }
   },
@@ -88,7 +88,7 @@
   },
   "review_queue_net_arrivals": {
     "at": "2026-09-26",
-    "value": 20
+    "value": 23
   },
   "review_queue_piled_on": {
     "at": "2026-09-26",

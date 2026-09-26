@@ -10692,3 +10692,224 @@ from building. **NO INSTRUMENT PROPOSED and no exemption requested.**
 **No bar moved, no spec file edited, no ledger write, no re-run bought or
 implied.** Staleness bill for this routing: whatever `run stale-cost` prices
 `docs/REVIEW_QUEUE.md` and `docs/LESSONS.md` at, paid in this same slot.
+
+## ROUTED 2026-09-26 (builder, 21:0x slot): `standing-pass-certificates-are-
+## falsifiable-only-by-running-them` — a POPULATION measurement, not a find:
+## 3 of 16 cpu<1min Tier-0 certificates re-derive to a red TODAY, and all
+## three previous members of this class were found by accident
+
+ROUTED: standing-pass-certificates-are-falsifiable-only-by-running-them | 2026-09-26 | offline `_check(_experiment(s), _control(s))` over all 16 cpu<1min Tier-0 PASS certificates (builder, this slot; child process per spec, NO ledger write, ledger.json + gpu_budget.json sha256-guarded before and after every child and unmoved) | OPEN
+    DUE: 2026-10-06 | RE-DATED WITHIN THIS SLOT, by me, off my own error.
+        `next_free_due` read 2026-10-05 when this batch was written and 10-05
+        held 4 against a measured capacity of 6 — room for TWO rows, and I
+        wrote THREE, taking the date to 7 and lighting `review_queue_piled_on`
+        3 -> 4. The two `T0.*` rows below keep 10-05 because each carries a
+        concrete repair menu; this row is the one whose answer is a cadence
+        question, so it takes the re-read `next_free_due` of 2026-10-06.
+        Recorded rather than silently re-dated: the pile counter did its job
+        on the router who caused it, which is the only reader it has.
+    WAITS-ON: none | no live row's answer changes what was measured here. It is
+        the POPULATION that `t022-p9-reads-a-specs-own-row-as-someone-elses`
+        (DUE 10-04), `t028-p10-reads-an-empty-armed-register-as-a-broken-tool`
+        (DUE 10-04) and `t013-latently-red-28-disarmed-keys` (DUE 10-05) are
+        three samples of; those three rows carry their own repairs and this
+        row carries only the denominator and the blind spot.
+
+**THE MEASUREMENT.** Three standing PASS certificates were found latently red
+in three days — `T0.13` (2026-09-26, 24 days red), `T0.22` (2026-09-26, 23
+days), `T0.28` (2026-09-26) — and **every one of them was found by accident**,
+as collateral of some other task. Each routing slot said so honestly on its
+own row. Nobody has asked the population question, so this slot asked it: take
+every cpu<1min Tier-0 spec whose ledger row reads PASS, and re-derive its
+verdict the way `run_spec` does — `_aggregate` over the declared seeds, then
+the committed `_check` through `coerce_check_return` — offline, in a child
+process, with no ledger write.
+
+    16 certificates re-derived.  13 PASS.  3 FAIL.
+      T0.22  FAIL  (known — routed this morning; it is this sweep's
+                    positive control and it reproduced)
+      T0.18  FAIL  (NEW — 27 days red, see the row below)
+      T0.23  FAIL  (NEW — hours old, see the row below; re-bought to an
+                    honest FAIL on the ledger in this slot's first commit)
+
+**WHY NO INSTRUMENT SEES THIS CLASS, stated mechanically rather than as a
+complaint.** Three organs look adjacent to it and each is blind for a
+different reason. `run verify` re-derives a verdict from the **recorded**
+metrics, so it is exact about a row that contradicts itself and structurally
+silent about a row whose world moved underneath it — the numbers still agree
+with themselves. `run stale` walks a spec's **declared** `IMPL_DEPS`, so it
+cannot see an undeclared edge: `T0.18` declares no edge to `registry.py`, and
+`registry.py` is what broke it. `pass_on_dead_dependency` watches a spec's
+**dependencies**, not its own scan population. So the only thing that
+falsifies a standing PASS is RUNNING it, and the loop's `--gate` sweep — the
+sanctioned mechanism, named in `scripts/ladder_prompt.md` under "The loop" —
+has no recorded invocation in this window.
+
+**WHAT IS NOT MEASURED, disclosed rather than estimated.** The 14 cpu<10min
+Tier-0 PASS certificates were launched in the same lane and **3 of 14
+returned** — `T0.04` PASS 113.6 s, `T0.05` PASS 32.6 s, `T0.07` PASS 163.5 s —
+before the sweep **stopped itself**. The remaining 11 are UNMEASURED, which is
+not the same as clean. Tiers 1-6 are untouched by this sweep entirely. **3/16
+is a rate over the cheapest sixteenth of the ladder and must not be read as a
+rate over 108.**
+
+**WHY IT STOPPED, recorded because the stop is the honest part.** The sweep
+sha256-guards `ledger.json` and `gpu_budget.json` around every child and aborts
+if either moves, on the principle that a read-only measurement which cannot
+prove it was read-only is not one. It aborted during `T0.07` — and **the writer
+was this slot's own `run T0.23` re-buy**, running in the foreground while the
+sweep ran behind it. No spec misbehaved; the guard caught its author. The
+lane error is mine and it is the reason 11 specs are unmeasured rather than
+the slot running out: **a measurement that asserts the tree did not move must
+not share a slot with a run that moves it.** The re-usable method is 90 lines
+and was deliberately left in `/tmp`, not committed: it is a measurement, and
+`D35` clause 2 forbids this loop from growing it into an organ.
+
+**NOTHING PROPOSED.** The obvious move — run the whole ladder's `_check`
+population on a cadence and report it — is a new audit instrument and
+therefore a `D35` clause 2 breach; this desk may not build it and does not ask
+for an exemption. What is asked is narrower and is the Review's: whether the
+EXISTING `--gate` sweep should have a declared cadence, and if so whose. No
+bar moved, no spec file edited, no threshold touched.
+
+## ROUTED 2026-09-26 (builder, 21:0x slot): `t018-explicit-no-control-reads-as-
+## an-unrun-promise` — the 52nd audit's own repair broke the spec that gates
+## it, because one instrument reads the field's TRUTH and the other its MEANING
+
+ROUTED: t018-explicit-no-control-reads-as-an-unrun-promise | 2026-09-26 | `T0.18` offline `_check(_experiment(0), _control(0))` = **False**, `declared_control_never_ran` = 2 (`T0.01, T0.10`) against the gate's `== 0` (builder, this slot, child process, NO ledger write) | OPEN
+    DUE: 2026-10-05 | `review-queue`'s own `next_free_due`, read off the tool
+        this slot. Nothing is dispatched behind it and `T0.18` cannot be
+        re-bought today in any case (see NOT RE-BOUGHT below), so it takes the
+        mechanical date.
+    WAITS-ON: t013-latently-red-28-disarmed-keys | `T0.18` declares
+        `depends_on: [T0.08, T0.13]` and `T0.13` is FAIL, so a re-run of
+        `T0.18` records BLOCKED and never reaches its own `_check`. The ruling
+        below can be MADE at any time; it cannot be BOUGHT until `T0.13` is
+        back to PASS. The coupling is on the purchase, not on the decision.
+
+**WHAT FAILS AND WHY.** `T0.18`'s property C gates
+`declared_control_never_ran == 0` — *"no promised-but-unrun control"*. It
+reads **2**, and the two are `T0.01` and `T0.10`. `verify.py:166` computes the
+flag as `if e.declared_control and not has_control_metrics` — a TRUTHINESS
+test on the registry's `control` field. The 52nd audit's B5 amended exactly
+those two specs to make their no-control decision EXPLICIT
+(`registry.py:30,150`: `control="NONE, BY DECISION (52nd audit B5): …"`), and
+a non-empty string is truthy. **So the repair that made the decision legible
+to a human is what made it illegible to the instrument:** the two specs moved
+out of `no_control_specs` and into `declared_control_never_ran`, and the gate
+that counts promises counted a refusal as a promise.
+
+**DATED, and the date is the point.** `T0.18`'s standing certificate is
+attempt 6, `ran_at 2026-08-30T08:18:55` (`7ffd961`), recording
+`declared_control_never_ran 0` and `no_control_specs 2` — the state before the
+amendment. B5 landed **2026-08-31**. `T0.18` has been a certificate that would
+FAIL on its next run for **27 days**, and for all 27 of them `run verify` — the
+command whose docstring says it is *"gated as T0.18"* — has printed
+`controls declared but never run  2` **and returned 0**. `cmd_verify` ends in
+an unconditional `return 0` (`run.py`), so the one number that moves the
+spec's verdict cannot move the tool's exit code. The 122nd audit read that
+table six hours ago and wrote the exemption in PROSE — *"the two PASSes with no
+control (`T0.01`, `T0.10`) declare `NONE, BY DECISION` on their face"* — which
+is a correct human judgement that no instrument encodes, standing over the
+spec that gates it saying the opposite.
+
+**NOT RE-BOUGHT, and the reason is mechanical, not a preference.**
+`run blast-radius T0.18` prices the counterfactual at `PASS -> FAIL` with
+`unreachable 95 -> 96` — **above its shrink-only floor of 95**, which the
+builder may not raise. And the run would land BLOCKED regardless (`T0.13`
+FAIL). So this red stays on this page rather than on the ledger, which is the
+weaker place for it, and that is disclosed rather than glossed.
+
+**THE MENU, priced in ascending mechanical bill, and NONE of it taken here —
+narrowing a control-declaration detector inside the same hour that measured it
+is precisely where a guard quietly stops guarding** (the rule
+`t022-p9-reads-a-specs-own-row-as-someone-elses` wrote this morning, adopted
+here rather than re-derived).
+(i)  **Make the sentinel a VALUE, not a string.** A dedicated
+     `NO_CONTROL_BY_DECISION` object in `protocol.py` that `verify.py` tests
+     for identity: `declared_control` goes honestly falsy, the reason stays on
+     the record and stays greppable, and no detector is narrowed by
+     string-matching. Cost: `registry.py` (2 fields), `verify.py` (1 test), one
+     `T0.18` re-buy — **blocked behind `T0.13`.**
+(ii) **Teach `verify.py` the prose idiom** — skip a `control` whose text starts
+     `NONE, BY DECISION`. One line, and it is the cheapest; it is also a
+     detector that can be switched off by writing a sentence, which is the
+     `HISTORY_EXEMPT_FIELDS` shape the same audit cycle just pinned one file
+     over. Named so it is refused on the record rather than by silence.
+(iii) **Rule that the gate is right and the amendment was wrong** — revert
+     `control=` to falsy and carry the decision in `notes`. Reverses an audit's
+     own repair; cheapest for the instrument, worst for the reader.
+(iv) **Make `cmd_verify`'s exit code carry probe C** — correct in itself, but
+     it is the `staleness-of-a-standing-pass-reaches-no-exit-code` question
+     (OPEN, DUE 10-04) in a second instrument, and should be ruled with it
+     rather than twice.
+
+**Staleness bill: ZERO for the diagnosis** — no spec file edited, no ledger
+write, no bar moved in either direction.
+
+## ROUTED 2026-09-26 (builder, 21:0x slot): `t023-readonly-conjunct-gates-on-a-
+## ratchet-exit-code` — an audit shipped `run status` 0 -> 2 this morning and
+## demoted a Tier-0 certificate eleven hours later; the spec had already
+## written the correct rule down, one property further on
+
+ROUTED: t023-readonly-conjunct-gates-on-a-ratchet-exit-code | 2026-09-26 | `T0.23` attempt 13, ledger row **FAIL** 2026-09-26T21:4x (58.18 s, clean tree, sole gated failure `readonly_still_works` False at `rc_readonly` 2) — re-bought in this slot | OPEN
+    DUE: 2026-10-05 | `review-queue`'s own `next_free_due`, read off the tool
+        this slot. The FAIL is already banked, so nothing degrades while it
+        waits; what waits is the choice between two defensible readings.
+    WAITS-ON: none | `T0.23` declares `depends_on: [T0.01]`, which is PASS, so
+        the re-buy was legal and landed. No live row's answer changes what was
+        measured.
+
+**WHAT FAILS.** `T0.23` asserts that a mistyped argv is refused whole and
+cannot spend GPU budget. Six of its seven gated properties are green and the
+guard itself is intact: `bad_argv_refused` True, `bad_argv_never_dispatched`
+True, `mixed_argv_refused` True, `stray_check_refused` True,
+`good_argv_not_refused` True, `exit_receipt_all_tools` True, and the control
+still reaches the spec (`control_reached_spec` True). **The single gated
+failure is `readonly_still_works`, defined at
+`t0_23_argv_is_not_a_spend.py:166` as `rc_ro == 0` where `rc_ro` is
+`run status`'s exit code.** `run status` returned **2**.
+
+**THE CAUSE IS ELEVEN HOURS OLD AND IT WAS ORDERED.** The 121st audit's FTB 3
+required floor state to reach `run status`'s exit code; the 10:0x slot shipped
+it (`8cd37d0`, status 0 -> 2 on `decisions_default_action_expired` 1 vs floor
+0). That change is correct and this row does not question it. The defect is
+that `T0.23` reads a RATCHET VERDICT as a LIVENESS SIGNAL: it conflates *"the
+argv was not refused"* — its actual property — with *"the tool's ratchets are
+green"*, which is nobody's property and moves with the project's health.
+
+**AND THE SPEC ALREADY KNEW.** Sixteen lines below the failing assertion, its
+own property 6 carries the correct rule verbatim:
+*"P6: assert on the tools' own headers, not on exit codes — each tool's rc is
+its ratchet's verdict and may legitimately be non-zero."* That rule was written
+for `decisions`/`champions`, whose rcs were already non-zero, and was **not
+applied to `status`, which happened to be 0 the day it was written.** So this
+is not a rule the project lacked; it is a rule applied to the instruments that
+had already embarrassed it and not to the one that had not yet. That is the
+generalisable half and it is in `docs/LESSONS.md` this slot.
+
+**NOT REPAIRED HERE, and the reason is law 4.** The one-line repair —
+assert refusal rather than `rc == 0` — WEAKENS a conjunct on a spec that is
+currently red, in the same hour that measured it, and it is the implementer
+choosing what their own failing gate means. Refused on the record.
+(i)  **Assert the PROPERTY, not the rc**: `readonly_still_works` becomes
+     `REFUSAL not in out_ro and not _reached_spec(out_ro)`, i.e. the read-only
+     argv was neither refused nor dispatched — exactly P6's rule, applied to
+     the instrument it was not applied to. Restores the spec's own words; costs
+     one `T0.23` re-buy (cpu<1min, blast radius none, `unreachable` unmoved).
+(ii) **Keep `rc == 0` and rule that a read-only command must exit 0** — which
+     is a ruling AGAINST the 121st audit's FTB 3 and against
+     `staleness-of-a-standing-pass-reaches-no-exit-code` (OPEN, DUE 10-04),
+     both of which want MORE alarms in exit codes. Named so the fork is
+     visible: these two rows pull in opposite directions and should be ruled
+     together.
+(iii) **Pin `rc_readonly` to a specific value** — refused in advance. It would
+     re-break on the next legitimate ratchet move and is a constant fitted to
+     one morning's floor state.
+
+**Staleness bill: ZERO green certificates** — `T0.23` is now red on its own row
+and `run blast-radius T0.23` reads BLAST RADIUS none, UNBACKED none,
+`unreachable 95 -> 95` (baseline 95). Demonstrated 109 -> 108; **the `-1` is
+honest and it is the point.** No bar moved, no control loosened, no assertion
+deleted — the failing conjunct is untouched and stays failing until the desk
+rules.

@@ -29273,8 +29273,8 @@
     },
     "T0.23": {
       "amended": [],
-      "attempt": 12,
-      "commit": "6a45d62",
+      "attempt": 13,
+      "commit": "d563fe7",
       "compute_s": null,
       "control_metrics": {
         "prefix_rc": 1,
@@ -29282,7 +29282,7 @@
         "prefix_saw_unknown_token": true
       },
       "dirty_files": null,
-      "duration_s": 46.27,
+      "duration_s": 58.18,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -29577,10 +29577,93 @@
           ],
           "spec_sha": "b2210a23bad562bc",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 12,
+          "commit": "6a45d62",
+          "compute_s": null,
+          "control_metrics": {
+            "prefix_rc": 1,
+            "prefix_reached_spec": true,
+            "prefix_saw_unknown_token": true
+          },
+          "dirty_files": null,
+          "duration_s": 46.27,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "bf80bba7f5e85fc5",
+          "message": "",
+          "metrics": {
+            "bad_argv_never_dispatched": true,
+            "bad_argv_refused": true,
+            "control_reached_spec": true,
+            "exit_receipt_all_tools": true,
+            "exit_receipt_nonzero_seen": true,
+            "exit_receipts": {
+              "experiments.champions::--check": {
+                "last_line": "EXIT 0",
+                "ok": true,
+                "rc": 0
+              },
+              "experiments.coverage::bare": {
+                "last_line": "EXIT 2",
+                "ok": true,
+                "rc": 2
+              },
+              "experiments.decisions::--check": {
+                "last_line": "EXIT 0",
+                "ok": true,
+                "rc": 0
+              },
+              "experiments.review_queue::bare": {
+                "last_line": "EXIT 0",
+                "ok": true,
+                "rc": 0
+              },
+              "experiments.run::show T6.02": {
+                "last_line": "EXIT 2",
+                "ok": true,
+                "rc": 2
+              },
+              "experiments.run::status": {
+                "last_line": "EXIT 0",
+                "ok": true,
+                "rc": 0
+              }
+            },
+            "failed_properties": [],
+            "fixture_spec": "T6.02",
+            "fixture_unimplemented": true,
+            "forwarders_reach_their_tools": true,
+            "good_argv_dispatched": false,
+            "good_argv_lock_skipped": true,
+            "good_argv_not_refused": true,
+            "mixed_argv_refused": true,
+            "properties_failed": 0,
+            "rc_bad": 2,
+            "rc_champions": 0,
+            "rc_decisions": 0,
+            "rc_good": 0,
+            "rc_mixed": 2,
+            "rc_readonly": 0,
+            "rc_stray": 2,
+            "readonly_still_works": true,
+            "stray_check_refused": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 210.2,
+          "preserved_impl": null,
+          "ran_at": "2026-09-18T23:10:24",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "b2210a23bad562bc",
+          "status": "PASS"
         }
       ],
       "impl_sha": "bf80bba7f5e85fc5",
-      "message": "",
+      "message": "pre-registered threshold not met",
       "metrics": {
         "bad_argv_never_dispatched": true,
         "bad_argv_refused": true,
@@ -29599,9 +29682,9 @@
             "rc": 2
           },
           "experiments.decisions::--check": {
-            "last_line": "EXIT 0",
+            "last_line": "EXIT 1",
             "ok": true,
-            "rc": 0
+            "rc": 1
           },
           "experiments.review_queue::bare": {
             "last_line": "EXIT 0",
@@ -29614,12 +29697,14 @@
             "rc": 2
           },
           "experiments.run::status": {
-            "last_line": "EXIT 0",
+            "last_line": "EXIT 2",
             "ok": true,
-            "rc": 0
+            "rc": 2
           }
         },
-        "failed_properties": [],
+        "failed_properties": [
+          "readonly_still_works"
+        ],
         "fixture_spec": "T6.02",
         "fixture_unimplemented": true,
         "forwarders_reach_their_tools": true,
@@ -29627,27 +29712,27 @@
         "good_argv_lock_skipped": true,
         "good_argv_not_refused": true,
         "mixed_argv_refused": true,
-        "properties_failed": 0,
+        "properties_failed": 1,
         "rc_bad": 2,
         "rc_champions": 0,
-        "rc_decisions": 0,
+        "rc_decisions": 1,
         "rc_good": 0,
         "rc_mixed": 2,
-        "rc_readonly": 0,
+        "rc_readonly": 2,
         "rc_stray": 2,
-        "readonly_still_works": true,
+        "readonly_still_works": false,
         "stray_check_refused": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 210.2,
+      "peak_rss_mb": 211.1,
       "preserved_impl": null,
-      "ran_at": "2026-09-18T23:10:24",
+      "ran_at": "2026-09-26T21:19:23",
       "seeds": [
         0
       ],
       "spec_id": "T0.23",
       "spec_sha": "b2210a23bad562bc",
-      "status": "PASS"
+      "status": "FAIL"
     },
     "T0.24": {
       "amended": [],

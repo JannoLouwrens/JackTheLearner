@@ -19545,3 +19545,117 @@ docket, the `lc03` seat row, the `t306` venue row, `A4`'s three-way fork, the
 `ba03-registered-run-foreclosed-by-d20` options, `SM.03`'s F1 arm pick, the
 `PL.02` gate disposition, **and the `adverse-verdicts` disposition routed
 today** — option (iii) is instrument scope and `D35` clause 2 owns it.
+
+- 2026-09-26 21:0x (builder, **opus** — `JACK_LOOP_MODEL=fable` is pinned at
+  **95%** and the chain walked me up, as the steering page says it will;
+  `week:all models` **66%** is the gate and the line I acted on; session 9%):
+  **THE 26th EMPTY BOARD, AND THIS TIME I ASKED THE POPULATION QUESTION
+  INSTEAD OF WAITING FOR THE NEXT ACCIDENT.** `run next` 0 fresh of 48 and
+  `run review-queue`'s `DISPOSITIONED` class both re-derived, not inherited:
+  `1^13` units 4 (`LT.02`) and 5 (`T2.15`) are DONE and settled — `LT.02`
+  attempt 2 **PASS** on the ledger, `T2.15`'s null-beat conjunct visible in
+  `run next`'s own `falsified_by` — and unit 3's part 2 (`PS.08` rate-blind
+  amputation control) was already executed this morning at `a313122`. Units
+  1-3's part 1 are HELD behind `ps09-known-answer-floor-was-calibrated-on-an-
+  oracle-cut`, verified at source, not taken on trust. So: nothing assigned,
+  nothing to manufacture.
+  **WHAT I DID INSTEAD.** Three standing PASS certificates were found latently
+  red in three days — `T0.13` (24 d), `T0.22` (23 d), `T0.28` — and **all
+  three were found BY ACCIDENT**, each routing slot saying so honestly on its
+  own row. Nobody had asked how many there are. I re-derived the verdict of
+  **all 16 cpu<1min Tier-0 PASS certificates** the way `run_spec` does
+  (`_aggregate` over declared seeds -> committed `_check` ->
+  `coerce_check_return`), offline, child process per spec, **no ledger write**,
+  with `ledger.json`/`gpu_budget.json` sha256-guarded around every child.
+  **13 PASS, 3 FAIL.** `T0.22` was the sweep's positive control and reproduced.
+  **`T0.18` and `T0.23` are NEW.**
+  **`T0.18` — 27 days red, and the cause is an AUDIT'S OWN REPAIR.** Property C
+  gates `declared_control_never_ran == 0`; it reads **2** (`T0.01`, `T0.10`).
+  `verify.py:166` tests `e.declared_control` for TRUTH, and the 52nd audit's B5
+  (2026-08-31) made those two specs' no-control decision EXPLICIT —
+  `control="NONE, BY DECISION (52nd audit B5): …"` — which is a truthy string.
+  The two specs moved from `no_control_specs` into `declared_control_never_ran`
+  and the gate that counts promises counted a refusal as a promise. `T0.18`'s
+  standing row is attempt 6, `ran_at 2026-08-30`, recording that count at **0**
+  — the state one day before the amendment. **NOT RE-BOUGHT and the reason is
+  mechanical:** `run blast-radius T0.18` prices `unreachable 95 -> 96`, ABOVE
+  its shrink-only floor, and the run lands BLOCKED anyway (`depends_on` carries
+  `T0.13`, FAIL). Routed with a four-option menu and **none of it taken** —
+  narrowing a control-declaration detector in the hour that measured it is
+  where a guard quietly stops guarding (`t022-p9`'s rule this morning, adopted
+  not re-derived).
+  **`T0.23` — hours old, RE-BOUGHT TO AN HONEST FAIL** (attempt 13, 58.18 s,
+  clean tree, `EXIT 1`). Sole gated failure `readonly_still_works` at
+  `rc_readonly` **2**: the 121st audit's FTB 3 put floor state into
+  `run status`'s exit code and the 10:0x slot shipped it (`8cd37d0`, 0 -> 2)
+  eleven hours earlier. The guard is intact — six of seven gated properties
+  green, `bad_argv_refused`/`mixed_argv_refused`/`stray_check_refused` all
+  True. **The spec had already written the correct rule sixteen lines below the
+  failing line** (its P6: *"assert on the tools' own headers, not on exit codes
+  — each tool's rc is its ratchet's verdict"*) and had applied it only to the
+  tools whose rc was ALREADY non-zero. Blast radius none, `unreachable` 95 ->
+  95, demonstrated **109 -> 108**. The `-1` is honest and it is the point. Not
+  repaired: the one-line fix WEAKENS a conjunct on a red spec in the hour that
+  measured it, which is law 4's territory, and option (ii) pulls against
+  `staleness-of-a-standing-pass-reaches-no-exit-code` — named so the desk rules
+  the two together.
+  **MY OWN TWO ERRORS, both caught by instruments pointed at me.** (1) The
+  cpu<10min half returned only **3 of 14** (`T0.04`/`T0.05`/`T0.07`, all PASS)
+  because the sweep's own sha256 guard ABORTED it — and the writer was **my own
+  foreground `run T0.23` re-buy**, running while the sweep ran behind it. No
+  spec misbehaved; the guard caught its author. 11 specs UNMEASURED, which is
+  not the same as clean, and disclosed as such. (2) I routed three rows onto
+  `next_free_due` 10-05, which held 4 against a measured capacity of 6 — room
+  for two. `review_queue_piled_on` went 3 -> 4 and **I re-dated my own least
+  time-critical row to 10-06 inside the slot**, with the error on the record;
+  the counter is now back to 3.
+  **THREE ROWS ROUTED, NO INSTRUMENT PROPOSED, NO EXEMPTION REQUESTED.** The
+  population row explicitly refuses to ask for the obvious organ — sweeping the
+  whole ladder's `_check` on a cadence is a `D35` clause 2 breach and this desk
+  may not build it; what is asked is only whether the EXISTING `--gate` sweep
+  should have a declared cadence and whose. **Two LESSONS entries**, both
+  generalised past their specs: *an explicit decision is a written value, and
+  every instrument that tested for its ABSENCE now reads it as its PRESENCE*
+  (documentation-by-populating-a-field is an API change to every reader of that
+  field; grep the readers in the same commit) — and *a ratchet's exit code is a
+  verdict about the project, never a liveness signal for the tool* (a rule
+  applied only to the instruments that already embarrassed you is a list of
+  incidents wearing a principle's clothes).
+  **INSTRUMENTS AFTER, all seven re-derived bare and none inherited:** `verify`
+  **0**, `status` **2**, `coverage` **2**, `decisions` **1**, `champions` **0**,
+  `review-queue` **2**, `render` **0**. And the DELTA, quoted from the tool
+  rather than composed beside those levels: *ratchets vs committed readings
+  (HEAD): 2 MOVED (`fail_unowned_owned_forms` queue-row 28 -> 29,
+  `review_queue_net_arrivals` 20 -> 23); no counter refused to compute; floors:
+  2 ABOVE (`decisions_default_action_expired`, `pass_on_dead_dependency`), 0
+  BELOW, 0 UNVERIFIED.* Both moves are MINE and both are this slot's routing —
+  the queue-row form is `T0.23`'s new FAIL taking its own owner, which is why
+  `fail_unowned` stays **0**. **No floor was raised.** Both floor breaches are
+  pre-existing and owned elsewhere (`D33`; the `T0.13` pair plus `T1.08`'s two).
+  **CREATURE GATE MOVED: NONE (#51).** Recorded as a real breach per the `d35`
+  disposition. Chain re-derived from `registry.py` this slot: `T6.01` <-
+  `T4.05` <- `T4.04` <- `T2.01` (FAIL) <- `T1.08` (FAIL, pipeline repair the
+  Review's, `t108-pipeline-repair-has-no-design` DUE 10-02); `XL.01` FAIL <-
+  `PS.02`/`XL.00`, repair-path row OPEN to 10-03. Unchanged and still
+  structural.
+  **GPU: `2026-W39`, 30 free Kaggle hours, 0 charged.** `coverage` still reads
+  every GPU cost class `NOT FILLABLE — the repair is a REDESIGN`. Nothing
+  manufactured — **refusal #51.**
+  **HYGIENE.** `git add` by name, tree checked before the re-buy (CLEAN) and
+  before the commit, no foreign files, sweep script left in `/tmp` deliberately
+  and NOT committed, no processes left running, pushed. Staleness bill for the
+  `REVIEW_QUEUE.md` edit priced at **1 certificate (`T0.31`)** and paid in this
+  slot.
+  **NEXT ITERATION (22:07):** **06:37 tomorrow is the Sunday FULL** on which the
+  Review has pre-committed to DECLINE the `W1` authorship if the date breaks a
+  fifth time — do not pre-empt it; the 07:0x slot should diff
+  `PROGRESS.md`/`OVERSIGHT.md` for fresh FOR THE BUILDER items. **The 11
+  unmeasured cpu<10min Tier-0 certificates are the obvious next unit** —
+  `T0.14 T0.15 T0.16 T0.26 T0.29 T0.30 T0.32 T0.33 T0.34 T0.35` plus `T0.31`;
+  re-run `/tmp/t0_latent_sweep.py` (rewrite it, it is not committed) **in a slot
+  that buys nothing**, because that is exactly what broke this one. Do NOT
+  repair `T0.18` or `T0.23` — both menus are the desk's, dated 10-05. Do NOT
+  re-run `T0.13`. Still not yours: `W1.01`/`W1.03`/`W1.04`, `D33`/`D35`/`D36`,
+  `UB.10`'s successor arm, `T1.08`'s pipeline design, the `w1-world-edit-window`
+  docket, the `lc03` seat row, the `t306` venue row, `A4`'s three-way fork, the
+  PS-family part-1 inheritance, and the `adverse-verdicts` disposition.

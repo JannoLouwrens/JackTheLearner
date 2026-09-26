@@ -17801,3 +17801,86 @@ same free backward check `verify` was built on — just pointed at the half of t
 ledger `verify` declines. When an instrument declares a scope, the one-off
 measurement OUTSIDE that scope is usually the cheapest audit available, because
 nobody has ever taken it.
+
+---
+
+## An explicit decision is a WRITTEN VALUE, and every instrument that tested for its ABSENCE now reads it as its PRESENCE (2026-09-26, builder, from `T0.18`)
+
+**The scar.** The 52nd audit's B5 did a good thing: `T0.01` and `T0.10` have no
+control *by decision*, and instead of leaving that as a silent blank it wrote
+the decision down — `control="NONE, BY DECISION (52nd audit B5): …"` in
+`registry.py`. A human reading the registry now learns *why* there is no
+control instead of wondering whether someone forgot one.
+
+`verify.py:166` computes *"a control was promised and never ran"* as
+`if e.declared_control and not has_control_metrics`. A non-empty string is
+truthy. So on 2026-08-31 both specs stopped being counted as *"no control"* and
+started being counted as *"promised a control and never ran it"* — and
+`T0.18`, whose property C gates that count at exactly `== 0`, became a
+certificate that would FAIL on its next run. It stayed PASS on the board for
+**27 days.**
+
+**The generalisation, which is the useful part.** *Making a decision explicit
+moves it from ABSENT to PRESENT, and every instrument in the repo that tested
+the field for presence silently flips its answer.* The two readings are
+
+- **TRUTH** — "is this field set?" — which is what a detector computes; and
+- **MEANING** — "does this field promise anything?" — which is what the
+  property is about, and which only a human or a sentinel can answer.
+
+They agreed for as long as the only way to say *no control* was to say nothing.
+The moment somebody said it out loud they diverged, and nothing in the repo
+was watching the seam. **Documentation-by-populating-a-field is an API change
+to every consumer of that field.**
+
+**The habit that follows, and it costs one grep.** When you make an implicit
+decision explicit by writing it into a structured field, grep for every reader
+of that field *in the same commit* and say in the message what each one now
+computes. `registry.py`'s `control` had exactly two readers; the amendment
+named neither.
+
+**And the second, sharper reading — an exemption that lives only in prose is
+not an exemption.** Six hours before this was found, the 122nd audit read
+`run verify`'s own table printing `controls declared but never run  2` and
+wrote the correct human judgement beside it: *"the two PASSes with no control
+declare `NONE, BY DECISION` on their face."* That judgement is right. It is
+also invisible to `T0.18`, which is the spec `cmd_verify`'s docstring names as
+its own gate — so the tool and the spec that gates it have disagreed for 27
+days while a page said they agreed. `cmd_verify` ends in an unconditional
+`return 0`, so the one number that moves the spec's verdict cannot move the
+tool's exit code. **If a human exemption is correct, encode it in a sentinel
+the detector can test; if it cannot be encoded, it is not an exemption but a
+standing red somebody keeps forgiving.**
+
+## A ratchet's exit code is a VERDICT ABOUT THE PROJECT, never a liveness signal for the tool (2026-09-26, builder, from `T0.23`)
+
+**The scar.** `T0.23` proves that a mistyped argv is refused whole and cannot
+spend GPU budget. One of its conjuncts, `readonly_still_works`, was written as
+`rc_ro == 0` where `rc_ro` is `run status`'s exit code — meaning *"a read-only
+command still works"*. The 121st audit then ordered floor state into
+`run status`'s exit code and the loop shipped it (`8cd37d0`, status 0 -> 2).
+**Eleven hours later `T0.23` was a red certificate**, on a property that had
+not changed and a guard that was still intact: six of its seven gated
+properties were green and the argv guard itself was never in question.
+
+**What makes this worth a lesson rather than a fix** is that `T0.23` had
+already written the correct rule down, sixteen lines below the failing
+assertion, in its own property 6:
+
+> *assert on the tools' own headers, not on exit codes — each tool's rc is its
+> ratchet's verdict and may legitimately be non-zero.*
+
+That rule was written for `decisions` and `champions`, whose exit codes were
+*already* non-zero when the property was authored. It was not applied to
+`status`, whose exit code *happened to be 0 that day*. **A rule applied only
+to the instruments that have already embarrassed you is a rule you have not
+adopted** — it is a list of past incidents wearing a principle's clothes. The
+test is whether you apply it to the case that is currently comfortable.
+
+**The habit.** In this repo every audit instrument's exit code is a shrink-only
+ratchet over the project's own health, and health moves. So: an assertion that
+some tool *ran* must read what the tool PRINTED — its header, its refusal
+string, whether it dispatched — and never its rc. Reserve rc for the one
+question rc answers: *what verdict did this ratchet reach?* The two spellings
+look identical on the day the ratchet is green, which is the only day anyone
+writes the assertion.
