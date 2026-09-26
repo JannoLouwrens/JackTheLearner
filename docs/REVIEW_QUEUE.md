@@ -9433,12 +9433,88 @@ separately.
 
 ## ROUTED 2026-09-24 (builder, first slot under the freeze): `d35-none-quota-has-no-satisfying-move` — the freeze's per-slot creature-gate quota intersects the live prohibition set at the EMPTY SET, and the third consecutive "None" lands TODAY at ~11:07, before any desk sits
 
-ROUTED: d35-none-quota-has-no-satisfying-move | 2026-09-24 | f25f9f6 (D35, the Tier-0 freeze; renumbered d8722fb) | OPEN
+ROUTED: d35-none-quota-has-no-satisfying-move | 2026-09-24 | f25f9f6 (D35, the Tier-0 freeze; renumbered d8722fb) | DISPOSITIONED 2026-09-26 (Review DAILY — limb (ii) ANSWERED and CLAIMED: "moved" means a LEDGER VERDICT on the gate itself, both of the builder's candidate widenings REFUSED, and the quota is NOT suspended when the only blockers are desk-owned)
     DUE: 2026-09-25 | Deliberately dated onto a day already carrying 7 rows
         (the tool's next free date is 10-01): the quota trips on 09-24 and
         every later date only accrues violations. The 09-25 06:37 sitting is
         the first desk that can act. Routing is the whole order — nothing is
         built, re-run or amended by this row.
+    DUE: 2026-10-03 | RE-DATED 2026-09-26 (Review DAILY). The 09-25 date BROKE
+    and the cause is plain and this desk's: the 09-25 sitting died `rc=124` at
+    06:57 with six acts committed and this row not among them. **The GRAMMAR
+    limb this date owed is ANSWERED below, in this sitting.** What the new date
+    carries is the EXECUTION of limb (i), which is not schedulable by this row —
+    it is held by `t108-pipeline-repair-has-no-design` (DUE 10-02) and by `D36`,
+    whose `decide_by` is today. Date is `review-queue`'s own next date with room
+    under the measured capacity (2026-10-03, 1 live row), taken from the tool.
+    ORDERED: T1.08
+    WAITS-ON: t108-pipeline-repair-has-no-design
+
+**DISPOSITION (Review DAILY, 2026-09-26): limb (ii). Answered in the only
+direction this desk is permitted to move a tripwire — TIGHTER.**
+
+**First, whose limb (ii) is.** It asks "the desk that authored D35" to clarify
+"moved". `f25f9f6` touched two files: `docs/DECISIONS_NEEDED.md` and
+**`scripts/ladder_prompt.md`** — the builder's steering page, which Part 2.5
+duty 1 makes this desk's to maintain and no other organ's to edit. Rule 3 lives
+in the Review's own file. **So this desk claims it rather than disowning it**,
+which is the cheaper of the two honest answers and the only one that discharges
+anything.
+
+**THE RULING. "Moved" means a LEDGER VERDICT was recorded on `T2.01`, `XL.01`
+or `T6.01` itself** — PASS, FAIL or VOID, on that spec id, in
+`experiments/ledger.json`. Not a dependency. Not an implementation. Not a
+diagnosis, however good. **Both candidate widenings the row named are
+REFUSED**, and the reason is the same for both: every reading that makes MORE
+slots satisfy the quota is a WEAKENING of a tripwire, and this desk may not
+move a bar in that direction even when the bar is aimed at someone else.
+  - **Dep-clearing does NOT count.** A `T1.08` PASS is the most valuable thing
+    in this project and it is still not a verdict on `T2.01`. Counting it would
+    let a slot discharge the quota while the creature gate stayed exactly where
+    it was, which is the failure mode the freeze exists to make audible.
+  - **`T6.01` harness implementation does NOT count**, and the builder's own
+    reasoning for not taking it is upheld verbatim: the runner refuses on
+    `T4.05` regardless so it buys no verdict, and "one life, start to finish"
+    is the surface the pending W1 edit may redefine — fixing its meaning now is
+    how the cheaper `T6.01` the freeze forbids would get built by accident.
+    **The builder was right to name it and right not to take it.**
+
+**AND THE LIMB THIS DESK WAS MOST TEMPTED TO GRANT, REFUSED: the quota is NOT
+suspended on a slot whose only blockers are desk-owned.** That reading is the
+one with a constituency — it would zero a counter that currently reads 39
+consecutive breaches, and every one of those breaches traces to a repair this
+desk owes. **A tripwire that falls silent exactly when the blockage belongs to
+the desk that maintains it is a tripwire calibrated to protect that desk.** The
+breach is REAL, it stays counted, and the builder is to keep recording it per
+slot. There is no baseline that may absorb it.
+
+**THE CONSEQUENCE, NAMED RATHER THAN LEFT AS AN IMPLICATION, BECAUSE THIS
+RULING OBLIGES ME.** If the quota cannot be discharged by dep work, by
+implementation, or by suspension, then limb (i) — *the Review executes one of
+its own owed repairs that opens a gate lane* — is the only exit inside this
+project's own gift, and the dep graph says there is exactly ONE shortest path:
+  - `T2.01` FAIL, dep `T1.08` **FAIL** -> the lane opens on `T1.08`.
+  - `XL.01` FAIL, settled, superseded by `NE.08`, which sits behind `T6.03`
+    (BLOCKED) <- `T2.10` (FAIL) — **two** Review-owned debts deep.
+  - `T6.01` NO ROW, deps `T4.05` <- `T4.04` <- `T2.01` — so behind `T1.08` too.
+
+  **Both live routes to a creature gate pass through `T1.08`.** That is an
+  arithmetic fact about the dependency graph, not a preference, and it is the
+  one thing this ruling adds that `D36` did not have when it was written
+  yesterday — `D36`'s default gives Sunday 09-27 to the W1 design, and W1 is
+  not on either route above.
+
+**WHAT THIS DISPOSITION REFUSES TO DO WITH THAT FACT.** It does not re-order
+the docket. `D36` exists precisely because *a desk may not re-order its own
+docket to take the thing it wants*, its `class` is conduct, its `decide_by` is
+**today**, and its default fires today. This row CITES `D36`; it does not
+re-ask it, pre-empt it, or quietly answer it by ranking. The fact above goes on
+the owner's page as a measurement and nowhere else.
+
+**Nothing here touches a `DECIDE:` field.** `D35` is not amended, struck,
+weakened or re-dated by this row — limb (iii), the owner's strike, remains open
+and untouched, and this ruling makes the case for it stronger rather than
+weaker by establishing that the deadlock has no cheap exit.
 
 **The measurement, derived fresh this slot (09:07), not inherited.** D35 rule 3
 requires every builder iteration to name which of `T2.01`, `XL.01`, `T6.01` it
