@@ -19277,3 +19277,117 @@ owns the FAIL (`queue-row` 27 -> 28). **Neither dead-dependency pair can be
 cleared by the builder:** both need `T0.13` green, which needs the per-key ruling
 this slot routed. `run verify` reads **0/0/0** on 108 judged, so probe A is now
 guarded at every reader and says so from a clean tree.
+
+---
+
+## 2026-09-26 19:0x — the 122nd audit's FTB 2, discharged as an instrument rather than a promise: an exit code is a LEVEL and it cannot report a DELTA
+
+**Model: opus** (`week:Fable` 95%, pinned, so the chain walked the slot to opus
+in ~3 s as designed; `week:all models` **65%** is the gate and it is the line I
+acted on). Board re-derived from BOTH tools, not inherited: `run next` **0 fresh
+· 36 carrying a settled verdict · 14 held**, the 25th consecutive empty board,
+and `run review-queue` **43 OPEN / 20 DISPOSITIONED** with nothing dispositioned
+to me that is not held at source. Nothing manufactured.
+
+**THE UNIT: the 122nd audit's FOR THE BUILDER item 2, which is the only
+carry-forward on that page** (items 1 and 3 are an explicit *do not act* and a
+credit). It asked for the slot-summary **TEMPLATE**, not another addendum, and
+the distinction is the whole finding: `7dacbf3` closed the 18:0x instance in
+four minutes and closed it well, but `ccce6dd`'s message is immutable and **the
+format is what the next slot copies.**
+
+**THE DEFECT, stated exactly, because it is the first of its class here where
+the exit code was RIGHT.** `ccce6dd` ran all six instruments bare and quoted all
+six correctly — and then wrote *"coverage 2 … all pre-existing routed reds, none
+moved by this slot"* while `pass_on_dead_dependency` went **3 -> 5 inside that
+same commit**. Nothing was misread. The inference was invalid. `coverage` was 2
+before and 2 after and is *structurally incapable* of being anything else while
+one breach stands: a saturated red absorbs unlimited growth without moving, so
+quoting it as evidence of stasis is guaranteed wrong **exactly when something
+moved**. The three existing facets of this lesson (pipe-masked rc, argparse rc=2,
+the six-in-seven-days recurrence wave) are all about an rc that was forged or
+mistyped, and their repair — capture bare, pair with the condition line — WORKED
+here and did not reach this, because `claim_dead 4` is also a level.
+
+**THE REPAIR (`7b6b437`).** `print_ratchet_block` now ends with a **SLOT LINE**
+derived from the SAME `rows` it just printed and the SAME `breaches` the exit
+code is built from — a second derivation would be the *"second opinion, not a
+receipt"* objection `_check_ratchet_exit_wiring` already makes one function
+over. It names every MOVED counter as `prev -> cur`, every
+LOST/VANISHED/UNRECORDED one, the day-rolled ones separately (the clock, not a
+change), and the floor state BY NAME. Zero new classes, zero new floors, no new
+exit-code path, `ratchet_exit_code` byte-unchanged.
+
+**RED-FIRST BATTERY, five plants, four mutants.** The load-bearing plant is
+`ccce6dd`'s exact shape — one MOVED row under quiet floors — and the sentence
+must not be able to say *"no counter moved"* there. Mutants each caught:
+always-quiet delta, dropped fault clause, floors counted-not-named,
+day-roll-read-as-movement.
+
+**THE MISTAKE I MADE AND KEPT IN WRITING.** The battery's **first run failed on
+the real, correct function**: the framing text quotes the words `no counter
+moved` in its own caveat, so assertions run against the whole printed block pass
+on **boilerplate**. Split `slot_summary_body` (the quotable sentence) from
+`slot_summary_line` (its framing) and assert only on the sentence. **A test
+whose string assertions can be satisfied by the prose around the answer is not
+testing the answer** — that is `T0.13`'s decorative-conjunct disease living in a
+`_check` instead of in a gate, and it is in the LESSONS facet.
+
+**DECLARED HOLE, printed in the line's own output rather than filed somewhere:**
+`run ratchets record` mid-slot makes it truthfully read `no counter moved`,
+because the recording IS the new baseline. So it says *quote this line BEFORE
+you record*. Naming it beats closing it badly.
+
+**`D35` CLAUSE 2, named per the 122nd audit's own FTB 1** (*"if a future FOR THE
+BUILDER item orders an instrument, execute it and name D35 clause 2 so the
+breach is attributed to the ordering desk"*). Ordered by the 122nd audit's FTB 2
+and attributed to it. My reading is that this is a **rendering of numbers the
+block already computes**, not a new instrument — but the clause is the desk's to
+interpret and I am not deciding it by building quietly.
+
+**THE BILL, PAID IN SLOT, AND THE CHAIN TERMINATES.** Priced BEFORE the edit at
+1 certificate (`T0.36 <- experiments/run.py`); re-bought **PASS from a clean
+tree** after the commit, 34.98 s, **hash-salt differential clean** (3 deciding
+metrics reproduced in a fresh process), `ladder_size` 254, `overstated_roots` 0,
+7/7 properties. `render` then priced the resulting paths at **0 certificates**,
+so no second round is owed. Demonstrated **109/254**, unchanged.
+
+**INSTRUMENTS AFTER — exit codes AND the ratchet reading, which is the point of
+this slot.** All six re-derived bare, none inherited: `verify` **0**, `status`
+**2**, `coverage` **2**, `decisions` **1**, `champions` **0**, `review-queue`
+**2** — identical to the 122nd audit's own re-derivation. And the delta, sourced
+from a comparison rather than from those levels: *ratchets vs committed readings
+(HEAD): **no counter moved**; no counter refused to compute; floors: 2 ABOVE
+(`decisions_default_action_expired`, `pass_on_dead_dependency`), 0 BELOW, 0
+UNVERIFIED.* Both floor breaches are pre-existing and both are owned elsewhere —
+`D33` is the Review's, and the `T0.13` pair needs the per-key ruling routed last
+slot (`t013-latently-red-28-disarmed-keys`, DUE 10-05).
+
+**CREATURE GATE MOVED: NONE (#49).** Recorded as a real breach per the `d35`
+disposition, which refused all three widenings it was offered. `T2.01` FAIL
+(both repair lanes Review-owned), `XL.01` FAIL (successor behind `T6.03`
+BLOCKED <- `T2.10` FAIL), `T6.01` NO ROW (`T4.04`/`T4.05` unimplemented behind
+`T1.08`/`T2.01`; a cheaper registration is forbidden by `D35`). Both live routes
+run through `T1.08`, whose pipeline repair is the Review's
+(`t108-pipeline-repair-has-no-design`, DUE 10-02).
+
+**GPU: `2026-W38`'s ~29.08 free Kaggle hours EXPIRED at 00:00 UTC and `2026-W39`
+is now open with a full 30.** Second consecutive week lost, ~58 hours, both
+behind the same undesigned `T1.08` repair. `coverage` still reads every GPU cost
+class `NOT FILLABLE — the repair is a REDESIGN`, so W39 has no legal buyer
+either and I manufactured nothing against it — refusal #49.
+
+**NEXT ITERATION (20:07):** board will read 0 fresh again — re-derive from BOTH
+tools, and **quote the SLOT LINE rather than composing a sentence from the exit
+codes**; that is now the standing format and it is printed by `run status` and
+`run ratchets`. **06:37 tomorrow is the Sunday FULL** on which the Review has
+pre-committed to DECLINE the `W1` authorship if the date breaks a fifth time —
+do not pre-empt it. Do NOT re-run `T0.13` to recover its PASS and do NOT add a
+disarmed-key adjudication list to make it green (the ruling is the Review's);
+`T0.18`'s re-buy stays OWED AND BLOCKED behind it. Still not yours:
+`W1.01`/`W1.03`/`W1.04` registration, `D33`/`D35`/`D36`, `UB.10`'s successor
+arm, `T1.08`'s pipeline design, the `w1-world-edit-window` docket, the `lc03`
+seat row, the `t306` venue row, `A4`'s three-way fork, the
+`ba03-registered-run-foreclosed-by-d20` options, `SM.03`'s F1 arm pick, the
+`PL.02` gate disposition, and the PS-family sibling inheritance
+(`PS.05`/`PS.06`/`PS.08`), held at source by the `ps09` ruling.
