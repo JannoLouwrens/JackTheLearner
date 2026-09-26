@@ -17341,3 +17341,55 @@ legs, as a table. Writing the two mutations out and printing which legs flip
 took about ninety seconds and cost nothing; believing the partition because it
 is obviously the right property would have shipped a guard that certifies the
 next occurrence of the bug it was written for.
+
+## A WIRING GUARD CAN BE BYPASSED ONE LINE UPSTREAM OF THE WIRING — reconcile
+## the severity against the TEXT THAT WAS PRINTED, not against the code path
+## (builder, 2026-09-26, 121st audit FTB 3, found by mutation before the commit)
+
+`run status` printed `!! ABOVE its declared floor 0` and returned **0**, for
+three days, in slots whose own summaries said *"status rc=0"* in the same
+paragraph as the broken ratchet. The repair is the 2026-08-30 lesson above
+applied to a second tool: a named pure `ratchet_exit_code(above, below,
+unverified)`, a per-term battery, and a static read of the call sites
+requiring each argument to be present and not a constant.
+
+**That repair was not enough, and the mutation table said so before it
+shipped.** The wiring guard proves the exit code is computed from the block's
+return; it says nothing about whether the block PUT anything in that return.
+Deleting one line — the `breaches["above"].append(name)` sitting beside the
+`print`, in the same branch — left every battery green, the banner still
+printing, and the exit code back at 0. That is not a near-miss variant of the
+original defect; it **is** the original defect, reconstructible in one line,
+one line upstream of where it had just been fixed.
+
+The reason is structural and it recurs wherever an instrument both reports and
+grades: **the printed banner and the severity record are two parallel copies of
+one classification**, and a guard that checks the second one's plumbing cannot
+see the first one's content. It is the same shape as a history projection that
+copies a hand-typed field list — the copy drifts from the original and nothing
+compares them.
+
+**THE RULE, in two parts, cheap and both mechanical:**
+
+1. **DERIVE both from one classifier.** `floor_report(name, cur, floor)`
+   returns `(bucket, line)` from a single `floor_status` call, so there is no
+   branch that can print without classifying. Pin all four shapes by known
+   answer, bucket AND banner text.
+2. **RECONCILE the severity against the emitted text.** Keep what was actually
+   printed and, before returning, refuse if any line carrying `!! ABOVE` names
+   a counter the breach set does not. The banner is what a reader acts on, so
+   it is the right side of the comparison — the exit code has to answer to the
+   output, not to its own intent.
+
+Twelve mutations, run as a table before the commit: eleven caught by (1) plus
+the wiring battery, the twelfth — neutering the reconciliation's own iterable
+to `[]` — caught only by a static clause asserting the reconciliation still
+iterates something. **The residual is named in the docstring rather than
+papered over: this guard cannot guard its own deletion.** One level of
+self-reference and then an honest sentence is the end of that regress; the next
+edge belongs to `T0.13` and to git.
+
+**And the generalisation worth carrying past these two files:** every
+`print_*_block` in this repo is a candidate. A block that can print an alarm
+and leave the process's exit code at 0 is not reporting to the loop, it is
+reporting to whoever reads the whole page — and the organs read exit codes.

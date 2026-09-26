@@ -725,13 +725,19 @@ def cmd_status(ledger: Ledger) -> int:
                       f"{prev_at})")
         print()
     print_settle_block(ledger)
-    print_ratchet_block(ledger)
+    breaches = print_ratchet_block(ledger)
     print_steering_block()
     print_fieldwatch_block()
     print_unread_metrics_block()
     print_resolution_block(ledger)
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
-    return 0
+    # 121st audit FTB 3. `cmd_status` used to `return 0` here unconditionally
+    # while the block above printed `!! ABOVE its declared floor`, and every
+    # slot summary paired "status rc=0" with that broken ratchet in the same
+    # paragraph. Floor state now reaches the exit code; nothing else about
+    # this command's output does, and that limit is deliberate — see
+    # `ratchet_exit_code`.
+    return ratchet_exit_code(**breaches)
 
 
 def print_resolution_block(ledger: Ledger) -> None:
@@ -1871,6 +1877,67 @@ def floor_status(cur, floor):
     return "AT"
 
 
+# 121st audit FINDING 2 / FTB 3. Floor state reached NO exit code in this
+# tool: `print_ratchet_block` was pure output, `cmd_ratchets` returned 0
+# unconditionally, and `cmd_status` had no ratchet branch at all — so a slot
+# that printed `!! ABOVE its declared floor 0` and reported "status rc=0" in
+# the same paragraph was telling the truth about the exit code and a falsehood
+# about the machine. The split is `coverage.exit_code`'s, which is already this
+# repo's convention and is quoted rather than re-invented:
+#   RED (2)   — a shrink-only counter GREW with nobody raising the constant,
+#               or a FLOORED counter whose live value refused to compute. The
+#               second is red for the reason the block already says out loud
+#               about LOST: a floored ratchet nobody can verify is the
+#               instrument going quiet, not a quiet day.
+#   AMBER (1) — the number FELL and the floor did not follow. A real defect
+#               (the ratchet will accept a silent regression back up as clean)
+#               but a bookkeeping one: it misleads nobody about a capability.
+# Deliberately NOT wired here: MOVED / VANISHED / LOST on unfloored counters.
+# The audit asked for floor state and floor state only, and a MOVED is legal
+# in the very commit that records it — reddening it would teach the next
+# iteration to ignore this exit code, which is the disease, not the cure.
+def floor_report(name, cur, fl):
+    """`(breach_bucket_or_None, printed_line)` for ONE floored counter.
+
+    The printed banner and the exit-code bucket derive from a SINGLE
+    `floor_status` call here, rather than being an `if/elif` chain that
+    prints in one branch and appends in another. The parallel version is how
+    a breach gets printed and not counted, which is the whole of the 121st
+    audit's FINDING 2 — and the four shapes are pinned by known answer in
+    `_check_ratchet_exit_wiring`, so a bucket cannot be dropped silently.
+    """
+    fs = floor_status(cur, fl)
+    if fs == "AT":
+        return None, f"        vs declared floor {fl}: AT floor — ok"
+    if fs == "ABOVE":
+        return "above", (
+            f"        !! ABOVE its declared floor {fl} — growth nobody "
+            f"raised the constant for. `ratchets record` cannot\n        "
+            f"bless this; the floor moves only in the commit that grew the "
+            f"number, with\n        the reason in its growth log.")
+    if fs == "BELOW":
+        return "below", (
+            f"        !! BELOW its declared floor {fl} — the number fell "
+            f"and the floor did not follow.\n        Lower the constant in "
+            f"the same commit, or the ratchet will accept a silent\n        "
+            f"regression back up as clean.")
+    return "unverified", (                # no live value — cannot be verified
+        f"        declared floor {fl}: live value unavailable, floor "
+        f"UNVERIFIED this scan.")
+
+
+def ratchet_exit_code(above, below, unverified) -> int:
+    """`2` if any red condition is non-empty, else `1` for amber, else `0`.
+
+    Pure and dict/list-shaped for the same reason `coverage.exit_code` is:
+    so the battery can name the condition it is exercising, and so a reader
+    can enumerate what turns this block red without reading the printer.
+    """
+    if above or unverified:
+        return 2
+    return 1 if below else 0
+
+
 def committed_ratchet_readings() -> tuple:
     """`(readings, provenance)` as of HEAD. Read from git deliberately: an
     uncommitted rewrite of the readings file must not quiet the delta. The
@@ -2269,8 +2336,201 @@ def _check_ratchet_reader() -> None:
             "the same commit that declares its constant")
 
 
-def print_ratchet_block(ledger: Ledger) -> None:
+def _check_ratchet_exit_wiring() -> None:
+    """The durable half of the 121st audit's FTB 3, and it is the WIRING that
+    matters, not the three-line function.
+
+    `print_ratchet_block` printed `!! ABOVE its declared floor` for three days
+    while `cmd_status` returned 0, and nothing in this repo could say so —
+    because no fixture asserted that a floor state reaches an exit code. The
+    defect was not a wrong branch; it was a MISSING EDGE between a printer and
+    its caller, and a missing edge is invisible to any test of either end.
+
+    So this guard does two things, in `coverage._exit_code_fixture`'s idiom:
+    a per-condition battery through the REAL `ratchet_exit_code` (each term
+    individually load-bearing, red dominating amber), and a STATIC read of
+    this file asserting that both callers still take the block's RETURN and
+    pass it on. Static because `print_ratchet_block` calls this guard, so a
+    dynamic check would recurse into itself — the same reason
+    `_exit_code_fixture` reads its own source.
+
+    Pinned mutations, each of which left every other fixture in this repo
+    green when tried before shipping:
+      1. `cmd_status` ends `return 0`                 -> caught (no call)
+      2. `ratchet_exit_code(above=[], ...)` literals  -> caught (CONSTANT)
+      3. `breaches = {...}` built locally in `cmd_status` rather than taken
+         from the block                               -> caught (not from
+                                                         print_ratchet_block)
+      4. `print_ratchet_block` stops returning        -> caught (no Return)
+      5. any of the three terms dropped from the split -> caught by the battery
+      6. the block's return taken and then REBOUND to a literal, or emptied
+         in place (`breaches["above"] = []`)          -> caught (a name
+                                                         qualifies only if
+                                                         EVERY binding of it
+                                                         is from the block)
+      7. the collector deleted from the print loop, or narrowed to one
+         bucket                                       -> caught by the
+                                                         banner-vs-breach
+                                                         reconciliation in
+                                                         the block itself
+      8. `floor_report` stops returning a bucket      -> caught (known answer)
+      9. that reconciliation neutered (`for ... in []`) -> caught statically
+                                                           here
+    Mutations 6 and 7 both escaped earlier versions of this guard and are why
+    the binding test is total rather than existential and why the
+    reconciliation reads the EMITTED TEXT: in each case the escape hatch was
+    the defect wearing the wiring's signature, the same shape LESSONS.md
+    records for `HISTORY_EXEMPT_FIELDS` earlier the same day.
+
+    THE RESIDUAL, named rather than papered over: this function can be
+    deleted, or its call at the top of `print_ratchet_block` removed, and
+    nothing here fires. A guard cannot guard its own deletion; that edge is
+    `T0.13`'s (no gate in the ladder is decorative) and the git history's.
+    """
+    fails = []
+    RED = ["above", "unverified"]
+    AMBER = ["below"]
+    clean = {k: [] for k in RED + AMBER}
+    if ratchet_exit_code(**clean) != 0:
+        fails.append("ratchet_exit_code: no breach must be 0")
+    for k in RED:
+        if ratchet_exit_code(**dict(clean, **{k: ["x"]})) != 2:
+            fails.append(f"ratchet_exit_code: red `{k}` alone must exit 2 — "
+                         f"a floor state that does not reach the exit code "
+                         f"is the 121st audit's FINDING 2 again")
+        if ratchet_exit_code(**dict(clean, **{k: ["x"]},
+                                    **{a: ["y"] for a in AMBER})) != 2:
+            fails.append(f"ratchet_exit_code: red `{k}` must dominate amber")
+    for k in AMBER:
+        if ratchet_exit_code(**dict(clean, **{k: ["x"]})) != 1:
+            fails.append(f"ratchet_exit_code: amber `{k}` alone must exit 1")
+    if set(RED) & set(AMBER):
+        fails.append("ratchet_exit_code: a term cannot be red and amber")
+
+    # The classifier that feeds it, all four shapes by known answer: the
+    # bucket AND the banner, because the exit code is reconciled against the
+    # banner and a bucket that stops being returned would otherwise only
+    # show up as a quieter exit code.
+    for _cur, _want_bucket, _want_mark in ((91, "above", "!! ABOVE"),
+                                           (89, "below", "!! BELOW"),
+                                           (90, None, "AT floor"),
+                                           (None, "unverified",
+                                            "UNVERIFIED")):
+        _b, _line = floor_report("zz", _cur, 90)
+        if _b != _want_bucket or _want_mark not in _line:
+            fails.append(
+                f"floor_report({_cur}, 90) returned ({_b!r}, ...) expecting "
+                f"{_want_bucket!r} with {_want_mark!r} in the line — the "
+                f"print and the exit code no longer share one classification")
+
+    import ast as _ast
+    try:
+        _tree = _ast.parse(Path(__file__).read_text())
+    except (OSError, SyntaxError, ValueError) as exc:      # pragma: no cover
+        fails.append(f"ratchet_exit_code wiring: could not read own "
+                     f"source: {exc}")
+        _tree = None
+    _fns = {}
+    for _n in _ast.walk(_tree) if _tree is not None else []:
+        if isinstance(_n, _ast.FunctionDef):
+            _fns[_n.name] = _n
+    # The printer must still HAVE a return value to wire.
+    _blk = _fns.get("print_ratchet_block")
+    if _blk is None:
+        fails.append("ratchet_exit_code wiring: print_ratchet_block is gone")
+    elif not any(isinstance(_r, _ast.Return)
+                 and _r.value is not None
+                 and not isinstance(_r.value, _ast.Constant)
+                 for _r in _ast.walk(_blk)):
+        fails.append("ratchet_exit_code wiring: print_ratchet_block no longer "
+                     "returns its breaches — the callers have nothing to wire")
+    if _blk is not None:
+        # ...and the banner-vs-exit-code reconciliation must still be there.
+        # It is what catches a collector deleted from the print loop, and a
+        # guard is only load-bearing while it is executed: neutering its
+        # iterable (`for name, line in []`) leaves every other check green.
+        _recon = [_f for _f in _ast.walk(_blk)
+                  if isinstance(_f, _ast.For)
+                  and getattr(_f.iter, "id", None) == "emitted"
+                  and any(isinstance(_r, _ast.Raise) for _r in _ast.walk(_f))]
+        if not _recon:
+            fails.append(
+                "ratchet_exit_code wiring: print_ratchet_block no longer "
+                "reconciles its printed banners against the breach set over "
+                "`emitted` — without it a collector can be deleted and the "
+                "banner keeps printing while the exit code goes quiet")
+    for _name in ("cmd_status", "cmd_ratchets"):
+        _fn = _fns.get(_name)
+        if _fn is None:
+            fails.append(f"ratchet_exit_code wiring: `{_name}` is gone")
+            continue
+        # Which locals are bound from `print_ratchet_block(...)` AND from
+        # nothing else. "Bound from the block at least once" is not enough
+        # and the first version of this guard made exactly that mistake:
+        # `breaches = print_ratchet_block(ledger)` followed by
+        # `breaches = {'above': [], ...}` left it green, which is the defect
+        # wearing the wiring's signature (LESSONS.md 2026-09-26, one file
+        # over). A name qualifies only if EVERY binding of it in this
+        # function comes from the block, and it is never mutated in place.
+        _bindings = {}
+        _tainted = set()
+        for _a in _ast.walk(_fn):
+            if isinstance(_a, _ast.Assign):
+                _ok = (isinstance(_a.value, _ast.Call)
+                       and getattr(_a.value.func, "id", None)
+                       == "print_ratchet_block")
+                for _t in _a.targets:
+                    if isinstance(_t, _ast.Name):
+                        _bindings.setdefault(_t.id, []).append(_ok)
+                    elif (isinstance(_t, _ast.Subscript)
+                          and isinstance(_t.value, _ast.Name)):
+                        _tainted.add(_t.value.id)   # breaches["above"] = []
+            elif isinstance(_a, (_ast.AugAssign, _ast.AnnAssign,
+                                 _ast.NamedExpr)):
+                _t = getattr(_a, "target", None)
+                if isinstance(_t, _ast.Name):
+                    _bindings.setdefault(_t.id, []).append(False)
+                elif (isinstance(_t, _ast.Subscript)
+                      and isinstance(_t.value, _ast.Name)):
+                    _tainted.add(_t.value.id)
+        _from_block = {n for n, oks in _bindings.items()
+                       if all(oks) and n not in _tainted}
+        _calls = [_c for _c in _ast.walk(_fn) if isinstance(_c, _ast.Call)
+                  and getattr(_c.func, "id", None) == "ratchet_exit_code"]
+        if not _calls:
+            fails.append(f"ratchet_exit_code wiring: `{_name}` no longer "
+                         f"calls ratchet_exit_code — floor state reaches no "
+                         f"exit code from it, which is exactly the defect")
+            continue
+        for _c in _calls:
+            _args = [_kw.value for _kw in _c.keywords] + list(_c.args)
+            if any(isinstance(_v, _ast.Constant)
+                   or (isinstance(_v, (_ast.List, _ast.Tuple, _ast.Dict))
+                       and not (getattr(_v, "elts", None)
+                                or getattr(_v, "keys", None)))
+                   for _v in _args):
+                fails.append(f"ratchet_exit_code wiring: `{_name}` passes a "
+                             f"CONSTANT — wired in appearance only")
+            _names = {_v.id for _v in _args if isinstance(_v, _ast.Name)}
+            if _names and not (_names & _from_block):
+                fails.append(
+                    f"ratchet_exit_code wiring: `{_name}` passes "
+                    f"{sorted(_names)}, none of which is bound SOLELY from "
+                    f"`print_ratchet_block(...)` — an exit code derived from "
+                    f"something other than the printed block is a second "
+                    f"opinion, not a receipt")
+    if fails:
+        raise RuntimeError(
+            "the ratchet exit-code wiring failed its own battery: "
+            + "; ".join(fails))
+
+
+def print_ratchet_block(ledger: Ledger) -> dict:
+    """Prints the block and RETURNS its floor breaches, so the caller can put
+    them in an exit code (121st audit FTB 3). The return is a dict of lists
+    keyed `above` / `below` / `unverified`, feeding `ratchet_exit_code`."""
     _check_ratchet_reader()
+    _check_ratchet_exit_wiring()
     recorded, prov = committed_ratchet_readings()
     # gmtime, not localtime: the DAY-ROLLED print asserts "resets at 00:00
     # UTC", and a local-time `today` makes that a lie on any box whose TZ
@@ -2302,6 +2562,8 @@ def print_ratchet_block(ledger: Ledger) -> None:
             f"{ghost_joins} that the live ratchet scan does not compute — "
             "a paper join is the unjoined class wearing a name")
     splits = ratchet_splits(rows)
+    breaches = {"above": [], "below": [], "unverified": []}
+    emitted = []
     print("  RATCHET COUNTERS — standing-red tools' numbers, printed here so "
           "a blessed red\n    can never silence them (64th audit B2). "
           f"Committed readings from {prov}:")
@@ -2321,6 +2583,15 @@ def print_ratchet_block(ledger: Ledger) -> None:
                   f"change.\n      Movement within today would still banner.)")
         elif kind == "UNCHANGED":
             print(f"      {name} = {cur}  (unchanged since {prev_at})")
+            _n = recorded.get(name)
+            # `at` dates the KEY, never the break: a class can read ≥1 for
+            # days before anyone creates its reading, and then this line
+            # dates an old break to the day it was first recorded (121st
+            # audit FINDING 2, second half). A `note` in the readings file
+            # is where that history lives, and it is printed HERE because a
+            # correction the block does not print needs an archaeologist.
+            if isinstance(_n, dict) and _n.get("note"):
+                print(f"        note: {_n['note']}")
         elif kind == "LOST":
             print(f"      {name}  !! computation refused ({note}); last "
                   f"committed reading {prev} at {prev_at}.\n      An "
@@ -2363,31 +2634,39 @@ def print_ratchet_block(ledger: Ledger) -> None:
         # B3): `ratchets record` refreshes the readings file, but the floor
         # is a constant that only moves against its own growth log.
         if name in floors:
-            fl = floors[name]
-            fs = floor_status(cur, fl)
-            if fs == "AT":
-                print(f"        vs declared floor {fl}: AT floor — ok")
-            elif fs == "ABOVE":
-                print(f"        !! ABOVE its declared floor {fl} — growth "
-                      f"nobody raised the constant for. `ratchets record` "
-                      f"cannot\n        bless this; the floor moves only in "
-                      f"the commit that grew the number, with\n        the "
-                      f"reason in its growth log.")
-            elif fs == "BELOW":
-                print(f"        !! BELOW its declared floor {fl} — the "
-                      f"number fell and the floor did not follow.\n        "
-                      f"Lower the constant in the same commit, or the "
-                      f"ratchet will accept a silent\n        regression "
-                      f"back up as clean.")
-            else:  # no live value — the floor cannot be verified
-                print(f"        declared floor {fl}: live value unavailable, "
-                      f"floor UNVERIFIED this scan.")
+            bucket, line = floor_report(name, cur, floors[name])
+            if bucket is not None:
+                breaches[bucket].append(name)
+            print(line)
+            emitted.append((name, line))
+    # The print and the exit code must agree, checked on the ACTUAL EMITTED
+    # TEXT rather than on intent. Deleting the collection above leaves the
+    # banner printing and the exit code quiet — which IS the 121st audit's
+    # FINDING 2, reconstructible one line lower than where it was fixed. The
+    # banner is the evidence a reader acts on, so it is the thing the exit
+    # code is reconciled against.
+    for name, line in emitted:
+        for mark, bucket in (("!! ABOVE", "above"), ("!! BELOW", "below"),
+                             ("UNVERIFIED", "unverified")):
+            if mark in line and name not in breaches[bucket]:
+                raise RuntimeError(
+                    f"{name} printed `{mark}` and is not in the "
+                    f"{bucket!r} breach set — a banner the exit code does "
+                    f"not know about is the defect this return value exists "
+                    f"to end")
+    if breaches["above"] or breaches["below"] or breaches["unverified"]:
+        print(f"    FLOOR STATE REACHES THE EXIT CODE (121st audit FTB 3): "
+              f"{len(breaches['above'])} ABOVE, "
+              f"{len(breaches['below'])} BELOW, "
+              f"{len(breaches['unverified'])} UNVERIFIED — this tool exits "
+              f"{ratchet_exit_code(**breaches)}.")
     print()
+    return breaches
 
 
 def cmd_ratchets(ledger: Ledger, record: bool = False) -> int:
     print()
-    print_ratchet_block(ledger)
+    breaches = print_ratchet_block(ledger)
     if record:
         import datetime
         import json
@@ -2403,15 +2682,27 @@ def cmd_ratchets(ledger: Ledger, record: bool = False) -> int:
         payload = {}
         for name, (val, _n) in sorted(live.items()):
             old = recorded.get(name)
-            at = (old.get("at", today) if isinstance(old, dict)
-                  and old.get("value") == val else today)
-            payload[name] = {"value": val, "at": at}
+            # Carry the entry FORWARD rather than rebuilding it from two
+            # known keys. `value`/`at` are the only fields this tool computes,
+            # but they are not the only fields an entry may legitimately hold
+            # — `note` says WHEN the class broke, which `at` (the key's
+            # creation date) structurally cannot. Rebuilding erased it on the
+            # next record, which is the 121st audit's FINDING 1 exactly one
+            # file over: a hand-written field list silently drops every field
+            # added after it was written.
+            entry = dict(old) if isinstance(old, dict) else {}
+            at = (entry.get("at", today) if entry.get("value") == val
+                  else today)
+            entry.update(value=val, at=at)
+            payload[name] = entry
         RATCHET_READINGS.write_text(
             json.dumps(payload, indent=2, sort_keys=True) + "\n")
         print(f"  recorded {len(payload)} reading(s) to "
               f"{RATCHET_READINGS.relative_to(_REPO)} — commit it in the "
               f"same motion as the\n  change that moved the counter.")
-    return 0
+    # A recording does NOT bless a floor breach — the block says so in prose
+    # and now says it in the exit code too.
+    return ratchet_exit_code(**breaches)
 
 
 def gpu_orphans() -> list:
