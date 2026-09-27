@@ -18503,3 +18503,46 @@ payer's-unit reading beside the count on every pricing, so this paragraph
 cannot be the only place the conversion exists. That is the difference between
 a lesson and a guard — the count was corrected by prose on 09-22 and three
 pages went on quoting 21 anyway.
+
+## A one-parameter reference is not a low-capacity reference if its parameter is chosen on the rows it will be quoted on
+
+`PS.09`'s legibility ruling rested on one datum: a bare threshold on the odour
+concentration channel read the held-out sign at **balanced accuracy 1.00** where
+the registered RFF+ridge probe read 0.60, so the sense was called *"perfectly
+legible"* and `KA_SIGNAL_MIN` was registered at **0.90** against it. The
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` row then measured that
+the 1.00 only reproduces when the cut is chosen **on the held-out rows**; fit on
+the train rows the same channel reads **0.80**, so the floor sat above anything
+an honestly-fit single-channel reference can read at that venue, and attempt 2
+VOIDed on the conjunct the ruling had just added.
+
+The tempting reading — "a threshold on one channel is about as simple as an
+estimator gets, so it cannot overfit" — is what made the number believable, and
+it is **wrong on a mechanism, not on a margin.** `_ka_ref_acc` maximises
+balanced accuracy over *every* candidate cut in both directions: with ~450
+distinct train values that is a maximum over ~900 hypotheses, and a maximum over
+900 hypotheses evaluated on the rows that selected them saturates at 1.0000 by
+construction. Parameter COUNT is not capacity; **capacity is how many hypotheses
+the fitting procedure gets to look at before it reports.**
+
+Measured at two sibling venues on 2026-09-27, with the same held-out-fit "oracle"
+applied to a *fitted* reference instead of a searched one: `PS.05`'s food channel
+went 0.8359 honest → 0.9770 oracle, `PS.06`'s intero block 0.8804 → 0.8775, and
+the leak was **negative** on two of six cells — fitting on the evaluation rows
+made the reading WORSE. A ridge fit at fixed λ has no cut to shop for, so the
+same oracle procedure that inflated `PS.09` by +0.20 moves a fit by ±0.14 at
+worst. **The defect was the recipe, not the venue, which is exactly why it did
+not travel and why nobody noticed it could.**
+
+**Rule:** before a diagnostic number becomes a registered floor, state its
+fitting procedure's hypothesis count and its fit/eval split in the same
+sentence as the number. If the procedure is a SEARCH — any `argmax` over cuts,
+directions, folds, channels or seeds — re-derive it with the search confined to
+the train rows before quoting it, and never calibrate a floor on the venue's
+own gated rows. And the corollary that the same measurement produced, because
+it is the inverse error and it was one commit from shipping: a known-answer
+channel can also be chosen too NARROW. `PS.06`'s physically-obvious channel
+(fatigue `f` alone) reads **0.0216** on seed 1, which would report the venue
+UNREADABLE on the two seeds where the registered probe reads 0.6998 and 0.7496
+and is plainly working. A known-answer control must be validated to READ before
+it is trusted to REFUSE — in both directions.

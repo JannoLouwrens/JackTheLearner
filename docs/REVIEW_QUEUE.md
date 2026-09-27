@@ -10198,6 +10198,100 @@ re-derive it before registering a floor against it.
 a2), nothing cites it. No bar moved, no re-run owed — attempt 2 is spent
 evidence, not a lottery ticket.
 
+**BUILDER MEASUREMENT 2026-09-27 06:1x — THE ANSWER TO CLAUSE (b), MEASURED
+RATHER THAN ARGUED: the oracle defect does NOT replicate in the siblings, and
+the reason is that PS.09's reference was a CUT SEARCH while theirs is a FIT.
+One sibling's channel is ready and the other's candidate is REFUTED.** This row
+asks the Review to *"rule whether the siblings' pre-registered controls
+(1^13 units 2-3) are calibrated the same oracle way before any of them inherits
+the conjunct"*, and the hold it places on `PS.05`/`PS.06`/`PS.08` cannot be
+lifted by reading either spec. So it was measured. Script in `/tmp`, **no
+ledger row, no bar declared, no spec file edited, nothing inherited** — the
+channel pick stays this desk's under the ruling's part 1.
+
+**METHOD, and it is each spec's own rig and own estimator.** For `PS.05` and
+`PS.06`, at all three registered seeds, the spec's `_collect` materialised its
+own legibility rows, and the spec's own `_fit_predict`/`_r2` read the candidate
+by-construction channel on the spec's own held-out-by-trip / by-session split
+three ways: the registered full-feature probe (reproduction), the channel alone
+**fit on the TRAIN rows** (HONEST), and the channel alone **fit ON THE HELD-OUT
+ROWS** (ORACLE — the strongest available leak, fit and evaluated on the same
+rows the floor would be quoted on). `ref_oracle − ref_train_fit` is the leak
+`PS.09` paid 567 s and one VOID for.
+
+**DETERMINISM RECEIPT FIRST, because the whole read rests on this being the same
+rig.** Both reconstructions reproduce their recorded attempt-1 seed means:
+`PS.05` `probe_r2` **−0.3775** vs recorded **−0.377524** and `shuffled_r2`
+**−2.3049** vs **−2.304944**; `PS.06` `probe_r2` **0.4823** vs **0.482244** and
+`shuffled_r2` **−0.1163** vs **−0.116296**; row counts 180/72 and 51–53/36–37
+exactly as recorded. Nothing about either rig moved.
+
+| spec | channel | probe_r2 s0/s1/s2 | HONEST (train-fit) | ORACLE (holdout-fit) | leak |
+|---|---|---|---|---|---|
+| `PS.05` | food conc L/R (2 cols) | −1.1264 / 0.3560 / −0.3622 | **0.8359 / 0.8452 / 0.9894** | 0.9770 / 0.9557 / 0.9767 | +0.141 / +0.111 / **−0.013** |
+| `PS.05` | whole odour block (12) | (same) | 0.4759 / 0.6817 / 0.7128 | 0.9310 / 0.8857 / 0.9282 | **+0.455** / +0.204 / +0.215 |
+| `PS.06` | fatigue `f` (1 col) | 0.6998 / −0.0026 / 0.7496 | 0.4397 / **0.0216** / 0.7546 | 0.4329 / 0.1478 / 0.8541 | −0.007 / +0.126 / +0.100 |
+| `PS.06` | whole intero block (9) | (same) | 0.8804 / 0.6663 / 0.8790 | 0.8775 / 0.6822 / 0.8911 | −0.003 / +0.016 / +0.012 |
+
+**FINDING 1 — THE DEFECT WAS THE RECIPE, NOT THE VENUE, AND THAT IS WHY IT DOES
+NOT TRAVEL.** `PS.09`'s reference went **0.80 honest → 1.0000 oracle** on a
+single scalar. Here the worst leak on a NARROW channel is **+0.141**, and it is
+**NEGATIVE on `PS.05` seed 2 and `PS.06` seed 0** — fitting on the held-out rows
+makes the reading *worse*. The mechanism is exact rather than statistical:
+`_ka_ref_acc` maximises balanced accuracy over **every candidate cut**, so
+evaluating that search on the rows it is quoted on is a maximum over ~900
+hypotheses and saturates at 1.0000 by construction; a ridge fit has no such
+freedom. **So part 1 is calibratable honestly for both specs — provided the
+floor is derived from the HONEST column and the reference is a FIT.** A
+threshold search is not a low-capacity estimator just because it has one
+parameter.
+
+**FINDING 2 — `PS.05`'s KNOWN-ANSWER CONTROL WOULD FIRE, HARDER THAN `PS.09`'s,
+AND IT CONFIRMS THIS RULING'S PREMISE AT A SECOND VENUE INDEPENDENTLY.** On the
+SAME rows, the two-column food-concentration channel reads **0.8359 / 0.8452 /
+0.9894** while the registered 66-feature RFF+ridge probe reads **−1.1264 /
+0.3560 / −0.3622** — gaps of **1.96 / 0.49 / 1.35 R²**, and the probe is *below
+the y-mean predictor* on two of three seeds while a channel it already contains
+reads 0.84+. `PS.05`'s FAIL measured its estimator, not Jack's sense of
+distance. That is the ruling's central claim reproduced without reference to
+`PS.09`'s numbers at all, which is what it was missing.
+
+**FINDING 3 — AND THIS IS THE ONE THAT NEEDED MEASURING BEFORE ANYONE WROTE A
+FLOOR: `PS.06`'s NARROW CANDIDATE IS REFUTED AS A KNOWN-ANSWER CHANNEL.**
+Fatigue `f` (`needs.obs()` index 4) is the obvious by-construction channel for
+*tiring*, and it reads **0.0216 honest on seed 1** — so under any floor at or
+near `PROBE_R2_MIN` 0.35, with the worst-seed discipline this family carries,
+`PS.06`'s legibility conjunct would report **UNREADABLE on all three seeds**,
+including the two where its registered probe reads **0.6998 and 0.7496** and is
+demonstrably reading the venue. That is a known-answer control failing on a
+venue where the instrument works — the exact inverse error to the one part 1
+exists to prevent, and it would have been shipped by anyone picking the
+physically-obvious channel. The wider **intero block reads 0.6663 worst with a
+leak of +0.016**, which is a channel that survives both tests. **Which of the
+two `PS.06` gets is this desk's under part 1; the measurement only removes the
+option that fails.**
+
+**`PS.08` WAS DELIBERATELY NOT MEASURED, and the reason is a coupling inside the
+ruling rather than a shortage of slot.** Part 2 orders that *"for any spec whose
+priced quantity is power-derived, the amputation control must blind the RATE"* —
+and the drain rate is the only quantity `PS.08`'s own entry identifies as
+carrying the load class by construction (its clock-only control read **0.708**,
+ABOVE the registered probe, *because* e/w drain rates encode load). So part 1's
+candidate channel and part 2's blinded quantity are the same quantity there.
+Picking the first before the second is decided could hand `PS.08` a known-answer
+control its own amputation control is required to be blind to. **That sequencing
+is this desk's; it is named here so the next slot does not measure it blind.**
+
+**WHAT IS NOT ASKED FOR.** No bar moves in either direction: `PROBE_R2` 0.35,
+`probe_bal_acc` 0.65/0.70, `KA_SIGNAL_MIN` 0.90 and `KA_GAP_MAX` 0.10 are all
+byte-unmoved, no floor is proposed, and no number above is offered as one — a
+floor read off this table would be calibrated on the same rows it gates, which
+is the defect this row exists for. **Staleness bill: this block edits
+`docs/REVIEW_QUEUE.md`, priced BEFORE the edit at `T0.21` (cpu<1min) +
+`T0.31` (cpu<10min) = 1 slot, paid in slot from the clean tree.** Do not re-run
+these six cells: spent evidence, ~11 core-minutes, two seeds' worth of rig per
+spec reproduced to the recorded digit.
+
 ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09-25T22:00:21, 16,580.6 s, seeds 0/1/2, clean stamp at `c1114ae`), harvested and _check-replayed this slot | OPEN
     WAITS-ON: none | the finding is about the LT rig's own panel trap (PG.4
         construction), not about W0's depth — no live row's answer changes

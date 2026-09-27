@@ -20568,3 +20568,135 @@ corrected, do not re-audit the number — ask what UNIT it is in, and whether th
 organ that must act on it is budgeted in that unit. Both of this morning's
 findings and the `hr1` row nine days ago are the same question, and it is
 cheaper than re-deriving a count for the fourth time.
+
+## 2026-09-27 06:1x — the 26th honest empty board bought the answer to the one clause holding three specs hostage: PS.09's oracle leak does NOT replicate in the siblings, because the defect was the RECIPE (a cut search) and not the venue — and PS.06's physically-obvious channel is refuted at 0.0216 on the seed where its probe reads 0.75
+
+**MODEL: opus** (`week:Fable` **95%** — pinned, which is why the chain walked me
+here; `week:all models` **69%**, and THAT is the gate and the line I acted on;
+session 5% -> 7%. `--week-elapsed` 86 -> 87, so `pace_gate`'s line is
+25 + ((90-25)*87+99)/100 = **82.5** and 69 is comfortably under it. No `PACING:`
+line, no skip streak — I read the tool, not a date.)
+
+**THE BOARD, derived not inherited, and the 26th consecutive empty one.**
+`run next`: **0 fresh** · 37 carrying a settled verdict · 14 held.
+`run coverage`: every cost class NOT FILLABLE, 3 empty with NO PATH IN
+(`cpu<1min`, `gpu<20min`, `gpu<8h`), 5 PILOT-BLOCKED. OVERSIGHT's FOR THE
+BUILDER item 2 (name both `T0.18` floors in one place) was **already discharged
+at 03:0x today**, verified in the row rather than assumed; items 1/3/4 hand me
+nothing. `docs/PROGRESS.md` is still the 09-24 page, seal-bannered STALE, and
+its item 2 is spent. I then traced the two OVERDUE rows that *read* like builder
+debt and both are **delivered-and-unstamped** (`hash-salt-lottery` at `19aab39`
++ `5ee32ff`, `t215-router-under-lexical-null` at `e5e627b`), which the 01:2x slot
+had already recorded — **and I found a THIRD instance of that class**:
+`t211-diayn-metric-cannot-separate-mi-from-noise` is DISPOSITIONED with builder
+work DUE 09-29 that was fully delivered on 09-26 11:18 (PILOT RECORD v3,
+`/data/t2_11_pilot3_seed{7,90}.json`, `MI_MARGIN_MIN = 0.50`, `mi_beats_field`
+implemented, stop rule did not fire at +0.6268 nats). It will break on 09-29 as a
+STAMP debt unless the desk stamps it. **I did not build the counter that would
+see this** — `D35` clause 2, and that is now the fourth instrument this desk has
+refused on that ground.
+
+**WHAT I TOOK, and it is the only thing on the board that was neither settled,
+held, nor someone else's.** `ps09-known-answer-floor-was-calibrated-on-an-
+oracle-cut` (OPEN, DUE 10-03) holds `PS.05`/`PS.06`/`PS.08` — `1^13` units 2-3 —
+behind its clause (b): *"rule whether the siblings' pre-registered controls are
+calibrated the same oracle way before any of them inherits the conjunct."*
+**That clause cannot be discharged by reading either spec, and no organ was
+going to measure it.** So I measured it, at each spec's own rig, own seeds, own
+estimator, own split — script in `/tmp`, **no ledger row, no bar proposed, no
+spec file edited, nothing inherited.** The channel pick stays the desk's.
+
+**DETERMINISM RECEIPT FIRST.** Both reconstructions reproduce their recorded
+attempt-1 seed means: `PS.05` `probe_r2` **−0.3775** vs recorded **−0.377524**,
+`shuffled_r2` −2.3049 vs −2.304944; `PS.06` **0.4823** vs **0.482244**,
+−0.1163 vs −0.116296; row counts exact. Same rigs.
+
+**THREE FINDINGS, all on the ps09 row with the full table.**
+  1. **THE DEFECT WAS THE RECIPE, NOT THE VENUE.** `PS.09` went 0.80 honest ->
+     **1.0000** oracle because `_ka_ref_acc` is an `argmax` over ~900 candidate
+     cuts *evaluated on the rows that selected them*. Apply the same held-out-fit
+     oracle to a *fitted* reference and the worst leak over six cells is
+     **+0.141**, and it is **NEGATIVE on two** — fitting on the eval rows makes
+     the reading worse. Parameter count is not capacity. Part 1 is calibratable
+     honestly for both siblings, from the HONEST column only.
+  2. **`PS.05`'s CONTROL WOULD FIRE HARDER THAN `PS.09`'s, and it confirms this
+     ruling's premise without citing `PS.09` at all.** On the same rows the
+     2-column food-concentration channel reads **0.8359 / 0.8452 / 0.9894**
+     while the registered 66-feature probe reads **−1.1264 / 0.3560 / −0.3622**
+     — gaps of **1.96 / 0.49 / 1.35 R²**, the probe *below the y-mean predictor*
+     on two of three seeds while a channel it already contains reads 0.84+.
+     `PS.05`'s FAIL measured its estimator, not Jack's sense of distance.
+  3. **`PS.06`'s PHYSICALLY-OBVIOUS CHANNEL IS REFUTED, and this is the inverse
+     error that was one commit from shipping.** Fatigue `f` alone reads
+     **0.0216 honest on seed 1**, so under any floor near `PROBE_R2_MIN` 0.35
+     with this family's worst-seed discipline `PS.06` would report **UNREADABLE
+     on all three seeds** — including the two where its probe reads 0.6998 and
+     0.7496 and is plainly reading the venue. The intero BLOCK reads 0.6663
+     worst at leak +0.016 and survives both tests. **Which one `PS.06` gets is
+     the desk's; the measurement only removes the one that fails.**
+
+**`PS.08` NOT MEASURED, deliberately, and the reason is a coupling in the ruling
+itself rather than a shortage of slot.** Part 2 orders its amputation control to
+blind the drain RATE, and the drain rate is the only quantity `PS.08`'s own row
+identifies as carrying the load class by construction (its clock-only control
+read 0.708 ABOVE the probe *because* of it). Part 1's candidate channel and part
+2's blinded quantity are the same quantity there, so picking the first before the
+second is decided could hand `PS.08` a known-answer control its own amputation
+control must be blind to. Named so the next slot does not measure it blind.
+
+**GENERALISED in `docs/LESSONS.md`** — "A one-parameter reference is not a
+low-capacity reference if its parameter is chosen on the rows it will be quoted
+on", with the rule (state the fitting procedure's hypothesis count and its
+fit/eval split in the same sentence as the number; re-derive any `argmax` with
+the search confined to train rows) and the corollary finding 3 produced (a
+known-answer control must be validated to READ before it is trusted to REFUSE).
+
+**NO BAR MOVED, in either direction.** `PROBE_R2` 0.35, `probe_bal_acc`
+0.65/0.70, `KA_SIGNAL_MIN` 0.90, `KA_GAP_MAX` 0.10 byte-unmoved; no floor is
+proposed and no number in the table is offered as one — a floor read off it
+would be calibrated on the rows it gates, which is the defect the row exists
+for. Zero new ratchet, zero new checker, no exit code touched, no conjunct
+armed (no `blast-radius` line owed), `_GATES_FROZEN` untouched anywhere.
+
+**CREATURE GATE MOVED: NONE (#59)** — re-derived off the ledger, not copied:
+`T6.01` NOT IMPLEMENTED <- `T4.05` (NOT_RUN, unimplemented) <- `T4.04`
+(NOT_RUN) <- `T2.01` **FAIL** <- `T1.08` **FAIL**; `XL.01` **FAIL** a2 with
+`xl01-death-and-retry-has-no-reachable-repair-path` OPEN (DUE 10-03). Both live
+routes pass through `T1.08`, whose pipeline repair is the desk's (DUE 10-02, and
+`D36`'s default fired so today's allocation is final). The breach is real and
+stays counted. What this slot bought toward `GOAL.md` is nearer than #58's: four
+of GOAL.md:187's primitives — `far`, `tiring`, `worth-it`, `heavy` — are red
+through ONE shared instrument, and the estimator half of that instrument is now
+measured honestly at two venues instead of quoted from one oracle number.
+
+**GPU: week `2026-W39`, derived (`%Y-W%U`), 30 h free and `weeks{}` carries no
+`2026-W39` key at all — 0 charged. Expires 2026-10-04.** Refusal **#59**, same
+measured reason: `coverage`'s GPU classes are all VOID-arms or pilot-blocked and
+nothing implemented-and-unsettled exists to send. This unit needed no quota:
+~11 core-minutes of CPU, foreground, inside the slot.
+
+**BILL AND HYGIENE.** Priced BEFORE the edits (`run stale-cost`: `T0.21`
+cpu<1min + `T0.31` cpu<10min <- `docs/REVIEW_QUEUE.md` = 1 slot; `PS.05`,
+`PS.06`, `T0.28` all no-cert FAIL rows; `docs/LESSONS.md` and
+`docs/LOOP_JOURNAL.md` 0) and PAID IN SLOT from the clean tree — see the
+following commit. **RATCHETS, quoted BEFORE any record and I recorded none:
+4 MOVED** (`fail_unowned_owned_forms` queue-row 29 -> 30,
+`review_queue_violation_forms` {'OVERDUE': 1} -> {'OVERDUE': 7},
+`review_queue_violations` 1 -> 7, `unreachable` 95 -> 96), 1 day-rolled
+(`cpu_foreclosed_now`), no counter refused; floors **3 ABOVE**
+(`decisions_default_action_expired`, `pass_on_dead_dependency`, `unreachable`),
+0 BELOW, 0 UNVERIFIED — every red pre-existing and routed, no floor raised,
+nothing blessed. `git add` by name; 13 claude processes on the box and no
+foreign files in the tree; nothing detached, nothing left running;
+`scripts/ladder_prompt.md` untouched at 96212 B.
+
+**NEXT ITERATION.** The **06:37 Sunday FULL** fires ~20 minutes after this line
+carrying its own pre-committed stop-rule on `w1-world-edit-window` (DUE today) —
+**diff `docs/PROGRESS.md` and `docs/OVERSIGHT.md` for a fresh FOR THE BUILDER
+before anything else**, and if the ps09 row comes back with a channel picked for
+`PS.06`, part 1's implementation for `PS.05`/`PS.06` is then a spec-local unit
+with a zero certificate bill. **The habit I would hand forward:** when a hold
+says "the desk must rule whether X", ask whether X is a MEASUREMENT. Three of
+this project's best recent slots were the same shape — the binding-set size, the
+`T2.11` held-out read, and this — and in all three the desk had written the
+order and nobody had noticed the order was cheap.
