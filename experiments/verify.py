@@ -54,6 +54,29 @@ Three probes, and they fail differently.
      it at 19, then at 20 — it grows. A ratchet is the honest form: the debt
      stays visible, and it may only ever be paid down.
 
+     REFUSAL IS NOT A PROMISE (2026-09-27, and it cost a measured false
+     positive in the one instrument that re-judges the record). This probe
+     asked `bool(e.declared_control)`, which answers *"is the field
+     non-empty?"* — a different question. `T0.01` and `T0.10` declare
+     `"NONE, BY DECISION (52nd audit B5): …"`, a refusal the 52nd audit wrote
+     INTO the field rather than setting `control=None`, precisely so an
+     auditor would read a decision instead of a blank. Truthy. So probe C
+     reported `declared_control_never_ran = 2` — *two safeguards promised and
+     never run* — about two specs that promise nothing, against a `T0.18` gate
+     that wants 0, and the number sat in `PROGRESS.md` as a standing red with
+     nobody able to clear it without moving a threshold. The bar did not move:
+     the PREDICATE did, to `protocol.declares_a_control`, shared with the
+     runner's pre-compute guard so the two readers of one field cannot drift.
+
+     And narrowing a detector's population is a weakening unless the same edit
+     closes what it opens, so it does, in BOTH places: an entry whose
+     declaration refuses a control while `control_metrics` is non-empty is now
+     flagged under `undeclared_control_ran` (a class this probe could not
+     reach while it read `bool(...)` — both branches were satisfied by the
+     same truthiness), and `run_spec` now REFUSES that combination before any
+     compute. `FIX.refused` and `FIX.refused_ran` plant both halves, because a
+     detector's fixture set is exactly the list of defects it can still see.
+
 Everything that could not be inspected is COUNTED, never skipped. A gate whose
 module will not import, that exposes no `_check`, or that raises when replayed
 is a gate this scan did not audit, and an unaudited item that leaves the
@@ -67,7 +90,8 @@ import importlib
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional
 
-from .protocol import Ledger, Status, coerce_check_return
+from .protocol import (CONTROL_REFUSAL_PREFIX, Ledger, Status,
+                       coerce_check_return, declares_a_control)
 
 #: Marker for the one entry a scan may legitimately not judge: its own.
 SELF_EXCLUDED = "self-excluded"
@@ -163,10 +187,23 @@ def scan(entries: List[Entry]) -> dict:
             continue
 
         # ── C. declaration coherence (independent of whether the gate runs) ──
+        # `declares_a_control`, NOT `bool(e.declared_control)`: the two differ on
+        # the explicit refusal form and the difference was a false positive worth
+        # two entries — see the REFUSAL note in this module's docstring. The
+        # predicate is imported from `protocol` so this probe and the runner's
+        # pre-compute guard cannot drift apart; it is applied HERE, inside the
+        # shipped `scan`, so the known-answer fixture exercises the same branch
+        # the live ledger does (a tidied restatement for the test proves nothing
+        # — T0.13 shipped that bug once already).
+        promises_control = declares_a_control(e.declared_control)
         has_control_metrics = bool(e.control_metrics)
-        if e.declared_control and not has_control_metrics:
+        if promises_control and not has_control_metrics:
             declared_never_ran.append(e.spec_id)
-        if not e.declared_control and has_control_metrics:
+        if not promises_control and has_control_metrics:
+            # Catches BOTH directions of the missing declaration: the historic
+            # `control=None` debt, and the refusal that ran a control anyway —
+            # a field asserting "no control here" over recorded control metrics.
+            # The second class was UNREACHABLE while this read `bool(...)`.
             undeclared_ran.append(e.spec_id)
 
         # ── A. re-verdict ────────────────────────────────────────────────────
@@ -313,6 +350,14 @@ def _fixture_tuple_return(m, c):
         else (False, "below bar")
 
 
+#: The live refusal declarations' shape, reproduced for the fixture from the
+#: SHIPPED prefix rather than retyped — a fixture carrying its own copy of the
+#: string would keep passing after somebody edited the constant.
+_REFUSAL = (CONTROL_REFUSAL_PREFIX + " (fixture): the mechanism has nothing "
+            "to sabotage, and the reason is recorded here rather than in a "
+            "null field.")
+
+
 def fixture() -> List[Entry]:
     good = {"score": 0.8}
     ctrl = {"score": 0.1}
@@ -328,6 +373,25 @@ def fixture() -> List[Entry]:
         # in `unevaluable_gates` — never in `judged`, and never in the
         # control-blind bucket, where it would name the wrong defect.
         Entry("FIX.tuple", _fixture_tuple_return, dict(good), dict(ctrl), "a control"),
+        # ── the refusal pair, planted 2026-09-27 ────────────────────────────
+        # THE FALSE POSITIVE THIS SCAN SHIPPED: a spec that declares, in words,
+        # that it has NO control, and ran none. It promised nothing, so it must
+        # be flagged NOWHERE — it belongs in `no_control_specs` beside the
+        # honest nulls. This is the half that makes the number true.
+        #
+        # Byte-identical to `FIX.promised` above except for the declaration, on
+        # purpose: the predicate under test is the ONLY difference between a
+        # promise broken and a refusal kept, so nothing else may vary. (It reads
+        # the same control-blind gate for the same mechanical reason that entry
+        # does — a gate touching `c["score"]` raises KeyError with no control.)
+        Entry("FIX.refused", _fixture_control_blind, dict(good), {}, _REFUSAL),
+        # ...AND THE HOLE THAT RECOGNISING THE REFUSAL OPENS, which is why the
+        # two are planted together. A declaration asserting "no control here"
+        # over recorded control metrics is the audit surface lying in the one
+        # direction nothing watched: while probe C read `bool(...)` this entry
+        # satisfied NEITHER branch, so it was invisible to both halves at once.
+        # It must land in `undeclared_control_ran`.
+        Entry("FIX.refused_ran", _fixture_healthy, dict(good), dict(ctrl), _REFUSAL),
     ]
 
 
@@ -349,8 +413,24 @@ def assert_detector_works() -> dict:
         bad.append(f"control-blindness probe found {r['control_blind_specs']} of 1")
     if r["declared_control_never_ran"] != 1:
         bad.append(f"declared-never-ran probe found {r['declared_control_never_ran']} of 1")
-    if r["undeclared_control_ran"] != 1:
-        bad.append(f"undeclared probe found {r['undeclared_control_ran']} of 1")
+    if r["undeclared_control_ran"] != 2:
+        bad.append(f"undeclared probe found {r['undeclared_control_ran']} of 2")
+    # ── the refusal pair, and BOTH directions are load-bearing ──────────────
+    # Pinned by NAME, not by count. `declared_control_never_ran == 1` alone is
+    # also satisfied by a scan that spares FIX.refused and flags FIX.promised's
+    # twin instead, and `undeclared_control_ran == 2` alone is satisfied by a
+    # scan that flags the healthy entry. The whole defect this pair exists for
+    # was a counter reading a plausible number about the wrong specs.
+    if "FIX.refused" in r["declared_never_ran_detail"].split(", "):
+        bad.append("the explicit refusal was counted as a control promised and "
+                   "never run — the false positive this pair was planted for")
+    if "FIX.refused_ran" not in r["undeclared_ran_detail"]:
+        bad.append("a declaration refusing a control while control_metrics is "
+                   "non-empty went unflagged: "
+                   f"undeclared_ran_detail = {r['undeclared_ran_detail']!r}")
+    if "FIX.refused" not in r["no_control_detail"].split(", "):
+        bad.append("the refusal that ran nothing did not land in no_control, so "
+                   "it left the denominator rather than being counted")
     # The planted tuple-returner must be REFUSED, not judged — and it must be
     # refused under its own name. `unevaluable_gates == 1` alone would also be
     # satisfied by a scan that choked on the healthy fixture.

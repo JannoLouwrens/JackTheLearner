@@ -3484,7 +3484,10 @@ def cmd_verify(ledger: Ledger) -> int:
               f"{r['no_control_specs']}\n      {r['no_control_detail']}")
         print("      Probe B has nothing to say about these: there is no control "
               "to delete.\n      An existence claim whose gate was never shown "
-              "capable of reporting the\n      bad case (OVERSIGHT §1.2).")
+              "capable of reporting the\n      bad case (OVERSIGHT §1.2) — EXCEPT "
+              "where the spec DECLARES the absence\n      and why, which is a "
+              "decision on the record rather than a silence. Read\n      "
+              "`Spec.control` before reading this line as a debt (2026-09-27).")
     if r["self_excluded_entries"]:
         print(f"\n  ? {r['self_excluded_entries']} entry self-excluded "
               f"({r['self_excluded_detail']}) — a spec cannot re-judge its own "

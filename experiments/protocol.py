@@ -1479,6 +1479,58 @@ class UndeclaredControl(RuntimeError):
     """
 
 
+#: The one form of `Spec.control` that declares a control's ABSENCE rather than
+#: promising one. Written into the field on purpose by the 52nd audit's B5
+#: (`T0.01`, `T0.10`) instead of setting `control=None`, because `None` reads
+#: identically to "nobody thought about it" — the exact 19-entry rot
+#: `UndeclaredControl` was written to stop. A refusal that names its authority
+#: and its reason is MORE audit surface than a null, not less, and the readers
+#: are what had to learn it.
+CONTROL_REFUSAL_PREFIX = "NONE, BY DECISION"
+
+#: A refusal must carry a reason. The bare token is a word, not a decision, and
+#: `Spec.control = "NONE, BY DECISION"` with nothing after it would be an
+#: exemption anybody could type — so the predicate below demands the prefix AND
+#: a justification behind it. Both live sites carry one ("(52nd audit B5): …").
+_REFUSAL_MIN_REASON = 12
+
+
+def is_control_refusal(declaration: Optional[str]) -> bool:
+    """Does this `Spec.control` declare that there is NO control, with a reason?
+
+    ONE predicate, deliberately shared by the two readers that must not
+    disagree — `run_spec`'s pre-compute guard below and `verify.scan`'s probe C.
+    They were allowed to disagree until 2026-09-27 and the cost was a measured
+    false positive in the only instrument that re-judges the record: probe C
+    counted `T0.01` and `T0.10` as *"a control promised and never run"* because
+    a refusal string is truthy, reading `declared_control_never_ran = 2` against
+    a gate that wants 0, while the same truthiness let those two specs past the
+    guard that refuses an undeclared control. One field, two readers, opposite
+    errors — so the notion is defined once here and imported, not re-expressed.
+
+    NOT a loose match. Anchored at the start and case-sensitive, so a
+    declaration that merely MENTIONS the words ("the control is NONE of the
+    above…") is still a promise, and a reason is required so the exemption
+    cannot be claimed by typing the token alone.
+    """
+    if not declaration:
+        return False
+    s = declaration.strip()
+    if not s.startswith(CONTROL_REFUSAL_PREFIX):
+        return False
+    return len(s) >= len(CONTROL_REFUSAL_PREFIX) + _REFUSAL_MIN_REASON
+
+
+def declares_a_control(declaration: Optional[str]) -> bool:
+    """True when `Spec.control` PROMISES a control — the audit-surface question.
+
+    `bool(spec.control)` is what both readers used to ask, and it answers a
+    different question: "is this field non-empty?". A field holding an explicit
+    refusal is non-empty and promises nothing.
+    """
+    return bool(declaration) and not is_control_refusal(declaration)
+
+
 def _declares_void(metrics: Dict[str, Any]) -> Optional[str]:
     """Return the metric value that declares VOID, if any."""
     for v in metrics.values():
@@ -3835,10 +3887,20 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # Before anything is spent: a control that runs must also be declared.
     # Raised rather than warned, and raised BEFORE the experiment, because a
     # warning at the end of a 20,000-second run is a warning nobody reads.
-    if control_fn is not None and not spec.control:
+    #
+    # WIDENED 2026-09-27 (strengthen-only): the test was `not spec.control`,
+    # i.e. "is the field empty?", so a spec declaring the explicit refusal form
+    # and then running a control anyway sailed through — a declaration saying
+    # *"there is no control here"* beside recorded `control_metrics`, which is
+    # the audit surface lying in the direction nothing was watching. It is now
+    # `declares_a_control`, the same predicate `verify.scan`'s probe C reads.
+    if control_fn is not None and not declares_a_control(spec.control):
         raise UndeclaredControl(
             f"{spec.id} passes control_fn={control_fn.__name__} to run_spec but "
-            f"Spec.control is None. Declare in the registry WHAT the control is "
+            f"Spec.control "
+            + ("declares NO control, by decision" if spec.control
+               else "is None")
+            + ". Declare in the registry WHAT the control is "
             f"and WHICH WAY it must fail; that field is the audit surface.")
 
     ledger = ledger or Ledger()

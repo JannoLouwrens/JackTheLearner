@@ -19,11 +19,12 @@ keys and reads perfectly clean. Deleting the control and demanding the verdict
 move is the only probe that separates "the control is read" from "the control
 was merely run".
 
-Control: a planted five-entry record, scanned by the SAME `verify.scan` the
+Control: a planted eight-entry record, scanned by the SAME `verify.scan` the
 real ledger goes through — one healthy gate that must NOT be flagged, one whose
 recorded metrics no longer clear it, one that ignores its control, one that
 declares a control it never ran, one that records a control its spec does not
-declare. The healthy entry is the load-bearing half: a detector that answers
+declare, one whose `_check` answers with a tuple, and the REFUSAL PAIR added
+2026-09-27. The healthy entry is the load-bearing half: a detector that answers
 "defect" to everything has measured nothing, exactly like a detector that
 answers "clean" to everything. T0.13's first attempt came back clean on a
 known-bad gate because its source extraction silently read nothing, so a
@@ -40,14 +41,47 @@ supplies a `control_fn` while declaring `Spec.control = None`. That guard is
 itself a claim, so it is tested here in both directions on throwaway specs and a
 throwaway ledger — a guard that refuses everything and a guard that refuses
 nothing produce the same clean-looking log, which is the reaper lesson.
+
+## PROBE C WAS COUNTING A REFUSAL AS A PROMISE (repaired 2026-09-27; the red
+## was named in `docs/PROGRESS.md` FOR THE BUILDER item 4, Review 2026-09-27)
+
+`Spec.control` is prose, and `bool(spec.control)` answers *"is this field
+non-empty?"*, not *"was a control promised?"*. `T0.01` and `T0.10` declare
+`"NONE, BY DECISION (52nd audit B5): …"` — a refusal the 52nd audit deliberately
+wrote INTO the field instead of setting `control=None`, so that an auditor reads
+a decision with its authority and reason rather than a blank that is
+indistinguishable from nobody having thought about it. Truthy. So probe C read
+`declared_control_never_ran = 2` — *two safeguards promised and never run* —
+about the two specs on this ladder that promise none, and this gate wants 0.
+
+**MEASURED BEFORE THE EDIT, on the live ledger, so the repair is not an
+argument:** `declared_control_never_ran` **2**, `declared_never_ran_detail`
+`"T0.01, T0.10"`, over 107 entries / 106 re-judged. **AFTER: 0**, with both ids
+still counted, in `no_control_specs`. No threshold moved in either direction;
+`UNDECLARED_CONTROL_BUDGET` is still 0 and this gate still demands 0. What moved
+is the PREDICATE, to `protocol.declares_a_control`, which the runner's
+pre-compute guard now reads too — one field had two readers making opposite
+errors off the same truthiness, and a notion expressed twice is a notion that
+drifts.
+
+**Narrowing a detector's population is a weakening unless the same edit closes
+what it opens, so two things are armed here rather than one.** A declaration
+that refuses a control while `control_metrics` is non-empty — the audit surface
+asserting "no control here" over a control that ran — was reachable by NEITHER
+branch of probe C while it read `bool(...)`: one truthy string made the promise
+branch see a promise kept and the undeclared branch see a declaration present.
+That class is now flagged under `undeclared_control_ran` (`FIX.refused_ran`),
+and `run_spec` refuses the combination before any compute (`refused_refusal`).
+`FIX.refused` is byte-identical to `FIX.promised` except for the declaration, so
+the fixture varies exactly the predicate under test and nothing else.
 """
 from __future__ import annotations
 
 import tempfile
 from pathlib import Path
 
-from ..protocol import (Budget, Ledger, Spec, Status, UndeclaredControl,
-                        run_spec)
+from ..protocol import (CONTROL_REFUSAL_PREFIX, Budget, Ledger, Spec, Status,
+                        UndeclaredControl, run_spec)
 from ..registry import BY_ID
 from ..verify import UNDECLARED_CONTROL_BUDGET, collect, fixture, scan
 
@@ -101,13 +135,28 @@ def _guard_probe() -> dict:
                     null_baseline="the control", metric="x",
                     budget=Budget.CPU_FAST, control=control)
 
-    out = {"refused_undeclared": 0.0, "ran_declared": 0.0}
+    out = {"refused_undeclared": 0.0, "refused_refusal": 0.0, "ran_declared": 0.0}
     with tempfile.TemporaryDirectory(prefix="t018_guard_") as d:
         led = Ledger(path=Path(d) / "ledger.json")
         try:
             run_spec(_spec(None), _fn, _chk, control_fn=_ctl, ledger=led)
         except UndeclaredControl:
             out["refused_undeclared"] = 1.0
+        # …and a spec whose declaration REFUSES a control, while handing the
+        # runner one, must be refused too (2026-09-27). The old guard read
+        # `not spec.control`, so this arm ran happily and recorded
+        # `control_metrics` under a field asserting there is no control —
+        # invisible to `verify`'s probe C in BOTH directions at once, because
+        # one truthy string satisfied neither branch. Asserted here because the
+        # guard and the scan now share `protocol.declares_a_control`, and a
+        # shared predicate that only one side is tested on is one predicate
+        # short of the two readers it is supposed to keep in step.
+        try:
+            run_spec(_spec(CONTROL_REFUSAL_PREFIX + " (throwaway): nothing to "
+                           "sabotage in a two-line fixture."),
+                     _fn, _chk, control_fn=_ctl, ledger=led)
+        except UndeclaredControl:
+            out["refused_refusal"] = 1.0
         # …and the same spec WITH a declaration must run through to a verdict.
         res = run_spec(_spec("the control's x must be lower"), _fn, _chk,
                        control_fn=_ctl, ledger=led)
@@ -150,16 +199,23 @@ def _check(m: dict, c: dict) -> bool:
 
     # ── and the guard that keeps probe C at zero must bite, and only there ──
     guard_works = (m["refused_undeclared"] == 1.0
+                   # A declaration that REFUSES a control may not hand the
+                   # runner one (armed 2026-09-27, strengthen-only).
+                   and m["refused_refusal"] == 1.0
                    and m["ran_declared"] == 1.0
                    and m["guard_ledger_entries"] == 1.0)
 
     # ── and the scan must find exactly the planted defects, and no others ──
     control_caught = (
-        c["entries_seen"] == 6
+        c["entries_seen"] == 8
         and c["verdict_disagreements"] == 1
         and c["control_blind_specs"] == 1
         and c["declared_control_never_ran"] == 1
-        and c["undeclared_control_ran"] == 1
+        # TWO, not one, since 2026-09-27: the historic `control=None` debt shape
+        # AND the refusal that ran a control anyway. Counted together because
+        # they are the same defect — the audit field not describing the run —
+        # and `UNDECLARED_CONTROL_BUDGET` is 0 on the live side either way.
+        and c["undeclared_control_ran"] == 2
         # Each flag must land on exactly the planted entry and nowhere else —
         # in particular never on FIX.healthy, because a detector that flags
         # everything is as useless as one that flags nothing.
@@ -173,8 +229,24 @@ def _check(m: dict, c: dict) -> bool:
         # flagged and moves the verdict when the value moves.
         and c["control_blind_detail"] == "FIX.blind"
         and c["disagreement_detail"] == "FIX.disagree(BOOL:False)"
+        # THE REFUSAL PAIR (2026-09-27), and both equalities are the claim.
+        # `FIX.refused` and `FIX.promised` are byte-identical fixtures apart
+        # from the declaration — one refuses a control in words, one promises
+        # one and runs none — so `declared_never_ran_detail` naming EXACTLY
+        # `FIX.promised` is what says the predicate reads the declaration and
+        # not merely the field's emptiness. Probe C reported both of them
+        # (`declared_control_never_ran = 2` on the live ledger, `T0.01, T0.10`)
+        # until the predicate became `protocol.declares_a_control`.
         and c["declared_never_ran_detail"] == "FIX.promised"
-        and c["undeclared_ran_detail"] == "FIX.undeclared"
+        # ...and the hole that recognising the refusal opens is pinned in the
+        # same breath, because a narrowed detector is a weakened one unless it
+        # is: a declaration refusing a control OVER recorded control metrics.
+        and c["undeclared_ran_detail"] == "FIX.refused_ran, FIX.undeclared"
+        # The spared refusal must stay IN the denominator rather than vanish
+        # from the scan — an entry counted nowhere is how "clean" and "not
+        # looked at" become the same number, which is this spec's founding
+        # lesson applied to its own newest branch.
+        and c["no_control_detail"] == "FIX.promised, FIX.refused"
         # THE VERDICT CHANNEL THAT CANNOT FAIL, planted 2026-09-26 (`FIX.tuple`).
         # `unevaluable_gates` on the CONTROL side used to be asserted at 0 here
         # — which was honest about the fixture set as it stood and is exactly
