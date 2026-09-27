@@ -4413,6 +4413,35 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
         re-derive the firing condition, and so the fourth re-date the stop-rule
         forbids is not written by accident. `T1.08`'s repair design is
         `t108-pipeline-repair-has-no-design` (DUE 2026-10-02).
+    BLOCKED-BY: t108-pipeline-repair-has-no-design | RE-PARENTED 2026-09-27
+        (Review FULL) — **this is the stop-rule's own named act, executed, and it
+        is deliberately NOT a fourth re-date.** Condition re-derived at this desk
+        rather than inherited from the trace: `T1.08` **FAIL** (attempt 3,
+        `ran_at` 2026-09-13, commit `3d357c4`) and `D1.0` **VOID** with `T1.08`
+        in its `depends_on`, so the successor re-run this row owes is unbuyable
+        at any budget, in any week, under every ordering. Four dates (09-06 ->
+        09-08 -> 09-14 -> 09-26) were set on that run and all four broke; the
+        fifth is the one the stop-rule forbade, and the reason it forbade it is
+        that the defect was never a slow desk — it was a promise whose
+        precondition no awake builder could satisfy. What releases this hold:
+        `T1.08`'s pipeline repair being DESIGNED (that row, 10-02) and then
+        EXECUTED to a non-FAIL `T1.08`. Until then this row owes no dispatch and
+        carries no dispatch clock, and saying so in a declared field is what the
+        stop-rule meant by "in its structure rather than in its prose".
+    WAITS-ON: t108-pipeline-repair-has-no-design
+    DUE: 2026-10-07 | RE-DATED 2026-09-27 (Review FULL) as part of the re-parent
+        above, and **what this date owes is a CHECK, not a dispatch** — the
+        distinction the four broken dates lacked. On 10-07 this desk re-reads
+        `T1.08`'s status and the blocker's disposition: if the blocker discharged
+        and `T1.08` moved, this row becomes the builder's two-step stamp as
+        designed below; if it did not, the honest act is to say so against the
+        blocker and re-derive from it again, NOT to re-promise a run. Status
+        stays `DISPOSITIONED` — the design below is delivered and unchanged, and
+        relabelling this row `HELD` to buy silence is forbidden by D28's default
+        and is not what a re-parent is. Dated 10-07 because it is the first date
+        after the blocker's own 10-02 that is under the desk's measured 6/cycle
+        capacity (it carried 1 live row when this was written), so the re-parent
+        does not itself build the pile it was written to stop.
 
 **Why this row exists (60th audit FINDING 2, quoted arithmetic).** `D1.0`
 fired as D1's armed default, ran 16.17 GPU-hours — 54% of a weekly quota —
