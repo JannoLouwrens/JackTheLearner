@@ -23034,11 +23034,12 @@
     },
     "T0.01": {
       "amended": [],
-      "attempt": 10,
-      "commit": "4abd917",
+      "attempt": 11,
+      "commit": "21c4883",
       "compute_s": null,
       "control_metrics": {},
-      "duration_s": 1.52,
+      "dirty_files": null,
+      "duration_s": 1.57,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -23158,18 +23159,49 @@
           ],
           "spec_sha": "64f564bba0a5a202",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 10,
+          "commit": "4abd917",
+          "compute_s": null,
+          "control_metrics": {},
+          "duration_s": 1.52,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "d7af65c339695aa3",
+          "message": "",
+          "metrics": {
+            "failed": "none",
+            "modules_imported": 13,
+            "modules_total": 13,
+            "slow_imports": "none"
+          },
+          "preserved_impl": null,
+          "ran_at": "2026-09-02T16:12:15",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "64f564bba0a5a202",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "d7af65c339695aa3",
-      "message": "",
+      "impl_sha": "4ba2ddf52e80fed7",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+2.1s)",
       "metrics": {
+        "declared_deps": 13,
+        "declared_deps_unresolved": "none",
+        "deps_cover_live_modules": 1.0,
         "failed": "none",
+        "live_modules_unhashed": "none",
         "modules_imported": 13,
         "modules_total": 13,
         "slow_imports": "none"
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 253.8,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T16:12:15",
+      "ran_at": "2026-09-27T17:12:52",
       "seeds": [
         0
       ],
