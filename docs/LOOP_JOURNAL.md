@@ -19943,3 +19943,129 @@ today** — option (iii) is instrument scope and `D35` clause 2 owns it.
   `w1-world-edit-window` docket, the `lc03` seat row, the `t306` venue row,
   `A4`'s three-way fork, the PS-family part-1 inheritance, and the
   `adverse-verdicts` disposition.
+
+- **2026-09-27 00:1x–01:2x (00:07 slot, OPUS — `week:Fable` 95%, gate
+  `week:all models` 67%).** The board was the 24th consecutive empty one for
+  DISPATCHES (`run next`: 0 fresh · 37 settled · 14 held) and I did not
+  manufacture one. **The unit came from the 09-25 `t215` ruling's closing
+  paragraph, which carried a candidate ladder-wide audit to TODAY's Sunday FULL
+  (06:37, five hours after this slot): _"every spec that declares a null it
+  does not gate — a question no existing instrument asks."_ I asked it once, by
+  hand, over all 108 standing PASS certificates, so the desk decides whether to
+  BUILD that instrument against a measured population instead of against the
+  two accidents that suggested it.**
+  **THE NUMBER: 1 of 108.** Screen = `unread_metrics.scan_spec`'s existing
+  UNREAD set (metrics the run recorded, no `_check` conjunct reads) filtered to
+  comparator-NAMED keys, vocabulary fixed before any hit list was seen —
+  so a spec gating chance through a pre-registered constant (`T2.15`'s
+  `CLAIM_MIN` 12 at 1/7) is correctly OUTSIDE the class, having no in-run
+  comparator to read. **15 hits, all 15 hand-adjudicated against the specs' own
+  `_check`, 14 refuted.** Causes, which are the real finding: the null gated
+  under a DIFFERENT NAME (7); per-seed SHARDS gated while the unread hit is the
+  aggregate (1, `LG.02`); summarised through a SUBSCRIPT ASSIGNMENT the parent
+  screen cannot see (3 — `m["rig_ok"] = float(m["base_rate_ok"] == 1.0 and ...)`
+  is invisible to a dict-literal walk); dynamic/minted keys (2).
+  **SURVIVOR `ME.11.A`:** `recency_null_recall` computed at `:136`, read by
+  nobody, recorded **0.0 — exactly its gated claim statistic
+  `paraphrase_recall_at_1` 0.0**, with `templated_recall` 0.85 as the fixture's
+  alive-proof. **Not a red** (a ceiling certificate is not refuted by an equally
+  low null) and I did not repair it: the cost is downstream and named — `T2.10`
+  asks a challenger to beat both losing scorers by >= 0.10 on the one channel
+  whose only two measured numbers are 0.0 and 0.0, and `T2.10`'s repair is the
+  desk's.
+  **I BUILT NOTHING, and that is the point of the row.** The honest repair for
+  cause 3 is one line in `unread_metrics.py`; refused, because it is a
+  governance instrument nine days into `D35` clause 2 (122nd audit FINDING 1)
+  and its output is reporting-only and unfloored at a measured 95% FP rate, so
+  tightening it moves no verdict anywhere. What the measurement buys instead:
+  **a ratchet on this class would today floor one ceiling diagnostic and print
+  fourteen false alarms** — an argument against building it made from
+  measurement rather than from the freeze. Both scan scripts are in `/tmp`,
+  uncommitted; nothing joined the three organs.
+  **ONE BY-CATCH, named with its own reason for not being a defect.** `XL.00`
+  gates `perm_p_attainable` on the CONTROL side and reads it nowhere on the
+  CLAIM side — where the claim is a NEGATIVE result (`indep_p >= 0.01`), so an
+  unattainable test passes by arithmetic. Measured safe by construction:
+  1.99998e-05 (the `2/(N_PERM+1)` floor), ~500x under the gate, `MIN_LIVES = 12`
+  inside the gated `conjunction`, so `2/n!` cannot bind. It is `T0.13`'s shape
+  and becomes real the day `N_PERM` or `MIN_LIVES` moves.
+  **AND THE CONSTRUCTIVE HALF, in LESSONS:** `LG.00` is in the hit list and is
+  the one spec that cannot be faulted for it, because it wrote down what the
+  others left implicit — the null on its certified subset is *"0.000 BY
+  CONSTRUCTION ... any sigma against it would be infinite and meaningless"*, so
+  that channel is gated on an absolute bar and the null is recorded *"so a
+  reader cannot mistake selection for evidence."* Generalised: **a null that
+  gates nothing must say in source which conjunct decides instead and why it
+  cannot** — needs no instrument, and is exactly what `T2.15` lacked when it
+  recorded a mechanism beaten by its declared baseline and exited through a
+  different gate.
+  **ONE READING FOR THE 06:37 SITTING, because a row of theirs is now
+  OVERDUE on it.** `t215-router-under-lexical-null` broke at midnight. Its
+  conjunct (2) — *register the retrieval/bag-of-words challenger as a NEW
+  spec* — **looks already absorbed**: the 09-25 ruling on its sibling declared
+  the two `t215` rows ONE finding and named the successor as *"a conjunct on
+  T2.15's own line — promote `tfidf_retrieval_correct` to GATED"*, which
+  **shipped 09-25** (`t2_15_freeform_routing.py:64`, per-seed lower bound,
+  `CLAIM_MIN` untouched). On that reading what the row still owes is only
+  conjunct (1), the SEAT — FULL-mode work by its own words. **I did not register
+  a challenger spec on an ambiguous reading five hours before the sitting that
+  owns it**; if the desk reads it the other way, say so and it is one slot.
+  **BILL PAID IN SLOT.** Priced BEFORE the edit at 2 certificates
+  (`docs/REVIEW_QUEUE.md` -> `T0.21`, `T0.31`; LESSONS and this journal bill 0)
+  and paid from a clean tree at `767891f`: `T0.21` **PASS 10.14 s**, `T0.31`
+  **PASS 1.79 s**, both HASH-SALT DIFFERENTIAL CLEAN on 3 deciding metrics in a
+  fresh process. `render` then prices the two new rows at **0 certificates**, so
+  the chain terminates.
+  **INSTRUMENTS AFTER, all re-derived bare:** `verify` **0**, `status` **2**,
+  `coverage` **2**, `champions` **0**, `review-queue` **2**,
+  `decisions --check` **1**, `render` **0** — every one at the level the 22:0x
+  and 23:5x slots recorded. **THE DELTA, quoted from `run status` and
+  DELIBERATELY NOT RECORDED:** *3 MOVED (`review_queue_net_arrivals` 26 -> 24,
+  `review_queue_violation_forms` {'OVERDUE': 1} -> {'OVERDUE': 7},
+  `review_queue_violations` 1 -> 7); 1 day-rolled (`cpu_foreclosed_now`) — the
+  clock, not a change; no counter refused to compute; floors: 2 ABOVE, 0 BELOW,
+  0 UNVERIFIED.* Cause READ, not reasoned: **six dated rows fell due and broke
+  at midnight** (`t215-router-under-lexical-null`, `w2-needs-have-no-single-k`,
+  `two-eyes-one-certified`, `d10-successor-rerun-under-adopted-gate`,
+  `so07-recording-worlds-fail-the-reference-bar`,
+  `hash-salt-lottery-in-a-gated-metric`) plus `a4-...-computed-nowhere` at 2 d,
+  and **+1 arrival is my own row**. I did **not** run `ratchets record`: it
+  would make the next reading say *no counter moved* and leave a seven-fold
+  violation jump visible only in a commit diff, five hours before the sitting
+  whose own rows moved it. No floor raised, nothing blessed.
+  **CREATURE GATE MOVED: NONE (#54)**, recorded as a real breach per the `d35`
+  disposition, chain re-derived this slot from `status` + the ledger rather than
+  inherited: `T6.01` / `T4.05` / `T4.04` NOT IMPLEMENTED <- `T2.01` **FAIL** <-
+  `T1.08` **FAIL** (pipeline repair the desk's, `t108-pipeline-repair-has-no-
+  design` DUE 10-02); `XL.01` **FAIL** (a2, 2026-08-19) with
+  `xl01-death-and-retry-has-no-reachable-repair-path` OPEN, DUE 10-03.
+  Structural and unchanged.
+  **GPU: the week is `2026-W39`, derived (`%Y-W%U`), 30.0 h free and 0 charged
+  — and `2026-W38`'s ~29.08 h expired unspent at 00:00 tonight, the third
+  consecutive week.** Refusal **#54**, same reason as #53 and it is not
+  inventory shyness: `coverage`'s GPU classes are all VOID-arms or
+  pilot-blocked, and the one conceivable buyer (declaring `T1.02`/`T1.09`'s
+  job-string edges, ~27 s of P100 each) is option (i) of a menu I routed to the
+  desk 90 minutes ago and is not mine to pick. A fresh 30 h and six days is the
+  right time to have a buyer; manufacturing one at 01:00 is not how to get it.
+  **HYGIENE.** `git add` by name; 12 `claude` processes on the box and no
+  foreign files in the tree at any point; tree verified clean before both
+  re-buys; no processes left running; nothing detached; pushed.
+  **NEXT ITERATION.** **`hash-salt-lottery-in-a-gated-metric` is OVERDUE (DUE
+  09-26) and it is MINE** — `1^12` item 5, option (iv): **measure the binding
+  set and report it BEFORE implementing**, narrowing the dynamic check to where
+  it decides. It broke at midnight while this slot was spent elsewhere; that is
+  the first pick. **Do NOT fold it with `waits-on-declared-field`** (discharged
+  09-25) and do not take two instrument edits in one slot — the disposition
+  says why. Then, if a slot is long: layer 4 of the certificate population is
+  `T1.01` (35 min) and `T1.06` (63 min, does not fit an hourly slot at all);
+  the churn-rate finding PREDICTS both green, so run one as a test of that
+  prediction, not as a sweep. **06:37 is the Sunday FULL** with the Review's
+  pre-committed `W1`-authorship stop-rule and `D36` due — diff
+  `PROGRESS.md`/`OVERSIGHT.md` for fresh FOR THE BUILDER items before anything
+  else; `PROGRESS.md` was still the stale 09-24 page as of this slot. Still not
+  yours: `W1.01`/`W1.03`/`W1.04`, `D33`/`D35`/`D36`, `T1.08`'s pipeline design,
+  `T2.10`'s repair, `UB.10`'s successor arm, the world-edit window, the `lc03`
+  seat row, the `t306` venue row, `A4`'s three-way fork, the PS-family part-1
+  inheritance (ON HOLD by the `ps09` row's own sequencing), and the `t215` seat
+  question.
