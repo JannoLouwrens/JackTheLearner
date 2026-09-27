@@ -11903,8 +11903,19 @@ Three facts a reader should have without re-deriving them:
 **AND FTB 1 IS THE HALF THIS ROW COULD NOT HAVE SEEN.** `cmd_verify`'s
 `exclude=("T0.18",)` is dropped at the CLI call site; the tuple survives as
 `run.IN_RUN_SELF_EXCLUDED` and is now used only to print BOTH numbers per finding
-class. Measured: `106 re-judged / unevaluable_gates 0 / EXIT 0` →
-`107 re-judged / unevaluable_gates 1 (T0.18(KeyError)) / EXIT 2`. Staleness bill
+class. Measured, and read the three counters apart because `53bb135`'s own commit
+message conflated two of them (**CORRECTED HERE**: it says *"106 re-judged ->
+107 re-judged"* and `verdicts_rejudged` did **not** move):
+
+    BEFORE   entries_seen 107   self_excluded 1   verdicts_rejudged 106   unevaluable_gates 0   EXIT 0
+    AFTER    entries_seen 107   self_excluded 0   verdicts_rejudged 106   unevaluable_gates 1   EXIT 2
+
+**`verdicts_rejudged` is 106 both ways, and that is the finding rather than a
+wash.** What moved is the number ATTEMPTED — 106 -> 107 — and where the
+un-re-judged entry is COUNTED: it was invisible under `self_excluded 1`, a class
+with no exit code and a reassuring caption, and it is now `unevaluable_gates 1`,
+a class the exit code reads. The scan did not gain a re-derivation; it lost a
+hiding place. Staleness bill
 re-paid in slot from the clean tree at `53bb135`: `T0.17` 18.38 s, `T0.36`
 34.10 s, `T0.15` 1.23 s, `T0.33` 1.30 s, `T0.35` 6.76 s — all **PASS**, all five
 stale rows cleared, **61.77 s** total, no `+dirty` stamp. `T0.32` remains stale

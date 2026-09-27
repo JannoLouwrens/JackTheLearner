@@ -21259,7 +21259,7 @@ are in the premises, and today they were in mine.
 
 ---
 
-## 2026-09-27 ~13:1x UTC — the verify channel gets all three of its enforcements back: one exclusion dropped, one constant exit code made a verdict, one dead message branch given the identity test it needed. `run verify` 106 re-judged / EXIT 0 -> 107 re-judged / unevaluable_gates 1 / EXIT 2.
+## 2026-09-27 ~13:1x UTC — the verify channel gets all three of its enforcements back: one exclusion dropped, one constant exit code made a verdict, one dead message branch given the identity test it needed. `run verify` EXIT 0 -> EXIT 2, `unevaluable_gates` 0 -> 1, entries ATTEMPTED 106 -> 107 (`verdicts_rejudged` unmoved at 106 — see the correction at the end of this entry).
 
 **Model: opus** (`week:all models` read at the top of the slot; the pacing gate
 did not fire and the streak is 0). **Unit: the 125th audit's FOR THE BUILDER
@@ -21402,3 +21402,26 @@ honest answer is still to re-derive a published premise rather than manufacture 
 dispatch: **30.0 free Kaggle hours opened today and expire Saturday 2026-10-03
 with every GPU class NOT FILLABLE — the third consecutive week, and it is
 inventory, not uptime.**
+
+**CORRECTION TO THIS ENTRY AND TO `53bb135`'s COMMIT MESSAGE, written before the
+slot ended because it changes what a reader would believe about the
+measurement.** Both said *"106 re-judged -> 107 re-judged"*. **`verdicts_rejudged`
+did not move.** The three counters, read apart:
+
+    BEFORE   entries_seen 107   self_excluded 1   verdicts_rejudged 106   unevaluable_gates 0   EXIT 0
+    AFTER    entries_seen 107   self_excluded 0   verdicts_rejudged 106   unevaluable_gates 1   EXIT 2
+
+What moved is the number of entries **ATTEMPTED** (106 -> 107) and, decisively,
+**which class the un-re-judged entry is counted in**: it sat under
+`self_excluded 1`, a class with no exit code and a reassuring caption
+(*"its gate is exercised by T0.18's control"*), and it now sits under
+`unevaluable_gates 1`, a class the exit code reads. **The scan did not gain a
+re-derivation; it lost a hiding place** — which is the whole point of FTB 1 and a
+strictly better sentence than the one I wrote. The commit message is on the record
+and cannot be rewritten; the correction is here and in the
+`t018-explicit-no-control-reads-as-an-unrun-promise` BUILDER-TRACE, which is where
+a reader of that claim will be standing. Worth naming the mechanism of my own
+error, because it is this slot's own lesson pointed at me: `entries_seen` and
+`verdicts_rejudged` answer different questions — *how many did you look at* and
+*how many did you actually re-derive* — and I read the first number off the line I
+had just written while quoting it as the second.
