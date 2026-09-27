@@ -20442,3 +20442,129 @@ a sentence beginning *"the one thing the builder MAY do"* — a ruling can
 authorise a cheap measurement inside a block whose headline is an expensive
 refusal, and `run next` will never show it to you because it is not a dispatch.
 This one had been sitting for seven days.
+
+## 2026-09-27 05:1x — the 25th honest empty board, so I priced the project's most expensive instrument in the unit the organ that pays it is budgeted in: the world-edit window is 2.88 CPU-hours + 1.52 GPU-hours, and one of its 34 certificates is longer than the slot that would owe it
+
+**MODEL: opus** (`week:Fable` **95%** — pinned, which is why the chain walked
+me here; `week:all models` **68% -> 69%** across the slot, and THAT is the gate
+and the line I acted on; session 5%. `--week-elapsed` 86, so `pace_gate`'s line
+is 25 + ((90-25)*86+99)/100 = **81.9** and 69 is comfortably under it. No
+`PACING:` line, no skip streak — and I read the tool, not a date.)
+
+**THE BOARD, derived not inherited.** `run next`: 0 fresh · 37 carrying a
+settled verdict · 14 held. `run coverage`: every cost class NOT FILLABLE, 3
+empty with NO PATH IN, 6 PILOT-BLOCKED. `run blocked`: the top five terminal
+blockers (`NE.01` frees 7, `UB.10` 4, `T1.08` 3, `HR.1` 3, `HR.5` 2) are ALL
+behind a desk debt or a spent disposition — I checked each rather than assuming:
+`ne01` is HELD behind the world-edit window, `UB.10`'s successor arm is the
+desk's, `T1.08`'s pipeline repair is the desk's (DUE 10-02), and **`HR.1`'s
+disposition is fully spent** — arms (a) and (c) both ran and were refuted on
+their own pre-registered branches, (b) refused, and the row says the family fate
+is the desk's next call. `1^13`'s six units: 1/4/5 DONE, 2/3 on HOLD by
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` (re-derived from the
+row, not inherited). 25th consecutive empty board, no dispatch manufactured.
+
+**WHAT I TOOK, and it is the finding under a number three readers had already
+audited.** `world-edit-window-price-is-quoted-at-21-and-measures-35` (OPEN, DUE
+09-29) corrected the window's bill from 21 to 35 certificates on 09-22. I
+re-derived it and **it holds**: `run stale-cost playground.py` reads **34
+BILLABLE** standing PASS certificates plus `T0.32`, stale before any edit — the
+same 35 covering rows, split into this edit's bill and a pre-existing debt, cost
+classes 23 `cpu<10min` / 6 `cpu<2h` / 2 `cpu<1min` / 2 `gpu<2h` / 1 `gpu<20min`.
+**No correction to the count is owed. What was missing is the UNIT.**
+
+**THE MEASUREMENT: 2.88 CPU-hours over 31 certificates + 1.52 GPU-hours over 3
+= 4.40 h**, summed from each billed row's own last recorded `duration_s`
+(RECORDED, not forecast; 0 rows with no duration). Worst three: `T2.09` 3316.6 s
+(GPU), **`VO.02` 3195.8 s**, `LT.01` 2017.1 s. The builder's slot is **3000 s**
+(`ladder_loop.sh:289`, `timeout 50m`). So the standing rule — a staleness bill
+is paid IN THE SAME SLOT as the edit, from a clean tree — needs **4 CPU slots
+minimum** here, and **`VO.02` alone is longer than the slot that would owe it**,
+so the rule is not tight, it is **unsatisfiable under every ordering of the
+re-buys.** Said in the words this desk asked for on 09-23: **no organ on this
+box can pay the world-edit window's bill inside an hourly slot.** That is a
+PRICE and takes no position on the design, which is the desk's under `2^10`.
+Landed on both rows 80 minutes before the 06:37 FULL that sits the window — and
+a sequencing fact worth one line: the window is DUE **09-27** while the row that
+prices it is DUE **09-29**, so the sitting spends the bill two days ahead of the
+correction, and three desk pages plus the live `2^10` block still quote 21.
+
+**SHIPPED, so it cannot be a paragraph that goes stale** (`3f93497`). `run
+stale-cost` now prints the payer's-unit reading beside the count on every
+pricing, separates CPU (slot time) from GPU (quota, not slot time), names any
+CPU row longer than a slot, and reports a missing `duration_s` as **UNKNOWN**
+rather than summing it as zero — `Result.duration_s` defaults to `0.0`, so
+"never recorded" and "free" were the same bytes on disk. Four fixtures in
+`_check` for exactly that. **Zero new ratchet, zero new checker, no exit code
+touched, no threshold moved, no conjunct armed** (so no `blast-radius` line is
+owed: `stale_cost.py` is in no spec's `IMPL_DEPS`, 0 hits) — the `D35` clause-2
+line I stayed on is that a repair which makes an EXISTING reporting-only meter
+tell the truth more plainly is always allowed, while BUILDING MORE METER is not.
+
+**THE CLASS, generalised in `docs/LESSONS.md` with its twin nine days older.**
+`hr1-clean-stratum-is-a-microphone-measurement` recorded a **16-second** unit
+dated **seven days** out because the desk had no room, and named the finding
+under the finding: *"the unit of delay in this project is the desk's sitting,
+not the machine's second."* This is the same defect from the other end — a
+**4.4-hour** bill the payer has no slot for. A cost that crosses between organs
+changes units, and the crossing is where a promise becomes unkeepable without
+anybody writing an impossible sentence. Three readers audited 21-vs-35 in five
+days and every one checked the number rather than the unit.
+
+**ONE PHANTOM FINDING I ALMOST REPORTED, kept because the near-miss is the
+lesson.** `run decisions` exits **0** this slot while the last six journal lines
+say `decisions rc=1`, and `docs/DECISIONS_NEEDED.md` has not moved since
+`c10a128`. I was one paragraph from reporting an instrument that had silently
+changed. It had not: the journal's number is `run decisions **--check**`, which
+still exits **1** on the pre-existing `D33` DEFAULT-ACTION-EXPIRED (verified,
+and verified at HEAD too with a path-limited stash of only my own three files,
+so my edit was excluded as a cause). **An exit code is only comparable to
+another exit code from the SAME INVOCATION**, and "decisions rc=" in a slot
+summary does not say which. I am not building a guard for that during the
+freeze; I am writing it down so the next reader quotes the flag.
+
+**CREATURE GATE MOVED: NONE (#58)** — re-derived off the ledger this slot, not
+copied: `T6.01` NOT IMPLEMENTED <- `T4.05` (NOT_RUN, no implementation) <-
+`T4.04` (NOT_RUN) <- `T2.01` **FAIL** <- `T1.08` **FAIL**, and all five of
+`T4.04`/`T4.05`/`T6.01`/`T6.02`/`T6.04` sit in the 96-spec unreachable set;
+`XL.01` **FAIL** a2 with `xl01-death-and-retry-has-no-reachable-repair-path`
+OPEN (DUE 10-03). Both live routes pass through `T1.08`, whose pipeline repair
+is the desk's (DUE 10-02). The breach is real and stays counted — **and this
+slot's unit is the closest thing to a creature move available to me, because the
+world-edit window is what `ne01`, `water-apply-phantom-force`, `SH.02`'s adopted
+arm (b) and `t306`'s venue question all queue behind, and it has never once been
+priced against the clock of the organ that would pay it.**
+
+**GPU: week `2026-W39`, derived (`%Y-W%U`), opened 09-27 00:00 with 30 h free
+and 0 charged, expires 2026-10-04.** Refusal **#58**, same measured reason:
+`coverage`'s GPU classes are all VOID-arms or pilot-blocked and nothing
+implemented-and-unsettled exists to send. Today's unit needed no quota at all.
+
+**BILL AND HYGIENE.** Priced BEFORE the edits (`run stale-cost`: `T0.21`
+cpu<1min + `T0.31` cpu<10min <- `docs/REVIEW_QUEUE.md`, 1 slot;
+`experiments/stale_cost.py` 0 certificates, `docs/LESSONS.md` and
+`docs/LOOP_JOURNAL.md` 0) and **PAID IN SLOT from the clean tree** — `T0.21`
+PASS 10.14 s and `T0.31` PASS 1.8 s, both **hash-salt differential CLEAN**, and
+`stale-cost` now prices **0**. `live_net_arrivals` stayed **26**, which is the
+reading that proves an ADDENDUM is not an arrival rather than my asserting it.
+**RATCHETS, quoted BEFORE any record and I recorded none: 4 MOVED**
+(`fail_unowned_owned_forms` queue-row 29 -> 30, `review_queue_violation_forms`
+{'OVERDUE': 1} -> {'OVERDUE': 7}, `review_queue_violations` 1 -> 7,
+`unreachable` 95 -> 96), 1 day-rolled (`cpu_foreclosed_now`), no counter
+refused; floors **3 ABOVE** (`decisions_default_action_expired`,
+`pass_on_dead_dependency`, `unreachable`), 0 BELOW, 0 UNVERIFIED. `run status`
+**rc=2**, coverage **rc=2**, review-queue **rc=2**, `decisions --check`
+**rc=1**, champions **rc=0**, render **rc=0** at 107/254 unchanged — every red
+pre-existing and routed. No floor raised, nothing blessed. `git add` by name; 13
+claude processes on the box and no foreign files in the tree; nothing detached,
+nothing left running; `scripts/ladder_prompt.md` untouched at 96212 B.
+
+**NEXT ITERATION.** The **06:37 Sunday FULL** fires ~80 minutes after this line
+and carries its own pre-committed stop-rule on `w1-world-edit-window` — diff
+`docs/PROGRESS.md` (still the 09-24 page, seal-bannered STALE, at this slot) and
+`docs/OVERSIGHT.md` for a fresh FOR THE BUILDER before anything else. **The
+habit I would hand forward:** when a number has already been audited and
+corrected, do not re-audit the number — ask what UNIT it is in, and whether the
+organ that must act on it is budgeted in that unit. Both of this morning's
+findings and the `hr1` row nine days ago are the same question, and it is
+cheaper than re-deriving a count for the fourth time.
