@@ -21095,3 +21095,164 @@ currently has no evidence for. **And the pattern that produced this slot is now
 two-for-two: the previous slot inverted a finding about `XL.01`'s rig, this one
 inverted a finding about `EmotionalState.py` — when the board is empty, re-derive
 a published premise, because that is where the errors are.**
+
+---
+
+## 2026-09-27 ~12:0x–12:4x UTC — **`T0.18`'s probe C was counting a REFUSAL as a
+## promise: `declared_control_never_ran` 2 -> 0 with no bar moved — and I shipped
+## the repair a queue row had NAMED TO BE REFUSED, then converted it in slot**
+
+**Model: OPUS.** `week:Fable` **95%** (pinned, so the chain walks to opus as
+designed), `week:all models` **80%** — the gate, and it is the line I acted on.
+`session` 41%. Under the 90% stop with ~10 points of room; no `PACING:` streak,
+dark slots 0. One larger, better-chosen unit, per the walked-to-Opus rule.
+
+**THE UNIT came from `docs/PROGRESS.md` FOR THE BUILDER item 4** (Review, this
+morning): *"`T0.18`'s property C is still counting a refusal as a promise …
+`declared_control_never_ran` reads 2 where the gate wants 0. That is a real red
+with a known cause and it is not mine to fix by touching a threshold."* The
+board itself was empty for the 29th consecutive slot (`run next`: 0 fresh of 51,
+37 carrying a settled verdict, 14 held) and I manufactured nothing.
+
+**MEASURED FIRST, READ-ONLY, before any edit** — `scan(collect(Ledger(),
+exclude=('T0.18',)))` in a child process, no ledger write: `declared_control_
+never_ran` **2**, detail **`"T0.01, T0.10"`**, over 107 entries / 106 re-judged.
+Both specs declare `control="NONE, BY DECISION (52nd audit B5): …"` — a refusal
+the 52nd audit wrote INTO the field rather than setting `control=None`, so a
+reader would see a decision instead of a blank. A non-empty string is TRUTHY,
+and both readers of that field asked `bool(spec.control)`, which answers *"is
+the field non-empty?"*. **The repair that made the decision legible to a human
+is what made it illegible to the instrument.**
+
+**WHAT I GOT WRONG, first, because it is the more useful half.** `3eddd91`
+repaired it by teaching `verify.py` and `run_spec` the PROSE IDIOM (text starts
+`NONE, BY DECISION`, plus a reason). **That is option (ii) of
+`t018-explicit-no-control-reads-as-an-unrun-promise`** — a row a builder routed
+yesterday, OPEN, DUE 10-05, which lists that option with the words *"named so it
+is refused on the record rather than by silence"*, because it yields *"a detector
+that can be switched off by writing a sentence."* I had not read the row. The
+objection is decisive, so I converted rather than defended, in the same slot and
+before any certificate was bought against it (`eba3e58`) — that row's option (i):
+
+    class NoControlByDecision(str):
+        def __bool__(self): return False
+
+**WHY (i) IS BETTER, measured rather than argued.** `spec_sha_of` is UNMOVED for
+both specs (`T0.01 64f564bba0a5a202`, `T0.10 1a2e392382041a3d`), so the type
+change stales no certificate and `control` stays in `SPEC_CLAIM_FIELDS`
+untouched. A hand-typed `"NONE, BY DECISION (typed by hand): trust me"` still
+reads as a **PROMISE** — the words do not earn the exemption; constructing the
+class in `registry.py` does, and that is a diff a reader sees. And because the
+value is honestly FALSY, **every `bool(spec.control)` in the repo became correct
+with no edit** — nothing anywhere pattern-matches the text. AFTER:
+`declared_control_never_ran` **0**, detail empty, both ids still counted in
+`no_control_specs`. `run verify` prints `controls declared but never run  0`.
+
+**NO THRESHOLD MOVED IN EITHER DIRECTION, and the narrowing is paid for.**
+`T0.18` still gates that metric `== 0`; `UNDECLARED_CONTROL_BUDGET` is still 0.
+Narrowing a detector is a weakening unless the same commit shuts what it opens,
+so it does: a declaration refusing a control while `control_metrics` is
+non-empty — the audit surface asserting "no control here" over a control that
+RAN — was reachable by **NEITHER** branch of probe C while it read `bool(...)`
+(one truthy string satisfied both), and is now flagged under
+`undeclared_control_ran` (`FIX.refused_ran`, 2 of 2) with `run_spec` refusing the
+combination before any compute (`refused_refusal`, asserted both directions in
+`T0.18`'s guard probe). `FIX.refused` is byte-identical to `FIX.promised` except
+the declaration, and is built THROUGH the shipped class — a fixture imitating the
+prose would certify the repair the row refused.
+
+**`T0.18` COULD NOT BE BOUGHT, and that was already on the record.**
+`run T0.18` answers **`BLOCKED by T0.13 (FAIL)`**. Everything above is the
+shipped `scan` replayed offline plus the fixture battery `run verify` runs live;
+**no `T0.18` row was written and its standing PASS is untouched.**
+`blast-radius T0.18` unchanged: BLAST RADIUS none, and the PASS -> FAIL
+counterfactual pushes `unreachable` 96 -> 97 above its floor, which is why the
+red stays on a page. The deadlock, the two opposing floors and *"two Tier-0
+specs that certify each other's instruments cannot both be re-bought after
+either one is edited"* are all already written in
+`t013-latently-red-28-disarmed-keys` — I checked before routing and routed **no
+new row**, only traces on the two that exist.
+
+**THE ONE NUMBER THIS BOUGHT FOR ANOTHER DESK'S RULING.** `T0.13` re-bought
+(FAIL, 2.03 s, clean tree, `3eddd91`): `disarmed_conjunct_keys` **28 -> 15**,
+`specs_with_disarmed_keys` **6 -> 5**. `T0.18`'s 13 keys were never decorative —
+its 08-30 row was replayed against a `_check` that gained conjuncts on 09-26,
+and a gate whose baseline verdict is already False cannot be moved by any
+perturbation, so every key it reads scores disarmed. That row PREDICTED the
+15/28 split offline yesterday; it is now the **recorded** number, so the per-key
+adjudication owed 10-05 reads 15 off a ledger row. **AND THE RED I CREATED,
+named not buried: `unevaluable_gates` 0 -> 1 (`T0.18`)** — its `_check` now reads
+keys absent from that 08-30 row, so the replay raises `KeyError`. `T0.13` was
+FAIL before and after on the 15 keys in five OTHER specs, so no verdict moved,
+but a counter that read 0 reads 1 and it is mine. It is also the honest class:
+"this scan did not audit that gate" is true of a row predating the gate, where
+"13 of its keys are decorative" named a defect that was not there — the same
+disposal `LT.03`'s tuple return already gets one layer over.
+
+**PRICE OF THE CORRECTION, reported rather than absorbed:** the four
+`protocol.py` certificates were bought **twice**, once against `3eddd91` and
+again against `eba3e58`, ~28 s of CPU spent twice.
+
+**BILL PAID IN SLOT, every row from the clean tree with `dirty` unset:** `T0.17`
+PASS 18.33 s, `T0.15` PASS 1.25 s, `T0.33` PASS 1.30 s, `T0.35` PASS 6.72 s (all
+`experiments/protocol.py`), `T0.36` PASS 33.88 s (`experiments/run.py`), and
+`T0.21` PASS 9.91 s / `T0.31` PASS 1.84 s for the two doc edits. **Salt
+differential CLEAN on all seven — 27 deciding metrics reproduced bit-exact in
+fresh processes at salt 1.** Nine ledger rows total, **zero status changes**, no
+threshold moved anywhere, no `IMPL_DEPS` removed, no floor raised, **zero new
+checker, ratchet, organ or Tier-0 spec** (freeze items 1–2 obeyed).
+
+**Ratchets quoted BEFORE any record, and I recorded none:** 6 MOVED
+(`fail_unowned_owned_forms` queue-row 29 -> 30, `review_queue_net_arrivals`
+26 -> 31, `review_queue_piled_on` 3 -> 4, `review_queue_violation_forms`
+{OVERDUE:1} -> {}, `review_queue_violations` 1 -> 0, `unreachable` 95 -> 96),
+1 day-rolled (`cpu_foreclosed_now`) — **identical to the entry reading, so all
+six are inherited, none is mine.** Floors 3 ABOVE
+(`decisions_default_action_expired`, `pass_on_dead_dependency`, `unreachable`),
+0 BELOW, 0 UNVERIFIED — all three pre-existing and routed. `status` rc=2 and
+`coverage --check` rc=2, unchanged from entry.
+`scripts/ladder_prompt.md` **untouched at 96212 B**. `git add` by name; 13 claude
+processes; no foreign files in the tree; `pgrep` clean, nothing left running.
+
+**TWO ROWS THE STEERING SENT ME AT THAT ARE ALREADY DISCHARGED — disclosed so a
+third slot does not spend on them.** `PROGRESS.md` FOR THE BUILDER item 2 names
+`t215-router-under-lexical-null` and `hash-salt-lottery-in-a-gated-metric` as
+*"designs DELIVERED, execution owed"*, and asks for the hash-salt binding-set
+measurement *"BEFORE implementing"*. **Both are delivered and both rows already
+carry a BUILDER-TRACE proving it** — hash-salt's measurement at `19aab39` and
+implementation at `5ee32ff` (2026-09-26), `t215`'s conjunct at `e5e627b`
+(09-25). The traces were written at 01:2x today, ~5 h BEFORE this morning's
+Review re-dated both rows a third time (to 10-08 / 10-09) citing the same
+missing execution and arming a stop-rule that writes a **phantom** debt into the
+builder's PRIORITY block on a fourth breach. I did not redo either.
+
+**CREATURE GATE: NONE — and this is the 2nd of at most 2 in a row, so the next
+slot cannot legally answer NONE.** Say it plainly for whoever reads this next:
+of `T2.01` / `XL.01` / `T6.01`, `ready()` returns exactly **one** — `XL.01`, a
+settled FAIL whose attempt 3 ran at 09:43 today — `T2.01` is `blocked_by
+['T1.08']` (FAIL, repair undesigned until 10-02, explicitly not the builder's)
+and `T6.01` is four hops out behind two unimplemented specs. So the quota
+resolves mechanically to *re-run one settled FAIL*, which `run next`'s own
+triage line forbids and which the standing prohibition on run-until-pass forbids
+in general. That is exactly the live row
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-
+failing-spec` (OPEN, DUE 10-07), and the collision arrives NEXT SLOT rather than
+in a week. **Do not discharge it by re-rolling `XL.01`.** Report the
+impossibility in the journal and let it reach the owner, which is the one thing
+the freeze's own text leaves open (*"If the freeze is wrong, the owner strikes it
+in one line"*).
+
+**NEXT ITERATION.** The cheapest honest unit adjacent to today's is on the
+`t013` row and it is a RULING, not a run, so it is not yours: 15 disarmed keys
+across `LT.01`/`SO.02`/`T0.17`/`T0.32`/`T0.33`, due 10-05. What IS yours and is
+new: **`T0.18` now has a THIRD reason it cannot be re-bought** (stale `impl_sha`,
+`BLOCKED` by `T0.13`, and now an `unevaluable` replay), and the class of
+"certificate whose gate has outrun its row and whose dependency forbids the
+re-buy" has exactly one member today — worth a measurement of whether any OTHER
+standing PASS is in the same state, which `run status` reports in three separate
+blocks that no reader joins. That is a census over existing instruments, not a
+new one, so the freeze permits it. And the pattern from the last three slots
+holds a third time: **when the board is empty, re-derive a published premise** —
+two slots inverted findings about `XL.01`'s rig and `EmotionalState.py`, and this
+one found a repair menu already priced and a refused option shipped. The errors
+are in the premises, and today they were in mine.
