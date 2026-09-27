@@ -12629,3 +12629,130 @@ exemption survive its stated reason?
     Staleness bill for this row: **ZERO** — it edits no spec file and no
     `IMPL_DEPS` path. The `protocol.py` edit it reports is billed and paid on the
     addendum above (`T0.15`, `T0.17`, `T0.33`, `T0.35` re-bought in slot).
+
+---
+
+## ROUTED 2026-09-27 (builder, 11:0x slot): `root-modules-outside-every-staleness-
+## bill-are-six-files-not-one` — the Review invited a confirm-or-refute on
+## `EmotionalState.py`; it is REFUTED, and the class it named is 4,109 lines
+
+ROUTED: root-modules-outside-every-staleness-bill-are-six-files-not-one | 2026-09-27 | census over all 21 repo-root modules against every spec module's `IMPL_DEPS`, read with the runner's own `impl_deps_of`/`impl_sha_of` (`experiments/protocol.py`); perturbation test on the named file; `UnifiedBrain.py:264, 272, 4093, 4130` read statically. Builder, this slot, child processes, NO ledger write | OPEN
+    SUBJECT: the APPARATUS — the staleness bill's domain. No spec's science is
+        in question and no certificate is claimed red. `T2.12`'s PASS is
+        measured intact and is the thing the published finding said did not
+        exist.
+    DUE: 2026-10-08 | `review-queue`'s own "next date with room under the
+        measured capacity", read off the tool this slot (2026-10-07 reached 6
+        with the previous slot's row) and not chosen by hand.
+    WAITS-ON: none | this is a DOMAIN question about what an `IMPL_DEPS` edge
+        is, and it is the same question `impl-deps-domain-misses-a-read-and-a-
+        relative-import` (DUE 10-06) and `gpu-job-strings-carry-undeclared-
+        edges-that-no-ast-walk-can-see` (DUE 10-06) ask from two other
+        directions. Deliberately NOT declared downstream of either: each of the
+        three carries a different edge kind and a ruling on one does not decide
+        the others. If the desk prefers to rule them together, that is a
+        merge it can make; it is not a dependency this row can assert.
+
+**FIRST, THE REFUTATION, because a wrong finding on an owner-facing page outlives
+the slot that could have caught it.** `PROGRESS.md` FOR THE OWNER item 5 (this
+morning) reads: *"`EmotionalState.py` is 1,149 lines and is named in NO spec's
+`IMPL_DEPS` — its two specs (`T2.12`, `T3.07`) do not hash it, so editing it
+stales nothing and its behaviour is certified by nothing. I am reporting it
+rather than routing it because it is one grep and the builder can confirm or
+refute it in a slot."* Taken up as invited, and it is false on both clauses:
+
+    T2.12  declared IMPL_DEPS = ('EmotionalState.py',)    t2_12:49, declared 2026-09-06 (ab9d3e8)
+           recorded impl_sha  acb44e8c2b7c22a6  ==  today's  ->  NOT stale
+           EmotionalState.py + one byte  ->  0d80870361a08e44   ->  the sha MOVES
+    T3.07  IMPL_DEPS = ('MovementMoodCoupling.py', 'EmotionalState.py',
+                        'TrainingPipeline.py', 'UnifiedBrain.py',
+                        'experiments/tests/t2_12_emotion_separability.py')
+           perturbation moves its sha too (5c54411e -> 111f1df1 from today's basis)
+
+So editing that file stales a standing PASS, and that PASS is a certificate over
+the module's behaviour (`T2.12`, attempt 4: nearest-centroid held-out 0.904 ±
+0.072 vs chance 0.25, matched-variance random-walk null 0.238 ± 0.027, shuffled
+control 0.146). **The narrower true statement is already on `T2.12`'s own
+record** and is worth more than the refuted one: separability is certified,
+**valence sign is not** — the untrained GRU makes the event->PAD map
+seed-arbitrary and OCC deltas never reach `pad_vector` (`EmotionalState.py:611`,
+journaled with the 2026-09-06 PASS). That is a real uncertified property of
+Jack's emotion model and it is not what the page said.
+
+**SECOND, THE CLASS IS REAL — and the file chosen to illustrate it was the single
+best-covered module of the twenty-one.** Census, declarers counted across every
+spec module in `experiments/tests/` (0 modules whose `IMPL_DEPS` could not be
+read, so the population is complete, not sampled):
+
+    declared by somebody  15 modules   playground.py 62, UnifiedBrain.py 25,
+                                       EpisodicMemory.py 21, ContactAudio.py 11,
+                                       TrainingPipeline.py 8, EmotionalState.py 2, ...
+    declared by NOBODY     6 modules   4,109 lines
+                                       Persistence.py      1155
+                                       TaskManager.py       849
+                                       Personality.py       787
+                                       InnerMonologue.py    673
+                                       AudioListener.py     444
+                                       mocap_cmu.py         201
+
+**And the two largest of those are constructed by default inside Jack's brain.**
+`UnifiedBrain.__init__` builds `Personality` at 4093 and `InnerMonologue` at
+4130, under `enable_emotional_state` and `enable_inner_monologue`, **both
+defaulting `True` at 264 and 272, and no spec in the tree sets either flag**
+(`grep` over `experiments/tests/` and `experiments/*.py`: zero hits). Both
+modules import cleanly in this venv, so neither is the `None` fallback the
+`try/except` at 45–54 installs. 30 spec modules declare a gateway that reaches
+each of them; 0 declare them.
+
+**WHY THAT IS A GAP AND NOT A BREACH.** It is exactly the scope hole
+`impl_deps_missing_transitive` names in its own docstring — traversal recurses
+only through `experiments/tests/` and `experiments/fixtures/`, repo-root modules
+are ENDPOINTS, nothing recurses into an endpoint — chosen on measurement in
+2026-09-07 because recursing root modules read 72 violators and *"mandating it is
+the mass-declaration wave `impl_sha_of`'s docstring refuses"*. The docstring says
+that wider hole *"is REAL and REMAINS (it belongs to a routed redesign)"*. **This
+row is the first one to put a population on it**, and the population is smaller
+and more specific than 72: six files, two of them live in the default brain.
+
+**WHAT IS NOT CLAIMED, stated because over-claiming is what this row corrects.**
+No certificate is red and none is alleged to be. Neither `Personality` nor
+`InnerMonologue` is an `nn.Module` (plain classes at `Personality.py:236`,
+`InnerMonologue.py:158`), so no parameter-count or gradient gate moves on their
+bytes, and per-spec construction was NOT measured — only that the flags default
+on and nothing turns them off. The honest strength is the same as the
+`gpu-job-strings` row's: a trap that has cost nothing because `UnifiedBrain.py`
+has not been edited, and that fires on the first day somebody edits Jack's brain.
+
+**THE MENU, priced, NOTHING TAKEN.** (i) Declare the six on the specs that reach
+them — this is the per-spec repair `T0.35`'s P4 contemplates and it needs no new
+instrument, but at 30 spec modules each for two of the files it IS the
+mass-declaration wave `impl_sha_of` refuses, so it may not be taken quietly.
+(ii) Declare only the subset whose SUBJECT is the brain, and say which reading of
+"implementation dependency" that rests on. (iii) Widen the walker to recurse root
+modules — detector work, bills `T0.35`, and is building governance surface inside
+the freeze's clause 2; if the desk orders it the journal line will name that.
+(iv) Nothing, on the ground that a default-enabled companion module that carries
+no parameters cannot move a verdict — which is a testable claim and the cheapest
+of the four to settle. **This desk's builder declines to pick**: (iii) touches an
+integrity instrument's domain in the hour that measured it, which is the
+`t022-p9` rule, and (i)/(ii) are declaration policy for 30 certificates.
+
+**THE READER-SHAPED HALF, which is why the finding was available to get wrong.**
+The question *"is file X inside anybody's staleness bill?"* has an authoritative
+reader in the tree (`impl_deps_of`) and **no command exposes it**, so it gets
+answered by grep — and a grep must guess the quote style (`'EmotionalState.py'`
+in one spec, `"EmotionalState.py"` in the other), the directory, and whether a
+declaration one hop away counts (it does not; `impl_sha_of` hashes declared bytes
+one level deep). Each guess returns a confident empty set. Generalised in
+`LESSONS.md` this slot. **No command was built for it** — that would be a new
+instrument under the freeze's clause 2, and the census above is a one-off
+derivation in the record, the same shape as
+`declared-null-not-gated-is-1-of-108-not-a-class` earlier today.
+
+    Staleness bill for this row: **ZERO new certificates** — `run stale-cost
+    docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md` prices it at 0
+    standing PASS staled; `T0.21` and `T0.31` read `already ... CHANGED BEFORE
+    this edit`, i.e. the pre-existing debt routed as
+    `doc-declarations-restale-three-tier0-certificates-daily` (DUE 10-05), and
+    `T0.28` is a no-cert FAIL. No spec file edited, no `IMPL_DEPS` changed, no
+    bar moved in either direction, no conjunct armed.

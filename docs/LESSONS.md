@@ -18843,3 +18843,73 @@ is about the instrument, and that leg costs seconds where chasing the subject
 costs a world-edit window. Corollary, for the page as much as the code: an
 instrument may not claim a false-positive rate it has not measured; write
 `rate unmeasured` and let it be embarrassing.
+
+## "NAMED IN NO SPEC'S IMPL_DEPS" IS A QUESTION FOR THE DECLARATION READER, NOT FOR A GREP — and the file an organ picks to illustrate a real class is the one most likely to be the covered case
+## (builder, 2026-09-27; the Review published this as a one-grep finding and invited confirm-or-refute in the same sentence. Refuted on the named file; the class it meant is 6 files and 4,109 lines, and both of the two largest are reached by 30 spec modules through a gateway those specs DO declare)
+
+**THE PUBLISHED FINDING.** `PROGRESS.md` FOR THE OWNER item 5, this morning:
+*"`EmotionalState.py` is 1,149 lines and is named in NO spec's `IMPL_DEPS` — its
+two specs (`T2.12`, `T3.07`) do not hash it, so editing it stales nothing and
+its behaviour is certified by nothing."* Reported rather than routed, explicitly
+because it was cheap to check.
+
+**IT IS FALSE ON BOTH CLAUSES, and the check is three lines against the reader
+the runner itself uses** (`impl_deps_of`, `impl_sha_of`, `experiments/protocol.py`):
+
+    T2.12  declared IMPL_DEPS = ('EmotionalState.py',)                 <- t2_12:49, since 2026-09-06
+           recorded impl_sha acb44e8c2b7c22a6 == today's  (NOT stale)
+           one byte appended to EmotionalState.py -> 0d80870361a08e44  (the sha MOVES)
+    T3.07  declares it too, among five deps; perturbing it moves that sha as well
+
+So editing `EmotionalState.py` stales a standing PASS, and `T2.12`'s PASS is a
+certificate over its behaviour (nearest-centroid held-out 0.904 vs chance 0.25,
+matched-variance null 0.238, shuffled control 0.146). The narrower true statement
+the row was reaching for is already on `T2.12`'s own record: separability is
+certified, **valence sign is not** (the untrained GRU makes the event->PAD map
+seed-arbitrary; OCC deltas never reach `pad_vector`, `EmotionalState.py:611`).
+
+**THE CLASS IS REAL AND THE ILLUSTRATION WAS THE COVERED CASE.** Census over all
+21 repo-root modules, declarers counted across every spec module's `IMPL_DEPS`:
+
+    declared by somebody   15 modules   playground.py 62 specs, UnifiedBrain.py 25,
+                                        EpisodicMemory.py 21, ContactAudio.py 11, ...
+    declared by NOBODY      6 modules   4,109 lines
+                                        Persistence.py 1155, TaskManager.py 849,
+                                        Personality.py 787, InnerMonologue.py 673,
+                                        AudioListener.py 444, mocap_cmu.py 201
+
+And the two largest are not unreachable code. `UnifiedBrain.__init__` constructs
+`Personality` (4093) and `InnerMonologue` (4130) under `enable_emotional_state`
+and `enable_inner_monologue`, **both defaulting `True` (264, 272), and no spec
+anywhere sets either flag.** Both modules import cleanly, so neither is the
+`None` fallback. 30 spec modules declare a gateway that reaches each of them and
+0 declare them, which is `impl_deps_missing_transitive`'s own named scope hole —
+root modules are ENDPOINTS, nothing recurses into one — measured on the specific
+population an organ had just pointed at.
+
+**WHAT IS NOT CLAIMED, because the Review's version of this over-claimed and
+that is the lesson.** No certificate is shown red and none is. Neither class is
+an `nn.Module`, so no parameter-count or gradient gate moves on their bytes, and
+per-spec construction was not measured. This is a DOMAIN gap with a population,
+not a breach.
+
+**WHY AN ORGAN GOT THIS WRONG, and it is structural rather than careless.** The
+question *"is file X inside anybody's staleness bill?"* has an authoritative
+reader in the tree and no command that exposes it, so it gets answered by grep —
+and a grep must guess the quoting (`'EmotionalState.py'` in one spec,
+`"EmotionalState.py"` in the other), the directory, and whether a declaration
+one hop away counts (it does not: `impl_sha_of` hashes declared bytes ONE level
+deep, so `A declares B, B declares C` leaves A unmoved when C changes). Each of
+those is a coin flip that returns a confident empty set.
+
+**Rule.** A claim that a file is undeclared, uncovered, uncited or unhashed is a
+claim about a DECLARATION, and a declaration has a reader — use it, and quote
+what it returned. Where no command exposes the reader, derive it in-slot and put
+the derivation in the record; do not publish a grep's empty set as a population.
+And when the finding survives, **report the census, not the specimen**: an organ
+choosing one file to stand for a class will reach for the file it already has a
+reason to be thinking about, which is selection on availability, not on exposure
+— here it picked the single best-covered module of the twenty-one and the class
+it named was 3.6x larger without it. Corollary for the desk that publishes:
+"reported rather than routed, because it is one grep" is a fine instinct, and it
+is only safe if the grep is the reader.

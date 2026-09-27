@@ -20959,3 +20959,139 @@ threshold to touch. If you reach an empty board, the honest unit is the one this
 slot demonstrates: **take a finding another organ published and re-derive its
 premise**, because that is where two inverted conclusions have now been found in
 two days.
+
+---
+
+## 2026-09-27 ~11:0x-11:4x UTC — THE REVIEW'S "ONE GREP" FINDING IS REFUTED ON THE FILE IT NAMED AND TRUE ABOUT SIX OTHERS: `EmotionalState.py` IS HASHED BY BOTH ITS SPECS, WHILE 4,109 LINES OF JACK SIT OUTSIDE EVERY STALENESS BILL — TWO OF THEM CONSTRUCTED BY DEFAULT INSIDE HIS BRAIN
+
+**Model: OPUS.** `week:Fable` reads **95%** and is pinned — not the gate.
+`week:all models` reads **79%**, which IS the gate (`lib_usage.sh` ->
+`claude_usage.py --pct`), 11 points under the 90% stop; session 40%. Pacing
+computed, not guessed: `--week-elapsed` 89, so `allow = 25 + ((90-25)*89 + 99)/100
+= 83.84` and 79 < 83.84 — no skip, and **no `PACING:` line and no skip streak**
+(the previous slot ran and committed at 10:3x). Board taken from the tools:
+`run next` **0 fresh · 37 settled · 14 held** — the **30th** consecutive empty
+dispatch board — and `run review-queue` **56 OPEN / 21 DISPOSITIONED** at entry.
+
+**THE UNIT CAME FROM THE ONLY PLACE ON TODAY'S PAGES THAT HANDED THE BUILDER A
+FRESH QUESTION.** `PROGRESS.md` FOR THE BUILDER is 4 items and none is takeable
+(1 is the desk's `T1.08` design, 2 is two rows discharged by the 09-26/09-27
+slots, 3 is explicitly forbidden, 4 is blocked behind `T0.13`'s FAIL and the
+`t013-latently-red-28-disarmed-keys` ruling DUE 10-05). `OVERSIGHT.md` FOR THE
+BUILDER is three items, of which the first says nothing in RANK 1–3 is mine and
+the other two are a credit and a carry-forward already being honoured. The live
+question was in FOR THE **OWNER** item 5: *"`EmotionalState.py` is 1,149 lines and
+is named in NO spec's `IMPL_DEPS` ... I am reporting it rather than routing it
+because it is one grep and the builder can confirm or refute it in a slot."*
+Taken up as invited, and it also satisfies the previous slot's hand-forward
+verbatim: **take a finding another organ published and re-derive its premise.**
+
+**REFUTED, WITH THE RUNNER'S OWN READER RATHER THAN A GREP** (`impl_deps_of`,
+`impl_sha_of`; child processes, **no ledger write**):
+
+    T2.12  IMPL_DEPS = ('EmotionalState.py',)      t2_12:49, declared 2026-09-06 (ab9d3e8)
+           recorded impl_sha acb44e8c2b7c22a6 == today's        -> NOT stale
+           EmotionalState.py + one byte -> 0d80870361a08e44     -> the sha MOVES
+    T3.07  declares it among five deps; perturbation moves its sha too
+
+So editing that file **does** stale a standing PASS, and that PASS **is** a
+certificate over its behaviour (attempt 4: held-out 0.904 ± 0.072 vs chance 0.25,
+matched-variance null 0.238 ± 0.027, shuffled control 0.146). **The narrower true
+statement was already on `T2.12`'s own record and is worth more than the refuted
+one:** separability is certified, **valence SIGN is not** — untrained GRU, OCC
+deltas never reach `pad_vector` (`EmotionalState.py:611`).
+
+**AND THE CLASS IT MEANT IS REAL, 3.6x LARGER, AND THE FILE IT PICKED WAS THE
+COVERED CASE.** Census over all **21** repo-root modules against every spec
+module's `IMPL_DEPS` (0 modules whose declaration could not be read, so the
+population is complete):
+
+    declared by somebody  15   playground.py 62, UnifiedBrain.py 25, EpisodicMemory.py 21,
+                               ContactAudio.py 11, TrainingPipeline.py 8, EmotionalState.py 2, ...
+    declared by NOBODY     6   4,109 lines — Persistence 1155, TaskManager 849,
+                               Personality 787, InnerMonologue 673, AudioListener 444,
+                               mocap_cmu 201
+
+**Two of those are constructed by default inside Jack's brain.**
+`UnifiedBrain.__init__` builds `Personality` (4093) and `InnerMonologue` (4130)
+under flags defaulting **`True`** (264, 272) that **no spec in the tree sets** —
+zero hits across `experiments/tests/` and `experiments/*.py` — and both modules
+import cleanly, so neither is the `None` fallback. **30 spec modules declare a
+gateway that reaches each; 0 declare them.** That is
+`impl_deps_missing_transitive`'s own named endpoint hole, whose docstring says
+the wider version *"is REAL and REMAINS"*; this is the first population on it,
+and it is smaller and sharper than the 72 violators that scope choice was made
+against.
+
+**WHAT I DID NOT CLAIM, because over-claiming is the defect this slot corrects.**
+No certificate is red and none is alleged to be. Neither class is an `nn.Module`
+(`Personality.py:236`, `InnerMonologue.py:158`), so **no parameter-count or
+gradient gate moves on their bytes**, and per-spec construction was NOT measured
+— only that the flags default on and nothing turns them off. Same honest strength
+as the `gpu-job-strings` row: a trap that has cost nothing because
+`UnifiedBrain.py` has not been edited, and that fires on the first day somebody
+edits Jack's brain.
+
+**WHY AN ORGAN GOT IT WRONG — structural, not careless, and it is the
+generalisable half.** *"Is file X inside anybody's staleness bill?"* has an
+authoritative reader in the tree and **no command exposes it**, so it is answered
+by grep — and a grep must guess the quote style (`'EmotionalState.py'` in one
+spec, `"EmotionalState.py"` in the other), the directory, and whether a
+declaration one hop away counts (**it does not**: `impl_sha_of` hashes declared
+bytes ONE level deep). Each guess returns a confident empty set.
+`LESSONS.md` entry appended: *a claim about a DECLARATION has a reader — use it
+and quote what it returned; and report the CENSUS, not the specimen, because an
+organ choosing one file to stand for a class reaches for the file it already had
+a reason to think about, which is selection on availability rather than on
+exposure.* **NO COMMAND BUILT** — that is a new instrument under the freeze's
+clause 2; the census is a one-off derivation in the record, same shape as
+`declared-null-not-gated-is-1-of-108-not-a-class` earlier today.
+
+**BILL AND HYGIENE.** One row routed, SUBJECT declared per the 124th audit FTB 2
+— `root-modules-outside-every-staleness-bill-are-six-files-not-one` (the
+**APPARATUS**), `DUE 2026-10-08` off `review-queue`'s own next-date-with-room read
+this slot, `WAITS-ON: none` declared with the reason, **not MALFORMED**;
+`review-queue` **0 violations**, 10-08 now carries 2 of 6 so **no pile created**.
+**My row is +1 of the `review_queue_net_arrivals` 30 -> 31 delta and I say so
+rather than letting it read as clock.** `run stale-cost` priced the edit at **0
+standing PASS certificates staled**; `T0.21`/`T0.31` read `already ... CHANGED
+BEFORE this edit` — the pre-existing debt routed as
+`doc-declarations-restale-three-tier0-certificates-daily` (DUE 10-05) — and
+`T0.28` is a no-cert FAIL. **I re-bought the two anyway from the clean tree**, so
+the certificates cover the content I changed rather than content from before it.
+No bar moved in either direction, no spec file edited, no `IMPL_DEPS` changed, no
+conjunct armed (no `blast-radius` line owed), **zero new checker, ratchet, organ
+or Tier-0 spec** (freeze items 1–2 obeyed). Ratchets quoted BEFORE any record and
+I recorded none: **6 MOVED** (`fail_unowned_owned_forms` queue-row 29 -> 30,
+`review_queue_net_arrivals` 26 -> 31, `review_queue_piled_on` 3 -> 4,
+`review_queue_violation_forms` {OVERDUE:1} -> {}, `review_queue_violations`
+1 -> 0, `unreachable` 95 -> 96), 1 day-rolled (`cpu_foreclosed_now`) — the clock,
+not a change; floors **3 ABOVE** (`decisions_default_action_expired`,
+`pass_on_dead_dependency`, `unreachable`), 0 BELOW, 0 UNVERIFIED — all three
+pre-existing and routed, none mine, no floor raised. `status` rc=2 and
+`coverage --check` rc=2, unchanged from entry.
+`scripts/ladder_prompt.md` **untouched at 96212 B**. `git add` by name; 13 claude
+processes; no foreign files in the tree. Nothing left running: `pgrep` clean.
+
+**CREATURE GATE: NONE** — 1st of at most 2. This slot's subject is the staleness
+bill's domain, and none of `T2.01`/`XL.01`/`T6.01` moved. The previous slot moved
+`XL.01`, so the budget is not spent; **the next slot that cannot reach a creature
+gate honestly is the second and last, and the freeze's own quota has exactly one
+runnable member (a settled FAIL), which is the live row
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-
+failing-spec` (DUE 10-07) and not a licence to re-run one.**
+
+**NEXT ITERATION.** **Do NOT re-measure the `EmotionalState.py` census** — it is
+complete, in the row, and in `LESSONS.md`; the open half is a DESK ruling on the
+four-option menu, not a measurement. **The cheapest honest unit adjacent to it is
+option (iv) settled rather than argued:** whether a default-enabled,
+parameter-free companion module can move any certificate's verdict is testable —
+build a default `UnifiedBrain`, perturb `Personality.py`'s constants, and see
+whether a Tier-1 certificate's metrics move at all. If they do not, the menu
+collapses to (ii)/(iv) and a 30-certificate declaration wave is refuted by
+measurement instead of by preference; if they do, the wave is owed and the row
+has its answer. That is CPU, spec-local to nothing, and it buys a ruling the desk
+currently has no evidence for. **And the pattern that produced this slot is now
+two-for-two: the previous slot inverted a finding about `XL.01`'s rig, this one
+inverted a finding about `EmotionalState.py` — when the board is empty, re-derive
+a published premise, because that is where the errors are.**
