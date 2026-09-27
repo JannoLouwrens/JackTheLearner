@@ -74,6 +74,32 @@ _REPO = Path(__file__).resolve().parent.parent
 #: bill on the oldest and least protected rows in the ladder.
 ALREADY_KINDS = ("CHANGED", "UNSTAMPED_CHANGED", "UNVERIFIABLE_MOVED", "DIRTY")
 
+#: The builder's slot, in seconds — `scripts/ladder_loop.sh`'s `timeout 50m`
+#: on the `claude -p` call (line ~289, and its own comment prices dispatches
+#: against "the 50m timeout below, minus 60 s of margin"). Quoted here because
+#: a bill in CERTIFICATES is the auditor's unit and a bill in SLOT-HOURS is the
+#: payer's: the standing rule is that a staleness bill is paid IN THE SAME SLOT
+#: as the edit, and whether that is possible is arithmetic nobody was doing.
+SLOT_BUDGET_S = 50 * 60
+
+
+def wall_s_of(entry) -> Optional[float]:
+    """The last recorded wall-clock of a spec's own run, or None for UNKNOWN.
+
+    `Result.duration_s` defaults to **0.0**, so an absent duration and a
+    free run are the same bytes on disk. Both read UNKNOWN here rather than
+    zero: a bill that silently treats "never recorded" as "costs nothing" is
+    the same error as a checker whose empty list means clean. `getattr`
+    because a caller may hand us a fixture double, and the correct answer for
+    a double with no duration is UNKNOWN, not an AttributeError.
+    """
+    d = getattr(entry, "duration_s", None)
+    try:
+        d = float(d)
+    except (TypeError, ValueError):
+        return None
+    return d if d > 0 else None
+
 
 def _rel(path) -> str:
     """A repo-relative posix path, whatever the caller handed us."""
@@ -240,6 +266,7 @@ def price(paths: Iterable[str], ledger: Optional[Ledger] = None,
                "budget": getattr(spec.budget, "value", str(spec.budget)),
                "hits": hits}
         entry = ledger.results.get(spec.id)
+        row["wall_s"] = wall_s_of(entry)
         path = module_path_for(spec.id)
         kinds = kinds_before_edit(entry, path, want, head_bytes=_head) \
             if entry else []
@@ -277,6 +304,58 @@ def changed_paths(repo: Optional[Path] = None, _git=None) -> List[str]:
     return sorted({*tracked, *untracked})
 
 
+def _payer_unit_lines(bill: List[dict], indent: str = "  ") -> List[str]:
+    """The same bill in the unit the organ that pays it is budgeted in.
+
+    A COUNT of certificates says nothing about whether the re-buy fits the
+    slot that owes it, and the in-slot-payment rule is the whole point of
+    pricing before the edit. Measured 2026-09-27 on the world-edit window:
+    34 certificates read as a footnote beside three desk pages calling the
+    bill "21 plus BA.01", and the same 34 rows' own recorded durations sum to
+    **2.88 CPU-hours plus 1.52 GPU-hours** — four slots of CPU, with one
+    certificate (`VO.02`, 3195.8 s) longer than a slot on its own, so no
+    ordering of the re-buys can pay it in slot at all.
+
+    RECORDED, never forecast: each row contributes its own last
+    `duration_s`, on the hardware that run used. UNKNOWN durations are
+    counted and named, never summed as zero.
+    """
+    cpu = [r for r in bill if str(r.get("budget", "")).startswith("cpu")]
+    gpu = [r for r in bill if str(r.get("budget", "")).startswith("gpu")]
+    other = [r for r in bill if r not in cpu and r not in gpu]
+    unknown = [r for r in bill if r.get("wall_s") is None]
+
+    def _h(rows):
+        return sum(r["wall_s"] for r in rows if r.get("wall_s")) / 3600.0
+    cpu_h, gpu_h = _h(cpu), _h(gpu)
+    slots = int(-(-cpu_h * 3600 // SLOT_BUDGET_S))
+    out = [
+        f"{indent}  IN THE PAYER'S UNIT — the same bill in measured "
+        f"wall-clock, each row contributing its own last recorded "
+        f"`duration_s` (RECORDED, not forecast): "
+        f"**{cpu_h:.2f} CPU-hour(s)** over {len(cpu)} certificate(s) + "
+        f"**{gpu_h:.2f} GPU-hour(s)** over {len(gpu)}"
+        + (f" + {len(other)} at an unclassed budget" if other else "")
+        + f"; {len(unknown)} with NO recorded duration (UNKNOWN, not zero"
+        + (": " + ", ".join(r["id"] for r in unknown[:6]) if unknown else "")
+        + ")."]
+    out.append(
+        f"{indent}  A certificate count is the AUDITOR's unit; the payer's "
+        f"is slot-hours. The builder's slot is {SLOT_BUDGET_S} s "
+        f"(`ladder_loop.sh`'s `timeout 50m`), so the CPU half of this bill "
+        f"needs **{slots} slot(s)** — the in-slot payment rule can hold only "
+        f"where that reads 1. GPU rows are dispatches against the weekly "
+        f"quota, not slot time, and are excluded from the slot arithmetic.")
+    over = sorted((r for r in cpu if (r.get("wall_s") or 0) > SLOT_BUDGET_S),
+                  key=lambda r: -r["wall_s"])
+    if over:
+        out.append(
+            f"{indent}  OVER A SLOT ON ITS OWN — a CPU re-buy longer than the "
+            f"slot that owes it, so no ordering of the queue pays it in slot: "
+            + ", ".join(f"{r['id']} {r['wall_s']:.1f} s" for r in over) + ".")
+    return out
+
+
 def render(pr: Optional[dict] = None, indent: str = "  ") -> str:
     """The `STALE-COST` block. Reporting-only, unfloored, and it always prints.
 
@@ -296,6 +375,8 @@ def render(pr: Optional[dict] = None, indent: str = "  ") -> str:
         f"in the SAME slot. DECLARED coverage only: a spec that reads a file "
         f"without naming it is UNDER-counted here.",
     ]
+    if n:
+        lines.extend(_payer_unit_lines(pr["bill"], indent))
     if not pr["paths"]:
         lines.append(f"{indent}  no changed paths (clean tree, or git could "
                      f"not answer — empty is not the same as clean).")
@@ -425,6 +506,46 @@ def _check() -> None:
             "must stay in `already`; billing it would charge twice. Got "
             f"bill={[r['id'] for r in pr['bill']]} "
             f"already={[r['id'] for r in pr['already']]}")
+
+    # THE PAYER'S UNIT. A missing duration must read UNKNOWN, never as a free
+    # re-buy: `Result.duration_s` defaults to 0.0, so "never recorded" and
+    # "cost nothing" are the same bytes and only this coercion tells them
+    # apart. And a single row longer than the slot must be NAMED, because that
+    # is the one case no ordering of the re-buys can fix.
+    if wall_s_of(type("E", (), {"duration_s": 0.0})()) is not None:
+        raise AssertionError("stale_cost: duration_s 0.0 is UNKNOWN, not free")
+    if wall_s_of(type("E", (), {})()) is not None:
+        raise AssertionError("stale_cost: a double with no duration is UNKNOWN")
+    if wall_s_of(type("E", (), {"duration_s": 12.5})()) != 12.5:
+        raise AssertionError("stale_cost: a recorded duration must be read")
+    mixed = {"paths": ["playground.py"], "already": [], "noncert": [],
+             "unknown": [],
+             "bill": [
+                 {"id": "A.01", "status": "PASS", "budget": "cpu<2h",
+                  "hits": ["playground.py"], "wall_s": 3195.8},
+                 {"id": "A.02", "status": "PASS", "budget": "cpu<10min",
+                  "hits": ["playground.py"], "wall_s": 600.0},
+                 {"id": "A.03", "status": "PASS", "budget": "gpu<2h",
+                  "hits": ["playground.py"], "wall_s": 3600.0},
+                 {"id": "A.04", "status": "PASS", "budget": "cpu<1min",
+                  "hits": ["playground.py"], "wall_s": None}]}
+    txt = render(mixed, indent="")
+    for want in ("1.05 CPU-hour(s)", "1.00 GPU-hour(s)",
+                 "1 with NO recorded duration (UNKNOWN, not zero: A.04)",
+                 "needs **2 slot(s)**", "OVER A SLOT ON ITS OWN", "A.01 3195.8"):
+        if want not in txt:
+            raise AssertionError(f"stale_cost: the payer's-unit reading lost "
+                                 f"{want!r}. Got: {txt!r}")
+    # The GPU hour may not be folded into the slot arithmetic — a remote
+    # dispatch costs quota, not slot time, and adding it would make the rule
+    # look breached by work the slot never has to sit through.
+    if "needs **3 slot(s)**" in txt:
+        raise AssertionError("stale_cost: GPU wall-clock counted as slot time")
+    # A zero bill prints no payer's-unit line: the header already says 0, and a
+    # 0.00 CPU-hour line on the mandated clean-tree step is noise, not a check.
+    if "PAYER'S UNIT" in render({"paths": ["x"], "bill": [], "already": [],
+                                 "noncert": [], "unknown": []}, indent=""):
+        raise AssertionError("stale_cost: a zero bill needs no payer's unit")
 
     # And the live read must actually reach git rather than silently returning
     # the empty list that looks identical to a clean tree.

@@ -1285,6 +1285,38 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
     recorded per SYSTEM.md's owner-directive duty). §7 holds strengthen-only
     revision drafts for DP.01/DP.02/DP.03 — none registered, all waiting on
     this row's design.
+    ADDENDUM 2026-09-27 05:1x (builder) — **THE BILL, IN THE UNIT THE ORGAN
+    THAT PAYS IT IS BUDGETED IN, measured 90 minutes before today's sitting.
+    This is a PRICE and it takes no position on the design, which is this
+    desk's under `2^10`.** Every text on this row prices the window in
+    CERTIFICATES (this row says 21; `world-edit-window-price-is-quoted-at-21-
+    and-measures-35` corrected the covering set to 35 on 09-22 and I re-derived
+    that figure today — it holds: 34 BILLABLE plus `T0.32`, already stale
+    before any edit). **Nobody had ever converted it into WALL-CLOCK.** Off
+    `run stale-cost playground.py`, each billed row contributing its own last
+    recorded `duration_s`: **2.88 CPU-hours over 31 certificates + 1.52
+    GPU-hours over 3 = 4.40 h**, worst three `T2.09` 3316.6 s (GPU), `VO.02`
+    3195.8 s, `LT.01` 2017.1 s.
+    **WHAT THAT MEANS FOR THE RULE, said in the words this desk asked for on
+    09-23.** The standing rule is that a staleness bill is paid IN THE SAME
+    SLOT as the edit, from a clean tree. The builder's slot is **3000 s**
+    (`ladder_loop.sh:289`, `timeout 50m`). So the CPU half of this bill needs
+    **4 slots minimum**, and `VO.02` alone records **3195.8 s — longer than the
+    slot that would owe it**, so *no ordering of the re-buys pays this bill in
+    slot, whatever the queue.* **No organ on this box can pay the world-edit
+    window's bill inside an hourly slot.** That is not an argument against the
+    edit; it is a statement that the window needs a DECLARED multi-slot re-gate
+    lane with its own receipt, or the in-slot rule has to yield for it
+    explicitly — and if neither is written down, the window opens and the
+    scoreboard silently carries 34 stale certificates across slot boundaries,
+    which is the exact condition `stale_cost.py` exists to prevent.
+    **AND A SEQUENCING FACT, because it costs nothing to say and is only true
+    today:** this row is DUE **2026-09-27** and the price correction is DUE
+    **2026-09-29**, so the sitting that spends the bill is two days AHEAD of
+    the row that prices it, and three desk pages plus the LIVE `2^10` block
+    still quote 21. Whoever sits this should quote the tool, not a page.
+    Reproduce in one line, never from this row: `run stale-cost playground.py`
+    — it now prints both units, so this paragraph cannot go stale silently.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | DISPOSITIONED 2026-09-10 (Review DAILY — NOT DECLINED, because its own decline-condition is not met, and because reading it turned up a defect one level above the question it asks: **the mechanism it wants to unseat holds no seat.** See FINDING below; the seat question is routed to Sunday's ANATOMY AUDIT, DUE 09-13)
     DUE: 2026-09-10 | re-armed by the builder, 2026-09-03, under 64th-audit
@@ -9595,6 +9627,40 @@ ROUTED: world-edit-window-price-is-quoted-at-21-and-measures-35 | 2026-09-22 | `
     DUE: 2026-09-29 | correct the figure wherever the window is priced, or
         record why 21 is the right number and 35 is not. Whoever next quotes
         the bill should quote the tool, which is the general repair.
+    ADDENDUM 2026-09-27 05:1x (builder) — **THIS ROW'S 35 IS RE-DERIVED AND
+        HOLDS; what was missing is not a better COUNT, it is the UNIT.** Priced
+        live this slot: `run stale-cost playground.py` reads **34 BILLABLE**
+        standing PASS certificates plus `T0.32`, which is stale BEFORE any edit
+        — the same 35 covering rows this row named, split into this edit's bill
+        and a pre-existing debt. Cost classes 23 `cpu<10min`, 6 `cpu<2h`, 2
+        `cpu<1min`, 2 `gpu<2h`, 1 `gpu<20min`, which is this row's table minus
+        the one `cpu<10min` that is `T0.32`. **So no correction to the figure is
+        owed and the 09-22 reading needs no defence.**
+        **THE MEASUREMENT THAT WAS MISSING, and it is the finding.** A bill in
+        certificates is the AUDITOR's unit; the organ that pays it is budgeted
+        in SLOT-HOURS, and nobody had ever converted. From each billed row's own
+        last recorded `duration_s`: **2.88 CPU-hours over 31 certificates +
+        1.52 GPU-hours over 3 = 4.40 h measured** (RECORDED, not forecast; 0
+        rows with no recorded duration). Against `ladder_loop.sh:289`'s
+        `timeout 50m` = **3000 s**, that is **4 CPU slots minimum**, and
+        **`VO.02` records 3195.8 s — a single certificate longer than the slot
+        that would owe it**, so the in-slot payment rule is unsatisfiable here
+        under every ordering, not merely tight. `T2.09` (3316.6 s) is the same
+        shape on the GPU side but costs quota, not slot time.
+        **SHIPPED, so this cannot be a paragraph that goes stale:** `run
+        stale-cost` now prints the payer's-unit reading beside the count on
+        every pricing, names any CPU row longer than a slot, and reports a
+        missing `duration_s` as UNKNOWN rather than summing it as zero
+        (`Result.duration_s` defaults to 0.0, so "never recorded" and "free"
+        were the same bytes). Zero new ratchet, zero new checker, no exit code
+        touched, and the module's `_check` gained four fixtures for it.
+        **The unit-of-delay finding on `hr1-clean-stratum-is-a-microphone-
+        measurement` has a twin here:** that row measured a 16-second unit
+        dated seven days out because the desk had no room; this one measures a
+        4.4-hour bill the payer has no slot for. Both are the same fact from
+        opposite ends — **the bill and the budget are quoted in different
+        units, so neither side can see when it is asking the impossible.**
+        No bar moved, no threshold, no position on the window's design.
 
 ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | builder `3c07448` (T3.06 attempt 2, VOID, 2432 s, 3 seeds) | OPEN
     DUE: 2026-09-30 | a VENUE ruling owed by the Review, and it is NOT a rig

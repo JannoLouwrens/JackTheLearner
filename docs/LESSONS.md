@@ -18446,3 +18446,60 @@ denominator you have not looked at. When a spec declares
 only half of the pre-registration the rule is reaching for — the other half is
 the null's spread and n, and without it a gate can be registered that no
 outcome inside the envelope could ever clear.
+
+## A BILL IN THE AUDITOR'S UNIT IS NOT A BILL THE PAYER CAN PLAN AGAINST — price an edit in SLOT-HOURS, not in certificates, because the organ that owes it is budgeted in the first and every page quotes the second (builder, 2026-09-27; the world-edit window read "21 certificates" for 27 days and measures 2.88 CPU-hours + 1.52 GPU-hours, with one certificate longer than the slot that would owe it)
+
+The world-edit window is the most expensive instrument this project owns. Four
+desk pages and the LIVE `2^10` prohibition block priced it as *"21
+`playground.py` certificates plus `BA.01`"*. On 2026-09-22 a builder slot
+re-derived the count from the `IMPL_DEPS` declarations `impl_sha_of` actually
+hashes and found **35**, with `BA.01` inside its own example — a 67% growth
+nobody had noticed, correctly routed as a price correction.
+
+**And the corrected number was still unusable, because it was in the wrong
+unit.** Five days later the same bill, converted from each billed row's own
+recorded `duration_s`, reads **2.88 CPU-hours over 31 certificates plus 1.52
+GPU-hours over 3**. The builder's slot is `timeout 50m` = **3000 s**
+(`scripts/ladder_loop.sh:289`). The standing rule is that a staleness bill is
+paid IN THE SAME SLOT as the edit, from a clean tree. So:
+
+* the CPU half needs **four slots minimum**, and
+* `VO.02` alone records **3195.8 s — longer than the slot that would owe it**,
+  so the rule is not merely tight here, it is **unsatisfiable under every
+  ordering of the re-buys**.
+
+Nobody was hiding this and nobody was lazy. The count was audited three times
+in five days by three different readers and every one of them checked the
+number rather than the unit. A certificate count answers *"how much of the
+scoreboard does this edit invalidate"* — which is the auditor's question, and
+`stale-cost` was built to answer exactly it. The payer's question is *"can I
+discharge this before my process is killed"*, and the two have no conversion
+factor written down anywhere, so the impossible request was invisible from both
+ends.
+
+**The twin, measured nine days earlier on an unrelated family, which is what
+makes this a class and not an anecdote.** `hr1-clean-stratum-is-a-microphone-
+measurement` recorded that arm (a) was *"~16 seconds of CPU and it is dated
+seven days out because this desk's queue has no earlier room"*, and named the
+finding under the finding: *"the unit of delay in this project is the desk's
+sitting, not the machine's second."* That row and this one are the same defect
+from opposite ends — a 16-second unit priced in sitting-days, a 4.4-hour bill
+priced in certificates. Whenever a cost crosses from one organ to another it
+changes units, and the crossing is where a promise becomes unkeepable without
+anybody writing an impossible sentence.
+
+**Rule:** when you price work for a DIFFERENT organ than the one that measured
+it, quote the cost in the unit that organ's budget is denominated in, and quote
+both units side by side so neither can be read alone. Concretely for a
+staleness bill: certificates AND measured wall-clock, split CPU (slot time)
+from GPU (quota, not slot time), and name any single row longer than the slot,
+because that is the case no scheduling can fix. A missing duration is UNKNOWN,
+never zero — `Result.duration_s` defaults to `0.0`, so "never recorded" and
+"free" are the same bytes on disk, and a bill that sums them silently
+under-prices its oldest rows.
+
+**Shipped rather than written down:** `run stale-cost` now prints the
+payer's-unit reading beside the count on every pricing, so this paragraph
+cannot be the only place the conversion exists. That is the difference between
+a lesson and a guard — the count was corrected by prose on 09-22 and three
+pages went on quoting 21 anyway.
