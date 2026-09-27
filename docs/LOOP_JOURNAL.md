@@ -20171,3 +20171,140 @@ today** — option (iii) is instrument scope and `D35` clause 2 owns it.
   `T2.10`'s repair, `UB.10`'s successor arm, the world-edit window, the `lc03`
   seat row, the `t306` venue row, `A4`, `SO.07`, `SO.10`, and the PS-family
   part-1 inheritance.
+
+## 2026-09-27 03:0x — I inherited an `rc=124` slot and the thing that needed checking was its COMMIT MESSAGE: it said a row was routed, `fail_unowned` agreed, and neither was true
+
+**MODEL: OPUS.** `week:Fable` **95%** and pinned at the 95% model floor, so the
+chain refused fable in ~3 s at 03:07:16 (D14 option (b)) and walked me up — the
+fourth consecutive slot to be walked, self-announcing, not a fault. **THE GATE IS
+`week:all models` and it reads 68%**, `--week-elapsed` 85%, so `pace_gate`'s
+`allow` is 25 + ((90-25)*85 + 99)/100 = **81.24** and 68 < 81.24: no skip, no
+`PACING:` line, and the skip streak is 0. I acted on 68%.
+
+**THE SLOT BEFORE ME DIED `timeout 50m` — `rc=124` at 02:57:26, THIRTY SECONDS
+AFTER ITS LAST COMMIT (`03af51f`).** That is the whole proximate cause and it is
+not the finding. What it left, all four verified at source rather than assumed:
+`docs/LESSONS.md` + `docs/REVIEW_QUEUE.md` written and UNCOMMITTED, no journal
+line for 02:0x (this paragraph is the only record that slot has), two commits
+unpushed, and **two phantom queue-row ids.**
+
+**THE FINDING: A ROUTING THAT EXISTS ONLY IN A COMMIT MESSAGE IS NOT A ROUTING,
+AND THE COUNTER BUILT TO NOTICE SAID GREEN.** `03af51f`'s message reads *"routed
+this slot as `lt02-c2-passed-on-the-epsilon-not-on-a-measurement`"* and
+concludes *"`fail_unowned` stays 0: the new FAIL is owned by the routed row."*
+`grep -c` over `docs/REVIEW_QUEUE.md` returned **0** for that id an hour later.
+**`fail_unowned` did read 0 — correctly, and for a reason with nothing to do with
+the claim:** it matches by SPEC ID, so `LT.02`'s new FAIL resolved to
+`lt02-the-venue-has-no-true-positive-body-chaos-is-reducible`, a row whose
+subject (the absent true positive) was DISCHARGED at `88762a2` eight days
+earlier. **A stale owner and a correct owner are indistinguishable to it; so are
+a promised row and a row.** Second instance, worse because it is COMMITTED
+SOURCE: `lt_02_chaos_detector.py:823` cited
+`lt03-reward-ratio-fabricates-a-number-on-a-negative-denominator`, also zero
+rows — that finding IS routed, as the 09-27 addendum to
+`lt03-icm-trap-not-live-in-flight`, so it was a wrong NAME for real work.
+
+**WHAT I DID — `de6de67`, then the bill in `2423cdf`.** Committed the inherited
+docs as the predecessor wrote them, with their arithmetic re-derived first rather
+than inherited (`-147,365.910333 * 1e-9 = -1.47366e-4`, an ordinary METRA reward;
+`5.2631 * 1e-9 = 5.2631e-9`, a plausible late ICM reward — both check). Routed
+`lt02-c2-passed-on-the-epsilon-not-on-a-measurement` **for real**, DUE 2026-10-06,
+from the RECORDED row and not from the message: attempt 3 FAIL
+2026-09-27T02:40:10, 800.24 s, clean at `f047060`, `chaos_reward_ratio` **nan**
+where attempt 2 recorded **5.2631**, everything else reproducing. **The science
+agrees with the red** — the SIBLING ratio on the noise arm is DEFINED at
+`reward_ratio_icmnoise` **2.4735 ± 0.0232**, so the path works and it is the
+`icm` arm that has no reward left (`e_mean_icm` 0.164560 vs `e_mean_random`
+0.558748, exactly attempt 1's "body chaos is REDUCIBLE"). C2 asks the noise-free
+farmer to be fed by a chaos this spec has measured it eats. Three arms named for
+the desk; **`REWARD_RATIO_MIN` 2.0 / `CHAOS_OCC` 3.0 / `CHAOS_RATIO` 2.0 UNMOVED
+and C2 NOT DROPPED.** Corrected the source citation and wrote the helper's
+DOMAIN into its docstring — the unflagged late mean must be strictly positive,
+which is a property of the CALLER'S ARMS and therefore something `IMPL_DEPS`
+staleness can never check. **Docstring-only, PROVEN:** docstring-stripped ASTs of
+HEAD and the working copy are `ast.dump`-identical.
+
+**SECOND ROW — `commit-messages-cite-queue-rows-that-do-not-exist`, DUE
+2026-10-07, and I MOVED THAT DATE MYSELF.** My first draft dated it 10-06
+alongside the sibling, which took 10-06 to its measured capacity of 6; the tool
+flagged my own row under `DATED ONTO A FULL DAY` and the re-date is the repair,
+so that reading is back to **3** and none of the three is mine. **The structural
+half: every check in `review_queue.py` runs from the ROW inward** — `ROUTED:`,
+`DUE:`, `WAITS-ON:`, five VIOLATIONS, piled-on, throughput — **and nothing runs
+from a CITATION outward.** So the cheapest way to discharge a routing obligation
+is the only way no instrument here can tell from having done it. **I BUILT
+NOTHING:** `review_queue.py` is one of the three instruments `D35` clause 2
+closes, and the 123rd audit's FTB called declining to widen `T0.35` the right
+call. The candidate reader is written out in the row so the sitting can price it;
+two instances in one morning is not a population.
+
+**123rd AUDIT FOR THE BUILDER — ITEM 2 DISCHARGED, and it was the only item
+addressed to me.** Both floors are now in one place inside
+`t013-latently-red-28-disarmed-keys`: `pass_on_dead_dependency` 5 vs floor 3
+(BREACHED; stated repair = a re-run) beside `unreachable` 96 vs floor 95 (also
+BREACHED). **The breached ratchet's own stated repair is forbidden by the
+other:** re-running `T0.18` to record its BLOCKED clears a pair by DEMOTING a
+standing PASS, pushing `unreachable` further above its floor. Neither floor may
+be raised; the per-key RULING is the only exit. Items 1, 3 and 4 of that page are
+credit or explicitly not mine and I took none of them.
+
+**WHAT I DID NOT TAKE, and the reason is a HOLD I re-derived rather than
+inherited.** `1^13`'s units 2-3 (`PS.05`/`PS.06`/`PS.08` inheriting the
+known-answer conjunct) are **NOT legal today.** `ps09-known-answer-floor-was-
+calibrated-on-an-oracle-cut` says it in words — *"PS.05/PS.06/PS.08 inheritance
+is ON HOLD by the ruling's own sequencing"* — because the ruling required the
+conjunct to fire correctly at `PS.09` FIRST, and it did not: `KA_SIGNAL_MIN` 0.90
+was calibrated off an ORACLE cut (1.0000 on held-out rows) where an honestly-fit
+single channel reads 0.75–0.87, so `PS.09` attempt 2 VOIDed on the signal arm.
+Recalibrating that floor is a THRESHOLD decision and `1^13`'s own rule sends it
+back to the desk (DUE 10-03). `1^13`'s units 1, 4 and 5 are all DONE (`d186c07`,
+`88762a2`, and `T2.15`'s `falsified_by` now carries the promoted null-beat
+conjunct) and `1^12` item 2 is done too — `usage_attribution.py` identifies slot
+lines by `_SLOT_RE` on `iteration start`/`end`, with the `PACING:`-followed-by-
+timestamped-notice fixture in place. **Still not mine:** `W1.01`/`W1.03`/`W1.04`,
+`D33`/`D35`/`D36`, `T1.08`'s pipeline design, `T2.10`, `UB.10`'s successor arm,
+the world-edit window, the `lc03` seat row, the `t306` venue row, `A4`, `SO.07`,
+`SO.10`, and the PS-family part-1 inheritance.
+
+**CREATURE GATE MOVED: NONE (#56)** — a real breach recorded per the `d35`
+disposition, chain re-derived this slot off the ledger: `T6.01` NOT IMPLEMENTED
+<- `T2.01` **FAIL** <- `T1.08` **FAIL** (`t108-pipeline-repair-has-no-design`,
+the desk's, DUE 10-02); `XL.01` **FAIL** with
+`xl01-death-and-retry-has-no-reachable-repair-path` OPEN, DUE 10-03. Unchanged
+and structural. The four zero-pass GOAL commitments whose only runnable claims
+are PS specs are all behind the oracle-cut row above.
+
+**GPU: the week is `2026-W39`, derived (`%Y-W%U`) — it OPENED TODAY at 00:00,
+holds 30 h free with 0 charged, and expires 2026-10-04 00:00 UTC.** Refusal
+**#56**, same measured reason: `coverage`'s GPU classes are all VOID-arms or
+pilot-blocked and nothing implemented-and-unsettled exists to send. Six days
+remain; a manufactured buyer at 03:00 on day one would be exactly the failure
+mode the page has warned about since 08-29.
+
+**BILL AND HYGIENE.** Staleness bill priced BEFORE the edit (`run stale-cost`:
+`T0.21` cpu<1min, `T0.31` cpu<10min, both <- `docs/REVIEW_QUEUE.md`; the spec
+file's three dependents are `T0.28` FAIL / `LT.02` FAIL / `LT.03` VOID = no
+certificate) and PAID IN SLOT from the clean tree — both **PASS**, both
+**HASH-SALT DIFFERENTIAL CLEAN**, and `stale-cost` now prices 0. **RATCHETS,
+quoted before any record and I ran none: 4 MOVED** — and the honest detail is
+that it was **5** before my commit, because `review_queue_net_arrivals` had read
+24 against a committed 26 and **my own two rows put it back to 26**, so it left
+the MOVED list. That is two arrivals, not a repair. Floors **3 ABOVE**, 0 BELOW,
+0 UNVERIFIED; `run status` **EXIT 2**. No floor raised, nothing blessed.
+`git add` by name, 12 claude processes on the box and no foreign files in the
+tree, nothing detached, nothing left running. `scripts/ladder_prompt.md` is
+96212 B, 34860 under the exec cliff. Pushed.
+
+**NEXT ITERATION — a hypothesis about the board, not the board.** Run `run next`
+AND `run review-queue` yourself; `next` will read 0 fresh again and that is a
+true reading of DISPATCHES, not of the board. **06:37 today is the Sunday FULL**
+and it carries 7 due rows plus the Review's own pre-committed `W1`-authorship
+stop-rule; diff `PROGRESS.md` and `docs/OVERSIGHT.md` for a fresh FOR THE BUILDER
+before anything else (`PROGRESS.md` was still the 09-24 page at this slot).
+**The one thing I would hand forward as a habit rather than a task:** the
+predecessor's commit message was a false record that no instrument in this repo
+can stale, and I only found it because I grepped an id instead of trusting a
+sentence. If you inherit a slot that ended `rc=124`, `rc=126` or with an
+uncommitted tree, verify its commit messages the way you would verify a
+hand-forward — every id must resolve, every counter must re-read, every file it
+says it wrote must be committed.
