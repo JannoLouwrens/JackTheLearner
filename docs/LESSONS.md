@@ -19242,3 +19242,58 @@ spent or forbidden. Of `1^13`'s six units, four are discharged and two are held
 YOURS RIGHT NOW"*. Neither state is visible to any instrument, and the two look
 identical from inside a fresh session: a list of numbered orders and no way to
 tell a live one from a corpse.
+
+---
+
+## THE SUBJECT A SPEC ENUMERATES IN CODE IS THE SUBJECT ITS `impl_sha` MUST HASH — and a list the experiment ITERATES is a stronger tell than a docstring, which is why the docstring audit could not have found this one (builder, 2026-09-27)
+
+The lesson above (*"'what belongs in `IMPL_DEPS`' is not 'what does this module
+import' — it is 'whose bytes can flip my verdict'"*) gave the cheapest audit of
+that class: **grep the docstrings against the declarations.** Run against
+`T0.01` it returns clean, and `T0.01` was the widest instance in the repo.
+
+`T0.01` is *"every live module imports cleanly, with no side effects."* Its
+docstring names no file. Its `_experiment` iterates a module-level literal:
+
+    LIVE_MODULES = ["UnifiedBrain", "VirtualWorld", "TaskManager",
+                    "Persistence", "EmotionalState", ...]      # 13 modules
+
+and imports each one, timing it. The verdict is a pure function of those
+thirteen files' bytes — and for 49 days `IMPL_DEPS` was absent, so `impl_sha`
+covered `t0_01_imports.py` alone. Adding a model download to `Persistence.py`
+— the precise failure the spec exists to catch — left the PASS standing and
+`run stale` silent. Five of those thirteen (`AudioListener`, `InnerMonologue`,
+`Persistence`, `Personality`, `TaskManager`, 146,391 B) were in **no** spec's
+`IMPL_DEPS` at all.
+
+**The generalisation, and it is one line wider than the docstring rule:** a
+spec's subject is declared wherever the RUN reads it, and code is a stronger
+declaration than prose. Docstring mentions are the cheap tell; the expensive
+one is any **list, glob, directory walk or config key the experiment iterates**
+— those enumerate the verdict's inputs *executably*, and a text comparison
+against the docstring will never see them. Grep for iteration over
+module-level literals of path-like strings, not only for filenames in prose.
+
+**AND THE REPAIR HAS A TRAP THE DECLARATION ALONE WALKS INTO.**
+`protocol.impl_deps_of` reads `IMPL_DEPS` **statically**, with
+`ast.literal_eval`, deliberately — the reader of a sha must not import the
+module to check it. So the declaration **cannot be computed** from the list the
+experiment iterates: it has to be a second, hand-written literal saying the
+same thing. Two lists that must agree and nothing checking they do is the
+original hole re-dug one level up, and it fails in the silent direction — add a
+module to `LIVE_MODULES`, forget the path, and the certificate quietly covers
+less than it judges while every instrument reads green.
+
+**So the correspondence is GATED, not maintained by care.** `T0.01` now
+measures `LIVE_MODULES \ IMPL_DEPS` plus the declared paths that do not resolve
+(a typo hashes as the literal `missing:<path>`, which is a permanent mismatch
+rather than coverage — `impl_sha_of`'s own rule) and gates
+`deps_cover_live_modules == 1.0`. **And the conjunct reads `IMPL_DEPS` back
+through the AST rather than off the module global**, because the value that
+lands in the hash is the one the static parser sees: a conjunct reading the
+live global would pass while the hash read something else, which is
+`impl_sha_of`'s two-code-paths scar in miniature.
+
+**The rule:** when you declare `IMPL_DEPS` to mirror something the code already
+enumerates, gate the mirror in the same commit, and assert it against the value
+the READER parses — never against the one the module holds.

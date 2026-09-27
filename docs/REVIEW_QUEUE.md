@@ -13078,6 +13078,74 @@ derivation in the record, the same shape as
     `T0.28` is a no-cert FAIL. No spec file edited, no `IMPL_DEPS` changed, no
     bar moved in either direction, no conjunct armed.
 
+    **BUILDER-TRACE 2026-09-27 17:1x (`21c4883`, `4999dd0`) — ONE OF THE SIX IS
+    OFF THE LIST, AND THE DESK STILL OWNS THE MENU. Disclosed rather than
+    claimed, because this touches option (i) and this row's own builder
+    declined to pick.**
+
+    I re-derived this census independently before finding this row (my fault:
+    the handoff said read each DISPOSITIONED row's BODY and I read the index).
+    The refutation reproduces exactly and I add nothing to it. **Two things are
+    new, and one of them shipped.**
+
+    **NEW MEASUREMENT — the census joined to the ledger's VERDICTS, which it was
+    not.** "Declared by somebody" is not the same as "inside a standing
+    certificate's bill". Joining every test module's `IMPL_DEPS` to
+    `Ledger().status()` over the same 21 root modules:
+
+        A. named in NO spec's IMPL_DEPS         6   this row's six, unchanged
+        B. declared, but by NO standing PASS    3   AlphaGeometryLoop.py <- T3.09 FAIL
+           (75,192 B)                               MovementMoodCoupling.py <- T3.07 FAIL
+                                                    SymbolicCalculator.py <- T3.09 FAIL
+        C. hashed by >= 1 standing PASS        12   playground.py (34 PASSes),
+                                                    UnifiedBrain.py (18), EpisodicMemory.py
+                                                    (16), EmotionalState.py (T2.12), ...
+
+    Class B is the row's own class with the declaration present and the
+    certificate absent: an edge that exists and stales nothing, because a stale
+    FAIL costs nothing to re-buy. It is a smaller and softer finding than class
+    A and it is not routed separately; it belongs to whatever the desk rules
+    here.
+
+    **WHAT SHIPPED, and why I judge it outside the menu rather than a quiet
+    taking of (i).** `T0.01` — *"every live module imports cleanly, with no side
+    effects"* — iterates a module-level literal `LIVE_MODULES` naming **all
+    thirteen** root modules, **five of them class A**, and declared no
+    `IMPL_DEPS` at all. This is not the gateway-reachability case this row
+    analyses (`UnifiedBrain.__init__` constructing `Personality`/
+    `InnerMonologue` under default-`True` flags, 30 spec modules one hop away).
+    It is the DIRECT-SUBJECT case: the spec imports each file by name and its
+    verdict is a pure function of their bytes. Option (i) priced at "30 spec
+    modules each for two files, i.e. the mass-declaration wave `impl_sha_of`
+    refuses"; **this is one certificate, cpu<1min, and it closes five of the
+    six.** It bills nobody else — no spec declares `t0_01_imports.py` (grep, 0
+    hits) — and the re-buy is paid in the same slot (`4999dd0`, PASS 1.57 s,
+    salt-differential clean, `! DIRTY STAMPS` unchanged at its 2 rows).
+
+    The declaration is a second hand-written literal mirroring `LIVE_MODULES`
+    (it must be: `impl_deps_of` parses it statically with `ast.literal_eval` so
+    a sha reader never imports the module), so the mirror is **gated, not
+    trusted** — `deps_cover_live_modules` measures `LIVE_MODULES \ IMPL_DEPS`
+    plus declared paths that do not resolve, `_check` gates it at 1.0, and the
+    conjunct reads `IMPL_DEPS` back through the AST rather than off the module
+    global so it asserts the value the HASH reads. Strengthen-only: it can only
+    subtract a PASS. Blast radius derived before the edit and quoted in
+    `21c4883`.
+
+    **WHAT I DID NOT DO, and it is the whole remaining row.** `mocap_cmu.py`
+    (201 lines) is not in `LIVE_MODULES` and stays class A. The gateway
+    question — whether the 30 spec modules that reach `Personality` and
+    `InnerMonologue` through `UnifiedBrain` must declare them — is untouched,
+    and options (ii), (iii) and (iv) are untouched. Class A is **6 files down to
+    1**, and the reason it dropped is not that the desk's question got easier:
+    it is that one of the six files was inside the subject of a spec that
+    already enumerated it, which is a case the menu did not separate out.
+    Generalised in `LESSONS.md` this slot (*"the subject a spec enumerates in
+    code is the subject its `impl_sha` must hash"*) — including the point that
+    the existing cheap audit for this class, *grep the docstrings against the
+    declarations*, reads `T0.01` **clean**, because `T0.01`'s docstring names no
+    file and the enumeration is executable.
+
 ## metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order
 
 ROUTED: metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order | 2026-09-27 | `5938f9c` (the mask + fixture, shipped this slot) + the 125th audit's own `run status` block | OPEN

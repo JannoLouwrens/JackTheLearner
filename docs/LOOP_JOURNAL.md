@@ -21810,3 +21810,134 @@ the desk's, and the obvious channel for `PS.06` is already measured refuted.
 only thing that says otherwise; read `run review-queue`'s DISPOSITIONED class
 *and each row's body* before starting any unit a priority block names, because
 four of that block's six units are spent and no tool prints that.
+
+## 2026-09-27 ~17:1x UTC — the audit invited a confirm-or-refute, an earlier slot had already refuted it, and the file underneath both of us was T0.01: a certificate over thirteen root modules that hashed none of them for 49 days
+
+**METERS, read at the top of the slot, both lines printed.** `week:all models`
+**84%** — the gate — against `pace_gate`'s `allow` of 86.44 at `--week-elapsed`
+**93** (`25 + (65*93+99)/100`, arithmetic, not a forecast), so the slot is live
+with ~6 points of headroom to the 90% stop. `week:Fable` **95%**, which is not
+the gate and is why I am on **Opus**; `session` 7%. Unit sized accordingly:
+one, small, finished.
+
+**WHAT I TOOK AND WHY.** `OVERSIGHT.md` FOR THE BUILDER 1–3 are all discharged
+(`53bb135`, 13:14) and item 4 is a prohibition. `run next`: **0 fresh · 38
+settled · 14 held** — the 32nd consecutive empty board, nothing manufactured.
+`PROGRESS.md` FOR THE OWNER item 5 carried the one builder-shaped unit on any
+desk page: *"`EmotionalState.py` is 1,149 lines and is named in NO spec's
+`IMPL_DEPS` ... I am reporting it rather than routing it because it is one grep
+and the builder can confirm or refute it in a slot."*
+
+**REFUTED, and then I found the 11:0x slot had already refuted it.** That is my
+error and I am recording it as one: the previous handoff's own line (c) says
+*"read `run review-queue`'s DISPOSITIONED class **and each row's body** before
+starting any unit a priority block names"*, and I read the index, which prints
+row NAMES. `root-modules-outside-every-staleness-bill-are-six-files-not-one`
+sits ~13,000 lines into `REVIEW_QUEUE.md` with the same census in it. The
+duplicated half cost a few minutes of child processes and no ledger write. The
+generalisation is already in `LESSONS.md` from this morning and I did not
+re-add it.
+
+**WHAT WAS ACTUALLY NEW, in two parts.**
+
+*(1) The census joined to VERDICTS, which it had not been.* "Declared by
+somebody" and "inside a standing certificate's bill" are different questions:
+
+    A. named in NO spec's IMPL_DEPS       6 files    (the routed row's six)
+    B. declared, but by NO standing PASS  3 files    AlphaGeometryLoop.py, 75,192 B
+                                                     MovementMoodCoupling.py,
+                                                     SymbolicCalculator.py
+                                                     — all <- T3.09 / T3.07, both FAIL
+    C. hashed by >= 1 standing PASS      12 files    playground.py (34 PASSes),
+                                                     UnifiedBrain.py (18),
+                                                     EpisodicMemory.py (16), ...
+
+Class B is the same hole with the edge present and the certificate absent: a
+stale FAIL costs nothing to re-buy, so those bytes bill nothing either.
+
+*(2) `T0.01` was the widest instance in the repo and neither the audit nor the
+routed row was looking at it.* `T0.01` is *"every live module imports cleanly,
+with no side effects"*; `_experiment` iterates a module-level literal
+`LIVE_MODULES` naming **thirteen** root modules — **five of them class A**
+(`AudioListener`, `InnerMonologue`, `Persistence`, `Personality`,
+`TaskManager`, **146,391 B**) — and it declared no `IMPL_DEPS` at all. So
+`impl_sha` covered `t0_01_imports.py` alone, and adding a model download to
+`Persistence.py`, *the precise failure this spec exists to catch*, left the
+PASS standing and `run stale` silent. The PG.6 scar, quoted verbatim inside
+`impl_sha_of`'s own docstring, sitting on the Tier-0 spec with the widest
+subject.
+
+**SHIPPED (`21c4883`), strengthen-only, one certificate.** `IMPL_DEPS` = the 13
+`LIVE_MODULES` paths, **plus the gate that keeps the two lists honest**. The
+declaration has to be a second hand-written literal — `impl_deps_of` parses it
+statically with `ast.literal_eval` so a sha reader never imports the module —
+and two lists that must agree with nothing checking them is the same hole
+re-dug one level up, failing in the silent direction. So
+`deps_cover_live_modules` measures `LIVE_MODULES \ IMPL_DEPS` and the declared
+paths that do not resolve (a typo hashes as `missing:<path>`, a permanent
+mismatch, not coverage), and `_check` gates it at **1.0**. The conjunct reads
+`IMPL_DEPS` back **through the AST**, not off the module global, because the
+value that lands in the hash is the one the static parser sees — a conjunct on
+the global would pass while the hash read something else.
+
+**BLAST RADIUS, derived before the edit and quoted in the commit as the
+contract requires:** `T0.01` PASS -> FAIL would take `unreachable` 96 -> 97
+(floor 95), blast radius 1 (`T0.23`), 5 standing PASSes UNBACKED (`T0.02`,
+`T0.06`, `T0.20`, `T0.21`, `T1.03`), frees 1 / blocks 1. **This commit does not
+take it there** — the conjunct measured green. No spec declares
+`t0_01_imports.py` (grep, 0 hits), so the bill was `T0.01` alone.
+
+**RE-BOUGHT IN SLOT FROM THE CLEAN TREE (`4999dd0`): PASS 1.57 s**, HASH-SALT
+DIFFERENTIAL CLEAN (salt 1, 3 deciding metrics bit-exact in a fresh process),
+`modules_imported` 13/13, `declared_deps` 13, `live_modules_unhashed` none,
+`declared_deps_unresolved` none, `deps_cover_live_modules` **1.0** — and
+flipping that metric to 0.0 turns `_check` False, checked offline before the
+run. `! DIRTY STAMPS` re-checked after the row landed: still exactly `T6.03`
+and `PL.02`, the two it held when this slot began. Class A: **6 files -> 1**
+(`mocap_cmu.py`).
+
+**WHAT I DID NOT TOUCH, disclosed on the routed row as a BUILDER-TRACE rather
+than claimed as a discharge.** That row published a four-option MENU and its
+builder *declined to pick*, because option (i) prices at "30 spec modules each
+for two files — the mass-declaration wave `impl_sha_of` refuses". Mine is the
+DIRECT-SUBJECT case, not the gateway case: one certificate, cpu<1min, for a
+spec that imports each file by name. The gateway question
+(`UnifiedBrain.__init__` building `Personality`/`InnerMonologue` under
+default-`True` flags) and options (ii)/(iii)/(iv) are untouched and still the
+desk's. **Class A did not drop because the desk's question got easier** — it
+dropped because one of the six sat inside the subject of a spec that already
+enumerated it, a case the menu did not separate out.
+
+**LESSON (`LESSONS.md`, this slot).** The existing cheap audit for this class is
+*"grep the docstrings against the declarations"*, and run against `T0.01` it
+returns **clean** — its docstring names no file. The enumeration is
+*executable*. So: a spec's subject is declared wherever the RUN reads it, and
+**a list the experiment ITERATES is a stronger tell than prose**; grep for
+iteration over module-level literals of path-like strings, not only for
+filenames in docstrings. Plus the repair's own trap: gate the mirror in the
+same commit, and assert it against the value the READER parses.
+
+**CREATURE GATE: NONE — RECORDED VIOLATION #5 of this run under `D35` rule 3,
+recorded and not discharged, mechanical reason unchanged from #4.** `T2.01`
+settled FAIL with both repair lanes desk-owned and prohibited to me by name;
+`T6.01` unimplemented behind `T4.05 <- T4.04 <- T2.01 <- T1.08` (FAIL);
+`XL.01` a settled FAIL run this morning. The rule resolves to *re-run a settled
+FAIL*, which `run next` and two standing prohibitions forbid. On the owner's
+desk as the 125th audit's only perishable item; live row
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-
+failing-spec` (OPEN, DUE 10-07).
+
+**GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday
+2026-10-03; every GPU cost class NOT FILLABLE. Third consecutive week at risk.
+Nothing dispatched, nothing manufactured.
+
+**NEXT ITERATION.** (a) The docs bill for this slot is `T0.21` + `T0.31` (both
+declare `docs/REVIEW_QUEUE.md`; `T0.28` declares it and is a standing FAIL, so
+no re-buy is owed) — priced at 2 certificates / 0.00 CPU-h by `run stale-cost`
+BEFORE the edit and **paid in this slot from the clean tree** after the docs
+commit; check `! DIRTY STAMPS` is still the 2 rows (`T6.03`, `PL.02`). (b) **Read
+the queue rows' BODIES, not the index.** I re-derived a census that was already
+in the file, and so would you: the index prints names, the holds and the prior
+findings live ~13,000 lines down. (c) `mocap_cmu.py` and the class-B three are
+still uncovered and are the desk's, not yours — do not declare them onto
+FAILing specs to make a count move.
