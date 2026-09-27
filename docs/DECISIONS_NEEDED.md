@@ -8791,3 +8791,190 @@ transcription onto `docs/DECISIONS_RESOLVED.md`, per the `D13` rule that the
 overseer stays inside its own file set and the `D31`/`D32`/`D34` precedent.
 Until that lands, `decisions.py`'s second identification channel
 (`RECORD_PAGE`/`RECORD_MARKER`) cannot see this firing.
+
+## D37 — I ruled A4's missing collapse diagnostic this morning and then found `D29` had already ruled it the other way, four days earlier, BECAUSE I was late. May the readout be built? (2026-09-27, Review, FULL)
+
+**THE SEQUENCE, and it is not flattering to this desk.** `LEARNING_CORE.md` §5.4
+promises `A4` a *mandatory* collapse diagnostic — effective rank and
+per-dimension latent variance every 1,000 decisions, a rank below a
+pre-registered floor being `Status.VOID`. It was never computable:
+`effective_rank` occurs twice in `*.py` and both hits are prose inside other
+specs' `hypothesis` strings; `svd|singular|RankMe|eig|spectrum` across
+`experiments/` returns 7 hits, every one audio spectrum; `LC.03`'s committed row
+records 50 `wm-latent` metrics across five arms and not one is a rank or a
+per-dimension variance. `D10` seated `A4` BY VERDICT on 2026-09-01, so the seat
+was won in a ring missing one of its declared walls.
+
+`D29` put that to you with four options and a `decide_by` of 2026-09-22 placed
+**deliberately after** this desk's deliverable (`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere`,
+DUE 2026-09-18) *"so the owner would rule with that work in hand"*. The
+deliverable slipped. Nothing re-checked the placement. `D29` fired on 09-23 on
+what its own firing block calls *"a premise its own author called insufficient"*,
+and chose **(iii) RECORD THE DEBT, CHANGE NO MARKING** — the weakest option, by
+construction, precisely because the premise was missing.
+
+**The missing premise was produced this morning, nine days late.** It is the
+ruling on that row and the amendment to §5.4, both committed today. Having
+written them, this desk read `DECISIONS_RESOLVED.md`, found `D29`, and
+**withdrew the half of its own ruling that `D29` forbids** rather than arguing
+for it. That withdrawal is why this entry exists.
+
+**WHAT IS ALREADY DONE AND NEEDS NO RULING.** The debt is recorded in §5.4
+itself, in a block that states what was promised, that it was never computed,
+and that a seat was awarded without it. That is (iii), in a second location.
+It moves no threshold, fails no spec, stales no certificate, spends nothing, and
+leaves `A4`'s `HELD: BY VERDICT` marking untouched; §5.4's original paragraph is
+byte-identical beneath it. It is deliberately NOT `D29`'s refused option (ii)
+(CORRECT §5.4), whose content was to bring the promise DOWN to meet the gap.
+
+**WHAT NEEDS YOUR RULING — one thing only.** `D29` records that option **(i)
+BUILD THE DIAGNOSTIC was NOT taken**. This desk's ruling would build it, and a
+`DUE:` was briefly written against it before the collision was found. A resolved
+decision may not be reversed by a desk writing a date against it, so the build
+is withdrawn to contingent and put to you here.
+
+**THE RECOMMENDATION, quoted verbatim so the instrument matches on it and so it
+cannot drift from what was actually asked:**
+
+> **(i) BUILD IT is RECOMMENDED, CONTINGENT ON `D37`**, and would be the
+> BUILDER's, in ActSWM's `Δ_k` form (field watch wk7 §2's N3), not as a bare rank
+> floor: roll the latent twice from one context — once under recorded actions,
+> once under the all-zero action sequence — and score both by cosine against the
+> true future latent. Under collapse both rolls agree and `Δ_k` -> 0, so unlike a
+> loss curve it cannot be satisfied by a collapsed latent. The floor is
+> PRE-REGISTERED before the run that it gates, never after seeing it. Scope is
+> deliberately small: the readout and its floor, REQUIRED for the next
+> `A4`-family run to be scoreable, with no retroactive effect on the awarded seat
+> and no reopening of `LC.03`.
+
+**WHY IT IS WORTH ANYTHING AT ALL, given that it cannot guard the seat.** It
+cannot, and `D29` is right about why: the trained `A4` weights are not on disk,
+`LC.03` v2 is VOID-FORECLOSED, `LC.07` is VENUE-UNAFFORDABLE at ~526 wall-hours.
+So this buys nothing retroactive. What it buys is that the NEXT latent-prediction
+arm is scoreable against its own declared failure mode instead of inheriting the
+same hole — and `A4` is the JEPA representative, the family most likely to be
+re-run when a venue becomes affordable.
+
+**THE COUNTERARGUMENT, stated because it is real.** `D29` chose the weakest
+option on a defective premise; the premise is now supplied, which is an argument
+for reopening. But it is also true that this desk is asking you to revisit a
+closed decision because it missed its own deadline, and that "let me reopen it
+now that I've done my homework" is a pattern that, repeated, makes `decide_by`
+meaningless. If you would rather hold `D29` closed on that ground alone, this
+desk has no complaint available to it — the debt is recorded either way, which
+was always the load-bearing half.
+
+DECIDE: D37
+  class:     goal
+  blocks:    no spec id today. What it blocks is whether the next `A4`-family
+             run can be scored against §5.4's own declared VOID condition. `A4`
+             holds the Learning-core seat (`D10`, BY VERDICT); the arms behind it
+             are `LC.03` (VOID-FORECLOSED) and `LC.07` (VENUE-UNAFFORDABLE at
+             both venues), so nothing is waiting on this THIS week and the cost
+             of delay is not perishable. Said plainly so it is not oversold.
+  default:   (iii) HOLD `D29` AS IT STANDS — the debt stays recorded in both
+             `CHAMPIONS.md` (per `D29`'s firing) and `LEARNING_CORE.md` §5.4 (per
+             today's amendment), and the `Δ_k` readout is NOT built. This is the
+             only legal default and it is deliberately NOT the recommendation: a
+             default may not reverse a resolved decision, which is the whole
+             reason this entry exists, and `D29` itself resolved to (iii). It is
+             MONOTONE — it can only leave the debt visible and unguarded, never
+             hide it, never move a threshold, never spend a GPU-hour, never fail
+             a spec, never stale a certificate. Its price, stated rather than
+             buried: the next latent-prediction arm inherits an uncomputable VOID
+             condition, i.e. exactly the hole this row spent thirteen days
+             finding, and the project keeps a `mandatory` guard it has never once
+             been able to run.
+  decide_by: 2026-10-04
+
+## D38 — Two armed defaults each claim the FULL Review's FIRST act, they collide only on Sundays, and today I broke one of them. Which one wins? (2026-09-27, Review, FULL)
+
+**THE COLLISION, stated as the two sentences that produce it.** `D28` (RESOLVED
+by armed default 2026-09-22, fired by this desk): *"the Review's daily sitting
+spends its first act disposing the OVERDUE class, ACT / DECLINE / re-date with a
+reason, before routing anything new."* `D33` (standing order, reaffirmed when
+`D36`'s default fired at ~00:5x **this morning**, option (i) CHANGE NOTHING):
+the FULL Review takes the **W1 world-edit design as its FIRST design item, ahead
+of Part 2**, and `w1-world-edit-window` keeps `DUE: 2026-09-27` — today.
+
+On six days a week these do not touch: DAILY sittings have no design item. **On
+Sunday they both claim the first act of the same sitting**, and the sitting has
+one first act.
+
+**WHAT I DID, so it is on the record and not inferred.** I obeyed `D28`. The
+OVERDUE class is EMPTY for the first time since the class opened — seven rows
+disposed, including one stop-rule executed as a re-parent and one three-way fork
+ruled — and `review-queue` went `EXIT 2 -> 0`. **I did not produce the W1
+design. It has now lost a fifth consecutive Sunday**, which is exactly the
+outcome `D36` forecast four days ago when it called (i) *"knowingly buys a FIFTH
+instalment of a design that has beaten four sittings"*.
+
+**WHY THIS IS NOT ME ASKING TO BE EXCUSED.** `D33` already named the failure
+mode: *"a design that loses every contest is not being scheduled, it is being
+declined by instalments."* That is still true and today made it truer. But the
+reason it lost today was not a free choice between merits — it was two standing
+orders, both of which fired defaults rather than being ruled, each written by a
+different organ on a different day, neither aware it was claiming a slot the
+other had. Whichever I obeyed, I would be reporting a broken armed default this
+morning. That is a constitution defect, not a scheduling preference, and it is
+the kind `SYSTEM.md` says a fresh agent could trip on.
+
+**THE MEASURED CONTEXT, priced in the currency that perishes.** `2026-W39`
+opened today with **30.0 free Kaggle GPU-hours and 0.0 charged; they expire
+Saturday 2026-10-03.** `2026-W38`'s ~29.08 h expired unbought, as did W37's —
+this would be the **third** consecutive week lost, and both live routes to
+spending them run through `T1.08` (FAIL), whose repair design is
+`t108-pipeline-repair-has-no-design`, DUE 2026-10-02, undesigned. The builder is
+NOT dark: dark-slot streak **0**, an iteration landed 06:31 today, `PACE_FLOOR`
+and `PACE_CAP` unchanged and the 90% hard stop untouched. **The scarce resource
+is this desk's Sunday, not the machine's hours** — which is precisely why two
+orders competing for its first act is expensive rather than merely untidy.
+
+**THE RECOMMENDATION, quoted verbatim so the instrument matches on it:**
+
+> **`D28` KEEPS THE FIRST ACT, and `D33`'s W1 order is re-scoped to the FIRST
+> DESIGN ITEM rather than the first act of the sitting — with a hard floor: if
+> the OVERDUE class cannot be emptied AND a design produced in one sitting, the
+> desk publishes WHICH it dropped and why, in `PROGRESS.md`, that same sitting.**
+> `D28` should win because OVERDUE disposal is bounded, cheap and unbuyable
+> anywhere else — a broken dated promise is a violation an instrument counts —
+> whereas a 45-spec design is a large unit that has now demonstrated, five times,
+> that it does not fit beside anything else. Re-scoping W1 is NOT declining it:
+> on this recommendation it becomes the first thing after OVERDUE, every Sunday,
+> and it stops competing with a class that can be cleared in under an hour.
+
+**THE COUNTERARGUMENT, and it is the stronger one against me.** Five instalments
+is enough evidence that "W1 goes second" means "W1 never happens", and `D33`
+anticipated this desk making exactly this argument. If you think W1 will never be
+produced while anything at all precedes it, then the correct ruling is the
+opposite of my recommendation — `D33` wins outright, the OVERDUE class waits one
+sitting, and this desk eats the violations that result and reports them. I would
+accept that ruling without complaint; I recommend against it only because the
+OVERDUE class was, today, seven broken promises deep, and leaving those to age
+another week to buy a sixth attempt at a design that has failed five is a trade I
+am not willing to make on my own authority.
+
+DECIDE: D38
+  class:     conduct
+  blocks:    no spec id directly. What it blocks is the SEQUENCING of the FULL
+             Review's first act, and behind it `w1-world-edit-window` (21
+             `playground.py` certificates plus `BA.01`, and three rows explicitly
+             `BLOCKED-BY` it: `ne01-occlusion-knife-edge`,
+             `water-apply-phantom-force`, `w2-needs-have-no-single-k`) and
+             `T1.08` (frees 3 / blocks 45). Perishable cost named above: 30.0
+             free GPU-hours expiring 2026-10-03, third consecutive week.
+  default:   (i) CHANGE NOTHING — both standing orders stay exactly as written,
+             `D28` keeps firing first because it is written as the first act, and
+             each Sunday FULL continues to break one of the two and report which.
+             This is the only legal default and it is deliberately NOT the
+             recommendation, for the reason `D36` gave about itself: a default
+             may not reverse the ordering an armed default produced, and here
+             TWO armed defaults produced conflicting orderings, so a default
+             that picked either would be reversing one of them. It is MONOTONE —
+             it moves no threshold, edits no constitution text, spends nothing,
+             narrows nothing, and leaves both debts VISIBLE and ageing. Its
+             price, stated rather than buried: on the measured record the desk
+             obeys `D28` (bounded, cheap, instrument-counted) and W1 slips a
+             SIXTH time, and the collision stays undocumented in both entries so
+             the next organ to read either one still cannot see it.
+  decide_by: 2026-10-04
