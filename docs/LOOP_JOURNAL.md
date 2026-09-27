@@ -21941,3 +21941,115 @@ in the file, and so would you: the index prints names, the holds and the prior
 findings live ~13,000 lines down. (c) `mocap_cmu.py` and the class-B three are
 still uncovered and are the desk's, not yours — do not declare them onto
 FAILing specs to make a count move.
+
+---
+
+## 2026-09-27 18:07 slot — four promises break at midnight and four of them are already kept
+
+**METERS, read at the top of the slot, not cached:** `week:all models` **84%**
+— the gate — against `pace_gate`'s `allow` ~86.8 at `--week-elapsed` 94, so the
+slot was admitted with ~3 points of room. `week:Fable` **95%**, pinned, so the
+chain walked me to **Opus**; I planned one larger unit accordingly. Dark-slot
+streak 0.
+
+**THE BOARD IS EMPTY FOR THE 33rd CONSECUTIVE SLOT, and I verified it rather
+than inheriting it.** `run next`: **0 fresh · 38 carrying a settled verdict ·
+14 held**. `coverage` QUEUE DEPTH: **6 dispatchable, all 6 VOID, 0 FRESH**,
+every cost class `NOT FILLABLE`, 3 newly empty. Nothing was manufactured.
+
+**AND EVERY ORDERED UNIT ON EVERY STEERING PAGE IS ALREADY DISCHARGED — checked
+against git and disk, not taken on a page's word.** The 125th audit's FTB 1–3
+landed at `53bb135` (`run verify` now EXIT 2, `unevaluable_gates` 1 =
+`T0.18(KeyError)` printed with its shadow, the dead message branch gone).
+PROGRESS FTB 2's two rows landed at `e5e627b` / `19aab39`+`5ee32ff`. `1^13` is
+four-discharged, two-held, zero live (`28d3db0`). The t211 METRIC ruling — which
+`review-queue` still lists as live work due 09-29 — was executed at `a080386` on
+09-26: `MI_MARGIN_MIN = 0.50`, `mi_heldout` per arm per seed, PILOT RECORD v3,
+`_GATES_FROZEN` still False. And PROGRESS's FOR-THE-OWNER item 5 (*"`EmotionalState.py`
+is named in NO spec's `IMPL_DEPS`"*) is **FALSE**: `t2_12_emotion_separability.py:49`
+declares it and has since `ab9d3e8` on **09-06**, three weeks before the finding
+was written; `t3_07` declares it too. That refutation was already in HEAD when I
+got here, routed by the 17:1x slot — so I did NOT route it a second time.
+
+**THE UNIT: the four `DISPOSITIONED` rows that fall due TODAY all owed EXECUTION
+by me, and all four were already executed — two of them five days early — with
+no receipt any reader can see.** Measured, and the count is perishable:
+`review_queue` findings go **0 OVERDUE today → 7 at 2026-09-28 00:00**, and
+**four of the seven are these**:
+
+    t108-noise-floor-is-quoted-by-nobody   ruling item 2 (the CITE_MARKER
+        arming declaration, written where it bills no certificate) landed
+        2026-09-22 in `b2a109f` as `registry.CONJUNCT_ARMING_OWED["T1.08"]`
+        — conjunct/owed_at/first_citer T2.03/authority/declared/why_not_now all
+        present. Items 1 and 3 owe nothing today by their own terms.
+    t306-matched-magnitude-noise-buys-coverage   options (a) AND (b) landed
+        2026-09-22 in `181fbff`: `C-NOISE` + `C-RANDREW` (the binding
+        random-action comparator) each carrying the file's three-conjunct form,
+        `DELTA_MIN` 0.05 unmoved, and `_derive_random_dwell_cap()` — which
+        **corrected the order that asked for it**: at n=144 the honest
+        order-statistic cap is **0.01850, TIGHTER than the frozen 0.02**, so
+        the n-freeze alone cannot explain attempt 1's VOID.
+    ba03-null-saturates-the-horizon   option (c) implemented 2026-09-26 in
+        `702aa56`; the registered RUN then had no permitted lane, refused at
+        dispatch by D20's class closure (`4a7a571`) and routed.
+    sh02-null-saturation   option-(a) diagnostic pre-registered then run TODAY
+        (`ea00910` → `1834b89`), DEAD at `z_rand -3.1563`.
+
+The other three are genuinely broken and none is mine: `w1-world-edit-window`
+(this desk DECLINED the authorship today), `hr5-fixture-refuted` (HELD),
+`ba03-vestibular-channel-is-never-load-bearing-under-one-kick` (OPEN).
+
+**SHIPPED: a BUILDER-TRACE receipt inside each of the four rows** — commit sha,
+artefact, and the ruling clause it satisfies — so the desk's 09-28 cycle can
+stamp in one read instead of re-deriving what I just re-derived. This attacks
+the one constraint every dated promise in the file is downstream of: measured
+throughput is **1.14 disposals/cycle against 6.00 arrivals, drain UNBOUNDED, 84
+live rows**. **Each trace says in its own text what it does NOT do:** it is not
+a disposition, only the desk stamps `ACTED`, and **it does not lower the OVERDUE
+count** — verified, 7 before and 7 after. I routed NO new row: at 6 arrivals
+against 1.14 disposals an 85th row is negative value, and every defect I found
+was already routed.
+
+**PLACEMENT WAS THE RISK AND IT WAS VERIFIED BY DIFFING THE PARSE, NOT BY EYE.**
+`parse()` ends a row's body at the first non-indented line — the scar this file
+paid for twice (09-09, and twice in one morning on 09-20). All four traces sit
+inside the rows' indented blocks; before/after across all **109** rows:
+`status`, `due`, `ordered`, `waits_on` **identical**, malformation list
+identical (0 → 0), findings identical at both 09-27 and 09-28. One mid-slot
+scare was my own: a `sed` window looked like a concurrent edit and was my own
++64 lines shifting the file — `git show HEAD:` confirmed the text was already
+committed.
+
+**LESSON (`LESSONS.md`, this slot).** A promise and its discharge are written by
+two different organs and the instrument that judges the promise reads only one
+of them. The cheap fix does not work, measured both ways: `git log --grep
+<row-id>` missed `t211` (its commit says "t211 METRIC ruling executed" — the
+prefix, not the id) and returned false positives that were only the desk's
+re-dating sittings. **The receipt is the artefact the ruling ordered, checked
+where the ruling said to write it** — not a grep over prose. And
+`DISPOSITIONED` conflates *execution owed* with *execution done, awaiting a
+stamp*, which is the exact list `1^13` item 1 sends an idle builder to.
+
+**CREATURE GATE: NONE — RECORDED VIOLATION #6 of this run under `D35` rule 3,
+recorded and not discharged; mechanical reason unchanged from #5.** `T2.01`
+settled FAIL with both repair lanes desk-owned and prohibited to me by name;
+`T6.01` unimplemented behind `T4.05 <- T4.04 <- T2.01 <- T1.08` (FAIL); `XL.01`
+a settled FAIL run this morning. The rule resolves to *re-run a settled FAIL*,
+which `run next` and two standing prohibitions forbid. Live row
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-
+failing-spec` (OPEN, DUE 10-07); the 125th audit calls it the owner's only
+perishable item.
+
+**GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday
+2026-10-03; every GPU cost class NOT FILLABLE. Third consecutive week at risk.
+Nothing dispatched, nothing manufactured.
+
+**NEXT ITERATION.** (a) The docs bill for this slot is `T0.21` + `T0.31` (both
+declare `docs/REVIEW_QUEUE.md`; `T0.28` declares it and is a standing FAIL, so
+no re-buy is owed) — priced at 2 certificates / 0.00 CPU-h / 1 slot by `run
+stale-cost` BEFORE the edit and paid in this slot from the clean tree; check
+`! DIRTY STAMPS` is still the 2 rows (`T6.03`, `PL.02`). (b) **Check the
+DISPOSITIONED class for execution before believing it is owed work** — four of
+four due today were already done, and the index cannot tell you. (c) The three
+genuinely-broken 09-27 promises are NOT yours; do not reach for
+`w1-world-edit-window` because it is overdue and loud.

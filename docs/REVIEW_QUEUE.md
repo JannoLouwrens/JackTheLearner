@@ -2444,6 +2444,16 @@ ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed
         two-sided problem.** Whether that changes (b)'s rank against
         `w1-world-edit-window`'s other queued rows is the desk's; it is recorded
         here so the decision is made with the number rather than without it.
+    BUILDER-TRACE 2026-09-27 (builder, 18:0x slot — a RECEIPT, not a
+        disposition). The option-(a) diagnostic this ruling ordered was
+        pre-registered and run TODAY: `ea00910` (the pre-registration, with a
+        known-answer control, written BEFORE the run) then `1834b89` (the
+        result). It came back DEAD at `z_rand -3.1563`, and the finding the
+        commit carries is the MAGNITUDE — a 26.8x difference in LEVELS.
+        Artifact `/data/sh02_random_comparator_diag_seed90.json`. **What this
+        trace does NOT do:** it does not lower the OVERDUE count, and it does
+        not rule on what a dead diagnostic means for the row — that is this
+        desk's.
 
 **The measurement.** `SH.02`'s seed-90 pilot (N=3000/arm, 6 arms, ~19 min)
 fired the spec's own pre-registered `HEADROOM` VOID. Every arm without a live
@@ -3397,6 +3407,20 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
         forbids one freeze over. Routed as
         `ba03-registered-run-foreclosed-by-d20-class-closure` (DUE 10-03);
         evidence appended under D20 in DECISIONS_NEEDED.md.
+    BUILDER-TRACE 2026-09-27 (builder, 18:0x slot — a RECEIPT, not a
+        disposition). Option (c) was IMPLEMENTED 2026-09-26, one day AHEAD of
+        this date, in `702aa56`: the claim statistic moved off the saturated
+        time-to-topple onto integrated absolute tilt over the fixed 12 s
+        window, bars pre-registered in source from the random walk's measured
+        distribution BEFORE any tilt number existed, all six green rig
+        conjuncts byte-unchanged, `VOID-FORECLOSED` superseded to marked
+        history, and the spec left gate-provisional behind its declared
+        seed-90 tilt pilot. **The registered RUN then had no permitted lane:**
+        refused at dispatch by `D20`'s class closure (`4a7a571`), routed as
+        `ba03-registered-run-foreclosed-by-d20-class-closure` (DUE 2026-10-03),
+        whose options are explicitly none of the builder's. **What this trace
+        does NOT do:** it does not lower the OVERDUE count, and the half that
+        is unexecuted is blocked by CONDUCT, not unattempted.
 
 ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | DISPOSITIONED 2026-09-20 (Review FULL — (a) AND (b) both, (c) refused; MISBUNDLED, this is the t211 attribution disease and not the saturation disease; the random-action comparator becomes binding and the `kills:` field is repaired. See THE BUNDLED RULING on `sh02-null-saturation`)
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
@@ -3498,6 +3522,31 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
         declared uninterpretable. The stop-rule on this row is DISCHARGED by
         the ruling, not by a decline. Full reasoning in THE BUNDLED RULING on
         `sh02-null-saturation`.
+    BUILDER-TRACE 2026-09-27 (builder, 18:0x slot — a RECEIPT, not a
+        disposition; only this desk stamps ACTED). **THE ORDERED EXECUTION
+        LANDED 2026-09-22, FIVE DAYS BEFORE THIS DATE, and nothing told this
+        row.** Commit `181fbff`, in `t3_06_ablate_curiosity.py`. Option (a) is
+        armed as TWO comparators rather than one — `C-NOISE`
+        (`cov(curious) − cov(shuftask)`) and `C-RANDREW`
+        (`cov(curious) − cov(random)`), the random-action comparator this row
+        made BINDING — each carrying the file's existing three-conjunct form
+        (margin, every-seed floor, 3 sigma), so no new statistic is invented
+        and no gate is strict only where strictness is free. `DELTA_MIN` 0.05
+        stands, taken from `T2.08`'s `MARGIN_MIN` and explicitly NOT re-derived
+        from the wk5 readings in either direction. Option (b) is
+        `_derive_random_dwell_cap()`, and **it CORRECTED the order that asked
+        for it instead of executing it silently**: at the n the cap is actually
+        read (144 lives = 48 x 3 seeds) the honest order-statistic bound is
+        **0.01850, TIGHTER than the frozen 0.02** — so the n-freeze alone
+        cannot explain attempt 1's VOID, and that is written into the file
+        rather than absorbed. The `delta_shuf` veto is retired AS A VETO and
+        kept as a REPORTED number, with the 09-20 "a redesign may not drop a
+        control that is currently passing" prohibition answered on the record
+        rather than assumed past: `delta_shuf` is RED on every seed by the
+        exact n=3 bound, so it is not a passing control. Option (c) untaken,
+        as refused. **What this trace does NOT do:** it does not lower the
+        OVERDUE count, it buys no ledger row (`T3.06` is unrun under the
+        redesign), and it does not claim the row is disposed.
 
 ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) + 78aad78 (ARENA-UNREACHABLE) | ACTED 2026-09-16 (Review DAILY, executing commit `34116ca` — the design is delivered and it is that NO RE-PARENT IS OWED: all three weld roots are VOID-on-a-run, so the repair is a SUCCESSOR SPEC and every dependent's `depends_on` stays untouched. Three dates were set against `W1` registration, which was never this row's blocker. See ANSWER below)
     DUE: 2026-09-06 | the re-parenting design, owed by the Review's Sunday
@@ -7499,6 +7548,21 @@ ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.
         **the desk keeps writing the truth in a place the instrument does not
         look, and twice in one morning is not bad luck.** Nothing about the
         ruling changes; only its position does.
+    BUILDER-TRACE 2026-09-27 (builder, 18:0x slot — a RECEIPT, not a
+        disposition; only this desk stamps ACTED). **THE ORDERED EXECUTION
+        LANDED 2026-09-22, FIVE DAYS BEFORE THIS DATE, and nothing told this
+        row.** Ruling item 2 — the `CITE_MARKER` arming declaration, written
+        where it bills no certificate — is live at `experiments/registry.py`
+        as `CONJUNCT_ARMING_OWED["T1.08"]`, carrying `conjunct: CITE_MARKER`,
+        `owed_at: "T1.08's next PASS-bound re-buy"`, `first_citer: T2.03`,
+        `authority: Review 2026-09-20`, `declared: 2026-09-22`, and the
+        `why_not_now` reason in full. Commit `b2a109f`. Items 1 and 3 owe
+        nothing today by their own terms: item 1 fires only in `T1.08`'s
+        post-pipeline-repair dispatch, and item 3 is `mde_citing` STAYING
+        reported, which `T1.08` does (`mde_downstream` 49, `mde_citing` 0).
+        **What this trace does NOT do:** it does not lower the OVERDUE count —
+        this row still breaks at 2026-09-28 00:00 because only this desk can
+        stamp it — and it does not claim the row is disposed.
 
 **THE ONE-LINE QUESTION.** `T1.08` exists to produce `min_detectable_effect` —
 its own docstring says *"the number this produces should be quoted whenever a

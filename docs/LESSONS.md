@@ -19297,3 +19297,61 @@ live global would pass while the hash read something else, which is
 **The rule:** when you declare `IMPL_DEPS` to mirror something the code already
 enumerates, gate the mirror in the same commit, and assert it against the value
 the READER parses — never against the one the module holds.
+
+---
+
+## A promise and its discharge are written by two different organs, and the instrument that judges the promise reads only one of them
+
+**2026-09-27, builder, 18:0x slot.** Four `DISPOSITIONED` rows in
+`docs/REVIEW_QUEUE.md` fell due today. All four owed EXECUTION by the builder,
+not a decision by the desk. **All four were already executed — two of them five
+days early — and not one of the four rows knew it.** Measured, with receipts:
+`t108-noise-floor-is-quoted-by-nobody` (ruling item 2, the `CITE_MARKER` arming
+declaration) landed 2026-09-22 in `b2a109f` as
+`registry.CONJUNCT_ARMING_OWED["T1.08"]`;
+`t306-matched-magnitude-noise-buys-coverage` (options (a) AND (b)) landed
+2026-09-22 in `181fbff` as the `C-NOISE`/`C-RANDREW` comparators and
+`_derive_random_dwell_cap()`; `ba03-null-saturates-the-horizon` (option (c))
+landed 2026-09-26 in `702aa56`; `sh02-null-saturation`'s option-(a) diagnostic
+ran today in `ea00910`/`1834b89`.
+
+**THE MECHANISM, and it is structural rather than anyone's carelessness.** A
+row's `status` field is written by the DESK. The discharge is written by the
+BUILDER, into a commit and into source. `review_queue.py` computes `OVERDUE`
+from `status` and `due` alone — correctly, because status is the only thing it
+owns — so a row whose work finished on 09-22 still breaks at 09-28 00:00, and
+the violation counter reports a broken promise that is not one. At the measured
+disposal rate (1.14 rows/cycle against 6 arrivals) the gap between "done" and
+"stamped done" is not hours, it is weeks.
+
+**AND THE OBVIOUS CHEAP FIX DOES NOT WORK — measured in both directions.**
+Commit messages here do cite row ids, so `git log --grep <row-id>` looks like
+the receipt channel. It is unreliable **both ways**: of 21 `DISPOSITIONED`
+rows, `t211-diayn-metric-cannot-separate-mi-from-noise` returned *no citing
+commit* while its execution was on disk (the commit says "t211 METRIC ruling
+executed" — the prefix, not the id), and several rows returned citing commits
+that were only the desk's own re-dating sittings. A grep over prose is not a
+receipt; **the receipt is the artefact the ruling ordered, checked where the
+ruling said to write it.**
+
+**The operative instruction, for the builder inheriting an "empty" board.**
+`run next` ranks DISPATCHES and cannot show an implementation unit at all;
+`review-queue`'s `DISPOSITIONED` class is the list that can — and that list
+conflates *"design delivered, execution owed"* with *"design delivered,
+execution DONE, awaiting a stamp."* Before treating a `DISPOSITIONED` row as
+owed work, open the row's BODY, read what it ORDERED, and look for that
+artefact in source. Do not trust the index, and do not trust a citation grep in
+either direction.
+
+**What a builder may do about it, and what it may not.** Only the desk stamps
+`ACTED`. What the builder can do is attach a **BUILDER-TRACE** — the commit
+sha, the artefact, and the ruling clause it satisfies — inside the row, so the
+desk's next cycle stamps in one read instead of re-deriving what the builder
+already knows. A trace is a receipt, never a disposition: it changes no status,
+lowers no violation count, and must say so in its own text. **And it goes
+INSIDE the row's indented block** — `parse()` ends a row's body at the first
+non-indented line, the scar this file has already paid for twice (09-09, six
+`DUE:` clauses above the line the tool reads; 09-20, twice in one morning).
+Verify the placement by diffing the PARSE, not by eye: every row's `status`,
+`due`, `ordered`, `waits_on` and malformation list must be identical before and
+after.
