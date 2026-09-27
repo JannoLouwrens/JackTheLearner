@@ -21691,3 +21691,122 @@ and `SO.07` spent to record VOID, and it is NOT established that the missing
 cause (a `_check` returning tuples). What IS measured is that both overran the
 wall allowance of their own declared budget class while a gate built to project
 exactly that, before the run starts, was never called.
+
+---
+
+### 2026-09-27 ~16:1x UTC — the steering page ordered me at held work, and the four measurements that say no instrument could have told me
+
+**MODEL/METER, first paragraph as the steering page requires.** Ran on **Opus**
+(`week:Fable` is pinned at **95%**, so the Fable attempt refuses). Acting on
+**`week:all models` = 84%** — the gate, read off `claude_usage.py` this slot, not
+cached. `--week-elapsed` **92**, so `pace_gate`'s `allow` is
+`25 + ((90-25)*92 + 99)/100` = **85.79**, and 84 < 85.79: not paced out, with
+~1.8 points of room. **Dark-slot streak 0.** Instrument exit codes, re-derived:
+`coverage` 2, `run status` 2, `run verify` **2** (the constant `return 0` is gone
+— see below), `review-queue` 0. Ratchets vs HEAD's committed readings: **6
+MOVED** (`fail_unowned_owned_forms` queue-row 29→31, `review_queue_net_arrivals`
+26→33, `review_queue_piled_on` 3→4, `review_queue_violation_forms`
+`{OVERDUE:1}`→`{}`, `review_queue_violations` 1→0, `unreachable` 95→96),
+1 day-rolled (`cpu_foreclosed_now`); floors **3 ABOVE**, all three inherited and
+none caused here.
+
+**WHAT I DID NOT DO, because it was already done.** The 125th audit's FOR THE
+BUILDER 1–3 are all discharged at **`53bb135`** — verified from `git show` and by
+running the tool, not from the page: the CLI no longer inherits `T0.18`'s in-run
+self-exclusion (`unevaluable_gates` **1**, `T0.18(KeyError)`, printed with its
+shadow), `cmd_verify` exits **2** on the finding, and the guard's dead message
+branch is gone. `PROGRESS.md` FTB 2's two rows are discharged too — `T2.15` at
+`e5e627b`, `hash-salt` at `19aab39`+`5ee32ff`. `OVERSIGHT.md` is a current-state
+page and was published before those commits landed; that is not a fault, it is
+the property `oversight-for-the-builder-has-no-reader` exists for.
+
+**THE UNIT. I started `1^13` unit 2 — the `PS.06` legibility conjunct — and
+stopped, and stopping is the finding.** `PS.06` is RUNNABLE, red on attempt 1,
+cites nothing, and the ruling calls its part-1 conjunct a strengthening at zero
+staleness bill: every reason to take it. It is nevertheless **HELD**.
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` (OPEN, DUE 10-03) says
+in its own body that *"`PS.05`/`PS.06`/`PS.08` inheritance is ON HOLD by the
+ruling's own sequencing"*, and that row's 09-27 06:1x measurement reserves both
+halves of the work to the desk — the channel (*"Which of the two `PS.06` gets is
+this desk's under part 1"*) and the floor (a threshold decision). Worse, it had
+already **REFUTED** the channel I was reaching for: fatigue `f` alone reads
+**0.0216** honest on seed 1, so a floor anywhere near `PROBE_R2_MIN` 0.35 reports
+`UNREADABLE` on all three seeds *including* the two where the registered probe
+reads 0.6998 / 0.7496 and is demonstrably reading the venue. Its own sentence:
+*"it would have been shipped by anyone picking the physically-obvious channel."*
+**Nothing was shipped. No spec file was touched.** I found the hold ~10,500 lines
+into `REVIEW_QUEUE.md`, by hand.
+
+**THE FOUR MEASUREMENTS, all this slot, all read off the code.** Routed as
+`priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field`
+(OPEN, DUE **2026-10-08**, `next_free_due`; `WAITS-ON: none` with the two
+adjacent-not-upstream neighbours named).
+
+1. `STEERING_PAGES = ('docs/PROGRESS.md','docs/OVERSIGHT.md')`. The page
+   `ladder_loop.sh` hands me as a single argv — `scripts/ladder_prompt.md` — is
+   in `METRIC_PAGES` (numbers audited) and is `LAUNCH_PAGE` (bytes audited
+   against the `execve` cliff) and is in **neither** order list. Its
+   instructions are audited by nobody, and `run status` prints *"8 item(s) on 2
+   page(s)"* as a clean bill.
+2. Adding it is a **NO-OP**: `'## FOR THE BUILDER'` headings — `PROGRESS.md` 1,
+   `OVERSIGHT.md` 1, `ladder_prompt.md` **0**; items parsed 4 / 4 / **0**. The
+   orders live in the indented `1^13`/`2^10` PRIORITY blocks against a
+   start-anchored `^(\d{1,2})\.`. So the hole is a SHAPE mismatch and the
+   one-string repair would print coverage over an unparsed page.
+3. `steering.legality()` over the live `1^13` block (4726 B, 8 distinct ids):
+   **0 of 8 illegal** — `LT.02 PS.05 PS.06 PS.08 PS.09 T1.02 T1.08 T2.15` all
+   LEGAL. Correct on its own terms: `legality()`'s four verdicts come from
+   `BY_ID`, `coverage._liveness_state`, `decisions.holds` and
+   `Ledger.unsatisfied`, and the substring **`review_queue` appears nowhere in
+   `steering.py`**. A queue row cannot hold an order.
+4. And the hold has no field on the row that *is* the hold. `review_queue._DECL`
+   splits `WAITS-ON: <head> | <prose>` into `waits_on` and `waits_text`; the
+   `ps09` row's head is literally **`none`**, so `waits_on_groups` and the
+   malformed-root check both score it INDEPENDENT while three specs sit on hold
+   in the prose. **`WAITS-ON` declares what a row waits ON and has no inverse
+   for what a row HOLDS** — and the field shipped 09-25, the same day the first
+   row needing the inverse was written.
+
+**THE ARITHMETIC THAT MAKES `1^13` A CORPSE LIST, verified against ledger and
+git rather than inherited.** Unit 1 `PS.09` discharged (`d186c07`, attempt 2 VOID
+on the new conjunct's signal arm); unit 4 `LT.02` discharged (`88762a2`, attempt
+3 FAIL 2026-09-27T02:40); unit 5 `T2.15` discharged (`e5e627b`); units 2 and 3
+HELD. **Four discharged, two held, ZERO live**, under a heading reading *"THE SIX
+UNITS THAT ARE ACTUALLY YOURS RIGHT NOW"* and *"If you find yourself idle with
+these outstanding, start one."* `1^13` item 1 already diagnosed the board reading
+emptiest when the desk has handed over the most; this is that defect's other
+half — the board reading FULLEST when every unit is spent or forbidden — and no
+instrument can tell the two apart. Generalised in `docs/LESSONS.md` this slot,
+both halves (partially-audited pages; a coupling field with one direction).
+
+**BOARD, for the record and not manufactured around.** `run next`: 0 fresh · 38
+settled · 14 held. `coverage` QUEUE DEPTH: **6 dispatchable, 6 VOID, 0 FRESH**,
+every cost class `NOT FILLABLE` — the 31st consecutive empty board. No dispatch
+was made and none should have been.
+
+**CREATURE GATE: NONE — RECORDED VIOLATION #4 of this run under `D35` rule 3,
+recorded and not discharged, for the unchanged mechanical reason.** `T2.01`
+settled FAIL, both repair lanes desk-owned and prohibited to me by name; `T6.01`
+unimplemented behind `T4.05 <- T4.04 <- T2.01 <- T1.08` (FAIL); `XL.01` settled
+FAIL run yesterday. The rule resolves to *re-run a settled FAIL*, which `run
+next` and two standing prohibitions forbid. The 125th audit has this on the
+owner's desk as its only perishable item; live row
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-
+failing-spec` (OPEN, DUE 10-07).
+
+**GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday
+2026-10-03; every GPU class NOT FILLABLE. Third consecutive week at risk.
+Nothing dispatched, nothing manufactured.
+
+**NEXT ITERATION.** (a) The docs bill for this slot is `T0.21` + `T0.31` (both
+hash `docs/REVIEW_QUEUE.md`; `T0.28` hashes it too and is a standing FAIL, so no
+re-buy is owed) — **paid in this slot from the clean tree after the docs
+commit**; check `! DIRTY STAMPS` is still the 2 rows (`T6.03`, `PL.02`) it held
+when this slot began. (b) **Do NOT take `1^13` unit 2 or 3.** `PS.05`/`PS.06`/
+`PS.08` are genuinely owed, and they are owed *after* `ps09-known-answer-floor-
+was-calibrated-on-an-oracle-cut` rules on 10-03 — the channel and the floor are
+the desk's, and the obvious channel for `PS.06` is already measured refuted.
+(c) The steering page will still name them tomorrow, and the row above is the
+only thing that says otherwise; read `run review-queue`'s DISPOSITIONED class
+*and each row's body* before starting any unit a priority block names, because
+four of that block's six units are spent and no tool prints that.

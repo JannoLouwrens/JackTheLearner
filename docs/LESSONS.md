@@ -19170,3 +19170,75 @@ cause. What is measured is that two long-run specs overran the wall allowance
 of their own declared budget class, and that the gate built to project exactly
 that before the run starts was never invoked, throughout a window in which the
 gate's own certificate asserted no such spec existed.
+
+## A page whose NUMBERS and BYTES are both audited can still have its ORDERS audited by nobody — and the page most likely to be in that state is the one the loop cannot skip (2026-09-27, builder, `priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field`)
+
+`scripts/ladder_prompt.md` is passed to `claude -p` as a single argv by
+`ladder_loop.sh`. Every builder reads it; none can decline to. It is audited
+twice — `METRIC_PAGES` checks the numbers it quotes against the ledger, and
+`LAUNCH_PAGE` checks its byte count against `MAX_ARG_STRLEN`, a guard bought
+with nineteen dead slots. **It is not in `STEERING_PAGES`, so the reader that
+asks whether an order is LEGAL has never read it.** Measured this slot:
+`STEERING-PAGE ORDERS` reports *"8 item(s) on 2 page(s)"* and both pages are
+`docs/PROGRESS.md` and `docs/OVERSIGHT.md`.
+
+**Two properties of a page are not one property, and coverage of either reads
+like coverage of the page.** The metric reader and the size reader both point at
+this file, so `grep -l ladder_prompt experiments/*.py` returns hits and the page
+looks watched. What each reader actually watches is a different noun. A page's
+claims, its size and its instructions fail independently and are three audits,
+not one.
+
+**And the second half is the harder half: adding the page to the tuple would
+have been a NO-OP that read as coverage.** `builder_items` keys on
+`^##\s+FOR THE BUILDER\s*$`. The live page carries **0** such headings and **0**
+parsed items, against 1 and 4 on each of the two pages already listed — because
+the builder's orders live in the `1^13`/`2^10` PRIORITY blocks, whose units are
+indented against a start-anchored `^(\d{1,2})\.`. So the gap is a SHAPE
+mismatch, and the cheap-looking repair (one string in a tuple) would have
+produced a reader that prints a clean bill over a page it cannot parse. **When
+extending a reader to a new source, measure what it parses there BEFORE
+believing the extension, or the fix is indistinguishable from the bug with a
+green light on it.**
+
+**Rule, generalised past this instrument.** For every document that steers
+behaviour, enumerate its *kinds* of content and name the reader of each. Where a
+kind has no reader, say so in the open — a partially-audited page is the most
+dangerous kind, because the readers it does have are the evidence a future
+reader will use to conclude it is covered.
+
+**The companion defect, and it is why the order could not have been caught
+anyway: a HOLD written in prose cannot stop an order, because the field built
+for coupling has no inverse.** `legality()` has four verdicts, each from the
+organ owning the question — `UNKNOWN`/`BY_ID`, `HELD`/`coverage`,
+`DECISION-HELD`/`decisions`, `BLOCKED`/`Ledger`. The substring `review_queue`
+appears nowhere in `steering.py`, so a queue row's hold is not among them. And
+on the row that *is* the hold, `review_queue._DECL` parses
+`WAITS-ON: none | <prose>` into `waits_on="none"` and `waits_text=<prose>`, so
+every consumer scores the row INDEPENDENT while three specs sit on hold inside
+the prose. **`WAITS-ON` declares what a row waits on; nothing declares what a
+row holds.** A coupling field with one direction records half of every coupling,
+and the half it drops is the half that stops work.
+
+**The cost, measured on this slot rather than imagined.** The steering page
+ordered `1^13` unit 2 — the `PS.05`/`PS.06`/`PS.08` legibility conjunct. That
+work is held: the same morning's measurement had already REFUTED the physically
+obvious channel for `PS.06` (fatigue `f` alone, **0.0216** honest on seed 1, so
+any floor near `PROBE_R2_MIN` 0.35 reports `UNREADABLE` on all three seeds
+including the two where the registered probe reads 0.6998 and 0.7496 and is
+demonstrably working), and it reserved both the channel pick and the floor to
+the desk. This iteration reached the point of choosing that channel before
+finding the hold ~10,500 lines into `REVIEW_QUEUE.md`. Nothing was shipped, and
+the block's own sentence is *"it would have been shipped by anyone picking the
+physically-obvious channel."*
+
+**Corollary worth its own line, because it inverts a diagnosis this project
+already trusts.** `1^13` item 1 correctly explains that the builder's board
+reads EMPTIEST exactly when the desk has handed it the most, because `run next`
+ranks dispatches and a `DISPOSITIONED` row hands over implementation. The other
+half is now measured: a board can also read FULLEST when every unit on it is
+spent or forbidden. Of `1^13`'s six units, four are discharged and two are held
+— **zero live** — under a heading reading *"THE SIX UNITS THAT ARE ACTUALLY
+YOURS RIGHT NOW"*. Neither state is visible to any instrument, and the two look
+identical from inside a fresh session: a list of numbered orders and no way to
+tell a live one from a corpse.

@@ -13183,3 +13183,138 @@ by rewriting the true sentence that tripped it.
     slot from the clean tree after this block lands. `T0.28` also declares it
     and is a no-cert FAIL. No spec file edited, no `IMPL_DEPS` changed, no bar
     moved in either direction, no conjunct armed, no new instrument built.
+
+ROUTED: priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field | 2026-09-27 | `experiments/steering.py` constants + `steering.legality()` run this slot over the live `1^13` block; `review_queue._DECL`'s parse of the `ps09` row's own `WAITS-ON:` line | OPEN
+    DUE: 2026-10-08 | `review-queue`'s own `next_free_due`, read off the tool
+        this slot (09-28 through 10-07 all carry promises; 10-08 is the first
+        with room). What is owed is a RULING on two declarations — which pages
+        the order-legality reader reads, and whether a row gets an inverse of
+        `WAITS-ON` for the specs it HOLDS. Both are the Review's grammar, not
+        the builder's, and neither is a new instrument.
+    WAITS-ON: none | no live row's answer changes what is measured here. The
+        two neighbours are adjacent and NOT upstream:
+        `waits-on-has-no-producer-outside-a-closing-row` (DUE 10-01) asks who is
+        TOLD to write the field and constrains its enforcement; this row asks
+        what the field can EXPRESS. `oversight-for-the-builder-has-no-reader`
+        (DUE 09-30) asks whether FOR-THE-BUILDER items are DISCHARGED; this row
+        asks whether they are LEGAL. `ps09-known-answer-floor-was-calibrated-on-
+        an-oracle-cut` (DUE 10-03) supplies the live instance, and the hole
+        stands whichever way that row falls.
+
+**THE DEFECT, in four measured legs. Nothing here is inferred from a page.**
+
+**Leg 1 — the page the builder is actually handed is not in the order reader's
+page list.** `ladder_loop.sh` passes `scripts/ladder_prompt.md`'s whole text to
+`claude -p` as a single argv; it is the one document no builder can skip. Read
+off `experiments/steering.py` this slot:
+
+    STEERING_PAGES = ('docs/PROGRESS.md', 'docs/OVERSIGHT.md')
+    METRIC_PAGES   = ('docs/PROGRESS.md', 'docs/OVERSIGHT.md',
+                      'scripts/ladder_prompt.md')
+    LAUNCH_PAGE    = 'scripts/ladder_prompt.md'
+
+So that page's quoted NUMBERS are audited (`STEERING-METRIC-MISMATCH`) and its
+BYTES are audited (`STEERING-PAGE SIZE`, against the `execve` cliff that killed
+nineteen slots on 09-20). Its **ORDERS** are audited by nobody. `run status`
+says so in its own head and it reads as a clean bill: *"8 item(s) on 2
+page(s)"* — and the two are `PROGRESS.md` and `OVERSIGHT.md`.
+
+**Leg 2 — and adding the page to that tuple is a NO-OP, so the hole is a SHAPE
+mismatch and not a missing entry.** `builder_items` keys on
+`_BUILDER_HEADING = ^##\s+FOR THE BUILDER\s*$`. Measured on the live files:
+
+    page                        '## FOR THE BUILDER' headings   items parsed
+    docs/PROGRESS.md                          1                      4
+    docs/OVERSIGHT.md                         1                      4
+    scripts/ladder_prompt.md                  0                      0
+
+The builder's orders do not live under that heading. They live in the
+`1^13` / `2^10` PRIORITY blocks, whose units are indented `   1.` … `   5.`
+against a start-anchored `_ITEM = ^(\d{1,2})\.`. A reader pointed at the page
+would return zero items and print the same clean bill.
+
+**Leg 3 — and a reader that DID parse the block would still pass it clean.**
+`steering.legality()` run this slot over the live `1^13` block (4726 bytes, 8
+distinct ids): **0 of 8 illegal.**
+
+    LT.02  PS.05  PS.06  PS.08  PS.09  T1.02  T1.08  T2.15   -> all LEGAL
+
+That is correct on its own terms and it is the point. `legality()` has exactly
+four verdicts, each from the organ owning the question — `UNKNOWN` (`BY_ID`),
+`HELD` (`coverage._liveness_state`), `DECISION-HELD` (`decisions.holds`),
+`BLOCKED` (`Ledger.unsatisfied`). **The substring `review_queue` does not appear
+anywhere in `experiments/steering.py`.** A queue row cannot hold an order, so
+`1^13` units 2 and 3 — *"`PS.05`, `PS.06`, `PS.08` — the same conjunct, one spec
+at a time"* — read as live work, while
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` says in its own body
+that *"`PS.05`/`PS.06`/`PS.08` inheritance is ON HOLD by the ruling's own
+sequencing"*, and that row's 09-27 06:1x measurement reserves the channel pick
+to the desk in terms (*"Which of the two `PS.06` gets is this desk's under part
+1"*).
+
+**Leg 4 — and the hold has no FIELD to be seen through, on the one row that is
+the hold.** `review_queue._DECL` captures `WAITS-ON:` as
+`<head> | <prose>`, assigning `cur["waits_on"] = head` and the rest to
+`waits_text`. The `ps09` row's head is literally **`none`**, so
+`waits_on_groups` and the malformed-root check both score it INDEPENDENT —
+while its `waits_text` is where three specs are placed on hold. That is not the
+row misdeclaring: `WAITS-ON` declares what a row **waits on**, and there is no
+inverse for what a row **holds**. The field shipped 09-25 and the first row to
+need the inverse was written the same day.
+
+**THE LIVE COST, and it is this slot, stated because a hazard with no instance
+is a design taste.** This iteration read `1^13` item 2, opened
+`experiments/tests/ps_06_tiring_is_a_price.py`, and got as far as choosing the
+by-construction-legible channel and the shape of its floor — both of which the
+`ps09` row reserves to the Review, and one of which that row's own measurement
+had already REFUTED (`FINDING 3`: fatigue `f` alone reads **0.0216** honest on
+seed 1, so a floor near `PROBE_R2_MIN` 0.35 would report `UNREADABLE` on all
+three seeds *including* the two where the registered probe reads 0.6998 and
+0.7496 and is demonstrably reading the venue). That block's own sentence is
+*"it would have been shipped by anyone picking the physically-obvious
+channel."* The hold was found by reading ~10,500 lines into this file, not by
+any instrument. No spec file was edited and nothing was shipped.
+
+**AND THE ARITHMETIC THAT MAKES THIS URGENT RATHER THAN TIDY: `1^13` HAS NO
+LIVE UNIT LEFT, AND SAYS THE OPPOSITE.** Verified this slot against the ledger
+and git, not inherited: unit 1 `PS.09` discharged (`d186c07`, attempt 2 VOID on
+the new conjunct's signal arm); unit 4 `LT.02` discharged (`88762a2` redesign,
+attempt 3 FAIL 2026-09-27T02:40); unit 5 `T2.15` discharged (`e5e627b`, the
+`tfidf_retrieval_correct` promotion, confirmed by the row's own
+BUILDER-TRACE); units 2 and 3 HELD as above. **Four discharged, two held, zero
+live** — against a block that opens *"THE SIX UNITS THAT ARE ACTUALLY YOURS
+RIGHT NOW"* and *"If you find yourself idle with these outstanding, start
+one."* The overseer measured **30 consecutive empty boards** and `1^13` item 1
+already diagnosed why the builder's board reads emptiest when the desk has
+handed it the most; this is the same defect's other half — the board reads
+FULLEST when every unit on it is spent or forbidden, and no organ can tell the
+two apart.
+
+**WHAT THE REVIEW OWNS HERE, and it is two declarations, not an organ.**
+(a) Whether `scripts/ladder_prompt.md` joins `STEERING_PAGES` and, if so, in
+what SHAPE — either the PRIORITY block gains a parseable heading, or
+`builder_items` learns the block's grammar; a page added without one of those
+is a silent no-op, which is worse than the gap because it reads as coverage.
+(b) Whether a row declares the specs it HOLDS — `WAITS-ON`'s inverse — so a
+hold written in prose can reach the reader that judges orders. Carry the 09-19
+disposition's constraint forward unchanged: `WAITS-ON:` buys nothing and
+exempts nothing, and `waits-on-has-no-producer-outside-a-closing-row` forbids a
+violation class for an undeclared coupling. **Declaration-only, same as its
+sibling.**
+
+**WHAT MAY NOT BE DONE.** No bar moves and none is proposed. The `1^13` units
+may not be marked discharged by editing the steering page to delete them —
+`PS.05`/`PS.06`/`PS.08` are genuinely owed once the `ps09` row rules, and
+deleting a held order is how a hold becomes a forgotten debt. And no new
+counter, exit code, floor or command is asked for: `D35` clause 2 forbids it
+and both repairs above are declarations on instruments that already exist.
+
+    Staleness bill for this row, priced BEFORE the edit: **no code changed**, so
+    `run stale-cost` has nothing to read — `experiments/steering.py` and
+    `experiments/review_queue.py` were MEASURED, not edited. This doc edit bills
+    `T0.21` (cpu<1min) and `T0.31` (cpu<10min), the two standing PASSes that
+    declare `docs/REVIEW_QUEUE.md` in `IMPL_DEPS` — paid in slot from the clean
+    tree after this block lands. `T0.28` also declares it and is a standing
+    FAIL, so staling it re-buys nothing. No spec file edited, no `IMPL_DEPS`
+    changed, no bar moved in either direction, no conjunct armed, no instrument
+    built.
