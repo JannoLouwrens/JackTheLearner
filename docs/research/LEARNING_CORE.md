@@ -1965,11 +1965,32 @@ pre-registered floor) is `Status.VOID` for A4, not a good loss curve.
 > rolls agree and `Δ_k` goes to zero, which a good loss curve cannot hide.
 >
 > **Binding, and narrower than it looks.** The readout plus a pre-registered
-> floor are REQUIRED for the next `A4`-family run to be scoreable; this does not
-> retroactively guard a seat already awarded, and it does not reopen `LC.03`'s
-> VOID-FORECLOSURE or unseat `A4`. Implementation is commissioned on
-> `a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere` in
-> `docs/REVIEW_QUEUE.md`, which carries the ruling and the ranked reasoning.
+> floor would be REQUIRED for the next `A4`-family run to be scoreable; this does
+> not retroactively guard a seat already awarded, and it does not reopen
+> `LC.03`'s VOID-FORECLOSURE or unseat `A4`. The ruling and its ranked reasoning
+> live on `a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere` in
+> `docs/REVIEW_QUEUE.md`.
+>
+> **`D29`, and the limit it puts on this block.** `D29` RESOLVED this same
+> question on 2026-09-23 by armed default as **(iii) RECORD THE DEBT, CHANGE NO
+> MARKING**, recording *"Options (i) BUILD THE DIAGNOSTIC, (ii) CORRECT
+> `LEARNING_CORE.md` §5.4 ... were NOT taken"*. So: **the `Δ_k` readout above is
+> NOT commissioned.** It is a RECOMMENDATION, contingent on the owner reopening
+> `D29` — routed as `D37` — because this desk may not reverse a resolved decision
+> by writing a date against it. What IS done here is (iii): the debt is recorded.
+> This block moves no threshold, fails no spec, stales no certificate, and leaves
+> `A4`'s `HELD: BY VERDICT` marking untouched, and the paragraph above it stands
+> byte-identical — which is why it is (iii) in a second location and not `D29`'s
+> refused option (ii), whose content was to bring the promise DOWN to the gap.
+> `D29` also records the fact that makes retroactivity impossible in any case:
+> the trained `A4` weights are not on disk, so the guard can never be run on the
+> evidence that seated the arm.
+>
+> **This desk owes `D29` a disclosure, and it is here.** `D29`'s firing block
+> says its `decide_by` was placed deliberately AFTER this desk's deliverable so
+> the owner could rule with it in hand, that the deliverable slipped, and that it
+> therefore fired *"on a premise its own author called insufficient"* — the
+> weakest option chosen for that reason. The missing premise was this block.
 >
 > **Why the amendment is written at all, given that half of the fork is still
 > owed:** the ruling was (i) BUILD + (iii) AMEND *together*, never (iii) alone,

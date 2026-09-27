@@ -8863,9 +8863,12 @@ ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026
         date carried is DISCHARGED — the fork is RULED in THE RULING block below
         and the desk's own half (iii) is EXECUTED in this sitting's commit, so
         this date is not the fourth promise of a decision.** What the new date
-        carries is the BUILDER's execution of the (i) half — the ActSWM `Δ_k`
-        readout and its pre-registered floor — which is slot-sized and needs no
-        GPU. Dated 10-04 rather than sooner for one reason, stated because it is
+        carries is NOT builder execution — see THE `D29` COLLISION below, found
+        in this sitting: `D29` resolved this same question on 09-23 as (iii)
+        alone, so the (i) BUILD half is CONTINGENT and is routed to the owner as
+        `D37`. What 10-04 owes is this desk CHECKING `D37` and, if the owner has
+        ruled or its default has fired, handing the `Δ_k` readout to the builder
+        then. Dated 10-04 rather than sooner for one reason, stated because it is
         the finding under the finding and it is the same one `hr1` recorded four
         days ago: 09-28..10-03 each already carry this desk's measured 6/cycle
         capacity, so the date is set by THIS QUEUE'S ROOM, not by the cost of
@@ -8971,7 +8974,34 @@ because nine days of further evidence did not disturb it.
   COMPUTABLE rather than softened. The strengthen-only law is not strained here,
   it is the whole mechanism — an uncomputable VOID condition is a wall that was
   never there, and specifying it builds the wall.
-- **(i) BUILD IT is ADOPTED and is the BUILDER's**, in ActSWM's `Δ_k` form
+**THE `D29` COLLISION, found in this same sitting and disclosed rather than
+glossed — and it NARROWS the ruling above.** After writing the ruling this desk
+read `docs/DECISIONS_RESOLVED.md` and found `D29`: the SAME question, RESOLVED
+2026-09-23 by armed default as **(iii) RECORD THE DEBT, CHANGE NO MARKING**,
+with *"Options (i) BUILD THE DIAGNOSTIC, (ii) CORRECT `LEARNING_CORE.md` §5.4
+and (iv) DOWNGRADE THE SEAT'S MARKING were NOT taken"*. Three things follow and
+the desk states all three:
+
+  1. **`D29` fired BECAUSE THIS ROW WAS LATE.** Its own firing block says the
+     `decide_by` was placed deliberately after this deliverable (DUE 09-18) *"so
+     the owner would rule with that work in hand"*, that the deliverable slipped,
+     that nothing re-checked the placement, and that it therefore fired *"on a
+     premise its own author called insufficient"* — choosing the weakest option
+     by construction for exactly that reason. The missing premise is the document
+     above. That is this desk's debt to `D29`, not a point in its favour.
+  2. **The §5.4 amendment is WITHIN (iii), and deliberately not (ii).** (iii) is
+     RECORD THE DEBT, CHANGE NO MARKING: the amendment records the debt, moves no
+     threshold, fails no spec, and leaves `A4`'s `HELD: BY VERDICT` marking
+     untouched. `D29`'s *"§5.4 stands verbatim"* is still literally true — the
+     original paragraph is byte-identical and the amendment is appended beneath
+     it. `D29`'s option (ii) was to CORRECT the section, i.e. bring the promise
+     down to meet the gap; this amendment does the opposite and says so.
+  3. **(i) BUILD IS THEREFORE NOT COMMISSIONED. It is CONTINGENT**, because
+     `D29` says (i) was not taken and this desk may not reverse a resolved
+     decision by writing a `DUE:` against it. Routed to the owner as `D37`.
+
+- **(i) BUILD IT is RECOMMENDED, CONTINGENT ON `D37`**, and would be the
+  BUILDER's, in ActSWM's `Δ_k` form
   (wk7 §2's N3), not as a bare rank floor: roll the latent twice from one
   context — once under recorded actions, once under the all-zero action
   sequence — and score both by cosine against the true future latent. Under
