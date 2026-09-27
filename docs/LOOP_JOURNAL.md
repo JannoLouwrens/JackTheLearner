@@ -20848,3 +20848,114 @@ this slot** (gate moved: `XL.01`), but note what the row above measures: the
 quota's only runnable member is a settled FAIL, so the next slot that cannot
 reach `XL.01` honestly has no legal way to satisfy item 3 — say so plainly
 rather than manufacturing a re-run.
+
+---
+
+## 2026-09-27 ~10:0x-10:3x UTC — THE SALT DETECTOR'S FIRST LIVE HIT WAS ITS OWN COLD CACHE. `XL.01`'s RIG IS INNOCENT, THE WORLD-EDIT BILL IS NOT OWED, AND THE FALSE POSITIVE WAS REPRODUCIBLE AT SALT 0.
+
+**Model: OPUS.** `week:Fable` reads **95%** and is pinned — not the gate.
+`week:all models` reads **79%**, which IS the gate (`lib_usage.sh` ->
+`claude_usage.py --pct`), 11 points under the 90% stop; session 37%. No
+`PACING:` line and no skip streak: the previous slot ran and committed at
+09:43. Board taken from the tools, not from this page: `run next` **0 fresh ·
+37 settled · 14 held** — the 29th consecutive empty dispatch board — and
+`run review-queue` **55 OPEN / 21 DISPOSITIONED** at entry. **The unit came
+from the previous slot's own hand-forward**, which named the next act as a
+MEASUREMENT: localise the `XL.01` salt divergence to a file.
+
+**TAKEN, AND IT INVERTED THE ROW THAT COMMISSIONED IT.** Three legs, ~600 s CPU,
+no ledger writes:
+
+    _control(0) ALONE, PYTHONHASHSEED=0   ->  c_fixture_ok 0.0   <- the RECORDED
+    _control(0) ALONE, salt 1 / salt 7    ->  0.0 / 0.0             run's own salt
+    _experiment(0) THEN _control(0),
+      ONE process, salt 1                 ->  1.0  (alien_seed 101,
+                                                 alien_min_dist 2.0634, rows 2)
+
+Leg A is decisive by itself and it is the leg nobody ran: **the
+"salt-dependent" value reproduces at the recorded run's own salt.** `_control`
+reads `_CACHE[seed]`, written only by `_experiment` (`xl_01:640, 668-671`), and
+`_salt_rerun` ran **each `(fn, seed)` in a fresh subprocess** while `run_spec`
+runs every experiment seed then every control seed **in ONE** process
+(`protocol.py:3855-3857`). The replayed control took its cold-cache early return.
+
+**THE DIVERGENCE SET ACCOUNTS TO THE DIGIT, so this is an identity and not a
+better story.** 20 numeric control keys recorded; `c_fixture_ok` diverges
+(DECIDING), `c_fixture_ok_std` is 0.0 either way, **18** absent -> the reported
+`1 deciding + 18 non-deciding`. All **40** numeric experiment metrics reproduced
+bit-exactly. **Zero of the 19 was salt.**
+
+**MY PREDECESSOR'S ELIMINATION WAS RIGHT AND ITS CONCLUSION WAS WRONG, and the
+shape of the error is worth more than the fix.** `_wide_homes` IS salt-stable;
+the distance filter DOES pass 11/17/10 candidates. The inference *"therefore the
+alien explorer goes blind, therefore world construction or stepping"* enumerated
+the paths INSIDE `_build_alien_store` and never asked whether the function was
+CALLED. It was not. A correct elimination plus an unexamined premise pointed a
+confident finding at the most expensive instrument this project owns — the
+world-edit window, whose authorship the desk declined the same morning.
+
+**REPAIRED AT THE DETECTOR, lowest rung of the ascending-bill rule** (`274d987`).
+`_salt_rerun` now replays the runner's own sequence in one child. Verified twice,
+live and offline: the four re-buys below all printed `HASH-SALT DIFFERENTIAL
+CLEAN` across **17 deciding metrics**, and on `SO.02` — a second cache-pattern
+spec, standing PASS, **zero ledger writes** — the old model returns an **empty**
+control dict where the new one returns all 7 keys. **The class had a second
+instance sitting in it, unfired.**
+
+**"ZERO FALSE POSITIVES" STRUCK FROM THE HEADER ON EVIDENCE.** That clause was
+the stated reason this instrument escapes `D27`'s pricing of heuristic screens;
+it was never tested; its first live hit on a deciding metric was a false
+positive. Measured rate 1-of-1, and **no spec certifies this instrument** — said
+plainly because the trap is structural: the detector that found a defect in a
+creature gate is certified by nothing, and the rule that would let anyone
+certify it is frozen until a creature gate runs.
+
+**BILL PAID IN SLOT, from the clean tree.** `stale-cost` priced the edit at **4
+standing PASS certificates** (0.01 CPU-h, 1 slot): `T0.15` a9 **PASS** 1.28 s,
+`T0.17` a22 **PASS** 18.42 s, `T0.33` a22 **PASS** 1.32 s, `T0.35` a22 **PASS**
+6.77 s — all stamped at `274d987`, `dirty` unset, and all four out of STALE
+CLAIMS afterwards. `T0.27` declares `protocol.py` and is a FAIL: no capability
+claim lost, no re-buy owed. All four were replayed GREEN offline before the
+commit, not after.
+
+**BILL AND HYGIENE.** One row routed, SUBJECT declared per the 124th audit FTB 2
+— `replay-instruments-do-not-replay-the-runs-process-model` (the **APPARATUS**),
+`DUE 2026-10-07` off `review-queue`'s own next-date-with-room, `WAITS-ON: none`
+declared, not MALFORMED; `review-queue` **0 violations**, rc=0. **My row is +1 of
+the `review_queue_net_arrivals` 29 -> 30 delta and I say so rather than letting
+it read as clock.** No bar moved in either direction (`HASH_SALT_MARGIN_REL` 0.10,
+`HASH_SALT_ZERO_ABS` 0.10, `HASH_SALT_CPU_BUDGETS`, `ALIEN_MIN_DIST` 2.0,
+`RATIO_MAX` 0.5, `CONTROL_RATIO_MIN` 0.75 all byte-unmoved); no conjunct armed,
+so no `blast-radius` line is owed; **zero new checker, ratchet, organ or Tier-0
+spec** (freeze items 1-2 obeyed). Ratchets quoted BEFORE any record and I
+recorded none: **6 MOVED**, 1 day-rolled, floors **3 ABOVE**
+(`decisions_default_action_expired`, `pass_on_dead_dependency`, `unreachable`),
+0 BELOW, 0 UNVERIFIED — all three pre-existing and routed, none mine, no floor
+raised. `status` rc=2 and `coverage --check` rc=2, unchanged from entry.
+`scripts/ladder_prompt.md` **untouched at 96212 B**. `git add` by name; 13 claude
+processes; no foreign files in the tree. **DISCLOSURE: the warm-cache leg
+(299 s) was moved to the harness's background lane at its 120 s mark** — it was
+harness-tracked, not detached on a wake-up promise, it completed inside the slot,
+and its output was read off disk. Nothing left running: `pgrep` clean.
+
+**CREATURE GATE MOVED: `XL.01`** — not a new verdict, but its recorded FAIL is
+**re-derivable from the record again**, which is the exact property yesterday's
+row said it had lost. That property is what every row on this ladder is for.
+
+**NEXT ITERATION.** **Do NOT re-open the `XL.01` salt thread** — it is measured,
+repaired, billed and routed; a third slot sent at it will find nothing, and the
+world-edit-window bill it priced is withdrawn. The `XL.01` half of
+`xl01-c-fixture-ok-is-a-salt-lottery-in-a-deciding-metric` is refuted in an
+addendum on the row; its `WAITS-ON` sibling
+(`xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off`, the
+estimator defect on the same `_check`) is **untouched and still the desk's**.
+What IS yours and cheap: `PROGRESS.md` FOR THE BUILDER item 2's two
+`DISPOSITIONED` rows are both reported discharged by the 09-26/09-27 slots —
+**verify that on the rows before acting, do not take it from a page** — and item
+4 (`T0.18`'s property C, `declared_control_never_ran` reads 2 where the gate
+wants 0) is a real red whose repair is blocked behind `T0.13`'s FAIL and the
+`t013-latently-red-28-disarmed-keys` ruling (DUE 10-05), so it is NOT a
+threshold to touch. If you reach an empty board, the honest unit is the one this
+slot demonstrates: **take a finding another organ published and re-derive its
+premise**, because that is where two inverted conclusions have now been found in
+two days.
