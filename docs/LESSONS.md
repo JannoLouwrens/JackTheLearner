@@ -19355,3 +19355,58 @@ non-indented line, the scar this file has already paid for twice (09-09, six
 Verify the placement by diffing the PARSE, not by eye: every row's `status`,
 `due`, `ordered`, `waits_on` and malformation list must be identical before and
 after.
+
+---
+
+## A DECLINE executed in prose is strictly worse than no decline at all, because the token is the only half that releases anybody else (2026-09-27, overseer, 126th audit)
+
+The Review desk armed a stop-rule against itself on 09-24: *"if 2026-09-27
+breaks, this desk does not re-date this row again — it DECLINES the authorship
+and says so on the owner's page."* On 09-27 it broke, and the desk executed the
+stop-rule exactly — on `docs/PROGRESS.md`, loudly, pre-committed, with the
+reversal named as the owner's alone. It never touched the row. At HEAD,
+`docs/REVIEW_QUEUE.md:998` still reads `... | OPEN` with `DUE: 2026-09-27`, and
+`git log -p --since=<that morning> -- docs/REVIEW_QUEUE.md` shows **no diff hunk
+inside that row's block at all**.
+
+**Why this class is not the same as the familiar prose-vs-token scar, and is
+worse than it.** The sibling lesson on this page — *the desk writes the truth in
+the prose and not in the token the instrument reads* — is about a
+**self-regarding** disposition: the row's own status is misreported, and the
+cost is that the row ages wrongly. `DECLINED` is not self-regarding. It is one
+of only two `TERMINAL` statuses (`review_queue.py:251`), and a hold whose
+blocker reaches terminal **must release** (`HOLD-ON-A-RESOLVED-BLOCKER`). So
+the token is load-bearing for **other rows**:
+
+    declined in the TOKEN  ->  author freed  AND  dependents released into the open
+    declined in PROSE only ->  author freed  AND  dependents held behind a blocker
+                                                   that no longer has anyone behind it
+
+Two rows, both 34 days old, were `BLOCKED-BY` this window and are **exempt from
+ageing** because of it. The prose decline retired the author's obligation and
+left their exemption running. That is not a reporting delay; it is a transfer of
+the cost onto rows that cannot complain, and the instrument cannot report it
+because **the blocker is not resolved, it is abandoned** — a state with no class
+in the tool. `HOLD-ON-A-RESOLVED-BLOCKER` and `HOLD-WITHOUT-A-CLOCK` both pass it.
+
+**The shape to watch for, stated generally.** When a disposition has two halves
+— one that discharges YOU and one that costs a NUMBER or releases SOMEONE ELSE
+— the first half is free and will get done, and the second is the one that
+quietly does not. This is not bad faith; today's instance is the most honest
+decline in the file's history and it was still only half executed. **Ask of any
+disposition: which half of this would a busy, honest organ skip, and who pays
+when it does?** The answer is almost always the half a machine reads.
+
+**The corroborating count, because it is the cheapest possible check and nobody
+had run it.** `run review-queue`'s own header prints
+`... 25 ACTED, 0 DECLINED of 109 routed`. **Zero of one hundred and nine.** At
+least five rows in the file carry armed stop-rules naming `DECLINED` as the act
+a further breach converts to. A terminal status a queue keeps promising itself
+and has used zero times is not a disposition, it is a rhetorical device — and
+the check that finds it is reading the tool's OWN summary line for a count of
+zero, which no gate anywhere asserts on because zero looks like health.
+
+**Transferable:** for every enum an instrument can print, ask what its
+population count is. A class with zero members is either genuinely clean or
+structurally unreachable, and those two look identical in every report this
+project writes.

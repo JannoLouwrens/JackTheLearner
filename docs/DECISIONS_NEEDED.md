@@ -8066,6 +8066,59 @@ ledger): claims asserted on desk pages should be checked against the artifact
 by an instrument, because this desk demonstrably does not check them by
 reading.
 
+**EVIDENCE ADDENDUM — 2026-09-27 18:5x UTC (overseer, 126th audit). The
+stop-rule this entry gated FIRED this morning and was executed in PROSE ONLY;
+three rows are now owned by nobody and no instrument can say so. Appending
+measurements, asking nothing new.**
+
+This is evidence on the question `D33` already asks (*"is the Review capable of
+producing this at all?"*) and it does not re-open or re-arm anything.
+
+1. **The decline is real and correctly published.** Today's `docs/PROGRESS.md`
+   FOR THE OWNER item 3 executes the 09-24 stop-rule verbatim: *"2026-09-27
+   broke. I did not produce the W1 world-edit design. I am therefore DECLINING
+   the authorship of it, as pre-committed."* No complaint is made about that
+   act; it was pre-registered and it is honoured.
+
+2. **The row was not touched.** `docs/REVIEW_QUEUE.md:998` reads at HEAD
+   `ROUTED: w1-world-edit-window | 2026-09-06 | ... | OPEN` with
+   `DUE: 2026-09-27`. Verified mechanically: `git log -p --since=2026-09-27T00:00
+   -- docs/REVIEW_QUEUE.md` produces **no diff hunk inside that row's block**;
+   the only two lines naming the row id today are inside other rows' bodies.
+   The row goes `OVERDUE` at 00:00 tonight with no cause attached to it, while
+   the cause sits on a current-state page the next FULL rewrites.
+
+3. **The un-stamped token is load-bearing, not cosmetic.**
+   `experiments/review_queue.py:251` defines `TERMINAL = ("ACTED","DECLINED")`,
+   and `:44` releases a hold whose blocker has reached a terminal status via
+   `HOLD-ON-A-RESOLVED-BLOCKER`. Two rows carry
+   `BLOCKED-BY: w1-world-edit-window` — `ne01-occlusion-knife-edge` and
+   `water-apply-phantom-force`, **both 34 days old and both ageing-exempt
+   because of that blocker**. A `DECLINED` stamp would have forced both into
+   the open tonight. Left `OPEN`, they wait behind a blocker that has no
+   author: **not resolved, abandoned** — a state the instrument has no class
+   for. A third row, `w2-needs-have-no-single-k` (DUE 10-10), queues behind the
+   same window.
+
+4. **`DECLINED` has never once been used.** `run review-queue` reads
+   `60 OPEN, 3 HELD, 21 DISPOSITIONED, 25 ACTED, **0 DECLINED** of 109 routed`.
+   At least five rows in the file carry armed stop-rules naming `DECLINED` as
+   the act a further breach converts to. The first row ever entitled to it was
+   declined in prose instead.
+
+**WHAT WOULD DISCHARGE THIS, both one line, neither requiring a new decision
+entry:** (a) stamp the row `DECLINED 2026-09-27` with the `PROGRESS.md` text
+quoted into it — which releases both holds where they can be re-owned; or (b)
+re-parent the window onto a named owner who is not the Review desk, which is
+what today's page asked for. The overseer may not write `docs/REVIEW_QUEUE.md`
+and is not attempting either.
+
+**NOT ASKED AND NOT ARMED.** This addendum adds no option, moves no
+`decide_by`, and carries no default. `D33`'s `DEFAULT-ACTION-EXPIRED` red
+(floor 0, reading 1 since 2026-09-23) is untouched by it and is still computed
+from text inside this entry's own `DECIDE:` block, which the overseer may not
+edit.
+
 ---
 
 ## D28 — RECLASSIFICATION FIRED, 2026-09-21 06:5x UTC (overseer, 107th audit). `class: goal` → `class: conduct`. The entry stays open; only WHO decides has changed.
