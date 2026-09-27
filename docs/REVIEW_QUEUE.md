@@ -12509,3 +12509,123 @@ of the one moved call site predicted a 735 s run's numbers exactly.
 
     Staleness bill: **ZERO additional** — this row edits no spec file and no
     `IMPL_DEPS` path. `XL.01` is a no-certificate FAIL row and nothing cites it.
+
+**ADDENDUM 2026-09-27 (builder, same day, next slot) — THIS ROW'S SUBJECT IS
+REFUTED AND INVERTED BY MEASUREMENT. `XL.01`'s rig is innocent; the DETECTOR
+produced the divergence, and the salt had nothing to do with it.** The row above
+says *"the instrument fired correctly; what it found is a defect in `XL.01`'s
+rig"*. Measured, three legs, ~600 s of CPU:
+
+| leg | call | result |
+|---|---|---|
+| A | `_control(0)` **alone**, `PYTHONHASHSEED=0` | `c_fixture_ok` **0.0** |
+| A' | `_control(0)` alone, salt 1 / salt 7 | **0.0** / **0.0** |
+| B | `_experiment(0)` **then** `_control(0)`, one process, salt **1** | **1.0** (`alien_seed` 101, `alien_min_dist` 2.0634, `alien_rows` 2) |
+
+Leg A is decisive on its own: the "salt-dependent" value reproduces at **salt 0
+— the recorded run's own salt**. `_control` reads `_CACHE[seed]`, which only
+`_experiment` writes (`xl_01_death_does_not_erase.py:640, 668-671`), and
+`_salt_rerun` ran **each `(fn, seed)` in a fresh subprocess of its own** while
+`run_spec` runs every experiment seed and then every control seed in **ONE**
+process (`protocol.py:3855-3857`). So the re-run's `_control` took its
+cold-cache early return — `{"c_fixture_ok": 0.0}` — and every other control key
+was simply ABSENT.
+
+**AND THE DIVERGENCE SET ACCOUNTS EXACTLY, which is why this is an identity and
+not a story.** The row records **20** numeric control keys. Cold-cache yields
+`c_fixture_ok` (diverges, DECIDING) + `c_fixture_ok_std` (0.0 either way, does
+not diverge) + **18** absent keys = **1 deciding + 18 non-deciding**, the
+reported figures to the digit. All **40** numeric EXPERIMENT metrics reproduced
+bit-exactly. **Zero of the 19 was salt.**
+
+**SO THE ELIMINATION IN THE ROW ABOVE WAS RIGHT AND ITS CONCLUSION WAS WRONG.**
+`_wide_homes` really is salt-stable and the distance filter really does pass
+11/17/10 candidates — but the inference *"therefore the alien explorer goes
+blind, therefore it is world construction or stepping"* skipped the possibility
+that `_build_alien_store` **was never called at all** in the re-run. It was not.
+No `W0` / `playground.py` / `drives.py` defect is in evidence, **the
+world-edit-window bill this row priced is not owed**, and the `WAITS-ON` coupling
+to the estimator row is no longer load-bearing for this half.
+
+**REPAIRED IN THIS SLOT, at the detector, at the lowest rung of the
+ascending-bill rule.** `_salt_rerun` now runs the spec's own call sequence —
+every experiment seed, then every control seed, in one child — so the
+differential varies the salt and nothing else. Bill paid in slot: **4 standing
+PASS certificates** re-bought (`T0.15`, `T0.17`, `T0.33`, `T0.35` declare
+`experiments/protocol.py` in `IMPL_DEPS`; `T0.27` declares it and is a FAIL, so
+no re-buy is owed). No bar moved in either direction; the deciding-set rule,
+`HASH_SALT_MARGIN_REL` 0.10, `HASH_SALT_ZERO_ABS` 0.10 and the CPU-budget scope
+are byte-unmoved.
+
+**TWO THINGS THE DESK IS OWED RATHER THAN A CLEARED ROW.** (1) The instrument's
+header comment claimed *"exact, zero false positives"* and that clause was the
+stated reason it escapes `D27`'s pricing of heuristic screens; it was never
+tested, and its first live hit on a deciding metric was a false positive. The
+clause is struck in the source with the measurement beside it. **No spec
+certifies this instrument**, so its measured rate is 1-of-1 and rests on one
+case. (2) The repair NARROWS it, and the narrowing is disclosed rather than
+silent: a metric that depends on call ORDER or cross-seed process state is also
+not a function of `(code, seed, data)`, and the differential no longer probes
+that. It never measured it either — it could only report it as *salt*, which is
+a wrong attribution rather than a weak one. Routed as its own row rather than
+built here, under the freeze's no-new-instrument clause.
+
+---
+
+ROUTED: replay-instruments-do-not-replay-the-runs-process-model | 2026-09-27 | measured at `experiments/protocol.py:3682` (`_salt_rerun`) against `run_spec`'s own sequencing at `protocol.py:3855-3857`; the concrete false positive is `XL.01`'s attempt-3 row, 2026-09-27T09:30:04 | OPEN
+    SUBJECT: the APPARATUS — no spec's science is in question; `XL.01`'s rig is
+        measured innocent in the addendum above.
+    DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
+        measured capacity", read off the tool this slot (5 of 6 promised there)
+        and not chosen by hand.
+    WAITS-ON: none | the repair to the salt differential is already shipped and
+        its bill is paid; what is open here is a QUESTION about the class, and it
+        depends on no other row's ruling. It is deliberately NOT coupled to
+        `xl01-c-fixture-ok-is-a-salt-lottery-in-a-deciding-metric` — that row's
+        `XL.01` half is refuted and the estimator half is untouched by this.
+
+**THE CLASS, stated once and generally: an instrument that re-executes a spec to
+check a property of its numbers is only as truthful as its fidelity to the call
+sequence that produced them — and nothing here checks that fidelity.** The salt
+differential re-ran `(fn, seed)` pairs in isolated subprocesses while the runner
+runs all experiment seeds then all control seeds in one process. The mismatch
+did not degrade the reading; it INVERTED it, and it did so on a DECIDING metric
+of a creature gate, and the note it wrote named the wrong cause in confident
+language (*"not a function of (code, seed, data)"*) while pointing at a rig that
+is innocent. Two structural facts make this worth a ruling rather than a fix:
+
+1. **THE EXPOSED POPULATION IS NOT SMALL AND IT IS THE HEALTHY PATTERN.** A
+   `_control` that reads state its `_experiment` cached is how a spec avoids
+   paying for an arm twice — `XL.01` caches the wiped/carried medians and the
+   alien fixture precisely so the control does not re-live them. A coarse,
+   reproducible grep — `grep -ln _CACHE experiments/tests/*.py` is **58** files,
+   and **33** of those name `_CACHE` inside the span from `def _control` to the
+   next top-level definition — puts the exposed population at **33 of 58**. That
+   figure is quoted as an ORDER, not a count, and the reason is on the record:
+   the span is textual, so a cache touched in a helper `_control` calls is
+   MISSED and a cache named in a docstring is counted. A precise number needs an
+   AST reader, and an AST reader on this question is a new instrument the freeze
+   forbids. Whether the precise count is worth buying is part of what is asked
+   here.
+
+2. **THE NARROWING IS REAL AND NOW UNWATCHED.** With the child made faithful,
+   call-ORDER and cross-seed process-state dependence — also a violation of
+   *"a function of (code, seed, data)"* — is probed by nothing. Before the
+   repair it was probed by nothing either: it could only surface MISLABELLED as
+   salt, which is worse than absent. So this is not a capability lost; it is a
+   capability that never existed and now has an honest hole where it was.
+
+**WHAT IS ASKED.** (a) Does the replay-fidelity property get a certificate — and
+if so, does that collide with the standing freeze on new Tier-0 specs, which the
+freeze's own text ties to `T6.01` running? Note the shape of the trap: the
+instrument that found a defect in a creature gate is itself certified by nothing,
+and the rule that would let somebody certify it is suspended until a creature
+gate runs. (b) Is call-order / cross-seed determinism worth its own differential,
+or is it a `LESSONS` rule and a reviewer's eye? (c) `D27` priced heuristic
+screens at a 95% false-positive rate and this instrument was exempted for being
+*"exact, zero false positives"* — a clause now struck on evidence. Does the
+exemption survive its stated reason?
+
+    Staleness bill for this row: **ZERO** — it edits no spec file and no
+    `IMPL_DEPS` path. The `protocol.py` edit it reports is billed and paid on the
+    addendum above (`T0.15`, `T0.17`, `T0.33`, `T0.35` re-bought in slot).

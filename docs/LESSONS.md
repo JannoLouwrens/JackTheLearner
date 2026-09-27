@@ -18780,3 +18780,66 @@ with their positions recovered**. The moved dependency is **inert at the only
 site this spec touches** — the staleness is a hash fact, not a behaviour fact.
 A stale stamp and a changed verdict are different debts, and eleven lines of
 probe told them apart for the price of neither.
+
+## A DIFFERENTIAL'S EXACTNESS IS A PROPERTY OF THE COMPARISON, NEVER OF THE REPLAY — and the replay is the half nobody tests, so "zero false positives" is a capability claim that law 1 binds like any other
+## (builder, 2026-09-27; measured the day after the instrument's first live hit, on `XL.01`, where 19 of 19 reported divergences were the detector's own cold cache and the salt moved nothing)
+
+**THE EVENT.** The hash-salt differential (`protocol.py`, shipped 2026-09-26 as
+option (iv) of `hash-salt-lottery-in-a-gated-metric`) asks a sharp, correct
+question: is a recorded metric a function of `(code, seed, data)`? It answers it
+by re-running the spec under a second `PYTHONHASHSEED` and diffing. On its first
+live hit against a DECIDING metric it reported that `XL.01` — a creature gate —
+had a verdict that was a function of the interpreter's salt, `c_fixture_ok`
+1.0 → 0.0, verdict replaying FAIL → VOID. The slot that received it routed a
+queue row declaring the detector correct and the spec's rig defective, and — on
+good evidence, honestly gathered — eliminated the layout fixture and concluded
+the defect must lie in world construction or stepping, i.e. behind the most
+expensive instrument the project owns.
+
+**THE MEASUREMENT THAT INVERTED IT, and the cheapest leg was decisive.**
+
+    _control(0) alone, PYTHONHASHSEED=0   ->  c_fixture_ok 0.0   <- the RECORDED run's own salt
+    _control(0) alone, salt 1 / salt 7    ->  0.0 / 0.0
+    _experiment(0) THEN _control(0),
+      one process, salt 1                 ->  1.0
+
+`_control` reads a module-level `_CACHE` that only `_experiment` writes.
+`run_spec` runs every experiment seed and then every control seed **in one
+process**; the differential ran **each `(fn, seed)` in a fresh subprocess of its
+own**. So the replayed `_control` took its cold-cache early return. The
+divergence set accounts to the digit — 20 numeric control keys, minus one whose
+value is 0.0 on both sides, is `1 deciding + 18 non-deciding`, exactly what was
+reported — and all 40 numeric experiment metrics reproduced bit-exactly. **Zero
+of it was salt.**
+
+**WHY THIS IS NOT JUST A BUG.** Three properties make it a class:
+
+1. **The mismatch did not degrade the reading, it INVERTED it**, and it aimed
+   confident language (*"not a function of (code, seed, data)"*) at an innocent
+   party. A noisy instrument makes you doubt its output; a faithful-looking one
+   that swaps the subject makes you act.
+2. **The exposed population is the HEALTHY pattern.** A `_control` that reads
+   what `_experiment` cached is how a spec avoids paying for an arm twice. A
+   coarse grep puts it at 33 of 58 cache-holding spec files here. The defect
+   selects for good practice.
+3. **The false-positive claim was the instrument's own admission ticket.** Its
+   header read *"exact, zero false positives, nothing to calibrate — which is
+   why it does not collide with D27"*, where `D27` is the ruling that priced a
+   heuristic screen at 95% false. The clause was never tested, and it was
+   load-bearing for an exemption. **A number asserted about an instrument's own
+   error rate is a capability claim, and "a capability may only be claimed by a
+   test that could have failed" does not stop applying because the subject is a
+   checker rather than Jack.** No spec certified this one.
+
+**Rule, and it generalises past salt.** Any instrument that RE-EXECUTES a
+subject to check a property of the subject's numbers must reproduce the
+subject's **execution context** — call order, process boundaries, and the state
+that survives between calls — and must say in source which axis it varies and
+which it holds. The honest form is one line of code away: replay the runner's own
+sequence, do not compose your own. And when a replay-based instrument reports a
+divergence, the FIRST leg to run is the one that holds the varied axis FIXED: if
+the "salt-dependent" value reproduces at the recorded run's own salt, the finding
+is about the instrument, and that leg costs seconds where chasing the subject
+costs a world-edit window. Corollary, for the page as much as the code: an
+instrument may not claim a false-positive rate it has not measured; write
+`rate unmeasured` and let it be embarrassing.
