@@ -1936,6 +1936,48 @@ mandatory diagnostic: **effective rank and per-dimension variance of the latent
 must be reported every 1,000 decisions**, and a collapse (rank below a
 pre-registered floor) is `Status.VOID` for A4, not a good loss curve.
 
+> **AMENDMENT 2026-09-27 (Review FULL), and it records its own scar rather than
+> matching this text to the code.** The sentence above is a capability claim
+> — `SYSTEM.md`, 2026-08-30: *"A governing document that names an enforcement is
+> making a capability claim, and it is bound by law 1 like any other."* **It was
+> never computable.** `effective_rank` occurs twice in `*.py` and both hits are
+> prose inside other specs' `hypothesis` strings; `svd|singular|RankMe|eig|
+> spectrum` across `experiments/` returns 7 hits and every one is audio
+> spectrum; the committed `LC.03` row records 50 metrics for `wm-latent` and not
+> one of them is effective rank or per-dimension latent variance, for any of the
+> five arms. There is no rank, there is no floor, and **`D10` seated `A4` BY
+> VERDICT on 2026-09-01** — so the seat was won in a ring missing one of its
+> declared walls. The seat's own evidence (`life_gain` t_null 4.65 / t_twin
+> 4.00) is real and is NOT questioned here; what is recorded is that this
+> specific silent-failure guard was absent when the verdict was taken.
+>
+> **Nothing above is withdrawn or weakened.** The VOID condition STANDS, and
+> this amendment's whole purpose is to make it computable instead of
+> aspirational — the forbidden repair here was amending the promise down to meet
+> the gap, and that was refused explicitly. What is ADDED is the missing
+> operational form, taken from field watch wk7 §2's N3 (ActSWM) because it is
+> better-posed than a bare rank floor: roll the latent twice from one context,
+> once under the recorded actions and once under the **all-zero action
+> sequence**, score both by cosine against the true future latent, and report
+> `Δ_k = s_k^gt − s_k^0`. In `W0` zero torque is a legal executable action, so
+> the baseline is not arbitrary: `Δ_k` measures *how much this model thinks its
+> actions matter*, and a collapsed latent cannot fake it — under collapse both
+> rolls agree and `Δ_k` goes to zero, which a good loss curve cannot hide.
+>
+> **Binding, and narrower than it looks.** The readout plus a pre-registered
+> floor are REQUIRED for the next `A4`-family run to be scoreable; this does not
+> retroactively guard a seat already awarded, and it does not reopen `LC.03`'s
+> VOID-FORECLOSURE or unseat `A4`. Implementation is commissioned on
+> `a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere` in
+> `docs/REVIEW_QUEUE.md`, which carries the ruling and the ranked reasoning.
+>
+> **Why the amendment is written at all, given that half of the fork is still
+> owed:** the ruling was (i) BUILD + (iii) AMEND *together*, never (iii) alone,
+> and (iii) alone is precisely "quietly match the text to the code". This block
+> is the opposite of that — it is the only place in the repository that says the
+> guard was promised, when, that it was never computed, and that a seat was
+> awarded without it. Deleting this block to tidy the section is the reversal.
+
 - **Hypothesis tested:** does pixel-free latent prediction beat reconstruction
   *at our scale*? The literature's argument for latent prediction is that
   reconstruction wastes capacity on irrelevant detail — an argument made at

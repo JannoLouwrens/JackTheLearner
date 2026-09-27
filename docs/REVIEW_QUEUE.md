@@ -8752,13 +8752,25 @@ certificate; the row asks for a ruling.
 
 ---
 
-ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026-09-14 | `9075d58` (field watch wk7 §6, greps reproduced by the builder at ~06:2x and by this desk at ~07:3x) | OPEN
+ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026-09-14 | `9075d58` (field watch wk7 §6, greps reproduced by the builder at ~06:2x and by this desk at ~07:3x) | DISPOSITIONED 2026-09-27 (Review FULL — the three-way fork is RULED (i)+(iii), and the (iii) half is EXECUTED in this sitting's commit, not merely designed. See THE RULING below)
     DUE: 2026-09-18 | a fork owed by the Review, and it is three-way: BUILD the
     diagnostic, RE-EXAMINE `A4`'s seat, or AMEND `LEARNING_CORE.md` §5.4. Date
     is `review-queue`'s own `next_free_due`, not chosen by hand (68th audit B7,
     `3''`) — and note it is the SECOND row on that date, which is this desk's
     demonstrated rate and not its measured capacity.
     DUE: 2026-09-25 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. RANKED FIRST of the desk-owed rows and that is the substantive act in this batch. Three open questions now converge on the A4 seat — this three-way fork, the new `lc03` row (five controls, none isolating the term the seat is named for), and field watch week 8's N1 — and all three want the same 14.40 core-h with no weights on disk. They are marginal on each other; deciding this one first is what stops the project paying up to three times for one run.
+    DUE: 2026-10-04 | RE-DATED 2026-09-27 (Review FULL). **The debt the 09-25
+        date carried is DISCHARGED — the fork is RULED in THE RULING block below
+        and the desk's own half (iii) is EXECUTED in this sitting's commit, so
+        this date is not the fourth promise of a decision.** What the new date
+        carries is the BUILDER's execution of the (i) half — the ActSWM `Δ_k`
+        readout and its pre-registered floor — which is slot-sized and needs no
+        GPU. Dated 10-04 rather than sooner for one reason, stated because it is
+        the finding under the finding and it is the same one `hr1` recorded four
+        days ago: 09-28..10-03 each already carry this desk's measured 6/cycle
+        capacity, so the date is set by THIS QUEUE'S ROOM, not by the cost of
+        the work. That is the drain, and it is `D28`'s, not this row's.
+    WAITS-ON: none
 
 **THE DISAGREEMENT, in two greps.** `docs/research/LEARNING_CORE.md` §5.4,
 verbatim:
@@ -8836,6 +8848,52 @@ shape, same week, one organ over.
 this row and `LC.03`'s VOID-FORECLOSURE is not reopened by it. `run senses` and
 `coverage` are untouched. The builder is explicitly told in `ladder_prompt.md`
 `1^7` item 4 **not** to pre-empt the disposition.
+
+**THE RULING — 2026-09-27 (Review FULL). (i)+(iii), and the desk took the half
+that was its own.** The 09-22 re-date ranked this row FIRST of the desk-owed
+rows and said the substantive act was deciding it; that act is taken here rather
+than moved a third time. The leaning recorded on 09-18 is ADOPTED unchanged,
+because nine days of further evidence did not disturb it.
+
+- **(ii) RE-EXAMINE THE SEAT is REFUSED**, on cost and on honesty. `LC.07` is
+  VENUE-UNAFFORDABLE AT BOTH VENUES (CPU 535.5 core-h = 33.5 days of the whole
+  budget, `a3a090a`; GPU refused 09-06), so there is no instrument with which to
+  re-decide the seat — and a re-examination nobody can run is exactly the kind
+  of promise the `d10-successor` stop-rule fired on this same morning for. Said
+  plainly: `A4` keeps its seat, and the reason is partly that we cannot afford
+  to challenge it, which is a worse reason than "the evidence held" and is
+  recorded as such rather than dressed up.
+- **(iii) AMEND §5.4 is EXECUTED THIS SITTING**, in `docs/research/
+  LEARNING_CORE.md` — and it is an amendment that records its own scar, which
+  was the stated precondition for (iii) being permissible at all. It states what
+  §5.4 promised, that it was never computed, that `D10` seated `A4` without it,
+  and it **withdraws nothing**: the `Status.VOID` condition stands and is made
+  COMPUTABLE rather than softened. The strengthen-only law is not strained here,
+  it is the whole mechanism — an uncomputable VOID condition is a wall that was
+  never there, and specifying it builds the wall.
+- **(i) BUILD IT is ADOPTED and is the BUILDER's**, in ActSWM's `Δ_k` form
+  (wk7 §2's N3), not as a bare rank floor: roll the latent twice from one
+  context — once under recorded actions, once under the all-zero action
+  sequence — and score both by cosine against the true future latent. Under
+  collapse both rolls agree and `Δ_k` -> 0, so unlike a loss curve it cannot be
+  satisfied by a collapsed latent. The floor is PRE-REGISTERED before the run
+  that it gates, never after seeing it. Scope is deliberately small: the readout
+  and its floor, REQUIRED for the next `A4`-family run to be scoreable, with no
+  retroactive effect on the awarded seat and no reopening of `LC.03`.
+
+**WHAT THIS RULING DOES NOT DO.** It does not unseat `A4`, reopen `LC.03`'s
+VOID-FORECLOSURE, move any threshold, or spend the 14.40 core-h. It does not
+answer the `lc03` row (five controls, none isolating the term the seat is named
+for) or field watch week 8's N1 — but it is the decision those two were
+marginal on, and taking it first is what stops the project paying up to three
+times for one run, which is what the 09-22 ranking predicted.
+
+**STALENESS BILL: ZERO green certificates.** `docs/research/LEARNING_CORE.md`
+is in no spec's `IMPL_DEPS` (checked, not assumed — no ledger row declares it),
+the readout is unimplemented so no row can depend on it, and `LC.03` is already
+VOID-FORECLOSED and is not re-run by this. The amendment therefore invalidates
+nothing, which is why the (iii) half was affordable in this sitting.
+
 
 ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (HR.1 attempt 2, FAIL, clean stamp) | DISPOSITIONED
     HR.1 measured FAIL exactly on its pre-stated branch, and the number is the
