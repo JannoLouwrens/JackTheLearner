@@ -19621,3 +19621,68 @@ answer this by building a prohibition checker: the freeze's clause 2 forbids the
 new organ, the owner reserves character to himself in the same paragraph, and a
 regex over an owner's prose would manufacture exactly the false-positive class
 `STEERING-METRIC-MISMATCH` measured at 60%.
+
+---
+
+## A prohibition enforced by remembering to type a flag is not enforced — and
+## the flag that keeps the certificates honest is what keeps it untested
+
+**(Builder, 2026-09-27 22:xx. Second instance of the negative-sentence sweep the
+entry above prescribes. The first one found typed character; this one found a
+1.7B-parameter language model living inside Jack, and the reason nobody had
+noticed is more general than either finding.)**
+
+GOAL.md says the parent language model *"is not inside him"*;
+`MULTIMODAL_BINDING.md:73` says *"Never a submodule of `nn.Module`"*;
+`CHAMPIONS.md:84` seats it **BY DECREE**. Shipped default:
+`UnifiedBrain.__init__:3901` → `LLMEncoder.__init__:1296` assigns
+`self.llm = AutoModelForCausalLM.from_pretrained(...)` inside an `nn.Module`,
+with `llm_enabled=True` and the model id pinned to the **1.7B** where the decree
+names the **360M**. Measured this slot; full record in
+`parent-llm-is-a-submodule-and-96-percent-of-the-brain`.
+
+**The first generalisation — the shape of the non-enforcement.** The decree IS
+obeyed, everywhere it matters, by **18 hand-written `llm_enabled=False`
+assignments** scattered across the spec files (some literal, some via a
+`for flag in (...)` setattr loop). Seven of the 31 spec files that build the
+brain never mention the LLM at all, and three of those hold standing PASSes.
+That is not a lapse by seven authors; it is what a prohibition looks like when
+its only enforcement is *remembering*. **A rule that must be retyped in every
+new file that could break it has a defect rate equal to the author's memory, and
+it degrades monotonically as the file count grows.** When you find a constraint
+being honoured by repetition rather than by construction, the count of
+repetitions is the bug report: 18 obediences and 7 omissions is a measurement of
+the enforcement mechanism, not of the seven authors.
+
+**The second generalisation, and it is the sharper one: THE WORKAROUND HID THE
+VIOLATION.** Those 18 `llm_enabled=False` lines are correct, careful work — they
+are why no capability number in this ladder is contaminated. They are also the
+exact reason the decree has never been tested, because the configuration the
+decree forbids is the configuration no honest spec ever runs. **A defect that is
+correctly worked around at every call site becomes invisible at the same moment
+it becomes harmless.** So: when you find a guard repeated at many call sites,
+ask what is true in the configuration the guard is avoiding — nobody else is
+looking there, by construction.
+
+**The third: AN UNREAD METRIC CAN RECORD A DECREE VIOLATION IN DECIMAL.**
+`T1.03` (PASS) has recorded `total_params` **1,767,267,976** against
+`trainable_params` **55,891,592** since 2026-09-06. The parent is the
+1,711,376,384-parameter difference — **96.84% of Jack** — sitting in the ledger
+in plain decimal for three weeks. `run status`'s **METRIC RECORDED BUT UNREAD**
+class already lists `total_params` among 550 such metrics, and `D27` correctly
+ruled that class unactionable spec-by-spec at a **95% false-positive rate**.
+**That ruling is right and this does not reopen it — because it answers a
+different question.** "Does this unread metric mean the certificate is wrong?"
+is 95% false. **"Does any unread metric contradict a DECREE?"** is a different
+query over the same rows, with a different base rate, and it found this in one
+pass. A metric no conjunct reads is not evidence against its own spec; it can
+still be evidence about the ARCHITECTURE the spec was run on.
+
+**The rule, and the guard on it.** Keep running the negative-sentence sweep the
+previous entry prescribes — it is now 2 for 2. But when it hits, **check whether
+the prohibition is enforced by construction or by repetition, and if by
+repetition, COUNT the repetitions and the omissions.** Do NOT answer any of this
+by building a prohibition checker or a new ratchet: freeze clause 2 forbids the
+organ, and a regex over owner prose manufactures the `STEERING-METRIC-MISMATCH`
+false-positive class measured at 60%. The deliverable is a routed row with the
+arithmetic in it, which is what a desk can rule on.

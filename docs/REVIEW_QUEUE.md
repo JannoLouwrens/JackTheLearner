@@ -13754,3 +13754,151 @@ re-value a component (standing prohibition). So:
 measured by importing `Personality.py`, not by changing it. This row's own edit
 to `REVIEW_QUEUE.md` bills `T0.21` and `T0.31`, priced before the edit and
 re-bought in slot.
+
+---
+
+ROUTED: parent-llm-is-a-submodule-and-96-percent-of-the-brain | 2026-09-27 | `UnifiedBrain.py:105-127, 1296-1327, 3901, 4176` read statically; `LLMEncoder` and `UnifiedBrain` CONSTRUCTED in this venv and their `named_parameters()` trees measured; the real SmolLM2-1.7B checkpoint loaded once from `/data/caches/huggingface`; `T1.03`'s recorded metrics read off `experiments/ledger.json`; all 31 spec files that build the brain scanned for the guard. Builder, this slot, NO ledger write, NO spec or root module edited | OPEN
+    DUE: 2026-10-13 | `next_free_due`'s literal answer, taken without special
+        pleading. Live dated promises per day, counted off the tool this slot:
+        09-28 through 10-08 are ALL at or over the measured capacity of 6 (six
+        days at 6, four at 7, 10-08 at 5); 10-09 carries 2, 10-10 carries 1,
+        10-12 carries 1, and **10-13 is the first day measured EMPTY**. The
+        09-27 FULL's re-dating rule says place a date on an empty day, so I
+        did. This row has no clock the calendar cannot absorb — the
+        configuration it describes has been shipped since before this ladder
+        existed and `T1.03`'s row has recorded it since 2026-09-06 — so I am
+        not repeating my predecessor's (well-disclosed) jump to an
+        under-capacity day. Against a queue at 6.00 arrivals per cycle and
+        1.14 disposals, the cheapest thing a new row can do is not crowd one.
+    WAITS-ON: none | no live row's answer changes what is measured here.
+        The nearest neighbour is NOT upstream:
+        `personality-is-a-typed-character-sheet-on-the-answer-path` (OPEN, DUE
+        2026-10-09, routed 19:0x this morning) shares this row's METHOD — a
+        GOAL.md prohibition checked against shipped code — and shares the
+        `UnifiedBrain.py` file, but asks a disjoint question: that row is about
+        WHAT IS TYPED INTO the character the LLM is handed, this row is about
+        WHERE THE LLM LIVES. Every branch of that row's priced menu leaves this
+        finding exactly where it is, and vice versa.
+
+**THE FINDING: GOAL.md says the parent language model "is not inside him", a
+champion seat held BY DECREE says "SmolLM2-360M ... NOT inside him", and the
+shipped default makes SmolLM2-1.7B an `nn.Module` grandchild that is 96.8% of
+Jack's parameters — a fact already recorded in plain numbers on a standing PASS
+certificate that no instrument reads as a violation.** Nothing below is inferred
+from a page; every number was read off the code, measured in this venv this
+slot, or read off the ledger.
+
+**Leg 1 — what is forbidden, in the owner's and the repo's own words.**
+`GOAL.md:148-157`: *"The LLM is his TALKATIVE PARENT (owner, 2026-08-09) —
+decided. **It is not inside him.** It lives in his WORLD as a voice that speaks
+to him."* `GOAL.md:162`: *"The borrowed model is frozen and out-of-process
+precisely so that nothing he learns can hide inside it."*
+`docs/MULTIMODAL_BINDING.md:73` states the engineering form of the same
+decision: *"`HuggingFaceTB/SmolLM2-360M-Instruct`, frozen, fp16 ≈ 0.7 GB,
+running **out-of-process on CPU** next to MuJoCo. **Never a submodule of
+`nn.Module`** — that is what let `:4088` destroy it. Demote from 1.7B: 3.42 GB
+does not fit the 3 GiB container cap on a box shared with paying tenants."*
+`docs/CHAMPIONS.md:84` seats it: *"Language model | SmolLM2-360M as a TALKATIVE
+PARENT — in his world, speaking to him; NOT inside him | **BY DECREE**"*.
+
+**Leg 2 — what ships, measured by constructing it rather than by reading it.**
+`UnifiedBrain.py` config defaults (`:122-127`): `llm_enabled = True`,
+`llm_backend = "smollm"`, `llm_model_id = "HuggingFaceTB/SmolLM2-1.7B-Instruct"`,
+`llm_freeze = True`. `UnifiedBrain.__init__:3901` does
+`self.language_encoder = LLMEncoder(config)`; `LLMEncoder.__init__:1296` does
+`self.llm = AutoModelForCausalLM.from_pretrained(model_id, ...)` inside an
+`nn.Module`, which registers it. Measured in this venv:
+
+    LLMEncoder(UnifiedBrainConfig())  ->  use_llm True
+                                          'llm' in encoder._modules  TRUE
+    real checkpoint, HF_HUB_OFFLINE=1 ->  LlamaForCausalLM, 1,711.4M params
+                                          (cached at /data/caches/huggingface)
+    UnifiedBrain(UnifiedBrainConfig()) ->  language_encoder.llm.* present in
+                                           named_parameters()
+
+The decree names the **360M**; the shipped default is the **1.7B**. Both are
+cached on this box; the one the decree chose is the one not used.
+
+**Leg 3 — and this is the part no page had written down: the violation is
+already recorded, in decimal, on a standing PASS.** `T1.03` *"Gradient reaches
+every trainable parameter"* (PASS, attempt 4, ran 2026-09-06T17:23:31) builds
+the brain at `t1_03_gradient_coverage.py:54` as a bare
+`UnifiedBrainConfig()` — no guard — and its recorded metrics read:
+
+    total_params      1,767,267,976
+    trainable_params     55,891,592
+    ---------------------------------
+    the parent        1,711,376,384   =  96.84% of the brain
+
+My independent construction of the brain with the parent replaced by a 4.26M
+stub measured Jack's own trainable surface at **55,891,592 — bit-for-bit the
+number in the certificate**, which is how I know the difference is the parent
+and not a mis-subtraction.
+
+**Leg 4 — why no instrument says so, which is the reusable half.** Three
+separate organs each look straight at this and cannot see it:
+
+  * **The ladder.** No spec in `registry.py` or `registry_expansion.py` asserts
+    the decree. The closest is `T1.04`'s null baseline *"Frozen modules must
+    show exactly zero"* — and `t1_04_weights_move.py:86` sets
+    `llm_enabled = False`, so the frozen parent is not present to be measured.
+  * **The guard is 18 hand-written assignments, not a gate.** Of the 31 spec
+    files that construct the brain, 18 disable the parent by hand (a literal
+    `llm_enabled=False`, or the `for flag in ("llm_enabled", ...)` setattr loop
+    at e.g. `t0_03_checkpoint_roundtrip.py:38-40`). **Seven never mention the
+    LLM at all** — `t1_03_gradient_coverage.py`, `t2_03_pretrained_vision.py`,
+    `t3_01_ablate_vision.py`, `t3_10_trunk_knowledge_survives.py`,
+    `t2_11_skills_distinguishable.py`, `pl_00_encoder_cost.py`,
+    `pl00_render_bakeoff.py` — and three of those hold standing PASSes. The
+    flag that keeps the certificates honest is the same flag that keeps the
+    decree untested: a decree enforced by remembering to type something in
+    every new test file is not enforced.
+  * **`champions --check` exits 0 with every class at its floor.** A seat held
+    BY DECREE has no class for "the code contradicts the seat", so a seat can
+    be green and false at the same time.
+
+**Leg 5 — WHAT IS NOT CLAIMED, each checked before writing.**
+
+  * **No certificate is red or alleged red, and `T1.03` is not wrong.** Its
+    gate is `orphan_fraction` 0.0483, computed over TRAINABLE parameters
+    (`params_without_grad` 2,698,619 / 55,891,592 = 0.04828). The frozen parent
+    is outside the gate's scope by construction, so the verdict stands on its
+    own terms. What is defective is not the check — it is that `total_params`
+    is in `run status`'s **METRIC RECORDED BUT UNREAD** class (550 metrics on
+    59 certificates, named in no conjunct), and this is one where the unread
+    metric records an architecture fact that contradicts an owner decree.
+    `D27` correctly ruled that class unactionable spec-by-spec at a 95%
+    false-positive rate; this row does not reopen `D27` and asks for no ratchet.
+  * **The numbers those seven specs measured are very unlikely to be wrong.**
+    `T0.07`'s own registry notes already record the residency and settle the
+    behavioural question: *"llm_enabled=False changes rollout speed by 0.0%:
+    the 1.71B-param SmolLM2 is 6.9 GB resident and never runs in forward()."*
+    Never running in `forward()` means no gradient path and no effect on a
+    measured quantity. **The residency was therefore already known** (also
+    `docs/PIPELINE_REVIEW.md:74`, which names the grandchild as the premise of
+    the since-repaired `self.apply()` init-clobbering defect). What was NOT
+    written anywhere: that it is a standing violation of a decree, that it is
+    96.8% of the brain, and that nothing watches it.
+  * **The operational note is reported, not claimed.** `MULTIMODAL_BINDING.md`
+    rejected the 1.7B partly because 3.42 GB does not fit the 3 GiB container
+    cap on a box shared with paying tenants, and `T0.07` measures 6.9 GB
+    resident. I did not test whether any current spec run approaches that
+    ceiling and I am not asserting it does.
+  * **Nothing was fixed.** Moving the parent out-of-process is an architecture
+    change to `UnifiedBrain.py`, which is the owner's or the Review's call and
+    is a `playground`-class staleness event; the cheaper repairs (a default
+    flip to `llm_enabled=False`, a demotion to the 360M the decree names) are
+    still threshold-adjacent acts on a decree, and `GOAL.md` reserves this
+    class in terms. **Menu priced, NOTHING TAKEN.**
+
+**Staleness bill: ZERO.** No spec file and no root module was edited; the brain
+was measured by importing and constructing it, never by changing it. This row's
+own edit to `REVIEW_QUEUE.md` bills `T0.21` and `T0.31`, priced before the edit
+with `run stale-cost` (0.00 CPU-h, 1 slot) and re-bought in slot.
+
+**Disclosure.** Loading the real 1.7B checkpoint once to confirm
+`LlamaForCausalLM` and its parameter count took ~3.4 GB RSS, over this repo's
+~1.5 GB working rule. It was a single short-lived process, it has exited,
+nothing was left running, and every other measurement in this row used a 4.26M
+stub in its place. I would not repeat it, and a future check of this row needs
+only the ledger row in Leg 3.
