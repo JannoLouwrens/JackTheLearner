@@ -18221,3 +18221,179 @@ the cheaper half: **the slot that receives a hand-forward verifies it before
 obeying it.** A named first pick is a hypothesis about the board, never a
 reading of it, and the two diverge exactly when the predecessor was busy — the
 condition under which hand-forwards are written.
+
+## AN EPSILON CLAMP IS A DOMAIN ASSERTION WEARING A SAFETY GUARD'S COSTUME — and the fabrication that costs you a certificate is not the ABSURD one somebody eventually squints at, it is the COMFORTABLE one that clears a bar and is never looked at again (builder, 2026-09-27; found via `LT.03`'s `metra_chaos_ratio` -147,365, paid for by `LT.02`'s `chaos_reward_ratio` **5.2631 = 5.2631e-9 / 1e-9**, a standing PASS conjunct that had never been satisfied by a measurement)
+
+**The artifact.** `LT.03`'s registered run — 16,580.6 s, three seeds — recorded
+
+    metra_chaos_ratio  -147,365.910333  +/- 100,816.347505
+
+alongside siblings reading 3.71, 1.78, 0.92 and 0.84. The harvest row flagged
+it as *"an instrument smell worth a look before the next buy"* and left it
+there. It is not a smell and it is not a measurement: it is
+`fl.mean() * 1e9`, reproducible from `fl.mean() = -1.474e-4` to within 0.02%
+of the recorded value.
+
+**The mechanism.** `lt_02_chaos_detector._reward_ratio` computes the cause
+gate for the self-generated-chaos VOID lane — late-half intrinsic reward,
+detector-flagged mean over unflagged mean, gated at `>= 2.0` — and guarded
+the division as `fl.mean() / max(1e-9, un.mean())`. That guard is correct and
+complete for the domain it was written in: `LT.02`'s scored arms are all ICM
+prediction errors, so `un.mean()` is non-negative and the only reachable
+hazard is a zero denominator. `LT.03` imports the same helper and applies it
+to `metra-xs`, whose intrinsic reward is a SIGNED dot product
+`(phi(o2)-phi(o)).z`. The unflagged mean went negative; `max` returned the
+epsilon; the quotient is a fabrication nine orders of magnitude wide.
+
+**Why this is worse than a wrong number, and it is the part to carry.** THE
+FABRICATION'S SIGN DECIDED THE GATE. The lane is `occ >= 3.0 and ratio >=
+2.0`. The recorded run passed it only because the numerator happened to be
+negative too. Flip that numerator — a quantity ~3,000x SMALLER in magnitude
+than the denominator, i.e. an arm manifestly NOT being fed by the chaos — and
+the identical arm reads +147,400 and is declared contaminated. A gate whose
+verdict is decided by an arithmetic accident is decorative in one direction
+and libellous in the other, and both readings are unfalsifiable from the
+record, because the record shows a number.
+
+**The general rule.** `max(eps, x)`, `abs(x) + eps`, `x or 1.0`, `clip(x,
+lo, hi)` at a computed boundary — each of these encodes *"x is in this
+domain"* and each SILENTLY SUPPLIES A RESULT when it is not. The anticipated
+failure (divide by zero) is loud; the unanticipated one (divide by something
+signed) is silent and returns a value that then flows into a threshold
+comparison. **On every branch where a quantity has no meaning, return `NaN`,
+never a number** — and then read `NaN` in the REFUSING direction at each call
+site, because `nan < BAR` is `False` and will pass a gate silently while
+`not (nan >= BAR)` refuses it. `0.0` is the worst possible sentinel here: it
+is the value a clean arm produces.
+
+**The transmission path, and no import walk can see it.** The precondition
+"the denominator is non-negative" is a property of the CALLER'S arms, not of
+the helper, and it was never written anywhere. `IMPL_DEPS` correctly
+declared the edge — `LT.03` names `lt_02_chaos_detector.py` — but staleness
+answers *"did this file change?"*, never *"is this file's domain assumption
+still true in its new caller?"* A shared helper carries an unwritten contract
+about the numbers it will be handed, and the moment a second spec imports it
+that contract is being asserted by nobody. **When you import a scoring helper
+across specs, state its domain in its docstring and check that your arms are
+in it.** `_reward_ratio` now does.
+
+**THE HALF THAT COST A CERTIFICATE, AND IT IS THE HALF WORTH CARRYING.** The
+obvious damage from a fabricated value is the absurd one — a number five
+orders of magnitude from its siblings, which somebody eventually squints at.
+The expensive damage is the PLAUSIBLE one. Repairing the helper forced a
+re-buy of `LT.02`, the standing PASS whose file it lives in, and the re-buy
+came back **FAIL**: its `chaos_reward_ratio` went `5.2631` -> `NaN` while all
+seven other deciding metrics reproduced to the digit under a clean hash-salt
+differential. Enumerating the helper's branches, only `den <= 0` returns
+5.2631 before and NaN after — which forces `fl.mean() = 5.2631e-9` and, since
+ICM reward is a squared error, forces every unflagged late reward to be
+exactly 0.0. **`5.2631` was `5.2631e-9 / 1e-9`.** It was not a 5.3x ratio
+against a 2.0 bar; it was the ratio of a nanoscale number to a manufactured
+one, and it read as the healthiest figure on the page. The conjunct it
+cleared — *"the fixation must be FED by the chaos"* — had never once been
+satisfied by a measurement, on the certificate that carried it.
+
+So: **a clamp does not only produce impossible numbers, it produces
+COMFORTABLE ones, and those are invisible forever.** The absurd value was
+caught in a day by a human reading a harvest. The comfortable value survived
+a pilot, two registered runs, a redesign that explicitly promised to carry
+every passing control forward unchanged, an offline `_check` replay and a
+standing certificate — and nothing in the ladder could have found it, because
+every instrument this project owns reads the RECORDED number and the recorded
+number was 5.2631. The only thing that found it was changing the code that
+made it up.
+
+**Corollary for any `_check` you write: a gate that PASSES is unaudited.** The
+ladder's whole apparatus — controls, nulls, shuffled twins, the VOID lanes —
+is built to catch a claim that should not have passed. Nothing is built to
+catch a CONJUNCT that should not have passed, because a conjunct clearing its
+bar looks identical whether it was measured or manufactured. `T0.13` ("no
+gate in the ladder is decorative") is the nearest instrument and it perturbs
+the recorded value, so a bar cleared by a fabricated-but-live number reads
+live to it. Where a conjunct's quantity has a reachable degenerate case,
+record the DEFINEDNESS beside the value — `{arm}_chaos_ratio_defined` here —
+so a reader can tell a measurement from an arithmetic artifact without
+re-running anything.
+
+**And the reading discipline, since under the standing freeze no instrument
+may be built for this.** A recorded metric several orders of magnitude
+outside its siblings is a FABRICATION until proven otherwise, not an
+interesting result. The cheap test costs one line: take the recorded value,
+divide by the guard's epsilon, and see whether the answer is a plausible
+value of the numerator. Here `-147,365.91 * 1e-9 = -1.474e-4`, a perfectly
+ordinary METRA reward — settled before anything is re-run. **Then run the
+same line on the metrics that look FINE**, which is where the certificate
+was: `5.2631 * 1e-9 = 5.2631e-9`, an entirely plausible late-stage ICM
+reward, and that is the tell. If multiplying a healthy-looking ratio by the
+guard's epsilon yields a plausible numerator, the denominator was probably
+never there.
+
+## A ROUTING THAT EXISTS ONLY IN A COMMIT MESSAGE IS NOT A ROUTING — and the reason nothing caught it is that every check in this repo runs from the ROW inward and nothing runs from a CITATION outward (builder, 2026-09-27; two phantom row ids measured in one morning, one of them in committed spec source, while `fail_unowned` read 0 on a FAIL that nobody owned)
+
+**THE ARTIFACT.** Commit `03af51f` recorded `LT.02`'s honest re-buy to FAIL and
+closed its own reasoning with two sentences:
+
+    The repair is a REDESIGN of C2's arm or venue and it is the Review's,
+    routed this slot as `lt02-c2-passed-on-the-epsilon-not-on-a-measurement`.
+    ...
+    `fail_unowned` stays 0: the new FAIL is owned by the routed row.
+
+Neither was true when the slot ended. `grep -c` over `docs/REVIEW_QUEUE.md`
+returned **0** for that id an hour later. A second phantom id was found in the
+same sweep, and it is the worse of the two because it is **committed source**:
+`experiments/tests/lt_02_chaos_detector.py:823` cited
+`lt03-reward-ratio-fabricates-a-number-on-a-negative-denominator`, which also
+matched zero rows — that finding WAS routed, as an addendum to a differently
+named row, so the citation was a wrong name for real work rather than a missing
+owner.
+
+**THE PROXIMATE CAUSE IS MUNDANE AND IS NOT THE LESSON.** The 02:07 slot died
+`rc=124` at 02:57:26 — `timeout 50m` — **thirty seconds after that commit**, with
+`docs/LESSONS.md` and `docs/REVIEW_QUEUE.md` written but uncommitted, no journal
+line, and two commits unpushed. Nobody skipped a step; a clock landed between an
+intention and its record.
+
+**THE LESSON IS THAT THE INTENTION WAS INDISTINGUISHABLE FROM THE RECORD TO
+EVERY INSTRUMENT WE OWN, AND ONE OF THEM ACTIVELY SAID SO.** `fail_unowned` did
+read 0 — correctly, by its own contract, and for a reason with nothing to do with
+the claim. It matches a red spec to a queue row **by SPEC ID**, so `LT.02`'s new
+FAIL resolved to `lt02-the-venue-has-no-true-positive-body-chaos-is-reducible`, a
+row whose subject — an absent true positive — had been discharged eight days
+earlier at `88762a2`. **An ownership counter keyed on the spec cannot tell a
+stale owner from a correct one, and it cannot tell a promised row from a row.**
+The green reading was not a bug and it was not evidence.
+
+**THE STRUCTURAL ASYMMETRY, which is the part that travels.** `review_queue.py`
+enforces a genuinely rich contract on rows: a `ROUTED:` line, a `DUE:`, a
+`WAITS-ON:` declaration, five named VIOLATIONS for the ways a row can be
+dishonestly closed, a piled-on meter, a throughput measure. **Every one of those
+reads from the row inward.** Nothing reads from a citation outward — an id
+quoted in a commit message, a spec docstring, a steering page, or another row's
+prose is matched against nothing at all. So the cheapest conceivable way to
+discharge a routing obligation, *write the id and not the row*, is also the only
+way that no instrument here can distinguish from having done the work. The same
+shape one namespace over — dangling SPEC ids in `GOAL.md` — had a reader that
+worked and produced `goal-cites-four-specs-that-resolve-to-corpses`. The ROW
+namespace has none.
+
+**SO THE DISCIPLINE, and it costs one command.** Before a commit message or a
+docstring says *"routed as `X`"*, `grep -c X docs/REVIEW_QUEUE.md` and require
+a number greater than one — the citation itself is the first match. Do it
+**before** the message is written, not after, because the message is the thing
+that makes the claim. And write the row BEFORE the commit that cites it: a row
+is cheap and a phantom is expensive, and the ordering is what survives a clock
+landing in the wrong place. This is the same one-line discipline the 100th
+audit's lesson already asks for on a re-parent (*"before writing 'this waits on
+`X`', grep `X`"*) — what is new is that a **routing** is a forward reference too,
+that it can dangle at the moment it is written rather than four days later, and
+that the commit message is a record nobody diffs.
+
+**AND THE READER'S HALF, for whoever inherits a slot that died.** A commit
+message is the least verified document in this repo. It is never re-read by an
+instrument, never diffed against the tree, and — unlike a spec docstring or a
+ledger row — it cannot be made stale, so a false sentence in one is permanent
+and silent. When you inherit an `rc=124` slot, **verify its commit messages
+against the tree the way you would verify a hand-forward**: every id it cites
+must resolve, every counter it quotes must re-read, and every file it says it
+wrote must be committed. Two of the three failed here, and the one that read
+green was the one designed to notice.

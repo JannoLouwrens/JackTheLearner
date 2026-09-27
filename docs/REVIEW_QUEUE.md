@@ -10116,6 +10116,86 @@ before the next buy. Redesign is the Review's per the standing rule
 VOID does not decide the pivot). Staleness bill: ZERO certificates — no green
 row cites `lt_03_ladder_test.py`, and the attempt-1 row is already adverse.
 
+    ADDENDUM 2026-09-27 (builder, 02:0x slot) — **ARTIFACT GAP 2 OF 2 IS
+    CLOSED, AND IT WAS NOT A SMELL: IT WAS A FABRICATION.** This row named
+    two things any attempt 2 would need. One is now diagnosed and repaired at
+    zero bill; the other is NOT done and the reason is structural.
+
+    **(i) `metra_chaos_ratio` -147,365 +/- 100,816 — CLOSED (`f047060`).**
+    The row called it *"an instrument smell worth a look before the next
+    buy"*. Looked at: the recorded value is exactly `fl.mean() * 1e9` and
+    reproduces to within 0.02% from `fl.mean() = -1.474e-4`. It is not a
+    measurement. `lt_02_chaos_detector._reward_ratio` — this spec's cause
+    gate, imported under `IMPL_DEPS` — divided by `max(1e-9, un.mean())`.
+    That clamp is correct for LT.02, where every scored arm's reward is an
+    ICM prediction error and so non-negative. `metra-xs`'s reward
+    `(phi(o2)-phi(o)).z` is a SIGNED dot product; its unflagged late mean
+    went negative, the clamp substituted the epsilon, and the quotient is a
+    fabrication nine orders of magnitude wide.
+    THE PART THAT MATTERS FOR ANY ATTEMPT 2: **the fabrication's SIGN
+    decided the VOID lane.** `occ >= 3.0 and ratio >= 2.0` passed only
+    because the numerator was negative too; flip it — a quantity ~3,000x
+    SMALLER in magnitude than the denominator, i.e. an arm manifestly not
+    fed by the chaos — and the same arm reads +147,400 and is declared
+    contaminated. So attempt 1's contamination lane was decided by an
+    arithmetic accident for `metra-xs`, and would have been for any signed-
+    reward arm that reached the chaos region.
+    REPAIRED: the helper now returns NaN on every branch where the ratio has
+    no meaning (no reward stream; a one-sided late half — and the
+    all-flagged case is the MOST chaos-farmed arm reachable; a non-positive
+    denominator). Callers read NaN in the REFUSING direction, because
+    `nan < BAR` is False and passes a gate silently. Here an arm at or above
+    `CHAOS_OCC` whose cause gate is undefined is contaminated, not clean —
+    which can only move a candidate from `live` to VOID. **NO BAR MOVES:**
+    `CHAOS_OCC` 3.0, `CHAOS_RATIO` 2.0, `REWARD_RATIO_MIN` 2.0 untouched.
+    **VERDICT PRESERVED:** replayed against attempt 1's recorded metrics the
+    run is still VOID on `icm_fixates` 0.0, which fires upstream of the lane.
+    **THE LEDGER ROW IS NOT TOUCHED.** The fabricated -147,365 stays in the
+    record as history (T2.02 precedent, metrics byte-untouchable); what
+    changed is that the code can no longer produce one, and
+    `{arm}_chaos_ratio_defined` is now recorded beside every ratio so a
+    future reader cannot quote one as a measurement.
+
+    **THE CLASS QUESTION, asked because one instance is not a class and this
+    project has twice been wrong about that.** Swept every division-guard
+    clamp in `experiments/` (~200 sites). Almost all are structurally safe:
+    `max(1, n)` on counts, `max(std, 1e-9)` on standard deviations,
+    `max(sst, 1e-12)` on sums of squares — all non-negative by construction.
+    The analogous class is exactly THREE sites, all the same "is the
+    fixation fed by the panel" idiom: `pg_4_noisy_tv.py:331`,
+    `t2_09_noisy_tv_control.py:477`, and the one repaired here. **The other
+    two are IN DOMAIN, verified at the reward definition rather than
+    assumed:** PG.4's `r` is `((fwd(inp) - obs2) ** 2).sum()`, and T2.09's
+    three live kinds (`icm`/`disagree`/`rnd`) are squared errors or
+    variances, with `zero` returning exactly 0.0 — which its own docstring
+    at line 219 already anticipates. **SO IT IS 1 OF 3, and the separating
+    variable is whether the spec admits an arm with a SIGNED intrinsic
+    reward.** LT.03 is the only one of the three that does. No new row is
+    routed for the other two: nothing is owed by anybody, and this desk's
+    drain reads UNBOUNDED.
+
+    **(ii) PER-SEED `icm_dwell` — NOT DONE, and not a choice.** `_aggregate`
+    (protocol.py:4063) means across seeds and keeps only keys present in
+    EVERY run, so a per-seed value is not expressible while
+    `_experiment(seed)` is called once per seed; the `_per_seed` list idiom
+    (T3.07) requires the spec to loop its seeds internally. That is a
+    restructure of LT.03's seed handling and it belongs with the attempt-2
+    redesign, which is this row's and the Review's. Named in the spec
+    docstring so attempt 2 cannot inherit it silently. **Nothing above
+    pre-empts that redesign:** this row's subject is the dead panel trap
+    (`icm_fixates` 0.0, every arm `engaged` 0.0 at the full envelope), and
+    nothing here touches it, moves a bar, or makes a PASS reachable.
+
+    **(iii) THE BILL CAME BACK RED, AND IT IS NOT THIS ROW'S — see
+    `lt02-c2-passed-on-the-epsilon-not-on-a-measurement`.** Staleness bill
+    was 1 certificate (`LT.02` cpu<10min), priced before the edit and paid in
+    slot from a clean tree. The re-buy landed **FAIL** (attempt 3,
+    2026-09-27T02:40:10, hash-salt differential clean on 7 deciding metrics),
+    because `LT.02`'s OWN `chaos_reward_ratio` 5.2631 was the same
+    fabrication: `5.2631e-9 / 1e-9`. `unreachable` 95 -> 96, ABOVE floor,
+    signed to this slot and the floor NOT raised. That belongs to `LT.02`'s
+    C2, not to this row's trap question, and is routed separately.
+
 ROUTED: check-return-type-defect-swept-and-repaired | 2026-09-25 | LT.03 attempt-1 harvest, this slot: recorded PASS contradicted its own metrics under offline _check replay | OPEN
     WAITS-ON: none | the repair is EXECUTED in the routing commit (run_spec
         type gate + lt_03 return-type fix + disclosed ledger hand-repair);
@@ -10630,6 +10710,37 @@ list here is a loosening of the project's sharpest gate-liveness instrument and
 own (`T0.32`, `T0.33`) and one is TODAY's (`T0.17`'s P12 partition conjunct,
 `51d21a5`), so the class is being GROWN by this loop's own instrument work,
 which is the allocation question the freeze already names.
+
+**ADDENDUM 2026-09-27 (builder, 03:0x slot) — BOTH FLOORS NAMED IN ONE PLACE,
+which is the 123rd audit's FOR THE BUILDER item 2 and the only thing it handed
+me. It is a paragraph, not an instrument.** The deadlock above is fenced by
+**two** ratchets pulling in opposite directions, and until today each half was
+written somewhere the other's reader would not go: `pass_on_dead_dependency`'s
+half here, `unreachable`'s half only in a journal line. Side by side, read off
+`run status` this slot:
+
+  * **`pass_on_dead_dependency` = 5, floor 3, BREACHED.** Its two newest pairs
+    are `T0.18 <- T0.13` and `T0.19 <- T0.13`, created by `T0.13`'s honest
+    re-buy to FAIL above. The class's stated repair is *a re-run* — either the
+    dependency back to PASS, or the dependent so its row records the BLOCKED it
+    actually is.
+  * **`unreachable` = 96, floor 95, ALSO BREACHED** (the +1 is `LT.03`, signed
+    to the 02:0x slot, not to this row). `unreachable` counts specs the runner
+    would REFUSE today, and `T0.18`/`T0.19` are refusable exactly because
+    `T0.13` is FAIL.
+
+**So the breached ratchet's own stated repair is the move the intact side of the
+other one forbids.** Re-running `T0.18` to record its BLOCKED would clear a
+`pass_on_dead_dependency` pair by *demoting a standing PASS*, which pushes
+`unreachable` further above ITS floor and converts a reporting-only class into a
+second breach; while re-running `T0.13` to PASS is what this row exists to say
+cannot be done without the per-key ruling. **Neither floor may be raised to
+release it** — the standing prohibition on raising `UNREACHABLE_BASELINE` to
+cover your own work is explicit, and `pass_on_dead_dependency`'s floor was
+deliberately left at 3 when the number went to 5. The release is the per-key
+RULING, and it is the only move that touches neither floor. A reader who sees
+one half of this concludes the builder is sitting on an easy re-run; a reader
+who sees both sees a deadlock with exactly one exit.
 
 **Staleness bill for this routing: `T0.21` (cpu<1min) and `T0.31` (cpu<10min)
 against `docs/REVIEW_QUEUE.md`, paid in the same slot.** No spec file is edited
@@ -11391,3 +11502,172 @@ building it, made from measurement rather than from the freeze.
     `docs/LESSONS.md` and `docs/LOOP_JOURNAL.md` bill zero. No spec file
     touched, no bar moved, no re-run owed by any spec measured above: every
     number quoted is read from a standing recorded row.
+
+## ROUTED 2026-09-27 (builder): `lt02-c2-passed-on-the-epsilon-not-on-a-measurement`
+## — the redesign owner for LT.02's new FAIL. The 02:0x slot's commit message
+## said this row was routed; the slot was killed rc=124 thirty seconds later and
+## it never was, so the FAIL spent an hour owned by a row about a different
+## question.
+
+ROUTED: lt02-c2-passed-on-the-epsilon-not-on-a-measurement | 2026-09-27 | `LT.02` attempt 3, ledger row **FAIL** 2026-09-27T02:40:10 (800.24 s, seeds 0/1/2, clean stamp at `f047060`), read off `experiments/ledger.json` this slot | OPEN
+    DUE: 2026-10-06 | `review-queue`'s own *"Next date with room under the
+        measured capacity"*, read off the tool this slot (09-27 through 10-05
+        are all at or above the measured 6/cycle). What is owed is a REDESIGN
+        of C2's ARM or VENUE — a threshold question this desk may not take,
+        because `REWARD_RATIO_MIN` 2.0 is a registered bar and the `1^13` rule
+        ("wanting to move a bar to make one of these pass — stop and route it
+        back") is exactly this row.
+    WAITS-ON: none | nothing live changes what attempt 3 measured. It is
+        deliberately NOT declared `BLOCKED-BY:
+        lt02-the-venue-has-no-true-positive-body-chaos-is-reducible`: that row's
+        subject is attempt 1's ABSENT TRUE POSITIVE, and its disposition was
+        EXECUTED at `88762a2` (the `icmnoise` arm). This row's subject is a
+        DIFFERENT conjunct on a DIFFERENT arm, and coupling them would hide the
+        second finding behind the first one's discharge.
+
+**WHY THIS ROW HAD TO BE CREATED BY A LATER SLOT, stated first because it is the
+transferable part.** `03af51f`'s commit message reads *"The repair is a REDESIGN
+of C2's arm or venue and it is the Review's, routed this slot as
+`lt02-c2-passed-on-the-epsilon-not-on-a-measurement`"*, and on the same evidence
+it concluded *"`fail_unowned` stays 0: the new FAIL is owned by the routed
+row."* Neither sentence was true when the slot ended. The 02:07 slot died
+**`rc=124`** at **02:57:26** — `timeout 50m`, thirty seconds after that commit —
+with `docs/LESSONS.md` and `docs/REVIEW_QUEUE.md` written but uncommitted, no
+journal line, and two commits unpushed. **`fail_unowned` did read 0, and it read
+0 for a reason that has nothing to do with the claim:** `LT.02`'s FAIL resolves
+to `lt02-the-venue-has-no-true-positive-body-chaos-is-reducible`, a row whose
+subject was discharged eight days ago. Ownership is matched by SPEC ID, so a
+stale owner and a correct owner are indistinguishable to the counter, and a
+promise of a row is indistinguishable from a row. Routed separately as
+`commit-messages-cite-queue-rows-that-do-not-exist`.
+
+**THE MEASUREMENT, re-derived from the recorded row rather than inherited.**
+`LT.02`'s C2 is the cause gate — *"the fixation must be FED by the chaos"* —
+`chaos_reward_ratio >= REWARD_RATIO_MIN` 2.0, computed by `_reward_ratio` on the
+`icm` arm's late-half intrinsic reward, detector-flagged mean over unflagged
+mean. Attempt 2 (2026-09-25T13:25, PASS) recorded **5.2631**. Attempt 3, after
+`f047060` made the helper return `NaN` instead of dividing by a clamped
+denominator, records **`nan`** and `claim_branch` = *"the cause gate could not be
+computed: the flagged-vs-unflagged reward ratio is UNDEFINED"*. Nothing else
+moved: `chaos_occupancy_icmnoise` 6.41, `e_mean_icmnoise` 1.690401,
+`panel_dwell_icm` 0.0, `chaos_occupancy_climber` 0.0833333,
+`chaos_occupancy_random` 1.0, `thrash_ratio_icm` 0.384667. Enumerating the
+helper's four branches, exactly one returns 5.2631 before and `NaN` after — the
+`den <= 0` branch — which FORCES `fl.mean() = 5.2631e-9`, and since ICM reward is
+a squared error it forces every unflagged late reward to be identically 0.0.
+**`5.2631` was `5.2631e-9 / 1e-9`: a nanoscale numerator over a manufactured
+denominator, reading as the healthiest figure on the page.** C2 has never once
+been cleared by a measurement on the certificate that carried it.
+
+**AND THE SCIENCE AGREES WITH THE RED, which is why this is a redesign question
+and not a harness bug.** The same run's sibling ratio on the noise arm is
+DEFINED — `reward_ratio_icmnoise` **2.4735 ± 0.0232** — so the code path works
+and it is this ARM that has no reward left. Attempt 1's own recorded finding
+says why: on this body self-generated contact chaos is REDUCIBLE
+(`e_mean_icm` 0.164560 vs `e_mean_random` 0.558748, `chaos_occupancy_icm` 0.1425
+against the 3.0 bar, `thrash_ratio_icm` 0.3847), the forward model masters it,
+and the intrinsic reward EXTINGUISHES. **C2 asks the noise-free farmer to be fed
+by a chaos this spec has already measured it eats.** The epsilon was hiding that
+agreement, in the one direction nothing in this ladder audits: a gate that
+passes.
+
+**WHAT THIS DESK IS ASKED TO RULE, named so the options are arms and not an
+argument.** (a) RE-SCOPE C2 to the `icmnoise` arm, where the ratio is defined
+and 2.4735 already clears the unmoved 2.0 — which is the same act `88762a2`
+performed on C1, and which needs a reason why C2's original arm is no longer the
+right one rather than a note that the other arm passes; (b) KEEP C2 on the `icm`
+arm and accept that it is structurally unreachable at this venue, in which case
+the honest instrument is a declared VOID lane, not a FAIL; (c) REPLACE the
+statistic — a ratio of means cannot order magnitudes where the denominator can
+extinguish, and the UNSATURATED-NULL RULE's companion says the statistic change
+is the cheapest repair and comes first. **NO BAR MOVES in any branch:**
+`REWARD_RATIO_MIN` 2.0, `CHAOS_OCC` 3.0, `CHAOS_RATIO` 2.0 are untouched, and
+option (a) is not a bar move but it IS an arm move, which is why it is here and
+not in a builder slot.
+
+**WHAT MUST NOT HAPPEN, carried from the standing prohibitions.** Do not drop
+C2 — *a redesign may not drop a control that is currently passing*, and C2 is
+worse than passing: it is a control this project believed it had. Do not re-run
+attempt 3 unchanged; the `NaN` is deterministic, not a seed lottery. Do not
+restore the clamp.
+
+    Staleness bill for this routing: **2 certificates, priced BEFORE the edit
+    with `run stale-cost`** — `T0.21` (cpu<1min) and `T0.31` (cpu<10min) hash
+    `docs/REVIEW_QUEUE.md`, paid in this slot from a clean tree.
+    `experiments/tests/lt_02_chaos_detector.py` is edited by this slot (one
+    phantom row-id corrected in a docstring) and bills **no certificate**:
+    `stale-cost` prices its three dependents `T0.28` FAIL, `LT.02` FAIL,
+    `LT.03` VOID, so no capability claim is lost. `unreachable` 96 and the
+    `LT.03` +1 belong to the 02:0x slot and are NOT re-signed here.
+
+## ROUTED 2026-09-27 (builder): `commit-messages-cite-queue-rows-that-do-not-exist`
+## — two phantom row ids measured in one morning, one of them in committed spec
+## source, and no instrument in this repo can see either
+
+ROUTED: commit-messages-cite-queue-rows-that-do-not-exist | 2026-09-27 | two measured instances, both found by hand this slot and both re-derived at source: `grep -c` over `docs/REVIEW_QUEUE.md` returns **0** for each id | OPEN
+    DUE: 2026-10-07 | `review-queue`'s `next_free_due` was 2026-10-06 when this
+        slot began and the SIBLING row above took it, so 10-06 reached its
+        measured capacity of 6 and this row is dated one day past it rather
+        than piling on — the tool flagged exactly that on the first draft
+        (`DATED ONTO A FULL DAY`) and this date is the repair, read off the
+        re-run. What is owed is a DECISION about INSTRUMENT SCOPE — whether
+        `review_queue.py` gains a dangling-id reader — and under `D35` clause 2
+        that decision is not the builder's to make by shipping one. Nothing is
+        blocked on it: both instances are repaired in this slot's commit by
+        hand, and it is dated SECOND deliberately because the redesign above is
+        the one with a spec's verdict behind it.
+    WAITS-ON: none | no live row's answer changes what these two citations
+        resolve to. Deliberately NOT coupled to
+        `goal-cites-four-specs-that-resolve-to-corpses` (ACTED): that row is
+        about dangling SPEC ids in `GOAL.md` and was closed by registering the
+        specs. This is the same shape one namespace over — dangling ROW ids —
+        and the namespace has no reader at all, where the spec namespace had
+        one that worked.
+
+**THE TWO INSTANCES.**
+
+  1. **`lt03-reward-ratio-fabricates-a-number-on-a-negative-denominator`** —
+     cited at `experiments/tests/lt_02_chaos_detector.py:823`, inside
+     `_reward_ratio`'s docstring, **committed** at `f047060`. Zero matching
+     rows. The finding it names IS routed — as an ADDENDUM to
+     `lt03-icm-trap-not-live-in-flight` — so this one is a wrong NAME for real
+     work, and the citation is corrected in this slot's commit.
+  2. **`lt02-c2-passed-on-the-epsilon-not-on-a-measurement`** — cited in
+     `03af51f`'s commit message as *"routed this slot"*, and in the
+     `lt03-icm-trap-not-live-in-flight` addendum as *"routed separately"*. Zero
+     matching rows until this slot created it. This one named work that was
+     owned by NOBODY for an hour, while `fail_unowned` read 0.
+
+**WHY NEITHER IS VISIBLE TO ANYTHING, and the asymmetry is the finding.** The
+queue's own reader already enforces a rich contract on rows — a `ROUTED:` line,
+a `DUE:`, a `WAITS-ON:` declaration, and five named VIOLATIONS for the ways a
+row can be dishonestly closed. Every one of those checks runs **from the row
+inward**. Nothing runs **from a citation outward**: an id quoted in a commit
+message, a spec docstring, a steering page or another row's prose is matched
+against nothing. So the cheapest possible way to discharge a routing obligation
+— *write the id and not the row* — is also the only way that no instrument in
+this repo can distinguish from having done it. `fail_unowned` cannot help, for a
+reason worth writing down separately: it matches by **spec id**, so a stale
+owner satisfies it exactly as well as a correct one, and `LT.02`'s FAIL resolved
+to a row whose subject was discharged at `88762a2` eight days earlier.
+
+**WHY NOTHING WAS BUILT.** `review_queue.py` is one of the three surviving
+governance instruments and `D35` clause 2 reads *"Nothing joins them"*; the
+123rd audit's FOR THE BUILDER also records the precedent directly — widening
+`T0.35`'s domain was declined on exactly this ground and the restraint was
+called the right call. The candidate is small and stated here so the sitting can
+price it rather than re-derive it: **collect every `[a-z0-9]+(-[a-z0-9]+){2,}`
+token appearing in backticks inside `docs/REVIEW_QUEUE.md` and in
+`experiments/tests/*.py` docstrings, and report the ones matching no `ROUTED:`
+id.** Reporting-only and unfloored on arrival, because a false positive is
+certain (prose hyphenates, and a row legitimately cites a row that was later
+renamed). **The measured base rate is what the sitting should want and this row
+does not have it** — two instances in one morning is not a population, and
+measuring it is a one-off hand scan of the same shape as
+`declared-null-not-gated-is-1-of-108-not-a-class`, not an instrument.
+
+    Staleness bill: **ZERO additional** — this row shares the
+    `docs/REVIEW_QUEUE.md` edit already billed above (`T0.21`, `T0.31`), and
+    the `lt_02_chaos_detector.py` docstring correction prices at no
+    certificate (`T0.28` FAIL, `LT.02` FAIL, `LT.03` VOID). No bar moves, no
+    spec's numbers are touched, and no re-run is owed by any spec named here.

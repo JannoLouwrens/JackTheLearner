@@ -819,8 +819,12 @@ def _reward_ratio(arm: dict, flags: np.ndarray, sub_idx: np.ndarray) -> float:
 
     RETURNS NaN — never a number — ON EVERY BRANCH WHERE THE RATIO HAS NO
     MEANING. It used to return a number on all three, and the middle one cost
-    a measurement (builder, 2026-09-27; routed as
-    `lt03-reward-ratio-fabricates-a-number-on-a-negative-denominator`):
+    a measurement (builder, 2026-09-27; routed as the ADDENDUM of 2026-09-27
+    to `lt03-icm-trap-not-live-in-flight`, and this spec's OWN C2 casualty as
+    `lt02-c2-passed-on-the-epsilon-not-on-a-measurement`. The id this line
+    named until 03:0x — `lt03-reward-ratio-fabricates-a-number-on-a-negative-
+    denominator` — matched ZERO rows; see
+    `commit-messages-cite-queue-rows-that-do-not-exist`):
 
       * no reward stream                     -> was 0.0, reads as "clean"
       * every late sample flagged, or none   -> was 0.0, reads as "clean",
@@ -844,6 +848,15 @@ def _reward_ratio(arm: dict, flags: np.ndarray, sub_idx: np.ndarray) -> float:
     positive. Outside that domain the lane cannot decide, and "cannot decide"
     is not "clean" — so callers must read NaN in the REFUSING direction
     (`not (x >= BAR)`, never `x < BAR`, which NaN passes).
+
+    DOMAIN, WRITTEN DOWN BECAUSE IT WAS THE UNWRITTEN PART: this helper assumes
+    the unflagged late mean is STRICTLY POSITIVE. That holds for any arm whose
+    intrinsic reward is a squared error or a variance and fails for any SIGNED
+    reward. It is a property of the CALLER'S ARMS, not of this function, so
+    `IMPL_DEPS` staleness can never check it — staleness answers "did this file
+    change?", never "is this file's domain assumption still true in its new
+    caller?". A spec that imports this must verify its arms are in the domain at
+    the reward DEFINITION, not assume it.
     """
     r = arm["rewards"]
     if r is None:
