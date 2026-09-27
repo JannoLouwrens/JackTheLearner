@@ -11366,6 +11366,32 @@ against `docs/REVIEW_QUEUE.md`, paid in the same slot.** No spec file is edited
 by this row. No bar moves and no re-run of the five specs is implied — a
 disarmed key is a statement about their `_check`, not about their numbers.
 
+**BUILDER-TRACE 2026-09-27 12:2x — "THE FINDING IS 15 KEYS, NOT 28" IS NOW THE
+RECORDED NUMBER, and `T0.18`'s 13 keys left the disarmed class for a
+differently-named one. Two facts, both measured this slot; nothing here rules
+anything and the per-key adjudication owed on 10-05 is untouched.**
+
+  * **`T0.13` attempt row, `3eddd91`, clean tree, 2.03 s, FAIL:**
+    `disarmed_conjunct_keys` **28 -> 15**, `specs_with_disarmed_keys` **6 -> 5**,
+    `gates_scanned` 109 -> 107. The five specs and the fifteen keys are exactly
+    the list above, unchanged. This row PREDICTED that decomposition from an
+    offline computation; it is now on the ledger, so the 10-05 ruling reads 15
+    off a recorded row rather than off this page's arithmetic.
+  * **`unevaluable_gates` 0 -> 1, `unevaluable_detail` `T0.18`** — a red class
+    that read 0 before this slot, and it is mine. `T0.18`'s `_check` gained
+    conjuncts (`refused_refusal`, `c['no_control_detail']`) whose keys are
+    ABSENT from its 2026-08-30 row, so the replay now raises `KeyError` instead
+    of returning False. **That is the honest classification and it is a
+    STRICTLY better one:** "this scan did not audit that gate" is true of a row
+    predating the gate, whereas "13 of its keys are decorative" named a defect
+    that was not there. It is the same disposal `LT.03`'s tuple return already
+    gets one layer over. `stale_gates` is 1 (`T0.18`) before and after.
+  * **What this does NOT change.** `T0.13` stays FAIL on the 15 standing keys in
+    the five other specs; the deadlock this row describes is intact; neither
+    floor was touched; no threshold moved. The row's sentence *"one stale row
+    inflates the disarmed count by its entire key set"* is now demonstrated by
+    subtraction rather than argued, and the desk has 13 fewer keys to rule on.
+
 ## ROUTED 2026-09-26 (builder): `adverse-verdicts-are-re-derived-by-nobody`
 ## — the 47 non-PASS rows have never had their verdict replayed, and two of
 ## them are decided by a module-global memo rather than by their own record
@@ -11742,6 +11768,73 @@ here rather than re-derived).
 
 **Staleness bill: ZERO for the diagnosis** — no spec file edited, no ledger
 write, no bar moved in either direction.
+
+**BUILDER-TRACE 2026-09-27 12:3x — OPTION (i) IS EXECUTED, AND I SHIPPED
+OPTION (ii) FIRST BY NOT HAVING READ THIS ROW. Disclosed in that order because
+the mistake is the more useful half.**
+
+`3eddd91` repaired probe C the way today's `PROGRESS.md` FOR THE BUILDER item 4
+asked — and it did it by teaching `verify.py` and `run_spec` the PROSE IDIOM: a
+`control` whose text starts `NONE, BY DECISION`, plus a reason, is a refusal.
+**That is option (ii) above, the one this row named "so it is refused on the
+record rather than by silence", on the ground that it yields a detector that can
+be switched off by writing a sentence.** The objection is right. I had not read
+this row when I made the edit; I read it before buying anything against it, and
+converted rather than defended, in the same slot (`eba3e58`).
+
+**WHAT IS NOW SHIPPED — this row's option (i), as priced.**
+`protocol.NoControlByDecision`, a `str` subclass whose `__bool__` is False.
+`registry.py` wraps `T0.01`'s and `T0.10`'s declarations in it. Measured:
+
+    declared_control_never_ran   2 -> 0   (detail "T0.01, T0.10" -> "")
+    no_control_specs             2        both ids still counted, unchanged
+    spec_sha_of(T0.01)   64f564bba0a5a202   UNMOVED by the type change
+    spec_sha_of(T0.10)   1a2e392382041a3d   UNMOVED
+    declares_a_control("NONE, BY DECISION (typed by hand): trust me") -> True
+
+The last line is the one that answers this row's objection to (ii): the words do
+not earn the exemption, so a refusal cannot be claimed by prose in the field
+under audit. And because the value is FALSY, no reader was narrowed — every
+`bool(spec.control)` in the repo becomes correct without an edit, and nothing
+anywhere pattern-matches the text. `run verify` now prints
+`controls declared but never run  0`.
+
+**AND THE HOLE THAT RECOGNISING A REFUSAL OPENS IS SHUT IN THE SAME COMMIT,
+because narrowing a detector without that is a weakening.** A declaration
+refusing a control while `control_metrics` is non-empty — the audit surface
+asserting "no control here" over a control that RAN — was reachable by NEITHER
+branch of probe C while it read `bool(...)`: one truthy string made the promise
+branch see a promise kept and the undeclared branch see a declaration present.
+It is now flagged under `undeclared_control_ran` (fixture `FIX.refused_ran`,
+which reads 2 of 2), and `run_spec` refuses the combination BEFORE any compute
+(`refused_refusal`, asserted in `T0.18`'s guard probe in both directions).
+`FIX.refused` is byte-identical to `FIX.promised` except for the declaration, so
+the fixture varies exactly the predicate under test — and it is built THROUGH
+the shipped class, never imitated with a bare string, because a fixture that
+imitated the prose would be certifying the repair this row refused.
+
+**STILL NOT BOUGHT, and still for the mechanical reason this row already gave.**
+`run T0.18` answers `BLOCKED by T0.13 (FAIL)`. The measurements above are
+offline replays of the shipped `scan` in a child process plus the fixture
+battery that `run verify` runs on the live path; **no `T0.18` ledger row was
+written and the standing PASS is untouched.** `blast-radius T0.18` is unchanged:
+BLAST RADIUS none, and the PASS -> FAIL counterfactual would push `unreachable`
+96 -> 97 above its floor, which is why this red stays on this page.
+
+**WHAT IS LEFT FOR THE DESK, and it is narrower than the menu.** Options (ii)
+and (iii) are moot — (ii) refused on this row's own reasoning and now unshipped,
+(iii) unnecessary since (i) keeps the amendment's words. **Option (iv) — make
+`cmd_verify`'s exit code carry probe C — is DELIBERATELY NOT TAKEN**, exactly as
+this row asks: it is the `staleness-of-a-standing-pass-reaches-no-exit-code`
+question (OPEN, DUE 10-04) in a second instrument and should be ruled with it,
+not twice. Nothing about (iv) got easier or harder today.
+
+**Staleness bill paid in slot: `T0.15`, `T0.17`, `T0.33`, `T0.35`
+(`experiments/protocol.py`) and `T0.36` (`experiments/run.py`), all PASS from
+the clean tree; plus `T0.21`/`T0.31` for this file. The four protocol rows were
+bought TWICE — once against `3eddd91` and again against `eba3e58` — ~28 s of CPU
+spent twice, which is the measured price of the course correction and is
+reported rather than absorbed.**
 
 ## ROUTED 2026-09-26 (builder, 21:0x slot): `t023-readonly-conjunct-gates-on-a-
 ## ratchet-exit-code` — an audit shipped `run status` 0 -> 2 this morning and

@@ -18913,3 +18913,73 @@ reason to be thinking about, which is selection on availability, not on exposure
 it named was 3.6x larger without it. Corollary for the desk that publishes:
 "reported rather than routed, because it is one grep" is a fine instinct, and it
 is only safe if the grep is the reader.
+
+## An exemption written as PROSE in the field being audited is a switch, not an exemption — encode it as a VALUE
+
+The 52nd audit's B5 did the right thing for the right reason: `T0.01` and
+`T0.10` went from `control=None` to
+`control="NONE, BY DECISION (52nd audit B5): …"`, because `None` reads
+identically to *"nobody thought about it"* — the rot that
+`protocol.UndeclaredControl` exists to stop. A refusal that names its authority
+and its reason is more audit surface than a null.
+
+It is also **truthy**, and both readers of that field asked
+`bool(spec.control)` — *"is the field non-empty?"* — where the question is
+*"was a control PROMISED?"*. So `verify.scan`'s probe C reported
+`declared_control_never_ran = 2`, *two safeguards promised and never run*, about
+the two specs on the ladder that promise none, against a `T0.18` gate that
+demands 0. **The repair that made the decision legible to a human is what made
+it illegible to the instrument**, and for 27 days `run verify` printed
+`controls declared but never run  2` and exited 0.
+
+The obvious fix is to teach the reader the idiom: skip a `control` whose text
+starts `NONE, BY DECISION`. It was priced on the queue row and refused there,
+and the objection is decisive — **a guard whose exemption is claimable by typing
+the right sentence into the very field it guards has stopped being a guard.**
+Measured after the repair that was actually shipped: a hand-typed
+`"NONE, BY DECISION (typed by hand): trust me"` still reads as a PROMISE.
+
+What worked was a VALUE: `class NoControlByDecision(str)` with `__bool__`
+returning False. The words are byte-identical, so the reason still prints, greps
+and hashes (`spec_sha` unmoved for both specs, so no certificate is staled by
+the type); the exemption is claimed by constructing a class in the registry,
+which is a diff a reader sees; and **every truthiness reader in the repo becomes
+correct with no edit at all**, because the field is now honestly falsy. A text
+match would have fixed one reader and left the next one to be written wrong.
+
+**Rule.** When a declaration field needs to express a REFUSAL as well as a
+promise, give the refusal a type, not a wording. Prose in an audited field can
+be produced by anyone who wants past the audit, and the readers must each be
+taught it separately — the same sentence is therefore both a silent exemption
+and a coordination problem. A sentinel value is the opposite on both counts.
+Corollary, and it is where the cost actually landed: narrowing a detector's
+population is a WEAKENING unless the same commit closes what the narrowing
+opens. Recognising the refusal made a new class reachable — a declaration
+refusing a control while `control_metrics` is non-empty, which while the reader
+said `bool(...)` satisfied NEITHER of probe C's branches and was invisible to
+both at once. Ship the fixture for the hole in the commit that opens it.
+
+## Read the queue row before repairing the red it is about
+
+The red above was named in `PROGRESS.md` FOR THE BUILDER, so it was a
+legitimate pick. But a builder had routed it the previous day with four repairs
+priced, and the one that gets reached for first — teach the reader the prose
+idiom, one line, cheapest — is the one that row had named explicitly *"so it is
+refused on the record rather than by silence"*. It was shipped anyway, then
+converted in the same slot once the row was read. Cost: the four `protocol.py`
+certificates were bought twice, ~28 s of CPU.
+
+This is the same shape as `progress-items-may-be-discharged-elsewhere` and it
+generalises past discharge. A steering page names a RED; the queue holds the
+ANALYSIS of that red, including which repairs have already been argued and
+refused. Those live in different files with no link between them, and the
+steering page is the one you are told to read.
+
+**Rule.** Before editing the mechanism behind a named red, `grep` the red's
+subject in `docs/REVIEW_QUEUE.md` and read any row that comes back — not to ask
+permission, but because a priced menu of repairs is exactly the thing you are
+about to re-derive worse. If a row prices the option you were going to take and
+refuses it, that reasoning is evidence, and it outranks the fact that your
+option is cheaper. And when you have already shipped the refused one: convert in
+the same slot, before any certificate is bought against it, and report the
+sequence with the mistake first.
