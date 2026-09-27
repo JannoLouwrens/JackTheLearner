@@ -11108,6 +11108,36 @@ ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run st
     Staleness bill: ZERO for the diagnosis. Option (i) bills `T0.36`
     (cpu<1min) plus whatever the desk decides about `T0.21`/`T0.31`; option
     (iii) bills `T0.36` alone.
+    **BUILDER-TRACE 2026-09-27 13:1x (`53bb135`) — EVIDENCE FOR THIS ROW'S
+    SEVERITY QUESTION, arrived from a sibling class rather than from an
+    argument, and NOTHING here is decided by it.** The 125th audit's FTB 2
+    ordered `run verify`'s exit code off its unconditional `return 0`, and it is
+    now 2 on any of five hard classes. **Two of this row's premises are changed
+    by that and one is not:**
+      * Option (iii) said *"it cannot be written honestly today: NO tool in this
+        repo gates staleness by exit code"*. **Still true** — `run verify` gates
+        on REPLAYABILITY, not staleness, and `run stale` is untouched at EXIT 0.
+        This trace does not unblock (iii).
+      * Option (ii)'s objection — *"the exit code would be permanently red with
+        no legal action available"* — now has a **live measured instance in a
+        sibling tool**, not a forecast. `run verify` is red every slot on exactly
+        ONE entry, `T0.18(KeyError)`, owned by the desk under
+        `t013-latently-red-28-disarmed-keys` (DUE 10-05), blocked behind `T0.13`
+        (FAIL), and explicitly not the builder's to clear (FTB 4). So the shape
+        this row calls "immediately self-defeating" is now running, and the desk
+        can watch whether it teaches the next reader to ignore the code.
+      * **The mitigation is the transferable part, and it is cheaper than a
+        severity ruling:** the tool prints the OWNER, the BLOCKER and the
+        prohibition beside each red. A red that names who may clear it and why
+        you may not is not the same object as a red that just recurs — which
+        suggests a fifth option for this row that nobody priced: **(v) redden on
+        the whole class, but print each row's owner and whether any legal action
+        exists.** Under the measurement above, 22 of the 25 would print "no legal
+        action — settled non-PASS under a standing do-not-re-dispatch", which is
+        an honest and useful page rather than an ignorable light. Named, priced
+        at one predicate plus the `T0.36` re-buy, and **NOT taken here** — this
+        row's own reasoning (the implementer should not make the severity call in
+        the hour they opened the seam) applies to me exactly as written.
 
 ---
 
@@ -11835,6 +11865,51 @@ the clean tree; plus `T0.21`/`T0.31` for this file. The four protocol rows were
 bought TWICE — once against `3eddd91` and again against `eba3e58` — ~28 s of CPU
 spent twice, which is the measured price of the course correction and is
 reported rather than absorbed.**
+
+**BUILDER-TRACE 2026-09-27 13:1x (`53bb135`) — I TOOK OPTION (iv) AFTER THIS ROW
+REFUSED IT, ON AN ORDER, AND THE DISCLOSURE IS THE POINT.** The 125th audit's
+FOR THE BUILDER 2 reads, in the open: *"Return non-zero when
+`verdict_disagreements`, `control_blind_specs`, `declared_control_never_ran`,
+`unevaluable_gates` or `unavailable_entries` is non-zero, with
+`undeclared_control_ran` against its budget as today."* That is this row's option
+(iv) and wider. I obeyed the audit rather than my own predecessor's deferral, and
+the reason is authority, not preference: **(iv) was deferred by the BUILDER, and
+a builder's deferral of its own work does not bind the auditing desk's order.**
+Three facts a reader should have without re-deriving them:
+
+- **The substance the deferral protected is GONE.** (iv) was scoped to *carry
+  probe C*, and probe C reads **0** since `eba3e58` — taking (iv) as written
+  would have changed no exit code at all. What shipped is red on
+  `unevaluable_gates`, a class (iv) never named and this row never priced,
+  because the `KeyError` that produces it landed at 12:18 *after* this row was
+  written.
+- **The severity hazard the deferral cited is REAL and is now MEASURED, not
+  argued.** `run verify` exits **2 every slot** on exactly one entry —
+  `T0.18(KeyError)` — whose re-buy is the desk's under
+  `t013-latently-red-28-disarmed-keys` (DUE 10-05) and is BLOCKED behind `T0.13`
+  (FAIL), and which the same audit's FTB 4 forbids the builder to clear by
+  re-running anything. That is a standing red no reader of this repo may act on,
+  which is the precise hazard the sibling row's option (ii) names. **The
+  mitigation shipped instead of a softer code: the tool PRINTS the owner, the
+  blocker and the prohibition beside the red**, so it cannot be misread as fresh
+  or as the builder's. If the desk judges that insufficient, the repair is a
+  severity ruling on this class, and it now has a live instance to rule on rather
+  than a hypothetical.
+- **What did NOT happen:** no threshold moved in either direction,
+  `UNDECLARED_CONTROL_BUDGET` is still 0, no class is counted differently, and
+  `T0.18`'s standing PASS is untouched — the row remains unbought for the
+  mechanical reason above.
+
+**AND FTB 1 IS THE HALF THIS ROW COULD NOT HAVE SEEN.** `cmd_verify`'s
+`exclude=("T0.18",)` is dropped at the CLI call site; the tuple survives as
+`run.IN_RUN_SELF_EXCLUDED` and is now used only to print BOTH numbers per finding
+class. Measured: `106 re-judged / unevaluable_gates 0 / EXIT 0` →
+`107 re-judged / unevaluable_gates 1 (T0.18(KeyError)) / EXIT 2`. Staleness bill
+re-paid in slot from the clean tree at `53bb135`: `T0.17` 18.38 s, `T0.36`
+34.10 s, `T0.15` 1.23 s, `T0.33` 1.30 s, `T0.35` 6.76 s — all **PASS**, all five
+stale rows cleared, **61.77 s** total, no `+dirty` stamp. `T0.32` remains stale
+from before this edit and is NOT this edit's bill (`run stale-cost` said so
+before the edit).
 
 ## ROUTED 2026-09-26 (builder, 21:0x slot): `t023-readonly-conjunct-gates-on-a-
 ## ratchet-exit-code` — an audit shipped `run status` 0 -> 2 this morning and

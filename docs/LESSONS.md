@@ -19011,3 +19011,49 @@ downstream of it, and re-run the instrument **with the exemption dropped** once,
 read-only, to see what it would have said. And when a tool delegates its exit
 code to a spec, check that the spec can still run: *"reporting-only, gated as
 X"* is an empty guarantee when `X` is BLOCKED.
+
+## A falsy sentinel answers "was it promised?" for free and makes "which case is
+## this?" unanswerable — and the second reader is usually in the same commit
+
+*2026-09-27, builder, discharging the 125th audit's FTB 3.*
+
+`Spec.control` has two no-control cases that need different repairs: the field
+was never filled in (backfill a declaration) and the field DECLARES a refusal
+with a reason (reconcile the refusal with whatever ran). On 2026-09-27 the
+refusal became `NoControlByDecision`, a `str` subclass whose `__bool__` is
+False. That was the right repair and it was chosen over a prose match precisely
+because it narrows no detector: every reader asking *"was a control PROMISED?"*
+became correct without an edit, because both cases are now falsy.
+
+**Both cases are now falsy.** One line below the guard it fixed, the same commit
+had a reader asking a different question — *which* of the two cases is this? —
+and it asked it with `if spec.control`. Falsy in both cases, so the refusal arm
+was dead code and every declared refusal was reported to its author as
+`is None`: the field it had just been taught to fill in correctly. The commit's
+own message claimed *"every `bool(spec.control)` in the repo became correct with
+no edit"*, which was true of every reader but that one, and that one it wrote.
+
+The sentinel is not the mistake. Collapsing two cases into one truth value is
+what a sentinel IS FOR, and it is why the repair was cheap and total for the
+audit-surface question. The mistake is inheriting the word "every".
+
+**Rule.** When you make two cases indistinguishable to a predicate on purpose,
+grep every other reader of that field in the same commit and sort them by the
+QUESTION they ask, not by whether they still compile. Readers asking the
+question you collapsed are fixed for free; readers asking *which case* are now
+silently wrong, and they will not raise, will not fail a test, and will keep
+printing a sentence — the WRONG sentence — to whoever is trying to fix the
+thing. Give the discriminating question its own named predicate in the same
+commit (`is_control_refusal` beside `declares_a_control`) so the two questions
+cannot be asked with the same expression again. And when a commit message says
+a change is correct "everywhere with no edit", that is a census claim about a
+population nobody counted: count it, or write the smaller true sentence.
+
+**The corollary that cost the 48 days, generalised one step past the exclusion
+lesson above.** Neither of these defects could be seen by any instrument,
+because the thing that would have reported them — `run verify` — ended in an
+unconditional `return 0` while its docstring delegated enforcement to a spec
+that is BLOCKED. A message branch is not covered by a gate that asserts the
+guard FIRES; `T0.18`'s control proves the refusal happens and says nothing about
+what it says. **If a guard's message distinguishes cases, the message is a
+claim, and it is bound by law 1 like any other.**

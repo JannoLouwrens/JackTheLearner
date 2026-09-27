@@ -21256,3 +21256,149 @@ holds a third time: **when the board is empty, re-derive a published premise** �
 two slots inverted findings about `XL.01`'s rig and `EmotionalState.py`, and this
 one found a repair menu already priced and a refused option shipped. The errors
 are in the premises, and today they were in mine.
+
+---
+
+## 2026-09-27 ~13:1x UTC — the verify channel gets all three of its enforcements back: one exclusion dropped, one constant exit code made a verdict, one dead message branch given the identity test it needed. `run verify` 106 re-judged / EXIT 0 -> 107 re-judged / unevaluable_gates 1 / EXIT 2.
+
+**Model: opus** (`week:all models` read at the top of the slot; the pacing gate
+did not fire and the streak is 0). **Unit: the 125th audit's FOR THE BUILDER
+1-3, complete, plus the staleness bill in the same slot.** Commit `53bb135`.
+
+**WHY THIS AND NOT A SPEC.** The overseer's 125th audit returned **INTEGRITY
+RISK** on one finding: the ladder's re-derivability guarantee lost all three of
+its enforcement channels at 12:18 today, and no instrument could say so. The
+board is empty for the 30th consecutive slot (`coverage`: 6 dispatchable, all 6
+VOID, 0 FRESH, every cost class NOT FILLABLE), so there was no competing science
+to displace. An auditor's FTB is the highest-priority work when present and this
+one is the trust anchor.
+
+**FTB 1 — the exclusion. `unevaluable_gates` 0 -> 1, and the 1 is the truth.**
+`cmd_verify` passed `exclude=("T0.18",)` from `2cd0289` (2026-08-10). Correct
+inside `T0.18`'s own run — the row it would judge is written afterwards — and
+wrong at the CLI, where the 08-30 row exists and IS the standing certificate. It
+cost nothing for 48 days; at 12:18 a strengthen-only conjunct landed whose key is
+absent from `T0.18`'s own recorded row, its replay began raising `KeyError`, and
+**the one entry that now fails the scan was the one entry the scan excluded.** No
+edit was ever made to the exclusion: the population moved underneath it. The
+tuple survives as `run.IN_RUN_SELF_EXCLUDED`, used only to print BOTH numbers per
+finding class — *"1 here, 0 under T0.18's in-run self-exclusion"* — which is the
+audit's own repair: the excluded entry can never again be the invisible one.
+
+**FTB 2 — the exit code. `return 0` -> `return 2` on any finding, with NO
+threshold moved.** One `return` in the whole function, no branch on any result,
+while the docstring delegated enforcement to `T0.18` — which is `BLOCKED` behind
+`T0.13` (FAIL), so the delegated channel was shut for the entire period the
+delegation was written down. Two consecutive audits quoted *"`run verify` EXIT
+0"* as evidence of a clean record; it meant the command had executed. Five hard
+classes plus `undeclared_control_ran` over its budget now exit 2.
+`UNDECLARED_CONTROL_BUDGET` is still 0; nothing is counted differently.
+
+**AND I TOOK AN OPTION MY OWN PREDECESSOR'S QUEUE ROW HAD REFUSED — disclosed
+first, as the 09-27 lesson requires.** `t018-explicit-no-control-reads-as-an-
+unrun-promise` option (iv) says *"make `cmd_verify`'s exit code carry probe C"*
+and marks it DELIBERATELY NOT TAKEN, to be ruled jointly with
+`staleness-of-a-standing-pass-reaches-no-exit-code` (DUE 10-04). I read the row
+BEFORE editing this time, and obeyed the audit anyway, on authority: **(iv) was
+deferred by the builder, and a builder's deferral of its own work does not bind
+the auditing desk's order.** Two things a reader should have: the substance (iv)
+protected is gone — probe C reads **0** since `eba3e58`, so (iv) as written would
+have changed no exit code at all — and what shipped is red on
+`unevaluable_gates`, a class (iv) never named because the `KeyError` postdates the
+row. **The severity hazard that row cited is real and I did not argue it away:**
+`run verify` is now red every slot on exactly one entry the builder may not
+clear. The mitigation shipped instead of a softer code — the tool PRINTS the
+owner (the desk, `t013-latently-red-28-disarmed-keys`, DUE 10-05), the blocker
+(`T0.13` FAIL) and the prohibition (FTB 4) beside the red. Both rows carry
+BUILDER-TRACEs saying this, and the sibling row gets a **fifth option nobody had
+priced** — redden the whole staleness class but print each row's owner and
+whether any legal action exists — named and explicitly NOT taken, because that
+row's own rule (the implementer should not make the severity call in the hour
+they opened the seam) applies to me as written.
+
+**FTB 3 — the dead branch, and it is the more interesting defect.** The guard
+widened at 12:18 chose its message with `if spec.control`, and
+`declares_a_control` is False in exactly two cases whose fields are BOTH falsy —
+so the `"declares NO control, by decision"` arm was dead code and every
+refusal-that-ran-a-control, *the precise case the widening was written to catch*,
+was reported to its author as `is None`. Measured in a child process, no ledger
+write:
+
+    refusal  bool=False  refusal=True   -> "declares NO control, by decision: NONE, BY DECISION (probe): nothing to shuffle"
+    None     bool=False  refusal=False  -> "is None"
+    empty    bool=False  refusal=False  -> "is None"
+
+The generalisation is in LESSONS: **a falsy sentinel answers "was it promised?"
+for free and makes "which case is this?" unanswerable, and the second reader is
+usually in the same commit.** `eba3e58`'s claim that *"every `bool(spec.control)`
+in the repo became correct with no edit"* was true of every reader but the one
+that commit wrote, one line below the guard it fixed — and the correction is now
+in `NoControlByDecision`'s own docstring rather than left to be inherited as
+verified. `T0.18`'s control asserts the guard FIRES; nothing asserted what it
+SAYS. If a guard's message distinguishes cases, the message is a claim.
+
+**BILL PAID IN SLOT, from the clean tree, no `+dirty` stamp.** Priced by
+`run stale-cost` BEFORE the edit at 5 certificates / 0.02 CPU-h / 1 slot, then
+bought at `53bb135`: **T0.17 18.38 s, T0.36 34.10 s, T0.15 1.23 s, T0.33 1.30 s,
+T0.35 6.76 s — all PASS, 61.77 s total**, all five stale rows cleared. Docs bill
+(`REVIEW_QUEUE.md`): `T0.21`, `T0.31`, re-bought after this entry. `T0.32`
+remains stale from BEFORE this edit and is not this edit's bill — the tool said so
+in advance and I am not absorbing someone else's debt into mine.
+
+**INSTRUMENTS AT COMMIT.** `run verify` **EXIT 2** (1 finding, honest).
+`run review-queue` EXIT 0, **0 violations**. `coverage` EXIT 2, unchanged
+pre-existing red (`pass_on_dead_dependency` 5 vs floor 3, two of the five being
+`T0.18`/`T0.19` <- `T0.13`). `run status` EXIT 2 on the same three floors.
+Ratchet slot line quoted BEFORE any record, per the 122nd audit: *6 MOVED
+(fail_unowned_owned_forms queue-row 29 -> 30, review_queue_net_arrivals 26 -> 31,
+review_queue_piled_on 3 -> 4, review_queue_violation_forms {'OVERDUE': 1} -> {},
+review_queue_violations 1 -> 0, unreachable 95 -> 96); 1 day-rolled; floors 3
+ABOVE, 0 BELOW, 0 UNVERIFIED.* **None of the six is mine** — all six predate this
+slot and are the 125th audit's own recorded readings; `ratchets record` was NOT
+run, because the floor moves only in the commit that grew the number.
+
+**ONE PREMISE RE-DERIVED AND REFUTED, at zero cost, because it was published
+today.** `PROGRESS.md` FOR THE OWNER item 5 reports as NEW that
+*"`EmotionalState.py` is 1,149 lines and is named in NO spec's `IMPL_DEPS`"* and
+invites the builder to confirm it in a slot. **It is false and it was already
+refuted here two slots ago** — `grep -l EmotionalState experiments/tests/*.py`
+returns `t0_01_imports.py`, `t2_12_emotion_separability.py` and
+`t3_07_ablate_mood_conditioning.py`, and the journal entry from that slot says in
+terms *"Do NOT re-measure the `EmotionalState.py` census"*. The earlier finding
+was that a grep must guess the quote style, not that the file is unhashed. I did
+not re-measure it; the pattern from the last four slots holds a fourth time —
+**when the board is empty, re-derive a published premise, and the errors keep
+turning up in the premises.**
+
+**CREATURE GATE: NONE — and this is a RECORDED VIOLATION of `D35` rule 3, the
+first of what will be a run, exactly as the 125th audit predicted an hour ago.**
+The last slot was NONE #2 of at most 2. Of `T2.01` / `XL.01` / `T6.01`: `T2.01`
+is settled FAIL with both repair lanes desk-owned and prohibited to me by name;
+`T6.01` is unimplemented behind `T4.05 <- T4.04 <- T2.01 <- T1.08` (FAIL); and
+`XL.01` is a settled FAIL run this morning. So rule 3 resolves mechanically to
+*re-run a settled FAIL*, which `run next` forbids and which the standing
+prohibition on run-until-pass forbids in general. **I am recording the violation
+rather than discharging it by re-rolling `XL.01`.** The live row is
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-
+failing-spec` (OPEN, DUE 10-07) and the 125th audit's FOR THE OWNER item 2 is
+already on the desk with three one-line repairs, none ruled. Last time this
+happened it produced 20 consecutive recorded violations of a rule filed one day
+earlier; this is #1 of the second run, and it will keep accruing every slot until
+the owner strikes or reachably re-scopes the release condition. **A quota that
+can only be satisfied by an act two standing rules forbid is not a quota the
+builder can meet by trying harder, and saying so is the only move its own text
+leaves open.**
+
+**NEXT ITERATION.** `run verify` is RED and will stay red until the desk's
+`T0.18` re-buy — **do not try to clear it.** FTB 4 forbids it by name, the run
+would land `BLOCKED` behind `T0.13` regardless, and the `PASS -> FAIL`
+counterfactual pushes `unreachable` 96 -> 97 above a shrink-only floor you may not
+raise. What IS live and unclaimed: `T0.32` has been stale since before this
+slot (`t0_32_rtf_gate.py`, ran on `a421a547774997a3`, now `f0d6f9abd2270c9a`) — a
+standing PASS whose test file has moved, which is a live capability claim about
+code that no longer exists, and it is one `run T0.32` at cpu class. Check
+`run blast-radius T0.32` first. Beyond that the board is still empty and the
+honest answer is still to re-derive a published premise rather than manufacture a
+dispatch: **30.0 free Kaggle hours opened today and expire Saturday 2026-10-03
+with every GPU class NOT FILLABLE — the third consecutive week, and it is
+inventory, not uptime.**
