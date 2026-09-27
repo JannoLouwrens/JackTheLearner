@@ -1420,6 +1420,29 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
             and this desk should read the row as ONE FULL-mode unit rather
             than hand it back as builder execution a third time.
         Nothing here moves a bar, registers a spec, or picks an arm.
+    DUE: 2026-10-08 | RE-DATED 2026-09-27 (Review FULL) under D28's armed default (a) OVERDUE
+        FIRST. **This is the THIRD date on this row and the batch rule has changed,
+        because the second one did not work:** six of the seven rows re-dated on
+        09-22 broke again within four days, so "rank by frontier value and re-date at
+        the demonstrated rate" has now been run twice and failed twice. Re-dating a
+        third time under the same reasoning would be the error this desk's own
+        `d10-successor` stop-rule fired against this morning. So each row in this
+        batch carries an ARMED STOP-RULE below, and the date is placed on a day
+        measured EMPTY rather than merely under capacity — the pile is what broke
+        the last two batches.
+        **THE MISATTRIBUTION, and it is this row's real finding.** This row is
+        `DISPOSITIONED`: the design is DELIVERED and what the date owes is
+        EXECUTION BY THE BUILDER. It has nevertheless been dated three times
+        against THIS DESK's measured 6/cycle capacity, which is the wrong meter
+        entirely — a builder-owed execution that breaches says nothing about the
+        Review's throughput, and counting it as a desk violation has been hiding
+        the fact that nobody routed the work into a builder slot. Dated 10-08, a
+        day measured EMPTY.
+        STOP-RULE, armed: if this date breaks with the design still unexecuted, the
+        row is NOT re-dated a fourth time — it is written into
+        `scripts/ladder_prompt.md`'s PRIORITY block as a named builder unit, because
+        a design nobody was ever tasked to execute is a routing failure and the
+        queue should say so in the builder's map rather than on this desk's clock.
 
 ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | DISPOSITIONED 2026-09-26 (Review DAILY — the METRIC ruling: adopt (a), the objective's own held-out information content, as a NEW deciding conjunct; retain all four existing CLAIM conjuncts UNCHANGED; no third rig, no arm added, no bar lowered, and the one move that could weaken anything is NAMED and deliberately NOT made)
     DUE: 2026-09-16 | RE-ARMED 2026-09-07 (builder): the row went STALE at 9 d
@@ -2777,6 +2800,25 @@ ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
     computed from shipped constants (metric `k_from_*`, spread factor 12.15):
     DUE: 2026-09-26 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Same lineage, same rule, same newly-declared blocker as its sibling above, and placed one sitting AFTER it deliberately: both re-scale `needs.py` constants and deciding them in one sitting at ~1/cycle is how a date gets broken. 09-26 carries 3 live rows against the measured 6.
     BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23
+    DUE: 2026-10-10 | RE-DATED 2026-09-27 (Review FULL) under D28's armed default (a) OVERDUE
+        FIRST. **This is the THIRD date on this row and the batch rule has changed,
+        because the second one did not work:** six of the seven rows re-dated on
+        09-22 broke again within four days, so "rank by frontier value and re-date at
+        the demonstrated rate" has now been run twice and failed twice. Re-dating a
+        third time under the same reasoning would be the error this desk's own
+        `d10-successor` stop-rule fired against this morning. So each row in this
+        batch carries an ARMED STOP-RULE below, and the date is placed on a day
+        measured EMPTY rather than merely under capacity — the pile is what broke
+        the last two batches.
+        Desk-owed and genuinely undecided: this row and its sibling both re-scale
+        `needs.py` constants, and the 09-22 date deliberately placed it one sitting
+        behind `w1-world-edit-window` for that reason. That sequencing argument is
+        intact and is NOT the reason it broke — it broke because the sitting it was
+        queued behind did not happen either. Dated 10-10, measured EMPTY.
+        STOP-RULE, armed: if this date breaks, no fourth date — the row is DECLINED
+        with the reason written out, because a needs-rescaling this desk has failed
+        to sit down with four times is not actually a live intention and pretending
+        otherwise costs the queue its meaning.
 
         day length      86400 / 1200          =  72.0
         thermal tau     17069 / 240           =  71.1   (W.1 finding 2)
@@ -2974,6 +3016,25 @@ ROUTED: two-eyes-one-certified | 2026-09-07 | 2b3e8a6 (82nd audit B3; eye adopte
     DUE: 2026-09-26 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | the Review rules whether existing visual certificates
         migrate to the adopted coarse eye, stay grandfathered under the eye
         they were bought with, or get a crossing test — Sunday FULL.
+    DUE: 2026-10-11 | RE-DATED 2026-09-27 (Review FULL) under D28's armed default (a) OVERDUE
+        FIRST. **This is the THIRD date on this row and the batch rule has changed,
+        because the second one did not work:** six of the seven rows re-dated on
+        09-22 broke again within four days, so "rank by frontier value and re-date at
+        the demonstrated rate" has now been run twice and failed twice. Re-dating a
+        third time under the same reasoning would be the error this desk's own
+        `d10-successor` stop-rule fired against this morning. So each row in this
+        batch carries an ARMED STOP-RULE below, and the date is placed on a day
+        measured EMPTY rather than merely under capacity — the pile is what broke
+        the last two batches.
+        Desk-owed. 54 visual certificates were bought under one render quality and
+        all new visual work opts into another, with no instrument measuring whether
+        a claim survives the crossing. Unchanged in substance and still unruled.
+        Dated 10-11, measured EMPTY.
+        STOP-RULE, armed: if this date breaks, no fourth date — the row is escalated
+        to `docs/DECISIONS_NEEDED.md` as an owner decision with a written default,
+        because a question about the validity of 54 standing certificates that this
+        desk cannot find a sitting for in a month is above this desk's throughput,
+        not below it.
 
 **The question as it actually stands** (transcribed from the 82nd audit, which
 found it living only as a sentence inside the `pl02-dependency-on-pl00-verdict-
@@ -6355,6 +6416,24 @@ that decision, or it needs its own successor spec. Nothing here re-runs.
 ROUTED: so07-recording-worlds-fail-the-reference-bar | 2026-09-05 | builder (SO.07 attempt-1 harvest, 9bd3114) | OPEN
     DUE: 2026-09-18 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE — FIRST break for this row, and it is this desk's own decision debt, not the builder's. Re-dated ONCE at the desk's DEMONSTRATED disposal rate (~1/cycle), onto a date with measured room under the 6/day capacity, never onto a day already at it. The Review is NOT pace-gated (its 06:37 slot is exempt), so unlike the builder-execution rows in this batch, this desk has no excuse available to it and is not offering one. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for SO.07's VOID: what re-validates the reference arm on the recording worlds — re-frozen fixture, a wider design-world set, or a world/body redesign. Date is `next_free_due` per the router's own print (every earlier day is at or over measured capacity).
     DUE: 2026-09-26 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. SO.07's VOID has no repair path until this fork is taken, and the row has now broken twice; the 09-15 re-date said plainly that this desk 'has no excuse available to it and is not offering one'. That sentence stands and is not repeated as if it were new information.
+    DUE: 2026-10-12 | RE-DATED 2026-09-27 (Review FULL) under D28's armed default (a) OVERDUE
+        FIRST. **This is the THIRD date on this row and the batch rule has changed,
+        because the second one did not work:** six of the seven rows re-dated on
+        09-22 broke again within four days, so "rank by frontier value and re-date at
+        the demonstrated rate" has now been run twice and failed twice. Re-dating a
+        third time under the same reasoning would be the error this desk's own
+        `d10-successor` stop-rule fired against this morning. So each row in this
+        batch carries an ARMED STOP-RULE below, and the date is placed on a day
+        measured EMPTY rather than merely under capacity — the pile is what broke
+        the last two batches.
+        Desk-owed, and the 09-15 re-date already said this desk 'has no excuse
+        available to it and is not offering one'. That sentence stands and is not
+        repeated as though it were new information. SO.07's VOID has no repair path
+        until this fork is taken. Dated 10-12, measured EMPTY.
+        STOP-RULE, armed: if this date breaks, no fourth date — escalated to
+        `docs/DECISIONS_NEEDED.md`, on the same ground as `two-eyes-one-certified`:
+        a VOID with no repair path is a dead spec, and leaving it dated on a desk
+        that has missed it three times is how a corpse keeps a heartbeat on paper.
 
 **The verdict:** SO.07 attempt 1 (2026-09-05T02:41:48, 9201.5 s, worlds 3/4/5)
 recorded **VOID at the first pre-registered VOID lane**: the REF arm —
@@ -8289,6 +8368,27 @@ ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.1
         ambiguity with a predecessor's authority attached. Lesson generalised
         in `docs/LESSONS.md` this slot. Nothing is proposed here — the freeze's
         item 2 forbids the counter that would see it.
+    DUE: 2026-10-09 | RE-DATED 2026-09-27 (Review FULL) under D28's armed default (a) OVERDUE
+        FIRST. **This is the THIRD date on this row and the batch rule has changed,
+        because the second one did not work:** six of the seven rows re-dated on
+        09-22 broke again within four days, so "rank by frontier value and re-date at
+        the demonstrated rate" has now been run twice and failed twice. Re-dating a
+        third time under the same reasoning would be the error this desk's own
+        `d10-successor` stop-rule fired against this morning. So each row in this
+        batch carries an ARMED STOP-RULE below, and the date is placed on a day
+        measured EMPTY rather than merely under capacity — the pile is what broke
+        the last two batches.
+        Same MISATTRIBUTION as `t215-router-under-lexical-null` above, and it is
+        the reason these two are the cheapest rows in the batch: the design answer
+        (option (iv), narrow the dynamic check to where it decides) was DELIVERED
+        09-19. What remains is the BUILDER's measurement of the binding set,
+        reported BEFORE implementing, then the implementation — builder work, dated
+        three times on the desk's meter. Dated 10-09, measured EMPTY, one day
+        behind `t215` so the builder is not handed two instrument edits in one slot
+        (the 09-22 date's reasoning, preserved because it was correct).
+        STOP-RULE, armed: identical to `t215`'s — a fourth breach writes it into
+        `scripts/ladder_prompt.md`'s PRIORITY block as a named builder unit rather
+        than onto this desk's calendar again.
 
 **THE EVENT, and it was found by USING the rig rather than reading it.** An
 inert seam was added to `LG.10._measure` for the VACANT `Language routing`
