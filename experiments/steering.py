@@ -479,7 +479,43 @@ _METRIC_WINDOW = 60
 # after the count above was written): a key followed directly by a list
 # delimiter is enumerated, not quoted — see the skip in
 # `text_metric_mismatches` and the fixture paragraph that replays it.
+#
+# A FIFTH HEURISTIC, and it was 3 of the 5 live rows (builder, 2026-09-27).
+# `_NUM` matched the DIGITS INSIDE A SPEC CITATION: `T0.18` read as the
+# number 0.18, `T0.13` as 0.13. Measured on `docs/OVERSIGHT.md` at the 125th
+# audit, all three phantoms with the id one character to their left:
+#
+#     unevaluable_gates           says 0.18  <- `T0.18(KeyError)`
+#     stale_gates                 says 0.13  <- `T0.13`
+#     declared_control_never_ran  says 0.18  <- `T0.18`'s `_check`
+#
+# The worst of the three shows why silence was not the error direction here:
+# the audit's FOR THE BUILDER 1 writes the true reading as
+# *"`unevaluable_gates = 1`"*, which the BAR heuristic above correctly skips
+# (led by `=`), so the only number left in the window was the phantom out of
+# the id beside it — and the reader reported the page as disagreeing with the
+# ledger on the one line where the page was RIGHT. A false positive on the
+# auditor's own repair order is the D27 fate this reader's comment block
+# names twice. So spec citations are MASKED before numbers are scanned: the
+# mask is exact (`SPEC_CITATION`, the same pattern the sid scan already
+# trusts), it removes only digits the reader itself calls an id, and it
+# cannot silence a real quote — a metric key contains an underscore and an
+# id never does, so no citation span can overlap one.
 METRIC_PAGES = STEERING_PAGES + (LAUNCH_PAGE,)
+
+
+def _mask_citations(flat: str) -> str:
+    """`flat` with every spec citation blanked to `#`, offsets preserved.
+
+    `T0.18` is an id, not the number 0.18. Length-preserving so a window
+    taken from the masked text lines up with the unmasked one, and so a
+    citation straddling the window's edge is masked on the paragraph rather
+    than half-seen inside it."""
+    out = list(flat)
+    for m in SPEC_CITATION.finditer(flat):
+        for i in range(m.start(), m.end()):
+            out[i] = "#"
+    return "".join(out)
 
 
 def ledger_metrics(path: Optional[Path] = None) -> Dict[str, Dict[str, float]]:
@@ -549,6 +585,10 @@ def text_metric_mismatches(text: str, metrics: Dict[str, Dict[str, float]],
     two sentences after naming the spec. Where a paragraph names several
     specs carrying the same key, agreement with ANY of them is silence —
     the reader may not guess whose number the sentence "really" quotes.
+
+    Numbers are scanned over the CITATION-MASKED paragraph (`_mask_citations`)
+    — a spec id's own digits are not a quoted reading, and reading them as one
+    was 3 of this reader's 5 live rows on 2026-09-27.
     """
     out: List[dict] = []
     seen = set()
@@ -560,6 +600,9 @@ def text_metric_mismatches(text: str, metrics: Dict[str, Dict[str, float]],
                       if s in metrics)
         if not sids:
             continue
+        # The sids above are read off the UNMASKED text; every number below
+        # is read off the masked copy.
+        flat = _mask_citations(flat)
         keys: Dict[str, Dict[str, float]] = {}
         for sid in sids:
             for k, v in metrics[sid].items():
@@ -822,6 +865,11 @@ random.
 
 `T2.07` replayed offline against the recorded row: every rig gate green
 (construction_ok, memorisers 0.0/0.0, NB reference 5/5, seen-fit 11/11).
+
+Expect the honest reading to be `unevaluable_gates = 1`,
+`unevaluable_detail = T0.18(KeyError)`; that is the true state.
+
+`T0.13`'s own `stale_gates` reads 0.0000 today.
 """
     _mreg = {
         "ME.1": {"distractor_abstention": 1.0, "fabricated_abstention": 1.0,
@@ -829,18 +877,29 @@ random.
         "ME.3": {"aggregation_qa_gain": 0.343733, "raw_answer_rate": 1.0},
         "T3.06": {"task_cov_vs_random": -0.233333},
         "T2.07": {"construction_ok": 1.0},
+        # The 2026-09-27 phantom pair, verbatim from `docs/OVERSIGHT.md` at
+        # the 125th audit. Paragraph 8 is the auditor's own repair order and
+        # must stay SILENT: its true reading is written `= 1` (a bar by this
+        # reader's third heuristic) and the only other number in the window
+        # is the `0.18` inside `T0.18`. Paragraph 9 must still FIRE — a real
+        # misquote standing beside a citation, so the mask is proven not to
+        # be a blanket silencer of numbers near an id.
+        "T0.18": {"unevaluable_gates": 0.0},
+        "T0.13": {"stale_gates": 1.0},
     }
     mmis = text_metric_mismatches(_METRIC_FIXTURE, _mreg, "fixture")
     got_mm = [(m["key"], m["page_says"]) for m in mmis]
-    want_mm = [("distractor_abstention", ["0.0", "0.0000"])]
+    want_mm = [("distractor_abstention", ["0.0", "0.0000"]),
+               ("stale_gates", ["0.0000"])]
     if got_mm != want_mm:
         raise AssertionError(
             f"steering: metric fixture flunked: {got_mm} != {want_mm} — the "
-            f"one dead reading must flag; the arrow transition (0.0000 -> "
+            f"two dead readings must flag; the arrow transition (0.0000 -> "
             f"1.0000, its new number agrees), the rounding (0.344 vs "
             f"0.343733), the bar (>= 0.95 vs measured 1.0), the bare "
-            f"count (on 3 seeds) and the enumeration neighbour "
-            f"(construction_ok, memorisers 0.0) must all stay silent")
+            f"count (on 3 seeds), the enumeration neighbour "
+            f"(construction_ok, memorisers 0.0) and the digits inside a "
+            f"spec citation (`T0.18` is not 0.18) must all stay silent")
     mtxt = render_metrics(mmis, indent="")
     if "distractor_abstention" not in mtxt or "0.0000" not in mtxt \
             or "1.0" not in mtxt:
