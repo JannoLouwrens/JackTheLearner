@@ -7437,6 +7437,41 @@ ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-1
     which is the first time this project has measured, rather than assumed, that
     its world does not yet charge for distance, exertion or mass.
 
+    BUILDER ANSWER 2026-09-27 09:4x — **`EmotionalState.py` IS DECLARED, AND
+    THIS WEEK'S `FOR THE OWNER` ITEM 5 IS REFUTED.** That item reads
+    *"`EmotionalState.py` is 1,149 lines and is named in NO spec's `IMPL_DEPS`
+    — its two specs (`T2.12`, `T3.07`) do not hash it, so editing it stales
+    nothing and its behaviour is certified by nothing"*, and invites the
+    builder to confirm or refute it in a slot. Refuted on all three clauses,
+    measured rather than argued:
+      * **Declared in two specs, today:** `t2_12_emotion_separability.py:49`
+        `IMPL_DEPS = ['EmotionalState.py']`, and
+        `t3_07_ablate_mood_conditioning.py:134` names it among five paths. A
+        scan of every `IMPL_DEPS` literal in `experiments/tests/` returns
+        exactly those two and no others.
+      * **Declared at the commits their rows RECORD**, so the recorded
+        `impl_sha` covers it: `git show ab9d3e8:…t2_12…` and
+        `git show 2dc8afd:…t3_07…` both carry the declaration.
+      * **The edit is priced, mechanically:** `run blast-radius T2.12` reads
+        `PASS -> FAIL`, blast radius 1 (`T3.07`), `unreachable` **96 -> 97**
+        against floor 95. So editing `EmotionalState.py` stales one standing
+        PASS and one FAIL — not nothing.
+    **THE RECORD-VS-SOURCE ASYMMETRY THAT MAKES THE ERROR CHEAP TO MAKE, and
+    it is the half worth keeping.** `impl_deps` is **absent from 0 of 156
+    ledger rows — every row in this repository's history, including the twelve
+    newest.** The staleness reader does not need it (it reconstructs the
+    declared list from the committed source at the recorded commit, which is
+    how `run status` can print *"IMPL_DEPS ITSELF changed [...] -> [...]"* for
+    `T0.32`). But it means **any reader that asks the ROW what a spec declares
+    gets `None` for all 254 specs**, and would conclude of any file that
+    nothing hashes it. Whether that is what happened here is NOT claimed — this
+    desk's method was not observed and is not being reconstructed. What is
+    claimed is that the asymmetry exists, is total, and is the same shape as
+    the 121st audit's own lesson that a field added to make a row auditable is
+    only as durable as the projection that archives it.
+    Nothing is routed by this answer: a refutation closes, it does not queue.
+    No new row, so net arrivals are **+0**.
+
 ---
 
 ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.08 strengthening, Review items 4a/5) | DISPOSITIONED 2026-09-20 (Review FULL — the docstring is a REAL REQUIREMENT, not an overclaim; the conjunct is ARMED but BOUND to the T1.08 pipeline-repair dispatch and forbidden before it. See RULING below)
@@ -12408,3 +12443,69 @@ question for whoever holds that instrument, not a new one.
     `docs/REVIEW_QUEUE.md` and `docs/LOOP_JOURNAL.md`. `scripts/ladder_prompt.md`
     is NOT edited — striking or re-scoping the freeze is the owner's one line,
     not this desk's and not the builder's.
+
+ROUTED: xl01-c-fixture-ok-is-a-salt-lottery-in-a-deciding-metric | 2026-09-27 | `XL.01` attempt 3, ledger row **FAIL** 2026-09-27T09:30:04 (735.74 s, seeds 0/1/2, clean stamp at `6e6c1ab`, `dirty` unset) — the run's own reporting-only hash-salt replay | OPEN
+    SUBJECT: a SPEC's science — the instrument fired correctly; what it found
+        is a defect in `XL.01`'s rig, not in the detector.
+    DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
+        measured capacity", read off the tool this slot and not chosen by hand.
+    WAITS-ON: xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off
+        | that row is OPEN, DUE 2026-10-07, and it is the OTHER estimator defect
+        on this same spec's `_check`. Both touch which arm's number decides and
+        under what aggregation; ruling this one alone would re-open the same
+        `_check` twice in two sittings. They are one visit to `XL.01`.
+
+**THE CATCH, and it is the hash-salt detector's FIRST LIVE HIT on a real spec.**
+The instrument shipped at `5ee32ff` under `hash-salt-lottery-in-a-gated-metric`
+(option (iv): run the exact check, but only where the metric decides). On
+`XL.01` attempt 3 it reported, reporting-only and without touching the verdict:
+
+    HASH-SALT DIVERGENCE (salt 1): 1 DECIDING metric(s) are not a function of
+    (code, seed, data): c_fixture_ok 1.0 -> 0.0; +18 non-deciding diverged;
+    verdict replays FAIL -> VOID — repair the code, never the bar
+
+`c_fixture_ok` is `_check`'s fourth VOID lane
+(`xl_01_death_does_not_erase.py:703`): 0.0 means the alien-world scan found no
+world whose food sits `>= ALIEN_MIN_DIST` from this world's, so the control
+*"could help by accident and its verdict would be noise"*. **So `XL.01`'s
+recorded verdict is a function of the interpreter's salt: FAIL at the unset
+salt, VOID at salt 1.** An auditor handed the row and the commit cannot
+re-derive it, which is the one property every row on this ladder is for — and
+this is the third spec family in this class after `LG.10`/`LG.12`.
+
+**WHAT IS ALREADY ELIMINATED, measured this slot so the next visit does not
+re-do it.** The obvious suspect — the v2 wide-food-home fixture and the alien
+distance scan — is **NOT the cause.** `_wide_homes` is byte-identical across
+`PYTHONHASHSEED` 0/1/7 on all three recorded world seeds (3/4/5), and the
+distance filter passes **11 / 17 / 10** candidate worlds respectively at every
+salt. The scan is a pure function of the world seed exactly as its docstring
+claims. So the divergence enters BELOW `XL.01`'s own fixture — the only
+remaining path to `c_fixture_ok == 0.0` is `_build_alien_store`'s
+`if not diary.events: continue` firing on every one of those 10-17 candidates,
+which requires the alien explorer to go blind, which is world construction or
+stepping, not layout.
+
+**WHY THE REPAIR IS NOT TAKEN IN THIS SLOT, priced rather than deferred.** If
+the divergence is in `W0` / `playground.py` / `drives.py`, the repair bills the
+`playground.py` certificate set and belongs to the world-edit window, which is
+undesigned and whose authorship this desk declined on 09-27. The standing
+ascending-mechanical-bill rule says statistic (zero) before scoring (zero)
+before venue (bills every `playground.py` certificate) — so the next act is to
+LOCALISE the divergence to a file, which is a measurement, not an edit, and
+guessing a site would be the expensive move. **No bar is touched**
+(`ALIEN_MIN_DIST` 2.0, `RATIO_MAX` 0.5, `CONTROL_RATIO_MIN` 0.75 byte-unmoved)
+and the detector's own instruction — *"repair the code, never the bar"* — is
+what this row carries forward.
+
+**AND THE SEPARATE, GOOD NEWS ON THE SAME ROW: the staleness was inert, as
+forecast.** `XL.01` was stale because `EpisodicMemory.py` moved at `6502d36`.
+The forecast registered in `6e6c1ab` BEFORE the run — *"attempt 3 reproduces
+attempt 2's FAIL"* — held to every digit: `search_time_ratio` **1.003401** vs
+attempt 2's 1.0034, `carried_ttf2_s` **19.866667** / `wiped_ttf2_s`
+**27.266667** vs 19.8667 / 27.2667, `carried_ltc` **2.666667** vs
+`wiped_ltc` **2.000000**, `ok_claim` 0.333333, every rig gate green
+(`calibrated` 1.0, `ok_ref` 1.0, `ok_null_informative` 1.0). An 11-line probe
+of the one moved call site predicted a 735 s run's numbers exactly.
+
+    Staleness bill: **ZERO additional** — this row edits no spec file and no
+    `IMPL_DEPS` path. `XL.01` is a no-certificate FAIL row and nothing cites it.

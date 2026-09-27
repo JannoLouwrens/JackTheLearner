@@ -20730,3 +20730,121 @@ order and nobody had noticed the order was cheap.
 **CREATURE GATE MOVED: NONE, honestly** — this slot touched none of T2.01, XL.01, T6.01. It is the **1st of the at most 2 consecutive NONEs** the freeze permits, so the next slot's NONE budget is nearly spent and should be spent knowingly.
 
 **NEXT ITERATION.** **The cheap sibling is `PS.06` and the recipe is now written down:** its `tiring` target is the imminent droop, its narrow candidate (fatigue `f` alone) is already **REFUTED** as a known-answer channel (0.0216 on seed 1, would report UNREADABLE where the probe reads 0.6998/0.7496) and its intero block reads 0.6663 worst with leak +0.016 — but **neither was measured in a zero-parameter basis**, and PS.05 just showed that is worth 0.16 R². If `needs.py` declares the droop's law in source the way `odour.py` declares the odour law, the same inversion applies and the ceiling is one ~670 s run away; if it does NOT, **say so** — a venue whose law is not declared in source cannot have a knob-free reference, and that is itself the answer to item (a) for that sibling. **The habit I would hand forward, now five slots running:** when a page hands you a design question, ask first whether it is a MEASUREMENT — the binding-set size, `T2.11`'s held-out Î, the PS sibling calibration, XL.01's estimator read, and today's ceiling were all orders somebody had already written and nobody had noticed were cheap. **And the new half of that habit, which cost me a wrong sentence in a commit message: before claiming a measurement is the first of its kind, grep the queue for its own numbers.** `run next` cannot see a DISPOSITIONED row, and neither can it see that the row was already half-executed.
+
+---
+
+**2026-09-27 ~09:0x-09:5x UTC — the freeze's exit condition is five specs deep,
+not one, and the run I bought to discharge its quota caught a salt lottery in a
+deciding metric instead.** Meters read at the top of the slot: `week:all models`
+**70%** — the gate, and the only line I acted on — `week:Fable` 95%, session 2%.
+Ran on **Opus**. `PACING:` streak **0**; the launcher is healthy.
+
+**THE UNIT, and it started as a board check that found the board was wrong about
+itself.** `PROGRESS.md` FOR THE BUILDER item 2 named two rows as waiting on me;
+**both are already discharged** and both carry a BUILDER-TRACE from the 01:2x
+slot saying so (`t215` execution landed at `e5e627b`, `hash-salt` measurement at
+`19aab39` and implementation at `5ee32ff`). The Review FULL re-dated both to
+10-08/10-09 at ~06:37 with text that re-asserts builder execution is owed. I did
+not execute them again. So I went at the freeze instead, and the arithmetic is
+this, taken from `registry.ready()` / `Ledger.blocked_by` rather than from any
+page: **`T6.01 <- T4.05 <- T4.04 <- T2.01 <- T1.08`** — the freeze says *"Lifting
+it requires **only** that `T6.01` runs"*, and it is **five specs**, two with no
+implementation, one the project's largest settled FAIL, and the first hop a
+design this desk is explicitly forbidden to pre-empt. `run blocked` has printed
+`T6.01` inside `T1.08`'s own blocks set for all ten days the freeze has stood.
+The second half has a cost every slot: of the three creature gates the freeze
+quotas over, `ready()` returns **exactly one** (`XL.01`, a settled FAIL), so the
+quota resolves mechanically to re-running one failing spec every third slot —
+the act `run next`'s own triage line forbids. `D38`'s shape, in a conduct
+amendment instead of the register. **I did not strike, lift, re-label or
+re-scope the freeze** — that is the owner's one line — and I did not build the
+reader that would catch this class, because freeze item 2 forbids it.
+
+**CREATURE GATE MOVED: `XL.01`** — attempt 3, **FAIL**, 735.74 s, 3 seeds, clean
+stamp at `6e6c1ab`, `dirty` unset. Not a quota purchase: it is `run status`'s own
+owed staleness re-run, and it had a NAMED mechanism, which is what separates an
+owed re-run from a lottery draw. `EpisodicMemory.py` moved materially at
+`6502d36` (similarity floor: raw containment 0.34 -> coverage-over-known-words
+0.95) and `XL.01` reads the diary through exactly that function (line 371,
+`recall("saw food room", channel="saw")`). **Probed in eleven lines BEFORE
+spending 735 s, and the forecast was written into `6e6c1ab` before the run so it
+could be wrong:** recorded texts are `jack saw food in the <quadrant> part of the
+room`, all three cue words present, coverage **1.0000** vs the 0.95 floor, **4 of
+4 rows returned with positions recovered** -> forecast *reproduces attempt 2's
+FAIL*. **It held to every digit** — `search_time_ratio` **1.003401** (was
+1.0034), `carried_ttf2_s` **19.866667** / `wiped_ttf2_s` **27.266667** (was
+19.8667 / 27.2667), `carried_ltc` **2.666667** vs `wiped_ltc` **2.000000**,
+`ok_claim` 0.333333, all four rig gates green. **The staleness was a hash fact,
+not a behaviour fact**, and an 11-line probe said so for the price of neither.
+
+**THE FIND THAT WAS WORTH THE 735 s, and it is not the verdict.** The hash-salt
+detector shipped at `5ee32ff` took its **first live hit on a real spec**:
+`c_fixture_ok` **1.0 -> 0.0** at salt 1 — a **DECIDING** metric, `_check`'s
+fourth VOID lane — with **+18 non-deciding diverged** and **the verdict replaying
+FAIL -> VOID**. So `XL.01`'s recorded verdict is a function of the interpreter's
+salt, and an auditor holding the row and the commit cannot re-derive it. Third
+family in this class after `LG.10`/`LG.12`. **I eliminated the obvious suspect by
+measurement rather than naming candidates:** `_wide_homes` is byte-identical
+across `PYTHONHASHSEED` 0/1/7 on all three recorded world seeds, and the alien
+distance filter passes **11 / 17 / 10** candidate worlds at every salt — the
+fixture geometry and scan are pure functions of the world seed exactly as
+documented. So the divergence enters BELOW `XL.01`'s fixture, and the only
+remaining path is the alien explorer going blind in all 10-17 candidates, which
+is world construction or stepping. **Repair NOT attempted and the reason is
+priced, not deferred:** if it is in `W0`/`playground.py`/`drives.py` it bills the
+`playground.py` certificate set and belongs to the world-edit window, whose
+authorship this desk declined today. Ascending mechanical bill says the next act
+is to LOCALISE to a file — a measurement — and guessing a site is the expensive
+move. No bar touched in either direction.
+
+**AND `FOR THE OWNER` ITEM 5 IS REFUTED, in the one grep it was offered for.**
+*"`EmotionalState.py` ... is named in NO spec's `IMPL_DEPS` ... editing it stales
+nothing and its behaviour is certified by nothing"* — wrong on all three
+clauses. Declared in **two** specs today (`t2_12:49`, `t3_07:134`, and a scan of
+every `IMPL_DEPS` literal returns exactly those two), declared **at the commits
+their rows record** (`ab9d3e8`, `2dc8afd`, so the recorded `impl_sha` covers it),
+and `run blast-radius T2.12` prices the edit at `PASS -> FAIL`, radius 1
+(`T3.07`), `unreachable` **96 -> 97**. **The half worth keeping is why the error
+is cheap to make:** `impl_deps` is absent from **0 of 156 ledger rows — every row
+in this repo's history** — so any reader that asks the ROW what a spec declares
+gets `None` for all 254 specs. I do NOT claim that is what happened; the method
+was not observed. Answered as an addendum on the existing completeness row, so a
+refutation closes instead of queueing.
+
+**BILL AND HYGIENE.** Two rows routed, both **SUBJECT declared** per the 124th
+audit FTB 2 — `freeze-release-condition-is-five-specs-deep-...` (the APPARATUS)
+and `xl01-c-fixture-ok-is-a-salt-lottery-in-a-deciding-metric` (a SPEC's
+science) — both `DUE 2026-10-07` off `review-queue`'s own next-date-with-room,
+both with `WAITS-ON:` declared and neither MALFORMED; `review-queue` **0
+violations**, rc=0. **My two rows are +2 of the `review_queue_net_arrivals`
+26 -> 29 delta and I say so rather than letting it read as clock.** No spec file
+edited, no `IMPL_DEPS` path edited, no threshold moved in either direction, no
+conjunct armed (no blast-radius line owed), **zero new checker, ratchet, organ or
+Tier-0 spec** (freeze items 1-2 obeyed). Ratchets quoted BEFORE any record and I
+recorded none: **6 MOVED**, 1 day-rolled, floors **3 ABOVE** (`decisions_default
+_action_expired`, `pass_on_dead_dependency`, `unreachable`), 0 BELOW, 0
+UNVERIFIED — all three pre-existing and routed, none mine, no floor raised.
+`scripts/ladder_prompt.md` **untouched at 96212 B**. `git add` by name; 13 claude
+processes; no foreign files in the tree — `CHECKLIST.md`'s one-line delta is
+`run render`'s own output for my `XL.01` row (`borrowed_commit` 761121a ->
+6c57954), checked with `git diff` rather than assumed foreign and committed as
+mine. **DISCLOSURE: the
+harness moved my foreground `run XL.01` to its background lane at the 600 s mark
+and the run printed the LANE WARNING.** It was harness-tracked, not detached on a
+wake-up promise, it completed inside the slot, and the row is on the ledger with
+a clean stamp — verified on disk, not inferred from the completion notice.
+Nothing left running: `pgrep` clean.
+
+**NEXT ITERATION.** **The `XL.01` salt divergence is the live thread and the
+next act on it is a MEASUREMENT, not an edit:** bisect the `+18 non-deciding
+diverged` metrics to a file by running `_build_alien_store`'s candidate loop
+under two salts with the world build instrumented — `_wide_homes` and the
+distance filter are already cleared, so start at `W0(seed=cand, ...)` and
+`_reset_food`. If it localises to `playground.py` it is the world-edit window's
+and must be handed over, not repaired. **Do NOT re-run `t215` or `hash-salt`** —
+both discharged, both traced twice now, and the third slot to be sent at them
+will be the third to find nothing. **And the freeze's NONE budget is NOT spent
+this slot** (gate moved: `XL.01`), but note what the row above measures: the
+quota's only runnable member is a settled FAIL, so the next slot that cannot
+reach `XL.01` honestly has no legal way to satisfy item 3 — say so plainly
+rather than manufacturing a re-run.
