@@ -6117,6 +6117,79 @@ ROUTED: xl01-death-and-retry-has-no-reachable-repair-path | 2026-09-05 | 72nd-au
     docket would put the longer path first. Date is the tool's own next date
     with room (2026-10-03, carrying 2 when this was written).
     WAITS-ON: none
+    BUILDER MEASUREMENT 2026-09-27 07:1x — **BOTH OF THIS ROW'S TWO CANDIDATE
+        ANSWERS ARE MEASURABLY WRONG, AND THE CHEAP ROUTE IS THE ONE NEITHER OF
+        THEM NAMES: `XL.01`'s OWN ESTIMATOR.** This row asks the Review to pick
+        between *"`NE.01`'s occlusion redesign is the single upstream unblock"*
+        and *"death-and-retry needs a claim that is powerable at free-tier seat
+        counts"*. Both are answerable by arithmetic off evidence already paid
+        for, so neither was left as a design call. Script in `/tmp`, **no ledger
+        row, no spec file edited, no bar proposed, nothing inherited** — every
+        number below is read from `experiments/ledger.json:results.XL.01`
+        (attempt 2, `265e683`, ran_at 2026-08-19T18:35:10, FAIL) and from
+        `registry.py` at HEAD.
+        (a) **CLAUSE 1 IS FALSE: `NE.01` IS NOT THE SINGLE UPSTREAM UNBLOCK, AND
+            THE ROW UNDERCOUNTS THE DEPTH IT ALREADY WARNS ABOUT.** Walked
+            mechanically rather than read off a page: `NE.08.depends_on` is
+            `['NE.05', 'ME.10', 'ME.9', 'T6.03']`, and the transitive non-PASS
+            roots are **`NE.01` (FAIL), `NE.02` (NOT_RUN, no implementation) and
+            `T2.10` (FAIL)** on **two independent branches** —
+            `NE.05 <- NE.03 <- {NE.01, NE.02}` and `T6.03 <- T2.10`. Repairing
+            `NE.01` alone leaves two. The row's own text names only the
+            `T6.03 <- T2.10` branch ("two desk debts deep"); the `NE.05` branch
+            is a third debt and one of its roots has no test file at all.
+        (b) **CLAUSE 2 CANNOT BE BOUGHT BY AN ENVELOPE, AND HALF THE ARITHMETIC
+            IS SIGMA-FREE.** `_check` requires `ok_claim == 1.0`, and `ok_claim`
+            is computed PER SEED inside `_experiment` (`search_time_ratio <=
+            RATIO_MAX` AND `carried_ltc < wiped_ltc`) then averaged by
+            `protocol._aggregate` — so the gate is **all 3 seeds, both legs**.
+            For a per-seed boolean gate required on all three, a truth sitting
+            exactly AT the bar gives `p_seed` 0.5 and **power 0.125 at ANY
+            dispersion** — more lives and more seeds cannot move that, because
+            it is not a variance statement. At the recorded mean/sd
+            (1.0034 / 0.6714) `p_seed` is 0.2267 and power is **0.0117**;
+            `P(exactly 1 of 3)` is 0.4067 and the row recorded `ok_claim`
+            0.3333 = **1 of 3**, so the observation is unremarkable rather than
+            unlucky. And the sd cannot be used to SIZE anything: estimated from
+            n=3 (2 df) its own 95% CI is **[0.3496, 4.2195]**. For contrast,
+            `NE.08`'s `>= 2 of 3` form lifts at-bar power 0.125 -> **0.500** for
+            free — still a coin flip, and worth knowing before its mandated
+            power pilot is sized.
+        (c) **THE FINDING, AND IT IS A DEFECT THIS SPEC DIAGNOSED, REPAIRED ON
+            ITS CONTROL, AND LEFT ON ITS CLAIM.** `search_time_ratio` is a
+            **mean of per-seed ratios**. On the SAME recorded numbers the
+            **equal-N pooled** ratio — `carried_ttf2_s / wiped_ttf2_s` =
+            19.8667 / 27.2667 — is **0.7286** against the gated statistic's
+            **1.0034**. The estimator is worth **+0.2748 ratio units, 55% of the
+            whole distance from the pooled effect to the 0.5 bar.** The spec's
+            own v2 change list says why, in its own words, about the OTHER arm:
+            *"ALIEN GATE POOLED ACROSS SEEDS ... a per-seed gate on 7
+            heavy-tailed lives per arm is noise-dominated ... equal-N pooling,
+            so one lucky tiny denominator cannot dominate."* The control's
+            numbers reproduce that bias exactly — per-seed mean-of-ratios
+            **3.3955** vs pooled **2.2421** — and the control was pooled. The
+            claim's leg, gated per seed on the same 8 heavy-tailed lives, was
+            not.
+        (d) **AND IT CANNOT RESCUE THE FAIL, WHICH IS WHY IT IS REPORTABLE AT
+            ALL.** Pooled 0.7286 is still above the **UNMOVED** `RATIO_MAX`
+            0.5, and leg 2 fails pooled too — `carried_ltc` **2.6667** vs
+            `wiped_ltc` **2.0000**, the wrong direction, so the carried arm
+            needed MORE lives to reach criterion. Attempt 2's FAIL stands under
+            either estimator. No bar moves in either direction and nothing here
+            is a proposal to move one.
+        (e) **THE RANKING THIS CHANGES.** `XL.01` has **zero** root blockers
+            (`PS.02`, `XL.00` both PASS) and its defect is **spec-local**;
+            `NE.08`, the strengthened successor, is **three** roots deep on two
+            branches, one of them unimplemented. The cheap route to the
+            death-and-retry commitment is `XL.01`'s estimator, and this row's
+            two candidate answers both point at the expensive one.
+        **WHAT IS NOT DONE HERE, deliberately.** The estimator repair is NOT
+        implemented, because pooling a per-seed gate REMOVES worst-seed
+        discipline and that collides head-on with `aggregate-hides-worst-seed`
+        (OPEN, DUE 2026-09-29) — the two must be ruled together or this project
+        pools a claim on Tuesday and forbids pooling on Wednesday. Routed as its
+        own row below with that coupling declared. Nothing above moves a bar,
+        registers a spec, picks an arm or edits a spec file.
 
 **The claim and the silence:** `XL.01` — *"Death does not erase what he
 learned"*, filed by its own `COVERS:` under both **death & retry** and
@@ -12098,3 +12171,71 @@ measuring it is a one-off hand scan of the same shape as
     the `lt_02_chaos_detector.py` docstring correction prices at no
     certificate (`T0.28` FAIL, `LT.02` FAIL, `LT.03` VOID). No bar moves, no
     spec's numbers are touched, and no re-run is owed by any spec named here.
+
+## ROUTED 2026-09-27 (builder): `xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off`
+## — SUBJECT: a spec's SCIENCE (the estimator that decides a claim about Jack),
+## not the apparatus. Labelled here per the 124th audit's FOR THE BUILDER item 2.
+
+ROUTED: xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off | 2026-09-27 | XL.01 attempt 2 (FAIL, `265e683`, ran_at 2026-08-19T18:35:10) read this slot; the spec's own v2 change list | OPEN
+    DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
+        measured capacity", read off the tool this slot and not chosen by hand
+        (09-27 through 10-06 all carry 6 or 7 against a measured capacity of 6).
+    WAITS-ON: aggregate-hides-worst-seed | that row is OPEN, DUE 2026-09-29 —
+        and its parenthetical was FIRST WRITTEN INSIDE THIS FIELD, where
+        `review_queue.py` correctly read the whole string as the row id and
+        raised MALFORMED. Recorded rather than silently corrected: the
+        `waits-on-declared-field` instrument shipped 09-25 caught its first real
+        author error on its second week, which is the only evidence that a
+        declaration-only field is being parsed at all. The repair
+        available here is to gate the CLAIM's ratio on the equal-N pooled form
+        the CONTROL already uses, and pooling a per-seed gate REMOVES worst-seed
+        discipline. That is the exact question `aggregate-hides-worst-seed`
+        holds, one spec over. Ruling this one first would settle that one by
+        implication and in the loosening direction, which is the move this desk
+        may not make by side effect. They are one decision.
+
+**THE MEASUREMENT.** Derived in full, with the power arithmetic beside it, in
+the `BUILDER MEASUREMENT 2026-09-27 07:1x` block on
+`xl01-death-and-retry-has-no-reachable-repair-path` above; quoted here only so
+this row stands alone. `XL.01`'s deciding statistic `search_time_ratio` is a
+**mean of per-seed ratios**, gated per seed and required on all three
+(`ok_claim == 1.0`). On the SAME recorded numbers the **equal-N pooled** ratio
+is **0.7286** (19.8667 / 27.2667) where the gated statistic reads **1.0034** —
+the estimator is worth **+0.2748 ratio units, 55% of the distance from the
+pooled effect to the unmoved 0.5 bar**. The spec's v2 change list already
+diagnosed this defect and repaired it **on the control**: *"a per-seed gate on
+7 heavy-tailed lives per arm is noise-dominated ... equal-N pooling, so one
+lucky tiny denominator cannot dominate."* The control's own numbers reproduce
+the bias (per-seed 3.3955 vs pooled 2.2421). The claim's leg, on the same 8
+heavy-tailed lives, was left per-seed.
+
+**WHY THIS IS NOT A RESCUE, and the reason it may be reported at all.** Pooled
+0.7286 is still above `RATIO_MAX` **0.5**, and `ok_claim`'s second leg fails
+pooled too (`carried_ltc` **2.6667** vs `wiped_ltc` **2.0000** — the wrong
+direction). **Attempt 2's FAIL stands under either estimator.** No bar moves in
+either direction; the strengthening is to the ESTIMATOR, which is the cheapest
+rung of the 09-23 ascending-bill rule (statistic before scoring before venue
+before envelope).
+
+**WHAT THE REVIEW OWNS HERE, and it is one decision for two rows.** Whether a
+heavy-tailed per-seed ratio may be gated on its pooled form when the SAME spec
+already pooled the same statistic on its control for a measured reason — and if
+so, what replaces the worst-seed discipline that pooling removes (a paired CI
+across seeds, a per-seed floor beside the pooled gate, a median-of-ratios, or
+the honest answer that the statistic itself is wrong and `t_secure` should be
+compared paired life-by-life rather than as a ratio of medians). `XL.01`'s FAIL
+stays in the ledger either way; `T1.02` precedent binds any successor.
+
+**WHY IT MATTERS MORE THAN ITS SIZE.** `XL.01` is one of the THREE creature
+gates `D35` rule 3 names, and the only one of the three with **zero root
+blockers** — `PS.02` and `XL.00` both PASS, so it is runnable today. Its
+strengthened successor `NE.08` is **three** non-PASS roots deep on two
+independent branches (`NE.05 <- NE.03 <- {NE.01 FAIL, NE.02 unimplemented}` and
+`T6.03 <- T2.10 FAIL`). So the cheapest reachable route to the death-and-retry
+commitment — a GOAL.md commitment at **0 pass** — runs through this row, not
+through an upstream unblock.
+
+    Staleness bill: **ZERO additional** — this row shares the
+    `docs/REVIEW_QUEUE.md` edit billed in the same commit (`T0.21`, `T0.31`,
+    both re-bought in slot). No spec file is edited, `XL.01` is a no-certificate
+    FAIL row and nothing cites it, so no re-run is owed by any spec named here.

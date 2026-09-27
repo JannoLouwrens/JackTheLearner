@@ -18585,3 +18585,60 @@ work changes (a builder that has stopped dispatching and started probing; a desk
 that has stopped designing and started re-dating), **re-read every exemption
 whose sentence names the old mode**, because that is the moment they go stale
 and the moment nothing will tell you.
+
+## A defect diagnosed on one arm and repaired only there — the same statistic lives on both sides of a spec, and it decides on only one
+
+`XL.01` ("death does not erase what he learned") compares a carried-diary arm
+against a diary-wiped arm by a ratio of median time-to-first-feed, and it runs
+the SAME ratio statistic twice: once as the CLAIM
+(`search_time_ratio = carried/wiped`, gated at `<= 0.5`) and once as the
+CONTROL (`alien/wiped`, gated at `>= 0.75`). Writing v2, its author piloted the
+control, measured per-seed ratios of **1.67 / 15.67 / 0.62** from a store that
+was content-wrong by construction, and pre-registered the correct diagnosis in
+the docstring: *"a per-seed gate on 7 heavy-tailed lives per arm is
+noise-dominated ... equal-N pooling, so one lucky tiny denominator cannot
+dominate."* The control was moved to `mean(alien)/mean(wiped)` across seeds.
+
+**The claim's leg was not touched, and it is the same statistic on the same
+number of equally heavy-tailed lives.** Attempt 2 (FAIL, 2026-08-19) then
+recorded exactly the symptom the pilot had predicted, one arm over: the gated
+mean-of-per-seed-ratios reads **1.0034**, while the equal-N pooled ratio on the
+identical recorded numbers is **0.7286** — a **+0.2748** gap, **55% of the whole
+distance from the effect to the unmoved 0.5 bar.** The control's own recorded
+numbers reproduce the bias in the same direction and to the same degree
+(per-seed **3.3955** vs pooled **2.2421**), which is what makes the read
+airtight rather than an argument: the bias is measured twice in one row, and
+only the arm that does not decide anything was protected from it.
+
+Two things made this invisible for 39 days. The docstring's v2 change list reads
+as a *completed repair* — it names the defect, the mechanism, the fix and the
+preserved discriminating power, all correctly — so a later reader has no reason
+to ask which arms it was applied to. And nothing in this repo compares a spec's
+two uses of one statistic: staleness hashes files, `T0.13` checks whether each
+metric can move its own verdict, and neither can see that two conjuncts read the
+same quantity through different estimators.
+
+The generalisation is not about ratios. A spec's arms are usually written at
+different times — the claim first, the controls later when the pilots expose
+what the claim's instrument does wrong — so the LAST arm written carries the
+best version of the shared machinery, and the arm that decides carries the
+oldest.
+
+**Rule:** when a pilot makes you change how a statistic is computed, grep the
+spec for every OTHER site that computes the same quantity and say in the change
+list which arms the fix was applied to and which were deliberately left. If the
+answer is "the control only", write down why the claim is exempt — and if no
+reason exists, the claim is where the fix was needed most, because it is the
+only arm whose estimator can cost a verdict.
+
+**Corollary, sigma-free and worth keeping separately.** A per-seed boolean gate
+required to hold on ALL seeds has power `p^n`, and when the truth sits exactly
+AT the bar, `p = 0.5` by symmetry — so an all-3-seeds gate tops out at
+**12.5% at any dispersion**. That is not a variance statement and no envelope
+touches it: more lives and more seeds shrink `sigma`, and `sigma` is not what is
+binding. Before sizing a power pilot for a worst-seed gate, compute the at-bar
+power first; if it is hopeless there, the repair is the STATISTIC or the
+asserted MARGIN, never the envelope. (Same family as the UNSATURATED-NULL RULE,
+2026-09-23: a margin placed at the bound of what the statistic can reach is not
+registerable, and growing the envelope against it is the one repair
+arithmetically guaranteed not to work.)
