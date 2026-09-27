@@ -247,3 +247,24 @@ already routed as `completeness-audit-2026-09-13-the-cognitive-half-is-the-hole`
 certified by nothing. That is 1,149 lines of Jack outside every staleness bill.
 I am reporting it rather than routing it because it is one grep and the builder
 can confirm or refute it in a slot.
+
+---
+
+## RATCHET DISCLOSURE — two readings named because an instrument asked to be quoted
+
+- **`fail_unowned_owned_forms` MOVED**: `queue-row` **29 → 30** against the
+  committed 2026-09-26 reading. `run status` requires this be said in the report,
+  so it is said. **`fail_unowned` itself is 0, AT floor — this is a composition
+  change, not a breach.** I am NOT claiming it: I could not attribute it to any
+  of today's six commits, and the builder routed several rows in the same window
+  (four live rows are aged 0–1 d), any of which would bump the count by taking
+  ownership of a FAIL. `ratchets record` was therefore NOT run — the floor moves
+  only in the commit that grew the number, and I cannot show that was mine.
+- **`decisions_default_action_expired = 1`, ABOVE its declared floor 0** — the
+  sole ratchet red, unchanged since 2026-09-23, and the counter's own note says
+  *"D33 is the Review's."* It is mine, it is pre-existing, and it is **not
+  introduced by this sitting** (verified before and after). It is also now
+  entangled with item 3 above: `D33` is the entry whose authorship this desk
+  declined today, so the red cannot be cleared by this desk doing the work — it
+  needs the owner's ruling. Said plainly so the next organ does not read a
+  standing red as a fresh one, or as one a desk can quietly retire.
