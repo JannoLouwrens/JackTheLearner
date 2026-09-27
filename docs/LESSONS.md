@@ -19474,3 +19474,79 @@ one line and its CONTENT occupies the rest. **Before believing any "nothing
 changed here" that was established by searching for a name, ask what fraction of
 the record's lines contain that name.** If the answer is "one", the search
 proved nothing. Diff the REGION, or diff nothing and say so.
+
+## "Is this file certified by anything?" is a COMPUTED question with a tool. A name-grep answers a different question and gets the opposite answer
+
+Second instance in twenty-four hours of a desk settling a mechanical question
+with a text search (the first is the lesson directly above — an id-grep over a
+queue row's body). The mechanism is different enough to be worth its own
+heading, and the fix is not a better search.
+
+**What happened.** `PROGRESS.md` FOR THE OWNER, 2026-09-27, item 5 reported as a
+new finding: *"`EmotionalState.py` is 1,149 lines and is named in NO spec's
+`IMPL_DEPS` — its two specs (`T2.12`, `T3.07`) do not hash it, so editing it
+stales nothing and its behaviour is certified by nothing."* The line count was
+exactly right. Everything after it was false:
+
+    experiments/tests/t2_12_emotion_separability.py:49
+        IMPL_DEPS = ['EmotionalState.py']
+    experiments/tests/t3_07_ablate_mood_conditioning.py:134
+        IMPL_DEPS = ["MovementMoodCoupling.py", "EmotionalState.py", ...]
+
+and the bytes really are folded in — `impl_sha_of` with a one-byte mutation of
+`EmotionalState.py` moves both shas (T2.12 `acb44e8c2b7c22a6` →
+`bb53ce90225d1be1`, T3.07 `339b899c4eab5893` → `5092cffd575df959`), and the
+first of those values is byte-for-byte the "now" sha `run status` prints for
+T3.07, so it is the live hash the staleness checker reads.
+
+**The likely blind search, and why it is the natural one to write.** `IMPL_DEPS`
+reads like a property OF A SPEC, and specs live in `experiments/registry*.py`.
+A grep for `EmotionalState` there returns one line — a `kills=` string — and
+nothing else. But `IMPL_DEPS` is declared in the TEST MODULE, not the registry
+entry, and `impl_deps_of` reads it statically from that module's source. **The
+search was looking at the wrong surface, and the wrong surface returned a clean
+answer rather than an error.**
+
+**The tool already existed and answers it in one line:**
+
+    /data/venvs/jackthelearner/bin/python -m experiments.run stale-cost <path>
+
+For `EmotionalState.py` it names THREE rows, including one the finding did not
+mention at all: `BILLED T0.01 PASS`, `BILLED T2.12 PASS`, `no-cert T3.07 FAIL`.
+It was built on 2026-09-22 for exactly this question and it computes the closure
+instead of searching for a name.
+
+**Rule:** a dependency is a CLOSURE, never a mention. `grep <name>` answers
+*"which files talk about X"*; `run stale-cost X` answers *"which certificates
+fall if X moves"*, and the two differ in both directions — a file can be
+discussed in twenty docstrings and hashed by none, or hashed by two specs and
+mentioned in neither's prose. Before reporting that anything is outside the
+staleness bill, run the tool. Before reporting that anything IS covered, run it
+too; `T3.07`'s coverage is a FAIL row, which is not a certificate.
+
+**AND THE HALF THAT MATTERS MORE: the same tool run over the whole class found a
+real instance, which no spot-check could have.** Pricing all 21 repo-root
+modules took one loop over `stale_cost.price([f], ledger)` and read **exactly
+one** outside every declared bill — no PASS certificate, no non-PASS row:
+`mocap_cmu.py`, 201 lines, and it holds up the two certificates whose entire
+subject is that the motion data is real (`T1.13` *"The grounding pairs are
+real"*, `T2.14` *"Imitation from real motion capture"*). It hid because
+`MoCapLoader.py:639` reaches it through a **function-local import**, and because
+`undeclared_impl_deps` makes repo-root modules ENDPOINTS in its traversal by
+measurement — its own docstring names that wider hole as *"REAL and REMAINS"*
+and routes it. So no instrument was going to surface this one; it took pricing
+every file in the class.
+
+**Rule:** when you catch yourself checking ONE file, price the whole class
+instead. The cost difference was a `for` loop; the difference in what it found
+was a refutation versus a repair. A spot-check can only ever exonerate or
+convict the file you already suspected, and the file you already suspected is
+the one someone else's reasoning nominated — it is not a sample.
+
+**Corollary, for the writer rather than the reader:** the finding above was
+published on a page the owner reads, under a desk's name, having been checked by
+a method that could not have found the answer. It was honest and it was wrong,
+which is the pair this repo's first law exists for. If a report's evidence is a
+search, say so in the report — *"grep found no declaration"* invites the one-line
+confirmation, while *"it is named in NO spec's IMPL_DEPS"* asserts a computed
+fact and forecloses it.

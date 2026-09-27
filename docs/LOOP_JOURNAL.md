@@ -22147,3 +22147,137 @@ lesson carries the one-liner. (c) Before executing anything a desk page hands
 you, check the row BODY for a trace: three slots running, the named work was
 already done. (d) `w1-world-edit-window` goes `OVERDUE` at midnight WITH a cause
 attached now; do not reach for the stamp, and do not re-derive the decline.
+
+## 2026-09-27 ~20:1x–20:3x UTC — the desk's newest finding was refuted, and running its own check over the whole class found the real one: `mocap_cmu.py`, the only root module outside every bill, holding up both certificates whose subject is that the motion data is REAL
+
+**METER, read at the top of the slot and not cached from any page:**
+`week:all models` **85%** — that is the gate (90%), so ~5 points of headroom;
+`week:Fable` **95%**, pinned, NOT the gate; session 4%; `--week-elapsed` 95.
+Both lines printed, and the one I acted on is `week:all models`. Ran on **Opus**
+(Fable pinned), so: one larger, better-chosen unit rather than several.
+
+**Instruments, re-derived at the end of the slot, not inherited:** `status` **2**,
+`ratchets` **2**, `coverage` **2**, `review-queue` **0**, `verify` **2**,
+`decisions --check` **1**, `champions --check` **0**.
+Ratchet delta, quoted BEFORE any record (I recorded none): *6 MOVED
+(`fail_unowned_owned_forms` queue-row 29 → 31, `review_queue_net_arrivals`
+26 → 34, `review_queue_piled_on` 3 → 4, `review_queue_violation_forms`
+`{OVERDUE:1}` → `{}`, `review_queue_violations` 1 → 0, `unreachable` 95 → 96);
+1 day-rolled (`cpu_foreclosed_now`); floors 3 ABOVE
+(`decisions_default_action_expired`, `pass_on_dead_dependency`, `unreachable`),
+0 BELOW, 0 UNVERIFIED.* **Byte-identical to the 126th audit's line — nothing I
+did moved a counter,** and in particular `unreachable` stayed **96**.
+
+**THE BOARD WAS EMPTY AGAIN AND I DID NOT MANUFACTURE WORK.** `run next`: *0
+fresh · 38 carrying a settled verdict · 14 held*, the 34th consecutive empty
+board. `1^13`'s six units are discharged (checked, not assumed: `PS.09` carries
+the known-answer conjunct at `ps_09:144-186`, `PS.05` its ruling record,
+`LT.02` ran twice since, and `T2.15`'s conjunct landed at `e5e627b` — its row's
+own BUILDER-TRACE says the remainder is FULL-mode desk work). OVERSIGHT FTB 1
+was discharged by the previous slot; FTB 2 is the owner's; FTB 3 is "nothing
+else". So I took the one thing today's `PROGRESS.md` handed the builder by name.
+
+**THE UNIT: `PROGRESS.md` FOR THE OWNER item 5, *"one grep and the builder can
+confirm or refute it in a slot"*. REFUTED — and the refutation was the cheap
+half.** The finding: *"`EmotionalState.py` is 1,149 lines and is named in NO
+spec's `IMPL_DEPS` … editing it stales nothing."* The line count is exactly
+right. The rest is false, and not by eye:
+
+    t2_12_emotion_separability.py:49    IMPL_DEPS = ['EmotionalState.py']
+    t3_07_ablate_mood_conditioning.py:134  [..., "EmotionalState.py", ...]
+
+`impl_sha_of` with a one-byte mutation moves both shas — T2.12
+`acb44e8c2b7c22a6` → `bb53ce90225d1be1`, T3.07 `339b899c4eab5893` →
+`5092cffd575df959` — and that first value is byte-for-byte the "now" sha
+`run status` prints for T3.07, so this is the live hash the staleness checker
+reads and not a side computation. `run stale-cost EmotionalState.py` answers the
+whole question in one line and names **three** rows, including a `T0.01` the
+finding never mentioned. **The blind search is a natural one and worth naming:**
+`IMPL_DEPS` reads like a property of a SPEC, and grepping
+`experiments/registry*.py` returns one `kills=` string — the declaration lives in
+the TEST MODULE.
+
+**THEN I RAN THE SAME TOOL OVER ALL 21 ROOT MODULES, because the question was a
+good one and deserved its real answer. Exactly ONE is outside every declared
+bill** — no PASS certificate, no non-PASS row:
+
+    mocap_cmu.py   201 lines   — NONE —
+
+and it is load-bearing for the two certificates whose entire subject is data
+authenticity: **`T1.13` "The grounding pairs are real"** and **`T2.14` "Imitation
+from real motion capture"**. `MoCapLoader.py:639` does `from mocap_cmu import
+CMUTextMotionCorpus` — a **function-local import** — and `t2_14`'s own line 20
+already names `mocap_cmu.py` as the module that replaced the loader which
+*"fabricated sinusoids"*, i.e. the substance of the claim, while its `IMPL_DEPS`
+named only the door. `impl_sha_of` hashes one level deep: declaring the door does
+not hash what is behind it.
+
+**NOT A NEW HOLE, and I say so rather than claim it.** `undeclared_impl_deps`
+makes repo-root modules ENDPOINTS in its traversal **by measurement** (recursing
+them read 72 violators) and its docstring already names the wider hole *"REAL and
+REMAINS … belongs to a routed redesign, not a quiet widening here"*. So no
+instrument was going to reach this instance. What the routed redesign did not
+have is that its residual has a **zero-cost, load-bearing** instance — this one.
+
+**SHIPPED.** (1) `7a67a74` — `mocap_cmu.py` declared on both specs, each with the
+scar in a comment; no threshold, gate, bar or control touched in either diff.
+(2) `5c05d21` — **`T1.13` re-buy PAID IN SLOT from the clean tree: PASS attempt
+5, 1.96 s, `impl_sha 44f429fa44bc3113`, `dirty_files None`** (`real_f_ratio`
+8.3086, `label_signal_advantage` 7.956, every bar unmoved — this re-buy changed
+which BYTES the certificate covers, not what it asserts). Priced at 1 CPU
+certificate / 0.00 CPU-h / **1 slot** by `run stale-cost` BEFORE the edit.
+`! DIRTY STAMPS` is still the 2 rows (`T6.03`, `PL.02`) it held when this slot
+began. (3) The refutation appended as a **BUILDER-TRACE inside `PROGRESS.md` item
+5 itself**, not only here — today's own lesson is that a correction written where
+a human reads and not where the reader looks vanishes with the page, and item 5
+is on the page the OWNER reads. (4) A `LESSONS.md` entry: *a dependency is a
+CLOSURE, never a mention* — plus the half that matters more, *when you catch
+yourself checking ONE file, price the whole class*, because the `for` loop was
+free and it was the difference between a refutation and a repair.
+
+**THE DISCLOSED COST, stated plainly so the next organ does not read it as fresh
+rot: `T2.14` is now a STALE-and-UNCLEARABLE PASS.** Its re-buy is `gpu<2h` and
+`run_spec` refuses it — dep `T1.08` is **FAIL** — so it stays stale until `T1.08`
+is repaired (`t108-pipeline-repair-has-no-design`, the Review's, DUE 10-02). It
+was already in `run status`'s UNBACKED CERTIFICATES for that same dep. I declared
+anyway: the alternative was a green board bought by not declaring a dependency we
+know is load-bearing. **`run blast-radius T2.14` warns `unreachable` 96 → 97 and
+that is the WRONG COUNTERFACTUAL for this edit** — it models PASS → FAIL, while a
+declaration makes a row STALE and leaves its recorded status PASS. Verified after
+the fact: `unreachable` is still 96. **No new queue row** (20 arrivals in 24 h
+against 1.14 disposals/cycle; the finding is refuted and the repair is shipped,
+so nothing is left for a row to carry).
+
+**CREATURE GATE: NONE — RECORDED VIOLATION #8 of this run under `D35` rule 3,
+recorded and NOT discharged.** Re-derived from `run status` and the registry this
+slot, not inherited: `T2.01` settled FAIL, dep `T1.08` FAIL, both repair lanes
+desk-owned and prohibited to me by name (`2^10`, `3''`); `T6.01` never run, deps
+`T4.05` ← `T4.04` ← `T2.01` with both intermediates **unimplemented**, so no
+verdict is recordable whatever I implement, and the 09-24 ruling refuses
+implementation as a discharge in terms; `XL.01` settled FAIL, superseded by
+`NE.08` which sits behind `T6.03` (BLOCKED) ← `T2.10` (FAIL), two Review-owned
+debts deep. The ruling at `REVIEW_QUEUE.md:10348` forbids all three widenings
+(dep-clearing, implementation, suspension-when-desk-blocked) and states the fact
+plainly: **both live routes to a creature gate pass through `T1.08`.** Live row
+`freeze-release-condition-is-five-specs-deep-…` (OPEN, DUE 10-07). Note for the
+honesty of the count: `T1.13`'s re-buy is a certificate about whether Jack's
+motion data is real, which is closer to him than most re-buys, and it is still
+**not** a verdict on one of the three. It does not discharge anything.
+
+**GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday
+2026-10-03 — third consecutive week at risk. Every GPU cost class `NOT
+FILLABLE`; both live routes run through `T1.08` (FAIL, undesigned until 10-02).
+Nothing dispatched, nothing manufactured. `T2.14`'s owed re-buy is a *fourth*
+named GPU buyer that `T1.08` is blocking, which is a datum for that row.
+
+**NEXT ITERATION.** (a) `w1-world-edit-window` went `OVERDUE` at midnight with a
+cause already attached by the 19:0x slot — **do not reach for the stamp and do
+not re-derive the decline.** (b) Docs bill for this slot: `run stale-cost` priced
+`LESSONS.md` + `PROGRESS.md` + `LOOP_JOURNAL.md` at **0 standing PASS
+certificates** (`T0.28` is a standing FAIL, so no re-buy is owed) — nothing owed,
+and it was priced before the edit. (c) **Before reporting that any file is
+uncertified, run `run stale-cost <path>`; before reporting it about a CLASS, loop
+the tool over the class.** (d) The `undeclared_impl_deps` root-module residual now
+has a named, repaired instance — if a redesign of that scope is ever costed,
+`mocap_cmu.py` is the worked example and `run stale-cost` over all 21 files is the
+measurement, not a fresh survey.

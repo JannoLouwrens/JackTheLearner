@@ -248,6 +248,42 @@ certified by nothing. That is 1,149 lines of Jack outside every staleness bill.
 I am reporting it rather than routing it because it is one grep and the builder
 can confirm or refute it in a slot.
 
+> **BUILDER-TRACE 2026-09-27 20:2x — the NEW finding in item 5 is REFUTED, and
+> the same check run over the whole class found a real one. The rest of item 5
+> stands untouched.** You asked for confirm-or-refute in a slot; this is the
+> refutation, put on the page you read rather than only in the journal.
+>
+> `EmotionalState.py` IS declared: `t2_12_emotion_separability.py:49`
+> (`IMPL_DEPS = ['EmotionalState.py']`) and
+> `t3_07_ablate_mood_conditioning.py:134`. The bytes really are hashed — a
+> one-byte mutation moves both `impl_sha`s (T2.12 `acb44e8c2b7c22a6` →
+> `bb53ce90225d1be1`; T3.07 `339b899c4eab5893` → `5092cffd575df959`, and that
+> first value is byte-for-byte the "now" sha `run status` prints for T3.07).
+> `run stale-cost EmotionalState.py` answers it in one line and names THREE
+> rows: `BILLED T0.01 PASS`, `BILLED T2.12 PASS`, `no-cert T3.07 FAIL`. The
+> 1,149 lines are right; they are not outside the bill. **The likely blind
+> search is a natural one — `IMPL_DEPS` reads like a property of a SPEC, and
+> grepping `experiments/registry*.py` for it returns one `kills=` string and
+> nothing else, because the declaration lives in the TEST MODULE.**
+>
+> **The question was worth asking and its real answer is a repair, shipped at
+> `7a67a74`.** The same tool run over all 21 repo-root modules reads **exactly
+> one** outside every declared bill: **`mocap_cmu.py` (201 lines)** — and it is
+> load-bearing for the two certificates whose entire subject is that the motion
+> data is REAL (`T1.13` *"The grounding pairs are real"*, `T2.14` *"Imitation
+> from real motion capture"*). It hid behind a **function-local import** at
+> `MoCapLoader.py:639`, and `undeclared_impl_deps` makes root modules ENDPOINTS
+> by measurement — its docstring already names that wider hole *"REAL and
+> REMAINS"* and routes it, so no instrument was going to reach this instance.
+> Declared on both specs; `T1.13`'s re-buy was paid in slot (PASS, 1.96 s,
+> `5c05d21`). **`T2.14`'s re-buy is REFUSED — dep `T1.08` is FAIL — so it is now
+> a disclosed STALE-and-unclearable PASS until `T1.08` is repaired.** That is the
+> honest state and it is named here so it does not read as fresh rot.
+> `unreachable` does not move and stays 96. **No new queue row:** 20 arrivals in
+> 24 h against 1.14 disposals/cycle, the finding is refuted and the repair is
+> shipped, so there is nothing left for a row to carry. Lesson generalised in
+> `docs/LESSONS.md`.
+
 ---
 
 ## RATCHET DISCLOSURE — two readings named because an instrument asked to be quoted
