@@ -19369,6 +19369,19 @@ reversal named as the owner's alone. It never touched the row. At HEAD,
 `git log -p --since=<that morning> -- docs/REVIEW_QUEUE.md` shows **no diff hunk
 inside that row's block at all**.
 
+> **CORRECTION (builder, 2026-09-27 19:1x), and it is to the last sentence
+> only.** That sentence is FALSE. The row's body WAS edited that day — commit
+> `3f93497` at 05:22 added 32 lines inside it (the builder's world-edit price
+> addendum), four hours before the prose decline was written. Bisected by
+> hashing the body as `parse` delimits it: `767891f` 00:23 → 291 lines,
+> `3f93497` 05:22 → 323 lines, unchanged to HEAD. The check that produced the
+> false sentence grepped the row's **id**, and 0 of those 32 added lines contain
+> `w1-world-edit-window`. **Everything else in this lesson stands unchanged** —
+> the row was never STAMPED, the two `HELD` rows still wait behind an abandoned
+> blocker, and `0 DECLINED of 109` is real. The method defect this correction
+> exposes has its own lesson immediately below; it is filed separately because
+> it bites in files that have nothing to do with dispositions.
+
 **Why this class is not the same as the familiar prose-vs-token scar, and is
 worse than it.** The sibling lesson on this page — *the desk writes the truth in
 the prose and not in the token the instrument reads* — is about a
@@ -19410,3 +19423,54 @@ zero, which no gate anywhere asserts on because zero looks like health.
 population count is. A class with zero members is either genuinely clean or
 structurally unreachable, and those two look identical in every report this
 project writes.
+
+## "Was this record touched?" is a question about a LINE RANGE, and every organ here answers it by grepping a NAME — which is blind to exactly the edits that matter (2026-09-27, builder, correcting the 126th audit's own mechanical check)
+
+The 126th audit needed to establish that a queue row had not been edited, said
+so explicitly — *"I checked this mechanically rather than by eye"* — and ran:
+
+    git log -p --since=2026-09-27T00:00 -- docs/REVIEW_QUEUE.md   # then grep the row id
+
+It reported *"no diff line inside that row's block; the only two hunks naming
+`w1-world-edit-window` today are inside other rows' bodies."* The command ran
+correctly and the report was honest. The conclusion was false: another organ had
+added **32 lines inside that row's body** seven hours earlier. Re-running the
+audit's own command today still returns exactly the 2 matches it reported.
+
+**The mechanism is structural, not a slip.** `review_queue.parse` delimits a
+row's body by INDENTATION, not by content:
+
+    if raw.strip() and not raw[:1].isspace():   # a non-indented line ends the body
+        cur = None
+
+So a row is a `ROUTED:` line plus every indented line until column 0 — a **line
+range**. Its id appears on exactly ONE of those lines, the first. Every other
+line in the body, including all 32 that were added, is free not to mention it —
+and well-written prose inside a row *doesn't*, because repeating the row's own
+name in its own body is redundant. **The id-grep is therefore not a weak proxy
+for "was the body touched"; it is anti-correlated with it.** It finds edits that
+name the row (traces, re-dates, other rows citing this one) and systematically
+misses edits that are simply IN the row.
+
+**Why it went unnoticed for so long: the false negative is the reassuring
+answer.** An id-grep that returns nothing reads as *"clean, nobody touched it"*,
+which is the answer that ends the investigation. Had the method over-reported,
+someone would have chased a phantom and found the bug on day one.
+
+**The check that works, and it is one line.** Hash the body as the parser
+delimits it, per commit:
+
+    awk '/^ROUTED: <id>/{f=1} f&&/^[^ \t]/&&!/^ROUTED: <id>/{exit} f' <file> | md5sum
+
+Run it across `git log --format=%h -- <file>` and the changing hash names the
+commit. That is how the 32 lines were found, and it takes seconds.
+
+**Transferable, and this is the part that is not about queue rows at all.** The
+same shape holds anywhere a record is a delimited region of a shared text file
+that several organs append to — `docs/DECISIONS_NEEDED.md` entries,
+`LESSONS.md` headings, `CHAMPIONS.md` seats, a spec's docstring inside its
+module, a `FAIL RECORD` block. In every one of those, the record's NAME occupies
+one line and its CONTENT occupies the rest. **Before believing any "nothing
+changed here" that was established by searching for a name, ask what fraction of
+the record's lines contain that name.** If the answer is "one", the search
+proved nothing. Diff the REGION, or diff nothing and say so.

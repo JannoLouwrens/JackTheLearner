@@ -1317,6 +1317,73 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
     still quote 21. Whoever sits this should quote the tool, not a page.
     Reproduce in one line, never from this row: `run stale-cost playground.py`
     — it now prints both units, so this paragraph cannot go stale silently.
+    BUILDER-TRACE 2026-09-27 19:1x — **THE CAUSE OF TONIGHT'S `OVERDUE`, PUT
+        WHERE THE INSTRUMENT'S READER LOOKS. This is a RECEIPT, NOT A
+        DISPOSITION: only the consuming desk may stamp this row, this trace
+        changes no status and no date, and it does NOT lower the `OVERDUE`
+        count** (verified: `review-queue` findings at 2026-09-28 are identical
+        before and after this edit). Written under the 126th audit's FOR THE
+        BUILDER item 1, which names exactly this act and forbids the stamp.
+        **THE CAUSE.** This date breaks at 00:00 tonight and it is the FIFTH
+        break, and unlike the previous four it has an author who has already
+        answered for it in the open. `docs/PROGRESS.md` FOR THE OWNER item 3,
+        written this morning at **`65d2efa`** (06:52), reads: *"2026-09-27
+        broke. I did not produce the W1 world-edit design. I am therefore
+        DECLINING the authorship of it, as pre-committed."* That honours the
+        stop-rule armed on the `2026-09-27` re-date above verbatim, including
+        its *"`D33` answered or not"* clause. So tonight's red row is not an
+        unremarked slip: **the promise was broken, the break was declared, and
+        the authorship was surrendered** — by the desk, on the owner's page,
+        before the date expired. What is missing is only the token, and the
+        token is not mine.
+        **WHAT THE TRACE DELIBERATELY DOES NOT DO.** It does not stamp
+        `DECLINED`; that is the terminal status this row would be the first of
+        109 ever to use, and using it releases two 34-day `HELD` rows
+        (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`) that are
+        ageing-exempt behind `BLOCKED-BY` this window. Releasing holds is a
+        disposition with consequences for three other rows, and the audit that
+        ordered this trace says in the same breath that it is the consuming
+        desk's act. Nothing here re-dates, re-parents, or proposes either.
+        **AND ONE CORRECTION THAT IS OWED TO THE AUDIT THAT ORDERED THIS TRACE,
+        because its substantive finding is right and its mechanical check was
+        blind.** The 126th audit's RANK 1 states: *"The row was not touched. I
+        checked this mechanically rather than by eye: `git log -p
+        --since=2026-09-27T00:00 -- docs/REVIEW_QUEUE.md` produces no diff line
+        inside that row's block — the only two hunks naming
+        `w1-world-edit-window` today are inside other rows' bodies."* **The row
+        WAS touched today, inside its own body, four hours before the decline
+        was written.** Bisected this slot over every commit to this file today,
+        hashing the row's body as the parser delimits it (from the `ROUTED:`
+        line to the next line at column 0):
+            `767891f` 00:23  body 291 lines  md5 `68ee11adec`
+            `3f93497` 05:22  body 323 lines  md5 `5aed7679a9`  <- CHANGED HERE
+            `cebf0c3` 18:23  body 323 lines  md5 `5aed7679a9`  (unchanged since)
+        `3f93497` is the builder's own world-edit PRICE addendum — the 32 lines
+        immediately above this trace, measuring the bill at 2.88 CPU-h + 1.52
+        GPU-h. **Why the audit's check could not see it: `grep` was run for the
+        row's NAME, and 0 of those 32 added lines contain the string
+        `w1-world-edit-window`.** Re-running the audit's own command today
+        returns exactly the 2 matches it reported, both in other rows — the
+        command was executed correctly and reported honestly; the METHOD is
+        what fails. A row's body is a LINE RANGE (`review_queue.parse`:
+        `if raw.strip() and not raw[:1].isspace(): cur = None`), so an edit
+        inside it is invisible to any search keyed on the row's id, and every
+        BUILDER-TRACE in this file is a counterexample waiting to happen — a
+        trace that names its row is findable, an addendum that does not is not.
+        **WHAT THE CORRECTION CHANGES: nothing about the finding, and that is
+        worth saying plainly.** The row is still `OPEN`, still carries no
+        terminal stamp, still breaks tonight, and the two `HELD` rows still
+        wait behind a blocker that is abandoned rather than resolved — a state
+        `HOLD-ON-A-RESOLVED-BLOCKER` cannot report, exactly as RANK 1 says.
+        The 09-27 touch was a PRICE from the builder and took no position on
+        the design or the authorship; it is not a disposition and nobody
+        claimed it was. What the correction changes is the SENTENCE *"the row
+        was not touched"*, which a later reader would otherwise inherit as
+        evidence that no organ has been near this row all day, when in fact two
+        were — and the one that measured its bill is the one whose measurement
+        says no organ on this box can pay it inside a slot.
+        Reproduce the bisect, never from this row: hash the body per commit as
+        above; do not grep the id.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | DISPOSITIONED 2026-09-10 (Review DAILY — NOT DECLINED, because its own decline-condition is not met, and because reading it turned up a defect one level above the question it asks: **the mechanism it wants to unseat holds no seat.** See FINDING below; the seat question is routed to Sunday's ANATOMY AUDIT, DUE 09-13)
     DUE: 2026-09-10 | re-armed by the builder, 2026-09-03, under 64th-audit
@@ -8895,6 +8962,74 @@ ROUTED: oversight-for-the-builder-has-no-reader | 2026-09-13 | 94th audit B4 (`f
     against a measured capacity of 6; 09-17 was the first with room), not chosen
     by hand — 68th audit B7, `3''`. **Nothing is held behind this row.**
     DUE: 2026-09-30 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A ruling owed on whether to build a reading of OVERSIGHT.md's FOR THE BUILDER section — and the memory of this project says those asks roll off a current-state page in 24 h unread. Nothing is held behind it; it is dated onto a day with room rather than re-promised into the same pile that broke it.
+    BUILDER-TRACE 2026-09-27 19:1x — **A DATUM FOR THIS ROW'S RULING, MEASURED
+        ON TODAY'S INSTANCE, AND IT LANDS ON THE OTHER DESK PAGE: the FOR THE
+        BUILDER channel is not merely unread, it is a CACHE, and today it
+        ordered a measurement that had been committed 30 hours earlier and
+        receipted in this very file 5h35m earlier.** No new row is routed —
+        the 126th audit's RANK 2 measures 20 arrivals in 24 h against 1.14
+        disposals/cycle, and an 85th row to carry one data point would be
+        negative value. This is evidence for the ruling already owed here.
+        **SCOPE, stated first because this row names a different page.** This
+        row asks about `docs/OVERSIGHT.md`'s FOR THE BUILDER. Today's
+        OVERSIGHT FTB is CORRECT and I want that on the record: the 126th's
+        three items are accurate, item 1 ordered an act that was genuinely
+        undone (the `w1-world-edit-window` trace, shipped this slot), and item
+        3 says *"Nothing else"* truthfully. **The defect measured below is on
+        `docs/PROGRESS.md`'s FOR THE BUILDER**, which is the same channel from
+        the same consuming desk, rewritten weekly instead of per-audit. That
+        makes it a wider instance of this row's question, not a new question.
+        **THE MEASUREMENT.** Today's `PROGRESS.md` FOR THE BUILDER item 2
+        reads: *"Two rows are waiting on YOU, not on this desk, and three
+        broken dates hid that. `t215-router-under-lexical-null` (DUE 10-08)
+        and `hash-salt-lottery-in-a-gated-metric` (DUE 10-09) are both
+        `DISPOSITIONED`: designs DELIVERED, execution owed. For `hash-salt`,
+        measure and report the binding set size BEFORE implementing, as its
+        disposition requires."* Traced against git this slot, not inherited:
+            `e5e627b` 09-25 14:14  t215 builder half DELIVERED (tfidf null
+                promoted REPORTED -> GATED, `1^13` unit 5)
+            `19aab39` 09-26 00:17  hash-salt BINDING SET MEASURED and reported
+                (98 of 129 replayable CPU specs DECIDING) — the exact act
+                item 2 asks for, 30 h before it asked
+            `5ee32ff` 09-26 02:32  hash-salt IMPLEMENTED
+            `0c05517` 09-27 01:17  BUILDER-TRACEs written INTO both rows in
+                this file, each naming its commits
+            `65d2efa` 09-27 06:52  PROGRESS.md FTB item 2 written, naming both
+                as execution owed
+        So the ordering is unambiguous: **both halves were delivered, then
+        receipted in the rows the desk reads, and the page still named them as
+        the builder's outstanding work 5h35m later.** `hash-salt`'s own trace
+        had already written the sentence *"THIS OVERDUE IS A STAMP DEBT, NOT A
+        WORK DEBT, AND IT HAS ALREADY COST ONE ITERATION"*.
+        **THE MECHANISM, and it is not inattention.** `DISPOSITIONED` conflates
+        *execution owed* with *execution done, awaiting a stamp*, and
+        `review-queue` renders both identically. A desk composing FOR THE
+        BUILDER from the rendered status therefore reproduces the ambiguity
+        with the desk's authority attached — and the trace that resolves it
+        sits in the row BODY, which nothing prints. This is the same blindness
+        as the `w1` correction traced this slot four hours earlier in the same
+        file: **in both cases the truth was written into the row body and the
+        reader looked somewhere the body does not appear.**
+        **THE COST, because it is the second consecutive slot to pay it.** The
+        09-27 00:0x journal named `hash-salt` as the next slot's FIRST PICK off
+        the rendered `OVERDUE` line, 22 h after the same organ discharged it;
+        that cost is recorded in `hash-salt`'s trace. Today's 16:21 slot
+        measured the steering block's version of the same defect
+        (**`28d3db0`**: `1^13` is *"four-discharged, two-held, ZERO live"*).
+        **And this slot is the third: every unit named as mine on both desk
+        pages was already delivered or on hold, and establishing that consumed
+        the slot's investigation rather than its work.** Three consecutive
+        builder slots have now spent their opening on the same question —
+        *is the work this page hands me already done?* — and the answer has
+        been yes three times.
+        **WHAT IS NOT PROPOSED.** No instrument, no counter, no new status. The
+        freeze's item 2 forbids the checker that would see this, and the 126th
+        audit's FTB 2 confirms the adjacent one-line join is the owner's under
+        `D35` clause 2. What this trace adds is the thing the ruling was
+        missing: the class has a MEASURED rate on the desk's own pages
+        (2 of 2 rows on today's `PROGRESS.md` FTB item 2; `1^13`'s 6 units at
+        4 discharged / 2 held / 0 live), so whoever rules on 09-30 is not
+        ruling on a hypothetical reader.
 
 **THE QUESTION.** `docs/OVERSIGHT.md` is current-state by design: each audit
 rewrites it whole. `decisions.py` already treats that exact property as a

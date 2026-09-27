@@ -22053,3 +22053,97 @@ DISPOSITIONED class for execution before believing it is owed work** — four of
 four due today were already done, and the index cannot tell you. (c) The three
 genuinely-broken 09-27 promises are NOT yours; do not reach for
 `w1-world-edit-window` because it is overdue and loud.
+
+**2026-09-27 ~19:1x UTC (builder, Opus — `week:Fable` 95% pinned, so the chain
+walked me to Opus; the gate `week:all models` read **84%**, 6 points of
+headroom, both reset 09-28 04:59).** Board: `run next` **0 fresh · 38 settled ·
+14 held**; `coverage` EXIT 2 on two inherited grown floors (`unreachable` 96 vs
+95, `pass_on_dead_dependency` 5 vs 3, both with written causes at their sites);
+`review-queue` rc=0, 7 findings at 09-28. `1^13`'s six units are
+four-discharged / two-held / zero live (`28d3db0`, and I re-derived PS.06's hold
+myself: the `ps09-known-answer-floor` row holds sibling conjunct inheritance and
+names the channel pick as the desk's — PS.06's physically-obvious `f` channel is
+REFUTED at 0.0216 honest, so writing its conjunct today would ship the inverse
+error part 1 exists to prevent).
+
+**BOTH ROWS TODAY'S `PROGRESS.md` FTB NAMES AS "waiting on YOU" WERE ALREADY
+DELIVERED, AND BOTH ALREADY CARRIED TRACES SAYING SO.** `t215-router-under-
+lexical-null`'s builder half landed `e5e627b` (09-25 14:14); `hash-salt`'s
+binding-set MEASUREMENT — the exact act item 2 asks for — landed `19aab39`
+(09-26 00:17) and its implementation `5ee32ff` (09-26 02:32); BUILDER-TRACEs
+went into both rows at `0c05517` (09-27 01:17); the FTB naming them as owed was
+written at `65d2efa` (09-27 06:52), **5h35m later.** Third consecutive slot to
+open by asking whether the work the desk handed it was already done, and the
+answer has been yes three times.
+
+**THE UNIT (perishable, ordered by the 126th audit's FTB 1): the BUILDER-TRACE
+on `w1-world-edit-window`, whose date breaks at 00:00 tonight.** A RECEIPT, not
+a disposition — it points at `PROGRESS.md` FOR THE OWNER item 3 (`65d2efa`),
+where the desk DECLINED the W1 authorship as its own 09-24 stop-rule pre-
+committed, so tonight's red row has a cause where the instrument's reader looks.
+I did not stamp `DECLINED` and must not: that is terminal, it releases two
+34-day `HELD` rows, and it is the consuming desk's act. Verified the trace
+changes nothing: parse diffed across all **109** rows before/after — `status`,
+`due`, `blocked_by`, `waits_on`, `ordered`, malformation list and the full
+`audit()` at BOTH 09-27 and 09-28 **IDENTICAL**; 7 findings before, 7 after;
+`0 DECLINED` still.
+
+**AND THE FINDING, which is a correction to the audit that ordered the trace —
+its substance is right and its mechanical check was blind.** RANK 1 states *"The
+row was not touched. I checked this mechanically rather than by eye"* and quotes
+an id-grep over today's diffs. **The row WAS touched inside its own body:**
+`3f93497` (05:22) added **32 lines** — the builder's own world-edit price
+addendum — four hours before the decline was written. Bisected by hashing the
+body as `parse` delimits it: `767891f` 00:23 → 291 lines `68ee11adec`;
+`3f93497` 05:22 → 323 lines `5aed7679a9`; unchanged to HEAD. **Why the check
+could not see it: 0 of those 32 added lines contain the string
+`w1-world-edit-window`,** and re-running the audit's own command today returns
+exactly the 2 matches it reported, both in other rows. A row's body is a LINE
+RANGE (`review_queue.parse`: `if raw.strip() and not raw[:1].isspace()`), its id
+appears on exactly one of its lines, so an id-grep is not a weak proxy for "was
+this touched" — it is anti-correlated with it, and its false negative is the
+reassuring answer that ends the investigation. **Nothing in the audit's finding
+falls:** the row is still `OPEN`, still unstamped, still breaks tonight, and the
+two `HELD` rows still wait behind a blocker that is abandoned rather than
+resolved. What falls is the sentence a later reader would inherit as *"no organ
+has been near this row all day"* — when two were.
+
+**SHIPPED.** (1) The `w1` trace, with the cause and the correction. (2) A
+measured datum on `oversight-for-the-builder-has-no-reader` (OPEN, DUE 09-30) —
+the FTB channel is a CACHE, measured on today's instance, scoped explicitly to
+`PROGRESS.md` because today's OVERSIGHT FTB is CORRECT and I said so in the
+trace. (3) **A CORRECTION INSIDE `LESSONS.md` to the 126th audit's own lesson**,
+whose closing sentence carried the false claim into the file the next builder
+reads before diagnosing anything — corrected in place, substance left standing.
+(4) A new lesson with the guard that works, validated against `parse()` this
+slot (390 lines at HEAD, 291 at `767891f`, exact agreement):
+`awk '/^ROUTED: <id>/{f=1} f&&/^[^ \t]/&&!/^ROUTED: <id>/{exit} f' <file> | md5sum`
+per commit. **NO new queue row:** 20 arrivals in 24 h against 1.14
+disposals/cycle, and an 85th row for one datum is negative value.
+
+**CREATURE GATE: NONE — RECORDED VIOLATION #7 of this run under `D35` rule 3,
+recorded and NOT discharged.** Mechanical reason unchanged from #5/#6 and
+re-derived, not inherited: `T2.01` settled FAIL with both repair lanes desk-owned
+and prohibited to me by name; `T6.01` unimplemented behind
+`T4.05 <- T4.04 <- T2.01 <- T1.08` (FAIL), two of those unimplemented; `XL.01` a
+settled FAIL run this morning. The rule resolves to *re-run a settled FAIL*,
+which `run next` and two standing prohibitions forbid. Live row
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-
+failing-spec` (OPEN, DUE 10-07); the 125th and 126th audits both call it the
+owner's only perishable item.
+
+**GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday
+2026-10-03 — third consecutive week at risk. Every GPU cost class `NOT
+FILLABLE`; both live routes run through `T1.08` (FAIL, undesigned until 10-02).
+Nothing dispatched, nothing manufactured.
+
+**NEXT ITERATION.** (a) The docs bill for this slot is `T0.21` + `T0.31` (both
+declare `docs/REVIEW_QUEUE.md`; `T0.28` declares it and is a standing FAIL, so
+no re-buy is owed) — priced at 2 certificates / 0.00 CPU-h / **1 slot** by
+`run stale-cost` BEFORE the edit and paid in slot from the clean tree; check
+`! DIRTY STAMPS` is still the 2 rows (`T6.03`, `PL.02`). (b) **Do not answer
+"was this record touched?" with a grep for its name** — hash the region; the
+lesson carries the one-liner. (c) Before executing anything a desk page hands
+you, check the row BODY for a trace: three slots running, the named work was
+already done. (d) `w1-world-edit-window` goes `OVERDUE` at midnight WITH a cause
+attached now; do not reach for the stamp, and do not re-derive the decline.
