@@ -8709,3 +8709,85 @@ per the `D13` rule that the overseer stays inside its own file set and the
 `D32`/`D34` precedent (`6aaed9b`, 2026-09-25 01:12). Until that lands,
 `decisions.py`'s second identification channel (`RECORD_PAGE`/`RECORD_MARKER`)
 cannot see this firing.
+
+---
+
+## D36 — RESOLVED BY ARMED DEFAULT, fired 2026-09-27 ~00:5x UTC by the OVERSEER (123rd audit), on the first legal day. Off your desk; options (ii) and (iii) remain yours to rule at any time.
+
+**THE OWNER DID NOT RULE BY 2026-09-26, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(i) CHANGE NOTHING** — `w1-world-edit-window` keeps 2026-09-27's FULL
+sitting under `D33`'s standing order, and `t108-pipeline-repair-has-no-design`
+stays at its `next_free_due` of 2026-10-02. Options **(ii) SWAP** and
+**(iii) DECLINE W1 OUTRIGHT** were **NOT** taken.
+
+**AND THE FIRST THING THIS FIRING MUST SAY: THE DEFAULT WAS ALREADY THE STATE OF
+THE WORLD, BY THE ENTRY'S OWN AUTHOR, SO THIS FIRING ORDERS NO WORK AND CHANGES
+NO BEHAVIOUR.** The entry says so itself, in its `CONDUCT-DESK` note: *"The
+DEFAULT, option (i), is a desk act and it is the state I have LEFT the world
+in."* Verified at source this audit rather than inherited:
+
+```
+docs/REVIEW_QUEUE.md  w1-world-edit-window                 OPEN   DUE 2026-09-27
+docs/REVIEW_QUEUE.md  t108-pipeline-repair-has-no-design   OPEN   DUE 2026-10-02
+experiments/run review-queue                               both rows live, neither re-dated
+```
+
+**So what this firing actually settles, stated narrowly.** It closes the
+QUESTION, not a scheduling gap. `D36` has been an open entry carrying a passed
+`decide_by` and nothing left to execute — `decisions --check` listed it as a
+stale `CONDUCT-DESK` row on the morning of the sitting it governs. After this
+firing the record says plainly that the allocation was made by a deadline
+passing rather than by a ruling, and it says so **before** 06:37 rather than
+after. No row moved, no date moved, no threshold moved, nothing was widened or
+narrowed, no GPU was committed and no certificate was staled.
+
+**Why the OVERSEER fired a `class: conduct` entry, since that is the reasonable
+objection.** The entry's author drew the line itself and I am honouring it
+exactly: everything desk-executable *was* executed, and the one act that was not
+— option (ii) — was refused on the ground that *"a desk may not re-order its own
+queue to move its own hardest unit off the only sitting big enough to hold it."*
+That reasoning is sound and I am not overriding it. What was left was an entry
+whose deadline had passed with its default already realised, which is precisely
+the case the firing idiom exists for (`D29`, `D31`, `D32`, `D34` precedent). The
+alternative — leaving it open and ageing — would let a passed deadline read as
+an unmade decision.
+
+**The price, restated because a firing may not quietly drop it.** The entry
+priced (i) itself and the price is unchanged: it *"knowingly buys a FIFTH
+instalment of a design that has beaten four sittings"*, and on the measured
+record its most likely product is another INCOMPLETE banner plus `T1.08`'s
+repair still undesigned on 10-02. Its only merit, and it is real, is that it
+keeps both debts VISIBLE and ageing rather than letting the desk re-order its
+own docket to suit itself.
+
+**ONE CORRECTION TO THE EVIDENCE, and it cuts against the entry's own mechanism
+rather than its conclusion (123rd audit FINDING 1).** `D36` argues from *"four
+of four Sunday FULL runs ever fired on cron died at max turns"*. That count is
+true and it is from the **pre-repair 3-turns/min regime**. Under the current
+budget (`scripts/review.sh:100`, `TURNS_PER_MIN=6`) the Review's deaths are
+**clock** deaths, not turns deaths: 2026-09-25 and 2026-09-26 both ended
+`rc=124` — `timeout`'s code — at exactly 20 minutes of a 20-minute wall, with
+their turn budget nowhere near spent. The repair's own comment predicted this
+(*"At 6/min the `timeout` becomes the binding ceiling"*). **The direction of
+`D36`'s argument survives — a sitting that has never completed a design of this
+size is still unlikely to complete one — but the failure mode it names has
+changed, and today's post-mortem must read the `rc` rather than repeat the
+count.** More turns will not buy today's sitting anything; only wall-clock
+would, and that is a budget decision, which is why it is on the owner's desk in
+this audit's `FOR THE OWNER` item 1 rather than being taken here.
+
+**WHAT REVERSES THIS.** Rule option (ii) SWAP or (iii) DECLINE at any time. (ii)
+was the entry author's own written recommendation. Note that after 06:37 today
+(ii) is moot for *this* Sunday and becomes a ruling about 2026-10-04.
+
+**Evidence:** `docs/DECISIONS_NEEDED.md` `D36` `DECIDE` block, `decide_by:
+2026-09-26`; `experiments.decisions --check` at 2026-09-27 00:4x listing `D36`
+as `CONDUCT-DESK … (due 2026-09-26, STALE by 1 day(s))`; `/data/jack-logs/
+review.log` 2026-09-25 and 2026-09-26 `review start` lines and their
+`rc=124` seals at `06:57:1x`; `scripts/review.sh:89-101`.
+
+**OWED BY THE REVIEW, NOT BY ME:** the `## D36 — RESOLVED BY ARMED DEFAULT`
+transcription onto `docs/DECISIONS_RESOLVED.md`, per the `D13` rule that the
+overseer stays inside its own file set and the `D31`/`D32`/`D34` precedent.
+Until that lands, `decisions.py`'s second identification channel
+(`RECORD_PAGE`/`RECORD_MARKER`) cannot see this firing.
