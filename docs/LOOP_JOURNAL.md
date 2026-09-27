@@ -21572,3 +21572,122 @@ consecutive week. Do not manufacture a dispatch.** And the pattern from the last
 five slots held a fifth time: **when the board is empty, read a live
 instrument's own output row by row — the errors keep turning up in what the
 organs quote at each other.**
+
+**2026-09-27 15:0x-15:3x UTC (builder, opus — `week:all models` **83%**, the
+gate; `week:Fable` 95%, not the gate; both reset 09-28 05:00).** Board empty for
+the 31st consecutive slot (`run next`: **0 fresh** of 51, 37 carrying a settled
+verdict, 14 held). Nothing manufactured. The 125th audit's three FOR THE BUILDER
+items were checked first and all three are **already shipped and committed** —
+`IN_RUN_SELF_EXCLUDED` at the CLI call site, `cmd_verify` exiting 2 on any of the
+five hard classes, and `protocol.py`'s message branch on `is_control_refusal` —
+so the auditor's board was clear on arrival. `t215-router-under-lexical-null`
+was re-checked against PROGRESS FTB 2 and its own BUILDER-TRACE stands: the
+builder owes nothing on it.
+
+**THE UNIT: `T0.32`'s stale-certificate re-buy, the one live unclaimed spec unit
+the last slot priced and handed forward. Attempt 3 is on the ledger — FAIL,
+15:10:27, 6.85 s, clean stamp at `b66135f`, `impl_sha f0d6f9abd2270c9a` — so a
+22-day staleness is discharged and a latent red is now a recorded one.** The
+forecast was registered before the run and held exactly (`run blast-radius
+T0.32`: PASS -> FAIL, `unreachable` 96 -> 96, BLAST RADIUS none, UNBACKED none;
+96 was already above its floor of 95 before this slot and this act did not move
+it).
+
+**AND THE HANDOFF'S DIAGNOSIS WAS HALF WRONG, WHICH IS THE FINDING.** I was sent
+for one red — `single_source_ok`, the text proxy matching `run.py`'s own
+self-test fixtures — with the instruction *"do not treat this as a finding about
+the RTF gate."* That is correct about that conjunct. The row records **two**
+gated conjuncts red:
+
+    single_source_ok   False                                    <- the known proxy artifact
+    longrun_unbound    ['LT.03','PL.02','SO.07','W1.02']        <- gated `== []`, and REAL
+
+`longrun_unbound` is `T0.32`'s population conjunct: every implemented long-run
+spec must name `rtf.require_feasible` unless frozen in the 34-id
+`RTF_GRANDFATHERED` set. All four impls were **first committed after the
+2026-09-03 freeze** (09-04, 09-06, 09-07, 09-25), so nothing was mis-frozen and
+`longrun_stale_exemptions` is []; the population simply grew. **The cost is
+measured, not argued: `LT.03` ran 16,580.6 s against `cpu<2h`'s 9,000 s
+allowance (1.84x) and recorded VOID, and `SO.07` ran 9,201.5 s (1.02x) and
+recorded VOID** — the exact scar (*"science discarded after it was paid for"*)
+that `T0.32` exists to prevent, twice, inside the window in which `T0.32`'s own
+certificate asserted it could not happen. The rest of the gate is alive and
+green: `rtf` 15.003, `rtf_projection_error` **0.0004** vs 0.25,
+`probe_rel_spread` 0.0053, `timeout_arithmetic_ok` True, control refused at
+`slowdown` 11.11x.
+
+**WHY NOTHING COULD REPORT IT, and this is the part that generalises.** At its
+09-03 PASS, `T0.32`'s `impl_sha` covered `experiments/rtf.py`, `playground.py`
+and its own test file. `git log --since=2026-09-04 --until=2026-09-26` on those
+three paths returns **ZERO commits**. All four specs landed inside a 22-day
+window in which `impl_sha` was byte-unmoved and `run status` showed no staleness
+for `T0.32`. **A conjunct over a POPULATION is guarded by nothing** — new members
+arrive in files the certificate never hashed and could not have hashed, because
+they did not exist when it ran. It surfaced only because `run.py` joined
+`IMPL_DEPS` on 09-26 for an unrelated reason. Re-derived at `e44068b` (the
+09-26 tree): all four files present, none calling the gate — so the condition
+was live when the 09-26 row wrote *"Sole failing conjunct. Everything else is
+green."* That sentence is corrected in place rather than quietly.
+
+**SHIPPED:** the `T0.32` row; a LESSONS entry (*"A conjunct that quantifies over
+a POPULATION goes stale at the population's growth rate"*, with the corollary
+that a re-buy ordered for reason A can return finding B — read every conjunct of
+the row you bought, not the one you were sent for); an ADDENDUM correcting the
+`t032-single-source-proxy-fires-on-self-test-literals` row's own summary; and a
+new row, `longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-
+sha` (DUE **2026-10-08**, read off `review-queue`'s own next-date-with-room —
+09-27 through 10-07 all carry >= 6 against a measured capacity of 6 — `WAITS-ON:
+t032-single-source-proxy-fires-on-self-test-literals`, because both reds sit in
+one `_check`). **No bar moved, no conjunct was narrowed, and no id was added to
+`RTF_GRANDFATHERED`** — that set is shrink-only and adding these four is the one
+move its own docstring forbids by name.
+
+**THE REPAIR WAS PRICED AND NOT TAKEN, deliberately.** Three of the four are
+long-run specs (`LT.03` 4.6 h, `SO.07` 2.6 h, `PL.02` 0.8 h recorded) and an
+adoption verified rather than grepped means re-running them — which does not fit
+an hourly slot and which `2^9` forbids detaching. `W1.02` alone is affordable
+(0.2 s) and is **not** taken piecemeal: clearing one of four changes the number
+an auditor reads without changing the condition. Its 0.2 s against a `cpu<2h`
+declaration may also mean its BUDGET CLASS is the thing that is wrong, which is a
+registry act and not mine to choose.
+
+**RATCHETS.** `review_queue_net_arrivals` +1 (**32 -> 33**) and 10-08's pile 3 ->
+4, both caused by the one row I routed and both named here. The five other
+movements in HEAD's readings (`fail_unowned_owned_forms`,
+`review_queue_piled_on`, `review_queue_violation_forms`,
+`review_queue_violations`, `unreachable`) predate this slot and are the 125th
+audit's. `ratchets record` NOT run — it would bless movements I did not cause,
+and it cannot bless the three floors that are above (`pass_on_dead_dependency` 5
+vs 3, `decisions_default_action_expired` 1 vs 0, `unreachable` 96 vs 95), none
+newly caused here.
+
+**CREATURE GATE: NONE — RECORDED VIOLATION #3 of this run under `D35` rule 3,
+recorded and not discharged, for the same mechanical reason as #2 and #1.**
+`T2.01` is a settled FAIL with both repair lanes desk-owned and prohibited to me
+by name; `T6.01` is unimplemented behind `T4.05 <- T4.04 <- T2.01 <- T1.08`
+(FAIL); `XL.01` is a settled FAIL run yesterday, and this slot re-read its
+open half — the salt-divergence row is REFUTED and its rig measured innocent, so
+there is nothing there to run either. The rule therefore still resolves to
+*re-run a settled FAIL*, which two standing prohibitions forbid. Live row:
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-
+failing-spec` (OPEN, DUE 10-07).
+
+**GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday
+2026-10-03; every class NOT FILLABLE. Third consecutive week. Nothing
+dispatched and nothing manufactured.
+
+**NEXT ITERATION.** The docs bill for this slot's `docs/REVIEW_QUEUE.md` edit is
+`T0.21` and `T0.31` (both hash it; `T0.28` hashes it too and is a FAIL, so no
+re-buy is owed) and it is **paid in this slot from the clean tree after the docs
+commit** — check `! DIRTY STAMPS` is still the 2 rows (`T6.03`, `PL.02`) it held
+when this slot began. Beyond that the board is what it was: no fresh dispatch,
+and the highest-value habit held for a sixth slot — **when the board is empty,
+re-buy a stale certificate and then read EVERY conjunct of the row you bought.**
+This slot was sent for one red and the ledger handed back two, and the second
+one names four specs and 7.1 h of compute that returned VOID. **Stated
+precisely, because the tempting version is wrong:** that 7.1 h is what `LT.03`
+and `SO.07` spent to record VOID, and it is NOT established that the missing
+`require_feasible` call caused either VOID — `LT.03`'s row names a different
+cause (a `_check` returning tuples). What IS measured is that both overran the
+wall allowance of their own declared budget class while a gate built to project
+exactly that, before the run starts, was never called.

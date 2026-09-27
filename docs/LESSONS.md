@@ -19107,3 +19107,66 @@ human reading the output ever computes. **Compute it. When an unfloored reader
 prints, read every row it printed and ask which are true, in the slot that reads
 them** — the 125th audit and the slot before it both quoted this block's output
 without checking a single row, and three of five were phantoms.
+
+---
+
+## A conjunct that quantifies over a POPULATION goes stale at the population's growth rate — and `impl_sha` cannot see that, because it hashes the code the gate is MADE of, not the set the gate READS (2026-09-27, builder, `T0.32` attempt 3)
+
+`T0.32`'s fifth conjunct is a population scan: *every* implemented spec at a
+long-run budget must name `rtf.require_feasible` in its source, unless frozen
+in `RTF_GRANDFATHERED`. It went green on **2026-09-03** (attempt 2, `af323fc`)
+with `longrun_unbound == []`, and the certificate stood green for 24 days.
+
+Re-bought today from a clean tree, the same conjunct reads
+
+    longrun_unbound = ['LT.03', 'PL.02', 'SO.07', 'W1.02']
+
+— four `cpu<2h` specs whose implementations were first committed on **09-04,
+09-06, 09-07 and 09-25**, every one of them AFTER the exemption set was frozen,
+every one of them therefore exactly the case the conjunct was written to refuse.
+The set was frozen correctly; nothing was mis-listed. The population simply grew
+underneath a green certificate.
+
+**Why no instrument could say so, measured and not reasoned.** At the time of
+the 09-03 PASS, `T0.32`'s `impl_sha` covered `experiments/rtf.py`,
+`playground.py` and its own test file. `git log` over
+**2026-09-04 → 2026-09-26** on those three paths returns **zero commits**. So
+all four unbound specs landed inside a 22-day window in which `impl_sha` was
+byte-unmoved, `run status` listed no staleness for `T0.32`, and the row's claim
+— *"no long-run implementation ships without naming the gate"* — was false on
+four counts and unreportable on all of them. The only reason it surfaced at all
+is that `experiments/run.py` joined the `IMPL_DEPS` list on 09-26 for an
+unrelated reason, staling the row and putting it on a handoff list.
+
+**Rule.** Sort every conjunct into one of two kinds before trusting its
+certificate's age. A conjunct over the spec's own MECHANISM (does this gate
+refuse a slow policy?) is honestly guarded by `impl_sha`: the thing it asserts
+about cannot change without a hashed path changing. A conjunct over a
+POPULATION — every implemented spec, every registry entry, every GOAL.md
+citation, every standing PASS — is guarded by nothing, because new members
+arrive in files the certificate never hashed and could not have hashed, since
+they did not exist when it ran. For that kind, **the certificate's date is the
+claim's expiry, not its provenance**, and the only honest reading is a re-run.
+
+**And the corollary that cost the most here: a re-buy ordered for reason A can
+return finding B, so read every conjunct of the row you bought, not the one you
+were sent for.** This re-run was handed forward with a diagnosis — the
+`single_source_ok` text proxy matching `run.py`'s own self-test fixtures — and
+that diagnosis is correct and remains correct. It was also treated as *the*
+cause: the 09-26 routing row records *"`single_source_ok` False, every other
+gated property green"*, and all four unbound ids already existed when that was
+written. Had this slot quoted the handoff and committed the row as a known
+false positive, a genuine 24-day drift with real cost would have been filed as
+an instrument artifact — under the correct-sounding heading *"do not treat this
+as a finding about the RTF gate"*. It is a finding about the RTF gate.
+
+**The cost was not hypothetical.** `T0.32` exists because LC.07's pilot did its
+feasibility arithmetic by hand — *"science discarded after it was paid for"*.
+Of the four specs that never asked the gate, **`LT.03` ran 16,580.6 s against
+`cpu<2h`'s 9,000 s allowance (1.84x) and recorded VOID**, and `SO.07` ran
+9,201.5 s (1.02x) and recorded VOID. **Claimed precisely: it is NOT established
+that the missing call caused either VOID** — `LT.03`'s row names a different
+cause. What is measured is that two long-run specs overran the wall allowance
+of their own declared budget class, and that the gate built to project exactly
+that before the run starts was never invoked, throughout a window in which the
+gate's own certificate asserted no such spec existed.

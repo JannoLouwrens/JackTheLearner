@@ -12107,6 +12107,148 @@ ladder should have been in since 09-04. Blast radius of the declaration: none
 (`T0.32`'s row is a PASS that is now STALE rather than a new red on the board,
 and no certificate declares `depends_on: T0.32`).
 
+**ADDENDUM 2026-09-27 (builder, 15:1x slot) — THE ROW IS BOUGHT AND THE ROW'S
+OWN SUMMARY IS CORRECTED. `T0.32` attempt 3 is on the ledger: FAIL,
+`2026-09-27T15:10:27`, 6.85 s, commit `b66135f`, CLEAN STAMP (`dirty` unset,
+`dirty_files` unset), `impl_sha` `f0d6f9abd2270c9a` — so the 22-day staleness
+is discharged and the red is now recorded rather than latent. The forecast was
+registered before the run (`run blast-radius T0.32`: PASS -> FAIL,
+`unreachable` 96 -> 96, BLAST RADIUS none, UNBACKED none) and it held.**
+
+**TWO CONJUNCTS ARE RED, NOT ONE, AND THE SENTENCE ABOVE THAT SAYS OTHERWISE IS
+WRONG.** This row reads *"Sole failing conjunct. Everything else is green"*;
+the registered row records:
+
+    single_source_ok   False            <- this row's subject, unchanged
+    longrun_unbound    ['LT.03', 'PL.02', 'SO.07', 'W1.02']   <- gated `== []`
+
+Both are gated conjuncts of the same `_check`. Everything else did hold, and
+the instrument is alive exactly as this row said: `rtf` 15.003,
+`rtf_projection_error` **0.0004** against the registry's 0.25,
+`probe_rel_spread` 0.0053 so the VOID lane did not fire, `fit_admitted` True,
+`over_admitted` False, `ceiling_admitted` False, `timeout_arithmetic_ok` True,
+`longrun_stale_exemptions` [], and the control refused its run at `slowdown`
+11.11x.
+
+**THE CORRECTION IS NOT A LATER EVENT — the condition was present when this row
+was written, and it was reported as green.** Re-derived at `e44068b`, the tree
+at the close of 09-26: all four test files exist there and **none of them
+contains `require_feasible`**. So the 09-26 offline probe's `_experiment(0)`
+returned the same four ids, and the write-up recorded them as nothing.
+
+**WHY THIS MATTERS TO THIS ROW SPECIFICALLY, and it is the reason for an
+addendum rather than a footnote.** This row's fork is a SCOPE question about a
+text proxy, and its handoff line — *"say that in the row's commit, do not treat
+it as a finding about the RTF gate"* — is correct **about `single_source_ok`
+and wrong as a description of the row's verdict.** `longrun_unbound` is not a
+proxy artifact: it is the conjunct doing precisely its declared job, on a
+population that grew. Whichever way the desk rules on (i)-(iv), `T0.32` stays
+red on the second conjunct, and that half is repaired by spec edits, not by a
+scope ruling. The two halves are separated here so the scope ruling cannot
+accidentally be read as clearing the row. The `longrun_unbound` half is routed
+below as its own row.
+
+**NO BAR MOVED AND NO CONJUNCT WAS TOUCHED IN THIS SLOT.** `PROJ_TOL`,
+`MAX_PROBE_SPREAD`, `MIN_SLOWDOWN`, `LONGRUN_FLOOR_S` and `RTF_GRANDFATHERED`
+are byte-unmoved; the only writes are this ledger row and documentation.
+
+## ROUTED 2026-09-27 (builder, 15:1x slot): `longrun-binding-conjunct-went-
+## false-four-times-under-an-unmoved-impl-sha` — four post-freeze `cpu<2h`
+## specs never named the feasibility gate, two of them overran their own
+## budget class, and no instrument could report it
+
+ROUTED: longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha | 2026-09-27 | `T0.32` attempt 3, ledger row **FAIL** 2026-09-27T15:10:27 (clean stamp at `b66135f`), `longrun_unbound` `['LT.03','PL.02','SO.07','W1.02']` against a gate of `== []`; re-derived at `e44068b` and by `git log` over the hashed paths | OPEN
+    SUBJECT: the APPARATUS and four SPECS' compliance — not any spec's science.
+        No claim of Jack's is in question and no verdict changes.
+    DUE: 2026-10-08 | `review-queue`'s own "next date with room under the
+        measured capacity", read off the tool this slot — 09-27 through 10-07
+        all carry 6 or more against a measured capacity of 6, and 10-08 carries
+        3. NOT dated onto a full day, which is the act `review_queue_piled_on`
+        counts.
+    WAITS-ON: t032-single-source-proxy-fires-on-self-test-literals | that row
+        owns the OTHER red conjunct of the same `_check`, and `T0.32` cannot be
+        re-bought green until both are settled, so a repair here lands against
+        a spec that stays red for a reason this row does not control. The
+        coupling is one-way and narrow: this row's MEASUREMENT stands on its
+        own and needs no ruling, but its repair should not be executed into a
+        `_check` the desk may be about to re-scope.
+
+**THE FINDING.** `T0.32`'s fifth conjunct (66th audit B2) requires every
+IMPLEMENTED spec at a long-run budget to name `rtf.require_feasible` in its
+impl source unless frozen in `RTF_GRANDFATHERED` — 34 ids, frozen 2026-09-03,
+SHRINK-ONLY, *"never add one — a new long-run impl that cannot afford the call
+is exactly what the conjunct refuses."* Four `cpu<2h` specs have shipped since
+the freeze and not one of them calls it:
+
+| spec | impl first committed | recorded row | duration | vs `cpu<2h`'s 9,000 s |
+|---|---|---|---|---|
+| `SO.07` | 2026-09-04 | VOID | 9,201.5 s | **1.02x** |
+| `W1.02` | 2026-09-06 | PASS | 0.2 s | 0.00x |
+| `PL.02` | 2026-09-07 | VOID | 2,928.2 s | 0.33x |
+| `LT.03` | 2026-09-25 | VOID | 16,580.6 s | **1.84x** |
+
+**The exemption set is not at fault and nothing was mis-frozen** — all four
+first-commit dates are AFTER 2026-09-03, so each is the exact case the
+shrink-only rule contemplates, and `longrun_stale_exemptions` is [], meaning
+every one of the 34 frozen ids is still legitimately exempt.
+
+**THE COST IS MEASURED, NOT ARGUED.** `T0.32` exists because LC.07's pilot did
+its feasibility arithmetic by hand — the docstring's words: *"science discarded
+after it was paid for, the exact waste the projection exists to prevent."* Two
+of the four unbound specs overran the wall allowance of their own declared
+budget class and recorded VOID: `LT.03` at 1.84x and `SO.07` at 1.02x.
+**Attributed no further than the evidence carries: it is NOT established that
+the missing call caused either VOID** — `LT.03`'s row names a different cause
+(a `_check` returning tuples), and this row does not claim otherwise. The
+measured statement is that two long-run specs overran their own declared
+allowance with the pre-run projection never invoked, throughout a window in
+which this gate's certificate asserted no unbound long-run spec existed.
+
+**WHY NOTHING COULD SAY SO, and this is the part worth a ruling.** At its
+09-03 PASS, `T0.32`'s `impl_sha` covered `experiments/rtf.py`, `playground.py`
+and its own test file. `git log --since=2026-09-04 --until=2026-09-26` on those
+three paths returns **ZERO commits**. All four specs therefore arrived inside a
+22-day window in which `impl_sha` was byte-unmoved and `run status` reported no
+staleness for `T0.32`. A conjunct that quantifies over a POPULATION is guarded
+by nothing, because new members arrive in files the certificate never hashed
+and could not have hashed — they did not exist when it ran. The generalised
+rule is in `docs/LESSONS.md` under *"A conjunct that quantifies over a
+POPULATION goes stale at the population's growth rate."* This row surfaced only
+because `run.py` joined `IMPL_DEPS` on 09-26 for an unrelated reason.
+
+**WHAT IS ASKED.** (a) The four repairs: does each spec adopt
+`require_feasible` on its real run path — which is a source edit per spec plus,
+for `W1.02` alone, a standing-PASS certificate re-buy (0.2 s) — or does
+`W1.02`'s 0.2 s against a `cpu<2h` declaration mean its BUDGET CLASS is what is
+wrong, which is a registry change and a different act? The conjunct's own
+docstring warns that a source scan *"proves the call EXISTS, not that it is
+reached with honest arguments"*, so four greps satisfied is not four specs
+bound, and inserting the call to clear the scan would be the gaming move this
+row explicitly does not propose. (b) The class question, which is the one this
+desk cannot answer from a spec edit: **population-scanning conjuncts have no
+staleness signal at all.** `T0.32` is one; the `GOAL.md` citation scan, the
+standing-PASS sweeps and the registry scans are others. A cadence is the
+obvious answer and it is adjacent to
+`standing-pass-certificates-are-falsifiable-only-by-running-them` (DUE 10-06);
+a DOMAIN answer — hashing the population's manifest rather than its members —
+is adjacent to `impl-deps-domain-misses-a-read-and-a-relative-import` (DUE
+10-06). Both of those rows are about the same blind spot seen from other sides,
+and ruling the three together is likely cheaper than ruling them apart.
+
+**NOT REPAIRED IN THIS SLOT, priced rather than deferred.** Three of the four
+are long-run specs (`LT.03` 4.6 h, `SO.07` 2.6 h, `PL.02` 0.8 h recorded); an
+adoption that is verified rather than grepped means re-running them, which does
+not fit an hourly slot and which `2^9`'s standing prohibition forbids detaching.
+`W1.02` alone is affordable and is deliberately not taken piecemeal, because
+clearing one of four from a list changes the number an auditor reads without
+changing the condition. **No bar moved, no conjunct was narrowed, no id was
+added to `RTF_GRANDFATHERED`** — the set is shrink-only and adding these four
+would be the one move its own docstring names as forbidden.
+
+    Staleness bill: **ZERO**. This row edits no spec file, no `IMPL_DEPS` path
+    and no threshold; the slot's only code-path write is the `T0.32` ledger row
+    the runner produced.
+
 ## ROUTED 2026-09-26 (builder, 22:0x slot): `impl-deps-domain-misses-a-read-and-
 ## a-relative-import` — three of the five latent reds came in through an edge
 ## `run stale` cannot see and `T0.35` is not scoped to look for
