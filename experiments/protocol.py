@@ -1513,10 +1513,21 @@ class NoControlByDecision(str):
     A subclass of `str` whose `__bool__` is False answers both needs at once
     and narrows no detector:
 
-      * **Every truthiness reader in the repo becomes correct with no edit.**
-        `bool(spec.control)` is False, so probe C, the pre-compute guard, and
-        anything written later all read "no control promised" without knowing
-        this class exists. Nothing is string-matched anywhere.
+      * **Every truthiness reader that asks "was a control promised?" becomes
+        correct with no edit.** `bool(spec.control)` is False, so probe C, the
+        pre-compute guard, and anything written later all read "no control
+        promised" without knowing this class exists. Nothing is string-matched
+        anywhere. **CORRECTED 2026-09-27 (125th audit FTB 3): the version of
+        this bullet shipped with this class said "every truthiness reader in the
+        repo", and that was one reader too many.** `run_spec`'s guard has a
+        SECOND `bool(spec.control)` — the branch choosing which defect its
+        message names — and for that reader falsy is not the answer, because
+        both of its cases are falsy. It reported every declared refusal as
+        `is None` until the same audit found it. A falsy sentinel fixes the
+        readers asking *"is a control promised?"* and silently breaks any reader
+        asking *"WHICH of the two no-control cases is this?"*; the second
+        question needs `is_control_refusal`, and a class that makes one question
+        free does not answer the other.
       * **The reason stays on the record and stays greppable.** It IS the
         string — it prints, serialises, and hashes exactly as before, so
         `SPEC_CLAIM_FIELDS` sees no change and no certificate is staled by the
@@ -3922,11 +3933,22 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # *"there is no control here"* beside recorded `control_metrics`, which is
     # the audit surface lying in the direction nothing was watching. It is now
     # `declares_a_control`, the same predicate `verify.scan`'s probe C reads.
+    # WHICH DEFECT, and the branch used to be unreachable (125th audit FTB 3,
+    # 2026-09-27). The message asked `if spec.control`, and `declares_a_control`
+    # is False in exactly two cases — a `None`/empty field, and a
+    # `NoControlByDecision` whose `__bool__` is False — so `spec.control` is
+    # FALSY in both and the refusal arm was dead code. Every
+    # refusal-that-ran-a-control, the precise case the widening above was
+    # written to catch, was reported as `is None`. The two have different
+    # repairs (backfill a declaration vs. reconcile a declared refusal with a
+    # control that ran), so the identity question decides the message:
+    # `is_control_refusal`, never truthiness.
     if control_fn is not None and not declares_a_control(spec.control):
         raise UndeclaredControl(
             f"{spec.id} passes control_fn={control_fn.__name__} to run_spec but "
             f"Spec.control "
-            + ("declares NO control, by decision" if spec.control
+            + ("declares NO control, by decision: "
+               f"{str(spec.control)[:120]}" if is_control_refusal(spec.control)
                else "is None")
             + ". Declare in the registry WHAT the control is "
             f"and WHICH WAY it must fail; that field is the audit surface.")

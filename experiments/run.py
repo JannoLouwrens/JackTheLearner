@@ -3442,17 +3442,66 @@ def cmd_review_queue(ledger: Ledger) -> int:
     return check()
 
 
+#: The id `T0.18`'s OWN in-run scan must skip — and which THIS CLI must NOT.
+#:
+#: The exclusion is legitimate exactly once: when `T0.18` runs, the entry it
+#: would be judging has not been written yet, so a scan inside that run can only
+#: ever re-judge the PREVIOUS version of its own file. From the CLI the opposite
+#: is true — the 2026-08-30 row EXISTS and is the standing certificate, so
+#: excluding it is excluding a live claim from the audit of live claims.
+#:
+#: `exclude=("T0.18",)` stood at this call site from `2cd0289` (2026-08-10) and
+#: cost nothing for 48 days. At 12:18 on 2026-09-27 a strengthen-only conjunct
+#: landed in `T0.18`'s `_check` whose key is absent from its own recorded row,
+#: so its replay began raising `KeyError` — and the one entry that now fails the
+#: scan was the one entry the scan excluded. `unevaluable_gates` read 0 with the
+#: exclusion and 1 without it, and no edit was made to the exclusion: the
+#: population moved underneath it (125th audit RANK 1; LESSONS.md, *"An
+#: exclusion is harmless until the excluded thing is the only one that fails"*).
+#:
+#: So this CLI judges everything, and the name survives only to report, per
+#: finding class, what the in-run exclusion WOULD have hidden — the audit's own
+#: repair: *"print BOTH numbers, so the excluded entry cannot be the invisible
+#: one."* Nothing is skipped here; a member of this tuple that is also a finding
+#: is printed twice over, once as the number and once as the shadow.
+IN_RUN_SELF_EXCLUDED = ("T0.18",)
+
+
 def cmd_verify(ledger: Ledger) -> int:
     """Re-judge every PASS from the record alone, and probe whether its gate
-    actually reads its control. See `experiments/verify.py`; gated as T0.18.
+    actually reads its control. See `experiments/verify.py`.
 
     Costs no experiment: the ledger already stores the numbers and the repo
     already stores the thresholds, so the decision can simply be re-taken.
+
+    ## THE EXIT CODE IS A VERDICT HERE, not a report that the tool ran
+
+    This function ended in an unconditional `return 0` from 2026-08-10 to
+    2026-09-27 — one `return` in the body, no branch on any finding — while its
+    docstring said *"gated as T0.18"*. Two consecutive audits (the 124th and the
+    125th) quoted *"`run verify` EXIT 0"* as evidence of a clean record when it
+    meant only that the command had executed, and for 27 days of that window it
+    printed `controls declared but never run  2` and exited 0 regardless.
+    Delegation was not the flaw by itself; the flaw is that the delegate cannot
+    run: `T0.18` is `BLOCKED` behind `T0.13` (FAIL), so *"reporting-only, gated
+    as X"* was an empty guarantee for the whole period it was written down.
+
+    Any non-zero count in the five hard classes — verdicts that no longer
+    re-derive, gates blind to their control, controls declared and never run,
+    gates that could not be replayed, entries that could not be audited — or
+    `undeclared_control_ran` over `UNDECLARED_CONTROL_BUDGET`, now exits 2.
+    No threshold was moved to reach that: the budget is still 0 and every class
+    is still counted exactly as `verify.scan` counts it (125th audit FTB 1-2).
+
+    The tool prints WHO owns each red beside it, because the hazard of a gating
+    exit code is the one LESSONS.md records — red every slot for a reason nobody
+    can act on teaches the next reader to ignore it — and the mitigation is
+    naming the owner, never softening the code.
     """
     from .verify import UNDECLARED_CONTROL_BUDGET, assert_detector_works, collect, scan
 
     assert_detector_works()      # a scan that cannot see a planted defect is not reported
-    r = scan(collect(ledger, exclude=("T0.18",)))
+    r = scan(collect(ledger))    # NO exclusion — see IN_RUN_SELF_EXCLUDED above
 
     print(f"\nRe-judged {r['verdicts_rejudged']} PASS entries from the record "
           f"alone; probed {r['controls_probed']} controls.\n")
@@ -3468,9 +3517,20 @@ def cmd_verify(ledger: Ledger) -> int:
         ("entries that could not be audited", r["unavailable_entries"],
          r["unavailable_detail"]),
     ]
+    findings = 0
+    shadowed = []
     for label, n, detail in rows:
+        findings += n
         mark = "  " if n == 0 else "! "
         print(f"  {mark}{label:38} {n}" + (f"   {detail}" if detail else ""))
+        # BOTH numbers, per finding class: what the in-run self-exclusion hides.
+        hides = [d for d in detail.split(", ")
+                 if d and d.split("(")[0] in IN_RUN_SELF_EXCLUDED]
+        if hides:
+            shadowed.append(label)
+            print(f"      ^ {n} here, {n - len(hides)} under T0.18's in-run "
+                  f"self-exclusion — {', '.join(hides)} is EXCLUDED there and "
+                  f"judged here.")
     print(f"\n  ? controls run but NOT declared in the spec      "
           f"{r['undeclared_control_ran']} / {UNDECLARED_CONTROL_BUDGET} budget")
     if r["undeclared_ran_detail"]:
@@ -3493,8 +3553,38 @@ def cmd_verify(ledger: Ledger) -> int:
               f"({r['self_excluded_detail']}) — a spec cannot re-judge its own "
               f"entry;\n      that entry is written after the scan. Its gate is "
               f"exercised by T0.18's control.")
+    else:
+        print(f"\n  ? nothing self-excluded HERE: this CLI judges all "
+              f"{r['entries_seen']} standing PASS entries, including "
+              f"{', '.join(IN_RUN_SELF_EXCLUDED)},\n      whose row exists and "
+              f"is the standing certificate. T0.18's OWN run must skip it — its "
+              f"row is\n      written afterwards — and that exclusion was "
+              f"inherited here for 48 days until the one\n      entry it hides "
+              f"became the one entry that fails (125th audit RANK 1). "
+              + (f"It hides a finding TODAY, in: {'; '.join(shadowed)}."
+                 if shadowed else
+                 "It hides no finding today."))
+
+    over_budget = r["undeclared_control_ran"] > UNDECLARED_CONTROL_BUDGET
     print()
-    return 0
+    if not findings and not over_budget:
+        return 0
+    # THE EXIT CODE CARRIES THE FINDING (125th audit FTB 2). Named owners, so a
+    # standing red is not mistaken for a fresh one and not mistaken for the
+    # builder's to clear by re-running something.
+    print(f"  VERDICT: {findings} finding(s) in the five hard classes"
+          + (f" + undeclared_control_ran {r['undeclared_control_ran']} over "
+             f"budget {UNDECLARED_CONTROL_BUDGET}" if over_budget else "")
+          + " — this tool exits 2.")
+    if r["unevaluable_detail"]:
+        print(f"      unevaluable: {r['unevaluable_detail']}. A gate that "
+              f"cannot be replayed is a verdict this scan did NOT\n"
+              f"      re-derive — it is not a pass and it is not a fail. Where "
+              f"that is T0.18, the re-buy is\n      owed by the desk under "
+              f"`t013-latently-red-28-disarmed-keys` and is BLOCKED behind "
+              f"T0.13 (FAIL)\n      until then; re-running it is explicitly NOT "
+              f"the builder's repair (125th audit FTB 4).")
+    return 2
 
 
 # ── AWAITING: results owed by a detached launch (67th audit B2) ─────────────
