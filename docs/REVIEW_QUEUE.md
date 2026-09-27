@@ -12323,3 +12323,88 @@ through an upstream unblock.
     `docs/REVIEW_QUEUE.md` edit billed in the same commit (`T0.21`, `T0.31`,
     both re-bought in slot). No spec file is edited, `XL.01` is a no-certificate
     FAIL row and nothing cites it, so no re-run is owed by any spec named here.
+
+ROUTED: freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-failing-spec | 2026-09-27 | `registry.ready()` / `Ledger.blocked_by` evaluated this slot against the live ledger; `run blocked`'s own `T1.08` blocks set; the freeze text in `scripts/ladder_prompt.md` | OPEN
+    SUBJECT: the APPARATUS — this is about a governance rule's arithmetic, not
+        about any spec's science. Declared per the 124th audit FTB 2 so the next
+        audit reads the classification off the row instead of re-deriving it.
+    DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
+        measured capacity", read off the tool this slot and not chosen by hand
+        (09-27 through 10-06 all carry 6 or 7 against a measured capacity of 6).
+    WAITS-ON: t108-pipeline-repair-has-no-design | that row is DISPOSITIONED-
+        pending and DUE 2026-10-02, and `T1.08` is the FIRST hop of the chain
+        measured below. Whatever this desk decides about the freeze's release
+        clause, the clause cannot become satisfiable until `T1.08` does, so
+        ruling this one ahead of that one would either pre-empt the repair or
+        produce a release date with no arithmetic under it. They are coupled in
+        fact even though this row proposes no change to `T1.08`.
+
+**THE MEASUREMENT, from the runner's own predicate.** The STANDING FREEZE in
+`scripts/ladder_prompt.md` (desk, SYSTEM.md class 3, 2026-09-17) says
+**"Lifting it requires only that `T6.01` runs"**. `registry.ready()` and
+`Ledger.blocked_by` say otherwise:
+
+    T6.01  blocked_by ['T4.05']   NOT_RUN — no implementation
+    T4.05  blocked_by ['T4.04']   NOT_RUN — no implementation
+    T4.04  blocked_by ['T2.01']   NOT_RUN — no implementation
+    T2.01  blocked_by ['T1.08']   FAIL — 2.67 sigma vs an immovable 5
+    T1.08  blocked_by []          FAIL, ready — repair design owed by this desk
+
+**Five specs, two unimplemented, and the first hop is explicitly not the
+builder's** (`PROGRESS.md` FOR THE BUILDER item 1: *"Do not pre-empt it"*).
+`run blocked` has listed `T6.01` inside `T1.08`'s own "also blocks" set for the
+whole ten days the freeze has stood. The instrument was correct and public; no
+organ joins a governance page's release clause to a spec's reachability, because
+every citation check in this repo runs from the ROW inward.
+
+**WHAT IS NOT CLAIMED HERE.** Nothing about whether the freeze is RIGHT. Its
+diagnosis is the owner's measurement (465 doc commits to 258 spec commits; 50 of
+108 passes in Tier 0+1) and its own text says *"If the freeze is wrong, the owner
+strikes it in one line."* **This row does not ask for it to be struck, lifted,
+re-labelled or re-scoped, and the builder has taken no such action** — the three
+anti-cheapening guards in the release clause are obeyed exactly. What is reported
+is that the clause's cost was never priced, and that the word **"only"** is
+carrying a quantifier the arithmetic does not support.
+
+**THE SECOND HALF, and it is the part with a live cost every slot.** Freeze item
+3 requires each iteration to name which of `T2.01`, `XL.01`, `T6.01` it moved,
+with `NONE` legal at most twice in a row. Of the three, `ready()` returns exactly
+**one** — `XL.01`, a settled FAIL. `T2.01` is `blocked_by ['T1.08']`; `T6.01` is
+four hops out. So the quota resolves mechanically to *re-run one failing spec at
+least every third slot*, which is the act `run next`'s own triage line forbids
+(*"do not re-run a settled row to fill a slot"*) and which the standing
+prohibition on run-until-pass forbids in general. Two correct rules whose
+intersection is a seed-lottery draw — `D38`'s shape, arriving in a conduct
+amendment rather than in the decision register.
+
+**AND THE ONE HONEST DISCHARGE WAS PROBED BEFORE IT WAS BOUGHT.** `XL.01` is
+listed under `run status`'s STALE CLAIMS because `EpisodicMemory.py` moved after
+its row — materially, at `6502d36` (2026-09-06): the similarity floor went from
+raw containment at 0.34 to **coverage over the cue's known words at 0.95**. That
+is the function `XL.01`'s policy reads the diary through
+(`xl_01_death_does_not_erase.py:371`, `recall("saw food room", top_k=8,
+channel="saw")`), so the re-run had a NAMED MECHANISM by which the verdict could
+have moved, which is what separates an owed re-run from a lottery. Probed first,
+eleven lines, before any run: every recorded row's text is `jack saw food in the
+<quadrant> part of the room`, all three cue words are present, coverage is
+**1.0000** against the 0.95 floor, and **4 of 4 rows return with their positions
+recovered**. **The moved dependency is INERT at the only site this spec
+touches.** Forecast recorded BEFORE the run, so it can be wrong: `XL.01`
+attempt 3 reproduces attempt 2's FAIL, with `search_time_ratio` and
+`carried_ltc`/`wiped_ltc` unchanged in direction. If it does not, the probe
+missed a seam and that is the larger finding.
+
+**WHY THIS IS NOT A REQUEST FOR AN INSTRUMENT.** Freeze item 2 forbids a new
+checker, ratchet or organ, and the obvious repair — a reader that resolves spec
+ids cited on steering pages against `ready()` — is exactly that. It is therefore
+NOT proposed, and the freeze is obeyed rather than argued with. Note only that
+`STEERING-PAGE ORDERS` in `run status` already resolves spec ids on steering
+pages and already prints *"1 order(s) name a spec the runner would REFUSE
+today"*; whether a release CLAUSE is an order in that reader's sense is a
+question for whoever holds that instrument, not a new one.
+
+    Staleness bill: **ZERO**. No spec file, no `IMPL_DEPS` path and no threshold
+    is touched by this row; the only files edited are `docs/LESSONS.md`,
+    `docs/REVIEW_QUEUE.md` and `docs/LOOP_JOURNAL.md`. `scripts/ladder_prompt.md`
+    is NOT edited — striking or re-scoping the freeze is the owner's one line,
+    not this desk's and not the builder's.

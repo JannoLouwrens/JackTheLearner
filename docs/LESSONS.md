@@ -18711,3 +18711,72 @@ half that was not, and the unmeasured half is usually the one the repair's own
 vocabulary hides — "honestly fit" *sounds* total. When a ruling commissions a
 number, ask what else has to be chosen before that number exists, and write the
 choice down beside it.
+
+## A FREEZE'S RELEASE CONDITION IS A DEPENDENCY, AND THE WORD "ONLY" IS WHERE NOBODY CHECKS IT — an allocation rule gated on a spec must price that spec's chain, or the rule is permanent by arithmetic while reading as one step away
+## (builder, 2026-09-27; measured on the standing creature-gate freeze, 10 days after it was written, with the runner's own `blocked_by` rather than by reading the ladder)
+
+**THE EVENT.** `scripts/ladder_prompt.md` carries a STANDING FREEZE, made at the
+desk under SYSTEM.md class 3 on 2026-09-17, which closes Tier 0 to new specs,
+forbids new audit organs, and requires every iteration to name which of three
+creature gates it moved. Its release clause reads, verbatim: **"Lifting it
+requires only that `T6.01` runs"**, followed by three anti-cheapening guards —
+*"it cannot be lifted by re-labelling, by declaring the freeze satisfied, or by
+registering `T6.01` as something cheaper than the full episode its title
+names."* Every guard is aimed at somebody making the release **too easy**. None
+of them asks whether the release is **reachable at all**.
+
+**THE MEASUREMENT**, taken from `registry.ready()` / `Ledger.blocked_by` — the
+runner's own predicate, not a reading of the ladder page:
+
+    T6.01  blocked_by ['T4.05']      NOT_RUN, no implementation
+    T4.05  blocked_by ['T4.04']      NOT_RUN, no implementation
+    T4.04  blocked_by ['T2.01']      NOT_RUN, no implementation
+    T2.01  blocked_by ['T1.08']      FAIL — 2.67 sigma against an immovable 5
+    T1.08  blocked_by []             FAIL, ready; repair design owed by the desk
+
+So the freeze is not one step from release; it is **five specs**, two of which
+have no implementation, one of which is the project's largest settled FAIL under
+a standing do-not-re-dispatch directive, and the **first** of which is a design
+the builder is explicitly forbidden to pre-empt. `run blocked` had been printing
+`T6.01` inside `T1.08`'s own blocks set for the whole ten days. The instrument
+was right, in public, the entire time — **nobody joined it to the rule that
+depends on it**, because the rule names the spec and the instrument names the
+spec, and no organ reads a governance page's release clause as a spec citation.
+
+**AND THE SECOND HALF, which is the same defect one layer down.** The same
+freeze requires each iteration to name which of `T2.01`, `XL.01`, `T6.01` it
+moved, with `NONE` legal at most twice in a row. Of those three, `ready()`
+returns **one**: `T2.01` is `blocked_by ['T1.08']` and `T6.01` is four hops out,
+so the only gate a builder may legally run is `XL.01` — a settled FAIL. A quota
+written to push work toward the creature therefore resolves, mechanically, to
+**re-run one failing spec every third slot**, which is the precise act
+`run next`'s own triage line forbids (*"do not re-run a settled row to fill a
+slot"*). Two rules, both correct in isolation, whose intersection is a lottery
+draw. That is `D38`'s shape — colliding armed defaults — arriving in a conduct
+amendment instead of a decision register.
+
+**Rule.** When a rule's release, expiry or exemption is gated on a NAMED SPEC,
+price that spec's dependency chain **in the commit that arms the rule**, and
+write the hop count beside the name. A release clause is a citation, and every
+citation in this repo is checked from the row inward — so a clause that cites a
+spec from a page no checker reads is the one place an unreachable condition can
+sit indefinitely while reading as imminent. The word to distrust is **"only"**:
+it is doing quantifier work in a sentence whose author was defending against the
+opposite failure. And when a rule imposes a per-slot QUOTA over a named set,
+intersect that set with `ready()` before arming it — a quota over a set whose
+legal members are mostly unrunnable does not redirect work, it manufactures
+re-runs.
+
+**The corollary that cost this slot its own second unit.** The one re-run that
+would have discharged the quota with real science was `XL.01`'s staleness debt:
+`EpisodicMemory.py` moved materially after its row (`6502d36`, 2026-09-06 — the
+similarity floor went from raw containment at 0.34 to coverage-over-known-words
+at 0.95), and `XL.01`'s policy reads the diary through exactly that function
+(`xl_01_death_does_not_erase.py:371`, `recall("saw food room", channel="saw")`).
+Probed before running rather than after: every recorded row's text is
+`jack saw food in the <quadrant> part of the room`, so all three cue words are
+present, coverage is **1.0** against the 0.95 floor, and **4 of 4 rows return
+with their positions recovered**. The moved dependency is **inert at the only
+site this spec touches** — the staleness is a hash fact, not a behaviour fact.
+A stale stamp and a changed verdict are different debts, and eleven lines of
+probe told them apart for the price of neither.
