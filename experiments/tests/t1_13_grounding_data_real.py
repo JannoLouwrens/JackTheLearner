@@ -48,7 +48,17 @@ from ..registry import BY_ID
 
 # The implementation under test. Undeclared until 2026-09-06 (78th audit
 # finding 1.1; grandfather set shrunk here).
-IMPL_DEPS = ['MoCapLoader.py']
+#
+# `mocap_cmu.py` added 2026-09-27. This claim is that the grounding pairs are
+# REAL, and `mocap_cmu.CMUTextMotionCorpus` is what makes them real — but it is
+# reached through a FUNCTION-LOCAL import at `MoCapLoader.py:639`, so declaring
+# the door (`MoCapLoader.py`) did not hash what is behind it. It was the ONLY
+# one of this repo's 21 root modules outside every declared bill: measured with
+# `run stale-cost <path>` over all 21, 2026-09-27. Root modules are ENDPOINTS
+# in `undeclared_impl_deps`'s traversal scope BY DESIGN (that docstring names
+# the wider hole as REAL and REMAINING and routes it), so no instrument was
+# going to find this one; it took pricing every file.
+IMPL_DEPS = ['MoCapLoader.py', 'mocap_cmu.py']
 
 REPO = Path(__file__).resolve().parents[2]
 

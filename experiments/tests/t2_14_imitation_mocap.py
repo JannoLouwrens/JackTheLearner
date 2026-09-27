@@ -160,8 +160,19 @@ from ..registry import BY_ID
 from ..gpu import build_job, submit
 
 # The claim is about the shipped action path AND the shipped action definition;
-# all three files hash into the certificate.
-IMPL_DEPS = ["TrainingPipeline.py", "UnifiedBrain.py", "MoCapLoader.py"]
+# all four files hash into the certificate.
+#
+# `mocap_cmu.py` added 2026-09-27, and this spec's own line 20 already named it
+# as the thing that replaced the loader that "fabricated sinusoids" — the
+# substance of "from REAL motion capture" — while `IMPL_DEPS` named only
+# `MoCapLoader.py`, which reaches it through a function-local import at
+# `MoCapLoader.py:639`. Declared here KNOWING the re-buy is refused: this row's
+# dep `T1.08` is FAIL, so `run_spec` will not re-derive it and this certificate
+# goes STALE-and-unclearable until `T1.08` is repaired. That is the honest
+# state — the alternative is a green board bought by not declaring a dependency
+# we know is load-bearing. Disclosed in the commit and the journal, not quietly.
+IMPL_DEPS = ["TrainingPipeline.py", "UnifiedBrain.py", "MoCapLoader.py",
+             "mocap_cmu.py"]
 
 SEEDS = [0, 1, 2]
 
