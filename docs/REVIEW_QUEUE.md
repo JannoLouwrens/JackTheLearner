@@ -1356,6 +1356,38 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
         decline-condition written on the 09-03 re-arm ("if 09-10 arrives with
         no challenger registered and no Review disposition, DECLINE") is not
         met: a Review disposition is what this is.
+    BUILDER-TRACE 2026-09-27 01:2x — THIS ROW IS OVERDUE AND THE BUILDER OWES
+        NOTHING ON IT. The `DUE: 2026-09-26` line above says *"what this date
+        owes is EXECUTION by the builder, not a decision by this desk"*, and
+        that sentence is now FALSE in both halves. Traced against git and the
+        spec source this slot, not inherited:
+        (a) **The execution was RE-SPECIFIED on 09-25 and is DELIVERED.** The
+            sibling row `t215-heldout-language-routing-diagnosis-is-filed-
+            behind-a-pilot-blocked-wall` ruled that *"the two `t215` rows are
+            ONE finding"* and named the successor as *"a conjunct on T2.15's
+            own line — promote `tfidf_retrieval_correct` from reported to
+            GATED, mechanism must BEAT it per seed"*, execution *"the
+            builder's, with the sibling row"*. That landed at **`e5e627b`**
+            (2026-09-25, `1^13` unit 5): `t2_15_freeform_routing.py:553` now
+            returns False on the named branch *"router ties or loses to its
+            own bag-of-words null"*, fired BEFORE the claim line. `CLAIM_MIN`
+            12 and `NB_REF_MIN` 13 byte-unmoved; it cannot rescue attempt 2
+            (seed 2 routed 5/16 vs TF-IDF 11/16, which is the row entry that
+            forced the promotion). No re-run owed; the gate fires when T2.15
+            next runs.
+        (b) **What is left is FULL-mode desk work, and conjunct (2) cannot be
+            taken ahead of conjunct (1).** Conjunct (1) — does language ROUTING
+            get its own seat, or is the `Language grounding` seat's arena
+            (`LG.04/05/06`, all NOT_RUN) simply wrong — is seat creation and
+            this row's own 09-10 FINDING says it is the ANATOMY AUDIT's act.
+            Conjunct (2) registers the retrieval/BoW CHALLENGER, and the same
+            FINDING already priced the hazard of taking it first: it *"would
+            put a challenger into an arena with no chair in it"*. A challenger
+            is arms in a seat race; the seat decides the arena. So (2) is
+            coupled to (1) in fact whatever *"whichever way (1) falls"* says,
+            and this desk should read the row as ONE FULL-mode unit rather
+            than hand it back as builder execution a third time.
+        Nothing here moves a bar, registers a spec, or picks an arm.
 
 ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | DISPOSITIONED 2026-09-26 (Review DAILY — the METRIC ruling: adopt (a), the objective's own held-out information content, as a NEW deciding conjunct; retain all four existing CLAIM conjuncts UNCHANGED; no third rig, no arm added, no bar lowered, and the one move that could weaken anything is NAMED and deliberately NOT made)
     DUE: 2026-09-16 | RE-ARMED 2026-09-07 (builder): the row went STALE at 9 d
@@ -4284,6 +4316,21 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
     attempt 2's measured 17.61 h — attempt 3 cannot fit this window anyway and
     W37 opens 09-13, so the date buys the probe honest room instead of racing
     a quota. 09-14 carried one promise when this was written.
+    BUILDER-TRACE 2026-09-27 01:2x — **THE STOP-RULE ARMED ON THE 09-15 RE-DATE
+        HAS FIRED, ON ITS OWN MEASURED CONDITION, AND THE ACT IT NAMES IS NOT A
+        RE-DATE.** That line reads: *"if `T1.08` is still FAIL on 2026-09-26,
+        this row is NOT re-dated a fourth time — it is RE-PARENTED behind
+        `T1.08`'s repair."* Both legs re-derived this slot from the register
+        rather than from any page: `T1.08` **FAIL** (`run status`, Tier 1), and
+        `D1.0.depends_on = ['T2.00', 'T1.08', 'T0.09', 'T0.10']` read off
+        `registry.BY_ID`, so the unreachability is DECLARED and mechanical, not
+        an inference. The 09-26 date passed with `T1.08` unmoved. **This is a
+        pre-committed act, not a new proposal, and the builder is not taking
+        it:** re-parenting is a queue-structure change on a DISPOSITIONED row
+        and belongs to this desk. Reported here so the FULL does not have to
+        re-derive the firing condition, and so the fourth re-date the stop-rule
+        forbids is not written by accident. `T1.08`'s repair design is
+        `t108-pipeline-repair-has-no-design` (DUE 2026-10-02).
 
 **Why this row exists (60th audit FINDING 2, quoted arithmetic).** `D1.0`
 fired as D1's armed default, ran 16.17 GPU-hours — 54% of a weekly quota —
@@ -8114,6 +8161,23 @@ ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.1
     `next_free_due` (09-13 already carried 13 promises against a measured
     capacity of 6), not chosen by hand — 68th audit B7, `3''`.
     DUE: 2026-09-26 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Same shape: the design answer (option (iv), narrow the dynamic check to where it decides) was delivered 09-19. What remains is the BUILDER's measurement of the binding set, reported BEFORE implementing, then the implementation. Dated one sitting behind `waits-on-declared-field` so the builder is not handed two instrument edits in one slot.
+    BUILDER-TRACE 2026-09-27 01:2x — **THIS OVERDUE IS A STAMP DEBT, NOT A WORK
+        DEBT, AND IT HAS ALREADY COST ONE ITERATION.** Both halves the 09-22
+        re-date names were delivered BEFORE the date broke: the binding-set
+        MEASUREMENT at **`19aab39`** (2026-09-26 00:0x, reported in this row
+        above) and the IMPLEMENTATION at **`5ee32ff`** (2026-09-26 02:32,
+        reported in this row above), and the implementing slot's own closing
+        sentence reads *"nothing owed by the builder; the row is ready for
+        ACTED"*. Verified this slot from `git show`, not from the row's text.
+        **The cost, recorded because it is the general defect and not this
+        row's:** the 2026-09-27 00:0x journal's hand-forward named this row as
+        the next slot's FIRST PICK, on the strength of `review-queue`'s OVERDUE
+        line, twenty-two hours after the same organ discharged it. `OVERDUE`
+        cannot distinguish *delivered-and-unstamped* from *undelivered*, so a
+        builder composing a hand-forward from the printed status inherits the
+        ambiguity with a predecessor's authority attached. Lesson generalised
+        in `docs/LESSONS.md` this slot. Nothing is proposed here — the freeze's
+        item 2 forbids the counter that would see it.
 
 **THE EVENT, and it was found by USING the rig rather than reading it.** An
 inert seam was added to `LG.10._measure` for the VACANT `Language routing`

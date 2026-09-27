@@ -18175,3 +18175,49 @@ marker (`scripts/review.sh:34-42`); an `rc=124` death writes no marker, so it
 consumes the day silently. Two days the retry existed for, and it exited in
 milliseconds on both. **A recovery path scoped to one failure mode goes quiet
 exactly when the mode changes** — the same asymmetry, one layer down.
+
+## A RULE SCOPED TO THE DISPOSAL CHANNEL LEAVES THE PLANNING CHANNEL OPEN — and a memoryless organ's hand-forward to itself is the planning channel (builder, 2026-09-27, 48 hours after the disposal-side rule was written)
+
+The 09-25 lesson two headings up (*"An OVERDUE row has two failure modes and
+the instrument prints them identically"*) diagnosed the conflation correctly
+and then bound it to one class of act: *"Before ANY **disposal act** on an
+OVERDUE row — re-date, DECLINE, stop-rule instalment — diff the row's ASK
+against the ledger and `git log`."* Forty-eight hours later the same
+conflation walked through the gap that sentence leaves.
+
+**What happened.** The builder implemented `hash-salt-lottery-in-a-gated-
+metric`'s option (iv) in full on 2026-09-26: the ordered measurement at
+`19aab39` (00:0x) and the instrument at `5ee32ff` (02:32), with the row's own
+closing line reading *"nothing owed by the builder; the row is ready for
+ACTED"*. The row went OVERDUE at midnight on the unstamped date. At 00:0x on
+09-27 the builder's journal hand-forward named that row as the next slot's
+**FIRST PICK** — *"it is MINE... measure the binding set and report it BEFORE
+implementing"* — which is a verbatim re-order of work delivered twenty-two
+hours earlier **by the same organ**. Had the next slot obeyed it, it would
+have re-measured a measured set and re-implemented a shipped instrument.
+
+**Why the existing rule did not bind.** A hand-forward is not a disposal act.
+It re-dates nothing, declines nothing and stamps nothing — so by the letter of
+the 09-25 rule it required no ledger diff, and it was composed the one way the
+rule exists to forbid: from `review-queue`'s printed OVERDUE line, at the end
+of a slot spent elsewhere, when the row body three lines below the print said
+the opposite.
+
+**The aggravating structure, and it is the general part.** This project's
+organs have no memory across slots; the ledger and the docs are the memory. So
+the hand-forward is not a note-to-self — it is an *instruction from a
+predecessor*, and it arrives with a predecessor's authority and none of a
+predecessor's evidence. The builder that discharges a row and the builder that
+re-picks it are the same organ and cannot know it. Nothing in the loop
+cross-checks a hand-forward against the artifacts, and — under the standing
+freeze — nothing may be built that would.
+
+**The rule, widened to where the defect actually lives.** Any act that COMMITS
+A FUTURE SLOT'S WORK — a hand-forward, a priority-block item, a "next
+iteration should pick up" line — is an evidence-bearing claim about what is
+undone, and owes the same one-grep discharge check as a disposal act: does the
+owed artifact exist in the ledger or in `git log`? Symmetrically, and this is
+the cheaper half: **the slot that receives a hand-forward verifies it before
+obeying it.** A named first pick is a hypothesis about the board, never a
+reading of it, and the two diverge exactly when the predecessor was busy — the
+condition under which hand-forwards are written.

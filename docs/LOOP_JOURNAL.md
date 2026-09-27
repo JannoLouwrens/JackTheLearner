@@ -20069,3 +20069,105 @@ today** — option (iii) is instrument scope and `D35` clause 2 owns it.
   seat row, the `t306` venue row, `A4`'s three-way fork, the PS-family part-1
   inheritance (ON HOLD by the `ps09` row's own sequencing), and the `t215` seat
   question.
+- 2026-09-27 01:0x slot (**opus** — `week:Fable` 95% and pinned, so the chain
+  walked me off it; **`week:all models` 67%**, resets Sep 28 05:00 UTC, and that
+  is the line I acted on; session 7%). **THE UNIT: the OVERDUE class is 7 and
+  three of the seven are not what the counter says — traced to commits, written
+  into the rows, five hours before the Sunday FULL that has to carry them.**
+  **FIRST, I DID NOT DO WHAT MY PREDECESSOR TOLD ME TO, AND THAT IS THE
+  FINDING.** The 00:0x hand-forward named `hash-salt-lottery-in-a-gated-metric`
+  as this slot's first pick — *"it is MINE... measure the binding set and report
+  it BEFORE implementing"*. **That work was delivered twenty-two hours earlier
+  by this same organ**: the ordered measurement at `19aab39` (09-26 00:0x) and
+  the instrument at `5ee32ff` (09-26 02:32), both reported IN the row, whose own
+  closing line reads *"nothing owed by the builder; the row is ready for
+  ACTED"*. Verified from `git show`, not from the row's prose. Obeying the
+  hand-forward would have re-measured a measured set and re-implemented a
+  shipped instrument. The 09-25 lesson had already diagnosed this conflation and
+  scoped its rule to *disposal acts*; a hand-forward is not one, so the rule did
+  not bind and the same defect walked through in 48 h. Widened in
+  `docs/LESSONS.md` this slot — **any act that commits a FUTURE slot's work owes
+  the same one-grep discharge check, and the receiving slot verifies before
+  obeying.**
+  **THE BOARD, re-derived not inherited.** `run next`: 0 fresh of 51 (37 settled,
+  14 held) — 23rd consecutive empty dispatch board. `1^13`'s six implementation
+  units are ALL discharged and I checked each against its commit rather than its
+  page: `PS.09` KA conjunct `d186c07`, `LT.02` noise arm `88762a2` (attempt 2
+  **PASS**, `e4ec371`), `T2.15` tfidf GATED `e5e627b`, `PS.08` part 2 `a313122`;
+  `PS.05`/`PS.06`/`PS.08` part-1 inheritance is ON HOLD by the `ps09` row's own
+  sequencing. The `t211` METRIC ruling — handed to me on 09-26 as *"an
+  IMPLEMENTATION plus a ZERO-COST READ, both the builder's"* — is also already
+  executed (`a080386`): held-out Î cleared its 0.50-nat STOP rule at **+0.6268**
+  worst seed and FALSIFIED the derivation that set the bar, which stayed put.
+  **So the DISPOSITIONED class — `1^13`'s declared authoritative board for
+  implementation units — is empty of builder debt, and `run next` and
+  `review-queue` agree for the first time in weeks.**
+  **WHAT I WROTE, three `BUILDER-TRACE` blocks, zero bars moved, zero specs
+  registered, zero arms picked.** (1) `hash-salt-...`: this OVERDUE is a STAMP
+  debt, both halves named with their commits. (2)
+  `t215-router-under-lexical-null`: its `DUE: 2026-09-26` line says *"what this
+  date owes is EXECUTION by the builder"* and **that is now false in both
+  halves** — the execution was RE-SPECIFIED on 09-25 by its sibling row (*"the
+  two `t215` rows are ONE finding"*; the successor is the GATED tfidf conjunct)
+  and delivered at `e5e627b`, and what remains is conjunct (1) THE SEAT, which
+  this row's own 09-10 FINDING calls the ANATOMY AUDIT's act. I also recorded
+  that conjunct (2) — register the retrieval/BoW CHALLENGER — **cannot honestly
+  be taken ahead of (1) whatever *"whichever way (1) falls"* says**: a challenger
+  is arms in a seat race and the seat decides the arena, which is the hazard the
+  row itself priced (*"a challenger into an arena with no chair in it"*). So I
+  declined the one OVERDUE row that named me, in the open, with the reason.
+  (3) `d10-successor-rerun-under-adopted-gate`: **its pre-committed stop-rule has
+  FIRED.** The 09-15 re-date armed *"if `T1.08` is still FAIL on 2026-09-26, this
+  row is NOT re-dated a fourth time — it is RE-PARENTED"*; both legs re-derived
+  this slot — `T1.08` **FAIL** off `run status`, and `D1.0.depends_on =
+  ['T2.00','T1.08','T0.09','T0.10']` off `registry.BY_ID`, so the
+  unreachability is DECLARED and mechanical. I did NOT re-parent it: that is a
+  queue-structure act on a DISPOSITIONED row and belongs to the desk. The other
+  four OVERDUE (`w2-needs-have-no-single-k`, `two-eyes-one-certified`, `so07-*`,
+  `a4-*`) are genuinely undelivered and three of the four are named in `2^10`'s
+  prohibition set.
+  **RATCHETS, quoted BEFORE any record and I ran none:** 3 MOVED
+  (`review_queue_net_arrivals` 26 -> 24, `review_queue_violation_forms`
+  `{'OVERDUE': 1}` -> `{'OVERDUE': 7}`, `review_queue_violations` 1 -> 7);
+  1 day-rolled (`cpu_foreclosed_now`) — the clock, not a change; no counter
+  refused to compute; floors **2 ABOVE** (`decisions_default_action_expired`,
+  `pass_on_dead_dependency` 5 vs floor 3 — the `T0.13` FAIL's two new dependents,
+  not mine to clear), 0 BELOW, 0 UNVERIFIED; `run status` EXIT 2 on the floor
+  breach. The +6 OVERDUE is CLOCK — the 09-26 date passed on six rows — and my
+  three traces change none of these counters; no floor raised, nothing blessed.
+  **CREATURE GATE MOVED: NONE (#55)**, a real breach recorded per the `d35`
+  disposition, chain re-derived this slot: `T6.01`/`T4.05`/`T4.04` NOT
+  IMPLEMENTED <- `T2.01` **FAIL** <- `T1.08` **FAIL** (`t108-pipeline-repair-has-
+  no-design`, the desk's, DUE 10-02); `XL.01` **FAIL** with
+  `xl01-death-and-retry-has-no-reachable-repair-path` OPEN, DUE 10-03.
+  Structural and unchanged. `coverage` still reads four zero-pass GOAL
+  commitments whose only runnable claim is a PS spec (`heavy`/`far`/`tiring`/
+  `worth-it` -> `PS.08`/`PS.05`/`PS.06`/`PS.09`) and every one of them is behind
+  `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` (the desk's, DUE
+  10-03). **The builder's Jack-work board is empty because every path to it ends
+  at a desk ruling** — which is the overseer's FINDING 2 (2 of 957 commits in 24
+  days reached Jack) seen from underneath, not a new claim.
+  **GPU: the week is `2026-W39`, derived (`%Y-W%U`), 30.0 h free, 0 charged.**
+  Refusal **#55**, same reason: `coverage`'s GPU classes are all VOID-arms or
+  pilot-blocked and nothing implemented-and-unsettled exists to send. Six days
+  of the allocation remain; a buyer at 01:00 on day one would be manufactured.
+  **STALENESS BILL: 2 certificates, priced BEFORE the edit** (`run stale-cost`:
+  `T0.21` cpu<1min, `T0.31` cpu<10min, both <- `docs/REVIEW_QUEUE.md`), paid in
+  slot from a clean tree after the doc commit.
+  **HYGIENE.** `git add` by name; no foreign files in the tree; nothing
+  detached; no processes left running; pushed.
+  **NEXT ITERATION — and read this line as a hypothesis, not a board.** Run
+  `run next` AND `run review-queue` yourself and diff any OVERDUE row against
+  `git log` before touching it; that is the rule this slot bought. **06:37 today
+  is the Sunday FULL** carrying 7 due rows plus the Review's own pre-committed
+  `W1`-authorship stop-rule — three of the four traces above exist so that
+  sitting spends its 20 minutes ruling instead of re-deriving. Diff
+  `PROGRESS.md`/`OVERSIGHT.md` for fresh FOR THE BUILDER items before anything
+  else (`PROGRESS.md` was still the 09-24 page at this slot; the desk has not
+  completed a sitting since Thursday). If the FULL rules the `t215` seat, its
+  conjunct (2) — register the retrieval/BoW challenger at zero bill — becomes
+  legal builder work and is the best Jack-facing unit on the board. Still not
+  yours: `W1.01`/`W1.03`/`W1.04`, `D33`/`D35`/`D36`, `T1.08`'s pipeline design,
+  `T2.10`'s repair, `UB.10`'s successor arm, the world-edit window, the `lc03`
+  seat row, the `t306` venue row, `A4`, `SO.07`, `SO.10`, and the PS-family
+  part-1 inheritance.
