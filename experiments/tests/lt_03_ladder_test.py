@@ -36,6 +36,44 @@ numbers and do not move):
   chaos_reward_ratio >= 2.0 in any seed makes THAT ARM VOID for the run —
   its curiosity signal degenerated, so it did not test the claim).
 
+  THE CONTAMINATION LANE, AMENDED 2026-09-27 (builder) — NO BAR MOVES.
+  `chaos_reward_ratio` comes from `lt_02_chaos_detector._reward_ratio`, which
+  was written for LT.02, where every scored arm's intrinsic reward is an ICM
+  prediction error and therefore non-negative. LT.03 imports it and applies
+  it to `metra-xs`, whose reward `(phi(o2)-phi(o)).z` is a SIGNED dot product.
+  On attempt 1 the unflagged late mean went negative, the helper's
+  `max(1e-9, den)` clamp FABRICATED a denominator, and `metra_chaos_ratio`
+  was recorded as **-147,365 +/- 100,816** — a number, in the ledger, that
+  was never a measurement. The lane passed only because the numerator was
+  negative too; with the opposite sign on a numerator ~3,000x smaller than
+  the denominator the same arm reads +147,400 and is VOIDed. See that
+  helper's docstring for the reproduction.
+
+  The helper now returns NaN wherever the ratio has no meaning. Here that
+  changes ONE branch of the lane, in the harder direction:
+
+      an arm whose occupancy is AT OR ABOVE CHAOS_OCC and whose cause gate
+      is UNDEFINED is treated as contaminated, not as clean.
+
+  CHAOS_OCC (3.0) and CHAOS_RATIO (2.0) are UNTOUCHED, and this cannot
+  rescue a verdict: it can only move a candidate arm from `live` to VOID.
+  Replayed against attempt 1's recorded metrics the verdict is unchanged
+  (VOID on `icm_fixates` 0.0, which fires upstream of the lane).
+
+  REPORTED, not gated: `{arm}_chaos_ratio_defined` (1.0/0.0) is recorded
+  beside every `{arm}_chaos_ratio` so no future reader can quote a
+  fabricated ratio as a measurement. Its gating duty is already discharged
+  through `{arm}_chaos_void`; the flag exists for the RECORD.
+
+  NOT DONE, and named so attempt 2 does not inherit it silently: the harvest
+  row also asked for PER-SEED `icm_dwell`. `_aggregate` (protocol.py) means
+  across seeds and keeps only keys present in every run, so a per-seed value
+  is not expressible while `_experiment(seed)` is called once per seed — the
+  `_per_seed` list idiom (T3.07) requires the spec to loop seeds internally.
+  That is a restructure of this spec's seed handling and it belongs with the
+  attempt-2 redesign, which is the Review's (`lt03-icm-trap-not-live-in-
+  flight`). Not attempted here.
+
   CONTROLS, each on its declared side:
     (1) the ICM control MUST fixate on the panel in THIS rig: panel dwell
         > 0.4 in >= 2 of 3 seeds — proving the trap is live HERE, not only
@@ -782,7 +820,14 @@ def _experiment(seed: int) -> dict:
         s = stats_[n]
         occ = det["per_arm"][n]["occupancy"]
         ratio = _reward_ratio(logs[n], det["flags"][n], det["sub_idx"][n])
-        chaos = int(occ >= CHAOS_OCC and ratio >= CHAOS_RATIO)
+        # `_reward_ratio` returns NaN where the ratio has no meaning (see its
+        # docstring and CONTAMINATION LANE above). An arm SITTING IN THE CHAOS
+        # REGION whose cause gate cannot be computed has NOT been cleared of
+        # farming it, so the lane fires. Bars UNMOVED (CHAOS_OCC 3.0,
+        # CHAOS_RATIO 2.0); only the undefined branch changed, and it changed
+        # from clean to contaminated — strictly harder for a candidate arm.
+        defined = math.isfinite(ratio)
+        chaos = int(occ >= CHAOS_OCC and (not defined or ratio >= CHAOS_RATIO))
         out[f"{n}_engaged"] = float(s["engaged"])
         out[f"{n}_gain"] = round(s["gain"], 4)
         out[f"{n}_rho"] = round(s["rho"], 4)
@@ -795,6 +840,10 @@ def _experiment(seed: int) -> dict:
         out[f"{n}_dwell_ok"] = float(logs[n]["panel_dwell"] <= DWELL_MAX)
         out[f"{n}_chaos_occ"] = occ
         out[f"{n}_chaos_ratio"] = ratio
+        # Read this BEFORE the ratio: a 0.0 here means the number beside it is
+        # not a measurement. Attempt 1 recorded metra_chaos_ratio -147,365
+        # with no way for any reader to tell it was fabricated.
+        out[f"{n}_chaos_ratio_defined"] = float(defined)
         out[f"{n}_chaos_void"] = float(chaos)
         if n in CANDIDATES:
             out[f"{n}_claim"] = float(

@@ -815,18 +815,50 @@ def _detector(arms: dict, ruler: str, seed: int) -> dict:
 
 def _reward_ratio(arm: dict, flags: np.ndarray, sub_idx: np.ndarray) -> float:
     """Late-half intrinsic reward, detector-flagged vs unflagged (PG.4's
-    cause gate one rig over: the fixation must be FED by the chaos)."""
+    cause gate one rig over: the fixation must be FED by the chaos).
+
+    RETURNS NaN — never a number — ON EVERY BRANCH WHERE THE RATIO HAS NO
+    MEANING. It used to return a number on all three, and the middle one cost
+    a measurement (builder, 2026-09-27; routed as
+    `lt03-reward-ratio-fabricates-a-number-on-a-negative-denominator`):
+
+      * no reward stream                     -> was 0.0, reads as "clean"
+      * every late sample flagged, or none   -> was 0.0, reads as "clean",
+        and the all-flagged case is the MOST chaos-farmed arm reachable
+      * unflagged late mean <= 0             -> was numerator/1e-9, i.e. a
+        FABRICATION nine orders of magnitude wide whose SIGN decided the gate
+
+    The third is the one that fired. `LT.03` imports this helper and applies
+    it to `metra-xs`, whose intrinsic reward is a signed dot product
+    `(phi(o2)-phi(o)).z` and is freely negative. Its unflagged late mean went
+    negative, `max(1e-9, ...)` clamped the denominator, and the recorded
+    `metra_chaos_ratio` was -147,365 +/- 100,816 — reproduced here to within
+    0.02% from `fl.mean() = -1.474e-4`. The VOID lane `occ >= 3.0 and
+    ratio >= 2.0` passed only because the numerator happened to be negative
+    too; flip that sign — a quantity ~3,000x SMALLER in magnitude than the
+    denominator, i.e. an arm manifestly NOT fed by the chaos — and the same
+    arm is VOIDed at +147,400. A contamination gate decided by an arithmetic
+    accident is decorative in one direction and libellous in the other.
+
+    A ratio of means only orders magnitudes when the denominator is strictly
+    positive. Outside that domain the lane cannot decide, and "cannot decide"
+    is not "clean" — so callers must read NaN in the REFUSING direction
+    (`not (x >= BAR)`, never `x < BAR`, which NaN passes).
+    """
     r = arm["rewards"]
     if r is None:
-        return 0.0
+        return float("nan")
     half = len(r) // 2
     late = sub_idx >= half
     fl = flags & late
     un = ~flags & late
     if fl.sum() == 0 or un.sum() == 0:
-        return 0.0
+        return float("nan")
     r_sub = r[sub_idx]
-    return round(float(r_sub[fl].mean() / max(1e-9, r_sub[un].mean())), 4)
+    den = float(r_sub[un].mean())
+    if den <= 0.0:
+        return float("nan")
+    return round(float(r_sub[fl].mean()) / max(1e-9, den), 4)
 
 
 # ═══════════════════════ the spec's three callables ════════════════════════
@@ -949,7 +981,17 @@ def _check(m: dict, c: dict):
                              "positionally-invisible gap pair is "
                              "confounded")
         return False
-    if m["chaos_reward_ratio"] < REWARD_RATIO_MIN:
+    if not math.isfinite(m["chaos_reward_ratio"]):
+        m["claim_branch"] = ("the cause gate could not be computed: the "
+                             "flagged-vs-unflagged reward ratio is UNDEFINED "
+                             "(no reward stream, a one-sided late half, or a "
+                             "non-positive unflagged mean) — undefined is not "
+                             "clean, so the fixation is not certified as fed "
+                             "by chaos")
+        return False
+    # NOT `< REWARD_RATIO_MIN`: NaN passes a `<` test silently. The bar is
+    # UNMOVED at 2.0; only the refusing direction changed (2026-09-27).
+    if not (m["chaos_reward_ratio"] >= REWARD_RATIO_MIN):
         m["claim_branch"] = ("fixation not fed by chaos: flagged-vs-unflagged "
                              "intrinsic reward ratio below 2.0")
         return False
