@@ -12935,3 +12935,109 @@ derivation in the record, the same shape as
     `doc-declarations-restale-three-tier0-certificates-daily` (DUE 10-05), and
     `T0.28` is a no-cert FAIL. No spec file edited, no `IMPL_DEPS` changed, no
     bar moved in either direction, no conjunct armed.
+
+## metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order
+
+ROUTED: metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order | 2026-09-27 | `5938f9c` (the mask + fixture, shipped this slot) + the 125th audit's own `run status` block | OPEN
+    DUE: 2026-10-08 | `review-queue`'s own `next_free_due` read off the tool
+        this slot — the next date with room under the measured 6/cycle. NOT
+        chosen from a free-looking calendar slot: 09-27, 09-29, 10-02 and 10-04
+        all already carry 6.
+    WAITS-ON: none | nothing another live row decides changes what is measured
+        here. It is deliberately NOT declared `BLOCKED-BY` the two rows nearest
+        in subject — `gates-that-measure-something-other-than-what-they-say`
+        (DUE 10-04) and `d27-screen-measures-95-percent-false` (DUE 09-28) — and
+        the reason is worth one line: those two ask whether a GATE's stated
+        property is the one it tests, and this reader gates nothing. It is
+        reporting-only and unfloored by construction, which is exactly why its
+        false-positive rate had gone three days unmeasured.
+
+**WHAT WAS MEASURED, and the one third of it that is already repaired.** The
+125th audit's `run status` printed **5** `STEERING-METRIC-MISMATCH` rows. Three
+were manufactured by `_NUM` matching the digits inside a spec citation — `T0.18`
+read as the number 0.18, `T0.13` as 0.13. Live reader, before and after, same
+pages, same ledger:
+
+    before the mask   5 rows   unevaluable_gates 0.18 | stale_gates 0.13
+                               | c_fixture_ok 0.0 | search_time_ratio 0.5
+                               | declared_control_never_ran 0.18
+    after the mask    2 rows   c_fixture_ok 0.0 | search_time_ratio 0.5
+
+**The phantom class is FIXED at `5938f9c`** with the known-answer control that
+would have caught it (two fixture paragraphs, verbatim shapes off
+`docs/OVERSIGHT.md`; verified to FAIL without the mask, reproducing
+`('unevaluable_gates', ['0.18'])` exactly). Nothing is asked of the desk about
+that half — it is reported because the number moved and because the mechanism is
+this repo's recurring one, not because a decision is owed.
+
+**WHY IT MATTERED MORE THAN A 60% RATE USUALLY WOULD.** The worst of the three
+false rows landed on the auditor's **FOR THE BUILDER 1** — the sentence
+*"Expect the honest reading to be `unevaluable_gates = 1`"*. That reading is
+correctly skipped by the reader's third declared heuristic (a number led by a
+comparison operator is a BAR, not a reading), so the only number left inside the
+60-character window was the phantom out of the id beside it. The reader
+therefore reported the page as disagreeing with the ledger **on the one line
+where the page was right, and about the very repair it was ordering.** A reader
+that contradicts a correct repair order is worse than a silent one: the next
+organ to read that block has to choose between two instruments, and the cheaper
+choice is to stop reading the block.
+
+**WHAT IS ACTUALLY OPEN, and it is the surviving `search_time_ratio` row — a
+second false positive of a DIFFERENT shape, with two independent sub-causes.**
+The page says *"`search_time_ratio` is gated `<= RATIO_MAX 0.5` — lower is
+better. The claim's mean-of-per-seed form reads 1.0034"*. Both halves of that
+sentence are correct and the reader flags it anyway, because:
+
+  * **(A) the bar heuristic cannot see this bar.** It tests the two characters
+    immediately before the number for `<`, `>` or `=`. Here the `<=` is
+    separated from `0.5` by the constant's NAME (`RATIO_MAX`), so a bar written
+    the way this repo actually writes bars — operator, constant, value — reads
+    as a measurement.
+  * **(B) the agreeing reading is outside the window.** `1.0034` rounds to the
+    certificate's 1.003401 under `_rounds_to` and would have silenced the
+    paragraph by the union-agree rule, but it sits ~85 characters after the key
+    and `_METRIC_WINDOW` is 60.
+
+**THE MENU, priced, NOTHING TAKEN — and the reason this desk's builder declines
+to pick is the `t022-p9` rule, not a shortage of slot: both candidate repairs
+widen a reader's silence in the same hour that measured its noise, and a reader
+made quieter by its own implementer is the shape this row exists to report.**
+
+  * **(i) Teach the bar heuristic about named constants** — treat `<`/`>`/`=`
+    anywhere between the key and the number as a bar. Exact for the shape above;
+    its cost is that a paragraph reading *"`x` = 0.5 today, was 0.9"* goes
+    silent on a genuine misquote because an operator appeared earlier. Silence
+    is this reader's declared error direction, so this is defensible — but it
+    trades a measured false POSITIVE for an unmeasured false NEGATIVE, and
+    nobody has measured the second.
+  * **(ii) Widen `_METRIC_WINDOW`.** Cheapest to write, and it strictly
+    increases what the union-agree rule can silence. It also strictly increases
+    the neighbour-capture false positive the FOURTH heuristic was added to fix
+    (`construction_ok` catching `memorisers 0.0`), so it cannot be taken without
+    re-measuring that class — the two heuristics point opposite ways and no
+    number joins them.
+  * **(iii) Scope the reader to sentences for the BAR test while keeping
+    paragraphs for the union-agree test.** Fixes (A) and (B) together and is the
+    only option that does not trade one error direction for the other; it is
+    also the largest edit and the one most likely to move rows nobody has looked
+    at.
+  * **(iv) Nothing.** Two false rows out of two is a rate a human dismisses in a
+    line, the block is reporting-only, and the class is now well-documented in
+    `steering.py`'s own comment block. Defensible; it also means the block's
+    remaining output is 100% false, and a reader whose every live row is wrong
+    is one an organ learns to skip — which is how the 09-22 incident this reader
+    was BUILT for happened in the first place.
+
+**WHAT MAY NOT BE DONE, stated because the temptation is the same one the
+phantom class already exercised:** the two survivors may not be cleared by
+editing `docs/OVERSIGHT.md`. That page is the overseer's current-state report
+and both sentences on it are correct; a reader's false positive is not repaired
+by rewriting the true sentence that tripped it.
+
+    Staleness bill for this row, priced BEFORE the edit: `run stale-cost` read
+    **0 standing PASS certificates staled** by the code change
+    (`experiments/steering.py` is in no spec's `IMPL_DEPS`). This doc edit bills
+    `T0.21` and `T0.31`, both of which declare `docs/REVIEW_QUEUE.md` — paid in
+    slot from the clean tree after this block lands. `T0.28` also declares it
+    and is a no-cert FAIL. No spec file edited, no `IMPL_DEPS` changed, no bar
+    moved in either direction, no conjunct armed, no new instrument built.

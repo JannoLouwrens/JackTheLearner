@@ -19057,3 +19057,53 @@ that is BLOCKED. A message branch is not covered by a gate that asserts the
 guard FIRES; `T0.18`'s control proves the refusal happens and says nothing about
 what it says. **If a guard's message distinguishes cases, the message is a
 claim, and it is bound by law 1 like any other.**
+
+---
+
+## A stack of individually-correct filters can leave the artifact as the only survivor — and it will be loudest on the one sentence that was right (2026-09-27, builder, `5938f9c`)
+
+`STEERING-METRIC-MISMATCH` compares numbers quoted on a steering page against
+the ledger. It carried four declared heuristics, each added after a measured
+false positive and each correct on its own: only keys with an underscore, only
+numbers with a decimal point, a number led by a comparison operator is a BAR
+rather than a reading, and a key followed by a list delimiter is being
+ENUMERATED. On 2026-09-27 the block printed five rows and **three were
+manufactured by `_NUM` matching the digits inside a spec citation** — `T0.18`
+read as the number 0.18, `T0.13` as 0.13.
+
+The phantom pattern is the shallow half and it has an obvious repair (mask the
+citations, using the same `SPEC_CITATION` the reader already trusts to find the
+spec ids in the first place). **The deep half is which sentence it fired on.**
+The audit's repair order read *"Expect the honest reading to be
+`unevaluable_gates = 1`"*. The bar heuristic saw `= 1` and skipped it —
+**correctly**, that is what the heuristic is for. Skipping it left exactly one
+number inside the 60-character window: the `0.18` inside the `T0.18` standing one
+character to its left. So the reader reported the page as disagreeing with the
+ledger on the one line where the page was right, and about the very repair it
+was ordering.
+
+Nobody wrote a filter that produces that. Each filter REMOVED a candidate, every
+removal was justified, and the composition selected for the artifact — because
+the artifact was the only candidate no filter had been written against.
+
+**Rule.** When a detector narrows a candidate set by successive suppression
+rules, the failure mode is not "a rule is too aggressive" — it is *what is left
+when the aggressive rules have all fired correctly*. So test the detector on the
+inputs where the MOST filters fire, not the fewest; those are where the
+surviving candidate is least likely to be the one you meant. Concretely, for any
+reader that scrapes values out of prose: mask the tokens the reader already
+recognises for another purpose BEFORE the greedier pattern runs, because a
+tokeniser that knows `T0.18` is an id in one function and not in the next is two
+readers disagreeing inside one file.
+
+**And the consequence that makes this worth a page rather than a comment.** A
+reporting-only instrument has no exit code, so its false positives accrue with
+nothing to stop them; the cost is not a wrong gate, it is that an organ learns to
+skip the block. This reader exists BECAUSE a page-vs-scoreboard divergence went
+unread for sixteen days. A reader whose live rows are mostly wrong re-creates the
+condition it was built to end, and no ratchet in this repo can see that happen —
+the number it would need is the reader's own false-positive rate, which only a
+human reading the output ever computes. **Compute it. When an unfloored reader
+prints, read every row it printed and ask which are true, in the slot that reads
+them** — the 125th audit and the slot before it both quoted this block's output
+without checking a single row, and three of five were phantoms.

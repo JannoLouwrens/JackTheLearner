@@ -21425,3 +21425,150 @@ error, because it is this slot's own lesson pointed at me: `entries_seen` and
 `verdicts_rejudged` answer different questions — *how many did you look at* and
 *how many did you actually re-derive* — and I read the first number off the line I
 had just written while quoting it as the second.
+
+## 2026-09-27 ~13:0x UTC — the metric reader was 60% false and one of its three phantoms landed on the auditor's own repair order; live rows 5 -> 2, with the known-answer control that fires without the repair
+
+**MODEL: opus.** Meters read off the tool at the top of the slot, both lines
+printed, and I name the one I act on: **`week:all models` 83%** — the gate — with
+`week:Fable` at 95% and the session at 3%. Fable near its cap is why this slot is
+Opus; that is self-announcing and not a fault. 83% is seven points of headroom on
+a meter this page may not model, so the unit was chosen SMALL and FINISHED rather
+than large and handed forward.
+
+**THE BOARD, read from the tools and not from any page.** `run next`: **0 fresh**
+of 51 runnable (37 carrying a settled verdict, 14 held) — the empty board again.
+`run review-queue`: 57 OPEN / 3 HELD / 21 DISPOSITIONED at slot start. And I
+checked the four things the steering pages hand me BEFORE picking, because three
+of them turned out to be already discharged:
+
+  * **`OVERSIGHT.md` FOR THE BUILDER 1-3 are DONE** — shipped by the 12:0x slot at
+    `53bb135` (the CLI's inherited self-exclusion, the constant `return 0`, the
+    dead message branch). Item 4 is a prohibition and I obeyed it: `T0.18` was not
+    re-run and nothing was re-run to clear RANK 2.
+  * **`PROGRESS.md` FOR THE BUILDER 2 names two rows as waiting on me and both are
+    already delivered.** `hash-salt-lottery-in-a-gated-metric` carries a
+    BUILDER-TRACE from 01:2x this morning proving it — measurement at `19aab39`,
+    implementation at `5ee32ff` — and the desk re-dated it to 10-09 anyway;
+    `t215-router-under-lexical-null` is the same misattribution, and `T2.15`'s
+    null-beat conjunct is already promoted in its `falsified_by`. **This is the
+    second consecutive slot to lose time to `OVERDUE` being unable to distinguish
+    delivered-and-unstamped from undelivered.** I did not re-do either.
+  * **`PROGRESS.md` FOR THE BUILDER 4 is discharged** — probe C reads 0 since
+    `eba3e58`.
+  * **THE PS-FAMILY IS EXPLICITLY NOT MINE TODAY, and I nearly took it.** `1^13`
+    units 1-3 order the legibility conjunct into `PS.05`/`PS.06`/`PS.08`, and
+    `PS.05` looked ready — its PROBE RECORD already measures the zero-parameter
+    known-answer ceiling at **0.9994 worst seed** against the registered probe's
+    **-1.1264**. But `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`
+    (OPEN, DUE 10-03) puts the sibling inheritance **ON HOLD** in words —
+    *"PS.05/PS.06/PS.08 inheritance is ON HOLD by the ruling's own sequencing"* —
+    pending the Review's clauses (a) and (b), and shipping part 1 means DECLARING
+    A FLOOR, which is a threshold act `1^13` routes back here by name. **Read the
+    hold before the order.** Nothing was edited in any PS spec.
+
+**SO THE UNIT CAME FROM READING AN INSTRUMENT'S OUTPUT INSTEAD OF INHERITING ITS
+SUMMARY.** `run status` printed **5** `STEERING-METRIC-MISMATCH` rows. Three of
+them were `_NUM` matching the digits inside a spec citation:
+
+    unevaluable_gates           says 0.18  <- `T0.18(KeyError)`
+    stale_gates                 says 0.13  <- `T0.13`
+    declared_control_never_ran  says 0.18  <- `T0.18`'s `_check`
+
+Measured on the live pages, same ledger, mask off then on: **5 rows -> 2**, the
+three that vanish are exactly those, both survivors untouched.
+
+**THE PART WORTH MORE THAN THE RATE, and it is why this was not cosmetic.** The
+worst phantom fired on the audit's **FOR THE BUILDER 1** — *"Expect the honest
+reading to be `unevaluable_gates = 1`"*. The bar heuristic saw `= 1` and skipped
+it, **correctly**; that removal left the `0.18` out of the id beside it as the
+only number in the 60-char window. **The reader contradicted the page on the one
+line where the page was right, and about the repair it was ordering.** No filter
+produces that on its own: each of the four declared heuristics removed a
+candidate, every removal was justified, and the composition selected for the one
+candidate nobody had written a filter against. Generalised in `LESSONS.md`:
+**test a suppression-stack on the inputs where the MOST filters fire** — and, for
+any reader scraping values out of prose, mask the tokens the reader already
+recognises for another purpose before the greedier pattern runs, because a
+tokeniser that calls `T0.18` an id in one function and a number in the next is
+two readers disagreeing inside one file.
+
+**THE CONTROL, because a repair with no known-answer test is a promise.** Two
+fixture paragraphs added to `_METRIC_FIXTURE`, verbatim shapes off
+`docs/OVERSIGHT.md`: the auditor's repair order (must stay SILENT) and a real
+misquote standing beside a citation (must still FIRE, so the mask is proven not
+to be a blanket silencer of numbers near an id). Verified in a child process with
+`_mask_citations` stubbed to identity that the fixture **FAILS without the
+repair**, reproducing the live phantom exactly — got
+`('unevaluable_gates', ['0.18'])` where want has no such row. `steering._check()`
+runs on every `run status`, so this is enforced hourly rather than asserted here.
+
+**WHAT I MEASURED AND DID *NOT* FIX, routed instead.** The surviving
+`search_time_ratio` row is a second false positive of a different shape with two
+independent sub-causes: the bar heuristic tests only the two characters before
+the number, so `<= RATIO_MAX 0.5` — operator, constant, value, the way this repo
+actually writes bars — reads as a measurement; and the agreeing figure `1.0034`
+(which rounds to the certificate's 1.003401) sits ~85 chars away, outside
+`_METRIC_WINDOW` 60. Both candidate repairs make a reader QUIETER in the hour
+that measured its noise, and widening the window re-opens the neighbour-capture
+class the fourth heuristic was added to close — the two heuristics point opposite
+ways and no number joins them. Four options priced, **nothing taken**, under the
+`t022-p9` rule. Row:
+`metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order`,
+DUE **2026-10-08** (`next_free_due` off the tool — 09-27, 09-29, 10-02 and 10-04
+all already carry 6), `WAITS-ON: none` with the reason written.
+
+**BILL, priced before each edit and paid in slot.** Code: `run stale-cost` read
+**0 standing PASS certificates staled** — `experiments/steering.py` is in no
+spec's `IMPL_DEPS`. Docs: **T0.21 (cpu<1min) + T0.31 (cpu<10min), 1 slot**, both
+declaring `docs/REVIEW_QUEUE.md`; `T0.28` also declares it and is a no-cert FAIL.
+Re-bought from the clean tree after the doc commit, so no `+dirty` stamp — the
+two rows in `! DIRTY STAMPS` are still the `T6.03`/`PL.02` pair that was there
+when this slot began.
+
+**INSTRUMENTS AT COMMIT.** `coverage` **2**, `verify` **2**, `ratchets` **2**,
+`status` **2**, `decisions --check` **1**, `champions --check` **0**,
+`review-queue` **0 with 0 violations**. Every red is pre-existing and none is
+mine: `verify`'s 2 is the honest `unevaluable_gates 1` the 12:0x slot bought and
+which FTB 4 forbids me to clear; the three floors ABOVE
+(`decisions_default_action_expired`, `pass_on_dead_dependency`, `unreachable`)
+all predate this slot. Ratchet slot line, quoted BEFORE any record: *6 MOVED
+(fail_unowned_owned_forms queue-row 29 -> 30, review_queue_net_arrivals 26 -> 32,
+review_queue_piled_on 3 -> 4, review_queue_violation_forms {'OVERDUE': 1} -> {},
+review_queue_violations 1 -> 0, unreachable 95 -> 96); 1 day-rolled; floors 3
+ABOVE, 0 BELOW, 0 UNVERIFIED.* **One point of that is mine and I name it:**
+`review_queue_net_arrivals` was **31** at slot start and is **32** — the single
+row I routed. The other five predate this slot and are the 125th audit's own
+readings. **`ratchets record` was NOT run**, because it would bless five
+movements I did not cause and cannot bless the three floors anyway.
+
+**CREATURE GATE: NONE — RECORDED VIOLATION #2 of the second run under `D35`
+rule 3, and I am recording it rather than discharging it.** Of
+`T2.01`/`XL.01`/`T6.01`: `T2.01` is settled FAIL with both repair lanes
+desk-owned and prohibited to me by name; `T6.01` is unimplemented behind
+`T4.05 <- T4.04 <- T2.01 <- T1.08` (FAIL); `XL.01` is a settled FAIL run
+yesterday morning. The rule therefore resolves mechanically to *re-run a settled
+FAIL*, which `run next` forbids and which the standing prohibition on
+run-until-pass forbids in general. The live row is
+`freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-failing-spec`
+(OPEN, DUE 10-07) and the 125th audit's FOR THE OWNER item 2 carries three
+one-line repairs, none ruled. **A quota satisfiable only by an act two standing
+rules forbid is not met by trying harder**, and the previous run of this reached
+20 consecutive recorded violations.
+
+**NEXT ITERATION.** `T0.32` is still the one live unclaimed spec unit and I
+priced it without taking it: `run blast-radius T0.32` reads **PASS -> FAIL,
+unreachable 96 -> 96, BLAST RADIUS none** — so the demotion costs no reachability
+and grows no floor. Read the spec's own note first, because it changes what the
+run MEANS: the 09-26 commit that declared `experiments/run.py` wrote *"the
+reading is still FAIL and it is deliberately not meant to be green"*, and I
+confirmed the mechanism — all **9** quoted `cpu<`/`gpu<` literals in `run.py`
+today sit inside self-test fixtures, which is the false positive routed as
+`t032-single-source-proxy-fires-on-self-test-literals` (OPEN, DUE 10-06, the
+desk's scope decision). So the re-buy is honest and owed, and it records a red
+whose measured cause is an over-broad proxy — say that in the row's commit, do
+not treat it as a finding about the RTF gate. **GPU: `2026-W39` still has 30.0 h
+charged 0.00, expiring Saturday 2026-10-03, every class NOT FILLABLE. Third
+consecutive week. Do not manufacture a dispatch.** And the pattern from the last
+five slots held a fifth time: **when the board is empty, read a live
+instrument's own output row by row — the errors keep turning up in what the
+organs quote at each other.**
