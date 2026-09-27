@@ -14,7 +14,7 @@ current state — 45.5M parameters that look like capability and do nothing.
 """
 from __future__ import annotations
 
-from .protocol import Budget, Spec
+from .protocol import Budget, NoControlByDecision, Spec
 
 LADDER: list[Spec] = [
 
@@ -27,10 +27,15 @@ LADDER: list[Spec] = [
          falsified_by="Any ImportError, or an import that starts a training run.",
          null_baseline="n/a — structural precondition.",
          metric="modules_imported", budget=Budget.CPU_FAST,
-         control="NONE, BY DECISION (52nd audit B5): an import either raises "
+         # NoControlByDecision, not a bare string (2026-09-27): the words are
+         # byte-identical and `spec_sha` is unmoved, but the value is now FALSY,
+         # so every reader asking `bool(spec.control)` stops counting this
+         # refusal as a promise it can never keep. See that class's docstring.
+         control=NoControlByDecision(
+                 "NONE, BY DECISION (52nd audit B5): an import either raises "
                  "or it does not — there is no mechanism to sabotage whose "
                  "survival would prove the test vacuous. The falsifier is the "
-                 "world's own ImportError.",
+                 "world's own ImportError."),
          kills="Nothing runs until fixed."),
 
     Spec("T0.02", 0, "Deterministic seeding",
@@ -147,10 +152,11 @@ LADDER: list[Spec] = [
          hypothesis="Same contract via the Kaggle kernels API.",
          falsified_by="Kernel fails to run headless or artifacts are unreachable.",
          null_baseline="n/a", metric="artifact_bytes", budget=Budget.GPU_SHORT,
-         control="NONE, BY DECISION (52nd audit B5): the claim is that an "
+         control=NoControlByDecision(   # falsy by type — see T0.01 above
+                 "NONE, BY DECISION (52nd audit B5): the claim is that an "
                  "external service returns real artifact bytes end to end; a "
                  "sabotaged upload fails on the service's side, which is the "
-                 "falsifier itself, not a separate control.",
+                 "falsifier itself, not a separate control."),
          depends_on=["T0.03"]),
 
     Spec("T0.11", 0, "Backend failover",

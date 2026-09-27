@@ -1479,54 +1479,82 @@ class UndeclaredControl(RuntimeError):
     """
 
 
-#: The one form of `Spec.control` that declares a control's ABSENCE rather than
-#: promising one. Written into the field on purpose by the 52nd audit's B5
-#: (`T0.01`, `T0.10`) instead of setting `control=None`, because `None` reads
-#: identically to "nobody thought about it" — the exact 19-entry rot
-#: `UndeclaredControl` was written to stop. A refusal that names its authority
-#: and its reason is MORE audit surface than a null, not less, and the readers
-#: are what had to learn it.
-CONTROL_REFUSAL_PREFIX = "NONE, BY DECISION"
+class NoControlByDecision(str):
+    """`Spec.control` declaring a control's ABSENCE, and WHY — falsy on purpose.
 
-#: A refusal must carry a reason. The bare token is a word, not a decision, and
-#: `Spec.control = "NONE, BY DECISION"` with nothing after it would be an
-#: exemption anybody could type — so the predicate below demands the prefix AND
-#: a justification behind it. Both live sites carry one ("(52nd audit B5): …").
-_REFUSAL_MIN_REASON = 12
+    ## The defect this exists to remove, measured before it was written
+
+    The 52nd audit's B5 amended `T0.01` and `T0.10` from `control=None` to
+    `control="NONE, BY DECISION (52nd audit B5): …"`, and that was the right
+    act: `None` reads identically to *"nobody thought about it"*, which is the
+    19-entry rot `UndeclaredControl` below exists to stop. A refusal that names
+    its authority and its reason is MORE audit surface than a null.
+
+    But a non-empty string is TRUTHY, and both readers of this field asked
+    `bool(spec.control)` — *"is the field non-empty?"* — where the question is
+    *"was a control PROMISED?"*. So `verify.scan`'s probe C reported
+    `declared_control_never_ran = 2`, *two safeguards promised and never run*,
+    about the two specs on this ladder that promise none, against a `T0.18`
+    gate that demands 0. **The repair that made the decision legible to a
+    human is what made it illegible to the instrument** — and for 27 days
+    `run verify` printed `controls declared but never run  2` and exited 0.
+
+    ## Why a VALUE and not a string match
+
+    `docs/REVIEW_QUEUE.md`'s `t018-explicit-no-control-reads-as-an-unrun-
+    promise` (routed by the builder 2026-09-26) priced four repairs and this is
+    its option (i). Its option (ii) — teach the readers the PROSE idiom, skip a
+    `control` whose text starts `NONE, BY DECISION` — was named there *"so it
+    is refused on the record rather than by silence"*, because it yields **a
+    detector that can be switched off by writing a sentence**. That objection
+    is correct and it is decisive: a guard whose exemption is claimable by
+    typing the right words into the field it guards is not a guard.
+
+    A subclass of `str` whose `__bool__` is False answers both needs at once
+    and narrows no detector:
+
+      * **Every truthiness reader in the repo becomes correct with no edit.**
+        `bool(spec.control)` is False, so probe C, the pre-compute guard, and
+        anything written later all read "no control promised" without knowing
+        this class exists. Nothing is string-matched anywhere.
+      * **The reason stays on the record and stays greppable.** It IS the
+        string — it prints, serialises, and hashes exactly as before, so
+        `SPEC_CLAIM_FIELDS` sees no change and no certificate is staled by the
+        type (verified: `spec_sha_of` for `T0.01`/`T0.10` unmoved at
+        `64f564bba0a5a202` / `1a2e392382041a3d`).
+      * **The exemption cannot be claimed by prose.** It is claimed by
+        constructing this class in `registry.py`, which is a diff a reader sees.
+
+    Use `is_control_refusal` / `declares_a_control` below rather than testing
+    the type at a call site, so the notion has ONE definition. The two readers
+    that must never disagree about this field — `run_spec`'s guard and probe C
+    — both go through them.
+    """
+
+    def __bool__(self) -> bool:                      # noqa: D105
+        return False
+
+    def __repr__(self) -> str:                       # noqa: D105
+        return f"NoControlByDecision({str.__repr__(self)})"
 
 
 def is_control_refusal(declaration: Optional[str]) -> bool:
-    """Does this `Spec.control` declare that there is NO control, with a reason?
+    """Does this `Spec.control` DECLARE that there is no control?
 
-    ONE predicate, deliberately shared by the two readers that must not
-    disagree — `run_spec`'s pre-compute guard below and `verify.scan`'s probe C.
-    They were allowed to disagree until 2026-09-27 and the cost was a measured
-    false positive in the only instrument that re-judges the record: probe C
-    counted `T0.01` and `T0.10` as *"a control promised and never run"* because
-    a refusal string is truthy, reading `declared_control_never_ran = 2` against
-    a gate that wants 0, while the same truthiness let those two specs past the
-    guard that refuses an undeclared control. One field, two readers, opposite
-    errors — so the notion is defined once here and imported, not re-expressed.
-
-    NOT a loose match. Anchored at the start and case-sensitive, so a
-    declaration that merely MENTIONS the words ("the control is NONE of the
-    above…") is still a promise, and a reason is required so the exemption
-    cannot be claimed by typing the token alone.
+    An identity question, not a text question: exactly the declarations built
+    as `NoControlByDecision`. A spec whose prose merely says "none" is still a
+    promise, which is the point — see that class's docstring.
     """
-    if not declaration:
-        return False
-    s = declaration.strip()
-    if not s.startswith(CONTROL_REFUSAL_PREFIX):
-        return False
-    return len(s) >= len(CONTROL_REFUSAL_PREFIX) + _REFUSAL_MIN_REASON
+    return isinstance(declaration, NoControlByDecision)
 
 
 def declares_a_control(declaration: Optional[str]) -> bool:
     """True when `Spec.control` PROMISES a control — the audit-surface question.
 
-    `bool(spec.control)` is what both readers used to ask, and it answers a
-    different question: "is this field non-empty?". A field holding an explicit
-    refusal is non-empty and promises nothing.
+    Named so the two readers ask one question in one place. The `bool()` half
+    carries it (the refusal class is falsy); the `isinstance` half is belt and
+    braces, so a future refusal form that forgets `__bool__` is still read as a
+    refusal here rather than silently becoming a promise again.
     """
     return bool(declaration) and not is_control_refusal(declaration)
 

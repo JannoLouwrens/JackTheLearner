@@ -64,9 +64,18 @@ Three probes, and they fail differently.
      reported `declared_control_never_ran = 2` — *two safeguards promised and
      never run* — about two specs that promise nothing, against a `T0.18` gate
      that wants 0, and the number sat in `PROGRESS.md` as a standing red with
-     nobody able to clear it without moving a threshold. The bar did not move:
-     the PREDICATE did, to `protocol.declares_a_control`, shared with the
-     runner's pre-compute guard so the two readers of one field cannot drift.
+     nobody able to clear it without moving a threshold.
+
+     THE BAR DID NOT MOVE AND NO DETECTOR HERE WAS NARROWED. The two refusals
+     are now `protocol.NoControlByDecision`, a `str` subclass that is FALSY, so
+     `bool(...)` answers the question it was always asking and answers it
+     correctly. This probe reads `protocol.declares_a_control` — shared with
+     the runner's pre-compute guard, so the two readers of one field cannot
+     drift — and that function is an identity test, never a text match. The
+     queue row `t018-explicit-no-control-reads-as-an-unrun-promise` priced the
+     text-match repair as option (ii) and named it to be REFUSED: an exemption
+     claimable by typing a sentence into the field under audit is not an
+     exemption, it is a switch. This is that row's option (i).
 
      And narrowing a detector's population is a weakening unless the same edit
      closes what it opens, so it does, in BOTH places: an entry whose
@@ -90,7 +99,7 @@ import importlib
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional
 
-from .protocol import (CONTROL_REFUSAL_PREFIX, Ledger, Status,
+from .protocol import (Ledger, NoControlByDecision, Status,
                        coerce_check_return, declares_a_control)
 
 #: Marker for the one entry a scan may legitimately not judge: its own.
@@ -350,12 +359,15 @@ def _fixture_tuple_return(m, c):
         else (False, "below bar")
 
 
-#: The live refusal declarations' shape, reproduced for the fixture from the
-#: SHIPPED prefix rather than retyped — a fixture carrying its own copy of the
-#: string would keep passing after somebody edited the constant.
-_REFUSAL = (CONTROL_REFUSAL_PREFIX + " (fixture): the mechanism has nothing "
-            "to sabotage, and the reason is recorded here rather than in a "
-            "null field.")
+#: The live refusal declarations' SHAPE, built through the shipped class rather
+#: than imitated — `T0.01`/`T0.10` construct exactly this, so the fixture
+#: exercises the real thing and cannot keep passing after somebody changes what
+#: a refusal is. Deliberately NOT a bare string starting "NONE, BY DECISION":
+#: prose is not what earns the exemption, and a fixture that pretended otherwise
+#: would be certifying the repair this file refused (option (ii), see the class).
+_REFUSAL = NoControlByDecision(
+    "NONE, BY DECISION (fixture): the mechanism has nothing to sabotage, and "
+    "the reason is recorded here rather than in a null field.")
 
 
 def fixture() -> List[Entry]:

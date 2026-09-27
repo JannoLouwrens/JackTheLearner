@@ -58,11 +58,22 @@ about the two specs on this ladder that promise none, and this gate wants 0.
 argument:** `declared_control_never_ran` **2**, `declared_never_ran_detail`
 `"T0.01, T0.10"`, over 107 entries / 106 re-judged. **AFTER: 0**, with both ids
 still counted, in `no_control_specs`. No threshold moved in either direction;
-`UNDECLARED_CONTROL_BUDGET` is still 0 and this gate still demands 0. What moved
-is the PREDICATE, to `protocol.declares_a_control`, which the runner's
-pre-compute guard now reads too — one field had two readers making opposite
-errors off the same truthiness, and a notion expressed twice is a notion that
-drifts.
+`UNDECLARED_CONTROL_BUDGET` is still 0 and this gate still demands 0.
+
+What moved is the VALUE: the two refusals are now `protocol.NoControlByDecision`,
+a `str` subclass that is FALSY, so `bool(spec.control)` answers the question it
+was always asking — *"was a control promised?"* — and answers it correctly, with
+the reason still printing, grepping and hashing exactly as before
+(`spec_sha_of` unmoved for both, `64f564bba0a5a202` / `1a2e392382041a3d`, so no
+certificate is staled by the type). **No detector is narrowed and nothing is
+string-matched.** The queue row `t018-explicit-no-control-reads-as-an-unrun-
+promise` (routed by the builder 2026-09-26) priced the text-match repair as its
+option (ii) and named it to be refused, because a detector that can be switched
+off by writing a sentence into the field it audits is a switch and not a
+detector. That objection is right; this is that row's option (i). Both readers
+of the field — the runner's pre-compute guard and probe C — go through
+`declares_a_control`, because a notion expressed twice is a notion that drifts,
+and this one had already drifted into two opposite errors off one truthiness.
 
 **Narrowing a detector's population is a weakening unless the same edit closes
 what it opens, so two things are armed here rather than one.** A declaration
@@ -80,7 +91,7 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-from ..protocol import (CONTROL_REFUSAL_PREFIX, Budget, Ledger, Spec, Status,
+from ..protocol import (Budget, Ledger, NoControlByDecision, Spec, Status,
                         UndeclaredControl, run_spec)
 from ..registry import BY_ID
 from ..verify import UNDECLARED_CONTROL_BUDGET, collect, fixture, scan
@@ -152,8 +163,9 @@ def _guard_probe() -> dict:
         # shared predicate that only one side is tested on is one predicate
         # short of the two readers it is supposed to keep in step.
         try:
-            run_spec(_spec(CONTROL_REFUSAL_PREFIX + " (throwaway): nothing to "
-                           "sabotage in a two-line fixture."),
+            run_spec(_spec(NoControlByDecision(
+                         "NONE, BY DECISION (throwaway): nothing to sabotage "
+                         "in a two-line fixture.")),
                      _fn, _chk, control_fn=_ctl, ledger=led)
         except UndeclaredControl:
             out["refused_refusal"] = 1.0
