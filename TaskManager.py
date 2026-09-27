@@ -390,12 +390,37 @@ class TaskManager:
         """
         Decompose a high-level command into subtasks.
 
-        Priority:
-        1. Check known task templates
-        2. Check simple commands
-        3. Use API LLM to decompose (if available)
-        4. Use HierarchicalPlanner (if trained)
-        5. Fallback: treat entire command as single subtask
+        WHAT THIS FUNCTION ACTUALLY DOES, in the order it does it. The list
+        below used to read `4. Use HierarchicalPlanner (if trained)`, and that
+        line was false in two independent ways (measured 2026-09-27): the name
+        `HierarchicalPlanner` has ZERO AST Name/Attribute references anywhere in
+        this file outside the `from UnifiedBrain import` line, and
+        `UnifiedBrainConfig`'s shipped default is
+        `enable_hierarchical_planner=False` (UnifiedBrain.py:232 — "37.2M —
+        larger than the backbone"), so the object that line named is `None` in
+        the configuration this repo runs. No learned decomposition path has ever
+        been reachable from here.
+
+        1. `KNOWN_TASKS`         hand-written table, 5 keys / 37 typed steps
+        2. `SIMPLE_COMMANDS`     hand-written table, 9 keys / 9 typed steps
+        3. `_decompose_with_llm` the out-of-process parent LLM (GOAL.md:148)
+        4. `_decompose_keywords` hand-written patterns, 4 families / 10 triggers
+        5. the command itself, as a single subtask
+
+        Three of the five branches are tables somebody typed, one is the parent,
+        and none of them is Jack. That is a fact about this function and not a
+        complaint: what Jack does UNPROMPTED does not come through here at all
+        (`_idle_tick` delegates to the brain, and the autotelic goal generator
+        samples a learned prior — neither reads these tables). What IS worth
+        knowing is that (1) outranks (3) while `KNOWN_TASKS`' own comment reads
+        "used when LLM is unavailable" — the table wins even when the LLM is
+        there, and `"explore the room"` resolves to a 7-waypoint itinerary.
+
+        Whether that ordering is right, and whether the planner should be wired,
+        are ROUTED as `taskmanager-decompose-documents-a-learned-path-with-no-
+        call-site`. Both are architecture acts. Do not quietly change either,
+        and do not restore the old line: it is the founding disease of this repo
+        (GOAL.md:61, "A README saying 'Working' is not learning") in a docstring.
         """
         cmd_lower = command.lower().strip()
 

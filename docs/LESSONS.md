@@ -19686,3 +19686,90 @@ by building a prohibition checker or a new ratchet: freeze clause 2 forbids the
 organ, and a regex over owner prose manufactures the `STEERING-METRIC-MISMATCH`
 false-positive class measured at 60%. The deliverable is a routed row with the
 arithmetic in it, which is what a desk can rule on.
+
+---
+
+## A DOCSTRING THAT ENUMERATES A PRIORITY ORDER IS A CAPABILITY CLAIM ABOUT
+## CONTROL FLOW — and pinning a file's bytes into a certificate makes its false
+## sentences DURABLE rather than visible
+## (builder, 2026-09-27 23:xx; third run of the negative-sentence sweep, on one
+## of the five root modules pinned into `T0.01` twenty-four hours earlier)
+
+**Report the miss first, because the miss is the news.** The sweep's first two
+runs hit (typed character; the 1.7B grandchild). The third picked `GOAL.md:21-23`
+*"not from a curriculum we write, but from curiosity we give him"* and
+`GOAL.md:33` *"Nobody scripts 'ladder lesson' or 'swim lesson'"* — and **came
+back CLEAN.** `TaskManager._idle_tick`, the actual no-task no-instruction path,
+reads no table at all; `AutotelicGoalGenerator` samples a learned prior or a
+progress-ranked bank; and every hand-written decomposition in the repo is
+reachable only from `set_task(command)`, whose two call sites are a human typing
+a chat message — which `GOAL.md:141` *"Their words are teaching"* permits in
+terms. **So the sweep is 2 hits and 1 clean in 3, and that number is worth more
+than a third hit would have been:** a sweep that only ever reports hits cannot
+state its own rate, and a method with no measured miss rate is indistinguishable
+from a method that finds what it went looking for.
+
+**And the clean check is what produced the finding.** Walking the instructed path
+to prove it was NOT the curiosity path is what made `_decompose` legible, and
+`_decompose`'s docstring said this:
+
+    Priority:
+    1. Check known task templates
+    2. Check simple commands
+    3. Use API LLM to decompose (if available)
+    4. Use HierarchicalPlanner (if trained)      <-- no call site, no object
+    5. Fallback: treat entire command as single subtask
+
+**The first generalisation: a documented PRIORITY ORDER is a claim about which
+code paths exist, and law 1 binds it exactly like a README status table.** Item 4
+was false in two independent ways. `HierarchicalPlanner` has **zero** `ast`
+Name/Attribute references in the whole 849-line file outside the
+`from UnifiedBrain import` line, and `UnifiedBrainConfig`'s shipped default is
+`enable_hierarchical_planner=False`, so the object it names is `None` in the
+configuration this repo runs. Of the five branches the function really has, three
+are tables somebody typed (5+9 keys, 46 hand-typed steps, 4 keyword families),
+one is the out-of-process parent, and **none is Jack**. This is
+`GOAL.md:61` — *"A README saying 'Working' is not learning"* — in a docstring,
+which is the founding disease of this repository with a different file extension.
+
+**The second, and it is a method rule you can apply today: when the question is
+"is this path reachable", ASK THE AST, NOT THE TEXT.** `grep -c
+HierarchicalPlanner TaskManager.py` returns **2** and reads like wiring; the AST
+returns **0** references. The two textual hits are the import and the false
+docstring line itself — so the grep's evidence for the path existing *was the
+false claim about the path*. A name inside a docstring is a mention; a name in a
+`Call` or `Attribute` node is a path. Any organ here that establishes wiring by
+`grep` is one docstring away from confirming a path that does not exist, and this
+repo already has the sibling lesson for citations (*"a routing that exists only
+in a commit message is not a routing"*) and for declarations (*"'named in no
+spec's IMPL_DEPS' is a question for the declaration reader, not for a grep"*).
+This is the third member of that family and the narrowest: **the text that
+mentions a mechanism is disproportionately likely to be the text that lies about
+it, because that is what lying about it consists of.**
+
+**The third: PINNING BYTES PRESERVES FALSE SENTENCES.** `TaskManager.py` is named
+in exactly one spec's `IMPL_DEPS` — `T0.01 Repo imports clean`, which added the
+five root modules on 09-27 — so this docstring edit bills three certificates
+while the defect it removes was invisible to all of them. Every staleness
+instrument here (`impl_sha`, `STALE CLAIMS`, `stale-cost`, `verify`) answers *did
+these bytes move since the run?*; **not one answers *is what this file says about
+itself true?*** The repair that pinned the bytes therefore made the false
+sentence load-bearing: change it and you owe three re-buys, leave it and nothing
+ever complains. That is yesterday's entry — *"a coverage census answers which
+bytes are PINNED, never which bytes are TESTED"* — arriving as a measured
+instance inside 24 hours, on a file that repair covered. **A pin is not a test,
+and the cost of editing a pinned file is a mild incentive not to correct it.**
+
+**The rule.** Keep running the negative-sentence sweep, and report its CLEAN
+results with the hits. When a clean result walks you past an adjacent
+mechanism, read that mechanism's prose against its AST — the cheapest capability
+claim in any repository is a docstring, and it is the only one nothing here
+audits. **Do NOT answer this by building a docstring checker**: freeze clause 2
+forbids the new organ, and a regex over prose manufactures the
+`STEERING-METRIC-MISMATCH` false-positive class measured at 60%. The deliverable
+is the prose-only correction (verify it by comparing docstring-stripped ASTs
+across the diff, then pay the re-buy in slot) plus a routed row carrying the
+behavioural questions you must NOT decide — here, whether the hand-written table
+should keep outranking the LLM while its own comment says it is *"used when LLM
+is unavailable"*, and whether `T3.04 Ablate the hierarchical planner` should
+finally run and make 37.2M parameters earn or lose their place.

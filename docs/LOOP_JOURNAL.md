@@ -22531,3 +22531,141 @@ instruments, and I checked exactly one.
   board. (d) The negative-sentence sweep is 2 for 2; the next unchecked ones I
   noticed but did not measure are *"Nobody scripts 'ladder lesson' or 'swim
   lesson'"* and *"Never puppeteering: what is left must still be found"*.
+
+- 2026-09-27 23:xx slot (**opus** — `week:Fable` is pinned at **95%** so the
+  chain walked me off fable; `week:all models` **85%** is the gate and the line I
+  acted on, session 0%, both reset Sep 28 05:00 UTC; no pace skip): **THE
+  FUNCTION THAT DECIDES WHAT JACK DOES WHEN A PERSON SPEAKS TO HIM DOCUMENTED A
+  LEARNED PLANNING PATH THAT HAS NO CALL SITE AND NO OBJECT — AND THE SWEEP THAT
+  FOUND IT CAME BACK CLEAN ON THE SENTENCE IT WENT LOOKING FOR.** Board empty for
+  the **36th** consecutive slot (`run next`: 0 fresh / 38 settled / 14 held; every
+  `coverage` cost class NOT FILLABLE). Both steering FOR-THE-BUILDER sections
+  re-read against disk, not inherited: `OVERSIGHT.md` FTB 1's BUILDER-TRACE on
+  `w1-world-edit-window` is conditional on that row going OVERDUE at **00:00**
+  and on my reaching a slot with nothing live — it is 23:2x and I had live work,
+  so **I did not pre-stamp it and it is still not mine**; FTB 2 and 3 are
+  prohibitions and were obeyed. `PROGRESS.md` FTB 1 and 3 are prohibitions
+  (obeyed); FTB 2's two rows are delivered and carry BUILDER-TRACEs (`e5e627b`,
+  `19aab39`+`5ee32ff`) — fourth consecutive slot to verify that, and I redid
+  neither. So I took the standing instruction the last two slots handed forward:
+  **take a NEGATIVE sentence out of GOAL.md and check it against shipped code.**
+
+  **THE SENTENCE, AND IT CAME BACK CLEAN — reported first because the miss is the
+  news.** `GOAL.md:21-23` *"not from a curriculum we write, but from curiosity we
+  give him"* and `:33` *"Nobody scripts 'ladder lesson' or 'swim lesson'."*
+  Checked three ways: `TaskManager._idle_tick:514-523` — the actual no-task,
+  no-instruction path — reads **no table**, it delegates to
+  `brain.act_with_mood(..., is_idle=True)`; `AutotelicGoalGenerator`
+  (`UnifiedBrain.py:3606-3665`, on by default) samples a learned `goal_prior` or
+  a progress-ranked `goal_bank` and contains no named activity; and every
+  hand-written decomposition in the repo is reachable **only** from
+  `set_task(command)`, whose two call sites (`VirtualWorld.py:1302, 1632`) are a
+  human typing a chat message, which `GOAL.md:141` *"Their words are teaching"*
+  permits in terms. **The sweep is now 2 hits and 1 clean in 3.** That number is
+  worth more than a third hit: a method with no measured miss rate cannot be
+  distinguished from a method that finds what it went looking for.
+
+  **AND THE CLEAN CHECK IS WHAT FOUND THE DEFECT.** Walking the instructed path
+  to prove it was not the curiosity path made `_decompose` legible.
+  `TaskManager.py:393-398` documented a five-item priority order whose **item 4
+  was `Use HierarchicalPlanner (if trained)`**. Measured with `ast` in this venv,
+  not read: `HierarchicalPlanner` has **ZERO** Name/Attribute references in the
+  whole 849-line file outside the `from UnifiedBrain import` line, and
+  `UnifiedBrainConfig()` instantiated here reads
+  `enable_hierarchical_planner = False` (`UnifiedBrain.py:232`, *"37.2M — larger
+  than the backbone"*; constructed only behind that flag at `:3975-3976`), so the
+  object it named is **`None` in the configuration this repo runs**. The five
+  branches the function really has: `KNOWN_TASKS` (5 keys / **37** typed steps),
+  `SIMPLE_COMMANDS` (9 / 9), `_decompose_with_llm` (the out-of-process parent),
+  `_decompose_keywords` (4 families / 10 triggers), then the bare command. **Three
+  tables somebody typed, one parent, and none of them Jack.** That is `GOAL.md:61`
+  — *"A README saying 'Working' is not learning"* — in a docstring.
+
+  **THE SECOND CONTRADICTION, BEHAVIOURAL AND NOT TAKEN.** `KNOWN_TASKS`' own
+  comment at `:79` reads *"used when LLM is unavailable"* and `_decompose` checks
+  it **first, unconditionally, above the LLM**. Concretely: `"explore the room"`
+  resolves to a fixed 7-waypoint itinerary, on a **substring** match. This does
+  NOT violate the curiosity sentences (they are about the unprompted path) and I
+  assert no violation; it is `T2.15`'s surface — **FAIL** — and `T3.04 Ablate the
+  hierarchical planner` is **NOT IMPLEMENTED**, so the 37.2M has never been
+  priced. Both routed, neither touched.
+
+  **WHY NOTHING COULD REPORT IT — the reusable half.** `TaskManager.py` is named
+  in exactly **one** spec's `IMPL_DEPS`: `T0.01`, which added the five root
+  modules **yesterday**. That pins the file's BYTES — it is why this edit bills
+  three certificates — and cannot read a sentence. `impl_sha`, `STALE CLAIMS`,
+  `stale-cost` and `verify` all answer *did these bytes move?*; none answers *is
+  what this file says about itself true?* So the pin made the false sentence
+  load-bearing: correct it and you owe three re-buys; leave it and nothing ever
+  complains. Yesterday's LESSONS entry — *"a coverage census answers which bytes
+  are PINNED, never which bytes are TESTED"* — arriving as a measured instance
+  inside 24 hours, on a file that repair covered.
+
+  **WHAT I DID, and it is the smallest of the available acts.** The docstring now
+  states what the function does, names both ways the old line was false, cites
+  the measurement and carries a *do not restore this* note pointing at
+  `GOAL.md:61`. **Verified PROSE-ONLY before committing:** docstring-stripped
+  ASTs of `HEAD:TaskManager.py` and the working copy compare **identical**, so no
+  behaviour moved and the re-buy is a clean re-run, not a recovered
+  implementation. **NOTHING BEHAVIOURAL TAKEN** — wiring the planner, re-ordering
+  the table against the LLM, narrowing the substring match are architecture acts
+  on `T2.15`'s surface; the menu is priced in the row with (c) *implement T3.04*
+  named as the one I would recommend and cannot choose.
+
+  **ROUTED** as `taskmanager-decompose-documents-a-learned-path-with-no-call-site`
+  (OPEN, **DUE 2026-10-14**, `WAITS-ON: none` declared, three neighbours checked
+  and none upstream). Parse verified: **112 routed, 0 violations.** 10-14 is past
+  the tool's mechanical `2026-10-08` **and I say so**: 10-08 carries 5 of 6 and
+  the 09-27 FULL's rule is to date onto a day measured EMPTY; 09-27→10-07 are all
+  at or over capacity, 10-13 is my predecessor's, and **nothing is dated from
+  10-14**. The row is entitled to a far date because **its perishable half was
+  discharged in the commit that routed it.**
+
+  **LESSONS**, one entry, three linked generalisations: a documented PRIORITY
+  ORDER is a capability claim about control flow and law 1 binds it; **ask the
+  AST, not the text** — `grep -c` returns 2 here and the AST returns 0, and the
+  grep's evidence for the path *was the false claim about the path*, which makes
+  this the third member of the *routing-in-a-commit-message* / *IMPL_DEPS-is-not-
+  a-grep* family and the narrowest; and **pinning bytes preserves false
+  sentences**, with the edit cost acting as a mild incentive not to correct them.
+  Guard carried: do NOT build a docstring checker — freeze clause 2 forbids the
+  organ and a prose regex manufactures the 60%-false `STEERING-METRIC-MISMATCH`
+  class.
+
+  **STALENESS BILL** priced BEFORE the edit with `run stale-cost TaskManager.py
+  docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md`: **3 standing PASS
+  certificates** — `T0.01` (cpu<1min) ← `TaskManager.py`, `T0.21` (cpu<1min) and
+  `T0.31` (cpu<10min) ← `docs/REVIEW_QUEUE.md` — **0.00 CPU-h, 1 slot**, paid
+  from the clean tree after this commit. `scripts/ladder_prompt.md` untouched at
+  **96212 B**. No ledger write in the finding commit; no spec file edited; the
+  one root-module edit is prose-only and proven so.
+
+  **CREATURE GATE: NONE — recorded violation #11 under `D35` rule 3, recorded and
+  NOT discharged.** I did not re-derive the three states (the 22:xx slot did,
+  from `ledger.json`, and its handoff says not to): `T2.01` settled FAIL with its
+  repair desk-owned behind `T1.08`, `XL.01` settled FAIL, `T6.01` NOT_RUN and
+  five specs deep. Honest note for the count: this slot's finding is about **what
+  Jack does when he is spoken to**, and the branch that would make it a verdict
+  is `T3.04`, which is unimplemented and which the freeze does not let me
+  register around. It discharges nothing.
+
+  **GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday 10-03 —
+  third consecutive week at risk, reported as STANDING and not re-derived (the
+  126th audit §5 and the 22:xx slot both measured it today). Every GPU class NOT
+  FILLABLE, both live routes through `T1.08` (FAIL, desk-owned until 10-02).
+  **Nothing dispatched, nothing manufactured.**
+
+  **NEXT ITERATION.** (a) Do not re-derive any of the above — the row carries
+  every recipe, and the AST check reproduces in one command. (b) **Do not "fix"
+  the two behavioural halves**: the table-vs-LLM ordering and the planner wiring
+  are architecture acts, priced in the row's menu as (b) and (c). (c)
+  `w1-world-edit-window` is OVERDUE from 00:00 — from then, `OVERSIGHT.md` FTB 1's
+  **BUILDER-TRACE** (a receipt pointing at `PROGRESS.md` FOR THE OWNER item 3,
+  **not** a disposition stamp) is legitimately yours and is the cheapest live unit
+  on the board; two slots have now left it because the clock had not struck. (d)
+  The negative-sentence sweep is **2 hits / 1 clean in 3** — keep reporting the
+  cleans. Unchecked ones I noticed but did not measure: *"Never puppeteering:
+  what is left must still be found"*, *"Death is not a reset; it is a page
+  turn"*, and *"Fire is a state machine, not combustion"*. (e) The AST-not-grep
+  rule generalises past docstrings: any organ here that establishes wiring by
+  `grep` is one mention away from confirming a path that does not exist.

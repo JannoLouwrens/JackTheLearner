@@ -13902,3 +13902,166 @@ with `run stale-cost` (0.00 CPU-h, 1 slot) and re-bought in slot.
 nothing was left running, and every other measurement in this row used a 4.26M
 stub in its place. I would not repeat it, and a future check of this row needs
 only the ledger row in Leg 3.
+
+---
+
+ROUTED: taskmanager-decompose-documents-a-learned-path-with-no-call-site | 2026-09-27 | `TaskManager.py:80-143, 389-513` and `UnifiedBrain.py:232, 2045-2067, 3975-3976, 4393` read statically; `TaskManager.py` parsed with `ast` in this venv and the two tables + `_decompose`'s call set enumerated MECHANICALLY rather than by eye; `UnifiedBrainConfig()` instantiated to read the shipped default; `run stale-cost` priced before the edit; `run next`/`run status` read for `T2.15`/`T3.04`'s recorded state. Builder, this slot. NO ledger write. ONE root-module edit, PROSE-ONLY and verified so (docstring-stripped ASTs identical across the diff) | OPEN
+    DUE: 2026-10-14 | past the tool's own mechanical answer, on the 09-27 FULL's
+        rule and with the arithmetic quoted. `review-queue` says *"Next date with
+        room under the measured capacity: 2026-10-08"* and 10-08 carries 5 of 6,
+        so taking it would make a sixth day sit AT capacity. The 09-27 FULL
+        disposed its batch onto days *"measured EMPTY rather than merely under
+        capacity — the pile is what broke the last two batches"*, and the live
+        pile this slot is 09-27 through 10-07 all at or over 6, then 10-08 at 5,
+        10-09 at 2, 10-10 at 1, 10-11 at 2, 10-12 at 1, 10-13 at 1 (my
+        predecessor's row, routed 22:xx) and **nothing at all from 10-14**. So
+        10-14 is the first day measured EMPTY. This row is entitled to a far
+        date for a reason stronger than politeness: **its perishable half was
+        discharged in the commit that routed it** (the false docstring line is
+        gone), and what remains is two architecture questions that have been
+        latent since before this ladder existed. Against 6.00 arrivals per cycle
+        and 1.14 disposals, a row with no clock that crowds a day is a row that
+        breaks somebody else's promise.
+    WAITS-ON: none | no live row's answer changes what is measured here, and I
+        checked the three that touch it. `root-modules-outside-every-staleness-
+        bill-are-six-files-not-one` (OPEN) names `TaskManager.py` as one of its
+        six and is about whether the file's BYTES are pinned — which they now
+        are, by `T0.01`; this row is about what the pinned bytes SAY, and every
+        branch of that row's declaration menu leaves this finding untouched.
+        `personality-is-a-typed-character-sheet-on-the-answer-path` (DUE 10-09)
+        and `parent-llm-is-a-submodule-and-96-percent-of-the-brain` (DUE 10-13)
+        share this row's METHOD — a GOAL.md sentence checked against shipped
+        code — and are disjoint in subject. `standing-pass-certificates-are-
+        falsifiable-only-by-running-them` (OPEN) is adjacent and NOT upstream:
+        it is about re-running certificates, and no run of `T0.01` would have
+        found this, which is the point of Leg 4 below.
+
+**THE FINDING: `TaskManager._decompose` — the function that decides what Jack
+does when a person speaks to him — carried a five-line docstring PRIORITY ORDER
+whose item 4 was `Use HierarchicalPlanner (if trained)`, and that path has no
+call site and no object. The name `HierarchicalPlanner` has ZERO `ast`
+Name/Attribute references anywhere in the file outside the `from UnifiedBrain
+import` line, and `UnifiedBrainConfig`'s shipped default is
+`enable_hierarchical_planner=False`, so the thing it named is `None` in the
+configuration this repo runs. Of the five branches the function really has,
+three are tables somebody typed, one is the out-of-process parent LLM, and none
+is Jack.** That is `GOAL.md:61` — *"A README saying 'Working' is not learning"* —
+reproduced as a module docstring, which is this repository's founding disease in
+the one file whose bytes were pinned into a certificate twenty-four hours ago.
+
+**Leg 1 — how this was reached, because the METHOD is the transferable half.**
+The 21:3x slot handed forward a standing instruction: *take a NEGATIVE sentence
+out of `GOAL.md` and check it against the shipped code.* Two runs, two hits
+(`his kindness is not decreed` -> `Personality.py`; `it is not inside him` ->
+the 1.7B grandchild). **The sentence I picked is the third, and IT CAME BACK
+CLEAN — I am reporting that first because the miss is the news.**
+`GOAL.md:21-23` *"not from a curriculum we write, but from curiosity we give
+him"* and `GOAL.md:33` *"Nobody scripts 'ladder lesson' or 'swim lesson'. The
+environment plus intrinsic motivation IS the curriculum."* Checked:
+
+  * `TaskManager._idle_tick:514-523` — the no-task, no-instruction path, which
+    is exactly what those sentences are about — reads **no table**. It calls
+    `self.brain.act_with_mood(..., is_idle=True)` and falls back to
+    `self.brain(state)`. Nothing scripts his free time.
+  * `AutotelicGoalGenerator` (`UnifiedBrain.py:3606-3665`, `enable_autotelic_
+    goals=True` by default) samples from a learned `goal_prior` or from a
+    progress-ranked `goal_bank` buffer. No named activity appears in it.
+  * `_decompose_keywords` and both tables are reachable ONLY from
+    `set_task(command)`, whose two call sites (`VirtualWorld.py:1302, 1632`) are
+    both a **human typing a chat message**. `GOAL.md:141` explicitly permits
+    that: *"Their words are teaching."*
+
+So the sweep is **2 hits and 1 clean in 3**, and the clean one still paid for
+itself, because checking the curiosity path is what made the instructed path
+legible enough to find the defect below. A sweep that only reports hits cannot
+tell you its own rate.
+
+**Leg 2 — the defect, measured with `ast` rather than read.** Parsed in this
+venv this slot:
+
+    KNOWN_TASKS       5 keys / 37 hand-typed steps
+                      ['make tea','make coffee','fetch the ball','clean up',
+                       'explore the room']
+    SIMPLE_COMMANDS   9 keys /  9 hand-typed steps
+    calls inside _decompose:
+      KNOWN_TASKS.items, SIMPLE_COMMANDS.items, Subtask, command.lower,
+      command.lower().strip, self._decompose_with_llm, self._decompose_keywords
+    HierarchicalPlanner AST Name/Attribute refs in TaskManager.py:  []
+
+Two textual hits for `HierarchicalPlanner` in 849 lines: the import at `:170`
+and the docstring at `:397`. And the object is absent as well as uncalled —
+`UnifiedBrain.py:232` reads `enable_hierarchical_planner: bool = False  # 37.2M
+— larger than the backbone`, and `:3975-3976` constructs it only behind that
+flag, so `brain.hierarchical_planner is None` in the shipped configuration.
+`UnifiedBrainConfig()` instantiated here to confirm: `False`.
+
+**Leg 3 — the second, smaller contradiction, which is BEHAVIOURAL and is NOT
+mine to change.** `KNOWN_TASKS`' own comment at `:79` reads *"Known task
+decompositions (used when LLM is unavailable)"*, and `_decompose` checks it
+**first, unconditionally, above the LLM branch**. The table wins even when the
+LLM is available. The concrete consequence, and it is the one that made me look
+twice: `"explore the room"` resolves to a fixed 7-waypoint itinerary (table,
+shelf, door, look around at each, walk back to start). Ask Jack to explore and
+he executes a route somebody typed — *while `substring` matching means the
+command need only CONTAIN the key.* This does not violate the curiosity
+sentences (Leg 1: they are about the unprompted path), and I am not asserting it
+violates anything. It is an architecture question with a live spec attached —
+`T2.15 Free-form language routes to the right task` is **FAIL** — and it is
+routed here rather than repaired.
+
+**Leg 4 — why nothing could report it, and this is the reusable half.**
+`TaskManager.py` is named in exactly **one** spec's `IMPL_DEPS`: `T0.01 Repo
+imports clean`, which added the five root modules on 09-27 (146,391 B). That
+declaration pins the file's **bytes** — it is why this edit bills a certificate
+at all — and it cannot read a sentence. `run status`'s `STALE CLAIMS`,
+`impl_sha`, `stale-cost` and `verify` all answer *"did these bytes move since
+the run?"*; none of them answers *"is what this file SAYS about itself true?"*
+That is the live LESSONS entry *"A coverage census answers which bytes are
+PINNED, never which bytes are TESTED"* — written **yesterday**, about this exact
+repair — arriving as a measured instance inside 24 hours, on one of the five
+files that repair pinned. `T3.04 Ablate the hierarchical planner` is the spec
+that would have priced the planner's parameters and it is **NOT IMPLEMENTED**;
+the freeze forbids registering a Tier-0 substitute and I did not.
+
+**Leg 5 — WHAT I DID, and it is deliberately the smallest of the available
+acts.** The docstring now states what the function does, names the two ways the
+old line was false, cites the measurement, and carries a `do not restore this`
+note pointing at `GOAL.md:61`. Verified **prose-only** before committing:
+docstring-stripped ASTs of `HEAD:TaskManager.py` and the working copy compare
+**identical**, so no behaviour moved and the re-buy is a clean re-run rather
+than a recovered implementation.
+
+**Leg 6 — WHAT IS NOT CLAIMED, each checked.**
+
+  * **No certificate is red or alleged red.** `T0.01` is PASS and stays PASS —
+    it asserts the module imports, which is true; nothing it claims is affected.
+    No verdict anywhere moves on this finding.
+  * **The planner is not alleged to be dead weight.** Its flag is off for a
+    MEASURED reason written beside it (37.2M > the backbone), which is a
+    defensible engineering call, not a defect. Whether it earns its parameters
+    is `T3.04`'s question and `T3.04` has never run. I am not pre-judging it.
+  * **The tables are not alleged to be illegitimate.** A hand-written
+    decomposition for an instructed task is permitted by `GOAL.md:141`; what is
+    not permitted is a docstring claiming a learned path beside them.
+  * **Nothing behavioural was touched.** Wiring the planner, re-ordering the
+    table against the LLM, and narrowing the substring match are all
+    architecture acts on the surface `T2.15` measures. **Menu priced, NOTHING
+    TAKEN**, and all three are named here so a later slot cannot mistake the
+    docstring repair for the whole job.
+
+**THE MENU, for whoever disposes this row.** (a) Leave it: the docstring is now
+true and the rest is `T2.15`/`T3.04`'s business — cost zero, and the honest
+default. (b) Re-order `_decompose` so the LLM outranks `KNOWN_TASKS`, matching
+the table's own comment — a behaviour change on `T2.15`'s surface, bills
+`T0.01`, and should not be made without `T2.15` re-running. (c) Implement
+`T3.04` and let the planner's 37.2M earn or lose its place — the only branch
+that answers *"components must EARN their parameters or be deleted"*
+(`GOAL.md:87`), and the only one that is about Jack. (d) Narrow the substring
+match on the two tables. **(a) is the honest no-op; (c) is the one I would
+recommend and cannot choose.**
+
+**Staleness bill, priced BEFORE the edit with `run stale-cost TaskManager.py
+docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md`: 3 standing PASS
+certificates** — `T0.01` (cpu<1min) <- `TaskManager.py`, `T0.21` (cpu<1min) and
+`T0.31` (cpu<10min) <- `docs/REVIEW_QUEUE.md` — **0.00 CPU-h, 1 slot**, so
+payable in slot and paid from the clean tree after this commit.
