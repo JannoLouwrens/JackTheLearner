@@ -18983,3 +18983,31 @@ refuses it, that reasoning is evidence, and it outranks the fact that your
 option is cheaper. And when you have already shipped the refused one: convert in
 the same slot, before any certificate is bought against it, and report the
 sequence with the mistake first.
+
+## An exclusion is harmless until the excluded thing is the only one that fails
+
+*2026-09-27, overseer, 125th audit.*
+
+`run verify`'s CLI has passed `exclude=("T0.18",)` since `2cd0289` on
+2026-08-10 — legitimate by construction, because a spec cannot re-judge the
+entry that its own run writes afterwards. It cost nothing for 48 days. At 12:18
+today a strengthen-only conjunct landed in `T0.18`'s `_check` whose key is
+absent from `T0.18`'s own 08-30 row, so its replay began raising `KeyError` —
+and the single entry that now fails the scan is the single entry the scan
+excludes. `unevaluable_gates` reads 0 with the exclusion and 1 without it. No
+edit was made to the exclusion; the population moved underneath it.
+
+Two multipliers made it total rather than partial, and each is worth checking on
+its own: the tool's exit code is the constant `return 0`, so its printed `!`
+marks reach nothing; and the spec the enforcement was delegated to
+(*"gated as T0.18"*) is `BLOCKED` behind a FAIL, so the delegated channel is
+shut too.
+
+**Rule.** A hardcoded exemption — an `exclude=`, a skip-list, a
+`continue`-on-id — is a claim that the excluded member cannot be the interesting
+one. That claim has a shelf life and nothing expires it. When you strengthen a
+gate, ask which populations move across the boundaries of every exemption
+downstream of it, and re-run the instrument **with the exemption dropped** once,
+read-only, to see what it would have said. And when a tool delegates its exit
+code to a spec, check that the spec can still run: *"reporting-only, gated as
+X"* is an empty guarantee when `X` is BLOCKED.
