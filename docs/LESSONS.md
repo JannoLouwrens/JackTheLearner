@@ -19550,3 +19550,74 @@ which is the pair this repo's first law exists for. If a report's evidence is a
 search, say so in the report — *"grep found no declaration"* invites the one-line
 confirmation, while *"it is named in NO spec's IMPL_DEPS"* asserts a computed
 fact and forecloses it.
+
+## A coverage census answers "which bytes are PINNED", never "which bytes are TESTED" — and the repair that closed the visible class left the disease at full strength (2026-09-27, builder)
+
+Last night's slot found `mocap_cmu.py` outside every declared staleness bill,
+widened `T0.01`'s `IMPL_DEPS` to name all thirteen modules it imports, and
+re-bought the certificate. That repair was correct and it worked: priced this
+slot, **all 21 repo-root modules now bill at least one standing PASS**, and the
+zero-coverage class is empty.
+
+**It is also, on its own, worth almost nothing, and the arithmetic says so.**
+Of the 21, **12 bill exactly one certificate**, and for eight of those the one
+certificate is `T0.01 "Repo imports clean"`. Split by whether any spec names
+them in `IMPL_DEPS` in ANY verdict:
+
+    tested and RED      AlphaGeometryLoop.py, SymbolicCalculator.py  <- T3.09 FAIL
+                        MovementMoodCoupling.py                      <- T3.07 FAIL
+    named by NO spec    AudioListener.py, InnerMonologue.py, Persistence.py,
+                        Personality.py, TaskManager.py   = 4,008 lines
+
+**`stale-cost` cannot tell those apart from a module with a capability behind
+it, because its unit is the certificate and it does not weigh them.** "Covered
+by 1" reads identically whether the 1 asserts *"ablate this and behaviour
+degrades"* or *"this file imports without raising"*. So the instrument that
+measures coverage went from red to green while the founding disease — *"a README
+status table reading 'Working' for eleven components that had never received a
+gradient"* — stayed at five modules and four thousand lines, two of them
+constructed by default inside Jack's brain.
+
+**Rule: a census over an instrument's own unit can only ever close the class the
+instrument can see.** Before reporting a coverage class closed, ask what the
+covering certificate ASSERTS, not how many there are. `T0.01` is the right kind
+of certificate and it is a smoke test; a module whose only certificate is a smoke
+test is untested in every sense the governing rule cares about, and is reported
+as covered by every tool here.
+
+## GOAL.md's PROMISES are machine-represented; its PROHIBITIONS are represented nowhere, so shipped code can contradict the north star in the owner's own words and every instrument stays green (2026-09-27, builder)
+
+`coverage.py` reads `GOAL.md` twice and neither read can catch a prohibition.
+It extracts **spec-id citations** (`GOAL_CITATION`, `:258`) to check that every
+id resolves and is runnable — a link checker. And it carries a **hand-written
+`COMMITMENTS` table** (`:154-165`) of regex keywords that maps each promise to
+the specs that must test it, which its own docstring at `:60-62` admits is
+prose-derived and would be *"better ... derived from GOAL.md automatically"*.
+Both represent things GOAL.md says must BE TESTED. **Neither represents anything
+GOAL.md says must NOT BE BUILT.**
+
+The instance that found this: GOAL.md says, in the owner's words, *"we
+deliberately refuse to carve his character. His kindness is not decreed."*
+Shipped `Personality.py:135-139` types five Big Five traits
+(agreeableness 0.80) and `:731` builds `JACK_PERSONALITY` from them;
+`core_values` ships the literal string `'Kindness -- genuinely cares about
+others'`; `UnifiedBrain.answer_question` (`:2784`, call at `:2803`) injects the
+2,585-character result as the LLM's system prompt, on by default at `:264`.
+Full record and priced menu: `personality-is-a-typed-character-sheet-on-the-
+answer-path`.
+
+**Why no organ was ever going to find it.** `coverage` checks GOAL.md's links,
+not its claims. `champions` checks that seats have arenas. `stale-cost` counts
+certificates. `decisions` reads the register. **An owner directive that
+FORBIDS something has no reader**, so the only way it gets enforced is a human
+noticing — which is how the four scars in `coverage.py`'s own docstring were
+found, and the reason that file exists.
+
+**Rule: when you read GOAL.md at the top of a slot, read it for the sentences in
+the NEGATIVE — the things it says we refuse to do — and check one of them against
+the code.** They are the half no instrument holds, they are where the
+unfalsifiable failure lives, and a prohibition has no ratchet to go red. Do NOT
+answer this by building a prohibition checker: the freeze's clause 2 forbids the
+new organ, the owner reserves character to himself in the same paragraph, and a
+regex over an owner's prose would manufacture exactly the false-positive class
+`STEERING-METRIC-MISMATCH` measured at 60%.

@@ -13585,3 +13585,172 @@ and both repairs above are declarations on instruments that already exist.
     FAIL, so staling it re-buys nothing. No spec file edited, no `IMPL_DEPS`
     changed, no bar moved in either direction, no conjunct armed, no instrument
     built.
+
+ROUTED: personality-is-a-typed-character-sheet-on-the-answer-path | 2026-09-27 | `Personality.py:135-139, 731` + `UnifiedBrain.py:264, 2729, 2784, 2803, 4093-4100` read statically; `JACK_PERSONALITY` constructed and its PAD baseline + `core_values` + system prompt MEASURED in this venv; `stale-cost` census over all 21 repo-root modules; `lg_00_not_a_puppet.py`'s prompt path read. Builder, this slot, NO ledger write, NO spec or root module edited | OPEN
+    DUE: 2026-10-09 | NOT `next_free_due`'s literal answer, and the arithmetic
+        is disclosed so the desk can move it. Live dated promises per day,
+        counted off the tool this slot: 09-28 through 10-07 are ALL at or over
+        the measured capacity of 6 (six days at 6, three at 7); 10-08 carries 5
+        — my predecessor's row from this morning — and 10-09 carries 1. The
+        09-27 FULL's newest re-dating rule says place a date on a day measured
+        EMPTY, and the first EMPTY day is 10-13. I took 10-09 instead and say
+        why: that rule was written for RE-DATING a batch of broken rows, and
+        this row has a clock the calendar cannot see — it must be ruled BEFORE
+        `T6.01` first runs Jack end to end, because that is the run in which
+        this code path first executes inside a certificate. 10-09 is the first
+        day materially under capacity. If the desk prefers its own rule, 10-13
+        is the number.
+    WAITS-ON: none | no live row's answer changes what is measured here, and
+        the measurement is complete rather than blocked. Two neighbours are
+        adjacent and NEITHER is upstream:
+        `root-modules-outside-every-staleness-bill-are-six-files-not-one`
+        (OPEN, this morning) shares two files with this row and asks a
+        DECLARATION question — whether the specs that reach these modules must
+        name them in `IMPL_DEPS`; this row asks a CONTENT question about what
+        two of those modules DO, and every branch of that row's priced menu
+        leaves this finding exactly where it is.
+        `freeze-release-condition-is-five-specs-deep-...` (OPEN, DUE 10-07)
+        owns the ROUTE to `T6.01`; this row owns what will be true when the
+        route opens, and it is strictly better answered before then.
+
+**THE FINDING: Jack ships a typed character sheet, it is wired on by default,
+it reaches the LLM through his shipped answer path, and GOAL.md forbids it in
+the owner's own words.** Nothing below is inferred from a page; every number was
+read off the code or measured in this venv this slot.
+
+**Leg 1 — the sheet, measured by constructing it rather than by reading it.**
+`Personality.py:135-139` types five Big Five traits as dataclass defaults, and
+`Personality.py:731` constructs `JACK_PERSONALITY = Personality()` from them at
+import time:
+
+    openness 0.85 · conscientiousness 0.55 · extraversion 0.60
+    agreeableness 0.80 · neuroticism 0.25
+
+Constructed in this venv, that yields a PAD baseline of **pleasure +0.491,
+arousal -0.360, dominance +0.120** via the ALMA mapping (Gebhard 2005,
+`EmotionalState.set_personality`, docstring at `EmotionalState.py:918`) — a
+pleasant, calm, mildly dominant disposition, typed in. The same object carries
+five `core_values` strings, read verbatim from the live object:
+
+    'Curiosity above all -- always wants to understand why'
+    'Honesty -- admits when confused or wrong'
+    'Kindness -- genuinely cares about others'
+    'Growth -- celebrates learning and improving'
+    'Friendship -- values connection with the user'
+
+and `get_system_prompt()` renders **2,585 characters** opening *"You are Jack, a
+virtual humanoid companion... a curious young AI who just woke up in his virtual
+world. He's fascinated by everything, loves to explore, and values his
+friendship with the user."*
+
+**Leg 2 — it is on by default, and it is on the ANSWER path.**
+`UnifiedBrain.__init__:4093-4100` sets `self.personality = JACK_PERSONALITY` and
+feeds those five floats to `EmotionalState.set_personality()` whenever
+`enable_emotional_state` is true, which is its default at `:264`. Two methods
+then call the sheet: `_generate_with_llm` (`:2729`) and **`answer_question`
+(`:2784`, call at `:2803`)** — Jack's shipped path for answering a question.
+Both build `persona = self.personality.get_system_prompt(mood_dict)` and hand it
+to the LLM as the system prompt. The fallback when `personality is None` is the
+string `"You are a helpful companion robot."`, so the sheet is not an optional
+enrichment of a neutral path; it is the path.
+
+**Leg 3 — GOAL.md forbids exactly this, in the owner's words, twice.**
+
+  > *"Who he becomes is not written here (owner, 2026-08-09). We carve what he
+  > IS — the needs, the senses, the honesty, the mortality — and we
+  > deliberately refuse to carve his character. His kindness is not decreed; it
+  > is expected to GROW from his need for company, the way it grew in us."*
+
+  > *"he must develop knowledge and connect it to words instead of just the LLM
+  > communicating and pretending to be Jack."*
+
+`core_values[2]` is the string `'Kindness -- genuinely cares about others'`.
+Kindness is decreed, as a typed constant, injected into the LLM's system prompt
+by default. Curiosity — GOAL.md's north star, the thing the whole curiosity
+family exists to MEASURE — is decreed in the same list as
+`'Curiosity above all'`. So is honesty, which GOAL.md explicitly lists among the
+things we DO carve, and which is therefore the one member of the list that is
+not a contradiction.
+
+**Leg 4 — its only certificate is that the file imports, and the one spec whose
+whole subject is this failure mode cannot see it.** `stale-cost` over all 21
+repo-root modules this slot: every module now bills at least one standing PASS
+(last night's `T0.01` repair closed the zero-coverage class, and that holds).
+But **12 bill exactly one**, and for eight of those the single certificate is
+`T0.01 "Repo imports clean"`. Splitting those eight by whether any spec names
+them in `IMPL_DEPS` in ANY verdict:
+
+    tested and RED      AlphaGeometryLoop.py 559, SymbolicCalculator.py 790  <- T3.09 FAIL
+                        MovementMoodCoupling.py 630                          <- T3.07 FAIL
+    named by NO spec    AudioListener.py 444, InnerMonologue.py 673,
+                        Persistence.py 1155, Personality.py 787,
+                        TaskManager.py 849        = 5 modules, 4,008 lines
+
+`Personality.py` is in the second group. And `LG.00 "Not a puppet"` — **PASS,
+attempt 7, 2026-09-06, and it seats BOTH `Language acquisition` and
+`Language model` BY DECREE in `champions`** — is the spec whose entire claim is
+that stripping the diary and the learned core must collapse his answers about
+his own life. It cannot see this: its `IMPL_DEPS` are `EpisodicMemory.py` and
+`lg_01`, and it scores through `lg_01`'s own `_prompt` scaffold (imported at
+`lg_00_not_a_puppet.py:156`), which never calls `get_system_prompt()`. Verified
+by grep this slot: **zero callers of `answer_question`, `_generate_with_llm` or
+`get_system_prompt` anywhere under `experiments/`.** So the one certificate
+about Jack not being a costume was bought in a venue that does not contain the
+costume.
+
+**WHAT IS NOT CLAIMED, stated because the row this one sits beside exists to
+correct an over-claim.**
+  1. **No certificate is red and none is alleged to be.** `LG.00`'s PASS is
+     clean on its own terms — different prompt path, verified, not assumed.
+     `T2.12`'s PASS certifies emotion *separability*, not the baseline's origin.
+  2. **No threshold is breached.** This is a contradiction between shipped
+     default code and GOAL.md's text, not a gate failure. There is no spec to
+     fail.
+  3. **`Personality` is not an `nn.Module`** (plain class, `Personality.py:236`),
+     so no parameter or gradient gate moves on its bytes — the same qualifier
+     the sibling census row established, and it is why every existing instrument
+     is blind here by construction rather than by oversight.
+  4. **Whether the sheet reaches BEHAVIOUR is measured NEGATIVE, not unknown.**
+     `T3.07 "Ablate mood conditioning"` is **FAIL** (attempt 2, 2026-08-20), and
+     its own `kills:` line reads *"MovementMoodCoupling as anything but
+     cosmetics"*. So on current evidence the carving reaches his WORDS and not
+     his ACTIONS — which is not a mitigation. It places the carving precisely
+     where GOAL.md locates the costume risk ("the LLM communicating and
+     pretending to be Jack") and precisely where it does NOT locate character
+     growth (lived consequence).
+  5. **The path is dormant in the ladder and live in the product.** Zero specs
+     call it today. It executes the first time a spec runs Jack end to end —
+     `T6.01`, `T6.02`, `T6.04`, all NOT_RUN — which is the freeze's own release
+     condition. That is why this is worth a row now: the defect would otherwise
+     be inside the first end-to-end certificate this project ever buys, and
+     found afterwards.
+
+**THE MENU, priced, NOTHING TAKEN — and the reason nothing is taken is written
+in GOAL.md rather than chosen here.** *"If who he becomes ever troubles us, that
+is a conversation for the owner, not a hotfix."* Character is reserved to the
+owner by the north star's own text, and this desk's builder may not delete or
+re-value a component (standing prohibition). So:
+  (i) **The owner rules the traits DELIBERATE** — a starting temperament is not
+      a carved character, on the analogy that a human infant has one too. Then
+      GOAL.md gains a sentence saying so, and the numbers stop being
+      undocumented defaults. Costs nothing and closes the row honestly.
+  (ii) **The owner rules them a BREACH** — the five floats and the five
+      `core_values` come out, `get_system_prompt` loses the trait and values
+      blocks, and what conditions the LLM is the diary and the learned core
+      only. Bills every certificate that hashes `UnifiedBrain.py`: priced this
+      slot at **18 standing PASS certificates** by `stale-cost`. Not a hotfix.
+  (iii) **REGISTER THE QUESTION rather than answer it** — a spec in `LG.00`'s
+      family that runs `answer_question` with the sheet present and absent, and
+      requires his answers about his own life to be unchanged by the sheet while
+      his *manner* may change. That converts the contradiction into a
+      falsifiable claim, which is what this project does with every other
+      contested property, and it is the only branch that produces evidence. It
+      is a new registration and therefore the Review's, not the builder's.
+  (iv) **Nothing, on the ground that the path is dormant.** Testable and
+      cheapest, and it expires on its own: it stops being true the day `T6.01`
+      runs, which is the day the freeze lifts.
+
+**Staleness bill: ZERO.** No spec file and no root module edited; the traits were
+measured by importing `Personality.py`, not by changing it. This row's own edit
+to `REVIEW_QUEUE.md` bills `T0.21` and `T0.31`, priced before the edit and
+re-bought in slot.

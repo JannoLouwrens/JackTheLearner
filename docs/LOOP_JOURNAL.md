@@ -22281,3 +22281,138 @@ the tool over the class.** (d) The `undeclared_impl_deps` root-module residual n
 has a named, repaired instance — if a redesign of that scope is ever costed,
 `mocap_cmu.py` is the worked example and `run stale-cost` over all 21 files is the
 measurement, not a fresh survey.
+
+## 2026-09-27 ~20:0x UTC — builder, Opus (Fable pinned 95%)
+
+**METERS FIRST:** `week:all models` **85%** — the gate — against `pace_gate`'s
+`allow` ≈ 87 at `--week-elapsed` 95, so live with ~2 points of pacing headroom
+and ~5 to the hard stop, reset 09-28 05:00. `week:Fable` 95% pinned, hence Opus.
+Dark-slot streak 0. Board **EMPTY for the 34th consecutive slot** (0 fresh / 38
+settled / 14 held, every cost class NOT FILLABLE); nothing manufactured.
+
+**WHAT I DID NOT DO, checked rather than assumed.** OVERSIGHT FTB 1 (the
+`w1-world-edit-window` BUILDER-TRACE) was already discharged by the 19:0x slot
+and FTB 2/3 are explicitly not mine. PROGRESS FTB 2's two rows are discharged
+(`e5e627b`, `19aab39`+`5ee32ff`). `1^13` is four-discharged / two-held / zero
+live — re-verified against ledger and git, not inherited — and the two held
+(`PS.05`/`PS.06`/`PS.08` conjunct inheritance) are held by
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`'s own body, whose
+recalibration is a THRESHOLD decision reserved to the desk (DUE 10-03). The four
+DISPOSITIONED rows breaking at midnight all carry builder traces from `cebf0c3`.
+
+**THE UNIT: I re-measured the owner's own freeze, and the freeze is not measuring
+what its thesis is about.** The STANDING FREEZE was written on an owner review of
+**2026-09-17** but only reached the builder's prompt at `f25f9f6` on **09-24**, so
+it has been in force 3 days, not 10. Commit allocation, classified by touched
+paths (recipe disclosed — my spec/registry count reproduces the owner's 258 at
+**261**, so the recipe is close; docs/infra split differently, so I report both
+readings and do not claim to have recovered theirs):
+
+    pre-freeze 08-18 -> 09-18   1111 commits   docs-only 620  infra 208  spec/reg 261
+    measured, not in force      197 commits    docs-only 139  infra  31  spec/reg  21
+    IN FORCE 09-24 -> now       199 commits    docs-only 122  infra  28  spec/reg  29
+
+**The allocation did not move.** But the number that matters is one the owner's
+three categories cannot express: **edits to Jack's own 21 root modules.** Three
+in the 1111-commit window (`EpisodicMemory.py` x2, `playground.py` x1); **zero in
+the 396 commits since 09-18.** The freeze's categories count *measurements about*
+Jack (`experiments/tests/`, 23%) in the virtuous column. The creature's own source
+received 3 edits in 30 days and none in 13.
+
+**That is correct discipline, not a fault — and following it to where it leads is
+the finding.** You do not edit Jack without a spec that says what is wrong; that
+is the governing rule. So I asked the inverse question — what does the ladder
+actually certify about the bytes of Jack — by running the measurement the 19:0x
+slot handed forward in exactly those words (*"`run stale-cost` over all 21 files
+is the measurement, not a fresh survey"*).
+
+**RESULT 1, and it refutes nothing and demotes plenty.** All 21 modules now bill
+>= 1 standing PASS: last night's `T0.01` repair really did close the
+zero-coverage class. **But 12 bill exactly one, and for eight of those the one
+certificate is `T0.01 "Repo imports clean"`.** Three of the eight are red under a
+real spec (`T3.09`, `T3.07`); **five are named by NO spec in any verdict —
+`AudioListener.py`, `InnerMonologue.py`, `Persistence.py`, `Personality.py`,
+`TaskManager.py`, 4,008 lines.** A coverage census cannot tell a smoke test from
+a capability, so the instrument went green while the founding disease stayed at
+full strength. LESSONS entry written.
+
+**RESULT 2 — THE UNIT'S ACTUAL PRODUCT, and it is about the creature, routed as
+`personality-is-a-typed-character-sheet-on-the-answer-path` (OPEN, DUE 10-09).**
+`Personality.py:135-139` types five Big Five traits; constructed in this venv
+they yield a PAD baseline of **P +0.491 / A -0.360 / D +0.120** (ALMA, Gebhard
+2005) and five `core_values` strings including the literal
+**`'Kindness -- genuinely cares about others'`**; `get_system_prompt()` renders
+**2,585 characters** of prose identity. `UnifiedBrain.__init__:4093` wires it on
+by default (`:264`), and **`answer_question` (`:2784`, call at `:2803`)** — Jack's
+shipped answer path — hands it to the LLM as the system prompt. GOAL.md, owner's
+words: *"we deliberately refuse to carve his character. His kindness is not
+decreed."*
+
+**What keeps it honest, and I checked each before writing it.** No certificate is
+red or alleged red: `LG.00 "Not a puppet"` (PASS a7, and it seats two champion
+seats BY DECREE) scores through `lg_01`'s own `_prompt` scaffold and **never calls
+`get_system_prompt`** — so the one certificate about Jack not being a costume was
+bought in a venue that does not contain the costume. `Personality` is not an
+`nn.Module`, so no gradient gate moves on its bytes. Whether the sheet reaches
+BEHAVIOUR is measured **negative**, not unknown (`T3.07` FAIL, *"cosmetics"*) —
+which places the carving exactly where GOAL.md locates the costume risk and not
+where it locates character growth. **Zero specs call the path today**: it is
+dormant in the ladder and live in the product, and it first executes inside a
+certificate the day `T6.01` runs — which is the freeze's own release condition.
+That is why it is worth a row now rather than after.
+
+**ROUTED ONE ROW AGAINST A DROWNING QUEUE, and the justification is that this is
+not apparatus.** 6.00 arrivals/cycle vs 1.14 disposals, 84 live rows, drain
+UNBOUNDED; the 19:0x slot correctly declined an 85th row for an apparatus defect.
+This one is a contradiction between shipped default code and the north star, and
+GOAL.md reserves character to the owner in terms (*"a conversation for the owner,
+not a hotfix"*), so the menu is priced and **nothing is taken** — option (ii)
+alone bills 18 standing PASS certificates. DUE 10-09 is NOT `next_free_due`'s
+literal answer (10-08 carries 5, my predecessor's row; the first EMPTY day is
+10-13) and the row discloses both numbers and why I chose the earlier one.
+
+**SECOND LESSON, structural: GOAL.md's PROMISES are machine-represented and its
+PROHIBITIONS are represented nowhere.** `coverage.py` reads GOAL.md for spec-id
+citations (a link checker, `:258`) and a hand-written COMMITMENTS regex table
+(`:154-165`, which its own docstring says should be derived). Both encode what
+must BE TESTED. Nothing encodes what must NOT BE BUILT, so an owner directive
+that forbids something has no reader and no ratchet to turn red. **The rule I
+wrote down: read GOAL.md for its NEGATIVE sentences and check one against the
+code each slot.** Explicitly NOT answered by building a prohibition checker —
+freeze clause 2 forbids the organ, the owner reserves character to himself, and a
+regex over owner prose manufactures the same false-positive class
+`STEERING-METRIC-MISMATCH` measured at 60%.
+
+**CREATURE GATE: NONE — recorded violation #9 under `D35` rule 3, recorded and
+NOT discharged.** Re-derived, not inherited: `T2.01` settled FAIL with its repair
+desk-owned; `T6.01` NOT_RUN and five specs deep behind `T1.08` FAIL
+(`T6.01<-T4.05<-T4.04<-T2.01`, two intermediates unimplemented), and the 09-24
+ruling refuses implementation as a discharge in terms; `XL.01` settled FAIL, and
+its successor `NE.08` sits behind `T6.03` BLOCKED <- `T2.10` FAIL. **The honest
+note for the count: this slot's finding is ABOUT `T6.01` — it names a defect that
+would otherwise ship inside the first end-to-end certificate — and that still is
+not a verdict on one of the three. It discharges nothing.**
+
+**GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday 10-03 —
+third consecutive week at risk. Every GPU class NOT FILLABLE, both live routes
+through `T1.08` (FAIL, desk-owned until 10-02). Nothing dispatched, nothing
+manufactured.
+
+**STALENESS BILL** priced BEFORE the edit with `run stale-cost docs/REVIEW_QUEUE.md
+docs/LESSONS.md docs/LOOP_JOURNAL.md`: **2 standing PASS certificates**, `T0.21`
+(cpu<1min) and `T0.31` (cpu<10min), 0.00 CPU-h, **1 slot** — so payable in slot,
+and paid from the clean tree after this commit. No spec file and no root module
+was edited; the traits were measured by importing `Personality.py`, not changing
+it.
+
+**NEXT ITERATION.** (a) Do not re-derive the allocation measurement or the
+21-module census — both are above with their recipes; re-run the census only if
+`T0.01`'s `IMPL_DEPS` changes. (b) Do not touch `Personality.py`: the row is
+routed, the menu is priced, and every branch is the owner's or the Review's.
+(c) The `Personality` row shares two files with
+`root-modules-outside-every-staleness-bill-are-six-files-not-one` and is NOT
+downstream of it — that row's declaration menu leaves this finding where it is,
+which is stated in both. (d) If you reach a slot with nothing live, the standing
+instruction from this one is in LESSONS: take a NEGATIVE sentence out of GOAL.md
+and check it against the shipped code. There are more of them than there are
+instruments, and I checked exactly one.
