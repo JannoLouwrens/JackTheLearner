@@ -212,6 +212,62 @@ rather than against a motionless twin; (b) give every arm a matched outward
 impulse at spawn so "stay" costs something in every arm; (c) score only lives
 in which the agent left the hut at least once, making return the measured
 quantity. Do NOT grow the envelope — the pilot's failure is not a budget.
+
+## THE REVIEW RULED (2026-09-20, FULL, queue row `sh02-null-saturation`):
+## (b) ADOPTED and bound to `w1-world-edit-window`; (a) and (c) REFUSED.
+
+(c) was refused for a reason worth carrying: scoring only lives in which he left
+CONDITIONS THE SAMPLE ON THE BEHAVIOUR BEING MEASURED — the twin never leaves,
+so it contributes zero scored lives, and the null is not beaten but DELETED.
+(a) was refused because it moves only the COMPARATOR: the twin, the oracle and
+the both-cosmetic control would all still hold 1.0000, and a claim whose own
+privileged oracle beats it cannot be evidence that maintenance was learned.
+(b) removes the free win at its source — but it is a VENUE repair, it bills the
+21 `playground.py` certificates, and the window is still undesigned.
+
+## OPTION-(a) DIAGNOSTIC — RUN 2026-09-27 ~04:3x UTC, seed 90, N=3000/arm,
+## 482 s, artifact /data/sh02_random_comparator_diag_seed90.json.
+## READING: **DEAD**. NO LEDGER ROW; the HEADROOM VOID above stands untouched.
+
+The same ruling authorised exactly one builder act before the window — run (a)
+as a DIAGNOSTIC ONLY, "never as the registered gate", to learn "whether the
+learner clears a non-degenerate comparator at all" and so "whether (b) is worth
+the certificates it will bill". It was run from
+`experiments/sh02_random_comparator_diag.py` (pre-registered in `ea00910`
+BEFORE the numbers existed, forecast written down as DEAD), through THIS file's
+own `_run_arm`/`_eval_lives`/`_fracs`/`_welch_z`, with `Z_MIN` 3.0 quoted and
+unmoved.
+
+    KNOWN-ANSWER CONTROL: REPRODUCED to the pilot's recorded precision —
+      frac_shelt learn 0.0136  twin 1.0000  rand 0.3639   rand_frozen 25
+      z_shelter -377.7245      lives 32 / 15 / 26         steps 1469
+    THE STATISTIC:
+      z_rand  **-3.1563**  against the quoted +3.0
+      learner 0.0136 +/- 0.0083 over 10 eval lives
+      random  0.3639 +/- 0.3138 over  8 eval lives
+
+**THREE INDEPENDENT FACTS, and the third one is new.** (1) (a) is REFUSED on
+principle, by the desk, above. (2) (a) is also DEAD on arithmetic: the learner
+is 3.16 sigma BELOW the wanderer at the registry's own bar, so the contrast (a)
+would gate does not merely lack a claim — it is refuted in the wrong direction.
+(3) **(a) would have been an UNDERPOWERED gate in either direction, and the
+levels hid that.** The levels differ by 26.8x and the z is only 3.16, because
+the random arm's per-life spread (0.3138) is 86% of its own mean (0.3639) over 8
+eval lives. A comparator can have HEADROOM and still have no POWER; that is the
+mirror-image failure of the saturated null, and the UNSATURATED-NULL RULE
+adopted on 2026-09-20 does not yet ask about it. Generalised in LESSONS.md.
+
+**WHAT IT SAYS ABOUT (b), stated as pricing and NOT as an arm choice — the arm
+is the desk's and it is adopted.** Disease B is real and measured: the venue
+hands the null a free 1.0000. A matched outward impulse at spawn makes "stay"
+cost the same everywhere and destroys that free win BY CONSTRUCTION, exactly as
+ruled. What this diagnostic adds is that the LEARNER side of the same contrast
+is also refuted at this envelope — he spends 98.6% of his life outside a roof he
+was born under, which is *less* sheltered than random flailing — and an impulse
+that pushes every arm out does not obviously bring him back in. So (b) repairs a
+NECESSARY condition for this claim, not a sufficient one, and the 21-certificate
+bill buys the null's half of a two-sided problem. That is the fact the ruling
+asked to have before the window opens; the decision remains where it is.
 """
 from __future__ import annotations
 

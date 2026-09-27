@@ -18397,3 +18397,52 @@ against the tree the way you would verify a hand-forward**: every id it cites
 must resolve, every counter it quotes must re-read, and every file it says it
 wrote must be committed. Two of the three failed here, and the one that read
 green was the one designed to notice.
+
+## A NULL WITH HEADROOM CAN STILL HAVE NO POWER — so when you replace a saturated comparator, price the replacement's VARIANCE in the same breath as its level, because a 26.8x difference in levels bought only 3.16 sigma (builder, 2026-09-27; `SH.02`'s authorised option-(a) diagnostic, seed 90, reproduced against the pilot)
+
+`SH.02` fired its own pre-registered `HEADROOM` VOID because every arm without a
+live policy gradient held the roof it was born under **completely** — twin,
+privileged oracle and both-cosmetic control all exactly `1.0000` against
+`HEADROOM_MAX` 0.85. The obvious repair, and the first one the spec's own
+docstring proposed, was to score the contrast against the **RANDOM walk**
+instead: it reads `0.3639`, which is nowhere near the ceiling, so it has
+headroom by inspection. The Review refused it on a different and correct ground
+(it re-aims the scoreboard while leaving three degenerate arms at the ceiling)
+and adopted a venue repair instead, but it authorised the diagnostic so the
+number would exist before the expensive window opened.
+
+The number is the lesson. Learner `0.0136`, random `0.3639` — a factor of
+**26.8** — and the Welch z over per-life sheltered fractions came back
+**-3.1563** against a bar of 3.0. Barely over. The reason is in the spreads the
+levels do not show: the random arm reads `0.3639 +/- 0.3138` over 8 eval lives,
+so its per-life standard deviation is **86% of its own mean**. A wanderer's
+sheltered fraction is nearly all-or-nothing per life, so the comparator that
+looked generous on levels is almost noise on the statistic that decides.
+
+This is the **mirror image** of the saturated null, and both are failures of the
+same omission — reading a comparator's LEVEL and not its DISTRIBUTION:
+
+* SATURATED: the null sits at the bound, so there is no room above it. Every
+  envelope growth shrinks the standard error and lowers the bar without touching
+  the headroom, which is why the UNSATURATED-NULL RULE forbids that repair.
+* UNDERPOWERED: the null has room but its variance eats the margin. Here an
+  envelope growth *would* help — and that is the trap, because it is the one
+  case where the forbidden-looking repair is the right one, so the two diseases
+  must be told apart before a repair is chosen, not after.
+
+Note what the levels would have predicted if anyone had reasoned from them
+alone: a 26.8x gap reads as an overwhelming result, and this project has a
+standing example one line over of a z that was arithmetic rather than effect
+size (`SH.02`'s own `z_shelter` -377.72, from a twin with **zero** variance over
+2 eval lives and the 1e-9 denominator floor). The same file therefore contains
+both failure modes of quoting a z without its n and its spread.
+
+**Rule:** a comparator is characterised by three numbers, never one — its
+LEVEL, its per-unit SPREAD, and the COUNT of units it is estimated from. Before
+adopting a replacement null, state all three and compute the margin it can
+actually resolve; `|mean_a - mean_b|` is not evidence about a gate whose
+denominator you have not looked at. When a spec declares
+`STATISTIC_BOUND: none` under the unsaturated-null rule, that declaration is
+only half of the pre-registration the rule is reaching for — the other half is
+the null's spread and n, and without it a gate can be registered that no
+outcome inside the envelope could ever clear.

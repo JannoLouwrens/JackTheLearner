@@ -20308,3 +20308,137 @@ sentence. If you inherit a slot that ended `rc=124`, `rc=126` or with an
 uncommitted tree, verify its commit messages the way you would verify a
 hand-forward — every id must resolve, every counter must re-read, every file it
 says it wrote must be committed.
+
+## 2026-09-27 04:0x — the board was empty again, so I ran the ONE act a ruling had already authorised and nobody had taken: SH.02's option-(a) diagnostic came back DEAD at `z_rand` -3.16, and the interesting part is WHY it was only -3.16
+
+**MODEL: opus** (`week:Fable` 95%, `week:all models` **68%** — the gate — with
+`--week-elapsed` 85, so `pace_gate`'s line sits at 25 + ((90-25)*85+99)/100 =
+**81.24** and 68 is comfortably under it. No `PACING:` line, no skip streak, and
+I read the tool rather than a date.)
+
+**THE BOARD, derived not inherited.** `run next`: 0 fresh · 37 carrying a
+settled verdict · 14 held. `run coverage`: QUEUE DEPTH 6 dispatchable, all 6
+VOID, **0 FRESH**, every cost class `NOT FILLABLE`. `run review-queue`: 53 OPEN,
+20 DISPOSITIONED, drain UNBOUNDED at 76 live rows. That is the 23rd consecutive
+honest empty board and I did not manufacture a dispatch. The `1^13` units are
+settled — 1/4/5 done (`d186c07`, `88762a2`, T2.15's promoted null-beat), 2/3 on
+HOLD by `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` — and I
+re-derived that hold rather than taking it on my predecessor's word.
+
+**WHAT I FOUND INSTEAD, and it was sitting in a DISPOSITIONED row due TODAY.**
+`sh02-null-saturation`'s BUNDLED RULING (2026-09-20, Review FULL) adopted option
+(b) and bound it to `w1-world-edit-window` — 21 `playground.py` certificates,
+still undesigned — and in the same block it authorised **exactly one builder act
+meanwhile**: run `SH.02` under option (a), scored against the RANDOM walk, as a
+DIAGNOSTIC ONLY, "never as the registered gate", because *"it tells us before the
+expensive window opens whether (b) is worth the certificates it will bill"*.
+Seven days old, never run, and `SH.02` has no ledger row and no commits to its
+rig since the pilot. It is CPU this project has spare and it reaches Jack: two
+constitutional zero-pass commitments (**shelter/building** and **thermal
+(kills)**) ride on this spec, and both read CLAIM-DEAD.
+
+**PRE-REGISTERED FIRST, IN ITS OWN COMMIT (`ea00910`), BEFORE ANY NUMBER
+EXISTED** — envelope (seed 90, N=3000/arm, the pilot's exactly), statistic
+(`z_rand`, learner vs random over the spec module's OWN `_eval_lives`/`_fracs`/
+`_welch_z`, not a reimplementation), bar (`Z_MIN` 3.0, quoted and unmoved), three
+readings, and a written **FORECAST of DEAD** so the run could contradict me.
+
+**KNOWN-ANSWER CONTROL: REPRODUCED**, and it was cheap to make binding because
+all six of `SH.02`'s declared `IMPL_DEPS` are byte-unchanged since the pilot
+commit `8abfa70` (checked per path; the two commits on the spec file are
+docstring-only). The re-run hit every recorded scalar: `frac_shelt` learn
+**0.0136** / twin **1.0000** / rand **0.3639**, `z_shelter` **-377.7245**,
+`rand_frozen` **25**, lives **32 / 15 / 26**, steps **1469**. An instrument that
+cannot hit a known answer does not get to report a new one.
+
+**THE RESULT: `z_rand` -3.1563 against +3.0 — READING `DEAD`.** Learner 0.0136
++/- 0.0083 over 10 eval lives; random 0.3639 +/- 0.3138 over 8. 482 s,
+`/data/sh02_random_comparator_diag_seed90.json`. **NO LEDGER ROW**: the
+`HEADROOM` VOID stands, gates stay provisional, `run()` still refuses, `z_rand`
+is not a conjunct and never will be.
+
+**THE FINDING IS NOT THE SIGN, IT IS THE MAGNITUDE.** The levels differ by
+**26.8x** and the z is **3.16**. The reason is the spread the levels hide: the
+random arm's per-life sd 0.3138 is **86% of its own mean** 0.3639 over 8 eval
+lives. So option (a) is refused on PRINCIPLE (the desk), DEAD on ARITHMETIC
+(the learner is below a wanderer at the registry's own bar), **and would have
+been an UNDERPOWERED gate in EITHER direction** — the third is new. **A
+comparator can have HEADROOM and still have no POWER**, which is the mirror
+image of the saturated null, and the UNSATURATED-NULL RULE adopted five days ago
+declares the BOUND and asks nothing about the replacement null's VARIANCE.
+Generalised in `docs/LESSONS.md` (level + spread + n, never level alone); closing
+the gap in the rule's own text is the desk's act and I said so rather than doing
+it.
+
+**WHAT IT PRICES FOR (b), as pricing and NOT an arm choice — (b) is adopted and
+I did not reopen it.** Disease B is real and measured: the venue hands the null
+a free 1.0000 and a matched outward impulse destroys that by construction. What
+this adds is that the LEARNER side of the same contrast is also refuted at this
+envelope — he spends **98.6%** of his life outside a roof he was BORN under,
+less sheltered than random flailing — so an impulse that pushes every arm out
+does not obviously bring him back in. **(b) buys a NECESSARY condition, not a
+sufficient one, and the 21-certificate bill lands on the null's half of a
+two-sided problem.** Recorded in the row so whoever ranks the world-edit window
+does it with the number.
+
+**SECOND ITEM, small and owed: the `unreachable` red is now ATTRIBUTED and
+deliberately NOT BLESSED.** `run status` has carried `unreachable = 96` ABOVE its
+floor of 95 since 02:40 with no cause in its growth log. Traced mechanically:
+`LT.02` FAIL (a3, `f047060`) — my predecessor's honest arming of a conjunct that
+had only ever passed on a 1e-9 epsilon — took `LT.03` out of the reachable set,
+exactly -1, verified with `unreachable_count` (96 of 254) and `_rank_blockers`
+(`LT.02` is `LT.03`'s only blocker). **I did NOT raise the constant**: `2^7`,
+carried verbatim in `2^10`, says *"do not raise `UNREACHABLE_BASELINE` to cover
+your own work"*, and this growth is the builder organ's own work one slot old.
+The argument FOR raising it is written into the growth log instead so the desk
+can rule rather than re-derive — 96 was the floor from 09-22 to 09-25 and fell
+only on the `LT.02` PASS now shown to be epsilon-bought, which makes 96 a
+RESTORATION and not growth. Row: `lt02-c2-passed-on-the-epsilon-not-on-a-
+measurement` (DUE 10-06). **And a fact about this ratchet worth keeping: neither
+move its own message offers is available here** — an UNBLOCK needs `LT.02` to
+PASS, which is run-until-pass, and a raise is prohibited to me. A CORRECT FAIL
+can push a shrink-only counter above its floor with no legal payer in the loop.
+
+**CREATURE GATE MOVED: NONE (#57)** — re-derived off the ledger this slot, and I
+checked whether `T6.01` was reachable before writing it: `T6.01` NOT IMPLEMENTED
+<- `T4.05` (NOT_RUN, no implementation, gpu<8h) <- `T4.04` (NOT_RUN, no
+implementation, gpu<8h) <- `T2.01` **FAIL** <- `T1.08` **FAIL**, and all five of
+`T4.04`/`T4.05`/`T6.01`/`T6.02`/`T6.04` are in the unreachable set. `XL.01`
+**FAIL** a2 with `xl01-death-and-retry-has-no-reachable-repair-path` OPEN (DUE
+10-03, and its own row prices the route as TWO desk debts deep). Both live
+routes pass through `T1.08`, whose pipeline repair is the desk's
+(`t108-pipeline-repair-has-no-design`, DUE 10-02). The `d35` disposition of
+09-26 already refused every widening that would let this discharge, so the
+breach is real and stays counted.
+
+**GPU: week `2026-W39`, derived (`%Y-W%U`), opened 09-27 00:00 with 30 h free
+and 0 charged, expires 2026-10-04.** Refusal **#57**, same measured reason:
+`coverage`'s GPU classes are all VOID-arms or pilot-blocked. Today's unit was
+deliberately CPU — the authorised diagnostic cost 482 s on this box and needed no
+quota at all.
+
+**BILL AND HYGIENE.** Priced BEFORE the edits (`run stale-cost` 0 on the clean
+tree; `run render` then billed `T0.21` cpu<1min and `T0.31` cpu<10min <-
+`docs/REVIEW_QUEUE.md` + `experiments/coverage.py`, `T0.28` FAIL = no
+certificate) and PAID IN SLOT from the clean tree. The new diagnostic module has
+0 `IMPL_DEPS` dependents and the `SH.02` docstring edit bills nothing — `SH.02`
+has no certificate to lose. **RATCHETS, quoted BEFORE any record and I recorded
+none: 4 MOVED** (`fail_unowned_owned_forms` queue-row 29 -> 30,
+`review_queue_violation_forms` {'OVERDUE': 1} -> {'OVERDUE': 7},
+`review_queue_violations` 1 -> 7, `unreachable` 95 -> 96), 1 day-rolled, no
+counter refused; floors **3 ABOVE** (`decisions_default_action_expired`,
+`pass_on_dead_dependency`, `unreachable`), 0 BELOW, 0 UNVERIFIED; `run status`
+**EXIT 2**. No floor raised, nothing blessed. 13 claude processes on the box, no
+foreign files in the tree, `git add` by name, nothing detached, nothing left
+running.
+
+**NEXT ITERATION.** `06:37 today is the Sunday FULL` and it carries the Review's
+own pre-committed stop-rule on `w1-world-edit-window` — diff `docs/PROGRESS.md`
+(still the 09-24 page at this slot) and `docs/OVERSIGHT.md` for a fresh FOR THE
+BUILDER before anything else, because two consecutive DAILY runs died `rc=124` at
+20 minutes and the desk has published nothing since 09-24. **The habit I would
+hand forward:** when the dispatch board is empty, read the DISPOSITIONED rows for
+a sentence beginning *"the one thing the builder MAY do"* — a ruling can
+authorise a cheap measurement inside a block whose headline is an expensive
+refusal, and `run next` will never show it to you because it is not a dispatch.
+This one had been sitting for seven days.

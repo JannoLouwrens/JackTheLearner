@@ -1169,6 +1169,42 @@ QUEUE_EMPTY_BASELINE = frozenset()
 # `run status` carried the gap as BELOW ITS DECLARED FLOOR for one slot —
 # again the ratchet working — and this commit pays it. Shrink-only, floor
 # follows the number down.
+# ABOVE THE FLOOR AT 96 SINCE 2026-09-27 02:40, ACCOUNTED HERE AND **NOT
+# RAISED** (builder). The live count is 96 of 254 and this constant stays at 95,
+# so `coverage --check` and `run status` stay RED on `unreachable_grew` on
+# purpose. The cause, traced mechanically rather than inferred from the delta:
+# `LT.02` recorded **FAIL** (attempt 3, ran_at 2026-09-27T02:40:10, commit
+# `f047060`, harvested `03af51f`) when the builder armed a conjunct that had
+# never been decided by a measurement — its C2 passed on the 1e-9 epsilon, and
+# `chaos_reward_ratio 5.2631` was `5.2631e-9 / 1e-9`. `LT.03` declares
+# `depends_on: [LT.01, LT.02, PG.4]`, so it left the reachable set and it is
+# exactly -1: verified by running `unreachable_count` at this commit (96 of 254)
+# and by `_rank_blockers`, which names `LT.02` as `LT.03`'s only blocker.
+#   WHY THE FLOOR IS NOT RAISED, WHICH IS THE POINT OF THIS ENTRY. Every prior
+#   GROWTH line here was signed by the Review. The prohibition set carried on
+#   `scripts/ladder_prompt.md` since 2026-09-14 (`2^7`, restated verbatim in
+#   `2^10`) reads *"Do not raise UNREACHABLE_BASELINE to cover your own work"* —
+#   and this growth IS the builder organ's own work, one slot old. A builder
+#   raising the floor over its own edit is the exact act that sentence forbids,
+#   however good the justification reads, so the honest move is to leave the red
+#   standing WITH ITS CAUSE ATTACHED rather than to bless it. There is precedent
+#   for accounting without raising: the `94 @ 2026-09-06` entry did it for an
+#   interim above-floor reading.
+#   AND THE ARGUMENT FOR RAISING IT, WRITTEN DOWN SO THE DESK CAN RULE ON IT
+#   RATHER THAN RE-DERIVE IT. 96 was this floor's value from 09-22 to 09-25; it
+#   fell to 95 only because `LT.02` PASSed on 09-25 (`d377874`), and that PASS is
+#   the one now shown to have been bought on an epsilon. On that reading 96 is a
+#   RESTORATION of a floor whose shrink was purchased by a certificate since
+#   withdrawn, not new growth — the same shape the Review blessed at
+#   `95 @ 2026-09-06` (a strengthening that FAILed a spec and blocked its
+#   dependents). The routed row is `lt02-c2-passed-on-the-epsilon-not-on-a-
+#   measurement` (OPEN, DUE 2026-10-06); the raise belongs there or nowhere.
+#   THE REPAIR IS NOT AN UNBLOCK, and this ratchet's own message offers that as
+#   the alternative: unblocking `LT.03` requires `LT.02` to PASS, and re-running
+#   a spec whose conjunct has just correctly failed it is run-until-pass. So
+#   neither of the two moves the message names is available to this organ, which
+#   is itself worth knowing about a shrink-only counter: a FAIL that is CORRECT
+#   can put this number above its floor with no legal payer in the loop.
 UNREACHABLE_BASELINE = 95
 
 

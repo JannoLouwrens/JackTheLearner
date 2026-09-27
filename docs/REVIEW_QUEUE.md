@@ -2339,6 +2339,56 @@ ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed
         **the desk keeps writing the truth in a place the instrument does not
         look, and twice in one morning is not bad luck.** Nothing about the
         ruling changes; only its position does.
+    BUILDER-DIAGNOSTIC 2026-09-27 ~04:3x — **THE ONE ACT THIS RULING AUTHORISED
+        HAS BEEN RUN, AND ITS READING IS `DEAD`.** The ruling's own words:
+        `SH.02` may be run under (a) as a DIAGNOSTIC ONLY, "never as the
+        registered gate", because "it tells us before the expensive window opens
+        whether (b) is worth the certificates it will bill". Pre-registered in
+        `ea00910` BEFORE any number existed — envelope, statistic, the quoted
+        and unmoved `Z_MIN` 3.0, three readings, and a written FORECAST of DEAD
+        so the run could contradict it — then run from
+        `experiments/sh02_random_comparator_diag.py` through the spec module's
+        own `_run_arm`/`_eval_lives`/`_fracs`/`_welch_z`. Seed 90, N=3000/arm,
+        482 s, artifact `/data/sh02_random_comparator_diag_seed90.json`.
+        **NO LEDGER ROW WAS WRITTEN**: `SH.02` is still pilot-blocked, its
+        `HEADROOM` VOID stands, its gates stay provisional and `run()` still
+        refuses. Nothing here asks to re-point the registered null and nothing
+        here touches the adopted arm.
+        **KNOWN-ANSWER CONTROL: REPRODUCED.** All six declared `IMPL_DEPS` are
+        byte-unchanged since the pilot commit `8abfa70` (checked per path, zero
+        commits each; the two commits on the spec file are docstring-only), so a
+        deterministic re-run had to hit the pilot's recorded scalars or forfeit
+        the right to report a new one. It hit every one: `frac_shelt` learn
+        **0.0136** / twin **1.0000** / rand **0.3639**, `z_shelter`
+        **-377.7245**, `rand_frozen` **25**, lives **32 / 15 / 26**, steps
+        **1469**.
+        **THE STATISTIC: `z_rand` -3.1563** against the quoted +3.0 — learner
+        0.0136 +/- 0.0083 over 10 eval lives, random 0.3639 +/- 0.3138 over 8.
+        So option (a) is refused on PRINCIPLE (this desk), **and DEAD on
+        ARITHMETIC** (the learner is 3.16 sigma BELOW the wanderer at the
+        registry's own bar), and **THIRD AND NEW: it would have been an
+        UNDERPOWERED gate in EITHER direction, which the levels hid.** The
+        levels differ by 26.8x and the z is only 3.16, because the random arm's
+        per-life spread 0.3138 is 86% of its own mean 0.3639 over 8 eval lives.
+        **A comparator can have HEADROOM and still have no POWER — the mirror
+        image of the saturated null, and the UNSATURATED-NULL RULE adopted
+        2026-09-20 declares the bound but asks nothing about the replacement
+        null's VARIANCE.** That is a gap in a rule this desk adopted five days
+        ago, it is generalised in `docs/LESSONS.md` this slot, and closing it in
+        the rule's own text is this desk's act, not mine.
+        **THE PRICING FACT THE RULING ASKED FOR, and it is pricing and NOT an
+        arm choice — (b) is adopted and I am not reopening it.** Disease B is
+        real and measured: the venue hands the null a free 1.0000, and a matched
+        outward impulse destroys that by construction. What this run adds is
+        that the LEARNER side of the same contrast is ALSO refuted at this
+        envelope — he spends 98.6% of his life outside a roof he was BORN under,
+        less sheltered than random flailing — so an impulse that pushes every
+        arm out does not obviously bring him back in. **(b) therefore buys a
+        NECESSARY condition for this claim, not a sufficient one, and the
+        21-certificate `playground.py` bill lands on the null's half of a
+        two-sided problem.** Whether that changes (b)'s rank against
+        `w1-world-edit-window`'s other queued rows is the desk's; it is recorded
+        here so the decision is made with the number rather than without it.
 
 **The measurement.** `SH.02`'s seed-90 pilot (N=3000/arm, 6 arms, ~19 min)
 fired the spec's own pre-registered `HEADROOM` VOID. Every arm without a live
