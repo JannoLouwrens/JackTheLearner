@@ -4473,6 +4473,59 @@ say so in the `default` and mark the accrued violations absorbed rather than
 letting them accrue unread. Full finding: `docs/OVERSIGHT.md` FINDING 1, 116th
 audit.
 
+**EVIDENCE ADDENDUM, 2026-09-27 12:5x UTC (overseer, 125th audit). No `DECIDE`
+field above is touched, nothing is struck, and no disposition is offered — this
+organ may append evidence to a decision entry and may not amend another desk's
+conduct call. What is added is the THIRD realised cost of clause 2, and the
+first where the act it forbids is a FLOOR rather than a checker.**
+
+**CLAUSE 2 NOW FORBIDS THE ONLY REPAIR TO A HOLE OPENED TODAY.** At 12:28
+(`eba3e58`) the builder converted `T0.01`/`T0.10`'s control declarations to
+`protocol.NoControlByDecision` — falsy by type — executing option (i) of
+`docs/REVIEW_QUEUE.md`'s `t018-explicit-no-control-reads-as-an-unrun-promise`.
+The act is correct, was pre-priced by that row, and moved no threshold. Its
+consequence, measured at this HEAD and not read off any page:
+
+```
+before:  T0.01, T0.10 in `declared_control_never_ran`  -> GATED `== 0` by T0.18
+after:   T0.01, T0.10 in `no_control_specs` = 2        -> gated by NOTHING
+```
+
+Four checks, all at HEAD: `verify.py` declares exactly one constant
+(`UNDECLARED_CONTROL_BUDGET = 0`) and no `BASELINE_*` for this class;
+`run.py`'s `FLOORED_CLASS_TOOLS = ("coverage","champions","review_queue",
+"decisions")` does not include `verify`, so the floored-class scan cannot see
+it either; `T0.18._check` reads `no_control_specs` in no conjunct; and
+`cmd_verify` prints it under a `?` marker and then `return 0` unconditionally.
+So growth in *"standing PASSes resting on a gate never shown able to report the
+bad case"* — this project's own §1 integrity question — now reaches **no floor,
+no committed reading, no gate and no exit code**.
+
+**THE FORBIDDEN REPAIR IS ONE LINE.** Joining `no_control_specs` to
+`ratchet_live` with a declared floor of 2, in the exact idiom the five
+`decisions.py` classes joined on 2026-09-26 (120th audit FINDING 2). Clause 2
+reads *"no new audit organ, checker or ratchet may be built (coverage/decisions/
+champions keep running, nothing joins them)"*, so the builder may not write it,
+and the overseer may not write code. The class therefore stays unfloored for as
+long as this freeze stands — which the 116th audit's addendum above measured as
+**unbounded on this project's own dependency graph**.
+
+**WHAT IS NOT CLAIMED.** Not that the freeze is wrong, not that the builder
+breached anything (it did not: it disclosed the class change in its own commit
+body and in a BUILDER-TRACE, and it did not touch a floor), and not that the two
+specs' exemption is illegitimate — the 52nd audit's ruling that an import check
+and a job round-trip have nothing to sabotage stands, and I verified that a
+hand-typed imitation of the refusal still reads as a PROMISE
+(`declares_a_control("NONE, BY DECISION (typed): trust me")` → True), so the
+exemption cannot be claimed by prose. The defect is that **nothing counts the
+population**, and that the act which would count it is forbidden by name.
+
+**DISCHARGE.** The 116th audit's option **(b)** — *exempt truthfulness repairs
+to EXISTING checkers from rule 2* — discharges this if it is widened one word to
+cover **floors** on existing checkers as well as repairs to them. No new
+decision entry is needed and no `decide_by` moves. Full finding:
+`docs/OVERSIGHT.md` RANK 2, 125th audit.
+
 ## D19 — RESOLVED BY THE OWNER 2026-09-17: "yes may download anything to /data"
 
 *Filing repair, builder, 2026-09-24, ordered by the 113th audit: the ruling
