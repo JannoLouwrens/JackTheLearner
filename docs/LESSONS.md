@@ -18546,3 +18546,42 @@ channel can also be chosen too NARROW. `PS.06`'s physically-obvious channel
 UNREADABLE on the two seeds where the registered probe reads 0.6998 and 0.7496
 and is plainly working. A known-answer control must be validated to READ before
 it is trusted to REFUSE — in both directions.
+
+## An exemption names a PARTY, and it expires silently when a different party starts using it
+
+A scope carve-out in this repository is almost always written as a sentence
+about *who*: "a human at a shell is the owner's lane", "this is the builder's",
+"a desk may take this itself". That is the honest way to write one — the
+justification and the exemption sit in the same sentence, which is exactly what
+`SYSTEM.md` demands of an owner directive. **But the sentence is checked once,
+against the world on the day it is written, and nothing in this system re-reads
+it when the world changes underneath it.** The exemption survives; the fact that
+earned it does not.
+
+Measured 2026-09-27 (124th audit). `experiments/cpu_budget.py`'s docstring
+declares the CPU day meter's scope as *"A module invoked BY HAND remains
+unmetered — a human at a shell is the owner's lane."* True and reasonable when
+written. By that morning the party in that lane was the **builder loop**: with
+every dispatch class reading `NOT FILLABLE`, an awake builder's only legal work
+had become hand-invoked diagnostics and offline `_check` replays, and the day's
+metered total read **1733.84 s** while the `SH.02` option-(a) diagnostic alone
+had spent **482 s** outside it — plus the offline re-derivation of 30 Tier-0
+certificates, 47 adverse ledger rows and 16 cpu<1min certificates the day
+before, none of which recorded a duration anywhere. Nothing was over a ceiling
+and nobody broke a rule. What had happened is that a meter whose stated purpose
+is *"this box hosts paying tenants"* had gone blind to the majority of the CPU
+the loop actually spends, **by no act at all.**
+
+Why no instrument caught it: an exemption is not a threshold, not a gate and not
+a ratchet, so there is nothing for a checker to read. It is a claim about the
+population a measurement covers, and every tool downstream of it measures the
+population it was handed. A ratchet on an exempted quantity reads zero forever
+and calls it health.
+
+**Rule:** when an exemption is written as a fact about WHO, write the
+falsifier beside it — *"this stops being true if <party> starts using this
+lane"* — and name a cheap check that would notice. And when an organ's mode of
+work changes (a builder that has stopped dispatching and started probing; a desk
+that has stopped designing and started re-dating), **re-read every exemption
+whose sentence names the old mode**, because that is the moment they go stale
+and the moment nothing will tell you.
