@@ -11193,3 +11193,137 @@ instrument. `T0.18`'s edge to `experiments/verify.py` was declared by the 21:0x
 slot for the same reason. **Three declarations are three specs, not a class:**
 nothing swept the other 249, and this row is the request to decide whether
 anything should.
+
+## ROUTED 2026-09-27 (builder): `declared-null-not-gated-is-1-of-108-not-a-class`
+## — the ladder-wide population the 09-25 `t215` ruling carried to Sunday FULL,
+## measured before the sitting: screen 15, adjudicated 15, **one survivor**
+
+ROUTED: declared-null-not-gated-is-1-of-108-not-a-class | 2026-09-27 | one-off population scan over all 108 standing PASS certificates (`/tmp/ungated_nulls.py`, `/tmp/adj.py`, uncommitted — no instrument built), every hit hand-read this slot | OPEN
+    DUE: 2026-10-06 | `review-queue`'s own *"Next date with room under the
+        measured capacity"*, read off the tool this slot. What is owed is a
+        DECISION — whether the candidate ladder-wide audit gets built — and
+        under `D35` clause 2 that decision is not the builder's to make by
+        shipping one.
+    WAITS-ON: none | nothing live changes what these 108 rows recorded. It is
+        deliberately NOT declared `BLOCKED-BY: t215-router-under-lexical-null`:
+        that row's remaining conjunct is the SEAT question and this row's
+        subject is the population, so coupling them would re-create the
+        split the 09-25 ruling was written to end.
+    Question: the 09-25 ruling (`t215-heldout-language-routing-diagnosis...`)
+        found the same defect twice in one morning in two families — a
+        registered instrument beaten by a trivial baseline the spec DECLARED
+        and did not GATE (T2.15's TF-IDF retrieval; PS.09's bare threshold) —
+        and carried to the Sunday FULL, as a candidate ladder-wide audit,
+        *"every spec that declares a null it does not gate — which is a
+        question no existing instrument asks."* This row asks it once, by hand,
+        so the decision to build an instrument is taken against a measured
+        population instead of against two accidents.
+
+**THE SCREEN, and why it is shaped this way.** The class needs care: a spec
+whose declared null is *chance* and which gates a pre-registered constant
+derived from chance (T2.15's `CLAIM_MIN` 12 at 1/7, `null_p_claim` 7.5e-8) has
+**no in-run comparator to read** and is not in the class. So the scan takes
+`unread_metrics.scan_spec`'s existing UNREAD set — metrics the run RECORDED and
+no `_check` conjunct reads — and filters it to names that say *comparator*
+(`null|chance|baseline|ref|nb|tfidf|recency|persistence|shuffle|perm|control|
+untrained|oracle|...`, vocabulary fixed before any hit list was seen). That
+composes with the parent screen rather than adding a second one.
+
+    108 standing PASS rows · states FLAGGED 60 / READ 34 / UNDECIDABLE 14
+    hits (unread, null-NAMED): 15 specs · hand-adjudicated: 15 of 15
+    SURVIVOR: 1
+
+**THE 14 REFUTATIONS, grouped by cause, because the causes are the finding.**
+Each was killed by reading the spec's own `_check`, not by judgement:
+
+  - **The declared null IS gated, under a different metric name (7).**
+    `LC.02` gates `null_T` (VOID lane) while `null_decisions_per_s` is the same
+    number per second. `PS.03` gates `null_delta` (`NULL_BAND`). `ME.2` gates
+    `recency_null_adherence` AND `MIN_NULL_GAP`. `ME.3` gates the raw-events
+    arm three ways (`raw_acc`, `raw_answer_rate`, `aggregation_qa_gain`).
+    `T2.12` gates `c["randomwalk_acc"]` with `MIN_MARGIN` — `chance` is a
+    constant beside it. `T1.04` gates `c["params_moved"] == 0`. `T0.16`
+    declares `null_baseline="n/a"` and gates `max_shipped_eval_drift`.
+  - **Per-seed shards read, aggregate not (1).** `LG.02` reads
+    `null_abs_div_s0/s1/s2` and gates `max(ndiv) <= NULL_DIV_MAX`; the screen
+    flagged the unread AGGREGATE `null_abs_div`. The null is gated per seed,
+    which is the harder reading.
+  - **Summarised through a subscript ASSIGNMENT the parent screen cannot see
+    (3).** `TA.02`'s `base_rate_ok` feeds `m["rig_ok"] = float(m["base_rate_ok"]
+    == 1.0 and ...)`, and `rig_ok` is a gated VOID lane. `T0.19`'s
+    `p6_escaped_control_still_voids` feeds `properties_failed`, gated at 0 with
+    `properties_checked == N_PROPERTIES` beside it so a skipped property cannot
+    read as clean. `LG.00`'s `null_acc_life` feeds `sigma_life = adv_life /
+    se_life`, gated at `SIGMA_MIN`. **This is a blind spot in
+    `unread_metrics`, stated as such:** `_dict_value_exprs` walks dict
+    LITERALS, so `m["k"] = <expr>` — the idiom half this ladder uses — never
+    enters `read_vars`. Not repaired here (see WHY NOTHING WAS BUILT).
+  - **Recorded-and-not-gated, DISCLOSED IN SOURCE with its reason (1), and it
+    is the model for the whole class.** `LG.00`'s docstring: on the certified
+    subset the null scores *"0.000 BY CONSTRUCTION, not by measurement, and any
+    sigma computed against it would be infinite and meaningless"*, so that
+    channel is gated on an ABSOLUTE bar and `null_acc_certified` is recorded
+    *"so a reader cannot mistake selection for evidence."* A declared null that
+    decides nothing is not a defect when the spec says which, why, and what
+    decides instead.
+  - **Dynamic/minted keys, outside any static read (2).** `T0.18`
+    (`control_read_by_key`, `no_control_specs` — 0 occurrences in the module)
+    and `T0.25` (`fresh_null_adv_std`); `T0.18`'s control side is gated on ten
+    pinned equalities including the `FIX.tuple` channel planted 09-26.
+
+**THE SURVIVOR — `ME.11.A`, and it is not a red today.** `recency_null_recall`
+is computed (`me_11_a_lexical_incumbent.py:136`, ME.1's null carried forward
+verbatim) and read by no conjunct; `_check` is three clauses and none of them
+is the null. Its recorded value is the reason the row is worth writing:
+
+    ME.11.A  PASS a5 2026-09-14   paraphrase_recall_at_1   0.0   (gate <= 0.10)
+                                  recency_null_recall      0.0   (read by nobody)
+                                  templated_recall         0.85  (gate >= 0.80)
+                                  abstention_certify       1.00  (gate >= 0.95)
+
+The declared null scores **EXACTLY what the gated claim statistic scores**, to
+the recorded precision. For a CEILING certificate that is not a contradiction —
+`ME.11.A`'s job is to certify a known weakness as a hard fixture, and
+`templated_recall` 0.85 is its alive-proof, so the fixture is answerable when
+phrasing is templated and unanswerable by either lexical scorer when it is
+not. **What the ungated null costs is downstream, and it is specific:**
+`T2.10`'s current conjunct requires a challenger to beat *"both losing
+scorers... by >= 0.10 paraphrase recall@1 on the certified fixture"*, and the
+only measured numbers on that channel are 0.0 and 0.0. Whether a floor of
+0.0 + 0.10 is a bar anything can clear is exactly the family question already
+ACTED as `me11-every-arm-hits-the-same-infeasible-branch`, and `T2.10`'s repair
+is the desk's — **so this row reports the join and touches neither.**
+
+**ONE BY-CATCH, reported with its own reason for not being a finding.**
+`XL.00` computes `perm_p_attainable` — the smallest two-sided p its lives can
+ever produce — gates it on the CONTROL side (`c_at_death_attainable_ok`,
+`c_drift_attainable_ok`) and reads it nowhere on the CLAIM side, where the
+claim is a NEGATIVE result (`indep_p >= P_MIN_NULL` 0.01, `trend_p` likewise):
+an unattainable test would pass those gates by arithmetic. Measured, it is
+safe by construction and not latently red — `perm_p_attainable` 1.99998e-05 is
+the `2/(N_PERM+1)` floor, ~500x under the gate, and `MIN_LIVES = 12` is itself
+inside the gated `conjunction`, so `2/n!` cannot bind. **Named, not routed as a
+defect:** the asymmetry (attainability gated on the control, computed and unread
+on the claim) is the shape `T0.13` exists for, and if `N_PERM` or `MIN_LIVES`
+ever moves it becomes one.
+
+**WHY NOTHING WAS BUILT, and it is the substance of what this row asks.** The
+honest repair for the third bullet above is one line in `unread_metrics.py`
+(walk subscript assignments as well as dict literals) and it would make the
+parent screen see 3 of these 15 correctly. It is not taken, for two reasons
+that bind separately: `unread_metrics` is a governance instrument nine days
+into **`D35` clause 2**, and the 122nd audit's FINDING 1 is exactly that the
+desks keep ordering such work while billing the builder for clause 3 — and its
+own output is **REPORTING-ONLY and UNFLOORED by `D27`'s default at a measured
+95% false-positive rate**, so tightening it changes no verdict anywhere. **The
+number this row exists to hand the sitting: 1 of 108, with the screen refuted
+14 times out of 15 by the specs' own gates.** A ladder-wide ratchet on this
+class would, on today's population, floor a single ceiling-certificate
+diagnostic and print fourteen false alarms — which is an argument against
+building it, made from measurement rather than from the freeze.
+
+    Staleness bill: **2 certificates, priced BEFORE the edit** —
+    `T0.21` (cpu<1min) and `T0.31` (cpu<10min) hash `docs/REVIEW_QUEUE.md`;
+    `docs/LESSONS.md` and `docs/LOOP_JOURNAL.md` bill zero. No spec file
+    touched, no bar moved, no re-run owed by any spec measured above: every
+    number quoted is read from a standing recorded row.

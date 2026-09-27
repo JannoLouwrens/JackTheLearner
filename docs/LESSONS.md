@@ -18075,3 +18075,57 @@ appears three times. **A trap that is harmless only while the project is
 stalled is not harmless** — it fires on the first day somebody edits Jack's
 brain, which is the work everything else is blocked on. Routed as
 `gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see`.
+
+## A DECLARED NULL THAT DECIDES NOTHING MUST SAY SO IN SOURCE — and a name-match is not a finding (2026-09-27)
+
+Two specs were caught in one morning (09-25) losing to a baseline their own
+registry entry DECLARED and their `_check` never read: `T2.15`'s router beaten
+by its TF-IDF retrieval null on seed 2 while the only branch that fired was an
+unrelated claim bar, and `PS.09`'s RFF probe beaten by a bare threshold. The
+ruling carried the obvious next question to the Sunday FULL — *every spec that
+declares a null it does not gate* — and it was asked once, by hand, over all
+**108 standing PASS certificates** before that sitting. The answer:
+
+    screen (unread metric whose NAME says comparator):  15 specs
+    hand-adjudicated against each spec's own `_check`:  15
+    survivors:                                           1   (ME.11.A)
+
+**So the general lesson is NOT "this class is everywhere".** Fourteen of
+fifteen were refuted by the specs' own gates, and the refutations fall into
+four mechanical causes worth knowing before anyone screens for this again: the
+null is gated under a DIFFERENT metric name (7 — `LC.02`'s `null_T`, `PS.03`'s
+`null_delta`, `T2.12`'s `randomwalk_acc`); the per-seed SHARDS are gated and
+the unread hit is the aggregate (1 — `LG.02`, and per-seed is the harder
+reading); the value is summarised through a SUBSCRIPT ASSIGNMENT
+(`m["rig_ok"] = float(m["base_rate_ok"] == 1.0 and ...)`) which
+`unread_metrics`' dict-literal walk cannot see (3); or the keys are minted
+dynamically (2). **A vocabulary match on a metric name is a screen, and a
+screen's output is a work-list, never a count** — the same discipline `D27`
+already forced on the parent instrument at its measured 95% false-positive
+rate. Publishing 15 as "fifteen ungated nulls" would have been a false
+ladder-wide indictment built out of correct arithmetic.
+
+**THE CONSTRUCTIVE HALF, which is the rule to carry.** `LG.00` is in the
+screen's hit list and is the one spec that cannot be criticised for it, because
+it wrote down what the others left implicit: on its certified subset the null
+scores *"0.000 BY CONSTRUCTION, not by measurement, and any sigma computed
+against it would be infinite and meaningless"*, so that channel is gated on an
+ABSOLUTE bar and the null is recorded *"so a reader cannot mistake selection for
+evidence."* That is the whole repair, and it needs no instrument:
+
+> **When a registered null is computed and gates nothing, the spec's own source
+> must say which conjunct decides instead and why the null cannot.** A null that
+> is silent about its own role is indistinguishable, from the outside, from a
+> null the spec lost to — which is exactly how `T2.15` recorded a mechanism
+> beaten by its declared baseline and exited through a different gate.
+
+**AND THE METHOD NOTE, because it decided what shipped.** The honest repair to
+the third cause is one line in `unread_metrics.py`. It was not taken: that file
+is a governance instrument nine days into `D35` clause 2, its output is
+reporting-only and unfloored, and tightening it would change no verdict
+anywhere — while the measurement itself, which cost one slot and no new code,
+is what tells the desk that a ratchet on this class would floor one ceiling
+diagnostic and print fourteen false alarms. **Measuring a proposed instrument's
+population is cheaper than building it, and it is the only evidence that can
+argue against building it.** Routed as
+`declared-null-not-gated-is-1-of-108-not-a-class`.
