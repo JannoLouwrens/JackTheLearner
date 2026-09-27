@@ -18129,3 +18129,49 @@ diagnostic and print fourteen false alarms. **Measuring a proposed instrument's
 population is cheaper than building it, and it is the only evidence that can
 argue against building it.** Routed as
 `declared-null-not-gated-is-1-of-108-not-a-class`.
+
+---
+
+## WHEN A REPAIR MOVES A BOTTLENECK, EVERY DOCUMENT THAT FORECASTS FROM THE OLD ONE KEEPS FORECASTING — so a fixed constraint leaves behind a fleet of confidently wrong predictions, and the repair's own comment is usually the only place the move is written down (2026-09-27, overseer, 123rd audit, from the Review's `rc=124` deaths)
+
+On 2026-08-31 `scripts/review.sh` raised `TURNS_PER_MIN` from 3 to 6 because
+seven max-turns deaths across three organs had all left time on the clock. The
+repair worked. Its own comment said what would happen next, in as many words:
+*"At 6/min the `timeout` becomes the binding ceiling, which is the one that
+actually caps spend; `--max-turns` returns to being the runaway guard."*
+
+Twenty-six days later the Review died twice in a row — 2026-09-25 and
+2026-09-26 — at **exactly 20 minutes of a 20-minute wall**, `rc=124`, which is
+`timeout`'s code and not the agent's, with the turn budget nowhere near spent.
+The prediction had come true and **no organ had written it down.** Three live
+documents were still forecasting from the retired mode: `D36`'s decision text,
+`docs/PROGRESS.md`'s `FOR THE OWNER` item 3, and the 122nd audit's own
+FINDING 3, all reasoning forward from *"four of four Sunday FULL runs died at
+max turns"* — a true count, entirely from the 3-turns/min regime, quoted as if
+it forecast a sitting that now runs with four times the turns.
+
+**Why this shape recurs, and it is not carelessness.** A statistic about a
+failure mode is durable, quotable and cheap to carry, while the fact that the
+mode has been retired lives in one shell-script comment and one exit code in a
+log nobody greps. So the statistic propagates by citation — `D36` cited
+`PROGRESS.md`, the 122nd audit cited `D36` — and each hop looks like corroboration
+rather than like the same unrefreshed reading three times. The count never gets
+re-derived because it never looks like a measurement; it looks like history.
+
+**The rule to carry.** *When you repair a limit, the repair is not finished
+until you have named the NEW binding constraint in the same commit — and when
+you quote a failure-mode statistic, date it against the regime that produced it
+before you reason forward from it.* A death count is only a forecast if the
+thing that did the killing is still the thing in charge. The cheap test is the
+one this audit ran and it takes one command: read the `rc`, not the tally.
+`rc=124` and a max-turns death are different diagnoses with different repairs,
+and only one of them is bought by more turns — so a document that cannot tell
+you which one it is describing cannot tell you what to buy.
+
+**The corollary, which is where the cost landed.** `D36` allocated a 40-minute
+Sunday sitting on the strength of the retired statistic, and the `--retry` poll
+that might have rescued either lost day fires **only** on a usage-gate deferral
+marker (`scripts/review.sh:34-42`); an `rc=124` death writes no marker, so it
+consumes the day silently. Two days the retry existed for, and it exited in
+milliseconds on both. **A recovery path scoped to one failure mode goes quiet
+exactly when the mode changes** — the same asymmetry, one layer down.
