@@ -124,6 +124,7 @@ from .. import odour
 from ..tests import ps_05_far_is_a_price as ps05
 
 SEEDS = (0, 1, 2)
+ARTIFACT = "/data/ps05_odour_reference_probe.json"
 
 # The per-seed registered readings this replay must reproduce before any
 # reference number below may be quoted (queue row, re-derived from attempt 1).
@@ -283,6 +284,20 @@ def main() -> None:
         print(f"  probe_r2  min {min(r['probe_r2_replay'] for r in ok):+.4f}"
               f"   vs PROBE_R2_MIN {ps05.PROBE_R2_MIN}")
 
+    print("\nTHE DECOY CONTROL'S OWN n — disclosed because the sign filter is "
+          "the selector")
+    print("  A sourceless channel is N(0, 1e-3), so ~half its rows are "
+          "non-positive and drop\n  out of `-ln`. The R^2 above is therefore "
+          "scored on the SURVIVING rows, and the\n  count is the honest way to "
+          "read it: a control on 36 of 72 rows is a control on\n  36 rows.")
+    for r in ok:
+        ns = "  ".join(f"{k} n={v['n']}/{r['n_test_rows']}"
+                       for k, v in r["decoys"].items())
+        print(f"  seed {r['seed']}: {ns}")
+
+    with open(ARTIFACT, "w") as fh:
+        json.dump(out, fh, indent=1, default=float)
+    print(f"\nARTIFACT {ARTIFACT}")
     print("\nJSON")
     print(json.dumps(out, indent=1, default=float))
 

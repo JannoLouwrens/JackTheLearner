@@ -128,6 +128,65 @@ row set are RIG findings: Status.VOID, never FAIL — a run that could not
 test the claim refutes nothing (T0.22). FAIL is reserved for the three
 falsified_by branches: flat/non-monotone cost, sub-quantum gap, illegible
 distance.
+
+## PROBE RECORD — THE VENUE'S LEGIBILITY CEILING IS 0.9994, AND THE FIRED
+## CONJUNCT IS 100% ESTIMATOR (builder, 2026-09-27; NO bar moved, no ledger
+## row, nothing inherited)
+
+`ps05-legibility-holdout-is-a-band-lottery` offered three readings for
+attempt 1's sole fired conjunct (`probe_r2` -0.3775 ± 0.6053 vs
+`PROBE_R2_MIN` 0.35, every world gate green on every seed), and the
+PS-family legibility ruling held that reading **(b) genuine range limit** is
+*"not READABLE off this estimator's output until the estimator clears a
+known-answer control"*. It has now cleared one, twice over, on THESE rows.
+
+`experiments/tests/ps05_odour_reference_probe.py` (committed ahead of any
+number, with its forecast; artifact `/data/ps05_odour_reference_probe.json`)
+calls `_collect`/`_score` above — the committed functions — so the rows are
+the rows. **Replay receipt first:** per-seed `probe_r2` reproduces
+**-1.1264 / +0.3560 / -0.3622**, mean **-0.377524** against the recorded
+-0.377524, to every digit. Then, under the SAME held-out-by-trip split
+(180 train / 72 test rows per seed):
+
+    reference                             seed 0    seed 1    seed 2   worst
+    inversion of the declared law, 0 fit  +0.9994   +0.9999   +0.9998  0.9994
+      same, direction+scale on TRAIN only +0.9993   +0.9999   +0.9998  0.9993
+      same, fit ON THE HELD-OUT rows      +0.9994   +0.9999   +0.9998  (leak
+                                                                       0.0001)
+    registered 66-feature RFF+ridge       -1.1264   +0.3560   -0.3622  -1.1264
+    amputated control (odour dropped)     -5.3787   -0.5139   -1.4931
+
+`odour.StaticField` is analytic — `C = A0*strength*exp(-d/LAMBDA_M)` + N(0,
+1e-3) — so `d_hat = -LAMBDA_M*ln(C_mean)` needs **zero fitted parameters**
+and therefore has no fit/eval split to leak through. Its own must-fail
+control fires hard: the sourceless `decay`/`smoke`/`water` columns, same
+arithmetic, read **-105.7/-131.7/-136.6**, **-45.3/-48.9/-51.1** and
+**-599.6/-597.1/-498.6** (on the 44-55 of 72 rows whose noise is positive —
+the count is disclosed because the sign filter selects the rows).
+
+**READING (b) IS REFUTED AT THIS VENUE ON MEASUREMENT.** Distance is legible
+en route to a reader that knows the world's own law, at the full `D_LEG`
+(1, 6) m range, on the worst seed, including seed 0's far-heavy test draw
+(y 0.614-1.212, i.e. 3.7-7.3 m) that the row blamed for -1.126. The gap
+between the ceiling and the registered probe on that seed is **2.13 R²
+units**, and the probe sits BELOW the y-mean predictor while a channel it
+already contains reads 0.9994. `PS.05`'s FAIL measured its estimator, not
+Jack's nose.
+
+**AND THE NUMBER THAT IS NEW, because a prior slot already refuted (b) with
+a FITTED reference** (`ps09-known-answer-floor...` appendix, 0.8359/0.8452/
+0.9894 honest): a ridge fit on the two RAW food columns under-reads the same
+venue by **0.16 R² at the worst seed**, because the target is a *log* of the
+channel and a reference given it raw must learn the log. "Honestly fit"
+bounds a reference's SPLIT; it does not bound its BASIS. Any floor
+calibrated from the fitted column would credit the estimator with ~0.16 of
+venue noise this venue does not have — see LESSONS, 2026-09-27.
+
+**WHAT THIS RECORD MAY NOT BE USED FOR.** `PROBE_R2_MIN` 0.35 does not move
+in either direction and a reference reading the target cannot rescue this
+spec's FAIL. Which repair `PS.05` takes — estimator, probe draw, or
+measuring where legibility ends — is the row's disposition; recalibrating
+any floor against these numbers is the Review's threshold decision.
 """
 from __future__ import annotations
 

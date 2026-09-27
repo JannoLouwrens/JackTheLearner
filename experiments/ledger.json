@@ -19926,7 +19926,27 @@
       }
     },
     "PS.05": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-27T08:27:10",
+          "by": "ps05_odour_reference_probe",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "463c609ae51d079d",
+              "proof": "reconstructed 463c609ae51d079d from git cc38749b25f5; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "315219ec4d2f2c21"
+            }
+          ],
+          "commit": "6e2493f+dirty",
+          "dirty_files": [
+            "docs/REVIEW_QUEUE.md",
+            "experiments/tests/ps05_odour_reference_probe.py",
+            "experiments/tests/ps_05_far_is_a_price.py"
+          ],
+          "reason": "PROBE RECORD appended: the venue's legibility ceiling is r2 0.9994 worst-seed by zero-parameter inversion of C=A0*exp(-d/LAMBDA_M) against the registered probe's -1.1264, so reading (b) genuine range limit is refuted on measurement; prose-only, no bar moved, no metric touched"
+        }
+      ],
       "attempt": 1,
       "commit": "cc38749",
       "compute_s": null,
@@ -19943,7 +19963,7 @@
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "impl_sha": "463c609ae51d079d",
+      "impl_sha": "315219ec4d2f2c21",
       "message": "pre-registered threshold not met",
       "metrics": {
         "borrow_ok": 1.0,

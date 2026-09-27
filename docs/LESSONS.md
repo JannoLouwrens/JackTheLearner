@@ -18642,3 +18642,72 @@ asserted MARGIN, never the envelope. (Same family as the UNSATURATED-NULL RULE,
 2026-09-23: a margin placed at the bound of what the statistic can reach is not
 registerable, and growing the envelope against it is the one repair
 arithmetically guaranteed not to work.)
+
+## "HONESTLY FIT" BOUNDS A REFERENCE'S SPLIT, NOT ITS BASIS — the function class is a second, undeclared calibration knob, and where the world's law is in source the only reference with no knobs is the inversion
+## (builder, 2026-09-27; measured at PS.05 one day after the split half of this defect was written down, on the same rows, with the registered number reproduced to every digit)
+
+Yesterday's lesson — *"a one-parameter reference is not a low-capacity reference
+if its parameter is chosen on the rows it will be quoted on"* — fixed the
+**fit/eval split** of a known-answer reference, and the rule it wrote is right:
+state the hypothesis count and the split in the same sentence as the number. It
+left something free that nobody noticed was free, and the freedom is worth
+**0.16 R²** at the first venue anyone re-measured.
+
+`PS.05` gates `far`'s legibility on `probe_r2 >= 0.35`, worst seed. Three
+references, **the same rows, the same held-out-by-trip split, all three honest
+in the split sense**, on 180 train / 72 test rows per seed:
+
+| reference | seed 0 | seed 1 | seed 2 | worst |
+|---|---|---|---|---|
+| registered 66-feature RFF+ridge | -1.1264 | +0.3560 | -0.3622 | **-1.1264** |
+| ridge fit on the 2 RAW food-concentration columns | 0.8359 | 0.8452 | 0.9894 | **0.8359** |
+| inversion of the declared law, **zero fitted parameters** | +0.9994 | +0.9999 | +0.9998 | **0.9994** |
+
+The venue is the same venue in all three rows. Its "legibility" reads anywhere
+from **below the mean predictor** to **0.9994** depending on a choice — the
+reference's function class — that the ruling commissioning the calibration never
+named. A floor derived from the middle row sits **0.16 R² under the ceiling** and
+silently credits the estimator with venue noise the venue does not have.
+
+**The mechanism, and it is exact rather than statistical.** `odour.StaticField`
+is analytic: `C = A0 * strength * exp(-d / LAMBDA_M)` plus `N(0, 1e-3)`. The
+target is `y ∝ d`, so **the target is a LOG of the informative channel**. A
+reference handed `C` raw must *learn* `-ln` from 180 rows while 64 nuisance
+columns share the distance metric; a reference handed the LAW computes
+`d_hat = -LAMBDA_M * ln(C_mean)` and is done. Capacity in the right basis beats
+capacity. The registered probe's miss (2.13 R² at the worst seed) and the fitted
+reference's miss (0.16) are **the same defect at two magnitudes**, and the
+spec's own docstring had already confessed the premise: *"the probe is generic
+on purpose."*
+
+**And the escape is structural, not statistical.** A zero-parameter reference has
+**no fit/eval split at all**, so it cannot leak through the hole yesterday's
+lesson is about — measured, not assumed: fitting the same inversion on the
+held-out rows moves it by **0.0001**, against `PS.09`'s **+0.20**. The oracle
+column stops being a hazard the moment the reference stops having parameters.
+
+**Rule.** When a spec's world law is DECLARED IN SOURCE — a named constant and a
+closed form — the known-answer reference is **the inversion of that law**, and
+every reference quoted as a ceiling carries its **parameter count** beside its
+split. Two references with the same split and different bases are two different
+claims about the venue; pick the one with no knobs, or say in the same sentence
+which knob you turned. A ceiling quoted without its basis is a number somebody
+else will register a floor against.
+
+**Two guards that made the ceiling quotable, both cheap, both owed by any probe
+of this shape.** (1) The replay's own known-answer control, pointed at the script
+rather than at the world: it calls the spec's committed `_collect`/`_score`, and
+the registered metric must reproduce — here **-1.1264 / +0.3560 / -0.3622**,
+mean **-0.377524** against the recorded **-0.377524** — or nothing else it prints
+may be quoted. (2) The reference's own must-fail control: `decay`, `smoke` and
+`water` have no source in this fixture, so the identical arithmetic on them read
+**-45 to -600**. A known-answer control with no control of its own is an
+assertion, and the inverse error is already on the books one lesson up (`PS.06`'s
+fatigue channel reading 0.0216 would have reported a working venue UNREADABLE).
+
+**The general shape, which is why this is filed as method and not as PS.05.** A
+repair written against the half of a defect that was measured will leave the
+half that was not, and the unmeasured half is usually the one the repair's own
+vocabulary hides — "honestly fit" *sounds* total. When a ruling commissions a
+number, ask what else has to be chosen before that number exists, and write the
+choice down beside it.

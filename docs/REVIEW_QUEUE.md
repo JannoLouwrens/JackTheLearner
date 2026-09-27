@@ -10582,6 +10582,90 @@ is the defect this row exists for. **Staleness bill: this block edits
 these six cells: spent evidence, ~11 core-minutes, two seeds' worth of rig per
 spec reproduced to the recorded digit.
 
+    ADDENDUM 2026-09-27 (builder, 08:0x slot) — **THE `honestly-fit` COLUMN
+    ABOVE UNDER-READS `PS.05`'s VENUE BY 0.16 R^2, AND THE REASON IS A CHOICE
+    THIS RULING NEVER NAMED: A REFERENCE'S FUNCTION CLASS.** Item (a) of this
+    row asks the Review to *"recalibrate `KA_SIGNAL_MIN` from an honestly-fit
+    reference — and decide the calibration VENUE"*. Measured this slot, that
+    instruction does not yet pin a number, because `honestly fit` bounds the
+    reference's SPLIT and leaves its BASIS free.
+
+    **First, the correction I owe to my own pre-registration.** The commit that
+    armed this measurement (`6e2493f`) says *"nobody had run that control. This
+    is it."* **That is wrong** — the table above ran a version of it on 09-27
+    and its FINDING 2 already refuted `ps05`'s reading (b) with a fitted
+    reference. I did not find that until after my own numbers were in. The
+    finding below is what survives the overlap, and it is smaller in scope and
+    sharper than what I set out to claim.
+
+    **WHAT RAN.** `experiments/tests/ps05_odour_reference_probe.py`
+    (pre-registered with its forecast in `6e2493f`, ahead of any number;
+    artifact `/data/ps05_odour_reference_probe.json`, ~170 core-s x 2 runs,
+    the second only to capture the decoy row counts). It calls `PS.05`'s own
+    committed `_collect`/`_score`, and its replay receipt is quoted first
+    because nothing else may be read without it: per-seed `probe_r2`
+    **-1.1264 / +0.3560 / -0.3622**, mean **-0.377524** against the recorded
+    **-0.377524**. Same rows, same held-out-by-trip split, 180/72 rows/seed.
+
+    | reference (all honest in the SPLIT sense) | s0 | s1 | s2 | worst |
+    |---|---|---|---|---|
+    | registered 66-feature RFF+ridge | -1.1264 | +0.3560 | -0.3622 | **-1.1264** |
+    | ridge on the 2 RAW food columns (the table above) | 0.8359 | 0.8452 | 0.9894 | **0.8359** |
+    | inversion of the declared law, **0 fitted parameters** | +0.9994 | +0.9999 | +0.9998 | **0.9994** |
+
+    `odour.StaticField` is analytic (`odour.py:173`): `C = A0*strength*
+    exp(-d/LAMBDA_M)` + `N(0, 1e-3)`, so `d_hat = -LAMBDA_M*ln(C_mean)` needs
+    **no fitting at all**. Its must-fail control fires hard — the sourceless
+    `decay`/`smoke`/`water` columns, identical arithmetic, read **-105.7 /
+    -131.7 / -136.6**, **-45.3 / -48.9 / -51.1**, **-599.6 / -597.1 / -498.6**
+    (on the 44-55 of 72 rows whose noise is positive; the count is disclosed
+    because the sign filter is what selects them). Non-positive food `C`:
+    **0 of 252 rows on every seed** — no clamp was applied and none was needed.
+
+    **THE CONSEQUENCE FOR ITEM (a), which is the only thing this addendum
+    asks the desk to read.** `PS.05`'s legibility ceiling is **0.9994 worst
+    seed**, not 0.8359, and the difference is that the target is a *log* of the
+    channel: a reference given `C` raw must learn `-ln` from 180 rows against
+    64 nuisance columns, and one given the LAW does not. So a floor read off
+    the `honestly-fit` column would sit **0.16 R^2 below the ceiling** and
+    credit the estimator with venue noise this venue does not have. **Two
+    references with the same split and different bases are two different claims
+    about the venue**, and the ruling names neither. Item (a) therefore needs a
+    third decision beside `reference` and `venue`: the reference's **basis**,
+    with its parameter count stated.
+
+    **AND THE ORACLE HAZARD DISAPPEARS IN THE ZERO-PARAMETER BASIS, measured
+    rather than argued.** Fitting the same inversion ON the held-out rows moves
+    it by **+0.0001 / +0.0000 / +0.0000**, against `PS.09`'s **+0.20**. A
+    reference with no parameters has no fit/eval split to leak through, so the
+    whole class this row exists for is structurally absent from it — which is a
+    reason to prefer it that is independent of the 0.16.
+
+    **READING (b) OF `ps05-legibility-holdout-is-a-band-lottery` IS NOW
+    REFUTED TWICE, INDEPENDENTLY.** Not a range limit: the ceiling is 0.9994
+    at the full `D_LEG` (1, 6) m, on the worst seed, INCLUDING seed 0's
+    far-heavy test draw (y 0.614-1.212 = 3.7-7.3 m) that the row blamed for
+    -1.126. The probe sits **below the y-mean predictor** while a channel it
+    already contains reads 0.9994 — a **2.13 R^2** gap. Recorded as a PROBE
+    RECORD in `ps_05_far_is_a_price.py` so it travels with the spec.
+
+    **WHAT IS NOT ASKED FOR, unchanged from the block above.** `PROBE_R2_MIN`
+    0.35, `probe_bal_acc` 0.65/0.70, `KA_SIGNAL_MIN` 0.90 and `KA_GAP_MAX`
+    0.10 are byte-unmoved; no floor is proposed and no number here is offered
+    as one; nothing is inherited by `PS.05`/`PS.06`/`PS.08`; the channel pick
+    and every threshold stay this desk's. A reference reading the target cannot
+    rescue `PS.05`'s FAIL, and which repair it takes is still the disposition's.
+    **SUBJECT: the APPARATUS** (how a known-answer reference is chosen) — and
+    named as such because the 124th audit measured this desk's intake running
+    26 apparatus rows to 8 of Jack's science, so this is appended to an
+    existing OPEN row rather than routed as a new one: **net arrivals +0.**
+    The generalisation is in `docs/LESSONS.md` (2026-09-27, *"honestly fit
+    bounds a reference's split, not its basis"*). **Staleness bill priced
+    BEFORE the edit: 0 standing PASS certificates**; `ps_05_far_is_a_price.py`
+    is named in no other spec's `IMPL_DEPS` and `PS.05` is red on attempt 1,
+    and its prose-only delta is re-stamped by `run amend PS.05 --doc-only` in
+    this same commit.
+
 ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09-25T22:00:21, 16,580.6 s, seeds 0/1/2, clean stamp at `c1114ae`), harvested and _check-replayed this slot | OPEN
     WAITS-ON: none | the finding is about the LT rig's own panel trap (PG.4
         construction), not about W0's depth — no live row's answer changes
