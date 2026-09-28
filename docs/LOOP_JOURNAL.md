@@ -23666,3 +23666,75 @@ remain start-ungated per `1^14` item 2 — but PS.09's known-answer conjunct
 is reserved-adjacent to the ps09 hold row; read
 `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` (OPEN, the
 Review's, DUE 10-03) before touching any PS-family legibility work.
+
+## 2026-09-28 10:0x-10:2x UTC — builder, fable
+
+**METERS FIRST.** `week:all models` **11%** — *the gate, the line I am acting
+on* — `week:Fable` 15%, session 23%. Dark-slot streak 0, no pacing skip, no
+detached launches; `declared_pids` owes nothing. 17 claude processes on the
+box — committed by name throughout, nothing swept.
+
+**THE BOARD:** `run next` 0 fresh (39th+ consecutive empty dispatch board);
+`review-queue` read beside it per `1^14` item 2. Both FTB sections verified
+against disk, not inherited: OVERSIGHT FTB 1 discharged by the Review itself
+(`8b50a82`), FTB 2 executed last slot (`e3daa10`), FTB 3-4 obeyed (nothing
+built, no hold touched); PROGRESS FTB 1+2 landed at `c4df5a4`. All five
+`1^13` units executed or held: units 4+5 verified at `88762a2`/`e5e627b`
+with LT.02 attempt 3 run (09-27, FAIL honest), units 1-3 held behind the
+`ps09` oracle-cut row (read before touching, per the hand-forward — its own
+WAITS-ON says the siblings wait on IT).
+
+**UNIT 1: the 03:0x sweep's two unconverted receipts are now in the declared
+channel.** The sweep found five execution-complete rows; the `BUILDER-TRACE:`
+field was created FOUR HOURS AFTER it (`c4df5a4`) and only t215/t211 were
+converted. Added the declared field to the two remaining fully-complete rows:
+`lt02` (88762a2 — noise arm live, attempt 3 ran, detector certified 6.41 vs
+random 1.0, GUARD held, spec honestly red on chaos_reward_ratio nan) and
+`ps09` (d186c07 — known-answer conjunct wired, fired FAIL->VOID on attempt 2,
+floor calibration stays the desk's open row). `ps08` deliberately NOT
+declared: its one date owes two halves with two owners and the declared field
+would over-claim — the prose trace already says so. Verified: DELIVERED
+2 -> 4, violations 9 unchanged, 0 MALFORMED, 113 routed, EXIT 2 unchanged.
+Nothing stamped, no date moved.
+
+**UNIT 2: the negative-sentence sweep is CLOSED — checked, not manufactured.**
+Per the 09:0x hand-forward, enumerated every negative construction in GOAL.md
+(60 lines) and mapped each against the seven runs and their rows; closure
+recorded on the class row (the aggregate's declared home). Coverage: 5 class
+instances + 2 sibling rows RED; 2 CLEAN (scripted-curriculum run 3,
+puppeteering run 5); needs/death/fire NO VENUE — extended this slot with a
+fresh grep reading ZERO fire/flame/burn tokens in `VirtualWorld.py`,
+`UnifiedBrain.py` AND `playground.py`, so "Fire is a state machine" has no
+venue anywhere and its first venue is the unauthored W1 (`D33`); 4
+ladder-tested negatives named checkably (loss-curve, not-two-brains via run
+3's no-second-tower AST fact, modality collapse, told-knowledge). NO eighth
+run. A GOAL.md edit reopens the series; the three sibling clocks
+(10-09/10-12/10-13) are untouched.
+
+**STALENESS BILLS** paid in slot, twice (the closure check ran between the
+two queue edits, so they billed separately — batching them would have saved
+one re-buy, disclosed as the slot's inefficiency): T0.21 PASS 10.62s/10.17s,
+T0.31 PASS 1.96s/2.03s, all four HASH-SALT DIFFERENTIAL CLEAN (salt 1, 3
+deciding metrics each), all dirty_files None, cpu_budget.json carries both
+charges.
+
+**CREATURE GATE: NONE — recorded violation, continuing.** Re-derived:
+`T6.01 <- T4.05 <- T4.04 <- T2.01 <- T1.08 (FAIL)`; T1.08's pipeline-repair
+design is the Review's (`t108-pipeline-repair-has-no-design`, DUE 10-02).
+This slot's contribution to the path is visibility only: two more finished
+units now legible to the desk that must stamp them.
+
+**GPU:** `2026-W39`, 30.0 h free, 0.00 charged, expiring Saturday 10-03 —
+every GPU class NOT FILLABLE, both routes through T1.08. Nothing dispatched,
+nothing manufactured.
+
+**NEXT ITERATION.** (a) The negative-sentence sweep is CLOSED on the class
+row — do not run an eighth; only a GOAL.md edit reopens it. (b) DELIVERED now
+reads 4; `t211` falls due TOMORROW (09-29) with its trace on the row —
+stamping is the desk's act, not yours. (c) PS.05/PS.06/PS.08-part-1 conjunct
+inheritance still HELD behind `ps09-known-answer-floor-was-calibrated-on-an-
+oracle-cut` (desk's, DUE 10-03) — do not ship it. (d) The board's next fresh
+work arrives via the desk: `t108-pipeline-repair-has-no-design` (10-02) and
+the ps09 floor ruling (10-03). If the board is still empty, the DISPOSITIONED
+sweep (2024e6a) is 1 day old and does not need re-doing; check only rows
+dispositioned SINCE it.
