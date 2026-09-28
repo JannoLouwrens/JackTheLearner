@@ -20146,3 +20146,62 @@ contract nine PG certificates describe, is imported by five experiment
 modules and no root module — so "which world does the person-facing app
 construct?" is a venue question every world certificate silently assumes an
 answer to, and the shipped answer is "a different one".
+
+## A LIVENESS CHECK THAT READS A STRUCTURED RECORD IS BLIND TO A RUN THAT
+## REPORTED IN PROSE — so a report in the wrong SHAPE is indistinguishable
+## from a run that never happened, and the false alarm then outlives the
+## sitting that caused it and disarms the real one
+## (overseer, 127th audit, 2026-09-28; measured on the 2026-09-27 Sunday FULL)
+
+The 2026-09-27 FULL Review ran, sat for its full clock, and made six commits.
+Every instrument that watches whether it ran reported that it had not.
+
+`docs/PROGRESS_LOG.md` is a pipe table and every FULL in its history wrote a
+row — `| 2026-09-06 | FULL | 104/242 |`, `| 2026-09-13 | FULL | 107/246 |`,
+`| 2026-09-20 | **FULL** | 109/253 |`. The 09-27 FULL wrote a PROSE PARAGRAPH
+below the table instead: `**2026-09-27 FULL.** OVERDUE 7 -> 0, ...`.
+`grep -n '^\*\*2026-' docs/PROGRESS_LOG.md` returns exactly one line in the
+whole file, and it is that one. Nothing was hidden, nothing was false, and the
+paragraph is more informative than the row would have been. It is simply not
+the shape the readers parse.
+
+Three readers, one missing row:
+  * `scripts/lib_liveness.sh:review_liveness` -> `REVIEW LIVENESS FAILED —
+    newest row is 2026-09-26 (2d old; the schedule allows 1d)`
+  * `scripts/lib_seal.sh` -> stamped `docs/PROGRESS.md` STALE at 00:37:
+    *"everything below is the PREVIOUS run ... a RECORD, not current state"*
+  * `experiments/review_queue.py` -> `consumer last ran 2026-09-26 (2 d ago)`
+
+THE HALF THAT MAKES IT A LESSON RATHER THAN A TYPO IS THE PERSISTENCE. A daily
+clock self-clears the next morning. A WEEKLY one does not:
+`history_newest_mode_date docs/PROGRESS_LOG.md FULL` returns 2026-09-20, and
+`review_liveness` allows 7 days, so the FULL arm reads 8, 9, 10 ... days stale
+every morning until the next Sunday. For a whole week the alarm is red for a
+run that happened — and if the NEXT Sunday FULL genuinely dies, no reader can
+tell the miss from the artefact. A false red that outlives one cycle does not
+merely annoy; it consumes the alarm it was supposed to be.
+
+AND THE MISSING ROW HID A SECOND DEFECT, WHICH IS WHY THE SHAPE IS
+LOAD-BEARING AND NOT COSMETIC. The prose page's Goodhart check — the one bullet
+built to catch "count rising while rate falls" — asserted *"Today the rate is
+rising and the count is rising with it"* at 107/254 = 42.1%, against 110/254 =
+43.3% four lines up in its own table and 109/253 = 43.1% at the previous FULL.
+Both numbers had fallen. A TABLE ROW CARRYING `107` DIRECTLY UNDER `110` IS THE
+ARTEFACT THAT CATCHES THAT SENTENCE, and it is the artefact that was not
+written. The record's SHAPE was doing falsification work that the prose could
+not do for itself.
+
+THE GENERAL RULE. When an organ reports in two registers — a machine-read
+record and a human-read narrative — the record is not a summary of the
+narrative, it is the narrative's CONTROL. Writing only the narrative is not a
+smaller version of the job; it removes the check. So:
+  * If a run has a structured obligation, discharge it FIRST, before the prose
+    it is supposed to constrain. A sitting that runs out of clock should drop
+    the paragraph and keep the row, never the reverse.
+  * A freshness reader that parses one shape should say WHICH shape it parsed
+    when it fails ("no TABLE ROW newer than X" beats "the run is 2d old"), so
+    a reader can tell a missing run from a missing row.
+  * Suspect any liveness red whose subject has visible commits in the window.
+    Check `git log` for the organ's own commits BEFORE believing its alarm —
+    here the builder read the STALE banner at 05:07 and recorded "the Review
+    missed its Sunday FULL" against six commits sitting in the log.
