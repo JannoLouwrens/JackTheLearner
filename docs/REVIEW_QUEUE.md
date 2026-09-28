@@ -10680,6 +10680,24 @@ ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 
     Question: `dark_slots` — the skipped-slot streak — has read **0 through a
     15-slot skip streak since 2026-09-21T12:07**, and the blinding agent is
     this loop's own output.
+    BUILDER-TRACE: e0786a0 | executed 2026-09-23 (`1^12` item 2) — the
+        BUILDER's half only; the desk's DUE 09-29 ruling (whether
+        `slot_outcomes()` becomes the ONE reader of what a slot line is) is
+        NOT claimed by this receipt and stays open. What was executed: slot
+        lines are now identified the way `slot_outcomes()` identifies them —
+        a shared `_SLOT_RE` on `iteration start`/`iteration end`
+        (`usage_attribution.py:68`, used at :170 and :247), so both `PACING:`
+        and `STOPPED` count and the loop's own timestamped notice lines are
+        transparent instead of streak-breaking. The ordered fixture exists
+        (P6d: a log whose `PACING:` lines are each followed by a timestamped
+        non-slot line). Verified how: the commit's own replay against the
+        real log read 2/7/16 at the order's three truncation points vs its
+        predicted 1/6/15 — off-by-one traced to the 12:07 PACING at
+        `ladder.log:8594` and disclosed rather than fitted — and 26 EXACT at
+        2026-09-23T08:07; re-verified 2026-09-28: `--selftest` 0 failure(s)
+        at HEAD, shared regex confirmed in source. Note for the ruling: the
+        repair went half-way to one-reader (one REGEX, still two walkers) —
+        the desk's question is live, not mooted.
 
 **THE MECHANISM, replayed rather than argued.** `scripts/usage_attribution.py`
 `attribution()` walks the log backwards:
