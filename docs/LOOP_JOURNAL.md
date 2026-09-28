@@ -22810,3 +22810,109 @@ instruments, and I checked exactly one.
   rather than a false claim about the shipped world — do not manufacture a hit out
   of it. (d) **A handoff is a claim**: item (c) of the last one named a unit that
   was four hours done. Check the artefact.
+
+## 2026-09-28 01:1x–02:0x UTC — builder, Opus (Fable pinned 95%) — the two units the Review handed me were finished before it wrote the page, and the stop-rules it armed on them will fire on discharged work
+
+**METERS FIRST:** `week:all models` **86%** — *the gate* — against `pace_gate`'s
+`allow` ≈ 87 at `--week-elapsed` **98**, so live with ~1 point of pacing headroom
+and 4 to the hard stop; **reset 09-28 04:59, under three hours away.**
+`week:Fable` 95% pinned, hence **Opus**. Dark-slot streak 0. Board **EMPTY for
+the 35th consecutive slot** — `run next` 0 fresh / 38 settled / 14 held,
+`coverage` QUEUE DEPTH 6 dispatchable of which **6 VOID → 0 FRESH**, every cost
+class `NOT FILLABLE`, three of them `nothing to implement, nothing to pilot`.
+Nothing manufactured, and the refusal is disclosed here as required.
+
+**CREATURE GATE: NONE — recorded violation #13 under `D35` rule 3, recorded and
+NOT discharged.** Re-derived this slot rather than inherited, because the
+arithmetic is the finding: `T2.01` FAIL ← `T1.08` FAIL (desk-owned, design DUE
+10-02); `XL.01` FAIL and *runnable*, but its two estimator rows are OPEN on the
+desk (DUE 10-07) and re-running it unchanged buys the same row — verified, its
+attempt 3 of 2026-09-27T09:30 reproduced attempt 2 to every digit; `T6.01`
+NOT_RUN behind **`T4.05` ← `T4.04` ← `T1.08` (FAIL)**. **So the freeze's own
+lifting condition — *"requires only that `T6.01` runs"* — is four hops behind a
+FAIL whose repair belongs to another desk, which is why this rule has now
+produced thirteen consecutive violations that no builder act can discharge.**
+Stated as measurement, not as a request to soften it: striking or re-scoping the
+freeze is the owner's one line.
+
+**WHAT I DID, and it is a correction to the highest-priority page I am given.**
+`docs/PROGRESS.md` FOR THE BUILDER item 2 (Review FULL, 2026-09-27) reads *"Two
+rows are waiting on YOU, not on this desk... designs DELIVERED, execution
+owed."* **Both were already executed when it was written**, verified from source
+and diff this slot and not from either row's existing trace:
+
+  * `t215-router-under-lexical-null` → **`e5e627b`**, 2026-09-25 14:14 UTC.
+    `t2_15_freeform_routing.py:553` returns `False` on the named branch *"router
+    ties or loses to its own bag-of-words null"*, fired before the claim line;
+    the diff adds those lines; `run next` prints the promotion in
+    `falsified_by`. `CLAIM_MIN` 12 / `NB_REF_MIN` 13 byte-unmoved.
+  * `hash-salt-lottery-in-a-gated-metric` → **`19aab39`** (binding set measured
+    and reported first, as option (iv) required: DECIDING 98 of 129 replayable
+    CPU specs, doubled cost 44.9% of the day ceiling) + **`5ee32ff`**
+    (implementation). Live at `protocol.py:3602-4126`. **Eleven ledger rows now
+    carry `HASH-SALT DIFFERENTIAL CLEAN`** across eleven specs — counted from
+    `ledger.json`, not quoted — against one DIVERGENCE (`XL.01`) which a later
+    slot measured to be the detector's own cold-cache artifact and repaired.
+
+**THE PART THAT IS NEW, and it is why this was worth a slot rather than a
+sentence.** Each row already carried a BUILDER-TRACE dated 2026-09-27 01:2x
+saying the builder owed nothing — and the 09-27 FULL wrote its re-date
+*directly underneath* it, then copied the debt onto `PROGRESS.md`. **Both rows
+now carry an ARMED STOP-RULE whose trigger is *"with the design still
+unexecuted"*, a condition already false, so on 2026-10-08/10-09 it promotes
+two-week-discharged units into `scripts/ladder_prompt.md`'s PRIORITY block.**
+Nothing cross-checks a steering order against the ledger — `run status`'s
+STEERING-PAGE ORDERS reader resolves **spec** ids and both of these are
+**queue-row** ids, so the class is structurally invisible to it — and the page is
+96212 B against the 131072 B EXEC CLIFF. My two traces are the first written
+AFTER the re-date and the first to name that dated consequence, put on the rows
+the stop-rules will fire from. **Nothing stamped**: `DISPOSITIONED → ACTED` is
+the desk's act, and `review-queue` reads **identically** before and after my
+edit (7 VIOLATIONS, OVERDUE 7, same seven ids).
+
+**WHAT I DID NOT DO, checked rather than assumed — and one near-miss worth
+recording.** I drafted the `w1-world-edit-window` BUILDER-TRACE that OVERSIGHT
+FTB 1 names as mine, then **found the 19:1x slot had already written it**
+(`REVIEW_QUEUE.md:1320`, more thoroughly than my draft, including the
+verification that it does not lower the `OVERDUE` count) **and deleted my
+duplicate before committing.** OVERSIGHT FTB 2 and 3 are explicitly not mine.
+`1^13` is discharged: `T2.15` above; `PS.05`/`PS.06` carry `PROBE_R2_MIN` 0.35;
+`PS.08` carries `ACC_MIN` + `CONTROL_MARGIN_MIN` and its part 1 is *deliberately*
+withheld behind `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` (OPEN,
+desk, DUE 10-03); `LT.02`'s body-carried noise arm ran at 2026-09-27T02:40 and
+its detector is certified on the true positive (`chaos_occupancy_icmnoise`
+**6.41** vs random 1.0, climber 0.083, separation 6.33) while the spec FAILs
+honestly on `chaos_reward_ratio` **nan** — the cause gate is undefined on the
+original `icm` arm, exactly as the disposition's GUARD predicted, since body
+chaos is measured REDUCIBLE in this venue (`reducibility_gain_icm` 0.0188). No
+bar moved anywhere in this slot.
+
+**RATCHETS, quoted BEFORE any `record` and none was run** (nothing I committed
+grew a counter): 6 MOVED vs committed readings — `fail_unowned_owned_forms`
+queue-row 29→31, `review_queue_net_arrivals` 26→36, `review_queue_piled_on` 3→4,
+`review_queue_violation_forms` {OVERDUE 1}→{OVERDUE 7},
+`review_queue_violations` 1→7 (**CLOCK** — the calendar reached a date),
+`unreachable` 95→96; 1 day-rolled (`cpu_foreclosed_now`). Floors: **3 ABOVE**
+(`decisions_default_action_expired` 1 vs 0 — `D33`'s, the desk's;
+`pass_on_dead_dependency` 5 vs 3 — `T0.13`'s two new dependents, blocked on the
+same FAIL; `unreachable` 96 vs 95), 0 BELOW, 0 UNVERIFIED. `run status` EXIT 2,
+`review-queue` EXIT 2, `coverage` EXIT 2 — all three pre-existing.
+
+**STALENESS BILL** priced BEFORE the edit with `run stale-cost
+docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md`: **2 standing PASS
+certificates — `T0.21` (cpu<1min), `T0.31` (cpu<10min) — 0.00 CPU-h, 1 slot**,
+paid from the clean tree after the docs commit. Docs-only: no spec file, no root
+module, no ledger write, so `! DIRTY STAMPS` must still read the 2 rows
+(`T6.03`, `PL.02`) it held when this slot began.
+`scripts/ladder_prompt.md` untouched at **96212 B**.
+
+**NEXT ITERATION.** (a) **Do not re-execute `t215` or `hash-salt`** — both are
+discharged and now traced twice each; if you are handed them a third time, cite
+`e5e627b` / `19aab39`+`5ee32ff` and refuse. (b) **Do not build the reader** that
+would have caught this: extending STEERING-PAGE ORDERS to queue-row ids is an
+audit instrument and freeze clause 2 forbids it by name. (c) The reset at
+**04:59** lands inside the next two slots — `week:Fable` unpins then, so expect
+to be walked back to Fable and plan smaller units. (d) **A handoff is a claim:**
+I drafted a duplicate of a discharged trace because the predecessor's journal
+said it was done and I believed the page before I checked the file. Check the
+file.

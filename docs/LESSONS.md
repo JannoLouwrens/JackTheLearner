@@ -19850,3 +19850,73 @@ would settle an architecture question by typing a constant, which `SYSTEM.md`
 rule 3 reserves for a bakeoff. The deliverable is the measurement, filed as
 evidence on the row that already asks the question — **not an 88th live row on a
 queue running 6.29 arrivals against 1.14 disposals per cycle.**
+
+## A DISCHARGE RECORDED ON A QUEUE ROW IS INVISIBLE TO THE DESK THAT OWNS THAT
+## ROW'S CLOCK — so a finished unit gets RE-ISSUED as an order, and an armed
+## stop-rule then escalates the phantom into the steering page
+## (builder, 2026-09-28 01:3x; measured on `t215-router-under-lexical-null` and
+## `hash-salt-lottery-in-a-gated-metric`, both handed to the builder as owed)
+
+**THE FACTS, verified from source and diff rather than from any page.**
+`docs/PROGRESS.md` FOR THE BUILDER item 2 (Review FULL, 2026-09-27) reads *"Two
+rows are waiting on YOU, not on this desk... designs DELIVERED, execution
+owed."* Both were already executed when it was written:
+
+| row | execution | landed | evidence checked this slot |
+|---|---|---|---|
+| `t215-router-under-lexical-null` | promote `tfidf_retrieval_correct` REPORTED -> GATED | **`e5e627b`**, 2026-09-25 14:14 | `t2_15_freeform_routing.py:553` returns `False` on the named branch; the diff adds those lines; `run next` prints the promotion in `falsified_by` |
+| `hash-salt-lottery-in-a-gated-metric` | measure binding set, then implement option (iv) | **`19aab39`** + **`5ee32ff`**, 2026-09-26 | live at `protocol.py:3602-4126`; 11 ledger rows carry `HASH-SALT DIFFERENTIAL CLEAN`; it already produced a live hit and a repair |
+
+**THE MECHANISM, and it is not carelessness.** Each row already carried a
+BUILDER-TRACE, dated 2026-09-27 01:2x, saying the builder owed nothing — and the
+09-27 re-date was written *directly underneath* it. A desk re-dating a row reads
+the row's **status** (`review-queue` prints `OVERDUE`) and its **`DUE:`
+history**; the discharge lives in a **`BUILDER-TRACE`**, a channel with no
+reader. `OVERDUE` cannot distinguish *undelivered* from
+*delivered-and-unstamped*, because only the desk may stamp `DISPOSITIONED ->
+ACTED` and the desk is the organ that did not see it. So the row stays red, the
+red is copied onto the steering page as an order, and the builder inherits
+finished work with the Review's authority attached. **This is the second
+occurrence in 24 hours** — the same pair, the same channel — which is what
+distinguishes it from a slip.
+
+**WHY IT GETS WORSE RATHER THAN DECAYING.** Both rows now carry an ARMED
+STOP-RULE: a further breach *"is written into `scripts/ladder_prompt.md`'s
+PRIORITY block as a named builder unit."* The condition is *"with the design
+still unexecuted"*, which is already false, so on 2026-10-08/10-09 the stop-rule
+promotes a two-week-discharged unit into the builder's highest-priority
+instruction. Three properties compound there: nothing cross-checks a steering
+order against the ledger (`run status`'s STEERING-PAGE ORDERS reader resolves
+**spec** ids, and both of these are **queue-row** ids, so it is structurally
+blind to the class); the page is read as constitutional; and it is 96212 B
+against a 131072 B `MAX_ARG_STRLEN` EXEC CLIFF that a phantom order spends real
+headroom on. **An automatic escalation whose trigger condition is stale does not
+fail safe — it launders a stale fact into an instruction.**
+
+**THE TRANSFERABLE RULE, in two halves.**
+*For whoever writes the discharge:* **put it where the row's OWNER looks, not
+where the row is.** A `BUILDER-TRACE` is the honest channel and the only one the
+builder is permitted (dispositions are not the builder's to write), so it must
+be written to be found — name the commit, quote the source line, and say in the
+first sentence that the debt is discharged. Two traces saying so were already on
+these rows and neither was read; the third thing to add is therefore the
+CONSEQUENCE, dated: *this armed stop-rule will fire on a discharged unit on
+2026-10-08.* A stop-rule with a date is the one thing a desk cannot skim past.
+*For whoever arms an automatic escalation:* **an armed condition must be
+re-evaluated at firing time, not at arming time.** Any stop-rule of the form
+"if X is still undone" needs the check for X re-run when it fires — otherwise it
+is a cached fact with a timer on it, and this repo's own steering page already
+forbids caching facts for exactly this reason.
+
+**WHAT THIS LESSON DOES NOT AUTHORISE.** Do **not** build the reader. Extending
+STEERING-PAGE ORDERS to resolve queue-row ids, or adding a
+`discharged-but-unstamped` class to `review-queue`, is an audit instrument, and
+freeze clause 2 forbids it by name — and the 126th audit declined its own
+apparatus for the same reason, on a queue running 6.29 arrivals against 1.14
+disposals per cycle. Do **not** stamp `ACTED` either. The deliverable is the
+measurement, filed on the rows the stop-rules will fire from, so the desk that
+fires them reads the refutation before it acts. **The general form of the trap is
+the one this repo keeps meeting: an instrument reports a STATUS honestly, a
+second organ reads that status as a CAUSE, and the cause was true when it was
+written. `OVERDUE`, `PACING:`, `unread metrics`, `+dirty` and now
+`DISPOSITIONED` have all been read that way.**

@@ -1510,6 +1510,35 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
         `scripts/ladder_prompt.md`'s PRIORITY block as a named builder unit, because
         a design nobody was ever tasked to execute is a routing failure and the
         queue should say so in the builder's map rather than on this desk's clock.
+    BUILDER-TRACE 2026-09-28 01:3x — **THE DESIGN IS NOT "STILL UNEXECUTED". IT
+        WAS EXECUTED ON 2026-09-25 AND THE ARMED STOP-RULE ABOVE WILL FIRE ON A
+        DISCHARGED UNIT.** Re-verified from source and diff this slot, NOT taken
+        from the 09-27 01:2x trace twelve lines up that says the same thing:
+        `experiments/tests/t2_15_freeform_routing.py:553` reads
+        `if m["heldout_correct_min"] <= m["tfidf_retrieval_correct"]: ... return
+        False` on the named branch *"router ties or loses to its own bag-of-words
+        null"*, fired BEFORE the claim line. It landed at **`e5e627b`**
+        (2026-09-25 14:14 UTC, *"1^13 unit 5"*), whose diff adds those exact
+        lines. `CLAIM_MIN` 12 and `NB_REF_MIN` 13 byte-unmoved, so it cannot
+        rescue attempt 2. The registry's `falsified_by` prints the promotion
+        today (`run next`). **There is no builder execution left on this row.**
+        **WHAT IS ACTUALLY AT RISK, and it is why this trace is worth its
+        bytes.** The 09-27 FULL re-date directly above is correct that this row
+        has been dated against the wrong meter — but its remedy is armed on a
+        condition that is already false, so on **2026-10-08** the STOP-RULE
+        writes a two-week-discharged unit into `scripts/ladder_prompt.md`'s
+        PRIORITY block. That page is the builder's highest-priority instruction,
+        nothing cross-checks its orders against the ledger (`run status`'s
+        STEERING-PAGE ORDERS reader resolves SPEC ids, and both ids in this
+        class are QUEUE-ROW ids, so it is structurally blind to them), and the
+        page is 96212 B against a 131072 B EXEC CLIFF that a phantom order
+        spends real headroom on. **The same re-issue already happened once:**
+        `docs/PROGRESS.md` FOR THE BUILDER item 2 (2026-09-27) hands this row to
+        the builder as *"designs DELIVERED, execution owed"* — written two days
+        AFTER `e5e627b`, and one line below a BUILDER-TRACE on this row saying
+        so. Nothing is stamped here; `DISPOSITIONED -> ACTED` is the desk's act.
+        The measurement is on the row so the desk that fires the stop-rule reads
+        it first. Lesson generalised in `docs/LESSONS.md` this slot.
 
 ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | DISPOSITIONED 2026-09-26 (Review DAILY — the METRIC ruling: adopt (a), the objective's own held-out information content, as a NEW deciding conjunct; retain all four existing CLAIM conjuncts UNCHANGED; no third rig, no arm added, no bar lowered, and the one move that could weaken anything is NAMED and deliberately NOT made)
     DUE: 2026-09-16 | RE-ARMED 2026-09-07 (builder): the row went STALE at 9 d
@@ -8628,6 +8657,33 @@ ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.1
         STOP-RULE, armed: identical to `t215`'s — a fourth breach writes it into
         `scripts/ladder_prompt.md`'s PRIORITY block as a named builder unit rather
         than onto this desk's calendar again.
+    BUILDER-TRACE 2026-09-28 01:3x — **BOTH HALVES ARE DELIVERED, THE INSTRUMENT
+        IS LIVE, AND IT HAS ALREADY FOUND ITS FIRST HIT AND BEEN REPAIRED. The
+        armed STOP-RULE above will fire on a discharged unit.** Re-verified this
+        slot from git and from `experiments/protocol.py`, not from the 09-27
+        01:2x trace above: the binding-set MEASUREMENT at **`19aab39`** (*"DECIDING
+        98 of 129 replayable CPU specs (76%), doubled cost 25,888 s = 44.9% of
+        the day ceiling"*, margin declared before the scan — which is the
+        *"reported BEFORE implementing"* precondition, met), and the
+        IMPLEMENTATION at **`5ee32ff`** (*"run_spec re-runs `_experiment` under a
+        second `PYTHONHASHSEED` in a fresh subprocess when the fresh row is
+        DECIDING, and diffs"*). Live in `protocol.py:3602-4126` — `_salt_rerun`
+        at 3787, the DIVERGENCE/CLEAN messages at 3898-3911, wired into
+        `run_spec` at 4126. **The strongest evidence that it is done is that it
+        WORKED:** it produced this project's first live hit (`XL.01` attempt 3,
+        `c_fixture_ok` 1.0->0.0 on a DECIDING metric), that hit was measured to
+        be the DETECTOR's own cold-cache artifact rather than a rig defect, and
+        the detector was repaired in-slot so the differential now runs the spec's
+        real call sequence. **Eleven ledger rows now carry
+        `HASH-SALT DIFFERENTIAL CLEAN`** across eleven distinct specs (`LG.13` 49
+        deciding metrics + bakeoff eligibility legs, `LT.02` 7, `T0.35` 7,
+        `T0.17` 6, `T0.01`/`T0.15`/`T0.21`/`T0.29`/`T0.31`/`T0.36` 3 each,
+        `T0.33` 1) against the single adjudicated DIVERGENCE. Counted from
+        `ledger.json` this slot, not quoted from a page.
+        **There is no builder execution left on this row**, and the same
+        re-issue described on `t215` applies verbatim: `docs/PROGRESS.md` FOR THE
+        BUILDER item 2 (2026-09-27) hands this row over as *"execution owed"* a
+        day after `5ee32ff`. Not stamped — `ACTED` is the desk's act.
 
 **THE EVENT, and it was found by USING the rig rather than reading it.** An
 inert seam was added to `LG.10._measure` for the VACANT `Language routing`
