@@ -995,7 +995,65 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
         denominator; until then their 1.0 readings certify 0.819 / 0.920 and
         should be read as such. ME.11 runs at m=300 and is clear.]
 
-ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
+ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | DECLINED 2026-09-28 (Review DAILY — the authorship was DECLINED in the open on `docs/PROGRESS.md` at the 2026-09-27 FULL, exactly as this row's own 09-24 stop-rule pre-committed, and the row was never stamped. This stamp records a decision already made and published; it makes none. See THE STAMP below)
+    THE STAMP 2026-09-28 (Review DAILY, OVERDUE FIRST, D28 default (a)) — the
+        FIRST `DECLINED` in 113 routed rows, and it is a stamp, not a decision.
+        THE DECISION WAS MADE YESTERDAY AND PUBLISHED. `docs/PROGRESS.md` item 3,
+        quoted verbatim so this row and that page cannot drift apart:
+        *"THE STOP-RULE I ARMED AGAINST MYSELF HAS FIRED, AND I AM HONOURING IT.
+        Last week's page said, in the open: 'if 2026-09-27 breaks, this desk
+        stops re-dating the row and DECLINES the authorship on this page, `D33`
+        answered or not.' 2026-09-27 broke. I did not produce the W1 world-edit
+        design. I am therefore DECLINING the authorship of it, as pre-committed,
+        and this is the fifth instalment being the last as promised rather than
+        the sixth being arranged. This is not a request and carries no default —
+        the reversal is yours alone."*
+        WHY THE STAMP WAS MISSING, and it is not a clerical point. The 126th
+        audit (`4e6cbe1`, 18:47 yesterday) caught the gap with five hours of the
+        clock left and named the mechanism: a disposition with a half that
+        discharges THIS DESK and a half that releases SOMEONE ELSE gets its
+        first half done and its second half forgotten. Writing the decline
+        discharged me. Stamping it costs nine other rows their blocker, and that
+        is the half that sat undone for 24 hours while the row read `| OPEN`.
+        THE BLAST RADIUS, MEASURED WITH THE TOOL BEFORE STAMPING, not estimated:
+        `review_queue.parse()` reports **9 LIVE rows declaring
+        `BLOCKED-BY: w1-world-edit-window`** — `ne01-occlusion-knife-edge` and
+        `water-apply-phantom-force` (both HELD, both 35 d, both with NO `DUE:`,
+        so the hold was their only clock), `sh02-null-saturation`,
+        `hr5-fixture-refuted`,
+        `ba03-vestibular-channel-is-never-load-bearing-under-one-kick` (the three
+        that are OVERDUE this morning), `w1-cold-is-not-lethal-at-night`,
+        `w2-needs-have-no-single-k`, `dp04-lifespan-has-no-resolution` and
+        `t306-random-arm-breaches-the-analytic-chance-dwell-bound`.
+        `DECLINED` is TERMINAL (`review_queue.py:251`), so every one of the nine
+        fires `HOLD-ON-A-RESOLVED-BLOCKER` the moment this line is written.
+        **THE SPIKE IS THE POINT AND IT IS NOT BEING LAUNDERED.** Nine rows were
+        already waiting on a window with no author; yesterday they were waiting
+        invisibly and today they are waiting in red. A violation count that
+        jumps because a project's largest structural fact became machine-readable
+        is the instrument working. This desk is NOT re-pointing the nine onto
+        fresh dates to keep the number down: it has no authority to say who
+        authors W1 — that is `D33`, open on the owner's desk and five days past
+        its `decide_by` — and dating nine rows on an answer it does not control
+        would be the sixth instalment of exactly the promise this stop-rule
+        exists to stop.
+        ONE DEFECT IN THE INSTRUMENT, found by walking into it, appended as
+        evidence to the row that owns the class rather than paid for with a
+        21st arrival at 6.43 arrivals/cycle against 1.14 disposals: the
+        `HOLD-ON-A-RESOLVED-BLOCKER` message reads *"the window it was waiting
+        for has opened"* (`review_queue.py:758-761`), which is TRUE of an
+        `ACTED` blocker and FALSE of a `DECLINED` one. The window did not open;
+        it was abandoned. Both statuses are `TERMINAL` and the text assumes one
+        of them. The 126th audit reached the same place from the other side
+        (*"a blocker that is not resolved but ABANDONED, a state with no class
+        in the tool"*). Recorded, not repaired — a message change is a builder
+        edit and this desk is not making one inside its own disposal.
+        NO `DUE:` IS DROPPED — the `DUE: 2026-09-27` below stands as the date
+        that broke, and `DECLINED` stops its clock honestly (`:752`, terminal
+        rows are skipped before the OVERDUE test) rather than by deletion.
+        Owner consequence is already routed: the 126th audit filed the
+        orphaned-rows fact as an EVIDENCE ADDENDUM on `D33`, with no new option
+        and no default, because the reversal is the owner's alone.
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — THE FACT, NOT A NEW
         PROMISE, AND NOT A RE-DATE. The Sunday FULL this row was dated to sat at
         06:37 today and DID NOT TAKE UP W1. Verified against the day's commits
