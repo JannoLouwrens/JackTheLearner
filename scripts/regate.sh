@@ -39,8 +39,27 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "load $LOAD too high — skippi
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt 3 ] && { say "only ${FREE_GB}GB free on / — skipping"; exit 0; }
 
-OUT=$(nice -n 19 timeout 3000 "$PY" scripts/regate.py 2>&1)
-printf '%s\n' "$OUT" | while IFS= read -r l; do say "$l"; done
+# STREAM, DO NOT BUFFER. The first version did `OUT=$(...)` and wrote the log
+# only after the sweep returned, so a sweep killed partway logged NOTHING while
+# having really re-bought five certificates (2026-09-28 10:25: ME.11.B, ME.11.C,
+# PS.08, T0.27, T0.28 all ran and landed, and the log's last line was the pause
+# test from twenty minutes earlier). Their rows were only committed because the
+# builder's own pace-skip bookkeeping found them orphaned.
+#
+# That is a lesson this project has already paid for once, on a different lane:
+# the LC.03 registered run printed nothing for 15 hours and taught that liveness
+# is worker CPU time, not log bytes. A log that appears only on success cannot
+# report a failure, which is the one thing a log is for. `-u` keeps python from
+# holding lines back; the read loop stamps and appends each as it arrives, and
+# TMP keeps a copy for the commit message because the loop runs in a subshell.
+TMP=$(mktemp) || exit 0
+trap 'rm -f "$TMP"' EXIT
+say "sweep start — $("$PY" scripts/regate.py --list 2>/dev/null | tail -1 | tr -d '\n')"
+nice -n 19 timeout 3000 "$PY" -u scripts/regate.py 2>&1 | while IFS= read -r l; do
+  say "$l"
+  printf '%s\n' "$l" >> "$TMP"
+done
+OUT=$(cat "$TMP")
 
 # Only the runner writes the ledger; this just commits what the runner wrote.
 # Explicit paths, because another writer shares this tree (LESSONS.md, the

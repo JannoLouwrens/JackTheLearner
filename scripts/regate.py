@@ -99,8 +99,9 @@ def cheap_stale() -> list[tuple[str, str, str]]:
     from experiments.protocol import Ledger
     from experiments.registry import BY_ID
     from experiments.run import stale_claims
-    out, seen = [], set()
-    for row in stale_claims(Ledger()):
+    ledger = Ledger()
+    out, seen, blocked = [], set(), []
+    for row in stale_claims(ledger):
         sid, status = row[0], row[1]
         # A spec can be reported by more than one staleness path (T6.03 is both
         # dirty-tree and changed-code). Re-running it twice in one sweep would
@@ -111,8 +112,27 @@ def cheap_stale() -> list[tuple[str, str, str]]:
         spec = BY_ID.get(sid)
         if spec is None:
             continue
-        if getattr(spec.budget, "value", "") in CHEAP:
-            out.append((sid, status, spec.budget.value))
+        if getattr(spec.budget, "value", "") not in CHEAP:
+            continue
+        # SKIP WHAT CANNOT PASS. A spec whose dependency is red comes back
+        # BLOCKED however many times it is run, and re-running it every two
+        # hours forever is the clerical lane inventing its own busywork — the
+        # exact disease it was built to remove. Observed on the first two
+        # sweeps: T6.03 -> BLOCKED by T2.10 (FAIL), T0.18 -> BLOCKED by T0.13
+        # (FAIL), both re-run twice for nothing.
+        #
+        # The staleness is real and still owed; it is just not payable yet, and
+        # it becomes payable the moment the blocker clears — at which point this
+        # lane picks it up with no further instruction. Reported, not silently
+        # dropped, because a queue that quietly shrinks is one nobody audits.
+        unsat = ledger.unsatisfied(spec)
+        if unsat:
+            blocked.append((sid, ", ".join(f"{d} ({w})" for d, w in unsat)))
+            continue
+        out.append((sid, status, spec.budget.value))
+    if blocked:
+        for sid, why in blocked:
+            print(f"  skip {sid:9s} stale but unpayable — blocked by {why}")
     return out
 
 
