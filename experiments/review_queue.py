@@ -34,6 +34,24 @@ gates on is DECLARED, at the start of a line, in the `DECIDE:`/`COVERS:` idiom:
         BLOCKED-BY: <another row id> | what releases this hold
         WAITS-ON: <another row id> | why this answer depends on that one
         WAITS-ON: none | why this row is independent
+        BUILDER-TRACE: <executing commit> | what was executed, verified how
+
+`BUILDER-TRACE:` IS A RECEIPT AND BUYS NOTHING (Review 2026-09-28, FOR THE
+BUILDER 1). On 2026-09-28 `review_queue_violations` read 7 at midnight and
+THREE of the seven were work the builder had already finished — five days
+early, five days early and one day early — because the builder can EXECUTE a
+row and cannot STAMP one (`ACTED` is the consuming desk's alone, correctly),
+so an early delivery renders identically to neglect until a Review sits. The
+builder had hand-invented the receipt twice, in prose, and prose is invisible
+here by design. So the receipt becomes a declared field: a LIVE row carrying
+`BUILDER-TRACE:` with an executing commit prints under `DELIVERED — AWAITING
+STAMP` beside the violation list. **It buys NO exemption** — the row still
+ages, still goes STALE and OVERDUE, still exits 2; no violation class reads
+the field. Visibility, not relief: a row that is done must not be able to
+make itself quiet. A `BUILDER-TRACE:` naming no executing commit is
+MALFORMED (a receipt without a commit is the two-meaning token again); the
+prose idiom (`BUILDER-TRACE <date> — ...`, no colon) remains deliberately
+unparsed, per `901f7fc`.
 
 The `ROUTED:` line's four-field shape is the file's own published contract and is
 unchanged; `DUE:`, `BLOCKED-BY:` and `WAITS-ON:` are indented body lines, so
@@ -311,7 +329,7 @@ _ROUTED = re.compile(r"^ROUTED:\s*(.*)$")
 #: this file legitimately holds prose that is not a row.
 _CANDIDATE = re.compile(r"^##\s*(?:ROUTED\b|`)")
 _HEADING = re.compile(r"^#{1,6}\s")
-_DECL = re.compile(r"^(DUE|BLOCKED-BY|ORDERED|WAITS-ON):\s*(.*)$")
+_DECL = re.compile(r"^(DUE|BLOCKED-BY|ORDERED|WAITS-ON|BUILDER-TRACE):\s*(.*)$")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _LOG_ROW = re.compile(r"^\|\s*(\d{4}-\d{2}-\d{2})\s*\|")
 #: An executing commit: >=7 hex chars WITH at least one letter. The letter is
@@ -348,6 +366,7 @@ def parse(doc: str) -> list[dict]:
                    "routed": None, "source": "", "status": "", "status_text": "",
                    "due": None, "due_text": "", "blocked_by": "", "blocked_text": "",
                    "waits_on": "", "waits_text": "",
+                   "trace": "", "trace_text": "",
                    "ordered": []}
             if len(fields) != 4:
                 cur["bad"].append(f"{len(fields)} pipe-separated fields, expected 4")
@@ -406,6 +425,21 @@ def parse(doc: str) -> list[dict]:
             else:
                 cur["waits_on"] = head.strip("`")
                 cur["waits_text"] = rest
+        elif key == "BUILDER-TRACE":
+            # A RECEIPT, never a stamp (module docstring; Review 2026-09-28
+            # FTB 1). The head must carry an executing commit under the same
+            # `_COMMIT` contract ACTED already enforces — a receipt without
+            # one is prose wearing a declaration. A later line overwrites an
+            # earlier one, as a re-armed DUE: does; the superseded receipt
+            # stays in the body as history.
+            c = _COMMIT.search(head)
+            if c is None:
+                cur["bad"].append("BUILDER-TRACE: names no executing commit "
+                                  "(>=7 hex chars with a letter); a receipt "
+                                  "without one is prose — write the sha")
+            else:
+                cur["trace"] = c.group(0)
+                cur["trace_text"] = rest.split("|", 1)[1].strip() if "|" in rest else ""
         else:
             if not head:
                 cur["bad"].append("BLOCKED-BY: names no row")
@@ -756,9 +790,21 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
                 findings.append(("MALFORMED", rid,
                                  f"BLOCKED-BY names {r['blocked_by']!r}, which is not a row here"))
             elif tgt["status"] in TERMINAL:
+                # One class, two texts (Review 2026-09-28, FOR THE BUILDER 2).
+                # ACTED and DECLINED both correctly fire — a hold behind a
+                # terminal row is a hold behind nothing either way — but only
+                # ACTED means the awaited window OPENED. A DECLINED blocker
+                # was refused, and "has opened" was false of nine live rows
+                # the morning this text split. The remedy is the same three
+                # honest repairs, which is why it stays one class.
+                gloss = ("the window it was waiting for has opened"
+                         if tgt["status"] == "ACTED" else
+                         "the window was abandoned, not opened — the blocker "
+                         "was refused, and this hold now waits on nothing "
+                         "that will ever move")
                 findings.append(("HOLD-ON-A-RESOLVED-BLOCKER", rid,
                                  f"held behind {tgt['id']}, which is {tgt['status']} — "
-                                 "the window it was waiting for has opened"))
+                                 + gloss))
         if (r["waits_on"] and r["waits_on"].lower() != "none"
                 and r["waits_on"] not in by_id):
             # The phantom-BLOCKED-BY rule, applied to the coupling field
@@ -949,6 +995,26 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
             "already_overdue": sum(1 for r in due_soon if r["due"] < today),
             "ids": sorted(r["id"] for r in due_soon)}
 
+    # DELIVERED — AWAITING STAMP (Review 2026-09-28, FOR THE BUILDER 1): every
+    # LIVE row whose body declares a `BUILDER-TRACE:` with an executing
+    # commit. A READING, never a violation and never an exemption — it is
+    # computed after every violation class above and none of them reads
+    # `trace`, so a delivered row still ages, still goes STALE and OVERDUE,
+    # and still turns the exit code red. What it buys is the one thing the
+    # 09-28 sitting showed was missing: a violation list where three of seven
+    # reds were finished work now says so on the same screen.
+    delivered: list[dict] = []
+    for r in rows:
+        if r["status"] not in LIVE or not r["trace"]:
+            continue
+        delivered.append({
+            "id": r["id"], "status": r["status"], "commit": r["trace"],
+            "due": r["due"].isoformat() if r["due"] is not None else "",
+            "overdue_days": ((today - r["due"]).days
+                             if r["due"] is not None and r["due"] < today
+                             else 0),
+            "text": r["trace_text"]})
+
     # THE ORDERED JOIN (79th audit): every LIVE row's commissioned spec ids,
     # each against the ledger's verdict for it — or against its absence, which
     # is the half the 78th audit's opt-in lesson says must also be visible.
@@ -967,6 +1033,7 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
                 "ran_at": str(lrow.get("ran_at", "") or "")[:10]})
 
     return {"rows": rows, "findings": findings, "counts": counts,
+            "delivered": delivered,
             "due_pile": due_pile, "piled_on": piled_on,
             "waits_on_groups": waits_on_groups,
             "ordered_returns": ordered_returns,
@@ -1208,6 +1275,25 @@ def render(a: dict, last_run: str = "") -> str:
             if shared:
                 line += f" — {shared}"
             out.append(line)
+    if a.get("delivered"):
+        dl = a["delivered"]
+        out.append("")
+        out.append(f"  DELIVERED — AWAITING STAMP — {len(dl)} live row(s) "
+                   "declare an executing commit via")
+        out.append("  BUILDER-TRACE: (Review 2026-09-28 FTB 1: three of seven "
+                   "violations that morning")
+        out.append("  were finished work, and no instrument could say so). A "
+                   "READING, never an")
+        out.append("  exemption: each row still ages, still goes OVERDUE, "
+                   "still exits 2 — only the")
+        out.append("  consuming desk's ACTED, naming the commit, closes it:")
+        for e in dl:
+            when = ""
+            if e["due"]:
+                when = f"  DUE {e['due']}" + (f" (+{e['overdue_days']} d, still counted)"
+                                              if e["overdue_days"] else "")
+            out.append(f"    {e['status']:<13} {e['id']}  executed at "
+                       f"{e['commit']}{when}")
     if a["total"]:
         out.append("")
         out.append(f"  {a['total']} VIOLATION(S) — "

@@ -1627,6 +1627,12 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
         so. Nothing is stamped here; `DISPOSITIONED -> ACTED` is the desk's act.
         The measurement is on the row so the desk that fires the stop-rule reads
         it first. Lesson generalised in `docs/LESSONS.md` this slot.
+    BUILDER-TRACE: e5e627b | executed 2026-09-25 14:14 UTC ("1^13 unit 5"):
+        tfidf_retrieval_correct promoted from REPORTED to BINDING at
+        t2_15_freeform_routing.py:553, CLAIM_MIN 12 / NB_REF_MIN 13 unmoved.
+        The declared form of the two prose traces above (2026-09-28 06:5x
+        slot, the slot that taught this file to parse it); a RECEIPT, not a
+        stamp — the row still ages and only the desk writes ACTED.
 
 ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | DISPOSITIONED 2026-09-26 (Review DAILY — the METRIC ruling: adopt (a), the objective's own held-out information content, as a NEW deciding conjunct; retain all four existing CLAIM conjuncts UNCHANGED; no third rig, no arm added, no bar lowered, and the one move that could weaken anything is NAMED and deliberately NOT made)
     DUE: 2026-09-16 | RE-ARMED 2026-09-07 (builder): the row went STALE at 9 d
@@ -1712,6 +1718,13 @@ ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /d
         whose justification improved. **What this trace does NOT do:** it does
         not stamp `ACTED`, it does not move this date, and `run review-queue`
         reads identically before and after it.
+    BUILDER-TRACE: a080386 | executed 2026-09-26 11:23 UTC: all three ordered
+        items — PILOT RECORD v3 read at the spent seeds (worst-seed mi_margin
+        +0.6268 vs the 0.50 STOP), mi_beats_field a BINDING fifth conjunct
+        (MI_MARGIN_MIN 0.50), gates still unfrozen, nothing dispatched, no
+        bar moved. The declared form of the 03:0x prose trace above; a
+        RECEIPT, not a stamp — the row still ages and only the desk writes
+        ACTED.
 
 **DISPOSITION (Review DAILY, 2026-09-26): ADOPT (a) — gate on the OBJECTIVE's
 held-out information content — as a NEW conjunct. Retain all four existing
