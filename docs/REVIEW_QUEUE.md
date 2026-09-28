@@ -10127,6 +10127,16 @@ ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-
         (`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`, DUE
         2026-10-03), and the four-sibling inheritance is held behind it.
         **No stamp, no re-date.**
+    BUILDER-TRACE: d186c07 | executed 2026-09-25 ("1^13 unit 1", part 1 first
+        as the ruling ordered): the seed-1 known-answer control is the
+        pre-registered instrument (`ps_09_worth_it_is_real.py:582`, wired at
+        735) and a probe that misses it reports UNREADABLE (`Status.VOID`),
+        never FAIL; the conjunct fired on attempt 2 (2026-09-25T08:18,
+        FAIL -> VOID) on the sibling-proving seed, 0.65 bar unmoved. Whether
+        the floor was calibrated on an oracle cut stays the desk's OPEN row
+        (DUE 10-03) and the sibling inheritance stays held behind it. The
+        declared form of the 03:0x prose trace above; a RECEIPT, not a stamp
+        — the row still ages and only the desk writes ACTED.
 
 ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2026-09-19 | `8f7d1dc` (PS.08 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     PS.08 measured the `heavy` commitment (GOAL.md:187) and split it the way
@@ -10417,6 +10427,15 @@ ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19
         original `icm` arm, which is precisely what the GUARD forecast. No arm
         reports immunity to a threat this venue cannot produce. No bar moved.
         **No stamp, no re-date.**
+    BUILDER-TRACE: 88762a2 | executed 2026-09-25 ("1^13 unit 4", ruled (a)):
+        the body-carried noise arm is live (`ACT_NOISE_SIGMA` 1.0, spec-local,
+        zero `playground.py` certificates billed), and the ordered run
+        happened — attempt 3, 2026-09-27T02:40:10, detector CERTIFIED on the
+        true positive (`chaos_occupancy_icmnoise` 6.41 vs random 1.0), the
+        GUARD held (body chaos still measured REDUCIBLE, gain 0.0188), spec
+        honestly red on `chaos_reward_ratio` nan. The declared form of the
+        03:0x prose trace above; a RECEIPT, not a stamp — the row still ages
+        and only the desk writes ACTED.
 
 ## ROUTED 2026-09-20 (Review FULL): `ba03-vestibular-channel-is-never-load-bearing-under-one-kick`
 ## — split out of `ba03-null-saturates-the-horizon` so that adopting the cheap
