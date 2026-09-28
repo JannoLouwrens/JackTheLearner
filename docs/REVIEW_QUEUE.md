@@ -425,6 +425,48 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
         evidence now points. The disposition's W1 design and registrations
         stand; it is the Pile A *diagnosis* ("the repair is in our
         instruments") that did not survive four hours.
+    WAITS-ON: w1-world-edit-window | DECLARED 2026-09-28 by the builder (the
+        127th audit's FTB 2). Not a new fact: this row's own 09-24 re-date
+        sentence (the live `DUE:` line above) says it was dated *"deliberately
+        AFTER `w1-world-edit-window`'s 09-27 Sunday date, because registering
+        these three is downstream of the world-edit window they run in"* —
+        true in prose since 09-24 and invisible to every reader of a field.
+        WAITS-ON is the correct field and BLOCKED-BY is not: this declaration
+        buys NOTHING — no ageing exemption, no OVERDUE relief, this row keeps
+        every clock it has — and a TERMINAL root is legal here by this
+        instrument's own contract (*"the root resolving does not release the
+        row from anything, because there was never anything to release"*).
+        The root IS terminal: `w1-world-edit-window` was stamped DECLINED on
+        2026-09-28.
+    BUILDER-TRACE 2026-09-28 ~09:0x UTC (builder — a RECEIPT in the prose
+        idiom, deliberately NOT the declared `BUILDER-TRACE:` field: that
+        field asserts DELIVERED — AWAITING STAMP, and nothing this row owes
+        has been executed. Nothing here is stamped, no date moves, and no
+        position is taken on who authors W1 — that is `D33`, the owner's).
+        THE CYCLE, both halves read through `review_queue.parse()` at HEAD
+        `9b3d8db`, written where this instrument's reader looks because the
+        127th audit's RANK 2 found it stated in no desk file, decision entry
+        or commit message:
+        (1) `w1-world-edit-window` — `DUE: 2026-09-27`, field
+        `BLOCKED-BY: w0-too-shallow | the W1 design above must be REGISTERED`.
+        Dated four days BEFORE the row it declares its own prerequisite.
+        (2) `w0-too-shallow` (this row) — `DUE: 2026-10-01`, field
+        `BLOCKED-BY:` EMPTY. Its half of the cycle lived only in the re-date
+        sentence quoted in the WAITS-ON above: dated four days AFTER a row
+        that names THIS row its prerequisite.
+        Each row declares itself downstream of the other, so no date either
+        row could have been given was keepable — the mechanical explanation
+        for the five broken instalments, and it is a cycle, not desk neglect
+        (re-derived from the fields this slot, not inherited from the audit
+        that ordered this trace).
+        AND THE CYCLE IS NOW HALF-ABANDONED, WHICH IS A DIFFERENT FACT THAN
+        CIRCULAR: `w1-world-edit-window` is DECLINED — terminal, the first in
+        113 routed rows — so the window was REFUSED, not opened, and this
+        row's 2026-10-01 date sits downstream, by its own re-date logic, of a
+        blocker that no organ will resolve unless `D33` is ruled. The
+        registration of `W1.01`/`W1.03`/`W1.04` that this row owes is dated
+        behind a refusal; on 2026-10-02 this row goes OVERDUE for the fourth
+        time and the cause will be this sentence, not throughput at any desk.
 
 ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1 (builder; finding §3.1) | ACTED 2026-09-16 (Review DAILY, executing commit `d521384` — the carry-back was already discharged on the `w0-too-shallow` row itself on 09-06; what this row still owed was the ORDERING consequence, and it is delivered below. The W1 ordering stops being contingent and becomes unconditional. See ANSWER below)
     DUE: 2026-09-15 | first future date carrying no promise yet per
