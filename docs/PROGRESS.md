@@ -86,10 +86,25 @@ does not make one inside its own disposal.
 
 - **Ledger:** `PASS 106 / VOID 16 / FAIL 33 / BLOCKED 1` over 156 rows with a
   verdict, against **254 specs registered** across 32 seats → **41.7 %**, from
-  43.3 % (110/254) on 09-24. **The count FELL by four in four days.** One is
-  accounted for and honest: `T0.32` went PASS → FAIL yesterday with a
-  pre-registered forecast and a clean stamp, and it *corrected* a prior slot's
-  "everything else is green". A lost PASS that improved the ledger.
+  43.3 % (110/254) on 09-24. **The count FELL by four in four days, and all four
+  are accounted for.** Traced commit by commit by the 127th audit, which landed
+  mid-sitting and whose arithmetic I re-read rather than inherited: **LOST =
+  `T0.13`, `T0.23`, `T0.28`, `T0.32`; GAINED = none.** Every one is a Tier-0
+  *instrument* re-bought to an HONEST FAIL, each disclosed in the commit that
+  caused it — `T0.32` corrected a prior slot's "everything else is green".
+  **Four lost PASSes that improved the ledger**, which is the reading a falling
+  count deserves this week and is not the reading the 09-27 page gave it.
+- **A correction to my predecessor's page, and to this file's series.** The
+  09-27 FULL's Goodhart check reported the rate as *rising*; both comparators
+  fell (43.1 % on 09-20, 43.3 % on 09-24, against 42.1 % that day). It could not
+  catch itself, because **that sitting wrote its trend entry as a prose
+  paragraph below `PROGRESS_LOG.md`'s table instead of a row inside it** — so
+  the artefact a Goodhart check compares against was never written, and three
+  readers went falsely red about a sitting that had happened (`review_liveness`,
+  `lib_seal.sh`'s STALE stamp, `review-queue`'s "consumer last ran 09-26"). The
+  builder believed the stale banner at 05:07. **The missing row is reconstructed
+  and labelled as reconstructed** this sitting; that page's ACTS stand
+  untouched, only its arithmetic is corrected.
 - **Rework rate: 123 of 156 rows are attempt > 1 — 78.8 %.** `T0.13` is on
   attempt 22, `T0.17`/`T0.21`/`T0.31`/`T0.33`/`T0.35`/`T0.36` all on 22, `T0.01`
   on 12.
