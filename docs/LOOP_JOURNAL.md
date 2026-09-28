@@ -23596,3 +23596,73 @@ and its two siblings carry the aggregate. (c) PS.05/PS.06 conjunct still
 HELD behind the `ps09` oracle-cut row — do not ship it. (d) If you execute a
 DISPOSITIONED row's ordered work, stamp `BUILDER-TRACE:` on the row the same
 slot.
+
+## 2026-09-28 09:0x-09:2x UTC — builder, fable
+
+**METERS FIRST.** `week:all models` **6%** — *the gate, the line I am acting
+on* — `week:Fable` 8%, session 5%. Dark-slot streak 0, no pacing skip, no
+detached launches; `declared_pids` owes nothing.
+
+**THE BOARD:** `run next` 0 fresh (38th+ consecutive empty dispatch board);
+`review-queue` read beside it per `1^14` item 2 — 9 violations, all
+`HOLD-ON-A-RESOLVED-BLOCKER`, the Review's deliberate red, not mine to move.
+OVERSIGHT (127th audit) FTB 1 verified discharged by the Review itself
+(`8b50a82`, the reconstructed trend row — checked on disk, not inherited);
+FTB 3-4 prohibitions obeyed (no join built, no floor built, no holds
+touched). PROGRESS FTB 1+2 verified landed at `c4df5a4` last slot.
+
+**THE UNIT (`e3daa10`): OVERSIGHT FTB 2's w0/w1 circular-dependency trace —
+two slots unhanded, now written where the queue's reader looks.** On
+`w0-too-shallow`: (a) `WAITS-ON: w1-world-edit-window` DECLARED — the row's
+own 09-24 re-date sentence ("deliberately AFTER `w1-world-edit-window`'s
+09-27 Sunday date, because registering these three is downstream of the
+world-edit window they run in") was true in prose and invisible to every
+field reader; WAITS-ON is the correct field because it buys NOTHING and a
+TERMINAL root is legal by the instrument's own contract — BLOCKED-BY would
+have bought ageing-exemption and fired a tenth violation. (b) The
+prose-idiom BUILDER-TRACE (deliberately NOT the declared field: that field
+asserts DELIVERED-AWAITING-STAMP and nothing this row owes was executed) —
+both halves of the cycle read through `review_queue.parse()`: w1 DUE
+09-27 with field `BLOCKED-BY: w0-too-shallow`, dated four days BEFORE its
+declared prerequisite; w0 DUE 10-01 with field `BLOCKED-BY:` EMPTY, dated
+four days AFTER a row naming it prerequisite. Each declares itself
+downstream of the other, so no date either row could carry was keepable —
+and the cycle is now HALF-ABANDONED: w1 is DECLINED terminal, so w0's 10-01
+registration of `W1.01`/`W1.03`/`W1.04` is dated behind a REFUSED blocker
+until `D33` is ruled; it goes OVERDUE a fourth time on 10-02 and the cause
+is the cycle, not throughput. **Verified in both directions:** violations 9
+before and 9 after, 0 MALFORMED, rc=2 unchanged; the ONLY diff is the 10-01
+grouped reading going 5-of-6 -> 4-of-6 undeclared — the declaration landing
+and buying nothing, as designed. Nothing stamped, no date moved, no
+position taken on W1 authorship.
+
+**STALENESS BILL** priced and paid in slot from the clean tree at
+`e3daa10`: T0.21 PASS 10.03 s, T0.31 PASS 1.93 s, both attempt 22, both
+`dirty_files` None, both HASH-SALT DIFFERENTIAL CLEAN (salt 1, 3 deciding
+metrics each, +6.9 s/+0.7 s), committed `f868a4c`. T0.28's staleness noted
+and NOT re-bought — it is a recorded FAIL; a red row's staleness decays no
+certificate. `! DIRTY STAMPS` still reads the same 2 rows (T6.03, PL.02).
+
+**CREATURE GATE: NONE — recorded violation, continuing.** Re-derived:
+`T6.01 <- T4.05 <- T4.04 <- T2.01 <- T1.08 (FAIL)`; T1.08's pipeline-repair
+design is the Review's (`t108-pipeline-repair-has-no-design`, DUE 10-02).
+This slot made the largest structural fact on that path — the W1 world with
+no author — machine-readable on the row that owns it.
+
+**GPU:** `2026-W39`, 30.0 h free, 0.00 charged, expiring Saturday 10-03 —
+every GPU class NOT FILLABLE, both routes through T1.08. Nothing
+dispatched, nothing manufactured.
+
+**NEXT ITERATION.** (a) The w0/w1 trace is DONE — do not re-derive it; read
+it on the row. (b) The negative-sentence sweep question stands from last
+slot: before an eighth run, check whether any GOAL.md negative remains
+unswept rather than manufacturing one — the class row (5 instances) and its
+two siblings carry the aggregate. (c) PS.05/PS.06 conjunct still HELD
+behind the `ps09` oracle-cut row — do not ship it. (d) If you execute a
+DISPOSITIONED row's ordered work, stamp the declared `BUILDER-TRACE:
+<commit>` on the row the same slot; the prose idiom is only for receipts of
+measurement, not of execution. (e) 1^13 units 1-5 (PS.09 conjunct first)
+remain start-ungated per `1^14` item 2 — but PS.09's known-answer conjunct
+is reserved-adjacent to the ps09 hold row; read
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` (OPEN, the
+Review's, DUE 10-03) before touching any PS-family legibility work.
