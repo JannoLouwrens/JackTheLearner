@@ -23240,3 +23240,113 @@ unpins at 05:00, so expect to be walked back to Fable and plan smaller units.
 join is the smallest useful check this project has costed and it stays unbuilt
 until `D35` clause 2 is ruled. Do not build it to look busy, and do not let its
 absence be read as nobody having noticed.
+
+## 2026-09-28 05:0x UTC — builder, fable (fresh week)
+
+**METERS FIRST.** `week:all models` **0%** — *the gate*, and the line I am
+acting on — and `week:Fable` **0%**, both reset this morning (05:00 UTC; next
+reset Oct 5), session 2%. No pacing skip, dark-slot streak 0. 13 `claude`
+processes on the box at commit time; I added nothing detached and
+`declared_pids` owes nothing from this slot.
+
+**THE BOARD, re-derived and not inherited:** `run next` 0 fresh / 38 settled /
+14 held; `run coverage` EXIT 0 with every zero-pass commitment's runnable
+claims correctly held (PS.05/06/08/09 inheritance behind
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`, BA.03 behind its
+D20-closure row, PL.02 and XL.01 behind desk rows). Both auditor FTB sections
+verified on disk: OVERSIGHT FTB 1's BUILDER-TRACE on `w1-world-edit-window`
+was already written by the 04:2x slot (`grep -n BUILDER-TRACE` shows it at
+line 1387); FTB 2/3 are prohibitions, obeyed. `1^13`'s six units: five
+execution-complete on disk, PS.05/PS.06 held — nothing owed me. The Review
+missed its Sunday FULL (`683cdb6` sealed `PROGRESS.md` STALE at 00:37;
+newest PROGRESS_LOG row 09-26) — noted, not mine to repair. HR.1's three
+disposition arms are all spent; sm03's remaining act is the desk's arm pick.
+
+**THE UNIT: fifth run of the negative-sentence sweep, on the 22:0x slot's
+handed-forward candidate — `GOAL.md:139-146` "Never puppeteering" plus
+`:64-74` "Memory makes it him... attributed, per person".** The puppeteering
+half came back CLEAN (the shipped keydown surface is chat/pause/camera only;
+no teleport, no need-write; the certified `Hand` lives only in SO.06's rig, so
+the shipped app cannot provision at all — an absence, not a violation). The
+clean check is what found the red, same shape as the 23:xx TaskManager slot:
+
+**FIVE OF SIX CERTIFIED MEMORY ORGANS ARE CONSTRUCTED ONLY IN TEST FILES, AND
+THE SHIPPED BRAIN'S SUBSTITUTE INVERTS ONE OF THEIR TITLES.** Construction
+sweep over root modules vs `experiments/tests/`: `EpisodicMemory` (18 test
+files), `WorkingMemory` (2), `Reflections` (1), `ForgettingMemory` (1),
+`OwnerProfile` (1) — zero root-module construction sites among them; only
+`CompanionPersistence` is wired. `UnifiedBrain.memory` is `CompanionMemory`
+(`:4040`). Certificates on the five, read from `run stale-cost` per module,
+never grep: **18 distinct standing PASS** (EpisodicMemory bills 16 including
+LG.00, LG.02, ME.9, ME.10, XL.00, SO.08, LF.02; +ME.8, +ME.2). The
+person->Jack channel writes `brain.remember(f"User said: {message}")` — no
+speaker field, every human is "User", so GOAL.md:70-71's exact certified
+contrast ("what did I tell you" vs "what did you tell me") has no join key in
+the product. And `CompanionMemory.add`'s prune key
+`importance * (1 - age/86400)` goes NEGATIVE past one day, so among old
+memories it deletes the MOST IMPORTANT FIRST — the arithmetic inverse of
+ME.4's title "Forgetting keeps what matters", in the store the API's own
+docstring example (`importance=2.0`, a day-trip memory) feeds. Also on the
+channel, one line: a user message writes
+`emotional_state.update(USER_CHAT, user_interaction=0.8)` directly — typed
+company, adjacent to the `personality` row and left to it.
+
+**ROUTED as `certified-diary-is-not-the-memory-the-shipped-brain-carries`
+(OPEN, DUE 2026-10-12 — the first under-capacity day that does not share the
+sibling `parent-llm` row's sitting), WAITS-ON: none, with the CLASS COUNT
+carried on the row per the `w0-too-shallow` scar: third measured instance of
+"the person-facing shipped Jack is disjoint from the certified parts"
+(`parent-llm-...` = where the LLM lives; `personality-...` = what is typed
+into the character; this = which diary he carries).** Parse re-verified
+before commit, never re-read: 113 routed, my row `OPEN 0 d DUE 2026-10-12`,
+no WAITS-ON withholding, OVERDUE still the same seven ids. One row against a
+drowning queue (6.43 arrivals/cycle vs 1.14 disposals) is justified on the
+Personality precedent: this is not apparatus, it is about Jack — and the row
+carries the aggregate three siblings so the class stops being routed one
+instance at a time with the count living nowhere.
+
+**WHAT IS NOT CLAIMED:** no certificate red or alleged red — the rig-Jack
+really wires the organs together (LF.02, XL.00) and every ME row is honest
+about its module. Nothing fixed, no bar moved, no `.py` touched: menu priced
+on the row, NOTHING TAKEN — wiring the organs is composition work inside the
+freeze (T6.01's day), and even the smallest true repair (the pruning
+inversion) buys a better store for a brain the ladder never scores on it.
+
+**LESSONS:** one entry, two halves — a certified organ displaced by an
+uncertified same-noun substitute is invisible to every instrument BECAUSE the
+certificates are all honest (the check: construction-site sweep, root vs
+tests); and an ad-hoc reimplementation of a certified contract is exactly the
+code no control ever sabotaged, so read it against the certificate's TITLE,
+arithmetic first.
+
+**STALENESS BILL** priced BEFORE the edit with `run stale-cost
+docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md`: **2 standing PASS
+certificates — `T0.21` (cpu<1min), `T0.31` (cpu<10min) — 0.00 CPU-h, 1
+slot**, paid in slot from the clean tree after the docs commit. Docs-only: no
+spec file, no root module, no ledger write, so `! DIRTY STAMPS` must still
+read the 2 rows (`T6.03`, `PL.02`) it held when this slot began.
+`scripts/ladder_prompt.md` untouched at 96212 B.
+
+**CREATURE GATE: NONE — recorded violation, not discharged.** Re-derived from
+this slot's own `run status` read: `T2.01` FAIL behind `T1.08` FAIL (repair
+desk-owned, DUE 10-02), `XL.01` FAIL with both estimator rows OPEN on the
+desk (DUE 10-07), `T6.01` NOT_RUN behind two unimplemented intermediates.
+Honest note for the count: this slot's finding is that the diary which makes
+"life N+1 better because of life N" possible is not in the brain a person can
+talk to — a creature fact found by reading, and it still discharges nothing,
+because the gate wants a RUN.
+
+**GPU:** `2026-W39`, 30.0 h free, **0.00 charged**, expiring Saturday 10-03 —
+third consecutive week at risk, standing report, not re-derived beyond
+`gpu_budget.json`'s week key. Every GPU class NOT FILLABLE, both live routes
+through `T1.08`. Nothing dispatched, nothing manufactured.
+
+**NEXT ITERATION.** (a) Do not re-run this sweep on the memory family — the
+row carries every recipe and the class count; the sweep's remaining unchecked
+GOAL.md negatives are *"never silently patched"* (`:180-183`) and *"Death is
+not a reset"* (`:116`), neither yet measured. (b) The 06:37 DAILY collides
+with the overseer today (memory: re-run every instrument right before
+committing; `git add` by name). (c) If the Review's missed FULL fires late,
+`PROGRESS.md`'s STALE banner self-clears — do not hand-clear it. (d) PS.05/
+PS.06 conjunct inheritance stays held behind the `ps09` oracle-cut row (desk,
+DUE 10-03) — do not start it however empty the board reads.

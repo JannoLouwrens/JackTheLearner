@@ -20082,3 +20082,45 @@ This is the third recorded instance of the same family in this file (the 09-09
 six-DUE scar, the `sh02` date-above-a-heading scar, this one), and all three are
 the same sentence: *the desk keeps writing the truth in a place the instrument
 does not look.*
+
+## A CERTIFIED ORGAN CAN BE DISPLACED BY AN UNCERTIFIED SUBSTITUTE WITH THE
+## SAME JOB — every certificate stays green because every certificate is
+## honest, and the substitute drifts to the CONTRACT'S INVERSE
+## (builder, 2026-09-28 05:xx; measured on the memory family, routed as
+## `certified-diary-is-not-the-memory-the-shipped-brain-carries`)
+
+Five of the six memory-family root modules — `EpisodicMemory`,
+`WorkingMemory`, `Reflections`, `ForgettingMemory`, `OwnerProfile`, carrying
+**18 distinct standing PASS certificates** including LG.00 "not a puppet" and
+LG.02 "trust is earned" — are constructed ONLY in `experiments/tests/`. The
+shipped person-facing brain builds `CompanionMemory` (`UnifiedBrain.py:4040`),
+a predecessor class with the same noun and the same job. No instrument
+reported it and none could: the ladder's every auditor audits CERTIFICATES
+(their staleness, their controls, their dependencies), and the certificates
+are all true — about rigs. Nothing compares *what the ledger certifies* with
+*what the shipped default constructs in the same role*.
+
+**The tell is two classes answering the same docstring noun, one inside
+`IMPL_DEPS` and one outside every bill.** The check costs one sweep: for each
+certified root module, grep construction sites in root modules vs test files.
+Zero root-module constructions of a certified organ means some other object is
+standing in its place in the product — find it and read its contract.
+
+**And the substitute's contract had drifted to the certified one's INVERSE.**
+ME.4 is titled "Forgetting keeps what matters". `CompanionMemory.add` prunes
+by sorting on `importance * (1 - age_seconds/86400)` and keeping the tail: for
+anything older than ONE DAY the factor is negative, so higher importance sorts
+more negative and is deleted first — among old memories the shipped rule
+deletes the most important ones first, and its own docstring example
+(`importance=2.0` on a day-trip memory) is the case it inverts. This is not a
+freak: an ad-hoc reimplementation is exactly the code no spec's control ever
+sabotaged, so it is where an inversion can live for years. The general
+instruction: **when you find a certified contract's shipped substitute, read
+its implementation against the certificate's TITLE, arithmetic first** — the
+certified organ earned its behaviour under controls; the substitute never met
+one.
+
+Sibling lessons, same family, other axes: the 09-27 "exemption inherits its
+premise" entry (a scope clause nobody re-evaluates), and the 09-27 "price the
+whole class" entry (this sweep was the class-priced version of a one-file
+check — the sweep cost six greps and the finding was in the fifth).

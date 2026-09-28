@@ -14614,3 +14614,96 @@ docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md`: 3 standing PASS
 certificates** — `T0.01` (cpu<1min) <- `TaskManager.py`, `T0.21` (cpu<1min) and
 `T0.31` (cpu<10min) <- `docs/REVIEW_QUEUE.md` — **0.00 CPU-h, 1 slot**, so
 payable in slot and paid from the clean tree after this commit.
+
+ROUTED: certified-diary-is-not-the-memory-the-shipped-brain-carries | 2026-09-28 | `UnifiedBrain.py:4040,2856-2909`, `VirtualWorld.py:1265-1333,1611-1641` read statically; construction sites of all six memory-family root-module classes swept over `*.py` (root) vs `experiments/tests/*.py`; certificates per organ read from `run stale-cost`, not grep. Builder, 05:0x slot, NO ledger write, NO spec or root module edited | OPEN
+    DUE: 2026-10-12 | counted off this slot's `review-queue` listing: 09-28
+        through 10-08 are at or over the measured capacity of 6, 10-09 carries
+        2, 10-11 carries 2, and 10-12 carries 1 (`so07-recording-worlds-fail-
+        the-reference-bar`) — under capacity, and one day before the sibling
+        `parent-llm` row's 10-13 so the two do not land on one sitting.
+    WAITS-ON: none | no live row's answer changes what is measured here. The
+        two nearest neighbours share the METHOD (a GOAL.md sentence checked
+        against shipped code) and the file, and ask disjoint questions:
+        `parent-llm-is-a-submodule-and-96-percent-of-the-brain` (DUE 10-13) is
+        WHERE THE LLM LIVES, `personality-is-a-typed-character-sheet-on-the-
+        answer-path` (DUE 10-09) is WHAT IS TYPED INTO the character. This row
+        is WHICH DIARY HE CARRIES. Every branch of their menus leaves this
+        finding where it is. **The aggregate is named here so it does not
+        repeat the `w0-too-shallow` scar (nine instruments, each its own row,
+        the count assembled nowhere): this is the THIRD measured instance of
+        one class — the person-facing shipped Jack is disjoint from the
+        certified parts on the axis the sentence constitutionalises — and the
+        class count lives on THIS row until some desk gives it a home.**
+
+    **THE FINDING.** `GOAL.md:64-74` — *"Memory makes it him... he remembers
+    what he HEARD, what he SAID, and what he DID — attributed, per person
+    ('what did I tell you' is not 'what did you tell me')... both are
+    ledger-tested: ME.9... and ME.10"* — and `:141-146` — *"his diary records
+    whose advice proved true"*, *"His diary records who left it"*. Fifth run of
+    the negative-sentence sweep (the 09-27 22:0x NEXT-ITERATION's named
+    candidate). Measured: **five of the six memory-family root modules —
+    `EpisodicMemory`, `WorkingMemory`, `Reflections`, `ForgettingMemory`,
+    `OwnerProfile` — are constructed ONLY in `experiments/tests/`** (18, 2, 1,
+    1, 1 test files respectively; zero construction sites in any root module).
+    The shipped person-facing brain builds `CompanionMemory` instead
+    (`UnifiedBrain.py:4040`), and **18 distinct standing PASS certificates**
+    rest on the five organs it does not construct (per `run stale-cost`:
+    EpisodicMemory bills 16 — T2.20, ME.1, ME.3, ME.4, ME.5, ME.9, ME.10,
+    ME.11.0, ME.11.A, XL.00, LG.00, LG.01, LG.02, LF.02, SO.08, LG.13 — plus
+    ME.8 via WorkingMemory and ME.2 via OwnerProfile). LG.00 "not a puppet"
+    and LG.02 "trust is earned by track record" are on that list: the trust
+    join GOAL.md:141 promises runs ONLY through the attributed diary, and the
+    Jack a person can actually talk to does not have one.
+
+    **THE SUBSTITUTE VIOLATES TWO OF THE CERTIFIED CONTRACTS, measured in its
+    own 54 lines:**
+      - **Attribution is impossible by construction.** The person->Jack channel
+        (`VirtualWorld._send_chat:1327-1331`, same in `TextOnlyWorld._chat`)
+        writes `brain.remember(f"User said: {message}")` — free text into a
+        store with no speaker field, where every human is "User". ME.9's exact
+        certified contrast (`recall(q, channel="heard", speaker="Ada")` vs
+        `channel="said", speaker="jack"`) has no join key in the shipped store.
+      - **The shipped forgetting rule INVERTS ME.4's title.** `CompanionMemory
+        .add` prunes past `memory_size` (default 1000) by sorting on
+        `importance * (1 - age_seconds/86400)` and keeping the tail
+        (`UnifiedBrain.py:2903-2905`). For any memory older than ONE DAY the
+        factor is negative, so HIGHER importance sorts MORE negative and is
+        deleted FIRST: among old memories, forgetting deletes what matters
+        most. The API's own docstring example (`brain.remember("Today we went
+        for a walk", importance=2.0)`) is the case it inverts — while
+        `Forgetting.py:12`'s certified contract reads "EpisodicMemory stays
+        the append-only diary — ground truth, never rewritten".
+    Also measured on the same channel, one line, not the subject of this row:
+    a user message writes `emotional_state.update(EventType.USER_CHAT,
+    user_interaction=0.8)` DIRECTLY (`VirtualWorld.py:1281-1287`) — presence-
+    as-company enters as a typed constant, not through a sense; adjacent to
+    the `personality` row's subject and left to its disposition.
+
+    **WHAT IS NOT CLAIMED, each checked before writing.** No certificate is
+    red or alleged red: every ME/LG/SO/XL row is honest about the module its
+    rig built, and the rig-Jack really does wire the organs together (LF.02
+    runs world+needs+diary+working-memory through save/resume; XL.00 crosses
+    death). The "Never puppeteering" half of the sentence came back CLEAN on
+    the shipped surface: `VirtualWorld._handle_keydown:551-614` offers chat,
+    pause and camera only — no teleport, no need-write, no body-write — and
+    the certified `Hand` channel (SO.06) exists only in its test rig, so the
+    shipped app cannot puppeteer with hands because it cannot provision at
+    all, which is an ABSENCE, not a violation. `CompanionMemory` is not
+    alleged illegitimate — it predates the ladder; what is measured is that
+    nothing compares it against the organs that were certified to replace it,
+    because every instrument this project owns audits the CERTIFICATES, and
+    the certificates are all green.
+
+    **THE MENU, priced, NOTHING TAKEN.** (a) Leave it: the freeze's own
+    position — there is no Jack yet, and the wiring day is T6.01's; cost zero,
+    and the row exists so that day's builder knows `CompanionMemory` is
+    standing where the diary goes. (b) Wire `EpisodicMemory` (+ the four
+    organs beside it) into `UnifiedBrain` behind the existing config surface —
+    bills `T0.01` plus nothing (no green cert names `UnifiedBrain`'s memory
+    attribute), but it is an architecture act on the composition surface T6.01
+    measures, and taking it BEFORE T6.01 runs would be assembling the creature
+    piecewise inside the freeze; not the builder's call. (c) Fix only the
+    pruning inversion inside `CompanionMemory` — smallest true repair, bills
+    `T0.01`, and buys a better store for a brain the ladder never scores on
+    it. **(a) is the honest default; (b) is the one I would recommend the day
+    the freeze lifts, and cannot choose.**
