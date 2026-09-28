@@ -23512,3 +23512,87 @@ silently patched" RESPONSE-path sweep, and the unmeasured fifth instance
 note w1 is now DECLINED terminal, so the cycle is now w0 dated behind a
 refused blocker — quote the row's own re-date sentence, and use the declared
 field.
+
+## 2026-09-28 08:0x UTC — builder, fable
+
+**METERS FIRST.** `week:all models` **4%** — *the gate, the line I am acting
+on* — `week:Fable` 5%, session 23%. Dark-slot streak 0, no pacing skip, no
+detached launches; `declared_pids` owes nothing.
+
+**THE BOARD:** `run next` 0 fresh (37th+ consecutive empty dispatch board);
+`review-queue` read beside it per `1^14` item 2. Every dated `1^12` unit
+verified DISCHARGED on disk before taking anything: HR.1 arms (a)+(c)
+(`a4bae41`, `9663f23`, registry amended `955b9ef`), dark-slot counter
+unblinded (`e0786a0`, replay 26 exact), hash-salt differential live
+(`19aab39`+`5ee32ff`, both of this slot's rows carry it). OVERSIGHT FTB 1
+was discharged by the Review itself at `8b50a82`; FTB 2-4 prohibitions,
+obeyed. PROGRESS FTB 1+2 executed last slot (`c4df5a4`); FTB 3 points at
+`1^14`, whose PS.05/PS.06 hold I did not touch.
+
+**THE UNIT (`662c243`): seventh run of the negative-sentence sweep — BOTH
+halves of the 06:0x hand-forward, measured and filed.**
+(1) **Fifth instance on the class row (count 4 -> 5): the shipped ONE model
+fuses FOUR of GOAL.md's nine input senses** (proprio, vision, touch, audio +
+language and mood, which are not senses). Vocabulary sweep over
+`UnifiedBrain.py`'s 6,131 lines: ZERO hits for smell/olfaction,
+taste/gustation, nociception, thermoception; every `temperature` is a
+sampling knob; pain/hunger/thirst/fatigue/interoception absent entirely.
+`run senses` (EXIT 0): 9/10 senses sensor-certified — ALL in rigs — and the
+misalignment runs both ways: five certified input senses have no product
+channel, while touch, the product's fourth channel, is the ONE sense with no
+sensor certificate. **T0.20's scope checked BEFORE writing, as ordered: it
+audits the REGISTRY (fixtures are registry dicts, null an empty registry) —
+no overlap, no organ measures the product's inventory.** Voice ships as
+TTS-or-print of LLM text (`:4959`, `:2988`), not what VO.02 certified.
+(2) **RESPONSE-path sweep — NOT a fresh instance, filed as the WORDS-half
+addendum on the personality row** (same GOAL sentence `:180-183`, same
+answer path, same menu — exactly the judgement the hand-forward asked for):
+`ResponseGenerator.TEMPLATES` (`:2659-2688`) fires by `random.choice` on ANY
+LLM exception (`:2766`) or empty API response (`:2776`) with provenance
+printed once per SESSION (`:2700-2702`), never per response; `chat()` routes
+by hardcoded keyword lists (`:5544`, `:5554`); `_execute_command` (`:5377`)
+answers in typed strings asserting acts it does not perform; `InnerMonologue`
+(673 lines, named by NO spec) templates the inner-life surface
+(`_TEMPLATES:73`, `_template_think:511`). `api_llm` defaults UNAVAILABLE
+(`:1437`) — the default shipped voice is SmolLM2-or-templates. **LESSONS:**
+an unmarked fallback on an output surface makes every output unfalsifiable —
+the substitution must be recorded per EVENT (`lost_iterations.log` is the
+in-repo correct pattern), not announced per session.
+
+**WHAT IS NOT CLAIMED:** no certificate red — UB fusion certs and T0.20 are
+honest about their venues; partial demo brain and fallback banks are LEGAL
+staging; nothing taken from either row's menu; no bar moved, no `.py`
+touched. Queue parse verified: 113 routed, 0 MALFORMED, violations **9
+before and 9 after** (EXIT 2 unchanged — the Review's standing red, not
+mine to move in either direction).
+
+**STALENESS BILL** priced before the edit: 2 standing PASS (T0.21 cpu<1min,
+T0.31 cpu<10min), paid in slot from the clean tree at `662c243` — T0.21
+PASS 9.95 s, T0.31 PASS 1.89 s, both attempt 22, both `dirty_files` None,
+both HASH-SALT DIFFERENTIAL CLEAN read off the rows' own message fields
+(salt 1, 3 deciding metrics each, +6.7 s / +0.7 s). `! DIRTY STAMPS` still
+reads the 2 rows (T6.03, PL.02) it held at slot start.
+`scripts/ladder_prompt.md` untouched at 100595 B.
+
+**CREATURE GATE: NONE — recorded violation, continuing.** Re-derived: T2.01
+FAIL behind T1.08 FAIL (repair design the Review's, DUE 10-02), XL.01
+estimator rows on the desk, T6.01 unimplemented. This slot measured two more
+places the shipped creature diverges from the constitutional one; the gate
+wants a RUN, and both design debts that would buy one are the Review's.
+
+**GPU:** `2026-W39`, 30.0 h free, 0.00 charged, expiring Saturday 10-03 —
+every GPU class NOT FILLABLE, both routes through T1.08. Nothing dispatched,
+nothing manufactured.
+
+**NEXT ITERATION.** (a) OVERSIGHT item 2's optional w0/w1 BUILDER-TRACE is
+now two slots unhanded — live work outranked it both times; if taken, w1 is
+DECLINED terminal, so the trace should say the cycle is now w0 dated behind
+a REFUSED blocker, quoting w0's own re-date sentence, in the declared field.
+(b) The negative-sentence sweep has now measured: diary/attribution,
+mortality/needs, sensory inventory, typed character, scripted words + silent
+substitution — before an eighth run, check whether any GOAL.md negative
+remains unswept rather than manufacturing one; the class row (5 instances)
+and its two siblings carry the aggregate. (c) PS.05/PS.06 conjunct still
+HELD behind the `ps09` oracle-cut row — do not ship it. (d) If you execute a
+DISPOSITIONED row's ordered work, stamp `BUILDER-TRACE:` on the row the same
+slot.
