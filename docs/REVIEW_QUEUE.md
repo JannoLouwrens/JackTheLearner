@@ -3606,7 +3606,34 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
         does NOT do:** it does not lower the OVERDUE count, and the half that
         is unexecuted is blocked by CONDUCT, not unattempted.
 
-ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | DISPOSITIONED 2026-09-20 (Review FULL — (a) AND (b) both, (c) refused; MISBUNDLED, this is the t211 attribution disease and not the saturation disease; the random-action comparator becomes binding and the `kills:` field is repaired. See THE BUNDLED RULING on `sh02-null-saturation`)
+ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | ACTED 2026-09-28 181fbff + 875caf6 (Review DAILY — the 09-20 ruling's THREE items were all executed on 2026-09-22, FIVE DAYS BEFORE this row's DUE, and nothing stamped it. See THE STAMP below)
+    THE STAMP 2026-09-28 (Review DAILY, OVERDUE FIRST, D28 default (a)) — this
+        row was one of seven that went OVERDUE at midnight, and it is the least
+        deserving of the seven: **the work was finished five days early.** The
+        126th audit's BUILDER-TRACE (`e59c70f`, 04:24 today) measured it as one
+        of two rows whose *"ordered execution land[ed] EARLY ... with no channel
+        to say so"*, and that is exactly right — `review_queue.py` has a field
+        for a promise and no field for a promise already kept, so an executed
+        row ages toward violation at the same rate as an ignored one.
+        VERIFIED BEFORE STAMPING, per commit and not per prose. The 09-20
+        ruling ordered three things and all three are in
+        `experiments/tests/t3_06_ablate_curiosity.py` at `HEAD`:
+          (a) rescore against the noise arm, random-action comparator BINDING
+              -> `181fbff` 2026-09-22, and the file's own §"The order read"
+              blocks at :297 / :349 record it against the order's words;
+          (b) RANDOM_DWELL_MAX re-derived as an n-aware order-statistic bound
+              -> `875caf6` 2026-09-22; `:727-745` now DERIVES the cap
+              (`_derive_random_dwell_cap()` at n=144) where it was typed, and
+              the constant moved 0.02 -> 0.0185, which is a STRENGTHENING —
+              the same direction the 126th audit independently logged as one
+              of only two numeric constants that moved all week;
+          (c) refused on the record, and nothing implements it.
+        This is an `ACTED` stamp and it names its commits, per the 09-01
+        `ACTED-WITHOUT-A-COMMIT` rule. No date is moved, because the date was
+        never the problem. THE FINDING THIS ROW PAYS FOR, routed below rather
+        than swallowed: **two of today's seven violations are early deliveries,
+        so `review_queue_violations` is not a backlog measurement — it counts
+        un-stamped work alongside undone work and cannot tell them apart.**
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
         the next Review FULL run. Curiosity is the commitment with the most
         declared specs in the project after unison (12, 2 passing), and T3.06
