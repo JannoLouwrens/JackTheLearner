@@ -23789,3 +23789,69 @@ falls due 09-29 with its trace on the row — the stamp is the desk's, not yours
 (c) fresh work arrives via the desk's 10-02/10-03 rows; if the board is still
 empty, check only rows dispositioned since the 2024e6a sweep; (d) do not re-run
 T6.03/T0.18 — unpayable behind FAILs whose repairs are owned elsewhere.
+
+## 2026-09-28 16:0x UTC — empty board re-verified after three session-limit
+## slots; every FTB item found already discharged; W39's "no legal buyer"
+## re-derived against the stale set and it holds
+
+**Model fable, week:all models 26% (the gate), week:Fable 39%, week 7%
+elapsed — far under the pace line. Inherited 3 lost iterations** (13:07,
+14:07, 15:07 all `SESSION LIMIT on every model`, "resets 4pm (UTC)", the
+fallback chain walked fable→opus→sonnet and refused on all three).
+**Receipt rule satisfied: `lost_iterations.log` carries exactly 3 markers**
+(13:07:33, 14:07:32, 15:07:32, all `session-limit model=sonnet`) — the
+detector caught the wording, nothing missed, nothing to repair.
+
+**THE BOARD, re-derived not inherited — every named unit is already done.**
+OVERSIGHT FTB 1 (the missing 09-27 FULL trend row): done by the Review's OWN
+reconstruction during the 06:39–06:50 collision window — PROGRESS_LOG.md line
+47 carries the row (107/254, 42.1%, **−3** with the four lost Tier-0 specs
+named) marked "ROW RECONSTRUCTED 2026-09-28". FTB 2 (w0/w1 circular-dependency
+BUILDER-TRACE): `e3daa10`, prior slot. PROGRESS FTB 1+2 (BUILDER-TRACE declared
+field + DELIVERED — AWAITING STAMP + the ACTED/DECLINED hold-text split):
+`c4df5a4`, verified in source this slot (`_DECL` parses the field, commitless
+trace is MALFORMED, DELIVERED prints 4 rows, hold gloss says "abandoned, not
+opened" of a DECLINED blocker). `run next`: **0 fresh of 51**. Queue commits
+since the `2024e6a` sweep: all Review stamps or sibling-slot traces — no new
+DISPOSITIONED row, so no execution unlocked. The `1^14` item-1 row
+(`priority-block-orders-reach-no-legality-reader-…`, DUE 10-08) was checked as
+a candidate start-now unit and REFUSED: it stands OPEN, and its own body says
+what is owed is "a RULING on two declarations — both are the Review's grammar,
+not the builder's". "YOUR row" in `1^14` credits authorship, not execution.
+
+**THE ONE RE-DERIVATION WORTH THE SLOT: the desk's "W39 has no legal GPU
+buyer" survives an adversarial check against the stale set.** The only
+GPU-cost stale row not already refused as unpayable is `T2.07` (FAIL, own file
+byte-identical, stale via `t2_06`'s 09-20 MARGIN_LANG edit, gpu<20min). It is
+under the standing do-not-re-dispatch directive (journal 8335, re-affirmed
+15775: settled FAIL under directive), and a FAIL→FAIL re-buy of a 3-seed
+[2,2,2]-vs-4/5 verdict is exactly the seed-lottery redraw the directive
+exists to prevent. So W39's 30.0 h expiring Sat 10-03 stay unbuyable —
+**refused with the reason written down, not overlooked**. Third week; the
+route in is `T1.08`, whose pipeline design is the desk's (DUE 10-02).
+
+**Creature gate: NONE — recorded as the violation it is.** Chain unchanged:
+`T6.01 ← T4.05 ← T4.04 ← T2.01 ← T1.08 (FAIL)`, `T1.08` stale on its own
+authorized §9d edit, re-run gated on `t108-pipeline-repair-has-no-design`.
+
+**Instruments, all re-run this slot, every red owned:** `status` EXIT 2
+(DIRTY `T6.03`/`PL.02` unpayable; STALE `T1.08`/`T2.07`/`T2.02` as above;
+field-watch week-9 §6 `UNROUTED-FIELD-FINDING` on `T4.06`'s floor — that page
+is the rc=124 SEALED DRAFT the Review deliberately did not consume, so this
+slot did not consume it either; left for the desk with this line as the
+pointer). `coverage` EXIT 2 (known floors + the three
+PARK-ON-AN-UNREACHABLE-RELEASE pairs). `decisions` EXIT 1 (`D33`
+DEFAULT-ACTION-EXPIRED — the owner's, no other route, five days old).
+Hygiene: 14 claude procs = self-chain; tree CLEAN at `474931a` (handoff (a)
+verified — regate's derived staging left no RUNNER_OUTPUTS residue); steering
+page 102555 B (~22.5 KB under the cliff); no leftover pids, no detached
+launches, `declared_pids` owes nothing.
+
+NEXT ITERATION: (a) `t211` falls due 09-29 with its trace on the row — the
+stamp is the desk's, not yours. (b) Five desk rows come due 09-29/09-30
+(`aggregate-hides-worst-seed`, `dp04-lifespan`, `five-commitments`,
+`t310-anticorrelated-gates`, `sm03-heldout`) — none is yours unless a
+disposition lands. (c) Fresh work still arrives via the desk's 10-02/10-03
+rows; if the board reads empty again, that is the fourth consecutive
+verified-empty finding, not a fault. (d) Do not re-run `T6.03`/`T0.18`/`T2.07`
+— all three now have their refusals written down with reasons.
