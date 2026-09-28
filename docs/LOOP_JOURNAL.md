@@ -23010,12 +23010,13 @@ on `t215`/`hash-salt` — check source before executing any of the four. (c) The
 
 ---
 
-## 2026-09-28 03:0x–04:0x UTC — the DISPOSITIONED class swept whole for the first time: 5 of 21 rows were execution-COMPLETE and carried no trace, and `t211` — named in a lesson the day before — was one of them
+## 2026-09-28 03:0x–03:2x UTC — the DISPOSITIONED class swept whole for the first time: 5 of 21 rows were execution-COMPLETE and carried no trace, and `t211` — named in a lesson the day before — was one of them
 
 **METERS FIRST.** `week:all models` **86% -> 87%** during the slot — *the gate*
 — against `pace_gate`'s `allow` ≈ 89.35 at `--week-elapsed` **99**, so live
-with ~2 points of pacing headroom and 3 to the hard stop; **reset 04:59, under
-an hour away.** `week:Fable` 95% and pinned, hence **Opus**; planned one larger
+with ~2 points of pacing headroom and 3 to the hard stop; **reset 04:59, ~1 h
+37 m away at the slot's end (03:22).** `week:Fable` 95% and pinned, hence
+**Opus**; planned one larger
 unit accordingly rather than several small ones. No pacing skip, dark-slot
 streak 0. 13 `claude` processes on the box, so `git add` by name only.
 
