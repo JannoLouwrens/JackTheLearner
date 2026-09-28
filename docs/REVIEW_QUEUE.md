@@ -3446,7 +3446,40 @@ designed to be able to come back red as a *venue* verdict. Naming `LG.04` buys
 the seat a real ring; it does not buy it a ring that is known to be reachable
 in W0.
 
-ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1, 3.99 CPU-h, ledger row VOID) | DISPOSITIONED 2026-09-20 (Review FULL — option (c), integrated absolute tilt at a FIXED horizon; (a) refused as a forbidden envelope growth, (b) re-routed to the world-edit window rather than dropped. See THE BUNDLED RULING on `sh02-null-saturation`)
+ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1, 3.99 CPU-h, ledger row VOID) | ACTED 2026-09-28 702aa56 (Review DAILY — option (c) was IMPLEMENTED 2026-09-26, one day before this row's DUE, and nothing stamped it. See THE STAMP below)
+    THE STAMP 2026-09-28 (Review DAILY, OVERDUE FIRST, D28 default (a)) — the
+        SECOND of today's seven violations that is an early delivery rather
+        than an undone promise, and the pair is the finding (recorded in full
+        on `t306-matched-magnitude-noise-buys-coverage`, disposed this sitting
+        as `2948e2e`).
+        VERIFIED AT `HEAD` BEFORE STAMPING, against the ruling's own words and
+        not against the commit subject. The 09-20 ruling read: *"option (c),
+        CHANGE THE METRIC — integrated absolute tilt over a FIXED 12 s horizon,
+        bar set from the RANDOM walk rather than the blind twin, all six green
+        rig conjuncts carried forward unchanged."* In
+        `experiments/tests/ba_03_braces_against_a_surface.py`:
+          - integrated absolute tilt IS the deciding statistic (`:8`, `:117`),
+            replacing the saturated time statistic;
+          - the bar is set from the RANDOM walk, not the twin — `tilt_sd_random`
+            at `:120-126`, measured IN-RUN, and the docstring at `:123` quotes
+            the ruling's phrase back at it;
+          - the horizon is unchanged at 12 s (`HORIZON_S`, `:272`), which is
+            what makes this (c) and not the REFUSED (a);
+          - the matched-noise conjunct survives on the new statistic (`:128`).
+        Executing commits: `702aa56` (implementation, and its own message names
+        this row and this DUE), `4761d60` (seed-90 tilt pilot HARVESTED, NOT
+        degenerate, gates FROZEN off it — so the numbers at `:25-31` are
+        pre-registered rather than fitted), `cdab11a` (120th-audit FINDING 1,
+        the two fraction floors labelled PERMISSIVE).
+        WHAT THIS STAMP DOES NOT CLAIM. `ACTED` here means the ADOPTED ARM IS
+        BUILT, which is what this row's DUE said it owed (*"what this date owes
+        is EXECUTION by the builder"*). It does NOT claim BA.03 passes: the
+        spec's own frozen forecast is **FAIL at seed 90**, and the registered
+        run is separately foreclosed — that is the live row
+        `ba03-registered-run-foreclosed-by-d20-class-closure` (`DUE 2026-10-03`),
+        which is not disturbed by this stamp. The 09-20 stop-rule on this row
+        was discharged by the ruling, and the ruling is now discharged by the
+        build; a FAIL forecast is a measurement, not an unpaid debt.
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
         promise, and NOT a re-date: like `sh02-null-saturation`, this row's arm
         choice was moved onto the 2026-09-13 FULL on the stated ground that a
