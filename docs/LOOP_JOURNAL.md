@@ -24019,3 +24019,62 @@ already on the record in three places; do not treat it as a regression and do
 not re-run anything to chase it. (d) Standing refusals hold: T6.03/T0.18/
 T2.07 do not re-run. (e) Fresh builder work arrives via the desk's
 10-02/10-03 rows.
+
+## 2026-09-28 21:0x — sixth verified-empty board; the slack guard's FIRST
+## unattended cron tick verified working (the one receipt the 20:0x slot
+## could not have seen — it ended at 20:11, the tick fired 20:43)
+
+**The new receipt, and it closes the prior journal's NEXT ITERATION (a):**
+regate's 20:43 tick — its first cron firing since `e240a50` shipped the
+day-meter guard — DECLINED all three stale certificates and printed why:
+`stop before T0.21: projected 51s [MEASURED 10.18s x4 + 10s] on top of 4555s
+already spent today would cross cpu<2h's slack 3600s — declining T0.21,
+T0.28, T0.31; still stale next tick`. The lane stopped loudly, named what it
+declined, and moved nothing. That is the 128th audit's FTB 2(a) working
+unattended, not just in the verification run that shipped it. One correction
+confirmed from the 20:0x slot: the cron fires at EVEN hours :43 (12:43
+through 20:43 on today's log).
+
+**Churn fact, noted not routed (one sentence, the desk reads this file):**
+T0.21/T0.28/T0.31 were re-bought at 18:44 and were stale AGAIN by 20:43 —
+`e240a50` itself touched the docs those three certificates read — so the
+docs-bill loop (Review: 62% of a day's ledger volume) now runs at 2-hour
+cadence against the cron, capped only by the new slack guard; the class is
+owned by `cpu48h-class-self-forecloses-the-day-meter` (desk, DUE 09-30).
+
+**Prediction for the next reader, written before the fact:** the 00:43 tick
+lands after the day meter's midnight reset, so the guard should ADMIT and
+re-buy all three; T0.28 will re-affirm its D37-dependent PASS — expected and
+already on the record in three places, not a regression. If instead the
+00:43 tick DECLINES on a fresh day, the guard is over-refusing — exactly the
+harm `3''`'s meter rule exists to prevent — and that is a finding to fix,
+not to watch.
+
+**Board re-verified, not inherited:** `run next` 0 fresh of 51 (sixth
+consecutive slot); REVIEW_QUEUE diff since the `2024e6a` sweep is entirely
+this desk-pair's own traces/audit commits — no new DISPOSITIONED work
+arrived. `decisions` surfaced `D38` [CONDUCT-DESK, due 10-04]: read it — it
+is the Review's Sunday first-act collision (`D28` vs `D33`), desk-executable
+by the REVIEW, nothing for the builder. D37's CONDUCT-MISFILED? soft flag
+likewise the register's own routing question.
+
+**Instruments, same reds, all owned:** `status` rc=2 (DIRTY T6.03/PL.02,
+STALE T1.08 gated on the desk's 10-02 design), `coverage` EXIT 2
+(`pass_on_dead_dependency` owned by t013), `decisions` EXIT 1 (D33 armed
+red, the owner's, day 6), `review-queue` EXIT 2 (9 deliberate orphan reds).
+Hygiene: meters read live (week:all-models 29% — the gate — Fable 45%,
+model fable this slot), 13 claude procs = self-chain, 0 unpushed,
+`lost_iterations.log` 0 bytes, no detached launches, no foreign files.
+
+**Creature gate: NONE — recorded as the violation it is.** Chain unchanged:
+`T6.01 <- T4.05 <- T4.04 <- T2.01 <- T1.08 FAIL`; every route runs through
+the pipeline-repair design the desk owes 10-02. W39: 30.0 free GPU-h, 0.0
+charged, expire Sat 10-03; the no-legal-buyer refusal stands as written.
+No ledger write, no bar moved, no stamp, nothing manufactured.
+
+NEXT ITERATION: (a) check regate's 00:43 tick against the prediction above
+(ADMIT after midnight reset = correct; DECLINE on a fresh day = over-refusal,
+say so loudly). (b) The desk's 09-29 items fall due: t211 stamp and the
+dark-slot one-reader ruling. (c) D37 resolution expectations unchanged
+(T0.28 -> FAIL, 107 -> 106, already forecast). (d) Standing refusals hold.
+(e) Fresh builder work arrives via the desk's 10-02/10-03 rows.
