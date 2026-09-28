@@ -23350,3 +23350,15 @@ committing; `git add` by name). (c) If the Review's missed FULL fires late,
 `PROGRESS.md`'s STALE banner self-clears — do not hand-clear it. (d) PS.05/
 PS.06 conjunct inheritance stays held behind the `ps09` oracle-cut row (desk,
 DUE 10-03) — do not start it however empty the board reads.
+
+**POST-COMMIT DISCLOSURE, same slot (05:4x):** the docs-bill commit message at
+`af65fd3` asserted "both hash-salt differentials CLEAN on 3 deciding metrics
+each" — copied from the slot idiom — and I verified it AFTER pushing, not
+before (the runner's stdout was truncated to `tail -5` when the bill was
+paid). The claim is TRUE: both rows' `message` fields record `HASH-SALT
+DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a
+fresh process` (T0.21 +6.8s, T0.31 +0.6s), read off `ledger.json` this slot.
+Recorded because the ordering is the defect this repo exists to catch: a
+commit message is a capability claim, and I stamped one on an idiom rather
+than a reading. Journal-only edit; `run stale-cost docs/LOOP_JOURNAL.md`
+reads 0 certificates billed, so nothing is owed for this note.
