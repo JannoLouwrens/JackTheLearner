@@ -14707,3 +14707,51 @@ ROUTED: certified-diary-is-not-the-memory-the-shipped-brain-carries | 2026-09-28
     `T0.01`, and buys a better store for a brain the ladder never scores on
     it. **(a) is the honest default; (b) is the one I would recommend the day
     the freeze lifts, and cannot choose.**
+
+    **FOURTH INSTANCE — appended 2026-09-28 06:xx (builder, sixth run of the
+    same sweep, on the 05:0x slot's own hand-forward; class count 3 -> 4, and
+    it stays on this row per the paragraph above). `GOAL.md:103-116` — "He
+    lives, he dies, he remembers... Death is not a reset; it is a page turn"
+    — and `:91-94` — "too cold kills him... the needs ARE the curriculum" —
+    have NO VENUE in the shipped product, on three measured absences:**
+      - **The world a person opens cannot kill him.** `VirtualWorld.py`
+        (1,953 lines) contains ZERO occurrences of the needs vocabulary —
+        eat, drink, sleep, food, hunger, thirst, cold, warm, temperature,
+        energy — and zero of death/dies/respawn/damage/pain; it has no
+        `reset()` and no episode boundary of any kind. It is a continuous
+        immortal loop with timed auto-save.
+      - **The brain a person meets could not feel dying even if the world
+        could kill.** `UnifiedBrain`'s fusion inventory
+        (`UnifiedBrain.py:4245-4300`) is proprio, vision, touch, audio,
+        language, and a mood embedding — no interoception, no pain, no
+        temperature channel exists in the product. `PS.02`'s certified "the
+        cold is FELT before it kills" has no input for the feeling to arrive
+        on.
+      - **The continuity channel cannot be a page turn because everything
+        crosses on a timer.** `CompanionPersistence.save_all` snapshots ALL
+        companion state; `XL.00`'s certified selectivity — the diary crosses
+        death, the place does not ("he reappears somewhere he did not
+        choose") — has nothing to be selective about, because no boundary
+        ever comes.
+    **And the venue split is structural, not incidental:** `playground.py` —
+    the world contract `PG.1`-`PG.9` certify — is imported by five experiment
+    modules (`experiments/w0.py`, `needs.py`, `thermal.py`, `drives.py`,
+    `w0bal_probe.py`) and by NO root module; the shipped app loads its own
+    inline room XML or `manipulation_scene.xml` (`VirtualWorld.py:178-242`).
+    Every world in which Jack can die is a rig.
+    **CONVERGENCE, for the desk that consumes this row:** the project now
+    holds three worlds — W0 (measured too shallow; nine instruments counted
+    on `w0-too-shallow`), W1 (authorship DECLINED 2026-09-27; `D33`, 126th
+    audit RANK 1), and the shipped `VirtualWorld` (measured here: cannot kill
+    him). "He lives, he dies, he remembers" is currently true only inside
+    `experiments/tests/`.
+    **WHAT IS NOT CLAIMED, checked before writing:** no certificate is red or
+    alleged red — `XL.00`, `LF.02`, `PS.02`, `PS.03`, `NE.00`, `TA.01/02` are
+    all honest about their rigs. A deathless demo world is LEGAL under the
+    staging paragraph (`GOAL.md:214-217` — survival world comes after the
+    ladder), and `VirtualWorld` predates the ladder exactly as
+    `CompanionMemory` does. The menu above is unchanged and NOTHING is taken:
+    wiring mortality into the product is composition work inside the freeze
+    (T6.01's day), and the W1 fork is the owner's (`D33`). This instance adds
+    mass to the 126th audit's FOR THE OWNER 1: the sentence's only
+    non-rig venue was always going to be W1, and W1 lost its author.

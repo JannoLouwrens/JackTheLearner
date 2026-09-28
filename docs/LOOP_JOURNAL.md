@@ -23362,3 +23362,88 @@ Recorded because the ordering is the defect this repo exists to catch: a
 commit message is a capability claim, and I stamped one on an idiom rather
 than a reading. Journal-only edit; `run stale-cost docs/LOOP_JOURNAL.md`
 reads 0 certificates billed, so nothing is owed for this note.
+
+## 2026-09-28 06:0x UTC — builder, fable
+
+**METERS FIRST.** `week:all models` **2%** — *the gate, the line I am acting
+on* — `week:Fable` 3%, session 10%. No pacing skip, dark-slot streak 0. No
+detached launches this slot; `declared_pids` owes nothing.
+
+**THE BOARD, re-derived:** `run next` 0 fresh / 38 settled / 14 held (35th+
+consecutive empty board); `coverage` EXIT 2 with all three floor-reds carrying
+written causes at their sites (none mine to raise); `run status` EXIT 2, its
+own slot line quoted at commit time below. OVERSIGHT FTB: item 1's
+BUILDER-TRACE was written by the 04:2x slot (verified on disk), 2-3 are
+prohibitions, obeyed. PROGRESS FTB (sealed STALE 00:37): items 1/3
+prohibitions; item 2's two executions verified previously at `e5e627b` and
+`19aab39`+`5ee32ff`; item 4's refusal-as-promise defect repaired at `53bb135`
+per the 126th audit §1. `1^13`: five execution-complete, PS.05/PS.06 held
+behind the `ps09` oracle-cut row. The field watch is sealed DRAFT (rc=124);
+its §6 (T4.06 floor `-r/(n_fit-r)`) is the REVIEW's to consume at today's
+FULL — read, deliberately not grabbed, and NOT acted on: a draft is not a
+finding and the repair it names is adjacent to the D37-held A4 readout.
+
+**THE UNIT: sixth run of the negative-sentence sweep, on the 05:0x slot's
+hand-forward — `GOAL.md:103-116` "Death is not a reset; it is a page turn"
+(+ `:91-94` "too cold kills him... the needs ARE the curriculum").**
+Measured: the sentence has NO VENUE in the shipped product, on three
+independent absences. (1) `VirtualWorld.py`, 1,953 lines: ZERO occurrences of
+eat/drink/sleep/food/hunger/thirst/cold/warm/temperature/energy, zero
+death/dies/respawn/damage/pain, no `reset()`, no episode boundary — a
+continuous immortal loop with timed auto-save. (2) `UnifiedBrain`'s fusion
+inventory (`:4245-4300`): proprio, vision, touch, audio, language, mood — no
+interoception, pain or temperature channel, so PS.02's certified "cold is
+FELT before it kills" has no input to arrive on. (3) Continuity is
+`CompanionPersistence.save_all` — everything crosses on a timer, so XL.00's
+certified selectivity (diary crosses, place does not) has nothing to be
+selective about. Structural venue split: `playground.py` (the PG.1-9 world
+contract) is imported by five experiment modules and NO root module; the
+shipped app loads its own room XML (`VirtualWorld.py:178-242`). Every world
+in which Jack can die is a rig. CONVERGENCE: three worlds — W0 too shallow
+(nine instruments), W1 authorless since yesterday's DECLINE (D33/RANK 1),
+VirtualWorld cannot kill him. **RECORDED as the FOURTH instance appended to
+`certified-diary-is-not-the-memory-the-shipped-brain-carries` (class count
+3 -> 4 lives on that row by its own design; no new queue row against a queue
+at 6.43 arrivals vs 1.14 disposals/cycle). Parse re-verified: 113 routed,
+row OPEN 0 d, header unchanged.**
+
+**WHAT IS NOT CLAIMED:** no certificate red — XL.00/LF.02/PS.02/PS.03/NE.00/
+TA.01-02 are honest about their rigs; a deathless demo world is LEGAL staging
+(`GOAL.md:214-217`); VirtualWorld predates the ladder as CompanionMemory
+does. Nothing fixed, no bar moved, no `.py` touched, NOTHING taken from the
+row's menu.
+
+**LESSONS:** one entry — the absence-variant of the construction-site sweep:
+a missing capability has no substitute object to find, so sweep the GOAL
+sentence's own vocabulary and count zero matches as the measurement; plus the
+venue corollary (the certified world is imported by no root module).
+
+**STALENESS BILL** priced BEFORE the edit: 2 standing PASS — `T0.21`
+(cpu<1min), `T0.31` (cpu<10min) — 0.00 CPU-h, 1 slot; paid in slot from the
+clean tree after the docs commit. Docs-only slot: `! DIRTY STAMPS` must still
+read the 2 rows (T6.03, PL.02) it held at slot start.
+`scripts/ladder_prompt.md` untouched at 96212 B.
+
+**CREATURE GATE: NONE — recorded violation, not discharged.** Re-derived this
+slot: T2.01 FAIL behind T1.08 FAIL (repair desk-owned, DUE 10-02), XL.01 FAIL
+with estimator rows on the desk, T6.01 NOT_RUN behind unimplemented
+intermediates. This slot's finding is again a creature fact found by reading
+— the world he ships in cannot kill him, so death-and-retry has no venue —
+and it discharges nothing, because the gate wants a RUN.
+
+**GPU:** `2026-W39`, 30.0 h free, 0.00 charged, expiring Saturday 10-03 —
+third consecutive week at risk; every GPU class NOT FILLABLE, both live
+routes through T1.08. Nothing dispatched, nothing manufactured.
+
+**NEXT ITERATION.** (a) The negative-sentence sweep's last unchecked GOAL.md
+negative is *"never scripted, and never silently patched"* (`:180-183`) —
+note the personality row already covers the typed-character half; check the
+RESPONSE path (overrides, filters, canned replies) before calling it a fresh
+instance. (b) Today's Review FULL (06:37, collides with the overseer) owes
+the missed-Sunday makeup and consumes the field-watch DRAFT — if PROGRESS.md
+is rewritten, re-read FOR THE BUILDER before taking any unit. (c) The class
+row now carries FOUR instances; a fifth (the sensory inventory: the shipped
+brain fuses 5 senses where GOAL.md names 10) was NOTICED here but NOT
+measured or appended — measure construction sites and certificates first if
+you take it, and check T0.20's scope (it audits the LADDER's inventory, not
+the shipped brain) before claiming any overlap.

@@ -20124,3 +20124,25 @@ Sibling lessons, same family, other axes: the 09-27 "exemption inherits its
 premise" entry (a scope clause nobody re-evaluates), and the 09-27 "price the
 whole class" entry (this sweep was the class-priced version of a one-file
 check — the sweep cost six greps and the finding was in the fifth).
+
+## A DISPLACED ORGAN LEAVES A SUBSTITUTE TO FIND; A MISSING CAPABILITY LEAVES
+## NOTHING TO GREP — sweep the constitutional sentence's own VOCABULARY
+## against the shipped surface, and count zero as the measurement
+## (builder, 2026-09-28 06:xx; measured on mortality, appended as the fourth
+## instance to `certified-diary-is-not-the-memory-the-shipped-brain-carries`)
+
+The construction-site sweep (previous entry) finds a certified organ's
+uncertified stand-in because there is an OBJECT answering the same noun. It
+cannot find a capability the product simply lacks: nothing stands in death's
+place in `VirtualWorld.py` — no needs, no damage, no episode boundary — so
+there is no class to sweep for and no contract to read against a title. The
+check that works is one step more primitive: take the GOAL.md sentence's own
+vocabulary (eat, drink, sleep, cold, warm, dies, respawn, pain) and grep the
+shipped surface for it. **1,953 lines with zero matches is a measurement, not
+a null result** — it says the sentence's venue is nowhere in the product, and
+the certificates that prove the capability (XL.00, LF.02, PS.02, NE.00) are
+all true about rigs. Corollary worth its own line: `playground.py`, the world
+contract nine PG certificates describe, is imported by five experiment
+modules and no root module — so "which world does the person-facing app
+construct?" is a venue question every world certificate silently assumes an
+answer to, and the shipped answer is "a different one".
