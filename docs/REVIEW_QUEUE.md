@@ -2696,6 +2696,47 @@ ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed
         prints a row's `DUE:` in preference to its blocker (`:1058-1062`, an
         `elif`). The field is machine-readable and still unprinted; it feeds a
         join nobody has built.
+    WAITS-ON: w1-world-edit-window
+    DUE: 2026-10-09 | RE-DATED 2026-09-28 (Review DAILY) under D28's armed
+        default (a) OVERDUE FIRST. **THE CAUSE IS NEW THIS MORNING AND IT IS NOT
+        A REPEAT OF ANY EARLIER RE-DATE ON THIS ROW: the prerequisite this date
+        stood on stopped having an AUTHOR today.** `w1-world-edit-window` was
+        stamped `DECLINED` this sitting (`5ab54fe`) — recording, not deciding,
+        the authorship decline this desk published in the open at the 2026-09-27
+        FULL under a stop-rule it had armed against itself. Every earlier
+        re-date on this row assumed the world-edit window would be authored by
+        somebody; that assumption is now formally false, and re-dating on the
+        old reasoning would be the dishonest move the stop-rule existed to stop.
+        **WHAT THIS DATE DISPOSES, AND WHAT IT DELIBERATELY DOES NOT.** It
+        disposes the OVERDUE half only. This row is one of NINE live rows that
+        declared `BLOCKED-BY: w1-world-edit-window`, and all nine now fire
+        `HOLD-ON-A-RESOLVED-BLOCKER`. **That red is LEFT STANDING on purpose.**
+        It is the orphaning becoming machine-readable for the first time, it is
+        addressed to the owner rather than to this desk, and clearing it by
+        re-pointing nine rows at a fresh blocker would launder the single
+        largest structural fact this project has. The `BLOCKED-BY:` line on this
+        row is NOT struck for the same reason — a corpse named honestly is worth
+        more than a silence.
+        **WHY RE-DATED AND NOT DECLINED.** The finding is unrefuted; only its
+        VENUE is unavailable. Declining live science to tidy a counter is the
+        one move forbidden at this desk.
+        **THE DATE IS DERIVED, NOT CHOSEN.** `review-queue`'s own
+        `next_free_due` reads 2026-10-08, which already carries 5 against a
+        measured capacity of 6; 2026-10-09 carries 2, so the three orphan rows
+        re-dated together this sitting land it at 5 — under capacity, nothing
+        piled on. `WAITS-ON: w1-world-edit-window` is DECLARED above on all
+        three so the grouped reader prints them as ONE decision rather than
+        three promises; a terminal root is legal in that field by construction
+        (`WAITS-ON` buys no exemption, so a resolved root releases nothing and
+        falsifies nothing), which is exactly why it can carry this truth where
+        `BLOCKED-BY:` cannot.
+        **STOP-RULE, ARMED IN THE OPEN AND BINDING ON THIS DESK.** `D33` — who
+        authors the world edit — is open on the owner's desk and five days past
+        its `decide_by`. If `D33` is still unanswered on 2026-10-09, this row is
+        **DECLINED** to the owner as one member of the orphaned world-edit class
+        and is NOT re-dated a further time. This desk has watched five
+        instalments of "W1 goes next" and will not author a sixth on a row whose
+        author is undetermined.
 
 **The measurement.** `SH.02`'s seed-90 pilot (N=3000/arm, 6 arms, ~19 min)
 fired the spec's own pre-registered `HEADROOM` VOID. Every arm without a live
@@ -5780,6 +5821,47 @@ ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, class
         can. 09-16 carries 3 live rows against a measured capacity of 6.
     DUE: 2026-09-27 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. HELD since 09-12 and still OVERDUE, because HELD does not stop a clock — only a DUE does, and this row's was never moved with it. The remaining debt is a world EDIT riding the same window as its two structural siblings, so it is dated behind both of them. Declaring the blocker is the repair for the nine days this dependency spent in prose.
     BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23
+    WAITS-ON: w1-world-edit-window
+    DUE: 2026-10-09 | RE-DATED 2026-09-28 (Review DAILY) under D28's armed
+        default (a) OVERDUE FIRST. **THE CAUSE IS NEW THIS MORNING AND IT IS NOT
+        A REPEAT OF ANY EARLIER RE-DATE ON THIS ROW: the prerequisite this date
+        stood on stopped having an AUTHOR today.** `w1-world-edit-window` was
+        stamped `DECLINED` this sitting (`5ab54fe`) — recording, not deciding,
+        the authorship decline this desk published in the open at the 2026-09-27
+        FULL under a stop-rule it had armed against itself. Every earlier
+        re-date on this row assumed the world-edit window would be authored by
+        somebody; that assumption is now formally false, and re-dating on the
+        old reasoning would be the dishonest move the stop-rule existed to stop.
+        **WHAT THIS DATE DISPOSES, AND WHAT IT DELIBERATELY DOES NOT.** It
+        disposes the OVERDUE half only. This row is one of NINE live rows that
+        declared `BLOCKED-BY: w1-world-edit-window`, and all nine now fire
+        `HOLD-ON-A-RESOLVED-BLOCKER`. **That red is LEFT STANDING on purpose.**
+        It is the orphaning becoming machine-readable for the first time, it is
+        addressed to the owner rather than to this desk, and clearing it by
+        re-pointing nine rows at a fresh blocker would launder the single
+        largest structural fact this project has. The `BLOCKED-BY:` line on this
+        row is NOT struck for the same reason — a corpse named honestly is worth
+        more than a silence.
+        **WHY RE-DATED AND NOT DECLINED.** The finding is unrefuted; only its
+        VENUE is unavailable. Declining live science to tidy a counter is the
+        one move forbidden at this desk.
+        **THE DATE IS DERIVED, NOT CHOSEN.** `review-queue`'s own
+        `next_free_due` reads 2026-10-08, which already carries 5 against a
+        measured capacity of 6; 2026-10-09 carries 2, so the three orphan rows
+        re-dated together this sitting land it at 5 — under capacity, nothing
+        piled on. `WAITS-ON: w1-world-edit-window` is DECLARED above on all
+        three so the grouped reader prints them as ONE decision rather than
+        three promises; a terminal root is legal in that field by construction
+        (`WAITS-ON` buys no exemption, so a resolved root releases nothing and
+        falsifies nothing), which is exactly why it can carry this truth where
+        `BLOCKED-BY:` cannot.
+        **STOP-RULE, ARMED IN THE OPEN AND BINDING ON THIS DESK.** `D33` — who
+        authors the world edit — is open on the owner's desk and five days past
+        its `decide_by`. If `D33` is still unanswered on 2026-10-09, this row is
+        **DECLINED** to the owner as one member of the orphaned world-edit class
+        and is NOT re-dated a further time. This desk has watched five
+        instalments of "W1 goes next" and will not author a sixth on a row whose
+        author is undetermined.
 
 **RULING, 2026-09-12 (Review, DAILY). Two acts: the contract is CLOSED with a
 fifth item added, and the row is moved to the status it should have carried
@@ -10321,6 +10403,47 @@ ROUTED: ba03-vestibular-channel-is-never-load-bearing-under-one-kick | 2026-09-2
         not before it, and only if BA.03's (c) re-run has not already answered
         it. Dated onto the same day as the three rows it was split from so the
         world-edit bill is read as ONE bill, per the bundling rule.
+    WAITS-ON: w1-world-edit-window
+    DUE: 2026-10-09 | RE-DATED 2026-09-28 (Review DAILY) under D28's armed
+        default (a) OVERDUE FIRST. **THE CAUSE IS NEW THIS MORNING AND IT IS NOT
+        A REPEAT OF ANY EARLIER RE-DATE ON THIS ROW: the prerequisite this date
+        stood on stopped having an AUTHOR today.** `w1-world-edit-window` was
+        stamped `DECLINED` this sitting (`5ab54fe`) — recording, not deciding,
+        the authorship decline this desk published in the open at the 2026-09-27
+        FULL under a stop-rule it had armed against itself. Every earlier
+        re-date on this row assumed the world-edit window would be authored by
+        somebody; that assumption is now formally false, and re-dating on the
+        old reasoning would be the dishonest move the stop-rule existed to stop.
+        **WHAT THIS DATE DISPOSES, AND WHAT IT DELIBERATELY DOES NOT.** It
+        disposes the OVERDUE half only. This row is one of NINE live rows that
+        declared `BLOCKED-BY: w1-world-edit-window`, and all nine now fire
+        `HOLD-ON-A-RESOLVED-BLOCKER`. **That red is LEFT STANDING on purpose.**
+        It is the orphaning becoming machine-readable for the first time, it is
+        addressed to the owner rather than to this desk, and clearing it by
+        re-pointing nine rows at a fresh blocker would launder the single
+        largest structural fact this project has. The `BLOCKED-BY:` line on this
+        row is NOT struck for the same reason — a corpse named honestly is worth
+        more than a silence.
+        **WHY RE-DATED AND NOT DECLINED.** The finding is unrefuted; only its
+        VENUE is unavailable. Declining live science to tidy a counter is the
+        one move forbidden at this desk.
+        **THE DATE IS DERIVED, NOT CHOSEN.** `review-queue`'s own
+        `next_free_due` reads 2026-10-08, which already carries 5 against a
+        measured capacity of 6; 2026-10-09 carries 2, so the three orphan rows
+        re-dated together this sitting land it at 5 — under capacity, nothing
+        piled on. `WAITS-ON: w1-world-edit-window` is DECLARED above on all
+        three so the grouped reader prints them as ONE decision rather than
+        three promises; a terminal root is legal in that field by construction
+        (`WAITS-ON` buys no exemption, so a resolved root releases nothing and
+        falsifies nothing), which is exactly why it can carry this truth where
+        `BLOCKED-BY:` cannot.
+        **STOP-RULE, ARMED IN THE OPEN AND BINDING ON THIS DESK.** `D33` — who
+        authors the world edit — is open on the owner's desk and five days past
+        its `decide_by`. If `D33` is still unanswered on 2026-10-09, this row is
+        **DECLINED** to the owner as one member of the orphaned world-edit class
+        and is NOT re-dated a further time. This desk has watched five
+        instalments of "W1 goes next" and will not author a sixth on a row whose
+        author is undetermined.
 
 ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-21 | `785f921` (field watch week 8, §6) | OPEN
     **The question, and it is a SEAT question before it is a spec question.**
