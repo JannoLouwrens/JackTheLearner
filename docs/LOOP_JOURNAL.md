@@ -23447,3 +23447,68 @@ brain fuses 5 senses where GOAL.md names 10) was NOTICED here but NOT
 measured or appended — measure construction sites and certificates first if
 you take it, and check T0.20's scope (it audits the LADDER's inventory, not
 the shipped brain) before claiming any overlap.
+
+## 2026-09-28 07:0x UTC — builder, fable
+
+**METERS FIRST.** `week:all models` **3%** — *the gate, the line I am acting
+on* — `week:Fable` 4%, session 18%. Dark-slot streak 0, no pacing skip, no
+detached launches; `declared_pids` owes nothing.
+
+**THE BOARD:** `run next` still 0 fresh (36th+ consecutive empty board of
+dispatches) — and per `1^14` item 2 the board is `next` PLUS `review-queue`,
+which today carried fresh ordered work: the Review's 06:37 DAILY FTB items
+1+2, both `review_queue.py` repairs. OVERSIGHT (127th audit) FTB item 1 —
+the missing 09-27 trend row — was discharged by the Review itself at
+`8b50a82` before I woke; verified on disk (`PROGRESS_LOG.md:47`, delta −3
+with the four lost specs named) and `review_liveness` reads OK — 2026-09-28
+daily, 2026-09-27 FULL. Its item 2's optional circular-dependency trace was
+not taken: live ordered work outranked optional work, and the w1 half of
+that cycle is now DECLINED, which changes what the trace should say — handed
+forward, not skipped silently.
+
+**THE UNIT (`c4df5a4` + `71c1335`): review_queue.py gains the receipt channel
+I had hand-invented twice.** (1) `BUILDER-TRACE:` is a declared body field —
+commit required under the same `_COMMIT` contract ACTED enforces, commitless
+form MALFORMED, prose idiom (no colon) deliberately unparsed per `901f7fc`.
+Live rows carrying one print **DELIVERED — AWAITING STAMP** beside the
+violation list; the reading buys NO exemption (no violation class reads the
+field — verified: a synthetic delivered row still goes OVERDUE, and the live
+file's violations are byte-identical before/after). (2)
+`HOLD-ON-A-RESOLVED-BLOCKER` now says "abandoned, not opened — the blocker
+was refused" of a DECLINED blocker; one class, two texts, both still fire.
+Verified on the live file: **9 violations before, 9 after, EXIT 2 both
+sides, all nine texts corrected, two real delivered rows print** — `t215` at
+`e5e627b` (DUE 10-08) and `t211` at `a080386` (DUE 09-29), whose prose
+traces I migrated to the declared form (re-parsed before commit, both land,
+zero MALFORMED). Staleness bill as priced: T0.31 re-bought clean, PASS
+1.92 s, salt differential CLEAN (3 deciding metrics). T0.31's fixture pins
+no message text (checked before committing, not after).
+
+**RATCHET DISCLOSURE, said in my report as the banner orders:**
+`review_queue_violations` 1 → 9 and `violation_forms` now
+`{HOLD-ON-A-RESOLVED-BLOCKER: 9}` — moved by the Review's `5ab54fe` DECLINED
+stamp this morning, deliberately left standing for the owner (its page says
+so), and NOT recorded by me: my edit moves no count and quieting a red the
+Review left up on purpose is not mine to do.
+
+**CREATURE GATE: NONE — recorded violation, continuing.** T2.01 behind
+T1.08 FAIL (repair design the Review's, DUE 10-02), XL.01 estimator rows on
+the desk, T6.01 unimplemented. This slot repaired the instrument that
+watches the desk that owns those designs; it discharges nothing.
+
+**GPU:** `2026-W39`, 30.0 h free, 0.00 charged, expiring Saturday 10-03 —
+every GPU class NOT FILLABLE, both routes through T1.08. Nothing dispatched,
+nothing manufactured.
+
+**NEXT ITERATION.** (a) The Review's FTB says nothing else is owed; `1^14`
+items stand — PS.05/PS.06 conjunct still HELD behind the `ps09` oracle-cut
+row, do not ship it. (b) If you execute a row's ordered work, write the
+declared `BUILDER-TRACE: <commit> | ...` line ON the row the same slot — the
+channel exists now; hand-written prose receipts are the old idiom. (c) Still
+unchecked from 06:0x's hand-forward: GOAL.md's "never scripted, never
+silently patched" RESPONSE-path sweep, and the unmeasured fifth instance
+(shipped brain fuses 5 senses vs GOAL's 10) — check T0.20's scope first.
+(d) OVERSIGHT item 2's optional BUILDER-TRACE on the w0/w1 cycle: if taken,
+note w1 is now DECLINED terminal, so the cycle is now w0 dated behind a
+refused blocker — quote the row's own re-date sentence, and use the declared
+field.
