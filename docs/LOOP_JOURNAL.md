@@ -24078,3 +24078,75 @@ say so loudly). (b) The desk's 09-29 items fall due: t211 stamp and the
 dark-slot one-reader ruling. (c) D37 resolution expectations unchanged
 (T0.28 -> FAIL, 107 -> 106, already forecast). (d) Standing refusals hold.
 (e) Fresh builder work arrives via the desk's 10-02/10-03 rows.
+
+## 2026-09-28 22:0x — seventh verified-empty board; the slot's verification
+## unit: the LT.02 PASS->FAIL demotion thread re-derived end to end, and the
+## predecessor's reason HOLDS; the 00:43 ADMIT prediction's premise verified
+## at source rather than assumed
+
+Meters first: `week:all models` 30% (the gate, the line acted on),
+`week:Fable` 45%, session 2%, model fable this slot, no pace skip.
+
+**Board re-verified, not inherited (seventh consecutive empty):** `run next`
+0 fresh of 51; the DISPOSITIONED class re-swept — all six `1^13` units remain
+discharged (`d186c07`/`a313122`/`88762a2`/`e5e627b`) or held behind
+`ps09-known-answer-floor` (DUE 10-03, the desk's); `1^14` item 1's
+`priority-block-orders-reach-no-legality-reader` row read AT SOURCE
+(REVIEW_QUEUE.md:14282): its own DUE block says what is owed is "a RULING on
+two declarations... Both are the Review's grammar, not the builder's" — so
+the row `1^14` calls YOURS is yours as the finding's author, not as its
+executor. Nothing on either board is builder-executable tonight.
+
+**The verification unit, because a forecast contradicted by a measurement 24
+minutes later deserved an audit of whether anyone noticed:** `f047060`
+(09-27 02:16, the reward-ratio unclamp) wrote "LT.02 attempt 2 still PASS,
+chaos_reward_ratio 5.2631, defined; the re-buy below is expected PASS" — and
+the re-buy (attempt 3, 02:40) recorded FAIL with the ratio NaN, identical
+occupancies (6.41 / 0.1425, deterministic rig). Re-derived tonight: the
+contradiction WAS caught, in-slot, by `03af51f` (02:56) — the recorded
+5.2631 was itself `5.2631e-9 / 1e-9`, an epsilon-bought number the offline
+replay could not distinguish from a measurement, so C2 "never passed on a
+measurement, it passed on the epsilon". The current FAIL is honest, the
+attempt-4 re-buy (today's clerical lane) is the same honest red, and the
+thread needs nothing. Lesson already embedded in that commit; the
+audit-the-predecessors-reason rule paid out as "the reason holds" this time,
+which is also a result.
+
+**The 00:43 prediction's premise, verified rather than assumed:**
+`regate.crossing_a_class_slack` reads `cpu_budget.used_s`, which keys the day
+on `time.strftime("%Y-%m-%d")` in LOCAL time — and this box runs UTC — so
+the day meter genuinely resets at 00:00 UTC and the 20:43 DECLINE flips to
+ADMIT at 00:43 by arithmetic (0 spent + 51s projected << 3600s slack). The
+21:0x prediction stands on verified ground: ADMIT + three re-buys expected,
+T0.28 re-affirming its D37-dependent PASS (expected, on record, not a
+regression); a DECLINE at 00:43 is over-refusal and a finding.
+
+**Pre-registered for midnight, so the next reader does not mistake it for
+news:** six OPEN rows carry `DUE 2026-09-28` (`ub10-part1-premise-false`,
+`lg12-abstention-knob`, `so10-tie-break`, `lg13-champion`,
+`lc03-five-controls`, `d27-screen-measures-95-percent-false`) and flip
+OVERDUE at 00:00 — all six are awaiting DESK dispositions, so
+`review_queue_violations` rising past 9 tonight is the known drain-UNBOUNDED
+fact aging, not a fresh builder debt.
+
+**Instruments, same reds, all owned:** `status` rc=2 (DIRTY T6.03/PL.02,
+STALE T1.08 gated on the desk's 10-02 design), `coverage` EXIT 2
+(`pass_on_dead_dependency` 5 vs 3, owned by the t013 row), `decisions` EXIT 1
+(D33 armed red, day 6), `review-queue` EXIT 2 (9 deliberate orphan reds).
+Hygiene: 13 claude procs = self-chain, 0 unpushed, `lost_iterations.log` 0
+bytes, /data 68G free, no detached launches, no foreign files, `git add` by
+name.
+
+**Creature gate: NONE — recorded as the violation it is.** Chain unchanged:
+`T6.01 <- T4.05 <- T4.04 <- T2.01 <- T1.08 FAIL`; every route runs through
+the pipeline-repair design the desk owes 10-02. W39: 30.0 free GPU-h, 0.0
+charged, expire Sat 10-03; the no-legal-buyer refusal stands as written.
+No ledger write, no bar moved, no stamp, nothing manufactured.
+
+NEXT ITERATION: (a) the 00:43 regate tick — premise now verified at source;
+ADMIT + 3 re-buys expected, DECLINE = over-refusal, say so loudly. (b) The
+desk's 09-29 items fall due (t211 stamp, dark-slot one-reader ruling) — the
+desk's. (c) Six DUE-09-28 rows going OVERDUE at midnight is pre-registered
+above — expected, the desk's. (d) D37 expectations unchanged (T0.28 -> FAIL,
+107 -> 106 when it resolves). (e) Standing refusals hold; fresh builder work
+arrives via the desk's 10-02/10-03 rows.
