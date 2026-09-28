@@ -8121,6 +8121,72 @@ edit.
 
 ---
 
+**ADDENDUM 2026-09-28 (Review DAILY) — THE STOP-RULE FIRED, IS NOW STAMPED, AND
+THIS ENTRY HAS NO LIVE DEFAULT LEFT. Nothing here is asked, no option is added,
+no `decide_by` is moved, and the recommendation above stands quoted and
+unchanged. What follows is a STATE CORRECTION the owner needs before ruling.**
+
+**1. The decline is no longer prose. It is a stamp.** `w1-world-edit-window`
+was stamped **`DECLINED`** this morning in `5ab54fe` — the first `DECLINED` in
+113 routed rows. The decision itself was made and published at the 2026-09-27
+FULL (`docs/PROGRESS.md` item 3) under the stop-rule this desk armed against
+itself; the row nonetheless still read `| OPEN` for 24 hours, which the 126th
+audit caught (`4e6cbe1`) and this sitting executed. The register and the queue
+now agree, which is the condition this entry's `decide_by` note demanded.
+
+**2. `D33` NOW HAS NO DEFAULT THAT CAN FIRE, and that is why five days passed
+with nothing happening.** The armed default is *"(i) RE-DATE ONCE MORE, TO
+2026-09-23, AND CHANGE NOTHING ELSE."* It is dead twice over:
+  - **It names a date in the past.** `decisions.py` has flagged this as
+    `DEFAULT-ACTION-EXPIRED` since 2026-09-23 — the earliest firing was
+    09-24, by which time the action it prescribes was already historical. A
+    default whose act is in the past is not a weak default; it is not a default.
+  - **Its act is now foreclosed by this desk's own pre-commitment.** (i) says
+    re-date the row. The 09-24 stop-rule said *"this desk does not re-date this
+    row again"*, and the row is now `DECLINED`, which is TERMINAL. Firing (i)
+    would require reversing a published decline — the one thing this entry's
+    own text reserves to the owner.
+  The `decide_by` is NOT moved here: a deadline may tighten on its own and may
+  never be lengthened, and inventing a fresh one for a default that cannot fire
+  would be the fifth instalment in a different costume.
+
+**3. THE COST STOPPED BEING FORECAST AND IS NOW MACHINE-READABLE — nine rows,
+counted with the tool, not estimated.** `DECLINED` is TERMINAL, so every live
+row declaring `BLOCKED-BY: w1-world-edit-window` fired
+`HOLD-ON-A-RESOLVED-BLOCKER` the moment the stamp landed. Predicted 9, observed
+9: `ne01-occlusion-knife-edge` and `water-apply-phantom-force` (both 35 d HELD,
+both with NO `DUE:` — the hold was their only clock), `sh02-null-saturation`,
+`hr5-fixture-refuted`, `ba03-vestibular-channel-is-never-load-bearing-under-one-
+kick`, `w1-cold-is-not-lethal-at-night`, `w2-needs-have-no-single-k`,
+`dp04-lifespan-has-no-resolution`, `t306-random-arm-breaches-the-analytic-
+chance-dwell-bound`. **This desk deliberately did NOT clear that red.** It is
+the orphaning becoming visible for the first time and it is addressed to you;
+re-pointing nine rows at a fresh blocker would launder it. The entry's `blocks:`
+field listed five of these as a forecast — it is now an observation, and it is
+larger than the forecast was.
+
+**4. THE QUESTION HAS CHANGED SHAPE, and the owner should rule on the new one.**
+This entry asks *"is the Review capable of producing this at all?"* **That
+question is answered and the answer is no — not by argument, by five
+instalments and a stamped decline.** What is open now is narrower and more
+urgent: **with the Review formally out, who authors the W1 world edit?** The
+recommendation above (option (ii), move it to the builder under this desk's
+review) is unchanged and is still the one thing this desk cannot take for
+itself, because `D22` is the owner's resolved ruling and a desk may not carve an
+exception out of a ruling made above it — the reasoning this entry used on
+2026-09-20 and which binds harder now that the carve-out is the only exit left.
+
+**5. A STOP-RULE IS ARMED AGAINST THIS DESK AGAIN, on the three orphaned rows
+rather than on this entry.** `sh02-null-saturation`, `hr5-fixture-refuted` and
+`ba03-vestibular-channel` were re-dated to **2026-10-09** this morning
+(`c0882fc`) with a declared `WAITS-ON: w1-world-edit-window` so the grouped
+reader counts them as ONE decision. If `D33` is still unanswered on 2026-10-09,
+those rows are **DECLINED** to the owner as the orphaned world-edit class and
+are NOT re-dated a further time. Stated here so the register and the queue break
+on the same day, exactly as this entry's `decide_by` note required.
+
+---
+
 ## D28 — RECLASSIFICATION FIRED, 2026-09-21 06:5x UTC (overseer, 107th audit). `class: goal` → `class: conduct`. The entry stays open; only WHO decides has changed.
 
 **The owner did not rule by 2026-09-21, so the pre-registered reclassification
