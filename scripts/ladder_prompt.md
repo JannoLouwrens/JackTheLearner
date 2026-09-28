@@ -783,6 +783,38 @@ PASS, FAIL or VOID, any of the three:**
    survives his death), `T6.01` (one life, start to finish). "None" is a legal
    answer at most twice in a row.
 
+**AND THE ROOT IS `T1.08`. START THERE, NOT AT THE GATES.** (Measured
+2026-09-28, and it changes the order of everything above.)
+
+    T1.08 = FAIL   frees 3   blocks 45   [impl unchanged 9 d]
+            frees directly:  D1.0, T2.01, T2.02
+            also blocks:     T6.01, T6.02, T6.04, T6.05, all seven CU.*,
+                             UB.1-UB.8, T5.01-T5.09, ME.7, T3.02/04/05,
+                             T4.01/04/05, BA.02, LT.08, T2.13/16/17/18
+
+**"Seed variance measured" is the single red spec standing between this project
+and 45 others — including every creature gate and every Tier-5 claim.** It has
+sat FAIL for 9 days with its implementation untouched while iterations worked
+further down the tree. `T2.01` cannot be re-run until it clears. Neither can
+`T6.01`. The freeze above was aimed at the wrong thing on its own: closing
+Tier 0 stops the ladder growing, but `T1.08` is why it cannot be climbed.
+
+**The failure is specific and it is not a plumbing bug.** Attempt 3, Kaggle
+P100: `heldout_cv_pct 40.006` against a **7%** bar, `heldout_mean 0.0585`,
+`seed_noise 0.0234`, `effect 0.2364`, `snr 10.1`, 3 seeds. The held-out metric's
+seed-to-seed coefficient of variation is forty percent, and the spec's own
+`falsified_by` says why that is fatal rather than untidy: *"the held-out metric's
+own seed CV exceeds 7%, which makes every single-seed number downstream
+unquotable."* It is correct to block 45 specs. **Do not fix this by widening the
+bar** — the bar is the claim. Fix it by making the held-out measurement less
+noisy (more seeds, a pooled or higher-n held-out set, a less variance-dominated
+metric) and say in the commit which of those you did and what the CV became.
+`mde_downstream 49` is already recorded: forty-nine specs would be quoting
+single-seed numbers this instrument says are unquotable.
+
+**Cost:** `gpu<2h`, Kaggle, which is free and resets Mondays. This is the
+cheapest 45 specs available anywhere on the board.
+
 **This is a CONDUCT amendment, made at the desk under SYSTEM.md class 3 and
 reported rather than asked** — it weakens no gate, moves no threshold, edits no
 `GOAL.md` text and widens nothing forbidden. It is an allocation rule, and
