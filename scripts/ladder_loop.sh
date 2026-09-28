@@ -125,7 +125,15 @@ usage_gate say || exit 0
 # down). The full harvest write-up (docstring FAIL RECORD, journal, amend)
 # still belongs to the next unskipped iteration — this commits the evidence,
 # not the interpretation.
-HARVEST_PATHS="experiments/ledger.json experiments/gpu_budget.json experiments/gpu_submissions.jsonl experiments/cpu_budget.json"
+# docs/DECISIONS_RESOLVED.md joined 2026-09-28: it has been protocol.RUNNER_OUTPUTS
+# since 09-26 (bakeoff.py appends the winner record DURING a registered run), so a
+# detached bakeoff spec finishing in a gated hour orphans its record exactly as the
+# GPU receipts were orphaned before the 29th audit B4 — regate's sweep did it the
+# same morning this line landed (SO.10's record sat uncommitted behind a pushed
+# commit). Dual-writer caveat, weighed: the desk also writes that file, but it
+# commits in-sitting, the lanes are cron-staggered, and the measured cost of NOT
+# staging is a dirty tree that dirty-stamps every run for the rest of a blackout.
+HARVEST_PATHS="experiments/ledger.json experiments/gpu_budget.json experiments/gpu_submissions.jsonl experiments/cpu_budget.json docs/DECISIONS_RESOLVED.md"
 harvest_bookkeeping() {
   cd "$REPO" || return 0
   # Against HEAD, not the index: an iteration killed between `git add` and
@@ -167,7 +175,7 @@ PY
   # under a message asserting one file — the add -A sweep through a new door,
   # in the one path that runs unattended with no agent watching.
   # shellcheck disable=SC2086
-  if git commit -q -m "pace-skip bookkeeping: detached-run ledger row(s) [${ROWS:-unknown}] + GPU/CPU receipts committed while the builder was pace-gated (27th audit B3, 29th audit B4). Mechanical commit from ladder_loop.sh; the next unskipped iteration owes the harvest write-up. Only the four harvest RUNNER_OUTPUTS staged." -- $HARVEST_PATHS 2>/dev/null; then
+  if git commit -q -m "pace-skip bookkeeping: detached-run ledger row(s) [${ROWS:-unknown}] + GPU/CPU receipts committed while the builder was pace-gated (27th audit B3, 29th audit B4). Mechanical commit from ladder_loop.sh; the next unskipped iteration owes the harvest write-up. Only the harvest RUNNER_OUTPUTS staged." -- $HARVEST_PATHS 2>/dev/null; then
     say "bookkeeping: committed detached ledger row(s) [${ROWS:-unknown}] during pace skip"
     git push -q 2>/dev/null && say "bookkeeping: pushed" || say "bookkeeping: push failed — next iteration retries"
   else

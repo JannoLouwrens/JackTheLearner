@@ -61,21 +61,36 @@ nice -n 19 timeout 3000 "$PY" -u scripts/regate.py 2>&1 | while IFS= read -r l; 
 done
 OUT=$(cat "$TMP")
 
-# Only the runner writes the ledger; this just commits what the runner wrote.
-# Explicit paths, because another writer shares this tree (LESSONS.md, the
-# 2026-08-24 double sweep) — `git add -A` is banned here for that reason.
-if ! git diff --quiet experiments/ledger.json 2>/dev/null; then
+# Only the runner writes these files; this just commits what the runner wrote.
+# The staged set is protocol.RUNNER_OUTPUTS — DERIVED, not hand-copied, because
+# the hand-copied version ("ledger.json alone") orphaned cpu_budget.json and
+# SO.10's bakeoff record in DECISIONS_RESOLVED.md on 2026-09-28: the sweep
+# pushed a clean-looking commit and left a dirty tree behind it, which is the
+# "evidence log that invalidates the evidence" scar (protocol.py documents four
+# occurrences) minted a fifth way. Still explicit paths, never `git add -A` —
+# another writer shares this tree (LESSONS.md, the 2026-08-24 double sweep);
+# RUNNER_OUTPUTS is exactly the set no human hand writes mid-run. Diffed
+# against HEAD, not the index, so a sweep killed between add and commit is
+# still harvested next pass (ladder_loop's 28th-audit-B2 lesson).
+STAGE=$("$PY" -c 'import os
+from experiments.protocol import RUNNER_OUTPUTS
+print(" ".join(p for p in RUNNER_OUTPUTS if not p.endswith(".tmp") and os.path.exists(p)))')
+# shellcheck disable=SC2086
+if [ -n "$STAGE" ] && ! git diff --quiet HEAD -- $STAGE 2>/dev/null; then
   MOVED=$(printf '%s\n' "$OUT" | grep -o 'STATUS MOVED on .*' || true)
-  git add experiments/ledger.json
+  # shellcheck disable=SC2086
+  git add -- $STAGE
   git commit -q -m "regate sweep: cheap stale certificates re-bought mechanically
 
 $(printf '%s\n' "$OUT" | tail -12)
 
 No model call, no judgment, no threshold touched — the runner produced every
 verdict here and this lane only chose which cheap stale rows to ask for.
+Staged: the changed protocol.RUNNER_OUTPUTS (ledger row + every receipt the
+runner wrote beside it), nothing else.
 ${MOVED:+A status MOVED, which is the lane working: it keeps the scoreboard TRUE, not green.}" \
     && git push -q origin HEAD 2>/dev/null \
     && say "committed and pushed" || say "commit/push failed — rows are on the ledger, tree left for the loop"
 else
-  say "no ledger change"
+  say "no runner-output change"
 fi

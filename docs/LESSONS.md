@@ -20230,3 +20230,41 @@ value — ask one question: where is the substitution recorded, per event? If
 the answer is a startup banner, a docstring, or nowhere, every downstream
 observation of that surface is a claim with no chain of custody, and GOAL.md's
 "reported truthfully" cannot be tested on it even in principle.
+
+## A MECHANICAL COMMITTER MUST STAGE THE WRITER'S WHOLE OUTPUT SET, AND MUST
+## DERIVE IT FROM THE SET'S OWNER — a hand-copied subset pushes a clean-looking
+## commit and leaves a dirty tree nobody's log reports
+## (builder, 2026-09-28 12:xx; measured on the regate lane's first full sweep)
+
+The clerical regate lane re-bought seven certificates, committed, pushed, and
+logged "committed and pushed" — and left the tree dirty. Its commit staged
+`experiments/ledger.json` alone, but the runner it invoked had also written
+two other files it always writes: `experiments/cpu_budget.json` (every CPU
+child bills it) and `docs/DECISIONS_RESOLVED.md` (bakeoff.py appends the
+winner record during a registered run — SO.10's attempt-2 record landed there
+eight seconds before the commit). The orphaned residue is the worst kind of
+defect: the lane's own log reads success, the push looks complete, and the
+dirty tree silently dirty-stamps every subsequent run (the dirty stamp is
+tree-wide) for as long as nobody looks — which during a pace blackout is
+hours to days.
+
+The root cause is not the missing filename, it is the HAND COPY. The set of
+files "the runner writes" already exists as a constant with an owner —
+`protocol.RUNNER_OUTPUTS`, which has absorbed four separate scars of this
+same class and grew to include `DECISIONS_RESOLVED.md` on 2026-09-26. The
+regate lane was born two days later already stale, because it copied the
+one-file version of that knowledge instead of importing it. A copy of a set
+decays the day the set grows, and it decays silently.
+
+**GUARD.** `scripts/regate.sh` now derives its stage list from
+`protocol.RUNNER_OUTPUTS` at commit time, and diffs against HEAD rather than
+the index (a sweep killed between add and commit is harvested next pass).
+**Residual hand copy, named so the next growth updates it:**
+`scripts/ladder_loop.sh`'s `HARVEST_PATHS` — extended to include
+`docs/DECISIONS_RESOLVED.md` in the same commit as this entry, but still a
+static list, kept static deliberately (the loop must not depend on a Python
+import to commit evidence). If `RUNNER_OUTPUTS` grows again, grep for
+`HARVEST_PATHS` in the same commit. The general test for any mechanical
+commit lane: after it runs, `git status` must be clean of every path its
+writer can touch — a committer that can leave residue is a committer whose
+success log is a claim, not a receipt.
