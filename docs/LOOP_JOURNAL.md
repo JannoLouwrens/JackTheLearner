@@ -23007,3 +23007,121 @@ C-RANDREW comparator and control-red→VOID). So 2 of the 6 OVERDUE queue
 violations are discharged-but-unstamped, the same class the 01:3x slot measured
 on `t215`/`hash-salt` — check source before executing any of the four. (c) The
 04:59 reset lands within the next slot or two; expect to be walked back to Fable.
+
+---
+
+## 2026-09-28 03:0x–04:0x UTC — the DISPOSITIONED class swept whole for the first time: 5 of 21 rows were execution-COMPLETE and carried no trace, and `t211` — named in a lesson the day before — was one of them
+
+**METERS FIRST.** `week:all models` **86% -> 87%** during the slot — *the gate*
+— against `pace_gate`'s `allow` ≈ 89.35 at `--week-elapsed` **99**, so live
+with ~2 points of pacing headroom and 3 to the hard stop; **reset 04:59, under
+an hour away.** `week:Fable` 95% and pinned, hence **Opus**; planned one larger
+unit accordingly rather than several small ones. No pacing skip, dark-slot
+streak 0. 13 `claude` processes on the box, so `git add` by name only.
+
+**CREATURE GATE: NONE — recorded violation, not discharged.** Re-derived from
+`registry.BY_ID` this slot rather than inherited: `T6.01 <- T4.05 <- T4.04 <-
+T2.01 <- T1.08 (FAIL)`, four hops, and `T1.08`'s pipeline repair is the
+Review's, undesigned until 10-02. `XL.01`'s own deps ARE satisfied (`PS.02`
+PASS, `XL.00` PASS) so it is genuinely runnable — but re-running it unchanged
+buys the same row and both of its estimator rows are OPEN on the desk
+(`xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off`,
+`xl01-c-fixture-ok-is-a-salt-lottery-in-a-deciding-metric`, DUE 10-07). Board
+EMPTY again: `run next` **0 fresh / 38 settled / 14 held**, `coverage` QUEUE
+DEPTH 6 dispatchable of which 6 VOID -> **0 FRESH**, three classes with no path
+in. Nothing manufactured; the refusal is disclosed here as required.
+
+**WHAT I DID, and why it was one unit rather than six.** `1^13` is right that
+`review-queue`'s `DISPOSITIONED` class — not `run next` — is the builder's
+implementation board. Yesterday's 18:0x lesson measured the four rows falling
+due THAT MORNING and found all four already executed. **I swept all 21 live
+`DISPOSITIONED` rows instead** — read each row's body for what it ORDERED, then
+checked HEAD source — because the per-row habit only ever looks at today's
+breakage, and a row executed early and dated far out is invisible until the
+morning it breaks.
+
+| row | DUE | ordered execution at HEAD | trace before this slot |
+|---|---|---|---|
+| `t211-diayn-metric-cannot-separate-mi-from-noise` | 09-29 | **COMPLETE** — `a080386` | **none** |
+| `t215-heldout-language-routing…` | 10-02 | **COMPLETE** — `e5e627b` (shared w/ sibling) | **none** |
+| `ps09-probe-memorizes-trips…` | 10-02 | **COMPLETE** — `d186c07` | **none** |
+| `ps08-amputation-control…` | 10-02 | part 2 `a313122`; part 1 withheld IN SOURCE | **none** |
+| `lt02-the-venue-has-no-true-positive…` | 10-02 | **COMPLETE** — `88762a2` + run 09-27T02:40 | **none** |
+| `ps05` / `ps06` | 10-02 | measurement on disk; conjunct inheritance HELD | addendum (ps06) |
+| `ba03`, `t306`, `t215-router`, `hash-salt`, `sh02`, `t108-noise-floor`, `d10-successor`, `a4`, `hr1`, `cross-organ`, `sm03` | — | executed or correctly blocked | already traced |
+| `w0-too-shallow`, `cpu48h`, `d35` | — | desk-owned or registration prohibited | n/a |
+
+**`t211` IS THE SHARP CASE AND IT IS THE FINDING.** Yesterday's LESSONS entry
+NAMED it — *"returned no citing commit while its execution was on disk"* — its
+date falls TOMORROW, and it still acquired no trace on the row. **Being named
+in a lesson is not being traced on the row.** Verified at HEAD, not off the
+commit message: (i) `PILOT RECORD v3` at `t2_11_skills_distinguishable.py:333`,
+worst-seed `mi_margin` **+0.6268 nats** against the ruling's own pre-registered
+STOP at 0.50 — so the cheap half did NOT kill the expensive half; (ii)
+`mi_beats_field` BINDING at line 1195, worst-seed, `MI_MARGIN_MIN = 0.50` at
+line 594; (iii) `_GATES_FROZEN` still False, no `T2.11` key in `ledger.json`,
+nothing dispatched. **`git diff a080386^ HEAD` over that file adds exactly ONE
+module-level constant and moves no other** — seven existing bars byte-unmoved,
+`beats_shuffled` still binding, five claim conjuncts where there were four.
+**And the ordered read falsified the ruling's own arithmetic:** out of sample
+`zero` reads −0.2149/−0.2158 and `shuffled` −0.0099/−0.0115, so the *"3.1x
+`zero`'s 0.16 nats"* derivation that SIZED the bar is wrong — the floor is
+below zero — and the bar was left at 0.50 rather than recomputed downward. That
+is the correct handling of a threshold whose justification improves, and it was
+sitting undiscovered on a row reading as owed.
+
+**WHAT I WROTE AND WHAT I REFUSED.** Five `BUILDER-TRACE` blocks in the `ba03`
+idiom — a RECEIPT, never a disposition. **Nothing stamped**: `DISPOSITIONED ->
+ACTED` is the desk's act, and `run review-queue` `diff`s **byte-identically**
+before and after (63 OPEN / 3 HELD / 21 DISPOSITIONED / 25 ACTED, 7 VIOLATIONS
+OVERDUE 7 — same seven ids). I did NOT write traces on `ps05`/`ps06`: their
+ordered measurement is on disk but the conjunct's inheritance is held behind
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` (OPEN, desk, DUE
+10-03), and a trace reading "done" on a half-executed row is false in the
+direction that costs most — it retires a clock over work nobody did. I did NOT
+build the reader that would have caught all of this: extending the instrument
+to a `discharged-but-unstamped` class is an audit instrument and `D35` clause 2
+forbids it by name. **No bar moved anywhere in this slot; no spec source was
+edited; no ledger row was written by me.**
+
+**LESSONS: appended as an INCREMENT to the existing 09-27 section rather than
+as a new entry** — SYSTEM.md asks for deduplicated lessons and the class was
+already generalised. What the increment adds is what the four-row sample could
+not see: the sweep is **bounded at 21 rows and one slot**, the per-row habit
+has a structural blind spot (it only looks at today's breakage), and a
+discharge is **not binary** — `ps08`'s one date owes two halves with two owners
+and `ba03`'s owes an implementation that landed plus a run `D20` then refused a
+lane.
+
+**RATCHETS, quoted BEFORE any `record` and none was run** (nothing I committed
+grows a counter — docs only): 6 MOVED vs committed readings —
+`fail_unowned_owned_forms` queue-row 29->31, `review_queue_net_arrivals` 26->36,
+`review_queue_piled_on` 3->4, `review_queue_violation_forms` {OVERDUE 1}->{OVERDUE 7},
+`review_queue_violations` 1->7 (**CLOCK** — the calendar reached a date),
+`unreachable` 95->96; 1 day-rolled (`cpu_foreclosed_now`). Floors: **3 ABOVE**
+(`decisions_default_action_expired` 1 vs 0 — `D33`'s; `pass_on_dead_dependency`
+5 vs 3 — `T0.13`'s two new dependents; `unreachable` 96 vs 95, whose cause is
+already written out at `coverage.py:1172-1207` and deliberately NOT blessed),
+0 BELOW, 0 UNVERIFIED. `run status` EXIT 2, `review-queue` EXIT 2, `coverage`
+EXIT 2 — all three pre-existing.
+
+**STALENESS BILL** priced BEFORE the edit with `run stale-cost
+docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md`: **2 standing PASS
+certificates — `T0.21` (cpu<1min), `T0.31` (cpu<10min) — 0.00 CPU-h, 1 slot**,
+paid in slot from the clean tree after the docs commit. Docs-only: no spec
+file, no root module, so `! DIRTY STAMPS` must still read the 2 rows (`T6.03`,
+`PL.02`) it held when this slot began. `scripts/ladder_prompt.md` untouched at
+**96212 B**.
+
+**NEXT ITERATION.** (a) **Do not re-execute `t211`, `t215`, `ps09`, `ps08`
+part 2 or `lt02`** — all five are discharged and now traced with commit shas on
+their rows; if a steering page hands you one, cite the sha and refuse. (b) The
+`ps05`/`ps06`/`ps08`-part-1 inheritance is genuinely NOT yours until
+`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` is ruled (desk, DUE
+10-03) — the hold is written in `ps_08_heavy_is_a_price.py:221`, read it before
+believing any page that says otherwise. (c) The 04:59 reset lands within the
+next slot; `week:Fable` unpins, expect to be walked back to Fable and plan
+smaller units. (d) **A handoff is a claim, and so is a lesson:** `t211` was
+correctly identified in writing on 09-27 and still went three days without the
+one-paragraph receipt that would have told its reader. Naming a defect is not
+repairing it — put the receipt where the instrument's reader looks.

@@ -1593,6 +1593,37 @@ ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /d
     no other row, which is exactly why six deferrals of it were indefensible.
     ORDERED: T2.11
     WAITS-ON: none
+    BUILDER-TRACE 2026-09-28 (builder, 03:0x slot — a RECEIPT, not a
+        disposition; only this desk stamps ACTED). **ALL THREE ORDERED ITEMS
+        WERE EXECUTED ON 2026-09-26 AT 11:23 UTC IN `a080386`, three days
+        before this date, and nothing on this row says so.** Re-verified from
+        source at HEAD this slot rather than read off the commit message:
+        **(i)** the zero-cost read is `PILOT RECORD v3`
+        (`t2_11_skills_distinguishable.py:333`) — held-out `Î` for all four
+        arms at the spent seeds 7/90, worst-seed `mi_margin` **+0.6268 nats**
+        against the pre-registered STOP at 0.50, so the STOP did NOT fire and
+        the ruling survived the falsifier it ordered against itself;
+        **(ii)** `mi_beats_field` is a BINDING claim conjunct — line 1195,
+        `m["mi_margin"] >= MI_MARGIN_MIN`, read at the WORST seed
+        (`w("mi_margin", False)`) — with `MI_MARGIN_MIN = 0.50` at line 594
+        and `claim/ctrl/zero/oracle_mi_heldout` reported per arm per seed;
+        **(iii)** `_GATES_FROZEN` is still `False` (line 464), `T2.11` still
+        has no key in `ledger.json["results"]`, and nothing was dispatched.
+        **NO BAR MOVED, checked mechanically:** `git diff a080386^ HEAD` over
+        this spec file adds exactly ONE module-level constant —
+        `MI_MARGIN_MIN` — and touches no other; `ABOVE_CHANCE_MIN`,
+        `MARGIN_MIN`, `PER_CLASS_MIN`, `SHUFFLE_FIT_FLOOR`, `SHUFFLE_BAND`,
+        `FLOOR_COVERAGE` and `ORACLE_MIN` are byte-unmoved and
+        `beats_shuffled` is still binding, so the spec is strictly harder at
+        five claim conjuncts where there were four. **AND THE READ CORRECTED
+        THE RULING THAT ORDERED IT:** out of sample `zero` reads
+        −0.2149/−0.2158 and `shuffled` −0.0099/−0.0115, so the *"3.1x `zero`'s
+        0.16 nats"* derivation that sized the bar is FALSIFIED — the floor is
+        below zero, not at 0.16 — and the builder left 0.50 standing rather
+        than recomputing it downward, which is the correct handling of a bar
+        whose justification improved. **What this trace does NOT do:** it does
+        not stamp `ACTED`, it does not move this date, and `run review-queue`
+        reads identically before and after it.
 
 **DISPOSITION (Review DAILY, 2026-09-26): ADOPT (a) — gate on the OBJECTIVE's
 held-out information content — as a NEW conjunct. Retain all four existing
@@ -6538,6 +6569,21 @@ ROUTED: t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-
         written. Full ruling in the RULING TEXT block below the prose paragraph
         on this row; execution the builder's, with the sibling row
         `t215-router-under-lexical-null`.
+    BUILDER-TRACE 2026-09-28 (builder, 03:0x slot — a RECEIPT, not a
+        disposition). **The builder's half of this date is SHARED with
+        `t215-router-under-lexical-null` and was shipped there on 2026-09-25
+        at 14:14 UTC in `e5e627b`**, verified in source this slot: the
+        declared-but-ungated bag-of-words null is now a GATED conjunct —
+        `t2_15_freeform_routing.py:553` returns `False` on *"router ties or
+        loses to its own bag-of-words null"*, fired before the claim line —
+        with `CLAIM_MIN` 12 and `NB_REF_MIN` 13 byte-unmoved. That is the
+        `**never gated**` defect this row's own ruling named at line 59 of the
+        spec's docstring. **The sibling row carries TWO traces of that commit
+        and this row carried none**, which is why it reads as outstanding.
+        Untouched and explicitly NOT the builder's: the REFUSAL of the
+        `FAIL-DISPOSED:` marker, and the ladder-wide *every spec that declares
+        a null it does not gate* audit carried to the FULL. **No stamp, no
+        re-date; `run review-queue` reads identically before and after.**
 
 **Why this row exists at all:** the 72nd audit measured FAIL-UNOWNED at 3;
 the detector built to its own B1 conjunction finds **4**. `T2.15`
@@ -9678,6 +9724,23 @@ ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-
         ONE THE RULING TURNS ON — your seed-1 threshold datum is promoted from
         a diagnostic to the class's known-answer control, and it is why the
         ruling could be made today instead of after a four-arm bakeoff.
+    BUILDER-TRACE 2026-09-28 (builder, 03:0x slot — a RECEIPT, not a
+        disposition). **Part 1 was executed ON THIS ROW FIRST, exactly in the
+        order the ruling ordered it, on 2026-09-25 in `d186c07`** — verified in
+        source at HEAD: the seed-1 bare-threshold datum is the pre-registered
+        known-answer instrument (`ps_09_worth_it_is_real.py:582`, wired at
+        line 735), and a probe that misses it reports **UNREADABLE —
+        `Status.VOID` naming the miss** (line 180), never FAIL, which is the
+        clause that keeps an unreadable instrument from being scored as a
+        refuted world. `probe_bal_acc`'s 0.65 bar is unmoved in either
+        direction. The spec's recorded verdict moved FAIL -> VOID on
+        2026-09-25T08:18 on that account, which is the conjunct firing
+        correctly on the sibling-proving seed. **Still NOT discharged and not
+        the builder's:** whether the known-answer FLOOR was calibrated on an
+        oracle cut is this desk's own OPEN row
+        (`ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`, DUE
+        2026-10-03), and the four-sibling inheritance is held behind it.
+        **No stamp, no re-date.**
 
 ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2026-09-19 | `8f7d1dc` (PS.08 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     PS.08 measured the `heavy` commitment (GOAL.md:187) and split it the way
@@ -9725,6 +9788,19 @@ ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2
         adopted verbatim as PART 2 of that ruling and is the reason it has two
         halves: a redesign that fixes the estimator and keeps the inert-channel
         assumption would pass every instrument and still measure nothing.
+    BUILDER-TRACE 2026-09-28 (builder, 03:0x slot — a RECEIPT, not a
+        disposition). **PART 2 — your warning, the half this row is named for
+        — WAS EXECUTED ON 2026-09-25 IN `a313122`: the amputation control is
+        now RATE-BLIND.** Verified in source at HEAD. **PART 1 is NOT shipped
+        here and that is DELIBERATE and SAID SO IN THE SPEC**, not an
+        omission: `ps_08_heavy_is_a_price.py:221` carries
+        `DELIBERATELY NOT INCLUDED: part 1 of the same ruling`, naming this
+        desk's OPEN row `ps09-known-answer-floor-was-calibrated-on-an-oracle-
+        cut` (DUE 2026-10-03) and the rule *"until that row is disposed, no
+        sibling inherits the conjunct"*. So this date's two halves have
+        different owners: half is discharged in source with no trace, half is
+        blocked on a desk row that has not been ruled. `ACC_MIN` and
+        `CONTROL_MARGIN_MIN` are unmoved. **No stamp, no re-date.**
 
 **THE PS-FAMILY LEGIBILITY RULING — Review DAILY 2026-09-25, disposing
 `ps05` + `ps06` + `ps08` + `ps09` in one act, as all four rows asked.**
@@ -9933,6 +10009,28 @@ ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19
         Sunday: the row's own block mass, live at routing, frees 6
         (LT.03–LT.07, LT.09) against 8 blocked, the third-largest FAIL mass on
         the board. Not re-derived this morning; re-derive before execution.
+
+    BUILDER-TRACE 2026-09-28 (builder, 03:0x slot — a RECEIPT, not a
+        disposition). **RULED (a) WAS EXECUTED ON 2026-09-25 IN `88762a2` AND
+        THE ARM HAS SINCE RUN** — verified in source at HEAD, not inherited:
+        the fifth arm is live (`ACT_NOISE_SIGMA = 1.0` at line 289, white
+        actuation noise on a dedicated rng stream `60_000+seed`, applied at
+        `_rag_life(rig, "icm", seed, act_noise=...)` line 886 and reported as
+        `chaos_occupancy_icmnoise` line 892), and it is **spec-local**: the
+        rig overrides the body in `LT.02`'s own file, so it bills **zero** of
+        the 21 `playground.py` certificates and waited on no world-edit
+        window, exactly as the disposition required. **The ordered run
+        happened:** `LT.02` attempt 3, `ran_at` 2026-09-27T02:40:10, and the
+        detector is CERTIFIED on the true positive —
+        `chaos_occupancy_icmnoise` **6.41** against random 1.0 and the climber
+        0.083, separation 6.33. **THE GUARD HELD AND IS THE REASON THE SPEC IS
+        STILL RED:** the disposition forbade reading the new source as
+        restoring the THREAT, body chaos is measured REDUCIBLE at this venue
+        (`reducibility_gain_icm` 0.0188), and `LT.02` FAILs honestly on
+        `chaos_reward_ratio` **nan** — the cause gate undefined on the
+        original `icm` arm, which is precisely what the GUARD forecast. No arm
+        reports immunity to a threat this venue cannot produce. No bar moved.
+        **No stamp, no re-date.**
 
 ## ROUTED 2026-09-20 (Review FULL): `ba03-vestibular-channel-is-never-load-bearing-under-one-kick`
 ## — split out of `ba03-null-saturates-the-horizon` so that adopting the cheap

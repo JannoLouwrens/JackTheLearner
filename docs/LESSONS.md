@@ -19343,6 +19343,49 @@ owed work, open the row's BODY, read what it ORDERED, and look for that
 artefact in source. Do not trust the index, and do not trust a citation grep in
 either direction.
 
+**INCREMENT, 2026-09-28 03:0x (builder): THE SWEEP IS BOUNDED, IT COSTS ONE
+SLOT, AND DOING IT PER-ROW-AS-IT-FALLS-DUE IS WHAT LEFT FIVE ROWS UNTRACED FOR
+THREE DAYS.** The entry above measured the four rows falling due that morning.
+Today the whole live class was swept — all **21** `DISPOSITIONED` rows, each
+read for what it ORDERED and checked against source at HEAD — and the residue
+was not small: **five rows were execution-COMPLETE with no `BUILDER-TRACE` at
+all** (`t211-diayn-metric-cannot-separate-mi-from-noise`, `a080386`;
+`t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall`,
+`e5e627b` shared with its sibling; `ps09-probe-memorizes-trips-while-a-bare-
+threshold-reads-the-sign`, `d186c07`; `ps08-amputation-control-out-reads-the-
+probe-intero-is-not-clock-like` part 2, `a313122`; `lt02-the-venue-has-no-true-
+positive-body-chaos-is-reducible`, `88762a2` plus its 2026-09-27T02:40 run),
+and two more (`ps05`, `ps06`) had their ordered MEASUREMENT on disk with the
+conjunct's inheritance held behind a still-OPEN desk row. `t211` is the sharp
+case: it was NAMED in the paragraph above as the row whose execution was on
+disk and whose commit did not cite it, its date fell the next day, and it still
+acquired no trace — **being named in a lesson is not being traced on the row.**
+
+**TWO THINGS THE FULL SWEEP SHOWS THAT THE FOUR-ROW SAMPLE COULD NOT.**
+**(1) The per-row habit has a structural blind spot: it only ever looks at rows
+falling due TODAY**, so a row executed early and dated far out (`t215-heldout`
+at 10-02, `ps09`/`ps08`/`lt02` at 10-02, `t211` at 09-29) is invisible until
+the morning it breaks — which is the morning it is least useful to discover.
+The class is 21 rows and the check is a `grep` per row; there is no reason to
+meet it one broken promise at a time. **(2) A discharge is not binary and a
+trace must say which half it discharges.** `ps08`'s date owes two halves with
+two different owners — part 2 shipped in source, part 1 deliberately withheld
+and SAID SO at `ps_08_heavy_is_a_price.py:221` pending a desk row — and
+`ba03`'s owes an implementation that landed and a run that was then refused a
+lane by `D20`. A trace reading "done" on either would be false in the
+direction that costs most, because it would retire a clock over work nobody
+did.
+
+**AND THE PROHIBITION THAT STILL BINDS, restated so the cheap wrong repair is
+not reached for.** The fix that suggests itself — teach `review_queue.py` to
+read source and report a `discharged-but-unstamped` class — is a new audit
+instrument, which `D35` clause 2 forbids by name while the Tier-0 freeze
+stands. The legal move is the one taken here: sweep by hand, write the receipt
+on the row in the `BUILDER-TRACE` idiom, stamp nothing, and verify the
+instrument reads **byte-identically** before and after (it did — 63 OPEN / 3
+HELD / 21 DISPOSITIONED / 25 ACTED, 7 VIOLATIONS OVERDUE 7, `diff` clean). A
+receipt that moved the number would be a disposition wearing a receipt's name.
+
 **What a builder may do about it, and what it may not.** Only the desk stamps
 `ACTED`. What the builder can do is attach a **BUILDER-TRACE** — the commit
 sha, the artefact, and the ruling clause it satisfies — inside the row, so the
