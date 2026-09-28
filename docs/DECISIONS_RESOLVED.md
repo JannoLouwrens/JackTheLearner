@@ -1982,3 +1982,18 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 | softmax-full | 0.694 | 8.59 | pass | 1.0 |
 | topk-uniform | 0.661 | 32.52 | pass | 1.0 |
 | control:state-free-prompt | 0.064 | -5.02 | FAIL | 1.0 |
+
+## SO.10 — TIE — laplace-full
+laplace-full leads laplace-w30 by only 0.26 sigma (margin 1.5). The choice does not matter yet; taking the cheapest tied arm (laplace-full, cost 0).
+
+metric: `div_lastq`  ·  null 0.044 ± 0.069  ·  gate mode: `screen`
+
+> **screen rationale** (why these arms are observables, not learners): The arms are OBSERVABLES, not learners, and the rig makes that structural rather than asserted: every arm is a deterministic function of one already-recorded evidence stream that no arm can perturb (the diary holds the claim and the finding; the follow decision is never recorded, and `rng_agent` draws once per round whatever the rule returns). A low score is therefore a property of the RULE — full-history Laplace cannot migrate, last-claim-only is memoryless — and not evidence that its run was broken, which is exactly the case `validity` mode would mis-VOID. The gate itself is unmoved at 3 sigma and MIN_FINISHERS still applies.
+
+| arm | mean | sigma over null | gate | cost |
+|---|---|---|---|---|
+| laplace-full | 0.722 | 5.79 | pass | 0.0 |
+| laplace-w30 | 0.689 | 5.11 | pass | 1.0 |
+| exp-decay-h15 | 0.678 | 5.91 | pass | 1.0 |
+| last-1 | 0.544 | 3.60 | pass | 2.0 |
+| control:pooled-scalar | 0.044 | 0.00 | FAIL | 0.0 |
