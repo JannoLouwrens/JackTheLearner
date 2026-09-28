@@ -19920,3 +19920,51 @@ the one this repo keeps meeting: an instrument reports a STATUS honestly, a
 second organ reads that status as a CAUSE, and the cause was true when it was
 written. `OVERDUE`, `PACING:`, `unread metrics`, `+dirty` and now
 `DISPOSITIONED` have all been read that way.**
+
+## A KNOWN-ANSWER CHANNEL IS THE WORLD'S FORMULA, NOT THE STATE VARIABLE THE
+## CLAIM IS NAMED AFTER — and picking the eponymous one refutes a good control
+## (builder, 2026-09-28 06:0x; measured on `PS.06`, cross-checked against the
+## 09-27 table on the same rows to four decimals)
+
+The PS-family legibility ruling requires each spec to pre-register *"one channel
+the venue's own physics makes legible BY CONSTRUCTION"*, against which the
+registered estimator is validated before its reading counts. `PS.06` prices
+**tiring**, so the obvious pick is fatigue `f` — and a prior measurement
+correctly REFUTED it: `f` alone reads held-out R² **0.0216** on seed 1, so any
+floor near the spec's own `PROBE_R2_MIN` 0.35 would have reported UNREADABLE on
+all three worlds, *including the two where the registered probe reads 0.70 and
+0.75 and is demonstrably working.* A known-answer control that fails where the
+instrument works is the exact inverse of the error part 1 exists to prevent.
+
+**The replacement was named in the spec's own prose the whole time.** The
+weakness gate is `gear_scale = GEAR_FLOOR + (1−GEAR_FLOOR)·(1−f)·min(e,i)` — the
+scalar the capability probe's commanded `ctrl` is literally multiplied by — and
+the docstring already said *"gear_scale couples min(e,i) too"* as the reason its
+own frozen twin isolates `f`'s share. On the same rows, same split, same
+estimator, that one derived column reads **0.8695 / 0.6979 / 0.8889** (worst
+0.698, ~2× the bar) against `f` alone's 0.0216 worst, with a leak that is
+NEGATIVE on two of three seeds.
+
+**THE TRANSFERABLE RULE.** *The by-construction channel is whatever quantity the
+world's code multiplies, integrates or thresholds — read the equation and write
+it down, do not reach for the state variable the commitment is named after.* The
+eponymous variable is usually one INPUT to that equation, and an input is not a
+known answer: here `f` is one of three, and handing the estimator all three raw
+(`f`,`e`,`i`) still reads **0.6532** worst — *below* the single derived scalar.
+So the reference's power came from reproducing the venue's arithmetic, not from
+access to its columns. **A reference basis is a choice about which of the venue's
+equations to write down, and that choice is load-bearing** — which is the same
+axis as the 2026-09-27 lesson that *"honestly fit"* bounds a reference's SPLIT
+and leaves its BASIS free, arriving from the other direction.
+
+**AND THE READING IT KILLED, which is why this is worth a lesson and not a
+footnote.** `PS.06`'s disposition offered *"interoceptive legibility genuinely
+varies by world"* as its honest third reading, on the strength of one seed. That
+reading is now measured FALSE at this venue: the world's own scalar is legible on
+every world, and what varied was a 200-feature RFF+ridge fit's ability to find a
+signal it already contained at 53 train rows. **A cheap, correct reference can
+retire a large scientific claim about the creature — so pick it before banking
+the claim, not after.** The corollary for anyone tempted the other way: a
+reference reading the target CANNOT rescue the spec's verdict (`PS.06` still
+fails on `probe_r2` whatever any reference reads), which is exactly what makes
+measuring it legitimate rather than a rescue.

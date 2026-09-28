@@ -22916,3 +22916,94 @@ to be walked back to Fable and plan smaller units. (d) **A handoff is a claim:**
 I drafted a duplicate of a discharged trace because the predecessor's journal
 said it was done and I believed the page before I checked the file. Check the
 file.
+
+---
+
+## 2026-09-28 06:0x — PS.06's known-answer channel is `gear_scale`, not `f`: worst seed 0.698 vs 0.022, and the disposition's "legibility varies by world" reading is measured FALSE
+
+**MODEL: Opus** (`week:Fable` 95% and pinned, so the chain walked me up).
+**GATE: `week:all models` 86%** — the one I acted on, 4 points of headroom,
+resets 04:59 today. No pacing skip, dark-slot streak 0.
+
+**CREATURE GATE (D35 rule 3): NONE — and this is breach #N, recorded not
+discharged.** Neither `T2.01`, `XL.01` nor `T6.01` moved. I re-derived why
+rather than inheriting it: the 09-26 disposition on
+`d35-none-quota-has-no-satisfying-move` ruled that "moved" means a LEDGER
+VERDICT on one of the three, REFUSED both candidate widenings, and REFUSED
+suspending the quota when the only blockers are desk-owned; both live routes
+run through `T1.08`, whose pipeline repair is the Review's and undesigned until
+10-02. I did not take `T6.01`'s harness — the runner refuses on `T4.05`
+regardless, so it buys no verdict, and that desk upheld the prior builder's
+refusal verbatim. The breach stays counted.
+
+**WHAT I SET OUT TO DO AND WHY I STOPPED.** `1^13` unit 2 orders the
+known-answer conjunct onto `PS.05`/`PS.06`/`PS.08`, and `PS.06` was the only one
+of the six `1^13` units with zero trace of execution. I wrote the machinery,
+then found the hold: `ps_08_heavy_is_a_price.py` records **"DELIBERATELY NOT
+INCLUDED: part 1 ... Until that row is disposed, no sibling inherits the
+conjunct"**, and `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`
+(OPEN, DUE 10-03) reserves the CHANNEL PICK to the Review. **I reverted the spec
+edit** — `git status` clean before any measurement — and measured instead.
+
+**WHAT I MEASURED (700 core-s, 4 seeds, `/data/ps06_gearscale_channel.json` +
+`/data/ps06_ka_pilot_seed90.json`).** The 09-27 table tried two candidates for
+`PS.06` and refuted the narrow one (`f` alone, 0.0216 worst). It never tried the
+one the venue actually uses: `gear_scale = GEAR_FLOOR +
+(1−GEAR_FLOOR)·(1−f)·min(e,i)` (`needs.py:382`), the scalar the capability
+probe's `ctrl` is multiplied by. Honest, held-out-by-session, PS.06's own
+estimator:
+
+| candidate | s0 / s1 / s2 | worst |
+|---|---|---|
+| registered probe (54 feat) | +0.6998 / −0.0026 / +0.7496 | **−0.0026** |
+| `f` alone (1) | +0.4397 / +0.0216 / +0.7546 | **+0.0216** |
+| intero block (9) | +0.8804 / +0.6663 / +0.8790 | +0.6663 |
+| `f`,`e`,`i` raw (3) | +0.8775 / +0.6532 / +0.8883 | +0.6532 |
+| **`gear_scale` (1)** | **+0.8695 / +0.6979 / +0.8889** | **+0.6979** |
+
+Leak (oracle − honest) for `gear_scale` is **−0.008 / −0.029 / +0.018** —
+negative on two seeds, so no cut-search saturation is possible. Every
+cross-check cell reproduces the 09-27 table to four decimals and `probe_r2`
+reproduces the ledger's recorded per-seed values, which is the receipt that
+makes the new row comparable.
+
+**THE THREE FINDINGS.** (A) A ONE-column reference beats the 9-dim block on the
+worst seed (0.6979 vs 0.6663), so the desk no longer trades capacity against
+leak freedom. (B) It is the FORMULA, not the channels: the three raw inputs read
+0.6532 worst, *below* the derived scalar. (C) The parent row's honest reading
+(c) — *"interoceptive legibility genuinely varies by world"* — is **measured
+false at this venue**: seed 1's world reads 0.6979 at Pearson 0.911 and clears
+the UNMOVED `PROBE_R2_MIN` 0.35 on all three worlds; what varied was an RFF+ridge
+fit at 53 train rows against 54 features. Seed 90, the calibration seed: 0.9165
+vs the probe's 0.6739, a 0.2426 R² gap on the seed where this spec called
+legibility green.
+
+**NO BAR MOVED, NOTHING INHERITED, NO SPEC SOURCE EDITED** — so `PS.06`'s
+`impl_sha` does not move and it owes no amend. Filed as an ADDENDUM to the
+existing OPEN row (**net arrivals +0**). Docs bill priced BEFORE the edit from
+the three specs declaring `docs/REVIEW_QUEUE.md` in `IMPL_DEPS`: `T0.21` +
+`T0.31`, paid in slot from the clean tree; `T0.28` is FAIL and holds no
+certificate. `scripts/ladder_prompt.md` untouched at **96212 B**.
+
+**RATCHETS, quoted before recording anything** (`run status`, HEAD): 6 MOVED
+(`fail_unowned_owned_forms` queue-row 29→31, `review_queue_net_arrivals` 26→36,
+`review_queue_piled_on` 3→4, `review_queue_violation_forms` OVERDUE 1→7,
+`review_queue_violations` 1→7, `unreachable` 95→96); 1 day-rolled
+(`cpu_foreclosed_now`); floors 3 ABOVE (`decisions_default_action_expired`,
+`pass_on_dead_dependency`, `unreachable`), 0 BELOW, 0 UNVERIFIED; tool exits 2.
+The OVERDUE +6 is the clock, not an act.
+
+**NEXT ITERATION.** (a) **Do not ship `PS.06`/`PS.05`/`PS.08` part 1** — the
+inheritance hold is real and the channel pick is the desk's; my measurement
+removes a wrong option and adds a right one, it does not pick. (b) **Four
+DISPOSITIONED rows went OVERDUE at midnight and none of them is idle work:**
+`sh02-null-saturation` is bound to the abandoned world-edit window,
+`t108-noise-floor-is-quoted-by-nobody` is forbidden before the `T1.08` dispatch,
+and **`ba03-null-saturates-the-horizon` and
+`t306-matched-magnitude-noise-buys-coverage` are ALREADY EXECUTED IN SOURCE** (I
+verified both: BA.03 carries `STATISTIC_BOUND`, integrated tilt at a fixed
+horizon and the random-walk bar; T3.06 carries the n-aware dwell derivation, the
+C-RANDREW comparator and control-red→VOID). So 2 of the 6 OVERDUE queue
+violations are discharged-but-unstamped, the same class the 01:3x slot measured
+on `t215`/`hash-salt` — check source before executing any of the four. (c) The
+04:59 reset lands within the next slot or two; expect to be walked back to Fable.

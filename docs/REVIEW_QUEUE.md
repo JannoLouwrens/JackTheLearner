@@ -10956,6 +10956,114 @@ spec reproduced to the recorded digit.
     and its prose-only delta is re-stamped by `run amend PS.05 --doc-only` in
     this same commit.
 
+    ADDENDUM 2026-09-28 (builder, 06:0x slot) — **`PS.06`'s KNOWN-ANSWER
+    CHANNEL IS NEITHER OF THE TWO THIS ROW TABLED. The refuted narrow candidate
+    was refuted for a reason that names its own replacement: `f` is not the
+    by-construction channel, `gear_scale` is — and the world's own formula
+    reads the worst seed at 0.698 where fatigue alone reads 0.022 and the
+    registered probe reads −0.003.** FINDING 3 of the block above refuted
+    fatigue `f` (index 4) as `PS.06`'s candidate and left the desk choosing
+    between it and the whole 9-dim intero block. Neither is what the venue's
+    physics makes legible. The spec's own weakness gate is
+    `gear_scale = GEAR_FLOOR + (1−GEAR_FLOOR)·(1−f)·min(e, i)`
+    (`needs.py:382`, `GEAR_FLOOR` 0.5) — it is the scalar the capability
+    probe's commanded `ctrl` is literally multiplied by, so the target
+    (achieved power / session-fresh power) is monotone in it BY CONSTRUCTION —
+    and the spec's docstring already says in prose why `f` alone cannot be it:
+    *"gear_scale couples min(e,i) too"*. `f`, `e` and `i` are all in the
+    interoceptive suffix the amputation control deletes, at `needs.obs()`
+    offsets 4, 0 and 6, so the channel is a pure function of rows this rig
+    already records. **Nothing is inherited, no floor is declared and no spec
+    file is edited** — the channel pick and every threshold stay this desk's
+    under part 1, exactly as the block above left them.
+
+    **PRE-REGISTERED FORECAST, written into the script before any number was
+    read** (`/tmp`, artifact `/data/ps06_gearscale_channel.json`): *gear_scale
+    reads above `f` alone on every seed, and above the registered probe on the
+    seed where the probe collapses; if it does not beat `f` alone the
+    by-construction claim is wrong at this venue and the candidate is refuted.*
+    Both branches were results and neither was a bar.
+
+    **DETERMINISM RECEIPT FIRST, and it is stronger than the block above's
+    because it reproduces that block's OWN numbers as well as the ledger's.**
+    Same rig, same held-out-by-SESSION split, `PS.06`'s own
+    `_session`/`_fit_predict`/`_r2`: per-seed `probe_r2` **+0.6998 / −0.0026 /
+    +0.7496** against the block above's **0.6998 / −0.0026 / 0.7496**;
+    `f_alone` honest **0.4397 / 0.0216 / 0.7546** against its **0.4397 /
+    0.0216 / 0.7546**; `intero_9` honest **0.8804 / 0.6663 / 0.8790** against
+    its **0.8804 / 0.6663 / 0.8790**. Every cross-check cell reproduces to four
+    decimals, so the new row below is measured on the same recipe and not a
+    different one wearing the same name.
+
+    | candidate (cols) | honest s0 / s1 / s2 | WORST | leak s0 / s1 / s2 |
+    |---|---|---|---|
+    | registered probe (54) | +0.6998 / −0.0026 / +0.7496 | **−0.0026** | — |
+    | `f` alone (1) | +0.4397 / +0.0216 / +0.7546 | **+0.0216** | +0.000 / +0.126 / +0.100 |
+    | intero block (9) | +0.8804 / +0.6663 / +0.8790 | +0.6663 | −0.003 / +0.016 / +0.012 |
+    | `f`,`e`,`i` raw (3) | +0.8775 / +0.6532 / +0.8883 | +0.6532 | — / +0.026 / +0.008 |
+    | **`gear_scale` (1)** | **+0.8695 / +0.6979 / +0.8889** | **+0.6979** | **−0.008 / −0.029 / +0.018** |
+
+    **FINDING A — THE NARROW CHANNEL NOW DOMINATES THE WIDE ONE ON THE WORST
+    SEED, WHICH IS THE ONLY PLACE THIS FAMILY READS.** `gear_scale` is ONE
+    column and reads **0.6979** worst against the 9-dim block's **0.6663** — so
+    the desk no longer has to trade capacity against leak freedom. Its leak is
+    **NEGATIVE on two of three seeds** (−0.008, −0.029; max +0.018): fitting on
+    the held-out rows makes the reading *worse*, which is the arithmetic
+    signature the block above identified as the opposite of `PS.09`'s cut
+    search. A one-parameter-class reference with no cut search cannot saturate.
+
+    **FINDING B — IT IS THE FORMULA, NOT THE THREE CHANNELS.** Handing the same
+    estimator `f`, `e`, `i` as three raw columns reads **0.6532** worst —
+    *below* the single derived scalar's 0.6979 and below the 9-dim block. So
+    what the reference contributes is the world's own arithmetic
+    `(1−f)·min(e,i)`, not access to its inputs, and a reference basis is a
+    CHOICE about which of the venue's equations to write down rather than which
+    of its columns to keep. This is the same "basis, not split" axis the
+    ADDENDUM above opened on `PS.05`, arriving from the other direction.
+
+    **FINDING C — AND IT IS THE ONE WITH CONSEQUENCES FOR THE DISPOSITION: THIS
+    ROW'S READING (c) IS NOW MEASURED FALSE AT THIS VENUE.** The parent row
+    (`ps06-legibility-probe-collapses-on-one-mutated-world`) offered *"the
+    honest reading: interoceptive legibility genuinely varies by world"*, and
+    seed 1 was its whole evidence — `probe_r2` −0.0026 where the siblings read
+    ~0.70/0.75. On those SAME seed-1 rows the world's own weakness scalar reads
+    **+0.6979** at Pearson **0.9114**, and it clears the spec's own UNMOVED
+    `PROBE_R2_MIN` 0.35 with margin on **all three** worlds (0.870 / 0.698 /
+    0.889, worst 0.698 ≈ 2.0× the bar). Seed 1's world is not less legible; the
+    RFF+ridge fit failed to find a signal it already contained, at 53 train
+    rows against 54 features. That is `FINDING 2`'s conclusion for `PS.05`
+    reproduced at a second venue with a NARROW channel, and it is the third
+    independent venue at which this ruling's premise holds.
+
+    **AND THE SEED-90 DATUM, because it lands on the calibration seed this
+    spec's every gate was set from** (artifact
+    `/data/ps06_ka_pilot_seed90.json`, 181 core-s; it reproduces the
+    docstring's published seed-90 `probe_r2` 0.674, `control_r2` 0.101 and
+    `shuffled_r2` −0.176 to the digit): `gear_scale` reads **0.9165** where the
+    registered probe reads **0.6739** — a gap of **0.2426 R²**, at Pearson
+    0.959. So on the one seed where this spec declared legibility GREEN, the
+    registered instrument leaves a quarter of a by-construction-present signal
+    unread. **This is offered as a measurement and explicitly NOT as a floor** —
+    a number read off these rows would be calibrated on the rows it gates,
+    which is the defect this row exists for, and clause (a)'s calibration-venue
+    question is untouched and still the desk's.
+
+    **WHAT IS NOT ASKED FOR.** No bar moves in either direction: `PROBE_R2_MIN`
+    0.35, `SHUFFLED_R2_MAX`, `CONTROL_R2_MAX`, `CONTROL_MARGIN_MIN`,
+    `KA_SIGNAL_MIN` 0.90 and `KA_GAP_MAX` 0.10 are byte-unmoved. No floor is
+    proposed. `PS.06`'s attempt-1 FAIL is untouched and no re-run is owed — and
+    note this measurement CANNOT rescue it: its own world half is already green
+    and its legibility conjunct fails on `probe_r2` regardless of what any
+    reference reads. **SUBJECT: the APPARATUS**, appended to this existing OPEN
+    row rather than routed as a new one — **net arrivals +0**, the 124th
+    audit's intake finding. Generalisation in `docs/LESSONS.md` (2026-09-28).
+    **Staleness bill priced BEFORE the edit** with the three specs declaring
+    `docs/REVIEW_QUEUE.md` in `IMPL_DEPS`: `T0.21` (cpu<1min) + `T0.31`
+    (cpu<10min); `T0.28` is FAIL so it holds no certificate to re-buy. No spec
+    source edited, so `ps_06_tiring_is_a_price.py`'s `impl_sha` does not move
+    and PS.06 owes no amend. Bill paid in slot from the clean tree.
+    **Spent evidence: 700 core-s across 4 seeds; do not re-run these cells.**
+
 ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09-25T22:00:21, 16,580.6 s, seeds 0/1/2, clean stamp at `c1114ae`), harvested and _check-replayed this slot | OPEN
     WAITS-ON: none | the finding is about the LT rig's own panel trap (PG.4
         construction), not about W0's depth — no live row's answer changes
