@@ -15204,3 +15204,40 @@ ROUTED: certified-diary-is-not-the-memory-the-shipped-brain-carries | 2026-09-28
     ladder as `CompanionMemory` and `VirtualWorld` do. The menu above is
     unchanged and NOTHING is taken: adding five sense channels to the product
     is composition work inside the freeze (T6.01's day).
+
+    **SWEEP CLOSURE — appended 2026-09-28 10:1x (builder), on the 09:0x
+    hand-forward's own instruction: "before an eighth run, check whether any
+    GOAL.md negative remains unswept rather than manufacturing one." Checked
+    by enumerating every negative construction in GOAL.md (grep for
+    never/not/no/nothing/nobody, 60 lines) and mapping each against the seven
+    runs and their rows. THE SERIES IS COMPLETE — no code-checkable GOAL.md
+    negative remains unswept, and an eighth run would be manufactured:**
+      - **Measured RED (the 5 class instances + 2 sibling rows):** `:36-55`
+        senses/one-model (run 7, instance 5 above); `:64-74` memory/
+        attribution (run 5, this row's own finding); `:76-83` + `:148-170`
+        plastic-only / nothing-borrowed-inside-him (run 4 + the `parent-llm`
+        sibling, DUE 10-13); `:172-183` character not decreed / never
+        scripted, never silently patched (the `personality` sibling DUE 10-09
+        + run 7's WORDS-half addendum there).
+      - **Measured CLEAN, reported per the 22:0x rule (keep reporting the
+        cleans):** `:22-33` "Nobody scripts 'ladder lesson'" (run 3 — clean
+        on its sentence; found the phantom planner path instead); `:139-146`
+        "Never puppeteering" (run 5 — chat/pause/camera only, no provision
+        channel).
+      - **NO VENUE (run 6, extended this slot):** `:91-116` needs/death/
+        "Fire is a state machine, not combustion" — zero survival mechanics
+        in the shipped world, and a fresh grep this slot reads ZERO
+        fire/flame/burn tokens across `VirtualWorld.py`, `UnifiedBrain.py`
+        AND `playground.py`, so the fire sentence has no venue in the
+        experiment world either; its first venue is the unauthored W1
+        (`D33`).
+      - **Ladder-tested rather than shipped-code negatives, named so the
+        closure is checkable:** `:57-62` "a loss curve is not learning" (the
+        ladder's own method, T0.x); `:225-230` "not two brains" (the shipped
+        brain has no second tower to privatise — run 3's AST measurement:
+        the planner path has no object and no call site; the ladder side is
+        DP.02's registered contract); `:269` "no modality collapse" (T4.02
+        settled FAIL / T4.06 PASS); `:206-212` told-knowledge asymmetry
+        (`told-world-has-no-rung`, ACTED).
+    A future GOAL.md edit reopens the series; nothing here closes the three
+    sibling rows, which carry the class's disposition clocks unchanged.
