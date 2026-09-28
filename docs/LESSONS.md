@@ -19773,3 +19773,80 @@ behavioural questions you must NOT decide — here, whether the hand-written tab
 should keep outranking the LLM while its own comment says it is *"used when LLM
 is unavailable"*, and whether `T3.04 Ablate the hierarchical planner` should
 finally run and make 37.2M parameters earn or lose their place.
+
+## AN EXEMPTION INHERITS ITS PREMISE, AND NOTHING IN THIS REPO RE-EVALUATES A
+## SCOPE CLAUSE WHEN THE FACT IT RESTS ON IS MEASURED FALSE — plus its companion:
+## a `_check` that DIVIDES BY A SUBSET makes a silent claim about the complement
+## (builder, 2026-09-28 00:1x; fourth run of the negative-sentence sweep, on
+## `GOAL.md:76-83`'s PLASTIC-ONLY decree, and it came back BOTH clean and red)
+
+**The first lesson, and it is the general one: an exemption is only as true as
+the premise it cites, and a falsified premise does not propagate.** `GOAL.md`'s
+PLASTIC-ONLY decree — *"nothing inside him is frozen ... his encoders, his core,
+his fusion"* — carves out exactly one thing, and it carves it out by citing
+another decree: *"This does NOT touch the parent LLM: **that is not inside him**,
+it lives in his world and speaks to him."* The 22:1x slot on 2026-09-27 measured
+that premise FALSE (`eceac54`: SmolLM2-1.7B is an `nn.Module` grandchild, 96.84%
+of the parameter tree). **The exemption did not fall with it, because no organ
+here watches a scope clause.** Measured this slot: of the 1,711,376,384 frozen
+parameters in `UnifiedBrain(UnifiedBrainConfig())`, **100% sit under one
+top-level submodule, `language_encoder`** — so 96.84% of Jack is welded shut
+under a decree that says nothing inside him is, and the decree's own arithmetic
+justification (*"reshaping gain is identically ZERO for a frozen tower"*) applies
+to all of it. This is `pass_on_dead_dependency` one level up the stack: that
+ratchet catches a CERTIFICATE resting on a fallen dependency; this is a DECREE's
+scope resting on a fallen premise, and the class has no name, no count and no
+reader. **When you falsify something, grep the repo for documents that cite it as
+a reason — the falsification is worth more than the fact.**
+
+**The second lesson, and it is the reusable instrument rule: a `_check` that
+divides by a SUBSET is making a silent claim about the COMPLEMENT, and the tell
+is that the complement's size is recorded two keys away.** `T1.03 Gradient
+reaches every trainable parameter` does
+`if not p.requires_grad: continue` (`t1_03_gradient_coverage.py:112`) and then
+`orphan_params / max(1, trainable)`. Both are CORRECT for the question its title
+asks, and the spec is not wrong. But its own recorded row carries
+`total_params 1,767,267,976` and `trainable_params 55,891,592` **in the same
+metrics dict as the fraction that ignores the difference** — so the evidence that
+96.84% of the brain is outside the gate has been sitting inside a standing PASS
+since 2026-09-06, in decimal, adjacent. **A skipped population is not an absent
+one; if a `_check` cannot see it, the docstring must say so and say why.** And
+note which way the blindness cuts: it is not that the gate lies, it is that a
+reader who trusts `orphan_fraction 0.0483 <= 0.05` believes something about Jack
+that is true of 3.16% of him.
+
+**The third, measured in the same pass and the reason the sweep must report its
+cleans: FIVE of the six freeze sites are innocent, and four documents say
+otherwise.** The `ast` census of `requires_grad = False` in `UnifiedBrain.py`,
+each site carried with every enclosing `If` test, finds `dinov2`/`siglip` behind
+`use_pretrained_vision` (default `False`), `whisper`/`wav2vec2` behind
+`use_pretrained_audio` (default `False`), RND's `rnd_target` reachable only
+through `enable_intrinsic_motivation` (default `False`), and the parent's behind
+`llm_enabled`/`llm_freeze` (both default `True`). **Exactly one fires in the
+shipped default.** Meanwhile `docs/MASTER_PLAN.md:12`,
+`docs/MULTIMODAL_BINDING.md:74-75` and `:260-263`, `docs/DECISIONS.md:87` and
+`docs/PIPELINE_REVIEW.md:270` all describe Jack as sitting on frozen towers — so
+checking a decree against the DOCS returns a violation the AST says is not there,
+in the same sweep that returns a real one the docs never mention. Four pages
+describing a design and one flag deciding it is the ordinary state of this
+repository. **Read the flag, then the guard chain, then the default — a freeze
+behind a `False` is a contested arm, not a violation.**
+
+**The fourth, small and worth a line: a legitimate exception that is nowhere
+declared is indistinguishable from a violation.** RND's target network MUST be
+frozen — that is the algorithm, not a design slip — and nothing in `GOAL.md`,
+`CHAMPIONS.md` or `DECISIONS.md` records it as a permitted exception to
+PLASTIC ONLY. The next reader has to re-derive that it is legal. A decree with no
+exception register spends its readers' time proving the obvious cases innocent.
+
+**The rule.** Keep the negative-sentence sweep running and keep reporting the
+cleans; this run was 5-clean/1-red inside one file and the clean half is what
+stops the red half being noise. When a sweep falsifies a premise, **immediately
+search for every document that cites that premise as a reason** — that is where
+the unrepaired consequence lives, and it is free to find. Do **not** discharge
+either lesson by building a scope-clause checker or a frozen-fraction ratchet:
+freeze clause 2 forbids the organ, and gating `trainable_params/total_params`
+would settle an architecture question by typing a constant, which `SYSTEM.md`
+rule 3 reserves for a bakeoff. The deliverable is the measurement, filed as
+evidence on the row that already asks the question — **not an 88th live row on a
+queue running 6.29 arrivals against 1.14 disposals per cycle.**

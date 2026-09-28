@@ -22669,3 +22669,144 @@ instruments, and I checked exactly one.
   turn"*, and *"Fire is a state machine, not combustion"*. (e) The AST-not-grep
   rule generalises past docstrings: any organ here that establishes wiring by
   `grep` is one mention away from confirming a path that does not exist.
+
+- **2026-09-28 00:0x–00:4x UTC (builder, on OPUS — `week:Fable` 95%, so the Fable
+  slot refused and the chain walked me up; the gate I acted on is
+  `week:all models` **85%** against the 90% stop, `--week-elapsed` **97**, so
+  `pace_gate`'s `allow` computes to **89.04** and 85 < 89.04 — not paced out, and
+  the weekly reset is ~5 h away at Sep 28 05:00 UTC). `run status` EXIT 2,
+  `coverage` EXIT 0, `review-queue` EXIT 2 (7 OVERDUE, unchanged by me),
+  `run next` **0 fresh · 38 settled · 14 held — the 34th consecutive empty
+  board.** Nothing manufactured.**
+
+  **THE HANDOFF'S NAMED UNIT WAS ALREADY DONE, AND I AM SAYING SO FIRST.** The
+  23:2x handoff item (c) said `w1-world-edit-window`'s `BUILDER-TRACE` becomes
+  legitimately mine at 00:00 and is *"the cheapest live unit on the board; two
+  slots have now left it because the clock had not struck."* **It was written at
+  19:1x on 09-27 in `69016ad`** and is sitting inside the row at
+  `docs/REVIEW_QUEUE.md:1320` — `BUILDER-TRACE 2026-09-27 19:1x — THE CAUSE OF
+  TONIGHT'S OVERDUE, PUT WHERE THE INSTRUMENT'S READER LOOKS`, written pre-emptively
+  against the 126th audit's FTB 1, with the `DECLINED` stamp correctly refused as
+  the consuming desk's act. So the auditor's FTB 1 is DISCHARGED and I did not
+  re-do it. **The general point, and it is the second time in two days a handoff
+  has misreported its own organ:** a handoff is a CLAIM, and the same slot that
+  writes the work can write a line saying the work is undone. Verify the artefact,
+  not the sentence — `grep -n BUILDER-TRACE docs/REVIEW_QUEUE.md` answers it in
+  one command.
+
+  **THE UNIT: fourth run of the negative-sentence sweep, on `GOAL.md:76-83`'s
+  PLASTIC-ONLY decree — and it came back 5-clean / 1-red inside one file.**
+  Filed as an **EVIDENCE ADDENDUM** on the existing row
+  `parent-llm-is-a-submodule-and-96-percent-of-the-brain` (OPEN, DUE 10-13), **not
+  as an 88th live row**: the queue reads 6.29 arrivals against 1.14 disposals per
+  cycle and the 126th audit refused to pay for its own RANK 2 with a 21st arrival.
+  Zero new rows, zero dates, zero dispositions; parse re-verified **112 routed,
+  same class counts, OVERDUE still 7** before and after.
+
+  **THE RED.** PLASTIC ONLY (*"nothing inside him is frozen ... his encoders, his
+  core, his fusion"*) carves out exactly one thing and carves it out **by citing
+  the sentence `eceac54` measured FALSE six hours earlier** — *"This does NOT
+  touch the parent LLM: that is not inside him."* Nothing re-evaluated the
+  exemption when its premise fell. Measured by walking `named_parameters()` on
+  `UnifiedBrain(UnifiedBrainConfig())`, the shipped default with no guard, exactly
+  as `t1_03_gradient_coverage.py:54` builds it: **frozen 1,711,376,384 of
+  1,767,267,976 = 96.84%, and 100% of that mass is under ONE top-level submodule,
+  `language_encoder`.** `total_params` and `trainable_params` reproduce T1.03's
+  recorded row **bit-for-bit**, which is how I know it is the parent and not a
+  mis-subtraction (Leg 3 of that row got the same total by SUBTRACTING a stub
+  build; this is the other direction).
+
+  **THE SHARPEST NUMBER, and it is new: the one plastic seam in the language path
+  is not wired either.** `language_encoder` also holds **2,624,000 TRAINABLE**
+  parameters — its projection into Jack — and `T1.03`'s own recorded
+  `worst_offenders` names them FIRST: `language_encoder=2,624,000` of
+  `params_without_grad` 2,698,619 = **97.2% of the entire orphan mass**, i.e.
+  0.04695 of the gate's own 0.0483 against `MAX_ORPHAN_FRACTION` 0.05 — headroom
+  **0.0017**. Drop that one module from the numerator and the fraction reads
+  **0.00133**, a 36x margin. **Net: of the 1,714,000,384 parameters under
+  `language_encoder`, ZERO receive a gradient in the pass T1.03 runs** — the tower
+  because it is frozen, the seam because it is orphaned. `GOAL.md:206-212` stakes
+  a falsifiable bet that told-knowledge integrates BETTER when it anchors to
+  something lived; those 2,624,000 parameters are the only place in this brain
+  where that anchoring could be learned.
+
+  **THE CLEAN HALF, reported first in the addendum because four documents predict
+  otherwise.** `ast` census of all six `requires_grad = False` sites in
+  `UnifiedBrain.py`, each carried with every enclosing `If` test (not grepped —
+  the 23:2x lesson): `dinov2`/`siglip` `:643,:645` behind `use_pretrained_vision`
+  **False**; `whisper`/`wav2vec2` `:1017,:1022` behind `use_pretrained_audio`
+  **False**; RND's `rnd_target` `:3093` reachable only via
+  `enable_intrinsic_motivation` **False**; the parent `:1307` behind
+  `llm_enabled`/`llm_freeze`, **both True**. **Exactly one of six fires in the
+  shipped default.** So PLASTIC ONLY is honoured everywhere it is contestable and
+  violated only where its own scope clause said it could not reach — while
+  `MASTER_PLAN.md:12`, `MULTIMODAL_BINDING.md:74-75`/`:260-263`,
+  `DECISIONS.md:87` and `PIPELINE_REVIEW.md:270` all describe Jack as sitting on
+  frozen towers. Checking a decree against the DOCS returns a violation the AST
+  says is not there, in the same sweep that returns a real one the docs never
+  mention.
+
+  **NOTHING FIXED, NOTHING REGISTERED, NO BAR MOVED, NO `.py` TOUCHED.** `T1.03`
+  is not alleged red and its `continue` at `:112` is correct for the question its
+  title asks. Gating `trainable_params/total_params` would settle an architecture
+  question by typing a constant (`SYSTEM.md` rule 3 reserves it); building a
+  scope-clause checker is forbidden by freeze clause 2. Menu is the desk's.
+
+  **LESSONS**, one entry, four linked generalisations: **an exemption inherits its
+  premise and nothing here re-evaluates a scope clause when the premise falls** —
+  `pass_on_dead_dependency` one level up the stack, with no name, no count and no
+  reader, and the transferable instruction is *when you falsify something, grep for
+  every document that cites it as a reason*; **a `_check` that divides by a SUBSET
+  makes a silent claim about the COMPLEMENT**, and the tell is that the
+  complement's size is recorded two keys from the fraction that ignores it; **read
+  the flag, then the guard chain, then the default** — a freeze behind a `False` is
+  a contested arm, not a violation; and **an undeclared legitimate exception is
+  indistinguishable from a violation** (RND's target must be frozen and no page
+  says so).
+
+  **STALENESS BILL** priced BEFORE the edit with `run stale-cost
+  docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md`: **2 standing PASS
+  certificates — `T0.21` (cpu<1min), `T0.31` (cpu<10min) — 0.00 CPU-h, 1 slot**,
+  paid from the clean tree after the finding commit. Docs-only: no spec file, no
+  root module, no ledger write, so no code certificate is staled and
+  `! DIRTY STAMPS` must still read the 2 rows (`T6.03`, `PL.02`) it held when this
+  slot began. `scripts/ladder_prompt.md` untouched at **96212 B**.
+
+  **CREATURE GATE: NONE — recorded violation #12 under `D35` rule 3, recorded and
+  NOT discharged.** Not re-derived (the 23:3x slot did, from `ledger.json`, and
+  said not to): `T2.01` FAIL with its repair desk-owned behind `T1.08`, `XL.01`
+  FAIL, `T6.01` NOT_RUN and five deep behind `T4.05`. **Honest note for the count,
+  and it is the strongest one yet:** this slot's finding is that 96.84% of Jack
+  cannot learn and the only seam that could attach his words to his life receives
+  no gradient. That is as close to a creature fact as a non-run gets, and it still
+  discharges nothing, because the gate wants a RUN. The rule is generating one
+  recorded violation per hour and will until `T1.08` is repaired — which is the
+  owner's item 2(c) and not mine.
+
+  **GPU:** `2026-W39`, 30.0 h free, **0.00 h charged**, expiring Saturday 10-03 —
+  third consecutive week at risk, reported as STANDING and NOT re-derived (the
+  126th audit §5 and the 22:xx/23:2x slots all measured it). Every GPU class NOT
+  FILLABLE, both live routes through `T1.08` (FAIL, desk-owned until 10-02).
+  **Nothing dispatched, nothing manufactured.**
+
+  **NEXT ITERATION.** (a) Do not re-derive anything above — the addendum carries
+  every recipe and both measurements reproduce in one command each. (b) **Do not
+  "fix" the frozen parent**: flipping `llm_enabled`, demoting to the 360M the
+  decree names, or moving it out-of-process are all architecture acts on an owner
+  decree, priced in the addendum and reserved. (c) **The sweep's next unchecked
+  sentences, and two of the three I measured are now CLEAN and should not be
+  re-run:** *"Death is not a reset; it is a page turn"* is **CLEAN** — `w0.py`'s
+  `_place` deliberately omits `mj_resetData` and documents why (*"Resetting the
+  whole world on death would put the objects back, refill the food and rewind the
+  clock"*), `_die` writes a `did` diary row carrying the life index and increments
+  `self.life`; and *"Never puppeteering: what is left must still be found"* is
+  **CLEAN at the claim level** — it is quoted VERBATIM as `SO.07`'s `kills=` in
+  `registry_expansion.py:8432`, so it has a registered falsifier (unimplemented,
+  therefore unmeasured, not unclaimed). Still unchecked: *"Fire is a state machine,
+  not combustion"* — note before spending a slot on it that `thermal.py` is the
+  whole of fire in W0, it IS declared (billed by `PS.02` and `SO.02`), and its
+  `fire_xy` is a constant Gaussian with `FIRE_DIST_RANGE` commented *"never close
+  enough to save him"*, so the honest reading is ASPIRATIONAL-about-the-jungle
+  rather than a false claim about the shipped world — do not manufacture a hit out
+  of it. (d) **A handoff is a claim**: item (c) of the last one named a unit that
+  was four hours done. Check the artefact.

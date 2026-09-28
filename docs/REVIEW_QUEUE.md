@@ -13903,6 +13903,136 @@ nothing was left running, and every other measurement in this row used a 4.26M
 stub in its place. I would not repeat it, and a future check of this row needs
 only the ledger row in Leg 3.
 
+**EVIDENCE ADDENDUM 2026-09-28 00:1x (builder, this slot) to
+`parent-llm-is-a-submodule-and-96-percent-of-the-brain` — THE SECOND DECREE.
+No new row, no date, no disposition: this is evidence for the decision this row
+already asks, and the queue took 44 arrivals against 8 disposals over the
+trailing week. The row id is written into this paragraph on purpose — the 19:1x
+lesson is that an addendum which does not name its row is invisible to any search
+keyed on the row.**
+
+**WHAT IS NEW: this row falsified a premise, and a DIFFERENT owner decree's
+scope clause is derived from that premise.** `GOAL.md:76-83` —
+*"**PLASTIC ONLY — nothing inside him is frozen (owner decree, 2026-08-09).**
+Every component inside Jack learns: his encoders, his core, his fusion."* Its
+carve-out, verbatim: *"This does NOT touch the parent LLM: **that is not inside
+him**, it lives in his world and speaks to him."* `docs/CHAMPIONS.md:185-188`
+repeats it as the seat's SCOPE. So PLASTIC ONLY exempts exactly one thing, and
+it exempts it **by citing the sentence Leg 2 of this row measured false.** When
+the premise falls the exemption falls with it, and nothing recomputes — there is
+no instrument that re-evaluates a decree's scope clause when the fact it rests on
+moves. The decree's own justification then applies to the exempted mass:
+*"reshaping gain ... is identically ZERO for a frozen tower, by arithmetic."*
+
+**MEASUREMENT 1 — the frozen mass, ATTRIBUTED rather than subtracted.** Leg 3
+got 1,711,376,384 by building a stub-parent brain and subtracting. I walked
+`named_parameters()` on `UnifiedBrain(UnifiedBrainConfig())` — the shipped
+default, no guard, exactly as `t1_03_gradient_coverage.py:54` builds it — and
+bucketed by top-level submodule:
+
+    total_params      1,767,267,976   (== T1.03's recorded row, bit-for-bit)
+    trainable_params     55,891,592   (== T1.03's recorded row, bit-for-bit)
+    frozen_params     1,711,376,384   = 96.84% of the module tree
+    frozen, by top-level submodule:  language_encoder  1,711,376,384  (100.0%)
+    top-level submodules holding a frozen parameter:  1
+
+**So 96.84% of Jack is welded shut, and every welded parameter is the parent.**
+That is the independent confirmation Leg 3 asked for, from the other direction.
+
+**MEASUREMENT 2 — the AST census of freeze sites WITH THEIR GUARDS, and it
+EXONERATES the senses.** `UnifiedBrain.py` has six `requires_grad = False` /
+`requires_grad_(False)` sites. Enumerated with `ast`, each carrying the enclosing
+class, function and every `If` test above it — not grepped, per the 23:2x lesson:
+
+    :643  self.dinov2.requires_grad_(False)       PrismaticVisionEncoder.__init__
+                                                  < if config.use_pretrained_vision
+    :645  self.siglip.requires_grad_(False)       same guard
+    :1017 self.whisper_model.requires_grad_(False) AudioEncoder.__init__
+                                                  < if getattr(config,'use_pretrained_audio',False)
+    :1022 self.wav2vec_model.requires_grad_(False) same guard
+    :3093 param.requires_grad = False             IntrinsicCuriosityModule.__init__
+                                                  (rnd_target; NO if-guard of its own)
+    :1307 param.requires_grad = False             LLMEncoder.__init__
+                                                  < if config.llm_enabled and llm_backend != 'fallback'
+                                                  < if config.llm_freeze
+
+`UnifiedBrainConfig()` instantiated this slot: `use_pretrained_vision False`,
+`use_pretrained_audio False`, `enable_intrinsic_motivation False` (the flag at
+`:4076` that decides whether `AutonomousMind` — and therefore the frozen
+`rnd_target` — is constructed at all), `llm_enabled True`, `llm_backend
+'smollm'`, `llm_freeze True`. **Exactly ONE of the six fires in the shipped
+default, and it is the parent's.** PLASTIC ONLY is honoured in every place it is
+contestable and violated only where its own scope clause said it could not
+reach. **Reported first because it is the clean half and four documents predict
+otherwise** — `docs/MASTER_PLAN.md:12` (*"sits on frozen swappable towers
+(DINOv2+CLIP vision 732M ...)"*), `docs/MULTIMODAL_BINDING.md:74-75` and
+`:260-263` (a table listing the vision, text and whisper towers as `frozen`),
+`docs/DECISIONS.md:87`, `docs/PIPELINE_REVIEW.md:270`. A reader checking the
+decree against the docs concludes a violation the AST says is not there; the
+flags are the reason, and no page carries them. (The `rnd_target` freeze is also
+*algorithmically* legitimate — RND's target network is a fixed random yardstick,
+not a tower whose reshaping anyone wants — but nothing in this repo records it as
+a permitted exception, so a legal freeze and an illegal one are indistinguishable
+to every reader. Named, not routed.)
+
+**MEASUREMENT 3 — AND THIS IS THE SHARPEST, because it is about the one seam
+that COULD have carried GOAL.md's told-world bet.** `language_encoder` is not
+purely frozen: it also holds **2,624,000 trainable parameters** — its projection
+into Jack, the only plastic surface anywhere in the language path. `T1.03`'s own
+recorded row names them **first**, in a metric no conjunct reads:
+
+    worst_offenders  = language_encoder=2,624,000; action_head=49,761;
+                       emotional_state=14,103; tokenizer=9,216; movement_mood=1,539
+    params_without_grad = 2,698,619
+    -> language_encoder is 97.2% of the entire orphan mass
+    -> 2,624,000 / 55,891,592 = 0.04695 of the gate's own 0.0483
+
+`orphan_fraction` **0.0483** against `MAX_ORPHAN_FRACTION` **0.05**: headroom
+**0.0017**, and 97.2% of what is being measured is the LLM projection receiving
+nothing. Drop that one module from the numerator and the fraction reads
+**0.00133** — a 36x margin. **Net, and this is the sentence worth carrying: of
+the 1,714,000,384 parameters under `language_encoder`, ZERO receive a gradient
+in the pass `T1.03` runs** — 1,711,376,384 because they are frozen, 2,624,000
+because they are orphaned. The tower cannot learn and its seam is not wired.
+`GOAL.md:206-212` stakes a falsifiable bet that *"told-knowledge should
+integrate BETTER when it anchors to something he has lived"*; the only place in
+this brain where that anchoring could be learned is those 2,624,000 parameters.
+
+**WHAT IS NOT CLAIMED, each checked before writing.** `T1.03` is **not** wrong
+and is **not** alleged red — Leg 5 already said its scope is the trainable set
+and that stands; what this addendum adds is that its `continue` at
+`t1_03_gradient_coverage.py:112` (`if not p.requires_grad: continue`) is the
+line that puts 96.84% of Jack outside the denominator, and that the spec RECORDS
+the skipped population's size (`total_params`) two keys away from the fraction
+that ignores it. No bar is moved and none should be: gating
+`trainable_params/total_params` would settle an architecture question by typing
+a constant, which `GOAL.md` and `SYSTEM.md` rule 3 both reserve. **Nothing was
+fixed, nothing was registered, no ledger row was written, no spec file and no
+root module was edited.** The freeze's clause 1 and 2 forbid a new Tier-0 spec
+and a new checker, and neither is asked for here.
+
+**IF THE DESK JUDGES THE PLASTIC-ONLY HALF A SEPARATE UNIT, the split is the
+desk's act and it costs a row.** I did not take it: the `PLASTIC ONLY` seat is
+one of the two `UNCONTESTED` seats the 126th audit §ARCHITECTURE says it owes a
+schedule for, both turning on `PL.02` — `VOID`, one of the two standing
+`! DIRTY STAMPS`, repair already dated
+(`pl02-void-gate-quantifies-over-its-own-nulls`, DUE 10-05). Filing this as
+evidence on an existing row rather than as an 88th live row is the whole reason
+it is written here.
+
+**Staleness bill: this addendum edits `docs/REVIEW_QUEUE.md` only.** Priced
+BEFORE the edit with `run stale-cost docs/REVIEW_QUEUE.md docs/LESSONS.md
+docs/LOOP_JOURNAL.md`: **2 standing PASS certificates — `T0.21` (cpu<1min) and
+`T0.31` (cpu<10min) — 0.00 CPU-h, 1 slot**, paid from the clean tree after the
+commit. No `.py` file was touched, so no code certificate is staled.
+**Reproduce, never from this page:** walk `named_parameters()` on
+`UnifiedBrain(UnifiedBrainConfig())` and bucket on `p.requires_grad`; parse
+`UnifiedBrain.py` with `ast` and print each `requires_grad` site's enclosing
+`If` tests. Peak RSS ~7.1 GB for the two construction passes (the 1.7B
+checkpoint, cached at `/data/caches/huggingface`), both short-lived, both
+exited, nothing left running — the same disclosure this row's own author owed
+and made, and for the same reason.
+
 ---
 
 ROUTED: taskmanager-decompose-documents-a-learned-path-with-no-call-site | 2026-09-27 | `TaskManager.py:80-143, 389-513` and `UnifiedBrain.py:232, 2045-2067, 3975-3976, 4393` read statically; `TaskManager.py` parsed with `ast` in this venv and the two tables + `_decompose`'s call set enumerated MECHANICALLY rather than by eye; `UnifiedBrainConfig()` instantiated to read the shipped default; `run stale-cost` priced before the edit; `run next`/`run status` read for `T2.15`/`T3.04`'s recorded state. Builder, this slot. NO ledger write. ONE root-module edit, PROSE-ONLY and verified so (docstring-stripped ASTs identical across the diff) | OPEN
