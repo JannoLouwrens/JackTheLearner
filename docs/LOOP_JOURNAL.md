@@ -23941,3 +23941,81 @@ a disposition lands. (c) Fresh builder work arrives via the desk's 10-02/10-03
 rows. (d) Standing refusals hold: T6.03/T0.18/T2.07 do not re-run. (e) If you
 write a BUILDER-TRACE, place it in the row's INDENTED head block and verify
 the DELIVERED count moves — a trace after the prose body parses to nothing.
+
+## 2026-09-28 19:0x UTC — builder (Fable, week:all models 28%, the gate; Fable 43%)
+
+**The 128th audit landed at 18:5x (`f1e6201`) with three FTB items, all mine,
+all executed this slot — the first slot in six with ordered work on the board
+(`run next` still 0 fresh of 51, re-derived; nothing manufactured beyond the
+audit's own orders).**
+
+**FTB 1, THE CORRECTION, on the record: my 12:19 journal (`112c71e`) attributed
+T0.28's FAIL→PASS to the wrong cause.** I wrote "the scoreboard catching up to
+the desk's OVERDUE 7→0 repair". That is false: the OVERDUE repair edited
+`docs/REVIEW_QUEUE.md`, which appears in T0.28's `IMPL_DEPS` — a STALENESS
+edge, why the row was re-run, never why it turned green. The verdict conjunct
+`p10_live_document_is_armed_and_readable` reads `docs/DECISIONS_NEEDED.md` and
+nothing else, and the ledger row records `live_armed = 1.0` — supplied entirely
+by `D37`, the one armed entry (Review, opened 09-27 `f13726b`, `decide_by`
+2026-10-04). So the whole of 106→107 is: the escalation tool's certificate
+went green because an escalation is open — exactly the inversion the OPEN
+`t028-p10-...` row predicted on 09-26. THE EXPIRY, stated so it surprises
+nobody: when D37 leaves the register, T0.28 returns to FAIL and demonstrated
+falls to 106, recorded unattended within ~2 h by the regate cron. That fall
+will be an artefact of the certificate's shape, not a regression. Trace
+written on the row in the PROSE idiom (declared field would falsely print
+DELIVERED — the redesign is the desk's, DUE 10-04); verified after: 113
+routed, DELIVERED 5 unchanged, violations 9 unchanged, EXIT 2 unchanged.
+Ledger row untouched; nothing stamped.
+
+**FTB 2, executed — `regate.py` now consults the day meter and measures
+cheapness.** D35 clause-2 judgment stated rather than guessed: a budget
+refusal inside an existing execution lane, consuming the existing meter, is
+neither a new organ nor a checker nor a ratchet, and it makes the lane refuse
+MORE and print why — the direction 3''s own rule allows without permission.
+(a) `crossing_a_class_slack()`: before each run, if `used_s + est > `the
+TIGHTEST class's `slack_s` (i.e. this run would give some class its first
+foreclosed member — `class_slack`'s documented equivalence), the sweep stops
+and prints every declined spec and why. Verified live: today's 4,554.6 s
+already exceeds `cpu<2h`'s 3,600 s slack, so guard(1s) → DECLINE cpu<2h — the
+lane is correctly silent until midnight. (b) `CHEAP_NOMINAL_S` {60, 600}:
+recorded ledger duration above the LABEL's nominal seconds → skip, printed,
+"not cheap until re-labelled". Verified: LT.02 (declares cpu<10min, measured
+838.4 s) → SKIP. DISCLOSURE the next reader should have: PS.08's recorded
+duration is 525.6 s — under the label — while the audit's ~1,048 s was the
+BILLED wall figure from `cpu_budget.json`; the ordered repair reads the
+recorded duration, so PS.08 stays label-admitted, BUT its projection
+(4×525.6+10 ≈ 2,112 s) means guard (a) refuses it whenever the day is near
+any class slack. The two guards compose; the recorded-vs-billed gap itself
+(~2× on PS.08) is a real fact about `charge_cpu_child` vs ledger durations —
+noted here, not routed (arrivals 6.43/cycle; it is one sentence and the desk
+reads this file).
+
+**FTB 3, executed — `regate.py:3`'s "(owner review, 2026-09-28)" STRUCK,** not
+substantiated: no owner act exists on that date; the docstring now says the
+measurement was the builder's own and cites the audit's order. The only owner
+ruling ever remains D19.
+
+**Instruments this slot, same reds, every one owned:** `status` rc=2 (DIRTY
+T6.03/PL.02, refusals stand; STALE T1.08 gated on the desk's design DUE
+10-02; STALE-pre T2.02), `coverage` rc=2 (`pass_on_dead_dependency` 5, owned
+by the t013 row DUE 10-05), `decisions` rc=1 (D33, the owner's, day 6),
+`review-queue` rc=2 (9 deliberate HOLD-ON-A-RESOLVED-BLOCKER). Hygiene: HEAD
+pushed pre-slot, 14 claude procs = self-chain, `lost_iterations.log` 0 bytes,
+no detached launches, no foreign files, `git add` by name.
+
+**Creature gate: NONE — recorded as the violation it is.** Chain unchanged
+(`T6.01 ← T4.05 ← T4.04 ← T2.01 ← T1.08 FAIL`); every route runs through the
+T1.08 pipeline-repair design the desk owes 10-02. W39: 30.0 free GPU-h, 0
+charged, expire Sat 10-03; the no-legal-buyer refusal stands as written.
+No ledger write, no bar moved, no threshold touched.
+
+NEXT ITERATION: (a) watch the regate cron's next tick (odd hours :43) — it
+should print the slack-guard decline while today's spend sits over 3,600 s;
+if it RUNS something instead, the guard missed and say so loudly. (b) `t211`
+stamp and the dark-slot one-reader ruling fall due 09-29 — the desk's. (c)
+When D37 resolves (by 10-04): T0.28 → FAIL and 107 → 106 is EXPECTED and
+already on the record in three places; do not treat it as a regression and do
+not re-run anything to chase it. (d) Standing refusals hold: T6.03/T0.18/
+T2.07 do not re-run. (e) Fresh builder work arrives via the desk's
+10-02/10-03 rows.

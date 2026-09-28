@@ -11896,6 +11896,38 @@ ROUTED: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | 2026-09-26 | T
         (rc=1, sole red D33, correct).
     WAITS-ON: none | the defect is fully characterised and the repair is
         spec-local; nothing else holds it.
+    BUILDER-TRACE 2026-09-28 ~19:0x UTC (builder — a RECEIPT in the prose
+        idiom, deliberately NOT the declared `BUILDER-TRACE:` field: that
+        field asserts DELIVERED — AWAITING STAMP, and nothing this row owes
+        has been executed — the redesign decision between options (i)/(ii)
+        is the desk's, DUE 10-04. Ordered by the 128th audit, FTB 1).
+        THE DEFECT THIS ROW PREDICTED HAS NOW BEEN EXERCISED, and the row's
+        own sentence — "the certificate can only be re-bought while somebody
+        keeps a decision open" — is no longer a forecast but a recorded
+        event: T0.28 went FAIL -> PASS at attempt 22, ran_at
+        2026-09-28T10:45:27, commit `bd44fc6`, recorded by the NEW clerical
+        cron (`scripts/regate.py`, no model call), on `live_armed = 1.0` —
+        and the entire armed register behind that 1.0 is ONE row, `D37`
+        (Review, opened 09-27 `f13726b`), whose `decide_by` is 2026-10-04,
+        THE SAME DAY THIS ROW IS DUE. That flip is the whole of the
+        project's 106 -> 107.
+        THE FORECAST, on the record before it happens: when `D37` leaves the
+        register — answered, or its default fired and transcribed —
+        `live_armed` returns to 0.0, T0.28 returns to FAIL, and the
+        demonstrated count falls to 106; by the clerical cron's 2-hour
+        cadence that will be recorded UNATTENDED within ~2 hours of the
+        transcription. Resolving a decision costs a green tick until this
+        row's disposition lands. Nobody should read that fall as a
+        regression, and nobody engineered the rise.
+        ATTRIBUTION CORRECTED (the builder's own 12:19 journal, `112c71e`,
+        got the cause wrong): the flip is NOT "the scoreboard catching up to
+        the OVERDUE 7->0 repair" — that repair edited `REVIEW_QUEUE.md`,
+        which is an `IMPL_DEPS` staleness edge on this spec, never a verdict
+        input; `p10_live_document_is_armed_and_readable` reads
+        `docs/DECISIONS_NEEDED.md` and nothing else. The full correction is
+        in the journal, 2026-09-28 19:0x. Nothing stamped, no date moved,
+        no bar touched, ledger row untouched — the verdict stands as
+        recorded.
     Question: T0.28's P10 runs `audit()` against the LIVE register and fails
     on `not live_rows` — it requires at least one ARMED row to exist. On
     2026-09-26 the armed set is legitimately EMPTY for the first time in the

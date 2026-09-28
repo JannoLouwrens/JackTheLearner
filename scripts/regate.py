@@ -1,6 +1,10 @@
 """Re-buy stale CHEAP certificates mechanically, spending no Claude budget at all.
 
-WHY THIS EXISTS, with the numbers that justify it (owner review, 2026-09-28).
+WHY THIS EXISTS, with the numbers that justify it (the BUILDER's own
+measurement, 2026-09-28 — no owner act is cited or claimed; the 128th audit
+found the original "(owner review)" phrasing here had no referent anywhere in
+the repo and ordered it struck or substantiated, and struck is the honest one:
+the only owner ruling this project has ever recorded is D19, 2026-09-17).
 
 A ledger PASS is a claim about a specific piece of code. Edit that code and the
 claim keeps asserting the old result under the new code's name, so `impl_sha`
@@ -69,6 +73,13 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PY = "/data/venvs/jackthelearner/bin/python"
 RUN_LOCK = "/tmp/jack-ladder.lock"
 CHEAP = ("cpu<1min", "cpu<10min")
+# The label's NOMINAL promise, not rtf.BUDGET_SECONDS' padded child allowance.
+# "Cheap" was a declaration until the 128th audit measured it: LT.02 declares
+# cpu<10min and took 838 s, PS.08 declares cpu<10min and took ~1,048 s — both
+# inside the padded kill-timeout, both 40-75% over the label they wear. A spec
+# whose RECORDED runtime exceeds its label's nominal seconds is not cheap,
+# whatever it declares, until someone re-labels it.
+CHEAP_NOMINAL_S = {"cpu<1min": 60.0, "cpu<10min": 600.0}
 # A cap, because an unbounded clerical lane on a tenant box is a new background
 # service and this project is forbidden from adding one. Whatever is left is
 # still stale next tick; nothing is lost by stopping early.
@@ -95,12 +106,13 @@ def lock_is_held() -> bool:
         return True
 
 
-def cheap_stale() -> list[tuple[str, str, str]]:
+def cheap_stale() -> list[tuple]:
+    from experiments.cpu_budget import child_estimate_s, measured_child_seconds
     from experiments.protocol import Ledger
     from experiments.registry import BY_ID
     from experiments.run import stale_claims
     ledger = Ledger()
-    out, seen, blocked = [], set(), []
+    out, seen, blocked, overran = [], set(), [], []
     for row in stale_claims(ledger):
         sid, status = row[0], row[1]
         # A spec can be reported by more than one staleness path (T6.03 is both
@@ -125,22 +137,57 @@ def cheap_stale() -> list[tuple[str, str, str]]:
         # it becomes payable the moment the blocker clears — at which point this
         # lane picks it up with no further instruction. Reported, not silently
         # dropped, because a queue that quietly shrinks is one nobody audits.
+        # CHEAP BY MEASUREMENT, not by declaration (128th audit, RANK 2b).
+        # The label filter above admitted LT.02 (838 s) and PS.08 (~1,048 s)
+        # as "cpu<10min"; the recorded duration is the truth about what this
+        # lane would actually spend. Reported, never silently dropped.
+        measured = measured_child_seconds(sid)
+        nominal = CHEAP_NOMINAL_S[spec.budget.value]
+        if measured is not None and measured > nominal:
+            overran.append((sid, measured, nominal, spec.budget.value))
+            continue
         unsat = ledger.unsatisfied(spec)
         if unsat:
             blocked.append((sid, ", ".join(f"{d} ({w})" for d, w in unsat)))
             continue
-        out.append((sid, status, spec.budget.value))
+        out.append((sid, status, spec.budget.value, *child_estimate_s(spec)))
     if blocked:
         for sid, why in blocked:
             print(f"  skip {sid:9s} stale but unpayable — blocked by {why}")
+    for sid, measured, nominal, label in overran:
+        print(f"  skip {sid:9s} declares {label} but measured {measured:.0f}s "
+              f"against the label's {nominal:.0f}s — not cheap until re-labelled; "
+              f"stays with the loop")
     return out
+
+
+def crossing_a_class_slack(est_s: float):
+    """The 128th audit's RANK 2a repair: on its first day this lane spent
+    4,218.6 s of the day's 4,450.2 s and foreclosed `cpu<2h` (37 specs, 36
+    never run) — a class whose slack is 13x smaller than this lane's own —
+    because it consulted no meter. So the guard is not this lane's own class
+    budget: it is the TIGHTEST class's slack. `used_s > slack_s` is exactly
+    "that class has >= 1 foreclosed member" (`class_slack`'s own documented
+    equivalence), so refusing to be the spender that crosses it means the
+    clerical lane can never again be the reason a science class closed.
+    Returns the class row it would close (plus the live spend), or None.
+    """
+    from experiments.cpu_budget import CpuBudget, class_slack
+    rows = class_slack()          # sorted tightest-slack first
+    if not rows:
+        return None
+    used = CpuBudget().used_s()   # fresh read — the runner charges between runs
+    tightest = rows[0]
+    if used + est_s > tightest["slack_s"]:
+        return {"used_s": used, **tightest}
+    return None
 
 
 def main(argv: list[str]) -> int:
     rows = cheap_stale()
     if "--list" in argv:
-        for sid, status, cost in rows:
-            print(f"  {sid:9s} {status:8s} {cost}")
+        for sid, status, cost, est_s, prov in rows:
+            print(f"  {sid:9s} {status:8s} {cost}  est {est_s:.0f}s [{prov}]")
         print(f"  {len(rows)} cheap stale certificate(s)")
         return 0
 
@@ -152,7 +199,17 @@ def main(argv: list[str]) -> int:
         return 0
 
     ran, changed = 0, []
-    for sid, status, _cost in rows[:MAX_PER_RUN]:
+    for sid, status, _cost, est_s, prov in rows[:MAX_PER_RUN]:
+        hit = crossing_a_class_slack(est_s)
+        if hit is not None:
+            # Print every spec declined, and why — a lane that quietly stops
+            # is one nobody audits (cce6cef's own rule).
+            left = [r[0] for r in rows[:MAX_PER_RUN]][ran:]
+            print(f"  stop before {sid}: projected {est_s:.0f}s [{prov}] on "
+                  f"top of {hit['used_s']:.0f}s already spent today would cross "
+                  f"{hit['budget']}'s slack {hit['slack_s']:.0f}s and close that "
+                  f"class — declining {', '.join(left)}; still stale next tick")
+            break
         p = subprocess.run([PY, "-m", "experiments.run", sid],
                            cwd=REPO, capture_output=True, text=True, timeout=1800)
         ran += 1
