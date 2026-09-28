@@ -1384,6 +1384,36 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
         says no organ on this box can pay it inside a slot.
         Reproduce the bisect, never from this row: hash the body per commit as
         above; do not grep the id.
+    BUILDER-TRACE 2026-09-28 ~04:2x UTC (builder — a RECEIPT, not a
+        disposition; nothing here is stamped, no `DUE:` is moved, and this desk
+        takes no position on who should author W1). Written because the row went
+        OVERDUE at 00:00 and the 126th audit's FOR THE BUILDER 1 asked for the
+        cause to be put where this instrument's reader looks.
+        **(1) THE AUTHORSHIP IS DECLINED, and the record is on the owner's page
+        rather than in this file:** `docs/PROGRESS.md` FOR THE OWNER item 3,
+        2026-09-27 — *"2026-09-27 broke. I did not produce the W1 world-edit
+        design. I am therefore DECLINING the authorship of it"* — exactly as the
+        stop-rule in the `DUE: 2026-09-27` block above pre-committed. The
+        reversal is the owner's alone and is not asked for here.
+        **(2) AND THE FIFTH BREAK WAS ARITHMETIC BEFORE IT WAS ANYTHING ELSE.
+        Measured this slot, and it is new.** This row is `DUE: 2026-09-27` and
+        declares `BLOCKED-BY: w0-too-shallow`, whose own `DUE:` is
+        **2026-10-01**. The date was set FOUR DAYS AHEAD of the prerequisite this
+        row itself names, so no desk of any speed could have discharged it on
+        time — the fifth break was scheduled, not merely suffered. Four of the
+        six other live OVERDUE rows have the same shape and **not one of the
+        seven is an unattempted promise a faster desk would have kept**; the full
+        table is in the EVIDENCE ADDENDUM on
+        `waits-on-has-no-producer-outside-a-closing-row` (DUE 2026-10-01) rather
+        than repeated here, because an aggregate that lives in seven places lives
+        nowhere.
+        **What this trace does NOT do:** it does not stamp, does not re-date,
+        does not lower the OVERDUE count, and does not release the three rows
+        queued behind this window (`ne01-occlusion-knife-edge`,
+        `water-apply-phantom-force`, `w2-needs-have-no-single-k`), which still
+        wait on a blocker that is abandoned rather than resolved — the state
+        `HOLD-ON-A-RESOLVED-BLOCKER` cannot report, exactly as the audit's
+        RANK 1 says.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | DISPOSITIONED 2026-09-10 (Review DAILY — NOT DECLINED, because its own decline-condition is not met, and because reading it turned up a defect one level above the question it asks: **the mechanism it wants to unseat holds no seat.** See FINDING below; the seat question is routed to Sunday's ANATOMY AUDIT, DUE 09-13)
     DUE: 2026-09-10 | re-armed by the builder, 2026-09-03, under 64th-audit
@@ -2581,6 +2611,33 @@ ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed
         trace does NOT do:** it does not lower the OVERDUE count, and it does
         not rule on what a dead diagnostic means for the row — that is this
         desk's.
+    BLOCKED-BY: w1-world-edit-window | DECLARED 2026-09-28 by the builder. Not a
+        new fact and not a re-parenting: this row's own `ROUTED:` status text has
+        said since 2026-09-20 that arm (b) is a *"VENUE repair, so execution is
+        bound to `w1-world-edit-window`"*. It was true in prose and invisible to
+        every reader of the field. See the trace below for what it buys.
+    BUILDER-TRACE 2026-09-28 ~04:2x UTC (builder — a RECEIPT, adding the field
+        declaration to the 09-27 trace above; arm (b) untouched, no `DUE:` moved,
+        nothing stamped). **WHAT THE DECLARATION BUYS: nothing, verified rather
+        than asserted.** `review_queue.py` gates `STALE` on `due is None`
+        (`:779-786`) and `OVERDUE` on the date alone (`:771-774`), so on a row
+        carrying a `DUE:` a `BLOCKED-BY:` clears neither; the only channel it
+        opens is `HOLD-ON-A-RESOLVED-BLOCKER` (`:758-761`), an ADDITIONAL
+        violation, never an exemption. `run review-queue` diffed across the edit:
+        7 VIOLATIONS before, 7 after, 0 MALFORMED both sides.
+        **THE ONE WAY IT COULD LATER BUY SOMETHING, named so the desk can refuse
+        it rather than discover it:** if this row's `DUE:` is ever dropped while
+        the row is live, `HOLD-WITHOUT-A-CLOCK` (`:775-778`) is satisfied by a
+        `BLOCKED-BY:` alone and the row becomes ageing-exempt. One line to delete
+        if the desk disagrees. **WHY IT MATTERS HERE:** `DUE: 2026-09-27` against
+        a blocker also `DUE: 2026-09-27` — same-day discharge is possible in
+        principle and was not possible in fact, that date carrying 7 rows against
+        a measured capacity of 6. Table in the EVIDENCE ADDENDUM on
+        `waits-on-has-no-producer-outside-a-closing-row`. **AND IT IS NOT VISIBLE EITHER:**
+        `run review-queue` is BYTE-IDENTICAL across this edit, because the render
+        prints a row's `DUE:` in preference to its blocker (`:1058-1062`, an
+        `elif`). The field is machine-readable and still unprinted; it feeds a
+        join nobody has built.
 
 **The measurement.** `SH.02`'s seed-90 pilot (N=3000/arm, 6 arms, ~19 min)
 fired the spec's own pre-registered `HEADROOM` VOID. Every arm without a live
@@ -7705,6 +7762,36 @@ ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.
         **What this trace does NOT do:** it does not lower the OVERDUE count —
         this row still breaks at 2026-09-28 00:00 because only this desk can
         stamp it — and it does not claim the row is disposed.
+    BLOCKED-BY: t108-pipeline-repair-has-no-design | DECLARED 2026-09-28 by the
+        builder. Not a new fact: this row's own `ROUTED:` status text has said
+        since 2026-09-20 that the conjunct *"is ARMED but BOUND to the T1.08
+        pipeline-repair dispatch and forbidden before it"*, and the row that owes
+        that design is `t108-pipeline-repair-has-no-design`. The prohibition was
+        machine-readable nowhere. See the trace below for what it buys.
+    BUILDER-TRACE 2026-09-28 ~04:2x UTC (builder — a RECEIPT, adding the field
+        declaration to the 09-27 trace above; the conjunct is NOT executed, must
+        not be, and nothing here is stamped). **THIS IS THE CLEAREST CASE IN THE
+        FILE OF A PROMISE CONSTRUCTED TO BREAK.** Its own disposition FORBIDS
+        execution before the `T1.08` pipeline-repair dispatch; the design that
+        dispatch waits on is `DUE: 2026-10-02`; this row is `DUE: 2026-09-27`.
+        **The date is five days ahead of the earliest moment its own ruling
+        permits the work** — so today's OVERDUE could not have been avoided by
+        anybody, and a builder OBEYING the prohibition is indistinguishable, to
+        the only instrument that looks, from a builder ignoring the date.
+        **WHAT THE DECLARATION BUYS: nothing, verified.** Same reading as on
+        `sh02-null-saturation`: `STALE` gates on `due is None`
+        (`review_queue.py:779-786`), `OVERDUE` on the date alone (`:771-774`),
+        and a `BLOCKED-BY:` opens only `HOLD-ON-A-RESOLVED-BLOCKER`
+        (`:758-761`) — an extra violation, not an exemption. `run review-queue`
+        diffed across the edit: 7 VIOLATIONS before, 7 after, 0 MALFORMED both
+        sides. Same latent exposure, named there too: if this `DUE:` is ever
+        dropped while the row is live, `HOLD-WITHOUT-A-CLOCK` (`:775-778`) is
+        satisfied by this field alone. One line to delete if the desk
+        disagrees. **AND IT IS NOT VISIBLE EITHER:**
+        `run review-queue` is BYTE-IDENTICAL across this edit, because the render
+        prints a row's `DUE:` in preference to its blocker (`:1058-1062`, an
+        `elif`). The field is machine-readable and still unprinted; it feeds a
+        join nobody has built.
 
 **THE ONE-LINE QUESTION.** `T1.08` exists to produce `min_detectable_effect` —
 its own docstring says *"the number this produces should be quoted whenever a
@@ -10694,6 +10781,76 @@ ROUTED: waits-on-has-no-producer-outside-a-closing-row | 2026-09-25 | 115th audi
         carries it.
     WAITS-ON: none | this row asks a desk to adopt a sentence; no other open
         row's answer changes what that sentence says.
+    EVIDENCE ADDENDUM 2026-09-28 ~04:2x UTC (builder — evidence for this row's
+        EXISTING ask, not a new ask, and deliberately NOT a new row: the 126th
+        audit declined to pay for a finding with a 21st arrival and this desk
+        agrees). This row says the coupling rule *"has no producer outside a
+        closing row"* and notes in passing that *"most of the current OVERDUE
+        pile is its own routing"*. Here is that pile, measured, at 7 live
+        violations on 2026-09-28:
+
+        | live OVERDUE row | DUE | prerequisite it names | that row's DUE | gap |
+        |---|---|---|---|---|
+        | `w1-world-edit-window` | 09-27 | `w0-too-shallow` (FIELD) | 2026-10-01 | **+4 d** |
+        | `t108-noise-floor-is-quoted-by-nobody` | 09-27 | the `T1.08` pipeline dispatch = `t108-pipeline-repair-has-no-design` (PROSE) | 2026-10-02 | **+5 d** |
+        | `sh02-null-saturation` | 09-27 | `w1-world-edit-window` (PROSE) | 2026-09-27 | 0 d |
+        | `hr5-fixture-refuted` | 09-27 | `w1-world-edit-window` (FIELD) | 2026-09-27 | 0 d |
+        | `ba03-vestibular-channel-is-never-load-bearing-under-one-kick` | 09-27 | `w1-world-edit-window` (FIELD) | 2026-09-27 | 0 d |
+        | `ba03-null-saturates-the-horizon` | 09-27 | ordered half LANDED 09-26; remainder refused by `D20` = `ba03-registered-run-foreclosed-by-d20-class-closure` | 2026-10-03 | **+6 d** |
+        | `t306-matched-magnitude-noise-buys-coverage` | 09-27 | none — ordered execution LANDED 2026-09-22 | — | **-5 d** |
+
+        **TWO READINGS, and the second is the one this row's ask repairs.**
+        **(1) Not one of the seven is an unattempted promise a faster desk would
+        have kept.** Two had their ordered execution land EARLY — `t306` five
+        days early, `ba03-null`'s option (c) one day early — and the clock has no
+        channel to say so; both were traced 2026-09-27. Five name a prerequisite
+        whose own `DUE:` falls on or after their own, and the two same-day cases
+        are possible in principle but were not possible in fact, because
+        2026-09-27 already carried 7 rows against a measured capacity of 6.
+        **(2) The fact lives in two grammars and nothing joins them.** Three of
+        the five declared the prerequisite in the machine-readable `BLOCKED-BY:`
+        field; two declared it ONLY in their own `ROUTED:` status prose, and the
+        builder moved those two into the field this slot (`sh02-null-saturation`,
+        `t108-noise-floor-is-quoted-by-nobody`) — verified non-softening, latent
+        exposure named on each row. And where the field WAS populated, no reader
+        had ever compared the two dates.
+
+        **WHAT IS NOT BUILT, and why.** The join is one expression over two
+        fields `parse()` already produces — `r["due"]` against
+        `by_id[r["blocked_by"]]["due"]` — and it is **NOT IMPLEMENTED**, in
+        either direction. As a VIOLATION class it is refused by this row's own
+        carried constraint (the 09-19 disposition: no violation class for an
+        undeclared coupling) and it would be wrong anyway, because dating a row
+        behind its blocker can be a deliberate, legal act. As a REPORTING-ONLY
+        reading it is a floor on an existing checker, which is what `D35`
+        clause 2 forbids by name and what the 126th audit's FOR THE OWNER item
+        2(b) asks the owner to exempt. So the PRICE is recorded here instead: one
+        expression, zero seeds, zero ledger rows, buildable the hour 2(b) is
+        ruled. **The producer-side sentence this row actually asks for is the
+        cheaper half and needs no exemption at all** — and the table above is
+        what it is worth: a router obliged to name its prerequisite in the FIELD
+        is a router that can be shown, for free, that it has dated the work
+        before the thing the work waits on.
+
+        **AND THE HONEST LIMIT OF WHAT THIS EDIT BOUGHT, because "verified
+        non-softening" is not the same as "visible":** `run review-queue`'s whole
+        output is **BYTE-IDENTICAL** across the edit (both sides exit 2, 7
+        OVERDUE, 0 MALFORMED). The render prints a row's `DUE:` in PREFERENCE to
+        its blocker — `review_queue.py:1058-1062` is an `elif` — so on a row that
+        carries a date the declaration is machine-readable and still not PRINTED
+        anywhere. It feeds a join nobody has built. That is the point of
+        recording the price below rather than claiming a repair.
+
+        **A PLACEMENT NOTE, and it is itself a live instance of this file's
+        recurring scar.** The builder's first two attempts put both `BLOCKED-BY:`
+        lines at the visual END of their rows. A row's body ends at the first
+        COLUMN-0 non-blank line (`review_queue.py:367-369`) — not at the `###`
+        ruling heading, and not at the next `ROUTED:` — so both attempts parsed
+        as `''` and bought nothing. Caught by re-parsing before the commit, not
+        by reading the diff. Same family as the 09-09 six-DUE scar and the
+        `sh02` date-above-a-heading scar this file already records, with the
+        sharper version of the rule: **an edit to a declared field is a
+        capability claim, and the only thing that can check it is the parser.**
 
 **The defect (115th audit Finding 4).** The only written instruction telling a
 ROUTER to declare coupling lives in the body of `waits-on-declared-field`,

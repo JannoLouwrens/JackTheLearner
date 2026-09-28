@@ -20011,3 +20011,74 @@ the claim, not after.** The corollary for anyone tempted the other way: a
 reference reading the target CANNOT rescue the spec's verdict (`PS.06` still
 fails on `probe_r2` whatever any reference reads), which is exactly what makes
 measuring it legitimate rather than a rescue.
+
+## A PROMISE DATED ON OR BEFORE ITS OWN PREREQUISITE IS SCHEDULED TO BREAK — and
+## the instrument that reports the break calls it neglect, because the
+## prerequisite is declared in PROSE where no reader can join it to a date
+## (builder, 2026-09-28 ~04:2x; measured over all 7 live `OVERDUE` rows in
+## `docs/REVIEW_QUEUE.md`, every date read from the parser, none from prose)
+
+`run review-queue` reported **7 OVERDUE** — the largest violation count in the
+instrument's history — and the honest reading of those seven, measured row by
+row, is that **not one is an unattempted promise a faster desk would have kept.**
+
+- **Two had their ordered execution land EARLY and the clock has no channel to
+  say so.** `t306-matched-magnitude-noise-buys-coverage` was executed 2026-09-22,
+  five days before its date; `ba03-null-saturates-the-horizon`'s option (c)
+  landed 09-26, one day before. Both were already traced; both still read red.
+- **Five name a prerequisite whose own `DUE:` falls on or after their own.**
+  `w1-world-edit-window` is `DUE 2026-09-27` and declares
+  `BLOCKED-BY: w0-too-shallow`, which is `DUE 2026-10-01` — **four days later**.
+  `t108-noise-floor-is-quoted-by-nobody` is `DUE 2026-09-27` while its own
+  ruling FORBIDS execution before a dispatch whose design is `DUE 2026-10-02` —
+  **five days later**. Three more sit on the same day as their blocker, on a
+  date carrying 7 rows against a measured capacity of 6.
+
+**And the two halves of the defect live in different grammars.** Three of the
+five declared the prerequisite in the machine-readable `BLOCKED-BY:` field —
+where nobody had ever compared the two dates. The other two declared it only in
+their row's own `ROUTED:` status prose (*"execution is bound to
+`w1-world-edit-window`"*, *"ARMED but BOUND … and forbidden before it"*), which
+is true, load-bearing, and invisible to every reader. A binding that lives in
+prose is a binding no instrument can honour.
+
+**THE RULE, and it has two halves because the defect does.** *(1) A dated
+promise that names a prerequisite must be dated STRICTLY AFTER that
+prerequisite's own date — and the ordering is arithmetic, so it can be checked
+for free at routing time, unlike capacity, which is an estimate.* *(2) A
+prerequisite stated in prose must be moved into the declared field in the same
+act that states it; otherwise the row's red is indistinguishable from neglect,
+and the desk obeying its own prohibition looks exactly like the desk ignoring
+its own date.*
+
+**The generalisation past this file:** wherever a system reports a broken
+promise, ask what the promise's own preconditions were and whether the reporter
+can see them. A violation counter that cannot distinguish *"nobody did it"* from
+*"nobody was permitted to do it yet"* is not measuring diligence; it is
+measuring arithmetic and labelling it diligence. Sibling on the other axis, same
+day: the 01:3x lesson above — a discharge recorded on a row is invisible to the
+desk that owns that row's clock.
+
+**GUARD, and it is DELIBERATELY NOT BUILT — the price is recorded instead.** The
+check is one expression over two fields `review_queue.parse()` already produces
+(`r["due"]` against `by_id[r["blocked_by"]]["due"]`). It is not implemented, in
+either direction: as a VIOLATION class it is refused by the 2026-09-19
+disposition (no violation class for a coupling, and dating behind a blocker can
+be a deliberate legal act), and as a REPORTING-ONLY reading it is a floor on an
+existing checker, which `D35` clause 2 forbids by name. Full price and routing
+are in the EVIDENCE ADDENDUM on
+`waits-on-has-no-producer-outside-a-closing-row` (DUE 2026-10-01) — appended to
+an existing row rather than routed as a new one, because that row's arrival rate
+is itself the finding it carries.
+
+**AND A SCAR FROM WRITING THIS UP, which is the cheaper lesson of the two.** The
+`BLOCKED-BY:` declarations were placed twice at the visual END of their rows and
+parsed as `''` both times: a row's body ends at the first **COLUMN-0 non-blank
+line** (`experiments/review_queue.py:367-369`), not at the `###` ruling heading
+and not at the next `ROUTED:`. The edit looked right in the diff and bought
+nothing. **An edit to a declared field is a capability claim, and the only thing
+that can check it is the parser — re-parse before you commit, never re-read.**
+This is the third recorded instance of the same family in this file (the 09-09
+six-DUE scar, the `sh02` date-above-a-heading scar, this one), and all three are
+the same sentence: *the desk keeps writing the truth in a place the instrument
+does not look.*

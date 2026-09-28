@@ -23126,3 +23126,117 @@ smaller units. (d) **A handoff is a claim, and so is a lesson:** `t211` was
 correctly identified in writing on 09-27 and still went three days without the
 one-paragraph receipt that would have told its reader. Naming a defect is not
 repairing it — put the receipt where the instrument's reader looks.
+
+### 2026-09-28 04:0x–04:3x UTC — the 7 OVERDUE rows measured one by one: NOT ONE is an unattempted promise, five were dated on or before their own prerequisite, and two of the five declared that prerequisite only in prose
+
+**MODEL AND METERS, read at the top of the slot, not cached.** `week:Fable`
+**95%** (pinned, resets 05:00 — I was walked to **opus**, and planned one larger
+unit accordingly); `week:all models` **87%** — *that* is the gate, 3 points of
+headroom, `--week-elapsed` **99**, so `pace_gate`'s line sits at ~89.4 and did
+not fire. No pacing skip; dark-slot streak 0. 13 `claude` processes on the box,
+so `git add` by name only.
+
+**CREATURE GATE: NONE — recorded violation, not discharged.** Re-derived, not
+inherited: `T6.01` depends on `T4.05` (not implemented) and the chain runs
+`T4.05 <- T4.04 <- T2.01 <- T1.08 (FAIL)`, whose pipeline repair is the Review's
+and undesigned until 10-02. `XL.01` is runnable but re-running it unchanged buys
+the same row while both of its estimator rows are OPEN on the desk (DUE 10-07).
+`coverage` QUEUE DEPTH: **6 dispatchable, 6 VOID, 0 FRESH** — the 34th
+consecutive empty board, every cost class `NOT FILLABLE`. Nothing manufactured.
+
+**THE UNIT: the 126th audit's FOR THE BUILDER 1, executed, and it turned into a
+measurement worth more than the receipt it asked for.** The order was a
+`BUILDER-TRACE` on `w1-world-edit-window` once the row went OVERDUE. Writing it
+meant reading why the other six were red, and the answer is a class:
+
+| live OVERDUE row | DUE | prerequisite it names | that row's DUE | gap |
+|---|---|---|---|---|
+| `w1-world-edit-window` | 09-27 | `w0-too-shallow` (FIELD) | 10-01 | **+4 d** |
+| `t108-noise-floor-is-quoted-by-nobody` | 09-27 | `t108-pipeline-repair-has-no-design` (PROSE) | 10-02 | **+5 d** |
+| `sh02-null-saturation` | 09-27 | `w1-world-edit-window` (PROSE) | 09-27 | 0 d |
+| `hr5-fixture-refuted` | 09-27 | `w1-world-edit-window` (FIELD) | 09-27 | 0 d |
+| `ba03-vestibular-channel-…-one-kick` | 09-27 | `w1-world-edit-window` (FIELD) | 09-27 | 0 d |
+| `ba03-null-saturates-the-horizon` | 09-27 | (c) LANDED 09-26; remainder refused by `D20` | 10-03 | **+6 d** |
+| `t306-matched-magnitude-noise-buys-coverage` | 09-27 | none — execution LANDED 09-22 | — | **-5 d** |
+
+**Two of the seven had their ordered work land EARLY and the clock has no channel
+to say so; five name a prerequisite dated on or after their own date; ZERO are
+promises a faster desk would have kept.** The two same-day cases are possible in
+principle and were not possible in fact — 09-27 carried 7 rows against a measured
+capacity of 6. Every date above was read from `review_queue.parse()`, none from
+prose.
+
+**WHAT I WROTE.** (a) The ordered `BUILDER-TRACE` on `w1-world-edit-window`,
+carrying the `PROGRESS.md` FOR THE OWNER item 3 decline verbatim *and* the +4 d
+arithmetic — nothing stamped, no `DUE:` moved, no position taken on authorship.
+(b) `BLOCKED-BY:` DECLARED on the two rows whose binding was prose-only —
+`sh02-null-saturation -> w1-world-edit-window` and
+`t108-noise-floor-is-quoted-by-nobody -> t108-pipeline-repair-has-no-design`,
+both quoting the row's own status text as the source. (c) An **EVIDENCE ADDENDUM
+on the existing row** `waits-on-has-no-producer-outside-a-closing-row` (DUE
+10-01) rather than a new row — the 126th audit refused to pay for a finding with
+a 21st arrival at 6.29 arrivals/cycle against 1.14 disposals, and that judgement
+is right.
+
+**WHAT THE FIELD DECLARATION BUYS: nothing, verified, and I checked the
+permissive direction first because that is the one that could be a cheat.**
+`STALE` gates on `due is None` (`review_queue.py:779-786`), `OVERDUE` on the date
+alone (`:771-774`); the only channel a `BLOCKED-BY:` opens is
+`HOLD-ON-A-RESOLVED-BLOCKER` (`:758-761`), an ADDITIONAL violation. `run
+review-queue` is **BYTE-IDENTICAL** across the edit — 7 OVERDUE, 0 MALFORMED,
+exit 2 both sides — because the render prints a row's `DUE:` in preference to its
+blocker (`:1058-1062`, an `elif`). So the fact is now machine-readable and still
+unprinted. **The one latent exposure is named on both rows so the desk can refuse
+it rather than discover it:** if either `DUE:` is ever dropped while the row is
+live, `HOLD-WITHOUT-A-CLOCK` (`:775-778`) is satisfied by the field alone and the
+row goes ageing-exempt. One line to delete in each case.
+
+**WHAT I REFUSED TO BUILD, with the price recorded instead.** The join is one
+expression over two fields `parse()` already produces (`r["due"]` vs
+`by_id[r["blocked_by"]]["due"]`). NOT implemented, in either direction: as a
+violation class the 09-19 disposition refuses it (and it would be wrong — dating
+behind a blocker can be deliberate and legal); as a reporting-only reading it is a
+floor on an existing checker, which `D35` clause 2 forbids by name and which the
+126th audit's FOR THE OWNER 2(b) is asking the owner to exempt. One expression,
+zero seeds, zero ledger rows, buildable the hour 2(b) is ruled. I also did NOT
+touch `no_control_specs` (audit FTB 2) and did not stamp anything.
+
+**THE SCAR FROM DOING IT, and it is the cheaper half of today's lesson.** I
+placed the two `BLOCKED-BY:` lines at the visual end of their rows **twice** and
+both parsed as `''`. A row's body ends at the first **COLUMN-0 non-blank line**
+(`review_queue.py:367-369`) — not at the `###` ruling heading, not at the next
+`ROUTED:`. The diff looked correct; the parser said otherwise. Caught only
+because I re-parsed before committing. Third instance in this file's history of
+*the desk writing the truth where the instrument does not look*.
+
+**RATCHETS, quoted BEFORE any record, and I ran none** (docs only; nothing I
+committed grows a counter): 6 MOVED vs committed readings —
+`fail_unowned_owned_forms` queue-row 29->31, `review_queue_net_arrivals` 26->36,
+`review_queue_piled_on` 3->4, `review_queue_violation_forms` {OVERDUE 1}->{OVERDUE 7},
+`review_queue_violations` 1->7 (**CLOCK** — the calendar reached a date),
+`unreachable` 95->96; 1 day-rolled (`cpu_foreclosed_now`). Floors: **3 ABOVE**
+(`decisions_default_action_expired` 1 vs 0 — `D33`'s; `pass_on_dead_dependency`
+5 vs 3 — `T0.13`'s two dependents; `unreachable` 96 vs 95, cause written at
+`coverage.py:1172-1207` and deliberately NOT blessed), 0 BELOW, 0 UNVERIFIED.
+`run status` EXIT 2, `review-queue` EXIT 2, `coverage` EXIT 2 — all pre-existing,
+all unmoved by this slot. No bar moved anywhere; no spec source edited; no ledger
+row written by me.
+
+**STALENESS BILL** priced BEFORE the edit with `run stale-cost
+docs/REVIEW_QUEUE.md docs/LESSONS.md docs/LOOP_JOURNAL.md`: **2 standing PASS
+certificates — `T0.21` (cpu<1min), `T0.31` (cpu<10min) — 0.00 CPU-h, 1 slot**,
+paid in slot from the clean tree after the docs commit. Docs-only: no spec file,
+no root module, so `! DIRTY STAMPS` must still read the 2 rows (`T6.03`, `PL.02`)
+it held when this slot began. `scripts/ladder_prompt.md` untouched.
+
+**NEXT ITERATION.** (a) **Do not re-execute any of the seven rows above and do
+not read their red as neglect** — the table is on
+`waits-on-has-no-producer-outside-a-closing-row`; cite it and refuse if a steering
+page hands you one. (b) The two `BLOCKED-BY:` declarations are the desk's to keep
+or delete in one line; if it deletes one, the prose binding is still true and the
+row is back to invisible — say so rather than re-adding it. (c) `week:Fable`
+unpins at 05:00, so expect to be walked back to Fable and plan smaller units.
+(d) **A receipt is not a repair, and a price is not a build:** the date-ordering
+join is the smallest useful check this project has costed and it stays unbuilt
+until `D35` clause 2 is ruled. Do not build it to look busy, and do not let its
+absence be read as nobody having noticed.
