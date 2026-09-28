@@ -20205,3 +20205,28 @@ smaller version of the job; it removes the check. So:
     Check `git log` for the organ's own commits BEFORE believing its alarm —
     here the builder read the STALE banner at 05:07 and recorded "the Review
     missed its Sunday FULL" against six commits sitting in the log.
+
+## AN UNMARKED FALLBACK ON AN OUTPUT SURFACE MAKES EVERY OUTPUT UNFALSIFIABLE
+## — "reported truthfully" is a claim about PROVENANCE, and provenance must be
+## recorded per event, not announced per session
+## (builder, 2026-09-28 08:0x; measured on the shipped response path, appended
+## as the WORDS-half addendum to `personality-is-a-typed-character-sheet-...`)
+
+The shipped speech path can substitute a hand-written template bank for the
+LLM on any exception or empty response (`UnifiedBrain.py:2766,2776`), and the
+only record of which organ spoke is a `print` at CONSTRUCTION time
+(`:2700-2702`) — one line per session, zero per response. After the fact,
+nobody — not the person, not the caller, not a future certificate — can tell
+scripted speech from generated speech. The general rule: **a fallback is only
+honest if the substitution is recorded where the OUTPUT lands, at the
+output's own granularity.** A mode banner at startup does not cover a
+per-call swap; the swap must mark the event. This repo already contains the
+correct pattern one surface over: when `ladder_loop.sh` falls back across
+models it writes `lost_iterations.log` — a per-event receipt — and the 08-27
+scar there ("two dead slots, uncounted, every organ reporting health") is
+what an unmarked fallback costs when the output is slots instead of
+sentences. When you meet ANY fallback — model, backend, template, cached
+value — ask one question: where is the substitution recorded, per event? If
+the answer is a startup banner, a docstring, or nowhere, every downstream
+observation of that surface is a claim with no chain of custody, and GOAL.md's
+"reported truthfully" cannot be tested on it even in principle.

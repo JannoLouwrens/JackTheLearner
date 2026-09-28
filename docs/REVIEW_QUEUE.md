@@ -14472,6 +14472,48 @@ measured by importing `Personality.py`, not by changing it. This row's own edit
 to `REVIEW_QUEUE.md` bills `T0.21` and `T0.31`, priced before the edit and
 re-bought in slot.
 
+**ADDENDUM — the RESPONSE path, measured 2026-09-28 08:0x (builder, seventh run
+of the negative-sentence sweep, on the 06:0x hand-forward, which said to check
+this half before calling it a fresh instance — and it is NOT one: same GOAL.md
+sentence, same answer path, same menu, so it is appended here for the
+disposition to price both halves at once).** The sheet types WHO he is; the
+same path also scripts WHAT HE SAYS, on three measured mechanisms:
+  1. **A canned reply bank on the shipped speech path, fired silently.**
+     `ResponseGenerator.TEMPLATES` (`UnifiedBrain.py:2659-2688`) is six
+     situations of hand-written lines ("On it! {task}.", "Hey! What would you
+     like me to do?"). `_generate_with_llm` falls back to it on ANY exception
+     (`:2766`) and `_generate_with_api` on any empty response (`:2776`),
+     returning `random.choice` with NO per-response marker — provenance is
+     printed once at construction (`:2700-2702`) and never again, so the
+     caller, the person, and any future certificate cannot tell scripted
+     speech from generated speech after the fact.
+  2. **The chat router and the command voice are keyword scripts.** `chat()`
+     classes every message by hardcoded keyword lists (`:5544`, `:5554`), and
+     the stateless command path `_execute_command` (`:5377`) answers in typed
+     strings — "I see the {target}. Reaching for it now.", "I'll get the
+     {target} for you." — sentences asserting acts the method does not
+     perform. General chat with no generator is the constant "I heard you.
+     How can I help?" (`:5573`).
+  3. **The inner life has its own template bank.** `InnerMonologue` (673
+     lines, named by NO spec — leg 4's census) ships `_TEMPLATES`
+     (`InnerMonologue.py:73`) of appraisal/plan/reflection/observation
+     thoughts, and `_template_think` (`:511`) picks by `random.choice`
+     whenever no causal LM is loaded — the surface a person would read as
+     what emerges is, in the no-LLM configuration, a hand-written bank.
+`GOAL.md:180-183`'s negative is *"what emerges is OBSERVED, measured, and
+reported truthfully — never scripted, and never silently patched"*: legs 1-3
+above measured the WHO half (the typed sheet); this addendum measures that his
+WORDS can be scripted and the substitution is silent. **WHAT IS NOT CLAIMED:**
+no certificate is red — LG.00's venue has zero callers of this path (leg 4,
+unchanged); a fallback bank is LEGAL engineering for a demo app that must say
+something when no model is loaded; `api_llm` defaults UNAVAILABLE
+(`UnifiedBrain.py:1437`, env key required), so the default shipped voice is
+SmolLM2-or-templates, not an external API. The menu above is unchanged and
+NOTHING is taken. One consequence for branch (iii): a spec in `LG.00`'s family
+that scores this path should score PROVENANCE too — an output whose producing
+organ is unrecorded cannot be "reported truthfully" in the sentence's own
+terms, whatever the words say.
+
 ---
 
 ROUTED: parent-llm-is-a-submodule-and-96-percent-of-the-brain | 2026-09-27 | `UnifiedBrain.py:105-127, 1296-1327, 3901, 4176` read statically; `LLMEncoder` and `UnifiedBrain` CONSTRUCTED in this venv and their `named_parameters()` trees measured; the real SmolLM2-1.7B checkpoint loaded once from `/data/caches/huggingface`; `T1.03`'s recorded metrics read off `experiments/ledger.json`; all 31 spec files that build the brain scanned for the guard. Builder, this slot, NO ledger write, NO spec or root module edited | OPEN
@@ -15053,3 +15095,51 @@ ROUTED: certified-diary-is-not-the-memory-the-shipped-brain-carries | 2026-09-28
     (T6.01's day), and the W1 fork is the owner's (`D33`). This instance adds
     mass to the 126th audit's FOR THE OWNER 1: the sentence's only
     non-rig venue was always going to be W1, and W1 lost its author.
+
+    **FIFTH INSTANCE — appended 2026-09-28 08:0x (builder, seventh run of the
+    same sweep, measuring the candidate the 06:0x slot NOTICED but declined to
+    claim unmeasured; class count 4 -> 5, staying on this row per the
+    aggregate paragraph above). `GOAL.md:36-55` — "EVERY SENSE A HUMAN HAS,
+    one brain, trained together... All of it processed together in ONE
+    model" — the shipped ONE model fuses FOUR of the nine input senses, and
+    the instrument that owns the inventory question cannot see the gap by
+    design:**
+      - **The fusion inventory, read at its construction site.**
+        `UnifiedBrain.forward`'s modality loop (`UnifiedBrain.py:4245-4300`)
+        admits exactly proprio, vision, touch, audio — four of GOAL.md's nine
+        input senses — plus two channels that are not senses (language, which
+        GOAL.md:150-154 routes through his EARS, and a mood embedding, which
+        is a state). Vocabulary sweep over all 6,131 lines: ZERO occurrences
+        of smell/olfaction, taste/gustation, nociception or thermoception;
+        every `temperature` hit is an LLM sampling knob; pain, hunger,
+        thirst, fatigue and interoception have no hits at all. The tenth
+        sense, voice, is an effector and ships as TTS-or-print of LLM text
+        (`say()` `:4959`, `TTS.speak()` `:2988`) — mechanically present,
+        never the thing `VO.02` certified.
+      - **The certified inventory and the shipped inventory are misaligned in
+        BOTH directions.** `run senses` (this slot, EXIT 0): 10/10 spec'd,
+        NINE senses hold sensor-or-better certificates — sight and voice
+        LOAD-BEARING — all bought in rigs under `experiments/tests/`. Five of
+        those certified input senses (smell SM.01, taste TA.01/02, pain
+        PS.03, temperature PS.02, interoception PS.01) have NO channel in the
+        product; and the product's fourth channel, touch, is the ONE sense
+        with no sensor certificate at all (`[spec'd]`, UB.5 awaits). The
+        certificates and the product do not even disagree — they describe
+        disjoint brains.
+      - **T0.20's scope was checked before this was written, and there is no
+        overlap.** `T0.20` / `run senses` (`experiments/senses.py`) audits
+        the REGISTRY against the biological inventory — its fixtures are
+        registry dicts, its null an empty registry — so it reports 10/10
+        while the product carries 4, and both readings are correct, because
+        no organ this project owns measures the shipped brain's inventory.
+        (Instance 4's second bullet named the three mortality senses missing
+        from fusion; this instance is the full inventory and the
+        instrument-scope fact.)
+    **WHAT IS NOT CLAIMED, checked before writing:** no certificate is red —
+    the UB family's fusion certificates are honest about their rigs' own
+    modality sets, and T0.20's PASS is correct about the thing it audits; the
+    staging paragraph (`GOAL.md:214-217`) makes a partial demo brain LEGAL
+    exactly as it does the deathless world; `UnifiedBrain` predates the
+    ladder as `CompanionMemory` and `VirtualWorld` do. The menu above is
+    unchanged and NOTHING is taken: adding five sense channels to the product
+    is composition work inside the freeze (T6.01's day).
