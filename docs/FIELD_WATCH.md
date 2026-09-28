@@ -1,3 +1,11 @@
+> **INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING.**
+> The field-watch run that wrote this file exited rc=124 and did not
+> complete its own checklist (2026-09-28T06:07:11+00:00). Everything below was
+> written before the run stopped: any verdict, any section claiming
+> "no findings", and any instrument table in it are UNVERIFIED.
+> Sealed automatically by scripts/lib_seal.sh; the exit code is in
+> the log, and this banner is what joins the two.
+
 # FIELD_WATCH.md — the scout's current-state report
 
 > **Rewritten weekly. This is a state, not a log.** Every entry here is either
@@ -11,12 +19,12 @@
 > `SYSTEM.md` law 3: decisions are made by bakeoff, never by argument — and a
 > field watch that argued would be making decisions.
 
-**Sweep date:** 2026-09-21 · **Window:** ~2026-03 → 2026-09 (6 months)
-**Scout:** field watch, week 8. **Seven days since week 7** (2026-09-14), the
-embargo (*"not before ~2026-09-21"*) spent to the day. **Fourth consecutive
-sweep on the intended cadence.** Front 3 (MEMORY) is **not swept** — its
-endorsed two-week cadence puts it at 2026-09-28, and it was the primary front
-last week.
+**Sweep date:** 2026-09-28 · **Window:** ~2026-04 → 2026-09 (6 months)
+**Scout:** field watch, week 9. **Seven days since week 8** (2026-09-21), the
+embargo (*"not before ~2026-09-28"*) spent to the day. **Fifth consecutive
+sweep on the intended cadence.** **Front 3 (MEMORY) RETURNS** on its endorsed
+two-week cadence, and it returns with a nomination for the first time in six
+sweeps of looking.
 
 **Confidence markers:** **[V]** fetched and read · **[c]** claimed by the authors,
 not checked against their table · **[s]** asserted by a search engine *about* a
@@ -25,412 +33,407 @@ measured here, on this box, command shown.
 
 ---
 
-## 0. WHAT MOVED IN THE INTERVAL — and the week this page acquired an instrument
+## 0. WHAT MOVED IN THE INTERVAL — the week two of this desk's nominations became part of a spec that ran
 
-173 commits landed in seven days. Five facts re-point this sweep, and the
-second one changes what writing this page means.
+**326 commits** landed in seven days. Five facts re-point this sweep, and the
+first one is the best news this page has carried.
 
-**(1) THE arXiv API ANSWERS. QUEUED #1 CLOSES POSITIVE, AND THE SWEEP IS A
-REAL ONE AGAIN.** Week 7 ran **no** enumerations (HTTP 429, six attempts, two
-network paths) and said plainly that a sweep which cannot enumerate is a weaker
-sweep. **This sweep ran six 40-entry enumerations** — fronts 1, 2, 4, 5, the
-standing `q-bio.NC` biology search, and the small-model end. Week 7's read that
-the closure was probably transient is upheld. One operational detail is
-recorded so a ninth sweep does not rediscover it: `http://export.arxiv.org/…`
-now returns **HTTP 301 and an empty body**, and only `-L` (or `https://`
-directly) returns **HTTP 200** and a feed [M]. A 301 with no body is a
-*silent* empty result, which is a worse failure than a 429 — a 429 announces
-itself.
+**(1) `t402` IS ACTED. THE BALANCING BAKEOFF THIS DESK REFUSED TO NOMINATE A
+METHOD INTO FOR FOUR SWEEPS WAS DESIGNED, RAN, AND PASSED — AND IT CARRIES THE
+REFERENCE ARM WEEK 8 NOMINATED.** `T4.06` *Fusion balancing bakeoff: three arms
+vs the shipped brain* — **PASS, attempt 1**, `ran_at 2026-09-23T10:46:27`,
+1588.66 s on a **kaggle Tesla T4**, `dirty_files None`, commit `aa7d49c` [M,
+from the ledger row]. Its `null_baseline` reads, verbatim: *"The incumbent:
+`T4.02`'s shipped rig re-run unchanged as arm zero, first in the same
+submission; its worst-modality latent R2 IS the bar, pre-registered as a rule
+before any number exists."*
 
-**(2) THIS PAGE NOW HAS A READER, AND IT WAS BUILT BECAUSE OF MY OWN FINDING.**
-`experiments/fieldwatch.py` shipped 2026-09-14 (`29220f9`, 96th audit FTB 1).
-It parses every `##`/`###` heading on this file containing the word *finding*,
-and reports each as ROUTED (cited or quoted by a `REVIEW_QUEUE.md` row or a
-`DECISIONS_NEEDED.md` entry) or **`UNROUTED-FIELD-FINDING`** in `run status`.
-The scar it cites is week 7's: §6b was repaired inside 27 minutes because it
-carried a formula and a constant, while §6 — the one about a seat — sat on no
-desk for six hours, and `grep -rn "FIELD_WATCH" --include=*.py` returned zero.
-On week 7's page it reads [M]: *2 finding section(s); **2 cited**, 0 quoted, 0
-UNROUTED* — and both of those citations are real, so **the channel the Review
-actually used works.** **On THIS page it reads `2 quoted, 0 UNROUTED`, and both
-of those are false.** §6b measures why, names the two mechanisms, and records
-that I tried rewording my way out once and made it worse. **The true state of
-both findings below is UNROUTED.** I am not going to stop calling a finding a
-finding in order to keep a counter at zero, and I am not going to edit prose
-until the counter looks right either.
+That is week 8's N2 — *"`t402` must carry the UNBALANCED INCUMBENT as a scored
+reference arm, and a balancing arm must beat THAT on the capability metric, not
+merely move 30.12 → 1.0"* — and the spec was designed **2026-09-23, two days
+after** that nomination was published. **I do not claim causation and I did not
+find a citation of this page in the row.** What I can say is that the control
+is in the spec, the spec ran, and the reference arm did exactly the work the
+nominated paper predicted it would: the family's own numbers are now on our
+ledger instead of in someone else's classification benchmark.
 
-**(3) MY OWN §6b WAS ACTED ON AND I CAN NOW SAY WHAT IT BOUGHT — AND WHAT IT
-DID NOT.** `db4200e` raised the distractor denominators. Recomputed at HEAD
-from the committed rows, `a_L = 0.05^(1/m)` [M for `m`, C for `a_L`]:
+And what it measured is the paper's finding reproduced here. `refuted_arms
+['grad_norm']`, `winning_arms ['loss_reweight']`, `n_winning_arms 1.0` [M].
+`grad_norm` drove the ratio to a **definitional** 1.0 — its five per-modality
+norms are byte-identical per seed (0.000651 / 0.000586 / 0.000904) because the
+arm equalises them by construction — and **failed** the harder conjunct. The
+one arm that won, won by **+0.0187** of latent R². **§6 is about what that
+number is measured against.**
 
-| spec | `m` before → after | `a_L` before → after | vs the 0.95 bar |
-|---|---|---|---|
-| `ME.1` | 40.0 → **94.67** | 0.928 → **0.9689** | **clears** |
-| `ME.3` | 39.3 → **87.67** | 0.927 → **0.9664** | **clears** |
-| `ME.5` | 52–60 → **110.33** | 0.944–0.951 → **0.9732** | **clears** |
-| `ME.9` | 15 → **15** | 0.8190 | **below, unchanged** |
-| `ME.10` | 36 → **36** | 0.9202 | **below, unchanged** |
-| `ME.11` | 300 | 0.9901 | clear, unchanged |
+**(2) THE `a4` FORK IS RULED — QUEUED #2 CLOSES POSITIVE.**
+`a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere` (week 7 §6)
+is **DISPOSITIONED 2026-09-27**: the three-way fork is **RULED (i)+(iii)**, and
+the (iii) half — amending `LEARNING_CORE.md` §5.4 to record that the guard was
+never built and the seat was awarded without it — **was executed in that
+sitting's commit**, not merely designed. That is the disposition this desk's
+recorded leaning asked for, and it arrived.
 
-Three of five repaired; **two are unchanged and the queue row says why in
-terms** — `ME.9`'s denominator is capped *by construction* (3 askable speakers
-× 12 topics; full censorship degenerates the control store) and `ME.10`'s 36
-held pairs are load-bearing in its main claim, so both need a fixture redesign
-rather than more negatives. **Recorded as a partial discharge with a named
-structural residue, not as "fixed".** This is the first time a finding of mine
-has come back with a number attached, and the honest headline is that the half
-that was cheap got done and the half that needs a fixture did not.
+The (i) BUILD half did **not** simply land: the sitting found a collision —
+`D29` had resolved the same question on 09-23 as **(iii) alone** — so building
+the readout is **CONTINGENT and routed to the owner as `D37`**, with the row
+re-dated **2026-10-04** to check `D37` and, if it has ruled or defaulted, hand
+the `Δ_k` readout to the builder then. **The row names week 8's N1 explicitly**
+as one of three questions converging on the same 14.40 core-h, and says the
+point of ruling this one first is *"what stops the project paying up to three
+times for one run."* That sequencing is right and I am not contesting it.
 
-**(4) LAST WEEK'S LEAD NOMINATION WAS ACCEPTED, ORDERED FIRST, AND HAS NO
-CODE — WHICH IS QUEUED #2'S ANSWER.** `f34d366` accepted N1 (the free-embedding
-critical-`d` probe) and ordered it **first**, *"because it can FORECLOSE a
-family"*. Seven days later, at HEAD [M]: no `ME.*` spec exists beyond the
-pre-existing family (`ME.1`…`ME.11.F`), and
-`grep -rln "free.embedding\|critical_d"` over `experiments/` and
-`MEMORY_RETRIEVAL_BAKEOFF.md` returns **nothing** — the only hits are this
-page, `INTEGRATION_QUEUE.md` and `PROGRESS_LOG.md`, all of which are
-*descriptions* of the nomination. **NOT RUN.** Recorded as an answer rather
-than left ambiguous, per this desk's own rule about dead nominations.
+**(3) MY OWN §6b WAS EXECUTED, AND IT CAUGHT A BUG THE ROW DID NOT ASK FOR.**
+`fieldwatch-quotation-channel-is-0-for-5` is **ACTED 2026-09-24**, executing
+builder commit `d901cb4` (09-23): `ROUTED:`-header stripping plus
+**`MIN_QUOTE_OVERLAP = 6`** in `experiments/fieldwatch.py` **only** —
+`decisions._shingles` left untouched, which was the row's own load-bearing
+caution. Post-fix on the live corpus: **0 spurious of 18 sub-threshold pairs**,
+both true quotations retained. The threshold was picked *after* enumerating 20
+live overlaps (spurious cap 4 post-strip; true quotes 12, 18, 66), not guessed.
 
-**(5) THE ROWS TWO SWEEPS WERE WRITTEN FOR AGED AGAIN, AND THE QUEUE WENT
-BACKWARDS.** `a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere`
-(my §6, routed within an hour) is **OPEN, DUE 2026-09-18, now +3 days**.
-`t402-touch-drowns-audio-at-the-fusion-boundary` is **OPEN and 16 days old**,
-re-dated to **2026-09-22 — tomorrow**. `w1-world-edit-window` is OPEN at 15
-days and has now lost a *fourth* Sunday FULL (`D33`, routed 09-20, asks in its
-own title whether the Review is capable of producing the design at all).
-Instrument readings [M]: `review_queue_violations` **12 → 17** since 09-20 (+5
-OVERDUE by clock), drain **UNBOUNDED**, 51 live rows, **21 imminent against a
-demonstrated capacity of 6**. §2's N2 is written for a row that falls due
-tomorrow; I have no expectation about whether it will be read in time, and the
-number above is why.
+**The measurement bought something nobody asked for**, and week 8's page had
+said in terms that it made *no* claim about the sibling reader: **`decisions.owner_asks`
+has parsed 0 items since 2026-09-09** — a `**N.` format against a `^digit`
+pattern — now routed separately as `owner-ask-reader-blind-since-0909` (OPEN,
+DUE 10-01). A reader built to catch un-owned findings was itself blind for
+fourteen days, and the thing that found it was measuring the false-positive
+rate of its neighbour.
+
+**(4) QUEUED #4 CLOSES POSITIVE — AND WEEK 8's FALSE `ROUTED` IS GONE.** The
+reader now reports, on week 8's page [M, `run status`]:
+
+```
+FIELD-WATCH FINDINGS — week 8: 2 finding section(s); 2 cited, 0 quoted,
+  0 UNROUTED-FIELD-FINDING.
+  §6    ROUTED — cited by queue-row `lc03-five-controls-never-switch-off-the-term-a4-is-named-for`
+  §6b   ROUTED — cited by queue-row `fieldwatch-quotation-channel-is-0-for-5`
+```
+
+Both citations are **real**. Week 8 predicted exactly this — that if a row
+opened for either finding it would route by **citation**, the channel that
+works — and recorded that it was leaving two *false* `quoted` readings standing
+rather than editing prose until a counter looked right. **The false positives
+were removed by fixing the reader, which is the correct repair, and both
+findings reached a desk.** Two sweeps ago this page had no instrument at all.
+
+**(5) THE ONE THING THAT DID NOT MOVE, AND THE QUEUE WENT BACKWARDS AGAIN.**
+Week 7's N1 (the free-embedding critical-`d` probe) was **ACCEPTED and ORDERED
+FIRST on 09-14** *"because it can FORECLOSE a family"*. At HEAD, **fourteen
+days on** [M]: `grep -rln "free.embedding\|critical_d\|critical-d"` over the
+repo returns **four files, all of them documents** —
+`docs/INTEGRATION_QUEUE.md`, `docs/PROGRESS_LOG.md`, and this page and its log.
+**No `.py` hit, no spec beyond the pre-existing `ME.1`…`ME.11.F`. STILL NOT
+RUN**, and it remains the cheapest live item on the desk. Queue instrument
+[M, `run review-queue`]: **64 OPEN, 88 live rows**, arrived **45** against
+disposed **8** over the trailing 7 days, **drain UNBOUNDED**, oldest live 35 d.
+§2's N2 lands beside that unrun probe, and I price it knowing this.
 
 ---
 
 ## 1. Coverage — what was actually searched, so the gaps are visible
 
+The arXiv API answered on the first attempt. Week 8's operational note holds
+and is worth one line: `https://` or `-L` returns HTTP 200; bare `http://`
+returns a **301 with an empty body**, which is a silent failure and worse than
+a 429 [M, re-verified this sweep].
+
 | Front | Searched this sweep | Depth reached |
 |---|---|---|
-| **1 · LEARNING CORES** | action-conditioned / latent world models with a proprioceptive or state-based regime; anti-collapse; action-sensitivity follow-through | **40-entry arXiv enumeration**; **2 full HTML** (ARC-Bench, TC-LeWM); 1 abstract (2608.10145) |
-| **2 · MULTIMODAL FUSION** *(queued first — one search last sweep)* | whether the balancing family has left supervised classification; modality imbalance / collapse / gradient balancing | **40-entry enumeration**; **1 full HTML** (2609.11247); 1 abstract |
-| **4 · CURIOSITY & OPEN-ENDEDNESS** | intrinsic motivation, autotelic, open-ended, intrinsic reward + exploration/agent | **40-entry enumeration**; 1 WebSearch; **no fetch** |
-| **5 · WORLDS & EMBODIMENT** *(queued first)* | survival / homeostatic / foraging / embodied agent × simulation, benchmark, MuJoCo | **40-entry enumeration**; **no fetch** |
-| Small-model end | RL/control × tiny, compact, parameter-efficient × CPU, edge, embedded | **30-entry enumeration**; **1 abstract** (MINERVA) |
-| Biology-as-oracle | **`q-bio.NC` standing search** (wk7 §7) × RL, intrinsic motivation, curiosity, world model, embodied | **40-entry enumeration**; 1 WebSearch; no fetch |
-| **3 · MEMORY** | **NOT SWEPT** — endorsed two-week cadence, last 2026-09-14, next **2026-09-28** | — |
-| Our own artifacts | `LC.03` row (257 metrics); `experiments/cores.py` (`lc_update`, `WorldModelCore`); `registry` control text for `LC.03`/`LC.01`/`UB.11`; parameter counts rebuilt at HEAD; `/data` + `checkpoints/` weight search; Clopper–Pearson on the shipped denominators | **[M]/[C] — commands in §6 and §0** |
+| **3 · MEMORY** *(returns on its two-week cadence — the primary front)* | episodic / agent memory; **retrieval-side abstention and calibrated refusal**; extractive retrieval, sparse distributed memory, consolidation | **3 enumerations (40 + 25 + 30)**; **2 full HTML** (2609.22056, 2609.19942 abs); ledger re-read |
+| **1 · LEARNING CORES** | world models / MBRL × latent, JEPA, proprioceptive, state-based; action-conditioning sufficiency | **40-entry enumeration**; 1 abstract (2609.31161) |
+| **2 · MULTIMODAL FUSION** | probing / linear-probe / decodability × multimodal, fusion, representation; probe control tasks, selectivity, shuffled labels | **2 enumerations (30 + 25)**; **1 abstract** (2609.30210) |
+| **4 · CURIOSITY & OPEN-ENDEDNESS** | intrinsic motivation / intrinsic reward / autotelic / open-ended learning | **40-entry enumeration**; **no fetch** |
+| **5 · WORLDS & EMBODIMENT** | survival / homeostatic / foraging × cs.RO, cs.LG, cs.AI, cs.NE; **plus one WebSearch on the MuJoCo ecosystem** (mandate item) | **40-entry enumeration**; 1 WebSearch; **no fetch** |
+| Biology-as-oracle | **`q-bio.NC` standing search** (wk7 §7) × RL, world model, embodied, curiosity, exploration | **40-entry enumeration**; **2 abstracts + 1 full HTML** (2605.27929, 2607.29476) |
+| Small-model end | tiny / compact / parameter-efficient / lightweight × RL, control policy, world model | **30-entry enumeration**; no fetch |
+| Queued closures | 3M-Progress full HTML (3rd pass), ARC-Bench code, 2608.29434 | **3 fetches [V]** |
+| Our own artifacts | `T4.06` ledger row (29 metrics) + its implementation + `resolution.py` + `LESSONS.md` §16550; `ME.11` family rows; `fieldwatch.py`; `cores.py` dims; `run status`, `run review-queue`; **a known-answer reconstruction of `T4.06`'s ridge probe** | **[M]/[C] — §6, commands and script shown** |
 
 **Known gaps, stated so nobody assumes coverage:**
 
-- **Fronts 4 and 5 were enumerated but not fetched.** Both returned nothing
-  that survived the abstract line; §5 says so plainly rather than manufacturing
-  a fetch to look thorough.
-- **Front 3 is deliberately unswept this week.** If the reader wants a memory
-  position today, week 7's is the current one and nothing here supersedes it.
+- **Fronts 4 and 5 were enumerated but not fetched.** Nothing survived the
+  abstract line. §5 says so rather than manufacturing a fetch to look thorough.
+- **The probe-control-task literature returned nothing in window.** I searched
+  for it specifically (control tasks, probe selectivity, shuffled-label
+  baselines) because §6 needed it, and the in-window returns were unrelated.
+  **§6's floor is therefore my own arithmetic, not an import**, and it is
+  marked [M]/[C] throughout.
 - **No conference main-track enumeration** (dropped permanently, week 4; still
-  dropped, still an acknowledged permanent gap). **No non-English sources.**
-- **ARC-Bench's code is not released** — the authors say release "will be
-  prepared" after the preprint is public [V]. So N1 is a protocol I would
-  reimplement, not a repository I would clone.
-- **TC-LeWM reports no GPU, no wall-clock, no parameter count and no code**
-  [V, checked]. Fifth consecutive sweep in which that is true of a nomination.
+  an acknowledged permanent gap). **No non-English sources.**
+- **N2's code is not released and its hardware is unstated**; N3 is
+  **abstract-level only**; N1 reports **no p-values or CIs for its geometric
+  metrics and no compute statement at all**. Each is said again in place.
+- **I did not measure the real fused representation's effective rank.** That
+  would need the brain instantiated and trained, which is a run and not a
+  scout's job. §6's whole nomination is that this quantity be recorded; its
+  absence is the finding, not a gap I could have closed by reading harder.
 
 ---
 
 ## 2. NOMINATIONS
 
-Three. **One is a cheap second readout for a seat-guard row that is already
-open and overdue, and it arrives with the best evidence this desk has seen in
-eight weeks; one is a zero-cost reference arm for a fusion bakeoff that falls
-due tomorrow; and one is a correction to a live nomination of my own, made by
-a paper that measured a defect in the method I promoted.** Each states its
-arXiv primary category, its evidence class, its cost on **our** substrate, and
-both sides steelmanned.
+Three. **One is a set of cheap latent-geometry readouts from a mouse study that
+can see the failure effective rank cannot; one is front 3's first
+constitutionally admissible arm in six sweeps of refusals; and one is a control
+for the readout metric §6 measures a defect in.** Each states its arXiv primary
+category, its evidence class, its cost on **our** substrate, and both sides
+steelmanned.
 
 ---
 
-### N1 — the replanning-frequency ablation: the cheapest way to ask whether `A4`'s seat number is measured in the regime that hides the failure it is seated for
+### N1 — three transition-geometry readouts for the `A4` diagnostic venue, because effective rank cannot see the failure four groups now name
 
-**Source:** *ARC-Bench: Closed-Loop Replanning Masks Broken Action Ranking in
-Frozen JEPA World Models* — [arXiv:2609.05461](https://arxiv.org/abs/2609.05461),
-primary category **cs.AI**, 2026-08-12, Zhengshu Zhang & Zhiyuan Li. **Full
-HTML read.** Code **not released** ("will be prepared for public release after
-the preprint is public") [V].
+**Source:** *Exploratory Experience Shapes the Geometry of Predictive
+Representations* — [arXiv:2605.27929](https://arxiv.org/abs/2605.27929),
+primary category **q-bio.NC**, 2026-05-27, Shilova, Sharafeldin, Balakrishnan &
+Choi. **Abstract and full HTML read [V].**
 
-**Why this is not a fourth re-run of the same nomination.** Weeks 6 and 7
-nominated a Context-Collapse diagnostic on `A4` from three sources — ActSWM,
-Delta-JEPA, Dueling World Models — and week 7's own lead objection was that
-**Delta-JEPA never measures the insensitivity it names**. ARC-Bench is the
-**fourth independent group on this theme and the first to MEASURE both the
-defect and the mechanism that hides it**, with the strongest evidence class
-this desk has nominated on in eight sweeps.
+**Why it is nominated where it is.** `LEARNING_CORE.md` §5.4 declares `A4`'s
+mandatory diagnostic to be **effective rank and per-dimension latent
+variance**, and week 7 §6 established that neither is computed anywhere in the
+repository — now RULED (i)+(iii), with the BUILD half contingent on `D37`
+(§0(2)). So there is a live, owner-bound question about *what readout to build*,
+and this is the first paper this desk has found that proposes cheap alternatives
+measured on a latent of our size.
 
-**The verified claims [V], with their numbers.**
+**The verified content [V].** Three quantities, all computed on the prior latent
+space (not on a UMAP projection):
 
-| audit | wrong-anchor rate | Hit@1 | mean top-1 regret |
-|---|---|---|---|
-| Push-T (official ckpt, 5 seeds × 750 anchors) | **96.8 %** | **3.2 %** | 0.243 [0.228, 0.257] |
-| MetaWorld reach-wall (official) | **100.0 %** | **0.0 %** | 0.283 [0.278, 0.290] |
-| Push-T, encoder swapped to V-JEPA 2 ViT-G | 97.3 % | 2.5 % | 0.215 [0.201, 0.230] |
-
-**And the masking result, which is the half I am nominating** — 3 seeds × 48
-paired episodes per domain:
-
-| domain | success at k = 1 | at k = 6 | Δ |
-|---|---|---|---|
-| PointMaze | **89.6 %** (129/144) | **61.8 %** (89/144) | +27.8 pp [19.4, 36.1], McNemar **p = 1.5 × 10⁻⁹** |
-| Push-T | **36.1 %** (52/144) | **12.5 %** (18/144) | +23.6 pp [16.7, 30.6], **p = 1.1 × 10⁻⁹** |
-
-Plus a first-plan diagnostic: *"41.7 % of high-Mirage episodes are rescued by
-frequent replanning against 8.3 % of low-Mirage episodes — a five-fold
-enrichment"*, rescued episodes carrying *"roughly twice the prior Mirage regret
-of non-rescued ones (4.35 vs 2.14)"*. The authors' own conclusion, quoted:
-**"Closed-loop success rates therefore systematically overstate the rankability
-of frozen latent representations."** Four control classes are run and named —
-provenance, undertraining, matched-budget backbone, and metric-circularity
-(the terminal probe's mean error is 0.364 on PointMaze against a Spearman of
-0.21 with true cost, so the probe is not reading the answer).
-
-**What I nominate, precisely.** On a trained `A4`, run the arm's **own existing
-`life_gain` evaluation with the action HELD for `k` steps**, `k ∈ {1, 2, 4, 6}`,
-and report `life_gain(k)`. No new network, no new loss, no matched environment
-rollouts — a hold on the action loop. **This is strictly cheaper than the
-`Δ_k` readout week 7 nominated**, which needs the *true future latent*
-`z_{t+k}` from a real-environment rollout run alongside the imagined one. If
-the builder runs only one readout on this seat, this is the one that costs
-less.
-
-> **The must-fail control is already in the rig and already measured.** `A4`'s
-> untrained twin reads `twin_life_gain` **−0.83 ± 4.92** [M]. A model that never
-> learned has no closed-loop correction to lose, so its `life_gain(k)` must be
-> **flat in `k`**. If the twin's curve bends the same way the arm's does, the
-> readout is measuring W0's action-hold dynamics and not the latent, and it
-> dies there.
-
-**Why this lands on `A4` specifically, and it is architectural, not analogical.**
-`lc_update` (`experiments/cores.py:542`) composes
-`loss = l_bind + VALUE_COEF * l_v + l_pi`, and the actor and critic read
-`shared_state` — the same RSSM that `l_bind` trains [M]. The seat's evidence
-(`lg_margin_null` t = 4.64, `lg_margin_twin` t = 4.00, recomputed at HEAD from
-the committed row [C]) is produced by that actor, **selecting a fresh action
-at every decision — which is `k = 1`, the maximally-forgiving end of the axis
-ARC-Bench measured.**
-
-**Cost on our substrate, and there is no free version.** Re-verified rather
-than inherited: `find /data /home/opc/jackthelearner/checkpoints -name '*.pt' -o
--name '*.pth'` returns **nothing** [M] — the `LC.03` artifacts on disk are eight
-JSON/log files totalling under 12 KB. So a trained `A4` must be produced, at
-`LC.03` v2's recorded **17,280.37 core-seconds per arm-seed** → **14.40 core-h
-for 3 seeds** [M/C], inside `D4`'s frozen `CPU_DAYS` cap, no GPU quota. The
-`k`-sweep itself is then four evaluation passes on a model that exists. **If
-the `a4-…-computed-nowhere` row takes option (i), this rides that run at near-
-zero marginal cost. If it does not, this costs 14.40 core-h like everything
-else on that seat, and I will not price it as free twice.**
-
-**Why it might WIN (falsifiable).** It is the only readout on this seat whose
-must-fail control already has a committed number. It reads a quantity the seat
-was awarded on rather than a new one. And its published effect size is large
-enough to see at 3 seeds (ARC-Bench saw +27.8 pp at 3 seeds × 48 episodes).
-
-**Why it might LOSE (steelmanned). Five, and the first is from our own ledger,
-not from the paper.**
-
-1. **W0'S MEASURED PASSIVITY INVERSION POINTS THE OPPOSITE WAY, AND THIS IS THE
-   LEAD OBJECTION.** `LC.03` control (a) records, from its own seed-90 pilot:
-   *"in W0 passivity MAXIMISES life length (statue 180.0 s = the basal ceiling
-   … vs arms 109–161 s and null 118–126 s)"*. Holding the action for `k` steps
-   moves every arm **toward** the statue — toward a control that **scores well
-   on the length ruler**. So ARC-Bench predicts `life_gain(k)` falls, W0's own
-   measured inversion predicts it rises, and a flat or null reading is
-   **uninterpretable**. This is fatal to the naive version.
-   **The repair is already written in our own spec and costs nothing:** read
-   the sweep on `needs_rise`, the conjunct `LC.03` added *"to exclude learned
-   passivity"*, not on `life_gain` alone. **And that conjunct is thinner than
-   it looks:** `wm-latent/needs_rise` = **0.0221 ± 0.0197** over 3 seeds → **t =
-   1.95** [C]. It is gated as a sign (`> 0`), and as a sign it holds — but it
-   is a sign that holds, not a margin that separates, and a `k`-sweep read on
-   it is reading a quantity with that much room in it.
-2. **ARC-Bench's planner is not ours.** It audits **frozen** JEPA checkpoints
-   that plan by **latent distance to a goal embedding**. `A4` is **plastic**
-   (GOAL.md's decree) and acts through an **actor-critic on the model state**
-   (`cores.py:444`) — it never ranks candidates by latent distance. The
-   *rankability* half of the paper therefore does not transfer at all; only the
-   *masking* half does, and I am nominating only that half.
-3. **Frozen is the whole point of their defect.** Their strongest result is
-   that the failure survives swapping DINOv2 for V-JEPA at ViT-L/ViT-G. Every
-   one of those encoders is frozen. A plastic encoder receiving policy gradient
-   is a different object, and it is entirely possible the defect is an artefact
-   of freezing — in which case GOAL.md's plastic-only decree already immunises
-   us and this readout returns green.
-4. **No hardware, no wall-clock, no parameter counts, no code** [V, checked].
-   Fifth consecutive sweep.
-5. **A green reading is the likely outcome**, as week 6 already said of this
-   family. The value is in the *unarmed guard*, not in an expectation of
-   catching something.
-
----
-
-### N2 — NOT AN ARM: the reference arm `t402`'s ordered bakeoff has to carry, because the field just measured that its entire candidate family does not beat doing nothing
-
-**Source:** *The Illusion of Balanced Multimodal Sentiment Analysis: Beyond the
-Limits of Optimization-Based Methods* —
-[arXiv:2609.11247](https://arxiv.org/abs/2609.11247), primary category
-**cs.CL**, 2026-09-10, Kaffeza, Georgiou & Potamianos. **Full HTML read.**
-
-**This desk refused to nominate into front 2 for four consecutive sweeps, on a
-Goodhart objection it still holds.** Nothing here changes that: this paper is
-**supervised classification** (CMU-MOSI / CMU-MOSEI sentiment), which is the
-objection. **What it adds is a measured negative about the exact candidate
-family `t402` named**, arriving the week before that row falls due.
-
-**`t402`'s own text names its arms:** *"per-modality gradient normalisation,
-loss reweighting, modality dropout schedules"*. **This paper evaluates that
-family and reports it does not work [V]:**
-
-- Methods tested, named: **OGM-GE** (gradient modulation), **AGM** (adaptive
-  gradient modulation), **PMR** (prototypical modal rebalance), **ReconBoost**.
-- *"no strategy reliably outperforms Late Concatenation; performance is
-  sensitive to hyperparameters; and even ratio calibration fails to yield
-  consistent gains."*
-- On CMU-MOSI Audio-Video, Late Concatenation reads **54.93 %**; OGM-GE reads
-  **52.48 %** (**−2.45**). On Text-Video the best gain in the table is PMR at
-  **+1.16** and ReconBoost at **+0.44**.
-- **5 runs**, hardware **a single GTX 1080 Ti (12 GB)** — the first nomination
-  in five sweeps that names its hardware at all, and it is a modest one.
-- The theoretical claim, quoted: **"loss is not utility, and gradients are not
-  importance"** — the methods *"conflate fitting speed with discriminative
-  contribution"*.
-
-**What I nominate, and it is one line.** `t402`'s bakeoff must carry a
-**DO-NOTHING reference arm** — the unbalanced incumbent, unchanged — scored on
-the same capability metric as every balancing arm, and a balancing arm must
-beat *that*, not merely move `max_modality_grad_ratio`. Cost: **zero**; the
-incumbent's numbers exist.
-
-**Why this is not an argument about the gate.** `T4.02`'s 10× gate is
-**constitutional** here — GOAL.md stage 4, *"no modality collapse"* — not
-performance-derived, and this desk has said so twice. **This paper does not
-touch the gate. It touches the repair.** And it sharpens week 6's Goodhart
-refusal into something checkable: `max_modality_grad_ratio` is a **gradient
-magnitude** ratio, and the paper's measured claim is that gradient magnitude is
-not importance. An arm that drives 30.12 → 1.0 while the capability is
-unchanged has bought the gate. **Together with wk6-N3's pathway-decoding
-control (still live, still uncosted at zero), that is a complete control set
-for this bakeoff: one control catches buying the gate, one catches degrading
-the dominant pathway, and the reference arm catches the whole family being
-worth nothing.**
-
-**And a convergence worth one line, offered as corroboration and not as
-evidence.** The authors' proposed successor is *"held-out discriminative
-modality valuation"* — *"the optimization of modality encoders … must be
-separated from the optimization of fusion weights (which should be learned from
-validation discriminative performance)"*. That is an **ablation**, which
-GOAL.md has mandated from the first page (*"ablate a sense, something measurable
-must degrade"*) and `UB.11` already implements as a standing matrix. The field's
-own proposed replacement for gradient balancing is the discipline we already
-have. **Corroboration is not news — sixth time of saying it — and it is not why
-this is nominated.**
-
-**Why it might LOSE (steelmanned). Four.**
-1. **It is supervised sentiment classification with three modalities.** Ours is
-   a world-model objective with five heterogeneous senses and a body. The
-   objection that refused this front four times applies to this paper too, and
-   the only reason it survives is that I am importing a **control**, not a
-   method.
-2. **Their dominant modality is text; ours is touch** (~2.9e-3 against audio
-   ~1e-4 [M]). Dominance by a pretrained language encoder and dominance by a
-   contact channel in a five-sense RSSM may not be the same phenomenon.
-3. **"No strategy reliably outperforms Late Concatenation" is a statement about
-   accuracy, and `T4.02` is not measuring accuracy.** It is legitimate for a
-   balancing method to cost accuracy and still be required here, because the
-   requirement is constitutional. So the reference arm can only *inform* the
-   verdict; it cannot decide it.
-4. **Development sets of 100 and 200 samples**, batch 16/32. Small, and the
-   hyperparameter-sensitivity claim is partly a claim about small validation
-   sets.
-
----
-
-### N3 — a correction to a live nomination of my own: if `A4c` ever enters, it must enter as TEMPORALLY-CENTERED SIGReg, because plain SIGReg has a measured defect in exactly our regime
-
-**Source:** *Temporally Centered SIGReg Improves LeWorldModel Representations
-for Robot Policy Learning* — [arXiv:2607.26924](https://arxiv.org/abs/2607.26924),
-primary category **cs.LG**, v1 2026-07-29 / v3 2026-08-26, Liu, Suo, Jin, Ping,
-Iwasawa, Matsuo & Zhu. **Full HTML read.**
-
-**This is aimed at my own week-5 nomination, which the Review accepted.**
-Week 5 nominated SIGReg (arXiv:2607.13612) as the **selection criterion** among
-the anti-collapse routes for `A4c`, on a theoretical argument — its lead
-objection, stated then, was *"there are NO EXPERIMENTS AT ALL"*. **This paper
-supplies experiments, and they do not simply vindicate the method: they
-identify a defect in it.**
-
-**The verified mechanism [V], quoted and with its formula.** The latent is split
-into a temporally persistent component and a centered residual over a window
-`W_t` (their Eq. 2): `z̄_t ≜ (1/|W_t|) Σ_{s∈W_t} z_s`, `r_t ≜ z_t − z̄_t`.
-Their Monte-Carlo analysis finds the two *"compete for the variance required by
-the projected marginal"*, and the prediction objective favours smaller residual
-variation, **"biasing variance allocation toward the persistent component at
-the expense of the centered residual, suppressing residual variance."** The fix
-is to apply SIGReg to the residuals `R = {r_t}` rather than to the whole latent
-`Z` — *"this simple change decouples persistent and residual variance
-allocation while retaining an effective anti-collapse property."*
-
-**The measured consequence, and it is why this matters to us [V]:** plain
-SIGReg gives *"reduced decodability of robot state and dynamics, particularly
-gripper dynamics"*, and the fix raises decodability *"for all three quantities
-and at all derivative orders"*.
-
-**The numbers [V]**, LIBERO, with error bars:
-
-| suite (10-task) | Raw LeWM (plain SIGReg) | **TC-LeWM** |
+| readout | definition, verbatim | what it asks |
 |---|---|---|
-| Spatial | 62.4 ± 7.5 | **86.0 ± 4.1** |
-| Object | 93.9 ± 2.3 | **97.0 ± 0.1** |
-| Goal | 53.4 ± 5.3 | **88.4 ± 7.5** |
-| Long | 44.7 ± 4.3 | **63.6 ± 6.8** |
-| **average** | **63.6 %** | **83.8 %** |
+| **spatial alignment** | `ρ_depth = \|Spearman(PC₁(z₁:L), d₁:L)\|` | does the leading latent direction track a task-relevant scalar |
+| **transition consistency** | `C_i = (1/k)∑_{j∈N_k(i)} 𝕀{dir(j)=dir(i)}` | do latent **neighbours** share transition **direction** |
+| **tortuosity** | `τ = ∑‖z_{ℓ+1}−z_ℓ‖ / ‖z_L−z_1‖` | is a monotone trajectory a path or a scribble in latent space |
 
-Unified 40-task: 72.6 → **85.4**. Single-task: 26.1 → **50.1**. Window `W = 4`,
-`J = 1024` projections, ViT-Tiny encoder, 10k steps (30k at 40 tasks), batch 128.
+Rig: online predictive-coding agent in a **binary-tree maze, N = 127 nodes**,
+**64-dimensional recurrent state, 16-dimensional latent transition state**,
+**30 seeds** — the best seed discipline in this sweep. Then the same predictive
+model is trained on **natural trajectories of water-deprived mice** in the same
+maze, and *"more exploratory mice show representational geometries that closely
+match those of exploratory agents, whereas mice with more restricted visitation
+patterns resemble reward-driven, exploitative agents."* Mouse behaviour is
+quantified by normalised visitation entropy `E_mouse = −∑pᵢ log pᵢ / log N`.
 
-**Why it lands on us, and it is a regime argument rather than a benchmark one.**
-The suppressed quantity is the **temporally centered residual** — the
-fast-changing part of the latent. In W0 that is exactly the part that carries
-contact events, joint-velocity change and drive movement, and `A4` is a
-**latent-prediction** objective whose target is an EMA of its own encoder,
-i.e. precisely the kind of objective that can be satisfied by a persistent
-component. **And it converges with wk4-N2 from a different direction**: that
-nomination's verified claim was that a sense enters the latent only when the
-loss asks for it as a TARGET (proprio probe r 0.98 vs 0.08). This one says a
-*time-scale* enters the latent only when the regulariser is applied at that
-time scale. Same shape, different axis.
+**THE FALSIFIABLE REASON IT MIGHT WIN, and it is a gap in the incumbent
+readout, not a preference.** Week 6's Context-Collapse nomination established
+from three independent groups — and week 8's ARC-Bench made a fourth at
+p = 1.5e-9 — that a latent world model can maintain healthy prediction
+similarity while producing *action-insensitive* futures. **Context Collapse has
+a HEALTHY effective rank.** Rank is a statistic of the *marginal* distribution
+of latent states; it cannot tell an ordered trajectory from its own shuffle. `C_i`
+and `τ` are statistics of *transitions*, so they can: a latent whose
+neighbourhoods mix inward and outward transitions reads `C_i ≈ 0.5` at full
+rank. So the two readouts are not competitors — **rank catches collapse, `C_i`
+catches scrambling, and the declared diagnostic only has the first.** That
+makes this a candidate for `D37`'s BUILD half rather than a fifth challenger to
+a seat.
 
-**What I nominate.** Not a new arm — an **amendment to a live accepted one**:
-if `A4c` (SIGReg/LeJEPA) is ever run, it enters as **temporally-centered**
-SIGReg, with plain SIGReg as its own paired comparator. The two are each
-other's control, they differ by one line, and the difference is a window
-constant. **Cost: zero new parameters, one hyperparameter (`W`), and it does
-not increase the arm's forward cost.**
+Second reason, and it is GOAL.md-shaped: the paper's result is that **latent
+geometry is a function of the behavioural regime that generated the
+experience** — exploratory policies organise it, exploitative ones do not. That
+is a directly falsifiable prediction about `W0` (a curious arm and a task arm
+should differ measurably in `C_i`), and it is the biology oracle in the form
+GOAL.md asks for: the agent claim is checked against real animals rather than
+asserted.
 
-**Why it might LOSE (steelmanned). Five.**
-1. **`A4b`/`A4c` have been LIVE and UNRUN for eight sweeps.** Amending an
-   unrun nomination is cheap in exactly the way that should make a reader
-   suspicious. **The honest position is that this desk has promoted five
-   anti-collapse routes and run zero**, and a sixth route would be padding —
-   which is why this is an amendment and not a nomination of a new arm. §5 says
-   the same thing about the four further anti-collapse papers the front-1
-   enumeration returned this week.
-2. **Pixels again**, and LIBERO visuomotor manipulation with a ViT-Tiny
-   encoder. Our regime has no images at all in W0.
-3. **No GPU, no wall-clock, no parameter count, no code** [V, checked].
-4. **The temporally-centered residual needs a definition in our regime that the
-   paper does not supply.** `W = 4` frames in a video stream is not obviously
-   `W = 4` decisions in a life that runs 541.9 s [M]. Choosing `W` for W0 is our
-   problem, and a free hyperparameter is what week 3's Optimistic-World-Models
-   objection was partly about.
-5. **Its baselines are Diffusion Policy and OpenVLA** — models far off this
-   box. Beating them is not evidence that anything transfers to 4 ARM cores.
+**Cost on our substrate.** The readouts themselves are **pure NumPy post-hoc on
+recorded latents** — a Spearman correlation, a k-NN majority vote, and a path-length
+ratio, at `LATENT = 64` [M, `cores.py:86`], which is the same order as the
+paper's 64-dim recurrent state. **Zero new parameters, zero new network,
+single-digit CPU-seconds** given latents on disk. But **no weights exist on
+disk** (week 8 re-verified; I did not re-verify it this sweep and do not claim
+to), so like `Δ_k` it is free only if bolted to whatever run `D37` authorises,
+and standalone it inherits the same **14.40 core-h / 3 seeds** [M, week 8] —
+which is precisely why the `a4` row's sequencing argument is right.
+
+**WHY IT MIGHT LOSE — steelmanned.**
+
+1. **There are no p-values, no confidence intervals and no statistical tests
+   for any of the three geometric metrics** [V, checked explicitly]. Thirty
+   seeds were run; what they produced is shown in figures. This is the same
+   evidence class this desk has objected to for eight weeks and the objection
+   does not weaken because I like the mechanism.
+2. **A binary-tree maze of 127 nodes is not a body.** `ρ_depth` needs a scalar
+   like "maze depth" to correlate `PC₁` against; `W0` has no such canonical
+   scalar, and choosing one (drive level? time alive?) would be a free
+   parameter of *ours*, which is how a readout becomes a story. `C_i` and `τ`
+   are the two that transfer without inventing anything, and only `C_i` needs
+   a discrete "direction" label — in `W0` that would also have to be defined.
+   **I am nominating the readouts; the direction label is an open design
+   question and it is mine, not the paper's.**
+3. **Predictive coding is not `A4`'s objective**, and no compute, hardware or
+   wall-clock is stated anywhere in the paper.
+4. `A4`'s own untrained twin is the must-fail side, and it is already in the
+   rig — but a twin scores near-zero on *everything*, so it cannot distinguish
+   a healthy `C_i` from a lucky one. **A shuffled-transition control would be
+   the real must-fail side, and the paper does not carry one.**
+
+---
+
+### N2 — RegimeAbstain's retrieval-structural score features: the "better score function" `MEMORY_RETRIEVAL_BAKEOFF` §1.8 pre-committed to, and the first admissible front-3 candidate in six sweeps
+
+**Source:** *Predictable Failure in Multi-Hop Retrieval: Score-Distributional
+Confidence Scoring and Abstention* —
+[arXiv:2609.22056](https://arxiv.org/abs/2609.22056), primary category
+**cs.IR**, 2026-09-18, Andre Bacellar (**single author**). **Abstract and full
+HTML read [V].**
+
+**Why this clears the constitutional bar that killed five sweeps of
+candidates.** Every front-3 rejection since week 1 has been the same: the
+method is generative, or it moves generation one step upstream into the write
+path. This one has **no language model in the scoring path at all**, and the
+paper says so in terms [V]: *"all features are computed from ANN similarity
+scores available after retrieval — no additional model inference is
+required"*, and *"RCS is computed in <1ms from ANN scores available at
+retrieval time — no LLM call is needed for the abstention decision."* Retrieval
+stays extractive; the abstention decision is a logistic function over numbers
+the retriever already produced.
+
+**Where it lands, and this is a pre-committed venue rather than my suggestion.**
+`MEMORY_RETRIEVAL_BAKEOFF.md` §1.8, verbatim: *"An infeasible arm is a
+**result**, not a bug, and the correct response is a **better score function**,
+never a split-the-difference threshold."* Our own readings [M, re-derived from
+the ledger this sweep, not inherited]:
+
+| row | `feasible_ok` | `tau_cov` | `tau_fpr` | gap to close |
+|---|---|---|---|---|
+| `ME.11` a1 | **0.0** | 0.2272 | 0.3882 | **0.1610** |
+| `ME.11.C` | **0.0** | 0.1840 | 0.3649 | 0.1809 |
+| `ME.11.D` | **0.0** | 0.2272 | 0.3882 | 0.1610 |
+| `ME.11.E` / `.F` | VOID | — | — | 0.1609 / 0.1809 |
+
+Every arm and **every variant** (`2m`, `mrl256`, `bge`) reads
+`feasible_ok 0.0`; `answered_cues` is **27.33 ± 4.78** of **160** headline cues.
+The row `me11-every-arm-hits-the-same-infeasible-branch` is ACTED, but what it
+executed was the **arithmetic verification** (E and F recorded VOID-FORECLOSED);
+it explicitly says *"the semantic-retrieval redesign need is carried by the
+`T2.10` paraphrase-venue conjunct… not a new row."* **The redesign is still
+owed, and this is a candidate for it.**
+
+**The verified numbers [V].** Nine features, all from the score distribution
+rather than the top-1 score: `hop1-max`, `hop1-margin` (s₁−s₂), `hop1-top3`
+mean, `hop1-H` (normalised Shannon entropy), `hop1-lift` (s₁ / mean of top-50),
+three hop-2 analogues, and query length (d = 6 for single-hop pipelines).
+
+| dataset / retriever | base CWAR | RCS AUC-AC | operating point |
+|---|---|---|---|
+| MuSiQue PropH | 39.5 % | **0.790** | 50 % coverage → CWAR **20.6 %** (−47.8 % rel.), acc 79.4 % |
+| 2Wiki PropH | 14.5 % | **0.947** | cross-dataset transfer 0.942 (**−0.5 pp**) |
+| HoVer Dense | 31.7 % | **0.873** | — |
+| MuSiQue Dense | 62.1 % | **0.556** | — |
+| 2Wiki Dense | 58.3 % | **0.649** | — |
+
+Calibration **ECE 0.035**, Brier **0.183 vs 0.239** baseline, **95 % bootstrap
+CIs (2,000 resamples)** in the tables. CWAR is defined
+`|{q ∈ 𝒞ₜ : y(q)=0}| / |𝒞ₜ|` with `y(q)=1` iff **all** gold passages land in
+top-k — which is our shape: `ME.11.0` records `max_gold_size 2.0` [M].
+
+**THE FALSIFIABLE REASON IT MIGHT WIN.** Our thresholds are set on a **single
+similarity score**, and `τ_fpr > τ_cov` says no single-score cut separates
+must-answer from must-abstain on our fixture. The entropy, margin and lift
+features carry information a scalar top-1 score cannot: *the shape of the
+score distribution distinguishes "one clear hit" from "fifty near-ties at the
+same height."* **And it is orthogonal to week 7's N1 in a way that matters
+operationally** — wk7-N1 asks whether *any* embedding geometry can work
+(a foreclosure probe on the representation); RCS changes the *decision rule*
+over the scores the existing embedding already produces. **If wk7-N1 comes back
+saying the geometry is hopeless, N2 can still win, because it never needed a
+better embedding.** Those two are a genuine pair, and both are cheap.
+
+**Cost on our substrate.** Fitting a 9-parameter logistic model: **milliseconds,
+4 ARM cores, no GPU, no new encoder, no disk.** Inference **<1 ms/query** [V]
+against `MEMORY_RETRIEVAL_BAKEOFF` §1.9's CPU table — the first front-3
+candidate in nine sweeps that reports a latency at all. **And the supervision is
+free here in a way it is not in the paper:** their `y(q)` came from dataset
+annotations, whereas our fixture *generates* its gold sets (`oracle_ceiling
+1.0`, `fixture_hash_seed_only 9c915329f4755c3e` [M]), so the label for all 160
+cues exists at zero cost.
+
+**WHY IT MIGHT LOSE — steelmanned.**
+
+1. **It is SUPERVISED, and our labelling budget is 3× smaller than the paper's
+   smallest.** Their tune sets are **486 / 509 / 1,007** examples; we have
+   **160** headline cues [M]. At 10 parameters that is 16 cues/parameter, which
+   is *not* the 1.5 rows/parameter disease of §6 and I will not pretend it is —
+   but 160 must serve tune **and** certify, and §1.8 already demands ≥300
+   negatives for certification. **The fixture may have to grow before the arm
+   can be fairly read**, and that is a real cost, not a footnote.
+2. **Its own weakest regime is near chance.** MuSiQue Dense AUC-AC **0.556**
+   and 2Wiki Dense **0.649** — the method is not uniformly good and the paper
+   is honest about it. `ME.11`'s dense arms are the ones that failed; the
+   regime where RCS is weakest is the regime we are in.
+3. **Single author, no code released, no hardware, and no statistical tests** —
+   CI overlap is used for co-best determination, which is not a test. Weakest
+   provenance nominated this week.
+4. **Multi-hop public QA is not a diary.** Their features include two-hop
+   structure that our single-hop retrieval does not have, so we would run the
+   d = 6 variant, which is *not* the configuration carrying their best numbers.
+5. Their CWAR ground truth is retrieval-side, but their headline MuSiQue
+   reduction is quoted *"with LLM-judge"* — the judge is in the **evaluation**,
+   not the scorer. I checked this because it is exactly the distinction five
+   refusals turned on, and it holds — but it means their eval pipeline is not
+   reproducible here without substitution.
+
+---
+
+### N3 — NOT AN ARM: the corruption-intervention control for fusion readout metrics, because §6 measures the defect and this is the discipline that catches it
+
+**Source:** *The Alignment Illusion in Multimodal Large Language Models* —
+[arXiv:2609.30210](https://arxiv.org/abs/2609.30210), primary category
+**cs.CV**, 2026-09-24, Wang, Wang & Ding. **Accepted to NeurIPS 2026.**
+**Abstract level only [V]** — stated here, not in a footnote.
+
+**The claim.** Standard layer-wise alignment metrics — **CKA, SVCCA, MIR,
+principal-angle cosine** — *"fail to distinguish corrupted visual tokens from
+original ones despite sharp accuracy drops."* The diagnosis is structural:
+*"anisotropic MLP down-projections pull visual and text tokens toward common
+output directions, producing weight-induced alignment."* Their conclusion,
+quoted because it is the transferable part: internal visual-text alignment
+*"is therefore best read as a geometric diagnostic of the visual stream inside
+the language model rather than a direct proxy for content-level cross-modal
+interaction."* 13 MLLMs, five families, 0.5 B–72 B.
+
+**The nomination is one line, and it is a method, not a metric:** the way they
+established the illusion is by **controlled corruption** — replace the visual
+tokens with Gaussian noise, observe that task accuracy collapses while the
+similarity metric does not move, and conclude the metric is not measuring what
+its name says. **Any readout used to decide a fusion bakeoff should carry that
+control: corrupt one modality's input, and the readout for that modality must
+move.** `T4.06`'s `min_modality_latent_r2` has no such lane. It has a ceiling
+saturation lane (`R2_SATURATION = 0.99`) and a grad-scale dominance control that
+guards the *ratio*, but nothing establishes that the R² readout responds to the
+presence or absence of the sense it is named for.
+
+This is the literature's version of §6's finding and I am presenting them as
+**one problem stated twice, not two problems.** §6 measures that the readout's
+floor is unknown and rank-dependent; N3 supplies the standard discipline for
+showing a readout measures anything at all. It also completes a control set
+this desk has been assembling for four sweeps: **wk6-N3** (pathway decoding
+before *and* after fusion) catches a winner degrading the pathway it balanced,
+**wk8-N2** (the do-nothing reference arm, now in the spec) catches the family
+being worthless, and **N3** catches the readout being blind. Cost: **zero new
+parameters**; one corrupted-input evaluation pass per modality on a model that
+is being evaluated anyway.
+
+**WHY IT MIGHT LOSE — steelmanned.**
+
+1. **Their metrics are not our metric.** CKA/SVCCA/MIR are representational
+   *similarity* measures between two streams; ours is a *supervised ridge
+   readout* of a known target. A ridge probe is in principle harder to fool than
+   CKA, and §6's measurement in fact shows **our probe is not capacity-limited**
+   — so the analogy transfers the *discipline* and not the *defect*, and week 3's
+   rule says to say so.
+2. **Abstract level only**: no seeds, no hardware, no parameter counts, no code
+   statement extracted. I did not open the full text; the mechanism paragraph
+   above is the authors' abstract, marked [V] at that level and no further.
+3. **An MLLM at 0.5–72 B with a language backbone is not a five-sense RSSM at
+   861,545 params** [M, week 7], and their dominant stream is vision-in-text
+   where ours is touch. This is the fourth consecutive sweep in which the
+   fusion literature's regime is nothing like ours.
+4. A corruption control can pass and still leave the readout uninformative:
+   showing R² *moves* when a sense is destroyed does not show the absolute
+   value means anything. **It is necessary, not sufficient** — §6's floor is the
+   other half.
 
 ---
 
@@ -442,21 +445,24 @@ Every entry records its arXiv **primary category**.
 
 | item | cat | what it is | what would PROMOTE it |
 |---|---|---|---|
-| **MINERVA** — *How Small Can a Manipulation Policy Be and Still Solve LIBERO?* ([arXiv:2609.03715](https://arxiv.org/abs/2609.03715), 2026-09-03, Sendai, Matsushima & Iwasawa) | cs.RO | **The small-model end returns something after five empty sweeps.** Measured [V]: **0.54 M parameters**, **95.1 %** average over **2,000 rollouts** on the four standard LIBERO suites, *"only 2.4 points below the reported LeRobot π₀.₅ result"*; 94.6 % on LIBERO-90 across 89 tasks; **saturates near 1 M, collapses below 0.25 M**. **Runs on a laptop CPU, 5–9 ms per chunk, 113× faster than SmolVLA and 1,400× faster than π₀.₅.** | **An RL result, or nothing.** It is **imitation learning from demonstrations**, which is the exact ground week 3 rejected DOOM-1.3M on, and consistency costs nothing here. It is also brittle where it matters to us — LIBERO-Plus perturbations 46–56 %, photometric robustness **near zero**. Recorded because it is the **first paper in eight sweeps whose inference runs on our substrate class with a latency number**, and because its measured collapse threshold (0.25 M) and saturation point (~1 M) bracket our own arms — `ppo-needs` **135,961** is *below* their collapse threshold and `wm-latent` **861,545** is just under their saturation point [M]. **That bracketing is an analogy, not arithmetic** (different task, imitation vs RL), and week 3's rule says so. |
-| **2609.21787** — *Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models* ([abs](https://arxiv.org/abs/2609.21787), 2026-09-18, Chen & Liu) | cs.RO | **State-based and recurrent** — structured-GRU and a parameter-matched LSTM, not pixels, which is `A4`'s shape (`nn.GRUCell`). Asks whether a compact intervention structure survives autonomous rollout, and answers that it persists as *"a moving, state-dependent local geometry"* rather than a fixed low-rank subspace. | **Any number at all.** The abstract contains **no metrics, no seeds, no hardware, no parameter counts, no code**, and the result is stated across *"two of three checkpoints"* without those checkpoints being characterised. Its relevance is concrete if it ever gets numbers: it is about whether a diagnostic measured at one state transfers to another, which is the question any `A4` readout inherits. |
-| **2608.10145** — *The Evaluation Protocol Determines the Result: An Independent Reproduction of LeWorldModel on TwoRoom* ([abs](https://arxiv.org/abs/2608.10145), 2026-08-10, Joyjeet Singh) | cs.LG | An independent reimplementation, **~$25 of rented compute with all evaluation on one laptop CPU**, **code released** (`joyjeet-singh/tinylab`). Measured [V]: on the authors' own released weights and **fifty identical episodes**, *"changing nothing but how the goal is constructed moves that checkpoint from 84.0 % to 8.0 %"*; the paper's appendix and the repository's config give **14.0 %** and **84.0 %**. Four undocumented conventions were required for convergence at all. | **Nothing — it is recorded, not promoted.** Its two general claims are corroboration of things this project already enforces: that one-step prediction error *"fails to order long-horizon success at all"* across a sevenfold range of prediction error is law 1 (*a loss curve is not learning*) measured in someone else's lab, and the batch-norm layer that inflated validation loss 300× is a `T0.x` scar we have paid. **Corroboration is not news.** It is on the list only because it is the second paper this sweep whose compute is honestly reported and small. |
+| **2607.29476** — *Resource depletion accelerates rate learning but not composition learning in patch foraging* ([abs](https://arxiv.org/abs/2607.29476), 2026-07-31, Kilpatrick & El Hady) | **q-bio.NC** | **Front 5's first on-axis item in seven sweeps, and it came from the biology category rather than `cs.*`** — week 7's lesson recurring. A normative Bayesian forager learning a patchy world while exploiting it, with a **dissociation**: depletion *accelerates* rate learning within a patch (*"successive encounters occur at falling rates whose spacing pins down the initial rate"*) but composition learning across patches is *"slow, set by the number of patches sampled rather than the time spent in each, and unaffected by depletion."* Reward-maximising and information-seeking strategies **diverge**; with replenishment the reward-maximising policy *"collapses onto a stable orbit over the high-yield patches."* | **Nothing promotes it to an arm — it is a WORLD-DESIGN reference, like ForageWorld.** It is **theory with no experiments, no subjects, no p-values, no agent** [V], so it cannot be a bakeoff arm and I am not proposing it as one. Its value is a pre-registerable constraint on `W1`: **if food depletes, the number of distinct patches — not time alive — bounds what Jack can learn about the world's composition**, and a world with few patches cannot teach it at all. `w1-world-edit-window` is OPEN and +1 OVERDUE with `W1.01`/`W1.03`/`W1.04` still unregistered; this is a design input for that window, offered to it and nothing more. |
+| **2609.31161** — *I Act Therefore I Am: When Is JEPA's Action-Conditioning Enough to Learn Causal Mechanisms?* ([abs](https://arxiv.org/abs/2609.31161), 2026-09-25, Liu, Huang & Shi) | cs.LG | **A FIFTH independent group on the action-conditioning theme**, and the first to ask for the *condition* rather than propose another fix. Information-theoretic identifiability: representations recover causal states *"up to component-wise invertible transformations and permutation"* when there is **"sufficient action-induced variation in the transition mechanisms"**; instantiated as A-JEPA. | **A computable post-hoc diagnostic.** The condition as stated is not measurable on a trained model — *"the provided content does not specify a computable post-hoc diagnostic metric"* [V, abstract level] — so it cannot be an instrument, which is the only thing this desk needs on that seat. **No numbers, no seeds, no hardware, no params, no code.** Promote if a later version gives an estimator for action-induced variation; otherwise it is a theory that agrees with four measurements we already have. Week 5's rule applies: a theory nomination must carry its assumption list, and this one's assumptions are about the data-generating process, not about a trained `A4`. |
+| **2609.19942** — *Intrinsic Sequence-Likelihood Confidence in Retrieval-Dominated Extractive QA: Two Pre-Specified Negatives* ([abs](https://arxiv.org/abs/2609.19942), 2026-09-17, Lee et al.) | cs.CL | **Recorded for its NEGATIVE result, in our exact task shape.** Extractive QA where questions were generated from the passages containing their answers, so *"retrieval recovers 92–99.8 % of what any mode combination could reach"* — and in that regime *"confidence-driven mechanisms have little to gain."* Two **pre-specified negatives** (a distillation trigger and a routing-and-abstention policy) both failed. AUROC 0.65–0.81; adaptation moved closed-book F1 *"by at most +0.03"*. **Code and data released** (two Zenodo DOIs). | **Nothing — it is a caution, not a candidate.** Its confidence signal is **generator-side sequence likelihood**, inadmissible here, so the method cannot enter. Its *warning* is worth carrying next to N2: **where retrieval already saturates, an abstention mechanism has no headroom to demonstrate anything.** Our fixture has `oracle_ceiling 1.0` but `answered_cues` **27.33 of 160** [M], so we are nowhere near their saturated regime — which is the check that keeps this from undercutting N2, and I ran it rather than assuming it. |
 
 **Carried and re-examined:**
 
 | item | cat | status |
 |---|---|---|
-| **2608.29434** — action-conditioned JEPA on point clouds | cs.LG | **Unchanged, and now the weaker of two non-pixel items.** Still abstract-level, still no metric definitions, no numbers, no hardware, no code. N1's ARC-Bench supersedes it as the evidence for the same theme; 2609.21787 supersedes it on the "non-pixel" axis by being genuinely state-based rather than geometric. **Promote on numbers, or drop it next sweep with cause.** |
-| **SmallWorlds** ([arXiv:2511.23465](https://arxiv.org/abs/2511.23465)) | cs.LG | Unchanged, fifth sweep. Rollout-horizon deterioration in the fully observable state space — our regime. Still no compute cost, no hardware, no environment size, no code. **Promote on: any statement that a domain runs on CPU.** |
-| **ForageWorld** ([arXiv:2506.06981](https://arxiv.org/abs/2506.06981)) | cs.AI | **Kept, and its window has now slipped a second time.** `w1-world-edit-window` has lost four consecutive Sunday FULLs and `D33` exists to ask whether the design is producible at all. Still the closest published existence proof of depleting/diffusing food, pursuing predators and an energy-gated immobilising sleep action. **Design reference only; it is not an arm and never was.** |
+| **2609.21787** — *Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models* | cs.RO | **Re-examined and its relevance went UP while its evidence stayed at zero.** Its subject — whether a compact latent geometry measured at one state transfers to another, *"a moving, state-dependent local geometry"* — is now the live question under both N1 and §6, since a `C_i` measured on one trajectory segment inherits exactly that worry. **Still no metrics, no seeds, no hardware, no params, no code**, and its result is stated across *"two of three checkpoints"*. **Promote on any number. Second sweep carried; per this desk's deferral rule it is dropped with cause next sweep if still numberless.** |
+| **3M-Progress** ([arXiv:2506.00138](https://arxiv.org/abs/2506.00138)) | q-bio.NC | **DEMOTED FROM §2 TO THE WATCHLIST — queued #5 closed, third and last pass, exactly as week 8 committed.** Full HTML read: the paper reports **no agent exploration or survival metric of any kind** — no coverage, no states visited, no reward, no time alive [V, checked explicitly]. What it reports is alignment: *"3M-Progress agents captured nearly all of the explainable variance in neural and astrocytic activity, markedly outperforming existing intrinsic motivation algorithms"*, over **250,000 cells (~125 K neurons + 125 K astrocytes)**, **11 subjects**, behavioural state transitions discovered *"by 10 million environment steps"*; inter-animal alignment *"nearly 100 %"*; Figures 3/4A carry the comparisons against ICM, RND, Disagreement, γ-Progress, homeostatic, max-entropy and random. **The demotion is on GOAL.md's own terms, not on a technicality:** biology enters as a bakeoff arm and must win on *our* ruler, and a neural-fit win is not a survival win — *"planes do not flap."* The `CURIOSITY_BAKEOFF` hold the Review placed on it was right and made this costless. **Promote on: any exploration or survival number, from any source.** |
+| **2608.29434** — *Does Latent Planning Survive Point Clouds? Action-Conditioned JEPA World Models for Geometric Observations* | cs.LG | **DROPPED WITH CAUSE — queued #8 executed.** Now identified in full (Oberweger & Schwingshackl, 2026-08-29, v1 only). Carried three sweeps at abstract level and there is still **no benchmark table, no seeds, no hardware, no parameter count and no code statement** [V]; the only numbers on the page (*"0.3–15 % of scene points moving"*) describe the dataset, not a result. Point clouds are not our regime either. Week 3's deferral rule applied without further argument. |
+| **SmallWorlds** ([arXiv:2511.23465](https://arxiv.org/abs/2511.23465)) | cs.LG | Unchanged, sixth sweep. Rollout-horizon deterioration in the fully observable state space — our regime. Still no compute cost, no hardware, no environment size, no code. **Promote on: any statement that a domain runs on CPU.** |
+| **ForageWorld** ([arXiv:2506.06981](https://arxiv.org/abs/2506.06981)) | cs.AI | **Kept, and it now has a companion** — 2607.29476 above supplies the *theory* of depleting patches where ForageWorld supplies an *implementation*. Still Craftax/GPU and a gridworld where `W0` is a body. **Design reference only; it is not an arm and never was.** |
+| **MINERVA** ([arXiv:2609.03715](https://arxiv.org/abs/2609.03715)) | cs.RO | Unchanged. 0.54 M params, 95.1 % on LIBERO, laptop CPU at 5–9 ms — still the only paper whose *inference* runs on our substrate class with a latency number, still **imitation learning from demonstrations**, the ground week 3 rejected DOOM-1.3M on. **Promote on: an RL result, or nothing.** |
 | **PRIME** ([arXiv:2607.16858](https://arxiv.org/abs/2607.16858)) | cs.LG | Unchanged. Pseudocount epistemic term, free on a 10×10 grid, undefined on a continuous body state. |
-| **IIBalance** ([arXiv:2603.17347](https://arxiv.org/abs/2603.17347)) | cs.MM | **Re-examined on front 2's return and now second-best in its own family.** N2's paper is the stronger statement of the same scepticism — IIBalance argues capacity-based budgets should replace forced equality; 2609.11247 *measures* that the forced-equality family does not beat concatenation. Still classification, still no extractable numbers. |
-| **Eywa** ([arXiv:2605.30771](https://arxiv.org/abs/2605.30771)), **ScrubJay-MEM** ([arXiv:2608.04746](https://arxiv.org/abs/2608.04746)), **RARE/RedQA** ([arXiv:2604.19047](https://arxiv.org/abs/2604.19047)), **CoDeR** ([arXiv:2606.13204](https://arxiv.org/abs/2606.13204)), **Argus Eyes** ([arXiv:2602.09616](https://arxiv.org/abs/2602.09616)) | cs.CL / cs.IR | **All front-3 items, carried unexamined this week by design** — front 3 is on its two-week cadence and returns 2026-09-28. Week 7's dispositions stand; nothing here is a fresh read and none of these is claimed to have been re-checked. |
-| **POBAX** ([arXiv:2508.00046](https://arxiv.org/abs/2508.00046)) | cs.LG | Unchanged, and still not an instrument we lack. `W1.01` is still unregistered, which is why it is still listed. |
+| **IIBalance** ([arXiv:2603.17347](https://arxiv.org/abs/2603.17347)) | cs.MM | Unchanged, and now largely spent: `T4.06` has measured the balancing question on our own rig, which is better evidence than any classification paper. |
+| **Eywa** ([2605.30771](https://arxiv.org/abs/2605.30771)), **ScrubJay-MEM** ([2608.04746](https://arxiv.org/abs/2608.04746)), **RARE/RedQA** ([2604.19047](https://arxiv.org/abs/2604.19047)), **CoDeR** ([2606.13204](https://arxiv.org/abs/2606.13204)), **Argus Eyes** ([2602.09616](https://arxiv.org/abs/2602.09616)) | cs.CL / cs.IR | **Front 3 was swept and none of these was re-opened.** Their dispositions stand from weeks 4–7 (generation in the write path for the first three; wrong failure axis for CoDeR). **They are superseded in role by N2**, which is the first of this family to keep generation out of the read path *and* report a latency. Not re-checked this sweep and not claimed to be. |
+| **POBAX** ([arXiv:2508.00046](https://arxiv.org/abs/2508.00046)) | cs.LG | Unchanged. `W1.01` still unregistered, which is why it is still listed. |
 | **Curiosity-Critic** ([arXiv:2604.18701](https://arxiv.org/abs/2604.18701)) | cs.LG | Unchanged. Weaker-evidenced sibling of LPM, already cited by `CURIOSITY_BAKEOFF.md`. |
 
 ---
@@ -465,22 +471,26 @@ Every entry records its arXiv **primary category**.
 
 | nomination | entered | status now |
 |---|---|---|
-| **wk7-N1 · free-embedding critical-`d` probe (2508.21038)** | `ME.11` successor pre-gate | **ACCEPTED, ORDERED FIRST, NOT RUN.** §0(4): no spec, no code, seven days on. Not re-argued and not withdrawn — it is the cheapest live item on the desk (single-digit CPU-minutes) and the reason it was ordered first has not changed. |
-| **wk7-N2 · 3M-Progress (2506.00138)** | `CURIOSITY_BAKEOFF` arm | **ACCEPTED AS AN ARM and HELD, with the hold written down** (`f34d366`): `CU.1`–`CU.7` are seven specs with **zero implemented**, and an arm spec for a bakeoff with no arms ages without a referent. **The hold is right and I am not contesting it.** Queued #6 (a third pass for its numbers) is **NOT DONE this sweep** — front 3's absence went to fronts 2 and 5, not to a fourth fetch of a held arm. Carried once; per this desk's deferral rule it is closed or dropped next sweep. |
-| **wk7-N3 · ActSWM `Δ_k` (2607.26712)** | merged into the `a4` row | **ACCEPTED and MERGED**, now option (i)'s named form on the `a4-…-computed-nowhere` row. **§2's N1 is a second readout for the same seat and is cheaper than this one** — `Δ_k` needs matched real-environment rollouts to get `z_{t+k}`; the `k`-sweep does not. Both are priced off the same 14.40 core-h training run. |
-| **wk7 · §6 (A4's mandatory diagnostic computed nowhere)** | `REVIEW_QUEUE.md` row | **ROUTED within an hour, OPEN, DUE 09-18, now +3 days.** The desk's recorded leaning is **(i)+(iii) together, never (iii) alone** — build the readout *and* amend `LEARNING_CORE.md` §5.4 to say the guard was never built and the seat was awarded without it. **§6 below is about the same seat from a different direction and does not repeat this one.** |
-| **wk7 · §6b (abstention certified below its own bar)** | `me1-similarity-floor-never-abstains` | **DISCHARGED IN PART — three of five repaired, two structurally capped.** §0(3) has the table. |
-| **wk6-N3 · IAF pathway-decoding control** | `t402` row, DUE **09-22** | **STILL WAITING, 16 days.** Carried unchanged and not re-argued. **§2's N2 is its complement, not its replacement:** N2 catches the family being worthless, wk6-N3 catches a winning arm degrading the pathway it balanced. |
-| **wk6-N2 · MULTIBENCH++ redundancy pre-gate** | `ub10` | **Unchanged.** Stands as a pre-registration on the hardened battery's next reading. |
-| **wk5-N1 · SIGReg vs VICReg (2607.13612)** | `LEARNING_CORE` §5.4 selection criterion | **AMENDED BY §2's N3, AND THE AMENDMENT IS AGAINST MYSELF.** Week 5 promoted SIGReg on a theorem; a paper with experiments now measures that plain SIGReg suppresses temporally-centered residual variance and reduces state/dynamics decodability. The nomination survives in its temporally-centered form. Its **re-pricing from zero still stands** (week 7 §6: the curves it was to be read on do not exist). |
-| **wk5-N2 · prosociality by coupling (2604.10760)** | `NE.07` | **Unchanged.** Arm DEFERRED, shuffled-partner CONTROL accepted. `NE.07` and `NE.02` have still never run. |
+| **wk8-N2 · do-nothing reference arm (2609.11247)** | `t402`'s ordered bakeoff | **THE CONTROL IS IN THE SPEC AND THE SPEC RAN.** `T4.06`'s `null_baseline` is the incumbent re-run unchanged as arm zero, and its spec-level control is *"the incumbent evaluated under the winner rule MUST NOT win"* — which held (`ctrl_incumbent_wins 0.0`, `ctrl_incumbent_still_red 1.0` [M]). §0(1). **No citation of this page appears in the row and I claim no causation.** The nominated paper's prediction — that the balancing family barely beats doing nothing — is now measured here: **+0.0187**. |
+| **wk6-N3 · IAF pathway-decoding control** | `t402` row | **PARTIALLY IN, AND THE MISSING HALF IS THE HALF THAT MATTERED.** `T4.06` measures per-modality latent R² *after* fusion (`latent_r2_per_seed`, all five senses, every arm [M]) — that is IAF's "after". It measures **no unimodal "before"**, so it cannot say whether fusion *degraded* a pathway or never carried it. The nomination survives, narrowed to exactly that: **a unimodal ceiling for each sense.** §6 explains why that is now the cheapest thing on this front. |
+| **wk7 · §6 (A4's mandatory diagnostic computed nowhere)** | `REVIEW_QUEUE.md` row | **RULED (i)+(iii); (iii) EXECUTED 09-27; (i) CONTINGENT on the owner via `D37`**, row re-dated 10-04. §0(2). The desk's recorded leaning was (i)+(iii) and that is what it ruled. **§2's N1 is a candidate for the (i) half's readout choice.** |
+| **wk8 · §6 (`LC.03`'s five controls never switch off `l_bind`)** | `lc03-five-controls-never-switch-off-the-term-a4-is-named-for` | **ROUTED BY CITATION, confirmed by the reader [M].** A row exists and carries it. Not re-argued here. |
+| **wk8 · §6b (fieldwatch quotation channel 0-for-5)** | `fieldwatch-quotation-channel-is-0-for-5` | **ACTED 2026-09-24, and it bought more than it asked for** — `MIN_QUOTE_OVERLAP = 6`, header stripping, 0 spurious of 18, `decisions._shingles` untouched, **plus the discovery that `owner_asks` had parsed 0 items for 14 days.** §0(3)–(4). **Closed.** |
+| **wk8-N1 · replanning-frequency ablation (2609.05461)** | the `a4` row | **LIVE, and named in the row as one of three items wanting the same 14.40 core-h.** Unrun, correctly sequenced behind `D37`. **Queued #7 CLOSED NEGATIVE: ARC-Bench's code is still not released** — the page is v1 (12 Aug 2026), with no repository, no release statement, and still no hardware or wall-clock anywhere [V]. The reimplementation risk this desk flagged as N1's largest unpriced part is **unchanged**. |
+| **wk8-N3 · temporally-centered SIGReg (2607.26924)** | `A4c` amendment | **Unchanged. `A4b`/`A4c` are LIVE AND UNRUN for a NINTH sweep.** §5 declines a sixth route again. |
+| **wk7-N1 · free-embedding critical-`d` probe (2508.21038)** | `ME.11` successor pre-gate | **ACCEPTED, ORDERED FIRST 09-14, STILL NOT RUN AT 14 DAYS** [M, §0(5)]. Not withdrawn and not re-argued: it is still the cheapest live item on the desk. **§2's N2 is its complement, not its replacement** — wk7-N1 asks whether the embedding geometry *can* work; N2 changes the decision rule over the scores that geometry already produces, so N2 survives a negative answer from wk7-N1. |
+| **wk7-N2 · 3M-Progress (2506.00138)** | `CURIOSITY_BAKEOFF` arm | **WITHDRAWN FROM §2 TO THE WATCHLIST**, on this desk's own deferral rule, after the promised third pass found no agent performance number of any kind. §3. The Review's HELD status made the withdrawal costless. |
+| **wk7-N3 · ActSWM `Δ_k` (2607.26712)** | merged into the `a4` row | **Unchanged, and now explicitly what the 10-04 sitting will hand to the builder if `D37` permits.** |
+| **wk6-N2 · MULTIBENCH++ redundancy pre-gate** | `ub10` | **Unchanged.** Stands as a pre-registration on the hardened battery's next reading. `ub10` is ACTED but `T4.03` (*Fusion actually fuses*) is still unimplemented. |
+| **wk5-N1 · SIGReg as variational free energy (2607.13612)** | `LEARNING_CORE` §5.4 | **Unchanged, in its wk8-amended temporally-centered form.** Its re-pricing from zero stands (the curves it was to be read on do not exist). |
+| **wk5-N2 · prosociality by coupling (2604.10760)** | `NE.07` | **Unchanged.** Arm DEFERRED, shuffled-partner CONTROL accepted. `NE.07`/`NE.02` still never run. |
 | **wk4-N1 · spectral-radius constraint (2607.19719)** | `A4` variant | **ACCEPTED, narrowed. Unrun.** |
-| **wk4-N2 · PSG-JEPA (2608.06799)** | `A4` ×2 | **ACCEPTED as two arms. Unrun**, sequenced behind `D9`'s PARK. **Converges with §2's N3** — see there. |
-| **wk4-N3 · infant motor noise** | `W0.DIAG` | **RUN AND PASSED.** Nothing further owed. Still the only field-watch nomination in eight weeks to become a number. |
-| wk1 · anti-collapse regularisers → `A4b`/`A4c` | `A4` variants | **LIVE, UNRUN — eighth sweep.** §2's N3 amends `A4c`'s form; it does not make the arm any more run than it was. §5 declines to add a fifth route. |
+| **wk4-N2 · PSG-JEPA (2608.06799)** | `A4` ×2 | **ACCEPTED as two arms. Unrun**, sequenced behind `D9`'s PARK. |
+| **wk4-N3 · infant motor noise** | `W0.DIAG` | **RUN AND PASSED.** Still the only field-watch *arm-side* nomination in nine weeks to become a number — though §0(1) and §0(3) are now two *control-side* ones that did. |
+| wk1 · anti-collapse regularisers → `A4b`/`A4c` | `A4` variants | **LIVE, UNRUN — ninth sweep.** |
 | wk1 · certificate-gated identifiability → `UB.11` pre-gate | `UB.11` | **LIVE, unrun.** Still the only route to `UB.11`'s certificate. |
-| wk1 · interoceptive precision (2608.04232) | `NE` §2.4b | **LIVE, unrun.** Still the cheapest item on the desk with released code, and it has been for eight weeks. |
-| wk1 · entity-collision protocol (2605.29630) | `MR` §2 | **LIVE, unrun**, and subsumed in spirit by wk7-N1, which is also unrun. |
+| wk1 · interoceptive precision (2608.04232) | `NE` §2.4b | **LIVE, unrun.** Still the cheapest item on the desk with released code, nine weeks running. |
+| wk1 · entity-collision protocol (2605.29630) | `MR` §2 | **LIVE, unrun.** |
 | wk2 · the whiff clock → `SM.02` | `SM.02` | **HELD, correctly — `SM.02` is PARKED.** |
 | wk2 · RPE-prioritised replay → `NE.05` | `NE.05` | **LIVE, unrun.** |
 | wk3 · CIG (2605.20878) → `A3` | `A3` | **Remains DEMOTED** (`wm-efe` t = 2.05). |
@@ -490,347 +500,339 @@ Every entry records its arXiv **primary category**.
 
 ## 5. NO-ACTION — fronts where nothing cleared the bar
 
-**FRONT 4 · CURIOSITY & OPEN-ENDEDNESS — NOTHING, AND THE ENUMERATION SAYS THE
-SAME THING FOR THE SIXTH TIME.** A 40-entry enumeration on intrinsic
-motivation / intrinsic reward / open-ended / autotelic × exploration or agent
-returned: LLM agent harnesses (ArenaFlow, Stellar Colosseum, EvoRS, AutoKD),
-HCI and visual-analytics papers, ads ranking, supply-chain analytics, and
-hardware-interference identification. **Not one has a body under homeostatic
-drive; not one evaluates an intrinsic reward against a random or noise
-baseline.** The nearest three are `2609.17325` (*Intrinsic Motivation in RL: A
-Research Agenda*, cs.AI — an agenda), `2609.05650` (*Endogenous Exploration
-with Intrinsic Curiosity*, cs.LG) and `2609.07575` (*Efficient Exploration Is
-Enough*, cs.LG); none was fetched and none is claimed to have been. **A
-WebSearch pass outside arXiv returned the homeostatic-RL literature this
-project already cites (HRRL, drive-reduction reward) at 2024–2025 dates —
-out of window, and the family `NEEDS_AND_DEATH` is built on.** Week 7's
-nomination on this front (3M-Progress) remains the front's only live arm and it
-is HELD behind seven unimplemented `CU` specs, which is a better description of
-why front 4 is empty than anything the literature did.
+**FRONT 4 · CURIOSITY & OPEN-ENDEDNESS — NOTHING, SEVENTH CONSECUTIVE TIME, AND
+THE CRITERION HAS NOT MOVED.** A 40-entry enumeration on intrinsic motivation /
+intrinsic reward / autotelic / open-ended learning returned an agenda paper
+(`2609.17325`), developmental-framework position pieces (`2609.11660`), LLM and
+code-reasoning bonuses (`2608.07531`, `2606.20881`, `2606.19476`), federated RL
+(`2608.10499`), multi-agent influence terms, and social-robot HCI. **Not one has
+a body under homeostatic drive; not one evaluates an intrinsic reward against a
+random or noise baseline.** Two are recorded without being fetched or
+nominated: `2606.11417` (*Signed Compression Progress on a Sealed Audit is
+Goodhart-Resistant*, cs.LG) is the only in-window item whose framing is about
+an intrinsic signal resisting Goodharting, which is this project's standing
+worry on this front; and `2605.22814` (*Remember to be Curious*, cs.LG) pairs
+episodic context with persistent worlds, which is the cross-life shape `GOAL.md`
+describes. **Neither was opened and no claim of theirs is relied on.** Front 4's
+only live arm is now withdrawn to the watchlist (§3), so **this front has zero
+live nominations for the first time since week 7** — and the honest reason is
+that `CU.1`–`CU.7` remain seven specs with none implemented, which ages an arm
+faster than any literature can supply one.
 
-**FRONT 5 · WORLDS & EMBODIMENT — NOTHING, AND THE SPECS THAT NEEDED SOMETHING
-ARE STILL UNREGISTERED.** A 40-entry enumeration on survival / homeostatic /
-foraging / embodied agent × simulation, benchmark, MuJoCo returned navigation
-benchmarks (EvoNav-Bench, 360CityArena, DreamFly), LLM-agent scaffolding,
-3D-scene-graph memory, swarm robotics, a Dark Souls boss environment, and —
-because "survival" is a word other fields own, week 2's lesson recurring —
-**six astrophysics and condensed-matter papers**. `2608.26947` (*4DSynth:
-Controllable Procedural World Synthesis for Dynamic Embodied Simulation*,
-cs.RO) and `2609.19801` (*DeliveryGym*, cs.LG) are the only two on the right
-axis and neither has needs, death or a fidelity claim. **`W1.01`/`W1.03`/
-`W1.04` remain NOT REGISTERED** and `w1-world-edit-window` has now lost four
-Sunday FULLs; week 6 established there is no cheap published
-environment-discriminability score and nothing this week changes it. **These
-instruments are still ours to build.**
+**FRONT 5 · WORLDS & EMBODIMENT — NO ARM, AND THE WORD "SURVIVAL" COST ME A
+THIRD SWEEP.** The 40-entry enumeration on survival / homeostatic / foraging
+returned quantisation papers, malware detection, tokamak disruption alarms,
+crystal-structure prediction, and **two medical survival-prediction papers**
+(`2609.25088` GBM survival, `2609.21811` MIST) — week 2's lesson recurring for
+the third time, now as a search discipline that *still* does not fully filter.
+The only on-axis items were locomotion controllers (`2609.27001` fly-inspired
+recurrent, `2609.25687` severity-gated CPGs), and neither has needs, death or a
+fidelity claim. **The MuJoCo ecosystem check (a standing mandate item) returned
+the same answer as week 3:** the live developments are **MuJoCo Warp** and
+**MuJoCo Playground**, both **GPU-accelerated parallel-environment** plays — the
+axis `SURVIVAL_WORLD` §2.2 ruled out, and we run one life serially on four
+shared ARM cores. **The genuinely useful front-5 item this sweep came from
+`q-bio.NC`, not `cs.*`** (§3, 2607.29476), which is the second consecutive
+sweep where the biology category outperformed the computer-science ones on a
+front that is not nominally about biology. `W1.01`/`W1.03`/`W1.04` **remain NOT
+REGISTERED** and `w1-world-edit-window` is OPEN and +1 OVERDUE at 22 days.
+**These instruments are still ours to build.**
 
-**FRONT 1 · LEARNING CORES — A NOMINATION AND A DELIBERATE REFUSAL, AND THE
-REFUSAL IS THE PART WORTH READING.** The enumeration returned **four further
-anti-collapse / latent-structuring routes for `A4`** in window: `2608.17542`
-(*No Gaussian Required: Contrastive Inverse Dynamics for JEPA*), `2608.20065`
-(*Orthogonal JEPA: Factorized Predictive States*), `2608.16287` (*SCALE:
-State-Calibrated Latent Embeddings*), `2609.04264` (*Spectral-Target Physical
-Latent Structuring*). **I am nominating none of them.** This desk has promoted
-**five** anti-collapse routes (`A4b` inverse-dynamics, `A4c` SIGReg/LeJEPA, the
-spectral-radius constraint, PSG-JEPA ×2) and **run zero**, across eight sweeps.
-A sixth route would be padding, and padding on this front specifically is how a
-seat ends up with six unrun challengers and no guard. **The honest thing a
-scout can do with four more papers on a family that already has five unrun
-members is say so and stop.**
+**FRONT 1 · LEARNING CORES — A NOMINATION FROM BIOLOGY, AND THE SAME REFUSAL AS
+LAST WEEK ON THE SAME GROUND.** The 40-entry enumeration returned a genuinely
+crowded field: `2609.24749` (D-JEPA, decision-aligned latent world model),
+`2609.30264` (AD-WM, action-discriminative), `2609.23252` (*Robot World Models
+Are Not Invariant to How the Actions Are Written*), `2609.29171`, `2609.22816`
+(FIRM-WM), `2609.15770` (JEPLO, LiDAR legged locomotion), `2609.25541` (a JEPA
+recipe for tabular models). **I nominate none of them as arms**, for the reason
+week 8 gave and which has only got stronger: this desk has promoted **five**
+anti-collapse / latent-structuring routes for `A4` and **run zero**, now across
+nine sweeps. `2609.31161` goes to the watchlist as a *fifth* independent group on
+the action-conditioning theme — note that the theme itself is now
+well-corroborated and **corroboration is not news, seventh time of saying it**.
+**N1 enters this front from `q-bio.NC` instead, and it enters as a READOUT for
+an owner-bound decision rather than as a sixth challenger to a seat** — which is
+the distinction that makes it not padding.
 
-**SMALL-MODEL END — SOMETHING IN WINDOW FOR THE FIRST TIME IN SIX SWEEPS, AND
-IT IS STILL NOT AN ARM.** MINERVA (§3) is 0.54 M parameters on a laptop CPU at
-5–9 ms, which is the substrate class this desk has been asking the literature
-for since week 3. It is **imitation learning from demonstrations**, which is
-the exact ground DOOM-1.3M was rejected on, and applying the same standard to a
-result I like costs nothing and is the whole point of having the standard.
-**Recorded, not nominated.**
+**FRONT 2 · FUSION — NO METHOD, FIFTH CONSECUTIVE SWEEP, AND THIS TIME THE
+REFUSAL IS BACKED BY OUR OWN LEDGER INSTEAD OF SOMEBODY ELSE'S.** The probing
+and imbalance enumerations returned classification, recommendation, medical EHR
+and autonomous driving, as in every prior sweep. What changed is that **the
+question no longer needs the literature**: `T4.06` measured the balancing
+family on our own rig, and the answer was one arm winning by +0.0187 with the
+`grad_norm` arm's ratio equalised by construction. **The Goodhart objection this
+desk raised four times was correct in its prediction and is now spent as an
+argument** — the gate moved (29.83 → 2.45) and §6 is about whether the capability
+did. N3 is a control, not a method. **The probe-control-task literature I went
+looking for specifically does not exist in window**, which is why §6 had to
+compute its own floor.
 
-**BIOLOGY-AS-ORACLE — the standing `q-bio.NC` search ran and returned no arm,
-but it returned a better field than `cs.*` did.** Of 40 entries, the ones on
-our axis were `2609.02243` (*Mus siliconus*: a neuro-musculoskeletal digital
-twin of the mouse integrating neural dynamics, biomechanics and **tactile**
-input), `2606.17456` (*Embodiment Shapes Rolling Behavior in a Multimodal
-Infant Model*), `2604.27583` (infant first-person sensorimotor experience by
-motion retargeting) and `2607.20306` (*State-Dependent Observation Noise
-Reintroduces Epistemic Value in Linear-Gaussian Active Inference* — which
-bears on `A3`'s epistemic term, an arm that read t = 2.05 and is DEMOTED).
-**None was fetched, none is nominated, and the category is now doing what week
-7 said it would**: `cs.*` returns papers that *cite* biology, `q-bio.NC`
-returns papers that *do* it. The standing search is worth its one slot and
-stays.
+**SMALL-MODEL END — NOTHING IN WINDOW, and MINERVA remains the only item in
+nine sweeps whose inference runs on our substrate class.** The 30-entry
+enumeration returned VLA residual-RL, driving world models, speculative
+decoding and grippers; nothing under 1 M parameters with an RL result. Our own
+`ppo-needs` at **135,961** params and `wm-latent` at **861,545** [M, week 7]
+remain smaller than anything this literature is proud of.
 
-**FRONT 2 · FUSION — §2's N2 is a CONTROL, and the four-sweep refusal to
-nominate a balancing METHOD is unchanged and now has the field's own
-measurement behind it.** The 40-entry enumeration returned ~20 in-window
-imbalance papers (CAT-GS, SAGG, ShapKO, Pareto LoRA, PDMP, MiMIC, and a
-mixture-of-experts survey) and **every one is supervised classification,
-recommendation, federated learning or medical EHR** — the **third consecutive
-year**, and now the fourth consecutive sweep this desk has said it. **Not one
-paper in the family has a world-model objective and five heterogeneous senses.**
-The Goodhart objection stands unchanged and is now joined by a measured one.
+**BIOLOGY-AS-ORACLE — the standing `q-bio.NC` search produced BOTH of this
+sweep's non-`cs.LG` items and is now the highest-yield slot on the desk.** N1
+and the front-5 watchlist entry both came from it. Also returned and **not**
+fetched: `2606.00667` (*Cortex and subcortex play distinct roles over learning
+when cortical memory is limited* — the hippocampus/cortex split `GOAL.md` names
+as the diary-vs-weights oracle), `2609.16217` (a neural-**astrocyte**
+architecture implementing a hybrid automaton, converging with 3M-Progress's
+astrocytic story from a different direction), `2606.26733` (*Surviving by
+Serving*, bearing on wk5-N2's prosociality route), `2609.02243` (*Mus
+siliconus*, carried), and `2607.13560` (*Grounded world models in biological
+organisms and future embodied AI*). **None is nominated and none was opened.**
+The slot keeps its place and has now earned it twice.
 
 ---
 
-## 6. A FINDING IN OUR OWN ARTIFACTS — `LC.03`'s five controls never switch off the term `A4` is named for, so the seated arm's number cannot distinguish its world model from its actor-critic
+## 6. A FINDING IN OUR OWN ARTIFACTS — `T4.06`'s deciding statistic was read against a floor that nobody computed, the floor is `−r/(n_fit − r)`, and the *other* half of the spec's own open question has an answer
 
-Week 3's rule: a scout reading our own ledger has no abstract to doubt, so it
-must carry the arithmetic. **This is a different hole in the same seat as week
-7's §6, and it is not a restatement of it** — week 7 found that `A4`'s declared
-*collapse* diagnostic does not exist. This is about what its *controls* do and
-do not remove. Reproducible in four commands.
+Week 3's rule: a scout reading our own ledger has no abstract to doubt, so the
+finding must carry the arithmetic that survives rather than the story that
+motivated it. Everything below is reproducible with NumPy and no GPU.
 
-**What `A4` is, in the code's own words** (`experiments/cores.py:15`):
+**WHAT IS ALREADY OWNED, STATED FIRST AND IN FULL, BECAUSE MOST OF THIS IS.**
+The 109th audit (2026-09-23) caught the margin problem the day the row landed,
+`LESSONS.md` §16550 records it as a two-part general rule, `experiments/resolution.py`
+computes and prints margin-over-spread for exactly this class of conjunct, and
+`run status` has printed it since the 110th audit. **The spec's own docstring
+already says the thing a reader would expect me to announce** [V, lines 45–60]:
 
-> *"A4 `wm-latent` — A2 with the decoder deleted; latent prediction vs an EMA
-> target encoder."*
+> *"the anchor ARRIVED at `min_modality_latent_r2 = −2.3939` … the
+> latent-recovery conjunct certified the winner INSIDE the anchor's noise and
+> must not be quoted as demonstrated. … In every arm including the winner, four
+> of five senses read latent R2 in [−2.38, −0.17] from the fused
+> representation, and only proprioception is positive — **whether that is the
+> brain or a ridge probe fitting 513 params to 768 rows is not answerable from
+> this run and is now askable.**"*
 
-So the machinery that makes `A4` `A4`, rather than a plain RSSM actor-critic, is
-the `latent_pred` head and the objective that trains it. **Measured at HEAD**
-(`build_arm('wm-latent')`, `n_params`) [M] — and the row's 861,545 reproduces
-exactly, so the artifact and the code agree:
+`LESSONS.md` goes further and asserts the mechanism: *"at p/n = 0.67 with
+regularisation that small, a held-out R² near −2 is what variance alone
+produces."* **I am not reporting any of that as new.** What I am reporting is
+that the question the docstring declares unanswerable **is answerable, at zero
+compute, and the two halves of it come apart.**
 
-```
-wm-latent total            861,545
-  latent_pred head         149,312  (17.3 %)   <- the only machinery A4 is named for
-  actor + critic           135,049  (15.7 %)
-```
+**THE RECONSTRUCTION.** I replicated the probe's arithmetic exactly — same
+solver (`t4_06…py:408–420`), `RIDGE_LAMBDA = 1e-3`, `PROBE_N = 1152`,
+`n_fit = (2·1152)//3 = 768`, test 384, design width `d_model = 512` → **513
+columns with the bias**, target `k = 8`, R² averaged per dimension — and fed it
+designs whose answer is known by construction, 5 seeds each [M]:
 
-**How the three losses combine** (`experiments/cores.py:542`, `lc_update`),
-verbatim:
+| condition | measured R² |
+|---|---|
+| **NULL**: X iid Gaussian, z independent | **−1.99** [−2.05, −1.83] |
+| **NULL**: X LayerNorm-shaped, z independent | **−1.97 … −2.13** |
+| POSITIVE: `X = z @ R`, LayerNorm-shaped | **+0.94** |
+| POSITIVE: `X = 0.5·(z @ R) + noise` | **+0.80** |
+| POSITIVE: `X = 0.25·(z @ R) + noise` | **+0.37** |
+| POSITIVE: `X = 0.1·(z @ R) + noise` | −0.88 |
 
-```python
-l_bind, _ = core.binding_loss(batch, dropped)
-z = core.shared_state(batch, dropped)
-l_v  = F.mse_loss(core.critic(z), targets["value"])
-a    = core.act(batch, z)
-l_pi = (((a - targets["action"]) ** 2).mean(-1) * targets["advantage"]).mean()
-loss = l_bind + VALUE_COEF * l_v + l_pi
-```
+**ANSWER TO HALF THE SPEC'S QUESTION: IT IS NOT A CAPACITY ARTEFACT.** At the
+*identical* 513 params / 768 rows / λ = 1e-3, a linearly present signal is
+recovered at **+0.94**, and stays positive down to a quarter-amplitude signal
+buried in full-rank noise. **The probe is a working instrument**, so "the
+magnitudes are probe artefacts" is too strong a reading of the row: the
+*floor* is an artefact of the regime, the *instrument* is not broken. That
+distinction matters because it decides whether the fix is a better probe or a
+declared floor.
 
-**`l_v` and `l_pi` push gradient into `shared_state` — the same encoder, GRU and
-posterior that `l_bind` trains.** The RSSM is therefore shaped by the policy and
-value terms as well as by the world-model term, and the three are additive.
+**AND THE FLOOR IS NOT A CONSTANT — IT IS SET BY THE EFFECTIVE RANK OF THE
+FUSED REPRESENTATION, IN CLOSED FORM.** I stress-tested my own lead objection
+(that the floor was measured on synthetic X). Correlation, tails and scale do
+**not** move it; **rank is the only structural knob that does** [M, 5 seeds
+each]:
 
-**What `LC.03`'s controls actually are**, from the registry's own text — five,
-each named: **(a) statue** (do nothing), **(b) randrew** (random stationary
-reward projection), **(c) frozen** (the optimiser never steps), **(d)
-wiped-store** (weights, optimiser and replay reinitialised at every death),
-**(e) darkroom** (rewarded for minimising predicted observation entropy).
+| structure of X (z independent throughout) | measured floor |
+|---|---|
+| all 512 dims correlated ρ = 0.5 / 0.9 / **0.99** | **−2.06** (unchanged across ρ) |
+| heavy-tailed (Student-t, df = 3) | −2.03 |
+| unnormalised, scale ×10 | −2.15 |
+| z correlated across its 8 dims | −2.05 |
+| **effective rank 256 of 512** | **−0.53** |
+| **effective rank 64** | **−0.09** |
+| **effective rank 16** | **−0.02** |
 
-**Not one of them sets `l_bind = 0` while the rest of the arm keeps learning.**
-(a) changes the policy to nothing; (b) and (e) change the *reward*; (c) stops
-*all* learning; (d) reinitialises the *whole* model. **Every must-fail control
-on this seat breaks the model everywhere at once, and none of them breaks only
-the part the seat is named for.**
+And the whole table is one formula. With `n_fit = 768` and effective rank `r`,
+the no-information floor is **≈ −r/(n_fit − r)** [C, and [M] against it]:
 
-**And the arm that would exist in the repo.** `CONTROL_ARMS` already contains
-`unbound` — *"per-modality encoders, concat, NO cross-modal loss term"*
-(`cores.py:495`) — but it is a **different architecture**, and the committed
-`LC.03` result carries metrics under exactly five arm prefixes [M]:
-
-```
-$ python -c "…json.load(…)['results']['LC.03']['metrics']…"
-LC.03 metric prefixes: ['dreamer-xs', 'ppo-lp', 'ppo-needs', 'wm-efe', 'wm-latent']
-unbound present? False        (257 metrics)
-```
-
-**`unbound` has never been run on the survival ruler.** Its only appearance is
-in `LC.01` as a gradient-plumbing control for U2, **at init**.
-
-**THE CONSEQUENCE, stated as a fact and not as an instruction.** `A4` holds the
-Learning-core seat on `lg_margin_null` t = 4.64 and `lg_margin_twin` t = 4.00
-[C, recomputed at HEAD from the committed row]. **Both margins are consistent
-with a reading in which the latent-prediction objective contributed nothing and
-an RSSM actor-critic produced the whole number** — because the untrained twin
-has *everything* switched off and the frozen control has *everything* switched
-off, so neither separates the two hypotheses. If that reading is the true one,
-**149,312 parameters — 17.3 % of the seated arm — are dead weight**, which is
-Tier 3's entire business (*"every component ablated; dead weight deleted"*) and
-`LC.06`'s (*"the simplicity budget is enforced, not promised"*).
-
-**Why this is a section and not a footnote, and it is the same shape as this
-week's lead nomination.** ARC-Bench's measured claim is that *closed-loop
-success rates systematically overstate the rankability of the latent* — a
-capability number credited to a latent objective that the number never
-isolates. **That is this, in another lab, with p = 1.5 × 10⁻⁹.** I did not go
-looking for the local instance; I went looking for what N1 would need and found
-that our own control set has the gap the paper is about.
-
-**The cheap version, offered as an observation.** An `A4` variant with
-`l_bind` dropped is a one-line change to a core that already builds, and it
-would be the paired comparator this seat has never had. It is **not free** —
-same 14.40 core-h per 3 seeds as everything else on this seat, since no weights
-exist on disk [M] — but if the `a4-…-computed-nowhere` row takes option (i) and
-a training run happens, this arm and N1's `k`-sweep are both marginal on it.
-
-**Nothing is decided here.** Whether `A4`'s seat needs this comparator, whether
-`LC.03`'s control set should have had it, and whether any of it is worth
-14.40 core-h are the builder's and the Review's. **I report that five controls
-exist and none of them removes the mechanism.**
-
-### 6b — a second, smaller one, free, and it is about the instrument built last week to read this page: BOTH findings on this page report ROUTED, and all five routings are stock English prose or the row's own slug
-
-`experiments/fieldwatch.py` shipped seven days ago to catch a finding of mine
-that reached no desk (§0(2)). **On the second page it has ever read — this one
-— its quotation channel reports both findings as already owned, and not one of
-those routings is real.** Measured at HEAD [M], `_shingles(finding) &
-_shingles(queue_row)` over every row in `REVIEW_QUEUE.md`:
-
-| finding | row it reports as owner | the overlapping 6-gram(s) |
+| effective rank `r` | measured floor | `−r/(768 − r)` |
 |---|---|---|
-| **§6** | `pass-certificates-are-not-re-evaluated-when-a-dependency-falls` | *"it is the same shape as"* |
-| **§6** | `sm03-heldout-split-saturated` | *"is the same shape as this"* |
-| **§6b** | `lg03-blind-twin-cannot-prove-itself-alive` | *"why this is not a one"* |
-| **§6b** | `t108-noise-floor-is-quoted-by-nobody` | *"so it is not mistaken for"* |
-| **§6b** | `a4-…-is-declared-and-computed-nowhere` | *"a4 mandatory collapse diagnostic is declared"*, *"collapse diagnostic is declared and computed"*, *"diagnostic is declared and computed nowhere"*, *"mandatory collapse diagnostic is declared and"* |
+| 512 | −2.011 | **−2.000** |
+| 384 | −1.044 | −1.000 |
+| 256 | −0.526 | −0.500 |
+| 128 | −0.213 | −0.200 |
+| 64 | −0.090 | −0.091 |
+| 32 | −0.047 | −0.043 |
+| 16 | −0.026 | −0.021 |
+| 8 | −0.012 | −0.011 |
 
-**§6's true state is UNROUTED** — it is a fresh hole in `A4`'s control set and no
-row owns it. **§6b's true state is UNROUTED.** The instrument says otherwise
-five times.
+**THREE CONSEQUENCES, offered as observations and not as decisions.**
 
-**Two distinct mechanisms, and both are general rather than particular to my
-prose.**
+**(1) The bar itself sits at the full-rank no-information floor.** The
+incumbent's `min_modality_latent_r2` bar is **−2.3939** (vision) [M]. The
+formula's full-rank value is **−2.00**, and my ten full-rank draws spanned
+−1.83 to −2.25. So the quantity `T4.06`'s winner rule compared two arms on is,
+for the worst modality, **at or past the value a probe returns when the
+representation carries nothing at all**. `loss_reweight` beat it by **+0.0187**.
+This does not contradict the 109th audit — it supplies the reason the margin
+*had* to be small against the spread: **a statistic pinned at its own
+no-information floor has only noise left to vary.**
 
-1. **STOCK CONNECTIVE PHRASES.** Four of the five collisions are ordinary
-   English — *"it is the same shape as"*, *"why this is not a one"*, *"so it is
-   not mistaken for"*. This page and `REVIEW_QUEUE.md` are written by the same
-   kind of agent in the same house style, arguing in the same register.
-   **Two desks that write alike will share six-grams that carry no content**,
-   and a threshold of **one** shingle cannot tell that from a quotation.
-2. **THE ROW SLUG IS INSIDE THE CHUNK.** `_queue_chunks` starts each chunk at
-   `ROUTED: <slug> |`, so a hyphenated slug of six or more words tokenises into
-   shingles of its own. **Any finding that names a row by its slug is therefore
-   reported as "quoted by" that row** — which is what the four a4 hits above
-   are. Naming the row you are *distinguishing yourself from* marks you as
-   owned by it.
+**(2) Which senses are readable depends on a rank the run does not record, and
+both answers are consequential.** `latent_r2` for the incumbent [M]: proprio
+**+0.7172**, touch **−0.2154**, audio **−2.1045**, language **−2.2408**, vision
+**−2.3939**.
 
-**I TRIED REWORDING AND IT MADE THINGS WORSE, WHICH IS THE POINT.** The first
-draft of §6 collided with the a4 row on one shingle (*"the committed lc 03 row
-records"* — a phrase I used because week 7's §6 used it and the Review's row
-quoted week 7's page back verbatim). I changed that one sentence. **The
-collision did not disappear; it moved to two different and completely unrelated
-rows.** That is the finding: at a one-shingle threshold, a page of this length
-against 68 rows of that length will collide with *something*, and a scout
-cannot write its way out. **I have stopped rewording, and both findings are
-left reading a wrong ROUTED rather than edited until the counter is pretty** —
-because a scout quietly tuning prose to move a counter is indistinguishable
-from the thing this reader exists to prevent.
+- *If the fused CLS vector is near full rank*, the floor is ≈ −2.00, so
+  **vision, language and audio are indistinguishable from carrying no linear
+  information**, while touch and proprio require some information to explain.
+- *If it is low rank* — which is what representation collapse **is**, and what
+  `A4`'s declared-but-unbuilt diagnostic exists to detect — the floor rises
+  toward −0.02, and then **touch falls below its floor too, leaving
+  proprioception as the only sense above it.**
 
-**Why this matters more than its size.** The module is **reporting-only and
-unfloored** by the 96th audit's explicit instruction, *"do not floor a counter
-whose false-positive rate has not been measured and written down"*. **This is
-that measurement, and the direction is the dangerous one:** the predicted
-false-positive shape was a finding *discharged in code* being called unrouted;
-the measured one is a finding *with no owner at all* being called **ROUTED**.
-A counter that reads 0 UNROUTED because everything collides is the 96th audit's
-scar with a green light on top — the exact failure the module was built to end,
-wearing the module's own badge.
+**The robust statement, true either way: at most two of five senses are
+linearly recoverable from the fused representation, and which two is not
+determinable from the committed row.** That is `GOAL.md` stage 4 territory
+(*"senses fused; each proven load-bearing; no modality collapse"*) and `T4.03`
+(*Fusion actually fuses*) is still unimplemented.
 
-**What I am NOT claiming.** Not that the shingle rule is wrong — it is imported
-from `decisions.owner_asks` so the two readers cannot drift apart, and a
-threshold that is too loose here may be right there; I have not measured it
-there and I do not assert anything about it. Not that the citation channel is
-affected: `_cites` is week-anchored and slug-independent, and **week 7's two
-findings both routed through it correctly**, which is why this page still says
-the instrument worked. **The claim is exactly this: the quotation channel, at
-n = 5 on the second page it has read, is 0 for 5.** Candidate closures — a
-minimum-overlap count, stripping the `ROUTED:` header line from the chunk,
-or subtracting shingles that also occur in the previous sweep's page — are the
-builder's call and not mine.
+**(3) A TYPED floor constant would be the wrong repair, and that sharpens the
+lesson already on the books.** `LESSONS.md` §16550's rule 1 says an in-run bar
+needs an unsaturated-null lane at **both** ends; `T4.06` armed only the ceiling
+(`R2_SATURATION = 0.99`). My measurement says the low end **cannot** be a typed
+number, because it moves by two orders of magnitude with a property of the
+representation that can differ *between arms of the same bakeoff*. **The floor
+has to be measured in-run**, and the cheapest form is the one this project
+already uses everywhere else — `T1.02` is literally *Shuffled-target control*:
+**permute `Z`'s rows against the same `X` and re-fit.** That is one line, it
+needs no new run, it costs no parameters, and it yields the floor for the actual
+fused vector rather than for my synthetic stand-in. `T4.06` has **no shuffle
+and no permutation anywhere** [M, grep returns nothing].
+
+**THE CONVERGENCE, and it is why this is in the same report as N1.** The
+quantity that sets this floor — **the effective rank of the fused
+representation** — is the *same* quantity `LEARNING_CORE.md` §5.4 declares as
+`A4`'s mandatory diagnostic and which week 7 §6 found computed nowhere. **Two
+different seats, one uncomputed number**: on the `A4` seat its absence left a
+declared VOID condition unarmed; on the fusion seat its absence leaves a PASSED
+spec's deciding statistic without a floor to be read against. I did not go
+looking for that link; it fell out of testing my own objection.
+
+**LEAD OBJECTION, AGAINST MYSELF.** **My floors are measured on synthetic
+designs, not on the real fused CLS vectors**, whose rank I did not measure and
+could not have without training the brain. So I cannot say *which* row of my
+table applies, and every consequence above is therefore conditional in exactly
+the way it is written. **That is not a hedge, it is the nomination**: the repair
+is not to compare `T4.06`'s numbers against my −2.00, it is to make the run
+report its own shuffled-label floor and the rank that predicts it. A second,
+smaller caveat: the fit/score split is **sequential** (first 2/3, last 1/3), not
+random, so any non-stationarity in the fixture draws would push the real floor
+*below* my estimate; the fixture draws iid per batch, so I expect this to be
+small, but I did not measure it and do not claim it is zero.
+
+**WHAT I AM NOT CLAIMING.** Not that `T4.06` should not have passed — its
+`n_winning_arms ≥ 1` claim and the **ratio** result (29.83 → 2.45 against the
+exogenous 10× gate, on three seeds, with the incumbent's control correctly
+refusing to win) are demonstrated and untouched by any of this. Not that the
+winner is wrong. Not that anything should be re-run. **The single sentence of
+this section is: the spec asked whether its negative R²s were the brain or the
+probe, said the question was not answerable from that run, and it is answerable
+for free — the probe works, and the floor is `−r/(n_fit − r)` for a rank nobody
+recorded.**
 
 ---
 
 ## 7. What this report does NOT claim
 
 - **No arm here has been run.** Every number in §2 and §3 is someone else's
-  measurement on someone else's hardware. The §0(3) Clopper–Pearson table, the
-  §6 parameter counts, greps and ledger reads, the `needs_rise` and
-  `lg_margin` t-statistics, and the weights-on-disk search are **ours**, marked
-  **[C]/[M]**, with the commands shown.
-- **N1's lead objection is from our own ledger and it is serious.** W0's
-  measured passivity inversion pushes `life_gain(k)` the opposite way from
-  ARC-Bench's prediction. **I am not claiming the `k`-sweep works; I am claiming
-  it is the cheapest readout on that seat and that it needs `needs_rise`, not
-  `life_gain`, to be readable at all.** And `needs_rise` on the seated arm reads
-  t = 1.95 [C], which I state rather than hide because it is the quantity the
-  repair leans on.
-- **ARC-Bench audits FROZEN checkpoints and a latent-distance planner. `A4` is
-  plastic and actor-critic.** Only the *masking* half of that paper is
-  nominated. The *rankability* half does not transfer and I say so in N1's
-  objection 2 rather than in a footnote.
-- **N3 is an amendment to my own live nomination, not a new arm** — and its
-  context is that this desk has promoted five anti-collapse routes and run zero.
-  §5 declines to add a sixth.
-- **MINERVA is not nominated**, on the same ground week 3 rejected DOOM-1.3M.
-  The standard is applied to a result I like at the same cost as to one I did
-  not.
-- **§6 is about `A4`'s CONTROLS; week 7's §6 was about its declared collapse
-  DIAGNOSTIC.** They are two holes in one seat and I have not merged them to
-  make either look bigger.
-- **§6b is a measured false-positive rate on ONE channel of ONE reader at
-  n = 5, on the second page that reader has seen.** It is not a claim that the
-  shingle rule is wrong, not a claim about `decisions.owner_asks` (which I did
-  not measure), and not a request to floor or unfloor anything. The citation
-  channel is unaffected and week 7's two findings routed through it correctly.
-- **Both of this page's findings display a WRONG `ROUTED` in `run status`
-  today, and I left them that way on purpose.** §6b says why: the one rewording
-  I tried moved the collision to two unrelated rows instead of removing it.
-- **Front 3 was not swept**, front 4 and front 5 were enumerated but not
-  fetched, and queued #6 (3M-Progress's numbers, third pass) was **not done**.
-  All three are stated in §1 and §4 rather than absorbed.
-- **Verification is uneven and marked:** N1 — full HTML, tables and p-values
-  quoted, **no hardware/wall-clock/params, code not released**; N2 — full HTML,
-  method names and hardware quoted; N3 — full HTML, formula and table quoted,
-  **no hardware/params/code**; MINERVA, 2608.10145, 2609.21787 — abstract level;
-  the ~20 front-2 and 40 front-4/5 enumeration entries — **title and category
-  only**, listed to establish a *family*, and no claim of any of theirs is
-  relied on.
-- **The `ME` denominators and the `t402`/`a4` row states in §0 are the builder's
-  and the Review's records, not mine.** I read them out of the queue, the
-  ledger and `run status`; I did not run them.
+  measurement on someone else's hardware. The §6 probe reconstruction, the
+  `ME.11` threshold table, the `T4.06` row reads, the queue and reader
+  readings, and the `LATENT`/params figures are **ours**, marked **[C]/[M]**,
+  with the arithmetic and commands shown.
+- **§0(1) claims a coincidence, not a cause.** `T4.06` was designed two days
+  after week 8 nominated the reference arm it carries, and **no citation of this
+  page appears in that row.** I state the sequence and decline the credit.
+- **§6 is mostly NOT new and says so first.** The margin defect, the mechanism
+  sentence about p/n, the reporter, and the observation that four of five senses
+  read negative were all already owned by the 109th audit, `LESSONS.md`,
+  `resolution.py` and the spec's own docstring. **What is new is the measured
+  floor, the closed form, the rank dependence, and the answer to the capacity
+  half of the spec's own question.**
+- **§6's floors are synthetic.** I did not measure the real fused
+  representation's rank or its shuffled-label floor, so every consequence in §6
+  is conditional on which rank regime holds, and both branches are given.
+- **N1's paper reports no p-values, no CIs and no compute**; its `ρ_depth`
+  needs a task scalar `W0` does not have, and the transition-direction label
+  `C_i` needs would be **ours to define** — I say so in N1 rather than in a
+  footnote, because a readout whose labels the analyst chooses is how a
+  diagnostic becomes a story.
+- **N2 is supervised and our labelling budget is 160 cues against the paper's
+  smallest 486.** I also state plainly that 16 cues/parameter is **not** the
+  same disease as §6's 1.5 rows/parameter, because applying my own finding
+  unfairly to a nomination I like would be as bad as the reverse.
+- **N3 is abstract-level only**, and its defect (similarity metrics fooled by
+  corruption) is **not** shown to be our defect — §6 measures that our probe is
+  *not* capacity-limited. Only the **discipline** transfers, and week 3's rule
+  says an analogy is not arithmetic.
+- **3M-Progress was withdrawn by me, on my own deferral rule**, after three
+  passes. That is a nomination of mine failing its own test, and it is recorded
+  in §4 as a withdrawal rather than quietly dropped from §2.
+- **Front 4 was enumerated but not fetched; front 5 was enumerated and searched
+  but not fetched.** Two front-4 items (`2606.11417`, `2605.22814`) and five
+  `q-bio.NC` items are named without being opened, and **no claim of theirs is
+  relied on anywhere in this report.**
+- **The `T4.06`, `ME.11`, `a4`, `t402` and queue states are the builder's and
+  the Review's records, not mine.** I read them out of the ledger, the queue and
+  `run status`; I did not run them.
 
 ---
 
-## 8. Queued for next sweep (**not before ~2026-09-28**)
+## 8. Queued for next sweep (**not before ~2026-10-05**)
 
-1. **FRONT 3 RETURNS** on its two-week cadence, and it has a question rather
-   than a survey: **did wk7-N1's free-embedding probe run, and what was the
-   critical `d`?** §0(4) records it as NOT RUN after being ordered first. If it
-   is still unrun on 09-28 that is 14 days on the cheapest item on the desk, and
-   the right thing for a scout to do is say the number.
-2. **Did the `a4-…-computed-nowhere` row rule — WEEK 7's §6?** Both
-   are about the same seat. The row was due 09-18 and is +3 today. **If it
-   ruled, §2's N1 and wk7-N3's `Δ_k` are both priced off whatever run it
-   ordered; if it did not, the seat's guard is unarmed for a fourth week.**
-3. **`t402` fell due 2026-09-22 — the day after this sweep.** Did the balancing
-   bakeoff get designed, and does it carry a do-nothing reference arm (§2 N2)
-   and wk6-N3's pathway-decoding control? **If `t402` is still open on 09-28
-   that is 23 days on a `FAIL-UNOWNED` repair.**
-4. **Did §6 and §6b reach a desk, and does `run status` still show a false
-   `ROUTED` for them?** They are the test case: if a row is opened for either
-   one it will route by **citation** (*"field watch wk8 §6"*), which is the
-   channel that works — and the quotation false positive in §6b will still be
-   sitting underneath it, uncounted, unless someone looks. **If the quotation
-   channel is unchanged next sweep, that is the second measurement of the same
-   false positive and it should stop being called n = 1.**
-5. **3M-Progress's numbers — THIRD AND LAST PASS**, per this desk's deferral
-   rule. PDF/appendix figures or the released repo's evaluation scripts
-   (`neuroagents-lab/autonomous_zebrafish`). **If no number is found, it leaves
-   §2 for the watchlist**, and the HELD status the Review gave it makes that
-   costless.
-6. **`q-bio.NC` on the biology front, standing** (wk7 §7, upheld — §5 says what
-   it bought this week). **Plus one addition of the same kind:** the front-5
-   enumeration returned six astrophysics papers on the word "survival", so the
-   primary-category convention (week 2) is now also a *search* discipline and
-   not only a *recording* one.
-7. **ARC-Bench's code**, if released. The authors say release follows the
-   preprint going public. A released protocol would cut N1's reimplementation
-   risk, which is currently the largest unpriced part of it.
-8. **2608.29434 — promote on numbers or DROP WITH CAUSE.** Carried three
-   sweeps at abstract level; two better-evidenced items on the same theme now
-   supersede it. Week 3's deferral rule applies.
-9. **NOT queued, deliberately:** conference proceedings (dropped wk4);
-   2607.22430, Simulus, UED-as-a-cheap-score (all closed wk6); LIMIT's
-   *conclusion* (closed wk7, instrument retained); **and the anti-collapse
-   family — four more routes appeared this week and §5 declines all four until
-   one of the five already accepted has been run.**
+1. **Did `D37` rule, and did the `a4` row's 10-04 sitting hand anything to the
+   builder?** That date falls the day before this embargo expires, so it is the
+   first thing to read. **If `D37` permitted the BUILD half, N1 and wk7-N3's
+   `Δ_k` are both live readout choices for it and §2's N1 should be re-costed
+   against whatever run was authorised.** If it did not, the seat's guard is
+   unarmed for a sixth week and that is the number to print.
+2. **Does `T4.06`'s successor — or any row — carry a shuffled-label floor?**
+   §6 is this sweep's finding and the reader will report whether it reached a
+   desk. The specific check is cheap: `grep -n "shuffle\|permut"` in the fusion
+   spec, and whether any row records the fused representation's **effective
+   rank**. **If the rank is ever recorded, §6's conditional collapses to one
+   branch and I should say which.**
+3. **FRONT 3 next returns 2026-10-12** on its two-week cadence, and it has a
+   question rather than a survey: **did wk7-N1's critical-`d` probe run, and did
+   N2's feature class enter anywhere?** Two nominations now sit on the same
+   redesign, both cheap, one of them 14 days unrun. **If both are still unrun on
+   10-12 that is the finding, not the literature.**
+4. **`w1-world-edit-window` (OPEN, +1 d, 22 days old) and `W1.01`/`W1.03`/
+   `W1.04`.** The front-5 watchlist entry (2607.29476) is a design input for
+   that window and will be stale if the window opens without it. **Also check
+   whether `w0-too-shallow`'s 10-01 date held**, since it carries the
+   registration of those three specs.
+5. **`owner-ask-reader-blind-since-0909` (DUE 10-01)** — the sibling bug my own
+   §6b measurement turned up. Worth one line next sweep: did the second blind
+   reader get fixed as fast as the first one did?
+6. **`q-bio.NC` standing search — upheld and now load-bearing.** It produced
+   both of this sweep's non-`cs.LG` items and the only on-axis front-5 entry.
+   **Plus one addition of the same kind:** `2606.00667` (cortex/subcortex under
+   limited cortical memory) is the closest thing yet to a biological oracle for
+   the diary-vs-weights split, and it is queued for a fetch rather than left as
+   a name in §5.
+7. **2609.21787 — promote on numbers or DROP WITH CAUSE.** Second sweep carried,
+   relevance rising, evidence still zero. Week 3's deferral rule applies.
+8. **NOT queued, deliberately:** conference proceedings (dropped wk4); 2607.22430,
+   Simulus, UED-as-a-cheap-score (closed wk6); LIMIT's *conclusion* (closed
+   wk7, instrument retained); 2608.29434 (**dropped with cause this sweep**);
+   3M-Progress's numbers (**closed this sweep after three passes**);
+   ARC-Bench's code (**checked and unreleased; will not be re-checked weekly —
+   it is now a promote-if-it-appears, not a queue item**); **and the
+   anti-collapse family — four more routes appeared last week, seven more this
+   week, and §5 declines all of them until one of the five already accepted has
+   been run.**
