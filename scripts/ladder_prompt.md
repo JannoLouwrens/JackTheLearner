@@ -552,7 +552,73 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
+**LIVE PRIORITY BLOCK — `1^14`/`2^10` (item `1^14` Review 2026-09-28, DAILY;
+`1^13` below is DISCHARGED — see `1^14` item 0 — and is retained for its
+STRUCTURAL FINDING, which is still true and still governs how you read your
+board; `1^12` items retained below and still live where not discharged;
+prohibitions consolidated 2026-09-21 and UNCHANGED today).
+
+## `1^14` — YOUR BOARD IS EMPTY BECAUSE BOTH DESIGN DEBTS THAT WOULD FILL IT
+## ARE THIS DESK'S, NOT BECAUSE YOU ARE OUT OF WORK
+## (Review 2026-09-28, DAILY — read this before `run next`)
+
+**ITEM 0 — `1^13` IS DISCHARGED, AND YOU DISCHARGED IT. CREDIT FIRST.** You
+swept all 21 live `DISPOSITIONED` rows in `2024e6a` — reading each row's body
+for what it ORDERED and checking it against `HEAD` source rather than against
+commit messages — and found **five rows execution-COMPLETE with no
+`BUILDER-TRACE`**, including `t211` one day before its date. You then measured
+`1^13` itself as **four-discharged, two-held, ZERO live** (`28d3db0`) and
+correctly STOPPED before touching a spec rather than shipping into a hold.
+Both acts were right. This desk stamped three of today's seven OVERDUE rows
+`ACTED` off work you had finished early — by five days, five days and one day.
+
+**ITEM 1 — THE HOLD THAT COST YOU A SLOT IS NOW ON THIS PAGE, WHICH IS WHERE IT
+SHOULD ALWAYS HAVE BEEN.** `PS.05` and `PS.06` part-1 legibility-conjunct
+inheritance is **HELD** behind `ps09-known-answer-floor-was-calibrated-on-an-
+oracle-cut` (OPEN, this desk's, `DUE 2026-10-03`), which reserves BOTH halves to
+this desk and has already REFUTED the physically-obvious channel — fatigue `f`
+alone reads `0.0216` honest on seed 1, so any floor near `PROBE_R2_MIN` 0.35
+reports UNREADABLE on all three seeds, including the two where the registered
+probe reads 0.6998/0.7496 and is demonstrably working. **DO NOT SHIP THE PS.05
+OR PS.06 CONJUNCT.** You found this hold by hand, ~10,500 lines into
+`REVIEW_QUEUE.md`, and `steering.legality()` called all eight `1^13` ids LEGAL
+because the substring `review_queue` appears NOWHERE in `steering.py`. That
+blindness is a real finding and it is YOUR row
+(`priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field`,
+`DUE 2026-10-08`); this page naming the hold is the stopgap, not the repair.
+
+**ITEM 2 — THE BOARD, AND IT IS A LIVING SOURCE, NOT A LIST ON THIS PAGE.**
+`1^13`'s structural finding stands and is not repealed: **`run next` ranks
+DISPATCHABLE SPECS; `review-queue`'s `DISPOSITIONED` class is where
+IMPLEMENTATION lives, and neither alone is your board.** Read both every slot.
+Per `1^13` and still true: **a `DUE:` is a deadline, not a start-gate** — begin
+any undated-forbidden unit the moment you are idle. No count or status is cached
+here on purpose; the rows move faster than this page does.
+
+**ITEM 3 — WHEN YOU TRACE A ROW AS DONE, SAY SO ON THE ROW.** Today made the
+cost unmistakable: `review_queue_violations` read **7** at midnight and **three
+of the seven were work you had already finished**. The counter cannot tell
+undone work from un-stamped work, and only this desk may write `ACTED`. Keep
+writing `BUILDER-TRACE` — you have now invented that receipt by hand twice
+(`e59c70f`, and on `t108-noise-floor` on 09-27) and both times it was the thing
+that let a stamp happen. It is not ceremony; it is the only channel you have.
+
+**ITEM 4 — WHAT IS NOT YOURS, and it is more than usual today.** The **W1
+world edit** is not yours: this desk **DECLINED its authorship** (`5ab54fe`, the
+first `DECLINED` in 113 routed rows) and who authors it now is the OWNER's, on
+`D33`. Nine rows are orphaned behind it and their red is deliberate — **do not
+re-point, re-date or "tidy" any `HOLD-ON-A-RESOLVED-BLOCKER` row.**
+`w0-too-shallow`'s registration of `W1.01`/`W1.03`/`W1.04` stays with this desk
+for the same reason: handing it to you while `D33` is unanswered would pre-empt
+the ruling this desk asked for. `T1.08`'s pipeline-repair design remains this
+desk's (`t108-pipeline-repair-has-no-design`, `DUE 2026-10-02`; sequencing on
+`D36`), and everything in `2^10`'s prohibition set below is unchanged.
+
+**BARS: `1^14` moves none.** Nothing above adds, lowers or re-aims a threshold.
+If you find yourself wanting to move a bar, stop and route it back here.
+
 **LIVE PRIORITY BLOCK — `1^13`/`2^10` (item `1^13` Review 2026-09-25, DAILY;
+DISCHARGED 2026-09-28 per `1^14` item 0 — retained for its structural finding;
 `1^12` items retained below and still live where not discharged;
 prohibitions consolidated 2026-09-21 and UNCHANGED today).
 
