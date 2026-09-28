@@ -23738,3 +23738,54 @@ work arrives via the desk: `t108-pipeline-repair-has-no-design` (10-02) and
 the ps09 floor ruling (10-03). If the board is still empty, the DISPOSITIONED
 sweep (2024e6a) is 1 day old and does not need re-doing; check only rows
 dispositioned SINCE it.
+
+2026-09-28 12:0x slot — THE HARVEST WRITE-UP OWED BY c439d2b PAID, THE SWEEP'S
+ORPHANED RESIDUE COMMITTED, AND THE STAGING BUG THAT ORPHANED IT MADE
+UNREPEATABLE. Meters first: week:all models 16% (the gate, the line acted on),
+week:Fable 27%, session 60%, week-elapsed 4% -> pace line ~28, no skip; model
+fable. **THE HARVEST (what the mechanical commits c439d2b + 71e5fbc actually
+bought, read from the rows, owed to this slot by the pace-skip's own message):**
+sweep 1 (killed mid-log by the .paused test, rows landed anyway, committed
+c439d2b): T0.28 attempt 22 **FAIL -> PASS** at 10:45:27, hash-salt CLEAN — the
+only verdict move of the day, demonstrated 106 -> 107; its 09-26 FAIL was
+instrument-class and the queue state it gates on was repaired by the desk's
+OVERDUE 7->0 sitting, so the re-PASS is the scoreboard catching up to the desk,
+not a lottery. Sweep 2 (71e5fbc): seven re-buys, every verdict UNCHANGED
+(FAIL->FAIL), every salt differential CLEAN — T0.27 a22 2.0s, ME.11.B a4 10.5s
+and ME.11.C a3 35.9s (each with 2 non-deciding ms_per_query divergences,
+blemishes on numbers nothing gates), PS.08 a3 525.6s, LT.02 a4 838.4s, HR.1 a5
+110.0s, SO.10 a2 4.8s re-recording its bakeoff (laplace-full TIE, div_lastq
+0.722 = 5.79 sigma over null, control:pooled-scalar 0.00 FAIL as it must).
+T6.03 and T0.18 correctly REFUSED as stale-but-unpayable (blocked by T2.10 /
+T0.13 FAILs; T0.18's clear is the desk's t013 per-key ruling, DUE 10-05). No
+bar moved anywhere. **THE FIND, AND THE FIX (8a9782b, 483da8e):** the sweep's
+commit staged ledger.json alone while its runner had also written
+cpu_budget.json and SO.10's bakeoff record into DECISIONS_RESOLVED.md — a
+pushed, clean-looking commit with a dirty tree behind it, logged as success.
+Residue committed as found; regate.sh now DERIVES its stage set from
+protocol.RUNNER_OUTPUTS at commit time (diffed vs HEAD, killed-mid-commit safe);
+ladder_loop's HARVEST_PATHS gains DECISIONS_RESOLVED.md (RUNNER_OUTPUTS member
+since 09-26, same orphan one lane over, dual-writer caveat weighed in the
+comment); LESSONS: a hand copy of an owned set decays the day the set grows —
+derive it, or grep every copy in the growth commit. bash -n clean on both, no
+IMPL_DEPS names either script, render STALE-COST 0. **Board re-verified before
+any of this:** run next 0 fresh; OVERSIGHT FTB 1 already discharged by the
+desk's own reconstruction (PROGRESS_LOG line 47), FTB 2 at e3daa10; HR.1 arm
+(a) implemented a4bae41 -> refuted -> arm (c) VCTK declared 9663f23, registry
+amended 955b9ef — nothing of 1^12/1^13 live for this desk today; PS.05/06/08
+part-1 conjunct still HELD (ps09 oracle-cut, the Review's, DUE 10-03).
+**Creature gate: NONE** — recorded as the violation it is; chain re-derived
+T6.01 <- T4.05 <- T4.04 <- T2.01 <- T1.08 (FAIL), T1.08 now also STALE on its
+own authorized §9d step-(a) edit (425a7e3), its re-run gated on the desk's
+pipeline design (t108-pipeline-repair-has-no-design, DUE 10-02). **GPU:**
+2026-W39, 30.0h free, 0.00 charged, expires Sat 10-03; every GPU class NOT
+FILLABLE, both routes through T1.08; nothing dispatched, nothing manufactured.
+Hygiene: 13 claude procs = self-chain, lost_iterations.log 0 bytes,
+declared_pids none owed (no detached launches this slot), steering page
+untouched at 102555 B, git add by name throughout. NEXT ITERATION: (a) regate's
+log line "committed and pushed" now implies a clean tree of RUNNER_OUTPUTS —
+if you find it dirty anyway the derivation failed, say so loudly; (b) t211
+falls due 09-29 with its trace on the row — the stamp is the desk's, not yours;
+(c) fresh work arrives via the desk's 10-02/10-03 rows; if the board is still
+empty, check only rows dispositioned since the 2024e6a sweep; (d) do not re-run
+T6.03/T0.18 — unpayable behind FAILs whose repairs are owned elsewhere.
