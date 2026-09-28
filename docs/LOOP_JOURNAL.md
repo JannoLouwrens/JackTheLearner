@@ -23855,3 +23855,43 @@ disposition lands. (c) Fresh work still arrives via the desk's 10-02/10-03
 rows; if the board reads empty again, that is the fourth consecutive
 verified-empty finding, not a fault. (d) Do not re-run `T6.03`/`T0.18`/`T2.07`
 — all three now have their refusals written down with reasons.
+
+## 2026-09-28 17:0x UTC — builder (Fable, week:all models 27%, the gate; Fable 41%)
+
+**Fourth consecutive verified-empty board — re-derived, not inherited, and kept
+cheap on purpose.** One hour after the 16:07 recovery slot: zero commits from
+any organ since `44deb5e` (checked `git log --all --since 16:14`), tree clean
+at HEAD, HEAD pushed (`rev-list origin/main..HEAD` = 0). `run next`: **0 fresh
+of 51** (37 settled, 14 held), no DISPOSITIONED row has moved since the
+`2024e6a` sweep, so no execution has unlocked. The four OPEN rows dated today
+(`ub10-part1`, `lg12`, `so10-tie-break`, `lg13`) are all awaiting the desk's
+disposition — OPEN is not a builder class; they go OVERDUE on the desk's
+counter tonight, not on mine. PS.05/PS.06 conjunct still HELD per `1^14` item 1
+(the ps09 known-answer-floor hold, desk's, DUE 10-03) — not shipped.
+
+**Instruments re-run fresh this slot, same three reds, every one owned:**
+`status` rc=2 (DIRTY T6.03/PL.02 — both refusals written down 12:0x, unpayable;
+STALE T1.08 — re-run gated on `t108-pipeline-repair-has-no-design`, desk's,
+DUE 10-02; STALE-pre T2.02), `coverage` rc=2 (known floors + PARK pairs),
+`decisions` rc=1 (`D33` DEFAULT-ACTION-EXPIRED, the owner's, no other route —
+day 5). Receipt hygiene from the 13:07–15:07 session-limit run: confirmed
+`lost_iterations.log` is 0 bytes after the 16:14 `recovered — clearing 3
+lost-iteration marker(s)` line, which is the correct post-recovery state, not a
+missed detection. 11 claude procs = self-chain; no detached launches; no
+leftover pids; `declared_pids` owes nothing.
+
+**Creature gate: NONE — the violation recorded again.** Chain unchanged:
+`T6.01 ← T4.05 ← T4.04 ← T2.01 ← T1.08 (FAIL, stale)`; every path to moving
+any of the three gates runs through the T1.08 pipeline-repair design the desk
+owes 10-02. W39: 30.0 free GPU-h, 0 charged, expire Sat 10-03; the no-legal-
+buyer refusal was adversarially re-derived at 16:0x and nothing changed it
+since — not re-litigated, not re-run. No ledger write, no bar moved, nothing
+manufactured.
+
+NEXT ITERATION: unchanged from 16:0x — (a) `t211` stamp falls due 09-29, the
+desk's; (b) five desk rows due 09-29/09-30, none yours unless a disposition
+lands; (c) fresh builder work arrives via the desk's 10-02/10-03 rows; a fifth
+empty board tomorrow morning is expected, not a fault — but if the 06:37
+Review runs and the board is STILL empty after its dispositions land, that is
+new information: say so and count it. (d) Standing refusals all have reasons
+written: T6.03/T0.18/T2.07 do not re-run.
