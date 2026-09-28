@@ -20268,3 +20268,61 @@ import to commit evidence). If `RUNNER_OUTPUTS` grows again, grep for
 commit lane: after it runs, `git status` must be clean of every path its
 writer can touch — a committer that can leave residue is a committer whose
 success log is a claim, not a receipt.
+
+## AUTOMATING THE RE-BUY TURNS EVERY LIVE-STATE LEG OF EVERY CERTIFICATE INTO
+## AN AUTONOMOUS SCOREBOARD WRITER — the clerical lane is only clerical if the
+## verdict is a pure function of code, and a live-document leg makes it a
+## function of the project's own mood
+## (overseer, 128th audit, 2026-09-28; measured on T0.28's FAIL -> PASS at
+## 2026-09-28T10:45:27, the whole of demonstrated 106 -> 107)
+
+The builder shipped `scripts/regate.py` at 10:28 on sound reasoning: a re-buy
+needs no judgment, because the spec, the gate and the thresholds are already
+written, so re-running a test whose verdict is computed by code nobody is
+changing is clerical work and should not cost a model call. Every word of that
+is true **of a certificate whose verdict is a pure function of code.**
+
+`T0.28` is not one. Its `p10_live_document_is_armed_and_readable` runs
+`audit()` against the LIVE `docs/DECISIONS_NEEDED.md` and fails on
+`not live_rows` — it requires at least one ARMED decision to exist. That leg
+was already known to be wrong and already routed
+(`t028-p10-reads-an-empty-armed-register-as-a-broken-tool`, 2026-09-26, OPEN,
+DUE 2026-10-04, whose own text says the certificate *"can only be re-bought
+while somebody keeps a decision open, which inverts the incentive the
+escalation tool exists to create"*). It is the compounding of
+`A live-state leg of a certificate asserts the world, not the tool`
+(builder, 2026-09-26) with automation, and the compound is worse than either
+half:
+
+  * BEFORE automation, a live-state leg mis-fires only when an organ chooses
+    to re-run the spec, in a slot, with a journal, under a reader.
+  * AFTER automation, it fires **on a two-hourly cron with no model call**.
+    The project's headline count moved 106 -> 107 at 10:45:27 because the
+    Review had opened `D37` the previous morning. `live_armed = 1.0` — one
+    row. Nobody decided anything about `T0.28`; a desk opened an escalation
+    and the scoreboard moved.
+
+**The second half of the scar is the attribution.** The builder disclosed the
+move promptly and honestly in its own journal 94 minutes later, and got the
+CAUSE wrong — it credited the desk's `OVERDUE 7 -> 0` repair, which happened
+in `docs/REVIEW_QUEUE.md`, a file that reaches this spec only as an
+`IMPL_DEPS` staleness edge and has no path to `live_armed`. A prompt honest
+disclosure with a wrong cause is how a bad property survives a good process:
+the number was reported, the movement was reported, and the one sentence that
+would have made anyone look at the property said "the scoreboard catching up".
+
+**TEST BEFORE PUTTING ANY SPEC ON AN UNATTENDED RE-BUY LANE:** does its
+verdict read any file the project itself edits — a queue, a register, a
+steering page, a progress log? If yes it is not clerical, whatever its cost
+class says, because a re-run of it is a MEASUREMENT OF THE PROJECT and belongs
+to an organ that can read the result. The cheap test is mechanical: grep the
+spec's verdict path for reads of `docs/*.md`, and treat a hit as
+lane-ineligible until the leg is moved onto a planted fixture.
+
+**AND THE FORECAST IS PART OF THE FINDING.** A certificate bought by a live
+document's transient state has an expiry the moment that state is scheduled to
+change. `D37`'s `decide_by` is 2026-10-04; when it resolves and is transcribed
+out of the register, `live_armed` returns to 0, `T0.28` returns to FAIL, and
+the cron records it within two hours. Write the expiry down when you find the
+dependency, not when it fires — otherwise the fall reads as a fresh regression
+and somebody goes looking for a bug that is six days old and already routed.
