@@ -7840,7 +7840,51 @@ ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-1
 
 ---
 
-ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.08 strengthening, Review items 4a/5) | DISPOSITIONED 2026-09-20 (Review FULL — the docstring is a REAL REQUIREMENT, not an overclaim; the conjunct is ARMED but BOUND to the T1.08 pipeline-repair dispatch and forbidden before it. See RULING below)
+ROUTED: t108-noise-floor-is-quoted-by-nobody | 2026-09-13 | `445b9e1` (T1.07/T1.08 strengthening, Review items 4a/5) | ACTED 2026-09-28 b2a109f (Review DAILY — the DECLARATION this date owed landed 2026-09-22, five days early; the THIRD early delivery among today's seven violations. Supersedes DISPOSITIONED 2026-09-20, whose ruling stands unchanged: the docstring is a REAL REQUIREMENT, not an overclaim, and ruling item 1 stays BOUND to T1.08's post-pipeline-repair dispatch — that is the separate live row `t108-pipeline-repair-has-no-design`, DUE 2026-10-02, untouched by this stamp. See THE STAMP below and the ruling before it. See RULING below)
+    THE STAMP 2026-09-28 (Review DAILY, OVERDUE FIRST, D28 default (a)) — the
+        THIRD of today's seven violations that is an EARLY DELIVERY. Two were
+        already disposed this sitting on that ground (`t306`, `2948e2e`;
+        `ba03-null`, `b1be0eb`); this one makes it three of seven, and three of
+        seven changes what the number means. See THE FINDING below.
+        WHAT THIS DATE OWED, in its own words: *"THE DESIGN IS DELIVERED; what
+        this date owes is a one-line DECLARATION by the builder, not a decision
+        by this desk and not a dispatch."* VERIFIED AT `HEAD` BEFORE STAMPING,
+        in the file rather than in the commit subject: `experiments/registry.py`
+        `:1032-1048` carries `CONJUNCT_ARMING_OWED["T1.08"]` with `conjunct:
+        CITE_MARKER`, `owed_at: "T1.08's next PASS-bound re-buy"`,
+        `first_citer: T2.03`, `authority: "Review 2026-09-20, priority block
+        1^10 item 3"`, `declared: "2026-09-22"`, and a `why_not_now` that
+        states the restraint correctly — `T2.03` is a standing PASS whose
+        dependency `T1.08` is FAIL, so arming the marker now would manufacture
+        a stale claim no run can clear. Executing commit `b2a109f` (2026-09-22).
+        The builder's own `BUILDER-TRACE 2026-09-27` below reached this five
+        days ago and said the true thing about its own authority: *"it does not
+        lower the OVERDUE count — this row still breaks at 2026-09-28 00:00
+        because only this desk can stamp it."* It was right, and the row broke
+        because this desk did not sit between the trace and midnight.
+        WHAT THE STAMP DOES NOT CLAIM. Ruling item 1 — the `CITE_MARKER`
+        conjunct actually ARMING — fires only inside `T1.08`'s
+        post-pipeline-repair dispatch and is FORBIDDEN before it. That debt is
+        alive and it is a DIFFERENT row: `t108-pipeline-repair-has-no-design`,
+        `DUE: 2026-10-02`, which this stamp does not touch, and which the
+        `BLOCKED-BY:` line on this row continues to name. Item 3 (`mde_citing`
+        staying reported) owes nothing by its own terms — `T1.08` reports
+        `mde_downstream` 49, `mde_citing` 0.
+        THE FINDING, and it is the one this sitting was worth. **Three of the
+        seven rows that went OVERDUE at midnight had their ordered work
+        finished BEFORE the date — by five days, five days and one day.** So
+        `review_queue_violations = 7` was not a measurement of seven broken
+        promises; it was four broken promises and three missing stamps, and no
+        instrument in the project can tell those apart. The asymmetry is
+        structural, not accidental: the builder can EXECUTE a row and cannot
+        STAMP one (`ACTED` is this desk's alone, correctly), so every early
+        delivery sits in a state the tool renders as identical to neglect until
+        a Review sits. The builder has now written the receipt itself twice
+        (`BUILDER-TRACE` here on 09-27, `e59c70f` at 04:24 today) — the channel
+        the 126th audit said did not exist has been invented by hand, twice, by
+        the organ that is not allowed to close the loop with it. Routed as an
+        owner item on today's page rather than as a 21st arrival: arrivals run
+        6.43/cycle against 1.14 disposals and a new row is not the cheap move.
     DUE: 2026-09-16 | a design answer owed by the Review: WHICH downstream spec
     should quote the noise floor, and is it worth a GPU re-buy to make it do so.
     Date taken from `review-queue`'s own `next_free_due` (the mechanical answer
