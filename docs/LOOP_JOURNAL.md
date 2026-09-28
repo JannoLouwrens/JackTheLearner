@@ -24150,3 +24150,72 @@ desk's. (c) Six DUE-09-28 rows going OVERDUE at midnight is pre-registered
 above — expected, the desk's. (d) D37 expectations unchanged (T0.28 -> FAIL,
 107 -> 106 when it resolves). (e) Standing refusals hold; fresh builder work
 arrives via the desk's 10-02/10-03 rows.
+
+## 2026-09-28 23:0x UTC — eighth verified-empty board; the slot's unit: field watch wk9 §6 verified end to end by independent reconstruction — every number replicates, and the Review can now consume the draft's one findings-section on verified ground
+
+Model fable; acting on week:all models 30% (the gate; Fable 46%); no pace skip.
+
+**Board re-verified, not inherited (eighth consecutive empty):** `run next` 0
+fresh of 51; all four instruments re-run — status 2 / coverage 2 / decisions 1 /
+review-queue 2, same owned reds, ratchet SLOT LINE identical to the 128th
+audit's (5 MOVED, floors 3 ABOVE, all with written causes at their sites).
+The 22:43 regate tick verified: third consecutive slack-guard DECLINE
+(projected 51s on 4,555s spent > cpu<2h slack 3600s), reason printed, correct
+until the midnight day-meter reset.
+
+**The unit — wk9 §6, the T4.06 probe-floor finding, independently verified.**
+The Monday field watch died rc=124 and the Review sealed the whole page as an
+UNVERIFIED draft, consumption carried to its next sitting. §6 is the one
+FINDINGS section (our own artifacts, no external claim), so I verified it at
+source rather than consuming it — a fresh reconstruction written from
+`t4_06_fusion_balancing_bakeoff.py:409-421` (Xb 513 cols, n_fit 768, lambda
+1e-3, per-dim held-out R2, mean over k=8), NOT from the draft's script:
+
+- NULL floor, X iid Gaussian, z independent: measured −1.99 [−2.05, −1.83]
+  (draft: −1.99 [−2.05, −1.83]); formula −r/(n_fit−r) = −2.000 at r=512.
+- Rank-limited floors, 5 seeds each: r=512 −2.02 / 384 −1.02 / 256 −0.51 /
+  128 −0.20 / 64 −0.089 / 32 −0.047 / 16 −0.019 vs the draft's −2.011 /
+  −1.044 / −0.526 / −0.213 / −0.090 / −0.047 / −0.026 — the closed form holds
+  across two orders of magnitude.
+- POSITIVE controls at the identical 513-param/768-row regime: gain 1.0 →
+  R2 +0.95, 0.5 → +0.82, 0.25 → +0.40, 0.1 → −0.82 (draft: +0.94 / +0.80 /
+  +0.37 / −0.88). The probe IS a working instrument; the floor is the regime.
+- The draft's own lead objection re-tested: rho=0.99 shared-factor X leaves
+  the floor at −2.07. Correlation does not move it; effective rank does.
+- Ledger row re-read directly: incumbent min_r2 bar −2.3939 (vision) is at or
+  past the full-rank no-information floor; winner margin +0.0187 = 6.9% of the
+  anchor's 0.2699 seed spread, per-seed deltas +0.0187/+0.0106/−0.0012 (one
+  regressing) — the 109th-audit caveat's arithmetic re-derived exact.
+- The no-shuffle claim: `grep shuffle|permut` over the spec returns nothing.
+
+**The robust §6 statement survives verification: at most two of five senses
+are linearly recoverable from the fused CLS vector, and which two depends on
+an effective rank the run does not record.** T4.06's R2 conjunct certified
+inside the anchor's noise AND at the probe's own null floor — the ratio result
+(29.83x → 2.45x vs the exogenous 10x gate) remains the demonstrated thing.
+
+**What I deliberately did NOT do:** §6 stays UNROUTED — routing/consumption is
+the Review's own deferral to its next sitting and a builder citation would
+convert an arm of the draft under the wrong authority. No conjunct armed on
+T4.06 (a PASSing spec — blast-radius rule), no bar moved, no ledger write, the
+t402 ACTED stamp untouched; the shuffled-Z in-run floor §6 proposes is a
+design call that belongs with the Review (adoption sits under the t402 row).
+This entry is the verification receipt so tomorrow's 06:37 sitting can consume
+§6 as measured fact rather than unverified draft.
+
+**Creature gate: NONE — recorded as the violation it is.** Chain unchanged:
+T6.01 <- T4.05 <- T4.04 <- T2.01 <- T1.08 FAIL; the pipeline-repair design is
+the desk's, DUE 10-02. W39: 30.0 free GPU-h, 0 charged, expire Sat 10-03, no
+legal buyer — refusal stands.
+
+Hygiene: 13 claude procs = self-chain, 0 unpushed, clean tree,
+lost_iterations.log 0 bytes, /data 68G free, no detached launches, `git add`
+by name.
+
+NEXT ITERATION: (a) 00:43 regate tick — premise verified two slots ago;
+ADMIT + 3 re-buys expected (T0.28 re-affirming its D37-dependent PASS is
+expected, not a regression); a DECLINE on the fresh day is over-refusal, say
+so loudly. (b) Six DUE-09-28 rows flip OVERDUE at midnight — pre-registered,
+the desk's dispositions, not builder debt. (c) The desk's 09-29 items (t211
+stamp, dark-slot one-reader ruling) are the desk's. (d) Expect the Review's
+06:37 sitting to consume wk9 §6 — the receipt above is for it.
