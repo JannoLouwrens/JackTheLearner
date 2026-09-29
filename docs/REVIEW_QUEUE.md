@@ -11012,7 +11012,7 @@ ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field 
 ## armed default ordered a screen, the screen is built, and its own measured
 ## false-positive rate says it cannot be floored
 
-ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overseer, 107th audit) + `experiments/unread_metrics.py` | OPEN
+ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overseer, 107th audit) + `experiments/unread_metrics.py` | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — DELETE, and the deletion EXECUTES `D27`'s default rather than reversing it: the entry's own text says the counter *"gets floored or deleted once it exists"*, and at 19/20 false it cannot be floored, so delete is the authorised branch and not a desk quietly undoing a default it disliked. Two things are ordered in its place so `D27`'s actual question does not die with its failed screen. See THE RULING below)
     **What happened, in one line.** `D27`'s armed default (i) BUILD THE SCREEN,
     REPORTING ONLY fired on 2026-09-21 and is now discharged in code:
     `metric_recorded_but_unread` is in `run status`, unfloored, first reading
@@ -11064,6 +11064,81 @@ ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overse
         so in `DECISIONS_RESOLVED.md` under `D27`. A third sitting that leaves
         a 95%-false counter printing in `run status` with no disposition is the
         outcome this row exists to prevent.
+    THE RULING 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **FOURTH sitting, and the row told me in advance that a fourth sitting
+        leaving a 95%-false counter printing with no disposition is the outcome it
+        exists to prevent. Disposed.**
+        **DELETE `metric_recorded_but_unread`. AND THE DELETION IS AUTHORISED BY
+        `D27` ITSELF, which is the whole reason this is a clean act instead of a
+        delicate one.** The builder was right to be careful here — *"deleting an
+        instrument that the owner's own armed decision ordered built … is the
+        shape of a desk quietly reversing a default it did not like"* — and the
+        care is what makes the answer safe to give. `D27`'s own text binds its
+        firing to a rate measurement: **the counter *"gets floored or deleted once
+        it exists"*.** Both branches were pre-authorised by the owner's default;
+        the rate decides which one fires. **The rate is 19 false / 1 true in a
+        deterministic 20-draw — 95% — so it cannot be floored, and delete is
+        therefore the branch `D27` armed, not a reversal of it.** I am executing
+        the second half of a default, not overriding its first half.
+        **AND THE EVIDENCE IS WORSE THAN THE RATE, which is the part that settles
+        it.** The single true positive is **not an instance of `D27`'s cited
+        class**: `T0.06 steps_ok` is the literal `5` written into a metrics dict
+        and never read — a *decorative metric*, not *"the run measured the quantity
+        that would have indicted it and then did not look at it."* **In a 20-draw
+        the screen found ZERO instances of the class it was built for.** A
+        reporting-only counter at 95% false that has never once printed its own
+        subject is not a weak instrument; it is a different instrument wearing the
+        name of the one that was ordered. Floors and narrowings do not fix a name
+        collision.
+        **BUT `D27`'S QUESTION DOES NOT DIE WITH ITS SCREEN, and separating those
+        two is the substance of this ruling.** Zero instances in a 20-draw has two
+        readings and they are distinguishable: either the motivating class is
+        genuinely rarer than the four-in-four-days that provoked the fork, or **the
+        screen cannot see it.** The row already names the mechanism for the second
+        — *"two of the three pairs that looked real were read in substance through
+        a SUBSCRIPT (`rb["refused"]`, `m["synth_lo_refused"]`) rather than a bare
+        identifier, so the syntactic dataflow filter has no shared `ast.Name` to
+        join on."* **ORDERED, and it is a MEASUREMENT, not a counter:** follow
+        subscripts and helper calls on the same 20-draw and report how many
+        instances of `D27`'s actual class appear. The row is explicit that nothing
+        has measured this and that it *"is the difference between 62 flagged specs
+        and an unknown smaller number."* **If it finds instances, a narrowed screen
+        is warranted and `D27` gets one. If it finds zero again, then zero is the
+        honest answer to `D27` and it should be written down as an answer rather
+        than left as an absence.** Either way `D27` is answered by a number instead
+        of by the disappearance of a counter — which is the thing deletion alone
+        would have quietly done.
+        **THE DECORATIVE-METRIC DETECTOR — ADOPTED, SEPARATELY, AND EXPLICITLY NOT
+        AS `D27`'S SCREEN.** The builder found it in the data (the true positive
+        was caught by a property no filter uses: *the recorded value is a LITERAL
+        in the source*), noted it *"has no false positives by construction"*, and
+        **declined to substitute it** because that *"would be answering a question
+        nobody asked while the asked one goes unreported."* **That refusal was
+        exactly right and I am not reversing it — I am ruling the substitution
+        question the builder correctly declined to rule on its own.** Adopt it as
+        its own reporting-only reading, named for what it measures (metrics whose
+        recorded value is a source literal), never quoted as answering `D27`. A
+        mechanical detector with no false positives by construction is worth having
+        for its own sake; passing it off as the ordered screen is how a question
+        gets closed by a near-miss.
+        **WHAT IS NOT OWED, unchanged from the row:** no bar moves, no certificate
+        is invalidated, nothing re-runs, and nothing becomes refusing — `D27`'s
+        default is reporting-only and this ruling does not touch that.
+    DUE: 2026-10-13 | RE-DATED 2026-09-29 (Review DAILY). **The disposition debt
+        is DISCHARGED above and it was this desk's alone for eight days; what this
+        date carries is EXECUTION, which is builder work.** Derived on this
+        sitting's saturation arithmetic (printed in full on `lg12`): every date
+        from 2026-09-29 through 2026-10-09 carries 6 or 7 live rows against a
+        MEASURED capacity of 6, and 10-10/10-11/10-12 took this sitting's other
+        five dispositions; 10-13 carries 1. | what is owed by then: (1)
+        `metric_recorded_but_unread` deleted from `run status` and
+        `experiments/unread_metrics.py`, with the deletion and its 19/20 reason
+        written into `docs/DECISIONS_RESOLVED.md` under `D27` — the deletion is not
+        done until that note exists, because an instrument that vanishes without a
+        recorded reason is indistinguishable from one nobody liked; (2) the
+        subscript/helper-call measurement reported as a NUMBER on the same 20-draw;
+        (3) the decorative-metric reading added under its own name. NOT owed: a
+        floored counter, any refusal, or a substitution of (3) for `D27`'s screen.
 
 ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 | Review DAILY (replayed against `/data/jack-logs/ladder.log` at 07:0x) | OPEN
     DUE: 2026-09-29 | the DESK's half: rule on whether `slot_outcomes()` should
