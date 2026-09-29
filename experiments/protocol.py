@@ -3226,6 +3226,23 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
     return out
 
 
+# GROWTH LOG (shrink-only; every raise needs an entry here and a reason in
+# the commit that makes it):
+#   2026-09-29  baseline 22, the measured value at first floor (130th audit
+#               FOR THE BUILDER 2). The audit dated every member: all 22
+#               pairs fall between 2026-08-09T13:49 and 2026-08-13T02:34 —
+#               rows whose adverse side predates `impl_sha`, a genuinely
+#               closed historical gap. But `audit_supersedes_fail` decides
+#               `unauditable` on FIELD ABSENCE (`if not e.get("impl_sha")`),
+#               never on a date, so a row written today without an
+#               `impl_sha` would join the class silently and shrink T0.27's
+#               own coverage with nothing printing. The floor makes that
+#               growth a red banner; the number can only legitimately
+#               shrink from here (a shrink lowers this constant in the same
+#               commit, per the ratchet discipline).
+UNAUDITABLE_PAIRS_BASELINE = 22
+
+
 def audit_supersedes_fail(results: Dict[str, Any],
                           repo_root=None) -> Dict[str, Any]:
     """Every amend-after-adverse-verdict must be auditable by someone who is

@@ -1875,8 +1875,23 @@ def ratchet_live(ledger: Ledger) -> dict:
         n, _base = _decisions_debt["debt"][kind]
         return n
 
+    def _live_unauditable_pairs():
+        # 130th audit FTB 2: `audit_supersedes_fail` counts a pair
+        # `unauditable` on FIELD ABSENCE, never on a date — the 22 members
+        # are all historical (2026-08-09..08-13, dated by the audit), so the
+        # class is closed by accident of history, not by construction. A row
+        # written today without an `impl_sha` would join it silently and
+        # shrink T0.27's own coverage. Floored shrink-only in protocol.py.
+        import json as _json
+        from .protocol import audit_supersedes_fail
+        p = Path(__file__).resolve().parent / "ledger.json"
+        results = _json.loads(p.read_text()).get("results", {})
+        return audit_supersedes_fail(
+            results, repo_root=p.parent.parent)["unauditable_pairs"]
+
     take("unreachable", _unreachable)
     take("fail_unowned", _fail_unowned)
+    take("live_unauditable_pairs", _live_unauditable_pairs)
     take("fail_unowned_owned_forms", _fail_unowned_owned_forms)
     take("pass_on_dead_dependency", _pass_on_dead_dependency)
     take("goal_unrunnable", _goal_unrunnable)
@@ -1924,7 +1939,14 @@ def ratchet_floors() -> dict:
     from .decisions import (BASELINE_ACTION_EXPIRED, BASELINE_FIRING_HAZARDS,
                             BASELINE_UNDECLARED, BASELINE_UNROUTED_ASKS,
                             BASELINE_VANISHED_ASKS)
+    from .protocol import UNAUDITABLE_PAIRS_BASELINE
     return {"unreachable": UNREACHABLE_BASELINE,
+            # Added 2026-09-29 (130th audit FTB 2). `audit_supersedes_fail`
+            # decides `unauditable` on field absence, never on a date; the
+            # 22 members are all historical (08-09..08-13) and the class can
+            # only legitimately shrink. Growth = a row written without an
+            # impl_sha, silently shrinking T0.27's own coverage.
+            "live_unauditable_pairs": UNAUDITABLE_PAIRS_BASELINE,
             "fail_unowned": FAIL_UNOWNED_BASELINE,
             # Added 2026-09-23 (Review DAILY, executing `pass-certificates-
             # are-not-re-evaluated-when-a-dependency-falls`, routed 09-13).
@@ -1969,7 +1991,10 @@ def ratchet_floors() -> dict:
 # class under a constant matching NEITHER name form is invisible to this scan
 # — `run.py`'s own GPU_UNATTRIBUTED_FLOOR shows the form exists. The four
 # audited tools use the idiom without exception today.
-FLOORED_CLASS_TOOLS = ("coverage", "champions", "review_queue", "decisions")
+# `protocol` joined 2026-09-29 (130th audit FTB 2): its first floored class
+# is UNAUDITABLE_PAIRS_BASELINE, scanned so it cannot drift out of the join.
+FLOORED_CLASS_TOOLS = ("coverage", "champions", "review_queue", "decisions",
+                       "protocol")
 
 # Every declared class maps to the `ratchet_live` counter that carries it.
 # Names here are asserted against the LIVE scan in `print_ratchet_block`, so
@@ -1988,6 +2013,7 @@ FLOORED_CLASS_JOIN = {
     "decisions.BASELINE_VANISHED_ASKS": "decisions_vanished_owner_ask",
     "decisions.BASELINE_ACTION_EXPIRED": "decisions_default_action_expired",
     "decisions.BASELINE_FIRING_HAZARDS": "decisions_firing_diff",
+    "protocol.UNAUDITABLE_PAIRS_BASELINE": "live_unauditable_pairs",
 }
 
 # Pinned UNJOINED, each with its reason — measured at pin time, 2026-09-26.
@@ -2487,7 +2513,10 @@ def _check_ratchet_reader() -> None:
                # 120th audit FINDING 2: decisions.py's five ratcheted classes.
                "decisions_undeclared", "decisions_unrouted_owner_ask",
                "decisions_vanished_owner_ask",
-               "decisions_default_action_expired", "decisions_firing_diff"}
+               "decisions_default_action_expired", "decisions_firing_diff",
+               # 130th audit FTB 2: T0.27's unauditable-pair class, closed
+               # by history (all 22 pre-impl_sha) but open by construction.
+               "live_unauditable_pairs"}
     got_floors = set(ratchet_floors())
     if got_floors != FLOORED:
         raise RuntimeError(
