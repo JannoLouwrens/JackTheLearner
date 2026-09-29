@@ -24277,3 +24277,50 @@ stamp to make, not yours. (ii) T0.28's PASS falls to FAIL when D37 resolves
 (decide_by 10-04) — forecast on the record, not a regression. (iii) The docs
 bill (T0.21/T0.28) recycles at cron cadence, capped by the slack guard —
 owned by the desk's cpu48h row, do not chase it.
+
+## 2026-09-29 01:0x UTC — 129th audit FTB 2 executed: unreachable=96's cause now written at its site; floor NOT raised
+
+Meters: week:all models 31% (the gate, acted on), week:Fable 48%, ran on
+Fable; pace allow ~32.8 at 12% week-elapsed — slot admitted.
+
+THE UNIT (129th audit FTB 2, RANK 2): `ratchet_readings.json`'s `unreachable`
+key now carries a `note` — it was the only above-floor key without one. Cause
+RE-DERIVED at source, not inherited from the audit: LT.02 FAIL (09-19) ->
+PASS (09-25T13:25, e4ec371) -> FAIL (09-27T02:40, f047060) -> FAIL re-buy
+(09-28, attempt 4, regate); the 95 reading was taken on 09-25 while the
+epsilon-bought PASS stood (chaos_reward_ratio 5.2631 verified on the PASS
+row's own metrics = the 5.2631e-9/1e-9 artifact the 22:0x slot re-derived);
+LT.03.depends_on [LT.01, LT.02, PG.4] read from registry_expansion.py:6978,
+other two PASS; `run blocked` names LT.02 = FAIL frees 1 -> LT.03.
+UNREACHABLE_BASELINE STAYS 95. Verified after the edit: unreachable still
+prints !! ABOVE floor, ratchets EXIT 2 unchanged — the note is visibility,
+not relief — and it survives `ratchets record` by construction
+(cmd_ratchets carries entries forward via dict(old), run.py:~3036).
+
+One over-claim caught in-slot: the first draft of the note said the re-buy is
+"deterministic-red until the detector repair lands" — unverified; trimmed to
+the recorded fact (attempt 4 FAIL) before commit.
+
+OVERSIGHT FTB 1 (conduct) adopted as standing practice: no wait armed beyond
+the slot, and this entry exists even though the dispatch board is empty —
+tenth consecutive verified-empty board (`run next`: 0 fresh of 51). OVERSIGHT
+FTB 3: nothing else taken. PROGRESS FTB 1+2 verified already discharged
+(c4df5a4, ratcheted at 5651fc1 to T0.31 P23/P24) — not redone.
+
+Instruments, re-run immediately before this commit: status 2 / coverage 2 /
+decisions --check 1 (D33 DEFAULT-ACTION-EXPIRED, floor 0 — the Review/owner's)
+/ review-queue 2 (15 violations = OVERDUE 6 + HOLD-ON-A-RESOLVED-BLOCKER 9,
+all desk dispositions; 1 DELIVERED row printing). Same owned reds, none mine.
+
+Creature gate: NONE — recorded as the violation it is; chain unchanged
+T6.01 <- T4.05 <- T4.04 <- T2.01 <- T1.08 FAIL, pipeline-repair design the
+desk's, DUE 10-02. W39: 30.0 free GPU-h, 0 charged, expire Sat 10-03, no
+legal buyer — refusal stands. Hygiene: 13 claude procs = self-chain,
+lost_iterations.log 0 bytes, git add by name, no detached launches.
+
+NEXT ITERATION: (i) t211 + dark-slot rows are DELIVERED with DUE 09-29 — the
+desk's stamp to make, not yours; if unstamped they age OVERDUE-while-
+DELIVERED, which is legal and visible. (ii) T0.28's PASS falls to FAIL when
+D37 resolves (decide_by 10-04) — forecast already on the record. (iii) The
+unreachable red clears only via an honest LT.02 PASS; do not re-run LT.02 as
+cheap work (838 s measured, regate already re-bought it to FAIL on 09-28).

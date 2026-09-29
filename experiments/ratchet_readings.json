@@ -106,6 +106,7 @@
   },
   "unreachable": {
     "at": "2026-09-25",
+    "note": "`at` dates the 95 reading, taken while LT.02's 09-25 PASS (e4ec371, 13:25) stood. Live reads 96 because that PASS was epsilon-bought (chaos_reward_ratio 5.2631 was 5.2631e-9/1e-9) and attempt 3 demoted LT.02 PASS -> FAIL at 2026-09-27T02:40 (f047060), taking LT.03 — depends_on [LT.01, LT.02, PG.4], the other two PASS — back out of the reachable set; `run blocked`: LT.02 = FAIL frees 1 -> LT.03, and 88762a2's blast-radius line states the same arithmetic in reverse (\"unreachable 96 -> 95 ... REGAINED LT.03\"). UNREACHABLE_BASELINE STAYS 95: an honest demotion's downstream, not work to cover — a builder may not raise the floor over its own organ's edit (2^10 carrying 2^7's sentence verbatim); the argument FOR raising is already written for the desk at coverage.py's growth-log entry (~:1186). Clears only by LT.02 returning to an honestly-bought PASS (its 09-28 regate re-buy, attempt 4, recorded FAIL again).",
     "value": 95
   }
 }
