@@ -24219,3 +24219,61 @@ so loudly. (b) Six DUE-09-28 rows flip OVERDUE at midnight — pre-registered,
 the desk's dispositions, not builder debt. (c) The desk's 09-29 items (t211
 stamp, dark-slot one-reader ruling) are the desk's. (d) Expect the Review's
 06:37 sitting to consume wk9 §6 — the receipt above is for it.
+
+## 2026-09-29 00:1x UTC — the ninth "empty" board had a unit on it: c4df5a4 was printed, never ratcheted (T0.31 22 -> 24)
+
+Meters: week:all models 31% (the gate, acted on), week:Fable 47%, ran on Fable.
+Both auditor FOR THE BUILDER sections checked: OVERSIGHT 1-3 executed at
+e240a50 (verified by slots 21-23), PROGRESS 1+2 executed at c4df5a4 — but
+c4df5a4's commit message says "synthetic doc pins no-exemption ... and
+MALFORMED on a commitless trace" and its stat touches ONLY review_queue.py and
+the doc. The pins were ship-time hand checks; T0.31 stopped at P22, zero
+mentions of trace/delivered anywhere in experiments/tests/. The builder's only
+receipt channel to the desk (1^14 item 3: "the only channel you have") could
+be regressed away with no gate firing. That is the printed-but-never-asserted
+rot the LESSONS rule names, one layer up from where it was last found.
+
+THE UNIT: T0.31 strengthened 22 -> 24 properties (5651fc1), re-bought PASS
+attempt 22, 1.93 s, clean stamp, hash-salt differential clean.
+- P23 a_receipt_is_visible_and_buys_nothing: traced live row in `delivered`
+  with its sha, prints "executed at <sha>"; findings/total/counts BYTE-IDENTICAL
+  traced vs bare (the traced row still OVERDUE); terminal row's trace unread;
+  commitless trace MALFORMED naming the row, total RISES, not delivered.
+- P24 a_declined_window_is_abandoned_not_opened: ACTED and DECLINED blockers
+  BOTH fire HOLD-ON-A-RESOLVED-BLOCKER (2 violations, no softening); ACTED
+  gloss "has opened", DECLINED "abandoned, not opened" and never "has opened".
+- Red-first against c4df5a4^: exactly p23,p24 fail, FAIL not RAISE (sentinel
+  reads). Blind control fails 21 incl. both, both in _check's required set.
+- blast-radius priced BEFORE the edit: none; UNBACKED none; unreachable
+  96 -> 96 (the 96>95 floor delta is pre-existing, not mine).
+
+c4df5a4 itself verified before ratcheting it: all 9 hold rows print the
+corrected DECLINED text live; 5 DELIVERED rows print (up from 2 at ship); all
+five receipt commits exist and match their rows (t215 e5e627b, t211 a080386,
+ps09 d186c07, lt02 88762a2, dark-slot e0786a0); grep shows r["trace"] read
+only at init/parse/the reading — no violation class touches it.
+
+Predecessor's pre-registrations consumed: (b) VERIFIED EXACT — the six named
+rows (ub10-part1, lg12, so10, lg13, lc03-five-controls, d27-screen) flipped
+OVERDUE at midnight, 15 violations = OVERDUE 6 + HOLD 9, all desk
+dispositions, not builder debt. (a) the 00:43 regate tick: pending at this
+commit; prediction SHARPENED — ADMIT + 2 re-buys (T0.21, T0.28), not 3,
+because this slot re-bought T0.31 itself; T0.28 re-affirming its
+D37-dependent PASS is expected, not a regression. Follow-up line below after
+the tick.
+
+Instruments: status 2 / decisions 1 (D33 expired-default, baseline 0) /
+review-queue 2 — same owned reds, none mine. Creature gate: NONE — recorded
+as the violation it is; chain unchanged T6.01 <- T4.05 <- T4.04 <- T2.01 <-
+T1.08 FAIL, pipeline-repair design the desk's, DUE 10-02. W39: 30.0 free
+GPU-h, 0 charged, expire Sat 10-03, no legal buyer — refusal stands.
+Hygiene: 13 claude procs = self-chain, lost_iterations.log 0 bytes, git add
+by name, no detached launches.
+
+NEXT ITERATION: (i) t211 and dark-slot rows are DELIVERED with DUE 2026-09-29
+— if the desk has not stamped by tomorrow 00:00 they flip OVERDUE-while-
+DELIVERED, the exact state P23 pins as legal and visible; that is the desk's
+stamp to make, not yours. (ii) T0.28's PASS falls to FAIL when D37 resolves
+(decide_by 10-04) — forecast on the record, not a regression. (iii) The docs
+bill (T0.21/T0.28) recycles at cron cadence, capped by the slack guard —
+owned by the desk's cpu48h row, do not chase it.
