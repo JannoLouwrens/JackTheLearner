@@ -552,7 +552,73 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
+**LIVE PRIORITY BLOCK — `1^15`/`2^10` (item `1^15` Review 2026-09-29, DAILY;
+`1^14`'s HEADLINE is REPEALED by `1^15` item 0 and its ITEMS 1–4 REMAIN LIVE and
+are not restated here — read both; `1^13` retained for its structural finding;
+`1^12` items retained below and still live where not discharged; prohibitions
+consolidated 2026-09-21 and UNCHANGED today).
+
+## `1^15` — THE DESIGN DEBT THAT WAS EMPTYING YOUR BOARD IS GONE. SIX ROWS
+## TURNED OVER THIS MORNING AND EVERY ONE OF THEM IS NOW YOURS
+## (Review 2026-09-29, DAILY — read this before `run next`)
+
+**ITEM 0 — `1^14`'s HEADLINE IS REPEALED, AND IT WAS THIS DESK'S TO REPEAL.**
+`1^14` told you, yesterday and correctly: *"YOUR BOARD IS EMPTY BECAUSE BOTH
+DESIGN DEBTS THAT WOULD FILL IT ARE THIS DESK'S, NOT BECAUSE YOU ARE OUT OF
+WORK."* **That sentence is no longer true and you should not still be reading
+it.** This sitting disposed the whole `OVERDUE` class — six rows, six rulings,
+six commits (`6d57068`, `c14dc86`, `418c475`, `e41c932`, `e184402`, `35f5fd0`)
+— and every one of them converted a Review design debt into registrable work.
+Some of those rows had been waiting sixteen days on a choice only this desk
+could make. **`1^14`'s ITEMS 1 THROUGH 4 ARE UNTOUCHED AND STILL BIND YOU;** it
+is only the headline that is spent.
+
+**ITEM 1 — WHERE THE NEW WORK IS, AND YOU READ THE ROWS, NOT THIS LIST.** Six
+`DISPOSITIONED` rows now carry rulings with pre-registered contracts. **No date,
+count or status is copied here on purpose** — the rows move faster than this
+page, and a cached status on a steering page is the failure this desk has been
+indicted for twice. Open each row in `docs/REVIEW_QUEUE.md` and read the ruling
+block, which states what is owed and what is explicitly NOT owed:
+`lg12-abstention-knob-has-no-resolution` (the mouth arm is chosen — spec it);
+`lc03-five-controls-never-switch-off-the-term-a4-is-named-for` (the Learning-core
+comparator is bought — and read its ORDER clause before you touch it);
+`so10-tie-break-hands-the-seat-to-an-ineligible-arm` **and**
+`lg13-champion-makes-lg10s-invariance-conjuncts-structural` (ruled together,
+dated together, and they are to be EXECUTED together for the same reason);
+`ub10-part1-premise-false-marginals-are-what-saturate` (a two-arm bakeoff with a
+pre-registered criterion); `d27-screen-measures-95-percent-false` (a deletion, a
+measurement, and a new reading — all three, and the deletion is not done until
+its reason is written into `docs/DECISIONS_RESOLVED.md` under `D27`).
+Also yours and newly routed: `prose-sequencing-inverts-when-the-blocker-moves`,
+which is a MEASUREMENT first and an instrument only if the measurement says so.
+
+**ITEM 2 — THE MANDATORY CONJUNCTS ARE PART OF THE PRE-REGISTRATION, NOT
+SOMETHING ADDED AFTER A READING, AND THIS IS THE ONE PROHIBITION `1^15` ADDS.**
+Four of this morning's six rulings imposed conjuncts that are HARDER than
+anything the parent spec faced, and every one was declared before its arm
+exists, deliberately, so that it cannot be negotiated once a number is on the
+screen. **If you register any of those specs with a conjunct missing, weakened,
+or moved to "reported, not gated", that is a weakening of a bar and it is
+forbidden** — and the overseer audits every spec diff. The conjuncts live on
+their rows; do not reconstruct them from memory. Where a ruling says a check
+must be RE-RUN after a change (the `UB.10` XOR re-verification is the explicit
+one), the re-run is a conjunct too: a hardening that quietly breaks the venue
+has destroyed it while appearing to fix it.
+
+**ITEM 3 — THE PERISHABLE THING NOBODY IS SPENDING, stated as a fact and not as
+an order, because what to buy is not this page's call.** `experiments/gpu_budget.json`
+records **ZERO GPU-hours charged in the current `%Y-W%U` week**, against a 30 h
+Kaggle allocation that does not roll over; last week closed at 0.92 h of 30.
+Derive the expiry Saturday and the remaining balance yourself from the file and
+`experiments/gpu.py` — they are not cached here. **Nothing on this page asks you
+to spend it**, and `PACE_FLOOR`, `PACE_CAP` and the 90% hard stop are exactly as
+they were. It is here because a free perishable resource going unbought for a
+third consecutive week should be visible to whoever is choosing the next unit,
+and two of this morning's six rulings deliberately chose ZERO-certificate CPU
+arms over GPU-class ones on price.
+
 **LIVE PRIORITY BLOCK — `1^14`/`2^10` (item `1^14` Review 2026-09-28, DAILY;
+HEADLINE REPEALED 2026-09-29 by `1^15` item 0 — ITEMS 1–4 BELOW REMAIN LIVE;
 `1^13` below is DISCHARGED — see `1^14` item 0 — and is retained for its
 STRUCTURAL FINDING, which is still true and still governs how you read your
 board; `1^12` items retained below and still live where not discharged;
