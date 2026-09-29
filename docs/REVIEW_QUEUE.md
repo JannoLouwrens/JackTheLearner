@@ -15487,3 +15487,72 @@ ROUTED: certified-diary-is-not-the-memory-the-shipped-brain-carries | 2026-09-28
         (`told-world-has-no-rung`, ACTED).
     A future GOAL.md edit reopens the series; nothing here closes the three
     sibling rows, which carry the class's disposition clocks unchanged.
+
+## ROUTED 2026-09-29 (Review DAILY): `prose-sequencing-inverts-when-the-blocker-moves` — a row's declared order lives in a `DUE:` sentence nothing parses, and it has now produced two violations
+
+ROUTED: prose-sequencing-inverts-when-the-blocker-moves | 2026-09-29 | this sitting's `lc03` ruling (`c14dc86`), against the 09-22 `ub10-part1` re-date | OPEN
+    **THE DEFECT, in one sentence.** A row that declares its sequencing in
+    ENGLISH inside its `DUE:` line goes silently unkeepable the moment its
+    blocker is re-dated forward, because nothing carries a dependent's date with
+    its blocker's and nothing reads the sentence.
+    **TWO INSTANCES, EIGHT DAYS APART, AND THE SECOND ONE IS THIS DESK'S.**
+      1. `ub10-part1-premise-false-marginals-are-what-saturate`, caught
+         2026-09-22: *"Already declares BLOCKED-BY `ub10-seed-fragility-and-
+         saturated-battery`, which is DISPOSITIONED and DUE 09-23; a blocked row
+         whose date falls BEFORE its blocker's is a promise nobody could have
+         kept."* **Caught because it used the machine-readable field.**
+      2. `lc03-five-controls-never-switch-off-the-term-a4-is-named-for`, caught
+         2026-09-29 (today). Routed 09-21 with `DUE: 2026-09-28` and the words
+         *"Dated a week out and BEHIND that row deliberately"*. The `a4` row was
+         `DUE 2026-09-25` at that moment, so the claim was TRUE. On 09-27 the
+         `a4` row was re-dated to **2026-10-04**; `lc03` was not touched, and came
+         due **six days before the row it was deliberately placed behind.**
+         **Not caught by anything — it was found by a human-equivalent read of the
+         sentence during the OVERDUE sweep, seven days late.**
+    **WHY THE EXISTING FIELDS DO NOT COVER IT, measured in the source rather than
+    assumed.** `BLOCKED-BY:` catches the inversion (instance 1) but buys
+    **ageing-exemption**, which is precisely why this desk avoids it on rows that
+    *should* age — `review_queue.py:2737-2744`, *"a `BLOCKED-BY:` alone and the row
+    becomes ageing-exempt"*. `WAITS-ON:` is the field built for declaring
+    dependence WITHOUT an exemption (93rd audit B3) and it is already parsed and
+    already validated — a `WAITS-ON:` naming an unknown row is MALFORMED
+    (`:813-816`) — **but it touches nothing: "not OVERDUE, not STALE, not ageing"
+    (`:68`).** So the project already has the right field, already type-checks it,
+    and has never once compared the two dates it names. The gap is one reading,
+    not a new field.
+    **THE CANDIDATE CLOSURE, named but NOT picked — measure first.** A
+    `DATE-INVERSION` reading over `WAITS-ON:`: a live row whose `DUE:` falls
+    strictly before the `DUE:` of the live row it declares `WAITS-ON` is printed.
+    It must be a **READING and never an exemption or a gate** — `WAITS-ON:` buys
+    nothing and this must not become the back door that makes it buy something.
+    Before it is built, the live corpus must be enumerated the way the fieldwatch
+    quotation repair was (`d901cb4`): how many current `WAITS-ON:` pairs are
+    inverted, and how many of those are *legitimate* (a dependent may honestly
+    come due first to produce an input). **If the legitimate fraction is high the
+    reading is noise and should not ship** — that measurement is what this row
+    buys, not the feature.
+    **WHAT THIS ROW DOES NOT ASK FOR.** Not a gate, not an exit code, not an
+    ageing exemption, and NOT a sweep that re-dates dependents automatically —
+    moving a promise without a desk reading it is the act every OVERDUE
+    disposition in this file exists to prevent. And not a prose ban: sentences in
+    `DUE:` lines carry reasoning no field can, which is why the answer is to make
+    the machine-readable field *also* present, never to stop writing the sentence.
+    **STALENESS BILL.** Reporting-only, so zero thresholds and zero verdicts move;
+    the bill is whatever `T0.31`-class re-buy the edit stales, named in the commit
+    that makes it. `lc03` itself needs no repair from this row — its ruling is
+    already landed and its new date already clears its blocker.
+    WAITS-ON: none | the measurement is independent; it reads the corpus as it
+        stands and needs no other row settled first. Declared here rather than
+        omitted because a row about an unread dependency field that does not
+        itself use the field would be the joke writing itself.
+    DUE: 2026-10-10 | a BUILDER measurement-then-maybe-instrument, not a Review
+        design — the closure is named above and the desk endorses enumerating the
+        live corpus before shipping a reading. Date derived from this sitting's
+        saturation arithmetic, printed in full on `lg12`: `review-queue`'s own day
+        pile reads 6 or 7 live rows on **every** date from 2026-09-29 through
+        2026-10-09 against a MEASURED capacity of 6, and 2026-10-10 carries **1**.
+        This is the first date in twelve days with genuine room, and routing a NEW
+        arrival onto a saturated day would be this row's own defect committed in
+        the act of reporting it. | what is owed by then: the inverted-pair count
+        on the live corpus, the legitimate fraction of it, written down — and the
+        reading shipped ONLY if that fraction says it would not be noise.
