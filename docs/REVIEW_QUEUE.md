@@ -10617,7 +10617,7 @@ ROUTED: ba03-vestibular-channel-is-never-load-bearing-under-one-kick | 2026-09-2
         instalments of "W1 goes next" and will not author a sixth on a row whose
         author is undetermined.
 
-ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-21 | `785f921` (field watch week 8, §6) | OPEN
+ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-21 | `785f921` (field watch week 8, §6) | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — BOTH halves of the design answer are ruled: the seat DOES get the `l_bind`-dropped comparator, and it is bought ON ITS OWN because the run it was sequenced to be marginal on WILL NOT HAPPEN. The row's own sequencing premise is discharged as FALSE, by a mechanism worth more than the ruling. See THE RULING below)
     **The question, and it is a SEAT question before it is a spec question.**
     `A4` (`wm-latent`) holds the Learning-core seat. The machinery it is NAMED
     for is the `latent_pred` head — 149,312 params, 17.3% of the arm. The scout
@@ -10646,6 +10646,104 @@ ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-2
         seat get an `l_bind`-dropped comparator, and is it bought on its own or
         marginal on the `a4-…-computed-nowhere` run. Dated a week out and BEHIND
         that row deliberately — buying this separately is the expensive mistake.
+    THE RULING 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **THE MECHANISM FIRST, because it is worth more than the ruling and it
+        is the SECOND instance of itself found at this desk in eight days.**
+        This row was dated 09-28 and declared, in the `DUE:` above, that it sits
+        *"BEHIND"* `a4-mandatory-collapse-diagnostic-is-declared-and-computed-
+        nowhere`. That was TRUE when it was written: on 2026-09-21 the `a4` row
+        was `DUE 2026-09-25`, so 09-28 was genuinely downstream. On 2026-09-27
+        the `a4` row was re-dated to **2026-10-04** — and nothing re-dated this
+        one. **A blocker moving forward does not carry its dependents with it, so
+        a sequencing declaration INVERTS SILENTLY and the dependent comes due
+        six days before the row it was deliberately placed behind.** The desk
+        found exactly this defect on 09-22 in `ub10-part1-premise-false-marginals-
+        are-what-saturate` (*"a blocked row whose date falls BEFORE its blocker's
+        is a promise nobody could have kept"*) — and then rebuilt it here four
+        days later with its own hands, in prose, where no instrument looks. The
+        `ub10` instance was caught because that row used the machine-readable
+        `BLOCKED-BY:` field. This one declared its sequencing in an English
+        sentence inside a `DUE:`, which nothing parses. **Routed as its own row
+        below rather than fixed quietly here** — a defect that has now produced
+        two violations is a class, not an incident.
+        **HALF TWO OF THE QUESTION, AND THE ANSWER IS NOT A DATE.** *"Is it
+        bought on its own or marginal on the `a4-…` run"* — **there is no run to
+        be marginal on.** The `a4` row was RULED (i)+(iii) on 09-27; the (iii)
+        AMEND half was executed in that sitting; and the (i) BUILD half was found
+        to collide with `D29` (resolved 09-23 as (iii) alone), so it is
+        **CONTINGENT and routed to the owner as `D37`** — whose armed default is
+        *"(iii) HOLD `D29` AS IT STANDS … the `Δ_k` readout is NOT built."* What
+        the `a4` row's 10-04 date buys, in its own words, is *"this desk CHECKING
+        `D37`"* — a desk errand, not a training run. **So the 14.40 core-h this
+        row hoped to ride on was never going to be spent, and the ledger this row
+        was protecting has no entry to share.** If the comparator is wanted it is
+        bought at full price, and pretending otherwise is how a row waits forever
+        for a run that was cancelled.
+        **HALF ONE: THE SEAT GETS THE COMPARATOR. TAKEN.** The case is stronger
+        now than when the scout filed it, because the `a4` ruling made it
+        stronger. Two INDEPENDENT holes are now on the record in the same seat:
+        (α) `A4`'s declared `Status.VOID` collapse guard was never computable —
+        `LEARNING_CORE.md` §5.4 promises effective rank and per-dimension latent
+        variance every 1,000 decisions, and the committed `LC.03` row records 50
+        metrics for `wm-latent` and not one of them is either — so the seat *"was
+        won in a ring missing one of its declared walls"*; and (β) this row's
+        finding, that **no control isolates the objective the arm is NAMED for**
+        (all five switch `latent_pred` off only as part of switching everything
+        off), so the seat's margins (`lg_margin_null` t = 4.64, `lg_margin_twin`
+        t = 4.00) are equally consistent with an RSSM actor-critic having
+        produced the entire number and 149,312 params — **17.3% of the seated
+        arm** — being dead weight. And if `D37`'s default fires to (iii), hole
+        (α) is settled BY HOLD and never measured, which makes this comparator
+        **the only live measurement that seat will ever get.** The value of this
+        row goes UP when `D37` defaults, not down. That is the argument for
+        buying it, and it is not the argument the scout made.
+        **THE PRICE, AND WHY IT IS AFFORDABLE.** 14.40 core-h per 3 seeds, no
+        weights on disk [scout, M], so a cheap inference-time ablation on a
+        trained checkpoint is NOT available and retraining is the only route —
+        stated so nobody re-litigates it as an oversight. Against the seat's
+        alternative: `LC.07` is **VENUE-UNAFFORDABLE AT BOTH VENUES** (535.5
+        core-h = 33.5 days of the whole CPU budget, `a3a090a`; GPU refused
+        09-06). **14.40 core-h is 2.7% of the re-run this seat cannot afford**,
+        and it is the only paired comparator the seat has ever had. No PASS
+        certificate is invalidated: `LC.03` is a VOID and the seat is held `BY
+        VERDICT` off it (`champions --check` VERDICT-IS-A-VOID, 2 of 2, at
+        floor), so the bill is compute and not re-certification.
+        **WHERE IT SITS IN THE ORDER, DECLARED RATHER THAN IMPLIED, because a
+        ruling that hides its own priority is how the frontier gets displaced by
+        the interesting.** This comparator **blocks no spec**. `T1.08` is
+        simultaneously this project's largest blocker (45 specs) and the thing
+        two standing PASS certificates rest on. **This row does NOT go ahead of
+        the `T1.08` pipeline repair and is not to be read as competing with it.**
+        It is a seat-quality measurement on a seat already flagged at floor, and
+        it is bought because it is cheap and decisive, not because it is urgent.
+        **TWO CONJUNCTS ON THE COMPARATOR — a STRENGTHENING, declared before the
+        arm exists.** An `l_bind`-dropped arm has an easy way to look meaningful:
+        run it on different seeds or a different budget and report that the
+        numbers differ. So the comparator is NOT eligible to be scored as a bare
+        second row:
+          1. **PAIRED, not merely adjacent** — identical seeds, identical step
+             budget, identical venue as the seated `A4` run, so the only declared
+             difference is the dropped term.
+          2. **SCORED ON THE SEAT'S OWN STATISTICS** — it must report
+             `lg_margin_null` and `lg_margin_twin`, the two numbers `D10` seated
+             `A4` on, and not a proxy chosen afterwards. If the `l_bind`-dropped
+             arm reproduces both margins within the seated arm's own seed spread,
+             **the finding is that 17.3% of the seat is dead weight** and that is
+             a reportable result, not a null.
+        Neither conjunct may be dropped to make a result reportable.
+    DUE: 2026-10-09 | RE-DATED 2026-09-29 (Review DAILY). **The design debt is
+        DISCHARGED above — both halves, not one — so this date carries the SPEC
+        and not a fourth sitting of mine.** Derived, and the derivation is the
+        same saturation fact this sitting printed on `lg12`: `review-queue`'s day
+        pile reads 6 or 7 live rows on every date from 2026-09-29 through
+        2026-10-07 against a MEASURED capacity of 6, 10-08 reads 5 and took
+        `lg12` this morning, so **10-09 is the first date where this promise is
+        arithmetically keepable.** It is also, independently, the first date that
+        clears `D37`'s 2026-10-04 `decide_by` — so the ruling above is read once,
+        with the seat's guard question settled either way, rather than twice. The
+        two derivations agree, which is why this date is not a coincidence. | what
+        is owed: the `l_bind`-dropped comparator registered with BOTH conjuncts
+        above present in the pre-registration, and it does NOT pre-empt `T1.08`.
 
 ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field watch week 8, §6b) | ACTED 2026-09-24 (Review DAILY, executing commit `d901cb4` — the builder EXECUTED this on 09-23 and the row has been sitting one day OVERDUE waiting only for this stamp. Verified against the commit, not against its own UPDATE note: the diff touches `experiments/fieldwatch.py` and NOT `experiments/decisions.py`, which is this row's own load-bearing caution honoured; all three things the `DUE:` bought are present — the FP rate re-measured after the fix and written down (0 spurious of 18 sub-threshold pairs, both true pairs route), the closure picked only after 20 live overlaps were enumerated, and the shared helper left alone with the threshold parameterised at the fieldwatch call site. The measurement also bought something the row did not ask for and could not have: `decisions.owner_asks` has parsed 0 items since 09-09, routed separately as `owner-ask-reader-blind-since-0909`)
     **The instrument built last week to read `FIELD_WATCH.md` returns a FALSE
