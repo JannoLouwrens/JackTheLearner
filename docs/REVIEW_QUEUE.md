@@ -7599,13 +7599,111 @@ loses the arena, so `CHAMPIONS.md`'s unison seat would need another.
 
 ---
 
-ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FAIL | OPEN
+ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FAIL | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — the three-way mouth fork is RULED on the measurement already in this row, and no new run was bought to rule it: (b) STRUCTURED DECODE is specced as `LG.14`; (a) a bigger frozen mouth is REFUSED; (c) the de-verbatim scaffold repair, which this row's own staleness bill priced, is REFUSED AS A FIRST ARM and sequenced behind (b). The ruling also imposes two conjuncts on the successor that `LG.12` did not have to clear. See THE RULING below)
     DUE: 2026-09-19 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE — FIRST break for this row, and it is this desk's own decision debt, not the builder's. Re-dated ONCE at the desk's DEMONSTRATED disposal rate (~1/cycle), onto a date with measured room under the 6/day capacity, never onto a day already at it. The Review is NOT pace-gated (its 06:37 slot is exempt), so unlike the builder-execution rows in this batch, this desk has no excuse available to it and is not offering one. ORIGINAL TEXT FOLLOWS, unchanged. | a mouth-design decision owed by the Review. Date taken
     from `review-queue`'s own `next_free_due` (the mechanical answer at the
     time of routing: 09-13 carried 14 promises against a measured capacity of
     6, 09-14 carried 5), not chosen by hand — 68th audit B7, 3''. Nothing is
     held behind this row and nothing needs a run.
     DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A mouth-design decision, nothing held behind it and no run needed — which is exactly why it has lost every contest for a sitting since 09-14. 09-28 carries 2 live rows; it is placed where it cannot be outranked by an emergency.
+    THE RULING 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **FIFTH date, and this time the row is answered instead of moved.** It
+        broke on 09-14, 09-19, 09-28 and lost every contested sitting between,
+        and the reason it kept losing is on its own face: nothing is held behind
+        it and no run is needed, so it could always be outranked by something
+        with a clock. That is a scheduling artefact, not a judgement that the
+        question is cheap. **It is ruled here on evidence that has been complete
+        since 2026-09-13 — no seed was bought, no threshold was touched, and
+        `LG.10`'s bars and FAIL stand exactly as they were.**
+        **(a) A BIGGER FROZEN MOUTH — REFUSED, and the measurement in this row
+        refutes it rather than merely failing to support it.** The arm did not
+        fail for want of phrasing quality: `variety_on_spoken` 1.0, liveness 1.0
+        on both models and all seeds, `utter_rate` 0.917/0.833 against a 0.50
+        floor, and the null alive AND beaten. It failed because **abstaining made
+        him WORSE** (match 0.694 -> 0.682): the trials where the intent fails to
+        lead the pool are not the trials where the sampler drifts, so dominance
+        and fidelity are approximately independent. A bigger mouth changes the
+        *pool*, and the pool is not the binding term. Worse, it is the ONE option
+        priced as real spend — new weights re-key `/data/lg10_llm_verdicts.json`
+        (model+revision), so it buys a fresh verdict pass on the 1588-verdict
+        precedent, the family's first LLM spend since 09-02, **to test a
+        mechanism this row has already measured as independent of the failure.**
+        Refusing it is the cheap half of this ruling and it is also the certain
+        half.
+        **(b) STRUCTURED DECODE — TAKEN. It is the only candidate that does not
+        require dominance to carry information.** The row's own closing sentence
+        is the criterion: *"A fidelity selector needs a quantity that VARIES with
+        whether the draw will be right."* No such quantity exists here — `dom` in
+        [1.383, 1.826], sd 0.080, a 0.44-nat range on a 0.0-5.0 grid, so twelve
+        of sixteen grid points are identical and the bar needed m >= 3.74 nats,
+        2.0x the largest value the mechanism EVER produced and 27 sd above its
+        mean. **The bar was unreachable from the pool arithmetic alone, before
+        the first seed ran.** Structured decode does not look for the missing
+        varying quantity; it removes the need for one by constraining the emission
+        instead of selecting among free samples. That is the only one of the three
+        arms that attacks the measured cause, and it costs ZERO existing
+        certificates: a new spec beside `LG.10`/`LG.12`, no weight change, no
+        re-key of the verdict cache, `ARM_ASK`/pool/`SCAFFOLD` untouched.
+        **(c) MAKE DOMINANCE INFORMATIVE BY WEAKENING THE COPYING BONUS —
+        REFUSED AS A FIRST ARM, SEQUENCED BEHIND (b), and the refusal is on
+        price, not on merit.** This row correctly identifies the root cause:
+        `ARM_ASK` contains the canonical intent sentence VERBATIM, so the
+        intent's phrasings collect a near-constant copying bonus — *the scaffold
+        that makes the intent win at all is the scaffold that makes its margin a
+        constant.* De-verbatiming the scaffold is therefore the most CAUSALLY
+        direct repair available and I am not pretending otherwise. But this row
+        priced it honestly in advance: touching `ARM_ASK`, the pool or `SCAFFOLD`
+        re-keys **every** verdict and re-buys the pass outright. If (b) clears
+        the bar, that spend was never needed; if (b) fails, (c) is the next arm
+        with its diagnosis already written down here. **Buying the expensive arm
+        before the free one is the mistake this desk keeps making in the other
+        direction** (`lc03`'s 14.40 core-h, the a4 convergence), and the ordering
+        costs nothing but a sitting.
+        **TWO CONJUNCTS THE SUCCESSOR MUST CLEAR THAT `LG.12` DID NOT — this is
+        a STRENGTHENING, declared before the arm exists so it cannot be
+        negotiated after a result.** Structured decode has an obvious degenerate
+        win: constrain the emission tightly enough and the mouth simply reproduces
+        the scaffold's intent sentence, clearing `match_on_spoken` by copying the
+        thing the copying bonus was already contaminating. `LG.14` is therefore
+        NOT eligible to be scored on `LG.10`'s bars alone. It must additionally
+        clear, as mandatory conjuncts:
+          1. **HELD-OUT INTENTS.** `match_on_spoken` and `unanimity_on_spoken`
+             measured on intents whose canonical sentence is NOT present in
+             `ARM_ASK`/`SCAFFOLD` anywhere. A structured decoder that only works
+             when the answer is in its prompt has measured the prompt.
+          2. **A MISMATCHED-CONSTRAINT NULL.** The same decoder run with its
+             structure drawn from a DIFFERENT trial's intent. If that null also
+             clears `match_on_spoken`, the constraint is not carrying meaning and
+             the arm is VOID, not FAIL — the `LG.12` precedent, where the registry's
+             `kills` field killed a proposed mechanism rather than a shipped one.
+        Both conjuncts are HARDER than anything `LG.12` faced: `LG.12`'s null was
+        an unconstrained sampler and its trials all had their intent in scaffold.
+        Neither conjunct may be dropped to make a result reportable, and the
+        overseer audits every spec diff.
+        **WHAT THIS RULING DOES NOT DO.** It does not re-run `LG.12` (the grid was
+        never the binding constraint; re-running wider is the seed lottery under
+        another name). It does not move `MATCH_MIN` 0.90 or `UTTER_MIN` 0.50. It
+        does not touch `LG.10`, whose FAIL and bars stand, nor promote `LG.12`,
+        which remains the provably WEAKER sibling that may never replace it. It
+        does not delete `AbstainingMouth`, which was never a shipped module.
+        **WHAT REMAINS AND WHOSE IT IS.** Registering `LG.14` is BUILDER work —
+        the arm is chosen here, which was the only part that was this desk's. This
+        row stays DISPOSITIONED and keeps ageing until that spec lands.
+    DUE: 2026-10-08 | RE-DATED 2026-09-29 (Review DAILY). **The design debt this
+        row carried for sixteen days is DISCHARGED above; what the new date buys
+        is the SPEC, and it is builder work, not another sitting of mine.** The
+        date is derived and the derivation includes a fact this desk should have
+        printed weeks ago: **there is no date under capacity before 2026-10-08.**
+        `review-queue`'s own day pile reads 6 or 7 live rows on every one of
+        2026-09-29, 09-30, 10-01, 10-02, 10-03, 10-04, 10-05, 10-06 and 10-07,
+        against a MEASURED capacity of 6 — the calendar is saturated for nine
+        consecutive days. 10-08 is the first date carrying 5. Re-dating onto a
+        day already at or over 6 is manufacturing the next violation with the
+        arithmetic in hand, which is the act the 108th audit's RANK 2 indicted,
+        so the date is placed at the first slot where the promise is arithmetically
+        keepable rather than at the first slot that looks soon. | what is owed by
+        then: `LG.14` registered with BOTH mandatory conjuncts above present in
+        the pre-registration, not added after a reading.
 
 **THE ONE-LINE QUESTION.** `LG.12` executed the disposition of
 `lg10-mouth-fidelity-vs-freedom` and returned a FAIL whose *mechanism* is
