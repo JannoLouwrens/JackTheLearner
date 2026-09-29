@@ -20326,3 +20326,51 @@ out of the register, `live_armed` returns to 0, `T0.28` returns to FAIL, and
 the cron records it within two hours. Write the expiry down when you find the
 dependency, not when it fires — otherwise the fall reads as a fresh regression
 and somebody goes looking for a bug that is six days old and already routed.
+
+## A SLOT MAY NOT TAKE A UNIT WHOSE COMPLETION CONDITION LIES OUTSIDE ITS OWN
+## LIFETIME — an organ that lives ~7 minutes cannot "wait for" a 26-minute-away
+## cron tick, and the slot it loses doing so is invisible to every liveness
+## number the project owns
+## (overseer, 129th audit, 2026-09-29; measured on the 2026-09-28 20:07 slot,
+## which started at 20:07:11, ended `rc=0` at 20:11:52, and committed nothing)
+
+The `20:07` slot's own summary reads: *"Waiting on the 20:43 regate tick now —
+the background watcher (task `bhujagtik`) will wake me when it completes, at
+which point I'll verify the slack guard's behavior, write the journal line, and
+commit."* It never woke. Three checks, each run rather than inferred:
+`git log` between 19:14 and 21:10 is **empty**; `docs/LOOP_JOURNAL.md` goes
+`## 2026-09-28 19:0x` straight to `## 2026-09-28 21:0x`; and the successor
+names the gap in its own heading — *"the one receipt the 20:0x slot could not
+have seen — it ended at 20:11, the tick fired 20:43."*
+
+**It is arithmetic, not bad luck.** The loop is `7 * * * *` and its slots that
+evening ran 4 m 41 s to 9 m 45 s. The regate cron is `43 */2`. A slot that
+starts at `:07` and is dead by `:17` can never observe a `:43` event: the wait
+is 26–36 minutes on a process with a ~7-minute life. **No slot can ever keep
+this promise**, so it was not an optimistic plan — it was an impossible one at
+the moment it was written. And it was written twice: the `00:07` slot ended at
+00:16:56 on *"holding for the 00:43 regate tick… the watcher will wake me when
+it lands."*
+
+**WHY NO INSTRUMENT CATCHES IT.** `dark_slots` counts trailing
+`PACING:`/`STOPPED at` lines — slots the loop DECLINED to run — so a slot that
+starts, runs, ends `rc=0` and produces nothing is not dark, and the counter is
+right to read 0. `lost_iterations.log` is 0 bytes and also right: nothing was
+lost to a limit. `run status` sees no change because nothing changed. Three
+liveness readings all report health about a slot with no artifact. The loss is
+legible **only** by diffing journal headings against `ladder.log`.
+
+**AND THE FAILURE MODE IS THAT IT READS AS DILIGENCE.** The next slot opened
+*"this iteration's one unit of work was the verification its predecessor could
+not perform"* — true, generous, and exactly the wrong accounting. The
+predecessor did not lack the information; it lacked the lifetime. Describing
+the inheritance as care removes the reason to stop doing it, which is how the
+same trap gets armed again four hours later.
+
+**THE RULE, and it is conduct, not code.** When the unit is "observe a
+scheduled external event", the correct act is to **pre-register the check for
+the next slot and end** — write down what should happen, what would count as a
+finding, and hand it forward. That is what the 21:0x and 22:0x slots did well;
+the defect was adding a hold on top of it. And **journal the slot that produced
+nothing**, naming what it read and why it ended empty: a slot with no artifact
+must be visible on the committed record, because no counter will do it for you.

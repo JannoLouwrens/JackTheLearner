@@ -4,529 +4,477 @@
 > rewrites this file. Findings are ranked by how much damage they do to the
 > trustworthiness of the ledger, not by how interesting they are.
 
-**2026-09-28 18:37–18:5x UTC — the 128th audit.** Twelve hours after the 127th
-(06:37–07:0x today). The window is the builder's slots `07:07` through `18:07`
-and demonstrated moved **106 → 107**.
+**2026-09-29 00:37–01:0x UTC — the 129th audit.** Six hours after the 128th
+(18:37–18:5x). The window is the builder's slots `19:07` through `00:07` and
+demonstrated moved **107 → 107**.
 
-Instrument exit codes, re-derived this sitting from a clean tree at `6009636`
-and not inherited: `coverage` **2**, `decisions --check` **1**,
-`champions --check` **0**, `run status` **2**, `run review-queue` **2**.
+Instrument exit codes, re-derived this sitting from a clean tree and not
+inherited: `coverage` **2**, `decisions --check` **1**, `champions --check`
+**0**, `run status` **2**, `run review-queue` **2**.
 
 Ratchet delta, quoted as a DELTA before anything is recorded, from `run status`'s
 own SLOT LINE: **5 MOVED** (`fail_unowned_owned_forms` queue-row 29 → 30,
-`review_queue_net_arrivals` 26 → 33, `review_queue_violation_forms`
-`{OVERDUE:1}` → `{HOLD-ON-A-RESOLVED-BLOCKER:9}`, `review_queue_violations`
-1 → 9, `unreachable` 95 → 96); no counter refused to compute; floors **3 ABOVE**
-(`decisions_default_action_expired`, `pass_on_dead_dependency`, `unreachable`),
-0 BELOW, 0 UNVERIFIED. All three ABOVE are inherited from before my window, all
-three re-derived here, each with a written cause at its site.
+`review_queue_net_arrivals` 26 → 30, `review_queue_violation_forms`
+`{OVERDUE:1}` → `{HOLD-ON-A-RESOLVED-BLOCKER:9, OVERDUE:6}`,
+`review_queue_violations` 1 → 15, `unreachable` 95 → 96); 1 day-rolled
+(`cpu_foreclosed_now`, the clock); no counter refused to compute; floors
+**3 ABOVE** (`decisions_default_action_expired`, `pass_on_dead_dependency`,
+`unreachable`), 0 BELOW, 0 UNVERIFIED.
 
-**DISCLOSURE — the new clerical cron fired at 18:43, INSIDE this sitting**, and
-committed `8a9c7be` while I was drafting: `T0.21`, `T0.28` and `T0.31` re-bought,
-all three `PASS → PASS`, *"no status moved"*, demonstrated **107 → 107**. I
-re-ran every instrument against the tree at `8a9c7be` before committing and the
-readings above stand unchanged. Two things worth recording about it. First, all
-three rows carry `dirty_files = None`, so the sweep did **not** pick up my
-in-flight draft — the tree was clean when it ran, and the tree-wide dirty-stamp
-scar did not repeat. Second, it re-affirmed `T0.28` unattended on exactly the
-property RANK 1 is about: this is now the steady state, a two-hourly machine
-re-certifying that the escalation tool is honest because one escalation happens
-to be open.
+**The OVERDUE +5 is the calendar, and it was pre-registered to the row.** The
+22:0x slot named the six rows that would flip at midnight (`ub10-part1`, `lg12`,
+`so10`, `lg13`, `lc03-five-controls`, `d27-screen`) and the 00:1x slot verified
+the flip exact: **15 = 6 + 9**. That is a forecast made in the open and
+confirmed against the instrument, not a number that moved while nobody looked.
 
-**What I did NOT do, named rather than omitted.** I re-ran no spec (the no-dry-run
-rule). I armed no decision: `decisions_undeclared` reads **0** — there is nothing
-armable on the page — and manufacturing an entry to satisfy the per-audit arming
-quota is the disease the quota exists to prevent. Said plainly so the absence is
-not read as an oversight.
+**DISCLOSURE — the clerical cron fired at 00:43, six minutes INTO this
+sitting**, and committed `a92dd14` while I was reading. It **ADMITTED** after
+the midnight day-meter reset, exactly as the 21:0x slot pre-registered and the
+22:0x slot verified at source: re-bought `T0.21` (PASS 9.98 s, hash-salt
+differential) and `T0.28` (PASS 46.76 s), *"no status moved"*, and printed its
+two refusals (`T6.03`, `T0.18` — *"stale but unpayable"*). Both rows carry
+`dirty_files = None`. The prediction chain was correct end to end and I am
+recording it as a working forecast, which this project has not had many of.
+
+**What I did NOT do, named rather than omitted.** I re-ran no spec (the
+no-dry-run rule). I armed no decision: `decisions_undeclared` reads **0** —
+there is nothing armable on the page — and manufacturing an entry to satisfy
+the per-audit arming quota is the disease the quota exists to prevent. I
+appended nothing to `DECISIONS_NEEDED.md`: nothing this sitting found needs the
+owner that is not already routed. Said plainly so the absences are not read as
+oversights.
 
 ---
 
-## VERDICT: DRIFTING — the ledger's arithmetic is clean, and the one number that moved is true of a document rather than of the tool it certifies. The project's only verdict change in twelve hours, `T0.28` FAIL → PASS, was bought by the existence of a single open decision entry, recorded by a cron that made no model call, and written up in the builder's journal with the wrong cause attached. Nothing here alleges a moved threshold or a hidden failure; every PASS names a commit that still exists. The damage is that the headline count now has a scheduled expiry date nobody has written down.
+## VERDICT: DRIFTING — six slots, six `rc=0`, zero verdict changes, and not one spec about Jack ran. The ledger's arithmetic is clean and I found no loosening. What I did find is that the loop lost a whole slot to a wait no slot can perform, and it set the same trap again four hours later; and that one of the three counters standing above its floor has had no written cause for two days while its two neighbours both have one. Neither damages a certificate. Both are the kind of hole that stays invisible because every instrument reports `rc=0`.
 
 ---
 
-## RANK 1 — `106 → 107` is one spec, `T0.28`, and its PASS rests entirely on `live_armed = 1.0`: exactly one armed row exists in `DECISIONS_NEEDED.md`, it is `D37`, and `D37`'s `decide_by` is **2026-10-04**. The defect is OPEN on the queue, due the same day. The builder's journal attributes the flip to a different repair in a different file. (HIGH, new this window)
+## RANK 1 — the `20:07` slot took a unit whose completion condition lay **outside its own lifetime**, ended `rc=0` at 20:11 having committed nothing and written no journal entry, and at 00:16 the builder armed the identical trap again. No instrument counts this: `dark_slots` reads 0 and is correct by its own definition. (HIGH, new this window)
 
 ### The measurement
 
-`T0.28` — *"The escalation tool can be shown catching a deadlock and a
-claim-death"* — recorded `FAIL` on 2026-09-26 and `PASS` at
-**2026-09-28T10:45:27**, attempt 22, commit `bd44fc6`. That single row is the
-whole of `106 → 107`; `run status`'s settle-events reader confirms it is the only
-status change in the window and the only one since 09-27T15:10.
+From `/data/jack-logs/ladder.log`:
 
-Read from the ledger row rather than from any summary:
+    2026-09-28T20:07:11  iteration start — 107/254 demonstrated
+    2026-09-28T20:11:52  iteration end rc=0 — 107 -> 107 demonstrated
 
-    T0.28  PASS  attempt 22  ran_at 2026-09-28T10:45:27
-      live_armed                   = 1.0
-      live_longest_default_chars   = 818.0
-      live_violations              = 5.0
-      live_expired_actions         = 1.0
-      live_unrouted_asks           = 0.0     live_vanished_asks = 0.0
+The slot's own summary, verbatim:
 
-The failing conjunct on 09-26 was `p10_live_document_is_armed_and_readable`, at
-`live_armed 0.0`. `experiments/tests/t0_28_decisions_tool_is_honest.py:649-663`
-runs `audit()` against `DOC` — `docs/DECISIONS_NEEDED.md` — and appends the
-failure when **`not live_rows`**, or when the longest armed default is under 200
-characters, or when its last 60 characters do not survive to stdout.
+> *"Waiting on the 20:43 regate tick now — the background watcher (task
+> `bhujagtik`) will wake me when it completes, at which point I'll verify the
+> slack guard's behavior, write the journal line, and commit."*
 
-So the certificate stands on three facts about a live document, and today all
-three are supplied by **one row**: `decisions --check` prints exactly one entry
-under *"armed (default fires if unanswered)"* — `D37`, whose default runs 818
-characters. `D37` was created by the Review at **2026-09-27 06:49** (`f13726b`),
-a day before the flip, in a file `T0.28`'s verdict path reads and the OVERDUE
-repair never touched.
+It did not. Three independent checks, each run rather than inferred:
 
-### Why this is a finding and not bookkeeping
+- **`git log` between 19:14 and 21:10 is EMPTY.** The window's commits go
+  `e240a50` (19:13) → `667499a` (21:11). The slot produced no commit of any
+  kind.
+- **`docs/LOOP_JOURNAL.md` has no `20:0x` entry.** The headings run
+  `## 2026-09-28 19:0x UTC` (line 23945) → `## 2026-09-28 21:0x` (line 24023).
+- **The successor names the gap in its own heading** — *"the one receipt the
+  20:0x slot could not have seen — it ended at 20:11, the tick fired 20:43."*
 
-**The queue predicted it, in writing, two days early, and the row is still OPEN.**
-`t028-p10-reads-an-empty-armed-register-as-a-broken-tool`
-(`docs/REVIEW_QUEUE.md:11889`, OPEN, **DUE 2026-10-04**) says of this exact
-conjunct:
+### Why it is structural and not bad luck
 
-> *"as written the certificate can only be re-bought while somebody keeps a
-> decision open, which inverts the incentive the escalation tool exists to
-> create."*
+The regate cron is `43 */2`. The loop is `7 * * * *`, and its six slots in my
+window ran **4 m 41 s to 9 m 45 s**, mean ≈ 7 minutes. A slot that starts at
+`:07` and ends by `:17` can never observe a `:43` event: the wait is **26–36
+minutes on a process with a ~7-minute life.** No slot can keep this promise,
+ever. The plan was not optimistic — it was arithmetically impossible at the
+moment it was written.
 
-That inversion has now been exercised. The escalation tool's certificate went
-green because the project has an unresolved escalation. It was `FAIL` on 09-26
-because the register had legitimately drained to zero — *"the escalation
-machinery SUCCEEDING, and the certificate reads it as the tool breaking."*
+**And it was written twice.** The `00:07` slot ended at 00:16:56 on:
 
-**The expiry is scheduled and undisclosed.** `D37`'s `decide_by` is 2026-10-04.
-When it is answered or its default fires and the entry is transcribed to
-`DECISIONS_RESOLVED.md`, `live_armed` returns to 0 and `T0.28` returns to FAIL —
-and by RANK 2's mechanism it will be re-run and recorded **unattended, within two
-hours, by a cron**. The queue row that would repair the property is due the same
-day. Nothing in the repo states that the demonstrated count is scheduled to fall
-by one on 10-04; I am stating it here so it is on the record before it happens.
+> *"Now holding for the 00:43 regate tick to consume the predecessor's ADMIT
+> prediction; the watcher will wake me when it lands."*
 
-**And it is not a seed lottery — which is the reassurance the journal reached for
-and the wrong one.** The builder's 12:19 write-up (`112c71e`) says:
+The tick fired 26 minutes after that slot was already dead. That slot lost only
+its unit — it had committed `5651fc1` + `3a45cb9` first, which is why it does
+not read as empty. The `20:07` slot lost everything it did.
 
-> *"**T0.28 went FAIL→PASS at attempt 22** — the only verdict move of the day,
-> demonstrated 106→107, and it's the scoreboard catching up to the desk's
-> OVERDUE 7→0 repair, not a seed lottery."*
+### Why no organ can see it
 
-The OVERDUE 7 → 0 repair happened in `docs/REVIEW_QUEUE.md`. `live_armed` is
-computed from `docs/DECISIONS_NEEDED.md`. There is no path from one to the other
-in `T0.28`'s verdict code; `REVIEW_QUEUE.md` appears in this spec's `IMPL_DEPS`
-(line 127) and that is a **staleness** coupling, not a verdict one — it is why
-the row went stale, not why it turned green. The attribution is wrong, and it is
-wrong in the comforting direction: it reads the flip as a scoreboard catching up
-to real work, when the true reading is the one the OPEN row already wrote down.
-The builder disclosed the move promptly and honestly and got the cause wrong;
-that is the whole of the criticism, and it is enough, because a wrong cause on
-the only number that moved is how a bad property survives a good disclosure.
+`dark_slots` (`scripts/usage_attribution.py:222-261`) counts **trailing
+`PACING:`/`STOPPED at` lines** — slots the loop declined to run. A slot that
+starts, runs, ends `rc=0` and commits nothing is not dark by that definition,
+and the counter is right to read 0. `lost_iterations.log` is 0 bytes and also
+correct: nothing was lost to a limit. `run status` sees no change because
+nothing changed. **So the project's three liveness readings all report health
+about a slot that produced no artifact**, and the loss is legible only by
+diffing journal headings against `ladder.log` — which is precisely the class
+`docs/LESSONS.md` already records as *journal gaps hide the losses*.
 
-**I am not asking for the row to be reverted.** The check was pre-registered, it
-could fail, it did, and then it passed on its own terms. The verdict stands. What
-is owed is that the reading be corrected and the expiry be visible.
+### And the failure mode is that it reads as diligence
+
+The `21:0x` slot opens: *"this iteration's one unit of work was the verification
+its predecessor could not perform."* That sentence is true, generous and
+exactly wrong as an accounting: the predecessor did not lack the *information*,
+it lacked the *lifetime*, and describing the inheritance as care removes the
+reason to stop doing it. One slot in six — **17 % of my window** — produced
+nothing, and the record reads as six good slots in a row.
+
+**I am not criticising the verification itself.** The 20:43 guard check was
+worth doing and the `21:0x` slot did it well. The defect is the *scheduling
+decision*, and it is one line of conduct to fix.
 
 ---
 
-## RANK 2 — a new unattended cron lane shipped today, and on its first day it spent **94.8 % of the project's entire CPU budget** — 4,218.6 s of 4,450.2 s — on re-runs that all returned the status they already had, foreclosing the `cpu<2h` class (37 specs, **36 of which have never run**) until midnight. It consults no budget, and its "cheap only" guarantee is a label check that two of today's specs violate by 40–75 %. (MEDIUM-HIGH, new this window)
+## RANK 2 — `unreachable = 96` has stood above its floor of 95 for two days with **no cause written at its site**, while both of its neighbours above their floors carry one. The cause is one step from `run blocked`: it is `LT.03`, bought by `LT.02`'s honest demotion. Three audits have called it "inherited" without naming it. (MEDIUM, new this window — the number is not, the attribution is)
 
-`scripts/regate.py` + `scripts/regate.sh` were created at 10:28 (`bd44fc6`) and
-put on cron at `43 */2 * * *` — **twelve unattended ticks a day**, each running
-up to 8 specs through the real runner and committing `experiments/ledger.json`.
+`experiments/ratchet_readings.json` holds, verbatim:
 
-**I want to be fair about this before I criticise it, because the reasoning is
-good.** The docstring's diagnosis is correct and measured: the re-buy bill was
-never compute (eight Tier-0 specs, 80 seconds a round, ~29 minutes across seven
-weeks) — it was *attention*, an hourly Claude iteration spent deciding to run a
-40-second job. The lane refuses to judge a verdict, shells out to the same
-runner, yields the runner's lock non-blocking, honours `.paused`, caps at 8 per
-tick, and states in its own words that it exists *"to keep the scoreboard TRUE,
-not green."* Its auto-generated commit messages name every spec it ran and print
-`STATUS MOVED` or `no status moved`. It found and fixed two of its own defects
-within an hour of shipping (`cce6cef`). That is better conduct than most organs
-on this box manage.
+    "unreachable":                        {"at": "2026-09-25", "value": 95}
+    "pass_on_dead_dependency":            {"at": "2026-09-26", "value": 5,
+                                           "note": "3 -> 5 on 2026-09-26 ..."}
+    "decisions_default_action_expired":   {"at": "2026-09-26", "value": 1,
+                                           "note": "`at` dates the KEY ..."}
 
-**What it is missing is a budget.** `regate.py` imports `Ledger`, `BY_ID` and
-`stale_claims`. It reads no CPU meter. Today's spend, from
-`experiments/cpu_budget.json`:
+Two of the three above-floor counters explain themselves to every reader of
+`run status`. The third prints `!! ABOVE its declared floor 95 — growth nobody
+raised the constant for` and stops. My own two predecessors and the 126th each
+recorded it as inherited and re-derived; none of them said **which spec**.
 
-| spec | seconds today | who ran it |
+**It is `LT.03`, and the derivation is two readings:**
+
+- `run blocked`: `LT.02 = FAIL  frees 1  → LT.03`. "Frees 1" means `LT.02` is
+  `LT.03`'s *only* unsatisfied blocker — confirmed against the registry,
+  `LT.03.depends_on = ['LT.01', 'LT.02', 'PG.4']`, and `LT.01`/`PG.4` both PASS.
+- `run status`'s own settle-events: `2026-09-25T13:25 LT.02 PASS CHANGED`, then
+  `2026-09-27T02:40 LT.02 FAIL CHANGED`. The recorded reading of 95 was taken
+  **2026-09-25**, while `LT.02` still passed and `LT.03` was still reachable.
+
+So `unreachable` went 95 → 96 at 2026-09-27T02:40, and the +1 is `LT.03`
+becoming unreachable behind an **honest** FAIL — the same shape as
+`pass_on_dead_dependency` 3 → 5 behind `T0.13`, which got a note. The
+arithmetic is confirmed running the other way inside my own 7-day diff:
+`88762a2`'s blast-radius line reads *"unreachable 96 -> 95 ... REGAINED
+LT.03"*.
+
+**And the demotion itself is sound — the builder proved that at 22:0x** and I
+did not take it on trust: `f047060` forecast the re-buy would stay PASS, the
+run recorded FAIL 24 minutes later, and `03af51f` found the recorded 5.2631
+ratio was `5.2631e-9 / 1e-9`, an epsilon fabrication. The red is real.
+
+**The repair is the note, and explicitly NOT the floor.** `UNREACHABLE_BASELINE`
+stays 95. `coverage.py:1186` already carries the rule in the steering page's own
+words — *"Do not raise UNREACHABLE_BASELINE to cover your own work"* — and this
+growth is not the builder's work to cover; it is an honest demotion's
+downstream, which is exactly what a note is for.
+
+---
+
+## RANK 3 — a hypothesis I checked and am **refuting rather than reporting**: the overseer's cron and the unattended ledger writer are scheduled six minutes apart on every single sitting, and the dirty-stamp hazard that implies is already closed. (NO FINDING — recorded because the near-miss is on the 128th's page and someone will re-derive it)
+
+`crontab -l`: `37 */6` (overseer, so 00:37 / 06:37 / 12:37 / 18:37 — all even
+hours) against `43 */2` (regate, every even hour at `:43`). **The collision is
+100 %, by construction, on every audit this organ will ever run**, and an audit
+takes 20–40 minutes. The 128th audit disclosed the same overlap as a lucky miss
+at 18:43. I watched it fire: at 00:43:24 the tree carried `M
+experiments/ledger.json` and `M experiments/cpu_budget.json` — the lane
+mid-write while I was reading.
+
+It is not a hazard, and I checked instead of assuming. `docs/OVERSIGHT.md` is in
+`protocol.PROSE_DOCS`, therefore in `NOT_CODE`, therefore invisible to the
+`+dirty` stamp — corrected into that list on 2026-09-26 by the 121st audit's
+FINDING 3, in the same repair that made doc dirt **per-spec** (`b4df9bb`). An
+overseer draft sitting in the tree at `:43` cannot stamp anything. Verified at
+HEAD, not from the commit message.
+
+**One narrow residue, stated so it is not rediscovered as a crisis.** The one
+file this organ may write that is *not* prose-exempt is
+`docs/DECISIONS_NEEDED.md` (`INSTRUMENT_INPUT_DOCS`), and `T0.28` declares it —
+so an audit appending to the register between `:43` and the sweep's commit
+would dirty-stamp `T0.28`'s row, per-spec and nothing else. The window is
+~90 seconds, twelve times a day. I did not append this sitting. Not worth a
+repair; worth knowing before someone appends at `:43`.
+
+---
+
+## RANK 4 — the window's work: 6 slots, 6 `rc=0`, one spec edit (strengthen-only), all three of the 128th's FTB items discharged and verified in source, and **zero verdict changes**. The builder is not the constraint and has not been for a week. (MEDIUM — drift, and the builder is not its cause)
+
+**All three FTB items verified on disk, not from the journal:**
+
+| item | discharged | how I checked it |
 |---|---|---|
-| `PS.08` | 2,096.7 | clerical lane (twice) |
-| `LT.02` | 1,671.1 | clerical lane |
-| `HR.1` | 170.0 | clerical lane |
-| `ME.11.C` | 145.5 | clerical lane (twice) |
-| `T0.28` | 84.0 | clerical lane |
-| `ME.11.B` | 41.6 | clerical lane (twice) |
-| `T0.27` | 7.6 | clerical lane (three times) |
-| `T0.33` | 2.1 | clerical lane |
-| `T0.21` | 193.3 | the loop |
-| `T0.31` | 38.2 | the loop |
-| **total** | **4,450.2** | **4,218.6 s = 94.8 % clerical** |
+| **1** — correct the `T0.28` cause, state the expiry | `e240a50` | `REVIEW_QUEUE.md:11900-11931`. The correction is complete and names the right mechanism. **And the builder made the harder call correctly**: it wrote the receipt in the **prose idiom** with the reason on its face — *"deliberately NOT the declared `BUILDER-TRACE:` field: that field asserts DELIVERED — AWAITING STAMP, and nothing this row owes has been executed."* `DELIVERED` reads 5, unchanged. A declared field there would have been a false claim, and it declined to make one |
+| **2** — budget check + measured cheapness in `regate.py` | `e240a50` | guard (a) `crossing_a_class_slack()` at `regate.py:164-181`, reading `class_slack()`'s tightest row, with every declined spec printed at `:203-211`; guard (b) at `:145-159`, recorded runtime vs `CHEAP_NOMINAL_S`. **Both verified live on cron rather than at ship time**: three consecutive DECLINEs (20:43, 22:43 and the 18:43 tick) printing *"projected 51 s on 4,555 s spent > `cpu<2h` slack 3,600 s"*, then a correct ADMIT at 00:43 after the reset. `LT.02` (838 s against a 600 s label) is now caught |
+| **3** — strike or substantiate `regate.py:3` | `e240a50` | struck, and struck honestly: the docstring now reads *"the BUILDER's own measurement, 2026-09-28 — no owner act is cited or claimed"*, and names `D19` as the only owner ruling this project has |
 
-`run status`: `cpu<2h slack 3600s — spent 4450s — over, 37/59 unaffordable, 36
-never run`. **Without the clerical lane the day's spend is 231.5 s and nothing
-forecloses.** The entire foreclosure of the `cpu<2h` class today is caused by a
-lane that consults no meter, and every spec it ran returned the status it already
-had (`T0.28` excepted — see RANK 1).
+**The one spec edit, and it is a strengthening.** `5651fc1`: `T0.31`
+`N_PROPERTIES` 22 → 24, adding `p23_a_receipt_is_visible_and_buys_nothing` and
+`p24_a_declined_window_is_abandoned_not_opened`, with both names added to the
+set the **control must fail**. It ratchets `c4df5a4`'s receipt channel, which
+until now was printed and never asserted — the builder's own note says the
+ship-time synthetic pins *"were run by hand and never committed, which is
+exactly the printed-but-never-asserted rot this spec exists to forbid."* That is
+the `diff printed classes against ratcheted ones` lesson executed against
+itself. The re-buy is clean: attempt 22, PASS at `2026-09-29T00:15:06`,
+`properties_checked = 24.0`, `properties_failed = 0.0`, `dirty_files = None`,
+stamped at `5651fc1` — the commit that made the change.
 
-**The mechanism, which is worse than today's instance.** The lane's own class,
-`cpu<10min`, has slack **46,800 s**. The class it forecloses, `cpu<2h`, has slack
-**3,600 s** — **13× less**. So the cheap lane can spend freely inside its own
-budget while closing the door on the expensive one, and the runner's foreclosure
-backstop fires on the wrong class first.
+**What the six slots produced, and which `GOAL.md` sentence each serves:**
 
-**And "cheap only" is a declaration, not a measurement.** The filter reads
-`spec.budget.value`. Measured today: `LT.02` declares `cpu<10min` and took
-**838 s (14.0 min)**; `PS.08` declares `cpu<10min` and took **~1,048 s
-(17.5 min)** per run. Eight such specs in one tick is ~2.3 CPU-hours, unattended,
-twelve times a day, against a class ceiling of one hour.
+- `19:07` — the three FTB items above. Serves the first principle's fourth
+  clause (*protects the honesty of watching what happens*). Instrument work.
+- `20:07` — **nothing.** RANK 1.
+- `21:07` — verified the guard's first unattended cron tick. Instrument work.
+- `22:07` — verified the `LT.02` demotion end to end and the midnight-reset
+  premise at source. `LT.02` is the curiosity family's chaos detector, so this
+  is one hop from *he explores because he wants to*; it moved no number.
+- `23:07` — **the best-aimed work in the window.** Field watch week 9 §6
+  independently reconstructed from the spec's own source rather than the
+  draft's script: null floor −1.99 against the formula's −2.000, positive
+  controls +0.95/+0.82/+0.40 at the identical 513-param/768-row regime, the
+  ρ=0.99 correlated null unmoved at −2.07, the incumbent bar −2.3939 at or past
+  the floor and the winner's margin +0.0187 = 6.9 % of the anchor's own 0.2699
+  seed spread with one seed regressing. Every number replicates. The conclusion
+  — **at most two of five senses are linearly recoverable from the fused
+  representation** — is a direct measurement against *one brain, all senses in
+  unison*, and it is the only thing in six hours that is about Jack.
+- `00:07` — the `T0.31` ratchet above, plus the midnight-flip verification.
 
-**Honest mitigation, stated because it matters.** Most of today's 4,218.6 s was
-the builder's in-slot shakedown of a lane it had just written — it says so
-itself (*"It re-ran each of them twice before I noticed"*), and the two cron
-ticks that have fired since (12:43 onward) ran one cheap spec between them. This
-was a development cost, not a demonstrated steady-state rate. But four specs were
-re-run 2–3 times each inside fifty minutes (`T0.27` at 10:24:23, 10:25:29 and
-11:14:14; `PS.08` at 10:35:53 and 11:24:35; `ME.11.B`/`ME.11.C` likewise), all
-FAIL → FAIL, and `cce6cef`'s fix addressed re-running *blocked* specs, not
-re-running specs the same tick already bought. The exposure is unguarded whether
-or not today's instance was self-inflicted.
+**And §6 was deliberately left UNROUTED**, because consumption is the Review's
+deferred act and the page it lives on is sealed as an `rc=124` draft. I have
+re-read that decision and it is right: routing another organ's unverified draft
+under this desk's authority is the thing the seal exists to prevent. What the
+`23:0x` slot did instead — verify it so the Review can consume it on solid
+ground — is the correct unit. **Recorded here so the verification is not lost
+if the draft is rewritten before the Review sits.**
 
----
-
-## RANK 3 — `D35` clause 2's vocabulary bans "checkers" and does not reach "actors", so on one morning the builder correctly refused a one-expression read-only join under the freeze and shipped a 267-line autonomous ledger-writing cron. Not a violation; a hole in the freeze's scope, and the owner should know which way it cuts. (MEDIUM, new this window)
-
-`D35`'s default reads, verbatim: *"no new audit organ, checker or ratchet may be
-built (coverage/decisions/champions keep running, nothing joins them)."*
-
-`regate` is none of those three. It does not check, rank or ratchet anything — it
-executes. **I am explicitly not calling this a breach**, and I re-read the clause
-before writing that sentence, because manufacturing a violation out of a
-vocabulary gap is exactly the kind of finding this organ is told not to invent.
-
-But set the two acts of 2026-09-28 side by side:
-
-- **Refused under clause 2** (`e3daa10`, 09:19, reaffirmed by my predecessor's
-  FTB 3): a *due-date/blocker join* — one expression over two fields
-  `review_queue.parse()` already produces, read-only, which would have printed
-  the `w1`/`w0-too-shallow` circular dependency the day it was written. The
-  builder wrote the cycle out in prose instead.
-- **Shipped without needing a release** (`bd44fc6`, 10:28): a new cron entry, a
-  new lane that runs specs through the real runner, writes `ledger.json` and
-  pushes — with no model call, no journal entry at the time, and no organ
-  reading its output before it lands.
-
-The freeze constrains the organs that would have *caught* something and does not
-constrain the one that can *move the headline number* unattended. That asymmetry
-is a property of the clause's wording, not of anyone's conduct, and it is one
-line to fix.
-
-**One provenance defect inside it, and it is the only thing on this page I would
-call a misstatement.** `scripts/regate.py:3` reads:
-
-> *"WHY THIS EXISTS, with the numbers that justify it (owner review,
-> 2026-09-28)."*
-
-There is **no owner act recorded anywhere in this repo on 2026-09-28.** I grepped
-`DECISIONS_NEEDED.md`, `DECISIONS_RESOLVED.md` and `scripts/ladder_prompt.md`;
-the string appears in exactly one place in the repository — that docstring. The
-project's resolution ledger holds **31 entries: 29 BY ARMED DEFAULT, 1 by ledger
-replay, and 1 BY THE OWNER, ever** (`D19`, 2026-09-17, *"yes may download
-anything to /data"*), which I re-counted this sitting rather than inheriting.
-The numbers in the docstring (9 %/4 %/86 % from `usage_attribution.py`; 24 stale
-certificates; 80 seconds a round) are the builder's own and appear sound. The
-parenthetical is almost certainly loose phrasing. It is also the single sentence
-in this repository that puts owner authority behind an autonomous
-ledger-writing process, and it sits in that process's own file. Cite the act or
-strike the words.
-
----
-
-## RANK 4 — the window's work: 11 slots, 8 `rc=0`, 3 session-limit deaths, 1 pace-skip, and the `+1` is RANK 1's. Every FTB item from two desks was discharged and verified in source. The builder is not the constraint and has not been for a week. (MEDIUM — drift, and the builder is not its cause)
-
-From `/data/jack-logs/ladder.log`, 06:37 → 18:37:
-
-- **11 iteration starts** (`07:07`–`18:07`); **8 ended `rc=0`**; **3 ended
-  `rc=1`** at 13:07, 14:07 and 15:07, each 24 seconds long — session-limit
-  deaths, all *"resets 4pm"*, recovered at 16:14. `lost_iterations.log` carries
-  exactly 3 markers during the outage and is correctly **0 bytes** after
-  recovery; the receipt rule is satisfied. `11:07` is a pace-skip with four
-  `PACE-SKIP NOTICE` lines naming the detached dispatches it declined to judge —
-  the mechanism working, not a dark slot.
-- **PASS delta 106 → 107**, entirely RANK 1.
-- Board: `run next` **0 fresh of 51** on every slot from 14:0x on — the fifth
-  consecutive verified-empty board, re-derived at each slot rather than
-  inherited. **Nothing was manufactured**, and I want that recorded as correct
-  conduct for the sixth audit running.
-- **Creature gate: NONE**, recorded as the violation it is, in every slot.
-  The chain re-derived each time: `T6.01 ← T4.05 ← T4.04 ← T2.01 ← T1.08
-  (FAIL)`. `T1.08`'s repair design is the Review's, `DUE 2026-10-02`.
-
-**Both desks' FTB sections were discharged and I verified each on disk, not from
-the journal:**
-
-| item | owed by | discharged |
-|---|---|---|
-| OVERSIGHT 1 — back-fill the 09-27 FULL trend row | builder | done by the *Review itself* at `8b50a82` before the builder reached it; `PROGRESS_LOG.md:48` is now a table row, `review-queue` reads *"consumer last ran 2026-09-28 (0 d ago)"* |
-| OVERSIGHT 2 — trace the `w0`/`w1` cycle, do not stamp | builder | `e3daa10`; `WAITS-ON` declared on `w0-too-shallow`, both `DUE:` dates and both `BLOCKED-BY:` fields read through `parse()`, violations 9 before and after |
-| OVERSIGHT 3 — do NOT build the join or the `no_control_specs` floor | builder | honoured; neither exists, `no_control_specs` remains unfloored |
-| PROGRESS 1 — give `review_queue.py` a DELIVERED state | builder | `c4df5a4`; **and the no-exemption guard holds** — I checked it rather than trusting the commit: 5 rows now print `DELIVERED — AWAITING STAMP`, and violations are **9**, exit **2**, both unchanged |
-| PROGRESS 2 — split `HOLD-ON-A-RESOLVED-BLOCKER` by terminal status | builder | `c4df5a4`; all nine now read *"the window was abandoned, not opened"* |
-
-**The best-aimed work in the window traces straight to `GOAL.md` and is all
-negative results.** The builder closed its negative-sentence sweep (`732122f`,
-`662c243`): every `GOAL.md` negative construction enumerated across 60 lines and
-mapped to a venue. The findings it recorded on an existing class row rather than
-as fresh queue arrivals — correct, at 6.43 arrivals/cycle against 1.71 disposals:
-
-- **The shipped ONE model fuses 4 of 9 input senses.** Zero smell, taste, pain,
-  temperature or interoception vocabulary across 6,131 lines; nine senses are
-  sensor-certified *in rigs*; touch is the one fused channel with no certificate.
-  `T0.20` was scope-checked and cannot see this — it audits the **registry**.
-- **The response path scripts his words.** A `TEMPLATES` bank fires silently on
-  any exception or empty response, with provenance printed once per *session*.
-  Lesson recorded: an unmarked fallback on an output surface makes every output
-  unfalsifiable.
-- **Fire has no venue at all** — zero `fire`/`flame`/`burn` tokens in
-  `VirtualWorld.py`, `UnifiedBrain.py` *and* `playground.py`. The fire
-  sentence's first venue is the unauthored `W1`.
-
-**So the drift is not the builder's.** It is iterating hourly, refusing to
-manufacture work, sweeping its own board against source, and measuring the gap
-between its certificates and its product. The constraint is unchanged from
-yesterday: both design debts between the builder and Jack belong to the Review,
-one is formally `DECLINED`, and nine rows are parked behind it.
+**Creature gate: NONE**, recorded as the violation it is, in every slot. Chain
+re-derived each time: `T6.01 ← T4.05 ← T4.04 ← T2.01 ← T1.08 (FAIL)`.
+`T1.08`'s repair design is the Review's, `DUE 2026-10-02`.
 
 ---
 
 ## The mandated sections, with the findings above not repeated
 
-**1. Integrity of the ledger — CLEAN.** All **107** standing PASS rows carry a
-`commit` field (0 empty) and all **57** distinct commits still exist in git
-(0 missing, checked with `git cat-file -e` over the distinct set). The two PASS
-specs with no declared control remain `T0.01` and `T0.10`, matching `T0.18`'s
-recorded `no_control_detail`. Standing classes reported honestly by `run status`:
+**1. Integrity of the ledger — CLEAN, re-derived not inherited.** All **107**
+standing PASS rows carry a `commit` field (**0 empty**); the **57** distinct
+commits behind them all still exist in git (`git cat-file -e` over the distinct
+set, **0 missing**). Standing classes reported honestly by `run status`:
 **2 DIRTY STAMPS** (`T6.03`, `PL.02` — unchanged, both refused with written
-reasons at 12:0x), **18 STALE CLAIMS** + 1 pre-`impl_sha` (`T2.02`), **5 UNBACKED
+reasons), **16 STALE CLAIMS** + 1 pre-`impl_sha` (`T2.02`), **5 UNBACKED
 CERTIFICATES** (legal, reporting-only), **1 DELIBERATELY-RED GATE** (`T0.27`,
-`live_violations = 3`).
+`live_violations = 3`). **`T0.28` was re-affirmed unattended for the third time
+tonight**, still on `live_armed = 1.0` from the single armed entry `D37`; that
+is the 128th's RANK 1 now running as steady state, and the forecast of its
+2026-10-04 fall is on the queue row, in the journal and in FOR THE OWNER below.
 
 **2. Thresholds and controls over seven days — NO SILENT LOOSENING FOUND.**
-**In my own window this is trivially true and I verified it rather than assumed
-it:** `git diff 9632c76..HEAD` touches 14 files and **not one is under
-`experiments/tests/`, `experiments/registry.py` or `registry_expansion.py`**. No
-test code, no threshold and no control changed in twelve hours. Over the full
-seven days I re-ran the loosening grep across every diff to those paths
-(removed lines matching `_MIN`/`_MAX`/`_FLOOR`/`_CEIL`/seed counts/comparison
-operators/` or `) and resolved every hit to a restructuring whose constants
-survive in source — spot-checked on `BA.03`, whose `702aa56` statistic move
-claims `T_GAIN_MIN 3.0`, `NOISE_GAIN_FRAC_MAX`, `VEST_OVER_NOISE_MIN` and
-`HEADROOM_MIN_MULT 2.0` are carried unmoved, and all four are present at
-`ba_03_braces_against_a_surface.py:118-319` with `HEADROOM_MIN_MULT` annotated
-*"ADDED and it is strengthen-only"*. **No findings in section 2.** Stated plainly
-because it is true.
+In my own window this is nearly trivial and I verified it rather than assumed
+it: `git diff f1e6201..HEAD` touches **6 files**, of which exactly one is under
+`experiments/tests/` — `T0.31`, and it is the strengthening above. `registry.py`
+and `registry_expansion.py` are untouched. Over the full seven days I re-ran the
+loosening grep (removed lines matching `_MIN`/`_MAX`/`_FLOOR`/`_CEIL`/seed
+counts/comparison operators/` or `) across every diff to those three paths and
+resolved every hit to a restructuring whose constants survive in source.
+**I deliberately spot-checked a DIFFERENT spec from my predecessor** so the two
+audits are not one check counted twice: `T3.06`, whose `RANDOM_DWELL_MAX` was
+deleted in `875caf6`. It reappears at `t3_06_ablate_curiosity.py:745` as
+**0.0185**, *tighter* than the 0.02 it replaced, derived by
+`_derive_random_dwell_cap()` at n = 144, and — the part that matters —
+`_assert_dwell_cap_current()` at `:1219-1245` **refuses to run the spec** if the
+typed constant and the derivation disagree by more than 1e-9. A threshold that
+cannot silently drift from its own justification. **No findings in section 2.**
+Stated plainly because it is true.
 
-**3. Drift from the goal.** Covered in RANK 4. The converse: `coverage` EXIT 2
-reports **0 commitments with NO declared spec** (floor held) but **3 CLAIM-DEAD**
-(smell, shelter/building, thermal-kills — every claim spec parked or foreclosed)
-and **14 more with live claim specs and nothing passing**. That is **17 of the
-owner's constitutional commitments with zero passing claims**, including *too
-cold kills him*, *he builds a shelter*, touch, tool use, proprioception, sleep,
-plasticity, fast/slow and the told world. `NO-LIVE-PATH` stands at 6 distinct
-commitments/seats, repair for every one a **registration**. `goal_unrunnable = 7`,
-unchanged since 09-05. `GOAL.md` cites 16 spec ids, **0 dangling**.
+**3. Drift from the goal.** Covered in RANK 4. The converse, from `coverage`
+EXIT 2: **0 commitments with NO declared spec** (floor held), **3 CLAIM-DEAD**
+(smell, shelter/building, thermal-kills) and **14 more with live claim specs and
+nothing passing** — **17 of the owner's constitutional commitments with zero
+passing claims**, including *too cold kills him*, *he builds a shelter*, touch,
+tool use, proprioception, sleep, plasticity, fast/slow and the told world.
+`NO-LIVE-PATH` stands at **6** distinct commitments/seats; the repair for every
+one is a **registration**. `goal_unrunnable = 7`, unchanged since 09-05, with
+`GEN.02`/`GEN.03`/`GEN.06`/`GEN.09` flagged **4 NEW unrunnable citations** —
+owned by the OPEN row `gen-four-reparented-to-a-decision-that-had-already-closed`
+(DUE 10-01). `GOAL.md` cites 16 spec ids, **0 dangling**.
 
-**4. Builder liveness.** Covered in RANK 4. 8/11 `rc=0`, 3 session-limit deaths
-with receipts intact, 0 dark slots, 0 manufactured work.
+**4. Builder liveness.** 6 iteration starts (`19:07`–`00:07`), **6 ended
+`rc=0`**, 0 session-limit deaths, `lost_iterations.log` correctly 0 bytes. PASS
+delta **107 → 107** — no verdict changed in six hours. `run next` read **0 fresh
+of 51** on every slot, re-derived each time rather than inherited: the sixth
+through ninth consecutive verified-empty board. **Nothing was manufactured**, and
+I want that recorded as correct conduct for the seventh audit running. The one
+defect in the window's liveness is RANK 1, and it is a scheduling choice, not
+idleness.
 
-**5. Compute honesty.** `2026-W39` carries **30.0 free Kaggle GPU-hours, 0.00
-charged** across zero jobs, **expiring Saturday 2026-10-03** — re-derived from
-`gpu_budget.json`'s own `charged_jobs` (W37 5.25 h, W38 0.92 h, W39 0.00 h), so
-this is the **third consecutive week** substantially lost. Both live routes run
-through `T1.08` (FAIL, blocks 45), whose repair design is undesigned until 10-02.
-Every cost class reads `NOT FILLABLE`; the builder adversarially re-derived the
-"no legal buyer" claim at 16:14 and refused `T2.07`'s stale FAIL→FAIL re-buy with
-the reason written. **No dispatch has been manufactured and none should be.**
-Standing waste unchanged: `gpu_hours_no_verdict` TOTAL **48.42 h**, of which
-`D1.0` holds **33.78 h across 2 attempts and 0 verdicts**; `gpu_unattributed_jobs
-= 21`, AT floor. **CPU honesty is the new problem and it is RANK 2.**
+**5. Compute honesty.** Re-derived from `gpu_budget.json`'s own
+`charged_jobs` rather than a summary: **`2026-W39` has ZERO charged jobs and
+0.00 h spent, against 30.0 free Kaggle GPU-hours expiring Saturday
+2026-10-03** — after `W37` 5.25 h and `W38` 0.92 h, this is the **third
+consecutive week substantially lost**. Every cost class in `coverage` reads
+`NOT FILLABLE`; **3 classes are NEWLY EMPTY** (`cpu<1min`, `gpu<20min`,
+`gpu<8h`) with no path in. Both live routes run through `T1.08` (FAIL, blocks
+45), whose repair design is undesigned until 10-02. The builder re-derived the
+"no legal buyer" claim adversarially at 16:14 and refused the only candidate
+with the reason written. **No dispatch has been manufactured and none should
+be.** Standing waste unchanged: `gpu_hours_no_verdict` TOTAL **48.42 h**, of
+which `D1.0` alone holds **33.78 h across 2 attempts and 0 verdicts**;
+`gpu_unattributed_jobs = 21`, AT floor. CPU: the day meter reads **20.5 s at
+00:45** against yesterday's 4,554.7 s — the 128th's RANK 2 is repaired and the
+repair is working.
 
 **6. Stuck decisions.** `decisions --check` EXIT 1. **No `MEANS-ESCALATED`** —
 nothing a measurement could settle sits on the owner's desk; the `D1` disease is
-absent. **No `UNDECLARED`** (0, at floor) — nothing was armable this audit. One
-armed entry: `D37`, due 10-04, default (iii) HOLD, `costs 0 specs` and the entry
-says so itself rather than overselling — **and it is now load-bearing for a
-certificate, which nobody intended (RANK 1)**. Five not armed: `D33`, `D35`,
-`D38` classed `CONDUCT-DESK` (stale by 5, 4 and 0 days); `D33` additionally
-`DEFAULT-ACTION-EXPIRED`; `D37` flagged `CONDUCT-MISFILED?`.
+absent. **`decisions_undeclared` = 0, at floor** — nothing was armable this
+audit, and I armed nothing rather than invent an entry. One armed: `D37`, due
+10-04, default (iii) HOLD, `costs 0 specs` and the entry says so itself. Five
+not armed: `D33` (stale 6 d), `D35` (stale 5 d), `D38` — all `CONDUCT-DESK`;
+`D33` additionally `DEFAULT-ACTION-EXPIRED`; `D37` flagged `CONDUCT-MISFILED?`.
 `decisions_unrouted_owner_ask` and `decisions_vanished_owner_ask` both **0**, at
-floor — the `D15` disease this organ measured on 08-29 stays closed, and today's
-single `PROGRESS.md` owner-ask is correctly attributed to `D22`/`D33`.
+floor — the `D15` disease this organ measured on 08-29 stays closed, and
+`PROGRESS.md`'s single owner-ask is correctly attributed to `D22`/`D33`.
 
-**7. Bakeoff hygiene — `champions --check` EXIT 0, 10 violations, all standing.**
-**Learning core** held `BY VERDICT` off `LC.03` (a VOID) with
-`VERDICT-IS-A-VOID` **and** `TRIGGER-UNREACHABLE` — every re-open trigger a
-closed door (`LC.07` PILOT-BLOCKED, `LC.03` VOID-FORECLOSED, `UB.10` VOID). That
-is section 7's *"a VOID treated as a verdict"*, correctly printed rather than
-hidden, and `D37` is the live entry on it. Also standing: **World**
-`VERDICT-UNDECLARED`/`TRIGGER-UNDECLARED`; **Fast/slow coupling**
-`ARENA-UNREACHABLE`/`TRIGGER-UNREACHABLE`; 2 `NO-ARENA` (ASR, Speaker ID);
-2 `UNCONTESTED` (Vision encoder, PLASTIC ONLY). `champions_unwinnable = 4` AT
-floor; `champions_trigger_debt = 3`. **`ARENA-MISSING` remains 0** — my own
-standing prompt still says 8, and the seats were repaired by REGISTERING specs,
-never by deleting arena references, which is the repair the ratchet was written
-to force. The per-seat `HELD:`/`ARENA:` syntax is live and changed the inferred
-reading on 10 seat/fields. One new-to-me class worth naming: **`KINDLESS
-DISCHARGE`, 1 of 1 — `LF.02` is credited as a challenger and declares no
-`COVERS` kind**, so that contest cannot be verified from the registry.
+**7. Bakeoff hygiene — `champions --check` EXIT 0, 10 violations, all standing
+and none new.** **Learning core** held `BY VERDICT` off `LC.03` (a VOID) with
+`VERDICT-IS-A-VOID` **and** `TRIGGER-UNREACHABLE` — that is section 7's *"a VOID
+treated as a verdict"*, printed rather than hidden, and `D37` is the live entry
+on it. Also standing: **World** `VERDICT-UNDECLARED`/`TRIGGER-UNDECLARED`;
+**Fast/slow coupling** `ARENA-UNREACHABLE`/`TRIGGER-UNREACHABLE`; 2 `NO-ARENA`
+(ASR, Speaker ID); 2 `UNCONTESTED` (Vision encoder, PLASTIC ONLY).
+`champions_unwinnable = 4` AT floor, `champions_trigger_debt = 3`.
+**`ARENA-MISSING` remains 0** — my own standing prompt still says 8, and those
+seats were repaired by REGISTERING specs, never by deleting arena references,
+which is the repair the ratchet was written to force. `KINDLESS DISCHARGE` 1/1
+(`LF.02`) unchanged.
 
 **8. THE HONEST SUMMARY — are we closer to a curious humanoid that climbs the
-ladder than we were twelve hours ago?**
+ladder than we were six hours ago?**
 
-No, and this window is a cleaner illustration of why than most.
+No. And this window is the cleanest statement of the problem I have had to
+write, because there is nothing to criticise in the work itself.
 
-The count went up by one. That one is a Tier-0 instrument certifying the honesty
-of the *decision tool*, and it went green because the project currently has an
-open decision. If tomorrow the owner rules `D37` — an unambiguously good thing —
-the number goes back down. We have a scoreboard where resolving a question costs
-a green tick. That is not fraud and nobody engineered it; it is a property nobody
-noticed until a machine exercised it, and the machine that exercised it was built
-this morning to take clerical work off the judgment lane, which is a genuinely
-good idea that worked.
+Six slots. Six `rc=0`. Every mandated read done in order, every board
+re-derived instead of inherited, every FTB item from two desks discharged and
+verified in source, one instrument strengthened against its own printed-but-
+unratcheted rot, three refusals to manufacture work, one refusal to route
+another organ's unverified draft, and a pre-registered prediction about an
+unattended cron that came true to the spec. That is a machine in good health
+doing careful work. **And the demonstrated count did not move, no spec about
+Jack ran, and the single piece of work that touched the creature was a
+verification of somebody else's finding that was deliberately not routed.**
 
-What actually happened in twelve hours: the builder closed a sweep proving the
-shipped brain fuses four of nine senses and has no word for fire; it wrote five
-receipts on work it had already finished; it discharged five FTB items from two
-desks; it refused three separate opportunities to manufacture work, and refused
-a GPU dispatch it could have justified. It also spent 94.8 % of the day's CPU
-shaking down a new lane, and the only certificate that changed did so for a
-reason its own journal got wrong.
+The one thing that went wrong went wrong in the same grain: a slot chose to
+*wait* for a machine instead of *doing* something, and a slot cannot wait.
+That is what an organ does when its board is empty and it will not invent work
+— it reaches for the only thing left, which is watching. Nine consecutive
+verified-empty boards is not a builder problem. It is the measurement that the
+work has moved somewhere the builder cannot reach.
 
-Set against the ladder: seventeen of the owner's constitutional commitments still
-have no passing claim. Nine rows sit behind a world that has been formally
-declined. Thirty free GPU-hours expire on Saturday for the third consecutive week
-because the only thing worth spending them on is a design. `T1.08` — one red
-Tier-1 spec — blocks forty-five others including every creature gate and every
-Tier-5 claim, and the repair for it is due from a desk on 10-02.
+Set against the ladder: seventeen of the owner's constitutional commitments
+still have no passing claim. Nine live rows sit behind a world whose authorship
+was formally DECLINED two days ago and has no owner. Thirty free GPU-hours
+expire on Saturday for the third consecutive week, because the only thing worth
+spending them on is a design. `T1.08` — one red Tier-1 spec — blocks forty-five
+others including every creature gate and every Tier-5 claim, and its repair is
+due from a desk on 10-02. Of 31 resolved decisions, 29 were resolved by armed
+default and **one, ever, by the owner**.
 
-**We are not closer to Jack. The instruments got one notch more honest and one
-notch more fragile on the same day, and the world he is supposed to live in still
-has no author.**
+**We are not closer to Jack. The builder has now spent a full day and a night
+proving, carefully and honestly, that there is nothing on its board — and the
+thing that would put something there is a design nobody has written and a world
+nobody has agreed to author.**
 
 ---
 
 ## FOR THE BUILDER
 
-1. **Correct the `T0.28` cause on the record, and state the expiry.** Your
-   `112c71e` journal calls the flip *"the scoreboard catching up to the desk's
-   OVERDUE 7→0 repair."* It is not: `p10_live_document_is_armed_and_readable`
-   reads `docs/DECISIONS_NEEDED.md` and gates on `live_armed`, `REVIEW_QUEUE.md`
-   is an `IMPL_DEPS` staleness edge only, and the ledger row records
-   `live_armed = 1.0` against the one armed entry in the register, `D37`. This is
-   a **one-paragraph correction in your next journal plus one `BUILDER-TRACE`
-   line** on the OPEN `t028-p10-reads-an-empty-armed-register-as-a-broken-tool`
-   row (DUE 10-04) naming: the executing run (`bd44fc6`, 10:45:27), the metric
-   (`live_armed 1.0`), the single supporting entry (`D37`, `decide_by
-   2026-10-04`), and the forecast — **when `D37` leaves the register, `T0.28`
-   returns to FAIL and the demonstrated count falls to 106.** Stamp nothing; the
-   disposition is the desk's and the row's question is a redesign, not a bar.
-   Do **not** touch the ledger row: the verdict stands.
-
-2. **Put a budget check in `regate.py` before its next tick, and make the
-   cheapness filter a measurement.** This is RANK 2 and it is yours because it is
-   your lane. Two changes, both small:
-   (a) **Consult the CPU day meter before running anything** and stop the sweep
-   when the next spec's estimate would cross the `cpu<2h` class's slack — today
-   the lane spent 4,218.6 s of 4,450.2 s and foreclosed 37 specs (36 never run)
-   on a class whose slack is 13× smaller than its own. **Print what it declined
-   and why**; a lane that quietly stops is one nobody audits, which is your own
-   rule from `cce6cef`.
-   (b) **Gate on measured runtime, not the declared label.** `spec.budget.value`
-   said `cpu<10min` for `LT.02` (838 s) and `PS.08` (~1,048 s). Read the last
-   recorded `compute_s` where one exists and treat a spec that overran its class
-   as not-cheap until someone re-labels it.
-   This is a repair to an EXISTING lane you built today, not a new organ — but
-   if you read `D35` clause 2 as covering it, **say so and stop**, and I will
-   route it. Do not guess in either direction.
-
-3. **Strike or substantiate `scripts/regate.py:3`.** The parenthetical *"(owner
-   review, 2026-09-28)"* has no referent: no owner act is recorded anywhere in
-   this repo on that date, and the project's only owner ruling ever is `D19`
-   (2026-09-17). Either cite the act with its location, or change the words to
-   name who actually did the review. One line, and it is the only sentence in the
-   repository granting owner authority to an autonomous ledger writer.
-
-4. **Nothing else.** Items 1 and 3 add no queue rows. Item 2 is a repair to your
-   own day-old code. I am adding no fresh arrivals to a queue running 6.43
+1. **Never take a unit whose completion condition lies outside your slot's
+   lifetime, and journal the slot that ends with nothing.** This is RANK 1 and
+   it is conduct, not code — no new organ, no `D35` question. Your slots run
+   ~7 minutes from a `:07` start; the regate cron fires at `:43`. The `20:07`
+   slot promised to be woken by a watcher 32 minutes after it would be dead, and
+   `git log` for 19:14–21:10 is empty, and `LOOP_JOURNAL.md` goes `19:0x` →
+   `21:0x`. You armed the same wait again at 00:16. Two changes:
+   (a) **when the unit is "observe a scheduled external event", the correct act
+   is to pre-register the check for the next slot and end** — which you already
+   do well, and did at 21:0x and 22:0x; just stop adding the hold on top of it.
+   (b) **write a `LOOP_JOURNAL.md` entry even when the slot produced nothing**,
+   naming what it read and why it ended empty. A slot with no artifact is
+   currently visible only by diffing journal headings against `ladder.log`;
+   `dark_slots` cannot see it and is correct not to. Do **not** build a counter
+   for this — one journal line is the repair, and the queue is running 6.00
    arrivals per cycle against 1.71 disposals.
+
+2. **Write the cause of `unreachable = 96` at its site, and do NOT raise the
+   baseline.** RANK 2. `ratchet_readings.json`'s `unreachable` key carries
+   `{"at": "2026-09-25", "value": 95}` and no `note`, while both of its
+   above-floor neighbours carry one. The cause, which you may quote and should
+   re-derive rather than inherit: **`LT.03`**, whose only unsatisfied blocker is
+   `LT.02` (`run blocked`: *"LT.02 = FAIL frees 1 → LT.03"*;
+   `LT.03.depends_on = [LT.01, LT.02, PG.4]`, the other two PASS), and `LT.02`
+   went `PASS → FAIL` at `2026-09-27T02:40` — *after* the 09-25 reading was
+   taken. Your own `88762a2` blast-radius line states the same arithmetic in
+   reverse (*"unreachable 96 -> 95 ... REGAINED LT.03"*). `UNREACHABLE_BASELINE`
+   **stays 95**: this is an honest demotion's downstream, not work to cover, and
+   `coverage.py:1186` already says so in the steering page's words. Same idiom
+   as the `pass_on_dead_dependency` note that is already there.
+
+3. **Nothing else.** Items 1 and 2 add no queue rows and touch no bar. Your
+   `regate` repairs from last night are verified working on cron, including the
+   ADMIT after the reset — that lane is closed as far as I am concerned.
 
 ## FOR THE OWNER
 
-**1. PERISHABLE, and new today: your project's headline number is scheduled to
-fall by one on 2026-10-04, and the reason is that answering a question costs a
-green tick.** `T0.28` — the spec certifying that the escalation tool is honest —
-requires at least one *armed* decision to exist in `DECISIONS_NEEDED.md`. It
-failed on 09-26 when the register legitimately emptied (the machinery
-succeeding), and it passed today at `live_armed = 1.0` because the Review opened
-`D37` yesterday. `D37`'s `decide_by` is **2026-10-04**. The queue row that would
-repair the property is OPEN and due **the same day**. Nothing needs your ruling
-here — the repair is a Review disposition and the builder has been told to write
-the trace — but you should know before it happens that **ruling `D37` will
-subtract one from the demonstrated count**, and that this is an artefact of the
-certificate's shape, not a real loss. Do not let it discourage the ruling.
+**1. `D33` — who authors the W1 world edit? Six days past its deadline, and
+neither organ can clear the red.** Unchanged from the 126th, 127th and 128th
+audits, and I am repeating it because nine live rows are behind it and it is now
+the largest single fact about this project. `decisions_default_action_expired`
+reads **1** against floor **0**, unchanged since 2026-09-23. `D33`'s own default
+is *"re-date once more, to 2026-09-23"*, which cannot fire before 09-24 — so the
+act it names is in the past on the day it fires. The Review has formally
+**DECLINED** the W1 authorship (the first `DECLINED` in 113 routed rows) and
+correctly refuses to move `decide_by`. `D13` bars me from editing the register's
+rulings. The instrument names two legal repairs — **shorten `decide_by`** (a
+deadline may tighten, never lengthen) or **declare whose date it is with
+`(CLOCK: <whose>)`** — and **neither is available to either organ.** Nine live
+rows now read `HOLD-ON-A-RESOLVED-BLOCKER`, two of them (`ne01-occlusion-
+knife-edge`, `water-apply-phantom-force`) **36 days old with no `DUE:` at all**.
+The Review recommends option (ii) — the builder drafts under Review — and says
+it may not carve that exception out of `D22`, which is your ruling. A stop-rule
+fires 2026-10-09.
 
-**2. NEW, and I would want to know: an unattended process now writes your
-ledger.** As of 10:28 today, `scripts/regate.sh` runs every two hours from cron,
-re-runs cheap certificates whose code has moved, and commits the result — no
-model call, no organ reading it before it lands. It is well-built: it never
-judges a verdict, records a PASS→FAIL as a FAIL, names every spec it ran in its
-commit message, yields the runner's lock, and honours `.paused`. Its first act
-was to move your headline number by +1 (item 1). **The gap I am routing to you is
-one of scope, not of conduct:** `D35` clause 2 freezes *"new audit organ, checker
-or ratchet"*, so it correctly stopped the builder building a one-expression
-read-only join this morning — the join that would have printed the `w1`/`w0`
-circular dependency — and did not reach a 267-line cron lane that writes the
-ledger. **The freeze constrains the things that would catch problems and not the
-things that can change the scoreboard.** If that is the intent, nothing needs
-doing. If it is not, it is one clause and it belongs with the three `D35` repairs
-in item 4.
+**2. PERISHABLE — your headline number is still scheduled to fall by one on
+2026-10-04, and it is now being re-affirmed by a machine every two hours.**
+`T0.28` requires at least one *armed* decision to exist in
+`DECISIONS_NEEDED.md`. It failed on 09-26 when the register legitimately emptied
+and passed on 09-28 at `live_armed = 1.0` because `D37` is open. Since then the
+clerical cron has re-bought and re-affirmed it **three more times unattended** —
+most recently at 00:44 tonight — on that same one-row basis. `D37`'s `decide_by`
+is **2026-10-04**; the queue row that repairs the property is OPEN and due the
+same day. **Ruling `D37` will subtract one from the demonstrated count**, within
+about two hours, by cron. That is an artefact of the certificate's shape, not a
+loss. Do not let it discourage the ruling. Nothing here needs your decision —
+the repair is a Review disposition and the builder has written the full forecast
+onto the row.
 
-**3. `D33`'s ratchet red is six days old and neither organ can clear it.**
-`decisions_default_action_expired = 1` against floor **0**, unchanged since
-2026-09-23. `D33`'s default is *"re-date once more, to 2026-09-23"* and it cannot
-fire before 09-24, so the act it names is in the past on the day it fires. The
-Review has formally `DECLINED` the W1 authorship (the first `DECLINED` in 113
-routed rows) and correctly refuses to move `decide_by`, because a fresh date for
-a dead default is *"the fifth instalment in a different costume."* `D13` bars me
-from editing the register's rulings. The instrument names two legal repairs —
-**SHORTEN `decide_by`** (a deadline may tighten, never lengthen) or **declare
-whose date it is with `(CLOCK: <whose>)`** — and neither is available to either
-organ. **Nine live rows are held behind the declined `w1-world-edit-window`**,
-two of them (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`) 35 days
-old with no `DUE:` at all. The question is unchanged and has now been open eight
-days: **who authors the W1 world edit?** The Review recommends option (ii) — the
-builder drafts under Review — and says it may not carve that exception out of
-`D22` itself. A stop-rule fires 2026-10-09.
-
-**4. `D35`'s three one-line repairs, unchanged from the 116th, 125th, 126th and
-127th audits.** (a) a reachable release condition — `T6.01` sits behind
+**3. `D35`'s three one-line repairs, unchanged from the 116th, 125th, 126th,
+127th and 128th audits.** (a) a reachable release condition — `T6.01` sits behind
 `T4.05 ← T4.04 ← T2.01 ← T1.08` (FAIL), so the freeze cannot end by any act
-available to anyone; (b) a clause-2 exemption for truthfulness repairs and floors
-on EXISTING checkers, which would unblock both the unfloored `no_control_specs`
-and the due-date/blocker join; (c) confirm the freeze is meant to be unbounded.
-Item 2 above suggests a fourth: say whether the clause covers autonomous actors
-or only checkers.
+available to anyone; (b) a clause-2 exemption for truthfulness repairs and
+floors on EXISTING checkers, which would unblock the unfloored
+`no_control_specs`; (c) confirm the freeze is meant to be unbounded; (d) the
+128th's addition — say whether clause 2's *"audit organ, checker or ratchet"*
+covers autonomous **actors**, since it stopped a one-expression read-only join
+and did not reach a cron lane that writes the ledger.
 
-**5. NO-DECISION, standing report: 30.0 free Kaggle GPU-hours, 0.00 charged,
-expiring Saturday 2026-10-03 — the third consecutive week, and no dispatch should
-be manufactured.** Re-derived from `gpu_budget.json`'s per-job records, not from
-a summary. Every cost class reads `NOT FILLABLE`; both live routes run through
-`T1.08` (FAIL, blocks 45), whose repair design is the Review's and is due 10-02.
-Standing waste unchanged: `D1.0` holds **33.78 GPU-hours across 2 attempts and 0
-verdicts**. The scarce resource remains a designed unblock and an owner ruling,
-not a machine hour.
+**4. NO-DECISION, standing report: `2026-W39` has ZERO charged GPU jobs and 30.0
+free Kaggle hours expiring Saturday 2026-10-03 — the third consecutive week, and
+no dispatch should be manufactured.** Re-derived from `gpu_budget.json`'s
+per-job records (`W37` 5.25 h, `W38` 0.92 h, `W39` no jobs at all). Every cost
+class reads `NOT FILLABLE` and three are newly empty with no path in. Both live
+routes run through `T1.08` (FAIL, blocks 45), whose repair design is the
+Review's and is due 10-02. Standing waste unchanged: `D1.0` holds **33.78
+GPU-hours across 2 attempts and 0 verdicts**. The scarce resource is a designed
+unblock and your ruling, not a machine hour.
 
-**6. NO-DECISION, and it is the number I would want if I were you: of 31 resolved
-decisions, 29 were resolved by armed default, 1 by ledger replay, and 1 by you,
-ever** — `D19`, 2026-09-17. Re-counted this sitting. Armed defaults are
-constrained by design to already-permitted actions, so the default channel can
-only ever select the weakest available option. It was specified as a deadlock
-breaker of last resort and it has become the only resort.
+**5. NO-DECISION, liveness: 0 dark slots, 6 of 6 builder slots `rc=0`, and one
+slot that produced nothing without any counter noticing.** All four organs fired
+within cadence. The builder has now verified an empty board nine consecutive
+times without inventing work, which is the correct behaviour and is also the
+measurement that the bottleneck is elsewhere — it is the two design debts in
+item 1 and item 4, both of which sit at a desk that sits for twenty minutes a
+day.
