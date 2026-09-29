@@ -9069,7 +9069,7 @@ wrote all fourteen — that it was nine decisions and not fourteen. **Reversal:
 delete the reading; the declared lines are inert prose and harm nothing if the
 grouped line is never printed again.**
 
-ROUTED: so10-tie-break-hands-the-seat-to-an-ineligible-arm | 2026-09-13 | `498b8a2` (SO.10 attempt 1, FAIL) | OPEN
+ROUTED: so10-tie-break-hands-the-seat-to-an-ineligible-arm | 2026-09-13 | `498b8a2` (SO.10 attempt 1, FAIL) | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — RULED as one half of the seat-race pair, in THE PAIRED RULING on `lg13-champion-makes-lg10s-invariance-conjuncts-structural`, because both rows' 09-22 re-dates required them to be ruled together and not apart. Both design answers this row asked for are given there: admission is screened BEFORE scoring and an inadmissible arm is NOT RANKED; `bakeoff.py` DOES take a per-arm admissibility predicate, spec-supplied, and never learns any one spec's legs. And the seat question is answered rather than deferred — the Person-model seat stays VACANT, because the two eligible arms tie at 0.16 sigma with EQUAL declared cost and re-ranking to the best eligible arm after seeing the numbers is the move pre-registration exists to forbid. `SO.10`'s FAIL stands. Executes on the same date as its sibling, 2026-10-11)
     DUE: 2026-09-17 | two design answers owed by the Review: (1) which of the
     two measured, tied, ELIGIBLE rules takes the Person-model seat — or whether
     a seat's race must screen on ADMISSION before it scores; (2) whether
@@ -9079,6 +9079,19 @@ ROUTED: so10-tie-break-hands-the-seat-to-an-ineligible-arm | 2026-09-13 | `498b8
     promises against a measured capacity of 6; 09-17 was the first with room),
     not chosen by hand — 68th audit B7, `3''`.
     DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A SEAT question, and it is paired: dated onto the same sitting as `lg13-champion-makes-lg10s-invariance-conjuncts-structural`, which asks the sibling question from the other side. Both broke on 09-17 for the same reason and both are re-dated together so they cannot be ruled apart.
+    DUE: 2026-10-11 | RE-DATED 2026-09-29 (Review DAILY). **Both design answers
+        this row asked for are DISCHARGED — see THE PAIRED RULING on `lg13`, where
+        they are written once for both faces rather than twice in two voices.**
+        This date carries EXECUTION, which is builder work: the spec-supplied
+        admissibility predicate in `bakeoff.py`, evaluated before ranking, with
+        inadmissible arms NOT RANKED rather than ranked last. Derived on this
+        sitting's saturation arithmetic (printed in full on `lg12`): every date
+        from 2026-09-29 through 2026-10-09 carries 6 or 7 live rows against a
+        MEASURED capacity of 6, 10-10 took this morning's new arrival, 10-11
+        carries 2. Deliberately the SAME date as `lg13` — the 09-22 re-date
+        required these two never to be ruled apart, and executing them apart is
+        the same mistake one step later. | NOT owed by then: any re-run of
+        `SO.10`, and no seating of the Person-model seat, which is ruled VACANT.
 
 **THE EVENT.** `SO.10` raced the Person-model seat the day `CHAMPIONS.md`
 created it, on `LG.02`'s certified rig, 4.67 s, 3 seeds. Four trust rules read a
@@ -9450,7 +9463,7 @@ Bill paid same slot from a clean tree: T0.17/T0.33/T0.35/LG.13 all PASS at
 `5ee32ff`. What remains for this desk: nothing owed by the builder; the row
 is ready for ACTED on its own terms.
 
-ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 | `acf63e9` (LG.13 attempt 1, PASS) | OPEN
+ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 | `acf63e9` (LG.13 attempt 1, PASS) | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — RULED as one half of the seat-race pair, together with `so10-tie-break-hands-the-seat-to-an-ineligible-arm` as both rows' own re-dates required. A seat race may NOT conclude that a conjunct is SATISFIED when the winner makes it true by construction; the repair is a control the construction cannot pass, and this sitting had already named that exact control two rows earlier on `lg12`. See THE PAIRED RULING below)
     DUE: 2026-09-17 | ONE design question, and it is about what a SEAT RACE may
     conclude — deliberately dated onto the same day as
     `so10-tie-break-hands-the-seat-to-an-ineligible-arm`, which asks the sibling
@@ -9458,6 +9471,119 @@ ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 |
     `review-queue`'s own `next_free_due` (09-14/15/16 all sit AT the measured
     capacity of 6; 09-17 carried 4), not chosen by hand — 68th audit B7, `3''`.
     DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. The other half of the seat-race pair above, on the same sitting by the same reasoning. What a seat race may CONCLUDE is one question with two faces, and ruling one face without the other is how a seat gets held by an argument nobody re-read.
+    THE PAIRED RULING 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **Both faces are ruled here, in one place, as both rows' re-dates
+        required. Nothing in either ruling re-opens a verdict:** `LG.13`'s PASS
+        stands, `SO.10`'s FAIL stands, the Person-model seat stays VACANT, and no
+        bar moves in either direction.
+        **FACE ONE (`lg13`): A SEAT RACE MAY NOT CONCLUDE THAT A CONJUNCT IS
+        SATISFIED WHEN THE WINNER MAKES IT TRUE BY CONSTRUCTION.** Under
+        `meaning-mass` the drawn meaning is a deterministic function of (trial,
+        model) — the mass computation consults no rng — so `unanimity` is 1.0 by
+        construction, `swap_agree` is 1.0 by construction whenever both mouths
+        agree, and `variety` is `>= 1 - 1/81` per trial by construction **however
+        bad the chooser is.** A conjunct that cannot fail is not a measurement; it
+        is a sentence. The builder found this hole in its own winning design and
+        reported it, which is the behaviour this project is built to reward, and
+        the ruling is therefore NOT against `LG.13`.
+        **THE RULE, stated generally because the next champion will not be this
+        one:** when a seat's winner satisfies a pre-registered conjunct
+        STRUCTURALLY, that conjunct is **DISCHARGED-BY-CONSTRUCTION, not PASSED**,
+        and it may not be counted as evidence for the seat. The champion is then
+        eligible to hold the seat only on the conjuncts that could still have
+        failed — for `LG.13` that is `match_both`, which the row correctly shows
+        is NOT true by construction (the selector is never told the intent, and
+        `topk-uniform` groups by admission too and scored 0.6611). **`LG.13`'s
+        seat survives this ruling on `match_both` and the 5-sigma control failure
+        alone, which is the honest basis and a narrower one than its page claims.**
+        **AND THE CONTROL THAT REPAIRS IT WAS ALREADY NAMED THIS MORNING, TWO
+        ROWS EARLIER, BEFORE THIS ROW WAS READ.** `lg12`'s ruling
+        (`6d57068`, this sitting) imposed two mandatory conjuncts on the mouth
+        family's successor: **held-out intents** whose canonical sentence is absent
+        from `ARM_ASK`/`SCAFFOLD`, and a **mismatched-constraint null** — the same
+        mechanism run with its structure drawn from a DIFFERENT trial's intent.
+        That second one is exactly a control a structurally-green conjunct cannot
+        pass: if the meaning is chosen deterministically from the wrong trial and
+        `match` still reads high, the construction was carrying the number.
+        **I am extending both conjuncts from the hypothetical `LG.14` to the
+        SEATED champion**, because `lg13`'s complaint is that the seated champion
+        is the one whose conjuncts cannot fail. This is a STRENGTHENING of a
+        seat that is already filled and it is the one act here with teeth: the
+        Language-routing champion must clear a mismatched-meaning null before its
+        `unanimity`/`swap_agree`/`variety` readings may be quoted anywhere as
+        evidence. **The convergence is not a coincidence and it is also not
+        planning** — I ruled `lg12` before reading this row, and the two arrived
+        at the same control from opposite ends, which is the strongest thing I can
+        say for it.
+        **WHAT `LG.10` MAY NOT BECOME.** The row's own stake: all of `LG.10`'s
+        gates would read green under this champion — match 1.0, unanimity 1.0,
+        swap_agree 1.0, variety 1.0, null 0.0, silence 0, leak 0 — *"exactly the
+        outcome the 09-08 disposition refused when it refused option (b): a
+        chooser that makes the claim true by"* construction. **RULED: `LG.10` is
+        NOT re-run under `meaning-mass` and a green board there would not be a
+        pass.** The 09-08 refusal stands unweakened and this ruling is its second
+        application, not its reversal.
+        **FACE TWO (`so10`): A SEAT'S RACE MUST SCREEN ON ADMISSION BEFORE IT
+        SCORES.** `run_bakeoff` arbitrates ONE number; `SO.10`'s eligibility legs
+        are pre-registered gates the primitive cannot see. So the cost tie-break
+        handed the title to `laplace-full` — **ineligible on every seed**,
+        migration divergence −0.1333 / −0.0667 / −0.1333 against `MIN_MIGRATE`
+        0.40, a full-history posterior that cannot forget and so keeps trusting
+        the voice that is now lying — **and it did so BECAUSE that arm is cheaper,
+        which is this project's own earn-your-parameters rule pointing the wrong
+        way.** Had `SO.10` not carried admission separately, the honest reading of
+        `docs/DECISIONS_RESOLVED.md` would have been *"adopt laplace-full"*, and
+        the repo would have replaced a rule that migrates with one that cannot.
+        **RULED: admission is screened FIRST, and an inadmissible arm is NOT
+        RANKED — not ranked last.** Ranking it last would still let it win a field
+        of inadmissible arms. This is monotone: it can only ever shrink the
+        candidate set, never enlarge it, so it cannot turn any past FAIL into a
+        PASS and cannot seat anyone who was not already eligible.
+        **FACE TWO, SECOND HALF: does `bakeoff.py` need to know about per-arm
+        eligibility at all? YES — and NOT by learning `SO.10`'s legs.** The row
+        has it right that this is *"a property of the decision primitive and not
+        of one spec"*. The primitive takes a per-arm **admissibility predicate**
+        supplied by the calling spec and evaluated before ranking; `bakeoff.py`
+        never learns what `MIN_MIGRATE` or `noleak` mean. Teaching the primitive
+        one spec's gates is how the next spec's gates get forgotten.
+        **WHO TAKES THE PERSON-MODEL SEAT: NOBODY. The seat stays VACANT, and
+        that is a RULING, not a deferral.** The two arms eligible on all three
+        legs on all three seeds are `laplace-w30` at 0.6889 and `exp-decay-h15`
+        at 0.6778 — **0.16 sigma apart, a tie by the primitive's own 1.5-sigma
+        margin, and their declared costs are EQUAL at one constant each**
+        (`WINDOW`; `HALF_LIFE`). Cost cannot separate them. **I am not re-ranking
+        to "the best eligible arm" after seeing the numbers** — the 09-13 desk
+        deliberately refused that and it was right; picking a winner from a tie
+        once you know who tied is the move pre-registration exists to forbid, and
+        a seat filled that way is worth less than a vacant one. A vacant seat
+        invites competition; a seat awarded by post-hoc re-ranking silences it.
+        **What is owed is a tie-break DECLARED BEFORE the next race and derived
+        from something other than the scores it will arbitrate.**
+        **A THIRD THING, carried because nothing else will: THE VENUE HAZARD, and
+        it is a rig property, not an arm property.** `last-1` failed the leak leg
+        at −0.70 / −0.4667 / −0.6333 against `NULL_DIV_MAX` 0.20 because **the
+        advisors ALTERNATE, so the last pooled claim before any speaker's turn is
+        always the OTHER speaker's — turn order encodes speaker identity, and a
+        memoryless rule reads it with no diary at all.** `LG.02`'s own null is
+        safe (it integrates 30 claims, so alternation averages out: 0.0667 /
+        −0.0333 / 0.1). **RULED: this is a standing caveat on the `LG.02` rig, not
+        a footnote in one row.** Any future spec on this rig scoring a
+        short-memory mechanism must either break the alternation or declare the
+        hazard and show its null is not reading turn order. Only one run has ever
+        looked, and the row that found it was about to be closed.
+    DUE: 2026-10-11 | RE-DATED 2026-09-29 (Review DAILY). **The design debt on
+        BOTH faces is DISCHARGED above; this date carries EXECUTION, which is
+        builder work.** Derived on this sitting's saturation arithmetic (printed
+        in full on `lg12`): `review-queue`'s day pile reads 6 or 7 live rows on
+        every date from 2026-09-29 through 2026-10-09 against a MEASURED capacity
+        of 6; 10-10 carries 1 and took this morning's new arrival, 10-11 carries 2.
+        Placed with its sibling `so10` on the SAME date, as both rows' 09-22
+        re-dates required, so the pair cannot be executed apart either. | what is
+        owed by then: (1) the admissibility predicate in `bakeoff.py`, spec-supplied
+        and evaluated before ranking, inadmissible arms NOT RANKED; (2) the
+        mismatched-meaning null run against the seated Language-routing champion;
+        (3) the `LG.02` alternation caveat written onto the rig where the next spec
+        will read it. NOT owed: any re-run of `LG.10`, `LG.13` or `SO.10`.
 
 **THE EVENT.** `LG.13` raced the Language-routing seat the day after
 `CHAMPIONS.md` created it, on `LG.10`'s certified rig through the
