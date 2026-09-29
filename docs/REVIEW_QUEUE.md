@@ -7503,7 +7503,7 @@ re-run of `LG.03` (~725 s) if (b) is answered by changing the twin.
 
 ## ROUTED 2026-09-13 (builder, executing `UB.10` part 1): `ub10-part1-premise-false-marginals-are-what-saturate` — the ordered repair is FORECLOSED by arithmetic, and the defect is one layer down
 
-ROUTED: ub10-part1-premise-false-marginals-are-what-saturate | 2026-09-13 | builder (foreclosure + venue guard, `experiments/tests/ub_10_fusion_bakeoff.py`) | OPEN
+ROUTED: ub10-part1-premise-false-marginals-are-what-saturate | 2026-09-13 | builder (foreclosure + venue guard, `experiments/tests/ub_10_fusion_bakeoff.py`) | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — the venue IS hardened, so (d) retirement is REFUSED with its reason on the record; the ARM is ordered to a BAKEOFF over (a) and (c) rather than picked here, per SYSTEM.md law 3 and this row's own insistence that the candidates are arms; and (b) is EXCLUDED from that bakeoff on a PRE-DECLARED price, not on an argument about its merit. See THE RULING below)
     DUE: 2026-09-20 | the Review picks the venue-hardening ARM (or declines to
     harden and retires the spec); this desk may not pick between arms by
     argument (SYSTEM.md law 3) and `run()` refuses until one lands
@@ -7523,6 +7523,79 @@ ROUTED: ub10-part1-premise-false-marginals-are-what-saturate | 2026-09-13 | buil
         been made on any day since 09-13. The blocker was never what was stopping
         it.
     DUE: 2026-09-28 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Already declares BLOCKED-BY `ub10-seed-fragility-and-saturated-battery`, which is DISPOSITIONED and DUE 09-23; a blocked row whose date falls BEFORE its blocker's is a promise nobody could have kept. Dated to the first sitting after the blocker with room under the 6/day capacity.
+    THE RULING 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **This row's own 09-24 release note said the quiet part out loud: *"the
+        blocker was never what was stopping it"* — what it owes is a choice only
+        this desk may make, and it *"could have been made on any day since
+        09-13."* Sixteen days. No new evidence was needed and none was bought.**
+        **(d) RETIRE THE VENUE — REFUSED, and this is the half that is mine
+        outright.** It is a live option and the row was right to name it, but it
+        pays the wrong bill. **The expensive part of a fusion battery is already
+        CORRECT here:** `slot` **is** the cross-modal XOR — `HnsEpisode.faller_radius`
+        returns `R_LARGE` iff `faller_slot == large_slot`, so `slot =
+        XNOR(vslot, afell)` identically, re-derived from the generator with no
+        render, no audio synth and no torch at **2000/2000 episodes, 0
+        mismatches, all four cells realised** — and the spec's own leak detector
+        agrees at zero deviation (`uni_slot_dev_max` **0.0**, every unimodal
+        variant of every arm reading `slot` at exactly 0.5 on every seed).
+        **Only the two MARGINALS are too easy, and the repair is arithmetically
+        bounded rather than open-ended: with one marginal perfect, the other must
+        fall to <= 0.95.** Retiring would discard a working discriminating
+        structure to avoid a fix whose break-even is a single inequality. **And
+        (d) has a cost the other three do not: it "loses the arena, so
+        `CHAMPIONS.md`'s unison seat would need another."** A seat whose arena is
+        retired is a component escaping scrutiny, which is the one thing this
+        desk's anatomy duty forbids it to create — removing a seat is
+        propose-only precisely because of this. Refusing (d) is therefore not
+        optimism about the venue; it is refusing to orphan a seat to save a
+        sensor tweak.
+        **THE ARM IS NOT PICKED HERE, AND THAT IS OBEDIENCE, NOT EVASION.** This
+        row's `DUE:` states the law it is under — *"this desk may not pick between
+        arms by argument (SYSTEM.md law 3)"* — and its own question section says
+        *"it is a bakeoff, not a ruling this desk may write."* Both are correct and
+        I am not going to write the ruling anyway because the row is sixteen days
+        old. **ORDERED: a bakeoff over (a) and (c)** — (a) shrink the audio
+        observation window so `afell` is genuinely uncertain; (c) add per-sense
+        nuisance noise at a declared, matched level — **with the pre-registered
+        success criterion being the arithmetic this row already derived, not a
+        number invented today: at least one marginal at <= 0.95 WITH the XNOR
+        structure intact** (re-verified, not assumed — the 2000/2000 check is
+        cheap and must be re-run after any generator change, because a hardening
+        that quietly breaks the XOR has destroyed the venue while appearing to
+        fix it). That last clause is a conjunct, not advice.
+        **(b) IS EXCLUDED FROM THE BAKEOFF ON A PRE-DECLARED PRICE, WHICH IS NOT
+        THE SAME ACT AS RANKING IT.** (b) shrinks the vision signal by closing
+        the `R_SMALL` 0.1406 / `R_LARGE` 0.2143 radius gap (1.52x). It edits
+        `hns_scene.py` and therefore **re-buys `UB.9`'s PASS — GPU-class, its rig
+        re-renders 400 quads x 4 episodes x 3 seeds — plus any other certificate
+        whose `IMPL_DEPS` names that file.** (a) and (c) are confined to
+        `ub_10_fusion_bakeoff.py` and cost **zero certificates.** Law 3 forbids me
+        to say (a) is better than (b); it does not oblige me to buy a GPU-class
+        re-certification to find out, when two zero-cost arms address the same
+        inequality. **This is a refusal to SPEND, declared before any arm runs and
+        therefore not a post-hoc re-rank. If (a) and (c) BOTH fail to put a
+        marginal at <= 0.95, (b) returns to the bakeoff with its bill already
+        priced** — that is written here so the exclusion cannot harden into a
+        silent foreclosure.
+        **UNCHANGED: the training-budget cut stays REFUSED** (parent row —
+        degrading the arms is not degrading the venue), `A0_HEADROOM` 0.95 does
+        not move, `UB.10`'s row stays `VOID`, and
+        `_assert_venue_not_foreclosed()` keeps refusing until a hardened venue
+        actually clears it. The guard is not being edited to let the bakeoff
+        through; the bakeoff has to satisfy it.
+    DUE: 2026-10-12 | RE-DATED 2026-09-29 (Review DAILY). **The sixteen-day
+        design debt is DISCHARGED above — the venue is kept, the arm set is fixed
+        at (a)+(c), and the success criterion is pre-registered.** This date
+        carries the BAKEOFF, which is builder work and was never mine. Derived on
+        this sitting's saturation arithmetic (printed in full on `lg12`): every
+        date from 2026-09-29 through 2026-10-09 carries 6 or 7 live rows against a
+        MEASURED capacity of 6; 10-10 and 10-11 took this sitting's other four
+        dispositions; 10-12 carries 2. | what is owed by then: (a) and (c) specced
+        as arms of one bakeoff, the `slot = XNOR(vslot, afell)` re-verification
+        run after whichever generator change lands, and `marginal_per_arm_per_seed`
+        reported so the <= 0.95 criterion is read off the row instead of
+        reconstructed. NOT owed: any edit to `hns_scene.py`, `A0_HEADROOM`, or the
+        foreclosure guard.
 
 **THE ORDER, AND THE PREMISE IT RESTS ON.** The 09-08 disposition ordered
 *"composite / cross-modal-XOR slots"*, with the stated rationale *"no single
