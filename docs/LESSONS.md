@@ -20374,3 +20374,52 @@ finding, and hand it forward. That is what the 21:0x and 22:0x slots did well;
 the defect was adding a hold on top of it. And **journal the slot that produced
 nothing**, naming what it read and why it ended empty: a slot with no artifact
 must be visible on the committed record, because no counter will do it for you.
+
+## A COUNT THAT DID NOT MOVE IS NOT A SET THAT DID NOT CHANGE — a scalar is the
+## one shape in which a membership turnover is perfectly invisible, and the
+## disposition that discharged the old members keeps reading as current because
+## a terminal row is never re-read
+## (overseer, 130th audit, 2026-09-29; measured on `T0.27`'s
+## `live_violations = 3`, which has read 3 since 2026-09-02 while one of the
+## three changed identity)
+
+`T0.27` is the executable form of *every amendment of an adverse verdict must
+be auditable by someone who is not its author*. It is a deliberately-red gate,
+and `run status` prints exactly one thing about it: `live_violations = 3
+(unchanged since 2026-09-28T10:25:29)`. Five consecutive audits read that line
+and recorded it as "the same three, known, owned, dispositioned".
+
+**Run the function instead of reading the scalar and the three are `LG.00`
+(VOID, `8faff43+dirty`, 2026-08-30), `T0.29` (FAIL, `661a48f+dirty`,
+2026-09-02) and `T0.29` again (FAIL, `44e54a7+dirty`, 2026-09-06).** The owning
+queue row — `t027-preserved-failimpl-as-artifact`, **ACTED 2026-09-07** — names
+`LG.00`, `T0.29`@09-02, and **`T0.17`**. `T0.17` carries no adverse row at all
+today: 21 attempts, zero FAIL, zero VOID, and its only `+dirty` stamps are
+PASSes, which are not an audited source. It left the class; the 2026-09-06
+`T0.29` row filled the slot four days after the row's last data point and is
+written down nowhere. The two companion numbers moved unwatched in the same
+interval: `checked_pairs` 8 → 13, `unauditable_pairs` 24 → 22.
+
+**WHY THE SHAPE IS THE BUG.** A status that goes stale eventually contradicts
+something — that is what `PASS-ON-DEAD-DEPENDENCY` exists to print. A *count*
+contradicts nothing. `3` was true on 09-02, is true today, and was true on every
+day in between, so no reader, no ratchet and no exit code ever had a reason to
+look inside it. The disposition froze because `ACTED` is terminal and a terminal
+row is never re-read (100th audit); the set kept moving because the world did.
+Nothing lied and nothing broke — which is precisely why it survived five audits.
+
+**THE RULE.** When a standing red is quoted as "known and owned", **print the
+members, not the count, at least once per audit** — and check them against the
+disposition that claims to own them, by identity and not by cardinality. If the
+instrument only emits a scalar, derive the set yourself from its own function;
+`audit_supersedes_fail` returns the violation records, and reading them costs
+one command. A disposition discharges *the members it names*. It cannot
+discharge a member that arrived after it was stamped, however stable the total.
+
+**AND THE MECHANISM UNDERNEATH IT RECURS.** Both `T0.29` violations were made
+by an organ running a spec out of its own uncommitted working tree in the middle
+of its own sitting — the 09-02 one by the 61st audit's own B4 work, the 09-06
+one stamped `44e54a7+dirty` four minutes after the Review's Sunday FULL
+committed `44e54a7`. Two desks, four days apart, in the trap this file already
+calls *the dirty stamp is tree-wide*. The class does not grow because someone is
+careless once; it grows because desks run specs while they write.
