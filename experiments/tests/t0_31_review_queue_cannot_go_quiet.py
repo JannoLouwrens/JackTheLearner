@@ -189,7 +189,7 @@ SPEC_ID = "T0.31"
 IMPL_DEPS = ["experiments/review_queue.py", "docs/REVIEW_QUEUE.md",
              "docs/PROGRESS_LOG.md"]
 
-N_PROPERTIES = 22
+N_PROPERTIES = 24
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -1112,6 +1112,98 @@ def _probe(blind: bool) -> dict:
     if blind or not corpse_ok:
         failed.append("p22_a_coupling_against_a_corpse_is_a_false_statement")
 
+    # P23 — A RECEIPT IS VISIBLE AND BUYS NOTHING (Review 2026-09-28, FOR THE
+    # BUILDER 1; shipped `c4df5a4`, ratcheted here — its ship-time synthetic
+    # pins were run by hand and never committed, which is exactly the
+    # printed-but-never-asserted rot this spec exists to forbid). The scar:
+    # three of that morning's seven violations were finished work, the builder
+    # had invented the receipt idiom by hand twice, and no instrument could
+    # say so. Conjuncts: (i) a LIVE row declaring `BUILDER-TRACE: <sha> |
+    # <what>` appears in the `delivered` reading with its executing commit and
+    # prints under `DELIVERED — AWAITING STAMP`; (ii) NO EXEMPTION — findings,
+    # total and counts against the traced doc are IDENTICAL to the same doc
+    # bare, so a delivered row is exactly as OVERDUE as an undelivered one;
+    # (iii) a TERMINAL row's trace is not read — the stamp already closed it;
+    # (iv) a BUILDER-TRACE naming no commit is MALFORMED, naming the row, the
+    # total RISES, and the row does NOT read as delivered — a receipt without
+    # a sha is prose wearing a declaration.
+    tr_rows = [
+        ("tr-done", "2026-08-30",
+         "DISPOSITIONED 2026-08-30 (design written; execution owed)",
+         ["DUE: 2026-08-31 | owed and passed",
+          "BUILDER-TRACE: abc12ef | executed | verified against source"]),
+        ("tr-closed", "2026-01-01", "ACTED 2026-01-02 (deadbeef)",
+         ["BUILDER-TRACE: abc12ef | closed rows are never re-read"]),
+        ("tr-open", "2026-08-30", "OPEN", []),
+    ]
+    tr_bare = [(rid, rt, st,
+                [d for d in ds if not d.startswith("BUILDER-TRACE")])
+               for rid, rt, st, ds in tr_rows]
+    ta, tb = audit(_doc(tr_rows), None, TODAY), audit(_doc(tr_bare), None, TODAY)
+    # Read through a sentinel (P18's rule): DELETING the reading from
+    # `review_queue.py` must make this property FAIL rather than RAISE.
+    t_del = {d["id"]: d for d in ta.get("delivered") or []}
+    tno = audit(_doc([
+        ("tn-prose", "2026-08-30",
+         "DISPOSITIONED 2026-08-30 (design written; execution owed)",
+         ["BUILDER-TRACE: done, trust me | no sha anywhere"]),
+    ]), None, TODAY)
+    ttext = render(ta)
+    trace_ok = (
+        # (i) the receipt is visible, with its commit — and (iii) the stamped
+        # row's trace is not: the set has exactly one member
+        set(t_del) == {"tr-done"}
+        and t_del["tr-done"]["commit"] == "abc12ef"
+        and t_del["tr-done"]["status"] == "DISPOSITIONED"
+        and "DELIVERED — AWAITING STAMP" in ttext
+        and "executed at abc12ef" in ttext
+        # (ii) no exemption: nothing a violation reads moves with the trace
+        and ta["findings"] == tb["findings"]
+        and ta["total"] == tb["total"] == 1
+        and ta["counts"] == tb["counts"]
+        and {rid for c, rid, _ in ta["findings"] if c == "OVERDUE"}
+            == {"tr-done"}
+        # (iv) a commitless receipt is a false statement, not a receipt
+        and {rid for c, rid, _ in tno["findings"] if c == "MALFORMED"}
+            == {"tn-prose"}
+        and tno["total"] == 1
+        and not (tno.get("delivered") or [])
+        and any("names no executing commit" in why
+                for c, rid, why in tno["findings"] if c == "MALFORMED"))
+    if blind or not trace_ok:
+        failed.append("p23_a_receipt_is_visible_and_buys_nothing")
+
+    # P24 — ONE CLASS, TWO TEXTS (Review 2026-09-28, FOR THE BUILDER 2;
+    # shipped `c4df5a4`, ratcheted here). "The window it was waiting for has
+    # opened" is true of an ACTED blocker and was false of the nine live rows
+    # held behind the DECLINED `w1-world-edit-window` — the first DECLINED in
+    # 113 routed rows found the message lying the day it was born. Conjuncts:
+    # (i) a live hold behind an ACTED blocker fires HOLD-ON-A-RESOLVED-BLOCKER
+    # saying the window OPENED; (ii) the same hold behind a DECLINED blocker
+    # fires the SAME class saying the window was ABANDONED, and never "has
+    # opened"; (iii) the split softens nothing — two holds, two violations,
+    # one class.
+    hd = audit(_doc([
+        ("hd-acted-root", "2026-01-01", "ACTED 2026-01-02 (deadbeef)", []),
+        ("hd-declined-root", "2026-01-01", "DECLINED 2026-01-02 (refused)", []),
+        ("hd-behind-acted", "2026-08-30", "HELD 2026-08-30 waiting",
+         ["BLOCKED-BY: hd-acted-root | releases when it acts"]),
+        ("hd-behind-declined", "2026-08-30", "HELD 2026-08-30 waiting",
+         ["BLOCKED-BY: hd-declined-root | the abandoned window"]),
+    ]), None, TODAY)
+    hd_why = {rid: why for c, rid, why in hd["findings"]
+              if c == "HOLD-ON-A-RESOLVED-BLOCKER"}
+    hold_ok = (
+        set(hd_why) == {"hd-behind-acted", "hd-behind-declined"}
+        and hd["counts"].get("HOLD-ON-A-RESOLVED-BLOCKER") == 2
+        and hd["total"] == 2
+        and "has opened" in hd_why["hd-behind-acted"]
+        and "abandoned, not opened" in hd_why["hd-behind-declined"]
+        and "has opened" not in hd_why["hd-behind-declined"]
+        and "hd-behind-declined" in render(hd))
+    if blind or not hold_ok:
+        failed.append("p24_a_declined_window_is_abandoned_not_opened")
+
     # The live desk's own numbers, recorded in the ledger row so the reading
     # that motivated P15 is dated and attributable rather than quoted from an
     # audit page. `-1` is the honest value for "no git baseline in this
@@ -1188,6 +1280,11 @@ def _control(seed: int) -> dict:
     exist — the 93rd audit's "14 rows or 9 decisions?" question is not even
     expressible to it.
 
+    P23 and P24 it fails by construction: a row count parses no
+    `BUILDER-TRACE:` declaration and reads no blocker's terminal status, so it
+    can neither surface a finished-but-unstamped row nor tell an opened window
+    from an abandoned one — the 09-28 sitting's finding, executable.
+
     P18 it fails for P17's reason one column over: a row count carries no DUE:
     dates and no notion of the consumer's cadence, so it cannot say that
     fourteen promises fall on one sitting that has ever discharged six. But
@@ -1224,6 +1321,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p20_a_terminal_rows_closed_parent_is_printed",
                            "p21_a_group_count_is_gated_on_a_complete_day",
                            "p22_a_coupling_against_a_corpse_is_a_false_statement",
+                           "p23_a_receipt_is_visible_and_buys_nothing",
+                           "p24_a_declined_window_is_abandoned_not_opened",
                            } <= control_names)
     return bool(experiment_clean and control_broken)
 
