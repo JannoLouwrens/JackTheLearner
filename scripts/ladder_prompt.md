@@ -552,11 +552,84 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^15`/`2^10` (item `1^15` Review 2026-09-29, DAILY;
-`1^14`'s HEADLINE is REPEALED by `1^15` item 0 and its ITEMS 1–4 REMAIN LIVE and
-are not restated here — read both; `1^13` retained for its structural finding;
-`1^12` items retained below and still live where not discharged; prohibitions
-consolidated 2026-09-21 and UNCHANGED today).
+**LIVE PRIORITY BLOCK — `1^16`/`2^10` (item `1^16` Review 2026-09-30, DAILY;
+`1^15`'s ITEMS 0–3 REMAIN LIVE and are not restated — read both; `1^14` items 1–4
+still bind; `1^13` retained for its structural finding; `1^12` items retained
+below and still live where not discharged; prohibitions consolidated 2026-09-21
+and UNCHANGED today).
+
+## `1^16` — YOU HAVE BEEN DARK FOR ~23 SLOTS AND IT IS NOT YOUR FAULT, NOT A
+## BUG, AND NOT SOMETHING YOU MAY WORK AROUND. AND THE ONE THING WORTH THE
+## WEEK'S FREE GPU-HOURS IS SITTING BEHIND A PARK MARKER WHOSE REASON WAS
+## DISCHARGED FOUR DAYS AGO (Review 2026-09-30, DAILY — read before `run next`)
+
+**ITEM 0 — THE PACE, AND WHY IT IS THE HEADLINE TODAY INSTEAD OF YOUR BOARD.**
+Derive the streak yourself — it is in your own `PACING:` line and in
+`usage_attribution.attribution()['dark_slots']`; nothing is cached here. As of
+this sitting it is over twenty consecutive skipped slots with **zero failed
+slots**, which means the loop is healthy and the gate is holding budget back on
+purpose. **The gate is RIGHT and you are to leave it alone.** `PACE_FLOOR`,
+`PACE_CAP` and the 90% hard stop are exactly as they were and this desk has not
+touched them. Do not split a unit to fit a skipped slot, do not retry across a
+`PACING:` line, and do not treat a dark slot as a slot you owe work for.
+**What you should know, because it changes the meaning of your own line:** the
+gate is `week:all models`, that pool is SHARED with the other tenants of this
+box, and your own line reports a large fraction of this week's consumption as
+`NOT THIS PROJECT`. You are being crowded out of your week by a neighbour. That
+is routed as `builder-blackout-is-paced-by-another-projects-usage` and it is on
+the owner's desk today. **It is not yours to fix and not yours to route again.**
+
+**ITEM 1 — `T2.11` IS UN-PARKED AS OF THIS MORNING, IT IS GPU-CLASS, ITS ONLY
+DEPENDENCY PASSES, AND IT HAS NEVER ONCE RETURNED A VERDICT.** This is the most
+valuable single item on your board and it needs one edit from you before it can
+run. The metric defect it was parked for — a control that beat the claim because
+held-out accuracy reads the POLICY's response to any structured reward, not the
+objective's information content — was repaired by you in `a080386` on 09-26, and
+this desk stamped that row `ACTED` this morning. `T2.11` had been PARKED behind
+it for 32 days and the row that held it hostage is closed.
+**The park is still declared in the spec file** (the banner at the top and
+`_GATES_FROZEN = False`, whose comment says *"PARKED, not merely un-piloted"*),
+so `run()` still refuses. **Lifting it is your edit and it is NOT automatic:**
+re-read the PARKED banner's own stated release condition first, and say in the
+commit which condition is met and how. **If the banner names a condition that is
+NOT met by `a080386`, the park STAYS and the row comes back to this desk** — do
+not lift a park because a queue row went green. Read the ruling in
+`docs/REVIEW_QUEUE.md` under `t211-diayn-metric-cannot-separate-mi-from-noise`,
+which states what was executed, what was NOT, and that the `0.50` bar stands on
+a falsified derivation and is not to be recomputed downward.
+**On the GPU-hours, and the distinction matters:** `1^15` item 3 tells you free
+hours are expiring and that nothing on that page asks you to spend them. That
+still holds and this page asks for nothing either. But note what `T2.11` is —
+a registered spec, GPU-class, `depends_on` satisfied, never run, carrying a claim
+about **Jack** rather than about the rig. **A dispatch of it would not be a
+manufactured one**, which is the objection that has correctly refused the last
+three weeks of spending. Derive its cost class and dependency state yourself.
+
+**ITEM 2 — FOUR NEW RULINGS FROM THIS MORNING, AND YOU READ THE ROWS, NOT THIS
+LIST.** No date, count or status is copied here, for the same reason as `1^15`:
+`dp04-lifespan-has-no-resolution` (the graded measure is PICKED — the
+need-integral — with three guards and a pre-registered STOP; option (ii) is NOT
+ordered and the gridworld is not to be edited);
+`aggregate-hides-worst-seed` (**step 1 ONLY**, the static audit — the recorder
+refusal is step 2 and returns to this desk with step 1's count in hand; arm (a)
+is REFUSED and is not a fallback);
+`goal-187-names-seven-primitives-four-have-no-commitment` (half (i), the register
+edit — and it now carries a pre-registered expectation that **`claim_dead` must
+NOT move**; if it rises, that is a `coverage.py` matcher defect and you ROUTE it
+rather than absorbing it as the gap becoming visible);
+`dark-slot-counter-is-blinded-by-the-loops-own-notice-lines` (one three-valued
+classifier, `RAN`/`DECLINED`/`NOT-A-SLOT`; **a two-valued refactor is a
+regression of that row and will be refused at review**).
+
+**ITEM 3 — THE TWO LOOPHOLES THIS MORNING'S RULINGS CLOSED IN ADVANCE, because
+both are the cheapest thing a builder under time pressure would do.** (a) Under
+`aggregate-hides-worst-seed` step 2, a spec broken by the recorder's refusal is
+repaired by **gating the worst seed** — NEVER by renaming the metric so it stops
+matching the worst-case naming convention. That rename passes both arms and
+silently restores the defect. (b) Under `dp04`, the new claim statistic's bar is
+pre-registered AFTER its resolution pre-check reports and BEFORE any arm is
+scored — not chosen once a number is on the screen. Both are weakenings if done
+the other way, and the overseer audits every spec diff.
 
 ## `1^15` — THE DESIGN DEBT THAT WAS EMPTYING YOUR BOARD IS GONE. SIX ROWS
 ## TURNED OVER THIS MORNING AND EVERY ONE OF THEM IS NOW YOURS
