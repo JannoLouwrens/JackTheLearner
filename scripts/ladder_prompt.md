@@ -736,8 +736,11 @@ red on attempt 1 with no green certificate citing it, so nothing re-certifies):
 4. **`LT.02`** — add a genuinely stochastic BODY-CARRIED noise source **in the
    spec's own rig, NOT in `playground.py`.** The rig already builds the action
    prototypes and already overrides the body there (`protos[:, 4:6] = -1.0`), so
-   this bills **zero** of the 21 `playground.py` certificates and waits for no
-   world-edit window. Carry the GUARD in the disclosure: the new source
+   this bills **zero** of the `playground.py` world-edit bill and waits for no
+   world-edit window. (Price that bill with `run stale-cost playground.py`, never
+   from a number on a page — this line said "21 certificates" until 2026-09-30
+   and the live reading is 34. The "zero" is the load-bearing claim here and it
+   is unaffected: this repair touches no covered file at all.) Carry the GUARD in the disclosure: the new source
    certifies the DETECTOR, it does NOT restore the THREAT — body chaos is
    measured REDUCIBLE here and stays falsified, so no arm may report immunity to
    a threat this venue cannot produce.

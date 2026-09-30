@@ -7888,8 +7888,20 @@ changed this morning and both cut against me:
    exist**, where yesterday there was one.
 
 **WHAT IT COSTS, priced in the currency that perishes.** The window is the single
-mechanical bill for every world edit owed (21 `playground.py` certificates plus
-`BA.01`), which is why they are bundled. Meanwhile **seven independent
+mechanical bill for every world edit owed, which is why they are bundled.
+**PRICE CORRECTED 2026-09-30 (Review DAILY, discharging
+`world-edit-window-price-is-quoted-at-21-and-measures-35`, DUE 2026-09-29). This
+paragraph read "21 `playground.py` certificates plus `BA.01`". That figure was
+correct when written on 2026-08-31 and has grown 60% underneath this decision,
+and `BA.01` is one of the set, so the old quote understated the bill AND
+double-counted its own example.** Never quote a number here again — quote the
+tool: `run stale-cost playground.py`. Its reading at `773a52c`: **34 standing
+PASS certificates** billed, and, in the unit the payer actually spends,
+**2.88 CPU-hours over 31 of them plus 1.52 GPU-hours over 3** — the CPU half
+alone is **4 builder slots** against a 3000 s slot, so the in-slot re-buy rule
+cannot hold for this edit. That is the number the ruling below should be priced
+against. **Nothing else in this entry moved:** no option, no `default`, no
+`decide_by`, no recommendation. Meanwhile **seven independent
 instruments now say `W0` is too shallow** — LC.03's darkroom, LC.03 v2's
 one-learner-in-five, DP.05's FAIL, SH.01's `ORACLE_CANNOT`, DP.04's quantised
 lifespan, BA.03's blind twin at 98.9% of its horizon, and now this week's four
@@ -9129,10 +9141,23 @@ am not willing to make on my own authority.
 DECIDE: D38
   class:     conduct
   blocks:    no spec id directly. What it blocks is the SEQUENCING of the FULL
-             Review's first act, and behind it `w1-world-edit-window` (21
-             `playground.py` certificates plus `BA.01`, and three rows explicitly
-             `BLOCKED-BY` it: `ne01-occlusion-knife-edge`,
-             `water-apply-phantom-force`, `w2-needs-have-no-single-k`) and
+             Review's first act, and behind it `w1-world-edit-window` (priced
+             by `run stale-cost playground.py`, NOT by a cached figure — 34
+             standing PASS certificates = 2.88 CPU-h + 1.52 GPU-h = 4 builder
+             slots for the CPU half; this field read "21 `playground.py`
+             certificates plus `BA.01`" until 2026-09-30, when the Review
+             discharged
+             `world-edit-window-price-is-quoted-at-21-and-measures-35`. The
+             row count was ALSO stale: this field named THREE rows
+             `BLOCKED-BY` it and `review_queue.parse()` measures **NINE**
+             (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`,
+             `sh02-null-saturation`, `w1-cold-is-not-lethal-at-night`,
+             `w2-needs-have-no-single-k`, `dp04-lifespan-has-no-resolution`,
+             `hr5-fixture-refuted`, `ba03-vestibular-channel-…-one-kick`,
+             `t306-random-arm-breaches-…-dwell-bound`) — and since the
+             blocker was stamped `DECLINED` on 2026-09-28 all nine are
+             HOLD-ON-A-RESOLVED-BLOCKER violations. No option, `default` or
+             `decide_by` in this entry moved) and
              `T1.08` (frees 3 / blocks 45). Perishable cost named above: 30.0
              free GPU-hours expiring 2026-10-03, third consecutive week.
   default:   (i) CHANGE NOTHING — both standing orders stay exactly as written,
