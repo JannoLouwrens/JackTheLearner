@@ -45,10 +45,10 @@
     "value": 0
   },
   "fail_unowned_owned_forms": {
-    "at": "2026-09-29",
+    "at": "2026-09-30",
     "value": {
       "disposed": 1,
-      "queue-row": 30,
+      "queue-row": 31,
       "repaired_by": 1
     }
   },
@@ -66,10 +66,10 @@
       "T2.01": "11.16 h / 2 attempt(s) / 2 verdict(s)",
       "T2.05": "1.93 h / 4 attempt(s) / 1 verdict(s)",
       "T2.07": "0.29 h / 1 attempt(s) / 1 verdict(s)",
-      "T2.11": "0.55 h / 1 attempt(s) / 0 verdict(s)",
+      "T2.11": "1.07 h / 2 attempt(s) / 1 verdict(s)",
       "T2.15": "0.31 h / 1 attempt(s) / 1 verdict(s)",
       "T4.02": "0.29 h / 2 attempt(s) / 2 verdict(s)",
-      "TOTAL": "48.97 h",
+      "TOTAL": "49.49 h",
       "UB.10": "0.30 h / 1 attempt(s) / 0 verdict(s)",
       "UNATTRIBUTED": "6.32 h / 21 job(s)"
     }
@@ -93,7 +93,7 @@
   },
   "review_queue_net_arrivals": {
     "at": "2026-09-30",
-    "value": 29
+    "value": 31
   },
   "review_queue_piled_on": {
     "at": "2026-09-30",

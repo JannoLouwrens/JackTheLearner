@@ -12047,6 +12047,27 @@ do not register a GEN spec (D35 freeze aside, an id resolving to a corpse is
 worse than one resolving to nothing — 59th audit). The routing is the whole
 unit.
 
+    BUILDER-TRACE 2026-09-30 15:xx (OVERSIGHT FTB 2, the 132nd audit —
+    executed on the builder-legal arm; the row stays OPEN because the RULING
+    is this desk's, not mine). The audit ordered *"fix GOAL.md's text or
+    route the revival"* — the first arm is that instrument's own advice line
+    (`coverage` prints it verbatim) and it conflicts with THIS row's own
+    constraint list ("do not touch `GOAL.md`") and with the 09-16
+    disposition's refusal ("deleting the four GOAL.md citations would clear
+    the red in one edit... refused"), so I took the second arm: the revival
+    is ROUTED as `gen-four-revival-needs-an-affordable-lc07-successor`
+    (2026-09-30, DUE 2026-10-11, WAITS-ON none), a LIVE dated carrier that
+    declares ownership of the four citations and puts the three doors —
+    owner D24 reversal (i)/(ii), or a Review-designed affordable LC.07
+    successor (iii) — on one page. Facts re-verified at HEAD before routing:
+    `coverage` still prints `4 NEW unrunnable citation(s) — GEN.02, GEN.03,
+    GEN.06, GEN.09`; D24's full RESOLVED entry still greps 0 for "GEN"; its
+    reversal clause is standing. GOAL.md untouched, baseline untouched, no
+    GEN spec registered, the ACTED parent row untouched. The ownership
+    question this row asks now has a candidate answer on the record for
+    tomorrow's sitting: the four are inherited by the new live row unless
+    this desk rules otherwise.
+
 ROUTED: waits-on-has-no-producer-outside-a-closing-row | 2026-09-25 | 115th audit Finding 4 (builder slot 01:1x) | OPEN
     DUE: 2026-10-01 | Dated onto `review-queue`'s mechanical next_free_due per
         the 115th audit's routing order. What is owed is one sentence in the
@@ -16463,3 +16484,58 @@ ROUTED: gpu-receipt-head-is-push-time-not-kernel-time | 2026-09-30 | experiments
     dispatch plumbing (`experiments/gpu.py` / `scripts/dispatch.sh`); the
     chosen repair's own bill is priced when it is implemented (`run
     stale-cost` on the touched file at that point, not now).
+
+## ROUTED: OPEN — `gen-four-revival-needs-an-affordable-lc07-successor`: the
+## four GEN citations get a LIVE owner with a clock, replacing the terminal
+## parent they were lost to (builder, 2026-09-30, OVERSIGHT FTB 2 — the
+## builder-legal arm of "fix GOAL.md's text or route the revival")
+
+ROUTED: gen-four-revival-needs-an-affordable-lc07-successor | 2026-09-30 | coverage at HEAD: `4 NEW unrunnable citation(s) — GEN.02, GEN.03, GEN.06, GEN.09`, all welded<-LC.07; D24 closed 2026-09-12 with zero GEN mentions (grep of its whole DECISIONS_RESOLVED.md section: 0 hits) | OPEN
+    DUE: 2026-10-11 | `next_free_due`'s literal answer (every day 10-01..10-10
+        already carries >= 6 live rows or is otherwise full per the tool's own
+        reading). Late is acceptable: the four citations have been red since
+        09-02 and nothing downstream moves until a door below is opened — what
+        this row buys TODAY is that they are owned by a row that ages, not by
+        a terminal entry that is never re-read (100th audit B2).
+    WAITS-ON: none | the only thing that looks like a blocker — `D24` — is a
+        CLOSED decision whose own reversal clause says the owner "may rule (i)
+        or (ii) at any later date at no cost"; a closed decision with a
+        standing reversal offer is an input to this row's ruling, not a
+        prerequisite of it. No open row's answer changes what this row owns.
+    OWNERSHIP DECLARED, which is the thing the parent defect was about: this
+    row inherits the four GOAL.md citations `GEN.02`, `GEN.03`, `GEN.06`,
+    `GEN.09` (jungle expansion 2, OTHER MINDS, GOAL.md:193-195). Their history
+    in one breath: cited in GOAL.md since 08-25, registered on Review order
+    09-01 (`7f1e875`), root `LC.07` fired pilot branch B eleven hours later
+    (VENUE-UNAFFORDABLE on arithmetic: ~526 wall-hours vs a 30 h/week free
+    allocation; CPU venue later priced 535.5 core-hours, venue ratio 1.0, on
+    `lc07-checkpoint-branch`), re-parented 09-16 to "whoever closes D24" —
+    but D24 had closed FOUR DAYS EARLIER without inheriting them
+    (`gen-four-reparented-to-a-decision-that-had-already-closed`). This row
+    is the live carrier that re-parent should have produced.
+    Question, and it is a fork with three doors, none of them the builder's:
+    the revival of the four runs through the learning-core scale-transfer
+    arena, and there are exactly three ways it can move — (i) the owner
+    exercises `D24`'s reversal clause arm (i), BUY THE VENUE (~17.5 weeks of
+    the whole free GPU allocation, priced in the D24 entry); (ii) the owner
+    exercises arm (ii), SHRINK THE CLAIM — a threshold move by definition,
+    legal only from the owner's desk and refused to fire by silence; (iii)
+    the Review designs an `LC.07` SUCCESSOR ARENA that measures scale
+    transfer at an affordable venue WITHOUT re-reading the "~10x" downward —
+    the same successor-not-surgery shape `reparenting-the-welded-fifteen`
+    already ruled for the LC.03-welded three. The ask on this desk: take door
+    (iii) as a design item, or DECLINE it to the owner's D24 reversal on the
+    record. Either answer is a legal disposition; what is not legal is the
+    four staying parented to nothing.
+    What is NOT asked, carried verbatim from the parent rows so the next
+    reader does not "fix" it: do not touch `GOAL.md` (the citations stand
+    truthfully red; deleting them is the champions.py prohibition verbatim,
+    refused 09-16); do not touch `GOAL_UNRUNNABLE_BASELINE` in either
+    direction (shrink-only by construction); do not register a fifth GEN spec
+    or re-register these four (an id resolving to a corpse is worse than one
+    resolving to nothing — 59th audit); do not re-open the ACTED row
+    `goal-cites-four-specs-that-resolve-to-corpses` or the closed `D24`.
+    STALENESS BILL: none — this row routes ownership and a design fork; no
+    covered file, no spec, no threshold, no `depends_on` is edited. Whatever
+    door eventually opens prices its own bill (a successor arena design
+    prices itself at registration; a D24 reversal is the owner's).
