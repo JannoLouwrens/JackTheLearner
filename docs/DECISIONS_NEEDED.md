@@ -9175,3 +9175,96 @@ DECIDE: D38
              SIXTH time, and the collision stays undocumented in both entries so
              the next organ to read either one still cannot see it.
   decide_by: 2026-10-04
+
+---
+
+## D30 — EVIDENCE ADDENDUM, 2026-09-30 06:4x UTC (overseer, 131st audit). NOT a re-opening, NOT a new decision, NOT a default fired. The blackout `D30` described has recurred, worse, and the armed default that resolved it has now been tested by events and did not report.
+
+`D30` was RESOLVED BY ARMED DEFAULT on 2026-09-19 with option **(v) REPORT THE
+STREAK, GATE NOTHING, RELAX NOTHING**. That default's own text priced its firing
+honestly — *"it fixes nothing and could not save W37's hours"* — and its whole
+mechanism is one paragraph in `scripts/review_prompt.md` Part 2.5 §4, so that a
+blackout is *"visible on day one with its perishable cost priced in the same
+sentence."*
+
+**Day one has now happened and it was visible to nobody.** This addendum
+attaches the measurement. The entry stays RESOLVED; the desk's recommended
+option **(i) — pace against this project's OWN attributed spend rather than the
+shared total — remains the owner's to rule at any time, at no cost, and is now
+the second blackout it would have prevented.**
+
+### The measurement, 2026-09-30 06:4x UTC, taken live and quoted from no page
+
+```
+last builder rc=0      2026-09-29T07:18:19   (e39664c)
+consecutive dark slots 23                    (scripts/usage_attribution.py --line)
+week:all models        78%                   (scripts/claude_usage.py --pct)
+attribution            builder 19 (24%)  desks 0 (0%)  both 1 (1%)
+                       NOT THIS PROJECT 58 (74%)
+2026-W39 in gpu_budget.json "weeks"          ABSENT — 0.00 of 30.0 free Kaggle GPU-h
+```
+
+Side by side with `D30`'s own opening measurement of 2026-09-15:
+
+| | 2026-09-15 (`D30`) | 2026-09-30 (this addendum) |
+|---|---|---|
+| consecutive dark slots | 18 | **23** |
+| `week:all models` | 37 % | **78 %** |
+| NOT THIS PROJECT | 28 of 37 (**75 %**) | 58 of 78 (**74 %**) |
+| free GPU-h expiring unspent | 26.51 | **30.00** |
+| weeks lost in a row | 2nd | **4th** (`W37` 5.25 h, `W38` 0.92 h, `W39` 0.00 h) |
+
+**The meter rose 36 % → 78 % — forty-two points — during twenty-two hours in
+which this project executed nothing at all.**
+
+### When the loop returns, computed rather than estimated
+
+`pace_gate` (`scripts/lib_usage.sh`) is a pure function of the clock:
+`allow = PACE_FLOOR + ((PACE_CAP - PACE_FLOOR) * elapsed + 99) / 100` with
+`PACE_FLOOR 25`, `PACE_CAP 90`. At `pct = 78` the builder runs again when
+`allow >= 79`, i.e. `elapsed >= 82 %` of the week. The week reset Monday
+2026-09-28 05:00 UTC, so:
+
+> **first legal builder slot: 2026-10-03 ~23:07 UTC (Saturday night)** — and
+> only if `week:all models` does not rise one further point. The meter is **12
+> points from the 90 % hard stop**, which would also stop the overseer and the
+> Review.
+
+`2026-W39`'s 30.0 free Kaggle GPU-hours expire Saturday 2026-10-03. `T1.08`'s
+pipeline-repair design — the one unit that would refill the builder's board —
+is due 2026-10-02, a date on which no builder slot will run.
+
+### Why the fired default did not report, stated as a mechanism and not as blame
+
+Option (v)'s only carrier is a paragraph in ONE organ's prompt. That organ's
+2026-09-29 sitting **died `rc=124` at 06:57 before rewriting
+`docs/PROGRESS.md`** (`/data/jack-logs/review.log`; disclosed by the builder at
+`6422eea`). So throughout the blackout the project's current-state page — the
+page this entry's own FOR THE OWNER section is published on — read:
+
+> *"Builder health: 0 dark slots. Fourteen consecutive `rc=0` slots; the
+> blackout that peaked at 26 stayed closed. The builder is not the constraint."*
+
+Three scheduled overseer sittings (`12:37`, `18:37`, `00:37`) each printed the
+streak on their own pacing skip line — 5, then 11, then 17 — and then declined
+to run, because the overseer is paced by the same shared meter and keeps one
+exempt sitting a day (`D15` clause c). And **`dark_slots` reaches no instrument
+at all**: it appears nowhere in `experiments/` — 0 hits in `*.py`, 0 in
+`ratchet_readings.json`, no ratchet key, no floor, no exit code. Its only
+writers are `scripts/usage_attribution.py` and `scripts/overseer.sh`, i.e. the
+organs being silenced.
+
+A repair for that last hole is ordered to the builder in `docs/OVERSIGHT.md`
+FOR THE BUILDER 1 — a floored, shrink-only ratchet reading in the same idiom as
+yesterday's `UNAUDITABLE_PAIRS_BASELINE`, **reporting only**, touching
+`PACE_FLOOR`, `PACE_CAP`, the pace line and the 90 % stop not at all. It does
+not need this entry and does not pre-empt it: it makes the streak *visible to a
+checker*; only the owner can make the builder *run*.
+
+### What this addendum deliberately does not do
+
+It does not reopen `D30`, does not propose a new option, does not move a
+`decide_by`, and fires nothing. Option (i) was correctly NOT taken as a default
+on 2026-09-19 — a default may not loosen a gate (`D26`'s reasoning) — which is
+exactly why it can only ever reach the owner by hand, and why the same
+measurement is now on this page twice.

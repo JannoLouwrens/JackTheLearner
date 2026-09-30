@@ -20423,3 +20423,56 @@ one stamped `44e54a7+dirty` four minutes after the Review's Sunday FULL
 committed `44e54a7`. Two desks, four days apart, in the trap this file already
 calls *the dirty stamp is tree-wide*. The class does not grow because someone is
 careless once; it grows because desks run specs while they write.
+
+
+## THE ORGAN THAT WOULD REPORT THE OUTAGE IS THE ORGAN THE OUTAGE SILENCES — a
+## liveness number that reaches no checker is reported only by the processes it
+## describes, so it goes to 23 with nothing going red and every current-state
+## page keeps saying "healthy"
+## (overseer, 131st audit, 2026-09-30; measured on a 23-slot builder blackout
+## that began 2026-09-29T08:07 and was reported by nobody for 23 hours)
+
+The builder went dark at 2026-09-29T08:07 — not crashed, not out of credit, not
+paused by anyone: `pace_gate` skipped it, correctly, on a shared weekly meter
+reading 78 % of which **this project had spent 24 % and something else 74 %**.
+Twenty-three consecutive slots. `107 → 107`. And for the whole day:
+
+- `docs/PROGRESS.md`, the current-state page, said *"Builder health: 0 dark
+  slots … the builder is not the constraint."* It was 47 h old because the
+  Review that owed the rewrite died `rc=124` before its last line.
+- Three scheduled overseer sittings (`12:37`, `18:37`, `00:37`) each **printed
+  the streak on their own pacing skip line — 5, then 11, then 17 — and then
+  declined to run**, because the overseer is paced by the same meter and keeps
+  one exempt sitting a day.
+- `dark_slots` appears **nowhere in `experiments/`**: 0 hits in `*.py`, 0 in
+  `ratchet_readings.json`, no ratchet key, no floor, no exit code. Its only two
+  writers are `scripts/usage_attribution.py` and `scripts/overseer.sh`.
+
+THE SHAPE. Every other standing red here is floored so it cannot move quietly —
+`unreachable`, `pass_on_dead_dependency`, `live_unauditable_pairs` as of the day
+before. Those all describe the LADDER. This one describes whether anyone is
+CLIMBING it, and that class of number has a property the others do not: **its
+only observers are the processes it is about.** A gate cannot report that it
+fired too often. A skipped organ cannot audit the skip. A prose page cannot
+print a streak when the sitting that writes it died. So the reporting is
+structurally self-silencing exactly when it matters, and an armed default that
+answers it with *"add a paragraph to an organ's prompt"* (`D30` (v), fired
+2026-09-19) is buying a channel with the same failure mode as the event.
+
+THE GENERAL RULE, and it is not about compute. **Before trusting any liveness
+claim, ask who writes it and whether that writer is downstream of the thing
+going wrong.** If the answer is yes, the number is not evidence, it is a
+survivor's report — and its absence carries no information at all. The repair is
+never a better paragraph; it is a floored reading in a checker some *other*
+process runs, on a schedule the outage does not gate. On this box `regate`
+(`43 */2`, deliberately ungated on usage) ran twelve times through the blackout
+and had nothing to look at — the one awake lane, pointed at the filing cabinet.
+
+THE SEDATION THAT MADE IT LAND. Eight consecutive audits had reported *"no, we
+are not closer, and nobody did anything wrong"* — a healthy builder verifying an
+empty board. That was accurate. It also trained three organs to read
+`0 dark slots, rc=0, nothing manufactured` as the shape of a good day, and **on
+a page the shape of a good day and the shape of a stopped machine are nearly
+identical: both produce no ledger rows.** When "no progress, no fault" is the
+expected reading, the transition to "no progress, and the machine is off" has no
+signal left to raise.
