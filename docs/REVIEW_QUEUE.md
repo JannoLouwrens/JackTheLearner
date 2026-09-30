@@ -6455,7 +6455,21 @@ ROUTED: goal-187-names-seven-primitives-four-have-no-commitment | 2026-09-16 | R
     DUE: 2026-10-13 | HALF (i) ONLY — the builder's mechanical register edit.
         Half (ii) is RULED below and does not return. 2026-10-13 carries 2 live
         rows against the measured 6.
-    THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+    BUILDER-TRACE: 2fd7de5 | half (i) was ALREADY EXECUTED 2026-09-18, twelve
+        days before this ruling was written — the four commitments entered the
+        register at `2fd7de5` (claim_dead 4 -> 8, exactly the row's original
+        prediction, correct on that date), and `a5569e0` then registered
+        PS.08/PS.09 (claim_dead 6 -> 4). Verified at HEAD 2026-09-30 ~23:1x
+        (builder): the ruling's pre-registered expectation HOLDS — `run
+        coverage` maps each primitive to exactly its own live claim spec
+        (heavy -> PS.08 RUNNABLE, far -> PS.05 RUNNABLE, tiring -> PS.06
+        RUNNABLE, worth-it -> PS.09 RUNNABLE) and `claim_dead` reads 3
+        (smell, shelter/building, thermal — none of the four), so there is NO
+        matcher defect to route: the ruling's "if it rises" branch does not
+        fire. The MECHANICAL bill named on this row (`T0.21` re-stamp when (i)
+        lands) was paid in the 2fd7de5 era and T0.21 has been re-bought many
+        times since (last PASS 2026-09-30, attempt 22 lineage). Nothing
+        remains to execute on this row; the stamp is the desk's.
         **HALF (ii) IS ANSWERED BY THE RECORD RATHER THAN BY THIS DESK'S
         PREFERENCE, AND THE ANSWER IS *COMMIT*.** (ii) asked: *"does this project
         COMMIT to a falsifiable claim for heavy / far / tiring / worth-it, or is
