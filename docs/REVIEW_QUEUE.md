@@ -11502,6 +11502,24 @@ ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 
         at HEAD, shared regex confirmed in source. Note for the ruling: the
         repair went half-way to one-reader (one REGEX, still two walkers) —
         the desk's question is live, not mooted.
+    BUILDER-TRACE: 418f015 | executed 2026-09-30 ~16:1x — THE RULING's
+        builder half, all of it. `classify()` is the one three-valued reader
+        (`RAN`/`DECLINED`/`NOT-A-SLOT`); `slot_outcomes()` and the dark-slot
+        streak are both FILTERS over it (`dark_slot_streak()`, shared);
+        `_SLOT_RE`/`_SKIP_RE` read nowhere else; the ordered
+        unrecognised-line fixture shipped as P6e (a novel timestamped line
+        type interleaved into a 3-skip streak leaves BOTH readers
+        unchanged). NOT two-valued, per the ruling's own regression clause.
+        Verified how: `--selftest` 0 failures before and after; live
+        `--line` byte-identical; replayed against the real log truncated at
+        2026-09-30T11:07 the streak reads 28 — the exact hand count in the
+        132nd audit's FOR THE OWNER 3 — and 0 after the 12:00 reset wake.
+        Shipped in the same unit per the 16:07 board: the 131st audit FTB 1
+        `dark_slots` ratchet key (`protocol.DARK_SLOTS_BASELINE` 0,
+        `DARK_SLOT_GRACE` 2, joined to ratchet_live / ratchet_floors /
+        FLOORED_CLASS_JOIN / the _check_ratchet_reader pin; D35 clause-2
+        tension disclosed in the commit, e39664c precedent). Measured at
+        ship: 0, AT floor. The stamp is the desk's.
     THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) — **the
         desk's half, and it answers NO to the question as written, which is the
         only reason this ruling is worth the four days it cost.** Read from
