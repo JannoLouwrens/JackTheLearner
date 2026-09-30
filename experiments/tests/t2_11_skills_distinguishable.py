@@ -1,12 +1,15 @@
 """T2.11 — skills are distinguishable, measured by someone who did not train them.
 
-*** PARKED 2026-08-29. DO NOT DISPATCH, DO NOT RE-PILOT, DO NOT WRITE A THIRD
-*** RIG. Two pre-registered mechanism repairs against one outcome; the
-*** pre-registered both-fail branch fired. The label-permuted control passed
-*** BOTH pilots — on v2's seed 90 it beat the claim arm, with every rig gate
-*** green. `_GATES_FROZEN` stays False and `run()` refuses. The finding, the
-*** mechanism and the routed redesign question are in PILOT RECORD v2 below;
-*** read it before touching anything here.
+*** PARK RELEASED 2026-09-30 (builder, on the Review's ACTED stamp `773a52c`
+*** and steering `1^16` item 1). The park (2026-08-29 → 2026-09-30) held
+*** because the metric could not separate MI from noise and a dispatch would
+*** have fired `kills: SkillDiscovery` off that defect; the release condition
+*** was a NEW MEASUREMENT, not a new rig, and `a080386` delivered it:
+*** `mi_beats_field` (held-out Î margin, binding at the worst seed), its
+*** ordered falsifier run and not fired (+0.6268 vs the 0.50 STOP), branches
+*** proven by t211_mi_battery.py 7/7. Bars frozen BYTE-UNCHANGED — no bar
+*** moved in either direction at release. Full history: PILOT RECORDS v1–v3
+*** and THE PARK RELEASE below; the pilots (seeds 7/90) stay spent.
 
 `UnifiedBrain.SkillDiscovery` (DIAYN, arXiv:1802.06070) has been in this
 repository since before the ladder existed and has never received a gradient in
@@ -440,6 +443,53 @@ deleting the conjunct makes the battery misfire loudly at exactly that
 sole-cause case. The generalised lesson from the derivation correction is in
 docs/LESSONS.md ("A BAR DERIVED FROM A NULL'S TRAIN-SIDE READING IS DERIVED
 FROM MEMORISATION").
+
+
+THE PARK RELEASE (builder, 2026-09-30, first slot after the weekly reset).
+The v3 record above says STILL PARKED, and it was right to: the 09-26 METRIC
+ruling's own item (iii) ordered `_GATES_FROZEN` left False because only the
+Review may close its row. That closure happened 2026-09-30 06:40 (`773a52c`):
+the row `t211-diayn-metric-cannot-separate-mi-from-noise` is stamped ACTED,
+the stamp states "T2.11 is UN-PARKED and runnable at HEAD", and steering
+`1^16` item 1 handed this file's edit to the builder with one instruction —
+lift the park only if the banner's own release condition is met by `a080386`.
+
+THE CONDITION, AND HOW IT IS MET. The park's operative sentence was the
+`_GATES_FROZEN` comment: flipping it "without a NEW MEASUREMENT — not a new
+rig — would dispatch a `kills: SkillDiscovery` off a run whose own
+label-permuted twin outscored it." `a080386` is that new measurement:
+`mi_beats_field` reads the OBJECTIVE's held-out information content — the
+channel PILOT RECORD v2 proved the accuracy metric cannot see — on the
+byte-identical rig (arms, world, learner, budget, discriminator, embedding,
+head init all unmoved, so the no-third-rig branch is respected). The v2
+vacuity (a chance-level discriminator's random reward field driving policy
+separation) can no longer produce a false verdict IN EITHER DIRECTION: a
+FAIL now requires the objective to have failed on its own channel too
+(`mi_margin` binding), and a PASS still requires all four original conjuncts,
+so nothing got easier — five binding claim conjuncts where there were four.
+
+GATES FROZEN AT RELEASE, no bar moved: ABOVE_CHANCE_MIN 0.15, MARGIN_MIN
+0.15, PER_CLASS_MIN 0.20, SHUFFLE_FIT_FLOOR 0.60, SHUFFLE_BAND 0.10,
+FLOOR_COVERAGE 0.05, ORACLE_MIN 0.60, MI_MARGIN_MIN 0.50 — byte-identical to
+the pre-registration plus the ruling's conjunct. The pre-registration allowed
+the pilot to move the bars once, in the open, before the first registered
+seed; that move is DECLINED — the pilots' readings (v2: seed 7
+shuffle_clf_fit 0.5625 under the 0.60 rig floor) were left where they were,
+so a registered seed that lands there reads VOID honestly rather than
+passing a floor lowered to accommodate it. `_SEC_PER_SEED` is re-measured to
+the redesigned rig in the same commit (531.1 s, the worst of four full-scale
+pilot walls: v2 527.6/531.1, v3 525.6/527.5), per T2.19's calibrate-never-
+guess rule. The registered seeds 0/1/2 remain untouched by every pilot.
+
+WHAT A VERDICT NOW MEANS, restated so the dispatch is honest. PASS: skills
+are distinguishable by an independent classifier AND the objective carries
+>= 0.50 nats of held-out information over its permuted twin, at the worst
+seed. FAIL: the shipped objective does not produce distinguishable behaviour
+in this world under a skill-conditioned policy — with the rig bracketed by
+`learner_alive` and `floor_is_uniform`, and with the MI channel unable to
+rescue an accuracy red (battery-proven) — and `kills: SkillDiscovery` fires
+on that measurement, scoped as WHAT THIS SPEC DOES AND DOES NOT TEST above.
+VOID: the apparatus did not ask the question. All three are results.
 """
 from __future__ import annotations
 
@@ -461,34 +511,22 @@ from .pg_4_noisy_tv import (
 IMPL_DEPS = ["playground.py", "experiments/tests/pg_4_noisy_tv.py",
              "UnifiedBrain.py"]
 
-_GATES_FROZEN = False           # PARKED, not merely un-piloted. Two pilots ran
-                                # (v1 tabular, v2 shared-policy); the control
-                                # passed both. Flipping this without a NEW
-                                # MEASUREMENT — not a new rig — would dispatch a
-                                # `kills: SkillDiscovery` off a run whose own
-                                # label-permuted twin outscored it. See the
-                                # PARKED banner and PILOT RECORD v2.
+_GATES_FROZEN = True            # FROZEN 2026-09-30 at the park release. The
+                                # NEW MEASUREMENT the old comment demanded
+                                # exists: `mi_beats_field` (a080386), binding
+                                # at the worst seed, falsifier run and not
+                                # fired, battery-proven. Every bar below is
+                                # frozen byte-unchanged — the pilot's one
+                                # allowed move was declined. See THE PARK
+                                # RELEASE in the docstring; ACTED stamp
+                                # 773a52c is the desk's half of this flip.
 
-# The banner above said all of this in PROSE and no instrument could read it:
-# on 2026-08-30 `queue_depth` still advertised T2.11 as `gpu<2h`'s cheapest
-# repair — "run the pilot" — against a file whose first nine lines read DO NOT
-# RE-PILOT. Declared by the builder that day, transcribing PILOT RECORD v2; no
-# new judgement. NOT a registry park: this spec still carries the `kills:
-# SkillDiscovery` claim and still counts as coverage. What it says is that the
-# next unit is a redesign someone must decide on, not a pilot anyone can run.
-_PILOT_BLOCKED = (
-    "PARKED 2026-08-29 by its own pre-registered both-fail branch. Two pilots, "
-    "two pre-registered mechanism repairs against one outcome, and THE CONTROL "
-    "PASSED BOTH: v1 (seeds 7/90, full scale) diayn 0.9688/0.9844 vs shuffled "
-    "0.9766/0.9766 — margin -0.0078/+0.0078 against chance 0.125 — and on v2's "
-    "seed 90 the label-permuted twin BEAT the claim arm with every rig gate "
-    "green. A third rig would be the third draw at one outcome. Flipping "
-    "_GATES_FROZEN off either pilot would dispatch a `kills: SkillDiscovery` "
-    "verdict from a run its own permuted control outscored — the exact outcome "
-    "that flag exists to prevent. The repair is a redesign of what "
-    "distinguishability MEANS here, routed to the Review; the pilot seeds "
-    "(7, 90) are spent either way."
-)
+# The block marker that lived here 2026-08-30 → 2026-09-30 (its full text is
+# in git history and its substance in PILOT RECORD v2) is CLEARED with the
+# park release: the redesign it said "someone must decide on" was decided
+# (t211 METRIC ruling, 09-26), implemented (a080386) and stamped ACTED
+# (773a52c). `None` is the declared not-blocked state coverage.py reads.
+_PILOT_BLOCKED = None
 
 SEEDS = [0, 1, 2]               # registered; the registry declares 3 seeds
 PILOT_SEEDS = (7, 90)           # disjoint from the registered set, and spent
@@ -980,12 +1018,10 @@ _CACHE: dict = {}
 def _submit(seeds: list) -> dict:
     body = JOB.replace("__SEEDS__", repr(list(seeds)))
     job = build_job(body)
-    # PLACEHOLDER until the pilot measures it. `est_hours` feeds the GPU budget
-    # ledger and the watcher timeout, so it is deliberately left as a number
-    # this file cannot honour silently: `_GATES_FROZEN` is False and `run()`
-    # refuses, so no submission can be made against a guessed cost. The pilot
-    # writes the measured seconds-per-seed here in the same commit that flips
-    # the freeze (T2.19's rule: calibrate, never guess).
+    # `est_hours` feeds the GPU budget ledger and the watcher timeout.
+    # `_SEC_PER_SEED` is MEASURED on the redesigned rig (see its comment) and
+    # was stamped in the same commit that flipped the freeze, per T2.19's
+    # rule: calibrate, never guess. 3 seeds ≈ 0.54 h + overhead.
     est_hours = round(0.10 + _SEC_PER_SEED / 3600.0 * len(seeds), 3)
     timeout_s = int(est_hours * 3600 * 1.5) + 900
     res = submit(job, prefer="kaggle", est_hours=est_hours,
@@ -997,18 +1033,17 @@ def _submit(seeds: list) -> dict:
     return out
 
 
-_SEC_PER_SEED = 355.0           # MEASURED, 2026-08-29 pilot: 355.1 s (seed 7)
-                                # and 355.2 s (seed 90), full registered scale,
-                                # two concurrent on this box's 4 shared ARM
-                                # cores — so it errs long for a solo x86 run,
-                                # which is the direction a number feeding a
-                                # watcher timeout must err in. It is NOT the
-                                # cost of the redesigned rig (see PILOT
-                                # RECORD): a shared conditioned policy replaces
-                                # 8 tabular tables with a network forward per
-                                # decision, and must be re-measured before any
-                                # submission. `_GATES_FROZEN` is False, so no
-                                # submission can be made against this number.
+_SEC_PER_SEED = 531.1           # MEASURED on the REDESIGNED rig at full
+                                # registered scale — the worst of four pilot
+                                # walls (v2 2026-08-29: 527.6/531.1 s; v3
+                                # 2026-09-26: 525.6/527.5 s), each two
+                                # concurrent on this box's 4 shared ARM cores,
+                                # so it errs long for a solo x86/GPU run —
+                                # the direction a number feeding a watcher
+                                # timeout must err in. Re-stamped in the same
+                                # commit that flips `_GATES_FROZEN`, per the
+                                # rule written below when it was 355.0
+                                # (tabular v1's cost, superseded).
 
 
 # ── the reading ──────────────────────────────────────────────────────────
