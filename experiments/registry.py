@@ -671,7 +671,23 @@ LADDER: list[Spec] = [
                  "rather than DIAYN. (Declared 2026-08-29 with the "
                  "implementation; the spec had no control field and run_spec "
                  "would have raised UndeclaredControl.)",
-         kills="SkillDiscovery."),
+         kills="SkillDiscovery.",
+         kill_scope="FIRED 2026-09-30 (attempt 2 FAIL). Recorded scope, "
+                    "pre-registered in t2_11_skills_distinguishable.py at "
+                    "5eba43e before the row existed: the FAIL retires the "
+                    "shipped DIAYN objective as a producer of independently-"
+                    "classifiable behaviour IN THE PG.4 ARENA — NOT as a "
+                    "carrier of information about z (mi_margin green 0.9377 "
+                    "= 1.9x its bar on every seed of both attempts). "
+                    "Parameters (133rd audit FTB 1b, the first firing of "
+                    "GOAL.md's earn-or-be-deleted clause): UnifiedBrain "
+                    "still constructs SkillDiscovery and the component is "
+                    "RETAINED, not deleted — deletion does not execute on a "
+                    "one-seed FAIL; its information claim's only live path "
+                    "is the Review-designed successor spec in which the MI "
+                    "channel decides (row t211-accuracy-channel-is-seed-"
+                    "fragile-not-globally-broken), and the delete-or-keep "
+                    "decision belongs to that successor's verdict."),
 
     Spec("T2.13", 2, "Train to convergence, not to a step count",
          hypothesis="Training can be extended in increments until improvement "

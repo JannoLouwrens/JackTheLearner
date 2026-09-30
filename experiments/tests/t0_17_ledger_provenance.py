@@ -222,6 +222,13 @@ _CLAIM_INVARIANTS = {
     # a claim about Jack: declaring a repair edge must be provably free, or the
     # next declaration silently bills a re-run.
     "repaired_by": ["Z.99"],
+    # `kill_scope` (133rd audit FTB 1a, added 2026-09-30): reporting-only
+    # quotation of a scope recorded BEFORE the verdict; the registered `kills`
+    # stays the claim field and stays hashed. If this line ever moves the
+    # hash, the field has become a way to narrow a fired `kills` after the
+    # fact — which is the demotion-by-prose defect the field's own docstring
+    # forbids, and this spec should go red on it.
+    "kill_scope": "narrower words appended after the verdict",
 }
 
 

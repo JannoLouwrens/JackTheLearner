@@ -3794,6 +3794,8 @@ def cmd_next(ledger: Ledger) -> int:
         print(f"        falsified by: {s.falsified_by}")
         if s.kills:
             print(f"        kills:       {s.kills}")
+            if s.kill_scope:
+                print(f"        kill scope (recorded): {s.kill_scope}")
         print()
     return 0
 
@@ -5630,6 +5632,8 @@ def cmd_render(ledger: Ledger) -> int:
         out.append(f"      - _dies if:_ {s_.falsified_by}")
         if s_.kills:
             out.append(f"      - _then delete:_ {s_.kills}")
+            if s_.kill_scope:
+                out.append(f"      - _kill scope (recorded):_ {s_.kill_scope}")
     Path("CHECKLIST.md").write_text("\n".join(out) + "\n")
     print(f"wrote CHECKLIST.md — {done}/{total} demonstrated")
     # THE PRE-COMMIT BILL (2026-09-22). `render` is the last command the

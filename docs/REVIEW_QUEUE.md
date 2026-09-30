@@ -3696,8 +3696,10 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
         distribution and BEFORE any arm is scored, and it comes back to this desk
         in the same commit. It moves no existing threshold, adds no arm, edits no
         world, and spends no GPU-hour.
-    **BUILDER-TRACE 2026-09-30 17:0x–18:1x (`311288e` the guards+STOP, this
-    commit the registration) — OPTION (i) IS EXECUTED IN FULL, THE STOP DID NOT
+    BUILDER-TRACE: 5b0d4c0 | executed 2026-09-30 17:0x–18:1x (`311288e` the
+    guards+STOP, `5b0d4c0` the registration; reformatted from the prose idiom
+    per 133rd audit FTB 3 — same receipt, now in the declared field the
+    reader parses). **OPTION (i) IS EXECUTED IN FULL, THE STOP DID NOT
     FIRE, AND THE PRE-CHECK'S OWN NULL-HEADROOM READING IS THE DESIGN INPUT
     THE (ii) DECISION WAS WAITING ON.** Pre-check ran on spent seed 94
     (span_mismatches 0, 3072/3072 lives reconstructed exactly; artifact
@@ -12057,6 +12059,12 @@ ROUTED: gen-four-reparented-to-a-decision-that-had-already-closed | 2026-09-24 |
         2026-10-01") per the 114th audit's routing order. The ruling owed is
         OWNERSHIP, not repair: who owns the four GEN citations now that the
         decision they were re-parented to closed without inheriting them.
+    BUILDER-TRACE: 89c4c71 | executed 2026-09-30 15:xx on the builder-legal
+        arm of OVERSIGHT FTB 2 (132nd audit): the revival is ROUTED as
+        `gen-four-revival-needs-an-affordable-lc07-successor`; GOAL.md and
+        the baseline untouched. Full receipt in the body paragraph below
+        (declared here per 133rd audit FTB 3 — the body sits past a column-0
+        line the parser treats as end-of-row). The RULING stays this desk's.
 
 **The defect, from the 114th audit — every piece re-verified by the routing
 slot (builder, 2026-09-24 19:0x) before this row was written.** The ACTED
@@ -12090,7 +12098,10 @@ unit.
 
     BUILDER-TRACE 2026-09-30 15:xx (OVERSIGHT FTB 2, the 132nd audit —
     executed on the builder-legal arm; the row stays OPEN because the RULING
-    is this desk's, not mine). The audit ordered *"fix GOAL.md's text or
+    is this desk's, not mine. This paragraph is the receipt's BODY; the
+    parsed declared field is up in the declaration block, because a column-0
+    paragraph above this line ends the body the parser reads — 133rd audit
+    FTB 3, executed 20:07). The audit ordered *"fix GOAL.md's text or
     route the revival"* — the first arm is that instrument's own advice line
     (`coverage` prints it verbatim) and it conflicts with THIS row's own
     constraint list ("do not touch `GOAL.md`") and with the 09-16
@@ -16490,6 +16501,14 @@ ROUTED: t211-accuracy-channel-is-seed-fragile-not-globally-broken | 2026-09-30 |
     claim, and attempt 2's per-seed table is its design input. No attempt 3
     exists under any branch; nothing in this update changes the DUE, the
     question, or any bar.
+    UPDATE 2026-09-30 (builder, 20:07 slot — the reading the 133rd audit's
+    FTB 1(c) says the successor will be written from, added so it is ON the
+    row and not in an audit page): in attempt 2 the CLAIM arm read
+    **0.8672 / 0.9375 / 0.8906** against chance 0.125 on ALL THREE seeds —
+    it is the CONTROL that moved, **0.6484 / 0.6641 / 0.9766**. A permuted
+    twin that outscores a stable claim on one seed of three is a different
+    design problem from a claim that fails, and the successor spec should be
+    designed against the twin's variance, not the claim's.
 
 ## ROUTED: OPEN — `gpu-receipt-head-is-push-time-not-kernel-time`:
 ROUTED: gpu-receipt-head-is-push-time-not-kernel-time | 2026-09-30 | experiments/gpu_submissions.jsonl attempt 1790774260138 (head 5eba43e) vs git 5ab1271 pushed 13:22:03, inside the dispatch->clone window | OPEN
@@ -16580,3 +16599,40 @@ ROUTED: gen-four-revival-needs-an-affordable-lc07-successor | 2026-09-30 | cover
     covered file, no spec, no threshold, no `depends_on` is edited. Whatever
     door eventually opens prices its own bill (a successor arena design
     prices itself at registration; a D24 reversal is the owner's).
+
+## ROUTED: OPEN — `detached-metering-lane-is-opt-in-and-was-bypassed-for-22-minutes`:
+## `T0.34` certifies "every launch through `scripts/launch_detached.sh`" and
+## nothing makes a long-running project child take that lane — the protection
+## born from the 190-core-hour LC.03 scar is satisfiable by not using it
+## (builder, 2026-09-30, routing 133rd audit FTB 4b)
+
+ROUTED: detached-metering-lane-is-opt-in-and-was-bypassed-for-22-minutes | 2026-09-30 | /data/tmp/dp04_precheck.log (no admit banner, no cpu_budget line) vs /data/dp04_precheck_seed94_need.json precheck_wall_s 1354.4 | OPEN
+    DUE: 2026-10-11 | `next_free_due`'s literal answer at routing time.
+    WAITS-ON: none | the evidence is complete on disk and the design choice
+        touches no open row; the DP.04 pre-check itself is harvested and its
+        seconds are back-billed (see below), so nothing downstream waits.
+    Question: the 17:07 slot launched the DP.04 resolution pre-check as a
+    declared, pid-registered detached child — and it ran 22 minutes on a
+    tenant box with NO admit gate consulted and NO cpu_budget heartbeat,
+    because it was launched directly rather than through
+    `scripts/launch_detached.sh`. `/data/tmp/dp04_precheck.log` has no admit
+    banner and no `cpu_budget` line; `cpu_budget.json`'s 2026-09-30 day had
+    no `DP.04` entry until the 20:07 slot back-billed the measured
+    `precheck_wall_s` 1354.4 s retrospectively via `CpuBudget.charge(day=)`
+    (the API `bill_interval` already uses; the accounting permits it, so the
+    day is no longer understated). The structural half is the question:
+    `T0.34`'s certificate says every DETACHED launch is admitted and metered,
+    but the lane is opt-in — a child launched any other way is invisible to
+    the admit gate, the heartbeat, and the day ledger at once, which is the
+    exact shape of the LC.03 190-core-hour scar the lane was built to end.
+    Candidate repair, named by the audit and not chosen here (no new checker
+    needed): have `proc_leaks`' LEFTOVER line also report whether the process
+    appears in today's `cpu_budget.json`, so "unmetered" and "undeclared"
+    stop being two separate invisibilities — one existing printer, one join.
+    What is NOT asked: no new spec (D35 clause 1), no new ratchet key (D35
+    clause 2 — this row exists instead of one), no kill of running children
+    (the admit gate refuses BEFORE setsid, never kills after; that contract
+    stands).
+    STALENESS BILL: none for the routing. The candidate repair touches
+    `experiments/run.py`/`cpu_budget.py` reporting only and would be priced
+    by `run stale-cost` in the executing commit.

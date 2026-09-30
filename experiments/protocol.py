@@ -428,6 +428,19 @@ class Spec:
     kills: Optional[str] = None
     """What we delete or abandon if this fails. Forces the cost of failure to be
     decided before the result is known."""
+    kill_scope: Optional[str] = None
+    """Where a fired `kills` is READ, print what the FAIL actually retired.
+
+    Reporting-only, and deliberately NOT in `SPEC_CLAIM_FIELDS` (the
+    `repaired_by`/`notes` precedent): the registered `kills` string is part of
+    the claim a verdict was bought under and may not be narrowed after an
+    adverse verdict — that would be demotion-by-prose in the softening
+    direction (133rd audit FTB 1a; the T2.11 scar). This field therefore
+    BINDS NOTHING and changes no verdict. It may only QUOTE a scope that was
+    recorded BEFORE the verdict existed, and must name that provenance (a
+    commit, a pre-registration paragraph) in its own text; the printers render
+    it beside `kills` so the board stops showing the unscoped kill while the
+    scope lives in a docstring nobody reads at triage."""
     notes: str = ""
     gate_mode: str = "validity"
     """How `run_bakeoff` reads an arm that misses the learning gate.
@@ -1976,7 +1989,13 @@ def transitive_impl_imports(path, source: Optional[bytes] = None,
 
 def impl_sha_of(path, file_bytes: Optional[bytes] = None,
                 dep_bytes: Optional[dict] = None) -> Optional[str]:
-    """sha256 of a test file — the test as it was when it ran.
+    """sha256 of a test file — the test as it was when it ran, AS THIS BOX
+    HOLDS IT. For a REMOTE (GPU) run this is a statement about local disk at
+    harvest time, not about the code the kernel executed: the kernel clones
+    `origin/main` for itself and the one artefact asserting its identity is
+    its own printed `REPO <sha>` line, which the harvest currently discards
+    (133rd audit FTB 2; row `gpu-receipt-head-is-push-time-not-kernel-time`).
+    Do not read this sha as certifying what ran remotely.
 
     `file_bytes`, when given, is hashed in place of the file at `path` (deps
     are still read from disk, i.e. as they stand NOW). This is the doc-only
