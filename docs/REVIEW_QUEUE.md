@@ -11172,13 +11172,19 @@ ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overse
         (3) the decorative-metric reading added under its own name. NOT owed: a
         floored counter, any refusal, or a substitution of (3) for `D27`'s screen.
 
-ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 | Review DAILY (replayed against `/data/jack-logs/ladder.log` at 07:0x) | OPEN
-    DUE: 2026-09-29 | the DESK's half: rule on whether `slot_outcomes()` should
-        become the ONE reader of what a slot line is, so a third liveness
-        counter cannot be blinded by a fourth kind of line. The builder's half
-        (the repair itself) is ordered on `scripts/ladder_prompt.md` for today
-        and does not wait for this date. 09-29 carries 3 live rows against the
-        measured 6.
+ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 | Review DAILY (replayed against `/data/jack-logs/ladder.log` at 07:0x) | DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — THE DESK'S HALF IS RULED, and the ruling REFUSES the question's own premise: `slot_outcomes()` may NOT become the one reader, because it is LOSSY BY DESIGN and answering YES as asked would have rebuilt this exact bug inside the new single reader. The one reader is a THREE-valued classifier both walkers consume. Design lives in THE RULING below; execution is the builder's, DUE 2026-10-10)
+    DUE: 2026-10-10 | the BUILDER's execution of THE RULING below: one
+        three-valued line classifier (`RAN` / `DECLINED` / `NOT-A-SLOT`) that
+        both `slot_outcomes()` and `attribution()`'s dark-slot streak consume as
+        filters, so neither counter can be blinded independently again. The
+        desk's half is discharged and this date is not the desk's. 2026-10-10
+        carries 2 live rows against the measured 6.
+    RE-DATED 2026-09-30 from 2026-09-29 (Review DAILY): the date was the DESK's
+        ruling date, that ruling is now written, and what remains is a builder
+        refactor. The row is re-dated rather than stamped `ACTED` because a
+        ruling is a design and a design is `DISPOSITIONED` — the 09-01 lesson
+        that `ACTED` must name an EXECUTING commit applies to this desk's own
+        acts too, not only the builder's.
     Question: `dark_slots` — the skipped-slot streak — has read **0 through a
     15-slot skip streak since 2026-09-21T12:07**, and the blinding agent is
     this loop's own output.
@@ -11200,6 +11206,58 @@ ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 
         at HEAD, shared regex confirmed in source. Note for the ruling: the
         repair went half-way to one-reader (one REGEX, still two walkers) —
         the desk's question is live, not mooted.
+    THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) — **the
+        desk's half, and it answers NO to the question as written, which is the
+        only reason this ruling is worth the four days it cost.** Read from
+        source at `HEAD` rather than from this row's prose.
+        **WHY `slot_outcomes()` CANNOT BE THE ONE READER.** Its signature is
+        `list[tuple[str, int]]` — `(timestamp, rc)` — and its own docstring
+        states the intent: *"A `PACING:` line is not a slot outcome — it is a
+        slot that never started"* (`usage_attribution.py:165`). It is
+        **deliberately lossy**: it reports slots that RAN and silently drops
+        every slot the loop DECLINED. But the dark-slot streak is a count of
+        exactly the lines it drops. Making it the single reader would have
+        forced `attribution()` to recover `PACING:`/`STOPPED` by walking the log
+        a second time anyway — i.e. **the YES answer reconstructs the second
+        walker it was supposed to remove, and the next new line type blinds the
+        recovered walker just as the notice lines blinded this one.** The
+        question contained the bug. That is the finding.
+        **THE RULING: ONE CLASSIFIER, THREE VALUES, TWO FILTERS.** Introduce a
+        single function that answers *"what is this line"* and nothing else,
+        returning a three-valued verdict per line — **`RAN`** (with `rc`),
+        **`DECLINED`** (the loop refused the slot: `PACING:`, `STOPPED at N%`),
+        **`NOT-A-SLOT`** (everything else, including every timestamped notice
+        line the loop emits about itself). Then:
+        `slot_outcomes()` becomes a FILTER over it (`kind == RAN`) and keeps its
+        current signature and semantics exactly; `attribution()`'s `dark_slots`
+        becomes a FILTER over the same classification (the trailing run of
+        `DECLINED`, with `NOT-A-SLOT` transparent). `_SLOT_RE` and `_SKIP_RE`
+        become that function's private business and are read nowhere else.
+        **WHY THREE AND NOT TWO — the precise thing that must not be lost.** The
+        scar this row was routed for is that notice lines beginning with a digit
+        "ended the streak" (`usage_attribution.py:482-486`). A TWO-valued reader
+        (slot / not-slot) has to fold `DECLINED` into one of its two buckets:
+        fold it into *slot* and a declined slot reads as a slot that ran; fold it
+        into *not-slot* and it goes transparent and the streak never advances —
+        **which is the original bug, reading 0 through a 15-slot skip.** The
+        third value is not tidiness; it is the only arrangement in which both
+        counters can be right at once. **A two-valued refactor is a REGRESSION
+        of this row and must be refused at review.**
+        **THE STRENGTHENING THIS BUYS, and it is the point.** Today a new line
+        type has to be taught to two places and there is no reader that fails
+        loudly when it is taught to one. Under the ruling there is exactly ONE
+        site where a fourth kind of line is classified, and the failure mode
+        moves from *a liveness counter silently reads 0* to *one function has an
+        unhandled case*. Ordered with it: the classifier's `_check` must carry a
+        fixture in which a NEW, UNRECOGNISED timestamped line type is
+        interleaved into a skip streak, asserting that both `slot_outcomes()` and
+        `dark_slots` are unchanged by it. The existing P6d fixture proves the
+        KNOWN notice lines are transparent; this one proves the class is.
+        **What this ruling does NOT do:** it moves no threshold, changes no
+        `PACE_FLOOR`, no `PACE_CAP` and not the 90% hard stop; it does not touch
+        what the pace gate DOES, only how its output is READ; and it buys the
+        row no ageing relief — the row stays live at `DUE 2026-10-10` until a
+        commit executes it.
 
 **THE MECHANISM, replayed rather than argued.** `scripts/usage_attribution.py`
 `attribution()` walks the log backwards:
