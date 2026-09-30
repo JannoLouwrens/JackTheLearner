@@ -1676,7 +1676,7 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
         slot, the slot that taught this file to parse it); a RECEIPT, not a
         stamp — the row still ages and only the desk writes ACTED.
 
-ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | DISPOSITIONED 2026-09-26 (Review DAILY — the METRIC ruling: adopt (a), the objective's own held-out information content, as a NEW deciding conjunct; retain all four existing CLAIM conjuncts UNCHANGED; no third rig, no arm added, no bar lowered, and the one move that could weaken anything is NAMED and deliberately NOT made)
+ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | ACTED 2026-09-30 a080386 (Review DAILY, OVERDUE FIRST — the 2026-09-26 METRIC ruling was EXECUTED at `a080386` on 2026-09-26 11:23 UTC, four days before this stamp and three days before the date it broke. See THE STAMP below: the delay was entirely this desk's, the work was early, and `T2.11` is UN-PARKED by it)
     DUE: 2026-09-16 | RE-ARMED 2026-09-07 (builder): the row went STALE at 9 d
     with no DUE — the one live queue violation. 2026-09-16 is `next_free_due`,
     the tool's own mechanically-named first date carrying no promise (09-07
@@ -1767,6 +1767,38 @@ ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /d
         bar moved. The declared form of the 03:0x prose trace above; a
         RECEIPT, not a stamp — the row still ages and only the desk writes
         ACTED.
+    THE STAMP 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) — **the
+        stamp this row has been owed since 2026-09-26, and the second
+        consecutive morning on which this desk's largest OVERDUE finding is
+        that the work was FINISHED EARLY.** Verified at `HEAD` this sitting
+        rather than inherited from either trace: `a080386` (2026-09-26,
+        "t211 METRIC ruling executed") touches three files and adds 341 lines
+        across `docs/LESSONS.md`, `experiments/tests/t211_mi_battery.py` and
+        `experiments/tests/t2_11_skills_distinguishable.py` — the ordered
+        conjunct and nothing else. All three ordered items are executed, the
+        bar did NOT move (one new constant, `MI_MARGIN_MIN`, and the spec is
+        strictly harder at five binding claim conjuncts where it had four), and
+        the ordered falsifier was RUN AGAINST THE RULING and did not fire
+        (worst-seed `mi_margin` +0.6268 against the pre-registered 0.50 STOP).
+        **The `ORDERED: T2.11` measurement is the one thing still outstanding
+        and it is NOT this row's debt:** `review-queue` reads
+        `ordered T2.11 -> NO ROW YET`, and correctly — `_GATES_FROZEN` is still
+        `False`, `T2.11` holds no key in `ledger.json["results"]`, and nothing
+        was dispatched. The ruling ordered a METRIC, the metric is built, and
+        the RUN is the builder's on its own board. **What this stamp changes
+        besides the status:** `T2.11` has been PARKED behind this row for
+        **32 days** — it was the only registered spec the overdue class held
+        hostage, that sentence appears in this row's own 09-22 re-date, and it
+        is now false. `T2.11` is UN-PARKED and runnable at `HEAD`.
+        **What it does not change:** no threshold, no conjunct, no arm. The
+        0.50 bar stands with a WORSE justification than it was given — the
+        builder falsified the *"3.1x `zero`'s 0.16 nats"* derivation that sized
+        it (out-of-sample `zero` reads −0.2149/−0.2158, so the floor is below
+        zero) and left the bar where it was rather than recomputing it
+        downward. That is the correct handling and this desk endorses it
+        explicitly, because the opposite move — re-deriving a bar downward off
+        a better measurement — is the exact shape of the weakening this desk
+        may never make.
 
 **DISPOSITION (Review DAILY, 2026-09-26): ADOPT (a) — gate on the OBJECTIVE's
 held-out information content — as a NEW conjunct. Retain all four existing
