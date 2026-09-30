@@ -16407,3 +16407,59 @@ ROUTED: t211-accuracy-channel-is-seed-fragile-not-globally-broken | 2026-09-30 |
     STALENESS BILL: none — this row orders a DESIGN QUESTION, no edit to any
     covered file. T2.11 carries no PASS certificate (its only row is the
     VOID).
+    UPDATE 2026-09-30 (builder, 14:07 slot — attempt 2 harvested, `b6f505a`;
+    the row's premise is now measured on a RIG-GREEN fold): attempt 2 (kernel
+    jack-ladder-1790774260, 0.5223 h W39, ran_at 13:49:05, head `5eba43e`)
+    landed **FAIL** — the CLF_EPOCHS 300->900 repair lifted `shuffle_clf_fit`
+    0.5859 -> **0.9219** against the untouched 0.60 floor, so the VOID lane
+    cleared and the claim itself decided. The seed-fragile shape REPRODUCED,
+    sharpened: `margin_vs_shuffled` per seed **+0.2188 / +0.2734 / −0.086**
+    (seed 2's permuted-twin classifier again 0.9766, claim 0.8906),
+    `mi_margin` again green at **+0.9377 = 1.9x its bar**, oracle 0.9922,
+    hash_overlap 0. Two independent folds have now measured the same thing:
+    two seeds clear the bar by >= +0.21, one seed's twin outscores the claim,
+    and the objective's own channel is green throughout. `kills:
+    SkillDiscovery` FIRED AS REGISTERED under the pre-registered licensing
+    (spec file, THE ATTEMPT-1 RECORD): the shipped DIAYN objective is retired
+    as a producer of independently-classifiable behaviour IN THIS ARENA — not
+    as a carrier of information about z. The successor question this row
+    carries (a spec in which `mi_margin` decides and the policy channel
+    reports) is now the ONLY live path for SkillDiscovery's information
+    claim, and attempt 2's per-seed table is its design input. No attempt 3
+    exists under any branch; nothing in this update changes the DUE, the
+    question, or any bar.
+
+## ROUTED: OPEN — `gpu-receipt-head-is-push-time-not-kernel-time`:
+ROUTED: gpu-receipt-head-is-push-time-not-kernel-time | 2026-09-30 | experiments/gpu_submissions.jsonl attempt 1790774260138 (head 5eba43e) vs git 5ab1271 pushed 13:22:03, inside the dispatch->clone window | OPEN
+    DUE: 2026-10-10 | `next_free_due`'s literal answer (every day 10-01..10-09
+        already carries >= 6 live rows; 10-10 carries 1). Late is acceptable:
+        the gap has fired only in its benign form and push discipline is the
+        live mitigation.
+    WAITS-ON: none | the evidence is complete on disk today and the design
+        choice (pin the ref in the kernel vs. certify the clone's HEAD back)
+        does not depend on any open row; the fix is spec-neutral plumbing.
+    Question: the GPU job script clones the repo and does `git checkout main`
+    — the ref is NOT pinned in the kernel (kernel_sha256
+    702845e5... byte-identical across T2.11 attempts 1 and 2 despite
+    different recorded heads). The receipt's `head` field therefore means
+    "what origin/main was at push time", enforced by `assert_ref_is_current`
+    plus push-before-dispatch, not by the kernel itself. Today the hazard
+    fired in its benign form, measured: attempt 2 dispatched 13:17:40 with
+    recorded head `5eba43e`; commit `5ab1271` was pushed at 13:22:03, inside
+    the dispatch-to-kernel-clone window; the kernel therefore plausibly ran
+    at `5ab1271` while the ledger row's `commit` field says `5eba43e`.
+    Benign only because `5ab1271` touched zero code (journal + bookkeeping) —
+    the same five minutes around a code commit would put a wrong commit id on
+    a ledger row, which is the attribution `build_job`'s pinned-ref design
+    exists to guarantee. Candidate repairs, named not chosen: (i) pin the
+    dispatch HEAD into the kernel script (`git checkout <sha>`), making
+    kernel_sha256 vary per dispatch — the receipt becomes self-enforcing;
+    (ii) have the remote job print its cloned HEAD into the artifact and have
+    the harvester refuse a row whose printed HEAD differs from the attempt
+    row's `head`. (i) prevents, (ii) detects; a bakeoff is not needed to hold
+    both. What is NOT asked: any re-run of T2.11 or re-stamp of today's rows
+    — `5ab1271`'s zero-code content is verified by `git show --stat`.
+    STALENESS BILL: none for the routing — this row orders a DESIGN CHOICE on
+    dispatch plumbing (`experiments/gpu.py` / `scripts/dispatch.sh`); the
+    chosen repair's own bill is priced when it is implemented (`run
+    stale-cost` on the touched file at that point, not now).
