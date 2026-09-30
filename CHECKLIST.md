@@ -1131,7 +1131,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 0 — HARNESS — can we measure anything?
 
-- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.198; ceiling_admitted=False
+- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.202; ceiling_admitted=False
       - _asserts:_ For any declared control path, the harness measures sim-seconds per real second before a long run starts, and REFUSES a run whose projected duration exceeds the spec's timeout or the box's tenant-safety budget.
       - _dies if:_ A long run launching with a projected duration past its own timeout, OR a projection that differs from the achieved duration by >25%.
       - _then delete:_ Nothing directly; it prevents burning a Sunday quota on a run that could never have finished.

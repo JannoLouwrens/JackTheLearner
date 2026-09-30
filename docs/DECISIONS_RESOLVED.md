@@ -1997,3 +1997,18 @@ metric: `div_lastq`  ·  null 0.044 ± 0.069  ·  gate mode: `screen`
 | exp-decay-h15 | 0.678 | 5.91 | pass | 1.0 |
 | last-1 | 0.544 | 3.60 | pass | 2.0 |
 | control:pooled-scalar | 0.044 | 0.00 | FAIL | 0.0 |
+
+## LG.13 — WINNER — meaning-mass
+meaning-mass beats topk-softmax by 4.13 sigma and clears the null by 56.00 sigma.
+
+metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
+
+> **screen rationale** (why these arms are observables, not learners): The arms are OBSERVABLES, not learners, and the rig makes that structural rather than asserted: every arm is a deterministic function of ONE already-cached verdict table (1588 frozen log-probabilities, content-hash keyed) that no arm can perturb, and no arm has a parameter fitted to anything. A low score is therefore a property of the RULE and not evidence that its run broke, which is exactly the case `validity` mode would mis-VOID. The gate is unmoved at 3 sigma and MIN_FINISHERS still applies. Declared in advance and not expected to bind: LG.10's published incumbent reads match 0.60-0.78 against a 0.18 null, so the mode is on the record before any arm number exists rather than switched on after a VOID.
+
+| arm | mean | sigma over null | gate | admitted | cost |
+|---|---|---|---|---|---|
+| meaning-mass | 1.000 | 56.00 | pass | yes | 1.0 |
+| topk-softmax | 0.850 | 18.13 | pass | yes | 2.0 |
+| softmax-full | 0.694 | 8.59 | pass | yes | 1.0 |
+| topk-uniform | 0.661 | 32.52 | pass | yes | 1.0 |
+| control:state-free-prompt | 0.064 | -5.02 | FAIL | yes | 1.0 |

@@ -9518,6 +9518,14 @@ ROUTED: so10-tie-break-hands-the-seat-to-an-ineligible-arm | 2026-09-13 | `498b8
         required these two never to be ruled apart, and executing them apart is
         the same mistake one step later. | NOT owed by then: any re-run of
         `SO.10`, and no seating of the Person-model seat, which is ruled VACANT.
+    BUILDER-TRACE: 1b651ff | executed 2026-09-30 21:5x-22:3x UTC together with
+        its sibling `lg13`, as the pair's re-dates require — full receipt on
+        `lg13-champion-makes-lg10s-invariance-conjuncts-structural`'s trace.
+        This row's half: the `admissible=` predicate in `bakeoff.py`
+        (property 5), inadmissible arms NOT RANKED rather than ranked last, a
+        sub-2-admissible field VOIDs; `bakeoff_admission_battery.py` proves
+        the SO.10 defect reproduced without the predicate and removed with it
+        (9/9). SO.10 not re-run; seat not seated; no bar moved.
 
 **THE EVENT.** `SO.10` raced the Person-model seat the day `CHAMPIONS.md`
 created it, on `LG.02`'s certified rig, 4.67 s, 3 seeds. Four trust rules read a
@@ -10010,6 +10018,25 @@ ROUTED: lg13-champion-makes-lg10s-invariance-conjuncts-structural | 2026-09-13 |
         mismatched-meaning null run against the seated Language-routing champion;
         (3) the `LG.02` alternation caveat written onto the rig where the next spec
         will read it. NOT owed: any re-run of `LG.10`, `LG.13` or `SO.10`.
+    BUILDER-TRACE: 1b651ff | executed 2026-09-30 21:5x-22:3x UTC, all three
+        halves, eleven days early per `1^13` (a DUE is a deadline, not a
+        start-gate). (1) `bakeoff.py` property 5: spec-supplied `admissible=`
+        predicate, evaluated after scoring and before anything ranks;
+        inadmissible arms SCORED-AND-INELIGIBLE and NOT RANKED (cannot win,
+        tie, cost-break, or gate-VOID); fewer than 2 admissible -> VOID at the
+        door; `bakeoff_admission_battery.py` replays SO.10's exact shape 9/9
+        green, including the defect reproduced without the predicate. (2) The
+        mismatched-meaning null CLEARS: bar pre-registered in `1b651ff` before
+        any number was read (NULL_MATCH_MAX 0.35, LG.10's own, unmoved);
+        mismatched match 0.0000 on 5/6 seed x mouth cells, 0.0833 worst;
+        anchor 1.0000 on all 6; unanimity 1.0 under the sabotage on every cell
+        - the struck conjunct green while match collapsed. Reading recorded on
+        the seat cell in docs/CHAMPIONS.md; artifact
+        /data/lg13_mismatch_null.json. (3) Alternation caveat written into
+        `lg_02_liar_loses_him.py`'s docstring (prose-only; LG.02 + SO.08
+        re-stamped via `amend --doc-only`, LG.13 re-bought PASS 1.41s after
+        the bakeoff.py edit per stale-cost). Seat basis unchanged; no bar
+        moved; Person-model seat stays VACANT.
 
 **THE EVENT.** `LG.13` raced the Language-routing seat the day after
 `CHAMPIONS.md` created it, on `LG.10`'s certified rig through the
