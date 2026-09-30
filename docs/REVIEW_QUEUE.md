@@ -1911,7 +1911,7 @@ falsify the expensive half.**
 
 ---
 
-ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v2) | OPEN
+ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v2) | DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — RULED **(c) THEN (b)**, in that order and for that reason: (b) is the only arm that makes the bug unrepeatable and it is the one arm whose blast radius nobody has measured, and (c) is exactly the instrument that measures it without touching the recorder. (a) REFUSED on the row's own argument. See THE RULING below; execution is the builder's, DUE 2026-10-14)
     DUE: 2026-09-18 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all.
         This row went STALE — OPEN 9 days past the 8-day consumer cycle with no
         `DUE:` to re-arm it — and that is this desk's fault, not the router's:
@@ -1967,6 +1967,82 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
     a renamed key fails loudly at its next run, which is the intended behaviour
     and must be paid deliberately rather than discovered.
     DUE: 2026-09-29 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A recorder change (`protocol.py:_aggregate`) whose concrete caller was meant to be the UB.10 redesign; that redesign is now itself blocked, so the coupling argued on 09-08 no longer sets the date. Re-dated on its own merits onto an empty day rather than inheriting a blocked row's schedule.
+    DUE: 2026-10-14 | the BUILDER's execution of STEP 1 of THE RULING below —
+        arm (c), the static audit, which PRICES arm (b). Step 2 (the recorder
+        refusal) returns to this desk with that price in hand and is NOT ordered
+        yet. The desk's half is discharged. 2026-10-14 carries 2 live rows
+        against the measured 6.
+    THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **RULED: (c) THEN (b). (a) IS REFUSED. The order is the ruling.**
+        **FIRST, the blocker argument in the 09-22 re-date above is DISCHARGED
+        and is no longer a reason to wait.** That date was set on the ground that
+        this row's *"concrete caller was meant to be the UB.10 redesign; that
+        redesign is now itself blocked."* It is not blocked any more — this desk
+        RULED `ub10-part1-premise-false-marginals-are-what-saturate` on
+        2026-09-29 (`e184402`: venue KEPT, (d) retirement refused, the arm
+        ordered to a bakeoff over (a)+(c)). So the concrete caller the 09-08
+        disposition wanted in hand before deciding the general fix now exists,
+        and this row is decidable for the first time since it was routed. That
+        is why it gets a ruling this morning instead of a sixth date.
+        **(a) IS REFUSED, on this row's own argument rather than on cost.** The
+        row states it exactly: additive `_min`/`_max` *"makes the WRONG gate (raw
+        mean) no harder to write while making the right one easier, so it
+        improves ergonomics without closing the hole."* An arm that leaves the
+        defect writable is not a repair of a defect that has already been
+        written 10 times across 7 specs. **It is the arm that would let this row
+        be stamped `ACTED` while changing nothing that matters**, and refusing it
+        explicitly is the substance of this ruling as much as choosing (b) is.
+        **(b) IS THE DESTINATION and the row is right that it is the only arm
+        that makes the bug unrepeatable** — a spec gating the mean of a
+        worst-case key gets a `KeyError` instead of a plausible wrong number,
+        which converts a silent false certificate into a loud broken run. This
+        desk adopts it as the target state.
+        **BUT (b) MAY NOT SHIP FIRST, AND THIS IS THE WHOLE REASON THE ORDER IS
+        THE RULING.** (b)'s cost is *"it will break existing specs — which is the
+        point and the cost"*, and **nobody knows how many.** The row's own
+        estimate of the exposed population is a grep: *"26 spec files fold a
+        `worst`/`_lo`/`_hi` quantity and 89 lines read a `_std`"*, and it says in
+        the same breath that *"nothing mechanical distinguishes a correct gate
+        from a wrong one."* Shipping (b) against an unmeasured population means
+        discovering the bill by reddening an unknown number of standing
+        certificates, one run at a time. **This project's own rule is that the
+        staleness bill is computed BEFORE the decision, not discovered after it
+        — and (c) IS that computation.** (c) reads each spec's `_check` for a
+        bare `m["<key>"]` on a key the same file folds with min/max/len; that set
+        is, to a false positive, exactly the set (b) would break. So (c) is not a
+        weaker alternative to (b), it is (b)'s price tag.
+        **ORDERED, STEP 1 — arm (c), and it is cheap because most of it already
+        exists.** The 2026-09-12 sweep attached to this row already ran an AST
+        pass over every multi-seed PASS row and returned **10 (spec, metric)
+        pairs across 7 specs** with the exact n=3 extreme-value bound applied.
+        (c) is that sweep turned from a one-off into a standing T0-family gate
+        and widened from "multi-seed PASS rows" to every registered spec.
+        Its report must name, per flagged pair, whether the gate is CORRECT
+        (already bounds the worst seed, as `T3.06` v2 does with `1.5*std`) or
+        WRONG — the row is right that the sweep's value is the classification and
+        not the count. **The count that comes back IS the ruling on (b)'s
+        timing**, and it returns to this desk in the same commit.
+        **THE LOOPHOLE, CLOSED NOW BECAUSE IT WILL NOT BE OBVIOUS LATER.** Under
+        (b), a spec broken by the recorder's refusal must be repaired by **gating
+        the worst seed**. It may NOT be repaired by renaming the metric so it no
+        longer matches the worst-case naming convention. That rename passes (b),
+        passes (c), silently restores the original defect, and would be the
+        cheapest thing for a builder under time pressure to do. Any such rename
+        is a weakening and must be refused at review. Ordered with (c): a
+        fixture in which a worst-case key is renamed to dodge the convention,
+        asserting the audit still flags it.
+        **(c) IS NOT A SUBSTITUTE FOR (b) AND THIS ROW DOES NOT CLOSE ON IT.**
+        The row's own text says (c) *"catches it without touching the
+        recorder ... will have false positives"* — an audit a future author can
+        read past is weaker than a recorder that cannot produce the wrong number
+        at all. This row stays live through (c) and returns here for (b).
+        **What this ruling does NOT do:** it moves no threshold, changes no
+        existing gate's value (the SEMANTIC bill under (c) is zero — it reads
+        source and records nothing into any certificate), edits no spec's claim,
+        and does not un-park or quiet anything. The MECHANICAL bill stands as
+        computed on this row: 4 spec files name `protocol.py` in `IMPL_DEPS`
+        (`T0.17`, `T0.22`, `T0.27`, `XL.00`), all cpu<1min or fixture, and that
+        bill is owed at step 2, not step 1.
 
     THE SWEEP THIS ROW ASKED FOR IS ATTACHED (builder, 2026-09-12, 90th audit
     B2 — no second row opened). It was RUN, not estimated: an AST pass over
@@ -4477,8 +4553,57 @@ ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca7
         acted on — that red is the tool working and it is not to be quieted,
         unparked, or answered with a successor spec against the same venue the
         pilots already measured as unable to grade it.**
+    RE-DATE RATIONALE 2026-09-30 (Review DAILY, OVERDUE FIRST, D28
+        default (a)) — the reasoning behind the `DUE: 2026-10-14` line at the
+        END of this row (the operative date; this block is its justification and
+        is deliberately NOT a second declared field).
+        **The FIFTH re-date of this row, and the first one whose
+        reason is that the row's own SUBJECT SET changed underneath it rather
+        than that this desk ran out of sitting.** Two measured changes, both
+        taken from instruments at `HEAD` this morning, neither of which this row
+        records:
+        **(1) `balance` IS NO LONGER CLAIM-DEAD.** `run coverage` reads **3
+        CLAIM-DEAD**, not 4: `smell`, `shelter/building`, `thermal (kills)`.
+        `balance` left the set when `ba03-null-saturates-the-horizon` was
+        executed — option (c) built 2026-09-26, gates frozen off a harvested
+        pilot, stamped `ACTED 702aa56` on 09-28. So the `Question:` block below
+        names four commitments and three of them are still true, and this row's
+        own 09-11 `DUE:` text — *"The `CLAIM-DEAD` ratchet stays RED at 4 and
+        `coverage` keeps exiting rc=2 until this row is acted on"* — is **false
+        on the number**: the ratchet went 4 -> 3 without this row being acted on
+        at all, because a SIBLING row's repair discharged one of its members.
+        The rc=2 is still real; the 4 is not. *This is the 130th audit's finding
+        arriving on the row it was about: a standing red's count held while one
+        of its members changed identity.*
+        **(2) THE INPUT THIS ROW WAITS ON WAS REFUSED, NOT DELAYED.** Every
+        re-date above sequences this row behind the W0/W1 design. That design was
+        DECLINED by this desk on 2026-09-27 and stamped `w1-world-edit-window |
+        DECLINED` on 09-28. **Waiting for it is now waiting for nothing**, and
+        `D33` — who authors it instead — is the live owner question. The
+        dependency is real and has changed KIND: it is no longer "wait for a
+        design that is coming", it is "wait for an owner to say who writes one".
+        **WHY THAT IS A REASON TO RE-DATE AND NOT TO ACT.** Acting today would
+        mean writing successor specs against a three-member set this row
+        describes as four, for commitments whose re-parenting target depends on a
+        world design nobody has yet been assigned. The specific harm is concrete
+        and this row already warns against it in its own words: *"never ... a
+        successor spec written against the same venue the pilots already measured
+        as unable to grade the claim."* A successor spec written blind to `D33`
+        is exactly that spec.
+        **STOP-RULE, armed against this desk and pre-committed in the open:** if
+        2026-10-14 breaks, this row is **DECLINED to the owner as a class**
+        alongside the three `D33` orphans, rather than re-dated a sixth time.
+        Five slips is the limit this desk sets for itself here.
+        **WHAT IS NOT DEFERRED, and it should be lifted out of this row rather
+        than wait with it:** the SIXTH-STATE instrument design below
+        (transitively-foreclosed) depends on NOTHING in the W0/W1 question — it
+        is a `coverage.py` predicate. It is bundled here only by history. Ordered
+        to the builder on this page as a split candidate; this row keeps the
+        commitment half. 2026-10-14 carries 1 live row against the measured 6.
     Question: `balance`, `smell`, `shelter/building` and `thermal (kills)` —
-    four of the owner's own 2026-08-09 survival directives — have zero
+    four of the owner's own 2026-08-09 survival directives — **THREE as of
+    2026-09-30: `balance` left the set at `702aa56`, see the 10-14 `DUE:`
+    above** — have zero
     passing claims and every claim-kind spec PARKED or FORECLOSED
     (BA.03 VOID-FORECLOSED + BA.02 parked; SM.03 PILOT-BLOCKED + SM.02
     parked; SH.02 PILOT-BLOCKED + SH.01 parked, carrying shelter AND thermal
@@ -4510,6 +4635,19 @@ ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca7
     the 21-certificate playground.py bill already computed on
     `w0-too-shallow`.
     DUE: 2026-09-29 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. The most downstream row on the board: successor specs need the W0/W1 design as INPUT, and that design is behind the 09-23 edit window. Four CLAIM-DEAD commitments sit here, which is why it is not pushed further despite being the least ready.
+    DUE: 2026-10-14 | RE-DATED 2026-09-30 (Review DAILY, OVERDUE FIRST, D28
+        default (a)) — **the OPERATIVE date. Full reasoning in RE-DATE RATIONALE
+        above**, which is where it is written out because it is long; in one
+        sentence, this row's SUBJECT SET changed underneath it (`run coverage`
+        reads **3** CLAIM-DEAD, not 4 — `balance` left the set at `702aa56`, so
+        the sentence in the 09-11 `DUE:` that the ratchet *"stays RED at 4 ...
+        until this row is acted on"* is false on the number) and the W0/W1 design
+        it has been sequenced behind four times was **DECLINED on 09-27, not
+        delayed**, so waiting for it is waiting for nothing and `D33` is the live
+        question. **STOP-RULE, armed against this desk: if 2026-10-14 breaks,
+        this row is DECLINED to the owner as a class alongside the `D33`
+        orphans, not re-dated a sixth time.** 2026-10-14 carries 2 live rows
+        against the measured 6.
 
 ---
 
