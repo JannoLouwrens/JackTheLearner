@@ -148,6 +148,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A classifier recovers the skill label from trajectories above chance.
       - _dies if:_ Skills are indistinguishable — the MI objective collapsed.
       - _then delete:_ SkillDiscovery.
+      - _kill scope (recorded):_ FIRED 2026-09-30 (attempt 2 FAIL). Recorded scope, pre-registered in t2_11_skills_distinguishable.py at 5eba43e before the row existed: the FAIL retires the shipped DIAYN objective as a producer of independently-classifiable behaviour IN THE PG.4 ARENA — NOT as a carrier of information about z (mi_margin green 0.9377 = 1.9x its bar on every seed of both attempts). Parameters (133rd audit FTB 1b, the first firing of GOAL.md's earn-or-be-deleted clause): UnifiedBrain still constructs SkillDiscovery and the component is RETAINED, not deleted — deletion does not execute on a one-seed FAIL; its information claim's only live path is the Review-designed successor spec in which the MI channel decides (row t211-accuracy-channel-is-seed-fragile-not-globally-broken), and the delete-or-keep decision belongs to that successor's verdict.
 - [ ] **T2.13** Train to convergence, not to a step count
       - _asserts:_ Training can be extended in increments until improvement falls below seed noise, and the stopping point is decided by measurement rather than by whoever got bored.
       - _dies if:_ Held-out performance is still climbing when the criterion fires, or the criterion never fires because per-increment gains never drop below noise.
@@ -1130,7 +1131,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 0 — HARNESS — can we measure anything?
 
-- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.201; ceiling_admitted=False
+- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.198; ceiling_admitted=False
       - _asserts:_ For any declared control path, the harness measures sim-seconds per real second before a long run starts, and REFUSES a run whose projected duration exceeds the spec's timeout or the box's tenant-safety budget.
       - _dies if:_ A long run launching with a projected duration past its own timeout, OR a projection that differs from the achieved duration by >25%.
       - _then delete:_ Nothing directly; it prevents burning a Sunday quota on a run that could never have finished.
