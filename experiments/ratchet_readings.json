@@ -57,7 +57,7 @@
     "value": 7
   },
   "gpu_hours_no_verdict": {
-    "at": "2026-09-18",
+    "at": "2026-09-30",
     "value": {
       "D1.0": "33.78 h / 2 attempt(s) / 0 verdict(s)",
       "PILOT": "2.00 h / 2 job(s)",
@@ -66,9 +66,10 @@
       "T2.01": "11.16 h / 2 attempt(s) / 2 verdict(s)",
       "T2.05": "1.93 h / 4 attempt(s) / 1 verdict(s)",
       "T2.07": "0.29 h / 1 attempt(s) / 1 verdict(s)",
+      "T2.11": "0.55 h / 1 attempt(s) / 0 verdict(s)",
       "T2.15": "0.31 h / 1 attempt(s) / 1 verdict(s)",
       "T4.02": "0.29 h / 2 attempt(s) / 2 verdict(s)",
-      "TOTAL": "48.42 h",
+      "TOTAL": "48.97 h",
       "UB.10": "0.30 h / 1 attempt(s) / 0 verdict(s)",
       "UNATTRIBUTED": "6.32 h / 21 job(s)"
     }
@@ -91,22 +92,22 @@
     "value": 5
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-29",
-    "value": 31
+    "at": "2026-09-30",
+    "value": 29
   },
   "review_queue_piled_on": {
-    "at": "2026-09-26",
-    "value": 3
+    "at": "2026-09-30",
+    "value": 4
   },
   "review_queue_violation_forms": {
-    "at": "2026-09-29",
+    "at": "2026-09-30",
     "value": {
-      "HOLD-ON-A-RESOLVED-BLOCKER": 9
+      "HOLD-ON-A-RESOLVED-BLOCKER": 8
     }
   },
   "review_queue_violations": {
-    "at": "2026-09-29",
-    "value": 9
+    "at": "2026-09-30",
+    "value": 8
   },
   "unreachable": {
     "at": "2026-09-29",
