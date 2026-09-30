@@ -20476,3 +20476,84 @@ a page the shape of a good day and the shape of a stopped machine are nearly
 identical: both produce no ledger rows.** When "no progress, no fault" is the
 expected reading, the transition to "no progress, and the machine is off" has no
 signal left to raise.
+
+
+## A CONJUNCT ADDED TO A CONJUNCTION CANNOT PROTECT THE FAIL SIDE — "strictly
+## harder" and "cannot produce a false verdict in either direction" are not the
+## same sentence, and this project writes the first one almost every week
+## (overseer, 132nd audit, 2026-09-30; measured on T2.11's park release at
+## `9754b89` and the row that landed 33 minutes later)
+
+`T2.11` sat PARKED for 32 days on one stated harm: flipping its gates *"would
+dispatch a `kills: SkillDiscovery` off a run whose own label-permuted twin
+outscored it."* The release added a fifth claim conjunct — `mi_beats_field`, a
+genuinely new and honestly-falsified measurement — and wrote, in the commit
+message and byte-identically into the shipped docstring:
+
+> *"can no longer produce a false verdict IN EITHER DIRECTION: a FAIL now
+> requires the objective to have failed on its own channel too."*
+
+The code:
+
+```python
+return bool(_claim_holds(m)
+            and m["margin_vs_shuffled"] >= MARGIN_MIN
+            and m["mi_margin"] >= MI_MARGIN_MIN      # <- the new conjunct
+            and not _claim_holds(c))
+```
+
+**Adding a term to a conjunction makes PASS harder and FAIL EASIER.** There is no
+branch on which a green `mi_margin` prevents a FAIL — the new gate has strictly
+more ways to be red than the old one had, and every one of them is a new route to
+an adverse verdict. The claim was false by Boolean arithmetic before any number
+existed. The same file said so correctly twice, 25 and 60 lines away (*"the MI
+channel unable to rescue an accuracy red"*; *"the new conjunct cannot rescue the
+red this spec is parked on"*), and the release paragraph took the false reading.
+
+THE SHAPE, and it is why this is a lesson and not a typo. A `_check` in this
+repository has **two** exits, not one: a `rig` conjunction whose failure returns
+`VOID` (*the apparatus did not ask the question*) and a `claim` conjunction whose
+failure returns `FAIL` (*the creature was refuted*). A conjunct's protective
+direction is decided entirely by **which conjunction you put it in**:
+
+- in the CLAIM conjunction → guards against a false **PASS**. Strictly harder.
+- in the RIG conjunction → guards against a false **FAIL**. Strictly more VOIDs.
+
+So *"I am worried a broken metric will fire a `kills`"* has exactly one honest
+repair shape, and it is a **rig/VOID conjunct**. Answering it with another claim
+conjunct is not a weak fix or a partial fix; it moves the protection to the
+opposite side of the verdict from the worry.
+
+THE PROOF ARRIVED IN 33 MINUTES, which is the part worth keeping. The registered
+run landed `VOID` on one rig conjunct — `shuffle_clf_fit` **0.5859 against a 0.60
+floor, missed by 0.0141** — with every other rig gate green. Had it cleared, the
+row was a FAIL decided by **one seed of three** (`margin_vs_shuffled` +0.2031 /
++0.2656 / **−0.0704**) on the conjunct `_check`'s own comment calls *"measured to
+answer a different question than this spec asks"*, **while `mi_margin` read
++0.9377 = 1.9× its bar.** The new conjunct was green, loudly, in the exact
+scenario it was announced as preventing. The thing that actually prevented it was
+an **old rig floor the builder had refused to lower** — declined in writing,
+before the number was known, in the same commit.
+
+THE GENERAL RULE. **Before writing "strictly harder", say which verdict you made
+harder to reach — and if the failure you are afraid of is an adverse one, a claim
+conjunct is the wrong instrument.** Two mechanical checks, both cheap:
+
+1. Count the branches. If the change only ever turns a PASS into a non-PASS, it
+   bought nothing on the FAIL side, whatever the prose says.
+2. Ask the battery. `t211_mi_battery.py` **already encoded the truth** — its
+   pre-registered case is *"v3's measured worst-seed shape with the accuracy
+   channel red and MI green stays False"*, 7/7 green. The falsifier was right and
+   the paragraph above it was wrong. When a battery and a docstring disagree,
+   the battery is the one that ran.
+
+AND THE CORRECTION THIS AUDIT OWES ITS OWN READING. I forecast a FAIL from the
+two spent pilot seeds (7/90), where the permuted twin beat the claim arm on both.
+The registered seeds do not behave that way: **2 of 3 beat the twin by better than
++0.20.** The pilots said *the objective is dead*; the registered run says *the
+metric is seed-fragile*. A worst-seed fold over three seeds and a rig floor the
+metric is sitting on will keep producing VOID-or-one-seed-FAIL indefinitely, and
+neither of those is a statement about Jack. **Evidence from disjoint pilot seeds
+bounds the apparatus, not the verdict** — quoting it as a prediction of the
+registered fold is the same category error as the paragraph this lesson is about,
+made one level up.
