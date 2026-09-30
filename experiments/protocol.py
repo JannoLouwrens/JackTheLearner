@@ -3242,6 +3242,25 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
 #               commit, per the ratchet discipline).
 UNAUDITABLE_PAIRS_BASELINE = 22
 
+# GROWTH LOG (shrink-only; every raise needs an entry here and a reason in
+# the commit that makes it):
+#   2026-09-30  baseline 0 (131st audit FTB 1). The consecutive-dark-slot
+#               streak from /data/jack-logs/ladder.log had NO reading
+#               anywhere in experiments/ — its only writers were
+#               scripts/usage_attribution.py and scripts/overseer.sh, i.e.
+#               the organs that are themselves being skipped, and the
+#               28-slot 2026-09-29/30 blackout was visible only to a desk
+#               ordered to count it by hand. The live reading (run.py
+#               `_dark_slots`) is the streak once it exceeds DARK_SLOT_GRACE
+#               (2 slots = 2x the hourly cadence; the steering page's
+#               standing rule is that a single PACING: line is one hour
+#               deferred on purpose, not a fault) and 0 within the grace —
+#               so ABOVE this floor means the builder has been held out of
+#               three or more consecutive slots and `run status` goes red
+#               until the streak clears. This baseline never legitimately
+#               rises: a dark builder is never the accepted state.
+DARK_SLOTS_BASELINE = 0
+
 
 def audit_supersedes_fail(results: Dict[str, Any],
                           repo_root=None) -> Dict[str, Any]:

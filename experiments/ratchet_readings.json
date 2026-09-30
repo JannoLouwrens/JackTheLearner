@@ -19,6 +19,10 @@
     "at": "2026-09-29",
     "value": 0
   },
+  "dark_slots": {
+    "at": "2026-09-30",
+    "value": 0
+  },
   "decisions_default_action_expired": {
     "at": "2026-09-26",
     "note": "`at` dates the KEY, not the break: this class has read >=1 since 2026-09-23, when D33's decide_by passed unanswered \u2014 the 120th audit measured exactly that, and the key was only created on 09-26 (121st audit FINDING 2, second half). D33 is the Review's.",

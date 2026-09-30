@@ -58,21 +58,55 @@ LEDGER = Path("/data/jack-logs/usage_ledger.jsonl")
 LADDER_LOG = Path("/data/jack-logs/ladder.log")
 
 #: `iteration start — ...` / `iteration end rc=N — ...`. The ONLY lines in
-#: `ladder.log` the loop writes about a slot that actually attempted to run,
-#: and the ONLY definition of "a real slot line" in this file — both readers
-#: (`slot_outcomes` and the dark-slot walk in `attribution`) share it. The
-#: walk used to test `line[:4].isdigit()` instead, and every timestamped
-#: non-slot line (`PACE-SKIP NOTICE:`, `LIVE NOTICE:`, `STOPPED at ...`)
-#: read as a healthy slot: the counter printed 0 through the 26-slot
-#: 2026-09-22/23 blackout it existed to report.
+#: `ladder.log` the loop writes about a slot that actually attempted to run.
+#: PRIVATE TO `classify` — read nowhere else (Review ruling 2026-09-30). The
+#: dark-slot walk used to test `line[:4].isdigit()` instead, and every
+#: timestamped non-slot line (`PACE-SKIP NOTICE:`, `LIVE NOTICE:`,
+#: `STOPPED at ...`) read as a healthy slot: the counter printed 0 through
+#: the 26-slot 2026-09-22/23 blackout it existed to report.
 _SLOT_RE = re.compile(r"^(\S+)\s+iteration (start|end)\b(?:\s+rc=(\d+))?")
 
 #: A slot the loop DECLINED to run: `pace_gate`'s `PACING:` skip or the hard
 #: usage stop's `STOPPED at N% weekly usage`. Anchored to the char after the
 #: timestamp so prose QUOTING either marker (a notice line, a session's final
 #: message echoed into the log) cannot count as a skip — `lib_credits.sh`'s
-#: start-anchor rule, one surface over.
+#: start-anchor rule, one surface over. PRIVATE TO `classify`, like _SLOT_RE.
 _SKIP_RE = re.compile(r"^\S+\s+(?:PACING:|STOPPED at )")
+
+RAN, DECLINED, NOT_A_SLOT = "RAN", "DECLINED", "NOT-A-SLOT"
+
+
+def classify(raw: str) -> tuple[str, str | None, int | None]:
+    """`(kind, ts, rc)` — what is this `ladder.log` line, and nothing else.
+
+    THE ONE READER of what a slot line is (Review ruling 2026-09-30,
+    `dark-slot-counter-is-blinded-by-the-loops-own-notice-lines`). Three
+    values, deliberately, and a two-valued refactor is a REGRESSION of that
+    ruling: a slot/not-slot reader must fold DECLINED into one bucket or the
+    other — into *slot* and a declined slot reads as one that ran; into
+    *not-slot* and it goes transparent and the streak never advances, which
+    is the original bug (0 through a 15-slot skip).
+
+      RAN         an `iteration start/end` line; `rc` is set on `end`
+      DECLINED    the loop refused the slot: `PACING:` / `STOPPED at N%`
+      NOT-A-SLOT  everything else, including every timestamped notice line
+                  the loop emits about itself
+
+    `slot_outcomes` and the dark-slot streak are both FILTERS over this, so
+    neither counter can be blinded independently again: a fourth kind of
+    line has exactly ONE place to be taught, and the failure mode moves from
+    *a liveness counter silently reads 0* to *this function has an unhandled
+    case*.
+    """
+    s = raw.strip()
+    m = _SLOT_RE.match(s)
+    if m:
+        rc = (int(m.group(3))
+              if m.group(2) == "end" and m.group(3) is not None else None)
+        return RAN, m.group(1), rc
+    if _SKIP_RE.match(s):
+        return DECLINED, None, None
+    return NOT_A_SLOT, None, None
 
 #: The organs that are NOT the builder. `pace_gate` applies to the builder
 #: alone — `scripts/review.sh` calls `usage_gate` without `pace_gate`, so the
@@ -162,15 +196,38 @@ def _alive(sessions: dict[str, list[tuple[str, str]]], organs, lo: str, hi: str)
 def slot_outcomes(log_text: str) -> list[tuple[str, int]]:
     """`[(timestamp, rc)]` for every slot that ENDED, oldest first.
 
-    A `PACING:` line is not a slot outcome — it is a slot that never started.
-    Nothing here conflates the two; see `failed_streak` for why that matters.
+    A FILTER over `classify` (`kind == RAN`, with an rc) — and DELIBERATELY
+    LOSSY: it reports slots that ran and drops every slot the loop DECLINED,
+    which is why it may never be the one reader of the log (the dark-slot
+    streak is a count of exactly the lines this drops). A `PACING:` line is
+    not a slot outcome — it is a slot that never started; see
+    `failed_streak` for why that matters.
     """
     out = []
     for raw in log_text.splitlines():
-        m = _SLOT_RE.match(raw.strip())
-        if m and m.group(2) == "end" and m.group(3) is not None:
-            out.append((m.group(1), int(m.group(3))))
+        kind, ts, rc = classify(raw)
+        if kind == RAN and rc is not None:
+            out.append((ts, rc))
     return out
+
+
+def dark_slot_streak(log_text: str) -> int:
+    """Trailing run of DECLINED slots, newest backwards — the OTHER filter
+    over `classify`. A RAN line ends the streak; NOT-A-SLOT is transparent,
+    so the loop's own timestamped notices can never end it again. Shared by
+    `attribution()` and `experiments/run.py`'s `dark_slots` ratchet reading
+    (131st audit FTB 1), so the pace line and `run status` cannot disagree
+    about what a dark slot is."""
+    streak = 0
+    for raw in reversed(log_text.splitlines()):
+        if not raw.strip():
+            continue
+        kind = classify(raw)[0]
+        if kind == DECLINED:
+            streak += 1
+        elif kind == RAN:
+            break
+    return streak
 
 
 def failed_streak(outcomes: list[tuple[str, int]]) -> int:
@@ -237,20 +294,12 @@ def attribution(text: str | None = None, log_text: str | None = None,
         except Exception:
             log_text = None
     if log_text is not None:
-        streak = 0
-        for raw in reversed(log_text.splitlines()):
-            raw = raw.strip()
-            if not raw:
-                continue
-            if _SKIP_RE.match(raw):        # PACING: or STOPPED at — a dark slot
-                streak += 1
-            elif _SLOT_RE.match(raw):      # only an iteration start/end line
-                break                      # ends the streak — nothing else.
-            # Anything else — a PACE-SKIP NOTICE, a LIVE NOTICE, a session's
-            # prose — is neither a slot nor a skip and is TRANSPARENT. The
-            # old `line[:4].isdigit()` break here treated every timestamped
-            # non-slot line as a healthy slot and read a 26-slot blackout as 0.
-        out["dark_slots"] = streak
+        # A FILTER over `classify`, like `slot_outcomes` — DECLINED counts,
+        # RAN ends the streak, NOT-A-SLOT (a PACE-SKIP NOTICE, a LIVE
+        # NOTICE, a session's prose) is TRANSPARENT. The old walk here
+        # treated every timestamped non-slot line as a healthy slot via
+        # `line[:4].isdigit()` and read a 26-slot blackout as 0.
+        out["dark_slots"] = dark_slot_streak(log_text)
         out["dark_known"] = True
         # THE SECOND READING, and it is a SEPARATE quantity (107th audit,
         # RANK 2 / FOR THE BUILDER 3). `dark_slots` counts slots that were
@@ -514,6 +563,42 @@ def _selftest() -> int:
     if a["dark_slots"] != 0:
         fails.append(f"blind: a slot RUNNING RIGHT NOW (trailing `iteration "
                      f"start`) must end the streak — got {a['dark_slots']}")
+
+    # P6e — THE CLASS, NOT THE INSTANCES (Review ruling 2026-09-30). P6d
+    # proves the KNOWN notice lines are transparent; this proves an
+    # UNRECOGNISED one is. The scar: a new timestamped line type had to be
+    # taught to two walkers, and teaching it to one blinded the other with
+    # nothing failing. Under the one-classifier design a line type nobody
+    # has heard of lands in NOT-A-SLOT, so BOTH readers must be unchanged by
+    # its arrival — if this fixture ever fails, a fourth kind of line has
+    # been taught to something other than `classify`.
+    base = ("2026-09-24T06:07:00+00:00 iteration start — 110/254\n"
+            "2026-09-24T06:49:00+00:00 iteration end rc=0 — 110 -> 110\n"
+            "2026-09-24T07:07:00+00:00 PACING: acting on 'week:all models'\n"
+            "2026-09-24T08:07:00+00:00 PACING: acting on 'week:all models'\n"
+            "2026-09-24T09:07:00+00:00 PACING: acting on 'week:all models'\n")
+    novel = ("2026-09-24T08:30:00+00:00 QUOTA-FORECAST NOTICE: a line type "
+             "invented after this fixture was written\n"
+             "2026-09-24T09:30:00+00:00 2026-10-01 is when the next such "
+             "line style might appear\n")
+    a0 = attribution("", log_text=base, now="2026-09-24T09:49:00+00:00")
+    # interleave the novel lines inside and after the skip streak
+    lines = base.splitlines(keepends=True)
+    nl = novel.splitlines(keepends=True)
+    mixed = "".join(lines[:4] + [nl[0]] + lines[4:] + [nl[1]])
+    a1 = attribution("", log_text=mixed, now="2026-09-24T09:49:00+00:00")
+    if a0["dark_slots"] != 3:
+        fails.append(f"novel: baseline fixture must read 3 dark slots — got "
+                     f"{a0['dark_slots']} (fixture bug, not a reading)")
+    if a1["dark_slots"] != a0["dark_slots"]:
+        fails.append(f"novel: an UNRECOGNISED timestamped line type inside a "
+                     f"skip streak changed dark_slots "
+                     f"{a0['dark_slots']} -> {a1['dark_slots']} — a new line "
+                     f"class has been taught to something other than "
+                     f"`classify`")
+    if slot_outcomes(mixed) != slot_outcomes(base):
+        fails.append("novel: an UNRECOGNISED timestamped line type changed "
+                     "slot_outcomes — the classifier is not the one reader")
 
     for f in fails:
         print(f"  FAIL {f}")

@@ -1515,6 +1515,14 @@ def gpu_hours_verdictless(results, charged: dict, attributed=None) -> dict:
 #               stopped writing its receipt.
 GPU_UNATTRIBUTED_FLOOR = 21
 
+# 131st audit FTB 1: how many consecutive DECLINED slots are ordinary pacing
+# before the `dark_slots` ratchet starts reporting. 2 = 2x the hourly cadence;
+# the steering page's standing rule is that a single `PACING:` line is one
+# hour deferred on purpose and must not be investigated, so the reading is 0
+# at or under this and the FULL streak beyond it. Raising this widens the
+# builder's own blindness window and takes a commit that says so here.
+DARK_SLOT_GRACE = 2
+
 
 def gpu_unattributed(charged: dict, ledger_jobs, named) -> dict:
     """Charged jobs joining to no spec by EITHER path. Returns
@@ -1889,9 +1897,33 @@ def ratchet_live(ledger: Ledger) -> dict:
         return audit_supersedes_fail(
             results, repo_root=p.parent.parent)["unauditable_pairs"]
 
+    def _dark_slots():
+        # 131st audit FTB 1: the dark-slot streak appeared NOWHERE in
+        # experiments/ — its only writers were the organs that are
+        # themselves being skipped, so a 28-slot blackout read "healthy" on
+        # every current-state page. The classifier is loaded from
+        # scripts/usage_attribution.py rather than re-implemented: the
+        # 2026-09-30 ruling on that file is ONE reader of what a slot line
+        # is, and a second walk here would be the two-walker bug reborn one
+        # module over. An unreadable log raises -> LOST -> red, on purpose:
+        # a liveness counter nobody can compute is the instrument going
+        # quiet, not a quiet day. Floored shrink-only in protocol.py
+        # (DARK_SLOTS_BASELINE); reads 0 within DARK_SLOT_GRACE because a
+        # one-or-two-slot pace skip is the gate working as designed.
+        import importlib.util
+        p = Path(__file__).resolve().parent.parent / "scripts" / \
+            "usage_attribution.py"
+        spec = importlib.util.spec_from_file_location("_usage_attr", p)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        streak = mod.dark_slot_streak(
+            mod.LADDER_LOG.read_text(errors="replace"))
+        return streak if streak > DARK_SLOT_GRACE else 0
+
     take("unreachable", _unreachable)
     take("fail_unowned", _fail_unowned)
     take("live_unauditable_pairs", _live_unauditable_pairs)
+    take("dark_slots", _dark_slots)
     take("fail_unowned_owned_forms", _fail_unowned_owned_forms)
     take("pass_on_dead_dependency", _pass_on_dead_dependency)
     take("goal_unrunnable", _goal_unrunnable)
@@ -1939,8 +1971,13 @@ def ratchet_floors() -> dict:
     from .decisions import (BASELINE_ACTION_EXPIRED, BASELINE_FIRING_HAZARDS,
                             BASELINE_UNDECLARED, BASELINE_UNROUTED_ASKS,
                             BASELINE_VANISHED_ASKS)
-    from .protocol import UNAUDITABLE_PAIRS_BASELINE
+    from .protocol import DARK_SLOTS_BASELINE, UNAUDITABLE_PAIRS_BASELINE
     return {"unreachable": UNREACHABLE_BASELINE,
+            # Added 2026-09-30 (131st audit FTB 1). The dark-slot streak's
+            # only writers were the organs being skipped; floor 0 with a
+            # 2-slot grace, so three-plus consecutive held-out slots red
+            # `run status` in a channel that cannot die with a sitting.
+            "dark_slots": DARK_SLOTS_BASELINE,
             # Added 2026-09-29 (130th audit FTB 2). `audit_supersedes_fail`
             # decides `unauditable` on field absence, never on a date; the
             # 22 members are all historical (08-09..08-13) and the class can
@@ -2014,6 +2051,7 @@ FLOORED_CLASS_JOIN = {
     "decisions.BASELINE_ACTION_EXPIRED": "decisions_default_action_expired",
     "decisions.BASELINE_FIRING_HAZARDS": "decisions_firing_diff",
     "protocol.UNAUDITABLE_PAIRS_BASELINE": "live_unauditable_pairs",
+    "protocol.DARK_SLOTS_BASELINE": "dark_slots",
 }
 
 # Pinned UNJOINED, each with its reason — measured at pin time, 2026-09-26.
@@ -2516,7 +2554,11 @@ def _check_ratchet_reader() -> None:
                "decisions_default_action_expired", "decisions_firing_diff",
                # 130th audit FTB 2: T0.27's unauditable-pair class, closed
                # by history (all 22 pre-impl_sha) but open by construction.
-               "live_unauditable_pairs"}
+               "live_unauditable_pairs",
+               # 131st audit FTB 1: the dark-slot streak, floored at 0 with
+               # a 2-slot grace — the one fault the pace gate cannot report
+               # about itself, moved out of prompts into a checker.
+               "dark_slots"}
     got_floors = set(ratchet_floors())
     if got_floors != FLOORED:
         raise RuntimeError(
