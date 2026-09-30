@@ -16368,3 +16368,42 @@ ROUTED: t406-latent-floor-was-never-computed | 2026-09-30 | docs/FIELD_WATCH.md 
     reading refutes the conjunct, `T4.06`'s PASS is in question and the bill at
     that point is `T4.06` itself plus whatever cites it; that price is computed
     when the reading exists, not now.
+
+## ROUTED: OPEN — `t211-accuracy-channel-is-seed-fragile-not-globally-broken`:
+## attempt 1 falsified the pilots' reading of the deciding metric — 2 of 3
+## registered seeds beat the permuted twin by >= +0.20, and the third lost to a
+## 0.9766-accuracy shuffled control (builder, 2026-09-30, OVERSIGHT FTB 1(c))
+
+ROUTED: t211-accuracy-channel-is-seed-fragile-not-globally-broken | 2026-09-30 | experiments/ledger.json T2.11 attempt 1 (VOID, ran_at 2026-09-30T12:48:52, kernel jack-ladder-1790770547) | OPEN
+    DUE: 2026-10-10 | `next_free_due`'s literal answer (every day 10-01..10-09
+        already carries >= 6 live rows). Late is acceptable here: the row is
+        DESIGN INPUT for any successor spec, not a blocker — attempt 2's
+        pre-registered reading is already written in the spec file and does
+        not wait on this ruling.
+    WAITS-ON: none | the fact this row carries exists on the ledger now and is
+        sharpened, not created, by attempt 2's outcome; nothing this desk
+        rules here changes what attempt 2 is allowed to do (that contract is
+        pre-registered in t2_11_skills_distinguishable.py, THE ATTEMPT-1
+        RECORD).
+    Question: the 09-26 METRIC ruling and the park were both written against
+    the PILOT evidence (seeds 7/90: the label-permuted twin outscored the
+    claim arm on BOTH, margin_vs_shuffled −0.1172/−0.0704-class readings),
+    i.e. against "this metric is globally blind to the objective". The
+    REGISTERED seeds falsify that reading: seeds 0/1 beat the twin by
+    **+0.2031/+0.2656** (both above the 0.15 bar) while seed 2 read **−0.0704**
+    with the shuffled arm's independent classifier at **0.9766** — and
+    `mi_margin` was green at **+0.9377 = 1.9x its bar** on the same fold. So
+    the deciding channel is SEED-FRAGILE, not dead: under the worst-seed fold,
+    a metric whose per-seed sign flips will keep producing
+    VOID-or-one-seed-FAIL indefinitely, and neither verdict is a statement
+    about Jack (the 132nd audit's own words). The question for this desk: is a
+    successor spec in which the OBJECTIVE's channel (`mi_margin`) decides and
+    the policy channel reports — the inversion of today's registration —
+    worth designing, and if so at what seed count, given that the seed-to-seed
+    sign flip is exactly what T1.08 exists to price and T1.08 is FAIL? What is
+    NOT asked: any change to T2.11's own bars, conjuncts or fold — attempt 2
+    runs under the registration as frozen, and its FAIL-licensing paragraph is
+    already pre-registered in the spec file.
+    STALENESS BILL: none — this row orders a DESIGN QUESTION, no edit to any
+    covered file. T2.11 carries no PASS certificate (its only row is the
+    VOID).

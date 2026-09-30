@@ -144,7 +144,7 @@ Every line here is backed by an experiment that could have failed;
 - [!] **T2.10** Memory retrieval beats recency  — events=650.0; events_std=0.0
       - _asserts:_ Retrieval scoring beats a pure-recency baseline on recall questions — AND beats both losing scorers on the ME.11 certified stem-disjoint paraphrase fixture, where cue and target share no content word.
       - _dies if:_ Recency-only does as well — or the combined scorer cannot beat both controls by >= 0.10 paraphrase recall@1 on the certified fixture (the seat's known weakness: the same scorer is measured 0.0000 there, ME.11.A 2026-08-30).
-- [ ] **T2.11** Skills are distinguishable
+- [~] **T2.11** Skills are distinguishable  — backend=kaggle; chance=0.125
       - _asserts:_ A classifier recovers the skill label from trajectories above chance.
       - _dies if:_ Skills are indistinguishable — the MI objective collapsed.
       - _then delete:_ SkillDiscovery.

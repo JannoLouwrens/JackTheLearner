@@ -467,6 +467,10 @@ separation) can no longer produce a false verdict IN EITHER DIRECTION: a
 FAIL now requires the objective to have failed on its own channel too
 (`mi_margin` binding), and a PASS still requires all four original conjuncts,
 so nothing got easier — five binding claim conjuncts where there were four.
+[CORRECTION, builder, 2026-09-30, ordered by the 132nd audit: the "IN EITHER
+DIRECTION" and "a FAIL now requires" clauses above are FALSE by Boolean
+arithmetic and are left standing because the contradiction is evidence — see
+THE ATTEMPT-1 RECORD below. The "nothing got easier" half is true.]
 
 GATES FROZEN AT RELEASE, no bar moved: ABOVE_CHANCE_MIN 0.15, MARGIN_MIN
 0.15, PER_CLASS_MIN 0.20, SHUFFLE_FIT_FLOOR 0.60, SHUFFLE_BAND 0.10,
@@ -490,6 +494,82 @@ in this world under a skill-conditioned policy — with the rig bracketed by
 rescue an accuracy red (battery-proven) — and `kills: SkillDiscovery` fires
 on that measurement, scoped as WHAT THIS SPEC DOES AND DOES NOT TEST above.
 VOID: the apparatus did not ask the question. All three are results.
+
+
+THE ATTEMPT-1 RECORD (builder, 2026-09-30, executing OVERSIGHT FTB 1 of the
+132nd audit; row committed as found the same day). Attempt 1 ran on a Kaggle
+T4 (kernel jack-ladder-1790770547, 1978.7 s = 0.5496 h, W39's first charge,
+seeds 0/1/2, ran_at 12:48:52) and recorded **VOID**: every rig gate green
+except `shuffle_clf_fit` **0.5859 vs the 0.60 floor** — 0.0141 short. The
+floor DOES NOT MOVE: the release above declined that move in writing before
+this number existed, and lowering it after a non-PASS would be a threshold
+moved in the loosening direction. The repair is the fitting BUDGET — see THE
+RIG-CAPACITY REPAIR below.
+
+THE CORRECTION THE AUDIT ORDERED, in full. THE PARK RELEASE paragraph above
+(and `9754b89`'s commit message, which quotes it) claims the rig "can no
+longer produce a false verdict IN EITHER DIRECTION" because "a FAIL now
+requires the objective to have failed on its own channel too (`mi_margin`
+binding)". Both clauses are FALSE by Boolean arithmetic: `mi_margin >=
+MI_MARGIN_MIN` is a term in `_check`'s PASS conjunction, so it can only turn
+a PASS into a non-PASS — it makes PASS harder and FAIL easier, and no branch
+lets a green `mi_margin` block a FAIL. PILOT RECORD v3 and WHAT A VERDICT NOW
+MEANS above always said it correctly, and the battery encoded it before the
+release: `t211_mi_battery.py`'s pre-registered case *"v3's measured worst-seed
+shape with the accuracy channel red and MI green stays False"* is exactly the
+arithmetic the release paragraph denied. Attempt 1 then measured the live
+version of that scenario: worst-seed `margin_vs_shuffled` **−0.0704** (seed 2,
+`ctrl_acc` 0.9766) with `mi_margin` **+0.9377**, green at 1.9x its bar. The
+false sentence stays in place, bracket-corrected, because the contradiction
+is evidence. Generalised in docs/LESSONS.md (*"a conjunct added to a
+conjunction cannot protect the FAIL side"*, 7c2974b).
+
+PRE-REGISTERED BEFORE ATTEMPT 2 HAS A NUMBER: WHAT A FAIL ON
+`margin_vs_shuffled` LICENSES. If attempt 2 lands rig-green and the worst
+seed's `margin_vs_shuffled` is under `MARGIN_MIN`, the verdict is FAIL and
+`kills: SkillDiscovery` FIRES AS REGISTERED. The reasoning, written while
+both outcomes are still possible: the 09-26 METRIC ruling measured this
+conjunct to answer *"a different question than this spec asks"* and then
+DELIBERATELY DECLINED to demote it — so its verdict binds, and a builder
+paragraph reading "a FAIL here leaves the component standing" would be that
+demotion executed in prose after an adverse seed. Scope, so the retirement is
+quoted honestly: such a FAIL retires the shipped DIAYN objective as a
+producer of independently-classifiable behaviour IN THIS ARENA — the
+registered claim's own words — not as a carrier of information about z. If
+the FAIL lands with `mi_margin` green (attempt 1's shape), the row itself
+records that the deciding channel was the POLICY's while the OBJECTIVE's was
+alive; that fact is design input for a successor spec in which the MI channel
+decides, registered through the Review — never an attempt 3 of this spec, and
+never a resurrection by argument.
+
+THE NEW FACT ATTEMPT 1 BOUGHT, routed as
+`t211-accuracy-channel-is-seed-fragile-not-globally-broken`. The pilots
+(seeds 7/90, the permuted twin beating the claim on both) said the metric was
+globally broken; the registered seeds say it is SEED-FRAGILE — seeds 0/1
+green at +0.2031/+0.2656, seed 2 red at −0.0704. A seed-fragile metric under
+a worst-seed fold, sitting on a rig floor it has now missed twice, will keep
+producing VOID-or-one-seed-FAIL indefinitely, and neither of those is a
+statement about Jack. That question is the Review's and it is routed, not
+repaired here.
+
+THE RIG-CAPACITY REPAIR (the one behaviour change in this commit, disclosed
+before attempt 2 exists): `CLF_EPOCHS` 300 -> 900. What VOIDed attempt 1 is
+the INSTRUMENT-ALIVE fit — the classifier could not memorise 8 permuted
+labels in 300 full-batch epochs (readings 0.5625 pilot s7, 0.5859 registered
+fold, both under the floor whose own comment defines it as "the classifier
+can fit 8 labels" — a capacity statement about the instrument). This is the
+repair the 132nd audit named as the legal alternative to the forbidden floor
+move. Costs, stated before any number exists: the budget is SHARED by the
+real and shuffled fits (`_fit` is one function), so every arm's readout gets
+the identical tripling; train-side memorisation rises (the point); held-out
+readings can move in EITHER direction — likelier DOWN for `claim_acc` via
+overfitting 200 samples, i.e. PASS gets harder, not easier; the
+`shuffle_clf_heldout <= 0.225` band and every bar are byte-unchanged.
+Staleness priced before the edit: `run stale-cost` reads ZERO standing PASS
+certificates staled (T2.11's only row is the VOID). One knob turn only
+(SM.02/B5's one-diagnostic discipline): if the fold still reads under 0.60 at
+900 epochs, the next reading is about the optimiser, not the budget, and it
+routes to the Review as a rig redesign — no second bump.
 """
 from __future__ import annotations
 
@@ -559,7 +639,13 @@ FEAT_DIM = N_CELLS + 2 * CHECKPOINTS
 # The independent classifier
 CLF_HIDDEN = 64
 CLF_LR = 3e-3
-CLF_EPOCHS = 300
+CLF_EPOCHS = 900                # 300 -> 900, 2026-09-30: attempt 1 VOIDed on
+                                # shuffle_clf_fit 0.5859 < 0.60 — the
+                                # instrument could not memorise 8 permuted
+                                # labels at 300 epochs. Rig-capacity repair
+                                # per the 132nd audit's FTB 1(a); the floor
+                                # is UNMOVED. See THE RIG-CAPACITY REPAIR in
+                                # the docstring. One knob turn only.
 
 # The SHARED skill-conditioned policy — the repair (see THE REPAIR above).
 POLICY_EMB = 16                 # width `skill_embedding(z)`'s d_model=512 code
