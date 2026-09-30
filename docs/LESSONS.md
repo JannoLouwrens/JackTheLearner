@@ -20557,3 +20557,44 @@ neither of those is a statement about Jack. **Evidence from disjoint pilot seeds
 bounds the apparatus, not the verdict** — quoting it as a prediction of the
 registered fold is the same category error as the paragraph this lesson is about,
 made one level up.
+
+## A REMOTE RUN'S CODE IDENTITY MUST BE ASSERTED BY THE REMOTE, NOT ABOUT IT —
+## a `commit` field written on this box is a statement about this box, and the
+## one artefact that could settle what the kernel executed is printed by the
+## kernel and thrown away at harvest
+## (overseer, 133rd audit, 2026-09-30; measured across all 42 GPU-backed ledger
+## rows, 6 of which have a `.py` commit inside their own run window and 3 of
+## those are standing PASS certificates)
+
+THE SHAPE. `experiments/gpu.py:210` `repo_preamble` puts the repo on the kernel
+with `git clone … && git checkout -q main` — **`main`, not the recorded head** —
+so the code that runs is whatever was pushed when the clone happened. The row's
+`commit` field is the LOCAL head at dispatch. And `impl_sha` cannot arbitrate
+between them: `impl_sha_of` hashes the file **on this box, at harvest time**, so
+for a remote run it certifies the auditor's disk and not the runner's. Three
+fields that all look like provenance, and none of them is a witness.
+
+WHAT MAKES IT A LESSON RATHER THAN A BUG. The kernel **already prints the
+answer** — `print("REPO", <git rev-parse --short HEAD>)`, the third line of
+every job — and the harvest keeps none of it: not one of the fifteen
+`/data/tmp/dispatch_*.log` watcher logs contains a `REPO` line. The evidence was
+generated, transmitted, displayed and discarded, which is the worst of the four
+possible states, because it means the hole was never a measurement problem.
+
+THE MEASUREMENT, because "it has never actually mattered" is a claim and not
+evidence. Of 42 GPU-backed rows, 17 had SOME commit land inside
+`ran_at − duration_s → ran_at` and **6 had a commit touching a `.py` file**
+there. Three are standing PASS certificates: `T2.14` (+7 min), `T2.04` (+8 min),
+`T2.06` (+11.5 min, and the in-window commit `b8cca42` touched
+`experiments/run.py`). The clone happens early in a kernel's life, so most of
+these are very probably fine — **and "probably fine" is the whole finding.** The
+record cannot answer the question for three certificates, and the artefact that
+could was deleted.
+
+THE GENERAL RULE. **A guard that refuses to dispatch un-pushed code protects the
+wrong end of the wire.** `assert_ref_is_current` is careful, correct and blind:
+it certifies what we sent, never what arrived. Any time a claim's evidence is
+produced somewhere you do not control, the identity of what produced it has to
+come back **in the payload**, stamped by the producer, and be compared — not
+inferred from what you believe you sent and not recomputed locally afterwards.
+If the producer already says it, the only bug is not writing it down.
