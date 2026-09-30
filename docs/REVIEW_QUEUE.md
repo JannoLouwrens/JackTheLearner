@@ -11244,7 +11244,7 @@ that does not depend on the code being right about what "a slot" means.
     IMPL_DEPS (grepped, 0 hits), so the repair stales no certificate and
     re-buys nothing.
 
-ROUTED: world-edit-window-price-is-quoted-at-21-and-measures-35 | 2026-09-22 | `experiments/stale_cost.py` (builder, first reading) | OPEN
+ROUTED: world-edit-window-price-is-quoted-at-21-and-measures-35 | 2026-09-22 | `experiments/stale_cost.py` (builder, first reading) | ACTED 2026-09-30 53b6802 (Review DAILY, OVERDUE FIRST — the DUE's FIRST branch taken: the figure is corrected at all three LIVE pricing sites and replaced by the TOOL INVOCATION rather than by a fresher cached number, which is the general repair this row itself named. Historical dated rows in this file are deliberately NOT rewritten — the 21 was correct when written and the record stays. See THE STAMP below)
     **The most expensive instrument this project owns is priced on three desk
     pages from a cached number, and the number has grown 67% underneath it.**
     `docs/DECISIONS_NEEDED.md:7611`, `docs/REVIEW_QUEUE.md:1018/2865/2895` and
@@ -11305,6 +11305,46 @@ ROUTED: world-edit-window-price-is-quoted-at-21-and-measures-35 | 2026-09-22 | `
         opposite ends — **the bill and the budget are quoted in different
         units, so neither side can see when it is asking the impossible.**
         No bar moved, no threshold, no position on the window's design.
+    THE STAMP 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **EXECUTED at `53b6802`.** The `DUE:` offered two branches; the FIRST is
+        taken. 34 is the right number, 21 is not, and **the edit that nobody had
+        actually made is now made** — the addendum above proved the figure and
+        shipped the better UNIT, but it was a builder receipt on a row, and the
+        three desk pages still said 21 three days later. That gap is the whole
+        reason this row broke: the row had been *settled* and not *executed*.
+        **Re-derived at `HEAD` this sitting rather than inherited:**
+        `run stale-cost playground.py` reads **34 standing PASS certificates**,
+        2.88 CPU-h over 31 + 1.52 GPU-h over 3, 4 builder slots for the CPU
+        half. One thing has changed since the addendum and it SIMPLIFIES the
+        row: `T0.32` has gone `FAIL`, so it now prices as `no-cert`, and the
+        "34 billable + 1 pre-stale" split is no longer needed — the 34 and the
+        35 were always the same set seen before and after one row's demotion.
+        The 09-22 count needed no defence and gets none.
+        **WHY THIS ROW WAS TAKEN FIRST of six OVERDUE, said plainly so it can be
+        argued with:** `D33` asks the OWNER who authors the W1 world edit now
+        that this desk has formally declined it, and
+        `docs/DECISIONS_NEEDED.md` priced that question from a figure cached on
+        **2026-08-31** in which `BA.01` was quoted as an ADDITION to a set it is
+        already a member of. **The owner was being asked to assign work at ~60%
+        of its measured cost, and the four-slot finding above — that the in-slot
+        re-buy rule is unsatisfiable for this edit under every ordering — never
+        reached the page the ruling will be made from.** A stale price under a
+        LIVE owner decision outranks a fresher one under a closed question.
+        **A SECOND STALE COUNT, found in the same paragraph and corrected with
+        it:** `D38`'s `blocks:` field named **three** rows `BLOCKED-BY:
+        w1-world-edit-window`; `review_queue.parse()` measures **nine**, and
+        since the blocker was stamped `DECLINED` on 09-28 every one of the nine
+        is a `HOLD-ON-A-RESOLVED-BLOCKER` violation. Identical defect class to
+        this row — a number cached beside a decision and grown underneath it —
+        so it is repaired in the same commit rather than routed as a new row.
+        **What this stamp does NOT do:** it moves no option, no `default`, no
+        `decide_by` and no recommendation in either decision entry; it does not
+        rewrite the dated historical rows in this file that quote the 21 (the 21
+        was correct when written and the record stays); and it takes no position
+        on the W1 design, which is `2^10`'s and the owner's.
+        Sites corrected: `docs/DECISIONS_NEEDED.md` (`D33` "WHAT IT COSTS",
+        `D38` `blocks:`), `scripts/ladder_prompt.md` item 4 (where "bills
+        **zero**" was the load-bearing claim and is unaffected).
 
 ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | builder `3c07448` (T3.06 attempt 2, VOID, 2432 s, 3 seeds) | OPEN
     DUE: 2026-09-30 | a VENUE ruling owed by the Review, and it is NOT a rig
