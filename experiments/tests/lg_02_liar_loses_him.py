@@ -49,6 +49,22 @@ proving the join machinery ran and only attribution was missing — a null
 whose trust sits at the untouched prior is a dead instrument, and dead
 instruments VOID (24th-audit B3).
 
+STANDING RIG CAVEAT — TURN ORDER ENCODES SPEAKER IDENTITY (ruled 2026-09-29,
+the `so10`/`lg13` paired ruling, from a measurement on THIS rig): the
+advisors ALTERNATE, so the last pooled claim before any speaker's turn is
+always the OTHER speaker's — a memoryless or short-memory rule reads speaker
+identity out of turn order with no diary at all. Measured, not conjectured:
+SO.10's `last-1` arm failed the stripped-attribution leak leg at
+-0.70 / -0.4667 / -0.6333 against NULL_DIV_MAX 0.20, and that is a property
+of this VENUE, not of that arm. LG.02's own null is safe because it
+integrates the last WINDOW (30) verified claims, so alternation averages out
+(measured 0.0667 / -0.0333 / 0.1). Any future spec that scores a
+short-memory mechanism on this rig must either BREAK the alternation or
+declare the hazard and show its null is not reading turn order. Only one run
+has ever looked. (The same caveat is recorded on the Person-model seat in
+docs/CHAMPIONS.md; this copy is here because the next spec reads the rig,
+not the seat.)
+
 THE CONTROL (owner-designed, declared in the registry): THE SWAP. The
 advisors exchange roles at SWAP_ROUND. Trust must MIGRATE — over the last
 quarter, follow-rate(newly-truthful) - follow-rate(newly-lying) >=

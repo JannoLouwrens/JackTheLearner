@@ -61,6 +61,26 @@ the run.
      The check that this was not reverse-engineered: `screen` does NOT change
      the verdict of the run that motivated it. Round 1 had exactly one finisher
      (`peak_dvel`, 5.99 sigma) and stays VOID under both modes.
+
+  5. ADMISSION IS SCREENED BEFORE RANKING, AND AN INADMISSIBLE ARM IS NOT
+     RANKED — not ranked last (ruled 2026-09-29, the `so10`/`lg13` paired
+     ruling, on a measured failure: `SO.10`'s cost tie-break handed the
+     Person-model seat to `laplace-full`, ineligible on every seed because its
+     eligibility legs were pre-registered gates this primitive could not see,
+     and it won BECAUSE it was cheaper — earn-your-parameters pointing the
+     wrong way). The calling spec supplies a per-arm `admissible` predicate;
+     this module never learns what any one spec's legs (`MIN_MIGRATE`,
+     `noleak`, ...) mean — teaching the primitive one spec's gates is how the
+     next spec's gates get forgotten. An inadmissible arm is still SCORED on
+     the same ruler (SYSTEM.md's SCORED-AND-INELIGIBLE rule: its number goes
+     in the record) but takes no further part: it cannot win, cannot tie,
+     cannot resolve a tie by cost, and cannot VOID the run through the
+     learning gate, because an arm outside the candidate set arbitrates
+     nothing. "Not ranked last" matters: ranked-last still wins a field of
+     inadmissible arms; here a field screened below two admissible arms is a
+     race with one runner and VOIDs at the door. The rule is monotone — it
+     can only ever shrink the candidate set — so it cannot seat an arm that
+     was not already eligible.
 """
 from __future__ import annotations
 
@@ -113,6 +133,9 @@ class ArmResult:
     passed_gate: bool
     cost: Optional[float] = None
     description: str = ""
+    admissible: bool = True
+    """False when the spec's `admissible` predicate excluded this arm: it was
+    scored (the number is real and recorded) and it is NOT RANKED."""
 
 
 @dataclass
@@ -140,6 +163,7 @@ class BakeoffResult:
             m[f"{a.name}_mean"] = round(a.mean, 4)
             m[f"{a.name}_sigma"] = round(a.sigma_over_null, 3)
             m[f"{a.name}_gate"] = float(a.passed_gate)
+            m[f"{a.name}_adm"] = float(a.admissible)
             if a.cost is not None:
                 m[f"{a.name}_cost"] = a.cost
         return m
@@ -154,11 +178,19 @@ def run_bakeoff(spec: Spec,
                 higher_is_better: bool = True,
                 controls: Optional[List[Arm]] = None,
                 ledger: Optional[Ledger] = None,
-                decisions_path: Optional[Path] = None) -> BakeoffResult:
+                decisions_path: Optional[Path] = None,
+                admissible: Optional[Callable[[Arm], bool]] = None) -> BakeoffResult:
     """Run every arm on every seed, gate them, and pick a winner or refuse to.
 
     `arms` COMPETE and must clear the learning gate. `controls` are expected to
     FAIL it, and are scored without being allowed to VOID the run.
+
+    `admissible` is property 5's seam: a per-arm predicate the CALLING SPEC
+    supplies (pre-registered in its own committed code, evaluating its own
+    eligibility legs), applied after scoring and before anything ranks. An arm
+    it rejects is recorded SCORED-AND-INELIGIBLE and takes no further part —
+    not in the gate, not in the ranking, not in the cost tie-break. This
+    module never inspects what the predicate measures.
 
     The distinction was forced by the curiosity bakeoff, and it is not a
     convenience. That design needs ICM and RND present as arms that MUST be
@@ -209,7 +241,9 @@ def run_bakeoff(spec: Spec,
         sigma = delta / sigma_unit
         results.append(ArmResult(arm.name, scores, mean, std, sigma,
                                  sigma >= learning_gate_sigma, arm.cost,
-                                 arm.description))
+                                 arm.description,
+                                 admissible=(admissible is None
+                                             or bool(admissible(arm)))))
 
     # Controls are scored on the same ruler but never compete. One that
     # CLEARS the gate inverts the verdict: the metric is not measuring what
@@ -233,8 +267,25 @@ def run_bakeoff(spec: Spec,
             f"measure what the spec claims; no comparison on it is valid.",
             spec.metric), ledger, decisions_path)
 
-    failed = [a.name for a in results if not a.passed_gate]
-    competing = results
+    # Property 5: admission screens BEFORE the gate and the ranking. An
+    # inadmissible arm stays in `results` (scored, recorded) and out of
+    # everything that decides.
+    candidates = [a for a in results if a.admissible]
+    inadmissible = [a.name for a in results if not a.admissible]
+    adm_note = (f" Inadmissible (scored, NOT RANKED): {', '.join(inadmissible)}."
+                if inadmissible else "")
+    if len(candidates) < MIN_FINISHERS:
+        return _finish(spec, BakeoffResult(
+            spec.id, "VOID", None, results + control_results, null_mean, null_std,
+            f"admission: only {len(candidates)} admissible arm(s) "
+            f"({', '.join(a.name for a in candidates) or 'none'}); "
+            f"{MIN_FINISHERS} are needed. A field screened below two is a race "
+            f"with one runner, and ranking an inadmissible arm last would still "
+            f"let it win a field of inadmissible arms.{adm_note}",
+            spec.metric), ledger, decisions_path)
+
+    failed = [a.name for a in candidates if not a.passed_gate]
+    competing = candidates
     screened_note = ""
     if failed and gate_mode == "validity":
         # See property 1 above. This is the whole point of the module.
@@ -242,11 +293,12 @@ def run_bakeoff(spec: Spec,
             spec.id, "VOID", None, results + control_results, null_mean, null_std,
             f"arms below the {learning_gate_sigma}-sigma learning gate: "
             f"{', '.join(failed)}. An arm that has not demonstrably learned "
-            f"cannot arbitrate the decision.", spec.metric), ledger, decisions_path)
+            f"cannot arbitrate the decision.{adm_note}",
+            spec.metric), ledger, decisions_path)
     if gate_mode == "screen":
         # Property 4. The gate is unchanged; what changes is that a missed gate
         # eliminates an OBSERVABLE instead of invalidating the run.
-        competing = [a for a in results if a.passed_gate]
+        competing = [a for a in candidates if a.passed_gate]
         if len(competing) < MIN_FINISHERS:
             return _finish(spec, BakeoffResult(
                 spec.id, "VOID", None, results + control_results, null_mean,
@@ -287,12 +339,13 @@ def run_bakeoff(spec: Spec,
             f"{best.name} leads {second.name} by only {gap:.2f} sigma "
             f"(margin {margin_sigma}). The choice does not matter yet; "
             f"taking the cheapest tied arm ({cheapest.name}, cost "
-            f"{cheapest.cost:g}).{screened_note}", spec.metric), ledger, decisions_path)
+            f"{cheapest.cost:g}).{screened_note}{adm_note}",
+            spec.metric), ledger, decisions_path)
 
     return _finish(spec, BakeoffResult(
         spec.id, "WINNER", best.name, results + control_results, null_mean, null_std,
         f"{best.name} beats {second.name} by {gap:.2f} sigma and clears the "
-        f"null by {best.sigma_over_null:.2f} sigma.{screened_note}",
+        f"null by {best.sigma_over_null:.2f} sigma.{screened_note}{adm_note}",
         spec.metric), ledger, decisions_path)
 
 
@@ -356,11 +409,12 @@ def _append_decision(res: BakeoffResult, path: Optional[Path] = None,
         # the verdict it permitted rather than only in the spec that claimed it.
         lines.append(f"\n> **screen rationale** (why these arms are observables, "
                      f"not learners): {rationale}\n")
-    lines += ["\n| arm | mean | sigma over null | gate | cost |",
-              "\n|---|---|---|---|---|"]
+    lines += ["\n| arm | mean | sigma over null | gate | admitted | cost |",
+              "\n|---|---|---|---|---|---|"]
     for a in sorted(res.arms, key=lambda x: x.mean, reverse=True):
         lines.append(f"\n| {a.name} | {a.mean:.3f} | {a.sigma_over_null:.2f} | "
                      f"{'pass' if a.passed_gate else 'FAIL'} | "
+                     f"{'yes' if a.admissible else 'NO — not ranked'} | "
                      f"{a.cost if a.cost is not None else '—'} |")
     lines.append("\n")
     with open(DECISIONS_FILE, "a", encoding="utf-8") as fh:
