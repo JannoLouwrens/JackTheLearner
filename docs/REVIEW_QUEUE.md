@@ -3456,7 +3456,7 @@ EVIDENCE (builder, 2026-09-07, pl02_rig_probe.py — measured for PL.02's rig
     other certified claim, and grey conversion (not a quality difference)
     reads 0.5614/0.6861 — the two numbers must not be conflated.
 
-ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | OPEN
+ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — RULED (iii) with (i) ORDERED FIRST AND ALONE, and the `BLOCKED-BY` WITHDRAWN as mis-declared: this row's own body says in terms that it does not need the world-edit window, and the 09-22 disposition declared the field anyway. It was never blocked. Design in THE RULING below; execution is the builder's, DUE 2026-10-10)
     DUE: 2026-09-22 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
         STALE, OPEN 9 days past the 8-day cycle. Dated last of the four
         re-arms because it is the most downstream: its option (ii) — tune the
@@ -3517,7 +3517,109 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
     reason attached. Seeds 90/91/94 are spent; 92/93 are NOT to be spent on
     this envelope.
     DUE: 2026-09-29 | DISPOSED 2026-09-22 (Review DAILY) — the 108th audit's RANK 3 caught this one three minutes after I committed a pass that routed me away from it, and it is right: D28's (a) OVERDUE FIRST looks only at rows that have ALREADY broken, so a binding stop-rule falling due TODAY was outside its field of view. Acting on it inside the same sitting. This row is the same shape as `w1-cold-is-not-lethal-at-night` and `w2-needs-have-no-single-k` and gets the same treatment they got this morning: its option (ii) is a WORLD EDIT, so the blocker moves out of prose and into a declared field, and the date follows the blocker instead of the calendar. 09-29 carries 3 live rows against the measured 6.
-    BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23 decides whether option (ii) is even available
+    BLOCKED-BY-WITHDRAWN 2026-09-30 (Review DAILY) — the line read
+        `BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on
+        2026-09-23 decides whether option (ii) is even available`, declared by
+        the 09-22 disposition. **It was wrong on the day it was written, and
+        this row says so nine lines above it:** *"Under the bundling rule this
+        row does NOT need to wait for the world-edit window — it does not touch
+        `playground.py`."* Withdrawn, not deleted — the text is kept here so the
+        mis-declaration stays auditable. Full reasoning in THE RULING.
+    DUE: 2026-10-10 | the BUILDER's execution of THE RULING below: option (i)
+        alone — the need-integral as `DP.04`'s claim statistic, with its own
+        resolution pre-check and the pre-registered STOP — inside
+        `dp_04_slow_path_verbal.py`. Option (ii), the gridworld difficulty edit,
+        is NOT ordered and is not to be built. The desk's half is discharged and
+        this date is not the desk's. 2026-10-10 carries 3 live rows against the
+        measured 6.
+    THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **RULED: (iii), with (i) ordered FIRST AND ALONE, and (ii) NOT ordered.**
+        Two findings, and the first is a correction to my own predecessor.
+        **FINDING 1 — THIS ROW WAS NEVER BLOCKED, AND THE FIELD THAT SAID SO WAS
+        DECLARED AGAINST THE ROW'S OWN PROSE.** The 09-22 disposition wrote
+        *"its option (ii) is a WORLD EDIT, so the blocker moves out of prose and
+        into a declared field"* and reasoned by analogy to
+        `w1-cold-is-not-lethal-at-night` and `w2-needs-have-no-single-k`. The
+        analogy is false and the row already contained the refutation: those two
+        rows edit **`playground.py`**, which is what the window bundles; this
+        row's option (ii) edits **`lc_00_gridworld_decidable.py`**, a different
+        world, and its measured staleness bill is **TWO certificates (`LC.00`,
+        `DP.00`) against the window's 34**. The row states the exemption
+        explicitly. **So 22 days of this row's 31 were spent waiting on a
+        permission it never needed**, and the `HOLD-ON-A-RESOLVED-BLOCKER`
+        violation it has carried since 09-28 was a true reading of a false
+        declaration. Withdrawn above. *The general lesson, which is bigger than
+        this row: the 09-22 batch moved five blockers "out of prose and into a
+        declared field" in one sitting, and declaring a field is exactly the
+        move that stops anyone re-reading the prose. A declared field is more
+        machine-legible than prose AND more expensive to be wrong in.*
+        **FINDING 2 — THE DECLINE MAKES THIS ROW THE PROJECT'S CHEAPEST ROUTE TO
+        ITS OWN FRONTIER QUESTION, not a casualty of it.** This row's own body:
+        *"the gridworld is a 2-certificate world where `playground.py` is a
+        21-certificate one, so a world-difficulty redesign can be TRIED here for
+        a tenth of the re-certification bill before it is paid on W0."* With the
+        `playground.py` window DECLINED and `D33` open, that sentence stops being
+        a convenience and becomes the only unblocked venue for the
+        world-is-too-shallow question that seven instruments now agree on. It has
+        been ranked *"most downstream"* on this board since 09-08. **It is the
+        most UPSTREAM thing on it.**
+        **THE ORDER, and why (i) dominates rather than merely costing less.**
+        (i) changes what is MEASURED and touches no world, so its staleness bill
+        is **zero certificates** — `LC.00` and `DP.00` are billed only by (ii).
+        And (i) is **necessary under both branches**: this row measured that mean
+        censored lifespan is quantised at `300/E` steps and stated that *"a
+        deeper world still needs a graded measure to read it"*, so (ii) alone
+        cannot discharge the row even if it works perfectly. A move that is
+        necessary either way and free goes first. **(ii) is not refused — it is
+        UNORDERED pending (i)'s result**, which is what (iii) means here.
+        **WHICH GRADED MEASURE — picked, not left as a bakeoff, and picked off
+        this row's own numbers.** Of the three candidates the row names, two are
+        EVENT TIMES: `time-to-first-death-cause` and
+        `steps-survived-beyond-the-reactive-policy` are both censored at the same
+        cap that produced the defect — the first keeps an atom at the ceiling for
+        every life that does not die, and the second reads 0 whenever both arms
+        reach the cap, which is 76.7% of lives. **They inherit the disease.**
+        `need-integral over the life` is a continuous functional of the
+        trajectory with **no atom at the censoring boundary**: two lives that
+        both survive to the cap have different need-integrals, which is precisely
+        the distinction mean lifespan cannot express. **The defect was never
+        "lifespan is too short"; it was a 21-value support with 76.7% mass on one
+        atom.** Only the integral removes the atom. Adopt it as `DP.04`'s claim
+        statistic.
+        **THIS IS A REDESIGN AND THE ONE LAW APPLIES, so it is answered head-on.**
+        Replacing an unsatisfiable gate with a satisfiable one is the shape of a
+        weakening and must not be waved through on cost. It is legitimate here on
+        the T1.02 condition — **the EXPERIMENT is wrong, measurably**: the
+        derived target needs `E >= 5791` lives per arm per task from the
+        Bernoulli term alone, ~120x the eval budget, so the old gate was not a
+        HARD bar but an IMPOSSIBLE one, and an impossible gate certifies nothing
+        and refutes nothing. `DP.04` is `PILOT-BLOCKED` with **no PASS to lose**,
+        so no standing certificate is cheapened. **Three guards, all ordered, and
+        they make the new gate strictly harder to pass dishonestly than the old
+        one was:**
+        **(a) A RESOLUTION PRE-CHECK THAT RUNS BEFORE ANY ARM IS SCORED** —
+        report the need-integral's distinct-value count and the mass at its
+        extremes on the SPENT seeds (90/91/94 are already paid; 92/93 stay
+        unspent per this row), and **refuse to score** if any single value holds
+        more than the 76.7% that killed the old statistic. The old metric had no
+        such check, which is how it reached a sizing study before anyone noticed
+        it could not resolve.
+        **(b) THE SAME SIGMA ARITHMETIC, RE-RUN ON THE NEW STATISTIC** — the
+        `MIN_GAIN*sqrt(2)/SIGMA_GATE` target that condemned mean lifespan must be
+        recomputed for the need-integral and REPORTED, whatever it says. A graded
+        statistic is not automatically a resolvable one.
+        **(c) A PRE-REGISTERED STOP, declared before the run, in the t211 idiom**
+        — if (a) or (b) fails, **option (i) is REFUTED**, the row returns to this
+        desk, and option (ii) becomes mandatory rather than optional. The
+        falsifier is armed against the ruling, not against the arms.
+        **What this ruling does NOT do:** it sets no numeric bar for the
+        need-integral — `MIN_GAIN` is not transferable across a change of unit
+        and inventing one here would be calibrating a threshold against a
+        statistic nobody has yet measured, which is the hash-salt-lottery defect.
+        The bar is pre-registered by the builder AFTER (a) reports the
+        distribution and BEFORE any arm is scored, and it comes back to this desk
+        in the same commit. It moves no existing threshold, adds no arm, edits no
+        world, and spends no GPU-hour.
 
 ## ROUTED: OPEN — `champions-language-grounding-arena`: the 51st audit ordered a
 ## seat to name `LG.00` as its ring, and naming it is the move this file's own
