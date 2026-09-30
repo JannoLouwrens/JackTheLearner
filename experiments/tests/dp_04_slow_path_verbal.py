@@ -418,7 +418,54 @@ in the order the ruling lists its guards:
   (cheapest design satisfying (b), resolvable gain rounded UP; companions by
   the old bars' declared geometry), with the pre-check record pasted below.
 
-PRECHECK RECORD v1 — pasted by the registration commit after the run.
+PRECHECK RECORD v1 — 2026-09-30. Seed 94 (spent sizing seed), launched by the
+17:07 slot (pid-declared, log /data/tmp/dp04_precheck.log), completed 17:46,
+wall 1354.4 s, `span_mismatches 0` — all 3072 reconstructed lives matched
+SIZING RECORD v1's spans exactly. Registered by the 18:07 slot. Artifact:
+/data/dp04_precheck_seed94_need.json; everything quoted below is from its
+`derived` block and nothing else (no arm mean exists anywhere in it).
+
+  GUARD (a) — PASS AT BOTH CAPS. Pooled per-life NI over every scored arm:
+  616 distinct values over 3072 lives at both caps, max_single_mass 0.0833
+  against NEED_MASS_CAP 0.767 (the retired statistic read 21 values with
+  0.767 on one atom). Disclosed, not gated: mass within the top 1% of the
+  value range is 0.652 (cap 200) / 0.658 (cap 400) — the RESOLUTION defect
+  is repaired; the world's shallowness is not, and was never this
+  statistic's to repair.
+
+  GUARD (b) — PASS. All 24 grid designs fit: resolvable gain
+  sd*SIGMA_GATE/sqrt(2) from 15.38 (cap 200, E 48, R 7) to 87.51 (cap 400,
+  E 12, R 1) against room_median 122.10 (cap 200) / 294.05 (cap 400).
+  `stop_fires` FALSE — option (i) is not refuted; guard (c) stands down.
+
+  REGISTRATION, by the rule declared above before the run: cheapest design
+  satisfying (b) by (R, E, cap) = (1, 12, 200), resolvable_gain
+  34.0206765975521, rounded UP -> NEED_MIN_GAIN = 35.0. Companions by the
+  old bars' declared geometry: SCRAM_ABS_NEED 28.0 (0.8x),
+  MUTE_FLOOR_MIN_NEED 35.0 (1.0x), HEADROOM_MIN_NEED 56.0 (1.6x).
+
+  DISCLOSURE FOR THE DESK'S (ii) DECISION — the unsaturated-null
+  arithmetic, from the same derive block. The null's measured distance from
+  STATISTIC_BOUND (ceil_need = LIFE_CAP) at cap 200 is 20.47 / 27.87 /
+  37.64 / 49.76 per task — mean 33.94, min 20.47. At the registered bars
+  the cap-200 venue as measured on seed 94 cannot pay the claim: the
+  maximum attainable mean gain (33.94, requiring verbal fully sated every
+  lived step, unattainable by construction) sits BELOW NEED_MIN_GAIN 35.0,
+  and min-task headroom 20.47 sits far below HEADROOM_MIN_NEED 56.0 — so
+  the registered run's expected verdict is VOID on the `headroom` lane:
+  the unsaturated-null guard refusing a venue whose matched-compute filler
+  already lives ~83-90% sated. Cap 400 reads the same at its cheapest
+  design (resolvable 87.51 vs mean headroom 83.10, min 49.65). Denser
+  designs DO fit under even the worst-task headroom (cap 200 E 48 R 7 ->
+  15.38 and R 5 -> 17.57 vs 20.47; cap 400 E 24 R 7 -> 45.25 vs 49.65),
+  but the registration rule picks by training cost and was declared before
+  these numbers existed — re-picking now would be choosing a design with
+  the numbers on the screen, so it is NOT done here. This is option (i)'s
+  result in the ruling's own sense: the statistic now resolves, and what
+  it resolves is that the WORLD leaves less room between the do-nothing-
+  smart arm and the bound than the smallest honest claim the cheapest
+  instrument can certify. The fifth instrument's reading is sharpened and
+  the row returns to the desk with this arithmetic.
 """
 
 from __future__ import annotations
@@ -434,7 +481,13 @@ _PILOT_BLOCKED = (
     "one, 21 distinct lifespans, quantum 6.25 steps at 48 lives against "
     "MIN_GAIN 5.0, and E>=5791 lives/arm/task would be needed for the derived "
     "2.357-step sd. The repair is a world/metric redesign (Review + "
-    "REVIEW_QUEUE `dp04-lifespan-has-no-resolution`), not a pilot."
+    "REVIEW_QUEUE `dp04-lifespan-has-no-resolution`), not a pilot. "
+    "UPDATE 2026-09-30, after the need-integral registration (PRECHECK RECORD "
+    "v1): the metric half is repaired (616 distinct values), but the null's "
+    "measured distance from the bound at cap 200 (min-task 20.47, mean 33.94) "
+    "sits below NEED_MIN_GAIN 35.0 and far below HEADROOM_MIN_NEED 56.0, so a "
+    "pilot on seeds 92/93 would buy the predicted headroom VOID. Still not a "
+    "pilot: the row is back on the Review desk for the option (ii) decision."
 )
 
 import hashlib
@@ -561,10 +614,10 @@ _PRECHECK_STOP = (
 # (SCRAM_ABS/MIN_GAIN = 0.8, MUTE_FLOOR_MIN/MIN_GAIN = 1.0,
 # HEADROOM_MIN/MIN_GAIN = 1.6). None is fitted to an arm mean; none was ever
 # on the screen. While None, `run()` refuses and `_check` returns VOID.
-NEED_MIN_GAIN = None      # need units (1.0 == one fully-sated step)
-SCRAM_ABS_NEED = None     # 0.8 * NEED_MIN_GAIN once registered
-MUTE_FLOOR_MIN_NEED = None   # 1.0 * NEED_MIN_GAIN once registered
-HEADROOM_MIN_NEED = None     # 1.6 * NEED_MIN_GAIN once registered
+NEED_MIN_GAIN = 35.0      # ceil(34.0206765975521) — PRECHECK RECORD v1 below
+SCRAM_ABS_NEED = 28.0     # 0.8 * NEED_MIN_GAIN
+MUTE_FLOOR_MIN_NEED = 35.0   # 1.0 * NEED_MIN_GAIN
+HEADROOM_MIN_NEED = 56.0     # 1.6 * NEED_MIN_GAIN
 
 _PRECHECK_ARTIFACT = "/data/dp04_precheck_seed94_need.json"
 

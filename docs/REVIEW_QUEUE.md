@@ -3696,6 +3696,29 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
         distribution and BEFORE any arm is scored, and it comes back to this desk
         in the same commit. It moves no existing threshold, adds no arm, edits no
         world, and spends no GPU-hour.
+    **BUILDER-TRACE 2026-09-30 17:0x–18:1x (`311288e` the guards+STOP, this
+    commit the registration) — OPTION (i) IS EXECUTED IN FULL, THE STOP DID NOT
+    FIRE, AND THE PRE-CHECK'S OWN NULL-HEADROOM READING IS THE DESIGN INPUT
+    THE (ii) DECISION WAS WAITING ON.** Pre-check ran on spent seed 94
+    (span_mismatches 0, 3072/3072 lives reconstructed exactly; artifact
+    `/data/dp04_precheck_seed94_need.json`). Guard (a): 616 distinct NI values,
+    max_single_mass 0.0833 vs cap 0.767 — PASS both caps. Guard (b): all 24
+    designs fit room_median — PASS; `stop_fires` false. Registered by the
+    pre-declared rule, blind to every mean: cheapest design (R 1, E 12,
+    cap 200) -> resolvable 34.0207, ceil -> **NEED_MIN_GAIN 35.0**; companions
+    28.0 / 35.0 / 56.0 by the old geometry. **What the desk should read before
+    ruling on (ii):** the derive block's own unsaturated-null figures say the
+    cap-200 venue cannot pay the registered claim — null headroom per task
+    20.47/27.87/37.64/49.76 (mean 33.94) vs NEED_MIN_GAIN 35.0, min-task 20.47
+    vs HEADROOM_MIN_NEED 56.0 — so the expected registered-run verdict is VOID
+    on the `headroom` lane, the unsaturated-null guard refusing a venue whose
+    matched-compute filler lives ~83–90% sated. Denser grid designs would fit
+    (cap 200 E 48 R 7 resolvable 15.38 < 20.47) but re-picking after seeing
+    the numbers is the hash-salt defect, so the tie-break stood. Full
+    arithmetic in PRECHECK RECORD v1 in the spec docstring; `_PILOT_BLOCKED`
+    updated so coverage keeps refusing a pilot that would buy the predicted
+    VOID. Seeds 92/93 unspent. No bar moved, no world edited, no GPU spent.
+    The stamp is the desk's.
 
 ## ROUTED: OPEN — `champions-language-grounding-arena`: the 51st audit ordered a
 ## seat to name `LG.00` as its ring, and naming it is the move this file's own
