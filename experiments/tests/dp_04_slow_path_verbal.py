@@ -373,6 +373,52 @@ is a bakeoff somebody has to write, not an argument. Routed to the Review as
 `dp04-lifespan-has-no-resolution` in `docs/REVIEW_QUEUE.md` — the redesign
 lane, NOT `DECISIONS_NEEDED.md`: law 3 says a fork whose arms can both be run
 is an experiment nobody has written yet, not an owner escalation.
+
+NEED-INTEGRAL ADOPTION — THE 2026-09-30 RULING EXECUTED (builder, 2026-09-30
+~17:1x UTC). The Review ruled (iii) with option (i) ORDERED FIRST AND ALONE:
+the claim statistic becomes the NEED-INTEGRAL over the life, option (ii) (the
+gridworld difficulty edit) is NOT ordered and is not built here. What changed,
+in the order the ruling lists its guards:
+
+  THE STATISTIC. Per life, NI = sum over lived steps of (1 - _drive(h0, h1)),
+  post-step needs clamped exactly as `_sim` clamps them for reward; per
+  (task, arm) the score is the mean NI over the same keyed eval spawns. The
+  full definition, the orientation argument (integrating deprivation alone
+  would reward dying early), and the retirement of the four lifespan-step
+  bars are at the NEED-INTEGRAL constants block below. The registry metric
+  key `lookahead_gain_over_matched_compute_filler` is UNCHANGED — the
+  registry states the claim unit-free; only the unit under it moved.
+
+  GUARD (a). `_experiment` now reports `need_resolution_max_mass` and
+  `need_distinct_values` over the pooled per-life NI of every scored arm, and
+  `_check` VOIDs — refuses to score, ahead of the hypothesis block — if any
+  single value holds more than NEED_MASS_CAP = 0.767, the measured mass that
+  killed mean lifespan. Offline, the `precheck` CLI mode reconstructs the
+  exact 3072 lives SIZING RECORD v1 paid for on the spent seed 94 (string-
+  keyed training and spawns; spans asserted against the v1 artifact, so a
+  mismatch is loud) and reads their need-integrals. Seeds 92/93 untouched.
+
+  GUARD (b). The same sigma arithmetic, re-run on the new statistic:
+  `_need_derive` bootstraps the reducible sd of the median-of-R need-gain
+  over the identical (cap, E, R) grid and reports the minimal resolvable
+  gain sd*SIGMA_GATE/sqrt(2) per design beside the statistic's attainable
+  room (ceil_need - react_need). SIGMA_GATE does not move. DELIBERATE
+  BLINDNESS: the pre-check computes no mean of the need-gain and no mean of
+  the verbal arm anywhere, so the bar registered after it reports cannot
+  have been fitted to an effect size (1^16 item 3(b)).
+
+  GUARD (c). `_PRECHECK_STOP`, declared in source in the SAME COMMIT that
+  built the pre-check and BEFORE it ran: if (a) fails at both caps or (b)
+  reports no design whose resolvable gain fits the room, option (i) is
+  REFUTED, the row returns to the desk, and option (ii) becomes mandatory.
+
+  THE BAR. NEED_MIN_GAIN and its three unit-bound companions are None in
+  this commit — `run()` refuses and `_check` VOIDs while they are — and are
+  registered in the NEXT commit by the rule declared at their definition
+  (cheapest design satisfying (b), resolvable gain rounded UP; companions by
+  the old bars' declared geometry), with the pre-check record pasted below.
+
+PRECHECK RECORD v1 — pasted by the registration commit after the run.
 """
 
 from __future__ import annotations
@@ -408,7 +454,7 @@ from .dp_00_lookahead_pays import (CTRL_TOL, FLAT_EPISODES, FLAT_MIN_D,
                                    FLAT_SHAPE, FLAT_T, LIFE_CAP, _action_scores,
                                    _flat_scores, _flat_sim, _pick, _sim)
 from .lc_00_gridworld_decidable import (ACTIONS, DEPLETE, GAMMA, N_FOOD, SIZE,
-                                        _World)
+                                        _World, _drive)
 
 IMPL_DEPS = ["experiments/tests/lc_00_gridworld_decidable.py",
              "experiments/tests/dp_00_lookahead_pays.py"]
@@ -450,6 +496,77 @@ SCRAM_ABS = 4.0           # ...and an absolute ceiling in steps
 FLAT_TOL = 0.04           # |normalised gain| allowed at zero demand
 RHO_MIN = 0.60            # Pearson r, normalised demand vs normalised gain
 MUTE_FLOOR_MIN = 5.0      # steps the mute arm must clear its reactive floor by
+
+# ── THE NEED-INTEGRAL STATISTIC — option (i) of the 2026-09-30 ruling on
+# `dp04-lifespan-has-no-resolution` (docs/REVIEW_QUEUE.md), executed by the
+# builder. MEAN CENSORED LIFESPAN IS RETIRED AS THE CLAIM STATISTIC: SIZING
+# RECORD v1 measured it as a 21-value support with 76.7% mass on one atom —
+# a survive/die indicator wearing a continuous type. The four bars above that
+# are denominated in LIFESPAN STEPS (MIN_GAIN, SCRAM_ABS, MUTE_FLOOR_MIN,
+# HEADROOM_MIN) are RETIRED WITH IT, values untouched — the ruling: "MIN_GAIN
+# is not transferable across a change of unit". `_check` no longer reads them;
+# they stay in source so the history is legible and nothing looks moved.
+#
+# The statistic, per life:  NI = sum over lived steps of (1 - _drive(h0, h1)),
+# post-step needs clamped at 0 exactly as `_sim` clamps them for reward.
+# `_drive` is LC.00's OWN declared deprivation (lc_00:115) — the function the
+# world's reward is already defined on — imported, not invented. The `1 -`
+# orientation is load-bearing: integrating deprivation alone would REWARD
+# dying early (a dead clone accrues no deprivation), while integrating
+# wellbeing makes living well accumulate and death stop the accrual. NI
+# strictly refines lifespan: two lives that both reach the cap differ by how
+# sated they stayed, which is exactly the distinction the ruling names as the
+# one mean lifespan cannot express (no atom at the censoring boundary).
+# Claim score per (task, arm) = mean NI over the same keyed eval spawns.
+#
+# GUARD (a) — RESOLUTION PRE-CHECK, wired into the scoring path: `_experiment`
+# reports `need_resolution_max_mass` over the pooled per-life NI values of
+# every scored arm, and `_check` refuses to score (VOID) if any single value
+# holds more than NEED_MASS_CAP — the measured mass that killed the old
+# statistic. Offline, `python -m ... precheck` re-derives the same quantities
+# on the SPENT sizing seed 94 by reconstructing the exact lives already paid
+# for (string-keyed training and spawns; spans are asserted against the v1
+# artifact) — seeds 92/93 are NOT spent by it.
+NEED_MASS_CAP = 0.767     # the sizing run's own cap-atom mass; exclusive bound
+
+# GUARD (b) — THE SAME SIGMA ARITHMETIC, RE-RUN ON THE NEW STATISTIC: the
+# pre-check bootstraps the reducible sd of the need-gain over the identical
+# (cap, E, R) grid and reports the minimal resolvable gain
+# sd * SIGMA_GATE / sqrt(2) per design, beside the statistic's own attainable
+# room (ceil_need - react_need per task). A graded statistic is not
+# automatically a resolvable one. DELIBERATE BLINDNESS: the pre-check never
+# computes the need-gain's MEAN — only its sd — so the bar registered after
+# it reports cannot have been chosen with an effect size on the screen.
+#
+# GUARD (c) — THE PRE-REGISTERED STOP, declared before the pre-check ran:
+_PRECHECK_STOP = (
+    "If the pre-check reports (a) a single need-integral value holding more "
+    "than NEED_MASS_CAP of the pooled per-life mass at BOTH candidate caps "
+    "(200 and 400), or (b) no design in the pre-registered grid "
+    "(caps 200/400 x E 12/24/48 x R 1/3/5/7, at a cap that passed (a)) whose "
+    "minimal resolvable gain sd*SIGMA_GATE/sqrt(2) fits inside the "
+    "statistic's attainable room (median over tasks of ceil_need - "
+    "react_need), then option (i) is REFUTED, the row returns to the Review "
+    "desk, and option (ii) - the gridworld difficulty edit - becomes "
+    "mandatory rather than optional. The falsifier is armed against the "
+    "ruling, not against the arms.")
+
+# THE BAR — registered by the builder AFTER guard (a) reported and BEFORE any
+# arm is scored (ruling, verbatim), in the commit that pastes the pre-check
+# record into this docstring. The registration rule is declared HERE, before
+# the pre-check ran: NEED_MIN_GAIN = the minimal resolvable gain of the
+# CHEAPEST grid design satisfying guard (b) (ties: min R, then E, then cap),
+# rounded UP — i.e. the smallest honest claim this instrument can certify —
+# and the three unit-bound companions inherit the old bars' declared geometry
+# (SCRAM_ABS/MIN_GAIN = 0.8, MUTE_FLOOR_MIN/MIN_GAIN = 1.0,
+# HEADROOM_MIN/MIN_GAIN = 1.6). None is fitted to an arm mean; none was ever
+# on the screen. While None, `run()` refuses and `_check` returns VOID.
+NEED_MIN_GAIN = None      # need units (1.0 == one fully-sated step)
+SCRAM_ABS_NEED = None     # 0.8 * NEED_MIN_GAIN once registered
+MUTE_FLOOR_MIN_NEED = None   # 1.0 * NEED_MIN_GAIN once registered
+HEADROOM_MIN_NEED = None     # 1.6 * NEED_MIN_GAIN once registered
+
+_PRECHECK_ARTIFACT = "/data/dp04_precheck_seed94_need.json"
 
 _PILOT_SEEDS = (90, 91)
 _PILOT_ARTIFACT = "/data/dp04_pilot_seed%d.json"
@@ -561,6 +678,28 @@ def _seed_of(key: str) -> int:
     return int(hashlib.sha256(key.encode()).hexdigest()[:8], 16)
 
 
+def _need_step(h0: float, h1: float) -> float:
+    """Per-step wellbeing: 1 minus the world's own deprivation, post-step
+    needs clamped at zero exactly as `_sim` clamps them for reward."""
+    return 1.0 - _drive(max(0.0, h0), max(0.0, h1))
+
+
+def _starve_integral() -> float:
+    """The need-integral of the never-consuming life — the deterministic
+    FLOOR anchor. Needs deplete at a constant rate and consumption RESETS a
+    need to 1.0 (never partial), so no trajectory's needs sit below the
+    starving trajectory's while it is alive; it dies at LIFE_FLOOR by
+    construction. Derived, not typed, so it cannot rot under a DEPLETE edit."""
+    h0 = h1 = 1.0
+    tot = 0.0
+    while True:
+        h0 -= DEPLETE[0]
+        h1 -= DEPLETE[1]
+        tot += _need_step(h0, h1)
+        if h0 <= 0.0 or h1 <= 0.0:
+            return tot
+
+
 # ── tasks ────────────────────────────────────────────────────────────────
 
 class _Survival:
@@ -574,8 +713,15 @@ class _Survival:
         self.name = f"res{n_res}"
         self.world = _VariantWorld(seed, n_res)
         self.memo: dict = {}
-        self.floor = float(LIFE_FLOOR)
-        self.ceil = float(LIFE_CAP)
+        # NEED-UNIT anchors (2026-09-30 ruling). The ceiling is the HARD
+        # measurement bound — LIFE_CAP steps at full satiation — which is
+        # unattainable by construction (needs deplete before any reset), so
+        # the statistic cannot pile an atom on it the way lifespan piled on
+        # the cap. STATISTIC_BOUND: LIFE_CAP * 1.0; the null's measured
+        # distance from it is reported by the pre-check and gated by
+        # `headroom` (unsaturated-null rule, 2026-09-20).
+        self.floor = _starve_integral()
+        self.ceil = float(LIFE_CAP) * 1.0
         self._planes = torch.zeros(2, SIZE, SIZE)
         for (x, y) in self.world.food:
             self._planes[0, x, y] = 1.0
@@ -627,36 +773,46 @@ class _Survival:
                 steps = LIFE_CAP
         return torch.stack(obs), torch.stack(tgt)
 
-    def rollout_spans(self, act_fn, n: int | None = None) -> list:
-        """The raw per-life lifespans, censored at LIFE_CAP.
+    def rollout_lives(self, act_fn, n: int | None = None,
+                      marks: tuple = ()) -> list:
+        """(span, need_integral, {mark_step: prefix_integral}) per life.
 
-        Split out of `rollout` for the sizing run, which needs the spans rather
-        than their mean: the spawn sequence is drawn from a fixed key, so the
-        first `N_EVAL_LIVES` entries of an `n > N_EVAL_LIVES` call are exactly
-        the lives the registered envelope would have scored. That prefix
-        property is what lets one sizing run report every eval count without
-        re-running anything, and it is why `n` extends the sequence rather than
-        re-seeding it.
+        The spawn sequence is drawn from a fixed key with the SAME draw
+        pattern the original `rollout_spans` used, so the first
+        `N_EVAL_LIVES` entries of an `n > N_EVAL_LIVES` call are exactly the
+        lives the registered envelope would have scored, and a re-run
+        reproduces the lives the sizing artifact already paid for —
+        span-for-span. `marks` records the running integral at given step
+        counts so one cap-400 run also reports the cap-200 statistic.
         """
         spawn = random.Random(f"dp04-spawn-{self.seed}-{self.name}")
-        spans = []
+        lives = []
         for _ in range(N_EVAL_LIVES if n is None else n):
             x, y = spawn.randrange(SIZE), spawn.randrange(SIZE)
             h0 = h1 = 1.0
-            steps = 0
+            steps, ni, at = 0, 0.0, {}
             while steps < LIFE_CAP:
                 a = act_fn(self.obs((x, y, h0, h1)))
                 x, y, h0, h1, _r, dead = _sim(self.world, x, y, h0, h1, a)
                 steps += 1
+                ni += _need_step(h0, h1)
+                if steps in marks:
+                    at[steps] = ni
                 if dead:
                     break
-            spans.append(steps)
-        return spans
+            for mk in marks:
+                at.setdefault(mk, ni)
+            lives.append((steps, ni, at))
+        return lives
+
+    def rollout_spans(self, act_fn, n: int | None = None) -> list:
+        """The raw per-life lifespans, censored at LIFE_CAP (v1 reader)."""
+        return [s for s, _ni, _at in self.rollout_lives(act_fn, n)]
 
     def rollout(self, act_fn, tag: str) -> float:
-        """Mean lifespan, censored at LIFE_CAP. Spawns are identical per arm."""
-        spans = self.rollout_spans(act_fn)
-        return sum(spans) / len(spans)
+        """Mean NEED-INTEGRAL over the eval lives. Spawns identical per arm."""
+        lives = self.rollout_lives(act_fn)
+        return sum(ni for _s, ni, _at in lives) / len(lives)
 
     def reference(self) -> tuple:
         """(reactive floor, oracle ceiling) — DP.00's two arms, this variant.
@@ -679,28 +835,29 @@ class _Survival:
         gate is for."""
         rng = random.Random(f"dp04-rand-{self.seed}-{self.name}")
         spawn = random.Random(f"dp04-spawn-{self.seed}-{self.name}")
-        spans = []
+        scores = []
         for _ in range(N_EVAL_LIVES):
             x, y = spawn.randrange(SIZE), spawn.randrange(SIZE)
             h0 = h1 = 1.0
-            steps = 0
+            steps, ni = 0, 0.0
             while steps < LIFE_CAP:
                 x, y, h0, h1, _r, dead = _sim(self.world, x, y, h0, h1,
                                               rng.randrange(N_ACT))
                 steps += 1
+                ni += _need_step(h0, h1)
                 if dead:
                     break
-            spans.append(steps)
-        return sum(spans) / len(spans)
+            scores.append(ni)
+        return sum(scores) / len(scores)
 
     def _planner_score(self, horizon: int, persist: bool = False) -> float:
         rng = random.Random(f"dp04-arm-{self.seed}-{self.name}-{horizon}-{persist}")
         spawn = random.Random(f"dp04-spawn-{self.seed}-{self.name}")
-        spans = []
+        scores = []
         for _ in range(N_EVAL_LIVES):
             x, y = spawn.randrange(SIZE), spawn.randrange(SIZE)
             h0 = h1 = 1.0
-            prev, steps = None, 0
+            prev, steps, ni = None, 0, 0.0
             while steps < LIFE_CAP:
                 self._memo_guard()
                 a = _pick(_scores_shared(self.world, x, y, h0, h1, horizon,
@@ -708,10 +865,11 @@ class _Survival:
                 prev = a
                 x, y, h0, h1, _r, dead = _sim(self.world, x, y, h0, h1, a)
                 steps += 1
+                ni += _need_step(h0, h1)
                 if dead:
                     break
-            spans.append(steps)
-        return sum(spans) / len(spans)
+            scores.append(ni)
+        return sum(scores) / len(scores)
 
 
 class _Flat:
@@ -999,8 +1157,13 @@ def _fit_all(seed: int) -> dict:
         for arm in ("verbal", "filler", "mute"):
             fit = _train(task, arm, seed, obs, tgt)
             net = fit["net"]
+            if task.kind == "survival":
+                lives = task.rollout_lives(_act_fn(net))
+                score = sum(ni for _s, ni, _at in lives) / len(lives)
+            else:
+                lives, score = None, task.rollout(_act_fn(net), arm)
             entry["arms"][arm] = {
-                "score": task.rollout(_act_fn(net), arm),
+                "score": score, "lives": lives,
                 "loss_first": fit["loss_first"], "loss_last": fit["loss_last"],
                 "net": net}
         # THE CONTROL: verbal's own trained weights, symbols permuted at eval.
@@ -1017,8 +1180,14 @@ def _fit_all(seed: int) -> dict:
             pl[s] = cycle[(i + 1) % VOCAB]
         perm = torch.tensor(pl)
         vnet = entry["arms"]["verbal"]["net"]
+        if task.kind == "survival":
+            slives = task.rollout_lives(_act_fn(vnet, perm=perm))
+            sscore = sum(ni for _s, ni, _at in slives) / len(slives)
+        else:
+            slives = None
+            sscore = task.rollout(_act_fn(vnet, perm=perm), "scrambled")
         entry["arms"]["scrambled"] = {
-            "score": task.rollout(_act_fn(vnet, perm=perm), "scrambled"),
+            "score": sscore, "lives": slives,
             "loss_first": entry["arms"]["verbal"]["loss_first"],
             "loss_last": entry["arms"]["verbal"]["loss_last"],
             "net": vnet}
@@ -1089,6 +1258,23 @@ def _experiment(seed: int) -> dict:
             headroom = min(headroom, e["ceil"] - f)
             m[f"headroom_to_oracle_{name}"] = e["oracle"] - f
 
+    # GUARD (a) — the resolution pre-check, computed before the claim fold
+    # and gated in `_check` AHEAD of the hypothesis block: if any single
+    # need-integral value holds more than NEED_MASS_CAP of the pooled
+    # per-life mass, the statistic has no resolution here and the run
+    # refuses to score (VOID), exactly as the 2026-09-30 ruling orders.
+    vals = []
+    for name in surv:
+        for arm in ("verbal", "filler", "mute", "scrambled"):
+            arm_lives = fit["tasks"][name]["arms"][arm]["lives"] or []
+            vals += [round(ni, 6) for _s, ni, _at in arm_lives]
+    counts: dict = {}
+    for v in vals:
+        counts[v] = counts.get(v, 0) + 1
+    m["need_resolution_max_mass"] = (
+        max(counts.values()) / len(vals) if vals else 1.0)
+    m["need_distinct_values"] = float(len(counts))
+
     m["lookahead_gain_over_matched_compute_filler"] = (
         sum(gains[i] for i, n in enumerate(fit["order"]) if n in surv)
         / max(len(surv), 1))
@@ -1148,8 +1334,13 @@ def _check(m: dict, c: dict):
         return Status.VOID          # an arm never learned; the compare is dead
     if m.get("emit_entropy_min", 0.0) < ENT_MIN:
         return Status.VOID          # the emission collapsed: verbal IS filler
-    if m.get("headroom", 0.0) < HEADROOM_MIN:
-        return Status.VOID          # the null already matches the teacher
+    if NEED_MIN_GAIN is None or HEADROOM_MIN_NEED is None \
+            or SCRAM_ABS_NEED is None or MUTE_FLOOR_MIN_NEED is None:
+        return Status.VOID          # need bars unregistered; run() refuses first
+    if m.get("need_resolution_max_mass", 1.0) > NEED_MASS_CAP:
+        return Status.VOID          # guard (a): the statistic has no resolution
+    if m.get("headroom", 0.0) < HEADROOM_MIN_NEED:
+        return Status.VOID          # the null sits on the measurement ceiling
     if m.get("demand_spread", 0.0) < SPREAD_MIN:
         return Status.VOID          # there is no dose axis to respond to
     if m.get("demand_flat_steps", 1e9) > CTRL_TOL:
@@ -1161,30 +1352,38 @@ def _check(m: dict, c: dict):
     gain = m.get("lookahead_gain_over_matched_compute_filler", 0.0)
     sigma = gain * math.sqrt(2.0) / max(
         m.get("lookahead_gain_over_matched_compute_filler_std", 0.0), 1e-9)
-    ok = (gain >= MIN_GAIN
+    ok = (gain >= NEED_MIN_GAIN
           and sigma >= SIGMA_GATE
           # (b) the control must not help
           and c.get("ctrl_scrambled_gain", 1e9) <= max(SCRAM_FRAC * gain, 0.0)
-          and c.get("ctrl_scrambled_gain", 1e9) <= SCRAM_ABS
+          and c.get("ctrl_scrambled_gain", 1e9) <= SCRAM_ABS_NEED
           # (c) zero demand, zero gain
           and abs(m.get("gain_flat", 1e9)) <= FLAT_TOL
           # (d) dose-response across the five task points
           and m.get("rho_demand_gain", -1.0) >= RHO_MIN
           # (e) the mute arm must still deliberate
-          and m.get("mute_over_floor_min", -1e9) >= MUTE_FLOOR_MIN)
+          and m.get("mute_over_floor_min", -1e9) >= MUTE_FLOOR_MIN_NEED)
     return Status.PASS if ok else Status.FAIL
 
 
 def run(ledger: Ledger | None = None):
+    if NEED_MIN_GAIN is None:
+        raise RuntimeError(
+            "DP.04's claim bar is UNREGISTERED. The 2026-09-30 ruling "
+            "(dp04-lifespan-has-no-resolution) adopts the need-integral as "
+            "the claim statistic; NEED_MIN_GAIN and its three unit-bound "
+            "companions are registered only AFTER the resolution pre-check "
+            "(`python -m experiments.tests.dp_04_slow_path_verbal precheck`) "
+            "reports, per the declared registration rule above them.")
     if not _GATES_FROZEN:
         raise RuntimeError(
-            "DP.04 gates are PROVISIONAL. Run the pilot "
-            "(`python -m experiments.tests.dp_04_slow_path_verbal pilot`), read "
-            f"{_PILOT_ARTIFACT % 90} and {_PILOT_ARTIFACT % 91}, freeze "
-            "ENT_MIN / HEADROOM_MIN / SPREAD_MIN / MIN_GAIN / SCRAM_FRAC / "
-            "SCRAM_ABS / FLAT_TOL / RHO_MIN / MUTE_FLOOR_MIN against the "
-            "measured table in a commit that pastes the table into this "
-            "docstring, then set _GATES_FROZEN = True. A gate fitted to the "
+            "DP.04 gates are PROVISIONAL. Run pilot v2 on seeds 92/93 "
+            "(`python -m experiments.tests.dp_04_slow_path_verbal pilot`), "
+            "freeze ENT_MIN / SPREAD_MIN / SCRAM_FRAC / FLAT_TOL / RHO_MIN "
+            "against the measured table in a commit that pastes the table "
+            "into this docstring, then set _GATES_FROZEN = True. The "
+            "NEED-denominated bars are ALREADY REGISTERED by the declared "
+            "rule and are not re-fitted at pilot time. A gate fitted to the "
             "run it judges is not a gate.")
     return run_spec(BY_ID["DP.04"], _experiment, _check, control_fn=_control,
                     ledger=ledger or Ledger())
@@ -1355,6 +1554,12 @@ def _size():
     enter `lookahead_gain_over_matched_compute_filler`, which is the statistic
     being sized; its own gate (`demand_flat_steps`) passed on both pilot seeds.
     """
+    import os
+    if os.path.exists(_SIZE_ARTIFACT):
+        raise RuntimeError(
+            f"{_SIZE_ARTIFACT} exists and is load-bearing (SIZING RECORD v1). "
+            "This mode is superseded by `precheck`, which reconstructs the "
+            "same lives without overwriting the record.")
     torch.set_num_threads(THREADS)
     old = _shrink(LIFE_CAP=_SIZE_CAP)
     try:
@@ -1402,6 +1607,185 @@ def _size():
         _CACHE.clear()
 
 
+def _need_derive(out: dict) -> dict:
+    """Guards (a) and (b) on the reconstructed lives. Pure post-processing.
+
+    DELIBERATE BLINDNESS: no mean of the need-GAIN — and no mean of the
+    verbal arm at all — is computed anywhere in this function; only spreads,
+    masses, counts and NULL-arm levels. The bar registered off this report
+    cannot have been chosen with an effect size in view. (The raw per-life
+    values are in the artifact, as v1's raw spans were; the registration
+    commit quotes this derive block and nothing else.)
+    """
+    names = list(out["tasks"])
+    d = {"NEED_MASS_CAP": NEED_MASS_CAP, "stop_rule": _PRECHECK_STOP,
+         "caps": {}, "designs": [], "sigma_arith":
+         "resolvable_gain = sd * SIGMA_GATE / sqrt(2); the inverse of "
+         "SIZING RECORD v1's target_gain_std, same two unmoved bars"}
+
+    # GUARD (a): resolution, pooled over every (task, arm, restart) life.
+    for cap in _SIZE_CAPS:
+        vals = []
+        for n in names:
+            for arm in ("verbal", "filler"):
+                for r in out["tasks"][n]["arms"][arm]:
+                    vals += [round(v, 6) for v in r[f"ni{cap}"]]
+        counts: dict = {}
+        for v in vals:
+            counts[v] = counts.get(v, 0) + 1
+        mx = max(counts.values())
+        sv = sorted(vals)
+        lo, hi = sv[0], sv[-1]
+        w = (hi - lo) or 1.0
+        room = sorted(out["tasks"][n][f"ceil_need_{cap}"]
+                      - out["tasks"][n][f"react_need_{cap}"] for n in names)
+        d["caps"][cap] = {
+            "n_lives": len(vals), "distinct_values": len(counts),
+            "max_single_mass": mx / len(vals),
+            "mass_top_1pct_of_range":
+                sum(1 for v in vals if v >= hi - 0.01 * w) / len(vals),
+            "mass_bottom_1pct_of_range":
+                sum(1 for v in vals if v <= lo + 0.01 * w) / len(vals),
+            "value_min": lo, "value_max": hi,
+            "quartiles": [sv[len(sv) // 4], sv[len(sv) // 2],
+                          sv[(3 * len(sv)) // 4]],
+            "room_per_task": {n: out["tasks"][n][f"ceil_need_{cap}"]
+                              - out["tasks"][n][f"react_need_{cap}"]
+                              for n in names},
+            "room_median": 0.5 * (room[1] + room[2]),
+            # the NULL's distance from the statistic's bound, per the
+            # unsaturated-null rule — filler only, never verbal
+            "null_headroom_per_task": {
+                n: out["tasks"][n][f"ceil_need_{cap}"] - (
+                    sum(v for r in out["tasks"][n]["arms"]["filler"]
+                        for v in r[f"ni{cap}"])
+                    / sum(len(r[f"ni{cap}"])
+                          for r in out["tasks"][n]["arms"]["filler"]))
+                for n in names},
+            "a_pass": bool(mx / len(vals) <= NEED_MASS_CAP)}
+
+    # GUARD (b): the same sigma arithmetic, re-run on the new statistic —
+    # bootstrap sd of the median-of-R need-gain, sd ONLY, never its mean.
+    for cap in _SIZE_CAPS:
+        for E in _SIZE_ES:
+            scE = {(n, a): [sum(r[f"ni{cap}"][:E]) / E
+                            for r in out["tasks"][n]["arms"][a]]
+                   for n in names for a in ("verbal", "filler")}
+            for R in _SIZE_RS:
+                bs = random.Random(f"dp04-need-bs-{cap}-{E}-{R}")
+                draws = []
+                for _ in range(_SIZE_B):
+                    tot = 0.0
+                    for n in names:
+                        mv = _median([bs.choice(scE[(n, "verbal")])
+                                      for _ in range(R)])
+                        mf = _median([bs.choice(scE[(n, "filler")])
+                                      for _ in range(R)])
+                        tot += mv - mf
+                    draws.append(tot / len(names))
+                sd = _stdev(draws)
+                rg = sd * SIGMA_GATE / math.sqrt(2.0)
+                d["designs"].append({
+                    "cap": cap, "E": E, "R": R, "gain_sd_reducible": sd,
+                    "resolvable_gain": rg,
+                    "fits_room": bool(rg <= d["caps"][cap]["room_median"]),
+                    "trainings_rel": R})
+
+    ok = [x for x in d["designs"]
+          if x["fits_room"] and d["caps"][x["cap"]]["a_pass"]]
+    d["a_pass_any_cap"] = any(d["caps"][c]["a_pass"] for c in _SIZE_CAPS)
+    d["b_pass"] = bool(ok)
+    d["cheapest_design"] = (min(ok, key=lambda x: (x["R"], x["E"], x["cap"]))
+                            if ok else None)
+    d["stop_fires"] = not (d["a_pass_any_cap"] and d["b_pass"])
+    return d
+
+
+def _precheck():
+    """GUARDS (a) AND (b) of the 2026-09-30 ruling, on the SPENT sizing seed.
+
+    Reconstructs the exact 3072 lives SIZING RECORD v1 already paid for on
+    seed 94 — same string-keyed training, same keyed spawns, spans asserted
+    against the v1 artifact — and reads their need-integrals, which v1 did
+    not record. Seeds 92/93 are NOT touched. No ledger row is written and
+    none may be. The H=8 oracle reference is deliberately NOT re-run (the
+    room arithmetic needs the reactive floor and the hard ceiling only), so
+    this costs less than the sizing run it mirrors.
+    """
+    torch.set_num_threads(THREADS)
+    old = _shrink(LIFE_CAP=_SIZE_CAP)
+    try:
+        t0 = time.time()
+        try:
+            with open(_SIZE_ARTIFACT) as fh:
+                v1 = json.load(fh)["tasks"]
+        except OSError:
+            v1 = None
+            print("WARN: v1 artifact missing; span match cannot be verified",
+                  flush=True)
+        out = {"seed": _SIZE_SEED, "R": _SIZE_R, "E": _SIZE_E,
+               "cap_run": _SIZE_CAP,
+               "statistic": "need_integral: sum over lived steps of "
+                            "(1 - lc00._drive(h0, h1)), post-step, clamped",
+               "stop_rule": _PRECHECK_STOP, "tasks": {},
+               "span_mismatches": 0}
+        for n_res in RES_COUNTS:
+            task = _Survival(_SIZE_SEED, n_res)
+            rng = random.Random(f"dp04-collect-{_SIZE_SEED}-{task.name}")
+            obs, tgt = task.collect(N_LABEL, rng)
+            react400 = max(task._planner_score(1, persist=False),
+                           task._planner_score(1, persist=True))
+            rand400 = task.random_score()
+            entry = {"floor_need": task.floor,
+                     "ceil_need_400": float(_SIZE_CAP),
+                     "ceil_need_200": 200.0,
+                     "react_need_400": react400, "rand_need_400": rand400,
+                     "arms": {}}
+            old2 = _shrink(LIFE_CAP=200)
+            entry["react_need_200"] = max(
+                task._planner_score(1, persist=False),
+                task._planner_score(1, persist=True))
+            globals().update(old2)
+            for arm in ("verbal", "filler"):
+                runs = []
+                for r in range(_SIZE_R):
+                    fit = _train(task, arm, _SIZE_SEED, obs, tgt, restart=r)
+                    lives = task.rollout_lives(_act_fn(fit["net"]), _SIZE_E,
+                                               marks=(200,))
+                    spans = [s for s, _ni, _at in lives]
+                    if v1 is not None:
+                        want = v1[task.name]["arms"][arm][r]["spans"]
+                        if spans != want:
+                            out["span_mismatches"] += 1
+                            print(f"SPAN MISMATCH {task.name}/{arm}/r{r}",
+                                  flush=True)
+                    runs.append({
+                        "restart": r, "spans": spans,
+                        "ni400": [ni for _s, ni, _at in lives],
+                        "ni200": [at[200] for _s, _ni, at in lives],
+                        "loss_first": fit["loss_first"],
+                        "loss_last": fit["loss_last"]})
+                    print("  %s/%s r%d done (%.0f s)"
+                          % (task.name, arm, r, time.time() - t0), flush=True)
+                entry["arms"][arm] = runs
+            task.memo.clear()
+            out["tasks"][task.name] = entry
+        out["precheck_wall_s"] = time.time() - t0
+        out["derived"] = _need_derive(out)
+        txt = json.dumps(out, default=float, indent=1)
+        try:
+            with open(_PRECHECK_ARTIFACT, "w") as fh:
+                fh.write(txt)
+        except OSError as exc:                       # pragma: no cover
+            print(f"WARN: could not write {_PRECHECK_ARTIFACT}: {exc}")
+        print(json.dumps(out["derived"], default=float, indent=1), flush=True)
+        print("span_mismatches", out["span_mismatches"], flush=True)
+        print("precheck_wall_s %.1f" % out["precheck_wall_s"], flush=True)
+    finally:
+        globals().update(old)
+        _CACHE.clear()
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "smoke":
         _smoke()
@@ -1409,5 +1793,7 @@ if __name__ == "__main__":
         _pilot()
     elif len(sys.argv) > 1 and sys.argv[1] == "size":
         _size()
+    elif len(sys.argv) > 1 and sys.argv[1] == "precheck":
+        _precheck()
     else:
         print(run().status)
