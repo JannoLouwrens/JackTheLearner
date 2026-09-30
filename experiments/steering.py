@@ -386,14 +386,29 @@ def text_date_mismatches(text: str, register: Dict[str, str],
             dates = _ISO.findall(sent)
             if not dates:
                 continue
+            cited = []
             for m in DECISION_CITATION.finditer(sent):
                 did = "D" + m.group(1)
-                db = register.get(did)
-                if db is None:
-                    continue
+                if register.get(did) is not None and did not in cited:
+                    cited.append(did)
+            withheld_ids = []
+            for did in cited:
+                db = register[did]
                 fire = (_dt.date.fromisoformat(db)
                         + _dt.timedelta(days=1)).isoformat()
                 if any(d in (db, fire) for d in dates):
+                    continue
+                # THE SAME-SPAN RULE (132nd audit FTB 3, repaired rather
+                # than endorsed): a sentence naming MORE THAN ONE open id
+                # beside a date cannot attribute the date, so a would-be
+                # mismatch there is WITHHELD — the way `WAITS-ON` withholds
+                # a partial day — instead of fanning one sentence into one
+                # false positive per id (measured: 4 of 6 readings were one
+                # predecessor sentence listing D33/D35/D37/D38 beside one
+                # date). A sentence whose date AGREES with an id stays
+                # silent for that id exactly as before.
+                if len(cited) > 1:
+                    withheld_ids.append(did)
                     continue
                 key = (did, tuple(sorted(set(dates))))
                 if key in seen:
@@ -403,6 +418,14 @@ def text_date_mismatches(text: str, register: Dict[str, str],
                             "page_says": sorted(set(dates)),
                             "register_says": db,
                             "sentence": sent[:160]})
+            if withheld_ids:
+                key = (tuple(withheld_ids), tuple(sorted(set(dates))))
+                if key not in seen:
+                    seen.add(key)
+                    out.append({"page": page, "withheld": True,
+                                "ids": withheld_ids,
+                                "page_says": sorted(set(dates)),
+                                "sentence": sent[:160]})
     return out
 
 
@@ -411,21 +434,31 @@ def render_dates(mis: Optional[List[dict]] = None,
     """The `STEERING-DATE-MISMATCH` block printed by `run status`."""
     if mis is None:
         mis = date_mismatches()
+    hard = [m for m in mis if not m.get("withheld")]
+    held = [m for m in mis if m.get("withheld")]
     if not mis:
         return (f"{indent}STEERING-DATE-MISMATCH — none: every open-decision "
                 f"deadline quoted on a steering page\n"
                 f"{indent}  agrees with the register (or with its fire day, "
                 f"deadline + 1).\n")
-    lines = [f"{indent}STEERING-DATE-MISMATCH — {len(mis)} open-decision "
-             f"deadline(s) misquoted on a steering page.\n"
+    lines = [f"{indent}STEERING-DATE-MISMATCH — {len(hard)} open-decision "
+             f"deadline(s) misquoted on a steering page"
+             + (f"; {len(held)} reading(s) WITHHELD (multi-id span)"
+                if held else "") + ".\n"
              f"{indent}  Reporting-only, unfloored: the register is the "
              f"authority; a page may cite a date\n"
              f"{indent}  for another reason, and this reader does not read "
              f"intent.\n"]
-    for m in mis:
+    for m in hard:
         lines.append(f"{indent}    {m['id']}  {m['page']} says "
                      f"{', '.join(m['page_says'])} — register says decide_by "
                      f"{m['register_says']}\n")
+        lines.append(f"{indent}      \"{m['sentence']}\"\n")
+    for m in held:
+        lines.append(f"{indent}    WITHHELD  {m['page']}: one span names "
+                     f"{', '.join(m['ids'])} beside "
+                     f"{', '.join(m['page_says'])} — attribution withheld "
+                     f"(same-span rule)\n")
         lines.append(f"{indent}      \"{m['sentence']}\"\n")
     return "".join(lines)
 
@@ -812,21 +845,36 @@ fourth piece of evidence.**
 Both `D20` and `D30` carry `decide_by: 2026-09-18`. `D24`, which closed
 2026-09-12, is not open and says nothing here. `D1.0` attempt 3 waited for
 W37 (opened 2026-09-13); a spec id is not a decision id.
+
+**3. The multi-id span (132nd audit FTB 3, the measured shape).** `D20`,
+`D28` and `D30` all fall due by 2026-09-21 and none may self-approve.
 """
     _reg = {"D30": "2026-09-18", "D28": "2026-09-21", "D20": "2026-09-18"}
     mis = text_date_mismatches(_DATE_FIXTURE, _reg, "fixture")
     want_mis = [("D30", ["2026-09-25"], "2026-09-18")]
-    got_mis = [(m["id"], m["page_says"], m["register_says"]) for m in mis]
+    got_mis = [(m["id"], m["page_says"], m["register_says"]) for m in mis
+               if not m.get("withheld")]
     if got_mis != want_mis:
         raise AssertionError(
             f"steering: date fixture flunked: {got_mis} != {want_mis} — the "
             f"one real misquote must flag; the fire-day sentence (09-19), the "
             f"agreeing citations (D28, D20/D30), the closed decision (D24) "
             f"and the spec id (D1.0) must all stay silent")
+    held = [m for m in mis if m.get("withheld")]
+    if [(tuple(m["ids"]), m["page_says"]) for m in held] != [
+            (("D20", "D30"), ["2026-09-21"])]:
+        raise AssertionError(
+            f"steering: the multi-id span must produce ONE withheld reading "
+            f"for its two disagreeing ids (D28 agrees and stays silent), not "
+            f"a mismatch per id: {held}")
     txt = render_dates(mis, indent="")
     if "D30" not in txt or "2026-09-25" not in txt or "2026-09-18" not in txt:
         raise AssertionError("steering: the mismatch render must name the id "
                              "and both dates")
+    if "WITHHELD" not in txt or "same-span rule" not in txt \
+            or "1 reading(s) WITHHELD" not in txt:
+        raise AssertionError("steering: the withheld reading must render as "
+                             "withheld, counted apart from the misquotes")
     if "none:" not in render_dates([], indent=""):
         raise AssertionError("steering: a clean read must still print — an "
                              "absent block is indistinguishable from an "
