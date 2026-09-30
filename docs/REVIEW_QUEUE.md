@@ -16256,3 +16256,115 @@ ROUTED: prose-sequencing-inverts-when-the-blocker-moves | 2026-09-29 | this sitt
         the act of reporting it. | what is owed by then: the inverted-pair count
         on the live corpus, the legitimate fraction of it, written down — and the
         reading shipped ONLY if that fraction says it would not be noise.
+
+## ROUTED: OPEN — `builder-blackout-is-paced-by-another-projects-usage`: 23 dark
+## slots, and 42% of the weekly pool that paced them is NOT THIS PROJECT
+## (Review DAILY 2026-09-30, D30's standing default, read from the loop's own
+## PACING lines rather than from a summary)
+
+ROUTED: builder-blackout-is-paced-by-another-projects-usage | 2026-09-30 | Review DAILY (`/data/jack-logs/ladder.log` PACING lines 03:07–06:07, `usage_attribution.attribution()` at HEAD) | OPEN
+    DUE: 2026-10-02 | **the DESK's half only, and it is a MEASUREMENT, not a
+        design:** verify the `desks 0 (0%)` attribution against the desks'
+        actual sittings this week and say whether it is true or a gap. If it is
+        a gap, the pace gate is restricting the only organ whose consumption it
+        can see, and that is a different finding with a different owner. Nothing
+        is edited before that reading exists. 2026-10-02 carries 6 live rows —
+        AT the measured capacity and not over it, and dated there anyway because
+        a 30.0-hour GPU expiry on 10-03 makes a later date worthless.
+    Question: the builder has been dark for **23 consecutive slots** (~23.5 h;
+    last `rc=0` at `2026-09-29T07:18:19`, and the loop's own count read 22 at
+    06:07 today). `dark_slots = 23`, `failed_slots = 0` — **it is not broken and
+    it has not refused: it is being paced**, and its own PACING line names the
+    cause in full:
+    *"`week:all models` 78% at 29% of the week (line 44% …); week:Fable 57% (not
+    the gate); of this week's 35 shared point(s): builder 19 (54%), desks 0
+    (0%), both 1 (2%), **NOT THIS PROJECT 15 (42%)**; 22 consecutive dark
+    slot(s); 0 failed slots — skipping, budget held for later in the week."*
+    **THE FINDING IS THE LAST FIELD.** The gate is `week:all models`, the pool
+    is shared with the other tenants of this box (`CLAUDE.md`: the OpenClaw
+    platform, `company-*` agents, `jj-app`, `admin`), and **42% of this week's
+    consumption is not this project's work at all.** So the pace gate is
+    behaving exactly as designed — 78% spent at 29% of the week is genuinely
+    ahead of the line and holding budget back is correct — while the quantity it
+    is protecting against is substantially determined by traffic this project
+    neither issues nor controls. **The builder is being crowded out of its own
+    week by a neighbour, and no organ was reporting that.** The 09-28 page read
+    `dark slots 0` and wrote *"the builder is not the constraint"*; two days
+    later the builder is the only thing that is constrained.
+    **THE SECOND READING, FLAGGED AS UNVERIFIED BECAUSE THIS DESK CANNOT SETTLE
+    IT THIS SITTING.** The same line attributes **`desks 0 (0%)`** of 35 shared
+    points. The desks ran daily this week — this sitting alone is over an hour,
+    the overseer fired at 06:37 and 06:50 today, and `usage_ledger.jsonl` records
+    both — so either "shared point" is a unit the desks genuinely do not consume,
+    or **desk usage is invisible to the accounting that paces the builder.** If
+    it is the latter, the organ that gets throttled is the only one whose cost is
+    measured, which would be a structural unfairness built into the gate rather
+    than a bug in a number. **Stated as a question, not a conclusion:** this desk
+    has not read `usage_attribution.py`'s definition of a shared point and will
+    not assert a defect it has not verified.
+    **WHY IT MATTERS THIS WEEK AND NOT IN GENERAL — the perishable half.**
+    `2026-W39` carries **30.0 free Kaggle GPU-hours, 0.0 charged, expiring
+    Saturday 2026-10-03** (`W37` charged 5.25 h, `W38` charged 0.92 h — both
+    expired substantially unbought, so this is the **third consecutive week
+    lost**). Three days remain. The dark streak and the expiry are the same
+    week's arithmetic and have never been printed in the same sentence, which is
+    what `D30` exists to force.
+    **WHAT THIS ROW DOES NOT PROPOSE, said plainly so no future reader mistakes
+    it for a lever.** It proposes NO change to `PACE_FLOOR`, `PACE_CAP` or the
+    90% hard stop; those are exactly as they were and this desk may not move
+    them. It does not propose raising this project's share, which is not this
+    desk's to take, and it does not propose manufacturing a GPU dispatch to
+    spend the expiring hours — the 09-28 page's refusal on that point stands and
+    is correct, because both live routes to those hours run through `T1.08`
+    (FAIL) whose repair design is undelivered. **The ask is that the owner know
+    the trade is being made**, which is in FOR THE OWNER on today's page.
+    STALENESS BILL: none. No spec, no threshold, no certificate.
+
+## ROUTED: OPEN — `t406-latent-floor-was-never-computed`: the one UNROUTED field
+## finding, lifted off an INCOMPLETE-RUN DRAFT — and the distinction that makes
+## that legal (Review DAILY 2026-09-30, Part 2.5 duty 2)
+
+ROUTED: t406-latent-floor-was-never-computed | 2026-09-30 | docs/FIELD_WATCH.md §6 (week 9 sweep, 2026-09-28, INCOMPLETE-RUN DRAFT) | OPEN
+    DUE: 2026-10-05 | CHECK the arithmetic, then rule. Specifically: is the
+        floor for `min_modality_latent_r2` under a ridge probe fitting 513
+        params to 768 rows really `−r/(n_fit − r)`, and if so, do the four
+        senses reading latent R2 in `[−2.38, −0.17]` sit ABOVE or BELOW it?
+        `T4.06` holds a PASS, so this is a live certificate and the answer
+        decides whether one of its conjuncts measured anything. 2026-10-05
+        carries 6 live rows; dated there because the next field sweep lands
+        ~10-05 and this finding should be discharged before it is re-reported.
+    Question: `run status`'s `FIELD-WATCH FINDINGS` reader has reported **1
+    `UNROUTED-FIELD-FINDING`** since the 09-28 sweep: *"`T4.06`'s deciding
+    statistic was read against a floor that nobody computed, the floor is
+    `−r/(n_fit − r)`"*. `T4.06` is a standing **PASS** (`2026-09-23`, the week's
+    only first-ever verdict about Jack), and `run status`'s own
+    `ANCHOR-DECIDED CONJUNCTS` block independently prints its
+    `min_modality_latent_r2` conjunct as decided against an in-run anchor with
+    `loss_reweight` CERTIFIED at `+0.0187 = +6.9%` of the anchor's seed spread
+    and `0 improving / 3 REGRESSING` on two of the three arms. **Two
+    instruments and an outside scout are looking at the same conjunct from three
+    directions.**
+    **WHY THIS IS ROUTED WHEN THE PAGE IT CAME FROM IS SEALED AS UNVERIFIED, and
+    the distinction is the act.** `FIELD_WATCH.md` exited `rc=124` on 09-28 and
+    its banner declares every verdict and nomination in it UNVERIFIED. The 09-28
+    Review declined to consume it on the ground that *"consuming an unverified
+    draft would put an unreviewed arm on the builder's board under this desk's
+    authority."* **That reasoning is correct and it applies to NOMINATIONS —
+    proposals to adopt an external arm, which this desk cannot check without
+    doing the scout's work again.** It does not apply to §6, which is a finding
+    about **OUR OWN LEDGER**: its inputs are `T4.06`'s recorded metrics and its
+    claim is arithmetic, both of which this desk can verify from the repo
+    without trusting the draft at all. §6 even states its own provenance —
+    *"reproducible with NumPy and no GPU"* — and credits what the 109th audit
+    and `LESSONS.md` already own. **So the draft's six NOMINATIONS stay
+    unconsumed and uncontested until a complete sweep re-reports them; the one
+    finding about our own artifacts is lifted out and given an id.** Nothing is
+    adopted here: this row QUOTES a claim and orders it CHECKED.
+    **This also discharges the reader's own complaint rather than waiting a
+    week:** `FIELD-WATCH FINDINGS` asked for *"route it (quoting it) or record
+    its discharge where a desk can see it"*, and an `rc=124` page is not a
+    reason for a true finding inside it to age invisibly for seven days.
+    STALENESS BILL: none today — this row orders a READING, not an edit. If the
+    reading refutes the conjunct, `T4.06`'s PASS is in question and the bill at
+    that point is `T4.06` itself plus whatever cites it; that price is computed
+    when the reading exists, not now.
