@@ -6252,7 +6252,7 @@ ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | ACTED 20
         commitment`, DUE 2026-09-18) rather than riding out of sight on a
         row that is now closed. This row is ACTED and does not return.
 
-ROUTED: goal-187-names-seven-primitives-four-have-no-commitment | 2026-09-16 | Review-DAILY-09-16 (told-world-has-no-rung ANSWER (a)) | OPEN
+ROUTED: goal-187-names-seven-primitives-four-have-no-commitment | 2026-09-16 | Review-DAILY-09-16 (told-world-has-no-rung ANSWER (a)) | DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — HALF (ii) IS RULED AND CLOSED: the project has ALREADY committed to falsifiable claims for all four primitives, `PS.05` far / `PS.06` tiring / `PS.08` heavy / `PS.09` worth-it, one spec per primitive, all four RUN. `GOAL.md` needs no correction and NOTHING routes to the owner. Half (i) stays the builder's, DUE 2026-10-13, with its predicted effect REVERSED — see THE RULING below)
     DUE: 2026-09-18 | first date with room under the measured capacity of 6
         (09-18 carries 4; 09-16 and 09-17 carry 6 each, 09-20 carries 6). Not
         dated onto the Sunday FULL despite being Completeness-Audit-shaped,
@@ -6289,6 +6289,62 @@ ROUTED: goal-187-names-seven-primitives-four-have-no-commitment | 2026-09-16 | R
     MECHANICAL bill: `T0.21` audits `coverage.py` and will owe a re-stamp
     when (i) lands; `T0.36` hashes `run.py` and does not.
     DUE: 2026-09-29 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. `heavy`, `far`, `tiring` and `worth-it` are invisible to the commitment register, so no instrument in this repo can report them missing — a Completeness-Audit-shaped gap that a Sunday keeps outranking. Dated onto a DAILY with room instead, because waiting for a FULL is what has cost it four days.
+    DUE: 2026-10-13 | HALF (i) ONLY — the builder's mechanical register edit.
+        Half (ii) is RULED below and does not return. 2026-10-13 carries 2 live
+        rows against the measured 6.
+    THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
+        **HALF (ii) IS ANSWERED BY THE RECORD RATHER THAN BY THIS DESK'S
+        PREFERENCE, AND THE ANSWER IS *COMMIT*.** (ii) asked: *"does this project
+        COMMIT to a falsifiable claim for heavy / far / tiring / worth-it, or is
+        `GOAL.md`'s sentence corrected to name only what it intends to test?"*
+        Read off `run status` at `HEAD` this sitting, all four primitives already
+        have one registered spec each, and the titles are the commitment in
+        words:
+        `PS.05` **FAIL** — *"Far is a price: distance costs need-currency before
+        anyone has to learn it"*;
+        `PS.06` **FAIL** — *"Tiring is a price: sustained exertion drains the
+        body's capability before anyone has to learn it"*;
+        `PS.08` **FAIL** — *"Heavy is a price: moving mass costs need-currency
+        before anyone has to learn it"*;
+        `PS.09` **VOID** — *"Worth-it is a real distinction: the world pays and
+        charges in one currency, and some trips do not pay"*.
+        **One spec per missing primitive, named for the primitive, all four RUN,
+        three of them reporting honest FAILs.** A project does not get a stronger
+        demonstration of commitment than building the test and letting it fail.
+        **SO THE BRANCH THAT WOULD HAVE REACHED THE OWNER IS CLOSED, and that is
+        the point of this disposition.** (ii) pre-committed that a resolution
+        toward *correction* "routes to the owner as a `D`, quoting the
+        recommendation verbatim", on the `D29` ground that a default may not
+        narrow what this project has promised itself. **No such routing is owed:
+        the resolution is toward COMMIT, which narrows nothing.** `GOAL.md:186-188`
+        stands unedited and this desk proposes no change to it. One prospective
+        owner decision is removed from the docket by measurement rather than by
+        argument — which is the only honest way to shrink an owner's docket.
+        **THE ROW'S OWN PREDICTION IS NOW WRONG, AND REVERSING IT IS THE REAL
+        ORDER TO THE BUILDER.** Half (i) predicted *"`claim_dead` 4 -> up to 8 on
+        the first read; that rise is the gap becoming visible, not a
+        regression."* That was right on 2026-09-16, when the four primitives had
+        no specs. It is wrong today: `PS.05`/`PS.06`/`PS.08`/`PS.09` exist, so
+        four new commitments should map onto four existing registered specs and
+        **`claim_dead` should not move at all.** So half (i) stops being a
+        bookkeeping chore and becomes a TEST with a pre-registered expectation:
+        **add the four commitments and `claim_dead` must stay at 3.** If it
+        rises, the register's matcher cannot see a spec that plainly answers the
+        commitment, and *that* is a defect in `coverage.py` worth a row of its
+        own — route it rather than absorbing the rise as "the gap becoming
+        visible", which is the reading the row's stale prediction would license.
+        The monotonicity argument in (i) is unchanged and still correct: adding a
+        commitment can only raise these counts, never lower one, so the edit
+        needs no ruling and is safe in the shrink-only direction.
+        **What this ruling does NOT do:** it edits no spec, moves no threshold,
+        stales no certificate, and takes no position on WHY `PS.05`/`PS.06`/`PS.08`
+        FAIL — those are live reds with their own owners, and three honest FAILs
+        against a world that does not yet charge for distance, exertion or mass
+        is exactly the evidence half (ii) needed. It does not raise
+        `commitments_uncovered`, which reads 0 at floor 0 today precisely because
+        the four primitives are not in the register — **a zero that means "not
+        asked", not "covered", and the clearest small example this project has of
+        an audit inheriting every hole in its own standard.**
 
 ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | ACTED 2026-09-10 (Review DAILY, executing commit `1a0e413` — the reading this row asked for, delivered, and it is a PARTIAL: see READING below. `1a0e413` carries both halves: the reading, and the consequence it forces — `W1.04` gains conjunct (c) in the design block on the `w0-too-shallow` row, which is what the builder registers from)
     DUE: 2026-09-06 | direct evidence owed INTO the W1 design the Review
