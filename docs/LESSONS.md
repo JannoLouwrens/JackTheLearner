@@ -20598,3 +20598,52 @@ produced somewhere you do not control, the identity of what produced it has to
 come back **in the payload**, stamped by the producer, and be compared — not
 inferred from what you believe you sent and not recomputed locally afterwards.
 If the producer already says it, the only bug is not writing it down.
+
+## A NEW HONESTY MECHANISM'S PERMISSIVE DEFAULT CERTIFIES THE EXACT CASE IT WAS
+## BUILT TO CATCH — "no predicate supplied" and "the predicate said yes" must
+## never render as the same token, because the specs that do not supply one are
+## precisely the ones the mechanism was commissioned for
+## (overseer, 134th audit, 2026-10-01; measured on `bakeoff.py`'s admissibility
+## predicate, which published `admitted | yes` for the ineligible arm 21 minutes
+## after it shipped)
+
+THE SHAPE. The `so10` ruling commissioned a per-arm admissibility predicate so
+that an ineligible arm could not win a bakeoff on a cost tie-break. It was built
+correctly: scored-and-ineligible, not ranked, cannot win or tie or VOID the
+field, 9/9 battery in both directions. Two lines decide what happens to a spec
+that supplies no predicate — `admissible: bool = True` on the dataclass, and
+`(admissible is None or bool(admissible(arm)))` at the call site — and together
+they collapse **"nobody asked"** into **"it passed"**. `SO.10`, the spec the
+ruling was *about*, supplies none, and correctly so: the ruling explicitly said a
+re-run was NOT owed.
+
+WHAT MAKES IT A LESSON RATHER THAN A BUG. Nobody published the false assurance;
+a **mechanical regate sweep** did, 21 minutes later, re-buying a stale
+certificate and rendering `SO.10 — TIE — laplace-full … admitted | yes` onto
+`docs/DECISIONS_RESOLVED.md` — the arm the desk had ruled INELIGIBLE 36 hours
+earlier, now wearing the new machinery's endorsement. **A new column with a
+permissive default is retroactive**: it does not describe the runs made after it
+shipped, it re-describes every row the next sweep touches. The population it
+re-describes first is the un-migrated one, which is the population the mechanism
+exists for.
+
+THE GENERAL RULE, and it is a ratchet-shaped rule. **A field that can mean
+"checked and clean" or "not checked" needs three values, not two, and the
+unchecked value must not be the clean one.** The same arithmetic as the
+three-valued slot classifier (`RAN`/`DECLINED`/`NOT-A-SLOT`), discovered the same
+week for the same reason: fold the unknown into the good bucket and the
+instrument reads green through the thing it was built to see; fold it into the
+bad bucket and you have retroactively failed work nobody measured. Both are
+wrong, and both are avoided by refusing to encode "I did not look" as a verdict.
+When you add an assurance column, ask what it prints for the rows that predate
+it — and if the honest answer is a dash, ship the dash.
+
+THE SIBLING INSTANCE, same audit, same week, so the class is not a one-off.
+`classify()` in `scripts/usage_attribution.py` shipped on 2026-09-30 as the
+single three-valued reader of a slot line, with `dark_slots` floored at 0; the
+next day the builder lost its `19:07` slot to `ABORT: only 2GB free on /data`,
+which matches neither regex and returns `NOT-A-SLOT`, so the counter read **0
+through a lost slot**. Its own docstring had already named that outcome as "the
+original bug". A mechanism that enumerates the cases it knows about will be
+defaulted into silence by the case it does not, and the default is where to look
+on the day after it ships — not a year later.
