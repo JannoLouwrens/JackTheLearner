@@ -253,6 +253,8 @@ ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for t
         sitting, which is now its own row with its own DUE 2026-09-13. If W1
         is built this follows it there and the bill goes to zero, exactly as
         the original line said.
+    DUE: 2026-10-09 | **A CLOCK, AT LAST — this row has been AGEING-EXEMPT FOR FIVE WEEKS and that was never a decision anybody made.** Routed 08-24, HELD 08-25, and the hold was its only clock; when `w1-world-edit-window` was `DECLINED` on 09-28 the hold stopped pointing at anything that will ever move, and because the row carries no `DUE:` it could not even go OVERDUE to say so. **Dropping a `DUE:` is a violation of this file's own contract; never having one is the same hole with better manners, and the 134th audit named it twice.** The date is not chosen: it is `D33`'s armed stop-rule — *"if `D33` is unanswered on 2026-10-09, the three orphaned rows are DECLINED to you as a class rather than re-dated a fifth time"* — and this row is a fourth member of exactly that class, so it joins the same decision rather than inventing a second date for one question. `WAITS-ON` declares that, so the pile counts it as one decision and not as one more row.
+    WAITS-ON: sh02-null-saturation
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
         promise, and NOT a re-date: the sitting this hold waits on did not
         happen. The 2026-09-13 FULL sat at 06:37 and did not take up W1, so
@@ -275,6 +277,8 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for t
         from `w0-too-shallow` for the same reason as the row above; the same
         world-edit window, still paying the 21-certificate mechanical bill
         once instead of three times.
+    DUE: 2026-10-09 | **A CLOCK, AT LAST — this row has been AGEING-EXEMPT FOR FIVE WEEKS and that was never a decision anybody made.** Routed 08-24, HELD 08-25, and the hold was its only clock; when `w1-world-edit-window` was `DECLINED` on 09-28 the hold stopped pointing at anything that will ever move, and because the row carries no `DUE:` it could not even go OVERDUE to say so. **Dropping a `DUE:` is a violation of this file's own contract; never having one is the same hole with better manners, and the 134th audit named it twice.** The date is not chosen: it is `D33`'s armed stop-rule — *"if `D33` is unanswered on 2026-10-09, the three orphaned rows are DECLINED to you as a class rather than re-dated a fifth time"* — and this row is a fourth member of exactly that class, so it joins the same decision rather than inventing a second date for one question. `WAITS-ON` declares that, so the pile counts it as one decision and not as one more row.
+    WAITS-ON: sh02-null-saturation
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
         promise, and NOT a re-date: the 2026-09-13 FULL did not take up W1, so
         the window this hold rides did not open and `w1-world-edit-window` goes
