@@ -39377,15 +39377,15 @@
     },
     "T0.32": {
       "amended": [],
-      "attempt": 6,
-      "commit": "5157002",
+      "attempt": 7,
+      "commit": "4922eea",
       "compute_s": null,
       "control_metrics": {
-        "honest_rtf": 15.13,
+        "honest_rtf": 15.047,
         "slow_admitted": false,
-        "slow_projected_s": 332.7,
-        "slow_rtf": 1.364,
-        "slowdown": 11.09
+        "slow_projected_s": 333.5,
+        "slow_rtf": 1.354,
+        "slowdown": 11.12
       },
       "dirty_files": null,
       "duration_s": 6.89,
@@ -39696,12 +39696,98 @@
             "spec_sha": "786df375524344ce",
             "status": "FAIL"
           }
+        },
+        {
+          "amended": [],
+          "attempt": 6,
+          "commit": "5157002",
+          "compute_s": null,
+          "control_metrics": {
+            "honest_rtf": 15.13,
+            "slow_admitted": false,
+            "slow_projected_s": 332.7,
+            "slow_rtf": 1.364,
+            "slowdown": 11.09
+          },
+          "dirty_files": null,
+          "duration_s": 6.89,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "426f36a9f5808056",
+          "message": "pre-registered threshold not met",
+          "metrics": {
+            "achieved_s": 1.202,
+            "ceiling_admitted": false,
+            "fit_admitted": true,
+            "lf01_admitted_today": true,
+            "lf01_limit_h": 15.0,
+            "lf01_projected_h": 0.4,
+            "longrun_grandfathered_n": 34,
+            "longrun_stale_exemptions": [],
+            "longrun_unbound": [
+              "LT.03",
+              "PL.02",
+              "SO.07",
+              "W1.02"
+            ],
+            "over_admitted": false,
+            "probe_rel_spread": 0.004,
+            "projected_s": 1.2,
+            "rtf": 15.004,
+            "rtf_projection_error": 0.0018,
+            "sim_dt_per_decision": 0.025,
+            "single_source_ok": false,
+            "timeout_arithmetic_ok": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 259.6,
+          "preserved_impl": null,
+          "ran_at": "2026-09-30T20:45:00",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "786df375524344ce",
+          "status": "FAIL",
+          "supersedes_fail": {
+            "commit": "f6ca5ab",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "5afc56f3bebba6ae",
+            "metrics": {
+              "achieved_s": 1.198,
+              "ceiling_admitted": false,
+              "fit_admitted": true,
+              "lf01_admitted_today": true,
+              "lf01_limit_h": 15.0,
+              "lf01_projected_h": 0.4,
+              "longrun_grandfathered_n": 34,
+              "longrun_stale_exemptions": [],
+              "longrun_unbound": [
+                "LT.03",
+                "PL.02",
+                "SO.07",
+                "W1.02"
+              ],
+              "over_admitted": false,
+              "probe_rel_spread": 0.0052,
+              "projected_s": 1.198,
+              "rtf": 15.019,
+              "rtf_projection_error": 0.0001,
+              "sim_dt_per_decision": 0.025,
+              "single_source_ok": false,
+              "timeout_arithmetic_ok": true
+            },
+            "ran_at": "2026-09-30T16:45:41",
+            "spec_changed": false,
+            "spec_sha": "786df375524344ce",
+            "status": "FAIL"
+          }
         }
       ],
-      "impl_sha": "426f36a9f5808056",
+      "impl_sha": "4a5031bfe4e1cfbc",
       "message": "pre-registered threshold not met",
       "metrics": {
-        "achieved_s": 1.202,
+        "achieved_s": 1.204,
         "ceiling_admitted": false,
         "fit_admitted": true,
         "lf01_admitted_today": true,
@@ -39716,18 +39802,18 @@
           "W1.02"
         ],
         "over_admitted": false,
-        "probe_rel_spread": 0.004,
-        "projected_s": 1.2,
-        "rtf": 15.004,
-        "rtf_projection_error": 0.0018,
+        "probe_rel_spread": 0.0055,
+        "projected_s": 1.205,
+        "rtf": 14.933,
+        "rtf_projection_error": 0.0014,
         "sim_dt_per_decision": 0.025,
         "single_source_ok": false,
         "timeout_arithmetic_ok": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 259.6,
+      "peak_rss_mb": 258.4,
       "preserved_impl": null,
-      "ran_at": "2026-09-30T20:45:00",
+      "ran_at": "2026-10-01T00:43:11",
       "seeds": [
         0
       ],
@@ -39735,12 +39821,12 @@
       "spec_sha": "786df375524344ce",
       "status": "FAIL",
       "supersedes_fail": {
-        "commit": "f6ca5ab",
+        "commit": "5157002",
         "dirty": false,
         "impl_changed": true,
-        "impl_sha": "5afc56f3bebba6ae",
+        "impl_sha": "426f36a9f5808056",
         "metrics": {
-          "achieved_s": 1.198,
+          "achieved_s": 1.202,
           "ceiling_admitted": false,
           "fit_admitted": true,
           "lf01_admitted_today": true,
@@ -39755,15 +39841,15 @@
             "W1.02"
           ],
           "over_admitted": false,
-          "probe_rel_spread": 0.0052,
-          "projected_s": 1.198,
-          "rtf": 15.019,
-          "rtf_projection_error": 0.0001,
+          "probe_rel_spread": 0.004,
+          "projected_s": 1.2,
+          "rtf": 15.004,
+          "rtf_projection_error": 0.0018,
           "sim_dt_per_decision": 0.025,
           "single_source_ok": false,
           "timeout_arithmetic_ok": true
         },
-        "ran_at": "2026-09-30T16:45:41",
+        "ran_at": "2026-09-30T20:45:00",
         "spec_changed": false,
         "spec_sha": "786df375524344ce",
         "status": "FAIL"
