@@ -133,9 +133,17 @@ class ArmResult:
     passed_gate: bool
     cost: Optional[float] = None
     description: str = ""
-    admissible: bool = True
-    """False when the spec's `admissible` predicate excluded this arm: it was
-    scored (the number is real and recorded) and it is NOT RANKED."""
+    admissible: Optional[bool] = None
+    """THREE-VALUED, deliberately (134th audit RANK 1: the first default was
+    `True`, so "no predicate supplied" rendered identically to "predicate said
+    yes" — 21 minutes after the seam shipped, a mechanical regate sweep
+    published `admitted | yes` for the exact arm the so10 ruling had declared
+    INELIGIBLE). None = no predicate was supplied; nothing was checked and
+    nothing is asserted (renders `—`). True = the spec's predicate admitted
+    this arm. False = the predicate excluded it: scored (the number is real
+    and recorded) and NOT RANKED. Ranking treats None like True — an arm with
+    no predicate must stay rankable or every historical bakeoff would be
+    retroactively VOIDed — but the RECORD must never say `yes` for it."""
 
 
 @dataclass
@@ -163,7 +171,12 @@ class BakeoffResult:
             m[f"{a.name}_mean"] = round(a.mean, 4)
             m[f"{a.name}_sigma"] = round(a.sigma_over_null, 3)
             m[f"{a.name}_gate"] = float(a.passed_gate)
-            m[f"{a.name}_adm"] = float(a.admissible)
+            # Three-valued on purpose: an unsupplied predicate must not record
+            # as the clean value (LESSONS, 2026-10-01). Absence would be
+            # ambiguous with "an older bakeoff.py never computed this", so the
+            # unevaluated case is an explicit sentinel string, not a missing key.
+            m[f"{a.name}_adm"] = ("unevaluated" if a.admissible is None
+                                  else float(a.admissible))
             if a.cost is not None:
                 m[f"{a.name}_cost"] = a.cost
         return m
@@ -242,8 +255,8 @@ def run_bakeoff(spec: Spec,
         results.append(ArmResult(arm.name, scores, mean, std, sigma,
                                  sigma >= learning_gate_sigma, arm.cost,
                                  arm.description,
-                                 admissible=(admissible is None
-                                             or bool(admissible(arm)))))
+                                 admissible=(None if admissible is None
+                                             else bool(admissible(arm)))))
 
     # Controls are scored on the same ruler but never compete. One that
     # CLEARS the gate inverts the verdict: the metric is not measuring what
@@ -270,8 +283,10 @@ def run_bakeoff(spec: Spec,
     # Property 5: admission screens BEFORE the gate and the ranking. An
     # inadmissible arm stays in `results` (scored, recorded) and out of
     # everything that decides.
-    candidates = [a for a in results if a.admissible]
-    inadmissible = [a.name for a in results if not a.admissible]
+    # `is not False`, not truthiness: None means "no predicate supplied" and
+    # must rank exactly as before the seam existed (presentation-only default).
+    candidates = [a for a in results if a.admissible is not False]
+    inadmissible = [a.name for a in results if a.admissible is False]
     adm_note = (f" Inadmissible (scored, NOT RANKED): {', '.join(inadmissible)}."
                 if inadmissible else "")
     if len(candidates) < MIN_FINISHERS:
@@ -414,8 +429,13 @@ def _append_decision(res: BakeoffResult, path: Optional[Path] = None,
     for a in sorted(res.arms, key=lambda x: x.mean, reverse=True):
         lines.append(f"\n| {a.name} | {a.mean:.3f} | {a.sigma_over_null:.2f} | "
                      f"{'pass' if a.passed_gate else 'FAIL'} | "
-                     f"{'yes' if a.admissible else 'NO — not ranked'} | "
+                     f"{'—' if a.admissible is None else ('yes' if a.admissible else 'NO — not ranked')} | "
                      f"{a.cost if a.cost is not None else '—'} |")
+    if any(a.admissible is None for a in res.arms):
+        # "Nobody asked" and "the predicate said yes" must never render as the
+        # same token (134th audit RANK 1); the dash needs its meaning beside it.
+        lines.append("\n\n*admitted `—` = no admissibility predicate was "
+                     "supplied; nothing was checked and nothing is asserted.*\n")
     lines.append("\n")
     with open(DECISIONS_FILE, "a", encoding="utf-8") as fh:
         fh.write("".join(lines))

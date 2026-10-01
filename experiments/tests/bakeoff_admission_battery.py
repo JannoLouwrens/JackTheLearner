@@ -89,11 +89,31 @@ def main() -> None:
     show("zero admissible arms -> VOID", r.verdict, "VOID")
 
     # 4. MONOTONE / NO-OP: a predicate admitting everything changes nothing
-    #    against the no-predicate baseline.
-    show("admit-all predicate == no predicate",
+    #    against the no-predicate baseline — in VERDICT. In the RECORD they
+    #    must differ (case 4b): the first default was `admissible: bool = True`,
+    #    which rendered "no predicate supplied" identically to "predicate said
+    #    yes", and a regate sweep published `admitted | yes` for the arm the
+    #    so10 ruling had declared ineligible 21 minutes after the seam shipped
+    #    (134th audit RANK 1).
+    show("admit-all predicate == no predicate (verdict and winner)",
          (_run(costs, lambda a: True).verdict,
           _run(costs, lambda a: True).winner),
          (_run(costs, None).verdict, _run(costs, None).winner))
+
+    # 4b. THREE-VALUED RECORD: no predicate -> admissible is None on every arm
+    #     ("nothing was checked, nothing is asserted"); admit-all -> True
+    #     ("checked and admitted"). If these ever collapse into one value, the
+    #     unchecked case is wearing a verdict again.
+    r_none = _run(costs, None)
+    r_all = _run(costs, lambda a: True)
+    show("no predicate: every arm's admissible is None (unevaluated)",
+         sorted({a.admissible for a in r_none.arms
+                 if not a.name.startswith("control:")}, key=str), [None])
+    show("admit-all: every arm's admissible is True (checked, admitted)",
+         sorted({a.admissible for a in r_all.arms
+                 if not a.name.startswith("control:")}, key=str), [True])
+    show("unevaluated records as a sentinel, not as the clean float",
+         r_none.to_metrics()["eligible-a_adm"], "unevaluated")
 
     # 5. AN INADMISSIBLE ARM CANNOT VOID THE RUN THROUGH THE LEARNING GATE:
     #    outside the candidate set it arbitrates nothing. eligible-a beats
@@ -110,7 +130,7 @@ def main() -> None:
     show("...but WITH no predicate it still VOIDs (gate unchanged)",
          r.verdict, "VOID")
 
-    print("battery green: 9/9")
+    print("battery green: 12/12")
 
 
 if __name__ == "__main__":

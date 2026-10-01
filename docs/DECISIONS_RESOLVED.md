@@ -1212,6 +1212,12 @@ metric: `div_lastq`  ·  null 0.044 ± 0.069  ·  gate mode: `screen`
 | last-1 | 0.544 | 3.60 | pass | 2.0 |
 | control:pooled-scalar | 0.044 | 0.00 | FAIL | 0.0 |
 
+> **MARKER (builder, 2026-10-01, 134th audit FTB 1b):** the cost tie-break shown
+> above is the DEFECT the `so10` row was routed for, not a result to adopt:
+> `laplace-full` is INELIGIBLE (its post-swap migration divergence is negative on
+> every seed), the Person-model seat stays **VACANT**, and `SO.10`'s **FAIL
+> stands** (ruling of 2026-09-29, `docs/REVIEW_QUEUE.md`).
+
 **THE ARM THIS TIE NAMES DID NOT TAKE THE SEAT, AND THE ROW IS THE AUTHORITY**
 (builder, 2026-09-13, appended by hand under the machine-written verdict above
 so nobody adopts `laplace-full` off this table). `run_bakeoff` arbitrates the
@@ -1998,6 +2004,12 @@ metric: `div_lastq`  ·  null 0.044 ± 0.069  ·  gate mode: `screen`
 | last-1 | 0.544 | 3.60 | pass | 2.0 |
 | control:pooled-scalar | 0.044 | 0.00 | FAIL | 0.0 |
 
+> **MARKER (builder, 2026-10-01, 134th audit FTB 1b):** the cost tie-break shown
+> above is the DEFECT the `so10` row was routed for, not a result to adopt:
+> `laplace-full` is INELIGIBLE (migration gate, every seed negative), the
+> Person-model seat stays **VACANT**, and `SO.10`'s **FAIL stands**
+> (ruling of 2026-09-29, `docs/REVIEW_QUEUE.md`).
+
 ## LG.13 — WINNER — meaning-mass
 meaning-mass beats topk-softmax by 4.13 sigma and clears the null by 56.00 sigma.
 
@@ -2013,6 +2025,12 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 | topk-uniform | 0.661 | 32.52 | pass | yes | 1.0 |
 | control:state-free-prompt | 0.064 | -5.02 | FAIL | yes | 1.0 |
 
+> **MARKER (builder, 2026-10-01, 134th audit FTB 1):** the `admitted | yes`
+> column above is the unsupplied-predicate DEFAULT, not a predicate's verdict —
+> `lg_13_chooser_seat_bakeoff.py` supplies no `admissible=`. Nothing was
+> checked. The verdict itself is unaffected (admission was never at issue
+> here); the renderer now prints `—` for the unevaluated case.
+
 ## SO.10 — TIE — laplace-full
 laplace-full leads laplace-w30 by only 0.26 sigma (margin 1.5). The choice does not matter yet; taking the cheapest tied arm (laplace-full, cost 0).
 
@@ -2027,3 +2045,14 @@ metric: `div_lastq`  ·  null 0.044 ± 0.069  ·  gate mode: `screen`
 | exp-decay-h15 | 0.678 | 5.91 | pass | yes | 1.0 |
 | last-1 | 0.544 | 3.60 | pass | yes | 2.0 |
 | control:pooled-scalar | 0.044 | 0.00 | FAIL | yes | 0.0 |
+
+> **MARKER (builder, 2026-10-01, 134th audit FTB 1b):** this record is the
+> proof of the 134th audit's RANK 1 — appended mechanically by the regate sweep
+> `5bc7471`, 21 minutes after the admissibility predicate landed, with every
+> `admitted` cell filled by the DEFAULT (`so_10_trust_rule_bakeoff.py` supplies
+> no `admissible=`; nothing was checked). And the verdict it re-renders is the
+> defect itself: the cost tie-break is what the `so10` row was routed for,
+> `laplace-full` is INELIGIBLE (migration gate, every seed negative), the
+> Person-model seat stays **VACANT**, and `SO.10`'s **FAIL stands** (ruling of
+> 2026-09-29, `docs/REVIEW_QUEUE.md`). The renderer now prints `—` for an
+> unevaluated arm.
