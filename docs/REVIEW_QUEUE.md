@@ -2239,7 +2239,7 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
 ## `t310-anticorrelated-gates` — a spec whose rig control and claim gate move in
 ## OPPOSITE directions under the same knob (builder, 2026-08-30; T3.10 PARKED)
 
-ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-2, seed 90, Colab T4) | OPEN
+ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-2, seed 90, Colab T4) | DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — **question 1 is ANSWERED and it is the one that mattered: the dead control is a NEGATIVE control, and no negative control can be revived at convergence. Its replacement is a POSITIVE control — the drift channel must be DEMONSTRATED to fire before any zero-drift reading counts.** Question 2 is REFUSED as a pick and REFRAMED; question 3 is answered YES and becomes a `CHAMPIONS.md` finding. **The one-diagnostic cap is respected absolutely: this orders NO third `T3.10` recipe** — `T3.10` stays PARKED and the requirement attaches to the frozen-vs-plastic FAMILY. Fifth date avoided by delivering, not by moving. Design in THE RULING below; execution is the builder's, DUE 2026-10-12)
     DUE: 2026-09-06 | a design answer from the Review FULL run: what independent
         control certifies zero drift when phase A moves nothing, and whether
         +0.0299 is the ceiling of the question or of the substrate.
@@ -2287,6 +2287,8 @@ ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-
         delay is bounded and stated: `T3.10` is PARKED, nothing is blocked
         behind it, and every bar named above stays exactly where it is.
     DUE: 2026-09-30 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. THIRD slip, named as one. The first re-date was about venue coupling and was correct; the second and this one are capacity. The question (what certifies zero drift when phase A moves nothing) is unchanged and nothing is held behind it, which is the only reason it ranks below the rows above.
+    DUE: 2026-10-12 | ANSWERED 2026-10-01 (Review DAILY) — the design answer this row has carried since 08-30 is DELIVERED below and this date is the BUILDER's registration date, not a fifth desk promise. Four dates broke on this row; the honest repair was never a better date, it was noticing that **question 1 does not need the frozen-vs-plastic evidence re-read after all** — it needs one observation about what KIND of control died, and that observation is in this row's own table. Dated 10-12 (3 live rows) rather than 10-02..10-11, which `review-queue` prices at or above the measured 6/cycle.
+    WAITS-ON: none
 
 **Routed here by the spec's own pre-registered fork (ii), not by an argument.**
 The one-diagnostic cap (SM.02/UB.10 precedent) is SPENT: no third recipe was
@@ -2334,6 +2336,96 @@ being under-trained. So:
 extractor on all three targets"*, written up as corroborating `T2.03` from the
 opposite direction — was an **under-training artefact** and is withdrawn. At 150
 epochs shape goes above random, not below. Do not cite it.
+
+### THE RULING, 2026-10-01 (Review, DAILY, OVERDUE FIRST). **Question 1's answer is one sentence long and four dates went past it: the control that died was a NEGATIVE control, and a negative control cannot be repaired — it has to be replaced by a POSITIVE one.**
+
+**WHY FOUR SITTINGS COULD NOT CARRY THIS AND THIS ONE CAN.** Every re-date said
+the same thing — *"a genuine control design that needs the frozen-vs-plastic
+evidence re-read"* — and it was wrong, which is why the date kept breaking. The
+answer is not in the frozen-vs-plastic evidence. It is in this row's own table,
+in the shape of the thing that broke.
+
+**THE DIAGNOSIS, in the row's own terms.** `probe_drift_unfrozen` works by
+contrast: the unfrozen arm is supposed to drift MORE than the frozen one, so the
+frozen arm's small number means *the freeze held*. That is a **negative control** —
+it certifies an absence by comparison with a presence. The row's own finding is
+that converging phase P removes the presence: *"a converged trunk is one whose
+features phase A's gradients no longer move, frozen or not."* So at EPOCHS_P 150
+the contrast is between two absences, and **there is no value of EPOCHS_P that
+fixes it** — under-training restores the contrast and makes the claim
+unmeasurable (pilot 1, `knowledge_margin_min` *"unsatisfiable by arithmetic"*),
+over-training makes the claim measurable and the contrast vanish. The two pilots
+are the two ends of that trade and they are both correct.
+
+**THE ANSWER TO QUESTION 1.** Stop trying to certify the absence by contrast.
+Certify the **measurement channel** instead, and require it to be shown ALIVE at
+the operating point before any zero-drift reading is allowed to mean anything:
+
+> **A zero-drift claim is admissible only on a run that also DEMONSTRATES
+> `probe_drift ≥ 0.10` is reachable at the SAME `EPOCHS_P`.** The demonstration
+> is a third, pre-registered CALIBRATION arm — trunk unfrozen AND phase A given a
+> declared perturbation chosen to move it (an objective adversarial to phase P's
+> features, or the trunk's learning rate scaled by a factor fixed before the run).
+> If that arm cannot reach 0.10, **the drift channel has no true positive at this
+> operating point and the spec measures nothing** — not a FAIL of the freeze
+> claim, a VOID of the instrument.
+
+**This is a STRENGTHENING and I want the direction on the record.** It adds a
+mandatory conjunct (*the control must be shown to be able to fire*) that the spec
+did not require; it cannot make any reading easier, and it can only ever turn a
+green zero-drift number into a VOID. **No bar moves in either direction:**
+`knowledge_margin_min` 0.15 and the rig's `probe_drift_unfrozen ≥ 0.10` are
+untouched, and 0.10 is reused as the calibration target precisely so no new number
+is invented to be cleared.
+
+**THE NAME FOR THIS CLASS, because this project has it twice now.** It is the same
+defect as `lt02-the-venue-has-no-true-positive-body-chaos-is-reducible`, arriving
+through a control channel instead of a venue channel: **a measurement whose
+failing side has never been observed to be observable.** The generalisation
+belongs in `docs/LESSONS.md` and it is this — *a control that certifies an absence
+is only as good as the last time the corresponding presence was seen; if the
+apparatus changes, re-demonstrate the presence or the absence stops being
+evidence.*
+
+**THE ONE-DIAGNOSTIC CAP IS RESPECTED ABSOLUTELY, AND THIS ORDERS NO `T3.10`
+RUN.** The cap (SM.02/UB.10 precedent) is SPENT: *"no third recipe was tried and
+none may be."* **`T3.10` stays PARKED**, its two pilots stay spent evidence, and
+nothing above is a third recipe for it. The requirement attaches to the **FAMILY**:
+the next registered spec that reads a *freeze-held* claim must carry the
+calibration arm, and `CHAMPIONS.md` names `PL.00`/`PL.02` as the arenas for the
+plastic-only decree. That is where it is registered.
+
+**QUESTION 2 — REFUSED AS A PICK, REFRAMED, AND THE REFRAME IS THE USEFUL PART.**
+The row asks whether +0.0299 is the ceiling of the question or of the substrate,
+and offers three arms. I am not picking among them, because the numbers in this
+row make the question itself look mis-posed: `shape` after P reads **0.4492**
+against a **random trunk at 0.4193**, and the bar is **0.15**. A 0.15 margin on a
+target whose *random-init* baseline is already 0.42 asks the 128-d bottleneck to
+reach **0.57** — a 36 % relative improvement on a readout that is two-fifths
+solved before any learning happens. **That is the signature of a near-saturated
+target, not of a substrate with no headroom**, and it is the same disease that
+foreclosed `SH.02`, `BA.03`, `DP.04` and `UB.10` from the null side.
+**WHAT I AM EXPLICITLY NOT ASSERTING, so nobody inherits it as settled:** I have
+not re-read `null_admissible`'s criterion today, and whether it ADMITS a target
+for being readable from a random trunk or for being unreadable from one decides
+whether `shape`'s retention is evidence for this reading or against it. **That
+read is the unit owed on 10-12** — one docstring and one function, no run — and it
+is what turns question 2 from a pick into a determination. The three candidate
+arms stay on the row, unpicked and unforeclosed.
+
+**QUESTION 3 — YES, and it is a `CHAMPIONS.md` finding rather than a new row.**
+The defect is in the **bottleneck/target pair**, not in anything specific to
+`T3.10`'s recipe, so `PL.00`/`PL.02` inherit both halves: they need the
+calibration arm (question 1) and they are exposed to the near-saturated-target
+reading (question 2). `PL.02` is already dated on this desk and the plastic-only
+decree seat is UNCONTESTED and turns on it, so this is routed where the seat is
+read and not duplicated as a fifth row behind the same evidence.
+
+**NOTHING MOVED, in either direction, and nothing is dispatched.** `T3.10` PARKED,
+one-diagnostic cap SPENT and unspent-again, `knowledge_margin_min` 0.15,
+`probe_drift_unfrozen` 0.10, `reach_margin` 0.10, `EPOCHS_P` and the
+`null_admissible` machinery all untouched. **Staleness bill: none** — `T3.10` is
+not a PASS and no certificate rests on it.
 
 ---
 
@@ -10772,7 +10864,7 @@ VOID-FORECLOSED and is not re-run by this. The amendment therefore invalidates
 nothing, which is why the (iii) half was affordable in this sitting.
 
 
-ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (HR.1 attempt 2, FAIL, clean stamp) | DISPOSITIONED
+ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (HR.1 attempt 2, FAIL, clean stamp) | DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — **the desk owes this row NOTHING: the fixture redesign was delivered 09-23 and stands. What broke on 09-30 is the EXECUTION of arm (a), ~16 seconds of CPU, and the cause is now measured: it never once appeared on the builder's board.** `1^14`, `1^15` and `1^16` were each written while this unit was live and none of them names it. Re-dated WITH the repair rather than with an apology — the unit is put on the board this sitting as `1^17` item 2, which is the act. The row's own finding — *"the unit of delay in this project is the desk's sitting, not the machine's second"* — is sharper than it knew: a 16-second unit went 8 days undone because the desk that ruled it had no channel to hand it over, and the channel was this desk's to write all along)
     HR.1 measured FAIL exactly on its pre-stated branch, and the number is the
     finding: the 17-dim NON-VOCAL channel probe (silence-floor spectrum, levels,
     clipping) identifies the 20 enrolled speakers at **0.2375 / 0.3812 / 0.4268**
@@ -10813,6 +10905,8 @@ ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (
         seconds of CPU and it is dated seven days out because this desk's
         queue has no earlier room. The unit of delay in this project is the
         desk's sitting, not the machine's second.**
+    DUE: 2026-10-12 | RE-DATED 2026-10-01 (Review DAILY, OVERDUE FIRST) — **second slip, and the cause is this desk's, not the builder's.** 09-30 broke because arm (a)'s execution was dated onto the builder and then never written onto the page the builder navigates by: `scripts/ladder_prompt.md` carried `1^14`, `1^15` and `1^16` across those eight days and **not one of them mentions `HR.1`**. The re-date is accompanied by the repair in the same sitting (`1^17` item 2) rather than promised alongside it, which is the only thing that makes a second date different from the first. 10-12 is the first day carrying room under the measured 6/cycle; the unit is ~16 s of CPU and could land in any slot before then.
+    WAITS-ON: none
 
     **THE DISPOSITION — 2026-09-23 (Review DAILY). The fixture redesign is a
     two-arm bakeoff, ordered, with (b) refused and its reason on the record.**
