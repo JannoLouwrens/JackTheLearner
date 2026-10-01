@@ -66,12 +66,25 @@ LADDER_LOG = Path("/data/jack-logs/ladder.log")
 #: the 26-slot 2026-09-22/23 blackout it existed to report.
 _SLOT_RE = re.compile(r"^(\S+)\s+iteration (start|end)\b(?:\s+rc=(\d+))?")
 
-#: A slot the loop DECLINED to run: `pace_gate`'s `PACING:` skip or the hard
-#: usage stop's `STOPPED at N% weekly usage`. Anchored to the char after the
-#: timestamp so prose QUOTING either marker (a notice line, a session's final
-#: message echoed into the log) cannot count as a skip — `lib_credits.sh`'s
-#: start-anchor rule, one surface over. PRIVATE TO `classify`, like _SLOT_RE.
-_SKIP_RE = re.compile(r"^\S+\s+(?:PACING:|STOPPED at )")
+#: A slot the loop DECLINED to run: `pace_gate`'s `PACING:` skip, the hard
+#: usage stop's `STOPPED at N% weekly usage`, or a pre-launch `ABORT:` (the
+#: loop's own guards refusing to start — disk, load, unreadable meter; all
+#: three wordings in the real log share the prefix). `ABORT:` was taught
+#: 2026-10-01 (134th audit RANK 3): the 2026-09-30T19:07 slot died on
+#: `ABORT: only 2GB free on /data (need 3GB)`, which matched neither regex,
+#: and `dark_slots` read 0 through a lost slot ONE DAY after this classifier
+#: shipped — the outcome its own docstring had named as the original bug.
+#: Anchored to the char after the timestamp so prose QUOTING any marker (a
+#: notice line, a session's final message echoed into the log) cannot count
+#: as a skip — `lib_credits.sh`'s start-anchor rule, one surface over.
+#: PRIVATE TO `classify`, like _SLOT_RE.
+#: KNOWN STILL-INVISIBLE refusal wordings, swept 2026-10-01 and left in
+#: NOT-A-SLOT deliberately: `previous iteration still running — skipping`
+#: (x2 — the system is actively working, a dark streak through it would lie
+#: in the other direction) and the owner-pause lines `paused (remove ...)` /
+#: `PAUSED — all agents stopped` (x13 — an owner pause is a different kind
+#: of dark; teaching it DECLINED is a desk call, not a builder default).
+_SKIP_RE = re.compile(r"^\S+\s+(?:PACING:|STOPPED at |ABORT: )")
 
 RAN, DECLINED, NOT_A_SLOT = "RAN", "DECLINED", "NOT-A-SLOT"
 
@@ -88,7 +101,8 @@ def classify(raw: str) -> tuple[str, str | None, int | None]:
     is the original bug (0 through a 15-slot skip).
 
       RAN         an `iteration start/end` line; `rc` is set on `end`
-      DECLINED    the loop refused the slot: `PACING:` / `STOPPED at N%`
+      DECLINED    the loop refused the slot: `PACING:` / `STOPPED at N%` /
+                  a pre-launch `ABORT:` (disk, load, unreadable meter)
       NOT-A-SLOT  everything else, including every timestamped notice line
                   the loop emits about itself
 
@@ -599,6 +613,43 @@ def _selftest() -> int:
     if slot_outcomes(mixed) != slot_outcomes(base):
         fails.append("novel: an UNRECOGNISED timestamped line type changed "
                      "slot_outcomes — the classifier is not the one reader")
+
+    # P6f — THE PRE-LAUNCH DEATH, REPLAYED (134th audit RANK 3). The real
+    # 2026-09-30 shape, exact bytes from ladder.log: the 18:07 slot ends
+    # rc=0, the 19:07 slot dies on a disk ABORT before `iteration start` is
+    # ever written, the 20:07 slot runs. On 2026-09-30 the counter read 0
+    # through the ABORT — one day after this classifier shipped, in the
+    # failure direction its own docstring names as the original bug. A slot
+    # that dies before launch is DECLINED in substance: the loop refused to
+    # start. All three historical ABORT wordings must classify alike.
+    k, _, _ = classify("2026-09-30T19:07:01+00:00 ABORT: only 2GB free on "
+                       "/data (need 3GB)")
+    if k != DECLINED:
+        fails.append(f"abort: a pre-launch ABORT line must classify DECLINED "
+                     f"— got {k}")
+    for s in ("2026-08-19T04:07:08+00:00 ABORT: usage unreadable — refusing "
+              "to run",
+              "2026-08-09T11:07:01+00:00 ABORT: load 8.37 above 6.0 — "
+              "leaving the box to the tenants"):
+        if classify(s)[0] != DECLINED:
+            fails.append(f"abort: wording not covered — {s!r}")
+    if classify("2026-09-30T20:07:12+00:00 the slot summary said 'ABORT: "
+                "only 2GB free' happened at 19:07")[0] != NOT_A_SLOT:
+        fails.append("abort: prose QUOTING the marker mid-line must stay "
+                     "NOT-A-SLOT — the start anchor is load-bearing")
+    log = ("2026-09-30T18:19:06+00:00 iteration end rc=0 — 107 -> 107\n"
+           "2026-09-30T19:07:01+00:00 ABORT: only 2GB free on /data "
+           "(need 3GB)\n")
+    a = attribution("", log_text=log, now="2026-09-30T19:49:00+00:00")
+    if a["dark_slots"] != 1:
+        fails.append(f"abort: the trailing ABORT is one dark slot — got "
+                     f"{a['dark_slots']} (0 is the 2026-09-30 bug)")
+    log += "2026-09-30T20:07:11+00:00 iteration start — 107/254\n" \
+           "2026-09-30T20:52:00+00:00 iteration end rc=0 — 107 -> 107\n"
+    a = attribution("", log_text=log, now="2026-09-30T21:00:00+00:00")
+    if a["dark_slots"] != 0 or a["failed_slots"] != 0:
+        fails.append(f"abort: a recovered loop reads 0 dark / 0 failed — got "
+                     f"{a['dark_slots']}/{a['failed_slots']}")
 
     for f in fails:
         print(f"  FAIL {f}")
