@@ -11941,12 +11941,13 @@ ROUTED: world-edit-window-price-is-quoted-at-21-and-measures-35 | 2026-09-22 | `
         `D38` `blocks:`), `scripts/ladder_prompt.md` item 4 (where "bills
         **zero**" was the load-bearing claim and is unaffected).
 
-ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | builder `3c07448` (T3.06 attempt 2, VOID, 2432 s, 3 seeds) | OPEN
+ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | builder `3c07448` (T3.06 attempt 2, VOID, 2432 s, 3 seeds) | DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — RULED, and the ruling REFUSES the three-way question as posed: *"null, world, or resolution"* is not a choice this desk may make by argument, because the three branches are **mechanically discriminable by one CPU measurement** and the derivation names the exact surrogate that would decide them. `BLOCKED-BY` **WITHDRAWN** as mis-declared — the blocker is `DECLINED` AND this row's own staleness bill says the null-model arm edits `t3_06_*.py` alone and bills nothing, so only one of the three branches ever needed the window. The VENUE half is NOT this row's to answer and is folded into `w0-too-shallow`, where it is already counted as the eighth instrument. Design in THE RULING below; execution is the builder's, DUE 2026-10-13)
     DUE: 2026-09-30 | a VENUE ruling owed by the Review, and it is NOT a rig
         repair: does W0's dwell distribution disagree with the analytic null
         because the null is wrong, because the world is, or because 48 lives
         at 16.3 informative cannot resolve it? 09-30 carries 3 live rows.
-    BLOCKED-BY: w1-world-edit-window | whatever the edit window rules about W0's dynamics decides whether this is a null-model repair or a world one
+    DUE: 2026-10-13 | RULED 2026-10-01 (Review DAILY) — the owed unit CHANGES HANDS AND KIND, as `sm03`'s did: what is owed is a builder DIAGNOSTIC that separates the three branches, not a desk opinion about which one is true. Dated 10-13 (3 live rows) rather than onto 10-02..10-11, every one of which `review-queue` prices at or above the measured 6/cycle capacity.
+    WAITS-ON: none
     Question: the n-derived `RANDOM_DWELL_MAX` = 0.0185, computed in source
     from the stationary occupancy of the null walker before the run, was
     BREACHED BY THE NULL WALKER ITSELF on 2 of 3 seeds (`random_dwell_breach`
@@ -11974,6 +11975,85 @@ instrument** and the first to say it about a NULL rather than about an arm.
     `t3_06_*.py` only (T3.06 is VOID; no certificate rests on it). A WORLD
     repair bills every `playground.py` certificate and must go through the
     edit window, which is why this row is dated behind it rather than beside it.
+
+### THE RULING, 2026-10-01 (Review, DAILY, OVERDUE FIRST). **The three-way question is not mine to answer and never was: the derivation states its own surrogate in source, and whether the world honours that surrogate is a MEASUREMENT.** What is ordered is the diagnostic that separates the branches, with all three readings declared before any number exists.
+
+**`BLOCKED-BY` IS WITHDRAWN, and it was wrong on the day it was written.** Two
+independent reasons, the second of which is on this row already: (a)
+`w1-world-edit-window` is `DECLINED` — the window was abandoned, not opened, so
+the hold waits on nothing that will ever move; (b) this row's own staleness bill
+says *"a null-model repair edits `t3_06_*.py` only (T3.06 is VOID; no certificate
+rests on it)"*. **Only the WORLD branch ever needed the window**, and declaring
+the whole row blocked behind it put the two cost-free branches behind a wall they
+did not share. Same shape as the `dp04` mis-declaration ruled on 09-30.
+
+**THE HOLE, read from `_derive_random_dwell_cap()`'s own docstring at `:773–800`
+rather than argued.** The derivation is exact *given one stated surrogate*, and
+it says so:
+
+> *"the rover's motion is the clamped 9-action step map `x -> clip(x + DELTA*a,
+> GRID_LO, GRID_HI)`, which the measured world reproduces to 0.5%: 0.2985 m of
+> the nominal 0.30 m, **the velocity servo's one-decision lag**"*
+
+**The 0.5% check validates the step LENGTH. Nothing anywhere validates the step
+map's MEMORYLESSNESS** — and the parenthesis naming the cause of the 0.5% gap is
+a one-decision servo lag, i.e. the precise mechanism by which realised
+displacement at decision *t* depends on the action at *t−1*. Steps 1–4 of the
+derivation (power iteration, restricted-chain residence pmf, compound Poisson,
+order statistic) are each exact **for a memoryless chain** and every one of them
+mis-states the residence-run tail if the realised walk is autocorrelated. That is
+the single unchecked assumption standing between "the null is wrong" and "the
+world is", and it is a numpy-scale question, not a venue question.
+
+**WHAT IS ORDERED — a scratch diagnostic, explicitly NOT a re-run and NOT a
+pilot.** In the `sm03_vis_open_probe.py` / `lg03_blind_twin_probe.py` idiom: kept
+in `experiments/tests/`, outside the ledger, no seed spent, no row written, no
+gate frozen, no constant moved, committed BEFORE it runs with its branches
+declared. It reports three numbers for the `random` arm in the ACTUAL world:
+
+1. the **empirical residence-run pmf** for the goal cell, against the pmf step 2
+   computes from the chain (the same object the cap is a tail of);
+2. the **lag-1 autocorrelation of realised per-decision displacement direction**
+   — the memorylessness the surrogate assumes and nothing has ever read;
+3. the **empirical stationary occupancy** of the goal cell, against step 1's
+   0.002021 centre / 0.002530 corner.
+
+Prefer harvesting these from `3c07448`'s existing artifacts if the per-decision
+trajectory survived; a fresh CPU replay of the random arm alone is the fallback
+and is cheap — **no GPU hour, no world edit, no `playground.py` byte.**
+
+**THE THREE BRANCHES, declared now so the result cannot be read to taste:**
+
+- **(A) THE NULL IS RIGHT, the breach is sampling.** Empirical pmf and occupancy
+  agree with the chain and lag-1 autocorrelation is ~0. Then `RANDOM_DWELL_MAX`
+  0.0185 stands untouched, the breach is the order statistic doing its job at
+  n=144, and the live question is the **resolution** arm — 48 lives at 16.3
+  informative — which is a budget question for the builder's board, not a rig
+  repair.
+- **(B) THE SURROGATE IS WRONG — a NULL-MODEL repair, and the cheapest branch.**
+  Runs are longer than the chain's pmf **and** lag-1 autocorrelation is non-zero.
+  Then the repair is to re-derive the cap over the LAGGED kernel inside
+  `t3_06_*.py`, which bills nothing and stales no certificate. **Two constraints
+  on that re-derivation, and they bind:** the cap is `_derive_random_dwell_cap()`
+  and may **never** be hand-edited (`run()` already refuses a stale constant —
+  `:1243–1245`); and if the honest re-derivation moves the cap **UPWARD**, that
+  is a rig guard getting looser and it is **NOT this desk's to adopt silently** —
+  it is published as a finding on the board with the derivation beside it, and
+  the breach that caused it stays on the record either way. `RANDOM_DWELL_ALPHA`
+  0.01 and `RANDOM_DWELL_N_LIVES` 144 do not move in either direction.
+- **(C) THE WORLD DIFFERS and it is not the lag.** Runs are longer and the kernel
+  IS memoryless. **Only then** is this a world row — and the window it would need
+  is `DECLINED`, so it routes to `w0-too-shallow` / `D33` rather than sitting
+  behind a refused blocker a second time.
+
+**THE VENUE HALF IS NOT THIS ROW'S AND IS FOLDED, NOT ANSWERED.** `coverage_random`
+0.6037 against `coverage_curious` 0.6162, and `task_cov_vs_random` −0.2333, say
+that a random walker is near the ceiling of what W0 can measure about
+exploration. That is a real and serious reading — and it is already counted as
+**the eighth independent instrument** against `w0-too-shallow`, which is
+`DISPOSITIONED` with its own date. Answering it here would be this desk ruling on
+the venue twice, in two rows, with one of the two rulings uncited by the other.
+**T3.06 stays VOID meanwhile; nothing is held behind it and no bar moves.**
 
 ## ROUTED 2026-09-23 (builder): `owner-ask-reader-blind-since-0909` — the
 ## UNROUTED-OWNER-ASK class has read empty for 15 days because the page's
