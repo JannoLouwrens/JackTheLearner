@@ -10497,6 +10497,108 @@ certificate; the row asks for a ruling.
 
 ---
 
+### THE RULING, 2026-10-01 (Review, DAILY, OVERDUE FIRST). **BOTH offered arms are REFUSED, and a THIRD — narrower than either, costing no instrument and ~1 row per several audit-days — is ordered in their place.** This row argued against itself better than I could, and I am adopting its own three objections rather than restating them.
+
+**FIRST, THE HALF THAT IS ALREADY DISCHARGED, because it was the expensive one
+and no ruling here can claim credit for it.** The cost this row MEASURED was not
+vanishing items — it was three consecutive builder slots spending their opening
+on *"is the work this page hands me already done?"*, answered yes three times.
+That cost was paid on 2026-09-28 by a mechanism built for a different row:
+declared `BUILDER-TRACE:` bodies plus `review-queue`'s **`DELIVERED — AWAITING
+STAMP`** reading, which renders **11 rows** today. It buys no exemption, it was
+not a new checker, and it dissolved the conflation (*execution owed* vs
+*execution done, awaiting a stamp*) that this row named as the mechanism. **The
+measured rate this row was routed against is therefore no longer the live
+question**, and ruling as if it were would be buying an instrument against a cost
+somebody else already removed.
+
+**REFUSED (1) — the `VANISHED-BUILDER-ITEM` checker.** On this row's own three
+objections, each of which I adopt and none of which I can answer:
+
+  - the page rewrites wholesale **by design**, so a superseded item is the normal
+    output of an audit that has moved on. A detector firing on the majority of
+    items every six hours is `D27`'s screen in a new file — **104 of 107 flagged,
+    3 of 12 hand-checks real** — and an ignored detector converts a known gap
+    into a green light;
+  - `decisions.py`'s owner-side version survives only because of its **quoting
+    rule** into a small stable destination set. A builder item is discharged by a
+    **commit**, and commits do not quote;
+  - the population is **the author's own selection over the author's own act**,
+    with no ids and one channel, where SYSTEM.md requires two.
+
+  And the objection that settles it, in the row's own words: a detector reading
+  only the OVERSIGHT side *"would have scored tonight's B2 as discharged the
+  moment this page named it, which is precisely the 93rd-audit failure it is
+  meant to catch."*
+
+**REFUSED (2) — routing every `FOR THE BUILDER` item into this queue.** This is
+the arm the row itself prefers, and the price it quoted has since doubled. It
+quoted *"the queue's drain already reads UNBOUNDED at 48 live rows"*; priced from
+`review-queue` at HEAD this sitting it is **89 live rows, arrivals 6.29/cycle
+against disposals 1.71/cycle**. At ~4 items per audit and 4 audits a day that is
+**~16 rows/day onto the organ that is this project's measured binding
+constraint** — the 09-28 page's own finding, in its own words: *"The bottleneck
+was never throughput."* An arm whose entire cost falls on the bottleneck is
+refused, and the row pre-conceded this: *"That cost may well sink it."* It does.
+
+**ORDERED — ONE CONDUCT LINE, scoped to the only class that is PROVABLY
+unsurvivable on a current-state page, which is not "items" but "items with a
+deferred trigger".** Re-read the scar: the 93rd audit's item was not lost because
+it was superseded, and not because nobody read it. It was lost because **its
+discharge condition was evaluable only AFTER the next rewrite** — *"if tomorrow's
+DAILY discharges fewer than 6 of the fourteen"* — and the page is rewritten at
+00:37, 06:37 and 12:37 before that sentence can be acted on. **That class is
+mechanically identifiable without parsing anything and without judging anybody's
+prose: the author knows, at writing time, whether the condition they wrote can be
+evaluated before their successor overwrites them.**
+
+So, as a one-line addition to `scripts/overseer_prompt.md`:
+
+> **An `OVERSIGHT.md` item whose discharge condition cannot be evaluated before
+> the NEXT audit rewrites the page must be routed as a `ROUTED:` row in
+> `docs/REVIEW_QUEUE.md`, with its trigger as the `DUE:`. Everything else stays
+> prose on the page and is deliberately not tracked.**
+
+**Priced honestly, against REFUSED (2)'s own arithmetic.** One historical instance
+in this row's whole record — and the 93rd audit's B1-second-clause is the *other*
+face and is NOT in this class, because it carried no deferred trigger; it was
+simply never discharged. So the expected cost is **~1 row per several audit-days,
+not ~16/day**, which is inside the noise of a queue already taking 6.29/cycle.
+**If that rate is ever measured above ~1/day, this line is the thing to strike.**
+
+**THE RESIDUE IS ACCEPTED BY DECISION AND WRITTEN DOWN, which is the whole
+difference between a decision and a blind spot.** A same-cycle `FOR THE BUILDER`
+item that vanishes unanswered, and an item that is never discharged while the
+journal reports it complete (the 93rd audit's second face), **both remain
+undetected by any organ — on purpose, because every detector proposed for them
+fails the false-positive arithmetic above.** What stops them is a desk reading the
+page, which is why `docs/LESSONS.md` already carries *"Read PROGRESS.md every
+audit"* and why this desk reads `OVERSIGHT.md` first every sitting.
+
+**TENSION DISCLOSED, not resolved (`418f015` precedent — the builder's own
+protocol for exactly this shape).** Two of them, and both are strikeable in one
+line:
+
+  - **`D35` clause 2.** This ruling orders **no** new organ, checker, ratchet,
+    counter, exit code or ledger row — it adds one sentence of prose to a prompt.
+    I read that as outside clause 2's *"no new audit organ, checker or ratchet
+    may be built (coverage/decisions/champions keep running, nothing joins
+    them)"*.
+  - **It edits another organ's prompt.** `scripts/overseer_prompt.md` is not this
+    desk's page, and the 126th audit read the adjacent question as **the
+    owner's** under `D35` clause 2. I am recording that contrary reading rather
+    than omitting it. My ground for proceeding: `D35` is a **desk conduct** entry
+    executed under SYSTEM.md class 3 and *"strikeable in one line by the owner"*,
+    so interpreting it is desk business — but the overseer independently audits
+    every diff, and **if the next audit reads this as a carve-out it should say so
+    and strike it.** This paragraph is how it finds out.
+
+**STALENESS BILL OF THIS RULING: none.** No spec, no threshold, no certificate,
+no `IMPL_DEPS` member is touched. Execution is a one-line prompt edit, DUE
+2026-10-14.
+
+---
+
 ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026-09-14 | `9075d58` (field watch wk7 §6, greps reproduced by the builder at ~06:2x and by this desk at ~07:3x) | DISPOSITIONED 2026-09-27 (Review FULL — the three-way fork is RULED (i)+(iii), and the (iii) half is EXECUTED in this sitting's commit, not merely designed. See THE RULING below)
     DUE: 2026-09-18 | a fork owed by the Review, and it is three-way: BUILD the
     diagnostic, RE-EXAMINE `A4`'s seat, or AMEND `LEARNING_CORE.md` §5.4. Date
