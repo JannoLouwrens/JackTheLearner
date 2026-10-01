@@ -713,6 +713,10 @@ def cmd_status(ledger: Ledger) -> int:
         st = ledger.status(s.id)
         impl = "" if module_path_for(s.id, strict=True) else "  (not implemented)"
         print(f"    [{MARK[st]}] {s.id}  {s.title}{impl}")
+        if s.verdict_caveat and st is not Status.NOT_RUN:
+            # Reporting-only (134th audit FTB 2): the one place a reader
+            # actually looks must carry the reading, not just the docstring.
+            print(f"             ! read the verdict with care: {s.verdict_caveat}")
     print(f"\n  {counts}\n")
     # CPU day-meter visibility (68th audit B4): a budget refusal returns
     # UNRECORDED by design (tenant protection is not a measurement of the
@@ -5634,6 +5638,8 @@ def cmd_render(ledger: Ledger) -> int:
             out.append(f"      - _then delete:_ {s_.kills}")
             if s_.kill_scope:
                 out.append(f"      - _kill scope (recorded):_ {s_.kill_scope}")
+        if s_.verdict_caveat and st is not Status.NOT_RUN:
+            out.append(f"      - _read the verdict with care:_ {s_.verdict_caveat}")
     Path("CHECKLIST.md").write_text("\n".join(out) + "\n")
     print(f"wrote CHECKLIST.md — {done}/{total} demonstrated")
     # THE PRE-COMMIT BILL (2026-09-22). `render` is the last command the

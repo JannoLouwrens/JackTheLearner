@@ -339,6 +339,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **PG.4** Noisy-TV panel traps naive curiosity
       - _asserts:_ The re-randomizing texture panel is a working trap: a prediction-error agent fixates on it; dwell-time metric works.
       - _dies if:_ The naive-curiosity control arm does NOT fixate — then the fixture cannot certify any curiosity claim.
+      - _read the verdict with care:_ HOW TO READ THIS PASS: per-seed dwell_share is (1.0, 1.0, 0.0) — one of the three seeds never found the panel at all, and on that seed four of the five experiment conjuncts in _check fail. The PASS is on the cross-seed MEAN (the ladder's uniform aggregate protocol, not bent for this run); _check has no spread conjunct. Recoverable from the row's own mean 0.666667 / std 0.471405, which on [0,1] forces {1,1,0} exactly. Disclosed by the author in 4a4afb3 (2026-08-10) and the spec docstring (90th audit B3); carried to the board 2026-10-01 (134th audit FTB 2). Four specs depend on this fixture.
 - [x] **PG.5** Procedural contact audio with localization labels
       - _asserts:_ Modal-resonator synthesis on MuJoCo contact events yields stereo audio whose panning matches source bearing.
       - _dies if:_ Bearing decoded from stereo does not match ground truth.
@@ -1131,7 +1132,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 0 — HARNESS — can we measure anything?
 
-- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.202; ceiling_admitted=False
+- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.204; ceiling_admitted=False
       - _asserts:_ For any declared control path, the harness measures sim-seconds per real second before a long run starts, and REFUSES a run whose projected duration exceeds the spec's timeout or the box's tenant-safety budget.
       - _dies if:_ A long run launching with a projected duration past its own timeout, OR a projection that differs from the achieved duration by >25%.
       - _then delete:_ Nothing directly; it prevents burning a Sunday quota on a run that could never have finished.

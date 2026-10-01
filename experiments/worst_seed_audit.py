@@ -477,7 +477,7 @@ def audit(ledger_path: Path = LEDGER):
     """Run both lanes over every registered spec. Returns a dict of findings."""
     results = json.loads(ledger_path.read_text())["results"] \
         if ledger_path.exists() else {}
-    fold_rows, bound_rows, skipped = [], [], []
+    fold_rows, bound_rows, protected_rows, skipped = [], [], [], []
     for sid, path in _registered_files():
         try:
             tree = ast.parse(path.read_text())
@@ -498,26 +498,46 @@ def audit(ledger_path: Path = LEDGER):
             mu, sigma = vals.get(g.key), vals.get(g.key + "_std")
             verdict, detail = classify(g, mu, sigma, n)
             sibling = (g.source, g.key) in protected
+            if sibling and verdict == "WRONG":
+                # 134th audit FTB 2 note, softening ordered before arm (b) is
+                # priced: a std-bounded sibling conjunct gates the SAME key
+                # per-seed (T2.08's `margin_floor = mean - 1.5*std > 0`
+                # guarantees every seed's margin positive at n=3), so the
+                # record does NOT admit a seed the spec's own per-seed claim
+                # forbids — the flagged bar is mean-level by declaration. The
+                # real defect is reader ambiguity (which of the two bars is
+                # the all-seeds one?), and counting it as WRONG inflates the
+                # price of arm (b)'s lane.
+                verdict = "PROTECTED"
+                detail += (" — SOFTENED: a std-bounded sibling conjunct gates "
+                           "this key per-seed, so no seed violates the spec's "
+                           "own per-seed claim; the bar above is mean-level. "
+                           "Defect: a board reader cannot tell which bar is "
+                           "the all-seeds one (134th audit FTB 2)")
             entry = {"spec": sid, "gate": g, "fold": folds.get(g.key),
                      "verdict": verdict, "detail": detail,
-                     "partially_protected": sibling and verdict == "WRONG",
+                     "partially_protected": verdict == "PROTECTED",
                      "derived_gates": derived}
             if g.key in folds:
                 fold_rows.append(entry)
             if verdict == "WRONG":
                 bound_rows.append(entry)
-    return {"fold": fold_rows, "bound": bound_rows, "skipped": skipped}
+            elif verdict == "PROTECTED":
+                protected_rows.append(entry)
+    return {"fold": fold_rows, "bound": bound_rows,
+            "protected": protected_rows, "skipped": skipped}
 
 
 def render(res: dict) -> str:
     out = []
     w = out.append
     wrong_first = sorted(res["fold"],
-                         key=lambda e: {"WRONG": 0, "UNRESOLVED": 1,
-                                        "UNMEASURED": 2, "FIRED": 3,
-                                        "CORRECT": 4}[e["verdict"]])
+                         key=lambda e: {"WRONG": 0, "PROTECTED": 1,
+                                        "UNRESOLVED": 2, "UNMEASURED": 3,
+                                        "FIRED": 4, "CORRECT": 5}[e["verdict"]])
     fold_wrong = [e for e in res["fold"] if e["verdict"] == "WRONG"]
     bound_specs = sorted({e["spec"] for e in res["bound"]})
+    prot = res.get("protected", [])
     w("WORST-SEED GATE AUDIT — arm (c) of `aggregate-hides-worst-seed` "
       "(ruled 2026-09-30: (c) prices (b); (a) refused)")
     w("  A bare `_check` gate on an _aggregate-meaned key cannot see its worst "
@@ -529,9 +549,14 @@ def render(res: dict) -> str:
         w("  none — no committed row admits a seed on the failing side of its bar")
     for e in sorted(res["bound"], key=lambda e: e["spec"]):
         g = e["gate"]
-        pp = "  [std-bounded sibling conjunct exists: partially protected]" \
-            if e["partially_protected"] else ""
-        w(f"  {e['spec']:<8} {g!r:<52} WRONG: {e['detail']}{pp}")
+        w(f"  {e['spec']:<8} {g!r:<52} WRONG: {e['detail']}")
+    if prot:
+        w(f"  PROTECTED ({len(prot)} gate(s)) — a std-bounded sibling conjunct "
+          f"gates the same key per-seed; the flagged bar is mean-level, the "
+          f"defect is reader ambiguity, NOT an admitted violating seed "
+          f"(134th audit FTB 2):")
+        for e in sorted(prot, key=lambda e: e["spec"]):
+            w(f"    {e['spec']:<8} {e['gate']!r:<52} {e['detail']}")
     w("")
     w(f"LANE A — FOLD-FLAGGED, the set that prices arm (b) "
       f"({len(res['fold'])} pair(s), {len(fold_wrong)} WRONG):")
@@ -547,7 +572,10 @@ def render(res: dict) -> str:
     w(f"summary: fold-flagged {len(res['fold'])} pair(s) "
       f"({len(fold_wrong)} WRONG — arm (b)'s breakage price), "
       f"record-admits-violation {len(res['bound'])} gate(s) across "
-      f"{len(bound_specs)} spec(s): {', '.join(bound_specs) or 'none'}")
+      f"{len(bound_specs)} spec(s): {', '.join(bound_specs) or 'none'}"
+      + (f"; {len(prot)} PROTECTED (sibling-gated per-seed, reader-ambiguity "
+         f"only): {', '.join(sorted({e['spec'] for e in prot}))}"
+         if prot else ""))
     return "\n".join(out) + "\n"
 
 
@@ -647,16 +675,24 @@ def _selftest() -> int:
     for pair in [("PG.4", "icm_dwell_share"), ("PG.4", "dwell_margin"),
                  ("PG.4", "panel_reward_ratio"),
                  ("PG.4", "rays_on_panel_while_dwelling"),
-                 ("ME.10", "skill_gain"), ("PS.02", "shuffled_r2"),
-                 ("T2.08", "coverage_margin")]:
+                 ("ME.10", "skill_gain"), ("PS.02", "shuffled_r2")]:
         check(f"reference WRONG: {pair}", pair in wrong)
     for spec, key in [("LG.01", "retained_min_per_category"),
                       ("T3.01", "ref_min"), ("W0.DIAG", "jit_delta_up")]:
         check(f"reference safe: {(spec, key)}", (spec, key) not in wrong)
-    t208 = [e for e in res["bound"]
+    # T2.08 is the 09-12 table's "partially protected" entry, PROMOTED to its
+    # own verdict on the 134th audit's FTB 2 order: `margin_floor =
+    # mean - 1.5*std > 0` guarantees every seed's margin positive at n=3, so
+    # the record admits no seed the spec's per-seed claim forbids — the 0.05
+    # bar is mean-level and the defect is reader ambiguity. It must be OUT of
+    # the WRONG lane (counting it there inflates arm (b)'s price) and IN the
+    # protected lane, never silently absent from both.
+    t208 = [e for e in res.get("protected", [])
             if (e["spec"], e["gate"].key) == ("T2.08", "coverage_margin")]
-    check("T2.08 partially protected",
-          bool(t208) and t208[0]["partially_protected"])
+    check("T2.08 PROTECTED, not WRONG",
+          bool(t208) and ("T2.08", "coverage_margin") not in wrong)
+    check("T2.08 protected verdict carries the softening",
+          bool(t208) and "SOFTENED" in t208[0]["detail"])
 
     if failures:
         print("SELFTEST FAIL:\n  " + "\n  ".join(failures))

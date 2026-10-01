@@ -750,6 +750,18 @@ EXPANSION: list[Spec] = [
          metric="icm_dwell_share", budget=Budget.CPU_LONG, depends_on=["PG.1"],
          seeds=3,
          control="The IDENTICAL ICM agent with a STATIC panel texture must NOT fixate — else dwell measures the geometry of that corner of the room rather than its unpredictability.",
+         verdict_caveat="HOW TO READ THIS PASS: per-seed dwell_share is "
+                        "(1.0, 1.0, 0.0) — one of the three seeds never found "
+                        "the panel at all, and on that seed four of the five "
+                        "experiment conjuncts in _check fail. The PASS is on "
+                        "the cross-seed MEAN (the ladder's uniform aggregate "
+                        "protocol, not bent for this run); _check has no "
+                        "spread conjunct. Recoverable from the row's own "
+                        "mean 0.666667 / std 0.471405, which on [0,1] forces "
+                        "{1,1,0} exactly. Disclosed by the author in 4a4afb3 "
+                        "(2026-08-10) and the spec docstring (90th audit B3); "
+                        "carried to the board 2026-10-01 (134th audit FTB 2). "
+                        "Four specs depend on this fixture.",
          notes="Every later curiosity claim must report dwell share on this "
                "fixture. The control above lived in this notes field until "
                "2026-08-10: it ran on every seed and was invisible to a grep of "

@@ -229,6 +229,13 @@ _CLAIM_INVARIANTS = {
     # fact — which is the demotion-by-prose defect the field's own docstring
     # forbids, and this spec should go red on it.
     "kill_scope": "narrower words appended after the verdict",
+    # `verdict_caveat` (134th audit FTB 2, added 2026-10-01): reporting-only
+    # how-to-read-this-verdict line, the `kill_scope` pattern one field over
+    # (the PG.4 (1,1,0) disclosure moved from a docstring to the board). It
+    # may only quote a reading recoverable from the committed record. If this
+    # line ever moves the hash, the field has become a way to re-argue a
+    # verdict after the fact, and this spec should go red on it.
+    "verdict_caveat": "a how-to-read line appended after the verdict",
 }
 
 

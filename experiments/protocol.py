@@ -441,6 +441,23 @@ class Spec:
     commit, a pre-registration paragraph) in its own text; the printers render
     it beside `kills` so the board stops showing the unscoped kill while the
     scope lives in a docstring nobody reads at triage."""
+    verdict_caveat: Optional[str] = None
+    """Where a standing verdict is READ, print how to read it (134th audit
+    RANK 2 / FTB 2 — the `kill_scope` pattern, one field over).
+
+    Reporting-only, deliberately NOT in `SPEC_CLAIM_FIELDS`, binds nothing and
+    changes no verdict. The scar: `PG.4`'s PASS rests on per-seed
+    `dwell_share` (1.0, 1.0, 0.0) — on the zero-dwell seed four of its five
+    experiment conjuncts fail — and that reading was disclosed by its author
+    on the day it landed, in the commit and the docstring, where it stayed
+    true and correctly written for 52 days while `run status` printed
+    `[PASS] PG.4` unmarked and four specs stood on the fixture. A disclosure
+    the board cannot see is a disclosure only to people who already know.
+    This field may only QUOTE a reading that is recoverable from the
+    committed record (the row's own metrics, a docstring, a commit), must
+    name that provenance in its own text, and must never soften, scope or
+    re-argue the verdict — a caveat that says "so the FAIL doesn't count" is
+    the demotion-by-prose defect, one field over from `kill_scope`'s."""
     notes: str = ""
     gate_mode: str = "validity"
     """How `run_bakeoff` reads an arm that misses the learning gate.
