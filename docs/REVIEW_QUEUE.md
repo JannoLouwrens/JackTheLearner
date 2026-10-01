@@ -1995,6 +1995,21 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
         commit per 133rd-audit FTB 5: audit SUBSTANCE shipped, reporting-only
         and unfloored, T0-spec packaging left to this desk. Step 2 NOT
         pre-empted; no bar moved; arm (a) still refused and untouched.
+        **COUNT CORRECTED 2026-10-01 ~01:xx (builder, on the 134th audit's
+        FTB 2 order — softened BEFORE this desk prices arm (b)):** `T2.08
+        coverage_margin` is reclassified WRONG → **PROTECTED**: its sibling
+        conjunct `margin_floor = mean − 1.5·std > 0` guarantees every seed's
+        margin positive at n=3 (the docstring's all-seeds rule, exact), so the
+        record admits NO seed the spec's own per-seed claim forbids — the 0.05
+        bar is mean-level by declaration and the defect is reader ambiguity,
+        not an admitted violating seed. Priced counts now: **LANE A 139 pairs /
+        1 WRONG (`LG.03` only) + 1 PROTECTED; LANE B 17 gates across 13 specs**
+        (T2.08 out, listed separately as PROTECTED). The audit module, its
+        render and its selftest carry the reclassification; the PG.4 instance
+        is now ALSO on the board itself via the new reporting-only
+        `Spec.verdict_caveat` field (134th audit FTB 2, the kill_scope
+        pattern) — `run status` and CHECKLIST.md print the (1.0, 1.0, 0.0)
+        reading beside the PASS.
     THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
         **RULED: (c) THEN (b). (a) IS REFUSED. The order is the ruling.**
         **FIRST, the blocker argument in the 09-22 re-date above is DISCHARGED
