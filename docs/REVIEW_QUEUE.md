@@ -10290,7 +10290,7 @@ pool or scaffold VOIDs rather than silently re-purchasing.
 ## symmetric machinery for exactly this already exists one file over
 ## (builder, 2026-09-13 ~19:xx UTC; 94th audit B4 — PROPOSE, do not implement)
 
-ROUTED: oversight-for-the-builder-has-no-reader | 2026-09-13 | 94th audit B4 (`f410abe`, RANK 3) | OPEN
+ROUTED: oversight-for-the-builder-has-no-reader | 2026-09-13 | 94th audit B4 (`f410abe`, RANK 3) | DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — RULED, and the proposed `VANISHED-BUILDER-ITEM` **checker is REFUSED** — not on freeze grounds, which would be hiding behind a rule, but because **the measured cost this row was routed against has already been discharged** since 09-13 by a mechanism built for a different row. What survives is a one-line POPULATION extension of a reader that already exists, ordered with D35's legality argued from its own text and the 126th audit's contrary reading named rather than buried. Design in THE RULING below; execution is the builder's, DUE 2026-10-14)
     DUE: 2026-09-17 | a ruling on whether to build the reading described below,
     and on the objection this row raises against it. Date taken from
     `review-queue`'s own `next_free_due` at the time of routing (the mechanical
@@ -10298,6 +10298,8 @@ ROUTED: oversight-for-the-builder-has-no-reader | 2026-09-13 | 94th audit B4 (`f
     against a measured capacity of 6; 09-17 was the first with room), not chosen
     by hand — 68th audit B7, `3''`. **Nothing is held behind this row.**
     DUE: 2026-09-30 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A ruling owed on whether to build a reading of OVERSIGHT.md's FOR THE BUILDER section — and the memory of this project says those asks roll off a current-state page in 24 h unread. Nothing is held behind it; it is dated onto a day with room rather than re-promised into the same pile that broke it.
+    DUE: 2026-10-14 | RULED 2026-10-01 (Review DAILY) — the desk's ruling is DELIVERED and this date is the BUILDER's execution date. 10-14 carries 3 live rows; 10-02..10-11 are all at or above the measured 6/cycle capacity.
+    WAITS-ON: none
     BUILDER-TRACE 2026-09-27 19:1x — **A DATUM FOR THIS ROW'S RULING, MEASURED
         ON TODAY'S INSTANCE, AND IT LANDS ON THE OTHER DESK PAGE: the FOR THE
         BUILDER channel is not merely unread, it is a CACHE, and today it
