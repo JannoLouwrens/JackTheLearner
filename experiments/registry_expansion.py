@@ -5124,6 +5124,125 @@ EXPANSION: list[Spec] = [
                "from one that changes what he means. "
                "  COVERS: language (parent) (claim)"),
 
+    # ── STRUCTURED DECODE — THE RULED SUCCESSOR TO LG.12's FAIL ──────────
+    # Registered 2026-10-01 by the builder, discharging THE RULING of
+    # 2026-09-29 on `lg12-abstention-knob-has-no-resolution`
+    # (docs/REVIEW_QUEUE.md, DISPOSITIONED, DUE 2026-10-08). The three-way
+    # mouth fork was ruled on LG.12's own measurement, with no new run
+    # bought: (b) STRUCTURED DECODE is TAKEN — this spec; (a) a bigger
+    # frozen mouth is REFUSED (the arm did not fail for want of phrasing
+    # quality — dominance and fidelity measured ~independent, so the pool is
+    # not the binding term — and (a) is the one arm priced as real LLM
+    # spend); (c) de-verbatiming the scaffold is REFUSED AS A FIRST ARM and
+    # SEQUENCED BEHIND THIS SPEC on price, not merit: its diagnosis is
+    # already written on the row, and its bill (touching ARM_ASK/pool/
+    # SCAFFOLD re-keys EVERY verdict and re-buys the pass outright) is only
+    # worth paying if (b) fails. REGISTRATION ONLY: no dispatch authorised,
+    # no LLM verdicts bought on this row's account.
+    #
+    # WHY STRUCTURED DECODE, from the ruling, because it is the claim's
+    # premise: LG.12 measured dominance in [1.383, 1.826] (sd 0.080, a
+    # 0.44-nat range on a 0.0-5.0 grid) against a bar the pool arithmetic
+    # put at >= 3.74 nats — 2.0x the largest value the mechanism EVER
+    # produced, 27 sd above its mean. "A fidelity selector needs a quantity
+    # that VARIES with whether the draw will be right," and no such quantity
+    # exists in the pool. Structured decode does not look for the missing
+    # varying quantity; it removes the need for one by CONSTRAINING the
+    # emission instead of selecting among free samples. It is the only arm
+    # of the three that attacks the measured cause.
+    #
+    # UNSATURATED-NULL DECLARATION (the 2026-09-23 standing rule, in source
+    # before any run). STATISTIC_BOUND: match_on_spoken is bounded at 1.0.
+    # The free-generation null MEASURED 0.044/0.083 on this exact rig
+    # (LG.12 attempt 1, per seed worst/next) — ~0.92 under the bound, ~0.27
+    # under its own 0.35 ceiling, and ~0.82 under the 0.90 claim bar. The
+    # null is nowhere near the bound, so the gate is registerable.
+    #
+    # THE DEGENERATE WIN, AND WHY BOTH CONJUNCTS ARE MANDATORY. Constrain
+    # the emission tightly enough and the mouth simply reproduces the
+    # scaffold's intent sentence, clearing match_on_spoken by copying the
+    # thing the copying bonus was already contaminating. The ruling
+    # therefore imposed both conjuncts below BEFORE this arm existed, so
+    # they cannot be negotiated after a result; both are HARDER than
+    # anything LG.12 faced (its null was an unconstrained sampler, and its
+    # trials all had their intent in scaffold). Dropping or weakening either
+    # to make a result reportable is a bar-weakening, and the overseer
+    # audits every spec diff.
+    Spec("LG.14", 4, "Structured decode: his meaning constrains the mouth, "
+                     "not a margin over its free samples",
+         hypothesis="Given a structured decoder — the core's selected intent "
+                    "CONSTRAINS the frozen mouth's emission (the utterance is "
+                    "generated under the intent's structure, drawn from his "
+                    "state) rather than selecting among free samples by a "
+                    "dominance margin — the mouth is right when it speaks, on "
+                    "LG.10/LG.12's unmoved bars: match_on_spoken >= 0.90, "
+                    "unanimity_on_spoken >= 0.90, swap_agree >= 0.90, per "
+                    "seed and both frozen models, with utter_rate >= 0.50 "
+                    "over report trials. AND — MANDATORY CONJUNCT 1, "
+                    "HELD-OUT INTENTS — match_on_spoken and "
+                    "unanimity_on_spoken clear the same bars on intents whose "
+                    "canonical sentence is NOT present in ARM_ASK or SCAFFOLD "
+                    "anywhere: a structured decoder that only works when the "
+                    "answer is in its prompt has measured the prompt.",
+         falsified_by="match_on_spoken under 0.90 on any seed/model with the "
+                      "rig alive — structured decode cannot buy fidelity "
+                      "either, and the next arm is the row's (c), the "
+                      "de-verbatim scaffold repair, sequenced and priced in "
+                      "advance. OR the held-out conjunct fails while "
+                      "in-scaffold intents clear — the decoder measured its "
+                      "prompt, a FAIL of this claim, not a smaller pass. OR "
+                      "he goes mute: utter_rate under 0.50 on any seed (the "
+                      "ME.3 starvation failure, LG.12's floor carried "
+                      "unmoved). OR the mismatched-constraint null also "
+                      "clears match_on_spoken, in which case the constraint "
+                      "is not carrying meaning and the run is VOID, not FAIL "
+                      "(law 2; the LG.12 precedent — kills retires a proposed "
+                      "mechanism, not a shipped one).",
+         null_baseline="TWO nulls, both binding. (1) LG.10's free-generation "
+                       "null carried unmoved: no core-selected intent, "
+                       "match_on_spoken <= 0.35 (NULL_MATCH_MAX), and its "
+                       "at-chance reading proved alive or the run is VOID "
+                       "NULL_SILENCED_BY_MECHANISM (24th audit B3 rule). "
+                       "(2) MANDATORY CONJUNCT 2, THE MISMATCHED-CONSTRAINT "
+                       "NULL: the SAME decoder run with its structure drawn "
+                       "from a DIFFERENT trial's intent. If that null also "
+                       "clears match_on_spoken, the constraint carries no "
+                       "meaning and the verdict is VOID, not FAIL.",
+         metric="match_on_spoken_on_held_out_intents",
+         budget=Budget.CPU, depends_on=["LG.00"], seeds=3,
+         control="THE MISMATCHED-CONSTRAINT NULL doubles as the condition "
+                 "that MUST fail: with structure from the wrong trial's "
+                 "intent it must not reach MATCH_MIN — and if it does, the "
+                 "run VOIDs rather than the claim scoring anyway. SILENCE is "
+                 "NOT carried as a control: this design has no abstention "
+                 "path, so LG.12's demotion reasoning applies a fortiori and "
+                 "the utterance floor carries the aliveness burden.",
+         kills="The structured-decode arm — a proposed mechanism, never a "
+               "shipped module. If it fails, the remaining repair is the "
+               "row's arm (c): de-verbatim the scaffold so dominance becomes "
+               "informative, whose diagnosis is already written on the row "
+               "and whose bill (re-keying every verdict in "
+               "/data/lg10_llm_verdicts.json) was priced before this spec "
+               "existed. Nothing in Jack is deleted by this FAIL.",
+         notes="RULED SUCCESSOR, NOT A REPAIR: LG.10's bars and FAIL stand "
+               "untouched; LG.12 remains the provably weaker sibling that "
+               "may never replace it, and this spec may not be scored on "
+               "LG.10's bars alone — both mandatory conjuncts are part of "
+               "this pre-registration and may not be dropped. Bars quoted "
+               "from source, none moved: MATCH_MIN 0.90, UNANIMITY_MIN "
+               "0.90, SWAP_AGREE_MIN 0.90, NULL_MATCH_MAX 0.35 "
+               "(lg_10_jack_chooses_what_to_say.py:174-177), UTTER_MIN 0.50 "
+               "(lg_12_abstaining_mouth.py:223). COST: ZERO existing "
+               "certificates at registration — no weight change, no re-key "
+               "of /data/lg10_llm_verdicts.json, ARM_ASK/pool/SCAFFOLD "
+               "untouched. The held-out conjunct's trials are NEW content "
+               "and therefore buy NEW verdict keys when the implementation "
+               "first runs — new keys, not a re-key; the implementer "
+               "discloses the count in the run's commit. depends_on is "
+               "LG.00, not LG.12 — a FAIL is not a dependency (the LG.12 "
+               "registration's own rule). "
+               "  COVERS: language (parent) (claim)"),
+
     # ── THE TOLD WORLD (66th audit B1, registered 2026-09-03) ─────────────
     # GOAL.md:206-212 has said of itself "FALSIFIABLE, and it must be tested
     # rather than assumed" since 1859c8f (2026-08-09) — 25 days, 0 of 232
