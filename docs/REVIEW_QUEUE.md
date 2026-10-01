@@ -1972,6 +1972,29 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
         refusal) returns to this desk with that price in hand and is NOT ordered
         yet. The desk's half is discharged. 2026-10-14 carries 2 live rows
         against the measured 6.
+    BUILDER-TRACE: 5b026bd | STEP 1 executed 2026-10-01 ~00:1x–00:5x, 13 days
+        early (a DUE is a deadline, not a start-gate). `experiments/
+        worst_seed_audit.py` + `run worst-seed-audit` + `--selftest`; the
+        09-12 ten-pair reference classification REPRODUCES (PG.4 x4 / ME.10 /
+        PS.02 / T2.08 WRONG; LG.01 safe by integer arithmetic; T3.01 and
+        W0.DIAG safe once the if-bad-return inversion is handled); the
+        rename-dodge fixture ships and fires (fold detection, not naming).
+        **THE COUNT THE RULING ASKED FOR, returning to this desk — arm (b)'s
+        price:** LANE A fold-flagged **139 (spec,key) pairs** across the
+        registered ladder; **2 WRONG** on committed green rows (`T2.08
+        coverage_margin`, worst admissible 0.0279 vs 0.05, partially
+        protected; `LG.03 rand_rate_retained_max`, admits 0.3333 vs 0.25) —
+        most of the 139 are UNMEASURED/FIRED/CORRECT, so (b)'s breakage is
+        far smaller than the 26-file grep feared, but the KeyError sweep
+        under (b) would still touch all 139 gating sites. **WIDENING
+        FINDING, new since 09-12:** LANE B (the sweep standing, every
+        registered spec) reads **18 green-on-the-mean gates across 14 specs
+        whose committed record admits a violating seed**: DP.05, HR.5,
+        LC.03, LG.03, LT.01, LT.02, ME.10, NE.00, PG.4(x4), PS.02,
+        PS.05(x2), PS.06, T2.08, T2.20. Freeze/D35 tension disclosed in the
+        commit per 133rd-audit FTB 5: audit SUBSTANCE shipped, reporting-only
+        and unfloored, T0-spec packaging left to this desk. Step 2 NOT
+        pre-empted; no bar moved; arm (a) still refused and untouched.
     THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
         **RULED: (c) THEN (b). (a) IS REFUSED. The order is the ruling.**
         **FIRST, the blocker argument in the 09-22 re-date above is DISCHARGED
