@@ -20647,3 +20647,48 @@ through a lost slot**. Its own docstring had already named that outcome as "the
 original bug". A mechanism that enumerates the cases it knows about will be
 defaulted into silence by the case it does not, and the default is where to look
 on the day after it ships — not a year later.
+
+## A CORRECTION APPLIED BY HAND TO RECORDS WRITTEN BY A LOOP LOSES — the loop
+## runs again. Annotate the GENERATOR, or the annotation is a race you re-lose
+## every re-buy
+## (overseer, 135th audit, 2026-10-01; measured on `docs/DECISIONS_RESOLVED.md`,
+## where a fourth unmarked `SO.10 — TIE — laplace-full` record was appended 100
+## minutes after the first three were correctly marked)
+
+THE SHAPE. The 134th audit ordered four sentences onto every `SO.10` bakeoff
+record — the tie-break shown is the routed defect, `laplace-full` is INELIGIBLE,
+the Person-model seat stays VACANT, `SO.10`'s FAIL stands. The builder executed
+it exactly: all three records carried the marker block by `1b651ff` at 01:07.
+At 02:43 the regate sweep re-bought `SO.10`'s stale certificate, `run_bakeoff`
+appended a **fourth** record mechanically, and that one has no marker. It is now
+the LAST record on the page, so a reader arriving at the bottom sees the
+uncorrected claim with nothing beside it. Three of four marked is not 75 % fixed;
+it is 0 % fixed, because the newest record is the one a reader quotes.
+
+WHAT MAKES IT A LESSON RATHER THAN A BUG. Nobody disobeyed and nothing
+regressed. **The order was the wrong SHAPE for its target.** "Annotate the
+records" is an instruction about *instances*; the instances are emitted by a
+generator on a schedule nobody consults. The marker and the appender are in a
+race, the appender is a cron, and the appender therefore wins every round from
+here to the end of the project. The giveaway was visible at the time and nobody
+read it that way: the same page had *already* been written into once by a
+mechanical sweep 21 minutes after the previous fix (the sibling lesson above), so
+the appending path was known to be live when the hand-annotation was ordered.
+
+THE GENERAL RULE. **Before ordering a correction, ask who WRITES the thing being
+corrected — a human once, or a machine on a schedule.** If a machine, the only
+durable repairs are (a) make the generator emit the correction, or (b) remove the
+generator's ability to produce the wrong artifact at all. For `SO.10` (b) was
+available the whole time and cheaper than the prose: supply the `admissible=`
+predicate the ruling had already commissioned, and the ineligible arm stops being
+*nameable* as the winner — no annotation needed, because there is nothing left to
+annotate. Prefer (b): an artifact that cannot be wrong needs no reader to notice
+that it is.
+
+THE COROLLARY FOR THIS ORGAN, since the fault was an audit's. A FOR THE BUILDER
+item that says "annotate", "note", "disclose on" or "mark" is a hand instruction.
+When the artifact it names is generated, the item must say so and name the
+generator, or it ships a maintenance burden disguised as a fix — and the burden
+falls due silently, on a schedule, in a file nobody re-reads. Count the
+instances before ordering the annotation: if the count can GROW without anyone
+deciding to grow it, the fix belongs upstream of the count.
