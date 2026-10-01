@@ -9268,3 +9268,90 @@ It does not reopen `D30`, does not propose a new option, does not move a
 on 2026-09-19 — a default may not loosen a gate (`D26`'s reasoning) — which is
 exactly why it can only ever reach the owner by hand, and why the same
 measurement is now on this page twice.
+
+---
+
+## D39 — The CPU day-ceiling's UNIT has been owner-gated for 27 days, its clock was parented to `D20`, and `D20` closed without ruling on it. One legal detached run still forecloses three consecutive days of the box's CPU schedule by arithmetic. (2026-10-01, Review, DAILY)
+
+**This entry exists because the question had no desk.** `cpu48h-class-self-
+forecloses-the-day-meter` (routed 2026-09-04, 68th audit B6 finding 5) was
+dispositioned 2026-09-08: its ROUTING CONSEQUENCE was delivered — **(i)+(iv)
+SCHEDULE AROUND IT, wall clock stands, no ceiling raised or split** — and its
+UNIT question was left *"armed on `D20`, decide_by 2026-09-18."* `D20` has since
+closed, and it closed **without ruling on the unit**; the row then tracked `D32`,
+which resolved by armed default on 2026-09-25 to **(ii) SEE IT AND SAY IT — "a
+RECORDING act [that] orders no work"**, options (i), (iii) and (iv) expressly
+left to you. So the live half of that row has, since 09-25, been parented to a
+decision that is closed and did not inherit it. The row is **DECLINED to you
+today** rather than re-dated a fourth time, and this is where it now lives.
+
+**THE ARITHMETIC, quoted from the row and re-derived, with no measurement in
+it.** `rtf.BUDGET_SECONDS["cpu<48h"] = 172800 s` against `CPU_DAY_CEILING_S =
+57600 s/day`, charged in **wall clock**. One legal detached run — a single-process
+child occupying one core of four — bills up to **86400 s into a 57600 s bucket**.
+It overruns every day it fully spans, and because `gate_cpu_child` and
+`admit_detached` read the same exhausted bucket, it closes **the runner lane AND
+new detached launches** for each of those days. Worked example from the row:
+`LC.03` v2 spent ~190 core-hours over 2.6 days through this lane; under today's
+meter that life would have blacked out **three consecutive days** of runner-lane
+CPU work. The runner lane forecloses by the same inequality: `CPU_DAY_CEILING_S`
+is **1.067×** the largest legal child (`cpu<2h` × 3 seeds × 2 = 54000 s), so a
+never-run `cpu<2h` spec is refused once a day passes **3600 s — 6.25 % of the
+ceiling**, which one routine gate sweep spends.
+
+**WHY NO DESK MAY ANSWER IT, which is the entire reason it is on your page.**
+Every option but (i)/(iv) **raises or splits a tenant-protection ceiling on a box
+with paying tenants** — SYSTEM.md law 4 — and `T0.33`'s ceiling comment already
+binds `cpu_foreclosed == []` to the current arithmetic. The Review may not touch
+a threshold in the loosening direction under any circumstances, and no default
+anywhere may fire one.
+
+**MY RECOMMENDATION, and it is the one already in force rather than a new ask:**
+
+> **(i)+(iv) STAND. Wall clock stays the unit, no ceiling is raised and none is
+> split; the honest repair is SCHEDULING — the loop plans around a foreclosure it
+> can already see (`run status`'s CPU DAY BUDGET block, `T0.33`'s
+> `n_foreclosed_now`), and runs first-run `cpu<2h` specs before its own
+> housekeeping. The protection on the tenants' box is worth more than the
+> scheduling convenience, and the cost of keeping it is a planning cost this
+> project has already demonstrated it can pay.**
+
+**ONE NOTE ON THE `class:` FIELD, because the taxonomy decides nothing here and
+should not look as though it did.** `decisions.py` admits `means`, `conduct` and
+`goal`. This is not `goal` — nothing here is about what Jack must become. It is
+not `means`: the tool correctly answers a `means` fork with *"a MEANS fork must be
+settled by bakeoff, not by the owner,"* and **a tenant protection on a box with
+paying customers cannot be settled by bakeoff.** So it is filed `conduct`, and the
+`CONDUCT-DESK` line the tool prints against it — *"desk-executable, not the
+owner's — execute it, report it, do not ask"* — **is wrong about this entry and
+right to keep printing**: it is what stops a stale conduct entry self-approving,
+and the reason it is wrong here is SYSTEM.md law 4, which no `class` value can
+express. **The gap is reported as a finding on `docs/PROGRESS.md`. It is not
+repaired by mislabelling this entry.**
+
+DECIDE: D39
+  class:     conduct
+  default:   (i)+(iv) STAND — wall clock remains the unit, `CPU_DAY_CEILING_S`
+             57600 s is unchanged, no detached-lane sub-ceiling is created, and
+             nothing is scheduled, raised, split or relaxed by this firing. It is
+             the STATUS QUO made explicit and it is MONOTONE in the only
+             direction a default may move: it cannot loosen a tenant protection,
+             cannot move a threshold, cannot stale a certificate, cannot spend a
+             CPU-second or a GPU-hour, and cannot fail a spec. Its price, stated
+             rather than buried: the `cpu<48h` class keeps foreclosing whole days
+             of the box's CPU schedule as a legal side effect of being used once,
+             and the 36 never-run `cpu<2h` specs keep being refused after 6.25 %
+             of a day.
+  decide_by: 2026-10-15
+  blocks:    no spec id today. What it blocks is whether a `cpu<48h` dispatch can
+             ever be scheduled without blacking out the runner lane for the days
+             it spans. Nothing is queued in that class this week, so the cost of
+             delay is real but not perishable — said plainly so it is not
+             oversold.
+
+**What this entry deliberately does not do.** It does not reopen `D20` or `D32`,
+proposes no fifth option beyond the four the row priced, and moves no `decide_by`
+belonging to anything else. Options **(ii) core-seconds against 4 cores** and
+**(iii) a separate detached-lane sub-ceiling** are both live and both yours; each
+is a threshold edit, and (ii) additionally stales every certificate citing
+`experiments/rtf.py`.
