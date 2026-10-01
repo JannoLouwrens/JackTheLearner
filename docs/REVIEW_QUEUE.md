@@ -2340,7 +2340,7 @@ epochs shape goes above random, not below. Do not cite it.
 ## ROUTED 2026-08-30 (builder): `SM.03`'s held-out split is saturated — pick the
 ## repair arm, do not let me pick it
 
-ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pilot_seed90.json) | DISPOSITIONED 2026-09-12 (Review DAILY — the arm pick is REFUSED, not slipped: all three offered arms act on F1's split geometry and NONE of them acts on F2, whose failure VOIDs the run whichever arm wins. F2 is promoted from rider to blocker and answered by a MEASUREMENT the builder owes, not a pick this desk owes. See RULING below)
+ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pilot_seed90.json) | DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — **THE F1 ARM IS PICKED: arm 3, HOLD OUT BY PANEL-ALIGNED ABSOLUTE BEARING SECTOR with an 8° angular guard band.** Picked by arithmetic off the spec's own constants, not by preference: arms 1 and 2 are each REFUSED by a number this row already carries. The pre-committed fallback — DECLINE to the owner rather than renew a fourth time — is deliberately NOT taken, and the reason is stated rather than skipped: that stop-rule was armed against a fourth SLIP, and this sitting delivers the owed pick instead, which is the thing the stop-rule existed to force. Design in THE F1 RULING below; execution is the builder's, DUE 2026-10-12)
     DUE: 2026-09-06 | the Review picks the repair arm — the author must not; and
         F2 (the dead alive-proof) needs its own answer whichever arm wins.
     DUE: 2026-09-07 | the same owed pick, moved to the Monday DAILY — RE-ARMED
@@ -2377,6 +2377,8 @@ ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pi
         probe, not this desk's F1 arm pick. Dated 09-15 (5 live rows, measured
         capacity 6) and not 09-13 (14 rows). Design in the RULING below.
     DUE: 2026-09-30 | DISPOSED 2026-09-22 (Review DAILY) — the 108th audit's RANK 3 caught this one three minutes after I committed a pass that routed me away from it, and it is right: D28's (a) OVERDUE FIRST looks only at rows that have ALREADY broken, so a binding stop-rule falling due TODAY was outside its field of view. Acting on it inside the same sitting. The owed act is an arm PICK this desk REFUSED on 09-12 rather than slipped, and a refusal that is never revisited is a slip with better manners. Re-dated once, onto a day carrying 3 live rows, and ranked below the A4-seat convergence because nothing is held behind it. If 09-30 breaks this becomes a third break and the desk should DECLINE it to the owner rather than renew it a fourth time.
+    DUE: 2026-10-12 | THE PICK IS DELIVERED 2026-10-01 (Review DAILY) and this date is now the BUILDER's execution date, not a fourth desk promise. 09-30 did break, by one day, and the armed fallback was DECLINE-to-the-owner; I am not taking it, because its purpose was to stop a fifth empty date and the pick is on the page below. The date is the first one carrying room under the measured 6/cycle capacity (`review-queue`'s own DUE-DATE PILE reads 10-02…10-11 all at or above 6, 10-12 at 3), so the execution is not dated onto a day already scheduled to break.
+    WAITS-ON: none
 
 **Status: DISPOSITIONED. Gates provisional, `run()` still refuses, nothing
 dispatched, `_GATES_FROZEN` still False.**
@@ -2624,6 +2626,109 @@ Whichever wins, F2 (the dead alive-proof) needs its own answer and may not be
 downstream of F1 at all: 480 rows for a CNN on 12×64×64, and a 0.12 m ball at
 1.8–2.6 m under a 90° fovy at 64×64 (~4 px), are both live suspects and neither
 is measured.
+
+---
+
+### THE F1 RULING, 2026-10-01 (Review, DAILY, OVERDUE FIRST). **ARM 3 — hold out by PANEL-ALIGNED ABSOLUTE BEARING SECTOR, with an 8° angular guard band.** Arms 1 and 2 are refused by arithmetic this row already contained; arm 3 is the only one that does not need a second pilot, and it preserves `MIN_SEP_M`'s guarantee to four decimal places while making the generalisation demand strictly larger.
+
+**The arms, priced off the spec's own constants and nothing else.** `SRC_R_RANGE
+= (1.8, 2.6)` → annulus **11.0584 m²**; `N_TRAIN_L = 480` discs of radius
+`MIN_SEP_M = 0.25` → **94.2478 m²**, **8.52×** oversubscribed. Each arm's own
+number is what disqualifies or qualifies it:
+
+| arm | the number that decides it | verdict |
+|---|---|---|
+| 1 shrink `N_TRAIN_L` | `N_TRAIN_L` must fall to **56** for the exclusion budget to fit the annulus once | **REFUSED** |
+| 2 widen `SRC_R_RANGE` | outer radius must rise **2.6 → 5.77 m** for 480 discs to fit once | **REFUSED** |
+| 3 hold out by sector | 8° guard → worst-case chord at `r = 1.8` is **0.2511 m ≥ `MIN_SEP_M` 0.25** | **PICKED** |
+
+**Arm 1 is refused because it VOIDs the leg that was just repaired.** 56 layouts
+for an 8-way task against a readout whose own measured open train fit at **480**
+rows is 0.8917 (`sm03_readout_sweep.json`, p=8) cannot be expected to hold
+`vis_open ≥ VIS_OPEN_MIN` 0.60, and `vis_open` below that floor is a **VOID**
+condition in this spec's own tree. Arm 1 therefore trades a split defect for a
+void, nine days after the builder spent 631.6 s buying that leg back. Refused on
+this row's own measurement, not on taste.
+
+**Arm 2 is refused because it is a different venue and the venue is foreclosed.**
+5.77 m is 2.2× the pilot's outer radius; source distance is the dominant term in
+`odour.StaticField`/`PuffField`, so whiff coverage, the placebo margin and the
+occlusion geometry are all re-opened at once, and none of them has a reading at
+that radius. A venue change needs a pilot, and `coverage` marks `SM.03`
+**PILOT-BLOCKED** with its own repair note binding: *"not another pilot."* Arm 2
+is legal only after a decision nobody has asked for.
+
+**Arm 3 is picked, and the reason it is not the "biggest change to the claim"
+this row feared is a fact about the label that no previous sitting checked.**
+Read from source at `_draw_layout:530–532`:
+
+```python
+h0  = float(rng.uniform(-math.pi, math.pi))
+rel = (theta - h0) % (2.0 * math.pi)
+label = int(rel / (2.0 * math.pi / N_BINS)) % N_BINS
+```
+
+**The label is bearing RELATIVE TO THE HEAD, and `h0` is drawn independently of
+`theta`.** So holding out absolute source sectors does **not** hold out label
+classes — all 8 bins stay uniformly present in both splits, because a uniform
+`h0` spreads any fixed `theta` across all 8. The obvious objection to arm 3 —
+*"you cannot hold out the classes you are asking it to predict"* — is false here
+by construction, and it is the objection that made this arm look like a claim
+change. It is not one. The claim (*"classify the source's bearing relative to the
+initial heading from the odour window alone"*) is byte-identical under arm 3.
+
+**Two further facts make the held-out sector LEARNABLE rather than impossible,
+which is the bar a real held-out split has to clear:** the ring is **8 identical
+panels at 45°** (`N_PANELS = 8`, `_mjcf:371–373`), and the wind is **`WIND_SPEED`
+along source→centre per layout** (`:287`), so the whole generator is
+rotation-equivariant in absolute `theta` with period 45°. A held-out sector that
+is **panel-period-aligned and exactly 45° wide spans one complete panel/gap phase
+cycle**, so every phase in the test region is covered by training while every
+*position* in it is not. That is the difference between a generalisation demand
+and a trick, and it is why the held-out sectors must be `k·45°`-aligned — that
+alignment is part of the pick, not an implementation detail.
+
+**THE SPEC CHANGE ORDERED, exactly, with every bar held:**
+
+1. `_build_split`'s test draw stops excluding by euclidean disc and excludes by
+   **sector**: `N_HELDOUT_SECTORS = 2` of the 8 panel-aligned 45° sectors (fixed
+   per seed by the seed's own RNG, declared before the run) are **TEST-ONLY**;
+   the remaining 6 are **TRAIN-ONLY**.
+2. A **`SECTOR_GUARD_DEG = 8.0`** band is excluded from the **TRAIN** draw at
+   each edge of each held-out sector. Worst case — two positions both at the
+   inner radius `r = 1.8`, separated by the guard — gives a chord of
+   `2·1.8·sin(4°) = **0.2511 m**`. **`MIN_SEP_M` 0.25 is therefore still
+   guaranteed, everywhere, and is NOT removed from the file**: it stays as the
+   asserted lower bound the guard band must clear, and the assertion is the new
+   conjunct. A guard that fails that arithmetic is a FAIL, not a smaller guard.
+3. Budget: test region **90° / 2.76 m²**, train region **238° / 7.31 m²**. Test
+   rejection from the sector rule alone is **0.75** against today's measured
+   **0.9964**, and — the point of the whole repair — the test draw is **uniform
+   inside its region** instead of being the residue of a saturated domain. The
+   09-13 probe's median nearest-training distance of **0.2822 m** (max 0.3483)
+   is replaced by a separation of ≥ 0.2511 m **by construction at the boundary
+   and ~1.4–2.6 m in the interior**.
+4. **NOTHING MOVES DOWNWARD.** `MIN_SEP_M` 0.25, `VIS_OPEN_MIN` 0.60,
+   `VIS_OCC_CEIL` 0.22, `CTRL_CEIL` 0.22, `ODOUR_OCC_MIN` 0.25, `N_TRAIN_L` 480,
+   `N_TEST_L` 240, `HEAD_POOL` 8 and `SRC_R_RANGE` (1.8, 2.6) are all untouched.
+   `_GATES_FROZEN` stays False and `run()` keeps refusing until the builder
+   freezes them by the existing rule.
+
+**THE PRE-REGISTERED STOP, written before any number exists, because a pick that
+cannot be refuted is a preference.** If the repaired split sends **`vis_open`
+below `VIS_OPEN_MIN` 0.60** — i.e. the *vision* arm cannot read a source in an
+untrained absolute sector — then the held-out sector is not a sampling change but
+a venue change after all, arm 3 is **withdrawn**, and this row routes to
+`w0-too-shallow` exactly as the 09-12 ruling's second leaf said. That is the one
+outcome that falsifies this ruling, and the measurement costs CPU minutes.
+**What is NOT a refutation:** `odour_occ` failing `ODOUR_OCC_MIN` 0.25. A nose
+that cannot generalise to an unseen sector is this spec reporting a result about
+Jack's nose, which is what it is for.
+
+**Cost of the pick, stated.** `SM.02` is PARKED with `SM.03` as its stated
+revival path, so this row is one of `coverage`'s `PARK-ON-AN-UNREACHABLE-RELEASE`
+pairs and smell stays CLAIM-DEAD until the builder executes. Execution is CPU-only
+and needs no GPU hour and no pilot.
 
 ---
 
