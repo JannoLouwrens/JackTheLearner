@@ -8182,6 +8182,20 @@ ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FA
         keepable rather than at the first slot that looks soon. | what is owed by
         then: `LG.14` registered with BOTH mandatory conjuncts above present in
         the pre-registration, not added after a reading.
+    BUILDER-TRACE: 87bc128 | executed 2026-10-01 ~02:1x UTC, seven days before
+        the 10-08 DUE. `LG.14` is registered (tier 4, cpu<10min, depends_on
+        LG.00, seeds 3) with BOTH mandatory conjuncts IN the pre-registration:
+        held-out intents (canonical sentence nowhere in ARM_ASK/SCAFFOLD) as a
+        claim conjunct in `hypothesis`, and the mismatched-constraint null as
+        both `null_baseline` and `control`, with its clearing match_on_spoken
+        pre-registered as VOID-not-FAIL in `falsified_by`. Bars quoted from
+        source and unmoved (MATCH_MIN/UNANIMITY_MIN/SWAP_AGREE_MIN 0.90,
+        NULL_MATCH_MAX 0.35, UTTER_MIN 0.50); arm (a) REFUSED and arm (c)
+        sequenced behind (b) are both restated in the registration comment so
+        a later implementer inherits the ordering. UNSATURATED-NULL declared
+        in source (bound 1.0, null measured 0.044/0.083). Registration only:
+        no dispatch, no LLM verdicts, zero existing certificates billed
+        (stale-cost on registry_expansion.py: 0). The stamp is the desk's.
 
 **THE ONE-LINE QUESTION.** `LG.12` executed the disposition of
 `lg10-mouth-fidelity-vs-freedom` and returned a FAIL whose *mechanism* is
