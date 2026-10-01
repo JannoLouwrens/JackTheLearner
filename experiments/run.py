@@ -5811,6 +5811,25 @@ def cmd_stale_cost(ledger: Ledger, paths=None) -> int:
     return 0
 
 
+def cmd_worst_seed_audit(ledger: Ledger) -> int:
+    """`run worst-seed-audit` — arm (c) of `aggregate-hides-worst-seed`.
+
+    Flags every bare `_check` gate on a key its own file folds with
+    min/max/len (the set that prices arm (b), the recorder refusal), and
+    re-runs the 09-12 extreme-value sweep over every committed multi-seed
+    row: a gate is WRONG when it reads green on the mean while the record
+    admits a seed on the failing side of the bar. Reporting-only and
+    deliberately unfloored — it records nothing, gates nothing, and always
+    exits 0; `python -m experiments.worst_seed_audit --selftest` carries the
+    fixtures (rename-dodge, if-bad inversion, integer refinement, the 09-12
+    reference classification). See `experiments/worst_seed_audit.py` for why
+    the T0-spec packaging is deliberately NOT here.
+    """
+    from . import worst_seed_audit
+    print(worst_seed_audit.render(worst_seed_audit.audit()), end="")
+    return 0
+
+
 #: The read-only sub-commands, named ONCE. They used to be a tuple in the
 #: dispatch test and a dict in the dispatch itself; a word present in one and
 #: absent from the other is how a command silently becomes "not a command".
@@ -5824,6 +5843,7 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "unread": cmd_unread,
                       "ratchets": cmd_ratchets,
                       "lane": cmd_lane,
+                      "worst-seed-audit": cmd_worst_seed_audit,
                       # Takes spec ids, so `main` routes it one branch earlier;
                       # it is registered HERE anyway because this dict is the
                       # single place a command's name exists (see above) and
