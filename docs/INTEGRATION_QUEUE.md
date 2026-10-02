@@ -1254,3 +1254,77 @@ correction is cost-free today because `A4c` does not exist. **The obligation it
 creates is narrow and durable: plain SIGReg may not enter as the `A4c`
 selection criterion. If `A4c` is ever designed, it enters TEMPORALLY-CENTERED
 or the week-5 nomination is re-opened first.**
+
+---
+
+## WEEK 9 (sweep 2026-09-28) — CONSUMED 2026-10-02 by the Review DAILY, four days late, and the lateness is the first thing to record
+
+**WHY THIS BLOCK EXISTS AND WHY IT IS URGENT RATHER THAN ROUTINE.** The week-9
+sweep **exited `rc=124` mid-report**. `scripts/lib_seal.sh` banners the page
+*"INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING"*, which is correct and is also
+why no desk consumed it for four days: a page a desk may not trust is a page a
+desk skips. Meanwhile `docs/FIELD_WATCH.md` is **rewritten weekly** and its own
+header says *"superseded entries are deleted, not archived"* — so the next sweep
+(**Monday 2026-10-05**) would have DELETED these three nominations unread. The
+scout's credits were four days from being spent for nothing. That structural
+trap is routed separately in `docs/REVIEW_QUEUE.md`
+(`field-watch-rc124-page-is-untrustable-and-then-deleted`).
+
+**HOW A DRAFT IS CONSUMED HONESTLY, because the banner is not decoration.** The
+distinction this desk is drawing, and the next reader may hold it to it:
+**nominations are POINTERS OUTWARD** — an arXiv id, a primary category, an
+evidence class — and their value does not depend on our run finishing its own
+checklist, so they are consumable with the banner noted. **§6 is a claim about
+OUR artifacts**, made by a run that did not complete, so it is NOT consumed here:
+it is routed to be **RE-DERIVED from the ledger before anything acts on it**.
+Nothing below adopts an arm, changes a spec, a threshold or a decision.
+
+### ADMITTED AS A DORMANT CONDITIONAL — N1: three transition-geometry readouts as candidates for the `A4` diagnostic, firing only if `D37` resolves toward building a readout
+
+*Source:* arXiv:2605.27929 (q-bio.NC), read [V] by the scout.
+**Status: RECORDED, CREATES NO WORK TODAY, and deliberately so.** `LEARNING_CORE.md`
+§5.4 declares `A4`'s mandatory diagnostic to be effective rank and per-dimension
+latent variance; week 7 established neither is computed anywhere; `D37` is the
+open armed entry asking whether the readout may be built, **`decide_by`
+2026-10-04**, and its default is **(iii) HOLD — the readout is NOT built**. So
+admitting N1 as work today would pre-empt an armed owner decision two days from
+firing, which this desk may not do.
+**What is bought by recording it anyway, at zero cost:** if `D37` ever resolves
+toward building, the candidate set for that readout is no longer "effective rank
+alone" — it includes three quantities the scout verified are computed on the
+prior latent space rather than on a projection, and measured at our latent size.
+**The obligation is narrow and durable: if the `A4` readout is built, these three
+are considered alongside effective rank, and a build that silently reverts to
+effective rank alone re-opens this nomination first.**
+
+### ADMITTED AS A DESIGN UNIT — N2: RegimeAbstain's retrieval-structural score features, which is the "better score function" `MEMORY_RETRIEVAL_BAKEOFF` §1.8 already pre-committed to
+
+*Source:* per the week-9 page, §2 N2.
+**Status: ADMITTED — the design unit is "design the bakeoff arm spec for
+RegimeAbstain's retrieval-structural score features".** This is the one of the
+three that converts into work, and the reason is not novelty but **a standing
+promise**: `MEMORY_RETRIEVAL_BAKEOFF` §1.8 pre-committed to a better score
+function, and this is **the first constitutionally admissible front-3 candidate
+in six consecutive sweeps of refusals.** A pre-committed slot with no candidate
+is a promise the project cannot keep; a pre-committed slot with one admissible
+candidate is a bakeoff arm. Refusing it would need a reason, and six sweeps of
+looking is evidence that a better one is not arriving soon.
+**What is NOT decided here, per `SYSTEM.md` law 3:** that it WINS. It enters as
+an ARM against the incumbent score function, and the bakeoff decides. This desk
+admits the arm; it adopts no method by argument.
+
+### ADMITTED AS A DISCIPLINE, NOT AN ARM — N3: the corruption-intervention control for fusion readout metrics
+
+*Source:* per the week-9 page, §2 N3; the scout itself labels it **"NOT AN ARM"**.
+**Status: ADMITTED as a CONTROL DISCIPLINE, and its admission is deliberately
+decoupled from the §6 finding it was offered to serve.** N3 is the discipline that
+would CATCH the class of defect §6 claims to have found: a readout metric scored
+without an intervention that is known to corrupt it. That discipline is good
+whether or not §6's specific arithmetic about `T4.06` survives re-derivation —
+which is exactly why it is admitted here while §6 is routed to be re-derived.
+**The obligation: any future fusion-readout metric that gates a verdict carries a
+corruption intervention whose effect on the metric is PRINTED, so that a metric
+which cannot detect its own known corruption fails rather than passes quietly.**
+It fires on the next fusion readout designed; it re-opens nothing retroactively,
+because retroactive application is `T4.06`'s question and that is routed, not
+settled here.

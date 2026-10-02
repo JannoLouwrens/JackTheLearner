@@ -17419,3 +17419,88 @@ ROUTED: detached-metering-lane-is-opt-in-and-was-bypassed-for-22-minutes | 2026-
     STALENESS BILL: none for the routing. The candidate repair touches
     `experiments/run.py`/`cpu_budget.py` reporting only and would be priced
     by `run stale-cost` in the executing commit.
+
+## ROUTED 2026-10-02 (Review DAILY, Part 2.5 duty 2): `field-watch-rc124-page-is-untrustable-and-then-deleted` — a sweep that dies at the end produces a page no desk may trust, and the next sweep deletes it; week 9's three nominations were four days from being lost unread
+
+ROUTED: field-watch-rc124-page-is-untrustable-and-then-deleted | 2026-10-02 | Review DAILY 10-02, consuming docs/FIELD_WATCH.md at 51cce28 | OPEN
+    DUE: 2026-10-13 | Dated onto `review-queue`'s own printed next-date-with-room.
+        The INSTANCE is already discharged (week 9's nominations are consumed into
+        `docs/INTEGRATION_QUEUE.md` in this commit, so nothing perishes on
+        2026-10-05); what this date owes is the CLASS, which is a design question
+        about sealing and is nobody's emergency.
+    WAITS-ON: none | declared at routing time under THE ROUTER'S DECLARATION
+        adopted in this file's contract today. No live row's answer changes what
+        this one asks.
+    THE DEFECT, and both halves of it are working as designed, which is why it
+        needs a ruling rather than a bug fix. (a) `scripts/lib_seal.sh` banners an
+        incomplete run's page *"INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING …
+        any verdict, any section claiming 'no findings', and any instrument table
+        in it are UNVERIFIED"*. Correct, and it makes the page one a desk skips.
+        (b) `docs/FIELD_WATCH.md` is **rewritten weekly** and its own header says
+        *"superseded entries are deleted, not archived — the one-line history lives
+        in docs/FIELD_WATCH_LOG.md"*. Also correct. **Composed, they destroy
+        output: a sweep that dies near its end writes a page nobody may trust, and
+        seven days later the next sweep deletes it.** The loss is silent because
+        the organ's log shows it FIRED, and liveness checks read fire times.
+    THE MEASURED INSTANCE. Week 9 (`2026-09-28T06:07:11`, `rc=124`) wrote a page
+        that reached its FINAL section (§8 "Queued for next sweep") and carried
+        **three nominations**, a watchlist, a disposition of prior nominations, and
+        a §6 finding about one of our own certificates. Four Review sittings
+        (09-28, 09-30, 10-01, and this one) passed over it; the last complete
+        field-watch report is **week 8, 2026-09-21 — eleven days ago**. Monday
+        2026-10-05's sweep would have deleted all of it.
+    THE QUESTION. Should a sealed INCOMPLETE page be exempt from the weekly
+        overwrite until a desk has consumed or explicitly discarded it? Candidate
+        shapes, named so the disposition has something to accept or refuse:
+        (i) the weekly rewrite refuses to overwrite a page still carrying the
+        INCOMPLETE banner, and the scout writes alongside it; (ii) the seal copies
+        an incomplete page into `docs/FIELD_WATCH_LOG.md` or a dated sibling before
+        the next sweep can touch it — cheapest, and it preserves rather than
+        blocks; (iii) the banner gains a CONSUMABILITY distinction, since the
+        failure mode here is that "unverified" was read as "untouchable" when the
+        nominations were only ever pointers outward; (iv) decline — accept that a
+        died sweep's output is forfeit, which is honest but prices a week of scout
+        credits at zero whenever the organ times out near the end.
+    STALENESS BILL: zero ledger rows. Every candidate touches
+        `scripts/lib_seal.sh` / `scripts/field_watch.sh` and doc lifecycle only —
+        no spec's code, gate or venue moves. (ii) is the cheapest and this desk's
+        leaning, stated so the disposition is not pre-empted: preserving an
+        incomplete page costs one copy and forecloses nothing.
+
+## ROUTED 2026-10-02 (Review DAILY, from the week-9 field watch §6): `t406-deciding-statistic-read-against-an-uncomputed-floor` — the scout says `T4.06`'s deciding statistic was scored against a floor nobody computed, and it says so from a run that did not complete, so the claim must be RE-DERIVED before it is believed or dismissed
+
+ROUTED: t406-deciding-statistic-read-against-an-uncomputed-floor | 2026-10-02 | Review DAILY 10-02, routing docs/FIELD_WATCH.md §6 (week 9, INCOMPLETE/rc=124) | OPEN
+    DUE: 2026-10-13 | Dated onto `review-queue`'s printed next-date-with-room. The
+        FIRST unit is cheap and is not the ruling: re-derive the arithmetic from
+        the ledger. Only if it survives does this become a question about a
+        standing certificate, which is Part 2 (Sunday) territory.
+    WAITS-ON: none | declared at routing time under THE ROUTER'S DECLARATION
+        adopted in this file's contract today.
+    THE CLAIM, attributed and NOT adopted. The week-9 page's §6 heading reads:
+        *"`T4.06`'s deciding statistic was read against a floor that nobody
+        computed, the floor is `−r/(n_fit − r)`, and the other half of the spec's
+        own open question has an answer."* `T4.06` is **PASS, attempt 1**,
+        `ran_at 2026-09-23T10:46:27`, 1588.66 s on a kaggle Tesla T4, commit
+        `aa7d49c`.
+    WHY IT IS ROUTED RATHER THAN ACTED ON, and this is the whole point of the row.
+        **The page carrying this claim is a sealed INCOMPLETE draft** — its own
+        banner says every instrument table in it is UNVERIFIED. A claim about an
+        EXTERNAL paper survives that banner, because it is a pointer we can follow.
+        **A claim about OUR OWN ledger does not**, because the run that computed it
+        stopped before verifying itself. So this desk neither believes nor dismisses
+        it today: **the unit owed is a re-derivation of `−r/(n_fit − r)` against
+        `T4.06`'s recorded metrics, by a slot that completes.** Adopting an
+        unverified arithmetic claim against a standing PASS would be exactly the
+        move the overseer audits for; discarding it because its author timed out
+        would throw away the one finding the sweep made in our own artifacts.
+    STALENESS BILL. The re-derivation itself: **zero** — it reads recorded metrics
+        and runs nothing. If the claim SURVIVES, the bill is `T4.06`'s own
+        certificate: one kaggle GPU re-run at the measured 1588.66 s (~0.44
+        GPU-h), plus whatever reads its statistic. Priced here, before deciding,
+        so that "re-run T4.06" is a known cost rather than a discovered one — and
+        note it is affordable: 28.93 of the current week's 30 free kaggle hours
+        are unspent and expire 2026-10-03.
+    NOT ASKED: no threshold moves in either direction, and this row does not
+        propose weakening `T4.06`. If the floor was uncomputed, the honest
+        consequence is that the bar was never TESTED, which points at a
+        strengthening or a VOID — never at a softer bar.
