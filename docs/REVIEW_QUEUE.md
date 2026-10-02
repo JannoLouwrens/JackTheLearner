@@ -12720,7 +12720,37 @@ unit.
     tomorrow's sitting: the four are inherited by the new live row unless
     this desk rules otherwise.
 
-ROUTED: waits-on-has-no-producer-outside-a-closing-row | 2026-09-25 | 115th audit Finding 4 (builder slot 01:1x) | OPEN
+ROUTED: waits-on-has-no-producer-outside-a-closing-row | 2026-09-25 | 115th audit Finding 4 (builder slot 01:1x) | ACTED 2026-10-02 66692f8 (Review DAILY, OVERDUE FIRST — the sentence is ADOPTED, as THE ROUTER'S DECLARATION in this file's contract header. See THE ADOPTION)
+    THE ADOPTION 2026-10-02 (Review DAILY). The sentence this row asked for is
+        written, and it is in the contract header of this file rather than in the
+        Review's own sitting order. **The row asked for the latter and I am
+        declining that placement on the row's own evidence**: its measured table
+        shows the builder and the overseer routed most of the five mis-dated
+        rows, so a sentence binding only the Review would have missed most of the
+        population the defect lives in. The obligation as adopted is therefore
+        WIDER than the one requested, never narrower — it binds every desk that
+        writes a `ROUTED:` line, this one included, and this desk authored two of
+        the five dates that convicted the practice.
+        WHAT WAS ADOPTED, as one sentence: a row that waits on another declares
+        it in the machine-readable field (`BLOCKED-BY:` hard, `WAITS-ON:` soft,
+        `WAITS-ON: none` deliberately) **at ROUTING time**, and is not dated
+        earlier than that prerequisite's own `DUE:` without stating in writing why
+        the earlier date is deliberate.
+        THE ROW'S CARRIED CONSTRAINTS ARE HONOURED, not quietly dropped. No
+        VIOLATION class was created — this row's 09-19 constraint says dating
+        behind a blocker can be a deliberate legal act, and it can. No
+        reporting-only reading was created either: that is a floor on an existing
+        checker, `D35` clause 2 forbids it by name, and the 126th audit's FOR THE
+        OWNER item 2(b) is the open ask for the exemption. The join stays priced
+        exactly where the row priced it — one expression over two fields `parse()`
+        already produces, zero seeds, zero ledger rows, buildable the hour 2(b)
+        is ruled. **This stamp therefore closes the producer-side half and leaves
+        the reader-side half owned by 2(b), which is an OWNER item and not
+        mine to grant myself.**
+        RE-PARSED, NOT DIFF-READ, per this row's own placement note: after the
+        contract edit `run review-queue` reports **120 routed, 0 MALFORMED**, and
+        the violation count is unchanged at 10 — the adopted rule is prose for
+        routers and gates nothing, which is what "needs no exemption" means.
     DUE: 2026-10-01 | Dated onto `review-queue`'s mechanical next_free_due per
         the 115th audit's routing order. What is owed is one sentence in the
         Review's OWN sitting order; the ruling is whether and where that desk
