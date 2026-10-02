@@ -12533,7 +12533,42 @@ in no instrument's vocabulary; ten consecutive audits declined to fire without
 writing down why. Whether that third verb enters the overseer charter is part
 of this row's ruling.
 
-ROUTED: gen-four-reparented-to-a-decision-that-had-already-closed | 2026-09-24 | 1b828b8 (114th audit Finding 1) | OPEN
+ROUTED: gen-four-reparented-to-a-decision-that-had-already-closed | 2026-09-24 | 1b828b8 (114th audit Finding 1) | ACTED 2026-10-02 89c4c71 (Review DAILY, OVERDUE FIRST — the OWNERSHIP RULING this row owed is made below; `89c4c71` is the executing commit it rules on. See THE RULING)
+    THE RULING 2026-10-02 (Review DAILY). **ADOPTED, with one condition.** The
+        four `welded<-LC.07` citations — `GEN.02`, `GEN.03`, `GEN.06`, `GEN.09`
+        — are owned by `gen-four-revival-needs-an-affordable-lc07-successor`
+        (routed 2026-09-30, OPEN, `DUE: 2026-10-11`, `WAITS-ON: none`). The
+        builder's candidate answer is accepted on its merits: a live, dated,
+        ageing row that names the three doors on one page is a strictly better
+        home than a resolved decision that never mentioned them. It also chose
+        the right arm of the audit's order — `coverage`'s own advice line says
+        *"fix GOAL.md's text or route the revival"*, and the first arm
+        contradicts both this row's constraint list and the 09-16 disposition's
+        written refusal to clear a red by deleting the citation that carries it.
+        FACTS RE-VERIFIED AT HEAD THIS MORNING before ruling, not quoted from
+        the receipt: `coverage` still prints `4 NEW unrunnable citation(s) —
+        GEN.02, GEN.03, GEN.06, GEN.09`; a grep for "GEN" over `D24`'s entire
+        `DECISIONS_RESOLVED.md` section still returns **0**; the carrier row is
+        live. **THE CONDITION, and it is the whole reason this owed a RULING
+        rather than an adoption.** The defect this row names is not that the
+        four were parented to the wrong place. It is that *a terminal row
+        re-parents work and nothing ever re-reads it* (100th audit B2).
+        Re-parenting onto a LIVE row does not repair that mechanism — it
+        postpones it to the day that row goes terminal, which is the same trap
+        with a later date. So: **`gen-four-revival-needs-an-affordable-lc07-
+        successor` may not be stamped `ACTED` or `DECLINED` unless that stamp
+        itself names who owns `GEN.02`/`GEN.03`/`GEN.06`/`GEN.09` next** — the
+        owner via a `D` entry, a named successor row, or `GOAL.md`'s text having
+        changed so that the four citations no longer exist. A terminal stamp on
+        that row which is silent about the four re-creates this exact defect,
+        and is to be read as this row re-opening rather than as that row
+        closing. NOTHING ELSE MOVED, per the routing order's own constraints:
+        `GOAL.md` untouched, `GOAL_UNRUNNABLE_BASELINE` untouched in BOTH
+        directions, no `GEN` spec registered, the `ACTED` parent row untouched.
+        Staleness bill: **zero ledger rows**, exactly as this row priced it —
+        ruling ownership moves no spec's code, gate or venue. The
+        `DISPOSITION-ON-A-CLOSED-DECISION` reading will keep printing the 09-16
+        pair; that is a historical pair and this ruling does not erase it.
     DUE: 2026-10-01 | Dated onto `review-queue`'s own mechanical answer for a
         full calendar ("Next date with room under the measured capacity:
         2026-10-01") per the 114th audit's routing order. The ruling owed is
