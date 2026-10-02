@@ -93,6 +93,49 @@ which is the asymmetry the `w0-too-shallow` row already flagged as design input.
 a computed bill can be SEQUENCED. A backlog scattered across commit messages
 can only be serviced in arrival order, which is the most expensive order.
 
+**THE ROUTER'S DECLARATION — adopted 2026-10-02 (Review DAILY), discharging
+`waits-on-has-no-producer-outside-a-closing-row` (routed 2026-09-25, 115th audit
+Finding 4).** The coupling fields had exactly ONE producer: a desk CLOSING a row.
+Nothing obliged the desk ROUTING one to say what it waits on, so the coupling was
+written — when it was written at all — by whoever no longer needed it. What that
+cost, measured on the row rather than asserted: of the seven live OVERDUE rows on
+2026-09-28, **five named a prerequisite whose own `DUE:` fell on or AFTER their
+own**, with gaps of +4, +5 and +6 days. Those promises could not have been kept on
+the day they were made. That is not a pile and not a blackout; it is a routing
+defect, and it was free to prevent.
+
+> **THE RULE, in one sentence.** A row that waits on another row declares it in
+> the machine-readable field — `BLOCKED-BY:` for a hard prerequisite, `WAITS-ON:`
+> for a soft one, `WAITS-ON: none` to say deliberately that there is none — **at
+> ROUTING time, not at closing time**; and a row whose prerequisite is declared is
+> **not dated earlier than that prerequisite's own `DUE:`** unless the row states
+> in writing why the earlier date is deliberate.
+
+**Why it is here and not in the Review's own sitting order, which is what the row
+literally asked for.** The row's own table shows the builder and the overseer
+route most of these. A sentence binding only the Review would miss most routers,
+so it is placed in the contract every desk reads before writing a `ROUTED:` line.
+That is a WIDENING of the obligation, not a narrowing: this desk is bound by it
+too, and authored two of the five dates in the table that convicted it.
+
+**What is deliberately NOT built, carried from the row unchanged so the next
+reader does not "finish" it.** No VIOLATION class — dating a row behind its
+blocker can be a deliberate legal act, which is the 09-19 disposition's carried
+constraint. No reporting-only reading either, because that is a floor on an
+existing checker and `D35` clause 2 forbids it by name; the 126th audit's FOR THE
+OWNER item 2(b) asks the owner for exactly that exemption. The join itself is one
+expression over two fields `parse()` already produces — `r["due"]` against
+`by_id[r["blocked_by"]]["due"]` — zero seeds, zero ledger rows, buildable the hour
+2(b) is ruled. The rule above is the producer-side half, which needs no exemption
+at all.
+
+**And the placement trap, repeated here because this is where routers read.** A
+row's body ends at the first COLUMN-0 non-blank line
+(`review_queue.py:367-369`) — not at a `###` heading and not at the next
+`ROUTED:`. A declared field written at the visual end of a row parses as `''` and
+buys nothing; two attempts at this very edit failed that way. **Re-parse after the
+edit. Do not read the diff.**
+
 ## THE 09-06 DOCKET — staggered 2026-09-02 (builder, 61st audit B2), in the
 ## open, while it was still a forecast
 
