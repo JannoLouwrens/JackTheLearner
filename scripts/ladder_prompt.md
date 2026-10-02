@@ -552,11 +552,77 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^16`/`2^10` (item `1^16` Review 2026-09-30, DAILY;
-`1^15`'s ITEMS 0–3 REMAIN LIVE and are not restated — read both; `1^14` items 1–4
-still bind; `1^13` retained for its structural finding; `1^12` items retained
-below and still live where not discharged; prohibitions consolidated 2026-09-21
-and UNCHANGED today).
+**LIVE PRIORITY BLOCK — `1^17`/`2^10` (item `1^17` Review 2026-10-02, DAILY;
+`1^16`'s ITEMS 0–2 REMAIN LIVE and are not restated — read both, ITEM 0's pace
+rule especially; `1^15` items 0–3 still bind; `1^14` items 1–4 still bind; `1^13`
+retained for its structural finding; `1^12` items retained below and still live
+where not discharged; prohibitions consolidated 2026-09-21 and UNCHANGED today).
+
+## `1^17` — TWO SPECS CAME OFF A DEAD BLOCKER THIS MORNING AND THEY ARE THE
+## CHEAPEST REAL SCIENCE ON YOUR BOARD (Review 2026-10-02, DAILY)
+
+**ITEM 0 — `1^16` ITEM 0 STILL GOVERNS THE PACE AND NOTHING HERE OVERRIDES IT.**
+The streak is longer than when that item was written. Derive it yourself from
+your own `PACING:` line and `usage_attribution.attribution()['dark_slots']`; no
+number is cached here. The gate is right, leave it alone, and do not treat a dark
+slot as a slot you owe work for. This block tells you what to do WHEN a slot
+opens — it does not ask you to make one open.
+
+**ITEM 1 — `W1.01` AND `W1.04` ARE REGISTRABLE TODAY, AND UNTIL THIS MORNING
+EVERYONE INCLUDING THIS DESK BELIEVED THEY WERE NOT.** The W1 design has been
+published since 2026-09-06 (`9eddb52`). Its summary line says `W1.01`, `W1.03`
+and `W1.04` "need the world-edit window", and the world-edit window was DECLINED
+on 09-28 — so all three read as dead. **Re-read against the design's own spec
+bodies, that summary is wrong for two of the three:** for `W1.01` and `W1.04` the
+world edit is needed to **PASS**, not to **RUN**. `W1.01` ("Passivity dies")
+claims `passive <= FLOOR < ROOF <= oracle` with a benign-twin control — a
+measurement of W0 as it stands. `W1.04` ("The horizon is longer than the
+consequence") measures the horizon against a MEASURED time-to-consequence and its
+own falsifier contemplates passing trivially. **`W1.03` is genuinely dead and you
+are not to register it** — its claim is that the venue CONTAINS traps, delays and
+irreversibility and its control needs a twin with them REMOVED; neither sentence
+is writable against a world that has none.
+**WHAT YOU ARE ORDERED TO DO: register `W1.01` and `W1.04` from the published
+design. REGISTRATION ONLY** — no dispatch, no world edit, no threshold invented
+by you. Take every bar, conjunct, control and falsifier from `THE W1 DESIGN` block
+in `docs/REVIEW_QUEUE.md`; if the design is silent or ambiguous on a bar, **STOP
+AND ROUTE** rather than choosing one, because choosing it would make you the
+designer and `D22` says you are not.
+**EXPECT `W1.01` TO FAIL, AND DO NOT TREAT THAT AS YOUR ERROR.** `SH.02`'s pilot
+already measured twin, privileged oracle and both cosmetic controls at exactly
+`1.0000`, which is the saturation `W1.01` forbids. **A FAIL here is the point:**
+it converts "seven independent instruments say W0 is too shallow" from prose in a
+queue row into a registered, gated, falsifiable red. Do not soften anything to
+avoid it; a PASS obtained by softening would destroy the only value in the unit.
+Row: `w0-too-shallow`, `DUE: 2026-10-13`, with the full reasoning.
+**Cost, derive it yourself but it should be near zero:** registration bought zero
+existing certificates when you did `LG.14` the same way on 10-01. If your own
+`registry_expansion` stale-cost reading disagrees, disclose it and stop.
+
+**ITEM 2 — THREE DESIGNS WERE RULED THIS MORNING AND YOU READ THE ROWS, NOT THIS
+LIST.** No date, count or status is copied here. `declared-venue-vs-delivered-
+venue-has-no-comparator` (candidate (i) adopted, shape pinned — and the
+load-bearing clause is that `_experiment` must DERIVE `venue_used` from the
+artifacts it loaded and never copy it from the declaration; a guessed backfill is
+FORBIDDEN; if the `run verify` print would be a floor on an existing checker,
+STOP AND ROUTE per `D35` clause 2). `decisions-settles-on-headers-alone` (the
+`D35` rule-2 exemption is GRANTED for the settlement-detection path ONLY — if you
+find yourself ADDING a red rather than removing a false one you are outside it;
+the `D19`-shaped fixture lands WITH the fix or the fix is refused).
+`t406-deciding-statistic-read-against-an-uncomputed-floor` (the FIRST unit is a
+re-derivation that reads recorded metrics and runs nothing — do not re-run
+`T4.06` to answer it).
+
+**ITEM 3 — ONE PROHIBITION, AND IT IS NEW THIS MORNING.** `docs/REVIEW_QUEUE.md`'s
+contract now carries **THE ROUTER'S DECLARATION**: when you route a row you
+declare what it waits on in the machine-readable field (`BLOCKED-BY:` hard,
+`WAITS-ON:` soft, `WAITS-ON: none` deliberately) **at routing time**, and you do
+not date a row EARLIER than its declared prerequisite's own `DUE:` without saying
+in writing why the earlier date is deliberate. This binds this desk too. The
+placement trap it inherits is the one that has bitten three times: a row's body
+ends at the first COLUMN-0 non-blank line (`review_queue.py:367-369`), so a field
+written at the visual end of a row parses as `''`. **Re-parse after the edit; do
+not read the diff.**
 
 ## `1^16` — YOU HAVE BEEN DARK FOR ~23 SLOTS AND IT IS NOT YOUR FAULT, NOT A
 ## BUG, AND NOT SOMETHING YOU MAY WORK AROUND. AND THE ONE THING WORTH THE
