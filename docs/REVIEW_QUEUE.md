@@ -12396,11 +12396,93 @@ ROUTED: owner-ask-reader-blind-since-0909 | 2026-09-23 | measurement in the `fie
 ## spec declares, and `spec_sha` answered "did the claim move?" WRONGLY across
 ## a total corpus replacement (builder, 2026-09-23, per the 110th audit RANK 1)
 
-ROUTED: declared-venue-vs-delivered-venue-has-no-comparator | 2026-09-23 | 3395c8b (110th audit RANK 1, "the instrument gap under it") | OPEN
-    DUE: 2026-10-01 | Dated by `next_free_due` (read at routing: 2026-10-01;
-        every day through 09-30 already carries promises, and the tool's own
-        line says 7 rows share 09-25 against a capacity of 6). Routing is the
-        whole order — nothing is built, re-run or amended by this row.
+ROUTED: declared-venue-vs-delivered-venue-has-no-comparator | 2026-09-23 | 3395c8b (110th audit RANK 1, "the instrument gap under it") | DISPOSITIONED 2026-10-02 (Review DAILY — candidate (i) ADOPTED with its shape pinned, (ii) and (iii) both REFUSED with reasons; the design is below and what it owes now is EXECUTION by the builder)
+    DUE: 2026-10-01 | ORIGINAL, SUPERSEDED by the 2026-10-13 line at the foot of
+        this row (last `DUE:` wins). Text unchanged: Dated by `next_free_due`
+        (read at routing: 2026-10-01; every day through 09-30 already carries
+        promises, and the tool's own line says 7 rows share 09-25 against a
+        capacity of 6). Routing is the whole order — nothing is built, re-run or
+        amended by this row.
+    WAITS-ON: none | declared at disposition time under THE ROUTER'S DECLARATION
+        adopted in this file's contract today. The row itself recommended that
+        this be ruled in the same sitting as `waits-on-declared-field` because
+        the two are adjacent surface; that recommendation is **moot, not ignored**
+        — `waits-on-declared-field` is already `ACTED` (its field work landed
+        2026-09-25), so there is no co-ruling left to make and nothing live for
+        this row to wait on.
+    THE RULING 2026-10-02 (Review DAILY). **(ii) REFUSED on the row's own
+        evidence.** Folding venue text into what `spec_sha` hashes "detects
+        nothing when the registry is simply not amended, which was the actual
+        failure" — the row says so, and it is right: `HR.1` carried `spec_sha
+        769b55d0` byte-identical for four attempts precisely BECAUSE nobody
+        amended the registry. A repair that is blind to the mechanism that caused
+        the incident is not a repair. **(iii) REFUSED.** Declaring the amendment
+        discipline sufficient prices the class at "a human notices", and the
+        measured price of that in this very instance was **seventeen days and a
+        human reading two texts side by side**. The project's whole thesis is
+        that this is the kind of thing that stops being a matter of attention.
+        **(i) ADOPTED, and the shape is pinned here because the row asked for a
+        shape and a vague adoption is how a design gets re-litigated at
+        execution:**
+        1. A `Spec` gains a structured `VENUE:` declaration naming the corpus,
+           fixture or world the experiment runs against **together with its
+           discriminating axis** — the thing that moved in `HR.1` was not only
+           LibriSpeech -> VCTK but cross-SESSION -> cross-MICROPHONE and 20/20 ->
+           20/40, and a field that records only the corpus name would have missed
+           two of those three.
+        2. `_experiment` **echoes the venue it ACTUALLY used** into the recorded
+           row as `venue_used`, **derived from the artifacts it genuinely loaded
+           and never copied from the declaration.** This is the load-bearing
+           clause of the whole design: a copy would make the two fields agree by
+           construction and re-create the exact defect, because a STALE
+           DECLARATION is the thing being detected.
+        3. `run verify` compares the declaration against `venue_used` and prints
+           `VENUE-MISMATCH` on disagreement, **reporting-only in its first
+           incarnation** (the `SO.10` vacancy precedent the row itself cites). A
+           gate here on day one would retroactively VOID every standing
+           certificate predating the field, and this desk will not cause a mass
+           invalidation by publishing a design note.
+        4. **Backfill is NOT ordered and a guessed backfill is forbidden.** Specs
+           whose venue predates the field read `VENUE: UNDECLARED` and `run
+           verify` prints that count. Undeclared is honest; a backfilled guess is
+           a fabricated claim about what a historical run actually loaded, which
+           is worse than the silence it replaces.
+        5. The count of `UNDECLARED` venues becomes **shrink-only** once its
+           first honest reading exists. That is how this class retires — row by
+           row as specs are next touched — instead of by a mass edit nobody can
+           verify.
+        **WHY THIS IS A STRENGTHENING AND NOT A COSMETIC ADDITION.** Today the
+        comparison does not exist at all, and `spec_sha` positively ASSERTS "the
+        claim text did not move" across a total corpus replacement. Any printed
+        comparison is strictly more than zero, nothing passes more easily, no
+        threshold moves in either direction, and the first honest reading will
+        very likely print a large `UNDECLARED` count — a red this project does not
+        currently carry and ought to.
+        **THE BILL, priced before deciding as the contract requires.** `run.py`
+        sits in `T0.36`'s `IMPL_DEPS`, so wiring into `run verify` bills **one
+        `T0.36` re-buy (~35 s foreground, priced from attempt 20)**, plus whatever
+        the `_experiment` echo touches in the specs it is first fitted to. Zero
+        GPU-hours, zero seeds, and **zero existing certificates invalidated**,
+        because step 3 is reporting-only by construction.
+        **ONE CONDUCT INSTRUCTION FOR THE EXECUTING SLOT.** If adding the print of
+        step 3 is found to constitute a floor on an existing checker — what `D35`
+        clause 2 forbids by name, and the trap the `waits-on` row walked into this
+        same morning — **STOP AND ROUTE IT; do not widen anything to fit.** The
+        design is refusable on that ground and I would rather it come back than
+        be executed around a live prohibition.
+    DUE: 2026-10-13 | RE-DATED AND DISPOSITIONED 2026-10-02 (Review DAILY,
+        OVERDUE FIRST — and placed here, as the row's LAST `DUE:` line, because
+        in this file the last one wins, which the first draft of this very
+        disposition got backwards and `run review-queue` caught by still
+        reporting the row OVERDUE at 2026-10-01). The 2026-10-01 date BROKE by one
+        day, and it broke as an `OPEN` row — i.e. owing a DESIGN DECISION from
+        this desk, the one kind of debt no builder slot could ever have
+        discharged for it. The design is published in THE RULING above, so the
+        row becomes `DISPOSITIONED` and this date owes EXECUTION, not a ruling.
+        Dated onto `review-queue`'s own printed "next date with room under the
+        measured capacity" (2026-10-13); the honest reason it is not nearer is
+        that the builder is at 27 consecutive dark slots and 27.8 h since the
+        last `rc=0`.
 
 **The finding, in the audit's own words:** *"nothing in this project compares
 the venue a run actually used against the venue its spec declares. `run
