@@ -8280,6 +8280,68 @@ Evidence: `experiments/decisions.py:1476` (`"DEFAULT-ACTION-EXPIRED":
 BASELINE_ACTION_EXPIRED`), `:664` (`BASELINE_ACTION_EXPIRED = 0`), `:1351` (the
 firing site), and `decisions --check` EXIT 1 at 2026-09-26 06:4x.
 
+**ADDENDUM 2026-10-02 (Review DAILY) — THIS ENTRY'S DEFAULT IS NOT MERELY
+EXPIRED, IT IS MOOT, AND THE THING THAT MADE IT MOOT WAS THIS DESK'S OWN ACT.
+No option, no default, no `decide_by` and no recommendation is changed by this
+addendum; it records a fact that changes what the existing default MEANS.**
+
+`decisions --check` has reported `D33 DEFAULT-ACTION-EXPIRED` for days, and the
+tool's diagnosis is a date-arithmetic one: the default names 2026-09-23, the
+earliest firing is 2026-09-24, so the action is in the past on the day it fires.
+**That is true and it understates the problem.** The default is option (i)
+*"RE-DATE ONCE MORE, TO 2026-09-23, AND CHANGE NOTHING ELSE"*, and its OBJECT is
+the queue row `w1-world-edit-window`. **That row was `DECLINED` on 2026-09-28 —
+by this desk, as its own pre-committed stop-rule required — and `DECLINED` is
+TERMINAL (`review_queue.py:251`).** So the default's action is not a past-dated
+act that could still be performed late. It is an act that can no longer be
+performed at all:
+
+  - **Mechanically**, re-dating a terminal row buys nothing — `review_queue.py`
+    skips terminal rows before the OVERDUE test (`:752`), so a new `DUE:` on that
+    row would change no reading and no violation count. The clock the default
+    exists to restart has already been stopped honestly.
+  - **Constitutionally**, and this is the binding half: performing it would
+    require reversing the authorship DECLINE this desk published in the open on
+    `docs/PROGRESS.md` at the 2026-09-27 FULL. That decline's own text says *"this
+    is not a request and carries no default — the reversal is yours alone."* **A
+    default may not reverse a resolved decision** — the rule `D37`'s entry is
+    built on, and it binds here even though the reversal would be convenient for
+    me, because the decision it would reverse is one I made against myself.
+
+**THE CONSEQUENCE, stated plainly because it is the part that needs the owner.**
+`D33` now has **no legal default at all.** Option (ii) was never the default (a
+default may not reassign authority `D22` settled); option (iii) was never the
+default (a default may not narrow what the project promised itself); and option
+(i), the only legal one, has had its object go terminal. **This entry therefore
+cannot self-resolve, and it is the only open entry in this register of which that
+is true.** It is 9 days past `decide_by` with **7 live queue rows** firing
+`HOLD-ON-A-RESOLVED-BLOCKER` behind it (`ne01-occlusion-knife-edge`,
+`water-apply-phantom-force`, `sh02-null-saturation`, `hr5-fixture-refuted`,
+`w1-cold-is-not-lethal-at-night`, `w2-needs-have-no-single-k`,
+`ba03-vestibular-channel-is-never-load-bearing-under-one-kick`), and behind those
+the seven-instrument W0-too-shallow finding.
+
+**WHAT THIS DESK DID INSTEAD OF WAITING, so the entry is not read as an excuse
+for a fifth instalment.** Today's sitting re-derived the debt and found that two
+of the three unregistered specs were never behind this question: `W1.01` and
+`W1.04` are measurements of W0 as built and need the world edit to PASS, not to
+RUN, so their registration is now dated and ordered independently of `D33`
+(`w0-too-shallow`, `DUE: 2026-10-13`, commit `6efa5f9`). **`W1.03` alone is
+genuinely behind this entry** — its claim is that the venue CONTAINS traps,
+delays and irreversibility and its control needs a twin with them removed, and
+neither sentence is writable against a world that has none. So the blast radius
+of `D33` is smaller than it was yesterday, and what remains in it is irreducible
+without a ruling from you.
+
+**`decide_by` is NOT extended by this addendum** — a deadline may tighten on its
+own and may never be lengthened, and this desk will not lengthen one it already
+broke. The separate **2026-10-09** date appearing on `docs/PROGRESS.md` and
+`docs/OVERSIGHT.md` is a **stop-rule the Review armed against ITSELF**, not a
+restatement of this entry's `decide_by`; `steering.py` reports all three as
+`STEERING-DATE-MISMATCH` against the register, the register is the authority, and
+today's page says so in those words rather than quietly aligning the register to
+the pages.
+
 ---
 
 ## D34 — The builder loop could not start a single iteration for 23 hours because one file crossed one kernel limit. The Review found and trimmed it at 06:41 this morning, independently and before I finished; the outage is over and the DESIGN that caused it is not. (2026-09-21, overseer, 107th audit)
