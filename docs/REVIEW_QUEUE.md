@@ -12261,7 +12261,49 @@ the venue twice, in two rows, with one of the two rulings uncited by the other.
 ## UNROUTED-OWNER-ASK class has read empty for 15 days because the page's
 ## item format moved out from under its parser
 
-ROUTED: owner-ask-reader-blind-since-0909 | 2026-09-23 | measurement in the `fieldwatch-quotation-channel-is-0-for-5` execution (builder) | OPEN
+ROUTED: owner-ask-reader-blind-since-0909 | 2026-09-23 | measurement in the `fieldwatch-quotation-channel-is-0-for-5` execution (builder) | ACTED 2026-10-02 d95b587 (Review DAILY, OVERDUE FIRST — the repair landed 2026-09-25 as the 115th audit's 1a and was never stamped; this desk verified all FOUR of the row's own stated requirements on disk before closing it. See THE STAMP)
+    THE STAMP 2026-10-02 (Review DAILY). This row did not ask for "a fix" — it
+        named four things the repair had to carry, and a stamp is only honest if
+        each was checked rather than inferred from the commit subject. Checked
+        this morning, at HEAD:
+        (1) **The mechanism.** `experiments/decisions.py:962` reads
+            `_ITEM = re.compile(r"^\*{0,2}(\d{1,2})\.\s+(.*)$")` — the
+            `\*{0,2}` the row sketched — and the comment above it at :957-961
+            names THIS row as the reason. Verified by reading the file, not the
+            diff.
+        (2) **A fixture in the `**N. ` shape the live page actually uses**, which
+            the row insisted on because the bare-digit pattern's failure was
+            invisible to every fixture that predated it. It exists at
+            `decisions.py:2071-2076`: a bolded three-item page carrying one
+            `NO-DECISION:` exemption, one `D`-cite, and one genuinely unrouted
+            ask — i.e. it exercises the exemption path, the cite path and the
+            firing path in the one shape that was blind.
+        (3) **Gated, not merely present.** `T0.28` declares
+            `p11_unrouted_owner_ask_is_reported` and
+            `p12_vanished_owner_ask_is_the_known_positive` among its properties
+            (`registry_expansion.py:6457`), and the ledger's `T0.28` entry shows
+            the two arms doing opposite things, which is what a real control
+            looks like: experiment arm **19 properties checked, 0 failed**;
+            control arm **13 failed**, `p11` and `p12` both among the named
+            casualties. A property that the control cannot break would not have
+            been worth stamping.
+        (4) **The certificate re-bought, and standing.** `T0.28` is **PASS**,
+            attempt 22, `ran_at` 2026-10-01T08:44:26 at commit `6dc3914`,
+            `message`: *"HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding
+            metric(s) reproduced exactly in a fresh process"*.
+        **THE RE-ARMED COUNTER'S READING TODAY, independently re-run rather than
+        quoted from the row:** `python -m experiments.decisions` prints **0
+        UNROUTED / 0 VANISHED**, and `T0.28`'s own metrics carry the same pair
+        as gated numbers (`live_unrouted_asks` 0.0, `live_vanished_asks` 0.0).
+        The row predicted the first honest reading would be `> 3` and the
+        executing slot CORRECTED that prediction in place to 0/0 — the correction
+        is the row's, is still legible in its body, and this stamp does not
+        quietly adopt the original guess as though it had been right.
+        **WHAT THIS DOES NOT CLOSE.** The same `decisions` run still reports
+        `D33 DEFAULT-ACTION-EXPIRED` and five `CONDUCT-DESK` entries. Those are
+        live findings about the REGISTER, not residue of this reader's blindness,
+        and two of them are disposed elsewhere in today's sitting. A reader that
+        can see again is supposed to produce findings; these are them.
     **What was measured, incidentally, while honouring that row's shared-helper
     caution.** `decisions.owner_asks` parses **0 items** on `docs/PROGRESS.md`
     at every revision from 2026-09-09 through today — the live page carries
