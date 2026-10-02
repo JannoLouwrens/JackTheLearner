@@ -12664,8 +12664,8 @@ no baseline may absorb.
 
 ## ROUTED 2026-09-24 (builder, 113th-audit item 3): `decisions-settles-on-headers-alone` — a ruling filed in prose under a neighbouring heading is invisible to the settlement parser, and the instrument then orders the answer reversed
 
-ROUTED: decisions-settles-on-headers-alone | 2026-09-24 | a1dbf54 (113th audit) | OPEN
-    DUE: 2026-10-01 | Dated onto the tool's next free date — 09-25 already
+ROUTED: decisions-settles-on-headers-alone | 2026-09-24 | a1dbf54 (113th audit) | DISPOSITIONED 2026-10-02 (Review DAILY — BOTH limbs ruled: the `D35` rule-2 exemption is GRANTED for the settlement-detection path only, and the third verb `ANSWERED` is ADOPTED for this desk with a hard condition, with the overseer-charter half routed to the owner rather than taken. See THE RULING)
+    DUE: 2026-10-01 | ORIGINAL, SUPERSEDED by the 2026-10-13 line at the foot of this row (last `DUE:` wins). Text unchanged: Dated onto the tool's next free date — 09-25 already
         carries 7 rows plus the WAITS-ON unlock and the d35 disposition. This
         row is a DESIGN awaiting a desk's ruling, not a build order: D35 rule 2
         forbids new audit instruments, and whether a truthfulness repair to an
@@ -12673,6 +12673,77 @@ ROUTED: decisions-settles-on-headers-alone | 2026-09-24 | a1dbf54 (113th audit) 
         meter ... tell the truth more plainly is always allowed" was written
         for the CPU accountant, not for decisions.py) is the desk's call, not
         the builder's.
+    THE RULING 2026-10-02 (Review DAILY, OVERDUE FIRST). Both limbs, because the
+        row correctly refused to let the builder decide either.
+        **LIMB 1 — IS A TRUTHFULNESS REPAIR TO `decisions.py` EXEMPT FROM `D35`
+        RULE 2? YES, and the exemption is granted on a principle rather than on
+        convenience, so it can be applied again without me.** `D35` rule 2 freezes
+        the number of things that can go RED — it is a freeze on SURFACE. This
+        repair adds no instrument, no property class and no red. It REMOVES a
+        false positive from an existing checker, and the direction of travel is
+        therefore the shrink direction the freeze itself prefers. The decisive
+        fact is what the false positive was CARRYING: for ten days `--check`
+        printed *"D19 ... OVERDUE — DEFAULT IS DUE TO FIRE"*, which is an ORDER,
+        and executing it would have **reversed a ruling the owner had already
+        made**. A freeze that preserves an instrument's power to order the
+        reversal of an owner ruling is not a freeze anybody wrote. So the 3''
+        carve-out reaches this, and the fact that it was authored for the CPU
+        accountant is a fact about its birth, not about its scope.
+        **THE EXEMPTION IS NARROW AND I am stating its edge so it cannot be
+        stretched at execution:** it covers the SETTLEMENT-DETECTION path only
+        (`_SETTLED` and the region it scans). It is not a licence to grow
+        `decisions.py` generally, not a licence to add a violation class, and not
+        a licence to add any print that could go red. If the implementing slot
+        finds itself ADDING a red rather than removing a false one, it is outside
+        this exemption and must stop and route.
+        **The row's three binding constraints are carried into the grant
+        unchanged, and they are the whole reason this is safe:** `_SETTLED` must
+        keep naming the DECISION's fate and never an entry's freshness (the
+        `STALE` false-exoneration scar at `decisions.py:337-344`); the marker scan
+        must not let a desk settle its own entry BY ADJECTIVE — the settlement
+        text must still be an ANSWER, not a status; and the fixture proving the
+        pre-fix blindness, in `D19`'s exact shape (a ruling filed under a
+        neighbour's heading), lands WITH the fix in `T0.28`'s existing property
+        style. A fix without that fixture would be unfalsifiable and is refused.
+        **LIMB 2 — DOES THE THIRD VERB ENTER? YES for this desk, immediately and
+        with a condition; and the overseer-charter half is NOT mine to take.**
+        The charter gap is real: `OVERDUE` admits only *fire* or *re-arm with a
+        reason*, and neither is honest when a decision was ANSWERED and
+        mis-filed — ten consecutive audits declined to fire and none wrote down
+        why, which is the gap behaving exactly as a missing word does.
+        **And the sharpest evidence is this desk's own practice: `ANSWERED` was
+        already used as a disposition yesterday** (`02f8d8e`, 2026-10-01, `t310`).
+        So the verb is in the commit log and in no instrument's vocabulary — the
+        worst of both, because it reads as authoritative and is enforced by
+        nothing. **THE CONDITION, which is limb 1's constraint applied to limb
+        2:** `ANSWERED` must name WHERE the answer is filed — commit, file and
+        location — so that it can never be an adjective a desk applies to its own
+        entry. An `ANSWERED` that cites nothing is a status, not an answer, and
+        is to be read as an unresolved `OVERDUE`.
+        **WHAT I AM NOT DOING, and why.** I am not editing the overseer's
+        charter. This desk's standing authority over another organ's steering
+        covers `scripts/ladder_prompt.md`'s PRIORITY section and nothing else; the
+        overseer charter is not operational priority, it is that organ's
+        definition of what counts as a violation. Ruling that the verb SHOULD
+        enter it, and editing it in, are two different acts and only the first is
+        mine. The second is on today's page as a FOR THE OWNER item and routed as
+        a decision entry, quoted verbatim — rather than done quietly, which is
+        how a desk grows its own jurisdiction.
+    WAITS-ON: none | declared at disposition time under THE ROUTER'S DECLARATION
+        adopted in this file's contract today. Limb 1's exemption is this desk's
+        to grant and limb 2's desk half is this desk's to adopt, so neither waits
+        on another live row; the charter half waits on the OWNER, which is a
+        decision entry and not a queue row.
+    DUE: 2026-10-13 | RE-DATED AND DISPOSITIONED 2026-10-02 (Review DAILY,
+        OVERDUE FIRST), placed as this row's LAST `DUE:` line because last one
+        wins in this file. The 2026-10-01 date BROKE by one day, as an `OPEN` row
+        owing a DESIGN RULING from this desk — the one debt no builder slot could
+        have discharged for it. The ruling is above, so the row becomes
+        `DISPOSITIONED` and this date owes EXECUTION: the `_SETTLED` repair plus
+        its `D19`-shaped fixture, inside the narrow exemption granted above.
+        Dated onto `review-queue`'s own printed next-date-with-room, and the
+        honest reason it is not nearer is that the builder is at 27 consecutive
+        dark slots and 27.8 h since the last `rc=0`.
 
 **The defect, from the 113th audit.** `decisions.py:333-345` settles a decision
 by scanning its HEADERS for `RESOLVED|off your desk|BY THE CALENDAR`. D19's
