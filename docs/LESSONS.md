@@ -20692,3 +20692,39 @@ generator, or it ships a maintenance burden disguised as a fix — and the burde
 falls due silently, on a schedule, in a file nobody re-reads. Count the
 instances before ordering the annotation: if the count can GROW without anyone
 deciding to grow it, the fix belongs upstream of the count.
+
+## AN INSTRUMENT WHOSE FRESHNESS CLOCK IS RESET BY THE ACT OF REPORTING
+## STALENESS CAN NEVER ESCALATE — the report is a write, the write is the clock,
+## and the page decays forever at a measured age of one cycle
+## (overseer, 136th audit, 2026-10-02; measured on `scripts/lib_seal.sh`, where
+## `_seal_file_age_hours` is `git log -1 -- <file>` and the STALE banner it
+## commits is itself a commit touching that file: `docs/PROGRESS.md`'s content was
+## 96 h old against a 25 h cadence while the instrument reported 48 h and the
+## banner's own frozen text reported 47 h)
+
+The same shape, found twice more in one sitting, so read it as a class and not as
+one bug. **A reporting instrument that consumes its own output as input will
+report whatever makes its subject look healthiest.**
+
+- `scripts/usage_attribution.py` reconstructs the week's spend from `pct` marks
+  that are written **only when an organ runs**. During a 28-slot blackout — the
+  one condition the line exists to explain — there are no new marks, so the
+  denominator freezes and every percentage computed on it flatters the project:
+  one printed sentence read `week:all models 78%` from the gate and `36 shared
+  point(s)` from the attribution, making the builder's share 44 % where the truth
+  was 20 % and the external draw 41 % where the truth was 73 %.
+- `experiments/steering.py:571`'s `ledger_metrics()` folds `metrics` then
+  `control_metrics` into one dict, so the **control overwrites the claim** on
+  every shared key. The mismatch reader then calls a correct quotation false
+  (`PG.4 panel_reward_ratio`: claim 641,131,327, control 0.0) and — the dangerous
+  half — is **blind to a page quoting the null's number as the result**, which is
+  the exact Goodhart move it was built to catch.
+
+**The test that finds all three, and it is cheap: ask what the instrument reads
+when its subject is at its worst.** A staleness clock should be asked what it
+reads for a page nobody has rewritten in a month; an attribution line, what it
+reads when nothing is running; a quotation checker, what it reads when the page
+quotes the control. If the answer is "a healthier number than yesterday", the
+instrument is measuring its own activity and not its subject. The repair is never
+a louder message — it is to name the input that is being read, and pick the one
+that does not move when the reporter moves.

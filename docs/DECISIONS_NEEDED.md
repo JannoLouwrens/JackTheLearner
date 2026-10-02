@@ -9417,3 +9417,126 @@ belonging to anything else. Options **(ii) core-seconds against 4 cores** and
 **(iii) a separate detached-lane sub-ceiling** are both live and both yours; each
 is a threshold edit, and (ii) additionally stales every certificate citing
 `experiments/rtf.py`.
+
+---
+
+## D30 — EVIDENCE ADDENDUM, 2026-10-02 06:5x UTC (overseer, 136th audit). NOT a re-opening, NOT a new decision, NOT a default fired. The blackout has recurred a third time and is now the longest on record; and the pace line that governs it has been calibrated against the wrong week all along.
+
+`D30` was RESOLVED BY ARMED DEFAULT on 2026-09-19 with option **(v) REPORT THE
+STREAK, GATE NOTHING, RELAX NOTHING.** The 131st audit's addendum (2026-09-30)
+attached the second recurrence. This attaches the third, plus one fact that no
+prior sitting measured: **the two constants that set the pace line were derived
+for a week that begins Monday 00:00, and this account's week begins Wednesday
+11:59 UTC.** The entry stays RESOLVED. The desk's recommended option **(i)** —
+pace against this project's OWN attributed spend rather than the shared total —
+remains the owner's to rule at any time, at no cost, and is now the third
+blackout it would have prevented.
+
+### The measurement, 2026-10-02 06:4x UTC, taken live and quoted from no page
+
+```
+last builder rc=0      2026-10-01T02:17:07   (LG.14 registration, 28.4 h ago)
+consecutive dark slots 28                    (ladder.log 10-01T03:07 -> 10-02T06:07, unbroken)
+week:all models        79%                   (scripts/claude_usage.py --pct)
+week-elapsed           25%  -> line 42%      (PACE_FLOOR 25 + ceil(65*25/100))
+.usage-resumed         ABSENT
+attribution (live)     builder 16 (20%)  desks 5 (6%)  both 0 (0%)
+                       NOT THIS PROJECT 57 (73%)
+2026-W39 kaggle        1.07 h of 30.0 free   (experiments/gpu_budget.json "weeks")
+```
+
+Side by side with this entry's two earlier measurements:
+
+| | 2026-09-15 (`D30`) | 2026-09-30 (131st) | 2026-10-02 (this addendum) |
+|---|---|---|---|
+| consecutive dark slots | 18 | 23 | **28** |
+| `week:all models` | 37 % | 78 % | **79 %** |
+| NOT THIS PROJECT | 28 of 37 (75 %) | 58 of 78 (74 %) | **57 of 78 (73 %)** |
+| free Kaggle GPU-h expiring unspent | 26.51 | 30.00 | **~28.9** |
+| consecutive weeks lost | 2nd | 4th by that count | **3rd by Kaggle hours: W37 2.22 h, W38 0.92 h, W39 1.07 h of ~90** |
+
+**The meter rose 37 % → 79 % — forty-two points — in the 23.7 hours between the
+last two rows this project wrote to `usage_ledger.jsonl`, during which it executed
+nothing but two desk sittings.**
+
+### Two corrections to the 131st audit's addendum, both of which make the picture worse
+
+**(1) Its projected return date was three days early, because it used a
+hand-typed week boundary.** That addendum said *"the week reset Monday
+2026-09-28 05:00 UTC"* and therefore *"first legal builder slot: 2026-10-03
+~23:07 UTC."* The live meter contradicts the premise: `week:all models … resets
+Oct 7, 11:59am (UTC)`, and `--week-elapsed` returns **25** right now. A
+Monday-09-28 reset would make Friday 10-02 roughly 75 % elapsed, not 25 %. The
+authority is `claude_usage.py --week-elapsed`, which `pace_gate` already reads;
+the prose used a different number. Recomputed from the live boundary:
+
+> **first legal builder slot: `2026-10-06 09:06 UTC` (Tuesday)** — the first
+> moment `allow` exceeds 79 is `elapsed = 84 %` of the week that began
+> 2026-09-30 11:59. **This is a floor on the blackout, not a forecast:** it holds
+> only if the meter rises no further, and the meter has been rising at
+> **1.77 pts/h** from a source this project does not control.
+
+**(2) The attribution line it quoted was stale by 42 points, and so was mine
+yesterday.** `scripts/usage_attribution.py` reconstructs the week from `pct`
+marks in `/data/jack-logs/usage_ledger.jsonl`, and **that file is written only
+when an organ starts or ends a run.** Across a 28-slot blackout there are no rows
+to read. At `06:07` today the pacing line therefore printed, in one sentence from
+one meter: *`week:all models` **78 %** … of this week's **36** shared point(s):
+builder 16 (**44 %**) … NOT THIS PROJECT 15 (**41 %**)*. Run live forty minutes
+later: **78 points, builder 20 %, NOT THIS PROJECT 73 %.** The stale denominator
+more than doubles the builder's apparent share and halves the external draw — in
+the direction that makes the blackout look like this project's own doing. The
+135th audit's "37 %" was read off that line. **The true figure is 73 %, so its
+conclusion was right and understated by half.**
+
+### THE NEW FACT: the line was calibrated for a Monday week
+
+`scripts/lib_usage.sh:59-60` states the calibration in its own words:
+
+> `PACE_FLOOR=25` buys the week's opening burst; **by Friday the line is ~62 %,
+> Sunday ~81 %**, and the loop is still awake when the GPU quota expires.
+
+Those two figures reproduce exactly under a Monday-00:00 week and under no other
+boundary. Against the meter's actual Wednesday-11:59 week:
+
+| | design (Monday 00:00) | actual (Wed 11:59) |
+|---|---|---|
+| Friday | elapsed 57 % → line **63 %** | elapsed 25 % → line **42 %** |
+| Sunday | elapsed 86 % → line **81 %** | elapsed 57 % → line **63 %** |
+
+The offset is 59 h of week = 35 points of `elapsed` = `0.65 × 35 ≈ 23` points of
+line. **The real Sunday line equals the design's Friday line.** `pace_gate` is
+computing correctly from a correct input; the defect is in the constants and in
+the comment that justifies them.
+
+**Why this belongs on the owner's desk and nowhere else.** The gate's own header
+names the failure it exists to prevent — *"30.9 free GPU-hours have died in two
+weeks with no agent awake to dispatch them — on a project whose owner has ruled
+free compute only."* At the **designed** Sunday line of 81 % the builder would run
+this weekend (`79 < 81`); at the **actual** line of 63 % it will not (`79 > 63`),
+and ~28.9 free Kaggle GPU-hours expire that weekend. Re-deriving `PACE_FLOOR`
+against the real reset weekday **widens what the builder may spend**, so it can
+never be an armed default (`D26`'s reasoning) and a desk may not take it over its
+own constraint. It is one number and it is the owner's.
+
+### The six-hour fact
+
+`week:all models` is **11 points** from the 90 % stop, which `usage_gate` applies
+to `ladder_loop.sh:111`, `overseer.sh:47`, `review.sh:57` and
+`field_watch.sh:32` — **every organ except `regate.sh`, which calls no model.**
+With no `.usage-resumed` on disk the log line is *"STOPPED at N% weekly usage —
+all agents paused until the owner resumes"*. At the measured 1.77 pts/h that
+arrives **~13:00 UTC on 2026-10-02**. Nothing in `experiments/` reads the usage
+meter at all, so this distance reaches no exit code, no ratchet and no board; a
+reporting-only repair for that hole is ordered in `docs/OVERSIGHT.md` FOR THE
+BUILDER 1, touching `PACE_FLOOR`, `PACE_CAP`, the line and the 90 % stop not at
+all. It does not need this entry and does not pre-empt it: it makes the distance
+*visible to a checker*; only the owner can make the builder *run*.
+
+### What this addendum deliberately does not do
+
+It does not reopen `D30`, proposes no new option, moves no `decide_by`, and fires
+nothing. It does not touch `PACE_FLOOR`, `PACE_CAP` or the 90 % stop. Option (i)
+was correctly NOT taken as a default on 2026-09-19 — a default may not loosen a
+gate — which is exactly why it can only reach the owner by hand, and why the same
+measurement is now on this page three times.
