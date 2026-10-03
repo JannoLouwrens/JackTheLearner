@@ -9540,3 +9540,118 @@ nothing. It does not touch `PACE_FLOOR`, `PACE_CAP` or the 90 % stop. Option (i)
 was correctly NOT taken as a default on 2026-09-19 — a default may not loosen a
 gate — which is exactly why it can only reach the owner by hand, and why the same
 measurement is now on this page three times.
+
+---
+
+## D40 — `D30`'s recommended repair has been "the owner's to rule at any time" for 18 days inside a RESOLVED entry, where nothing can make it answerable. The builder is now 51 slots dark, 73% of the pool is another tenant's, and ~28.9 GPU-hours expire today. (2026-10-03, Review, DAILY)
+
+**THIS ENTRY IS NOT A FOURTH COPY OF THE MEASUREMENT. It exists because the
+measurement now has nowhere to land.** `D30` resolved by armed default on
+2026-09-19 to **(v) REPORT THE STREAK, GATE NOTHING, RELAX NOTHING**, and it has
+stayed RESOLVED while three successive sittings attached evidence to it — the
+131st audit (2026-09-30), the 136th (2026-10-02), and this desk today. Each one
+recorded that the desk's option **(i)** *"remains the owner's to rule at any
+time, at no cost"*. **None of them could make you rule on it**, because a
+resolved entry is not a question: `experiments/decisions.py` reports the armed
+and the unrouted, and a recommendation living inside a closed entry is neither.
+The 136th audit's own closing sentence names the trap exactly — option (i)
+*"can only reach the owner by hand, and ... the same measurement is now on this
+page three times."* **Writing it a fourth time into the same closed entry would
+have been the error, not the fix.** This is that hand, and the only thing new
+about it is that the question is finally shaped like one.
+
+### What changed since the 136th audit's addendum, 28 hours ago
+
+| | 2026-09-15 (`D30`) | 2026-09-30 (131st) | 2026-10-02 (136th) | **2026-10-03 (this desk)** |
+|---|---|---|---|---|
+| consecutive dark slots | 18 | 23 | 28 | **51** |
+| hours since last `rc=0` | — | — | 28.4 | **51.8** |
+| `week:all models` | 37 % | 78 % | 79 % | **82 %** |
+| NOT THIS PROJECT | 75 % | 74 % | 73 % | **73 %** (57 of 78) |
+| builder's own share | — | 44 %* | 20 % | **20 %** (16 of 78) |
+| W39 Kaggle drawn / free | — | — | 1.07 / 30.0 | **1.0719 / 30.0** |
+
+\* the 131st's figure was read off a stale denominator, as its own successor
+established; it is shown struck through in spirit, not as a trend.
+
+Counted from `/data/jack-logs/ladder.log` by this desk rather than taken from
+the loop's own counter, per `D30`'s standing reporting default. **The last
+builder `rc=0` was `2026-10-01T02:17`.** Every slot since has printed `PACING …
+skipping, budget held for later in the week`, `0 failed slots`. The builder is
+not broken and has not refused: **it is being held back from a pool in which
+73 % of this week's consumption is not this project's work at all.**
+
+### The perishable price, in the same breath, per `D30`'s own default
+
+**`2026-W39` holds 30.0 free Kaggle GPU-hours with 1.0719 drawn. ~28.93 hours
+expire TODAY, Saturday 2026-10-03.** That is the **third consecutive week** the
+same ~29 hours have expired unbought: W37 2.22 h, W38 0.92 h, W39 1.07 h drawn
+of ~90 available. The next expiry is Saturday **2026-10-10**, and on the current
+meter the builder's first legal slot is **not before it**.
+
+**Said honestly, because it is the strongest argument AGAINST urgency and this
+entry is worse without it:** those hours would have expired anyway. The largest
+GPU consumer is `T1.08`'s pipeline repair, which **has no design** — and a
+GPU-hour spent on a run nobody designed is worse than an expired one. The
+blackout is not why the hours burned this week. **What the blackout costs is the
+CPU ladder**, which needs no GPU and no design: 51 slots is roughly two days of
+hourly iterations that would have run specs, disposed rows, and bought
+certificates, and that work is simply gone. The GPU number belongs here because
+`D30` requires the pairing, not because it is the damage.
+
+### Why no desk may answer this, which is the whole reason it is on your page
+
+Option (i) changes **what the pace gate meters** — this project's own attributed
+spend instead of the shared total. However it is framed, it **loosens a gate**,
+and no desk here may do that and no default anywhere may fire one. That is why
+(i) was correctly not taken as a default on 2026-09-19 and why it has sat
+unruled since. It is filed `conduct` for the reason `D39` sets out at length —
+it is not `goal`, and a `means` fork is answered by bakeoff, which cannot settle
+a question about a pool shared with paying tenants (`SYSTEM.md` law 4). **The
+`CONDUCT-DESK` line `decisions.py` will print against this entry is wrong about
+it and right to keep printing**, exactly as on `D39`.
+
+**MY RECOMMENDATION:**
+
+> **Take (i): pace the builder against THIS PROJECT'S OWN attributed spend, not
+> against `week:all models`. The gate is currently protecting a shared pool by
+> throttling the only tenant whose consumption it can see, while 73 % of the
+> draw comes from tenants it cannot throttle at all — so it buys the box no
+> protection it would not already have, and pays for it in the one organ that
+> produces Jack. Keep `PACE_FLOOR`, `PACE_CAP` and the 90 % hard stop exactly
+> where they are; change the METER, not the limits. If that is too much, the
+> narrower (ii) — exempt the builder below some floor of consecutive dark slots,
+> so a blackout can never exceed a day — fixes the failure mode without touching
+> what the gate measures, and I would take it over the status quo.**
+
+DECIDE: D40
+  class:     conduct
+  default:   (v) STANDS, UNCHANGED — the meter stays `week:all models`, the
+             builder stays paced against a pool it does not control, and the
+             streak keeps being reported and gating nothing. This is the STATUS
+             QUO made explicit and it is deliberately NOT the recommendation: a
+             default may not loosen a gate, which is the precise reason this
+             question cannot resolve itself and has not for 18 days. It is
+             MONOTONE — it cannot relax a gate, move `PACE_FLOOR`/`PACE_CAP`/the
+             90 % stop, spend a GPU-hour or a CPU-second, fail a spec, or stale
+             a certificate. Its price, stated rather than buried: the blackout
+             continues, the streak passes 51 slots and keeps climbing at one per
+             hour, and the CPU ladder — which needs no GPU and no design —
+             produces nothing for as long as a neighbouring tenant is busy.
+  decide_by: 2026-10-10
+  blocks:    no spec id directly, and that is what makes it easy to leave. What
+             it blocks is the BUILDER — every hourly iteration for 51 slots and
+             counting. Unlike `D37` and `D39`, the cost here IS perishable and
+             is being paid continuously: each dark slot is one iteration that
+             does not happen and cannot be recovered later. `decide_by` is set
+             to the next Kaggle expiry rather than a comfortable fortnight for
+             that reason.
+
+**What this entry deliberately does not do.** It does not reopen `D30` — `D30`
+is RESOLVED and stays so, and this is a new question about what to do next, not
+a re-litigation of (v). It proposes no option `D30` did not already price,
+moves no `decide_by` belonging to anything else, touches no threshold, and
+fires nothing. The 136th audit's finding that the pace line's constants were
+calibrated for a Monday week while this account's week begins Wednesday 11:59
+UTC is **not** folded in here: it is a separate defect with a separate repair,
+and bundling it would let one ruling disguise two.
