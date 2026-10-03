@@ -13101,7 +13101,7 @@ the owner's desk.
 ## train-learned threshold; it reproduces EXACTLY under a cut chosen on the
 ## held-out rows
 
-ROUTED: ps09-known-answer-floor-was-calibrated-on-an-oracle-cut | 2026-09-25 | PS.09 attempt 2 VOID (2026-09-25T08:18:29, 567.19 s, seeds 0/1/2, clean stamp at `d186c07`) + deterministic seed-1 reproduction, this slot | OPEN
+ROUTED: ps09-known-answer-floor-was-calibrated-on-an-oracle-cut | 2026-09-25 | PS.09 attempt 2 VOID (2026-09-25T08:18:29, 567.19 s, seeds 0/1/2, clean stamp at `d186c07`) + deterministic seed-1 reproduction, this slot | DISPOSITIONED 2026-10-03 (Review DAILY, OVERDUE FIRST — this row is not itself overdue, it is the BLOCKER of four rows that are, and the sitting ruled it first for that reason. All three clauses answered: (a) RULED without moving `KA_SIGNAL_MIN`, by re-basing the REFERENCE instead of the bar — the cut search is refuted as a reference CLASS, not merely as a calibration; (b) RULED on the builder's measurement — the oracle defect does NOT replicate, the sibling hold is LIFTED and each sibling's channel is named; (c) already in LESSONS. Execution the builder's. See THE KNOWN-ANSWER REFERENCE RULING below)
     DUE: 2026-10-03 | `review-queue`'s own next-date-with-room, read off the
         tool this slot. Recalibration of `KA_SIGNAL_MIN` is a THRESHOLD
         decision on a conjunct the 09-25 ruling registered — the Review's,
@@ -13111,6 +13111,17 @@ ROUTED: ps09-known-answer-floor-was-calibrated-on-an-oracle-cut | 2026-09-25 | P
         SIBLING inheritance (1^13 units 2-3, PS.05/PS.06/PS.08) waits on THIS
         row by the ruling's own sequencing ("prove the new conjunct fires
         correctly here before the siblings inherit"), not the reverse.
+    DUE: 2026-10-14 | DESIGN DELIVERED 2026-10-03 by THE KNOWN-ANSWER
+        REFERENCE RULING below; DISPOSITIONED, execution the builder's. 10-14
+        is `review_queue`'s own printed `next date with room` (4 live rows
+        against a measured capacity of 6) — deliberately NOT 10-13, which
+        already carries 9 against that same 6 and is the file's worst pile.
+        What this date buys: `PS.09`'s re-based reference MEASURED at its own
+        venue, honest split, parameter count declared, against the UNMOVED
+        0.90. One of two reported outcomes, both of them results: it clears
+        0.90 honestly and nothing was ever wrong but the basis, or it does not
+        and the floor returns to THE OWNER as a bar move this desk may not
+        make. No bar moves on either branch without that measurement in hand.
 
 **WHAT RAN.** PS.09 attempt 2, the registered verification the `d186c07` commit
 promised, foreground-equivalent lane, clean tree, no dirty stamp. Verdict:
@@ -13447,6 +13458,164 @@ spec reproduced to the recorded digit.
     source edited, so `ps_06_tiring_is_a_price.py`'s `impl_sha` does not move
     and PS.06 owes no amend. Bill paid in slot from the clean tree.
     **Spent evidence: 700 core-s across 4 seeds; do not re-run these cells.**
+
+**THE KNOWN-ANSWER REFERENCE RULING — Review DAILY 2026-10-03, disposing this
+row's three clauses and LIFTING the hold it placed on `PS.05`/`PS.06`/`PS.08`.**
+(Not a `##` heading, for the reason the 09-25 ruling gives: `review_queue.py`
+reads one as a row announcement. This ruling mints no clock of its own — the
+clock is this row's `DUE: 2026-10-14` above, and the four sibling rows carry
+their own.)
+
+**THE SHORT FORM, because the rest is argument.** `KA_SIGNAL_MIN` **0.90 does
+not move**, in either direction, and no other bar in the family moves either.
+What was wrong was never the number on its own: it was that the number and the
+instrument it gates were read off the same object — a maximum over ~900
+hypotheses, evaluated on the rows it was quoted on. **The repair is to the
+REFERENCE, not to the bar.** A desk that answered clause (a) by lowering 0.90
+to 0.81 would have preserved the defective instrument and spent the only bar
+protecting against it.
+
+**CLAUSE (a) — RULED. The cut search is refuted as a reference CLASS, and the
+refutation is structural rather than statistical.** `_ka_ref_acc`
+(`ps_09_worth_it_is_real.py:581`) maximises balanced accuracy over every
+candidate cut in both directions — `xs` midpoints plus two outer cuts, ~900
+hypotheses on this venue's row counts. Evaluating that argmax on the rows it is
+quoted on **saturates at 1.0000 by construction**, which is exactly what the
+09-19 diagnostic reported and exactly what the 09-25 ruling promoted to a
+calibration constant. This is not "a number that leaked a little". A maximum
+over hypotheses has no honest reading on its own fit rows at any venue, with
+any data, ever — so no re-calibration of 0.90 against THIS reference could have
+been trustworthy, including a conservative one. The three measured confirmations
+are already in this row and are not re-bought: `PS.09` honest 0.75–0.87 against
+oracle 1.0000 (leak **+0.20**); `PS.05`'s two-column ridge leak **+0.141 worst
+and NEGATIVE on seed 2**; `PS.06`'s `gear_scale` leak **negative on two of
+three seeds**. The ridge and the derived scalar cannot saturate because they
+have no argmax to evaluate; the cut search can and did.
+
+So, adopted as the family's reference contract, and it is a STRENGTHENING on
+every count — it adds requirements to a conjunct that currently has none of
+them, and it removes a degree of freedom from whoever picks the next channel:
+
+  1. **A known-answer reference may not be a maximum over hypotheses scored on
+     the rows the floor is quoted on.** Fit-time search is permitted only with a
+     train/test split declared in the spec and the search confined to the train
+     rows — which is what `_ka_ref_acc` already does for its READING and did
+     NOT do for its CALIBRATION. The defect was entirely in the second.
+  2. **A reference's PARAMETER COUNT is declared beside its floor**, in the
+     spec, as a registered quantity. This is the 09-27 addendum's finding
+     promoted from prose to contract: *honestly fit* bounds a reference's SPLIT
+     and leaves its BASIS free, and two references with the same split and
+     different bases are two different claims about the venue. A floor without
+     a declared basis is not a pre-registration.
+  3. **Preference order for the basis, strongest first: (i) the venue's own
+     declared law, inverted, ZERO fitted parameters; (ii) a fixed-basis fit on
+     named columns with its split declared; (iii) a search, under rule 1.** The
+     reason to prefer (i) is measured and not aesthetic: at `PS.05` the
+     zero-parameter inversion of `odour.StaticField`'s analytic law reads
+     **0.9994 worst seed** where the two-column ridge reads 0.8359 — and its
+     oracle leak is **+0.0001**. A reference with no parameters has no fit/eval
+     split to leak through, so this entire class of defect is *structurally
+     absent* from it. That is a reason independent of the 0.16 R².
+
+**WHAT THIS ORDERS FOR `PS.09`, and it is a measurement, not a number.**
+`PS.09`'s venue runs the SAME analytic odour law as `PS.05`
+(`C = A0*strength*exp(-d/LAMBDA_M)`, `odour.py:173`), so basis (i) is
+*available* here. It is not yet *measured* here, and this desk will not quote
+`PS.05`'s 0.9994 at `PS.09`'s venue: `PS.05`'s target is distance, which the
+inversion returns directly, while `PS.09`'s target is the SIGN of a net need
+gain over (payoff, distance) offers — recovering `d_hat` for free does not make
+the sign free, because the sign needs the cost model too. **Anyone who carried
+0.9994 across that gap would be repeating this row's own mistake one venue to
+the left.** So what `DUE: 2026-10-14` buys is the re-based reference MEASURED at
+`PS.09`'s venue, honest split, parameter count declared, read against the
+unmoved 0.90 — with both branches pre-committed above so neither is a surprise
+that gets argued with afterwards.
+
+**CLAUSE (b) — RULED, AND THE HOLD IS LIFTED.** The row asked whether the
+siblings' controls are calibrated the same oracle way "before any of them
+inherits the conjunct". The builder measured it rather than arguing it, on each
+spec's own rig, with determinism receipts reproducing both the ledger's recorded
+means and the prior block's cells to four decimals. **The answer is NO, and the
+mechanism says why it could not have been otherwise:** `PS.09`'s reference was a
+cut SEARCH, the siblings' candidates are FITS. The hold's premise is therefore
+discharged as false, and holding four rows behind a defect measured not to
+travel would be this desk manufacturing its own backlog.
+
+  * **`PS.05` — channel: the declared-law inversion, 0 fitted parameters,
+    worst seed 0.9994, oracle leak +0.0001.** Its must-fail control fires hard
+    (sourceless `decay`/`smoke`/`water` columns, identical arithmetic, read
+    −45 to −600). Basis (i). Ready to inherit.
+  * **`PS.06` — channel: `gear_scale` (`needs.py:382`), 1 column, worst seed
+    0.6979, leak NEGATIVE on two of three seeds.** Note what the measurement
+    bought that no argument would have: the physically-obvious candidate,
+    fatigue `f`, is **REFUTED** — 0.0216 on seed 1, so a floor anywhere near
+    `PROBE_R2_MIN` 0.35 would have reported UNREADABLE on all three worlds
+    *including the two where the registered probe demonstrably reads the venue*.
+    That is the exact inverse of the error part 1 exists to prevent, and it
+    would have shipped. Basis (ii), and it is the world's own formula rather
+    than its columns — the same three channels handed over raw read 0.6532,
+    BELOW the derived scalar. Ready to inherit.
+  * **`PS.08` — STILL HELD, and now for a named reason with a date rather than
+    an open coupling.** See clause (d).
+
+**CLAUSE (c) — already discharged.** The generalisation is in `docs/LESSONS.md`
+(2026-09-27, *"honestly fit bounds a reference's split, not its basis"*, and the
+09-25 entry on a diagnostic number becoming a calibration constant the moment a
+ruling quotes it). Rules 1–3 above are the contract form of the same lesson;
+nothing further is owed here.
+
+**CLAUSE (d) — `PS.08`'s SEQUENCING, RULED, because the builder named it rather
+than measuring it blind and the ruling it needs is one sentence.** The worry
+recorded above is that part 1's candidate channel and part 2's blinded quantity
+are the same quantity — the e/w drain rate — so picking the first before the
+second is settled "could hand `PS.08` a known-answer control its own amputation
+control is required to be blind to". **Verified in source at HEAD before
+ruling:** part 2 is shipped and the control DELETES the rate rather than masking
+it (`ps_08_heavy_is_a_price.py:179` PART 2 RECORD, the deletion at :560, and
+:890 *"jittering cannot mask a RATE, so the rate is deleted rather than
+masked"*).
+
+With that verified, **the coincidence is not a hazard — it is the design, and
+this ruling makes it mandatory rather than permitted.** The two instruments
+answer different questions about the same quantity and they must agree on which
+quantity it is: the known-answer reference establishes that the load class IS
+readable from the drain rate; the amputation control establishes that it is
+readable from NOTHING ELSE. If the control blinds a quantity the reference does
+not read, the spec has no control over the channel its legibility claim actually
+rests on — the hole is in the version where they differ. So: **for any spec in
+this family, part 1's known-answer channel and part 2's blinded quantity SHALL
+be the same quantity, and a spec in which they differ is mis-constructed.**
+`PS.08` satisfies this with the drain rate on both sides.
+
+`PS.08` nevertheless **stays held one more step**, and not on the coupling,
+which is now closed. It is held on rule 3 and on nothing else: its candidate
+channel has never been measured under the honest/oracle pair the other two
+specs now have in the table above, and this ruling has just forbidden declaring
+a floor without that pair. That measurement is cheap and is ordered on the
+sibling row's own clock, not here.
+
+**WHAT IS NOT RULED, said plainly so the next sitting does not read closure into
+it.** No floor is declared for ANY of the four specs today. `KA_SIGNAL_MIN`
+0.90, `KA_GAP_MAX` 0.10, `PROBE_R2_MIN` 0.35, `probe_bal_acc` 0.65/0.70,
+`SHUFFLED_R2_MAX`, `CONTROL_R2_MAX`, `CONTROL_MARGIN_MIN` and `ACC_MIN` 0.65 are
+all byte-unmoved, and none of the numbers in this row's tables is offered as a
+floor — a floor read off those rows would be calibrated on the rows it gates,
+which is the defect this row exists for. **None of this rescues a single FAIL:**
+`PS.05`'s and `PS.06`'s legibility conjuncts fail on `probe_r2` regardless of
+what any reference reads, `PS.09` is VOID on either arm, and `PS.08` is red on
+attempt 1. That is the test of whether this ruling is a strengthening, and it
+passes it — **four specs are harder to pass after it than before, and not one
+of them is closer to green.**
+
+**Staleness bill: ZERO, and re-checked rather than inherited.** All four specs
+are red (FAIL a1 ×3, VOID a2 on `PS.09`) and hold no certificate; no spec source
+is edited by this ruling, so no `impl_sha` moves and no spec owes an amend. This
+block edits `docs/REVIEW_QUEUE.md`, which three specs declare in `IMPL_DEPS`:
+`T0.21` (cpu<1min) + `T0.31` (cpu<10min), paid in sitting from a clean tree.
+**Spent evidence, do not re-buy:** the ~11 core-minutes of honest/oracle cells,
+the 170 core-s `PS.05` reference probe, the 700 core-s across 4 seeds on
+`PS.06`. Everything this ruling needed was already measured and paid for; what
+it added was the decision nobody else is allowed to make.
 
 ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09-25T22:00:21, 16,580.6 s, seeds 0/1/2, clean stamp at `c1114ae`), harvested and _check-replayed this slot | OPEN
     WAITS-ON: none | the finding is about the LT rig's own panel trap (PG.4
