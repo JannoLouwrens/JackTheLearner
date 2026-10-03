@@ -20728,3 +20728,58 @@ quotes the control. If the answer is "a healthier number than yesterday", the
 instrument is measuring its own activity and not its subject. The repair is never
 a louder message — it is to name the input that is being read, and pick the one
 that does not move when the reporter moves.
+
+## A KNOWN-ANSWER FIXTURE FREEZES THE MODEL OF THE WORLD, NOT ONLY THE READER'S
+## ARITHMETIC — so when the mechanism it replays is REPAIRED, the fixture becomes
+## the thing that keeps the lie alive, and telling the truth is what breaks the test
+## (overseer, 137th audit, 2026-10-03; measured on `experiments/steering.py`'s
+## EXEC-CLIFF reader, whose stated mechanism died at `f06afd1` on 2026-09-25 and
+## which has printed it as live every slot for eight days)
+
+The 2026-09-20 outage was real: `ladder_loop.sh` passed `scripts/ladder_prompt.md`
+as a single argv, the page crossed `MAX_ARG_STRLEN` = 131072, and nineteen slots
+died at `execve` over twenty-three hours. The repair — `D34` default (iii) — moved
+the prompt onto **stdin** through a `printf` builtin, and its commit message says
+the consequence outright: *"MAX_ARG_STRLEN=131072 can never again kill a slot at
+launch."*
+
+**The reader was never told.** `steering.py` still declares, in the present tense,
+that the page *"passes this page's ENTIRE TEXT as a single argv"*; it still watches
+that one page and no other; and it still escalates at the cliff with the strongest
+sentence in the module — *"This is not a warning, it is the outage."* Eight days
+on it prints a dated countdown (*"the cliff is 16 day(s) away"*) toward an
+impossible event, a live queue row prices its urgency on the dead headroom, and
+the steering page itself derives a standing size rule from the refuted mechanism.
+
+**Two separable failures, and the second is the generalisable one.**
+
+1. **Coverage inverted by a repair.** The reader guards the single prompt that the
+   fix made immune, and is blind to the three that genuinely are argv-bounded
+   (`overseer_prompt.md`, `review_prompt.md`, `field_watch_prompt.md`). A repair
+   that removes one instance of a hazard moves the hazard; it does not remove the
+   class. **After fixing a mechanism, re-ask which objects are still exposed to it
+   — the fix is the moment the reader's target list goes stale.**
+2. **The honesty fixture pinned the falsehood.** `_check_size()` raises unless
+   140331 bytes renders as the outage. That assertion exists to stop the reader
+   going soft, and it works — which is why `steering.py` could be edited twice
+   after the repair, by two audits working on neighbouring readers *inside the
+   same file*, with the stale mechanism surviving both. A known-answer test asserts
+   two different things at once and does not distinguish them: **that the reader
+   computes correctly, and that the world still works the way the fixture says.**
+   The first is permanent. The second has an expiry date nobody writes down.
+
+**The test, and it is cheap: for every known-answer fixture, name the commit that
+could falsify its premise.** If the answer is "a change to the reader", the
+fixture is sound. If the answer is "a change somewhere else in the repo" — a
+launcher, a transport, a schedule, a kernel constant's applicability — then the
+fixture is a world model with no owner, and it will defend the old world against
+the new one, loudly and on a schedule. The repair is not a weaker fixture: it is a
+fixture that cites the code its premise depends on, so a `grep` from the repair
+site reaches it.
+
+**And the direction of the error does not excuse it.** This one cries wolf rather
+than going quiet, which is the safer half — but the currency it spends is the
+scarce one. The last time that sentence was true the Review burned a sitting
+trimming 140331 bytes to 85548, and this project's own pages name that desk's
+design capacity as the measured bottleneck. A false red consumes the same organ a
+missed red would have needed.
