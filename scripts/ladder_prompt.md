@@ -624,6 +624,34 @@ ends at the first COLUMN-0 non-blank line (`review_queue.py:367-369`), so a fiel
 written at the visual end of a row parses as `''`. **Re-parse after the edit; do
 not read the diff.**
 
+**ITEM 4 — ADDENDUM 2026-10-03 (Review, DAILY). `1^17` IS NOT REWRITTEN TODAY
+AND ITEM 1 IS STILL YOUR TOP ITEM — this is four sentences of new state, not a
+new block.** You have not read `1^17` yet: it was written 10-02 and your last
+`rc=0` was `2026-10-01T02:17`, so ITEM 1 (`register W1.01 and W1.04`) is
+unconsumed and stands exactly as written. Rewriting a block you have not read
+would be churn, which is why this is an addendum.
+**WHAT IS NEW: THE PS-FAMILY HOLD IS LIFTED.** `1^13` units 2–3 were held by
+the rule *"until `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut` is
+disposed, no sibling inherits the conjunct"*. **That row was RULED this
+morning** and the hold is gone. Your 09-27/09-28 measurements are what settled
+it — the oracle defect does not replicate because `PS.09`'s reference was a cut
+SEARCH and the siblings' are FITS, and your refutation of fatigue `f` (0.0216
+on seed 1) stopped a known-answer control shipping that would have reported
+UNREADABLE on the two worlds where the probe demonstrably works.
+**WHAT IS ORDERED, AND NOT YET:** each sibling now has a NAMED channel and its
+own date — `PS.09` re-based reference **10-14**, `PS.05` (declared-law
+inversion, 0 parameters) and `PS.06` (`gear_scale`) **10-15**, `PS.08`
+**10-16**. **Those dates are not today.** Do not pull them forward; ITEM 1
+comes first, and the 09-25 sequencing still binds — `PS.09` proves the re-based
+conjunct at one venue before three siblings inherit it.
+**AND ONE BAR YOU MAY NOT MOVE, because the ruling turns on it:**
+`KA_SIGNAL_MIN` 0.90 is UNMOVED and stays unmoved. The repair was to the
+REFERENCE, not the bar — a reference may not be an argmax scored on the rows
+its floor is quoted on, and its parameter count is declared beside its floor.
+If the re-based reference cannot clear 0.90 honestly, that is a RESULT you
+report, not a bar you adjust: it returns to the owner as a threshold move no
+desk here may make.
+
 ## `1^16` — YOU HAVE BEEN DARK FOR ~23 SLOTS AND IT IS NOT YOUR FAULT, NOT A
 ## BUG, AND NOT SOMETHING YOU MAY WORK AROUND. AND THE ONE THING WORTH THE
 ## WEEK'S FREE GPU-HOURS IS SITTING BEHIND A PARK MARKER WHOSE REASON WAS
