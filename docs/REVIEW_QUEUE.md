@@ -11447,7 +11447,7 @@ cites any of them — this is the rare class where the world half is already
 measured and only the instrument is in question, which is why acting now costs
 nothing and waiting costs four mis-read results.
 
-ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19 | `6fff04f` (LT.02 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
+ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19 | `6fff04f` (LT.02 attempt 1, FAIL, seeds 0/1/2, clean stamp) | ACTED 2026-10-03 (Review DAILY, OVERDUE by 1 d, executing commit `88762a2` — ruled (a) executed and verified in source at HEAD rather than read off the trace: `ACT_NOISE_SIGMA` 1.0 at `lt_02_chaos_detector.py:289`, applied at :886, reported at :892 and GATED at :985, and it is spec-local exactly as the disposition required, so it billed zero of the 21 `playground.py` certificates and waited on no world-edit window. The detector is CERTIFIED on the body-carried true positive it previously lacked: `chaos_occupancy_icmnoise` 6.41 against random 1.0 and climber 0.083, separation 6.33 at std 0.22. TWO CORRECTIONS TO THE TRACE, both found by reading the ledger instead of the receipt, and both of which make the execution MORE complete rather than less: HEAD is attempt 4 (`cce6cef`, 2026-09-28T11:47:16), not the attempt 3 the trace cites; and attempt 2 PASSED on 2026-09-25 before attempts 3 and 4 went red. That PASS is not a regression — it is the GUARD working. Attempt 2 banked the new noise source as restoring the THREAT, which this disposition expressly forbade, and the guard that demoted it is the disposition's own clause enforcing itself against the builder's own arm. A spec that passed and was taken back down by its author's guard is the strongest evidence this row's repair was executed in substance and not in form. NOT CLOSED SILENTLY WITH IT: the spec now FAILs on `chaos_reward_ratio` nan, which is an uncomputable gate rather than a measurement, and that is a different finding with a different answer — routed as its own row below rather than left as prose in a row going terminal, which is the 100th-audit B2 defect `t108-pipeline-repair-has-no-design` exists to punish)
     LT.02 exists to certify the instrument that can see the noisy-TV-is-your-
     own-body failure (PG.4's blind spot) before CU.3 and the LT.03+ arms may
     claim "his curiosity is not trapped". The registered run FAILed on C1
@@ -11590,6 +11590,80 @@ ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19
         honestly red on `chaos_reward_ratio` nan. The declared form of the
         03:0x prose trace above; a RECEIPT, not a stamp — the row still ages
         and only the desk writes ACTED.
+
+## ROUTED 2026-10-03 (Review DAILY): `lt02-deciding-gate-is-nan-and-nan-reads-as-FAIL`
+## — split out of the row above at the moment it was stamped, because a
+## defect left as prose inside a terminal row is a rule that exists for
+## exactly as long as nobody needs it
+
+ROUTED: lt02-deciding-gate-is-nan-and-nan-reads-as-FAIL | 2026-10-03 | Review DAILY, reading `experiments/ledger.json` LT.02 attempt 4 (`cce6cef`, 2026-09-28T11:47:16, FAIL) against the row it was closing | OPEN
+    DUE: 2026-10-16 | the design answer, this desk's: does an UNCOMPUTABLE
+        deciding gate refute the claim, or report UNREADABLE? 10-16 carries 1
+        live row against a measured capacity of 6 — chosen off the
+        instrument's own pile rather than defaulted onto Sunday, and
+        deliberately not 10-13 (9 rows) or 10-14 (5).
+    WAITS-ON: none | no live row's answer changes what the nan means. It is
+        adjacent to the `A4`/`D37` class (a `mandatory` VOID condition that
+        has never once been computable) and to this morning's known-answer
+        ruling, but neither decides it and it is not held behind either.
+
+**THE FINDING.** `LT.02` attempt 4 FAILs, and the conjunct it fails on is
+`chaos_reward_ratio` = **nan** (`_std` nan too, so it is nan on every seed and
+not an aggregation artifact). On attempt 1 that same gate read **5.32** and
+HELD. It became undefined when the venue stopped producing the thing its
+denominator is made of — body chaos is measured REDUCIBLE here
+(`reducibility_gain_icm` 0.0188), so the original `icm` arm farms no chaos and
+the ratio has nothing to divide.
+
+**WHY THIS IS NOT THE SAME FINDING AS THE ROW IT CAME OUT OF, which is the
+reason it gets a clock instead of a sentence.** The parent row's finding was
+*the venue cannot produce a body-carried true positive*, and that is now
+REPAIRED and certified: `chaos_occupancy_icmnoise` 6.41 vs random 1.0. What is
+left is a question about the SPEC'S ARITHMETIC, not its venue: the detector
+works, the new arm fires, and the spec is red because a gate on the OLD arm
+divides by a quantity the disposition's own guard guarantees is ~zero. Nobody
+designed that; it is the residue of a repair.
+
+**THE QUESTION, stated so it cannot be answered by preference.** A `nan` is not
+a small number and it is not a large one — it is the absence of a measurement.
+`LT.02`'s verdict currently reads FAIL, and FAIL in this project's grammar is a
+statement about the creature: *the detector did not meet its bar*. But the
+detector DID meet every bar that could be computed, on the arm built to test
+it. The candidate answers:
+  (i) **UNREADABLE/VOID on a nan deciding gate**, the way this morning's
+      known-answer ruling made an unvalidated estimator report VOID rather than
+      FAIL — same principle, same grammar: *a red that names the instrument
+      instead of the creature*. The cost is that a spec can go VOID by having
+      its denominator vanish, which is a new way to avoid a verdict.
+  (ii) **FAIL is correct and should stay** — the gate was pre-registered, the
+      arm it reads is pre-registered, and a venue that cannot populate its own
+      registered gate has failed to support the claim. The cost is that the
+      project records "the chaos detector FAILED" when what happened is
+      "one of its two arms became arithmetically empty".
+  (iii) **Neither — the gate is mis-scoped** and should be conditioned on the
+      arm that can carry it (`icmnoise`), which is the arm the repair added.
+      The cost, and the reason this is not obviously right: re-aiming a gate
+      onto the arm that makes it computable is one short step from re-aiming a
+      gate onto the arm that makes it pass, and the step is hard to see from
+      inside. Any move here needs the T1.02 precedent argued explicitly.
+**This desk's leaning is (i) or (iii) and it is NOT a ruling today** — (iii) in
+particular cannot be chosen without checking whether `chaos_reward_ratio` on
+the `icmnoise` arm would read above or below its bar, because choosing it
+blind is indistinguishable from choosing it to pass. That check is the first
+thing 10-16 buys.
+
+**WHY IT MATTERS BEYOND THIS SPEC.** `LT.02` gates the `LT.03`+ chain's right
+to claim "his curiosity is not trapped" — the parent row priced it at 6 specs
+freed / 8 blocked, the third-largest FAIL mass on the board. So the difference
+between FAIL and UNREADABLE here is the difference between *"we measured
+Jack's curiosity and it is trapped"* and *"we have not yet measured it"*, on a
+claim with eight specs behind it. That is not a bookkeeping distinction.
+Block mass NOT re-derived this morning; re-derive before acting, per the
+parent row's own standing instruction.
+
+**Staleness bill: ZERO.** `LT.02` is red (FAIL on attempts 1, 3, 4; the
+attempt-2 PASS was demoted by its own guard and holds no certificate) and no
+green certificate cites it. No spec file is edited by minting this row.
 
 ## ROUTED 2026-09-20 (Review FULL): `ba03-vestibular-channel-is-never-load-bearing-under-one-kick`
 ## — split out of `ba03-null-saturates-the-horizon` so that adopting the cheap
