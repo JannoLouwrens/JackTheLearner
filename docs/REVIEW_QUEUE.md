@@ -17842,3 +17842,89 @@ ROUTED: t406-deciding-statistic-read-against-an-uncomputed-floor | 2026-10-02 | 
         propose weakening `T4.06`. If the floor was uncomputed, the honest
         consequence is that the bar was never TESTED, which points at a
         strengthening or a VOID — never at a softer bar.
+
+## ROUTED 2026-10-03 (Review DAILY): `seven-rows-are-held-behind-a-refused-window-and-a-moot-decision`
+## — the last violation class on the board, and the reason the 09-28 stamp
+## gave for leaving it alone has since stopped being true
+
+ROUTED: seven-rows-are-held-behind-a-refused-window-and-a-moot-decision | 2026-10-03 | Review DAILY, `review_queue.py` HOLD-ON-A-RESOLVED-BLOCKER ×7 (the board's only remaining violation class after this morning's OVERDUE 8 -> 0) + the `D33` MOOT addendum at `DECISIONS_NEEDED.md:8283` | OPEN
+    DUE: 2026-10-11 | the disposition, this desk's: per row, does it ACTUALLY
+        need the world-edit window, or is its edit SPEC-LOCAL? 10-11 is a FULL
+        sitting and this is FULL-sized work — seven rows, each needing its own
+        `IMPL_DEPS` read. It takes that date to 7 against a measured capacity
+        of 6, which is one over and is said rather than hidden: the
+        alternative dates are 10-13 (9) and tomorrow's FULL, which is already
+        carrying `T1.08`'s design as its first act.
+    WAITS-ON: none | and that is the entire finding. These seven wait on
+        `w1-world-edit-window`, which is DECLINED, whose governing decision
+        `D33` is MOOT. There is no answer coming.
+    (NO `BLOCKED-BY:` FIELD, deliberately, and the first attempt wrote
+        `BLOCKED-BY: none` and was correctly caught as MALFORMED —
+        `review_queue.py` requires that field to name a real row, because an
+        unparseable blocker is worse than an absent one. Said in prose
+        instead: this row is NOT itself held behind the window. It is a row
+        ABOUT the hold, placed outside it on purpose, because a row asking
+        "is this hold still real?" that was itself subject to the hold could
+        never be read.)
+
+**THE SEVEN:** `ne01-occlusion-knife-edge`, `water-apply-phantom-force`,
+`sh02-null-saturation`, `w1-cold-is-not-lethal-at-night`,
+`w2-needs-have-no-single-k`, `hr5-fixture-refuted`,
+`ba03-vestibular-channel-is-never-load-bearing-under-one-kick`. Two of them
+(`ne01`, `water-apply`) have **no `DUE:` at all** — the hold was their only
+clock, so they have been ageing for 40 days against nothing.
+
+**WHY THIS IS NOT SECOND-GUESSING THE 09-28 STAMP, which was right when it was
+written.** That stamp refused to re-point these rows and gave a precise reason:
+*"it has no authority to say who authors W1 — that is `D33`, open on the
+owner's desk and five days past its `decide_by` — and dating nine rows on an
+answer it does not control would be the sixth instalment of exactly the promise
+this stop-rule exists to stop."* **That reasoning was correct and this row does
+not reverse it.** What it does is re-derive the FACT it rested on, which is
+this desk's standing obligation when a predecessor declined to act: `D33` is no
+longer an open question awaiting an owner. The 2026-10-02 addendum
+(`DECISIONS_NEEDED.md:8283`) established that its default is **MOOT, not merely
+expired** — its object is a TERMINAL row, so the action "re-date
+`w1-world-edit-window`" can no longer be performed at all, by anyone, including
+the owner. **A hold justified by "an answer is coming" survives only as long as
+an answer can come.** It cannot here, and five days have passed with the seven
+frozen in red.
+
+**THE DISPOSING METHOD, and it is not "release them" — it is a question with a
+measured precedent behind it.** The window exists to pay `playground.py`'s
+21-certificate mechanical bill ONCE. A row belongs behind it only if its edit
+genuinely touches the shared world. **`LT.02` is the worked precedent and it
+went the other way**: that row's venue edit *looked* like it billed the 21
+certificates, because the spec declares `playground.py` in `IMPL_DEPS` — and on
+inspection the edit's natural home was the spec's own rig, which already
+overrides the body there. It billed **ZERO** certificates, waited for nothing,
+and was executed and certified while these seven sat held. The 09-25 ruling's
+own words: *"the cheap fork and the scientifically correct fork are the same
+fork."* So the question per row is narrow and answerable from source: **does
+this row's repair require editing `playground.py`, or is its natural home the
+spec's own rig?** Declaring `playground.py` in `IMPL_DEPS` is NOT the test —
+that is exactly the inference that misfiled `LT.02`.
+
+**WHAT THIS ROW MAY NOT DO, stated up front so the disposing sitting cannot
+drift into it.** It may not decide who authors `W1` — still not this desk's,
+still the owner's, and the stop-rule that declined it stands undisturbed. Rows
+that genuinely need a shared-world edit stay blocked and get **said so with a
+date**, which is what they lack today; they do not get released by
+reclassification. **The expected outcome is a SPLIT, not a release**, and if
+all seven turn out to genuinely need the window then the correct disposition is
+seven honest `DECLINED`s or a dated hold on the owner's answer — not a sixth
+instalment.
+
+**ONE INSTRUMENT NOTE, already recorded on the blocker row and repeated here
+because this is the row that will act on it.** `HOLD-ON-A-RESOLVED-BLOCKER`
+prints *"the window it was waiting for has opened"*, which is true of an
+`ACTED` blocker and **false of a `DECLINED` one** — the window did not open, it
+was abandoned. Reading that message literally is the one way to get this
+disposition exactly backwards.
+
+**Staleness bill: ZERO today** — minting a row edits no spec file. The bill on
+the eventual disposition is per-row and is the thing the sitting must price
+BEFORE deciding: any row that genuinely needs the shared-world edit carries a
+share of the 21 `playground.py` certificates, and any row that turns out
+spec-local carries none. That asymmetry is the whole reason the question is
+worth a sitting rather than a sentence.
