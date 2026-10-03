@@ -9543,7 +9543,19 @@ measurement is now on this page three times.
 
 ---
 
-## D40 — `D30`'s recommended repair has been "the owner's to rule at any time" for 18 days inside a RESOLVED entry, where nothing can make it answerable. The builder is now 51 slots dark, 73% of the pool is another tenant's, and ~28.9 GPU-hours expire today. (2026-10-03, Review, DAILY)
+## D40 — `D30`'s recommended repair has been "the owner's to rule at any time" for 18 days inside a closed entry, where nothing can make it answerable. The builder is now 51 slots dark, 73% of the pool is another tenant's, and ~28.9 GPU-hours expire today. (2026-10-03, Review, DAILY)
+
+> **A NOTE ON THIS HEADING, because it is evidence and not housekeeping.** It
+> first read *"inside a RESOLVED entry"*, and `decisions.py` then dropped `D40`
+> from the owner's page entirely — reported in neither the armed list nor the
+> not-armed list. `_SETTLED` (`decisions.py:345`) searches for `RESOLVED` in an
+> entry's **headers**, so an entry whose TITLE describes another decision as
+> resolved classifies itself as settled. This desk ruled on
+> `decisions-settles-on-headers-alone` **yesterday** and was caught by it
+> **today**, on the first entry it wrote afterwards — which is a sharper
+> demonstration of that row's finding than the row's own argument, and is
+> recorded against it rather than routed as new intake. The word is avoided in
+> this heading; nothing else about the entry changed.
 
 **THIS ENTRY IS NOT A FOURTH COPY OF THE MEASUREMENT. It exists because the
 measurement now has nowhere to land.** `D30` resolved by armed default on
@@ -9655,3 +9667,80 @@ fires nothing. The 136th audit's finding that the pace line's constants were
 calibrated for a Monday week while this account's week begins Wednesday 11:59
 UTC is **not** folded in here: it is a separate defect with a separate repair,
 and bundling it would let one ruling disguise two.
+
+---
+
+## D30 — EVIDENCE ADDENDUM, 2026-10-03 07:0x UTC (overseer, 137th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS a number the previous addendum put on this page: the "six hours to the hard stop" forecast did not happen, and the rate it was derived from was a burst, not a rate.
+
+`D30` stays RESOLVED under option **(v) REPORT THE STREAK, GATE NOTHING, RELAX
+NOTHING**. This entry proposes no option, moves no `decide_by`, fires nothing, and
+touches `PACE_FLOOR`, `PACE_CAP`, the line and the 90 % stop not at all. It exists
+because the 136th audit's addendum (2026-10-02) and the `OVERSIGHT.md` page of the
+same morning both told the owner the project would stop within about six hours,
+and **it did not** — and an uncorrected forecast on this page becomes a measured
+rate for the next reader.
+
+### What was forecast, and what happened
+
+The 136th audit derived **1.77 pts/h** from `usage_ledger.jsonl` — `pct 37` at
+2026-10-01T06:57 against `pct 79` at 2026-10-02T06:37, i.e. 42 points in 23.7 h —
+and placed the 90 % stop at **~13:00 UTC on 2026-10-02**.
+
+Measured from `ladder.log`'s own hourly `PACING` lines:
+
+```
+2026-10-01T03  pct=31     2026-10-02T06  pct=78      <- the forecast was made here
+2026-10-01T07  pct=37     2026-10-02T07  pct=79
+2026-10-01T11  pct=60  <- +23 points in 4 h          2026-10-02T15  pct=82
+2026-10-01T19  pct=74     2026-10-02T23  pct=82
+2026-10-01T23  pct=74     2026-10-03T03  pct=82
+2026-10-02T03  pct=77     2026-10-03T06  pct=82      <- FLAT for 15 h
+```
+
+**The 42-point figure contained a four-hour burst** (31 % → 60 % between 10-01T07
+and 10-01T11) and extrapolating it across a day treated that burst as a rate. The
+realised draw after the forecast was **3 points in 24 hours (0.125 pts/h), then
+0.0 for fifteen hours** — an overstatement of roughly **14×**. The stop has not
+fired, no `.usage-resumed` was needed, and nothing was lost by the owner not
+acting within six hours.
+
+### What replaces it, and it is a range rather than a time
+
+- `week:all models` **82 %**; week-elapsed **39 %**; line **51 %**
+  (`PACE_FLOOR 25 + ceil(65 × elapsed / 100)`, 0.3869 pts/h, zero variance).
+- Builder release needs `allow >= 82`, i.e. elapsed **>= 87 %** →
+  **2026-10-06 ~14:50 UTC**, ~81 h away, a blackout of ~132 h / 5.5 days.
+- The week resets (elapsed 100 %) at **~2026-10-07 12:40 UTC**.
+- For the 90 % stop to arrive before the reset the meter needs only
+  **+0.08 pts/h** from here. The measured external draw over five days spans
+  **0.0 to 1.4 pts/h**.
+
+**So the honest statement is that the stop is possible at any moment and is not
+predictable from this record.** Attribution, live: of this week's 81 shared
+points — builder 16 (19 %), desks 5 (6 %), **NOT THIS PROJECT 60 (74 %)**. Option
+**(i)** — pace against this project's OWN attributed spend rather than the shared
+total — remains the owner's to rule at any time and is now the fourth blackout it
+would have prevented. It cannot reach the owner any other way: a default may not
+loosen a gate.
+
+### The third measurement this entry carries, unchanged in kind
+
+Builder dark **52 consecutive slots / 52.5 h**, the longest on record; last
+`rc=0` 2026-10-01T02:17:07; demonstrated **107 → 107** for 48 h. `2026-W39`
+Kaggle: **1.07 h drawn of 30 free**, ~28.9 h expiring at tonight's Sunday reset —
+the **third consecutive week lost** (W37 5.25/30, W38 0.92/30). No dispatch has
+been manufactured to spend them and none should be.
+
+### The new fact, and it is why this report is on THIS page
+
+`D30`'s chosen remedy is *"a standing FOR THE OWNER finding on the Review's
+page, printed beside the week's GPU-expiry forecast."* **That page currently
+reads "Dark slots 0 — fourteen consecutive `rc=0` builder slots, the blackout
+stayed closed. The builder is not the constraint."** It was last written on
+2026-09-28 and last touched by its own STALE stamp on 2026-09-30 — **72 h against
+a 25 h cadence** — because six of the last eight DAILY sittings died `rc=124`
+after 6–9 real acts and the page is written last by design. **The remedy this
+entry resolved to is not late; it is being delivered by a page that says the
+opposite.** Repairs are ordered in `docs/OVERSIGHT.md` FOR THE BUILDER 4 and 5
+(refresh the banner's age even when a banner exists; write the owner section
+first). They do not need this entry and do not pre-empt it.
