@@ -7523,7 +7523,7 @@ treats unequal senses unequally. Couple them if one design answers both.
     stands as a true measurement until an arm returns under the declared
     shape. No certificate anywhere hashes a file this disposition touches.
 
-ROUTED: t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall | 2026-09-05 | 72nd-audit-B4 + builder (the FAIL-UNOWNED detector's 4th member — the audit's own count missed it) | DISPOSITIONED
+ROUTED: t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall | 2026-09-05 | 72nd-audit-B4 + builder (the FAIL-UNOWNED detector's 4th member — the audit's own count missed it) | ACTED 2026-10-03 (Review DAILY, OVERDUE by 1 d, executing commit `e5e627b` — and this row was outstanding for a bookkeeping reason rather than a substantive one, which the builder's trace diagnosed correctly: the commit carried TWO traces on the sibling row `t215-router-under-lexical-null` and NONE here, so finished work read as open. Verified in source at HEAD rather than from the trace: the declared-but-never-gated bag-of-words null is a GATED conjunct at `t2_15_freeform_routing.py:553`, returning False on "router ties or loses to its own bag-of-words null", fired before the claim line, with `CLAIM_MIN` 12 (:166) and `NB_REF_MIN` 13 (:167) byte-unmoved. EVERY OTHER LIMB OF THIS ROW IS ACCOUNTED FOR, which is the condition for stamping rather than re-dating: the fork was ANSWERED by the 09-25 ruling (branch 2, its own successor); the `FAIL-DISPOSED:` marker was REFUSED, and a refusal is a disposition, not an omission; and the ladder-wide "every spec that declares a null it does not gate" audit — the one limb that could have been orphaned here — is NOT orphaned, because it has its own live clock at `declared-null-not-gated-is-1-of-108-not-a-class` (OPEN, DUE 2026-10-06), where it has already been MEASURED: 1 of 108 standing certificates, which is an instance and not a class. Checked before stamping, precisely because closing a row whose last limb lives only in its own prose is the defect this file keeps re-committing)
     DUE: 2026-09-24 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for T2.15's FAIL: route the memorisation-route finding somewhere an instrument can see it, or dispose it explicitly. Date is `next_free_due` per B4.
     DUE: 2026-10-02 | DISPOSITIONED 2026-09-25 (Review DAILY) — the fork is
         ANSWERED (branch 2, its own successor) and NO `FAIL-DISPOSED:` marker is
@@ -13158,6 +13158,40 @@ ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting 
         mechanism has to be. The Sunday-versus-10-02 SEQUENCING does depend on
         `w1-world-edit-window` (both want the same sitting), but that is a
         docket question routed to the owner, not an input to this row's answer.
+    DUE: 2026-10-04 | RE-DATED 2026-10-03 (Review DAILY, OVERDUE by 1 d), onto
+        TOMORROW'S FULL SITTING, and with a sequencing instruction attached
+        because the date alone will not survive contact with that sitting's
+        agenda. **THE DOCKET CONFLICT THAT MADE THIS DATE UNDECIDABLE IS GONE,
+        and that is the material change since 09-25:** this row deferred the
+        Sunday-versus-weekday question to the owner because
+        `w1-world-edit-window` wanted the same sitting. That row is now
+        **DECLINED** — the window was abandoned, not opened — so nothing is
+        competing for the sitting and the question the owner was holding has
+        dissolved rather than been answered. A deferral whose premise is dead
+        is not a deferral. **WHY 10-04 AND NOT 10-11, stated as arithmetic
+        rather than ambition, because 10-04 is the harder promise:** this
+        desk's own 09-25 text on this row forecast ~29.08 h expiring Saturday
+        09-26 as "the correct outcome". It was, once. `2026-W39` has **1.0719
+        h drawn of 30** and the remaining **~28.93 h expire TODAY**, Saturday
+        2026-10-03 — the THIRD consecutive week the same ~29 hours have gone
+        unbought behind the same undesigned repair. Dating this 10-11 does not
+        risk a fourth; it guarantees one, because 10-11 falls AFTER the
+        2026-10-10 expiry. 10-04 is the only remaining date from which a
+        design can exist before W40's hours burn. **THE SEQUENCING, and it is
+        this desk's call to make and not the owner's — it is conduct, how the
+        organs spend a sitting, not what Jack must become:** on 10-04 this is
+        the FULL's FIRST act, AHEAD of both completeness audits. The reason is
+        perishability and nothing else. The ANATOMY and COMPLETENESS audits
+        lose nothing measurable by slipping a week — no hour expires, no
+        certificate stales, and their last run found gaps that have been open
+        since August. ~29 GPU-hours expire every Saturday behind this one.
+        When a sitting cannot hold everything, the perishable item goes first;
+        that ordering is not a judgement about which matters more. **AND THE
+        HONEST RISK, recorded so that a broken date tomorrow is read as a
+        known gamble rather than a surprise:** four of the four Sunday FULL
+        runs that have ever fired on cron died at max turns. This date may
+        break. It is still the right date, because the alternative is a date
+        that cannot succeed even if the sitting goes perfectly.
 
 **WHY THIS ROW EXISTS, and it is the cleanest instance of this file's founding
 defect since the file was created.** On 2026-09-20 this desk wrote, in the
@@ -17422,7 +17456,7 @@ ROUTED: prose-sequencing-inverts-when-the-blocker-moves | 2026-09-29 | this sitt
 ## (Review DAILY 2026-09-30, D30's standing default, read from the loop's own
 ## PACING lines rather than from a summary)
 
-ROUTED: builder-blackout-is-paced-by-another-projects-usage | 2026-09-30 | Review DAILY (`/data/jack-logs/ladder.log` PACING lines 03:07–06:07, `usage_attribution.attribution()` at HEAD) | OPEN
+ROUTED: builder-blackout-is-paced-by-another-projects-usage | 2026-09-30 | Review DAILY (`/data/jack-logs/ladder.log` PACING lines 03:07–06:07, `usage_attribution.attribution()` at HEAD) | ACTED 2026-10-03 (Review DAILY, OVERDUE by 1 d, executing commit — THIS ONE; the act this row's DUE bought is a MEASUREMENT and the measurement is the commit. **THE ANSWER: `desks 0 (0%)` WAS TRUE, NOT A GAP, and it is settled by a within-week change rather than by argument.** The row asked whether the attribution channel can see desk consumption at all. On 09-30 it read `desks 0 (0%)` of 35 shared points; this morning, in the SAME `%Y-W%U` week (W39 runs Sun 2026-09-27 to Sat 2026-10-03, so both readings are the same bucket), it reads `desks 5 (6%)` of 78. A blind channel reads 0 forever; this one moved 0 -> 5 without anybody touching it. So the pace gate is NOT restricting the builder on the strength of a counter that cannot see the desks, which is the specific alternative this row raised and the one that would have made it a different finding with a different owner. **WHAT THE SAME READING FOUND THAT THE ROW DID NOT ASK FOR, and it is worse than what it did ask:** the blackout has gone from 23 consecutive dark slots to **51** (51.8 h since the last `rc=0`, which was 2026-10-01T02:17), and the neighbour's share from `NOT THIS PROJECT 15 (42%)` to **`57 (73%)`**. The builder now holds 16 of 78 shared points — 20% — in a week where it has been dark for the last two days. That is not this row's question and this desk cannot answer it: the pool is shared with the other tenants of this box and this project neither issues nor controls 73% of it. **SUCCESSOR CLOCK NAMED so the escalation is not buried in a terminal row: `D40` in `docs/DECISIONS_NEEDED.md`**, armed, which is where a fork this desk has no authority over belongs. One residual noted and deliberately NOT routed, to keep intake honest: 5 points across roughly 35 desk sittings in the week is a low attribution and may under-count the desks — but under-counting the desks blames the builder LESS, not more, so it cannot be what is starving it, and a row minted on it today would be apparatus intake on a morning that already added two)
     DUE: 2026-10-02 | **the DESK's half only, and it is a MEASUREMENT, not a
         design:** verify the `desks 0 (0%)` attribution against the desks'
         actual sittings this week and say whether it is true or a gap. If it is
