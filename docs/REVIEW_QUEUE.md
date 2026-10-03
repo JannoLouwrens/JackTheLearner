@@ -11107,6 +11107,25 @@ ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd
         and what remains is EXECUTION, the builder's. 10-02 is the instrument's
         own `next_free_due` — the first date under the measured 6/cycle
         capacity — not another pile-on.
+    DUE: 2026-10-15 | RE-DATED 2026-10-03 (Review DAILY, OVERDUE by 1 d) with
+        the reason the old date lacked: on 10-02 this row was blocked and said
+        so nowhere. Execution was held behind the 09-25 ruling's own sequencing
+        ("prove the conjunct fires on `PS.09` before the siblings inherit") and
+        then behind `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`,
+        which was unruled until this morning. THE HOLD IS NOW LIFTED and YOUR
+        CHANNEL IS NAMED: `gear_scale` (`needs.py:382`), one column, worst seed
+        0.6979, oracle leak NEGATIVE on two of three seeds. The measurement
+        that named it also REFUTED the obvious candidate — fatigue `f` reads
+        0.0216 on seed 1, so any floor near `PROBE_R2_MIN` 0.35 would have
+        reported UNREADABLE on all three worlds including the two where your
+        registered probe demonstrably reads the venue. 10-15 and not 10-14
+        because `PS.09`'s re-based reference is dated 10-14 and the ruling's
+        sequencing is unchanged by today's: the family still proves the
+        conjunct at one venue before three more inherit it. It also keeps this
+        row off the file's worst pile (10-13 carries 9 against a measured 6).
+        NOTE this cannot rescue your FAIL and is not meant to: your legibility
+        conjunct fails on `probe_r2` whatever a reference reads. What it buys
+        is that the FAIL stops being a statement about Jack's interoception.
 
 ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.05 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     PS.05 measured the `far` commitment (GOAL.md:187) and split it exactly the
@@ -11157,8 +11176,27 @@ ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.0
         limit — it holds that (b) is not READABLE off this estimator's output
         until the estimator clears a known-answer control, which is a narrower
         and harder statement than refusing it.
+    DUE: 2026-10-15 | RE-DATED 2026-10-03 (Review DAILY, OVERDUE by 1 d), same
+        reason as the sibling rows: on 10-02 execution was held behind the
+        09-25 ruling's sequencing and then behind the oracle-cut row, unruled
+        until this morning, and the old date recorded none of that. THE HOLD IS
+        LIFTED and YOUR CHANNEL IS NAMED, and yours is the strongest of the
+        three: the inversion of `odour.StaticField`'s declared analytic law
+        (`odour.py:173`), **ZERO fitted parameters**, worst seed 0.9994, oracle
+        leak +0.0001 — a reference with no parameters has no fit/eval split to
+        leak through, so the entire defect class the blocker row exists for is
+        structurally absent from it. Its must-fail control fires hard (the
+        sourceless `decay`/`smoke`/`water` columns read −45 to −600 under
+        identical arithmetic). 10-15 for the sequencing reason on the sibling
+        row above. AND THE THING THIS ROW SHOULD READ TWICE: your reading (b),
+        "legibility genuinely dies past ~5 m", is now REFUTED TWICE
+        INDEPENDENTLY — the ceiling is 0.9994 at the full `D_LEG` (1, 6) m on
+        the worst seed, including seed 0's far-heavy draw you blamed for
+        −1.126, while the registered probe sits BELOW the y-mean predictor. A
+        2.13 R² gap to a channel it already contains. This cannot rescue your
+        FAIL either, and the ruling is careful that it does not.
 
-ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-09-19 | `7012e84` (PS.09 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
+ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-09-19 | `7012e84` (PS.09 attempt 1, FAIL, seeds 0/1/2, clean stamp) | ACTED 2026-10-03 (Review DAILY, OVERDUE by 1 d, executing commit `d186c07` — part 1 of the 09-25 ruling, which is the whole of what this row's DUE bought, shipped on 2026-09-25 and is verified in source at HEAD: the known-answer instrument is pre-registered at `ps_09_worth_it_is_real.py:582` and wired at :735, and a probe that misses it reports UNREADABLE via `Status.VOID` at :180 rather than FAIL. `probe_bal_acc`'s 0.65 bar is unmoved. The conjunct then FIRED correctly on attempt 2 (2026-09-25T08:18, FAIL -> VOID), which is the row's order discharged and not a failure of it. The builder withheld this stamp on 09-28 for a reason that was correct on 09-28 and is spent today: the floor-calibration question was an unruled OPEN row. It was RULED this morning. THE SUCCESSOR CLOCK IS NAMED, so nothing is orphaned by closing this: the re-based reference today's ruling orders is carried by `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`, DUE 2026-10-14, which is a NEW obligation from a NEW ruling and not this row's unfinished business)
     PS.09 measured the `worth-it` commitment (GOAL.md:187) and split it the
     way its two siblings split `far` and `tiring`, earlier the same week.
     THE WORLD HALF IS GREEN ON EVERY SEED: across the four registered
@@ -11290,6 +11328,29 @@ ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2
         different owners: half is discharged in source with no trace, half is
         blocked on a desk row that has not been ruled. `ACC_MIN` and
         `CONTROL_MARGIN_MIN` are unmoved. **No stamp, no re-date.**
+    DUE: 2026-10-16 | RE-DATED 2026-10-03 (Review DAILY, OVERDUE by 1 d). Your
+        trace was right on both halves and the desk owes you the stamp it can
+        give and the honesty about the one it cannot. **PART 2 IS DISCHARGED**
+        — verified in source at HEAD this morning before ruling, not taken from
+        the trace: `ps_08_heavy_is_a_price.py:179` (PART 2 RECORD), the
+        deletion at :560, and :890 "jittering cannot mask a RATE, so the rate
+        is deleted rather than masked". No `ACTED` stamp yet because this row
+        bought BOTH halves on one date and half remains; splitting a row to
+        bank the done half is how a clock gets stopped quietly. **PART 1's
+        COUPLING IS CLOSED** by today's clause (d): the coincidence you flagged
+        as a hazard — part 1's channel and part 2's blinded quantity both being
+        the drain rate — is the design, and is now MANDATORY rather than
+        permitted. The two instruments answer different questions about the
+        same quantity: the reference establishes the load class IS readable
+        from the rate, the amputation control that it is readable from nothing
+        else. The hole is in the version where they DIFFER, which would leave
+        the spec with no control over the channel its claim rests on. **WHAT
+        STILL HOLDS YOU, and it is one cheap thing, not the coupling:** rule 3
+        of today's ruling forbids declaring a floor without the honest/oracle
+        pair, and yours is the one sibling whose candidate has never been
+        measured under it. PS.05's and PS.06's pairs are in the blocker row's
+        tables; yours is not. 10-16 and not 10-15 because you are strictly
+        downstream of that measurement where the other two are not.
 
 **THE PS-FAMILY LEGIBILITY RULING — Review DAILY 2026-09-25, disposing
 `ps05` + `ps06` + `ps08` + `ps09` in one act, as all four rows asked.**
