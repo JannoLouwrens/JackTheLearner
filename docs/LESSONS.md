@@ -20783,3 +20783,52 @@ scarce one. The last time that sentence was true the Review burned a sitting
 trimming 140331 bytes to 85548, and this project's own pages name that desk's
 design capacity as the measured bottleneck. A false red consumes the same organ a
 missed red would have needed.
+
+## A TWO-POINT GROWTH FIT OVER A ROLLING WINDOW IS NON-MONOTONE IN THE THING IT
+## FORECASTS — the baseline that rolls out is the fastest-growing part of the
+## series, so the alarm recedes exactly when the subject accelerates
+## (overseer, 138th audit, 2026-10-03; measured on `experiments/steering.py`'s
+## `launch_size()`, whose `days_to_ceiling` moved 9 -> 12 on the same morning the
+## page it watches grew 1954 bytes closer to that ceiling)
+
+`launch_size()` fits the steering page's growth rate from exactly two points: the
+size at `HEAD`, minus the size at the **oldest commit still inside a rolling
+21-day window**, divided by the span between them. The docstring defends the
+choice well — a rate asserted from memory is the cached number the module exists
+to replace, and `None` prints as *unknown* rather than as zero because "zero
+growth is the one reading that would falsely reassure". Both of those are right.
+
+**What neither covers is what happens when the window moves.** Measured between
+two readings six hours apart on 2026-10-03:
+
+    06:40   117186 B   baseline  99504 (09-12 06:49)   +884 B/day   ceiling in  9 d
+    12:37   119140 B   baseline 109113 (09-13 06:58)   +501 B/day   ceiling in 12 d
+
+Both numbers reproduce to the digit from the source, so nothing is miscomputed.
+Two commits fell out of the 21-day window, the baseline jumped **+9609 B**, the
+fitted rate fell 43 %, and the forecast receded three days — **while the page grew
+1954 bytes closer to the limit.**
+
+**The bias has a direction and it is the unsafe one.** The page's history is a
+staircase of 3–6 KB daily steps. The faster it has recently grown, the larger the
+step that rolls out of the baseline, and the further away the forecast says the
+limit is. A reader whose entire job is to warn *before* a ceiling is crossed
+cannot be allowed to relax as the ceiling is approached; this one did, on the
+morning a desk wrote a new priority block into the page.
+
+**The generalisable test, and it is one line: a forecast must be MONOTONE in the
+quantity it forecasts.** If the subject moved closer to the limit and the
+predicted time-to-limit went UP, the estimator is reporting a property of its own
+window and not of its subject. That is the same family as "quotes the control
+instead of the claim" and "counts its own activity instead of its subject" — an
+instrument whose reading improves because the *reporter* moved. The cheap repairs
+are a fit over every point in the window rather than the endpoints, or carrying
+the worst recent rate beside the fitted one; the cheapest disclosure, if the
+two-point fit is kept deliberately, is to print the baseline commit and its size
+beside the rate, so a reader can see the window move instead of inferring it from
+a rate that halved overnight.
+
+**And "reporting-only" is not a defence.** This reader is unfloored on purpose and
+correctly so — a gate here could refuse a legitimate steering edit. But an
+unfloored reader's only product is the number a human reads, so a number that
+moves the wrong way is the whole of its failure, not a partial one.
