@@ -3553,9 +3553,18 @@ ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
     story rather than keeping a promise. If the commitment *"too cold kills
     him"* is to live, it lives through a **registered successor spec** — which
     is the owner ask standing on this sitting's page, not a queue date.
-    WAITS-ON: D33 | the orphaned-rows class decision, DUE 2026-10-09 — same
-        decision as `ne01-occlusion-knife-edge`, `water-apply-phantom-force`
-        and `hr5-fixture-refuted`, not a fourth separate question
+    WAITS-ON: sh02-null-saturation | `D33`'s orphaned-rows class decision, DUE
+        2026-10-09 — the same single decision as `ne01-occlusion-knife-edge`,
+        `water-apply-phantom-force` and `hr5-fixture-refuted`, all four of which
+        declare it through this row, not a fifth separate question.
+        **CORRECTED IN FLIGHT 2026-10-04:** this field first named `D33`
+        directly and the instrument refused it — `MALFORMED: WAITS-ON names
+        'D33', which is not a row here` — correctly, and the refusal is a good
+        one: this field groups ROWS, and a decision id would let a date's group
+        count be computed against something `review_queue.py` cannot see. The
+        class's existing members all declare through `sh02-null-saturation`, so
+        this row joins the convention rather than inventing a second spelling
+        of the same group.
     BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23 — **DECLINED 2026-09-28, and this pointer is LEFT WRONG ON PURPOSE** (see the 10-04 re-date): the hold waits on nothing that will ever move, the violation is the true reading of that, and re-pointing it at a live blocker to clear the red is the one repair this desk refuses
 
 ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
@@ -14294,7 +14303,7 @@ tuple-idiom `_check` by grep.
 
 ## ROUTED 2026-09-26 (builder, 07:1x slot): `ba03-registered-run-foreclosed-by-d20-class-closure` — the first runnable spec in the cpu<48h class landed 22 hours after an armed default closed the class's only lane, and the dispatch was planned by three organs without any of them reading the closure
 
-ROUTED: ba03-registered-run-foreclosed-by-d20-class-closure | 2026-09-26 | launch log /data/jack-logs/ba03_registered_run_0710.log (gate_cpu_child refusal, unrecorded by design; day meter had ADMITTED at 49,172 s remaining) | ACTED 2026-10-04 (Review FULL, OVERDUE by 1 d — limb (ii) RULED, and it is ruled AGAINST the re-label this row made available to me. The arithmetic says BA.03 sits in a GAP in the cost ladder, not in the wrong class, so no re-declaration is honest and the repair is a new class. D20's reversal stays the owner's, untouched. See THE RULING)
+ROUTED: ba03-registered-run-foreclosed-by-d20-class-closure | 2026-09-26 | launch log /data/jack-logs/ba03_registered_run_0710.log (gate_cpu_child refusal, unrecorded by design; day meter had ADMITTED at 49,172 s remaining) | ACTED 2026-10-04 d2f4228 (Review FULL, OVERDUE by 1 d — limb (ii) RULED, and it is ruled AGAINST the re-label this row made available to me. The executing commit is the one carrying THE RULING itself, which is what this row owed: its own text says *"What this row owes is a RULING on the lane, never a run"*. The stamp first named no commit and `review-queue` refused it as `ACTED-WITHOUT-A-COMMIT` — correctly, and the convention it enforced is the right one (`gen-four-reparented-to-a-decision-that-had-already-closed` and `waits-on-has-no-producer-outside-a-closing-row` both name the commit that CARRIES the ruling). The arithmetic says BA.03 sits in a GAP in the cost ladder, not in the wrong class, so no re-declaration is honest and the repair is a new class. D20's reversal stays the owner's, untouched. See THE RULING)
     DUE: 2026-10-03 | the tool's own next date with room. What this row owes
         is a RULING on the lane, never a run: the run itself is ordered,
         implemented and disposed (`ba03-null-saturates-the-horizon`, DUE
