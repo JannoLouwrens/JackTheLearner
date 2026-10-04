@@ -6229,7 +6229,7 @@ already declared in the registry for any future attempt; and any future
 execution of the clause must rest on a run whose controls behave — that is the
 whole content of (a).
 
-ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | DISPOSITIONED 2026-09-06 (Review FULL — fork (c), PER-SPEC instrument-input dirt; design below, builder implements with the mutation falsifier that makes it safe)
+ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | ACTED 2026-10-04 b4df9bb (Review FULL, OVERDUE by 1 d — executing commit `b4df9bb` 2026-09-26 12:23, bill paid `13c759f`. The row's own EXECUTED note reserved this stamp for this desk and it is nine days late; the desk, not the builder, is the cause of the break. See THE STAMP)
     DUE: 2026-09-06 | a design fork owed by the Review. Dated ON the 09-06
     pile knowingly: the trap is armed every night an audit runs, and each
     trip re-bills the whole re-buy — that recurring cost outranks
@@ -6287,6 +6287,44 @@ ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | D
     fork (a) wearing fork (c)'s name and must be refused, and the mutation
     falsifier is not optional. Date is the tool's own next date with room.
     WAITS-ON: none
+
+    **THE STAMP — 2026-10-04 (Review FULL, OVERDUE FIRST, act 1).** Stamped
+    `ACTED` on `b4df9bb`, and the honest part first: **this break is the desk's,
+    not the builder's.** The work landed 2026-09-26 12:23, the row's own
+    EXECUTED note below says in terms that *"the ACTED stamp is this desk's"*,
+    and this desk then let the row go OVERDUE on 10-03 anyway. It is one of the
+    eight `DELIVERED — AWAITING STAMP` rows the instrument has been printing
+    since the 09-28 FULL ordered that reading; the reading worked and the desk
+    did not read it. Nothing about the repair was late.
+    **VERIFIED IN SOURCE AT HEAD rather than off the EXECUTED note**, which is
+    the condition for stamping rather than re-dating, and the note's three
+    load-bearing claims all hold: `protocol.py` no longer carries the flat
+    `DOC_OUTPUTS` this row quoted — `PROSE_DOCS` is declared at `:139`,
+    `DOC_OUTPUTS` is its alias at `:144`, `NOT_CODE = RUNNER_OUTPUTS +
+    PROSE_DOCS` at `:200`, and `INSTRUMENT_INPUT_DOCS` is gated separately at
+    `:1694`/`:1756`; `is_code_dirt` at `:217` takes `declared_docs=None` and is
+    three-valued exactly as claimed, so `gate_precondition` and the GPU push
+    guard keep the conservative pre-fix answer; and the mutation falsifier is
+    NOT optional — it is `T0.17` P11 at `t0_17_ledger_provenance.py:376`, wired
+    at `:729`, with its three mutation legs (`mutation_catches_planted_reader`,
+    `mutation_spares_prose_mention`, `mutation_spares_declared_reader`) asserted
+    at `:435`–`:438` and the comment at `:841` recording that the mutation legs
+    come FIRST in intent. `T0.17` stands PASS at attempt 22 (`0ac932b`,
+    2026-10-01T01:21:44) with no `dirty_files`, so the falsifier is live and
+    bought clean, not merely written.
+    **NEITHER PROHIBITED MOVE WAS MADE**, checked because this row pre-refused
+    both: `DOC_OUTPUTS` was not widened into the instrument class (fork (a)
+    wearing fork (c)'s name) — it aliases `PROSE_DOCS`, and the instrument docs
+    are a separate set gated in a separate place — and the falsifier shipped.
+    **NOTHING IS ORPHANED BY CLOSING THIS**, which is the 100th-audit B2
+    condition: the one cost the row did not price — joining the map to
+    `IMPL_DEPS` — has its own live clock at
+    `impl-deps-domain-misses-a-read-and-a-relative-import` (OPEN, DUE
+    2026-10-06), and the residual daily re-staling the per-spec map exposed is
+    carried by `doc-declarations-restale-three-tier0-certificates-daily`
+    (OPEN, DUE 2026-10-05). Both are NEW obligations from the repair, not this
+    row's unfinished business. The tail risk the row refused to let be forgotten
+    is now mechanised rather than remembered, which is what it asked for.
 
     **EXECUTED 2026-09-26 by the builder (`b4df9bb`, bill paid `13c759f`) — no
     stamp, no re-date: the ACTED stamp is this desk's.** Fork (c) is
