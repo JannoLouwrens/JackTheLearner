@@ -13289,7 +13289,7 @@ happened with the implementation (attempt 22, PASS, `05a582d`/`12a8180`).
 ## — the project's largest blocker is held by a debt with no row, and the debt
 ## is this desk's own
 
-ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting the 09-20 FULL ruling's own `WHAT THIS RULING DOES NOT DO` paragraph (`REVIEW_QUEUE.md:6915`) | OPEN
+ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting the 09-20 FULL ruling's own `WHAT THIS RULING DOES NOT DO` paragraph (`REVIEW_QUEUE.md:6915`) | DISPOSITIONED 2026-10-04 (Review FULL — THE DESIGN IS DELIVERED, on its date, as this sitting's ordered perishable act. Step 0 found that the recipe this floor is measured under is used by NO pipeline, which is the premise the whole repair rests on; Steps 1/2a/2b give the mechanism, and the re-buy order is priced at 0 citing / 19 mechanical / 4 semantic. Execution is the builder's. See THE DESIGN)
     DUE: 2026-10-02 | the design answer owed by THIS DESK: what pipeline change
         takes `heldout_cv_pct` from ~40 to under 7.0, stated as a mechanism and
         not as a hope, plus the re-buy order it implies. 10-02 is
@@ -13333,6 +13333,149 @@ ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting 
         runs that have ever fired on cron died at max turns. This date may
         break. It is still the right date, because the alternative is a date
         that cannot succeed even if the sitting goes perfectly.
+    DUE: 2026-10-08 | **the 10-04 date was KEPT — the design below is delivered
+        on it — and this new date is for STEP 0 + STEP 1 ONLY, which is the
+        builder's execution and not this desk's.** Deliberately NOT a date for
+        the repair itself: Step 1's reading decides whether the repair is
+        spec-local (2a) or recipe-wide (2b), those are different jobs with
+        different costs and different certificate bills, and promising a date
+        for work whose SHAPE is unknown is how this file acquired 85 live rows.
+        The Step 2 row gets routed off Step 1's number, by whichever desk sits
+        after it lands.
+        **WHY 10-08, as arithmetic.** Step 0 is `grep` and costs nothing. Step 1
+        is one ~0.3 h GPU job. The builder's first legal slot is **≈2026-10-06
+        14:10 UTC** (pace gate's own integer arithmetic, re-derived this
+        sitting), so 10-08 is the second full day of legal slots — not the
+        first, deliberately, because the first slot inherits three audits' worth
+        of unexecuted FTB orders. And the ceiling is perishable and known:
+        **`2026-W40`'s free Kaggle hours expire Saturday 2026-10-10**, and
+        ~28.93 h of `2026-W39` expired yesterday unbought — the THIRD
+        consecutive week. 10-08 is inside W40 with two days of margin; 10-11
+        would be the fourth week lost by arithmetic rather than by accident.
+        **AND THE DISCLOSURE, because the instrument will flag this and it
+        should:** 10-08 already carries its measured capacity of 6, so this is a
+        deliberate `DATED ONTO A FULL DAY`. The reason is the expiry above and
+        nothing else. A date with room (10-14, 10-15) falls after W40 burns.
+
+    **THE DESIGN — DELIVERED 2026-10-04 (Review FULL, act 4), and this row goes
+    `DISPOSITIONED`: the mechanism below is stated, the re-buy order is priced,
+    and what remains is execution by the builder.**
+
+    **STEP 0 — FREE, SOURCE-ONLY, AND IT MUST COME FIRST, BECAUSE IT IS THE
+    PREMISE OF THE WHOLE MEASUREMENT: the recipe `T1.08` measures is used by no
+    pipeline.** `t1_08_seed_variance.py:157` says, in its own words,
+    *"Same recipe as T1.07 and TrainingPipeline. A noise floor measured under a
+    different configuration would not bound the claims it is supposed to
+    bound."* **The first clause is false and the second is therefore the
+    finding.** Measured at HEAD this sitting:
+
+    | | `make_action_optimizer` (`UnifiedBrain.py:4547`) | `TrainingPipeline.py:493` |
+    |---|---|---|
+    | optimiser | `Adam` | **`AdamW`** |
+    | weight decay | none | **1e-4** |
+    | eps | default | **1e-5** |
+    | schedule | `LambdaLR` warmup to 1.0, then **constant** | none |
+    | grad clip | 2.0 | **1.0** (`:712`, `:1028`, `:1188`) |
+
+    `make_action_optimizer`'s own docstring claims *"Returning both from one
+    place means a spec and the pipeline cannot drift apart again."* **The
+    pipeline never adopted it.** `grep -rln make_action_optimizer` returns four
+    spec files (`t1_07`, `t1_08`, `t1_09`, `t6_03`) and `UnifiedBrain.py` —
+    **and no pipeline.** So the function built to end a drift is called only by
+    the specs, and the drift it was built to end is live and unmeasured. This
+    is why Step 0 is not optional and is not a tidy-up: **repairing seed noise
+    under a recipe nothing ships buys a floor that bounds nothing**, which is
+    the exact failure the spec's own comment names. It costs no GPU hour and no
+    certificate to establish — it is `grep` — and doing it AFTER the repair
+    would invalidate the repair's order.
+
+    **STEP 1 — ONE GPU JOB (~0.3 h, the `est_hours` already declared at
+    `t1_08:190`), AND IT IS THE MEASUREMENT THAT DECIDES WHICH REPAIR TO BUY.
+    Decompose the 40.006 %.** The seed-dependent inputs here are a **CLOSED
+    set**, which is what makes the decomposition cheap and conclusive: the task
+    is pinned at `Generator().manual_seed(900)` (`:141`) so it is identical
+    across arms; the batch order is `i = (step * BS) % (N_TRAIN - BS)` (`:162`)
+    with no shuffle and no generator, so **data order is identical across arms
+    too**. That leaves exactly three: weight init, stochastic forward during
+    training, and — **the one nobody has priced** — the eval sampler draw.
+    `generate_actions_flow_matching` starts from `x = torch.randn(action_shape,
+    device=device)` at `UnifiedBrain.py:4523`, **unseeded, off the global RNG**,
+    and it is reached after `torch.manual_seed(seed)` (`t1_08:150`) and a full
+    1500-step training run — so the eval noise vector is a seed-dependent
+    function of the entire training trajectory, and **a single draw of it is
+    inside a metric whose docstring says it measures THE PIPELINE.**
+    **The measurement:** take ONE trained checkpoint, re-evaluate it K = 16
+    times with K different sampler seeds, and report `eval_cv_pct` beside
+    `heldout_cv_pct`. One checkpoint, sixteen forward passes — a rounding error
+    against the 0.3 h envelope. **Pre-register both outcomes before running**,
+    so neither can be chosen after the fact.
+
+    **STEP 2a — IF `eval_cv_pct` DOMINATES, THE DEFECT IS IN THE METRIC AND NOT
+    IN THE PIPELINE, and the repair is spec-local.** Pin the sampler seed to one
+    constant shared by every arm, so arms are compared on identical eval noise,
+    AND report the held-out MSE as the mean over K draws rather than one, which
+    cuts the estimator's eval variance by ~1/K without pretending the sampler is
+    deterministic. `MAX_HELDOUT_CV_PCT` stays **7.0, byte-unmoved**.
+    **PRE-REGISTERED SO THIS CANNOT BE A PASS-MANUFACTURING MOVE, and this is
+    the clause the Review is bound by:** the repaired spec must report the OLD
+    single-draw CV and the NEW K-draw CV side by side, permanently, in
+    `_experiment`'s metrics. And if it is this step that takes the number under
+    7.0, then the honest sentence is **"the pipeline's seed instability was
+    never 40 %"** — a correction to a number this project has published to the
+    owner for three weeks and quoted as its largest blocker — and it must be
+    written in those words, not banked as a repair.
+
+    **STEP 2b — IF TRAINING VARIANCE DOMINATES, THE REPAIR IS IN THE RECIPE,
+    AND IT IS A NAMED STANDARD MECHANISM RATHER THAN A HOPE.** The schedule is
+    `LambdaLR(opt, lambda step: min(1.0, (step + 1) / max(warmup_steps, 1)))`
+    at `UnifiedBrain.py:4556` — it rises to 1.0 over 100 steps and is then
+    **CONSTANT at lr = 3e-4 for the remaining 1400 of 1500 steps. There is no
+    decay.** A constant-LR final iterate does not converge to a point; it
+    random-walks in a noise ball whose radius scales with lr, and the spread of
+    a final-iterate held-out metric across seeds is the direct arithmetic
+    consequence. Two mechanisms, in this order and for this reason:
+    **(i) tail-average / EMA the weights over the last ~20 % of steps and
+    evaluate the average** — try this FIRST because it does not alter the
+    optimisation trajectory at all, so it changes no other spec's dynamics and
+    its effect is attributable; **(ii) decay the LR to ~0 after warmup**
+    (cosine or linear) — larger expected effect, but it changes the trajectory,
+    so it must not be bundled with (i) or neither is attributable. Neither
+    touches the task, the seeds, or any bar.
+
+    **THE RE-BUY ORDER THIS IMPLIES, PRICED RATHER THAN WAVED AT.**
+    - **The CITING bill is ZERO today, and that is the strongest argument for
+      doing this now.** `mde_citing` reads **0** against `mde_downstream` **49**
+      (ledger `T1.08` attempt 3): forty-nine specs stand transitively behind
+      this floor and **not one of them quotes `min_detectable_effect` yet**. So
+      the repair costs no downstream re-derivation today and gets strictly more
+      expensive the first time any spec starts citing it. **This is the
+      cheapest moment the repair will ever have.**
+    - **MECHANICAL staleness, measured not estimated: editing `UnifiedBrain.py`
+      restales 19 PASS certificates** — `PL.00, T0.01, T0.03, T0.04, T0.07,
+      T1.03, T1.04, T1.05, T1.07, T1.10, T1.11, T1.12, T2.03, T2.04, T2.06,
+      T2.14, T2.19, T3.01, T4.06` (every spec naming `UnifiedBrain.py` in
+      `IMPL_DEPS`). **Four are Tier-0 (`T0.01, T0.03, T0.04, T0.07`) and
+      therefore intersect `D35`'s Tier-0 freeze — check that intersection
+      BEFORE the edit, not after.**
+    - **SEMANTIC bill: 4, not 19.** Only `T1.07`, `T1.08`, `T1.09` and `T6.03`
+      call `make_action_optimizer`, so a recipe change alters behaviour for four
+      specs. Order: **`T1.08` first** (it is the measurement), then **`T1.07`**
+      (LR robustness — this recipe's own origin, and the spec most likely to
+      read differently under a decayed schedule), then `T1.09`, then `T6.03`
+      (BLOCKED regardless).
+    - **Step 2a costs ZERO certificates outside `T1.08`.** If Step 1 points at
+      2a, the whole repair is spec-local and the 19-certificate bill is never
+      incurred. That asymmetry is the reason Step 1 comes before either repair.
+
+    **WHAT THIS DESIGN DOES NOT DO, pre-registered so Step 2 cannot be scored as
+    a success for merely reducing a number.** It does **not** promise
+    `heldout_cv_pct` under 7.0. Step 1 may show the spread is genuine training
+    instability that neither tail-averaging nor decay removes — in which case
+    the answer to this row is that **this model's action path is seed-unstable
+    at ~40 %, forty-nine specs stand behind a floor that is honestly 40 %, and
+    that is a capability finding rather than a plumbing one.** That outcome is
+    a legitimate discharge of this row and must not be re-opened as "the design
+    failed".
 
 **WHY THIS ROW EXISTS, and it is the cleanest instance of this file's founding
 defect since the file was created.** On 2026-09-20 this desk wrote, in the
