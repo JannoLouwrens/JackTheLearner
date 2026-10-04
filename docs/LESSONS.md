@@ -20832,3 +20832,56 @@ a rate that halved overnight.
 correctly so — a gate here could refuse a legitimate steering edit. But an
 unfloored reader's only product is the number a human reads, so a number that
 moves the wrong way is the whole of its failure, not a partial one.
+
+## A DEAD CURRENT-STATE PAGE DOES NOT GO QUIET — IT BECOMES A SOURCE. The only
+## thing a stale page can still do is be QUOTED, so re-derive a predecessor's
+## reason from the ARTIFACT at HEAD, never from the page that states the reason
+## (overseer, 139th audit, 2026-10-04; measured on `docs/REVIEW_QUEUE.md:18158`,
+## where a row routed 2026-10-03 asserts twice that two other rows have "no
+## `DUE:` at all" — a clock the same desk had written onto both of them at
+## `a65fdd7`, 2026-10-01 06:56:29)
+
+**The shape.** `docs/PROGRESS.md` had not been rewritten in 96 hours and its
+content described a window six days old. Its 09-28 text reads: *"Two of them —
+`ne01-occlusion-knife-edge` and `water-apply-phantom-force` — carry **no `DUE:`
+at all**; the hold was their only clock."* On 10-01 the Review **repaired exactly
+that**, in a commit whose own title is *"the two ageing-EXEMPT holds get a clock
+… 38 days old with no `DUE:` at all"*. On 10-03 the same desk routed a new row
+and wrote, in its commit message and in the committed row body: *"Two of them
+(`ne01`, `water-apply`) have **no `DUE:` at all** … ageing for 40 days against
+nothing."* It is the stale page's sentence with the day count bumped 35 → 40 and
+the repair deleted — and it is now the load-bearing premise of a FULL-sized
+seven-row unit dated onto an over-capacity day.
+
+**Why the doctrine did not prevent it.** The desk was obeying the right rule.
+"Re-derive the fact a predecessor declined on" is this project's standing
+obligation and the 10-03 row performs it explicitly and at length. The failure is
+in **which copy of the fact got re-derived**: the page that *states* the reason,
+not the file the reason is *about*. Re-deriving from a report reproduces the
+report's age along with its words, and does so invisibly, because the prose reads
+as freshly checked.
+
+**The generalisation, and it is the reason this is worth a lesson rather than a
+correction.** A heavily instrumented system does not usually fail by lying. It
+fails when its organs begin reading each other's *reports* instead of the
+*artifacts* — and a stale report is more dangerous than a missing one, because a
+missing report is obviously missing. The same morning produced a second instance
+of the identical blindness: one `FIELD_WATCH.md` §6 finding routed **twice**,
+2026-09-30 and 2026-10-02, with two different `DUE:` dates eight days apart,
+neither row aware of the other, and `run status`'s `FIELD-WATCH FINDINGS` reader
+printing only the **first** quoter — so a finding routed twice renders exactly
+like a finding routed once.
+
+**The cheap repairs, in order of cost.** (a) When a row's prose asserts the
+ABSENCE of a field, check it against the field the parser already resolves on the
+row named — or, with no heuristic at all, print every cited row's current `DUE:`
+beside the citation. (b) Print **every** quoter of a field finding, not the
+first, and flag more than one as `DOUBLE-ROUTED`. (c) The conduct half, which
+costs nothing and would have caught both: **one `grep` against the file you are
+about to write about.**
+
+**What this is NOT.** It is not an argument for trusting pages less in general —
+the pages are the only cross-organ memory this project has, and the Review's
+duty to re-derive a predecessor's reason remains exactly right. It is an argument
+that a page's AGE is part of its content, and that an organ quoting a page owes
+the same freshness check it would owe a ledger metric.
