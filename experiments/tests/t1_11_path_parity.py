@@ -26,7 +26,7 @@ from ..registry import BY_ID
 
 # The implementation under test. Undeclared until 2026-09-06 (78th audit
 # finding 1.1; grandfather set shrunk here).
-IMPL_DEPS = ['UnifiedBrain.py']
+IMPL_DEPS = ['UnifiedBrain.py', 'TrainingPipeline.py']
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -34,6 +34,38 @@ REPO = Path(__file__).resolve().parents[2]
 # VirtualWorld._update_brain -> act_with_mood -> act_dual_system ->
 # generate_actions_flow_matching -> ActionExpert (+ backbone via cross-attention).
 INFERENCE_MODULES = ("action_expert", "layers", "proprio_encoder")
+
+# ── STRENGTHENED 2026-10-04 (Review FULL, Part 2 re-examination) ──────────────
+# THE HOLE: every conjunct below this line tested that `action_training_loss`
+# REACHES the actuator. Not one tested that anything CALLS it. That is the
+# second half of the exact defect this spec's own docstring exists for — "and
+# train_flow_matching_step, the only bridge between them, had zero callers in
+# the repo" — and leaving it untested let the defect recur one layer up.
+#
+# MEASURED 2026-10-04, which is why this is being added rather than argued:
+# `action_training_loss` has ZERO call sites outside `experiments/` (the only
+# non-experiments hits in the repo are its own `def` and a docstring mention),
+# while `TrainingPipeline.py:193` still computes
+# `output['physics'].pow(2).mean() + output['actions'].pow(2).mean()` — a loss
+# through `forward()['actions']`, which is *this spec's own `_control`*, the
+# loss the check below REQUIRES TO FAIL. So this certificate was being bought
+# by proving a loss nothing ships reaches the joints, while the thing that
+# does ship trains the module this spec proves is not on the inference path.
+#
+# This is STRICTLY ADDITIVE: the two original conjuncts are byte-unmoved, no
+# threshold is relaxed, the control is unchanged, and a new conjunct is
+# conjoined to them. It is EXPECTED TO DEMOTE THIS SPEC TO FAIL, and that is
+# the point — the FAIL is the true reading and is routed as its own queue row
+# in the same sitting. Repairing it means making the shipped pipeline call the
+# certified loss; it does NOT mean relaxing anything here.
+SHIPPED_CALLER_MIN = 1          # the certified loss must be called by something
+                                # that is not a ladder spec. 1, not 2: this
+                                # asserts the bridge EXISTS, never how popular
+                                # it is.
+#: Directories whose callers do not count. A spec calling the loss is what this
+#: conjunct exists to stop being sufficient, so `experiments/` is excluded by
+#: construction rather than by convenience.
+_NOT_SHIPPED = ("experiments",)
 
 
 def _build():
@@ -78,9 +110,52 @@ def _gradient_coverage(loss_fn) -> dict:
     }
 
 
+def _shipped_callers() -> dict:
+    """Does anything OUTSIDE the ladder call the loss this spec certifies?
+
+    Added 2026-10-04 (see the STRENGTHENED block above). An AST walk rather
+    than a grep, so a docstring mention of the name cannot satisfy it — that
+    distinction is load-bearing: at HEAD the only non-experiments hits on
+    `action_training_loss` are its own `def` and a reference to it inside
+    `make_action_optimizer`'s docstring, and a grep would have counted both.
+    """
+    import ast
+
+    callers, control_sites = [], []
+    for path in sorted(REPO.rglob("*.py")):
+        rel = path.relative_to(REPO)
+        if rel.parts and rel.parts[0] in _NOT_SHIPPED:
+            continue
+        try:
+            tree = ast.parse(path.read_text())
+        except (SyntaxError, UnicodeDecodeError):
+            continue          # unparseable is not a caller; unknown is not one either
+        for node in ast.walk(tree):
+            # a CALL to the certified loss, not a mention of its name
+            if isinstance(node, ast.Call):
+                fn = node.func
+                name = fn.attr if isinstance(fn, ast.Attribute) else getattr(fn, "id", None)
+                if name == "action_training_loss":
+                    callers.append(f"{rel}:{node.lineno}")
+            # the control's own loss, appearing in shipped code: a subscript
+            # ['actions'] that feeds .pow(...) or a *_loss(...) call
+            if isinstance(node, ast.Subscript):
+                sl = node.slice
+                key = sl.value if isinstance(sl, ast.Constant) else None
+                if key == "actions":
+                    control_sites.append(f"{rel}:{node.lineno}")
+    return {
+        "shipped_callers": len(callers),
+        "shipped_caller_sites": "; ".join(callers) or "NONE",
+        "shipped_actions_subscripts": len(control_sites),
+    }
+
+
 def _experiment(seed: int) -> dict:
-    return _gradient_coverage(
+    out = _gradient_coverage(
         lambda b, obs, tgt: b.action_training_loss(obs, tgt)["loss"])
+    out.update(_shipped_callers())
+    return out
 
 
 def _control(seed: int) -> dict:
@@ -94,8 +169,14 @@ def _control(seed: int) -> dict:
 
 def _check(m: dict, c: dict) -> bool:
     # Near-total coverage under the real loss, and the old loss must miss badly.
+    # Both conjuncts and both constants are byte-unmoved from the 2026-08-11
+    # version; the third is ADDED (2026-10-04, Review FULL Part 2).
     return (m["inference_params_trained_frac"] >= 0.99
-            and c["inference_params_trained_frac"] < 0.9)
+            and c["inference_params_trained_frac"] < 0.9
+            # ADDED: the certified loss must have a caller that is not a spec.
+            # Proving a loss reaches the joints is worth nothing if the shipped
+            # pipeline calls a different one -- which is what it does today.
+            and m["shipped_callers"] >= SHIPPED_CALLER_MIN)
 
 
 def run(ledger: Ledger | None = None):
