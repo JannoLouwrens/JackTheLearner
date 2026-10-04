@@ -9788,3 +9788,162 @@ entry resolved to is not late; it is being delivered by a page that says the
 opposite.** Repairs are ordered in `docs/OVERSIGHT.md` FOR THE BUILDER 4 and 5
 (refresh the banner's age even when a banner exists; write the owner section
 first). They do not need this entry and do not pre-empt it.
+
+## D41 — Two separate bridges built so "a spec and the pipeline cannot drift apart again" both have ZERO pipeline callers, and 249 commits in seven days touched Jack zero times. Which artefact is the thing we are building? (2026-10-04, Review, FULL)
+
+**THE MEASUREMENT, and it is two independent instances of one disease found the
+same morning by two unrelated routes.**
+
+**(1)** `T1.11` ("Train/inference path parity") has stood PASS since 2026-08-11.
+It exists because the system once trained `action_head` while the robot ran
+`ActionExpert`, and its docstring records the original bug as *"train_flow_matching_step
+— the only bridge between them — had zero callers in the repo."* It certifies
+that `action_training_loss` REACHES the actuator: 41,525,008 of 41,525,008
+parameters, every seed. **It never tested that anything CALLS it.** Measured by
+AST walk over every `*.py` outside `experiments/`: **zero call sites.** The only
+non-experiments occurrences of the name are its own `def` and one docstring
+mention. Meanwhile `TrainingPipeline.py:193` computes
+`output['physics'].pow(2).mean() + output['actions'].pow(2).mean()` — a loss
+through `forward()['actions']`, which **is `T1.11`'s own `_control`**, the arm
+the spec requires to FAIL. The certificate was bought by proving a loss nothing
+ships reaches the joints, while the thing that ships trains the module the same
+spec proves is off the inference path. Strengthened and demoted to FAIL this
+sitting; owned at `t111-certified-loss-has-no-shipped-caller`.
+
+**(2)** `make_action_optimizer` (`UnifiedBrain.py:4547`) was written to end the
+same class of drift in the training RECIPE, and says so: *"Returning both from
+one place means a spec and the pipeline cannot drift apart again."* It has
+**four spec callers (`T1.07`, `T1.08`, `T1.09`, `T6.03`) and no pipeline
+caller.** `TrainingPipeline.py:493` is `AdamW(weight_decay=1e-4, eps=1e-5)`
+clipping at 1.0; the shared recipe is plain `Adam`, warmup-then-constant, no
+decay, clipping at 2.0. So `t1_08_seed_variance.py:157`'s *"Same recipe as T1.07
+and TrainingPipeline"* is false — and its own next sentence, *"A noise floor
+measured under a different configuration would not bound the claims it is
+supposed to bound,"* is therefore the finding about `T1.08` itself, the spec
+that blocks 45 others.
+
+**(3) And the number that makes this a fork rather than two bugs: 249 commits in
+the last seven days, of which ZERO touched `UnifiedBrain.py`,
+`TrainingPipeline.py` or `playground.py`.** 175 touched `docs/` or `scripts/`;
+16 touched spec files. The ladder has been maintained, audited and steered with
+great care while the artefact it is supposed to be measuring was not edited
+once.
+
+**WHY THIS IS YOURS AND NOT A DESK'S.** Each instance has a repair and both are
+routed. What no desk can decide is the thing both instances are evidence of:
+**the ladder and the shipped system have become two artefacts, and every
+certificate we hold is about the first one.** `GOAL.md` says *"the system is the
+product, not the model"* and the ladder is the falsification machinery for a
+system — but if `TrainingPipeline` is what would actually train a living Jack,
+then 106 passing certificates describe a configuration that nothing runs, and
+the honest `demonstrated` count for the shipped artefact is unknown rather than
+106. If instead the ladder's rig IS the real system and `TrainingPipeline.py` is
+legacy, then it is dead weight on the answer path and `GOAL.md`'s own
+"components must EARN their parameters or be deleted" applies to it. Both
+answers are respectable. They imply completely different next quarters, and a
+desk choosing one would be choosing what the project is.
+
+**THE RECOMMENDATION, quoted verbatim so the instrument matches on it and so it
+cannot drift from what was actually asked:**
+
+> **(ii) DECLARE THE LADDER'S RIG THE SYSTEM OF RECORD AND PUT
+> `TrainingPipeline.py` ON THE ABLATION BLOCK is RECOMMENDED.** Every
+> certificate we hold is about the ladder's configuration, the ladder is where
+> every control and every seed count lives, and `GOAL.md`'s caveman principle
+> and its 57M-vs-54K lesson both point at deleting the unmeasured twin rather
+> than certifying it twice. Concretely: register ONE spec that asks whether
+> `TrainingPipeline.py` is on any path a living Jack would execute, and if it
+> is not, delete it and let `T1.11`'s new conjunct be satisfied by the rig's
+> own entry point rather than by a legacy module. **This is deliberately NOT
+> (i) "make TrainingPipeline call the certified loss"**, which is the cheap
+> repair and would make `T1.11` green again while leaving two artefacts in the
+> repo, each half-certified, which is how both of these drifts happened.
+
+DECIDE: D41
+  class:     goal
+  blocks:    no single spec id. It blocks the interpretation of all 106 passing
+             certificates, and concretely it blocks the repair shape for
+             `t111-certified-loss-has-no-shipped-caller` (DUE 2026-10-16) and
+             Step 0 of `t108-pipeline-repair-has-no-design` (DUE 2026-10-08).
+             Not perishable this week: both rows have their own clocks and
+             neither needs this answered to proceed on its measurement half.
+  default:   (iii) NEITHER — HOLD BOTH ARTEFACTS, REPAIR EACH INSTANCE ON ITS
+             OWN ROW, AND RE-ASK IN WRITING. The two routed rows proceed on
+             their measurement halves only: `T1.11` stays an honest FAIL and is
+             NOT repaired by adding a call site, and `T1.08` Step 0 reports the
+             recipe divergence without resolving which recipe is correct. This
+             is MONOTONE — it moves no threshold, repairs nothing cosmetically,
+             deletes no module, spends no GPU-hour, and leaves both findings
+             standing and red. It is deliberately NOT the recommendation: a
+             default may not decide what the project is. Its price, stated
+             rather than buried: the drift stays live, a third bridge may be
+             built and go uncalled the same way, and the `demonstrated` count
+             keeps being reported without the caveat that it describes one of
+             two artefacts.
+  decide_by: 2026-10-18
+
+## D42 — Three of your own constitutional commitments are CLAIM-DEAD and have been for eight days; each needs a successor spec the ladder cannot generate from inside itself. Which ONE matters most? (2026-10-04, Review, FULL)
+
+**THE STATE, unchanged since 2026-09-26 and reported by `coverage` every day
+since.** `claim_dead` reads **3**: **smell**, **shelter/building**, and
+**thermal ("too cold kills him")**. Every spec that could have falsified any of
+them is PARKED or PILOT-BLOCKED **on honest evidence** — `SM.02` PARKED when the
+pre-registered both-fail branch fired (three mechanism repairs, none moved the
+learnability ratios); `SH.01` PARKED on `ORACLE_CANNOT` at the full envelope
+(the certified core sheltered in 0 of 27 lives with the hut's direction IN its
+observation); `SM.03` and `SH.02` PILOT-BLOCKED. **The parking was right every
+time. Leaving the commitment claim-dead is the bug.**
+
+**WHY NO INSTRUMENT WILL EVER RAISE THIS, which is the whole reason it is on
+your desk.** A missing spec has no id. It blocks nothing, fails no gate, ages on
+no clock and appears in no `depends_on`. `commitments_uncovered` reads **0** and
+is correct — every commitment has a *declared* spec; the declared specs are
+corpses. `champions` independently marks **Smell (olfaction)** among its four
+seats that no one can ever WIN. Two instruments see the hole from two directions
+and neither can ask for the thing that would fix it, because the thing that
+would fix it is design work.
+
+**WHAT IS NOT BEING ASKED.** Not an unpark — each park has a pre-registered
+rule and those rules bind. Not a deletion — a deleted commitment is a quietly
+abandoned promise and `GOAL.md` is yours, not ours. Not a threshold move.
+
+**THE RECOMMENDATION, quoted verbatim so the instrument matches on it and so it
+cannot drift from what was actually asked:**
+
+> **NAME `thermal ("too cold kills him")` AS THE ONE, and let smell and
+> shelter wait.** It is RECOMMENDED over the other two for a reason that is
+> arithmetic rather than taste: thermal is the only one of the three that is
+> load-bearing for the OTHER two — shelter-building has no consequence without
+> a lethal cold to shelter FROM, and `GOAL.md` names cold death as a need that
+> drives the curriculum rather than as a sense to be added. It is also the
+> cheapest to make falsifiable without a world edit: a successor need only
+> show that a cold night changes behaviour measurably, which is a claim about
+> the needs model and not about the world's geometry, where both `SH.01` and
+> `SM.02` died. **Smell is the one I would name second and explicitly not
+> first**, because its successor has to beat a measured both-fail branch and
+> that is a research problem, not a spec-writing one.
+
+DECIDE: D42
+  class:     goal
+  blocks:    no spec id — that is precisely the defect. It blocks the
+             registration of a successor claim spec for one of three `GOAL.md`
+             commitments that currently have no live falsifier, and it is the
+             upstream of `five-commitments-are-claim-dead-behind-foreclosures`
+             (OPEN, DUE 2026-10-14). Not perishable in GPU-hours; perishable in
+             the sense that it has stood unchanged for eight days and the
+             reporting of it has become routine.
+  default:   (iv) HOLD — NO SUCCESSOR IS DESIGNED, AND THE THREE COMMITMENTS
+             STAY CLAIM-DEAD AND SAID SO. `coverage` keeps reporting
+             `claim_dead = 3`, the queue row keeps its clock, every park stays
+             parked under its own pre-registered rule, and no desk writes a
+             successor on your behalf. MONOTONE — it moves no threshold,
+             unparks nothing, deletes no commitment, spends nothing, and cannot
+             make the hole smaller or hide it. Deliberately NOT the
+             recommendation: choosing which of the owner's own commitments
+             matters most is not a desk's call, and a default that picked one
+             would be a desk writing `GOAL.md`. Its price: three of the
+             capability target's named commitments remain unfalsifiable, the
+             daily report of that becomes wallpaper, and the first two
+             instruments that can see the hole continue to be unable to ask
+             about it.
+  decide_by: 2026-10-18
