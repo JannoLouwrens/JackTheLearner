@@ -14243,7 +14243,7 @@ tuple-idiom `_check` by grep.
 
 ## ROUTED 2026-09-26 (builder, 07:1x slot): `ba03-registered-run-foreclosed-by-d20-class-closure` — the first runnable spec in the cpu<48h class landed 22 hours after an armed default closed the class's only lane, and the dispatch was planned by three organs without any of them reading the closure
 
-ROUTED: ba03-registered-run-foreclosed-by-d20-class-closure | 2026-09-26 | launch log /data/jack-logs/ba03_registered_run_0710.log (gate_cpu_child refusal, unrecorded by design; day meter had ADMITTED at 49,172 s remaining) | OPEN
+ROUTED: ba03-registered-run-foreclosed-by-d20-class-closure | 2026-09-26 | launch log /data/jack-logs/ba03_registered_run_0710.log (gate_cpu_child refusal, unrecorded by design; day meter had ADMITTED at 49,172 s remaining) | ACTED 2026-10-04 (Review FULL, OVERDUE by 1 d — limb (ii) RULED, and it is ruled AGAINST the re-label this row made available to me. The arithmetic says BA.03 sits in a GAP in the cost ladder, not in the wrong class, so no re-declaration is honest and the repair is a new class. D20's reversal stays the owner's, untouched. See THE RULING)
     DUE: 2026-10-03 | the tool's own next date with room. What this row owes
         is a RULING on the lane, never a run: the run itself is ordered,
         implemented and disposed (`ba03-null-saturates-the-horizon`, DUE
@@ -14285,6 +14285,67 @@ ROUTED: ba03-registered-run-foreclosed-by-d20-class-closure | 2026-09-26 | launc
     the ruling at once), or the builder re-labelling the budget class (a
     self-serving cost move after measurement; D35's "cannot be lifted by
     re-labelling" principle, one freeze over).
+
+    **THE RULING — 2026-10-04 (Review FULL, OVERDUE FIRST, act 6). Limb (ii) is
+    mine and I am ruling it DOWN: the re-label is refused, and the reason is
+    arithmetic rather than caution.**
+
+    **(1) THE NUMBERS, all read from source at HEAD this sitting.** `Budget` has
+    seven values and exactly two CPU classes above ten minutes: `cpu<2h` and
+    `cpu<48h` (`registry.py`). `cpu<48h` holds **six** ids — `LC.03, BO.01,
+    PS.04, BA.03, GEN.06, GEN.09` — and `gate_cpu_child` refuses the whole class
+    unconditionally as a runner child (`cpu_budget.py:284`, *"cpu<48h is the
+    detached lane, not a runner child"*), while `D20`'s fired default closed
+    that detached lane to registered spec work. **BA.03's measured envelope is
+    ~25,167 s total over 3 seeds = ~8,389 s = 2.33 h PER SEED.**
+
+    **(2) SO THE RE-LABEL THIS ROW OFFERED ME WOULD SWAP ONE FALSE LABEL FOR
+    ANOTHER.** `cpu<48h` over-declares BA.03 by **~7×** (≤172,800 s declared
+    against 25,167 s measured) — that much this row already knew. But the only
+    class below it is `cpu<2h` = 7,200 s, and BA.03 measures **8,389 s per
+    seed**, so `cpu<2h` **under-declares it by 17 %.** Moving it there replaces
+    a 7×-too-loose declaration with a 1.17×-too-tight one and calls the result
+    accurate. **That is exactly the move `D35`'s "cannot be lifted by
+    re-labelling" principle exists to stop, and the principle does not become
+    sound because a desk makes the move instead of the builder.** This row
+    pre-refused the builder's version; I am refusing mine, on the same ground.
+
+    **(3) THE REAL DEFECT, WHICH NO ORGAN HAD NAMED: THERE IS NO CLASS THAT
+    DESCRIBES 2–48 h CPU WORK.** The ladder jumps `cpu<2h` → `cpu<48h` with
+    nothing between, and the GPU side does not have this hole (`gpu<20min`,
+    `gpu<2h`, `gpu<8h`). Everything that falls in the CPU gap must over-declare
+    into a class that is refused as a child, so **the foreclosure BA.03 hit is
+    structural, not a `D20` side-effect** — `D20` closed the only lane the
+    gap forces work into, which is why closing it foreclosed six ids at once.
+    This also explains the cited precedent honestly: LT.03's ~5.2 h wall run
+    bought legally under `cpu<2h` was **already a mis-declaration**, a 2.6×
+    over-run inside a label, and it passed only because the gate's real
+    protection is the 57,600 s DAY ceiling and the load ceiling, never the
+    label. The labels have not been enforced against measured wall at all.
+
+    **(4) WHAT FOLLOWS, AND THE LINE I AM NOT CROSSING.** The repair is a NEW
+    declared class — `cpu<8h`, mirroring `gpu<8h` — with its own
+    `child_estimate_s` entry, admitted as a runner child, routed below as
+    `cpu-class-ladder-has-no-rung-between-2h-and-48h`. I am ordering the design,
+    **not opening a lane by my own hand**, and I am deliberately NOT doing the
+    cheap thing available to me: I could have re-declared BA.03 into `cpu<2h`
+    this morning and reported a zero-pass `GOAL.md` commitment unblocked. That
+    would have been a gate loosened by a desk that is forbidden to loosen
+    gates, wearing a measurement as a warrant. **`D20`'s reversal and the
+    retirement of `cpu<48h` stay exactly where its firing reserved them — the
+    owner's — and the other five ids stay foreclosed**, because not one of them
+    has a measured envelope and a class cannot be designed around estimates
+    nobody has bought.
+    **The day ceiling is the thing that was always doing the work**, and it is
+    the honest guard for the new rung: 25,167 s is 44 % of 57,600 s, so BA.03
+    fits a single day with 56 % to spare, `charge`'s overrun marks still bind
+    the running child, and `T0.33`'s `cpu_foreclosed == []` property is the
+    existing test that must stay green across the change.
+    **COST OF THE REFUSAL, stated rather than hidden:** `balance` is a zero-pass
+    `GOAL.md` commitment and its one runnable claim spec stays foreclosed for
+    however long the new rung takes. I judge a correctly-described cost ladder
+    worth more than one unblocked spec, and I am recording the price so the
+    owner can disagree with me cheaply.
 
 ## ROUTED 2026-09-26 (builder, 08:1x slot): `t028-p10-reads-an-empty-armed-register-as-a-broken-tool` — the certificate's live-document leg asserts the PROJECT's state, not the tool's honesty, and the first healthy-empty register in the tool's history demoted a standing PASS to FAIL
 
@@ -18271,3 +18332,44 @@ ROUTED: xl01-pooled-conjunct-is-additive-or-it-is-a-loosening | 2026-10-04 | THE
     (`carried_ltc` 2.6667 vs `wiped_ltc` 2.0000, the wrong direction). If this
     repair produces a PASS, something else changed and it must be explained
     before the certificate is banked.
+
+## ROUTED 2026-10-04 (Review FULL, act 6 — the successor the `ba03` ruling owes): `cpu-class-ladder-has-no-rung-between-2h-and-48h` — the CPU cost ladder jumps 2 h to 48 h with nothing between, so all 2–48 h work must over-declare into the one class `gate_cpu_child` refuses, and `D20`'s closure of that lane foreclosed six ids at once
+
+ROUTED: cpu-class-ladder-has-no-rung-between-2h-and-48h | 2026-10-04 | THE RULING on `ba03-registered-run-foreclosed-by-d20-class-closure` (ACTED 2026-10-04) | OPEN
+    DUE: 2026-10-15 | 10-15 carries 2 live rows against the measured capacity
+        of 6, so this is routed onto room rather than onto a pile. NOT dated
+        inside this week: the builder's first legal slot is ~2026-10-06 14:10
+        UTC and its first slots owe three audits' worth of unexecuted FTB
+        orders plus `T1.08`'s Steps 0+1 (DUE 10-08), which is the perishable
+        item. This one perishes nothing — no GPU hour expires behind it.
+    WAITS-ON: none | `D20`'s reversal is an owner question and is NOT an input
+        here: this row adds a rung so that 2-48 h work stops being forced into
+        the detached lane at all, which is a different repair from re-opening
+        that lane. Either answer to `D20` leaves this gap exactly where it is.
+    What this owes: add `cpu<8h` to `registry.Budget` (mirroring the existing
+    `gpu<8h`, so the CPU and GPU ladders have the same shape), give it a
+    `child_estimate_s` entry in `experiments/cpu_budget.py`, and let
+    `gate_cpu_child` admit it as a runner child under the UNCHANGED 57,600 s
+    day ceiling and the UNCHANGED load ceiling. Then re-declare `BA.03` into
+    it against its measured ~8,389 s/seed envelope, carrying in the record
+    that the label was chosen AFTER the seed-90 pilot measured it.
+    MEASURED INPUTS, so this is not designed against estimates: `BA.03`
+    ~25,167 s total / ~8,389 s per seed over 3 seeds (seed-90 pilot);
+    `cpu<2h` = 7,200 s, which under-declares that by 17 %; `cpu<48h` =
+    172,800 s, which over-declares it by ~7x; day ceiling 57,600 s, so
+    `BA.03` is 44 % of one day.
+    PRE-REFUSED: re-declaring any of the other five `cpu<48h` ids (`LC.03`,
+    `BO.01`, `PS.04`, `GEN.06`, `GEN.09`) into the new rung — not one has a
+    measured envelope, and a class populated from estimates is the same defect
+    one rung lower. Each needs its own pilot first. Also pre-refused:
+    weakening the day ceiling, the load ceiling, or `charge`'s overrun marks
+    to make the new rung fit; the rung exists to describe work honestly, not
+    to buy headroom.
+    GUARD: `T0.33` gates `cpu_foreclosed == []` and must stay green across the
+    change — a new class that forecloses a different class by arithmetic is
+    the ME.11.E disease the module's own comment at `cpu_budget.py:84` names.
+    REPORT, not a gate: print each spec's DECLARED class beside its MEASURED
+    envelope wherever one exists. The ruling found two live mis-declarations
+    (`BA.03` 7x over, `LT.03`'s shipped run 2.6x over inside `cpu<2h`) and no
+    instrument could see either, because the labels have never been checked
+    against measured wall at all.
