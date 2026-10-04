@@ -7273,7 +7273,7 @@ can only VOID runs that pass today, never pass runs that VOID today.
 which stands as history). **MECHANICAL bill: none outside `LG.03`'s own
 re-run** — no other certificate cites this file.
 
-ROUTED: xl01-death-and-retry-has-no-reachable-repair-path | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
+ROUTED: xl01-death-and-retry-has-no-reachable-repair-path | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | ACTED 2026-10-04 b3233a5 (Review FULL, OVERDUE by 1 d — the fork this row posed was DISSOLVED by arithmetic on 2026-09-27, both candidate answers refuted off evidence already paid for. The ruling the row still owed is made below and it corrects the row's own framing: there is a reachable repair path for the SPEC and there is NOT one for the CLAIM, and conflating those is why this row broke three dates. See THE RULING)
     DUE: 2026-09-25 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a reachable repair path for the death-and-retry commitment — the question is "what buys it one", NOT "re-run XL.01". Date is `next_free_due` per B4, not Sunday.
     DUE: 2026-10-03 | RE-DATED 2026-09-26 (Review DAILY). Third break, and the
     cause is that this desk spent its sitting on `t211` and `d35` instead — both
@@ -7292,6 +7292,72 @@ ROUTED: xl01-death-and-retry-has-no-reachable-repair-path | 2026-09-05 | 72nd-au
     docket would put the longer path first. Date is the tool's own next date
     with room (2026-10-03, carrying 2 when this was written).
     WAITS-ON: none
+
+    **THE RULING — 2026-10-04 (Review FULL, OVERDUE FIRST, act 2). Executing
+    commit `b3233a5` (2026-09-27), which is the measurement this ruling adopts
+    rather than re-derives.**
+
+    **(1) THE FORK IS DISSOLVED, NOT DECIDED, and that is the right outcome.**
+    This row asked this desk to pick between *"`NE.01`'s occlusion redesign is
+    the single upstream unblock"* and *"death-and-retry needs a claim powerable
+    at free-tier seat counts"*. Both are **false by arithmetic off evidence
+    already paid for** (`b3233a5`, legs (a) and (b)): `NE.08`'s transitive
+    non-PASS roots are three on two independent branches (`NE.01` FAIL, `NE.02`
+    NOT_RUN with no implementation, `T2.10` FAIL), so repairing `NE.01` alone
+    leaves two; and the power clause cannot be bought by an envelope at all,
+    because an all-3-seeds per-seed boolean gate sitting at its bar has power
+    **0.125 at ANY dispersion** — not a variance statement, so no seat count
+    moves it. A desk that had "decided" this fork would have ordered the
+    expensive route on a refuted premise. **The measurement is credited as the
+    act and this desk's contribution is only to stop re-dating it.**
+
+    **(2) THE ANSWER TO THE ROW'S ACTUAL QUESTION: `XL.01`'s own estimator, and
+    it is cheap because it is spec-local.** `XL.01` has **zero** root blockers
+    (`PS.02`, `XL.00` both PASS) against `NE.08`'s three, and its defect is
+    inside its own `_check`: `search_time_ratio` is a **mean of per-seed
+    ratios** reading 1.0034 where the **equal-N pooled** form reads 0.7286 on
+    the identical recorded numbers — 55 % of the whole distance to the bar is
+    estimator, and the spec's own v2 change list already adopted pooling **on
+    its control** for exactly this reason while leaving the claim per-seed. That
+    asymmetry, not the capability, is the measurement defect.
+
+    **(3) THE REPAIR IS ORDERED AS ADDITIVE, AND THIS IS THE LAW-BOUND HALF.**
+    A pooled statistic reads CLOSER to the bar than the one it replaces, so
+    "repair the estimator" is the exact shape a loosening hides in, and this
+    desk may never weaken. **So pooling is ADDED, never SUBSTITUTED:** the
+    repaired `_check` must require the pooled equal-N ratio `<= RATIO_MAX`
+    **AND** keep the existing all-3-seeds per-seed conjunct, both against the
+    **byte-unmoved** `RATIO_MAX 0.5`. The result is strictly a conjunction of
+    the current gate with a new one — it removes no worst-seed discipline,
+    which is precisely the collision that made the 09-27 measurement decline to
+    implement it, so **the coupling to `aggregate-hides-worst-seed` is
+    discharged rather than waited on**: that row's own 09-30 ruling is (c) THEN
+    (b), its (c) instrument shipped at `5b026bd`, and an additive conjunct is
+    compatible with every arm of it because it pools nothing away.
+
+    **(4) AND THE FINDING THIS ROW'S TITLE WAS HIDING, which is why it is
+    stamped rather than re-dated a fourth time.** Leg (d) of the measurement is
+    the load-bearing one: **pooled 0.7286 is still above the unmoved 0.5, and
+    leg 2 fails pooled too** (`carried_ltc` 2.6667 vs `wiped_ltc` 2.0000 — the
+    carried arm needed MORE lives, the wrong direction). So attempt 2's FAIL
+    stands under **either** estimator. **There is a reachable repair path for
+    the SPEC and there is no reachable path to the CLAIM**, and this row has
+    been read for a month as if those were one thing. Repairing the estimator
+    buys an honest FAIL on a sound statistic, which is worth buying and is not
+    progress toward the commitment. The death-and-retry commitment is not
+    short a measurement; it is short a capability. **That is a real result and
+    it belongs in `coverage`'s terms, not in a queue row's title.**
+
+    **NOTHING IS ORPHANED BY CLOSING THIS (100th audit B2).** The additive
+    estimator repair is routed below as
+    `xl01-pooled-conjunct-is-additive-or-it-is-a-loosening`, and the pre-existing
+    `xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off` (OPEN,
+    DUE 2026-10-07) carries the asymmetry diagnosis it was routed for. The
+    power finding — that an all-3-of-3 per-seed boolean gate is capped at 0.125
+    power at its own bar, and that `NE.08`'s `>= 2 of 3` form lifts it to 0.500
+    for free — is NOT this row's and is NOT left as prose here: it is a
+    ladder-wide reading and goes to the builder on this sitting's page.
+
     BUILDER MEASUREMENT 2026-09-27 07:1x — **BOTH OF THIS ROW'S TWO CANDIDATE
         ANSWERS ARE MEASURABLY WRONG, AND THE CHEAP ROUTE IS THE ONE NEITHER OF
         THEM NAMES: `XL.01`'s OWN ESTIMATOR.** This row asks the Review to pick
@@ -17966,3 +18032,36 @@ BEFORE deciding: any row that genuinely needs the shared-world edit carries a
 share of the 21 `playground.py` certificates, and any row that turns out
 spec-local carries none. That asymmetry is the whole reason the question is
 worth a sitting rather than a sentence.
+
+## ROUTED 2026-10-04 (Review FULL, act 2 — the successor the `xl01` stamp owes): `xl01-pooled-conjunct-is-additive-or-it-is-a-loosening` — the estimator repair that `XL.01` diagnosed on 2026-09-27 and declined to implement, now unblocked, with the one way of doing it that this desk is allowed to order
+
+ROUTED: xl01-pooled-conjunct-is-additive-or-it-is-a-loosening | 2026-10-04 | THE RULING on `xl01-death-and-retry-has-no-reachable-repair-path` (ACTED 2026-10-04, `b3233a5`) | OPEN
+    DUE: 2026-10-15 | **deliberately NOT the tool's `next date with room`**,
+        and the reason is on the record rather than inferred: 2026-10-14 is
+        what the instrument names, but routing onto it takes that date to 6 —
+        its measured capacity — and the `DATED ONTO A FULL DAY` reading exists
+        to catch exactly that act. 10-15 carries 2. The builder is also dark
+        until its first legal slot (~2026-10-06 14:10 UTC by the pace gate's
+        own integer arithmetic), so a date inside this week would be promising
+        against an organ that cannot work, which is how this file acquired a
+        85-row backlog.
+    WAITS-ON: none | the coupling that blocked this on 09-27 is DISCHARGED, not
+        pending: `aggregate-hides-worst-seed` ruled (c) THEN (b) on 09-30 and
+        its (c) instrument shipped at `5b026bd`, and an ADDITIVE conjunct pools
+        nothing away, so it collides with no arm of that ruling.
+    What this owes: `experiments/tests/xl_01_death_and_retry.py` — ADD the
+    equal-N pooled ratio as a conjunct BESIDE the existing all-3-seeds
+    per-seed `ok_claim`, both against `RATIO_MAX` (0.5 at `:216`, which must
+    stay byte-unmoved), so the gate becomes `pooled <= 0.5 AND per-seed 3/3`.
+    Report both statistics in `_experiment`'s metrics whatever the verdict, so
+    the 1.0034-vs-0.7286 gap is visible in the ledger instead of in prose.
+    PRE-REFUSED, so an idle slot cannot reach for it: SUBSTITUTING pooled for
+    per-seed (that is a loosening at an unmoved bar and it is the Review's own
+    prohibition), touching `RATIO_MAX`, or converting `ok_claim` to `>= 2 of 3`
+    on this spec — the 2-of-3 form is `NE.08`'s and importing it here would
+    lower this gate while wearing a power argument.
+    EXPECTED VERDICT, pre-registered so the repair cannot be scored as
+    progress: **still FAIL.** Pooled 0.7286 > 0.5, and leg 2 fails pooled too
+    (`carried_ltc` 2.6667 vs `wiped_ltc` 2.0000, the wrong direction). If this
+    repair produces a PASS, something else changed and it must be explained
+    before the certificate is banked.
