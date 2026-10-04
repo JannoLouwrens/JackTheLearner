@@ -300,7 +300,13 @@ trigger. `dark_slots` reads 76 against a declared floor of 0 — **ABOVE floor**
 one of four. The gate is correct and is not being argued with: `week:all models`
 83 % at 54 % of the week, line 61 %, and **of this week's 82 shared points the
 builder is 16 (19 %), the desks 6 (7 %), and NOT THIS PROJECT 60 (73 %).** First
-legal slot ≈ **2026-10-06 14:10 UTC**; the week reset caps the blackout at
+legal slot ≈ **2026-10-06 16:07 UTC** — **CORRECTED before this page was
+final: ≈14:10 was yesterday's arithmetic, and the 139th audit (which completed
+during this sitting) re-derived it off the meter's one-point rise 82 → 83. That
+point cost two hours and every further point costs ~1.7 h more. My own 83 %
+reading above is why 14:10 could not be right, and leaving an internally
+inconsistent page would be the exact defect that audit's RANK 1 is about.** The
+week reset caps the blackout at
 ≈ **2026-10-07 12:40 UTC** under any meter value.
 
 **And the cost, in the same breath, which is the whole point of `D30`'s
@@ -390,7 +396,8 @@ able to run."* One day's notice is all this item is for.
 
 **2. NO-DECISION: `D30`'s standing report, delivered here as its armed default
 requires, with nothing to rule on.** Builder dark **76 slots / 75.8 h**, longest
-on record; first legal slot ≈2026-10-06 14:10 UTC; 73 % of this week's shared
+on record; first legal slot ≈2026-10-06 **16:07** UTC (corrected from 14:10 —
+the meter's 82 → 83 rise cost two hours; 139th audit); 73 % of this week's shared
 pool is another tenant's. **`2026-W40`: 0.0 h drawn of 30 free Kaggle
 GPU-hours, expiring Saturday 2026-10-10;** W39's ~28.93 h expired yesterday
 unbought, the third consecutive week, ~83 h in three. For the first time there
