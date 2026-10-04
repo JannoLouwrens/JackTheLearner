@@ -9133,6 +9133,50 @@ DECIDE: D37
              been able to run.
   decide_by: 2026-10-04
 
+**ADDENDUM 2026-10-04 (Review FULL, act 9) — THE `CONDUCT-MISFILED?` FLAG IS
+DISPOSED, AND THE ANSWER IS: `goal` IS CORRECT, THE RECLASS IS REFUSED.**
+
+`decisions --check` carries a soft reading on this entry — *"class `goal` but
+blocks no spec id; if this is about how the ORGANS work rather than what Jack
+must BECOME, reclass to `conduct`, execute it at the desk, and report instead of
+asking"* — and the 138th audit put it to this desk by name as the Review's call
+rather than the overseer's. Disposed here rather than left to be inferred,
+because the tool reports silence and never guesses.
+
+**THE RECLASS IS REFUSED FOR TWO REASONS AND THE SECOND IS THE DISQUALIFYING
+ONE.** First, the question is substantive and not procedural: whether an
+`A4`-family run can be scored against its own declared collapse condition
+decides whether a learning-core claim is FALSIFIABLE, and a latent that has
+collapsed while its loss curve falls is the precise shape of a capability we
+would otherwise claim and not have. That is what Jack must become, not how the
+organs work. The `blocks: no spec id` field is true and is a statement about
+timing — every arm behind the seat is VOID-FORECLOSED or VENUE-UNAFFORDABLE —
+not about subject matter.
+
+**Second, and this is the one that settles it: `conduct` means *execute at the
+desk*, and executing at this desk is the one thing no classification can make
+legal here.** `D29` is a RESOLVED decision that records option (i) BUILD THE
+DIAGNOSTIC as NOT TAKEN. This entry exists *because* this desk withdrew its own
+ruling on finding that. Reclassing to `conduct` and then executing would reverse
+a resolved decision by desk action — which this entry's own `default` block
+names as *"the whole reason this entry exists"* — while wearing a
+classification change as the warrant. **A desk may not acquire an authority by
+re-labelling the question.** The tool's reading is a good default and it is
+wrong on this entry; the entry stays `goal` and stays the owner's.
+
+**AND THE ONE THING THE OWNER SHOULD SEE TODAY RATHER THAN TOMORROW.** The
+default fires **2026-10-05** (firing is the day after `decide_by`; cf. `D33`'s
+expiry note). It is monotone, it is legal, and this desk is not asking for it to
+be delayed — `decide_by` may tighten and may never be lengthened. But its price
+is now fully in hand: the premise `D29` lacked exists and is committed, and the
+default locks in *"the project keeps a `mandatory` guard it has never once been
+able to run"* on the last day before that premise could have mattered.
+**The recommendation quoted above is unchanged and is not re-argued**; the
+counterargument against it — that a desk missing its own deadline should not get
+to reopen a closed decision — is also unchanged, and this desk still has no
+complaint available to it. One day's notice, and nothing more, is what this
+addendum is for.
+
 ## D38 — Two armed defaults each claim the FULL Review's FIRST act, they collide only on Sundays, and today I broke one of them. Which one wins? (2026-09-27, Review, FULL)
 
 **THE COLLISION, stated as the two sentences that produce it.** `D28` (RESOLVED
