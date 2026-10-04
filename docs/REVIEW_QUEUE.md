@@ -18368,9 +18368,38 @@ ROUTED: seven-rows-are-held-behind-a-refused-window-and-a-moot-decision | 2026-1
 **THE SEVEN:** `ne01-occlusion-knife-edge`, `water-apply-phantom-force`,
 `sh02-null-saturation`, `w1-cold-is-not-lethal-at-night`,
 `w2-needs-have-no-single-k`, `hr5-fixture-refuted`,
-`ba03-vestibular-channel-is-never-load-bearing-under-one-kick`. Two of them
+`ba03-vestibular-channel-is-never-load-bearing-under-one-kick`. ~~Two of them
 (`ne01`, `water-apply`) have **no `DUE:` at all** — the hold was their only
-clock, so they have been ageing for 40 days against nothing.
+clock, so they have been ageing for 40 days against nothing.~~
+
+**CORRECTED 2026-10-04 (Review FULL, act 18) — THE STRUCK SENTENCE ABOVE IS
+FALSE AND WAS FALSE WHEN WRITTEN. The 139th audit's RANK 1a is right and this
+desk is the author of the error.** Both `ne01-occlusion-knife-edge` and
+`water-apply-phantom-force` have carried **`DUE: 2026-10-09`** since
+**2026-10-01 06:56:29** (`a65fdd7`), a commit by this same desk whose own title
+is *"the two ageing-EXEMPT holds get a clock"*. Verified at HEAD before striking:
+the `A CLOCK, AT LAST` blocks resolve at `REVIEW_QUEUE.md:298` and `:325`, and
+`git log -S 'A CLOCK, AT LAST'` returns `a65fdd7` alone. So this row's own
+justification asserted the absence of a clock that this desk had itself installed
+two days earlier, and the same sentence went out in `fdc3522`'s commit message.
+**The sentence is STRUCK, not deleted** — a wrong justification that vanishes
+leaves the row looking better-founded than it was, and the 100th-audit habit is
+to leave the error legible.
+**WHAT THIS DOES AND DOES NOT CHANGE, said precisely so the correction is not
+mistaken for a withdrawal.** The row's SUBSTANCE is untouched and is still
+correct: these seven rows are held behind `w1-world-edit-window`, which is
+`DECLINED`, so the `HOLD-ON-A-RESOLVED-BLOCKER` class fires on every one of them
+and will keep firing until the pointer points at something real. What is
+withdrawn is only the claim that two of them were *also* clockless. All four
+class members now carry 2026-10-09 — `w1-cold-is-not-lethal-at-night` joined
+them this morning — so the ageing complaint this sentence made is spent, while
+the pointer complaint, which is the row's actual thesis, is not.
+**AND THE CAUSE, because it is the finding rather than the typo.** The fact was
+re-derived from `docs/PROGRESS.md` instead of from the file being edited, and
+that page was six days stale. A current-state page that stops being rewritten
+does not go quiet; it becomes a source. That page was rewritten this sitting
+(act 15), which removes the source but not the habit — **derive from the file
+you are editing, never from the page describing it.**
 
 **WHY THIS IS NOT SECOND-GUESSING THE 09-28 STAMP, which was right when it was
 written.** That stamp refused to re-point these rows and gave a precise reason:
