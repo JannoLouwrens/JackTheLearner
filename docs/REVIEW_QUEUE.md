@@ -3518,8 +3518,45 @@ ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
     row's own disposition a different and simpler question. Dating it past that
     Sunday is the first re-date of this row whose reason has a date attached to
     it rather than a hope. 2026-10-03 is the tool's own next date with room.
-    WAITS-ON: w1-world-edit-window
-    BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23
+    DUE: 2026-10-09 | RE-DATED 2026-10-04 (Review FULL, OVERDUE FIRST, act 3).
+    **Fourth break, and the 09-26 re-date's own promise is the thing to answer
+    first, because it was kept and it did not help.** That re-date said 09-27
+    *"gives this row an answer either way: a window to be re-scaled against, or
+    a declined authorship that makes this row's own disposition a different and
+    simpler question."* **The second limb happened** — `w1-world-edit-window`
+    was stamped `DECLINED` on 09-28 — and this desk then did not take the
+    simpler question it had promised to take. So the honest cause of break four
+    is not the blocker; it is that the blocker resolved and nobody re-read the
+    row. That is the `HOLD-ON-A-RESOLVED-BLOCKER` violation this row fires, and
+    it is correct to fire.
+    **THE DATE IS DERIVED, NOT CHOSEN, and it is deliberately not a free
+    calendar slot.** 2026-10-09 is `D33`'s own armed stop-rule — *"if `D33` is
+    unanswered on 2026-10-09, the three orphaned rows are DECLINED to you as a
+    class rather than re-dated a fifth time"* — and `ne01-occlusion-knife-edge`,
+    `water-apply-phantom-force` and `hr5-fixture-refuted` already carry that
+    exact date for that exact reason. This row is a member of the same class by
+    the same mechanism (held behind the same `DECLINED` window), so it **joins
+    the existing decision instead of inventing a fifth date for one question**.
+    `WAITS-ON` is re-pointed at that class decision so the pile counts these as
+    ONE decision and not as four rows; `BLOCKED-BY` is **deliberately left
+    pointing at the DECLINED row**, which is why the violation stays red. **That
+    asymmetry is the whole point and is not an oversight:** re-pointing
+    `BLOCKED-BY` at a fresh live blocker would clear the red and launder the
+    largest structural fact this project has, which the 10-03 audit named and
+    this desk is refusing. A clock makes the row honest about *when*; it does
+    not make the pointer point at anything.
+    **AND THE STOP-RULE IS NOW UNCONDITIONAL FOR THIS ROW, stated in advance so
+    the fifth break cannot be a surprise:** on 2026-10-09 this row is DECLINED
+    with the class whether or not `D33` is answered. Cold-is-not-lethal needs a
+    `playground.py` re-scaling that only the refused window authorised; there is
+    no second route, and five re-dates against no route is this file telling a
+    story rather than keeping a promise. If the commitment *"too cold kills
+    him"* is to live, it lives through a **registered successor spec** — which
+    is the owner ask standing on this sitting's page, not a queue date.
+    WAITS-ON: D33 | the orphaned-rows class decision, DUE 2026-10-09 — same
+        decision as `ne01-occlusion-knife-edge`, `water-apply-phantom-force`
+        and `hr5-fixture-refuted`, not a fourth separate question
+    BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23 — **DECLINED 2026-09-28, and this pointer is LEFT WRONG ON PURPOSE** (see the 10-04 re-date): the hold waits on nothing that will ever move, the violation is the true reading of that, and re-pointing it at a live blocker to clear the red is the one repair this desk refuses
 
 ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
     DUE: 2026-09-21 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
