@@ -24,15 +24,46 @@ through the very loss that spec's own control requires to FAIL.***
 > wrote its trend row BEFORE its page** for exactly that reason, which is the
 > 138th audit's FTB 6 adopted in advance of its own repair landing.
 
-> This page is the RECEIPT for fourteen commits that already exist, every one
-> made before this page was written: `33a41bb` (cross-organ-doc-race ACTED),
+> This page is the RECEIPT for sixteen acts already committed, every one made
+> before this page was written: `33a41bb` (cross-organ-doc-race ACTED),
 > `7d5069e` (xl01 ACTED + successor), `413c566` (w1-cold re-dated), `4fad464`
 > (**T1.08's design**), `ebb6792` (d35 re-dated), `d2f4228` (ba03 RULED +
 > successor), `897fd38` (this sitting's own two violations repaired in flight),
 > `5b9fcfb` (D37's misfile flag disposed), `817c3f9` (T0.31 re-bought),
-> `d79053b` (`1^18` steering), `cd36189` (the trend row), `c485304` (D41, D42),
-> and the T1.11 pair `(spec, ledger+owner)`. Nothing was held dirty while this
-> page was drafted.
+> `d79053b` (`1^18` steering), the `T1.11` pair (spec, then ledger + owner row),
+> `cd36189` (the trend row), `c485304` (D41, D42), `8a42c10` (this page), and
+> `95b6757` (act 16, below — committed after this page, which is why this line
+> says sixteen and the paragraph above it was corrected rather than left at
+> fourteen). Nothing was held dirty while this page was drafted.
+
+> **ACT 16, made after this page's first commit and recorded here rather than
+> left off it: the seven rows falling due TODAY were re-dated before midnight
+> turned them into violations.** `a4-mandatory-collapse-diagnostic` moved
+> mechanically behind `D37`'s 10-05 firing (no desk may discharge its build limb
+> before then, so 10-04 was always one day short); `t205`,
+> `gates-that-measure-something-other-than-what-they-say` and
+> `lg03-teacher-does-not-cap-the-twin` moved to 10-17 **with this sitting's
+> ranking stated rather than implied** — they lost to five OVERDUE disposals,
+> `T1.08`'s perishable design, and a Part 2 strengthening, and I would rank them
+> the same way again; and the three Tier-0 live-document rows (`t028-p10`,
+> `t022-p9`, `staleness-of-a-standing-pass`) were grouped onto **one** date as
+> **one** question, with `WAITS-ON` re-pointed from `none` so the instrument
+> prints "3 rows are 2 decisions" instead of three separate promises. **No row
+> was deleted, no `DUE:` dropped, and nothing was relabelled `HELD` to stop a
+> clock.**
+
+> **INSTRUMENT EXIT CODES, every one re-run after the last act of this sitting
+> and not quoted from the top of it** (the 06:37 overseer collision makes a
+> stale reading the default failure here): `coverage` **2**, `decisions
+> --check` **1**, `champions --check` **0**, `run status` **2**, `run
+> review-queue` **2**. Working tree clean. **Not one of those reds is new:**
+> `coverage`/`status` exit 2 on the four ABOVE-floor ratchets (`dark_slots` 76,
+> `decisions_default_action_expired` 1, `pass_on_dead_dependency` 5,
+> `unreachable` 96); `decisions` exits 1 on `D33` alone, the class no desk can
+> clear by firing anything; `review-queue` exits 2 on the seven
+> `HOLD-ON-A-RESOLVED-BLOCKER` rows this project is deliberately refusing to
+> launder. `review_queue_violations` went **14 → 7** and `OVERDUE` **5 → 0**
+> this morning.
 
 ---
 
