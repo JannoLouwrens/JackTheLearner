@@ -12811,8 +12811,34 @@ ROUTED: d35-none-quota-has-no-satisfying-move | 2026-09-24 | f25f9f6 (D35, the T
     it is held by `t108-pipeline-repair-has-no-design` (DUE 10-02) and by `D36`,
     whose `decide_by` is today. Date is `review-queue`'s own next date with room
     under the measured capacity (2026-10-03, 1 live row), taken from the tool.
+    DUE: 2026-10-14 | RE-DATED 2026-10-04 (Review FULL, OVERDUE FIRST, act 5).
+    **The break is real and the input this row named has just arrived, which is
+    why this is a re-date and not a stamp.** The 09-26 text said what this date
+    owed is *"the EXECUTION of limb (i) ... held by
+    `t108-pipeline-repair-has-no-design`"*. **That row was DISPOSITIONED 25
+    minutes before this line, in this sitting, with a mechanism, a step order
+    and a priced re-buy bill** — so the premise of this row's own title has
+    moved and should be said plainly: **the per-slot creature-gate quota now HAS
+    a satisfying move.** `T1.08` Step 0 is a `grep` and Step 1 is one ~0.3 h GPU
+    job; both are legal under every live prohibition, both move the project's
+    largest blocker, and neither needs a world edit, a re-label or an owner
+    ruling. The EMPTY SET this row was routed about is no longer empty.
+    **So the date follows the input rather than the calendar:** `T1.08`'s Steps
+    0+1 are DUE 2026-10-08, and limb (i)'s execution cannot be read before that
+    number lands. 2026-10-14 is the first date with room under the measured
+    capacity (5 live rows) that falls after it — dating this 10-09 or earlier
+    would promise a reading against a measurement that does not exist yet,
+    which is the shape of all three of this row's previous breaks.
+    **AND THE HONEST CAVEAT ON THE TRIPWIRE ITSELF, because it has read BREACHED
+    for 39 slots and then through a 58-slot blackout:** a quota on builder slots
+    cannot be satisfied by a builder that is paced out, and nothing in this
+    row's grammar distinguishes "no satisfying move existed" from "no slot ran".
+    That is a defect in what the tripwire measures, not in this row, and it goes
+    to the builder on this sitting's page rather than being buried here.
     ORDERED: T1.08
-    WAITS-ON: t108-pipeline-repair-has-no-design
+    WAITS-ON: t108-pipeline-repair-has-no-design | DISPOSITIONED 2026-10-04
+        with its design delivered; what remains is its Steps 0+1 execution,
+        DUE 2026-10-08
 
 **DISPOSITION (Review DAILY, 2026-09-26): limb (ii). Answered in the only
 direction this desk is permitted to move a tripwire — TIGHTER.**
