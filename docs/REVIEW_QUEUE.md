@@ -7503,6 +7503,24 @@ binds any successor; XL.01's FAIL stands as history either way.
 
 ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
     DUE: 2026-10-04 | RE-DATED 2026-09-24 (Review DAILY). The 2026-09-23 date BROKE — second break. This row is NOT part of the W1 docket and must not inherit its excuse: what it owes is a disposition of the fast/slow world-model fixture — *what does the DP family require of a world model that beats every null but loses to a linear probe?* — and no world edit, no registration and no GPU hour gates it. The honest cause of this break is therefore the plainest one available and it is this desk's alone: **at a DEMONSTRATED disposal rate of ~1 row per sitting, three Review-owned designs cannot share one morning, and this one ranked third of three.** It is dated LAST of today's three for a stated reason rather than by accident — `w1-world-edit-window` blocks five other rows and `w0-too-shallow` holds the project's largest standing result, while this one blocks a FAIL-UNOWNED diagnosis and nothing downstream of it. Dated 2026-10-04 (2 promised against a measured 6), one sitting clear of 10-01 so the two are not made to share a morning the way these three just were. ORIGINAL TEXT FOLLOWS, unchanged. | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for the fast/slow world-model fixture: what does the DP family require of a world model that beats every null but loses to a linear probe? Date is `next_free_due` per B4.
+    DUE: 2026-10-17 | RE-DATED 2026-10-04 (Review FULL, act 16). **Third break,
+        and the cause is this desk's and is the same one its own 09-24 re-date
+        named: at a demonstrated disposal rate of ~1-2 designs per sitting,
+        this row keeps ranking last.** What it owes is unchanged and still
+        needs no world edit, no registration and no GPU hour. **What this
+        sitting spent its clock on instead, said plainly so the ranking is
+        auditable rather than implied:** five OVERDUE disposals, `T1.08`'s
+        pipeline-repair design (perishable, ~29 free GPU-hours expiring weekly
+        behind it), and a Part 2 strengthening that demoted a standing PASS. I
+        judge all three above this row and I am recording that judgement rather
+        than letting the date break silently for a third time.
+        **AND A RANK CHANGE THIS SITTING EARNED IT, which is the reason it is
+        not dated last again:** this row asks what the DP family requires of a
+        world model that beats every null but loses to a linear probe. `T1.08`'s
+        Step 1 measures how much of that rig's spread is estimator rather than
+        capability, and the answer bears directly on whether "loses to a ridge
+        reference" is a finding about the world model or about the measurement.
+        Dated one sitting AFTER Step 0+1 lands (10-08) for that reason.
 
 **Measured, twice, consistently.** `T2.05` v1 (2026-08-14) VOIDed itself
 honestly — the persistence ruler leaked marginal statistics (shuffled
@@ -8061,6 +8079,18 @@ ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Rev
         `t310`. 09-20 carries 2 live rows. What is owed is the SWEEP and a
         verdict on whether it becomes a standing instrument.
     DUE: 2026-10-04 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. FULL-sized Part 2 work and it has now missed two Sundays. 09-27 carries 5 live rows and this sweep plus its paired row would make 7 — the exact `piled_on` defect this file counts — so it goes to the NEXT FULL with the pair intact. Naming the cost rather than hiding it: that is twelve more days in which specs may pass gates that measure something other than what they say.
+    DUE: 2026-10-17 | RE-DATED 2026-10-04 (Review FULL, act 16). Second break,
+        cause as above and not the builder's. **And this sitting produced a NEW
+        instance that belongs to this row rather than to a fresh one, which is
+        why it is re-dated and not re-routed:** `T1.11` ("Train/inference path
+        parity") was gating on whether the certified loss REACHES the actuator
+        while its name claims PARITY between the training and inference paths —
+        a gate measuring something other than what it says, found by this
+        sitting's Part 2 and repaired by an added conjunct (`shipped_callers
+        >= 1`; the demotion to FAIL is owned at
+        `t111-certified-loss-has-no-shipped-caller`). **That is this row's
+        thesis demonstrated on a 7-week-old certificate**, and the ladder-wide
+        sweep it asks for is now worth strictly more than it was yesterday.
 
 **Three instances, three specs, two days, all found by reading source rather
 than by any tool:**
@@ -8222,6 +8252,13 @@ ROUTED: lg03-teacher-does-not-cap-the-twin | 2026-09-12 | builder (gate 1bd42dc,
         row refutes. Reading them apart would let a corrected premise and the
         generalisation built on it be ruled in different sittings.
     DUE: 2026-10-04 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. Moved WITH the sweep above, not beside it: that sweep cites LG.03 as one of its three founding instances and quotes as the instance the exact sentence this row refutes. Reading them in different sittings would let a corrected premise and the generalisation built on it be ruled apart.
+    DUE: 2026-10-17 | RE-DATED 2026-10-04 (Review FULL, act 16). Second break,
+        cause as above: a desk-owned design question that ranked below the
+        perishable item and below the OVERDUE class. Nothing about it moved,
+        nothing gates it, and no builder slot was waiting on it. Dated with its
+        two siblings above because all three are this desk's design debt and
+        pretending they will be disposed on three separate mornings is how this
+        file acquires broken dates.
 
 **The ruling was implemented in full and NOTHING here asks to undo it.**
 `PLANNER_CALIB_MIN = 1.0` is committed (`1bd42dc`), checked before
@@ -10909,6 +10946,16 @@ ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026
         days ago: 09-28..10-03 each already carry this desk's measured 6/cycle
         capacity, so the date is set by THIS QUEUE'S ROOM, not by the cost of
         the work. That is the drain, and it is `D28`'s, not this row's.
+    DUE: 2026-10-19 | RE-DATED 2026-10-04 (Review FULL, act 16), and this one is
+        **mechanical rather than judged: the row's remaining half is gated by an
+        owner decision that has not fired yet.** `D37` asks whether the `Delta_k`
+        readout may be BUILT, its default fires **2026-10-05**, and this desk
+        disposed its `CONDUCT-MISFILED?` flag this morning by REFUSING the
+        reclass that would have let a desk execute it. So no desk may discharge
+        this row's build limb before 10-05 under any reading, and dating it ON
+        10-04 was always one day short. 10-19 is the first date with room that
+        falls clear of `D37`'s firing plus one builder slot; `decide_by` may
+        tighten and this date follows it down if it does.
     WAITS-ON: none
 
 **THE DISAGREEMENT, in two greps.** `docs/research/LEARNING_CORE.md` §5.4,
@@ -14415,6 +14462,20 @@ ROUTED: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | 2026-09-26 | T
         certificate, never a bar move: P10's other conjuncts and P1-P17's
         fixture legs all pass, and `decisions --check` itself is healthy
         (rc=1, sole red D33, correct).
+    DUE: 2026-10-20 | RE-DATED 2026-10-04 (Review FULL, act 16). First break.
+        **Grouped deliberately with `t022-p9-reads-a-specs-own-row-as-someone-elses`
+        and `staleness-of-a-standing-pass-reaches-no-exit-code` onto one date,
+        because they are one question asked three times:** each is a Tier-0
+        certificate whose live-document conjunct asserts something about the
+        PROJECT's state rather than about the tool's honesty, so a healthy
+        project state reads as a broken tool. This sitting watched that exact
+        mechanism fire a fourth time — **`T0.31` fell PASS -> FAIL at 06:44:49
+        on this desk's own in-flight malformation**, P1 gating live
+        `MALFORMED == 0` in the real file, and was re-bought to PASS once the
+        edit was repaired twenty minutes later. A certificate that a desk can
+        demote and restore by editing prose mid-sitting is the same defect these
+        three rows describe, now with a dated instance. One ruling should settle
+        the class; three separate mornings would produce three local patches.
     WAITS-ON: none | the defect is fully characterised and the repair is
         spec-local; nothing else holds it.
     BUILDER-TRACE 2026-09-28 ~19:0x UTC (builder — a RECEIPT in the prose
@@ -14529,11 +14590,13 @@ ROUTED: t022-p9-reads-a-specs-own-row-as-someone-elses | 2026-09-26 | `T0.22` of
         6). Not urgent by compute — nothing is dispatched behind it — but it is
         a STANDING PASS certificate that has been latently red for 23 days, so
         it should not sit past the next free date.
-    WAITS-ON: none | no live row's answer changes what is measured here. The
-        row belongs to the same class as `gates-that-measure-something-other-
-        than-what-they-say` (DUE 10-04, same date, deliberately) and is filed
-        separately because that row is about gates in general and this one is a
-        single instrument with a one-line repair and a measured date.
+    DUE: 2026-10-20 | RE-DATED 2026-10-04 (Review FULL, act 16). First break.
+        Grouped with `t028-p10-reads-an-empty-armed-register-as-a-broken-tool`
+        onto one date as one question; see that row's re-date for the reasoning
+        and for the `T0.31` instance this sitting measured. `WAITS-ON` declares
+        the grouping so the pile counts these as one decision and not as three
+        rows.
+    WAITS-ON: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | RE-POINTED 2026-10-04 (Review FULL, act 16) from `none`, which was true row-by-row and wrong about the group: these three Tier-0 live-document rows are ONE question and now share ONE date (2026-10-20), so the pile must count them as one decision. It buys no ageing exemption and moves no violation count.
     Question: `T0.22`'s property 9 — *"No test in the ladder may read another
     spec's metrics off the ledger directly"* — is implemented as a regex over
     every file in `experiments/tests/` for `results["<any real spec id>"]`, and
@@ -14588,12 +14651,16 @@ ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run st
         this slot (09-27, 09-29 and 10-02 all read AMBER at 7 against a measured
         capacity of 6). Nothing is dispatched behind it and no number moves
         until the desk rules, so it takes the mechanical date.
-    WAITS-ON: none | no live row's answer changes what is measured here. It is
-        adjacent to `t022-p9-reads-a-specs-own-row-as-someone-elses` (DUE
-        10-04, routed this morning) in the sense that both are standing PASS
-        certificates that are red-in-waiting, and it is filed separately
-        because that row is one instrument with a one-line repair while this
-        one is a SEVERITY question across a whole reporting class.
+    DUE: 2026-10-20 | RE-DATED 2026-10-04 (Review FULL, act 16). First break,
+        and it was `DATED ONTO A FULL DAY` when routed (7 already promised on
+        10-04), which the instrument flagged at the time. Grouped with
+        `t028-p10-...` onto one date as one question; see that row's re-date.
+        **One observation this sitting owes it:** the live `T0.31` demotion and
+        restoration above happened *within* one sitting and left no exit code
+        behind once re-bought, which is this row's own claim — the staleness and
+        the recovery of a standing PASS were both invisible to every gate except
+        the regate sweep's log line.
+    WAITS-ON: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | RE-POINTED 2026-10-04 (Review FULL, act 16) from `none`, for the reason given on `t022-p9-...`: one question, one date, one decision. No exemption is claimed and no number above moves.
     Question: the 121st audit's FTB 3 ordered floor state into `run status`'s
     exit code, and this slot shipped it (`8cd37d0`: status 0 -> 2 on
     `decisions_default_action_expired` = 1 vs floor 0). Immediately visible
