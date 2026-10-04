@@ -46685,8 +46685,8 @@
     },
     "T1.11": {
       "amended": [],
-      "attempt": 3,
-      "commit": "ab9d3e8",
+      "attempt": 5,
+      "commit": "04f99d1",
       "compute_s": null,
       "control_metrics": {
         "inference_params_total": 41525008,
@@ -46694,7 +46694,8 @@
         "inference_params_trained_frac": 0.8888,
         "per_module": "action_expert=0; layers=36,710,400; proprio_encoder=198,912"
       },
-      "duration_s": 6.35,
+      "dirty_files": null,
+      "duration_s": 6.42,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -46743,26 +46744,118 @@
           ],
           "spec_sha": "24a67270652473b7",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 3,
+          "commit": "ab9d3e8",
+          "compute_s": null,
+          "control_metrics": {
+            "inference_params_total": 41525008,
+            "inference_params_trained": 36909312,
+            "inference_params_trained_frac": 0.8888,
+            "per_module": "action_expert=0; layers=36,710,400; proprio_encoder=198,912"
+          },
+          "duration_s": 6.35,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "6aa5842f7d8c65c7",
+          "message": "",
+          "metrics": {
+            "inference_params_total": 41525008,
+            "inference_params_trained": 41525008,
+            "inference_params_trained_frac": 1.0,
+            "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912"
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 943.4,
+          "preserved_impl": null,
+          "ran_at": "2026-09-06T17:28:29",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "24a67270652473b7",
+          "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 4,
+          "commit": "d79053b+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "inference_params_total": 41525008,
+            "inference_params_trained": 36909312,
+            "inference_params_trained_frac": 0.8888,
+            "per_module": "action_expert=0; layers=36,710,400; proprio_encoder=198,912"
+          },
+          "dirty_files": [
+            "experiments/tests/t1_11_path_parity.py"
+          ],
+          "duration_s": 10.16,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "6ba988c544153675",
+          "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/T1.11/2026-10-04T06-59-44",
+          "metrics": {
+            "inference_params_total": 41525008,
+            "inference_params_trained": 41525008,
+            "inference_params_trained_frac": 1.0,
+            "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912",
+            "shipped_actions_subscripts": 81,
+            "shipped_caller_sites": "NONE",
+            "shipped_callers": 0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 930.7,
+          "preserved_impl": "refs/jack/failimpl/T1.11/2026-10-04T06-59-44",
+          "ran_at": "2026-10-04T06:59:44",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "24a67270652473b7",
+          "status": "FAIL"
         }
       ],
-      "impl_sha": "6aa5842f7d8c65c7",
-      "message": "",
+      "impl_sha": "6ba988c544153675",
+      "message": "pre-registered threshold not met",
       "metrics": {
         "inference_params_total": 41525008,
         "inference_params_trained": 41525008,
         "inference_params_trained_frac": 1.0,
-        "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912"
+        "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912",
+        "shipped_actions_subscripts": 81,
+        "shipped_caller_sites": "NONE",
+        "shipped_callers": 0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 943.4,
+      "peak_rss_mb": 935.0,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T17:28:29",
+      "ran_at": "2026-10-04T07:00:02",
       "seeds": [
         0
       ],
       "spec_id": "T1.11",
       "spec_sha": "24a67270652473b7",
-      "status": "PASS"
+      "status": "FAIL",
+      "supersedes_fail": {
+        "commit": "d79053b+dirty",
+        "dirty": true,
+        "impl_changed": false,
+        "impl_sha": "6ba988c544153675",
+        "metrics": {
+          "inference_params_total": 41525008,
+          "inference_params_trained": 41525008,
+          "inference_params_trained_frac": 1.0,
+          "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912",
+          "shipped_actions_subscripts": 81,
+          "shipped_caller_sites": "NONE",
+          "shipped_callers": 0
+        },
+        "ran_at": "2026-10-04T06:59:44",
+        "spec_changed": false,
+        "spec_sha": "24a67270652473b7",
+        "status": "FAIL"
+      }
     },
     "T1.12": {
       "amended": [],

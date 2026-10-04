@@ -18433,3 +18433,58 @@ ROUTED: cpu-class-ladder-has-no-rung-between-2h-and-48h | 2026-10-04 | THE RULIN
     (`BA.03` 7x over, `LT.03`'s shipped run 2.6x over inside `cpu<2h`) and no
     instrument could see either, because the labels have never been checked
     against measured wall at all.
+
+## ROUTED 2026-10-04 (Review FULL, act 12 — the owner for the FAIL this sitting's own strengthening created): `t111-certified-loss-has-no-shipped-caller` — `T1.11` certifies that `action_training_loss` reaches the actuator and never checked that anything CALLS it; measured, it has ZERO callers outside `experiments/` while `TrainingPipeline.py:193` still trains through `output['actions']`, which is `T1.11`'s own `_control`
+
+ROUTED: t111-certified-loss-has-no-shipped-caller | 2026-10-04 | T1.11 attempt 2, FAIL 2026-10-04 (clean tree), `shipped_caller_sites = NONE`, `shipped_actions_subscripts = 81` — the Review's Part 2 re-examination | OPEN
+    DUE: 2026-10-16 | 10-16 carries 2 live rows against the measured capacity
+        of 6, so this is routed onto room. **NOT dated sooner on purpose, and
+        the reason is that this is the most consequential repair on the board
+        and the cheapest wrong version of it is one slot away.** Making
+        `TrainingPipeline` call `action_training_loss` changes what the shipped
+        system trains; it is not a one-line import. Dated behind `T1.08`'s
+        Steps 0+1 (10-08) because that measurement tells you what the training
+        recipe's seed noise actually is, and changing the loss and the recipe
+        in the same week makes neither attributable.
+    WAITS-ON: none | nothing gates the diagnosis; the repair is design work
+        that exists now.
+    THE FINDING, and it is the second half of the exact defect `T1.11` was
+    written for. That spec's docstring records the original bug as: the runtime
+    path was `@torch.no_grad()`, training went through `action_head`, and
+    *"train_flow_matching_step — the only bridge between them — had zero callers
+    in the repo."* `T1.11` then tested the first half (does the fixed loss
+    REACH the actuator: yes, 41,525,008 of 41,525,008 parameters, every seed)
+    and never tested the second (does anything CALL the fixed loss). Measured
+    at HEAD by AST walk over every `*.py` outside `experiments/`:
+    **`action_training_loss` has ZERO call sites.** The only non-experiments
+    occurrences of the name in the repo are its own `def` at
+    `UnifiedBrain.py:4593` and a docstring reference at `:4553` — which is why
+    the conjunct is an AST walk and not a grep.
+    AND THE OTHER HALF, which is what makes this a live defect rather than a
+    gap: `TrainingPipeline.py:193` computes
+    `loss = output['physics'].pow(2).mean() + output['actions'].pow(2).mean()`.
+    A loss through `forward()['actions']` **is `T1.11`'s `_control`** — the arm
+    the spec REQUIRES to fail, and which does fail it at
+    `inference_params_trained_frac < 0.9`. So the certificate was bought by
+    proving that a loss nothing ships reaches the joints, while the thing that
+    does ship trains through the arm the same spec proves does not.
+    SIBLING FINDING, same disease one layer up, found the same morning and
+    routed separately: `make_action_optimizer` was built so that *"a spec and
+    the pipeline cannot drift apart again"* and has four spec callers and no
+    pipeline caller (`TrainingPipeline.py:493` is `AdamW(weight_decay=1e-4,
+    eps=1e-5)` clipping at 1.0; the shared recipe is `Adam`, warmup-then-
+    constant, clipping at 2.0). See `THE DESIGN` on
+    `t108-pipeline-repair-has-no-design`, Step 0. **Two independent bridges
+    between the ladder and the shipped pipeline, both built to end a drift,
+    both uncalled by the pipeline.** That pattern is the thing to fix, not
+    either instance.
+    WHAT THIS OWES: make the shipped training path call the certified loss, or
+    — if there is a reason the pipeline must compute its own — register the
+    reason and give `T1.11` a conjunct that names the sanctioned alternative.
+    PRE-REFUSED, because both cheap wrong moves are available: relaxing or
+    deleting the new `shipped_callers >= 1` conjunct (it is a strengthening by
+    a desk forbidden to weaken, and the overseer audits every spec diff), and
+    adding a bare call to `action_training_loss` somewhere in shipped code
+    purely to satisfy the count — a caller on a path nothing executes is the
+    same lie with a call site. If a repair is cosmetic, say so and leave the
+    FAIL standing; an honest red here is worth more than this certificate was.
