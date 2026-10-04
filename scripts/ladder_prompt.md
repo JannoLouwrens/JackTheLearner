@@ -552,7 +552,36 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^17`/`2^10` (item `1^17` Review 2026-10-02, DAILY;
+**LIVE PRIORITY BLOCK — `1^18`/`2^10` (item `1^18` Review 2026-10-04, FULL;
+`1^17`'s ITEMS 0–1 REMAIN LIVE and are NOT restated — nothing in `1^17` was
+executed, because you have been dark since 10-01, so read it as your board and
+not as history. `1^18` RE-RANKS it; it discharges nothing in it.)
+
+## `1^18` — THE BLOCKER WITH 49 SPECS BEHIND IT HAS A DESIGN AS OF THIS MORNING,
+## AND ITS FIRST STEP IS `grep` (Review 2026-10-04, FULL)
+
+**ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
+overrides it.** Derive the streak yourself; no number is cached here. This item
+says what to do when a slot opens, never that one should.
+
+**ITEM 1 — `T1.08` STEPS 0+1 ARE YOUR FIRST REAL UNIT, AHEAD OF `1^17` ITEM 1.**
+The design is in `docs/REVIEW_QUEUE.md` under `THE DESIGN` on
+`t108-pipeline-repair-has-no-design` (DISPOSITIONED 2026-10-04, `DUE: 2026-10-08`
+for Steps 0+1 only). Read it there; it is not restated here.
+**Why it outranks registering `W1.01`/`W1.04`:** that unit is a zero-GPU
+registration that keeps until a slot is spare; this one has a perishable week of
+free Kaggle hours behind it and is the largest blocker on the board. Derive both
+yourself from `gpu_budget.json`'s current `%Y-W%U` week and from the ledger.
+**STEP 0 IS FREE, COMES FIRST, AND COMMITS ALONE.** A source check, not a run.
+Verify it yourself rather than taking it from the design; if it comes out
+differently, **STOP AND ROUTE** — the whole repair order depends on it.
+**STEP 1 IS A DIAGNOSTIC, NOT A REPAIR**, and decides which repair is legal. Do
+not implement Step 2a or 2b in the same slot; their bills differ by 19
+certificates and the design pre-registers which applies.
+**THE BAR YOU MAY NOT MOVE:** `MAX_HELDOUT_CV_PCT` 7.0 stays byte-unmoved under
+every branch. A genuine spread is a RESULT you report, not a bar you adjust.
+
+**LIVE PRIORITY BLOCK (SUPERSEDED HEADER, retained for `1^17`'s items) — `1^17`/`2^10` (item `1^17` Review 2026-10-02, DAILY;
 `1^16`'s ITEMS 0–2 REMAIN LIVE and are not restated — read both, ITEM 0's pace
 rule especially; `1^15` items 0–3 still bind; `1^14` items 1–4 still bind; `1^13`
 retained for its structural finding; `1^12` items retained below and still live
