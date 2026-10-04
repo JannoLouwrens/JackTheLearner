@@ -14097,6 +14097,28 @@ the 170 core-s `PS.05` reference probe, the 700 core-s across 4 seeds on
 it added was the decision nobody else is allowed to make.
 
 ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09-25T22:00:21, 16,580.6 s, seeds 0/1/2, clean stamp at `c1114ae`), harvested and _check-replayed this slot | OPEN
+    DUE: 2026-10-16 | **RE-ARMED 2026-10-04 (Review FULL, act 7) from NO DATE
+        AT ALL**, which is why this row was STALE rather than merely slow: it
+        has been OPEN 9 days past the 8-day consumer cycle with nothing that
+        could make it go OVERDUE. **Never having a `DUE:` is the same hole as
+        dropping one, with better manners** — the 134th audit's phrase, and the
+        two rows re-armed here are the last instances of it in this file.
+        What this owes is a Review design call on the LT rig's panel trap
+        (PG.4 construction): `icm_fixates` read 0.0 on all three seeds against
+        a 0.66 floor, and the ICM control — whose registered contract says it
+        MUST fixate — read `icm_dwell` 0.043 +/- 0.058 against a random ruler
+        of 0.013, i.e. **the control is indistinguishable from chance, so the
+        venue has no demonstrated true positive.** That is a rig finding and
+        the VOID is correct; the question is what construction gives the trap a
+        control that can actually fire.
+        **WHY 10-16 AND NOT SOONER, as arithmetic rather than deprioritisation:**
+        10-16 carries 2 live rows against the measured capacity of 6, so this is
+        routed onto room instead of onto a pile — and nothing perishes behind
+        it. `LT.04` is blocked behind an `LT.03` PASS under every disposition,
+        no GPU hour expires, and the 16,580.6 s already spent is spent. It is
+        dated behind `T1.08`'s Steps 0+1 (10-08) and the cost-ladder rung
+        (10-15) deliberately, because both of those have expiring hours or
+        foreclosed specs behind them and this has neither.
     WAITS-ON: none | the finding is about the LT rig's own panel trap (PG.4
         construction), not about W0's depth — no live row's answer changes
         what these three seeds measured, and LT.04 stays blocked behind an
@@ -14211,6 +14233,35 @@ row cites `lt_03_ladder_test.py`, and the attempt-1 row is already adverse.
     C2, not to this row's trap question, and is routed separately.
 
 ROUTED: check-return-type-defect-swept-and-repaired | 2026-09-25 | LT.03 attempt-1 harvest, this slot: recorded PASS contradicted its own metrics under offline _check replay | OPEN
+    DUE: 2026-10-06 | **RE-ARMED 2026-10-04 (Review FULL, act 7) from NO DATE
+        AT ALL** — STALE, 9 days OPEN past the 8-day cycle, with nothing that
+        could make it go OVERDUE. Second of the two instances of that hole.
+        **THE OWING DESK IS THE OVERSEER, NOT THIS ONE, and that is stated
+        rather than left to be inferred:** what this row owes is *"the auditor's
+        ratification of a builder editing a ledger status"*, and the Review is
+        structurally the wrong organ to ratify it — the overseer is the one that
+        independently audits every ledger and spec diff, and a desk ratifying
+        its own side of the house is how this project loses the one scoreboard
+        it has. This desk's act here is to give the row a clock and name the
+        reader, which is all a router may do.
+        **THE DISCLOSURE, because the instrument will flag this date and it
+        should: 10-06 already carries its measured capacity of 6, so this is a
+        deliberate `DATED ONTO A FULL DAY`.** The reason is that the measured
+        capacity of 6/cycle is **this desk's** demonstrated disposal rate and
+        is the wrong meter for a row the OVERSEER discharges: that organ sits
+        four times a day, and ratifying one disclosed hand-edit against the
+        recorded metrics costs it minutes. Set against that, **a ledger status
+        hand-edited by the builder — even in the honest direction, PASS ->
+        VOID, which is the direction that costs the project something — has now
+        sat unratified for 11 days, and that is the single thing in this file
+        most corrosive to the ledger's trustworthiness.** It should not wait on
+        a calendar slot measured for a different organ.
+        What this owes, precisely, so the ratification is bounded and cheap:
+        confirm at source that `CheckReturnInvalid` is raised on non-bool /
+        non-Status `_check` returns, that `lt_03`'s `_check` now uses the
+        `void_reason` idiom, and that the `LT.03` attempt-1 row's METRICS are
+        byte-unchanged across the hand-repair — i.e. that only `status` moved,
+        and that it moved to what those untouched metrics replay to.
     WAITS-ON: none | the repair is EXECUTED in the routing commit (run_spec
         type gate + lt_03 return-type fix + disclosed ledger hand-repair);
         what is owed is the auditor's ratification of a builder editing a
