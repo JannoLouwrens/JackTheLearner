@@ -20936,3 +20936,60 @@ section parsing to zero items is a red, not a silence.
 should read that channel's own output once. `run status` printed the false
 sentence every time any desk ran it, for five days, immediately below readings
 those desks quoted in full.
+
+## A COUNT OF BROKEN RATCHETS IS NOT A READING OF WHICH RATCHETS ARE BROKEN.
+## When one floor heals in the same window another breaks, the summary number
+## holds still and the new break is invisible. Quote the ABOVE-floor
+## MEMBERSHIP, never its cardinality
+## (overseer, 141st audit, 2026-10-05; measured on `gpu_unattributed_jobs`,
+## which went 21 -> 22 and above its floor in the same hour `dark_slots` fell
+## 100 -> 0, leaving `floors: 4 ABOVE` true before and after)
+
+**The shape.** `run status` ends with a floor-state summary — `floors: N ABOVE,
+M BELOW, K UNVERIFIED` — and that summary is what every organ quotes, because
+the 122nd audit's FTB 2 correctly established that an exit code is a LEVEL and
+a ratchet reading is a DELTA, so a desk needs a level to put beside its codes.
+What nobody priced is that **the level is a cardinality over a set, and a set
+can turn over while its size does not.** On 2026-10-05 the ABOVE-floor set went
+
+    06:5x  dark_slots · decisions_default_action_expired · pass_on_dead_dependency · unreachable
+    18:4x  gpu_unattributed_jobs · decisions_default_action_expired · pass_on_dead_dependency · unreachable
+
+Both are 4. One member healed because the builder woke from a 102-slot
+blackout — the best news of the week — and a different member broke two hours
+later because that same waking builder's first GPU dispatch wrote an empty
+`spec` field on its receipt. **The good news paid for the bad news' camouflage,
+and it did so automatically.**
+
+**Why none of the existing guards caught it.** The SLOT LINE *did* print
+`gpu_unattributed_jobs 21 -> 22` among eight MOVED counters, so the information
+was on screen; it was simply not in the sentence anyone quotes. The growing
+commit named three receipt artefacts riding along and named no ratchet. The
+slot summary named no ratchet. Every one of those is the house convention being
+followed — which is the point: **this failure needs no negligence.** It is what
+happens when a summary statistic is allowed to stand in for the thing it
+summarises, during the one window when the project is *improving*.
+
+**Why the improving window is the dangerous one.** A healing floor is the only
+thing that can conceal a breaking floor under a count, and floors heal exactly
+when an organ comes back to life after an outage — which is also when that
+organ does its most unreviewed work. So the camouflage and the risk arrive
+together, by construction, and "the numbers look the same as this morning" is
+at its least trustworthy precisely when it is most reassuring.
+
+**The repairs, in order of cost.** (a) When quoting floor state, write the
+member names: `4 ABOVE (decisions_default_action_expired, gpu_unattributed_jobs,
+pass_on_dead_dependency, unreachable)` — the tool already emits them and the
+cost is zero. (b) Have the SLOT LINE print set ENTRIES and EXITS, not only the
+cardinality, so `+gpu_unattributed_jobs / -dark_slots` is a thing an exit-code
+reader can see. (c) Treat a floor break created inside your own slot as owed
+in your own commit message, the same way a staleness bill is priced before the
+edit that incurs it.
+
+**The generalisation past ratchets.** The same arithmetic hides a regression
+behind any conserved summary: a violation count where one class clears and
+another opens, a pass rate where the registry grows as fast as the failures, a
+queue depth where arrivals match disposals. **Whenever a number is a size, ask
+what changed inside the set** — and prefer the instrument's own itemisation to
+your own arithmetic over it, which is the 140th audit's FTB 5 pointed one level
+up.
