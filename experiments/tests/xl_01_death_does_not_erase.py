@@ -103,6 +103,24 @@ substrate), lethal, uniform legal respawns, PS.01-calibrated drives:
       pooled gate too; the pilots' honest control pools to 2.41. Per-seed
       ratios and flags stay REPORTED (c_alien_vs_wiped_ratio, c_alien_ok).
 
+  v3, 2026-10-05 (ordered by `xl01-pooled-conjunct-is-additive-or-it-is-a-
+  loosening`, routed 2026-10-04; T1.02 precedent — attempts 1-3 stay in
+  history). THE CLAIM GATE GAINS THE EQUAL-N POOLED RATIO AS AN ADDITIVE
+  CONJUNCT: mean(carried ttf2) / mean(wiped ttf2) across the 3 recorded
+  seeds must be <= RATIO_MAX, gated BESIDE — never instead of — the
+  existing all-3-seeds per-seed `ok_claim`. RATIO_MAX 0.5 is byte-unmoved.
+  Why: attempt 3 measured the per-seed-ratio mean at 1.0034 while the
+  equal-N pooled ratio reads 0.7286 — a mean of ratios at n=7 heavy-tailed
+  lives per arm is dominated by one lucky tiny denominator, which is the
+  same noise-domination the alien gate's v2 pooling repaired. Substituting
+  pooled FOR per-seed is PRE-REFUSED (a loosening at an unmoved bar), as is
+  any `>= 2 of 3` form. The pooled statistic is written into the recorded
+  metrics (`pooled_search_time_ratio`) whatever the verdict, so the
+  1.0034-vs-0.7286 gap is a ledger number rather than prose. EXPECTED
+  VERDICT, pre-registered: still FAIL — pooled 0.7286 > 0.5, and leg 2's
+  pooled means also sit the wrong way (carried_ltc 2.6667 vs wiped_ltc
+  2.0000).
+
 DECLARED FIXTURES, all external to `w0.py`, all symmetric across arms:
   * SHORT LIVES: every life starts at LIFE_E0 (XL.00's fixture, larger here
     because a life must be long enough for exploration to find food — the
@@ -703,16 +721,28 @@ def _check(m: dict, c: dict):
     if c.get("c_fixture_ok", 0.0) != 1.0:
         return Status.VOID              # no adequately-distant alien world:
         # the control could help by accident and its verdict would be noise
+    # ── the claim's POOLED statistic, computed and RECORDED first (v3) ───
+    # Same estimator as the alien gate below, aimed at the claim: `m` holds
+    # equal-N seed means (protocol._aggregate), so this quotient IS the
+    # equal-N pooled ratio. Written into `m` BEFORE any gate can return, so
+    # both statistics land in the ledger whatever the verdict (t0_24's
+    # _check-derived-metric precedent).
+    pooled_claim = (m.get("carried_ttf2_s", float("nan")) / m["wiped_ttf2_s"]
+                    if m.get("wiped_ttf2_s", 0.0) > 0 else float("nan"))
+    m["pooled_search_time_ratio"] = pooled_claim
     # ── the control, on its declared side, POOLED across seeds ──────────
-    # `c`/`m` hold seed MEANS (protocol._aggregate), so this quotient IS the
-    # equal-N pooled ratio. Per-seed gating was measured noise-dominated by
-    # the v2 pilots — see the docstring's last v2 change. NaN fails closed.
+    # Per-seed gating was measured noise-dominated by the v2 pilots — see
+    # the docstring's last v2 change. NaN fails closed.
     pooled = (c.get("c_alien_ttf2_s", 0.0) / m["wiped_ttf2_s"]
               if m.get("wiped_ttf2_s", 0.0) > 0 else float("nan"))
     if not pooled >= CONTROL_RATIO_MIN:
         return False                    # a foreign store recovered the
         # speedup: the "memory" is a prior, and the test measures nothing
-    # ── the claim ───────────────────────────────────────────────────────
+    # ── the claim, POOLED across seeds (v3, ADDITIVE conjunct — gated
+    # BESIDE the per-seed 3/3 `ok_claim`, never instead of it) ───────────
+    if not pooled_claim <= RATIO_MAX:
+        return False
+    # ── the claim, per-seed (all 3 of 3 — unchanged) ─────────────────────
     return bool(m.get("ok_claim", 0.0) == 1.0)
 
 
