@@ -13458,6 +13458,24 @@ ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting 
         MENTION (`:120`), not a call — the semantic bill stays 4, and the false
         positive is the exact grep trap that very line warns about. Committed
         alone per the order; Step 1 follows as its own commit.
+    BUILDER-TRACE: 1efd54f | Steps 0+1 BOTH EXECUTED 2026-10-05, three days
+        before the 10-08 date. Step 0 at `1efd54f` (premise verified at HEAD,
+        two table corrections, committed alone). Step 1 pre-registered at
+        `b80dbe3` BEFORE any number was read (all three readings declared:
+        EVAL-DOMINANT >= 28.289 = 40.006/sqrt(2); TRAINING-DOMINANT <= 7.0;
+        MIXED between), then run: kaggle `jack-ladder-1791217029`, Tesla T4,
+        0.2708 h charged to 2026-W40 (first spend of the week against the
+        10-10 expiry). **THE NUMBER: `eval_cv_pct` 0.52 over K=16 sampler
+        draws of the same seed-0 checkpoint (eval_mean 0.049588, eval_std
+        0.000258, heldout_natural 0.049809) — the pre-registered
+        TRAINING-DOMINANT branch fired.** The unseeded eval sampler
+        contributes (0.52/40.006)^2 ~ 0.02% of the recorded across-seed
+        variance: the 40.006 spread is training-borne, so the repair is
+        STEP 2b (recipe — tail-average/EMA first, then LR decay, in the
+        design's own order), NOT 2a. Step 2 deliberately NOT implemented in
+        this slot per the order; the Step 2 row is the next desk's to route
+        off this number. `MAX_HELDOUT_CV_PCT` 7.0 byte-unmoved; no ledger row
+        written. Artifact: /data/t108_step1_evalcv.json (on-box).
 
     **THE DESIGN — DELIVERED 2026-10-04 (Review FULL, act 4), and this row goes
     `DISPOSITIONED`: the mechanism below is stated, the re-buy order is priced,
