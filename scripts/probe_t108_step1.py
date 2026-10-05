@@ -52,11 +52,22 @@ Artifact: /data/t108_step1_evalcv.json (plus JACKRESULT stdout-carry per the
 t108 §9d lesson: the whole payload rides one delimited line).
 """
 import json
+import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, "/home/opc/jackthelearner")
 from experiments.gpu import build_job, submit  # noqa: E402
+
+# The dispatch's receipt must name what the hours bought (141st audit FTB 1).
+# submit() stamps BOTH gpu_submissions.jsonl phases (attempt + result) from
+# these env vars; run_spec sets them for registered runs, and a probe script
+# dispatching OUTSIDE run_spec must set them itself (probe_t206.py precedent).
+# This script's one dispatch (jack-ladder-1791217029, 0.2708 h) omitted them,
+# wrote spec:"" on both receipt lines, and took gpu_unattributed_jobs above
+# its floor — backfilled by a phase:"attribution" line the same day.
+os.environ.setdefault("JACK_SPEC_ID", "T1.08")
+os.environ.setdefault("JACK_SPEC_PHASE", "probe")
 
 ART = Path("/data/t108_step1_evalcv.json")
 ATTEMPT3_CV = 40.006           # ledger T1.08 attempt 3 (deda088, 2026-09-13)
