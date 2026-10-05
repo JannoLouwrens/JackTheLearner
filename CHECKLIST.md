@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 107 / 255 demonstrated
+## 106 / 255 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -79,7 +79,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T1.05** Frozen stays frozen
       - _asserts:_ The pretrained trunk/LLM does not change during policy training.
       - _dies if:_ Any delta in frozen parameters.
-- [x] **T1.11** Train/inference path parity
+- [!] **T1.11** Train/inference path parity  — inference_params_total=41525008; inference_params_trained=41525008
       - _asserts:_ Every module on the INFERENCE path that produces joint commands receives gradient from the TRAINING loss.
       - _dies if:_ A module the runtime uses to drive actuators gets zero gradient from the loss the pipeline optimises.
       - _then delete:_ Any training result. If the module producing joint commands never learns, the loss curve is measuring something the robot does not use.
@@ -1136,7 +1136,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 0 — HARNESS — can we measure anything?
 
-- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.204; ceiling_admitted=False
+- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.203; ceiling_admitted=False
       - _asserts:_ For any declared control path, the harness measures sim-seconds per real second before a long run starts, and REFUSES a run whose projected duration exceeds the spec's timeout or the box's tenant-safety budget.
       - _dies if:_ A long run launching with a projected duration past its own timeout, OR a projection that differs from the achieved duration by >25%.
       - _then delete:_ Nothing directly; it prevents burning a Sunday quota on a run that could never have finished.
