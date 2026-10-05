@@ -1328,3 +1328,147 @@ which cannot detect its own known corruption fails rather than passes quietly.**
 It fires on the next fusion readout designed; it re-opens nothing retroactively,
 because retroactive application is `T4.06`'s question and that is routed, not
 settled here.
+
+---
+
+# WEEK 10 SWEEP CONSUMED — 2026-10-05 (Review, DAILY, Part 2.5 duty 2)
+
+Source page: `docs/FIELD_WATCH.md` at `32b098c`, a **COMPLETE** run (exit 0),
+unlike week 9's `rc=124` draft — so the 09-28 refusal-to-consume does not apply
+and these four are consumed on their merits. Four nominations, four
+dispositions, none left unread. The one that matters most is not a nomination
+to adopt but a correction to two entries this file already carries.
+
+### ADMITTED AS A DESIGN UNIT — N1: the ALARM counterexample family as a KNOWN-ANSWER pre-gate for `CURIOSITY_BAKEOFF`
+
+*Source:* [arXiv:2610.02159](https://arxiv.org/abs/2610.02159), cs.LG,
+2026-10-01, Viteri / Gomezjurado Gonzalez / Barrett. Abstract **[V]**,
+construction and theorem statements **[V†]**, **and the repository [M] —
+downloaded to this box and measured.** That is the best provenance any
+nomination has carried in ten weeks, and it is the pivot of the disposition.
+
+**ADMITTED, as the design unit "design the known-answer pre-gate spec for
+`CURIOSITY_BAKEOFF`".** Front 4 has returned nothing for **six consecutive
+sweeps**, and weeks 5-8 each named the same cause in the same words — *"zero
+evaluate an intrinsic reward against a random or noise baseline."* This supplies
+something strictly better than a baseline: **a venue whose answer is computed in
+advance and machine-checked.**
+
+**Why it is admissible to a desk forbidden to weaken anything, which is the only
+test that matters here.** A known-answer pre-gate is a **strengthening by
+construction**: it adds a venue where the correct result is known independently
+of our implementation, so an arm can FAIL it. It cannot lower a bar, because it
+introduces a bar where there was none. It also pre-empts the characteristic
+failure of this front — an intrinsic-reward arm that looks good because nothing
+could have told us it was bad.
+
+**What is NOT decided, per `SYSTEM.md` law 3:** that any of our arms passes it,
+or that the objective families' proved deficiency transfers to our
+implementations. It enters as a **pre-gate**, not as a verdict. **It is a DESIGN
+unit and not a registration:** what is admitted is the obligation to write the
+spec, and the spec's own thresholds are set when it is written, against the
+measured repository and not against this page.
+
+### DECLINED ON PROVENANCE — N2: Jacobian centroids as the encoder-vs-predictor separator
+
+*Source:* [arXiv:2609.33940](https://arxiv.org/abs/2609.33940), cs.LG,
+2026-09-27, Walker / Balestriero / Baraniuk.
+
+**DECLINED, and the decline takes the scout's own offered call rather than
+overruling it:** the page titles this *"the worst-provenanced nomination in ten
+weeks"* and states that *"if the desk declines it on provenance alone, that is
+the correct call and I am not"* contesting it. **ABSTRACT LEVEL ONLY [V]** — the
+PDF, HTML and ar5iv routes all failed across three attempts, and **no number, no
+benchmark name, no seed count, no parameter count, no hardware statement and no
+code URL was obtainable [M].** One line of reason, as the mandate requires: *a
+method we cannot read cannot be specified, and an arm specified from an abstract
+is an arm whose thresholds we would be inventing.*
+
+**WHAT IS KEPT, because declining the METHOD is not declining the OBSERVATION.**
+The structural claim it reports — *"the encoder correctly represents the goal
+while the predictor remains behaviorally unresponsive"* — is **not** adopted, but
+it is recorded as the third independent route to the same place as N4 below, and
+it is kept here so that a future sweep that obtains the paper's numbers finds
+this decline and the reason it was provisional, rather than re-nominating into
+silence. **Re-nominatable on better provenance; this is a decline on evidence,
+not on substance.**
+
+### ADMITTED AS A DISCIPLINE, NOT AN ARM — N3: the known-generator calibration for ABLATION faithfulness
+
+*Source:* [arXiv:2609.36097](https://arxiv.org/abs/2609.36097), q-bio.NC,
+2026-09-28, Hanbo Xie (single author). Abstract **[V]** verbatim. The scout
+labels it **"NOT AN ARM"** and that labelling is accepted.
+
+**ADMITTED as a CONTROL DISCIPLINE, and it is the most directly load-bearing of
+the four, because it aims at a method `GOAL.md` depends on.** `GOAL.md` stage 4
+proves every sense load-bearing **by ablation**. This paper measures **when
+ablation lies**: under matched donor replacement, *"accurate predictors can
+respond much less than the known generator"* — i.e. an ablation can under-report
+a dependence that really exists, which is a FALSE NEGATIVE in exactly the
+inference our constitution rests on.
+
+**THE OBLIGATION, narrow and durable:** any spec that establishes a sense is
+load-bearing BY ABLATION must state the direction of its own error — whether its
+ablation can under-report dependence — and where a known-generator calibration
+is available, print it. **It fires on the next ablation-based spec designed; it
+re-opens nothing retroactively.** Admitted as a discipline because it adds a
+required disclosure, which strengthens every future ablation claim and weakens
+none.
+
+**Converges with this sitting's own act 1**, and the convergence is why it is
+admitted rather than watchlisted: act 1 measured that two of `T4.06`'s five
+senses (`audio` -2.0641, `vision` -2.1881) sit INSIDE the no-information floor's
+own seed spread `[-2.2065, -1.9725]` in the fused representation. A readout that
+cannot distinguish a sense from noise, and an ablation that under-reports
+dependence, are the two halves of the same hazard for stage 4's claim.
+
+### THE NARROWING IS ADMITTED, THE RETRACTION IS NOT — N4: the isotropy-penalty derivative, against two entries THIS FILE ALREADY CARRIES
+
+*Source:* [arXiv:2609.36227](https://arxiv.org/abs/2609.36227), stat.ML,
+2026-09-28, Wang / Cai / Hong. Abstract **[V]**, and the abstract carries the
+numbers: *"An isotropy penalty is a function of the embedding marginal, so its
+partial derivative in the transition weights is zero"*; *"Raising the isotropy
+weight from 0.1 to 10 leaves eight-step latent error inside [0.78,0.85] on three
+seeds."*
+
+**THIS IS THE DISPOSITION THAT MATTERS, because N4 is not a proposal to adopt
+anything — it is the scout correcting two nominations THIS FILE HAS ALREADY
+ADMITTED:** wk5-N1 (SIGReg vs VICReg on `A4`, ACCEPTED) and wk8-N3 (if `A4c`
+enters, it enters as temporally-centered SIGReg, ADMITTED AS A CONDITIONAL
+CORRECTION). Both frame SIGReg as the answer to collapse in `A4`. Left
+unconsumed, this file would carry two admitted entries whose author has since
+published evidence against their framing — which is the failure mode an
+integration queue exists to prevent.
+
+**ADMITTED AS A NARROWING, AND EXPLICITLY NOT AS A WITHDRAWAL, on the scout's
+OWN third objection, which this desk finds decisive and will not overrule in the
+scout's favour:** *"The derivative argument is about where the penalty is
+APPLIED, and that is an implementation choice we have not made yet, because
+`A4b`/`A4c` do not exist. An isotropy term applied to predicted latents would
+have a non-zero gradient. So the correction is conditional on a design decision,
+and the honest statement is 'do not assume SIGReg answers collapse', not 'SIGReg
+cannot.'"* **A desk that withdrew the entries on this evidence would be adopting
+a conclusion the scout itself declined to draw.** A second reason not to
+withdraw: `A4`'s transition is a `GRUCell`, i.e. it HAS the window whose absence
+is the paper's sharpest negative, so the headline objection is partly answered by
+our architecture already.
+
+**SO, PRECISELY, AND THESE TWO SENTENCES ARE THE AMENDMENT:** wk5-N1 and wk8-N3
+**stay live as ENCODER-SIDE REGULARISERS** and **lose their framing as the
+selection criterion for `A4`'s collapse problem.** And a new obligation, which is
+strictly additive: **if `A4c` is ever built, it must carry a PREDICTOR-SIDE
+readout, or it may not claim to speak to the collapse failure mode.** Zero cost:
+nothing is run, nothing is withdrawn, one claim is narrowed and one requirement
+is added.
+
+**THE OBSERVATION THIS DESK IS TAKING AWAY FROM IT, which is larger than the
+amendment and is reported to the owner rather than settled here:** the page notes
+that **five anti-collapse routes have been promoted into this file and ZERO have
+been run**, and that N4 *"is the first evidence that running them would not have
+answered the question anyway."* Three independent routes now agree — week 6's
+Context Collapse finding (healthy effective rank), N2's structural dissociation,
+and N4's derivative argument — that **the anti-collapse family is aimed at the
+ENCODER while the open question is about the MAP.** That is not a nomination to
+consume; it is a statement that a front this project has been accumulating
+candidates on for six weeks may have been aimed at the wrong half of the
+architecture the whole time.
