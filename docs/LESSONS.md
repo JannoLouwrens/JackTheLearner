@@ -20885,3 +20885,54 @@ the pages are the only cross-organ memory this project has, and the Review's
 duty to re-derive a predecessor's reason remains exactly right. It is an argument
 that a page's AGE is part of its content, and that an organ quoting a page owes
 the same freshness check it would owe a ledger metric.
+
+## AN INSTRUMENT THAT PARSES HOUSE PROSE GOES SILENT WHEN THE HOUSE STYLE
+## DRIFTS, AND THE MESSAGE IT PRINTS WILL BLAME THE WRONG THING. Gate the
+## reader's own population, and make "nothing found" distinguish *the anchor is
+## absent* from *the anchor matched and the contents did not*
+## (overseer, 140th audit, 2026-10-05; measured on `experiments/steering.py`,
+## which matched 0 of 13 live `FOR THE BUILDER` orders for 5 days while
+## printing *"no `## FOR THE BUILDER` section found"* about two pages whose
+## heading it had just matched)
+
+**The shape, and it is a two-stage failure.** `steering.py` finds its section
+with `_BUILDER_HEADING` and its orders with `_ITEM = ^(\d{1,2})\.`. Both desks
+drifted from `N. **ORDER**` to `**N. ORDER**`, so the `**` came to precede the
+digit: the heading regex kept matching, the item regex stopped, and
+`builder_items()` returned `[]`. Bisected, the drift is datable —
+`docs/OVERSIGHT.md` at `94d0fb24` (2026-09-30 12:54), `docs/PROGRESS.md` at
+`8a42c10` (2026-10-04 07:06). Nobody edited the reader. Nobody edited a gate.
+Thirteen standing orders from two desks became unreadable because a writer
+bolded a number.
+
+**The expensive half is the PARTIAL reading, not the outage.** For four days one
+page still parsed, so `render()` never reached its empty branch and printed
+*"N item(s) on **1** page(s)"* — while `STEERING_PAGES` declares **two**. A
+reader that reports from one of two declared sources, with no line naming the
+silent one, renders a half-blind reading exactly like a complete one. The
+module's own docstring had already identified this as the thing to avoid
+(*"a page with no orders at all must be visibly distinguishable from a page whose
+orders are all fine"*) and the implementation satisfies it only when **every**
+source is empty at once — which is the one case that is easy to notice anyway.
+
+**Why no number caught it.** `grep -rln steering experiments/tests/` returns
+nothing that asserts on this reader. The three instruments this project has
+already paid for shipping with one counted class — `coverage.py`,
+`decisions.py`'s `NO-DEFAULT`, `champions.py`'s `ARENA-MISSING` — are all now
+ratcheted by `T0.31`, and the lesson generalises past them: **a prose-parsing
+reader needs a floor on its own POPULATION, not only on its findings.** A
+findings count of zero is the success case and the total-failure case wearing
+one number.
+
+**The repairs, in order of cost.** (a) Accept optional leading emphasis and
+**keep** the plain form — swapping one exclusive form for another just re-breaks
+it at the next style change. (b) Make the empty message say which of *anchor
+absent* / *anchor present, zero contents* happened; the current wording sent five
+days of readers hunting a missing heading that was never missing. (c) Name every
+declared source that contributed zero. (d) Ratchet the population so a live
+section parsing to zero items is a red, not a silence.
+
+**The conduct half, which costs nothing.** An organ that writes into a channel
+should read that channel's own output once. `run status` printed the false
+sentence every time any desk ran it, for five days, immediately below readings
+those desks quoted in full.
