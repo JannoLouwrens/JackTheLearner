@@ -18669,6 +18669,16 @@ ROUTED: xl01-pooled-conjunct-is-additive-or-it-is-a-loosening | 2026-10-04 | THE
     (`carried_ltc` 2.6667 vs `wiped_ltc` 2.0000, the wrong direction). If this
     repair produces a PASS, something else changed and it must be explained
     before the certificate is banked.
+    BUILDER-TRACE: e9086ac | conjunct ADDED 2026-10-05 19:13 (equal-N pooled
+        ratio gated BESIDE per-seed 3/3; RATIO_MAX 0.5 byte-unmoved, verified
+        absent from the diff; no pre-refused form taken). Recording run landed
+        at a094cb0: XL.01 attempt 4 FAIL as pre-registered — pooled 0.7286 >
+        0.5 now a ledger number (pooled_search_time_ratio), per-seed mean
+        1.0034, ok_claim 1/3; controls green (c_fixture_ok 1.0, c_alien_ok
+        1.0, alien pooled 2.24 on its declared side); salt differential CLEAN
+        this attempt. Run FOREGROUND after two detached children died with
+        their sessions (19:17:40, 20:13:24). The row still ages; only the
+        desk writes ACTED.
 
 ## ROUTED 2026-10-04 (Review FULL, act 6 — the successor the `ba03` ruling owes): `cpu-class-ladder-has-no-rung-between-2h-and-48h` — the CPU cost ladder jumps 2 h to 48 h with nothing between, so all 2–48 h work must over-declare into the one class `gate_cpu_child` refuses, and `D20`'s closure of that lane foreclosed six ids at once
 
