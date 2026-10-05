@@ -99,7 +99,7 @@ DESK_DECISIONS = "docs/DECISIONS_NEEDED.md"
 # week 7 wrote "A FINDING IN OUR OWN ARTIFACTS" and "a second, smaller one" —
 # the marker is the word, not the shouting.
 _HEADING = re.compile(r"^(#{2,3})\s+(.*)$")
-_FINDING_WORD = re.compile(r"\bfinding\b", re.I)
+_FINDING_WORD = re.compile(r"\bfindings?\b", re.I)
 
 # "## 6. TITLE" / "### 6b — TITLE" -> section key "§6" / "§6b".
 _SECTION_KEY = re.compile(r"^(\d{1,2}[a-z]?)\b")
