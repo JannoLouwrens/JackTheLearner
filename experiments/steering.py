@@ -111,6 +111,16 @@ LAUNCH_GROWTH_DAYS = 21         # window over which the growth rate is fitted.
 _BUILDER_HEADING = re.compile(r"^##\s+FOR THE BUILDER\s*$", re.M)
 _SECTION_END = re.compile(r"^(##\s|---\s*$)")
 _ITEM = re.compile(r"^(\d{1,2})\.\s+(.*)$")
+# THE 2026-09-30 → 10-05 OUTAGE (140th audit, RANK 1): both desks drifted to
+# writing `**N. THE ORDER**`, the `**` precedes the digit, and `_ITEM` matched
+# ZERO of thirteen live orders for five days while `render()` blamed an absent
+# heading that was present. The repair is a NORMALISATION, not a looser match:
+# a bold-leading numbered line is rewritten to house style (`N. **…`) before
+# `_ITEM` sees it, so the plain form keeps matching byte-for-byte AND the bold
+# span still lands where `lead` extraction expects the order to live. A third
+# style will still go dark — which is why `page_stats` now makes a section
+# that parses to zero items LOUD instead of silent.
+_BOLD_LEAD = re.compile(r"^\*\*(\d{1,2})\.\s+")
 
 # Same shape as `coverage.GOAL_CITATION`, and deliberately the same regex:
 # two readers of governing prose disagreeing about what a spec id looks like
@@ -158,6 +168,7 @@ def builder_items(text: str) -> List[dict]:
         for ln in text[m.end():].splitlines():
             if _SECTION_END.match(ln):
                 break
+            ln = _BOLD_LEAD.sub(r"\1. **", ln)
             head = _ITEM.match(ln)
             if head:
                 cur = {"n": int(head.group(1)), "lines": [head.group(2)]}
@@ -231,6 +242,53 @@ def legality(sids, by_id=None, ledger=None, state_of=None,
     return out
 
 
+def page_stats(pages=STEERING_PAGES,
+               repo: Optional[Path] = None) -> List[dict]:
+    """Per DECLARED page: `{page, exists, headings, items}`.
+
+    The accounting `render()` was missing for five days (140th audit, RANK 1):
+    with only the item list in hand, *"one of two declared pages is empty"*
+    and *"both pages contributed"* print identically, and *"heading absent"*
+    is indistinguishable from *"heading present, zero items parsed"* — which
+    sent five days of readers hunting for a heading that was there. The
+    heading count and the item count are taken from the SAME text read, so
+    the two cannot disagree about which page they describe.
+    """
+    repo = _REPO if repo is None else repo
+    out: List[dict] = []
+    for rel in pages:
+        p = repo / rel
+        if not p.exists():
+            out.append({"page": rel, "exists": False,
+                        "headings": 0, "items": 0})
+            continue
+        text = p.read_text()
+        out.append({"page": rel, "exists": True,
+                    "headings": len(_BUILDER_HEADING.findall(text)),
+                    "items": len(builder_items(text))})
+    return out
+
+
+def _empty_page_lines(stats: List[dict], indent: str) -> List[str]:
+    """One line per declared page that contributed ZERO items, saying WHY —
+    the three states are different defects and the 2026-09-30 outage was
+    mis-hunted for five days because they printed as one."""
+    lines: List[str] = []
+    for s in stats:
+        if s["items"]:
+            continue
+        if not s["exists"]:
+            why = "page MISSING on disk"
+        elif not s["headings"]:
+            why = "no `## FOR THE BUILDER` heading"
+        else:
+            why = (f"!! heading PRESENT ({s['headings']}), ZERO items parsed "
+                   f"— the orders exist and the reader cannot see them "
+                   f"(form drift; the 2026-09-30 outage shape)")
+        lines.append(f"{indent}  {s['page']}: {why}\n")
+    return lines
+
+
 def read(pages=STEERING_PAGES, repo: Optional[Path] = None,
          **kw) -> List[dict]:
     """Every steering-page order, with the illegal ids it names.
@@ -261,31 +319,45 @@ def read(pages=STEERING_PAGES, repo: Optional[Path] = None,
     return items
 
 
-def render(items: Optional[List[dict]] = None, indent: str = "  ") -> str:
+def render(items: Optional[List[dict]] = None, indent: str = "  ",
+           stats: Optional[List[dict]] = None) -> str:
     """The block printed by `run status` and `run steering`.
 
     Prints SUBJECT lines always and MENTION lines only under an item that has
     an illegal subject — a mention is context for an order that is already in
     question, and promoting every quoted corpse to a finding is how a reader
     at `D27`'s 104-of-107 rate gets ignored inside a week.
+
+    `stats` is `page_stats()`; computed live when `items` is (fixture callers
+    pass both or neither). Every declared page that contributed zero items is
+    NAMED with the reason — heading absent, page missing, or the loud one:
+    heading present and zero items parsed, which for five days printed as
+    "no section found" about pages that had one (140th audit, RANK 1).
     """
-    items = read() if items is None else items
+    if items is None:
+        items = read()
+        if stats is None:
+            stats = page_stats()
+    empty_lines = _empty_page_lines(stats, indent) if stats else []
     if not items:
-        return (f"{indent}STEERING-PAGE ORDERS — no `## FOR THE BUILDER` "
-                f"section found on {', '.join(STEERING_PAGES)}. That is "
-                f"itself worth\n{indent}  saying: the pages are the order "
-                f"list, and an empty one is a finding, not a clean bill.\n")
+        return (f"{indent}STEERING-PAGE ORDERS — 0 items parsed from "
+                f"{len(STEERING_PAGES)} declared page(s). That is itself "
+                f"worth\n{indent}  saying: the pages are the order list, and "
+                f"an empty one is a finding, not a clean bill.\n"
+                + "".join(empty_lines))
     hit = [it for it in items if it["subject"]]
     bad = [it for it in hit if not it["prohibition"]]
     ok = [it for it in hit if it["prohibition"]]
+    pages_with = len(set(i["page"] for i in items))
+    declared = len(stats) if stats else len(STEERING_PAGES)
     head = (f"{indent}STEERING-PAGE ORDERS — {len(items)} item(s) on "
-            f"{len(set(i['page'] for i in items))} page(s); "
+            f"{pages_with} of {declared} declared page(s); "
             f"{len(bad)} order(s) name a spec the\n"
             f"{indent}  runner would REFUSE today. Reporting-only, unfloored: "
             f"an order may legitimately be\n"
             f"{indent}  aspirational, and SUBJECT vs MENTION is a heuristic "
             f"about which span is bold, never a\n"
-            f"{indent}  reading of intent.\n")
+            f"{indent}  reading of intent.\n" + "".join(empty_lines))
     if not hit:
         return head + (f"{indent}  every order's subject resolves to a spec "
                        f"the runner would accept today.\n")
@@ -777,6 +849,54 @@ def _check() -> None:
         raise AssertionError(f"steering: item parse flunked its fixture: "
                              f"{got} != {want}")
 
+    # ── the bold-lead known answer (140th audit, RANK 1) ────────────────────
+    # Verbatim shape of the 2026-09-30 → 10-05 outage: both desks wrote
+    # `**N. THE ORDER**`, `_ITEM` matched zero of thirteen live orders for
+    # five days, and `render()` blamed a heading that was present. Items 1–2
+    # replay the two live forms (wholly-bold, bold-then-prose); item 3 is the
+    # PLAIN form in the same section, because the repair is required to ADD a
+    # form, never to swap one exclusive form for another.
+    _BOLD_FIXTURE = """
+## FOR THE BUILDER
+
+**1. `T2.10` — CPU, ten minutes.**
+
+**2. THE ORDER IN BOLD.** The reasoning, with `D1.0` in the body.
+
+3. **A plain-form item in the same section.** Still parses.
+"""
+    bold_got = [(it["n"], it["lead"], it["lead_ids"], it["body_ids"])
+                for it in builder_items(_BOLD_FIXTURE)]
+    bold_want = [(1, "`T2.10` — CPU, ten minutes.", ["T2.10"], []),
+                 (2, "THE ORDER IN BOLD.", [], ["D1.0"]),
+                 (3, "A plain-form item in the same section.", [], [])]
+    if bold_got != bold_want:
+        raise AssertionError(
+            f"steering: the bold-lead parse flunked the outage fixture — "
+            f"a `**N.` order is invisible again, or the plain form broke: "
+            f"{bold_got} != {bold_want}")
+
+    # ── the empty-page accounting known answer (140th audit FTB 1a/1b) ──────
+    # The three zero-item states must print as three DIFFERENT defects, and a
+    # half-empty read must name its empty page instead of rendering complete.
+    _st = [{"page": "a.md", "exists": True, "headings": 1, "items": 0},
+           {"page": "b.md", "exists": True, "headings": 0, "items": 0},
+           {"page": "c.md", "exists": False, "headings": 0, "items": 0}]
+    etxt = render([], indent="", stats=_st)
+    if "no `## FOR THE BUILDER` section found" in etxt:
+        raise AssertionError("steering: the false blanket sentence is back — "
+                             "a parse that found a heading may not blame an "
+                             "absent one")
+    if ("a.md" not in etxt or "heading PRESENT" not in etxt
+            or "ZERO items parsed" not in etxt):
+        raise AssertionError(f"steering: heading-present-zero-items must "
+                             f"print LOUD and name its page: {etxt!r}")
+    if "b.md" not in etxt or "no `## FOR THE BUILDER` heading" not in etxt:
+        raise AssertionError("steering: a genuinely heading-less page must "
+                             "say so, as a different defect")
+    if "c.md" not in etxt or "MISSING" not in etxt:
+        raise AssertionError("steering: a missing page must say so")
+
     by_id = {"T2.10": object(), "D1.0": object(), "T2.01": object(),
              "T6.03": object(), "LF.02": object()}
 
@@ -823,6 +943,17 @@ def _check() -> None:
     if "CONFIRMED" not in text or "item 6" not in text:
         raise AssertionError("steering: a prohibition the ledger agrees with "
                              "must be printed, and printed as agreement")
+    # The four-day MIDDLE period of the outage: one declared page populated,
+    # the other silently empty, and the head line rendered as a complete read.
+    # A half-blind reading must say which page came back empty.
+    half = render(items, indent="", stats=[
+        {"page": "fixture", "exists": True, "headings": 1,
+         "items": len(items)},
+        {"page": "other.md", "exists": True, "headings": 1, "items": 0}])
+    if "1 of 2 declared page(s)" not in half or "other.md" not in half:
+        raise AssertionError(
+            "steering: a read where one of two declared pages contributed "
+            "zero items must say which page came back empty")
 
     # ── the date-mismatch known answer (100th audit B1) ─────────────────────
     # Verbatim from `docs/PROGRESS.md` at `a01837f` (Review DAILY, 2026-09-18
