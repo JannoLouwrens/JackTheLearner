@@ -9947,3 +9947,77 @@ DECIDE: D42
              instruments that can see the hole continue to be unable to ask
              about it.
   decide_by: 2026-10-18
+
+---
+
+## D37 — RESOLVED BY ARMED DEFAULT, fired 2026-10-05 ~06:5x UTC by the OVERSEER (140th audit), on the first legal day. Off your desk; option (i) remains yours to rule at any time.
+
+**THE OWNER DID NOT RULE BY 2026-10-04, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(iii) HOLD `D29` AS IT STANDS** — the debt stays recorded in both
+`docs/CHAMPIONS.md` (per `D29`'s own firing) and `LEARNING_CORE.md` §5.4 (per the
+2026-10-04 amendment), and the `Δ_k` collapse readout is **NOT built**. Option
+**(i) BUILD THE DIAGNOSTIC** — the entry's own quoted recommendation — was
+**NOT** taken.
+
+**WHY THIS WAS MINE TO FIRE, SINCE THAT IS THE REASONABLE OBJECTION.** `D37` is
+`class: goal` and armed; `decisions --check` listed it this morning as the single
+`OVERDUE — DEFAULT IS DUE TO FIRE` entry, and firing is the day after `decide_by`
+(`D33`'s expiry note; the entry's own 10-04 addendum states **"The default fires
+2026-10-05"** in terms). The overseer firing an armed default on the first legal
+day is the established idiom — `D27` (107th), `D29` (109th), `D32`/`D34` (115th),
+`D31` (119th), `D36` (123rd). Nothing here reverses the entry's own 10-04 ruling
+that the `CONDUCT-MISFILED?` reclass is **REFUSED**: I am not executing option
+(i) at a desk, I am recording that the deadline passed without a ruling.
+
+**THIS FIRING ORDERS NO WORK AND CHANGES NO BEHAVIOUR.** Verified at source this
+audit rather than inherited from the entry:
+
+```
+LEARNING_CORE.md §5.4        debt block present, original paragraph byte-identical beneath it
+docs/CHAMPIONS.md            Learning core still HELD: BY VERDICT — marking untouched
+experiments/  effective_rank  no computing call site; `svd|singular|RankMe|eig|spectrum` = audio spectrum only
+champions --check            EXIT 0, all 10 violations AT their declared floors
+```
+
+It is **MONOTONE**: it moves no threshold, edits no constitution text, unparks
+nothing, spends no GPU-hour, fails no spec, stales no certificate, and leaves the
+debt **visible and unguarded** rather than hidden. It picks only among
+already-permitted actions — it is, exactly, the status quo.
+
+**THE PRICE, RESTATED BECAUSE A FIRING MAY NOT QUIETLY DROP IT.** In the entry's
+own words: *"the next latent-prediction arm inherits an uncomputable VOID
+condition, i.e. exactly the hole this row spent thirteen days finding, and the
+project keeps a `mandatory` guard it has never once been able to run."* And the
+sharper edge the 10-04 addendum added: the premise `D29` lacked **now exists and
+is committed**, so this default locks in the weakest option on the first day the
+missing premise could have mattered. `LEARNING_CORE.md` §5.4 still promises `A4` a
+*mandatory* diagnostic that no code computes, and `A4` still holds the
+Learning-core seat BY VERDICT off a VOID.
+
+**WHAT IS NOT PERISHABLE, SAID SO IT IS NOT OVERSOLD.** The entry's `blocks`
+field is honest: no spec id waits on this today. Every arm behind the seat is
+`LC.03` (VOID-FORECLOSED) or `LC.07` (PILOT-BLOCKED, ~526 wall-hours against
+30 h/week). Nothing was lost **this week** by the deadline passing.
+
+**WHAT REVERSES THIS.** Rule option **(i) BUILD IT** at any time — it stays the
+entry's own recommendation, in ActSWM's `Δ_k` form (roll the latent twice from one
+context, once under recorded actions and once under the all-zero action sequence,
+score both by cosine against the true future latent; under collapse both rolls
+agree and `Δ_k` → 0, so unlike a loss curve it cannot be satisfied by a collapsed
+latent), with the floor **pre-registered before the run it gates, never after
+seeing it**. One sentence from you reverses it and the work is the builder's. The
+counterargument the entry raised against itself is also unchanged and I am not
+re-arguing it: a desk that missed its own deadline should not get to reopen a
+closed decision by doing its homework late.
+
+**Evidence:** `docs/DECISIONS_NEEDED.md` `D37` `DECIDE` block, `decide_by:
+2026-10-04`, and its 2026-10-04 addendum naming 2026-10-05 as the firing date;
+`experiments.decisions --check` at 2026-10-05 06:37 printing `D37  costs 0 specs
+OVERDUE — DEFAULT IS DUE TO FIRE`; `docs/DECISIONS_RESOLVED.md` `D29` recording
+option (i) as NOT TAKEN.
+
+**OWED BY THE REVIEW, NOT BY ME:** the `## D37 — RESOLVED BY ARMED DEFAULT`
+transcription onto `docs/DECISIONS_RESOLVED.md`, per the `D13` rule that the
+overseer stays inside its own file set and the `D31`/`D32`/`D34`/`D36`
+precedent. Until that lands, `decisions.py`'s second identification channel
+(`RECORD_PAGE`/`RECORD_MARKER`) cannot see this firing.
