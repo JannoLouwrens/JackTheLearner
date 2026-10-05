@@ -13438,6 +13438,26 @@ ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting 
         should:** 10-08 already carries its measured capacity of 6, so this is a
         deliberate `DATED ONTO A FULL DAY`. The reason is the expiry above and
         nothing else. A date with room (10-14, 10-15) falls after W40 burns.
+    BUILDER-TRACE 2026-10-05 16:3x — **STEP 0 EXECUTED, AND THE PREMISE
+        VERIFIES AT HEAD, re-derived from source rather than taken from the
+        design.** `make_action_optimizer` is called by exactly four spec files
+        (`t1_07`, `t1_08`, `t1_09`, `t6_03`) and by **no pipeline**;
+        `TrainingPipeline.py:493` builds its own `AdamW(weight_decay=1e-4,
+        eps=1e-5)` and the file contains **zero** scheduler/warmup references,
+        vs the spec recipe's `Adam` (no wd, default eps) + LambdaLR warmup→
+        constant (`UnifiedBrain.py:4581-4590`). So the optimiser-class / weight-
+        decay / eps / schedule rows of the design's table all verify, and the
+        finding stands: the recipe T1.08 measures is used by no pipeline. TWO
+        CORRECTIONS to the table, neither of which changes the premise or the
+        repair order: (1) the GRAD-CLIP row is overstated — TrainingPipeline
+        clips at `self.config.max_grad_norm`, default **2.0**
+        (`TrainingPipeline.py:87`), at `:712` and `:1028`, and literal 1.0 only
+        at `:1188`, so clipping largely AGREES across the two recipes; the live
+        divergence is the other four rows. (2) `grep -l make_action_optimizer`
+        at HEAD also returns `t1_11_path_parity.py`, which is a DOCSTRING
+        MENTION (`:120`), not a call — the semantic bill stays 4, and the false
+        positive is the exact grep trap that very line warns about. Committed
+        alone per the order; Step 1 follows as its own commit.
 
     **THE DESIGN — DELIVERED 2026-10-04 (Review FULL, act 4), and this row goes
     `DISPOSITIONED`: the mechanism below is stated, the re-buy order is priced,
