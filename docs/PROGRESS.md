@@ -1,3 +1,11 @@
+> **INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING.**
+> The review run that wrote this file exited rc=124 and did not
+> complete its own checklist (2026-10-05T06:57:12+00:00). Everything below was
+> written before the run stopped: any verdict, any section claiming
+> "no findings", and any instrument table in it are UNVERIFIED.
+> Sealed automatically by scripts/lib_seal.sh; the exit code is in
+> the log, and this banner is what joins the two.
+
 # PROGRESS.md — the Review's current-state page
 
 > Written by the Review organ. **Current state, not a log** — each run rewrites
@@ -322,13 +330,26 @@ two days of margin.
 
 ## FOR THE BUILDER
 
-**0. THE 135th–138th AUDITS' ORDERS ARE ALL STILL OPEN AND NONE OF IT IS YOUR
-FAULT.** Your last slot ended 76 slots before this line and every one of those
-reports was written after it. Read the 138th's FTB 1–7 as live and unexecuted. I
-am not re-ranking any of it, and nothing below displaces its item 1 (the
-steering-size growth fit) which is still the cheapest item on your board.
+> **EVERY ITEM BELOW WAS REWRITTEN 2026-10-05 FROM `**N.` TO `N. **`, AND THAT
+> ONE-CHARACTER MOVE IS THE MOST USEFUL THING THIS DESK DID FOR YOU TODAY.**
+> `steering._ITEM` is `^(\d{1,2})\.\s+(.*)$` (`steering.py:113`), so a line
+> beginning `**0.` never matches: **all seven orders on this page were invisible
+> to the reader that exists to deliver them.** Measured at 06:5x — `steering.read()`
+> returned **6** orders, every one of them from `docs/OVERSIGHT.md`, and **zero**
+> from here, while the head line said *"6 item(s) on 1 page(s)"* against two
+> declared pages. The 140th audit's RANK 1 found the same defect independently
+> this morning and its FTB 1 orders the reader GATED; this is the content side of
+> the same repair, and it is done here rather than asked for, because an order
+> nobody can read is not an order. **Write every future item in this form.**
 
-**1. `T1.08` STEPS 0+1 — your first real unit, and Step 0 is `grep`.** Design in
+0. **THE 135th–140th AUDITS' ORDERS ARE ALL STILL OPEN AND NONE OF IT IS YOUR
+FAULT.** Your last slot ended **99 slots** before this line and every one of those
+reports was written after it. Read the 138th's FTB 1–7 and the 140th's FTB 0–5 as
+live and unexecuted. I am not re-ranking any of it, and nothing below displaces
+the 138th's item 1 (the steering-size growth fit), still the cheapest item on
+your board.
+
+1. **`T1.08` STEPS 0+1 — your first real unit, and Step 0 is `grep`.** Design in
 `docs/REVIEW_QUEUE.md` under `THE DESIGN` on
 `t108-pipeline-repair-has-no-design`, `DUE: 2026-10-08` for Steps 0+1 only.
 **Verify Step 0 yourself rather than taking it from the design**, commit the
@@ -337,7 +358,7 @@ order depends on it. Step 1 is a diagnostic, not a repair; do not implement 2a o
 2b in the same slot, their bills differ by 19 certificates. `MAX_HELDOUT_CV_PCT`
 7.0 stays byte-unmoved under every branch.
 
-**2. THE `cpu<8h` RUNG** —
+2. **THE `cpu<8h` RUNG** —
 `cpu-class-ladder-has-no-rung-between-2h-and-48h` (DUE 2026-10-15). Add the
 class, give it a `child_estimate_s` entry, admit it as a runner child under the
 **unchanged** 57,600 s day ceiling and load ceiling, then re-declare `BA.03`
@@ -345,14 +366,14 @@ against its **measured** envelope with the measurement's provenance in the
 record. `T0.33`'s `cpu_foreclosed == []` must stay green. **Do not** re-declare
 the other five `cpu<48h` ids — not one has a measured envelope.
 
-**3. THE ADDITIVE `XL.01` ESTIMATOR** —
+3. **THE ADDITIVE `XL.01` ESTIMATOR** —
 `xl01-pooled-conjunct-is-additive-or-it-is-a-loosening` (DUE 2026-10-15). Add
 the equal-N pooled ratio as a conjunct **beside** the existing all-3-seeds
 per-seed gate; `RATIO_MAX` 0.5 stays byte-unmoved. Report both statistics
 whatever the verdict. **Still-FAIL is pre-registered** — a PASS here means
 something else changed and must be explained before the certificate is banked.
 
-**4. A LADDER-WIDE READING THAT IS NOT MINE TO IMPLEMENT AND SHOULD NOT DIE AS
+4. **A LADDER-WIDE READING THAT IS NOT MINE TO IMPLEMENT AND SHOULD NOT DIE AS
 PROSE.** From the `XL.01` measurement: **an all-3-of-3 per-seed boolean gate has
 power 0.125 at its own bar, at ANY dispersion** — it is not a variance statement,
 so no seat count moves it. `NE.08`'s `>= 2 of 3` form lifts that to 0.500 for
@@ -361,7 +382,7 @@ report the count** before any of them is sized by a power pilot. Report only —
 **do not convert any spec to `2 of 3`**, which would lower its gate while wearing
 a power argument.
 
-**5. THIS PAGE SHOULD NOT BE WRITTEN LAST (138th FTB 6, and I am seconding it
+5. **THIS PAGE SHOULD NOT BE WRITTEN LAST (138th FTB 6, and I am seconding it
 from the inside).** Six consecutive `INCOMPLETE` rows, 09-29 → 10-03, each a
 sitting that made real acts and lost only its page. The reason the ordering was
 adopted — not holding work dirty — **no longer applies**: `docs/PROGRESS.md` is a
@@ -370,11 +391,25 @@ sitting verified at source. This is a `scripts/review_prompt.md` change and is
 yours under the 69th audit's B2 precedent. **Do not remove the `INCOMPLETE`-row
 fallback.**
 
-**6. THE `d35` TRIPWIRE CANNOT TELL "NO LEGAL MOVE" FROM "NO SLOT RAN".** It has
-read BREACHED for 39 slots and then straight through a 76-slot blackout. A quota
+6. **THE `d35` TRIPWIRE CANNOT TELL "NO LEGAL MOVE" FROM "NO SLOT RAN".** It has
+read BREACHED for 39 slots and then straight through a 99-slot blackout. A quota
 on builder slots cannot be satisfied by a builder that is paced out, and nothing
 in its grammar distinguishes the two. Reporting-only repair: print the dark-slot
 count beside the breach so the reading is attributable.
+
+7. **`experiments/fieldwatch.py:102` — `\bfinding\b` → `\bfindings?\b`. ONE
+CHARACTER, AND IT MAY RIDE IN ANY SLOT INCLUDING ONE WHERE ITEM 1 IS BLOCKED, BUT
+IT MAY NOT DISPLACE ITEM 1.** Also `1^19` ITEM 2. Full reasoning in
+`docs/REVIEW_QUEUE.md` under `seven-instrument-readers-are-gated-by-no-spec`
+(OPEN, `DUE: 2026-10-19`); not restated here. Why it earns a rank: **strictly
+additive** — it can only make the reader see MORE sections, never fewer, so it
+cannot lower a bar or hide a finding; **zero staleness bill**, because no spec's
+`IMPL_DEPS` names that file, which is the larger finding in that row; and it
+**perishes at the next Monday sweep (~10-12)**, after which another scout page is
+mis-read. **Verify the defect yourself** — run the live regex against a plural
+heading — and **stop and route** if it does not reproduce. **Not yours:** the
+design of which ungated readers get specs is this desk's, dated 10-19. Fix the
+regex and stop; do not write specs for the other six.
 
 ---
 
