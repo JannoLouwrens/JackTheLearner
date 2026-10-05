@@ -8646,6 +8646,23 @@ ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FA
         in source (bound 1.0, null measured 0.044/0.083). Registration only:
         no dispatch, no LLM verdicts, zero existing certificates billed
         (stale-cost on registry_expansion.py: 0). The stamp is the desk's.
+    BUILDER-TRACE: 1935cf6 + a2afdb5 | the arm-(b) lifecycle is COMPLETE:
+        implemented 2026-10-05 ~22:1x (1935cf6, both mandatory conjuncts
+        rig-gated in code, free-generation null carried byte-unmoved via
+        LG.10's cached verdicts and exact draw keys), verdict keys bought
+        offline (1866 new, both models, detached pass survived its session
+        and wrote clean), and attempt 1 RECORDED 2026-10-05T23:10:41
+        (a2afdb5): **FAIL, claim branch alone** — match_on_spoken 0.7778,
+        held-out 0.7722, unanimity_on_spoken 0.3056 vs the unmoved 0.90
+        bars; mismatched-constraint null 0.1389 FAILED as required (so FAIL,
+        not VOID — the constraint carries meaning, 0.78 vs 0.14/0.04);
+        free-generation null 0.0444 alive under 0.35; rig green
+        (verdicts_missing 0, held_out_prompt_clean 1.0, utter_rate 1.0).
+        Held-out equals in-scaffold (0.772 vs 0.778): the decoder did not
+        measure its prompt. The ruling's own sequencing now binds: arm (c)
+        de-verbatim scaffold is the remaining repair, priced in advance,
+        and it is the DESK's to order, not this lane's to start. The stamp
+        is the desk's.
 
 **THE ONE-LINE QUESTION.** `LG.12` executed the disposition of
 `lg10-mouth-fidelity-vs-freedom` and returned a FAIL whose *mechanism* is
