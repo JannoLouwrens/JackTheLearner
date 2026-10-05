@@ -14777,7 +14777,22 @@ ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run st
 ## 2026-09-13 and never given a row.
 
 ROUTED: pl02-void-gate-quantifies-over-its-own-nulls | 2026-09-26 | `PL.02` attempt 2 VOID (2026-09-13T01:11:50, commit `7ffd3c8+dirty`, 2928.18 s, seeds 0/1/2), read off `ledger.json:results.PL.02` this slot | OPEN
-    DUE: 2026-10-05 | `review-queue`'s own `next_free_due`, read off the tool
+    DUE: 2026-10-17 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date — one
+        `DUE:` line, no prior break, no stop-rule engaged.** **RANK 2 of the five
+        rows left on today's date**, and it ranks here for a reason that is
+        almost the opposite of rank 1's: nothing is held behind it, but **it is
+        the only one of the five that NO OTHER DESK MAY EVER TAKE.** Its own text
+        establishes that: the repairs on the menu all REMOVE an arm from a gate
+        or RE-AIM it, which is a loosening under any reading, and the builder's
+        `1^13` rule routes exactly this back here. A row that only this desk can
+        discharge accrues risk differently from one that is merely waiting —
+        if this desk keeps outranking it, it is not delayed, it is abandoned.
+        It also sits on `PL.02`, a registered VOID lane in the chain carrying
+        the constitution's only registered falsifier, which is why it outranks
+        the three below rather than joining them. Dated 10-17 (pile 3 of 6), one
+        day after rank 1 and deliberately not the same day: these are two
+        heavyweight rulings and the measured rate of this desk is ~1-2 per
+        sitting. ORIGINAL TEXT FOLLOWS, unchanged. | `review-queue`'s own `next_free_due`, read off the tool
         this slot (2026-09-27 already carries 7 against a measured capacity of
         6). This is a GATE-SEMANTICS decision on a registered VOID lane and the
         only repairs on the menu REMOVE an arm from a gate or RE-AIM it — a
@@ -14933,7 +14948,35 @@ disposition.
 ## keys against the 0 it recorded
 
 ROUTED: t013-latently-red-28-disarmed-keys | 2026-09-26 | `f096f29` (the three-readers repair, which staled T0.13 and forced the re-buy) + the T0.13 attempt row recorded this slot, FAIL, 2.0 s | OPEN
-    DUE: 2026-10-05 | per `review-queue`'s own `next_free_due` — 09-27
+    WAITS-ON: none | PROMOTED FROM PROSE TO A DECLARED FIELD 2026-10-05 (Review
+        DAILY), quoting this row's own words rather than inventing a warrant:
+        the original `DUE:` line below already said *"`WAITS-ON: none` | nothing
+        else's answer changes what these 28 keys measure"* — but it said it
+        INSIDE the `DUE:` block, where no instrument reads it, which is why
+        `review-queue`'s WAITS-ON GROUPING printed `2026-10-05 WITHHELD — 2 of 7
+        rows undeclared` and this row was one of the two. The claim is
+        unchanged; only its surface moves, from prose to the field the reader
+        actually parses. This is the same defect class as
+        `waits-on-declared-field` and `decisions-settles-on-headers-alone`: a
+        true statement written where nothing can see it.
+    DUE: 2026-10-16 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date for
+        this row — one `DUE:` line, no break before today, so no stop-rule is
+        engaged and none is being dodged.** It is **RANK 1 of the five rows left
+        on today's date**, and the rank is earned by a measured fact rather than
+        by importance-in-the-abstract: this is **the only one of the five
+        holding another spec's certificate hostage.** `T0.18` declares
+        `depends_on: [T0.08, T0.13]`, `T0.13` is FAIL, and so a re-run of
+        `T0.18` records BLOCKED and never reaches its own `_check` — meaning the
+        `t018` row below cannot be BOUGHT until this one is discharged, however
+        promptly it is ruled. `T0.13` is itself a live FAIL at 109 gates with 28
+        disarmed keys against a certificate last bought at 90 gates. **Why the
+        date is 10-16 and not tomorrow:** the row's own text is right that this
+        is a per-key ADJUDICATION across five specs and not a one-sitting
+        ruling, and `review-queue`'s pile reads 10-06 through 10-15 at or above
+        the measured 6/cycle capacity with 10-16 at 4. Dating it nearer would be
+        promising a multi-spec adjudication onto a day already scheduled to
+        break, which is the act that built this pile. ORIGINAL TEXT FOLLOWS,
+        unchanged. | per `review-queue`'s own `next_free_due` — 09-27
         through 10-04 are all at or above the measured capacity of 6, and this
         row is a per-key ADJUDICATION across five specs, not a one-sitting
         ruling. `WAITS-ON: none` | nothing else's answer changes what these 28
@@ -15056,7 +15099,20 @@ anything and the per-key adjudication owed on 10-05 is untouched.**
 ## them are decided by a module-global memo rather than by their own record
 
 ROUTED: adverse-verdicts-are-re-derived-by-nobody | 2026-09-26 | one-off fresh-process replay of all 47 adverse ledger rows through their committed `_check` (this slot, script in /tmp, no ledger write, clean tree) | OPEN
-    DUE: 2026-10-05 | `review-queue`'s own `next_free_due`, read off the tool
+    DUE: 2026-10-20 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date — one
+        `DUE:` line, no prior break, no stop-rule engaged.** **RANK 4 of the five
+        rows left on today's date**, and like rank 3 the date is DERIVED, not
+        picked: this row declares `WAITS-ON: lg12-abstention-knob-has-no-
+        resolution` *"not for its ANSWER but for its ORDER"*, and that row's own
+        `DUE:` is 2026-10-08, so any date here must fall after it. 10-20 is the
+        first day after both 10-08 and rank 1's 10-16 with room (pile 3 of 6).
+        **A SECOND, INDEPENDENT REASON IT CANNOT BE DISCHARGED EARLIER, which
+        this row understates:** its repair is INSTRUMENT SCOPE — widen
+        `verify`/`T0.13` past the PASS set, or declare `_check` purity a
+        contract — and `D35` clause 2 forbids a fourth checker joining the three
+        that exist. So the legal repair space here is narrower than the row's
+        menu suggests, and ruling it in a hurry risks ordering a repair that
+        `D35` already forecloses. ORIGINAL TEXT FOLLOWS, unchanged. | `review-queue`'s own `next_free_due`, read off the tool
         this slot (09-27 already carries 7 against a measured capacity of 6).
         The repair is INSTRUMENT SCOPE — widening `verify`/`T0.13` past the
         PASS set, or declaring `_check` purity a contract — and under `D35`
@@ -15358,7 +15414,20 @@ this row, no threshold touched.
 ## it, because one instrument reads the field's TRUTH and the other its MEANING
 
 ROUTED: t018-explicit-no-control-reads-as-an-unrun-promise | 2026-09-26 | `T0.18` offline `_check(_experiment(0), _control(0))` = **False**, `declared_control_never_ran` = 2 (`T0.01, T0.10`) against the gate's `== 0` (builder, this slot, child process, NO ledger write) | OPEN
-    DUE: 2026-10-05 | `review-queue`'s own `next_free_due`, read off the tool
+    DUE: 2026-10-19 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date — one
+        `DUE:` line, no prior break, no stop-rule engaged.** **RANK 3 of the five
+        rows left on today's date**, and this date is DERIVED from rank 1's
+        rather than chosen: this row's declared `WAITS-ON` is
+        `t013-latently-red-28-disarmed-keys`, whose own `DUE:` now reads
+        2026-10-16, and this file's own prerequisite rule forbids dating a row
+        EARLIER than the prerequisite it names. 10-19 is the first day after
+        10-16 carrying genuine room (pile 1 of 6). **The coupling is on the
+        PURCHASE and not on the decision, and that is exactly why the date moves
+        rather than the rank:** the ruling here can be made at any time, but
+        `T0.18` records BLOCKED and never reaches its own `_check` while `T0.13`
+        is FAIL, so discharging this row before rank 1 would produce a ruling
+        that cannot be bought and a row that cannot be stamped `ACTED`. Nothing
+        is dispatched behind it. ORIGINAL TEXT FOLLOWS, unchanged. | `review-queue`'s own `next_free_due`, read off the tool
         this slot. Nothing is dispatched behind it and `T0.18` cannot be
         re-bought today in any case (see NOT RE-BOUGHT below), so it takes the
         mechanical date.
@@ -15557,7 +15626,22 @@ before the edit).
 ## written the correct rule down, one property further on
 
 ROUTED: t023-readonly-conjunct-gates-on-a-ratchet-exit-code | 2026-09-26 | `T0.23` attempt 13, ledger row **FAIL** 2026-09-26T21:4x (58.18 s, clean tree, sole gated failure `readonly_still_works` False at `rc_readonly` 2) — re-bought in this slot | OPEN
-    DUE: 2026-10-05 | `review-queue`'s own `next_free_due`, read off the tool
+    DUE: 2026-10-20 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date — one
+        `DUE:` line, no prior break, no stop-rule engaged.** **RANK 5, LAST of
+        the five rows left on today's date, and it is last on its own
+        evidence:** six of `T0.23`'s seven gated properties are green, the guard
+        it exists to protect is intact (`bad_argv_refused`,
+        `bad_argv_never_dispatched`, `mixed_argv_refused`,
+        `stray_check_refused`, `good_argv_not_refused`, `exit_receipt_all_tools`
+        all True), the FAIL is banked on the ledger, `depends_on: [T0.01]` is
+        PASS so the re-buy was legal, and `WAITS-ON: none`. **Nothing degrades
+        while it waits and nothing is held behind it** — what waits is a choice
+        between two defensible readings of one conjunct. That is the honest
+        definition of last place, and it is being said rather than implied so
+        that a later sitting can see it was ranked and not forgotten. Dated
+        10-20 alongside rank 4 (pile 4 of 6 after that row lands, under
+        capacity): two cheap items on one day is legitimate where two
+        heavyweight ones are not. ORIGINAL TEXT FOLLOWS, unchanged. | `review-queue`'s own `next_free_due`, read off the tool
         this slot. The FAIL is already banked, so nothing degrades while it
         waits; what waits is the choice between two defensible readings.
     WAITS-ON: none | `T0.23` declares `depends_on: [T0.01]`, which is PASS, so
