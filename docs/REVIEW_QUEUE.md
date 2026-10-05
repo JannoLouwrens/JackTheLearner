@@ -514,6 +514,25 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
         registration of `W1.01`/`W1.03`/`W1.04` that this row owes is dated
         behind a refusal; on 2026-10-02 this row goes OVERDUE for the fourth
         time and the cause will be this sentence, not throughput at any desk.
+    BUILDER-TRACE: a24cdb7 | executed 2026-10-05 ~17:2x UTC ("1^17
+        ITEM 1"): `W1.01` and `W1.04` REGISTERED in
+        `experiments/registry_expansion.py`, transcribed from THE W1 DESIGN
+        block below — registration ONLY, per the 2026-10-02 split; no
+        dispatch, no world edit, no threshold chosen at the builder's desk.
+        W1.01's gap bar quotes W1.02's certified quantum (0.0083681, PASS
+        2026-09-06T11:32:50) as the design orders, read from the recorded
+        row rather than hard-coded; its predicted FAIL (the SH.02-pilot
+        saturation) is in `falsified_by` at registration, before any run.
+        W1.04 carries the 2026-09-10 conjunct (c) amendment verbatim (5th
+        percentile not mean, cause tags per life, no horizon-shortening
+        repair, disabled-mechanism twin control), satisfying the 2^7
+        standing condition. `W1.03` NOT registered, as 1^17 forbids — its
+        twin control is not writable against a world with no traps. Both
+        show `[needs implementing]`, deps W1.02 (PASS), in `run next`;
+        `claim_dead` 3 before AND after; `GOAL_UNRUNNABLE_BASELINE`
+        untouched; registry-edit staleness bill 0 certificates
+        (`run stale-cost`, the LG.14 2026-10-01 precedent). A RECEIPT, not
+        a stamp — the row still ages and only the desk writes ACTED.
 
 ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1 (builder; finding §3.1) | ACTED 2026-09-16 (Review DAILY, executing commit `d521384` — the carry-back was already discharged on the `w0-too-shallow` row itself on 09-06; what this row still owed was the ORDERING consequence, and it is delivered below. The W1 ordering stops being contingent and becomes unconditional. See ANSWER below)
     DUE: 2026-09-15 | first future date carrying no promise yet per
