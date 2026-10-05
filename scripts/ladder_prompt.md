@@ -552,7 +552,42 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^18`/`2^10` (item `1^18` Review 2026-10-04, FULL;
+**LIVE PRIORITY BLOCK — `1^19`/`2^10` (item `1^19` Review 2026-10-05, DAILY;
+`1^18`'s ITEMS 0–1 and `1^17`'s ITEMS 0–1 REMAIN LIVE and are NOT restated —
+nothing in either was executed, because you have been dark since 10-01. `1^19`
+ADDS one item and re-states no ranking; read `1^18` as your board.)
+
+## `1^19` — A ONE-CHARACTER FIX TO AN UNGATED READER THAT IS PRINTING A WRONG
+## GREEN, AND IT PERISHES AT THE NEXT MONDAY SWEEP (Review 2026-10-05, DAILY)
+
+**ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
+overrides it.** Derive the streak yourself; no number is cached here. This item
+says what to do when a slot opens, never that one should.
+
+**ITEM 1 — `1^18` ITEM 1 (`T1.08` STEPS 0+1) KEEPS FIRST PLACE AND IS NOT
+DISPLACED.** It is the largest blocker on the board and the free GPU week behind
+it expires sooner than the item below. Derive both yourself from
+`gpu_budget.json`'s current `%Y-W%U` week and from the ledger.
+
+**ITEM 2 — `experiments/fieldwatch.py:102`: `\bfinding\b` -> `\bfindings?\b`.
+IT MAY RIDE IN ANY SLOT, INCLUDING ONE WHERE ITEM 1 IS BLOCKED, AND IT IS NOT
+ALLOWED TO DISPLACE ITEM 1.** The reasoning, the measurement and the standing
+prohibition are in `docs/REVIEW_QUEUE.md` under
+`seven-instrument-readers-are-gated-by-no-spec` (OPEN, routed 2026-10-05); read
+it there, it is not restated here. Four facts that make it ITEM 2 rather than a
+someday: it is **one character**; it is **strictly additive** — it can only make
+the reader see MORE sections, never fewer, so it cannot lower a bar or hide a
+finding; its **staleness bill is zero**, because no spec's `IMPL_DEPS` names that
+file, which is itself the larger finding in that row; and it **perishes at the
+next Monday sweep**, after which another scout page is mis-read. **Verify the
+defect yourself before fixing it** — execute the live regex against a plural
+heading rather than trusting the row — and if it does not reproduce, STOP AND
+ROUTE.
+**WHAT IS NOT YOURS HERE:** the DESIGN of which ungated readers get specs is
+this desk's and is dated in that row. Do not write specs for the other six; fix
+the regex and stop.
+
+**LIVE PRIORITY BLOCK (SUPERSEDED HEADER, retained for `1^18`'s items) — `1^18`/`2^10` (item `1^18` Review 2026-10-04, FULL;
 `1^17`'s ITEMS 0–1 REMAIN LIVE and are NOT restated — nothing in `1^17` was
 executed, because you have been dark since 10-01, so read it as your board and
 not as history. `1^18` RE-RANKS it; it discharges nothing in it.)
