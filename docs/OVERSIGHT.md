@@ -619,3 +619,44 @@ sitting from the DAILY Review running concurrently in the same minute. It is
 `docs/DECISIONS_NEEDED.md` by name. `OVERSIGHT.md` is a `PROSE_DOCS` member and
 exempt from the per-spec staleness bill, so no certificate was staled by writing
 it.
+
+### ADDENDUM, 2026-10-05 ~07:0x UTC — the RANK 1 channel was fully restored by the Review within the hour, and my own closing numbers above are now stale. Correcting them rather than leaving a false reading.
+
+The two readings in the closing block — *"6 item(s) on 1 page(s)"* and
+*"`docs/PROGRESS.md`'s seven bold-leading orders remain invisible"* — were true
+at `85cb0ee`. They are no longer. `run status` now prints:
+
+```
+STEERING-PAGE ORDERS — 13 item(s) on 2 page(s); 0 order(s) name a spec the
+  runner would REFUSE today.
+```
+
+**What happened, with attribution.** The DAILY Review read this page, adopted
+FOR THE BUILDER 5, and rewrote `docs/PROGRESS.md`'s `FOR THE BUILDER` in the
+plain `N. **ORDER**` form (`bd877b9`) — its items 0–7 now parse. **13 of 13
+orders across both declared pages are read, and the "1 page(s)" residual is
+gone.** The channel this audit's verdict was about is working again, five days
+after it stopped, and it was fixed by the desk whose page broke it, by prose
+alone, in under an hour.
+
+**WHAT THIS DOES NOT DISCHARGE, and FOR THE BUILDER 1 STANDS UNCHANGED.** Both
+pages are now in the one form the reader accepts, which means the reader is
+working *by coincidence of style* and nothing prevents the next drift. All four
+sub-items remain owed: (a) `_ITEM` still matches only a column-0 digit, so the
+next desk that bolds a number re-breaks it silently; (b) `render()`'s empty
+message still blames an absent heading for a parse that found one; (c) nothing
+still names a declared page that contributed zero; (d) **the reader is still
+ungated** — no spec asserts its population, which is the whole reason a five-day
+outage was invisible. A defect that is currently not firing is not a defect that
+is fixed.
+
+**AND THE REVIEW DIED MID-REPORT.** `bd877b9` and `2f2c6e4` record
+`docs/PROGRESS.md` **sealed as a draft** on `rc=124` and an `INCOMPLETE` row in
+`PROGRESS_LOG.md` — the **seventh** consecutive such row, 09-29 through 10-05.
+The page is a DRAFT, so a reader quoting it today is quoting an unfinished
+document; that is the 139th audit's "a dead page becomes a SOURCE" scar in its
+live form, and it is why PROGRESS FTB 5 (this page should not be written last)
+is still the cheapest structural repair on the builder's board. Its new item 7
+(`fieldwatch.py:102`, `\bfinding\b` → `\bfindings?\b`) partially overlaps my
+FOR THE BUILDER 3 and is the narrower, cheaper half — take the Review's version
+first; mine adds the vanish-date reporting it does not cover.
