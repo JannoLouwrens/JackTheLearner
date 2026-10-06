@@ -16001,8 +16001,64 @@ cadence, and whose. Nothing new is proposed here and no exemption is requested.
 ## self-test-literals` — a 22-day latent red whose failing conjunct is a TEXT
 ## proxy that has started matching text it was never aimed at
 
-ROUTED: t032-single-source-proxy-fires-on-self-test-literals | 2026-09-26 | `T0.32` offline `_check(_experiment(0), _control(0))` = **False**, `single_source_ok` False, every other gated property green (builder, this slot, child process, NO ledger write); cause bisected over `af323fc..HEAD` | OPEN
-    DUE: 2026-10-06 | `review-queue`'s own next-date-with-room, read off the
+ROUTED: t032-single-source-proxy-fires-on-self-test-literals | 2026-09-26 | `T0.32` offline `_check(_experiment(0), _control(0))` = **False**, `single_source_ok` False, every other gated property green (builder, this slot, child process, NO ledger write); cause bisected over `af323fc..HEAD` | DISPOSITIONED 2026-10-06 the design is THE RULING below (option (i), the proxy is right and the repair is in run.py); execution is the builder's
+    DUE: 2026-10-17 | **RE-DATED 2026-10-06 (Review DAILY) AND RULED — the
+        fork is picked below, so what the new date owes is EXECUTION.** 10-17
+        carried 4 of a measured 6 when this was written, against a builder that
+        is live again (14 consecutive `rc=0` slots since 2026-10-05T16:37).
+        **THE RULING: option (i) — THE PROXY IS RIGHT AND THE REPAIR IS IN
+        `run.py`.** Move the seven self-test expectations and the docstring
+        occurrence out of `experiments/run.py` (a fixture constant or a test
+        module beside it), leaving the one arguable live-code hit — `a3d2c9e`'s
+        `s.budget.value != "cpu<48h"` — to be either removed or kept as a true
+        positive on its own merits.
+        **WHY (ii) AND (iv) ARE NOT AVAILABLE TO THIS DESK AT ALL, which is a
+        rule and not a judgement.** Both NARROW or SPLIT a conjunct on a spec
+        in the hour it was measured red — (ii) excludes the module's own
+        self-test block and docstrings from the proxy's domain, (iv) demotes a
+        self-test hit from FAIL to REPORT. This desk may strengthen and may
+        never weaken, and "the conjunct stops failing because its domain got
+        smaller" is the definition of the forbidden move. The 21:0x slot
+        reached the same conclusion on `T0.23` and was right to.
+        **WHY (iii) IS REFUSED THOUGH IT IS THE CLEVEREST OPTION.** Replacing
+        the text proxy with a structural one — *no dict or tuple in `run.py`
+        maps a budget class to a NUMBER* — is better aimed at the thing
+        actually banned, and this desk nearly took it. It is refused because it
+        would be a NET LOOSENING dressed as a re-aim: the text proxy forbids a
+        private budget table under any shape, including ones nobody has thought
+        of, while the structural assertion forbids exactly one shape and would
+        green-light all eight current literals. A proxy that admits everything
+        presently in the tree is not a sharper proxy; it is a retired one. If
+        the structural assertion is worth having it is worth having BESIDE the
+        text proxy, as an added conjunct — and that is a different proposal
+        from the one this row offers.
+        **WHY (i)'S ONLY STATED OBJECTION IS SPENT, measured rather than
+        inherited — and this is the second row due today whose cost argument
+        was priced before the organ that pays it existed.** The row declined
+        (i) because *"it edits `run.py`, which is now a declared `IMPL_DEPS`
+        path of this spec and of three others"* — four certificates to re-buy.
+        **The measured number is not four.** Walking every spec module's
+        `IMPL_DEPS` constant, exactly TWO declare `experiments/run.py`:
+        `T0.32` itself (`cpu<10min`, and its ledger row is **already FAIL**, so
+        there is no standing certificate to lose) and `T0.36` (`cpu<1min`,
+        PASS, 34.81 s recorded). `T0.22` mentions the path three times and
+        declares it nowhere — `t0_22_borrowed_constants.py:319-320,391` are
+        `" M experiments/run.py"` git-status DIRT STRINGS inside its own
+        self-test fixtures, which is the same false-positive shape this very
+        row is about, one file over. **So the true bill for option (i) is ONE
+        cheap re-buy, and `scripts/regate.sh` — created 2026-09-28, two days
+        AFTER this row was written — pays exactly that bill mechanically,
+        twelve times a day, for zero judgment and zero Claude budget:** an
+        edit to a DECLARED `IMPL_DEPS` path is precisely what
+        `stale_claims` catches, so `T0.36` lands in regate's lane
+        automatically. The attention cost that made (i) unattractive on
+        2026-09-26 is now paid by an organ.
+        **WHAT IS NOT ORDERED:** no threshold moves, `single_source_ok` keeps
+        its exact current predicate, and no conjunct's domain is edited in
+        either direction. If removing the literals exposes the `a3d2c9e` hit as
+        a genuine live-code breach, that is a finding to report and not a
+        licence to re-scope the proxy.
+        ORIGINAL TEXT FOLLOWS, unchanged. | `review-queue`'s own next-date-with-room, read off the
         tool this slot (10-06 carried 1 against a measured capacity of 6). NOT
         10-05: that date is already at 6 and the 21:0x slot lit
         `review_queue_piled_on` by writing onto it, which is a mistake this
@@ -16504,14 +16560,51 @@ building it, made from measurement rather than from the freeze.
 ## question.
 
 ROUTED: lt02-c2-passed-on-the-epsilon-not-on-a-measurement | 2026-09-27 | `LT.02` attempt 3, ledger row **FAIL** 2026-09-27T02:40:10 (800.24 s, seeds 0/1/2, clean stamp at `f047060`), read off `experiments/ledger.json` this slot | OPEN
-    DUE: 2026-10-06 | `review-queue`'s own *"Next date with room under the
+    DUE: 2026-10-16 | **RE-DATED 2026-10-06 (Review DAILY) ONTO ITS TWIN'S
+        DATE, because this row and `lt02-deciding-gate-is-nan-and-nan-reads-as-
+        FAIL` are ONE decision and were being carried as two.** That row was
+        routed 2026-10-03 by this same desk, is `DUE: 2026-10-16`, and its
+        subject is the IDENTICAL conjunct on the IDENTICAL statistic: *"does an
+        UNCOMPUTABLE deciding gate refute the claim, or report UNREADABLE?"*
+        over `chaos_reward_ratio` = `nan`. This row asks what the REDESIGN must
+        deliver; that row asks what the `nan` MEANS — **and the second answer
+        determines the first, which is why they cannot be sequenced the other
+        way round.** If `nan` must read UNREADABLE (`VOID`), the redesign's job
+        is to make the ratio COMPUTABLE and the 2.0 bar is never reached this
+        cycle; if `nan` → `FAIL` stands, the redesign must make the ratio
+        computable AND clear 2.0, which is a strictly larger piece of venue
+        work. Designing the second before ruling the first would be designing
+        against an unruled premise.
+        **THIS IS NOT A FIFTH RE-DATE DRESSED AS A MERGE, and the record shows
+        it: this row has never been re-dated before — 2026-10-06 was its
+        first and only date.** It is also not a hold: no `BLOCKED-BY` is
+        declared, both rows keep live ageing statuses, and 10-16 carries 2 of a
+        measured 6 with this row on it. Both are this desk's own debts, due the
+        same sitting, and they will be ruled in one act or neither.
+        **WHAT THIS DESK WILL NOT DO ON 10-16, pre-committed now while it costs
+        nothing to say:** `REWARD_RATIO_MIN` 2.0 does not move. Attempt 2's
+        5.2631 was computed by a helper that divided by a CLAMPED denominator
+        and `f047060` replaced that with an honest `NaN` — so the number that
+        cleared the bar by 2.6x was partly an artefact of the clamp, and the
+        attempt-3 FAIL is the more truthful reading, not a regression. A bar
+        whose only passing measurement came from an epsilon is a bar that has
+        never actually been cleared; lowering it to meet the artefact would be
+        the exact move `1^13` forbids and this row was routed to prevent.
+        ORIGINAL TEXT FOLLOWS, unchanged. | `review-queue`'s own *"Next date with room under the
         measured capacity"*, read off the tool this slot (09-27 through 10-05
         are all at or above the measured 6/cycle). What is owed is a REDESIGN
         of C2's ARM or VENUE — a threshold question this desk may not take,
         because `REWARD_RATIO_MIN` 2.0 is a registered bar and the `1^13` rule
         ("wanting to move a bar to make one of these pass — stop and route it
         back") is exactly this row.
-    WAITS-ON: none | nothing live changes what attempt 3 measured. It is
+    WAITS-ON: lt02-deciding-gate-is-nan-and-nan-reads-as-FAIL | DECLARED
+        2026-10-06 (Review DAILY) so the pile counts these two rows as the ONE
+        decision they are. The 09-27 text below is preserved and remains
+        correct about the row it names — `lt02-the-venue-has-no-true-positive-
+        body-chaos-is-reducible` is a different conjunct on a different arm and
+        coupling to IT would have hidden this finding behind that one's
+        discharge. The twin declared here did not exist on 09-27; it was routed
+        on 10-03. ORIGINAL TEXT FOLLOWS, unchanged. | nothing live changes what attempt 3 measured. It is
         deliberately NOT declared `BLOCKED-BY:
         lt02-the-venue-has-no-true-positive-body-chaos-is-reducible`: that row's
         subject is attempt 1's ABSENT TRUE POSITIVE, and its disposition was

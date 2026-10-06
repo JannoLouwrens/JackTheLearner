@@ -21088,3 +21088,59 @@ already writes about `3b2e38b`. That is twice now that this mechanism's
 third instance is recognised faster: **when a check has been wrong about its
 population once, the next question is not "is the check correct" but "is the
 population complete", and those are answered by different evidence.**
+
+---
+
+## A COST MEASURED OUTSIDE THE TIMED BLOCK IS NOT A MEASUREMENT, AND `MEASURED` IS A WORSE PROVENANCE THAN `ENUM` WHEN IT IS WRONG (143rd audit, 2026-10-06)
+
+`W1.01`'s PASS row records `duration_s` **0.22** for a run that billed
+**2,479.79 s** to the day ledger and recorded `wall_s` **1,154.89** in its own
+metrics — off by 11,272×. The cause is a deliberately-adopted pattern, not a
+bug: `run()` does all 12 arm rollouts in a worker `Pool` and memoises them into
+a module `_CACHE` **before** calling `run_spec`, so `run_spec` times a dictionary
+read. The same pattern is in all four `W1.0x` tests.
+
+**Two unrelated meters consumed that field as a measurement, and neither organ
+had noticed either.** `cpu_budget.child_estimate_s` returned
+`(10.88, 'MEASURED 0.22s x4 + 10s')` — the tenant-protection day gate sizing a
+2,480 s child at 11 s on a box with paying customers; and
+`protocol.py`'s hash-salt differential set `tmo = max(120.0, 3.0 * elapsed_s)`
+= 120 s for a replay that needs ≳3,400 s, because the salt child re-enters
+`_experiment` with a **cold** cache and does serially what the pool did in
+parallel. That produced the ledger's first-ever salt-differential
+`TimeoutExpired`.
+
+**Three generalisations.**
+
+(i) **Ask where the cost is INCURRED relative to where it is TIMED.** A timer
+around an aggregation step measures the aggregation. Any pattern that moves work
+*before* the instrumented call silently zeroes every downstream consumer of that
+duration — and the consumers are usually in other files, written by people who
+never saw the pattern.
+
+(ii) **A one-sided clamp protects one direction and blesses the other.**
+`child_estimate_s`'s invariant — *"the projection may only TIGHTEN ... can never
+refuse something it would have admitted before"* — bounds over-estimation and
+assumes the measurement honestly lower-bounds cost. When that assumption breaks,
+**`MEASURED` is strictly worse than `ENUM`**: the fallback was accurate
+(54,000 s for the unrun twin) and the "measurement" was not. A provenance label
+is a claim and it needs the same scrutiny as a number.
+
+(iii) **A reporting-only guard whose coverage is anti-correlated with cost is
+absent exactly where it matters, and its absence is invisible if it lands in
+prose.** The salt differential exists because an unreconstructible
+`PYTHONHASHSEED` came one count-tie from deciding a seat; it now cannot complete
+on the most expensive certificates — the ones hardest to re-derive by hand — and
+there is **no counter anywhere** for its outcomes, so "which certificates have
+no salt reading" is a grep of `message` strings rather than a number. Whenever a
+guard is declared reporting-only, ask what prints its *coverage*, not its
+verdict.
+
+**And a conduct note, because this one nearly got deferred.** The builder
+disclosed the timeout honestly and wrote *"routed as a row only if W1.04
+reproduces it."* The timeout is a deterministic function of `duration_s` and the
+cold-cache replay, both readable at source in a minute. **When a failure's cause
+is readable at source, a second instance buys no information and costs another
+certificate its guard** — reproduce-before-routing is the right instinct for a
+flake and the wrong one for an arithmetic consequence, and telling the two apart
+is a source read, not a second run.
