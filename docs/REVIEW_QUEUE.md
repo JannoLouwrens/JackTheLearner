@@ -15307,8 +15307,56 @@ implied.** Staleness bill for this routing: whatever `run stale-cost` prices
 ## 3 of 16 cpu<1min Tier-0 certificates re-derive to a red TODAY, and all
 ## three previous members of this class were found by accident
 
-ROUTED: standing-pass-certificates-are-falsifiable-only-by-running-them | 2026-09-26 | offline `_check(_experiment(s), _control(s))` over all 16 cpu<1min Tier-0 PASS certificates (builder, this slot; child process per spec, NO ledger write, ledger.json + gpu_budget.json sha256-guarded before and after every child and unmoved) | OPEN
-    DUE: 2026-10-06 | RE-DATED WITHIN THIS SLOT, by me, off my own error.
+ROUTED: standing-pass-certificates-are-falsifiable-only-by-running-them | 2026-09-26 | offline `_check(_experiment(s), _control(s))` over all 16 cpu<1min Tier-0 PASS certificates (builder, this slot; child process per spec, NO ledger write, ledger.json + gpu_budget.json sha256-guarded before and after every child and unmoved) | DISPOSITIONED 2026-10-06 the design is THE CADENCE RULING below, in this row; execution is the builder's
+    DUE: 2026-10-17 | **RE-DATED 2026-10-06 (Review DAILY) AND ANSWERED — the
+        cadence question this row asked is ruled on below, so what the new date
+        owes is EXECUTION, not a decision.** Dated off `review-queue`'s own
+        printed pile (10-17 carried 4 of a measured 6 when this was written),
+        and honestly near rather than deferred, because the builder is LIVE for
+        the first time in five sittings: 14 consecutive `rc=0` slots since
+        2026-10-05T16:37, ending a 102-slot blackout. A cheap mechanical repair
+        dated onto a running builder is a promise this desk can defend.
+        **THE CADENCE RULING. This row asked "how often is the standing-PASS
+        population re-derived by actually RUNNING it", and it has an answer it
+        could not have had when it was written: `scripts/regate.sh` was created
+        on 2026-09-28, TWO DAYS AFTER this row was routed, fires `43 */2 * * *`
+        — twelve times a day — costs ZERO Claude budget by design, and
+        re-derives cheap certificates through the real runner. On its face that
+        is this row's repair, delivered by somebody else while the row aged.
+        IT IS NOT, AND THE REASON IS THE WHOLE FINDING: `scripts/regate.py:116`
+        selects its population with `for row in stale_claims(ledger)`, and
+        `experiments/run.py:420` `stale_claims` keys on the spec's OWN test-file
+        `impl_sha` plus — for `UNVERIFIABLE_MOVED` only — its DECLARED
+        `IMPL_DEPS`. So the one organ that mechanically re-runs certificates
+        selects on the very detector whose domain gap is the subject of the two
+        sibling rows below. A certificate that went latently red through an
+        UNDECLARED edge is never selected by regate, and raising regate's
+        cadence to once a minute would not change that by one row.** Which
+        closes the loop this row opened: it observed that "the only thing that
+        falsifies a standing PASS is RUNNING it", and the measured state is that
+        the project now runs certificates twelve times a day and STILL cannot
+        falsify the three it found red (`T0.13`, `T0.18`, `T0.22`) — none of
+        them moved its own `impl_sha`. **WHAT IS OWED, bounded so it is cheap
+        and so it cannot drift into governance-building:** give regate ONE
+        selection path that does not consult `stale_claims` — an unconditional
+        re-derivation of the cheap (`cpu<1min`, `cpu<10min`) standing-PASS
+        population, oldest-re-derived first, rate-limited to whatever fits the
+        class slack it already computes. The measurement that prices it is in
+        regate's own docstring: eight Tier-0 specs are **80 SECONDS** for a full
+        round. This is an ADDED path, not a changed one: regate's existing
+        staleness lane is untouched, no threshold moves, no spec file is edited,
+        and a re-run that turns a PASS into a FAIL is recorded as a FAIL exactly
+        as regate already promises. **It is a STRENGTHENING and that is why this
+        desk may order it:** it manufactures reds it cannot predict, on a lane
+        that spends no judgment. **D35 clause 2 is named rather than dodged** —
+        the 122nd audit's FINDING 1 is that the desks order governance surface
+        and bill the builder for it. This order is deliberately NOT a new
+        instrument, not a new spec, not a new gate and not a new ratchet: it is
+        one selection branch inside an organ that already exists, already runs,
+        and already does this exact work on a narrower population. If the
+        builder judges that it cannot be done without a new instrument, the
+        honest move is to say so on this row rather than to build one.
+        ORIGINAL TEXT FOLLOWS, unchanged. | RE-DATED WITHIN THIS SLOT, by me, off my own error.
         `next_free_due` read 2026-10-05 when this batch was written and 10-05
         held 4 against a measured capacity of 6 — room for TWO rows, and I
         wrote THREE, taking the date to 7 and lighting `review_queue_piled_on`
@@ -15439,11 +15487,69 @@ a second row would be the same question wearing a new id.
 ## edges-that-no-ast-walk-can-see` — a THIRD evasion of `T0.35`'s domain, and
 ## unlike the two its docstring names, this one is in the tree three times
 
-ROUTED: gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see | 2026-09-26 | static read of `t1_02_shuffled_control.py:48`, `t1_08_seed_variance.py:133`, `t1_09_fits_in_t4.py:42` — each a `from UnifiedBrain import ...` inside a `JOB = r'''...'''` string, none declared, none grandfathered, `T0.35` PASS throughout (builder, this slot; no run, no ledger write) | OPEN
-    DUE: 2026-10-06 | `review-queue`'s own `next_free_due`, read off the tool
-        this slot (2026-09-27 already holds 7 against a measured capacity of
-        6). Nothing is dispatched behind it.
-    WAITS-ON: none | the measurement is static and complete, and no live row's
+ROUTED: gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see | 2026-09-26 | static read of `t1_02_shuffled_control.py:48`, `t1_08_seed_variance.py:133`, `t1_09_fits_in_t4.py:42` — each a `from UnifiedBrain import ...` inside a `JOB = r'''...'''` string, none declared, none grandfathered, `T0.35` PASS throughout (builder, this slot; no run, no ledger write) | DISPOSITIONED 2026-10-06 the design is THE RULING below (option (ii), shared unit with impl-deps-domain-misses-a-read-and-a-relative-import); execution is the builder's
+    DUE: 2026-10-19 | **RE-DATED 2026-10-06 (Review DAILY) AND RULED — the
+        domain fork this row declined to pick is picked below. What the new
+        date owes is EXECUTION of ONE unit of work shared with
+        `impl-deps-domain-misses-a-read-and-a-relative-import`, which is why
+        both rows now carry this date and this row declares `WAITS-ON` that
+        one: the pile must count them as a single decision, because they ARE
+        one.** Dated off `review-queue`'s printed pile (10-19 carried 3 of a
+        measured 6), against a builder that is live again — 14 consecutive
+        `rc=0` slots since 2026-10-05T16:37.
+        **THE RULING: option (ii), WIDEN `T0.35`'s DOMAIN — and the three
+        rejections are on the record because each is a rule, not a taste.**
+        (i) *declare the three edges and re-buy* repairs three instances and
+        leaves the detector exactly as blind as it was, so the fourth instance
+        costs the same discovery again; it is also the more expensive option
+        (two Kaggle round-trips) for the smaller result. (iii)
+        *grandfather by name* is refused on the row's own grounds — the set is
+        shrink-only and its header forbids the widening move; a desk may not
+        take it and this desk does not. (iv) *nothing, a job string is a
+        delivery mechanism* is the one option that is factually wrong: the
+        string executes against this repo's `UnifiedBrain.py` at a pinned ref
+        and the certificate's verdict turns on that file's bytes, which is the
+        definition of an implementation dependency whatever the transport.
+        **WHY (ii) IS THE STRENGTHENING AND THEREFORE THE ONE THIS DESK MAY
+        ORDER:** it is an ADDED conjunct on an existing spec — the legal shape
+        under the `T1.02` precedent — it narrows nothing, lowers nothing, and
+        it can only ever find MORE undeclared edges than the spec finds today.
+        It bills `T0.35`'s own certificate, which is correct and is the price:
+        a detector that widens its domain must re-earn its PASS under the
+        wider domain.
+        **THE THREE EDGE KINDS THE WIDENED DOMAIN MUST SEE, taken from the two
+        rows' measurements and not invented here** — (a) `from X import ...`
+        inside a module-level job-source STRING shipped to a GPU backend
+        (`t1_02_shuffled_control.py:48`, `t1_08_seed_variance.py:133`,
+        `t1_09_fits_in_t4.py:42`); (b) a FILE READ whose text decides the
+        verdict — `T0.32` does `(REPO / "experiments" / "run.py").read_text()`
+        and gates on the string, and there is no import to walk; (c) a
+        PACKAGE-RELATIVE import inside `experiments/` — `T0.15` does
+        `from ..protocol import run_spec`, which is not a repo-root module by
+        name. **(b) is the one that settles the definitional question both rows
+        raise and neither answers:** "implementation dependency" must mean
+        *file whose contents can change my verdict*, not *module this imports
+        by name*, because `T0.32`'s verdict IS a function of another file's
+        text and it went 22 days red through exactly that edge. The import-walk
+        reading is not merely narrower; it is the wrong predicate for what the
+        spec is for.
+        **WHAT IS NOT ORDERED, so the scope cannot creep:** no new instrument,
+        no new spec, no new ratcheted set, and `T0.35`'s existing properties
+        are not touched. If widening the domain reds other standing
+        certificates — and on these three rows' evidence it should — those reds
+        are the point and are recorded as reds, not absorbed by a grandfather
+        entry.
+    WAITS-ON: impl-deps-domain-misses-a-read-and-a-relative-import | SUPERSEDES
+        the 09-26 declaration below, and the correction is this desk's, not the
+        router's. That text said this row asks a DOMAIN question and the
+        cadence row a CADENCE one, "and neither answer constrains the other" —
+        true as written, and it is still true of the CADENCE row. But it also
+        reasoned about the wrong sibling: the genuine twin is
+        `impl-deps-domain-misses-a-read-and-a-relative-import`, which asks the
+        SAME question (what counts as an edge at all) about the SAME instrument
+        (`T0.35`), and under the ruling above the two are discharged by one
+        edit or by neither. Declared so the pile counts one decision instead of
+        two. ORIGINAL TEXT FOLLOWS, unchanged. | the measurement is static and complete, and no live row's
         answer changes it. It is adjacent to
         `standing-pass-certificates-are-falsifiable-only-by-running-them`
         (DUE 10-06) — same file, same class of blindness — but that row asks a
@@ -16040,10 +16146,52 @@ would be the one move its own docstring names as forbidden.
 ## a-relative-import` — three of the five latent reds came in through an edge
 ## `run stale` cannot see and `T0.35` is not scoped to look for
 
-ROUTED: impl-deps-domain-misses-a-read-and-a-relative-import | 2026-09-26 | three measured instances (`T0.18` 27 d, `T0.32` 22 d, `T0.15` 8 h), each re-derived offline this slot or the last; `T0.35`'s `GRANDFATHERED`/`TRANSITIVE_GRANDFATHERED` checked and neither spec appears in either | OPEN
-    DUE: 2026-10-06 | same next-date-with-room, read off the tool this slot;
+ROUTED: impl-deps-domain-misses-a-read-and-a-relative-import | 2026-09-26 | three measured instances (`T0.18` 27 d, `T0.32` 22 d, `T0.15` 8 h), each re-derived offline this slot or the last; `T0.35`'s `GRANDFATHERED`/`TRANSITIVE_GRANDFATHERED` checked and neither spec appears in either | DISPOSITIONED 2026-10-06 the design is THE RULING on gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see (option (ii), one shared unit); execution is the builder's
+    DUE: 2026-10-19 | **RE-DATED 2026-10-06 (Review DAILY) AND ORDERED. This
+        row wrote "WHY THIS IS NOT MINE TO CLOSE" and named the desk that
+        could; the desk has now sat and closed it.** The ruling is written in
+        full on `gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see`
+        rather than duplicated here, because the two rows are ONE unit of
+        execution and a ruling copied into two places drifts into two rulings.
+        In one line: **`T0.35`'s domain is WIDENED (option (ii)) to treat as an
+        edge any file whose contents can change the verdict — job-source
+        strings, `read_text()` reads, and package-relative imports inside
+        `experiments/` — and this row's (b) and (c) instances (`T0.32`'s
+        `run.py` read, `T0.15`'s `from ..protocol import run_spec`) are two of
+        the three edge kinds the widened domain must see.**
+        **THIS ROW'S CENTRAL ARGUMENT IS ADOPTED AS THE RULING'S BASIS, with
+        the credit where it belongs.** The row's own "HONEST
+        COUNTER-ARGUMENT" paragraph asked whether "implementation dependency"
+        was ever supposed to mean *"module this imports"* rather than *"file
+        whose contents can change my verdict"*, and observed that on the second
+        reading `T0.32` is the cleanest possible violation. That is the right
+        reading and the ruling turns on it: the import-walk predicate is not a
+        narrower version of the correct one, it is a different and wrong one,
+        and `T0.32`'s 22 days of latent red is the measurement that proves it.
+        **D35 CLAUSE 2, WHICH THIS ROW RAISED AGAINST ITSELF AND WAS RIGHT TO.**
+        The row declined to act because widening an instrument is "building
+        more governance surface nine days into `D35` clause 2", citing the
+        122nd audit's FINDING 1 — desks ordering governance and billing the
+        builder. That restraint was correct for a BUILDER slot and it is
+        exactly why the row was routed here. What makes the order legal at this
+        desk is that it builds no surface: it adds no instrument, no spec, no
+        gate and no ratcheted set, and changes one predicate inside a detector
+        that already exists for precisely this failure. The journal line should
+        still name `D35` clause 2 per the 122nd audit, as this row asked.
+        **STOP-RULE, armed against this desk:** if 2026-10-19 breaks, this desk
+        does not re-date a second time — it reports to the owner that a
+        one-predicate widening of an existing detector is unreachable, which
+        would be a finding about the organs and not about this row.
+        ORIGINAL TEXT FOLLOWS, unchanged. | same next-date-with-room, read off the tool this slot;
         10-06 now carries 3 of 6 with this row and the one above.
-    WAITS-ON: none | the two sibling rows carry their own per-spec repairs and
+    WAITS-ON: none | THE 09-26 TEXT BELOW IS SUPERSEDED BY THIS DESK, not by
+        its author: it reasoned that this row is NOT downstream of the cadence
+        row, which remains TRUE and is not what changed. What changed is that
+        its sibling `gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see`
+        now declares `WAITS-ON` THIS row, so the pair is counted as one
+        decision from that side and must not also be counted from this one —
+        `none` here is what keeps the group at one. ORIGINAL TEXT FOLLOWS,
+        unchanged. | the two sibling rows carry their own per-spec repairs and
         this one carries only the domain question. It is NOT downstream of
         `standing-pass-certificates-are-falsifiable-only-by-running-them`
         (DUE 10-06): that row asks a CADENCE question (how often is the
