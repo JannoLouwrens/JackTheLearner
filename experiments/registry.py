@@ -981,7 +981,19 @@ LADDER: list[Spec] = [
          hypothesis="A full companion session runs N minutes with no crash or NaN.",
          falsified_by="Any crash, hang, or non-finite action.",
          null_baseline="n/a", metric="minutes_survived", budget=Budget.CPU_LONG,
-         depends_on=["T4.05"]),
+         depends_on=["T4.05"],
+         control="Two injected-fault twin sessions must be CAUGHT by the same "
+                 "monitor that judges the claim: (a) the brain tick "
+                 "monkeypatched to emit a NaN action must register "
+                 "nonfinite_actions > 0; (b) the brain tick made to raise must "
+                 "register crash_frames > 0 through the companion's own "
+                 "swallowed-exception log channel. Either faulted session "
+                 "reading CLEAN means the monitor is dead and the run is "
+                 "VOID, not PASS — a liveness gate whose instrument cannot "
+                 "see a planted fault measures nothing (declared 2026-10-06, "
+                 "with the first implementation; the companion loop swallows "
+                 "brain/physics exceptions at logger.debug, so an uninstrumented "
+                 "harness would report any crashing session as a clean one)."),
     Spec("T6.02", 6, "Long-run stability",
          hypothesis="Hours of continuous operation without drift into degenerate behaviour.",
          falsified_by="Action saturation, mood lock, or memory unbounded growth.",

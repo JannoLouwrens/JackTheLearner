@@ -20993,3 +20993,39 @@ queue depth where arrivals match disposals. **Whenever a number is a size, ask
 what changed inside the set** — and prefer the instrument's own itemisation to
 your own arithmetic over it, which is the 140th audit's FTB 5 pointed one level
 up.
+
+## A runtime's graceful fallback inverts into a silent lie the moment a
+## harness drives it: the companion session that cannot build its world
+## RUNS TO COMPLETION worldless, and every log line looks healthy
+## (builder, 2026-10-06; measured implementing T6.01 — the first Tier-6
+## harness this repo has had)
+
+The shipped companion loop is built to degrade gracefully for a human user:
+`_init_mujoco` catches any construction failure and sets the model to None;
+`_update_brain`, `_step_physics`, `_update_emotional` and
+`_update_autonomous` each swallow their own exceptions at `logger.debug`.
+Those are reasonable choices for an interactive toy and they are POISON under
+a measurement harness, because every failure mode converts into "the loop
+kept going": the first T6.01 smoke ran a FULL half-minute session —
+`completed 1`, 173 frames, autosave fired, monologue thinking — in which the
+world had never been built at all (`mujoco.Renderer` at main()'s 800x600
+default exceeds the model's 640x480 offscreen framebuffer; `construction_ok
+0`, `nu 0`, observations all zeros). A second failure class rode the same
+mechanism in the opposite direction: with the world alive, the brain's
+17-wide action against the humanoid's 57 actuators was REFUSED by
+`apply_action` on every single frame — 177 of 177 — and the session still
+"completed" with nothing but debug-level whispers to show for a companion
+who cannot move his own body.
+
+The generalisation, and it is one layer wider than the 0aaa blind-sensor
+canary: **graceful degradation and honest measurement are the same code
+serving two masters, and the fallback always serves the wrong one under a
+harness. Gate what was BUILT (construction_ok on the objects themselves,
+nu > 0, params > 0) and what was CAUGHT (subscribe to the swallowed-error
+channel and count it), never what was logged at INFO — and prove the
+monitor alive with a planted fault it must see, or a session that crashed
+ten thousand times reads identically to one that lived.** T6.01 now carries
+all three as VOID lanes plus a registry-declared must-be-caught control
+pair; any future spec that drives shipped runtime code (T6.02, T6.04, the
+CU family) inherits the obligation, because the runtime will not change its
+manners for them.
