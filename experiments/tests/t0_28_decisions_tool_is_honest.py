@@ -889,6 +889,21 @@ DECIDE: D84
     #   - dropping the second channel does not narrow the first one's answer;
     #   - and `firing_coverage` names a declared firing no commit reached,
     #     which is the reading that says whether the audit found them ALL.
+    # SCOPE, stated because the 142nd audit measured its edge (RANK 1): every
+    # assertion below runs against SYNTHETIC page literals and reads nothing
+    # from docs/DECISIONS_RESOLVED.md as it stands, so this property certifies
+    # the MECHANISM and is silent about the live documents. `firing_coverage`
+    # is drawn from the resolved page, so a firing recorded on
+    # DECISIONS_NEEDED.md whose transcription never lands is invisible to both
+    # the record channel and this completeness reading at once — D36's firing
+    # commit c10a128 sat nine days in exactly that hole while this property
+    # read PASS, honestly. The converse reading is
+    # `decisions.untranscribed_firings` (reported on every `--check`);
+    # re-scoping this battery to the LIVE page is NOT done here — it is a
+    # Tier-0 certificate change (bill: T0.28 alone, cpu<10min, ~0.01 CPU-h per
+    # `run stale-cost`) and a design question about whether a battery should
+    # depend on document state, owned by the Review under
+    # `seven-instrument-readers-are-gated-by-no-spec` (DUE 2026-10-19).
     real_missed = "bbb1|D22's record completed (89th audit B1.1) + the measure"
     union = _identify(FIRING_LOG, real_missed, safety_enforced=S)
     both = _identify(FIRING_LOG, "aaa1|D26 FIRED by armed default",

@@ -938,13 +938,48 @@ def firing_coverage(resolved_text: str, rows: list) -> tuple:
     how a guard gets switched off. The floor that bites stays `FIRING-DIFF`, on
     the hazards themselves.
     """
-    declared = sorted({m.group(1) for m in re.finditer(
-        r"^##\s+(D\d+)\s+\S*\s*RESOLVED BY ARMED DEFAULT", resolved_text, re.M)},
-        key=lambda s: int(s[1:]))
+    declared = sorted(set(_RECORD_HEADING.findall(resolved_text)),
+                      key=lambda s: int(s[1:]))
     named = set()
     for _sha, subj in rows:
         named.update(re.findall(r"\bD\d+\b", subj))
     return declared, [d for d in declared if d not in named]
+
+
+#: The firing-record heading, shared by BOTH pages: the overseer appends it to
+#: `docs/DECISIONS_NEEDED.md` when it fires (that it cannot skip — it is the
+#: firing act itself), and a later transcription writes it onto `RECORD_PAGE`
+#: (that it CAN skip — it is somebody else's follow-up commit, per the `D13`
+#: file-set rule). The same pattern `firing_coverage` has always used, lifted
+#: to a constant so the converse reading below provably reads the same shape.
+_RECORD_HEADING = re.compile(
+    r"^##\s+(D\d+)\s+\S*\s*RESOLVED BY ARMED DEFAULT", re.M)
+
+
+def untranscribed_firings(needed_text: str, resolved_text: str) -> list:
+    """D-ids recorded as FIRED on `docs/DECISIONS_NEEDED.md` with no record on
+    `RECORD_PAGE` — the converse question nothing in this repository asked
+    until the 142nd audit's RANK 1 (2026-10-06).
+
+    Why this exists as its own reading: the RECORD channel and
+    `firing_coverage` are both drawn from the resolved page, so a firing whose
+    transcription never lands is absent from the audited population AND from
+    the completeness check at once, and the two silences read exactly like full
+    coverage. Measured instance: `D36`'s firing commit `c10a128` matched
+    neither channel for nine days while `FIRING-DIFF` read 0 (its diff audits
+    CLEAN, so the exposure was zero — which is the only reason this shipped at
+    a reading of zero). The cross-check has to come from a second,
+    independently-written source; the NEEDED page is that source, because the
+    firing act itself writes it.
+
+    REPORTED, NOT RATCHETED, deliberately: this ships in the commit that
+    creates its first reading, and a floor invented in the same breath as its
+    first number is a floor nobody has watched behave. If the reading proves
+    quiet, flooring it at 0 is a later, separate decision.
+    """
+    recorded = set(_RECORD_HEADING.findall(needed_text))
+    declared = set(_RECORD_HEADING.findall(resolved_text))
+    return sorted(recorded - declared, key=lambda s: int(s[1:]))
 
 
 # ── the owner's OTHER desk: `## FOR THE OWNER` in docs/PROGRESS.md ──────────
@@ -1881,6 +1916,28 @@ def _firing_fixture() -> None:
         (["D22", "D25"], ["D25"]), firing_coverage(page, [("bbb1", "")])
     assert firing_coverage(page, []) == (["D22", "D25"], ["D22", "D25"])
 
+    # THE CONVERSE OF COVERAGE (142nd audit RANK 1): `firing_coverage` is drawn
+    # from the resolved page, so a firing RECORDED on the needed page but never
+    # transcribed is missing from the audited population and from the
+    # completeness check at once. The planted positive is the real shape:
+    # `D36`/`D37` recorded as fired on the needed page, absent from a resolved
+    # page that declares only `D22`/`D25` — and an armed-but-unfired entry
+    # (`D40`) must NOT count as recorded.
+    needed = ("## D36 — RESOLVED BY ARMED DEFAULT, fired 2026-09-27 by the "
+              "OVERSEER (123rd audit). Off your desk.\n"
+              "## D37 — RESOLVED BY ARMED DEFAULT, fired 2026-10-05 by the "
+              "OVERSEER (140th audit). Off your desk.\n"
+              "## D40 — the 90% stop has no watcher (armed, not fired)\n"
+              "## D22 — RESOLVED BY ARMED DEFAULT, fired 2026-09-12.\n")
+    assert untranscribed_firings(needed, page) == ["D36", "D37"], \
+        untranscribed_firings(needed, page)
+    assert untranscribed_firings(needed, needed) == []
+    assert untranscribed_firings("", page) == []
+    # Transcribing one must shrink the reading by exactly that one.
+    assert untranscribed_firings(
+        needed, page + "## D36 — RESOLVED BY ARMED DEFAULT (fired): t\n"
+    ) == ["D37"]
+
     # And the ratchet must actually BITE: a hazard is not a printed warning.
     assert check_rc([("FIRING-DIFF", "aaa2", "…")]) == 1
     assert check_rc([]) == 0
@@ -2307,6 +2364,19 @@ def main(argv: list[str]) -> int:
     # nonzero cannot be seen to be at floor").
     if "--check" in argv:
         violations.extend(firing_violations())
+        # THE CONVERSE OF COVERAGE, reported beside the firing ratchet on every
+        # `--check` (142nd audit FTB 1b). Reporting-only and unfloored — see
+        # `untranscribed_firings` for why a floor does not ship in the same
+        # commit as the first reading. Printed even at zero: a counter that
+        # only appears when it is nonzero cannot be seen to be at floor.
+        _untr = untranscribed_firings(text, resolved_text)
+        _rec = len(set(_RECORD_HEADING.findall(text)))
+        print(f"  firing transcriptions: {_rec - len(_untr)} of {_rec} "
+              f"firing(s) recorded on {DOC.name} have a record on "
+              f"{RECORD_PAGE.rsplit('/', 1)[-1]}"
+              + (f" — UNTRANSCRIBED: {', '.join(_untr)} (invisible to the "
+                 f"RECORD channel and to firing_coverage until transcribed)"
+                 if _untr else "") + ".\n")
 
     debt = ratchet_debt(violations)
     if "--check" in argv:
