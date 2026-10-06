@@ -18821,3 +18821,63 @@ ROUTED: seven-instrument-readers-are-gated-by-no-spec | 2026-10-05 | docs/FIELD_
     **NOT CLAIMED.** Not that any of the seven is currently wrong beyond the one measured defect — six of them were not audited here and this row does not assert they are broken, only that nothing would say so if they were. Not that each needs a full Tier-0 battery; the design half exists precisely to decide what is proportionate. Not that the scout should have found this — §7d is about the reader's regex and finding the ungated class required enumerating our own registry, which is this desk's job and not a scout's.
     **§7 AND §7b ARE DISCHARGED HERE TOO, by quotation, because the same reader reports them UNROUTED and both are about the SCOUT's tooling rather than the repo's.** §7: *"MY ENUMERATION SCRIPT DIED SILENTLY AT IMPORT AND A LIVENESS CHECK WOULD HAVE PASSED IT ... Zero of fourteen enumerations ran, and the process exited 0 from the launcher's point of view ... assert the expected RESULT COUNT, never the exit status or the fire time."* §7b, quoted verbatim because a paraphrase does not reach this reader and the first version of this row proved it — the `FIELD-WATCH FINDINGS` channel still printed §7b as `UNROUTED` after I summarised it, which is `fieldwatch-quotation-channel-is-0-for-5`'s lesson arriving at my own desk: *"MY OWN VERIFICATION GREP PRODUCED A FALSE POSITIVE OF EXACTLY THE SHAPE I ROUTED IN WEEK 8. Checking N1's Lean supplement I first measured "2 admits, 1 axiom" and nearly published it as the nomination's honest residue. All three hits are English prose inside comments ... Re-measured in tactic position: 0 `sorry`, 0 `admit`, 0 `axiom` declarations ... the correct guard is the one I used by accident — check the match's syntactic position, not its presence ... the residue I almost published would have understated a nomination I am arguing for, which is the direction of error that is hardest to catch."* **Disposition: ACCEPTED AS CORRECT, NO REPO ACTION, and both are `LESSONS.md` candidates the scout nominated and deliberately did not write.** §7's rule — assert the result COUNT, never the exit status — is the generalisation of this desk's own standing lesson that a well-formed nothing is the dangerous failure, and it is the same shape as the wrong green above; §7b is a re-occurrence of an already-owned lesson and needs no new entry. Recording the disposition here is what stops the reader re-reporting them next week as un-owned.
     STALENESS BILL: the regex half is **ZERO** — `fieldwatch.py` is in no spec's `IMPL_DEPS` (that is the finding), so changing it stales no certificate, which is itself the cleanest possible demonstration of the defect. The design half's bill is computed when the design exists and is not guessed now; registering specs for ungated readers MANUFACTURES scrutiny rather than relieving it, and any new spec may legitimately be born FAIL.
+
+## ROUTED 2026-10-06 (builder, under the 142nd audit's FTB 2 — the three
+## runtime findings from T6.01's implementation slot, one row because they
+## share a cause): `shipped-companion-cannot-move-see-or-report-failure`
+
+ROUTED: shipped-companion-cannot-move-see-or-report-failure | 2026-10-06 | T6.01 implementation smokes (872c370, journal 2026-10-06 00:07 slot), re-derived by the 142nd audit (OVERSIGHT.md RANK 2 / finding 2) and re-verified at source at routing time | OPEN
+    DUE: 2026-10-15 | review-queue's own "Next date with room under the
+        measured capacity" printed 2026-10-15 at routing time — the mechanical
+        answer, not a hand-picked date, per the 142nd audit's FTB 2 order.
+    WAITS-ON: none | no QUEUE ROW is a prerequisite (the field's grammar
+        names rows only). The soft coupling is to `D41` on the OWNER's desk
+        (`decide_by 2026-10-18`), and dating this row three days earlier is
+        deliberate, stated per THE ROUTER'S DECLARATION: these three
+        measurements are themselves evidence D41's entry now carries
+        (EVIDENCE ADDENDUM 2026-10-06), so a row dated after 10-18 would
+        arrive too late to inform the ruling it feeds; and under D41's own
+        default (iii) — "repair each instance on its own row" — the
+        disposition of this row proceeds whichever way D41 resolves. Only
+        the repair SHAPE (rig-side vs shipped-side) waits on D41; the
+        findings and their disposition do not.
+    THE THREE FINDINGS, one cause — the shipped companion pipeline is not the
+    artefact the ladder certifies, measured at RUNTIME for the first time
+    (every prior instance of D41's drift was static analysis):
+    **(1) HE CANNOT MOVE.** The shipped brain emits a 17-wide action vector
+    into the embodied humanoid's 57-actuator body and `apply_action` refuses
+    every frame: **crash_frames 177 of 177** on the T6.01 smoke (seed 0,
+    nu=57). The width-17 contract is certified — by `T0.06` ("Env/policy
+    dimension contract", PASS, `EXPECTED_NU = 17`, `kills = "Every locomotion
+    result"`) — on Gymnasium `Humanoid-v5`, a venue the shipped body is not.
+    `T0.06`'s certificate is VENUE-LOCAL and its control is the thing that
+    caught this; whether its scope line should say so is a desk judgement
+    about certificate scope, NOT a demotion this row asks for.
+    **(2) HE CANNOT SEE.** `assets/humanoid_full.xml` declares cameras
+    `track` (:68), `left_eye` (:83), `right_eye` (:84), `head_cam` (:85) —
+    and **no camera named `"eye"`**. `VirtualWorld.py:714` looks up `"eye"`
+    by `mj_name2id` and returns None when absent; `playground.py:537` is the
+    place that EMITS a `"eye"` camera, in the ladder's generated world. So
+    the embodied session runs blind by scene wiring (eye_alive 0, recorded
+    not gated) — the shipped eye exists only in the rig's world, which is
+    the drift in one sentence.
+    **(3) HIS SESSION CANNOT FAIL.** At `main()`'s 800x600 default window
+    the renderer refuses humanoid_full's 640x480 framebuffer, `_init_mujoco`
+    fails CLOSED, and the companion loop swallows its own error at
+    `logger.debug` level: a WORLDLESS session ran to completion and reported
+    **completed 1** (173 frames, construction_ok 0, nu 0). T6.01's
+    construction_ok VOID lane now gates this; the shipped loop still
+    swallows it.
+    PRE-REFUSED at measurement time, re-refused here: padding or truncating
+    the action vector to 57 (a green bought by driving the body with garbage),
+    and renaming a scene camera to `"eye"` (a green bought by aliasing). Both
+    turn a red green without making either artefact correct, and both are the
+    exact cheap repair D41's recommendation names as how this drift happened.
+    WHAT THIS OWES: a dispositioned repair design for the three instances —
+    which artefact's side each repair lands on is downstream of D41; the
+    numbers above are final and need no re-run (T6.01's recording run will
+    reproduce crash_frames mechanically until the width contract is repaired,
+    and is pre-registered to FAIL exactly there).
+    STALENESS BILL: zero — this row edits no code; T6.01 has no certificate
+    (never run to ledger); T0.06's certificate is untouched by naming its
+    venue-locality in a queue row.

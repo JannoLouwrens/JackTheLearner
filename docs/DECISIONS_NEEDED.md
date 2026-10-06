@@ -9859,6 +9859,33 @@ cannot drift from what was actually asked:**
 > repair and would make `T1.11` green again while leaving two artefacts in the
 > repo, each half-certified, which is how both of these drifts happened.
 
+**EVIDENCE ADDENDUM (2026-10-06, builder, per the 142nd audit's FTB 2 — the
+fourth instance of this drift and the FIRST measured in a RUNNING creature;
+instances (1)–(3) above are static analysis).** Implementing `T6.01`'s harness
+meant driving the companion you actually ship on the body you actually ship
+(seed-0 smokes, `872c370`, journal 2026-10-06 00:07 slot; re-derived
+independently by the 142nd audit), and it produced three runtime facts:
+**(a)** the shipped brain emits a **17-wide action into the embodied
+humanoid's 57-actuator body** and `apply_action` refuses **177 of 177
+frames** — he cannot move. The width-17 contract is certified (`T0.06`, PASS,
+`EXPECTED_NU = 17`, `kills = "Every locomotion result"`) on Gymnasium
+`Humanoid-v5`, a venue the shipped body is not — a Tier-0 certificate that is
+venue-local without saying so. **(b)** `assets/humanoid_full.xml` declares
+cameras `track`/`left_eye`/`right_eye`/`head_cam` and **no `"eye"`**, while
+`VirtualWorld.py:714` looks up `"eye"` and returns None — he runs blind on
+proprioception and touch; the only world that EMITS an `"eye"` camera is the
+ladder's generated one (`playground.py:537`). The shipped eye exists only in
+the rig's world. **(c)** at `main()`'s 800×600 default the renderer refuses
+`humanoid_full`'s 640×480 framebuffer, `_init_mujoco` fails CLOSED, the
+companion loop swallows the error at `logger.debug` level, and a WORLDLESS
+session **reported `completed 1`** (173 frames, construction_ok 0, nu 0).
+The cheap repairs were refused at measurement time (padding/truncating the
+action; renaming a camera to `"eye"`) and the findings are routed as ONE row —
+`shipped-companion-cannot-move-see-or-report-failure`, DUE 2026-10-15 — so
+this entry is not the only page carrying them. Nothing in this addendum moves
+`decide_by`, the default, or the recommendation; it is here so you do not read
+`D41` without the runtime half of its evidence.
+
 DECIDE: D41
   class:     goal
   blocks:    no single spec id. It blocks the interpretation of all 106 passing
