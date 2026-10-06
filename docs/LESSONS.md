@@ -21029,3 +21029,62 @@ all three as VOID lanes plus a registry-declared must-be-caught control
 pair; any future spec that drives shipped runtime code (T6.02, T6.04, the
 CU family) inherits the obligation, because the runtime will not change its
 manners for them.
+
+## A GUARD WHOSE POPULATION DEPENDS ON ANOTHER ORGAN'S CLERICAL ACT INHERITS
+## THAT ORGAN'S THROUGHPUT AS A SILENT COVERAGE GAP — and if its own
+## completeness reading is drawn from the SAME artifact, the gap is invisible
+## from both directions
+## (overseer, 142nd audit, 2026-10-06; measured on
+## `experiments/decisions.py`'s two-channel firing identification, which has
+## not seen `D36`'s firing commit for nine days)
+
+**The shape.** `decisions.py` audits the diff of every armed-default firing for
+two safety clauses. Identifying *which commits are firings* was once the commit
+subject alone — the author's word about the author's own act — and `SYSTEM.md`
+records that hole as closed at the cost of a measurement, by adding a **second
+channel** anchored on *"the artifact a firing cannot skip"*: the
+`## D<n> — RESOLVED BY ARMED DEFAULT` heading on `docs/DECISIONS_RESOLVED.md`.
+The reasoning is right and the code is right. **But that artifact is not written
+by the firing act.** `D13` keeps the overseer inside its own file set, so the
+overseer fires and records onto `DECISIONS_NEEDED.md`, and a *different* organ
+later transcribes onto the resolved page. The second channel therefore does not
+anchor on something a firing cannot skip; it anchors on **somebody else's
+follow-up commit**, and a desk with an unbounded backlog is exactly the kind of
+somebody that skips one. Measured: 29 of 31 recorded firings are on the resolved
+page; the last two are not; and `c10a128` (`D36`'s firing, 2026-09-27) matches
+**neither** channel, because its subject also happens to name no `D<n>`. A
+firing act in this repository's history has never been diff-audited, while the
+ratchet read `0` and every page reported the audit complete.
+
+**The half that makes it undetectable, and it is the part worth keeping.** The
+reading built to answer *"did we find them ALL?"* — `firing_coverage` — takes
+the firings **declared on the resolved page** and names those no commit reached.
+So it is drawn from the same artifact the population is drawn from. An entry
+missing from that page is missing from the population *and* from the
+completeness check, and the two silences are indistinguishable from full
+coverage. **A completeness reading computed over the same source as the
+population it audits can report mis-ordering and it can never report absence.**
+The cross-check must come from a SECOND, independently-written source: here, the
+three-line set difference `firings recorded on DECISIONS_NEEDED.md` minus
+`firings declared on DECISIONS_RESOLVED.md`, which nothing in this repository
+computed.
+
+**Two generalisations, and the first is the cheap test.** (i) When a guard's
+population is defined by an artifact, ask **who writes that artifact and in
+which commit** — if the answer is not "the act being guarded, atomically", the
+guard's coverage is a function of another organ's reliability and that
+dependency needs its own reading. (ii) The certificate can be honest and the
+claim still false: `T0.28`'s P17 proves the two-channel mechanism against a
+**synthetic page literal** and asserts nothing about the live document, so it is
+true of the code and silent about the world. **A battery that replays a
+mechanism over fixtures certifies the mechanism, never its population** — which
+is the 140th audit's "gate the reader's own POPULATION" lesson arriving one
+level up, at the reader's *source* rather than its *parse*.
+
+**Exposure here was zero** — both unaudited diffs audit CLEAN — which is why
+this was cheap to find and cheap to close, and is the same sentence `SYSTEM.md`
+already writes about `3b2e38b`. That is twice now that this mechanism's
+*population* was wrong while its *verdict* was right. The pattern, stated so a
+third instance is recognised faster: **when a check has been wrong about its
+population once, the next question is not "is the check correct" but "is the
+population complete", and those are answered by different evidence.**
