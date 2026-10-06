@@ -915,7 +915,24 @@ LADDER: list[Spec] = [
     Spec("T4.05", 4, "Full regression gate",
          hypothesis="Every passing Tier 0-3 test still passes after composition.",
          falsified_by="Any regression.", null_baseline="n/a",
-         metric="regressions", budget=Budget.GPU_LONG, depends_on=["T4.04"]),
+         metric="regressions", budget=Budget.GPU_LONG, seeds=3,
+         depends_on=["T4.04"],
+         control="T4.04's corrupted-supervision twin (task A's own inputs "
+                 "trained against SHUFFLED labels for the identical phase-2 "
+                 "step budget, from the same phase-1 snapshot) must register "
+                 ">= 1 regression on the SAME six-item battery on every "
+                 "seed. The damage is certainly planted, so a twin reading "
+                 "zero regressions means the battery cannot see a lost "
+                 "capability, and the run is VOID, not PASS (declared "
+                 "2026-10-06, with the first implementation).",
+         notes="The battery maps Tier 0-3 claims whose subject is the brain "
+               "onto the composed brain, by spec id: T1.01/T1.03/T1.04/"
+               "T1.06/T0.14-convention/T2.04, with T2.06's retrieval gate "
+               "as the composition-reality VOID lane. Tier 0-3 specs whose "
+               "subject is a rig, world or instrument are outside a brain-"
+               "training event's causal reach; their re-sweep is owned by "
+               "--gate (T0.30), deliberately not re-implemented here "
+               "(freeze clause 2). Scope declared in the test docstring."),
 
     # ===================================================================
     # TIER 5 — THE CLAIMS. The thesis stands or falls here.
