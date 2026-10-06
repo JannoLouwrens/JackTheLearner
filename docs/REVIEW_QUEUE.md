@@ -19368,3 +19368,77 @@ ROUTED: duration-s-feeds-two-meters-as-the-specs-cost | 2026-10-06 | 143rd audit
     experiments/protocol.py experiments/cpu_budget.py`): 5 standing PASS
     certificates (T0.15, T0.17, T0.33, T0.34, T0.35), ~0.01 CPU-h total,
     payable in the repair's own slot per the in-slot payment rule.
+
+## ROUTED 2026-10-06 (builder, 09:xx slot, executing the 143rd audit's RANK 3
+## order — "write it with the conjunct-by-conjunct reading attached, do not
+## assert it"): `t112-pass-stands-on-t111s-orthogonal-added-conjunct`
+
+ROUTED: t112-pass-stands-on-t111s-orthogonal-added-conjunct | 2026-10-06 | 143rd audit (OVERSIGHT.md, FOR THE BUILDER item 2, RANK 3); every leg re-verified at source at routing time | OPEN
+    DUE: 2026-10-18 | review-queue's "Next date with room under the measured
+        capacity" printed 2026-10-18 at routing time — the mechanical answer.
+        Dated AFTER its referenced blocker's own DUE (t111: 10-16), so the
+        router's-declaration earlier-date clause does not bind.
+    WAITS-ON: none | the reading below is complete and stampable now; nothing
+        gates it. The counter member's EXIT runs through
+        `t111-certified-loss-has-no-shipped-caller` (T1.11 back to PASS), but
+        this row neither holds nor re-dates that repair.
+    THE QUESTION THIS ROW OWNS: `T1.12` ("Flow matching actually denoises") is
+    a standing PASS whose only dependency, `T1.11`, went FAIL on 2026-10-04 —
+    the `pass_on_dead_dependency` member `T1.12 <- T1.11` (reading 6 vs floor
+    3). No row owned it; this one does.
+    THE READING, conjunct by conjunct, verified at source this slot:
+    **(1) T1.11's FAIL has exactly one cause and it is the ADDED conjunct.**
+    Attempt 5 (2026-10-04T07:00:02, clean tree, the strengthening commit
+    `04f99d1`). `_check` is three conjuncts; against the FAIL row's own
+    numbers: `inference_params_trained_frac` 1.0 >= 0.99 GREEN (all 41,525,008
+    inference-path params reached: action_expert 4,615,696 + layers 36,710,400
+    + proprio_encoder 198,912); control 0.8888 < 0.9 GREEN with
+    `action_expert=0` — the old `forward()['actions']` loss still misses the
+    actuator entirely, so the discrimination is alive; `shipped_callers` 0 < 1
+    RED — the sole failing conjunct. The two original conjuncts are
+    BYTE-IDENTICAL across the strengthening (diffed `04f99d1^` lines 97-98
+    against HEAD lines 174-175, not taken from the file's own comment).
+    **(2) What T1.12 borrows from T1.11 is the part still green.** T1.12's rig
+    calls the certified loss ITSELF (`t1_12_flow_denoises.py:75`,
+    `brain.action_training_loss(obs, target)["loss"]`) and gates on the
+    runtime sampler (`generate_actions_flow_matching` via `_sample_error`).
+    The premise it inherits is gradient-reach — conjuncts (1)-(2), measured
+    alive on the dependency's own FAIL row. The failed conjunct asserts a
+    caller OUTSIDE `experiments/` exists; inside T1.12's rig the spec is the
+    caller by construction, and nothing in T1.12's registered hypothesis,
+    null, control, metric or kills consumes shipped-caller existence.
+    **(3) T1.12's certificate is independently fresh.** Absent from STALE
+    CLAIMS: `impl_sha 02c33783dcde7c8d` (test file + its declared
+    UnifiedBrain.py) unmoved since the PASS (attempt 3, 2026-09-26, seeds
+    0/1/2, reconstruction_improvement 867.92, sampler_error_after 0.00134 vs
+    untrained 1.0441, shuffled-conditioning control 1.958 — the control still
+    fails as required).
+    **THE DISPOSITION PROPOSED: the certificate STANDS as registered, and no
+    re-run is owed.** A run today records BLOCKED by arithmetic (`run_spec`
+    refuses on a FAIL dependency) — converting a fresh, re-derivable
+    certificate into a blocked row while measuring nothing. The coverage
+    instrument's "re-run the dependent so its row records the BLOCKED it
+    actually is" branch is for a dependent whose BORROWED PREMISE died;
+    T1.12's borrowed premise is the part of T1.11 still measured green. If the
+    Review reads any conjunct above differently, the honest fallback is that
+    re-run and its BLOCKED row — recorded, not argued around.
+    **THE PROHIBITED QUOTATION, which is what the counter member is FOR:**
+    T1.12's PASS may NOT be quoted as evidence that the SHIPPED pipeline
+    trains a denoising sampler. `TrainingPipeline.py:193` trains through
+    `output['actions']` — T1.11's own `_control`, the arm required to fail.
+    That inference died with the added conjunct; its repair is owned by
+    `t111-certified-loss-has-no-shipped-caller` (OPEN, DUE 2026-10-16) and the
+    artefact question is `D41` (decide_by 2026-10-18).
+    **THE COUNTER IS NOT BLESSED HERE.** `pass_on_dead_dependency` stays red
+    at 6 vs floor 3; the floor does not move and the 5 -> 6 growth is NOT
+    `ratchets record`-ed in this commit — per the 143rd audit's own
+    constraint, the floor moves only in the commit that grew the number
+    (`04f99d1`, which did not record it), so the MOVED flag stands as the
+    honest record of that omission.
+    EXIT: when T1.11 returns to PASS the member dissolves with no T1.12
+    action. If the t111 repair instead registers a sanctioned-alternative
+    conjunct, T1.12 is untouched either way — it relies on reach, never on
+    which shipped path calls the loss.
+    STALENESS BILL: zero. This row edits no source, moves no threshold,
+    re-runs nothing; `run stale-cost docs/REVIEW_QUEUE.md` = PROSE/doc, 0
+    certificates.
