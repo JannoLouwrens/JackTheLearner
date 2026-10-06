@@ -89,6 +89,7 @@ verdict here and this lane only chose which cheap stale rows to ask for.
 Staged: the changed protocol.RUNNER_OUTPUTS (ledger row + every receipt the
 runner wrote beside it), nothing else.
 ${MOVED:+A status MOVED, which is the lane working: it keeps the scoreboard TRUE, not green.}" \
+    -- $STAGE \
     && git push -q origin HEAD 2>/dev/null \
     && say "committed and pushed" || say "commit/push failed — rows are on the ledger, tree left for the loop"
 else
