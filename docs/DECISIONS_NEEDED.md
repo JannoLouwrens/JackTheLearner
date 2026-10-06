@@ -7936,7 +7936,12 @@ DECIDE: D33
              shallow finding that is this project's largest standing scientific
              result. The cost is realised, not forecast: 14 days live, four
              slips, three FULLs.
-  default:   (i) RE-DATE ONCE MORE, TO 2026-09-23, AND CHANGE NOTHING ELSE.
+  default:   (i) RE-DATE ONCE MORE, TO 2026-09-23 (CLOCK: c9aca70 — provenance,
+             not a command: this entry's own NOTE records that the re-date was
+             already performed in `c9aca70`, with a written cause and a
+             stop-rule, BEFORE this entry was written; annotated 2026-10-06 per
+             the 143rd audit FTB 3, the `D22` precedent at
+             `decisions.py:666`), AND CHANGE NOTHING ELSE.
              This is the only legal default of the three and it is deliberately
              the weakest one on the list. It picks only already-permitted
              actions — a desk re-dating its own row in the open, with a written
