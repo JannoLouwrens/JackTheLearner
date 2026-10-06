@@ -901,7 +901,17 @@ LADDER: list[Spec] = [
          hypothesis="Training task B does not degrade task A beyond a set tolerance.",
          falsified_by="A drops >10% while learning B.",
          null_baseline="A trained alone.", metric="task_a_retention",
-         budget=Budget.GPU_LONG, seeds=3, depends_on=["T2.01"]),
+         budget=Budget.GPU_LONG, seeds=3, depends_on=["T2.01"],
+         control="A corrupted-supervision twin must be CAUGHT by the same "
+                 "ruler that judges the claim: phase 2 trains task A's own "
+                 "inputs against SHUFFLED labels for the identical step "
+                 "budget, which certainly overwrites the A mapping, and its "
+                 "measured drop must exceed the claim's own tolerance on "
+                 "every seed. The corrupted twin reading as retained means "
+                 "the retention instrument cannot see degradation that is "
+                 "certainly there, and the run is VOID, not PASS (declared "
+                 "2026-10-06 with the first implementation; the at-chance-"
+                 "control lesson, LESSONS.md 2026-08-21)."),
     Spec("T4.05", 4, "Full regression gate",
          hypothesis="Every passing Tier 0-3 test still passes after composition.",
          falsified_by="Any regression.", null_baseline="n/a",
