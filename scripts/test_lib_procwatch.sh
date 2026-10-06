@@ -39,6 +39,7 @@ cleanup() {
 trap cleanup EXIT
 
 export JACK_PROC_DECL="$TMP/declared_pids"
+export JACK_MEM_RECEIPTS="$TMP/mem_receipts"
 . "$REAL_REPO/scripts/lib_procwatch.sh"
 
 # spawn CMD... -> echoes the pid, records it for cleanup, waits for the EXEC
@@ -217,6 +218,90 @@ proc_memory_report say && R=clean || R=over
 chk "under the ceiling the report is clean" "$R" clean
 chk "  ...and PROC_MEM_N is 0" "$PROC_MEM_N" 0
 JACK_MEM_CEILING_MB=1536
+
+echo "== memory receipts: an EXITED breach is harvested, not lost (142nd FTB 3) =="
+
+# The defect this arm exists for: T6.01's child peaked at 2129 MB inside the
+# 00:07 slot, EXITED, and the live scan at slot end had nothing to read —
+# VmHWM dies with the pid. The receipt is the peak carried out by the process
+# itself; these cases run the REAL python writer against the REAL shell
+# harvester, same discipline as the self-declaration section above.
+rm -f "$JACK_MEM_RECEIPTS"
+chk "mark on a missing receipt file reads 0" "$(mem_receipts_mark)" 0
+
+# A receipt from BEFORE the slot's mark is prior work, not this slot's breach.
+printf '%s\t%s\t%s\t%s\n' "999998:1" "$(date -Iseconds)" 3000 "T6.PRIOR" >> "$JACK_MEM_RECEIPTS"
+MARK=$(mem_receipts_mark)
+
+# The real writer: plants the 2129 MB shape under its own (about to exit)
+# pid:starttime, so the python and shell key formats meet over a real death.
+( cd "$REAL_REPO" && "$VENV_PY" -c '
+import sys; sys.path.insert(0, "/home/opc/jackthelearner")
+from experiments.protocol import _report_mem_receipt
+_report_mem_receipt("T6.FAKE", 2129.0)' )
+LOGLINE=""; PROC_MEM_N=-1
+proc_memory_report say "$MARK" && R=clean || R=over
+chk "an exited over-ceiling receipt is reported" "$R" over
+chk "  ...as an EXITED line carrying the self-reported peak" \
+    "$(printf '%s' "$LOGLINE" | grep -c "(EXITED) — peak rss 2129 MB")" 1
+chk "  ...labelled with the spec that recorded it" \
+    "$(printf '%s' "$LOGLINE" | grep -c "run_spec T6.FAKE")" 1
+chk "  ...and the pre-mark receipt is NOT re-reported" \
+    "$(printf '%s' "$LOGLINE" | grep -c "T6.PRIOR")" 0
+chk "  ...PROC_MEM_N counts the exited breach" "$PROC_MEM_N" 1
+
+# A --gate sweep writes one receipt per spec from ONE process; the high-water
+# mark is monotone, so the harvest must collapse them to one line at the max.
+MARK2=$(mem_receipts_mark)
+printf '%s\t%s\t%s\t%s\n' "999997:3" "$(date -Iseconds)" 900  "SWEEP.A" >> "$JACK_MEM_RECEIPTS"
+printf '%s\t%s\t%s\t%s\n' "999997:3" "$(date -Iseconds)" 2048 "SWEEP.B" >> "$JACK_MEM_RECEIPTS"
+printf '%s\t%s\t%s\t%s\n' "999996:3" "$(date -Iseconds)" 400  "LEAN.C"  >> "$JACK_MEM_RECEIPTS"
+LOGLINE=""; PROC_MEM_N=-1
+proc_memory_report say "$MARK2" || true
+chk "a sweep's receipts collapse to ONE line at the process max" \
+    "$(printf '%s' "$LOGLINE" | grep -c "999997:3 (EXITED) — peak rss 2048 MB")" 1
+chk "  ...an under-ceiling exited process stays silent" \
+    "$(printf '%s' "$LOGLINE" | grep -c "999996:3")" 0
+
+# A receipt whose process is STILL ALIVE is the live scan's to name from the
+# kernel's own counter — the harvest reporting it too would double-count.
+ALIVE_PID=$(spawn "$VENV_PY" -c 'import time; time.sleep(45)')
+ALIVE_KEY=$(proc_key "$ALIVE_PID")
+MARK3=$(mem_receipts_mark)
+printf '%s\t%s\t%s\t%s\n' "$ALIVE_KEY" "$(date -Iseconds)" 7777 "STILL.ALIVE" >> "$JACK_MEM_RECEIPTS"
+LOGLINE=""
+proc_memory_report say "$MARK3" || true
+chk "a receipt whose process is still alive is left to the live scan" \
+    "$(printf '%s' "$LOGLINE" | grep -c "STILL.ALIVE")" 0
+
+# No mark -> the harvest arm stays off: the pre-mark/over-ceiling receipts
+# above must NOT leak into a caller that only asked for the live scan.
+LOGLINE=""
+proc_memory_report say || true
+chk "without a mark the harvest arm stays off (live scan only)" \
+    "$(printf '%s' "$LOGLINE" | grep -c "EXITED")" 0
+
+# The trim is bounded and only ever runs BEFORE a mark is taken.
+seq 1 4100 | awk -v OFS='\t' '{print "1:" $1, "t", 10, "x"}' > "$JACK_MEM_RECEIPTS"
+mem_receipts_trim
+chk "an oversized receipt log trims to its tail" "$(wc -l < "$JACK_MEM_RECEIPTS")" 2000
+seq 1 100 | awk -v OFS='\t' '{print "1:" $1, "t", 10, "x"}' > "$JACK_MEM_RECEIPTS"
+mem_receipts_trim
+chk "a small receipt log is left alone" "$(wc -l < "$JACK_MEM_RECEIPTS")" 100
+rm -f "$JACK_MEM_RECEIPTS"
+chk "a missing receipt file is not a crash" \
+    "$(proc_memory_report say "0" && echo clean || echo over)" clean
+
+# The call-site pin, grep-level on purpose (the notice-before-prune lesson):
+# the trim MOVES byte offsets, so it must run before the mark is taken, and
+# the slot-end report must actually receive the mark.
+LOOP="$REAL_REPO/scripts/ladder_loop.sh"
+T_LINE=$(grep -n '^mem_receipts_trim' "$LOOP" | head -1 | cut -d: -f1)
+M_LINE=$(grep -n '^MEM_MARK_BEFORE=\$(mem_receipts_mark)' "$LOOP" | head -1 | cut -d: -f1)
+chk "ladder_loop.sh trims BEFORE taking the mark" \
+    "$([ -n "$T_LINE" ] && [ -n "$M_LINE" ] && [ "$T_LINE" -lt "$M_LINE" ] && echo yes || echo no)" yes
+chk "ladder_loop.sh passes the mark to the slot-end report" \
+    "$(grep -c 'proc_memory_report say "\${MEM_MARK_BEFORE:-}"' "$LOOP")" 1
 
 echo "== housekeeping =="
 

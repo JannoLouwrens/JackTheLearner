@@ -3670,6 +3670,44 @@ def _declare_to_procwatch(label: str) -> None:
         pass                # no /proc or no /data: nothing watches here
 
 
+def _report_mem_receipt(label: str, peak_mb) -> None:
+    """Self-report this process-tree's peak RSS so the loop's memory guard
+    can see a breach that EXITS before slot end (142nd audit FTB 3).
+
+    `proc_memory_report`'s live scan reads VmHWM from /proc once at slot end,
+    so a child that peaked over the ceiling and exited was invisible — T6.01's
+    child held 2129 MB inside the 00:07 slot and no MEMORY line was written.
+    The kernel's high-water mark dies with the process; only the process can
+    carry it out, so `run_spec` writes a receipt beside its declaration and the
+    loop harvests receipts appended during its slot (same key discipline:
+    `pid:starttime`, so a recycled pid cannot adopt a stale receipt; one line
+    per recorded spec, so a --gate sweep's lines share a key and the reader
+    maxes them). The receipt records the FACT; the ceiling POLICY lives only in
+    the reader — a ceiling change must not orphan old receipts.
+
+    NAME, NEVER KILL, and this gates nothing: the value is already on the
+    ledger row as `peak_rss_mb`; this copy exists because the guard reads
+    /data, not the ledger. Best-effort by construction (a GPU clone has no
+    /data), and honestly incomplete: a child killed before this line (OOM
+    kill, SIGKILL mid-run) still reports nothing — the guard's own docstring
+    says so."""
+    if peak_mb is None:
+        return
+    try:
+        with open("/proc/self/stat", "rb") as f:
+            stat = f.read().decode("ascii", "replace")
+        starttime = stat.rsplit(") ", 1)[1].split()[19]
+        path = Path(os.environ.get("JACK_MEM_RECEIPTS",
+                                   "/data/jack-logs/mem_receipts"))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "a") as f:
+            f.write(f"{os.getpid()}:{starttime}\t"
+                    f"{time.strftime('%Y-%m-%dT%H:%M:%S%z')}\t"
+                    f"{peak_mb}\t{label}\n")
+    except (OSError, IndexError, ValueError):
+        pass                # no /proc or no /data: nothing watches here
+
+
 # ---------------------------------------------------------------------------
 # HASH-SALT DIFFERENTIAL — option (iv) of `hash-salt-lottery-in-a-gated-metric`
 # (docs/REVIEW_QUEUE.md, disposition 2026-09-19; the deciding set was measured
@@ -4248,6 +4286,9 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # spent memory. The ERROR case especially: an OOM-adjacent crash is the
     # row whose peak the next reader most needs.
     rss_after = _peak_rss_mb()
+    # Carried out of the process for the loop's memory guard: VmHWM dies with
+    # the pid, and the live scan cannot see an exited breach (142nd FTB 3).
+    _report_mem_receipt(spec.id, rss_after)
     # Undecidable ownership (no before-reading) records as inherited=True: an
     # upper bound a ratchet must not gate on, never a false claim of exactness.
     rss_inherited = (None if rss_after is None else

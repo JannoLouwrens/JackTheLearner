@@ -53,6 +53,10 @@ JACK_REPO="${JACK_REPO:-/home/opc/jackthelearner}"
 JACK_VENV="${JACK_VENV:-/data/venvs/jackthelearner/}"
 JACK_PROC_DECL="${JACK_PROC_DECL:-/data/jack-logs/declared_pids}"
 JACK_AWAITING="${JACK_AWAITING:-/data/jack-logs/awaiting}"
+# Peak-RSS receipts, self-reported by run_spec at exit (142nd audit FTB 3).
+# Format (tab-separated): pid:starttime, ISO timestamp, peak MB, spec label.
+# The WRITER records the fact; the ceiling policy lives only in the reader.
+JACK_MEM_RECEIPTS="${JACK_MEM_RECEIPTS:-/data/jack-logs/mem_receipts}"
 # SYSTEM.md's "~1.5 GB RAM" ceiling, as a number a predicate can read. Do NOT
 # raise it to match observed behaviour — T2.00 peaked at 7.57 GB and T0.07
 # records 6.99 GB on a green row, and whether that means the specs are in
@@ -299,7 +303,26 @@ $key"*) continue ;; esac
   return 0
 }
 
-# proc_memory_report [sayfn]
+# mem_receipts_mark -> byte offset of the receipt file now (0 if absent).
+# Taken at slot START so the harvest below reads only THIS slot's receipts: a
+# breach belongs to the slot whose work produced it, and re-reporting last
+# week's lines every hour would bury the one that matters.
+mem_receipts_mark() { stat -c %s "$JACK_MEM_RECEIPTS" 2>/dev/null || echo 0; }
+
+# mem_receipts_trim — bound the receipt log. Call ONLY at slot start, BEFORE
+# mem_receipts_mark: a trim moves byte offsets, so trimming after a mark is
+# taken would make the harvest read garbage. ~100 B/receipt; 4000 lines is
+# weeks of full regate sweeps.
+mem_receipts_trim() {
+  local tmp
+  [ -f "$JACK_MEM_RECEIPTS" ] || return 0
+  [ "$(wc -l < "$JACK_MEM_RECEIPTS" 2>/dev/null || echo 0)" -gt 4000 ] || return 0
+  tmp=$(mktemp) || return 0
+  tail -n 2000 "$JACK_MEM_RECEIPTS" > "$tmp" &&
+    mv "$tmp" "$JACK_MEM_RECEIPTS" 2>/dev/null || rm -f "$tmp"
+}
+
+# proc_memory_report [sayfn] [receipts_mark]
 #
 # The OTHER half of the rule this file's header cites. SYSTEM.md says "leave
 # no process running" AND "stay under ~1.5 GB RAM"; until 2026-09-03 only the
@@ -307,16 +330,30 @@ $key"*) continue ;; esac
 # both — a guard's comment is a capability claim and law 1 binds it (63rd
 # audit B2; the miss was found with T2.00 at 7.57 GB, 5x the ceiling, live).
 #
-# Names every project python whose PEAK rss (VmHWM) exceeds the ceiling. Same
-# discipline as proc_leaks: NAME, NEVER KILL. Deliberately checked against
-# ALL current project pythons, not just this iteration's — a leak is defined
-# by when a process started; a memory breach is defined by what it did, and a
-# pre-existing or DECLARED process over the ceiling is exactly the case that
-# went unseen (a declaration attributes a pid, it does not waive the RAM
-# constraint). Sets PROC_MEM_N. Returns 0 when nothing is over, 1 otherwise.
+# TWO ARMS, and the claim is exactly their union (142nd audit FTB 3 — the
+# first arm alone claimed "a memory breach is defined by what it did" while
+# only seeing what is still alive: T6.01's child peaked at 2129 MB inside the
+# 00:07 slot, exited with it, and no MEMORY line exists for that slot):
+#   1. LIVE SCAN — every current project python whose peak rss (VmHWM)
+#      exceeds the ceiling. Deliberately ALL of them, not just this
+#      iteration's: a leak is defined by when a process started; a memory
+#      breach by what it did, and a pre-existing or DECLARED process over the
+#      ceiling is exactly the case that went unseen (a declaration attributes
+#      a pid, it does not waive the RAM constraint).
+#   2. RECEIPT HARVEST — when $2 (a mem_receipts_mark taken at slot start) is
+#      given, receipts appended since it are read and any EXITED process-tree
+#      whose self-reported peak (run_spec's getrusage ru_maxrss, written at
+#      recording time) exceeds the ceiling is named too. A key still alive is
+#      skipped — arm 1 already names it from the kernel's own counter.
+#
+# STILL BLIND, said rather than implied: a child killed before run_spec's
+# receipt line (OOM kill, SIGKILL mid-run) reports nothing, and an ad-hoc
+# python that never calls run_spec and exits before slot end was never in
+# either population. Same discipline as proc_leaks: NAME, NEVER KILL.
+# Sets PROC_MEM_N. Returns 0 when nothing is over, 1 otherwise.
 PROC_MEM_N=0
 proc_memory_report() {
-  local sayfn="${1:-:}" d pid mb key n=0
+  local sayfn="${1:-:}" mark="${2:-}" d pid mb key label n=0
   for d in /proc/[0-9]*; do
     pid=${d#/proc/}
     _proc_is_ours "$pid" || continue
@@ -326,6 +363,21 @@ proc_memory_report() {
     n=$((n + 1))
     "$sayfn" "MEMORY $key — peak rss ${mb} MB (VmHWM) over the ${JACK_MEM_CEILING_MB} MB ceiling, $(proc_cpu_seconds "$pid")s CPU, cmd: $(proc_cmdline "$pid")"
   done
+  if [ -n "$mark" ] && [ -r "$JACK_MEM_RECEIPTS" ]; then
+    # Max per pid:starttime — a --gate sweep writes one receipt per spec from
+    # one process, and the kernel's high-water mark is monotone, so the max is
+    # the process's true peak and the label is its LAST spec, an attribution
+    # bound (peak_rss_inherited's caveat), not a culprit.
+    while IFS=$'\t' read -r key mb label; do
+      [ -n "$key" ] || continue
+      [ "$(proc_key "${key%%:*}" 2>/dev/null)" = "$key" ] && continue  # alive: arm 1's
+      n=$((n + 1))
+      "$sayfn" "MEMORY $key (EXITED) — peak rss ${mb} MB (ru_maxrss, self-reported by run_spec at recording time) over the ${JACK_MEM_CEILING_MB} MB ceiling, last receipt: run_spec ${label}"
+    done < <(tail -c "+$((mark + 1))" "$JACK_MEM_RECEIPTS" 2>/dev/null |
+      awk -F'\t' -v OFS='\t' -v ceil="$JACK_MEM_CEILING_MB" '
+        NF >= 4 && $3 + 0 > mx[$1] { mx[$1] = $3 + 0; lab[$1] = $4 }
+        END { for (k in mx) if (mx[k] > ceil) print k, mx[k], lab[k] }')
+  fi
   PROC_MEM_N=$n
   if [ "$n" -gt 0 ]; then
     "$sayfn" "MEMORY: ${n} project process(es) whose peak rss exceeds the ${JACK_MEM_CEILING_MB} MB ceiling (SYSTEM.md ~1.5 GB, on a box with paying tenants). NOT killed, and a declaration is not a waiver — named so the excess is a number instead of an anecdote; whether the ceiling itself is right is on the owner's desk (63rd audit B2)."

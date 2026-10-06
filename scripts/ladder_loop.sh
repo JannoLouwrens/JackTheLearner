@@ -257,6 +257,12 @@ notice_exited_dispatches LIVE   # live path too, before the iteration's work is
                                 # janitor.
 proc_prune_declarations
 PROC_BEFORE=$(proc_snapshot)
+# Trim BEFORE the mark, never after: a trim moves byte offsets and the mark
+# is one. Receipts appended after this point are THIS slot's; the harvest in
+# leftover_report reads only them (142nd audit FTB 3 — an exited child's
+# peak must reach the same MEMORY channel the live scan uses).
+mem_receipts_trim
+MEM_MARK_BEFORE=$(mem_receipts_mark)
 LEFTOVER_NOTE=""
 leftover_report() {
   local rc=0
@@ -267,8 +273,10 @@ leftover_report() {
   fi
   # The memory half of the same SYSTEM.md rule (63rd audit B2): peak rss over
   # the ceiling is NAMED here, never killed and never gated — the ceiling's
-  # own validity is an open owner question.
-  if ! proc_memory_report say; then
+  # own validity is an open owner question. The mark adds the EXITED arm
+  # (142nd FTB 3); unset (an on_exit before the snapshot block ran) degrades
+  # to the live scan alone, never to reading the whole receipt history.
+  if ! proc_memory_report say "${MEM_MARK_BEFORE:-}"; then
     LEFTOVER_NOTE="${LEFTOVER_NOTE} | MEMORY=${PROC_MEM_N} process(es) over ${JACK_MEM_CEILING_MB} MB peak — see the MEMORY lines above"
     rc=1
   fi
