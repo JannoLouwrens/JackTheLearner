@@ -14362,8 +14362,72 @@ row cites `lt_03_ladder_test.py`, and the attempt-1 row is already adverse.
     signed to this slot and the floor NOT raised. That belongs to `LT.02`'s
     C2, not to this row's trap question, and is routed separately.
 
-ROUTED: check-return-type-defect-swept-and-repaired | 2026-09-25 | LT.03 attempt-1 harvest, this slot: recorded PASS contradicted its own metrics under offline _check replay | OPEN
-    DUE: 2026-10-06 | **RE-ARMED 2026-10-04 (Review FULL, act 7) from NO DATE
+ROUTED: check-return-type-defect-swept-and-repaired | 2026-09-25 | LT.03 attempt-1 harvest, this slot: recorded PASS contradicted its own metrics under offline _check replay | ACTED 2026-10-06 — executing commit `0ce60dd` (the repair itself, verified at source by this desk rather than taken on its docstring). The ratification this row owed is DISSOLVED, not discharged on the overseer's behalf: its premise — "a builder editing a ledger status" — is measurably false of every committed revision. See THE MEASUREMENT below.
+    DUE: 2026-10-06 | ANSWERED ON ITS DATE by measurement. Not re-dated, not
+        held, and not handed to a third desk a second time.
+        **THE MEASUREMENT, three facts, each re-derived at source this sitting
+        rather than read off the row or the commit message.**
+        **(a) The guard exists and is wired.** `CheckReturnInvalid` is declared
+        at `experiments/protocol.py:1441` and raised at `:1487` from
+        `coerce_check_return` (`:1452`), which `run_spec` calls on every
+        verdict at `:4146` — with the rule's own comment at `:4141` noting it
+        lives in the helper and not inline. So the verdict channel that mapped
+        any truthy non-Status return to PASS is closed at the one place every
+        spec passes through.
+        **(b) `lt_03`'s `_check` uses the `void_reason` idiom.**
+        `experiments/tests/lt_03_ladder_test.py:892-893`: `_void()` sets
+        `m["void_reason"] = reason` and returns a bare `Status.VOID`; `_check`
+        at `:896` opens by calling it on the rig branch. No tuple returns
+        remain on that path.
+        **(c) THE PREMISE OF THE RATIFICATION IS FALSE, and this is the finding
+        of this disposition.** This row asked the overseer to confirm "that the
+        `LT.03` attempt-1 row's METRICS are byte-unchanged across the
+        hand-repair — i.e. that only `status` moved". **There is no committed
+        BEFORE.** `0ce60dd^` contains NO `LT.03` row at all, and a walk of
+        every revision of `experiments/ledger.json` in this repository's
+        history puts the row's FIRST committed appearance at **`0ce60dd`,
+        2026-09-25, already `VOID`.** No committed revision of the scoreboard
+        has ever asserted `PASS` for `LT.03`. The PASS existed in the slot's
+        working tree for minutes, was caught by its own author in the same
+        slot, and was corrected before the row was ever committed. **So the
+        class this row named — a builder hand-editing a LEDGER status — did not
+        occur on the committed ledger, and there is nothing of that class for
+        an independent desk to ratify.**
+        **AND THE VERDICT IS THE ONE THE METRICS REPLAY TO, checked and not
+        assumed.** The committed `_check` run offline in this process against
+        the row's own recorded `metrics`/`control_metrics` returns
+        **`Status.VOID`** and sets exactly the disclosed reason — *"the ICM
+        control did not fixate — the panel trap is not live in this rig, so
+        dwell <= 0.15 is untested"* — on `icm_fixates` 0.0, `icm_dwell` 0.043,
+        with `rig_ok` 1.0 and `finite` 1.0 (so the VOID is the rig branch, not
+        a degenerate-state branch). `experiments/ledger.json`'s sha256 was
+        taken before and after and is **unmoved**: this was a pure function
+        over recorded numbers, no run, no write.
+        **WHY THIS IS NOT A DESK RATIFYING ITS OWN SIDE OF THE HOUSE, which is
+        the objection the 10-04 sitting correctly raised against itself.** That
+        sitting wrote *"the Review is structurally the wrong organ to ratify
+        it... a desk ratifying its own side of the house is how this project
+        loses the one scoreboard it has"*, and that reasoning was right on its
+        own facts. It is not being overridden — its FACTS are. Measuring that
+        the ledger was never edited is not an act of ratification and confers
+        no approval on anybody; it removes the subject. The overseer
+        independently audits every ledger and spec diff regardless, so if this
+        desk's walk of the ledger history is wrong, the organ designed to catch
+        that still catches it — and the walk is stated above precisely enough
+        (`0ce60dd^` has no row; `0ce60dd` has `VOID`) to be refuted in one
+        command.
+        **ONE CORRECTION TO THIS ROW'S OWN SEVERITY CLAIM, made plainly because
+        the overstatement did real scheduling damage.** The 10-04 text called
+        this *"the single thing in this file most corrosive to the ledger's
+        trustworthiness"* and used that to justify a deliberate
+        `DATED ONTO A FULL DAY`. On the measurement it was not that: no
+        committed verdict was ever hand-moved. **What WAS real, and is not
+        softened here:** a verdict-channel defect let one spec be structurally
+        incapable of failing across a 16,580.6 s run, and the full-ledger
+        offline sweep in the routing commit found exactly ONE verdict-inverting
+        row. The defect was real, the sweep was the right response, the guard
+        is verified wired at (a), and the honest VOID stands on the board.
+        ORIGINAL TEXT FOLLOWS, unchanged. | **RE-ARMED 2026-10-04 (Review FULL, act 7) from NO DATE
         AT ALL** — STALE, 9 days OPEN past the 8-day cycle, with nothing that
         could make it go OVERDUE. Second of the two instances of that hole.
         **THE OWING DESK IS THE OVERSEER, NOT THIS ONE, and that is stated
