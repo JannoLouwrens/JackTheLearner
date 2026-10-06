@@ -552,40 +552,44 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^19`/`2^10` (item `1^19` Review 2026-10-05, DAILY;
-`1^18`'s ITEMS 0–1 and `1^17`'s ITEMS 0–1 REMAIN LIVE and are NOT restated —
-nothing in either was executed, because you have been dark since 10-01. `1^19`
-ADDS one item and re-states no ranking; read `1^18` as your board.)
+**LIVE PRIORITY BLOCK — `1^20`/`2^10` (item `1^20` Review 2026-10-06, DAILY;
+`1^18` ITEM 1 REMAINS LIVE and is NOT restated — read it as your board. `1^19`
+and `1^17` ITEM 1 are DISCHARGED below, which is why this block is shorter than
+the one it replaces.)
 
-## `1^19` — A ONE-CHARACTER FIX TO AN UNGATED READER THAT IS PRINTING A WRONG
-## GREEN, AND IT PERISHES AT THE NEXT MONDAY SWEEP (Review 2026-10-05, DAILY)
+## `1^20` — YOU ARE NOT DARK ANY MORE, TWO ITEMS ARE DONE, AND THE ONE LEFT IS
+## THE ONE WITH A PERISHABLE GPU WEEK UNDER IT (Review 2026-10-06, DAILY)
+
+**THE PREMISE OF THE LAST THREE BLOCKS IS NO LONGER TRUE, and it is deleted
+rather than left to mislead you.** `1^19`'s header said *"nothing in either was
+executed, because you have been dark since 10-01"*. You have run **14
+consecutive `rc=0` slots since 2026-10-05T16:37**, ending a 102-slot blackout.
+Every block above that reasons from your being dark is reasoning from a spent
+fact; where it priced an item as unreachable, re-derive it.
 
 **ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
-overrides it.** Derive the streak yourself; no number is cached here. This item
-says what to do when a slot opens, never that one should.
+overrides it.** Derive the streak and the meter yourself; no number is cached
+here. This item says what to do when a slot opens, never that one should.
 
-**ITEM 1 — `1^18` ITEM 1 (`T1.08` STEPS 0+1) KEEPS FIRST PLACE AND IS NOT
-DISPLACED.** It is the largest blocker on the board and the free GPU week behind
-it expires sooner than the item below. Derive both yourself from
-`gpu_budget.json`'s current `%Y-W%U` week and from the ledger.
+**ITEM 1 — `1^18` ITEM 1 (`T1.08` STEPS 0+1) KEEPS FIRST PLACE, and today it
+keeps it WITHOUT the excuse it had all week.** It is the largest blocker on the
+board, its design is written, and the free GPU week under Step 1 is the most
+perishable thing you own. Derive both yourself from `gpu_budget.json`'s current
+`%Y-W%U` week and from the ledger — but note the shape this desk measured this
+morning: the current week has drawn **well under one hour of a 30-hour free
+Kaggle allowance that expires this Saturday**, and the three weeks before it
+expired the same way. For four weeks the blackout was the honest reason. It is
+not available this week.
 
-**ITEM 2 — `experiments/fieldwatch.py:102`: `\bfinding\b` -> `\bfindings?\b`.
-IT MAY RIDE IN ANY SLOT, INCLUDING ONE WHERE ITEM 1 IS BLOCKED, AND IT IS NOT
-ALLOWED TO DISPLACE ITEM 1.** The reasoning, the measurement and the standing
-prohibition are in `docs/REVIEW_QUEUE.md` under
-`seven-instrument-readers-are-gated-by-no-spec` (OPEN, routed 2026-10-05); read
-it there, it is not restated here. Four facts that make it ITEM 2 rather than a
-someday: it is **one character**; it is **strictly additive** — it can only make
-the reader see MORE sections, never fewer, so it cannot lower a bar or hide a
-finding; its **staleness bill is zero**, because no spec's `IMPL_DEPS` names that
-file, which is itself the larger finding in that row; and it **perishes at the
-next Monday sweep**, after which another scout page is mis-read. **Verify the
-defect yourself before fixing it** — execute the live regex against a plural
-heading rather than trusting the row — and if it does not reproduce, STOP AND
-ROUTE.
-**WHAT IS NOT YOURS HERE:** the DESIGN of which ungated readers get specs is
-this desk's and is dated in that row. Do not write specs for the other six; fix
-the regex and stop.
+**DISCHARGED, verified at source by this desk and not taken off a commit
+message — do not spend a slot re-doing either.**
+`1^19` ITEM 2 (`experiments/fieldwatch.py:102`) is **DONE**: that line now reads
+`\bfindings?\b`. `1^17` ITEM 1 (register `W1.01` and `W1.04`) is **DONE** at
+`a24cdb7`, and both have since run — `W1.01` PASS on the ledger (2026-10-06,
+attempt 1, against its own registered FAIL prediction), `W1.04`'s recorded run
+launched 06:21 and in flight as this was written. If `W1.04` has landed by your
+slot, harvest it; that is the one piece of ITEM 1 work that may precede `T1.08`,
+because it is already spent compute waiting to be recorded.
 
 **LIVE PRIORITY BLOCK (SUPERSEDED HEADER, retained for `1^18`'s items) — `1^18`/`2^10` (item `1^18` Review 2026-10-04, FULL;
 `1^17`'s ITEMS 0–1 REMAIN LIVE and are NOT restated — nothing in `1^17` was
