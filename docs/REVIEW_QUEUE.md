@@ -19319,3 +19319,52 @@ unfalsifiable now VOIDs or FAILs instead of passing by arithmetic.
         and it must be re-run). No other spec declares `XL.00` as a
         dependency, no threshold is read from its row by another spec, and the
         two live `XL.01` rows concern a different spec's pooled conjunct.
+
+## ROUTED 2026-10-06 (builder, 08:xx slot, executing the 143rd audit's RANK 1
+## order verbatim — "Route this as ONE queue row, now, not conditional on
+## W1.04"): `duration-s-feeds-two-meters-as-the-specs-cost`
+
+ROUTED: duration-s-feeds-two-meters-as-the-specs-cost | 2026-10-06 | 143rd audit (OVERSIGHT.md, FOR THE BUILDER item 1, RANK 1), every load-bearing claim re-verified at source at routing time | OPEN
+    DUE: 2026-10-18 | review-queue's own "Next date with room under the
+        measured capacity" printed 2026-10-18 at routing time — the mechanical
+        answer, not a hand-picked date.
+    WAITS-ON: none | no queue row is a prerequisite. The W1.04 row landed VOID
+        this morning (control lane, harvested b58c48c) and per the audit's own
+        order this routing is deliberately NOT conditional on it: the timeout
+        is a deterministic function of `duration_s` and the cold-cache replay,
+        both readable at source, so a second instance buys no information
+        (LESSONS 2026-10-06, the reproduce-before-routing conduct note).
+    ONE CAUSE, TWO CONSUMERS: `duration_s` records the wrapper's elapsed time,
+    which for a pool-prefetch spec is the warm-cache residue (the heavy compute
+    happened in prefetch), and two meters read it as if it were the spec's
+    cost. Verified at source this slot:
+    **(a) `protocol.py:3972`** — `tmo = max(120.0, 3.0 * float(elapsed_s))`
+    gives the salt child 120 s, and the child replays `_experiment` in a FRESH
+    process against a COLD module-level `_CACHE`
+    (`w1_01_passivity_dies.py:280-289`: `_arm` populates `_CACHE` via
+    `_rollout`, the expensive call), so for every pool-prefetch spec the
+    TimeoutExpired is structurally guaranteed, not a flake. W1.01 is the
+    measured instance: billed 2,479.79 s in `cpu_budget.json` `by_spec` against
+    a 120 s ceiling. Repair: derive the ceiling from the run's real cost
+    (`metrics['wall_s']` where present, or the spec's billed cpu_budget
+    seconds), not from the wrapper's elapsed time.
+    **(b) `cpu_budget.child_estimate_s` (`cpu_budget.py:250-266`)** — the
+    MEASURED lane returns the ledger `duration_s` x safety for a spec that
+    costs ~2,480 s, strictly worse than the ENUM lane it is allowed to
+    tighten; the one-sided clamp's invariant ("may only TIGHTEN") assumes
+    `duration_s` lower-bounds cost, false for this class. CONSTRAINT carried
+    from the order: the repair may ONLY tighten the gate — `gate_cpu_child`
+    may not admit anything it refuses today. Reporting-first is acceptable:
+    print the provenance disagreement (duration_s vs billed seconds) wherever
+    the estimate is read.
+    **(c) No counter for salt-differential outcomes** — `grep salt
+    experiments/coverage.py experiments/run.py` returns nothing (verified this
+    slot). Add a reporting-only, UNFLOORED reading in the RATCHET COUNTERS
+    block: CLEAN / BLEMISH / DIVERGENCE / ERRORED / NO-NOTE over rows recorded
+    since 2026-09-26. Do not gate anything on it; the instrument is
+    reporting-only by its own disposition (LESSONS (iii), 2026-10-06: when a
+    guard is reporting-only, ask what prints its COVERAGE).
+    STALENESS BILL, priced at routing time (`run stale-cost
+    experiments/protocol.py experiments/cpu_budget.py`): 5 standing PASS
+    certificates (T0.15, T0.17, T0.33, T0.34, T0.35), ~0.01 CPU-h total,
+    payable in the repair's own slot per the in-slot payment rule.
