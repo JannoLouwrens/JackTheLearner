@@ -376,6 +376,25 @@ own board from it.
 orders are not re-ranked here; nothing above displaces item 1 of RANK 1, which
 is the cheapest real finding on your board.
 
+6. **THE CROSS-ORGAN COMMIT RACE SURVIVES ITS OWN DISPOSITION — see the
+POSTSCRIPT, which is a finding this audit made by trying to commit itself.** At
+06:51:47 the Review DAILY's `9a29031` absorbed this audit's staged
+`docs/OVERSIGHT.md` and `docs/LESSONS.md` into its own changeset, so a
+1,074-line rewrite of the overseer's page is attributed in git to *"Review DAILY
+10-06 acts 6-7."* Content intact; attribution gone. **The existing defence is
+one-directional:** "stage by name" protects the organ that commits, never the
+organ whose staged index is standing when someone else runs a wildcard add.
+`cross-organ-doc-race-voids-certificates` is already `ACTED` (`b4df9bb`), so
+this is a surviving mode of a dispositioned class. **Reporting-first repair, and
+do not make it a lock:** have each organ's commit helper stage an explicit
+pathspec AND pass that same pathspec to `git commit -- <paths>`, so a commit can
+only ever contain what its author named. **Verify the race at source before
+changing anything** — read whichever helper `scripts/` uses for the Review's
+commits and confirm it stages with a wildcard — and **stop and route if it does
+not reproduce**, because an attribution fix built on a guessed cause is worse
+than the race. The design of *who* owns a shared doc's write window is the
+Review's, not yours.
+
 ---
 
 ## FOR THE OWNER
@@ -433,3 +452,37 @@ and 2 returned no findings and that is reported as a result, not as an absence
 of effort: 107 PASS rows checked for a live commit, a registered spec and a
 recorded control, and 18 commits of threshold diff read for a loosening that is
 not there.*
+
+---
+
+## POSTSCRIPT — a finding this audit made BY TRYING TO COMMIT ITSELF
+
+**At 06:51:47 the Review DAILY's commit `9a29031` ("acts 6-7") absorbed this
+audit's two files.** I staged `docs/OVERSIGHT.md` and `docs/LESSONS.md` by name
+at ~06:51; the Review's next commit landed with
+`docs/OVERSIGHT.md +1074/-662`, `docs/LESSONS.md +56` and its own
+`docs/REVIEW_QUEUE.md +101` in one changeset, and my `git commit` then reported
+*"no changes added to commit."*
+
+**Nothing was lost** — this page and the lesson are both in `HEAD`, verified by
+content. **What was lost is attribution.** A 1,074-line rewrite of the
+overseer's own current-state page is recorded in git as *"Review DAILY 10-06
+acts 6-7: the T0.32 scope fork ruled (i)..."*, and `docs/LESSONS.md`'s 822+
+entries gained one under the same message.
+
+**Why this is a real defect and not a cosmetic one.** This project's cross-organ
+discipline rests on being able to ask *"which organ did this, and in which
+commit"* — it is the premise of `BUILDER-TRACE`, of the firing-transcription
+diff, of `DELIVERED — AWAITING STAMP`, and of this organ's standing instruction
+to **re-derive the fact a prior audit declined on**. The next audit looking for
+the 143rd will not find it by message. And the defence that exists is
+one-directional: *"stage by name"* protects the committing organ from swallowing
+someone else's work; it does nothing when the OTHER organ stages with a
+wildcard. The two organs collide at 06:37 by cron and the collision is known —
+`cross-organ-doc-race-voids-certificates` was `ACTED` at `b4df9bb` — so this is
+a surviving mode of an already-dispositioned class, which is the interesting
+part.
+
+**Routed to the builder as item 6.** I am not re-committing the content (it is
+already correct in `HEAD`); this commit exists so the audit is findable by its
+own message.
