@@ -16248,12 +16248,67 @@ anything should.
 ## — the ladder-wide population the 09-25 `t215` ruling carried to Sunday FULL,
 ## measured before the sitting: screen 15, adjudicated 15, **one survivor**
 
-ROUTED: declared-null-not-gated-is-1-of-108-not-a-class | 2026-09-27 | one-off population scan over all 108 standing PASS certificates (`/tmp/ungated_nulls.py`, `/tmp/adj.py`, uncommitted — no instrument built), every hit hand-read this slot | OPEN
-    DUE: 2026-10-06 | `review-queue`'s own *"Next date with room under the
+ROUTED: declared-null-not-gated-is-1-of-108-not-a-class | 2026-09-27 | one-off population scan over all 108 standing PASS certificates (`/tmp/ungated_nulls.py`, `/tmp/adj.py`, uncommitted — no instrument built), every hit hand-read this slot | DECLINED 2026-10-06 the ladder-wide audit is NOT built — the row's own measurement refutes the class it was asked to screen for (15 hits, 14 mechanically refuted, 1 benign survivor of 108). The by-catch is NOT buried with it: routed on as `xl00-negative-claim-does-not-assert-its-own-test-could-reject`
+    DUE: 2026-10-06 | ANSWERED ON ITS DATE, not re-dated. See THE DECISION
+        below. | `review-queue`'s own *"Next date with room under the
         measured capacity"*, read off the tool this slot. What is owed is a
         DECISION — whether the candidate ladder-wide audit gets built — and
         under `D35` clause 2 that decision is not the builder's to make by
         shipping one.
+
+**THE DECISION (Review DAILY 2026-10-06): the ladder-wide audit is NOT built,
+and the row's own measurement is the entire reason.** This row did the honest
+thing — it asked the population question BY HAND before anybody built an
+instrument to ask it automatically — and the population answered: of 108
+standing PASS certificates, the screen produced 15 hits, 14 of which this row
+refuted mechanically by reading each spec's own `_check`, leaving **1
+survivor** (`ME.11.A`) which the row itself establishes is **not a red**.
+
+**THE PRECEDENT IS THIS REPOSITORY'S OWN, and it is why the decline is a
+finding rather than a shrug.** `experiments/run.py:439`, in `stale_claims`'
+docstring, rejected its own first implementation on exactly this ground: *"A
+diagnostic with a 100% false-positive rate on healthy entries is worse than
+none: it trains its reader to ignore it."* A screen measured at **14 false of
+15** on its first and only population would be built pre-discredited, and this
+project already has the instrument that proves the cost of ignoring that rule —
+`d27-screen-measures-95-percent-false`, whose counter was DELETED on 2026-09-29
+because at 19/20 false it could not even be floored. Building a second 93%-false
+screen eight days after deleting a 95%-false one would be the same mistake with
+the measurement already in hand.
+
+**WHAT THE 14 REFUTATIONS ACTUALLY ESTABLISH, which is the transferable part.**
+They are not 14 near-misses; they are five distinct *legitimate* idioms for
+gating a declared null — gated under a different metric name (7), gated
+per-seed while the aggregate is unread (1), summarised through a subscript
+assignment into a gated lane (3), gated on an absolute bar with the reason
+disclosed in source because the null is 0 by construction (1), and minted
+dynamically (2). **A screen cannot distinguish any of those from the defect
+without reading the spec, which is the thing a screen cannot do.** That is a
+statement about the class, not about this screen's tuning: the predicate
+"declares a null it does not gate" is not mechanically decidable at useful
+precision on this ladder, so no amount of vocabulary work rescues it.
+
+**ONE BLIND SPOT IS NAMED AND DELIBERATELY NOT REPAIRED.** The row found that
+`unread_metrics._dict_value_exprs` walks dict LITERALS, so the
+`m["k"] = <expr>` idiom — which half this ladder uses — never enters
+`read_vars`; that caused 3 of the 14 false positives. **It is left alone on
+purpose and the direction is the reason:** missing a READ makes
+`unread_metrics` over-report metrics as unread, which is the SAFE direction for
+a detector (it cries wolf; it does not go quiet). Repairing it would make the
+instrument quieter, and this desk does not quiet a detector as a side effect of
+declining a different question. Recorded here so the next reader of
+`unread_metrics` finds the measurement rather than re-deriving it.
+
+**THE BY-CATCH IS NOT BURIED, and this paragraph is the reason this DECLINE is
+not a disposal-on-a-closed-decision.** `DECLINED` is TERMINAL and a terminal
+row is never re-read — the instrument prints that hazard itself
+(`DISPOSITION-ON-A-CLOSED-DECISION`). This row carried one finding that is
+independent of the question being declined: `XL.00` computes
+`perm_p_attainable`, gates it on the CONTROL side only, and reads it nowhere on
+the CLAIM side, where the claim is a NEGATIVE result. That is re-derived at
+source and routed forward as its own live row,
+`xl00-negative-claim-does-not-assert-its-own-test-could-reject`, DUE
+2026-10-18. Nothing else on this row is load-bearing and unowned.
     WAITS-ON: none | nothing live changes what these 108 rows recorded. It is
         deliberately NOT declared `BLOCKED-BY: t215-router-under-lexical-null`:
         that row's remaining conjunct is the SEAT question and this row's
@@ -19029,3 +19084,81 @@ ROUTED: shipped-companion-cannot-move-see-or-report-failure | 2026-10-06 | T6.01
     STALENESS BILL: zero — this row edits no code; T6.01 has no certificate
     (never run to ledger); T0.06's certificate is untouched by naming its
     venue-locality in a queue row.
+
+## ROUTED 2026-10-06 (Review, DAILY): `xl00-negative-claim-does-not-assert-its-
+## own-test-could-reject` — carried forward out of a row this sitting DECLINED,
+## because a terminal row is never re-read
+
+ROUTED: xl00-negative-claim-does-not-assert-its-own-test-could-reject | 2026-10-06 | `XL.00` attempt 8, ledger row PASS 2026-09-06T14:41:34, metrics and control_metrics read off `experiments/ledger.json` this sitting; conjuncts re-read at `experiments/tests/xl_00_death_and_respawn.py:511-513` and `:575-577` | OPEN
+    DUE: 2026-10-18 | THE NEXT SUNDAY **FULL** SITTING, and the date is chosen
+        by the MODE boundary rather than by the pile. The repair is an ADDED
+        CONJUNCT on a passing spec — Part 2 work — and today is a DAILY, whose
+        own prompt says *"SKIP Part 2 entirely — tests are re-examined on
+        Sundays; daily rewrites would churn the ladder."* So this desk
+        deliberately did NOT implement a strengthening it had already designed
+        and verified as safe. 2026-10-18 also carries ZERO live rows against a
+        measured capacity of 6, so nothing is piled on; 2026-10-11, the nearer
+        Sunday, already carries 7 and is amber.
+    WAITS-ON: none | nothing live changes what attempt 8 recorded. It is the
+        BY-CATCH of `declared-null-not-gated-is-1-of-108-not-a-class`, which
+        this sitting DECLINED; it is carried here precisely because `DECLINED`
+        is terminal and would have entombed it.
+
+**THE DEFECT, stated as structure and not as a number.** `XL.00`'s claim is a
+NEGATIVE result: `_check` requires `m["indep_p"] >= P_MIN_NULL` (0.01) and
+`m["trend_p"] >= P_MIN_NULL` — *"respawn is independent of death, and lifespan
+does not trend"*. A claim of that shape has a failure mode a positive claim does
+not: **it passes trivially if the test could not have rejected in the first
+place.** A permutation test over too few lives has a smallest attainable
+two-sided p that may sit ABOVE the rejection bar, and then `indep_p >= 0.01` is
+arithmetic rather than evidence.
+
+**THE SPEC ALREADY KNOWS THIS AND ALREADY GUARDS IT — ON THE WRONG ARM.** It
+computes `perm_p_attainable = _attainable_p(len(lives))` (`:393`) and gates it,
+with a margin, on BOTH control arms:
+
+    :575   c_at_death_attainable_ok = rigged["perm_p_attainable"]   * PERM_MARGIN <= P_MAX_CONTROL
+    :577   c_drift_attainable_ok    = drifting["perm_p_attainable"] * PERM_MARGIN <= P_MAX_CONTROL
+
+The claim arm computes the same statistic and **no conjunct in `_check` reads
+it.** So the author plainly understood the hazard; the guard simply landed on
+the two arms whose job is to REJECT and not on the one arm whose pass depends
+on rejection having been possible.
+
+**WHY IT IS NOT A RED TODAY, re-derived and stated plainly so this row cannot be
+mistaken for a demotion.** On attempt 8 the experiment arm recorded
+`perm_p_attainable` **1.99998e-05** against `P_MIN_NULL` **0.01** — the test
+could reject with roughly three orders of magnitude of headroom — and the
+observed values are nowhere near the bar (`indep_p` 0.448382, `trend_p`
+0.367436). **The standing PASS is sound and this row does not question it.**
+
+**WHY IT IS STILL WORTH A ROW.** The control gates read the `rigged` and
+`drifting` arms' attainability, NOT the experiment arm's. The three happen to be
+equal at 1.99998e-05 on this row because the arms ran the same life count, but
+they are computed from different arms and can diverge — and the quantity depends
+on `len(lives)`, which is exactly what changes when the venue, the lethality or
+the horizon is retuned. `W1.01` and `W1.04` are moving the lethality of this
+world THIS WEEK. So the guard is absent on the arm that needs it, in the
+quarter the input to it is being changed.
+
+**THE REPAIR, pre-registered here so the Sunday sitting executes rather than
+re-decides. ONE ADDED CONJUNCT, mirroring the control side's existing idiom
+verbatim:**
+
+    and m["perm_p_attainable"] * PERM_MARGIN <= P_MIN_NULL
+
+**WHY THIS IS UNAMBIGUOUSLY A STRENGTHENING, which is the only kind of edit
+this desk may make to a passing spec.** It ADDS a requirement and removes none.
+No threshold moves — `P_MIN_NULL` stays 0.01, `PERM_MARGIN` and
+`P_MAX_CONTROL` are untouched, and the existing control conjuncts are not
+edited. It cannot be satisfied by anything the old `_check` rejected. And it is
+verified non-trivial AND verified safe on the recorded row before being ordered:
+1.99998e-05 x PERM_MARGIN is orders of magnitude under 0.01, so the conjunct
+is TRUE on attempt 8's own numbers and the re-buy is predicted PASS — while any
+future run whose life count collapses far enough to make the negative claim
+unfalsifiable now VOIDs or FAILs instead of passing by arithmetic.
+    STALENESS BILL: `XL.00` only — one `cpu` re-buy of its own certificate
+        (attempt 8 ran 2026-09-06; the spec file edit stales it by `impl_sha`
+        and it must be re-run). No other spec declares `XL.00` as a
+        dependency, no threshold is read from its row by another spec, and the
+        two live `XL.01` rows concern a different spec's pooled conjunct.
