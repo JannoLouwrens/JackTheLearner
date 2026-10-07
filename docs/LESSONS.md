@@ -21144,3 +21144,66 @@ is readable at source, a second instance buys no information and costs another
 certificate its guard** — reproduce-before-routing is the right instinct for a
 flake and the wrong one for an arithmetic consequence, and telling the two apart
 is a source read, not a second run.
+
+## A REPLAY THAT DOES NOT REPRODUCE THE CALL SEQUENCE IS NOT A REPLAY, AND
+## "EXACT" IS A PROPERTY OF THE COMPARISON, NEVER OF WHAT IS COMPARED
+## (Review DAILY, 2026-10-07; ruling the 09-27 row
+## `replay-instruments-do-not-replay-the-runs-process-model`, measured at
+## `experiments/protocol.py:3682` against `run_spec`'s sequencing at
+## `protocol.py:3855-3857`)
+
+**The general rule, and it binds every future reader of this kind: an instrument
+that RE-EXECUTES a spec to check a property of its numbers is only as truthful as
+its fidelity to the call sequence that produced them.** Inputs are not the
+interface. `(code, seed, data)` is not the interface. The interface is the
+ORDER — which arm ran first, in which process, against which warm caches.
+
+The salt differential re-ran `(fn, seed)` pairs in isolated subprocesses while
+the runner runs all experiment seeds, then all control seeds, in ONE process. So
+a `_control` that reads state its `_experiment` cached took its cold-cache early
+return in the child and in no other place. The consequence is the thing worth
+remembering: **the mismatch did not WEAKEN the reading, it INVERTED it.** On
+`XL.01` attempt 3 it reported 19 divergent keys, every one of them the re-run's
+own cold module cache and reproducible at salt 0 — 1 deciding key plus 18 keys
+that were simply ABSENT, accounting to the digit against a row with 20 numeric
+control keys and 40 experiment metrics that reproduced bit-exactly. Zero of the
+19 was salt. It then named the wrong cause in confident language (*"not a
+function of (code, seed, data)"*) while pointing at a rig that is innocent.
+
+**A false positive that accuses is worse than a missing reading, and this is the
+asymmetry to carry forward.** An absent guard leaves a hole somebody can see. A
+confident wrong attribution spends a reader's trust on the innocent and bills a
+repair to the wrong component — this one priced a world-edit-window bill against
+`W0`/`playground.py`/`drives.py` that was never owed. Prefer silence to a
+mislabelled finding, and when a reporting-only reader fires on a DECIDING metric,
+read its replay before you read its verdict.
+
+**THE POPULATION IS THE HEALTHY PATTERN, WHICH IS WHY THIS WAS NOT A ONE-OFF.** A
+`_control` that reads state its `_experiment` cached is how a spec avoids paying
+for an arm twice — the good design, not the sloppy one. `grep -ln _CACHE
+experiments/tests/*.py` is 58 files and 33 of those name `_CACHE` inside the span
+from `def _control` to the next top-level definition: **33 of 58 exposed**, quoted
+as an ORDER and not a count, because the span is textual (a cache touched in a
+helper is missed, one named in a docstring is counted). The pattern an instrument
+is most likely to break is the pattern good specs use most.
+
+**AND THE CLAIM-SHAPED HALF, which is the part that generalises past replays.**
+This instrument escaped `D27`'s pricing of heuristic screens on one clause —
+*"exact, zero false positives"* — that was never tested and was false on its
+first live hit. The lesson is not "it was wrong". It is that **"exact" was a true
+statement about the wrong half**: a differential compares recorded numbers to
+re-run numbers and invents nothing, so the COMPARISON really is exact and really
+has nothing to calibrate. The error lived entirely in what was compared. So
+exactness of a comparison buys exemption from CALIBRATION and buys nothing at all
+against being WRONG, and the two were bundled in one sentence for three months.
+When a reader claims an exemption, ask which half of the obligation the stated
+reason actually discharges — and whoever grants it should write that split down,
+because an unsplit exemption is read as total by every later reader.
+
+**Ruled here rather than built:** (b) call-order and cross-seed determinism get
+this rule and a reviewer's eye, NOT a second differential — the capability never
+existed (before the repair such a dependence could only surface MISLABELLED as
+salt), and probing it honestly needs either an AST reader or a second full
+re-execution per spec, on a box with no headroom and under a freeze that forbids
+new instruments. An honest hole where a wrong reading used to be is an
+improvement, and it is recorded here so it is a KNOWN hole.
