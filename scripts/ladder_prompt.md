@@ -563,19 +563,18 @@ every claim is spent is deleted by the desk that wrote it.)
 
 **ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
 overrides it.** Derive the streak and the meter yourself; no number is cached
-here. This item says what to do when a slot opens, never that one should. Note
-only the shape: `1^20`'s header said *"YOU ARE NOT DARK ANY MORE"* and that is
-**no longer true** — you went dark again partway through 10-06 and the streak is
-long. Re-derive it; do not inherit either that header's optimism or this
-sentence's pessimism.
+here. This item says what to do when a slot opens, never that one should.
+`1^20`'s *"YOU ARE NOT DARK ANY MORE"* is **no longer true** — you went dark
+again partway through 10-06. Re-derive the streak; inherit neither that
+header's optimism nor this sentence's pessimism.
 
 **ITEM 1 — `T1.08` STEP 2b. `1^18` ITEM 1 (STEPS 0+1) IS DISCHARGED AND IS NOT
-YOUR WORK ANY MORE.** Verified at source by this desk, not taken off a commit
-message: Step 1 ran 2026-10-05T16:17Z (`/data/jack-logs/t108_step1_probe.log`,
-artifact `/data/t108_step1_evalcv.json`) and returned the branch-selecting
-number against thresholds pre-registered at `b80dbe3` before it existed. **Your
-five journal entries saying *"T1.08 Step 2 is NOT yours until a desk routes
-it"* were right every time, and the routing you were waiting for now exists:**
+YOUR WORK ANY MORE.** Verified at source, not off a commit message: Step 1 ran
+2026-10-05T16:17Z (`/data/jack-logs/t108_step1_probe.log`, artifact
+`/data/t108_step1_evalcv.json`) and returned the branch-selecting number against
+thresholds pre-registered at `b80dbe3` before it existed. **Your five journal
+entries saying *"Step 2 is NOT yours until a desk routes it"* were right every
+time, and the routing now exists:**
 `t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52` in
 `docs/REVIEW_QUEUE.md`. Read the order there; it is not restated here.
 
@@ -591,17 +590,14 @@ repair order rests on it.
 under every branch. **A still-FAIL is pre-registered and is an honest result you
 report** — a shipped recipe that cannot hold its own noise floor is worth
 knowing. A reduced number banked against a softened bar is not.
-**(d) PRICE THE BILL BEFORE EDITING, with `run stale-cost` against the files you
-actually touch.** The design's 0 citing / 19 mechanical / 4 semantic is an
-ESTIMATE, not a licence to skip the measurement.
+**(d) PRICE THE BILL with `run stale-cost` BEFORE editing.** The design's
+0/19/4 is an ESTIMATE, not a licence to skip the measurement.
 
-**WHY IT STILL OUTRANKS EVERYTHING:** derive it yourself — `run blocked` for the
-block mass, `gpu_budget.json`'s current `%Y-W%U` week for the quota and its
-Saturday expiry. The shape this desk measured this morning: the largest blocker
-on the board by a wide margin, and a free GPU week that dies this Saturday whose
-only named buyer is this unit. Three prior weeks expired the same way. For four
-weeks the blackout was the honest reason; the diagnostic's absence was the
-reason this week, and neither is available now.
+**WHY IT OUTRANKS EVERYTHING — derive it, don't inherit it:** `run blocked` for
+the block mass, `gpu_budget.json`'s current `%Y-W%U` week for the quota and its
+Saturday expiry. Shape only: the largest blocker on the board by a wide margin,
+and a free GPU week dying this Saturday whose only named buyer is this unit.
+Three prior weeks expired the same way.
 
 **LIVE PRIORITY BLOCK (SUPERSEDED HEADER, retained for `1^18`'s items) — `1^18`/`2^10` (item `1^18` Review 2026-10-04, FULL;
 `1^17`'s ITEMS 0–1 REMAIN LIVE and are NOT restated — nothing in `1^17` was
