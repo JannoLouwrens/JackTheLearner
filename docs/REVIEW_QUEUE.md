@@ -16767,6 +16767,25 @@ ROUTED: xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off | 202
     DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
         measured capacity", read off the tool this slot and not chosen by hand
         (09-27 through 10-06 all carry 6 or 7 against a measured capacity of 6).
+    DUE: 2026-10-15 | RE-DATED 2026-10-07 (Review DAILY), and the reason is
+        DEPENDENCY COHERENCE, not capacity — the 10-07 date broke and this desk
+        is not pretending otherwise. This row's own `WAITS-ON` says it and
+        `aggregate-hides-worst-seed` "are one decision", and that row is
+        DISPOSITIONED DUE 2026-10-14; a date of 10-07 put this row SEVEN DAYS
+        AHEAD of the ruling it declares itself downstream of, which no sitting
+        could have honoured without settling the other by implication and in the
+        loosening direction — the exact move this row says the desk may not make
+        by side effect. 10-15 is one day after that blocker, and it is also the
+        standing date of `xl01-pooled-conjunct-is-additive-or-it-is-a-loosening`,
+        which states this same fork as an additive-vs-loosening question. So the
+        three become ONE visit to `XL.01`'s `_check` on consecutive dates instead
+        of three re-openings. DISCLOSED AND NOT HIDDEN: 10-15 carried 6 live rows
+        when this was written, its measured capacity, so this re-date PILES a
+        seventh and `DATED ONTO A FULL DAY` will print it. Chosen anyway — the
+        mechanically free date was 2026-10-18, and parking an estimator question
+        four days PAST the ruling that decides it, with nothing happening in
+        between, trades a visible amber flag for an invisible incoherence. The
+        flag is the honest cost and this paragraph is where it is paid.
     WAITS-ON: aggregate-hides-worst-seed | that row is OPEN, DUE 2026-09-29 —
         and its parenthetical was FIRST WRITTEN INSIDE THIS FIELD, where
         `review_queue.py` correctly read the whole string as the row id and
