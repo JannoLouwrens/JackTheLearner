@@ -17048,12 +17048,16 @@ built here, under the freeze's no-new-instrument clause.
 
 ---
 
-ROUTED: replay-instruments-do-not-replay-the-runs-process-model | 2026-09-27 | measured at `experiments/protocol.py:3682` (`_salt_rerun`) against `run_spec`'s own sequencing at `protocol.py:3855-3857`; the concrete false positive is `XL.01`'s attempt-3 row, 2026-09-27T09:30:04 | OPEN
+ROUTED: replay-instruments-do-not-replay-the-runs-process-model | 2026-09-27 | measured at `experiments/protocol.py:3682` (`_salt_rerun`) against `run_spec`'s own sequencing at `protocol.py:3855-3857`; the concrete false positive is `XL.01`'s attempt-3 row, 2026-09-27T09:30:04 | ACTED 2026-10-07 `0554565` (Review DAILY — all three limbs disposed, one in code-and-docs, one RULED with its execution handed to a named successor, one MERGED into the live row that already holds it. Limb (b) EXECUTED at `0554565`: call-order and cross-seed determinism get a LESSONS rule and a reviewer's eye, NOT a second differential — the capability never existed, and probing it honestly needs an AST reader or a second full re-execution per spec, which the freeze forbids and this box cannot afford; an honest hole where a wrong reading used to be is an improvement, and it is now a KNOWN hole rather than an unwritten one. Limb (c) RULED, **and the ruling is a SPLIT rather than a yes or a no, which is the finding**: the exemption from `D27` survives its CALIBRATION half and does NOT survive its ACCOUNTING half. A differential compares recorded numbers to re-run numbers and invents nothing, so there is genuinely no threshold to tune and `D27`'s pricing of heuristic screens does not reach it — but `D27`'s other content is that a reader whose output can be WRONG publishes its measured rate and gets a counter, and that obligation attaches to exactness of comparison not at all. The two were bundled in one sentence for three months and read as total. Limb (a) — does replay fidelity get a certificate, and does that collide with the freeze — is **MERGED, not ruled**, into `seven-instrument-readers-are-gated-by-no-spec` (OPEN, DUE 2026-10-19), which asks the same question over the whole class of seven; ruling it here would settle that row by implication, on a sample of one, in the direction of exempting the instrument that was just measured wrong. **WHAT THIS DOES NOT CLOSE, stated so no later reader has to infer it:** the instrument still has no coverage counter and `protocol.py:3722-3724` still asserts the UNSPLIT exemption three lines above the struck clause that was its only stated reason. Both are carried by `salt-differential-has-no-coverage-counter-and-an-unsplit-d27-exemption`, DUE 2026-10-19, deliberately as ONE bundle: `protocol.py` is in the `IMPL_DEPS` of `T0.15`, `T0.17`, `T0.33` and `T0.35`, so touching it costs 4 standing certificates, and the comment narrowing is not worth that bill on its own)
     SUBJECT: the APPARATUS — no spec's science is in question; `XL.01`'s rig is
         measured innocent in the addendum above.
     DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
         measured capacity", read off the tool this slot (5 of 6 promised there)
         and not chosen by hand.
+        KEPT ON ITS DATE 2026-10-07 by the ACTED above. This row and
+        `xl01-c-fixture-ok-is-a-salt-lottery-in-a-deciding-metric` were the two
+        halves of one 09-27 discovery and both are terminal this morning, which
+        is the point of dating a question on the day its evidence is still legible.
     WAITS-ON: none | the repair to the salt differential is already shipped and
         its bill is paid; what is open here is a QUESTION about the class, and it
         depends on no other row's ruling. It is deliberately NOT coupled to
@@ -19503,3 +19507,65 @@ ROUTED: bare-git-commit-writes-the-whole-shared-index | 2026-10-06 | 143rd audit
     all design calls above this row's pay grade.
     STALENESS BILL: `run stale-cost scripts/regate.sh` = **0 standing PASS
     certificates** (verified before the edit); the row itself is a doc, 0.
+
+---
+
+## ROUTED 2026-10-07 (Review DAILY): `salt-differential-has-no-coverage-counter-
+## and-an-unsplit-d27-exemption` — the residual of
+## `replay-instruments-do-not-replay-the-runs-process-model`, ruled this
+## sitting; one bundle because `protocol.py` costs 4 certificates to touch
+
+ROUTED: salt-differential-has-no-coverage-counter-and-an-unsplit-d27-exemption | 2026-10-07 | `experiments/protocol.py:3722-3724` read at source this sitting (the exemption sentence) against `:3726-3739` (the struck clause that was its only stated reason); `docs/LESSONS.md`'s own entry (iii) on the differential's absent coverage, written before this ruling and independently | OPEN
+    SUBJECT: the APPARATUS — an instrument's accounting obligation and one
+        source comment. No spec's science is in question, no certificate is
+        claimed red, and no bar moves in either direction.
+    DUE: 2026-10-19 | `review-queue`'s own next-free-date arithmetic read this
+        sitting, then adjusted by one day because this sitting's own re-dates
+        took 2026-10-18 to its measured capacity of 6. 2026-10-19 carried 5 and
+        now carries 6. Deliberately the SAME date as
+        `seven-instrument-readers-are-gated-by-no-spec`, which holds limb (a) of
+        the parent ruling: if that row's answer is that readers of this class get
+        certificates, the certificate and the counter are one visit to this file,
+        and the 4-certificate bill below is paid once instead of twice.
+    WAITS-ON: seven-instrument-readers-are-gated-by-no-spec | that row is OPEN,
+        DUE 2026-10-19, and it decides whether this class of reader is certified
+        at all. This row's counter is owed either way — that is what makes it a
+        separate row and not a sub-clause — but WHERE the counter is asserted
+        (a ratchet reading only, or a ratchet reading a spec gates on) is that
+        row's call, and shipping the counter first would answer it by default.
+
+**WHAT IS OWED, and the whole of it is two things in one commit.**
+
+1. **A COVERAGE COUNTER FOR THE SALT DIFFERENTIAL'S OUTCOMES.** Ruled this
+   sitting as the surviving half of `D27`'s claim on this instrument: exactness
+   of a COMPARISON discharges the calibration obligation and discharges nothing
+   against being WRONG, so the published-rate-and-counter half stands. Today the
+   instrument's measured false-positive rate is **1 of 1 live hits on a deciding
+   metric** and *"which certificates have no salt reading"* is a grep of
+   `message` strings rather than a number — `docs/LESSONS.md` found the same hole
+   from the cost direction before this ruling existed, which is the only
+   corroboration available given that no spec certifies the reader.
+
+2. **THE EXEMPTION SENTENCE AT `protocol.py:3722-3724`, NARROWED TO THE SPLIT.**
+   It currently reads *"A differential re-run is a MEASUREMENT, not a screen:
+   exact, nothing to calibrate — which is why it does not collide with D27"* and
+   it sits **three lines above** the 2026-09-27 block that strikes *"zero false
+   positives"* as falsified. The struck clause was the exemption's only stated
+   reason; the exemption itself was left whole. A later reader reads the
+   assertion and not the retraction below it. The narrowing is to state the split
+   in place: exempt from `D27`'s calibration pricing, NOT exempt from its
+   accounting.
+
+**WHY ONE BUNDLE AND NOT TWO ROWS, priced before deciding.** `experiments/
+protocol.py` is declared in the `IMPL_DEPS` of `T0.15`, `T0.17`, `T0.33` and
+`T0.35`, so any byte of it — comment included — stales 4 standing PASS
+certificates. A comment narrowing is not worth that bill alone, and the counter
+has to touch the same file. Shipping them together pays it once. This is the
+ascending-bill rule applied to the desk's own order rather than to a builder's.
+
+    STALENESS BILL: **4 standing PASS certificates** (`T0.15`, `T0.17`, `T0.33`,
+    `T0.35` — each declares `experiments/protocol.py` in `IMPL_DEPS`; `T0.27`
+    declares it and is a FAIL, so no re-buy is owed on it). Identical to the
+    bill the 09-27 repair of this same function paid and verified, which is why
+    it is quoted rather than re-derived — and it is the whole reason this row
+    exists as a bundle instead of as two cheap-looking asks.
