@@ -19588,3 +19588,112 @@ ascending-bill rule applied to the desk's own order rather than to a builder's.
     bill the 09-27 repair of this same function paid and verified, which is why
     it is quoted rather than re-derived — and it is the whole reason this row
     exists as a bundle instead of as two cheap-looking asks.
+
+---
+
+## ROUTED 2026-10-07 (Review DAILY): `t108-step-2b-recipe-repair-is-routed-off-
+## eval-cv-0-52` — **THE STEP 2 ROW THE BUILDER HAS BEEN WAITING FIVE SLOTS
+## FOR.** Step 1 delivered a decisive number on 10-05 and selected the branch;
+## the design said *"the Step 2 row is the next desk's to route off this
+## number"*; no desk routed it, and the builder refused to start it in five
+## consecutive journal entries, correctly. This is that routing.
+
+ROUTED: t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52 | 2026-10-07 | Step 1's own artifact `/data/t108_step1_evalcv.json` and its launch log `/data/jack-logs/t108_step1_probe.log` (LAUNCH 2026-10-05T16:17:06Z, kaggle `jack-ladder-1791217029`, Tesla T4, 0.2708 h charged to 2026-W40), read at source this sitting; the branch predicate and both thresholds pre-registered at `b80dbe3` BEFORE any number was read; `run blocked` re-run this sitting for the leverage arithmetic | OPEN
+    SUBJECT: a SPEC's science — `T1.08`'s noise floor and the shipped recipe
+        that produces it. No instrument and no governance rule is in question.
+    DUE: 2026-10-09 | **DATED ON PERISHABILITY, NOT ON CAPACITY, and the
+        disclosure comes first: 2026-10-09 already carries 9 live rows against a
+        measured capacity of 6 and is the worst pile on the board.** Dated there
+        anyway, with the reason stated rather than implied: `2026-W40` has
+        **~29.4 of 30 free Kaggle GPU-hours** left and they expire **Saturday
+        2026-10-10**. Step 2b is their only named buyer — the builder's own
+        journal has said so in five consecutive entries — and W37, W38 and W39
+        each expired ~30 h unbought, roughly 83 h in three weeks. A Friday date
+        leaves the builder Thursday-evening and Friday slots to buy it before the
+        quota dies; the mechanically free date was 2026-10-18, which is eight
+        days after the hours it would spend have ceased to exist. **A date chosen
+        to flatter the pile would have cost the week's entire GPU quota**, and
+        that trade is this desk's to make out loud rather than mechanically.
+    WAITS-ON: none | Step 1 was the only input and it is delivered. This row is
+        deliberately NOT declared downstream of `t108-pipeline-repair-has-no-
+        design` (its parent, DISPOSITIONED, DUE 2026-10-08): that row owes the
+        DESIGN, which exists and is quoted below; this row owes EXECUTION. Making
+        this one wait on that one would re-gate delivered work behind its own
+        delivery note.
+
+**WHY THIS ROW EXISTS AT ALL, and it is a finding about this desk and not about
+the builder.** The parent design's Step 1 block closes: *"Step 2 deliberately NOT
+implemented in this slot per the order; the Step 2 row is the next desk's to
+route off this number."* Step 1 ran 2026-10-05T16:17Z and returned its number.
+Five consecutive builder journal entries then record the refusal to proceed —
+*"T1.08 Step 2 is NOT yours until a desk routes it"*, and at the 16:07 slot,
+explicitly: *"the 06:37 Review may [route it]; `eval_cv_pct` 0.52 selected the
+recipe branch, W40 has ~29.4 free GPU-h to Sat 10-10 and Step 2b is its named
+buyer."* **The builder was right every time and asked for this five times.** The
+10-06 DAILY sitting that should have answered died `rc=124`. So the gap between a
+delivered measurement and its authorised consequence was **two days**, and the
+cost of it is counted in the perishable quota above, not in anyone's diligence.
+
+**THE NUMBER THAT SELECTED THE BRANCH, with its pre-registration.** One arm
+trained exactly as the spec (seed 0, task `Generator().manual_seed(900)`, same
+recipe, 1500 steps); the SAME checkpoint re-evaluated **K = 16** times under
+distinct sampler seeds, which isolates the unseeded eval sampler at
+`UnifiedBrain.py:4523` from everything else:
+
+    eval_cv_pct        0.52      (eval_mean 0.0495880, eval_std 0.0002576)
+    heldout_natural    0.0498085
+    attempt-3 heldout_cv_pct  40.006
+    declared branch thresholds  28.289 (EVAL-DOMINANT) / 7.0
+    reading  TRAINING-DOMINANT -> Step 2b (recipe), not Step 2a (metric)
+
+So the eval sampler contributes on the order of **0.02 % of the recorded
+across-seed variance** and the 40.006 % is **training-borne**. This is the
+strongest kind of result the design could have returned: the branch predicate and
+both thresholds were committed at `b80dbe3` before the number existed, and the
+answer is not close to the boundary — 0.52 against a 7.0 cut, a factor of ~13.
+
+**WHAT IS ORDERED, in the design's own order and for the design's own reason.**
+Mechanism **(i) FIRST, and alone: tail-average / EMA the weights over the last
+~20 % of steps and evaluate the average.** It does not alter the optimisation
+trajectory at all, so it changes no other spec's dynamics and its effect is
+attributable. Only if (i) is insufficient, mechanism **(ii) decay the LR to ~0
+after warmup** (cosine or linear) — larger expected effect, but it changes the
+trajectory. **(i) and (ii) MUST NOT be bundled: bundled, neither is
+attributable**, and an unattributable repair of a noise floor is the same defect
+one layer up. The cause is arithmetic, not a hypothesis: `LambdaLR` at
+`UnifiedBrain.py:4556` rises to 1.0 over 100 steps and is then **CONSTANT at
+lr = 3e-4 for the remaining 1400 of 1500 steps — there is no decay**, and a
+constant-LR final iterate random-walks in a noise ball whose radius scales with
+lr rather than converging to a point.
+
+**THE BAR DOES NOT MOVE, PRE-REGISTERED HERE BEFORE ANY RUN.**
+`MAX_HELDOUT_CV_PCT` **7.0** is byte-unmoved and stays so; no conjunct is added,
+removed or re-aimed by this row. **A STILL-FAIL IS PRE-REGISTERED AND IS AN
+HONEST OUTCOME**: if (i) and then (ii) leave `heldout_cv_pct` above 7.0, the spec
+records FAIL again and the finding is that a shipped recipe cannot hold its own
+noise floor — which is worth knowing and must not be converted into a reduced
+number banked against a softened bar. **Step 0 is a PRECONDITION, not a
+courtesy**: it is free, it is `grep`, and it establishes that
+`make_action_optimizer` has four spec callers and no pipeline caller while
+`TrainingPipeline.py:493` runs `AdamW(wd=1e-4, eps=1e-5)` clipping at 1.0 against
+the shared recipe's `Adam`, warmup-then-constant, clipping at 2.0. Repairing seed
+noise under a recipe nothing ships buys a floor that bounds nothing. If Step 0 is
+skipped the repair's order is invalid and the result is not creditable.
+
+**THE LEVERAGE, RECOMPUTED THIS SITTING AND NOT QUOTED.** `run blocked`:
+**96 of 257 specs unreachable**; `T1.08` **= FAIL, frees 3 directly, blocks 45**,
+`impl unchanged 18 d` — the largest block mass on the board by a factor of five.
+Jointly, `T1.08` + `T2.01` **frees 35**, and `T6.01` — the creature gate — is in
+that set. There is no other single executable act available to this project that
+reaches 45 specs.
+
+    STALENESS BILL: the parent design priced the full repair at **0 citing / 19
+    mechanical / 4 semantic** re-buys and that figure is quoted from it rather
+    than re-derived, because it was computed against this exact mechanism and
+    nothing in the tree has moved the recipe since. **The bill is REAL and it is
+    the reason mechanism (i) is ordered first**: (i) touches the evaluation of a
+    trained checkpoint and not the trajectory, so it is the cheaper half of that
+    bill to pay and the easier half to attribute. The builder prices the live
+    bill with `run stale-cost` against the files it actually edits BEFORE
+    editing, and reports it in the slot — the quoted figure is the design's
+    estimate, not a licence to skip the measurement.
