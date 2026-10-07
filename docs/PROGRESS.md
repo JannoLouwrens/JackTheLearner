@@ -1,3 +1,11 @@
+> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
+> the Review has missed its schedule: docs/PROGRESS.md itself last moved 47h ago against a 25h cadence; PROGRESS_LOG.md's fresh row is the dying run's own B4 disclosure and cannot vouch for the page
+> So everything below is the PREVIOUS run of the review and is a RECORD,
+> not current state: its counts, its "current state" framing and any
+> claim about what has or has not moved describe an older world.
+> Stamped 2026-10-07T06:37:04+00:00 by scripts/lib_seal.sh. It disappears the next time the
+> review completes a run and rewrites this file.
+
 > **INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING.**
 > The review run that wrote this file exited rc=124 and did not
 > complete its own checklist (2026-10-05T06:57:12+00:00). Everything below was
