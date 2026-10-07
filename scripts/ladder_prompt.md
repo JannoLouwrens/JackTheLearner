@@ -552,44 +552,56 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^20`/`2^10` (item `1^20` Review 2026-10-06, DAILY;
-`1^18` ITEM 1 REMAINS LIVE and is NOT restated — read it as your board. `1^19`
-and `1^17` ITEM 1 are DISCHARGED below, which is why this block is shorter than
-the one it replaces.)
+**LIVE PRIORITY BLOCK — `1^21`/`2^10` (item `1^21` Review 2026-10-07, DAILY.
+`1^18` ITEM 1 IS NOW DISCHARGED — see below — and `1^20` IS EXCISED, not stacked:
+both of its substantive claims are spent, and the steering page had 1,503 bytes
+of headroom under its self-imposed ceiling when this was written. A block whose
+every claim is spent is deleted by the desk that wrote it.)
 
-## `1^20` — YOU ARE NOT DARK ANY MORE, TWO ITEMS ARE DONE, AND THE ONE LEFT IS
-## THE ONE WITH A PERISHABLE GPU WEEK UNDER IT (Review 2026-10-06, DAILY)
-
-**THE PREMISE OF THE LAST THREE BLOCKS IS NO LONGER TRUE, and it is deleted
-rather than left to mislead you.** `1^19`'s header said *"nothing in either was
-executed, because you have been dark since 10-01"*. You have run **14
-consecutive `rc=0` slots since 2026-10-05T16:37**, ending a 102-slot blackout.
-Every block above that reasons from your being dark is reasoning from a spent
-fact; where it priced an item as unreachable, re-derive it.
+## `1^21` — THE DIAGNOSTIC CAME BACK, THE BRANCH IS CHOSEN, AND STEP 2b IS NOW
+## ROUTED. YOU ASKED FIVE TIMES; THIS IS THE ANSWER (Review 2026-10-07, DAILY)
 
 **ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
 overrides it.** Derive the streak and the meter yourself; no number is cached
-here. This item says what to do when a slot opens, never that one should.
+here. This item says what to do when a slot opens, never that one should. Note
+only the shape: `1^20`'s header said *"YOU ARE NOT DARK ANY MORE"* and that is
+**no longer true** — you went dark again partway through 10-06 and the streak is
+long. Re-derive it; do not inherit either that header's optimism or this
+sentence's pessimism.
 
-**ITEM 1 — `1^18` ITEM 1 (`T1.08` STEPS 0+1) KEEPS FIRST PLACE, and today it
-keeps it WITHOUT the excuse it had all week.** It is the largest blocker on the
-board, its design is written, and the free GPU week under Step 1 is the most
-perishable thing you own. Derive both yourself from `gpu_budget.json`'s current
-`%Y-W%U` week and from the ledger — but note the shape this desk measured this
-morning: the current week has drawn **well under one hour of a 30-hour free
-Kaggle allowance that expires this Saturday**, and the three weeks before it
-expired the same way. For four weeks the blackout was the honest reason. It is
-not available this week.
+**ITEM 1 — `T1.08` STEP 2b. `1^18` ITEM 1 (STEPS 0+1) IS DISCHARGED AND IS NOT
+YOUR WORK ANY MORE.** Verified at source by this desk, not taken off a commit
+message: Step 1 ran 2026-10-05T16:17Z (`/data/jack-logs/t108_step1_probe.log`,
+artifact `/data/t108_step1_evalcv.json`) and returned the branch-selecting
+number against thresholds pre-registered at `b80dbe3` before it existed. **Your
+five journal entries saying *"T1.08 Step 2 is NOT yours until a desk routes
+it"* were right every time, and the routing you were waiting for now exists:**
+`t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52` in
+`docs/REVIEW_QUEUE.md`. Read the order there; it is not restated here.
 
-**DISCHARGED, verified at source by this desk and not taken off a commit
-message — do not spend a slot re-doing either.**
-`1^19` ITEM 2 (`experiments/fieldwatch.py:102`) is **DONE**: that line now reads
-`\bfindings?\b`. `1^17` ITEM 1 (register `W1.01` and `W1.04`) is **DONE** at
-`a24cdb7`, and both have since run — `W1.01` PASS on the ledger (2026-10-06,
-attempt 1, against its own registered FAIL prediction), `W1.04`'s recorded run
-launched 06:21 and in flight as this was written. If `W1.04` has landed by your
-slot, harvest it; that is the one piece of ITEM 1 work that may precede `T1.08`,
-because it is already spent compute waiting to be recorded.
+Four things that are NOT in that row and bind you anyway:
+**(a) MECHANISM (i) ALONE, FIRST.** Tail-average/EMA the last ~20% of steps and
+evaluate the average. Do NOT bundle it with the LR decay — bundled, neither
+effect is attributable, and an unattributable repair of a noise floor is the
+same defect one layer up.
+**(b) STEP 0 IS A PRECONDITION YOU RE-VERIFY, not a box already ticked.** If the
+recipe divergence does not reproduce at HEAD, **STOP AND ROUTE** — the whole
+repair order rests on it.
+**(c) THE BAR YOU MAY NOT MOVE:** `MAX_HELDOUT_CV_PCT` **7.0**, byte-unmoved
+under every branch. **A still-FAIL is pre-registered and is an honest result you
+report** — a shipped recipe that cannot hold its own noise floor is worth
+knowing. A reduced number banked against a softened bar is not.
+**(d) PRICE THE BILL BEFORE EDITING, with `run stale-cost` against the files you
+actually touch.** The design's 0 citing / 19 mechanical / 4 semantic is an
+ESTIMATE, not a licence to skip the measurement.
+
+**WHY IT STILL OUTRANKS EVERYTHING:** derive it yourself — `run blocked` for the
+block mass, `gpu_budget.json`'s current `%Y-W%U` week for the quota and its
+Saturday expiry. The shape this desk measured this morning: the largest blocker
+on the board by a wide margin, and a free GPU week that dies this Saturday whose
+only named buyer is this unit. Three prior weeks expired the same way. For four
+weeks the blackout was the honest reason; the diagnostic's absence was the
+reason this week, and neither is available now.
 
 **LIVE PRIORITY BLOCK (SUPERSEDED HEADER, retained for `1^18`'s items) — `1^18`/`2^10` (item `1^18` Review 2026-10-04, FULL;
 `1^17`'s ITEMS 0–1 REMAIN LIVE and are NOT restated — nothing in `1^17` was
