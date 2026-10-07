@@ -10053,3 +10053,78 @@ transcription onto `docs/DECISIONS_RESOLVED.md`, per the `D13` rule that the
 overseer stays inside its own file set and the `D31`/`D32`/`D34`/`D36`
 precedent. Until that lands, `decisions.py`'s second identification channel
 (`RECORD_PAGE`/`RECORD_MARKER`) cannot see this firing.
+
+---
+
+## D40 — EVIDENCE ADDENDUM, 2026-10-07 06:37 UTC (overseer, 144th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS the attribution shares this entry and `D30`'s standing report are argued on: the instrument that measures them is blind to a blackout while the blackout is happening, and its error direction is to blame the builder.
+
+`D40` stays **armed**, `class conduct`, `decide_by 2026-10-10`, default **(v)
+STANDS, UNCHANGED**. This addendum proposes no option, moves no `decide_by`,
+fires nothing, and touches `PACE_FLOOR`, `PACE_CAP`, the pace line and the 90 %
+hard stop not at all. It exists because this entry's cost case, and `D30`'s
+standing report every sitting, quote `usage_attribution.py`'s shares — and
+those shares are a function of **when** they are read.
+
+### The mechanism, at source
+
+`scripts/usage_attribution.py:338-351` sums the meter's rise between
+**consecutive recorded `pct` readings** in `/data/jack-logs/usage_ledger.jsonl`.
+Rows are written only when an organ **starts or ends** a run (`phase`
+`"start"`/`"end"`). While nothing runs, no reading is written — so the rise
+during a blackout is not in the ledger at all, and the instrument reports only
+up to the last mark. `pace_gate` prints the line on the **skip** path, which is
+exactly when no marks are being written.
+
+### Measured, replayed against the real ledger through the pure `attribution(text=…)` entry point, nothing mutated
+
+| reading taken | total | builder | desks | NOT THIS PROJECT |
+|---|---|---|---|---|
+| 2026-10-07 06:07, 20 dark slots in (last mark 10-06T09:19, `pct 35`) | 27 pts | **20 (74 %)** | 4 (15 %) | **3 (11 %)** |
+| 2026-10-07 06:37, the two desks' `start` rows land `pct 56` | 48 pts | **20 (42 %)** | 4 (8 %) | **24 (50 %)** |
+
+Same usage week, same builder spend — 20 points in both rows. The 21 points that
+fell between 10-06T09:19 and 10-07T06:37 are **44 % of the whole week's rise**,
+and they were invisible to **every one of the twenty `PACING:` lines** printed
+during this blackout: all twenty print the identical `27 shared point(s):
+builder 20 (74%)`. The external share moved 11 % → 50 % because a reading got
+written, not because anything happened.
+
+### What this does and does not change about this decision
+
+- **The gate is unaffected.** `pace_gate` branches on `pct` vs `allow` and never
+  reads attribution. No certificate is touched. This is a reporting defect.
+- **The direction matters here.** The error under-reports the neighbouring
+  tenant and over-reports the builder — i.e. it makes the lockout look
+  self-inflicted, which argues FOR default (v). Today it inflated the builder's
+  share by 32 points of percentage.
+- **The honest reading of this week, stated so the ruling has it:** 48 shared
+  points — builder **20 (42 %)**, desks **4 (8 %)**, **NOT THIS PROJECT 24
+  (50 %)**. Both halves are true at once and neither excuses the other: the
+  builder did front-load its own 20 points into the eight productive hours of
+  10-06 and then pace itself out, **and** half the week's meter is somebody
+  else's. The 2026-09-09 Review's diagnosis (external drain read as our own
+  prodigality) is therefore only half the story this week, and an addendum that
+  recycled it would have been wrong.
+
+### The repair is routed to the builder, not to you
+
+144th audit FOR THE BUILDER 1: have `pace_gate` append one `phase: "mark"` row
+per slot from the `pct` it already holds before it branches
+(`scripts/lib_usage.sh:80`). Verified strictly additive at source — `_sessions`
+pairs only `"start"`/`"end"` so a mark creates no session and is credited to
+nobody; `marks` counts any row with an int `pct`; `_week_rows` detects the reset
+by the meter falling, which more samples make more accurate. It changes no
+branch, moves no constant, and cannot change what `pace_gate` returns.
+**Staleness bill 0** — neither file is in any spec's `IMPL_DEPS`.
+
+### The perishable cost, re-derived for this entry's `decide_by`
+
+The builder is **21 consecutive dark slots** deep (last `rc=0`
+2026-10-06T09:19:21). By the line's own formula — `allow = 25 +
+ceil(0.65·elapsed)`, live `pct` 57 at `elapsed` 30 %, `allow` 45 — it runs again
+at `elapsed ≥ 50 %`, i.e. **≈ 2026-10-08 16:30 UTC**, later if the meter rises;
+the week reset ≈2026-10-12 04:30 caps it. **`2026-W40` has 0.271 h drawn of 30
+free Kaggle GPU-hours; 29.73 h expire Saturday 2026-10-10** — the fourth
+consecutive near-empty week (W37 5.249, W38 0.918, W39 1.072, W40 0.271; ~112 h
+unbought in four weeks). `decide_by 2026-10-10` was set to the Kaggle expiry,
+and the builder gets roughly **1.3 days** of it back under default (v).
