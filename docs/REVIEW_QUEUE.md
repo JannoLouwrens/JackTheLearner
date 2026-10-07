@@ -5594,6 +5594,33 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
         after the blocker's own 10-02 that is under the desk's measured 6/cycle
         capacity (it carried 1 live row when this was written), so the re-parent
         does not itself build the pile it was written to stop.
+    DUE: 2026-10-18 | **THE CHECK THIS DATE OWED WAS PERFORMED 2026-10-07
+        (Review DAILY) AND IT RETURNED CONTENT, so this date is KEPT, not
+        broken.** The 10-07 line above says what it owed in its own words — *"a
+        CHECK, not a dispatch ... this desk re-reads `T1.08`'s status and the
+        blocker's disposition"* — and both legs were re-derived at source rather
+        than inherited. (1) `T1.08` is **unmoved**: the live ledger row is still
+        attempt 3, **FAIL**, `ran_at` 2026-09-13T10:05:05, commit `3d357c4`,
+        `heldout_cv_pct` 40.006, `impl unchanged 18 d` per `run blocked`. (2) The
+        blocker is **NOT unmoved, and this is the material change the check
+        found**: `t108-pipeline-repair-has-no-design` delivered its design at
+        `1efd54f`, its Step 1 GPU job ran 2026-10-05T16:17Z and returned
+        `eval_cv_pct` **0.52**, selecting the recipe branch — and this sitting has
+        ROUTED the execution as `t108-step-2b-recipe-repair-is-routed-off-eval-cv-
+        0-52`, DUE 2026-10-09. So for the first time in five dates, the run this
+        row owes sits behind a chain whose next link is **executable, dated, and
+        funded by a quota that exists**, rather than behind a design that did not
+        exist. 10-18 is `review-queue`'s own next-free date (it carried 4 of a
+        measured 6 when this was written, and this re-date plus its sibling take
+        it to exactly 6 — no pile is built). Nine days past Step 2b's date, which
+        is deliberate: if Step 2b lands and `T1.08` moves, this row becomes the
+        builder's two-step stamp as designed below, with room for the attempt to
+        run; if Step 2b does not land, the honest act on 10-18 is to say so
+        against `T1.08`'s own row and not to re-promise a run — the same rule the
+        10-07 line wrote and this sitting honoured. Status stays
+        `DISPOSITIONED`; the design below is unchanged; nothing is relabelled
+        `HELD` to buy silence, and the `BLOCKED-BY` above is left pointing where
+        it points.
 
 **Why this row exists (60th audit FINDING 2, quoted arithmetic).** `D1.0`
 fired as D1's armed default, ran 16.17 GPU-hours — 54% of a weekly quota —
@@ -16853,7 +16880,30 @@ ROUTED: freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable
     DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
         measured capacity", read off the tool this slot and not chosen by hand
         (09-27 through 10-06 all carry 6 or 7 against a measured capacity of 6).
-    WAITS-ON: t108-pipeline-repair-has-no-design | that row is DISPOSITIONED-
+    DUE: 2026-10-18 | RE-DATED 2026-10-07 (Review DAILY). The 10-07 date BROKE
+        and is recorded as broken. This row and `d10-successor-rerun-under-
+        adopted-gate` are **ONE decision** re-dated in one act onto one date, and
+        the ground is this row's own `WAITS-ON`: *"the clause cannot become
+        satisfiable until `T1.08` does."* That remains literally true — `T1.08` is
+        attempt 3, **FAIL**, unmoved since 2026-09-13 — so a ruling today would
+        still produce *"a release date with no arithmetic under it"*, which this
+        row names as the thing not to do. **What changed, and it is why 10-18 is a
+        real date rather than a fourth deferral:** the blocker's Step 1 ran
+        2026-10-05 and returned `eval_cv_pct` 0.52, and this sitting ROUTED the
+        execution as `t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52`, DUE
+        2026-10-09. The first hop of the chain this row measures is now an
+        executable, dated, funded order. 10-18 is `review-queue`'s own next-free
+        date — it carried 4 of a measured 6, and this re-date with its sibling
+        takes it to exactly 6, so no pile is built. **AND A STOP-RULE, armed
+        against this desk in the open, because this row has now been deferred on
+        the same ground twice:** if `T1.08` is still FAIL on 2026-10-18, this row
+        is NOT re-dated a third time on the `T1.08` ground. The freeze's release
+        clause is then ruled on the arithmetic as it stands — a clause five specs
+        deep whose quota is satisfiable by one failing spec is a defect in the
+        CLAUSE regardless of whether `T1.08` ever moves, and treating it as
+        downstream of a spec repair is how a governance defect hides behind a
+        science one. Ruling it then may well mean tightening the release clause
+        with the chain still red, which is a legal act and a harder one.
         pending and DUE 2026-10-02, and `T1.08` is the FIRST hop of the chain
         measured below. Whatever this desk decides about the freeze's release
         clause, the clause cannot become satisfiable until `T1.08` does, so
