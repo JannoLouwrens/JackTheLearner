@@ -16912,11 +16912,19 @@ question for whoever holds that instrument, not a new one.
     is NOT edited — striking or re-scoping the freeze is the owner's one line,
     not this desk's and not the builder's.
 
-ROUTED: xl01-c-fixture-ok-is-a-salt-lottery-in-a-deciding-metric | 2026-09-27 | `XL.01` attempt 3, ledger row **FAIL** 2026-09-27T09:30:04 (735.74 s, seeds 0/1/2, clean stamp at `6e6c1ab`, `dirty` unset) — the run's own reporting-only hash-salt replay | OPEN
+ROUTED: xl01-c-fixture-ok-is-a-salt-lottery-in-a-deciding-metric | 2026-09-27 | `XL.01` attempt 3, ledger row **FAIL** 2026-09-27T09:30:04 (735.74 s, seeds 0/1/2, clean stamp at `6e6c1ab`, `dirty` unset) — the run's own reporting-only hash-salt replay | DECLINED 2026-10-07 (Review DAILY — the finding is REFUTED AT SOURCE by this row's own addendum, and there is nothing left here to rule on. `_salt_rerun` re-ran `(fn, seed)` pairs in isolated subprocesses where `run_spec` runs all experiment seeds then all control seeds in ONE process, so the re-run's `_control` took its cold-cache early return and the divergence set accounts to the digit — 1 deciding key (`c_fixture_ok`) + 18 absent keys = the reported 19, with all 40 experiment metrics bit-exact and ZERO of the 19 actually salt. `XL.01`'s rig is measured innocent: no `W0`/`playground.py`/`drives.py` defect is in evidence and **the world-edit-window bill this row priced is not owed** — which is the substantive reason to decline rather than hold, since that bill was this row's entire cost case. The detector was repaired at `5ee32ff`'s successor in the finding slot with 4 standing certificates re-bought and no bar moved in either direction. DECLINED is not "no defect was found": the defect was real and is **fixed**, and the two residuals the addendum says the desk is still owed are LIVE ELSEWHERE with their own dates rather than carried here — the class question as `replay-instruments-do-not-replay-the-runs-process-model` (ruled this same sitting) and the uncertified-instrument question as `seven-instrument-readers-are-gated-by-no-spec` (DUE 2026-10-19). Nothing is closed by implication)
     SUBJECT: a SPEC's science — the instrument fired correctly; what it found
         is a defect in `XL.01`'s rig, not in the detector.
+        ~~STRUCK 2026-10-07 (Review DAILY), not deleted~~: both clauses are now
+        known FALSE and this line is the clearest single statement of what the
+        false positive cost. The instrument did NOT fire correctly — it fired on
+        a process-model mismatch of its own making — and the defect was in the
+        DETECTOR, not in the rig. Kept visible because a refuted classification
+        that vanishes teaches nobody; the corrected subject is **the APPARATUS**.
     DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
         measured capacity", read off the tool this slot and not chosen by hand.
+        DISCHARGED ON ITS OWN DATE 2026-10-07 by the DECLINED above — recorded
+        because this is the first of the 09-27 batch's six dates to be kept.
     WAITS-ON: xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off
         | that row is OPEN, DUE 2026-10-07, and it is the OTHER estimator defect
         on this same spec's `_check`. Both touch which arm's number decides and
