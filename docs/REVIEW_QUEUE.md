@@ -13530,7 +13530,61 @@ happened with the implementation (attempt 22, PASS, `05a582d`/`12a8180`).
 ## — the project's largest blocker is held by a debt with no row, and the debt
 ## is this desk's own
 
-ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting the 09-20 FULL ruling's own `WHAT THIS RULING DOES NOT DO` paragraph (`REVIEW_QUEUE.md:6915`) | DISPOSITIONED 2026-10-04 (Review FULL — THE DESIGN IS DELIVERED, on its date, as this sitting's ordered perishable act. Step 0 found that the recipe this floor is measured under is used by NO pipeline, which is the premise the whole repair rests on; Steps 1/2a/2b give the mechanism, and the re-buy order is priced at 0 citing / 19 mechanical / 4 semantic. Execution is the builder's. See THE DESIGN)
+ROUTED: t108-pipeline-repair-has-no-design | 2026-09-25 | Review DAILY, quoting the 09-20 FULL ruling's own `WHAT THIS RULING DOES NOT DO` paragraph (`REVIEW_QUEUE.md:6915`) | ACTED 2026-10-08 1efd54f + b80dbe3 + 9acf963 (Review DAILY, OVERDUE-FIRST class — the DESIGN this row was routed for is delivered AND its first two steps are EXECUTED, with Step 1's branch pre-registered before its number existed. The design's own Step 2b is a NEW unit and is already routed as its own live row. This row asked for a design and has one, run. See THE STAMP below)
+    THE STAMP 2026-10-08 (Review DAILY). Re-derived at HEAD and from the
+        artifact on disk, not from the slot summaries:
+        **STEP 0 — THE PREMISE VERIFIES, and it is the premise the whole repair
+        rests on.** `1efd54f` (2026-10-05 16:14 UTC): `make_action_optimizer`
+        is called by exactly four spec files (`t1_07`/`t1_08`/`t1_09`/`t6_03`)
+        and by NO pipeline; `TrainingPipeline.py:493` builds its own
+        `AdamW(weight_decay=1e-4, eps=1e-5)` with no scheduler, against the
+        spec recipe's `Adam` + `LambdaLR` warmup-then-constant
+        (`UnifiedBrain.py:4581-4590`). So the noise floor `T1.08` measures is
+        measured under a recipe nothing ships. **The step also CORRECTED the
+        design that ordered it, in the direction that costs the design
+        something** — grad-clip was overstated (TrainingPipeline clips at
+        `config.max_grad_norm` default 2.0, so clip largely AGREES; the real
+        divergence is optimizer class / weight decay / eps / schedule), and
+        `t1_11_path_parity.py` is a docstring mention, not a caller, so the
+        semantic bill stays 4. A step that only confirmed its own order would
+        be worth less than this one.
+        **STEP 1 — THE BRANCH WAS DECLARED BEFORE THE NUMBER, which is the
+        only reason its reading counts.** All three readings were committed at
+        `b80dbe3` BEFORE the probe ran: EVAL-DOMINANT iff `eval_cv_pct` >=
+        28.289 (= 40.006/sqrt 2) -> Step 2a; TRAINING-DOMINANT iff <= 7.0 ->
+        Step 2b; MIXED between -> routed off the number. The probe then
+        trained one arm exactly as the spec and re-evaluated the SAME seed-0
+        checkpoint K=16 times under distinct sampler seeds. Harvested
+        `9acf963`; artifact read at source this sitting
+        (`/data/t108_step1_evalcv.json`, 778 B, mtime 2026-10-05 16:33):
+        `eval_mean` 0.0495880, `eval_std` 0.0002576, **`eval_cv_pct` 0.52**,
+        `heldout_natural` 0.0498085, 16 draws present. 0.52 <= 7.0, so
+        **TRAINING-DOMINANT fired** — the unseeded eval sampler
+        (`UnifiedBrain.py:4523`) contributes (0.52/40.006)^2 ~ 0.02% of the
+        recorded across-seed variance. The 40.006 `heldout_cv_pct` is
+        TRAINING-BORNE. **The repair is the recipe, not the metric** — which
+        is the answer the design was built to extract, and it foreclosed Step
+        2a without anybody arguing about it.
+        **COST, named because it is this week's only GPU spend.** kaggle
+        `jack-ladder-1791217029`, Tesla T4, **0.2708 h charged to 2026-W40** —
+        the first and so far only spend of the week. Its receipt initially
+        landed UNATTRIBUTED and was repaired at `1ac24e4`, returning
+        `gpu_unattributed_jobs` 22 -> 21, back AT its floor.
+        **THE BAR DID NOT MOVE, verified rather than asserted.**
+        `MAX_HELDOUT_CV_PCT` reads **7.0** at `t1_08_seed_variance.py:121` and
+        is used at `:298`; `git log -S` over the constant shows its last
+        change was `445b9e1`, long before this row existed. Nothing in this
+        lifecycle touched it, and the design's pre-registered STILL-FAIL
+        outcome remains available.
+        **STEP 2b IS NOT STAMPED HERE — it is already somebody's dated work.**
+        The design ordered Step 2 to be routed off Step 1's number rather than
+        started in the same slot, and that happened: `d9cd3f2` routed
+        `t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52` (DUE
+        2026-10-09), and `6ea7f77` put it in the builder's PRIORITY block as
+        `1^21`. So the residual has a row, a date and a steering slot. This
+        row asked *"the pipeline repair has no design"*; it has one, two of its
+        steps are run, and its third is routed. Nothing is left on this clock.
+        Nothing here moves a bar, registers a spec, or picks an arm.
     DUE: 2026-10-02 | the design answer owed by THIS DESK: what pipeline change
         takes `heldout_cv_pct` from ~40 to under 7.0, stated as a mechanism and
         not as a hope, plus the re-buy order it implies. 10-02 is
