@@ -38644,7 +38644,7 @@
     "T0.28": {
       "amended": [],
       "attempt": 22,
-      "commit": "d668a65",
+      "commit": "d0c1c94+dirty",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
@@ -38658,56 +38658,13 @@
         "properties_checked": 19.0,
         "properties_failed": 13.0
       },
-      "dirty_files": null,
-      "duration_s": 55.2,
+      "dirty_files": [
+        "docs/DECISIONS_NEEDED.md"
+      ],
+      "duration_s": 53.76,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "584033d",
-          "compute_s": null,
-          "control_metrics": {
-            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
-            "live_armed": 1.0,
-            "live_expired_actions": 1.0,
-            "live_longest_default_chars": 818.0,
-            "live_specs_in_radius": 0.0,
-            "live_unrouted_asks": 0.0,
-            "live_vanished_asks": 0.0,
-            "live_violations": 6.0,
-            "properties_checked": 19.0,
-            "properties_failed": 13.0
-          },
-          "dirty_files": null,
-          "duration_s": 49.39,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "e7db523d0e51b980",
-          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+35.1s)",
-          "metrics": {
-            "failed_names": "",
-            "live_armed": 1.0,
-            "live_expired_actions": 1.0,
-            "live_longest_default_chars": 818.0,
-            "live_specs_in_radius": 0.0,
-            "live_unrouted_asks": 0.0,
-            "live_vanished_asks": 0.0,
-            "live_violations": 6.0,
-            "properties_checked": 19.0,
-            "properties_failed": 0.0
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 250.4,
-          "preserved_impl": null,
-          "ran_at": "2026-10-02T06:44:14",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "bb2c3ecb87ada37f",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -39568,10 +39525,55 @@
           ],
           "spec_sha": "bb2c3ecb87ada37f",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "d668a65",
+          "compute_s": null,
+          "control_metrics": {
+            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
+            "live_armed": 2.0,
+            "live_expired_actions": 0.0,
+            "live_longest_default_chars": 811.0,
+            "live_specs_in_radius": 2.0,
+            "live_unrouted_asks": 0.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 7.0,
+            "properties_checked": 19.0,
+            "properties_failed": 13.0
+          },
+          "dirty_files": null,
+          "duration_s": 55.2,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "4ad3cf9b220419dc",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+39.1s)",
+          "metrics": {
+            "failed_names": "",
+            "live_armed": 2.0,
+            "live_expired_actions": 0.0,
+            "live_longest_default_chars": 811.0,
+            "live_specs_in_radius": 2.0,
+            "live_unrouted_asks": 0.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 7.0,
+            "properties_checked": 19.0,
+            "properties_failed": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 249.1,
+          "preserved_impl": null,
+          "ran_at": "2026-10-08T12:44:20",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "bb2c3ecb87ada37f",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "4ad3cf9b220419dc",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+39.1s)",
+      "impl_sha": "8682d3f1644a72aa",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+38.8s)",
       "metrics": {
         "failed_names": "",
         "live_armed": 2.0,
@@ -39585,9 +39587,9 @@
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 249.1,
+      "peak_rss_mb": 248.1,
       "preserved_impl": null,
-      "ran_at": "2026-10-08T12:44:20",
+      "ran_at": "2026-10-08T14:43:57",
       "seeds": [
         0
       ],
