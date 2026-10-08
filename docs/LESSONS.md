@@ -21207,3 +21207,60 @@ salt), and probing it honestly needs either an AST reader or a second full
 re-execution per spec, on a box with no headroom and under a freeze that forbids
 new instruments. An honest hole where a wrong reading used to be is an
 improvement, and it is recorded here so it is a KNOWN hole.
+
+---
+
+## An organ's uncommitted prose is another spec's dirty implementation, and the
+## seal that reports "produced nothing" cannot see the file it was written to
+
+*(146th audit, 2026-10-08. Found by inheriting the 145th audit's abandoned work
+rather than by any instrument reporting it.)*
+
+The 145th audit ran, wrote a correct 123-line evidence addendum to
+`docs/DECISIONS_NEEDED.md`, and died before rewriting `docs/OVERSIGHT.md`.
+`scripts/lib_seal.sh` then stamped that page STALE with *"exited rc=1 **without
+writing a word**"*. Two regate sweeps ran across the still-dirty tree, and
+because `docs/DECISIONS_NEEDED.md` sits inside `T0.28`'s staleness bill, that
+spec's re-bought PASS recorded *"reconstructs from no commit and was not
+preserved … it cannot be recovered by anyone."* A Tier-0 certificate — the one
+proving the escalation tool can be *shown* catching a deadlock — lost its
+reconstructability to an overseer's unsaved paragraph.
+
+**Three things generalise, and the third is the one worth keeping.**
+
+**1. A liveness seal reports on its own file and phrases it as a verdict on the
+run.** The question `lib_seal.sh` can answer is *"was THIS page rewritten?"*; the
+sentence it prints is *"the run produced nothing."* Those differ exactly when an
+organ is permitted to write more than one file — which this one is, by design, for
+precisely the escalation work that is hardest to drop. So **the failure mode of a
+per-file liveness check is a false negative about every other output**, and it is
+machine-generated, so it recurs silently and is never audited by the organ that
+would have caught it (it is the one being described). When a watcher's subject is
+narrower than its sentence, the sentence is what later readers believe.
+
+**2. The exemption that made doc-writing safe mid-run stopped exactly one file
+short of the one that matters.** `OVERSIGHT.md` and `LESSONS.md` are
+`PROSE_DOCS`-exempt so the overseer can write them without dirtying a
+certificate. `DECISIONS_NEEDED.md` is correctly *not* exempt, because `T0.28`
+genuinely reads it. Nobody wrote down the consequence: **the one page this organ
+is REQUIRED to append to is the one page it must never leave dirty**, and nothing
+warns it. A partial exemption is read by every later reader as covering the whole
+category it was named after — the same unsplit-exemption failure recorded in the
+replay-differential lesson above, arriving by a different road.
+
+**3. The strongest form of the "audit the predecessor's reason for not acting"
+rule: here the wrong reason was written by a script.** An audit that re-derives
+why its predecessor declined will catch a human's bad reason. It will *not* catch
+a seal's, because a seal's reason reads as infrastructure rather than as
+judgement — and infrastructure is what an audit uses to orient, not what it
+suspects. **The tell was a contradiction between two artefacts, not a wrong
+number in either:** the seal said nothing was written, and `git status` said a
+permitted output was dirty. Neither is checkable alone. So when inheriting from a
+run that failed, **diff what the run was ALLOWED to write against what the tree
+actually holds, before believing any account of what it did** — including the
+machine's.
+
+**Priced, not implied:** committing that addendum is what lets the next regate buy
+a clean stamp, and it is the whole repair available to this organ. `T0.28` still
+owes a re-run from a clean tree, which is the builder's — a certificate whose
+implementation cannot be reconstructed is not healed by the dirt going away.

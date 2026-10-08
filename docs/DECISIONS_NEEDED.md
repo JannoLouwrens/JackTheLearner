@@ -10128,3 +10128,152 @@ free Kaggle GPU-hours; 29.73 h expire Saturday 2026-10-10** — the fourth
 consecutive near-empty week (W37 5.249, W38 0.918, W39 1.072, W40 0.271; ~112 h
 unbought in four weeks). `decide_by 2026-10-10` was set to the Kaggle expiry,
 and the builder gets roughly **1.3 days** of it back under default (v).
+
+---
+
+## D40 — EVIDENCE ADDENDUM, 2026-10-08 12:4x UTC (overseer, 145th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS THIS ENTRY'S DESCRIPTION OF THE MECHANISM UNDER DECISION: the 90 % stop fired for the first time in this project's history two days before your `decide_by`, and it released itself with no act by you — while this entry, `D30`'s standing report and `docs/PROGRESS.md` all tell you that resuming requires a file written by your hand.
+
+> Appended in the idiom of the 144th audit's addendum above and under the same
+> rule: it proposes no option, moves no `decide_by`, fires nothing, and touches
+> neither `PACE_FLOOR`, `PACE_CAP` nor the 90 constant. It changes one thing —
+> the factual premise you would have ruled on.
+
+### What this entry currently tells you, in its own words
+
+Three separate places in this project's record say the stop is a latch that only
+you can open:
+
+- **this entry, `### The six-hour fact`:** *"With no `.usage-resumed` on disk the
+  log line is 'STOPPED at N% weekly usage — all agents paused until the owner
+  resumes'."*
+- **this entry, `### What was forecast, and what happened`:** *"The stop has not
+  fired, no `.usage-resumed` was needed, and nothing was lost by the owner not
+  acting within six hours."* — true on 2026-10-03, false now.
+- **`docs/PROGRESS.md:431` (Review, 2026-10-04, published to you under `FOR THE
+  OWNER 1`):** *"`lib_usage.sh:121` refuses every organ except the regate sweep
+  at 90 % with 'all agents paused until the owner resumes', and resuming needs a
+  `.usage-resumed` file written **by you**; there is none on disk."*
+
+The last clause is the one that is wrong, and a desk published it to you as
+evidence under this decision.
+
+### The mechanism, at source — `scripts/lib_usage.sh`, `usage_gate()`
+
+```sh
+usage_gate() {
+  pct=$(_usage_pct)
+  case "$pct" in ''|*[!0-9]*) "$say_fn" "ABORT: usage unreadable — refusing to run"; return 1;; esac
+  if [ "$pct" -lt 90 ]; then return 0; fi          # <-- the whole latch
+  local f="$REPO/.usage-resumed"
+  if [ -f "$f" ]; then ... fi                      # <-- only consulted ABOVE 90
+  "$say_fn" "STOPPED at ${pct}% weekly usage — all agents paused until the owner resumes"
+  return 1
+}
+```
+
+`.usage-resumed` is read **only on the branch where `pct >= 90`**. It is a
+*ceiling override for continuing to operate above 90 %* — not a resume latch.
+Below 90 the function returns 0 and the organ runs, and nothing anywhere records
+that a stop ever happened. **The sentence in the log line is false about the code
+that prints it.**
+
+### What actually happened, measured from `/data/jack-logs/ladder.log`
+
+```
+2026-10-07T12:07:04   STOPPED at  90% weekly usage — all agents paused until the owner resumes
+2026-10-07T13:07:04   STOPPED at  99% ...
+2026-10-07T14:07:03   STOPPED at 100% ...        <- 100% for sixteen further slots
+2026-10-08T06:07:03   STOPPED at 100% ...        <- the 19th and last
+2026-10-08T07:07:09   iteration start — 107/257 demonstrated, model fable, load 2.07
+                      (the slot's own first paragraph: gate `week:all models` 17%)
+2026-10-08T07:22:52   iteration end rc=0
+```
+
+- **19 consecutive stopped slots**, 2026-10-07T12:07 → 2026-10-08T06:07, the
+  first firing of the 90 % stop in the project's history (every prior blackout
+  was `pace_gate`'s voluntary skip, which is a different branch).
+- **`.usage-resumed` is ABSENT from disk right now** and was absent throughout.
+- **Zero `RESUMED BY OWNER` lines in the window.** The log holds 11 of them in
+  total and the most recent is **2026-08-12T11:07** — eight weeks before this
+  firing.
+- The release was the **weekly meter reset** between 06:07 and 07:07 on 10-08:
+  `pct` 100 → 17, so `pct < 90` returned 0 and the builder ran unaided.
+- It then lost **four more slots** (08:07, 09:07, 10:07, 11:07, each `rc=1`) to a
+  per-session limit that is a different mechanism again, recovering at 12:07.
+
+**So the realised cost of this mechanism's first firing is 19 slots, its maximum
+possible cost is one usage week, and the owner is not on the critical path of
+either.** All three statements are new to this entry.
+
+### What it changes about your ruling, and what it does not
+
+- **The option set is untouched.** Options (i)–(v) are exactly as armed. This
+  addendum proposes none of them and recommends none.
+- **Default (v) is "the status quo", and the status quo is not what this entry
+  describes.** Ruling (v) on the current text means accepting *"the builder stays
+  dead until I write a file"*; ruling (v) on the measured mechanism means
+  accepting *"the builder loses up to one usage week per firing and then restarts
+  itself"*. Those are different commitments, and the first is the more alarming
+  of the two — i.e. **the error in the record argues AGAINST default (v) more
+  strongly than the truth does.** It is reported here because the direction being
+  favourable to action does not make it accurate.
+- **Nothing here is a reason to loosen the gate**, and the overseer may not. The
+  90 constant, `PACE_FLOOR`, `PACE_CAP` and the branch are all unmoved by this
+  addendum, and option (i)'s "pace against our own spend" remains yours alone
+  precisely because it widens what the builder may spend.
+- **The second half of the defect is that nothing retained the firing.** By the
+  time you read this, `dark_slots` reads **0** ("unchanged since 2026-09-30, AT
+  floor — ok"), `failed_slots` reads 0, and `hours_since_rc0` is small, because
+  all three are *trailing streaks* that a single `rc=0` slot zeroes. 23 lost slots
+  inside 24 hours reach no ratchet, no exit code and no page. `D30`'s armed
+  default obliges the Review to deliver the dark streak to you as a standing
+  report; the number that report will carry is 0.
+
+### The repairs are routed to the builder, not to you
+
+145th audit FOR THE BUILDER 1 and 2: correct the log line to state what the code
+does, and extend the 144th audit's `usage_ledger.jsonl` mark to the stop branch so
+a firing survives its own ending. Both are message/reporting-only, strictly
+additive, and cannot change what `usage_gate` returns. Staleness bill 0 — no
+spec's `IMPL_DEPS` names `scripts/lib_usage.sh`.
+
+### The perishable cost, re-derived live for this entry's `decide_by 2026-10-10`
+
+**`2026-W40` has 1.971 h drawn of 30 free Kaggle GPU-hours; 28.03 h expire
+Saturday 2026-10-10**, the same date as this `decide_by`. That is the **fourth
+consecutive near-empty week** (W37 1.379, W38 0.918, W39 1.072, W40 1.971 —
+~114 h unbought in four weeks). **Unlike the previous three, this week's hours
+have a buyer that is buying:** `T1.08` Step 2b dispatched twice (attempts 4 and
+5), attempt 4 recorded an honest FAIL at `heldout_cv_pct` 14.666 against the
+byte-unmoved 7.0 bar, and attempt 5 has since landed (`…1791461828`, 1.0458 h,
+`ok:true`). The 19 slots this mechanism took were taken from exactly that work.
+
+> **PROVENANCE AND ONE CORRECTION, 146th audit, 2026-10-08 18:5x UTC.**
+> Everything above this box was written by the **145th audit at ~12:4x** and was
+> never committed: that run died before rewriting `docs/OVERSIGHT.md`, so
+> `scripts/lib_seal.sh` stamped the page STALE at 12:46:25 with the words *"exited
+> rc=1 **without writing a word**"* — false, because this addendum was already on
+> disk. It then sat dirty through two regate sweeps (14:44, 16:45), and because
+> `docs/DECISIONS_NEEDED.md` is inside `T0.28`'s staleness bill, that spec's
+> re-bought PASS at `95c0a7b` records a DIRTY stamp: *"reconstructs from no commit
+> and was not preserved … it cannot be recovered by anyone."* Committing it is
+> what lets the next regate buy a clean stamp; `T0.28` still owes a re-run from a
+> clean tree (146th audit FOR THE BUILDER 1).
+>
+> **I verified its substance at source before adopting it** — `scripts/lib_usage.sh:128`
+> returning 0 below 90 before `.usage-resumed` is read at `:130`; the 19 `STOPPED`
+> lines 2026-10-07T12:07 → 2026-10-08T06:07; `.usage-resumed` absent; zero
+> `RESUMED BY OWNER` lines since 2026-08-12. All of it holds.
+>
+> **The one correction, in the paragraph immediately above:** its W40 figures
+> (0.9252 h drawn / ~29.07 h expiring) were true at 12:4x and went stale when job
+> `…1791461828` landed afterwards; they now read 1.971 h and 28.03 h, re-derived
+> live from `experiments/gpu_budget.json`. Its **W37 = 1.379 h is correct and the
+> 144th audit's addendum above, which says 5.249 h, is the wrong one for the claim
+> it supports** — 5.2493 is all jobs on all backends including two Colab jobs and
+> one failed Kaggle job, while the 30 h free quota meters kaggle-and-`ok` only.
+> Said out loud because the error was in this organ's own output and the 145th
+> corrected it silently, which is how a wrong number survives.
+>
+> Nothing in this box proposes an option, moves `decide_by 2026-10-10`, fires
+> anything, or touches `PACE_FLOOR`, `PACE_CAP` or the 90 constant.
