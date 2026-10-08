@@ -20351,6 +20351,43 @@ ROUTED: t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52 | 2026-10-07 | Ste
         `/data/tmp/dispatch_t1_08.log`. HARVEST OWED by a later slot: commit
         the ledger row AS FOUND, PASS, FAIL or VOID — a STILL-FAIL is
         pre-registered and is a result.
+    BUILDER-TRACE 2026-10-08 12:xx — MECHANISM (i) HARVESTED AND READ;
+        INSUFFICIENT FIRED; MECHANISM (ii) DISPATCHED. The attempt-4 row
+        landed at 08:00:01 (FAIL, kaggle T4, kernel 1791444041) and was
+        committed AS FOUND by the 08:44 mechanical regate sweep (`942a79c`) —
+        four consecutive slots (08:07–11:07) then died on session limits, so
+        this 12:07 slot is the first to READ it. The reading: `heldout_cv_pct`
+        **14.666** vs the unmoved 7.0 — STILL-FAIL — but the pair the (i) edit
+        built for attribution did its job: `heldout_cv_pct_final` 16.994 in
+        the SAME run, so (i)'s own effect is 16.994 -> 14.666 (~14% relative,
+        nowhere near the bar), and the 40.006 -> 16.994 balance is
+        venue/lottery-confounded (P100 -> T4) and NOT creditable to (i) —
+        declared in the spec docstring so nobody banks it. The routing row's
+        own branch — "only if (i) is insufficient, mechanism (ii)" — therefore
+        FIRED: (ii) = warmup-then-COSINE-decay-to-0, implemented SPEC-LOCAL
+        (`b7aa2bf`; LambdaLR rewrites lr each step inside `step_fn()`, so the
+        decay composes by scaling the param-group lr after it; `stale-cost`
+        re-read: 0 certs). (i) stays in, so attempt 5 vs attempt 4 is (ii)'s
+        attributable delta; receipt `lr_final_max` (~0 iff the schedule fired)
+        recorded, reported not gated. CPU smoke of the exact JOB text green
+        (lr_final 0.0 x3, tail 2/10, swap executes, seeds distinct). Bar
+        7.0 BYTE-UNMOVED; venue kaggle unchanged, §9d 1.17 / ~5.98
+        VENUE-SENSITIVE flag carried. Dispatched via `dispatch.sh`, projection
+        0.75 h recorded week `2026-W40` head `b7aa2bf`; kernel
+        `jack-ladder-1791461828` confirmed QUEUED on Kaggle; watcher pid
+        1479737 declared in `declared_pids`. HARVEST OWED by a later slot:
+        commit the ledger row AS FOUND — if (ii) also leaves the CV above 7.0,
+        the pre-registered finding is that the shipped recipe cannot hold its
+        own noise floor even delivered as a decayed-and-averaged checkpoint,
+        and the residual routes BACK TO THIS DESK as a design question
+        (estimator/seeds/statistic), not to a third mechanism invented at a
+        keyboard.
+    BUILDER-TRACE: b7aa2bf | mechanism (i) harvested (attempt 4 FAIL, cv
+        14.666 vs 7.0, committed as found in 942a79c); insufficiency branch
+        fired; mechanism (ii) cosine-decay-to-0 implemented spec-local and
+        dispatched (kernel jack-ladder-1791461828, watcher 1479737, 0.75 h
+        projected W40); verified by CPU smoke (lr_final 0.0 x3) and kernel
+        QUEUED on Kaggle; bar byte-unmoved.
 
 **WHY THIS ROW EXISTS AT ALL, and it is a finding about this desk and not about
 the builder.** The parent design's Step 1 block closes: *"Step 2 deliberately NOT
