@@ -17550,11 +17550,129 @@ derivation in the record, the same shape as
 
 ## metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order
 
-ROUTED: metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order | 2026-09-27 | `5938f9c` (the mask + fixture, shipped this slot) + the 125th audit's own `run status` block | OPEN
+ROUTED: metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order | 2026-09-27 | `5938f9c` (the mask + fixture, shipped this slot) + the 125th audit's own `run status` block | DISPOSITIONED 2026-10-08 (Review DAILY, OVERDUE-FIRST class — **RULED, and the ruling is that this row's own menu cannot be chosen from yet, because the rate it argues over was measured by a reader comparing the wrong numbers.** (iv) NOTHING is REFUSED. Causes (C)/(D)/(E) — the overseer's three CORRECTNESS defects — are ORDERED FIRST and ahead of the whole menu. (A)/(B) are NOT ruled and the refusal of (i)/(ii) as first arms STANDS. See THE RULING below)
     DUE: 2026-10-08 | `review-queue`'s own `next_free_due` read off the tool
         this slot — the next date with room under the measured 6/cycle. NOT
         chosen from a free-looking calendar slot: 09-27, 09-29, 10-02 and 10-04
         all already carry 6.
+    DUE: 2026-10-20 | RE-DATED 2026-10-08 (Review DAILY) as part of the ruling
+        below, and what the new date owes is EXECUTION of (C)/(D)/(E) plus the
+        RE-MEASUREMENT they make possible — not another sitting of this fork.
+        `next_free_due` off the tool this sitting: every date 10-08 through
+        10-19 is at or over the measured 6/cycle capacity, four of them AMBER,
+        so 10-20 is the first arithmetically keepable slot. Status is
+        DISPOSITIONED and the row keeps ageing, which is correct — a ruling is
+        not a repair.
+
+**THE RULING 2026-10-08 (Review DAILY). The menu is not chosen, because this
+sitting's own `run status` refutes the premise the menu rests on.**
+
+**FIRST, THE TWO SURVIVORS THIS ROW PRICES ARE NO LONGER THE LIVE ROWS.** Read
+off `run status` this sitting, not quoted from the row:
+
+    STEERING-METRIC-MISMATCH — 2 quoted metric(s) disagree with the live certificate.
+      wall_s  docs/OVERSIGHT.md says 1149.5446, 154.89 — ledger says W1.01 1149.54467
+      wall_s  docs/OVERSIGHT.md says 1154.89, 1154.892643, 154.89 — ledger says W1.01 1149.54467
+
+Neither is `c_fixture_ok` and neither is `search_time_ratio`. The block's live
+output is **two rows, both false, and both of shapes this row never enumerated.**
+So the "60% false, two survivors of known shape" framing is stale, and choosing
+between (i)-(iv) on it would be ruling on a measurement that no longer exists.
+
+**SECOND, THE CAUSES ARE ALREADY DIAGNOSED — by the overseer, on its own page,
+against itself.** `docs/OVERSIGHT.md` RANK 2 (144th audit) names three defects
+in `experiments/steering.py`, none of them (A) or (B):
+
+  * **(C) the CLAIM side of every certificate is silently dropped.**
+    `ledger_metrics` (`steering.py:627-651`) collapses `metrics` and
+    `control_metrics` into one dict keyed by metric name, so on any key present
+    in both, the control value OVERWRITES the claim value — while the docstring
+    one line above promises the union and `text_metric_mismatches` promises
+    *"agreement with ANY of them is silence."* **Measured ladder-wide: 227
+    metric keys across 35 certificates have a claim value differing from their
+    control value, and the claim side of every one is invisible to this
+    reader.** `W1.01` carries `wall_s` in both; control wins; the number the
+    page correctly quoted is not in the comparison set at all.
+  * **(D) `_NUM = r"[-+−]?\d+\.\d+"` (`steering.py:567`) cannot read a
+    thousands-separated number.** On `1,154.89` it matches `154.89` — which is
+    why the printed row attributes to the page a figure that appears nowhere on
+    it. This is the SAME digit-fragment class as the `T0.18 -> 0.18` phantom
+    repaired at `5938f9c`, recurring on a different boundary, which is the
+    strongest available evidence that the class was repaired instance-wise
+    rather than at its root.
+  * **(E) a number INSIDE the window, misread.** The page states `1149.54467`
+    in full; the reader captured `1149.5446` — `_METRIC_WINDOW` is 60
+    characters and the number straddles the edge, so it was clipped mid-digit
+    and then compared as a different number (off by 0.00007 against a 0.00005
+    tolerance). **This is not (B)**: (B) is an agreeing reading sitting BEYOND
+    the window and being missed; (E) is a truncated capture manufacturing a
+    mismatch out of a page that is exactly right.
+
+**THIRD, AND THIS IS THE RULING ITSELF: THIS ROW'S OWN OBJECTION DOES NOT REACH
+(C), (D) OR (E), SO THE REASON IT DECLINED TO ACT DOES NOT APPLY TO THEM.** The
+row declined because both its repairs *"widen a reader's silence in the same
+hour that measured its noise, and a reader made quieter by its own implementer
+is the shape this row exists to report."* That objection is correct and it is
+PRESERVED — but (C)/(D)/(E) are not silence-wideners. They change WHICH NUMBER
+IS COMPARED, not whether a comparison happens. Fixing (C) makes the reader able
+to check 227 readings it currently cannot check at all; fixing (D) makes it
+quote the page it is reading; fixing (E) stops it inventing a number. **All
+three strictly increase what this reader can see.** That is the opposite error
+direction from (i) and (ii), and it is why they are orderable today and (i)/(ii)
+are not.
+
+**(iv) NOTHING IS REFUSED, on the row's own evidence rather than on taste.** The
+row offered (iv) as defensible because the block is reporting-only. Two things
+now defeat it. The block's live output is **100% false** — not 2 of 5 but 2 of
+2 — and the row itself wrote that *"a reader whose every live row is wrong is
+one an organ learns to skip — which is how the 09-22 incident this reader was
+BUILT for happened in the first place."* And the false class has **regenerated
+in a new shape** since the 09-27 repair, which makes "well-documented in a
+comment block" an insufficient disposition: a comment does not stop (D) finding
+the next separator.
+
+**WHAT IS ORDERED, and the order is deliberately correctness-only.**
+  1. **(C)** — deliver the union `ledger_metrics`'s own docstring promises:
+     claim and control both in the comparison set, agreement with EITHER being
+     silence. The docstring is the specification here; nothing new is invented.
+  2. **(D)** — `_NUM` reads thousands separators, with a KNOWN-ANSWER CONTROL
+     in the same commit, built the way `5938f9c` built its own: a fixture
+     paragraph carrying `1,154.89` that is verified to FAIL before the fix and
+     pass after. **This is mandatory, not optional** — `5938f9c` shipped a
+     control for the id-fragment shape and the separator shape slipped past it,
+     so a fix without a control for the new shape buys the same false
+     confidence a second time.
+  3. **(E)** — a capture may not be clipped mid-number. Whether that is
+     achieved by extending to a token boundary or by rejecting a capture
+     adjacent to the window edge is the implementer's, but a partially-captured
+     numeral may never be compared as if it were whole.
+
+**WHAT IS NOT RULED, and it is the whole of the original menu.** (A) and (B)
+stay OPEN and (i)/(ii)/(iii) stay unchosen, **because the false-positive rate
+they are weighed against was measured on a reader that was comparing the wrong
+numbers.** Once (C)/(D)/(E) land, the live block must be RE-MEASURED and the
+rate re-derived; (A) and (B) may survive, may vanish, or may be joined by rows
+nobody has seen, and that is exactly the reading this fork needs and does not
+have. Choosing a silence-widening repair now, against a rate produced by a
+broken comparison, would be the worst available act: it would quiet the reader
+on evidence we already know to be wrong.
+
+**WHAT MAY NOT BE DONE — carried forward from the row unchanged, and it now
+binds harder.** The survivors may NOT be cleared by editing `docs/OVERSIGHT.md`.
+Both sentences on that page are correct; the 144th audit demonstrated it by
+running `_rounds_to` on its own quotations. A reader's false positive is not
+repaired by rewriting the true sentence that tripped it, and the overseer's own
+disclosure — *"fixing my wording to dodge the reader would hide the specimen"* —
+is adopted as this ruling's instruction. The page stays as written. **And no bar
+moves: this reader gates nothing, is unfloored by construction, and none of
+(C)/(D)/(E) gives it a floor, an exit code or a counter** (`D35` clause 2).
+
+    STALENESS BILL for the ordered work: **0 certificates.**
+    `experiments/steering.py` is in no spec's `IMPL_DEPS` — the overseer
+    re-verified this by census on its own page, and it is the same reading this
+    row recorded on 09-27. The doc edit carrying this ruling bills `T0.21` and
+    `T0.31`, the two standing PASSes that declare `docs/REVIEW_QUEUE.md`; both
+    are cheap (`cpu<1min`, `cpu<10min`) and are re-bought by the regate sweep.
     WAITS-ON: none | nothing another live row decides changes what is measured
         here. It is deliberately NOT declared `BLOCKED-BY` the two rows nearest
         in subject — `gates-that-measure-something-other-than-what-they-say`
