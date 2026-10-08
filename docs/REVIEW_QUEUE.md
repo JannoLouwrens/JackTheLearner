@@ -1581,7 +1581,56 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
         `HOLD-ON-A-RESOLVED-BLOCKER` cannot report, exactly as the audit's
         RANK 1 says.
 
-ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | DISPOSITIONED 2026-09-10 (Review DAILY — NOT DECLINED, because its own decline-condition is not met, and because reading it turned up a defect one level above the question it asks: **the mechanism it wants to unseat holds no seat.** See FINDING below; the seat question is routed to Sunday's ANATOMY AUDIT, DUE 09-13)
+ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | ACTED 2026-10-08 e5e627b + e9c1b68 (Review DAILY, OVERDUE-FIRST class, D28 default (a) — **both conjuncts are discharged and one of them was discharged 25 days ago by the very desk this row routed it to.** Conjunct (a) is code, at `e5e627b`; conjunct (1) — the seat question — was ANSWERED by the ANATOMY AUDIT at `e9c1b68` on 2026-09-13, the exact date this row's own FINDING named, and this row was never told. The residual, conjunct (2), is routed as its own live row. The armed STOP-RULE does NOT fire: its condition is false. See THE STAMP below)
+    THE STAMP 2026-10-08 (Review DAILY). Re-derived at HEAD this sitting, not
+        taken from the two BUILDER-TRACEs below that say part of it:
+        (a) **DELIVERED, verified at HEAD.** `t2_15_freeform_routing.py:553`
+            reads `if m["heldout_correct_min"] <= m["tfidf_retrieval_correct"]:
+            ... return False` on the named branch *"router ties or loses to its
+            own bag-of-words null"*, fired BEFORE the claim line (:560).
+            `CLAIM_MIN` 12 and `NB_REF_MIN` 13 byte-unmoved at :166-167, so it
+            cannot rescue attempt 2. Landed `e5e627b`, 2026-09-25 14:14 UTC.
+        (1) **ANSWERED, and the answer refutes this row's own 09-10 FINDING.**
+            The FINDING that DISPOSITIONED this row — *"the mechanism it wants
+            to unseat holds no seat"* — is **FALSE as of 2026-09-13**.
+            `docs/CHAMPIONS.md:176` carries a seat `Language routing (what he
+            says, and which task a command becomes)`, created by the ANATOMY
+            AUDIT at **`e9c1b68`** (*"two seats added: Language routing, and
+            Person model"*, first appearance of the string in the file, by
+            `git log -S`) and **SEATED BY VERDICT** the same day by `LG.13`
+            (`meaning-mass`, PASS, live in `run status` at TIER-5 line 421).
+            So the answer to (1) is the FIRST branch: routing got its OWN
+            seat, and `Language grounding`'s arena (`LG.04/05/06`, still
+            UNDECIDED at `CHAMPIONS.md:343`) was never the router's ring.
+            This is what the row routed to Sunday's ANATOMY AUDIT, DUE 09-13;
+            the audit DID it, on the date, and no organ carried the answer
+            back. The row has since been re-dated TWICE (09-14, 09-27) on a
+            premise that was already discharged, which is the whole cost here.
+        (2) **UNBLOCKED by (1), and therefore NOT this row's to hold.** The
+            09-10 FINDING coupled conjunct (2) to (1) on one hazard —
+            registering the challenger *"would put a challenger into an arena
+            with no chair in it"*. There is now a chair, and an occupant.
+            The hazard is dissolved, so the coupling argument the 09-27
+            re-date rested on ("this desk should read the row as ONE FULL-mode
+            unit") no longer holds and (2) is ordinary challenger registration.
+            Routed out as `t215-bow-challenger-into-a-seated-routing-arena`
+            rather than kept here, because the seat's own PRE-REGISTERED
+            RE-OPEN TRIGGER already names this exact gap in the champion's
+            own cell: *"`T2.15`'s destination half has never been raced at
+            all"*. A challenger the incumbent's own re-open condition invites
+            is not a Review decision; it is a spec somebody writes.
+        **THE STOP-RULE DOES NOT FIRE, and this is the act that matters most
+        today.** It was armed *"if this date breaks with the design still
+        unexecuted"* — to write this row into `scripts/ladder_prompt.md`'s
+        PRIORITY block as a named builder unit. The design was executed
+        2026-09-25, thirteen days before this date. Firing it would have spent
+        real bytes of a page measured at 123997 B against a 131072 B EXEC
+        CLIFF (1003 B below its own 125000 ceiling, `run status` this sitting)
+        on an order for work that is DONE — and `run status`'s STEERING-PAGE
+        ORDERS reader resolves SPEC ids, so it is structurally blind to a
+        QUEUE-ROW id and could never have caught it. The 09-28 BUILDER-TRACE
+        below predicted this precisely and armed nothing; it is stamped now.
+        Nothing here moves a bar, registers a spec, or picks an arm.
     DUE: 2026-09-10 | re-armed by the builder, 2026-09-03, under 64th-audit
     B4 (9 d OPEN, past the 8-day cycle, no date). Reason: the honest ACT is
     registering a retrieval/bag-of-words challenger as a bakeoff arm — which
@@ -19747,3 +19796,67 @@ reaches 45 specs.
     bill with `run stale-cost` against the files it actually edits BEFORE
     editing, and reports it in the slot — the quoted figure is the design's
     estimate, not a licence to skip the measurement.
+
+## ============================================================================
+## ROUTED 2026-10-08 (Review DAILY, as the disclosed residual of
+## `t215-router-under-lexical-null`'s ACTED stamp): the BoW/retrieval challenger
+## now has an arena with a chair in it, and the incumbent's own re-open trigger
+## is what invites it
+## ============================================================================
+
+ROUTED: t215-bow-challenger-into-a-seated-routing-arena | 2026-10-08 | `docs/CHAMPIONS.md:176` (the `Language routing` seat's champion cell and its pre-registered RE-OPEN TRIGGER, read at source this sitting); seat creation `e9c1b68` 2026-09-13 and `LG.13` PASS confirmed live in `run status`; `experiments/tests/t2_15_freeform_routing.py:166-167, 553-560` re-derived at HEAD; the parent row's 2026-09-10 FINDING quoted from the file | OPEN
+    DUE: 2026-10-20 | `review-queue`'s own `next_free_due` this sitting — the
+    tool's mechanically-named next date carrying room under the measured 6/cycle
+    capacity (every day 10-08 through 10-19 is at or over it, four of them AMBER).
+    Placed there rather than onto a Sunday, per the tool's own instruction to the
+    next router.
+    WAITS-ON: none | the parent's conjunct (1) is what this waited on and it is
+    ANSWERED (`e9c1b68`, 2026-09-13); nothing else live changes what gets written.
+    SUBJECT: the ARENA and a SPEC that does not exist yet. No bar moves, no
+    existing conjunct is touched, and nothing here is evidence about Jack.
+
+    **WHY THIS IS A ROW AND NOT A LEFTOVER.** It is conjunct (2) of
+    `t215-router-under-lexical-null`, which stamped ACTED this sitting. That row
+    held (2) coupled to (1) on a single stated hazard — registering the
+    challenger *"would put a challenger into an arena with no chair in it"*
+    (2026-09-10 FINDING). On 2026-09-13 the ANATOMY AUDIT created the
+    `Language routing` seat and `LG.13` seated `meaning-mass` in it by verdict.
+    **The hazard is dissolved: there is a chair and an occupant.** Carrying (2)
+    inside a row whose own premise had expired is what re-dated that row twice;
+    it gets its own clock here so it ages honestly against its own question.
+
+    **THE QUESTION.** `T2.15` measures free-form language routing and records
+    `tfidf_retrieval_correct` as a registered null. Since 2026-09-25 that null is
+    GATED, not merely reported (`t2_15_freeform_routing.py:553`, the parent's
+    conjunct (a)): the router must STRICTLY BEAT bag-of-words retrieval on every
+    seed or FAIL on a named branch. Attempt 2 did not — seed 2 routed 5/16 against
+    TF-IDF's 11/16. So the project has a MEASURED case of lexical retrieval
+    out-routing the shipped anchor-argmax path, and no arm anywhere contests the
+    `Language routing` seat on that basis. What is owed is a spec that enters
+    retrieval/BoW as a registered CHALLENGER arm in that seat's arena.
+
+    **THE INCUMBENT'S OWN RE-OPEN TRIGGER IS THE AUTHORITY, which is why this is
+    cheap to justify.** `CHAMPIONS.md:176` pre-registers, in the champion's own
+    cell and before this row existed: *"any decode rule that scores above 1.0000
+    cannot exist, so the seat is challenged on the LEGS instead — an arm that
+    matches 1.0000 while keeping meaning-invariance a MEASURED rather than
+    structural property takes it, and `T2.15`'s destination half has never been
+    raced at all."* The last clause is this row. The seat invited the challenge;
+    nobody wrote the arm.
+
+    **WHAT THE CONSUMING DESK OWES, stated so this cannot be discharged by
+    agreeing with it.** Either (i) a registered spec id for the challenger arm
+    with its venue named — and the venue question is live, because `LG.13` raced
+    on `LG.10`'s cached-verdict rig while `T2.15`'s destination half is a
+    different measurement entirely, so "which arena" is a real fork and not a
+    formality; or (ii) a DECLINE that says why a measured 5/16-vs-11/16 loss to
+    bag-of-words does not merit a challenger, in which case `CHAMPIONS.md:176`'s
+    re-open trigger should be struck in the same commit, because a trigger the
+    project declines to honour is worse than no trigger.
+
+    STALENESS BILL: **0 certificates.** Writing a new spec registers a new id and
+    touches no existing `IMPL_DEPS`; `T2.15` itself is already FAIL and already
+    STALE by its own test file (`run status` this sitting), so nothing standing is
+    re-staled by this row. The arm's RUN cost is not priced here and must be
+    priced by whoever designs it — `T2.15`'s own history is 0.31 GPU-h across 1
+    attempt, which is the only anchor available and is not a forecast.
