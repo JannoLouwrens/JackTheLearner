@@ -20319,6 +20319,38 @@ ROUTED: t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52 | 2026-10-07 | Ste
         DESIGN, which exists and is quoted below; this row owes EXECUTION. Making
         this one wait on that one would re-gate delivered work behind its own
         delivery note.
+    BUILDER-TRACE 2026-10-08 07:2x — STEP 2b MECHANISM (i) IMPLEMENTED AND
+        DISPATCHED (`381a9e6`). Step 0 re-verified at HEAD BEFORE editing, per
+        `1^21` binding (b): `make_action_optimizer` has exactly four spec
+        callers and no pipeline caller; `TrainingPipeline.py:493` builds its
+        own `AdamW(wd=1e-4, eps=1e-5)` with zero scheduler refs — reproduces.
+        Bill priced per binding (d) BEFORE editing, with the live tool and not
+        the design's estimate: `stale-cost t1_08_seed_variance.py` = **0
+        certificates**; `stale-cost UnifiedBrain.py` = **17 standing PASS
+        certs, 0.48 CPU-h over 9 + 2.78 GPU-h over 8**. So (i) is implemented
+        SPEC-LOCAL (ascending mechanical bill, the 09-23 companion rule): the
+        arm tail-averages trainable weights over the last `TAIL_FRAC` 0.2 of
+        steps, trajectory untouched, and the gate reads the averaged
+        delivery's CV with the final-iterate statistic reported beside it
+        PERMANENTLY (`heldout_cv_pct_final`) for attribution. PROMOTION of (i)
+        into the shared `make_action_optimizer` — so the three sibling
+        callers' numbers are bounded by the same delivery — is deliberately
+        NOT done at 17 certs ahead of a measured win; its sequencing is this
+        row's desk's, and until it lands the floor bounds the recipe as
+        delivered here, said in the spec docstring out loud.
+        `MAX_HELDOUT_CV_PCT` 7.0 byte-unmoved (`:124` after edit); mechanism
+        (ii) NOT bundled, per binding (a). VENUE pre-registered in the spec
+        docstring BEFORE any number exists: `prefer="kaggle"` — attempt-3's
+        own venue and W40's only named buyer — with the §9d discordance 1.17
+        declared, so a PASS with `heldout_cv_pct` above 7.0/1.17 ≈ 5.98 is
+        flagged VENUE-SENSITIVE rather than quoted venue-independent. CPU
+        smoke of the exact JOB text green (tail fires at 2/10 steps, swap
+        executes, averaged != final, seeds distinct). Dispatched via
+        `dispatch.sh`: watcher pid 1386473 declared in `declared_pids`,
+        projection 0.5 h recorded week `2026-W40` head `381a9e6`, log
+        `/data/tmp/dispatch_t1_08.log`. HARVEST OWED by a later slot: commit
+        the ledger row AS FOUND, PASS, FAIL or VOID — a STILL-FAIL is
+        pre-registered and is a result.
 
 **WHY THIS ROW EXISTS AT ALL, and it is a finding about this desk and not about
 the builder.** The parent design's Step 1 block closes: *"Step 2 deliberately NOT
