@@ -5629,7 +5629,31 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
         EXECUTED to a non-FAIL `T1.08`. Until then this row owes no dispatch and
         carries no dispatch clock, and saying so in a declared field is what the
         stop-rule meant by "in its structure rather than in its prose".
-    WAITS-ON: t108-pipeline-repair-has-no-design
+    BLOCKED-BY: t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52 |
+        RE-PARENTED 2026-10-08 (Review DAILY), and this re-parent is FORCED BY
+        THIS DESK'S OWN ACT ONE COMMIT EARLIER — disclosed rather than left for
+        an instrument to find. Stamping `t108-pipeline-repair-has-no-design`
+        ACTED (`fa1744c`) made this hold a `HOLD-ON-A-RESOLVED-BLOCKER`:
+        `review-queue` read the blocker as terminal and said *"the window it was
+        waiting for has opened"*. **It has only half opened, and the honest
+        structure says which half.** This row's release condition, written
+        2026-09-27, is *"`T1.08`'s pipeline repair being DESIGNED (that row,
+        10-02) and then EXECUTED to a non-FAIL `T1.08`"*. The DESIGN leg is now
+        discharged — design delivered, Steps 0 and 1 run, `eval_cv_pct` 0.52
+        selecting the recipe branch. The EXECUTION leg is NOT: `T1.08` is still
+        **FAIL** at attempt 3 (`ran_at` 2026-09-13T10:05:05, `3d357c4`,
+        `heldout_cv_pct` 40.006), re-read at source this sitting. So the hold
+        stands and only its PARENT changes — onto the live row that actually
+        carries the remaining work, `t108-step-2b-recipe-repair-is-routed-off-
+        eval-cv-0-52` (OPEN, DUE 2026-10-09, in the builder's PRIORITY block as
+        `1^21`). **This is not a new judgement**: the 10-18 DUE line below
+        already named Step 2b as the chain's next link, so the re-parent makes
+        the structure agree with prose this row had already written.
+        Nothing else moves: status stays `DISPOSITIONED`, the 10-18 date is
+        KEPT, no clock is dropped and nothing is relabelled `HELD` — the
+        prohibitions the original re-parent cited still bind. What releases the
+        hold is unchanged in substance: Step 2b executed to a non-FAIL `T1.08`.
+    WAITS-ON: t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52
     DUE: 2026-10-07 | RE-DATED 2026-09-27 (Review FULL) as part of the re-parent
         above, and **what this date owes is a CHECK, not a dispatch** — the
         distinction the four broken dates lacked. On 10-07 this desk re-reads
