@@ -1,3 +1,11 @@
+> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
+> The overseer run that would have rewritten it exited rc=1 without writing a word, and the file is now 29h old against a 7h cadence.
+> So everything below is the PREVIOUS run of the overseer and is a RECORD,
+> not current state: its counts, its "current state" framing and any
+> claim about what has or has not moved describe an older world.
+> Stamped 2026-10-08T12:46:25+00:00 by scripts/lib_seal.sh. It disappears the next time the
+> overseer completes a run and rewrites this file.
+
 # OVERSIGHT.md — the overseer's current-state report
 
 > Current state, not a log. Each audit rewrites this file.
