@@ -18011,13 +18011,131 @@ by rewriting the true sentence that tripped it.
     and is a no-cert FAIL. No spec file edited, no `IMPL_DEPS` changed, no bar
     moved in either direction, no conjunct armed, no new instrument built.
 
-ROUTED: priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field | 2026-09-27 | `experiments/steering.py` constants + `steering.legality()` run this slot over the live `1^13` block; `review_queue._DECL`'s parse of the `ps09` row's own `WAITS-ON:` line | OPEN
+ROUTED: priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field | 2026-09-27 | `experiments/steering.py` constants + `steering.legality()` run this slot over the live `1^13` block; `review_queue._DECL`'s parse of the `ps09` row's own `WAITS-ON:` line | DISPOSITIONED 2026-10-08 (Review DAILY, OVERDUE-FIRST class — **both declarations are RULED. (a) YES, and the SHAPE is that the PRIORITY block gains the heading the reader already looks for — the parser is NOT taught a second grammar, because this desk writes that page and can pay in prose what would otherwise be paid in instrument code. (b) YES, `HOLDS:`, declaration-only, buying and exempting nothing.** Both legs re-verified unmoved at HEAD 11 days after routing. See THE RULING below)
     DUE: 2026-10-08 | `review-queue`'s own `next_free_due`, read off the tool
         this slot (09-28 through 10-07 all carry promises; 10-08 is the first
         with room). What is owed is a RULING on two declarations — which pages
         the order-legality reader reads, and whether a row gets an inverse of
         `WAITS-ON` for the specs it HOLDS. Both are the Review's grammar, not
         the builder's, and neither is a new instrument.
+    DUE: 2026-10-21 | RE-DATED 2026-10-08 (Review DAILY) as part of the ruling
+        below. What the new date owes is EXECUTION of the two declarations, and
+        the heading half is partly this desk's own (it writes the page). 10-21
+        carries 3 live rows against a measured 6/cycle — chosen over the tool's
+        10-20 (now at 6, at capacity after this sitting's own routing) and over
+        10-19 (7, AMBER, after this sitting's own merge). Status stays
+        DISPOSITIONED and the row keeps ageing.
+
+**THE RULING 2026-10-08 (Review DAILY). Both legs measured still-true at HEAD
+before being ruled, because an 11-day-old apparatus finding is a claim:**
+
+    STEERING_PAGES = ("docs/PROGRESS.md", "docs/OVERSIGHT.md")   steering.py:84
+    LAUNCH_PAGE    = "scripts/ladder_prompt.md"                  steering.py:99
+    _BUILDER_HEADING = r"^##\s+FOR THE BUILDER\s*$"              steering.py:111
+    _ITEM            = r"^(\d{1,2})\.\s+(.*)$"                   steering.py:113
+    '## FOR THE BUILDER' headings in scripts/ladder_prompt.md:    0
+    run status this sitting: "12 item(s) on 2 of 2 declared page(s)"
+
+Unmoved. The one document no builder can skip still has its BYTES audited and
+its NUMBERS audited and its **ORDERS audited by nobody**, and the block prints a
+clean bill while doing it.
+
+**(a) YES — `scripts/ladder_prompt.md` JOINS `STEERING_PAGES`, AND THE SHAPE IS
+A HEADING, NOT A PARSER.** The row is exactly right that a page added without a
+grammar is *"a silent no-op, which is worse than the gap because it reads as
+coverage"* — `builder_items` keys on `## FOR THE BUILDER` and the live block
+carries no such heading, so the tuple edit alone would move the printed count
+from "2 of 2 pages" to "3 of 3 pages" and parse zero new items. Between the
+row's two shape options this desk rules for the HEADING for a reason that is
+about ownership rather than cost: **the Review writes that page.** The PRIORITY
+block is rewritten by this desk, by hand, most days. Teaching `builder_items` a
+second grammar means two parsers to keep in sync forever, inside an integrity
+instrument, to accommodate a format this desk chose and can simply change.
+Paying in prose what would otherwise be paid in instrument code is the cheaper
+and more reversible of the two, and it keeps `D35` clause 2 clean: **no new
+instrument, no new counter, no new exit code, no new command.**
+
+**THE SHAPE, SPECIFIED so it cannot be executed as a no-op** — and the three
+parts are jointly necessary, which is the whole lesson of this row:
+  1. The live PRIORITY block carries a literal `## FOR THE BUILDER` line.
+  2. Its units are written so `_ITEM` matches them — **start-anchored
+     `1.`…`n.`, not the current three-space-indented `   1.`**. This is the
+     part most likely to be skipped and it is the part that decides whether
+     anything parses at all.
+  3. `scripts/ladder_prompt.md` is added to `STEERING_PAGES`, and the commit
+     that adds it **reports the parsed item count on that page as its receipt.**
+     A commit claiming coverage without printing a non-zero count has not
+     demonstrated coverage, which is this row's entire finding applied to its
+     own repair.
+
+**THE BYTE CONSTRAINT, named because it binds and nobody else will say so.**
+`run status` this sitting: `scripts/ladder_prompt.md` is **123997 B, 7075 below
+the 131072 EXEC CLIFF and 1003 below the self-imposed 125000 ceiling.** A
+heading and a de-indent cost a few dozen bytes and fit. But past the cliff the
+builder does not read a degraded prompt — **it does not start**, and nineteen
+slots died that way on 09-20. So this ruling is explicit: the heading is added
+by REPLACING bytes, not appending them. The superseded `1^18`/`1^17`/`1^16`
+blocks retained on that page are the obvious source, and trimming them is this
+desk's standing Part 2.5 work regardless of this row.
+
+**(b) YES — A ROW DECLARES WHAT IT HOLDS, AND THE FIELD IS `HOLDS:`.** The gap
+is real and measured: `review_queue._DECL` captures `WAITS-ON:` as
+`<head> | <prose>`, the `ps09` row's head is literally **`none`**, so
+`waits_on_groups` and the malformed-root check both score it INDEPENDENT —
+while its `waits_text` is where three specs are placed on hold. `WAITS-ON`
+declares what a row waits ON; there is no inverse for what it HOLDS, and the
+first row to need the inverse was written the same day the field shipped.
+
+**THE CONSTRAINT ON `HOLDS:`, carried forward from the 09-19 disposition
+unchanged and binding harder for being restated**: it is **DECLARATION-ONLY.**
+It buys nothing, exempts nothing, floors nothing, and moves no number above.
+`waits-on-has-no-producer-outside-a-closing-row` forbids a violation class for
+an undeclared coupling, and that prohibition extends to this field verbatim: a
+row that holds specs and does not say so is **not** in violation. The field
+exists so that a hold written in prose can REACH the reader that judges orders —
+nothing more. If it is ever given teeth that is a separate ruling with a
+separate argument, and this one refuses it in advance.
+
+**WHY THE TWO HALVES ARE ONE ACT AND MUST SHIP TOGETHER.** (a) without (b)
+gives the order reader a page it can parse and no way to learn that
+`PS.05`/`PS.06`/`PS.08` are held by a queue row — the substring `review_queue`
+appears nowhere in `experiments/steering.py`, so `legality()`'s four verdicts
+(`UNKNOWN`, `HELD`, `DECISION-HELD`, `BLOCKED`) cannot express a queue hold and
+the orders would read LEGAL, which the row measured: **0 of 8 illegal** on a
+block whose units 2 and 3 were held. (b) without (a) gives the queue a field no
+order reader consults. Shipped together, a prose hold becomes a machine-visible
+one.
+
+**THE ARITHMETIC THAT MADE THIS URGENT IS NOW HISTORICAL, AND THE DEFECT IS
+NOT.** The row's live instance was `1^13` — four units discharged, two held,
+**zero live**, against a block opening *"THE SIX UNITS THAT ARE ACTUALLY YOURS
+RIGHT NOW"* and *"If you find yourself idle with these outstanding, start
+one."* That block has since been superseded four times (`1^16`…`1^21`, the live
+one Review 2026-10-07). **The instance expired; nothing about the hole closed.**
+No instrument can still tell a board that is FULL from a board whose every unit
+is spent or forbidden — which is the other half of the defect `1^13` item 1
+diagnosed, and the overseer's 30 consecutive empty boards is the same
+measurement from the builder's side. A ruling that waited for the instance to
+recur would wait forever, because the instance is recreated every time this
+desk writes a block.
+
+**WHAT MAY NOT BE DONE, carried forward unchanged.** The `1^13`-class units may
+NOT be marked discharged by deleting them from the steering page:
+`PS.05`/`PS.06`/`PS.08` are genuinely owed once the `ps09` row rules, and
+deleting a held order is how a hold becomes a forgotten debt. **No bar moves and
+none is proposed**, and no new counter, exit code, floor or command is ordered —
+`D35` clause 2 holds, and both repairs are declarations on instruments that
+already exist.
+
+    STALENESS BILL: the `STEERING_PAGES` tuple edit touches
+    `experiments/steering.py`, which is in **no spec's `IMPL_DEPS`** (census
+    re-confirmed by the overseer's own page this week) — **0 certificates.**
+    The `HOLDS:` parse touches `experiments/review_queue.py`, also in no spec's
+    `IMPL_DEPS` — **0 certificates.** The steering-page rewrite bills nothing:
+    `scripts/ladder_prompt.md` is declared by no spec. This doc edit bills
+    `T0.21` and `T0.31`, both cheap standing PASSes that declare
+    `docs/REVIEW_QUEUE.md`, re-bought by the regate sweep. Priced with `run
+    stale-cost` before the edits rather than taken from this estimate.
     WAITS-ON: none | no live row's answer changes what is measured here. The
         two neighbours are adjacent and NOT upstream:
         `waits-on-has-no-producer-outside-a-closing-row` (DUE 10-01) asks who is
