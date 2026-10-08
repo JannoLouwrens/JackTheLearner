@@ -8603,7 +8603,54 @@ loses the arena, so `CHAMPIONS.md`'s unison seat would need another.
 
 ---
 
-ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FAIL | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — the three-way mouth fork is RULED on the measurement already in this row, and no new run was bought to rule it: (b) STRUCTURED DECODE is specced as `LG.14`; (a) a bigger frozen mouth is REFUSED; (c) the de-verbatim scaffold repair, which this row's own staleness bill priced, is REFUSED AS A FIRST ARM and sequenced behind (b). The ruling also imposes two conjuncts on the successor that `LG.12` did not have to clear. See THE RULING below)
+ROUTED: lg12-abstention-knob-has-no-resolution | 2026-09-13 | LG.12-attempt-1-FAIL | ACTED 2026-10-08 87bc128 + 1935cf6 + a2afdb5 (Review DAILY, OVERDUE-FIRST class — the 09-29 ruling's arm (b) has a COMPLETE lifecycle: registered with both mandatory conjuncts, implemented with both rig-GATED in code, run, and FAILED honestly three days before this date. The ruling is discharged; the sequenced arm (c) is a NEW order, routed as its own row rather than kept on this clock. See THE STAMP below)
+    THE STAMP 2026-10-08 (Review DAILY). The two BUILDER-TRACEs below are not
+        taken on trust; the gates they claim were read in source at HEAD:
+        **BOTH MANDATORY CONJUNCTS ARE GATES, not prose.** The ruling's whole
+        value was imposing two conditions `LG.12` never had to clear, and the
+        failure mode to check for was a successor that declares them in a
+        docstring and asserts neither. It does not happen here:
+        `lg_14_structured_decode.py:510` — `if min(_per_seed(
+        "held_out_prompt_clean")) < 1.0:` VOIDs on the branch *"the held-out
+        conjunct was never tested"*, so a leaked canonical sentence cannot
+        read as a pass; and `:529-531` — `if max(_per_seed("mismatch_match"))
+        >= MATCH_MIN or max(_per_seed("mismatch_match_swap")) >= MATCH_MIN:`
+        VOIDs on the mismatched-constraint null clearing. Both are in `_check`,
+        both fire BEFORE the claim, and both were present at registration
+        (`87bc128`, 2026-10-01) rather than added after a reading — which is
+        the condition the ruling actually imposed.
+        **THE ARM RAN AND FAILED, which is the outcome this desk pre-registered
+        as honest.** `LG.14` attempt 1 recorded 2026-10-05T23:10:41 at
+        `a2afdb5`, confirmed FIRST-EVER in `run status`'s SETTLE EVENTS this
+        sitting: FAIL on the claim branch alone — `match_on_spoken` 0.7778,
+        held-out 0.7722, `unanimity_on_spoken` 0.3056 against the unmoved 0.90
+        bars. It is FAIL and not VOID because the mismatched-constraint null
+        read 0.1389 and so FAILED as required: the constraint carries meaning
+        (0.78 vs 0.14), the rig was green (`verdicts_missing` 0,
+        `held_out_prompt_clean` 1.0, `utter_rate` 1.0), and the free-generation
+        null stayed alive at 0.0444 under 0.35. **No bar moved anywhere in this
+        lifecycle** — MATCH/UNANIMITY/SWAP_AGREE 0.90, NULL_MATCH_MAX 0.35,
+        VARIETY 0.30, LIVENESS 0.80, UTTER_MIN 0.50 all imported from `LG.10`
+        and `LG.12` unmoved.
+        **THE FINDING INSIDE THE FAIL, and it is worth more than the verdict.**
+        Held-out match 0.7722 against in-scaffold 0.7778 — a gap of 0.0056.
+        The decoder did not measure its prompt. Structured decode therefore
+        did not fail because the held-out venue was hard; it failed at the same
+        level everywhere, which means the 0.90 fidelity bar is not reachable by
+        constraining the DECODE at all while the scaffold still contains the
+        target wording. That is the positive case for arm (c) — the
+        de-verbatim scaffold — and it is now evidence rather than a guess. The
+        09-29 ruling sequenced (c) behind (b) and said (b) first; (b) has run,
+        and its result points at (c) for a reason the ruling could only
+        hypothesise.
+        **WHY (c) IS NOT STAMPED HERE.** The ruling REFUSED (c) as a first arm;
+        it did not order it as a second. Ordering it is a new act with a new
+        cost, and the trace above is explicit that it is *"the DESK's to order,
+        not this lane's to start."* Keeping it on this row's clock would be the
+        `t215` error disposed one act earlier this sitting — a discharged row
+        re-dated because a residual was carried inside it. Routed as
+        `lg14-deverbatim-scaffold-is-the-arm-the-fail-points-at`, DUE 2026-10-20.
+        Nothing here moves a bar, registers a spec, or picks an arm.
     DUE: 2026-09-19 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE — FIRST break for this row, and it is this desk's own decision debt, not the builder's. Re-dated ONCE at the desk's DEMONSTRATED disposal rate (~1/cycle), onto a date with measured room under the 6/day capacity, never onto a day already at it. The Review is NOT pace-gated (its 06:37 slot is exempt), so unlike the builder-execution rows in this batch, this desk has no excuse available to it and is not offering one. ORIGINAL TEXT FOLLOWS, unchanged. | a mouth-design decision owed by the Review. Date taken
     from `review-queue`'s own `next_free_due` (the mechanical answer at the
     time of routing: 09-13 carried 14 promises against a measured capacity of
@@ -19860,3 +19907,70 @@ ROUTED: t215-bow-challenger-into-a-seated-routing-arena | 2026-10-08 | `docs/CHA
     re-staled by this row. The arm's RUN cost is not priced here and must be
     priced by whoever designs it — `T2.15`'s own history is 0.31 GPU-h across 1
     attempt, which is the only anchor available and is not a forecast.
+
+## ============================================================================
+## ROUTED 2026-10-08 (Review DAILY, as the disclosed residual of
+## `lg12-abstention-knob-has-no-resolution`'s ACTED stamp): arm (b) ran and
+## failed at the SAME level held-out as in-scaffold, which is the first real
+## evidence for arm (c) rather than an argument for it
+## ============================================================================
+
+ROUTED: lg14-deverbatim-scaffold-is-the-arm-the-fail-points-at | 2026-10-08 | `LG.14` attempt 1, recorded 2026-10-05T23:10:41 at `a2afdb5` (FIRST-EVER in `run status`'s SETTLE EVENTS, read this sitting); `experiments/tests/lg_14_structured_decode.py:504-531` read at source at HEAD for the gate structure; the 2026-09-29 ruling's own sequencing quoted from `lg12-abstention-knob-has-no-resolution` | OPEN
+    DUE: 2026-10-20 | `review-queue`'s own `next_free_due` this sitting. Every
+    date 10-08 through 10-19 is at or over the measured 6/cycle capacity (four
+    AMBER), so this is the first arithmetically keepable slot. Not placed sooner
+    to look responsive: the parent ruling waited sixteen days for arm (b) and the
+    cost of that wait was zero, because (b) answered the question (c) depends on.
+    WAITS-ON: none | arm (b)'s verdict is what this waited on and it is RECORDED.
+    SUBJECT: an ARM ORDER and a cost. No bar moves, no existing conjunct is
+    touched, and `LG.12`/`LG.14` both stay FAIL whatever this row decides.
+
+    **WHAT IS BEING ASKED.** The 2026-09-29 ruling on `lg12` refused arm (c) —
+    the de-verbatim scaffold repair — *as a first arm*, and sequenced it behind
+    arm (b), structured decode. It did not order (c) as a second arm; it ordered
+    (b) and stopped. (b) is now complete and FAILED. So the question the ruling
+    deliberately left open is live for the first time: **is arm (c) ordered, or
+    is the `LG.10` fidelity line abandoned?** This desk owes one of those two
+    answers, not a third sitting of deferral.
+
+    **THE EVIDENCE THAT CHANGED, and it is the reason this is not a re-ask.**
+    `LG.14` recorded `match_on_spoken` 0.7778 in-scaffold against held-out
+    0.7722 — **a gap of 0.0056 against bars of 0.90.** The decoder did not
+    measure its prompt. Structured decode did not fail because the held-out
+    venue was hard; it failed at the same level in both venues. The honest
+    reading is that constraining the DECODE cannot reach 0.90 while the
+    SCAFFOLD still contains the target wording — which is precisely arm (c)'s
+    premise, and until 2026-10-05 it was a hypothesis the 09-29 ruling could
+    only state. It is now a measurement. Note what this does NOT say: it is not
+    evidence that (c) WILL clear 0.90, only that (b)'s failure is located where
+    (c) acts. An order for (c) buys a measurement, not a pass.
+
+    **THE HONEST ALTERNATIVE, named so this row cannot be discharged by
+    agreeing with the attractive option.** Three arms have now been spent on
+    `LG.10`'s fidelity line — `LG.10` FAIL, `LG.12` FAIL (selection with a
+    dominance margin, mechanism foreclosed), `LG.14` FAIL (structured decode,
+    venue-insensitive). A desk that orders a fourth arm on the same line should
+    say what reading would make it stop, because "one more repair" three times
+    in a row is how a line becomes unfalsifiable. **A STOP-RULE IS THEREFORE
+    REQUESTED AS PART OF THE ORDER**: if (c) is ordered, the order names the
+    reading at which the fidelity line is abandoned rather than repaired again.
+
+    **WHAT IS ALREADY SETTLED AND IS NOT RE-OPENED BY THIS ROW.** Arm (a), a
+    bigger frozen mouth, is REFUSED (09-29) and that refusal stands. The
+    `Language routing` seat is HELD by `meaning-mass` on `match_both` and the
+    control's gate failure alone, and `LG.10` is NOT re-run under the champion
+    (09-29 ruling, and the 09-08 disposition's refusal of option (b)) — a green
+    `LG.10` board under `meaning-mass` would not be a pass. Nothing here
+    disturbs any of that.
+
+    STALENESS BILL: **not priced here, and that is a disclosure, not an
+    omission.** Arm (c) edits the SCAFFOLD, which is shared machinery — the
+    parent `lg12` row priced a de-verbatim scaffold repair when it was a
+    candidate, and that figure is now stale because `LG.14` has since been added
+    as a consumer of the same rig. Whoever orders (c) prices the live bill with
+    `run stale-cost` against the files it actually edits BEFORE editing. What is
+    known: `LG.14` carries ~2232 verdict keys at `/data/lg10_llm_verdicts.json`
+    bought offline, and a scaffold change invalidates verdict keys by
+    construction, because the cache is keyed on a hash over the scaffold.
+    **That is the real cost of arm (c) and it is an LLM-verdict re-buy, not a
+    GPU hour.**
