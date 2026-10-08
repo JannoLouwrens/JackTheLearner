@@ -384,6 +384,12 @@
       "ok": true,
       "week": "2026-W40"
     },
+    "jannolouwrens/jack-ladder-1791444041": {
+      "backend": "kaggle",
+      "hours": 0.6544,
+      "ok": true,
+      "week": "2026-W40"
+    },
     "ladder-1786478893": {
       "backend": "colab",
       "hours": 0.9914,
@@ -458,7 +464,17 @@
       "reason": "Pre-per-job-records balance: weeks counter carried 6.3849h when charged_jobs was still empty (gap opened at 92931a6, frozen through every commit since \u2014 overseer 16th audit, RANK 2). Unattributable to any job; NOT lowered, because over-stating spend is the safe direction. remaining() is therefore a FLOOR this week; Budget.remaining_range() reports the honest interval."
     }
   },
-  "overruns": [],
+  "overruns": [
+    {
+      "at": "2026-10-08T08:00:01",
+      "backend": "kaggle",
+      "billed_hours": 0.6544,
+      "est_hours": 0.5,
+      "job_id": "jannolouwrens/jack-ladder-1791444041",
+      "kind": "per_job",
+      "week": "2026-W40"
+    }
+  ],
   "projections": [
     {
       "at": "2026-09-13T09:15:25",
@@ -508,6 +524,13 @@
       "hours": 0.56,
       "spec": "T2.11",
       "week": "2026-W39"
+    },
+    {
+      "at": "2026-10-08T07:20:37",
+      "head": "381a9e6",
+      "hours": 0.5,
+      "spec": "T1.08",
+      "week": "2026-W40"
     }
   ],
   "weeks": {
@@ -549,7 +572,7 @@
       "kaggle": 1.0719
     },
     "2026-W40": {
-      "kaggle": 0.2708
+      "kaggle": 0.9252
     }
   }
 }
