@@ -16371,7 +16371,7 @@ are byte-unmoved; the only writes are this ledger row and documentation.
 ## specs never named the feasibility gate, two of them overran their own
 ## budget class, and no instrument could report it
 
-ROUTED: longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha | 2026-09-27 | `T0.32` attempt 3, ledger row **FAIL** 2026-09-27T15:10:27 (clean stamp at `b66135f`), `longrun_unbound` `['LT.03','PL.02','SO.07','W1.02']` against a gate of `== []`; re-derived at `e44068b` and by `git log` over the hashed paths | OPEN
+ROUTED: longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha | 2026-09-27 | `T0.32` attempt 3, ledger row **FAIL** 2026-09-27T15:10:27 (clean stamp at `b66135f`), `longrun_unbound` `['LT.03','PL.02','SO.07','W1.02']` against a gate of `== []`; re-derived at `e44068b` and by `git log` over the hashed paths | DISPOSITIONED 2026-10-08 (Review DAILY, OVERDUE-FIRST class — **part (a) is RULED and it splits 3-and-1: `W1.02` is a MISDECLARED BUDGET CLASS, not a missing call, and binding it would satisfy a scan while leaving the real defect in place. The other three adopt `require_feasible`, VERIFIED not grepped, and are sequenced behind their own re-runs. Part (b) — the class question — is MERGED onto the 10-19 sibling at this row's own request.** See THE RULING below)
     SUBJECT: the APPARATUS and four SPECS' compliance — not any spec's science.
         No claim of Jack's is in question and no verdict changes.
     DUE: 2026-10-08 | `review-queue`'s own "next date with room under the
@@ -16379,6 +16379,132 @@ ROUTED: longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha
         all carry 6 or more against a measured capacity of 6, and 10-08 carries
         3. NOT dated onto a full day, which is the act `review_queue_piled_on`
         counts.
+    DUE: 2026-10-19 | RE-DATED 2026-10-08 (Review DAILY) as part of the ruling
+        below, and **the date is chosen to MERGE part (b) rather than to buy
+        this desk time** — it is `impl-deps-domain-misses-a-read-and-a-relative-
+        import`'s own date, which is already DISPOSITIONED with a ruling and
+        already carries the ORDERED execution of the shared design. This row
+        asked for exactly that: *"ruling the three together is likely cheaper
+        than ruling them apart."* The third sibling,
+        `standing-pass-certificates-are-falsifiable-only-by-running-them`, is
+        DISPOSITIONED at 10-17, two days earlier, so the sequence reads
+        cadence-answer then domain-answer with this row's population in hand.
+        **THE DATE'S COST, stated correctly after this desk got it wrong once
+        in this same paragraph.** A first draft of this line claimed the
+        re-date "takes no new one ... so the pile does not grow." That was
+        FALSE and the tool said so immediately: 10-19 went from 6 live rows to
+        **7**, and is now AMBER. The claim was the comfortable one and it was
+        not checked before it was written, which is the 144th audit's own
+        indictment of this project's readers turned on this desk's prose. The
+        true statement: this re-date overshoots the measured 6/cycle capacity by
+        ONE row, deliberately, because the merge is worth more than the
+        overshoot — 10-21 was available at 3 rows and was REJECTED, since dating
+        this row there would separate it from the domain ruling whose answer
+        could dissolve its mechanism outright, which is the one thing this row
+        asked not to happen. A one-row overshoot with a named reason is a legal
+        move; an unchecked claim that there was no cost is not.
+        Status stays DISPOSITIONED.
+
+**THE RULING 2026-10-08 (Review DAILY). Part (a) answered; part (b) merged.**
+
+**PART (a) SPLITS 3-AND-1, AND THE SPLIT IS THE RULING.** The row asked whether
+each of the four specs adopts `require_feasible` on its real run path, *"or does
+`W1.02`'s 0.2 s against a `cpu<2h` declaration mean its BUDGET CLASS is what is
+wrong, which is a registry change and a different act?"* **It does. That is the
+answer for `W1.02` and it is not the answer for the other three.**
+
+  * **`W1.02` — the BUDGET CLASS is the defect.** A spec that records **0.2 s**
+    against a `cpu<2h` declaration (9,000 s) is running at 0.00002x of its
+    declared allowance. `require_feasible` is a PRE-RUN FEASIBILITY PROJECTION:
+    its whole function is to refuse a dispatch that cannot afford its own
+    budget. Binding it into a 0.2-second spec computes a projection nobody
+    needs, and — this is the part that matters — it would clear
+    `longrun_unbound` for `W1.02` **while leaving a spec declared at 450,000x
+    its measured cost sitting in the long-run population.** That is the gaming
+    move the row explicitly declined to propose, arrived at from the other
+    direction: the scan goes green and the misdeclaration survives. So
+    `W1.02`'s repair is a REGISTRY change — re-declare it at the class its
+    measurement supports — and `require_feasible` is NOT added to it.
+  * **`LT.03`, `SO.07`, `PL.02` — the CALL is the defect and the adoptions are
+    ORDERED.** These are genuinely long-run (16,580.6 s, 9,201.5 s, 2,928.2 s
+    recorded) and two of them overran the wall allowance of their own declared
+    class. They are exactly the population the conjunct was written for.
+
+**THE ADOPTIONS MUST BE VERIFIED, NOT GREPPED, and this ruling adopts the
+conjunct's own docstring as the standard.** It warns that a source scan *"proves
+the call EXISTS, not that it is reached with honest arguments."* So an adoption
+is discharged only when the call is demonstrated to be REACHED on the spec's
+real run path with the arguments it will actually carry — which, for all three,
+means the spec runs. **This is why they are not cheap and must not be made to
+look cheap:** `LT.03` 4.6 h, `SO.07` 2.6 h, `PL.02` 0.8 h recorded. The row is
+right that this does not fit an hourly slot and that `2^9`'s standing
+prohibition forbids detaching it.
+
+**AND THE ORDER IS NOT "DO IT NOW" — IT IS "DO IT WHEN THE SPEC NEXT RUNS."**
+All three are currently **VOID** (`run status`, this sitting), so each is owed a
+re-run on its own account regardless of this row. Buying three long runs purely
+to install a feasibility call would spend 8 h of compute to turn an apparatus
+gate green, which is worse value than almost anything on the board — and this
+project's scarce resource this week is not CPU but the builder's availability
+(45 consecutive dark slots, reported to the owner this sitting). So:
+**`require_feasible` is adopted into `LT.03`, `SO.07` and `PL.02` as a source
+edit now, and VERIFIED on the next run each of them takes for its own reasons.**
+The edit is free; the verification rides work that is already owed. Nothing is
+stamped discharged on the strength of the edit alone.
+
+**WHAT THIS RULING REFUSES TO DO, and it is the move that would have made the
+number pretty.** `W1.02` alone is affordable (0.2 s) and could have been
+cleared today, taking `longrun_unbound` from four ids to three. The row
+declined that and this desk agrees, in stronger terms now that the split is
+ruled: `W1.02` is the one of the four that should NOT get the call at all, so
+clearing it first would have moved the counter by making the only misdeclared
+spec in the set look compliant. **And `RTF_GRANDFATHERED` is not touched.** The
+set is SHRINK-ONLY, frozen 2026-09-03 at 34 ids, and its own docstring says
+*"never add one — a new long-run impl that cannot afford the call is exactly
+what the conjunct refuses."* All four first-commit dates are after the freeze,
+`longrun_stale_exemptions` is `[]`, and adding these four would be the single
+move the conjunct exists to forbid. **No bar moves and no conjunct is narrowed.**
+
+**THE ATTRIBUTION STAYS WHERE THE ROW LEFT IT.** It is NOT established that the
+missing call caused either VOID — `LT.03`'s row names a different cause (a
+`_check` returning tuples) — and this ruling does not claim otherwise. The
+measured statement is unchanged: two long-run specs overran their own declared
+allowance with the pre-run projection never invoked, throughout a window in
+which this gate's certificate asserted no unbound long-run spec existed.
+
+**PART (b) IS MERGED, NOT DEFERRED, and the distinction is in the date.** The
+class question — **population-scanning conjuncts have no staleness signal at
+all** — is this row's deepest content and it is not answerable per-spec. The
+row named its two siblings and asked for a joint ruling; both are now
+DISPOSITIONED with designs (`standing-pass-certificates-are-falsifiable-only-
+by-running-them` at 10-17, `impl-deps-domain-misses-a-read-and-a-relative-
+import` at 10-19, the latter already carrying an ORDERED shared execution). So
+(b) rides 10-19 with the domain ruling, which is the sibling whose answer —
+hashing a population's MANIFEST rather than its members — would dissolve this
+row's mechanism outright. **The generalised lesson is already banked** in
+`docs/LESSONS.md` under *"A conjunct that quantifies over a POPULATION goes
+stale at the population's growth rate"*, so the knowledge does not depend on
+this row surviving.
+
+**THE FACT THIS ROW ESTABLISHED THAT MUST NOT BE LOST IN THE MERGE**, restated
+because it is the strongest evidence any of the three siblings has produced: at
+`T0.32`'s 09-03 PASS its `impl_sha` covered `experiments/rtf.py`,
+`playground.py` and its own test file, and `git log --since=2026-09-04
+--until=2026-09-26` over those three paths returns **ZERO commits**. Four specs
+entered the long-run population inside a 22-day window in which `impl_sha` was
+byte-unmoved and `run status` reported no staleness. The certificate was not
+wrong when it ran and was not stale by any signal the project has — **it was
+simply no longer true**, and nothing in the tree could say so. This row surfaced
+only because `run.py` joined `IMPL_DEPS` on 09-26 for an unrelated reason.
+
+    STALENESS BILL: the three source adoptions touch `LT.03`, `SO.07` and
+    `PL.02` impl paths and will stale those specs' own entries — all three are
+    already VOID, so **no standing PASS certificate is billed by the edits.**
+    `W1.02`'s registry re-declaration bills `W1.02` itself, which is a standing
+    **PASS** (0.2 s), so that one re-buy is real and is trivially affordable —
+    and it is the only certificate this entire ruling costs. Priced with `run
+    stale-cost` before the edits, per the standing rule, rather than taken from
+    this estimate.
     WAITS-ON: t032-single-source-proxy-fires-on-self-test-literals | that row
         owns the OTHER red conjunct of the same `_check`, and `T0.32` cannot be
         re-bought green until both are settled, so a repair here lands against
