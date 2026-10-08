@@ -105,6 +105,49 @@ implementation edit to a GPU certificate (`T2.03` is the only PASSing dependent)
 plus its re-buy. `CITE_MARKER` below is the protocol that makes the future gate
 armable — a downstream spec DECLARES the citation, so the count can never be
 satisfied by an accidental substring.
+
+STEP 2b — MECHANISM (i), 2026-10-08 (builder, executing
+`t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52`, REVIEW_QUEUE.md).
+Step 1 (K=16 re-evals of one trained checkpoint, branch thresholds
+pre-registered at `b80dbe3` before the number existed) measured `eval_cv_pct`
+0.52 against the 7.0 TRAINING-DOMINANT cut: the recorded 40.006% spread is
+training-borne, so the ordered repair is the RECIPE, not the metric. The
+recipe's schedule is warmup-then-CONSTANT lr (`UnifiedBrain.py:4582`), and a
+constant-LR final iterate does not converge to a point — it random-walks in an
+lr-scaled noise ball. Mechanism (i), ordered FIRST and ALONE because it leaves
+the optimisation trajectory untouched: tail-average the trainable weights over
+the last `TAIL_FRAC` of steps and evaluate the average. The average is now
+what this recipe DELIVERS, and `heldout_cv_pct` is its seed CV. The
+final-iterate statistic is reported beside it PERMANENTLY
+(`heldout_cv_pct_final` et al.), so (i)'s effect is attributable inside one
+run and the pipeline's measured 40% cannot be silently re-narrated away.
+
+PRE-REGISTERED: `MAX_HELDOUT_CV_PCT` 7.0 is byte-unmoved; a STILL-FAIL is an
+honest outcome; mechanism (ii) (LR decay) is NOT bundled here and becomes
+legal only if (i) is measured insufficient.
+
+PLACEMENT, priced rather than assumed (the routing row orders `run
+stale-cost` against the files actually edited, before editing): this edit is
+SPEC-LOCAL — `run stale-cost experiments/tests/t1_08_seed_variance.py` read
+**0 staled certificates** this sitting, while `run stale-cost UnifiedBrain.py`
+read **17 standing PASS certificates (0.48 CPU-h over 9 + 2.78 GPU-h over
+8)**. Ascending mechanical bill (the 09-23 companion rule): measure (i) at
+zero certificates first; PROMOTION of (i) into the shared
+`make_action_optimizer` recipe — so T1.07/T1.09/T6.03's numbers are bounded
+by the same delivery — is owed against a MEASURED win, and its sequencing
+(the design's own semantic order: T1.08, then T1.07, T1.09, T6.03) is the
+Review's. Until that promotion lands, this floor bounds the recipe AS
+DELIVERED HERE and the siblings' final-iterate numbers are NOT yet bounded by
+it — said out loud rather than left to be discovered.
+
+VENUE, pre-registered before the number exists: dispatched `prefer="kaggle"`
+— the venue of the standing attempt-3 FAIL (P100, 40.006), and the venue of
+`2026-W40`'s ~29.7 free hours expiring 2026-10-10, whose only named buyer is
+this run (the routing row's own DUE text). The §9d probe read cv_T4/cv_P100
+= 42.786/36.577 = 1.17, branch BOTH_ABOVE — the spread is the pipeline's,
+not the hardware's. Flag, declared in advance: a PASS with `heldout_cv_pct`
+above 7.0/1.17 ≈ 5.98 is VENUE-SENSITIVE and goes to the Review flagged as
+such rather than quoted as venue-independent.
 """
 from __future__ import annotations
 
@@ -121,6 +164,9 @@ MIN_SPREAD = 1e-6      # ... but the spread must not be zero, or seeding is fake
 MAX_HELDOUT_CV_PCT = 7.0   # the seed spread of the held-out metric ITSELF, which
                            # is what makes a single-seed number downstream
                            # quotable. See REACHABILITY in the docstring.
+TAIL_FRAC = 0.2    # mechanism (i): fraction of final steps whose weights are
+                   # averaged into the recipe's delivered checkpoint. Not a bar —
+                   # the design's "last ~20% of steps", fixed before the run.
 
 # A downstream spec declares that it quotes this spec's noise floor by putting
 # this exact string in a claim field, its notes, or its implementation. Declared
@@ -134,6 +180,7 @@ from UnifiedBrain import UnifiedBrain, UnifiedBrainConfig
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
 N_TRAIN, N_TEST, STEPS, BS, RANK = 2048, 512, 1500, 64, 8
+TAIL_FRAC = __TAIL_FRAC__   # substituted from the module constant
 
 def make_task(cfg, seed):
     # Task fixed across arms: only the TRAINING seed varies, so the spread
@@ -154,22 +201,50 @@ def arm(seed):
     brain = UnifiedBrain(cfg).to(DEV).train()
     obs, tgt = make_task(cfg, seed)
     tr_o, tr_t, te_o, te_t = obs[:N_TRAIN], tgt[:N_TRAIN], obs[N_TRAIN:], tgt[N_TRAIN:]
-    # Same recipe as T1.07 and TrainingPipeline. A noise floor measured under a
-    # different configuration would not bound the claims it is supposed to bound.
+    # The shared SPEC recipe (make_action_optimizer: Adam, warmup-then-constant
+    # LR, clip 2.0). NB: the comment that stood here — "Same recipe as T1.07 and
+    # TrainingPipeline" — was half false and the false half is Step 0's finding
+    # (verified at HEAD, 1efd54f): TrainingPipeline.py:493 builds its own
+    # AdamW(wd=1e-4, eps=1e-5), no scheduler. This floor bounds the four spec
+    # callers of make_action_optimizer, not the pipeline.
     opt, step_fn = brain.make_action_optimizer(lr=3e-4, warmup_steps=100,
                                                max_grad_norm=2.0)
+    # STEP 2b mechanism (i): running sum of the trainable weights over the last
+    # TAIL_FRAC of steps; the trajectory itself is untouched (same optimiser,
+    # schedule, step count, batch order).
+    tail_start = int(STEPS * (1.0 - TAIL_FRAC))
+    train_params = [p for p in brain.parameters() if p.requires_grad]
+    tail_sum = [torch.zeros_like(p, dtype=torch.float32) for p in train_params]
+    n_tail = 0
     for step in range(STEPS):
         i = (step * BS) % (N_TRAIN - BS)
         loss = brain.action_training_loss(tr_o[i:i+BS], tr_t[i:i+BS])["loss"]
         opt.zero_grad(); loss.backward(); step_fn()
+        if step >= tail_start:
+            with torch.no_grad():
+                for a, p in zip(tail_sum, train_params):
+                    a.add_(p.detach().float())
+            n_tail += 1
     brain.eval()
     with torch.no_grad():
+        # Final-iterate eval FIRST — the pre-(i) statistic, kept permanently so
+        # the repair's effect is attributable inside one run.
         pred = brain.generate_actions_flow_matching(te_o)
-        heldout = float(F.mse_loss(pred.float(), te_t.float()))
+        heldout_final = float(F.mse_loss(pred.float(), te_t.float()))
         base = float(F.mse_loss(tr_t.mean(0, keepdim=True).expand_as(te_t).float(),
                                 te_t.float()))
-    return {"seed": seed, "heldout": heldout, "mean_baseline": base,
-            "improvement": base - heldout}
+        # Swap in the tail average (params only; buffers stay the final
+        # iterate's, the standard Polyak convention) and evaluate what the
+        # recipe now DELIVERS.
+        for a, p in zip(tail_sum, train_params):
+            p.copy_((a / max(n_tail, 1)).to(p.dtype))
+        pred_avg = brain.generate_actions_flow_matching(te_o)
+        heldout = float(F.mse_loss(pred_avg.float(), te_t.float()))
+    return {"seed": seed, "heldout": heldout, "heldout_final": heldout_final,
+            "mean_baseline": base,
+            "improvement": base - heldout,
+            "improvement_final": base - heldout_final,
+            "tail_steps": n_tail}
 
 out = {"gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu",
        "arms": [arm(s) for s in __SEEDS__]}
@@ -186,8 +261,14 @@ print("DONE", flush=True)
 
 
 def _submit() -> dict:
-    job = build_job(JOB.replace("__SEEDS__", repr(SEEDS)))
-    res = submit(job, prefer="colab", est_hours=0.3, timeout_s=3000,
+    job = build_job(JOB.replace("__SEEDS__", repr(SEEDS))
+                       .replace("__TAIL_FRAC__", repr(TAIL_FRAC)))
+    # prefer="kaggle": pre-registered in the STEP 2b docstring block — the
+    # standing FAIL's own venue, and W40's expiring free hours' only named
+    # buyer. A PASS above ~5.98 is flagged VENUE-SENSITIVE there.
+    # timeout raised 3000 -> 4200: three arms plus one extra eval each; the
+    # Step 1 probe's one arm cost 0.27 h of session on a T4.
+    res = submit(job, prefer="kaggle", est_hours=0.5, timeout_s=4200,
                  fetch=["t108.json"])
     if not res.ok:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")
@@ -261,14 +342,23 @@ def _experiment(seed: int) -> dict:
     arms = _CACHE["arms"]
     imps = [a["improvement"] for a in arms]
     held = [a["heldout"] for a in arms]
+    held_final = [a["heldout_final"] for a in arms]
     eff, noise = _stats(imps)
     h_mean, h_std = _stats(held)
+    hf_mean, hf_std = _stats(held_final)
     cites = _citations()
     return {
         "gpu": _CACHE["gpu"], "backend": _CACHE["backend"], "seeds": len(arms),
         "heldout_mean": round(h_mean, 5),
         "heldout_std": round(h_std, 6),
         "heldout_cv_pct": round(100 * h_std / max(abs(h_mean), 1e-9), 3),
+        # The OLD statistic — the final-iterate delivery this recipe had before
+        # mechanism (i) — reported beside the gated one PERMANENTLY (STEP 2b
+        # docstring block). Attribution lives in this pair.
+        "heldout_mean_final": round(hf_mean, 5),
+        "heldout_std_final": round(hf_std, 6),
+        "heldout_cv_pct_final": round(100 * hf_std / max(abs(hf_mean), 1e-9), 3),
+        "tail_frac": TAIL_FRAC,
         "effect": round(eff, 5),
         "seed_noise": round(noise, 6),
         "snr": round(eff / max(noise, 1e-9), 2),
