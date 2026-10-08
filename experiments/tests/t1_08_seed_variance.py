@@ -126,6 +126,32 @@ PRE-REGISTERED: `MAX_HELDOUT_CV_PCT` 7.0 is byte-unmoved; a STILL-FAIL is an
 honest outcome; mechanism (ii) (LR decay) is NOT bundled here and becomes
 legal only if (i) is measured insufficient.
 
+STEP 2b — MECHANISM (ii), 2026-10-08 12:xx (builder, same routing row). The
+condition above FIRED: attempt 4 (kaggle T4, `381a9e6`, harvested and
+committed in `942a79c`) measured mechanism (i) INSUFFICIENT — `heldout_cv_pct`
+14.666 against the unmoved 7.0, with (i)'s own attributable effect only
+16.994 (final) -> 14.666 (tail-averaged) inside that run. So the routing
+row's "only if (i) is insufficient" branch authorises (ii): decay the LR to
+~0 after warmup. COSINE is the shape, fixed here before the run (the design
+offered cosine or linear; cosine is the standard remedy named in the row and
+reaches exactly 0 at the final step). IMPLEMENTED SPEC-LOCALLY, same
+placement argument as (i): `make_action_optimizer`'s LambdaLR rewrites
+`lr = base * warmup(step)` inside `step_fn()` every step, so the decay
+composes by multiplying the param-group lr AFTER each `step_fn()` call —
+effective lr(step) = base * warmup(step) * cosine_decay(step), no shared-file
+edit, `stale-cost` re-read this sitting: 0 certificates (T1.08 FAIL,
+no-cert). Mechanism (i) STAYS IN: attempt 4 is the (recipe + i) baseline, so
+attempt 5 vs attempt 4 is (ii)'s attributable delta, and the permanent
+final-iterate pair (`*_final`) keeps both mechanisms separable inside the
+run. Receipt that the schedule fired: `lr_final_max`, the largest param-group
+lr across arms at the last step, recorded (must be ~0; reported, not gated).
+ATTRIBUTION CAVEAT, declared in advance: attempt 3 (P100) read 40.006 final
+where attempt 4 (T4) read 16.994 final, so the 40 -> 17 move is
+venue/lottery-confounded and may NOT be credited to (i); only within-run
+pairs and same-venue deltas are quotable. Venue unchanged: `prefer="kaggle"`,
+W40's expiring hours (0.93 of 30 charged, die Sat 2026-10-10), the §9d 1.17
+discordance and the ~5.98 VENUE-SENSITIVE flag all carried forward unchanged.
+
 PLACEMENT, priced rather than assumed (the routing row orders `run
 stale-cost` against the files actually edited, before editing): this edit is
 SPEC-LOCAL — `run stale-cost experiments/tests/t1_08_seed_variance.py` read
@@ -175,12 +201,14 @@ TAIL_FRAC = 0.2    # mechanism (i): fraction of final steps whose weights are
 CITE_MARKER = "CITES T1.08:min_detectable_effect"
 
 JOB = r'''
-import json, torch, torch.nn.functional as F
+import json, math, torch, torch.nn.functional as F
 from UnifiedBrain import UnifiedBrain, UnifiedBrainConfig
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
 N_TRAIN, N_TEST, STEPS, BS, RANK = 2048, 512, 1500, 64, 8
 TAIL_FRAC = __TAIL_FRAC__   # substituted from the module constant
+WARMUP = 100       # mirrors the make_action_optimizer(warmup_steps=100) call
+                   # below; mechanism (ii)'s decay starts where warmup ends.
 
 def make_task(cfg, seed):
     # Task fixed across arms: only the TRAINING seed varies, so the spread
@@ -220,6 +248,16 @@ def arm(seed):
         i = (step * BS) % (N_TRAIN - BS)
         loss = brain.action_training_loss(tr_o[i:i+BS], tr_t[i:i+BS])["loss"]
         opt.zero_grad(); loss.backward(); step_fn()
+        # STEP 2b mechanism (ii): warmup-then-cosine-decay-to-0. step_fn()'s
+        # LambdaLR has just rewritten lr = base * warmup(step+1), so the decay
+        # composes by scaling the param-group lr here; the next opt.step()
+        # uses it. Spec-local on purpose — the shared recipe is untouched.
+        nxt = step + 1
+        if nxt >= WARMUP:
+            prog = min((nxt - WARMUP) / max(STEPS - WARMUP, 1), 1.0)
+            dec = 0.5 * (1.0 + math.cos(math.pi * prog))
+            for grp in opt.param_groups:
+                grp["lr"] *= dec
         if step >= tail_start:
             with torch.no_grad():
                 for a, p in zip(tail_sum, train_params):
@@ -244,7 +282,9 @@ def arm(seed):
             "mean_baseline": base,
             "improvement": base - heldout,
             "improvement_final": base - heldout_final,
-            "tail_steps": n_tail}
+            "tail_steps": n_tail,
+            # mechanism (ii)'s receipt: ~0 iff the decay actually ran.
+            "lr_final": max(g["lr"] for g in opt.param_groups)}
 
 out = {"gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu",
        "arms": [arm(s) for s in __SEEDS__]}
@@ -359,6 +399,10 @@ def _experiment(seed: int) -> dict:
         "heldout_std_final": round(hf_std, 6),
         "heldout_cv_pct_final": round(100 * hf_std / max(abs(hf_mean), 1e-9), 3),
         "tail_frac": TAIL_FRAC,
+        # mechanism (ii)'s receipt: largest final-step lr across arms. ~0 iff
+        # the cosine decay fired on every arm. Reported, not gated.
+        "lr_final_max": max(a.get("lr_final", -1.0) for a in arms),
+        "lr_schedule": "warmup100+cosine_to_0",
         "effect": round(eff, 5),
         "seed_noise": round(noise, 6),
         "snr": round(eff / max(noise, 1e-9), 2),
