@@ -17359,7 +17359,7 @@ exemption survive its stated reason?
 ## bill-are-six-files-not-one` — the Review invited a confirm-or-refute on
 ## `EmotionalState.py`; it is REFUTED, and the class it named is 4,109 lines
 
-ROUTED: root-modules-outside-every-staleness-bill-are-six-files-not-one | 2026-09-27 | census over all 21 repo-root modules against every spec module's `IMPL_DEPS`, read with the runner's own `impl_deps_of`/`impl_sha_of` (`experiments/protocol.py`); perturbation test on the named file; `UnifiedBrain.py:264, 272, 4093, 4130` read statically. Builder, this slot, child processes, NO ledger write | OPEN
+ROUTED: root-modules-outside-every-staleness-bill-are-six-files-not-one | 2026-09-27 | census over all 21 repo-root modules against every spec module's `IMPL_DEPS`, read with the runner's own `impl_deps_of`/`impl_sha_of` (`experiments/protocol.py`); perturbation test on the named file; `UnifiedBrain.py:264, 272, 4093, 4130` read statically. Builder, this slot, child processes, NO ledger write | DISPOSITIONED 2026-10-08 (Review DAILY, OVERDUE-FIRST class — **RULED: option (iv) is not the null option this menu presents it as, it is a CLAIM, and it is ordered TESTED before anything is declared.** (i) and (iii) are REFUSED as first arms. The test's result selects between (iv) and (ii) mechanically, so the declaration policy is decided by a measurement rather than by a preference. See THE RULING below)
     SUBJECT: the APPARATUS — the staleness bill's domain. No spec's science is
         in question and no certificate is claimed red. `T2.12`'s PASS is
         measured intact and is the thing the published finding said did not
@@ -17367,6 +17367,119 @@ ROUTED: root-modules-outside-every-staleness-bill-are-six-files-not-one | 2026-0
     DUE: 2026-10-08 | `review-queue`'s own "next date with room under the
         measured capacity", read off the tool this slot (2026-10-07 reached 6
         with the previous slot's row) and not chosen by hand.
+    DUE: 2026-10-21 | RE-DATED 2026-10-08 (Review DAILY) as part of the ruling
+        below. What the new date owes is the (iv)-TEST and the declaration it
+        selects — not another sitting of this four-way menu. **10-21 rather than
+        the tool's 10-20, because this sitting's own four placements took 10-20
+        from 5 live rows to 9 against a measured 6/cycle** — disclosed rather
+        than absorbed. 10-21 carries zero other promises, and this row's child
+        `t212-certifies-separability-not-valence-sign` is dated the same day on
+        purpose, so the apparatus ruling and the science finding it surfaced can
+        be read together. Status stays DISPOSITIONED and the row keeps ageing.
+
+**THE RULING 2026-10-08 (Review DAILY).**
+
+**THE MENU HAS A FALSE NULL IN IT, and that is the whole ruling.** Options
+(i)-(iii) are acts with costs; (iv) is presented as *"Nothing, on the ground
+that a default-enabled companion module that carries no parameters cannot move a
+verdict"*. That ground is **a factual claim about this codebase**, and the row
+itself says so in the same breath — *"which is a testable claim and the cheapest
+of the four to settle."* A menu that offers three priced acts and one unpriced
+assertion will be answered with the assertion, because it looks free. It is not
+free: choosing (iv) without testing it means the project has decided that
+editing `Personality.py` or `InnerMonologue.py` cannot move any recorded number,
+**on nobody's measurement.** That is the shape this file exists to refuse.
+
+**SO (iv) IS ORDERED TESTED, NOT CHOSEN.** The test is the row's own
+perturbation method, which it already ran successfully against
+`EmotionalState.py` to refute the `PROGRESS.md` finding — so the apparatus
+exists and the method is proven in this exact context:
+
+  1. For each of the six undeclared modules (`Persistence.py` 1155,
+     `TaskManager.py` 849, `Personality.py` 787, `InnerMonologue.py` 673,
+     `AudioListener.py` 444, `mocap_cmu.py` 201), perturb the file by one byte.
+  2. For the specs that REACH it — the row measured 30 spec modules declaring a
+     gateway that reaches `Personality` and `InnerMonologue`, and 0 declaring
+     them — determine whether any RECORDED metric of a standing certificate
+     changes. Construction alone is not the question; the question is whether
+     the bytes reach a number.
+  3. Report per module, not in aggregate. The six are not one finding: two are
+     built by default inside `UnifiedBrain.__init__` (`:4093`, `:4130`, under
+     flags defaulting `True` at `:264`/`:272` with no spec setting either), and
+     `mocap_cmu.py` is already an `IMPL_DEPS` member of `T2.14` by that spec's
+     own 09-30 declaration change — so the population may be smaller than six
+     by the time anyone looks, and a per-module answer survives that where a
+     single verdict would not.
+
+**HOW THE RESULT DECIDES, pre-registered here so the reading cannot be chosen
+after it is seen** — this is the point of ruling now rather than later:
+
+  * **If no perturbation moves any recorded metric on any reaching spec** →
+    **(iv) is JUSTIFIED and becomes the disposition**, and it is then a
+    measured result rather than an assumption. The gap is priced at zero and
+    the row closes with a number behind it.
+  * **If any perturbation moves any recorded metric** → **(ii) FIRES for that
+    module**: it is declared on the specs whose SUBJECT it is, and the reading
+    of "implementation dependency" that rests on is the one the perturbation
+    demonstrated — the bytes reach the verdict. No argument about declaration
+    philosophy is needed, because the module will have proved its own edge.
+
+**(i) IS REFUSED as a first arm.** Declaring six files across 30 spec modules
+each IS the mass-declaration wave `impl_sha_of`'s own docstring refuses, and the
+row is right that it *"may not be taken quietly."* It is not refused forever —
+if the test fires broadly it may be the only honest answer — but it may not be
+the FIRST act, because a wave of 30 declarations taken before the test would
+make the test unperformable.
+
+**(iii) IS REFUSED as a first arm, and the reason is this project's own rule
+rather than its cost.** Widening the walker to recurse root modules is detector
+work on an integrity instrument's domain, it bills `T0.35`, and it is
+governance surface inside the freeze's clause 2. The row's builder declined it
+under the `t022-p9` rule — do not touch an integrity instrument's domain in the
+hour that measured it — and this desk adopts that refusal rather than
+overriding it. Also noted and NOT treated as settled: the 2026-09-07
+measurement that chose the current scope read **72 violators** when root
+modules were recursed, and `impl_sha_of`'s docstring says that wider hole *"is
+REAL and REMAINS (it belongs to a routed redesign)."* This row is the first to
+put a POPULATION on it, and six files — two inside the default brain — is a
+far better starting point than 72. If (iii) is ever ordered it should be
+ordered off this row's population, not off the 72.
+
+**WHAT THIS RULING EXPLICITLY ENDORSES FROM THE ROW, because a correction that
+costs the corrector something should not be buried.** This row REFUTED a
+finding this desk's own `PROGRESS.md` published to the owner — that
+`EmotionalState.py` is named in no spec's `IMPL_DEPS`. It is named, by `T2.12`
+at `t2_12:49` (declared 2026-09-06, `ab9d3e8`) and by `T3.07`; the perturbation
+moves both shas; the file was **the single best-covered module of the
+twenty-one** the page called uncovered. The refutation is ACCEPTED in full. And
+the narrower true statement the row put in its place is the more valuable
+finding and is hereby carried forward rather than lost with this row:
+**`T2.12` certifies emotional separability and does NOT certify valence sign** —
+the untrained GRU makes the event->PAD map seed-arbitrary and OCC deltas never
+reach `pad_vector` (`EmotionalState.py:611`). That is a real uncertified
+property of Jack's emotion model, it is on `T2.12`'s own record, and it is a
+SCIENCE finding sitting inside an APPARATUS row where no instrument will look
+for it. It is NOT discharged by this ruling and is routed onward as
+`t212-certifies-separability-not-valence-sign`.
+
+**WHAT IS NOT CLAIMED, carried forward unchanged.** No certificate is red and
+none is alleged to be. Neither `Personality` nor `InnerMonologue` is an
+`nn.Module` (plain classes at `Personality.py:236`, `InnerMonologue.py:158`), so
+no parameter-count or gradient gate moves on their bytes — which is precisely
+why the perturbation test is the right instrument and a source scan is not. The
+honest strength of the finding is unchanged: a trap that has cost nothing
+because `UnifiedBrain.py` has not been edited, and that fires on the first day
+somebody edits Jack's brain. **No bar moves, no `IMPL_DEPS` is edited by this
+ruling, and no new instrument, counter or command is ordered** (`D35` clause 2).
+
+    STALENESS BILL for the ordered test: **0 certificates, and this is
+    structural rather than lucky.** A perturbation test writes no file it does
+    not restore and registers nothing; the row ran exactly this method on
+    `EmotionalState.py` on 09-27 at zero bill. The declaration that the test
+    SELECTS does carry a bill — (ii) edits `IMPL_DEPS` on real specs and stales
+    them — and that bill is to be priced with `run stale-cost` BEFORE the
+    declaration, against the specs the test actually implicates, not against
+    all 30.
     WAITS-ON: none | this is a DOMAIN question about what an `IMPL_DEPS` edge
         is, and it is the same question `impl-deps-domain-misses-a-read-and-a-
         relative-import` (DUE 10-06) and `gpu-job-strings-carry-undeclared-
@@ -20048,11 +20161,14 @@ reaches 45 specs.
 ## ============================================================================
 
 ROUTED: t215-bow-challenger-into-a-seated-routing-arena | 2026-10-08 | `docs/CHAMPIONS.md:176` (the `Language routing` seat's champion cell and its pre-registered RE-OPEN TRIGGER, read at source this sitting); seat creation `e9c1b68` 2026-09-13 and `LG.13` PASS confirmed live in `run status`; `experiments/tests/t2_15_freeform_routing.py:166-167, 553-560` re-derived at HEAD; the parent row's 2026-09-10 FINDING quoted from the file | OPEN
-    DUE: 2026-10-20 | `review-queue`'s own `next_free_due` this sitting — the
-    tool's mechanically-named next date carrying room under the measured 6/cycle
-    capacity (every day 10-08 through 10-19 is at or over it, four of them AMBER).
-    Placed there rather than onto a Sunday, per the tool's own instruction to the
-    next router.
+    DUE: 2026-10-22 | **the tool named 2026-10-20 and this desk is NOT using it,
+    because this sitting's own routing filled it.** `next_free_due` was computed
+    before this sitting placed four rows on 10-20, taking it from 5 live rows to
+    9 against a measured 6/cycle capacity; a fifth would manufacture the
+    violation `review_queue_piled_on` counts. 10-22 carries ZERO promises. This
+    row is the furthest-out of the four deliberately: it is the only one whose
+    work is a NEW SPEC rather than a ruling or a repair, so it is the one that
+    loses least by waiting, and the seat it challenges is occupied and stable.
     WAITS-ON: none | the parent's conjunct (1) is what this waited on and it is
     ANSWERED (`e9c1b68`, 2026-09-13); nothing else live changes what gets written.
     SUBJECT: the ARENA and a SPEC that does not exist yet. No bar moves, no
@@ -20112,11 +20228,13 @@ ROUTED: t215-bow-challenger-into-a-seated-routing-arena | 2026-10-08 | `docs/CHA
 ## ============================================================================
 
 ROUTED: lg14-deverbatim-scaffold-is-the-arm-the-fail-points-at | 2026-10-08 | `LG.14` attempt 1, recorded 2026-10-05T23:10:41 at `a2afdb5` (FIRST-EVER in `run status`'s SETTLE EVENTS, read this sitting); `experiments/tests/lg_14_structured_decode.py:504-531` read at source at HEAD for the gate structure; the 2026-09-29 ruling's own sequencing quoted from `lg12-abstention-knob-has-no-resolution` | OPEN
-    DUE: 2026-10-20 | `review-queue`'s own `next_free_due` this sitting. Every
-    date 10-08 through 10-19 is at or over the measured 6/cycle capacity (four
-    AMBER), so this is the first arithmetically keepable slot. Not placed sooner
-    to look responsive: the parent ruling waited sixteen days for arm (b) and the
-    cost of that wait was zero, because (b) answered the question (c) depends on.
+    DUE: 2026-10-21 | **10-21, not the tool's 2026-10-20, and the correction is
+    this desk's own doing.** `next_free_due` named 10-20 before this sitting had
+    routed anything; four rows later 10-20 reads 9 live against a measured
+    6/cycle, so placing this here too would build the pile this desk spent its
+    first act disposing. 10-21 carries ZERO promises. Not placed sooner to look
+    responsive: the parent ruling waited sixteen days for arm (b) and the cost of
+    that wait was zero, because (b) answered the question (c) depends on.
     WAITS-ON: none | arm (b)'s verdict is what this waited on and it is RECORDED.
     SUBJECT: an ARM ORDER and a cost. No bar moves, no existing conjunct is
     touched, and `LG.12`/`LG.14` both stay FAIL whatever this row decides.
@@ -20170,3 +20288,92 @@ ROUTED: lg14-deverbatim-scaffold-is-the-arm-the-fail-points-at | 2026-10-08 | `L
     construction, because the cache is keyed on a hash over the scaffold.
     **That is the real cost of arm (c) and it is an LLM-verdict re-buy, not a
     GPU hour.**
+
+## ============================================================================
+## ROUTED 2026-10-08 (Review DAILY, carried out of
+## `root-modules-outside-every-staleness-bill-are-six-files-not-one`'s ruling):
+## a SCIENCE finding about Jack's emotion model was sitting inside an APPARATUS
+## row, where no instrument looks for it
+## ============================================================================
+
+ROUTED: t212-certifies-separability-not-valence-sign | 2026-10-08 | `T2.12`'s own record as quoted by `root-modules-outside-every-staleness-bill-are-six-files-not-one` (builder, 2026-09-27), which journaled it with the 2026-09-06 PASS; `EmotionalState.py:611` named there; `T2.12` PASS confirmed live in `run status` this sitting (TIER 2) | OPEN
+    DUE: 2026-10-21 | **NOT `next_free_due`'s literal answer, and the reason is
+    this desk's own arithmetic turning against it mid-sitting.** The tool named
+    2026-10-20 and this sitting has already placed FOUR rows there (two new, two
+    re-dated), taking it from 5 live rows to 9 — above the measured 6/cycle
+    capacity. Adding a fifth would be manufacturing the next violation with the
+    arithmetic in hand, which is the act the 108th audit's RANK 2 indicted and
+    which `review_queue_piled_on` counts. 10-21 carries ZERO promises. Disclosed
+    rather than absorbed: the saturation is now total through 10-20, and that is
+    reported to the owner this sitting as a structural finding rather than
+    smoothed over by date-shuffling.
+    WAITS-ON: none | the parent row's apparatus question does not decide this.
+    SUBJECT: a SPEC's SCIENCE — what `T2.12`'s PASS does and does not certify
+    about Jack's emotion model. This is the first row in this file to carry it.
+
+    **WHY THIS IS ROUTED RATHER THAN LEFT WHERE IT WAS.** It was found inside
+    `root-modules-outside-every-staleness-bill-are-six-files-not-one` — a row
+    whose declared SUBJECT is *"the APPARATUS — the staleness bill's domain. No
+    spec's science is in question."* The finding below IS a spec's science. It
+    arrived as the narrower true statement that replaced a refuted one, which is
+    the most easily lost position a finding can occupy: the row around it is
+    about `IMPL_DEPS` domains, so every instrument that reads that row reads it
+    as apparatus, and when the parent closes the finding closes with it. This is
+    the 100th-audit B2 defect — a live finding left as prose in a row going
+    terminal — and it is routed for that reason alone, not because anything new
+    was measured today.
+
+    **THE FINDING.** `T2.12` (*Emotion model produces distinguishable states*)
+    is a standing **PASS** — attempt 4, nearest-centroid held-out **0.904 ±
+    0.072** against chance 0.25, a matched-variance random-walk null at 0.238 ±
+    0.027 and a shuffled control at 0.146. That is a strong certificate and
+    nothing here disputes it. **What it certifies is SEPARABILITY. It does not
+    certify VALENCE SIGN** — the untrained GRU makes the event->PAD map
+    seed-arbitrary, and OCC deltas never reach `pad_vector`
+    (`EmotionalState.py:611`), journaled with the 2026-09-06 PASS.
+
+    **WHY THAT GAP MATTERS AND IS NOT PEDANTRY.** States being mutually
+    distinguishable is compatible with the mapping from EVENT to STATE being
+    arbitrary. A model whose emotional states are cleanly separable but whose
+    sign is seed-dependent is a model that can tell its own moods apart while
+    being **wrong about which events are good and which are bad** — and on
+    `GOAL.md`'s terms that is close to the opposite of what an emotion model is
+    for. `EmotionalState.py` is 1,149 lines; the project has two specs on it;
+    and the one that passes is silent on the direction of the mapping.
+
+    **THE PRECEDENT THAT MAKES THIS A FAMILIAR SHAPE, named so the desk can
+    reuse the reasoning rather than re-derive it.** This is the `T2.11`
+    pattern — a spec whose metric measures a weaker property than its title
+    claims, where a control passes every rig gate and the mechanism is not what
+    the number is about. It is also the `LG.13` pattern — conjuncts that are
+    green BY CONSTRUCTION rather than by evidence, which that seat's ruling
+    struck from its own basis as DISCHARGED-BY-CONSTRUCTION. Whether `T2.12`'s
+    separability number is load-bearing for anything the project wants to claim
+    about emotion, or whether it is separability-by-construction over an
+    arbitrary map, is the question.
+
+    **WHAT IS ASKED.** Either (a) a conjunct on `T2.12` — or a successor spec —
+    that gates the SIGN of the event->valence mapping, which is the thing a
+    reader assumes a passing emotion-separability spec already asserts; or (b) a
+    recorded ruling that the sign is deliberately out of scope, in which case
+    `T2.12`'s claim text should say so, because the gap is currently invisible to
+    anyone reading the ladder board. **This desk does not pick between them
+    today**: (a) is a strengthening with a real design question inside it (what
+    is the ground truth for a valence sign, and does the project have one?), and
+    choosing it on a DAILY without that design would be ordering a conjunct
+    whose threshold nobody has derived.
+
+    **WHAT MAY NOT BE DONE.** `T2.12`'s PASS is not demoted, and no bar on it
+    moves in either direction — the certificate is intact, honestly bought, and
+    this row's whole content is that it certifies LESS than its title suggests,
+    which is a scope finding and never grounds for taking a verdict down. And
+    the OCC/`pad_vector` disconnection at `EmotionalState.py:611` may not be
+    "fixed" as a quiet code repair ahead of a ruling: making OCC deltas reach
+    `pad_vector` would change what `T2.12` measured and stale its certificate,
+    so it is a spec question first and an edit second.
+
+    STALENESS BILL: **0 certificates** for the routing. Whatever is ordered off
+    it is not priced here — a conjunct on `T2.12` would re-buy `T2.12` itself
+    (its history is CPU-cheap), and `T3.07` declares `EmotionalState.py` too and
+    is already FAIL and already STALE (`run status` this sitting), so the live
+    bill must be read with `run stale-cost` at the time rather than quoted now.
