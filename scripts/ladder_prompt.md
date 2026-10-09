@@ -552,81 +552,85 @@ scripts/ladder_prompt.md`. Past 131072 the builder does not read a degraded
 prompt; it does not launch at all, and the failure looks like an ordinary
 `rc=126` slot rather than a blackout.
 
-**LIVE PRIORITY BLOCK — `1^21`/`2^10` (item `1^21` Review 2026-10-07, DAILY.
-`1^18` ITEM 1 IS NOW DISCHARGED — see below — and `1^20` IS EXCISED, not stacked:
-both of its substantive claims are spent, and the steering page had 1,503 bytes
-of headroom under its self-imposed ceiling when this was written. A block whose
-every claim is spent is deleted by the desk that wrote it.)
+**LIVE PRIORITY BLOCK — `1^22`/`2^10` (item `1^22` Review 2026-10-09, DAILY.
+`1^21` IS EXCISED, not stacked: you executed its ITEM 1 in full and every one of
+its claims is now spent, including its ranking claim, which this block reverses.
+A block whose every claim is spent is deleted by the desk that wrote it.)
 
-## `1^21` — THE DIAGNOSTIC CAME BACK, THE BRANCH IS CHOSEN, AND STEP 2b IS NOW
-## ROUTED. YOU ASKED FIVE TIMES; THIS IS THE ANSWER (Review 2026-10-07, DAILY)
+## `1^22` — YOU DID IT, BOTH MECHANISMS, AND THE ANSWER IS NO. `T1.08` COMES OFF
+## YOUR BOARD AND THE QUOTA IS NOT YOURS TO SPEND ON IT (Review 2026-10-09, DAILY)
 
 **ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
 overrides it.** Derive the streak and the meter yourself; no number is cached
-here. This item says what to do when a slot opens, never that one should.
-`1^20`'s *"YOU ARE NOT DARK ANY MORE"* is **no longer true** — you went dark
-again partway through 10-06. Re-derive the streak; inherit neither that
-header's optimism nor this sentence's pessimism.
+here. This item says what to do when a slot opens, never that one should. You
+are dark again as this is written; inherit neither that fact nor its opposite —
+re-derive it.
 
-**ITEM 1 — `T1.08` STEP 2b. `1^18` ITEM 1 (STEPS 0+1) IS DISCHARGED AND IS NOT
-YOUR WORK ANY MORE.** Verified at source, not off a commit message: Step 1 ran
-2026-10-05T16:17Z (`/data/jack-logs/t108_step1_probe.log`, artifact
-`/data/t108_step1_evalcv.json`) and returned the branch-selecting number against
-thresholds pre-registered at `b80dbe3` before it existed. **Your five journal
-entries saying *"Step 2 is NOT yours until a desk routes it"* were right every
-time, and the routing now exists:**
-`t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52` in
-`docs/REVIEW_QUEUE.md`. Read the order there; it is not restated here.
+**ITEM 1 — `T1.08` STEP 2b IS DISCHARGED, IN FULL, AND IS NOT YOUR WORK ANY
+MORE. NEITHER IS ITS RESIDUAL.** Verified from `experiments/ledger.json` at HEAD
+by the desk, not from your trace: attempt 4 (`381a9e6`, mechanism (i)) and
+attempt 5 (`b7aa2bf`, mechanism (ii)) both ran, both harvested, both FAIL —
+`heldout_cv_pct` 14.666 then 17.285 against a bar you held byte-unmoved at 7.0.
+You followed (a) through (d) exactly: (i) alone first, Step 0 re-verified, the
+bar untouched, the bill priced live at 0 certificates. The queue row is **ACTED
+at `b7aa2bf`** and the pre-registered still-FAIL is recorded as the honest result
+it was promised to be.
 
-Four things that are NOT in that row and bind you anyway:
-**(a) MECHANISM (i) ALONE, FIRST.** Tail-average/EMA the last ~20% of steps and
-evaluate the average. Do NOT bundle it with the LR decay — bundled, neither
-effect is attributable, and an unattributable repair of a noise floor is the
-same defect one layer up.
-**(b) STEP 0 IS A PRECONDITION YOU RE-VERIFY, not a box already ticked.** If the
-recipe divergence does not reproduce at HEAD, **STOP AND ROUTE** — the whole
-repair order rests on it.
-**(c) THE BAR YOU MAY NOT MOVE:** `MAX_HELDOUT_CV_PCT` **7.0**, byte-unmoved
-under every branch. **A still-FAIL is pre-registered and is an honest result you
-report** — a shipped recipe that cannot hold its own noise floor is worth
-knowing. A reduced number banked against a softened bar is not.
-**(d) PRICE THE BILL with `run stale-cost` BEFORE editing.** The design's
-0/19/4 is an ESTIMATE, not a licence to skip the measurement.
+**THE HARVEST WRITE-UP THAT ROW OWED IS DISCHARGED — by the desk, in the row's
+`THE STAMP` block. Do not spend a slot redoing it.** Two readings are already
+written there and you should know them rather than re-derive them: mechanism (ii)
+provably fired (`lr_final_max` 0.0, so the FAIL measures the mechanism and not
+its wiring — that receipt was the right thing to pre-commit and it did its job);
+and the `heldout_cv_pct` / `heldout_cv_pct_final` pair you built for attribution
+**reversed its own verdict between the two arms** — 16.994 -> 14.666 in attempt
+4, 16.861 -> 17.285 in attempt 5, same mechanism, same `tail_frac`, same venue,
+opposite sign. Your attribution instrument is what found that. It is a better
+result than a passing spec would have been.
 
-**WHY IT OUTRANKS EVERYTHING — derive it, don't inherit it:** `run blocked` for
-the block mass, `gpu_budget.json`'s current `%Y-W%U` week for the quota and its
-Saturday expiry. Shape only: the largest blocker on the board by a wide margin,
-and a free GPU week dying this Saturday whose only named buyer is this unit.
-Three prior weeks expired the same way.
+**THE ONE PROHIBITION IN THIS BLOCK, and it is the reason the block exists:
+DO NOT DISPATCH A SIXTH `T1.08` ATTEMPT.** Not a third mechanism, not a re-run,
+not a seed sweep — nothing. The routing row forbade a third mechanism in writing
+and its successor
+(`t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign`, OPEN,
+DUE 2026-10-21) inherits that prohibition verbatim. The open question is now an
+ESTIMATOR question — seeds, the statistic, the bar's provenance — and it is the
+desk's, with its arms to be chosen BEFORE any number is read. **This matters
+today specifically because of a collision you would otherwise walk into:** your
+own journal called this unit "W40's only named buyer" in five consecutive
+entries, and `2026-W40`'s free Kaggle hours expire **Saturday 2026-10-10**. A
+dying quota plus a spent habit is exactly how a sixth 3-seed reading of a
+statistic we have just shown to be unreliable gets bought. **Unbought hours are
+cheaper than hours spent confirming a broken instrument.** If a slot opens and
+`T1.08` is the only buyer you can find, the correct act is to buy nothing and
+say so in the journal.
 
-**LIVE PRIORITY BLOCK (SUPERSEDED HEADER, retained for `1^18`'s items) — `1^18`/`2^10` (item `1^18` Review 2026-10-04, FULL;
-`1^17`'s ITEMS 0–1 REMAIN LIVE and are NOT restated — nothing in `1^17` was
-executed, because you have been dark since 10-01, so read it as your board and
-not as history. `1^18` RE-RANKS it; it discharges nothing in it.)
+**ITEM 2 — WHAT THE BOARD IS INSTEAD, derived this sitting and not cached.**
+`run next` reports **0 fresh** specs for a sixth consecutive day: every runnable
+row carries a settled verdict, and `ready()` has never meant "legitimate
+dispatch". So your work is not in `next` — it is the **DISPOSITIONED rows in
+`docs/REVIEW_QUEUE.md`, which carry delivered designs awaiting execution.** Read
+them there, in `DUE:` order; they are not restated here and their rulings are
+long. Two cautions that are not in any of those rows:
+**(a) CHECK `DELIVERED — AWAITING STAMP` BEFORE YOU START ANYTHING.**
+`run review-queue` prints it. Several of those designs are already executed by
+you and are waiting only on a desk's `ACTED` — starting one again is the most
+expensive mistake available on this board.
+**(b) `T1.08`'s 45-spec block mass DID NOT MOVE and does not make it yours.**
+`run blocked` still ranks it first by a wide margin (frees 3, blocks 45). That
+number is why the desk is spending a Sunday on the estimator question; it is not
+a licence to dispatch against a prohibition. The largest blocker on the board
+being out of your hands is a real state and the honest response to it is a
+journal line, not a run.
 
-## `1^18` — THE BLOCKER WITH 49 SPECS BEHIND IT HAS A DESIGN AS OF THIS MORNING,
-## AND ITS FIRST STEP IS `grep` (Review 2026-10-04, FULL)
-
-**ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
-overrides it.** Derive the streak yourself; no number is cached here. This item
-says what to do when a slot opens, never that one should.
-
-**ITEM 1 — `T1.08` STEPS 0+1 ARE YOUR FIRST REAL UNIT, AHEAD OF `1^17` ITEM 1.**
-The design is in `docs/REVIEW_QUEUE.md` under `THE DESIGN` on
-`t108-pipeline-repair-has-no-design` (DISPOSITIONED 2026-10-04, `DUE: 2026-10-08`
-for Steps 0+1 only). Read it there; it is not restated here.
-**Why it outranks registering `W1.01`/`W1.04`:** that unit is a zero-GPU
-registration that keeps until a slot is spare; this one has a perishable week of
-free Kaggle hours behind it and is the largest blocker on the board. Derive both
-yourself from `gpu_budget.json`'s current `%Y-W%U` week and from the ledger.
-**STEP 0 IS FREE, COMES FIRST, AND COMMITS ALONE.** A source check, not a run.
-Verify it yourself rather than taking it from the design; if it comes out
-differently, **STOP AND ROUTE** — the whole repair order depends on it.
-**STEP 1 IS A DIAGNOSTIC, NOT A REPAIR**, and decides which repair is legal. Do
-not implement Step 2a or 2b in the same slot; their bills differ by 19
-certificates and the design pre-registers which applies.
-**THE BAR YOU MAY NOT MOVE:** `MAX_HELDOUT_CV_PCT` 7.0 stays byte-unmoved under
-every branch. A genuine spread is a RESULT you report, not a bar you adjust.
+**`1^18` WAS EXCISED 2026-10-09 (Review, DAILY) — FULLY SPENT, AND IT IS THE
+CEILING RULE THAT FORCED THE CHECK.** Its only substantive item was `T1.08`
+Steps 0+1, which you executed, and whose whole chain through Step 2b is now
+`ACTED` at `b7aa2bf`; its ITEM 0 was a pointer to `1^16` ITEM 0, restated in
+`1^22` above. Writing `1^22` took this file to **125,687 bytes — 687 over the
+125,000 ceiling** — and the rule above is not decorative: past 131,072 you do
+not read a degraded prompt, you fail to launch with `rc=126`. The desk that grew
+the file paid for it by deleting its own spent order rather than by trimming a
+live one. `git show cff86c3:scripts/ladder_prompt.md` has the text.
 
 **LIVE PRIORITY BLOCK (SUPERSEDED HEADER, retained for `1^17`'s items) — `1^17`/`2^10` (item `1^17` Review 2026-10-02, DAILY;
 `1^16`'s ITEMS 0–2 REMAIN LIVE and are not restated — read both, ITEM 0's pace
@@ -644,36 +648,21 @@ number is cached here. The gate is right, leave it alone, and do not treat a dar
 slot as a slot you owe work for. This block tells you what to do WHEN a slot
 opens — it does not ask you to make one open.
 
-**ITEM 1 — `W1.01` AND `W1.04` ARE REGISTRABLE TODAY, AND UNTIL THIS MORNING
-EVERYONE INCLUDING THIS DESK BELIEVED THEY WERE NOT.** The W1 design has been
-published since 2026-09-06 (`9eddb52`). Its summary line says `W1.01`, `W1.03`
-and `W1.04` "need the world-edit window", and the world-edit window was DECLINED
-on 09-28 — so all three read as dead. **Re-read against the design's own spec
-bodies, that summary is wrong for two of the three:** for `W1.01` and `W1.04` the
-world edit is needed to **PASS**, not to **RUN**. `W1.01` ("Passivity dies")
-claims `passive <= FLOOR < ROOF <= oracle` with a benign-twin control — a
-measurement of W0 as it stands. `W1.04` ("The horizon is longer than the
-consequence") measures the horizon against a MEASURED time-to-consequence and its
-own falsifier contemplates passing trivially. **`W1.03` is genuinely dead and you
-are not to register it** — its claim is that the venue CONTAINS traps, delays and
-irreversibility and its control needs a twin with them REMOVED; neither sentence
-is writable against a world that has none.
-**WHAT YOU ARE ORDERED TO DO: register `W1.01` and `W1.04` from the published
-design. REGISTRATION ONLY** — no dispatch, no world edit, no threshold invented
-by you. Take every bar, conjunct, control and falsifier from `THE W1 DESIGN` block
-in `docs/REVIEW_QUEUE.md`; if the design is silent or ambiguous on a bar, **STOP
-AND ROUTE** rather than choosing one, because choosing it would make you the
-designer and `D22` says you are not.
-**EXPECT `W1.01` TO FAIL, AND DO NOT TREAT THAT AS YOUR ERROR.** `SH.02`'s pilot
-already measured twin, privileged oracle and both cosmetic controls at exactly
-`1.0000`, which is the saturation `W1.01` forbids. **A FAIL here is the point:**
-it converts "seven independent instruments say W0 is too shallow" from prose in a
-queue row into a registered, gated, falsifiable red. Do not soften anything to
-avoid it; a PASS obtained by softening would destroy the only value in the unit.
-Row: `w0-too-shallow`, `DUE: 2026-10-13`, with the full reasoning.
-**Cost, derive it yourself but it should be near zero:** registration bought zero
-existing certificates when you did `LG.14` the same way on 10-01. If your own
-`registry_expansion` stale-cost reading disagrees, disclose it and stop.
+**ITEM 1 IS DISCHARGED AND IS EXCISED 2026-10-09 (Review, DAILY) — YOU DID IT,
+AND THE DESK'S WRITTEN PREDICTION ABOUT IT WAS WRONG.** It ordered `W1.01` and
+`W1.04` registered from the published design. Both are registered and both have
+RUN: `W1.01` **PASS** 2026-10-06T05:59:23 (`16b8495`), `W1.04` **VOID**
+2026-10-06T07:02:11 (`0326fbb`), read from the ledger at HEAD this sitting;
+`W1.03` correctly has no spec. **This item told you in bold to EXPECT `W1.01` TO
+FAIL** — *"a FAIL here is the point"* — and it passed. That is the desk's error,
+not yours, and it is being handled where it belongs: as a result on
+`w0-too-shallow` (`DUE: 2026-10-13`), not as steering. Two cautions survive the
+excision because they are about the PASS rather than the order: `W1.01`'s row
+carries `HASH-SALT DIFFERENTIAL ERRORED (11 deciding metric(s); reporting-only)
+TimeoutExpired`, so its salt robustness is UNMEASURED rather than clean — do not
+quote it as a clean PASS; and `W1.04`'s VOID says *"run did not test the claim;
+not a refutation"*, so it is not evidence either way. `git show
+cff86c3:scripts/ladder_prompt.md` has the original order.
 
 **ITEM 2 — THREE DESIGNS WERE RULED THIS MORNING AND YOU READ THE ROWS, NOT THIS
 LIST.** No date, count or status is copied here. `declared-venue-vs-delivered-
