@@ -5694,6 +5694,46 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
         `DISPOSITIONED`; the design below is unchanged; nothing is relabelled
         `HELD` to buy silence, and the `BLOCKED-BY` above is left pointing where
         it points.
+    BLOCKED-BY: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign |
+        RE-PARENTED 2026-10-09 (Review DAILY), and **this is the SECOND
+        consecutive re-parent forced by this desk's own act one commit earlier**
+        — disclosed here rather than left for the instrument to find, exactly as
+        the 10-08 line disclosed the first. Stamping `t108-step-2b-recipe-repair-
+        is-routed-off-eval-cv-0-52` ACTED (`b7aa2bf`) this sitting made this hold
+        a `HOLD-ON-A-RESOLVED-BLOCKER` again. **The release condition is
+        UNCHANGED and is STILL NOT MET**, and it is worth writing out because the
+        instrument's message says the opposite: this row's condition, authored
+        2026-09-27 and never softened, is *"Step 2b executed to a non-FAIL
+        `T1.08`"*. Step 2b **executed** — and `T1.08` is **FAIL** at attempt 5
+        (`ran_at` 2026-10-08T13:19:59, `b7aa2bf`, `heldout_cv_pct` 17.285 against
+        a byte-unmoved 7.0), re-read from `experiments/ledger.json` at HEAD this
+        sitting and not inherited from any page. So the conjunct that matters
+        went the wrong way: the blocker is terminal because the WORK finished,
+        not because the TARGET was reached. Only the parent moves — onto the row
+        that now carries the remaining work. Nothing else: status stays
+        `DISPOSITIONED`, the 10-18 date is KEPT and not re-promised, no clock is
+        dropped, and nothing is relabelled `HELD`.
+    WAITS-ON: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign
+    STOP-RULE, ARMED 2026-10-09 AGAINST THIS DESK, and it is a NEW rule because
+        the defect has changed shape under it. The 09-15 stop-rule forbade a
+        fourth DATE on an unreachable run, and it fired correctly. What no rule
+        yet covers is a fourth PARENT: this row has now followed the `T1.08`
+        repair chain through three of them — `t108-pipeline-repair-has-no-design`
+        (09-27) -> `t108-step-2b-...` (10-08) -> this one (10-09) — and each
+        re-parent was individually honest while the pattern went unnamed. **The
+        chain has stopped producing repairs and started producing questions.**
+        Its newest link does not propose a sixth attempt; it asks whether a
+        3-seed CV can adjudicate anything, and its arm (c) records that the 7.0
+        bar has been met exactly once, 58 days ago, by a reading that may itself
+        have been a lottery. **So: if that row's disposition concludes that
+        `T1.08` as written cannot be passed, this row is NOT re-parented a
+        fourth time.** It becomes a FOR THE OWNER finding, because a permanently
+        unbuyable successor re-run behind a VOID Tier-1 `D1.0` is a question
+        about what this project has proved, not a question about scheduling —
+        and five dates and three parents is long enough for a queue to have
+        learned that distinction. If instead the estimator question resolves and
+        `T1.08` becomes reachable, this row is the builder's two-step stamp
+        exactly as designed below, unchanged since 2026-09-08.
 
 **Why this row exists (60th audit FINDING 2, quoted arithmetic).** `D1.0`
 fired as D1's armed default, ran 16.17 GPU-hours — 54% of a weekly quota —
@@ -20297,7 +20337,7 @@ ascending-bill rule applied to the desk's own order rather than to a builder's.
 ## number"*; no desk routed it, and the builder refused to start it in five
 ## consecutive journal entries, correctly. This is that routing.
 
-ROUTED: t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52 | 2026-10-07 | Step 1's own artifact `/data/t108_step1_evalcv.json` and its launch log `/data/jack-logs/t108_step1_probe.log` (LAUNCH 2026-10-05T16:17:06Z, kaggle `jack-ladder-1791217029`, Tesla T4, 0.2708 h charged to 2026-W40), read at source this sitting; the branch predicate and both thresholds pre-registered at `b80dbe3` BEFORE any number was read; `run blocked` re-run this sitting for the leverage arithmetic | OPEN
+ROUTED: t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52 | 2026-10-07 | Step 1's own artifact `/data/t108_step1_evalcv.json` and its launch log `/data/jack-logs/t108_step1_probe.log` (LAUNCH 2026-10-05T16:17:06Z, kaggle `jack-ladder-1791217029`, Tesla T4, 0.2708 h charged to 2026-W40), read at source this sitting; the branch predicate and both thresholds pre-registered at `b80dbe3` BEFORE any number was read; `run blocked` re-run this sitting for the leverage arithmetic | ACTED 2026-10-09 b7aa2bf (Review DAILY — **both mechanisms are IMPLEMENTED, DISPATCHED AND HARVESTED, and the row's own pre-registered branch has fired on the second one. Attempt 5 is on the ledger: `heldout_cv_pct` 17.285 vs the byte-unmoved 7.0, FAIL, with `lr_final_max` 0.0 proving the schedule actually ran.** Execution of what this row ordered is COMPLETE; the result is a FAIL and a FAIL was pre-registered as a result. The residual is NOT a third mechanism — the row forbade that in writing — it is the design question this row routed back to this desk, and it is live as its own row `t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign`. See THE STAMP below)
     SUBJECT: a SPEC's science — `T1.08`'s noise floor and the shipped recipe
         that produces it. No instrument and no governance rule is in question.
     DUE: 2026-10-09 | **DATED ON PERISHABILITY, NOT ON CAPACITY, and the
@@ -20465,6 +20505,151 @@ reaches 45 specs.
     bill with `run stale-cost` against the files it actually edits BEFORE
     editing, and reports it in the slot — the quoted figure is the design's
     estimate, not a licence to skip the measurement.
+
+### THE STAMP, 2026-10-09 (Review, DAILY). **The builder did everything this row ordered, on the perishable hours it was dated for, and the answer came back NO. Both mechanisms fired, both are on the ledger, and the row's own pre-registered residual — not a third mechanism — is what it owes next.**
+
+**WHAT WAS EXECUTED, read from `experiments/ledger.json` at HEAD and not from the
+builder's trace.** `T1.08` attempt 5, commit `b7aa2bf`, `ran_at`
+2026-10-08T13:19:59, kaggle `jack-ladder-1791461828`, Tesla T4, 3764.97 compute-s
+(1.046 h) charged to `2026-W40`. `status` **FAIL**, `message` *"pre-registered
+threshold not met"*. `MAX_HELDOUT_CV_PCT` is byte-unmoved at 7.0 and `spec_sha`
+`83a78c32db41b9f7` is **identical to attempt 3's and attempt 4's** — the bar and
+the experiment did not move across three attempts, only the recipe did, which is
+exactly the condition under which the three numbers may be compared at all.
+
+**THE RECEIPT THE BUILDER PRE-COMMITTED TO, and it discharges the one way this
+result could have been vacuous.** `lr_final_max` **0.0** and `lr_schedule`
+`warmup100+cosine_to_0`. Mechanism (ii) was not merely coded, it demonstrably
+RAN: a cosine schedule that silently failed to attach would have left the final
+learning rate at base, and the reported 0.0 forecloses that. So the FAIL is a
+measurement of the mechanism, not of its wiring. This is the pattern the desk
+should keep ordering — a dispatched mechanism carrying a receipt that proves it
+fired is worth more than one carrying only its own verdict.
+
+**THE THREE NUMBERS, same bar, same experiment, same venue for the last two:**
+
+    attempt 3  3d357c4  P100  heldout_cv_pct 40.006                          (no repair)
+    attempt 4  381a9e6  T4    heldout_cv_pct 14.666   final 16.994   (i) tail-averaging
+    attempt 5  b7aa2bf  T4    heldout_cv_pct 17.285   final 16.861   (i)+(ii) cosine-to-0
+
+**READING 1 — mechanism (ii) did not work, and the comparison is clean.**
+14.666 -> 17.285 against an unmoved bar of 7.0. Attempts 4 and 5 are both T4,
+both kaggle, both `spec_sha` `83a78c32db41b9f7`, so the venue/lottery confound
+that the builder correctly refused to credit for 40.006 -> 16.994 does NOT apply
+here. Decaying the learning rate to a demonstrated zero moved the across-seed CV
+**the wrong way** and left it 2.5x its bar.
+
+**READING 2 — AND IT IS THE FINDING, because nobody has written it down and it
+is about this desk's evidence rather than the builder's work. THE ATTRIBUTION
+PAIR THAT WAS BUILT TO CREDIT MECHANISM (i) HAS NOW REFUTED THAT CREDIT.** The
+`heldout_cv_pct` / `heldout_cv_pct_final` pair exists because the 10-08 slot
+built it so that (i)'s own effect could be separated from the venue. In attempt 4
+it read 16.994 -> 14.666 and the builder banked *"(i)'s own effect is ~14%
+relative"* — carefully, and with the 40.006 balance explicitly NOT credited. In
+attempt 5 the same pair reads **16.861 -> 17.285**. Tail-averaging the last 20%
+of steps made the delivered checkpoint's across-seed CV **WORSE** this time.
+**The sign flipped.** One arm said averaging helps by 14%, the next arm said it
+hurts by 2.5%, nothing about mechanism (i) changed between them, and `tail_frac`
+is 0.2 in both. So (i) has no established effect at all: what attempt 4 measured
+was within the noise of the very quantity the spec is trying to measure, which is
+the most ironic possible way for this spec to fail and the most informative. **A
+3-seed CV is being used to adjudicate repairs whose effects are smaller than a
+3-seed CV's own sampling error.** `seeds` is `[0]` with `seeds: 3` in metrics on
+every one of the three attempts.
+
+**WHY THIS IS `ACTED` AND NOT `DISPOSITIONED`, since the spec still FAILs.** The
+row ordered Step 2b — the recipe repair selected by Step 1's `eval_cv_pct` 0.52 —
+and named its own completion condition in writing: *"commit the ledger row AS
+FOUND, PASS, FAIL or VOID — a STILL-FAIL is pre-registered and is a result."* The
+ledger row exists, as found, FAIL. Execution is complete and `b7aa2bf` is the
+commit that performed it. Holding this row open because the science came back
+negative would be the file's worst available habit: it would make `ACTED` mean
+*"the result pleased us"*, and the one thing this project cannot afford is a
+queue status that is a verdict on the finding rather than on the work.
+
+**WHAT THE ROW FORBADE, honoured.** *"...the residual routes BACK TO THIS DESK as
+a design question (estimator/seeds/statistic), not to a third mechanism invented
+at a keyboard."* No third mechanism is ordered here, and this desk is not
+inventing one. The residual is routed, as its own row, below.
+
+**WHAT IT COST, said plainly because the date was argued on perishability.** Three
+attempts spent 0.356 + 0.654 + 1.046 = **2.056 GPU-h** of `2026-W40`'s 30, and
+bought a decisive negative: the shipped recipe cannot hold its own noise floor,
+and two spec-local deliveries of it do not change that. `2026-W40` still holds
+**28.029 free Kaggle hours expiring Saturday 2026-10-10** — tomorrow. The row's
+date was chosen to beat that expiry and it did, by two days. The quota is not
+the thing that failed here.
+
+## ============================================================================
+## ROUTED 2026-10-09 (Review DAILY, as the pre-registered residual of
+## `t108-step-2b-recipe-repair-is-routed-off-eval-cv-0-52`'s ACTED stamp): two
+## spec-local recipe repairs are spent, and the instrument that judged them
+## reversed its own verdict between two arms
+## ============================================================================
+
+ROUTED: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | 2026-10-09 | `experiments/ledger.json` `results.T1.08` read at HEAD this sitting — attempt 5 (`b7aa2bf`, FAIL, `heldout_cv_pct` 17.285, `heldout_cv_pct_final` 16.861, `lr_final_max` 0.0) against attempt 4 (`381a9e6`, FAIL, 14.666 / 16.994, same `spec_sha` `83a78c32db41b9f7`, same T4 venue) and attempt 3 (`3d357c4`, FAIL, 40.006); `MAX_HELDOUT_CV_PCT` 7.0 confirmed byte-unmoved at `experiments/tests/t1_08_seed_variance.py` | OPEN
+    SUBJECT: a SPEC's science — the ESTIMATOR `T1.08` gates on, not a third
+        mechanism for the recipe. The parent row forbade the latter in writing
+        and this row inherits that prohibition verbatim.
+    DUE: 2026-10-21 | the tool's own `next date with room under the measured
+        capacity`, taken rather than argued around. **This is deliberately NOT
+        dated onto the expiring GPU week, and the reason is the opposite of the
+        parent row's.** The parent was dated on perishability because it had a
+        named GPU buyer and 29 h about to die. This row has **no GPU buyer at
+        all** until the estimator question is answered: ordering a sixth attempt
+        tomorrow would spend the quota on another 3-seed reading of a statistic
+        this row exists to question, which is the one purchase the evidence
+        forbids. Hours left unbought are cheaper than hours spent confirming a
+        broken instrument. The builder is also at **17 consecutive dark slots**
+        this morning, so a nearer date would promise against an organ that is
+        not running.
+    WAITS-ON: none | both inputs are delivered and on the ledger. This row is
+        NOT held behind the `playground.py` world-edit window: nothing here
+        touches the shared world, and the two repairs it supersedes were both
+        executed SPEC-LOCAL at a measured 0-certificate bill.
+    THE QUESTION, in one sentence: **`T1.08` adjudicates repairs with a 3-seed
+        across-seed CV, and that statistic has now contradicted itself on the
+        same mechanism in two consecutive arms — so what does the spec gate on?**
+    THE EVIDENCE, which is what makes this a design question and not a retry.
+        Mechanism (i) (tail-averaging, `tail_frac` 0.2, unchanged between arms)
+        measured **16.994 -> 14.666** in attempt 4 and **16.861 -> 17.285** in
+        attempt 5. Same mechanism, same bar, same `spec_sha`, same venue, opposite
+        sign. The pair was built to attribute (i)'s effect; what it actually
+        established is that (i)'s effect is smaller than the noise in the
+        estimator measuring it. A bar of 7.0 is being defended by a number whose
+        own arm-to-arm swing is ~2.6 CV-points.
+    THE THREE CANDIDATE ARMS, for the disposing sitting to choose between — and
+        the choice must be made BEFORE any number is read, as `b80dbe3` did for
+        Step 1, because this row's whole subject is a statistic that moves:
+        (a) **SEEDS.** `seeds: 3` on every attempt. Raise the seed count and
+            price what the CV's own sampling error is at n=3 vs n=10 — if the
+            7.0 bar is not resolvable at n=3, no recipe can ever be shown to
+            meet it and all three attempts were unfalsifiable by construction.
+            This is the arm that could retire the other two.
+        (b) **STATISTIC.** CV of the mean is scale-sensitive and `heldout_mean`
+            moved 0.05849 -> 0.0259 -> 0.0299 across the three attempts, so the
+            denominator is not stable while the bar on the ratio is. Ask whether
+            the claim wants a dispersion measure that does not divide by a
+            moving mean.
+        (c) **THE BAR'S PROVENANCE.** 7.0 was met once, by attempt 2 (`d74e1bd`,
+            2026-08-12, colab T4, `heldout_cv_pct` **5.717**, PASS). That single
+            PASS is the only evidence the bar is reachable, it is 58 days old,
+            and under the reading in (a) it may itself have been a 3-seed
+            lottery. **This arm is REPORT-ONLY and may not lower the bar** — the
+            desk that disposes this row may not touch 7.0 downward under any of
+            the three arms; it may only say what the number is worth.
+    WHAT THIS ROW MAY NOT DO, inherited from its parent and restated so the
+        disposing sitting cannot drift: it may not order a third recipe
+        mechanism, and it may not move `MAX_HELDOUT_CV_PCT`. If the honest
+        answer is that `T1.08` as written cannot be passed, that is a FOR THE
+        OWNER finding about a Tier-1 spec, not a threshold edit.
+    STALENESS BILL: **ZERO today** — minting a row edits no spec file. The bill
+        on the eventual disposition is arm-dependent and must be priced with
+        `run stale-cost` BEFORE editing, not from this estimate: (a) and (b) are
+        spec-local to `t1_08_seed_variance.py`, which the last two attempts
+        measured at **0 certificates**, and (a) additionally buys GPU time
+        linear in the seed count — attempt 5 cost 1.046 h at 3 seeds. (c) edits
+        nothing and costs nothing.
 
 ## ============================================================================
 ## ROUTED 2026-10-08 (Review DAILY, as the disclosed residual of
