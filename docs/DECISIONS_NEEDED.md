@@ -9982,6 +9982,157 @@ DECIDE: D42
 
 ---
 
+## D44 — Jack ships a typed character sheet, it is on by default, it reaches the LLM through his shipped answer path, and `GOAL.md` forbids it in your own words. Thirteen days in a queue row where you do not read. (2026-10-10, Review, DAILY)
+
+**WHY THIS IS ARRIVING NOW AND NOT ON 2026-09-27, because that is the first fair
+question and the answer is a process failure, not a new measurement.** The
+builder measured all of this on 2026-09-27 and routed it as
+`personality-is-a-typed-character-sheet-on-the-answer-path`. That row's own menu
+says character *"is reserved to the owner by the north star's own text"* — and
+then the question stayed in `docs/REVIEW_QUEUE.md`. Measured this sitting:
+`personality`, `character sheet` and `core_values` return **ZERO hits** across
+`docs/DECISIONS_NEEDED.md` **and** `docs/DECISIONS_RESOLVED.md`. For thirteen
+days the sharpest constitutional contradiction this project has found sat in a
+file you do not read, inside a row that says on its face that only you may rule
+it. That is the `VANISHED-OWNER-ASK` shape, caught by this desk's own
+`OVERDUE FIRST` pass rather than by the instrument, and this entry is the repair.
+
+**THE MEASUREMENT, re-verified at source in this venv this sitting rather than
+taken from the row.** Every number reproduces exactly:
+
+```
+Personality.py:135-139   openness 0.85 · conscientiousness 0.55 · extraversion 0.60
+                         agreeableness 0.80 · neuroticism 0.25     (dataclass defaults)
+Personality.py:731       JACK_PERSONALITY = Personality()           (constructed at import)
+constructed PAD          pleasure +0.491 · arousal -0.360 · dominance +0.120
+get_system_prompt()      2,585 characters
+core_values[0..4]        'Curiosity above all -- always wants to understand why'
+                         'Honesty -- admits when confused or wrong'
+                         'Kindness -- genuinely cares about others'
+                         'Growth -- celebrates learning and improving'
+                         'Friendship -- values connection with the user'
+UnifiedBrain.py:264      enable_emotional_state defaults TRUE
+UnifiedBrain.py:4093     self.personality = JACK_PERSONALITY        (wired on by default)
+UnifiedBrain.py:2784     answer_question() -> :2803 persona = get_system_prompt(mood_dict)
+grep across experiments/ ZERO callers of answer_question / get_system_prompt /
+                         _generate_with_llm  -> no spec on this ladder can see it
+```
+
+The fallback when `personality is None` is `"You are a helpful companion
+robot."` — so the sheet is not an optional enrichment of a neutral path, **it is
+the path.**
+
+**WHAT `GOAL.md` SAYS, quoted from `:167-182`.** *"he must develop knowledge and
+connect it to words instead of just the LLM communicating and pretending to be
+Jack."* And: *"We carve what he IS — the needs, the senses, the honesty, the
+mortality — and we deliberately refuse to carve his character. **His kindness is
+not decreed**; it is expected to GROW from his need for company, the way it grew
+in us."* And: *"If who he becomes ever troubles us, that is a conversation for
+the owner, not a hotfix."*
+
+`core_values[2]` is the literal string `'Kindness -- genuinely cares about
+others'`, injected into the LLM's system prompt by default. Kindness is decreed,
+as a typed constant. So is curiosity — the north star's own measurement target —
+as `'Curiosity above all'`.
+
+**WHAT I HAVE ALREADY DONE AT MY DESK, so this ask is read against the act and
+not instead of it.** I took the row's option **(iii) REGISTER THE QUESTION** this
+morning: a spec in `LG.00`'s family that runs the SHIPPED `answer_question` path
+with the sheet present and absent, with three conjuncts — his life answers must
+not move, his manner may move and is reported separately, and **provenance is
+scored per response** (the `TEMPLATES` bank at `UnifiedBrain.py:2659-2688` fires
+on any exception at `:2766` with no marker, so an unmarked run cannot tell *"the
+sheet changes nothing"* from *"both arms served the same canned bank"*). It must
+call the shipped path and may NOT score through `lg_01`'s `_prompt` scaffold —
+which is exactly why `LG.00`'s PASS is blind here: *"the one certificate about
+Jack not being a costume was bought in a venue that does not contain the
+costume."* Design published, registration dated 2026-10-22. **That ruling is
+deliberately non-prejudicial: it is compatible with either answer below, which
+is why a desk could take it.**
+
+**WHY THE REST IS NOT MINE.** `GOAL.md` reserves the character question to you in
+its own words, and the standing prohibition forbids this desk's builder deleting
+or re-valuing a component. Removing the sheet additionally bills **18 standing
+PASS certificates** that hash `UnifiedBrain.py`, priced by `stale-cost`. A desk
+may not spend that to settle a question the north star hands to the founder.
+
+**THE MENU AS THE ROW WROTE IT, AND WHY I AM NOT RECOMMENDING EITHER HALF OF IT
+AS WRITTEN.** The row offers (i) rule the traits DELIBERATE and document them in
+`GOAL.md`, or (ii) rule them a BREACH and strip them. **Both force ONE ruling
+onto two different objects, and that is the defect in the menu.** The five Big
+Five floats are a TEMPERAMENT — they become a PAD baseline, a disposition, the
+kind of thing a human infant demonstrably has at birth and which `GOAL.md`'s own
+list of things we DO carve ("what he IS") can accommodate. The five
+`core_values` strings and the 2,585-character persona prose are something else
+entirely: they are **decreed character, in English, in the system prompt**, and
+they are what the owner's sentence *"His kindness is not decreed"* is about.
+Ruling them together means either blessing the decreed values to keep the
+temperament, or paying 18 certificates to remove a temperament that was probably
+always fine.
+
+> **MY RECOMMENDATION, quoted here verbatim so it cannot drift from what I
+> actually asked: SPLIT THE OBJECT AND RULE THE TWO HALVES OPPOSITELY. (a) The
+> five Big Five floats and the PAD baseline they produce are DELIBERATE — a
+> starting temperament is not a carved character, an infant has one, and it is
+> "what he IS" in `GOAL.md`'s own sense. Keep them, and add the sentence to
+> `GOAL.md` that says so, so five undocumented dataclass defaults stop being
+> undocumented. (b) The five `core_values` strings and the persona prose that
+> asserts his character to the LLM are a BREACH and should come out of the
+> default answer path — "Kindness -- genuinely cares about others" is the exact
+> thing your own sentence "His kindness is not decreed" forbids, and curiosity
+> being decreed in the same list as the thing the entire curiosity family exists
+> to MEASURE is worse than untidy, it is circular. What conditions the LLM should
+> be the diary and the learned core, plus a temperament, and nothing that tells
+> it who Jack already is. Pay the 18-certificate bill once, on (b) alone, and
+> let the spec I registered this morning measure whether it mattered.**
+
+**WHAT I AM NOT ASKING.** Not whether the measurement is right — it reproduces at
+source and nothing in it is contested. Not to rule on the spec: it is registered,
+it is mine, and it proceeds however you rule here. Not for a hotfix — `GOAL.md`
+forbids that in the same breath, which is why this is an entry and not a commit.
+
+**WHY `class: goal` AND NOT `conduct`, pre-empting the flag this entry will
+draw.** `decisions --check` prints `CONDUCT-MISFILED?` against any `goal` entry
+that blocks no spec id, and it will print it here. It is wrong here for the same
+reason it is wrong on `D39`/`D40` and right to keep printing: this question is
+not about how the organs work, it is about **what Jack must BECOME** — it is the
+paradigm case of `goal`, it is the one question `GOAL.md` names as the owner's by
+title, and reclassing it to `conduct` would make it desk-executable, which would
+hand a desk the authority to decree or un-decree Jack's character. That is the
+one reclass this desk refuses.
+
+DECIDE: D44
+  class:     goal
+  blocks:    no spec id directly. It blocks nothing that is running, and that is
+             what has made it easy to leave for thirteen days. What it governs is
+             what the FIRST end-to-end certificate of Jack will contain:
+             `T6.01`/`T6.02`/`T6.04` are NOT_RUN, zero specs call this path
+             today, and it executes the first time one runs Jack end to end —
+             which is the freeze's own release condition. Not perishable in
+             GPU-hours. Perishable in exactly one way: ruled after `T6.01` runs,
+             it is a finding inside a bought certificate instead of a question
+             before one.
+  default:   NO RULING — THE SHEET STAYS EXACTLY AS IT SHIPS AND NOTHING IS
+             DOCUMENTED. The five floats stay, the five `core_values` stay, the
+             2,585-character persona keeps conditioning the default answer path,
+             and `GOAL.md` keeps forbidding in text what the code ships by
+             default. The spec registered this morning proceeds on its own clock
+             and REPORTS whatever it finds either way; this default rules only on
+             the sheet. Carries NO DATED ACTION, deliberately. MONOTONE — it
+             moves no threshold, edits no constitution text, deletes no
+             component, stales no certificate, spends no GPU-hour and no
+             CPU-second, and withdraws no finding. Deliberately NOT the
+             recommendation: deciding whether Jack's character may be decreed is
+             the single thing `GOAL.md` hands to you by name, and a default that
+             blessed the status quo on your behalf would be a desk ruling on who
+             Jack is by letting a clock run out. Its price, stated rather than
+             buried: the contradiction stays live, the five undocumented floats
+             stay undocumented, and the first end-to-end certificate this project
+             buys is bought over a costume nobody ruled on.
+  decide_by: 2026-10-24
+
+---
+
 ## D43 — Seven real measurements are now in TERMINAL rows because the window they waited on was abandoned and `D33` can no longer be answered. The holds are gone; the findings need somewhere to live. (2026-10-09, Review, DAILY)
 
 **WHAT I DID THIS MORNING, so the ask is read against the act and not instead of

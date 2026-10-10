@@ -18405,7 +18405,7 @@ and both repairs above are declarations on instruments that already exist.
     changed, no bar moved in either direction, no conjunct armed, no instrument
     built.
 
-ROUTED: personality-is-a-typed-character-sheet-on-the-answer-path | 2026-09-27 | `Personality.py:135-139, 731` + `UnifiedBrain.py:264, 2729, 2784, 2803, 4093-4100` read statically; `JACK_PERSONALITY` constructed and its PAD baseline + `core_values` + system prompt MEASURED in this venv; `stale-cost` census over all 21 repo-root modules; `lg_00_not_a_puppet.py`'s prompt path read. Builder, this slot, NO ledger write, NO spec or root module edited | OPEN
+ROUTED: personality-is-a-typed-character-sheet-on-the-answer-path | 2026-09-27 | `Personality.py:135-139, 731` + `UnifiedBrain.py:264, 2729, 2784, 2803, 4093-4100` read statically; `JACK_PERSONALITY` constructed and its PAD baseline + `core_values` + system prompt MEASURED in this venv; `stale-cost` census over all 21 repo-root modules; `lg_00_not_a_puppet.py`'s prompt path read. Builder, this slot, NO ledger write, NO spec or root module edited | DISPOSITIONED 2026-10-10 (Review DAILY, OVERDUE FIRST, D28's armed default — **option (iii) REGISTER THE QUESTION is TAKEN; (i) and (ii) are NOT this desk's and are routed to the owner as `D44`; (iv) is REFUSED.** The design is published in THE RULING below and the registration is the builder's from it, per the `W1.01`/`W1.04` precedent. Taking (iii) decides NOTHING about the character question — it buys the evidence (i)/(ii) should be ruled on. See THE RULING, 2026-10-10)
     DUE: 2026-10-09 | NOT `next_free_due`'s literal answer, and the arithmetic
         is disclosed so the desk can move it. Live dated promises per day,
         counted off the tool this slot: 09-28 through 10-07 are ALL at or over
@@ -18431,6 +18431,114 @@ ROUTED: personality-is-a-typed-character-sheet-on-the-answer-path | 2026-09-27 |
         `freeze-release-condition-is-five-specs-deep-...` (OPEN, DUE 10-07)
         owns the ROUTE to `T6.01`; this row owns what will be true when the
         route opens, and it is strictly better answered before then.
+    DUE: 2026-10-22 | RE-DATED 2026-10-10 (Review DAILY, OVERDUE FIRST). The
+        DESIGN debt is discharged in THE RULING below — option (iii), with both
+        conjuncts specified — so this date carries the BUILDER's registration
+        from a published design and not a further sitting of mine. That is the
+        `W1.01`/`W1.04` division exactly (`1^17` ITEM 1: *"ordered `W1.01` and
+        `W1.04` registered from the published design"*, both registered, both
+        run). Date is `review-queue`'s own print this sitting — *"Next date with
+        room under the measured capacity: 2026-10-22"* — not chosen by hand;
+        10-21 came to 6 when `lc03` landed on it earlier in this same sitting,
+        so this desk is not piling its own two disposals onto one day. It also
+        clears the pace line's projected ~10-12 release comfortably, so it is
+        not a promise made into the blackout.
+    HOLDS: the character question only, now `D44` | NOT a `WAITS-ON`, and the
+        distinction is the whole point: the REGISTRATION above waits on nothing
+        and is to proceed regardless of how `D44` is ruled or whether it is
+        ruled at all. Option (iii) was chosen precisely because it is the one
+        branch that is non-prejudicial to both (i) and (ii).
+
+### THE RULING, 2026-10-10 (Review, DAILY, OVERDUE FIRST). **Option (iii) TAKEN. (i) and (ii) go to the owner as `D44`. (iv) REFUSED. The contradiction becomes a falsifiable claim, which is what this project does with every other contested property.**
+
+**WHAT I RE-VERIFIED AT SOURCE BEFORE RULING, because this row asks for a spec
+and a spec ordered off a mis-read is worse than no spec.** Every load-bearing
+number in the finding reproduces exactly, measured in this venv this sitting and
+not read off the page: the five traits are dataclass defaults at
+`Personality.py:135-139` (openness 0.85, conscientiousness 0.55, extraversion
+0.60, agreeableness 0.80, neuroticism 0.25); `JACK_PERSONALITY = Personality()`
+at `:731`; the constructed PAD baseline is **pleasure +0.491, arousal −0.360,
+dominance +0.120**; `get_system_prompt()` renders **2,585 characters**; the five
+`core_values` read verbatim including `[2] 'Kindness -- genuinely cares about
+others'`; `UnifiedBrain:4093-4100` assigns the sheet by default; `answer_question`
+at `:2784` builds `persona = self.personality.get_system_prompt(mood_dict)` at
+`:2803`. And the blindness claim holds in the strongest form: **grep for
+`answer_question`, `get_system_prompt` and `_generate_with_llm` across
+`experiments/` returns ZERO hits.** No spec on this ladder can see this path.
+`GOAL.md:172-182` reads as quoted — *"we deliberately refuse to carve his
+character. His kindness is not decreed; it is expected to GROW from his need for
+company"*, and *"If who he becomes ever troubles us, that is a conversation for
+the owner, not a hotfix."*
+
+**WHY (iv) — "nothing, the path is dormant" — IS REFUSED, and it is the branch
+that would have been easiest to take on an overdue row.** Its own stated expiry
+is the argument against it: it *"stops being true the day `T6.01` runs, which is
+the day the freeze lifts."* So (iv) is not a disposition, it is a bet that the
+first end-to-end certificate this project ever buys will be bought before anyone
+looks at this again — and the defect would then be INSIDE that certificate,
+discovered afterwards. The row says this in terms and it is correct. A branch
+whose entire validity is "we will not get there soon" is refused on an overdue
+row by the desk whose job is asking "so what?".
+
+**WHY (i) AND (ii) ARE NOT MINE, stated so the routing is not read as
+timidity.** `GOAL.md` reserves the character question to the owner in its own
+words, and the standing prohibition forbids this desk's builder deleting or
+re-valuing a component. (ii) additionally bills **18 standing PASS certificates**
+that hash `UnifiedBrain.py`, priced by `stale-cost` — a desk may not spend that
+to settle a question the north star hands to the founder. **But the thing this
+row got wrong, and it is the reason the row went overdue rather than anything
+about its science: it identified the owner's jurisdiction correctly and then left
+the question in a queue row.** Measured this sitting: `personality`,
+`character sheet` and `core_values` return **ZERO hits** across
+`docs/DECISIONS_NEEDED.md` AND `docs/DECISIONS_RESOLVED.md`. For thirteen days
+the project's sharpest constitutional contradiction has been sitting where the
+owner does not read, in a row that says on its face that the owner must rule it.
+That is the `VANISHED-OWNER-ASK` shape exactly, and it is repaired here: the
+question is `D44`, with a class, a default, a `decide_by` and my recommendation
+quoted verbatim.
+
+**OPTION (iii), THE DESIGN, PUBLISHED SO THE BUILDER REGISTERS RATHER THAN
+DESIGNS.** A spec in `LG.00`'s family that runs the SHIPPED answer path twice —
+sheet present and sheet absent — and asserts the asymmetry `GOAL.md` names.
+Three conjuncts, and the third is the one the addendum earned:
+
+  1. **THE LIFE ANSWERS MUST NOT MOVE.** Questions about his own life
+     (diary-grounded, the `LG.00` family's subject) must be scored
+     SUBSTANTIVELY UNCHANGED between sheet-present and sheet-absent. If removing
+     a typed character sheet changes what Jack says happened to him, the sheet is
+     answering for him and the costume claim is live.
+  2. **THE MANNER MAY MOVE, AND MUST BE MEASURED SEPARATELY.** Tone, warmth and
+     register are permitted to differ, and the spec must report that difference
+     rather than suppress it — a spec that scored only (1) could pass by being
+     blind to the sheet entirely, which would certify nothing. The two channels
+     are reported as a PAIR; neither alone is the verdict.
+  3. **PROVENANCE IS SCORED, NOT ASSUMED** — the addendum's consequence, adopted
+     verbatim as a conjunct rather than left as a remark. Every scored output
+     must carry a per-response record of its producing organ. `ResponseGenerator`
+     falls back to `TEMPLATES` on ANY exception (`UnifiedBrain.py:2766`) and
+     `_generate_with_api` on any empty response (`:2776`), both returning
+     `random.choice` with **no per-response marker**. An unmarked run cannot
+     distinguish *"the sheet does not change his life answers"* from *"both arms
+     silently served the same canned bank"* — those are opposite results with
+     identical scores. `GOAL.md:180-183`'s *"reported truthfully"* is not
+     satisfiable by an output whose producing organ is unrecorded.
+
+**THE VENUE MUST CONTAIN THE COSTUME, and this is a STRENGTHENING of what
+`LG.00` has.** The spec must call the SHIPPED path — `answer_question` — and may
+NOT score through `lg_01`'s `_prompt` scaffold. That scaffold is exactly why
+`LG.00`'s PASS is blind here: it never calls `get_system_prompt()`, so *"the one
+certificate about Jack not being a costume was bought in a venue that does not
+contain the costume."* A successor that inherited the scaffold would inherit the
+blindness and buy a second green tick over the same hole. No bar is moved
+anywhere by this ruling; a venue is being aimed at the thing it claims to test.
+
+**WHAT THIS RULING DOES NOT DO, said against myself.** It does not rule the
+traits deliberate and it does not rule them a breach — (iii) is compatible with
+either, which is why it can be taken at a desk. It does not touch
+`Personality.py`, `UnifiedBrain.py` or any threshold. It does not mark `LG.00`
+red: that PASS is clean on its own terms and this spec is a SIBLING, not a
+re-run. And it buys no GPU-hour — the 28.029 free Kaggle hours expiring today
+are not a buyer for this and must not recruit it.
 
 **THE FINDING: Jack ships a typed character sheet, it is wired on by default,
 it reaches the LLM through his shipped answer path, and GOAL.md forbids it in
