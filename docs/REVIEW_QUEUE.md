@@ -10300,7 +10300,7 @@ gate and 1.5-sigma margin are `run_bakeoff`'s defaults. `SO.10` is not re-run to
 get a different winner — every arm's number is already in the row, and a re-run
 changes nothing about them.
 
-ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.12 determinism repair) | DISPOSITIONED 2026-09-19 (Review DAILY — none of (i)/(ii)/(iii): option (iv) NARROW THE DYNAMIC CHECK TO WHERE IT DECIDES, specified in the DISPOSITION block below; exact, zero false positives, no collision with D27, and the builder measures the target-set size and reports it BEFORE implementing)
+ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.12 determinism repair) | ACTED 2026-10-10 `19aab39` + `5ee32ff` (Review DAILY, OVERDUE FIRST — a STAMP debt discharged, not a work debt. Both halves option (iv) ordered were delivered 2026-09-26, re-verified from source this sitting: the instrument is live in `experiments/protocol.py` and 16 distinct specs now carry its differential. THE ARMED STOP-RULE IS DELIBERATELY NOT FIRED; see THE STAMP below for why firing it would be the defect it was armed against. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-09-19 (Review DAILY — none of (i)/(ii)/(iii): option (iv) NARROW THE DYNAMIC CHECK TO WHERE IT DECIDES, specified in the DISPOSITION block below; exact, zero false positives, no collision with D27, and the builder measures the target-set size and reports it BEFORE implementing)
     DUE: 2026-09-21 | RE-DATED 2026-09-19 (Review DAILY) BECAUSE THE DEBT
     CHANGED HANDS. The 2026-09-17 date broke on this desk and that break stands
     in the record. What was owed was a DESIGN ANSWER about an instrument, owed
@@ -10381,6 +10381,53 @@ ROUTED: hash-salt-lottery-in-a-gated-metric | 2026-09-13 | `8f3d944` (LG.10/LG.1
         re-issue described on `t215` applies verbatim: `docs/PROGRESS.md` FOR THE
         BUILDER item 2 (2026-09-27) hands this row over as *"execution owed"* a
         day after `5ee32ff`. Not stamped — `ACTED` is the desk's act.
+
+### THE STAMP, 2026-10-10 (Review, DAILY, OVERDUE FIRST). **`ACTED`. The desk's act, owed for fourteen days, performed on the third broken date.**
+
+**WHAT I VERIFIED, from source and ledger rather than from the two traces above,
+because the whole hazard on this row is a status believed from a page.** Both
+ordered halves exist: the binding-set MEASUREMENT at `19aab39` (2026-09-26,
+*"DECIDING 98 of 129 replayable CPU specs (76%), doubled cost 25,888 s = 44.9% of
+the day ceiling"*, with the margin declared before the scan — the *"reported
+BEFORE implementing"* precondition, met) and the IMPLEMENTATION at `5ee32ff`
+(2026-09-26). The instrument is live in `experiments/protocol.py`: `_salt_rerun`
+at 3897, the DIVERGENCE message at 4008, the CLEAN message at 4021. Line numbers
+differ from the 09-28 trace's because the file has moved since; the code is the
+same code.
+
+**THE EVIDENCE IS NOW STRONGER THAN THE TRACE THAT CLAIMED IT, which is the
+cleanest possible answer to "so what?" on this row.** Counted from
+`ledger.json` this sitting: **16** distinct specs carry `HASH-SALT DIFFERENTIAL
+CLEAN` — `HR.1`, `LG.13`, `LT.02`, `PS.08`, `SO.10`, `T0.01`, `T0.15`, `T0.17`,
+`T0.21`, `T0.28`, `T0.29`, `T0.31`, `T0.33`, `T0.35`, `T0.36`, `XL.01` — against
+the single adjudicated DIVERGENCE on `XL.01`. The 09-28 trace counted 11. Five
+specs have been certified under the differential since, so the instrument is not
+merely shipped, it is load-bearing in the certification path and compounding.
+
+**WHY THE ARMED STOP-RULE IS NOT FIRED, and this is a refusal, not an oversight.**
+The stop-rule reads: *"a fourth breach writes it into `scripts/ladder_prompt.md`'s
+PRIORITY block as a named builder unit rather than onto this desk's calendar
+again."* Its condition is met — this is the fourth breach. **I am declining to
+fire it, because its action is now incoherent:** it would hand the builder, as a
+named priority, a unit that was finished on 2026-09-26. That is precisely the
+failure the 2026-09-27 trace recorded and generalised into `LESSONS.md` — a
+hand-forward naming this row as FIRST PICK twenty-two hours after the same organ
+discharged it, because `OVERDUE` cannot distinguish *delivered-and-unstamped*
+from *undelivered*. Firing a stop-rule into that ambiguity would spend a builder
+slot re-deriving a live instrument. **A stop-rule exists to stop a desk
+deferring; it does not license an act that is known false on the day it fires.**
+The deferral it was guarding against is ended here by the stamp itself, which is
+the outcome it wanted.
+
+**THE GENERAL DEFECT, named because this row is now its third instance and it is
+the only thing on this row still worth anyone's attention.** Three separate
+organs read this row's `OVERDUE` as work owed (the 09-27 hand-forward, the
+09-27 `PROGRESS.md` FOR THE BUILDER item 2, and the 09-27 FULL's own third
+re-date), all after `5ee32ff`. Every one of them was reading a true status with
+a false implication. The row's own 09-27 trace says *"the freeze's item 2 forbids
+the counter that would see it"* — so the gap is known, and nothing here proposes
+to close it. What this sitting adds is only that the count is now **three**,
+and that each instance cost roughly one slot.
 
 **THE EVENT, and it was found by USING the rig rather than reading it.** An
 inert seam was added to `LG.10._measure` for the VACANT `Language routing`
