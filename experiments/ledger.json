@@ -35204,7 +35204,7 @@
     "T0.21": {
       "amended": [],
       "attempt": 22,
-      "commit": "f24ac94+dirty",
+      "commit": "5e3fb47+dirty",
       "compute_s": null,
       "control_metrics": {
         "commitments": 29.0,
@@ -35220,53 +35220,10 @@
       "dirty_files": [
         "docs/REVIEW_QUEUE.md"
       ],
-      "duration_s": 10.08,
+      "duration_s": 10.27,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "a0f8e70",
-          "compute_s": null,
-          "control_metrics": {
-            "commitments": 29.0,
-            "commitments_uncovered": 0.0,
-            "declared_specs_live": 162.0,
-            "docstring_covers_problems_live": 0.0,
-            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
-            "malformed_declarations_live": 0.0,
-            "nominated_not_declared": 47.0,
-            "properties_checked": 12.0,
-            "properties_failed": 7.0
-          },
-          "dirty_files": null,
-          "duration_s": 10.25,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "a47b4e4608788885",
-          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+6.9s)",
-          "metrics": {
-            "commitments": 29.0,
-            "commitments_uncovered": 0.0,
-            "declared_specs_live": 162.0,
-            "docstring_covers_problems_live": 0.0,
-            "failed_names": "",
-            "malformed_declarations_live": 0.0,
-            "nominated_not_declared": 47.0,
-            "properties_checked": 12.0,
-            "properties_failed": 0.0
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 240.8,
-          "preserved_impl": null,
-          "ran_at": "2026-10-05T23:13:08",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "f07d113ad391bfb1",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -36107,10 +36064,55 @@
           ],
           "spec_sha": "f07d113ad391bfb1",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "f24ac94+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "commitments": 29.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 162.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 47.0,
+            "properties_checked": 12.0,
+            "properties_failed": 7.0
+          },
+          "dirty_files": [
+            "docs/REVIEW_QUEUE.md"
+          ],
+          "duration_s": 10.08,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "ba2f212f93cb5ee2",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+6.9s)",
+          "metrics": {
+            "commitments": 29.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 162.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 47.0,
+            "properties_checked": 12.0,
+            "properties_failed": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 251.2,
+          "preserved_impl": null,
+          "ran_at": "2026-10-10T04:44:47",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "f07d113ad391bfb1",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "ba2f212f93cb5ee2",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+6.9s)",
+      "impl_sha": "e644fc1e0fbf2bb5",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+7.0s)",
       "metrics": {
         "commitments": 29.0,
         "commitments_uncovered": 0.0,
@@ -36123,9 +36125,9 @@
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 251.2,
+      "peak_rss_mb": 249.5,
       "preserved_impl": null,
-      "ran_at": "2026-10-10T04:44:47",
+      "ran_at": "2026-10-10T06:43:14",
       "seeds": [
         0
       ],
@@ -38666,7 +38668,7 @@
     "T0.28": {
       "amended": [],
       "attempt": 22,
-      "commit": "f24ac94+dirty",
+      "commit": "6b50392",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
@@ -38680,61 +38682,11 @@
         "properties_checked": 19.0,
         "properties_failed": 13.0
       },
-      "dirty_files": [
-        "docs/DECISIONS_NEEDED.md",
-        "docs/REVIEW_QUEUE.md"
-      ],
-      "duration_s": 57.57,
+      "dirty_files": null,
+      "duration_s": 57.49,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "0554565+dirty",
-          "compute_s": null,
-          "control_metrics": {
-            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
-            "live_armed": 2.0,
-            "live_expired_actions": 0.0,
-            "live_longest_default_chars": 811.0,
-            "live_specs_in_radius": 2.0,
-            "live_unrouted_asks": 0.0,
-            "live_vanished_asks": 0.0,
-            "live_violations": 7.0,
-            "properties_checked": 19.0,
-            "properties_failed": 13.0
-          },
-          "dirty_files": [
-            "docs/REVIEW_QUEUE.md"
-          ],
-          "duration_s": 53.54,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "b0e0030d3663cf2e",
-          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+38.6s)",
-          "metrics": {
-            "failed_names": "",
-            "live_armed": 2.0,
-            "live_expired_actions": 0.0,
-            "live_longest_default_chars": 811.0,
-            "live_specs_in_radius": 2.0,
-            "live_unrouted_asks": 0.0,
-            "live_vanished_asks": 0.0,
-            "live_violations": 7.0,
-            "properties_checked": 19.0,
-            "properties_failed": 0.0
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 250.3,
-          "preserved_impl": null,
-          "ran_at": "2026-10-07T06:44:16",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "bb2c3ecb87ada37f",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -39627,9 +39579,57 @@
           ],
           "spec_sha": "bb2c3ecb87ada37f",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "f24ac94+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution,p16_firing_diff_is_the_known_positive,p17_identification_is_not_the_authors_word,p18_the_worktree_check_reads_the_worktree",
+            "live_armed": 3.0,
+            "live_expired_actions": 0.0,
+            "live_longest_default_chars": 1025.0,
+            "live_specs_in_radius": 2.0,
+            "live_unrouted_asks": 0.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 7.0,
+            "properties_checked": 19.0,
+            "properties_failed": 13.0
+          },
+          "dirty_files": [
+            "docs/DECISIONS_NEEDED.md",
+            "docs/REVIEW_QUEUE.md"
+          ],
+          "duration_s": 57.57,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "79d717fe6e92de2b",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+42.0s)",
+          "metrics": {
+            "failed_names": "",
+            "live_armed": 3.0,
+            "live_expired_actions": 0.0,
+            "live_longest_default_chars": 1025.0,
+            "live_specs_in_radius": 2.0,
+            "live_unrouted_asks": 0.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 7.0,
+            "properties_checked": 19.0,
+            "properties_failed": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 252.9,
+          "preserved_impl": null,
+          "ran_at": "2026-10-10T04:45:53",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "bb2c3ecb87ada37f",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "79d717fe6e92de2b",
+      "impl_sha": "d877e841f886f14a",
       "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+42.0s)",
       "metrics": {
         "failed_names": "",
@@ -39644,9 +39644,9 @@
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 252.9,
+      "peak_rss_mb": 254.1,
       "preserved_impl": null,
-      "ran_at": "2026-10-10T04:45:53",
+      "ran_at": "2026-10-10T06:44:20",
       "seeds": [
         0
       ],
@@ -40292,16 +40292,16 @@
     "T0.31": {
       "amended": [],
       "attempt": 22,
-      "commit": "f24ac94+dirty",
+      "commit": "6b50392+dirty",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires,p18_dated_promises_are_forecast_before_they_break,p19_the_desks_movement_is_separable_from_the_calendars,p20_a_terminal_rows_closed_parent_is_printed,p21_a_group_count_is_gated_on_a_complete_day,p22_a_coupling_against_a_corpse_is_a_false_statement,p23_a_receipt_is_visible_and_buys_nothing,p24_a_declined_window_is_abandoned_not_opened",
         "fixture_violations": 5.0,
         "live_arrived": 17.0,
-        "live_disposed": 24.0,
-        "live_net_arrivals": -7.0,
+        "live_disposed": 25.0,
+        "live_net_arrivals": -8.0,
         "live_oldest_days": 8.0,
-        "live_open": 46.0,
+        "live_open": 45.0,
         "live_rows": 139.0,
         "live_violations": 0.0,
         "properties_checked": 24.0,
@@ -40310,57 +40310,10 @@
       "dirty_files": [
         "docs/REVIEW_QUEUE.md"
       ],
-      "duration_s": 1.82,
+      "duration_s": 1.87,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "a0f8e70",
-          "compute_s": null,
-          "control_metrics": {
-            "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires,p18_dated_promises_are_forecast_before_they_break,p19_the_desks_movement_is_separable_from_the_calendars,p20_a_terminal_rows_closed_parent_is_printed,p21_a_group_count_is_gated_on_a_complete_day,p22_a_coupling_against_a_corpse_is_a_false_statement,p23_a_receipt_is_visible_and_buys_nothing,p24_a_declined_window_is_abandoned_not_opened",
-            "fixture_violations": 5.0,
-            "live_arrived": 16.0,
-            "live_disposed": 18.0,
-            "live_net_arrivals": -2.0,
-            "live_oldest_days": 8.0,
-            "live_open": 52.0,
-            "live_rows": 128.0,
-            "live_violations": 7.0,
-            "properties_checked": 24.0,
-            "properties_failed": 21.0
-          },
-          "dirty_files": null,
-          "duration_s": 1.98,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "d4e48918d075fa70",
-          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+0.8s)",
-          "metrics": {
-            "failed_names": "",
-            "fixture_violations": 5.0,
-            "live_arrived": 16.0,
-            "live_disposed": 18.0,
-            "live_net_arrivals": -2.0,
-            "live_oldest_days": 8.0,
-            "live_open": 52.0,
-            "live_rows": 128.0,
-            "live_violations": 7.0,
-            "properties_checked": 24.0,
-            "properties_failed": 0.0
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 233.7,
-          "preserved_impl": null,
-          "ran_at": "2026-10-05T23:14:52",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "adba85e6f8c5d773",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -41275,27 +41228,76 @@
           ],
           "spec_sha": "adba85e6f8c5d773",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "f24ac94+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires,p18_dated_promises_are_forecast_before_they_break,p19_the_desks_movement_is_separable_from_the_calendars,p20_a_terminal_rows_closed_parent_is_printed,p21_a_group_count_is_gated_on_a_complete_day,p22_a_coupling_against_a_corpse_is_a_false_statement,p23_a_receipt_is_visible_and_buys_nothing,p24_a_declined_window_is_abandoned_not_opened",
+            "fixture_violations": 5.0,
+            "live_arrived": 17.0,
+            "live_disposed": 24.0,
+            "live_net_arrivals": -7.0,
+            "live_oldest_days": 8.0,
+            "live_open": 46.0,
+            "live_rows": 139.0,
+            "live_violations": 0.0,
+            "properties_checked": 24.0,
+            "properties_failed": 21.0
+          },
+          "dirty_files": [
+            "docs/REVIEW_QUEUE.md"
+          ],
+          "duration_s": 1.82,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "2b5afb5dd8c71827",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+0.6s)",
+          "metrics": {
+            "failed_names": "",
+            "fixture_violations": 5.0,
+            "live_arrived": 17.0,
+            "live_disposed": 24.0,
+            "live_net_arrivals": -7.0,
+            "live_oldest_days": 8.0,
+            "live_open": 46.0,
+            "live_rows": 139.0,
+            "live_violations": 0.0,
+            "properties_checked": 24.0,
+            "properties_failed": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 249.8,
+          "preserved_impl": null,
+          "ran_at": "2026-10-10T04:46:38",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "adba85e6f8c5d773",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "2b5afb5dd8c71827",
+      "impl_sha": "6685b6644fbccf19",
       "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+0.6s)",
       "metrics": {
         "failed_names": "",
         "fixture_violations": 5.0,
         "live_arrived": 17.0,
-        "live_disposed": 24.0,
-        "live_net_arrivals": -7.0,
+        "live_disposed": 25.0,
+        "live_net_arrivals": -8.0,
         "live_oldest_days": 8.0,
-        "live_open": 46.0,
+        "live_open": 45.0,
         "live_rows": 139.0,
         "live_violations": 0.0,
         "properties_checked": 24.0,
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 249.8,
+      "peak_rss_mb": 250.2,
       "preserved_impl": null,
-      "ran_at": "2026-10-10T04:46:38",
+      "ran_at": "2026-10-10T06:45:06",
       "seeds": [
         0
       ],
