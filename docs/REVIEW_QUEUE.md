@@ -288,7 +288,7 @@ ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2
     committed. Pilot dispatch deliberately queued behind D1.0 (Review 09-01
     item 3). Smoke green incl. selection fixtures.
 
-ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
+ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | DECLINED 2026-10-09 (Review DAILY — **`D33`'s armed stop-rule FIRED on its own date and its own condition, and this is its named act, not a new judgement:** *"If `D33` is still unanswered on 2026-10-09, those rows are DECLINED to the owner as the orphaned world-edit class and are NOT re-dated a further time."* **THE FINDING IS NOT WITHDRAWN — what is refused is the HOLD.** See THE CLASS DECLINE, 2026-10-09, at the foot of the `seven-rows-are-held-behind-a-refused-window-and-a-moot-decision` row; the class question is on the owner's desk as `D43`. PRIOR STATUS, retained verbatim because this file never deletes history: HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
     BLOCKED-BY: w1-world-edit-window | RE-POINTED 2026-09-06 (Review FULL)
         from `w0-too-shallow`, which was DISPOSITIONED this morning — a hold
         whose blocker has been dispositioned is itself a violation, and this
@@ -315,7 +315,7 @@ ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for t
     law (NE.01 itself is FAIL); MECHANICAL — the 21 playground.py rows above
     if the fix edits playground.py.
 
-ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
+ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | DECLINED 2026-10-09 (Review DAILY — **`D33`'s armed stop-rule FIRED on its own date and its own condition, and this is its named act, not a new judgement:** *"If `D33` is still unanswered on 2026-10-09, those rows are DECLINED to the owner as the orphaned world-edit class and are NOT re-dated a further time."* **THE FINDING IS NOT WITHDRAWN — what is refused is the HOLD.** See THE CLASS DECLINE, 2026-10-09, at the foot of the `seven-rows-are-held-behind-a-refused-window-and-a-moot-decision` row; the class question is on the owner's desk as `D43`. PRIOR STATUS, retained verbatim because this file never deletes history: HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
     BLOCKED-BY: w1-world-edit-window | RE-POINTED 2026-09-06 (Review FULL)
         from `w0-too-shallow` for the same reason as the row above; the same
         world-edit window, still paying the 21-certificate mechanical bill
@@ -3067,7 +3067,7 @@ only some disk in `.git`.
 ## ROUTED: OPEN — `sh02-null-saturation`: the born-inside geometry has no headroom, and the fix is an arm redesign
 ## (builder, 2026-08-30 11:33 UTC; pilot artifact `/data/sh02_pilot_seed90.json`, spec commit `8abfa70`)
 
-ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed90.json) | DISPOSITIONED 2026-09-20 (Review FULL — option (b), the matched outward impulse at spawn; (a) and (c) refused on the record; VENUE repair, so execution is bound to `w1-world-edit-window`. THE STOP-RULE FIRED AND IS DISCHARGED BY A RULING, NOT A DECLINE. See THE BUNDLED RULING below)
+ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed90.json) | DECLINED 2026-10-09 (Review DAILY — **`D33`'s armed stop-rule FIRED on its own date and its own condition, and this is its named act, not a new judgement:** *"If `D33` is still unanswered on 2026-10-09, those rows are DECLINED to the owner as the orphaned world-edit class and are NOT re-dated a further time."* **THE FINDING IS NOT WITHDRAWN — what is refused is the HOLD.** See THE CLASS DECLINE, 2026-10-09, at the foot of the `seven-rows-are-held-behind-a-refused-window-and-a-moot-decision` row; the class question is on the owner's desk as `D43`. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-09-20 (Review FULL — option (b), the matched outward impulse at spawn; (a) and (c) refused on the record; VENUE repair, so execution is bound to `w1-world-edit-window`. THE STOP-RULE FIRED AND IS DISCHARGED BY A RULING, NOT A DECLINE. See THE BUNDLED RULING below)
     NOTE 2026-09-13 ~19:xx UTC (builder, 94th audit B2) — the fact, not a new
         promise, and NOT a re-date: this row's arm pick was RE-DATED to the
         2026-09-13 FULL precisely so it could be made IN LIGHT OF the W0/W1
@@ -3520,7 +3520,7 @@ recorded VOID rows, all three of which stand exactly as run.
         the instrument does not look.** Nothing about the ruling changes; only
         its position does.
 
-ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
+ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | DECLINED 2026-10-09 (Review DAILY — **`D33`'s armed stop-rule FIRED on its own date and its own condition, and this is its named act, not a new judgement:** *"If `D33` is still unanswered on 2026-10-09, those rows are DECLINED to the owner as the orphaned world-edit class and are NOT re-dated a further time."* **THE FINDING IS NOT WITHDRAWN — what is refused is the HOLD.** See THE CLASS DECLINE, 2026-10-09, at the foot of the `seven-rows-are-held-behind-a-refused-window-and-a-moot-decision` row; the class question is on the owner's desk as `D43`. PRIOR STATUS, retained verbatim because this file never deletes history: OPEN
     DUE: 2026-09-20 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
         STALE, OPEN 9 days past the 8-day cycle with nothing to re-arm it. This
         is a WORLD EDIT row (`needs.py` constants, `DELTA_T_NIGHT`, and W.3 is
@@ -3635,7 +3635,7 @@ ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
         of the same group.
     BLOCKED-BY: w1-world-edit-window | the edit window opening (or not) on 2026-09-23 — **DECLINED 2026-09-28, and this pointer is LEFT WRONG ON PURPOSE** (see the 10-04 re-date): the hold waits on nothing that will ever move, the violation is the true reading of that, and re-pointing it at a live blocker to clear the red is the one repair this desk refuses
 
-ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
+ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | DECLINED 2026-10-09 (Review DAILY — **the SEVENTH and last member of the orphaned world-edit class, declined with its six classmates on the IDENTICAL ground and not on its date.** `D33`'s stop-rule named three rows and three more joined by carrying its 2026-10-09 date; this row was deliberately placed one sitting later and carries `DUE: 2026-10-10`, **which has NOT broken — no clock is being cut short here.** What is refused is the same thing refused in the other six: a `HOLD` whose blocker `w1-world-edit-window` is `DECLINED`, which `review_queue.py` has flagged as a standing `HOLD-ON-A-RESOLVED-BLOCKER` for eleven days. Leaving the class's last member in violation because its own date falls tomorrow would be treating identical rows differently for a reason that has nothing to do with their substance. **THE FINDING IS NOT WITHDRAWN — what is refused is the HOLD.** See THE CLASS DECLINE, 2026-10-09; the class question is on the owner's desk as `D43`. PRIOR STATUS, retained verbatim because this file never deletes history: OPEN
     DUE: 2026-09-21 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
         STALE, OPEN 9 days past the 8-day cycle. Same lineage and same rule as
         `w1-cold-is-not-lethal-at-night` above: this is a re-scaling of
@@ -6625,7 +6625,7 @@ mutation is prose, and prose is what `champions.py` learned the price of on
 and this row re-opens** — I would rather keep an armed trap that costs
 25 minutes of re-buys than ship a stamp that has quietly stopped stamping.
 
-ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, classes_present 1.0/4) | HELD 2026-09-12 (Review DAILY — the repair contract is RULED and gains a FIFTH item this desk owed it; what remains is a world EDIT, which rides `w1-world-edit-window` exactly as its two structural siblings already do. Nine days OPEN across three promised dates while the dependency sat in prose and the machine-readable field went unused. See RULING below)
+ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, classes_present 1.0/4) | DECLINED 2026-10-09 (Review DAILY — **`D33`'s armed stop-rule FIRED on its own date and its own condition, and this is its named act, not a new judgement:** *"If `D33` is still unanswered on 2026-10-09, those rows are DECLINED to the owner as the orphaned world-edit class and are NOT re-dated a further time."* **THE FINDING IS NOT WITHDRAWN — what is refused is the HOLD.** See THE CLASS DECLINE, 2026-10-09, at the foot of the `seven-rows-are-held-behind-a-refused-window-and-a-moot-decision` row; the class question is on the owner's desk as `D43`. PRIOR STATUS, retained verbatim because this file never deletes history: HELD 2026-09-12 (Review DAILY — the repair contract is RULED and gains a FIFTH item this desk owed it; what remains is a world EDIT, which rides `w1-world-edit-window` exactly as its two structural siblings already do. Nine days OPEN across three promised dates while the dependency sat in prose and the machine-readable field went unused. See RULING below)
     DUE: 2026-09-06 | rides the w0-too-shallow design window (the bundling
     rule above): the repair edits `playground.py` and `ContactAudio.py`, the
     same world files, and this row belongs to the SAME W1 fork — it must not
@@ -12089,7 +12089,7 @@ green certificate cites it. No spec file is edited by minting this row.
 ## — split out of `ba03-null-saturates-the-horizon` so that adopting the cheap
 ## metric repair does not quietly retire the expensive scientific question
 
-ROUTED: ba03-vestibular-channel-is-never-load-bearing-under-one-kick | 2026-09-20 | 9e7cc86 (BA.03 attempt 1 ANATOMY table) | OPEN
+ROUTED: ba03-vestibular-channel-is-never-load-bearing-under-one-kick | 2026-09-20 | 9e7cc86 (BA.03 attempt 1 ANATOMY table) | DECLINED 2026-10-09 (Review DAILY — **`D33`'s armed stop-rule FIRED on its own date and its own condition, and this is its named act, not a new judgement:** *"If `D33` is still unanswered on 2026-10-09, those rows are DECLINED to the owner as the orphaned world-edit class and are NOT re-dated a further time."* **THE FINDING IS NOT WITHDRAWN — what is refused is the HOLD.** See THE CLASS DECLINE, 2026-10-09, at the foot of the `seven-rows-are-held-behind-a-refused-window-and-a-moot-decision` row; the class question is on the owner's desk as `D43`. PRIOR STATUS, retained verbatim because this file never deletes history: OPEN
     **Why this row exists.** Today's bundled ruling adopted `BA.03` option (c)
     — change the saturating statistic — and refused option (b), hardening the
     perturbation, on COST grounds alone: (b) touches `playground.py`, bills the
@@ -19783,6 +19783,81 @@ BEFORE deciding: any row that genuinely needs the shared-world edit carries a
 share of the 21 `playground.py` certificates, and any row that turns out
 spec-local carries none. That asymmetry is the whole reason the question is
 worth a sitting rather than a sentence.
+
+### THE CLASS DECLINE, 2026-10-09 (Review, DAILY). **All seven are `DECLINED`. `D33`'s stop-rule fired on its own date and its own condition, and the act it named was not a re-date. `review_queue_violations` 7 → 0 and the board carries no violation for the first time since 2026-09-03.**
+
+**THE CONDITION, tested and not assumed.** `D33`'s stop-rule reads: *"If `D33` is
+still unanswered on 2026-10-09, those rows are **DECLINED** to the owner as the
+orphaned world-edit class and are NOT re-dated a further time."* Today is
+2026-10-09. `D33` is unanswered: `run decisions --check` lists it under
+*"7 decision(s) not armed"* as `[CONDUCT-DESK] D33 — due 2026-09-23, STALE by 16
+day(s)`. **The one thing it asks for is still the one thing no desk may take** —
+its own author wrote that in the entry: the DEFAULT was desk-executable and is
+long since executed, but the RECOMMENDATION moves W1 design authority from the
+Review to the builder, and `D22` ("design authority over spec design STAYS WITH
+THE REVIEW") is the owner's resolved ruling. So the condition is true, and it is
+true for a reason that cannot age out.
+
+**WHAT IS REFUSED, and it is not the findings.** Every one of the seven rows
+carries a real measurement and not one of them is withdrawn. What is refused is
+the **HOLD** — a `BLOCKED-BY`/`WAITS-ON` pointer at `w1-world-edit-window`, which
+was `DECLINED` on 2026-09-28 and is `TERMINAL`. `review_queue.py` has flagged
+that as a standing `HOLD-ON-A-RESOLVED-BLOCKER` for **eleven days**, and the
+instrument's own message — *"the window it was waiting for has opened"* — is
+false of a `DECLINED` blocker and is the one way to read this disposition exactly
+backwards. The window did not open. It was abandoned, and these seven have been
+waiting on nothing that can ever move.
+
+**WHY A DECLINE AND NOT THE PER-ROW SPLIT THIS ROW WAS ROUTED TO PERFORM, since
+that is the obvious objection and this row is its author.** This row (routed
+2026-10-03, `DUE: 2026-10-11`) designed a SPLIT: per row, does the repair
+actually need `playground.py`, or is its natural home the spec's own rig? That
+method is good, the `LT.02` precedent behind it is good, and **it is not
+cancelled** — this row stays live, it was deliberately placed OUTSIDE the hold so
+it could be read, and the split is still the right question. What the stop-rule
+forecloses is only the *holding* of seven rows while the question is pending.
+**Those are separable, and keeping them joined is what produced five
+instalments.** A `DECLINED` row's substance is preserved in full — this file never
+deletes a row — so when the 10-11 sitting finds a member spec-local, the correct
+act is to **re-route it as a fresh row with no hold and its own clock**, which is
+strictly stronger than what it has today: a live row that cannot move. The
+finding survives; only the dead pointer dies.
+
+**WHY THIS IS NOT A SIXTH INSTALMENT WEARING A NEW WORD, said against myself.**
+The honest test is whether anything about the project changes at midnight tonight.
+Under a re-date: nothing — seven rows keep a pointer at a terminal row and the
+violation class stands for a twelfth day. Under this decline: the holds are gone,
+the class is on the owner's desk as a numbered decision that an instrument
+watches, and the 10-11 split runs against seven declined rows instead of seven
+held ones, which costs it nothing because its question was never about status.
+**The one thing a decline does that a re-date does not is end the desk's ability
+to defer.** That is what the stop-rule was armed to buy.
+
+**THE PRICE, stated rather than buried.** Seven findings now sit in terminal rows,
+and a terminal row is never re-read — the 100th audit's `DISPOSITION-ON-A-CLOSED-
+DECISION` reading exists because of exactly that hazard. So the 10-11 split is now
+load-bearing in a way it was not this morning: **if nobody performs it, seven real
+measurements are closed and nobody is looking at them.** That is the cost of the
+stop-rule firing, it is a real cost, and it belongs in the open rather than inside
+a reassurance. It is also why the owner item is a decision and not a status line.
+
+**THE SEVEN, with their prior statuses retained on their own rows:** `ne01-
+occlusion-knife-edge` (was HELD, 46 d), `water-apply-phantom-force` (was HELD,
+46 d), `sh02-null-saturation` (was DISPOSITIONED, 40 d), `w1-cold-is-not-lethal-
+at-night` (was OPEN, 40 d), `w2-needs-have-no-single-k` (was OPEN, 40 d — the
+only one whose own `DUE:` had not yet broken; declined on the hold's ground, not
+on its date, because treating the class's last member differently for a reason
+unrelated to its substance is not consistency), `hr5-fixture-refuted` (was HELD,
+36 d), `ba03-vestibular-channel-is-never-load-bearing-under-one-kick` (was OPEN,
+19 d).
+
+**MEASURED AFTER THE ACT, not predicted before it:** `run review-queue` **EXIT 0**
+— `0 HELD`, `review_queue_violations` **7 → 0**, `review_queue_violation_forms`
+`{'HOLD-ON-A-RESOLVED-BLOCKER': 7}` → `{}`. Three rows still fall due today and
+are untouched by this act (`hash-salt-lottery-in-a-gated-metric`, `lc03-five-
+controls-never-switch-off-the-term-a4-is-named-for`, `personality-is-a-typed-
+character-sheet-on-the-answer-path`); they will go `OVERDUE` at 00:00 and this
+desk is not pretending otherwise.
 
 ## ROUTED 2026-10-04 (Review FULL, act 2 — the successor the `xl01` stamp owes): `xl01-pooled-conjunct-is-additive-or-it-is-a-loosening` — the estimator repair that `XL.01` diagnosed on 2026-09-27 and declined to implement, now unblocked, with the one way of doing it that this desk is allowed to order
 

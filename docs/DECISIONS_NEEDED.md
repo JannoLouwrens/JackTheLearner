@@ -9982,6 +9982,107 @@ DECIDE: D42
 
 ---
 
+## D43 — Seven real measurements are now in TERMINAL rows because the window they waited on was abandoned and `D33` can no longer be answered. The holds are gone; the findings need somewhere to live. (2026-10-09, Review, DAILY)
+
+**WHAT I DID THIS MORNING, so the ask is read against the act and not instead of
+it.** `D33`'s armed stop-rule fired on its own date and its own condition — *"If
+`D33` is still unanswered on 2026-10-09, those rows are DECLINED to the owner as
+the orphaned world-edit class and are NOT re-dated a further time"* — and I
+executed it. All seven rows of the orphaned world-edit class are `DECLINED`:
+`ne01-occlusion-knife-edge`, `water-apply-phantom-force`, `sh02-null-saturation`,
+`w1-cold-is-not-lethal-at-night`, `w2-needs-have-no-single-k`,
+`hr5-fixture-refuted`, `ba03-vestibular-channel-is-never-load-bearing-under-one-
+kick`. `run review-queue` now **EXIT 0** with `0 HELD` and
+`review_queue_violations` **7 → 0** — the board's first clean reading since
+2026-09-03. The full reasoning is `THE CLASS DECLINE, 2026-10-09` in
+`docs/REVIEW_QUEUE.md`.
+
+**WHY IT IS ON YOUR DESK ANYWAY, and it is not the decline.** The decline was
+pre-committed and is mine. What is NOT mine is the question all seven were
+actually waiting on: **is the `playground.py` world-edit window ever opening?**
+Every one of these rows is a finding whose repair may need an edit to the shared
+world, which bills 21 `PASS` certificates mechanically — and the window that
+existed to pay that bill once was `DECLINED` on 2026-09-28, while `D33`, the
+entry that governed who would author it, is **MOOT**: its object went terminal,
+so its default can no longer be performed by anyone, including you. Nobody
+abandoned the world edit on purpose. It was abandoned by a stop-rule firing
+correctly on a row nobody could deliver.
+
+**THE COST OF WHAT I JUST DID, stated plainly because it is the reason this entry
+exists.** A terminal row is never re-read — that is the hazard the 100th audit's
+`DISPOSITION-ON-A-CLOSED-DECISION` reading was built for. The per-row split that
+would separate the genuinely world-touching repairs from the spec-local ones is
+designed and dated (`seven-rows-are-held-behind-a-refused-window-and-a-moot-
+decision`, `DUE: 2026-10-11`, deliberately left OUTSIDE the hold so it survived
+the decline). **If that sitting does not happen, seven real measurements are
+closed and nobody is looking at them.** The `LT.02` precedent says this matters
+in both directions: that row *looked* like it billed the 21 certificates, and on
+inspection it billed **ZERO** and was executed and certified while these seven
+sat held.
+
+> **MY RECOMMENDATION, quoted here verbatim so it cannot drift from what I
+> actually asked: open a NARROW, SINGLE-PURPOSE world-edit window and let the
+> 10-11 split decide which of the seven enter it — rather than re-opening
+> `w1-world-edit-window`, re-asking `D33`, or leaving the seven closed. The
+> window's whole economic argument still holds (pay the 21-certificate bill ONCE
+> rather than seven times) and nothing about it was ever refused on its merits;
+> what died was a design assignment nobody could complete. Authorship stays
+> where `D22` put it — with this desk — and I am not asking for a carve-out: I
+> am asking you to say the window may exist, so the split has somewhere to put
+> the rows it finds genuinely world-touching. Any of the seven the split finds
+> SPEC-LOCAL needs no window and no ruling from you; it gets re-routed as a
+> fresh unheld row with its own clock, which is strictly stronger than the live
+> held row it has today.**
+
+**WHAT I AM NOT ASKING.** Not to reverse the decline — it was pre-committed and
+the holds were genuinely dead. Not to re-open `D33` — its recommendation is the
+one thing a desk may not take, and re-asking it would be the sixth instalment of
+the exact promise its stop-rule existed to stop. Not to decide which rows need
+the window — that is measurable from source and is the 10-11 sitting's job, not
+yours.
+
+**THE DEFAULT'S SHAPE, and it is a defect this entry caught in itself.** The
+default below deliberately contains **no date and no dated action**. The first
+draft's read *"...with the 10-11 split running anyway"*, and `decisions --check`
+raised `DEFAULT-ACTION-EXPIRED` on it the moment it was written: the earliest
+this default can fire is the day after its `decide_by`, by which time the split's
+date is in the past, **so the action would have been unperformable on the day it
+fired.** That is precisely the defect `D33` carries — the one that made its
+default MOOT and left seven rows waiting on an answer nobody could give — and
+`decisions_default_action_expired` carries a floor of 0 for exactly that reason.
+Writing a second instance of it one paragraph after citing the first would have
+been indefensible, so the dated clause is gone rather than re-worded. The split
+is a separately-clocked queue row; this default rules only on the window.
+
+DECIDE: D43
+  class:     goal
+  blocks:    no spec id directly. It blocks the repair path of seven terminal
+             queue rows carrying measured findings across `NE.01`, `SH.02`,
+             `HR.5`, `BA.03`, `W.1`/`W.2`'s needs scaling, and the two
+             `playground.py` dynamics defects routed 2026-08-24. Not perishable
+             in GPU-hours. Perishable in exactly one way, and it is the reason
+             for the short clock: the rows are now TERMINAL, and a terminal row
+             is never re-read.
+  default:   (iii) HOLD — NO WINDOW IS DECLARED AND THE SEVEN STAY DECLINED.
+             Carries NO DATED ACTION, deliberately; see THE DEFAULT'S SHAPE
+             above for why. The split is not this default's action — it is a
+             separately-clocked queue row that proceeds or does not on its own
+             clock, and this default simply declines to declare a window
+             whatever that row found. Whatever it found is reported to you in
+             the next report either way. MONOTONE — it moves no threshold,
+             re-opens no terminal row, declares no window, spends no GPU-hour,
+             withdraws no finding and softens no control. Deliberately NOT the
+             recommendation: declaring that a shared-world edit may happen
+             changes what 21 standing certificates mean, and a desk may not
+             decide that on your behalf. Its price, stated rather than buried:
+             the world-touching subset stays unrepairable for as long as the
+             hold lasts, the `W0 is too shallow` finding keeps being true and
+             keeps being unactionable, and the seven rows' substance survives
+             only for as long as somebody keeps choosing to read closed rows.
+  decide_by: 2026-10-16
+
+---
+
 ## D37 — RESOLVED BY ARMED DEFAULT, fired 2026-10-05 ~06:5x UTC by the OVERSEER (140th audit), on the first legal day. Off your desk; option (i) remains yours to rule at any time.
 
 **THE OWNER DID NOT RULE BY 2026-10-04, SO THE PRE-REGISTERED DEFAULT FIRED.**
