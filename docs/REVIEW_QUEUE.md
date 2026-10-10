@@ -12341,6 +12341,60 @@ ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-2
         two derivations agree, which is why this date is not a coincidence. | what
         is owed: the `l_bind`-dropped comparator registered with BOTH conjuncts
         above present in the pre-registration, and it does NOT pre-empt `T1.08`.
+    DUE: 2026-10-21 | RE-DATED 2026-10-10 (Review DAILY, OVERDUE FIRST, D28's
+        armed default). **THE DATE BROKE FOR A REASON THAT IS NOT ON THIS ROW AND
+        NOT IN THIS ROW'S GIFT, and that is the whole justification for a second
+        execution date rather than a decline.** Nothing was registered by 10-09
+        because the builder ran **zero iterations in the 41.6 h before the date
+        fell** — 41 consecutive dark slots at this sitting, `0 failed`, the gate
+        holding `week:all models` 64% against a pace line of 51% with **73% of
+        the week's 53 shared points spent by another project**. A date cannot be
+        kept by an organ that is not running, and this desk is not going to
+        record a builder failure that did not happen.
+        **THE SECOND CAUSE IS MINE AND IT IS THE REPAIRABLE ONE.** This unit was
+        never named in `scripts/ladder_prompt.md`'s PRIORITY block. It was ruled
+        on 09-29, dated 10-09, and in between the live blocks ordered `T1.08`
+        Steps 0+1+2b, `W1.01`/`W1.04`, three designs and four PS-family dates —
+        this comparator appears in none of them. **The ruling said it "does NOT
+        pre-empt `T1.08`" and that was correct, but nobody wrote the sentence
+        that says what happens when `T1.08` ends.** It ended: `T1.08` Step 2b is
+        `ACTED` at `b7aa2bf` and `1^22` took it off the builder's board on 10-09.
+        So the thing that deprioritised this row is discharged, and the row is
+        named in the PRIORITY block in the same sitting as this re-date — that
+        act is the reason this date is keepable where 10-09 was not.
+        **THE ROW'S OWN PRE-REGISTERED CONDITION FIRED, AND IT FIRED UPWARD.**
+        THE RULING above wrote: *"if `D37`'s default fires to (iii), hole (α) is
+        settled BY HOLD and never measured, which makes this comparator the only
+        live measurement that seat will ever get. The value of this row goes UP
+        when `D37` defaults, not down."* `D37` fired **2026-10-05** to exactly
+        that option — *"(iii) HOLD `D29` AS IT STANDS … the `Δ_k` collapse readout
+        is NOT built"* — and the 140th audit verified at source that
+        `effective_rank` still has no computing call site. **So the condition is
+        met and the conclusion is the row's own, not this sitting's invention:**
+        the `l_bind`-dropped comparator is now the only measurement the
+        Learning-core seat will ever get, and 149,312 params (17.3% of the seated
+        arm) stay unexamined for as long as it is unbought.
+        **WHAT IS OWED IS UNCHANGED AND BOTH CONJUNCTS STILL BIND** — PAIRED
+        (identical seeds, step budget and venue as the seated `A4` run) and
+        SCORED ON THE SEAT'S OWN STATISTICS (`lg_margin_null` and
+        `lg_margin_twin`, not a proxy chosen afterwards). Neither may be dropped
+        to make a result reportable. Nothing here softens anything.
+        **THE VENUE, stated because today invites exactly the wrong inference:**
+        this is **14.40 core-h of CPU**, no weights on disk. The 28.029 free
+        Kaggle GPU-hours that expire today cannot buy it, and this row is NOT a
+        buyer for that quota. Do not let the dying hours recruit this unit.
+        **THE DATE IS DERIVED.** `review-queue`'s own print this sitting reads
+        *"Next date with room under the measured capacity: 2026-10-21"*. It is
+        also the first date comfortably past the pace line's projected release
+        (~2026-10-12, 147th audit), so it does not re-promise work into a
+        blackout — which is the error 10-09 made.
+        **STOP-RULE, ARMED AND BINDING ON THIS DESK.** This is the row's SECOND
+        execution date. If 2026-10-21 breaks while the builder has had live
+        slots, the row is **DECLINED** and the seat's 17.3% is reported
+        unexamined to the owner as a standing anatomy gap — not re-dated a third
+        time. If it breaks while the builder is still dark, the finding is that
+        the BLACKOUT is the blocker and it is reported as such; a date cannot be
+        charged to an organ that never ran.
 
 ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field watch week 8, §6b) | ACTED 2026-09-24 (Review DAILY, executing commit `d901cb4` — the builder EXECUTED this on 09-23 and the row has been sitting one day OVERDUE waiting only for this stamp. Verified against the commit, not against its own UPDATE note: the diff touches `experiments/fieldwatch.py` and NOT `experiments/decisions.py`, which is this row's own load-bearing caution honoured; all three things the `DUE:` bought are present — the FP rate re-measured after the fix and written down (0 spurious of 18 sub-threshold pairs, both true pairs route), the closure picked only after 20 live overlaps were enumerated, and the shared helper left alone with the threshold parameterised at the fieldwatch call site. The measurement also bought something the row did not ask for and could not have: `decisions.owner_asks` has parsed 0 items since 09-09, routed separately as `owner-ask-reader-blind-since-0909`)
     **The instrument built last week to read `FIELD_WATCH.md` returns a FALSE
