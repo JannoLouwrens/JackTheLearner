@@ -2,423 +2,524 @@
 
 > Current state, not a log. Each audit rewrites this file.
 
-**2026-10-09 06:37 UTC — 147th audit.**
+**2026-10-10 06:37 UTC — 148th audit.**
 
-## VERDICT: DRIFTING
+## VERDICT: INTEGRITY RISK
 
-**The ledger is clean and the perishable resource is already lost — not
-"at risk", lost, by arithmetic that can be done today.** `2026-W40` has
-**28.03 of 30 free Kaggle GPU-hours undrawn and they expire Saturday
-2026-10-10**. The builder is the only organ that can spend them, and
-`pace_gate` cannot legally release it until the usage week is **64 % elapsed**,
-which is **≈ 2026-10-12 20:30 UTC — about 2.4 days AFTER the hours die.**
-That is not a forecast of a risk; it is a closed arithmetic, and it is the
-first time this loss has been computable *before* the expiry rather than
-reported after it. Fourth consecutive week; ~114 h unbought in four.
+> **UPGRADED FROM `DRIFTING` AT 06:49, MID-AUDIT, AND THE REASON IS THE WHOLE
+> REPORT.** I drafted this page with a `DRIFTING` verdict and a §1b that said
+> *"no certificate lost its implementation this time."* **That became false at
+> 06:45:06**, while I was re-running the instruments before committing. The
+> 2-hourly regate cron fired during the Review's live sitting and re-bought
+> **`T0.31`** against a `docs/REVIEW_QUEUE.md` the Review was mid-edit; the row
+> now reads *"the code that ran was never committed, reconstructs from no commit
+> and was not preserved … **it cannot be recovered by anyone**."* That is the
+> 146th audit's exact sentence, two days later, on the spec that gates the
+> backlog reader. The near-miss I was reporting is a hit. Full detail in §1b.
 
-**Section 1 is clean and that is the valuable half.** All **107** standing PASS
-rows resolve in `BY_ID`; every one names an implementation that exists on disk;
-every `commit` resolves in git; and **every PASS that declares a control has
-`control_metrics` recorded — 0 exceptions.** Only `T0.01` and `T0.10` declare no
-control at all, both harness smoke rows, both already owned at
-`t018-explicit-no-control-reads-as-an-unrun-promise` (OPEN, DUE 2026-10-19).
+**The ledger's numbers are clean and one of its Tier-0 certificates is now
+unrecoverable. The organ machinery that is supposed to protect it has a hole
+shaped exactly like the runs that fall into it, and the page carrying the
+already-written repair is the page that is stale.**
 
-**Section 2 is clean.** In seven days **not one numeric bar moved in the
-loosening direction.** Ten commits touched `registry*.py` or `experiments/tests/`;
-every constant in them is an **addition** (`W1.01`, `W1.04`, `T4.04`, `T4.05`,
-`T6.01` newly implemented; `T1.08`'s `TAIL_FRAC`/`WARMUP`), and the one change to
-an existing spec's gate — `T1.11`'s `SHIPPED_CALLER_MIN = 1` — **tightened** it
-into a FAIL. There is no `-CONST = N` / `+CONST = M` pair anywhere in the window.
-`MAX_HELDOUT_CV_PCT` 7.0 is byte-unmoved across all three `T1.08` attempts,
-verified at source.
+`scripts/lib_seal.sh`'s rescue sweep — the branch that commits a dying run's
+work so it is not lost — is reachable **only when `docs/PROGRESS.md` is itself
+dirty**, and `scripts/review_prompt.md:154` orders that page written **LAST**.
+So the sweep can fire only for a run that got far enough not to need rescuing.
+Measured consequence: the 2026-10-09 Review wrote seven declines, `D43`, and
+`THE CLASS DECLINE`, died `rc=124`, and its work sat **uncommitted for 24
+hours** until today's run inherited it at `81480de` (06:38:10). In that window
+the regate sweep re-bought three Tier-0 certificates **11–13 consecutive times
+against a dirty tree**. They are the three that gate my own instruments.
 
-**Instruments, re-run immediately before this file was committed** (the Review
-is in flight in the same 06:37 slot, so a reading quoted from the top of a
-sitting is the default failure here): `coverage` **2**, `decisions --check`
-**0**, `champions --check` **0**, `run status` **2** (unpiped), `run
-review-queue` **2**. Floors: **3 ABOVE** (`dark_slots` 18 vs 0,
-`pass_on_dead_dependency` 6 vs 3, `unreachable` 96 vs 95), 0 BELOW,
-0 UNVERIFIED. None of the three reds is new.
+Second, and the reason nobody saw it: **the seal's own stamp resets the clock
+the seal reads.** On 2026-10-08 it printed *"docs/PROGRESS.md untouched by this
+rc=124 run and only 24h old (cadence allows 25h) — still current, not
+stamping"* about a page whose content was **96 h old and whose own first line
+already said STALE** — because the 24 h was measured from the seal's own
+2026-10-07 STALE stamp.
 
-> **Concurrency disclosed:** `review.sh` (pid 1879250) started at 06:37:03
-> alongside this audit and committed `cff86c3` at 06:43:25 during it. Its work
-> is credited below rather than re-discovered, and `experiments/ledger.json` /
-> `experiments/cpu_budget.json` were dirty in the tree from that sitting while I
-> wrote. **I staged only `docs/OVERSIGHT.md` by name.**
+And the perishable loss the 147th audit computed one day early is now **fact,
+not forecast**: `2026-W40` has **28.03 of 30 free Kaggle GPU-hours undrawn and
+they expire today**. The builder — the only organ that can spend them — has
+been **dark 41 consecutive slots / 41.6 h**.
 
 ---
 
-## RANK 1 — the W40 GPU quota is unreachable by arithmetic, and three
-## independent locks each sit in a different instrument with no reader joining them
+## 1. Integrity of the ledger — CLEAN
 
-Every number here is derived from source, not quoted.
+**107 PASS rows of 160 results; 107/257 demonstrated.** Independently
+re-derived, not taken from `run status`:
 
-**Lock 1 — the clock.** `scripts/lib_usage.sh:85`:
+- Every PASS names a `commit`; **0** rows with a missing commit field.
+- **0** PASS rows whose commit has vanished from git. Three carry a `+dirty`
+  suffix (`T0.21`, `T0.28`, `T0.31` at `f24ac94+dirty`) — see §1b.
+- **Only `T0.01` and `T0.10`** have empty `control_metrics`, both harness smoke
+  rows that declare no control, both already owned by
+  `t018-explicit-no-control-reads-as-an-unrun-promise` (OPEN, `DUE: 2026-10-19`).
+  Every other PASS that declares a control has one recorded. **0 exceptions.**
 
-```
-allow = PACE_FLOOR + ((PACE_CAP - PACE_FLOOR) * elapsed + 99) / 100
-PACE_FLOOR=25   PACE_CAP=90        # skip iff  pct >= allow   (line 86)
-```
+### 1b. The dirty stamps — and `T0.31` is now unrecoverable
 
-Live now: `week:all models` **66 %**, `--week-elapsed` **13**, so
-`allow = 25 + ceil(0.65 × 13) = 34`. 66 ≥ 34 → skip. Release needs
-`allow ≥ 67`, i.e. `elapsed ≥ 64`. The meter resets **Oct 15 09:00 UTC**, so the
-week opened **Oct 8 09:00 UTC** and 64 % of 168 h lands at
-**≈ 2026-10-12 20:30 UTC.** The Kaggle hours die **Saturday 2026-10-10.**
-**The gap is ~2.4 days and it is not closable by waiting.**
+**At 06:39, when I first read it, this section was a near-miss.** `run status`
+has a `! DIRTY STAMPS` reader, it ran, and it said of all three
+(`T0.21`/`T0.28`/`T0.31` at `f24ac94+dirty`): *"the implementation it names IS
+committed: `impl_sha` reconstructs byte-identically at `81480de3` … the
+uncommitted edits were outside what this spec declares."* The reader works and
+deserves the credit.
 
-**And ≈Monday 20:30 is a FLOOR, not an estimate — it assumes the meter freezes
-at this instant.** The line rises at a constant **0.3869 pts/h** (the function's
-own comment). The meter rose **63 % → 64 % → 66 %** between 05:07 and 06:55
-this morning — **~1.7 pts/h, 4.3× the line's rate.** While the meter climbs
-faster than the line, the release date moves *away* faster than the clock moves
-toward it. Each additional meter point costs **~2.58 h** of further delay.
-**Of this week's 37 shared points: builder 8 (21 %), desks 4 (10 %), NOT THIS
-PROJECT 25 (67 %).** This project is being paced out of its own free GPU week by
-another tenant's spend, and at this morning's rate the gate may not release
-before the usage week's own reset on Oct 15 — by which time W40 is five days
-dead.
+**At 06:45:06 that stopped being true.** The regate cron fired *during* the
+Review's live sitting — between its 06:43:14 and 06:49:17 commits, while
+`docs/REVIEW_QUEUE.md` sat mid-edit — and re-bought `T0.31`. The row now reads:
 
-**Lock 2 — the buyer is spent, as of 06:43 this morning.** The 146th audit's one
-piece of good news, written 12 hours ago, was *"Unlike the previous three, W40's
-hours have a buyer that is buying."* **That sentence stopped being true at
-06:43:25 today.** `cff86c3` stamped `t108-step-2b-recipe-repair-is-routed-off-
-eval-cv-0-52` **ACTED**: both mechanisms implemented, dispatched, harvested, and
-the row's own pre-registered branch fired — *"the residual is NOT a third
-mechanism — the row forbade that in writing."* W40's named buyer is closed, and
-the successor row `t108-recipe-repair-is-exhausted-and-the-attribution-pair-
-flipped-sign` states in terms that it has **"no GPU buyer at all"** and dates
-itself **2026-10-21**, off the expiring week on purpose. **That reasoning is
-correct and I am not arguing with it** — buying another 3-seed reading of a
-statistic under suspicion is the one purchase the evidence forbids.
+> `T0.31` recorded PASS; ran from a modified tree at `6b50392`; **the code that
+> ran was never committed, reconstructs from no commit and was not preserved**
+> (1 uncommitted code file(s) at run time, INCLUDING this spec's own
+> `docs/REVIEW_QUEUE.md`) — **it cannot be recovered by anyone.** Re-run it from
+> a clean tree.
 
-**Lock 3 — there is no fresh GPU dispatch at any GPU cost class, awake or not.**
-From `coverage`'s QUEUE DEPTH, re-read this sitting:
+**`T0.31` is "The backlog reader cannot be quieted by tidying the backlog"** —
+the ratchet spec whose P4/P5/P6 assert on the violation TOTAL, named in this
+organ's own standing instructions as the thing that stops a "repair" from
+lowering its own number. Its implementation is gone. The reason it is
+irrecoverable rather than merely dirty: `REVIEW_QUEUE.md` is a genuine
+`IMPL_DEPS` member of `T0.31`, the re-buy consumed the Review's **intermediate**
+working-tree state of that file, and the Review then committed a *different*
+state four minutes later. The bytes that were tested exist nowhere.
 
-| class | dispatchable | state |
+**This is not a regression of the repair that was supposed to prevent it.**
+`cross-organ-doc-race-voids-certificates` was ACTED 2026-10-04 (`b4df9bb`); it
+made the overseer's *prose* docs (`OVERSIGHT.md`, `LESSONS.md`) `PROSE_DOCS`-exempt
+and deliberately left `REVIEW_QUEUE.md` unexempt, **correctly**, because `T0.31`
+genuinely reads it. What that repair never addressed is the scheduling half:
+**there is no interlock whatsoever between the 2-hourly regate cron and the
+organ sittings.** The cron does not know the Review is editing; the Review does
+not know a re-buy is due. At 06:37 every day they are guaranteed to overlap.
+`T0.28` happens to have escaped — it bought clean at 06:44:20 (`6b50392`) in the
+same window — which is the whole point: **which certificate dies is decided by
+cron phase.**
+
+The volume and cause, measured at 06:39 before the loss:
+
+| spec | consecutive `+dirty` re-buys | last CLEAN buy |
 |---|---|---|
-| `gpu<20min` | **0** | EMPTY — pilot BLOCKED on evidence (`DP.04`, `SM.03`); repair is a REDESIGN |
-| `gpu<2h` | 1 (`UB.10`) | VOID — "no FRESH dispatch here" |
-| `gpu<8h` | **0** | EMPTY — pilot BLOCKED on evidence (`LC.07`); repair is a REDESIGN |
+| `T0.21` The GOAL.md coverage audit cannot be flattered by a word | **13** | 2026-10-08T12:43:16 |
+| `T0.28` The escalation tool can be shown catching a deadlock | **11** | 2026-10-09T06:44:21 |
+| `T0.31` The backlog reader cannot be quieted by tidying the backlog | **11** | 2026-10-09T06:45:04 |
 
-Headline: **"dispatchable TODAY: 7, of which 7 VOID → only 0 is a FRESH
-dispatch."** So even a builder released this hour has nothing to spend the quota
-on.
+Those three specs gate `coverage.py`, `decisions.py` and `review_queue.py` —
+**the first, second and fourth instruments this audit is required to run.** The
+re-buy message reads `HASH-SALT DIFFERENTIAL CLEAN`, which is true of the salt
+differential and says nothing about the tree; a reader skimming the row sees the
+word CLEAN. The 146th audit (2026-10-08) measured this same mechanism producing
+a `T0.28` whose implementation **could not** be reconstructed. Two days later it
+fires every two hours and the only thing standing between it and that outcome is
+which files happened to be dirty.
 
-**Why this is a finding and not three re-reports.** Each lock is visible to
-exactly one instrument — the clock to `ladder.log`'s PACING line, the buyer to
-`review-queue`, the empty classes to `coverage` — and **no reader in this repo
-joins them.** The joined reading is the one that matters and it is not available
-anywhere: *the Kaggle quota has stopped being a constraint on this project at
-all.* The binding constraints are a shared usage meter two-thirds spent by
-somebody else and a dispatch queue with no fresh GPU work in it. `D30`'s
-standing report and `D40` both still frame the loss as hours going unbought
-through negligence or bad luck; it is now over-determined, and reporting
-"~28 h expired again" next week will describe the least important of three
-causes.
+## 2. Thresholds and controls over seven days — CLEAN
 
-## RANK 2 — the one real experiment of the week moved the number the WRONG WAY,
-## and the instrument defending a Tier-1 bar has contradicted itself
+**Not one numeric bar moved in the loosening direction.** Ten commits touched
+`registry*.py` or `experiments/tests/`. I diffed every changed line carrying a
+number or comparator (482 lines) and ran down every `-` hit by hand:
 
-Credit where it is owed: **the Review found this independently at 06:43 and
-routed it well.** I verified it at source rather than inheriting it.
+- Every constant is an **addition** — `W1.01`, `W1.04`, `T4.04`, `T4.05`,
+  `T6.01` newly implemented; `T1.08`'s `TAIL_FRAC`/`WARMUP`; `LG.14`'s imported
+  bars (*"Bars imported, none moved"*).
+- The single `-` line with a comparator —
+  `- and c["inference_params_trained_frac"] < 0.9` in `T1.11` — is the diff
+  artifact of **adding a third conjunct** (`m["shipped_callers"] >=
+  SHIPPED_CALLER_MIN`). Both original conjuncts are byte-unmoved and the change
+  **demoted `T1.11` to FAIL**. A strengthening, recorded as one.
+- `MAX_HELDOUT_CV_PCT` 7.0 byte-unmoved across all three `T1.08` Step-2b
+  attempts, verified at source.
+- No control deleted, no `_check` gained an `or`, no seed count reduced.
 
-| attempt | commit | `heldout_cv_pct` | final-iterate | mechanism |
-|---|---|---|---|---|
-| 3 | `3d357c4` | 40.006 | — | none |
-| 4 | `381a9e6` | **14.666** | 16.994 | (i) tail-average |
-| 5 | `b7aa2bf` | **17.285** | 16.861 | (i)+(ii) cosine-to-0 |
+There is no `-CONST = N` / `+CONST = M` pair anywhere in the window.
 
-Bar **7.0**, byte-unmoved, re-verified at
-`experiments/tests/t1_08_seed_variance.py:190`. Mechanism (i) is **unchanged
-between arms 4 and 5**, same `spec_sha`, same T4 venue — and its attributed
-effect reads **16.994 → 14.666** in one and **16.861 → 17.285** in the other.
-**Opposite sign, same mechanism.** The pair built to attribute (i)'s effect
-instead established that (i)'s effect is smaller than the noise of the estimator
-measuring it: a 7.0 bar is being adjudicated by a statistic whose own
-arm-to-arm swing is ~2.6 CV-points.
+## 3. The seal's two defects — THE AUDIT'S PRINCIPAL FINDING
 
-**The honest consequence nobody has written down: the tree is currently left
-holding the WORST-measured of the three configurations.** `t1_08_seed_variance.py`
-contains both mechanisms live (`TAIL_FRAC = 0.2` at :193, `WARMUP = 100` at :210,
-`lr_schedule "warmup100+cosine_to_0"` at :405), so a sixth attempt run from HEAD
-re-buys 17.285, not 14.666. That is legal — (i) was deliberately kept so arm 5
-would attribute (ii) — but it means **the spec's shipped implementation is now
-the configuration with the highest recorded dispersion, and no record says so.**
-Routed below as FTB 1; it is a disclosure, **not** a licence to revert, because
-reverting (ii) without a verdict is choosing a recipe on a statistic this
-project has just measured as unable to choose.
+### 3a. The rescue sweep is unreachable by the runs that need it
 
-This matters beyond `T1.08`: it is **the project's largest blocker (blocks 45
-specs)**, and `T2.03` and `T2.14` are both standing PASS rows resting on it
-(`pass_on_dead_dependency`).
+`seal_output()` (`scripts/lib_seal.sh:305–325`):
 
-## RANK 3 — `docs/PROGRESS.md` is five days old and its own staleness banner
-## understates that by 73 hours
+```
+if [ -z "$(git status --porcelain -- "$file" 2>/dev/null)" ]; then   # :313
+    ... age check ...            -> "still current, not stamping" ; return 0
+    ... stale_output ...                                           ; return 0
+fi                                                                   # :324
+# The run's whole dirty set, partitioned ...                         # :325
+```
 
-The Review's current-state page last had its content rewritten **2026-10-04**
-(`8a42c10`, items edited in the 10-05 run that died `rc=124`). Today is 10-09:
-the page is **~120 h old against a 25 h cadence.** Its banner reads *"last moved
-47h ago"* and is stamped **2026-10-07T06:37:04** — because `lib_seal.sh` returns
-early when a banner already exists, so **the staleness notice is itself two days
-stale and understates the age by 73 hours.**
+Both clean-branch paths `return 0` **before** line 325, where the dirty-set
+sweep that commits the run's *other* outputs begins. So the sweep is gated on
+the sealed file being dirty — and `scripts/review_prompt.md:154` says
+*"PROGRESS.md last, as the receipt for commits that already exist."*
 
-This is the same defect the 10-04 FULL diagnosed in its own banner (*"understated
-that by 30"*), and **the number has more than doubled since.** Its routed repair
-is that page's own **FTB 5** — stop writing the page last — which is a
-`scripts/review_prompt.md` change the builder owns and the builder has been dark
-for every slot since. `PROGRESS_LOG.md` now carries **nine consecutive
-`INCOMPLETE` rows, 09-29 through 10-08**: every one a sitting that made real acts
-and lost only its page. The desk is working; the record of the desk is not.
+**A run that dies before its last checklist item leaves `PROGRESS.md` clean,
+and therefore gets no sweep at all.** That is every `rc=124` run, which is most
+of them. Confirmed in the log: 2026-10-09 06:57:09 printed *"docs/PROGRESS.md
+already carries a stale banner — leaving it"* and swept nothing, while
+`REVIEW_QUEUE.md` and `DECISIONS_NEEDED.md` held that sitting's entire output.
 
-**Read with care, because the fix is cheap and the readings are not equivalent:**
-the page's `FOR THE BUILDER` and `FOR THE OWNER` sections are the *2026-10-04*
-asks, and I read them as live this audit (items 1–7 and owner items 1–6). The
-`VANISHED-OWNER-ASK` counter reads **0/0** — the asks did reach `D40`/`D33`/
-`D41`/`D42` and are attributed — so nothing has been lost. The damage is that
-the project's one current-state progress page has been a record for five days
-while four audits and five Review sittings read it as current.
+This is the 146th audit's lesson 1 — *"the failure mode of a per-file liveness
+check is a false negative about every other output"* — but one layer deeper
+than that lesson went. It recorded the **sentence** as wrong. The same per-file
+predicate also controls the **sweep**, so the consequence is not cosmetic: the
+work stays uncommitted, which dirties the regate, which is what bills the
+certificates in §1b.
 
-## RANK 4 — the three ABOVE-floor ratchets, and one of them cannot measure
-## its own worst reading
+### 3b. The seal's own stamp resets the clock it reads
 
-`dark_slots = 18` (floor 0), `pass_on_dead_dependency = 6` (floor 3),
-`unreachable = 96` (floor 95). None is new and all three are owned. But one
-reading is worth naming:
+`_seal_file_age_hours()` (`:227–232`) is `git log -1 --format=%ct -- "$file"` —
+the last commit touching the file. `stale_output()` **commits that same file**
+to add its banner. So every stamp resets the freshness clock to zero.
 
-**`dark_slots` is a gauge, not a counter, so its peak is unrecordable.** The
-committed reading is **0, recorded 2026-09-30**. Between then and now the
-builder went dark for the longest streak in project history — the 10-04 FULL
-measured **76 consecutive slots / 75.8 h**, and that page's FTB 0 told the
-builder its last slot had ended **99 slots** earlier. The counter passed through
-~99, returned to 0 when the builder woke on 10-06, and now reads 18. **The
-ratchet's committed history shows `0 → 18` and the 99 is nowhere in it.** A
-gauge whose floor is 0 is also ABOVE floor during *any* legal pacing, so its
-contribution to "3 ABOVE" is partly a tautology rather than a finding. Reported,
-not repaired: the fix is a high-water mark beside the live value, and it is the
-builder's.
+Traced against `docs/PROGRESS.md`, whose real content is `b61515f`
+(2026-10-04 07:10:31):
 
-`pass_on_dead_dependency` 6 against floor 3 is the honest reading of "107
-demonstrated": `LF.02 ← T6.03 BLOCKED`, `T0.18`/`T0.19 ← T0.13 FAIL`,
-`T1.12 ← T1.11 FAIL`, `T2.03`/`T2.14 ← T1.08 FAIL`. Three of the six trace to
-`T1.08` and `T1.11`, i.e. to RANK 2 and to the shipped-caller finding — **the
-repair for half this counter is the same repair.**
+| date | seal said | content actually was |
+|---|---|---|
+| 10-05 06:57:13 | sealed as INCOMPLETE draft (`bd877b9`) | 23.8 h |
+| 10-06 06:57:11 | *"only 23h old … still current, not stamping"* | **47.8 h** |
+| 10-07 06:37:04 | stamped STALE, *"last moved 47h ago"* (`1b7a3ea`) | **71.4 h** |
+| 10-08 07:08:52 | *"only 24h old … still current, not stamping"* | **96.0 h** |
+| 10-09 06:57:09 | *"already carries a stale banner — leaving it"* | **119.8 h** |
 
-## RANK 5 — `GOAL.md` cites four specs that resolve to corpses, and the
-## count is flagged NEW
+On 10-06 and 10-08 the instrument measured its own prior commits and declared
+the page current. **The 10-08 reading called a page "still current" whose own
+first line reads "STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED
+NOTHING."** Two artefacts in direct contradiction and no reader joining them.
 
-`coverage` reports **4 NEW unrunnable citation(s): `GEN.02`, `GEN.03`, `GEN.06`,
-`GEN.09`** — every one `welded ← LC.07`, which is `PILOT-BLOCKED`. Each id
-*resolves*, so the dangling-reference count cannot see it; and each is welded, so
-the citation's present tense is false. This is the 59th audit's B2 class: *an id
-that resolves to a corpse is a worse dangling reference than one that resolves to
-nothing.* These are the GOAL.md sentences on learning-by-watching, false belief,
-transfer across worlds, and culture — three of them the "OTHER MINDS" and "MORE
-WORLDS" expansions the page calls the destination.
+Note the bias direction. The 146th audit's lesson named the *false negative*
+(the seal under-reports what a run produced). **This is the false positive — the
+seal over-reports freshness — and it is the direction that flatters.** A
+double-stamp guard exists; a self-reset guard does not.
 
-It is owned (`gen-four-revival-needs-an-affordable-lc07-successor`, OPEN, DUE
-2026-10-11, and `gen-four-reparented-to-a-decision-that-had-already-closed`,
-ACTED), so this is a ranking, not a new route. **The instruction on the counter
-is the load-bearing part: `GOAL_UNRUNNABLE_BASELINE` is shrink-only and must not
-be raised to absorb these four.**
+## 4. Is the builder alive and productive? — NO, AND LEGALLY SO
 
----
+- **Last iteration that ran at all: 2026-10-08T12:32:55, `rc=0`.**
+- Last 24 h: **40 hourly slots, 40 `PACE-SKIP`, 0 `rc=0`, 0 ledger events.**
+- At 06:07 today: *"41 consecutive dark slot(s); 0 failed slots (41.6 h since
+  the last rc=0)."*
+- Cause is the pace line, not a crash and not the hard stop: `week:all models`
+  **64 %** against a pace line of **51 %**, hard stop 90 %. **73 % of this
+  week's 53 shared points belong to another tenant** (builder 8, desks 6).
 
-## The audit, section by section
+Three declared dispatches (`T0.21`, `T0.28`, `T0.31`) have been reported EXITED
+since 2026-10-08T12:32:55 with the notice *"the next unskipped iteration should
+read them"* — repeated every hour for 41 slots to a builder that cannot wake.
+Not a thrash and not a failure: a correctly-paced organ with nothing to pace.
 
-**1. Integrity of the ledger — CLEAN, no findings.** 107 PASS rows, 107 resolve
-in `BY_ID`, 107 implementations present on disk, 107 commits resolve in git,
-0 PASS rows with a declared control and no recorded `control_metrics`. Two PASS
-rows declare no control (`T0.01`, `T0.10`), both already owned. Separately and
-legally: 2 DIRTY STAMPS (`T6.03`, `PL.02` — both pre-date `dirty_files`),
-13 STALE CLAIMS, and 6 UNBACKED CERTIFICATES, all reporting-only and all
-unchanged from the 146th audit.
+## 5. Compute honesty — THE LOSS IS NOW REALISED
 
-**2. Thresholds and controls over time — CLEAN, no findings.** See the header.
-Ten commits in window, zero loosening, one deliberate strengthening that cost a
-certificate. **Saying so plainly is the result.**
+`experiments/gpu_budget.json`, `weeks` block:
 
-**3. Drift from the goal.** The builder's last productive slot (10-08 12:07,
-`rc=0`, 25 min) did `T1.08` Step 2b — which traces to *"every capability claimed
-only by an experiment that could have failed … at ≥3 seeds"*, and it is the right
-unit: `T1.08` is the largest blocker on the board. **No drift in what was
-worked on.** The converse question is where the damage is, and it is unchanged
-from the 10-04 FULL's reading: **`claim_dead = 3`** — **smell**, **shelter/
-building**, **thermal ("too cold kills him")** — each an owner commitment with
-no live falsifier, each parked on honest evidence, each needing a successor spec
-the ladder cannot generate from inside itself. Plus **14 commitments with live
-claim specs and nothing passing**, including `curiosity` (2 pass of 12),
-`one brain / unison` (1 of 28), `fast/slow` (0 of 8, five welded behind
-`LC.03`), and `sleep` (0 of 5). `commitments_uncovered` is **0** — every
-commitment has a spec; the hole is that the ladder's centre of gravity is still
-its own apparatus.
+- **`2026-W40`: 1.971 h drawn of 30 free Kaggle hours → 28.029 h expire TODAY
+  (Saturday 2026-10-10).**
+- W37 1.379 · W38 0.9176 · W39 1.0719 · W40 1.971 → **≈114.6 h undrawn across
+  four consecutive weeks.**
+- The 147th audit computed this yesterday and named the arithmetic: `pace_gate`
+  cannot release the builder until the usage week is 64 % elapsed ≈ 2026-10-12
+  20:30 UTC, **~2.4 days after the hours die.** Nothing has changed; the
+  forecast is now the outcome. It is recorded here as realised, not re-forecast.
+- **No GPU hours were spent without a ledger entry** — every W40 job
+  (`1791217029`, `1791444041`, `1791461828`) has a charged row and an `ok: true`.
+- **Two per-job overruns, both in W40, both under-estimates:** est 0.5 h →
+  **0.6544** billed (+31 %), est 0.5 h → **1.0458** billed (+109 %). Honestly
+  recorded in `overruns`. Flagged because `T1.08` Step 1's projection is 0.3 h
+  and the only two recent calibration points both ran long.
 
-**4. Is the builder alive and productive?** **Alive, legal, and locked out.**
-Last `rc=0` **2026-10-08T12:32:55**; **17 consecutive dark slots / 17.6 h** at
-06:07, 18 by the ratchet now; **0 failed slots.** Every skip since 13:07
-yesterday is `pace_gate` acting correctly on `week:all models` against its line.
-Before that, four slots (08:07–11:07 on 10-08) were lost to **session limits on
-every model** — fable, opus and sonnet all refused — and were correctly marked
-and inherited. **This is not a sick builder and nothing here is the builder's
-fault.** See RANK 1 for what it costs.
+## 6. Stuck decisions — ARMED, AND ONE FALLS TODAY
 
-**5. Compute honesty.** `2026-W40`: **1.971 h drawn of 30, 28.03 h expire
-Saturday 2026-10-10.** All three W40 jobs are `ok:true` and all three are
-`T1.08`. **Two per-job overruns recorded, both this week** —
-`…1791444041` 0.6544 h billed vs 0.5 est, `…1791461828` 1.0458 h vs 0.5 est —
-and the second is worth a note: `projections` logged **0.75 h** for that job at
-12:17:04 while `overruns` prices it against **0.5**, so the overrun channel is
-not reading the job's own projection. **Direction is safe** (it over-states the
-overrun, 2.09× instead of 1.39×), which is why this is a note and not a rank.
-`gpu_hours_no_verdict` TOTAL **51.47 h**; the standing waste is still one row —
-**`D1.0`, 33.78 h across 2 attempts, 0 verdicts** — and `UNATTRIBUTED` 6.32 h
-across 21 jobs sits at its floor.
+`decisions --check` **EXIT 0**, ratchet ok — `0/0` undeclared, `0/0`
+unrouted-owner-ask, `0/0` vanished-owner-ask, `0/0` default-action-expired,
+`0/0` firing-diff. 31 of 31 firings transcribed.
 
-**6. Stuck decisions.** `decisions --check` **exits 0 with its whole ratchet at
-floor**: 0 `UNDECLARED`, 0 `MEANS-ESCALATED`, 0 `UNROUTED-OWNER-ASK`, 0
-`VANISHED-OWNER-ASK`, 0 `default-action-expired`, and **31 of 31 firings
-transcribed** onto `DECISIONS_RESOLVED.md`. **Nothing a measurement could settle
-is sitting on the owner's desk, and there is no `UNDECLARED` entry to arm this
-audit** — the standing instruction to arm one per audit has nothing to act on,
-and I am saying that rather than manufacturing an entry. `D41` and `D42` are
-armed with monotone defaults, both `decide_by 2026-10-18`. Three `CONDUCT-DESK`
-entries are stale and are the desks' own to execute, not the owner's:
-**`D33` (16 d — MOOT, its object went terminal when `w1-world-edit-window` was
-`DECLINED`, so no desk can clear it by firing anything), `D35` (15 d),
-`D38` (5 d).** `D38` is the Sunday collision between `D28`'s OVERDUE-first and
-`D33`'s W1-design-first; it is the Review's to rule and it next binds on a
-Sunday, so it is not overdue in effect until 2026-10-11.
+- **No `MEANS-ESCALATED`.** No measurable fork is sitting on the owner's desk —
+  the `D1` disease is absent.
+- **No `UNDECLARED`** to arm, so this audit arms nothing: the register is
+  already fully armed. **No `OVERDUE — DEFAULT IS DUE TO FIRE`:** `D43`
+  2026-10-16, `D41`/`D42` 2026-10-18.
+- **`D40`'s `decide_by` is TODAY, 2026-10-10** (default (v) = the status quo).
+  It is the 90 % hard-stop item and it is the decision whose subject just cost
+  the project 28 GPU-hours. Flagged, not fired — its date has not passed.
+- Seven conduct entries are unarmed by design. **`D33` is STALE by 17 days**,
+  `D35` by 16, `D38` by 6. `D33`'s default is **MOOT, not merely expired** — its
+  object went terminal when `w1-world-edit-window` was DECLINED, so no desk can
+  clear it by firing anything. That reading is the 10-02 Review's and I
+  re-derived it rather than inheriting it: the entry's recommendation moves W1
+  design authority to the builder, and `D22` (the owner's resolved ruling) puts
+  it with the Review. The condition cannot age out.
+- `D41`/`D42` carry `CONDUCT-MISFILED?` — class `goal` but blocking no spec id.
+  Soft, routing-only, correctly left to the Review.
 
-**7. Bakeoff hygiene — no new findings.** `champions --check` **exits 0** with
-all 10 violations **at their declared floors**; no seat lost a door this window.
-The standing bad news is unchanged and is not re-litigated: the **Learning-core
-seat is held BY VERDICT off a VOID** (`LC.03`) with all three re-open triggers
-closed doors, and the **World seat is held BY VERDICT naming neither a deciding
-row nor a trigger** — the strongest marking in the file, twice, backed by a
-non-verdict and by nothing. 4 seats are unwinnable, 2 unfalsifiable.
+**`D43` was opened by the 10-09 Review and is honest about its own cost** — it
+states that seven findings now sit in TERMINAL rows, that a terminal row is
+never re-read, and that the 10-11 split is load-bearing as a result. I checked
+the one thing a desk could have got wrong here and it did not: the decline
+executed a **pre-registered** stop-rule on its own date and its own condition,
+and the findings are preserved rather than withdrawn.
 
-**8. The honest summary — are we closer to a curious humanoid, or to a longer
-list of green ticks?** Neither, this week, and the shape of the standstill has
-changed in a way worth naming precisely.
+## 7. Bakeoff hygiene — CLEAN
 
-We are not closer to Jack. The one experiment that ran moved its number from
-14.666 to 17.285 against a bar of 7.0 — **away** — and the more useful thing it
-produced was the discovery that the instrument adjudicating it cannot tell those
-two numbers apart. That is a real result and the right desk routed it within the
-hour, as an estimator question with the bar explicitly protected from being
-lowered. A project that answers a negative result by auditing its own ruler
-instead of trying a third recipe is a project whose scoreboard can be believed.
+33 resolved entries in `docs/DECISIONS_RESOLVED.md`. No decision made without a
+learning gate; no winner chosen inside the noise margin; every `screen
+rationale` I read is **pre-declared before any arm number existed**, with the
+gate *"unmoved at 3 sigma and MIN_FINISHERS still applies."*
 
-But we are not closer to a longer list of green ticks either, and that is new.
-**`demonstrated` has not moved in a week: 107 → 107.** Of 76 settle events in
-seven days, **6 were first-ever verdicts, 67 were re-buys, and 68 of 76 (89 %)
-were instrument-coupled** — this project's own tool edits re-staling its own
-certificates. Three Tier-0 instrument specs account for 58 of the 67 re-buys
-(`T0.21`×20, `T0.28`×20, `T0.31`×18). The machine is now spending most of its
-recorded activity proving that its measuring apparatus still works.
+One standing debt, correctly reported rather than hidden: the **Learning core**
+seat is held `BY VERDICT` off `LC.03`, which is a **VOID** — a VOID decided
+nothing. `champions --check` raises it as `VERDICT-IS-A-VOID` +
+`TRIGGER-UNREACHABLE` and it sits at its floor. Not a new finding and not a
+repair I may make; named so it is not mistaken for absence.
 
-The thing I would put in front of the owner above everything else is not a
-failure of honesty — the honesty is in excellent repair, and Sections 1, 2, 6
-and 7 are genuinely clean. It is that **the resources this project depends on
-have quietly stopped being ours to allocate.** Thirty free GPU-hours a week
-expire untouched for the fourth consecutive week, and this week it is provable in
-advance that no legal slot exists before they die. Two-thirds of the usage meter
-that gates the only organ able to spend them belongs to another tenant. The
-constraint on building Jack is no longer the ladder's difficulty, the builder's
-competence, or this project's honesty. It is that the project is third in line
-for its own compute, and no instrument in the repo says so in one sentence.
+## 8. The instruments, re-run immediately before this file was committed
+
+The Review is in flight in this same 06:37 slot (PID 2272208, and it committed
+`81480de` while I was reading), so a reading quoted from the top of a sitting is
+the default failure here.
+
+Readings below are the **06:49** re-run, not the 06:39 one, and two of them moved
+in those ten minutes:
+
+| instrument | exit | reading (06:49) |
+|---|---|---|
+| `coverage` | **2** | **0** commitments with NO declared spec. **3 CLAIM-DEAD** (smell, shelter/building, thermal — every claim spec parked or foreclosed); 14 with live claim specs but nothing passing. |
+| `decisions --check` | **0** | ratchet ok, all five classes at `0/0`. Now **4** armed — `D44` appeared at 06:49 (`due 2026-10-24`, `CONDUCT-MISFILED?`). |
+| `champions --check` | **0** | ratchet ok; 10 violations, every class at floor. **`ARENA-MISSING` is 0.** |
+| `run review-queue` | **0** *(was 2)* | **3 OVERDUE → 0.** The Review disposed all three during this audit: `hash-salt-lottery` ACTED (`5e3fb47`, 06:39:57), `lc03-five-controls` RE-DATED 2026-10-21 (`6b50392`, 06:43:14), `personality-is-a-typed-character-sheet` option (iii) with the character question routed as `D44` (`bd40dde`, 06:49:17). 45 OPEN, 48 ACTED of 139. **A clean board, honestly earned, and it is the one number that improved today.** |
+| `run status` | **2** | 107/257; the `! DIRTY STAMPS` block of §1b — **now carrying `T0.31` as unrecoverable.** |
+
+**A correction to my own standing instructions, because it cost me a wrong
+reading mid-audit.** The overseer prompt says `champions.py` finds
+*"`ARENA-MISSING` — **8 seats today**"*. It finds **zero**; the ratchet line
+reads `0/0 seats with a phantom arena`. Every number in those instructions is a
+dated example, not current state. (I also initially mis-read `coverage` as
+EXIT 0 by piping it through `head` and reading `head`'s status. It is **2**. Do
+not pipe an instrument whose exit code you intend to quote.)
+
+## 9. Drift from the goal
+
+**What the last day of work served.** The builder did nothing (§4), so the
+day's output is the Review's: `T1.08` Step 2b stamped ACTED and its residual
+routed as an estimator question; the seven-row class decline; `D43`. `T1.08` is
+*"Seed variance measured"* — it serves **"Really learning, not appearing to
+learn … at ≥3 seeds where the claim is about learning."** The decline and `D43`
+serve *"protects the honesty of watching what happens when the three meet."*
+**No drift: nothing was worked on that traces to no GOAL.md sentence.**
+
+**The converse, which is the harder question.** `coverage` EXIT 2 names three of
+the owner's own constitutional commitments with **no live falsifier at all**:
+
+- **smell** — `SM.02` PARKED, `SM.03` FORECLOSED. GOAL.md: *"olfaction finds
+  food, fire and decay at a distance and through occlusion — the sense that
+  works when sight fails."*
+- **shelter/building** — `SH.01` PARKED, `SH.02` FORECLOSED. *"the owner's own
+  image of success."*
+- **thermal (kills)** — *"too cold kills him, too hot kills him."*
+
+All three are CLAIM-DEAD **compositionally**: each park was individually legal
+and evidence-backed, and no dispatch anywhere revives the commitment behind
+them. This is `D42` (armed, `decide_by 2026-10-18`, default (iv) HOLD) and
+`five-commitments-are-claim-dead-behind-foreclosures` (OPEN, `DUE: 2026-10-14`).
+It is correctly routed and correctly on the owner's desk; I am reporting that it
+has stood for **eight days** and that the daily reporting of it has become
+routine, which `D42`'s own price paragraph predicted.
+
+Fourteen more commitments have live claim specs with nothing passing —
+**touch, tool use, told world, proprioception, sleep, plasticity, fast/slow**
+among them. Curiosity has 2 passing of 12; one brain / unison 1 of 28.
+
+## 10. The honest summary
+
+**Are we closer to a curious humanoid that climbs the ladder than yesterday?
+No. We are one day closer to not being able to find out.**
+
+The honest accounting of the last 48 hours: the ledger did not move (107/257,
+unchanged since 10-08), the builder ran zero iterations, 28 GPU-hours died, and
+the entire output of both organs was **spent on repairing the organs**. That
+work was good and necessary — `T1.08` Step 2b is a real negative result, the
+class decline ended an eleven-day standing violation — but none of it is Jack
+learning anything.
+
+And the specific shape of the drift is worth stating because it is not laziness.
+The system's self-repair machinery has begun to consume the capacity that would
+otherwise go to the ladder, and its own instruments are now the thing most often
+being fixed. **Three of the four instruments I am required to run are gated by
+certificates that have been re-bought against a dirty tree 11–13 times in two
+days, caused by a seal whose rescue path cannot reach the runs that need it, and
+the repair for that was written down six days ago on a page that the same seal
+has twice declared "still current".** That is a closed loop, and closed loops do
+not open themselves.
+
+The counterweight, stated because it is true: **section 2 is clean and the
+backlog board is clean.** Nothing has been loosened, no PASS is unsupported, no
+control went unrun, no GPU hour went unbilled, and the Review cleared every
+OVERDUE row while I watched. The scoreboard is honest. It is just not moving,
+and the reason it is not moving is no longer the science.
+
+**One last thing, and it is the most uncomfortable sentence in this report.**
+The certificate that died at 06:45 is the one that exists to stop an organ from
+quieting a backlog by tidying it — and it died because an organ was tidying a
+backlog. Nothing cheated: the Review's disposals were honest, the cron's re-buy
+was honest, the stamp that recorded the loss was honest. **The system caught
+itself destroying the evidence that it cannot destroy evidence, and the only
+reason anyone knows is that a human-facing reader happened to print it.** No
+exit code went red for `T0.31` specifically; `run status` exits 2 for a dozen
+reasons and has for days.
 
 ---
 
 ## FOR THE BUILDER
 
-0. **EVERY ORDER FROM THE 135th–146th AUDITS IS STILL OPEN AND NONE OF IT IS
-YOUR FAULT.** Your last `rc=0` was 2026-10-08T12:32 and `pace_gate` has refused
-every slot since, correctly. Read those reports and `docs/PROGRESS.md`'s FTB 1–7
-as live and unexecuted. I am re-ranking nothing. **When you do get a slot, note
-that RANK 1 means a GPU dispatch is almost certainly the wrong unit** — there is
-no fresh GPU work at any class, and the hours die Saturday.
+**B0. THE REGATE CRON AND THE ORGAN SITTINGS NEED AN INTERLOCK, AND THIS IS NOW
+THE TOP ITEM — it cost `T0.31`'s implementation at 06:45:06 today.** The
+2-hourly regate (`scripts/regate.py`, no model call) re-buys specs whose
+`IMPL_DEPS` include `docs/REVIEW_QUEUE.md` / `docs/DECISIONS_NEEDED.md`, with no
+knowledge of whether an organ is mid-edit. Today it fired between the Review's
+06:43:14 and 06:49:17 commits and recorded a PASS whose tested bytes were then
+overwritten — *"it cannot be recovered by anyone."* At the 06:37 slot this
+overlap is **guaranteed**, every day.
+The repair is a **refusal, not a retry**: before buying a spec, if any file in
+that spec's `IMPL_DEPS` is dirty, **skip that spec and log the skip** — a
+re-buy is a convenience and a lost implementation is not recoverable, so the
+asymmetry is total. `protocol.py` already computes exactly this predicate for
+the `+dirty` stamp (`:220`, *"pulled out of the `+dirty` stamp so the question
+can be asked of a fixture"*), so the check exists and only needs calling one
+step earlier.
+**Do NOT** fix this by adding `REVIEW_QUEUE.md` to `PROSE_DOCS` or to any
+exclusion list. `T0.31` genuinely reads that file; exempting it would make the
+staleness edge invisible rather than the race safe, and the 10-04 repair
+(`b4df9bb`) deliberately declined that shortcut. **Do NOT** serialise by having
+the Review hold a lock across its whole sitting — that would make a 20-minute
+desk block every re-buy. Skip-and-log is the monotone move.
+`T0.31` also owes a **re-run from a clean tree**; that is a separate unit and
+the certificate is not healed by the dirt going away.
 
-1. **DISCLOSE, DO NOT REVERT: `T1.08`'s shipped implementation is the
-worst-measured of its three configurations.** `experiments/tests/t1_08_seed_variance.py`
-carries mechanism (i) (`TAIL_FRAC = 0.2`, :193) **and** mechanism (ii)
-(`WARMUP = 100`, :210; `lr_schedule "warmup100+cosine_to_0"`, :405), which
-together recorded `heldout_cv_pct` **17.285** — above attempt 4's 14.666 and the
-highest of the two repaired arms. Add that fact to the spec's docstring so the
-next reader cannot mistake HEAD for the better arm. **Do NOT revert (ii), do NOT
-touch `MAX_HELDOUT_CV_PCT` 7.0, and do NOT dispatch a sixth attempt** — the
-estimator question is routed to the Review as
-`t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign`
-(OPEN, DUE 2026-10-21) and choosing a recipe before it is answered is choosing on
-a statistic this project has just measured as unable to choose. Docstring only;
-zero behaviour change; verify the three numbers at source before writing them.
+**B1. `scripts/lib_seal.sh` — the rescue sweep must not be gated on the sealed
+file.** Ranked second only because B0 is already bleeding; this is the deeper
+cause and it is what put the tree in the state B0 fired into.
+`seal_output()` returns at `:317` and `:323` before the dirty-set sweep at
+`:325`, so a dying run whose `$file` is clean gets **no sweep at all**. Hoist
+the partition-and-sweep block so it runs on **every** `rc != 0` path, including
+both clean-file branches. Evidence: 2026-10-09 06:57:09 logged *"already
+carries a stale banner — leaving it"* and left that sitting's entire output
+(`REVIEW_QUEUE.md`, `DECISIONS_NEEDED.md`) dirty for 24 h.
+**Do NOT** change which files are swept or the `mtime >= run_start` predicate
+that distinguishes this run's acts from another author's — that partition is the
+74th audit's B1 and it is correct. Only the *reachability* of the block changes.
+**Report the before/after on a forced `rc=124` with a clean `PROGRESS.md`.**
 
-2. **`dark_slots` NEEDS A HIGH-WATER MARK** (RANK 4). It is a gauge: it passed
-through ~99 during the 10-01→10-06 blackout, returned to 0, and the committed
-ratchet reading went `0 → 18` with the peak nowhere in it. Print a
-`dark_slots_max` beside the live value, persisted, monotone-up, reset only by an
-explicit recorded act. **Reporting-only — do not gate on it**, and do not change
-`dark_slots`' own floor of 0.
+**B2. `scripts/lib_seal.sh:227` — `_seal_file_age_hours` must not count the
+seal's own stamps.** It reads `git log -1 --format=%ct -- "$file"`, and
+`stale_output()` commits that file, so each stamp zeroes the clock. Walk back to
+the last commit touching the file that is **not** a seal stamp (the seal's own
+commits are identifiable by author/message — `stale_output` writes them, not the
+organ's agent, and says so at `:272`). Measured damage: 10-08 07:08:52 printed
+*"only 24h old (cadence allows 25h) — still current, not stamping"* about a page
+whose content was **96 h old and already bannered STALE**.
+**Do NOT** raise `max_clean_age` (25 h) or remove the already-bannered guard —
+both would hide the defect rather than fix it. This is a **reporting** repair:
+it can only make the seal stamp MORE often, never less.
 
-3. **THE OVERRUN CHANNEL DOES NOT READ THE JOB'S OWN PROJECTION** (section 5).
-`experiments/gpu_budget.json` `overruns[1]` prices `…1791461828` against
-`est_hours 0.5` while `projections` logged **0.75 h** for that job at 12:17:04,
-40 minutes before it ran. Make the per-job overrun read the most recent
-`projections` entry for the same spec at or before dispatch. **Strictly a
-reporting fix and the current direction is the SAFE one** — it over-states the
-overrun — so this may not displace item 1, and it must not be allowed to reduce
-any recorded overrun below what a correct reading gives.
+**B3. `experiments/run.py` — the `+dirty` re-buy message must not read CLEAN.**
+All three rows in §1b record `HASH-SALT DIFFERENTIAL CLEAN (salt 1)` while their
+commit field is `f24ac94+dirty`. The word is true of the salt differential and
+false of the tree, and the row is what later readers believe. Append the dirty
+marker to the recorded message when the stamp carries `+dirty` — e.g. a
+`+dirty (N uncommitted file(s))` clause. **Strictly additive**: it changes no
+verdict, moves no bar, and `run status`'s existing `! DIRTY STAMPS` reader —
+which is correct and did its job — keeps its text.
 
-4. **STILL UNDISCHARGED AND STILL THE CHEAPEST THING ON YOUR BOARD:**
-`docs/PROGRESS.md` FTB 7 — `experiments/fieldwatch.py:102`, `\bfinding\b` →
-`\bfindings?\b`. One character, strictly additive, zero staleness bill. It
-perished at the ~10-12 Monday sweep per its own row, so verify the defect against
-the live regex yourself and **stop and route if it no longer reproduces.**
+**B4. `scripts/review_prompt.md:154` — the page should not be written last
+(PROGRESS.md FTB item 5, 138th FTB 6, seconded by the Review 10-04, still
+undone).** With B1 landed this stops being load-bearing, so **do B1 first and
+then this**. The original reason for the ordering — not holding work dirty — no
+longer applies: `docs/PROGRESS.md` is a `PROSE_DOCS` member and exempt from the
+per-spec staleness bill. Yours under the 69th audit's B2 precedent.
+**Do NOT remove the `INCOMPLETE`-row fallback.**
+**And route it**: this item exists *only* on `docs/PROGRESS.md`, has **no
+`REVIEW_QUEUE.md` row, no `DUE:`, and no instrument watching it** — which is why
+it has survived six days on a page nobody can rewrite. It is the repair for the
+mechanism that is costing certificates every two hours and it currently has no
+clock.
+
+**B5. Three of your eight steering orders are already discharged, and the page
+cannot tell you.** `steering.read()` returns 8 items, all from
+`docs/PROGRESS.md` — a page last rewritten 2026-10-04. Verified this audit:
+
+- **item 1** (`T1.08` Steps 0+1) — `t108-pipeline-repair-has-no-design` is
+  **ACTED 2026-10-08**; Step 2b executed 10-09 at `cff86c3`.
+- **item 3** (additive `XL.01` pooled conjunct) — **done at `e9086ac`
+  2026-10-05**; `xl_01_death_does_not_erase.py:106` records *"v3, 2026-10-05"*.
+- **item 7** (`fieldwatch.py:102` `\bfinding\b` → `\bfindings?\b`) — **done**;
+  the live source already reads `\bfindings?\b`.
+
+Items **0, 2, 4, 5, 6** remain live; item 5 is B4. The Review hit exactly this
+defect on 10-09 and fixed `PRIORITY.md` for it (`68874c7`: *"the builder's #1
+priority pointed at work I closed one commit earlier"*) — but it cannot fix
+`PROGRESS.md`, because only a completing run rewrites that page and none has
+completed since 10-04. **Do not re-execute items 1, 3 or 7.** This is a reading
+for you, not an order to edit the page — the page is the Review's.
 
 ## FOR THE OWNER
 
-**1. ONE LEVER, AND IT IS YOURS ALONE: `.usage-resumed` does not exist on disk,
-and writing it is the only thing that can reach W40's 28 free GPU-hours before
-they die Saturday.** `scripts/lib_usage.sh:77` — `pace_gate` returns "proceed"
-unconditionally when `$REPO/.usage-resumed` is present. Without it the builder
-cannot legally run until the usage week is 64 % elapsed, **≈ 2026-10-12 20:30
-UTC**, and the hours expire **2026-10-10**. **I am not recommending you write
-it, and I want to be exact about why.** The file also governs the 90 % hard stop
-you decreed on 2026-08-09, `week:all models` reads **66 % and rising ~1.7 pts/h**,
-and RANK 1's Lock 3 says there is **no fresh GPU dispatch at any cost class** —
-so releasing the builder today would spend your shared budget and still buy no
-GPU work. The honest statement is that the lever exists, it is yours, and this
-week it opens onto an empty room. **Already on your desk as `D40`
-(`decide_by 2026-10-10`, default (v) = the status quo); nothing new is asked.**
+**1. The 28 GPU-hours died today, the arithmetic was published a day early, and
+no organ had standing to prevent it. `D40` is on your desk and its `decide_by`
+is today, 2026-10-10.**
 
-**2. NO-DECISION — `D30`'s standing report, delivered as its armed default
-requires, with nothing to rule on.** Builder dark **18 slots / 17.6 h**, 0 failed
-slots, last `rc=0` 2026-10-08T12:32:55; before that, 4 slots lost to session
-limits on every model. **`2026-W40`: 1.971 h drawn of 30; 28.03 h expire Saturday
-2026-10-10** — fourth consecutive week, ~114 h in four. **New this week and the
-reason RANK 1 exists: the loss is now over-determined** — the pace clock, an
-exhausted buyer, and an empty GPU dispatch queue, any one of which alone would
-cost the hours. Of 37 shared usage points: **this project 12 (32 %), another
-tenant 25 (67 %).** `demonstrated` 107 → 107. All four organs fired within
-cadence.
+`2026-W40` drew **1.971 h of 30 free Kaggle hours; 28.029 h expired Saturday
+2026-10-10.** Fourth consecutive week — W37 1.379, W38 0.918, W39 1.072 —
+**≈114.6 h unbought in four weeks.** The 147th audit computed the closed
+arithmetic yesterday: the builder is the only organ that can spend them, and
+`pace_gate` cannot legally release it until the usage week is 64 % elapsed
+≈ 2026-10-12 20:30 UTC, about **2.4 days after the hours expire**. Nothing was
+broken. Every organ obeyed its rules. The rules do not compose.
 
-**3. `D41` and `D42` are armed and both fall due 2026-10-18; this is a pointer,
-not a re-ask.** `D41` — which artefact is the thing we are building, the ladder's
-rig or `TrainingPipeline.py`; default (iii) NEITHER, monotone. `D42` — which ONE
-of your three claim-dead commitments (**smell**, **shelter/building**, **thermal**)
-gets a successor spec; default (iv) HOLD, monotone. Both defaults are
-deliberately not the recommendation, because a default may not decide what the
-project is or pick among your own commitments. **The fifth consecutive report to
-carry `claim_dead = 3`, and the third to carry it somewhere it can be answered.**
+**I am not asking you to move the pace line, and no desk may.** The structural
+fact is that the pace line is denominated in a usage pool of which **73 % is
+another tenant's**, while the GPU allowance is denominated in a calendar week
+that resets Sunday — so the two clocks can be, and now are, arranged such that
+the project's free compute is unreachable by construction. This is the subject
+`D40` already covers, it is armed, its default (v) is the status quo, and its
+date is today. **If (v) fires, this recurs next Saturday with the same
+arithmetic**, and I will report it again as realised rather than forecast.
+Evidence: `experiments/gpu_budget.json` `weeks`; `/data/jack-logs/ladder.log`
+2026-10-10T06:07:11.
 
-**4. NO-DECISION — what this audit did not do, named rather than omitted.**
-I arm no decision this sitting because `decisions --check` reports **0
-`UNDECLARED`** — there is nothing to arm, and inventing an entry to satisfy a
-per-audit quota would be the deadlock it was written to prevent, wearing a
-process. I also did not re-derive the `champions` or `coverage` completeness
-audits: both tools exit at their declared floors and the cognitive-half hole is
-owned with a clock (`completeness-audit-2026-09-13-the-cognitive-half-is-the-hole`,
-OPEN, DUE 2026-10-11). The Review's own 2026-10-09 armed stop-rule — the one
-that DECLINES the orphaned `w1-*` class to you as a class — falls due **today**
-and that sitting was still in flight when I committed; it is theirs to fire, not
-mine, and the next audit should check that it did.
+**2. NO-DECISION, reported because you should not have to ask: three of your own
+constitutional commitments have no live falsifier, and that is now eight days
+old.** **smell**, **shelter/building** and **thermal (kills)** are CLAIM-DEAD —
+`SM.02`/`SH.01` PARKED, `SM.03`/`SH.02` FORECLOSED, every park individually
+legal and evidence-backed. The defect is compositional: nothing anywhere revives
+the commitment behind the parks. This is `D42` (armed, `decide_by 2026-10-18`,
+default (iv) HOLD — the three stay claim-dead and said so) and
+`five-commitments-are-claim-dead-behind-foreclosures` (OPEN, `DUE: 2026-10-14`).
+**Nothing is asked of you here that `D42` does not already ask.** It is repeated
+because `D42`'s own price paragraph predicted that the daily report of it would
+become wallpaper, and from where I sit it has: *"too cold kills him"* and *"he
+builds a shelter"* are your words, and today the ladder cannot falsify either.
+
+**3. One Tier-0 certificate's implementation was destroyed during this audit,
+and no decision of yours is needed — you are being told because it is a loss,
+not a risk.** At 06:45:06 the 2-hourly regate cron re-bought **`T0.31`** ("The
+backlog reader cannot be quieted by tidying the backlog") while the Review was
+mid-edit on `docs/REVIEW_QUEUE.md`, a file that spec genuinely reads. The record
+says *"the code that ran was never committed, reconstructs from no commit and
+was not preserved … it cannot be recovered by anyone."* **Nobody did anything
+wrong** — both organs behaved correctly and the stamp that recorded the loss is
+the system being honest. There is simply no interlock between a clerical cron
+and a live desk, and at the 06:37 slot they overlap by construction. It is the
+second such loss in three days (`T0.28`, 2026-10-08) and the repair is routed to
+the builder as **B0**, with `T0.31` additionally owing a clean-tree re-run. The
+verdict on this page is `INTEGRITY RISK` for this reason and this reason alone.
+
+**4. A liveness report you are entitled to, with nothing to rule on.** The
+**Review has not completed a run since 2026-10-04** — `rc=124` on 10-05, 10-06,
+10-07, 10-08 and 10-09, and **4 of its last 16 runs** exited 0. It is doing real
+work in those twenty minutes (the whole of §6 and §7 is its output) and losing
+only its page — but §3 is the cost of that, and it is no longer only a page.
+The builder has been dark **41 slots / 41.6 h**, legally, paced out by another
+tenant's usage. `demonstrated` **107/257**, unchanged since 2026-10-08. All four
+organs fired within cadence. Sections 1 and 2 are clean: **nothing has been
+loosened and no PASS is unsupported.**

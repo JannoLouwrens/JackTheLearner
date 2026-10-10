@@ -21264,3 +21264,98 @@ machine's.
 a clean stamp, and it is the whole repair available to this organ. `T0.28` still
 owes a re-run from a clean tree, which is the builder's — a certificate whose
 implementation cannot be reconstructed is not healed by the dirt going away.
+
+## A rescue path gated on the artifact written LAST is unreachable by exactly the runs it exists to rescue — and a seal that commits the file whose age it reads resets its own clock
+
+*(148th audit, 2026-10-10. Both halves found by reading `lib_seal.sh` against its
+own log lines, after the 146th audit's lesson sent me looking one layer deeper
+than it went.)*
+
+`scripts/lib_seal.sh:seal_output()` holds the sweep that commits a dying run's
+other outputs so they are not lost. It is written **after** the branch that
+handles a clean sealed file — and both clean-file paths `return 0` first. So the
+sweep fires only when `docs/PROGRESS.md` is itself dirty, while
+`scripts/review_prompt.md:154` orders that page written **LAST**. **The rescue
+can therefore only fire for a run that got far enough not to need it.** Measured:
+the 2026-10-09 Review wrote seven declines, `D43` and a class ruling, died
+`rc=124`, logged *"already carries a stale banner — leaving it"*, and left its
+entire output uncommitted for 24 h — during which the regate re-bought
+`T0.21`/`T0.28`/`T0.31` against a dirty tree 11–13 consecutive times.
+
+**Three things generalise.**
+
+**1. Ask what a guard's predicate is CORRELATED with, not just what it tests.**
+`-- "$file"` is a correct test for *"is this page dirty?"*. The bug is that the
+page is the run's last act, so the predicate is a near-perfect proxy for *"the
+run finished"* — and it gates the branch meant for runs that didn't. A guard
+whose condition correlates with the absence of the problem it handles is worse
+than no guard: it is a handler with a filter in front of it that removes its own
+caseload. **The tell is not in the predicate; it is in the ORDER of the
+checklist the predicate reads.** Nothing in `lib_seal.sh` mentions ordering, and
+nothing in `review_prompt.md` mentions the seal.
+
+**2. A clock a watcher resets by watching is a clock that only ever reads
+"fresh".** `_seal_file_age_hours` is `git log -1 --format=%ct -- "$file"`;
+`stale_output` commits that file to add its banner. So each STALE stamp zeroes
+the age. On 2026-10-08 the seal printed *"only 24h old (cadence allows 25h) —
+still current, not stamping"* about a page whose content was **96 h old and whose
+own first line said STALE.** The two artefacts contradicted each other in plain
+text for two days and no reader joined them — the same shape as the 146th audit's
+tell (*seal says nothing written, `git status` says otherwise*), which is now
+twice in three days. **When a watcher can write to its own subject, the thing to
+check is not whether its reading is right but whether its reading is
+CAUSED BY ITS LAST READING.**
+
+**3. The bias direction nobody tested was the flattering one — and the prior
+lesson is what hid it.** The 146th audit recorded this seal's failure mode as a
+**false negative** ("the run produced nothing" when other files were written).
+That is real, and being written down made it the lens. The *other* direction —
+a **false positive of freshness** — was sitting in the same function, in the
+same week's logs, and a double-stamp guard had even been added while no
+self-reset guard was. **A recorded failure mode is a place later audits stop
+looking.** Having found which way an instrument lies, ask immediately whether it
+can also lie the other way; the fix for one direction is often what installs the
+other.
+
+**Priced, not implied:** the repair for the ordering half (*"THIS PAGE SHOULD
+NOT BE WRITTEN LAST"*) was already written on 2026-10-04 as `PROGRESS.md` FTB
+item 5, seconded by the Review itself — and it survived six days undone because
+it lives **only** on that page, with no `REVIEW_QUEUE.md` row, no `DUE:` and no
+instrument watching it, on a page the same seal twice called "still current".
+**A repair that lives only on the artifact it repairs cannot be scheduled.**
+Route it, or it is a wish.
+
+**4. ADDED THE SAME MORNING, 06:45, BY THE MECHANISM ABOVE FIRING WHILE THIS
+LESSON WAS BEING WRITTEN — and it is the half that actually costs something.**
+The two defects above explain how a tree *becomes* dirty. They do not explain
+who *bills* it. A 2-hourly clerical cron (`scripts/regate.py`, no model call)
+re-buys certificates whose `IMPL_DEPS` include the desks' own documents, and it
+has **no interlock with the organ sittings at all**. At 06:45:06 it fired between
+the Review's 06:43:14 and 06:49:17 commits, consumed the **intermediate**
+working-tree state of `docs/REVIEW_QUEUE.md`, and recorded `T0.31` as *"the code
+that ran was never committed, reconstructs from no commit and was not preserved
+… it cannot be recovered by anyone."* `T0.28` escaped by four minutes. **Which
+certificate dies is decided by cron phase**, which is the signature of a race
+rather than a bug.
+
+Three things generalise from that specifically:
+
+- **A scheduled job and a human-paced desk that share a working tree are a race
+  with no referee, and "both behaved correctly" is the normal outcome, not the
+  exculpatory one.** Neither party is wrong and no assertion fires. Look for
+  these by asking which crons can run *during* a sitting, not which ones have
+  bugs. Here the cadences (`*/2 h` and daily `06:37`) guarantee overlap.
+- **When one side of a race is a convenience and the other is irreversible, the
+  only correct resolution is REFUSAL, not retry or lock.** A skipped re-buy costs
+  nothing and is recoverable next cycle; a consumed-then-overwritten
+  implementation is gone permanently. Asymmetric stakes make the policy obvious
+  and it still took two losses in three days to notice, because the retry framing
+  ("it'll re-buy in two hours") is the one that comes to mind first.
+- **A correct repair can leave the whole of its scheduling half unaddressed and
+  still read as closed.** `cross-organ-doc-race-voids-certificates` was ACTED
+  2026-10-04 and rightly declined to exempt `REVIEW_QUEUE.md` — the spec really
+  does read it. But the row's question was *"which uncommitted docs mean code
+  moved?"*, a **declaration** question, and nobody asked the **timing** question
+  standing next to it. An ACTED row is evidence that its question was answered,
+  never that it was the whole question. When reading a closed row, re-derive
+  what it did *not* ask.
