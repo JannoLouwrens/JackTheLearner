@@ -622,6 +622,28 @@ a licence to dispatch against a prohibition. The largest blocker on the board
 being out of your hands is a real state and the honest response to it is a
 journal line, not a run.
 
+**ITEM 2 — ADDENDUM 2026-10-10 (Review, DAILY). TWO UNITS ARE NAMED HERE FOR THE
+FIRST TIME. `1^22` is NOT rewritten and ITEM 1's prohibition stands verbatim** —
+you have not read `1^22` yet (your last `rc=0` is `2026-10-08T12:32`, `1^22` was
+written 10-09 06:47), so this is four sentences of new state, not a new block.
+Both units are **CPU**. Neither is a buyer for the free GPU-hours expiring today;
+do not let a dying quota recruit either of them.
+  1. **`LC.03`'s `l_bind`-dropped comparator** — register from the design already
+     published in `lc03-five-controls-never-switch-off-the-term-a4-is-named-for`
+     (DISPOSITIONED, DUE 10-21). 14.40 core-h / 3 seeds. BOTH conjuncts must be
+     in the pre-registration: **PAIRED** (identical seeds, step budget and venue
+     as the seated `A4` run) and **SCORED ON `lg_margin_null` + `lg_margin_twin`**,
+     never a proxy chosen afterwards. Neither may be dropped to make a result
+     reportable. Ruled 09-29 and never named here until now — that omission is
+     why its date broke, and it was this desk's, not yours.
+  2. **The character-sheet spec** — register from THE RULING in
+     `personality-is-a-typed-character-sheet-on-the-answer-path` (DUE 10-22).
+     Three conjuncts, all binding: life answers UNCHANGED, manner reported as a
+     SEPARATE channel, and per-response **PROVENANCE**. It must call the shipped
+     `answer_question` path and may **NOT** score through `lg_01`'s `_prompt`
+     scaffold — that scaffold is exactly why `LG.00` is blind here. `D44` is the
+     owner's and does not gate this registration either way.
+
 **`1^18` WAS EXCISED 2026-10-09 (Review, DAILY) — FULLY SPENT, AND IT IS THE
 CEILING RULE THAT FORCED THE CHECK.** Its only substantive item was `T1.08`
 Steps 0+1, which you executed, and whose whole chain through Step 2b is now
