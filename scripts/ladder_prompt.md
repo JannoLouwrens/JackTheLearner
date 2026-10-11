@@ -577,15 +577,13 @@ at `b7aa2bf`** and the pre-registered still-FAIL is recorded as the honest resul
 it was promised to be.
 
 **THE HARVEST WRITE-UP THAT ROW OWED IS DISCHARGED — by the desk, in the row's
-`THE STAMP` block. Do not spend a slot redoing it.** Two readings are already
-written there and you should know them rather than re-derive them: mechanism (ii)
-provably fired (`lr_final_max` 0.0, so the FAIL measures the mechanism and not
-its wiring — that receipt was the right thing to pre-commit and it did its job);
-and the `heldout_cv_pct` / `heldout_cv_pct_final` pair you built for attribution
-**reversed its own verdict between the two arms** — 16.994 -> 14.666 in attempt
-4, 16.861 -> 17.285 in attempt 5, same mechanism, same `tail_frac`, same venue,
-opposite sign. Your attribution instrument is what found that. It is a better
-result than a passing spec would have been.
+`THE STAMP` block; do not spend a slot redoing it.** Know its two readings
+rather than re-deriving them: mechanism (ii) provably fired (`lr_final_max` 0.0,
+so the FAIL measures the mechanism and not its wiring), and the
+`heldout_cv_pct` / `heldout_cv_pct_final` pair you built **reversed its own
+verdict between the two arms** (16.994 -> 14.666 attempt 4; 16.861 -> 17.285
+attempt 5 — same mechanism, same venue, opposite sign). Your attribution
+instrument found that, and it is a better result than a passing spec.
 
 **THE ONE PROHIBITION IN THIS BLOCK, and it is the reason the block exists:
 DO NOT DISPATCH A SIXTH `T1.08` ATTEMPT.** Not a third mechanism, not a re-run,
@@ -594,15 +592,16 @@ and its successor
 (`t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign`, OPEN,
 DUE 2026-10-21) inherits that prohibition verbatim. The open question is now an
 ESTIMATOR question — seeds, the statistic, the bar's provenance — and it is the
-desk's, with its arms to be chosen BEFORE any number is read. **This matters
-today specifically because of a collision you would otherwise walk into:** your
-own journal called this unit "W40's only named buyer" in five consecutive
-entries, and `2026-W40`'s free Kaggle hours expire **Saturday 2026-10-10**. A
-dying quota plus a spent habit is exactly how a sixth 3-seed reading of a
-statistic we have just shown to be unreliable gets bought. **Unbought hours are
-cheaper than hours spent confirming a broken instrument.** If a slot opens and
-`T1.08` is the only buyer you can find, the correct act is to buy nothing and
-say so in the journal.
+desk's, with its arms to be chosen BEFORE any number is read. **Re-dated
+2026-10-11 (Review FULL): the quota this prohibition was racing is GONE and a
+fresh one has opened, so the pressure is live again, not spent.** `2026-W40`
+expired Saturday 2026-10-10 with its hours unbought — the right outcome.
+`2026-W41` opens today with **30.0 free Kaggle hours, 0.000 used, expiring
+Saturday 2026-10-17**, and the prohibition applies to every one of them. A dying
+quota plus a spent habit is how a sixth 3-seed reading of a statistic we have
+shown to be unreliable gets bought. **Unbought hours are cheaper than hours
+spent confirming a broken instrument.** If a slot opens and `T1.08` is the only
+buyer you can find, buy nothing and say so in the journal.
 
 **ITEM 2 — WHAT THE BOARD IS INSTEAD, derived this sitting and not cached.**
 `run next` reports **0 fresh** specs for a sixth consecutive day: every runnable
@@ -643,6 +642,49 @@ do not let a dying quota recruit either of them.
      `answer_question` path and may **NOT** score through `lg_01`'s `_prompt`
      scaffold — that scaffold is exactly why `LG.00` is blind here. `D44` is the
      owner's and does not gate this registration either way.
+
+**ITEM 2 — ADDENDUM 2026-10-11 (Review, SUNDAY FULL). THREE MORE UNITS, ALL CPU,
+ALL FROM TODAY'S OVERDUE SWEEP — and `1^22` is still NOT rewritten.** You have
+not had an `rc=0` since `2026-10-08T12:32`, so you have read neither `1^22` nor
+its 10-10 addendum; this is a third layer of unread state and I am keeping it to
+four items rather than restating anything. **None of the three is a GPU buyer**
+— do not let W41's 30.0 expiring hours recruit any of them.
+  3. **The GPU ref-pin, and it is the cheapest world-touching item on the whole
+     board** — from THE RULING in `gpu-receipt-head-is-push-time-not-kernel-time`
+     (DISPOSITIONED, **DUE 10-18**). `repo_preamble`/`build_job` default `ref` to
+     the literal `"main"` and every call site takes that default, so the kernel
+     checks out a BRANCH and `kernel_sha256` cannot vary with the head it is
+     meant to pin. Do **(i) then (ii)**, both, not one: (i) resolve `HEAD` to a
+     full sha and pass THAT as `ref`; (ii) have the job print its cloned HEAD and
+     have the harvester refuse a row whose printed HEAD differs. (ii) is still
+     required after (i) because `build_job(verify=False)` bypasses (i) entirely.
+     Bill priced at the desk: **1 certificate, `T0.12`, `cpu<1min`, 1 slot** — pay
+     it in the SAME slot. **Caution:** after (i) `kernel_sha256` stops being
+     stable across dispatches BY DESIGN; grep for readers that treat kernel-hash
+     equality as "same kernel", and a hit is a finding for that row, not a stop.
+  4. **The two `WAITS-ON` readings** — from THE RULING in
+     `prose-sequencing-inverts-when-the-blocker-moves` (DISPOSITIONED, **DUE
+     10-19**). The corpus measurement that row owed **is already done at the desk;
+     do not redo it.** Build the two readings in `experiments/review_queue.py`,
+     **class (2) FIRST**: (2) `WAITS-ON-A-CLOSED-WINDOW` — a live row whose
+     `WAITS-ON:` target is `ACTED`/`DECLINED` (3 live today); then (1)
+     `DATE-INVERSION` — a live row due strictly before the live row it waits on,
+     except where the `WAITS-ON:` text carries a justifying clause (1 live
+     today). **Both are READINGS: printed, no exit code, no ageing exemption, no
+     auto-re-date.** `WAITS-ON:` must keep buying nothing.
+  5. **`DP.04` option (ii), the gridworld difficulty edit** — from THE (ii)
+     RULING on `dp04-lifespan-has-no-resolution`, carried by its successor row
+     `dp04-graded-measure-passed-its-guard-and-did-not-cure-the-venue`
+     (DISPOSITIONED, **DUE 10-22**). Option (i) is ACTED and did **not** cure the
+     venue: the need-integral's median sits at 0.9990 of its maximum at BOTH caps
+     and 74.28% of lives fall inside one `NEED_MIN_GAIN`-wide band of the top,
+     against the 76.7% that condemned the retired statistic. **The acceptance
+     test is the PRE-CHECK's resolution reading on a SPENT seed — band mass well
+     under 0.7428 and median/max under 0.9990 — and it is NOT `DP.04`'s claim
+     verdict**, because a world edit accepted on its claim verdict is a world
+     tuned to pass a test. Run the pre-check BEFORE any claim fold. Bill: **2
+     certificates, `LC.00` + `DP.00`**; `DP.00`'s re-run is the informative one.
+     No bar on `DP.04` moves in either direction.
 
 **`1^18` WAS EXCISED 2026-10-09 (Review, DAILY) — FULLY SPENT, AND IT IS THE
 CEILING RULE THAT FORCED THE CHECK.** Its only substantive item was `T1.08`
@@ -882,15 +924,14 @@ prohibitions consolidated 2026-09-21 and UNCHANGED today).
 ## ARE THIS DESK'S, NOT BECAUSE YOU ARE OUT OF WORK
 ## (Review 2026-09-28, DAILY — read this before `run next`)
 
-**ITEM 0 — `1^13` IS DISCHARGED, AND YOU DISCHARGED IT. CREDIT FIRST.** You
-swept all 21 live `DISPOSITIONED` rows in `2024e6a` — reading each row's body
-for what it ORDERED and checking it against `HEAD` source rather than against
-commit messages — and found **five rows execution-COMPLETE with no
-`BUILDER-TRACE`**, including `t211` one day before its date. You then measured
-`1^13` itself as **four-discharged, two-held, ZERO live** (`28d3db0`) and
-correctly STOPPED before touching a spec rather than shipping into a hold.
-Both acts were right. This desk stamped three of today's seven OVERDUE rows
-`ACTED` off work you had finished early — by five days, five days and one day.
+**ITEM 0's CREDIT PASSAGE (Review 2026-09-28) WAS EXCISED 2026-10-11 (Review
+FULL)** — third and last of today's ceiling payments; retrospective praise for
+the `2024e6a` sweep, every claim spent. **The habit it credited is the live
+part and it paid off again today: checking what a row ORDERED against `HEAD`
+SOURCE rather than against commit messages is what let this desk stamp two rows
+`ACTED` this morning, and what made it withdraw a third finding it had wrongly
+started to write up.** Keep doing exactly that.
+`git show 578e1f8:scripts/ladder_prompt.md` has the excised text in full.
 
 **ITEM 1 — THE HOLD THAT COST YOU A SLOT IS NOW ON THIS PAGE, WHICH IS WHERE IT
 SHOULD ALWAYS HAVE BEEN.** `PS.05` and `PS.06` part-1 legibility-conjunct
@@ -1022,24 +1063,18 @@ prohibitions consolidated 2026-09-21 and UNCHANGED today).
 `2^10` NOW RESTATES THE COMPLETE LIVE PROHIBITION SET IN FULL — it references
 no superseded block and nothing binds you that is not written out below.**
 
-**FIRST, THE CREDIT, because `1^9` is the first priority block in this file's
-history that you discharged COMPLETELY.** All three items are done: `LT.01`
-attempt 2 ran **in the foreground** and PASSED (`4091066`, 2017 s, 3 seeds,
-branch G-adv, `adv_rise_max` 0.6157 over the UNMOVED 0.6 m bar);
-`notice_exited_dispatches` is wired on the LIVE path at `ladder_loop.sh:233`,
-not only behind `pace_gate`; and `W38`'s inventory was refused with the reason
-written down. You were also told to expect nothing fresh and you correctly
-refused to manufacture work for six consecutive slots rather than re-run a
-settled row to look busy. **That refusal was right and it is not to be read as a
-reason to loosen now.**
-
-**AND NOW THE PART THAT CHANGES YOUR BOARD. For the first time in a week there
-is FRESH, LEGAL, UNBLOCKED science on it, and it exists because this desk ruled
-rather than because anything about the ladder changed.** Today's FULL disposed
-the `sh02`/`ba03`/`t306` bundle and the `t108` noise-floor row. Three of those
-rulings hand you EXECUTION. **Take the state of the board from `run next` and
-`run review-queue`, never from this page — the counts here would be a cache and
-a cache is what makes this block go stale.**
+**THE TWO LIVE RULES FROM `1^9`/`1^12`'s CREDIT PASSAGES, which were EXCISED
+2026-10-11 (Review FULL) to pay for ITEM 2's 10-11 addendum under the 125,000
+ceiling.** Both passages were retrospective praise for work completed
+2026-09-22/23 and every factual claim in them was spent; the two rules inside
+them were not, and are kept here verbatim in substance:
+(1) you once refused to manufacture work for six consecutive slots rather than
+re-run a settled row to look busy — **that refusal was right and is not to be
+read as a reason to loosen now**; and
+(2) **take the state of the board from `run next` and `run review-queue`, never
+from this page — the counts here would be a cache, and a cache is what makes a
+block like this go stale.**
+`git show 578e1f8:scripts/ladder_prompt.md` has the excised text in full.
 
 **THE ONE RULE ADOPTED TODAY THAT BINDS EVERY SPEC YOU TOUCH FROM NOW ON —
 THE UNSATURATED-NULL RULE.** A claim gate may NOT be registered on a statistic
@@ -1056,20 +1091,16 @@ scoring (zero) before venue (bills every `playground.py` certificate) before
 envelope (forbidden).** Nothing goes to the world-edit window that a statistic
 change can fix.
 
-**ITEM 0 — THE CREDIT, AND IT IS EARNED (Review, 2026-09-22, DAILY).
-`1^10` IS DISCHARGED EXCEPT FOR ONE RUN AND ONE ITEM YOU DECLINED FOR A REASON
-I AM ABOUT TO CORRECT.** Three live slots in the 24 h since the launcher came
-back (11:07, 04:07, 05:07) and every one of them produced: `T2.06`'s GPU re-buy
-PASSED at `margin_lang_min` 0.105 against the exogenous 0.07 — the first legal
-GPU buy in three weeks; `UNREACHABLE_BASELINE` restored 98 → 96 in the same
-commit as ordered; `T3.06`'s dwell cap DERIVED from n rather than typed, with
-the order's own half-wrong diagnosis recorded rather than quietly shipped
-around; `T1.08`'s `CITE_MARKER` trigger declared; `STEERING-PAGE SIZE` printing
-in `run status` (88072 B, 43000 below the cliff, ~29 days). **And the item I
-want to name specifically: you removed a FALSE `kills:` — control-red now maps
-to VOID, not FAIL — and you armed `C-RANDREW`, a comparator your own arm is
-expected to LOSE to. Arming the contrast that can kill your result is the
-highest-value thing anyone did on this board this week.**
+**ITEM 0's CREDIT PASSAGE (Review 2026-09-22) WAS EXCISED 2026-10-11 (Review
+FULL)** — same ceiling payment, same test: retrospective praise for 09-22 slots,
+every claim spent (`T2.06`'s re-buy, `UNREACHABLE_BASELINE` 98→96, `T3.06`'s
+derived dwell cap, the `CITE_MARKER` trigger, a steering-page size reading now
+four weeks stale). **The one line worth carrying forward, because it is a
+standing instruction about how to build and not a fact about a past slot: you
+removed a FALSE `kills:` and armed `C-RANDREW`, a comparator your own arm was
+expected to LOSE to. Arming the contrast that can kill your own result remains
+the highest-value move available to you on any spec.**
+`git show 578e1f8:scripts/ladder_prompt.md` has the excised text in full.
 
 ## STANDING FREEZE — read before the numbered order below, every iteration
 
