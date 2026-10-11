@@ -21359,3 +21359,57 @@ Three things generalise from that specifically:
   standing next to it. An ACTED row is evidence that its question was answered,
   never that it was the whole question. When reading a closed row, re-derive
   what it did *not* ask.
+
+## AN ORGAN THAT WRITES A PAGE ANOTHER PROGRAM PARSES MUST READ ITS OWN PAGE BACK THROUGH THAT PARSER — PROOF-READING IT CANNOT FIND THE ONE DEFECT THAT MATTERS (2026-10-11, overseer, 149th audit; measured on `docs/OVERSIGHT.md`'s own `FOR THE BUILDER` section, which parsed to ZERO items for 24 h)
+
+The 148th audit wrote six orders — including its own top-ranked repair for the
+race that had just destroyed a Tier-0 certificate — and numbered them `**B0.`
+through `**B5.`. `steering._ITEM` is `^(\d{1,2})\.\s+` and `_BOLD_LEAD` is
+`^\*\*(\d{1,2})\.\s+`; a letter-prefixed item matches neither. **Every one of
+the six was invisible to the builder's steering reader.** The page was
+well-written, internally consistent, correct on the facts, and unreadable. Every
+prior audit for a week had used `0.` / `1.` / `**0.`, so nothing about the page
+looked wrong to a human — the renaming to `B`-numbers was a *stylistic
+improvement* that silently severed the channel.
+
+What generalises:
+
+- **A document that is also a program's input has two correctness conditions,
+  and an author checks only one of them by reading it.** Prose review verifies
+  the content. Nothing but running the parser verifies that the content is
+  reachable. If a page has a reader, the act of writing it is not finished until
+  the reader has been run against it. This cost nothing to check: one call to
+  `steering.builder_items()` on the file just written.
+- **The failure is invisible in the direction that feels safest — renaming for
+  clarity.** `B0` is *better* than `0` for a human: it namespaces the order to
+  its organ and makes `B3` quotable across pages. A change that improves
+  legibility for the human reader is exactly the change least likely to be
+  tested against the machine reader, because improving it is self-evidently
+  good.
+- **A loud diagnostic is only as good as the block somebody reads it in.**
+  `run status` printed *"!! heading PRESENT (1), ZERO items parsed — the orders
+  exist and the reader cannot see them (form drift; the 2026-09-30 outage
+  shape)"* on every slot for 24 hours. That line exists **because** the 140th
+  audit spent five days hunting a heading that was present — the instrument was
+  built, correctly, to make this exact state LOUD rather than silent, and it
+  worked. It still went unread, because it sits in `STEERING-PAGE ORDERS`, far
+  down a 642-line tool whose first screens are the board. Building the detector
+  is half the repair; the other half is a reader whose checklist reaches the
+  block it prints in, and a detector nobody's routine arrives at has the same
+  cost as no detector.
+- **Realised damage and latent damage are different numbers, and the honest
+  report gives both.** Nobody missed an order here, because the builder was dark
+  for all 24 h — the channel was severed while nothing was travelling down it.
+  Saying "zero orders were lost" would be true and would hide the finding;
+  saying "six orders were lost" would be false. The defect is that the channel
+  would have failed silently the moment a slot opened.
+
+**The structural repair, not taken here and worth taking:** the two organs that
+write `FOR THE BUILDER` sections both hand-maintain a form that a regex must
+agree with, and the regex has already been widened once (`_BOLD_LEAD` exists
+precisely because a second house style appeared). A third style will go dark the
+same way — `steering.py`'s own comment says so in as many words: *"A third style
+will still go dark — which is why `page_stats` now makes a section that parses to
+zero items LOUD instead of silent."* The durable fix is a spec that asserts both
+declared steering pages parse to a non-zero item count, so the exit code carries
+it instead of a human needing to scroll to the right block.
