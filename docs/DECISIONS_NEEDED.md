@@ -10529,3 +10529,82 @@ byte-unmoved 7.0 bar, and attempt 5 has since landed (`…1791461828`, 1.0458 h,
 >
 > Nothing in this box proposes an option, moves `decide_by 2026-10-10`, fires
 > anything, or touches `PACE_FLOOR`, `PACE_CAP` or the 90 constant.
+
+---
+
+## D40 — EVIDENCE ADDENDUM, 2026-10-11 06:5x UTC (Review, SUNDAY FULL). NOT a re-opening, NOT a new decision, NOT a default fired. Its `decide_by` has now PASSED and default (v) stands; this records what the week finally measured, because the 144th audit's correction told this desk exactly when its own number would be trustworthy and it was trustworthy this morning.
+
+> Appended in the idiom of the 144th and 145th audits' addenda and under the
+> same rule: it proposes no option, moves nothing, fires nothing, and touches
+> `PACE_FLOOR`, `PACE_CAP`, the pace line and the 90 % hard stop not at all.
+> `decide_by 2026-10-10` has passed unanswered; default **(v) STANDS**.
+
+### Why this desk trusts today's reading, which is the 144th audit's own test
+
+The 144th audit proved `usage_attribution`'s shares are a function of **when**
+they are read: no ledger mark is written while nothing runs, so during a
+blackout the instrument reports only up to the last mark, **under-reporting the
+neighbouring tenant and over-reporting the builder.** This desk nearly published
+the blackout reading as its headline. It did not, because that addendum exists.
+
+Today's reading is taken **after a mark landed** — this sitting's own `start`
+row — which is precisely the condition under which the 144th audit called its
+own number honest. Both figures are recorded so the drift is visible:
+
+| reading taken | total | builder | desks | NOT THIS PROJECT |
+|---|---|---|---|---|
+| 2026-10-11 06:07, the loop's own `PACING:` line, 65 dark slots in | 53 pts | 8 (15 %) | 6 (11 %) | 39 (73 %) |
+| 2026-10-11 ~06:5x, after this sitting's mark | **69 pts** | **8 (11 %)** | 6 (8 %) | **55 (79 %)** |
+
+Sixteen points appeared between those two rows and **every one of them was
+external.** The builder's absolute spend did not move: 8 points in both.
+
+### What the week measured, stated for the ruling that default (v) now governs
+
+Against the 144th audit's honest 2026-10-07 reading of 48 points — builder
+**42 %**, NOT THIS PROJECT **50 %** — four days later:
+
+- **NOT THIS PROJECT: 50 % → 79 %.**
+- **builder: 42 % → 11 %**, on an unchanged absolute spend of 8 points.
+- **66 consecutive dark slots, 66.3 h since the last `rc=0`** (2026-10-08T12:32),
+  with **0 failed slots** — the loop is healthy and the gate is holding budget.
+- The gate reads `week:all models` **83 %** against a pace line of **61 %** at
+  54 % of the week. `week:Fable` is **30 %** and is not the gate.
+
+**This is NOT the 2026-10-07 story and an addendum that recycled it would be
+wrong, in the same way the 144th audit said recycling 2026-09-09 would be.** On
+10-07 both halves were true at once: the builder front-loaded 20 points into
+eight productive hours and then paced itself out, AND half the meter was somebody
+else's. **This week the builder did not front-load anything** — 8 points across
+the whole week, 66 hours dark — so the "self-inflicted" half of that reading has
+no purchase on these numbers. What is left is a project throttled to 19 % of a
+pool it is a minority consumer in, by a pacer that is working exactly as designed.
+
+### What this does and does not change
+
+- **The gate is still unaffected and still right.** `pace_gate` never reads
+  attribution. No certificate is touched. This remains a reporting channel.
+- **The direction of the known bias now favours the opposite conclusion.** The
+  144th audit noted its error *"makes the lockout look self-inflicted, which
+  argues FOR default (v)"*. Corrected and re-read at the honest moment, the
+  lockout looks **externally imposed** — which is evidence against the premise
+  default (v) rests on. This desk is not re-opening `D40` to say so; it is
+  putting the number where the next reader of (v) will find it.
+- **The perishable cost, priced as `D30` requires:** `2026-W41` opened today
+  with **30.0 free Kaggle GPU-hours, 0.000 used, expiring Saturday 2026-10-17**.
+  Unlike W37–W40 this desk will NOT call that the loss: the standing `T1.08`
+  prohibition means those hours have no designed buyer, and buying a sixth
+  3-seed reading of an instrument we have shown unreliable would be worse than
+  letting them expire. **The loss is the CPU ladder**, and this sitting ordered
+  three CPU units (DUE 10-18/10-19/10-22) that cannot start while the builder is
+  dark.
+
+### Not routed as a new decision, deliberately
+
+`D40` already asks this question and has an armed, fired default. A second entry
+on the same subject would be the duplication this file's own discipline forbids.
+If the owner wants the external-consumption question ruled on separately from
+the pacer's conduct, that is a new entry and this desk will write it on request.
+
+---
+

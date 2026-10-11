@@ -21550,3 +21550,51 @@ ROUTED: t212-certifies-separability-not-valence-sign | 2026-10-08 | `T2.12`'s ow
     (its history is CPU-cheap), and `T3.07` declares `EmotionalState.py` too and
     is already FAIL and already STALE (`run status` this sitting), so the live
     bill must be read with `run stale-cost` at the time rather than quoted now.
+
+ROUTED: steering-page-is-two-days-from-the-launch-cliff-and-31kb-is-provenance | 2026-10-11 | `run status` STEERING-PAGE SIZE at 578e1f8; this sitting's own PRIORITY reconciliation (501389a) | DISPOSITIONED 2026-10-11 (Review FULL — **routed HERE and not to the owner, and the correction is this desk's own.** I wrote this as `D45` in `DECISIONS_NEEDED.md` first. `run decisions --check` immediately returned `[UNDECLARED] D45` and, reading the classes properly, `class conduct` means **"desk-executable, not the owner's — execute it, report it, do not ask"**. The steering page is OPERATIONAL and Part 2.5 duty 1 gives this desk direct edit rights over it, so asking the owner for permission to tidy a file I am already required to maintain was a mis-route, not a strategic fork. `D45` is WITHDRAWN from `DECISIONS_NEEDED.md` (the entry never had a `DECIDE` block and the `UNDECLARED` ratchet went 0 -> 1 and back to 0 in one sitting). The design below is complete; what remains is careful execution, and the hazard that stopped me doing it in the last minutes of a Sunday is named in writing)
+    DUE: 2026-10-18 | THIS DESK's execution of THE ARCHIVE below. A desk date,
+        not the builder's — the builder must not edit its own steering page, and
+        this is the file it navigates by. Dated a week out because the move
+        needs an unhurried sitting (see THE HAZARD), and because at +2198 B/day
+        the page reaches the 131072 cliff in ~2 days, so **if a slot opens
+        before 10-18 and this is still undone, it takes precedence over any
+        other act in this file.** That is a priority statement, not a re-date.
+    WAITS-ON: none | the measurement, the target state and the hazard are all
+        established on disk today; nothing upstream gates it. Declared at
+        ROUTING time per THE ROUTER'S DECLARATION.
+    Question: `scripts/ladder_prompt.md` is **127327 bytes — 3745 below the
+    131072 EXEC CLIFF (`MAX_ARG_STRLEN`) and 2327 OVER its own 125000 ceiling**,
+    growing **+2198 B/day over 25 commits**, so `run status` puts the cliff
+    **~2 days away**. **Past the cliff the builder does not read a degraded
+    prompt — it does not start, and the slot looks like an ordinary `rc=126`.**
+    That is what makes this urgent rather than untidy: the failure is
+    indistinguishable from a log tail from the launcher faults this project has
+    already spent weeks on, and it would arrive during a blackout currently (and
+    correctly) attributed to the pacer.
+    THE ARCHIVE — the fix, and it is cheap. ~31 KB below line 1450 is
+    explicitly headed *"Kept for provenance — SUPERSEDED 2026-09-04, do not
+    execute as priorities"*. Moving it to `scripts/ladder_prompt_archive.md`
+    takes the page to roughly **97 KB** and buys weeks of headroom at zero cost
+    to history, since git holds every byte and the header already says nothing
+    in it is to be executed.
+    THE HAZARD, which is why this is a dated row and not a commit this morning:
+    **the LIVE section points INTO the superseded block.** Live text reads *"The
+    ranker still cannot see the project's largest unblock — `3'` below,
+    unchanged and still unfixed"*, and the superseded header itself states that
+    the prohibitions in `2'` and `3'` are live and restated in `3''`. A naive
+    move dangles a live pointer on the page the builder steers by, in a week the
+    builder cannot run to report it. **So the execution is: inline the `2'`/`3'`
+    content that live text references, THEN move the remainder, THEN verify with
+    `run steering` (10 items, 0 refused today) and `run status`'s size line
+    before and after.** Half-doing it at the end of a sitting is the specific
+    failure this desk has been convicted of before.
+    WHAT THIS DESK ALREADY PAID, so the next reader knows the cheap excisions
+    are spent: three spent Review credit passages were excised this sitting
+    (`1^9`'s, `1^12` ITEM 0's, `1^13` ITEM 0's), each preserving its live rule
+    verbatim and citing `git show 578e1f8`. Net was still +2383 B because the
+    sitting also added three legitimate new builder units. **The remaining
+    headroom is not in credit passages; it is in the provenance tail.**
+    STALENESS BILL: **NONE.** No spec, threshold, bar, order, prohibition or
+    priority changes — this moves non-executable text between two files. `run
+    steering` must read the same 10 items, 0 refused, after the move; that is
+    the acceptance test.
