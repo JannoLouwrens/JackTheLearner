@@ -19499,7 +19499,7 @@ ROUTED: certified-diary-is-not-the-memory-the-shipped-brain-carries | 2026-09-28
 
 ## ROUTED 2026-09-29 (Review DAILY): `prose-sequencing-inverts-when-the-blocker-moves` — a row's declared order lives in a `DUE:` sentence nothing parses, and it has now produced two violations
 
-ROUTED: prose-sequencing-inverts-when-the-blocker-moves | 2026-09-29 | this sitting's `lc03` ruling (`c14dc86`), against the 09-22 `ub10-part1` re-date | OPEN
+ROUTED: prose-sequencing-inverts-when-the-blocker-moves | 2026-09-29 | this sitting's `lc03` ruling (`c14dc86`), against the 09-22 `ub10-part1` re-date | DISPOSITIONED 2026-10-11 (Review FULL, OVERDUE FIRST, 3 of 5 — **THE MEASUREMENT THIS ROW EXISTS TO BUY WAS PERFORMED AT THE DESK THIS MORNING, and its own ship-test is MET: the reading is not noise and SHOULD ship.** The row routed the measurement to the builder; it is a read over a file this desk already had open, using the instrument's own parser (`experiments/review_queue.parse`), so performing it here cost one command and removes a date from the builder's board rather than adding one. Full enumeration in THE MEASUREMENT below. Headline: **11 live rows declare a `WAITS-ON:` naming another row. Exactly 1 is date-inverted — and 0 of that 1 is legitimate, so the false-positive rate of the proposed reading is ZERO on today's corpus.** The row said *"if the legitimate fraction is high the reading is noise and should not ship"*; it is not high, it is nil. **AND THE MEASUREMENT FOUND A SECOND CLASS THE ROW DID NOT ANTICIPATE, THREE TIMES AS COMMON: 3 of the 11 `WAITS-ON:` targets are ALREADY TERMINAL** (two `ACTED`, one `DECLINED`) — a declared dependency on something that can never move again. `BLOCKED-BY:` has carried a named violation class for exactly this shape since 2026-08-31 (*"a hold whose blocker has reached a TERMINAL status ... is itself a violation"*); `WAITS-ON:` is exempt from it purely by construction, not by anyone's decision. Both readings are the same one-line comparison over an already-parsed field. RULED: ship BOTH, as READINGS, gating NOTHING — see THE RULING. Design is complete here; execution is the builder's, DUE 2026-10-19)
     **THE DEFECT, in one sentence.** A row that declares its sequencing in
     ENGLISH inside its `DUE:` line goes silently unkeepable the moment its
     blocker is re-dated forward, because nothing carries a dependent's date with
@@ -19554,7 +19554,73 @@ ROUTED: prose-sequencing-inverts-when-the-blocker-moves | 2026-09-29 | this sitt
         stands and needs no other row settled first. Declared here rather than
         omitted because a row about an unread dependency field that does not
         itself use the field would be the joke writing itself.
-    DUE: 2026-10-10 | a BUILDER measurement-then-maybe-instrument, not a Review
+    THE MEASUREMENT 2026-10-11 (Review FULL) — performed at the desk, against
+        `docs/REVIEW_QUEUE.md` at `8b74a34`, via `experiments.review_queue.parse`
+        so the enumeration uses the SAME parser the instrument would, not a
+        second regex over prose (the `901f7fc` lesson).
+            live rows                                        78
+            live rows declaring WAITS-ON: <a row>            11
+            ------------------------------------------------ --
+            DATE-INVERTED (dependent DUE < prerequisite DUE)  1
+            not inverted                                      7
+            WAITS-ON target ALREADY TERMINAL                  3
+        **THE ONE INVERSION, and the legitimacy test the row demanded.**
+        `d10-successor-rerun-under-adopted-gate` is `DUE 2026-10-18` and declares
+        `WAITS-ON: t108-recipe-repair-is-exhausted-and-the-attribution-pair-
+        flipped-sign`, which is `DUE 2026-10-21` — **three days after its own
+        dependent.** THE ROUTER'S DECLARATION permits an earlier date only when
+        *"the row states in writing why the earlier date is deliberate"*. Its
+        `WAITS-ON:` text is the bare row id with no justifying clause at all, and
+        its `DUE:` prose is about a check performed on 10-07 and says nothing
+        about the sequencing. So the inversion is **undeclared, not deliberate**:
+        a true positive. **Legitimate fraction among inversions: 0 of 1.** This
+        is the number the row said it was buying, and it is the number that
+        clears the proposed reading to ship.
+        **THE SECOND CLASS, unanticipated and more common.** Three live rows
+        declare they wait on a row that has reached a TERMINAL status:
+            w0-too-shallow                        waits-on  w1-world-edit-window (DECLINED)
+            d35-none-quota-has-no-satisfying-move waits-on  t108-pipeline-repair-has-no-design (ACTED)
+            adverse-verdicts-are-re-derived-by-nobody waits-on lg12-abstention-knob-has-no-resolution (ACTED)
+        Each is a declared dependency on a window that has already shut. Note
+        `w0-too-shallow`'s: that same mis-pointing, in the `BLOCKED-BY:` field,
+        is what the 09-30 `dp04` ruling convicted as *"22 days waiting on a
+        permission it never needed"* — and the identical defect in `WAITS-ON:` is
+        currently unreportable. **27% of the corpus against the inversion class's
+        9%**, which inverts the row's own ranking of what to build.
+    THE RULING 2026-10-11 (Review FULL) — **SHIP BOTH READINGS. GATE NEITHER.**
+        The row's constraints are adopted verbatim and are not loosened by adding
+        the second class: both are **READINGS** — printed, never an exit code,
+        never an ageing exemption, and emphatically not an automatic re-date.
+        `WAITS-ON:` continues to buy nothing, which is the property that makes it
+        safe to read.
+          1. `DATE-INVERSION` — a live row whose `DUE:` is strictly before the
+             `DUE:` of the live row it declares `WAITS-ON`, EXCEPT where the
+             `WAITS-ON:` text carries a justifying clause (the declaration's own
+             escape hatch). Today: 1 row, 0 false positives.
+          2. `WAITS-ON-A-CLOSED-WINDOW` — a live row whose `WAITS-ON:` target is
+             `ACTED` or `DECLINED`. Today: 3 rows. This is the `BLOCKED-BY`
+             terminal-blocker class, applied to the field that was exempt from it
+             by accident rather than by argument.
+        **ORDER OF WORK, and it is the reverse of what the row proposed:** (2)
+        first — it is three times as common, it needs no legitimacy exception,
+        and its target state is already parsed (`status in TERMINAL`). Then (1).
+        **WHAT STILL IS NOT ASKED FOR:** no gate, no exit code, no prose ban, no
+        sweep that moves a promise without a desk reading it. If either reading
+        is later proposed as a gate, that is a new row and a new argument.
+        **NOT FIXED HERE, deliberately:** the four rows the measurement convicts
+        are not re-dated or re-pointed by this disposition. Moving a promise
+        because an instrument printed it is precisely the act this row forbids;
+        they are findings for the desks that own them, and the `d10` inversion
+        goes to the builder's steering page instead.
+    DUE: 2026-10-19 | the BUILDER's execution of THE RULING: the two readings,
+        class (2) first, in `experiments/review_queue.py`, printed and gating
+        nothing. The MEASUREMENT half of this row is discharged at the desk and
+        is not owed by anyone. Dated 2026-10-19 rather than `next_free_due`'s
+        2026-10-22 because the work is now two one-line comparisons over fields
+        the parser already produces — the design risk the old date was holding
+        room for is spent. 2026-10-19 carried 6 live rows + 1 added by this
+        sitting; that is at the measured capacity and is declared, not hidden.
+    SUPERSEDED DUE: 2026-10-10 | a BUILDER measurement-then-maybe-instrument, not a Review
         design — the closure is named above and the desk endorses enumerating the
         live corpus before shipping a reading. Date derived from this sitting's
         saturation arithmetic, printed in full on `lg12`: `review-queue`'s own day
