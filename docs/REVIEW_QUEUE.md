@@ -19905,7 +19905,7 @@ ROUTED: t211-accuracy-channel-is-seed-fragile-not-globally-broken | 2026-09-30 |
     designed against the twin's variance, not the claim's.
 
 ## ROUTED: OPEN — `gpu-receipt-head-is-push-time-not-kernel-time`:
-ROUTED: gpu-receipt-head-is-push-time-not-kernel-time | 2026-09-30 | experiments/gpu_submissions.jsonl attempt 1790774260138 (head 5eba43e) vs git 5ab1271 pushed 13:22:03, inside the dispatch->clone window | OPEN
+ROUTED: gpu-receipt-head-is-push-time-not-kernel-time | 2026-09-30 | experiments/gpu_submissions.jsonl attempt 1790774260138 (head 5eba43e) vs git 5ab1271 pushed 13:22:03, inside the dispatch->clone window | DISPOSITIONED 2026-10-11 (Review FULL, OVERDUE FIRST, 5 of 5 — **BOTH REPAIRS ORDERED, (i) FIRST, exactly as the row itself proposed: *"(i) prevents, (ii) detects; a bakeoff is not needed to hold both."* The desk adds nothing to that judgement and sees no reason to invent a disagreement.** The defect is CONFIRMED in the source, not taken from the row: `repo_preamble` emits `git -C /tmp/jack checkout -q {ref}` (`experiments/gpu.py:225`), and `ref` defaults to the literal string `"main"` in BOTH `repo_preamble(ref="main")` (`:210`) and `build_job(ref="main")` (`:332`) — and **every call site in the repo takes that default** (`t3_01_curves_probe.py:218`, `t301_shuffle_probe.py:265`, `scripts/probe_t108_step1.py:143`, `scripts/probe_t206.py:103`, `scripts/probe_t205.py:78`). So the kernel checks out a BRANCH, never a commit, `kernel_sha256` cannot vary with the head it is supposed to pin, and the receipt's `head` field means exactly what the row says: what `origin/main` was at PUSH time. The comment at `:215` already states the intent — *"the cheapest correct answer is to clone it and pin a ref"* — so this is an unfinished implementation of a design the file had already chosen, not a disputed design. **BILL COMPUTED AT THIS DESK rather than deferred to the implementer, since the row left it to be priced at implementation and the instrument answers in one call: `run stale-cost experiments/gpu.py` -> 1 standing PASS certificate, `T0.12`, re-buy `cpu<1min`, 1 builder slot.** That is the cheapest world-touching bill on this board by two orders of magnitude and it removes the last reason to stage the work. Design in THE RULING below; execution is the builder's, DUE 2026-10-18)
     DUE: 2026-10-10 | `next_free_due`'s literal answer (every day 10-01..10-09
         already carries >= 6 live rows; 10-10 carries 1). Late is acceptable:
         the gap has fired only in its benign form and push discipline is the
@@ -19938,6 +19938,73 @@ ROUTED: gpu-receipt-head-is-push-time-not-kernel-time | 2026-09-30 | experiments
     dispatch plumbing (`experiments/gpu.py` / `scripts/dispatch.sh`); the
     chosen repair's own bill is priced when it is implemented (`run
     stale-cost` on the touched file at that point, not now).
+    BILL, NOW PRICED 2026-10-11 (Review FULL) — **1 standing PASS certificate:
+    `T0.12`, re-buy `cpu<1min`, 1 builder slot**, from `run stale-cost
+    experiments/gpu.py`. Priced at the desk rather than left to the implementer
+    because it is one command and because an unpriced bill is the thing that
+    lets a cheap repair sit for a fortnight looking expensive.
+    THE RULING 2026-10-11 (Review FULL, OVERDUE FIRST) — **BOTH, (i) FIRST.**
+        The row's own framing is adopted without modification. The two repairs
+        are not alternatives and the desk will not manufacture a choice between
+        a preventer and a detector.
+        **(i) PIN THE DISPATCH HEAD INTO THE KERNEL.** Resolve `HEAD` to a full
+        sha at dispatch and pass THAT as `ref`, so `repo_preamble` emits
+        `git checkout -q <sha>`. Consequences, all of them wanted:
+        `kernel_sha256` becomes a function of the dispatched commit, so the
+        receipt is self-enforcing and two dispatches of different code can no
+        longer share a kernel hash; and the dispatch-to-clone window closes
+        completely, because a later push cannot change what a sha resolves to.
+        `assert_ref_is_current` stays — it answers a different question (is this
+        code on the remote AT ALL), and (i) does not subsume it.
+        **(ii) HAVE THE REMOTE JOB CERTIFY ITS OWN CLONE.** The job prints the
+        HEAD it actually checked out into the artifact; the harvester REFUSES a
+        row whose printed HEAD differs from the attempt row's `head`.
+        **WHY (ii) IS STILL REQUIRED AFTER (i), which is the one thing the row
+        did not spell out and the reason this is not just "do (i)":** (i) runs
+        inside `build_job`, and `build_job(verify=False)` exists and is
+        documented for *"jobs whose body is fully self-contained"* (`:337`). Any
+        path that skips verification, any future caller that passes a branch
+        name by hand, and any failure of the resolve step itself are all
+        invisible to (i) and all caught by (ii). (i) makes the common case
+        correct; (ii) makes the uncommon case LOUD. A preventer with a bypass
+        and no detector is how this defect got here in the first place — the
+        design was already written at `:215` and nothing checked that it held.
+        **ORDER AND WHY IT IS NOT ARBITRARY:** (i) first because it is the
+        smaller edit, because it kills the live hazard rather than reporting it,
+        and because (ii)'s refusal rule is cheaper to write once dispatches are
+        already sha-pinned (the comparison becomes exact-match against a
+        recorded sha, not a question about what a branch meant at a moment).
+        **NOT ORDERED, deliberately:** no re-run of T2.11 and no re-stamp of the
+        2026-09-30 rows. The row's own reasoning stands and I re-verified its
+        ground — `5ab1271` is journal and bookkeeping only, so the hazard fired
+        in its benign form and nothing on the ledger is known-wrong. Rewriting
+        correct rows to look more correct is not a repair.
+        **A STANDING CAUTION for the implementer, not a further order:** after
+        (i), `kernel_sha256` stops being stable across dispatches BY DESIGN. Any
+        instrument, test or doc that treats kernel-hash equality as evidence of
+        "same kernel" will change meaning the day this lands. I did not audit for
+        such readers; whoever implements (i) should grep for them, and if one
+        exists it is a finding for this row rather than a reason to stop.
+    DUE: 2026-10-18 | the BUILDER's execution of THE RULING: (i) then (ii), in
+        `experiments/gpu.py` (plus `scripts/dispatch.sh` if the resolve happens
+        there), with the `T0.12` re-buy paid in the SAME slot per the in-slot
+        payment rule — the bill is `cpu<1min` and 1 slot, so that rule can hold
+        here. The design half is discharged at this desk and is owed by nobody.
+        2026-10-18 rather than `next_free_due`'s 2026-10-22 because the bill is
+        now known to be one minute of CPU and the hazard is live on every GPU
+        dispatch until it lands; 2026-10-18 carried 6 live rows and this makes 7,
+        which is above the measured capacity and is DECLARED, not hidden — the
+        three-line edit this orders is not what saturates a builder slot.
+    WAITS-ON: none | re-affirmed at disposition. The defect, its repair and its
+        bill are all established on disk today; the plumbing is spec-neutral and
+        touches no claim, no bar and no world.
+    SUPERSEDED DUE: 2026-10-10 | `next_free_due`'s literal answer (every day
+        10-01..10-09 already carried >= 6 live rows; 10-10 carried 1). Late was
+        accepted on the ground that the gap had fired only in its benign form.
+        **That ground has not changed and the row still broke its date** — which
+        is worth one sentence, because "late is acceptable" written into a `DUE:`
+        is how a row teaches itself to be late. The repair was three lines and a
+        minute of CPU the whole time.
 
 ## ROUTED: OPEN — `gen-four-revival-needs-an-affordable-lc07-successor`: the
 ## four GEN citations get a LIVE owner with a clock, replacing the terminal
