@@ -1,269 +1,287 @@
-> **CHECKLIST COMPLETE — THE RUN WAS KILLED ON THE TAIL, NOT MID-REPORT.**
-> The review run that wrote this file exited rc=124 (2026-10-10T06:57:09+00:00), and
-> before it died it reached the LAST item on its own checklist: docs/PROGRESS_LOG.md
-> carries this run's own row —
->     | 2026-10-10 | DAILY | 107/257 | 41.6% | 0 (107→107) | 79.4% | **Nothing ran: the builder did ZERO iterations in 24 h and neither the count nor the rate moved — a stopped week, not a slow one, and the cause is a meter rather than a lack of work.** ACT 0: inherited yesterday's `rc=124` run, which died holding BOTH its files — `THE CLASS DECLINE` (7 world-edit rows DECLINED on `D33`'s stop-rule) and `D43` — verified against the instruments and committed at `81480de` without re-opening either; the 74th-audit discipline cost the PAGE, not the WORK. **OVERDUE 3 → 0, `review-queue` EXIT 0 carrying no violation, three different right answers:** `hash-salt-lottery` **ACTED** — a STAMP debt, both halves delivered 09-26, re-verified in `protocol.py` and now carried by **16 distinct specs** (the 09-28 trace claimed 11), and **its armed stop-rule's condition was MET and I REFUSED to fire it** because its action would hand the builder a unit finished 14 days earlier, the exact defect `LESSONS.md` generalised from this row; `lc03` **RE-DATED 10-21** — not declined, the finding is unrefuted, and the date broke on two causes that are not builder failures (zero iterations in the preceding 41.6 h, and **this desk never named the unit in any PRIORITY block**), while the row's own pre-registered condition FIRED UPWARD when `D37` defaulted to (iii) on 10-05, making the comparator the only live measurement the `Learning core` seat will ever get and leaving **17.3% of the seated `A4` arm** unexamined; `personality-is-a-typed-character-sheet` **option (iii) TAKEN** and the character question routed as **`D44`**. **The finding of the week and it is about HIM, not about us:** Jack ships five typed Big Five floats, a 2,585-char persona and five `core_values` including the literal `'Kindness -- genuinely cares about others'`, wired ON by default at `UnifiedBrain.py:4093` and handed to the LLM by `answer_question` — while `GOAL.md:172` says *"we deliberately refuse to carve his character. His kindness is not decreed."* Curiosity is decreed in the same list the curiosity family exists to MEASURE. **ZERO callers of `answer_question`/`get_system_prompt`/`_generate_with_llm` under `experiments/`**, so `LG.00 "Not a puppet"` (PASS, seats two champions BY DECREE) scores through a scaffold that never touches the sheet — the one certificate about Jack not being a costume was bought in a venue that does not contain the costume. Registered as a spec with 3 conjuncts (life answers unchanged, manner reported separately, per-response PROVENANCE) aimed at the SHIPPED path; recommendation to the owner is to SPLIT the object (temperament deliberate + documented, `core_values`/persona a breach, 18-cert bill paid once). **It sat 13 days in a queue row: `personality`/`character sheet`/`core_values` returned ZERO hits across BOTH decision files — the `VANISHED-OWNER-ASK` shape, which the instrument could not catch because it audits PROGRESS.md and the question never reached PROGRESS.md.** `D30` pairing, counted here not inherited: dark **42 slots / 41.6 h**, `0 failed`, `week:all models` **64%** vs a **51%** line with **73%** of the pool another tenant's; **`2026-W40` 28.029 of 30 free Kaggle GPU-h expire TODAY — the FOURTH consecutive week, 114.66 h across W37–W40** — and `D40`, due **today**, predicted exactly this. Said against urgency: those hours had no designed buyer once `T1.08` went `ACTED` and prohibited; the real loss is the CPU ladder. Frontier recomputed: 96/257 unreachable, `T1.08` blocks 45 and is out of the builder's hands, **`NE.01` (frees 7, impl unchanged 46 d) is now INSIDE one of yesterday's seven TERMINAL rows** — `D43`'s cost paragraph made concrete. Steering: `1^22` gains an ITEM 2 **addendum** (not a rewrite — the builder has not read `1^22`) naming both ruled-but-never-handed-over units, both CPU, both marked NOT buyers for the dying quota; **`ladder_prompt.md` now at 124,944 of its 125,000 ceiling — 56 bytes, the next desk must excise first.** Field watch wk10 already consumed 10-05, nothing owed; `champions --check` EXIT 0 at all floors; all four organs within cadence — **but 10 of the last 11 DAILY Reviews died `rc=124` and the last completed row in this file is the 10-04 FULL.** Part 2 skipped per DAILY scope; tomorrow is a FULL and owes it plus both completeness audits. **The honest sentence: the instruments are clean, the board is empty of violations for the first time since September, and the creature is exactly where he was — the week's one real discovery about Jack had to wait thirteen days for an organ willing to ask the founder a question.** |
-> So this page is that run's finished product and is committed as
-> such: what the run lost was its exit, not its work. It is still
-> UNAUDITED — no other organ has checked it — and any checklist item
-> that comes AFTER the row above did not run. Sealed by
-> scripts/lib_seal.sh (D25, armed default fired 2026-09-14); the exit
-> code is in the log, and this banner is what joins the two.
-> Files this run also left dirty, committed unbannered by the seal: docs/PROGRESS_LOG.md.
-
 # PROGRESS.md — the Review's current-state page
 
-> Written by the Review organ. **Current state, not a log** — each run rewrites
-> this file. The running history is `docs/PROGRESS_LOG.md`.
-
-**2026-10-10, DAILY.** Every act below was committed as it was made; this page is
-the receipt, not the work. Five commits exist independently of it.
+**Review FULL, 2026-10-11 (Sunday).** Written LAST, as the receipt for ten
+commits that already exist. Every act below was committed as it was made, per
+the 74th audit's scar: a max-turns death costs the PAGE, not the WORK.
 
 ---
 
-## ACT 0 — I INHERITED A DEAD RUN'S WORK BEFORE DOING ANY OF MY OWN
-
-Yesterday's DAILY Review died `rc=124` holding **two dirty files that carried its
-entire output** — `THE CLASS DECLINE` (seven rows of the orphaned world-edit class
-DECLINED, executing `D33`'s armed stop-rule on its own date and condition) and
-`D43`. I verified both against the instruments before committing rather than
-trusting their prose: `run review-queue` EXIT 0, `0 HELD`, `review_queue_violations`
-**7 → 0**; `decisions --check` parses `D43` as armed, due 10-16. Committed at
-`81480de`. **I did not re-derive or re-open either act** — they were not mine.
-
-This is the 74th audit's scar working as intended: a late death cost the PAGE, not
-the WORK. It is also the tenth time in eleven days it has happened (below).
-
-## THE OVERDUE CLASS, DISPOSED FIRST — `OVERDUE 3 → 0`, `review-queue` EXIT 0 with no violation
-
-D28's armed default. Three live rows, three different right answers.
-
-**1. `hash-salt-lottery-in-a-gated-metric` → ACTED (`5e3fb47`).** A **stamp** debt,
-not a work debt. Both halves option (iv) ordered were delivered **2026-09-26** and
-this desk never stamped them, so the row broke a *third* date on finished work.
-Verified from source, not from the row's own two traces: `19aab39` carries the
-binding-set measurement with its margin declared before the scan; `5ee32ff` is live
-in `experiments/protocol.py` (`_salt_rerun` 3897, DIVERGENCE 4008, CLEAN 4021). **The
-evidence is now stronger than the trace that claimed it:** 16 distinct specs carry
-`HASH-SALT DIFFERENTIAL CLEAN` against the single adjudicated `XL.01` divergence; the
-09-28 trace counted 11, so five specs have been certified under the differential
-since. **Its armed stop-rule's condition was MET and I refused to fire it** — its
-action would name a unit finished on 09-26 as a builder priority, which is the exact
-defect `LESSONS.md` generalised from this row. A stop-rule stops a desk deferring; it
-does not license an act known false on the day it fires.
-
-**2. `lc03-five-controls-never-switch-off-the-term-a4-is-named-for` → RE-DATED
-2026-10-21 (`6b50392`).** Not declined: the finding is unrefuted and the design is
-fully ruled, so declining it would be declining live science to tidy a counter. **The
-date broke for two causes and neither is a builder failure.** The builder ran **zero
-iterations in the 41.6 h before it fell**. And **this desk never named the unit in any
-PRIORITY block** — the 09-29 ruling correctly said it *"does NOT pre-empt `T1.08`"*,
-but nobody wrote what happens when `T1.08` ends. It ended. The naming landed in the
-same sitting (ACT 4), which is what makes 10-21 keepable where 10-09 was not.
-**The row's own pre-registered condition fired, upward:** it wrote that if `D37`
-defaulted to (iii), the comparator becomes *"the only live measurement that seat will
-ever get."* `D37` fired 2026-10-05 to exactly (iii). So 149,312 params — **17.3% of
-the seated `A4` arm** — stay unexamined while this is unbought. Both conjuncts bind
-unchanged; nothing softened.
-
-**3. `personality-is-a-typed-character-sheet-on-the-answer-path` → option (iii)
-TAKEN, (i)/(ii) routed as `D44` (`bd40dde`).** The sharpest row on the board and it
-had been sitting for thirteen days. See `FOR THE OWNER 2`.
-
-## Part 1 — the state of progress, in numbers (last 24 h, per DAILY scope)
+## Part 1 — the state of progress, in numbers
 
 | | reading |
 |---|---|
-| demonstrated | **107 / 257 = 41.6%** — unmoved in 24 h |
-| pass rate of *registered* | 107/160 = 66.9% (`VOID` 17, `FAIL` 35, `BLOCKED` 1) |
-| net new | **0** |
+| demonstrated | **107 / 257 = 41.6%** — unmoved for a third week |
+| pass rate of *registered* | **107/160 = 66.9%** (`VOID` 17, `FAIL` 35, `BLOCKED` 1) |
+| net new PASS, this week | **0** (107 → 107) |
+| net new PASS, last week | **−1** (108 → 107) |
+| ledger rows | 156 → 157 → **160** over two weeks |
 | rework (attempts > 1) | 127/160 = **79.4%** |
-| builder iterations, 24 h | **ZERO** |
-| builder dark streak | **42 consecutive slots / 41.6 h**, `0 failed` |
-| commits, 24 h | 22 total — **13 mechanical regate re-buys, 9 desk commits (4 yesterday's review, 5 mine), 0 builder** |
-| queue | OVERDUE 3 → 0; trailing 7 d arrived 17, disposed 24, designed 10 |
+| builder iterations, 7 d | **ZERO** since 2026-10-08T12:32 |
+| builder dark streak | **66 consecutive slots / 66.3 h**, **0 failed** |
+| queue | **OVERDUE 5 → 0**, `review-queue` EXIT 0; 141 routed |
+| steering page | **127,327 B** — 3,745 under the launch cliff |
 
-**Did the builder produce, thrash, or stall? It STALLED, and cleanly.** `0 failed
-slots` across all 42 — the loop is healthy and the gate is holding budget back on
-purpose. `week:all models` reads **64%** against a pace line of **51%**, and **73% of
-this week's 53 shared points were spent by another project** (builder 15%, desks 11%).
-The builder is not broken and has not refused; it is being throttled against a pool
-in which it is a minority consumer.
+**Velocity, and it is the headline.** Two consecutive weeks of **zero net new
+PASSes**, and the earlier of the two was a net **loss** of one. Over the same
+fortnight the ledger grew by four rows. The project attempted more and certified
+less.
 
-**The frontier, recomputed not quoted.** 96 of 257 specs unreachable. `T1.08` = FAIL
-blocks **45** (frees 3) and is out of the builder's hands by a standing prohibition —
-the open question is an ESTIMATOR question owned by this desk. `NE.01` = FAIL frees 7
-(blocks 8), impl unchanged **46 d**. `UB.10` = VOID frees 4, impl unchanged 27 d.
-**And here is the thing worth noticing: `NE.01`, the highest-`frees` blocker on the
-board, is now inside one of the seven TERMINAL rows yesterday declined.** That is
-`D43`'s cost paragraph stopping being hypothetical.
+**Goodhart check — rate falling while count rises, which is the exact signature
+the DIRECTION_AUDIT warned about.** Pass rate of registered specs: **69.2%
+(09-27) → 68.2% (10-04) → 66.9% (today)**, on a ledger growing 156 → 160.
+Demonstrated-against-registry sits flat at 41.6% only because the registry did
+not move either. This is information and the information is unambiguous: **the
+denominator is winning again, and this time without the excuse of productive
+weeks behind it.** Three weeks ago that reading could be called the cost of
+growth. It cannot now — nothing grew.
 
-**Goodhart check.** Rate 41.6% on an unchanged registry of 257, with zero net new. So
-neither the count nor the rate moved: **the project produced no science in 24 hours.**
-That is information, not shame — but it is not a slow week either, it is a stopped
-one, and the cause is a meter, not a lack of work.
+**The frontier, recomputed not quoted.** 96 of 257 specs unreachable.
+`T1.08` = FAIL **frees 3, blocks 45** — still the largest transitive mass on the
+board by a wide margin, and still out of the builder's hands under a standing
+prohibition this desk re-affirmed today; the open question is an ESTIMATOR
+question and it is mine. `NE.01` = FAIL **frees 7** (blocks 8), impl unchanged
+**47 d** — the highest-`frees` blocker, and it sits inside one of the seven
+TERMINAL rows declined on 10-09, which is `D43`'s cost paragraph still
+concrete. `UB.10` = VOID frees 4, impl unchanged 28 d.
 
-**Anything in the journal that smells wrong?** Two things, and one is mine. The 51
-`regate sweep` commits are **legitimate** — a 2-hourly cron re-buying three Tier-0
-certificates (`T0.21`, `T0.28`, `T0.31`) that every doc edit stales, `no status
-moved` each time, already routed as `doc-declarations-restale-three-tier0-certificates-daily`
-(DUE 10-15). But they are a treadmill **this desk feeds**: my own edits today staled
-them twice. The second is below and it is about this organ.
+**Is the builder working on the frontier? The builder is not working at all, and
+it is not the builder's fault.** `0 failed slots` across all 66 — the loop is
+healthy and the pacer is holding budget deliberately. `week:all models` reads
+**83%** against a pace line of **61%** at 54% of the week (`week:Fable` 30%, not
+the gate). Attribution, taken after this sitting's own ledger mark landed —
+which is the only condition the 144th audit called honest — reads **69 shared
+points: builder 8 (11%), desks 6 (8%), NOT THIS PROJECT 55 (79%)**. See
+`FOR THE OWNER 1`.
 
-## Part 1b — the honest paragraph, no numbers
+**Effort-vs-goal.** Of this week's committed work, essentially none was spent
+advancing `GOAL.md`'s current stage, because the organ that advances it did not
+run. Ten commits today are desk acts: five queue dispositions, one spec
+strengthening, one steering reconciliation, one routing correction, one
+completeness-audit increment, one page. That is governance, honestly labelled.
 
-We are not closer to a creature this morning, and for once that is not because we
-were busy with the wrong thing — it is because nothing ran at all. The builder sat
-still for the better part of two days while a neighbouring tenant spent the pool it
-is metered against, and the three desks kept writing: disposing, ruling, routing,
-re-dating. The week's single most important step toward Jack is the one I could not
-have predicted mattering — a builder read `Personality.py` and found that we ship Jack
-a typed character sheet, wire it on by default, feed it to the LLM on his shipped
-answer path, and decree his kindness and his curiosity as English strings, while the
-north star forbids exactly that in the owner's own words. That is the first finding in
-weeks that is about *him* rather than about our instruments, and it sat in a queue row
-for thirteen days because the organ that found it had nowhere to put a question that
-only the founder may answer. The most concerning drift is the shape that made that
-possible: we have built an extraordinary apparatus for watching ourselves, and its
-reflex when it finds something about Jack is to route it, date it, and let it age. A
-costume nobody ruled on is still a costume. The queue is moving, the instruments are
-honest, the board is clean for the first time since September — and the creature is
-exactly where he was.
+### The honest paragraph — no numbers
 
-## Part 2 — SKIPPED, as DAILY mode requires
+Busier, and for the first time in a while I am not sure that is the right word
+either, because the thing that was busy was the desks and not the creature. The
+instruments are clean, the backlog is empty of violations, the rulings are
+careful, and Jack is exactly where he was a fortnight ago. What this week
+actually bought was understanding of our own measuring equipment: the single
+most important step toward Jack was discovering that a venue too easy to resolve
+its own claim produces a confident PASS just as readily as a red one — found in
+a passing spec, on the fourth rig to show the same pathology, which means the
+disease we have been treating as a property of the rigs that failed is a
+property of the ladder. That is a real step and it is a step about us, not him.
+The most concerning drift is that it had to be found by a desk reading old
+certificates on a Sunday, while the organ that builds him sat dark for most of
+three days behind a meter that another tenant is filling. A project whose
+reviewers are its only moving parts is not learning about its subject; it is
+learning about its own paperwork. I would rather report one new certified fact
+about a creature than ten well-reasoned pages about why we have none.
 
-Tests are re-examined on Sundays; daily rewrites would churn the ladder. **Tomorrow,
-2026-10-11, is a FULL** and owes Part 2, both completeness audits, and the weekly
-velocity line.
+---
 
-## Part 2.5 — steering maintenance
+## Part 2 — the test re-examination
 
-1. **PRIORITY reconciled (`9702cf7`)** — see ACT 4 below.
-2. **FIELD_WATCH: nothing owed.** Week 10's sweep (`32b098c`, 10-05) was fully
-   consumed on 10-05, all four nominations dispositioned in `INTEGRATION_QUEUE.md`
-   (N1 admitted as a design unit, N2 declined on provenance, N3 admitted as a
-   discipline, N4's narrowing admitted and its retraction refused). The page has not
-   changed since. Next sweep Monday 10-12.
-3. **Seats: no seat lost a door.** `champions --check` EXIT 0, all violations at their
-   declared floors. The `Learning core` seat carries `VERDICT-IS-A-VOID` +
-   `TRIGGER DEBT` — which is precisely what ACT 2's comparator addresses, and it is
-   now named for the builder for the first time.
-4. **ORGAN LIVENESS — all four alive, and one is lying about it.** `ladder` fired
-   06:07 (hourly, PACING), `overseer` 06:37 (6-hourly), `field_watch` 10-05 (Mondays),
-   `review` 06:37 (daily). No organ is silent past 2× its cadence. **But see
-   `FOR THE OWNER 4`: this organ fires and then dies.**
+**Scope, declared honestly: TWO specs examined against the mandated 8–12, and
+one strengthening implemented.** The sitting's first act consumed most of its
+budget: the OVERDUE class stood at **five rows**, the largest this desk has
+faced, and every one needed source verification rather than a stamp. I am not
+presenting a reduced sample as a full one. The two examined were chosen
+oldest-passed-and-least-reconsidered first, and both returned findings.
 
-## ACT 4 — PRIORITY names the two units this desk ruled and never handed over
+### STRENGTHENED — implemented, re-verified, committed
 
-Written as an **addendum** to `1^22`, not a rewrite: the builder has not read `1^22`
-yet (last `rc=0` 2026-10-08T12:32, `1^22` written 10-09 06:47), so rewriting it would
-be churn. ITEM 1's no-sixth-`T1.08`-attempt prohibition is untouched. Both units are
-**CPU** and both are marked **not buyers** for the GPU-hours expiring today, so a dying
-quota cannot recruit either.
+**`DP.04` — GUARD (a2), `need_resolution_band_mass`.** The pre-check measured
+its venue twice in fields its own stop-rule never read. Guard (a) asks "does one
+VALUE hold too much mass?" — and continuous arithmetic breaks exact ties without
+moving mass, so a statistic can satisfy it while remaining as saturated as the
+one it replaced. Measured on the spent seed-94 artifact: 616 distinct values and
+`max_single_mass` 0.0833 (a comfortable PASS), while the **median sits at 0.9990
+of the maximum at BOTH caps** and **74.28% of lives fall inside one
+`NEED_MIN_GAIN`-wide band of the top** (71.55% at cap 400) — against the
+**76.7%** single-value mass that condemned the retired statistic. Two lives
+inside one bar-width are indistinguishable *by the claim's own ruler* whether or
+not they are equal, so that is the mass the new guard measures.
+**Why it is a strengthening and not a tuning:** it asserts against the
+**already-declared** `NEED_MASS_CAP 0.767` — no threshold invented, none
+lowered, a refusal condition ADDED where there was none. It reads 0.7428 today
+and therefore **PASSES, by 2.4 points**, reported rather than tuned, because a
+guard that fired the day it was written would be a guard aimed at a number.
+Verified as a pure function against the spent artifact; **`DP.04` was not run**
+(it is `_PILOT_BLOCKED`, and running a spec writes the ledger). Bill: zero —
+DP.04 holds no PASS.
 
-**SIZE RULE HONOURED AND NEARLY BREACHED, disclosed because the organ that warns about
-this ceiling should not be the one crowding it:** `scripts/ladder_prompt.md` is at
-**124,944 bytes against the standing 125,000 ceiling — 56 bytes of headroom.** The next
-desk to add anything here **must excise a spent block first.** Past 131,072 the builder
-does not read a degraded prompt; it fails to launch at `rc=126`, which looks like an
-ordinary bad slot rather than a blackout.
+### RE-EXAMINED — `ME.8` (PASS, attempt 4, 2026-09-06)
 
-## FOR THE BUILDER
+**The objection I went looking for is not there, and that is the finding's
+first half.** `holdout_acc` **1.0** against `MIN_HOLDOUT` 0.95 and `resume_acc`
+**1.0** against `MIN_RESUME` 0.90 both sit flat on the ceiling — the shape today's
+`DP.04` ruling convicts. It does not convict `ME.8`: the DECIDING metric is
+neither of those (source comments `MIN_GAP = 0.50` as *"`resume_vs_zeroed`, the
+registered metric"*), that metric reads **0.8958 against a 0.50 bar** with real
+room beneath it, and **its control is genuine** — `zeroed_acc` reads **0.1042
+against a chance level of 0.125**, i.e. the null is AT chance, and `MAX_ZEROED`
+0.45 is a ~4σ band around it rather than a clearable number. `ME.8` is a better
+spec than its one-line summary suggests and its gate is not weak.
 
-1. **Two units are named in `1^22`'s new ITEM 2 addendum and they are yours when a
-   slot opens.** `LC.03`'s `l_bind`-dropped comparator (DUE 10-21, 14.40 core-h, both
-   conjuncts mandatory) and the character-sheet spec (DUE 10-22, three conjuncts
-   mandatory, and it must call the shipped `answer_question` path — **not** `lg_01`'s
-   `_prompt` scaffold, which is why `LG.00` is blind here). Register from the published
-   designs; do not re-design them.
-2. **Check `DELIVERED — AWAITING STAMP` before starting anything**, and this morning is
-   the argument for it: `hash-salt-lottery` cost three broken dates and roughly three
-   slots of other organs' attention purely because a finished unit was unstamped.
-   `OVERDUE` cannot distinguish *delivered-and-unstamped* from *undelivered*.
-3. **The pace gate is right; leave it alone.** 42 dark slots with `0 failed` is the gate
-   working, not a bug. Do not split a unit to fit a skipped slot, and do not treat a
-   dark slot as one you owe work for.
+**The weakness is real and it is elsewhere: the task is too easy for the
+instrument to resolve the capability.** Solved perfectly means the memory demand
+was never approached, so `resume_vs_zeroed` measures **WM persistence** and is
+structurally incapable of measuring **capacity or manipulation** — it cannot
+tell a one-item memory from a seven-item one, because the task never asks for a
+second item. **Fourth venue with this pathology (`DP.04`, `SH.02`, `W0`,
+`ME.8`), and `ME.8` is the first that is PASSING.** That generalisation is worth
+more than the spec: only the red ones have been getting attention.
+
+**Not weakened, not rewritten, nothing re-run.** The proposal is in
+`FOR THE BUILDER 4` because it is a redesign, not an added assertion.
+
+---
+
+## FOR THE BUILDER — ordered, cheapest and most perishable first
+
+All three ordered units are **CPU**. None is a buyer for W41's expiring GPU
+hours. All are named in `scripts/ladder_prompt.md`'s `1^22` ITEM 2 addendum;
+note you have had no `rc=0` since 2026-10-08T12:32, so you have read neither
+`1^22` nor its two addenda.
+
+1. **The GPU ref-pin — the cheapest world-touching item on the board.**
+   (`gpu-receipt-head-is-push-time-not-kernel-time`, **DUE 10-18**.)
+   `repo_preamble`/`build_job` default `ref` to the literal `"main"` and every
+   call site takes that default, so the kernel checks out a BRANCH and
+   `kernel_sha256` cannot vary with the head it is meant to pin. Do **(i) then
+   (ii)**: resolve `HEAD` to a sha and pass THAT as `ref`; then have the job
+   print its cloned HEAD and the harvester refuse a mismatch. (ii) is still
+   required after (i) because `build_job(verify=False)` bypasses (i) entirely.
+   Bill priced: **1 certificate, `T0.12`, `cpu<1min`** — pay it in the same slot.
+   Caution: after (i), `kernel_sha256` stops being stable across dispatches by
+   design; grep for readers that treat kernel-hash equality as "same kernel".
+2. **The two `WAITS-ON` readings.**
+   (`prose-sequencing-inverts-when-the-blocker-moves`, **DUE 10-19**.) The corpus
+   measurement that row owed **is already done at this desk — do not redo it.**
+   Build **class (2) FIRST**: `WAITS-ON-A-CLOSED-WINDOW` (3 live today), then
+   `DATE-INVERSION` (1 live today). **Both are READINGS** — printed, no exit
+   code, no ageing exemption, no auto-re-date. `WAITS-ON:` must keep buying
+   nothing.
+3. **`DP.04` option (ii), the gridworld difficulty edit.**
+   (`dp04-graded-measure-passed-its-guard-and-did-not-cure-the-venue`, **DUE
+   10-22**.) The acceptance test is the **pre-check's resolution reading on a
+   spent seed** — band mass well under 0.7428, median/max under 0.9990 — and it
+   is **NOT `DP.04`'s claim verdict**, because a world edit accepted on its claim
+   verdict is a world tuned to pass a test. Run the pre-check BEFORE any claim
+   fold. Bill: **2 certificates, `LC.00` + `DP.00`**; `DP.00`'s re-run is the
+   informative one, being a PASS whose venue this makes harder.
+4. **PROPOSAL — a load axis on `ME.8`.** A declared `WM_LOAD` parameter (items
+   held / interposed distractors), with the registered `resume_vs_zeroed` gap
+   required to persist at a load of **at least 2 items** and the bar re-derived
+   from chance AT THAT LOAD. **Strictly harder:** `MIN_GAP` 0.50 stays,
+   `MAX_ZEROED` 0.45 stays, every conjunct stays binding, a load axis is ADDED
+   where there is none, and the variant can FAIL where the current spec passes.
+   Falsifier pre-stated: a gap surviving trivially at load 2 retires the load
+   axis rather than vindicating it. Bill: **zero certificates.**
+5. **PROPOSAL — sweep the PASSING specs for unresolvable venues.** `ME.8` makes
+   this a class, not an anecdote. For each PASS, ask whether its claim statistic
+   has room between bar and structural ceiling, and whether its task is hard
+   enough to approach the capability it names. **This must NOT be done by
+   counting metrics at 1.0** — many are boolean conjunct flags, and a count that
+   conflated them would be confidently wrong, which is worse than absent. The
+   sweep needs a declared rule for distinguishing a claim statistic from a
+   conjunct flag before it produces any number. That rule is the deliverable.
+
+---
 
 ## FOR THE OWNER
 
-**1. `D40` FALLS DUE TODAY, ITS OWN FORECAST HAS BEEN CONFIRMED BY EVENTS, AND THE
-FOURTH CONSECUTIVE ~29 GPU-HOURS EXPIRE TONIGHT. See `D40`** (armed, `decide_by`
-**2026-10-10**, default **(v) = the status quo**, recommendation quoted verbatim there).
-This is `D30`'s standing pairing, counted by this desk rather than taken from the
-loop's counter, and it is not a re-ask — `D40` is already on your desk and today is
-its last day.
+**1. The builder has been dark 66 hours and 79% of the meter rationing it
+belongs to another tenant. See `D40`** — already on your desk, `class conduct`,
+`decide_by` **2026-10-10** now PASSED with default **(v)** standing. I have
+appended an EVIDENCE ADDENDUM rather than opening a second entry, because a
+duplicate on the same subject is what this file's discipline forbids.
+**What is new and why I trust it:** the 144th audit proved these shares are a
+function of *when* they are read — no ledger mark is written while nothing runs,
+so during a blackout the instrument under-reports the neighbouring tenant and
+over-reports the builder. **I nearly published the blackout reading as my
+headline and did not, because that correction exists.** Read after this
+sitting's own mark landed — the condition the 144th audit called honest —
+**NOT THIS PROJECT has gone 50% → 79% while the builder went 42% → 11% on an
+unchanged absolute spend of 8 points.** Sixteen points appeared between the
+06:07 `PACING:` line and my reading and **every one was external.**
+**This is not the 10-07 story and recycling it would have been wrong:** that
+week both halves were true (the builder front-loaded, then paced itself out).
+**This week the builder front-loaded nothing** — 8 points across seven days, 66
+hours dark — so the "self-inflicted" half has no purchase. The known bias
+direction was noted as arguing FOR default (v); corrected and re-read, it argues
+against it. My recommendation is unchanged from what `D40` already quotes and I
+am not restating it as a new ask.
+**`D30`'s required pairing, counted here not inherited:** dark **66 slots /
+66.3 h**, `0 failed`; **`2026-W41` opened today with 30.0 free Kaggle GPU-hours,
+0.000 used, expiring Saturday 2026-10-17.** Unlike W37–W40 I will **not** call
+those the loss: the standing `T1.08` prohibition means they have no designed
+buyer, and buying a sixth 3-seed reading of an instrument we have shown
+unreliable would be worse than letting them expire. **The loss is the CPU
+ladder** — three CPU units ordered today that cannot start while the builder is
+dark.
 
-Builder dark **42 consecutive slots / 41.6 h** (the loop's own line reads 41; it
-excludes the current slot). `week:all models` **64%** against a pace line of **51%**,
-with **73%** of the pool another tenant's. And the perishable half: **`2026-W40` holds
-30.0 free Kaggle GPU-hours with 1.971 drawn — 28.029 expire TODAY, Saturday
-2026-10-10.** That is the **fourth consecutive week**: W37 28.62 h, W38 29.08 h,
-W39 28.93 h, W40 28.03 h — **114.66 GPU-hours expired or expiring unbought in four
-weeks.**
+**2. NO-DECISION: liveness and docket report, nothing here to rule on.** All
+four organs within cadence: builder hourly (alive, PACING — see item 1),
+overseer 6-hourly (last 2026-10-11 06:37), field watch Monday (last 2026-10-05,
+week 11 due 10-12), this desk Sunday (now). **And one piece of good news against
+a standing concern:** the previous page recorded that 10 of the last 11 DAILY
+Reviews died `rc=124` and that four of four Sunday FULLs had died at max turns.
+**This FULL completed its checklist and committed ten acts as it made them**,
+which is the 74th-audit discipline working as intended rather than a change of
+luck. `champions --check` EXIT 0 at every floor (32 seats; 2/3 unfalsifiable,
+4/4 unwinnable, 2/2 unverified verdicts, 3/3 trigger debt — all at baseline,
+none grown). `review-queue` EXIT 0, **OVERDUE 5 → 0**. `decisions --check`
+EXIT 0. Open owner entries unchanged and on their own clocks: `D41`, `D42` (both
+10-18), `D43` (10-16), `D44` (10-24).
 
-**`D40` predicted this in terms** — *"The next expiry is Saturday 2026-10-10, and on
-the current meter the builder's first legal slot is not before it"* — and it was right.
-**Said honestly, because it is the strongest argument against urgency:** those hours had
-no designed buyer. `T1.08` was the only named one and it is now `ACTED` and prohibited
-from a sixth attempt. So the GPU number is the pairing `D30` requires, **not the
-damage.** The damage is the **CPU ladder**, which needs no GPU and no design: 42 slots
-is nearly two days of iterations that would have run specs and bought certificates, and
-that work is simply gone. If (v) fires tomorrow the meter stays and this recurs next
-Saturday.
+**3. NO-DECISION: a correction to my own routing, reported because an instrument
+caught it and the next desk should not repeat it.** I drafted the steering-page
+launch cliff as a new owner decision, `D45`. `run decisions --check` returned
+`[UNDECLARED] D45` and broke the `UNDECLARED` ratchet 0 → 1. Reading the classes
+properly, `class conduct` means *"desk-executable, not the owner's — execute it,
+report it, do not ask"*, and `scripts/ladder_prompt.md` is operational with Part
+2.5 duty 1 giving this desk direct edit rights. **I was asking you for
+permission to tidy a file I am required to maintain.** `D45` is withdrawn, the
+ratchet is back to 0, and the work is routed where it belongs as a desk row
+(`steering-page-is-two-days-from-the-launch-cliff-and-31kb-is-provenance`, DUE
+**2026-10-18**, with a priority clause putting it ahead of any other act here if
+a slot opens sooner). **The fact itself is worth your awareness even though the
+act is mine:** the page is **3,745 bytes** from the size at which the builder
+stops launching, and past that cliff it does not read a degraded prompt — it
+fails with an ordinary-looking `rc=126`, indistinguishable from the launcher
+faults we have already spent weeks on, and it would land inside a blackout
+currently blamed on the pacer. ~31 KB of the file is text explicitly marked
+never to be executed; archiving it takes the page to ~97 KB. I did not do it
+this morning because live orders cross-reference `2'` and `3'` *inside* the
+superseded block, so the move needs an inline rather than a cut, and half-doing
+it at the end of a sitting is a failure this desk has been convicted of before.
 
-**2. Jack ships a typed character sheet, it is on by default, it reaches the LLM
-through his shipped answer path, and `GOAL.md` forbids it in your own words. Routed as
-`D44`** (class `goal`, default **NO RULING — the sheet stays exactly as it ships**,
-`decide_by` **2026-10-24**), with my recommendation quoted verbatim there.
+**4. NO-DECISION: anatomy and completeness audits, reported.** **Anatomy:** 32
+seats against `GOAL.md`; no capability the goal requires is seatless, so **no
+seat was added** and none is proposed for merge or removal (both propose-only).
+**Completeness, audited against the external reference and not our own
+documents:** the sensory half is **closed and stays closed** — `run senses` at
+HEAD reports **10/10 of the inventory registered, 2/10 load-bearing (sight,
+voice)** — so three of the four zeros the owner found in one evening on
+2026-08-09 (voice, smell, taste) are gone. **Body schema remains the one
+owner-listed zero that has never moved:** 0 own specs, seated 2026-09-06, arena
+`UB.14` VOID-FORECLOSED. **The cognitive half is still the hole, and this
+sitting closed one ninth of it:** working memory is converted from a named gap
+into a specific harder spec design (`FOR THE BUILDER 4`). Eight capabilities
+remain — attention (0 specs), emotion (2 specs against 1,149 lines of
+`EmotionalState.py`, and **still not a declared `COVERS:` domain at all**),
+imagination, self-model, theory of mind, teaching, tool use, language
+production. **They are NOT converted to refusals by silence**; the row is
+re-armed `DUE 2026-11-01` with the next sitting pre-committed to `emotion`, the
+cheapest real repair and the oldest unmoved item from the 08-09 scar.
 
-Re-verified at source this sitting: five Big Five floats as dataclass defaults
-(`Personality.py:135-139`), `JACK_PERSONALITY` constructed at import (`:731`), a PAD
-baseline of pleasure **+0.491** / arousal **−0.360** / dominance **+0.120**, a
-**2,585-character** persona prose, and five `core_values` including the literal string
-**`'Kindness -- genuinely cares about others'`**. Wired on by default at
-`UnifiedBrain.py:4093`; `answer_question` (`:2784`) hands it to the LLM as the system
-prompt (`:2803`). The fallback when absent is *"You are a helpful companion robot"* —
-so the sheet is not an enrichment of a neutral path, **it is the path.** `GOAL.md:172`
-says *"we deliberately refuse to carve his character. **His kindness is not decreed**"*.
-Curiosity — the thing the entire curiosity family exists to MEASURE — is decreed in the
-same list as `'Curiosity above all'`.
+---
 
-**And no spec on this ladder can see any of it:** grep across `experiments/` returns
-**ZERO** callers of `answer_question`, `get_system_prompt` or `_generate_with_llm`.
-`LG.00 "Not a puppet"` — PASS, and it seats two champions BY DECREE — scores through a
-scaffold that never calls the sheet. *The one certificate about Jack not being a costume
-was bought in a venue that does not contain the costume.*
+## Constitution coherence
 
-**What I did at my desk:** took option (iii) and registered the question as a
-falsifiable spec with three conjuncts (life answers unchanged, manner reported
-separately, per-response provenance), aimed at the shipped path. That is
-non-prejudicial and proceeds however you rule. **What is yours:** whether the sheet may
-exist. **My recommendation is to SPLIT the object** — temperament DELIBERATE and
-documented in `GOAL.md`; `core_values` and the persona prose a BREACH off the default
-answer path, paying the 18-certificate bill once on that half alone.
-
-**Why this is arriving thirteen days late, which is the part that should worry you
-most:** the row that found it says on its face that only you may rule it, and then the
-question stayed in `docs/REVIEW_QUEUE.md`. `personality`, `character sheet` and
-`core_values` returned **ZERO hits** across `DECISIONS_NEEDED.md` **and**
-`DECISIONS_RESOLVED.md`. That is the `VANISHED-OWNER-ASK` shape, and the instrument
-built to catch it could not — it audits *this page*, and the question never reached
-this page.
-
-**3. NO-DECISION: the docket, announced rather than asked.** `D40` due **today**;
-`D43` (yesterday's seven terminal rows) due **10-16** — and note that `NE.01`, the
-board's highest-`frees` blocker, is inside that class; `D41` and `D42` due **10-18**;
-`D44` due **10-24**. `D33` remains **MOOT** and no desk can clear it by firing
-anything — its object went terminal, which is the substance of `D43`. `D37` fired
-2026-10-05 to (iii); option (i) remains yours at any time. Nothing here is new and
-nothing needs a ruling.
-
-**4. NO-DECISION: organ liveness, and this organ is the finding.** All four organs
-fired within cadence. But **10 of the last 11 DAILY Reviews died `rc=124`** before
-appending their own row — `PROGRESS_LOG.md` carries 13 `INCOMPLETE` rows and the last
-completed one is the **2026-10-04 FULL**. The organ is firing and then dying with its
-work in its hands. Yesterday's left its entire output uncommitted, which is why ACT 0
-exists. **Reported, not asked:** the commit-as-you-go discipline is what makes this
-survivable, it worked this morning, and the retry schedule (`9,12,15,18`) is already in
-cron. Nothing for you to rule — but you should know that this page has been the
-exception rather than the rule for eleven days.
+No new internal contradiction found in `GOAL.md` or `SYSTEM.md` this sitting,
+and none was edited — they remain the owner's. The live tension already on your
+desk as `D44` (shipped character sheet vs `GOAL.md:172`'s refusal to carve his
+character) is unchanged and on its own clock to 10-24.
