@@ -581,6 +581,16 @@ MUTE_FLOOR_MIN = 5.0      # steps the mute arm must clear its reactive floor by
 # for (string-keyed training and spawns; spans are asserted against the v1
 # artifact) — seeds 92/93 are NOT spent by it.
 NEED_MASS_CAP = 0.767     # the sizing run's own cap-atom mass; exclusive bound
+#
+# GUARD (a2) — THE SAME CAP, READ AT THE BAR'S OWN WIDTH (Review FULL
+# 2026-10-11). `_experiment` also reports `need_resolution_band_mass`: the
+# fraction of pooled per-life NI values lying within one NEED_MIN_GAIN-wide
+# band of the maximum, and `_check` VOIDs on it against this same
+# NEED_MASS_CAP. Guard (a) catches exact-value ties; (a2) catches lives that
+# are distinct numbers but indistinguishable to the claim's own ruler, which
+# is the form the old saturation took when the statistic became continuous.
+# Measured on seed 94: (a) 0.0833, (a2) 0.7428 at cap 200 / 0.7155 at cap 400.
+# Both pass; (a2) passes by 2.4 points, and that margin is the finding.
 
 # GUARD (b) — THE SAME SIGMA ARITHMETIC, RE-RUN ON THE NEW STATISTIC: the
 # pre-check bootstraps the reducible sd of the need-gain over the identical
@@ -1328,6 +1338,37 @@ def _experiment(seed: int) -> dict:
         max(counts.values()) / len(vals) if vals else 1.0)
     m["need_distinct_values"] = float(len(counts))
 
+    # GUARD (a2) — TIES AT THE CLAIM'S OWN RULER, not exact-value ties.
+    # STRENGTHENING added 2026-10-11 (Review FULL), and the reason is a
+    # measurement the pre-check already made and nothing read. Guard (a) asks
+    # "does one VALUE hold too much mass?". Continuous arithmetic breaks exact
+    # ties without moving mass, so a statistic can satisfy it while remaining
+    # as saturated as the one it replaced. Measured on the spent seed-94
+    # pre-check artifact: the need-integral has 616 distinct values and
+    # max_single_mass 0.0833 (guard (a): comfortable PASS), yet its MEDIAN sits
+    # at 0.9990 of its MAXIMUM at BOTH caps, 65.2% of lives lie within 1% of
+    # the range of each other, and **74.28% lie within one NEED_MIN_GAIN-wide
+    # band of the top (71.55% at cap 400) — against the 76.7% single-value mass
+    # that condemned the retired statistic.** Two lives inside one bar-width
+    # are indistinguishable BY THE CLAIM'S OWN RULER whether or not they are
+    # equal, so that is the mass this guard measures.
+    # NO NEW THRESHOLD IS INVENTED: it asserts the band mass against the
+    # already-declared NEED_MASS_CAP. At the measured 0.7428 that PASSES, by
+    # 2.4 points — so this does NOT retroactively refute option (i), whose
+    # pre-registered STOP did not fire and must not be re-aimed after seeing
+    # the numbers (the hash-salt defect). What it does is make any further
+    # drift toward saturation a VOID instead of a silent PASS, and put the
+    # 0.7428 on the scored row where the next desk cannot miss it.
+    if vals:
+        hi = max(vals)
+        bw = NEED_MIN_GAIN if NEED_MIN_GAIN is not None else 0.0
+        m["need_resolution_band_mass"] = (
+            sum(1 for v in vals if v >= hi - bw) / len(vals))
+        m["need_resolution_band_width"] = float(bw)
+    else:
+        m["need_resolution_band_mass"] = 1.0
+        m["need_resolution_band_width"] = 0.0
+
     m["lookahead_gain_over_matched_compute_filler"] = (
         sum(gains[i] for i, n in enumerate(fit["order"]) if n in surv)
         / max(len(surv), 1))
@@ -1392,6 +1433,10 @@ def _check(m: dict, c: dict):
         return Status.VOID          # need bars unregistered; run() refuses first
     if m.get("need_resolution_max_mass", 1.0) > NEED_MASS_CAP:
         return Status.VOID          # guard (a): the statistic has no resolution
+    if m.get("need_resolution_band_mass", 1.0) > NEED_MASS_CAP:
+        return Status.VOID          # guard (a2): no resolution AT THE BAR's
+        # own width — exact-value ties broken by arithmetic are still ties to
+        # the claim. Same declared cap as (a); see GUARD (a2) in _experiment.
     if m.get("headroom", 0.0) < HEADROOM_MIN_NEED:
         return Status.VOID          # the null sits on the measurement ceiling
     if m.get("demand_spread", 0.0) < SPREAD_MIN:

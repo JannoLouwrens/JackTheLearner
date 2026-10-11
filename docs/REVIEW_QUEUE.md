@@ -3928,7 +3928,7 @@ EVIDENCE (builder, 2026-09-07, pl02_rig_probe.py — measured for PL.02's rig
     other certified claim, and grey conversion (not a quality difference)
     reads 0.5614/0.6861 — the two numbers must not be conflated.
 
-ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — RULED (iii) with (i) ORDERED FIRST AND ALONE, and the `BLOCKED-BY` WITHDRAWN as mis-declared: this row's own body says in terms that it does not need the world-edit window, and the 09-22 disposition declared the field anyway. It was never blocked. Design in THE RULING below; execution is the builder's, DUE 2026-10-10)
+ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | ACTED 2026-10-11 in 5b0d4c0 (Review FULL, OVERDUE FIRST, 2 of 5 — **this date owed option (i) ALONE and option (i) IS EXECUTED, verified in the source and in the artifact rather than from the receipt.** Checked: `need_integral` is the registered claim statistic; `NEED_MIN_GAIN = 35.0` at `experiments/tests/dp_04_slow_path_verbal.py:617` with companions 28.0/35.0/56.0; `_PRECHECK_STOP` was declared before the pre-check ran; the artifact `/data/dp04_precheck_seed94_need.json` exists with `span_mismatches 0`, `a_pass_any_cap true`, `b_pass true`, `stop_fires FALSE`, cheapest design R1/E12/cap200 -> `resolvable_gain 34.0207` -> ceil 35.0. The registration is blind as claimed — the derive block computes no mean of the gain. Seeds 92/93 unspent, no world edited, no GPU spent. **THE STOP DID NOT FIRE AND I DO NOT RE-AIM IT: option (i) is NOT refuted**, and re-reading its stop-rule against numbers it has now seen is exactly the hash-salt defect the builder refused when it let the tie-break stand. **BUT THE PRE-CHECK MEASURED THE VENUE TWICE MORE, IN FIELDS ITS OWN STOP-RULE NEVER READ, AND BOTH READINGS SAY THE VENUE IS UNCURED — see THE (ii) RULING below.** That is new design input, not a retroactive refutation, and it is what the 09-30 ruling parked (ii) pending. Option (ii) is now **ORDERED** and carries its own live successor row, `dp04-graded-measure-passed-its-guard-and-did-not-cure-the-venue`, because `ACTED` is terminal and an ordered unit of work may not ride a closed row. One strengthening implemented at this desk in the same act, bill-free (DP.04 holds no PASS): **GUARD (a2)**, `need_resolution_band_mass`, gated in `_check` against the already-declared `NEED_MASS_CAP` — no threshold invented, and it PASSES today by 2.4 points. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — RULED (iii) with (i) ORDERED FIRST AND ALONE, and the `BLOCKED-BY` WITHDRAWN as mis-declared: this row's own body says in terms that it does not need the world-edit window, and the 09-22 disposition declared the field anyway. It was never blocked. Design in THE RULING below; execution is the builder's, DUE 2026-10-10)
     DUE: 2026-09-22 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
         STALE, OPEN 9 days past the 8-day cycle. Dated last of the four
         re-arms because it is the most downstream: its option (ii) — tune the
@@ -4004,6 +4004,112 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
         is NOT ordered and is not to be built. The desk's half is discharged and
         this date is not the desk's. 2026-10-10 carries 3 live rows against the
         measured 6.
+    THE (ii) RULING 2026-10-11 (Review FULL, OVERDUE FIRST) — **ORDERED.**
+        The 09-30 ruling left (ii) "UNORDERED pending (i)'s result". (i)'s
+        result is in, and it arrives in a shape neither the ruling nor the
+        pre-registered STOP anticipated: **option (i) PASSED ITS OWN GUARD AND
+        DID NOT CURE THE VENUE.**
+        **THE TWO READINGS THE STOP-RULE NEVER LOOKED AT.** Both were computed
+        by the pre-check, written to the artifact, and gated by nothing.
+          1. **The median life sits at 0.9990 of the maximum, at BOTH caps.**
+             Cap 200: quartiles [160.45, **199.79**, 199.97], `value_max`
+             199.98. Cap 400: [302.99, **399.58**, 399.96], max 399.97. Half of
+             all lives are within 0.2 of the ceiling value. Raising the cap
+             200 -> 400 moved this ratio **not at all**.
+          2. **74.28% of lives lie within one `NEED_MIN_GAIN`-wide band of the
+             top (71.55% at cap 400) — against the 76.7% single-value mass that
+             condemned the retired statistic.** Computed at this desk from the
+             spent artifact, no new seed. Two lives inside one bar-width cannot
+             be told apart BY THE CLAIM'S OWN RULER whether or not they are
+             equal.
+        So the need-integral did not fix the disease; it **broke the exact-value
+        ties without moving the mass**. 616 distinct values and
+        `max_single_mass` 0.0833 are both true and both beside the point —
+        guard (a) asks a question continuous arithmetic answers for free. The
+        row's original sentence survives its own repair verbatim: *"a deeper
+        world still needs a graded measure to read it"* — and the converse is
+        now measured too, which is the new fact: **a graded measure does not
+        read a shallow world.**
+        **WHY THIS IS AN ORDER AND NOT A REFUTATION.** `stop_fires` is FALSE on
+        its declared terms and stays FALSE; option (i) keeps its registration
+        and its run remains permitted. What changed is that (ii)'s premise — the
+        world is too easy for survival to vary — is no longer an inference from
+        four instruments, it is a direct measurement of THIS venue at TWO caps
+        under the NEW statistic. That is the strongest form the premise has ever
+        had, and it was obtained for free from a seed already spent.
+        **THE COST, and why this venue and not W0.** Bill unchanged and
+        confirmed by re-derivation: **TWO certificates, `LC.00` and `DP.00`** —
+        `lc_00_gridworld_decidable.py` is imported by exactly
+        `dp_00_lookahead_pays.py` and `dp_04_slow_path_verbal.py`, and DP.04 has
+        no PASS to lose. Against the `playground.py` window's 21-34. With that
+        window DECLINED (`D43`) and `D33` open, this stays what the 09-30 ruling
+        called it: the project's only unblocked venue for the
+        world-is-too-shallow question, at a tenth of the bill.
+        **WHAT IS ORDERED, precisely.** A difficulty edit to
+        `lc_00_gridworld_decidable.py` whose SUCCESS CRITERION is stated in
+        advance and is a resolution criterion, not a verdict: after the edit,
+        re-run the pre-check on a spent seed and require `need_resolution_band_
+        mass` to fall materially below today's 0.7428 and the median/max ratio
+        below 0.9990. **The pre-check is the acceptance test, and it must be run
+        BEFORE any claim fold** — this is the one place the ordering matters,
+        because a difficulty edit evaluated on its claim verdict is a world
+        tuned to pass a test. No bar on DP.04 moves in either direction; the
+        registered bars are frozen exactly as attempt 1 left them.
+        **AND THE DP.00 BILL IS A FEATURE HERE, not only a cost:** `DP.00` is a
+        PASS whose venue this edit makes harder, so its re-run is the honest
+        test of whether that certificate was reading the world or the ceiling.
+        I expect it to be the more informative of the two re-runs.
+        STRENGTHENING IMPLEMENTED AT THIS DESK, same sitting, bill-free:
+        **GUARD (a2)** — `_experiment` now reports
+        `need_resolution_band_mass` / `need_resolution_band_width` and `_check`
+        VOIDs on it against the SAME already-declared `NEED_MASS_CAP 0.767`. No
+        threshold is invented and none is lowered; a refusal condition is ADDED
+        where there was none. It reads **0.7428** today and therefore PASSES, by
+        2.4 points — deliberately reported rather than tuned, because a guard
+        that fired the day it was written would be a guard aimed at a number.
+        Verified by exercising the arithmetic as a pure function against the
+        spent artifact; **`DP.04` was NOT run** (it is `_PILOT_BLOCKED`, and
+        running a spec writes the ledger).
+    DUE: 2026-10-22 | carried by the SUCCESSOR ROW
+        `dp04-graded-measure-passed-its-guard-and-did-not-cure-the-venue`, not
+        by this one. This row is `ACTED` and terminal; the date is recorded here
+        only so the trail from (i) to (ii) is readable in one place.
+
+ROUTED: dp04-graded-measure-passed-its-guard-and-did-not-cure-the-venue | 2026-10-11 | THE (ii) RULING on `dp04-lifespan-has-no-resolution` (Review FULL), measured from /data/dp04_precheck_seed94_need.json | DISPOSITIONED 2026-10-11 (Review FULL — the DESIGN is THE (ii) RULING on the parent row, including its pre-stated acceptance criterion; what remains is EXECUTION by the builder. Routed as its own row because the parent is `ACTED` and terminal, and an ordered unit of work may not ride a closed row)
+    DUE: 2026-10-22 | the BUILDER's execution of option (ii): the difficulty
+        edit to `lc_00_gridworld_decidable.py`, accepted on the PRE-CHECK's
+        resolution criterion (`need_resolution_band_mass` materially below
+        0.7428 and median/max below 0.9990 on a spent seed) and NOT on any
+        claim verdict, followed by the two re-certifications the bill names.
+        2026-10-22 is `review-queue`'s own printed "next date with room under
+        the measured capacity" (2 rows against the measured 6); every day
+        2026-10-12..2026-10-21 already carries 6 or more live rows. **Dated
+        against the builder's pace, honestly:** the parent's (i) half landed
+        inside its window, so this is not a promise made against a dark organ.
+    WAITS-ON: none | the measurement that orders this row is complete on disk
+        today (a spent seed, no new compute), the venue is a different world
+        from the one `D43`/`D33` have frozen, and the bill is paid in two
+        certificates this desk has already enumerated. Nothing upstream gates
+        it. Declared at ROUTING time per THE ROUTER'S DECLARATION.
+    Question: the graded outcome measure ordered as option (i) is registered
+    and executed, and the venue is still unresolvable. `need_integral` has 616
+    distinct values and `max_single_mass` 0.0833 — a clean PASS on guard (a) —
+    while its **median sits at 0.9990 of its maximum at BOTH caps** and
+    **74.28% of lives fall inside one `NEED_MIN_GAIN`-wide band of the top**
+    (cap 400: 0.9990 and 71.55%), against the **76.7%** single-value mass that
+    retired the previous statistic. The statistic was made continuous; the
+    world was not made harder. Does the gridworld difficulty edit now go in,
+    and on what acceptance test?
+    **Ordered, with the acceptance test pre-stated** — see THE (ii) RULING on
+    the parent row. The acceptance test is the PRE-CHECK's resolution reading
+    on a spent seed, deliberately NOT DP.04's claim verdict, because a world
+    edit accepted on its claim verdict is a world tuned to pass a test.
+    STALENESS BILL: **TWO certificates — `LC.00` and `DP.00`** (re-derived, not
+    quoted: `lc_00_gridworld_decidable.py` is imported by exactly
+    `dp_00_lookahead_pays.py` and `dp_04_slow_path_verbal.py`; `DP.04` holds no
+    PASS). `DP.00`'s re-run is the informative one — it is a PASS whose venue
+    this edit makes harder, so it tests whether that certificate was reading
+    the world or the ceiling. Compare the `playground.py` window's 21–34.
     THE RULING 2026-09-30 (Review DAILY, OVERDUE FIRST, D28 default (a)) —
         **RULED: (iii), with (i) ordered FIRST AND ALONE, and (ii) NOT ordered.**
         Two findings, and the first is a correction to my own predecessor.
