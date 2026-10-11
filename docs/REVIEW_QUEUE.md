@@ -9144,7 +9144,7 @@ ROUTED: pass-certificates-are-not-re-evaluated-when-a-dependency-falls | 2026-09
     is no longer what is owed; the ratchet decision is. The builder does not
     get to settle it by having shipped the easy half.
 
-ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-13 | Review FULL (completeness audit, external reference) | OPEN
+ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-13 | Review FULL (completeness audit, external reference) | DISPOSITIONED 2026-10-11 (Review FULL — **acted on its OWN DATE, not after it.** This row came due TODAY and was therefore invisible to `OVERDUE FIRST`, which looks only at rows that have already broken; the 108th audit's RANK 3 named that blind spot and the fix is to take the row in the same sitting, which is what this is. **WHAT WAS DELIVERED: one gap converted from a named hole into a specific, harder spec design — WORKING MEMORY — and the sensory half re-verified live rather than quoted.** `run senses` at HEAD: 10/10 of the inventory registered, **2/10 load-bearing (sight, voice)**, so the 2026-08-09 scars (voice, smell, taste at zero specs) are CLOSED on the sensory side and stay closed; body schema remains the one owner-listed zero with 0 own specs. **WHAT WAS NOT DELIVERED: eight of the nine cognitive capabilities are still holes and are NOT converted to refusals by this disposition.** The row stays LIVE and ages. See THE WORKING-MEMORY FINDING below; re-armed `DUE 2026-11-01` with the reason written in the open)
     DUE: 2026-09-21 | this desk's own docket: convert the named gaps into
     registered specs or into written refusals, cheapest-first. Date is the
     next FULL sitting plus one; 09-20 already carries 5 rows including the
@@ -9173,6 +9173,10 @@ ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-1
       working memory     1 spec, ME.8 (PASS) — and it tests that WM SURVIVES A
                          RESTART, not that it holds or manipulates anything.
                          Nothing anywhere asks WM to do cognitive work.
+                         **RE-EXAMINED 2026-10-11 — see THE WORKING-MEMORY
+                         FINDING at the foot of this row. The 09-13 sentence
+                         above is CONFIRMED and now has a spec design behind
+                         it.**
       emotion            2 specs (T2.12 PASS, T3.07 FAIL) against 1,149 lines
                          of EmotionalState.py and a BY DEFAULT seat. UNCHANGED
                          since the 2026-08-09 scar named it. AND — the finding
@@ -9324,6 +9328,88 @@ ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-1
     only as durable as the projection that archives it.
     Nothing is routed by this answer: a refutation closes, it does not queue.
     No new row, so net arrivals are **+0**.
+
+    ### THE WORKING-MEMORY FINDING — 2026-10-11 (Review FULL, Part 2 re-exam of
+    ### a PASSING spec, which is the one power the overseer is denied)
+
+    **ME.8 (PASS, attempt 4, `ran_at 2026-09-06`) re-examined with fresh eyes.
+    THE OBJECTION I WENT LOOKING FOR IS NOT THERE, and I am recording that
+    first because this is the second time in one sitting that the obvious
+    reading was wrong.** I expected a saturated gate — `holdout_acc` **1.0**
+    against `MIN_HOLDOUT` 0.95 and `resume_acc` **1.0** against `MIN_RESUME`
+    0.90 both sit flat on the ceiling, which is the shape today's `DP.04`
+    ruling convicted. **It does not convict ME.8, for two measured reasons:**
+    the DECIDING metric is not either of those — the source comments
+    `MIN_GAP = 0.50` as *"`resume_vs_zeroed`, the registered metric"* — and
+    that metric reads **0.8958 against a 0.50 bar** with real room beneath it
+    (a structural maximum near 0.875 given chance), so a weaker memory would
+    land between bar and ceiling and be caught. **And its control is a genuine
+    control, checked rather than assumed: `zeroed_acc` reads 0.1042 against a
+    chance level of 0.125** — the zeroed arm is AT chance, which is exactly
+    what a real null looks like, and `MAX_ZEROED` 0.45 is a ~4-sigma band
+    around it rather than a number chosen to be clearable. ME.8 is a better
+    spec than its one-line summary suggests and the gate is NOT weak.
+
+    **THE WEAKNESS IS REAL, IT IS SOMEWHERE ELSE, AND IT IS THE SAME DISEASE
+    THIS SITTING DIAGNOSED IN `DP.04`: THE TASK IS TOO EASY FOR THE INSTRUMENT
+    TO RESOLVE THE CAPABILITY.** `holdout_acc 1.0` and `resume_acc 1.0` mean
+    the model solves the task PERFECTLY. A task solved perfectly is a task
+    whose memory demand was never approached, so what `resume_vs_zeroed`
+    measures is **WM PERSISTENCE** — the cue survives a checkpoint restart —
+    and it is structurally incapable of measuring **WM CAPACITY or
+    MANIPULATION**. The spec cannot tell a one-item memory from a seven-item
+    one, because the task never asks for a second item. The 09-13 sentence
+    above (*"it tests that WM SURVIVES A RESTART, not that it holds or
+    manipulates anything"*) is therefore CONFIRMED at the level of the
+    arithmetic, not just asserted. **This is the fourth venue on which this
+    project has now measured the same pathology** — `DP.04`, `SH.02`, `W0` and
+    now `ME.8` — and `ME.8` is the first of the four that is **PASSING**. That
+    is the finding worth more than the spec: the disease is not confined to the
+    rigs that went red. A venue too easy to resolve its claim produces a
+    confident PASS just as readily as a VOID, and only the red ones have been
+    getting attention.
+
+    **PROPOSED STRENGTHENING — FOR THE BUILDER, not implemented here because it
+    is a redesign and not an added assertion.** A LOAD axis on ME.8: a declared
+    `WM_LOAD` parameter (number of to-be-held items / interposed distractors),
+    with the registered `resume_vs_zeroed` gap required to persist at a load of
+    **at least 2 items**, and the bar re-derived from chance AT THAT LOAD rather
+    than carried over. **Why this is strictly HARDER and admissible under the
+    one law:** no existing threshold moves (`MIN_GAP` 0.50 stays, `MAX_ZEROED`
+    0.45 stays, every current conjunct stays binding); a load axis is ADDED
+    where there is none; and the variant can FAIL where the current spec passes,
+    which is the whole point. It cannot make ME.8 look better. **Its falsifier,
+    pre-stated:** if the gap survives at load 2 with `holdout_acc` still at 1.0,
+    the task is still too easy and the load must rise again — a trivially
+    surviving gap retires the load axis rather than vindicating it, exactly as
+    `W1.04`'s falsifier handles its own trivial pass.
+    **Staleness bill for the proposal: ZERO certificates** — `ME.8` is the only
+    PASS at stake and it is the spec being strengthened; a load-parameterised
+    variant registers alongside rather than editing a shared world.
+
+    **ROUTED BY THIS FINDING: nothing new.** The working-memory gap was already
+    named on this row and this sharpens it in place rather than opening a second
+    row for the same hole. Net arrivals **+0**.
+
+    DUE: 2026-11-01 | RE-ARMED 2026-10-11 (Review FULL) from 2026-10-11, IN THE
+        OPEN, and the reason is not a pile and not a blackout. **One of nine
+        cognitive gaps was converted this sitting (working memory, above), which
+        is 1/9 of the row's stated bill, so the row is not dischargeable today
+        and saying otherwise would be the `ACTED`-means-designed error this file
+        was built to end.** Three weeks rather than one, named honestly: this
+        desk's demonstrated conversion rate on this row is now **one capability
+        per FULL sitting**, measured on the only two sittings that have produced
+        one (09-20's pain/voice corrections, today's working memory), so nine
+        gaps is realistically a quarter's work and a one-week date would be the
+        fifth broken promise on this row rather than the first kept one.
+        2026-11-01 is a Sunday FULL with room. **What the next sitting takes,
+        pre-committed so the order is not re-litigated: `emotion`** — it is the
+        cheapest real repair this row already identified (declare an `emotion`
+        `COVERS:` domain on `T2.12`/`T3.07`, one registry edit, which makes the
+        gap visible to `coverage` instead of only to this page) and it is the
+        oldest unmoved item from the 2026-08-09 scar.
+    WAITS-ON: none | the audit reads an EXTERNAL reference and the registry;
+        nothing in the repo gates it. Declared per THE ROUTER'S DECLARATION.
 
 ---
 
