@@ -19775,17 +19775,26 @@ ROUTED: t406-latent-floor-was-never-computed | 2026-09-30 | docs/FIELD_WATCH.md 
 ## registered seeds beat the permuted twin by >= +0.20, and the third lost to a
 ## 0.9766-accuracy shuffled control (builder, 2026-09-30, OVERSIGHT FTB 1(c))
 
-ROUTED: t211-accuracy-channel-is-seed-fragile-not-globally-broken | 2026-09-30 | experiments/ledger.json T2.11 attempt 1 (VOID, ran_at 2026-09-30T12:48:52, kernel jack-ladder-1790770547) | OPEN
+ROUTED: t211-accuracy-channel-is-seed-fragile-not-globally-broken | 2026-09-30 | experiments/ledger.json T2.11 attempt 1 (VOID, ran_at 2026-09-30T12:48:52, kernel jack-ladder-1790770547) | DISPOSITIONED 2026-10-11 (Review FULL, OVERDUE FIRST, 4 of 5 — **THE INVERSION AS ASKED IS REFUSED; A STRICTLY HARDER SUCCESSOR IS ENDORSED AND ITS SEED COUNT IS DECLARED UNSETTABLE TODAY.** The row asks whether a successor should let `mi_margin` DECIDE and demote the policy channel to reporting. Answered no, on the one law: `margin_vs_shuffled` is the channel that REDS (worst-seed −0.086) and `mi_margin` is the channel that is GREEN at 1.9x its bar on every fold, and moving the verdict onto the green channel after seeing both is choosing the metric that passes. That is the T1.02 precedent's exact prohibition — *a redesign is legitimate only when the EXPERIMENT is wrong, never to make the system look better* — and nothing offered here shows the experiment is wrong. **I ALSO CHECKED, AND THEN WITHDREW, THE STRONGER OBJECTION I EXPECTED TO FIND.** `ctrl_acc` reads 0.6484 / 0.6641 / **0.9766** per seed where `zero_acc` reads ~0.125, so the label-permuted twin scores up to 8x chance and my first reading was a leaking control — which would have made `margin_vs_shuffled` a difference of two contaminated numbers and reframed the whole row. **It is not a defect and the spec got there first:** `t2_11_skills_distinguishable.py:222-225` records that under permuted labels a shared policy is still paid a state- and skill-dependent reward, *"which is what turns `beats_shuffled` from an identity into a measurement"*, and `:189` shows the separate instrument-honesty check that the permuted CLASSIFIER does read chance (0.11–0.18 against 0.125, `shuffle_clf_heldout` 0.1641 at attempt 2). The control is deliberately HARDER than chance, not broken. So the seed-fragility is a real result against a strong baseline, and the row's framing of it is sound. Full reasoning and the endorsed successor in THE RULING below; execution is NOT ordered today and the row carries a live date for the one thing that gates it)
     DUE: 2026-10-10 | `next_free_due`'s literal answer (every day 10-01..10-09
         already carries >= 6 live rows). Late is acceptable here: the row is
         DESIGN INPUT for any successor spec, not a blocker — attempt 2's
         pre-registered reading is already written in the spec file and does
         not wait on this ruling.
-    WAITS-ON: none | the fact this row carries exists on the ledger now and is
-        sharpened, not created, by attempt 2's outcome; nothing this desk
-        rules here changes what attempt 2 is allowed to do (that contract is
-        pre-registered in t2_11_skills_distinguishable.py, THE ATTEMPT-1
-        RECORD).
+    SUPERSEDED WAITS-ON 2026-10-11 (was `WAITS-ON: none`; re-declared at the foot
+        of this row as `t108-recipe-repair-is-exhausted-and-the-attribution-pair-
+        flipped-sign`). Relabelled rather than deleted, and relabelled rather
+        than left standing, because the parser reads the LAST declaration and a
+        human reads the FIRST — leaving a live `none` three screens above a live
+        dependency is how prose and field drift apart, which is the defect this
+        same sitting ruled on in `prose-sequencing-inverts-when-the-blocker-
+        moves`. ORIGINAL TEXT, unchanged: the fact this row carries exists on
+        the ledger now and is sharpened, not created, by attempt 2's outcome;
+        nothing this desk rules here changes what attempt 2 is allowed to do
+        (that contract is pre-registered in t2_11_skills_distinguishable.py,
+        THE ATTEMPT-1 RECORD). **Why it stopped being true:** that reasoning was
+        about attempt 2's CONTRACT, which indeed waits on nothing. THE RULING's
+        seed-count question is a different debt and it does wait on `T1.08`.
     Question: the 09-26 METRIC ruling and the park were both written against
     the PILOT evidence (seeds 7/90: the label-permuted twin outscored the
     claim arm on BOTH, margin_vs_shuffled −0.1172/−0.0704-class readings),
@@ -19808,6 +19817,63 @@ ROUTED: t211-accuracy-channel-is-seed-fragile-not-globally-broken | 2026-09-30 |
     STALENESS BILL: none — this row orders a DESIGN QUESTION, no edit to any
     covered file. T2.11 carries no PASS certificate (its only row is the
     VOID).
+    THE RULING 2026-10-11 (Review FULL, OVERDUE FIRST) — **(1) the channel
+        inversion is REFUSED. (2) A harder successor is ENDORSED in shape. (3)
+        Its seed count is NOT set, because the project cannot honestly set it
+        until `T1.08` passes, and that is this row's only live debt.**
+        **(1) WHY THE INVERSION IS A WEAKENING, not a redesign.** Measured at
+        attempt 2 (`FAIL`, `ran_at 2026-09-30T13:49:05`, `n_seeds 3.0`):
+            per-seed margin_vs_shuffled   +0.2188  +0.2734  −0.0860
+            reported margin_vs_shuffled   −0.0860   (the WORST seed, by rule)
+            mi_margin                     +0.9377   vs its 0.50 bar  = 1.9x
+        The spec already takes the worst seed on its deciding channel, which is
+        the strong convention and must not be touched. The proposal is to move
+        the verdict off that channel and onto the one reading 1.9x its bar. **No
+        argument is offered that the policy channel measures the wrong thing —
+        only that it is the channel that fails.** `beats_shuffled` is the
+        registered CLAIM conjunct and `:418` records it was deliberately kept
+        binding and byte-unchanged through the v2 redesign. Inverting now would
+        retire a binding conjunct on the evidence that it binds. Refused.
+        **(2) WHAT IS LEGITIMATE, and it is strictly harder than both.** The
+        row's own best observation is the one it buried: *"the seed-to-seed sign
+        flip is exactly what `T1.08` exists to price and `T1.08` is FAIL."* That
+        is the real defect and it is not a metric choice. With `n_seeds = 3` and
+        a worst-seed rule, ONE sign-flipping seed pins the verdict at FAIL or
+        VOID in perpetuity, and neither verdict is a statement about Jack (the
+        132nd audit's words, quoted correctly by this row). The successor worth
+        designing therefore **keeps `margin_vs_shuffled` deciding, keeps the
+        worst-seed rule, keeps every bar where it is, reports `mi_margin`
+        alongside — and RAISES THE SEED COUNT.** That is a strengthening in the
+        only direction available: a worst-seed statistic over more draws can
+        only fall or stay level, never rise. It cannot make T2.11 look better,
+        which is precisely why it is the admissible move.
+        **(3) WHY NO SEED COUNT IS NAMED HERE, and this is the honest part.** To
+        pick N I would need to know how much of the ±0.21/−0.09 spread is seed
+        noise and how much is real. That is `T1.08`'s entire job. `T1.08` is
+        **FAIL at attempt 5 (`ran_at 2026-10-08T13:19:59`, `seed_noise
+        0.005169`)**. Naming a seed count against a failed noise-pricing spec
+        would be inventing the number this desk is supposed to derive, and the
+        next audit would be right to call it arithmetic theatre. So the shape is
+        endorsed, the number is withheld, and the dependency is DECLARED rather
+        than left in prose — which is this sitting's own `prose-sequencing`
+        finding applied to itself.
+        **WHAT IS NOT CHANGED BY ANY OF THIS:** T2.11 attempt 2's registration,
+        bars, conjuncts and fold are untouched; its FAIL stands and is not
+        re-run; `mi_margin` does not become a gate. No threshold moves in either
+        direction.
+    DUE: 2026-10-20 | THE DESK's own re-reading of this row once `T1.08` reaches
+        a verdict that prices seed noise — at which point the successor's seed
+        count becomes derivable and the design can be written in one sitting.
+        This is NOT a builder date and nothing is ordered onto the board by it.
+        If `T1.08` is still FAIL on 2026-10-20, the correct disposition is to say
+        so and re-arm in the open, NOT to pick a seed count anyway.
+        **STOP-RULE, armed against this desk:** if `T1.08` has not reached a
+        seed-noise verdict by 2026-11-03, this row stops waiting and goes to the
+        owner as a strategic item — *the project cannot size any seed-fragile
+        successor while its only noise-pricing spec is red* — because at that
+        point the blockage is a standing capability gap, not a scheduling one.
+    WAITS-ON: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | the seed-count question above is gated on `T1.08`-class noise pricing, and this is the live row carrying that work. Declared at ROUTING time per THE ROUTER'S DECLARATION, and the date above (2026-10-20) is deliberately set AFTER that row's own `DUE: 2026-10-21`... **it is not, and I am naming that rather than quietly fixing it:** 2026-10-20 falls ONE DAY BEFORE its prerequisite. The earlier date is DELIBERATE and the written reason the declaration requires is this: what this date owes is only *"re-read this row and either design or re-arm"*, which is a desk act that costs one sitting and is worth performing the day after the prerequisite's own sitting regardless of outcome — whereas waiting until 10-22+ would mean this row could not respond to a 10-21 verdict inside the same week. Re-dating to 2026-10-22 would be the tidier number and the worse promise.
+    SUPERSEDED DUE: 2026-10-10 | `next_free_due`'s literal answer; see THE RULING, which discharges the design half and re-points what remains at `T1.08`.
     UPDATE 2026-09-30 (builder, 14:07 slot — attempt 2 harvested, `b6f505a`;
     the row's premise is now measured on a RIG-GREEN fold): attempt 2 (kernel
     jack-ladder-1790774260, 0.5223 h W39, ran_at 13:49:05, head `5eba43e`)
