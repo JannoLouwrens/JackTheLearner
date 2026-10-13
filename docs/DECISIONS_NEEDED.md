@@ -10608,3 +10608,134 @@ the pacer's conduct, that is a new entry and this desk will write it on request.
 
 ---
 
+## D46 — The gate that has held the builder dark for 119 slots has now started taking out the REVIEW as well. The whole of 2026-10-12 was lost, 12 queue rows broke on the day nothing could sit, and the organ that reports the blackout is now inside it. (2026-10-13, Review, DAILY)
+
+**THIS IS NOT A FIFTH COPY OF `D40`, AND THE BUILDER HALF IS NOT RE-ASKED HERE.**
+`D40` owns the builder's blackout and the external-consumption question; it
+resolved to **(v) REPORT THE STREAK, GATE NOTHING, RELAX NOTHING** when its
+`decide_by 2026-10-10` passed, and its own 2026-10-11 addendum closes by
+offering the owner a separate entry on external consumption *on request*. That
+offer is not what this is. **This entry is about a fact that did not exist when
+that addendum was written two days ago: the same gate has begun silencing the
+DESKS, so the blackout has stopped being observable from inside the system.**
+
+### The new measurement
+
+Every scheduled `review.sh` sitting on **2026-10-12 was DEFERRED by the usage
+gate** — `06:37`, and all four `--retry` polls at `09:22`, `12:22`, `15:22`,
+`18:22`. The log line is the same each time: *"sitting DEFERRED — the usage gate
+refused it; a later --retry poll today may hold it once the meter allows."*
+**No Review sat on 2026-10-12 at all.** On 2026-10-13 the `06:37` and `09:22`
+polls were refused the same way; the `12:22` poll is the first to hold since
+2026-10-11, and it is the sitting writing this.
+
+The consequence is not hypothetical and it is not a process complaint. It is
+**12 `OVERDUE` rows**, where the 2026-10-11 FULL sitting had driven the class to
+**0**. Nine of the twelve fell due on 10-11 or 10-12 — the two days the Review
+could not sit. Two of them (`so10`, `lg13`) turned out to be **finished work
+whose only defect was a missing stamp**, carrying delivered designs and a
+cleared pre-registered null since 2026-09-30; they sat broken purely because
+nobody was allowed to look. Four more could only be **re-dated**, because they
+were dated onto a builder that cannot start.
+
+### Beside it, per `D30`'s standing default: the streak and the perishable price
+
+| | 2026-10-03 (`D40`) | 2026-10-11 (addendum) | **2026-10-13 (this desk)** |
+|---|---|---|---|
+| consecutive dark slots | 51 | 71 | **119** |
+| hours since last builder `rc=0` | 51.8 | 71.6 | **119.6** |
+| `week:all models` | 82 % | 89 % | **68 %** (new week) |
+| NOT THIS PROJECT | 73 % | 78 % | **78 %** (55 of 70) |
+| builder's own share | 20 % | 11 % | **11 %** (8 of 70) |
+| desks' own share | — | 10 % | **10 %** (7 of 70) |
+| Kaggle free / drawn, current week | 30.0 / 1.07 (W39) | 30.0 / 1.97 (W40) | **30.0 / 0.000 (W41)** |
+
+Counted off `/data/jack-logs/ladder.log` and `/data/jack-logs/review.log` by this
+desk this sitting, not inherited from any loop counter. The last builder `rc=0`
+was **2026-10-08T16:31Z**. Every slot since has printed `PACING … skipping,
+budget held for later in the week` with `0 failed slots` — the builder is not
+broken and has not refused.
+
+**The perishable price: `2026-W41` holds 30.0 free Kaggle GPU-hours with 0.000
+drawn. All 30.0 expire Saturday 2026-10-17 — four days.** `2026-W40` already
+expired Saturday 2026-10-10 having drawn 1.971 of 30.0. This is the **fifth
+consecutive week** the quota has expired substantially unbought (W37 2.22,
+W38 0.92, W39 1.07, W40 1.97 of ~30 each). Said honestly because it is the
+strongest argument against urgency, exactly as `D40` said it: **those hours
+would very likely have expired anyway** — the standing `T1.08` prohibition
+forbids the only buyer the board has recently had, and `run next` has reported
+**0 fresh** specs for days. The hours are not the argument. The argument is that
+nothing can *decide* whether to buy them while no organ is allowed to sit.
+
+### Why this is a question and not a status report
+
+The pace line is a pure function of the clock (`PACE_FLOOR` 25 rising to
+`PACE_CAP` 90, 0.3869 pts/h, zero variance) applied to a **shared** meter. The
+desks consume 10 % of that meter. They are also the only organs that can observe
+a blackout, price it, and put it in front of the owner — `lib_usage.sh:155`
+already records in its own comments that *"`usage_gate` and `pace_gate` both read
+`week:all models`"*, and the `PACING` line already **computes and prints** this
+project's own attributed share before declining to gate on it. A gate that
+silences the reporter during the event the reporter exists to report is a
+different defect from a gate that paces a producer, and it is the one this entry
+asks about. `D30`'s default binds this desk to **report only**: the pace line,
+`PACE_FLOOR`, `PACE_CAP` and the 90 % hard stop are exactly as they were this
+morning and this desk has touched none of them.
+
+**THE RECOMMENDATION: (i) RESERVE A REPORTING FLOOR.** Exempt the desk organs
+(`review.sh`, `overseer.sh`) from the PACE LINE only, leaving them bound by the
+90 % `week:all models` HARD STOP exactly as today. The desks are 10 % of the
+pool and bounded by their own cadences, so the cost is small and capped; the
+builder's pace line, the floor, the cap and the hard stop all stay byte-unmoved,
+so this does not pre-empt `D40` in either direction. The system keeps the ability
+to see and report its own blackout, which is the one capability whose loss
+cannot be reported by anything else.
+
+### `decisions.py` will flag this `CONDUCT-DESK`. Here is why it is not, answered rather than left to look like self-approval
+
+The flag reads *"desk-executable, not the owner's — execute it, report it, do
+not ask,"* and it is right to raise it: the `D45` withdrawn on 2026-10-11 was
+exactly that error — this desk asking permission to tidy a steering page it is
+required to maintain. **The distinction is not the class label, it is what the
+act would allocate.** Tidying `ladder_prompt.md` spends nothing and touches
+nobody; exempting an organ from `week:all models` re-allocates a **shared
+account the owner holds with four paying tenants** (`company-lakeside`,
+`sportsstock`, `bergen`, `kayakco`), and it does so in favour of the very desk
+proposing it. Two standing defaults already forbid this desk from doing it
+unilaterally: `D30` binds it to **report only**, and `D40` resolved to **(v)
+GATE NOTHING, RELAX NOTHING**. An entry that executed through those by
+re-reading its own class label would be a desk overturning two resolved rulings
+to award itself budget. So the class stays `conduct` — the subject genuinely is
+how the organs work rather than what Jack must become — and the ask stays the
+owner's. If the owner judges the flag correct and this reserved floor is in fact
+the desk's to set, say so and it will be executed and reported, not re-asked.
+
+DECIDE: D46
+  class:     conduct
+  blocks:    no spec id. It blocks the project's ability to OBSERVE itself during
+             a blackout, which is why it has no spec: the failure deletes the
+             evidence of itself. Concretely it has already cost the 2026-10-12
+             sitting in full and 12 OVERDUE rows, two of which were finished work
+             waiting only on a stamp. Perishable in two ways: every further dark
+             day costs roughly another six broken promises on the current pile,
+             and 30.0 free Kaggle hours expire Saturday 2026-10-17 with nothing
+             allowed to sit and rule on whether to spend them.
+  default:   (ii) EXEMPT NOTHING — THE PACE LINE APPLIES TO EVERY ORGAN EQUALLY,
+             INCLUDING THE DESKS. Nothing is reserved, nothing is relaxed, and
+             during a tenant-driven blackout this project continues to lose its
+             own reporting alongside its production. MONOTONE — it moves no
+             threshold, reserves no allocation, edits no gate, spends no GPU-hour
+             and no CPU-second, withdraws no finding and softens no control; it
+             is the state of the system this morning, left exactly as it is.
+             Deliberately NOT the recommendation: granting any organ an exemption
+             from a shared-account gate is a ruling about a resource the owner
+             shares with four paying tenants, and no desk may hand itself more of
+             that on its own authority — least of all the desk that benefits.
+             Its price, stated rather than buried: the next blackout day is again
+             unobserved and unpriced, the OVERDUE class again accrues on days
+             nobody is permitted to look, finished work again sits broken for
+             want of a stamp, and this entry's own measurement becomes impossible
+             to refresh by exactly the mechanism it describes.
+  decide_by: 2026-10-17
+
+---
