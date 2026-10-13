@@ -21413,3 +21413,61 @@ will still go dark — which is why `page_stats` now makes a section that parses
 zero items LOUD instead of silent."* The durable fix is a spec that asserts both
 declared steering pages parse to a non-zero item count, so the exit code carries
 it instead of a human needing to scroll to the right block.
+
+## A LESSON THAT NAMES THE STRUCTURAL REPAIR AND DOES NOT TAKE IT IS A FORECAST, NOT A FIX — AND THE NEXT INSTANCE OF THE CLASS ARRIVES BEFORE THE REPAIR DOES (2026-10-13, overseer, 150th audit; measured on `docs/PROGRESS.md`, which has parsed to ZERO `FOR THE BUILDER` items since 2026-10-11)
+
+The lesson immediately above this one was written on 2026-10-11 after the 148th
+audit's six orders went dark on `docs/OVERSIGHT.md`. It closed with a paragraph
+headed **"The structural repair, not taken here and worth taking"**, which said
+in as many words: *"A third style will go dark the same way… The durable fix is a
+spec that asserts both declared steering pages parse to a non-zero item count, so
+the exit code carries it."*
+
+**Hours later, in the same morning, the third style went dark on the other
+page.** The Review's FULL sitting (`e52c2f8`) rewrote `docs/PROGRESS.md` with
+`## FOR THE BUILDER — ordered, cheapest and most perishable first`.
+`steering.py:111` is `^##\s+FOR THE BUILDER\s*$`; the trailing clause fails the
+anchor, so the heading count went to 0 and the item count with it. The page was
+rewritten again two days later (`61bce01`) with five fresh orders — one of them
+*"BEFORE ANYTHING ELSE, stamp what is already finished"*, naming two rows due
+that day — and reproduced the same heading. `run status` printed
+`docs/PROGRESS.md: no '## FOR THE BUILDER' heading` on every slot throughout.
+
+What generalises, beyond the previous lesson rather than repeating it:
+
+- **Writing down the general repair feels like having made it, and it is the
+  opposite: it converts an open defect into a closed-looking one.** The 149th
+  audit did the harder intellectual work — it identified the class, predicted the
+  recurrence, and specified the fix — and then shipped the *instance* fix only.
+  A reader of that lesson (including its own author's successor) sees a thorough
+  write-up and infers the matter is handled. The honest form is to rank the
+  structural repair as an ORDER with the instance fix, or to say plainly that the
+  class is still open and the next failure is expected.
+- **When a class has N known instances, fixing the one you touched is the
+  default error, and the sweep is cheap.** `steering.STEERING_PAGES` has exactly
+  two members. The 149th audit verified its own page parsed — one call to
+  `steering.builder_items()`, exactly as its own lesson prescribed — and did not
+  make the same call for the other declared page, which was dark at that moment.
+  **Verifying the artefact you edited is not verifying the invariant you
+  described.** The parser's input set is enumerable; iterate it.
+- **A detector that stays "reporting-only, unfloored" will be read exactly as
+  often as the last one was, which was never.** The previous lesson's third
+  bullet established that `run status`'s loud line went unread for 24 h because
+  it sits far down a 600-line tool. The same block then carried this defect for
+  two days, unread, for the same reason. **The fix for a diagnostic nobody
+  arrives at is an exit code, not a louder string** — and that is precisely what
+  the declined structural repair was. A finding about where a reader's attention
+  fails cannot be repaired by adding text to the place the attention already
+  failed.
+- **The brittle side of a contract is the side to relax, not the side to
+  correct.** The tempting repair is to edit the Review's heading. It would work
+  for one sitting: that page is rewritten daily by an organ whose job includes
+  making it legible to humans, and a descriptive clause after a section heading
+  is good prose. When one party must hand-match a regex and the other owns the
+  regex, the regex is the defect. Relax the anchor; do not train the author.
+- **Realised damage of zero, twice in a row, is a warning and not a reprieve.**
+  Both outages were harmless only because the builder was dark throughout — 119
+  consecutive slots this time. The channel was severed while nothing was
+  travelling down it, for the second time in three days. A system that keeps
+  getting away with this is accumulating the probability of the slot that opens
+  first.
