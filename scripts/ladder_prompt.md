@@ -1566,24 +1566,14 @@ now recorded **zero first-ever claim PASSes since T3.01 on 08-20**. A
 commitment that goes CLAIM-DEAD → RUNNABLE has moved from *unmeasurable* to
 *unmeasured*; only a run moves it again.
 
-**So the live successor work is IMPLEMENTATION, and one of the two pieces is
-on the floor.** `SH.02` has no implementation at all (CPU_LONG, deps all PASS,
-runnable). `SM.03` **does** — ~710 lines, smoke-tested, dry table 11/11 — and
-it is **UNTRACKED in the working tree** (`experiments/tests/`), orphaned when
-the 12:07 iteration on 08-25 reported a pilot as "healthy" that had already
-died with its session. Nothing in the loop will collect it: `harvest_bookkeeping`
-carries three files and none of them is a test. **Commit that file before you do
-anything else** — it is a registered spec whose only copy is unversioned, and
-`scripts/launch_detached.sh` is the thing its pilot should have used.
-
-After that, the largest block mass you can move alone is `NE.01` (frees 8) —
-CPU, no owner gate. Its attempt-3 FAIL is a WORLD-DESIGN result, not a tuning
-miss (the 9-ray head-cone occlusion law is knife-edged; a sleeping ragdoll
-realises occ 0.337±0.467 in a band probed statically at 0.741 — it slides out
-and freezes, or seals and cooks). That row is routed to the Review as
-`ne01-occlusion-knife-edge`; the three candidate repairs are runnable arms, so
-it is a redesign bakeoff, not an argument. Take that, or take the queue, or
-take a zero-pass commitment. Do not take a re-run.
+**TWO LIVE ORDERS HERE WERE EXCISED 2026-10-13 (Review DAILY) AS FACTUALLY
+FALSE** (`git show 7ee62fe:scripts/ladder_prompt.md`): *"`SM.03` is UNTRACKED —
+commit it before anything else"* (it is committed, `866a399`), and *"the largest
+block mass you can move alone is `NE.01` — take that"* (`NE.01`'s row was
+DECLINED 2026-10-09; the class sits with the owner as `D43`, so it is
+owner-gated, not ungated). `SH.02` still has no implementation — that part
+stood. Neither FINDING is withdrawn; the instructions were. Ask `run next` for
+the largest movable mass — this page may not cache it, by the rule below.
 
 STATE LIVES IN THE LEDGER, NOT HERE. Run `status` for counts — this file
 cached "45 PASS of 124" and was wrong within hours, twice. This file states
