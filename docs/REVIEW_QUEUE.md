@@ -22490,3 +22490,55 @@ ROUTED: steering-page-is-two-days-from-the-launch-cliff-and-31kb-is-provenance |
     priority changes — this moves non-executable text between two files. `run
     steering` must read the same 10 items, 0 refused, after the move; that is
     the acceptance test.
+
+ROUTED: review-defers-leave-no-labelled-hole | 2026-10-17 | Review DAILY 2026-10-17 (found backfilling three missing trend rows) | OPEN
+    DUE: 2026-10-19 | the BUILDER's execution; a ~4-line shell repair with a
+        ZERO staleness bill (`run stale-cost` priced on a clean tree this
+        sitting: 0 changed paths, 0 standing certificates staled). Dated onto
+        the cheap-builder day this sitting already opened (10-19), and the
+        AMBER that day now carries is disclosed in act 6's commit rather than
+        hidden: that 6/cycle is the DESK's disposal rate and this row's act at
+        the desk is a stamp. **PERISHABLE, and this is the reason for the near
+        date rather than importance:** every deferred day destroys a row that
+        cannot be reconstructed later except by a human reading a log tail —
+        which is exactly how this defect was found, and only because the 10-17
+        sitting happened to be comparing the table against `review.log`. The
+        meter that caused four deferrals in five days moved 100% -> 46% in one
+        hour today with no week reset and no `.usage-resumed` override, so
+        nothing on this box can promise it will not refuse again tomorrow.
+    WAITS-ON: none | no live row's answer changes what is measured here, and no
+        decision gates it: the repair adds a row to a history file and changes
+        no gate, no threshold and no verdict.
+    Should `scripts/review.sh` write a labelled trend row when a sitting is
+    DEFERRED by the usage gate, as it already does when a sitting DIES?
+    THE DEFECT, in mechanism. The 76th audit's B4 fallback exists so that a
+    Review which cannot finish leaves "a labelled hole instead of a silent
+    gap". It is gated on `[ "$RC" -ne 0 ]` and sits at `scripts/review.sh:180`,
+    i.e. AFTER an agent run. The deferral path at `:59-:60` logs
+    `sitting DEFERRED` and then `exit 0`, never reaching it. So a gate-deferred
+    day produces **no trend row and no non-zero exit anywhere in the system.**
+    B4 covers the death of a sitting and not its non-occurrence, and
+    non-occurrence is now the dominant mode: 10-12, 10-14, 10-15 and 10-16 —
+    four of the last five days — had every poll refused.
+    THE MEASURED INSTANCE. `docs/PROGRESS_LOG.md` carried rows for every day
+    from 2026-09-29 to 2026-10-13 and then jumped straight to 2026-10-17.
+    `/data/jack-logs/review.log` holds five `sitting DEFERRED` lines for each
+    of the three missing days. A reader of the trend table alone could not
+    distinguish those days from days the organ was never scheduled to run —
+    and the trend table is the one artefact designed to outlive any single
+    Review. The three rows were backfilled by hand at `ddcd8c6`, labelled as
+    backfills; a hand backfill is not a repair, it is evidence that one is
+    owed, and it only happened because a desk was awake to notice.
+    THE SHAPE, named so the builder does not have to design it. One row per
+    DAY, not per poll — the `06:37` sitting plus four `--retry` polls would
+    otherwise write five rows for one silent day. The existing guard is already
+    the right one and is already used twice in this file's writer: the
+    `grep -q "^| $(date -u +%F) "` idempotence check at `:171` and `:180`. So
+    the deferral branch writes the row only if today has no row yet, and a
+    later retry that actually HOLDS the sitting overwrites nothing because the
+    agent appends its own row under the same date guard. NOT ASKED and NOT
+    ORDERED: nothing about the gate, the 90% stop, the pace line or the retry
+    schedule changes here. This row is about whether the absence is RECORDED.
+    STALENESS BILL: **ZERO certificates.** `scripts/review.sh` is named by no
+    spec's `IMPL_DEPS`; priced with `run stale-cost` on a clean tree at this
+    sitting before routing, per the LG.14 2026-10-01 precedent.
