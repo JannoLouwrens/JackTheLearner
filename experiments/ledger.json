@@ -29057,7 +29057,7 @@
     "T0.05": {
       "amended": [],
       "attempt": null,
-      "commit": "b8bf61f+dirty",
+      "commit": "992d609+dirty",
       "compute_s": null,
       "control_metrics": {
         "checkpoints_checked": 12,
@@ -29069,7 +29069,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 32.39,
+      "duration_s": 50.51,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -29199,20 +29199,56 @@
           ],
           "spec_sha": "7f34b6ee7531e17d",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": null,
+          "commit": "b8bf61f+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "checkpoints_checked": 12,
+            "corrupt": 12,
+            "kills": 12,
+            "max_step_recovered": 0
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 32.39,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "8a511439cda39a26",
+          "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (max_step_recovered) \u2014 a blemish on numbers nothing gated stands on (+33.1s)",
+          "metrics": {
+            "checkpoints_checked": 12,
+            "corrupt": 0,
+            "kills": 12,
+            "max_step_recovered": 2
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 304.6,
+          "preserved_impl": null,
+          "ran_at": "2026-10-17T18:43:38",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "7f34b6ee7531e17d",
+          "status": "PASS"
         }
       ],
       "impl_sha": "8a511439cda39a26",
-      "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (max_step_recovered) \u2014 a blemish on numbers nothing gated stands on (+33.1s)",
+      "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (max_step_recovered) \u2014 a blemish on numbers nothing gated stands on (+31.9s)",
       "metrics": {
         "checkpoints_checked": 12,
         "corrupt": 0,
         "kills": 12,
-        "max_step_recovered": 2
+        "max_step_recovered": 1
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 304.6,
+      "peak_rss_mb": 245.2,
       "preserved_impl": null,
-      "ran_at": "2026-10-17T18:43:38",
+      "ran_at": "2026-10-17T20:43:57",
       "seeds": [
         0
       ],
@@ -29521,8 +29557,8 @@
     },
     "T0.08": {
       "amended": [],
-      "attempt": 13,
-      "commit": "b8bf61f+dirty",
+      "attempt": 14,
+      "commit": "992d609+dirty",
       "compute_s": null,
       "control_metrics": {
         "amendment_survived": false,
@@ -29536,7 +29572,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 1.31,
+      "duration_s": 1.32,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -29765,6 +29801,54 @@
           ],
           "spec_sha": "8c42327a17d13484",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 13,
+          "commit": "b8bf61f+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "amendment_survived": false,
+            "attempt_not_inflated": false,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": false,
+            "own_result_recorded": true,
+            "unseen_entry_survived": true
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 1.31,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "989fa3d1cb6af184",
+          "message": "",
+          "metrics": {
+            "amendment_survived": true,
+            "attempt_not_inflated": true,
+            "blocked_records_no_metrics": true,
+            "default_is_not_run": true,
+            "dependency_blocks": true,
+            "entries_after_concurrency": 19,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": true,
+            "own_result_recorded": true,
+            "roundtrip_ok": true,
+            "survives_concurrent_writers": true,
+            "unseen_entry_survived": true,
+            "void_dep_blocks": true,
+            "void_why_not_a_refutation": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 286.4,
+          "preserved_impl": null,
+          "ran_at": "2026-10-17T18:59:46",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "8c42327a17d13484",
+          "status": "PASS"
         }
       ],
       "impl_sha": "989fa3d1cb6af184",
@@ -29786,9 +29870,9 @@
         "void_why_not_a_refutation": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 286.4,
+      "peak_rss_mb": 226.9,
       "preserved_impl": null,
-      "ran_at": "2026-10-17T18:59:46",
+      "ran_at": "2026-10-17T20:44:32",
       "seeds": [
         0
       ],
