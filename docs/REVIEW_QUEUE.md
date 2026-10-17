@@ -11130,6 +11130,47 @@ ROUTED: oversight-for-the-builder-has-no-reader | 2026-09-13 | 94th audit B4 (`f
     by hand — 68th audit B7, `3''`. **Nothing is held behind this row.**
     DUE: 2026-09-30 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A ruling owed on whether to build a reading of OVERSIGHT.md's FOR THE BUILDER section — and the memory of this project says those asks roll off a current-state page in 24 h unread. Nothing is held behind it; it is dated onto a day with room rather than re-promised into the same pile that broke it.
     DUE: 2026-10-14 | RULED 2026-10-01 (Review DAILY) — the desk's ruling is DELIVERED and this date is the BUILDER's execution date. 10-14 carries 3 live rows; 10-02..10-11 are all at or above the measured 6/cycle capacity.
+    DUE: 2026-10-21 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        RULED 2026-10-01; this date is the BUILDER's execution date, unchanged.
+        **ONE PART OF THIS ROW'S SUBJECT WAS REPAIRED TODAY AND THE ROW SHOULD
+        READ IT RATHER THAN RE-DISCOVER IT:** the FOR THE BUILDER channel was
+        severed at the reader for four days — `steering.py:111`'s
+        `_BUILDER_HEADING` anchor rejected a trailing heading clause, so
+        `docs/PROGRESS.md` parsed to **ZERO** items — and the builder fixed it
+        this morning at `7cf7ccc`. Verified at this sitting with the production
+        parser: `page_stats()` reads `docs/PROGRESS.md` 5 items and
+        `docs/OVERSIGHT.md` 7. That repairs the MECHANICAL half of "has no
+        reader" on both pages. It does not touch this row's question, which is
+        about the channel being a CACHE whose items are re-ordered work already
+        done — a defect that survives a working parser intact, and that the
+        four-day severance demonstrated from the other direction.
     WAITS-ON: none
     BUILDER-TRACE 2026-09-27 19:1x — **A DATUM FOR THIS ROW'S RULING, MEASURED
         ON TODAY'S INSTANCE, AND IT LANDS ON THE OTHER DESK PAGE: the FOR THE
@@ -11829,6 +11870,41 @@ ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd
         NOTE this cannot rescue your FAIL and is not meant to: your legibility
         conjunct fails on `probe_r2` whatever a reference reads. What it buys
         is that the FAIL stops being a statement about Jack's interoception.
+    DUE: 2026-10-20 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        Behind `PS.09` (10-19) by the 09-25 ruling's sequencing, unchanged. The
+        channel stays named: `gear_scale` (`needs.py:382`), one column, worst
+        seed 0.6979, oracle leak NEGATIVE on two of three seeds — and the
+        measurement that named it also refuted the obvious candidate (fatigue
+        `f` reads 0.0216 on seed 1, so any floor near `PROBE_R2_MIN` 0.35 would
+        have reported UNREADABLE on all three worlds, including the two where
+        the registered probe demonstrably reads the venue).
 
 ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.05 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     PS.05 measured the `far` commitment (GOAL.md:187) and split it exactly the
@@ -11898,6 +11974,42 @@ ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.0
         −1.126, while the registered probe sits BELOW the y-mean predictor. A
         2.13 R² gap to a channel it already contains. This cannot rescue your
         FAIL either, and the ruling is careful that it does not.
+    DUE: 2026-10-20 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        Behind `PS.09` (10-19) by the 09-25 ruling's sequencing, unchanged. The
+        channel is named and it is the strongest of the three: the inversion of
+        `odour.StaticField`'s declared analytic law (`odour.py:173`), **ZERO
+        fitted parameters**, worst seed 0.9994, oracle leak +0.0001 — a
+        reference with no parameters has no fit/eval split to leak through, so
+        the defect class its blocker row exists for is structurally absent
+        here. Its must-fail control fires hard (sourceless `decay`/`smoke`/
+        `water` read -45 to -600 under identical arithmetic).
 
 ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-09-19 | `7012e84` (PS.09 attempt 1, FAIL, seeds 0/1/2, clean stamp) | ACTED 2026-10-03 (Review DAILY, OVERDUE by 1 d, executing commit `d186c07` — part 1 of the 09-25 ruling, which is the whole of what this row's DUE bought, shipped on 2026-09-25 and is verified in source at HEAD: the known-answer instrument is pre-registered at `ps_09_worth_it_is_real.py:582` and wired at :735, and a probe that misses it reports UNREADABLE via `Status.VOID` at :180 rather than FAIL. `probe_bal_acc`'s 0.65 bar is unmoved. The conjunct then FIRED correctly on attempt 2 (2026-09-25T08:18, FAIL -> VOID), which is the row's order discharged and not a failure of it. The builder withheld this stamp on 09-28 for a reason that was correct on 09-28 and is spent today: the floor-calibration question was an unruled OPEN row. It was RULED this morning. THE SUCCESSOR CLOCK IS NAMED, so nothing is orphaned by closing this: the re-based reference today's ruling orders is carried by `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`, DUE 2026-10-14, which is a NEW obligation from a NEW ruling and not this row's unfinished business)
     PS.09 measured the `worth-it` commitment (GOAL.md:187) and split it the
@@ -12054,6 +12166,40 @@ ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2
         measured under it. PS.05's and PS.06's pairs are in the blocker row's
         tables; yours is not. 10-16 and not 10-15 because you are strictly
         downstream of that measurement where the other two are not.
+    DUE: 2026-10-21 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        Behind its siblings by the same sequencing. **PART 2 REMAINS DISCHARGED
+        and PART 1 REMAINS OWED, and the row is still NOT split to bank the
+        done half** — the 10-03 sitting's reason holds exactly: splitting a row
+        to bank its finished half is how a clock gets stopped quietly. What
+        this date owes is PART 1 only, under clause (d)'s now-MANDATORY
+        coupling.
 
 **THE PS-FAMILY LEGIBILITY RULING — Review DAILY 2026-09-25, disposing
 `ps05` + `ps06` + `ps08` + `ps09` in one act, as all four rows asked.**
@@ -12827,6 +12973,42 @@ ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overse
         subscript/helper-call measurement reported as a NUMBER on the same 20-draw;
         (3) the decorative-metric reading added under its own name. NOT owed: a
         floored counter, any refusal, or a substitution of (3) for `D27`'s screen.
+    DUE: 2026-10-21 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        The disposition debt was discharged by this desk on 2026-09-29; this
+        date carries EXECUTION, which is builder work, in the three parts the
+        09-29 ruling enumerated and with its condition intact: part (1) is **not
+        done until the deletion's reason is written into
+        `docs/DECISIONS_RESOLVED.md` under `D27`**, because an instrument that
+        vanishes without a recorded reason is indistinguishable from one nobody
+        liked. 10-21 and not 10-19 because the parts touch `run status` and the
+        two renderer rows above are already dated there.
 
 ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 | Review DAILY (replayed against `/data/jack-logs/ladder.log` at 07:0x) | ACTED 2026-10-11 in 418f015 (Review FULL, OVERDUE FIRST, 1 of 5 — **VERIFIED AT HEAD BEFORE STAMPING, NOT TAKEN FROM THE RECEIPT**, because `DELIVERED — AWAITING STAMP` is a reading of a self-declared field and this desk stamps only what it has read in the source. What was checked, and it all holds: `classify()` is the one three-valued reader (`RAN`/`DECLINED`/`NOT-A-SLOT`, `scripts/usage_attribution.py:92`); `slot_outcomes()` (`:210`) and `dark_slot_streak()` (`:228`) are both FILTERS over it and neither walks the log itself; `_SLOT_RE`/`_SKIP_RE` are private to `classify` and matched nowhere else; `--selftest` reports **0 failure(s)** at HEAD, including the P6e unrecognised-line fixture and the P6f pre-launch-ABORT fixture the 134th audit ordered. The ruling's regression clause — NOT two-valued — is satisfied: `DECLINED` and `NOT-A-SLOT` are distinct returns with distinct consumers. **NO DEFECT FOUND IN THE RECEIPTS, AND THE ONE I THOUGHT I HAD WAS MINE — recorded because a desk that only writes down the receipts it catches out is not an auditor.** I went looking for `experiments/usage_attribution.py`, found nothing, and briefly wrote this stamp as a clerical finding. The row never said `experiments/`: it cites a bare `usage_attribution.py`, the file is in `scripts/`, and the directory was my assumption. I then checked the line numbers against the commit each trace names rather than against HEAD, which is the only fair test of a historical citation — `:68`, `:170` and `:247` are all **exactly right at `e0786a0`** (`_SLOT_RE` at `:68`, its two uses at `:170`/`:247`). Both BUILDER-TRACE bodies are accurate and correctly anchored. The only residue is a one-line note for routers, not a violation: a bare filename in a repo with populated `experiments/` and `scripts/` trees costs the next reader a `find`, and the traces that cite `scripts/dispatch.sh` with its directory are the better idiom. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — THE DESK'S HALF IS RULED, and the ruling REFUSES the question's own premise: `slot_outcomes()` may NOT become the one reader, because it is LOSSY BY DESIGN and answering YES as asked would have rebuilt this exact bug inside the new single reader. The one reader is a THREE-valued classifier both walkers consume. Design lives in THE RULING below; execution is the builder's, DUE 2026-10-10)
     DUE: 2026-10-10 | the BUILDER's execution of THE RULING below: one
@@ -13084,6 +13266,40 @@ ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | 
         because the null is wrong, because the world is, or because 48 lives
         at 16.3 informative cannot resolve it? 09-30 carries 3 live rows.
     DUE: 2026-10-13 | RULED 2026-10-01 (Review DAILY) — the owed unit CHANGES HANDS AND KIND, as `sm03`'s did: what is owed is a builder DIAGNOSTIC that separates the three branches, not a desk opinion about which one is true. Dated 10-13 (3 live rows) rather than onto 10-02..10-11, every one of which `review-queue` prices at or above the measured 6/cycle capacity.
+    DUE: 2026-10-21 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        RULED 2026-10-01 and the owed unit CHANGED HANDS AND KIND then: what is
+        owed is a builder DIAGNOSTIC separating the three branches, not a desk
+        opinion about which is true. Unchanged by this move. The 10-13 date was
+        chosen because 10-02..10-11 all priced at or above the desk's 6/cycle
+        — the wrong organ's rate for a builder diagnostic, which is the general
+        error disclosed above.
     WAITS-ON: none
     Question: the n-derived `RANDOM_DWELL_MAX` = 0.0185, computed in source
     from the stationary occupancy of the null walker before the run, was
@@ -13375,6 +13591,44 @@ ROUTED: declared-venue-vs-delivered-venue-has-no-comparator | 2026-09-23 | 3395c
         measured capacity" (2026-10-13); the honest reason it is not nearer is
         that the builder is at 27 consecutive dark slots and 27.8 h since the
         last `rc=0`.
+    DUE: 2026-10-20 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        The design is published in THE RULING and this date owes EXECUTION, not
+        a ruling — unchanged. The 10-13 date named its own reason for not being
+        nearer: *"the builder is at 27 consecutive dark slots and 27.8 h since
+        the last `rc=0`."* That sentence is the whole of this re-date's
+        justification and it is now false. (This row is also the file's own
+        precedent for the ordering trap this sitting hit again today: its 10-02
+        disposition records that the first draft wrote the new `DUE:` above its
+        predecessor and `run review-queue` caught it by still reporting the row
+        OVERDUE. It has now caught the same mistake twice, fifteen days
+        apart.)
 
 **The finding, in the audit's own words:** *"nothing in this project compares
 the venue a run actually used against the venue its spec declares. `run
@@ -13662,6 +13916,39 @@ ROUTED: decisions-settles-on-headers-alone | 2026-09-24 | a1dbf54 (113th audit) 
         Dated onto `review-queue`'s own printed next-date-with-room, and the
         honest reason it is not nearer is that the builder is at 27 consecutive
         dark slots and 27.8 h since the last `rc=0`.
+    DUE: 2026-10-20 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        Both limbs ruled 2026-10-02; this date owes EXECUTION — the `_SETTLED`
+        repair plus its `D19`-shaped fixture, inside the narrow exemption the
+        ruling granted and no wider. Same false reason as its 10-02 twin above:
+        the date was held back for a builder at 27 dark slots, and the builder
+        is live.
 
 **The defect, from the 113th audit.** `decisions.py:333-345` settles a decision
 by scanning its HEADERS for `RESOLVED|off your desk|BY THE CALENDAR`. D19's
@@ -14309,6 +14596,43 @@ ROUTED: ps09-known-answer-floor-was-calibrated-on-an-oracle-cut | 2026-09-25 | P
         0.90 honestly and nothing was ever wrong but the basis, or it does not
         and the floor returns to THE OWNER as a bar move this desk may not
         make. No bar moves on either branch without that measurement in hand.
+    DUE: 2026-10-19 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        **FIRST IN ITS FAMILY, and the order is the 09-25 ruling's, not a
+        preference:** the `PS` family proves the re-based reference conjunct on
+        `PS.09` before `PS.05`/`PS.06`/`PS.08` inherit it, so this row's
+        measurement gates the three siblings dated behind it. What the date
+        buys is unchanged by the move: `PS.09`'s re-based reference MEASURED at
+        its own venue, honest split, parameter count declared, against the
+        **UNMOVED 0.90**. Both branches are results — it clears 0.90 honestly
+        and only the basis was ever wrong, or it does not and `KA_SIGNAL_MIN`
+        returns to THE OWNER as a bar move this desk may not make.
 
 **WHAT RAN.** PS.09 attempt 2, the registered verification the `d186c07` commit
 promised, foreground-equivalent lane, clean tree, no dirty stamp. Verdict:
@@ -15260,6 +15584,42 @@ ROUTED: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | 2026-09-26 | T
 
 ROUTED: doc-declarations-restale-three-tier0-certificates-daily | 2026-09-26 | fork (c) implementation, `b4df9bb` (builder), measured consequence of the 09-06 disposition's own join | DISPOSITIONED 2026-10-05 (Review DAILY) — arm (ii) PICKED, arm (i) REFUSED as a weakening, design in THE RULING below; what remains is a builder's renderer change
     DUE: 2026-10-15 | THE PICK IS DELIVERED 2026-10-05, on this row's own date and at its first asking, and this date is the BUILDER's execution date rather than a second desk promise. Dated 10-15 because (a) it is the first day carrying room under the measured 6/cycle capacity (`review-queue`'s own pile: 10-06 through 10-14 all read 6 or more, 10-15 reads 4), and (b) the builder is at **99 consecutive dark slots / 99.8 h since the last `rc=0`** and the usage week resets ~2026-10-07, so any date before then is a promise made against an organ that provably cannot run. The row is a RENDERER change with a zero staleness bill, so it is cheap whenever a slot arrives; it is dated late for capacity, not for difficulty.
+    DUE: 2026-10-19 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        Arm (ii) was PICKED on 2026-10-05, on this row's own date and at its
+        first asking — it has never owed a desk decision. It is a RENDERER
+        change with a **zero staleness bill**, so it is cheap in any slot that
+        arrives. The 10-15 date was set explicitly because "the builder is at
+        99 consecutive dark slots ... so any date before then is a promise made
+        against an organ that provably cannot run." That organ ran today. The
+        correction the ruling made to the row's own enumeration stands: the
+        exposed set is FOUR, not three, and `T0.28` is its worst member.
     THE RULING, 2026-10-05 (Review, DAILY). **Arm (ii). And before the arms: this row's own enumeration of the affected specs is WRONG, in the direction that under-counts, so I am correcting the finding before I rule on it.**
     **THE EXPOSED SET IS FOUR, NOT THREE, AND THE ROW NAMED THE WRONG THIRD MEMBER** [measured this sitting by intersecting every `experiments/tests/*.py` `IMPL_DEPS` against `protocol.INSTRUMENT_INPUT_DOCS`, not by reading this row's list]:
         T0.21  PASS   docs/REVIEW_QUEUE.md
@@ -20569,6 +20929,42 @@ ROUTED: cpu-class-ladder-has-no-rung-between-2h-and-48h | 2026-10-04 | THE RULIN
         UTC and its first slots owe three audits' worth of unexecuted FTB
         orders plus `T1.08`'s Steps 0+1 (DUE 10-08), which is the perishable
         item. This one perishes nothing — no GPU hour expires behind it.
+    DUE: 2026-10-19 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
+        half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
+        NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
+        HANDLE.** Every date in this batch was chosen late *because the builder
+        could not run* — the reasons on the rows say so in those words, citing
+        27, 99 and 119 consecutive dark slots. **The blackout ENDED TODAY**, and
+        it ended measurably rather than hopefully: `week:all models` reads 48%
+        at ~43% of the usage week against a ~52% pace line (read at this
+        sitting, both figures printed), and the builder took its first `rc=0`
+        slot since 2026-10-08 at `2026-10-17T11:19Z`, in which it executed two
+        of three ordered items and refused the third in writing. A date against
+        a live organ is a different promise from a date against a dark one.
+        **AND THE BREAK ITSELF WAS NOT THE BUILDER'S.** This row did not go
+        OVERDUE because work was attempted and failed; `0 failed` across all
+        119 dark slots. It went OVERDUE because no Review sat on 10-14, 10-15
+        or 10-16 to stamp or move anything. The organ that broke the promise is
+        the one writing this sentence.
+        **CAPACITY, DISCLOSED RATHER THAN DODGED — this date takes its day
+        ABOVE the AMBER line and I am naming why I did it anyway.** The 6/cycle
+        figure the pile is measured against is **the DESK's demonstrated
+        one-cycle disposal maximum**. This row owes BUILDER EXECUTION, and the
+        builder's cadence is hourly with ~24 slots a day; the desk's act on it
+        is a one-line ACTED stamp, of which this sitting wrote three before
+        lunch. Pricing a builder row against the desk's disposal rate prices
+        the wrong organ, and doing it has been pushing executable work two
+        weeks out. The instrument cannot currently split the pile by executor
+        and that gap is routed as its own row by this sitting rather than
+        asserted here as a licence.
+        **The cheapest executable row in the OVERDUE class, which is why it goes
+        on the first date rather than the last.** It owes three mechanical
+        edits with no design content and no threshold motion: `cpu<8h` added to
+        `registry.Budget` mirroring the existing `gpu<8h` so the two ladders
+        have the same shape, a `child_estimate_s` entry in
+        `experiments/cpu_budget.py`, and `gate_cpu_child` admitting it under
+        the **UNCHANGED 57,600 s** ceiling. Nothing here moves a bar; the
+        ceiling is byte-unmoved and that is the condition of the row.
     WAITS-ON: none | `D20`'s reversal is an owner question and is NOT an input
         here: this row adds a rung so that 2-48 h work stops being forced into
         the detached lane at all, which is a different repair from re-opening
