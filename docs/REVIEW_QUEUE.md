@@ -12451,6 +12451,40 @@ ROUTED: lt02-deciding-gate-is-nan-and-nan-reads-as-FAIL | 2026-10-03 | Review DA
         live row against a measured capacity of 6 — chosen off the
         instrument's own pile rather than defaulted onto Sunday, and
         deliberately not 10-13 (9 rows) or 10-14 (5).
+    DUE: 2026-10-23 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        The design answer is this desk's and the question is unchanged: does an
+        UNCOMPUTABLE deciding statistic read as FAIL or as VOID? It is dated
+        with its twin below rather than apart, because the twin DECLARES a
+        `WAITS-ON` on this row and ruling them in one sitting is strictly
+        cheaper than ruling them a week apart — one `LT.02` design in the
+        head, not two.
     WAITS-ON: none | no live row's answer changes what the nan means. It is
         adjacent to the `A4`/`D37` class (a `mandatory` VOID condition that
         has never once been computable) and to this morning's known-answer
@@ -13682,6 +13716,44 @@ ROUTED: d35-none-quota-has-no-satisfying-move | 2026-09-24 | f25f9f6 (D35, the T
     whose `decide_by` is today. Date is `review-queue`'s own next date with room
     under the measured capacity (2026-10-03, 1 live row), taken from the tool.
     DUE: 2026-10-14 | RE-DATED 2026-10-04 (Review FULL, OVERDUE FIRST, act 5).
+    DUE: 2026-10-28 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        The GRAMMAR limb was ANSWERED in the 09-25 sitting; what the date carries
+        is the EXECUTION of limb (i), which this row has never been able to
+        schedule itself — its declared `WAITS-ON` is
+        `t108-pipeline-repair-has-no-design`, DISPOSITIONED 2026-10-04. Dated
+        late in the batch for that reason and not as a judgement on its
+        importance. `D35` is also one of the six entries `decisions` prints as
+        `CONDUCT-DESK` and STALE (due 2026-09-24, 23 days) — desk-executable,
+        to be executed and reported rather than asked. That staleness is this
+        sitting's FOR THE OWNER item on the conduct docket, not a reason to
+        move this row again.
     **The break is real and the input this row named has just arrived, which is
     why this is a re-date and not a stamp.** The 09-26 text said what this date
     owed is *"the EXECUTION of limb (i) ... held by
@@ -15151,6 +15223,45 @@ ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09
         dated behind `T1.08`'s Steps 0+1 (10-08) and the cost-ladder rung
         (10-15) deliberately, because both of those have expiring hours or
         foreclosed specs behind them and this has neither.
+    DUE: 2026-10-27 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        What this owes is a Review design call on the LT rig's panel trap
+        (`PG.4` construction), and the finding behind it is sharp enough to
+        restate: `icm_fixates` read 0.0 on all three seeds against a 0.66
+        floor, and the ICM control — whose registered contract says it MUST
+        fixate — read `icm_dwell` 0.043 +/- 0.058 against a random ruler of
+        0.013, i.e. **the control is indistinguishable from chance, so the
+        venue has no demonstrated true positive.** The VOID is correct and the
+        question is what construction gives the trap a control that can fire.
+        Dated with `lt02`'s pair already on 10-23: three `LT`-rig design calls
+        in one week is this desk's realistic ceiling, and stacking the third
+        onto the first two is how the 10-23 date breaks.
     WAITS-ON: none | the finding is about the LT rig's own panel trap (PG.4
         construction), not about W0's depth — no live row's answer changes
         what these three seeds measured, and LT.04 stays blocked behind an
@@ -16058,6 +16169,48 @@ ROUTED: t013-latently-red-28-disarmed-keys | 2026-09-26 | `f096f29` (the three-r
         ruling. `WAITS-ON: none` | nothing else's answer changes what these 28
         keys measure; the repair is per-spec and can start the moment the desk
         rules on how a disarmed key is disposed.
+    DUE: 2026-10-23 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        **RANK 1 of this batch, and the rank is earned by a measured fact rather
+        than importance-in-the-abstract: it is the only row here holding another
+        spec's certificate hostage.** `T0.18` declares `depends_on: [T0.08,
+        T0.13]`, `T0.13` is a live FAIL, so a re-run of `T0.18` records BLOCKED
+        and never reaches its own `_check` — the `t018` row cannot be BOUGHT
+        until this one is discharged, however promptly it is ruled. `T0.13`
+        sits at 109 gates with 28 disarmed keys against a certificate last
+        bought at 90. The 10-05 sitting's reason for not doing it in one
+        sitting stands and is not being re-litigated: it is a per-key
+        ADJUDICATION across five specs. **SECOND re-date; there was no break
+        before today, so no stop-rule is engaged and none is being dodged —
+        and I am arming one now rather than leaving the next desk to guess: if
+        2026-10-23 breaks, this row is reported to the owner as a blocked
+        certificate chain, not re-dated a third time.**
 
 **WHAT HAPPENED, and the re-buy was owed rather than chosen.** `T0.13`'s last
 run is **2026-09-02T23:11:49** at **90 gates scanned, `disarmed_conjunct_keys`
@@ -17661,6 +17814,40 @@ ROUTED: lt02-c2-passed-on-the-epsilon-not-on-a-measurement | 2026-09-27 | `LT.02
         because `REWARD_RATIO_MIN` 2.0 is a registered bar and the `1^13` rule
         ("wanting to move a bar to make one of these pass — stop and route it
         back") is exactly this row.
+    DUE: 2026-10-23 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        Dated onto its twin's date deliberately, which is what the 10-06 sitting
+        also did and for the same reason: this row's declared
+        `WAITS-ON: lt02-deciding-gate-is-nan-and-nan-reads-as-FAIL` means a
+        date ahead of that row's is a promise that cannot be kept, and a date
+        behind it wastes the shared context. Both are `LT.02` conjunct design
+        and they are ruled in one sitting or not at all.
     WAITS-ON: lt02-deciding-gate-is-nan-and-nan-reads-as-FAIL | DECLARED
         2026-10-06 (Review DAILY) so the pile counts these two rows as the ONE
         decision they are. The 09-27 text below is preserved and remains
@@ -17850,6 +18037,42 @@ ROUTED: xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off | 202
         four days PAST the ruling that decides it, with nothing happening in
         between, trades a visible amber flag for an invisible incoherence. The
         flag is the honest cost and this paragraph is where it is paid.
+    DUE: 2026-10-27 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        **DATED BEHIND ITS DECLARED `WAITS-ON`, which this sitting moved.** The
+        row waits on `aggregate-hides-worst-seed`, whose step 2 — the arm (b)
+        pricing decision — was re-dated to 2026-10-26 by act 4 of this sitting
+        with the measured price now in hand. This row asks whether `XL.01`'s
+        claim keeping the per-seed form while its control was pooled off is a
+        mismatch; that is the same per-seed-versus-pooled question arm (b)
+        settles in general, so ruling it first and the general case second
+        would be deciding the general case by accident.
     WAITS-ON: aggregate-hides-worst-seed | that row is OPEN, DUE 2026-09-29 —
         and its parenthetical was FIRST WRITTEN INSIDE THIS FIELD, where
         `review_queue.py` correctly read the whole string as the row id and
@@ -19335,6 +19558,45 @@ ROUTED: parent-llm-is-a-submodule-and-96-percent-of-the-brain | 2026-09-27 | `Un
         not repeating my predecessor's (well-disclosed) jump to an
         under-capacity day. Against a queue at 6.00 arrivals per cycle and
         1.14 disposals, the cheapest thing a new row can do is not crowd one.
+    DUE: 2026-10-29 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        Dated LAST in this batch, and the reason is that it is the most
+        strategic row on the desk rather than the least urgent: `UnifiedBrain`
+        totals 1,767,267,976 parameters of which the Llama submodule is
+        1,711.4M — **96% of "the brain" is a frozen pretrained checkpoint** —
+        and that is the measured form of the LLM-vs-Jack existential question
+        the 2026-08-09 completeness audit found had no test among 136 specs. A
+        row that asks what fraction of Jack is Jack is not disposed in a
+        Tuesday slot between two renderer fixes. It goes on the first date in
+        this batch with nothing else on it, and it is named in this sitting's
+        FOR THE OWNER section so the owner sees it before the desk rules on
+        it.
     WAITS-ON: none | no live row's answer changes what is measured here.
         The nearest neighbour is NOT upstream:
         `personality-is-a-typed-character-sheet-on-the-answer-path` (OPEN, DUE
@@ -19617,6 +19879,41 @@ ROUTED: taskmanager-decompose-documents-a-learned-path-with-no-call-site | 2026-
         latent since before this ladder existed. Against 6.00 arrivals per cycle
         and 1.14 disposals, a row with no clock that crowds a day is a row that
         breaks somebody else's promise.
+    DUE: 2026-10-25 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        Paired with `t111` above, and the pairing is the point rather than
+        calendar tidiness: both rows are the SAME defect class — a documented
+        learned path with no caller — measured in two different modules
+        (`train_flow_matching_step` there, the idle/decompose path here, where
+        `act_with_mood(..., is_idle=True)` falls back to `self.brain(state)`
+        and nothing scripts his free time). Ruling them in one sitting is the
+        only way the class gets one answer instead of two.
     WAITS-ON: none | no live row's answer changes what is measured here, and I
         checked the three that touch it. `root-modules-outside-every-staleness-
         bill-are-six-files-not-one` (OPEN) names `TaskManager.py` as one of its
@@ -20609,6 +20906,39 @@ ROUTED: field-watch-rc124-page-is-untrustable-and-then-deleted | 2026-10-02 | Re
         `docs/INTEGRATION_QUEUE.md` in this commit, so nothing perishes on
         2026-10-05); what this date owes is the CLASS, which is a design question
         about sealing and is nobody's emergency.
+    DUE: 2026-10-24 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        The other cheapest row — 47 lines, both halves of the defect working as
+        designed, and one clean question: should a sealed INCOMPLETE page be
+        exempt from the weekly delete? Paired with `t406` above because both
+        came off the same week-9 field page and the same `rc=124` seal, so one
+        sitting reads one incident.
     WAITS-ON: none | declared at routing time under THE ROUTER'S DECLARATION
         adopted in this file's contract today. No live row's answer changes what
         this one asks.
@@ -20655,6 +20985,40 @@ ROUTED: t406-deciding-statistic-read-against-an-uncomputed-floor | 2026-10-02 | 
         FIRST unit is cheap and is not the ruling: re-derive the arithmetic from
         the ledger. Only if it survives does this become a question about a
         standing certificate, which is Part 2 (Sunday) territory.
+    DUE: 2026-10-24 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        One of the two cheapest rows in this batch — 40 lines, a single
+        attributed claim from the week-9 field page, NOT adopted, and the row
+        is explicit that **no threshold moves in either direction**. It is
+        dated early in the batch for that reason: a row whose disposition
+        cannot move a bar is the safest work a tired desk can do, and it has
+        been sitting behind rows ten times its size.
     WAITS-ON: none | declared at routing time under THE ROUTER'S DECLARATION
         adopted in this file's contract today.
     THE CLAIM, attributed and NOT adopted. The week-9 page's §6 heading reads:
@@ -21009,6 +21373,43 @@ ROUTED: t111-certified-loss-has-no-shipped-caller | 2026-10-04 | T1.11 attempt 2
         Steps 0+1 (10-08) because that measurement tells you what the training
         recipe's seed noise actually is, and changing the loss and the recipe
         in the same week makes neither attributable.
+    DUE: 2026-10-25 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        **DEPENDENCY NAMED, because it changes what this date can honestly
+        promise:** `decisions` prints `D41` (armed, due 2026-10-18) as the
+        entry that blocks this row's REPAIR SHAPE, and `D41`'s own default
+        text says the two routed rows *"proceed on their measurement halves
+        only: `T1.11` stays an honest FAIL and is NOT repaired by adding a call
+        site."* So what 10-25 owes is the MEASUREMENT half and the diagnosis,
+        and it owes them whichever way `D41` lands — dated after `D41`'s
+        2026-10-18 clock so the sitting reads the answer rather than
+        pre-empting it.
     WAITS-ON: none | nothing gates the diagnosis; the repair is design work
         that exists now.
     THE FINDING, and it is the second half of the exact defect `T1.11` was
@@ -21089,6 +21490,43 @@ ROUTED: shipped-companion-cannot-move-see-or-report-failure | 2026-10-06 | T6.01
     DUE: 2026-10-15 | review-queue's own "Next date with room under the
         measured capacity" printed 2026-10-15 at routing time — the mechanical
         answer, not a hand-picked date, per the 142nd audit's FTB 2 order.
+    DUE: 2026-10-28 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 7 — the DESK
+        half of a 28-row OVERDUE class). **THESE ROWS BROKE FOR A DIFFERENT
+        REASON FROM THE BUILDER HALF AND THE REASON IS THIS DESK, SO THE DATES
+        ARE SPREAD UNDER CAPACITY RATHER THAN PULLED IN.** What each of them
+        owes is a DESIGN DECISION from the Review — the one kind of debt no
+        builder slot could ever discharge, however many hours the pacer frees.
+        The builder being live again buys these rows nothing, and dating them
+        near on today's good news would be borrowing another organ's recovery
+        to make this desk's backlog look shorter.
+        **THE BREAK, named without a cause outside this room:** no Review sat
+        on 2026-10-14, 10-15 or 10-16. The `06:37` polls were refused by the
+        usage gate and the whole of 10-12 went the same way (`D46`). But the
+        gate is not an excuse this desk gets to keep: the backlog it was
+        refused from clearing is a backlog of promises this desk wrote, at a
+        rate this desk's own instrument has priced at 6/cycle since September.
+        **SO THE DATES ARE DERIVED, NOT CHOSEN:** `review-queue`'s pile is read
+        after this sitting's builder batch, and no date in this batch is taken
+        to or above the measured 6. That is the arithmetic the 09-30 and 10-02
+        sittings said they were doing and then did not — every re-date in those
+        batches cited `next_free_due` and then landed on days that broke
+        together. Spreading to 2/day leaves room for the rows already standing
+        on 10-18 and 10-22, which this batch does not touch.
+        **AND THE HONEST LIMIT, which is this sitting's FOR THE OWNER finding
+        rather than a note:** 77 live rows against a demonstrated 6/cycle is
+        thirteen clean cycles of pure disposal with zero new routing, and the
+        instrument's own `drain` reading prices it at **54 cycles** at the
+        measured NET rate. Spreading dates honestly does not fix that and is
+        not claimed to. It stops the pile; it does not drain it.
+        The largest row in this batch and dated accordingly: three findings with
+        one cause, and the first RUNTIME measurement of `D41`'s drift class
+        (every prior instance was static analysis) — the shipped brain emits a
+        17-wide action vector, cannot move, cannot see, cannot report failure.
+        It is dated after `D41`'s 2026-10-18 clock for the same reason `t111`
+        is: `D41` is the entry that rules on whether the shipped artefact or
+        the certified one is the project's subject, and this row is the
+        strongest evidence on that question. Disposing it before `D41` answers
+        would be this desk ruling on `D41` through a queue row.
     WAITS-ON: none | no QUEUE ROW is a prerequisite (the field's grammar
         names rows only). The soft coupling is to `D41` on the OWNER's desk
         (`decide_by 2026-10-18`), and dating this row three days earlier is
