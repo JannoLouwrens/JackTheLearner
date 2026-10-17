@@ -4455,7 +4455,7 @@ def _check_unbacked_detector() -> None:
     named = {sid: (deps, cost, roots) for sid, deps, cost, roots in got}
     expect = (
         # POSITIVE — the fallen dependency is named, and so is the bill.
-        named.get("UB.CERT")[:2] == (["UB.RED"], "gpu<20min"),
+        named.get("UB.CERT")[:2] == (["UB.RED"], Budget.GPU_SHORT.value),
         # POSITIVE — the freshness half. A dependency in PASS is not enough.
         "UB.STALE" in named and named["UB.STALE"][0] == [_STALE_ID],
         # POSITIVE — the chain bottoms out one hop BELOW what is visible, and
@@ -4463,11 +4463,11 @@ def _check_unbacked_detector() -> None:
         # root-only deriver on the hop; neither conjunct carries the other.
         named.get("UB.DEEP", (None,))[0] == ["UB.MID"],
         named.get("UB.DEEP", (None, None, None))[2]
-        == [("UB.RED", "FAIL", "cpu<1min")],
+        == [("UB.RED", "FAIL", Budget.CPU_FAST.value)],
         # POSITIVE — and a one-hop chain does NOT acquire a deeper root: hop
         # and root are the same spec, said so rather than left to be inferred.
         named.get("UB.CERT", (None, None, None))[2]
-        == [("UB.RED", "FAIL", "cpu<1min")],
+        == [("UB.RED", "FAIL", Budget.CPU_FAST.value)],
         # NEGATIVE — without these the reader could pass by flagging everything.
         "UB.OK" not in named,
         "UB.NOPASS" not in named,
@@ -4521,7 +4521,7 @@ def _check_blast_radius() -> None:
     same graph. `KC` is a standing GPU certificate on `K`; `XC` is one on the
     already-red `X`:
 
-      K -> FAIL   `unbacked == [("KC", ["K"], "gpu<2h", [K FAIL cpu<1min])]` —
+      K -> FAIL   `unbacked == [(KC, [K], gpu<2h, [K FAIL cpu<1min])]` —
                   hop and root are the same spec here, said rather than
                   inferred, and the root's cost class is `K`'s own, not the
                   certificate's; `_check_unbacked_detector` owns the deep
@@ -4585,15 +4585,15 @@ def _check_blast_radius() -> None:
         pass_y["before"] - pass_y["after"] == 1,
         # THE BACKING HALF. A standing certificate falls with its dependency,
         # in the direction of harm, with its cost class attached ...
-        fail_k["unbacked"] == [("KC", ["K"], "gpu<2h",
-                                [("K", "FAIL", "cpu<1min")])],
+        fail_k["unbacked"] == [("KC", ["K"], Budget.GPU.value,
+                                [("K", "FAIL", Budget.CPU_FAST.value)])],
         # ... and a red dependent is NOT counted here as well as in `radius`.
         "L" not in [u[0] for u in fail_k["unbacked"]],
         # The green direction reads the same key as what is already down, and
         # the root carries the LIVE status of the spec that is actually down
         # — `NOT_RUN` here, not the counterfactual's `PASS`.
-        pass_x["unbacked"] == [("XC", ["X"], "gpu<2h",
-                                [("X", "NOT_RUN", "cpu<1min")])],
+        pass_x["unbacked"] == [("XC", ["X"], Budget.GPU.value,
+                                [("X", "NOT_RUN", Budget.CPU_FAST.value)])],
         # And a counterfactual that moves no certificate says so with an empty
         # set rather than by inheriting the previous subject's.
         pass_y["unbacked"] == [],
@@ -5043,9 +5043,9 @@ def _blocked_rows(ranked, dead_flavour, closed, held_map=None) -> list:
         HR.1 = NOT_RUN  frees 3  (blocks 3)  — The voice corpus is honest ...
 
     ranked fifth in the project, in the live repairable section, with nothing
-    beside it — while `coverage` printed, of the same spec, *"cpu<10min
+    beside it — while `coverage` printed, of the same spec, *cpu<10min
     HR.1 <- D19 (decide_by 2026-09-14) … the run IS the fetch the default
-    forbids."* Two instruments, one spec, opposite answers, and the one that
+    forbids.* Two instruments, one spec, opposite answers, and the one that
     advertises is the one that is wrong. It is also the most attractive row on
     the board by construction: `NOT_RUN` + `frees 3` is what a fresh unblock
     looks like. The orientation sentence beside this command reads *"run
