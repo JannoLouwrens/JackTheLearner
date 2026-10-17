@@ -2082,11 +2082,45 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
     a renamed key fails loudly at its next run, which is the intended behaviour
     and must be paid deliberately rather than discovered.
     DUE: 2026-09-29 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A recorder change (`protocol.py:_aggregate`) whose concrete caller was meant to be the UB.10 redesign; that redesign is now itself blocked, so the coupling argued on 09-08 no longer sets the date. Re-dated on its own merits onto an empty day rather than inheriting a blocked row's schedule.
+    DUE: 2026-10-26 | **STEP 1 IS DISCHARGED AT `5b026bd` AND THIS ROW IS NOT
+        STAMPED ACTED, deliberately.** An ACTED here would close the row with
+        STEP 2 — the arm (b) pricing decision — owned by nobody, which is the
+        exact failure the 100th audit's DISPOSITION-ON-A-CLOSED-DECISION
+        reading exists to catch. So the step-1 date is retired as paid and the
+        row is re-dated to carry STEP 2, which is **this desk's, not the
+        builder's**, and which is now ACTIONABLE FOR THE FIRST TIME: the price
+        the 09-30 ruling ordered has come back (LANE A 139 fold-flagged pairs /
+        1 WRONG, `LG.03` only, + 1 PROTECTED; LANE B 17 mean-level gates across
+        13 specs whose committed record admits a violating seed). The 10-14
+        date did not break on the work; it broke because no desk sat between
+        10-14 and today.
+        **WHAT STEP 2 MUST SETTLE FIRST, recorded here so it is not re-derived:
+        the `T2.08` reclassification is in tension with this row's own sweep
+        and the tension favours arm (b).** The builder's COUNT CORRECTED moved
+        `T2.08 coverage_margin` WRONG -> PROTECTED on the grounds that the
+        sibling conjunct `margin_floor = mean - 1.5*std > 0` guarantees every
+        seed's margin positive. This row's FOUR CLASSES block had already
+        answered that in writing: `margin_floor` gates **POSITIVITY, not
+        clearance**, the separate `coverage_margin >= MARGIN_MIN` conjunct is
+        still a bare mean, and its worst admissible seed is 0.027908 against
+        `MARGIN_MIN` 0.05. Both sentences cannot be true. I am NOT ruling it
+        today (DAILY mode; re-examining a passing spec's conjuncts is Part 2,
+        Sunday) and I am NOT touching the audit module's classification — but
+        the pairing is now ON THE ROW, because a reclassification that softens
+        a count is the one direction this project audits hardest, and the
+        softened count is the input to the decision it softens.
+        **THE DATE, named honestly:** 2026-10-26, not the instrument's
+        `next date with room` (2026-10-23) — 10-23 is where this sitting is
+        sending the cheap mechanical rows, and this is a design ruling that
+        needs a sitting's attention rather than a slot in a batch. 10-26
+        carries nothing. ORIGINAL STEP-1 DATE FOLLOWS, PAID.
     DUE: 2026-10-14 | the BUILDER's execution of STEP 1 of THE RULING below —
         arm (c), the static audit, which PRICES arm (b). Step 2 (the recorder
         refusal) returns to this desk with that price in hand and is NOT ordered
         yet. The desk's half is discharged. 2026-10-14 carries 2 live rows
-        against the measured 6.
+        against the measured 6. **PAID 2026-10-17 at `5b026bd` (executed
+        2026-10-01, 13 days early); the date broke on the desk's silence, not
+        on the work.**
     BUILDER-TRACE: 5b026bd | STEP 1 executed 2026-10-01 ~00:1x–00:5x, 13 days
         early (a DUE is a deadline, not a start-gate). `experiments/
         worst_seed_audit.py` + `run worst-seed-audit` + `--selftest`; the
