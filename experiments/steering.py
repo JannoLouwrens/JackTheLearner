@@ -108,7 +108,11 @@ LAUNCH_GROWTH_DAYS = 21         # window over which the growth rate is fitted.
 # discusses its own `FOR THE BUILDER` section in prose three times and none of
 # those may look like a heading. `finditer`, not `search` — a page is allowed
 # more than one such block and dropping the second would be a silent hole.
-_BUILDER_HEADING = re.compile(r"^##\s+FOR THE BUILDER\s*$", re.M)
+# A trailing clause after the phrase is ALLOWED (150th audit FTB 1): the
+# Review wrote `## FOR THE BUILDER — ordered, cheapest and most perishable
+# first` on 2026-10-11 and the old `\s*$` anchor parsed its five orders to
+# ZERO items for days. `\b` keeps `FOR THE BUILDERS` (any suffix word) out.
+_BUILDER_HEADING = re.compile(r"^##\s+FOR THE BUILDER\b.*$", re.M)
 _SECTION_END = re.compile(r"^(##\s|---\s*$)")
 _ITEM = re.compile(r"^(\d{1,2})\.\s+(.*)$")
 # THE 2026-09-30 → 10-05 OUTAGE (140th audit, RANK 1): both desks drifted to

@@ -24,9 +24,9 @@
     "value": 0
   },
   "decisions_default_action_expired": {
-    "at": "2026-09-26",
+    "at": "2026-10-17",
     "note": "`at` dates the KEY, not the break: this class has read >=1 since 2026-09-23, when D33's decide_by passed unanswered \u2014 the 120th audit measured exactly that, and the key was only created on 09-26 (121st audit FINDING 2, second half). D33 is the Review's.",
-    "value": 1
+    "value": 0
   },
   "decisions_firing_diff": {
     "at": "2026-09-26",
@@ -49,10 +49,10 @@
     "value": 0
   },
   "fail_unowned_owned_forms": {
-    "at": "2026-09-30",
+    "at": "2026-10-17",
     "value": {
       "disposed": 1,
-      "queue-row": 31,
+      "queue-row": 33,
       "repaired_by": 1
     }
   },
@@ -61,19 +61,19 @@
     "value": 7
   },
   "gpu_hours_no_verdict": {
-    "at": "2026-09-30",
+    "at": "2026-10-17",
     "value": {
       "D1.0": "33.78 h / 2 attempt(s) / 0 verdict(s)",
       "PILOT": "2.00 h / 2 job(s)",
-      "PROBE": "3.59 h / 4 job(s)",
-      "T1.08": "0.36 h / 1 attempt(s) / 1 verdict(s)",
+      "PROBE": "3.86 h / 5 job(s)",
+      "T1.08": "2.33 h / 4 attempt(s) / 3 verdict(s)",
       "T2.01": "11.16 h / 2 attempt(s) / 2 verdict(s)",
       "T2.05": "1.93 h / 4 attempt(s) / 1 verdict(s)",
       "T2.07": "0.29 h / 1 attempt(s) / 1 verdict(s)",
       "T2.11": "1.07 h / 2 attempt(s) / 1 verdict(s)",
       "T2.15": "0.31 h / 1 attempt(s) / 1 verdict(s)",
       "T4.02": "0.29 h / 2 attempt(s) / 2 verdict(s)",
-      "TOTAL": "49.49 h",
+      "TOTAL": "51.47 h",
       "UB.10": "0.30 h / 1 attempt(s) / 0 verdict(s)",
       "UNATTRIBUTED": "6.32 h / 21 job(s)"
     }
@@ -91,28 +91,27 @@
     "value": 3
   },
   "pass_on_dead_dependency": {
-    "at": "2026-09-26",
+    "at": "2026-10-17",
     "note": "3 -> 5 on 2026-09-26 18:xx, cause READ not reasoned: T0.13 was re-bought to an honest FAIL (28 disarmed conjunct keys, latently red since its 2026-09-02 run at 90 gates and 0 disarmed) and the two new pairs are its dependents, T0.18 <- T0.13 and T0.19 <- T0.13. The floor STAYS at 3 and was NOT raised. The repair is the per-key ruling owed under t013-latently-red-28-disarmed-keys (DUE 2026-10-05); T0.18's own re-buy is owed AND blocked by that same FAIL, so neither pair can be cleared by the builder today.",
-    "value": 5
+    "value": 6
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-30",
-    "value": 32
+    "at": "2026-10-17",
+    "value": -10
   },
   "review_queue_piled_on": {
-    "at": "2026-09-30",
-    "value": 4
+    "at": "2026-10-17",
+    "value": 9
   },
   "review_queue_violation_forms": {
-    "at": "2026-10-01",
+    "at": "2026-10-17",
     "value": {
-      "HOLD-ON-A-RESOLVED-BLOCKER": 8,
-      "OVERDUE": 6
+      "OVERDUE": 28
     }
   },
   "review_queue_violations": {
-    "at": "2026-10-01",
-    "value": 14
+    "at": "2026-10-17",
+    "value": 28
   },
   "unreachable": {
     "at": "2026-09-29",
