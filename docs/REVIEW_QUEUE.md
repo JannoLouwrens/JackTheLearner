@@ -11698,6 +11698,18 @@ ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (
         queue has no earlier room. The unit of delay in this project is the
         desk's sitting, not the machine's second.**
     DUE: 2026-10-12 | RE-DATED 2026-10-01 (Review DAILY, OVERDUE FIRST) — **second slip, and the cause is this desk's, not the builder's.** 09-30 broke because arm (a)'s execution was dated onto the builder and then never written onto the page the builder navigates by: `scripts/ladder_prompt.md` carried `1^14`, `1^15` and `1^16` across those eight days and **not one of them mentions `HR.1`**. The re-date is accompanied by the repair in the same sitting (`1^17` item 2) rather than promised alongside it, which is the only thing that makes a second date different from the first. 10-12 is the first day carrying room under the measured 6/cycle; the unit is ~16 s of CPU and could land in any slot before then.
+    BUILDER-TRACE: 1f5575e | the EXECUTION this row's three re-dates carry was
+        finished 2026-09-23, the same day the disposition was written — arm (a)
+        implemented at a4bae41 and REFUTED on its second pre-registered branch
+        (attempt 3, 13:16:01), arm (c) declared at 9663f23 and executed at
+        1f5575e, FAIL on its third branch (attempt 4, 17:11:38); registry
+        amended at 955b9ef (110th audit). All three disposition arms are SPENT
+        and the two UPDATE blocks below record the numbers. What remains on
+        this row is the DESK's family-fate ruling, not builder work — the
+        2026-10-01 disposition text ("what broke is the EXECUTION of arm (a)")
+        and the 10-13 re-date were written blind to these updates, and
+        PROGRESS.md FTB 2 of 2026-10-12 re-ordered the same spent unit. Traced
+        2026-10-17 (builder) so the instrument can say what the prose could not.
     DUE: 2026-10-22 | RE-DATED 2026-10-13 (Review DAILY, OVERDUE FIRST under D28's armed default). **Third date, and the second slip has a DIFFERENT cause from the first — which is the only thing that makes this re-date honest rather than a repeat.** 09-30 broke because arm (a) was never written onto the builder's page, and that was this desk's fault and was repaired on 10-01. 10-12 did not break that way: `1^22` ITEM 2 (Review 2026-10-09) routes the builder to the DISPOSITIONED rows in `DUE:` order by design, so the unit was reachable. The cause is MEASURED and it is not this row's and not the builder's: **the builder has not produced an iteration since 2026-10-08T16:31Z — 119 consecutive dark slots, every one a PACING skip, 119.6 h since the last `rc=0`** (counted off `/data/jack-logs/ladder.log` this sitting, not inherited). A date that names the builder as the executor is only honest if the builder can run, and for the whole life of the 10-12 promise it could not. The pacer is not malfunctioning — it is gating on `week:all models`, and **78% of this week's shared usage is NOT THIS PROJECT** (builder 8 of 70 points, 11%), so the convergence argument the pace line rests on cannot fire while other tenants hold the meter above it. The new date is therefore derived from the GATE, not from a calendar: the usage week resets **2026-10-19 04:59Z**, which is the first moment the builder has a structural chance, and the date sits past it. The blackout and its perishable price are on the owner's desk this morning as `D46` — this re-date does not wait on that ruling and proceeds either way. The unit remains ~16 s of CPU and could land in any slot. It is the cheapest thing on this list, so it is dated FIRST among the four and not last.
     WAITS-ON: none
 

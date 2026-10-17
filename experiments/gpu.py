@@ -234,6 +234,13 @@ _os.environ["JACK_OUT"] = JACK_OUT
 print("JACK_OUT", JACK_OUT, flush=True)
 print("REPO", _sp.run(["git", "-C", "/tmp/jack", "rev-parse", "--short", "HEAD"],
                       capture_output=True, text=True).stdout.strip(), flush=True)
+# The job certifies its OWN clone: the full sha it actually checked out, in a
+# marker line `submit` compares against the attempt receipt's head — repair (ii)
+# of `gpu-receipt-head-is-push-time-not-kernel-time`. (i) pins the ref, but
+# `build_job(verify=False)`, a hand-passed branch name, and a failed resolve all
+# bypass (i); this line is what makes those cases loud instead of silent.
+print("CLONED_HEAD", _sp.run(["git", "-C", "/tmp/jack", "rev-parse", "HEAD"],
+                             capture_output=True, text=True).stdout.strip(), flush=True)
 """
 
 
@@ -338,9 +345,43 @@ def build_job(body: str, ref: str = "main", verify: bool = True) -> Path:
     """
     if verify:
         assert_ref_is_current(ref)
+        if ref == "main":
+            # Repair (i) of `gpu-receipt-head-is-push-time-not-kernel-time`:
+            # resolve the dispatch HEAD to a full sha and pin THAT, so the
+            # kernel checks out a commit, never a branch. A branch checkout
+            # means "whatever origin/main is at CLONE time", and a push inside
+            # the dispatch-to-clone window puts a wrong commit id on a ledger
+            # row (measured 2026-09-30: attempt head 5eba43e, 5ab1271 pushed
+            # 4m23s later, inside the window). Pinning also makes
+            # `kernel_sha256` vary with the dispatched commit BY DESIGN — the
+            # receipt becomes self-enforcing. A failed resolve falls back to
+            # the branch name and is caught at harvest by the CLONED_HEAD
+            # refusal, repair (ii).
+            p = subprocess.run(["git", "-C", str(Path(__file__).parent.parent),
+                                "rev-parse", "HEAD"],
+                               capture_output=True, text=True)
+            if p.returncode == 0 and p.stdout.strip():
+                ref = p.stdout.strip()
     f = Path(tempfile.mkdtemp(dir="/data")) / "job.py"
     f.write_text(repo_preamble(ref) + "\n" + body)
     return f
+
+
+def cloned_head(stdout: str) -> str:
+    """The HEAD a remote job certified it checked out — the last
+    `CLONED_HEAD <sha>` marker in its stdout. Empty when the kernel predates
+    the marker (pre-2026-10-17 dispatches print only the short `REPO` line),
+    which is UNVERIFIABLE, not a mismatch — refusing it would strand every
+    kernel pushed before the marker existed, the same rule
+    `reattach_code_check` applies to pre-guard receipts."""
+    found = ""
+    for ln in (stdout or "").splitlines():
+        if ln.startswith("CLONED_HEAD "):
+            parts = ln.split(None, 1)
+            tok = parts[1].strip() if len(parts) > 1 else ""
+            if tok and all(c in "0123456789abcdef" for c in tok):
+                found = tok
+    return found
 
 
 @dataclass
@@ -1204,6 +1245,31 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
         budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id,
                       est_hours=est_hours)
         if res.ok:
+            # Repair (ii) of `gpu-receipt-head-is-push-time-not-kernel-time`:
+            # the job certified the HEAD it actually checked out; a row whose
+            # certified head differs from the attempt receipt's head would
+            # attribute the artifact to code that did not run, so it is
+            # REFUSED, not returned ok. Fresh dispatches only: a reattached
+            # kernel certifies its ORIGINAL dispatch head while this attempt
+            # receipt carries today's, and that lane's attribution burden is
+            # already carried by `reattach_code_check` (kernel-body sha,
+            # refuse-or-record). No marker (pre-marker kernel) = unverifiable,
+            # not a mismatch.
+            certified = cloned_head(res.stdout)
+            if not reuse and certified and head and not certified.startswith(head):
+                _record_submission({"phase": "cloned_head_mismatch",
+                                    "ts": time.time(), "attempt_id": attempt_id,
+                                    "backend": backend, "job_id": res.job_id,
+                                    "cloned_head": certified, "head": head}, journal)
+                res.ok = False
+                res.message = (
+                    f"refused at harvest: kernel certified CLONED_HEAD "
+                    f"{certified[:12]} but the attempt receipt names head {head} "
+                    f"— the artifact was computed from code this row would not "
+                    f"name (gpu-receipt-head-is-push-time-not-kernel-time, "
+                    f"repair (ii)). The quota is charged; the row is not written.")
+                res.head = head
+                return res
             res.message = (res.message + f" | attempts: {attempts}") if attempts else res.message
             # Carry the dispatch head out on the result, so a multi-kernel
             # merger never has to (wrongly) re-read HEAD at harvest time.
