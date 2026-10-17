@@ -2082,6 +2082,13 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
     a renamed key fails loudly at its next run, which is the intended behaviour
     and must be paid deliberately rather than discovered.
     DUE: 2026-09-29 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. A recorder change (`protocol.py:_aggregate`) whose concrete caller was meant to be the UB.10 redesign; that redesign is now itself blocked, so the coupling argued on 09-08 no longer sets the date. Re-dated on its own merits onto an empty day rather than inheriting a blocked row's schedule.
+    DUE: 2026-10-14 | the BUILDER's execution of STEP 1 of THE RULING below —
+        arm (c), the static audit, which PRICES arm (b). Step 2 (the recorder
+        refusal) returns to this desk with that price in hand and is NOT ordered
+        yet. The desk's half is discharged. 2026-10-14 carries 2 live rows
+        against the measured 6. **PAID 2026-10-17 at `5b026bd` (executed
+        2026-10-01, 13 days early); the date broke on the desk's silence, not
+        on the work.**
     DUE: 2026-10-26 | **STEP 1 IS DISCHARGED AT `5b026bd` AND THIS ROW IS NOT
         STAMPED ACTED, deliberately.** An ACTED here would close the row with
         STEP 2 — the arm (b) pricing decision — owned by nobody, which is the
@@ -2113,14 +2120,11 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
         `next date with room` (2026-10-23) — 10-23 is where this sitting is
         sending the cheap mechanical rows, and this is a design ruling that
         needs a sitting's attention rather than a slot in a batch. 10-26
-        carries nothing. ORIGINAL STEP-1 DATE FOLLOWS, PAID.
-    DUE: 2026-10-14 | the BUILDER's execution of STEP 1 of THE RULING below —
-        arm (c), the static audit, which PRICES arm (b). Step 2 (the recorder
-        refusal) returns to this desk with that price in hand and is NOT ordered
-        yet. The desk's half is discharged. 2026-10-14 carries 2 live rows
-        against the measured 6. **PAID 2026-10-17 at `5b026bd` (executed
-        2026-10-01, 13 days early); the date broke on the desk's silence, not
-        on the work.**
+        carries nothing. THE ORIGINAL STEP-1 DATE IS ABOVE, MARKED PAID —
+        `DUE:` lines on this file run OLDEST FIRST and the instrument reads the
+        LAST one as current, so a re-date written above its predecessor is not
+        read at all. Verified with `review-queue` after writing: this row reads
+        `DUE 2026-10-26`, not OVERDUE.
     BUILDER-TRACE: 5b026bd | STEP 1 executed 2026-10-01 ~00:1x–00:5x, 13 days
         early (a DUE is a deadline, not a start-gate). `experiments/
         worst_seed_audit.py` + `run worst-seed-audit` + `--selftest`; the
