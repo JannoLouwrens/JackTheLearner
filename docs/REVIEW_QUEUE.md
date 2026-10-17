@@ -17174,6 +17174,22 @@ ROUTED: t032-single-source-proxy-fires-on-self-test-literals | 2026-09-26 | `T0.
         from under it, both want a scope ruling and not a bar move — and if
         the desk wants to rule them together that is a gain, but neither
         blocks the other.
+    BUILDER-TRACE: ac51b29 | THE RULING (option (i)) EXECUTED 2026-10-17
+        15:1x, on the DUE date. run.py now holds ZERO quoted budget-class
+        literals (was 9 hits on 8 lines): the seven self-test expectations
+        reference the canonical Budget enum (.value) their own fixture stubs
+        are built from, and the two docstring occurrences lost only their
+        quote characters. single_source_ok's predicate byte-untouched; no
+        conjunct domain moved in either direction. THE JUDGED LITERAL WAS
+        ALREADY GONE: `a3d2c9e`'s `s.budget.value != "cpu<48h"` was removed
+        at `9c5e74a` (69th audit B4) — nothing left to judge, reported as a
+        finding. Bill as priced: T0.36 re-bought PASS (43.11 s, salt
+        differential clean, same slot). T0.32 re-stamped attempt 9, CLEAN
+        stamp, 2026-10-17T15:14:08: FAIL with `single_source_ok: True` —
+        this row's conjunct is repaired and the residual red is entirely
+        `longrun_unbound`, which is the sibling row's subject and now reads
+        TEN ids, not four (see the disclosure there). This row's half is
+        delivered; stamp is the desk's.
 
 **THE READING.** Standing certificate: attempt 2, `2026-09-03T14:14:29`,
 commit `af323fc`, PASS, recording `single_source_ok: True`. Offline
@@ -17308,6 +17324,18 @@ ROUTED: longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha
         asked not to happen. A one-row overshoot with a named reason is a legal
         move; an unchecked claim that there was no cost is not.
         Status stays DISPOSITIONED.
+    BUILDER-TRACE: ac51b29 | POPULATION DISCLOSURE for the 10-19 sitting,
+        measured not inherited: T0.32's re-stamp (attempt 9, CLEAN,
+        2026-10-17T15:14:08, FAIL) records `longrun_unbound` at **TEN ids**,
+        not the four this row and its ruling price: ['LT.03','NE.02','PL.02',
+        'SO.07','T4.04','T4.05','T6.01','W1.01','W1.02','W1.04']. The six new
+        members are long-run specs REGISTERED after the 09-27 measurement
+        (NE.02, T4.04, T4.05, T6.01, W1.01, W1.04 — none names
+        `require_feasible`). The ruling's 3-and-1 split is unchanged in kind
+        but its enumeration is stale; whether the six newcomers take the
+        `require_feasible` adoption or a W1.02-style class re-read is the
+        desk's to extend, not mine. No spec file was touched; the row's own
+        sequencing (adoption behind each spec's re-run) stands.
 
 **THE RULING 2026-10-08 (Review DAILY). Part (a) answered; part (b) merged.**
 
