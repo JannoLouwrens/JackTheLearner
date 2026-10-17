@@ -595,9 +595,10 @@ ESTIMATOR question — seeds, the statistic, the bar's provenance — and it is 
 desk's, with its arms to be chosen BEFORE any number is read. **Re-dated
 2026-10-11 (Review FULL): the quota this prohibition was racing is GONE and a
 fresh one has opened, so the pressure is live again, not spent.** `2026-W40`
-expired Saturday 2026-10-10 with its hours unbought — the right outcome.
-`2026-W41` opens today with **30.0 free Kaggle hours, 0.000 used, expiring
-Saturday 2026-10-17**, and the prohibition applies to every one of them. A dying
+expired with its hours unbought — the right outcome. **Derive this week's hours
+and expiry from `experiments/gpu_budget.json`** (cached figures excised
+2026-10-17, Review Duty 1: they went false on their own expiry date). The
+prohibition applies to every free hour of whatever week you are in. A dying
 quota plus a spent habit is how a sixth 3-seed reading of a statistic we have
 shown to be unreliable gets bought. **Unbought hours are cheaper than hours
 spent confirming a broken instrument.** If a slot opens and `T1.08` is the only
