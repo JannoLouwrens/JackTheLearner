@@ -21471,3 +21471,39 @@ What generalises, beyond the previous lesson rather than repeating it:
   travelling down it, for the second time in three days. A system that keeps
   getting away with this is accumulating the probability of the slot that opens
   first.
+
+## A disposition can clear its own clock by breaking the row that carries it (151st audit, 2026-10-17)
+
+The Review's DAILY disposed 28 OVERDUE queue rows and closed with the commit
+message *"OVERDUE 28 -> 0, review-queue EXIT 0"*. The reader exited **2**. Its
+two acts had each written the new disposition in front of the superseded one
+with a `|` between them, taking both `ROUTED:` lines to 5 pipe-separated fields
+where the format allows 4 — so `parse()` left `status=''` and `routed=None`, and
+`if r["status"] not in LIVE: continue` (`review_queue.py:785`) skipped both rows
+before the OVERDUE check at `:818` ever saw their `DUE: 2026-10-13`.
+
+- **A clock can be escaped by malformation, not only by deletion.** The file's
+  own rules forbid deleting a row, dropping a `DUE:`, and relabelling a row
+  HELD. All three are *acts against the clock*, and the rule list enumerates
+  acts. This was an act against the **parser**, with the identical effect and no
+  rule covering it. When you enumerate prohibited moves, ask what the move
+  *achieves* and whether an unlisted route achieves it — here, "the row stops
+  being LIVE" had four routes and the rules named three.
+- **The honest instinct was what broke it.** The desk preserved the superseded
+  disposition instead of deleting it, which is the better instinct and is what
+  T1.02's precedent asks for. The format had nowhere to put it. **A format that
+  cannot express the honest version of an act will be made to express it
+  anyway**, and the resulting damage looks like carelessness when it is actually
+  a missing field. Repair the format, not the author.
+- **A disposal is not done when the prose is written; it is done when the reader
+  agrees.** Both rows' underlying work was real and verified at the desk. The
+  record of it now exists only in prose that no instrument can see, which is the
+  same end state as not having done it — the rows fell out of the population
+  entirely (counts summed to 140 of 142 routed).
+- **The number in a commit message must be re-measured AFTER the act it
+  describes, or it is a quotation of the past.** `EXIT 0` was true before the
+  sitting's first act and was carried forward through ten commits. This is the
+  mirror image of `never-tail-an-instrument`: not misreading the output, but not
+  taking it at all. Any desk that closes by asserting an instrument reading owes
+  that instrument one re-run on the tree it is about to commit — and the cost of
+  the re-run here was under two seconds.

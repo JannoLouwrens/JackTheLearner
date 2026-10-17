@@ -10809,3 +10809,192 @@ recent buyer and `run next` reads 0 fresh. The hours are not the argument.
 Being unable to *decide* whether to buy them is.
 
 ---
+
+## D47 — The Review's queue is not drainable at the Review's own measured rate: 77 live rows against a demonstrated 6/cycle, and `review-queue` prices the drain at 54 cycles. Five consecutive sittings have responded by re-dating. (2026-10-17, Review, DAILY)
+
+class: conduct
+
+**WHY THIS IS AN ASK AND NOT A STATUS LINE.** Every number below has been on a
+desk page before. What has never been put to you is the consequence: **this desk
+has no honest move left that it has not already used up.** The three permitted
+repairs are ACT, DECLINE and RE-DATE. Acting is capacity-bound. Re-dating is
+what the last five sittings did, and the queue's own instrument now reports
+`DATED ONTO A FULL DAY` **16 live rows** deep. That leaves DECLINE, at a scale
+nobody has authorised — and declining measured findings in bulk to make a
+number go down is the single act most likely to look like progress while being
+its opposite.
+
+### The measurement, read this sitting
+
+- **77 live rows**; 39 OPEN, 35 DISPOSITIONED, 0 HELD, of 142 ever routed.
+- **Demonstrated disposal capacity: 6 rows in one cycle.** That is a measured
+  one-cycle MAXIMUM, not a rate — the honest trailing figure is lower.
+- **`review-queue`'s own `drain` reading: 54 cycles** to clear the live set at
+  the measured NET rate. Thirteen cycles of *pure* disposal with zero new
+  routing is the floor; 54 is what arrivals do to it.
+- **Arrivals 2/cycle against disposals 1.71/cycle**, trailing 7 days, measured
+  against the file's git history rather than its declared dates.
+- **Oldest live row: 48 days.** The row this sitting stamped ACTED had been live
+  **54 days** and its work had been finished for **12 of them**.
+- **This sitting's own disposal of 28 OVERDUE rows was 4 ACTED, 1 DECLINED, 23
+  RE-DATED.** Four of the five real disposals were stamps on work the builder
+  had already finished. **On design debt actually owed by this desk, the sitting
+  closed one row.**
+
+### What I am NOT asking
+
+Not for the queue to be deleted, capped, or garbage-collected by age — an old
+row is not a wrong row, and every one of the 77 carries a measured finding.
+Not for the 6/cycle figure to be raised by decree; it is measured, and a desk
+that promises more than it has ever delivered is how this pile was built. Not
+for relief from the `OVERDUE FIRST` rule, which is the only reason the class
+got disposed at all today.
+
+### THE RECOMMENDATION
+
+> **(ii) SPLIT THE DESK'S DOCKET FROM THE BUILDER'S, AND MEASURE THEM
+> SEPARATELY.** The 6/cycle capacity is the REVIEW's disposal rate, and roughly
+> half the live rows owe BUILDER EXECUTION, on which the desk's only act is a
+> one-line `ACTED` stamp — this sitting wrote three in minutes. Pricing an
+> executable row against the desk's design-ruling rate is what has been pushing
+> finished work two weeks into the future and what left four completed units
+> sitting unstamped for up to twelve days. Give `review-queue` an executor
+> field, report two piles against two capacities, and let the builder's rows be
+> dated against the builder's hourly cadence. **This is monotone: it moves no
+> threshold, declines no finding, deletes no row, and makes the desk's true
+> backlog LARGER and more visible, not smaller — the design-debt pile stops
+> being camouflaged by executable rows that only need a signature.**
+
+My reason for preferring it over the obvious alternative — **(i) declare a
+bulk DECLINE window** — is that (i) buys a smaller number by discarding
+measured findings, and this desk has already been convicted once of mistaking
+paper movement for progress. (ii) buys a TRUER number. It will likely reveal
+that the design-ruling backlog is worse than 77 rows suggested, and that is the
+outcome I want from it.
+
+**ARMED BY THE OVERSEER, 2026-10-17 ~12:5x UTC (151st audit), AND NOTHING ELSE
+ABOUT THIS ENTRY WAS TOUCHED.** The Review wrote every word above and below and
+then died `rc=124` at 12:42 holding this entry **uncommitted**; I inherited it
+per the 74th audit's discipline (a max-turns death costs the PAGE, not the
+WORK). It arrived declaring `class`, `default` and `decide_by` in prose bullets,
+which `decisions --check` read as **`UNDECLARED` — NEAR-MISS**, breaking the
+`BASELINE_UNDECLARED` 0 ratchet: *"an arming that does not parse is worse than
+none: it reads as armed to a human and as inert to the clock."* The instrument
+named its own repair — *"rewrite the bullets in that idiom"* — and that is the
+only edit I made. **The class, the default's text and the date below are the
+Review's, verbatim and unchanged.** I did not re-word the recommendation, pick
+an option, or answer the `CONDUCT-DESK` flag this entry will now draw; that
+flag is the Review's to answer in writing the way it answered `D46`'s, and it
+is named in `docs/OVERSIGHT.md` §6 rather than resolved here.
+
+DECIDE: D47
+  class:     conduct
+  blocks:    no spec id. It blocks the desk's own ability to tell its design
+             backlog from its countersigning backlog: 74 live rows against a
+             demonstrated 6/cycle, `drain` 47 cycles, and `DATED ONTO A FULL
+             DAY` 16 rows deep. Not perishable in GPU-hours; perishable in that
+             every cycle spent re-dating adds rows to the pile it is measuring.
+  default:   (iii) HOLD — NO SPLIT IS BUILT AND THE DESK KEEPS RE-DATING.
+             `review-queue` goes on reporting one pile against one capacity, the
+             Review goes on disposing ~6 rows a cycle with most of them re-dates,
+             and the drain reading goes on printing 54 cycles. MONOTONE — it moves
+             no threshold, declines no finding, deletes no row and spends nothing.
+             Deliberately NOT the recommendation: changing how this desk's own
+             workload is measured, in the direction that flatters the desk's
+             near-term dates, is not a thing a desk should grant itself by letting
+             a clock run out. Its price, stated rather than buried: executable work
+             keeps being dated against the wrong organ's rate, finished units keep
+             waiting days for a signature, and the one number that would tell you
+             whether the Review is capable of its own design docket stays mixed in
+             with work it only has to countersign.
+  decide_by: 2026-10-24
+
+---
+
+## D43 — RESOLVED BY ARMED DEFAULT, fired 2026-10-17 ~12:5x UTC by the OVERSEER (151st audit), on the first legal day. Off your desk; the window remains yours to declare at any time.
+
+**THE OWNER DID NOT RULE BY 2026-10-16, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(iii) HOLD — NO WINDOW IS DECLARED AND THE SEVEN STAY DECLINED.** The
+entry's own quoted recommendation — *"open a NARROW, SINGLE-PURPOSE world-edit
+window and let the 10-11 split decide which of the seven enter it"* — was **NOT**
+taken. No window exists. No terminal row was re-opened. Nothing was withdrawn.
+
+**WHY THIS WAS MINE TO FIRE.** `D43` is `class: goal` and armed; `decisions
+--check` listed it this audit as the single `OVERDUE — DEFAULT IS DUE TO FIRE`
+entry, and firing is the day after `decide_by`. The overseer firing an armed
+default on the first legal day is the established idiom — `D27` (107th), `D29`
+(109th), `D32`/`D34` (115th), `D31` (119th), `D36` (123rd), `D37` (140th). The
+2026-10-17 Review could have ruled it and did not: it sat at 12:22, disposed 28
+OVERDUE rows, and died `rc=124` at 12:42 without reaching the register.
+
+**THIS FIRING ORDERS NO WORK AND CHANGES NO BEHAVIOUR.** Read from the files
+this audit, not inherited from the entry:
+
+```
+the seven, via review_queue.parse()   ne01-occlusion-knife-edge          DECLINED
+                                      water-apply-phantom-force          DECLINED
+                                      sh02-null-saturation               DECLINED
+                                      w1-cold-is-not-lethal-at-night     DECLINED
+                                      w2-needs-have-no-single-k          DECLINED
+                                      hr5-fixture-refuted                DECLINED
+                                      ba03-vestibular-...-one-kick       DECLINED
+w1-world-edit-window                  DECLINED 2026-09-28 — no window to re-open
+HELD rows in docs/REVIEW_QUEUE.md     0 — nothing is waiting on this entry
+playground.py                         last touched 761121a, 2026-08-19 — the
+                                      shared world was never edited
+the split row                         seven-rows-are-held-behind-a-refused-
+                                      window-and-a-moot-decision = OPEN,
+                                      DUE 2026-10-25, outside the hold, alive
+```
+
+It is **MONOTONE**: it moves no threshold, declares no window, re-opens no
+terminal row, unparks nothing, spends no GPU-hour, stales no certificate,
+softens no control and withdraws no finding. It picks only among
+already-permitted actions — it is, exactly, the status quo.
+
+**THE PRICE, RESTATED BECAUSE A FIRING MAY NOT QUIETLY DROP IT.** In the entry's
+own words: *"the world-touching subset stays unrepairable for as long as the
+hold lasts, the `W0 is too shallow` finding keeps being true and keeps being
+unactionable, and the seven rows' substance survives only for as long as
+somebody keeps choosing to read closed rows."* Three things sharpen it since the
+entry was written:
+
+1. **The split row is still OPEN and has been re-dated to 2026-10-25** — the
+   `DUE: 2026-10-11` the entry relied on broke, so the one organ that was going
+   to separate the genuinely world-touching rows from the spec-local ones has
+   not sat. The entry's own hazard sentence — *"If that sitting does not happen,
+   seven real measurements are closed and nobody is looking at them"* — is now
+   the live state, not the risk.
+2. **The economic argument the entry quoted is understated by 67%.** It prices
+   the window at *"21 `PASS` certificates"*; `run stale-cost playground.py`
+   measures **35 standing PASS certificates — 2.88 CPU-hours over 32 and 1.52
+   GPU-hours over 3**, four builder slots of CPU re-buy with `VO.02` alone at
+   3195.8 s, longer than the 3000 s slot that would owe it. The correction is
+   not mine: the queue found it and `world-edit-window-price-is-quoted-at-21-and-
+   measures-35` is ACTED. It cuts **for** the recommendation (paying 35 once
+   beats paying it seven times) and it means the bill in the entry is the wrong
+   number to decide on.
+3. **`D33`, whose stop-rule produced this class, is `CONDUCT-DESK` and STALE by
+   24 days.** The upstream that made the holds dead is itself undischarged.
+
+**WHAT REVERSES THIS.** Say the window may exist — in one sentence, at any time.
+Authorship is already settled (`D22`, with the Review), the split row is alive
+and dated 2026-10-25, and nothing in this firing has to be undone first: declare
+it and the split puts rows into it. Equally, ruling that the window may **never**
+exist is a real answer and closes the class honestly rather than by silence; the
+seven rows' findings are then permanently a matter of record only, which the
+owner should want said out loud rather than inferred from a passed date.
+
+**TRANSCRIPTION OWED, AND NAMED SO IT IS NOT LOST.** `docs/DECISIONS_RESOLVED.md`
+is outside the overseer's write permissions (SYSTEM.md `D13`), so this firing has
+no record there yet. Measured after the append rather than predicted: the tool
+reports **`firing transcriptions: 31 of 32 ... UNTRANSCRIBED: D43 (invisible to
+the RECORD channel and to firing_coverage until transcribed)`** and **`EXIT 0`,
+with the `firing-diff` ratchet still `0/0`** — so this is a visible reported
+debt, not a ratchet break, and it will not fail anybody's gate. That makes it
+*easier* to forget, which is why it is ordered as **FOR THE BUILDER item 2** in
+`docs/OVERSIGHT.md`. The precedent is `D36`/`D37`, transcribed at `5bc466f`
+nine days and one day late respectively — which is exactly why it is being named
+here on the day it is created rather than left for an instrument to discover.
+
+---
