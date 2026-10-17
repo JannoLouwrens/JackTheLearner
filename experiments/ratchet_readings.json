@@ -92,7 +92,7 @@
   },
   "pass_on_dead_dependency": {
     "at": "2026-10-17",
-    "note": "3 -> 5 on 2026-09-26 18:xx, cause READ not reasoned: T0.13 was re-bought to an honest FAIL (28 disarmed conjunct keys, latently red since its 2026-09-02 run at 90 gates and 0 disarmed) and the two new pairs are its dependents, T0.18 <- T0.13 and T0.19 <- T0.13. The floor STAYS at 3 and was NOT raised. The repair is the per-key ruling owed under t013-latently-red-28-disarmed-keys (DUE 2026-10-05); T0.18's own re-buy is owed AND blocked by that same FAIL, so neither pair can be cleared by the builder today.",
+    "note": "3 -> 5 on 2026-09-26 18:xx, cause READ not reasoned: T0.13 was re-bought to an honest FAIL (28 disarmed conjunct keys, latently red since its 2026-09-02 run at 90 gates and 0 disarmed) and the two new pairs are its dependents, T0.18 <- T0.13 and T0.19 <- T0.13. The floor STAYS at 3 and was NOT raised. The repair is the per-key ruling owed under t013-latently-red-28-disarmed-keys (DUE 2026-10-05); T0.18's own re-buy is owed AND blocked by that same FAIL, so neither pair can be cleared by the builder today. 5 -> 6 on 2026-10-04: the 6th pair is T1.12 <- T1.11 FAIL (T1.11's re-run recorded FAIL at b0a3d56 on an orthogonal added conjunct while T1.12's PASS still cites it); owned by t112-pass-stands-on-t111s-orthogonal-added-conjunct (OPEN, DUE 2026-10-18). Note appended 2026-10-17 (builder, 151st audit FTB 3); the floor STAYS at 3 and was NOT raised.",
     "value": 6
   },
   "review_queue_net_arrivals": {

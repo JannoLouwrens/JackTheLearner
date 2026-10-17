@@ -2291,3 +2291,118 @@ metric: `div_lastq`  ·  null 0.044 ± 0.069  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## D43 — RESOLVED BY ARMED DEFAULT (fired 2026-10-17 ~12:5x UTC by the OVERSEER, 151st audit, on the first legal day; transcription completed by the builder 2026-10-17 ~13:1x, the same day as the firing — the first same-day transcription in the series): (iii) HOLD — NO WORLD-EDIT WINDOW IS DECLARED AND THE SEVEN MEASURED FINDINGS STAY DECLINED. The entry's own quoted recommendation — "open a NARROW, SINGLE-PURPOSE world-edit window and let the 10-11 split decide which of the seven enter it" — was NOT taken and remains the owner's to rule, in one sentence, at any time.
+
+**Transcription per the `D13` rule and the `D31`/`D32`/`D34`/`D36`/`D37`
+precedent: the overseer fires and records; the builder transcribes. The firing
+block appended to `docs/DECISIONS_NEEDED.md` (at its `## D43 — RESOLVED BY
+ARMED DEFAULT` header) is the firing record and is quoted here in full. Until
+this entry landed, that block was the record; this entry completes it and
+changes nothing in it. The firing itself named this transcription as owed
+(OVERSIGHT.md 151st audit, FOR THE BUILDER item 2) on the day it was created,
+which is why the gap is hours rather than the nine days `D36` cost.**
+
+**Invariants checked at transcription:** no `GOAL.md` edit, no threshold moved
+in either direction, no control loosened, no new permission created, nothing
+re-run, no certificate staled, no ratchet counter moved, no terminal row
+re-opened. **The three things the firing itself says must survive
+transcription: the firing is MONOTONE and ordered no work — the world was
+never edited (`playground.py` untouched since `761121a`, 2026-08-19) and no
+HELD row was waiting; the price is restated, not dropped — seven real
+measurements (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`,
+`sh02-null-saturation`, `w1-cold-is-not-lethal-at-night`,
+`w2-needs-have-no-single-k`, `hr5-fixture-refuted`, `ba03-vestibular-...-one-
+kick`) survive only as closed rows, and the split row
+(`seven-rows-are-held-behind-a-refused-window-and-a-moot-decision`, OPEN, DUE
+2026-10-25) is the one organ still looking; and the bill the owner was asked to
+weigh was wrong by 67% — the entry priced the window at 21 PASS certificates
+and `run stale-cost playground.py` measures 35, which cuts FOR the
+recommendation that was not taken.**
+
+> ## D43 — RESOLVED BY ARMED DEFAULT, fired 2026-10-17 ~12:5x UTC by the OVERSEER (151st audit), on the first legal day. Off your desk; the window remains yours to declare at any time.
+>
+> **THE OWNER DID NOT RULE BY 2026-10-16, SO THE PRE-REGISTERED DEFAULT FIRED.**
+> Option **(iii) HOLD — NO WINDOW IS DECLARED AND THE SEVEN STAY DECLINED.** The
+> entry's own quoted recommendation — *"open a NARROW, SINGLE-PURPOSE world-edit
+> window and let the 10-11 split decide which of the seven enter it"* — was **NOT**
+> taken. No window exists. No terminal row was re-opened. Nothing was withdrawn.
+>
+> **WHY THIS WAS MINE TO FIRE.** `D43` is `class: goal` and armed; `decisions
+> --check` listed it this audit as the single `OVERDUE — DEFAULT IS DUE TO FIRE`
+> entry, and firing is the day after `decide_by`. The overseer firing an armed
+> default on the first legal day is the established idiom — `D27` (107th), `D29`
+> (109th), `D32`/`D34` (115th), `D31` (119th), `D36` (123rd), `D37` (140th). The
+> 2026-10-17 Review could have ruled it and did not: it sat at 12:22, disposed 28
+> OVERDUE rows, and died `rc=124` at 12:42 without reaching the register.
+>
+> **THIS FIRING ORDERS NO WORK AND CHANGES NO BEHAVIOUR.** Read from the files
+> this audit, not inherited from the entry:
+>
+> ```
+> the seven, via review_queue.parse()   ne01-occlusion-knife-edge          DECLINED
+>                                       water-apply-phantom-force          DECLINED
+>                                       sh02-null-saturation               DECLINED
+>                                       w1-cold-is-not-lethal-at-night     DECLINED
+>                                       w2-needs-have-no-single-k          DECLINED
+>                                       hr5-fixture-refuted                DECLINED
+>                                       ba03-vestibular-...-one-kick       DECLINED
+> w1-world-edit-window                  DECLINED 2026-09-28 — no window to re-open
+> HELD rows in docs/REVIEW_QUEUE.md     0 — nothing is waiting on this entry
+> playground.py                         last touched 761121a, 2026-08-19 — the
+>                                       shared world was never edited
+> the split row                         seven-rows-are-held-behind-a-refused-
+>                                       window-and-a-moot-decision = OPEN,
+>                                       DUE 2026-10-25, outside the hold, alive
+> ```
+>
+> It is **MONOTONE**: it moves no threshold, declares no window, re-opens no
+> terminal row, unparks nothing, spends no GPU-hour, stales no certificate,
+> softens no control and withdraws no finding. It picks only among
+> already-permitted actions — it is, exactly, the status quo.
+>
+> **THE PRICE, RESTATED BECAUSE A FIRING MAY NOT QUIETLY DROP IT.** In the entry's
+> own words: *"the world-touching subset stays unrepairable for as long as the
+> hold lasts, the `W0 is too shallow` finding keeps being true and keeps being
+> unactionable, and the seven rows' substance survives only for as long as
+> somebody keeps choosing to read closed rows."* Three things sharpen it since the
+> entry was written:
+>
+> 1. **The split row is still OPEN and has been re-dated to 2026-10-25** — the
+>    `DUE: 2026-10-11` the entry relied on broke, so the one organ that was going
+>    to separate the genuinely world-touching rows from the spec-local ones has
+>    not sat. The entry's own hazard sentence — *"If that sitting does not happen,
+>    seven real measurements are closed and nobody is looking at them"* — is now
+>    the live state, not the risk.
+> 2. **The economic argument the entry quoted is understated by 67%.** It prices
+>    the window at *"21 `PASS` certificates"*; `run stale-cost playground.py`
+>    measures **35 standing PASS certificates — 2.88 CPU-hours over 32 and 1.52
+>    GPU-hours over 3**, four builder slots of CPU re-buy with `VO.02` alone at
+>    3195.8 s, longer than the 3000 s slot that would owe it. The correction is
+>    not mine: the queue found it and `world-edit-window-price-is-quoted-at-21-and-
+>    measures-35` is ACTED. It cuts **for** the recommendation (paying 35 once
+>    beats paying it seven times) and it means the bill in the entry is the wrong
+>    number to decide on.
+> 3. **`D33`, whose stop-rule produced this class, is `CONDUCT-DESK` and STALE by
+>    24 days.** The upstream that made the holds dead is itself undischarged.
+>
+> **WHAT REVERSES THIS.** Say the window may exist — in one sentence, at any time.
+> Authorship is already settled (`D22`, with the Review), the split row is alive
+> and dated 2026-10-25, and nothing in this firing has to be undone first: declare
+> it and the split puts rows into it. Equally, ruling that the window may **never**
+> exist is a real answer and closes the class honestly rather than by silence; the
+> seven rows' findings are then permanently a matter of record only, which the
+> owner should want said out loud rather than inferred from a passed date.
+>
+> **TRANSCRIPTION OWED, AND NAMED SO IT IS NOT LOST.** `docs/DECISIONS_RESOLVED.md`
+> is outside the overseer's write permissions (SYSTEM.md `D13`), so this firing has
+> no record there yet. Measured after the append rather than predicted: the tool
+> reports **`firing transcriptions: 31 of 32 ... UNTRANSCRIBED: D43 (invisible to
+> the RECORD channel and to firing_coverage until transcribed)`** and **`EXIT 0`,
+> with the `firing-diff` ratchet still `0/0`** — so this is a visible reported
+> debt, not a ratchet break, and it will not fail anybody's gate. That makes it
+> *easier* to forget, which is why it is ordered as **FOR THE BUILDER item 2** in
+> `docs/OVERSIGHT.md`. The precedent is `D36`/`D37`, transcribed at `5bc466f`
+> nine days and one day late respectively — which is exactly why it is being named
+> here on the day it is created rather than left for an instrument to discover.
+>
