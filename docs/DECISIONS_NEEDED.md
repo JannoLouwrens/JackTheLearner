@@ -10738,4 +10738,74 @@ DECIDE: D46
              to refresh by exactly the mechanism it describes.
   decide_by: 2026-10-17
 
+### ADDENDUM 2026-10-17 (Review, DAILY) — THE GATE OPENED ON ITS OWN, AND THAT MAKES THIS ENTRY MORE URGENT RATHER THAN LESS
+
+**The blackout ended today and I am not closing this entry on that.** The
+builder took its first `rc=0` slot since 2026-10-08 at `2026-10-17T11:19Z`;
+`week:all models` now reads **48 %**. If the question were "is the builder
+dark", it would be answered. It is not that question, and three measurements
+taken this morning say the opposite.
+
+**1. THE ENTRY'S OWN PREDICTION CAME TRUE THREE MORE TIMES, AND WORSE THAN
+WRITTEN.** This entry was filed on the loss of 2026-10-12. Since then **10-14,
+10-15 and 10-16 each lost every poll the same way** — `06:37` plus all four
+retries, `STOPPED at 100% weekly usage`, five `sitting DEFERRED` lines per day.
+Four of the last five days had no Review at all. The OVERDUE class it was filed
+over went **12 → 28** on pure clock, and this sitting spent its whole morning
+disposing it: 4 rows stamped ACTED whose work had been finished for up to twelve
+days, 1 DECLINED on its own armed stop-rule, 23 re-dated.
+
+**2. A NEW DEFECT, FOUND ONLY BECAUSE A DESK HAPPENED TO BE AWAKE: the deferral
+is not merely unreported, it is UNRECORDABLE.** `scripts/review.sh:180`'s
+labelled-hole fallback — built by the 76th audit so a dead Review leaves "a
+labelled hole instead of a silent gap" — is gated on `[ "$RC" -ne 0 ]` after an
+agent run. The deferral path `exit 0`s at `:60` and never reaches it. So a
+gate-deferred day writes **no trend row and no non-zero exit anywhere**, and
+`docs/PROGRESS_LOG.md` jumped from 10-13 straight to 10-17 with nothing in
+between. B4 covers a sitting's death and not its non-occurrence, and
+non-occurrence is now the dominant mode. Backfilled by hand at `ddcd8c6` and
+routed as `review-defers-leave-no-labelled-hole` (DUE 2026-10-19). **A hand
+backfill is not a repair; it is evidence that the system cannot see its own
+absences.**
+
+**3. THE READING THAT MOST NEEDS AN OWNER AND IS NOT THIS DESK'S TO EXPLAIN:
+the meter moved 100 % → 46 % in ONE HOUR with no week boundary and no
+override.** `ladder.log` logs `STOPPED at 100% weekly usage` at
+`2026-10-17T10:07:04Z` and the builder reads **46 %** at `11:07`. The week does
+not reset until **Oct 21, 12:00 UTC**, so no reset occurred. There is **no
+`.usage-resumed` file** — the only mechanism that lifts the 90 % stop — so no
+override was in force. I can establish that the movement was off-box and that
+nothing in this repository caused it; I cannot establish what did, and I am not
+going to guess in a decision entry. **Why it matters beyond curiosity:** the
+PACE LINE's convergence argument assumes the meter accumulates monotonically
+toward a week's end. The record now shows it does not. A number that can fall
+54 points in an hour is not a budget curve, and the project's entire work
+schedule is gated on it.
+
+**WHAT CHANGES IN THE RECOMMENDATION: nothing, and that is deliberate.** The
+quoted recommendation above stands exactly as written — a reporting floor for
+the desk organs, bound by the 90 % hard stop as today. Measurement 3 is the
+reason I am not widening it: if the meter's behaviour is not understood, this
+is the wrong week for this desk to propose touching more of the gate than the
+narrowest thing that keeps the project observable. **And the `CONDUCT-DESK`
+flag is answered the same way it was on 10-13:** a floor that exempts an organ
+from a meter re-allocates a shared account held with four paying tenants, in
+favour of the desk proposing it. If you judge the flag right and the floor is
+mine to set, say so and it will be executed and reported, not re-asked.
+
+**`D30`'s required pairing, counted this sitting and not inherited.** The dark
+streak was **119 slots / 119.6 h** and is **BROKEN** — 1 live slot at 11:07,
+then a `12:07` ABORT on box load 9.51 against a 6.0 ceiling, which is tenant
+contention and not the usage gate. Dark-slot modes over the blackout, which
+correct the 10-13 page: 10-14/15/16 were **24/24 `STOPPED`** — the 90 % HARD
+STOP — not `PACING`. The pacer was not holding budget for later in the week;
+the project was locked out of a shared pool. **GPU expiry: `2026-W41` holds
+30.0 free Kaggle hours with 0.000 drawn (`experiments/gpu_budget.json` carries
+no `2026-W41` key at all), and they expire TODAY, Saturday 2026-10-17** — the
+fifth consecutive week the quota expires unbought. The same honesty `D40`
+insisted on applies unchanged: those hours would very likely have expired
+anyway, because the standing `T1.08` prohibition forbids the board's only
+recent buyer and `run next` reads 0 fresh. The hours are not the argument.
+Being unable to *decide* whether to buy them is.
+
 ---
