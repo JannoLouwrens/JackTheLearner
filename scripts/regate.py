@@ -60,8 +60,9 @@ WHAT THIS DOES AND REFUSES TO DO.
     project has recorded five times (a control reading a proxy for the thing it
     governs).
 
-    python scripts/regate.py --list     # what is cheap and stale, no runs
-    python scripts/regate.py            # re-buy them, oldest bill first
+    python scripts/regate.py --list     # both lanes (stale + rotation), no runs
+    python scripts/regate.py            # re-buy: stale bills first, then the
+                                        # standing-PASS rotation, oldest first
 """
 from __future__ import annotations
 
@@ -161,6 +162,69 @@ def cheap_stale() -> list[tuple]:
     return out
 
 
+def cheap_pass_rotation(exclude: set) -> list[tuple]:
+    """THE ADDED SELECTION PATH — ordered by the Review's 2026-10-06 CADENCE
+    RULING on `standing-pass-certificates-are-falsifiable-only-by-running-them`
+    and deliberately NOT routed through `stale_claims`.
+
+    Why it exists, in the ruling's own arithmetic: `stale_claims` keys on a
+    spec's own test-file `impl_sha` plus its DECLARED `IMPL_DEPS`, so a
+    certificate that went latently red through an UNDECLARED edge is never
+    selected by the lane above — the project re-ran certificates twelve times
+    a day and still could not falsify the three it had already found red
+    (`T0.13`, `T0.18`, `T0.22`); none of them moved its own `impl_sha`. The
+    only thing that falsifies a standing PASS is RUNNING it, so this path runs
+    the cheap standing-PASS population unconditionally, OLDEST `ran_at` first,
+    behind the staleness lane and under the same slack guard and `MAX_PER_RUN`
+    cap. At twelve ticks a day the full cheap population re-derives in a few
+    days even when the staleness lane is busy.
+
+    What it inherits from the lane above, deliberately: the cheap-by-
+    MEASUREMENT rule (a spec whose recorded runtime exceeds its label's
+    nominal seconds stays with the loop), and the skip-what-cannot-pass rule —
+    a PASS whose dependency is currently red would come back BLOCKED, and
+    demoting certificates in the `pass_on_dead_dependency` class is owned by
+    the rows that explain them, not by a clerical cron. Both skips print.
+
+    What it must never grow into: a judgment lane. It selects by age, runs
+    through the same runner, and records whatever comes back. A re-run that
+    turns a PASS into a FAIL is the point, not an incident.
+    """
+    from experiments.cpu_budget import child_estimate_s, measured_child_seconds
+    from experiments.protocol import Ledger, Status
+    from experiments.registry import BY_ID
+    ledger = Ledger()
+    out, blocked, overran = [], [], []
+    for sid, spec in BY_ID.items():
+        if sid in exclude:
+            continue
+        if getattr(spec.budget, "value", "") not in CHEAP:
+            continue
+        row = ledger.results.get(sid)
+        if row is None or row.status is not Status.PASS:
+            continue
+        measured = measured_child_seconds(sid)
+        nominal = CHEAP_NOMINAL_S[spec.budget.value]
+        if measured is not None and measured > nominal:
+            overran.append((sid, measured, nominal, spec.budget.value))
+            continue
+        unsat = ledger.unsatisfied(spec)
+        if unsat:
+            blocked.append((sid, ", ".join(f"{d} ({w})" for d, w in unsat)))
+            continue
+        out.append((row.ran_at or "", sid, "PASS", spec.budget.value,
+                    *child_estimate_s(spec)))
+    for sid, why in blocked:
+        print(f"  skip {sid:9s} rotation would record BLOCKED, not a verdict — "
+              f"dependency red: {why}; owned by its pass_on_dead_dependency row")
+    for sid, measured, nominal, label in overran:
+        print(f"  skip {sid:9s} declares {label} but measured {measured:.0f}s "
+              f"against the label's {nominal:.0f}s — not cheap until re-labelled; "
+              f"stays with the loop")
+    out.sort()  # oldest ran_at first — the certificate longest unfalsified
+    return [row[1:] for row in out]
+
+
 def crossing_a_class_slack(est_s: float):
     """The 128th audit's RANK 2a repair: on its first day this lane spent
     4,218.6 s of the day's 4,450.2 s and foreclosed `cpu<2h` (37 specs, 36
@@ -184,27 +248,34 @@ def crossing_a_class_slack(est_s: float):
 
 
 def main(argv: list[str]) -> int:
-    rows = cheap_stale()
+    stale_rows = cheap_stale()
+    rotation = cheap_pass_rotation(exclude={r[0] for r in stale_rows})
+    # Staleness is an OWED bill and goes first; the rotation fills whatever is
+    # left of the same cap. On a quiet tick (stale empty, the common case at
+    # twelve ticks a day) the rotation gets the whole cap.
+    queue = ([("stale", *r) for r in stale_rows]
+             + [("rotate", *r) for r in rotation])
     if "--list" in argv:
-        for sid, status, cost, est_s, prov in rows:
-            print(f"  {sid:9s} {status:8s} {cost}  est {est_s:.0f}s [{prov}]")
-        print(f"  {len(rows)} cheap stale certificate(s)")
+        for lane, sid, status, cost, est_s, prov in queue:
+            print(f"  {lane:6s} {sid:9s} {status:8s} {cost}  est {est_s:.0f}s [{prov}]")
+        print(f"  {len(stale_rows)} cheap stale certificate(s); "
+              f"{len(rotation)} in the standing-PASS rotation (oldest first)")
         return 0
 
-    if not rows:
-        print("nothing cheap is stale")
+    if not queue:
+        print("nothing cheap is stale and the rotation is empty")
         return 0
     if lock_is_held():
         print("ladder lock held by the loop — yielding, these are still stale next tick")
         return 0
 
     ran, changed = 0, []
-    for sid, status, _cost, est_s, prov in rows[:MAX_PER_RUN]:
+    for lane, sid, status, _cost, est_s, prov in queue[:MAX_PER_RUN]:
         hit = crossing_a_class_slack(est_s)
         if hit is not None:
             # Print every spec declined, and why — a lane that quietly stops
             # is one nobody audits (cce6cef's own rule).
-            left = [r[0] for r in rows[:MAX_PER_RUN]][ran:]
+            left = [r[1] for r in queue[:MAX_PER_RUN]][ran:]
             print(f"  stop before {sid}: projected {est_s:.0f}s [{prov}] on "
                   f"top of {hit['used_s']:.0f}s already spent today would cross "
                   f"{hit['budget']}'s slack {hit['slack_s']:.0f}s and close that "
@@ -216,10 +287,11 @@ def main(argv: list[str]) -> int:
         tail = (p.stdout or "").strip().splitlines()
         verdict = next((l for l in reversed(tail)
                         if any(w in l for w in ("PASS", "FAIL", "VOID"))), "(no verdict line)")
-        print(f"  {sid:9s} was {status:8s} -> {verdict.strip()[:96]}")
+        print(f"  {sid:9s} [{lane}] was {status:8s} -> {verdict.strip()[:96]}")
         if status not in verdict:
             changed.append(sid)
-    print(f"re-bought {ran} of {len(rows)} cheap stale certificate(s)"
+    print(f"re-bought {ran} of {len(queue)} cheap certificate(s) "
+          f"({len(stale_rows)} stale + {len(rotation)} rotation)"
           + (f"; STATUS MOVED on {', '.join(changed)}" if changed else "; no status moved"))
     return 0
 

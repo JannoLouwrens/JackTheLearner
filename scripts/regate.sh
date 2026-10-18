@@ -80,7 +80,7 @@ if [ -n "$STAGE" ] && ! git diff --quiet HEAD -- $STAGE 2>/dev/null; then
   MOVED=$(printf '%s\n' "$OUT" | grep -o 'STATUS MOVED on .*' || true)
   # shellcheck disable=SC2086
   git add -- $STAGE
-  git commit -q -m "regate sweep: cheap stale certificates re-bought mechanically
+  git commit -q -m "regate sweep: cheap certificates re-bought mechanically (stale bills first, then the standing-PASS rotation)
 
 $(printf '%s\n' "$OUT" | tail -12)
 
