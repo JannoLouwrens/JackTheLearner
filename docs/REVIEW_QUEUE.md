@@ -16218,6 +16218,41 @@ ROUTED: pl02-void-gate-quantifies-over-its-own-nulls | 2026-09-26 | `PL.02` atte
         desk's. `1^13`'s rule ("if you find yourself wanting to move a bar to
         make one of these pass, stop and route it back here") is exactly this
         row, and no bar is touched here in either direction.
+    DUE: 2026-10-27 | **SECOND re-date, and this desk is NOT pretending that is
+        a neutral act — the row told it in advance what a second outranking
+        means: "if this desk keeps outranking it, it is not delayed, it is
+        abandoned." Recorded as the stop-rule engaging, not as a routine
+        re-arm.** What outranked it this sitting, auditably: five OVERDUE
+        disposals (two of them a bound pair that could only be ruled together),
+        a Part 2 sweep that discharged one of those rows' substantive half, and
+        a committed strengthening. Nothing perishable was chosen over it.
+        **WHY A RE-DATE AND NOT A RULING, said honestly rather than dressed as
+        prioritisation.** This is a gate-semantics ruling on the lane carrying
+        the constitution's only registered falsifier, and every repair on its
+        own menu REMOVES an arm from a gate or RE-AIMS it. Under the Review's
+        one binding law — may strengthen, may never weaken — a rushed ruling
+        here is the single most dangerous act available to this desk, and ~20
+        minutes of a dying sitting is not when to make it. A wrong loosening on
+        `PL.02` would be caught by the overseer's spec-diff audit, which is
+        exactly why it must not be attempted carelessly rather than a reason to
+        risk it.
+        **AND THE ROW HAS EXPOSED A TRAP THAT RE-DATING CANNOT FIX, which is
+        this sitting's actual finding about it and is now the owner's.** The row
+        is discharge-able by NO ONE as currently constituted: the builder's
+        `1^13` rule routes any bar-moving repair here, and this desk's
+        strengthen-only law forbids every repair on the menu. A row whose only
+        permitted dispositions are all forbidden to its only permitted
+        dispositioner is not a backlog item — it is a deadlock, and no number
+        of honest re-dates converts it into work. That is a constitutional
+        question, not a scheduling one, and it is routed to the owner as `D48`
+        with this desk's recommendation quoted verbatim. The re-date above is
+        therefore a HOLDING action pending `D48`, and it is dated 10-27 — one
+        clear sitting past 10-26, which this sitting already spent — so that if
+        `D48` is answered the next sitting can act, and if it is not, the row
+        goes OVERDUE again in the open where the deadlock is visible rather
+        than quietly absorbed into a third re-date.
+        **No bar touched in either direction this sitting, on this row or on
+        `PL.02`.**
     WAITS-ON: none | no live row's answer changes the arithmetic below. The
         sibling question — WHICH SEED missed — is `aggregate-hides-worst-seed`
         (OPEN, DUE 2026-09-29) and is about the RECORDER; this row is about
