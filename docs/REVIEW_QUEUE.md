@@ -7809,7 +7809,7 @@ that is powerable at free-tier seat counts (more lives per seed is CPU-cheap;
 XL.01's own row shows lives, not seeds, carry the variance). Strengthen-only
 binds any successor; XL.01's FAIL stands as history either way.
 
-ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
+ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | DISPOSITIONED 2026-10-18 the design is THE RULING in this row's 2026-10-25 DUE: block (the non-linear reference arm, reported not gated, with no existing threshold moved); execution is the builder's
     DUE: 2026-10-04 | RE-DATED 2026-09-24 (Review DAILY). The 2026-09-23 date BROKE — second break. This row is NOT part of the W1 docket and must not inherit its excuse: what it owes is a disposition of the fast/slow world-model fixture — *what does the DP family require of a world model that beats every null but loses to a linear probe?* — and no world edit, no registration and no GPU hour gates it. The honest cause of this break is therefore the plainest one available and it is this desk's alone: **at a DEMONSTRATED disposal rate of ~1 row per sitting, three Review-owned designs cannot share one morning, and this one ranked third of three.** It is dated LAST of today's three for a stated reason rather than by accident — `w1-world-edit-window` blocks five other rows and `w0-too-shallow` holds the project's largest standing result, while this one blocks a FAIL-UNOWNED diagnosis and nothing downstream of it. Dated 2026-10-04 (2 promised against a measured 6), one sitting clear of 10-01 so the two are not made to share a morning the way these three just were. ORIGINAL TEXT FOLLOWS, unchanged. | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for the fast/slow world-model fixture: what does the DP family require of a world model that beats every null but loses to a linear probe? Date is `next_free_due` per B4.
     DUE: 2026-10-17 | RE-DATED 2026-10-04 (Review FULL, act 16). **Third break,
         and the cause is this desk's and is the same one its own 09-24 re-date
@@ -7829,6 +7829,84 @@ ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-
         capability, and the answer bears directly on whether "loses to a ridge
         reference" is a finding about the world model or about the measurement.
         Dated one sitting AFTER Step 0+1 lands (10-08) for that reason.
+    DUE: 2026-10-25 | **RULED 2026-10-18 (Review FULL, OVERDUE FIRST) — the
+        design is below, in this row, so the status goes DISPOSITIONED and what
+        the new date owes is EXECUTION, not a decision.** The fourth break is
+        this desk's and is NOT blamed on the contingency its own 10-04 re-date
+        set up: that contingency was MET. `T1.08` Step 1 landed 2026-10-05
+        (`/data/t108_step1_evalcv.json`) and attempt 5 ran 2026-10-08. The date
+        then broke anyway, for the same ranking reason as the three before it,
+        and the honest record is that this row went four dates without its desk
+        reading the two artifacts that answer it. Both are read now.
+        **1. THE MEASUREMENT-vs-CAPABILITY QUESTION IS SETTLED, and NOT by the
+        transfer the 10-04 re-date proposed.** Step 1 reads `eval_cv_pct` 0.52%
+        against attempt 3's held-out CV of 40.006% — TRAINING-DOMINANT, the
+        estimator contributes essentially nothing. But that is `T1.08`'s rig,
+        and `T2.05` shares neither its gate nor its seeds, so this desk did NOT
+        carry the conclusion across. `T2.05`'s OWN recorded numbers settle it
+        far more cleanly: `k_step_mse` [0.178315, 0.195556, 0.231187] against
+        `mse_ridge` [0.114301, 0.116804, 0.130912] — ratios **1.56, 1.67,
+        1.77**, monotone, with zero overlap across the three seeds, while the
+        same arm beats `mse_null` [0.824, 0.860, 0.914] by ~4.6x. A 56-77%
+        deficit reproduced on every seed is not an estimator artifact. **The
+        FAIL is a capability finding. The bar does not move; T1.02 binds.**
+        **2. THE ROW'S QUESTION HAS A THIRD ANSWER AND NEITHER OFFERED OPTION
+        NAMED IT — this is the finding.** The row offered: a better WM, a
+        harder venue, or ridge as champion. But `T2.05` already contains a
+        task-indictment escape — "if the claim fails AND ridge also fails to
+        beat `mse_null` on every seed, the TASK is indicted, not the model →
+        VOID" — and it did not fire because `ridge_beats_null_any` is 1.0.
+        **That clause cannot distinguish a healthy task from a near-LINEAR
+        one.** A venue whose dynamics are close to linear in the (state,
+        action) encoding produces EXACTLY what is on the row: ridge beats the
+        uninformed null by a wide margin, and nothing can beat ridge. So
+        `ridge_beats_null_any` being satisfied is evidence the task is
+        LEARNABLE, not evidence it is NON-LINEAR, and the spec reads the first
+        as if it were the second. Until the venue's non-linear headroom is
+        measured, "a better WM" and "a harder venue" are not two options a desk
+        can choose between — they are one unanswered measurement.
+        **3. WHAT IS ORDERED, and it is a STRENGTHENING because it ADDS a
+        required reading and REMOVES an unearned inference.** `T2.05` must
+        RECORD a non-linear reference on the same windows, same splits, same
+        seeds — a modest one (random-features ridge, or a small MLP on the same
+        inputs), chosen by the builder and pre-registered before it runs — and
+        report `mse_nonlinear` per seed plus the derived `nonlinear_headroom`
+        = (`mse_ridge` - `mse_nonlinear`) / `mse_ridge`. **No existing
+        threshold moves: `WM_RATIO` stays 0.8, `CTRL_TOL` stays 0.98, the ridge
+        gate stays "matching is the bar" with no ratio, and the claim conjunct
+        is byte-untouched.** The new metric is REPORTED, not gated, on this
+        pass — because a desk that gates on a number before seeing one is the
+        thing this file was built to stop. What it buys is attribution that is
+        currently impossible: headroom large => the venue HAS non-linear
+        structure the shipped WorldModel failed to capture, the FAIL is the
+        model's, and "a better WM" is the only honest repair; headroom ~0 =>
+        the venue is near-linear, demanding the WM beat ridge is demanding it
+        match the Bayes-optimal linear predictor, and the VENUE is the defect
+        — which is a re-aiming, and the bundling rule then applies because it
+        is world-touching.
+        **4. WHAT IS NOT ORDERED.** No world edit, no new instrument, no new
+        spec, no registration, no GPU hour — the reference fits in the existing
+        `_ridge_mse` call site and the row's own prose prices ridge at ~10 s.
+        `D35` clause 2 is named rather than dodged: this is one added arm
+        inside a spec that already has four, not governance surface. Ridge-as-
+        champion (the SCORED-AND-INELIGIBLE idiom) is NOT refused here, it is
+        deferred — it becomes the right answer if and only if headroom ~0, and
+        pre-empting it now would be choosing the venue's disposition before the
+        measurement that decides it.
+        Dated 2026-10-25, one clear sitting past 10-24, because 10-24 is the
+        `next_free_due` this sitting already spent on
+        `regate-bought-nine-certificates-from-its-own-uncommitted-tree` and
+        stacking both of this morning's executions onto one day is the act that
+        built the pile this row has been caught in four times.
+    WAITS-ON: none | declared at this disposition rather than left blank, which
+        is the defect `review_queue` was printing as "2026-10-17 WITHHELD — 3
+        of 6 rows undeclared" and this row was one of the three. Nothing live
+        gates it: `T1.08`'s Step 1 has landed, and the ordered arm needs no
+        world edit, no registration and no GPU hour.
+    STALENESS BILL: **ZERO standing PASS certificates.** Priced with
+        `run stale-cost experiments/tests/t2_05_world_model.py` at this sitting
+        before ruling: the only covered row is `T2.05` itself, which is FAIL,
+        so no capability claim is lost by staling it.
 
 **Measured, twice, consistently.** `T2.05` v1 (2026-08-14) VOIDed itself
 honestly — the persistence ruler leaked marginal statistics (shuffled
