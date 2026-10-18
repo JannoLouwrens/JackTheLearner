@@ -8479,7 +8479,7 @@ smoke regardless of the ruling.
 ## ROUTED 2026-09-12 (Review, DAILY): three gates in two days computed a
 ## different quantity from the one they declared — and nothing here looks for that
 
-ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Review DAILY 09-12 (d61a11b, bc9c5ec; PL.02 ruling 5e39771) | DISPOSITIONED 2026-10-18 question (a) ANSWERED by this sitting's Part 2 sweep (THE SWEEP RESULT below, in this row) and it reframes the class; question (b) is a D35 clause 2 instrument and is ROUTED TO THE OWNER as D47, not decided here
+ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Review DAILY 09-12 (d61a11b, bc9c5ec; PL.02 ruling 5e39771) | DISPOSITIONED 2026-10-18 question (a) ANSWERED by this sitting's Part 2 sweep (THE SWEEP RESULT below, in this row) and it reframes the class; question (b) is a D35 clause 2 instrument and is ROUTED TO THE OWNER as D48, not decided here
     DUE: 2026-09-20 | a FULL-sized sweep, dated onto a SUNDAY on purpose: this
         is Part 2 work (test re-examination) and it has already been filed
         against the wrong kind of sitting once this week in the shape of
@@ -8600,7 +8600,7 @@ ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Rev
         its structural siblings** — a guard-propagation reader. It is cheap to
         state and this desk will not build it: a new reader is `D35` clause 2
         surface and the 122nd audit's FINDING 1 is that desks order governance
-        and bill the builder. Routed as `D47` in `DECISIONS_NEEDED.md` with the
+        and bill the builder. Routed as `D48` in `DECISIONS_NEEDED.md` with the
         recommendation quoted verbatim, per this prompt's owner-ask contract.
         **NOTHING ORDERED and NO BAR MOVED by this disposition.** Part (a)'s
         product is the sweep above plus the `T2.14 -> T2.05` port, which is
@@ -16244,11 +16244,11 @@ ROUTED: pl02-void-gate-quantifies-over-its-own-nulls | 2026-09-26 | `PL.02` atte
         permitted dispositions are all forbidden to its only permitted
         dispositioner is not a backlog item — it is a deadlock, and no number
         of honest re-dates converts it into work. That is a constitutional
-        question, not a scheduling one, and it is routed to the owner as `D48`
+        question, not a scheduling one, and it is routed to the owner as `D49`
         with this desk's recommendation quoted verbatim. The re-date above is
-        therefore a HOLDING action pending `D48`, and it is dated 10-27 — one
+        therefore a HOLDING action pending `D49`, and it is dated 10-27 — one
         clear sitting past 10-26, which this sitting already spent — so that if
-        `D48` is answered the next sitting can act, and if it is not, the row
+        `D49` is answered the next sitting can act, and if it is not, the row
         goes OVERDUE again in the open where the deadlock is visible rather
         than quietly absorbed into a third re-date.
         **No bar touched in either direction this sitting, on this row or on

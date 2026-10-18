@@ -10998,3 +10998,179 @@ nine days and one day late respectively — which is exactly why it is being nam
 here on the day it is created rather than left for an instrument to discover.
 
 ---
+
+---
+
+## D48 — The Sunday sweep you ordered found the defect class ALREADY GUARDED, and found the real one by accident: a conjunct invented on one spec never reaches its structural siblings. T2.05's FAIL was unattributable for 43 days because the guard that attributes it sits in a PASSING sibling. (2026-10-18, Review, FULL)
+
+class: conduct
+
+**WHY THIS IS AN ASK.** `gates-that-measure-something-other-than-what-they-say`
+asked two questions on 2026-09-12. Question (a) — sweep the PASS set for the
+pattern — is DISCHARGED this sitting and needs nothing from you. Question (b)
+asked whether the pattern should become an INSTRUMENT rather than a Sunday
+habit. A new reader is `D35` clause 2 surface, the 122nd audit's FINDING 1 is
+that desks order governance and bill the builder for it, and so this desk may
+not build it and does not claim an exemption. **But the sweep changed what the
+instrument should BE, and that is the part only you can rule on.**
+
+### The measurement, read this sitting
+
+- **14 oldest-passed PASS certificates** read against the row's three named
+  shapes: T0.19, T1.02, T2.03, T2.04, TA.02, T3.01, T2.19, T2.09, T2.14, T0.18,
+  T0.09, T0.10, T1.09, T1.06 (plus T0.22 and T2.00 for the battery shape).
+- Shape 3 (a declared control the check never compares against the headline):
+  **ZERO instances.** Checked against the declared `Spec.control` field, not
+  prose. `T0.10` reads as controlless and is not — its control is an explicit
+  `NoControlByDecision` carrying the 52nd audit's B5 reasoning.
+- The battery shape (`properties_failed == 0` passing a battery that stopped
+  early): **already guarded, correctly.** `T0.19` and `T0.22` both pin
+  `properties_checked == N_PROPERTIES` on the experiment AND on the control,
+  and both require the control to fail on SPECIFICALLY NAMED properties.
+- The capped-teacher shape: `T2.04` and `T2.14` carry **more** guards than
+  `LG.03` did, not fewer — `nn_informative_all`, `clip_overlap_max > 0 -> VOID`,
+  `floor_selftest_ok`, `task_not_trivial_all`.
+- **So an instrument built to question (b)'s description would have found
+  nothing in the oldest cohort.** That is the finding that matters.
+
+### What it found instead, and it is one measured instance, not a theory
+
+`T2.14` (PASS, 2026-08-30) gates on `task_not_trivial_all` — *a linear map must
+not annihilate the task; a good score here would be arithmetic, not imitation*
+— plus `floor_selftest_ok`, *a triviality floor that cannot demonstrate a case
+it rejects is not a floor*. `T2.05` measures the SAME shape (a learned head
+against `mse_ridge` on the same windows) and **has neither conjunct.** That
+absence is exactly why `T2.05`'s FAIL could not be attributed for 43 days, and
+why `t205-world-model-loses-to-the-ridge-reference` broke FOUR dated promises:
+its two offered repairs ("a better world model" vs "a harder venue") were never
+two choices, they were one unmeasured quantity — and the instrument that
+measures it was sitting in a passing sibling the whole time. Both rows are
+disposed this sitting and the `T2.14 -> T2.05` port is ordered on `t205`'s
+2026-10-25 date, so **nothing is blocked on this decision.**
+
+**RECOMMENDATION, quoted verbatim so the instrument and you are reading the
+same sentence:** *"the instrument with evidence behind it is not a
+wrong-quantity detector (it would have found nothing here) but a GUARD-
+PROPAGATION reader: detect a conjunct present in one spec and absent in its
+structural siblings. Grant the `D35` clause 2 exemption for that reader and
+that reader only, scoped to reporting (never floored), because the one defect
+this sweep actually measured is uneven propagation and no existing organ can
+see it."*
+
+default: if you do not rule by `decide_by`, **(i) NO exemption is granted and
+no reader is built.** The Sunday habit continues, question (b) is answered NO by
+silence, and this desk records each propagation gap by hand as it finds one. The
+default is deliberately the conservative one: an unbuilt reader costs one
+finding per Sunday, and a wrongly-scoped governance reader costs the builder
+every slot it floors. Choosing the default is a real answer and this desk will
+not re-ask it.
+
+decide_by: 2026-11-01
+
+---
+
+## D49 — A queue row whose only permitted dispositions are ALL forbidden to its only permitted dispositioner. `pl02-void-gate-quantifies-over-its-own-nulls` is not behind schedule; it is undischargeable as constituted, and no number of honest re-dates will convert it into work. (2026-10-18, Review, FULL)
+
+class: constitution
+
+**WHY THIS IS AN ASK AND NOT A SCHEDULING COMPLAINT.** This desk re-dated the
+row to 2026-10-27 this sitting and is telling you plainly that the re-date is a
+HOLDING action, not a plan. The row warned its own future reader: *"if this desk
+keeps outranking it, it is not delayed, it is abandoned."* This is the second
+outranking. But the cause is not capacity, and that is the discovery.
+
+### The deadlock, stated mechanically
+
+- The row is a **gate-semantics** decision on `PL.02` — the lane carrying
+  `GOAL.md`'s only registered falsifier.
+- **Every repair on the row's own menu REMOVES an arm from a gate or RE-AIMS
+  it** — a loosening under any reading. The row says so itself.
+- The **builder is forbidden** to take it: `1^13`'s rule is *"if you find
+  yourself wanting to move a bar to make one of these pass, stop and route it
+  back here"*, which routes it to this desk by construction.
+- **This desk is forbidden** to take it: the Review's one binding law is *may
+  strengthen, never weaken*, and every permitted repair is a weakening.
+- Therefore the set of actors permitted to discharge it is **empty**. ACT is
+  forbidden to everyone; DECLINE discards a measured finding on the
+  constitution's own falsifier lane; RE-DATE is what has now happened twice.
+
+This is not the same problem as `D47` (the queue is not drainable at the
+Review's rate). `D47` is about capacity. **This row would still be
+undischargeable in a sitting with infinite time.**
+
+**RECOMMENDATION, quoted verbatim:** *"Rule that the strengthen-only law admits
+one narrow, audited exception: a desk MAY re-aim or remove a gate arm when the
+arm is measured to quantify over its own nulls — i.e. when the arm is not a bar
+at all but an artefact — provided the act is published with its arithmetic, the
+old version stays in the ledger's history per the T1.02 precedent, and the
+overseer's independent spec-diff audit reviews it as a presumptive violation
+rather than as routine. Without such an exception, say so explicitly and the
+row should be DECLINED on the record rather than re-dated a third time —
+because a row nobody may act on should be visible as refused, not as pending."*
+
+default: if you do not rule by `decide_by`, **no exception exists and the row is
+DECLINED on the record at the next sitting**, with its measurement preserved as
+a matter of record and `PL.02`'s gate left exactly as it stands. This desk
+recommends against its own default — declining a measured defect on the
+constitution's only falsifier lane is the worse outcome — but a visible refusal
+beats a fourth broken date, and silence must resolve to something.
+
+decide_by: 2026-10-27
+
+---
+
+DECIDE: D48
+  class:     conduct
+  blocks:    no spec id, and NOTHING is waiting on it — the `T2.14 -> T2.05`
+             port is already ordered on `t205`'s 2026-10-25 date. It blocks only
+             whether uneven guard propagation is ever found MECHANICALLY instead
+             of once a Sunday by whichever desk happens to read two sibling
+             specs in one sitting. Not perishable in GPU-hours; perishable in
+             that every unread sibling pair is a certificate this project
+             believes for a reason no instrument has checked.
+  default:   (i) NO EXEMPTION, NO READER. Question (b) is answered NO by
+             silence, the Sunday habit continues, and this desk records each
+             propagation gap by hand as it meets one. MONOTONE — it builds
+             nothing, floors nothing, moves no threshold and spends no slot.
+             Deliberately the conservative branch: an unbuilt reader costs about
+             one finding per Sunday, while a wrongly-scoped governance reader
+             costs the builder every slot it floors. This desk will not re-ask
+             it if the default fires.
+  recommend: GRANT the `D35` clause 2 exemption, for one reader only — "the
+             instrument with evidence behind it is not a wrong-quantity detector
+             (it would have found nothing here) but a GUARD-PROPAGATION reader:
+             detect a conjunct present in one spec and absent in its structural
+             siblings. Grant the `D35` clause 2 exemption for that reader and
+             that reader only, scoped to reporting (never floored), because the
+             one defect this sweep actually measured is uneven propagation and
+             no existing organ can see it."
+  decide_by: 2026-11-01
+
+DECIDE: D49
+  class:     constitution
+  blocks:    `PL.02` — the lane carrying `GOAL.md`'s only registered falsifier —
+             and through it the row `pl02-void-gate-quantifies-over-its-own-
+             nulls`, which this sitting re-dated to 2026-10-27 as an explicit
+             HOLDING action. Perishable not in GPU-hours but in honesty: the row
+             has now been outranked twice and warned its own reader that a
+             second outranking means abandonment rather than delay.
+  default:   NO EXCEPTION EXISTS, and the row is DECLINED ON THE RECORD at the
+             next sitting, its measurement preserved as a matter of record, with
+             `PL.02`'s gate left exactly as it stands. Moves no threshold and
+             loosens nothing. This desk RECOMMENDS AGAINST ITS OWN DEFAULT —
+             declining a measured defect on the constitution's only falsifier
+             lane is the worse outcome — but a visible refusal beats a fourth
+             broken date, and silence must resolve to something rather than to a
+             third re-date.
+  recommend: "Rule that the strengthen-only law admits one narrow, audited
+             exception: a desk MAY re-aim or remove a gate arm when the arm is
+             measured to quantify over its own nulls — i.e. when the arm is not
+             a bar at all but an artefact — provided the act is published with
+             its arithmetic, the old version stays in the ledger's history per
+             the T1.02 precedent, and the overseer's independent spec-diff audit
+             reviews it as a presumptive violation rather than as routine.
+             Without such an exception, say so explicitly and the row should be
+             DECLINED on the record rather than re-dated a third time — because
+             a row nobody may act on should be visible as refused, not as
+             pending."
+  decide_by: 2026-10-27
