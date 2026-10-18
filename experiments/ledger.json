@@ -29057,7 +29057,7 @@
     "T0.05": {
       "amended": [],
       "attempt": null,
-      "commit": "ea937fa+dirty",
+      "commit": "219a01a+dirty",
       "compute_s": null,
       "control_metrics": {
         "checkpoints_checked": 12,
@@ -29069,7 +29069,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 30.68,
+      "duration_s": 30.65,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -29343,10 +29343,46 @@
           ],
           "spec_sha": "7f34b6ee7531e17d",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": null,
+          "commit": "ea937fa+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "checkpoints_checked": 12,
+            "corrupt": 12,
+            "kills": 12,
+            "max_step_recovered": 0
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 30.68,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "8a511439cda39a26",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+31.2s)",
+          "metrics": {
+            "checkpoints_checked": 12,
+            "corrupt": 0,
+            "kills": 12,
+            "max_step_recovered": 1
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 317.0,
+          "preserved_impl": null,
+          "ran_at": "2026-10-18T02:43:37",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "7f34b6ee7531e17d",
+          "status": "PASS"
         }
       ],
       "impl_sha": "8a511439cda39a26",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+31.2s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+30.9s)",
       "metrics": {
         "checkpoints_checked": 12,
         "corrupt": 0,
@@ -29354,9 +29390,9 @@
         "max_step_recovered": 1
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 317.0,
+      "peak_rss_mb": 316.7,
       "preserved_impl": null,
-      "ran_at": "2026-10-18T02:43:37",
+      "ran_at": "2026-10-18T04:43:38",
       "seeds": [
         0
       ],
@@ -29665,8 +29701,8 @@
     },
     "T0.08": {
       "amended": [],
-      "attempt": 17,
-      "commit": "ea937fa+dirty",
+      "attempt": 18,
+      "commit": "219a01a+dirty",
       "compute_s": null,
       "control_metrics": {
         "amendment_survived": false,
@@ -29680,7 +29716,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 1.32,
+      "duration_s": 1.3,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -30101,6 +30137,54 @@
           ],
           "spec_sha": "8c42327a17d13484",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 17,
+          "commit": "ea937fa+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "amendment_survived": false,
+            "attempt_not_inflated": false,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": false,
+            "own_result_recorded": true,
+            "unseen_entry_survived": true
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 1.32,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "989fa3d1cb6af184",
+          "message": "",
+          "metrics": {
+            "amendment_survived": true,
+            "attempt_not_inflated": true,
+            "blocked_records_no_metrics": true,
+            "default_is_not_run": true,
+            "dependency_blocks": true,
+            "entries_after_concurrency": 19,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": true,
+            "own_result_recorded": true,
+            "roundtrip_ok": true,
+            "survives_concurrent_writers": true,
+            "unseen_entry_survived": true,
+            "void_dep_blocks": true,
+            "void_why_not_a_refutation": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 292.8,
+          "preserved_impl": null,
+          "ran_at": "2026-10-18T02:44:11",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "8c42327a17d13484",
+          "status": "PASS"
         }
       ],
       "impl_sha": "989fa3d1cb6af184",
@@ -30122,9 +30206,9 @@
         "void_why_not_a_refutation": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 292.8,
+      "peak_rss_mb": 292.7,
       "preserved_impl": null,
-      "ran_at": "2026-10-18T02:44:11",
+      "ran_at": "2026-10-18T04:44:11",
       "seeds": [
         0
       ],
