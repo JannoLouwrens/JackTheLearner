@@ -120,14 +120,32 @@ Nothing was weakened. No threshold moved downward anywhere this sitting.
   coupling, World). As in the last five sittings, every match reads "not
   progressing" because nothing is progressing — that is a reading of the
   blackout, not of the arena, and it is not routed as a seat finding again.
-- **NOT DONE, named rather than left to look done:** `ladder_prompt.md`'s
-  PRIORITY section was **not** reconciled this sitting, and `FIELD_WATCH.md` was
+- **PRIORITY RECONCILED — AUDITED CLEAN, THEN AN ATTEMPTED EDIT WAS REVERTED,
+  AND THE REVERT IS THIS SITTING'S LAST FINDING.** The live `1^22` block was
+  audited for the dangerous failure mode (a FALSE live order at the top of the
+  builder's page): **none found.** Its cached GPU figures were already excised
+  on 10-17, it points at living sources, and its one status claim verifies —
+  `t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign` is
+  still OPEN, DUE 2026-10-21, exactly as written. **But this sitting's two new
+  builder units were not on the page**, so a `1^23` block naming them was
+  written — and then **reverted by its own author**, because `steering` priced
+  it: the insertion took `scripts/ladder_prompt.md` to **130,290 bytes, 782
+  below the 131,072 EXEC CLIFF**, past which the builder does not read a
+  degraded prompt — **it does not start, and the slot looks like an ordinary
+  `rc=126`.** Reverted; the page is back to 126,721 B, 4,351 below the cliff.
+  **The two orders therefore live in FOR THE BUILDER on this page only**, which
+  is a weaker channel than the builder's own prompt and is named as such rather
+  than papered over. **Also recorded, because the instrument said it and this
+  desk did not act on it:** `steering` flags the item-1 order
+  `SUBJECT T2.14 BLOCKED — T1.08 (FAIL)`. The ORDER is still legitimate — it is
+  a spec-file port, not a run of `T2.14` — but whether the re-run that pays its
+  bill can execute today is NOT established by this desk, and the builder should
+  derive that before spending a slot.
+- **NOT DONE, named rather than left to look done:** `FIELD_WATCH.md` was
   **not** consumed (it has not changed since 10-12 and its week-10 findings were
-  all routed by the 10-13 sitting, so nothing is owed there — but the PRIORITY
-  reconcile is a real omission). The sitting spent its clock on six OVERDUE
-  disposals, the Part 2 sweep and two committed strengthenings. Priorities point
-  at living sources and no false order was found on the page, so the omission
-  costs staleness, not a wrong instruction.
+  all routed by the 10-13 sitting, so nothing is owed there). The sitting spent
+  its clock on six OVERDUE disposals, the Part 2 sweep and two committed
+  strengthenings.
 
 ## FOR THE BUILDER — ordered, cheapest and most perishable first
 
@@ -204,10 +222,25 @@ a malformed `CHAMPIONS.md` breaks the one instrument that reads it, and the
 remaining minutes of a timed sitting are the wrong place to edit it. It is the
 first act I would take next Sunday.
 
-**6. NO-DECISION: what this desk did not do.** `ladder_prompt.md`'s PRIORITY
-reconcile (Part 2.5 duty 1) was not performed — see Part 2.5. No false live
-order was found on the page, so the cost is staleness rather than a wrong
-instruction, but it is an omission and not a judgement call.
+**6. THE BUILDER'S PROMPT IS THREE DAYS FROM AN EXEC CLIFF THAT LOOKS LIKE AN
+ORDINARY `rc=126`, AND THIS DESK JUST MEASURED IT BY WALKING INTO IT.**
+`scripts/ladder_prompt.md` is **126,721 B — 4,351 below the 131,072
+`MAX_ARG_STRLEN` cliff**, growing **+1,358 B/day** over the last 17 commits, so
+`steering` prices the cliff at **3 days**. Past it the builder does not read a
+degraded prompt: it does not start, and the failed slot is indistinguishable
+from any other `rc=126`. This sitting wrote a `1^23` block naming its two new
+units, measured the result at **782 B of margin**, and **reverted its own
+edit** — which means the orders now reach the builder only through this page.
+NO-DECISION is NOT claimed: the archival that fixes this (`1'`/`2'`/`3'`) is on
+its own queue row, every desk that edits this page makes it worse, and the next
+routine edit by builder, overseer or Review may be the one that silently stops
+the builder. **Recommendation: treat the self-imposed 125,000 ceiling as a hard
+refusal rather than a reporting line, so the organ that would cross it is
+refused in the open instead of discovering the cliff afterwards.** Routed
+nowhere new by design — it belongs to the existing archival row, and this desk
+is reporting the measured distance rather than opening a seventh entry on your
+desk in one morning. If you want it as its own decision, say so and it will be
+routed.
 
 ---
 
