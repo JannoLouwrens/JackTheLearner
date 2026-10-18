@@ -29057,7 +29057,7 @@
     "T0.05": {
       "amended": [],
       "attempt": null,
-      "commit": "0c44e30+dirty",
+      "commit": "5c51dd7+dirty",
       "compute_s": null,
       "control_metrics": {
         "checkpoints_checked": 12,
@@ -29069,7 +29069,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 30.84,
+      "duration_s": 30.9,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -29271,10 +29271,46 @@
           ],
           "spec_sha": "7f34b6ee7531e17d",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": null,
+          "commit": "0c44e30+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "checkpoints_checked": 12,
+            "corrupt": 12,
+            "kills": 12,
+            "max_step_recovered": 0
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 30.84,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "8a511439cda39a26",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+31.3s)",
+          "metrics": {
+            "checkpoints_checked": 12,
+            "corrupt": 0,
+            "kills": 12,
+            "max_step_recovered": 1
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 245.7,
+          "preserved_impl": null,
+          "ran_at": "2026-10-17T22:43:37",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "7f34b6ee7531e17d",
+          "status": "PASS"
         }
       ],
       "impl_sha": "8a511439cda39a26",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+31.3s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+31.2s)",
       "metrics": {
         "checkpoints_checked": 12,
         "corrupt": 0,
@@ -29282,9 +29318,9 @@
         "max_step_recovered": 1
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 245.7,
+      "peak_rss_mb": 244.8,
       "preserved_impl": null,
-      "ran_at": "2026-10-17T22:43:37",
+      "ran_at": "2026-10-18T00:43:37",
       "seeds": [
         0
       ],
@@ -29593,8 +29629,8 @@
     },
     "T0.08": {
       "amended": [],
-      "attempt": 15,
-      "commit": "0c44e30+dirty",
+      "attempt": 16,
+      "commit": "5c51dd7+dirty",
       "compute_s": null,
       "control_metrics": {
         "amendment_survived": false,
@@ -29608,7 +29644,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 1.31,
+      "duration_s": 1.29,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -29933,6 +29969,54 @@
           ],
           "spec_sha": "8c42327a17d13484",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 15,
+          "commit": "0c44e30+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "amendment_survived": false,
+            "attempt_not_inflated": false,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": false,
+            "own_result_recorded": true,
+            "unseen_entry_survived": true
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 1.31,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "989fa3d1cb6af184",
+          "message": "",
+          "metrics": {
+            "amendment_survived": true,
+            "attempt_not_inflated": true,
+            "blocked_records_no_metrics": true,
+            "default_is_not_run": true,
+            "dependency_blocks": true,
+            "entries_after_concurrency": 19,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": true,
+            "own_result_recorded": true,
+            "roundtrip_ok": true,
+            "survives_concurrent_writers": true,
+            "unseen_entry_survived": true,
+            "void_dep_blocks": true,
+            "void_why_not_a_refutation": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 226.8,
+          "preserved_impl": null,
+          "ran_at": "2026-10-17T22:44:11",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "8c42327a17d13484",
+          "status": "PASS"
         }
       ],
       "impl_sha": "989fa3d1cb6af184",
@@ -29954,9 +30038,9 @@
         "void_why_not_a_refutation": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 226.8,
+      "peak_rss_mb": 227.0,
       "preserved_impl": null,
-      "ran_at": "2026-10-17T22:44:11",
+      "ran_at": "2026-10-18T00:44:11",
       "seeds": [
         0
       ],
@@ -35439,8 +35523,8 @@
     },
     "T0.20": {
       "amended": [],
-      "attempt": 13,
-      "commit": "b8bf61f+dirty",
+      "attempt": 14,
+      "commit": "5c51dd7+dirty",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
@@ -35455,7 +35539,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 3.1,
+      "duration_s": 3.04,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -35630,10 +35714,52 @@
           ],
           "spec_sha": "73bd31d9a47eab38",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 13,
+          "commit": "b8bf61f+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
+            "inventory_size": 10.0,
+            "properties_checked": 7.0,
+            "properties_failed": 2.0,
+            "registry_size": 257.0,
+            "senses_absent_live": 0.0,
+            "senses_load_bearing_live": 2.0
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 3.1,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "d4d8cd17746bdd3b",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+2.0s)",
+          "metrics": {
+            "failed_names": "",
+            "inventory_size": 10.0,
+            "properties_checked": 7.0,
+            "properties_failed": 0.0,
+            "registry_size": 257.0,
+            "senses_absent_live": 0.0,
+            "senses_load_bearing_live": 2.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 294.1,
+          "preserved_impl": null,
+          "ran_at": "2026-10-17T19:06:45",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "73bd31d9a47eab38",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d4d8cd17746bdd3b",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+2.0s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+1.9s)",
       "metrics": {
         "failed_names": "",
         "inventory_size": 10.0,
@@ -35644,9 +35770,9 @@
         "senses_load_bearing_live": 2.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 294.1,
+      "peak_rss_mb": 235.0,
       "preserved_impl": null,
-      "ran_at": "2026-10-17T19:06:45",
+      "ran_at": "2026-10-18T00:51:10",
       "seeds": [
         0
       ],
@@ -49313,8 +49439,8 @@
     },
     "T2.08": {
       "amended": [],
-      "attempt": 5,
-      "commit": "b8bf61f+dirty",
+      "attempt": 6,
+      "commit": "5c51dd7+dirty",
       "compute_s": null,
       "control_metrics": {
         "shuf_auc": 0.3481,
@@ -49326,7 +49452,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 207.28,
+      "duration_s": 206.94,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -49479,10 +49605,64 @@
           ],
           "spec_sha": "2032e169230ea768",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "b8bf61f+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "shuf_auc": 0.3481,
+            "shuf_auc_std": 0.0266024,
+            "shuf_coverage": 0.5666,
+            "shuf_coverage_std": 0.0267593
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 207.28,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "dcbc73465fd36060",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+205.9s)",
+          "metrics": {
+            "auc_bored": 0.407733,
+            "auc_bored_std": 0.0186909,
+            "auc_margin": 0.0149,
+            "auc_margin_std": 0.00707531,
+            "auc_random": 0.379233,
+            "auc_random_std": 0.00953496,
+            "bored_worst_life": 0.629467,
+            "bored_worst_life_std": 0.0429069,
+            "coverage_margin": 0.0544,
+            "coverage_margin_std": 0.0187325,
+            "eps0_coverage": 0.6257,
+            "eps0_coverage_std": 0.0294653,
+            "null_agreement_gap": 0.0589,
+            "null_agreement_gap_std": 0.00708378,
+            "null_best_life": 0.734167,
+            "null_best_life_std": 0.0277135,
+            "random_coverage": 0.601567,
+            "random_coverage_std": 0.0392684,
+            "state_coverage": 0.697533,
+            "state_coverage_std": 0.0229217
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 331.6,
+          "preserved_impl": null,
+          "ran_at": "2026-10-17T19:03:15",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "2032e169230ea768",
+          "status": "PASS"
         }
       ],
       "impl_sha": "dcbc73465fd36060",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+205.9s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+205.6s)",
       "metrics": {
         "auc_bored": 0.407733,
         "auc_bored_std": 0.0186909,
@@ -49506,9 +49686,9 @@
         "state_coverage_std": 0.0229217
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 331.6,
+      "peak_rss_mb": 257.2,
       "preserved_impl": null,
-      "ran_at": "2026-10-17T19:03:15",
+      "ran_at": "2026-10-18T00:47:40",
       "seeds": [
         0,
         1,
@@ -57705,8 +57885,8 @@
     },
     "W0.DIAG": {
       "amended": [],
-      "attempt": 5,
-      "commit": "b8bf61f+dirty",
+      "attempt": 6,
+      "commit": "5c51dd7+dirty",
       "compute_s": null,
       "control_metrics": {
         "borrowed_ok": 1.0,
@@ -57738,7 +57918,7 @@
         "scripts/regate.py",
         "scripts/regate.sh"
       ],
-      "duration_s": 0.11,
+      "duration_s": 0.1,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -58120,6 +58300,97 @@
           ],
           "spec_sha": "959e49599830d50e",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "b8bf61f+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "borrowed_ok": 1.0,
+            "borrowed_ok_std": 0.0,
+            "eats_down": 0.0,
+            "eats_down_std": 0.0,
+            "eats_ka": 1.0,
+            "eats_ka_std": 0.0,
+            "gain_down": -11.044444,
+            "gain_down_std": 0.740537,
+            "gain_ka": 36.65,
+            "gain_ka_std": 5.715913,
+            "ka_margin": 36.640476,
+            "ka_margin_std": 5.710809,
+            "lives_down": 18.333333,
+            "lives_down_std": 0.471405,
+            "lives_ka": 14.0,
+            "lives_ka_std": 0.0,
+            "margin_down": -11.053968,
+            "margin_down_std": 0.647109,
+            "mean_life_down": 50.820468,
+            "mean_life_down_std": 0.377923,
+            "mean_life_ka": 64.27619,
+            "mean_life_ka_std": 0.948062,
+            "tail_open_down_s": 28.466667,
+            "tail_open_down_s_std": 17.061718
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 0.11,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "5c16c1ec31762093",
+          "message": "HASH-SALT DIFFERENTIAL ERRORED (4 deciding metric(s); reporting-only): TimeoutExpired: Command '['/data/venvs/jackthelearner/bin/python', '-c', \"import importlib,json,sys\\ndef _d(o):\\n    try: return float(o)\\n    except Exception: return str(o)\\ndef _fn(ref):\\n    mod,name=ref.r",
+          "metrics": {
+            "borrowed_ok": 1.0,
+            "borrowed_ok_std": 0.0,
+            "claim_branch": "correlation buys life through food",
+            "eats_random": 0.333333,
+            "eats_random_std": 0.471405,
+            "eats_up": 1.0,
+            "eats_up_std": 0.816497,
+            "gain_random": 0.00952381,
+            "gain_random_std": 0.391288,
+            "gain_repeat": -2.493333,
+            "gain_repeat_std": 3.899584,
+            "gain_up": 12.122222,
+            "gain_up_std": 1.199485,
+            "jit_delta_up": 0.0217737,
+            "jit_delta_up_std": 0.00227055,
+            "jit_final_up": 0.0144994,
+            "jit_final_up_std": 0.000952114,
+            "jit_first_up": 0.0362731,
+            "jit_first_up_std": 0.00136905,
+            "lives_ok": 1.0,
+            "lives_ok_std": 0.0,
+            "lives_random": 22.666667,
+            "lives_random_std": 0.471405,
+            "lives_repeat": 17.333333,
+            "lives_repeat_std": 0.471405,
+            "lives_up": 17.666667,
+            "lives_up_std": 0.471405,
+            "margin_up": 12.112698,
+            "margin_up_std": 1.140277,
+            "mean_life_random": 41.232411,
+            "mean_life_random_std": 0.730066,
+            "mean_life_up": 52.528322,
+            "mean_life_up_std": 1.876262,
+            "physics_finite_min": 1.0,
+            "physics_finite_min_std": 0.0,
+            "tail_open_up_s": 32.733333,
+            "tail_open_up_s_std": 18.990758
+          },
+          "peak_rss_inherited": true,
+          "peak_rss_mb": 317.5,
+          "preserved_impl": null,
+          "ran_at": "2026-10-17T18:54:29",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "959e49599830d50e",
+          "status": "PASS"
         }
       ],
       "impl_sha": "5c16c1ec31762093",
@@ -58163,10 +58434,10 @@
         "tail_open_up_s": 32.733333,
         "tail_open_up_s_std": 18.990758
       },
-      "peak_rss_inherited": true,
-      "peak_rss_mb": 317.5,
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 319.2,
       "preserved_impl": null,
-      "ran_at": "2026-10-17T18:54:29",
+      "ran_at": "2026-10-18T01:01:10",
       "seeds": [
         0,
         1,
