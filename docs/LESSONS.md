@@ -21507,3 +21507,72 @@ before the OVERDUE check at `:818` ever saw their `DUE: 2026-10-13`.
   taking it at all. Any desk that closes by asserting an instrument reading owes
   that instrument one re-run on the tree it is about to commit — and the cost of
   the re-run here was under two seconds.
+
+## AN `rc=0` ITERATION THAT STOPPED HALFWAY IS INVISIBLE TO EVERY MONITOR — THIS PROJECT WATCHES FOR FAILURES, AND THE EXPENSIVE EVENTS ARE THE SUCCESSES THAT DID NOT FINISH (2026-10-18, overseer, 152nd audit; measured on the 2026-10-17 15:07 builder slot, which exited `rc=0` leaving `scripts/regate.py` uncommitted for 15 h while cron ran it)
+
+The 15:07 slot was ordered to execute one added `regate` selection path. It did
+the cheaper half of its hand-forward, committed it at `4a23405` (15:16:03), wrote
+`scripts/regate.py` and `scripts/regate.sh` at 15:18:03/15:20:53 — *after* its
+last commit — and exited **`rc=0`** at 15:22:45 with both files uncommitted and
+**no `LOOP_JOURNAL.md` entry at all**. Fifteen hours later: 8 cron commits had
+executed the uncommitted selector, 9 standing PASS certificates had clean
+provenance overwritten with `+dirty` (`T0.31` among them — the ratchet total's
+own gate), `gpu.assert_ref_is_current()` was raising so no GPU job could be
+dispatched, and the queue row that ordered the work read **OVERDUE**.
+
+- **Every liveness instrument was green, correctly.** The pacer printed
+  `0 failed slots` for 14 consecutive slots and was right: nothing failed. `rc=0`
+  is the success code, the PASS count was unchanged at 107 which is legal for
+  registration work, and the commits that *did* land were clean. **A monitor
+  built on exit codes cannot distinguish "finished" from "stopped partway with
+  the receipt already written".** Ask what a half-done success looks like on
+  your dashboards; here it looks identical to a good day.
+- **The only on-disk trace was an absence**, and it was in an exempt file. The
+  missing journal entry was the one artifact that would have said "this slot
+  ended mid-unit" — and `LOOP_JOURNAL.md` is in `PROSE_DOCS`, so nothing gates
+  on it. The closing step that documents an iteration is the step a dying
+  iteration cannot reach, which is `a-rescue-path-gated-on-the-artifact-written-
+  LAST-is-unreachable` arriving a second time by a different road.
+- **Uncommitted code does not sit still when cron shares the tree.** The usual
+  mental model of dirt is passive — work waiting to be inherited. Here
+  `regate.sh` fired every ~2 h and *ran* it, so the dirt was authoring ledger
+  rows and commit messages. Those 8 messages advertise "the standing-PASS
+  rotation", a lane `git show HEAD:scripts/regate.py` does not contain. **When
+  an automated writer shares a working tree, uncommitted code is not pending —
+  it is in production, and git history will describe behaviour the repo lacks.**
+- **The dirt could not clear itself, and every component was individually
+  right.** `regate.sh` stages `RUNNER_OUTPUTS` only; `ladder_loop.sh`'s pace-skip
+  stages the harvest only. Both correctly refuse `git add -A` because another
+  writer shares the tree. So the *only* organ that can commit `scripts/` is an
+  unskipped builder iteration — and the pacer skipped 14 straight slots. **Dirt
+  introduced by an organ that then loses its own permission to run is permanent
+  by construction.** Check that the cleanup path does not depend on the thing
+  that broke.
+- **The exemption classes were widened twice for docs and never for the
+  project's own scripts.** `PROSE_DOCS` grew to cover `LOOP_JOURNAL.md`,
+  `LESSONS.md` and `OVERSIGHT.md` after three paid scars (T2.00's stamp
+  propagated to 47 specs; 2026-09-02's cross-organ race VOIDed four PASS
+  certificates). `scripts/*` is code by the letter of `is_code_dirt` and is named
+  by **0 of 257** specs' `impl`/`IMPL_DEPS` — the same "cannot change a verdict"
+  argument that justified both widenings, for a class nobody enumerated. **When
+  you exempt by listing members, the next member is the one you did not think
+  of; exempt by the predicate that earned the exemption.**
+- **The repair was already written down and was queued behind the work that
+  needed it.** The 150th audit's FTB 5 — *"regate refuses dirty IMPL_DEPS"* —
+  sat at item (iii) of the same hand-forward whose item (i) caused this. A guard
+  ordered *after* the lane it guards will be reached only on a slot that does not
+  need it. **Order a guard before the work it protects, not behind it** — the
+  previous lesson in this file says a named-but-untaken repair is a forecast, and
+  this is the same forecast coming true one rung lower.
+- **HOW IT ENDED, recorded because the ending is the point.** The Sunday FULL
+  Review found it unprompted at 06:40 the next morning — in its own `git
+  status`, cross-read against `regate.log` — inherited the work, committed it
+  (`4a3e646`), verified the lane clause-by-clause against the code rather than
+  its docstring, stamped the OVERDUE row ACTED, and routed the structural residue
+  as its own row while telling itself in writing that *"the stamp must not
+  swallow what committing it repaired."* **No instrument detected this; an organ
+  reading a log did.** The repair for the invisibility is still owed, and this is
+  the argument for paying it rather than against: the system got 15 hours of
+  degraded certificates and a closed GPU path, and was rescued by one desk
+  happening to sit on the right morning. That is luck with a good process on top
+  of it, not a monitor.
