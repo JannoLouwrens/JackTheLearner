@@ -745,11 +745,17 @@ def _experiment(seed: int) -> dict:
             max([rand_rate[c] for c in retained], default=0.0), 4),
         "planner_reach_mean": round(
             float(np.mean([np.mean(own_hit[c]) for c in own_hit if own_hit[c]])), 4),
-        # The teacher's reach AT THE CALIBRATION CELL — the ceiling on
-        # `blind_calib_rate`, computed by this run since attempt 1 and thrown
-        # away until the 09-12 ruling. Defaults to 0.0 (fail-closed) when the
-        # declared calibration cell is not a candidate at all: a liveness venue
-        # that does not exist is not a venue that passes.
+        # The teacher's reach AT THE CALIBRATION CELL — computed by this run
+        # since attempt 1 and thrown away until the 09-12 ruling. Defaults to
+        # 0.0 (fail-closed) when the declared calibration cell is not a
+        # candidate at all: a liveness venue that does not exist is not a venue
+        # that passes.
+        # NOT A CEILING ON `blind_calib_rate`, and this comment said it was
+        # until 2026-10-18 (Review FULL, disposing
+        # `lg03-teacher-does-not-cap-the-twin`). The per-seed join REFUTES the
+        # cap: teacher 1.00/0.75/0.75 against twin 0.50/1.00/0.25, and on seed 1
+        # the twin EXCEEDS its teacher. The metric is the VENUE'S validity, not
+        # a bound on the student's score. See `_check`'s ordering comment.
         "planner_calib_reach": round(
             float(np.mean(own_hit[calib_cell])) if own_hit.get(calib_cell)
             else 0.0, 4),
@@ -823,10 +829,21 @@ def _check(m: dict, c: dict):
     # VOID first: none of these is a refutation of the claim.
     if m["obs_finite"] < 1.0:
         return Status.VOID          # the world handed a policy a NaN
-    # ORDER IS LOAD-BEARING: the teacher is indicted before the student. A tape
-    # recorded from a servo that missed caps `blind_calib_rate` at
-    # `planner_calib_reach`, so reading the student's score first would blame
-    # the twin for the demonstrator's failure. See PLANNER_CALIB_MIN above.
+    # ORDER IS LOAD-BEARING: the teacher is indicted before the student, and
+    # the REASON was corrected 2026-10-18 (Review FULL, disposing
+    # `lg03-teacher-does-not-cap-the-twin`) without moving the gate.
+    # REFUTED, and kept here so nobody re-derives it: this comment used to say a
+    # tape recorded from a servo that missed CAPS `blind_calib_rate` at
+    # `planner_calib_reach`. The ordered per-seed join killed that — teacher
+    # 1.00/0.75/0.75 vs twin 0.50/1.00/0.25, and seed 1's twin (1.00) BEAT its
+    # teacher (0.75). There is no cap.
+    # WHAT SURVIVES, and it is sufficient on its own: scoring a student on a
+    # tape whose demonstrator missed measures the DEMONSTRATION, not the
+    # student — so a calibration cell the teacher cannot ace is an invalid
+    # LIVENESS VENUE, and an invalid venue is VOID before anyone reads the
+    # twin. That is a statement about what the venue can support, not a bound
+    # on the student, and it does not depend on the refuted cap.
+    # See PLANNER_CALIB_MIN above. The constant does not move.
     if m.get("planner_calib_reach", 0.0) < PLANNER_CALIB_MIN:
         return Status.VOID          # the liveness VENUE is invalid, not the twin
     if m["blind_calib_rate"] < CALIB_MIN:
