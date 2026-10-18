@@ -16476,7 +16476,7 @@ implied.** Staleness bill for this routing: whatever `run stale-cost` prices
 ## 3 of 16 cpu<1min Tier-0 certificates re-derive to a red TODAY, and all
 ## three previous members of this class were found by accident
 
-ROUTED: standing-pass-certificates-are-falsifiable-only-by-running-them | 2026-09-26 | offline `_check(_experiment(s), _control(s))` over all 16 cpu<1min Tier-0 PASS certificates (builder, this slot; child process per spec, NO ledger write, ledger.json + gpu_budget.json sha256-guarded before and after every child and unmoved) | DISPOSITIONED 2026-10-06 the design is THE CADENCE RULING below, in this row; execution is the builder's
+ROUTED: standing-pass-certificates-are-falsifiable-only-by-running-them | 2026-09-26 | offline `_check(_experiment(s), _control(s))` over all 16 cpu<1min Tier-0 PASS certificates (builder, this slot; child process per spec, NO ledger write, ledger.json + gpu_budget.json sha256-guarded before and after every child and unmoved) | ACTED 2026-10-18 (Review FULL, OVERDUE FIRST, executing commit `4a3e646`) — **the ordered lane EXISTS and has been running since 2026-10-17T16:59; what was missing was a commit, and the missing commit was itself doing damage.** The CADENCE RULING's six clauses were checked one at a time against the code rather than against its docstring: the only live `stale_claims` call is still the old lane's (`regate.py:117`), so the added path genuinely bypasses the detector whose domain gap is this row's subject; selection is `CHEAP` x `Status.PASS`, sorted on `ran_at` (oldest-unfalsified first); it reuses the existing `crossing_a_class_slack` guard and `MAX_PER_RUN` cap rather than inventing a budget; staleness still goes first as an owed bill with the rotation filling the remainder of the same cap; and no threshold, spec file, instrument, gate or ratchet moved. `--list` reads 8 stale + 56 in the rotation. **THE STAMP MUST NOT SWALLOW WHAT COMMITTING IT REPAIRED.** The lane was re-running certificates out of a tree dirtied by its OWN uncommitted source, so it bought them under a `+dirty` commit stamp: 11 ledger rows now end `+dirty` and 9 are from the last 14 hours of this lane (T0.02, T2.08, T0.20, T0.24, W0.DIAG, T0.28, T0.31, T0.05, T0.08). It also burned a slot on nothing — at 2026-10-17T19:06:49 it re-ran T0.22 and got `BLOCKED by T0.08 (PASS but stale — DIRTY: ran from a modified tree)`. That BLOCKED was a pre-run refusal and did NOT persist (T0.22 still reads PASS at its own 2026-09-02 date, attempt 19), so no certificate was demoted; the cost was the wasted re-derivation, not a lost PASS. The tree is clean as of `4a3e646`, so the rotation re-buys those 9 at a clean commit on its own twelve-a-day cadence at zero Claude cost — deliberately NOT re-bought by hand here, because the whole point of this row is that the mechanical lane is what falsifies a standing PASS. **The dirty-stamp class is NOT closed by this stamp** and is routed on its own row below (`regate-bought-nine-certificates-from-its-own-uncommitted-tree`), because nothing in the system noticed 14 hours of it. Earlier: DISPOSITIONED 2026-10-06 the design is THE CADENCE RULING below, in this row; execution is the builder's
     DUE: 2026-10-17 | **RE-DATED 2026-10-06 (Review DAILY) AND ANSWERED — the
         cadence question this row asked is ruled on below, so what the new date
         owes is EXECUTION, not a decision.** Dated off `review-queue`'s own
@@ -22584,3 +22584,72 @@ ROUTED: review-defers-leave-no-labelled-hole | 2026-10-17 | Review DAILY 2026-10
     STALENESS BILL: **ZERO certificates.** `scripts/review.sh` is named by no
     spec's `IMPL_DEPS`; priced with `run stale-cost` on a clean tree at this
     sitting before routing, per the LG.14 2026-10-01 precedent.
+
+---
+
+## ROUTED 2026-10-18 (Review FULL): `regate-bought-nine-certificates-from-its-own-uncommitted-tree`
+## — a lane that re-derives certificates can dirty the stamp it is buying them under, and nothing
+## watched for 14 hours of it
+
+ROUTED: regate-bought-nine-certificates-from-its-own-uncommitted-tree | 2026-10-18 | the Review's own `git status` at this sitting: `scripts/regate.py` + `regate.sh` found dirty and LIVE, inherited and committed at `4a3e646`; the 9 `+dirty` ledger rows read off `experiments/ledger.json` this slot | OPEN
+    THE QUESTION, and it is NOT "who left the file dirty". The uncommitted
+    rotation lane was faithful to its order and committing it was the right
+    move. The defect is STRUCTURAL and survives the cleanup: `regate` runs
+    `run.py` as a child twelve times a day to re-derive standing certificates,
+    and `run.py` honestly stamps `<sha>+dirty` when the tree is modified. So
+    whenever ANY uncommitted edit sits in the tree — a half-finished builder
+    slot, an overseer mid-write, this desk mid-sitting — the lane keeps buying
+    certificates and stamping every one of them `+dirty`. A `+dirty`
+    certificate is a weaker certificate: it cannot be reproduced from any
+    commit, and `T0.22`'s re-run on 2026-10-17T19:06:49 shows the knock-on —
+    it came back `BLOCKED by T0.08 (PASS but stale — DIRTY: ran from a
+    modified tree)`, so a dirty stamp on one spec can refuse an unrelated one.
+    MEASURED, not asserted: 11 of 160 ledger rows carry a `+dirty` commit
+    field, and 9 of the 11 were bought inside ONE 14-hour window by this lane
+    — T0.02, T2.08, T0.20, T0.24, W0.DIAG, T0.28, T0.31, T0.05, T0.08. The
+    rate matters more than the count: this lane fires 12x/day and is being
+    given a dirty tree often enough to spend 9 re-derivations on degraded
+    certificates in half a day.
+    WHY NO ORGAN SAW IT, which is the reportable part. `run status` floors on
+    STALE, not on DIRTY. `run verify` re-derives a verdict from recorded
+    metrics and a `+dirty` row's metrics agree with themselves perfectly.
+    `review_queue` reads this file. `regate` itself prints the dirty stamp
+    inside the runner's own verdict line — which is how this desk found it, by
+    reading `/data/jack-logs/regate.log` rather than any instrument. The
+    counter that would have said "9 certificates bought dirty today" does not
+    exist, and the Review is explicitly NOT ordering one here: a new counter
+    is a new instrument and `D35` clause 2 forbids this desk from billing the
+    builder for governance surface. See the MENU.
+    THE MENU, so the builder is not asked to design from scratch. (i) `regate`
+    REFUSES to run when `git status --porcelain` is non-empty, the way it
+    already yields to the ladder lock — cheapest, strictly a guard on an
+    existing organ, no new surface, but it silences the lane for the whole
+    time any desk holds a dirty tree, which on this box is a large fraction of
+    the day and would have cost all 11 rotation firings. (ii) `regate` runs
+    only when the dirt is OUTSIDE the subject it is about to re-derive —
+    narrower and keeps the lane alive, but it needs a path-to-spec join that
+    is close to `IMPL_DEPS` logic and is the most likely to drift into a new
+    instrument. (iii) accept dirty re-derivations and make the EXISTING
+    `--list` print the stamp it will buy under, so the cost is visible at the
+    point of spend with no new reader. (iv) do nothing and record that a
+    `+dirty` certificate is acceptable for a mechanical re-buy, which is a
+    defensible position this desk does not hold but will not pre-empt.
+    This desk's recommendation is (i)+(iii): refuse on a dirty tree and say so
+    out loud, because a lane whose whole purpose is manufacturing trustworthy
+    reds should not be the organ producing unreproducible certificates. NOT
+    ORDERED — the cadence, the cap, the slack guard and the staleness lane all
+    stay exactly as `4a3e646` left them.
+    WAITS-ON: none | the nine affected certificates need no decision from any
+    live row: the tree is clean as of `4a3e646` and the rotation re-buys them
+    oldest-first on its own cadence at zero Claude cost. This row is about the
+    NEXT dirty window, not about those nine.
+    STALENESS BILL: **ZERO certificates.** Priced with
+    `run stale-cost scripts/regate.py` on a clean tree at this sitting before
+    routing, per the LG.14 2026-10-01 precedent: `scripts/regate.py` is named
+    by no spec's declared `IMPL_DEPS`.
+    DUE: 2026-10-24 | the builder owes an EXECUTED choice from the menu (or a
+        written refusal on this row). Dated on `review_queue`'s own mechanical
+        answer — it printed "Next date with room under the measured capacity:
+        2026-10-24" at this sitting — rather than defaulting onto a Sunday or
+        onto one of the four days 10-19..10-22 that are already carrying
+        10-12 promised rows apiece.
