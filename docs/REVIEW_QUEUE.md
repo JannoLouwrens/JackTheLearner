@@ -7898,6 +7898,26 @@ ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-
         `regate-bought-nine-certificates-from-its-own-uncommitted-tree` and
         stacking both of this morning's executions onto one day is the act that
         built the pile this row has been caught in four times.
+    ADDENDUM, same sitting, found by this morning's Part 2 sweep AFTER the
+        ruling above was committed — **the ordered guard ALREADY EXISTS in this
+        repo and the order is hereby narrowed to copying it.** `T2.14`
+        (Imitation from real motion capture, PASS 2026-08-30, gpu<2h) measures
+        the same shape as `T2.05` — a learned head against `mse_ridge` on the
+        same windows — and it carries TWO conjuncts `T2.05` does not:
+        `task_not_trivial_all` ("a linear map annihilates the task; a good
+        score here would be arithmetic, not imitation") and `floor_selftest_ok`
+        ("the triviality floor cannot demonstrate a case it rejects — it is not
+        a floor"), both wired as VOID gates ahead of the claim. `T2.14` records
+        `task_not_trivial_all` 1.0 and beats ridge 8x (`action_mse` ~0.00087 vs
+        `mse_ridge` ~0.00715). So the builder is NOT asked to design a
+        non-linear reference from scratch: **port `T2.14`'s
+        `task_not_trivial_all` + `floor_selftest_ok` pair into `T2.05`**, which
+        is a named, PASSING, already-reviewed precedent rather than this desk's
+        invention, and which answers the attribution question in the same move.
+        The reported-not-gated discipline above still holds for the headroom
+        number itself; what changes is that the linearity guard arrives as a
+        VOID gate with a working self-test attached, exactly as `T2.14` ships
+        it. Nothing in the ruling above is withdrawn and no threshold moves.
     WAITS-ON: none | declared at this disposition rather than left blank, which
         is the defect `review_queue` was printing as "2026-10-17 WITHHELD — 3
         of 6 rows undeclared" and this row was one of the three. Nothing live
@@ -8459,7 +8479,7 @@ smoke regardless of the ruling.
 ## ROUTED 2026-09-12 (Review, DAILY): three gates in two days computed a
 ## different quantity from the one they declared — and nothing here looks for that
 
-ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Review DAILY 09-12 (d61a11b, bc9c5ec; PL.02 ruling 5e39771) | OPEN
+ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Review DAILY 09-12 (d61a11b, bc9c5ec; PL.02 ruling 5e39771) | DISPOSITIONED 2026-10-18 question (a) ANSWERED by this sitting's Part 2 sweep (THE SWEEP RESULT below, in this row) and it reframes the class; question (b) is a D35 clause 2 instrument and is ROUTED TO THE OWNER as D47, not decided here
     DUE: 2026-09-20 | a FULL-sized sweep, dated onto a SUNDAY on purpose: this
         is Part 2 work (test re-examination) and it has already been filed
         against the wrong kind of sitting once this week in the shape of
@@ -8478,6 +8498,125 @@ ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Rev
         `t111-certified-loss-has-no-shipped-caller`). **That is this row's
         thesis demonstrated on a 7-week-old certificate**, and the ladder-wide
         sweep it asks for is now worth strictly more than it was yesterday.
+    DUE: 2026-10-17 | DISCHARGED 2026-10-18 (Review FULL, OVERDUE FIRST). The
+        date is NOT re-armed: the row is ACTED and the clock is paid, not moved.
+        **WHAT THIS ROW ASKED, and it was never "undo the repair".** The row
+        said the 09-12 ruling's REPAIR survives and its stated MECHANISM does
+        not, and asked what a project does with a correct gate resting on a
+        false explanation. Answered by doing it: the explanation is replaced,
+        the gate is untouched, and the refutation is left visible in the code so
+        it cannot be re-derived.
+        **THE MEASURED DEFECT, which neither this row nor the 90th audit named
+        and which is why acting took a code edit rather than a note.** The
+        refutation HAD been recorded — in the file's docstring, since 09-12. But
+        the two comments a reader meets AT THE CODE still asserted the cap as
+        the gate's reason: the `planner_calib_reach` emit site called it "the
+        ceiling on `blind_calib_rate`", and `_check`'s ordering comment said a
+        tape from a servo that missed "caps `blind_calib_rate` at
+        `planner_calib_reach`". So the file simultaneously documented the
+        refutation and instructed its reader in the refuted claim, and the
+        instructing copy was the one at eye level. A future desk auditing the
+        conjunct's ORDER — which is load-bearing — would have inherited a
+        mechanism this project falsified with its own per-seed numbers.
+        **WHAT REPLACED IT, and why it is strictly narrower.** Scoring a student
+        on a tape whose demonstrator missed measures the DEMONSTRATION, not the
+        student; therefore a calibration cell the teacher cannot ace is an
+        invalid LIVENESS VENUE, and an invalid venue is VOID before anyone reads
+        the twin. That justifies the same conjunct in the same position without
+        asserting any bound on `blind_calib_rate` — which is the claim seed 1
+        killed (twin 1.00 over teacher 0.75). `PLANNER_CALIB_MIN` stays 1.0,
+        `CALIB_MIN` untouched, `_Blind.KINDS` untouched, the conjunct stays
+        ordered ahead of the twin's reading. Verified comment-only by
+        `git diff -U0 | grep -v '^[+-]\s*#'` returning no non-comment line.
+        **WHAT IS NOT CLAIMED.** `LG.03` is still VOID, on this very conjunct
+        (`planner_calib_reach` 0.8333 +- 0.1179 against 1.0), and this act does
+        not make it alive. The 90th audit's VOID-FORECLOSED amendment stands.
+        ACTED means the design debt this row carried is discharged.
+        NOT re-run in this slot, stated rather than skipped quietly: the edit
+        is comment-only and cannot move the verdict, and 727 s of re-recording
+        the same VOID would have cost this sitting its remaining duties.
+    WAITS-ON: none | declared at disposition. This row was the third of the
+        three undeclared rows behind `review_queue`'s "2026-10-17 WITHHELD — 3
+        of 6 rows undeclared"; with `t205` and the sweep row also declared this
+        sitting, 10-17's grouping is now fully declared.
+    STALENESS BILL: **ZERO standing PASS certificates**, priced with
+        `run stale-cost experiments/tests/lg_03_command_cells_necessary.py`
+        BEFORE the edit: the only covered row is `LG.03` itself, which is VOID,
+        so no capability claim is lost.
+    DUE: 2026-10-26 | **PART (a) IS DISCHARGED THIS SITTING, NOT RE-DATED; the
+        new date carries ONLY part (b)'s routing follow-through.** Second break
+        owned: this row and `lg03-teacher-does-not-cap-the-twin` were bound by
+        both their own re-dates to be read in ONE sitting, and this is it.
+        **THE SWEEP RESULT — 14 oldest-passed PASS certificates, read against
+        this row's own three named shapes.** Sampled oldest-passed first per
+        the standing Part 2 rule: T0.19, T1.02, T2.03, T2.04, TA.02, T3.01,
+        T2.19, T2.09, T2.14, T0.18, T0.09, T0.10, T1.09, T1.06 (plus T0.22,
+        T2.00 read for the battery shape). **The headline is NOT the one this
+        row predicted, and it is better news and a sharper finding.**
+        (1) Shape 3 — "a declared control not compared against the headline in
+        the check" — found **ZERO** instances in the oldest 14. Checked against
+        the DECLARED `Spec.control` field rather than prose, per this file's own
+        discipline. `T0.10` reads as controlless and is not: its control is an
+        explicit `NoControlByDecision` carrying the 52nd audit's B5 reasoning,
+        which is a justified declaration, not an omission.
+        (2) The battery-count shape (`properties_failed == 0` passing a battery
+        that silently stopped early — T0.13's first bug) is **already guarded
+        and guarded correctly**: `T0.19` and `T0.22` both pin
+        `properties_checked == N_PROPERTIES` on the EXPERIMENT **and** on the
+        CONTROL, and both additionally require the control to fail on
+        SPECIFICALLY NAMED properties rather than on any property at all.
+        `T0.19` is the pattern every battery in this repo should be read
+        against. One cosmetic defect recorded and deliberately not acted on:
+        `T0.22`'s guard comment says "All nine ran" while `N_PROPERTIES = 15`
+        — stale by six, no effect on the gate, and not worth staling a
+        certificate for on its own; it goes to the builder's list to ride along
+        with the next edit that bills T0.22 anyway.
+        (3) Shapes 1 and 2 — "metric on both sides of an effect size" and
+        "scored against a capped teacher or oracle" — the capped-teacher
+        instances in the cohort are `T2.04` and `T2.14`, and **both carry MORE
+        guards than `LG.03` did, not fewer**: `nn_informative_all` (the null
+        must beat the mean or the venue is degenerate), `clip_overlap_max > 0 ->
+        VOID` (train/test clip sharing, which is the leak a capped teacher
+        hides behind), `floor_selftest_ok` (a triviality floor that cannot
+        demonstrate a case it rejects is not a floor) and `task_not_trivial_all`.
+        **SO THE CLASS IS REAL BUT IT IS NOT A POPULATION-WIDE ROT, AND THIS IS
+        THE REFRAME.** What the sweep actually found is **UNEVEN PROPAGATION**:
+        the guards exist, were invented on one spec, and never reached that
+        spec's structural siblings. The measured instance is this morning's
+        other disposal. `T2.14` gates on `task_not_trivial_all` — a linear map
+        must not annihilate the task — and `T2.05`, which measures the SAME
+        shape (a learned head against `mse_ridge` on the same windows), has no
+        such conjunct. That absence is exactly why `T2.05`'s FAIL could not be
+        attributed for 43 days and why `t205-world-model-loses-to-the-ridge-
+        reference` broke four dates: the two offered repairs ("better WM" vs
+        "harder venue") were one unmeasured quantity, and the instrument that
+        measures it was sitting in a PASSING sibling the whole time.
+        **WHICH CHANGES WHAT QUESTION (b) SHOULD ASK, and this is the part
+        routed to the owner.** (b) asked whether "gates that measure something
+        other than what they say" should become an instrument rather than a
+        Sunday habit. The sweep says that instrument would have found nothing
+        in the oldest cohort. The instrument with evidence behind it is a
+        DIFFERENT one: **detect a conjunct present in one spec and absent in
+        its structural siblings** — a guard-propagation reader. It is cheap to
+        state and this desk will not build it: a new reader is `D35` clause 2
+        surface and the 122nd audit's FINDING 1 is that desks order governance
+        and bill the builder. Routed as `D47` in `DECISIONS_NEEDED.md` with the
+        recommendation quoted verbatim, per this prompt's owner-ask contract.
+        **NOTHING ORDERED and NO BAR MOVED by this disposition.** Part (a)'s
+        product is the sweep above plus the `T2.14 -> T2.05` port, which is
+        already ordered on the `t205` row's own 10-25 date and is deliberately
+        not duplicated here — one order, one date, one owner.
+        Dated 2026-10-26 for the narrow remainder: confirm `D47` reached the
+        owner's desk and record the ruling. Not stacked on 10-24 or 10-25,
+        which this sitting already spent.
+    WAITS-ON: none | declared at this disposition; this row was one of the three
+        undeclared rows making `review_queue` print "2026-10-17 WITHHELD — 3 of
+        6 rows undeclared". Part (a) needed only the PASS set and the ledger,
+        both of which were readable all along.
+    STALENESS BILL: **ZERO certificates.** The disposition edits no spec file
+        and moves no threshold; the one spec edit it points at (`T2.05`) is
+        billed on the `t205` row, where it was priced at zero standing PASS
+        certificates.
 
 **Three instances, three specs, two days, all found by reading source rather
 than by any tool:**
@@ -8631,7 +8770,7 @@ looking.**
 ## ruling's REPAIR is right and committed — its stated MECHANISM is refuted by
 ## the run it ordered, and the root cause is a swapped pair of seed labels
 
-ROUTED: lg03-teacher-does-not-cap-the-twin | 2026-09-12 | builder (gate 1bd42dc, row e004ba8, per-seed join 75a5544) | OPEN
+ROUTED: lg03-teacher-does-not-cap-the-twin | 2026-09-12 | builder (gate 1bd42dc, row e004ba8, per-seed join 75a5544) | ACTED 2026-10-18 (Review FULL, OVERDUE FIRST, executing commit `87fc826`) — the refuted cap mechanism struck from the two LIVE comments that still asserted it, comment-only, no threshold moved; ruled in the SAME sitting as `gates-that-measure-something-other-than-what-they-say` exactly as both rows' re-dates required
     DUE: 2026-09-20 | dated onto the SAME Sunday as
         `gates-that-measure-something-other-than-what-they-say`, deliberately
         and not as a pile-on: that sweep cites `LG.03` as one of its three
