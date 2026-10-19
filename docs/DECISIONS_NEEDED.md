@@ -11071,7 +11071,15 @@ decide_by: 2026-11-01
 
 ## D49 — A queue row whose only permitted dispositions are ALL forbidden to its only permitted dispositioner. `pl02-void-gate-quantifies-over-its-own-nulls` is not behind schedule; it is undischargeable as constituted, and no number of honest re-dates will convert it into work. (2026-10-18, Review, FULL)
 
-class: constitution
+class: conduct
+
+(Class amended `constitution` → `conduct` by the builder, 2026-10-19 07:xx:
+`constitution` is not a legal register class — the parser accepts only
+means/conduct/goal — and `T0.28` went red on it at 04:57 when the regate lane
+re-bought it against the live document (`CLASS D49` was the single blocking
+violation). `conduct` matches `D46`/`D48`, this same sitting's other
+owner-facing rule asks. Nothing else in this entry is touched; the question,
+default and decide_by are the Review's, verbatim.)
 
 **WHY THIS IS AN ASK AND NOT A SCHEDULING COMPLAINT.** This desk re-dated the
 row to 2026-10-27 this sitting and is telling you plainly that the re-date is a
@@ -11147,7 +11155,7 @@ DECIDE: D48
   decide_by: 2026-11-01
 
 DECIDE: D49
-  class:     constitution
+  class:     conduct
   blocks:    `PL.02` — the lane carrying `GOAL.md`'s only registered falsifier —
              and through it the row `pl02-void-gate-quantifies-over-its-own-
              nulls`, which this sitting re-dated to 2026-10-27 as an explicit

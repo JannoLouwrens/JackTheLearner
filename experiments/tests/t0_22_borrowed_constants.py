@@ -220,12 +220,26 @@ def _probe(rule_is_legacy: bool) -> dict:
     # bypassed. Matches a literal ledger lookup by a REAL spec id — T0.08's own
     # synthetic rows use "X.01", which is deliberately not a spec, so the check
     # separates borrowing from a test managing its own fixtures.
+    #
+    # A spec reading its OWN row is outside this property's claim ("another
+    # spec's metrics") and is exempt — but only when the matched id's registered
+    # module IS the scanning file, so the exemption cannot stretch to a sibling.
+    # The case that forced the distinction: LF.01's pre-registered
+    # FIXTURE_VOID_CAP counts its own prior VOIDs off its own history, which no
+    # borrow guard can serve (borrowing refuses non-PASS sources by P6). Exempted
+    # reads are still counted and reported (`own_row_reads`), never hidden.
     ids = "|".join(re.escape(i) for i in BY_ID)
     direct = re.compile(r"results(?:\.get\(|\[)\s*[\"'](" + ids + r")[\"']")
     offenders = []
+    own_reads = []
     for path in sorted(TESTS_DIR.glob("*.py")):
         for hit in direct.finditer(path.read_text()):
-            offenders.append(f"{path.name}:{hit.group(1)}")
+            hid = hit.group(1)
+            mp = module_path_for(hid)
+            if mp and Path(mp).resolve() == path.resolve():
+                own_reads.append(f"{path.name}:{hid}")
+                continue
+            offenders.append(f"{path.name}:{hid}")
     if rule_is_legacy or offenders:
         failed.append("p9_no_test_reads_another_specs_metrics_directly")
 
@@ -403,6 +417,8 @@ def _probe(rule_is_legacy: bool) -> dict:
         "failed_names": ",".join(failed),
         "direct_ledger_reads": float(len(offenders)),
         "offenders": ",".join(offenders),
+        "own_row_reads": float(len(own_reads)),
+        "own_row_readers": ",".join(own_reads),
         "source_impl_sha": str(impl_sha_of(module_path_for(SOURCE))),
     }
 
@@ -429,7 +445,7 @@ def _control(seed: int) -> dict:
 
 
 def _check(m: dict, c: dict) -> Status | bool:
-    # All nine ran AND all nine held. Gating on `properties_failed == 0` alone
+    # All N_PROPERTIES ran AND all held. Gating on `properties_failed == 0` alone
     # lets a battery that stopped early read as clean (T0.13's first bug; T0.19,
     # T0.20 and T0.21 carry the same guard).
     experiment_clean = (m["properties_failed"] == 0.0
