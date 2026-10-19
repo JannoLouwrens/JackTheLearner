@@ -1015,6 +1015,51 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
                              else 0),
             "text": r["trace_text"]})
 
+    # THE TWO WAITS-ON READINGS (THE RULING on `prose-sequencing-inverts-when-
+    # the-blocker-moves`, 2026-10-11; executed 2026-10-19). READINGS, never
+    # violations: printed, no exit code contribution, no ageing exemption, no
+    # auto-re-date — `WAITS-ON:` keeps buying nothing, which is the property
+    # that makes it safe to read. Class (2) first, per the ruling's ORDER OF
+    # WORK: it was three times as common on the measured corpus and needs no
+    # legitimacy exception.
+    waits_closed: list[dict] = []    # (2) WAITS-ON-A-CLOSED-WINDOW
+    waits_inverted: list[dict] = []  # (1) DATE-INVERSION
+    for r in rows:
+        if r["status"] not in LIVE:
+            continue
+        tgt_id = r["waits_on"]
+        if not tgt_id or tgt_id.lower() == "none":
+            continue
+        tgt = by_id.get(tgt_id)
+        if tgt is None:
+            continue                 # already MALFORMED above, not a window
+        if tgt["status"] in TERMINAL:
+            # (2) A declared dependency on a window that can never move again
+            # — `BLOCKED-BY:` has carried this as a violation class since
+            # 2026-08-31; `WAITS-ON:` was exempt by construction, not by
+            # anyone's decision. Here it is a reading, because the field buys
+            # nothing and so its defects gate nothing.
+            waits_closed.append({"id": r["id"], "status": r["status"],
+                                 "due": (r["due"].isoformat()
+                                         if r["due"] is not None else ""),
+                                 "target": tgt_id,
+                                 "target_status": tgt["status"]})
+            continue                 # a closed window has no live date to invert
+        if (r["due"] is not None and tgt["due"] is not None
+                and r["due"] < tgt["due"]):
+            # (1) A live row due strictly before the live row it waits on.
+            # The declaration's own escape hatch (THE ROUTER'S DECLARATION):
+            # an earlier date is legitimate only when the WAITS-ON text says
+            # in writing why it is deliberate — operationally, a `| why`
+            # clause after the row id. A bare id carries no clause (the one
+            # true positive on the ruling's corpus was exactly that shape).
+            clause = (r["waits_text"].split("|", 1)[1].strip()
+                      if "|" in r["waits_text"] else "")
+            if not clause:
+                waits_inverted.append({
+                    "id": r["id"], "due": r["due"].isoformat(),
+                    "target": tgt_id, "target_due": tgt["due"].isoformat()})
+
     # THE ORDERED JOIN (79th audit): every LIVE row's commissioned spec ids,
     # each against the ledger's verdict for it — or against its absence, which
     # is the half the 78th audit's opt-in lesson says must also be visible.
@@ -1034,6 +1079,8 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
 
     return {"rows": rows, "findings": findings, "counts": counts,
             "delivered": delivered,
+            "waits_on_closed": waits_closed,
+            "waits_on_inverted": waits_inverted,
             "due_pile": due_pile, "piled_on": piled_on,
             "waits_on_groups": waits_on_groups,
             "ordered_returns": ordered_returns,
@@ -1294,6 +1341,23 @@ def render(a: dict, last_run: str = "") -> str:
                                               if e["overdue_days"] else "")
             out.append(f"    {e['status']:<13} {e['id']}  executed at "
                        f"{e['commit']}{when}")
+    if a.get("waits_on_closed") or a.get("waits_on_inverted"):
+        out.append("")
+        out.append("  WAITS-ON READINGS (ruling 2026-10-11) — printed, gating "
+                   "nothing: no exit code,")
+        out.append("  no ageing exemption, no auto-re-date. The findings "
+                   "belong to the desks that")
+        out.append("  own the rows; moving a promise because an instrument "
+                   "printed it is forbidden:")
+        for e in a.get("waits_on_closed", ()):
+            when = f"  DUE {e['due']}" if e["due"] else ""
+            out.append(f"    WAITS-ON-A-CLOSED-WINDOW  {e['id']}{when}  waits on "
+                       f"{e['target']} ({e['target_status']} — terminal; "
+                       "this can never move again)")
+        for e in a.get("waits_on_inverted", ()):
+            out.append(f"    DATE-INVERSION  {e['id']}  DUE {e['due']}, strictly "
+                       f"before {e['target']}'s {e['target_due']} it waits on, "
+                       "with no justifying clause in the declaration")
     if a["total"]:
         out.append("")
         out.append(f"  {a['total']} VIOLATION(S) — "
