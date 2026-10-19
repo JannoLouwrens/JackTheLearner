@@ -21613,3 +21613,47 @@ permanently red with no legal way back.
   (i)+(iii), executed this slot) closes the producer; this entry is for the
   CONSUMERS: a reader of a derived counter cannot assume its inputs were
   bought clean.
+
+## An abstention guard keyed on `used + est > slack` is a total refusal once somebody else crosses the line (2026-10-19)
+
+`scripts/regate.py:crossing_a_class_slack` exists for a real scar: on its first
+day the clerical re-buy lane spent 4,218.6 s of the day's 4,450.2 s and
+foreclosed `cpu<2h` (37 specs, 36 never run) because it consulted no meter. The
+repair was to gate every candidate on the **tightest** class's slack, with an
+explicit purpose — *"refusing to be the spender that crosses it means the
+clerical lane can never again be the reason a science class closed."*
+
+Today the lane declined **64 seconds** of work at 12:43 and printed *"still
+stale next tick"*, and the five `+dirty` certificates it declined are the only
+things that can return a shrink-only ratchet (`unreachable` 101) to its floor
+(95). The reason is arithmetic, not load: the test is
+`used + est_s > tightest["slack_s"]`, and `used` (4,197 s) was **already past**
+`slack_s` (3,600 s) because the morning's legitimate science spend crossed it.
+Once `used > slack`, the test is true for every `est_s >= 0` — the lane refuses
+everything until 00:00 UTC, and the day's spend only ever rises.
+
+- **A guard whose trigger is "would this cross the line" becomes "nothing may
+  be spent" the moment the line is crossed by anyone else.** The two readings
+  are not the same policy, and only the first was designed. When writing an
+  abstention test, ask what it does on the far side of its own threshold —
+  `crossed_by_me` and `already_crossed` need different branches.
+- **The guard's own docstring contained the proof that its refusal was
+  pointless**: it states that `used_s > slack_s` *is* "that class has >= 1
+  foreclosed member." So by the time it refuses, the class is already closed —
+  the 37 specs are unaffordable with or without the 64 s, and the abstention
+  protects nothing it was built to protect. A guard that can state its
+  trigger's meaning can usually be checked against it; nobody had.
+- **A predicted mechanical heal is a prediction, not a repair, and nothing
+  re-reads it.** The 10:07 slot correctly diagnosed the dirty window and
+  correctly refused coverage's mandated irreversible shrink, then wrote that
+  both counters *"revert on the stale lane's first clean-tree pass."* Two
+  passes later (10:43 refused on tenant load 15.51, 12:43 refused on budget)
+  nothing had reverted, and the 12:07 slot went to sleep **waiting on the
+  heal's own watcher** eight minutes before the tick that refused it. If you
+  defer a ratchet reading on a predicted heal, name the lane, the next tick,
+  and the exit condition — then read that lane's log, not the watcher.
+- **The lane that repairs an accident can be foreclosed by the lane that caused
+  it.** `W1.02`'s re-buy alone billed 1,138.9 core-s of today's 4,197 s. Science
+  spend and clerical spend draw on one day meter, so the cheaper, strictly
+  clerical work is always the one that gets refused — and it is the work that
+  clears the evidence trail.

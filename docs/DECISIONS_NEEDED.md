@@ -11182,3 +11182,131 @@ DECIDE: D49
              a row nobody may act on should be visible as refused, not as
              pending."
   decide_by: 2026-10-27
+
+---
+
+## D41 — RESOLVED BY ARMED DEFAULT, fired 2026-10-19 ~12:5x UTC by the OVERSEER (153rd audit), on the first legal day. Off your desk; options (i) and (ii) remain yours to rule at any time.
+
+**THE OWNER DID NOT RULE BY 2026-10-18, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(iii) NEITHER — HOLD BOTH ARTEFACTS, REPAIR EACH INSTANCE ON ITS OWN
+ROW, AND RE-ASK IN WRITING.** The entry's recommendation was **NOT** taken; no
+artefact was named as the thing we are building. `T1.11` stays an honest FAIL
+and was **not** repaired by adding a call site. `T1.08`'s Step 0 reports the
+recipe divergence without resolving which recipe is correct.
+
+**WHY THIS WAS MINE TO FIRE.** `D41` is `class: goal` and armed;
+`decisions --check` listed it this audit as one of two
+`OVERDUE — DEFAULT IS DUE TO FIRE` entries, and firing is the day after
+`decide_by`. The overseer firing an armed default on the first legal day is the
+established idiom — `D27` (107th), `D29` (109th), `D32`/`D34` (115th), `D31`
+(119th), `D36` (123rd), `D37` (140th), `D43` (151st). The 2026-10-18 Sunday
+FULL could have ruled it and did not; the Review has not sat at all on
+2026-10-19 (`06:37` deferred on the usage gate at 93%, the `09:22` and `12:22`
+retries both `ABORT: load`).
+
+**RE-DERIVED AT SOURCE THIS AUDIT, not inherited from the entry.** A firing may
+not rest on the entry's own eight-day-old arithmetic:
+
+```
+action_training_loss  call sites outside experiments/   0
+                      (every caller is a spec test: T1.02, T1.03, T1.04, T1.06,
+                      T1.07, T1.08, T1.09, T1.12, T4.02, T6.03, T1.11 itself)
+make_action_optimizer spec callers      4  (T1.07, T1.08, T1.09, T6.03)
+                      script callers    1  (scripts/probe_t108_step1.py)
+                      pipeline callers  0
+TrainingPipeline.py:493   torch.optim.AdamW(params, weight_decay=1e-4, eps=1e-5)
+the shared SPEC recipe    plain Adam, warmup-then-constant, no decay, clip 2.0
+T1.11  live ledger status  FAIL
+T1.08  live ledger status  FAIL, attempt 3, ran_at 2026-09-13T10:05:05, 3d357c4
+```
+
+Both halves of the measurement hold unchanged. Routing status today:
+`t111-certified-loss-has-no-shipped-caller` is **OPEN, DUE 2026-10-25**;
+`t108-pipeline-repair-has-no-design` is **ACTED**; the successor
+`t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign` is
+**OPEN, DUE 2026-10-21**. So both instances still have a live owner and neither
+needed this answered to proceed on its measurement half, exactly as the entry's
+`blocks:` field said.
+
+It is **MONOTONE**: it moves no threshold, repairs nothing cosmetically, deletes
+no module, adds no call site, spends no GPU-hour, stales no certificate,
+unparks nothing, and leaves both findings standing and red. It picks only among
+already-permitted actions — it is, exactly, the status quo.
+
+**THE PRICE, RESTATED BECAUSE A FIRING MAY NOT QUIETLY DROP IT.** In the entry's
+own words: *"the drift stays live, a third bridge may be built and go uncalled
+the same way, and the `demonstrated` count keeps being reported without the
+caveat that it describes one of two artefacts."* The count is **107** as of this
+morning and is reported without that caveat on every page in this repository.
+
+**HOW TO REVERSE IT.** Name **(i)** or **(ii)** in one sentence — which artefact
+is the thing we are building — and the two routed rows change shape
+accordingly. Nothing has been foreclosed by this firing.
+
+---
+
+## D42 — RESOLVED BY ARMED DEFAULT, fired 2026-10-19 ~12:5x UTC by the OVERSEER (153rd audit), on the first legal day. Off your desk; naming one commitment remains yours to rule at any time.
+
+**THE OWNER DID NOT RULE BY 2026-10-18, SO THE PRE-REGISTERED DEFAULT FIRED.**
+Option **(iv) HOLD — NO SUCCESSOR IS DESIGNED, AND THE THREE COMMITMENTS STAY
+CLAIM-DEAD AND SAID SO.** The desk's own recommendation — *"NAME `thermal ("too
+cold kills him")` AS THE ONE, and let smell and shelter wait"* — was **NOT**
+taken, and deliberately so: choosing among the owner's own constitutional
+commitments is a desk writing `GOAL.md`.
+
+**WHY THIS WAS MINE TO FIRE.** `D42` is `class: goal` and armed;
+`decisions --check` listed it this audit as one of two
+`OVERDUE — DEFAULT IS DUE TO FIRE` entries, and firing is the day after
+`decide_by`. Same idiom and same precedent list as `D41` above.
+
+**RE-DERIVED AT SOURCE THIS AUDIT.** `coverage` this morning:
+
+```
+claim_dead = 3   (unchanged since 2026-09-26)
+  smell              2 specs  0 pass  0 now   CLAIM-DEAD — SM.02 PARKED 2026-08-20,
+                                              SM.03 FORECLOSED (PILOT-BLOCKED)
+  shelter/building   2 specs  0 pass  0 now   CLAIM-DEAD — SH.01 PARKED 2026-08-25,
+                                              SH.02 FORECLOSED (PILOT-BLOCKED)
+  thermal (kills)    4 specs  0 pass  0 now   CLAIM-DEAD — same two
+commitments_uncovered = 0      (correct, and the reason no instrument can ask)
+champions: Smell (olfaction)   among the 4 seats nobody can ever WIN
+park_release_pairs = 3         SH.01 -> SH.02 and SM.02 -> SM.03 both unwalkable
+```
+
+Every park remains legal and evidence-backed. Nothing was unparked, nothing was
+deleted, no PARKED marker was touched.
+
+It is **MONOTONE**: it moves no threshold, unparks nothing, deletes no
+commitment, registers nothing, spends nothing, and cannot make the hole smaller
+or hide it.
+
+**THE PRICE — AND IT IS NOW WORSE THAN THE ENTRY STATES, WHICH A FIRING MUST
+SAY RATHER THAN INHERIT.** The entry's `blocks:` field names
+`five-commitments-are-claim-dead-behind-foreclosures` as this question's live
+home, *"(OPEN, DUE 2026-10-14)"*. **That row is now DECLINED** — terminal, and
+a terminal row is never re-read (100th audit B2). Verified via
+`review_queue.parse()` this audit: `DECLINED, 48 d, DUE 2026-10-14 (+5 d)`.
+
+So as of this firing:
+
+```
+smell / shelter / thermal ("too cold kills him")
+  live claim spec     none        (every one PARKED or PILOT-BLOCKED)
+  open queue row      none        (the named home is DECLINED)
+  open register entry none        (this one, as of this block)
+  instrument that can ASK for the repair   none — a missing spec has no id
+```
+
+That is precisely the shape `D30` and `D40` were raised about: a recommendation
+surviving only inside a closed entry, where nothing can make it answerable. The
+entry's own words apply with the DECLINE added: *"three of the capability
+target's named commitments remain unfalsifiable, the daily report of that
+becomes wallpaper, and the first two instruments that can see the hole continue
+to be unable to ask about it."*
+
+**HOW TO REVERSE IT.** Name **ONE** commitment in one sentence — the desk's
+quoted recommendation is `thermal`, on the arithmetic that it is load-bearing
+for the other two and the only one whose successor needs no world edit — and a
+successor claim spec gets registered that iteration. The firing forecloses
+nothing; it records that nobody chose.
+
