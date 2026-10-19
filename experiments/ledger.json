@@ -29058,17 +29058,14 @@
     },
     "T0.02": {
       "amended": [],
-      "attempt": 5,
-      "commit": "4a23405+dirty",
+      "attempt": 6,
+      "commit": "5cd58c1",
       "compute_s": null,
       "control_metrics": {
         "max_abs_trace_delta": 0.12971967458724976
       },
-      "dirty_files": [
-        "scripts/regate.py",
-        "scripts/regate.sh"
-      ],
-      "duration_s": 65.46,
+      "dirty_files": null,
+      "duration_s": 4.95,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -29141,19 +29138,51 @@
           ],
           "spec_sha": "fa6cd45e574fbaa1",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "4a23405+dirty",
+          "compute_s": null,
+          "control_metrics": {
+            "max_abs_trace_delta": 0.12971967458724976
+          },
+          "dirty_files": [
+            "scripts/regate.py",
+            "scripts/regate.sh"
+          ],
+          "duration_s": 65.46,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "d90432ff215bb23c",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+20.4s)",
+          "metrics": {
+            "final_loss": 0.7114750146865845,
+            "max_abs_trace_delta": 0.0,
+            "steps": 30
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 342.9,
+          "preserved_impl": null,
+          "ran_at": "2026-10-17T17:00:39",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "fa6cd45e574fbaa1",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d90432ff215bb23c",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+20.4s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+2.9s)",
       "metrics": {
         "final_loss": 0.7114750146865845,
         "max_abs_trace_delta": 0.0,
         "steps": 30
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 342.9,
+      "peak_rss_mb": 281.7,
       "preserved_impl": null,
-      "ran_at": "2026-10-17T17:00:39",
+      "ran_at": "2026-10-19T07:24:11",
       "seeds": [
         0
       ],
