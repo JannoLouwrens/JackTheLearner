@@ -2423,9 +2423,11 @@ in either direction, no control loosened, no new permission created, nothing
 re-run, no certificate staled, no terminal row re-opened. **What the firing says
 must survive transcription: it is MONOTONE and is, exactly, the status quo; the
 price is restated, not dropped — the recipe drift stays live, a third bridge may
-be built and go uncalled the same way, and `demonstrated` (109 at transcription
-time, after this slot's five clean re-buys moved it from 107) keeps being
-reported without the caveat that it describes one of two artefacts; and both
+be built and go uncalled the same way, and `demonstrated` (107 at transcription
+time, read off `run status` after this slot's five clean re-buys — which moved
+no verdict, only stamps, so the count stands exactly as the firing reported it;
+a first draft of this line wrote 109 unchecked and was corrected in-slot) keeps
+being reported without the caveat that it describes one of two artefacts; and both
 instances keep live owners — `t111-certified-loss-has-no-shipped-caller` OPEN
 DUE 2026-10-25, `t108-recipe-repair-is-exhausted-and-the-attribution-pair-
 flipped-sign` OPEN DUE 2026-10-21.**
