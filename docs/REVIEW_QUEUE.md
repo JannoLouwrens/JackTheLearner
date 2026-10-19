@@ -23103,3 +23103,40 @@ ROUTED: assert-ref-is-current-collapses-per-spec-doc-dirt-to-strict | 2026-10-19
     DUE: 2026-10-24 | `review_queue`'s own mechanical answer ("Next date
         with room under the measured capacity: 2026-10-24"), read off the
         tool this slot; 12 rows already share 2026-10-19.
+
+ROUTED: rc0-slot-ends-mid-wait-with-watchers-armed-and-work-uncommitted | 2026-10-19 | 153rd audit FTB 6 (the 152nd named the class unrouted); measured FOUR firings in 48 h: 10-17 15:07 (LESSONS 2026-10-18, "an rc=0 iteration that stopped halfway is invisible to every monitor"), 10-19 08:36 (slot ended rc=0 on "Watchers are set — I'll proceed when the completion notification arrives" with part-(a) repairs UNCOMMITTED; the 08:52 regate sweep then bought FIVE certificates `+dirty` over that tree), 10-19 09:21 (three re-buys orphaned 46 min), and `demonstrated` read 106 at the 09:07 slot's start because that slot's own predecessor had not committed | OPEN
+    SUBJECT: the APPARATUS — `scripts/ladder_loop.sh`'s exit contract and
+        `scripts/usage_attribution.py`'s `dark_slots` — not any spec's
+        science. No verdict changes.
+    THE DEFECT, in the audit's words: a slot that ends `rc=0` while a
+        declared watcher is still armed is reported HEALTHY by every
+        instrument that looks — `dark_slots` read 0 through three of these,
+        because `rc=0` is its definition of a slot that ran. The cost is not
+        hypothetical: the 08:36 instance produced the five dirty
+        certificates this slot's FTB 1 paid ~206 s to heal, and the 15:07
+        10-17 instance cost a full slot's work. The class is the mirror of
+        the dead-watcher scar (a watcher that dies with its session): here
+        the SESSION dies politely while the watcher is still owed, and the
+        politeness is what blinds the detector.
+    THE SHAPE, named not chosen (the ruling is the Review's): the audit's
+        own sentence — "a slot that ends rc=0 while a declared watcher is
+        still armed should either commit its work first or exit non-zero" —
+        plus the detector half: `dark_slots` (or a sibling reading) counting
+        a slot whose transcript ends mid-wait with `declared_pids` armed and
+        uncommitted tracked work in the tree. Two halves, same class; the
+        row does not pre-pick which lands first.
+    STALENESS BILL: this routing edits `docs/REVIEW_QUEUE.md` only; priced
+        this slot with `run stale-cost docs/REVIEW_QUEUE.md` — 0 NEW
+        certificates staled by this edit (T0.21/T0.28/T0.31 are a
+        PRE-EXISTING debt, listed "CHANGED BEFORE this edit", with a live
+        payer: the 14:43 regate tick, unblocked by this slot's
+        `crossing_a_class_slack` fix).
+    WAITS-ON: none | the class is measured and its evidence is committed;
+        no open row owns the loop's exit contract, and the detector blind
+        spot (`dark-slot-counter-...` lineage) was repaired for a DIFFERENT
+        blindness (notice lines), so nothing live supersedes this.
+    DUE: 2026-10-26 | the pile tool this slot: 10-19 through 10-21 are all
+        AMBER (12/11/10 rows), 10-22 through 10-24 carry 6 = the measured
+        capacity (full by the 10-08 precedent), 10-25 carries 5, 10-26
+        carries 2. Dated 10-26 rather than 10-25 to leave one slot of slack
+        on a board already scheduled to break 12 promises today.
