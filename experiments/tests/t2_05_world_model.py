@@ -108,6 +108,45 @@ shipped WorldModel has not earned better-than-linear prediction (a fact the
 learning-core bakeoff's world-model arms need to know), not a threshold
 mishap.
 
+THE NON-LINEAR REFERENCE AND THE TRIVIALITY FLOOR (ported 2026-10-19 from
+T2.14 under the t205-world-model-loses-to-the-ridge-reference ruling,
+Review 2026-10-18; STRENGTHEN-ONLY — adds a required reading and two VOID
+gates, moves no existing threshold: WM_RATIO stays 0.8, CTRL_TOL stays 0.98,
+the ridge gate stays "matching is the bar", the claim conjunct is
+byte-untouched). The v2 FAIL cannot currently be attributed: ridge beating
+the uninformed null proves the task LEARNABLE, not NON-LINEAR, so "the WM is
+deficient" and "the venue is near-linear" are indistinguishable. This port
+measures it:
+  mse_nonlinear   1-NN regression (T2.14's `_nn_mse`, copied not imported —
+                  importing would couple this certificate to t2_14's file)
+                  on the EXACT ridge features [z(obs_t), actions] and the
+                  same windows/splits/seeds, predicting z(obs_{t+K}).
+  nonlinear_headroom = (mse_ridge - mse_nonlinear) / mse_ridge, per seed.
+                  REPORTED, NOT GATED on this pass (the ruling's own
+                  discipline: no desk gates on a number before seeing one).
+                  Large => the venue has structure the WM missed (the FAIL
+                  is the model's); ~0 or negative => the venue is
+                  near-linear and the VENUE is the defect (a re-aiming,
+                  bundling rule applies).
+  task_not_trivial_all   VOID gate, T2.14's form and constant unchanged:
+                  mse_ridge >= TRIVIAL_FLOOR * mse_nonlinear on every seed.
+                  A venue a linear map annihilates 20x against the modest
+                  non-linear reference cannot test "world model beats
+                  linear" — the run is VOID (venue indicted), not FAIL.
+  floor_selftest_ok      VOID gate: the floor must demonstrate, inside the
+                  run, a case it rejects AND a case it accepts. ONE
+                  DELIBERATE ADAPTATION from T2.14, recorded here: T2.14's
+                  "passes" arm was its own task, whose non-triviality was
+                  already measured at design time; here the task's floor
+                  reading IS the open question, so using it as the selftest
+                  arm would report "instrument broken" exactly when the
+                  instrument fires correctly on a near-linear venue. BOTH
+                  arms are therefore planted known answers on the same
+                  windows: the floor must FIRE on Y = z(obs_t) (a linear
+                  readout of the features — ridge's residual form solves it
+                  exactly) and must PASS on Y = z(obs_t)^2 elementwise
+                  (outside ridge's span; 1-NN reaches it by proximity).
+
 GPU. One submission for the whole spec (module cache — run_spec calls
 _experiment once per seed; the 5.5-GPU-hour scar). Kaggle first: W32's
 expiring hours die Sunday, and a Kaggle kernel computes server-side even if
@@ -159,6 +198,10 @@ WM_RATIO = 0.8
 # noise of a tie — the "bar finer than one quantum" lesson. A leak must beat
 # the null by >2% to count; the real 08-14 leak beat persistence by ~25%.
 CTRL_TOL = 0.98
+# Ported from t2_14_imitation_mocap.TRIVIAL_FLOOR UNCHANGED (2026-10-19, the
+# t205 ruling's addendum: inherited, not chosen here). Ridge may not beat the
+# non-linear reference by more than 20x, or the venue is linear-trivial.
+TRIVIAL_FLOOR = 0.05
 
 
 def _collect_windows(env, n: int, seed: int, domain: int) -> tuple:
@@ -317,6 +360,57 @@ def _ridge_mse(X0z_tr, Atr, Yz_tr, X0z_te, Ate, Yz_te) -> tuple:
     return float(((pred - Yz_te[:, -1]) ** 2).mean()), best_l2
 
 
+# ── the non-linear reference and its triviality floor (T2.14 port) ────────
+def _feats(X0z: np.ndarray, A: np.ndarray) -> np.ndarray:
+    """The ridge arm's exact feature map — the reference shares its inputs."""
+    return np.concatenate([X0z, A.reshape(len(A), -1)],
+                          axis=1).astype(np.float64)
+
+
+def _nn_mse(Ftr, Ytr, Fte, Yte) -> float:
+    """1-NN regression in z-scored feature space, chunked to stay flat in
+    memory. Copied from t2_14_imitation_mocap._nn_mse (NOT imported: an import
+    would hash t2_14's whole file into this certificate), features generalised
+    from raw obs to the caller's feature matrix."""
+    mu, sd = Ftr.mean(0), Ftr.std(0)
+    sd[sd < 1e-6] = 1e-6
+    A_ = ((Ftr - mu) / sd).astype(np.float32)
+    B_ = ((Fte - mu) / sd).astype(np.float32)
+    a2 = (A_ * A_).sum(1)
+    preds = np.empty_like(Yte)
+    for i in range(0, len(B_), 256):
+        b = B_[i:i + 256]
+        d = a2[None, :] - 2.0 * (b @ A_.T)      # + b2, constant per row
+        preds[i:i + 256] = Ytr[d.argmin(1)]
+    return float(((preds - Yte) ** 2).mean())
+
+
+def _task_floor_selftest(X0z_tr, Atr, X0z_te, Ate) -> dict:
+    """Known-answer pair for the triviality floor (discipline ported from
+    t2_14_imitation_mocap._task_floor_selftest; see docstring for the one
+    deliberate adaptation — both arms are PLANTED here because the real
+    task's floor reading is this port's open question, not a known answer).
+    The floor must FIRE on a target that is a linear readout of the features
+    (Y = z(obs_t): the residual-form ridge solves it exactly) and must PASS
+    on one outside ridge's span (Y = z(obs_t)^2 elementwise)."""
+    Ftr, Fte = _feats(X0z_tr, Atr), _feats(X0z_te, Ate)
+    Xtr64 = X0z_tr.astype(np.float64)
+    Xte64 = X0z_te.astype(np.float64)
+    out = {}
+    for name, Ytr_t, Yte_t in (("linear", Xtr64, Xte64),
+                               ("nonlin", Xtr64 ** 2, Xte64 ** 2)):
+        rg, _l2 = _ridge_mse(X0z_tr, Atr, Ytr_t[:, None, :],
+                             X0z_te, Ate, Yte_t[:, None, :])
+        nn = _nn_mse(Ftr, Ytr_t, Fte, Yte_t)
+        out[name] = (rg / nn) if nn > 0 else float("inf")
+    return {
+        "floor_ratio_linear": round(out["linear"], 6),
+        "floor_ratio_nonlin": round(out["nonlin"], 6),
+        "floor_selftest_fires": bool(out["linear"] < TRIVIAL_FLOOR),
+        "floor_selftest_passes": bool(out["nonlin"] >= TRIVIAL_FLOOR),
+    }
+
+
 # ── remote entry point (also the local smoke, scaled down) ────────────────
 def remote_run(seeds: list, n_train: int = N_TRAIN, n_test: int = N_TEST,
                wm_steps: int = WM_STEPS, wm_batch: int = WM_BATCH,
@@ -371,6 +465,14 @@ def remote_run(seeds: list, n_train: int = N_TRAIN, n_test: int = N_TEST,
         mse_ridge, l2_ridge = _ridge_mse(X0z_tr, Atr, Yz_tr,
                                          X0z_te, Ate, Yz_te)
 
+        # the non-linear reference (T2.14 port): same features, same windows,
+        # same split, direct K-step target. Plus the floor's known-answer pair.
+        mse_nonlinear = _nn_mse(_feats(X0z_tr, Atr),
+                                Yz_tr[:, -1].astype(np.float64),
+                                _feats(X0z_te, Ate),
+                                Yz_te[:, -1].astype(np.float64))
+        selftest = _task_floor_selftest(X0z_tr, Atr, X0z_te, Ate)
+
         # control — identical training on a shuffled (window, target)
         # pairing, fresh weights.
         torch.manual_seed(int(seed) + 7)
@@ -389,6 +491,8 @@ def remote_run(seeds: list, n_train: int = N_TRAIN, n_test: int = N_TEST,
             "mse_wm": round(mse_wm, 6), "mse_persist": round(mse_persist, 6),
             "mse_mean": round(mse_mean, 6), "mse_ridge": round(mse_ridge, 6),
             "mse_shuffled": round(mse_shuffled, 6),
+            "mse_nonlinear": round(mse_nonlinear, 6),
+            **selftest,
             "l2_ridge": l2_ridge,
             "loss_wm_final": round(loss_wm, 6),
             "loss_shuffled_final": round(loss_sh, 6),
@@ -398,6 +502,7 @@ def remote_run(seeds: list, n_train: int = N_TRAIN, n_test: int = N_TEST,
             "episodes_test": ep_te,
             "finite": bool(np.isfinite([mse_wm, mse_persist, mse_mean,
                                         mse_ridge, mse_shuffled,
+                                        mse_nonlinear,
                                         loss_wm, loss_sh]).all()),
         })
     env.close()
@@ -482,6 +587,24 @@ def _experiment(seed: int) -> dict:
                                   for r in rows),
         "ridge_beats_null_any": any(r["mse_ridge"] < _null(r)
                                     for r in rows),
+        # T2.14 port (2026-10-19): the non-linear reference and its floor.
+        # headroom is REPORTED, NOT GATED on this pass (the ruling's own
+        # discipline); the two _all/_ok fields are VOID gates in _check.
+        "mse_nonlinear": [r["mse_nonlinear"] for r in rows],
+        "nonlinear_headroom": [
+            round((r["mse_ridge"] - r["mse_nonlinear"]) / r["mse_ridge"], 4)
+            for r in rows],
+        "floor_ratio_task": [round(r["mse_ridge"] / r["mse_nonlinear"], 4)
+                             for r in rows],
+        "trivial_floor": TRIVIAL_FLOOR,
+        "task_not_trivial_all": all(
+            r["mse_ridge"] >= TRIVIAL_FLOOR * r["mse_nonlinear"]
+            for r in rows),
+        "floor_selftest_ok": all(r["floor_selftest_fires"]
+                                 and r["floor_selftest_passes"]
+                                 for r in rows),
+        "floor_ratio_linear": [r["floor_ratio_linear"] for r in rows],
+        "floor_ratio_nonlin": [r["floor_ratio_nonlin"] for r in rows],
         "persist_informative_all": all(r["mse_persist"] < r["mse_mean"]
                                        for r in rows),   # reported, not gated
         "det_ok_all": all(r["det_ok"] for r in rows),
@@ -509,6 +632,14 @@ def _check(m: dict, c: dict):
         return Status.VOID          # training diverged; nothing was measured
     if not m["det_ok_all"]:
         return Status.VOID          # eval path not deterministic (dropout scar)
+    if not m["floor_selftest_ok"]:
+        return Status.VOID          # the triviality floor cannot demonstrate a
+                                    # case it rejects AND one it accepts — it is
+                                    # not a floor (T2.14 port, known-answer pair)
+    if not m["task_not_trivial_all"]:
+        return Status.VOID          # a linear map annihilates the task against
+                                    # the non-linear reference: the VENUE cannot
+                                    # test this claim — venue indicted, not model
     # Control: information-free supervision must NOT beat the strongest
     # uninformed null (marginal statistics live inside the null now).
     if c["shuffled_beats_null"]:
@@ -538,6 +669,9 @@ if __name__ == "__main__":
         print(json.dumps(out, indent=1))
         row = out["seeds"][0]
         assert row["det_ok"] and row["dims_ok"] and row["finite"], row
+        assert row["floor_selftest_fires"], "triviality floor never fires"
+        assert row["floor_selftest_passes"], \
+            "triviality floor rejects its own known-nonlinear target"
         print("SMOKE OK")
     else:
         run()
