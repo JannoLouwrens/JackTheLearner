@@ -20753,6 +20753,25 @@ ROUTED: prose-sequencing-inverts-when-the-blocker-moves | 2026-09-29 | this sitt
         the parser already produces — the design risk the old date was holding
         room for is spent. 2026-10-19 carried 6 live rows + 1 added by this
         sitting; that is at the measured capacity and is declared, not hidden.
+    BUILDER-TRACE: ceb2a4c | 2026-10-19 10:07 slot — EXECUTED on its due day,
+        class (2) first per the ruling's ORDER OF WORK, both in
+        `experiments/review_queue.py`'s analysis (new keys `waits_on_closed` /
+        `waits_on_inverted`) and printed under "WAITS-ON READINGS" after the
+        DELIVERED section. Both are READINGS exactly as ruled: they add
+        nothing to `findings`/`counts`, so the exit code, ageing and OVERDUE
+        are untouched (verified: EXIT 2 before and after, from the same 8
+        OVERDUE). The inversion's escape hatch is implemented as the
+        declaration's own `| why` clause — a bare row id carries no clause,
+        which is the shape of the corpus's one true positive. Live output at
+        execution matches the desk's 10-11 measurement evolved by the 10-13
+        stamps: WAITS-ON-A-CLOSED-WINDOW 2 (`d35-none-quota...` -> t108-
+        pipeline ACTED; `adverse-verdicts...` -> lg12 ACTED; `w0-too-shallow`
+        left the live set when it was ACTED 10-13), DATE-INVERSION 1
+        (`d10-successor-rerun-under-adopted-gate`, bare id, undeclared).
+        No row re-dated or re-pointed. Bill at commit: `run stale-cost
+        experiments/review_queue.py` = 0 NEW certificates (T0.31 already
+        staled by this slot's earlier queue edit; its re-buy rides the stale
+        lane's first clean-tree pass, named in the journal).
     SUPERSEDED DUE: 2026-10-10 | a BUILDER measurement-then-maybe-instrument, not a Review
         design — the closure is named above and the desk endorses enumerating the
         live corpus before shipping a reading. Date derived from this sitting's
@@ -22956,9 +22975,9 @@ ROUTED: regate-bought-nine-certificates-from-its-own-uncommitted-tree | 2026-10-
         2026-10-24" at this sitting — rather than defaulting onto a Sunday or
         onto one of the four days 10-19..10-22 that are already carrying
         10-12 promised rows apiece.
-    BUILDER-TRACE 2026-10-19 10:07 slot: EXECUTED, options (i)+(iii) as the
-        desk recommended, five days early because the class fired AGAIN this
-        morning and the evidence was perishable. The 08:52 sweep ran while the
+    BUILDER-TRACE: e735f36 | 2026-10-19 10:07 slot — EXECUTED, options
+        (i)+(iii) as the desk recommended, five days early because the class
+        fired AGAIN this morning and the evidence was perishable. The 08:52 sweep ran while the
         08:07 slot's uncommitted work sat in the tree and bought FIVE more
         `+dirty` certificates (VO.01, DP.00, PG.9, NE.00, T0.30) — and the
         knock-on reached two RATCHETS in the same hour: the blocked-walk
