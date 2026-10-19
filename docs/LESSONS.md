@@ -21576,3 +21576,40 @@ dispatched, and the queue row that ordered the work read **OVERDUE**.
   degraded certificates and a closed GPU path, and was rescued by one desk
   happening to sit on the right morning. That is luck with a good process on top
   of it, not a monitor.
+
+## A counter can mandate an irreversible edit while the state it reads is a two-hour transient (2026-10-19)
+
+The 08:52 regate sweep ran over the 08:07 slot's uncommitted tree and bought
+five `+dirty` certificates (VO.01, DP.00, PG.9, NE.00, T0.30). For the two
+hours until the stale lane's next clean-tree pass, the blocked-walk treated
+those five as "PASS but STALE", and that single cause moved THREE instruments
+in OPPOSITE directions at once: `unreachable` rose 96 -> 101 (five specs newly
+"out of reach"), `goal_unrunnable` FELL 7 -> 5 (the walk now stopped at the
+stale DP.00 before reaching LC.03, so DP.02/DP.03 shed their `welded<-LC.03`
+marker and read "live"), and coverage printed a MANDATED edit: *"2
+unrunnable-baseline entr(y/ies) are LIVE again and must be removed from
+GOAL_UNRUNNABLE_BASELINE: DP.02, DP.03"*. That instruction was correct by the
+instrument's own rules and WRONG: the constant is shrink-only ("never add"),
+so obeying it during the transient would have moved a ratchet irreversibly on
+state that reverts within the hour, and the next honest reading would then be
+permanently red with no legal way back.
+
+- **A falling counter is not better news than a rising one; both inherit the
+  trust of the state they read.** The fall (`goal_unrunnable` 7 -> 5) looked
+  like progress and was the same dirt as the rise. Attribute a delta to its
+  CAUSE before classifying its direction as good or bad — here one `git log`
+  + one worktree diff named a single cause for all three movements.
+- **Before obeying an instrument's mandated edit to a shrink-only constant,
+  ask whether the reading it rests on survives a clean tree.** The cheap test:
+  does the delta trace to rows stamped `+dirty`, to an uncommitted file, or to
+  any state with a mechanical heal already scheduled? If yes, the mandate is
+  about the transient, not the project. An irreversible edit obeyed on a
+  reversible reading converts noise into permanent record.
+- **The dirty-stamp class reaches further than certificates.** Its row priced
+  the damage as "a weaker certificate" and one knock-on refusal. Measured
+  today: it also drives the blocker walk, the weld classifier, the
+  GOAL-citation auditor and the reachability ratchet — every reader of
+  `stale_claims` inherits the dirt. The structural guard (regate options
+  (i)+(iii), executed this slot) closes the producer; this entry is for the
+  CONSUMERS: a reader of a derived counter cannot assume its inputs were
+  bought clean.

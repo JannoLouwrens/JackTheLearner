@@ -22956,6 +22956,34 @@ ROUTED: regate-bought-nine-certificates-from-its-own-uncommitted-tree | 2026-10-
         2026-10-24" at this sitting — rather than defaulting onto a Sunday or
         onto one of the four days 10-19..10-22 that are already carrying
         10-12 promised rows apiece.
+    BUILDER-TRACE 2026-10-19 10:07 slot: EXECUTED, options (i)+(iii) as the
+        desk recommended, five days early because the class fired AGAIN this
+        morning and the evidence was perishable. The 08:52 sweep ran while the
+        08:07 slot's uncommitted work sat in the tree and bought FIVE more
+        `+dirty` certificates (VO.01, DP.00, PG.9, NE.00, T0.30) — and the
+        knock-on reached two RATCHETS in the same hour: the blocked-walk
+        treats a dirty stamp as "PASS but STALE", so `unreachable` read
+        96 -> 101 (DP.04/DP.05/NE.01/PS.06/PS.08 newly out of reach) while
+        `goal_unrunnable` read 7 -> 5 (the walk now stops at the stale DP.00
+        before reaching LC.03, so DP.02/DP.03 shed their `welded<-LC.03`
+        marker) — and coverage then printed a MANDATED edit ("2
+        unrunnable-baseline entr(y/ies) are LIVE again and must be removed
+        from GOAL_UNRUNNABLE_BASELINE: DP.02, DP.03") that a compliant
+        builder would have executed on a two-hour transient against a
+        shrink-only constant that forbids re-adding. NOT obeyed; LESSONS
+        entry written in the same commit. Implementation: (i) reuses
+        `protocol.gate_precondition` — the EXISTING class predicate, same
+        `code_dirt` form the stamp itself uses, so guard and stamp cannot
+        drift — as a lock-shaped yield (exit 0, rows still stale next tick),
+        with `--dirty-ok` passthrough; (iii) `stamp_preview()` prints the
+        exact stamp a buy would carry at the head of `--list`, derived from
+        the same predicate. Verified LIVE on this slot's own dirty tree:
+        run path refused naming `scripts/regate.py`, `--list` printed
+        "would stamp f729928+dirty"; `--dirty-ok` returns "". Cadence, cap,
+        slack guard and staleness lane untouched. Bill re-priced at commit:
+        `run stale-cost scripts/regate.py` = 0 certificates; the
+        REVIEW_QUEUE.md edit's own bill (T0.21/T0.28/T0.31) is payable by
+        the stale lane's first clean-tree pass and is named in the journal.
 
 ## ROUTED 2026-10-19 (builder, 08:07 slot, executing 152nd audit FTB 3):
 ## `assert-ref-is-current-collapses-per-spec-doc-dirt-to-strict` — the desks'

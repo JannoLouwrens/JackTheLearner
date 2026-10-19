@@ -247,6 +247,29 @@ def crossing_a_class_slack(est_s: float):
     return None
 
 
+def stamp_preview() -> str:
+    """The commit stamp a re-buy started RIGHT NOW would carry.
+
+    Option (iii) of `regate-bought-nine-certificates-from-its-own-uncommitted-
+    tree`: the cost of a dirty sweep is visible at the point of spend, with no
+    new reader — this derives from the SAME predicate the runner's own `+dirty`
+    stamp uses (`protocol.code_dirt`, conservative no-spec-context form), so the
+    preview and the stamp cannot drift. A spec that declares an instrument-input
+    doc in IMPL_DEPS can still be dirtied by doc dirt this preview calls clean
+    for others; the conservative form shows that dirt too, so the preview only
+    ever errs toward showing MORE dirt than a given stamp records.
+    """
+    from experiments.protocol import code_dirt, working_tree_porcelain
+    head = subprocess.run(["git", "rev-parse", "--short", "HEAD"],
+                          capture_output=True, text=True, cwd=REPO).stdout.strip()
+    dirty = code_dirt(working_tree_porcelain())
+    if not dirty:
+        return f"would stamp {head} (clean tree)"
+    shown = ", ".join(dirty[:6]) + (" …" if len(dirty) > 6 else "")
+    return (f"would stamp {head}+dirty — {len(dirty)} uncommitted code "
+            f"file(s): {shown}")
+
+
 def main(argv: list[str]) -> int:
     stale_rows = cheap_stale()
     rotation = cheap_pass_rotation(exclude={r[0] for r in stale_rows})
@@ -256,6 +279,7 @@ def main(argv: list[str]) -> int:
     queue = ([("stale", *r) for r in stale_rows]
              + [("rotate", *r) for r in rotation])
     if "--list" in argv:
+        print(f"  {stamp_preview()}")
         for lane, sid, status, cost, est_s, prov in queue:
             print(f"  {lane:6s} {sid:9s} {status:8s} {cost}  est {est_s:.0f}s [{prov}]")
         print(f"  {len(stale_rows)} cheap stale certificate(s); "
@@ -267,6 +291,26 @@ def main(argv: list[str]) -> int:
         return 0
     if lock_is_held():
         print("ladder lock held by the loop — yielding, these are still stale next tick")
+        return 0
+    # Option (i) of `regate-bought-nine-certificates-from-its-own-uncommitted-
+    # tree`: a lane whose purpose is manufacturing trustworthy reds must not be
+    # the organ producing unreproducible certificates. `gate_precondition` is
+    # the EXISTING class predicate (its docstring's scar — a gate run demoting
+    # clean stamps from a dirty tree — is this lane's defect verbatim; regate
+    # was the third incident of that class, 5 clean certificates demoted to
+    # `+dirty` inside one 08:4x window on 2026-10-19, flipping `unreachable`
+    # +5 and `goal_unrunnable` -2 in the same hour). Same yield shape as the
+    # lock: exit 0, nothing lost, still stale next tick — the stale lane picks
+    # the same rows up on the first clean-tree pass. `--dirty-ok` opts in, and
+    # changes nothing about what gets recorded: `+dirty` still fires exactly
+    # as before.
+    from experiments.protocol import (GATE_DIRTY_FLAG, gate_precondition,
+                                      working_tree_porcelain)
+    at_risk = sum(1 for row in queue[:MAX_PER_RUN] if row[2] == "PASS")
+    refusal = gate_precondition(working_tree_porcelain(), at_risk=at_risk,
+                                dirty_ok=GATE_DIRTY_FLAG in argv)
+    if refusal:
+        print(f"{refusal} — yielding, these are still stale next tick")
         return 0
 
     ran, changed = 0, []
