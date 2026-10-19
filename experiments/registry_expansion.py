@@ -6270,7 +6270,7 @@ EXPANSION: list[Spec] = [
                        "distinguish the broken metric from its replacement "
                        "is measuring nothing.",
          metric="synthetic_min_gain_detected_and_quantum_ratio",
-         budget=Budget.CPU_LONG, seeds=3, depends_on=["PS.01"],
+         budget=Budget.CPU, seeds=3, depends_on=["PS.01"],
          control="KNOWN-ANSWER, BINDING (wk5-N3): a synthetic arm with an "
                  "injected advantage of exactly MIN_GAIN must be detected "
                  "at >= 3 sigma by the replacement metric. CROSS-CHECK "
@@ -6307,7 +6307,21 @@ EXPANSION: list[Spec] = [
                "order-statistic bar frozen at a pilot n (T3.06 "
                "extreme-value lesson). SECOND of the family by the "
                "Review's ordering: W1.00 first (cheap), W1.02 before "
-               "W1.01/W1.03 because both quote its quantum.",),
+               "W1.01/W1.03 because both quote its quantum. BUDGET "
+               "RE-DECLARED cpu<2h -> cpu<10min 2026-10-19 per the "
+               "2026-10-08 ruling on `longrun-binding-conjunct-went-false-"
+               "four-times-under-an-unmoved-impl-sha` ('re-declare it at "
+               "the class its measurement supports'), WITH THE RULING'S "
+               "ENUMERATION CORRECTED: its 0.2 s premise was the attempt-1 "
+               "row's duration_s, which recorded a memo hit (_bundle caches "
+               "per-seed rollouts; the lives were computed in-process "
+               "before run_spec's clock started), not the work. The "
+               "measurement that holds is the spec's own measured pilot — "
+               "0.030 s/decision x 28,000 decisions = ~840 core-s per "
+               "experiment-seed — which exceeds cpu<1min's 300 s by 2.8x "
+               "(re-declaring there would recreate the row's own defect) "
+               "and fits cpu<10min's 1,800 s with 2.1x margin. Certificate "
+               "re-bought under these words in the same commit.",),
 
     Spec("W1.01", 2, "Passivity dies",
          hypothesis="In the venue (W0 as built), a do-nothing agent does "

@@ -129,7 +129,7 @@ import numpy as np
 
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
-from .. import drives
+from .. import drives, rtf
 from ..w0 import W0, SIM_S_PER_DECISION
 # After `..w0`, deliberately: importing it puts the repo root on sys.path.
 from EpisodicMemory import EpisodicMemory   # noqa: E402
@@ -170,6 +170,17 @@ DROP_TRIES = 16           # legal-placement attempts before skipping a drop
 PARK_XY = (40.0, 0.0)     # SO.06's parking idiom: the withdrawn apple
 TTF_FLOOR_S = SIM_S_PER_DECISION   # competence denominator floor (XL.01's)
 CAP_S = CAP_LIFE * SIM_S_PER_DECISION
+
+# ── T0.32's standing refusal (rtf.require_feasible), adopted 2026-10-19 per
+# the 2026-10-08 ruling on `longrun-binding-conjunct-went-false-four-times-
+# under-an-unmoved-impl-sha`: each seed projects the WHOLE child's declared
+# envelope on a probe world that is built, measured and discarded (LF.01's
+# idiom) BEFORE any arm lives. Per seed: ref runs N_OFF lives; a0/a1/a2
+# (experiment) and mis/give (control) run N_TRAIN+N_ON+N_OFF each. Lives may
+# die early — the projection prices the declared cap. A refusal is a VOID
+# lane (rtf_admitted 0.0), never FAIL. No claim bar moves.
+_LIVES_PER_SEED = N_OFF + 5 * (N_TRAIN + N_ON + N_OFF)
+TOTAL_CHILD_SIM_S = len(SEEDS) * _LIVES_PER_SEED * CAP_S
 
 # gates — PURPOSE_AND_SCAFFOLDING.md §3.7's table, reused verbatim
 R_PASS = 0.8              # retention: "owner right" row
@@ -500,6 +511,23 @@ def _flat(memo: dict, keys=SEEDS) -> dict:
     return out
 
 
+def _rtf_gate(wseed: int, j0: float, alpha: float) -> dict:
+    """T0.32's standing refusal, measured on a probe world then discarded."""
+    probe = W0(seed=wseed, j0=j0, alpha=alpha)
+    zero = np.zeros(8)
+    reading = rtf.measure_rtf(lambda: probe.decide(zero), SIM_S_PER_DECISION,
+                              n_steps=50, warmup=10, trials=2)
+    try:
+        d = rtf.require_feasible(reading, TOTAL_CHILD_SIM_S,
+                                 spec=BY_ID["SO.07"])
+        return {"rtf_probe": round(reading.rtf, 4),
+                "rtf_projected_s": round(d.projected_s, 1),
+                "rtf_limit_s": d.limit_s, "rtf_admitted": 1.0}
+    except rtf.RTFRefusal as e:
+        return {"rtf_probe": round(reading.rtf, 4), "rtf_admitted": 0.0,
+                "rtf_refusal": f"VOID: {e.decision.reason}"}
+
+
 def _measure(seed: int) -> dict:
     j0, alpha, prov = _calibration()
     m: dict = {"calibrated": float(j0 is not None), **prov}
@@ -507,6 +535,9 @@ def _measure(seed: int) -> dict:
         return m
     wseed = seed + WORLD_BASE
     m["world_seed"] = float(wseed)
+    m.update(_rtf_gate(wseed, j0, alpha))
+    if m["rtf_admitted"] != 1.0:
+        return m
 
     ref = _run_arm(wseed, "ref", j0, alpha)
     m["ref_fed_frac"] = float(np.mean(
@@ -596,6 +627,10 @@ def _control(seed: int) -> dict:
 def _check(m: dict, c: dict):
     if m.get("calibrated", 0.0) != 1.0:
         return Status.VOID              # PS.01 supplied no usable j0/alpha
+    for s in SEEDS:
+        if m.get(f"rtf_admitted_s{s}", 1.0) != 1.0:
+            return Status.VOID          # T0.32's standing refusal: the
+            # declared envelope projects past the child allowance; no life ran
     for s in SEEDS:
         if m.get(f"ref_fed_frac_s{s}", 0.0) < REF_MIN_FED:
             return Status.VOID          # the rig cannot produce the behaviour

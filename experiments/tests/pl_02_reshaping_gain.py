@@ -341,6 +341,7 @@ import playground as pg  # noqa: E402
 from ContactAudio import (MODE_GAINS, MODE_RATIOS, SAMPLE_RATE, TAU0,  # noqa: E402
                           VOICE_SECONDS, ContactAudioSynth)
 from ..eye_quality import apply_eye_quality  # noqa: E402
+from .. import rtf  # noqa: E402
 from ..protocol import Ledger, Status, run_spec  # noqa: E402
 from ..registry import BY_ID  # noqa: E402
 from . import pg_6_playground_eyes as pg6  # noqa: E402
@@ -362,6 +363,20 @@ AUDIO_DROP = 0.5
 L2 = 1.0                       # PG.6's ridge operating point, unchanged
 N_BOOT = 2000
 CI_LO, CI_HI = 2.5, 97.5
+
+# ── T0.32's standing refusal (rtf.require_feasible), adopted 2026-10-19 per
+# the 2026-10-08 ruling on `longrun-binding-conjunct-went-false-four-times-
+# under-an-unmoved-impl-sha`. Two declared phases, each probed and projected
+# over the WHOLE child (all seeds, experiment + control) BEFORE the phase
+# runs: phase 1 is episode rendering (work unit: one rendered episode),
+# phase 2 is pretext training (work unit: one optimiser step with every
+# parameter group live and both losses — the most expensive arm shape). The
+# probes draw from a PRIVATE rng and throwaway models, so the fixture's rng
+# stream, the shared per-seed init (reseeded inside _build_models/_pretrain)
+# and the paired data are untouched. A refusal is a VOID lane (rtf_admitted
+# 0.0), never FAIL. No claim bar moves.
+EPISODES_CHILD = 3 * (N_PRETEXT + N_PROBE_TR + N_PROBE_TE)  # registry seeds=3
+TRAIN_STEPS_CHILD = 3 * 4 * STEPS   # 3 seeds x (ua, plastic, frozen, shuffled)
 
 LEARN_DROP = 0.90              # final pretext loss must be < this x initial
 AUDIO_TEACH_R2_MIN = 0.50      # the teaching channel must know the radius
@@ -626,6 +641,52 @@ def _boot_ci(y, pred_a, pred_b, seed: int) -> tuple:
 _CACHE: dict = {}
 
 
+def _rtf_gate(torch, eye, seed: int) -> dict:
+    """T0.32's standing refusal, both declared phases; probes discarded."""
+    prng = np.random.RandomState(seed * 104729 + 7)
+    r1 = rtf.measure_rtf(lambda: _episodes(eye, prng, 1), 1.0,
+                         n_steps=12, warmup=3, trials=2)
+    try:
+        d1 = rtf.require_feasible(r1, EPISODES_CHILD, spec=BY_ID[SPEC_ID])
+    except rtf.RTFRefusal as e:
+        return {"rtf_admitted": 0.0, "rtf_render_eps_per_s": round(r1.rtf, 4),
+                "rtf_refusal": f"VOID (render phase): {e.decision.reason}"}
+    # phase 2: one optimiser step, probed on throwaway models and a probe
+    # batch rendered by the SAME private rng (all discarded afterwards).
+    data = _episodes(eye, prng, BATCH)
+    enc_a, enc_b, dec, aud_head = _build_models(torch, seed)
+    frames = _nchw(torch, data["frames"])
+    aud = data["audio"]
+    aud_z = torch.from_numpy((aud - aud.mean(0)) / (aud.std(0) + 1e-8))
+    params = (list(enc_a.parameters()) + list(enc_b.parameters())
+              + list(dec.parameters()) + list(aud_head.parameters()))
+    opt = torch.optim.Adam(params, lr=LR)
+
+    def _step():
+        xm, hole = _mask_frames(torch, frames, prng)
+        z = torch.cat([enc_a(xm), enc_b(aud_z)], dim=1)
+        recon = dec(z)
+        loss = ((recon - frames) ** 2 * hole).sum() / hole.sum().clamp(min=1.0)
+        loss = loss + ((aud_head(z) - aud_z) ** 2).mean()
+        opt.zero_grad()
+        loss.backward()
+        opt.step()
+
+    r2_reading = rtf.measure_rtf(_step, 1.0, n_steps=8, warmup=2, trials=2)
+    try:
+        d2 = rtf.require_feasible(r2_reading, TRAIN_STEPS_CHILD,
+                                  spec=BY_ID[SPEC_ID])
+    except rtf.RTFRefusal as e:
+        return {"rtf_admitted": 0.0,
+                "rtf_train_steps_per_s": round(r2_reading.rtf, 4),
+                "rtf_refusal": f"VOID (training phase): {e.decision.reason}"}
+    return {"rtf_admitted": 1.0,
+            "rtf_render_eps_per_s": round(r1.rtf, 4),
+            "rtf_train_steps_per_s": round(r2_reading.rtf, 4),
+            "rtf_projected_s": round(d1.projected_s + d2.projected_s, 1),
+            "rtf_limit_s": d1.limit_s}
+
+
 def _fixture(seed: int) -> dict:
     """Rendered episodes + the U_A/plastic training results, cached so the
     declared control (_control) reuses the SAME data, init and baseline
@@ -635,12 +696,16 @@ def _fixture(seed: int) -> dict:
     torch = _torch()
     eye = get_eye(seed)
     canary0 = eye.canary()
+    gate = _rtf_gate(torch, eye, seed)
+    if gate["rtf_admitted"] != 1.0:
+        _CACHE[seed] = {"eye": eye, "canary0": canary0, "rtf": gate}
+        return _CACHE[seed]
     rng = np.random.RandomState(seed * 271 + 3)
     pretext = _episodes(eye, rng, N_PRETEXT)
     probe_tr = _episodes(eye, rng, N_PROBE_TR)
     probe_te = _episodes(eye, rng, N_PROBE_TE)
     _CACHE[seed] = {"eye": eye, "canary0": canary0, "pretext": pretext,
-                    "probe_tr": probe_tr, "probe_te": probe_te}
+                    "probe_tr": probe_tr, "probe_te": probe_te, "rtf": gate}
     return _CACHE[seed]
 
 
@@ -678,6 +743,8 @@ def _experiment(seed: int) -> dict:
         pass
     torch = _torch()
     fx = _fixture(seed)
+    if fx["rtf"]["rtf_admitted"] != 1.0:
+        return dict(fx["rtf"])
     yte = fx["probe_te"]["radius"].astype(np.float64)
 
     ua = _pretrain(torch, "ua", fx["pretext"], seed,
@@ -736,7 +803,7 @@ def _experiment(seed: int) -> dict:
     fx["r2_ua"], fx["plastic_R"] = r2_ua, R_pl
 
     return {
-        "seed": seed,
+        "seed": seed, **fx["rtf"],
         "reshaping_gain_R": round(R_pl, 6),
         "R_ci_lo": round(lo_pl, 6), "R_ci_hi": round(hi_pl, 6),
         "r2_raw_pixel": round(r2_raw, 6),
@@ -771,6 +838,8 @@ def _control(seed: int) -> dict:
     real one means the gain was capacity, and _check returns VOID."""
     torch = _torch()
     fx = _fixture(seed)
+    if fx["rtf"]["rtf_admitted"] != 1.0:
+        return dict(fx["rtf"])
     yte = fx["probe_te"]["radius"].astype(np.float64)
     shuf = _pretrain(torch, "shuffled", fx["pretext"], seed,
                      _build_models(torch, seed))
@@ -801,6 +870,9 @@ def _control(seed: int) -> dict:
 
 def _check(m: dict, c: dict):
     # ── RIG GATES: VOID, not FAIL — an invalid run is not evidence.
+    if m.get("rtf_admitted", 1.0) < 1.0:
+        return Status.VOID          # T0.32's standing refusal: a declared
+        # phase projects past the child allowance; the phase never ran
     if m["canary_ok"] < 1.0 or m["learn_ok"] < 1.0:
         return Status.VOID
     if c.get("shuffled_learn_ok", 1.0) < 1.0:

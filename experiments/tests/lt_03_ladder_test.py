@@ -210,9 +210,10 @@ from pathlib import Path
 
 import numpy as np
 
+from .. import rtf
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
-from .lt_01_null_floor import (_Rig, ENGAGED_RISE, SUCCESS_RUNGS,
+from .lt_01_null_floor import (_Rig, ENGAGED_RISE, SUBSTEPS, SUCCESS_RUNGS,
                                MUTATE_STRENGTH)
 from .lt_02_chaos_detector import _detector, _reward_ratio
 from .pg_4_noisy_tv import EPS_HI, EPS_LO, GAMMA, Q_INIT, Q_LR
@@ -259,6 +260,17 @@ CHAOS_OCC = 3.0             # from LT.02 (VOID lane, per arm)
 CHAOS_RATIO = 2.0
 
 CANDIDATES = ("lp", "disagree", "metra")
+
+# ── T0.32's standing refusal (rtf.require_feasible), adopted 2026-10-19 per
+# the 2026-10-08 ruling on `longrun-binding-conjunct-went-false-four-times-
+# under-an-unmoved-impl-sha`: each seed projects the WHOLE child's declared
+# envelope (all seeds, experiment + control) on a probe rig that is built,
+# measured and discarded (LF.01's idiom) BEFORE any arm steps. A refusal is
+# a VOID lane (rtf_admitted 0.0), never FAIL — an infeasible dispatch is an
+# apparatus statement, not a world reading. No claim bar moves.
+_CHILD_ARMS = 7              # random, icm, lp, disagree, metra, randrew
+#                              (experiment) + the shuffled twin (control)
+_CHILD_DEC_PER_SEED = _CHILD_ARMS * N_LIVES * LIFE_DEC
 
 # Flipped only by a commit that pastes the pilot's JSON into this docstring.
 # Flipped 2026-09-25: PILOT RECORD above (seed 90, 85.8 s + teleport probe).
@@ -790,11 +802,32 @@ def _score_arm(log: dict, null_log: dict) -> dict:
     return st
 
 
+def _rtf_gate(seed: int) -> dict:
+    """T0.32's standing refusal, measured on a probe rig then discarded."""
+    probe = _LadderRig(seed)
+    sim_dt = float(probe.model.opt.timestep) * SUBSTEPS
+    hold = np.zeros(8, dtype=np.float32)
+    reading = rtf.measure_rtf(lambda: probe.decide(hold), sim_dt,
+                              n_steps=40, warmup=10, trials=2)
+    total_sim_s = BY_ID["LT.03"].seeds * _CHILD_DEC_PER_SEED * sim_dt
+    try:
+        d = rtf.require_feasible(reading, total_sim_s, spec=BY_ID["LT.03"])
+        return {"rtf_probe": round(reading.rtf, 4),
+                "rtf_projected_s": round(d.projected_s, 1),
+                "rtf_limit_s": d.limit_s, "rtf_admitted": 1.0}
+    except rtf.RTFRefusal as e:
+        return {"rtf_probe": round(reading.rtf, 4), "rtf_admitted": 0.0,
+                "rtf_refusal": f"VOID: {e.decision.reason}"}
+
+
 def _experiment(seed: int) -> dict:
     _audit_arm_sources()
+    gate = _rtf_gate(seed)
+    if gate["rtf_admitted"] != 1.0:
+        return gate
     rig = _LadderRig(seed)
     if not rig.calib["ok"]:
-        return {"rig_ok": 0.0, "finite": 0.0}
+        return {"rig_ok": 0.0, "finite": 0.0, **gate}
 
     logs = {"random": _run_arm(rig, "random", seed)}
     for name in ("icm",) + CANDIDATES + ("randrew",):
@@ -813,7 +846,7 @@ def _experiment(seed: int) -> dict:
     out = {"rig_ok": 1.0, "finite": min(l["finite"] for l in logs.values()),
            "ruler_occ": det["per_arm"]["random"]["occupancy"],
            "null_engaged": float(_ascent_stats(
-               logs["random"]["attempts"])["engaged"])}
+               logs["random"]["attempts"])["engaged"]), **gate}
 
     winner_engaged = stats_[best]["engaged"]
     for n in ("icm",) + CANDIDATES + ("randrew",):
@@ -896,6 +929,9 @@ def _void(m: dict, reason: str):
 def _check(m: dict, c: dict):
     """Pre-registered. m: seed-MEAN metrics (per-seed 0/1 flags arrive as
     fractions of 3 seeds); c: control means."""
+    if m.get("rtf_admitted", 1.0) < 1.0:
+        return _void(m, "rtf projection refused the declared envelope "
+                        "(T0.32's standing refusal); nothing was stepped")
     if m.get("rig_ok", 0.0) < 1.0 or m.get("finite", 0.0) < 1.0:
         return _void(m, "rig unhealthy (calibration or non-finite state)")
     if abs(m.get("ruler_occ", 1.0) - 1.0) > 0.10:
