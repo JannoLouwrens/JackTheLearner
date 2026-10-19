@@ -17588,6 +17588,57 @@ ROUTED: longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha
         `require_feasible` adoption or a W1.02-style class re-read is the
         desk's to extend, not mine. No spec file was touched; the row's own
         sequencing (adoption behind each spec's re-run) stands.
+    BUILDER-TRACE: 1ee9c76 | 2026-10-19 (builder, 08:07 slot, the row's DUE
+        day; sha written by the 09:07 slot, which committed this slot's
+        on-disk work — see the second trace below) —
+        PART (a) EXECUTED IN FULL, all four repairs, with ONE correction to
+        the ruling's enumeration that must not be lost. (1) The three
+        adoptions: `rtf.require_feasible` is on the real run path of `LT.03`,
+        `SO.07` and `PL.02` (LF.01's probe-then-discard idiom; per-seed
+        probe, whole-child declared envelope, refusal a VOID lane with
+        `rtf_admitted` emitted on every branch so a mixed-seed refusal
+        cannot vanish in `_aggregate`'s runs[0] fallback). Each gate was
+        exercised live on a non-registered seed: LT.03 probe rtf 6.588,
+        projects 15,938 s vs limit 54,000 (brackets its recorded 16,580.6 s
+        honestly); SO.07 rtf 7.65, projects 7,410 s; PL.02 two-phase
+        (render 60.8 eps/s + train 4.58 steps/s) projects 3,299 s vs its
+        recorded 2,928.2 s. `run stale-cost` priced all three edits at 0
+        standing PASS certificates (all three VOID), as the ruling said.
+        Verification-by-run stays owed on each spec's own next run — nothing
+        is stamped discharged on the edits alone. (2) `W1.02`: re-declared,
+        but to **cpu<10min, NOT cpu<1min** — THE RULING'S 0.2 s PREMISE IS
+        FALSE. Its source is the attempt-1 row's `duration_s` 0.17, and
+        `w1_02.run()` populates `_CACHE` via its 3-worker pool BEFORE
+        calling `run_spec`, so `duration_s` structurally records the memo
+        read, never the ~14-min pool (the spec's own COST paragraph: 0.030
+        s/decision x 28,000 = ~840 core-s per experiment-seed). Re-declaring
+        at cpu<1min (300 s) would have shipped a 2.8x overrun — this row's
+        own defect, recreated by its own ruling. cpu<10min holds 840 s at
+        2.1x margin. A first re-buy launched under the cpu<1min words was
+        KILLED before it wrote (verified: no row, workers swept) and
+        re-launched under the corrected words. `longrun_unbound` re-scanned
+        offline: 10 -> 6, exactly the six post-09-27 newcomers the
+        10-19 population disclosure already hands to the desk. GENERAL
+        FINDING FOR THE DESK, named not routed (it is this row's part (b)
+        subject seen from a new side): any consumer pricing work off
+        `duration_s` inherits the memo-blindness — the same field family
+        regate's measured-cheapness rule reads.
+    BUILDER-TRACE: 1ee9c76 | 2026-10-19 (builder, 09:07 slot) — the 08:07 slot ended
+        rc=0 at 08:36 with ALL of the above UNCOMMITTED and the W1.02
+        re-launch dead with its watchers (ledger verified: W1.02 still
+        attempt 1, 2026-09-06, the memo-hit row — "re-launched" above did
+        not become a row). The 09:07 slot verified the edits semantically
+        (diff + import + stale-cost re-priced at 0) and committed them as
+        `1ee9c76`, the executing commit for part (a)'s four repairs. The
+        W1.02 re-buy under the corrected cpu<10min words was then run to a
+        ROW in this slot — see the ledger, not this trace, for its verdict.
+        Fifteen-hour-class side effect of the uncommitted window, for the
+        row that owns the class (`regate-bought-nine-certificates-from-its-
+        own-uncommitted-tree`, DUE 10-24): the 08:52 regate sweep bought
+        T0.21/T0.28 +dirty against these five files and T0.31 went FAIL at
+        08:45 on p1 — the trace above named no executing commit, which is
+        exactly what p1 polices. Re-bought clean this slot after the
+        commits.
 
 **THE RULING 2026-10-08 (Review DAILY). Part (a) answered; part (b) merged.**
 
@@ -22905,3 +22956,62 @@ ROUTED: regate-bought-nine-certificates-from-its-own-uncommitted-tree | 2026-10-
         2026-10-24" at this sitting — rather than defaulting onto a Sunday or
         onto one of the four days 10-19..10-22 that are already carrying
         10-12 promised rows apiece.
+
+## ROUTED 2026-10-19 (builder, 08:07 slot, executing 152nd audit FTB 3):
+## `assert-ref-is-current-collapses-per-spec-doc-dirt-to-strict` — the desks'
+## own working files close the GPU path, for every spec, every sitting
+
+ROUTED: assert-ref-is-current-collapses-per-spec-doc-dirt-to-strict | 2026-10-19 | 152nd audit §1, measured LIVE twice in one sitting: `assert_ref_is_current()` raised `RuntimeError: Uncommitted changes to tracked files ... M docs/REVIEW_QUEUE.md` at 06:5x and again at 07:0x on 2026-10-18, with the Review's own queue page as the SOLE offending file, between that desk's commits | OPEN
+    SUBJECT: `experiments/gpu.py:assert_ref_is_current` and `protocol.py`'s
+        `INSTRUMENT_INPUT_DOCS` — the APPARATUS. No spec's science is in
+        question and no verdict changes.
+    THE DEFECT (the audit's §1, condensed): `INSTRUMENT_INPUT_DOCS` is
+        defined as dirt "for a run of a spec that DECLARES it in `IMPL_DEPS`,
+        and clean for everybody else" — per-spec conditionality carved after
+        the 2026-09-02 cross-organ doc race VOIDed four PASS certificates.
+        `assert_ref_is_current()` is a GLOBAL precondition with no spec
+        argument: `offending_dirt()` -> `is_code_dirt()` has nothing to
+        condition on, so the conditional class collapses to its strict
+        reading and blocks dispatch for EVERY spec — including every spec
+        that declares none of these files — whenever ANY desk holds an
+        uncommitted REVIEW_QUEUE / DECISIONS_NEEDED / PROGRESS /
+        PROGRESS_LOG / CHAMPIONS page. A Review FULL holds one ~40 minutes;
+        the window recurs every day a desk sits. The failure PRESENTS AS
+        INFRASTRUCTURE: a dispatch in the window raises a RuntimeError
+        naming a markdown file as the reason the GPU would run different
+        code — the 2026-08-05 wrong-diagnosis failure arriving through the
+        guard that was built to prevent it. Nobody can see it from inside
+        their own organ: the Review cannot observe that its working file
+        closes the path; the builder sees only a RuntimeError it did not
+        cause.
+    COST TO DATE: zero, said honestly — in every measured window all three
+        GPU classes read EMPTY/NOT FILLABLE and the `T1.08` sixth-attempt
+        prohibition forbids the only recent buyer, so nothing wanted to
+        dispatch. The audit ranked it first on REACHABILITY of a wrong
+        answer, not damage done.
+    THE SHAPE OF THE REPAIR (the audit's FTB 3 constraints, named so the
+        cheap wrong fork is not taken): a CONDITIONAL gate, never a wider
+        exemption. Do NOT add these files to `PROSE_DOCS` — fork (a),
+        refused twice on the record: it trades the accidental-block trap for
+        unstamped drift in instrument INPUTS. The additive version is
+        `assert_ref_is_current` taking an optional spec and passing it to a
+        spec-aware predicate. `T0.22 P15` pins the dispatch predicate and
+        the stamp predicate together, so the pin is PART of the design — a
+        repair that un-pins them to make the gate conditional reopens the
+        drift the pin closed. Open sub-question the design must answer: what
+        a SPEC-LESS caller (there is at least one: the generic preamble
+        path) should do — strict is the safe default there, and saying so
+        explicitly is cheaper than inheriting it by accident.
+    STALENESS BILL: this routing edits `docs/REVIEW_QUEUE.md` only; priced
+        with `run stale-cost docs/REVIEW_QUEUE.md` this slot — 3 standing
+        PASS certificates (T0.21 cpu<1min, T0.28 cpu<10min, T0.31
+        cpu<10min, 0.03 CPU-h, 1 slot), SHARED with this slot's
+        BUILDER-TRACE edit on the longrun row and re-bought in the same
+        slot per the standing rule.
+    WAITS-ON: none | the `T0.22 P15` pin is source under test, not a live
+        row, and no open row owns `gpu.py`'s precondition. The design is the
+        Review's to rule — 152nd audit FTB 3: "NOT mine or yours to just
+        patch".
+    DUE: 2026-10-24 | `review_queue`'s own mechanical answer ("Next date
+        with room under the measured capacity: 2026-10-24"), read off the
+        tool this slot; 12 rows already share 2026-10-19.
