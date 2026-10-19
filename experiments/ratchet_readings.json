@@ -16,8 +16,8 @@
     "value": 0
   },
   "cpu_foreclosed_now": {
-    "at": "2026-09-29",
-    "value": 0
+    "at": "2026-10-19",
+    "value": 37
   },
   "dark_slots": {
     "at": "2026-09-30",
@@ -97,7 +97,7 @@
   },
   "review_queue_net_arrivals": {
     "at": "2026-10-19",
-    "value": -7
+    "value": -6
   },
   "review_queue_piled_on": {
     "at": "2026-10-19",
