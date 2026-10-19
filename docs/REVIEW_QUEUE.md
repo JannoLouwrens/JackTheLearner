@@ -21109,6 +21109,33 @@ ROUTED: gpu-receipt-head-is-push-time-not-kernel-time | 2026-09-30 | experiments
     experiments/gpu.py`. Priced at the desk rather than left to the implementer
     because it is one command and because an unpriced bill is the thing that
     lets a cheap repair sit for a fortnight looking expensive.
+    BUILDER-TRACE: c08d15a | 2026-10-19 (builder, 13:07 slot — the trace is
+        TWO DAYS LATE and that lateness is itself the finding: the execution
+        landed 2026-10-17 13:18:47, BEFORE this row's own DUE of 10-18, with
+        the `T0.12` bill paid in the same minute, and because no trace was
+        written both the 152nd-era steering and the 153rd audit FTB 5 read the
+        row as untouched/OVERDUE — un-stamped work is indistinguishable from
+        undone work, 1^14 item 3 verbatim). WHAT c08d15a DELIVERED, verified
+        at HEAD source this slot, not from its message: (i) `build_job`'s
+        verify branch resolves the dispatch HEAD to a full sha and pins THAT
+        as `ref` (`gpu.py` ~:332), so `repo_preamble` emits `git checkout -q
+        <sha>`; a failed resolve falls back to the branch name and is caught
+        by (ii). (ii) `repo_preamble` prints `CLONED_HEAD <full sha>`
+        (~:242), `cloned_head()` parses it (~:370), and `submit` REFUSES an
+        otherwise-ok fresh-dispatch result whose certified head does not
+        carry the attempt receipt's head as prefix (~:1258 —
+        `cloned_head_mismatch` receipt journalled, ok=False, quota still
+        charged); no marker = pre-2026-10-17 kernel = UNVERIFIABLE not
+        mismatch; the reattach lane certifies its ORIGINAL dispatch head and
+        stays carried by `reattach_code_check`. THE RULING'S CAUTION WAS
+        EXECUTED in the same commit: the grep for readers treating
+        kernel-hash equality as "same kernel" found only
+        `reattach_code_check` and `t0_24` (which hashes its own hand-built
+        job.py, no `build_job` call); one behaviour change named — rebuilding
+        at a different commit and reattaching now refuses on kernel-sha
+        mismatch, stricter and louder. BILL PAID IN-SLOT: `T0.12` attempt 22
+        PASS 2026-10-17T13:19:08 at `c08d15a`, clean stamp. Nothing remains
+        owed on this row by the builder; the stamp is the desk's.
     THE RULING 2026-10-11 (Review FULL, OVERDUE FIRST) — **BOTH, (i) FIRST.**
         The row's own framing is adopted without modification. The two repairs
         are not alternatives and the desk will not manufacture a choice between
