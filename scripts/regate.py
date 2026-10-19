@@ -229,11 +229,22 @@ def crossing_a_class_slack(est_s: float):
     """The 128th audit's RANK 2a repair: on its first day this lane spent
     4,218.6 s of the day's 4,450.2 s and foreclosed `cpu<2h` (37 specs, 36
     never run) — a class whose slack is 13x smaller than this lane's own —
-    because it consulted no meter. So the guard is not this lane's own class
-    budget: it is the TIGHTEST class's slack. `used_s > slack_s` is exactly
-    "that class has >= 1 foreclosed member" (`class_slack`'s own documented
-    equivalence), so refusing to be the spender that crosses it means the
-    clerical lane can never again be the reason a science class closed.
+    because it consulted no meter. `used_s > slack_s` is exactly "that class
+    has >= 1 foreclosed member" (`class_slack`'s own documented equivalence),
+    so refusing to be the spender that CROSSES a line means the clerical lane
+    can never again be the reason a science class closed.
+
+    The 153rd audit's correction (FTB 2): the first form of this guard tested
+    `used + est > tightest_slack`, which is unconditionally true once the
+    tightest line is ALREADY crossed — on 2026-10-19 it refused a 64 s re-buy
+    against a `cpu<2h` slack already 597 s overdrawn, protecting nothing (the
+    37 foreclosed specs were unaffordable with or without the spend) while
+    five dirty certificates stayed dirty all day. The crossing a refusal can
+    still prevent is `used <= slack < used + est`, and only that refuses now.
+    It is tested against EVERY class row, not just the tightest: once the
+    tightest line is crossed, the next-tightest uncrossed line — including the
+    candidate's own class, which is what governs whether this spec is still
+    affordable — is the one this spend could close.
     Returns the class row it would close (plus the live spend), or None.
     """
     from experiments.cpu_budget import CpuBudget, class_slack
@@ -241,9 +252,9 @@ def crossing_a_class_slack(est_s: float):
     if not rows:
         return None
     used = CpuBudget().used_s()   # fresh read — the runner charges between runs
-    tightest = rows[0]
-    if used + est_s > tightest["slack_s"]:
-        return {"used_s": used, **tightest}
+    for row in rows:
+        if used <= row["slack_s"] < used + est_s:
+            return {"used_s": used, **row}
     return None
 
 
