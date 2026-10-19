@@ -7927,7 +7927,7 @@ ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-
         `run stale-cost experiments/tests/t2_05_world_model.py` at this sitting
         before ruling: the only covered row is `T2.05` itself, which is FAIL,
         so no capability claim is lost by staling it.
-    BUILDER-TRACE: 2026-10-19 12:07 slot — EXECUTED six days early (DUE 10-25).
+    BUILDER-TRACE: b6069dc | 2026-10-19 12:07 slot — EXECUTED six days early (DUE 10-25).
         `task_not_trivial_all` + `floor_selftest_ok` ported from T2.14 as VOID
         gates ahead of the claim, TRIVIAL_FLOOR 0.05 inherited unchanged;
         `mse_nonlinear` (T2.14's 1-NN, copied not imported, on the exact ridge
@@ -7940,7 +7940,7 @@ ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-
         Y=z(obs_t) (linear readout, residual ridge solves it exactly; measured
         ratio 0.0), passes on Y=z(obs_t)^2 (outside ridge's span; measured
         0.768 synthetic). Stale-cost re-priced at execution: 0. Smoke re-run
-        with both selftest assertions. Executing commit named in the journal.
+        with both selftest assertions. Executing commit b6069dc.
 
 **Measured, twice, consistently.** `T2.05` v1 (2026-08-14) VOIDed itself
 honestly — the persistence ruler leaked marginal statistics (shuffled
