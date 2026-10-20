@@ -17557,7 +17557,7 @@ are byte-unmoved; the only writes are this ledger row and documentation.
 ## specs never named the feasibility gate, two of them overran their own
 ## budget class, and no instrument could report it
 
-ROUTED: longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha | 2026-09-27 | `T0.32` attempt 3, ledger row **FAIL** 2026-09-27T15:10:27 (clean stamp at `b66135f`), `longrun_unbound` `['LT.03','PL.02','SO.07','W1.02']` against a gate of `== []`; re-derived at `e44068b` and by `git log` over the hashed paths | DISPOSITIONED 2026-10-08 (Review DAILY, OVERDUE-FIRST class — **part (a) is RULED and it splits 3-and-1: `W1.02` is a MISDECLARED BUDGET CLASS, not a missing call, and binding it would satisfy a scan while leaving the real defect in place. The other three adopt `require_feasible`, VERIFIED not grepped, and are sequenced behind their own re-runs. Part (b) — the class question — is MERGED onto the 10-19 sibling at this row's own request.** See THE RULING below)
+ROUTED: longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha | 2026-09-27 | `T0.32` attempt 3, ledger row **FAIL** 2026-09-27T15:10:27 (clean stamp at `b66135f`), `longrun_unbound` `['LT.03','PL.02','SO.07','W1.02']` against a gate of `== []`; re-derived at `e44068b` and by `git log` over the hashed paths | ACTED 2026-10-20 `1ee9c76` (Review DAILY, OVERDUE FIRST, act 1 — **PART (a) IS DISCHARGED IN FULL, and it was closed by RE-DERIVING THE GATE AT HEAD IN-PROCESS rather than from the trace's prose or from the ledger row, because both of those would have given the wrong answer in opposite directions.** `from experiments.tests.t0_32_rtf_gate import _longrun_binding; _longrun_binding()` at this HEAD returns `longrun_unbound == ['NE.02','T4.04','T4.05','T6.01','W1.01','W1.04']` — **all four ids this row was routed on (`LT.03`, `PL.02`, `SO.07`, `W1.02`) are GONE from the gate's population**, which is the only statement that closes this row. Mechanism checked per id, not in aggregate: `rtf.require_feasible` is called on the real run path at `lt_03_ladder_test.py:814`, `pl_02_reshaping_gain.py:650` and `:677` (the two-phase form), and `so_07_found_and_outlives.py:521`; `W1.02` took the 3-and-1 split's OTHER limb exactly as ruled — `registry_expansion.py:6243` now declares `budget=Budget.CPU` where `1ee9c76` found `Budget.CPU_LONG`, which drops it below `LONGRUN_FLOOR_S` and out of the scan's domain instead of satisfying the scan with a call it cannot afford. **THE LEDGER ROW WOULD HAVE TOLD ME NOTHING HAPPENED, and that is this stamp's one transferable finding.** `T0.32`'s live row is attempt 9, `FAIL`, `2026-10-17T15:14:08` — it PREDATES `1ee9c76` (2026-10-19) and therefore still prints all ten ids. A desk closing this row off the ledger would have read four repaired specs as unrepaired and re-dated for nothing; a desk closing it off the BUILDER-TRACE would have taken the repair on the committer's word. Only the re-derivation separates them, and the gap is the general one: **a source-scanning conjunct goes stale against its own subject the instant the source moves, and no organ re-runs it.** **WHAT THIS STAMP DOES NOT CLAIM.** `T0.32` IS STILL `FAIL`, on the six ids above. **AND THOSE SIX WOULD HAVE ESCAPED WITH THIS STAMP, which is the reason this disposition is not a bare `ACTED`:** they are long-run specs REGISTERED AFTER the 2026-09-27 measurement this row priced, `ac51b29` disclosed them, and that trace left their treatment "the desk's to extend, not mine" — i.e. to me, today. An `ACTED` is terminal and may not carry ordered work, so the extension is ROUTED AS ITS OWN LIVE ROW in the same act: `longrun-population-grew-six-ids-under-a-priced-row` below. Part (b), the class question, was MERGED onto `impl-deps-domain-misses-a-read-and-a-relative-import` at this row's own 10-08 request and is live there, NOT discharged here. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-10-08 (Review DAILY, OVERDUE-FIRST class — **part (a) is RULED and it splits 3-and-1: `W1.02` is a MISDECLARED BUDGET CLASS, not a missing call, and binding it would satisfy a scan while leaving the real defect in place. The other three adopt `require_feasible`, VERIFIED not grepped, and are sequenced behind their own re-runs. Part (b) — the class question — is MERGED onto the 10-19 sibling at this row's own request.** See THE RULING below)
     SUBJECT: the APPARATUS and four SPECS' compliance — not any spec's science.
         No claim of Jack's is in question and no verdict changes.
     DUE: 2026-10-08 | `review-queue`'s own "next date with room under the
@@ -23140,3 +23140,54 @@ ROUTED: rc0-slot-ends-mid-wait-with-watchers-armed-and-work-uncommitted | 2026-1
         capacity (full by the 10-08 precedent), 10-25 carries 5, 10-26
         carries 2. Dated 10-26 rather than 10-25 to leave one slot of slack
         on a board already scheduled to break 12 promises today.
+
+ROUTED: longrun-population-grew-six-ids-under-a-priced-row | 2026-10-20 | `_longrun_binding()` re-derived in-process at this HEAD (Review DAILY, act 1): `longrun_unbound == ['NE.02','T4.04','T4.05','T6.01','W1.01','W1.04']`, against a gate of `== []`; the parent row `longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha` ACTED the same morning on its own priced four | OPEN
+    SUBJECT: the APPARATUS and six SPECS' compliance with `T0.32`'s standing
+        refusal — not any spec's science. No claim of Jack's is in question
+        and no verdict changes either way.
+    **WHY THIS IS A NEW ROW AND NOT A RE-DATE OF THE PARENT.** The parent was
+        routed 2026-09-27 on a FOUR-id measurement and its ruling priced
+        exactly those four (three adopt `require_feasible`, `W1.02` is a
+        misdeclared class). All four are discharged and verified. These six
+        are long-run specs REGISTERED AFTER that measurement — they were
+        never in the parent's population, never priced by its ruling, and
+        carrying them on a terminal `ACTED` row is forbidden (an `ACTED` row
+        is never re-read, 100th audit B2). `ac51b29` disclosed the growth
+        honestly and left the extension to this desk; this row is that
+        extension, so the work survives its parent's closure.
+    **THE CLASS, which is the part worth more than the six repairs.** A
+        source-scanning conjunct's POPULATION is computed from the live
+        registry, so it grows every time a long-run spec is registered — but
+        the ROW that owns the conjunct's repair is priced once, at routing
+        time, against the population of that day. Nothing compares the two.
+        For 22 days this row's parent read as "four specs to repair" while
+        the true debt was ten, and the only reason anyone knows is that a
+        builder trace volunteered a re-count. The same shape threatens every
+        row routed on a registry-derived enumeration.
+    THE QUESTION, in one line: do the six newcomers take the
+        `require_feasible` adoption (the three-spec limb) or a `W1.02`-style
+        budget-class re-read (the one-spec limb), decided per id rather than
+        as a class — and separately, should registering a long-run spec
+        without the call be refused AT REGISTRATION, so the population
+        cannot grow behind a priced row again?
+    NOTE on `T6.01`: it also appears on the live OPEN row
+        `shipped-companion-cannot-move-see-or-report-failure`, which is a
+        DIFFERENT subject (its implementation smokes). Neither row
+        supersedes the other and neither is blocked on the other.
+    STALENESS BILL: this routing edits `docs/REVIEW_QUEUE.md` only and moves
+        no threshold, no gate and no verdict. `T0.32` is already `FAIL` on
+        this exact conjunct, so the row costs no certificate to open; each
+        per-id repair prices its own bill when it is designed (`run
+        stale-cost` on the touched spec at that point, not now).
+    WAITS-ON: none | the enumeration is complete and re-derived today; the
+        parent's part (b) class question sits on
+        `impl-deps-domain-misses-a-read-and-a-relative-import` and could
+        inform the registration-refusal half, but does not gate the per-id
+        decisions, so declaring a dependence here would buy delay rather
+        than information.
+    DUE: 2026-10-25 | `review-queue`'s own next-free-date arithmetic read off
+        the tool this sitting: 10-18 through 10-21 are AMBER (8/12/11/10
+        live rows), 10-22 through 10-24 each carry 6 = the measured
+        capacity, and 10-25 carries 5 — the first date with genuine room
+        under the 6/cycle measurement. Not dated onto a full day, which is
+        the act `review_queue_piled_on` counts.
