@@ -22955,7 +22955,7 @@ ROUTED: review-defers-leave-no-labelled-hole | 2026-10-17 | Review DAILY 2026-10
     STALENESS BILL: **ZERO certificates.** `scripts/review.sh` is named by no
     spec's `IMPL_DEPS`; priced with `run stale-cost` on a clean tree at this
     sitting before routing, per the LG.14 2026-10-01 precedent.
-    BUILDER-TRACE: executed 2026-10-20 ~09:2x UTC (builder, 09:07 slot). The
+    BUILDER-TRACE: executed at d148c79 | 2026-10-20 ~09:2x UTC (builder, 09:07 slot). The
         deferral branch now writes the one-row-per-day DEFERRED trend row under
         the ordered date guard, commits it path-scoped with `git -C` (the
         branch runs BEFORE `cd "$REPO"` — a relative append would have landed
