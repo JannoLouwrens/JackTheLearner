@@ -1335,7 +1335,18 @@ def _unreachable_fixture() -> List[str]:
 #               next_free_due). Zero is the working state now: every future
 #               settled FAIL must be routed or disposed in the same motion
 #               that records it, or coverage goes red.
-FAIL_UNOWNED_BASELINE = 0
+#   2026-10-20  0 -> 6: ME.11, ME.11.D, T2.07, W.1, W.2, W1.00 (builder,
+#               executing 156th audit FTB 1). NOT six new orphans — six FAILs
+#               that were ALWAYS owned by nobody, revealed when
+#               `_owned_by_dued_row` and the mention fallback became
+#               status-aware: every row crediting them is ACTED or DECLINED,
+#               and a terminal row's DUE: is a record, not an owner. The
+#               repair RAISED the number on purpose (the ratchet contract:
+#               the floor moves in the commit that grew the number, with the
+#               reason here). The number comes back down only by the legal
+#               repairs above — a LIVE row with a DUE:, a repaired_by, or a
+#               FAIL-DISPOSED marker — and the floor must follow it down.
+FAIL_UNOWNED_BASELINE = 6
 
 # The readable disposition marker (72nd audit B1: the T3.07 exclusion "must be
 # by a readable marker, not by a hardcoded id"). Lives in `Spec.notes` —
@@ -1349,15 +1360,52 @@ FAIL_DISPOSED_RX = re.compile(
     r"(?P<date>\d{4}-\d{2}-\d{2})")
 
 
+def _live_queue_view(queue_doc: str) -> str:
+    """`queue_doc` with every TERMINAL row's whole extent removed (156th audit
+    B1: a terminal row owns nothing).
+
+    A row's extent runs from its `ROUTED:` line to the next `ROUTED:` line or
+    EOF — the file's real record boundary (the Z.9 fixture arm's reading), so
+    a terminal row's flush-left evidence paragraphs leave with it. Prose
+    before the first row stays. Status comes from `review_queue.parse` — the
+    published parser, never a fresh regex, for the LESSONS reason that two
+    readers of one rendering drift — and liveness is `review_queue.LIVE`,
+    imported for the same reason `_DECL` is. A row whose status does not
+    parse is excluded too: that is the LOUD direction — an id owned only by a
+    malformed row reads unowned and fires, while the queue's own malformation
+    reader names the broken header. Idempotent, so applying it to an
+    already-filtered view changes nothing.
+    """
+    from . import review_queue as rq
+    statuses = [r["status"] for r in rq.parse(queue_doc)]
+    out: List[str] = []
+    idx, keep = -1, True
+    for raw in queue_doc.splitlines():
+        if rq._ROUTED.match(raw):
+            idx += 1
+            keep = idx < len(statuses) and statuses[idx] in rq.LIVE
+        if keep:
+            out.append(raw)
+    return "\n".join(out)
+
+
 def _owned_by_dued_row(sid: str, queue_doc: str) -> Optional[str]:
     """The strongest clocked-row ownership FORM for `sid`, or None.
 
-    Returns `"queue-row"` when a row about `sid` carries a `DUE:` (a dated
-    promise), `"held-on-blocker"` when its only clock is a `BLOCKED-BY:` (a
-    named release condition — legal payment per `REVIEW_QUEUE.md`'s own
-    contract and `review_queue.py`'s HOLD-WITHOUT-A-CLOCK, but weaker than a
-    date: it promises order, not time), and None when `sid` appears in no
-    clocked row at all — a bare mention, printed as one.
+    Returns `"queue-row"` when a LIVE row about `sid` carries a `DUE:` (a
+    dated promise), `"held-on-blocker"` when its only clock is a
+    `BLOCKED-BY:` (a named release condition — legal payment per
+    `REVIEW_QUEUE.md`'s own contract and `review_queue.py`'s
+    HOLD-WITHOUT-A-CLOCK, but weaker than a date: it promises order, not
+    time), and None when `sid` appears in no LIVE clocked row at all — a bare
+    mention, printed as one.
+
+    TERMINAL rows (`ACTED`/`DECLINED`) are excised before any matching, via
+    `_live_queue_view` (156th audit B1): a row's historical `DUE:` survives
+    its disposition — correctly, the queue never deletes history — but a
+    dated promise inside a closed row is a record, not an owner. A reference
+    is not a relationship; the thing pointing at the spec must still be able
+    to act.
 
     A row is "about" `sid` two ways, and both count (74th audit B2):
       - the id appears in the row's `ROUTED:` line or indented body — the
@@ -1376,6 +1424,7 @@ def _owned_by_dued_row(sid: str, queue_doc: str) -> Optional[str]:
     column-0 `ROUTED:` opens a row, a non-indented line ends its body.
     """
     from . import review_queue as rq
+    queue_doc = _live_queue_view(queue_doc)
     rx = re.compile(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)")
     slug = sid.lower().replace(".", "")
 
@@ -1695,13 +1744,19 @@ def fail_unowned(by_id: Optional[dict] = None,
     shrinks.
 
     Ownership-by-mention is deliberately generous: any appearance of the id in
-    the queue doc counts, header or body, because row bodies cite their
-    instrument specs by id (DP.05's repair genuinely rides the
-    `w0-too-shallow` row). The generosity is bounded by what the class is for:
-    a FAIL about which nobody has written a single queue line still fires,
-    which is exactly the XL.01 hole. A prose mention is a weak owner — the
-    strong forms are (a)-(c) above — but weak ownership is a routing-quality
-    question for the Review, not a hole this counter can see.
+    the LIVE portion of the queue doc counts, header or body, because row
+    bodies cite their instrument specs by id (DP.05's repair genuinely rides
+    the `w0-too-shallow` row). The generosity is bounded by what the class is
+    for: a FAIL about which nobody has written a single queue line still
+    fires, which is exactly the XL.01 hole. A prose mention is a weak owner —
+    the strong forms are (a)-(c) above — but weak ownership is a
+    routing-quality question for the Review, not a hole this counter can see.
+
+    TERMINAL rows own nothing, in EVERY form (156th audit B1): both the
+    clocked-row reader and this mention fallback run on `_live_queue_view`,
+    because filtering only the strong form would let the same six FAILs
+    migrate `queue-row` -> `mention-only` and keep the count at 0 — the
+    repair's whole point is that the number rises when the owners are dead.
 
     Returns `{"unowned": [ids], "disposed": {id: (authority, date)},
     "malformed": [ids], "owned": {id: form}, "count": int}`. A malformed
@@ -1731,6 +1786,7 @@ def fail_unowned(by_id: Optional[dict] = None,
     if queue_doc is None:
         qp = Path(__file__).resolve().parent.parent / "docs" / "REVIEW_QUEUE.md"
         queue_doc = qp.read_text() if qp.is_file() else ""
+    live_doc = _live_queue_view(queue_doc)
     out = {"unowned": [], "disposed": {}, "malformed": [], "owned": {},
            "count": 0}
     for sid in sorted(results):
@@ -1752,13 +1808,14 @@ def fail_unowned(by_id: Optional[dict] = None,
         # the clocked-row reader first — it also honours a row's SLUG, which
         # the literal search below cannot see; then the id-boundary mention
         # fallback: `Z.1` must not be satisfied by `Z.11` or `Z.1.B`, but a
-        # sentence-final `Z.1.` must count.
-        form = _owned_by_dued_row(sid, queue_doc)
+        # sentence-final `Z.1.` must count. BOTH run on the live view —
+        # a mention inside a terminal row is a citation, not an owner.
+        form = _owned_by_dued_row(sid, live_doc)
         if form:
             out["owned"][sid] = form
             continue
         if re.search(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)",
-                     queue_doc):
+                     live_doc):
             out["owned"][sid] = "mention-only"
             continue
         out["unowned"].append(sid)
@@ -1918,6 +1975,13 @@ def _fail_unowned_fixture() -> List[str]:
                                                         # only flush-left
         "Z.10": NS(repaired_by=[], notes=""),           # slug row, clock is
                                                         # BLOCKED-BY only
+        "Z.12": NS(repaired_by=[], notes=""),           # DUE in an ACTED row
+                                                        # only — fires
+        "Z.13": NS(repaired_by=[], notes=""),           # mention in a DECLINED
+                                                        # row only — fires
+        "Z.14": NS(repaired_by=[], notes=""),           # DUE in an ACTED row
+                                                        # AND in an OPEN row —
+                                                        # the live one owns
     }
     results = {sid: {"status": "FAIL"} for sid in by_id}
     results["Z.6"] = {"status": "PASS"}
@@ -1935,6 +1999,12 @@ def _fail_unowned_fixture() -> List[str]:
     # HOLD-WITHOUT-A-CLOCK both accept as legal payment. At slug level the
     # boundary conversion recurs: Z.1 (`z1`) must not be laundered by
     # `z10-held`.
+    # Z.12/Z.13/Z.14 are the 156th audit B1 class — a terminal row owns
+    # nothing, in every form: Z.12's only DUE lives in an ACTED row (fires),
+    # Z.13's only MENTION lives in a DECLINED row's body — including its
+    # flush-left evidence paragraph, which leaves with the row (fires), and
+    # Z.14 has a DUE in an ACTED row AND one in an OPEN row (the live row
+    # owns; status-awareness must not blind a living clock).
     doc = ("instrumented by Z.11 and Z.1.B; the row's spec is Z.3.\n"
            "ROUTED: z7-row | 2026-09-01 | fixture | OPEN\n"
            "    DUE: 2026-09-13 | repairs Z.7\n"
@@ -1946,16 +2016,26 @@ def _fail_unowned_fixture() -> List[str]:
            "this row repairs.\n"
            "ROUTED: z10-held | 2026-09-01 | fixture | HELD for the fixture\n"
            "    BLOCKED-BY: z9-flushleft-body | mentions Z.10; a blocked\n"
-           "        hold is legal payment for HOLD-WITHOUT-A-CLOCK\n")
+           "        hold is legal payment for HOLD-WITHOUT-A-CLOCK\n"
+           "ROUTED: z12-closed | 2026-09-01 | fixture | ACTED at deadbeef\n"
+           "    DUE: 2026-09-13 | repaired Z.12, past tense — a record\n"
+           "ROUTED: z13-refused | 2026-09-01 | fixture | DECLINED\n"
+           "    the body cites Z.13 as evidence\n"
+           "Flush-left paragraph of the declined row still names Z.13.\n"
+           "ROUTED: z14-first-attempt | 2026-09-01 | fixture | ACTED\n"
+           "    DUE: 2026-09-13 | the first Z.14 promise, since closed\n"
+           "ROUTED: z14-reopened | 2026-09-02 | fixture | OPEN\n"
+           "    DUE: 2026-10-01 | the living Z.14 clock\n")
     f = fail_unowned(by_id=by_id, results=results, queue_doc=doc)
-    if f["unowned"] != ["Z.1", "Z.5"]:
+    if f["unowned"] != ["Z.1", "Z.12", "Z.13", "Z.5"]:
         fails.append(f"fail-unowned: read {f['unowned']}, expected "
-                     f"['Z.1', 'Z.5'] — an exclusion arm is hiding a state "
-                     f"or firing on an owned one")
+                     f"['Z.1', 'Z.12', 'Z.13', 'Z.5'] — an exclusion arm is "
+                     f"hiding a state, firing on an owned one, or a terminal "
+                     f"row is still crediting ownership")
     if f["owned"] != {"Z.2": "repaired_by", "Z.3": "mention-only",
                       "Z.4": "disposed", "Z.7": "queue-row",
                       "Z.8": "mention-only", "Z.9": "queue-row",
-                      "Z.10": "held-on-blocker"}:
+                      "Z.10": "held-on-blocker", "Z.14": "queue-row"}:
         fails.append(f"fail-unowned: ownership FORMS misread {f['owned']!r} — "
                      f"the breakdown exists so `AT floor` cannot imply "
                      f"repair, and a wrong form is that implication reborn")

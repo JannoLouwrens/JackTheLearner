@@ -45,14 +45,14 @@
     "value": 0
   },
   "fail_unowned": {
-    "at": "2026-09-05",
-    "value": 0
+    "at": "2026-10-20",
+    "value": 6
   },
   "fail_unowned_owned_forms": {
-    "at": "2026-10-17",
+    "at": "2026-10-20",
     "value": {
       "disposed": 1,
-      "queue-row": 33,
+      "queue-row": 27,
       "repaired_by": 1
     }
   },
