@@ -21761,3 +21761,48 @@ Three practices that follow:
   caught. `meter_non_monotone` has no such distinction: a genuinely monotone week
   and a week whose pairs were all exempted both print `[]`. When a reading can be
   empty for two very different reasons, print which one.
+
+## An ownership test that never asks whether the owner is alive (2026-10-20, 156th audit)
+
+`coverage.fail_unowned` exists so that a settled FAIL cannot sit with nobody
+assigned to repair it. It reads **0** and sits at its declared floor. Six
+settled FAILs — including `W.1` and `W.2`, which encode `GOAL.md`'s *"too cold
+kills him"* and *"the needs ARE the curriculum"* — are credited to queue rows
+that are **all `ACTED` or `DECLINED`**. A terminal row is never re-read by
+anyone. The work is owned by nobody and the instrument says it is owned.
+
+The mechanism is one missing conjunct: `_owned_by_dued_row`
+(`coverage.py:1352-1417`) walks every `ROUTED:` block and credits ownership the
+moment it finds a `DUE:` declaration, with **no filter on the row's status**. A
+row's historical `DUE:` line survives its disposition — correctly, because this
+file never deletes history — so a dated promise made in September still reads as
+a live assignment in October, forever.
+
+The generalisable shape: **a reference is not a relationship.** Checking that
+*something points at X* is cheap and checks almost nothing; checking that *the
+thing pointing at X can still act* is the property you actually wanted. This
+project has now found the same defect in three organs under three names —
+`review_queue`'s `DISPOSITION-ON-A-CLOSED-DECISION` (100th audit B2: an `ACTED`
+row re-parents work onto a decision that already closed),
+`WAITS-ON-A-CLOSED-WINDOW` (a live row waiting on a terminal one), and this.
+Two of the three *print* the pair; the third silently counts it as health.
+
+Three practices that follow:
+
+- **When one organ publishes a liveness predicate, every organ that reasons
+  about the same objects must import it, not re-derive it.**
+  `review_queue.LIVE = ("OPEN","HELD","DISPOSITIONED")` already existed, and
+  `_owned_by_dued_row` already imports that module for `_DECL` — for exactly the
+  stated reason that two readers must not drift on what a clock looks like. The
+  same argument applies to what a *live row* is, and was not made.
+- **A counter whose healthy value is 0 needs its credit path audited, not its
+  alarm path.** Everyone tests that the alarm fires on a naked FAIL; the fixture
+  here does (`Z.1`). Nobody tested that the alarm *stops being suppressed* when
+  the suppressor dies, because that requires a fixture of a row changing status
+  over time, which is the one shape a static fixture does not naturally express.
+- **The repair raises the number, and that is the point.** Fixing this moves
+  `FAIL-UNOWNED` off its floor. The shrink-only ratchet is what makes that
+  honest rather than embarrassing: raise the baseline in the same commit with
+  the reason in the growth log. A repair that lowers its own number is the
+  failure mode `T0.31` was built for; a repair that *raises* one and says why is
+  the system working.
