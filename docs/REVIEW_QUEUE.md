@@ -12419,6 +12419,7 @@ ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2
         measured under it. PS.05's and PS.06's pairs are in the blocker row's
         tables; yours is not. 10-16 and not 10-15 because you are strictly
         downstream of that measurement where the other two are not.
+    WAITS-ON: ps09-known-answer-floor-was-calibrated-on-an-oracle-cut | declared 2026-10-20 (builder, 156th audit FTB 3; declaration-only, buys nothing). PART 1's conjunct floor is the one thing this date owes, and it inherits the calibration-venue question that row escalated as D51 (decide_by 2026-11-03) — a floor may not be declared off this spec's own rows while that answer is open. No inversion: the prerequisite row's own DUE (2026-10-19) precedes this row's 2026-10-21.
     DUE: 2026-10-21 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
         half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
         NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
@@ -13010,6 +13011,7 @@ ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-2
         two derivations agree, which is why this date is not a coincidence. | what
         is owed: the `l_bind`-dropped comparator registered with BOTH conjuncts
         above present in the pre-registration, and it does NOT pre-empt `T1.08`.
+    WAITS-ON: none | declared 2026-10-20 (builder, 156th audit FTB 3; declaration-only, buys nothing). The row's own sequencing premise (marginal on the a4-mandatory-collapse-diagnostic run) was discharged as FALSE by THE RULING; LC.08 is registered and traced (executed at da9ece0) — what remains is the 14.40 core-h run, which waits on slot shape, not on any row.
     DUE: 2026-10-21 | RE-DATED 2026-10-10 (Review DAILY, OVERDUE FIRST, D28's
         armed default). **THE DATE BROKE FOR A REASON THAT IS NOT ON THIS ROW AND
         NOT IN THIS ROW'S GIFT, and that is the whole justification for a second
@@ -13290,6 +13292,7 @@ ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overse
         subscript/helper-call measurement reported as a NUMBER on the same 20-draw;
         (3) the decorative-metric reading added under its own name. NOT owed: a
         floored counter, any refusal, or a substitution of (3) for `D27`'s screen.
+    WAITS-ON: none | declared 2026-10-20 (builder, 156th audit FTB 3; declaration-only, buys nothing). The deletion executes D27's own authorised branch, and both replacement orders are self-contained apparatus edits; nothing upstream holds them.
     DUE: 2026-10-21 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
         half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
         NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
@@ -18980,6 +18983,7 @@ ROUTED: root-modules-outside-every-staleness-bill-are-six-files-not-one | 2026-0
     DUE: 2026-10-08 | `review-queue`'s own "next date with room under the
         measured capacity", read off the tool this slot (2026-10-07 reached 6
         with the previous slot's row) and not chosen by hand.
+    WAITS-ON: none | declared 2026-10-20 (builder, 156th audit FTB 3; declaration-only, buys nothing). The (iv)-TEST is a self-contained measurement that itself selects the declaration; the child t212-certifies-separability-not-valence-sign is dated the same day to be READ together, not waited on.
     DUE: 2026-10-21 | RE-DATED 2026-10-08 (Review DAILY) as part of the ruling
         below. What the new date owes is the (iv)-TEST and the declaration it
         selects — not another sitting of this four-way menu. **10-21 rather than
@@ -19534,6 +19538,7 @@ ROUTED: priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field
         the order-legality reader reads, and whether a row gets an inverse of
         `WAITS-ON` for the specs it HOLDS. Both are the Review's grammar, not
         the builder's, and neither is a new instrument.
+    WAITS-ON: none | declared 2026-10-20 (builder, 156th audit FTB 3; declaration-only, buys nothing). Both ruled declarations — the LAUNCH-page heading join and the `HOLDS:` field — are grammar/page edits with no upstream row; the heading half is the desk's own page.
     DUE: 2026-10-21 | RE-DATED 2026-10-08 (Review DAILY) as part of the ruling
         below. What the new date owes is EXECUTION of the two declarations, and
         the heading half is partly this desk's own (it writes the page). 10-21
