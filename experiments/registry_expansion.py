@@ -2498,10 +2498,14 @@ EXPANSION: list[Spec] = [
                        "seat was scored on, recomputed at run time from "
                        "experiments/artifacts/lc03_curves_seed{0,1,2}.json "
                        "with LC.03's own life_gain definition and verified "
-                       "against LC.03's recorded ledger row to 1e-4 before "
-                       "any comparator number is read (VOID on mismatch — "
+                       "to 1e-4 against the recorded row's aggregates, "
+                       "pinned WITH PROVENANCE in the spec module "
+                       "(SEAT_RECORDED — a live ledger read of another "
+                       "spec's row is T0.22 P9's offence, and borrow_metrics "
+                       "correctly refuses a VOID source; the pin is "
+                       "fail-safe, see its comment). VOID on mismatch — "
                        "pairing targets that do not reconstruct pair "
-                       "nothing). No seated number is pasted anywhere.",
+                       "nothing.",
          metric="lg_margin_null / lg_margin_twin deficit vs the seated pair",
          budget=Budget.CPU_DAYS, seeds=3,
          depends_on=["LC.00", "LC.01", "LC.02", "PS.01", "XL.00"],

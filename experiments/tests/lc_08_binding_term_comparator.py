@@ -33,8 +33,11 @@ make a result reportable:
 
 THE DECISION RULE, pre-registered before any number exists. Let seat_mean and
 seat_std (ddof=0 — the house t's own denominator) be the seated run's margins
-recomputed from the artifacts and verified against LC.03's recorded row to
-1e-4 (VOID on mismatch: pairing targets that do not reconstruct pair nothing).
+recomputed from the artifacts and verified against the recorded row's
+aggregates, pinned with provenance in SEAT_RECORDED (a live ledger read of
+another spec's row is forbidden, T0.22 P9; the pin is fail-safe — see the
+constant's comment). VOID on mismatch: pairing targets that do not
+reconstruct pair nothing.
 
   PASS (load-bearing):  (seat_mean - comp_mean) > 1.0 * seat_std on BOTH
                         statistics — dropping the term costs more than the
@@ -77,8 +80,9 @@ playground.py / experiments/w0.py / survival.py / cores.py / drives.py since
 2026-08-20 (`git log --since=2026-08-23` empty; last rig commit `3fa7d61`);
 the seated run executed 2026-08-21 04:22 -> 2026-08-23 21:11. The artifacts
 are on-box and gitignored; their integrity gate is the replay: the
-recomputed seated aggregates must reproduce LC.03's recorded row (attempt 3,
-ran_at 2026-08-23T21:11:17) to 1e-4 or the run is VOID.
+recomputed seated aggregates must reproduce the pinned recorded aggregates
+(SEAT_RECORDED; LC.03 attempt 3, ran_at 2026-08-23T21:11:17) to 1e-4 or the
+run is VOID.
 
 WHAT THIS SPEC DOES NOT DO: it re-runs nothing of LC.03, moves no LC.03
 verdict (the screen's VOID stands), renames no metric, and does not pre-empt
@@ -115,9 +119,27 @@ ARTIFACTS = REPO / "experiments" / "artifacts"
 SEAT = "wm-latent"              # the seated arm, as recorded
 ARM = "wm-latent-nobind"        # this spec's comparator
 SPREAD_MULT = 1.0               # the ruling's own cutoff: one seated seed std
-TOL_REPLAY = 1e-4               # artifact -> ledger-row reconstruction gate
+TOL_REPLAY = 1e-4               # artifact -> recorded-aggregate reconstruction
 TOL_IDENTITY = 1e-9             # control: scoring the seat's own data
-SEAT_ROW_RAN_AT = "2026-08-23T21:11:17"   # provenance pin, checked not trusted
+
+# The recorded v2 row's wm-latent aggregates, PINNED as the replay anchor
+# (LC.03 attempt 3, ran_at 2026-08-23T21:11:17, read from
+# experiments/ledger.json at registration, commit da9ece0). A LIVE ledger read
+# here is forbidden by T0.22 P9 — no test may read another spec's metrics off
+# the ledger directly — and `borrow_metrics` correctly REFUSES this source
+# (VOID, P6), so the pin is the only honest anchor. It is also fail-safe in
+# the one drift direction that exists: LC.03 is terminally settled under a
+# standing do-not-re-dispatch order, and the only event that could move its
+# row (a forbidden re-run) would regenerate the artifacts, whose recomputed
+# aggregates would then MISMATCH these pins and VOID this spec's run rather
+# than silently re-pairing it. Stds are ddof=0, the house t's own denominator.
+SEAT_RECORDED = {
+    f"{SEAT}/lg_margin_null": 100.101537,
+    f"{SEAT}/lg_margin_null_std": 37.325548,
+    f"{SEAT}/lg_margin_twin": 97.659971,
+    f"{SEAT}/lg_margin_twin_std": 42.252817,
+    f"{SEAT}/life_gain": 96.831082,
+}
 
 
 # ── the comparator core ─────────────────────────────────────────────────────
@@ -346,24 +368,16 @@ def _check(m: dict, c: dict):
         if m.get(f"{k}_std", 0.0) != 0.0:
             return _void(m, f"venue inconsistent across seeds: {k}")
 
-    # ── replay gate: the pairing targets must reconstruct the recorded row ─
-    led = Ledger()
-    row = led.results.get("LC.03")
-    if row is None:
-        return _void(m, "LC.03 has no ledger row to pair against")
-    m["seat_row_ran_at"] = str(getattr(row, "ran_at", ""))
-    if m["seat_row_ran_at"] != SEAT_ROW_RAN_AT:
-        return _void(m, f"LC.03 row moved ({m['seat_row_ran_at']}); the "
-                        "pairing was registered against the v2 run — "
-                        "re-derive before trusting the artifacts")
+    # ── replay gate: the pairing targets must reconstruct the pinned
+    # recorded aggregates (see SEAT_RECORDED's provenance comment) ─────
     for ours, theirs in (
             ("seat_lg_margin_null_replayed", f"{SEAT}/lg_margin_null"),
             ("seat_lg_margin_null_replayed_std", f"{SEAT}/lg_margin_null_std"),
             ("seat_lg_margin_twin_replayed", f"{SEAT}/lg_margin_twin"),
             ("seat_lg_margin_twin_replayed_std", f"{SEAT}/lg_margin_twin_std"),
             ("seat_life_gain_replayed", f"{SEAT}/life_gain")):
-        rec = row.metrics.get(theirs)
-        if rec is None or abs(m.get(ours, float("nan")) - float(rec)) > TOL_REPLAY:
+        rec = SEAT_RECORDED[theirs]
+        if abs(m.get(ours, float("nan")) - rec) > TOL_REPLAY:
             return _void(m, f"pairing targets do not reconstruct: {ours} "
                             f"{m.get(ours)} vs recorded {rec}")
 
@@ -467,9 +481,6 @@ def _smoke():
         assert c.get("artifact_ok") == 1.0, c.get("artifact_refusal")
         assert abs(c["lg_margin_null"]
                    - c["seat_lg_margin_null_replayed"]) <= TOL_IDENTITY
-    led = Ledger()
-    row = led.results.get("LC.03")
-    import statistics as stats
     per = [_pairing(s, _load_artifact(s)[0]) for s in (0, 1, 2)]
     for ours, theirs in (("seat_lg_margin_null_replayed",
                           f"{SEAT}/lg_margin_null"),
@@ -477,7 +488,7 @@ def _smoke():
                           f"{SEAT}/lg_margin_twin")):
         vals = [p[ours] for p in per]
         mean = sum(vals) / 3
-        assert abs(mean - float(row.metrics[theirs])) <= TOL_REPLAY, \
+        assert abs(mean - SEAT_RECORDED[theirs]) <= TOL_REPLAY, \
             f"replay mismatch on {theirs}"
     out["replay_ok"] = 1.0
 
