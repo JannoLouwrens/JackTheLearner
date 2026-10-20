@@ -14274,8 +14274,25 @@ ROUTED: decisions-settles-on-headers-alone | 2026-09-24 | a1dbf54 (113th audit) 
         ruling granted and no wider. Same false reason as its 10-02 twin above:
         the date was held back for a builder at 27 dark slots, and the builder
         is live.
-
-**The defect, from the 113th audit.** `decisions.py:333-345` settles a decision
+    BUILDER-TRACE: 954c8a9 | executed 2026-10-20 ~14:3x UTC, on the DUE date.
+        `answered_in_region()` in `experiments/decisions.py` scans the region
+        from the decision's own column-0 `DECIDE: <id>` line to the next `##`
+        header and settles ONLY on three conjuncts together: `ANSWERED <its
+        own id>` (uppercase, id spelled out), the default's fate named
+        (superseded/resolved — `STALE` still settles nothing), and a citation
+        of where the answer is filed (sha / `.md` path / "in this file") —
+        the ruling's own condition that an uncited ANSWERED is a status and
+        stays an unresolved OVERDUE. `_SETTLED` byte-unmoved. Candidates can
+        only shrink: no new red, no new class — inside the exemption's edge.
+        Both directions measured pre-commit: live open set byte-identical
+        before/after (12 ids), D19's real region fires the predicate, and the
+        PRE-FIX organ at `3582f69` reads fixture `D97` as ARMED — the
+        blindness reproduced, not asserted. The `D19`-shaped fixture landed
+        WITH the fix as `T0.28` P20 (`DOC_ANSWERED`: the swallowed-ruling
+        neighbour, the adjective, and the uncited ANSWERED all REFUSE to
+        settle; N_PROPERTIES 19 -> 20). Limb 2's charter half untouched —
+        owner's, not executed here. Bill T0.28 (decisions.py) + T0.21/T0.31
+        (this edit), paid in-slot from the committed tree.
 by scanning its HEADERS for `RESOLVED|off your desk|BY THE CALENDAR`. D19's
 owner ruling of 2026-09-17 was appended under `## D35` with no header of its
 own, so for ten days `--check` printed `D19 ... OVERDUE — DEFAULT IS DUE TO
