@@ -37,7 +37,8 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-from .protocol import (GATE_DIRTY_FLAG, Budget, Ledger, Result, Status,
+from .protocol import (GATE_DIRTY_FLAG, INSTRUMENT_INPUT_DOCS, Budget, Ledger,
+                       Result, Status,
                        dirty_recoverability, gate_precondition,
                        impl_deps_of, impl_sha_of, is_code_dirt,
                        module_path_for, porcelain_path, spec_drift,
@@ -635,10 +636,14 @@ def stale_path_attribution(entry, path, repo_root=None) -> dict:
     return out
 
 
-def stale_attribution_line(entry, path) -> str:
+def stale_attribution_line(entry, path, attribution=None) -> str:
     """One printable sentence naming what moved, or "" when there is nothing
-    to add. Kept beside the data so the two print sites cannot drift."""
-    a = stale_path_attribution(entry, path)
+    to add. Kept beside the data so the two print sites cannot drift.
+    `attribution` lets a caller that already paid for
+    `stale_path_attribution` (the status renderer partitions on it) hand the
+    result in rather than compute the same git reads twice."""
+    a = (attribution if attribution is not None
+         else stale_path_attribution(entry, path))
     if a["problem"]:
         return f"attribution unavailable — {a['problem']}"
     bits = []
@@ -798,20 +803,63 @@ def cmd_status(ledger: Ledger) -> int:
         # 2026-09-26: 10 of 20 rows have a byte-identical own test file).
         # `impl_sha` is a composite; the attribution below says which member
         # of it moved. The alarm is unchanged — every row here is still stale.
+        #
+        # PARTITIONED PRINT, NEVER A PARTITIONED COUNT (arm (ii) of
+        # `doc-declarations-restale-three-tier0-certificates-daily`, ruled
+        # 2026-10-05). An entry whose moved-path set is a non-empty SUBSET of
+        # `INSTRUMENT_INPUT_DOCS` — own test file byte-identical, no absent
+        # dep, no declaration change — is stale because a desk edited a live
+        # instrument doc (REVIEW_QUEUE.md moved on 24 of 24 measured days), so
+        # it prints under its own sub-heading and a reader skimming for code
+        # rot stops re-reading every sub-line to find the rows that are not.
+        # The class stays in the count, the exit code and every ratchet:
+        # dropping it from any of those is the REFUSED arm (i) by the back
+        # door, and the ruling's acceptance test — `status` exit code and
+        # stale-claim count identical before and after this edit — binds any
+        # future edit here too.
+        _attr = {}
+        for sid, _st, _k, _d in changed:
+            _e, _p = ledger.results.get(sid), _module_path_for(sid)
+            _attr[sid] = (_e, _p,
+                          stale_path_attribution(_e, _p)
+                          if _e is not None and _p is not None else None)
+
+        def _doc_input_only(a):
+            return (a is not None and not a["problem"] and a["own"] == "same"
+                    and a["moved_deps"]
+                    and set(a["moved_deps"]) <= set(INSTRUMENT_INPUT_DOCS)
+                    and not a["absent_deps"] and not a["deps_declaration"])
+
+        doc_ids = {sid for sid, _st, _k, _d in changed
+                   if _doc_input_only(_attr[sid][2])}
         print("  ! STALE CLAIMS — a path folded into `impl_sha` changed after "
               "the run that\n    recorded it. `impl_sha` covers the test file "
               "AND every declared IMPL_DEPS path,\n    so the line naming the "
               "test file is the HASH's name, not a claim about which file "
               "moved:")
         for sid, st, _, detail in changed:
+            if sid in doc_ids:
+                continue
             print(f"      {sid}  recorded {st}; {detail}. Re-run it — the entry "
                   f"is about older code.")
-            entry = ledger.results.get(sid)
-            p = _module_path_for(sid)
+            entry, p, a = _attr[sid]
             if entry is not None and p is not None:
-                line = stale_attribution_line(entry, p)
+                line = stale_attribution_line(entry, p, a)
                 if line:
                     print(f"             {line}")
+        if doc_ids:
+            print("    STALE BY LIVE INSTRUMENT INPUT — same alarm, same "
+                  "count, same exit code;\n    partitioned in print only. Each "
+                  "test file is byte-identical at the recorded\n    commit; "
+                  "what moved is a live instrument doc the verdict is measured "
+                  "against:")
+            for sid, st, _, detail in changed:
+                if sid not in doc_ids:
+                    continue
+                docs = ", ".join(_attr[sid][2]["moved_deps"])
+                print(f"      {sid}  recorded {st}; stale by {docs} (its own "
+                      f"test file is byte-identical);\n             {detail}. "
+                      f"A re-buy re-stamps it against the live doc.")
         print()
     if unstamped_changed:
         # Declaration-free staleness (15th audit, B1): no impl_sha to compare,
@@ -3401,7 +3449,7 @@ def cmd_stale(ledger: Ledger) -> int:
                 continue
             a = stale_path_attribution(entry, p)
             attrib[sid] = a
-            line = stale_attribution_line(entry, p)
+            line = stale_attribution_line(entry, p, a)
             if line:
                 print(f"           {line}")
         # THE SPLIT, PRINTED AS A COUNT (2026-09-26). The heading "a claim

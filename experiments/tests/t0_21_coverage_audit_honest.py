@@ -503,7 +503,7 @@ def _control(seed: int) -> dict:
 
 
 def _check(m: dict, c: dict) -> Status | bool:
-    # All nine ran AND all nine held. Gating on `properties_failed == 0`
+    # All N_PROPERTIES ran AND all held. Gating on `properties_failed == 0`
     # alone would let a battery that stopped early read as clean (T0.13's own
     # first bug; T0.19 and T0.20 carry the same guard).
     experiment_clean = (m["properties_failed"] == 0.0
