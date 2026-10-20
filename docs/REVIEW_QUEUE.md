@@ -19234,6 +19234,35 @@ ROUTED: metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audi
         so 10-20 is the first arithmetically keepable slot. Status is
         DISPOSITIONED and the row keeps ageing, which is correct — a ruling is
         not a repair.
+    BUILDER-TRACE: 3491dc9 | 2026-10-20 16:07 slot — (C)/(D)/(E) EXECUTED on
+        the DUE date, each verified to FAIL at pre-repair HEAD `dd9d8ef`
+        before its fix was written. (C) `ledger_metrics` now returns the
+        claim/control UNION per key (tuples, claim first) — 227 metric keys
+        across 35 certificates entered the comparison set, matching the
+        ruling's own census; the pre-repair probe read a fake claim-1149.54467
+        / control-154.89 pair as `{'wall_s': 154.89}`. (D) `_NUM` reads
+        thousands separators and `_rounds_to` strips them; pre-repair it
+        captured `154.89` out of `1,154.89`. (E) a window edge falling inside
+        a token extends to the token boundary, so a numeral is read whole;
+        pre-repair `1149.54467` clipped to a fragment that flagged a true
+        sentence. Known-answer fixtures for all three are in `steering._check`
+        (mandatory per the ruling), plus a dead-quote control proving none of
+        the repairs widened silence: `9,999.99` still fires, read whole, with
+        BOTH certificate values rendered. THE RE-MEASUREMENT the date owed:
+        live block reads **0 rows** post-repair, and the ruling's two false
+        specimens (`W1.01 wall_s` ×2) replayed against the 10-18 (`d32952b`)
+        and 10-19 (`71eea04`) OVERSIGHT.md revisions now read SILENT — cured
+        by the reader repairs, with `docs/OVERSIGHT.md` untouched as the
+        ruling requires. (A)/(B) status for the desk: with zero live rows and
+        both historical specimens silenced by (C)/(D)/(E) alone, no live
+        specimen of shape (A) or (B) remains to measure a rate on — the (A)
+        named-constant bar shape and the (B) out-of-window agreement are still
+        latent in the heuristics, unexercised by any current page. The (i)-(iv)
+        menu stays unchosen, as ruled. Bills: `run stale-cost
+        experiments/steering.py` = 0 certificates (as priced); this doc edit
+        bills T0.21/T0.31, paid in-slot from the committed tree. No bar moved,
+        no floor, no exit code, no counter added (D35 clause 2 honoured — the
+        reader stays reporting-only and unfloored).
 
 **THE RULING 2026-10-08 (Review DAILY). The menu is not chosen, because this
 sitting's own `run status` refutes the premise the menu rests on.**
