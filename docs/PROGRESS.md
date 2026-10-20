@@ -1,3 +1,17 @@
+> **PARTIALLY REFRESHED 2026-10-20 BY A COMPLETED DAILY SITTING — read this
+> before trusting the staleness banner below it.** The DAILY Review of
+> 2026-10-20 ran to completion and committed six acts. A DAILY does NOT
+> rewrite this page (its remit is `FOR THE BUILDER` plus one `PROGRESS_LOG.md`
+> line), so the seal's banner stands for everything it does not touch — but
+> taken unqualified it would mark TODAY's most perishable order as a record of
+> an older world, which is the opposite of true. **FRESH, measured 2026-10-20:**
+> `FOR THE BUILDER` item 0 (the usage gate has released; 30.0 GPU-hours expire
+> Saturday 2026-10-24), item 4 (`longrun_unbound` is SIX specs, not ten), and
+> `FOR THE OWNER` item 4 (the blackout attributed to the 90% stop, not the
+> pacer). **STALE, as the banner says:** Part 1's counts, Part 2's sweep, and
+> every "current state" framing — those are the 2026-10-18 FULL's record. In
+> particular `consecutive dark builder slots | 14` in Part 1 reads **15** today.
+>
 > **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
 > the Review has missed its schedule: docs/PROGRESS.md itself last moved 29h ago against a 25h cadence; PROGRESS_LOG.md's fresh row is the dying run's own B4 disclosure and cannot vouch for the page
 > So everything below is the PREVIOUS run of the review and is a RECORD,
