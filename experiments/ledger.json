@@ -38448,7 +38448,7 @@
     "T0.13": {
       "amended": [],
       "attempt": 22,
-      "commit": "470c63a",
+      "commit": "b1e26de",
       "compute_s": null,
       "control_metrics": {
         "computed_detail": "",
@@ -38481,16 +38481,10 @@
         "unreadable_gates": 0
       },
       "dirty_files": null,
-      "duration_s": 2.01,
+      "duration_s": 2.38,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "44c719c",
-          "message": "",
-          "ran_at": "2026-08-09T19:14:22",
-          "status": "PASS"
-        },
         {
           "commit": "6c0fcd1",
           "message": "",
@@ -39384,9 +39378,130 @@
             "spec_sha": "044b792dbf379b0a",
             "status": "FAIL"
           }
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "470c63a",
+          "compute_s": null,
+          "control_metrics": {
+            "computed_detail": "",
+            "computed_gate_keys": 0,
+            "disarmed_conjunct_keys": 4,
+            "disarmed_detail": "F2_constant: m['all_good']; T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
+            "dynamic_inert_detail": "F4_dynamic: m['decorative']",
+            "dynamic_inert_keys": 1,
+            "dynamic_inert_specs": "F4_dynamic",
+            "gates_scanned": 5,
+            "hazard_detail": "T0.09_prefix",
+            "inert_gate_keys": 5,
+            "keyless_detail": "F3_keyless",
+            "keyless_gates": 1,
+            "precedence_hazards": 1,
+            "redundant_detail": "",
+            "redundant_disjunct_keys": 0,
+            "self_excluded_gates": 0,
+            "specs_with_disarmed_keys": 2,
+            "specs_with_precedence_hazards": 1,
+            "stale_detail": "F5_tuple",
+            "stale_gates": 1,
+            "unevaluable_detail": "F5_tuple",
+            "unevaluable_gates": 1,
+            "unloadable_detail": "",
+            "unloadable_gates": 0,
+            "unreached_detail": "",
+            "unreached_gate_keys": 0,
+            "unreadable_detail": "",
+            "unreadable_gates": 0
+          },
+          "dirty_files": null,
+          "duration_s": 2.01,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "cf16a193cee9aa9f",
+          "message": "pre-registered threshold not met",
+          "metrics": {
+            "computed_detail": "T0.24: m['control_reproduces_scar']; T1.02: m['beats_mean_baseline'], m['heldout_structure_advantage']",
+            "computed_gate_keys": 3,
+            "disarmed_conjunct_keys": 13,
+            "disarmed_detail": "LT.01: m['adv_ge_bar'], m['c2_branch'], m['nonladder_rise_ge_bar']; SO.02: m['null_acc'], m['null_base_rate'], m['null_mi'], m['null_mi_p95'], m['null_r2_level']; T0.17: m['history_fields_altered'], m['history_fields_dropped'], m['history_fixture_fields_unset']; T0.33: m['cpu_foreclosed'], m['est_above_enum']",
+            "dynamic_inert_detail": "LC.00: c['lg_null_std'], m['lg_model_efe'], m['lg_model_efe_std'], m['lg_model_vi'], m['lg_model_vi_std'], m['lg_q_drive'], m['lg_q_drive_std'], m['lg_q_lp'], m['lg_q_lp_std']; LC.02: m['dreamer-xs/clears@0.125'], m['dreamer-xs/clears@0.25'], m['dreamer-xs/clears@0.5'], m['dreamer-xs/clears@1.0'], m['dreamer-xs/clears@16.0'], m['dreamer-xs/clears@2.0'], m['dreamer-xs/clears@4.0'], m['dreamer-xs/clears@8.0'], m['ppo-lp/clears@0.125'], m['ppo-lp/clears@0.25'], m['ppo-lp/clears@0.5'], m['ppo-lp/clears@1.0'], m['ppo-lp/clears@16.0'], m['ppo-lp/clears@2.0'], m['ppo-lp/clears@4.0'], m['ppo-lp/clears@8.0'], m['ppo-needs/clears@0.125'], m['ppo-needs/clears@0.25'], m['ppo-needs/clears@0.5'], m['ppo-needs/clears@1.0'], m['ppo-needs/clears@16.0'], m['ppo-needs/clears@2.0'], m['ppo-needs/clears@4.0'], m['ppo-needs/clears@8.0'], m['wm-efe/clears@0.125'], m['wm-efe/clears@0.25'], m['wm-efe/clears@0.5'], m['wm-efe/clears@1.0'], m['wm-efe/clears@16.0'], m['wm-efe/clears@2.0'], m['wm-efe/clears@4.0'], m['wm-efe/clears@8.0'], m['wm-latent/clears@0.25'], m['wm-latent/clears@0.5'], m['wm-latent/clears@1.0'], m['wm-latent/clears@16.0'], m['wm-latent/clears@2.0'], m['wm-latent/clears@4.0'], m['wm-latent/clears@8.0']; T0.08: c['fresh_metric_survived']; T2.09: c['claim_dwell']; VO.02: c['coord'], c['coord_std'], m['untrained_coord_std']; W0.DIAG: c['margin_down_std']; W1.01: c['food_present'], m['food_present']",
+            "dynamic_inert_keys": 56,
+            "dynamic_inert_specs": "LC.00,LC.02,T0.08,T2.09,VO.02,W0.DIAG,W1.01",
+            "gates_scanned": 107,
+            "hazard_detail": "",
+            "inert_gate_keys": 69,
+            "keyless_detail": "",
+            "keyless_gates": 0,
+            "precedence_hazards": 0,
+            "redundant_detail": "",
+            "redundant_disjunct_keys": 0,
+            "self_excluded_gates": 0,
+            "specs_with_disarmed_keys": 4,
+            "specs_with_precedence_hazards": 0,
+            "stale_detail": "T0.18",
+            "stale_gates": 1,
+            "unevaluable_detail": "T0.18",
+            "unevaluable_gates": 1,
+            "unloadable_detail": "",
+            "unloadable_gates": 0,
+            "unreached_detail": "T1.09: c['absurd_peak_gb']; T2.04: m['ridge_beats_null_any']; T2.14: m['ridge_beats_null_any']",
+            "unreached_gate_keys": 3,
+            "unreadable_detail": "",
+            "unreadable_gates": 0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 330.5,
+          "preserved_impl": null,
+          "ran_at": "2026-10-20T14:43:06",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "044b792dbf379b0a",
+          "status": "FAIL",
+          "supersedes_fail": {
+            "commit": "5c9f096",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "f90ba47485ae8965",
+            "metrics": {
+              "computed_detail": "T0.24: m['control_reproduces_scar']; T1.02: m['beats_mean_baseline'], m['heldout_structure_advantage']",
+              "computed_gate_keys": 3,
+              "disarmed_conjunct_keys": 13,
+              "disarmed_detail": "LT.01: m['adv_ge_bar'], m['c2_branch'], m['nonladder_rise_ge_bar']; SO.02: m['null_acc'], m['null_base_rate'], m['null_mi'], m['null_mi_p95'], m['null_r2_level']; T0.17: m['history_fields_altered'], m['history_fields_dropped'], m['history_fixture_fields_unset']; T0.33: m['cpu_foreclosed'], m['est_above_enum']",
+              "dynamic_inert_detail": "LC.00: c['lg_null_std'], m['lg_model_efe'], m['lg_model_efe_std'], m['lg_model_vi'], m['lg_model_vi_std'], m['lg_q_drive'], m['lg_q_drive_std'], m['lg_q_lp'], m['lg_q_lp_std']; LC.02: m['dreamer-xs/clears@0.125'], m['dreamer-xs/clears@0.25'], m['dreamer-xs/clears@0.5'], m['dreamer-xs/clears@1.0'], m['dreamer-xs/clears@16.0'], m['dreamer-xs/clears@2.0'], m['dreamer-xs/clears@4.0'], m['dreamer-xs/clears@8.0'], m['ppo-lp/clears@0.125'], m['ppo-lp/clears@0.25'], m['ppo-lp/clears@0.5'], m['ppo-lp/clears@1.0'], m['ppo-lp/clears@16.0'], m['ppo-lp/clears@2.0'], m['ppo-lp/clears@4.0'], m['ppo-lp/clears@8.0'], m['ppo-needs/clears@0.125'], m['ppo-needs/clears@0.25'], m['ppo-needs/clears@0.5'], m['ppo-needs/clears@1.0'], m['ppo-needs/clears@16.0'], m['ppo-needs/clears@2.0'], m['ppo-needs/clears@4.0'], m['ppo-needs/clears@8.0'], m['wm-efe/clears@0.125'], m['wm-efe/clears@0.25'], m['wm-efe/clears@0.5'], m['wm-efe/clears@1.0'], m['wm-efe/clears@16.0'], m['wm-efe/clears@2.0'], m['wm-efe/clears@4.0'], m['wm-efe/clears@8.0'], m['wm-latent/clears@0.25'], m['wm-latent/clears@0.5'], m['wm-latent/clears@1.0'], m['wm-latent/clears@16.0'], m['wm-latent/clears@2.0'], m['wm-latent/clears@4.0'], m['wm-latent/clears@8.0']; T0.08: c['fresh_metric_survived']; T2.09: c['claim_dwell']; VO.02: c['coord'], c['coord_std'], m['untrained_coord_std']; W0.DIAG: c['margin_down_std']; W1.01: c['food_present'], m['food_present']",
+              "dynamic_inert_keys": 56,
+              "dynamic_inert_specs": "LC.00,LC.02,T0.08,T2.09,VO.02,W0.DIAG,W1.01",
+              "gates_scanned": 107,
+              "hazard_detail": "",
+              "inert_gate_keys": 69,
+              "keyless_detail": "",
+              "keyless_gates": 0,
+              "precedence_hazards": 0,
+              "redundant_detail": "",
+              "redundant_disjunct_keys": 0,
+              "self_excluded_gates": 0,
+              "specs_with_disarmed_keys": 4,
+              "specs_with_precedence_hazards": 0,
+              "stale_detail": "T0.18",
+              "stale_gates": 1,
+              "unevaluable_detail": "T0.18",
+              "unevaluable_gates": 1,
+              "unloadable_detail": "",
+              "unloadable_gates": 0,
+              "unreached_detail": "T1.09: c['absurd_peak_gb']; T2.04: m['ridge_beats_null_any']; T2.14: m['ridge_beats_null_any']",
+              "unreached_gate_keys": 3,
+              "unreadable_detail": "",
+              "unreadable_gates": 0
+            },
+            "ran_at": "2026-10-20T12:43:06",
+            "spec_changed": false,
+            "spec_sha": "044b792dbf379b0a",
+            "status": "FAIL"
+          }
         }
       ],
-      "impl_sha": "cf16a193cee9aa9f",
+      "impl_sha": "14b8ffb200a69ecf",
       "message": "pre-registered threshold not met",
       "metrics": {
         "computed_detail": "T0.24: m['control_reproduces_scar']; T1.02: m['beats_mean_baseline'], m['heldout_structure_advantage']",
@@ -39419,9 +39534,9 @@
         "unreadable_gates": 0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 330.5,
+      "peak_rss_mb": 263.5,
       "preserved_impl": null,
-      "ran_at": "2026-10-20T14:43:06",
+      "ran_at": "2026-10-20T18:43:07",
       "seeds": [
         0
       ],
@@ -39429,10 +39544,10 @@
       "spec_sha": "044b792dbf379b0a",
       "status": "FAIL",
       "supersedes_fail": {
-        "commit": "5c9f096",
+        "commit": "470c63a",
         "dirty": false,
         "impl_changed": true,
-        "impl_sha": "f90ba47485ae8965",
+        "impl_sha": "cf16a193cee9aa9f",
         "metrics": {
           "computed_detail": "T0.24: m['control_reproduces_scar']; T1.02: m['beats_mean_baseline'], m['heldout_structure_advantage']",
           "computed_gate_keys": 3,
@@ -39463,7 +39578,7 @@
           "unreadable_detail": "",
           "unreadable_gates": 0
         },
-        "ran_at": "2026-10-20T12:43:06",
+        "ran_at": "2026-10-20T14:43:06",
         "spec_changed": false,
         "spec_sha": "044b792dbf379b0a",
         "status": "FAIL"
@@ -59087,8 +59202,8 @@
     },
     "T2.10": {
       "amended": [],
-      "attempt": 4,
-      "commit": "5c9f096",
+      "attempt": 5,
+      "commit": "b1e26de",
       "compute_s": null,
       "control_metrics": {
         "instrument_alive": 1.0,
@@ -59107,7 +59222,7 @@
         "simonly_latest_at_1_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 6.65,
+      "duration_s": 7.19,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -59278,10 +59393,89 @@
             "spec_sha": "a2ff5468c06890bd",
             "status": "FAIL"
           }
+        },
+        {
+          "amended": [],
+          "attempt": 4,
+          "commit": "5c9f096",
+          "compute_s": null,
+          "control_metrics": {
+            "instrument_alive": 1.0,
+            "instrument_alive_std": 0.0,
+            "leaky_recall": 1.0,
+            "leaky_recall_std": 0.0,
+            "para_recency_recall": 0.0,
+            "para_recency_recall_std": 0.0,
+            "para_simonly_recall": 0.0,
+            "para_simonly_recall_std": 0.0,
+            "recency_latest_at_1": 0.0,
+            "recency_latest_at_1_std": 0.0,
+            "recency_recall_at_5": 0.177767,
+            "recency_recall_at_5_std": 0.020784,
+            "simonly_latest_at_1": 0.0,
+            "simonly_latest_at_1_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 6.65,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "aef3311cbc7e2863",
+          "message": "pre-registered threshold not met | HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+5.4s)",
+          "metrics": {
+            "events": 650.0,
+            "events_std": 0.0,
+            "fixture_hash": "9c915329f4755c3e",
+            "latest_at_1": 1.0,
+            "latest_at_1_std": 0.0,
+            "para_cues": 160.0,
+            "para_cues_std": 0.0,
+            "para_recall_at_1": 0.0,
+            "para_recall_at_1_std": 0.0,
+            "recall_at_1": 1.0,
+            "recall_at_1_std": 0.0,
+            "recall_at_5": 1.0,
+            "recall_at_5_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 313.3,
+          "preserved_impl": null,
+          "ran_at": "2026-10-20T12:43:14",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "a2ff5468c06890bd",
+          "status": "FAIL",
+          "supersedes_fail": {
+            "commit": "a5de52f",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "e8b5fc6f341c8e96",
+            "metrics": {
+              "events": 650.0,
+              "events_std": 0.0,
+              "fixture_hash": "9c915329f4755c3e",
+              "latest_at_1": 1.0,
+              "latest_at_1_std": 0.0,
+              "para_cues": 160.0,
+              "para_cues_std": 0.0,
+              "para_recall_at_1": 0.0,
+              "para_recall_at_1_std": 0.0,
+              "recall_at_1": 1.0,
+              "recall_at_1_std": 0.0,
+              "recall_at_5": 1.0,
+              "recall_at_5_std": 0.0
+            },
+            "ran_at": "2026-09-07T17:12:07",
+            "spec_changed": false,
+            "spec_sha": "a2ff5468c06890bd",
+            "status": "FAIL"
+          }
         }
       ],
-      "impl_sha": "aef3311cbc7e2863",
-      "message": "pre-registered threshold not met | HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+5.4s)",
+      "impl_sha": "9dcd2431f8ee1df8",
+      "message": "pre-registered threshold not met | HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+5.6s)",
       "metrics": {
         "events": 650.0,
         "events_std": 0.0,
@@ -59298,9 +59492,9 @@
         "recall_at_5_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 313.3,
+      "peak_rss_mb": 236.3,
       "preserved_impl": null,
-      "ran_at": "2026-10-20T12:43:14",
+      "ran_at": "2026-10-20T18:43:16",
       "seeds": [
         0,
         1,
@@ -59310,10 +59504,10 @@
       "spec_sha": "a2ff5468c06890bd",
       "status": "FAIL",
       "supersedes_fail": {
-        "commit": "a5de52f",
+        "commit": "5c9f096",
         "dirty": false,
         "impl_changed": true,
-        "impl_sha": "e8b5fc6f341c8e96",
+        "impl_sha": "aef3311cbc7e2863",
         "metrics": {
           "events": 650.0,
           "events_std": 0.0,
@@ -59329,7 +59523,7 @@
           "recall_at_5": 1.0,
           "recall_at_5_std": 0.0
         },
-        "ran_at": "2026-09-07T17:12:07",
+        "ran_at": "2026-10-20T12:43:14",
         "spec_changed": false,
         "spec_sha": "a2ff5468c06890bd",
         "status": "FAIL"
