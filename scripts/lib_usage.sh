@@ -21,12 +21,40 @@
 # CLI and has failed twice in ~500 reads (2026-08-19T04:07, 2026-08-23T14:07),
 # each costing a whole iteration to "ABORT: usage unreadable". The abort is the
 # right direction and stays; one retry is what separates a blink from an outage.
+#
+# 154th audit B3: the same blink class can also come back PARSEABLE AND WRONG,
+# and a reading at or past the 90% stop pauses every agent on this box — so a
+# reading that would cross the stop is confirmed by a second read before it is
+# allowed to. Two agreeing reads (both >=90) stop exactly as today, so no
+# persistent reading is loosened; a confirm that DISAGREES (second read <90) is
+# a blink caught in the act — the gate acts on the fresh read and the
+# overridden one gets its witness as a "blink" ledger row, because a reading
+# that nearly paused the whole system must not vanish without a record (the B1
+# principle one class over: log the event with no other witness). An unreadable
+# confirm keeps the first read — a readable stop never converts to a proceed or
+# an abort on a failed second read.
+# HONESTY CLAUSE, from the audit that ordered this (154th, B3): this fixes the
+# two-in-500 blink class ONLY. It would have saved none of the 15 slots of
+# 2026-10-19/20 — that false 95% persisted across 15 reads an hour apart, and
+# it would have agreed with itself here too. The persistent-false class is
+# METER-NON-MONOTONE's to report (usage_attribution.py, B2) and the policy
+# half of §A / D46 to decide. Do not report this retry as that fix.
 _usage_pct() {
-  local p
+  local organ="${1:-unknown}" p p2
   p=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --pct 2>/dev/null)
   case "$p" in ''|*[!0-9]*)
-    sleep 5
+    sleep "${JACK_USAGE_RETRY_SLEEP:-5}"
     p=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --pct 2>/dev/null);;
+  esac
+  case "$p" in ''|*[!0-9]*) :;; *)
+    if [ "$p" -ge 90 ]; then
+      sleep "${JACK_USAGE_RETRY_SLEEP:-5}"
+      p2=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --pct 2>/dev/null)
+      case "$p2" in ''|*[!0-9]*) :;; *)
+        [ "$p2" -lt 90 ] && usage_ledger "$organ" blink
+        p="$p2";;
+      esac
+    fi;;
   esac
   printf '%s' "$p"
 }
@@ -77,7 +105,7 @@ pace_gate() {
   [ -f "$REPO/.usage-resumed" ] && return 0
   elapsed=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --week-elapsed 2>/dev/null)
   case "$elapsed" in ''|*[!0-9]*) return 0;; esac          # unknown -> fail open
-  pct=$(_usage_pct)
+  pct=$(_usage_pct "$organ")
   case "$pct" in ''|*[!0-9]*) return 0;; esac              # usage_gate already ruled
   # Round the line UP: truncating divides the last point away, so the line
   # would top out at 89 and the final point of an untouched 90% ceiling would
@@ -136,7 +164,7 @@ pace_gate() {
 usage_gate() {
   local say_fn="${1:-say}" organ="${2:-unknown}"
   local pct override_ceiling override_until now
-  pct=$(_usage_pct)
+  pct=$(_usage_pct "$organ")
   case "$pct" in ''|*[!0-9]*)
     "$say_fn" "ABORT: usage unreadable — refusing to run"
     usage_ledger "$organ" refused none

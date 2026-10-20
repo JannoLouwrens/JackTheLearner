@@ -42,6 +42,12 @@ chk() { [ "$2" = "$3" ] && ok "$1" || bad "$1" "expected [$3], got [$2]"; }
 #                           (the map splits on them) — the fixture drops the
 #                           comma the real `resets` string carries, which the
 #                           sed in usage_ledger does not care about.
+#   <key>=<v1>;<v2>      -> SEQUENTIAL reads: the Nth call for that key gets the
+#                           Nth value (last one repeats; an empty element exits
+#                           2). Added for the 154th-audit B3 two-read STOP
+#                           confirmation, which a static map cannot exercise —
+#                           a blink IS two calls disagreeing. State lives in a
+#                           .seq_<key> counter file that run_case clears.
 # A key that is absent exits 2 with no output, same as the real tool.
 TMP=$(mktemp -d) || exit 1
 trap 'rm -rf "$TMP"' EXIT
@@ -60,6 +66,14 @@ table = dict(
 val = table.get(key)
 if not val:
     sys.exit(2)
+if ";" in val:
+    seq = val.split(";")
+    cf = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".seq_" + key)
+    n = int(open(cf).read()) if os.path.exists(cf) else 0
+    open(cf, "w").write(str(n + 1))
+    val = seq[min(n, len(seq) - 1)]
+    if not val:
+        sys.exit(2)
 print(val.replace("|", "\n"))
 PY
 REPO="$TMP"
@@ -67,10 +81,13 @@ REPO="$TMP"
 # this must be set BEFORE any gate is exercised: a self-test's fixture refusals
 # must not append rows to the production attribution ledger.
 JACK_USAGE_LEDGER="$TMP/usage_ledger.jsonl"; export JACK_USAGE_LEDGER
+# The retry sleeps are real 5 s pauses in production; a self-test that pays
+# them on every unreadable/confirm case is a self-test nobody runs.
+JACK_USAGE_RETRY_SLEEP=0; export JACK_USAGE_RETRY_SLEEP
 # shellcheck source=/dev/null
 . "$REAL_REPO/scripts/lib_usage.sh"
 
-run_case() { LOGLINE=""; JACK_TEST_MAP="$1"; export JACK_TEST_MAP; : > "$JACK_USAGE_LEDGER"; }
+run_case() { LOGLINE=""; JACK_TEST_MAP="$1"; export JACK_TEST_MAP; : > "$JACK_USAGE_LEDGER"; rm -f "$TMP/scripts/".seq_* 2>/dev/null; }
 
 echo "model_gate — D14's model floor"
 
@@ -205,6 +222,40 @@ run_case "all=92"
 usage_gate say; chk "an EXPIRED resume stops" "$?" "1"
 [ -f "$TMP/.usage-resumed" ] && bad "an expired resume is deleted" "the file survived" \
                              || ok "an expired resume is deleted"
+
+echo
+echo "the two-read STOP confirmation — 154th audit B3 (blink class ONLY)"
+
+# A blink caught in the act: the first read crosses the stop, the confirm
+# disagrees. Before B3 one bad read paused every agent on the box (the
+# two-in-500 class documented at the top of lib_usage.sh); now the gate acts on
+# the confirmed read, and the overridden one gets its witness as a "blink" row.
+run_case "all=95;42,full=week:all models [#] 42% resets Oct 26 4:59am (UTC)"
+usage_gate say builder; chk "a 95->42 blink PROCEEDS on the confirmed read" "$?" "0"
+case "$(tail -1 "$JACK_USAGE_LEDGER")" in *'"organ":"builder"'*'"phase":"blink"'*)
+    ok "the overridden first read writes its blink row";;
+  *) bad "the overridden first read writes its blink row" "row was [$(tail -1 "$JACK_USAGE_LEDGER")]";; esac
+
+# Two agreeing reads stop exactly as today — this is the clause that makes B3
+# a confirmation and not a loosening. The say-line carries the CONFIRMED value.
+run_case "all=95;92,full=week:all models [#] 92% resets Oct 26 4:59am (UTC)"
+usage_gate say builder; chk "95 then 92 — both past the stop — still STOPS" "$?" "1"
+case "$LOGLINE" in *"STOPPED at 92%"*) ok "the stop acts on the confirmed read, not the blink";;
+  *) bad "the stop acts on the confirmed read, not the blink" "log was [$LOGLINE]";; esac
+case "$(tail -1 "$JACK_USAGE_LEDGER")" in *'"phase":"refused"'*) ok "an agreeing pair writes refused, never blink";;
+  *) bad "an agreeing pair writes refused, never blink" "row was [$(tail -1 "$JACK_USAGE_LEDGER")]";; esac
+
+# An unreadable confirm keeps the first read: a readable stop never converts to
+# a proceed (or an abort) on a failed second read.
+run_case "all=95;,full=week:all models [#] 95% resets Oct 26 4:59am (UTC)"
+usage_gate say builder; chk "95 then unreadable still STOPS on the first read" "$?" "1"
+case "$LOGLINE" in *"STOPPED at 95%"*) ok "the unreadable-confirm stop quotes the first read";;
+  *) bad "the unreadable-confirm stop quotes the first read" "log was [$LOGLINE]";; esac
+
+# The confirm fires ONLY at the crossing. Below the stop there is one read; if
+# a second were taken here it would see 95 and wrongly stop.
+run_case "all=89;95"
+usage_gate say builder; chk "89 proceeds on ONE read (no confirm below the stop)" "$?" "0"
 
 echo
 echo "usage_ledger + the refusal rows — 154th audit B1"
