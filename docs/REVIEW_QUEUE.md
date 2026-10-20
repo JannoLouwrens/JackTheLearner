@@ -13064,6 +13064,36 @@ ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-2
         time. If it breaks while the builder is still dark, the finding is that
         the BLACKOUT is the blocker and it is reported as such; a date cannot be
         charged to an organ that never ran.
+    BUILDER-TRACE: da9ece0 | REGISTERED 2026-10-20 ~17:xx (builder, one day
+        ahead of the stop-rule, live slot): `LC.08` in the registry +
+        `experiments/tests/lc_08_binding_term_comparator.py`, BOTH conjuncts in
+        the pre-registration and both enforced structurally rather than
+        promised. PAIRED: envelope read FROM `lc03_curves_seed{0,1,2}.json`
+        (never restated), params must equal the recorded 861,545 to the digit,
+        calibration through `borrow_metrics` from PS.01/LC.02 exactly as
+        LC.03's, explore_std/record flags imported from the LC.03 module, and
+        the comparator computes the full `binding_loss` then multiplies by zero
+        so backward traverses the seated graph — compute parity, gradient
+        contribution exactly zero (smoke-proven: `latent_pred` byte-unmoved
+        after an `lc_update` step while the actor moved). SCORED ON THE SEAT'S
+        OWN STATISTICS: `lg_margin_null`/`lg_margin_twin` against the SAME
+        recorded per-seed null/twin life histories, with a replay VOID lane —
+        recomputed seat aggregates must reproduce LC.03's recorded row to 1e-4
+        (measured this slot: 100.101537 / 97.66 reconstruct to the recorded
+        digit; row pinned to ran_at 2026-08-23T21:11:17). Decision rule
+        pre-registered: PASS iff BOTH deficits exceed one seated seed-std
+        (ddof=0); FAIL otherwise, `deadweight_reading` recorded when both
+        margins reproduce — the ruling's 17.3% finding, machine-readable.
+        STATISTIC_BOUND: none, declared with the anchor's distance (4.6/4.0
+        house-sigma). Venue identity MEASURED at registration: zero rig commits
+        since 2026-08-20, seated run 08-21 -> 08-23; `Spec.venue` declared and
+        echoed derived-from-artifacts per the dae9bc3 comparator's contract.
+        FORECAST pre-registered with arithmetic (lean FAIL-dead-weight:
+        ppo-needs' 67.4 already sits above the 62.8 reproduce cutoff). The
+        14.40 core-h RUN is NOT launched by this trace — it does not fit a
+        slot, the detach ban stands, and the ruling's owed act is the
+        registration; the run is the board's next legal CPU buy and `run next`
+        now offers it. No bar moved anywhere; LC.03's VOID untouched.
 
 ROUTED: fieldwatch-quotation-channel-is-0-for-5 | 2026-09-21 | `785f921` (field watch week 8, §6b) | ACTED 2026-09-24 (Review DAILY, executing commit `d901cb4` — the builder EXECUTED this on 09-23 and the row has been sitting one day OVERDUE waiting only for this stamp. Verified against the commit, not against its own UPDATE note: the diff touches `experiments/fieldwatch.py` and NOT `experiments/decisions.py`, which is this row's own load-bearing caution honoured; all three things the `DUE:` bought are present — the FP rate re-measured after the fix and written down (0 spurious of 18 sub-threshold pairs, both true pairs route), the closure picked only after 20 live overlaps were enumerated, and the shared helper left alone with the threshold parameterised at the fieldwatch call site. The measurement also bought something the row did not ask for and could not have: `decisions.owner_asks` has parsed 0 items since 09-09, routed separately as `owner-ask-reader-blind-since-0909`)
     **The instrument built last week to read `FIELD_WATCH.md` returns a FALSE
