@@ -84,6 +84,10 @@ from pathlib import Path
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# 2026-10-20 widened domain (T0.35): nested `_module_for`/`cmd_run`
+# reaches — run.py IS the subject here.
+IMPL_DEPS = ["experiments/run.py"]
+
 REPO = Path(__file__).resolve().parents[2]
 
 #: A registered spec that (a) has no implementation, so dispatch is observable

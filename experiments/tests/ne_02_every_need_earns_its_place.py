@@ -147,6 +147,8 @@ IMPL_DEPS = [
     "experiments/needs.py",
     "experiments/drives.py",
     "experiments/tests/ne_01_nobody_survives_by_accident.py",
+    # 2026-10-20 widened domain (T0.35): nested `_declares_void` reach
+    "experiments/protocol.py",
 ]
 
 REPO = Path(__file__).resolve().parents[2]

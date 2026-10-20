@@ -33,6 +33,10 @@ from ..gpu import build_job, submit
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# 2026-10-20 widened domain (T0.35): the JOB string imports UnifiedBrain
+# on the remote clone — the verdict turns on its bytes.
+IMPL_DEPS = ["UnifiedBrain.py"]
+
 INTENDED_BATCH = 64
 MAX_GB = 12.0            # of 15 usable — headroom for fragmentation + context
 ABSURD_BATCH = 1024      # control: must OOM or blow past the bar

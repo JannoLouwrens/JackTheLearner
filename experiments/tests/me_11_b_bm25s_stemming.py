@@ -73,7 +73,9 @@ from ..registry import BY_ID
 from .me_11_a_lexical_incumbent import FAMILIES, REGISTERS, _recall_at_1
 
 IMPL_DEPS = ["experiments/fixtures/paraphrase_eval.py",
-             "experiments/tests/me_11_a_lexical_incumbent.py"]
+             "experiments/tests/me_11_a_lexical_incumbent.py",
+             # 2026-10-20 widened domain (T0.35): nested Status reach
+             "experiments/protocol.py"]
 
 MIN_ABSTENTION = 0.95          # same pooled certify bar Arm A was held to
 MIN_LEAKY_RECALL = 0.80        # aliveness floor, same bar ME.11.0 used

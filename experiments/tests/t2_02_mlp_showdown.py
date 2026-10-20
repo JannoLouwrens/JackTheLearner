@@ -77,6 +77,10 @@ from ..gpu import build_job, submit
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
+# 2026-10-20 widened domain (T0.35): the JOB string imports
+# TrainingPipeline on the remote clone.
+IMPL_DEPS = ["TrainingPipeline.py"]
+
 SEEDS = [0, 1, 2]
 N_ENVS = 32
 ROLLOUT_STEPS = 128

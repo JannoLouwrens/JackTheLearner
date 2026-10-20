@@ -77,7 +77,9 @@ from ..registry import BY_ID
 from .me_11_c_static_embeddings import MODEL, _DenseIndex, _load_model, _Prov
 
 IMPL_DEPS = ["experiments/fixtures/paraphrase_eval.py",
-             "experiments/tests/me_11_c_static_embeddings.py"]
+             "experiments/tests/me_11_c_static_embeddings.py",
+             # 2026-10-20 widened domain (T0.35): nested Status reach
+             "experiments/protocol.py"]
 
 FAMILY_BAR = 0.80              # ME.11's own hypothesis: recall >= 80%
 MIN_LEAKY_RECALL = 0.80        # aliveness floor, same bar ME.11.0 used

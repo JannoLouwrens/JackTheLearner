@@ -184,6 +184,10 @@ from ..gpu import build_job, submit
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# 2026-10-20 widened domain (T0.35): the JOB string imports UnifiedBrain
+# on the remote clone, and `_declares_void` is a nested protocol reach.
+IMPL_DEPS = ["UnifiedBrain.py", "experiments/protocol.py"]
+
 SEEDS = [0, 1, 2]
 MIN_SNR = 3.0          # effect must be >= 3x the seed spread
 MIN_SPREAD = 1e-6      # ... but the spread must not be zero, or seeding is fake

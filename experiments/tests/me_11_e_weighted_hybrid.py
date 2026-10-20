@@ -78,7 +78,9 @@ from ..registry import BY_ID
 from .me_11_b_bm25s_stemming import _Bm25Index, _bm25_recall, _compat
 
 IMPL_DEPS = ["experiments/fixtures/paraphrase_eval.py",
-             "experiments/tests/me_11_b_bm25s_stemming.py"]
+             "experiments/tests/me_11_b_bm25s_stemming.py",
+             # 2026-10-20 widened domain (T0.35): nested Status reach
+             "experiments/protocol.py"]
 
 FAMILY_BAR = 0.80              # ME.11's own hypothesis: recall >= 80%
 MIN_LEAKY_RECALL = 0.80        # aliveness floor, same bar ME.11.0 used

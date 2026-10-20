@@ -206,7 +206,9 @@ from .lc_03_survival_screening import (
 
 IMPL_DEPS = ["experiments/tests/lc_03_survival_screening.py",
              "experiments/survival.py", "experiments/cores.py",
-             "experiments/w0.py", "experiments/drives.py", "playground.py"]
+             "experiments/w0.py", "experiments/drives.py", "playground.py",
+             # 2026-10-20 widened domain (T0.35): nested `_aggregate` reach
+             "experiments/protocol.py"]
 
 REPO = Path(__file__).resolve().parents[2]
 ARTIFACTS = REPO / "experiments" / "artifacts"

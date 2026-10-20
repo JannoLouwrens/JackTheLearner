@@ -166,7 +166,9 @@ from ..registry import BY_ID
 
 # This spec certifies a property of the WORLD + integrator pair: both hash
 # into impl_sha so the certificate goes stale loudly when either changes.
-IMPL_DEPS = ["playground.py", "experiments/needs.py", "experiments/drives.py"]
+IMPL_DEPS = ["playground.py", "experiments/needs.py", "experiments/drives.py",
+             # 2026-10-20 widened domain (T0.35): nested `_declares_void`
+             "experiments/protocol.py"]
 
 REPO = Path(__file__).resolve().parents[2]
 

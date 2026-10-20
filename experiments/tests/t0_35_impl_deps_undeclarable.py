@@ -86,6 +86,30 @@ more properties:
       and P9 fails. A staleness detector that cannot be shown to fire is the
       thing the 81st audit was about.
 
+THE DOMAIN WAS WIDENED 2026-10-20 (queue rows `gpu-job-strings-carry-
+undeclared-edges-that-no-ast-walk-can-see` + `impl-deps-domain-misses-a-read-
+and-a-relative-import`, one ruling, option (ii)): an implementation dependency
+is a FILE WHOSE CONTENTS CAN CHANGE THE VERDICT, not a module imported by
+name. Three edge kinds joined the walker's domain, each with a measured
+instance (`T1.02/T1.08/T1.09`'s `JOB`-string `UnifiedBrain` imports; `T0.32`'s
+22-day latent red through a `read_text()` of `run.py`; `T0.15`'s nested
+`from ..protocol import _round6`), and three added properties pin them:
+
+  P10 JOB-STRING KNOWN-POSITIVE/NEGATIVE: an import inside a module-level
+      string that parses as Python is an edge; the declared twin is clean.
+  P11 VERDICT-READ KNOWN-POSITIVE/NEGATIVE: a `read_text()` whose literal
+      components join to an existing repo `.py` file is an edge; declared
+      twin clean. Literal components only — a path built through a variable
+      is a named evasion, not coverage.
+  P12 NESTED-RELATIVE KNOWN-POSITIVE/NEGATIVE, and the EXEMPTION is gated
+      too: a nested `from ..protocol import …` is an edge, the declared twin
+      is clean, and the identical import AT MODULE TOP LEVEL reads clean —
+      top-level relative imports of `experiments/*.py` are harness preamble,
+      exempt by the scope decision in `undeclared_impl_imports`' docstring
+      (mandating them was measured at 72 violators, the mass-declaration
+      wave the transitive walker's scope note refuses; that wider hole is
+      REAL and REMAINS with its routed redesign).
+
 THE CONTROL is the blind spot re-enacted, twice: the OPT-IN instrument —
 examine only modules that DECLARE `IMPL_DEPS`, the shape of both the
 pre-audit staleness lane and the corrected-then-recorrected queue-note grep
@@ -151,7 +175,11 @@ GRANDFATHERED = {
     # T1.12 deleted 2026-09-26: declared in the same commit and re-bought in
     # the same slot, which is what this set's comment asks for.
     "T2.00": ("TrainingPipeline",),
-    "T2.10": ("EpisodicMemory",),
+    # T2.10 deleted 2026-10-20: the widened domain added a second edge
+    # (nested `from ..protocol import Status`), and a grandfather entry may
+    # not widen — so T2.10 declared ALL its edges in the same commit and
+    # left both sets. Its FAIL row goes honestly stale; its re-run stays
+    # routed where it was.
     "T3.09": ("EpisodicMemory",),
 }
 
@@ -172,6 +200,9 @@ TRANSITIVE_GRANDFATHERED = {
     "LC.03": ("experiments/tests/lc_02_throughput_floor.py",),
     "LC.07": ("experiments/tests/lc_02_throughput_floor.py",),
     "LF.01": ("EpisodicMemory.py",),
+    # T2.10 deleted 2026-10-20 alongside its direct entry (see above): it now
+    # declares EpisodicMemory.py and me_1_event_log.py itself, so this entry
+    # would have gone stale in the same commit.
     "ME.11": ("EpisodicMemory.py",
               "experiments/tests/me_11_a_lexical_incumbent.py",
               "experiments/tests/me_1_event_log.py"),
@@ -190,7 +221,6 @@ TRANSITIVE_GRANDFATHERED = {
     "T1.06": ("UnifiedBrain.py",),
     # T1.12 deleted 2026-09-26 — see the direct set above.
     "T2.00": ("TrainingPipeline.py",),
-    "T2.10": ("EpisodicMemory.py", "experiments/tests/me_1_event_log.py"),
     "T3.09": ("EpisodicMemory.py",),
 }
 
@@ -247,6 +277,75 @@ def build():
     return EpisodicMemory
 '''}
 _CHAIN_REACH = ("EpisodicMemory.py", "experiments/tests/fixture_bridge.py")
+
+# P10's fixture is the Tier-1 defect verbatim: a module-level job-source
+# string whose Python body imports a repo-root module. The walker must read
+# THROUGH the string; the AST of the outer module sees only a constant.
+_FIXTURE_JOBSTRING = b'''
+"""fixture: repo-root import inside a module-level job string."""
+JOB = r"""
+import torch
+from UnifiedBrain import UnifiedBrain
+"""
+def _experiment(seed):
+    return {}
+'''
+_FIXTURE_JOBSTRING_DECLARER = b'''
+"""fixture: the identical job string, edge declared."""
+IMPL_DEPS = ["UnifiedBrain.py"]
+JOB = r"""
+import torch
+from UnifiedBrain import UnifiedBrain
+"""
+def _experiment(seed):
+    return {}
+'''
+
+# P11's fixture is T0.32's defect verbatim: the verdict is a function of
+# another source file's TEXT, reached by read_text() with literal components
+# and no import anywhere.
+_FIXTURE_READER = b'''
+"""fixture: gates on another source file's text, no import."""
+from pathlib import Path
+def _experiment(seed):
+    src = (Path(__file__).resolve().parents[2] / "experiments"
+           / "run.py").read_text()
+    return {"ok": "literal" in src}
+'''
+_FIXTURE_READER_DECLARER = b'''
+"""fixture: the identical read, edge declared."""
+IMPL_DEPS = ["experiments/run.py"]
+from pathlib import Path
+def _experiment(seed):
+    src = (Path(__file__).resolve().parents[2] / "experiments"
+           / "run.py").read_text()
+    return {"ok": "literal" in src}
+'''
+
+# P12's fixtures are T0.15's defect and the exemption, side by side: the
+# NESTED relative import is an edge, the identical import AT TOP LEVEL is
+# harness preamble and must read clean. The entry path gives the resolver
+# its package, same lane as the transitive fixtures.
+_FIXTURE_NESTED_ENTRY = "experiments/tests/fixture_nested_rel.py"
+_FIXTURE_NESTED_REL = b'''
+"""fixture: nested package-relative reach into protocol internals."""
+def _experiment(seed):
+    from ..protocol import _round6
+    return {}
+'''
+_FIXTURE_NESTED_REL_DECLARER = b'''
+"""fixture: the identical nested reach, edge declared."""
+IMPL_DEPS = ["experiments/protocol.py"]
+def _experiment(seed):
+    from ..protocol import _round6
+    return {}
+'''
+_FIXTURE_TOPLEVEL_REL = b'''
+"""fixture: the SAME import at top level -- exempt harness preamble."""
+from ..protocol import run_spec
+def _experiment(seed):
+    return {}
+'''
 
 
 def _parse_ok(src: bytes) -> bool:
@@ -309,6 +408,22 @@ def _experiment(seed: int) -> dict:
                                        source=_FIXTURE_TRANSITIVE_DECLARED,
                                        overlay=_OVERLAY)
 
+    # P10 / P11 / P12 — the widened domain (2026-10-20) on known ground.
+    js_pos, _ = undeclared_impl_imports("fixture_jobstring.py",
+                                        source=_FIXTURE_JOBSTRING)
+    js_neg, _ = undeclared_impl_imports("fixture_jobstring_declarer.py",
+                                        source=_FIXTURE_JOBSTRING_DECLARER)
+    rd_pos, _ = undeclared_impl_imports("fixture_reader.py",
+                                        source=_FIXTURE_READER)
+    rd_neg, _ = undeclared_impl_imports("fixture_reader_declarer.py",
+                                        source=_FIXTURE_READER_DECLARER)
+    nr_pos, _ = undeclared_impl_imports(_FIXTURE_NESTED_ENTRY,
+                                        source=_FIXTURE_NESTED_REL)
+    nr_neg, _ = undeclared_impl_imports(_FIXTURE_NESTED_ENTRY,
+                                        source=_FIXTURE_NESTED_REL_DECLARER)
+    tl_exempt, _ = undeclared_impl_imports(_FIXTURE_NESTED_ENTRY,
+                                           source=_FIXTURE_TOPLEVEL_REL)
+
     # P9 — the 81st audit's mutation falsifier: mutate EpisodicMemory.py's
     # bytes through impl_sha_of's dep_bytes lane (disk untouched) and
     # ME.11.A's sha must move. Only true while ME.11.A declares the reach.
@@ -342,6 +457,13 @@ def _experiment(seed: int) -> dict:
     return {
         "detector_fires_on_lazy_undeclared": pos == ("EpisodicMemory",),
         "detector_silent_on_declarer": neg == (),
+        "jobstring_import_fires": js_pos == ("UnifiedBrain",),
+        "jobstring_silent_on_declarer": js_neg == (),
+        "verdict_read_fires": rd_pos == ("experiments/run.py",),
+        "verdict_read_silent_on_declarer": rd_neg == (),
+        "nested_relative_fires": nr_pos == ("experiments/protocol.py",),
+        "nested_relative_silent_on_declarer": nr_neg == (),
+        "toplevel_relative_exempt": tl_exempt == (),
         "late_future_import_parse_compile_split": late_future_split,
         "transitive_fires_where_onehop_blind": (t_pos == _CHAIN_REACH
                                                 and t_pos_onehop == ()),
@@ -411,6 +533,17 @@ def _check(m: dict, c: dict) -> bool:
             m.get("detector_fires_on_lazy_undeclared", False),
         "detector_silent_on_declarer":
             m.get("detector_silent_on_declarer", False),
+        "jobstring_import_fires": m.get("jobstring_import_fires", False),
+        "jobstring_silent_on_declarer":
+            m.get("jobstring_silent_on_declarer", False),
+        "verdict_read_fires": m.get("verdict_read_fires", False),
+        "verdict_read_silent_on_declarer":
+            m.get("verdict_read_silent_on_declarer", False),
+        "nested_relative_fires": m.get("nested_relative_fires", False),
+        "nested_relative_silent_on_declarer":
+            m.get("nested_relative_silent_on_declarer", False),
+        "toplevel_relative_exempt":
+            m.get("toplevel_relative_exempt", False),
         "late_future_import_parse_compile_split":
             m.get("late_future_import_parse_compile_split", False),
         "transitive_fires_where_onehop_blind":

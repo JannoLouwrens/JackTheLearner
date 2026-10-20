@@ -39,6 +39,12 @@ from ..protocol import (DOC_OUTPUTS, RUNNER_OUTPUTS, Ledger, Result, Status,
                         module_path_for, run_spec)
 from ..registry import BY_ID
 
+# 2026-10-20 widened domain (T0.35): nested reaches into protocol
+# (`Budget`/`Spec`), run (`_terminal_blockers`) and gpu (`offending_dirt`)
+# — the constants under audit live in those files.
+IMPL_DEPS = ["experiments/protocol.py", "experiments/run.py",
+             "experiments/gpu.py"]
+
 SPEC_ID = "T0.22"
 
 # The borrow this spec was written about. Real spec, real file, real metric

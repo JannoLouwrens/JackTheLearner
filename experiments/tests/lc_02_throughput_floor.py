@@ -111,7 +111,9 @@ from ..w0 import W0, SIM_S_PER_DECISION
 # IS the throughput being measured — left this PASS standing over code it had
 # never run. The narrower list was not a smaller claim; it was a blind spot in
 # exactly the direction the guard exists to cover.
-IMPL_DEPS = ["playground.py", "experiments/w0.py", "experiments/drives.py"]
+IMPL_DEPS = ["playground.py", "experiments/w0.py", "experiments/drives.py",
+             # 2026-10-20 widened domain (T0.35): nested `from ..cores import`
+             "experiments/cores.py"]
 
 FLOOR = 5.0                      # sim-s per real-s, LEARNING_CORE.md §5.1
 N_THREADS = 3                    # "3 ARM cores of this box"

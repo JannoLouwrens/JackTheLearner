@@ -168,7 +168,11 @@ REPO = Path(__file__).resolve().parents[2]
 # property 11: this test asserts parsed equality with both, so an edit to
 # either must stale this certificate rather than decay it silently.
 IMPL_DEPS = ["experiments/cpu_budget.py", "experiments/protocol.py",
-             "scripts/ladder_loop.sh"]
+             "scripts/ladder_loop.sh",
+             # 2026-10-20 widened domain (T0.35) found this one — nested
+             # `from .. import run` whose `inspect.getsource` the wiring
+             # conjunct gates on. A fourth latent instance, not in the rows.
+             "experiments/run.py"]
 
 MID_CHARGE_S = 600.0          # the mid-range value the isolation assert uses
 WORST_LEGAL_CHILD_S = 54000.0  # cpu<2h x 3 seeds x 2 — must fit a fresh day

@@ -105,7 +105,9 @@ from .me_11_c_static_embeddings import _load_model as _load_arm_c
 IMPL_DEPS = ["experiments/fixtures/paraphrase_eval.py",
              "experiments/tests/me_11_a_lexical_incumbent.py",
              "experiments/tests/me_11_b_bm25s_stemming.py",
-             "experiments/tests/me_11_c_static_embeddings.py"]
+             "experiments/tests/me_11_c_static_embeddings.py",
+             # 2026-10-20 widened domain (T0.35): nested Status reach
+             "experiments/protocol.py"]
 
 REPO = "sentence-transformers/all-MiniLM-L6-v2"
 ONNX_FP32 = "onnx/model.onnx"

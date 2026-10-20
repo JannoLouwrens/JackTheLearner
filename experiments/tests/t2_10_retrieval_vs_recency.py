@@ -113,7 +113,14 @@ from .me_11_a_lexical_incumbent import _recall_at_1, _recency_null
 REPO = Path(__file__).resolve().parents[2]
 
 IMPL_DEPS = ["experiments/fixtures/paraphrase_eval.py",
-             "experiments/tests/me_11_a_lexical_incumbent.py"]
+             "experiments/tests/me_11_a_lexical_incumbent.py",
+             # 2026-10-20 de-grandfathered (T0.35 widened domain): the
+             # nested Status reach widened its tuple, and an entry may
+             # not widen — so ALL edges are declared and both entries
+             # deleted. The FAIL row goes honestly stale.
+             "EpisodicMemory.py",
+             "experiments/tests/me_1_event_log.py",
+             "experiments/protocol.py"]
 
 N_DISTINCT = 500
 N_RECUR_TUPLES = 30

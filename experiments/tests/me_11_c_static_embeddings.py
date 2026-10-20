@@ -99,7 +99,9 @@ from .me_11_b_bm25s_stemming import _Bm25Index, _bm25_recall
 
 IMPL_DEPS = ["experiments/fixtures/paraphrase_eval.py",
              "experiments/tests/me_11_a_lexical_incumbent.py",
-             "experiments/tests/me_11_b_bm25s_stemming.py"]
+             "experiments/tests/me_11_b_bm25s_stemming.py",
+             # 2026-10-20 widened domain (T0.35): nested Status reach
+             "experiments/protocol.py"]
 
 MODEL = "minishlab/potion-base-8M"
 VARIANT_2M = "minishlab/potion-base-2M"

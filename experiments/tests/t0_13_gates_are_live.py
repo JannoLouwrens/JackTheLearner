@@ -133,6 +133,10 @@ from typing import Any, Callable
 from ..protocol import Ledger, Status, coerce_check_return, run_spec
 from ..registry import BY_ID
 
+# 2026-10-20 widened domain (T0.35): nested `from ..run import TESTS_DIR`
+# — run.py is machinery this spec reaches mid-verdict.
+IMPL_DEPS = ["experiments/run.py"]
+
 # The pre-fix T0.09 gate, preserved verbatim as the control fixture. Do not
 # "tidy" the precedence here — the missing brackets ARE the fixture.
 CONTROL_SRC = '''

@@ -36,6 +36,10 @@ from ..gpu import build_job, result_json, submit
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# 2026-10-20 widened domain (T0.35): the JOB string below imports
+# UnifiedBrain on the remote clone — the verdict turns on its bytes.
+IMPL_DEPS = ["UnifiedBrain.py"]
+
 REPO = Path(__file__).resolve().parents[2]
 
 # Pre-registered, before any v3 result was seen.

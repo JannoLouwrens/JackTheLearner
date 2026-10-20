@@ -36,6 +36,10 @@ from ..gpu import build_job, submit
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# 2026-10-20 widened domain (T0.35): the JOB string imports
+# TrainingPipeline on the remote clone.
+IMPL_DEPS = ["TrainingPipeline.py"]
+
 SEEDS = [0, 1, 2]
 # v2 completed only 105,472 env-steps per seed (~80 steps/s). MuJoCo is not the
 # bottleneck -- 1024 env-steps of Humanoid costs it ~0.5s against ~13s measured

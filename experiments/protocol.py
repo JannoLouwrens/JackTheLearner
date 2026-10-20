@@ -1816,10 +1816,41 @@ def undeclared_impl_imports(path, source: Optional[bytes] = None) -> tuple:
     none, because falling back to "declared everything" is the silent
     narrowing this file already refuses in `impl_deps_of`.
 
+    THE DOMAIN WAS WIDENED 2026-10-20 (queue rows
+    `gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see` +
+    `impl-deps-domain-misses-a-read-and-a-relative-import`, one ruling, option
+    (ii)): "implementation dependency" means FILE WHOSE CONTENTS CAN CHANGE MY
+    VERDICT, not "module this imports by name" — `T0.32` went 22 days latently
+    red through a `read_text()` the import walk could never see. Three edge
+    kinds joined the domain, each with a measured instance behind it:
+
+      (a) imports inside a module-level STRING that parses as Python — the
+          GPU job-source pattern (`JOB = r'''from UnifiedBrain import …'''`,
+          three instances in Tier 1). The string executes against this repo's
+          clone at a pinned ref; the verdict turns on that file's bytes.
+      (b) a `read_text()`/`read_bytes()` whose receiver's string literals join
+          to an existing repo `.py` path (`T0.32` gates on `run.py`'s text).
+          Literal components only: a path built through a variable or helper
+          stays invisible, named below.
+      (c) a NESTED package-relative import — `from ..protocol import _round6`
+          inside a function (`T0.15:189`). Nested only, deliberately: the
+          nested import is the lazy, load-bearing shape P1's own measurement
+          made the subject, and a reach a module hides inside a function is a
+          reach it chose. TOP-LEVEL relative imports of `experiments/*.py`
+          remain EXEMPT as harness preamble: mandating them was measured
+          2026-10-20 at 72 violators (gpu.py 35, render.py 20 — transport and
+          GL bootstrap), the mass-declaration wave `transitive_impl_imports`'
+          scope note already refuses and routes to a redesign. That wider
+          hole is REAL and REMAINS; this widening does not pretend to close
+          it.
+
     KNOWN EVASIONS, named rather than hidden: a string-based
     `importlib.import_module("X")` and a `sys.path`-manipulated exec are
-    invisible to an AST walk. Neither appears in the tree today; if one ever
-    does, extend this walker in the same commit.
+    invisible to an AST walk; a read whose path is built through a variable,
+    f-string or helper is invisible to (b); a TOP-LEVEL relative import of an
+    `experiments/*.py` module is exempt by the scope decision in (c) above.
+    If a new evasion shape appears in the tree, extend this walker in the
+    same commit.
     """
     import ast
     try:
@@ -1838,9 +1869,77 @@ def undeclared_impl_imports(path, source: Optional[bytes] = None) -> tuple:
         elif isinstance(node, ast.ImportFrom):
             if node.level == 0 and node.module:
                 imported.add(node.module.split(".")[0])
-    missing = sorted(m for m in imported
-                     if (root / f"{m}.py").is_file()
-                     and f"{m}.py" not in declared)
+
+    # (a) module-level strings that parse as Python: walk THEIR absolute
+    # imports under the same repo-root rule. Job strings run as repo-root
+    # scripts on the remote clone, so relative imports cannot occur in them.
+    for node in tree.body:
+        if (isinstance(node, ast.Assign)
+                and isinstance(node.value, ast.Constant)
+                and isinstance(node.value.value, str)):
+            try:
+                sub = ast.parse(node.value.value)
+            except (SyntaxError, ValueError):
+                continue
+            for n in ast.walk(sub):
+                if isinstance(n, ast.Import):
+                    for alias in n.names:
+                        imported.add(alias.name.split(".")[0])
+                elif (isinstance(n, ast.ImportFrom) and n.level == 0
+                        and n.module):
+                    imported.add(n.module.split(".")[0])
+
+    # (b) reads whose literal components join to an existing repo .py file.
+    # Literals are joined in SOURCE order (lineno, col), because ast.walk is
+    # breadth-first and would join `REPO / "experiments" / "run.py"` backwards.
+    path_edges = set()
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                and node.func.attr in ("read_text", "read_bytes")):
+            lits = sorted((c for c in ast.walk(node.func.value)
+                           if isinstance(c, ast.Constant)
+                           and isinstance(c.value, str)),
+                          key=lambda c: (c.lineno, c.col_offset))
+            if lits:
+                cand = "/".join(c.value for c in lits)
+                if cand.endswith(".py") and (root / cand).is_file():
+                    path_edges.add(cand)
+
+    # (c) NESTED relative imports, resolved against the module's package.
+    # `path` may be a fixture name with no package (T0.35's overlay lane);
+    # a repo-relative entry path gives the resolver its package parts.
+    rp = Path(path)
+    if rp.is_absolute():
+        try:
+            rel_entry = rp.resolve().relative_to(root).as_posix()
+        except ValueError:
+            rel_entry = rp.name
+    else:
+        rel_entry = rp.as_posix()
+    pkg = rel_entry.split("/")[:-1]
+    top_level = {id(n) for n in tree.body}
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.ImportFrom) and node.level > 0):
+            continue
+        if id(node) in top_level:
+            continue                    # the (c) exemption: harness preamble
+        if node.level - 1 > len(pkg):
+            continue                    # escapes the repo: unresolvable
+        base = pkg[:len(pkg) - (node.level - 1)]
+        if node.module:
+            cands = ["/".join(base + node.module.split(".")) + ".py"]
+        else:
+            cands = ["/".join(base + [alias.name]) + ".py"
+                     for alias in node.names]
+        for cand in cands:
+            if (not cand.endswith("__init__.py")
+                    and (root / cand).is_file()):
+                path_edges.add(cand)
+
+    missing = sorted({m for m in imported
+                      if (root / f"{m}.py").is_file()
+                      and f"{m}.py" not in declared}
+                     | {p for p in path_edges if p not in declared})
     return tuple(missing), problem
 
 
