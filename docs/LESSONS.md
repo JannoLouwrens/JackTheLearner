@@ -21657,3 +21657,56 @@ everything until 00:00 UTC, and the day's spend only ever rises.
   spend and clerical spend draw on one day meter, so the cheaper, strictly
   clerical work is always the one that gets refused — and it is the work that
   clears the evidence trail.
+
+## A gate's INPUT can be false, and a monotone meter proves it for free (2026-10-20, 154th audit)
+
+The 90% usage stop refused 15 builder slots, 2 overseer audits and 1 Review poll
+in fifteen hours. The policy was correct, the code was correct, the threshold was
+correct. The *number* was impossible: inside one unchanged weekly window
+(`2026-10-19 05:00 → 2026-10-26 05:00`, from the CLI's own printed reset) the
+meter read 7% → 42% → 95% (fifteen hourly reads) → 0% → 2%.
+
+- **A cumulative counter that falls inside its own window has told you it is
+  lying, and it costs nothing to ask.** `claude_usage.py` already parses the
+  reset instant and already exposes `reset_epoch()`/`--week-elapsed`; every
+  ingredient for the check had been sitting in the file for two months. The
+  existing lesson here was *"do not model the meter"* — correct, and it was read
+  as "the meter is the ground truth." Not modelling a reading is not the same as
+  being unable to falsify it.
+- **The record did not contain the one field that proves the fault.**
+  `usage_ledger()` logs `pct` but not `resets`, so monotonicity-within-a-window
+  is uncomputable after the fact. One string, never captured, made an entire
+  failure class invisible — and the fix is cheaper than the paragraph describing
+  it, because the string is already in the output the function parses.
+- **An instrument that only records SUCCESS cannot explain an outage.**
+  `usage_ledger()` is called when an organ starts or ends. A gate-refused slot
+  starts nothing, so all 18 false readings existed only as English prose in three
+  log files. *Log the refusal, not just the run* — the refusal is the event with
+  no other witness.
+- **Two organs independently explained the impossible reading by assuming the
+  meter was honest, twelve hours apart.** The builder saw `93% → 7%` and wrote
+  *"off-box movement, read not modelled"*; the Review saw `95% → 0%` and wrote
+  *"the usage week has reset and the gate has RELEASED — the blackout's cause is
+  gone"*, onto the current-state page. Both are the natural reading. Both
+  preserve the instrument's truthfulness at the cost of the finding, and the
+  second one **closed** it. When an organ's premise comes from outside the repo,
+  "every organ agreed" is not corroboration — it is one unverified reading with
+  three signatures.
+- **The charitable explanation of an anomaly is the one to write down and then
+  attack.** "It reset", "that was someone else's spend", "it self-heals next
+  tick" are all unfalsifiable as written and all terminate the investigation. If
+  an anomaly is explained by an event (a reset, an external consumer), name the
+  event's own observable — here, the printed reset instant — and check it. It
+  took one subtraction.
+- **Split the repair by who is allowed to make it, or it will not be made.**
+  Recording and reporting the invariant is strictly monotone and belongs to the
+  builder. "May the organs run when the stop's reading is provably invalid" is
+  policy: every version of it either widens what may be spent or invents a second
+  limit nobody set, both forbidden to a desk default. Specifying the monotone half
+  and routing the policy half is what makes either half happen; specifying the
+  whole thing as one item is what makes a desk refuse it for another three days.
+- **Say which part of your fix does not fix the thing.** A confirming second read
+  before a STOP is correct and cheap, and it would have saved none of these 15
+  slots — the reading persisted across 15 reads an hour apart. Letting it ship as
+  "the fix for the blackout" would have closed the finding without closing the
+  hole.
