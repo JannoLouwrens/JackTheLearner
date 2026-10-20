@@ -3563,6 +3563,62 @@ def cmd_review_queue(ledger: Ledger) -> int:
 IN_RUN_SELF_EXCLUDED = ("T0.18",)
 
 
+# First honest reading, 2026-10-20 (the `declared-venue-vs-delivered-venue-
+# has-no-comparator` ruling, step 5): the count of specs with NO `venue`
+# declaration is SHRINK-ONLY from here — it retires row by row as specs are
+# next touched, never by a mass edit nobody can verify (a backfilled guess is
+# a fabricated claim about what a historical run actually loaded). Growth is
+# printed loudly below but moves no exit code: the whole reading is pinned
+# reporting-only in its first incarnation (the SO.10 vacancy precedent), and
+# arming it is a desk decision, not an edit here.
+VENUE_UNDECLARED_BASELINE = 256
+
+
+def _print_venue_comparison(ledger: Ledger) -> None:
+    """VENUE — compare each spec's declared venue against the `venue_used` its
+    own `_experiment` echoed into the recorded row (110th audit RANK 1).
+
+    The scar: `HR.1` attempts 1-4 carried `spec_sha 769b55d0` byte-identical
+    while the experiment under it moved LibriSpeech -> VCTK, cross-SESSION ->
+    cross-MICROPHONE and 20/20 -> 20/40. Every delta was disclosed — docstring,
+    journal, queue row, commit message — and none of it in a field an auditor
+    greps; the project's own integrity hook reported "the claim text did not
+    move" across a total venue replacement for seventeen days, until a human
+    read both texts side by side.
+
+    REPORTING-ONLY BY CONSTRUCTION: this function prints and returns None, and
+    `cmd_verify`'s exit code is computed without it. A mismatch here is a
+    finding for whoever owns the spec, never a VOID — gating it on day one
+    would retroactively indict every certificate predating the field.
+    """
+    norm = lambda s: " ".join(str(s).split())
+    declared, undeclared = [], []
+    for sid, spec in BY_ID.items():
+        (declared if getattr(spec, "venue", None) else undeclared).append(sid)
+    mismatches, matches, unechoed = [], [], []
+    for sid in declared:
+        row = ledger.results.get(sid)
+        echoed = (row.metrics or {}).get("venue_used") if row else None
+        if echoed is None:
+            unechoed.append(sid)   # no row yet, or the row predates the echo
+        elif norm(echoed) == norm(BY_ID[sid].venue):
+            matches.append(sid)
+        else:
+            mismatches.append((sid, norm(BY_ID[sid].venue), norm(echoed)))
+    print(f"\n  VENUE — declared {len(declared)} / {len(BY_ID)} specs; "
+          f"match {len(matches)}; declared-not-yet-echoed {len(unechoed)}"
+          + (f" ({', '.join(unechoed)})" if 0 < len(unechoed) <= 8 else ""))
+    for sid, want, got in mismatches:
+        print(f"  ! VENUE-MISMATCH {sid}\n      declared: {want}\n"
+              f"      run used: {got}")
+    grew = len(undeclared) > VENUE_UNDECLARED_BASELINE
+    print(f"      UNDECLARED {len(undeclared)} / baseline "
+          f"{VENUE_UNDECLARED_BASELINE} (shrink-only; honest — backfill is "
+          f"forbidden, the count retires as specs are next touched)"
+          + ("  !! GREW above baseline: a NEW spec registered without a venue "
+             "declaration — name it and declare it." if grew else ""))
+
+
 def cmd_verify(ledger: Ledger) -> int:
     """Re-judge every PASS from the record alone, and probe whether its gate
     actually reads its control. See `experiments/verify.py`.
@@ -3660,6 +3716,8 @@ def cmd_verify(ledger: Ledger) -> int:
               + (f"It hides a finding TODAY, in: {'; '.join(shadowed)}."
                  if shadowed else
                  "It hides no finding today."))
+
+    _print_venue_comparison(ledger)
 
     over_budget = r["undeclared_control_ran"] > UNDECLARED_CONTROL_BUDGET
     print()

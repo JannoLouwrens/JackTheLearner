@@ -7597,6 +7597,8 @@ EXPANSION: list[Spec] = [
                  "leak has measured nothing (docs/LESSONS.md, T0.13).",
          kills="HR.2, HR.3, HR.4. A speaker experiment on a leaky corpus "
                "measures the leak.",
+         venue="VCTK-Corpus-0.92 | axis: cross-microphone enrol mic1 test "
+               "mic2 | split: 20 enrolled / 40 unknown",
          notes="VENUE AS DELIVERED (amendment 2026-09-23, 110th audit FTB 1 — "
                "recorded AFTER attempt 4 so this entry describes the "
                "experiment the ledger row actually holds; both venues kept on "

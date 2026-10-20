@@ -481,6 +481,36 @@ class Spec:
     """REQUIRED when `gate_mode == "screen"`: why these arms are observables and
     not learners. Recorded verbatim in `docs/DECISIONS_RESOLVED.md`, so the
     justification is re-readable next to the verdict it permitted."""
+    venue: Optional[str] = None
+    """Structured declaration of the corpus, fixture or world the experiment
+    runs against, TOGETHER WITH ITS DISCRIMINATING AXIS — the thing that moved
+    in `HR.1` was not only LibriSpeech -> VCTK but cross-SESSION ->
+    cross-MICROPHONE and 20/20 -> 20/40, and a field recording only the corpus
+    name would have missed two of those three (110th audit RANK 1; the
+    `declared-venue-vs-delivered-venue-has-no-comparator` ruling, 2026-10-02,
+    candidate (i)).
+
+    Grammar: `"<venue name> | axis: <discriminating axis> | <other binding
+    dimensions>"`, compared whitespace-normalised against the `venue_used`
+    string the spec's own `_experiment` echoes into its recorded row's metrics.
+    THE ECHO MUST BE DERIVED FROM THE ARTIFACTS THE RUN GENUINELY LOADED and
+    never copied from this declaration — a copy makes the two fields agree by
+    construction and re-creates the exact defect, because a STALE DECLARATION
+    is the thing being detected. `run verify` prints `VENUE-MISMATCH` on
+    disagreement, reporting-only (the SO.10 vacancy precedent): a gate here on
+    day one would retroactively VOID every certificate predating the field.
+
+    Deliberately NOT in `SPEC_CLAIM_FIELDS`: folding venue text into what
+    `spec_sha` hashes was candidate (ii) of the same ruling and was REFUSED on
+    the row's own evidence — it detects nothing when the registry is simply
+    not amended, which was the actual failure (`HR.1` carried `spec_sha
+    769b55d0` byte-identical for four attempts across a total venue
+    replacement). The comparator against the run's own echo is the instrument;
+    the sha never was. Backfill is FORBIDDEN: a spec whose venue predates the
+    field reads `UNDECLARED`, which is honest — a backfilled guess is a
+    fabricated claim about what a historical run actually loaded. The
+    `UNDECLARED` count retires row by row as specs are next touched, never by
+    a mass edit nobody can verify."""
     repaired_by: List[str] = field(default_factory=list)
     """Specs whose result would tell us how to repair THIS one. A REPORTING
     edge, never a dependency — read only by `run blocked` (69th audit B3).

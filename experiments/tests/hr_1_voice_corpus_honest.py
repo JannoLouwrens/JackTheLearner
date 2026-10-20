@@ -475,7 +475,8 @@ def _bundle() -> dict:
     import numpy as np
 
     if not CORPUS_ROOT.is_dir():
-        _BUNDLE = {s: {"corpus_present": 0.0} for s in SEEDS}
+        _BUNDLE = {s: {"corpus_present": 0.0,
+                       "venue_used": f"ABSENT: {CORPUS_ROOT}"} for s in SEEDS}
         return _BUNDLE
 
     idx, n_files, n_bytes = _index_corpus()
@@ -499,6 +500,20 @@ def _bundle() -> dict:
             out[seed] = r
             continue
         enrolled, per_spk = split["enrolled"], split["per_spk"]
+        # VENUE ECHO (`declared-venue-vs-delivered-venue` ruling, step 2):
+        # derived from the artifacts this seed GENUINELY loaded — the corpus
+        # directory that was indexed and the mic suffixes of the paths the
+        # split actually assigned — NEVER copied from the Spec declaration,
+        # because a copy would make the two fields agree by construction and
+        # a stale declaration is the thing being detected.
+        _emic = sorted({Path(str(p)).name[:-5].split("_")[2]
+                        for d in per_spk.values() for p in d["enrol"] + d["ctrl"]})
+        _tmic = sorted({Path(str(p)).name[:-5].split("_")[2]
+                        for d in per_spk.values() for p in d["test"]})
+        r["venue_used"] = (f"{CORPUS_ROOT.parent.name} | axis: cross-microphone "
+                           f"enrol {'/'.join(_emic)} test {'/'.join(_tmic)} | "
+                           f"split: {len(enrolled)} enrolled / "
+                           f"{len(split['unknown'])} unknown")
         n_cls = len(enrolled)
         lab = {s: i for i, s in enumerate(enrolled)}
         rng = np.random.default_rng(10_000 + seed)
@@ -582,6 +597,13 @@ def _experiment(seed: int) -> dict:
     out = {"min_channel_leak_margin": worst,
            "clean_probe_acc": r.get("clean_acc", float("nan")),
            "noise_probe_acc": r.get("noise_acc", float("nan"))}
+    # Venue echo into the recorded row: one string when every seed loaded the
+    # same venue, an honest INCONSISTENT marker when they did not (aggregation
+    # would otherwise silently keep seed 0's string).
+    _venues = {str(b[s].get("venue_used", "UNCONSTRUCTED: split failed"))
+               for s in SEEDS}
+    out["venue_used"] = (_venues.pop() if len(_venues) == 1 else
+                         "INCONSISTENT-ACROSS-SEEDS: " + " || ".join(sorted(_venues)))
     for s in SEEDS:
         for k in ("corpus_present", "construction_ok", "n_enrolled",
                   "n_unknown", "n_ctrl_speakers", "chance", "leak_bar",
