@@ -574,7 +574,13 @@ def render_dates(mis: Optional[List[dict]] = None,
 # − is the Unicode minus these pages actually write negatives with —
 # reading "−0.2333" as 0.2333 flagged two correct sentences on the first
 # live pass of this reader, which is exactly the D27 fate it must not earn.
-_NUM = re.compile(r"[-+−]?\d+\.\d+")
+# The optional `(?:,\d{3})*` groups are the 2026-10-20 repair (155th audit
+# RANK 3 of the metric-reader row's ruling, defect (D)): on `1,154.89` the
+# old pattern matched `154.89` — a number that appears nowhere on the page —
+# which is the same digit-fragment class as the `T0.18 -> 0.18` phantom,
+# recurring on a different boundary. `_rounds_to` strips the separators
+# before comparing.
+_NUM = re.compile(r"[-+−]?\d+(?:,\d{3})*\.\d+")
 _METRIC_WINDOW = 60
 # The metric reader ALSO scans the builder's own prompt page — that is where
 # today's dead number actually lived (`1^11` item 0), and the page every
@@ -636,27 +642,37 @@ def _mask_citations(flat: str) -> str:
 def ledger_metrics(path: Optional[Path] = None) -> Dict[str, Dict[str, float]]:
     """{spec id -> {underscore metric key -> value}} from CURRENT entries.
 
-    `metrics` and `control_metrics` both — pages quote either. Numeric values
-    only. History is deliberately excluded: a page quoting an old attempt
-    writes it beside an arrow to the new one, and the union-agree rule keeps
-    such sentences silent without this reader pretending to know which
-    attempt a bare number means.
+    `metrics` and `control_metrics` both — pages quote either, so each key
+    maps to the TUPLE of distinct values the certificate records under it,
+    claim first. This is the union the sentence above always promised and
+    did not deliver until 2026-10-20 (defect (C) of the metric-reader row's
+    ruling): the old dict was keyed by metric name alone, so on any key
+    present in both, the control value OVERWROTE the claim value — 227 keys
+    across 35 certificates had their claim side invisible to this reader,
+    and `W1.01`'s correctly-quoted `wall_s` flagged as a misquote. Numeric
+    values only. History is deliberately excluded: a page quoting an old
+    attempt writes it beside an arrow to the new one, and the union-agree
+    rule keeps such sentences silent without this reader pretending to know
+    which attempt a bare number means.
     """
     import json
     p = Path(path) if path else _REPO / "experiments" / "ledger.json"
     entries = json.loads(p.read_text()).get("results", {})
-    out: Dict[str, Dict[str, float]] = {}
+    out: Dict[str, Dict[str, tuple]] = {}
     for sid, e in entries.items():
         if not isinstance(e, dict):
             continue
-        vals: Dict[str, float] = {}
+        vals: Dict[str, list] = {}
         for src in ("metrics", "control_metrics"):
             for k, v in (e.get(src) or {}).items():
                 if (isinstance(v, (int, float)) and not isinstance(v, bool)
                         and "_" in k):
-                    vals[k] = float(v)
+                    fv = float(v)
+                    vals.setdefault(k, [])
+                    if fv not in vals[k]:
+                        vals[k].append(fv)
         if vals:
-            out[sid] = vals
+            out[sid] = {k: tuple(v) for k, v in vals.items()}
     return out
 
 
@@ -665,9 +681,10 @@ def _rounds_to(quoted: str, value: float) -> bool:
 
     `0.344` agrees with 0.343733 (three decimals, tolerance 0.0005);
     `0.0000` does not agree with 1.0. Precision-aware on purpose: an exact
-    comparison would flag every honest rounding on the page.
+    comparison would flag every honest rounding on the page. Thousands
+    separators are stripped — `1,154.89` is the number 1154.89.
     """
-    quoted = quoted.replace("−", "-")
+    quoted = quoted.replace("−", "-").replace(",", "")
     q = float(quoted)
     dec = len(quoted.split(".")[1]) if "." in quoted else 0
     return abs(q - value) <= 0.5 * 10.0 ** -dec + 1e-12
@@ -718,14 +735,31 @@ def text_metric_mismatches(text: str, metrics: Dict[str, Dict[str, float]],
         # The sids above are read off the UNMASKED text; every number below
         # is read off the masked copy.
         flat = _mask_citations(flat)
-        keys: Dict[str, Dict[str, float]] = {}
+        keys: Dict[str, Dict[str, tuple]] = {}
         for sid in sids:
             for k, v in metrics[sid].items():
-                keys.setdefault(k, {})[sid] = v
+                # Values are tuples (claim and control both) since the (C)
+                # repair; a bare float from an older caller or fixture is
+                # normalised rather than refused.
+                keys.setdefault(k, {})[sid] = (
+                    tuple(v) if isinstance(v, (tuple, list)) else (float(v),))
         for k, by_sid in sorted(keys.items()):
             quoted: List[str] = []
             for m in re.finditer(r"\b%s\b" % re.escape(k), flat):
-                window = flat[m.end():m.end() + _METRIC_WINDOW]
+                end = m.end() + _METRIC_WINDOW
+                # (E) a capture may never be clipped mid-number: if the raw
+                # window edge falls inside a token, extend to the token
+                # boundary so a numeral straddling the edge is read WHOLE.
+                # The live instance read `1149.5446` off a page that states
+                # `1149.54467` in full, then compared the truncation as a
+                # different number (off by 0.00007 against a 0.00005
+                # tolerance) — a manufactured mismatch out of a page that
+                # was exactly right.
+                while (0 < end < len(flat)
+                       and not flat[end - 1].isspace()
+                       and not flat[end].isspace()):
+                    end += 1
+                window = flat[m.end():end]
                 # A key followed directly by a list delimiter is being
                 # ENUMERATED — "green (construction_ok, memorisers 0.0/0.0"
                 # names the key in a list and the number belongs to its
@@ -743,7 +777,7 @@ def text_metric_mismatches(text: str, metrics: Dict[str, Dict[str, float]],
             if not quoted:
                 continue
             if any(_rounds_to(q, v)
-                   for q in quoted for v in by_sid.values()):
+                   for q in quoted for vs in by_sid.values() for v in vs):
                 continue
             dedup = (page, k, tuple(sorted(set(quoted))))
             if dedup in seen:
@@ -774,7 +808,10 @@ def render_metrics(mis: Optional[List[dict]] = None,
              f"{indent}  another reason (a routing-time figure, a foreign "
              f"attempt), and this reader does not read intent.\n"]
     for m in mis:
-        led = ", ".join(f"{sid} {v}" for sid, v in m["ledger_says"].items())
+        led = ", ".join(
+            f"{sid} " + "/".join(str(x) for x in
+                                 (v if isinstance(v, (tuple, list)) else (v,)))
+            for sid, v in m["ledger_says"].items())
         lines.append(f"{indent}    {m['key']}  {m['page']} says "
                      f"{', '.join(m['page_says'])} — ledger says {led}\n")
     return "".join(lines)
@@ -1126,6 +1163,71 @@ Expect the honest reading to be `unevaluable_gates = 1`,
         raise AssertionError("steering: a clean metric read must still print "
                              "— an absent block is indistinguishable from an "
                              "absent check")
+
+    # ── the (C)/(D)/(E) known answers (metric-reader row's ruling, executed
+    # 2026-10-20) ────────────────────────────────────────────────────────────
+    # Three defects, each VERIFIED TO FAIL at the pre-repair HEAD (dd9d8ef)
+    # before the repair was written, per the ruling's mandate that a fix
+    # without a control for the new shape buys the same false confidence a
+    # second time:
+    #   (C) `ledger_metrics` collapsed claim and control into one dict — the
+    #       control OVERWROTE the claim on any shared key (measured: 227 keys
+    #       across 35 certificates invisible), so `W1.01`'s correctly-quoted
+    #       `wall_s` flagged. Pre-repair this union read {'wall_s': 154.89}.
+    #   (D) `_NUM` captured `154.89` out of `1,154.89` — a figure appearing
+    #       nowhere on the page, attributed to it.
+    #   (E) a numeral straddling the 60-char window edge was clipped to
+    #       `1149.5446` and compared as a different number (off by 0.00007
+    #       against a 0.00005 tolerance) — a manufactured mismatch out of a
+    #       page that was exactly right.
+    import json as _json
+    import tempfile as _tempfile
+    _ledger_fx = {"results": {"ZZ.9": {
+        "metrics": {"wall_s": 1149.54467},
+        "control_metrics": {"wall_s": 154.89}}}}
+    with _tempfile.NamedTemporaryFile("w", suffix=".json",
+                                      delete=False) as _fh:
+        _fh.write(_json.dumps(_ledger_fx))
+    try:
+        _union = ledger_metrics(Path(_fh.name))
+    finally:
+        Path(_fh.name).unlink()
+    if _union != {"ZZ.9": {"wall_s": (1149.54467, 154.89)}}:
+        raise AssertionError(
+            f"steering: (C) the claim/control union regressed — the claim "
+            f"side of a shared key is invisible again: {_union}")
+    _cde_reg = {"ZZ.9": {"wall_s": (1149.54467, 154.89)},
+                "ZZ.8": {"wall_s": (1154.892643,)}}
+    # (C): the CLAIM value, quoted correctly, is silence. Pre-repair the
+    # control had overwritten it and this true sentence flagged.
+    _c_para = "`ZZ.9` recorded `wall_s` 1149.54467 on the registered fold."
+    # (D): the separated form of the certificate's own number is silence;
+    # pre-repair the captured fragment `154.89` disagreed with 1154.892643.
+    _d_para = "`ZZ.8` closed with `wall_s` 1,154.89 after the sweep."
+    # (E): 49 chars of padding put the window's 60-char edge mid-numeral
+    # (`1149.5446|7`); pre-repair the clipped capture flagged this true
+    # sentence. The padding length is load-bearing — recompute before moving.
+    _e_para = ("`ZZ.9`'s `wall_s` " + "x" * 49 + " 1149.54467 end")
+    for _p, _d in ((_c_para, "(C) claim-side"), (_d_para, "(D) separator"),
+                   (_e_para, "(E) window-edge")):
+        _got = text_metric_mismatches(_p, _cde_reg, "fixture")
+        if _got:
+            raise AssertionError(
+                f"steering: {_d} fixture flunked — a TRUE sentence flags "
+                f"again, the 2026-10-20 repair has regressed: {_got}")
+    # And none of the three repairs may have widened silence: a genuinely
+    # dead thousands-separated quote must still FIRE, read whole, with both
+    # certificate values rendered.
+    _dead = text_metric_mismatches(
+        "`ZZ.9` read `wall_s` 9,999.99 at close.", _cde_reg, "fixture")
+    if [(m["key"], m["page_says"]) for m in _dead] != \
+            [("wall_s", ["9,999.99"])]:
+        raise AssertionError(
+            f"steering: the dead separated quote must fire whole: {_dead}")
+    if "1149.54467/154.89" not in render_metrics(_dead, indent=""):
+        raise AssertionError(
+            "steering: the render must show BOTH certificate values — "
+            "claim and control — not whichever won a dict collision")
 
 
 def launch_size(repo: Optional[Path] = None, days: int = LAUNCH_GROWTH_DAYS,
