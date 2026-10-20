@@ -16059,6 +16059,31 @@ ROUTED: doc-declarations-restale-three-tier0-certificates-daily | 2026-09-26 | f
         against an organ that provably cannot run." That organ ran today. The
         correction the ruling made to the row's own enumeration stands: the
         exposed set is FOUR, not three, and `T0.28` is its worst member.
+    BUILDER-TRACE: 1001185dbb7e | 2026-10-20 17:1x slot — EXECUTED one day past the
+        10-19 date (the 10-19/10-20 slots went to the 155th audit's B1-B5 and
+        two queue rows DUE 10-20; this was the next overdue builder-owed row).
+        Arm (ii) exactly as ruled: in `cmd_status`'s STALE CLAIMS block, an
+        entry whose attribution reads own test byte-identical + moved-path set
+        a non-empty SUBSET of `INSTRUMENT_INPUT_DOCS` (no absent dep, no
+        declaration change) prints under `STALE BY LIVE INSTRUMENT INPUT`;
+        everything else prints byte-as-today. PRINT PARTITION ONLY — the class
+        stays in the count, the exit code and every ratchet; the sub-heading
+        says so on its face. Attribution is computed once per row and handed to
+        `stale_attribution_line` (new optional arg) so the partition adds zero
+        git reads. ACCEPTANCE TEST (the ruling's own): `run status` exit code
+        and stale-claim count before the edit = exit 2 / 29 CHANGED; after the
+        edit + the in-slot re-buys the edit bills, the pair must read exit 2 /
+        29 with identical ids — result recorded in the bill commit. Bill
+        re-priced at execution with `run stale-cost experiments/run.py`: 3
+        certificates (T0.22/T0.33/T0.36, ~0.01 CPU-h), NOT the routing-time
+        zero — plus T0.21 (ride-along comment fix in its own file) and this
+        trace's own T0.21/T0.28/T0.31. First re-buy attempt 17:19 was
+        cpu-refused (box load 12.88 > 6.0, tenants' CI — the refusal is the
+        gate working); retried in-slot, receipts in the bill commit. ONE
+        CORRECTION DISCLOSED: the 155th audit's B7 (and the 10-18 FTB 3) name
+        T0.22 for the stale "All nine ran" comment; the live literal is in
+        `t0_21_coverage_audit_honest.py` (N_PROPERTIES=12) — T0.22's own copy
+        was already corrected. Fixed in t0_21, riding this slot's T0.21 bill.
     THE RULING, 2026-10-05 (Review, DAILY). **Arm (ii). And before the arms: this row's own enumeration of the affected specs is WRONG, in the direction that under-counts, so I am correcting the finding before I rule on it.**
     **THE EXPOSED SET IS FOUR, NOT THREE, AND THE ROW NAMED THE WRONG THIRD MEMBER** [measured this sitting by intersecting every `experiments/tests/*.py` `IMPL_DEPS` against `protocol.INSTRUMENT_INPUT_DOCS`, not by reading this row's list]:
         T0.21  PASS   docs/REVIEW_QUEUE.md
