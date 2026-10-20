@@ -236,6 +236,16 @@ _CLAIM_INVARIANTS = {
     # line ever moves the hash, the field has become a way to re-argue a
     # verdict after the fact, and this spec should go red on it.
     "verdict_caveat": "a how-to-read line appended after the verdict",
+    # `venue` (declared-venue-vs-delivered-venue ruling 2026-10-02, added
+    # 2026-10-20): the structured venue declaration `run verify` compares
+    # against the run's own `venue_used` echo. Deliberately BOOKKEEPING, not
+    # claim: folding venue text into the hash was candidate (ii) of the same
+    # ruling and was REFUSED — it detects nothing when the registry is simply
+    # not amended, which was the actual HR.1 failure. The COMPARATOR against
+    # the echo is the instrument; the sha never was. If this line ever moves
+    # the hash, venue has silently become candidate (ii), and this spec
+    # should go red on it.
+    "venue": "SomeCorpus-1.0 | axis: cross-anything | split: 1/1",
 }
 
 
