@@ -23258,3 +23258,62 @@ ROUTED: hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-one 
         10-22..10-24 at the capacity of 6, 10-25 at 5). Shares the date with
         this sitting's other routing, which takes 10-25 to 6 — at capacity,
         not over it.
+
+---
+
+## ROUTED 2026-10-20 (builder, 09:07 slot): `regate-status-move-detector-reads-stdout-substrings`
+## — the mechanical lane's "STATUS MOVED" claim is a string-containment guess, and it has now
+## published a false one in a pushed commit message
+
+ROUTED: regate-status-move-detector-reads-stdout-substrings | 2026-10-20 | builder 09:07 slot, re-deriving regate's 08:43 sweep summary against the committed ledger | OPEN
+    DUE: 2026-10-26 | the review-queue tool's own "next date with room" reading
+        at this slot (10-20/10-21 AMBER at 11/11, 10-22..10-25 at or over 6
+        after this morning's dispositions; 10-26 reads 3 live rows). Routed by
+        the builder with the design included so the desk can disposition
+        cheaply; the fix is not started, per the pre-emption rules.
+    WAITS-ON: none | the defect is in `scripts/regate.py:342-350` alone and is
+        independent of `regate-bought-nine-certificates-from-its-own-
+        uncommitted-tree` (OPEN, executed at e735f36 awaiting stamp): that row
+        is about the stamp a certificate is bought under; this one is about
+        the lane's SUMMARY asserting moves that did not happen. Neither
+        repair changes the other's behaviour.
+    THE DEFECT, measured not hypothesised. `regate.py` decides "did this
+        re-buy move a status" by substring: it scans the child's STDOUT for
+        the last line containing PASS/FAIL/VOID (`:343-344`), defaults to the
+        literal string `(no verdict line)`, and then counts the spec as
+        changed iff the OLD status string is not a substring of that line
+        (`:346`). Both directions are wrong:
+        (a) FALSE POSITIVE, published 2026-10-20 09:09:42 in pushed commit
+        3db1ad7: at 08:53:28 the rotation ran T0.22 and got no stdout verdict
+        — `run.py`'s `gate_cpu_child` refusal path prints `cpu-refused ...`
+        to STDERR and deliberately writes no ledger row ("a scheduling
+        refusal must never supersede a real verdict", run.py:5415-5428) — so
+        `"PASS" not in "(no verdict line)"` counted T0.22 as moved. The
+        commit message asserts "STATUS MOVED on T0.22" and "A status MOVED,
+        which is the lane working: it keeps the scoreboard TRUE, not green"
+        while T0.22's row sat untouched at its 10-19 PASS (verified: the
+        committed ledger in 3db1ad7 carries no T0.22 change, and T0.22 re-run
+        at ~09:3x this slot is PASS attempt 22+, 2.28s). A mechanical lane
+        whose one judgement-free claim is "I only report what the runner
+        said" published a verdict the runner never produced.
+        (b) FALSE NEGATIVE, latent and already shaped by a recorded scar: a
+        demotion that prints `... BLOCKED by T0.08 (PASS but stale — DIRTY
+        ...)` (T0.22's own 2026-10-17T19:06 re-run shape, quoted in
+        `regate-bought-nine-certificates`) contains the substring PASS, so
+        `"PASS" in verdict` reads it as no move — a PASS->BLOCKED demotion
+        the summary line exists to surface would print "no status moved".
+        VOID-FORECLOSED prose in a verdict line hides VOID moves the same way.
+    THE SHAPE OF THE REPAIR, named so the desk can order it in one line: the
+        lane already holds the honest source — the LEDGER. Read each spec's
+        (status, ran_at) from `experiments/ledger.json` before and after the
+        child run and report a move iff the recorded pair moved; keep the
+        stdout line for display only. A child that recorded nothing (the
+        cpu-refused case) is then its own, third, summary class — "ran,
+        recorded nothing" — which is also the honest description of what
+        happened to T0.22 at 08:53. No threshold, gate or verdict moves; the
+        change is to a log/commit-message summary only.
+    STALENESS BILL: `scripts/regate.py` is named by no spec's IMPL_DEPS
+        (`run stale-cost scripts/regate.py` to confirm at execution; the
+        e735f36 edit to the same file billed zero). This routing edits
+        `docs/REVIEW_QUEUE.md` and bills the T0.21/T0.28/T0.31 trio, paid in
+        this slot.
