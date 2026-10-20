@@ -54048,12 +54048,17 @@
     "T1.02": {
       "amended": [],
       "attempt": null,
-      "commit": "5c9f096",
-      "compute_s": 7182.76,
-      "control_metrics": {},
+      "commit": "7ffd491",
+      "compute_s": 4136.44,
+      "control_metrics": {
+        "shuffled_heldout": 0.548953,
+        "shuffled_heldout_std": 0.00930159,
+        "shuffled_train_loss": 0.0932067,
+        "shuffled_train_loss_std": 0.0118352
+      },
       "dirty_files": null,
-      "duration_s": 7189.82,
-      "gpu_job_id": "ladder-1792498408,jannolouwrens/jack-ladder-1792501976",
+      "duration_s": 26.26,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1792501976",
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -54118,15 +54123,78 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": null,
+          "commit": "5c9f096",
+          "compute_s": 7182.76,
+          "control_metrics": {},
+          "dirty_files": null,
+          "duration_s": 7189.82,
+          "gpu_job_id": "ladder-1792498408,jannolouwrens/jack-ladder-1792501976",
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "d70f174bb02a8856",
+          "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1 | fetch failed: /content/out.json: rc=1 exists=False [colab] A new version of Colab CLI is available: 0.7.4 (current: 0.6.0)\n[colab] Run 'colab update' to update.\n[colab] To silence this check, set \"enable_update_check\": false in ~/.config/colab-cli/set; kaggle: status=queued",
+          "metrics": {},
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 213.4,
+          "preserved_impl": null,
+          "ran_at": "2026-10-20T14:13:15",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "e8a8c6c9416872cd",
+          "status": "ERROR"
+        },
+        {
+          "amended": [],
+          "attempt": null,
+          "commit": "7ffd491",
+          "compute_s": 0.0,
+          "control_metrics": {},
+          "dirty_files": null,
+          "duration_s": 4.33,
+          "gpu_job_id": "jannolouwrens/jack-ladder-1792501976",
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "d70f174bb02a8856",
+          "message": "RuntimeError: GPU job failed on kaggle: all backends failed: kaggle: reattach refused: kernel jannolouwrens/jack-ladder-1792501976 was pushed with code sha 5b373e27be4d31e1\u2026 (attempt 1792501976274-796519-kaggle, head 5c9f096) but the local script hashes to 8d06a71c557da80c\u2026. The certificate would claim code that did not run. Either reattach from the submitting commit, or \u2014 if the divergence is pro",
+          "metrics": {},
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 213.6,
+          "preserved_impl": null,
+          "ran_at": "2026-10-20T14:26:31",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "e8a8c6c9416872cd",
+          "status": "ERROR"
         }
       ],
       "impl_sha": "d70f174bb02a8856",
-      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1 | fetch failed: /content/out.json: rc=1 exists=False [colab] A new version of Colab CLI is available: 0.7.4 (current: 0.6.0)\n[colab] Run 'colab update' to update.\n[colab] To silence this check, set \"enable_update_check\": false in ~/.config/colab-cli/set; kaggle: status=queued",
-      "metrics": {},
+      "message": "",
+      "metrics": {
+        "beats_mean_baseline": 11.079,
+        "device": "cuda",
+        "gpu_job_id": "jannolouwrens/jack-ladder-1792501976",
+        "gpu_repo_sha": "5c9f096",
+        "heldout_structure_advantage": 21.275,
+        "mean_baseline": 0.285867,
+        "mean_baseline_std": 0.00650078,
+        "reference_gain": 8.097,
+        "reference_heldout": 0.0353067,
+        "reference_heldout_std": 0.00144251,
+        "structured_heldout": 0.0258033,
+        "structured_heldout_std": 0.0023547
+      },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 213.4,
+      "peak_rss_mb": 213.8,
       "preserved_impl": null,
-      "ran_at": "2026-10-20T14:13:15",
+      "ran_at": "2026-10-20T14:27:54",
       "seeds": [
         0,
         1,
@@ -54134,7 +54202,7 @@
       ],
       "spec_id": "T1.02",
       "spec_sha": "e8a8c6c9416872cd",
-      "status": "ERROR"
+      "status": "PASS"
     },
     "T1.03": {
       "amended": [],
