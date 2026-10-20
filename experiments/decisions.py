@@ -344,6 +344,53 @@ _DID = re.compile(r"^(D\d+)\b")
 # marker must name the DECISION's fate, never an entry's freshness.
 _SETTLED = re.compile(r"RESOLVED|off your desk|BY THE CALENDAR", re.I)
 
+# A ruling filed in prose under a NEIGHBOUR's heading is invisible to the
+# header scan above — D19's owner answer of 2026-09-17 lived at the tail of
+# `## D35` for ten days while `--check` printed `OVERDUE — DEFAULT IS DUE TO
+# FIRE`, an order whose execution would have REVERSED an owner ruling (113th
+# audit; ruling on `decisions-settles-on-headers-alone`, 2026-10-02). So the
+# region from a decision's own retained `DECIDE:` block to the next `##`
+# header is ALSO scanned — and the bar is deliberately three conjuncts, not a
+# word, because the failure mode in the settle direction is worse than the one
+# this repairs: a false OVERDUE wastes an audit's attention, a false SETTLED
+# silently unarms a live default. The region settles its decision only when it
+# carries, together:
+#   1. `ANSWERED <its own id>` — uppercase, the id spelled out, so prose using
+#      the verb cannot fire and a neighbour's answer cannot leak in;
+#   2. the DEFAULT's fate named (`superseded` / `resolved`) — the fate of the
+#      decision, never an entry's freshness (`STALE` settles nothing, same as
+#      the header scan above);
+#   3. a citation of WHERE the answer is filed — a commit sha, a `.md` path,
+#      or `in this file` — per the 10-02 ruling's own condition: "an ANSWERED
+#      that cites nothing is a status, not an answer, and is to be read as an
+#      unresolved OVERDUE". An adjective cannot satisfy this, which is what
+#      keeps a desk from settling its own entry by mood.
+_ANSWER_FATE = re.compile(r"\b(superseded|resolved)\b", re.I)
+# A sha must carry at least one digit: "effaced" is seven hex letters. The
+# phrase form tolerates a line wrap — these documents hard-wrap prose, and a
+# citation must not stop counting because it fell across column 72.
+_ANSWER_CITE = re.compile(
+    r"(?=[0-9a-f]*\d)[0-9a-f]{7,40}\b|[\w/.-]+\.md\b|in\s+this\s+file")
+
+
+def answered_in_region(text: str, did: str) -> bool:
+    """True iff `did`'s own DECIDE-block region carries a qualifying ANSWERED
+    marker (all three conjuncts above). The region runs from each column-0
+    `DECIDE: <did>` line to the next `##` header, so prose ABOVE the block —
+    the entry's problem statement — can never settle it."""
+    answered = re.compile(r"\bANSWERED\s+" + re.escape(did) + r"\b")
+    lines = text.splitlines()
+    starts = [i for i, ln in enumerate(lines)
+              if re.match(r"^DECIDE:\s*" + re.escape(did) + r"\s*$", ln)]
+    for s in starts:
+        end = next((j for j in range(s + 1, len(lines))
+                    if lines[j].startswith("## ")), len(lines))
+        region = "\n".join(lines[s:end])
+        if (answered.search(region) and _ANSWER_FATE.search(region)
+                and _ANSWER_CITE.search(region)):
+            return True
+    return False
+
 # THREE CLASSES, NOT TWO (owner, 2026-09-17: "dont we have enough philosophy and
 # structure for an agent to solve these things?").
 #
@@ -448,6 +495,10 @@ def parse(text: str) -> tuple[dict, list]:
             continue
         headers.setdefault(key, []).append(title)
     candidates = [k for k, ts in headers.items() if not any(_SETTLED.search(t) for t in ts)]
+    # Second settle channel: an ANSWERED marker in the decision's own
+    # DECIDE-block region (D19's shape — see `answered_in_region`). Shrinks
+    # the open set only; it can add nothing.
+    candidates = [k for k in candidates if not answered_in_region(text, k)]
     return decls, sorted(candidates), dupes
 
 

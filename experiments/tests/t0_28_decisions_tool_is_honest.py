@@ -103,10 +103,10 @@ import re
 
 from ..coverage import _claim_dead
 from ..decisions import (BASELINE_ACTION_EXPIRED, BASELINE_FIRING_HAZARDS,
-                         BASELINE_UNDECLARED, DOC, WORKTREE, _diff_of, audit,
-                         blast_radius, check_rc, default_dates,
-                         expired_actions, firing_audit, firing_commits,
-                         firing_commits_all, firing_coverage,
+                         BASELINE_UNDECLARED, DOC, WORKTREE, _diff_of,
+                         answered_in_region, audit, blast_radius, check_rc,
+                         default_dates, expired_actions, firing_audit,
+                         firing_commits, firing_commits_all, firing_coverage,
                          firing_diff_hazards, main, owner_ask_silences, parse,
                          same_day_actions)
 from ..protocol import Ledger, Status, run_spec
@@ -127,7 +127,7 @@ SPEC_ID = "T0.28"
 IMPL_DEPS = ["experiments/decisions.py", "docs/DECISIONS_NEEDED.md",
              "docs/PROGRESS.md", "docs/REVIEW_QUEUE.md"]
 
-N_PROPERTIES = 19
+N_PROPERTIES = 20
 
 # P17's log. `aaa1` declares itself a firing in this repo's usual idiom; `aaa2`
 # is an ordinary commit that must never be claimed as one.
@@ -209,6 +209,63 @@ DECIDE: D96
   class:     goal
   default:   leave the sitting order as it stands
   decide_by: 2099-01-01
+"""
+
+# P20's document — D19's exact shape (113th audit; ruling on
+# `decisions-settles-on-headers-alone`, 2026-10-02). The owner's ruling was
+# filed under a NEIGHBOUR's heading, so no header bearing the id says
+# RESOLVED; the retained DECIDE block still parses as armed; and the GUARD
+# paragraph beside the block — `ANSWERED <id>`, the default's fate, a
+# citation of where the answer is filed — is the only legible settlement.
+# The pre-fix organ read headers alone and printed `OVERDUE — DEFAULT IS DUE
+# TO FIRE` over an answered decision for ten days: an ORDER whose execution
+# would have reversed an owner ruling. D98 and D99 are the two ways the new
+# channel must REFUSE to settle: by adjective (no ANSWERED marker at all),
+# and by an ANSWERED that cites nothing — "a status, not an answer, and to
+# be read as an unresolved OVERDUE" (the ruling's own condition).
+DOC_ANSWERED = """
+## D35 — a neighbouring decision whose section swallowed the ruling (OPEN)
+
+DECIDE: D35
+  class:     goal
+  default:   keep the freeze
+  decide_by: 2099-01-01
+  blocks:    T2.01
+
+The owner also ruled on D97 here: yes, may download anything to /data.
+
+## D97 — may the builder fetch outside the repo (OPEN, owner)
+
+DECIDE: D97
+  class:     goal
+  default:   NO FETCH; the family stays blocked-on-disk
+  decide_by: 2099-01-01
+  blocks:    T2.01
+
+GUARD — DO NOT FIRE THIS DEFAULT. THE OWNER ANSWERED D97. The ruling is in
+this file, verbatim — "yes, may download anything to /data" — and the armed
+default was NO FETCH; it is superseded, unfired.
+
+## D98 — settles itself by adjective and must STAY armed (OPEN, owner)
+
+DECIDE: D98
+  class:     goal
+  default:   keep the wall as it stands
+  decide_by: 2099-01-01
+  blocks:    T2.01
+
+This default is probably superseded by later events and the entry reads as
+resolved to everyone who has followed the thread.
+
+## D99 — ANSWERED but cites nothing: a status, must STAY armed (OPEN, owner)
+
+DECIDE: D99
+  class:     goal
+  default:   keep the wall as it stands
+  decide_by: 2099-01-01
+  blocks:    T2.01
+
+THE OWNER ANSWERED D99; it is superseded, unfired.
 """
 
 # `D8` as it actually stood on 2026-08-29, reduced to the sentence that names
@@ -961,6 +1018,29 @@ DECIDE: D84
             or [r["id"] for r in rows19] != ["D96"]
             or _rc(v19, safety_enforced=S) != 0):
         failed.append("p19_conduct_advisory_is_soft_and_leaves_the_arm")
+
+    # P20 — a ruling ANSWERED in prose beside its retained DECIDE block settles
+    # the decision, and NOTHING WEAKER DOES (D19's shape; ruling on
+    # `decisions-settles-on-headers-alone`, 2026-10-02). Four assertions, three
+    # of them refusals, because the settle direction's failure mode — a live
+    # default silently unarmed — is worse than the false OVERDUE this repairs:
+    # D97 (ANSWERED + fate + citation) leaves the armed list entirely; D35,
+    # whose section swallowed the ruling, stays armed — a neighbour's answer
+    # does not leak; D98 settles itself by adjective and stays armed; D99 says
+    # ANSWERED but cites nothing — "a status, not an answer" — and stays armed.
+    # The pre-fix organ read headers alone: it reported D97 armed and printed
+    # `OVERDUE — DEFAULT IS DUE TO FIRE` over an answered decision for ten
+    # days, an order whose execution would have reversed an owner ruling.
+    v20, rows20 = audit(DOC_ANSWERED, TODAY, rows_for_safety=[],
+                        by_id=FIXTURE_BY_ID)
+    kinds20 = {did: kind for kind, did, _ in v20}
+    if ("D97" in kinds20
+            or [r["id"] for r in rows20] != ["D35", "D98", "D99"]
+            or not answered_in_region(DOC_ANSWERED, "D97")
+            or answered_in_region(DOC_ANSWERED, "D35")
+            or answered_in_region(DOC_ANSWERED, "D98")
+            or answered_in_region(DOC_ANSWERED, "D99")):
+        failed.append("p20_answered_beside_the_block_settles_adjectives_do_not")
 
     live_asks = _live_asks()
     return {
