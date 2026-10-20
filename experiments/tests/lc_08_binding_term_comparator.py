@@ -111,7 +111,14 @@ from .lc_03_survival_screening import (EXPLORE_STD_LC03, N_LIVES_MIN,
                                        TRACE_EVERY, _panel_dwell)
 
 IMPL_DEPS = ["experiments/survival.py", "experiments/cores.py",
-             "experiments/w0.py", "experiments/drives.py", "playground.py"]
+             "experiments/w0.py", "experiments/drives.py", "playground.py",
+             # Declared, not grandfathered (T0.35 no_new_transitive fired on
+             # this file and was RIGHT): the pairing imports LC.03's rig
+             # constants and LC.02's committed-ratio reader, so a change to
+             # either sibling module changes this spec's venue and must stale
+             # its certificate.
+             "experiments/tests/lc_02_throughput_floor.py",
+             "experiments/tests/lc_03_survival_screening.py"]
 
 REPO = Path(__file__).resolve().parents[2]
 ARTIFACTS = REPO / "experiments" / "artifacts"
