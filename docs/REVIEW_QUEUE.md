@@ -13916,6 +13916,28 @@ ROUTED: declared-venue-vs-delivered-venue-has-no-comparator | 2026-09-23 | 3395c
         predecessor and `run review-queue` caught it by still reporting the row
         OVERDUE. It has now caught the same mistake twice, fifteen days
         apart.)
+    BUILDER-TRACE: dae9bc3 | EXECUTED 2026-10-20 15:1x slot, on the DUE date —
+        all five pinned steps of THE RULING's candidate (i).
+        `Spec.venue` added OUTSIDE `SPEC_CLAIM_FIELDS` (candidate (ii) stays
+        refused; T0.17's exhaustive-partition guard went red on the
+        unclassified field at a22 — honest FAIL kept — and `venue` is now a
+        documented `_CLAIM_INVARIANTS` entry whose comment names a future
+        hash-move as candidate (ii) in disguise). The echo fitted first to
+        `HR.1`: `venue_used` derived in `_bundle` from the corpus directory
+        actually indexed + the mic suffixes of the split's actual paths,
+        never copied from the declaration; ABSENT / UNCONSTRUCTED /
+        INCONSISTENT-ACROSS-SEEDS echoed honestly. `run verify` prints the
+        comparison REPORTING-ONLY — `_print_venue_comparison` returns None
+        and the exit code is computed without it; verified live (exit 2
+        before and after, both from the pre-existing T0.18 unevaluable). The
+        D35 stop-and-route clause was checked and does not fire: no floor
+        added to any existing checker. First honest reading: declared 1/257,
+        match 0, declared-not-yet-echoed 1 (HR.1 — its standing FAIL row
+        predates the echo and retires on its next legitimate run), UNDECLARED
+        256 = `VENUE_UNDECLARED_BASELINE`, shrink-only, growth prints loudly
+        but moves no exit code (arming is a desk decision). Bill priced
+        before the edit and paid in-slot from the committed tree: T0.17 a23,
+        T0.15/T0.22/T0.33/T0.35/T0.36 all PASS, salts clean.
 
 **The finding, in the audit's own words:** *"nothing in this project compares
 the venue a run actually used against the venue its spec declares. `run
