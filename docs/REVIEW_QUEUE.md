@@ -5842,6 +5842,8 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
         `DISPOSITIONED`; the design below is unchanged; nothing is relabelled
         `HELD` to buy silence, and the `BLOCKED-BY` above is left pointing where
         it points.
+    BLOCKED-BY: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | RE-PARENTED AGAIN 2026-10-20 (Review DAILY, OVERDUE FIRST, act 4) — **the 2026-09-27 re-parent's target has gone TERMINAL while this row's blocking CONDITION never cleared, so for the second time in this row's life the work it owes is owned by nobody. That is the 100th audit's B2 class, and this row is now its worked example.** Re-derived at the register this sitting, not taken from any page: the old parent `t108-pipeline-repair-has-no-design` is **ACTED 2026-10-08** (`1efd54f` + `b80dbe3` + `9acf963`) — terminal, never re-read — and yet `T1.08` reads **FAIL, attempt 5, 2026-10-08T13:19:59**, and `D1.0` reads **VOID, attempt 2**. So the window this row was parked behind DID open: the design it waited for was delivered AND executed. The thing that did not happen is the OUTCOME. `T1.08` was red before its repair was designed and is red after, which means a hold declared on "the design is missing" was silently discharged by the design arriving, while the unreachability it actually encodes — `D1.0.depends_on` includes `T1.08`, so no dispatch is buyable at any budget in any week — is unchanged. **THE STOP-RULE STILL FORBIDS A FOURTH RE-DATE AND I AM NOT WRITING ONE.** Its own named act is re-parenting, and re-parenting is exactly what is available: `t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign` is **OPEN**, routed 2026-10-09 on `T1.08`'s attempt-5 numbers (`heldout_cv_pct` 17.285 against `MAX_HELDOUT_CV_PCT` 7.0, byte-unmoved), and it is the live row that owns the FAIL this row is unreachable behind. The hold is moved there. **WHAT THIS RE-PARENT DOES NOT DO:** it does not re-open the gate question (adopted 2026-09-08, untouched), it does not move `STEP_TARGET`, it does not authorise a dispatch, and it does not price one — the row's own unanswered judgement, whether ~17 GPU-h should buy a run whose likeliest verdict is "still converging", stays unanswered and stays this desk's. It is now a FULL-sitting question with real money behind it, because the quota it would spend is currently perishing unused (30.0 h free in 2026-W42, 0.0 spent, expiring Saturday 2026-10-24; 2026-W41 expired at 0.0 the same way). **A SECOND DEFECT FOUND BY WALKING INTO IT, ROUTED NOT FIXED — and stated as what was MEASURED, after a first draft of this line asserted a cause I had not checked.** The question that opened it is simple: this row was `DISPOSITIONED` (live) and declared `BLOCKED-BY:` a row that is `ACTED`, which is precisely `HOLD-ON-A-RESOLVED-BLOCKER`'s subject — and that class did **NOT** fire, in either of this sitting's two `run review-queue` invocations (both printed `OVERDUE` as the only violation form, 20 then 17). What I then checked in the source, rather than assumed: the check at `review_queue.py:785-805` is **not** `HELD`-only — it guards on `if r["status"] not in LIVE: continue` with `LIVE = ("OPEN","HELD","DISPOSITIONED")` (`:268`), so it reads every live row's `BLOCKED-BY:`, and `HOLD-ON-A-RESOLVED-BLOCKER` **is** in the `VIOLATIONS` tuple at `:320-322`. So my first explanation was wrong and the opposite of the truth. Two things are nonetheless established and both are findings. (1) **The module's own comment is stale against its own code:** `:649` states the class *"checks only HELD rows' `BLOCKED-BY:`"*, which was true once and is false of the code three hundred lines below it — and that sentence is load-bearing, because it is the stated justification for building the ACTED-row prose reader as a separate organ. A reader built to cover a gap its neighbour no longer has is a design resting on a stale comment. (2) **The empirical miss is unexplained.** A live row with a terminal declared blocker did not raise the class that exists for it, which means either the parse of this row's `BLOCKED-BY:` yielded empty — the row is unusually shaped, carrying an embedded `| DECISION DELIVERED` inside a `DUE:` line — or the guard is not reached. I did not establish which, and I am not guessing in a file that exists to distrust unchecked claims. Note the cheap confound and that it does NOT explain it away: `t108-noise-floor-is-quoted-by-nobody` (`:9776`) also declares this blocker, but that row is `ACTED` and correctly skipped. Routed as `hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-one` below. **This re-parent does not depend on that answer:** moving the hold onto the live owner is right whether or not the instrument can see the old one.
+    DUE: 2026-10-21 | deliberately NOT a re-date of this row's own promise — it
     BLOCKED-BY: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign |
         RE-PARENTED 2026-10-09 (Review DAILY), and **this is the SECOND
         consecutive re-parent forced by this desk's own act one commit earlier**
@@ -6187,6 +6189,12 @@ Review's: this desk has not moved `STEP_TARGET` and will not.** The
 precondition this row set is satisfied in form; whether ~17 GPU-h should buy a
 run whose most likely verdict is "still converging" is a judgement the row
 should make explicitly before W37's quota is spent.
+        is the DATE OF THE ROW THIS ONE NOW HANGS ON, taken rather than chosen
+        so the `DATE-INVERSION` reading that shipped yesterday cannot fire on
+        it: a dependent due strictly before its blocker is the exact shape
+        that reading prints, and writing one into the file the morning after
+        buying the reading would be indefensible. If 10-21 moves, this moves
+        with it.
 ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | ACTED 2026-09-13 in 939e3c4 (builder, three days INSIDE this row's 09-16 clock: `LG.12` "He speaks correctly or he is silent" is REGISTERED — option (a) as a NEW claim beside `LG.10`, never an edit to it. All three binding conditions are in the registration: UTTER_MIN 0.50 on report trials as a CONJUNCT of the claim (a mouth that buys fidelity by going mute FAILs, it does not score lower); every fidelity bar carried UNMOVED (match/unanimity/swap_agree 0.90, variety 0.30, liveness 0.80, speak_silence 0.0, leak_draws 0, NULL_MATCH_MAX 0.35); and the null re-run through the IDENTICAL abstention machinery with its at-chance reading required to prove itself alive — if the margin silences the null below the same floor the run is VOID (NULL_SILENCED_BY_MECHANISM), not a quiet pass. NO DISPATCH and no LLM verdicts bought on this row's account; the run is its own decision. **TWO CORRECTIONS THE REGISTRATION CARRIES, both written into the registry block, and the first is to this disposition.** (1) "strictly more to satisfy, not less" is BACKWARDS: give the `LG.10` mouth an abstention rule that never abstains and utter_rate 1.0 clears any floor while match-on-spoken IS match-on-all, so `LG.10` PASS => `LG.12` PASS by construction — `LG.12` is formally WEAKER and cannot be a repair of `LG.10` even in principle, which is the strongest available argument for this row's own conclusion that `LG.10` must keep standing. UTTER_MIN is the only thing bounding how much weaker. (2) THE FLOOR WAS CHECKED FOR REACHABILITY BEFORE IT WAS WRITTEN (the `UB.10`/`BA.03`/`ME.11` lesson): at precision 0.90 an ORACLE abstention lets a mouth with ungated match m speak at most m/0.90 of the time, and `LG.10` v2's worst per-seed per-model match is 0.60, so ANY utterance floor above 0.6667 is born unreachable. 0.50 sits under it with headroom. Also recorded: the SILENCE control is DEMOTED on the record — with an abstention path available it is partly true by construction, so the utterance floor now carries the aliveness burden it can no longer carry alone. Discharges DISPOSITIONED 2026-09-08 (Review DAILY): (c) LG.10's bar and its FAIL both STAND; (b) refused on the spec's own docstring warning; (a) accepted as a NEW registered claim with a binding utterance-rate floor and explicitly NOT as a rewrite of a failing spec. Design in the DISPOSITION block at the foot of this row, unchanged)
     DUE: 2026-09-06 | a mouth-design decision owed by the Review's Sunday
     FULL run; bundle beside the ME.11 family disposition — both are cases
@@ -23191,3 +23199,47 @@ ROUTED: longrun-population-grew-six-ids-under-a-priced-row | 2026-10-20 | `_long
         capacity, and 10-25 carries 5 — the first date with genuine room
         under the 6/cycle measurement. Not dated onto a full day, which is
         the act `review_queue_piled_on` counts.
+
+ROUTED: hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-one | 2026-10-20 | `run review-queue` x2 this sitting (both printed `OVERDUE` as the only violation form, 20 then 17) against `d10-successor-rerun-under-adopted-gate`, which was `DISPOSITIONED` (live) declaring `BLOCKED-BY: t108-pipeline-repair-has-no-design`, which is `ACTED 2026-10-08` (terminal); source read at `experiments/review_queue.py:268, 320-322, 649, 785-805` | OPEN
+    SUBJECT: an INSTRUMENT's coverage of its own declared violation class.
+        No spec, threshold, verdict or claim of Jack's is in question.
+    **THE OBSERVATION, stated as measured and no further.** A live row with a
+        declared `BLOCKED-BY:` naming a TERMINAL row did not raise
+        `HOLD-ON-A-RESOLVED-BLOCKER`. The class is implemented
+        (`:805`), it is registered in `VIOLATIONS` (`:320-322`), and its
+        guard admits the row's status (`LIVE` includes `DISPOSITIONED`,
+        `:268`). On paper it should have fired. It did not.
+    **WHAT IS NOT THE EXPLANATION**, checked so the next desk does not spend
+        the time twice: NOT a HELD-only scope (the code guards on `LIVE`, not
+        on `HELD` — that is only what the stale comment at `:649` claims);
+        NOT the class being unregistered; and NOT the second declarer at
+        `:9776` (`t108-noise-floor-is-quoted-by-nobody`), which is `ACTED` and
+        therefore correctly skipped.
+    **THE LIVE HYPOTHESIS, named not confirmed.** The `BLOCKED-BY:` parse
+        returned empty for this row. `d10`'s body is unusually shaped — it
+        carries an embedded `| DECISION DELIVERED 2026-09-08 (Review DAILY):`
+        INSIDE a `DUE:` line, and the parser assigns `blocked_by` by
+        last-write (`:446`). A row whose `BLOCKED-BY:` silently parses to
+        empty is strictly worse than one that fails loudly: it reads as a row
+        with no hold at all, which is exactly how this one read for 23 days.
+    **WHY IT MATTERS MORE THAN ONE ROW.** If the parse is the cause, the miss
+        is not about holds — it is about any DECLARED field on an oddly
+        shaped row, and this file's entire contract is "DECLARED fields only,
+        never prose". A field that parses to empty without complaint
+        converts a declaration into a silent exemption, which is the shape of
+        the MALFORMED-row scar the 151st audit FTB 1 already paid for once
+        (a 5th pipe field emptied a status and exempted its `DUE:`).
+    THE ASK, in one line: establish whether `d10`'s `BLOCKED-BY:` parsed
+        empty and why; if a declared field can parse to empty silently,
+        decide whether that is MALFORMED (loud) rather than absent (quiet).
+    STALENESS BILL: this routing edits `docs/REVIEW_QUEUE.md` only; it moves
+        no threshold, gate or verdict. The investigation is a read over
+        `review_queue.py` plus its own parser, and prices its own repair if
+        one is needed.
+    WAITS-ON: none | the evidence is on disk and committed; no live row owns
+        `review_queue.py`'s parser.
+    DUE: 2026-10-25 | the first date with room under the measured 6/cycle on
+        this sitting's own pile reading (10-18..10-21 AMBER at 8/12/11/10,
+        10-22..10-24 at the capacity of 6, 10-25 at 5). Shares the date with
+        this sitting's other routing, which takes 10-25 to 6 — at capacity,
+        not over it.
