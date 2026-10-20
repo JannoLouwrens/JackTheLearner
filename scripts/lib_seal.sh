@@ -343,11 +343,14 @@ seal_output() {
   # the tree rather than from git, because an agent that appended its row and
   # died before committing still finished the list — the sweep below commits it.
   # A row that declares itself INCOMPLETE is the organ's own dead-run fallback
-  # and is never a receipt.
+  # and is never a receipt. A DEFERRED row is the same organ's gate-refusal
+  # fallback (review-defers-leave-no-labelled-hole, 2026-10-20) and is likewise
+  # never a receipt: a morning deferral row matching today's date must not seal
+  # a later held-and-killed run as COMPLETE.
   local tail_complete="" receipt_line=""
   if [ -n "$receipt_file" ] && [ -n "$receipt_pat" ] && [ -f "$receipt_file" ]; then
     receipt_line=$(grep -E "$receipt_pat" "$receipt_file" 2>/dev/null \
-                   | grep -v 'INCOMPLETE' | tail -1)
+                   | grep -vE 'INCOMPLETE|DEFERRED' | tail -1)
     if [ -n "$receipt_line" ]; then
       tail_complete=1
       "$sayfn" "tail receipt found in $receipt_file — this run finished its checklist and was killed on the tail"

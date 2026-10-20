@@ -57,6 +57,30 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenant
 usage_gate say review || {
   echo "$TODAY" > "$DEFER"
   say "sitting DEFERRED — the usage gate refused it; a later --retry poll today may hold it once the meter allows (99th audit B2)"
+  # A gate-deferred day must leave a labelled hole, not a silent gap
+  # (review-defers-leave-no-labelled-hole, routed 2026-10-17). The 76th audit B4
+  # fallback below is gated on an agent run's rc and this path exits before it,
+  # so 10-12/14/15/16 — four of five consecutive days, every poll refused —
+  # produced NO trend row and NO non-zero exit anywhere; the rows had to be
+  # backfilled by a human reading review.log. One row per DAY, not per poll:
+  # the same date guard B4 uses. A later --retry that actually HOLDS the
+  # sitting appends the agent's own row after this one. A DEFERRED row is
+  # never a tail receipt and never suppresses B4's INCOMPLETE row — both
+  # readers exclude it by the word DEFERRED (lib_seal.sh:350, :180 below).
+  # NOTE the cwd: this branch runs BEFORE `cd "$REPO"`, hence the -C/abs paths.
+  if ! grep -q "^| $TODAY " "$REPO/docs/PROGRESS_LOG.md" 2>/dev/null; then
+    DMODE=DAILY; [ "$(date +%u)" = "7" ] && DMODE=FULL
+    echo "| $TODAY | $DMODE | — | — | — | — | DEFERRED — the usage gate refused today's first poll before any sitting was held; written by review.sh at that refusal (review-defers-leave-no-labelled-hole) so the trend has a labelled hole instead of a silent gap. If a later --retry poll held the sitting, the agent's own row for this date follows this one; the refused meter lines are in review.log. |" >> "$REPO/docs/PROGRESS_LOG.md"
+    git -C "$REPO" add -- docs/PROGRESS_LOG.md 2>/dev/null
+    git -C "$REPO" commit -q -m "review: usage-gate deferral recorded as a DEFERRED trend row (review-defers-leave-no-labelled-hole)
+
+Committed by review.sh, not by an agent — no agent ran and nothing was spent.
+A trend file that skips every gate-refused day is indistinguishable from a
+file whose organ was never scheduled, which is how 10-12/14/15/16 vanished
+until the 10-17 sitting happened to compare it against review.log." -- docs/PROGRESS_LOG.md 2>/dev/null \
+      && say "wrote the DEFERRED trend row for $TODAY" \
+      || say "WARNING: could not commit the DEFERRED trend row"
+  fi
   exit 0
 }
 cd "$REPO" || exit 0
@@ -177,7 +201,10 @@ seal_output "$RC" docs/PROGRESS.md review say 25 "$RUN_START" \
 # throughput, which is the exact quantity D22 turns on. A dead run writes a
 # row that SAYS it is a hole; a completed run's own append is untouched (the
 # grep guard means this never duplicates one the agent already wrote).
-if [ "$RC" -ne 0 ] && ! grep -q "^| $(date -u +%F) " docs/PROGRESS_LOG.md 2>/dev/null; then
+# The guard ignores a DEFERRED row: a morning deferral followed by a --retry
+# that held the sitting and then died must still get its INCOMPLETE row, or the
+# day would read "nothing was held" about a sitting that spent real budget.
+if [ "$RC" -ne 0 ] && ! grep "^| $(date -u +%F) " docs/PROGRESS_LOG.md 2>/dev/null | grep -qv 'DEFERRED'; then
   echo "| $(date -u +%F) | $MODE | — | — | — | — | INCOMPLETE — the ${MODE} run exited rc=${RC} before appending its own row; written by review.sh (76th audit B4) so the trend has a labelled hole instead of a silent gap. The exit code is in review.log; any sealed draft is bannered in docs/PROGRESS.md. |" >> docs/PROGRESS_LOG.md
   git add -- docs/PROGRESS_LOG.md 2>/dev/null
   git commit -q -m "review: rc=${RC} run recorded as an INCOMPLETE row in PROGRESS_LOG.md (76th audit B4)

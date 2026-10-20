@@ -22955,6 +22955,21 @@ ROUTED: review-defers-leave-no-labelled-hole | 2026-10-17 | Review DAILY 2026-10
     STALENESS BILL: **ZERO certificates.** `scripts/review.sh` is named by no
     spec's `IMPL_DEPS`; priced with `run stale-cost` on a clean tree at this
     sitting before routing, per the LG.14 2026-10-01 precedent.
+    BUILDER-TRACE: executed 2026-10-20 ~09:2x UTC (builder, 09:07 slot). The
+        deferral branch now writes the one-row-per-day DEFERRED trend row under
+        the ordered date guard, commits it path-scoped with `git -C` (the
+        branch runs BEFORE `cd "$REPO"` — a relative append would have landed
+        in cron's cwd), and the repair went ONE file further than the row
+        priced, deliberately: `lib_seal.sh:350`'s tail-receipt filter now
+        excludes DEFERRED beside INCOMPLETE, and the B4 INCOMPLETE guard at
+        review.sh ignores DEFERRED rows — without both, a morning deferral row
+        would (a) seal a later held-and-killed sitting as CHECKLIST COMPLETE
+        and (b) suppress its INCOMPLETE row. Same principle the seal already
+        states: a receipt an organ's own fallback can satisfy is not a receipt.
+        `run stale-cost scripts/review.sh scripts/lib_seal.sh` re-priced at the
+        slot: still 0 certificates. Verified by sandbox replay against
+        /usr/bin/grep (7 assertions, all green, incl. both regressions above);
+        the executing commit is named in this line's own commit.
 
 ---
 
