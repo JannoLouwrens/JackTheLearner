@@ -11310,3 +11310,140 @@ for the other two and the only one whose successor needs no world edit — and a
 successor claim spec gets registered that iteration. The firing forecloses
 nothing; it records that nobody chose.
 
+
+---
+
+## D46 — EVIDENCE ADDENDUM, 2026-10-20 06:4x UTC (overseer, 154th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS THE PREMISE THIS ENTRY IS ARGUED ON: a material part of the blackout it prices as consumption was the gate acting on a meter reading that violates the meter's own declared invariant, and — as with `D40` in the 144th audit — the error direction blames the builder.
+
+`D46` stays open, `class conduct`, `decide_by 2026-10-17` (now 3 days past).
+`decisions --check` classes it `CONDUCT-DESK` — *"desk-executable, not the
+owner's — execute it, report it, do not ask."* This addendum proposes no option,
+moves no `decide_by`, fires nothing, and touches `PACE_FLOOR`, `PACE_CAP`, the
+pace line and the 90% hard stop **not at all**.
+
+### The invariant, and the readings that break it
+
+`week:all models` is a cumulative percentage inside a window the CLI itself
+prints. `scripts/claude_usage.py:reset_epoch()` resolves the current one to
+**2026-10-19 05:00 → 2026-10-26 05:00 UTC** (`--week-elapsed` printed `15` at
+audit time). A cumulative meter is monotone non-decreasing inside its window.
+Inside this *single, unchanged* window the gate read:
+
+```
+10-19 07:07    7%   /data/jack-logs/usage_ledger.jsonl   builder start
+10-19 15:22   42%   /data/jack-logs/usage_ledger.jsonl   review start
+10-19 16:07   95%   /data/jack-logs/ladder.log           STOPPED
+10-19 18:22   95%   /data/jack-logs/review.log           DEFERRED
+10-19 18:37   95%   /data/jack-logs/overseer.log         STOPPED
+10-20 00:37   95%   /data/jack-logs/overseer.log         STOPPED
+10-19 19:07 .. 10-20 06:07   95% x 12   ladder.log       STOPPED, hourly
+10-20 06:37    0%   usage_ledger.jsonl                   review + overseer start
+10-20 06:44    2%   overseer's own read, `resets Oct 26, 4:59am (UTC)`
+```
+
+42 -> 95 -> 0 -> 2 cannot all be true in one window. The same shape fired twelve
+hours earlier: at `10-19 06:37` the meter read **93%** — 1.6 h into a *fresh*
+window — and at `07:07` it read **7%**. The 06:37 value was the previous week's,
+served past its own reset, and it cost the Review its `06:37` DAILY sitting on
+the first day of a full budget. The builder saw that pair and filed it, in good
+faith, as *"off-box movement, read not modelled."*
+
+### What it cost, counted off the logs, not inherited from a loop counter
+
+| | |
+|---|---|
+| builder slots refused `STOPPED at 95%` | **15** (10-19 16:07 -> 10-20 06:07) |
+| overseer audits refused | **2** (10-19 18:37, 10-20 00:37) |
+| Review polls refused on the false reading | **1** (18:22) + `06:37` on the 93% read |
+| `dark_slots` ratchet | **0 -> 15**, ABOVE its declared floor of 0 |
+| `review-queue` OVERDUE | **0 (10-18 FULL) -> 17+**, `+11` in one day |
+
+The 10-19 Review DAILY owned those dates and had five chances to sit: `06:37`
+deferred on the **false 93%**, `09:22` and `12:22` aborted on genuine tenant
+load (7.64, 6.44), `15:22` refused at the door by a **genuine** session limit,
+`18:22` deferred on the **false 95%**. **Two of five were lost to data that can
+be proven wrong.** `run status` attributes the OVERDUE rise correctly and
+blamelessly — *"CLOCK: the calendar reached a date ... no commit is to blame"* —
+which is exactly why no organ traced it to the meter.
+
+### Why no instrument could see this, which is the part that generalises
+
+`lib_usage.sh:usage_ledger()` records `pct` and `model_pct` and **not the
+`resets` instant**, so the invariant above is uncomputable from the record. And
+it is called only when an organ *starts* or *ends*; a gate-refused slot starts
+nothing. **All 18 false readings therefore exist only as English prose in three
+log files.** The 153rd audit quoted `STOPPED at 90% / 93%` as fact in its
+opening paragraph; so did the Review. Neither had anything to check it against.
+
+### Two readings, and this desk does not claim to settle it
+
+Either the meter misreported, or the account's weekly ceiling was raised
+mid-window (which lowers the percentage without lowering absolute spend). This
+box cannot distinguish them. **The correction to this entry holds under both:**
+a material share of the recent blackout is not consumption, and 18 organ slots
+were refused on a number that is false by the time anyone audits it.
+
+### What is NOT proposed here
+
+No option is proposed and no default is armed, deliberately. The recording and
+reporting half is specified for the builder in `docs/OVERSIGHT.md` (B1, B2) and
+is strictly monotone — it refuses nothing, gates nothing, and relaxes nothing,
+in the idiom of `D26`'s fired default. The remaining question is policy and a
+desk default may not take it: **when the meter says STOP and the system can
+demonstrate the reading is invalid, may the organs run?** Every construction of
+that either widens what the builder may spend or invents a second limit nobody
+set — the two things an armed default is forbidden. It is recorded here so that
+whoever executes `D46` executes it against the corrected premise.
+
+## D50 — The 90% usage stop pauses every organ and records that nowhere, so its damage is discovered as four unrelated problems and attributed to the wrong cause. This desk did exactly that yesterday. (2026-10-20, Review, DAILY)
+
+DECIDE: D50
+  class:     conduct
+  default:   REPORT THE FIRING WHERE ITS DAMAGE IS READ. Each DAILY sitting
+             reads `field_watch.log` and `usage_ledger.jsonl` for a fired 90%
+             stop and, when it finds one, prints the stop TOGETHER WITH its
+             dated consequences — dark-slot streak, queue dates broken inside
+             the window, GPU weeks closed unbought — as ONE attributed
+             finding instead of separate symptoms. Reporting only: no gate,
+             no exit code, no new field, and NO change to `PACE_FLOOR`,
+             `PACE_CAP` or the 90% stop itself, which stay exactly as they
+             are. Silence adopts this.
+  decide_by: 2026-11-03
+
+**THE RECOMMENDATION, quoted verbatim from this sitting's `FOR THE OWNER` item 4:**
+
+> **Route the usage gate's own blackout as a reportable event: when the 90%
+> stop pauses the organs, nothing in the repo records that it fired, so the
+> resulting dark slots, broken queue dates and expired GPU weeks are each
+> discovered separately and attributed to the wrong cause — this desk
+> attributed them to the pacer yesterday on exactly that evidence.**
+
+### The evidence, measured this sitting
+
+- `field_watch.log`: `STOPPED at 98% weekly usage` (2026-10-12) and `STOPPED
+  at 92% weekly usage` (2026-10-19), each *"all agents paused until the owner
+  resumes"*. The hard stop fired twice and no repo document records it.
+- `dark_slots = 15`, ratcheted from 0 since 2026-09-30, against an hourly
+  cadence (7.5× the 2× trigger).
+- `gpu_budget.json`: `2026-W41` closed at 0.0 h spent of 30.0; `2026-W42`
+  stands at 0.0 of 30.0, expiring Saturday 2026-10-24.
+- `review_queue_violations` 8 → 17; 20 OVERDUE at this sitting's open, with 12
+  promises piled on one day against a measured capacity of 6.
+- `usage_ledger.jsonl` this morning: `pct: 0` — the week has reset and the
+  gate has released. The cause is gone; the debt is not.
+
+### Why this is not already covered
+
+`D30`'s standing default makes the Review *count* dark slots and price the GPU
+expiry beside them, and that default fired correctly. What it does not do is
+name the CAUSE — so yesterday's sitting published the pacer as the acting gate
+and the 90% stop as "not engaged", which the field-watch log refutes. A
+blackout whose cause is invisible gets re-diagnosed every sitting, and the
+desk is the organ least able to notice, because the same stop silences it too.
+
+### What this does not ask for
+
+Not a change to the gate, the pace line, or the 90% stop. Not an
+owner-notification channel. Not retroactive re-dating of the rows the
+blackout broke — those are disposed row by row at the desk, as they were this
+morning. Only that the firing becomes legible where its consequences are read.

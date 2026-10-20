@@ -157,6 +157,32 @@ Nothing was weakened. No threshold moved downward anywhere this sitting.
 
 ## FOR THE BUILDER — ordered, cheapest and most perishable first
 
+0. **THE USAGE GATE HAS RELEASED AND 30.0 GPU-HOURS EXPIRE SATURDAY 2026-10-24.
+   This is the only item on this page that cannot be done later.** Measured at
+   the Review's desk 2026-10-20, not inherited: `usage_ledger.jsonl` reads
+   `pct: 0` for this morning's organ starts, where the field watch logged
+   `STOPPED at 98% weekly usage` on 2026-10-12 and `STOPPED at 92%` on
+   2026-10-19. The week has reset, so the 90% hard stop is no longer what is
+   stopping you. The perishable side: `gpu_budget.json` records **0.0 hours
+   spent in `2026-W42`** against `KAGGLE_WEEKLY_HOURS = 30.0`, and the week
+   ends **Saturday 2026-10-24**. `2026-W41` also closed at **0.0 spent** — 30
+   hours already expired unused, and 30 more are on the same path. For
+   comparison, W38/W39/W40 spent 0.92/1.07/1.97 h, so this is not a quota that
+   is normally consumed either.
+   **What this item does and does not authorise.** It does NOT authorise a
+   dispatch: the two GPU specs that could absorb hours (`T2.03` gpu<20min,
+   `T2.14` gpu<2h) both read `needs T1.08`, and `T1.08` is **FAIL** at attempt
+   5, so nothing in the long-run GPU set is buyable today — which is exactly
+   why the hours have been expiring. What it DOES order is that you spend the
+   released slots on the work that unblocks them rather than on the cheap end
+   of this list: `t108-recipe-repair-is-exhausted-and-the-attribution-pair-
+   flipped-sign` (OPEN, DUE 10-21) is the live row that owns `T1.08`'s FAIL,
+   and as of this sitting it is also what `d10-successor-rerun-under-adopted-
+   gate` hangs on (re-parented today, act 4). `T1.08` is the project's largest
+   unblocker and the quota it would release is the only asset here with an
+   expiry date. If you judge the repair cannot land before Saturday, say so in
+   the slot summary — do not let a third week close at 0.0 in silence.
+
 1. **Port `T2.14`'s `task_not_trivial_all` + `floor_selftest_ok` into `T2.05`,
    and report `mse_nonlinear` + `nonlinear_headroom`** (DUE 10-25, bill 0
    certificates). Do NOT gate on the headroom number on this pass — report it.
@@ -173,8 +199,20 @@ Nothing was weakened. No threshold moved downward anywhere this sitting.
    stale by six, no effect on the gate. Deliberately NOT acted on alone (it
    would stale a certificate for a comment); ride it along with the next edit
    that bills T0.22 anyway.
-4. `longrun_unbound` still holds `T0.32` at FAIL over ten specs — its own row,
-   DUE 10-19, untouched and not pre-empted by this sitting's `t032` stamp.
+4. `longrun_unbound` still holds `T0.32` at FAIL, but over **six** specs, not
+   ten — corrected at the desk 2026-10-20 by re-deriving `_longrun_binding()`
+   in-process rather than reading the ledger. The row's part (a) is **ACTED**
+   (`1ee9c76`, Review act 1): `LT.03`/`PL.02`/`SO.07` adopted
+   `require_feasible` and `W1.02` was re-declared `Budget.CPU`, and all four
+   are out of the gate's population. What remains is
+   `['NE.02','T4.04','T4.05','T6.01','W1.01','W1.04']` — long-run specs
+   registered AFTER the 2026-09-27 measurement the old row priced, now carried
+   by their own row, `longrun-population-grew-six-ids-under-a-priced-row`
+   (OPEN, DUE 10-25). **Note for any desk reading `T0.32` off the ledger:** its
+   live row is attempt 9 at `2026-10-17T15:14:08`, which PREDATES the 10-19
+   repair and still prints all ten ids. A source-scanning conjunct goes stale
+   against its own subject the moment the source moves and no organ re-runs
+   it — re-derive before quoting this one.
 
 ## FOR THE OWNER
 
@@ -201,17 +239,46 @@ row would still be undischargeable in a sitting with infinite time. This desk
 **recommends against its own default** and says so in the entry — but a visible
 refusal beats a fourth broken date.
 
-**4. `D30`'s required pairing, counted this sitting and not inherited.** Dark
-**14 consecutive slots / 14.7 h**, 0 failed, against an hourly cadence — 7× the
-2× trigger. The gate acting is the **PACE LINE**, not the hard stop:
-`week:all models` **66%** at 54% of the week against a line of **61%**; the 90%
-stop is not engaged. `week:Fable` reads 6% and is **not** the gate.
-**`2026-W42` holds 30.0 free Kaggle GPU-hours, 0.000 drawn, all expiring
-Saturday 2026-10-24** — and **`2026-W41`'s entire 30.0 h expired unbought
-yesterday**, the sixth consecutive week. Said with the honesty `D40` required:
-these hours again have no designed buyer, so they would likely have expired
-regardless. **The hours are not the argument. Two consecutive weeks of being
-unable to decide whether to buy them is.**
+**4. `D30`'s required pairing, re-counted this sitting and not inherited —
+and the gate's identity has CHANGED since yesterday, which is the part that
+needs your eye.** Dark **15 consecutive slots**, against an hourly cadence —
+7.5× the 2× trigger, and one slot worse than yesterday's 14.
+**`2026-W42` still holds 30.0 free Kaggle GPU-hours, 0.0 drawn, all expiring
+Saturday 2026-10-24**; **`2026-W41` closed at 0.0 spent**, its entire 30.0 h
+expired unbought. Said with the honesty `D40` required, and it is now a
+STRONGER statement than yesterday's: W38/W39/W40 drew 0.92/1.07/1.97 h, so
+even the project's *active* weeks buy ~5% of the quota. These hours have no
+designed buyer, and they would likely have expired regardless.
+**WHAT CHANGED, measured at this desk and the reason this item is not a
+carry-forward.** Yesterday's pairing named the **PACE LINE** as the acting
+gate with the 90% stop "not engaged". That is no longer the reading.
+`/data/jack-logs/field_watch.log` records the field watch halting outright on
+its last two Mondays — **`STOPPED at 98% weekly usage` (2026-10-12)** and
+**`STOPPED at 92% weekly usage` (2026-10-19)**, each with *"all agents paused
+until the owner resumes"*. So the **hard stop did engage**, twice, and the
+15-slot blackout is its shadow, not the pacer's. And as of this morning
+`usage_ledger.jsonl` reads **`pct: 0`** for both organ starts — **the usage
+week has reset and the gate has RELEASED.** The blackout's cause is gone; its
+debt is not. That debt is on the queue: **20 OVERDUE rows** at this sitting's
+open, 12 promises piled on a single day against a measured capacity of 6, and
+`review_queue_violations` ratcheted **8 → 17**.
+**THE RECOMMENDATION, and it is not about the GPU hours.** The hours are a
+symptom and I do not recommend buying them. **Route the usage gate's own
+blackout as a reportable event: when the 90% stop pauses the organs, nothing
+in the repo records that it fired, so the resulting dark slots, broken queue
+dates and expired GPU weeks are each discovered separately and attributed to
+the wrong cause — this desk attributed them to the pacer yesterday on exactly
+that evidence.** Routed as `D50` (`class conduct`) — **and
+`python -m experiments.decisions` immediately classed it `CONDUCT-DESK`:
+"desk-executable, not the owner's — execute it, report it, do not ask."** The
+instrument is right and I am taking the correction rather than leaving an ask
+on your desk that is mine to discharge: the substance of `D50` is EXECUTED in
+this very item (the firing named, with its dark-slot streak, its broken queue
+dates and its unbought GPU weeks attributed to it in one place) and it becomes
+this desk's standing DAILY practice. `D50` stays filed as the record of the
+act, not as a question. **What is genuinely yours** is the second finding,
+unchanged from yesterday: two consecutive weeks of being unable to decide
+whether to buy the GPU hours.
 
 **5. NO-DECISION: completeness audit, reported because a named gap is a decision
 and an unnamed one is a blind spot.** Audited against the external human
