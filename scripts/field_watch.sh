@@ -29,7 +29,7 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenant
 # proxy. Nothing else is throttled — this is the only limit.
 # UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
 # open is not a limit.
-usage_gate say || exit 0
+usage_gate say field-watch || exit 0
 cd "$REPO" || exit 0
 # Turn budget derived from the clock at the Review's rate (3 turns/min over a
 # 30m timeout), not hard-coded. Seven max-turns deaths across the three organs,

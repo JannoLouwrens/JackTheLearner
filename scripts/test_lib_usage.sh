@@ -36,6 +36,12 @@ chk() { [ "$2" = "$3" ] && ok "$1" || bad "$1" "expected [$3], got [$2]"; }
 #   <model>=             -> that model has NO separate weekly line (exit 2),
 #                           which is the real behaviour of Opus and Sonnet
 #   elapsed=<pct>        -> `--week-elapsed`
+#   full=<text>          -> the NO-FLAG call (usage_ledger's full read); `|`
+#                           becomes a newline so one map value can carry the
+#                           real multi-line meter output. No commas in values
+#                           (the map splits on them) — the fixture drops the
+#                           comma the real `resets` string carries, which the
+#                           sed in usage_ledger does not care about.
 # A key that is absent exits 2 with no output, same as the real tool.
 TMP=$(mktemp -d) || exit 1
 trap 'rm -rf "$TMP"' EXIT
@@ -43,7 +49,7 @@ mkdir -p "$TMP/scripts"
 cat > "$TMP/scripts/claude_usage.py" <<'PY'
 import os, sys
 args = sys.argv[1:]
-key = "all"
+key = "all" if args else "full"
 if "--model" in args:
     key = args[args.index("--model") + 1].lower()
 if "--week-elapsed" in args:
@@ -54,13 +60,17 @@ table = dict(
 val = table.get(key)
 if not val:
     sys.exit(2)
-print(val)
+print(val.replace("|", "\n"))
 PY
 REPO="$TMP"
+# THE GATES NOW WRITE LEDGER ROWS ON THEIR REFUSAL PATHS (154th audit B1), so
+# this must be set BEFORE any gate is exercised: a self-test's fixture refusals
+# must not append rows to the production attribution ledger.
+JACK_USAGE_LEDGER="$TMP/usage_ledger.jsonl"; export JACK_USAGE_LEDGER
 # shellcheck source=/dev/null
 . "$REAL_REPO/scripts/lib_usage.sh"
 
-run_case() { LOGLINE=""; JACK_TEST_MAP="$1"; export JACK_TEST_MAP; }
+run_case() { LOGLINE=""; JACK_TEST_MAP="$1"; export JACK_TEST_MAP; : > "$JACK_USAGE_LEDGER"; }
 
 echo "model_gate — D14's model floor"
 
@@ -195,6 +205,70 @@ run_case "all=92"
 usage_gate say; chk "an EXPIRED resume stops" "$?" "1"
 [ -f "$TMP/.usage-resumed" ] && bad "an expired resume is deleted" "the file survived" \
                              || ok "an expired resume is deleted"
+
+echo
+echo "usage_ledger + the refusal rows — 154th audit B1"
+
+# The resets string, parsed as a PAIR with pct from one invocation. This is the
+# field METER-NON-MONOTONE (B2) keys on; if the pair ever comes from two reads,
+# the invariant it checks stops being an invariant.
+FULL="session [#] 18%|week:Fable [#] 12% resets Oct 26 4:59am (UTC)|week:all models [#] 92% resets Oct 26 4:59am (UTC)"
+run_case "full=$FULL"
+usage_ledger tester probe fable
+ROW=$(tail -1 "$JACK_USAGE_LEDGER")
+case "$ROW" in *'"pct":92'*) ok "usage_ledger records the all-models pct";;
+  *) bad "usage_ledger records the all-models pct" "row was [$ROW]";; esac
+case "$ROW" in *'"resets":"Oct 26 4:59am (UTC)"'*) ok "the resets window rides beside it";;
+  *) bad "the resets window rides beside it" "row was [$ROW]";; esac
+case "$ROW" in *'"model_pct":12'*) ok "the model line is matched case-insensitively";;
+  *) bad "the model line is matched case-insensitively" "row was [$ROW]";; esac
+printf '%s' "$ROW" | /data/venvs/jackthelearner/bin/python -c 'import json,sys; json.loads(sys.stdin.read())' \
+  && ok "the row is valid JSON" || bad "the row is valid JSON" "row was [$ROW]"
+
+# A meter with NO resets text must write null, not an empty string — the same
+# unreadable contract as pct.
+run_case "full=week:all models [#] 92%"
+usage_ledger tester probe fable
+case "$(tail -1 "$JACK_USAGE_LEDGER")" in *'"resets":null'*) ok "a missing resets string is null";;
+  *) bad "a missing resets string is null" "row was [$(tail -1 "$JACK_USAGE_LEDGER")]";; esac
+
+# THE SCAR CASE. On 2026-10-19/20 the 90% stop refused 18 organ slots on a
+# reading that violated the meter's own window invariant, and not one of those
+# 18 readings was recorded anywhere a program could check. A refusal now writes
+# the row; a proceed still writes nothing (the organ's own start row follows).
+run_case "all=92,full=week:all models [#] 92% resets Oct 26 4:59am (UTC)"
+usage_gate say builder
+ROW=$(tail -1 "$JACK_USAGE_LEDGER")
+case "$ROW" in *'"organ":"builder"'*'"phase":"refused"'*) ok "a 90%-stop refusal writes its row, organ named";;
+  *) bad "a 90%-stop refusal writes its row, organ named" "row was [$ROW]";; esac
+run_case "all=89,full=week:all models [#] 89% resets Oct 26 4:59am (UTC)"
+usage_gate say builder
+chk "a slot that PROCEEDS writes no gate row" "$(wc -c < "$JACK_USAGE_LEDGER")" "0"
+
+# The unreadable abort is a refusal too — it writes a row with null readings,
+# because a slot lost to a blind meter is still a lost slot.
+run_case ""
+usage_gate say overseer
+case "$(tail -1 "$JACK_USAGE_LEDGER")" in *'"organ":"overseer"'*'"pct":null'*'"phase":"refused"'*)
+    ok "an unreadable-meter abort records a null-reading row";;
+  *) bad "an unreadable-meter abort records a null-reading row" "row was [$(tail -1 "$JACK_USAGE_LEDGER")]";; esac
+
+# A pace skip is a DECLINED slot, not a stop; it gets its own phase so the two
+# are never conflated in the ledger — yesterday's misattribution (blackout
+# blamed on the pacer when the hard stop fired) is exactly that conflation.
+run_case "all=87,elapsed=95,fable=100,full=week:all models [#] 87% resets Oct 26 4:59am (UTC)"
+pace_gate say builder
+case "$(tail -1 "$JACK_USAGE_LEDGER")" in *'"organ":"builder"'*'"phase":"skipped"'*)
+    ok "a pace skip writes its row as skipped, not refused";;
+  *) bad "a pace skip writes its row as skipped, not refused" "row was [$(tail -1 "$JACK_USAGE_LEDGER")]";; esac
+
+# An un-migrated caller (no organ argument) still records the event rather than
+# silently reverting to the write-nothing behaviour B1 exists to end.
+run_case "all=92,full=week:all models [#] 92% resets Oct 26 4:59am (UTC)"
+usage_gate say
+case "$(tail -1 "$JACK_USAGE_LEDGER")" in *'"organ":"unknown"'*'"phase":"refused"'*)
+    ok "a caller passing no organ records as unknown";;
+  *) bad "a caller passing no organ records as unknown" "row was [$(tail -1 "$JACK_USAGE_LEDGER")]";; esac
 
 echo
 if [ "$FAIL" = 0 ]; then echo "ALL GREEN"; exit 0; fi

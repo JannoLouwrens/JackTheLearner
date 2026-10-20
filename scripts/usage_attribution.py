@@ -175,6 +175,44 @@ def _week_rows(rows: list[dict]) -> list[dict]:
     return rows[last_drop:]
 
 
+def meter_non_monotone(rows: list[dict]) -> list[dict]:
+    """METER-NON-MONOTONE (154th audit B2): readings that prove themselves false.
+
+    A weekly cumulative meter may never FALL inside its own window. With B1
+    landed, every ledger row carries `pct` and the meter's own `resets` string
+    as a pair from one CLI invocation — so two readings with the SAME `resets`
+    and a FALLING `pct` prove at least one of the pair false. On 2026-10-19/20
+    exactly that shape (7% -> 42% -> 95% held across 15 reads -> 0%, all inside
+    `resets Oct 26`) refused 18 organ slots and was diagnosed three different
+    wrong ways, because nothing recorded could contradict the meter.
+
+    REPORTING-ONLY AND UNFLOORED, in the idiom of D26's armed default (MEASURE
+    ONLY, GATE NOTHING, RELAX NOTHING): this gates nothing, refuses nothing,
+    and moves no PACE_FLOOR/PACE_CAP/90% constant. It is also deliberately NOT
+    the two-in-500 blink retry (154th B3, separate item): a blink is one bad
+    read; this is two internally-consistent reads that cannot both be true.
+
+    Comparison is between consecutive rows that BOTH carry an int `pct` and a
+    str `resets` (rows predating B1 carry no `resets` and are skipped, so the
+    reading goes live as B1 rows accumulate rather than inventing history).
+    Spanning over unreadable rows is sound: the invariant holds between any two
+    readings of the same window, not only adjacent minutes. A fall where
+    `resets` CHANGED is the legitimate weekly reset and is not an event.
+    """
+    events: list[dict] = []
+    prev: tuple[str, int, str] | None = None
+    for r in rows:
+        pct, resets = r.get("pct"), r.get("resets")
+        if not isinstance(pct, int) or not isinstance(resets, str):
+            continue
+        if prev is not None and resets == prev[2] and pct < prev[1]:
+            events.append({"from_ts": prev[0], "from_pct": prev[1],
+                           "to_ts": r["ts"], "to_pct": pct,
+                           "resets": resets})
+        prev = (r["ts"], pct, resets)
+    return events
+
+
 def _sessions(rows: list[dict]) -> dict[str, list[tuple[str, str]]]:
     """`organ -> [(start_ts, end_ts)]`, pairing each start with its next end.
 
@@ -297,7 +335,8 @@ def attribution(text: str | None = None, log_text: str | None = None,
     out = {"known": False, "total": None, "builder": None, "desks": None,
            "both": None, "unattributed": None,
            "dark_slots": None, "dark_known": False,
-           "failed_slots": None, "hours_since_rc0": None}
+           "failed_slots": None, "hours_since_rc0": None,
+           "meter_non_monotone": None}
 
     # The dark-slot streak is independent of the ledger: it is the one fault
     # `pace_gate` cannot report about itself, because the organ that would
@@ -333,7 +372,11 @@ def attribution(text: str | None = None, log_text: str | None = None,
             text = LEDGER.read_text(errors="replace")
         except Exception:
             return out
-    rows = _week_rows(_rows(text))
+    all_rows = _rows(text)
+    # ALL rows, not _week_rows: a fall inside an unchanged `resets` window is
+    # exactly what _week_rows would misread as a reset boundary and cut at.
+    out["meter_non_monotone"] = meter_non_monotone(all_rows)
+    rows = _week_rows(all_rows)
     marks = [(r["ts"], r["pct"]) for r in rows if isinstance(r.get("pct"), int)]
     if len(marks) < 2:
         return out
@@ -381,6 +424,15 @@ def line(a: dict) -> str:
     else:
         dark = "dark slots unknown"
     dark += "; " + _failed_phrase(a)
+    mnm = a.get("meter_non_monotone")
+    if mnm:
+        last = mnm[-1]
+        dark += (f"; !! METER-NON-MONOTONE x{len(mnm)}: the gating meter read "
+                 f"{last['from_pct']}% at {last['from_ts']} then "
+                 f"{last['to_pct']}% at {last['to_ts']} inside the SAME reset "
+                 f"window ('{last['resets']}') — a weekly cumulative meter "
+                 f"cannot fall in its own window, so at least one reading is "
+                 f"false (reporting-only; the gates still act on what they read)")
     if not a["known"]:
         return f"attribution unreadable (this project's own share unknown, NOT zero); {dark}"
     t = a["total"] or 0
@@ -396,9 +448,9 @@ def _selftest() -> int:
     be confused with — the same discipline as `coverage.py`'s fixtures."""
     fails: list[str] = []
 
-    def row(organ, ts, pct, phase):
+    def row(organ, ts, pct, phase, resets=None):
         return json.dumps({"organ": organ, "ts": ts, "pct": pct,
-                           "model_pct": None, "phase": phase})
+                           "model_pct": None, "resets": resets, "phase": phase})
 
     # P1 — THE LOAD-BEARING ARM: the union, not the sum. The overseer and the
     # review overlap completely across a 4-point rise. Summing sessions would
@@ -650,6 +702,68 @@ def _selftest() -> int:
     if a["dark_slots"] != 0 or a["failed_slots"] != 0:
         fails.append(f"abort: a recovered loop reads 0 dark / 0 failed — got "
                      f"{a['dark_slots']}/{a['failed_slots']}")
+
+    # P7 — METER-NON-MONOTONE (154th audit B2), the 2026-10-19/20 shape
+    # REPLAYED: 95% then 0% inside the SAME `resets` window. A weekly
+    # cumulative meter cannot fall in its own window, so the pair proves at
+    # least one reading false. Both timestamps and both values must be in the
+    # event, because "the meter was wrong" with no receipt is the prose this
+    # reading exists to replace.
+    W = "Oct 26, 4:59am (UTC)"
+    doc = "\n".join([
+        row("builder",  "2026-10-19T16:07:00+00:00", 95, "refused", W),
+        row("overseer", "2026-10-19T23:37:00+00:00", 95, "refused", W),
+        row("builder",  "2026-10-20T06:07:00+00:00", 0,  "start",   W),
+    ])
+    a = attribution(doc, log_text="")
+    ev = a["meter_non_monotone"]
+    if not ev or len(ev) != 1 or ev[0]["from_pct"] != 95 or ev[0]["to_pct"] != 0 \
+            or ev[0]["from_ts"] != "2026-10-19T23:37:00+00:00" \
+            or ev[0]["to_ts"] != "2026-10-20T06:07:00+00:00":
+        fails.append(f"non-monotone: 95% -> 0% inside one reset window must be "
+                     f"exactly one event carrying both timestamps and both "
+                     f"values — got {ev}")
+    else:
+        txt = line(a)
+        if "METER-NON-MONOTONE" not in txt or "95%" not in txt:
+            fails.append(f"non-monotone: the printed line must NAME the "
+                         f"contradiction with its values — got {txt!r}")
+
+    # P7b — the LEGITIMATE weekly reset: pct falls AND `resets` changes.
+    # Flagging this would cry wolf every Monday and bury the real class.
+    doc = "\n".join([
+        row("builder", "2026-10-25T04:07:00+00:00", 88, "end",
+            "Oct 26, 4:59am (UTC)"),
+        row("builder", "2026-10-26T06:07:00+00:00", 2, "start",
+            "Nov 2, 4:59am (UTC)"),
+    ])
+    a = attribution(doc, log_text="")
+    if a["meter_non_monotone"] != []:
+        fails.append(f"non-monotone: a fall across a CHANGED resets string is "
+                     f"the weekly reset, not an event — got "
+                     f"{a['meter_non_monotone']}")
+
+    # P7c — UNKNOWN IS NOT ZERO, and pre-B1 history is not evidence. Rows with
+    # no `resets` field (every row before 2026-10-20) carry no window id, so
+    # they can prove nothing and must not be compared; an unreadable ledger
+    # reports None, never [].
+    doc = "\n".join([
+        row("builder", "2026-10-19T16:07:00+00:00", 95, "end"),
+        row("builder", "2026-10-20T06:07:00+00:00", 0, "start"),
+    ])
+    a = attribution(doc, log_text="")
+    if a["meter_non_monotone"] != []:
+        fails.append(f"non-monotone: rows predating B1 (no resets field) "
+                     f"cannot prove a violation — got {a['meter_non_monotone']}")
+    # An EMPTY-but-readable ledger holds no contradicting pair: that is an
+    # honest [] ("none observed"), distinct from the dict default None, which
+    # only an UNREADABLE ledger keeps (the early `return out` before any row
+    # is parsed — same unknown-is-not-zero split as the attribution buckets).
+    a = attribution("", log_text="")
+    if a["meter_non_monotone"] != []:
+        fails.append(f"non-monotone: an empty readable ledger is [] (none "
+                     f"observed), not None and not an event — got "
+                     f"{a['meter_non_monotone']}")
 
     for f in fails:
         print(f"  FAIL {f}")

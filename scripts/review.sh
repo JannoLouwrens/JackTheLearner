@@ -54,7 +54,7 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenant
 # proxy. Nothing else is throttled — this is the only limit.
 # UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
 # open is not a limit.
-usage_gate say || {
+usage_gate say review || {
   echo "$TODAY" > "$DEFER"
   say "sitting DEFERRED — the usage gate refused it; a later --retry poll today may hold it once the meter allows (99th audit B2)"
   exit 0

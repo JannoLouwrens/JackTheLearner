@@ -70,9 +70,9 @@ _usage_pct() {
 PACE_FLOOR=${JACK_PACE_FLOOR:-25}
 PACE_CAP=90
 
-# pace_gate <log-fn>  -> 0 = proceed, 1 = skip this iteration (not a stop)
+# pace_gate <log-fn> [organ]  -> 0 = proceed, 1 = skip this iteration (not a stop)
 pace_gate() {
-  local say_fn="${1:-say}" pct elapsed allow
+  local say_fn="${1:-say}" organ="${2:-unknown}" pct elapsed allow
   [ -n "${JACK_NO_PACE:-}" ] && return 0
   [ -f "$REPO/.usage-resumed" ] && return 0
   elapsed=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --week-elapsed 2>/dev/null)
@@ -113,18 +113,34 @@ pace_gate() {
     # next reader sees in one glance that the line converges on the stop and
     # that "pace_gate never releases the builder" is unavailable as a sentence.
     "$say_fn" "PACING: acting on 'week:all models' ${pct}% at ${elapsed}% of the week (line ${allow}%, rising to ${PACE_CAP}% at week's end = the hard stop, so the line always converges); ${extra}; ${attrib} — skipping, budget held for later in the week"
+    # 154th audit B1: a skipped slot writes a ledger row, same contract as
+    # usage_gate's refusal rows above — pct + resets as a pair, never blocks.
+    usage_ledger "$organ" skipped none
     return 1
   fi
   return 0
 }
 
-# usage_gate <log-fn>  -> 0 = proceed, 1 = stop
+# usage_gate <log-fn> [organ]  -> 0 = proceed, 1 = stop
+#
+# 154th audit B1: every refusal path now appends a usage_ledger row
+# ("phase":"refused"). A gate-refused slot used to write NOTHING to the
+# attribution ledger, so when a false meter reading refused 18 organ slots in
+# fifteen hours (2026-10-19/20: 95% held across 15 reads inside a window that
+# later read 0%), the 18 readings the gate acted on existed only as English in
+# four different logs. The row is its own fresh CLI read so pct and `resets`
+# land as a pair from one invocation — which is what the METER-NON-MONOTONE
+# invariant needs — while the pct the gate ACTED on stays in the say-line.
+# Never blocks: usage_ledger swallows every failure. [organ] defaults to
+# "unknown" so an un-migrated caller still records the event.
 usage_gate() {
-  local say_fn="${1:-say}"
+  local say_fn="${1:-say}" organ="${2:-unknown}"
   local pct override_ceiling override_until now
   pct=$(_usage_pct)
   case "$pct" in ''|*[!0-9]*)
-    "$say_fn" "ABORT: usage unreadable — refusing to run"; return 1;; esac
+    "$say_fn" "ABORT: usage unreadable — refusing to run"
+    usage_ledger "$organ" refused none
+    return 1;; esac
   if [ "$pct" -lt 90 ]; then return 0; fi
 
   local f="$REPO/.usage-resumed"
@@ -135,6 +151,7 @@ usage_gate() {
     if [ -n "$override_until" ] && [ "$now" -ge "$override_until" ]; then
       "$say_fn" "owner resume EXPIRED at $(date -d @"$override_until" -Iseconds) — back to the 90% stop at ${pct}%"
       rm -f "$f"
+      usage_ledger "$organ" refused none
       return 1
     fi
     if [ -n "$override_ceiling" ] && [ "$pct" -lt "$override_ceiling" ]; then
@@ -142,9 +159,11 @@ usage_gate() {
       return 0
     fi
     "$say_fn" "STOPPED at ${pct}% — past the owner's resume ceiling of ${override_ceiling}%"
+    usage_ledger "$organ" refused none
     return 1
   fi
   "$say_fn" "STOPPED at ${pct}% weekly usage — all agents paused until the owner resumes"
+  usage_ledger "$organ" refused none
   return 1
 }
 
@@ -276,13 +295,28 @@ chain_reading() {
 # above already own refusal. Detectors on this file must treat it as a shared
 # log (lib_credits.sh precedent): match structure, not prose.
 usage_ledger() {
-  local organ="$1" phase="$2" mdl="${3:-${JACK_LOOP_MODEL:-opus}}" out pct mpct
+  local organ="$1" phase="$2" mdl="${3:-${JACK_LOOP_MODEL:-opus}}" out wk pct mpct resets
   out=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" 2>/dev/null)
-  pct=$(printf '%s\n' "$out" | grep -im1 'week:all models' | grep -oE '[0-9]+%' | head -1 | tr -d '%')
+  wk=$(printf '%s\n' "$out" | grep -im1 'week:all models')
+  pct=$(printf '%s\n' "$wk" | grep -oE '[0-9]+%' | head -1 | tr -d '%')
   mpct=$(printf '%s\n' "$out" | grep -im1 "week:${mdl}" | grep -oE '[0-9]+%' | head -1 | tr -d '%')
+  # 154th audit B1: the weekly `resets` string, read off the SAME line `pct`
+  # came from — no extra CLI call. It is the meter's own window id: a weekly
+  # cumulative pct may never FALL while `resets` is unchanged, and recording
+  # the pair from one invocation is what makes that invariant checkable
+  # (usage_attribution.py's METER-NON-MONOTONE reading, 154th audit B2 —
+  # 15 reads over 14 h said 95% inside a window that later read 0%, and
+  # nothing recorded could prove either false). Unreadable -> null, same
+  # contract as pct; quotes/backslashes stripped so the value cannot break
+  # the JSON line.
+  resets=$(printf '%s\n' "$wk" | sed -n 's/.*resets //p' | tr -d '"\\')
   case "$pct" in ''|*[!0-9]*) pct=null;; esac
   case "$mpct" in ''|*[!0-9]*) mpct=null;; esac
-  printf '{"organ":"%s","ts":"%s","model":"%s","pct":%s,"model_pct":%s,"phase":"%s"}\n' \
-    "$organ" "$(date -u -Iseconds)" "$mdl" "$pct" "$mpct" "$phase" \
-    >> /data/jack-logs/usage_ledger.jsonl 2>/dev/null || true
+  if [ -n "$resets" ]; then resets="\"$resets\""; else resets=null; fi
+  # Path override is FOR TESTS (test_lib_usage.sh): the gates below now call
+  # this on their refusal paths, and a self-test that exercises a refusal must
+  # not append fixture rows to the production ledger.
+  printf '{"organ":"%s","ts":"%s","model":"%s","pct":%s,"model_pct":%s,"resets":%s,"phase":"%s"}\n' \
+    "$organ" "$(date -u -Iseconds)" "$mdl" "$pct" "$mpct" "$resets" "$phase" \
+    >> "${JACK_USAGE_LEDGER:-/data/jack-logs/usage_ledger.jsonl}" 2>/dev/null || true
 }

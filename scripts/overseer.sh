@@ -44,7 +44,7 @@ FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 # proxy. Nothing else is throttled — this is the only limit.
 # UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
 # open is not a limit.
-usage_gate say || exit 0
+usage_gate say overseer || exit 0
 cd "$REPO" || exit 0
 
 # D15's clause (c), default fired 2026-09-06 (builder; DECIDE block in
@@ -76,7 +76,7 @@ PACE_DATE_F="$LOGDIR/overseer_pace.date"
 REVIEW_SLOT_H=6    # review.sh's crontab hour (37 6 * * *)
 RUN_HOUR=$(date -u +%-H)
 if [ "$(cat "$PACE_DATE_F" 2>/dev/null)" = "$(date -u +%F)" ] || [ "$RUN_HOUR" -lt "$REVIEW_SLOT_H" ]; then
-  pace_gate say || { say "audit slot paced (D15 clause c, 76th B2 slotting) — the exempt audit is the first completed one at or after the Review's ${REVIEW_SLOT_H}:37 slot; budget held"; exit 0; }
+  pace_gate say overseer || { say "audit slot paced (D15 clause c, 76th B2 slotting) — the exempt audit is the first completed one at or after the Review's ${REVIEW_SLOT_H}:37 slot; budget held"; exit 0; }
 fi
 
 # Declare this audit to procwatch (65th audit B5): the overseer's read-only

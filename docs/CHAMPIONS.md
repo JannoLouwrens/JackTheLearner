@@ -322,6 +322,15 @@ Three rules, each of them a scar:
 - SEAT: Curiosity signal | HELD: BY ANALYSIS | ARENA: LT.03, LT.04
 - SEAT: Episodic retrieval | HELD: BY VERDICT | VERDICT: ME.1, ME.9 | TRIGGER: ME.11.A–F | ARENA: ME.11.A–F
 - SEAT: Sensory fusion | HELD: UNDECIDED | ARENA: UB.10
+  (Fusion-balancing margin, recorded per the 154th audit §7/B5 so the next
+  reader does not have to re-derive how thin it is: `T4.06` certified
+  `loss_reweight` with anchor-relative margins of **+6.9% and +8.9% of the
+  anchor's OWN seed spread** — winner margin 0.0187 against incumbent seed
+  spread 0.2699, anchor −2.3939; a winner chosen inside the anchor's noise by
+  any ordinary reading. The verdict STANDS and nothing re-runs: the spec
+  pre-registered an exogenous gate, not an anchor-relative one, and `run
+  status` prints the margin REPORTING-ONLY under the SO.10 vacancy precedent.
+  This line is reporting too — no gate moves in either direction.)
 - SEAT: Vision encoder | HELD: BY DEFAULT | ARENA: T2.03, PL.02
 - SEAT: ASR (speech→text) | HELD: BY ANALYSIS | ARENA: NONE
 - SEAT: Speaker ID | HELD: BY ANALYSIS | ARENA: NONE
