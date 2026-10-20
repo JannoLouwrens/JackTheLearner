@@ -17034,6 +17034,27 @@ ROUTED: gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see | 2026-0
         (DUE 10-06) — same file, same class of blindness — but that row asks a
         CADENCE question and this one asks a DOMAIN question, and neither
         answer constrains the other.
+    BUILDER-TRACE: 30dbeb9 | executed 2026-10-20 ~11:4x UTC, the ONE shared
+        unit with `impl-deps-domain-misses-a-read-and-a-relative-import`,
+        exactly as ruled (option (ii)). `undeclared_impl_imports` widened to
+        the three edge kinds; T0.35 gains P10/P11/P12 (known-positive AND
+        declared-negative per kind, plus the exemption itself gated). All
+        three JOB-string instances fire and are declared. ONE SCOPE CALL
+        DISCLOSED for the stamp: edge kind (c) mandates NESTED relative
+        imports only — mandating top-level ones was measured THIS SLOT at 72
+        violators (gpu.py 35, render.py 20), the mass-declaration wave the
+        transitive walker's scope note refuses and routes to a redesign;
+        nested-only reads 14, every one a reach into internals. The widened
+        walker's first sweep found a FOURTH latent instance no row named:
+        `T0.33` gates on `inspect.getsource(run_mod._run_isolated)` via a
+        nested `from .. import run` — now declared. Bills paid in-slot:
+        T0.35/T0.15/T0.17/T0.33/T0.22 re-bought PASS clean; LC.02 re-run
+        in-slot; T2.10 de-grandfathered (both sets drain, 7->6 and 16->15).
+        OWED AND SAID LOUDLY: T1.02 and T1.09 are DRIFTED standing PASSes
+        (their new UnifiedBrain.py declarations re-price impl_sha) and their
+        re-buys are GPU (27s/28s P100, one Kaggle round-trip each) — the
+        slot could not carry two round-trips without detaching, which is
+        banned, so the reds stand recorded until the next GPU-capable slot.
 
 **WHAT IS TRUE.** `T0.35` gates "every registered spec declares in `IMPL_DEPS`
 every repo-root module it imports at ANY nesting depth", and its notes name
@@ -17937,6 +17958,15 @@ ROUTED: impl-deps-domain-misses-a-read-and-a-relative-import | 2026-09-26 | thre
         (DUE 10-06): that row asks a CADENCE question (how often is the
         population swept), this one asks a DOMAIN question (what counts as an
         edge at all), and either could be answered without the other.
+    BUILDER-TRACE: 30dbeb9 | executed 2026-10-20 ~11:4x UTC as the one
+        shared unit — the full trace, the disclosed (c) scope call, the
+        fourth latent instance (T0.33), the bills paid and the two GPU
+        re-buys owed are written on the sibling row
+        `gpu-job-strings-carry-undeclared-edges-that-no-ast-walk-can-see`,
+        which declares WAITS-ON this row so the pair counts as one decision.
+        This row's (b) and (c) instances are both pinned by gated fixtures
+        now (P11 verdict-read, P12 nested-relative), and the journal names
+        `D35` clause 2 per the 122nd audit's FTB 1, as this row asked.
 
 **THE MEASUREMENT.** Of the 5 non-PASS re-derivations in the completed
 30-certificate population, **3 went red through a file the spec reads and does
