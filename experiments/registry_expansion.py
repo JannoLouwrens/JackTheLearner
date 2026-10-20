@@ -2450,6 +2450,107 @@ EXPANSION: list[Spec] = [
                "this box, gitignored) — ship them into the kernel with the "
                "job, do not re-derive them.",),
 
+    # -- LC.08, registered 2026-10-20 by THE RULING on
+    # `lc03-five-controls-never-switch-off-the-term-a4-is-named-for`
+    # (Review DAILY 2026-09-29, re-dated 2026-10-10, DUE 2026-10-21). The
+    # Learning-core seat's only live measurement: D37 fired 2026-10-05 to
+    # (iii), so the declared collapse diagnostic is settled BY HOLD and this
+    # paired comparator is the one instrument that will ever say whether the
+    # objective A4 is NAMED for produced the margins it was seated on. BOTH
+    # ruling conjuncts are in the claim fields below, verbatim in substance:
+    # PAIRED, and SCORED ON THE SEAT'S OWN STATISTICS. Neither may be dropped
+    # to make a result reportable.
+    Spec("LC.08", 3, "The seat's binding objective earns its margins "
+         "(A4 paired against A4 with l_bind dropped)",
+         hypothesis="The Learning-core seat's margins are attributable to the "
+                    "binding objective wm-latent is NAMED for: the identical "
+                    "WorldModelCore(decoder=False) architecture — latent_pred "
+                    "head present and parameter-counted, init-identical under "
+                    "the rig's own seeding — trained at the identical LC.03 v2 "
+                    "envelope (seeds 0/1/2, 400,000 decisions, 17,280 core-s "
+                    "whichever is later, e0=1.0, constant explore_std 0.3, "
+                    "LC.02's committed train_ratio) with the binding term's "
+                    "gradient contribution zeroed records lg_margin_null AND "
+                    "lg_margin_twin — the two statistics D10 seated A4 on, "
+                    "paired per seed against the SAME recorded v2 null and "
+                    "twin life histories — whose seed means BOTH fall short "
+                    "of the seated run's recorded means by more than one "
+                    "seated-run seed std (ddof=0, the house t's own "
+                    "denominator). STATISTIC_BOUND: none — the deciding "
+                    "statistic (difference of paired margins) is unbounded in "
+                    "both directions and its anchor sits 4.6/4.0 house-sigma "
+                    "from zero, nowhere near a bound.",
+         falsified_by="The l_bind-dropped arm reproduces one or both seated "
+                      "margins within the seated arm's own seed spread "
+                      "(comparator seed mean >= seated mean - 1 seated "
+                      "seed-std on lg_margin_null or lg_margin_twin). When "
+                      "BOTH reproduce, that is the ruling's pre-registered "
+                      "dead-weight reading: an RSSM actor-critic without the "
+                      "binding objective produces the seat's number, and "
+                      "149,312 params — 17.3% of the seated arm — plus the "
+                      "objective it is named for are not what the margins "
+                      "measure. A reportable result about the seat, never a "
+                      "null (THE RULING, lc03-five-controls-never-switch-off-"
+                      "the-term-a4-is-named-for, 2026-09-29).",
+         null_baseline="The seated run itself is the anchor: comparator "
+                       "margins are computed against the SAME per-seed "
+                       "null_random and wm-latent/twin life histories the "
+                       "seat was scored on, recomputed at run time from "
+                       "experiments/artifacts/lc03_curves_seed{0,1,2}.json "
+                       "with LC.03's own life_gain definition and verified "
+                       "against LC.03's recorded ledger row to 1e-4 before "
+                       "any comparator number is read (VOID on mismatch — "
+                       "pairing targets that do not reconstruct pair "
+                       "nothing). No seated number is pasted anywhere.",
+         metric="lg_margin_null / lg_margin_twin deficit vs the seated pair",
+         budget=Budget.CPU_DAYS, seeds=3,
+         depends_on=["LC.00", "LC.01", "LC.02", "PS.01", "XL.00"],
+         control="Self-consistency on the null input, MUST NOT fire: the "
+                 "identical scoring path fed the SEATED arm's own recorded "
+                 "life histories in place of a fresh run (comparator := "
+                 "seat) must land exactly on the recorded margins with both "
+                 "deficits zero; if the claim branch fires on the seat's own "
+                 "data, or the reproduced margins drift from the recorded "
+                 "ones by more than numerical noise, the scoring path is "
+                 "measuring its own plumbing and the run is Status.VOID, "
+                 "never a verdict. Mis-pairing (wrong seed's null) and sign "
+                 "errors are exactly what this catches.",
+         kills="The claim that the Learning-core seat was won by its binding "
+               "objective. A FAIL with the dead-weight reading means any "
+               "future design buying latent-prediction machinery on the "
+               "strength of A4's margins loses that justification, and the "
+               "champions entry's basis must carry the reading (the Review's "
+               "edit, routed via the queue row). No LC.03 verdict moves "
+               "either way — the screen's VOID stands.",
+         venue="W0 lethal v2 screening envelope | axis: binding objective "
+               "off, all else as seated | 400000 decisions, 17280 core-s, "
+               "e0 1, paired to lc03_curves seeds 0-2",
+         notes="PAIRED is enforced structurally, not promised: the envelope "
+               "(n_steps, w_clock, e0) is READ FROM the seated run's own "
+               "artifacts rather than restated; params must equal the "
+               "artifact's recorded 861,545 to the digit (architecture "
+               "identity); j0/alpha and train_ratio come through "
+               "borrow_metrics from PS.01 and LC.02 exactly as LC.03's did; "
+               "explore_std and the record flags are the rig's own constants "
+               "imported from the LC.03 module, and the comparator computes "
+               "the full binding_loss then multiplies it by zero so backward "
+               "traverses the same graph — gradient contribution exactly "
+               "zero, per-update compute matched, the only declared "
+               "difference the dropped term. Venue identity verified at "
+               "registration: zero commits to playground.py / w0.py / "
+               "survival.py / cores.py / drives.py since 2026-08-20; the "
+               "seated run executed 2026-08-21 -> 2026-08-23. FORECAST, "
+               "pre-registered with its arithmetic: lean FAIL-dead-weight — "
+               "ppo-needs, the screen's pure actor-critic, recorded mean "
+               "lg_margin_null 67.4, which is ABOVE the reproduce cutoff "
+               "this spec pre-registers (100.1 - 37.3 = 62.8), so an "
+               "actor-critic in this venue has already produced a "
+               "reproducing-range number once; the twin (-0.83) proves "
+               "training produced all of the margin, not that the binding "
+               "term did. Either branch is a result: load-bearing seats the "
+               "objective honestly, dead-weight is the anatomy finding the "
+               "ruling priced the run for.",),
+
     # -- D1.0, registered 2026-09-01 BY D1's FIRING COMMIT (the armed default
     # of 2026-08-24, decide_by 2026-08-31 passed unanswered). This is the id
     # CHAMPIONS.md has named as the Control-architecture seat's arena since
