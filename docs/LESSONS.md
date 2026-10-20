@@ -21710,3 +21710,54 @@ meter read 7% → 42% → 95% (fifteen hourly reads) → 0% → 2%.
   slots — the reading persisted across 15 reads an hour apart. Letting it ship as
   "the fix for the blackout" would have closed the finding without closing the
   hole.
+
+## A reader keyed on a RENDERING inherits the renderer's flutter — compare the quantity, not the text that denotes it (2026-10-20, 155th audit)
+
+Two of this audit's three worst findings are the same defect in different files,
+and neither is in any spec's science. Both are readers that compare *how
+something was printed* instead of *what it means*, and both went blind on the
+morning they shipped.
+
+- **`METER-NON-MONOTONE`** (shipped 07:19 the same day, to catch the gate's false
+  meter) decides "is this the same usage week?" with `resets == prev[2]` — an
+  exact comparison of the CLI's printed reset instant. The CLI renders one
+  instant two ways: `Oct 26, 4:59am (UTC)` (7 rows) and `Oct 26, 5am (UTC)`
+  (5 rows). **5 of 11 consecutive pairs (45%) therefore read as a WINDOW CHANGE
+  and are exempt from the invariant**, inside a single real window — and the
+  exemption branch is the benign one ("a fall where `resets` CHANGED is the
+  legitimate weekly reset"). The repair was one line and the parser it needs
+  (`claude_usage.reset_epoch`) was already in the same folder: compare the parsed
+  epoch within a tolerance, because rendering flutter is 60 s and real windows
+  are 7 days apart — four orders of magnitude of margin, free.
+- **`steering._ITEM`** reads the overseer's orders by matching `^N. `, with a
+  normaliser for the one drifted style someone had already been caught using
+  (`**N. `). This audit's predecessor wrote `**B1.` — a third style — and
+  `docs/OVERSIGHT.md` went from **7 parsed items (10-18) to 6 (10-19) to 0
+  (10-20)**. The same file went dark the same way on 10-10. The orders were still
+  executed, because the builder reads prose; what was lost silently is the
+  legality check that tells a reader an order names a BLOCKED spec.
+
+The generalisable shape, and why it keeps recurring here: **a rendering is a
+lossy, unversioned, externally-owned encoding of a value, and treating it as the
+value makes an equality test depend on a formatting decision nobody in this repo
+controls.** The failure is always in the safe-looking direction — two things that
+ARE equal read as different, so the check declines to fire and prints `[]` or
+`ZERO items`, which a reader cannot distinguish from "checked and clean".
+
+Three practices that follow:
+
+- **If a value has a parser anywhere in the repo, the comparison must go through
+  it.** `reset_epoch` existed and was used elsewhere for pacing; the new reading
+  re-derived "same window" from scratch and got it wrong. Searching for an
+  existing parser is cheaper than writing a comparison.
+- **House style is not a contract unless a test holds it.** Three organs write
+  `FOR THE BUILDER` and each remembers a different numbering convention; the
+  parser comment had already *predicted in writing* that a third style would go
+  dark. A convention only one of three authors can recall is a latent outage with
+  a note attached, and the note does not help.
+- **A zero-count reading needs a loudness that a true zero does not trigger.**
+  `page_stats` was built after an earlier five-day outage to make "heading
+  present, zero items parsed" LOUD, and that loudness is the only reason this was
+  caught. `meter_non_monotone` has no such distinction: a genuinely monotone week
+  and a week whose pairs were all exempted both print `[]`. When a reading can be
+  empty for two very different reasons, print which one.
