@@ -95,23 +95,38 @@
     "note": "3 -> 5 on 2026-09-26 18:xx, cause READ not reasoned: T0.13 was re-bought to an honest FAIL (28 disarmed conjunct keys, latently red since its 2026-09-02 run at 90 gates and 0 disarmed) and the two new pairs are its dependents, T0.18 <- T0.13 and T0.19 <- T0.13. The floor STAYS at 3 and was NOT raised. The repair is the per-key ruling owed under t013-latently-red-28-disarmed-keys (DUE 2026-10-05); T0.18's own re-buy is owed AND blocked by that same FAIL, so neither pair can be cleared by the builder today. 5 -> 6 on 2026-10-04: the 6th pair is T1.12 <- T1.11 FAIL (T1.11's re-run recorded FAIL at b0a3d56 on an orthogonal added conjunct while T1.12's PASS still cites it); owned by t112-pass-stands-on-t111s-orthogonal-added-conjunct (OPEN, DUE 2026-10-18). Note appended 2026-10-17 (builder, 151st audit FTB 3); the floor STAYS at 3 and was NOT raised.",
     "value": 6
   },
+  "projection_vs_estimate": {
+    "at": "2026-10-20",
+    "value": [
+      "T1.07 @445b9e1 2026-W37: authorised 0.5h, attempt declared est_hours 0.4h (1789290929661-24294-kaggle)",
+      "T1.08 @3d357c4 2026-W37: authorised 0.6h, attempt declared est_hours 0.3h (1789292618535-31098-kaggle)",
+      "T1.07 @56954e0 2026-W37: authorised 0.47h, attempt declared est_hours 0.4h (1789737292877-1551759-kaggle)",
+      "T4.06 @aa7d49c 2026-W38: authorised 0.75h, attempt declared est_hours 0.92h (1790158802789-3293160-kaggle)",
+      "T2.11 @9754b89 2026-W39: authorised 0.55h, attempt declared est_hours 0.543h (1790770547881-2232273-kaggle)",
+      "T2.11 @5eba43e 2026-W39: authorised 0.56h, attempt declared est_hours 0.543h (1790774260138-2260917-kaggle)",
+      "T1.08 @b7aa2bf 2026-W40: authorised 0.75h, attempt declared est_hours 0.5h (1791461828585-1479757-kaggle)",
+      "T1.02 @5c9f096 2026-W42: authorised 0.2h, attempt declared est_hours 0.7h (1792498408900-796519-colab)",
+      "T1.02 @5c9f096 2026-W42: authorised 0.2h, attempt declared est_hours 0.7h (1792501976274-796519-kaggle)",
+      "T1.09 @77025f3 2026-W42: authorised 0.5h, attempt declared est_hours 0.2h (1792506527168-866178-kaggle)"
+    ]
+  },
   "review_queue_net_arrivals": {
-    "at": "2026-10-19",
-    "value": -6
+    "at": "2026-10-20",
+    "value": -5
   },
   "review_queue_piled_on": {
-    "at": "2026-10-19",
-    "value": 17
+    "at": "2026-10-20",
+    "value": 15
   },
   "review_queue_violation_forms": {
-    "at": "2026-10-19",
+    "at": "2026-10-20",
     "value": {
-      "OVERDUE": 8
+      "OVERDUE": 16
     }
   },
   "review_queue_violations": {
-    "at": "2026-10-19",
-    "value": 8
+    "at": "2026-10-20",
+    "value": 16
   },
   "unreachable": {
     "at": "2026-09-29",
