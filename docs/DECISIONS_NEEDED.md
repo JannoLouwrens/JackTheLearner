@@ -11447,3 +11447,84 @@ Not a change to the gate, the pace line, or the 90% stop. Not an
 owner-notification channel. Not retroactive re-dating of the rows the
 blackout broke — those are disposed row by row at the desk, as they were this
 morning. Only that the firing becomes legible where its consequences are read.
+
+## D51 — PS.09's known-answer floor is measured UNREACHABLE: `KA_SIGNAL_MIN` 0.90 sits at-or-above the venue's own monotone ceiling on two of three seeds, so the signal-present arm can never fire as registered. Whether the floor is re-based is a threshold move no desk may make. (2026-10-20, builder, pre-committed branch (B) of THE KNOWN-ANSWER REFERENCE RULING)
+
+DECIDE: D51
+  class:     goal
+  blocks:    PS.09
+  default:   THE FLOOR STAYS AND THE REDESIGN ROUTES ONWARD. `KA_SIGNAL_MIN`
+             0.90 stays exactly as registered — no threshold moves by
+             silence, in either direction — and the signal-present arm's
+             redesign becomes a Review design row (statistic or venue for
+             "the known answer is present", under the family reference
+             contract's rules 1–3, every registered bar byte-unmoved; any
+             repair that needs a bar to move comes back here instead of
+             firing). Nothing is parked, quieted, deleted or re-run by this
+             default; the commitment's falsifiability stays in motion at the
+             Review rather than frozen by a date. Silence adopts this.
+  decide_by: 2026-11-03
+
+**PROVENANCE OF THE DEFAULT, disclosed.** A first draft read "keep 0.90; the
+conjunct reads UNREADABLE indefinitely" and `decisions --check` refused it as
+SAFETY-CLAIM-DEAD — a standstill default would have been the single unattended
+event leaving `worth-it`'s only claim spec unmeasurable. The checker was right;
+the default above is the repair, not an evasion: the substance changed from
+standstill to routed redesign.
+
+**THE QUESTION.** The PS-family legibility ruling (2026-10-03) ordered the
+re-based reference measured at PS.09's own venue against the UNMOVED 0.90 and
+pre-committed both branches: *"it does not [clear 0.90] and `KA_SIGNAL_MIN`
+returns to THE OWNER as a bar move this desk may not make."* Branch (B) fired
+on 2026-10-20. The owner's options, none of which a desk may take:
+
+  (i)  the default above — keep 0.90; PS.09's legibility claim stays
+       unmeasurable at this venue and says so honestly;
+  (ii) authorise re-basing the floor from an honestly-fit reference at a
+       declared calibration venue DISJOINT from the rows the floor gates
+       (the Review would then execute the calibration; the number is not
+       proposed here and must not come from the probe's own rows);
+  (iii) route a redesign of the signal-present arm through the Review (a
+       different statistic or venue for "the known answer is present" —
+       e.g. one not capped by the single-channel ambiguity band).
+
+**THE EVIDENCE, measured 2026-10-20** (probe pre-registered with forecast at
+`28be875` before any number; artifact /data/ps09_rebased_reference_probe.json;
+replay FAITHFUL to the ledger's attempt-2 aggregates):
+
+- The strongest honestly available reference — the venue's declared odour law
+  inverted (0 parameters) + an affine pricing model fit on train rows only
+  (2 parameters, declared) — reads **0.90 / 0.70 / 0.70** by seed. Worst seed
+  0.70 vs the 0.90 floor.
+- The monotone CEILING (the saturating oracle cut on the held-out rows) reads
+  **0.90 / 1.00 / 0.90**: on seeds 0 and 2 NO reader of the food-concentration
+  channel, however fit, can exceed 0.90 on that draw. The spec's own disclosed
+  venue fact (the k–d concentration ambiguity band) puts ~1 of 10 test trips
+  beyond any single-channel reference, and 0.90 on a 5/5 class draw allows
+  exactly one trip wrong. The floor demands near-perfection from a channel
+  whose venue genuinely contains ambiguous trips.
+- Honest range across THREE reference forms: train-cut search 0.74–0.88,
+  affine-in-lnC 0.70–0.90, affine-in-raw-C 0.70. Every honest form misses
+  0.90 on at least two seeds.
+- Controls: all three sourceless decoy channels read 0.47–0.54 (the
+  reference's must-fail control fired); oracle−honest leak ≤ +0.10 (the
+  2-parameter basis has nothing to memorise).
+- Provenance of the 0.90: the seed-1 diagnostic datum of 2026-09-19 — an
+  argmax over ~900 cut hypotheses EVALUATED ON THE ROWS IT WAS QUOTED ON,
+  which saturates at 1.0000 by construction (the ruling's clause (a) refuted
+  it as a reference class). The floor was never derived from anything an
+  honest instrument can read.
+
+**WHY THIS IS THE OWNER'S.** Lowering 0.90 would be a desk weakening a
+registered threshold after seeing the numbers — forbidden by law 4 and by the
+ruling's own words. Keeping it means a registered conjunct that can never fire
+gates the family's legibility claims. Both directions move something only the
+owner may move. NOTE the coupling: PS.05/PS.06/PS.08's known-answer floors are
+not yet declared, and the calibration-venue question here is the same one
+their floors will pose — the answer sets the family's rule, not one spec's.
+
+**WHAT THIS IS NOT.** No replacement floor is proposed (a number read off the
+probe's rows would be the original defect one measurement later). Nothing here
+rescues PS.09's VOID or any sibling's FAIL: a reference reading the sign does
+not make the registered 66-feature probe read it — probe_bal_acc 0.547 ± 0.075
+against ACC_MIN 0.65 is untouched by every branch above.

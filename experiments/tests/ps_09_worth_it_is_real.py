@@ -186,6 +186,28 @@ FAIL branches fire exactly as before — a world with no negative offer is
 still a FAIL whatever the probe's state — and the legibility FAIL branch
 ("worth-it is decided blind") is now reachable only through a VALIDATED
 instrument, which is the first time it would mean what it says.
+
+## PROBE RECORD — THE RE-BASED REFERENCE, MEASURED 2026-10-20 (builder;
+## ps09-known-answer-floor-was-calibrated-on-an-oracle-cut, branch (B))
+
+`KA_SIGNAL_MIN` 0.90 is MEASURED UNREACHABLE by any honest single-channel
+reference at this venue, and the question of the floor is with the owner
+(`D51`). `experiments/tests/ps09_rebased_reference_probe.py` (pre-registered
+with forecast at `28be875`; artifact
+/data/ps09_rebased_reference_probe.json; replay FAITHFUL to this row's
+recorded aggregates, per-seed cut 0.88/0.80/0.74): the strongest honestly
+available basis — the declared odour law inverted (0 parameters) + an affine
+pricing model train-fit (2 parameters, declared) — reads
+**0.90 / 0.70 / 0.70 by seed**, and the monotone CEILING (oracle cut on the
+held-out rows) reads **0.90 / 1.00 / 0.90**: on two of three seeds no reader
+of the food-concentration channel can EXCEED 0.90 on that draw, because the
+disclosed k-d ambiguity band puts ~1 of 10 test trips beyond any
+single-channel reference and a 5/5 draw allows exactly one trip wrong.
+Decoys 0.47-0.54 (must-fail fired); oracle-honest leak <= +0.10. The bars
+are byte-unmoved; `ka_signal_present` will keep reading 0.0 here BY
+MEASUREMENT, not by accident — do not re-run this spec expecting otherwise,
+and do not recalibrate the floor off the probe's rows (that is the defect
+this record exists to prevent). Spent evidence: do not re-run the probe.
 """
 from __future__ import annotations
 

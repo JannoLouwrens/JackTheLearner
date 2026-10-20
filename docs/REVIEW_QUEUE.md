@@ -14958,6 +14958,42 @@ ROUTED: ps09-known-answer-floor-was-calibrated-on-an-oracle-cut | 2026-09-25 | P
         **UNMOVED 0.90**. Both branches are results — it clears 0.90 honestly
         and only the basis was ever wrong, or it does not and `KA_SIGNAL_MIN`
         returns to THE OWNER as a bar move this desk may not make.
+    BUILDER-TRACE: 28be875 | executed 2026-10-20 ~10:2x UTC. The re-based
+        reference MEASURED at PS.09's own venue per the ruling: basis = the
+        declared odour law inverted (`d_hat = -LAMBDA_M*ln(C/A0)`, 0
+        parameters) composed with an affine pricing model fit on the TRAIN
+        rows only (**2 parameters, declared** — full basis (i) is unavailable
+        for a SIGN target because the price side is the body's real NeedLayer
+        integration, no declared law to invert; the ruling's own caveat).
+        Probe pre-registered with forecast at `28be875` BEFORE any number;
+        artifact `/data/ps09_rebased_reference_probe.json`; ~570 core-s.
+        REPLAY FAITHFUL first: recomputed `ka_ref_acc` 0.806667 ± 0.057349
+        and `probe_bal_acc` 0.546667 ± 0.075425 vs the ledger's 0.806667 ±
+        0.0573488 / 0.546667 ± 0.0754247 (and the cut's per-seed values are
+        now on record: 0.88 / 0.80 / 0.74 — the ledger stores aggregates
+        only). **THE READING: honest re-based reference 0.9000 / 0.7000 /
+        0.7000 by seed — worst seed 0.70 against the UNMOVED 0.90. BRANCH
+        (B) FIRED, as forecast.** The sharper fact, from the ceiling
+        diagnostic: the saturating oracle cut on the held-out rows reads
+        0.90 / 1.00 / 0.90, so on TWO of three seeds **no monotone reader of
+        this channel, however fit, can EXCEED the floor on that draw** — the
+        disclosed k–d ambiguity band puts ~1 of 10 test trips beyond any
+        single-channel reference, and 0.90 on a 5/5 draw allows exactly one
+        trip wrong. Seed 1's draw IS separable (ceiling 1.00, the old
+        datum's seed) and every honest fit still misses 0.90 there (cut
+        0.80, affine 0.70). Controls: all three sourceless decoys read
+        0.47–0.54 (must-fail fired); oracle−honest leak +0.00/+0.10/+0.00
+        (the basis has nothing to memorise); raw-C basis reads 0.70 on every
+        seed (log basis beats it +0.20 on seed 0 — the 09-27 basis lesson,
+        reproduced). Honest range now measured across THREE reference forms:
+        cut 0.74–0.88, affine-lnC 0.70–0.90, affine-raw 0.70. **Per the
+        pre-committed branch, the floor returns to THE OWNER: escalated as
+        `D51` in docs/DECISIONS_NEEDED.md with this evidence and NO
+        replacement floor proposed off these rows** (a floor read off them
+        would be the original defect one measurement later). No bar moved in
+        either direction; no ledger row written; PS.09 stays VOID. Sibling
+        note for the desk: PS.05/PS.06/PS.08's conjunct floors are not yet
+        declared and inherit the same calibration-venue question D51 poses.
 
 **WHAT RAN.** PS.09 attempt 2, the registered verification the `d186c07` commit
 promised, foreground-equivalent lane, clean tree, no dirty stamp. Verdict:
