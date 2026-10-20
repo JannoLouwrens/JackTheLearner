@@ -1846,6 +1846,26 @@ def ratchet_live(ledger: Ledger) -> dict:
                 out[phase.upper()] = f"{b['hours']:.2f} h / {b['jobs']} job(s)"
         return out
 
+    def _projection_vs_estimate():
+        # 155th audit B3 (§C): the number that AUTHORISES a dispatch
+        # (gpu_budget.json:projections[].hours, what dispatch_guard checked)
+        # and the number the per-job overrun mark AUDITS (the attempt row's
+        # est_hours) are written to two files by two authors, and nothing
+        # compared them — T1.02 was authorised at 0.2 h, declared 0.7 h, and
+        # billed 0.9909 h with the mark firing only against the 0.7.
+        # Reporting-only, unfloored; the join and its reasoning live in
+        # dispatch_guard.projection_vs_estimate.
+        import json as _json
+        from .dispatch_guard import projection_vs_estimate
+        from .gpu import BUDGET_FILE
+        proj = _json.loads(BUDGET_FILE.read_text()).get("projections", [])
+        path = _REPO / "experiments" / "gpu_submissions.jsonl"
+        attempts = []
+        if path.exists():
+            attempts = [_json.loads(l) for l in path.read_text().splitlines()
+                        if l.strip()]
+        return projection_vs_estimate(proj, attempts)
+
     def _gpu_unattributed_jobs():
         # 83rd audit (85d435b) B1: 23 charged jobs — 17.48 h, 27.7% of every
         # per-job record — joined to no spec by any record this project
@@ -1934,6 +1954,7 @@ def ratchet_live(ledger: Ledger) -> dict:
     take("cpu_foreclosed_now", _cpu_foreclosed_now)
     take("gpu_hours_no_verdict", _gpu_hours_no_verdict)
     take("gpu_unattributed_jobs", _gpu_unattributed_jobs)
+    take("projection_vs_estimate", _projection_vs_estimate)
     take("claim_dead", _claim_dead_count)
     take("commitments_uncovered", _commitments_uncovered)
     take("park_release_pairs", _park_release_pairs)

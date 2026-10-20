@@ -114,17 +114,23 @@ LAUNCH_GROWTH_DAYS = 21         # window over which the growth rate is fitted.
 # ZERO items for days. `\b` keeps `FOR THE BUILDERS` (any suffix word) out.
 _BUILDER_HEADING = re.compile(r"^##\s+FOR THE BUILDER\b.*$", re.M)
 _SECTION_END = re.compile(r"^(##\s|---\s*$)")
-_ITEM = re.compile(r"^(\d{1,2})\.\s+(.*)$")
+_ITEM = re.compile(r"^(?:[A-Z])?(\d{1,2})\.\s+(.*)$")
 # THE 2026-09-30 → 10-05 OUTAGE (140th audit, RANK 1): both desks drifted to
 # writing `**N. THE ORDER**`, the `**` precedes the digit, and `_ITEM` matched
 # ZERO of thirteen live orders for five days while `render()` blamed an absent
 # heading that was present. The repair is a NORMALISATION, not a looser match:
 # a bold-leading numbered line is rewritten to house style (`N. **…`) before
 # `_ITEM` sees it, so the plain form keeps matching byte-for-byte AND the bold
-# span still lands where `lead` extraction expects the order to live. A third
-# style will still go dark — which is why `page_stats` now makes a section
-# that parses to zero items LOUD instead of silent.
-_BOLD_LEAD = re.compile(r"^\*\*(\d{1,2})\.\s+")
+# span still lands where `lead` extraction expects the order to live.
+# THE PREDICTED THIRD STYLE ARRIVED, TWICE (155th audit B2): the overseer
+# wrote `**B1.` on 2026-10-10 and again on 2026-10-20, and both revisions of
+# OVERSIGHT.md parsed to ZERO items — the 154th audit's six orders got no
+# legality check at all. Both regexes now take an optional SINGLE uppercase
+# letter before the digits (`B1.`, `**B1.`); the letter is dropped and `n` is
+# the digits, same as house style. A FOURTH style will still go dark — which
+# is why `page_stats` makes a section that parses to zero items LOUD instead
+# of silent (that loudness, not this regex, is what caught both outages).
+_BOLD_LEAD = re.compile(r"^\*\*([A-Z]?\d{1,2})\.\s+")
 
 # Same shape as `coverage.GOAL_CITATION`, and deliberately the same regex:
 # two readers of governing prose disagreeing about what a spec id looks like
@@ -879,6 +885,34 @@ def _check() -> None:
             f"steering: the bold-lead parse flunked the outage fixture — "
             f"a `**N.` order is invisible again, or the plain form broke: "
             f"{bold_got} != {bold_want}")
+
+    # ── the letter-prefix known answer (155th audit B2) ──────────────────────
+    # Verbatim shape of the 2026-10-10 AND 2026-10-20 outages: the overseer
+    # numbered its orders `**B1.` and OVERSIGHT.md parsed 7 items on 10-18, 6
+    # on 10-19, ZERO on 10-20 — so the 154th audit's six orders got no
+    # legality check. Items 1–2 replay the two live forms (`**B1.` bold-lead,
+    # bare `B2.`); item 3 is the plain form in the same section, because the
+    # repair is required to ADD a form, never to swap one exclusive form for
+    # another. The letter is dropped: `n` stays the digits.
+    _PREFIX_FIXTURE = """
+## FOR THE BUILDER
+
+**B1. `T2.10` — compare the window by epoch.** The reasoning.
+
+B2. **A bare letter-prefixed item.** The reasoning, with `D1.0` in the body.
+
+3. **A plain-form item in the same section.** Still parses.
+"""
+    pf_got = [(it["n"], it["lead_ids"], it["body_ids"])
+              for it in builder_items(_PREFIX_FIXTURE)]
+    pf_want = [(1, ["T2.10"], []),
+               (2, [], ["D1.0"]),
+               (3, [], [])]
+    if pf_got != pf_want:
+        raise AssertionError(
+            f"steering: the letter-prefix parse flunked the 10-20 outage "
+            f"fixture — a `B<n>.` order is invisible to the legality reader "
+            f"again: {pf_got} != {pf_want}")
 
     # ── the empty-page accounting known answer (140th audit FTB 1a/1b) ──────
     # The three zero-item states must print as three DIFFERENT defects, and a

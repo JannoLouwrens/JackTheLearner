@@ -281,7 +281,89 @@ def stamp_preview() -> str:
             f"file(s): {shown}")
 
 
+def _ledger_triple(sid: str):
+    """`(status, attempt, ran_at)` as RECORDED, or None for no row.
+
+    A fresh `Ledger()` per call on purpose: the sweep's own earlier children
+    may have written rows, and a snapshot taken at sweep start would blame the
+    wrong child for a move.
+    """
+    from experiments.protocol import Ledger
+    row = Ledger().results.get(sid)
+    if row is None:
+        return None
+    return (getattr(row.status, "name", str(row.status)), row.attempt,
+            row.ran_at)
+
+
+def status_moves(before: dict, after: dict) -> tuple[list, list]:
+    """Classify each spec's re-buy from its LEDGER triples, never from stdout.
+
+    `(moved, recorded_nothing)` over ids in `before`. The old detector scanned
+    the child's stdout for a PASS/FAIL/VOID substring and counted a spec as
+    moved iff the old status string was absent — which published FOUR false
+    `STATUS MOVED` claims in pushed commit messages inside one day (T0.22 in
+    `3db1ad7`, then ME.11.B/C/E in `734378b`, all `(no verdict line)` children
+    whose rows were byte-unchanged), and would read a real `PASS -> BLOCKED`
+    demotion whose refusal line quotes "PASS but stale" as no move
+    (`regate-status-move-detector-reads-stdout-substrings`, 155th audit §E/B4).
+    The runner's ledger is the one honest source:
+      * triple unchanged           -> the child RECORDED NOTHING (the
+                                      cpu-refused shape; never a move),
+      * status changed             -> a real move,
+      * same status, new attempt   -> an ordinary re-buy — neither.
+    """
+    moved, norec = [], []
+    for sid, b in before.items():
+        a = after.get(sid)
+        if a == b:
+            norec.append(sid)
+        elif b is None or a is None or b[0] != a[0]:
+            moved.append(sid)
+    return moved, norec
+
+
+def _selftest() -> int:
+    """Known answers for `status_moves`, planted beside what they must not be
+    confused with — each arm is a shape the stdout detector got wrong live."""
+    fails = []
+    # The 2026-10-20 12:50 shape VERBATIM (`734378b`, 155th audit §E): three
+    # ME.11 arms whose children printed `(no verdict line)` and wrote no row —
+    # the stdout detector published "STATUS MOVED" on all three. The exact
+    # live triples, frozen: a no-write child must read RECORDED NOTHING,
+    # never a move.
+    frozen = {"ME.11.B": ("FAIL", 4, "2026-09-28T11:14:26"),
+              "ME.11.C": ("FAIL", 3, "2026-09-28T11:15:13"),
+              "ME.11.E": ("VOID", 1, "2026-08-31T20:17:03")}
+    moved, norec = status_moves(frozen, dict(frozen))
+    if moved != [] or sorted(norec) != sorted(frozen):
+        fails.append(f"a child that wrote no row must be RECORDED NOTHING on "
+                     f"all three ME.11 ids and never a move — got "
+                     f"moved={moved} norec={norec}")
+    # The latent false NEGATIVE (row shape (b)): a PASS -> BLOCKED demotion
+    # whose refusal prose quotes "PASS but stale" hid the move from the
+    # substring scan; from the ledger it is unambiguous.
+    moved, norec = status_moves({"T0.22": ("PASS", 21, "2026-10-19T09:00:00")},
+                                {"T0.22": ("BLOCKED", 22, "2026-10-20T09:00:00")})
+    if moved != ["T0.22"] or norec:
+        fails.append(f"a recorded PASS -> BLOCKED demotion is a MOVE whatever "
+                     f"the stdout said — got moved={moved} norec={norec}")
+    # An ordinary re-buy: same status, fresh attempt — neither class.
+    moved, norec = status_moves({"T0.13": ("FAIL", 9, "2026-10-19T09:00:00")},
+                                {"T0.13": ("FAIL", 10, "2026-10-20T09:00:00")})
+    if moved or norec:
+        fails.append(f"a same-status re-record is an ordinary re-buy, neither "
+                     f"moved nor recorded-nothing — got moved={moved} "
+                     f"norec={norec}")
+    for f in fails:
+        print(f"  FAIL {f}")
+    print(f"regate selftest: {len(fails)} failure(s)")
+    return 1 if fails else 0
+
+
 def main(argv: list[str]) -> int:
+    if "--selftest" in argv:
+        return _selftest()
     stale_rows = cheap_stale()
     rotation = cheap_pass_rotation(exclude={r[0] for r in stale_rows})
     # Staleness is an OWED bill and goes first; the rotation fills whatever is
@@ -324,7 +406,7 @@ def main(argv: list[str]) -> int:
         print(f"{refusal} — yielding, these are still stale next tick")
         return 0
 
-    ran, changed = 0, []
+    ran, before, after = 0, {}, {}
     for lane, sid, status, _cost, est_s, prov in queue[:MAX_PER_RUN]:
         hit = crossing_a_class_slack(est_s)
         if hit is not None:
@@ -336,18 +418,26 @@ def main(argv: list[str]) -> int:
                   f"{hit['budget']}'s slack {hit['slack_s']:.0f}s and close that "
                   f"class — declining {', '.join(left)}; still stale next tick")
             break
+        before[sid] = _ledger_triple(sid)
         p = subprocess.run([PY, "-m", "experiments.run", sid],
                            cwd=REPO, capture_output=True, text=True, timeout=1800)
         ran += 1
+        after[sid] = _ledger_triple(sid)
+        # The stdout line is DISPLAY ONLY — the move judgement reads the
+        # ledger (status_moves' docstring carries the scar).
         tail = (p.stdout or "").strip().splitlines()
         verdict = next((l for l in reversed(tail)
                         if any(w in l for w in ("PASS", "FAIL", "VOID"))), "(no verdict line)")
-        print(f"  {sid:9s} [{lane}] was {status:8s} -> {verdict.strip()[:96]}")
-        if status not in verdict:
-            changed.append(sid)
+        rec = ("recorded nothing" if after[sid] == before[sid] else
+               f"recorded {after[sid][0]} a{after[sid][1]}")
+        print(f"  {sid:9s} [{lane}] was {status:8s} -> {verdict.strip()[:96]}"
+              f" [{rec}]")
+    changed, norec = status_moves(before, after)
     print(f"re-bought {ran} of {len(queue)} cheap certificate(s) "
           f"({len(stale_rows)} stale + {len(rotation)} rotation)"
-          + (f"; STATUS MOVED on {', '.join(changed)}" if changed else "; no status moved"))
+          + (f"; STATUS MOVED on {', '.join(changed)}" if changed
+             else "; no status moved")
+          + (f"; ran but RECORDED NOTHING: {', '.join(norec)}" if norec else ""))
     return 0
 
 

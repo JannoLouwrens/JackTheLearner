@@ -175,6 +175,57 @@ def _week_rows(rows: list[dict]) -> list[dict]:
     return rows[last_drop:]
 
 
+# Rendering flutter between two prints of ONE reset instant is ~60 s (the CLI
+# rounds `4:59am` to `5am` and back); real windows are 7 days apart. An hour
+# sits four orders of magnitude from the real spacing, so nothing is close.
+WINDOW_FLUTTER_S = 3600
+
+_RESET_EPOCH = None
+
+
+def _reset_epoch(resets: str) -> int | None:
+    """`claude_usage.reset_epoch` on a bare resets string.
+
+    Loaded by file path, not `import`: THIS module is itself loaded by path
+    (experiments/run.py `_dark_slots`), so `scripts/` is not guaranteed to be
+    importable as a package from every caller. The parser is NOT re-derived
+    here — "if a value has a parser anywhere in the repo, the comparison must
+    go through it" (LESSONS.md, 155th audit) is the rule this helper exists
+    to obey.
+    """
+    global _RESET_EPOCH
+    if _RESET_EPOCH is None:
+        import importlib.util
+        p = Path(__file__).resolve().parent / "claude_usage.py"
+        spec = importlib.util.spec_from_file_location("_claude_usage", p)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _RESET_EPOCH = mod.reset_epoch
+    return _RESET_EPOCH({"resets": resets})
+
+
+def _same_window(a: str, b: str) -> bool:
+    """Do two `resets` strings denote the SAME usage week?
+
+    Compared by PARSED epoch within `WINDOW_FLUTTER_S`, never by the rendered
+    string (155th audit RANK 1: the CLI renders one instant as both
+    `Oct 26, 4:59am (UTC)` and `Oct 26, 5am (UTC)`, so `==` on the string read
+    45% of live same-window pairs as a window CHANGE and exempted them from
+    the monotonicity invariant — a reader keyed on a rendering inherits the
+    renderer's flutter). String equality is still honoured first, so this can
+    only ADD pairs to the invariant relative to the old `==`: it loosens
+    nothing, and an unparseable-but-different pair falls back to the old
+    answer (changed window — the exemption, i.e. the pre-155th behaviour, not
+    a new event class).
+    """
+    if a == b:
+        return True
+    ea, eb = _reset_epoch(a), _reset_epoch(b)
+    if ea is None or eb is None:
+        return False
+    return abs(ea - eb) <= WINDOW_FLUTTER_S
+
+
 def meter_non_monotone(rows: list[dict]) -> list[dict]:
     """METER-NON-MONOTONE (154th audit B2): readings that prove themselves false.
 
@@ -196,8 +247,13 @@ def meter_non_monotone(rows: list[dict]) -> list[dict]:
     str `resets` (rows predating B1 carry no `resets` and are skipped, so the
     reading goes live as B1 rows accumulate rather than inventing history).
     Spanning over unreadable rows is sound: the invariant holds between any two
-    readings of the same window, not only adjacent minutes. A fall where
-    `resets` CHANGED is the legitimate weekly reset and is not an event.
+    readings of the same window, not only adjacent minutes. A fall where the
+    WINDOW changed is the legitimate weekly reset and is not an event — and
+    "same window" is decided by `_same_window`, the PARSED reset instant, never
+    by the rendered string (155th audit RANK 1: the CLI prints one instant as
+    both `Oct 26, 4:59am (UTC)` and `Oct 26, 5am (UTC)`, so string equality
+    exempted 5 of 11 live pairs — 45% — from the invariant inside one real
+    window, with the exemption falling on the benign branch).
     """
     events: list[dict] = []
     prev: tuple[str, int, str] | None = None
@@ -205,7 +261,7 @@ def meter_non_monotone(rows: list[dict]) -> list[dict]:
         pct, resets = r.get("pct"), r.get("resets")
         if not isinstance(pct, int) or not isinstance(resets, str):
             continue
-        if prev is not None and resets == prev[2] and pct < prev[1]:
+        if prev is not None and _same_window(resets, prev[2]) and pct < prev[1]:
             events.append({"from_ts": prev[0], "from_pct": prev[1],
                            "to_ts": r["ts"], "to_pct": pct,
                            "resets": resets})
@@ -742,6 +798,28 @@ def _selftest() -> int:
         fails.append(f"non-monotone: a fall across a CHANGED resets string is "
                      f"the weekly reset, not an event — got "
                      f"{a['meter_non_monotone']}")
+
+    # P7d — RENDERING FLUTTER IS NOT A WINDOW CHANGE (155th audit RANK 1,
+    # verbatim live shape): the CLI printed `Oct 26, 4:59am (UTC)` and
+    # `Oct 26, 5am (UTC)` for ONE reset instant, 7 and 5 times respectively,
+    # in the twelve rows after B1 shipped — so `==` on the string exempted
+    # 45% of consecutive pairs from the invariant inside a single real week.
+    # A fall across the flutter boundary must be an EVENT, not a reset. This
+    # is exactly the 95%->0% transition the reading was built for, landing on
+    # the one place the old comparison was blind.
+    doc = "\n".join([
+        row("builder", "2026-10-19T23:37:00+00:00", 95, "refused",
+            "Oct 26, 4:59am (UTC)"),
+        row("builder", "2026-10-20T06:07:00+00:00", 0, "start",
+            "Oct 26, 5am (UTC)"),
+    ])
+    a = attribution(doc, log_text="")
+    ev = a["meter_non_monotone"]
+    if not ev or len(ev) != 1 or ev[0]["from_pct"] != 95 or ev[0]["to_pct"] != 0:
+        fails.append(f"non-monotone: a fall across RENDERING FLUTTER of one "
+                     f"reset instant (4:59am vs 5am) is the same window and "
+                     f"must be exactly one event — got {ev}. The window is "
+                     f"compared by reset_epoch, never by the rendered string.")
 
     # P7c — UNKNOWN IS NOT ZERO, and pre-B1 history is not evidence. Rows with
     # no `resets` field (every row before 2026-10-20) carry no window id, so

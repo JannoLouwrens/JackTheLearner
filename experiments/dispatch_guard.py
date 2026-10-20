@@ -258,6 +258,58 @@ def record_projection(spec_id: str, projected_hours: float,
     return entry
 
 
+def projection_vs_estimate(projections: list, attempts: list) -> list[str]:
+    """PROJECTION-VS-ESTIMATE (155th audit B3, §C): the authorising number and
+    the auditing number, held to each other for the first time.
+
+    `projections[].hours` is what `dispatch_guard` CHECKED against the week's
+    quota and what REFUSAL 3's receipt filed *"so projected-vs-actual is
+    auditable"*. The attempt row's `est_hours` is what `gpu.py`'s per-job
+    overrun mark compares billed hours against. They are set in two files by
+    two authors, and until this reading nothing compared them — so `T1.02`
+    was authorised at 0.2 h, declared 0.7 h (hardcoded in its own test file),
+    and billed 0.9909 h: ~5x the authorised number, with the overrun mark
+    firing only against the 0.7. It diverges in both directions (the 10-08
+    `T1.08` dispatch projected 0.75 and declared 0.5 — audit stricter than
+    authorisation), so this is a missing reconciliation, not a one-sided
+    loosening.
+
+    REPORTING-ONLY AND UNFLOORED (D26 idiom: MEASURE ONLY, GATE NOTHING,
+    RELAX NOTHING): it refuses no dispatch and `PER_JOB_OVERRUN_MARGIN` does
+    not move. WHICH of the two numbers should bind is a threshold question
+    for a desk; this prints the pair. One line per attempt row whose
+    `est_hours` differs from a projection filed for the same
+    `(spec, head, week)`; attempt rows with NO filed projection predate the
+    guard (or bypassed it) and are a different class this reading does not
+    claim to cover — they stay with `gpu_unattributed_jobs`' lineage.
+    """
+    import datetime as _dt
+    filed: dict = {}
+    for p in projections:
+        key = (p.get("spec"), p.get("head"), p.get("week"))
+        filed.setdefault(key, set()).add(round(float(p.get("hours", 0.0)), 4))
+    out: list[str] = []
+    for a in attempts:
+        if a.get("phase") != "attempt" or a.get("est_hours") is None:
+            continue
+        try:
+            wk = _dt.datetime.strptime(a.get("iso", ""),
+                                       "%Y-%m-%dT%H:%M:%S").strftime("%Y-W%U")
+        except ValueError:
+            continue
+        key = (a.get("spec"), a.get("head"), wk)
+        hours = filed.get(key)
+        if not hours:
+            continue
+        est = round(float(a["est_hours"]), 4)
+        if est not in hours:
+            out.append(f"{a.get('spec')} @{a.get('head')} {wk}: authorised "
+                       f"{'/'.join(f'{h}h' for h in sorted(hours))}, attempt "
+                       f"declared est_hours {est}h "
+                       f"({a.get('attempt_id', '?')})")
+    return out
+
+
 def preflight(spec_id: str, projected_hours: float, *, record: bool = False,
               budget: Budget | None = None,
               ledger: Ledger | None = None) -> tuple:

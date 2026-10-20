@@ -23229,6 +23229,21 @@ ROUTED: rc0-slot-ends-mid-wait-with-watchers-armed-and-work-uncommitted | 2026-1
         capacity (full by the 10-08 precedent), 10-25 carries 5, 10-26
         carries 2. Dated 10-26 rather than 10-25 to leave one slot of slack
         on a board already scheduled to break 12 promises today.
+    BUILDER-TRACE (2026-10-20, 13:1x slot — FIRING 5 ATTACHED per 155th audit
+        B5/§D, timestamps as measured by the overseer, not re-derived): the
+        12:07 slot ended `iteration end rc=0` at 12:15:55 with
+        `dispatch T1.02` (pid 796480) and `run_spec T1.02` (pid 796519) armed
+        in declared_pids and `gpu_budget.json` + `gpu_submissions.jsonl`
+        UNCOMMITTED — the only record of a live GPU spend, while
+        `gpu_unattributed_jobs` sat AT its floor of 21, so this instance
+        risked breaking a floored ratchet on a lost file rather than on a
+        decision. The receipts reached HEAD at 12:50:04 inside `734378b`, a
+        regate-sweep commit whose subject does not name them (the
+        bare-commit provenance hole, second instance in 24 h). The NEXT
+        receipts from the same still-live watcher (Colab attempt FAILED,
+        0.9909 h billed, Kaggle fallback in flight) were committed BY NAME at
+        `d212dd8` by the 13:1x slot. The row's design stands; nothing
+        re-routed.
 
 ROUTED: longrun-population-grew-six-ids-under-a-priced-row | 2026-10-20 | `_longrun_binding()` re-derived in-process at this HEAD (Review DAILY, act 1): `longrun_unbound == ['NE.02','T4.04','T4.05','T6.01','W1.01','W1.04']`, against a gate of `== []`; the parent row `longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha` ACTED the same morning on its own priced four | OPEN
     SUBJECT: the APPARATUS and six SPECS' compliance with `T0.32`'s standing
@@ -23383,3 +23398,17 @@ ROUTED: regate-status-move-detector-reads-stdout-substrings | 2026-10-20 | build
         e735f36 edit to the same file billed zero). This routing edits
         `docs/REVIEW_QUEUE.md` and bills the T0.21/T0.28/T0.31 trio, paid in
         this slot.
+    BUILDER-TRACE (2026-10-20, 13:1x slot — EXECUTED per 155th audit B4,
+        which ordered this routed design run on the §E instance): `regate.py`
+        now reads each spec's `(status, attempt, ran_at)` ledger triple
+        before and after its child (`_ledger_triple`, fresh `Ledger()` per
+        read so a sweep's earlier children cannot be blamed for a later
+        move) and classifies via `status_moves()` — triple unchanged is the
+        third class, "ran but RECORDED NOTHING" (the cpu-refused shape, never
+        a move); status changed is a move; same-status re-record is an
+        ordinary re-buy. The stdout verdict line is DISPLAY ONLY. Fixture:
+        `--selftest` freezes the §E triples verbatim (ME.11.B FAIL a4
+        2026-09-28T11:14:26, ME.11.C FAIL a3, ME.11.E VOID a1) and the latent
+        false-negative (PASS->BLOCKED whose refusal prose quotes "PASS but
+        stale"). `run stale-cost scripts/regate.py` re-confirmed 0 at
+        execution. Awaiting the desk's stamp.
