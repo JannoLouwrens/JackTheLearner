@@ -79,7 +79,9 @@ VENUE IDENTITY, verified at registration rather than assumed: zero commits to
 playground.py / experiments/w0.py / survival.py / cores.py / drives.py since
 2026-08-20 (`git log --since=2026-08-23` empty; last rig commit `3fa7d61`);
 the seated run executed 2026-08-21 04:22 -> 2026-08-23 21:11. The artifacts
-are on-box and gitignored; their integrity gate is the replay: the
+are COMMITTED (narrow .gitignore un-ignore, 156th audit FTB 2 — LC.03 is
+foreclosed, so a lost artifact could never be regenerated); their integrity
+gate is unchanged and remains the replay: the
 recomputed seated aggregates must reproduce the pinned recorded aggregates
 (SEAT_RECORDED; LC.03 attempt 3, ran_at 2026-08-23T21:11:17) to 1e-4 or the
 run is VOID.
@@ -193,7 +195,8 @@ def _gain(spans) -> float:
 def _load_artifact(seed: int) -> Tuple[Optional[dict], str]:
     p = ARTIFACTS / f"lc03_curves_seed{seed}.json"
     if not p.exists():
-        return None, f"{p.name} missing (on-box, gitignored — this venue only)"
+        return None, (f"{p.name} missing (tracked since 156th-audit FTB 2 — "
+                      f"restore with `git checkout -- {p}`)")
     try:
         art = json.loads(p.read_text())
     except (OSError, json.JSONDecodeError) as e:

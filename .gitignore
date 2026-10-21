@@ -48,7 +48,18 @@ logs/
 .ipynb_checkpoints/
 
 # Experiment artifacts (the ledger itself IS tracked — it is the capability record)
-experiments/artifacts/
+# `/*` not `/` so the three negations below can re-include files: git cannot
+# re-include a file whose parent DIRECTORY is excluded.
+experiments/artifacts/*
+# Narrow exception (156th audit FTB 2): the LC.03 seed curves are the SOLE
+# surviving evidence behind LC.08, the Learning-core seat's only challenger.
+# LC.03 is VOID-FORECLOSED under a do-not-re-dispatch order, so a lost artifact
+# is unrecoverable by any legal act. Committing them makes loss recoverable;
+# LC.08's pinned-aggregate replay (SEAT_RECORDED -> VOID on mismatch) still
+# carries the integrity burden. Do not widen this exception.
+!experiments/artifacts/lc03_curves_seed0.json
+!experiments/artifacts/lc03_curves_seed1.json
+!experiments/artifacts/lc03_curves_seed2.json
 experiments/**/__pycache__/
 .usage-resumed
 
