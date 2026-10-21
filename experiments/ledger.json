@@ -20074,15 +20074,15 @@
     },
     "ME.2": {
       "amended": [],
-      "attempt": 6,
-      "commit": "ce0debb",
+      "attempt": 7,
+      "commit": "43be45e",
       "compute_s": null,
       "control_metrics": {
         "adherence_wiped": 0.216667,
         "adherence_wiped_std": 0.0311805
       },
       "dirty_files": null,
-      "duration_s": 1.4,
+      "duration_s": 1.42,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -20242,6 +20242,47 @@
           ],
           "spec_sha": "5899e20883f7520a",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 6,
+          "commit": "ce0debb",
+          "compute_s": null,
+          "control_metrics": {
+            "adherence_wiped": 0.216667,
+            "adherence_wiped_std": 0.0311805
+          },
+          "dirty_files": null,
+          "duration_s": 1.4,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "98d00106f5f568e3",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+0.3s)",
+          "metrics": {
+            "adherence_after_restart": 1.0,
+            "adherence_after_restart_std": 0.0,
+            "adherence_after_supersede": 1.0,
+            "adherence_after_supersede_std": 0.0,
+            "base_rate": 0.25,
+            "base_rate_std": 0.0,
+            "extracted_topics": 40.0,
+            "extracted_topics_std": 0.0,
+            "recency_null_adherence": 0.166667,
+            "recency_null_adherence_std": 0.0656167,
+            "stale_choice_rate": 0.0,
+            "stale_choice_rate_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 233.8,
+          "preserved_impl": null,
+          "ran_at": "2026-10-19T22:46:56",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "5899e20883f7520a",
+          "status": "PASS"
         }
       ],
       "impl_sha": "98d00106f5f568e3",
@@ -20261,9 +20302,9 @@
         "stale_choice_rate_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 233.8,
+      "peak_rss_mb": 225.4,
       "preserved_impl": null,
-      "ran_at": "2026-10-19T22:46:56",
+      "ran_at": "2026-10-21T02:46:46",
       "seeds": [
         0,
         1,
@@ -21250,8 +21291,8 @@
     },
     "ME.8": {
       "amended": [],
-      "attempt": 5,
-      "commit": "ce0debb",
+      "attempt": 6,
+      "commit": "43be45e",
       "compute_s": null,
       "control_metrics": {
         "acc_true_cue": 0.0,
@@ -21260,7 +21301,7 @@
         "match_restored_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 108.52,
+      "duration_s": 110.08,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -21377,10 +21418,53 @@
           ],
           "spec_sha": "21b2fbad6a26bc70",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "ce0debb",
+          "compute_s": null,
+          "control_metrics": {
+            "acc_true_cue": 0.0,
+            "acc_true_cue_std": 0.0,
+            "match_restored": 1.0,
+            "match_restored_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 108.52,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "f8158d0551bfb841",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+109.4s)",
+          "metrics": {
+            "holdout_acc": 1.0,
+            "holdout_acc_std": 0.0,
+            "killed_frac": 1.0,
+            "killed_frac_std": 0.0,
+            "mean_ckpt_step": 15.373333,
+            "mean_ckpt_step_std": 0.89164,
+            "resume_acc": 1.0,
+            "resume_acc_std": 0.0,
+            "resume_vs_zeroed": 0.895833,
+            "resume_vs_zeroed_std": 0.0589256,
+            "zeroed_acc": 0.104167,
+            "zeroed_acc_std": 0.0589256
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 311.5,
+          "preserved_impl": null,
+          "ran_at": "2026-10-19T22:48:47",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "21b2fbad6a26bc70",
+          "status": "PASS"
         }
       ],
       "impl_sha": "f8158d0551bfb841",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+109.4s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+111.3s)",
       "metrics": {
         "holdout_acc": 1.0,
         "holdout_acc_std": 0.0,
@@ -21396,9 +21480,9 @@
         "zeroed_acc_std": 0.0589256
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 311.5,
+      "peak_rss_mb": 304.2,
       "preserved_impl": null,
-      "ran_at": "2026-10-19T22:48:47",
+      "ran_at": "2026-10-21T02:48:38",
       "seeds": [
         0,
         1,
@@ -21410,15 +21494,15 @@
     },
     "ME.9": {
       "amended": [],
-      "attempt": 7,
-      "commit": "dd74351",
+      "attempt": 8,
+      "commit": "43be45e",
       "compute_s": null,
       "control_metrics": {
         "swapped_mean_acc": 0.0,
         "swapped_mean_acc_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 1.47,
+      "duration_s": 1.49,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -21696,6 +21780,59 @@
           ],
           "spec_sha": "a654518433c65fd6",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 7,
+          "commit": "dd74351",
+          "compute_s": null,
+          "control_metrics": {
+            "swapped_mean_acc": 0.0,
+            "swapped_mean_acc_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 1.47,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "03d846107d1a2b7e",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 1 deciding metric(s) reproduced exactly in a fresh process (+0.3s)",
+          "metrics": {
+            "acc_did": 1.0,
+            "acc_did_std": 0.0,
+            "acc_heard": 1.0,
+            "acc_heard_std": 0.0,
+            "acc_said": 1.0,
+            "acc_said_std": 0.0,
+            "distractor_abstention": 1.0,
+            "distractor_abstention_std": 0.0,
+            "distractor_evaluated": 15.0,
+            "distractor_evaluated_std": 0.0,
+            "distractor_excluded": 0.0,
+            "distractor_excluded_std": 0.0,
+            "events": 360.0,
+            "events_std": 0.0,
+            "filtered_recency_mean": 0.0944333,
+            "filtered_recency_mean_std": 0.0218779,
+            "filtered_recency_worst": 0.125,
+            "filtered_recency_worst_std": 0.0353553,
+            "pooled_null_mean": 0.3,
+            "pooled_null_mean_std": 0.055686,
+            "pooled_null_worst": 0.141667,
+            "pooled_null_worst_std": 0.0589256,
+            "scoring_margin": 0.905567,
+            "scoring_margin_std": 0.0218779
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 233.1,
+          "preserved_impl": null,
+          "ran_at": "2026-10-20T00:43:05",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "a654518433c65fd6",
+          "status": "PASS"
         }
       ],
       "impl_sha": "03d846107d1a2b7e",
@@ -21727,9 +21864,9 @@
         "scoring_margin_std": 0.0218779
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 233.1,
+      "peak_rss_mb": 226.2,
       "preserved_impl": null,
-      "ran_at": "2026-10-20T00:43:05",
+      "ran_at": "2026-10-21T02:53:19",
       "seeds": [
         0,
         1,
@@ -24405,8 +24542,8 @@
     },
     "PG.7": {
       "amended": [],
-      "attempt": 4,
-      "commit": "ce0debb",
+      "attempt": 5,
+      "commit": "43be45e",
       "compute_s": null,
       "control_metrics": {
         "control_seed_gates_ok": 1.0,
@@ -24421,7 +24558,7 @@
         "mass_leak_nonspectral_acc_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 101.39,
+      "duration_s": 101.3,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -24592,10 +24729,73 @@
           ],
           "spec_sha": "f1fdb925bec71120",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 4,
+          "commit": "ce0debb",
+          "compute_s": null,
+          "control_metrics": {
+            "control_seed_gates_ok": 1.0,
+            "control_seed_gates_ok_std": 0.0,
+            "geometry_leak_pan_gap": 1.529867,
+            "geometry_leak_pan_gap_std": 0.000598711,
+            "geometry_leak_slot_acc": 1.0,
+            "geometry_leak_slot_acc_std": 0.0,
+            "mass_leak_amp_rel_gap": 0.61161,
+            "mass_leak_amp_rel_gap_std": 0.0,
+            "mass_leak_nonspectral_acc": 1.0,
+            "mass_leak_nonspectral_acc_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 101.39,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "04f5374559f58499",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 5 deciding metric(s) reproduced exactly in a fresh process (+100.1s)",
+          "metrics": {
+            "audio_only_leak_margin": 0.0,
+            "audio_only_leak_margin_std": 0.0,
+            "both_spheres": 1.0,
+            "both_spheres_std": 0.0,
+            "episodes": 3200.0,
+            "episodes_std": 0.0,
+            "max_amp_rel_gap": 0.0,
+            "max_amp_rel_gap_std": 0.0,
+            "max_distance_gap": 9.34759e-10,
+            "max_distance_gap_std": 3.64762e-11,
+            "max_pan_gap": 4.43687e-10,
+            "max_pan_gap_std": 1.9463e-11,
+            "nonspectral_identity_acc": 0.5,
+            "nonspectral_identity_acc_std": 0.0,
+            "seed_gates_ok": 1.0,
+            "seed_gates_ok_std": 0.0,
+            "single_event": 1.0,
+            "single_event_std": 0.0,
+            "slot_leak_acc": 0.5,
+            "slot_leak_acc_std": 0.0,
+            "spectral_identity_acc": 1.0,
+            "spectral_identity_acc_std": 0.0,
+            "usable": 3200.0,
+            "usable_std": 0.0,
+            "voiced_correct": 1.0,
+            "voiced_correct_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 262.8,
+          "preserved_impl": null,
+          "ran_at": "2026-10-19T22:44:57",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "f1fdb925bec71120",
+          "status": "PASS"
         }
       ],
       "impl_sha": "04f5374559f58499",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 5 deciding metric(s) reproduced exactly in a fresh process (+100.1s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 5 deciding metric(s) reproduced exactly in a fresh process (+100.9s)",
       "metrics": {
         "audio_only_leak_margin": 0.0,
         "audio_only_leak_margin_std": 0.0,
@@ -24625,9 +24825,9 @@
         "voiced_correct_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 262.8,
+      "peak_rss_mb": 257.1,
       "preserved_impl": null,
-      "ran_at": "2026-10-19T22:44:57",
+      "ran_at": "2026-10-21T02:44:46",
       "seeds": [
         0,
         1,
@@ -24639,8 +24839,8 @@
     },
     "PG.8": {
       "amended": [],
-      "attempt": 9,
-      "commit": "ce0debb",
+      "attempt": 10,
+      "commit": "43be45e",
       "compute_s": null,
       "control_metrics": {
         "contact_cfrc_norm_ref": 243.0831,
@@ -24705,7 +24905,7 @@
         "world_mutated_std": 0.471405
       },
       "dirty_files": null,
-      "duration_s": 7.02,
+      "duration_s": 7.06,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -25345,6 +25545,167 @@
           ],
           "spec_sha": "d0095cc77b0a1f64",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 9,
+          "commit": "ce0debb",
+          "compute_s": null,
+          "control_metrics": {
+            "contact_cfrc_norm_ref": 243.0831,
+            "contact_cfrc_norm_ref_std": 6.221094,
+            "contact_ncon_pg": 9.333333,
+            "contact_ncon_pg_std": 0.471405,
+            "contact_ncon_ref": 8.333333,
+            "contact_ncon_ref_std": 0.471405,
+            "contact_non_floor_pg": 0.0,
+            "contact_non_floor_pg_std": 0.0,
+            "contact_obs_dev": 0.004066,
+            "contact_obs_dev_no_rne": 135.399133,
+            "contact_obs_dev_no_rne_std": 2.152137,
+            "contact_obs_dev_std": 0.00202521,
+            "contact_spot_xy": [
+              0.0,
+              0.0
+            ],
+            "dist_to_ladder_m": 12.990833,
+            "dist_to_ladder_m_std": 0.052645,
+            "drive_divergence_rad": 2.626887,
+            "drive_divergence_rad_std": 0.106819,
+            "drive_qfrc_max": 120.0,
+            "drive_qfrc_max_std": 0.0,
+            "has_humanoid": 1.0,
+            "has_humanoid_std": 0.0,
+            "idle_qfrc_max": 0.0,
+            "idle_qfrc_max_std": 0.0,
+            "model_max_dev_vs_v5": 4.48308e-13,
+            "model_max_dev_vs_v5_std": 0.0,
+            "motors_on_humanoid": 17.0,
+            "motors_on_humanoid_std": 0.0,
+            "mujoco_warnings": 0.0,
+            "mujoco_warnings_std": 0.0,
+            "n_humanoid_bodies": 13.0,
+            "n_humanoid_bodies_std": 0.0,
+            "nu": 17.0,
+            "nu_std": 0.0,
+            "obs_dim": 348.0,
+            "obs_dim_std": 0.0,
+            "obs_max_dev_vs_v5": 2.67841e-15,
+            "obs_max_dev_vs_v5_std": 1.02113e-15,
+            "pipeline_obs_dim": 348.0,
+            "pipeline_obs_dim_std": 0.0,
+            "ray_first_hit": "wall2",
+            "ray_hits_ladder": 0.0,
+            "ray_hits_ladder_std": 0.0,
+            "settle_finite": 1.0,
+            "settle_finite_std": 0.0,
+            "settle_obs_finite": 1.0,
+            "settle_obs_finite_std": 0.0,
+            "settle_qvel_max": 0.0193567,
+            "settle_qvel_max_std": 0.00694283,
+            "spawn_contacts": 0.0,
+            "spawn_contacts_std": 0.0,
+            "spawn_xyz": [
+              8.0,
+              8.0,
+              1.4
+            ],
+            "world_mutated": 0.666667,
+            "world_mutated_std": 0.471405
+          },
+          "dirty_files": null,
+          "duration_s": 7.02,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "b386e2e211f8ba94",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 15 deciding metric(s) reproduced exactly in a fresh process (+7.4s)",
+          "metrics": {
+            "contact_cfrc_norm_ref": 243.0831,
+            "contact_cfrc_norm_ref_std": 6.221094,
+            "contact_ncon_pg": 9.333333,
+            "contact_ncon_pg_std": 0.471405,
+            "contact_ncon_ref": 8.333333,
+            "contact_ncon_ref_std": 0.471405,
+            "contact_non_floor_pg": 0.0,
+            "contact_non_floor_pg_std": 0.0,
+            "contact_obs_dev": 0.004066,
+            "contact_obs_dev_no_rne": 135.399133,
+            "contact_obs_dev_no_rne_std": 2.152137,
+            "contact_obs_dev_std": 0.00202521,
+            "contact_spot_xy": [
+              0.0,
+              0.0
+            ],
+            "dist_to_ladder_m": 1.118133,
+            "dist_to_ladder_m_std": 0.0609914,
+            "drive_divergence_rad": 2.626887,
+            "drive_divergence_rad_std": 0.106819,
+            "drive_qfrc_max": 120.0,
+            "drive_qfrc_max_std": 0.0,
+            "has_humanoid": 1.0,
+            "has_humanoid_std": 0.0,
+            "idle_qfrc_max": 0.0,
+            "idle_qfrc_max_std": 0.0,
+            "model_max_dev_vs_v5": 4.48308e-13,
+            "model_max_dev_vs_v5_std": 0.0,
+            "motors_on_humanoid": 17.0,
+            "motors_on_humanoid_std": 0.0,
+            "mujoco_warnings": 0.0,
+            "mujoco_warnings_std": 0.0,
+            "n_humanoid_bodies": 13.0,
+            "n_humanoid_bodies_std": 0.0,
+            "nu": 17.0,
+            "nu_std": 0.0,
+            "null_bodies": [
+              "apple",
+              "obj0",
+              "obj1",
+              "obj2",
+              "obj3",
+              "obj4",
+              "seesaw",
+              "world"
+            ],
+            "null_has_humanoid": 0.0,
+            "null_has_humanoid_std": 0.0,
+            "null_nu": 0.0,
+            "null_nu_std": 0.0,
+            "obs_dim": 348.0,
+            "obs_dim_std": 0.0,
+            "obs_max_dev_vs_v5": 2.67841e-15,
+            "obs_max_dev_vs_v5_std": 1.02113e-15,
+            "pipeline_obs_dim": 348.0,
+            "pipeline_obs_dim_std": 0.0,
+            "ray_first_hit": "rung0",
+            "ray_hits_ladder": 1.0,
+            "ray_hits_ladder_std": 0.0,
+            "settle_finite": 1.0,
+            "settle_finite_std": 0.0,
+            "settle_obs_finite": 1.0,
+            "settle_obs_finite_std": 0.0,
+            "settle_qvel_max": 0.0193567,
+            "settle_qvel_max_std": 0.00694283,
+            "spawn_contacts": 0.0,
+            "spawn_contacts_std": 0.0,
+            "spawn_xyz": [
+              0.0,
+              -1.6,
+              1.4
+            ],
+            "world_mutated": 0.666667,
+            "world_mutated_std": 0.471405
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 317.0,
+          "preserved_impl": null,
+          "ran_at": "2026-10-19T22:46:46",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "d0095cc77b0a1f64",
+          "status": "PASS"
         }
       ],
       "impl_sha": "b386e2e211f8ba94",
@@ -25426,9 +25787,9 @@
         "world_mutated_std": 0.471405
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 317.0,
+      "peak_rss_mb": 308.9,
       "preserved_impl": null,
-      "ran_at": "2026-10-19T22:46:46",
+      "ran_at": "2026-10-21T02:46:35",
       "seeds": [
         0,
         1,
@@ -57458,8 +57819,8 @@
     },
     "T1.03": {
       "amended": [],
-      "attempt": 5,
-      "commit": "ce0debb",
+      "attempt": 6,
+      "commit": "43be45e",
       "compute_s": null,
       "control_metrics": {
         "orphan_fraction_with_plants": 0.0483,
@@ -57471,7 +57832,7 @@
         "worst_offenders_with_plants": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539; orphan_never_called=72"
       },
       "dirty_files": null,
-      "duration_s": 35.65,
+      "duration_s": 36.64,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -57591,10 +57952,54 @@
           ],
           "spec_sha": "63c867cfa8bab71a",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "ce0debb",
+          "compute_s": null,
+          "control_metrics": {
+            "orphan_fraction_with_plants": 0.0483,
+            "orphan_fraction_with_plants_std": 0.0,
+            "planted_none_detected": 1.0,
+            "planted_none_detected_std": 0.0,
+            "planted_zero_grad_detected": 1.0,
+            "planted_zero_grad_detected_std": 0.0,
+            "worst_offenders_with_plants": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539; orphan_never_called=72"
+          },
+          "dirty_files": null,
+          "duration_s": 35.65,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "56a62d4062c99167",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+38.1s)",
+          "metrics": {
+            "modalities_fed": "vision,touch,audio,goal,task",
+            "orphan_fraction": 0.0483,
+            "orphan_fraction_std": 0.0,
+            "params_without_grad": 2698619.0,
+            "params_without_grad_std": 0.0,
+            "total_params": 1767267976.0,
+            "total_params_std": 0.0,
+            "trainable_params": 55891592.0,
+            "trainable_params_std": 0.0,
+            "worst_offenders": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539"
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 7321.3,
+          "preserved_impl": null,
+          "ran_at": "2026-10-19T22:51:13",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "63c867cfa8bab71a",
+          "status": "PASS"
         }
       ],
       "impl_sha": "56a62d4062c99167",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+38.1s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+38.0s)",
       "metrics": {
         "modalities_fed": "vision,touch,audio,goal,task",
         "orphan_fraction": 0.0483,
@@ -57608,9 +58013,9 @@
         "worst_offenders": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539"
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 7321.3,
+      "peak_rss_mb": 7378.4,
       "preserved_impl": null,
-      "ran_at": "2026-10-19T22:51:13",
+      "ran_at": "2026-10-21T02:51:07",
       "seeds": [
         0,
         1,
@@ -57745,8 +58150,8 @@
     },
     "T1.05": {
       "amended": [],
-      "attempt": 5,
-      "commit": "ce0debb",
+      "attempt": 6,
+      "commit": "43be45e",
       "compute_s": null,
       "control_metrics": {
         "unprotected_construct_delta": 1.652565,
@@ -57757,7 +58162,7 @@
         "unprotected_train_delta_std": 0.294653
       },
       "dirty_files": null,
-      "duration_s": 25.45,
+      "duration_s": 22.84,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -57868,10 +58273,51 @@
           ],
           "spec_sha": "6fc0f15cba5cc1e6",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "ce0debb",
+          "compute_s": null,
+          "control_metrics": {
+            "unprotected_construct_delta": 1.652565,
+            "unprotected_construct_delta_std": 0.294977,
+            "unprotected_std": 0.0176333,
+            "unprotected_std_std": 0.00020548,
+            "unprotected_train_delta": 1.655311,
+            "unprotected_train_delta_std": 0.294653
+          },
+          "dirty_files": null,
+          "duration_s": 25.45,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "53f37ca7e94a5963",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+22.9s)",
+          "metrics": {
+            "construct_delta": 0.0,
+            "construct_delta_std": 0.0,
+            "expected_std": 0.5,
+            "expected_std_std": 0.0,
+            "sentinel_std": 0.505167,
+            "sentinel_std_std": 0.0157019,
+            "train_delta": 0.0,
+            "train_delta_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 1369.7,
+          "preserved_impl": null,
+          "ran_at": "2026-10-19T22:52:19",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "6fc0f15cba5cc1e6",
+          "status": "PASS"
         }
       ],
       "impl_sha": "53f37ca7e94a5963",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+22.9s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+22.3s)",
       "metrics": {
         "construct_delta": 0.0,
         "construct_delta_std": 0.0,
@@ -57883,9 +58329,9 @@
         "train_delta_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 1369.7,
+      "peak_rss_mb": 1388.3,
       "preserved_impl": null,
-      "ran_at": "2026-10-19T22:52:19",
+      "ran_at": "2026-10-21T02:52:10",
       "seeds": [
         0,
         1,
@@ -61638,8 +62084,8 @@
     },
     "T2.12": {
       "amended": [],
-      "attempt": 5,
-      "commit": "ce0debb",
+      "attempt": 6,
+      "commit": "43be45e",
       "compute_s": null,
       "control_metrics": {
         "randomwalk_acc": 0.2375,
@@ -61648,7 +62094,7 @@
         "shuffled_label_acc_std": 0.164042
       },
       "dirty_files": null,
-      "duration_s": 39.56,
+      "duration_s": 41.17,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -61777,6 +62223,45 @@
           ],
           "spec_sha": "7a366c370991ac3d",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "ce0debb",
+          "compute_s": null,
+          "control_metrics": {
+            "randomwalk_acc": 0.2375,
+            "randomwalk_acc_std": 0.0270031,
+            "shuffled_label_acc": 0.145833,
+            "shuffled_label_acc_std": 0.164042
+          },
+          "dirty_files": null,
+          "duration_s": 39.56,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "acb44e8c2b7c22a6",
+          "message": "",
+          "metrics": {
+            "chance": 0.25,
+            "chance_std": 0.0,
+            "mean_pleasure_struggling": 0.333533,
+            "mean_pleasure_struggling_std": 0.775904,
+            "mean_pleasure_thriving": 0.106767,
+            "mean_pleasure_thriving_std": 0.516128,
+            "separability_acc": 0.904167,
+            "separability_acc_std": 0.0724089
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 250.5,
+          "preserved_impl": null,
+          "ran_at": "2026-10-19T22:53:23",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "7a366c370991ac3d",
+          "status": "PASS"
         }
       ],
       "impl_sha": "acb44e8c2b7c22a6",
@@ -61792,9 +62277,9 @@
         "separability_acc_std": 0.0724089
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 250.5,
+      "peak_rss_mb": 243.0,
       "preserved_impl": null,
-      "ran_at": "2026-10-19T22:53:23",
+      "ran_at": "2026-10-21T02:53:16",
       "seeds": [
         0,
         1,
