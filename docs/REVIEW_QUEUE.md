@@ -13633,6 +13633,49 @@ ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | 
         — the wrong organ's rate for a builder diagnostic, which is the general
         error disclosed above.
     WAITS-ON: none
+    BUILDER-TRACE: 26d0541 | executed 2026-10-21: probe committed BEFORE it ran
+        (26d0541, 03:15 UTC), run to completion 05:09–05:20 UTC (643.8 s wall;
+        a first launch at 04:09 died when its slot ended rc=0 mid-wait — that
+        class is already routed as `rc0-slot-ends-mid-wait-with-watchers-armed-
+        and-work-uncommitted`). Artifact /data/t306_null_walker_probe.json,
+        sha256 988b7f67d0931205c53141895f17a91f1e036aebaf92430eb030562f5507f24e.
+        SELF-VALIDATION: V1 ok (tracer==rig exactly, sub_seed 5); V3 ok
+        (surrogate sim vs chain occ_ratio 1.0328, mean-run 1.8423 vs 1.8986);
+        V2 flagged 4 of 48 rows and ALL FOUR are the checker's own rounding
+        boundary, not replay error — round(replayed,4)==recorded on BOTH
+        columns for all four (e.g. dwell 0.00075 vs recorded 0.0008; float
+        diff 5.0000000000000016e-05 against a strict >5e-5 tolerance). The
+        replay IS the recorded run at the recorded precision. Recorded breach
+        reproduced: per-seed worst dwell 0.01975/0.01075/0.019 vs cap 0.0185 —
+        2 of 3, matching the row's 0.667.
+        THE READINGS (bands declared in source before any number existed):
+        (1) residence runs AGREE — mean-run ratio 1.0053 (band [0.80,1.25]),
+        tail ratio at k95=6 1.2024 (band [0.5,2.0]), 657 runs vs 625.7
+        expected; (2) lag-1 NON-ZERO — world 0.1051 vs surrogate −0.0079,
+        excess 0.1131 against the 0.05 line (pooled SE ~0.001); (3) occupancy
+        AGREE — ratio 1.0556 (band [0.80,1.25]).
+        VERDICT, verbatim from the artifact: "UNDECLARED combination — back to
+        the row unpicked" — the exact "lag non-zero with agreeing runs" shape
+        the probe pre-named as UNDECLARED. No branch fired: not A (lag is
+        non-zero), not B (runs/occupancy do not read ABOVE band), not C (the
+        kernel is not memoryless). NOTHING was repaired, no cap re-derived, no
+        constant moved, no bar touched — the ruling says this combination
+        returns to the desk unpicked and it is returned unpicked.
+        THE MECHANISM EXTRA, because it narrows the desk's question: the lstsq
+        decomposition of realised displacement onto (a_t, a_{t−1}) puts 0.1427
+        on a_t and 0.0021 on a_{t−1} — the one-decision SERVO LAG the ruling
+        named as the single unchecked assumption is REFUTED as the mechanism
+        of the persistence; the world's direction-persistence (0.105 mean
+        cosine) is real but is NOT carried by the previous command, and the
+        memoryless surrogate's own wall-clamping reads −0.008, so wall
+        geometry alone does not produce it either. Whatever correlates
+        realised directions does so without loading the lagged action — and
+        at this persistence the occupancy, mean-run and k95 tail of the goal
+        cell still agree with the memoryless chain within their bands, while
+        the recorded 2-of-3 worst-life breach of the 0.0185 order-statistic
+        cap reproduces. The tension between "every pooled statistic agrees"
+        and "the extreme order statistic breaches twice" is the desk's to
+        rule on, not this probe's to resolve.
     Question: the n-derived `RANDOM_DWELL_MAX` = 0.0185, computed in source
     from the stationary occupancy of the null walker before the run, was
     BREACHED BY THE NULL WALKER ITSELF on 2 of 3 seeds (`random_dwell_breach`
