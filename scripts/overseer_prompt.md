@@ -219,6 +219,14 @@ If a finding requires a code change, describe it precisely in `OVERSIGHT.md`
 under **FOR THE BUILDER** — the next loop iteration reads that section. If it
 requires the owner, append to `DECISIONS_NEEDED.md` with the evidence attached.
 
+An `OVERSIGHT.md` item whose discharge condition cannot be evaluated before the
+NEXT audit rewrites the page must be routed as a `ROUTED:` row in
+`docs/REVIEW_QUEUE.md`, with its trigger as the `DUE:`. Everything else stays
+prose on the page and is deliberately not tracked. (Ruling on
+`oversight-for-the-builder-has-no-reader`, 2026-10-01: the page is rewritten at
+00:37, 06:37 and 12:37, so a deferred trigger written only here is overwritten
+before it can fire.)
+
 ## Output
 
 Rewrite `docs/OVERSIGHT.md` (do not append — it is a current-state report) with
