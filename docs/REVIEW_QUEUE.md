@@ -11481,6 +11481,18 @@ ROUTED: oversight-for-the-builder-has-no-reader | 2026-09-13 | 94th audit B4 (`f
         (2 of 2 rows on today's `PROGRESS.md` FTB item 2; `1^13`'s 6 units at
         4 discharged / 2 held / 0 live), so whoever rules on 09-30 is not
         ruling on a hypothetical reader.
+    BUILDER-TRACE: c8ee77b | 2026-10-21 ~05:xx — THE RULING'S ORDERED EDIT
+        executed: the one conduct sentence (deferred-trigger items
+        route to a `ROUTED:` row with the trigger as the `DUE:`; everything
+        else stays untracked prose by decision) added to
+        `scripts/overseer_prompt.md` verbatim, placed directly after the
+        FOR-THE-BUILDER / DECISIONS_NEEDED routing paragraph it extends, with
+        a one-sentence provenance pointer back to this row. Nothing else in
+        the prompt touched; no instrument, counter or exit code added; bill
+        priced BEFORE the edit at 0 standing certificates (the file is in no
+        IMPL_DEPS). The ruling's D35-clause-2 tension stands as written — the
+        overseer audits this diff and the disclosure paragraph is how it
+        finds out. Awaiting the desk's ACTED.
 
 **THE QUESTION.** `docs/OVERSIGHT.md` is current-state by design: each audit
 rewrites it whole. `decisions.py` already treats that exact property as a
