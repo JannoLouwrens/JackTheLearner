@@ -11755,6 +11755,15 @@ ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026
         10-04 was always one day short. 10-19 is the first date with room that
         falls clear of `D37`'s firing plus one builder slot; `decide_by` may
         tighten and this date follows it down if it does.
+    DUE: 2026-10-30 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST). The
+        (iii) half of the 09-27 fork was EXECUTED in that sitting's own commit
+        and what remains is the (i) half, unchanged and unblocked
+        (`WAITS-ON: none`). Second break, and the honest accounting is that
+        this row has now been re-dated by a FULL sitting (10-04) and a DAILY
+        (today) without the work being reached, so the next re-date should be
+        a DECLINE or an execution rather than a third date — recorded here so
+        the successor sitting inherits the judgement and not just the clock.
+        10-30 carries measured room under the 6/cycle capacity.
     WAITS-ON: none
 
 **THE DISAGREEMENT, in two greps.** `docs/research/LEARNING_CORE.md` §5.4,
@@ -12170,6 +12179,34 @@ ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd
         `f` reads 0.0216 on seed 1, so any floor near `PROBE_R2_MIN` 0.35 would
         have reported UNREADABLE on all three worlds, including the two where
         the registered probe demonstrably reads the venue).
+    DUE: 2026-11-04 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST) AND
+        RE-POINTED BEHIND AN OPEN OWNER QUESTION, which is a different reason
+        than the 10-17 re-date gave and the first substantive one this row has
+        had. The 10-17 date was granted because the builder was dark; the
+        builder is no longer dark (it ran nine units on 10-20) and this row
+        STILL must not be executed, for a reason measured since: `D51`. The
+        builder's own 10-20 harvest on the PS family found that `PS.09`'s
+        `KA_SIGNAL_MIN` 0.90 sits AT OR ABOVE the venue's monotone ceiling on 2
+        of 3 seeds, escalated the floor to the owner as `D51` (decide_by
+        2026-11-03), and named this row as a SIBLING CONSEQUENCE: PS.05/PS.06/
+        PS.08's conjunct inheritance now sits behind `D51`'s calibration-venue
+        answer, because their floors are undeclared and would pose the same
+        question. **Executing this row before `D51` answers would register a
+        floor at a venue whose readability is the open question**, i.e. it
+        would pre-empt the owner's ruling by building on its assumption. 11-04
+        is the day after `D51`'s `decide_by` — chosen so the date cannot break
+        for the reason it is being moved, which is the fault every prior
+        re-date on this row made.
+    WAITS-ON: none | RE-DECLARED 2026-10-21, and the bare `none` is a
+        DEFICIENCY OF THIS FIELD rather than a statement that nothing gates
+        this row. What gates it is `D51`, an ARMED OWNER DECISION, and
+        `review-queue` rejects a decision id here (`MALFORMED: WAITS-ON names
+        'D51', which is not a row here`) — the field's vocabulary is queue rows
+        and `none`, so a row held by a decision cannot say so in the one field
+        built for declaring what holds it. Discovered by writing it and being
+        refused, in this sitting. The gate is stated in the `DUE:` reason
+        above, which is prose no instrument groups on. ROUTED as its own live
+        row in this same act: `waits-on-cannot-name-a-decision` below.
 
 ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.05 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
     PS.05 measured the `far` commitment (GOAL.md:187) and split it exactly the
@@ -12275,6 +12312,22 @@ ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.0
         the defect class its blocker row exists for is structurally absent
         here. Its must-fail control fires hard (sourceless `decay`/`smoke`/
         `water` read -45 to -600 under identical arithmetic).
+    DUE: 2026-11-04 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST) AND
+        RE-POINTED BEHIND `D51`, for the reason given in full on the sibling
+        row `ps06-legibility-probe-collapses-on-one-mutated-world` — one
+        question, one date, one decision. In short: the 10-17 date rested on
+        the builder being dark, the builder is no longer dark, and this row
+        still must not execute because the builder's 10-20 PS-family harvest
+        measured `PS.09`'s known-answer floor UNREACHABLE at its venue and
+        escalated it as `D51` (decide_by 2026-11-03), naming PS.05 by name as
+        a sibling whose undeclared floor poses the same question. 11-04 is the
+        day after `D51`'s `decide_by`, so the date cannot break for the reason
+        it is being moved.
+    WAITS-ON: none | RE-DECLARED 2026-10-21 — same deficiency as on the
+        sibling row `ps06-legibility-probe-collapses-on-one-mutated-world`:
+        what gates this is the armed owner decision `D51`, and this field
+        cannot name a decision. See that row and
+        `waits-on-cannot-name-a-decision` below.
 
 ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-09-19 | `7012e84` (PS.09 attempt 1, FAIL, seeds 0/1/2, clean stamp) | ACTED 2026-10-03 (Review DAILY, OVERDUE by 1 d, executing commit `d186c07` — part 1 of the 09-25 ruling, which is the whole of what this row's DUE bought, shipped on 2026-09-25 and is verified in source at HEAD: the known-answer instrument is pre-registered at `ps_09_worth_it_is_real.py:582` and wired at :735, and a probe that misses it reports UNREADABLE via `Status.VOID` at :180 rather than FAIL. `probe_bal_acc`'s 0.65 bar is unmoved. The conjunct then FIRED correctly on attempt 2 (2026-09-25T08:18, FAIL -> VOID), which is the row's order discharged and not a failure of it. The builder withheld this stamp on 09-28 for a reason that was correct on 09-28 and is spent today: the floor-calibration question was an unruled OPEN row. It was RULED this morning. THE SUCCESSOR CLOCK IS NAMED, so nothing is orphaned by closing this: the re-based reference today's ruling orders is carried by `ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`, DUE 2026-10-14, which is a NEW obligation from a NEW ruling and not this row's unfinished business)
     PS.09 measured the `worth-it` commitment (GOAL.md:187) and split it the
@@ -13879,7 +13932,7 @@ ROUTED: owner-ask-reader-blind-since-0909 | 2026-09-23 | measurement in the `fie
 ## spec declares, and `spec_sha` answered "did the claim move?" WRONGLY across
 ## a total corpus replacement (builder, 2026-09-23, per the 110th audit RANK 1)
 
-ROUTED: declared-venue-vs-delivered-venue-has-no-comparator | 2026-09-23 | 3395c8b (110th audit RANK 1, "the instrument gap under it") | ACTED 2026-10-21 (Review DAILY, OVERDUE FIRST, act 1 — executing commit `dae9bc3`, and the stamp is written off SOURCE AT HEAD rather than off the BUILDER-TRACE line, which declares only that somebody committed. Candidate (i) is present as ruled and in the shape the 10-02 ruling pinned: `Spec.venue` exists at `experiments/protocol.py` carrying the `"<venue> | axis: <discriminating axis> | <dims>"` grammar, and `run verify` prints the comparator — measured this sitting, not quoted: `VENUE - declared 2 / 258 specs; match 1; declared-not-yet-echoed 1 (LC.08); UNDECLARED 256 / baseline 256`. The three REFUSALS the ruling bought are all honoured in the shipped code, which is the half a bare 'it ran' would have missed: (ii) is REFUSED in place - `venue` is deliberately absent from `SPEC_CLAIM_FIELDS`, so nothing folded venue text into `spec_sha`, which is the candidate this row's own evidence killed (`HR.1` held `spec_sha 769b55d0` byte-identical across a total venue replacement); backfill is FORBIDDEN in the docstring rather than merely undone, so the 256 `UNDECLARED` reads as honest absence and not as a fabricated claim about what a historical run loaded; and `_print_venue_comparison` returns None with `cmd_verify`'s exit code computed without it, so the reading is reporting-only on day one per the SO.10 vacancy precedent and no certificate predating the field is retroactively indicted. `VENUE_UNDECLARED_BASELINE = 256` is declared SHRINK-ONLY. No threshold moved in either direction and no certificate was staled by this stamp. WHAT THIS STAMP DOES NOT CLAIM: the comparator has one echoing spec (`HR.1`) and one declared-not-yet-echoed (`LC.08`), so its true-positive power is demonstrated on a fixture and a single live venue, not on a population - arming it is a desk decision the ruling deliberately left unmade, and it is not ordered here.) PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-10-02 (Review DAILY — candidate (i) ADOPTED with its shape pinned, (ii) and (iii) both REFUSED with reasons; the design is below and what it owes now is EXECUTION by the builder)
+ROUTED: declared-venue-vs-delivered-venue-has-no-comparator | 2026-09-23 | 3395c8b (110th audit RANK 1, "the instrument gap under it") | ACTED 2026-10-21 (Review DAILY, OVERDUE FIRST, act 1 — executing commit `dae9bc3`, and the stamp is written off SOURCE AT HEAD rather than off the BUILDER-TRACE line, which declares only that somebody committed. Candidate (i) is present as ruled and in the shape the 10-02 ruling pinned: `Spec.venue` exists at `experiments/protocol.py` carrying the `"<venue>, axis: <discriminating axis>, <dims>"` grammar (pipe-separated in the source; rendered with commas here because a pipe inside a `ROUTED:` status field breaks this file's own 4-field contract — caught by `review-queue` MALFORMED in the same sitting that wrote it), and `run verify` prints the comparator — measured this sitting, not quoted: `VENUE - declared 2 / 258 specs; match 1; declared-not-yet-echoed 1 (LC.08); UNDECLARED 256 / baseline 256`. The three REFUSALS the ruling bought are all honoured in the shipped code, which is the half a bare 'it ran' would have missed: (ii) is REFUSED in place - `venue` is deliberately absent from `SPEC_CLAIM_FIELDS`, so nothing folded venue text into `spec_sha`, which is the candidate this row's own evidence killed (`HR.1` held `spec_sha 769b55d0` byte-identical across a total venue replacement); backfill is FORBIDDEN in the docstring rather than merely undone, so the 256 `UNDECLARED` reads as honest absence and not as a fabricated claim about what a historical run loaded; and `_print_venue_comparison` returns None with `cmd_verify`'s exit code computed without it, so the reading is reporting-only on day one per the SO.10 vacancy precedent and no certificate predating the field is retroactively indicted. `VENUE_UNDECLARED_BASELINE = 256` is declared SHRINK-ONLY. No threshold moved in either direction and no certificate was staled by this stamp. WHAT THIS STAMP DOES NOT CLAIM: the comparator has one echoing spec (`HR.1`) and one declared-not-yet-echoed (`LC.08`), so its true-positive power is demonstrated on a fixture and a single live venue, not on a population - arming it is a desk decision the ruling deliberately left unmade, and it is not ordered here.) PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-10-02 (Review DAILY — candidate (i) ADOPTED with its shape pinned, (ii) and (iii) both REFUSED with reasons; the design is below and what it owes now is EXECUTION by the builder)
     DUE: 2026-10-01 | ORIGINAL, SUPERSEDED by the 2026-10-13 line at the foot of
         this row (last `DUE:` wins). Text unchanged: Dated by `next_free_due`
         (read at routing: 2026-10-01; every day through 09-30 already carries
@@ -16043,6 +16096,17 @@ ROUTED: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | 2026-09-26 | T
         demote and restore by editing prose mid-sitting is the same defect these
         three rows describe, now with a dated instance. One ruling should settle
         the class; three separate mornings would produce three local patches.
+    DUE: 2026-10-27 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST). The
+        10-20 date was this row's FIRST break and it broke for a cause this
+        sitting can name rather than guess at: the builder spent 10-20, its
+        one live day in sixteen, on the nine units its own priority block
+        ordered — and this row was not on it. The row is unchanged, the
+        defect is fully characterised, the repair is known and `WAITS-ON` is
+        `none`, so there is nothing to design and nothing to decide; it is
+        queued builder work that simply has not been reached. It is dated
+        AHEAD of the two rows that declare `WAITS-ON: t028-...` so the group's
+        order is preserved rather than inverted, and 10-27 carries measured
+        room under the 6/cycle capacity.
     WAITS-ON: none | the defect is fully characterised and the repair is
         spec-local; nothing else holds it.
     BUILDER-TRACE 2026-09-28 ~19:0x UTC (builder — a RECEIPT in the prose
@@ -16238,6 +16302,12 @@ ROUTED: t022-p9-reads-a-specs-own-row-as-someone-elses | 2026-09-26 | `T0.22` of
         and for the `T0.31` instance this sitting measured. `WAITS-ON` declares
         the grouping so the pile counts these as one decision and not as three
         rows.
+    DUE: 2026-10-27 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST), on
+        the same date as its declared blocker `t028-p10-reads-an-empty-armed-
+        register-as-a-broken-tool` — one question, one date, one decision, as
+        the 10-04 re-pointing established for these three Tier-0 liveness
+        rows. First break, same cause: the builder's single live day went to
+        the units its priority block named and these were not among them.
     WAITS-ON: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | RE-POINTED 2026-10-04 (Review FULL, act 16) from `none`, which was true row-by-row and wrong about the group: these three Tier-0 live-document rows are ONE question and now share ONE date (2026-10-20), so the pile must count them as one decision. It buys no ageing exemption and moves no violation count.
     Question: `T0.22`'s property 9 — *"No test in the ladder may read another
     spec's metrics off the ledger directly"* — is implemented as a regex over
@@ -16302,6 +16372,10 @@ ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run st
         behind once re-bought, which is this row's own claim — the staleness and
         the recovery of a standing PASS were both invisible to every gate except
         the regate sweep's log line.
+    DUE: 2026-10-27 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST), on
+        the same date as `t028-p10-...` and `t022-p9-...` for the reason the
+        10-04 sitting gave when it re-pointed all three: one question, one
+        date, one decision. First break, same cause.
     WAITS-ON: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | RE-POINTED 2026-10-04 (Review FULL, act 16) from `none`, for the reason given on `t022-p9-...`: one question, one date, one decision. No exemption is claimed and no number above moves.
     Question: the 121st audit's FTB 3 ordered floor state into `run status`'s
     exit code, and this slot shipped it (`8cd37d0`: status 0 -> 2 on
@@ -16823,6 +16897,28 @@ ROUTED: adverse-verdicts-are-re-derived-by-nobody | 2026-09-26 | one-off fresh-p
         PASS set, or declaring `_check` purity a contract — and under `D35`
         clause 2 no checker may join the three that exist. That makes the
         disposition the desk's and not this one's.
+    DUE: 2026-10-30 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST) AND
+        **ITS BLOCKER WITHDRAWN AS VOID, which is this re-date's whole
+        content and a finding in its own right.** This row's `WAITS-ON` names
+        `lg12-abstention-knob-has-no-resolution`. That row was stamped
+        **ACTED on 2026-10-08** (`87bc128` + `1935cf6` + `a2afdb5`) — it is
+        TERMINAL and can never move again. So from 10-08 onward this row's
+        stated reason for waiting did not exist, and it sat blocked on a
+        closed window for **thirteen days**, through its own 10-20 break,
+        while `review-queue` printed it as `WAITS-ON-A-CLOSED-WINDOW` every
+        cycle. Nothing read that print. **The transferable finding is not
+        about this row: a `WAITS-ON` is written once at routing time and is
+        never re-read when its target closes, so a row can be held by a
+        blocker that stopped existing — and the instrument that detects this
+        is explicitly declared gating-nothing (no exit code, no auto-re-date,
+        by the 2026-10-11 ruling), which is correct in principle and meant
+        nobody acted on it in practice.** That gap is ROUTED AS ITS OWN LIVE
+        ROW in this same act: `waits-on-closed-window-prints-and-nobody-acts`
+        below. This row itself is UNBLOCKED as of today and is ordinary
+        builder work; 10-30 is a date with measured room under the 6/cycle
+        capacity and is not a date this sitting is otherwise filling.
+    WAITS-ON: none | RE-POINTED 2026-10-21 from `lg12-abstention-knob-has-no-
+        resolution`, which is ACTED and terminal. Nothing live gates this.
     WAITS-ON: lg12-abstention-knob-has-no-resolution | DUE 2026-09-28, and not
         for its ANSWER but for its ORDER: that row is due two days before this
         one and it prices a redesign against `LG.12`'s FAIL. Whoever sits it
@@ -17263,6 +17359,18 @@ ROUTED: t018-explicit-no-control-reads-as-an-unrun-promise | 2026-09-26 | `T0.18
         this slot. Nothing is dispatched behind it and `T0.18` cannot be
         re-bought today in any case (see NOT RE-BOUGHT below), so it takes the
         mechanical date.
+    DUE: 2026-11-05 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST) and
+        the blocker is CONFIRMED LIVE BY MEASUREMENT this sitting rather than
+        by reading this row's own prose. `run verify` at HEAD prints, in its
+        own VERDICT block, `unevaluable: T0.18(KeyError)` and states that the
+        re-buy *is owed by the desk under `t013-latently-red-28-disarmed-keys`
+        and is BLOCKED behind T0.13 (FAIL)*. `t013-latently-red-28-disarmed-
+        keys` is **OPEN** at HEAD, so this row's `WAITS-ON` names a window
+        that is genuinely still open — unlike `adverse-verdicts-are-re-
+        derived-by-nobody`, checked in the same act and found waiting on a
+        closed one. 11-05 is dated past `t013`'s own live clock rather than
+        onto a date this sitting is filling; a nearer date would be this desk
+        promising a repair whose prerequisite it does not control.
     WAITS-ON: t013-latently-red-28-disarmed-keys | `T0.18` declares
         `depends_on: [T0.08, T0.13]` and `T0.13` is FAIL, so a re-run of
         `T0.18` records BLOCKED and never reaches its own `_check`. The ruling
@@ -17476,6 +17584,11 @@ ROUTED: t023-readonly-conjunct-gates-on-a-ratchet-exit-code | 2026-09-26 | `T0.2
         heavyweight ones are not. ORIGINAL TEXT FOLLOWS, unchanged. | `review-queue`'s own `next_free_due`, read off the tool
         this slot. The FAIL is already banked, so nothing degrades while it
         waits; what waits is the choice between two defensible readings.
+    DUE: 2026-10-30 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST).
+        First break. `WAITS-ON` is `none` and was re-confirmed, not inherited:
+        `T0.23` declares `depends_on: [T0.01]`, which is PASS at HEAD, so
+        nothing gates this and it is ordinary unblocked builder work that the
+        builder's one live day did not reach. 10-30 carries measured room.
     WAITS-ON: none | `T0.23` declares `depends_on: [T0.01]`, which is PASS, so
         the re-buy was legal and landed. No live row's answer changes what was
         measured.
@@ -18755,6 +18868,17 @@ ROUTED: freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable
         ruling this one ahead of that one would either pre-empt the repair or
         produce a release date with no arithmetic under it. They are coupled in
         fact even though this row proposes no change to `T1.08`.
+    DUE: 2026-10-25 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST) onto
+        the Sunday FULL, and the reason is that this row is entangled with an
+        ARMED OWNER DECISION rather than with capacity. `D44` (decide_by
+        2026-10-24) governs what the first end-to-end certificate of Jack
+        contains, and its own text says it *executes the first time one runs
+        Jack end to end — which is the freeze's own release condition*, i.e.
+        this row's subject. `D44`'s clock therefore runs out the day BEFORE
+        10-25, so the FULL sitting reads this row with the owner's answer (or
+        the fired default) in hand instead of guessing at it. The 10-07 and
+        10-18 dates both broke without this connection being stated; stating
+        it is most of what this re-date is for.
 
 **THE MEASUREMENT, from the runner's own predicate.** The STANDING FREEZE in
 `scripts/ladder_prompt.md` (desk, SYSTEM.md class 3, 2026-09-17) says
@@ -21295,6 +21419,16 @@ ROUTED: t211-accuracy-channel-is-seed-fragile-not-globally-broken | 2026-09-30 |
         owner as a strategic item — *the project cannot size any seed-fragile
         successor while its only noise-pricing spec is red* — because at that
         point the blockage is a standing capability gap, not a scheduling one.
+    DUE: 2026-11-02 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST),
+        behind a blocker confirmed live at HEAD: `WAITS-ON` names
+        `t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-
+        sign`, which is **live** and is itself dated today. This row's own
+        text makes it THE DESK's re-reading *once `T1.08` reaches* its
+        resolution, so the date is structurally downstream and a nearer one
+        would be this desk promising to re-read a result that does not exist.
+        The seed count stays DECLARED UNSETTABLE and the 10-11 refusal of the
+        inversion as asked STANDS — this re-date moves a clock and nothing
+        else.
     WAITS-ON: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | the seed-count question above is gated on `T1.08`-class noise pricing, and this is the live row carrying that work. Declared at ROUTING time per THE ROUTER'S DECLARATION, and the date above (2026-10-20) is deliberately set AFTER that row's own `DUE: 2026-10-21`... **it is not, and I am naming that rather than quietly fixing it:** 2026-10-20 falls ONE DAY BEFORE its prerequisite. The earlier date is DELIBERATE and the written reason the declaration requires is this: what this date owes is only *"re-read this row and either design or re-arm"*, which is a desk act that costs one sitting and is worth performing the day after the prerequisite's own sitting regardless of outcome — whereas waiting until 10-22+ would mean this row could not respond to a 10-21 verdict inside the same week. Re-dating to 2026-10-22 would be the tidier number and the worse promise.
     SUPERSEDED DUE: 2026-10-10 | `next_free_due`'s literal answer; see THE RULING, which discharges the design half and re-points what remains at `T1.08`.
     UPDATE 2026-09-30 (builder, 14:07 slot — attempt 2 harvested, `b6f505a`;
@@ -21991,6 +22125,11 @@ ROUTED: cpu-class-ladder-has-no-rung-between-2h-and-48h | 2026-10-04 | THE RULIN
         `experiments/cpu_budget.py`, and `gate_cpu_child` admitting it under
         the **UNCHANGED 57,600 s** ceiling. Nothing here moves a bar; the
         ceiling is byte-unmoved and that is the condition of the row.
+    DUE: 2026-10-30 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST). The
+        10-17 re-date rested on the builder being dark; the builder ran on
+        10-20 and did not reach this. `WAITS-ON` is `none` and the `D20`
+        reversal is explicitly NOT an input to it, so nothing gates the work.
+        10-30 carries measured room.
     WAITS-ON: none | `D20`'s reversal is an owner question and is NOT an input
         here: this row adds a rung so that 2-48 h work stops being forced into
         the detached lane at all, which is a different repair from re-opening
@@ -22122,6 +22261,17 @@ ROUTED: t111-certified-loss-has-no-shipped-caller | 2026-10-04 | T1.11 attempt 2
 
 ROUTED: seven-instrument-readers-are-gated-by-no-spec | 2026-10-05 | docs/FIELD_WATCH.md §7d (week 10 sweep, `32b098c`, COMPLETE run) + this desk's own enumeration of `IMPL_DEPS` across all of `experiments/tests/` | OPEN
     DUE: 2026-10-19 | the DESIGN of which readers get a gating spec and what each must assert, owed by this desk; the one-character `fieldwatch.py` repair is ordered separately onto the builder's priority block TODAY because it perishes at the next sweep (~2026-10-12) and this date does not. 10-19 carries 2 live rows against the measured 6/cycle — genuine room, and after the ~10-07 usage-week reset the builder has been dark through.
+    DUE: 2026-10-29 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST). THIS
+        IS A DESK DATE and the debt is this desk's own: the DESIGN of which
+        readers get a gating spec and what each must assert. The separately
+        ordered one-character `fieldwatch.py` repair is not what is overdue
+        here. The 10-19 date was argued from room (*10-19 carries 2 live rows
+        against the measured 6/cycle*) and from the builder being dark, and
+        both premises were about the BUILDER's capacity on a row the builder
+        does not own — which is why it broke. 10-29 is dated as desk work past
+        the Sunday FULL of 10-25, so a FULL sitting with the population-sweep
+        remit can take it early if it chooses; it also carries a dependent
+        (`salt-differential-...`, re-dated to 11-02 behind it today).
     WAITS-ON: none | nothing else's answer changes the enumeration below, and the repair is additive in both halves (a regex that matches MORE, and specs where there are none). No live row's disposition is a prerequisite.
     **QUOTING THE FINDING, which is what the `FIELD-WATCH FINDINGS` reader asks of a consuming desk.** §7d: *"`experiments/fieldwatch.py` DETECTS `\bfinding\b` AND THEREFORE CANNOT SEE A HEADING THAT SAYS "FINDINGS" ... `_FINDING_WORD = re.compile(r"\bfinding\b", re.I)` (`fieldwatch.py:102`) — the trailing `s` destroys the right-hand word boundary ... `findings()` returned ONE section when the page carried four ... the reader would have printed `0 UNROUTED-FIELD-FINDING` — green — over three un-owned findings, one of which is the log that had already silently perished."*
     **VERIFIED AT THIS DESK, NOT CONSUMED.** `fieldwatch.py:102` reads `_FINDING_WORD = re.compile(r"\bfinding\b", re.I)` at HEAD. Executed against real headings this sitting: `## 6. A FINDING IN OUR OWN ARTIFACTS` MATCH; `## 7. TWO SMALLER FINDINGS ABOUT THIS DESK` **BLIND**; `### 7b. THE LOG HOLE, REPAIRED IN THIS COMMIT` BLIND; `## 3. THREE FINDINGS ABOUT THE LADDER` **BLIND**. With `\bfindings?\b` both the singular and the plural MATCH. **The implementation also contradicts its own declared contract:** the module docstring (`fieldwatch.py:57`) defines a finding as *"any `##`/`###` heading containing the word 'finding'"*, and a plural heading contains that word. So this is not a judgement call about scope — the code does not do what its own docstring says, and the direction of the error is a green light over un-owned findings.
@@ -22255,6 +22405,13 @@ ROUTED: xl00-negative-claim-does-not-assert-its-own-test-could-reject | 2026-10-
         and verified as safe. 2026-10-18 also carries ZERO live rows against a
         measured capacity of 6, so nothing is piled on; 2026-10-11, the nearer
         Sunday, already carries 7 and is amber.
+    DUE: 2026-10-25 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST) onto
+        the NEXT SUNDAY FULL, which is the venue this row named for itself and
+        the 10-18 date was: the 10-18 FULL ran and did not reach it. The date
+        is a VENUE and not a capacity pick, so the pile count on 10-25 does
+        not govern it — a negative claim that does not assert its own test
+        could have rejected is a Part 2 strengthening question, and Part 2
+        exists only on FULL sittings.
     WAITS-ON: none | nothing live changes what attempt 8 recorded. It is the
         BY-CATCH of `declared-null-not-gated-is-1-of-108-not-a-class`, which
         this sitting DECLINED; it is carried here precisely because `DECLINED`
@@ -22327,6 +22484,14 @@ ROUTED: duration-s-feeds-two-meters-as-the-specs-cost | 2026-10-06 | 143rd audit
     DUE: 2026-10-18 | review-queue's own "Next date with room under the
         measured capacity" printed 2026-10-18 at routing time — the mechanical
         answer, not a hand-picked date.
+    DUE: 2026-10-31 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST). The
+        10-18 date came from `review-queue`'s own next-free-date arithmetic
+        and broke anyway, which is worth stating plainly: **that arithmetic
+        answers "which date has room", not "which date will be worked", and on
+        a board where the builder lost fifteen of sixteen slots those are
+        different questions.** This sitting is therefore dating from room AND
+        from the disposal load it is itself creating — 10-31 is outside the
+        10-22..10-30 band this morning's re-dates are filling.
     WAITS-ON: none | no queue row is a prerequisite. The W1.04 row landed VOID
         this morning (control lane, harvested b58c48c) and per the audit's own
         order this routing is deliberately NOT conditional on it: the timeout
@@ -22377,6 +22542,15 @@ ROUTED: t112-pass-stands-on-t111s-orthogonal-added-conjunct | 2026-10-06 | 143rd
         capacity" printed 2026-10-18 at routing time — the mechanical answer.
         Dated AFTER its referenced blocker's own DUE (t111: 10-16), so the
         router's-declaration earlier-date clause does not bind.
+    DUE: 2026-10-25 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST) ONTO
+        THE SUNDAY FULL, and the venue is the reason rather than the capacity.
+        This row's own `WAITS-ON` says *the reading below is complete and
+        stampable now* — it is a DESK read of whether a `PASS` stands on a
+        conjunct added for an orthogonal purpose, which is precisely Part 2's
+        test-re-examination remit, and Part 2 is SKIPPED on DAILY sittings by
+        standing instruction so that daily rewrites cannot churn the ladder.
+        A DAILY desk stamping it would be doing Part 2 work in the one mode
+        forbidden to do it. 10-25 is the next FULL.
     WAITS-ON: none | the reading below is complete and stampable now; nothing
         gates it. The counter member's EXIT runs through
         `t111-certified-loss-has-no-shipped-caller` (T1.11 back to PASS), but
@@ -22450,6 +22624,12 @@ ROUTED: bare-git-commit-writes-the-whole-shared-index | 2026-10-06 | 143rd audit
     DUE: 2026-10-18 | review-queue's "Next date with room under the measured
         capacity" re-printed 2026-10-18 after this slot's own t112 routing —
         the mechanical answer.
+    DUE: 2026-10-31 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST).
+        Diagnosis complete, `WAITS-ON: none`, remaining work is a small
+        repair. Dated outside the 10-22..10-30 band this morning's disposals
+        are filling, for the reason recorded on `duration-s-feeds-two-meters-
+        as-the-specs-cost`: a date with room is not the same as a date that
+        will be worked.
     WAITS-ON: none | the diagnosis is complete; the remaining repair is a
         prompt/write-window design this row hands to its owner, and nothing
         gates the handover.
@@ -22514,6 +22694,12 @@ ROUTED: salt-differential-has-no-coverage-counter-and-an-unsplit-d27-exemption |
         the parent ruling: if that row's answer is that readers of this class get
         certificates, the certificate and the counter are one visit to this file,
         and the 4-certificate bill below is paid once instead of twice.
+    DUE: 2026-11-02 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST),
+        BEHIND ITS DECLARED BLOCKER and checked rather than assumed:
+        `WAITS-ON` names `seven-instrument-readers-are-gated-by-no-spec`,
+        which is **OPEN** at HEAD and is re-dated to 10-29 in this same act as
+        a DESK design. So the window is genuinely open and this row is dated
+        after it, not onto it.
     WAITS-ON: seven-instrument-readers-are-gated-by-no-spec | that row is OPEN,
         DUE 2026-10-19, and it decides whether this class of reader is certified
         at all. This row's counter is owed either way — that is what makes it a
@@ -23153,7 +23339,7 @@ ROUTED: steering-page-is-two-days-from-the-launch-cliff-and-31kb-is-provenance |
     steering` must read the same 10 items, 0 refused, after the move; that is
     the acceptance test.
 
-ROUTED: review-defers-leave-no-labelled-hole | 2026-10-17 | Review DAILY 2026-10-17 (found backfilling three missing trend rows) | ACTED 2026-10-21 (Review DAILY, OVERDUE FIRST, act 6 — executing commit `d148c79`, verified in `scripts/review.sh` at HEAD rather than off the trace. A gate-deferred day now writes its OWN trend row: `review.sh:73` appends a `| DEFERRED - ... |` line to `docs/PROGRESS_LOG.md` at the refusal, `:75` commits it, and `:81-82` says so or warns that it could not. The repair that makes it a labelled hole instead of a second kind of silence is the reader side, and it is present: `lib_seal.sh:350` and `review.sh:180` EXCLUDE rows carrying the word `DEFERRED` from freshness, so a deferral can never be mistaken for a held sitting by the staleness banner that reads this same file. NOTE ON THIS ROW'S OWN READING, because it is the row's subject: `review-queue` prints eight ORDERED-MEASUREMENT lines for this row (`ordered nothing`, `ordered about`, `ordered the`, `ordered gate`, ... ) — those are the reader tokenising this row's prose, NOT eight commissioned specs, and they are an artefact of the ORDERED-MEASUREMENTS extractor rather than of this repair. The stamp does not fix them and does not claim to; the reader defect is ROUTED AS ITS OWN LIVE ROW in this same act: `ordered-measurements-extractor-reads-prose-as-spec-ids` below, because an ACTED row is terminal and may not carry ordered work.) PRIOR STATUS, retained verbatim because this file never deletes history: OPEN
+ROUTED: review-defers-leave-no-labelled-hole | 2026-10-17 | Review DAILY 2026-10-17 (found backfilling three missing trend rows) | ACTED 2026-10-21 (Review DAILY, OVERDUE FIRST, act 6 — executing commit `d148c79`, verified in `scripts/review.sh` at HEAD rather than off the trace. A gate-deferred day now writes its OWN trend row: `review.sh:73` appends a `DEFERRED - ...` trend-table row to `docs/PROGRESS_LOG.md` at the refusal, `:75` commits it, and `:81-82` says so or warns that it could not. The repair that makes it a labelled hole instead of a second kind of silence is the reader side, and it is present: `lib_seal.sh:350` and `review.sh:180` EXCLUDE rows carrying the word `DEFERRED` from freshness, so a deferral can never be mistaken for a held sitting by the staleness banner that reads this same file. NOTE ON THIS ROW'S OWN READING, because it is the row's subject: `review-queue` prints eight ORDERED-MEASUREMENT lines for this row (`ordered nothing`, `ordered about`, `ordered the`, `ordered gate`, ... ) — those are the reader tokenising this row's prose, NOT eight commissioned specs, and they are an artefact of the ORDERED-MEASUREMENTS extractor rather than of this repair. The stamp does not fix them and does not claim to; the reader defect is ROUTED AS ITS OWN LIVE ROW in this same act: `ordered-measurements-extractor-reads-prose-as-spec-ids` below, because an ACTED row is terminal and may not carry ordered work.) PRIOR STATUS, retained verbatim because this file never deletes history: OPEN
     DUE: 2026-10-19 | the BUILDER's execution; a ~4-line shell repair with a
         ZERO staleness bill (`run stale-cost` priced on a clean tree this
         sitting: 0 changed paths, 0 standing certificates staled). Dated onto
@@ -23752,3 +23938,90 @@ ROUTED: metric-reader-rate-is-unmeasured-against-the-corrected-reader | 2026-10-
         a known-good reader costs less than a seventh broken promise.
     WAITS-ON: none | the corrected reader is already at HEAD, so nothing this
         row needs is behind another live row's answer.
+
+ROUTED: waits-on-closed-window-prints-and-nobody-acts | 2026-10-21 | `adverse-verdicts-are-re-derived-by-nobody`, found this sitting waiting since 2026-10-08 on `lg12-abstention-knob-has-no-resolution`, which was stamped ACTED (terminal) on that date | OPEN
+    THE FINDING, measured and not hypothetical: a `WAITS-ON` is written once
+        at routing time and is NEVER re-read when its target closes. One live
+        row sat held for THIRTEEN DAYS, through its own 10-20 break, on a
+        blocker that had become terminal and could never move again. The
+        instrument saw it the whole time — `review-queue` printed
+        `WAITS-ON-A-CLOSED-WINDOW adverse-verdicts-are-re-derived-by-nobody
+        ... (ACTED — terminal; this can never move again)` every cycle — and
+        nothing acted on the print. Two rows carry this class today; the other
+        (`d35-none-quota-has-no-satisfying-move`) is unexamined.
+    WHY THE INSTRUMENT'S SILENCE IS CORRECT AND STILL A PROBLEM: the
+        2026-10-11 ruling declared these READINGS — no exit code, no ageing
+        exemption, no auto-re-date — because *moving a promise because an
+        instrument printed it is forbidden*, and that is right: a date is a
+        desk's judgement. But the ruling solved the wrong half. The hazard was
+        never that a tool would re-date on its own; it is that a row whose
+        STATED REASON FOR WAITING HAS CEASED TO EXIST keeps ageing as though
+        the reason held, and the only organ that can notice is a desk reading
+        a block it has no instruction to read. **This is the predicted-heals
+        shape: a print that nobody re-reads is indistinguishable from no print
+        at all.**
+    THE SHAPE OF THE REPAIR, and it deliberately does not arm anything:
+        the OVERDUE-FIRST instruction this sitting runs under should name the
+        `WAITS-ON-A-CLOSED-WINDOW` block as a MANDATORY READ beside the
+        OVERDUE class, so disposing a row includes checking whether its stated
+        blocker still exists. That is a change to the Review's own prompt, not
+        to `review_queue.py`, and it adds a duty rather than an exit code —
+        the desk still rules, it simply cannot claim not to have looked. A
+        cheaper partial: have the block print the number of DAYS the window
+        has been closed, so thirteen reads differently from one.
+    STALENESS BILL: zero certificates for the prompt change (`scripts/
+        review.sh` and the Review's prompt are named by no spec's IMPL_DEPS;
+        confirm with `run stale-cost` at execution). The optional day-count
+        print touches `experiments/review_queue.py`, which is `T0.31`'s gated
+        implementation and would bill **T0.31**. This routing edit bills the
+        standing doc trio T0.21/T0.28/T0.31, paid in this sitting.
+    DUE: 2026-11-01 | THIS DESK's design, because the repair is to this desk's
+        own reading duty and no builder can be ordered to make a desk look at
+        something. Dated outside the 10-22..10-31 band this morning's
+        eighteen re-dates are filling, per the lesson recorded on
+        `duration-s-feeds-two-meters-as-the-specs-cost`: a date with room is
+        not the same as a date that will be worked.
+    WAITS-ON: none | the two instances are already on the page; nothing
+        upstream decides what this field means.
+
+ROUTED: waits-on-cannot-name-a-decision | 2026-10-21 | `review-queue`'s own `MALFORMED` class, fired twice against this sitting's re-dates of `ps05-legibility-holdout-is-a-band-lottery` and `ps06-legibility-probe-collapses-on-one-mutated-world` | OPEN
+    THE FINDING: `WAITS-ON`'s vocabulary is QUEUE ROWS and `none`. A row held
+        by an ARMED OWNER DECISION therefore cannot say so in the one field
+        built for declaring what holds it — writing `WAITS-ON: D51` returns
+        `MALFORMED: WAITS-ON names 'D51', which is not a row here`, so the
+        honest declaration is rejected and the only legal one, `none`, is
+        FALSE. Found by writing it and being refused, in this sitting.
+    WHY IT MATTERS BEYOND TIDINESS: `WAITS-ON` is not decoration — it feeds
+        `WAITS-ON GROUPING`, which exists because the 93rd audit found 14 rows
+        due together were really 9 decisions and nothing could print it. A
+        date's group count prints ONLY when every live row on it declares, on
+        the stated principle that *a confidently wrong group count is worse
+        than an absent one*. So two rows that are genuinely one decision
+        (`D51`) now declare `none` and will be counted as two independent
+        promises — which is exactly the miscount the grouping was built to
+        prevent, arriving through the field's own grammar. The error direction
+        is the bad one: it UNDER-reports shared blockage, making a pile look
+        more tractable than it is.
+    THE SHAPE OF THE REPAIR: admit `D<n>` as a legal `WAITS-ON` target when
+        the id resolves in `docs/DECISIONS_NEEDED.md` or
+        `DECISIONS_RESOLVED.md`, and group on it exactly as on a row id. The
+        known-positive is this sitting's two PS rows, which must group as ONE
+        decision behind `D51`; the known-negative is an unresolvable `D999`,
+        which must still read `MALFORMED` — the repair must not become a hole
+        through which any token passes. A decision whose window has CLOSED
+        should read as a closed window, the same as a terminal row, which
+        composes with `waits-on-closed-window-prints-and-nobody-acts` above.
+    WHAT IT MUST NOT BECOME: no exit code, no ageing exemption, no auto-
+        re-date. `WAITS-ON` is declaration-only by the 2026-10-11 ruling and
+        this row does not reopen that.
+    STALENESS BILL: `experiments/review_queue.py` is `T0.31`'s gated
+        implementation, so the repair bills **T0.31**; re-confirm with `run
+        stale-cost experiments/review_queue.py` at execution rather than
+        inheriting this line. This routing edit bills the standing doc trio
+        T0.21/T0.28/T0.31, paid in this sitting.
+    DUE: 2026-11-01 | the BUILDER's execution — a bounded grammar widening
+        with both error directions fixtured. Dated with
+        `waits-on-closed-window-prints-and-nobody-acts`, which it composes
+        with, and outside the 10-22..10-31 band this sitting's re-dates fill.
+    WAITS-ON: none | and here the `none` is true: nothing live decides what
+        this field's grammar should admit.
