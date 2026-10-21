@@ -1,3 +1,11 @@
+> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
+> the Review has missed its schedule: newest row in docs/PROGRESS_LOG.md is 2026-10-19 (2d old; the schedule allows 1d)
+> So everything below is the PREVIOUS run of the review and is a RECORD,
+> not current state: its counts, its "current state" framing and any
+> claim about what has or has not moved describe an older world.
+> Stamped 2026-10-21T06:37:04+00:00 by scripts/lib_seal.sh. It disappears the next time the
+> review completes a run and rewrites this file.
+
 > **PARTIALLY REFRESHED 2026-10-20 BY A COMPLETED DAILY SITTING — read this
 > before trusting the staleness banner below it.** The DAILY Review of
 > 2026-10-20 ran to completion and committed six acts. A DAILY does NOT
