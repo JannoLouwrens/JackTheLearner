@@ -24025,3 +24025,203 @@ ROUTED: waits-on-cannot-name-a-decision | 2026-10-21 | `review-queue`'s own `MAL
         with, and outside the 10-22..10-31 band this sitting's re-dates fill.
     WAITS-ON: none | and here the `none` is true: nothing live decides what
         this field's grammar should admit.
+
+## ROUTED: OPEN — `gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard`: the hour
+## that bought this week's only new certificate is filed as WASTE, and
+## `Budget.charge`'s idempotency-on-the-whole-RECORD makes that label permanent
+## (overseer, 158th audit — CARRYING the 157th audit's FINDING 1, whose own
+## declared routing never reached this file; see the provenance field)
+
+ROUTED: gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard | 2026-10-21 | RE-DERIVED LIVE AT HEAD by the 158th audit, not inherited: `experiments/gpu_budget.json` `charged_jobs["jannolouwrens/jack-ladder-1792501976"]` = `{"backend":"kaggle","hours":1.0043,"ok":false,"week":"2026-W42"}` against `experiments/ledger.json` `T1.02` **PASS** (`commit 7ffd491`, `ran_at 2026-10-20T14:27:54`) naming that exact id as its `gpu_job_id` with `metrics.device "cuda"` and `compute_s 4136.44`; guard read at `experiments/gpu.py:558` | OPEN
+    THE FINDING: `Budget.charge` returns `False` on a known `job_id` BEFORE the
+        `ok` label is reconsidered, so idempotency on the AMOUNT was
+        implemented as idempotency on the whole RECORD, outcome label
+        included. A job first charged `ok=False` by a watcher timeout can
+        never be re-labelled by the reattach that proves it succeeded. `W42`
+        therefore reads **1.9952 h waste (96.0%)** where **0.9909 h (47.7%)**
+        is real, and **0.0828 h** productive Kaggle time where **1.0871 h**
+        is real — a 13.1x understatement of the only productive GPU hour this
+        project has bought in three weeks.
+    WHY IT MATTERS BEYOND TIDINESS: `failed_hours()`'s own docstring says the
+        bucket exists because *"waste that cannot be seen cannot be reduced"*.
+        The bucket built to make waste visible is now what hides the opposite,
+        and **the error direction is the dangerous one** — it overstates waste,
+        which argues AGAINST drawing the free quota, which is the live question
+        on `D30`/`D40`/`D46`. It has already been quoted twice as fact on this
+        project's own pages (156th and 157th audits, §5 and FOR THE OWNER 3)
+        and corrected once.
+    WHY THIS ROW IS BEING ROUTED BY THE NEXT AUDIT RATHER THAN ITS AUTHOR, and
+        it is the sharper half: the 157th audit's page states *"Routed as
+        `gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard` ... and a `ROUTED:`
+        row"*. **No such row exists in this file.** That run exited `rc=124`
+        at 07:02 and was sealed as a draft; the last commit touching this file
+        is the Review's `d5e4fd5` at 06:51. So the mandated routing channel
+        failed silently, the page asserted a row that was never written, and
+        the finding survived only because the 12:37 audit checked the claim
+        instead of inheriting it — on the first morning after the
+        `oversight-for-the-builder-has-no-reader` ruling was executed into
+        `scripts/overseer_prompt.md` (`c8ee77b`). The ruling is right and this
+        is its first worked failure: the route must precede the prose, not
+        follow it.
+    THE SHAPE OF THE REPAIR, narrow and it MUST NOT RE-BILL: on a repeat charge
+        for a known `job_id`, if the stored record is `ok=False` and the new
+        call is `ok=True`, move `hours` from `{backend}_failed` to `{backend}`
+        in the SAME week bucket, set `"ok": true`, and **still return `False`**
+        so no caller believes fresh hours were billed. Then re-file the one
+        live instance. Add the watcher-timeout-then-reattach shape to the
+        budget fixture so it cannot regress.
+    WHAT IT MUST NOT BECOME: no change to the AMOUNT, no touch to
+        `remaining()` (it already sums both buckets at `gpu.py:473` and is
+        correct, so no quota is at risk and none was), no new ratchet key, and
+        no gate. `unattributable_hours()` filters on `j["ok"]` so a mislabelled
+        job drops out of BOTH sides of its subtraction — no false
+        `GPU BUDGET LEAK` fired and none should start.
+    ONE ADJACENT MEASUREMENT, FLAGGED AND NOT CLAIMED: the charge is the
+        watcher's metered window (capped 3600 s = 1.0 h) while the harvested
+        row records `compute_s 4136.44` = **1.1490 h**. Where a reattach
+        outlives the cap the quota is charged the cap rather than the
+        occupancy, and that **0.1447 h undercount is in the unsafe
+        direction**. What Kaggle actually billed is NOT established here, so
+        this half is reporting-only — print the gap beside the charge; a gate
+        on an unverified quantity would be worse than the gap.
+    STALENESS BILL: none for the routing itself beyond this file's standing
+        trio (below). The repair touches `experiments/gpu.py`; price it with
+        `run stale-cost experiments/gpu.py` at execution rather than
+        inheriting a number from here.
+    DUE: 2026-10-26 | the BUILDER's execution — a code commit, which is why it
+        cannot live as prose on a page rewritten at 00:37. 10-26 because it is
+        `review-queue`'s own printed "next date with room under the measured
+        capacity" (4 promised against 6). The week this mislabels closes
+        Saturday 2026-10-24 and that was considered as a deadline and
+        REJECTED: re-filing a closed week bucket stays possible afterwards, so
+        a tighter date would be a promise bought with no extra truth.
+    WAITS-ON: none | the evidence is complete on disk, the guard is read, and
+        the repair touches no open row.
+
+## ROUTED: OPEN — `steering-pages-rank-the-frontier-by-blocks-not-frees`: `T0.36`
+## PASSES on the claim that `frees` is the set a repair buys, and three organs
+## in a row have priced `T1.08` at its `blocks` column — while the top blocker
+## by `frees` is `NE.01` (7), unrun for 58 days, CPU-only, and named by nobody
+## (overseer, 158th audit)
+
+ROUTED: steering-pages-rank-the-frontier-by-blocks-not-frees | 2026-10-21 | `run blocked` at HEAD: `NE.01 = FAIL frees 7 (blocks 8)`, `UB.10 = VOID frees 4`, `T1.08 = FAIL frees 3 (blocks 45)`; `T0.36` PASS, whose own `control` field reads *"it claims `T1.08` frees 41 where repair buys 3 — a 38-spec overstatement"*; `docs/PROGRESS.md` FOR THE BUILDER 0 (*"`T1.08` is the project's largest unblocker"*); `docs/OVERSIGHT.md` 157th (*"`T1.08`'s ruling frees 45 specs"*) | OPEN
+    THE FINDING: the instrument is CORRECT and the prose that reads it is not.
+        `run blocked` prints `frees` and `blocks` as separate columns;
+        `T0.36`'s certified claim is that **`frees` is the set repair buys**,
+        and `T0.36`'s `notes` record that this spec exists because on
+        2026-09-13 the tool printed *"`T1.08` frees 41"* and *"PROGRESS.md,
+        OVERSIGHT.md, `coverage.py`'s header comment and a REVIEW_QUEUE row
+        that priced a design question at '41 specs'"* all quoted it. The tool
+        was repaired and gated. **The prose has regressed to the adjacent
+        column.** "Largest blocker" is TRUE of `T1.08` (45). "Largest
+        unblocker" / "frees 45" is FALSE: repairing `T1.08` alone frees
+        **three** — `D1.0`, `T2.01`, `T2.02` — and the other 42 need a
+        co-requisite too.
+    WHAT IT COSTS, and this is the part that is not bookkeeping: the spec that
+        tops the certified ranking is **`NE.01`** — *"The needs are a real
+        control problem: nobody survives by accident"* — `frees 7`
+        (`NE.02`-`NE.07`, `NE.09`), `Budget.CPU`, `depends_on ['PG.8','NE.00']`
+        both satisfied, so it is **buyable today with zero GPU hours**, and its
+        live row is **FAIL attempt 3 at 2026-08-24T15:45:03 — 58 days old**
+        with a stale `impl_sha` (its own test file moved, plus
+        `experiments/protocol.py`, plus an `IMPL_DEPS` change). It is the root
+        of `GOAL.md`'s *"the needs ARE the curriculum"*: `coverage` reads
+        hunger/thirst at 6 specs / **0 passing**, sleep at 5 / **0 passing**
+        (`NE.05`, `NE.06` both `blocked<-NE.01`), and the Interoception seat is
+        VACANT with `NE.02` as its arena. Meanwhile the one lane the builder
+        legally has is CPU, because every GPU buyer is behind `T1.08`. The
+        misranking has pointed the project's only spendable lane at its one
+        unspendable blocker.
+    THE QUESTION FOR THIS DESK, because the ranking of the frontier is not the
+        overseer's to set: should the steering pages quote `frees` beside
+        `blocks` whenever they name a blocker, in the same idiom `run blocked`
+        already prints — and is `NE.01` the frontier for the next CPU slots? The
+        `T1.08` priority may still be right for a DIFFERENT reason that is not
+        in dispute here (it gates the only re-buyable GPU specs, `T2.03` and
+        `T2.14`, and the quota expires Saturday); what is in dispute is the
+        NUMBER used to justify it and the spec that number hides.
+    WHAT IT MUST NOT BECOME: no threshold moves, no spec is re-parented
+        (`D21`), `T1.08`'s FAIL and its own live row are untouched, and this is
+        NOT a request to delete or downgrade the `blocks` column — `blocks` is
+        the honest measure of blast radius and `T0.36` does not say otherwise.
+        It is a request that the two columns stop being quoted as one.
+    STALENESS BILL: none for the routing beyond this file's standing trio. If
+        the answer is a printed line rather than conduct, it touches
+        `experiments/run.py` and must be priced at execution.
+    DUE: 2026-10-29 | THIS DESK's ruling on which column the steering pages
+        quote. Deliberately NOT 2026-10-25: that Sunday already carries 10 live
+        dated rows against a measured capacity of 6 and is printed AMBER, and
+        dating onto a full day is the act that built the pile. 10-29 carries 3.
+        The NE.01 re-run itself is NOT held behind this date — it is on the
+        158th audit's FOR THE BUILDER as a thing buyable in the next live slot.
+    WAITS-ON: none | `T0.36` is PASS and its arithmetic is settled; nothing
+        live decides which column a page quotes.
+
+## ROUTED: OPEN — `fail-ownership-is-conferred-by-an-incidental-mention`: `SO.10`
+## went FAIL-UNOWNED this morning because a row about a VENUE COMPARATOR closed,
+## and 11 of the 26 FAILs the counter calls owned are owned the same way
+## (overseer, 158th audit)
+
+ROUTED: fail-ownership-is-conferred-by-an-incidental-mention | 2026-10-21 | measured at HEAD with `coverage.fail_unowned(queue_doc=...)` against `git show 3a7f36b:docs/REVIEW_QUEUE.md`: count **6 -> 7**, the arriving member is `SO.10`, and `fail_unowned_owned_forms` moved `queue-row 27 -> 26`; the lost owner is `declared-venue-vs-delivered-venue-has-no-comparator`, stamped **ACTED** at 06:40 today (`5e7fa6a`), whose only contact with `SO.10` is two body lines citing *"the `SO.10` vacancy precedent"* | OPEN
+    THE FINDING: `fail_unowned` classed that row as `SO.10`'s **`queue-row`**
+        owner — the STRONGEST queue form, documented as *"a row ABOUT the
+        spec ... carries a `DUE:`, a dated promise"*. A row about a venue
+        comparator, citing `SO.10` as a precedent for an unrelated design
+        choice, is not a row about `SO.10` and promised nothing about it. So
+        `SO.10`'s FAIL has in truth had no repair owner since
+        `so10-tie-break-hands-the-seat-to-an-ineligible-arm` went ACTED on
+        **2026-10-13**, and the counter noticed eight days late, by accident,
+        when an unrelated row closed.
+    THE POPULATION, measured rather than asserted: of the **26** FAILs
+        currently owned by form `queue-row`, **11 (42%)** have no live row
+        whose header or slug names them at all — they are held up by a body
+        mention inside a row about something else: `DP.05`, `HR.5`, `LG.10`,
+        `ME.11.B`, `ME.11.C`, **`NE.01`**, `T0.27`, `T0.32`, `T2.10`, `T3.09`,
+        `T4.02`. The 15 genuinely-about rows are `HR.1`, `LG.12`, `LG.14`,
+        `LT.02`, `PS.05`, `PS.06`, `PS.08`, `T0.13`, `T0.23`, `T1.08`,
+        `T1.11`, `T2.05`, `T2.11`, `T2.15`, `XL.01`.
+    WHY IT MATTERS BEYOND TIDINESS: the floor is 6 and the live reading is 7,
+        so the class is ALREADY red — but the measurement above says the true
+        number of unowned FAILs is up to **18**, and the eleven are invisible
+        because a passing citation reads as a dated promise. `NE.01` is on that
+        list and is simultaneously the top blocker by `frees`
+        (`steering-pages-rank-the-frontier-by-blocks-not-frees`, above): the
+        project's most valuable repair looks owned and is not. The error
+        direction is the bad one — generous ownership UNDER-reports the hole,
+        and the counter's whole purpose is that *"the number rises when the
+        owners are dead"* (156th audit B1, its own docstring).
+    TWO DEBTS, and they are separate: (a) `SO.10`'s own disposition. The
+        10-13 ACTED stamp ANSWERED the question `SO.10` asked — the
+        Person-model seat stands VACANT by ruling at `docs/CHAMPIONS.md:177`,
+        the two eligible arms tie at 0.16 sigma on equal declared cost, and
+        `DECISIONS_RESOLVED.md` records it as `SO.10 — TIE — laplace-full` with
+        no winner seated. What was never written is a disposition for the FAIL
+        ROW. The `T3.07 <- D7` shape is the model: a registry
+        `FAIL-DISPOSED: <authority> <date>` marker naming the ruling that
+        killed the question. That is a registry edit, so it is the builder's,
+        and it is the honest repair here rather than a row minted to quiet a
+        counter. (b) the classifier. Whether `queue-row` should require the id
+        in the row's header/slug, with a weaker form (`mention-only` already
+        exists) for a body citation, is a question about the instrument.
+    WHAT IT MUST NOT BECOME: `FAIL_UNOWNED_BASELINE` does not move — it shrinks
+        only (`coverage.py`). No FAIL row is deleted, nothing is re-run for a
+        better number, and tightening the classifier will make the number
+        RISE, which is the point and must not be traded away for a green
+        check. And it must not become a licence to call the eleven unowned
+        before the Review has looked: weak ownership is a routing-quality
+        question for this desk, which is exactly why it is routed here and not
+        fixed by the audit.
+    STALENESS BILL: the classifier half touches `experiments/coverage.py`,
+        which is `T0.21`'s gated implementation — re-price with
+        `run stale-cost experiments/coverage.py` at execution. The
+        `FAIL-DISPOSED` half touches the registry and must be priced
+        separately.
+    DUE: 2026-10-31 | split deliberately: THIS DESK rules on whether a body
+        citation may confer `queue-row` ownership, and on which of the eleven
+        need real rows. Dated 10-31 (2 promised against a measured capacity of
+        6) rather than onto 10-25 or 10-27, both of which are at or past
+        capacity. The `SO.10` `FAIL-DISPOSED` marker is NOT held behind this
+        date — it is on the 158th audit's FOR THE BUILDER, because it needs no
+        ruling: the ruling it would cite already exists.
+    WAITS-ON: none | the measurement is complete and reproducible from this
+        file's own git history; no live row decides it.

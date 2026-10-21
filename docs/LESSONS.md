@@ -21806,3 +21806,64 @@ Three practices that follow:
   the reason in the growth log. A repair that lowers its own number is the
   failure mode `T0.31` was built for; a repair that *raises* one and says why is
   the system working.
+
+## The route must precede the prose (2026-10-21, 158th audit)
+
+The ruling on `oversight-for-the-builder-has-no-reader` was executed into
+`scripts/overseer_prompt.md` on the night of 2026-10-20 (`c8ee77b`). It says
+what it should say: an `OVERSIGHT.md` item whose discharge condition cannot be
+evaluated before the next audit rewrites the page must be routed as a `ROUTED:`
+row in `docs/REVIEW_QUEUE.md`, because the page is overwritten at 00:37, 06:37
+and 12:37.
+
+The next morning, the first audit under that rule found a real defect (a GPU
+job's `ok=False` label frozen by `Budget.charge`'s dedupe guard, hiding the only
+productive GPU hour of the week), wrote it up as its leading finding, wrote the
+sentence *"Routed as `gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard` … and a
+`ROUTED:` row"* — and then **exited `rc=124` before appending the row.** The
+page was sealed as a draft and the slug appears nowhere in
+`docs/REVIEW_QUEUE.md`. The next audit was the 12:37 rewrite the sentence itself
+predicted.
+
+**So the ruling was obeyed in intent and defeated by order of operations.** And
+the defeat is worse than simply losing the finding, because the page asserts the
+row exists: a reader auditing whether the item was tracked finds a sentence
+saying yes, and stops looking. A false claim of durability is strictly worse
+than an admitted gap — an admitted gap gets re-derived, a false claim gets
+quoted.
+
+The generalisable shape: **when a finding must outlive the document describing
+it, the durable write is the first act, not the last.** Prose about a durable
+record is not the record. And the ordering is not a style preference, it is the
+only version that survives a timeout — a run killed mid-sitting leaves either
+(a) a row with no prose, which the next reader finds and acts on, or (b) prose
+with no row, which the next reader finds and *believes*. There is no third
+outcome worth trading for, because the expensive half (deciding that the finding
+matters) is already done by the time either write happens.
+
+Three practices that follow:
+
+- **Append the `ROUTED:` row, then write the paragraph that cites it.** The
+  paragraph can then quote the row's real slug and `DUE:` rather than promising
+  them, which is also a better paragraph.
+- **A seal cannot repair this and should not try.** `lib_seal.sh` correctly
+  banners the page as an incomplete draft, and that banner is what let this be
+  found — but a banner over a page that asserts a route still asserts the route.
+  The seal marks the *page* untrusted; it cannot mark one sentence inside it
+  false. Only ordering can.
+- **Audit your predecessor's receipts, not only its reasoning.** The existing
+  lesson *"Audit the predecessor's reason for not acting"* covers a wrong reason
+  that vanishes with the page. This is its sibling: a **claimed act** that
+  vanishes with the page. Both are found the same way — re-derive the fact, and
+  grep for the artefact the claim names.
+
+Found in the same sitting, and recorded here as the second mile of *"An
+ownership test that never asks whether the owner is alive"* above rather than as
+a new lesson: making `fail_unowned`'s credit path status-aware was the right
+repair and it is still too generous. It credits a row as a FAIL's `queue-row`
+owner — the strongest queue form, *"a row ABOUT the spec … carries a `DUE:`, a
+dated promise"* — on any appearance of the id in the row's live extent. `SO.10`
+was therefore owned by a row about a venue comparator that merely cited *"the
+`SO.10` vacancy precedent"*, and 11 of the 26 credited FAILs (42%) are held up
+the same way. **A reference is not a relationship — and a citation is not even a
+reference to the same subject.**
