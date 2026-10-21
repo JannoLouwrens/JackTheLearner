@@ -23595,3 +23595,160 @@ ROUTED: regate-status-move-detector-reads-stdout-substrings | 2026-10-20 | build
         false-negative (PASS->BLOCKED whose refusal prose quotes "PASS but
         stale"). `run stale-cost scripts/regate.py` re-confirmed 0 at
         execution. Awaiting the desk's stamp.
+
+ROUTED: ordered-measurements-extractor-reads-prose-as-spec-ids | 2026-10-21 | `review_queue.py`'s own ORDERED MEASUREMENTS block, read this sitting against the row it indicts (`review-defers-leave-no-labelled-hole`, stamped ACTED at `7457472` in the same act that routed this) | OPEN
+    THE QUESTION: the ORDERED-MEASUREMENTS reader prints EIGHT ordered
+        measurements for one row and all eight are English words, not spec
+        ids — `ordered nothing -> NOT REGISTERED`, `ordered about`, `ordered
+        the`, `ordered gate`, `ordered the`, `ordered 90%`, `ordered stop`,
+        `ordered the`, `ordered pace`, `ordered line`, `ordered or`, `ordered
+        the`, `ordered retry`. The row's prose contains the phrase "ordered
+        nothing about the gate the 90% stop the pace line or the retry" and
+        the extractor has tokenised it. So the block that exists to print
+        *what a live row commissioned and what came back* is, for this row,
+        printing the row's own sentence back one word at a time with `NOT
+        REGISTERED` beside each.
+    WHY IT MATTERS AND WHY IT IS NOT COSMETIC: this block was ordered by the
+        79th audit on a real scar — a disposition's own ordered spec refuted
+        it in 3.5 h and nothing printed the pair. Its value is that a reader
+        can see an order and its answer side by side. Twelve false orders
+        against one row is a SIGNAL-TO-NOISE attack on exactly that: the
+        block currently has 13 lines of which 1 is real (`d35-none-quota...
+        ordered T1.08 -> FAIL 2026-10-08`) and 12 are tokens. A desk skimming
+        it learns nothing, and the failure direction is the dangerous one —
+        an extractor that manufactures `NOT REGISTERED` orders trains its
+        reader to ignore `NOT REGISTERED`, which is the one verdict in the
+        block that means a promise was never kept.
+    THE SHAPE OF THE REPAIR, named so it can be ordered in one line: require
+        an extracted order to MATCH THE REGISTRY'S SPEC-ID GRAMMAR (the
+        `^[A-Z]{1,2}[0-9]\.[0-9]{2}$` family, e.g. `T1.08`, `PS.09`, `W1.02`)
+        before it is printed as an order; a phrase that matches nothing is
+        not an order and must not print as one. The known-positive is the
+        `d35-none-quota` line, which must survive the change byte-identical;
+        the known-negative is this row's own twelve tokens, which must all
+        disappear. A row that genuinely ordered nothing should print nothing,
+        not twelve nothings.
+    WHAT THIS ROW DOES NOT ASK FOR: no gate, no exit code, no violation
+        class. ORDERED MEASUREMENTS is declared a READING and must stay one —
+        whether a result agrees with its disposition is no tool's judgement.
+        This is a correctness repair to a reading, in the same family as the
+        `metric-reader-false-positives` causes (C)/(D)/(E) stamped `3491dc9`
+        this morning: a reader comparing the wrong things is worse than a
+        reader that is merely silent.
+    STALENESS BILL: `experiments/review_queue.py` is the gated implementation
+        of `T0.31` (P12), so the repair bills **T0.31** and, because it also
+        edits `docs/REVIEW_QUEUE.md`, the standing doc trio **T0.21/T0.28/
+        T0.31**. Run `run stale-cost experiments/review_queue.py` at
+        execution to re-confirm rather than trusting this line. This routing
+        edit alone bills the trio, paid in this sitting.
+    DUE: 2026-10-28 | the BUILDER's execution. Dated 10-28 and not sooner for
+        a reason this sitting had in its hands rather than guessed at: the
+        measured consumer capacity is 6 dated rows per cycle and 2026-10-22
+        through 10-27 are the dates this morning's OVERDUE disposals are
+        landing on, so putting a thirteenth row onto any of them would be
+        this desk re-creating the 11-rows-against-6 pile it spent the whole
+        sitting draining. 10-28 is the first date this sitting is not itself
+        filling. The defect perishes at nobody's clock — it is a print
+        correctness bug on a reading, it harms slowly by teaching a reader to
+        ignore `NOT REGISTERED`, and one week of that is survivable where
+        another broken promise is not.
+    WAITS-ON: none | no live row's answer changes what the registry's spec-id
+        grammar is, and the repair touches no verdict, no bar and no
+        certificate's content.
+
+ROUTED: source-scanning-conjuncts-go-stale-against-their-own-subject | 2026-10-21 | inherited, not discovered: part (b) of `longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha`, merged onto `impl-deps-domain-misses-a-read-and-a-relative-import` at that row's own 10-08 request, and explicitly NOT discharged by either of their `ACTED` stamps (`1ee9c76` 10-20, `30dbeb9` 10-21) | OPEN
+    THE QUESTION, which is the CLASS question those two rows kept alive and
+        neither answered: a conjunct that gates on a SCAN OF SOURCE goes
+        stale against its own subject the instant the source moves, and no
+        organ re-runs it. The 10-20 stamp on `longrun-binding-conjunct...`
+        proved this is not hypothetical and proved it in the most expensive
+        possible way — `T0.32`'s live ledger row is attempt 9, `FAIL`,
+        2026-10-17T15:14:08, which PREDATES the `1ee9c76` repair, so the
+        recorded row still lists all ten unbound ids while the gate
+        re-derived in-process at HEAD returns six. A desk reading the LEDGER
+        would have read four repaired specs as unrepaired; a desk reading the
+        BUILDER-TRACE would have taken the repair on the committer's word.
+        Only re-derivation separated them, and re-derivation happened because
+        one desk chose to do it by hand on one row.
+    SO THE CLASS IS: WHICH conjuncts are source-scanning, and therefore carry
+        this staleness by construction? `T0.32`'s `_longrun_binding` and
+        `T0.35`'s impl-deps walk are two known members. The population is
+        unenumerated, and that is the finding — nothing in the repo can print
+        *"N conjuncts scan source; M of their recorded verdicts predate the
+        source they scanned"*, which is the sentence that would have made the
+        `T0.32` trap visible without a human choosing to look.
+    WHY THIS IS ROUTED AND NOT EXECUTED TODAY: it is a DESIGN question with a
+        real risk of being answered badly. The obvious repair — re-run every
+        source-scanning conjunct on every source change — is a cost nobody
+        has priced, and on a free-tier box an organ that re-buys certificates
+        on every commit is how the builder's slots get eaten. The honest
+        first step is ENUMERATION, which is cheap and which no one has done:
+        name the members, then price the repair against a known population
+        rather than an imagined one.
+    WHAT IT MUST NOT BECOME, stated now because this is the direction a
+        future desk would drift: this row may not be discharged by WEAKENING
+        anything. `T0.32` is still `FAIL` on six ids and this row is not a
+        route to making that number smaller. It is about whether a recorded
+        verdict can be trusted to describe the source it was computed over.
+    STALENESS BILL: enumeration alone is a read — zero certificates, and it
+        can be done offline with no ledger write. The repair it prices is
+        unbounded until the population is known, which is the argument for
+        doing the enumeration first and re-pricing after. Run `run
+        stale-cost` against whatever file the design lands in before
+        executing; do not inherit this line as the bill.
+    DUE: 2026-10-29 | THIS DESK's design (the enumeration and the priced
+        menu), not the builder's execution. A desk date, deliberately: the
+        two rows that fed this class both aged badly because the question was
+        a passenger on somebody else's row, and the first thing it needs is
+        an owner with a date. 10-29 is past the dates this sitting is filling
+        with its own OVERDUE disposals, and the Sunday FULL of 10-25 sits
+        before it, which is the sitting with the remit for a population sweep
+        if it chooses to take this early.
+    WAITS-ON: none | nothing another live row decides changes which conjuncts
+        scan source.
+
+ROUTED: metric-reader-rate-is-unmeasured-against-the-corrected-reader | 2026-10-21 | the `3491dc9` repair stamped ACTED this sitting (act 10) on `metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order`, whose 10-08 ruling ordered causes (C)/(D)/(E) FIRST precisely so this re-measurement could happen on a correct instrument | OPEN
+    THE QUESTION: the 60% false-positive rate that the parent row's whole
+        menu argues over was measured by a reader comparing the wrong
+        numbers. `3491dc9` fixed the three correctness defects — the
+        claim/control union is delivered (227 keys / 35 certificates enter
+        the comparison set), `_NUM` reads thousands separators, and a capture
+        is never clipped mid-number. The rate has NOT been re-measured since.
+        So the project currently holds a menu of repairs, a standing refusal
+        of two of its arms, and no current measurement of the problem any of
+        them address.
+    WHY IT IS A ROW AND NOT AN ASSUMPTION: the rate could have moved in
+        either direction and the direction decides the menu. If the corrected
+        reader reads LOW, (i)/(ii)'s refusal is vindicated and the menu may
+        be largely moot — a cheap, good outcome. If it reads HIGH or HIGHER,
+        then (A)/(B) are live questions on a reader that is now known-correct,
+        and they are worth their cost for the first time. Guessing which,
+        from a number produced by the broken reader, is exactly the move the
+        10-08 ruling refused to make.
+    THE MEASUREMENT, stated so it cannot be quietly re-scoped: re-run the
+        metric reader at HEAD over the same population the 60% was computed
+        over, report the rate, and report the per-cause breakdown — including
+        whether the instance that landed on the AUDIT'S OWN REPAIR ORDER (the
+        parent row's titular scar) still fires. Report the number BEFORE
+        choosing any menu arm.
+    WHAT STAYS RULED AND IS NOT REOPENED BY THIS ROW: (iv) NOTHING remains
+        REFUSED; the refusal of (i)/(ii) as FIRST arms STANDS until a number
+        is on the table; (A)/(B) remain unruled. This row produces a reading,
+        not a ruling, and no bar moves in either direction by executing it.
+    STALENESS BILL: a re-measurement that only READS is zero certificates —
+        `experiments/steering.py` is already at HEAD and this row orders no
+        edit to it. If the reading turns out to need an instrumentation
+        change to produce the per-cause breakdown, re-price it then with `run
+        stale-cost experiments/steering.py` and say so; do not let a read
+        quietly become an edit. This routing edit bills the standing doc trio
+        T0.21/T0.28/T0.31, paid in this sitting.
+    DUE: 2026-10-28 | the BUILDER's execution — a read with a reported
+        number, no bar touched. Dated with this sitting's own pile
+        arithmetic rather than by preference: 10-22 through 10-27 are
+        carrying the OVERDUE rows disposed this morning against a measured
+        6/cycle capacity, and 10-28 is the first date this desk is not
+        itself filling. The parent's ruling has already waited since 10-08
+        for a correct instrument; it now has one, and six more days against
+        a known-good reader costs less than a seventh broken promise.
+    WAITS-ON: none | the corrected reader is already at HEAD, so nothing this
+        row needs is behind another live row's answer.
