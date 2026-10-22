@@ -5900,6 +5900,27 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
         learned that distinction. If instead the estimator question resolves and
         `T1.08` becomes reachable, this row is the builder's two-step stamp
         exactly as designed below, unchanged since 2026-09-08.
+    DUE: 2026-10-29 | RE-DATED 2026-10-22 (Review DAILY, OVERDUE FIRST, act 5 —
+        the seven-row remainder of this sitting's OVERDUE class, none deleted,
+        none relabelled HELD, none dropped, each given a dated reason of its
+        own).
+        **A COMPUTE ROW BEHIND A GATED ORGAN, which is the one case where the
+        shared derivation above is the WHOLE reason.** The adopted twin-
+        denominator gate exists and is executed (`8f2990d`); what is owed is
+        the successor RUN of `D1.0`, and a run cannot be bought by an organ
+        taking one slot a day. Dated behind the two 10-28 rows because both of
+        those are desk/CPU work that a dark builder does not block.
+        THE SHARED DERIVATION, written once per row because it is one fact:
+        the builder took **1 iteration in its last 25 hourly slots** — 24
+        consecutive dark slots from 2026-10-21T06 to 2026-10-22T05, counted at
+        this desk off `/data/jack-logs/ladder.log` rather than inherited, EVERY
+        one of them `PACING` and `0 failed` — and the gate reads `week:all
+        models` **53% at 43% of the usage week against a 53% pace line**, i.e.
+        sitting exactly ON the line, so the skipping continues rather than
+        having ended. The dates are the tool's own arithmetic, not a
+        preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
+        live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
+        4 each. Every date below takes its day to AT MOST 6 and none above it.
 
 **Why this row exists (60th audit FINDING 2, quoted arithmetic).** `D1.0`
 fired as D1's armed default, ran 16.17 GPU-hours — 54% of a weekly quota —
@@ -12535,6 +12556,31 @@ ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2
         to bank its finished half is how a clock gets stopped quietly. What
         this date owes is PART 1 only, under clause (d)'s now-MANDATORY
         coupling.
+    DUE: 2026-10-31 | RE-DATED 2026-10-22 (Review DAILY, OVERDUE FIRST, act 5 —
+        the seven-row remainder of this sitting's OVERDUE class, none deleted,
+        none relabelled HELD, none dropped, each given a dated reason of its
+        own).
+        **ITS DECLARED WAIT IS VOID, AND THAT IS NEW INFORMATION ON THIS ROW
+        RATHER THAN A FOURTH TURN OF THE HANDLE.** The row declares
+        `WAITS-ON: ps09-known-answer-floor-was-calibrated-on-an-oracle-cut`,
+        which is `ACTED` and TERMINAL — it can never move again, so the thing
+        this row has been waiting for cannot arrive, and `review-queue` prints
+        it as `WAITS-ON-A-CLOSED-WINDOW`. The wait is therefore discharged as
+        a dead premise and the row must be decided on its own merits: whether
+        the amputation control out-reading the probe means interoception is
+        not clock-like. Dated last of the seven because it is the only one
+        whose premise had to be corrected before it could even be ranked.
+        THE SHARED DERIVATION, written once per row because it is one fact:
+        the builder took **1 iteration in its last 25 hourly slots** — 24
+        consecutive dark slots from 2026-10-21T06 to 2026-10-22T05, counted at
+        this desk off `/data/jack-logs/ladder.log` rather than inherited, EVERY
+        one of them `PACING` and `0 failed` — and the gate reads `week:all
+        models` **53% at 43% of the usage week against a 53% pace line**, i.e.
+        sitting exactly ON the line, so the skipping continues rather than
+        having ended. The dates are the tool's own arithmetic, not a
+        preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
+        live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
+        4 each. Every date below takes its day to AT MOST 6 and none above it.
 
 **THE PS-FAMILY LEGIBILITY RULING — Review DAILY 2026-09-25, disposing
 `ps05` + `ps06` + `ps08` + `ps09` in one act, as all four rows asked.**
@@ -13410,6 +13456,28 @@ ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overse
         vanishes without a recorded reason is indistinguishable from one nobody
         liked. 10-21 and not 10-19 because the parts touch `run status` and the
         two renderer rows above are already dated there.
+    DUE: 2026-10-30 | RE-DATED 2026-10-22 (Review DAILY, OVERDUE FIRST, act 5 —
+        the seven-row remainder of this sitting's OVERDUE class, none deleted,
+        none relabelled HELD, none dropped, each given a dated reason of its
+        own).
+        **THE DELETION IS RULED AND UNEXECUTED, and the row is dated behind
+        the frontier rows deliberately.** The 2026-09-29 ruling authorised
+        DELETE (executing `D27`'s own text, not reversing it) plus two
+        replacements. It is a builder edit against the blackout above, and
+        unlike the 10-28/10-29 rows nothing downstream is blocked on it: a
+        screen measured 19/20 false is already being ignored, so the cost of
+        one more week is bounded and visible.
+        THE SHARED DERIVATION, written once per row because it is one fact:
+        the builder took **1 iteration in its last 25 hourly slots** — 24
+        consecutive dark slots from 2026-10-21T06 to 2026-10-22T05, counted at
+        this desk off `/data/jack-logs/ladder.log` rather than inherited, EVERY
+        one of them `PACING` and `0 failed` — and the gate reads `week:all
+        models` **53% at 43% of the usage week against a 53% pace line**, i.e.
+        sitting exactly ON the line, so the skipping continues rather than
+        having ended. The dates are the tool's own arithmetic, not a
+        preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
+        live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
+        4 each. Every date below takes its day to AT MOST 6 and none above it.
 
 ROUTED: dark-slot-counter-is-blinded-by-the-loops-own-notice-lines | 2026-09-22 | Review DAILY (replayed against `/data/jack-logs/ladder.log` at 07:0x) | ACTED 2026-10-11 in 418f015 (Review FULL, OVERDUE FIRST, 1 of 5 — **VERIFIED AT HEAD BEFORE STAMPING, NOT TAKEN FROM THE RECEIPT**, because `DELIVERED — AWAITING STAMP` is a reading of a self-declared field and this desk stamps only what it has read in the source. What was checked, and it all holds: `classify()` is the one three-valued reader (`RAN`/`DECLINED`/`NOT-A-SLOT`, `scripts/usage_attribution.py:92`); `slot_outcomes()` (`:210`) and `dark_slot_streak()` (`:228`) are both FILTERS over it and neither walks the log itself; `_SLOT_RE`/`_SKIP_RE` are private to `classify` and matched nowhere else; `--selftest` reports **0 failure(s)** at HEAD, including the P6e unrecognised-line fixture and the P6f pre-launch-ABORT fixture the 134th audit ordered. The ruling's regression clause — NOT two-valued — is satisfied: `DECLINED` and `NOT-A-SLOT` are distinct returns with distinct consumers. **NO DEFECT FOUND IN THE RECEIPTS, AND THE ONE I THOUGHT I HAD WAS MINE — recorded because a desk that only writes down the receipts it catches out is not an auditor.** I went looking for `experiments/usage_attribution.py`, found nothing, and briefly wrote this stamp as a clerical finding. The row never said `experiments/`: it cites a bare `usage_attribution.py`, the file is in `scripts/`, and the directory was my assumption. I then checked the line numbers against the commit each trace names rather than against HEAD, which is the only fair test of a historical citation — `:68`, `:170` and `:247` are all **exactly right at `e0786a0`** (`_SLOT_RE` at `:68`, its two uses at `:170`/`:247`). Both BUILDER-TRACE bodies are accurate and correctly anchored. The only residue is a one-line note for routers, not a violation: a bare filename in a repo with populated `experiments/` and `scripts/` trees costs the next reader a `find`, and the traces that cite `scripts/dispatch.sh` with its directory are the better idiom. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — THE DESK'S HALF IS RULED, and the ruling REFUSES the question's own premise: `slot_outcomes()` may NOT become the one reader, because it is LOSSY BY DESIGN and answering YES as asked would have rebuilt this exact bug inside the new single reader. The one reader is a THREE-valued classifier both walkers consume. Design lives in THE RULING below; execution is the builder's, DUE 2026-10-10)
     DUE: 2026-10-10 | the BUILDER's execution of THE RULING below: one
@@ -19188,6 +19256,29 @@ ROUTED: root-modules-outside-every-staleness-bill-are-six-files-not-one | 2026-0
         `t212-certifies-separability-not-valence-sign` is dated the same day on
         purpose, so the apparatus ruling and the science finding it surfaced can
         be read together. Status stays DISPOSITIONED and the row keeps ageing.
+    DUE: 2026-10-28 | RE-DATED 2026-10-22 (Review DAILY, OVERDUE FIRST, act 5 —
+        the seven-row remainder of this sitting's OVERDUE class, none deleted,
+        none relabelled HELD, none dropped, each given a dated reason of its
+        own).
+        **FOURTH DATE, AND THE RANK IS THE REASON IT IS NOT A DECLINE.** What
+        this row ordered is a perturbation TEST that decides mechanically
+        between options (ii) and (iv) — i.e. whether six repo-root modules sit
+        outside every staleness bill. Until it runs, every `stale-cost` figure
+        this desk quotes (including the three priced in this sitting) rests on
+        a declared-coverage assumption nobody has tested. That makes it
+        integrity-bearing for the instrument this desk uses most, which is why
+        it takes the earliest keepable date rather than a later one.
+        THE SHARED DERIVATION, written once per row because it is one fact:
+        the builder took **1 iteration in its last 25 hourly slots** — 24
+        consecutive dark slots from 2026-10-21T06 to 2026-10-22T05, counted at
+        this desk off `/data/jack-logs/ladder.log` rather than inherited, EVERY
+        one of them `PACING` and `0 failed` — and the gate reads `week:all
+        models` **53% at 43% of the usage week against a 53% pace line**, i.e.
+        sitting exactly ON the line, so the skipping continues rather than
+        having ended. The dates are the tool's own arithmetic, not a
+        preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
+        live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
+        4 each. Every date below takes its day to AT MOST 6 and none above it.
 
 **THE RULING 2026-10-08 (Review DAILY).**
 
@@ -23081,6 +23172,32 @@ ROUTED: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | 
         measured at **0 certificates**, and (a) additionally buys GPU time
         linear in the seed count — attempt 5 cost 1.046 h at 3 seeds. (c) edits
         nothing and costs nothing.
+    DUE: 2026-10-28 | RE-DATED 2026-10-22 (Review DAILY, OVERDUE FIRST, act 5 —
+        the seven-row remainder of this sitting's OVERDUE class, none deleted,
+        none relabelled HELD, none dropped, each given a dated reason of its
+        own).
+        **THIS IS THE FRONTIER ROW AND IT IS OWED BY THIS DESK, NOT THE
+        BUILDER — so the blackout above is NOT its excuse.** `T1.08` is the
+        project's largest blocker; its recipe repair is spent (attempts 3/4/5
+        all FAIL, `heldout_cv_pct` 40.006 -> 14.666 -> 17.285 against a
+        byte-unmoved 7.0 bar) and the attribution pair flipped sign between
+        attempts 4 and 5 under an identical `spec_sha` and venue. What is owed
+        is a DESIGN RULING, and the reason it did not happen today is
+        disclosed rather than dressed up: this sitting spent its acts
+        executing four dispositions and had no room for a design of this size.
+        It takes the earliest keepable date, ahead of every other desk row
+        here, and it is named FIRST in this sitting's FOR THE BUILDER.
+        THE SHARED DERIVATION, written once per row because it is one fact:
+        the builder took **1 iteration in its last 25 hourly slots** — 24
+        consecutive dark slots from 2026-10-21T06 to 2026-10-22T05, counted at
+        this desk off `/data/jack-logs/ladder.log` rather than inherited, EVERY
+        one of them `PACING` and `0 failed` — and the gate reads `week:all
+        models` **53% at 43% of the usage week against a 53% pace line**, i.e.
+        sitting exactly ON the line, so the skipping continues rather than
+        having ended. The dates are the tool's own arithmetic, not a
+        preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
+        live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
+        4 each. Every date below takes its day to AT MOST 6 and none above it.
 
 ## ============================================================================
 ## ROUTED 2026-10-08 (Review DAILY, as the disclosed residual of
@@ -23217,6 +23334,27 @@ ROUTED: lg14-deverbatim-scaffold-is-the-arm-the-fail-points-at | 2026-10-08 | `L
     construction, because the cache is keyed on a hash over the scaffold.
     **That is the real cost of arm (c) and it is an LLM-verdict re-buy, not a
     GPU hour.**
+    DUE: 2026-10-29 | RE-DATED 2026-10-22 (Review DAILY, OVERDUE FIRST, act 5 —
+        the seven-row remainder of this sitting's OVERDUE class, none deleted,
+        none relabelled HELD, none dropped, each given a dated reason of its
+        own).
+        **SECOND DATE. A DESK DESIGN, and the honest reason is capacity, not
+        difficulty.** `LG.14` attempt 1 settled FAIL and the row's question —
+        whether the de-verbatim scaffold is the arm the FAIL actually points
+        at — needs the gate structure at `lg_14_structured_decode.py:504-531`
+        read against the 2026-09-29 `lg12` sequencing before anything is
+        ruled. Not started today and not pretended otherwise.
+        THE SHARED DERIVATION, written once per row because it is one fact:
+        the builder took **1 iteration in its last 25 hourly slots** — 24
+        consecutive dark slots from 2026-10-21T06 to 2026-10-22T05, counted at
+        this desk off `/data/jack-logs/ladder.log` rather than inherited, EVERY
+        one of them `PACING` and `0 failed` — and the gate reads `week:all
+        models` **53% at 43% of the usage week against a 53% pace line**, i.e.
+        sitting exactly ON the line, so the skipping continues rather than
+        having ended. The dates are the tool's own arithmetic, not a
+        preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
+        live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
+        4 each. Every date below takes its day to AT MOST 6 and none above it.
 
 ## ============================================================================
 ## ROUTED 2026-10-08 (Review DAILY, carried out of
@@ -23306,6 +23444,28 @@ ROUTED: t212-certifies-separability-not-valence-sign | 2026-10-08 | `T2.12`'s ow
     (its history is CPU-cheap), and `T3.07` declares `EmotionalState.py` too and
     is already FAIL and already STALE (`run status` this sitting), so the live
     bill must be read with `run stale-cost` at the time rather than quoted now.
+    DUE: 2026-10-30 | RE-DATED 2026-10-22 (Review DAILY, OVERDUE FIRST, act 5 —
+        the seven-row remainder of this sitting's OVERDUE class, none deleted,
+        none relabelled HELD, none dropped, each given a dated reason of its
+        own).
+        **SECOND DATE, and the row is a standing-PASS integrity question,
+        which is exactly the class a DAILY may not rush.** `T2.12` PASSES
+        (2026-09-06) while possibly certifying separability rather than
+        valence SIGN — i.e. a live certificate may assert less than its name.
+        Re-examining a passing spec is Part 2's power and Part 2 is Sunday's;
+        10-30 is the first keepable date, and the Sunday FULL of 11-01 is the
+        sitting that can properly hold it if it slips by two days.
+        THE SHARED DERIVATION, written once per row because it is one fact:
+        the builder took **1 iteration in its last 25 hourly slots** — 24
+        consecutive dark slots from 2026-10-21T06 to 2026-10-22T05, counted at
+        this desk off `/data/jack-logs/ladder.log` rather than inherited, EVERY
+        one of them `PACING` and `0 failed` — and the gate reads `week:all
+        models` **53% at 43% of the usage week against a 53% pace line**, i.e.
+        sitting exactly ON the line, so the skipping continues rather than
+        having ended. The dates are the tool's own arithmetic, not a
+        preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
+        live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
+        4 each. Every date below takes its day to AT MOST 6 and none above it.
 
 ROUTED: steering-page-is-two-days-from-the-launch-cliff-and-31kb-is-provenance | 2026-10-11 | `run status` STEERING-PAGE SIZE at 578e1f8; this sitting's own PRIORITY reconciliation (501389a) | ACTED 2026-10-21 (Review DAILY, OVERDUE FIRST, act 12 — executing commit `fbfc460`, this desk's own work as the row insisted, and EXECUTED rather than re-dated because this row's own text gave it precedence over every other act in this file if a slot opened with it undone. `scripts/ladder_prompt.md` **126721 -> 111927 bytes**: 19145 below the 131072 EXEC CLIFF and **13073 below the 125000 self-imposed ceiling, which it had been OVER since 10-11.** ~16 KB of explicitly non-executable history (`1'`, `2'`, `3'`, and the *Kept for provenance - DONE* block) moved verbatim to `scripts/ladder_prompt_archive.md`. **THE HAZARD THIS ROW NAMED IN ADVANCE WAS REAL AND IT FIRED — and it was a different one than the row predicted, which is the transferable finding.** The row warned that live text points INTO the superseded block, and it does; that was handled by re-pointing the four references (lines 546, 1395, 1406, 1455) at the archive by name. But the unpredicted one was worse: item **`0a. OWNER-SCHEDULED`** — *implement `T5.01`, the founding physics-thesis test, as soon as `T2.01` PASSES*, the order in which the owner invoked law 3 to REVERSE `DIRECTION_AUDIT`'s *do not start T5.01* — had come to sit INSIDE the headed provenance span, between two blocks both marked do-not-execute. A `sed` over the headed region would have archived a STANDING OWNER INSTRUCTION off the page the builder steers by, and the row's own design sentence (*move the remainder*) is exactly the move that would have done it. The boundary is cut at the line above it and `0a` remains live. **TWO CORRECTIONS TO THIS ROW'S OWN ARITHMETIC, recorded so the next desk does not inherit them: the archivable tail is ~16 KB, NOT the ~31 KB this row measured, so the page lands at ~112 KB and not the predicted ~97 KB — the row overstated its own benefit by about 2x, and there is NOT another 15 KB of provenance sitting there for a second excision.** It was still decisive: `run status` read the cliff 5 days out at +823 B/day before, and reads a negative growth rate after. ACCEPTANCE TEST, this row's own, run before AND after rather than asserted: `run steering` reads **9 items on 2 of 2 declared pages, 1 refused, EXIT 0 — byte-identical across the move** (the row's text predicted *10 items, 0 refused*, which was true on 10-11 and is not today; the test that matters is unchanged-across-the-move, not a match to a historical count). STALENESS BILL re-confirmed AT EXECUTION rather than inherited, as the row instructed: `run stale-cost` on both paths reads **0 standing PASS certificates**. No rule, prohibition, threshold, bar, order or priority changed.) PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-10-11 (Review FULL — **routed HERE and not to the owner, and the correction is this desk's own.** I wrote this as `D45` in `DECISIONS_NEEDED.md` first. `run decisions --check` immediately returned `[UNDECLARED] D45` and, reading the classes properly, `class conduct` means **"desk-executable, not the owner's — execute it, report it, do not ask"**. The steering page is OPERATIONAL and Part 2.5 duty 1 gives this desk direct edit rights over it, so asking the owner for permission to tidy a file I am already required to maintain was a mis-route, not a strategic fork. `D45` is WITHDRAWN from `DECISIONS_NEEDED.md` (the entry never had a `DECIDE` block and the `UNDECLARED` ratchet went 0 -> 1 and back to 0 in one sitting). The design below is complete; what remains is careful execution, and the hazard that stopped me doing it in the last minutes of a Sunday is named in writing)
     DUE: 2026-10-18 | THIS DESK's execution of THE ARCHIVE below. A desk date,
@@ -24411,3 +24571,60 @@ ROUTED: overdue-reconstitutes-overnight-from-rows-the-desk-could-see | 2026-10-2
         disposal of 3.00/cycle. Same caveat as the row above: room, not a
         promise of work.
     WAITS-ON: none | the measurement is complete and no live row decides it.
+
+ROUTED: dark-slot-ratchet-is-a-streak-so-an-ENDED-blackout-reads-zero | 2026-10-22 | measured by the 159th audit: `experiments/run.py:1972-1998` (`_dark_slots` returns `usage_attribution.dark_slot_streak`, i.e. the TRAILING streak) against `/data/jack-logs/ladder.log` PACING lines 2026-10-22T02:07..05:07 (`20/21/22/23 consecutive dark slot(s)`) and the two bracketing `rc=0` lines (`2026-10-21T05:27:02` -> `2026-10-22T06:07:09`) | OPEN
+    The question: **`dark_slots` is a CURRENT-STREAK reading, so it reads 0 the
+    moment one iteration runs — and therefore cannot record a blackout that has
+    ENDED.** Between `2026-10-21T05:27:02` and `2026-10-22T06:07:09` the builder
+    lost **23 consecutive slots** (peak recorded in the log at 05:07) across
+    **24 h 40 m** of wall clock. The 06:07 iteration then ran `rc=0`, and at this
+    audit's open the ratchet reads **`dark_slots = 0`, "unchanged since
+    2026-09-30"**, at its floor of 0 with `DARK_SLOT_GRACE = 2`. Nothing in
+    `experiments/` now holds any trace of those 23 slots.
+    **WHY THIS IS THE SAME BUG THE COUNTER WAS BUILT TO FIX.** `_dark_slots`'
+    own comment records the 131st audit FTB 1: the streak *"appeared NOWHERE in
+    `experiments/` — its only writers were the organs that are themselves being
+    skipped, so a 28-slot blackout read 'healthy' on every current-state page."*
+    The counter that was built to close that hole has the identical blindness in
+    the time dimension: it sees a blackout only while the blackout is still
+    running. **Every organ in this project starts on a cron slot that the pacer
+    has just released** — 06:37 and 12:37 for the overseer, 06:37 for the Review
+    — so the audit most likely to read the counter is the one reading it right
+    after the gate let go. The 158th audit saw `0 -> 7` only because it ran at
+    12:55 mid-blackout; this audit saw 23 only by reading PACING lines by hand.
+    **THE BIAS DIRECTION, STATED BECAUSE IT IS NOT SYMMETRIC.** The error always
+    runs toward health. A streak counter can over-report nothing: its worst
+    honest reading is the true current streak. Its failure mode is exclusively
+    to show 0 for a week in which hundreds of slots were lost — which is
+    precisely the quantity `D30`, `D40` and `D46` have been unable to settle,
+    each arguing attribution from hand-read logs because no counter accumulates.
+    **CANDIDATE READINGS for the ruling to choose among** (a reading, not a
+    gate — a paced day is legal and a gate here would forbid a legal move):
+    (i) `dark_slots_7d` — slots skipped in a trailing 7-day window, beside the
+    streak; (ii) `dark_slots_peak_24h`; (iii) record the streak's PEAK at the
+    moment it breaks, so the blackout survives its own end. This desk's
+    preference is (i): it is the one that makes a WEEK comparable to a week, it
+    is what the three open decisions actually need, and it is monotone — it adds
+    a reading, moves no floor, and cannot make any existing number look better.
+    **NOT A RE-ROUTE OF EITHER NEIGHBOUR, CHECKED AT SOURCE.**
+    `dark-slot-counter-is-blinded-by-the-loops-own-notice-lines` (2026-09-22) is
+    about the CLASSIFIER miscounting slot lines; this is about the counter's
+    SHAPE being instantaneous and is orthogonal to how well lines are parsed.
+    `builder-blackout-is-paced-by-another-projects-usage` (2026-09-30) is about
+    the pacer's INPUT; this is about the absence of a record of its OUTPUT.
+    Neither names a cumulative reading. **Also not a re-litigation of the
+    pacing itself**, which this audit found acting correctly on its inputs.
+    STALENESS BILL: **zero NEW certificates.** `T0.21`/`T0.28`/`T0.31` read this
+    file and were already stale when this audit opened; priced with
+    `scripts/regate.py --list` before the first edit at 3 certificates / 327 s /
+    ~0.09 CPU-h. Running specs is outside this organ's remit — the regate
+    stale-first lane is the expected payer.
+    DUE: 2026-11-04 | a desk ruling on which reading is adopted, NOT the
+        implementation — this date buys a decision, so the builder being dark
+        (the row's own subject) cannot break it. Derived, not chosen:
+        `review-queue` prices 2026-10-28..11-02 at 4/4/4/4/3/3 live rows
+        against a measured disposal of 3.14/cycle, and 11-04 at 2 — the
+        lightest declared day. Stated per the 10-21 sitting's own lesson: this
+        is *"which date has room"*, not a promise that the date will be worked.
+    WAITS-ON: none | the log is on disk, the arithmetic is re-derivable at any
+        time, and no live row decides it.
