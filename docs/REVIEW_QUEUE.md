@@ -12949,7 +12949,7 @@ ROUTED: ba03-vestibular-channel-is-never-load-bearing-under-one-kick | 2026-09-2
         instalments of "W1 goes next" and will not author a sixth on a row whose
         author is undetermined.
 
-ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-21 | `785f921` (field watch week 8, §6) | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — BOTH halves of the design answer are ruled: the seat DOES get the `l_bind`-dropped comparator, and it is bought ON ITS OWN because the run it was sequenced to be marginal on WILL NOT HAPPEN. The row's own sequencing premise is discharged as FALSE, by a mechanism worth more than the ruling. See THE RULING below)
+ROUTED: lc03-five-controls-never-switch-off-the-term-a4-is-named-for | 2026-09-21 | `785f921` (field watch week 8, §6) | ACTED 2026-10-22 `da9ece0` (Review DAILY, OVERDUE FIRST, act 2 — **EXECUTED, AND THE OWED UNIT IS THE REGISTRATION, WHICH IS WHY A SPEC WITH NO LEDGER ROW STILL CLOSES THIS ROW.** The `DUE: 2026-10-09` clause states the deliverable in its own words — *"the `l_bind`-dropped comparator registered with BOTH conjuncts above present in the pre-registration, and it does NOT pre-empt `T1.08`"* — so the discharge condition is a pre-registration, not a result. `da9ece0` (2026-10-20) registers `LC.08` in `experiments/tests/lc_08_binding_term_comparator.py`, +495 lines. **BOTH CONJUNCTS RE-DERIVED FROM THE SOURCE AT HEAD, NOT READ OFF THE COMMIT MESSAGE,** because this is the stamp where a one-conjunct spec would have passed unnoticed: (1) PAIRED — `:19-21` declares identical seeds (0/1/2), identical step budget (`N_STEPS` 400,000 decisions AND `W_CLOCK` 17,280 core-s, whichever is later) and identical venue (lethal `W0`, `e0=1.0`, `explore_std` 0.3), and the pairing is structural rather than asserted, computed per seed at `:299-300` and `:347-348` against the seat's own `lc03_curves` seeds 0-2; (2) SEAT'S OWN STATISTICS — `lg_margin_null` and `lg_margin_twin` are the reported numbers at `:146-149`, `:299-300`, with the control running the seat's own data through the identical scoring path (`:333-348`) and an `init_identical`/architecture VOID guard at `:398`, `:466`. Neither conjunct was dropped, which the ruling forbade in writing. `T1.08` is not pre-empted: the 14.40 core-h run was deliberately NOT launched in that slot. **WHAT THIS STAMP DOES NOT CLAIM, STATED HERE RATHER THAN DISCOVERED LATER:** `LC.08` is ABSENT from `ledger.json` results — the comparator is registered and unbought, so the seat-quality question this row opened is NOT answered, only made answerable. Closing this row with that compute owned by nobody would be the `recipe-sensitivity`/`UB.10` scar exactly — a design stamped `ACTED` reading as closed while the thing it designed sat unexecuted — and the row's own `WAITS-ON: none` line concedes the run *"waits on slot shape, not on any row"*, i.e. on nothing that ages. So the run is routed as its own live row, `lc08-comparator-registered-and-unbought`, in the same act that closes this one. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — BOTH halves of the design answer are ruled: the seat DOES get the `l_bind`-dropped comparator, and it is bought ON ITS OWN because the run it was sequenced to be marginal on WILL NOT HAPPEN. The row's own sequencing premise is discharged as FALSE, by a mechanism worth more than the ruling. See THE RULING below)
     **The question, and it is a SEAT question before it is a spec question.**
     `A4` (`wm-latent`) holds the Learning-core seat. The machinery it is NAMED
     for is the `latent_pred` head — 149,312 params, 17.3% of the arm. The scout
@@ -24225,3 +24225,34 @@ ROUTED: fail-ownership-is-conferred-by-an-incidental-mention | 2026-10-21 | meas
         ruling: the ruling it would cite already exists.
     WAITS-ON: none | the measurement is complete and reproducible from this
         file's own git history; no live row decides it.
+
+ROUTED: lc08-comparator-registered-and-unbought | 2026-10-22 | this sitting's `lc03-five-controls-never-switch-off-the-term-a4-is-named-for` stamp (act 2, `da9ece0` verified at HEAD); `LC.08` confirmed ABSENT from `experiments/ledger.json` results this sitting; `experiments/tests/lc_08_binding_term_comparator.py:19-21` for the declared budget | OPEN
+    The question: `LC.08` is registered with both ruling conjuncts intact and has
+    never been run, so the Learning-core seat-quality finding the `lc03` row was
+    opened for — **is 17.3% of the seated `A4` arm dead weight?** — is answerable
+    and unanswered. Who buys the 14.40 core-h, and on what slot shape?
+    **WHY THIS ROW EXISTS AT ALL, DECLARED SO IT IS NOT READ AS BUREAUCRACY.** The
+    `lc03` row is `ACTED` as of this sitting, and `ACTED` is terminal — it will
+    never be re-read. Its own `WAITS-ON: none` line says the remaining run
+    *"waits on slot shape, not on any row"*: a dependency on nothing that ages,
+    which is indistinguishable from abandonment after the parent closes. This is
+    the `recipe-sensitivity` class (a design stamped and read as closed for seven
+    days, parking `UB.10`) and the contract's own reason for separating `ACTED`
+    from `DISPOSITIONED`. The compute now has a row, so it has a clock.
+    **NOT A RE-OPENING OF `lc03` AND NOT A SECOND BITE AT ITS RULING.** The
+    comparator's design is settled, both conjuncts are verified in source, and
+    nothing here may weaken them. The only live unit is the purchase.
+    STALENESS BILL: **zero certificates.** `LC.08` has no ledger row to
+    invalidate, its five dependencies all PASS and are untouched by running it,
+    and `lc_08_binding_term_comparator.py` is in no other spec's `IMPL_DEPS`. The
+    bill is 14.40 core-h of CPU and nothing else — which is why this row is cheap
+    to keep open and was never worth hiding inside a closing row.
+    DUE: 2026-10-26 | a desk ruling on whether this purchase is bought now or
+        declined until the seat is contested, NOT the run itself — this date
+        buys a decision, so it cannot be broken by the builder being dark.
+        Derived, not chosen: `review-queue`'s pile reads 2026-10-22 through
+        2026-10-25 at 6/6/6/10 live rows against a measured capacity of 6, and
+        10-26 at 5 — the tool's own `next date with room`, and the first date
+        this promise is arithmetically keepable.
+    WAITS-ON: none | the ruling needs no other row: the design is closed and the
+        only input is this desk's judgement on priority against `T1.08`.
