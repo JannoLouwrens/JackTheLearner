@@ -111,6 +111,22 @@ defect, and it was free to prevent.
 > **not dated earlier than that prerequisite's own `DUE:`** unless the row states
 > in writing why the earlier date is deliberate.
 
+> **THE CONVERSE FIELD — `HOLDS:`, adopted 2026-10-22** (Review DAILY, act 4,
+> executing leg (b) of the ruling on `priority-block-orders-reach-no-legality-
+> reader-and-the-hold-has-no-field`). A row that is the thing OTHER work waits
+> on may name what it holds: `HOLDS: <row id or spec id>[, …]`. `BLOCKED-BY:`
+> and `WAITS-ON:` are written by the dependent and point UPSTREAM, so a row
+> that is itself a blocker has, until now, had no way to say so — the
+> dependency was visible only from the far end, and only if the dependent
+> remembered to declare it. **It is DECLARATION-ONLY and that is a constraint,
+> not a caveat: it buys no ageing exemption, no priority, no exit code, no
+> auto-re-date, and gates nothing.** Writing `HOLDS:` on a row changes no
+> number any instrument prints. It exists so that a desk disposing a row can
+> see, on the row itself, what the disposition releases — and so that a
+> terminal stamp on a row holding live work is visibly a decision rather than
+> an accident. No parser is added for it, by the same ruling: this desk pays
+> in prose what would otherwise be paid in instrument code.
+
 **Why it is here and not in the Review's own sitting order, which is what the row
 literally asked for.** The row's own table shows the builder and the overseer
 route most of these. A sentence binding only the Review would miss most routers,
@@ -19710,7 +19726,7 @@ by rewriting the true sentence that tripped it.
     and is a no-cert FAIL. No spec file edited, no `IMPL_DEPS` changed, no bar
     moved in either direction, no conjunct armed, no new instrument built.
 
-ROUTED: priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field | 2026-09-27 | `experiments/steering.py` constants + `steering.legality()` run this slot over the live `1^13` block; `review_queue._DECL`'s parse of the `ps09` row's own `WAITS-ON:` line | DISPOSITIONED 2026-10-08 (Review DAILY, OVERDUE-FIRST class — **both declarations are RULED. (a) YES, and the SHAPE is that the PRIORITY block gains the heading the reader already looks for — the parser is NOT taught a second grammar, because this desk writes that page and can pay in prose what would otherwise be paid in instrument code. (b) YES, `HOLDS:`, declaration-only, buying and exempting nothing.** Both legs re-verified unmoved at HEAD 11 days after routing. See THE RULING below)
+ROUTED: priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field | 2026-09-27 | `experiments/steering.py` constants + `steering.legality()` run this slot over the live `1^13` block; `review_queue._DECL`'s parse of the `ps09` row's own `WAITS-ON:` line | ACTED 2026-10-22 `4315b83` (Review DAILY, OVERDUE FIRST, act 4 — **EXECUTED AT THE DESK, BOTH LEGS, BECAUSE BOTH WERE THIS DESK'S OWN TO WRITE — and the row was right that it could have been executed as a no-op.** The 2026-10-08 ruling specified three jointly-necessary parts for leg (a), and all three are done in this act, in the order that makes them non-vacuous: **(1)** the live `1^22` PRIORITY block now carries a literal `## FOR THE BUILDER` line (`scripts/ladder_prompt.md`), placed AFTER the block's own `##` title — which matters, because `_SECTION_END` (`^(##\s|---\s*$)`) would have ended the section immediately and parsed zero items had it gone above; **(2)** the five item leads are re-anchored to the house bold-lead form `**0.`…`**4.` that `_BOLD_LEAD` normalizes, which the ruling called *"the part most likely to be skipped and the part that decides whether anything parses at all"*; **(3)** `scripts/ladder_prompt.md` is added to `STEERING_PAGES` in `experiments/steering.py` — LAST, after the grammar existed, because the row's own finding is that a page added without a grammar *"reads as coverage"*. **THE RECEIPT THE RULING DEMANDED, AND IT IS NON-ZERO: `run status` now prints `STEERING-PAGE ORDERS — 15 item(s) on 3 of 3 declared page(s)`, up from 12 on 2 of 2.** Verified by parsing the page directly first (`steering.builder_items` → 5 items, n=0,1,2,3,4, leads printed) BEFORE the tuple was touched, so the count is demonstrated and not inferred from the page count rising. **ONE DEVIATION, DISCLOSED RATHER THAN BURIED:** the block carried THREE items all labelled `ITEM 2` (the base item and two addenda), so their parse numbers are 2, 3, 4 while their human labels stay byte-verbatim (`ITEM 2 — ADDENDUM 2026-10-10`, `… 10-11`). `builder_items` appends to a list and does not key on `n`, so duplicates would not have collided — the renumbering is for the reader, not the parser, and no order's text or identity changed. **THE BYTE CONSTRAINT THE RULING NAMED IS NO LONGER THE ONE IT NAMED, and quoting its number would have been the error this project keeps making:** the ruling measured 123,997 B with 1,003 B of headroom; the page is **112,594 B** after this edit — 12,406 below the 125,000 ceiling and 18,478 below the 131,072 EXEC CLIFF — because the superseded blocks were excised since. Re-measured, not inherited. **LEG (b) IS ALSO EXECUTED:** `HOLDS:` is adopted in this file's contract preamble as a declaration-only converse of `BLOCKED-BY:`/`WAITS-ON:`, buying no exemption, no priority, no exit code and no auto-re-date, with no parser added — exactly the shape ruled. Bill priced BEFORE the edit with `run stale-cost experiments/steering.py`: **0 standing PASS certificates.** No threshold moved, no gate gained or lost an exit code. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-10-08 (Review DAILY, OVERDUE-FIRST class — **both declarations are RULED. (a) YES, and the SHAPE is that the PRIORITY block gains the heading the reader already looks for — the parser is NOT taught a second grammar, because this desk writes that page and can pay in prose what would otherwise be paid in instrument code. (b) YES, `HOLDS:`, declaration-only, buying and exempting nothing.** Both legs re-verified unmoved at HEAD 11 days after routing. See THE RULING below)
     DUE: 2026-10-08 | `review-queue`'s own `next_free_due`, read off the tool
         this slot (09-28 through 10-07 all carry promises; 10-08 is the first
         with room). What is owed is a RULING on two declarations — which pages
@@ -24303,3 +24319,95 @@ ROUTED: t306-probe-returned-an-undeclared-combination-and-v2-false-alarms | 2026
         capacity of 6, and 10-26 at 5 — the tool's own `next date with room`.
     WAITS-ON: none | the artifact is on disk and reproducible; no live row
         decides either half.
+
+ROUTED: register-entries-quote-instrument-readings-that-nothing-re-derives | 2026-10-22 | RE-DERIVED LIVE by the 159th audit using the instrument's own `review_queue.throughput()` against every October revision of this file in git, method validated by reproducing today's printed reading exactly (`arrived 16 / 2.29`, `disposed 21 / 3.00`, `live 72`, `drain 100.8` vs `101` printed); `D47`'s quoted figures traced to `8aea5db`..`2adfc24` and `2839b0b` (both 2026-10-13) | OPEN
+    The question: `docs/DECISIONS_NEEDED.md` entries argue their case — and
+    PRICE THEIR ARMED DEFAULTS — on numbers quoted from named instruments, and
+    **no reader in this repo re-derives a single one of them.** `T0.22` exists
+    to forbid exactly this shape for SPECS (*"A number borrowed from another
+    spec's entry cannot be stale"*) and PASSes. The register has no equivalent,
+    so an entry may quote a four-day-old reading under a freshness claim and
+    the clock fires on it.
+    **THE SPECIMEN, measured not asserted.** `D47` (`class conduct`,
+    `decide_by 2026-10-24`) is titled *"`review-queue` prices the drain at 54
+    cycles"* and carries a section headed **"The measurement, read this
+    sitting"** (2026-10-17). Re-derived from this file's own git history:
+      - `77 live rows` — never true on 10-17. It is the 2026-10-13 12:26-12:37
+        reading (`8aea5db`..`2adfc24`, live 77, drain **49.0**).
+      - `drain 54 cycles` — the 2026-10-13 12:26 reading of `2839b0b`
+        (live 78, drain **54.6**). The ONLY October revision printing 50-58.
+      - `39 OPEN, 35 DISPOSITIONED, 0 HELD` — **correct and fresh for 10-17**,
+        and at every one of those eight revisions `live_now` = **74** and
+        `drain` = **103.6** (172.7 earlier in the sitting). The entry's own
+        breakdown sums to 74 while its headline says 77.
+      - `arrivals 2/cycle against disposals 1.71/cycle` — printed at NO
+        revision from 2026-09-20 to today. Also self-inconsistent: arrivals
+        above disposals makes `net >= 0`, which `review_queue.py:510` prints as
+        `unbounded`, never as any finite cycle count.
+      - the `DECIDE:` block disagrees with the body it is attached to —
+        `74 live rows` (right) and `drain 47 cycles` (printed at no revision).
+    **WHY THIS IS THE ROW AND NOT JUST A CORRECTION.** The armed default's
+    stated price is *"the drain reading goes on printing 54 cycles."* The live
+    reading this morning is **101**. A default fires the day after
+    `decide_by`, the overseer fires on the first legal day, and the price a
+    firing must restate would therefore have understated the cost of holding by
+    ~2x. An EVIDENCE ADDENDUM correcting `D47` was appended this audit (same
+    idiom as `D40`'s three and `D46`'s), so the specimen is handled; the CLASS
+    is not, and the class is what this row owns.
+    **NOT A RE-OPENING OF `D47` AND NOT AN ANSWER TO IT.** Its class, its
+    options, its recommendation, its `default` text and its `decide_by` are
+    untouched. Nothing here picks an option or moves a date.
+    STALENESS BILL: **zero NEW certificates.** `T0.21`/`T0.28`/`T0.31` read
+    this file and were ALREADY stale when this audit opened (the Review's own
+    06:38 act, `80fb8ee`); priced with `scripts/regate.py --list` BEFORE this
+    edit at 3 certificates / 327 s / ~0.09 CPU-h. Running specs is outside this
+    organ's remit — the regate stale-first lane is the expected payer.
+    DUE: 2026-11-02 | a desk ruling on whether the register gets a
+        `T0.22`-shaped reader for quoted instrument readings, NOT the reader
+        itself — this date buys a decision, so the builder being dark cannot
+        break it. Derived, not chosen: `review-queue` prices 2026-10-27..11-01
+        at 6/4/4/4/3/3 live rows against a measured disposal of 3.00/cycle, and
+        11-02 at 2 — the lightest declared day on the board. Stated rather than
+        hidden, per the 10-21 sitting's own lesson: this is *"which date has
+        room"*, not a promise that the date will be worked.
+    WAITS-ON: none | the finding is re-derivable from git at any time and no
+        live row decides it.
+
+ROUTED: overdue-reconstitutes-overnight-from-rows-the-desk-could-see | 2026-10-22 | measured by the 159th audit against `d5e4fd5` (*"the OVERDUE class is 27 -> 0"*, 2026-10-21 06:51) and `run review-queue` at 06:37 today; the added `DUE:` lines of that commit extracted with `git show d5e4fd5 -- docs/REVIEW_QUEUE.md` | OPEN
+    The question: **`OVERDUE -> 0` is reported as a disposal achievement and
+    does not survive the night.** On 2026-10-21 the Review disposed 27 OVERDUE
+    rows and published the class at **0**. By 06:37 on 10-22 it read **11**.
+    Nothing was smuggled and no date was moved: all 11 already carried
+    `DUE: 2026-10-21`, written on 10-08, 10-10 and 10-17, and this file's own
+    date table printed **"2026-10-21  11 rows"** that morning. A row due TODAY
+    is not overdue, so the 0 was true at the instant it was measured and was
+    arithmetically certain to become 11 within hours.
+    **THE DESK IS NOT ACCUSED OF HIDING IT.** `d5e4fd5` assigned 18 new dates
+    and **not one of them was 2026-10-21** — it explicitly says *"dates were
+    assigned outside the band this sitting is itself filling."* It knew the day
+    was full. What it did not do is dispose of, or name, the 11 rows already
+    standing in it. The defect is that no instrument and no page says *"N live
+    rows are due TODAY and untouched"*, so a desk can truthfully report 0 while
+    tomorrow's 11 are sitting in front of it.
+    **THE CHEAPEST HONEST FIX IS A READING, NOT A GATE.** A gate here would
+    forbid a legal move (a row due today is legal and un-actioned work is
+    legal). The candidates, for the ruling to choose among: (i) print
+    `DUE TODAY — n live row(s)` beside the OVERDUE class, (ii) make the
+    throughput block report tomorrow's projected OVERDUE from today's
+    date table, (iii) both.
+    **ALREADY-DELIVERED SUBSET, named because it changes what the number
+    means.** 3 of the 11 are finished work awaiting only a signature, and this
+    file's own `DELIVERED — AWAITING STAMP` block names them with their commits:
+    `oversight-for-the-builder-has-no-reader` (`c8ee77b`),
+    `lc03-five-controls-never-switch-off-the-term-a4-is-named-for` (`da9ece0`),
+    `t306-random-arm-breaches-the-analytic-chance-dwell-bound` (`26d0541`).
+    That is `D47`'s recommendation (ii) — split the desk's docket from the
+    builder's — measured in the live file, and it is NOT re-routed here.
+    STALENESS BILL: **zero NEW certificates**, same three already-stale
+    `T0.21`/`T0.28`/`T0.31` as the row above, priced before the edit.
+    DUE: 2026-10-31 | a desk ruling on which reading (i)/(ii)/(iii) is adopted,
+        NOT the implementation. Derived: 10-31 prices at 3 live rows, the
+        lightest day inside a week of this finding, against a measured
+        disposal of 3.00/cycle. Same caveat as the row above: room, not a
+        promise of work.
+    WAITS-ON: none | the measurement is complete and no live row decides it.
