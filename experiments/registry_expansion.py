@@ -9053,6 +9053,23 @@ EXPANSION: list[Spec] = [
                "it does NOT claim any new capability for Jack — the kind is "
                "`rule` on purpose, so nothing here can move a commitment's "
                "`n_pass`. "
+               "FAIL-DISPOSED: so10-tie-break-hands-the-seat-to-an-ineligible-arm "
+               "2026-10-13 — the question this FAIL asked was ANSWERED, not "
+               "abandoned: the race ran, the Review's ruling (2026-09-29, "
+               "e41c932, recorded in the Person-model cell of "
+               "docs/CHAMPIONS.md) screened admission before scoring, found "
+               "the two eligible arms 0.16 sigma apart at EQUAL declared "
+               "cost, and left the seat VACANT BY RULING; "
+               "DECISIONS_RESOLVED.md carries it as 'SO.10 — TIE — "
+               "laplace-full' with no winner seated, and the routing row went "
+               "ACTED 2026-10-13. The FAIL stands as the registered finding "
+               "— no eligible winner means no seat — and a re-run unchanged "
+               "re-buys the same tie; what is owed before this seat can fill "
+               "is a tie-break declared BEFORE the next race, per the "
+               "ruling's own words. This marker excludes SO.10 from "
+               "FAIL-UNOWNED by declaration rather than by an incidental "
+               "mention inside a row about something else (158th audit, FOR "
+               "THE BUILDER 2). "
                "  COVERS: social/other agents (rule)"),
 
     # SIZING: `lg_10._measure` is 0.01 s of process time per (seed, selector)
