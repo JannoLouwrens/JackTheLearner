@@ -13645,7 +13645,7 @@ ROUTED: world-edit-window-price-is-quoted-at-21-and-measures-35 | 2026-09-22 | `
         `D38` `blocks:`), `scripts/ladder_prompt.md` item 4 (where "bills
         **zero**" was the load-bearing claim and is unaffected).
 
-ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | builder `3c07448` (T3.06 attempt 2, VOID, 2432 s, 3 seeds) | DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — RULED, and the ruling REFUSES the three-way question as posed: *"null, world, or resolution"* is not a choice this desk may make by argument, because the three branches are **mechanically discriminable by one CPU measurement** and the derivation names the exact surrogate that would decide them. `BLOCKED-BY` **WITHDRAWN** as mis-declared — the blocker is `DECLINED` AND this row's own staleness bill says the null-model arm edits `t3_06_*.py` alone and bills nothing, so only one of the three branches ever needed the window. The VENUE half is NOT this row's to answer and is folded into `w0-too-shallow`, where it is already counted as the eighth instrument. Design in THE RULING below; execution is the builder's, DUE 2026-10-13)
+ROUTED: t306-random-arm-breaches-the-analytic-chance-dwell-bound | 2026-09-22 | builder `3c07448` (T3.06 attempt 2, VOID, 2432 s, 3 seeds) | ACTED 2026-10-22 `26d0541` (Review DAILY, OVERDUE FIRST, act 3 — **THE ORDERED DIAGNOSTIC WAS DELIVERED, IT RAN, AND IT DID NOT PICK A BRANCH. All three facts are evidenced, and the third is the one that matters.** The 2026-10-01 ruling refused to answer *"null, world, or resolution"* by argument and ordered a builder measurement to separate them. `26d0541` (2026-10-21) registers `experiments/tests/t306_null_walker_probe.py`, +393 lines, with branches A/B/C and bands declared in source BEFORE any number was read — the right order, and the reason this result can be trusted at all. **AND THE RUN HAPPENED, which the commit message alone would not have told anyone** (its own subject says *"COMMITTED BEFORE IT RUNS"*): `/data/t306_null_walker_probe.json` + `.log`, 2026-10-21 05:20, `wall_s` 643.78, three seeds replayed, chain computed over 120 distinct goal cells. Read at source this sitting, not inherited. **THE ORDERED MEASUREMENT CAME BACK `UNDECLARED` — the pair is printed here because the 79th audit's scar is a disposition's own ordered spec refuting it in silence.** Readings: occupancy ratio **1.0556**, mean-run ratio **1.0053**, k≥6 tail ratio **1.2024** — every dwell statistic the row was opened about sits INSIDE its pre-declared band (`BAND` 0.80–1.25, `TAIL` 0.50–2.00) and agrees with the memoryless chain. But lag-1 displacement-direction excess is **0.1131** against `LAG_NONZERO` 0.05, so `lag_nonzero` is TRUE. Re-deriving the predicates at `:361-374`: branch A requires `occ_agree and run_agree and not lag_nonzero`; B and C BOTH require `run_longer or occ_above`. **The measured combination — chain fits the dwell, AND the directions are correlated anyway — is in no branch, because the menu assumed a lag could only matter when the dwell statistics disagreed.** That is a defect in the branch set, not in the probe or the world, and the probe was built to say so rather than round to the nearest branch (`:95`: *"a probe that forces"* a pick is the thing it refuses to be). The substantive content, stated plainly and NOT dressed as a branch: **nothing in this measurement supports the original claim that the random arm breaches the analytic chance dwell bound** — worst per-seed random dwell is 0.01975 / 0.01075 / 0.019 and the chain reproduces the occupancy and run-length structure to within 5.6% — while a real lag-1 direction correlation exists that the surrogate does not have (surrogate −0.0079). **SECOND FINDING, FROM THE SAME ARTIFACT, AND IT IS A DEFECT IN THE INSTRUMENT: the probe's own `V2` self-validation reports `ok: false` on a run that in fact replays correctly, and the error is exactly one ULP.** `V2` compares replayed lives against the ledger's recorded columns, which its own docstring (`:59-60`) says are *"rounded as recorded"*; the guard at `:252-253` rejects on `abs(diff) > 5e-5`. A 4-dp rounding admits a maximum legal error of EXACTLY 5e-5, so the tolerance equals the largest legal difference and float representation decides the comparison. Verified arithmetically this sitting over all four reported mismatches: every `cov` difference is comfortably inside tolerance (4.71e-5, 3.22e-5, 3.97e-5, 1.82e-5) and every `dwell` difference is the boundary case (0.00075 recorded as 0.0008, 0.01975 as 0.0198), computing to 5.000000000000002e-05 — just over. **All four "mismatches" are the same rounding boundary and none is a replay error.** `V1` (tracer == rig, 1e-12) and `V3` (chain == surrogate sim) both pass, so the replay machinery is sound and the measurement above stands. Had `V2` been a gate rather than a report, it would have VOIDed a correct 643-second run. The repair is NOT a looser epsilon — that would weaken a check this desk may not weaken — it is to round the replayed value to the recorded precision and compare exactly, which admits precisely the legal rounding and nothing more; it is strictly stronger than both the current test and any widened band. NOT edited in this sitting: `Part 2` is Sunday's power and this is a DAILY, and the artifact is already written, so the fix is routed rather than taken quietly. **WHAT CLOSES AND WHAT DOES NOT:** the builder's ordered unit is complete and cannot be re-run into a different answer, so this row is terminal; the unpicked branch and the `V2` defect are NOT buried in it — both are routed as `t306-probe-returned-an-undeclared-combination-and-v2-false-alarms`, live, in this same act. PRIOR STATUS, retained verbatim because this file never deletes history: DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — RULED, and the ruling REFUSES the three-way question as posed: *"null, world, or resolution"* is not a choice this desk may make by argument, because the three branches are **mechanically discriminable by one CPU measurement** and the derivation names the exact surrogate that would decide them. `BLOCKED-BY` **WITHDRAWN** as mis-declared — the blocker is `DECLINED` AND this row's own staleness bill says the null-model arm edits `t3_06_*.py` alone and bills nothing, so only one of the three branches ever needed the window. The VENUE half is NOT this row's to answer and is folded into `w0-too-shallow`, where it is already counted as the eighth instrument. Design in THE RULING below; execution is the builder's, DUE 2026-10-13)
     DUE: 2026-09-30 | a VENUE ruling owed by the Review, and it is NOT a rig
         repair: does W0's dwell distribution disagree with the analytic null
         because the null is wrong, because the world is, or because 48 lives
@@ -24256,3 +24256,50 @@ ROUTED: lc08-comparator-registered-and-unbought | 2026-10-22 | this sitting's `l
         this promise is arithmetically keepable.
     WAITS-ON: none | the ruling needs no other row: the design is closed and the
         only input is this desk's judgement on priority against `T1.08`.
+
+ROUTED: t306-probe-returned-an-undeclared-combination-and-v2-false-alarms | 2026-10-22 | `/data/t306_null_walker_probe.json` + `.log` (2026-10-21 05:20, `wall_s` 643.78, 3 seeds, 120 goal cells), read at source this sitting; branch predicates re-derived from `experiments/tests/t306_null_walker_probe.py:361-374`; the `V2` boundary arithmetic recomputed over all four reported mismatches against the guard at `:252-253` and the docstring at `:59-60` | OPEN
+    TWO questions, from one artifact, deliberately on one row because one run
+    produced both and they share a subject:
+    **(1) THE BRANCH MENU DOES NOT COVER WHAT WAS MEASURED.** Occupancy 1.0556,
+    mean-run 1.0053, tail 1.2024 — all inside their pre-declared bands, so the
+    memoryless chain fits every dwell statistic `t306` was opened about — while
+    lag-1 direction excess is 0.1131 against a 0.05 threshold, so `lag_nonzero`
+    is TRUE. Branch A forbids that conjunct; B and C both require the dwell
+    statistics to DISAGREE (`run_longer or occ_above`), which they do not. The
+    menu assumed a lag could only matter when the dwell structure broke. **What
+    does the desk conclude when the null reproduces the dwell and the directions
+    are correlated anyway?** The honest candidate: branch A's substance holds for
+    the dwell bound (no breach is supported — worst per-seed random dwell
+    0.01975/0.01075/0.019) and the lag is a SEPARATE true property of the world
+    that no `T3.06` verdict depends on. That is a desk ruling, not a measurement,
+    and it must NOT be reached by relabelling the result branch A.
+    **(2) `V2` FALSE-ALARMS BY ONE ULP, AND IT IS A REAL INSTRUMENT DEFECT.** The
+    guard rejects on `abs(diff) > 5e-5` against ledger columns its own docstring
+    says are *"rounded as recorded"* at 4 dp — whose maximum legal error is
+    EXACTLY 5e-5. All four reported mismatches are the same boundary case
+    (0.00075 recorded 0.0008; 0.01975 recorded 0.0198), each computing to
+    5.000000000000002e-05; every `cov` difference is well inside tolerance.
+    `V1` (1e-12) and `V3` pass, so the replay is sound and the readings stand.
+    **THE REPAIR IS CONSTRAINED, AND THE CONSTRAINT IS THE POINT:** round the
+    replayed value to the recorded precision and compare exactly. A widened
+    epsilon is REFUSED in advance — it would weaken a self-validation check, and
+    the round-then-compare form admits exactly the legal rounding and nothing
+    else, so it is strictly stronger than both the current test and any band.
+    Nobody may discharge this by loosening the number.
+    **WHY IT IS URGENT OUT OF PROPORTION TO ITS SIZE:** an artifact on disk
+    currently reads `"ok": false` on a correct 643-second run. The next reader
+    who finds it has every reason to discard the measurement, and `V2` as a gate
+    would have VOIDed it. A false alarm in a self-validator spends the credibility
+    of every reading beside it.
+    STALENESS BILL: **zero certificates.** `t306_null_walker_probe.py` is a probe
+    in no spec's `IMPL_DEPS`, it has no ledger row, and `T3.06` itself is VOID
+    (attempt 2, `1b7e7aa`) so there is no standing certificate over this subject
+    to invalidate. Cost of (2) is one edit and a re-run of the probe's own
+    validation path; cost of (1) is one desk sitting and no compute.
+    DUE: 2026-10-26 | one date for both halves: the `V2` repair is a builder edit
+        and the branch question is this desk's ruling, and splitting them would
+        date the ruling onto a day that cannot hold it. Derived: `review-queue`
+        prices 2026-10-22..10-25 at 6/6/6/10 live rows against a measured
+        capacity of 6, and 10-26 at 5 — the tool's own `next date with room`.
+    WAITS-ON: none | the artifact is on disk and reproducible; no live row
+        decides either half.
