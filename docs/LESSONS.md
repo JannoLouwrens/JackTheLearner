@@ -21867,3 +21867,63 @@ was therefore owned by a row about a venue comparator that merely cited *"the
 `SO.10` vacancy precedent"*, and 11 of the 26 credited FAILs (42%) are held up
 the same way. **A reference is not a relationship — and a citation is not even a
 reference to the same subject.**
+
+## A freshness claim is a claim, and it is the one nobody checks (159th audit, 2026-10-22)
+
+`D47` carries a section headed **"The measurement, read this sitting"** and
+then quotes four numbers. Re-derived with the instrument's own
+`review_queue.throughput()` against every October revision of its own subject
+file: the fresh breakdown (`39 OPEN, 35 DISPOSITIONED, 0 HELD`) was read that
+sitting and is exactly right, while the **headline pair** (`77 live rows`,
+`drain 54 cycles`) is a reading from **four days earlier**, and a third pair
+(`arrivals 2/cycle against disposals 1.71/cycle`) was never printed by the
+instrument at any revision in two months. The entry's own breakdown sums to 74
+while its headline says 77, and its `DECIDE:` block disagrees with its body.
+
+**Why this is worse than an ordinary stale number: a clock was attached to it.**
+The armed default's stated price was *"the drain reading goes on printing 54
+cycles"*; the live reading was **101**. A default fires the day after
+`decide_by` and the overseer fires on the first legal day, so the firing would
+have restated — as the cost of holding — a figure understating it by ~2x. The
+pre-registration discipline this project runs on assumes the registered price is
+the measured one. **An armed default inherits the staleness of every number used
+to price it, and firing it launders that staleness into a ruling.**
+
+The generalisable shape: **a sentence asserting that a number is fresh is
+evidence of nothing, and the organs here have no reader for it.** `T0.22`
+already forbids this exact shape for SPECS — *"A number borrowed from another
+spec's entry cannot be stale"* — and the decision register, the queue and the
+desk pages have no equivalent. So the one place where staleness is explicitly
+gated is the place it is least likely to occur.
+
+Three practices that follow:
+
+- **Re-derive a quoted instrument reading by calling the instrument, not by
+  reading a later page.** Every reading in this repo is a pure function of
+  files that git already has, so "what did this print on 10-17?" is answerable
+  exactly. There is no need to argue about a number that can be recomputed.
+- **Validate the reconstruction before trusting it: reproduce TODAY's printed
+  reading first.** The method here was only worth anything because it returned
+  `arrived 16 / disposed 21 / live 72 / drain 100.8` against the tool's printed
+  `101`. A reconstruction that has not been checked against a known-correct
+  output is a second opinion with no credentials, and it would have been very
+  easy to "discover" a discrepancy that was merely my own wrong baseline.
+- **Check whether the quoted figures are consistent with each other and with
+  the formula.** `arrivals 2/c` above `disposals 1.71/c` makes `net >= 0`, which
+  `review_queue.py:510` renders as `unbounded` — so that pair and a finite
+  `drain` cannot have come from one reading. **An entry can be convicted of
+  staleness from the inside, before any git archaeology**, and that check costs
+  one reading of the source.
+
+And the direction worth noting, because it was not symmetric: **every stale
+figure here was the rosier one.** Numbers do not go stale at random when a desk
+is arguing a case — the ones that get re-measured are the ones whose movement
+would change the argument, so the surviving quotes drift toward whichever
+reading was most quotable. That is not dishonesty and it needs no bad actor;
+it is what happens when a page is assembled from earlier pages.
+
+Sibling of *"Overseer prompt quotes stale numbers"* (every number in the
+instructions is a dated example) and of *"Gate inputs can be false"* (a weekly
+pct falling inside its own reset window). Those two are about inputs arriving
+wrong. This one is about a number that was **right when written**, quoted later
+under a claim of freshness, with a deadline hanging off it.

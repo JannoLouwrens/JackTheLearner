@@ -11528,3 +11528,166 @@ probe's rows would be the original defect one measurement later). Nothing here
 rescues PS.09's VOID or any sibling's FAIL: a reference reading the sign does
 not make the registered 66-feature probe read it — probe_bal_acc 0.547 ± 0.075
 against ACC_MIN 0.65 is untouched by every branch above.
+
+---
+
+## D47 — EVIDENCE ADDENDUM, 2026-10-22 06:5x UTC (overseer, 159th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS THE NUMBERS THIS ENTRY AND ITS ARMED DEFAULT'S PRICE ARE ARGUED ON: the headline pair (`77 live rows`, `drain 54 cycles`) is a 2026-10-13 reading quoted under a 2026-10-17 freshness claim, and the live reading is ~2x worse than the price the default promises to preserve.
+
+`D47` stays open, `class conduct`, `decide_by 2026-10-24` (2 days away).
+`decisions --check` classes it `CONDUCT-DESK` — *"desk-executable, not the
+owner's — execute it, report it, do not ask."* This addendum proposes no
+option, picks neither (i) nor (ii), moves no `decide_by`, fires nothing,
+declines no row, deletes no row, and leaves the recommendation's wording and
+the `default` text byte-untouched. **It exists because the overseer fires armed
+defaults on the first legal day, a firing must restate the entry's price, and
+the price as written is wrong.**
+
+### Why this was re-derived rather than read
+
+`D47`'s measurement section is headed **"The measurement, read this
+sitting"** (2026-10-17). That is a freshness claim, and nothing in this repo
+checks one. `T0.22` forbids exactly this shape for SPECS — *"A number borrowed
+from another spec's entry cannot be stale"* — and the register has no
+equivalent reader. So the numbers were recomputed with the instrument's own
+`experiments/review_queue.py:throughput()` against **every October revision of
+`docs/REVIEW_QUEUE.md` in git**, the same git-history basis the function
+itself uses.
+
+**Method validated before it was trusted**, against the reading the tool
+printed at this audit's open:
+
+```
+reconstruction  arrived 16 (2.29/c)  disposed 21 (3.00/c)  live 72  drain 100.8
+tool printed    arrived 16 (2.29/c)  disposed 21 (3.00/c)  live 72  drain 101
+```
+
+### What each quoted figure actually is
+
+| quoted in `D47` | status | the revision that printed it |
+|---|---|---|
+| `77 live rows` | **2026-10-13**, not 10-17 | `8aea5db`..`2adfc24`, 12:26–12:37 — live 77, drain **49.0** |
+| `drain 54 cycles` | **2026-10-13**, not 10-17 | `2839b0b`, 12:26 — live 78, drain **54.6**. The ONLY October revision printing 50–58 |
+| `39 OPEN, 35 DISPOSITIONED, 0 HELD` | **CORRECT and FRESH for 10-17** | all eight 10-17 revisions — and at every one, `live_now` = **74**, `drain` = **103.6** (172.7 earlier in the sitting) |
+| `arrivals 2/cycle against disposals 1.71/cycle` | printed at **no** revision, 09-20 → today | — |
+| `DECIDE:` block's `74 live rows` | **CORRECT for 10-17** | contradicts the body's own `77` |
+| `DECIDE:` block's `drain 47 cycles` | printed at **no** revision | — |
+
+Two consequences worth stating separately:
+
+1. **The entry's own breakdown sums to 74** (39 + 35 + 0) **while its headline
+   says 77.** Both numbers are in the same section.
+2. **`arrivals 2/cycle against disposals 1.71/cycle` is not merely stale, it is
+   self-inconsistent.** Arrivals above disposals makes `net >= 0`, and
+   `review_queue.py:510` renders that as `unbounded` — never as any finite
+   cycle count. The quoted pair and the quoted `drain` cannot both have come
+   from one reading.
+
+### The correction that matters, and its direction
+
+> `default: (iii) HOLD — NO SPLIT IS BUILT AND THE DESK KEEPS RE-DATING. [...]
+> and the drain reading goes on printing 54 cycles.`
+
+**The live reading at this audit's open is `101` cycles against 72 live rows.**
+The error direction is the one that matters: **the stale figure makes the
+status quo look roughly twice as survivable as it is measured to be**, so a
+default fired on the entry as written would have blessed a hold at half its
+measured cost. For the record, across 10-17 the instrument read 103.6–266
+cycles, so `D47`'s problem was already ~2–5x worse than its own headline on the
+day it was filed.
+
+**WHAT DOES NOT CHANGE, AND IS WORTH SAYING PLAINLY.** Every *qualitative*
+claim in `D47` survives this correction intact and most of them get stronger:
+the queue is not drainable at the desk's measured rate; re-dating is the only
+repair left in volume; `DATED ONTO A FULL DAY` is real; and the recommendation
+(ii) — split the desk's docket from the builder's — is independently confirmed
+by this audit in the live file, where `DELIVERED — AWAITING STAMP` names **3 of
+today's OVERDUE rows as finished work needing only a signature**
+(`oversight-for-the-builder-has-no-reader` at `c8ee77b`,
+`lc03-five-controls-never-switch-off-the-term-a4-is-named-for` at `da9ece0`,
+`t306-random-arm-breaches-the-analytic-chance-dwell-bound` at `26d0541`).
+**Nothing here is an argument against `D47`. It is the entry's own case, priced
+correctly.**
+
+**WHAT THIS IS NOT.** Not a re-opening — `D47` was open and stays open. Not an
+arming — it was already armed by the 151st audit and the `class`, `default` and
+`decide_by` are untouched. Not a date move; not an answer to the `CONDUCT-DESK`
+flag, which remains the Review's to answer in writing. Not a correction of any
+*qualitative* finding. **No number in this addendum was quoted from another
+document; every one was recomputed from git this morning, which is the practice
+the addendum is about.** The CLASS — register entries quoting instrument
+readings that nothing re-derives — is routed as
+`register-entries-quote-instrument-readings-that-nothing-re-derives`
+(`docs/REVIEW_QUEUE.md`, OPEN, DUE 2026-11-02), not resolved here.
+
+## D52 — The weekly scout samples the usage gate ONCE a week, and twice in a row that one instant landed in the exhausted tail of a usage week that reset within ~24 hours. Two entire sweeps were lost to a gate that was open for five of the seven days. (2026-10-22, Review, DAILY)
+
+DECIDE: D52
+  class:     conduct
+  blocks:    no spec id. It blocks the only organ that looks OUTSIDE this
+             repo, which is why it is not a scheduling detail: the
+             completeness audits exist because every other organ measures us
+             against our OWN documents.
+  default:   RETRY THE SWEEP WITHIN ITS WEEK INSTEAD OF LOSING IT.
+             `field_watch.sh` keeps its Monday 05:37 slot and gains
+             additional attempts later in the same ISO week, each one
+             consulting `usage_gate` exactly as it does now and each one
+             exiting if the gate refuses, with a guard so that at most ONE
+             sweep completes per ISO week. **The 90% stop, `PACE_FLOOR` and
+             `PACE_CAP` are byte-unmoved and no attempt may proceed past a
+             refusal** — this changes WHEN the gate is asked, never what it
+             answers or what it is allowed to permit. Silence adopts this.
+             MONOTONE in the directions that matter: it moves no threshold,
+             edits no constitution text, deletes no component, stales no
+             certificate, spends no GPU-hour, and withdraws no finding; its
+             only cost is up to a few extra gate reads a week.
+  decide_by: 2026-11-05
+
+**THE RECOMMENDATION, quoted verbatim from this sitting's `FOR THE OWNER` item 2:**
+
+> **Give the weekly scout a retry window instead of a single sample. The field
+> watch tests the 90% stop once per week, and on both 2026-10-12 and
+> 2026-10-19 that one instant landed in the exhausted tail of a usage week
+> that reset within about a day — so two entire sweeps were lost to a gate
+> that was open for five of the seven days that followed. The builder survives
+> the identical gate because it samples hourly; the field watch is the only
+> organ whose sample count equals its cadence, which makes a single unlucky
+> instant cost a whole week of outside input.**
+
+### The evidence, measured this sitting
+
+- `crontab`: `37 5 * * 1 scripts/field_watch.sh` — **one slot per week.**
+  `scripts/field_watch.sh:32` is `usage_gate say field-watch || exit 0`: one
+  sample, and on refusal the sweep is abandoned until the next Monday.
+- `/data/jack-logs/field_watch.log`: `2026-10-12T05:37 STOPPED at 98% weekly
+  usage`, `2026-10-19T05:37 STOPPED at 92% weekly usage`, each *"all agents
+  paused until the owner resumes"*.
+- **The gate was open for most of the week that followed**, read off the
+  builder's own hourly meter in `/data/jack-logs/ladder.log`: 2026-10-18 was
+  `66% at 50% of the week`; by 2026-10-20 the same meter read **`40% at 23%`**
+  — a weekly counter can only FALL like that by resetting, so the usage week
+  turned over within ~24 h of the scout's refusal. It read 53% today.
+- **The cost, in the only currency this organ has:** `docs/FIELD_WATCH.md` is
+  unchanged since **2026-10-05** (`32b098c`) — 17 days, two missed sweeps,
+  against a weekly cadence. Week 9 had already exited `rc=124`, so the last
+  COMPLETE outside report is week 10.
+
+### Why this is not `D30` and not `D50`
+
+`D30` makes this desk count dark slots and price the GPU expiry beside them;
+`D50`'s default makes it ATTRIBUTE a fired 90% stop to its consequences
+instead of re-diagnosing them as unrelated symptoms. Both are reporting
+duties, and both are discharged in this sitting's page. **Neither changes the
+fact that a refused weekly organ simply loses its week** — reporting the loss
+more clearly does not recover a sweep. This entry is the only one of the three
+that would make the scout's week survivable, and it is deliberately the
+smallest possible change that does so.
+
+### Why a desk should not just do it
+
+It is `class: conduct` and this desk would ordinarily execute it and report.
+It is routed instead because the thing being edited is the invocation path of
+the owner's own 2026-08-09 pause rule (`field_watch.sh:27-32`). Re-timing how
+often that rule is CONSULTED is close enough to re-timing the rule itself that
+a desk doing it quietly would be indistinguishable, in the log, from a desk
+loosening it. The default above is therefore written to be adopted by silence
+rather than executed by assumption.
