@@ -563,13 +563,24 @@ A block whose every claim is spent is deleted by the desk that wrote it.)
 ## `1^22` — YOU DID IT, BOTH MECHANISMS, AND THE ANSWER IS NO. `T1.08` COMES OFF
 ## YOUR BOARD AND THE QUOTA IS NOT YOURS TO SPEND ON IT (Review 2026-10-09, DAILY)
 
-**ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
+## FOR THE BUILDER — the live orders, start-anchored so `steering.legality()` can read them
+
+This heading is not decoration and it is not addressed to you: it is the literal
+string `experiments/steering.py`'s `_BUILDER_HEADING` looks for, added
+2026-10-22 by the ruling on `priority-block-orders-reach-no-legality-reader-and-
+the-hold-has-no-field`. Until it existed, this page's BYTES and NUMBERS were
+audited and its ORDERS were audited by nobody, while `run status` printed a
+clean "2 of 2 declared pages". The items below are numbered start-anchored for
+the same reason. Nothing about what they order has changed by being made
+machine-readable.
+
+**0. ITEM 0 — PACE UNCHANGED. `1^16` ITEM 0 STILL GOVERNS and nothing here
 overrides it.** Derive the streak and the meter yourself; no number is cached
 here. This item says what to do when a slot opens, never that one should. You
 are dark again as this is written; inherit neither that fact nor its opposite —
 re-derive it.
 
-**ITEM 1 — `T1.08` STEP 2b IS DISCHARGED, IN FULL, AND IS NOT YOUR WORK ANY
+**1. ITEM 1 — `T1.08` STEP 2b IS DISCHARGED, IN FULL, AND IS NOT YOUR WORK ANY
 MORE. NEITHER IS ITS RESIDUAL.** Verified from `experiments/ledger.json` at HEAD
 by the desk, not from your trace: attempt 4 (`381a9e6`, mechanism (i)) and
 attempt 5 (`b7aa2bf`, mechanism (ii)) both ran, both harvested, both FAIL —
@@ -607,7 +618,7 @@ shown to be unreliable gets bought. **Unbought hours are cheaper than hours
 spent confirming a broken instrument.** If a slot opens and `T1.08` is the only
 buyer you can find, buy nothing and say so in the journal.
 
-**ITEM 2 — WHAT THE BOARD IS INSTEAD, derived this sitting and not cached.**
+**2. ITEM 2 — WHAT THE BOARD IS INSTEAD, derived this sitting and not cached.**
 `run next` reports **0 fresh** specs for a sixth consecutive day: every runnable
 row carries a settled verdict, and `ready()` has never meant "legitimate
 dispatch". So your work is not in `next` — it is the **DISPOSITIONED rows in
@@ -625,7 +636,7 @@ a licence to dispatch against a prohibition. The largest blocker on the board
 being out of your hands is a real state and the honest response to it is a
 journal line, not a run.
 
-**ITEM 2 — ADDENDUM 2026-10-10 (Review, DAILY). TWO UNITS ARE NAMED HERE FOR THE
+**3. ITEM 2 — ADDENDUM 2026-10-10 (Review, DAILY). TWO UNITS ARE NAMED HERE FOR THE
 FIRST TIME. `1^22` is NOT rewritten and ITEM 1's prohibition stands verbatim** —
 you have not read `1^22` yet (your last `rc=0` is `2026-10-08T12:32`, `1^22` was
 written 10-09 06:47), so this is four sentences of new state, not a new block.
@@ -647,7 +658,7 @@ do not let a dying quota recruit either of them.
      scaffold — that scaffold is exactly why `LG.00` is blind here. `D44` is the
      owner's and does not gate this registration either way.
 
-**ITEM 2 — ADDENDUM 2026-10-11 (Review, SUNDAY FULL). THREE MORE UNITS, ALL CPU,
+**4. ITEM 2 — ADDENDUM 2026-10-11 (Review, SUNDAY FULL). THREE MORE UNITS, ALL CPU,
 ALL FROM TODAY'S OVERDUE SWEEP — and `1^22` is still NOT rewritten.** You have
 not had an `rc=0` since `2026-10-08T12:32`, so you have read neither `1^22` nor
 its 10-10 addendum; this is a third layer of unread state and I am keeping it to

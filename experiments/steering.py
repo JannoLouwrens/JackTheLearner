@@ -81,7 +81,16 @@ _REPO = Path(__file__).resolve().parent.parent
 # `PROGRESS.md` weekly-and-daily by the Review, `OVERSIGHT.md` every six hours
 # by the overseer — which is precisely why an order on either can go stale
 # between being written and being read.
-STEERING_PAGES = ("docs/PROGRESS.md", "docs/OVERSIGHT.md")
+# `ladder_prompt.md` JOINED 2026-10-22 (Review DAILY, act 4) under the ruling on
+# `priority-block-orders-reach-no-legality-reader-and-the-hold-has-no-field`. It
+# is the one page no builder can skip, and its orders were audited by nobody
+# while this tuple printed a clean "2 of 2 declared pages". Added only AFTER the
+# live PRIORITY block was given the literal `## FOR THE BUILDER` heading and
+# start-anchored items — the row's own finding is that a page added without a
+# grammar parses zero and reads as coverage, which is worse than the gap.
+# Receipt at the time of the edit: 5 items parsed on this page, not 0.
+STEERING_PAGES = ("docs/PROGRESS.md", "docs/OVERSIGHT.md",
+                  "scripts/ladder_prompt.md")
 
 # --- the launcher's hard ceiling (PROGRESS FOR THE BUILDER item 4) ---------
 # `ladder_loop.sh` passes this page's ENTIRE TEXT as a single argv to
