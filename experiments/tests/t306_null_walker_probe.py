@@ -57,7 +57,15 @@ SELF-VALIDATION, the first thing to read in the output, all three mandatory:
   V1. one traced life must reproduce `_life(sub_seed, "random")`'s returned
       (coverage, dwell) EXACTLY — the tracer is the rig or it is nothing;
   V2. the traced seed-0 lives must reproduce the ledger row's
-      `per_life_first_seed_only` random columns (rounded as recorded) — the
+      `per_life_first_seed_only` random columns — the replayed value is
+      rounded to the RECORDED precision (REC_DP, the recorder's own
+      `round(x, 4)`) and compared EXACTLY, which admits precisely the legal
+      rounding and nothing more. The first shipped form compared
+      `abs(diff) > 5e-5`, a tolerance equal to 4-dp rounding's maximum legal
+      error, so float representation decided the boundary and four correct
+      replays read as mismatches (queue row
+      `t306-probe-returned-an-undeclared-combination-and-v2-false-alarms`;
+      a widened epsilon was refused in advance there) — the
       replay is the recorded run or it is nothing;
   V3. the surrogate sim must land within Monte-Carlo error of the chain's
       occupancy and mean run length — the chain code is the derivation's or
@@ -110,6 +118,46 @@ TAIL_LO, TAIL_HI = 0.50, 2.00     # k95 tail agreement band
 LAG_NONZERO = 0.05                # world minus surrogate mean-cosine excess
 ARTIFACT = "/data/t306_null_walker_probe.json"
 
+# V2's comparison precision IS the recorder's: T3.06 writes every
+# per_life_first_seed_only column through round(x, 4)
+# (t3_06_ablate_curiosity.py, the per_life_first_seed_only literal). If the
+# recorder's precision ever changes, this constant must change with it or V2
+# goes blind/false-positive again.
+REC_DP = 4
+
+
+def _v2_match(replayed: float, recorded: float) -> bool:
+    """Round the replayed value to the recorded precision, compare exactly.
+
+    Strictly stronger than any epsilon band: the only admitted difference is
+    the recorder's own rounding. round() returns the nearest double to the
+    decimal result, which is the same double json.load parses from the
+    ledger's literal, so == is exact here, not a float-tolerance in disguise.
+    """
+    return round(replayed, REC_DP) == recorded
+
+
+def _v2_selftest() -> list:
+    """Known answers for _v2_match, run before anything expensive.
+
+    The four passes are the four boundary rows the 2026-10-21 run flagged as
+    false alarms (artifact self_validation.V2_replay_is_recorded_run), each a
+    legal 4-dp rounding whose float diff computed to one ULP over 5e-5. The
+    failures are genuine half-point mismatches that no repair may admit.
+    """
+    cases = [  # (replayed, recorded, must_match)
+        (0.6983471074380165, 0.6983, True),   # sub_seed 200 cov
+        (0.00075,            0.0008, True),   # sub_seed 200 dwell (boundary)
+        (0.5041322314049587, 0.5041, True),   # sub_seed 291 cov
+        (0.01975,            0.0198, True),   # sub_seed 291 dwell (boundary)
+        (0.6983471074380165, 0.6984, False),  # real mismatch, one half-point up
+        (0.00075,            0.0007, False),  # real mismatch, rounding the
+                                              # other way — round() must not
+                                              # be allowed to match both
+        (0.01975,            0.0199, False),  # real mismatch above the legal
+    ]
+    return [(r, c, want) for r, c, want in cases if _v2_match(r, c) != want]
+
 
 def main() -> None:
     import numpy as np
@@ -121,6 +169,13 @@ def main() -> None:
     from experiments.registry import BY_ID
 
     t0 = time.time()
+    bad = _v2_selftest()
+    if bad:
+        print(f"V2 SELFTEST FAILED on {bad} — the comparator cannot "
+              "demonstrate its own known answers; refusing to run.")
+        sys.exit(1)
+    print("V2 selftest: 7/7 known answers (4 legal roundings match, "
+          "3 real mismatches fire)", flush=True)
     seeds = list(range(BY_ID["T3.06"].seeds))          # [0, 1, 2]
     report: dict = {"readings": {}, "self_validation": {}, "branch": None}
 
@@ -249,8 +304,8 @@ def main() -> None:
     for r in rec:
         ss = int(r[i_ss])
         lf = lives[(0, ss)]
-        if (abs(lf["cov"] - r[i_rc]) > 5e-5 or
-                abs(lf["dwell"] - r[i_rd]) > 5e-5):
+        if (not _v2_match(lf["cov"], r[i_rc]) or
+                not _v2_match(lf["dwell"], r[i_rd])):
             v2_bad.append([ss, lf["cov"], r[i_rc], lf["dwell"], r[i_rd]])
     report["self_validation"]["V2_replay_is_recorded_run"] = {
         "n_rows": len(rec), "mismatches": v2_bad, "ok": not v2_bad}
