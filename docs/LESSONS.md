@@ -21927,3 +21927,38 @@ instructions is a dated example) and of *"Gate inputs can be false"* (a weekly
 pct falling inside its own reset window). Those two are about inputs arriving
 wrong. This one is about a number that was **right when written**, quoted later
 under a claim of freshness, with a deadline hanging off it.
+
+## A control that certifies an absence is only as good as the last time the presence was seen (2026-10-25, builder, executing the `t310-anticorrelated-gates` ruling of 2026-10-01)
+
+`T3.10` certifies "the freeze held" by contrast: the unfrozen arm must drift
+(`probe_drift_unfrozen >= 0.10`) so that the frozen arm's near-zero means the
+freeze did something. That is a NEGATIVE control — it certifies an absence by
+comparison with a presence. The spec's two repair pilots then measured the
+trade exactly: at `EPOCHS_P` 40 the contrast is alive (drift 0.1875) and the
+claim is unsatisfiable by arithmetic; at `EPOCHS_P` 150 the claim becomes
+measurable (`knowledge_margin_min` 0.0299) and the contrast vanishes (drift
+0.0078) — because a converged trunk is one whose features phase A's gradients
+no longer move, *frozen or not*. **There is no value of the knob that fixes
+it**: under-training restores the presence and unmeasures the claim,
+over-training measures the claim and removes the presence. The apparatus
+change (convergence) silently expired the control's credentials, and the spec
+had no way to notice.
+
+**Rule (the ruling's, generalised):** a control that certifies an absence is
+only as good as the last time the corresponding presence was seen; if the
+apparatus changes, re-demonstrate the presence or the absence stops being
+evidence. Mechanically: a zero-reading claim (zero drift, zero leak, zero
+trips) is admissible only on a run that ALSO demonstrates the channel can fire
+at the SAME operating point — a pre-registered calibration arm whose
+perturbation is declared before the run. A calibration arm that cannot fire is
+a VOID of the instrument, never a FAIL of the claim, and never a tuning
+opportunity. This is the second instance of the class — `lt02-the-venue-has-
+no-true-positive-body-chaos-is-reducible` is the same defect through a venue
+channel: **a measurement whose failing side has never been observed to be
+observable.**
+
+The permanent guard, per the ruling: the requirement attaches to the
+frozen-vs-plastic FAMILY, registered in `docs/CHAMPIONS.md` beside the
+PLASTIC-ONLY decree (arenas `PL.00`/`PL.02`) — the next registered spec that
+reads a freeze-held claim carries the calibration arm. `T3.10` itself stays
+PARKED; the one-diagnostic cap is SPENT; no bar moved in either direction.

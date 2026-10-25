@@ -251,6 +251,50 @@ weakening whatever the merits. It is routed to the Review as
 **exists and is unanswered**, which is honestly worse than it sounds and much
 better than a phantom.
 
+**INHERITED FROM `T3.10` — TWO CONDITIONS ON THIS FAMILY'S ARENAS (the
+`t310-anticorrelated-gates` ruling, 2026-10-01; registered here by the builder
+2026-10-25, which is where the ruling said it is registered).** `T3.10` itself
+stays PARKED and this orders no run of anything; both conditions are
+strengthenings that can only turn a green reading into a VOID.
+
+1. **THE CALIBRATION ARM IS MANDATORY on any freeze-held claim this family
+   registers next.** A zero-drift reading is admissible only on a run that
+   ALSO demonstrates `probe_drift >= 0.10` is reachable at the SAME operating
+   point (same `EPOCHS_P`-equivalent), via a third pre-registered arm: trunk
+   unfrozen AND phase A given a declared perturbation chosen before the run.
+   If that arm cannot fire, the drift channel has no true positive at this
+   operating point and the run is a **VOID of the instrument, never a FAIL of
+   the freeze claim** — and never a tuning opportunity. Reason, from the
+   ruling: `T3.10`'s negative control certified an absence by contrast with a
+   presence, and convergence removed the presence (drift 0.1875 at `EPOCHS_P`
+   40 vs 0.0078 at 150, while the claim moved the opposite way) — no knob
+   value serves both. Generalised in `docs/LESSONS.md` under *"A control that
+   certifies an absence is only as good as the last time the presence was
+   seen"*.
+
+2. **THE NEAR-SATURATED-TARGET EXPOSURE, now with the determination the
+   ruling left open (builder, 2026-10-25, the one-docstring-one-function read
+   the 10-12 unit owed; no run).** `null_admissible`'s criterion
+   (`t3_10_trunk_knowledge_survives.py:729`) is `probe_random[t] <= 1.0 -
+   KNOWLEDGE_MARGIN` — it admits a target for being sufficiently
+   **UNREADABLE from a random trunk** against the absolute 1.0 ceiling. Under
+   the ruling's own pre-registered dichotomy, `shape`'s retention is therefore
+   evidence **AGAINST** the near-saturated-TARGET reading as posed: shape
+   carried 0.5807 of arithmetically-available headroom (the exact quantity the
+   rule checks; `near`/`colour` were dropped for the opposite reason, nulls at
+   0.9427/0.9245), and the best-trained trunk recovered **+0.0299** of it.
+   That relocates question 2's live branch to the **SUBSTRATE** — the 128-d
+   globally-pooled bottleneck's achievable ceiling — which the admissibility
+   rule is structurally blind to (it reads saturation only against 1.0, never
+   against what the substrate can reach). The three candidate arms on the t310
+   row stay unpicked and unforeclosed; this determination narrows which
+   disease they would treat, it does not choose among them. One correction of
+   record: the row's prose *"colour and near dropped as unreadable from a
+   random trunk"* has the direction backwards — they were dropped for being
+   too READABLE from one, as the spec's own PILOT RECORD states; the backwards
+   sentence is plausibly why four sittings could not settle the direction from
+   the row alone.
+
 ### Superseded context: the contested phase (kept for the record)
 
 **NOT DECIDED.** docs/research/FROZEN_VS_PLASTIC.md recommends against frozen
