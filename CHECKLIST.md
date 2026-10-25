@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 106 / 260 demonstrated
+## 107 / 260 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -597,7 +597,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 
-- [ ] **LC.08** The seat's binding objective earns its margins (A4 paired against A4 with l_bind dropped)
+- [x] **LC.08** The seat's binding objective earns its margins (A4 paired against A4 with l_bind dropped)
       - _asserts:_ The Learning-core seat's margins are attributable to the binding objective wm-latent is NAMED for: the identical WorldModelCore(decoder=False) architecture — latent_pred head present and parameter-counted, init-identical under the rig's own seeding — trained at the identical LC.03 v2 envelope (seeds 0/1/2, 400,000 decisions, 17,280 core-s whichever is later, e0=1.0, constant explore_std 0.3, LC.02's committed train_ratio) with the binding term's gradient contribution zeroed records lg_margin_null AND lg_margin_twin — the two statistics D10 seated A4 on, paired per seed against the SAME recorded v2 null and twin life histories — whose seed means BOTH fall short of the seated run's recorded means by more than one seated-run seed std (ddof=0, the house t's own denominator). STATISTIC_BOUND: none — the deciding statistic (difference of paired margins) is unbounded in both directions and its anchor sits 4.6/4.0 house-sigma from zero, nowhere near a bound.
       - _dies if:_ The l_bind-dropped arm reproduces one or both seated margins within the seated arm's own seed spread (comparator seed mean >= seated mean - 1 seated seed-std on lg_margin_null or lg_margin_twin). When BOTH reproduce, that is the ruling's pre-registered dead-weight reading: an RSSM actor-critic without the binding objective produces the seat's number, and 149,312 params — 17.3% of the seated arm — plus the objective it is named for are not what the margins measure. A reportable result about the seat, never a null (THE RULING, lc03-five-controls-never-switch-off-the-term-a4-is-named-for, 2026-09-29).
       - _then delete:_ The claim that the Learning-core seat was won by its binding objective. A FAIL with the dead-weight reading means any future design buying latent-prediction machinery on the strength of A4's margins loses that justification, and the champions entry's basis must carry the reading (the Review's edit, routed via the queue row). No LC.03 verdict moves either way — the screen's VOID stands.
