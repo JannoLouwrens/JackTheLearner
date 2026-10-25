@@ -25004,3 +25004,247 @@ ROUTED: regate-dirty-guard-is-checked-once-at-entry-and-the-tree-went-dirty-mid-
         than a date that makes it the fifth broken promise in its family.
     WAITS-ON: none | every input is on disk at HEAD, the timeline is in the
         ledger's own `ran_at`/`dirty_files` fields, and no live row decides it.
+
+ROUTED: limit-lost-slots-are-erased-by-both-of-their-own-recorders | 2026-10-25 | measured by the 161st audit: `scripts/ladder_loop.sh:372-373` (the session-limit marker write), `:406-408` (`: > "$LOST"` on the first `rc=0`), and `/data/jack-logs/lost_iterations.log` read live at 0 bytes, mtime 2026-10-25 18:12; the three losses re-counted out of `/data/jack-logs/ladder.log` (15:14:02, 16:07:29, 17:07:31, all `SESSION LIMIT on every model`); `dark_slots` ratchet re-run live at 0 | OPEN
+    The question: when a builder slot is lost to a model limit, BOTH of the two
+    mechanisms that record the loss destroy the record as soon as the loop
+    recovers. Who owns a repair, and which mechanism gets it?
+    **THE TWO ERASURES, and they are independent.**
+    1. **`lost_iterations.log` is truncated on recovery.** `ladder_loop.sh:406`
+       fires on `[ "$RC" = 0 ] && [ -s "$LOST" ] && ! limit_hit`, says
+       *"recovered — clearing N lost-iteration marker(s)"*, and executes
+       `: > "$LOST"` at `:408`. Read live: the file is **0 bytes**, mtime
+       **2026-10-25 18:12** — the exact second of the recovering slot's
+       `iteration end rc=0`.
+    2. **`dark_slots` is a trailing streak.** It reads **0** and read 0 while
+       today's three-slot gap was open, because any `rc=0` resets it.
+    **TODAY'S WORKED INSTANCE, counted by hand off `ladder.log`.** Three
+    consecutive slots were lost — 15:07, 16:07, 17:07 — each `rc=1`, each
+    reading `You've hit your session limit · resets 5:50pm (UTC)` on fable, then
+    opus, then sonnet, then `SESSION LIMIT on every model — marking the lost
+    iteration`. The 18:07 slot inherited three markers, bought `LC.08`, and the
+    last line of the day's record is *"recovered — clearing 3 lost-iteration
+    marker(s)"*. **After that line, nothing in `experiments/`, nothing tracked
+    by git, and no counter anywhere holds the fact that three slots were lost.**
+    The losses survive only as prose in a rolling untracked log.
+    **WHY THIS IS NOT THE OPEN `dark-slot-ratchet-is-a-streak` ROW** (OPEN,
+    DUE 2026-11-04), checked at source before writing. That row's subject is the
+    RATCHET's shape — a streak reading zero once a blackout ENDS. This row's
+    subject is the **artifact**: the file the loop points readers at
+    (`:211`, *"see $LOST"*) is deliberately emptied, so even a correctly-shaped
+    counter would have no durable input to read. The two repairs are different
+    edits in different files, and fixing the ratchet alone leaves the record
+    gone. The 160th audit measured the consequence — *"Nothing in `experiments/`
+    holds any trace of the 72 slots"* — without finding the mechanism; this is
+    the mechanism, and it is one line.
+    **THE CAUSE IS A GOOD INTENTION, WHICH IS WHY IT SURVIVED.** `:370-371`
+    states the design: *"The marker is the point — a dead iteration must be a
+    number, not a silence."* The clearing exists so a stale marker cannot make a
+    healthy loop report an outage, and the comment at `:379-382` records that
+    the WRITE half already failed once (*"`lost_iterations.log` read 0 bytes
+    through the whole 08-21 outage because nothing here could write to it"*,
+    Review 2026-08-27). The write was repaired. The erase was not examined.
+    **THE REPAIR SHAPE IS CONSTRAINED and the constraint is the point.** The
+    live-marker semantics must be preserved — a recovered loop must not keep
+    reporting `inheriting N` — so the honest repair SEPARATES the two uses of
+    one file: keep the clearable live-marker file exactly as it is, and append
+    every loss to a second, never-truncated record (or a tracked counter that
+    totals rather than streaks). **REFUSED IN ADVANCE:** deleting the clearing
+    without replacing the live-marker semantics (it would make every recovered
+    slot read as an outage), and widening `dark_slots` to cover this without a
+    durable input (a counter with nothing to count is the defect, not the fix).
+    STALENESS BILL: **to be priced at implementation.** `scripts/ladder_loop.sh`
+    is in no spec's `IMPL_DEPS` as read by this audit, so the expected bill is
+    zero certificates; the implementer re-derives it with `run stale-cost`
+    rather than inheriting this sentence.
+    DUE: 2026-11-03 | a desk ruling on which mechanism gets the repair and in
+        which file, NOT the code. Derived, not chosen: `review-queue`'s pile
+        reads 10-26..11-05 at 7/6/6/6/6/6/5/6/4/6/4 live rows against a measured
+        capacity of 6, and 11-03 is one of three days with room. Room, not a
+        promise the day will be worked.
+    WAITS-ON: none | every input is on disk now: two log files, one shell
+        script, one ratchet. No live row decides it.
+
+ROUTED: learning-core-arena-stops-at-lc07-and-lc08-has-run | 2026-10-25 | measured by the 161st audit: `docs/CHAMPIONS.md:377` read at source — that SEAT line declares `HELD: BY VERDICT`, `VERDICT: LC.03`, `TRIGGER: LC.07, LC.03, UB.10` and `ARENA: LC.00–LC.07` (quoted field-by-field rather than verbatim: the declaration's own separator is a pipe, which this file's row grammar reserves); `champions --check` re-run live, whose own arena expansion for this seat prints `LC.00 LC.01 LC.02 LC.03 LC.04 LC.05 LC.06 LC.07` and whose 68-member `arenas that DO exist` list contains no `LC.08`; `experiments/registry_expansion.py:2453-2462` for what LC.08 was registered as; `experiments/ledger.json` LC.08 PASS attempt 1, `ran_at 2026-10-25T18:00:57` | OPEN
+    The question: `LC.08` was registered on 2026-10-20 by a ruling that calls it
+    *"The Learning-core seat's only live measurement ... the one instrument that
+    will ever say whether the objective A4 is NAMED for produced the margins it
+    was seated on"* (`registry_expansion.py:2456-2460`). It ran today and
+    PASSED. **It is named in neither the seat's `ARENA:` field nor its
+    `TRIGGER:` field.** Does the seat's declared ring gain it, and as which?
+    **WHAT THE TOOL SAYS ABOUT THE SAME SEAT, IN THE SAME RUN, TODAY.**
+    `champions --check` reports `VERDICT-IS-A-VOID` and `TRIGGER-UNREACHABLE` on
+    Learning core — *"every pre-registered re-open trigger is a closed door:
+    LC.07 (PILOT-BLOCKED); LC.03 (VOID-FORECLOSED); UB.10 (VOID) — the promise
+    of contestability has decayed to zero"* — and exits **0** with
+    `ratchet ok`. Both statements are correct about the three ids the file
+    declares. Neither can see the fourth, which is the only one that produced a
+    live reading on this seat in eight weeks.
+    **WHY THIS IS A DEFECT AND NOT BOOKKEEPING.** `LC.08` could have moved the
+    seat. Its `falsified_by` is explicit: if both seated margins reproduce
+    without `l_bind`, that is *"an RSSM actor-critic without the binding
+    objective produces the seat's number, and 149,312 params — 17.3% of the
+    seated arm — plus the objective it is named for are not what the margins
+    measure."* A spec that can report that is a spec that can unseat. It came
+    back the other way — deficits 116.14 on BOTH `lg_margin_null` (seat std
+    37.33) and `lg_margin_twin` (seat std 42.25), `deadweight_reading` 0.0 — so
+    the seat is VINDICATED, and **nothing in `CHAMPIONS.md` or `champions.py`
+    records that it was tested at all.** The error direction today is the
+    conservative one: the seat reads deader than it is. The error direction had
+    the result gone the other way is the dangerous one: an arena result that no
+    seat tool could credit.
+    **WHAT IS AND IS NOT ON OFFER.** The legal direction is REGISTERING the
+    spec into the ring — `ARENA: LC.00–LC.08`, which the tool's own dash-range
+    expansion already handles — and/or naming it in `TRIGGER:` if the desk reads
+    it as a re-open condition. **REFUSED IN ADVANCE:** anything that lowers a
+    champions count by this edit. Adding a PASSING arena member must not be
+    allowed to discharge `TRIGGER-UNREACHABLE`, `VERDICT-IS-A-VOID` or
+    `UNVERIFIED VERDICTS` on this seat — the seat is still held off a VOID
+    (`LC.03`) and `LC.07` is still `PILOT-BLOCKED`, and `LC.08` is an ABLATION
+    OF THE HOLDER, not a rival core. If the edit would move any of those three
+    findings, the edit is wrong, not the findings.
+    **PERISHABLE, AND NAMED AS SUCH.** `lc08-comparator-registered-and-unbought`
+    is `OPEN` with `DUE: 2026-10-26` and renders under `DELIVERED — AWAITING
+    STAMP`; its own trace says *"the champions-entry edit remains the
+    Review's."* `ACTED` is terminal. If that row is stamped without this edit,
+    the one act that connects the measurement to the seat it measured has no
+    live owner anywhere. This row exists so that it does.
+    STALENESS BILL: **zero certificates.** `docs/CHAMPIONS.md` is read by
+    `experiments/champions.py`, which `T0.29` declares; `T0.29` re-buys at ~45 s
+    on `cpu<1min` and was re-bought today at `d585c72`. The implementer
+    re-derives with `run stale-cost` rather than inheriting this sentence.
+    DUE: 2026-11-03 | the desk's ruling and edit, which is a one-line change to
+        a declaration field. Derived, not chosen: 11-03 is one of three days
+        with room under the measured capacity of 6. **A DEADLINE, NOT A
+        SCHEDULE:** this is dischargeable tomorrow in the same act as the
+        `lc08` stamp, and that is where it belongs; the date is the latest
+        honest promise, not the intended one.
+    WAITS-ON: none | the measurement is on the ledger, the declaration is in
+        `CHAMPIONS.md:377`, and no live row decides the seat.
+
+ROUTED: conduct-desk-expiries-reach-no-reader-no-clock-and-no-exit-code | 2026-10-25 | measured by the 161st audit: `decisions --check` re-run live (11 `CONDUCT-DESK` entries, 7 past their own `decide_by`); `experiments/decisions.py:1391-1409` (the CONDUCT-DESK branch) and `:1469-1477` (`if cls == "conduct": continue` before `rows`) read at source; each entry's `default:`/`decide_by:` re-parsed with `decisions.parse()`; `decisions_default_action_expired` ratchet re-run live at 0, AT its floor; `grep "ROUTED:" docs/REVIEW_QUEUE.md` for any owning row returns NONE | OPEN
+    The question: seven open `conduct` decisions have ARMED DEFAULTS whose dates
+    have passed, and the one mechanism this project owns for firing an armed
+    default cannot reach any of them. Who fires a desk's own expired default,
+    and under what words?
+    **THE SEVEN, re-derived rather than inherited (dates vs today 2026-10-25).**
+    `D33` 09-23 (**32 d**) · `D35` 09-24 (31 d) · `D38` 10-04 (21 d) ·
+    `D40` 10-10 (15 d) · `D39` 10-15 (10 d) · `D46` 10-17 (8 d) ·
+    `D47` 10-24 (1 d). Every one of the seven carries a non-empty `default:`
+    field (513–1853 characters), so none is unarmed and `NO-DEFAULT` is
+    correctly silent. Four more are armed and not yet due (`D48`, `D49`, `D50`,
+    `D52`).
+    **WHY NOTHING FIRES, located in source.** `decisions.py:1469-1477` is
+    explicit and deliberate: *"`rows` is the owner's armed-decisions report and
+    owner-owed tracking, which a conduct entry must never join (its visibility
+    lane is CONDUCT-DESK)"*, and the branch `continue`s before `rows` is built.
+    `rows` is the ONLY lane that emits `OVERDUE — DEFAULT IS DUE TO FIRE` — the
+    finding whose own instruction is *"Fire the default, journal it loudly ...
+    Do not silently extend the deadline; a deadline that moves when it is
+    reached is the deadlock it replaced."* **So for a `conduct` entry the
+    deadline is reached and nothing moves, by design.** The design is defensible
+    on its own terms (a conduct entry is not owner-owed) and the consequence was
+    never priced: a desk's deadline has no firing mechanism at all.
+    **AND NO COUNTER SEES IT.** `decisions_default_action_expired` reads **0, AT
+    its declared floor**, with the tool's own note that the class *"has read >= 1
+    since 2026-09-23"*. That counter measures a different thing — a default
+    whose text NAMES a date already past at firing time — so a 32-day-old
+    unfired conduct default reddens nothing. `decisions --check` exits **0**.
+    **THE REPORTING HISTORY, which is the second half of this row.** The 159th
+    audit reported six; the 160th reported seven as `RANK 6` and in
+    `FOR THE OWNER` item 4. Both reported it as PROSE on `docs/OVERSIGHT.md`,
+    which is rewritten at 00:37, 06:37, 12:37 and 18:37 — so a 32-day breach was
+    written down and overwritten at least six times in two days. That is exactly
+    what the 2026-10-01 ruling on `oversight-for-the-builder-has-no-reader`
+    forbids, and the rule is on the overseer's own charter at
+    `scripts/overseer_prompt.md`: an item whose discharge condition cannot be
+    evaluated before the next rewrite **must** be a `ROUTED:` row with its
+    trigger as the `DUE:`. This row is the overdue compliance, and the 161st
+    audit states plainly that its own two predecessors were in breach of it.
+    **WHAT THIS ROW DOES NOT ASK.** It does not propose firing any of the seven,
+    and it names no winner among them. Three of the seven are about the Review's
+    own capability and sitting order (`D33`, `D38`, `D47`) and cannot be
+    executed by any other organ. **`D39` IS SINGLED OUT FOR A REASON THAT IS NOT
+    THIS ROW'S:** its own text says the `CONDUCT-DESK` label *"is wrong about
+    this entry and right to keep printing"* because SYSTEM.md law 4 puts a
+    tenant-protection threshold beyond every desk and every default — so `D39`
+    is a conduct-classed entry that is genuinely the OWNER's, and the 161st
+    audit has attached a premise correction to it as an EVIDENCE ADDENDUM rather
+    than firing it. That single entry is why the taxonomy question is real and
+    not pedantry: `CLASSES = ("means", "conduct", "goal")` has no value that
+    expresses *"no desk may answer this"*, which `D39` says in prose and no
+    reader can parse.
+    **REFUSED IN ADVANCE:** re-dating any of the seven as the discharge (that is
+    the deadlock this class is made of); re-classing `D39` to `goal` to make it
+    visible (its own text forbids the mislabel in writing); and raising
+    `DECISIONS_DEFAULT_ACTION_EXPIRED`'s floor to admit the breach.
+    STALENESS BILL: **to be priced at implementation.** If the ruling orders a
+    new reader, `experiments/decisions.py` is named by `T0.28`'s `IMPL_DEPS`
+    (re-buys ~70 s, `cpu<10min`, re-bought today at 18:45). A ruling with no
+    code costs zero.
+    DUE: 2026-11-05 | a desk ruling on whether a desk's own expired default gets
+        a firing lane, a reader, or an explicit written exemption. Derived, not
+        chosen: 11-05 is one of three days with room under the measured capacity
+        of 6. Dated after the three nearer rows on purpose: this is the class
+        question, and the oldest member is already 32 days old, so a date this
+        desk can keep is worth more than the eighth broken promise in its family.
+    WAITS-ON: none | `D49` (`decide_by` 2026-10-27) is the nearest neighbour and
+        does NOT decide this: `D49` is about a queue row whose dispositions are
+        all forbidden to its dispositioner, which is the mirror image — a mover
+        with no legal move, rather than a deadline with no mover.
+
+ROUTED: detached-cpu-receipt-records-harvest-time-head-not-launch-time-head | 2026-10-25 | measured by the 161st audit off `experiments/ledger.json` at HEAD: `LC.08` records `commit: e7d2475` with `ran_at 2026-10-25T18:00:57`, against the launch at 13:19 UTC evidenced by `/data/jack-logs/ladder.log` (13:24 slot summary, "ETA ~18:10 UTC") and by `lc08-comparator-registered-and-unbought`'s own first `BUILDER-TRACE: 6c55559`; `git log` for the four commits inside the window (`c92f5ba`, `704bc71`, `b7f87a5`, `e7d2475`); `gpu-receipt-head-is-push-time-not-kernel-time` (ACTED 2026-10-20 `c08d15a`) read at source to confirm its repair is `experiments/gpu.py`-only | OPEN
+    The question: the detached CPU lane records, as a run's `commit`, the HEAD at
+    HARVEST time — not the HEAD the work was computed from. `LC.08`'s row names
+    `e7d2475` (17:08) for a run launched at 13:19, with four commits in between.
+    What does the receipt have to record, and who implements it?
+    **THE EXACT SHAPE, and it is the shape of a repair this project has already
+    made in the other lane.** `gpu-receipt-head-is-push-time-not-kernel-time` was
+    routed 2026-09-30 on the finding that a GPU receipt's `head` field meant
+    *"what `origin/main` was at PUSH time"* rather than what the kernel ran. It
+    was `ACTED` 2026-10-20 at `c08d15a` with BOTH halves: **(i) PREVENTS** — the
+    dispatch HEAD is resolved to a full sha and pinned as `ref` (`gpu.py:364`),
+    so the kernel checks out a commit and not a branch — and **(ii) DETECTS** —
+    the kernel prints `CLONED_HEAD <sha>` and the harvester refuses on mismatch
+    (`:1258-1272`), charging the quota and writing NO row. Read at source this
+    sitting: **every line of that repair is in `experiments/gpu.py`.** The
+    detached CPU lane has neither half.
+    **WHAT IS AND IS NOT PROTECTED TODAY, stated so this row is not read as
+    bigger than it is.** `impl_sha` (`c9ede74c928bbb27`) covers the test file
+    plus every declared `IMPL_DEPS` path, and `dirty_files` is `null`, so the
+    IMPLEMENTATION that ran is pinned and the tree was clean. What is NOT pinned
+    is everything else the `commit` field is read as naming: the registry text,
+    the fixtures outside `IMPL_DEPS`, and the repo state a replay would check
+    out. A reader who does `git checkout e7d2475` to reproduce `LC.08` gets a
+    tree four commits ahead of the one that computed it.
+    **WHY IT MATTERS NOW AND NOT IN THE ABSTRACT.** This is the lane that bought
+    the week's only first-ever verdict about Jack rather than about the
+    apparatus, over 4.7 wall-hours — the longest window this defect has ever had
+    to open. And **the launch head exists in exactly one place: hand-typed prose
+    in a `BUILDER-TRACE:` on a queue row that is `DELIVERED — AWAITING STAMP`
+    with `DUE: 2026-10-26`.** `ACTED` is terminal. After tomorrow's stamp, no
+    tracked artifact in this repo can say what code computed `LC.08`'s
+    certificate beyond its `impl_sha`.
+    **THE REPAIR SHAPE.** The launch already knows the answer —
+    `scripts/launch_detached.sh` runs from a tree whose HEAD it can resolve — so
+    the cheap half is to resolve and record it at launch (the detached receipt,
+    or `AWAITING` row, already carries pid/label/log) and have the harvest write
+    it onto the ledger row beside `commit`. The `(ii) DETECTS` half has a CPU
+    analogue if wanted — compare launch HEAD against harvest HEAD and say so on
+    the row — but this row does NOT order it; the GPU precedent ordered (i)
+    first and alone, and the same sequencing is available here.
+    **REFUSED IN ADVANCE:** re-stamping `LC.08`'s existing row with a different
+    `commit` (the row stands as recorded; a receipt is not repaired by editing
+    the thing it got wrong), and discharging this by writing the launch head
+    into queue prose again — prose on a row that goes terminal is the defect,
+    not the fix.
+    STALENESS BILL: **to be priced at implementation.** The candidate files are
+    `scripts/launch_detached.sh` and the harvest path in `experiments/protocol.py`;
+    `protocol.py` is named by several specs' `IMPL_DEPS` and is the expensive
+    half, which is a reason to prefer the launch-side write. The implementer
+    re-derives with `run stale-cost` rather than inheriting this sentence.
+    DUE: 2026-11-05 | a desk ruling on what the detached receipt must record and
+        where it is written, NOT the code. Derived, not chosen: 11-05 is one of
+        three days with room under the measured capacity of 6.
+    WAITS-ON: none | the measurement is on the ledger and in two logs, the GPU
+        precedent is terminal and readable, and no live row decides it.

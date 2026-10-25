@@ -12009,3 +12009,125 @@ because the damage in this pause was not a lost sweep, it was an unread write.
 No threshold is moved by this addendum, nothing is re-classed, the `decide_by`
 stands untouched, and the repair of the `T0.07` row itself is routed to the
 Review as a queue row with its own date rather than bundled into this ask.
+
+---
+
+## D39 — EVIDENCE ADDENDUM, 2026-10-25 18:5x UTC (overseer, 161st audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS THE PREMISE THIS ENTRY AND THE ROW BEHIND IT ARE ARGUED ON: the arithmetic is quoted for *"a single-process child occupying one core of four"*, and a legal dispatch today occupied THREE — so the undercount this entry prices at 1x is measured at 3.07x, and the ceiling's own stated safety budget was exceeded while its meter read 43%.
+
+`D39` stays OPEN and its armed default — *"(i)+(iv) STAND, wall clock remains
+the unit"* — stays exactly as written. Its `decide_by` of **2026-10-15 has
+passed and the default has not fired**; that is not repaired here and it is
+routed as its own queue row (see the end of this addendum). What follows is one
+measurement, taken today, that changes the size of the number this entry asks
+you to rule on.
+
+### What the entry says, and what the box did
+
+This entry's arithmetic block opens: *"One legal detached run — **a
+single-process child occupying one core of four** — bills up to 86400 s into a
+57600 s bucket."* The same premise is load-bearing in `cpu_budget.py`'s own
+justification of the ceiling (`:81-88`), which is the authority the entry cites:
+
+> *16 h: ... (b) **children are single-process Python**, so 16 h is <= 1/6 of
+> this 4-core box's core-day*
+
+**That premise was falsified today by a dispatch this project's own gates
+admitted, priced and blessed.** `LC.08`'s detached buy ran **three concurrent
+worker processes**, each at ~1 core (the launching organ's own receipt, written
+before any result: *"3 spawn workers verified computing at ~1 core each, nice
+19"*). Read off the ledger row and the meter, not argued:
+
+```
+LC.08 ran_at           2026-10-25T18:00:57   PASS attempt 1, 3 seeds
+core_s per seed        17280.38  (std 0.04)  -> 51841 core-s across 3 seeds
+billed to the day      16912.43 s            (cpu_budget.json, 2026-10-25)
+ratio                  51841 / 16912 = 3.07x
+```
+
+### The ceiling's own budget, exceeded while the meter read 43%
+
+`CPU_DAY_CEILING_S` is 57600 s and the comment equates that with 16 core-hours
+via the single-process premise — 1/6 of a 4-core core-day (4 x 24 = 96 core-h).
+Today, re-derived from `cpu_budget.json`:
+
+```
+charged today          24741.82 s of 57600  =  43% of the ceiling
+of which LC.08         16912.43 s wall       =  14.40 core-h actually spent
+the rest                7829.39 s wall       >= 2.17 core-h (single-process floor;
+                                                this file warns 1.68-1.72x for a
+                                                2-thread child, so this is a FLOOR)
+real core-hours given up  >= 16.58 core-h    vs the comment's own 16 core-h cap
+```
+
+**So the box gave up more core-hours than the ceiling's own safety argument
+names as its maximum, on a day its meter reported as 43% used.** The guard that
+did hold is the load gate: `admit_detached` refuses above `LOAD_CEILING` 6.0,
+and the loop's own iteration-start readings during the run were 0.10 -> 3.23 ->
+3.49 -> 3.97 -> **4.87** (`/data/jack-logs/ladder.log`, 13:07 to 17:07). 4.87 on
+4 cores is 122% of this box's cores, held for hours, on a box `CLAUDE.md`
+describes as hosting paying tenants with *"no headroom on a free-tier box"*.
+Nothing was breached; the point is that the instantaneous guard is what the
+ceiling's premise was leaning on, and the premise said it would not have to.
+
+### A second reading, offered as LATENT and not as a live breach
+
+Honesty about the blast radius matters more here than making the finding look
+bigger. `child_estimate_s` — the admission projection — now reads:
+
+```
+LC.08   measured 0.03 s  ->  (10.12, "MEASURED 0.03s x4 + 10s")
+LC.03   measured 0.02 s  ->  (10.08, "MEASURED 0.02s x4 + 10s")
+```
+
+Both numbers come from `Result.duration_s`, which the detached lane's harvest
+writes as the wall clock of the *harvest* call (0.03 s) rather than of the run.
+So this project's two largest CPU spends ever — ~14.4 and ~190 core-hours —
+estimate at **ten seconds**, under a provenance string that asserts
+`MEASURED`. That is ~5100x too LOW for `LC.08`.
+
+**It is not biting anything today, and the two reasons are worth writing down
+so the next reader does not have to re-derive them:** the runner lane
+categorically refuses `cpu<48h` (routed to the detached lane), and
+`admit_detached` is *"Est-free by design"* — it reads only remaining headroom
+and load, never an estimate. **What is worth your attention is the direction.**
+The 69th audit built this projection and proved it one-sided safe: *"the
+projection may only TIGHTEN an estimate and this gate can never refuse
+something it would have admitted before"*, with `T0.33` property 12 asserting
+that over the registry. Every word of that is about FALSE REFUSALS. The
+companion scar in the same file is also a refusal — `SO.08` foreclosed a full
+day at ~28,000x its measured cost. **Both the proof and the scar examine the
+direction that costs a dispatch. The direction that costs the tenants' box —
+an estimate far too low, wearing the word MEASURED — has no proof, no scar and
+no reader.**
+
+### What this addendum does and does not do
+
+It moves **no threshold**: `CPU_DAY_CEILING_S` 57600 s, `LOAD_CEILING` 6.0,
+`rtf.BUDGET_SECONDS["cpu<48h"]` 172800 s, `PROJECTION_SAFETY` 4.0 and
+`CHILD_OVERHEAD_S` 10.0 are all byte-unmoved. It proposes **no fifth option**
+beyond the four this entry already prices, and it does **not** recommend
+option (ii): core-seconds against 4 cores would RELAX a tenant protection, this
+organ may not propose a loosening, and the desk's recommendation of (i)+(iv) is
+untouched. It withdraws **nothing**. `LC.08`'s certificate stands as bought —
+the dispatch was legal in every gate it passed, and this is a finding about the
+meter, not about the run or the organ that launched it.
+
+What it adds is the number. If you rule (i)+(iv) — keep wall clock — you are
+now ruling it knowing that a legal detached dispatch can bill at 1/3 of what it
+costs, not 1/1, and that the ceiling's own written justification no longer
+describes the children it meters. **The cheapest honest consequence of (i)+(iv)
+is not an edit to a ceiling at all: it is to correct `cpu_budget.py:81-88`'s
+single-process sentence to say what it actually assumes, so the next organ to
+lean on it leans on something true.** That is a comment, it loosens nothing,
+and it is available to any desk without touching your decision.
+
+**Not bundled into this entry, named so it is not lost:** this entry's own
+`decide_by` passed ten days ago with an armed default that cannot fire, because
+`decisions.py:1469-1477` keeps `conduct`-classed entries out of the only lane
+that emits `OVERDUE — DEFAULT IS DUE TO FIRE`. `D39` is the sharpest member of
+that class precisely because its own text says the `CONDUCT-DESK` label *"is
+wrong about this entry and right to keep printing"*. That is routed to the
+Review as `conduct-desk-expiries-reach-no-reader-no-clock-and-no-exit-code`
+(`DUE: 2026-11-05`) rather than argued here, and the 161st audit did NOT fire
+this default: a tenant-protection question the entry itself puts beyond every
+default is not one an overseer may close by arithmetic.
