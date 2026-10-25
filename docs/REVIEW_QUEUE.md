@@ -25248,3 +25248,40 @@ ROUTED: detached-cpu-receipt-records-harvest-time-head-not-launch-time-head | 20
         three days with room under the measured capacity of 6.
     WAITS-ON: none | the measurement is on the ledger and in two logs, the GPU
         precedent is terminal and readable, and no live row decides it.
+
+ROUTED: wm01-buffer-learns-composition-on-one-seed-of-three | 2026-10-25 | measured by the builder off `experiments/ledger.json` WM.01 attempt 2 (FAIL, `ran_at 2026-10-25T19:35:49`, commit b68d9e2) and the per-seed re-derivation in the same sitting; test `experiments/tests/wm_01_working_memory_earns_slots.py` at HEAD; `run stale-cost WorkingMemory.py` re-run live | OPEN
+    The question: WM.01's FAIL is a TRAINABILITY fail, not a generalisation
+    fail — is that the mechanism's honest answer (the shipped GRU buffer does
+    not reliably learn to compose, so its slots are undefended), or a recipe
+    artifact that a designed successor may re-measure once? Only the Review
+    may choose, because the builder re-running with a friendlier recipe is
+    run-until-pass.
+    **THE NUMBERS, per seed (margins vs the 0.10 bar, worst-seed gated):**
+    seed 0: buffer 0.8320 (train fit 0.8256), margin 0.4707 — a decisive win;
+    seed 1: buffer 0.4316 (fit 0.4381), margin 0.0800;
+    seed 2: buffer 0.3750 (fit 0.4019), margin 0.0273.
+    The null is TIGHT across seeds (0.3535 +- 0.0057) and the shuffled-state
+    control collapsed on every seed (0.1217 +- 0.0144 vs CONTROL_MAX 0.30)
+    with the presence demonstrated at the same operating point (seed 0's
+    ordered 0.8320), so the rig measured: on seeds 1-2 the buffer NEVER FIT
+    TRAIN (0.44/0.40) — the GRU failed to learn the mod-8 register update at
+    this budget, the same recipe-sensitivity shape as UB.10's probe and the
+    seed-fragility T1.08 exists to price. On the one seed where it trained,
+    the mechanism's advantage over the record-reader is large and real.
+    **WHAT IS ALREADY DONE, so nothing is re-ordered:** the venue survived the
+    unsaturated-null rule only after a measured venue move (v1 lookup null
+    0.9941 = saturated -> v2 relative-update register null 0.3457, both
+    readings in the docstring); attempt 1's PASS-on-the-mean was caught and
+    superseded IN THE SAME SITTING by the worst-seed boolean gate (margins
+    {0.4707, 0.0800, 0.0273} vs mean 0.1927) — a same-day worked example for
+    `aggregate-hides-worst-seed`: the class bites at AUTHORSHIP time, on a
+    spec whose own docstring pre-registered "on every seed".
+    **THE BILL if the repair touches the substrate:** `WorkingMemory.py` is
+    IMPL_DEPS of ME.8 and LF.02 — 2 standing PASS certificates, 0.10 CPU-h,
+    1 slot. A repair confined to the test file stales nothing.
+    DUE: 2026-11-06 | the Review owes the recipe-vs-mechanism disposition;
+        11-06 chosen because every day through 11-05 already carries dated
+        promises against a measured capacity of 6/cycle.
+    WAITS-ON: none | the worst-seed gate is already shipped and committed, the
+        per-seed numbers are on the row, and no live row decides whether a
+        FAIL on trainability stands as the mechanism's answer.

@@ -85013,6 +85013,103 @@
       "spec_sha": "88125f7bed4264ae",
       "status": "VOID"
     },
+    "WM.01": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "b68d9e2",
+      "compute_s": null,
+      "control_metrics": {
+        "collapsed_ok": 1.0,
+        "collapsed_ok_std": 0.0,
+        "shuffled_acc": 0.121733,
+        "shuffled_acc_std": 0.0143982
+      },
+      "dirty_files": null,
+      "duration_s": 205.88,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "amended": [],
+          "attempt": 1,
+          "commit": "e3560bc",
+          "compute_s": null,
+          "control_metrics": {
+            "shuffled_acc": 0.121733,
+            "shuffled_acc_std": 0.0143982
+          },
+          "dirty_files": null,
+          "duration_s": 208.11,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "5f27bf977c1d1190",
+          "message": "",
+          "metrics": {
+            "buffer_acc": 0.5462,
+            "buffer_acc_std": 0.203408,
+            "buffer_params": 4872.0,
+            "buffer_params_std": 0.0,
+            "buffer_train_fit": 0.5552,
+            "buffer_train_fit_std": 0.191772,
+            "buffer_vs_no_buffer_margin": 0.192667,
+            "buffer_vs_no_buffer_margin_std": 0.197773,
+            "nobuffer_acc": 0.353533,
+            "nobuffer_acc_std": 0.005718,
+            "nobuffer_params": 4883.0,
+            "nobuffer_params_std": 0.0,
+            "nobuffer_train_fit": 0.3398,
+            "nobuffer_train_fit_std": 0.0158646,
+            "param_rel_diff": 0.00226,
+            "param_rel_diff_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 325.9,
+          "preserved_impl": null,
+          "ran_at": "2026-10-25T19:26:45",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "5bbb8598c5325d6a",
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "c0e0627e7e08aee8",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "buffer_acc": 0.5462,
+        "buffer_acc_std": 0.203408,
+        "buffer_params": 4872.0,
+        "buffer_params_std": 0.0,
+        "buffer_train_fit": 0.5552,
+        "buffer_train_fit_std": 0.191772,
+        "buffer_vs_no_buffer_margin": 0.192667,
+        "buffer_vs_no_buffer_margin_std": 0.197773,
+        "margin_ok": 0.333333,
+        "margin_ok_std": 0.471405,
+        "nobuffer_acc": 0.353533,
+        "nobuffer_acc_std": 0.005718,
+        "nobuffer_params": 4883.0,
+        "nobuffer_params_std": 0.0,
+        "nobuffer_train_fit": 0.3398,
+        "nobuffer_train_fit_std": 0.0158646,
+        "param_rel_diff": 0.00226,
+        "param_rel_diff_std": 0.0
+      },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 329.5,
+      "preserved_impl": null,
+      "ran_at": "2026-10-25T19:35:49",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "WM.01",
+      "spec_sha": "5bbb8598c5325d6a",
+      "status": "FAIL"
+    },
     "XL.00": {
       "amended": [
         {

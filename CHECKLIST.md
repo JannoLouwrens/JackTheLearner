@@ -1216,6 +1216,6 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 
-- [ ] **WM.01** The working-memory store earns its slots
+- [!] **WM.01** The working-memory store earns its slots  — buffer_acc=0.5462; buffer_acc_std=0.203408
       - _asserts:_ The shipped recurrent working-memory buffer beats an arm with NO separate buffer — attention over the episodic store alone — at matched parameters and matched steps. GOAL.md builds three stores ('it is two memories, not one', plus the fast/slow LEARNING split); CHAMPIONS.md seats episodic retrieval and consolidation, and the store in the middle was never raced.
       - _dies if:_ The no-buffer arm matches or beats the shipped buffer, in which case the working-memory parameters are decoration and should be deleted.
