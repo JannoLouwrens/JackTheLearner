@@ -9210,4 +9210,86 @@ EXPANSION: list[Spec] = [
                "capability for Jack — the kind is `rule` on purpose, so "
                "nothing here can move a commitment's `n_pass`. "
                "  COVERS: language (parent) (rule)"),
+
+    # ==================================================================
+    # THE ANATOMY AUDIT, 2026-10-25 (Review, SUNDAY FULL) — two seats were
+    # added to docs/CHAMPIONS.md for capabilities with NO chair, and a seat
+    # with `ARENA: NONE` is a seat nobody can ever contest. The UNFALSIFIABLE
+    # ratchet caught exactly that and went red (3 -> 4) the moment the chairs
+    # appeared. Per that constant's own rule the total "may shrink and may
+    # never grow", and it shrinks ONLY "by registering a runnable spec" —
+    # never by raising the constant, which would be this desk weakening a bar
+    # to accommodate its own act. So each new seat is registered a real ring
+    # here, in the same sitting that created it.
+    #
+    # Both are NOT IMPLEMENTED and both are MONOTONE: a new unimplemented spec
+    # cannot turn any existing FAIL into a PASS, moves no threshold, and
+    # touches no existing certificate. They grow the denominator, which LOWERS
+    # the headline pass rate — that is honest and is reported on this
+    # sitting's page rather than hidden.
+    Spec("AT.01", 4, "Attention reallocates when a channel goes dark",
+         hypothesis="When the task cue is carried by smell or audio on trials "
+                    "where vision is occluded, a policy that can REWEIGHT its "
+                    "modalities beats a fixed-weight policy fitted on clean "
+                    "trials and frozen. GOAL.md justifies olfaction as 'the "
+                    "sense that works when sight fails' — that is a claim "
+                    "about REALLOCATION, and nothing in this ladder tests "
+                    "that reallocation happens.",
+         falsified_by="The frozen fixed-weight null matches or beats the "
+                      "reweighting policy on occluded trials.",
+         null_baseline="Fixed modality weights fitted on unoccluded trials "
+                       "and frozen — uniform pooling with no selection.",
+         metric="occluded_cue_acc_vs_fixed_null", budget=Budget.CPU,
+         depends_on=["UB.9"], seeds=3,
+         control="MUST FAIL: an UNOCCLUDED block where vision itself carries "
+                 "the cue. There the reweighting policy must NOT beat the "
+                 "fixed null (margin <= 0 within seed spread). If it wins "
+                 "there too, it is not reallocating attention — it is just a "
+                 "better encoder, and this spec measured capacity, not "
+                 "selection. A second must-fail: cue present in EVERY channel "
+                 "simultaneously, where selection has nothing to select.",
+         notes="REGISTERED BY THE ANATOMY AUDIT 2026-10-25 to give the new "
+               "Attention seat a ring. Measured that morning over all 258 "
+               "registered specs: five matched 'atten*/salien*' and not one "
+               "was about attentional selection — UB.8 is a flow-head "
+               "attention MODULE, UB.2/UB.11 are fusion, DP.02 is trunk "
+               "connectedness, ME.11.C is static embeddings. Zero specs for "
+               "the capability. GOAL.md requires it by arithmetic rather than "
+               "by name — ten sensory channels onto one finite brain means "
+               "something selects — which is why no audit against GOAL.md's "
+               "VOCABULARY could find it, and why the 2026-08-09 scar said to "
+               "audit against an outside inventory instead. "
+               "  COVERS: one brain / unison (claim)"),
+
+    Spec("WM.01", 3, "The working-memory store earns its slots",
+         hypothesis="The shipped recurrent working-memory buffer beats an arm "
+                    "with NO separate buffer — attention over the episodic "
+                    "store alone — at matched parameters and matched steps. "
+                    "GOAL.md builds three stores ('it is two memories, not "
+                    "one', plus the fast/slow LEARNING split); CHAMPIONS.md "
+                    "seats episodic retrieval and consolidation, and the "
+                    "store in the middle was never raced.",
+         falsified_by="The no-buffer arm matches or beats the shipped buffer, "
+                      "in which case the working-memory parameters are "
+                      "decoration and should be deleted.",
+         null_baseline="No separate working memory: attention over the "
+                       "episodic store, same parameter count.",
+         metric="buffer_vs_no_buffer_margin", budget=Budget.CPU,
+         depends_on=["ME.8"], seeds=3,
+         control="MUST FAIL: SHUFFLE the buffer contents between steps while "
+                 "leaving its size and parameter count untouched. Performance "
+                 "must COLLAPSE. If a shuffled buffer scores like an ordered "
+                 "one, the slots are not holding state across the step and "
+                 "ME.8's PASS was bought by something other than memory.",
+         notes="REGISTERED BY THE ANATOMY AUDIT 2026-10-25 to give the new "
+               "Working-memory seat a ring. THE REASON THIS ONE IS URGENT "
+               "RATHER THAN MERELY MISSING: the capability already holds "
+               "PASSING certificates with no seat governing them — ME.8 "
+               "('working memory survives restarts') and LF.02 are both "
+               "PASS. A PASS with no seat means the mechanism those "
+               "certificates passed WITH was never raced, so no arm ever had "
+               "to beat it; ME.8 can only say the store survives a restart, "
+               "never that it is a good store. The incumbent is a "
+               "fixed-size recency buffer chosen by accident. "
+               "  COVERS: fast/slow (claim)"),
 ]
