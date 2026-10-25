@@ -82,9 +82,20 @@ ENV_WRAPPED = "JACK_CPU_WRAPPED"   # set by _wrap: the tree's charge has an owne
 # day. 16 h: (a) it ADMITS the largest legal child from a fresh day — cpu<2h
 # x 3 seeds x 2 = 54000 s; a tighter ceiling would foreclose that class by
 # arithmetic, the ME.11.E disease, and T0.33 gates `cpu_foreclosed == []` so
-# the property is checked, not assumed; (b) children are single-process
-# Python, so 16 h is <= 1/6 of this 4-core box's core-day, and the
-# instantaneous side stays with the load gate below and the mem watchdog.
+# the property is checked, not assumed; (b) this meter counts WALL CLOCK, and
+# the sentence that used to stand here — "children are single-process Python,
+# so 16 h is <= 1/6 of this 4-core box's core-day" — was FALSIFIED on
+# 2026-10-25 (161st audit RANK 1): a legal `cpu<48h` detached dispatch
+# (LC.08) ran THREE concurrent single-core workers, spending 51,841
+# core-seconds while 16,912 wall-seconds were billed — a 3.07x undercount,
+# >= 16.58 core-hours given up against the old premise's stated 16 while this
+# meter read 43%. So what the ceiling actually bounds is wall time at
+# (workers x billed) core cost, with the worker count uncapped by this file;
+# the premise holds only for the runner lane's single-process children. The
+# instantaneous protection is the load gate below plus the mem watchdog, and
+# on 2026-10-25 the load gate is what actually held (peak 4.87 vs 6.0).
+# Whether the DAY meter should count core-seconds instead is D39 — the
+# owner's, docs/DECISIONS_NEEDED.md — and this comment moves no constant.
 CPU_DAY_CEILING_S = 57600.0
 
 # Must equal `ladder_loop.sh`'s MAX_LOAD — one threshold, two languages;
