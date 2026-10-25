@@ -2626,3 +2626,117 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+
+## D44 — RESOLVED BY ARMED DEFAULT (fired 2026-10-25 ~12:4x UTC by the OVERSEER, 160th audit, on the first legal day; transcription completed by the builder 2026-10-25 ~13:1x, the same day as the firing — the `D41`/`D42`/`D43` same-day precedent held): NO RULING — THE CHARACTER SHEET STAYS EXACTLY AS IT SHIPS AND NOTHING IS DOCUMENTED. The desk's split recommendation — rule the five temperament floats DELIBERATE, rule the five `core_values` strings and the persona prose a BREACH — was NOT taken, deliberately: the entry armed the no-ruling branch precisely so a clock could not decree who Jack is. Both halves remain the owner's to rule, in one sentence, at any time.
+
+**Transcription per the `D13` rule and the `D31`/`D32`/`D34`/`D36`/`D37`/`D41`/
+`D42`/`D43` precedent: the overseer fires and records; the builder transcribes.
+The firing block appended to `docs/DECISIONS_NEEDED.md` (at its `## D44 —
+RESOLVED BY ARMED DEFAULT` header) is the firing record and is quoted here in
+full. Until this entry landed, that block was the record; this entry completes
+it and changes nothing in it. The firing named this transcription as owed
+(OVERSIGHT.md 160th audit, FOR THE BUILDER item 1) on the day it was created.**
+
+**PROVENANCE CAVEAT, carried forward rather than laundered: the firing was
+written by an overseer run that exited `rc=1` mid-report, and its own seal line
+says its facts are "that dead run's, unverified until an audit re-measures
+them." This transcription moves the record between files; it does not upgrade
+the facts. What the builder re-verified independently at transcription: the
+firing block exists verbatim in `docs/DECISIONS_NEEDED.md`; `decisions --check`
+reads "UNTRANSCRIBED: D44"; the registry at HEAD holds 260 spec ids with the LG
+family stopping at LG.14 and no character-sheet spec — so the firing's central
+price (the promised spec was never registered) stands re-confirmed at HEAD.**
+
+**Invariants checked at transcription:** no `GOAL.md` edit, no threshold moved
+in either direction, no control loosened, no new permission created, nothing
+re-run, no certificate staled, no terminal row re-opened. **What the firing says
+must survive transcription: the contradiction is LIVE in shipped default code
+(`Personality.py:135-139` five Big Five floats, `Personality.py:731` import-time
+singleton, `UnifiedBrain.py:4093` wired on by default) while `GOAL.md` says
+"His kindness is not decreed"; NO spec measures it; NO instrument can ask for
+one, because an unregistered spec has no id; and the register entry that
+promised the spec is closed as of the firing. The queue row
+`personality-is-a-typed-character-sheet-on-the-answer-path` (DISPOSITIONED,
+DUE 2026-11-05) is the one live owner of that registration, and the priority
+page's `1^22` ITEM 3 unit 2 orders it from THE RULING on that row.**
+
+> ## D44 — RESOLVED BY ARMED DEFAULT, fired 2026-10-25 ~12:4x UTC by the OVERSEER (160th audit), on the first legal day. Off your desk; both halves of the split recommendation remain yours to rule at any time.
+> PROVENANCE (scripts/lib_seal.sh, 2026-10-25T12:57:16+00:00): this entry was written by a overseer run that exited rc=1 without completing its own checklist — its report is sealed as an INCOMPLETE RUN draft. The entry's facts are that dead run's, unverified until an audit re-measures them; nothing here is re-dated, weakened or un-armed by this line.
+>
+> **THE OWNER DID NOT RULE BY 2026-10-24, SO THE PRE-REGISTERED DEFAULT FIRED.**
+> **NO RULING — THE SHEET STAYS EXACTLY AS IT SHIPS AND NOTHING IS DOCUMENTED.**
+> The five Big Five floats stay, the five `core_values` strings stay, the
+> 2,585-character persona keeps conditioning the default answer path, and
+> `GOAL.md` keeps forbidding in text what the code ships by default. The desk's
+> own recommendation — *"SPLIT THE OBJECT AND RULE THE TWO HALVES OPPOSITELY"* —
+> was **NOT** taken, and deliberately so: the entry itself says a default that
+> blessed the status quo would be a desk ruling on who Jack is by letting a clock
+> run out, and that reasoning is why the default is the no-ruling branch and not
+> the recommendation.
+>
+> **WHY THIS WAS MINE TO FIRE.** The entry is `class: goal` and armed;
+> `decisions --check` listed it this audit as the single
+> `OVERDUE — DEFAULT IS DUE TO FIRE` row, and firing is the day after
+> `decide_by`. Same idiom and same precedent list as the firings above.
+>
+> **RE-DERIVED AT SOURCE THIS AUDIT, not inherited from the entry.** Every
+> number in its measurement block reproduces in this venv, read off the files
+> today:
+>
+> ```
+> Personality.py:135-139   openness 0.85 · conscientiousness 0.55 · extraversion 0.60
+>                          agreeableness 0.80 · neuroticism 0.25   (dataclass defaults)
+> Personality.py:731       JACK_PERSONALITY = Personality()         (import-time singleton)
+> UnifiedBrain.py:264      enable_emotional_state: bool = True
+> UnifiedBrain.py:4093     self.personality = JACK_PERSONALITY      (wired on by default)
+> grep across experiments/ ZERO callers of answer_question / get_system_prompt /
+>                          _generate_with_llm  -> no spec on this ladder sees it
+> ```
+>
+> Nothing in the measurement is contested and nothing about it changed.
+>
+> **THE PRICE — AND IT IS WORSE THAN THE ENTRY STATES, WHICH A FIRING MUST SAY
+> RATHER THAN INHERIT.** The default's own text leans on one mitigation: *"The
+> spec registered this morning proceeds on its own clock and REPORTS whatever it
+> finds either way."* **That spec does not exist.** Verified three ways this
+> audit:
+>
+> ```
+> registry             258 specs; the LG family is LG.00..LG.14 and stops there
+> grep registry*.py    ZERO hits for answer_question / get_system_prompt /
+>                      'character sheet'; the only 'persona' hits are one
+>                      unrelated wiped-persona twin control
+> git log -S'Spec("'   since 2026-10-09, exactly ONE spec was registered:
+>                      LC.08 (da9ece0, 2026-10-20). No other registration exists.
+> ```
+>
+> The queue row's own ruling says the design is published and *"the registration
+> is the builder's from it"*; the entry dates that registration 2026-10-22. It
+> has not happened, and the row that owns it has now broken a dated promise on
+> it. So as of this firing:
+>
+> ```
+> the contradiction            live, in shipped default code
+> a spec that measures it      none
+> the register entry           this one, closed as of this block
+> an instrument that can ASK   none - no spec id, so no gate, no ranking, no blocker
+> ```
+>
+> That is the shape the coverage tool exists to shout about and cannot see here,
+> because an unregistered spec has no id.
+>
+> It is **MONOTONE**: it moves no threshold, edits no constitution text, deletes
+> no component, stales no certificate, spends no GPU-hour and no CPU-second, and
+> withdraws no finding. It also decrees nothing: the sheet is exactly as it was
+> before this block.
+>
+> **HOW TO REVERSE IT.** One sentence either way reverses it at any time, and the
+> desk's quoted recommendation is still on the record above: rule the five floats
+> and their PAD baseline DELIBERATE (and add the sentence to `GOAL.md` so five
+> undocumented dataclass defaults stop being undocumented), and rule the five
+> `core_values` strings and the persona prose a BREACH to come out of the default
+> answer path, paying the 18-certificate `UnifiedBrain.py` bill once on that half
+> alone. The firing forecloses neither half; it records that nobody chose, and
+> that the evidence the entry promised would arrive regardless has not been
+> registered.
