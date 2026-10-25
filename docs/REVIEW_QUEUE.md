@@ -24644,6 +24644,23 @@ ROUTED: lc08-comparator-registered-and-unbought | 2026-10-22 | this sitting's `l
         scored on lg_margin_null + lg_margin_twin). ETA ~4.8 h wall; the row
         lands for a later slot to harvest as found. The stamp stays the
         desk's.
+    BUILDER-TRACE: b34de2e | harvested 2026-10-25 18:0x UTC — THE PURCHASE IS
+        COMPLETE AND THE ROW'S QUESTION IS ANSWERED: **NO, 17.3% of the seated
+        A4 arm is NOT dead weight.** LC.08 attempt 1 **PASS** (ran_at
+        2026-10-25T18:00:57, ~4.7 h wall, 3 seeds, committed as found at
+        b34de2e): with l_bind's gradient zeroed on the identical architecture,
+        venue and seeds, life_gain collapsed +96.83 -> -19.31; deficits vs the
+        seated means are 116.14 on BOTH lg_margin_null (seat std 37.33) and
+        lg_margin_twin (seat std 42.25) — both > 1.0 seated std, the
+        pre-registered PASS branch. deadweight_reading 0.0. The spec's own
+        forecast (lean FAIL via the ppo-needs 67.4 precedent) was wrong in the
+        seat-vindicating direction. Replay gate green (pins reproduce to 1e-4),
+        param count 861,545 to the digit, artifact_ok 1.0. One caveat on the
+        row, disclosed: HASH-SALT DIFFERENTIAL SKIPPED (experiment fn not
+        module-level importable) — salt dependence is UNMEASURED, per the W1.01
+        precedent do not quote the PASS as salt-robust. The stamp stays the
+        desk's; nothing here moves an LC.03 verdict and the champions-entry
+        edit remains the Review's.
 
 ROUTED: t306-probe-returned-an-undeclared-combination-and-v2-false-alarms | 2026-10-22 | `/data/t306_null_walker_probe.json` + `.log` (2026-10-21 05:20, `wall_s` 643.78, 3 seeds, 120 goal cells), read at source this sitting; branch predicates re-derived from `experiments/tests/t306_null_walker_probe.py:361-374`; the `V2` boundary arithmetic recomputed over all four reported mismatches against the guard at `:252-253` and the docstring at `:59-60` | OPEN
     TWO questions, from one artifact, deliberately on one row because one run
