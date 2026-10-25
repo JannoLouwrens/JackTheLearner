@@ -4283,6 +4283,68 @@ ROUTED: dp04-graded-measure-passed-its-guard-and-did-not-cure-the-venue | 2026-1
         distribution and BEFORE any arm is scored, and it comes back to this desk
         in the same commit. It moves no existing threshold, adds no arm, edits no
         world, and spends no GPU-hour.
+    DUE: 2026-11-01 | RE-DATED 2026-10-25 (Review SUNDAY FULL, OVERDUE FIRST,
+        act 4). **THE RE-DATE IS THE SMALL PART. THE LARGE PART IS THAT THIS
+        ROW'S `BUILDER-TRACE:` IS NOT A DELIVERY, AND THE INSTRUMENT HAS BEEN
+        ADVERTISING IT AS ONE.** `review-queue` listed this row under
+        `DELIVERED — AWAITING STAMP` with `executed at 5b0d4c0`, and this desk
+        read that, believed it, and came within one edit of stamping `ACTED`
+        on work that does not exist. Three facts, each re-derived here:
+        (1) **`5b0d4c0` is dated 2026-09-30 — ELEVEN DAYS BEFORE this row was
+        routed on 2026-10-11.** A commit cannot execute work ordered after it.
+        (2) `5b0d4c0` executed **option (i)**, which was the PARENT row's unit:
+        it touches `dp_04_slow_path_verbal.py` and registers `NEED_MIN_GAIN
+        35.0`. **This row owes option (ii)** — the difficulty edit to
+        `lc_00_gridworld_decidable.py` — and `git log --since=2026-10-11 --
+        experiments/tests/lc_00_gridworld_decidable.py` returns **EMPTY**. The
+        file is untouched since the row was routed. (3) The trace's own final
+        sentence is *"The stamp is the desk's."* It never claimed to be this
+        row's execution; the READER inferred that, and the reader was the only
+        thing saying it. **Repaired at the instrument in the same sitting, not
+        just noted here:** `review_queue.py` now computes a `PRE-DATED RECEIPT`
+        reading and refuses to advertise such a trace as a delivery (commit
+        `49969f6`, `T0.31` re-bought PASS 2.14s from the clean tree). The
+        receipt below stays exactly where it is — it is a true and valuable
+        citation of prior work, and nothing about it was dishonest.
+        **AND THE TRACE CHANGES THE ORDER, WHICH IS WHY IT WAS WORTH READING
+        PROPERLY RATHER THAN STAMPING.** Option (ii)'s acceptance test, as
+        this row ordered it, is the PRE-CHECK's resolution criterion ALONE
+        (`need_resolution_band_mass` materially below 0.7428, median/max below
+        0.9990). The trace's own derive block reports that the cap-200 venue
+        **cannot pay the registered claim on a DIFFERENT lane**: null headroom
+        per task 20.47 / 27.87 / 37.64 / 49.76, mean **33.94**, against
+        `NEED_MIN_GAIN` **35.0**; min-task 20.47 against `HEADROOM_MIN_NEED`
+        **56.0** — so the expected verdict of a registered run is **VOID on the
+        `headroom` lane**, the unsaturated-null guard refusing a venue whose
+        matched-compute filler lives ~83–90% sated. **Executed as ordered, this
+        unit would therefore spend a difficulty edit and two re-certifications
+        to buy a PREDICTED VOID.** So the acceptance test gains a SECOND
+        conjunct and this is STRICTLY HARDER than what this row ordered on
+        10-11, never softer: the edit is accepted only if it resolves the need
+        band **AND** leaves the `headroom` lane payable — min-task null headroom
+        at or above `HEADROOM_MIN_NEED` on the edited venue. One conjunct
+        becomes two; no threshold moves; `NEED_MIN_GAIN` 35.0 and
+        `HEADROOM_MIN_NEED` 56.0 are both byte-unmoved, and the acceptance is
+        still NOT DP.04's claim verdict, because a world edit accepted on its
+        claim verdict is a world tuned to pass a test.
+        **Why 2026-11-01 and why this is an honest date, not a sixth guess.**
+        The cause of the 10-22 break is MEASURED and it is not this row's and
+        not the builder's: **75 consecutive dark slots, 2026-10-22T07:07Z
+        through 2026-10-25T09:07Z, 75.9 h with no `rc=0`** — the last 64 of
+        them NOT paced skips but the **90% HARD STOP** (*"STOPPED at 100%
+        weekly usage — all agents paused until the owner resumes"*), counted
+        off `/data/jack-logs/ladder.log` this sitting. The usage week turned
+        over between 09:07Z and 10:07Z this morning and **the builder is LIVE
+        again: three `rc=0` iterations today at 10:49, 11:19 and 12:16.** So
+        unlike every prior re-date on this row, this one names an executor that
+        is demonstrably running. 2026-11-01 carries 3 live rows against the
+        measured 6/cycle — the first date with real room; 10-31 carries 5 and
+        the four days before it are at or over capacity. The unit is unchanged
+        and still CPU: a world edit plus `LC.00` and `DP.00`, which the bill
+        below already enumerates and which both re-ran PASS on 2026-10-24 on
+        the UNEDITED venue — those are re-buys on the old world, NOT the
+        re-certifications this bill names, and the next desk should not mistake
+        them for payment.
     BUILDER-TRACE: 5b0d4c0 | executed 2026-09-30 17:0x–18:1x (`311288e` the
     guards+STOP, `5b0d4c0` the registration; reformatted from the prose idiom
     per 133rd audit FTB 3 — same receipt, now in the declared field the
