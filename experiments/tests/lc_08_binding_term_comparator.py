@@ -142,6 +142,22 @@ TOL_IDENTITY = 1e-9             # control: scoring the seat's own data
 # row (a forbidden re-run) would regenerate the artifacts, whose recomputed
 # aggregates would then MISMATCH these pins and VOID this spec's run rather
 # than silently re-pairing it. Stds are ddof=0, the house t's own denominator.
+#
+# DECLARED LIMIT (160th audit FTB 3): "the one drift direction that exists"
+# above is one of TWO. The fail-safe covers a forbidden RE-RUN; it does NOT
+# cover a ledger AMENDMENT (e.g. `run amend --doc-only`), which re-stamps the
+# row while leaving artifacts and these pins identical — this gate cannot see
+# that event, by construction, because the P9-compliant repair (31a3fd0)
+# removed the only channel (`seat_row_ran_at`) that could. Accepted rather
+# than repaired, with the acceptance priced: every amend lane leaves metrics
+# and seeds untouched (`Ledger.amend` — doc_only re-stamps impl_sha on a
+# proven-prose delta, fix_hardware derives from the row's own data, and a
+# status amendment may only move to a status that CLAIMS NOTHING), so the
+# pinned aggregates cannot be moved by any amendment and the pairing stays
+# numerically honest. What CAN move unseen is the row's status/provenance
+# wrapper around those numbers; and the alternative — re-reading LC.03's row
+# live — is exactly what P9 forbids. If the amend lane ever gains a
+# metric-moving mode, this constant is the first thing that goes stale.
 SEAT_RECORDED = {
     f"{SEAT}/lg_margin_null": 100.101537,
     f"{SEAT}/lg_margin_null_std": 37.325548,
