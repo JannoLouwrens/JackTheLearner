@@ -21962,3 +21962,55 @@ frozen-vs-plastic FAMILY, registered in `docs/CHAMPIONS.md` beside the
 PLASTIC-ONLY decree (arenas `PL.00`/`PL.02`) — the next registered spec that
 reads a freeze-held claim carries the calibration arm. `T3.10` itself stays
 PARKED; the one-diagnostic cap is SPENT; no bar moved in either direction.
+
+
+## A proof that a mechanism is safe in ONE direction leaves the other direction with LESS scrutiny than it had before
+
+Two instances, found in one sitting (161st audit), in two files, with nothing in
+common except their shape — which is why the shape is worth writing down.
+
+**Instance A — a one-sided safety proof.** `experiments/cpu_budget.py`'s
+admission projection carries an explicit proof of harmlessness: *"Clamped at the
+enum by construction, so the projection may only TIGHTEN an estimate and this
+gate can never refuse something it would have admitted before,"* and `T0.33`
+property 12 asserts it over the whole registry. The scar recorded in the same
+file points the same way — `SO.08` sat foreclosed a full day at ~28,000× its
+measured cost. **Both the proof and the scar are about FALSE REFUSALS.** Read
+live today, the same function returns `(10.12, "MEASURED 0.03s x4 + 10s")` for a
+spec whose run cost 51,841 core-seconds — roughly 5,100× too LOW, under a
+provenance string asserting a measurement. Nothing had looked, because the file
+already said the function was proved safe.
+
+**Instance B — a repaired write, an unexamined erase.** `lost_iterations.log`
+exists so that *"a dead iteration must be a number, not a silence"*
+(`ladder_loop.sh:370-371`). Its WRITE half failed through an entire outage, was
+diagnosed, and was repaired — and the repair's reasoning sits in the file as a
+comment, which is exactly what makes the file look audited. Eleven lines later
+the same script truncates that file on the first `rc=0` (`:408`, `: > "$LOST"`).
+The erase destroys the record the repair restored, and three slots lost the same
+day existed nowhere tracked once the loop recovered.
+
+**THE GENERALISATION, and it is an instruction for reading, not for coding.**
+A mechanism that carries a proof, a scar or a comment about one of its directions
+is *harder* to audit than one that carries nothing, because the artifact of past
+scrutiny reads as current coverage. So when you find one, do not check the
+direction it names — check the one it does not, and ask two questions in order:
+
+1. **Which direction did the proof examine?** Write the sentence out. "May only
+   tighten" is a statement about refusals and says nothing about admissions.
+   "The marker is written" is a statement about creation and says nothing about
+   destruction.
+2. **What does the unexamined direction COST, and is the cost recoverable?**
+   Rank by cost, never by symmetry. The two directions of an estimate error here
+   are *a dispatch this project did not get* and *a shared box lent out at three
+   times the metered rate* — and SYSTEM.md law 4 puts the second above the
+   ladder. A false refusal is visible the moment it happens and costs an
+   iteration. A false admission is invisible by construction and spends somebody
+   else's machine.
+
+The existing lesson *"One direction alone is worthless, because a guard that
+refuses everything and a guard that refuses nothing leave the same clean log
+behind them"* (`T0.18`'s two-sided fixture) is the same principle applied to a
+GATE. This is the same principle applied to a **proof about a gate** — and it is
+the harder case, because the gate's log is at least empty, while the proof's
+prose is full.
