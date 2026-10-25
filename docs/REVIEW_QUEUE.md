@@ -2459,6 +2459,32 @@ ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-
     DUE: 2026-09-30 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. THIRD slip, named as one. The first re-date was about venue coupling and was correct; the second and this one are capacity. The question (what certifies zero drift when phase A moves nothing) is unchanged and nothing is held behind it, which is the only reason it ranks below the rows above.
     DUE: 2026-10-12 | ANSWERED 2026-10-01 (Review DAILY) — the design answer this row has carried since 08-30 is DELIVERED below and this date is the BUILDER's registration date, not a fifth desk promise. Four dates broke on this row; the honest repair was never a better date, it was noticing that **question 1 does not need the frozen-vs-plastic evidence re-read after all** — it needs one observation about what KIND of control died, and that observation is in this row's own table. Dated 10-12 (3 live rows) rather than 10-02..10-11, which `review-queue` prices at or above the measured 6/cycle.
     DUE: 2026-10-22 | RE-DATED 2026-10-13 (Review DAILY, OVERDUE FIRST under D28's armed default). **Fifth date, and I am naming the cause rather than apologising for the fourth.** The cause is MEASURED and it is not this row's and not the builder's: **the builder has not produced an iteration since 2026-10-08T16:31Z — 119 consecutive dark slots, every one a PACING skip, 119.6 h since the last `rc=0`** (counted off `/data/jack-logs/ladder.log` this sitting, not inherited). A date that names the builder as the executor is only honest if the builder can run, and for the whole life of the 10-12 promise it could not. The pacer is not malfunctioning — it is gating on `week:all models`, and **78% of this week's shared usage is NOT THIS PROJECT** (builder 8 of 70 points, 11%), so the convergence argument the pace line rests on cannot fire while other tenants hold the meter above it. The new date is therefore derived from the GATE, not from a calendar: the usage week resets **2026-10-19 04:59Z**, which is the first moment the builder has a structural chance, and the date sits past it. The blackout and its perishable price are on the owner's desk this morning as `D46` — this re-date does not wait on that ruling and proceeds either way. 10-22 is `review-queue`'s own `next_free_due` (3 live rows against the measured 6/cycle), so the execution is not dated onto a day already scheduled to break. The unit is unchanged and still CPU: the POSITIVE control answer this row has carried since 10-01 is DELIVERED and needs no re-reading.
+    BUILDER-TRACE: bf78b60 | executed 2026-10-25 ~11:1x-11:3x UTC, all three
+        ordered parts, no run, no bar moved, T3.10 stays PARKED. (1) THE READ
+        THE 10-12 UNIT OWED: `null_admissible`'s criterion
+        (t3_10_trunk_knowledge_survives.py:729) is `probe_random[t] <= 1.0 -
+        KNOWLEDGE_MARGIN` — it ADMITS a target for being UNREADABLE from a
+        random trunk. Per this ruling's own pre-registered dichotomy, `shape`'s
+        retention is therefore evidence AGAINST the near-saturated-TARGET
+        reading: 0.5807 of the exact arithmetic headroom the rule checks was
+        available and the best-trained trunk recovered +0.0299 of it, so
+        question 2's live branch is the SUBSTRATE's ceiling (the 128-d
+        globally-pooled bottleneck), which the rule is structurally blind to —
+        it reads saturation only against 1.0, never against what the substrate
+        can reach. The three candidate arms stay unpicked and unforeclosed.
+        CORRECTION OF RECORD: this row's prose "colour and near dropped as
+        unreadable from a random trunk" is BACKWARDS — they were dropped for
+        being too READABLE (nulls 0.9427/0.9245 > 0.85), as the spec's own
+        PILOT RECORD states; the backwards sentence is plausibly why four
+        sittings could not settle the direction from the row alone. (2) The
+        calibration-arm requirement is REGISTERED on the frozen-vs-plastic
+        family in docs/CHAMPIONS.md beside the PLASTIC-ONLY decree
+        (PL.00/PL.02 arenas), as the ruling directed. (3) The generalisation is
+        in docs/LESSONS.md ("A control that certifies an absence is only as
+        good as the last time the presence was seen" — second instance of the
+        class after lt02's venue channel). Bills priced BEFORE the edits:
+        LESSONS.md 0, CHAMPIONS.md = T0.29, this file = T0.21+T0.28+T0.31,
+        paid in-slot from the committed tree.
     WAITS-ON: none
 
 **Routed here by the spec's own pre-registered fork (ii), not by an argument.**
