@@ -121,7 +121,15 @@ LAUNCH_GROWTH_DAYS = 21         # window over which the growth rate is fitted.
 # Review wrote `## FOR THE BUILDER — ordered, cheapest and most perishable
 # first` on 2026-10-11 and the old `\s*$` anchor parsed its five orders to
 # ZERO items for days. `\b` keeps `FOR THE BUILDERS` (any suffix word) out.
-_BUILDER_HEADING = re.compile(r"^##\s+FOR THE BUILDER\b.*$", re.M)
+# A PREFIX before the phrase is ALLOWED TOO (160th audit FTB 2): the 159th
+# audit titled its section `## 9. FOR THE BUILDER` and its orders were
+# invisible on 10-17, 10-18 and 10-22 — the third parse outage in this file,
+# each a new place on the same line. The match is now CONTAINMENT: any `##`
+# heading whose text contains the phrase opens a section. Strictly widening —
+# it can only find more orders, never fewer — and the known cost is accepted:
+# a `##` heading that merely DISCUSSES the phrase now opens a section too,
+# which errs toward auditing prose rather than toward blind orders.
+_BUILDER_HEADING = re.compile(r"^##\s+.*\bFOR THE BUILDER\b.*$", re.M)
 _SECTION_END = re.compile(r"^(##\s|---\s*$)")
 _ITEM = re.compile(r"^(?:[A-Z])?(\d{1,2})\.\s+(.*)$")
 # THE 2026-09-30 → 10-05 OUTAGE (140th audit, RANK 1): both desks drifted to
@@ -959,6 +967,39 @@ B2. **A bare letter-prefixed item.** The reasoning, with `D1.0` in the body.
             f"steering: the letter-prefix parse flunked the 10-20 outage "
             f"fixture — a `B<n>.` order is invisible to the legality reader "
             f"again: {pf_got} != {pf_want}")
+
+    # ── the numbered-heading known answer (160th audit FTB 2) ────────────────
+    # Verbatim shape of the 10-17/10-18/10-22 outages: the 159th audit titled
+    # its section `## 9. FOR THE BUILDER` and the exact-line match parsed its
+    # orders to ZERO — six orders got no legality check. The repair widens the
+    # heading match to CONTAINMENT, so item 1 must parse; the two near-misses
+    # must stay silent: a `FOR THE BUILDERS` heading (the `\b` guard, which
+    # the widening must not have cost) and a prose mention of the phrase that
+    # is not a heading at all. The `BUILDERS` heading doubles as the section
+    # end for item 1, so the boundary is exercised in the same fixture.
+    _NUMBERED_FIXTURE = """
+## 9. FOR THE BUILDER
+
+1. **`T2.10` under a numbered heading.** Parses.
+
+## FOR THE BUILDERS OF X
+
+2. **Must not parse — BUILDERS is not BUILDER.**
+
+A page may discuss its own FOR THE BUILDER section in prose; a non-heading
+line may not open one.
+
+3. **Must not parse — no live heading above this line.**
+"""
+    nh_got = [(it["n"], it["lead_ids"]) for it in
+              builder_items(_NUMBERED_FIXTURE)]
+    nh_want = [(1, ["T2.10"])]
+    if nh_got != nh_want:
+        raise AssertionError(
+            f"steering: the numbered-heading parse flunked the 10-22 outage "
+            f"fixture — a `## <n>. FOR THE BUILDER` section is invisible "
+            f"again, or the BUILDERS/prose guards broke: "
+            f"{nh_got} != {nh_want}")
 
     # ── the empty-page accounting known answer (140th audit FTB 1a/1b) ──────
     # The three zero-item states must print as three DIFFERENT defects, and a
