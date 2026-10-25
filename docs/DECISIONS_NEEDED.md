@@ -11691,3 +11691,80 @@ often that rule is CONSULTED is close enough to re-timing the rule itself that
 a desk doing it quietly would be indistinguishable, in the log, from a desk
 loosening it. The default above is therefore written to be adopted by silence
 rather than executed by assumption.
+
+## D53 — `SO.07`'s VOID has three repair options and a desk may legally take NONE of them: one is forbidden by the design/data split, one is a threshold move, and one routes to a decision that closed fifty days ago. Five dates, no work, and the row is undischargeable rather than late. (2026-10-25, Review, SUNDAY FULL)
+
+DECIDE: D53
+  class:     goal
+  blocks:    SO.07
+  default:   ADOPT (c)'s DIAGNOSIS AND GIVE IT A LIVE OWNER. The finding is
+             re-filed as a WORLD/BODY capability defect — a body that cannot
+             reach privileged food on 2 of 3 recording worlds — joining
+             `ba03-null-saturates-the-horizon` and SH.01's `ORACLE_CANNOT` as
+             one named class, and that class gets a live parent instead of
+             `D21`, which is long closed. **`REF_MIN_FED` is BYTE-UNMOVED
+             at 0.8 in both specs, no threshold is re-based, no fixture is
+             re-frozen, and SO.07 stays VOID** — this changes who OWNS the
+             defect, never what the defect measures. Silence adopts this.
+             MONOTONE in the directions that matter: it moves no threshold,
+             edits no constitution text, deletes no component, stales no
+             certificate, spends no GPU-hour, and withdraws no finding.
+  decide_by: 2026-11-08
+
+**THE RECOMMENDATION, quoted verbatim from this sitting's `FOR THE OWNER` item 1:**
+
+> **Do not let anyone re-base `REF_MIN_FED`, and give the world/body defect a
+> live owner instead. `SO.07` is VOID because its reference arm — privileged
+> food positions, every advantage the rig can give — fed only 0.333 / 0.667 /
+> 0.667 of lives on recording worlds 3–5 against a 0.8 bar. The instinct is
+> that the bar is miscalibrated. It is not: the SAME constant, in the spec it
+> was copied from, is met at the CEILING — `XL.01` records `ref_fed_frac`
+> 1.0000 and `ok_ref` 1.0, and XL.01's own FAIL is on a different conjunct. A
+> bar that reads 1.0 where it was born and 0.33 where the claim runs is not
+> measuring the bar, it is measuring the venue. So a world-relative re-base
+> would take a bar a working venue clears with room and lower it until the
+> broken venue clears it too — converting a measured body defect into a
+> passing number. My recommendation is (c)'s diagnosis with a live parent, and
+> that (b) be refused on this evidence if it is ever proposed.**
+
+### Why this is on your desk and not disposed at the desk
+
+Not capacity. The row has been dated five times and every date promised a DESK
+RULING — there is no builder unit on it at all — so this entry is not asking
+you to schedule anything. It is asking you because **each of the row's own three
+options is barred to the only organ permitted to disposition it:**
+
+| option | what it does | verdict |
+|---|---|---|
+| (a) | re-freeze fixture constants from counts on a wider design-world set | calibrating the fixture toward the venue where the claim runs. The design/data split exists to forbid exactly this, and the row's own body states the split forbids it |
+| (b) | re-base `REF_MIN_FED` from the absolute 0.8 to a world-relative bar | a threshold move. `D51` (2026-10-20) ruled *"whether the floor is re-based is a threshold move no desk may make"*; and this desk may strengthen but never weaken, and which direction a world-relative bar lands is not knowable before it is computed |
+| (c) | file as a further `w0-too-shallow` instrument, let the W1 decision own it | the W1 decision is `D21`, **RESOLVED BY ARMED DEFAULT 2026-09-06**. Fifty days closed. Routing here lands the work on nobody — the `DISPOSITION-ON-A-CLOSED-DECISION` class `review-queue` already prints for four other rows |
+
+**This is `D49` a second time.** `D49` (2026-10-18) named *"a queue row whose
+only permitted dispositions are ALL forbidden to its only permitted
+dispositioner."* One instance is an anecdote; two is a class, and the class is
+worth more than either row. A desk that can only ACT, DECLINE or re-date has no
+move when the work is legal but the mover is not — and its only honest output is
+a date it will break. **Five broken dates on this row are the symptom of that
+structural gap, not of a slow desk.** Whether the queue needs a fourth
+disposition for this state is a bigger question than SO.07 and is NOT bundled
+into this entry; it is flagged on this sitting's page.
+
+### The evidence, re-derived this sitting from `experiments/ledger.json`
+
+    SO.07  attempt 1, VOID   ref_fed_frac  0.5556   per seed 0.3333 / 0.6667 / 0.6667
+    XL.01  attempt 4, FAIL   ref_fed_frac  1.0000   ok_ref 1.0   ref_mean_ttf_s 24.15
+
+Same constant, both unmoved: `so_07_found_and_outlives.py:192` and
+`xl_01_death_does_not_erase.py:235`, each `REF_MIN_FED = 0.8`. SO.07 VOIDed at
+its FIRST pre-registered VOID lane, which is the lane doing its job (SH.01's
+lesson, cited in its own docstring) and not a harness fault: the rig could not
+demonstrate, with every advantage, the behaviour the spec measures, so per its
+own gates table no other number in the run means anything.
+
+### What this entry deliberately does NOT ask
+
+It does not ask you to re-open `D21`, to rule on the W1 stage question, or to
+price a repair. It asks only **who owns a world/body capability defect now that
+the decision that used to own the class has closed.** The default answers that
+and nothing else, which is why silence can safely adopt it.

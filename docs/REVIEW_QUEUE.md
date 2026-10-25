@@ -8326,7 +8326,7 @@ that decision, or it needs its own successor spec. Nothing here re-runs.
         question no existing instrument asks. Staleness bill: ZERO (T2.15 red,
         nothing cites it). Execution the builder's, with the sibling row.
 
-ROUTED: so07-recording-worlds-fail-the-reference-bar | 2026-09-05 | builder (SO.07 attempt-1 harvest, 9bd3114) | OPEN
+ROUTED: so07-recording-worlds-fail-the-reference-bar | 2026-09-05 | builder (SO.07 attempt-1 harvest, 9bd3114) | DECLINED 2026-10-25 (Review FULL, OVERDUE FIRST — **the fifth break happened, and this row's own 10-13 text pre-registered the disposition I now owe it: *"If this row breaks a fifth time it should be DECLINED to the owner rather than re-dated again, and this desk records that as the disposition it expects to owe next."* It broke on 2026-10-23. This is that named act, not a new judgement.** THE FINDING IS NOT WITHDRAWN — SO.07 is still VOID, `ref_fed_frac` is still 0.333/0.667/0.667 per seed against the unmoved 0.8, and the diagnosis stands. What is refused is the DATING: on the owner's desk as `D53`. **AND THE REASON IS NOT CAPACITY THIS TIME — it is that all three of this row's own repair options are unavailable to the only desk permitted to disposition it, which is the `D49` class a second time:** (a) re-freezing the fixture constants from counts on a wider design-world set is calibrating the fixture toward the venue where the claim runs, which the design/data split exists to forbid and which this row's own body says the split forbids; (b) re-basing `REF_MIN_FED` from XL.01's absolute 0.8 to a world-relative bar is a threshold move, and `D51` ruled on 2026-10-20 that *"whether the floor is re-based is a threshold move no desk may make"* — this desk may strengthen and may never weaken, and which direction a world-relative bar lands is not knowable before it is computed, so it cannot be pre-certified as a strengthening; (c) *"let the W1 decision own it"* routes into a CLOSED window — the W1 decision is `D21`, RESOLVED BY ARMED DEFAULT on 2026-09-06, fifty days ago, so (c) as constituted lands the work on nobody and is the `DISPOSITION-ON-A-CLOSED-DECISION` class the instrument already prints for four other rows. **ONE MEASURED FACT THIS SITTING ADDS, which no prior sitting put on this row and which changes which option is right:** the 0.8 bar is not discredited — in its home venue it is met at CEILING. `XL.01` attempt 4 records `ok_ref 1.0`, `ref_fed_frac` **1.0**, `ref_mean_ttf_s` 24.15; XL.01 fails on a different conjunct entirely. So the identical bar reads 1.0 where it was born and 0.33–0.67 on SO.07's recording worlds. That localises the defect to the VENUE/BODY and not to the constant — and it makes option (b) not merely forbidden but WRONG, because a world-relative re-base would convert a measured venue defect into a passing number. The honest repair is (c)'s DIAGNOSIS with a LIVE owner, which is exactly what `D21`'s closure removed. See THE DECLINE below.)
     DUE: 2026-09-18 | RE-DATED 2026-09-15 (Review DAILY). The 2026-09-14 date BROKE — FIRST break for this row, and it is this desk's own decision debt, not the builder's. Re-dated ONCE at the desk's DEMONSTRATED disposal rate (~1/cycle), onto a date with measured room under the 6/day capacity, never onto a day already at it. The Review is NOT pace-gated (its 06:37 slot is exempt), so unlike the builder-execution rows in this batch, this desk has no excuse available to it and is not offering one. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for SO.07's VOID: what re-validates the reference arm on the recording worlds — re-frozen fixture, a wider design-world set, or a world/body redesign. Date is `next_free_due` per the router's own print (every earlier day is at or over measured capacity).
     DUE: 2026-09-26 | RE-DATED 2026-09-22 (Review DAILY) under D28's armed default (a) OVERDUE FIRST, fired this sitting — its FIRST application. The date is derived, not chosen from a free calendar slot: every row in this batch already carried one or two re-dates citing `next_free_due`, and every one broke again, so the arithmetic that produced 21 violations is not being run a third time. Rank by frontier value, one sitting per row at this desk's DEMONSTRATED ~1/cycle, capped at the measured 6/day so no date is piled on. SO.07's VOID has no repair path until this fork is taken, and the row has now broken twice; the 09-15 re-date said plainly that this desk 'has no excuse available to it and is not offering one'. That sentence stands and is not repeated as if it were new information.
     DUE: 2026-10-12 | RE-DATED 2026-09-27 (Review FULL) under D28's armed default (a) OVERDUE
@@ -8389,6 +8389,69 @@ seed (r 0.0039 < R_FLOOR, con_ratio 353 ≥ 2; logs on disk at
 /data/so07_hand_logs_s{0,1,2}.json). Whether a clean control log from a
 REF-lane-VOID run counts as "measured" for that supersession is part of this
 disposition — one sentence either way.
+
+### THE DECLINE, 2026-10-25 (Review, SUNDAY FULL, OVERDUE FIRST, act 3).
+
+**This row armed a stop-rule against this desk twice, and both are now spent.**
+The 09-27 text armed *"if this date breaks, no fourth date — escalated to
+`docs/DECISIONS_NEEDED.md`"*; the desk broke it anyway and wrote a fourth date
+on 10-13, which is its own small dishonesty and is recorded here rather than
+smoothed over. That 10-13 text then armed the correct successor — DECLINE on a
+fifth break — and the fifth break came on 2026-10-23. The rule fires.
+
+**What the five dates were actually spent waiting for, named plainly.** Not the
+work: there is no builder unit on this row at all. Every one of the five dates
+promised a DESK RULING, and the 09-15 text already conceded that this desk *"has
+no excuse available to it and is not offering one."* That sentence was true then
+and it is still true for dates one through four. Date five has a different and
+better reason, and it is the one that makes DECLINE the right disposition rather
+than a sixth deferral under a new name: **the ruling the row asks for cannot
+legally be made by the desk the row routes it to.**
+
+**THE THREE OPTIONS, each tested against who is permitted to take it.**
+
+| option | what it does | who may take it | verdict |
+|---|---|---|---|
+| (a) | re-freeze fixture constants from counts on a wider design-world set | nobody | calibrating the fixture toward the venue where the claim runs — the design/data split exists to forbid this, and the row's own body says so |
+| (b) | re-base `REF_MIN_FED` off XL.01's absolute 0.8 to a world-relative bar | nobody at a desk | a threshold move; `D51` (2026-10-20) ruled *"whether the floor is re-based is a threshold move no desk may make"*, and this desk may strengthen but never weaken |
+| (c) | file as a further `w0-too-shallow` instrument, let the W1 decision own it | no live owner | the W1 decision is `D21`, **RESOLVED BY ARMED DEFAULT 2026-09-06** — fifty days closed. Routing here lands the work on nobody |
+
+That is the `D49` class a second time — *"a queue row whose only permitted
+dispositions are ALL forbidden to its only permitted dispositioner"* — and a
+second instance is what turns `D49` from an anecdote into a class. It is also
+why no amount of honest re-dating converts this row into work: **it is not behind
+schedule, it is undischargeable as constituted.**
+
+**THE ONE MEASURED FACT THIS SITTING ADDS, and it changes which option is
+right.** Every prior sitting on this row treated the 0.8 bar as the suspect.
+Re-derived from `experiments/ledger.json` this sitting, not quoted from any page:
+
+    SO.07  attempt 1, VOID   ref_fed_frac  0.5556   per seed 0.3333 / 0.6667 / 0.6667
+    XL.01  attempt 4, FAIL   ref_fed_frac  1.0000   ok_ref 1.0   ref_mean_ttf_s 24.15
+
+`REF_MIN_FED = 0.8` is the SAME constant in both specs
+(`so_07_found_and_outlives.py:192`, `xl_01_death_does_not_erase.py:235`, both
+unmoved). **In its home venue it is met at the CEILING — 1.0, not 0.8-and-a-bit
+— and XL.01's FAIL is on a different conjunct entirely.** So the identical bar
+reads 1.0 where it was born and 0.33–0.67 on SO.07's recording worlds 3–5.
+
+Two consequences, and the second is the load-bearing one:
+
+1. The constant is NOT discredited. It is a bar a healthy rig clears with room.
+2. **Option (b) is not merely forbidden, it is WRONG.** A world-relative re-base
+   would take a bar that a working venue clears at ceiling and lower it until
+   SO.07's venue clears it too — converting a measured venue/body defect into a
+   passing number. That is the exact move `GOAL.md`'s world-fidelity reasoning
+   and this desk's one law both exist to stop. **If the owner takes (b), this
+   desk's recommendation is that it be refused on this evidence.**
+
+So the live diagnosis is (c)'s — a body that cannot reach privileged food on two
+of three recording worlds is a WORLD/BODY defect, the same family as
+`ba03-null-saturates-the-horizon` and SH.01's `ORACLE_CANNOT` — and what (c)
+lacks is not a diagnosis but a LIVE OWNER, which `D21`'s closure removed.
+
+**Routed to the owner as `D53`, recommendation quoted verbatim there.** SO.07
+stays VOID and this row stays in the file forever, as every row does.
 
 ## ROUTED: OPEN — `pl02-eye-gate-reads-the-encoder-not-the-eye`: the 82nd
 ## audit's B4 gate, measured across seven operating points, VOIDs PL.02 at
