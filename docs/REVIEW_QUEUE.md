@@ -20301,6 +20301,19 @@ ROUTED: personality-is-a-typed-character-sheet-on-the-answer-path | 2026-09-27 |
         ruled at all. Option (iii) was chosen precisely because it is the one
         branch that is non-prejudicial to both (i) and (ii).
     DUE: 2026-11-05 | RE-DATED 2026-10-25 (Review SUNDAY FULL, OVERDUE FIRST — batch re-date, ONE cause, and for the first time in five sittings the cause has ENDED. **THE MEASURED BLACKOUT: 75 consecutive dark slots, 2026-10-22T07:07Z through 2026-10-25T09:07Z, 75.9 h with no `rc=0`** — counted off `/data/jack-logs/ladder.log` this sitting with `usage_attribution.dark_slot_streak`, not inherited from any page. **The last 64 of those slots were NOT paced skips: they were the 90% HARD STOP** — *"STOPPED at 100% weekly usage — all agents paused until the owner resumes"* — which is a different and worse state than the PACING skips every prior re-date on these rows cited. A date naming the builder as executor is only honest if the builder can run, and for the whole life of the broken promise it could not. **THE CAUSE IS NOW GONE, WHICH IS WHAT MAKES THIS DATE DIFFERENT FROM ITS PREDECESSORS:** the usage week turned over between 09:07Z and 10:07Z this morning and the builder is LIVE — three `rc=0` iterations today at 10:49, 11:19 and 12:16. This is the first date on this row in weeks that names an executor demonstrably running. **Two corrections to the record this sitting makes rather than inherits:** (1) prior re-dates asserted the usage week resets at 04:59Z — the log shows `STOPPED at 100%` still at 09:07Z today and the resume at 10:07Z, so the boundary is ~10:00Z Sunday and every date derived from 04:59Z was derived from a wrong constant; (2) the `dark_slots` ratchet reads **0** right now and read 0 all through the blackout's end, because it is a trailing STREAK that any `rc=0` resets — the 75-slot outage is already invisible to it, which is the open row `dark-slot-ratchet-is-a-streak-so-an-ENDED-blackout-reads-zero` and this week is its largest worked example. Date placed on a day measured to have room under the 6/cycle capacity, never onto a pile. Carried on `D44`, which is still OPEN and unanswered on the owner's desk; this date is the row's own ageing clock, not a prediction about when `D44` is ruled.
+    BUILDER-TRACE: f87ca40 | 2026-10-25 20:xx UTC — THE REGISTRATION IS
+        EXECUTED: `LG.15` resolves in `BY_ID`, lists in `run next` as the 1
+        fresh spec (cpu<10min, needs implementing). All three conjuncts are in
+        the registered claim verbatim-in-substance, none weakened: (1) life
+        answers unchanged vs an identical-arm resampling null, (2) manner a
+        separate reported channel with a must-move inverted-sheet control,
+        (3) per-response provenance a VOID lane (unmarked/canned-TEMPLATES
+        outputs can never buy a verdict). Venue binding carried: calls the
+        shipped `answer_question`, forbidden to score through `lg_01`'s
+        `_prompt` scaffold; sheet-absent arm is the shipped personality=None
+        branch. `D44` not pre-empted — the spec buys evidence, decides
+        nothing. Coverage after the edit: claim_dead unchanged at 3,
+        stale-cost 0 certificates. The ACTED stamp stays the desk's.
 
 ### THE RULING, 2026-10-10 (Review, DAILY, OVERDUE FIRST). **Option (iii) TAKEN. (i) and (ii) go to the owner as `D44`. (iv) REFUSED. The contradiction becomes a falsifiable claim, which is what this project does with every other contested property.**
 
