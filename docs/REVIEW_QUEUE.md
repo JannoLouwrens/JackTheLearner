@@ -25298,3 +25298,46 @@ ROUTED: wm01-buffer-learns-composition-on-one-seed-of-three | 2026-10-25 | measu
     WAITS-ON: none | the worst-seed gate is already shipped and committed, the
         per-seed numbers are on the row, and no live row decides whether a
         FAIL on trainability stands as the mechanism's answer.
+
+ROUTED: lg15-shipped-qa-venue-answers-no-one-at-both-ends | 2026-10-25 | measured by the builder off `experiments/ledger.json` LG.15 attempt 1 (VOID, provenance conjunct 3, commit 7d54652), `/data/lg15_answers.json` (75/75 answers, fixture_sha 3f7a2b427fecd667, model a10cc151) and a one-generation raw-decode reproduction at the run's exact torch seed; `UnifiedBrain.py:2816-2844` read at source; `run stale-cost UnifiedBrain.py` re-run live | OPEN
+    The question: the shipped `answer_question` venue cannot produce a
+    question-conditioned answer in EITHER arm — is the repair a
+    `UnifiedBrain.py` edit (apply the instruct model's chat template, and/or
+    raise `max_length=256` above the sheet's ~670 rendered tokens), and who
+    authors it? Both defects live in the ONE function; the builder may not
+    take it (18 standing PASS certificates hash `UnifiedBrain.py` — the
+    standing prohibition on the handoff and the parent row).
+    **THE TWO MEASURED ENDS:** (1) sheet-present (P/P2/INV): rendered prompt
+    670 tokens (583–590 INV) against `truncation=True, max_length=256` — the
+    question is tokenized AWAY and every answer is persona continuation
+    ("You are Jack, a virtual humanoid companion."); (2) sheet-absent (A/A2):
+    prompt 53–60 tokens, the question demonstrably reaches the model — and
+    ALL 30 generations across 3 seeds are EMPTY. Mechanism reproduced offline
+    at the run's exact seed (torch seed 202 = seed 0, arm A, q 0): the
+    model's FIRST sampled token is `<|im_end|>` (id 2 = EOS = PAD),
+    N_GEN_TOKENS 1, decode after `skip_special_tokens` is `''`.
+    SmolLM2-360M-INSTRUCT given `answer_question`'s raw-completion prompt
+    (`...Question: {q}\nAnswer:`) ends its turn immediately; the shipped path
+    never applies the chat template.
+    **The VOID is the instrument working:** conjunct 3 (no unmarked-or-canned
+    scored output) refused to score an all-empty arm — an empty-vs-truncated
+    comparison would have measured prompt-plumbing, not the sheet. Not a
+    refutation of the sheet claim; the claim never measured, and a re-run
+    UNCHANGED buys the identical VOID.
+    **Relation to `D44` and the parent row:** the ruling pinned the SHIPPED
+    path deliberately (lg_01's `_prompt` scaffold is why LG.00 is blind
+    here), and that choice is vindicated — the scaffold would have hidden
+    both defects. D44's firing (transcribed `be670f0`) priced the
+    never-registered spec; the spec now exists, ran, and its first evidence
+    is that the pinned venue is dead at both ends on the pinned model family.
+    **THE BILL if the repair touches the venue:** `UnifiedBrain.py` stales 18
+    standing PASS certificates — 0.46 CPU-h over 8 + 2.87 GPU-h over 10
+    (stale-cost read live this slot). A repair confined to the test file
+    stales nothing and measures nothing: the shipped venue IS the subject.
+    No LG.15 bar moves in either direction; its gates stay frozen.
+    DUE: 2026-11-01 | the Review owes the venue disposition (repair-vs-leave,
+        and who authors the UnifiedBrain.py edit); 11-01 is the first day
+        under the measured capacity of 6/cycle.
+    WAITS-ON: none | the parent row is DELIVERED awaiting stamp and D44's
+        firing is transcribed; neither decides whether the shipped venue is
+        repaired, and the evidence is on the ledger and in the artifact.
