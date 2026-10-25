@@ -350,6 +350,35 @@ def _date(s: str):
         return None
 
 
+_COMMIT_DATE_CACHE: dict[str, object] = {}
+
+
+def _commit_date(sha: str):
+    """Author date of `sha` as a date, or None if git cannot resolve it.
+
+    None means UNKNOWN and callers must say so rather than treating it as
+    agreement — the lesson `gpu-receipt-head-is-push-time-not-kernel-time` and
+    `unreachable`'s "unknown is not zero" note are the same shape. Cached
+    because `review-queue` renders the delivered block once per invocation but
+    this is called per row, and a subprocess per row is a cost a reader on a
+    free-tier box notices.
+    """
+    if sha in _COMMIT_DATE_CACHE:
+        return _COMMIT_DATE_CACHE[sha]
+    out = None
+    try:
+        p = subprocess.run(["git", "show", "-s", "--format=%ad",
+                            "--date=short", sha],
+                           capture_output=True, text=True, timeout=10,
+                           cwd=str(Path(__file__).resolve().parent.parent))
+        if p.returncode == 0:
+            out = _date(p.stdout.strip())
+    except Exception:
+        out = None
+    _COMMIT_DATE_CACHE[sha] = out
+    return out
+
+
 def parse(doc: str) -> list[dict]:
     """Rows in file order. Malformation is RECORDED on the row, never raised —
     a parser that dies on the first bad line reports one defect and hides the
@@ -1007,12 +1036,45 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
     for r in rows:
         if r["status"] not in LIVE or not r["trace"]:
             continue
+        # PRE-DATED RECEIPT (Review SUNDAY FULL 2026-10-25, Part 2 strengthening).
+        # A trace whose commit PREDATES the row's own `ROUTED:` date cannot be
+        # the execution of work this row ordered — the work did not exist yet.
+        # Found by walking into it: `dp04-graded-measure-passed-its-guard-and-
+        # did-not-cure-the-venue` was routed 2026-10-11 and declares
+        # `BUILDER-TRACE: 5b0d4c0`, dated 2026-09-30 — ELEVEN DAYS EARLIER. That
+        # commit executed the PARENT row's option (i); this row owes option (ii),
+        # a difficulty edit to `lc_00_gridworld_decidable.py` which `git log`
+        # shows untouched since the row was routed. The row's own trace text
+        # even ends "The stamp is the desk's."
+        #
+        # This desk read `DELIVERED — AWAITING STAMP`, believed it, and was one
+        # edit away from stamping `ACTED` on work that does not exist. That is
+        # the whole hazard: this block's PURPOSE is to tell a desk "finished,
+        # just stamp it", so a false entry here is not a cosmetic mis-read, it
+        # is a direct path to a fraudulent certificate — and `ACTED` is TERMINAL,
+        # so the row would never be re-read again.
+        #
+        # A READING, like the block it annotates: it does not refuse the row, does
+        # not change its ageing, and does not touch the exit code. It only stops
+        # the receipt being advertised as a delivery. Dates come from `git show`,
+        # so an unresolvable sha is reported as UNKNOWN and never as fine —
+        # unknown is not zero.
+        pre_dated = None
+        if r["routed"] is not None:
+            cdate = _commit_date(r["trace"])
+            if cdate is None:
+                pre_dated = "UNKNOWN"
+            elif cdate < r["routed"]:
+                pre_dated = (f"commit dated {cdate.isoformat()}, "
+                             f"{(r['routed'] - cdate).days} d BEFORE this row "
+                             f"was routed {r['routed'].isoformat()}")
         delivered.append({
             "id": r["id"], "status": r["status"], "commit": r["trace"],
             "due": r["due"].isoformat() if r["due"] is not None else "",
             "overdue_days": ((today - r["due"]).days
                              if r["due"] is not None and r["due"] < today
                              else 0),
+            "pre_dated": pre_dated,
             "text": r["trace_text"]})
 
     # THE TWO WAITS-ON READINGS (THE RULING on `prose-sequencing-inverts-when-
@@ -1339,8 +1401,24 @@ def render(a: dict, last_run: str = "") -> str:
             if e["due"]:
                 when = f"  DUE {e['due']}" + (f" (+{e['overdue_days']} d, still counted)"
                                               if e["overdue_days"] else "")
+            flag = ""
+            if e.get("pre_dated") == "UNKNOWN":
+                flag = "  !! RECEIPT UNVERIFIABLE: git cannot resolve this sha"
+            elif e.get("pre_dated"):
+                flag = f"  !! PRE-DATED RECEIPT: {e['pre_dated']}"
             out.append(f"    {e['status']:<13} {e['id']}  executed at "
-                       f"{e['commit']}{when}")
+                       f"{e['commit']}{when}{flag}")
+        if any(e.get("pre_dated") for e in dl):
+            out.append("  !! A PRE-DATED RECEIPT IS NOT A DELIVERY. A commit "
+                       "older than the row cannot")
+            out.append("     have executed work the row ordered later — read "
+                       "it as a citation of prior")
+            out.append("     work, and verify what this row owes before "
+                       "stamping. This block exists to")
+            out.append("     say 'finished, just stamp it', so a false entry "
+                       "here is a direct path to a")
+            out.append("     fraudulent ACTED — and ACTED is TERMINAL, so the "
+                       "row is never re-read.")
     if a.get("waits_on_closed") or a.get("waits_on_inverted"):
         out.append("")
         out.append("  WAITS-ON READINGS (ruling 2026-10-11) — printed, gating "
