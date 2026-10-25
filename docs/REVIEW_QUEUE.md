@@ -24479,6 +24479,16 @@ ROUTED: t306-probe-returned-an-undeclared-combination-and-v2-false-alarms | 2026
         capacity of 6, and 10-26 at 5 — the tool's own `next date with room`.
     WAITS-ON: none | the artifact is on disk and reproducible; no live row
         decides either half.
+    BUILDER-TRACE: dfb71d1 | 2026-10-25 10:07 slot — the V2 half executed, one
+        day early. `_v2_match` rounds the replayed value to REC_DP=4 (the
+        recorder's own `round(x, 4)` in t3_06, pinned with provenance) and
+        compares exactly; the 5e-5 epsilon is gone, not widened. Known-answer
+        selftest added ahead of anything expensive: the four measured boundary
+        rows match, three genuine half-point mismatches fire (7/7), and the
+        new rule replayed over the real artifact's four flagged rows reads
+        all-match, so the recorded run now validates as the correct replay it
+        was. The branch-menu half (the UNDECLARED combination) is untouched —
+        that ruling is the desk's, as the row says. Stale-cost at execution: 0.
 
 ROUTED: register-entries-quote-instrument-readings-that-nothing-re-derives | 2026-10-22 | RE-DERIVED LIVE by the 159th audit using the instrument's own `review_queue.throughput()` against every October revision of this file in git, method validated by reproducing today's printed reading exactly (`arrived 16 / 2.29`, `disposed 21 / 3.00`, `live 72`, `drain 100.8` vs `101` printed); `D47`'s quoted figures traced to `8aea5db`..`2adfc24` and `2839b0b` (both 2026-10-13) | OPEN
     The question: `docs/DECISIONS_NEEDED.md` entries argue their case — and
