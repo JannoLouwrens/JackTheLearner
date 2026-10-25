@@ -11865,3 +11865,147 @@ Three is a class, not a coincidence, and the structural question it raises —
 whether the queue needs a disposition for *"legal work, barred mover"* — is on
 this sitting's page as a separate item and is deliberately NOT bundled here.
 This entry asks only about `HR.1`'s bar.
+
+
+---
+
+## D44 — RESOLVED BY ARMED DEFAULT, fired 2026-10-25 ~12:4x UTC by the OVERSEER (160th audit), on the first legal day. Off your desk; both halves of the split recommendation remain yours to rule at any time.
+> PROVENANCE (scripts/lib_seal.sh, 2026-10-25T12:57:16+00:00): this entry was written by a overseer run that exited rc=1 without completing its own checklist — its report is sealed as an INCOMPLETE RUN draft. The entry's facts are that dead run's, unverified until an audit re-measures them; nothing here is re-dated, weakened or un-armed by this line.
+
+**THE OWNER DID NOT RULE BY 2026-10-24, SO THE PRE-REGISTERED DEFAULT FIRED.**
+**NO RULING — THE SHEET STAYS EXACTLY AS IT SHIPS AND NOTHING IS DOCUMENTED.**
+The five Big Five floats stay, the five `core_values` strings stay, the
+2,585-character persona keeps conditioning the default answer path, and
+`GOAL.md` keeps forbidding in text what the code ships by default. The desk's
+own recommendation — *"SPLIT THE OBJECT AND RULE THE TWO HALVES OPPOSITELY"* —
+was **NOT** taken, and deliberately so: the entry itself says a default that
+blessed the status quo would be a desk ruling on who Jack is by letting a clock
+run out, and that reasoning is why the default is the no-ruling branch and not
+the recommendation.
+
+**WHY THIS WAS MINE TO FIRE.** The entry is `class: goal` and armed;
+`decisions --check` listed it this audit as the single
+`OVERDUE — DEFAULT IS DUE TO FIRE` row, and firing is the day after
+`decide_by`. Same idiom and same precedent list as the firings above.
+
+**RE-DERIVED AT SOURCE THIS AUDIT, not inherited from the entry.** Every
+number in its measurement block reproduces in this venv, read off the files
+today:
+
+```
+Personality.py:135-139   openness 0.85 · conscientiousness 0.55 · extraversion 0.60
+                         agreeableness 0.80 · neuroticism 0.25   (dataclass defaults)
+Personality.py:731       JACK_PERSONALITY = Personality()         (import-time singleton)
+UnifiedBrain.py:264      enable_emotional_state: bool = True
+UnifiedBrain.py:4093     self.personality = JACK_PERSONALITY      (wired on by default)
+grep across experiments/ ZERO callers of answer_question / get_system_prompt /
+                         _generate_with_llm  -> no spec on this ladder sees it
+```
+
+Nothing in the measurement is contested and nothing about it changed.
+
+**THE PRICE — AND IT IS WORSE THAN THE ENTRY STATES, WHICH A FIRING MUST SAY
+RATHER THAN INHERIT.** The default's own text leans on one mitigation: *"The
+spec registered this morning proceeds on its own clock and REPORTS whatever it
+finds either way."* **That spec does not exist.** Verified three ways this
+audit:
+
+```
+registry             258 specs; the LG family is LG.00..LG.14 and stops there
+grep registry*.py    ZERO hits for answer_question / get_system_prompt /
+                     'character sheet'; the only 'persona' hits are one
+                     unrelated wiped-persona twin control
+git log -S'Spec("'   since 2026-10-09, exactly ONE spec was registered:
+                     LC.08 (da9ece0, 2026-10-20). No other registration exists.
+```
+
+The queue row's own ruling says the design is published and *"the registration
+is the builder's from it"*; the entry dates that registration 2026-10-22. It
+has not happened, and the row that owns it has now broken a dated promise on
+it. So as of this firing:
+
+```
+the contradiction            live, in shipped default code
+a spec that measures it      none
+the register entry           this one, closed as of this block
+an instrument that can ASK   none - no spec id, so no gate, no ranking, no blocker
+```
+
+That is the shape the coverage tool exists to shout about and cannot see here,
+because an unregistered spec has no id.
+
+It is **MONOTONE**: it moves no threshold, edits no constitution text, deletes
+no component, stales no certificate, spends no GPU-hour and no CPU-second, and
+withdraws no finding. It also decrees nothing: the sheet is exactly as it was
+before this block.
+
+**HOW TO REVERSE IT.** One sentence either way reverses it at any time, and the
+desk's quoted recommendation is still on the record above: rule the five floats
+and their PAD baseline DELIBERATE (and add the sentence to `GOAL.md` so five
+undocumented dataclass defaults stop being undocumented), and rule the five
+`core_values` strings and the persona prose a BREACH to come out of the default
+answer path, paying the 18-certificate `UnifiedBrain.py` bill once on that half
+alone. The firing forecloses neither half; it records that nobody chose, and
+that the evidence the entry promised would arrive regardless has not been
+registered.
+
+
+---
+
+## D50 — EVIDENCE ADDENDUM, 2026-10-25 ~12:4x UTC (overseer, 160th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS THIS ENTRY'S CENTRAL PREMISE: the 90% stop does NOT pause every organ. It pauses every READER and leaves the one WRITER running, and in the pause just ended that writer turned a Tier-0 certificate red where no organ could read it.
+> PROVENANCE (scripts/lib_seal.sh, 2026-10-25T12:57:16+00:00): this entry was written by a overseer run that exited rc=1 without completing its own checklist — its report is sealed as an INCOMPLETE RUN draft. The entry's facts are that dead run's, unverified until an audit re-measures them; nothing here is re-dated, weakened or un-armed by this line.
+
+The entry's title and body say the stop *"pauses every organ and records that
+nowhere."* The second half is true and is why this entry exists. **The first
+half is false, measured off the logs this audit**, and the direction of the
+error matters: it makes the blackout look like a quiet period in which nothing
+happened to the ledger, when the ledger was in fact being written the whole
+time by the only organ the gate does not sample.
+
+**THE MEASUREMENT.** `/data/jack-logs/ladder.log` and
+`/data/jack-logs/regate.log`, counted by hand this audit, not inherited:
+
+```
+                        2026-10-22   2026-10-23   2026-10-24   2026-10-25
+builder (hourly)        STOPPED 18:07 -> 09:07 on 10-25: ~72 consecutive slots,
+                        every line "STOPPED at 90..100% weekly usage"
+Review (06:37/12:37)    no sitting; docs/PROGRESS.md stamped STALE at 77 h
+overseer (37 */6)       no audit on 10-23 and none on 10-24 (git log of
+                        docs/OVERSIGHT.md ends at the 159th, 2026-10-22)
+regate re-buy lane      12 sweeps      12 sweeps      12 sweeps      7 so far
+```
+
+**WHAT THE WRITER DID WHILE THE READERS WERE OFF.** At
+`2026-10-23T04:48:54`, inside the 04:43 sweep, the rotation re-derived `T0.07`
+(*CPU throughput baseline*) and recorded **attempt 7 FAIL** — against attempt 6
+`PASS` at `2026-10-21T00:48:58`, read out of git at both revisions rather than
+from a counter. The verdict is honest: the binding conjunct is
+`policy_no_llm_rel_std` **0.272** against `MAX_POLICY_REL_STD` **0.20**, a
+trial-to-trial reproducibility conjunct and not a performance bar, on a box
+whose load this organ has repeatedly recorded as shared. The defect is not the
+flip. **The defect is that it went unread for 2.3 days, because the gate that
+let the writer run had switched off every reader.**
+
+**ITS PRICE, two readings, both computed and not argued.**
+
+1. `pass_on_dead_dependency` **6 -> 7**, now **4 above its declared floor of
+   3**: the new pair is `PL.00 <- T0.07 (FAIL)`, so the certificate carrying
+   the frozen-vs-plastic decree's own arena is resting on a dependency the
+   ledger says is dead, and `run_spec` would refuse to re-derive it. The regate
+   lane prints exactly this every sweep — *"skip PL.00 ... dependency red:
+   T0.07 (FAIL)"* — which is the writer correctly reporting the consequence of
+   its own write to a log no desk reads.
+2. `fail_unowned_owned_forms` gained its first-ever **`mention-only`** entry,
+   and it is `T0.07`. Its only trace in `docs/REVIEW_QUEUE.md` is prose inside
+   other rows' staleness bills and a residency note — no `DUE:`, no repair
+   owner. The count `fail_unowned` stays **6, AT its floor**, so no exit code
+   anywhere moved; the whole event is visible only in an unfloored forms map.
+
+**WHY THIS BELONGS HERE AND NOT IN A NEW ENTRY.** This entry's default is *"no
+reader, record nothing"*-shaped: it asks whether the stop should leave a record
+of what it paused. The answer this addendum supplies is that any such record
+must be asymmetric — it has to name what KEPT RUNNING, not only what stopped —
+because the damage in this pause was not a lost sweep, it was an unread write.
+No threshold is moved by this addendum, nothing is re-classed, the `decide_by`
+stands untouched, and the repair of the `T0.07` row itself is routed to the
+Review as a queue row with its own date rather than bundled into this ask.

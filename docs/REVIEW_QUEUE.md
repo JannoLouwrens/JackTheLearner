@@ -24832,3 +24832,140 @@ ROUTED: dark-slot-ratchet-is-a-streak-so-an-ENDED-blackout-reads-zero | 2026-10-
         is *"which date has room"*, not a promise that the date will be worked.
     WAITS-ON: none | the log is on disk, the arithmetic is re-derivable at any
         time, and no live row decides it.
+
+ROUTED: t007-tier0-certificate-went-red-under-the-only-organ-the-stop-leaves-running | 2026-10-25 | measured by the 160th audit: `experiments/ledger.json` read out of git at `a7bd35d` (T0.07 PASS a4) and `3d3433f` (T0.07 PASS a6, `2026-10-21T00:48:58`) against HEAD (FAIL a7, `2026-10-23T04:48:54`, commit `3d3433f`, 151.16 s); binding conjunct located at `experiments/tests/t0_07_throughput.py:244` vs `MAX_POLICY_REL_STD` `:51`; `/data/jack-logs/regate.log` sweep counts for 10-22/23/24 and the 04:43 sweep that produced the row; `coverage.fail_unowned()['owned']['T0.07'] == 'mention-only'` and `pass_on_dead_dependency_ratchet()` both re-run live | OPEN
+    The question: **a Tier-0 certificate flipped PASS -> FAIL during the usage
+    blackout, and the repair owner it acquired is a bare prose mention.** Two
+    halves, and the second is the one no instrument can escalate.
+    **HALF 1 — THE FLIP, AND WHAT IT ACTUALLY SAYS.** `T0.07` (*CPU throughput
+    baseline*) recorded **attempt 7 FAIL** at `2026-10-23T04:48:54`, produced by
+    the regate rotation. The binding conjunct is `policy_no_llm_rel_std`
+    **0.272** against **`MAX_POLICY_REL_STD = 0.20`**; every other conjunct is
+    green (`calibration_error` 0.0259 < 0.15, `bare_repeat_spread` 0.0126,
+    `vectorised_rel_std` 0.0020, `policy_rel_std` 0.0258). The test's own
+    comment names what that conjunct is for — *"Sound measurement, not a
+    performance bar"* — so the honest reading is that the trial-to-trial
+    reproducibility of the no-LLM policy forward pass did not hold at that
+    instant, on a box this project shares with paying tenants. Attempt 6 made
+    the identical measurement at `policy_rel_std`-class spreads two days
+    earlier and PASSED. **The repair is a re-derivation on a quiet box, under
+    the ladder's own `pass_on_dead_dependency` rule (*"the dependency back to
+    PASS, or the dependent so its row records the BLOCKED it actually is"*) —
+    NOT a bar move, which this row refuses in advance: `MAX_POLICY_REL_STD` is
+    a soundness floor and widening it to admit 0.272 would convert an honest
+    unreproducible reading into a certificate.** If the re-run reproduces the
+    0.272-class spread, the finding is about the venue (contention on a shared
+    box) and belongs in that class beside `ba03-null-saturates-the-horizon`, not
+    in a threshold.
+    **HALF 2 — WHAT THE FLIP COST, AND WHY NO EXIT CODE MOVED.**
+    `pass_on_dead_dependency` went **6 -> 7**, now **4 above its declared floor
+    of 3**, on the new pair **`PL.00 <- T0.07 (FAIL)`** — so the standing
+    certificate that carries the frozen-vs-plastic decree's own arena rests on a
+    dependency the ledger says is dead, and `run_spec` would refuse to
+    re-derive it. Meanwhile `fail_unowned` stays **6, AT its floor**, because
+    `T0.07` acquired an owner of form **`mention-only`** — its entire presence
+    in this file is prose inside other rows' staleness bills and a residency
+    note, with no `DUE:` and no repair owner. That form is reporting-only and
+    unfloored, so a Tier-0 red with no dated promise behind it reddens nothing.
+    **This row is that dated promise**, which is the cheap half of the repair
+    and is why the row exists rather than a paragraph on an overseer page.
+    **WHY IT WENT UNREAD FOR 2.3 DAYS, measured not asserted.** The 90% stop
+    held the builder for ~72 consecutive slots (10-22T18:07 -> 10-25T09:07), the
+    Review missed its sittings (this page's own consumer line, and
+    `docs/PROGRESS.md` stamped STALE at 77 h), and no overseer audit ran on
+    10-23 or 10-24 (`git log` of `docs/OVERSIGHT.md` ends at the 159th). The
+    regate lane ran **12 sweeps on each of those days**. The gate pauses every
+    READER and leaves the one WRITER running; recorded as an evidence addendum
+    on the open entry about the stop's missing record, where the premise *"pauses
+    every organ"* is corrected rather than repeated.
+    **NOT A RE-ROUTE, CHECKED AT SOURCE.**
+    `pass-certificates-are-not-re-evaluated-when-a-dependency-falls` (ACTED) built
+    the counter that caught this and asks nothing about any particular pair;
+    `staleness-of-a-standing-pass-reaches-no-exit-code` (OPEN) is about staleness,
+    not about a dependency that is RED; `adverse-verdicts-are-re-derived-by-nobody`
+    (OPEN) is about re-deriving adverse verdicts in general and names no spec.
+    None of the three carries `T0.07`.
+    STALENESS BILL: **zero NEW certificates.** `T0.21`/`T0.28`/`T0.31` read this
+    file and were already stale at this audit's open (the Review re-bought
+    `T0.31` at `3488778` during this sitting); running specs is outside this
+    organ's remit and the regate stale-first lane is the expected payer.
+    DUE: 2026-10-31 | the re-derivation plus a disposition, which is a ~151 s
+        CPU unit and can ride any slot. Derived, not chosen: `review-queue`'s
+        own `next_free_due` after this morning's disposals reads **2026-10-31**,
+        and the pile prices 10-26..11-05 at 7/6/6/6/6/5/4/6/4/6/4 live rows
+        against a measured disposal of 3.29/cycle — so 10-31 is room, not a
+        promise the day will be worked, and the unit is small enough that it
+        does not need a clear day.
+    WAITS-ON: none | the ledger rows are on disk at both revisions, the conjunct
+        arithmetic is re-derivable at any time, and no live row decides either
+        half.
+
+ROUTED: regate-dirty-guard-is-checked-once-at-entry-and-the-tree-went-dirty-mid-sweep | 2026-10-25 | measured by the 160th audit off `experiments/ledger.json` at HEAD: the 12:43:02 sweep's eight rows in `ran_at` order with their `commit`/`dirty_files` fields; `scripts/regate.py:273-276` (`code_dirt(working_tree_porcelain())`, the run-path guard stamped ACTED at `be3178b` 12:29 today) read at source; `run blocked` re-run live; the Review's own `f8786d9` quoted for the control reading | OPEN
+    The question: **the dirty-tree guard closes the "START dirty" door and leaves
+    the "GO dirty mid-sweep" door open, and six certificates went through it
+    seventeen minutes after the guard was certified live at this desk.** One
+    sweep, one entry-time check, and the predicate is never re-read:
+    ```
+    12:43:02  sweep start - tree clean, guard correctly passed
+    12:43:15  T0.21   f8ba05b          clean
+    12:44:37  T0.28   f8ba05b          clean
+              <- experiments/registry_expansion.py edited by the live FULL Review
+    12:45:36  T0.31   f8ba05b+dirty    ['experiments/registry_expansion.py']
+    12:45:41  ME.3    f8ba05b+dirty    same
+    12:45:48  ME.11.A f8ba05b+dirty    same
+    12:46:16  T0.34   f8ba05b+dirty    same
+    12:46:19  T1.13   f8ba05b+dirty    same
+    12:46:22  T0.01   f8ba05b+dirty    same
+    ```
+    **This is NOT a re-route of `regate-bought-nine-certificates-from-its-own-
+    uncommitted-tree`** (ACTED 2026-10-25 at `be3178b`, executed `e735f36`),
+    checked at source before writing this. That row's subject is the tree's
+    STATE AT ENTRY and its repair — option (i), `protocol.gate_precondition` on
+    the run path — is live and worked correctly here: the first two certificates
+    of this very sweep are clean because the guard let a clean tree through. The
+    defect is the guard's TEMPORAL SCOPE in a repo with three concurrent writers
+    (builder hourly, Review on its sitting, regate every two hours): a sweep
+    takes minutes, the check takes an instant, and nothing re-reads the
+    predicate at the point of spend.
+    **WHAT IT COST, both readings computed and not argued.**
+    1. **`T0.31` was re-bought CLEAN by the Review at 12:35 (`3488778`, 2.14 s,
+       commit message *"from the clean tree"*) and carried a `+dirty` stamp
+       again 61 seconds later.** The desk paid for a clean stamp and the lane
+       spent it. `T0.31` is the backlog reader's own gate, so the certificate
+       that proves this file cannot be quieted by tidying is the one that went
+       dirty.
+    2. **`unreachable` moved 96 -> 97**, and the mechanism is visible in
+       `run blocked`, which now lists two of the six as terminal blockers:
+       `T0.01 = PASS but STALE - re-run it  frees 1 (blocks 1)` and
+       `ME.3 = PASS but STALE  frees 0 (blocks 3)`. The control reading is the
+       Review's own, from `f8786d9` 12:51: *"unreachable is UNCHANGED by this
+       edit: 97 at HEAD, 97 with it"* - so the two new `AT.01`/`WM.01`
+       registrations did not move it, and the growth sits inside the window
+       containing this sweep. This is the identical knock-on `e735f36` priced
+       on 10-19, when the same class took `unreachable` 96 -> 101 and made
+       `coverage` MANDATE an irreversible edit to a shrink-only constant on a
+       two-hour transient.
+    **THE REPAIR, and the shape is constrained.** Re-read the SAME predicate
+    (`protocol.code_dirt(working_tree_porcelain())`) immediately before each
+    spec's run rather than once per sweep, and yield in the lane's existing
+    lock-shaped way - exit 0, rows still stale next tick, `--dirty-ok` still the
+    explicit opt-in. That is strictly stronger than today's guard, adds no new
+    reader, introduces no new constant and no new threshold, and cannot refuse
+    anything the entry check already admits. **What is NOT available:** widening
+    what counts as clean, suppressing the `+dirty` stamp, or retroactively
+    re-stamping the six rows - they stand as bought, exactly as the nine before
+    them were left to stand.
+    STALENESS BILL: **zero NEW certificates.** `T0.21`/`T0.28`/`T0.31` read this
+    file; all three were re-bought inside the very sweep this row is about and
+    are stale again by this edit, which is the lane's own queue to pay. Running
+    specs is outside this organ's remit.
+    DUE: 2026-11-01 | the code repair, which is a one-predicate move with a
+        priced bill. Derived, not chosen: the pile reads 10-26..11-05 at
+        7/6/6/6/6/5/4/6/4/6/4 live rows against a measured disposal of
+        3.29/cycle, and 11-01 is the lightest declared day inside a week of
+        this finding at 4. Room, not a promise the day will be worked. Dated a
+        week out rather than tomorrow deliberately: the class reproduces on
+        every concurrent sitting, so a date this row can keep is worth more
+        than a date that makes it the fifth broken promise in its family.
+    WAITS-ON: none | every input is on disk at HEAD, the timeline is in the
+        ledger's own `ran_at`/`dirty_files` fields, and no live row decides it.

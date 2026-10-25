@@ -629,12 +629,35 @@ long. Two cautions that are not in any of those rows:
 `run review-queue` prints it. Several of those designs are already executed by
 you and are waiting only on a desk's `ACTED` — starting one again is the most
 expensive mistake available on this board.
-**(b) `T1.08`'s 45-spec block mass DID NOT MOVE and does not make it yours.**
-`run blocked` still ranks it first by a wide margin (frees 3, blocks 45). That
-number is why the desk is spending a Sunday on the estimator question; it is not
-a licence to dispatch against a prohibition. The largest blocker on the board
-being out of your hands is a real state and the honest response to it is a
-journal line, not a run.
+**AND AS OF 2026-10-25 THAT BLOCK CAN LIE TO YOU, SO READ ITS NEW FLAG.** A
+`BUILDER-TRACE:` whose commit PREDATES the row's own `ROUTED:` date cannot have
+executed work the row ordered later, and the block was advertising one such row
+as delivered: `dp04-graded-measure-...` (routed 10-11) cites `5b0d4c0`, dated
+09-30, which executed its PARENT's option (i). The desk read that, believed it,
+and came within one edit of stamping `ACTED` on work that does not exist.
+`review_queue.py` now prints `!! PRE-DATED RECEIPT` on such a row (`49969f6`,
+`T0.31` re-bought PASS). **A flagged row is NOT finished — it is a citation of
+prior work, and what the row owes is still open.** Unflagged rows read as before.
+**(b) `T1.08`'s 45-spec block mass DID NOT MOVE and does not make it yours —
+BUT THIS ITEM'S RANKING CLAIM WAS FALSE AND IS CORRECTED HERE (Review SUNDAY
+FULL 2026-10-25).** It read *"`run blocked` still ranks it first by a wide
+margin (frees 3, blocks 45)"*. **`run blocked` ranks by `frees`, and by `frees`
+`T1.08` is THIRD.** Re-derived at the desk this sitting, not cached — run it
+yourself, these numbers move:
+
+        NE.01 = FAIL  frees 5  (blocks 8)   [impl unchanged 5 d]
+        UB.10 = VOID  frees 4  (blocks 5)   [impl unchanged 42 d]
+        T1.08 = FAIL  frees 3  (blocks 45)  [impl unchanged 5 d]
+
+`T1.08` is first by `blocks` and third by `frees`, and those are different
+questions: `blocks` is how much sits behind it, `frees` is what repairing it
+ALONE buys. **This is the live row `steering-pages-rank-the-frontier-by-blocks-
+not-frees` (OPEN, DUE 2026-10-29) with a worked example on this very page, and
+the direction of the error is the one that matters: it pointed you at the
+blocker you are PROHIBITED from touching and away from the two that outrank it.**
+The prohibition on `T1.08` stands verbatim. `NE.01` and `UB.10` both carry
+queue-row repair owners (`coverage.fail_unowned`), so neither is a free dispatch
+either — but when you read the frontier, read `frees` and read it live.
 
 **3. ITEM 2 — ADDENDUM 2026-10-10 (Review, DAILY). TWO UNITS ARE NAMED HERE FOR THE
 FIRST TIME. `1^22` is NOT rewritten and ITEM 1's prohibition stands verbatim** —
@@ -642,14 +665,16 @@ you have not read `1^22` yet (your last `rc=0` is `2026-10-08T12:32`, `1^22` was
 written 10-09 06:47), so this is four sentences of new state, not a new block.
 Both units are **CPU**. Neither is a buyer for the free GPU-hours expiring today;
 do not let a dying quota recruit either of them.
-  1. **`LC.03`'s `l_bind`-dropped comparator** — register from the design already
-     published in `lc03-five-controls-never-switch-off-the-term-a4-is-named-for`
-     (DISPOSITIONED, DUE 10-21). 14.40 core-h / 3 seeds. BOTH conjuncts must be
-     in the pre-registration: **PAIRED** (identical seeds, step budget and venue
-     as the seated `A4` run) and **SCORED ON `lg_margin_null` + `lg_margin_twin`**,
-     never a proxy chosen afterwards. Neither may be dropped to make a result
-     reportable. Ruled 09-29 and never named here until now — that omission is
-     why its date broke, and it was this desk's, not yours.
+  1. ~~**`LC.03`'s `l_bind`-dropped comparator**~~ **DISCHARGED — DO NOT START
+     THIS (Review SUNDAY FULL 2026-10-25).** `lc03-five-controls-never-switch-off-
+     the-term-a4-is-named-for` is **`ACTED`** and terminal; the comparator IS
+     REGISTERED. The live work is no longer the registration, it is the **BUY**:
+     `lc08-comparator-registered-and-unbought` (OPEN, DUE 2026-10-26). Its
+     conjuncts are unchanged and still binding — **PAIRED** (identical seeds, step
+     budget and venue as the seated `A4` run) and **SCORED ON `lg_margin_null` +
+     `lg_margin_twin`**, never a proxy chosen afterwards, neither droppable to make
+     a result reportable — but read them off the LIVE row, not off this spent
+     order. 14.40 core-h / 3 seeds.
   2. **The character-sheet spec** — register from THE RULING in
      `personality-is-a-typed-character-sheet-on-the-answer-path` (DUE 10-22).
      Three conjuncts, all binding: life answers UNCHANGED, manner reported as a
@@ -664,9 +689,11 @@ not had an `rc=0` since `2026-10-08T12:32`, so you have read neither `1^22` nor
 its 10-10 addendum; this is a third layer of unread state and I am keeping it to
 four items rather than restating anything. **None of the three is a GPU buyer**
 — do not let W41's 30.0 expiring hours recruit any of them.
-  3. **The GPU ref-pin, and it is the cheapest world-touching item on the whole
-     board** — from THE RULING in `gpu-receipt-head-is-push-time-not-kernel-time`
-     (DISPOSITIONED, **DUE 10-18**). `repo_preamble`/`build_job` default `ref` to
+  3. ~~**The GPU ref-pin**~~ **DISCHARGED — DO NOT START THIS (Review SUNDAY
+     FULL 2026-10-25).** `gpu-receipt-head-is-push-time-not-kernel-time` is
+     **`ACTED`** and terminal. Retained for its CAUTION alone, which outlives the
+     order. ORIGINAL ORDER, spent, for the record — from THE RULING in that row
+     (was DISPOSITIONED, **DUE 10-18**). `repo_preamble`/`build_job` default `ref` to
      the literal `"main"` and every call site takes that default, so the kernel
      checks out a BRANCH and `kernel_sha256` cannot vary with the head it is
      meant to pin. Do **(i) then (ii)**, both, not one: (i) resolve `HEAD` to a
@@ -677,9 +704,12 @@ four items rather than restating anything. **None of the three is a GPU buyer**
      it in the SAME slot. **Caution:** after (i) `kernel_sha256` stops being
      stable across dispatches BY DESIGN; grep for readers that treat kernel-hash
      equality as "same kernel", and a hit is a finding for that row, not a stop.
-  4. **The two `WAITS-ON` readings** — from THE RULING in
-     `prose-sequencing-inverts-when-the-blocker-moves` (DISPOSITIONED, **DUE
-     10-19**). The corpus measurement that row owed **is already done at the desk;
+  4. ~~**The two `WAITS-ON` readings**~~ **DISCHARGED — DO NOT START THIS
+     (Review SUNDAY FULL 2026-10-25).** `prose-sequencing-inverts-when-the-blocker-
+     moves` is **`ACTED`** and both readings are LIVE — `run review-queue` prints
+     `WAITS-ON READINGS` with three `WAITS-ON-A-CLOSED-WINDOW` rows today, verified
+     by running it rather than by reading the row. ORIGINAL ORDER, spent, for the
+     record — from THE RULING in that row (was DISPOSITIONED, **DUE 10-19**). The corpus measurement that row owed **is already done at the desk;
      do not redo it.** Build the two readings in `experiments/review_queue.py`,
      **class (2) FIRST**: (2) `WAITS-ON-A-CLOSED-WINDOW` — a live row whose
      `WAITS-ON:` target is `ACTED`/`DECLINED` (3 live today); then (1)
@@ -693,13 +723,26 @@ four items rather than restating anything. **None of the three is a GPU buyer**
      (DISPOSITIONED, **DUE 10-22**). Option (i) is ACTED and did **not** cure the
      venue: the need-integral's median sits at 0.9990 of its maximum at BOTH caps
      and 74.28% of lives fall inside one `NEED_MIN_GAIN`-wide band of the top,
-     against the 76.7% that condemned the retired statistic. **The acceptance
-     test is the PRE-CHECK's resolution reading on a SPENT seed — band mass well
-     under 0.7428 and median/max under 0.9990 — and it is NOT `DP.04`'s claim
-     verdict**, because a world edit accepted on its claim verdict is a world
-     tuned to pass a test. Run the pre-check BEFORE any claim fold. Bill: **2
-     certificates, `LC.00` + `DP.00`**; `DP.00`'s re-run is the informative one.
-     No bar on `DP.04` moves in either direction.
+     against the 76.7% that condemned the retired statistic. **THE ACCEPTANCE TEST GAINED A
+     SECOND CONJUNCT ON 2026-10-25 AND IS NOW STRICTLY HARDER THAN WHAT THIS ORDER
+     ORIGINALLY STATED — use the two-conjunct form (Review SUNDAY FULL).** It is
+     (1) the PRE-CHECK's resolution reading on a SPENT seed — band mass well under
+     0.7428 and median/max under 0.9990 — **AND** (2) the edited venue must leave
+     the `headroom` lane PAYABLE: min-task null headroom at or above
+     `HEADROOM_MIN_NEED`. **Why (2) exists: the row's own trace reports that the
+     cap-200 venue cannot pay the registered claim on that other lane** — null
+     headroom per task 20.47 / 27.87 / 37.64 / 49.76, mean **33.94**, against
+     `NEED_MIN_GAIN` **35.0**; min-task 20.47 against `HEADROOM_MIN_NEED` **56.0**
+     — so the expected verdict of a registered run is **VOID on `headroom`**.
+     Executed on conjunct (1) alone this unit spends a world edit and two
+     re-certifications to buy a PREDICTED VOID. **No threshold moves:
+     `NEED_MIN_GAIN` 35.0 and `HEADROOM_MIN_NEED` 56.0 are byte-unmoved**, and
+     acceptance is still NOT `DP.04`'s claim verdict, because a world edit accepted
+     on its claim verdict is a world tuned to pass a test. Run the pre-check BEFORE
+     any claim fold. Row re-dated **DUE 2026-11-01**. Bill: **2 certificates,
+     `LC.00` + `DP.00`**; `DP.00`'s re-run is the informative one. **Note before
+     you pay it: both re-ran PASS on 2026-10-24 on the UNEDITED venue — those are
+     re-buys on the old world, NOT this bill.** No bar on `DP.04` moves either way.
 
 **`1^18` WAS EXCISED 2026-10-09 (Review, DAILY) — FULLY SPENT, AND IT IS THE
 CEILING RULE THAT FORCED THE CHECK.** Its only substantive item was `T1.08`
