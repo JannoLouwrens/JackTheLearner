@@ -20065,6 +20065,44 @@
       "spec_sha": "705b359c853d0ee3",
       "status": "FAIL"
     },
+    "LG.15": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "def4299",
+      "compute_s": null,
+      "control_metrics": {
+        "manner_inv_delta": 0.0,
+        "manner_inv_delta_std": 0.0,
+        "manner_live_ok": 0.0,
+        "manner_live_ok_std": 0.0,
+        "manner_null_delta": 0.0,
+        "manner_null_delta_std": 0.0
+      },
+      "dirty_files": null,
+      "duration_s": 1.45,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "953cf208ea5fd0ac",
+      "message": "run did not test the claim; not a refutation",
+      "metrics": {
+        "provenance_ok": 0.0,
+        "provenance_ok_std": 0.0,
+        "void_reason": "provenance violation (conjunct 3): a scored output is unmarked or canned \u2014 A|0: calls=1 ans=''"
+      },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 241.8,
+      "preserved_impl": null,
+      "ran_at": "2026-10-25T22:08:50",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "LG.15",
+      "spec_sha": "704df704af9f6a18",
+      "status": "VOID"
+    },
     "LT.01": {
       "amended": [],
       "attempt": 2,

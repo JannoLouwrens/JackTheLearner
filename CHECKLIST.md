@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 108 / 260 demonstrated
+## 108 / 261 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1219,3 +1219,10 @@ Every line here is backed by an experiment that could have failed;
 - [!] **WM.01** The working-memory store earns its slots  — buffer_acc=0.5462; buffer_acc_std=0.203408
       - _asserts:_ The shipped recurrent working-memory buffer beats an arm with NO separate buffer — attention over the episodic store alone — at matched parameters and matched steps. GOAL.md builds three stores ('it is two memories, not one', plus the fast/slow LEARNING split); CHAMPIONS.md seats episodic retrieval and consolidation, and the store in the middle was never raced.
       - _dies if:_ The no-buffer arm matches or beats the shipped buffer, in which case the working-memory parameters are decoration and should be deleted.
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [~] **LG.15** The character sheet answers for no one — his life answers survive its removal  — provenance_ok=0.0; provenance_ok_std=0.0
+      - _asserts:_ On the SHIPPED answer path — UnifiedBrain.answer_question, the method that builds persona = personality.get_system_prompt(mood) and hands it to the LLM — answers to diary-grounded questions about his own life are SUBSTANTIVELY UNCHANGED between sheet-present and sheet-absent arms, while manner (tone, warmth, register) is measured and reported as a SEPARATE channel. The two channels are reported as a PAIR; neither alone is the verdict (ruling conjuncts 1+2).
+      - _dies if:_ Removing the typed character sheet changes WHAT Jack says happened to him — content divergence on the life channel beyond the identical-arm sampling null. Then the sheet is answering for him and GOAL.md's costume claim ('the LLM communicating and pretending to be Jack') is live on the shipped path.
+      - _then delete:_ Nothing on a FAIL — the finding routes to D44 (the owner's character question) with a measured number instead of a contradiction in prose. A FAIL here is evidence the sheet carries content, not a licence for any desk to edit Personality.py or UnifiedBrain.py (standing prohibition; 18 standing certificates hash UnifiedBrain.py).
