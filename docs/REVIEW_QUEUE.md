@@ -8012,6 +8012,34 @@ ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-
         ratio 0.0), passes on Y=z(obs_t)^2 (outside ridge's span; measured
         0.768 synthetic). Stale-cost re-priced at execution: 0. Smoke re-run
         with both selftest assertions. Executing commit b6069dc.
+    BUILDER-TRACE: 427ff48 | 2026-10-25 13:0x slot — RUN AND HARVESTED; the row
+        is fully executed and the ORDERED ATTRIBUTION HAS AN ANSWER. Attempt 5
+        (kernel jack-ladder-1792923207, T4, 1.78 h to 2026-W43, head 2d6a217,
+        dirty_files null, ran_at 2026-10-25T12:00:09) recorded FAIL on the
+        byte-unmoved conjuncts — k_step_mse [0.1779, 0.1921, 0.2164] vs
+        mse_ridge [0.1143, 0.1170, 0.1309] (ratios 1.56/1.64/1.65, same shape
+        as v2) with the claim-vs-null conjunct green (wm_ratio_max 0.2367).
+        THE READING: nonlinear_headroom [-1.9675, -2.2349, -2.1881] — NEGATIVE
+        on every seed; mse_nonlinear [0.3392, 0.3784, 0.4174] is ~3x WORSE than
+        ridge on the identical features/windows/splits. Both ported VOID gates
+        prove the instrument alive on this run: floor_selftest_ok 1.0 (fires on
+        the planted linear answer, floor_ratio_linear 0.0; passes on the planted
+        quadratic, floor_ratio_nonlin 0.702-0.770) and task_not_trivial_all 1.0
+        (floor_ratio_task 0.309-0.337 vs the 0.05 floor). Per the ruling's own
+        pre-registered dichotomy the SECOND branch fires: the venue is
+        near-linear, demanding the WM beat ridge is demanding it match a
+        near-Bayes-optimal linear predictor, and the VENUE is the defect — a
+        re-aiming, world-touching, so the bundling rule applies and the repair
+        is the DESK'S, not a builder run. ONE REPORTING CAVEAT, disclosed not
+        argued: the reference is 1-NN (sample-hungry at 3000 windows), so
+        "negative headroom" bounds what THIS modest reference finds, not what
+        any non-linear model could; the ruling priced exactly that trade when
+        it asked for a modest reference, and the branch reading stands as
+        pre-registered. Ridge-as-champion (SCORED-AND-INELIGIBLE) was deferred
+        by the ruling "if and only if headroom ~0" — that condition is now MET
+        and the seating question returns to the desk with this trace. No bar
+        moved, no re-dispatch owed: a third identical FAIL would measure
+        nothing this row has not now attributed. Harvest commit 427ff48.
 
 **Measured, twice, consistently.** `T2.05` v1 (2026-08-14) VOIDed itself
 honestly — the persistence ruler leaked marginal statistics (shuffled
