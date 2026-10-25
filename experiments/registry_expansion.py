@@ -9292,4 +9292,94 @@ EXPANSION: list[Spec] = [
                "never that it is a good store. The incumbent is a "
                "fixed-size recency buffer chosen by accident. "
                "  COVERS: fast/slow (claim)"),
+
+    # ==================================================================
+    # REGISTERED FROM THE RULING on `personality-is-a-typed-character-sheet-
+    # on-the-answer-path` (docs/REVIEW_QUEUE.md, DISPOSITIONED 2026-10-10,
+    # option (iii) REGISTER THE QUESTION; registration ordered to the builder
+    # per the W1.01/W1.04 precedent, ladder_prompt item 3.2). The finding it
+    # converts into a falsifiable claim: Personality.py types five Big Five
+    # traits and five core_values (including 'Kindness') as dataclass
+    # defaults, UnifiedBrain wires JACK_PERSONALITY on by default, and
+    # answer_question (UnifiedBrain.py:2784, call at :2803) hands
+    # get_system_prompt() to the LLM — while GOAL.md says "we deliberately
+    # refuse to carve his character." Whether the traits are DELIBERATE or a
+    # BREACH is the owner's (`D44`, open) and does NOT gate this registration
+    # either way — option (iii) was chosen precisely because it is
+    # non-prejudicial to both answers; this spec buys the evidence D44 should
+    # be ruled on. LG.00 is untouched and NOT re-run: its PASS is clean on
+    # its own terms, in a venue (lg_01's _prompt scaffold) that never calls
+    # get_system_prompt() — which is exactly why this sibling must not score
+    # through that scaffold. No bar anywhere moves.
+    Spec("LG.15", 4, "The character sheet answers for no one — his life "
+                     "answers survive its removal",
+         hypothesis="On the SHIPPED answer path — UnifiedBrain.answer_question, "
+                    "the method that builds persona = "
+                    "personality.get_system_prompt(mood) and hands it to the "
+                    "LLM — answers to diary-grounded questions about his own "
+                    "life are SUBSTANTIVELY UNCHANGED between sheet-present "
+                    "and sheet-absent arms, while manner (tone, warmth, "
+                    "register) is measured and reported as a SEPARATE channel. "
+                    "The two channels are reported as a PAIR; neither alone is "
+                    "the verdict (ruling conjuncts 1+2).",
+         falsified_by="Removing the typed character sheet changes WHAT Jack "
+                      "says happened to him — content divergence on the life "
+                      "channel beyond the identical-arm sampling null. Then "
+                      "the sheet is answering for him and GOAL.md's costume "
+                      "claim ('the LLM communicating and pretending to be "
+                      "Jack') is live on the shipped path.",
+         null_baseline="IDENTICAL-ARM RESAMPLING: sheet-present vs "
+                       "sheet-present with fresh sampling draws, same "
+                       "questions, same diary. Its content divergence is what "
+                       "'unchanged' means under sampling noise — the "
+                       "experiment's divergence is read against this floor, "
+                       "never against zero. If the sheet contributes nothing "
+                       "to content, experiment divergence matches this null.",
+         metric="life_answer_invariance_vs_sheet", budget=Budget.CPU,
+         depends_on=["LG.00"], seeds=3,
+         control="MUST MOVE (the manner instrument's liveness): a "
+                 "CONTRADICTORY sheet — traits and core_values inverted — "
+                 "must move the MANNER channel beyond the identical-arm "
+                 "null. A manner channel that cannot see an inverted sheet "
+                 "is blind, and conjunct 1 scored through a blind instrument "
+                 "certifies nothing (a spec that scored only content could "
+                 "pass by being blind to the sheet entirely — the ruling's "
+                 "own words). AND A VOID LANE, NOT A CONTROL: per-response "
+                 "PROVENANCE is scored, not assumed (ruling conjunct 3). "
+                 "ResponseGenerator falls back to its canned TEMPLATES bank "
+                 "on ANY exception (UnifiedBrain.py:2766) and to "
+                 "_generate_with_api's empty-response fallback (:2776), both "
+                 "via random.choice with NO per-response marker. The rig must "
+                 "record each scored output's producing organ (observed at "
+                 "the rig, never by editing UnifiedBrain.py); a run whose "
+                 "scored outputs include unmarked or canned-bank responses "
+                 "is VOID, never a verdict — an all-canned pair of arms "
+                 "scores 'unchanged' for the opposite reason, and those are "
+                 "opposite results with identical scores.",
+         kills="Nothing on a FAIL — the finding routes to D44 (the owner's "
+               "character question) with a measured number instead of a "
+               "contradiction in prose. A FAIL here is evidence the sheet "
+               "carries content, not a licence for any desk to edit "
+               "Personality.py or UnifiedBrain.py (standing prohibition; 18 "
+               "standing certificates hash UnifiedBrain.py).",
+         notes="THE VENUE MUST CONTAIN THE COSTUME (ruling, binding): this "
+               "spec calls the SHIPPED answer_question path and may NOT "
+               "score through lg_01's _prompt scaffold — that scaffold never "
+               "calls get_system_prompt(), which is exactly why LG.00 is "
+               "blind here; a successor that inherited it would buy a second "
+               "green tick over the same hole. Sheet-absent arm is the "
+               "shipped personality=None branch ('You are a helpful "
+               "companion robot.'), not a hand-built neutral prompt. All "
+               "three conjuncts are BINDING and pre-registered at "
+               "registration (1^15 item 2: registering with a conjunct "
+               "missing, weakened, or moved to reported-only is a weakening "
+               "and is forbidden): (1) life answers unchanged, (2) manner "
+               "reported as a separate channel, (3) per-response provenance. "
+               "Worst-seed rule from authorship: deciding conjuncts are "
+               "per-seed booleans gated ==1.0 (run_spec aggregates by mean; "
+               "the WM.01 incident). The path is dormant in the ladder and "
+               "live in the product — it executes the first time T6.01 runs "
+               "Jack end to end, which is why the question is bought now "
+               "rather than found inside the first end-to-end certificate. "
+               "  COVERS: language (parent) (claim)"),
 ]
