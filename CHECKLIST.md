@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 107 / 260 demonstrated
+## 108 / 260 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1210,7 +1210,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 4 — COMPOSITION — does adding B break A?
 
-- [ ] **AT.01** Attention reallocates when a channel goes dark
+- [x] **AT.01** Attention reallocates when a channel goes dark
       - _asserts:_ When the task cue is carried by smell or audio on trials where vision is occluded, a policy that can REWEIGHT its modalities beats a fixed-weight policy fitted on clean trials and frozen. GOAL.md justifies olfaction as 'the sense that works when sight fails' — that is a claim about REALLOCATION, and nothing in this ladder tests that reallocation happens.
       - _dies if:_ The frozen fixed-weight null matches or beats the reweighting policy on occluded trials.
 
