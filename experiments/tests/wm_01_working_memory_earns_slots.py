@@ -88,6 +88,21 @@ instructs — statistic and bars unchanged):
         working-memory parameters are decoration and the finding routes to
         the Review; this spec deletes nothing itself.
 
+HOW "on every seed" IS ENFORCED, and the incident that forced the mechanics
+to be written down (2026-10-25, same sitting, before any verdict was
+reported): `run_spec` aggregates per-seed metrics by MEAN and calls `_check`
+ONCE on the aggregate, so a bare `margin >= MARGIN_MIN` conjunct reads the
+MEAN margin — the exact defect the open row `aggregate-hides-worst-seed`
+names. Attempt 1 recorded PASS that way: mean margin 0.1927 over per-seed
+margins {0.4707, 0.0800, 0.0273} — two of three seeds BELOW the bar this
+docstring had pre-registered. The repair is the worst-seed gate the ruling
+on that row mandates, encoded as per-seed BOOLEANS whose mean is 1.0 only if
+every seed cleared: `margin_ok` and (control-side) `collapsed_ok`, both
+gated `== 1.0`. Bars unmoved; this can only turn a PASS into a FAIL, never
+the reverse; attempt 1 is superseded by the first run under the strengthened
+gate, and the per-seed numbers above reproduce the recorded aggregates
+exactly (the run is a pure function of code and seed).
+
 STATISTIC_BOUND (the unsaturated-null rule): statistic = accuracy margin,
 bound = 1.0. Null's measured distance from the bound at the registered venue:
 0.6543 (seed 90, pre-check above) against a required margin of 0.10. The
@@ -309,6 +324,10 @@ def _experiment(seed: int) -> dict:
     m["nobuffer_acc"] = round(_eval_arm("no_buffer", nob["model"], seed), 4)
     m["buffer_vs_no_buffer_margin"] = round(
         m["buffer_acc"] - m["nobuffer_acc"], 4)
+    # Worst-seed gate: run_spec aggregates by MEAN, so the deciding conjunct
+    # is a per-seed boolean — its mean is 1.0 only if EVERY seed cleared.
+    m["margin_ok"] = 1.0 if (
+        m["buffer_vs_no_buffer_margin"] >= MARGIN_MIN) else 0.0
     if m["nobuffer_acc"] < LEARN_MIN:
         m["void_reason"] = (
             f"the null is not a learner here (T2.02 rule — a dead null "
@@ -324,8 +343,10 @@ def _control(seed: int) -> dict:
     point by the experiment itself."""
     art = _pipeline(seed)
     try:
-        return {"shuffled_acc": round(
-            _eval_arm("buffer", art["buf"]["model"], seed, shuffle=True), 4)}
+        acc = round(
+            _eval_arm("buffer", art["buf"]["model"], seed, shuffle=True), 4)
+        return {"shuffled_acc": acc,
+                "collapsed_ok": 1.0 if acc <= CONTROL_MAX else 0.0}
     finally:
         _CACHE.pop(seed, None)
 
@@ -333,8 +354,10 @@ def _control(seed: int) -> dict:
 def _check(m: dict, c: dict):
     if "void_reason" in m:
         return Status.VOID
-    return (m["buffer_vs_no_buffer_margin"] >= MARGIN_MIN
-            and c["shuffled_acc"] <= CONTROL_MAX)
+    # Both conjuncts are worst-seed gates: per-seed booleans aggregated by
+    # mean read 1.0 only if every seed cleared (see docstring — the mean
+    # margin alone bought a PASS that the pre-registered rule forbade).
+    return m["margin_ok"] == 1.0 and c["collapsed_ok"] == 1.0
 
 
 def _precheck(seed: int = 90) -> dict:
