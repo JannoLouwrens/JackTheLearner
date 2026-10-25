@@ -11768,3 +11768,100 @@ It does not ask you to re-open `D21`, to rule on the W1 stage question, or to
 price a repair. It asks only **who owns a world/body capability defect now that
 the decision that used to own the class has closed.** The default answers that
 and nothing else, which is why silence can safely adopt it.
+
+## D54 — `HR.1`'s fixture repair removed 82.6% of the channel leak and the family root still FAILS, because one seed misses the bar by a SINGLE trial out of 160. The only two repairs left are both bar moves, and no desk may make one. (2026-10-25, Review, SUNDAY FULL)
+
+DECIDE: D54
+  class:     goal
+  blocks:    HR.1
+  default:   HOLD THE BAR AND LEAVE HR.1 RED. `CLEAN_BAR` stays at 0.10
+             (`chance + 0.05`), `HR.1` stays FAIL, and `HR.2`/`HR.3`/`HR.4`
+             stay killed as `HR.1`'s `kills` field says. The audio family
+             does not advance on a corpus whose recording channel still
+             identifies speakers at twice chance. **This is the CONSERVATIVE
+             default on purpose: it is the option that keeps a red gate red,
+             and it costs us the hearing family rather than risking a
+             speaker-ID number that is secretly a microphone measurement.**
+             Silence adopts this. MONOTONE in the directions that matter: it
+             moves no threshold, edits no constitution text, deletes no
+             component, stales no certificate, spends no GPU-hour, and
+             withdraws no finding.
+  decide_by: 2026-11-08
+
+**THE RECOMMENDATION, quoted verbatim from this sitting's `FOR THE OWNER` item 2:**
+
+> **Hold the 0.10 bar and leave the hearing family red, but know exactly what
+> you are buying. `HR.1` exists to catch a corpus whose microphone identifies
+> the speaker, and it caught one — twice. The repair worked: arm (a) then arm
+> (c) took the clean-stratum leak from 6.97x chance down to 2.04x, removing
+> 82.6% of the excess. What remains is a knife-edge, and I want you to see how
+> thin it is before you rule. The stratum is 160 trials, so every reading is an
+> integer: seed 1 PASSES at 12/160, seed 2 misses at 17/160 — ONE TRIAL over
+> the 16/160 bar — and seed 0 misses at 20/160. The family root's FAIL rests on
+> the worst-seed protocol applied to a one-to-four-trial spread. My
+> recommendation is still to hold: a residual channel cue at twice chance is
+> exactly the confound `HR.3` would launder into a speaker-ID claim, and "it
+> only leaks a bit" is how a fixture stops being a control. But this is a
+> threshold judgement about how clean is clean enough, and it is yours — I may
+> strengthen a bar and I may never weaken one, so I cannot take either
+> remaining repair even to say no to it.**
+
+### The measured movement, re-derived from `experiments/ledger.json` this sitting
+
+| attempt | date | arm | clean stratum per seed | mean | verdict |
+|---|---|---|---|---|---|
+| 1/2 | 09-18 | none (original LibriSpeech) | 0.2375 / 0.3812 / 0.4268 | 0.3485 | FAIL |
+| 3 | 09-23 13:16 | (a) channel equalisation | 0.2062 / 0.2562 / 0.2739 | 0.2455 | FAIL — REFUTED on its 2nd branch |
+| 4 | 09-23 17:11 | (c) corpus swap | **0.125 / 0.075 / 0.10625** | **0.1021** | FAIL |
+| 5, 6 | 09-28, 10-20 | — | byte-identical re-buys | 0.1021 | FAIL |
+
+Arm (c) fired automatically, correctly, with no desk sitting in between — this
+row pre-registered *"if (a) is refuted, (c) fires without a further sitting of
+mine"*, and that pre-registration is the reason two arms got spent during a
+period when this desk was re-dating the row without reading it.
+
+**Against chance 0.05: leak fell 6.97x → 2.04x, i.e. 82.6% of the
+excess-over-chance removed.** The arms did their job. Nobody wrote that down.
+
+### Why this is a threshold question and not a corpus question
+
+The stratum is **160 trials**, so each reading is an integer count:
+
+    seed 0   20/160 = 0.12500   four trials over the 16/160 bar
+    seed 1   12/160 = 0.07500   PASSES, four trials to spare
+    seed 2   17/160 = 0.10625   ONE TRIAL over
+
+`min_channel_leak_margin` = **-0.025**, driven by seed 0 alone. One of three
+seeds clears the bar; one misses by a single classification. A verdict that
+turns on one trial out of 160 is not telling you the corpus is hopeless — it is
+telling you the bar and the measurement are the same size, which is precisely
+when a threshold has to be ruled on rather than re-run.
+
+### The two remaining repairs, and why neither is available to a desk
+
+1. **Accept a residual leak of 2.04x chance as honest enough for `HR.3`.**
+2. **Re-base the 0.10 clean bar.**
+
+These are the same move in different words, and both are bar moves. `D51`
+(2026-10-20) ruled that *"whether the floor is re-based is a threshold move no
+desk may make"*, and this desk's standing law is that it may STRENGTHEN and may
+never WEAKEN. There is no third option: the fixture arms are spent — (a)
+refuted, (c) executed, and (b) (promote the noise/reverb stratum) was already
+priced out on the row because 15 dB SNR taxes the vocal signal `HR.3` needs
+(SVeritas prices that domain at 15.88% EER).
+
+### This is the `D49` class, third live instance
+
+`D49` named *"a queue row whose only permitted dispositions are ALL forbidden to
+its only permitted dispositioner."* Live instances as of this sitting:
+
+| row | why no desk can move it | routed |
+|---|---|---|
+| `pl02-void-gate-quantifies-over-its-own-nulls` | every repair is forbidden to its dispositioner | `D49` |
+| `so07-recording-worlds-fail-the-reference-bar` | (a) breaks the design/data split, (b) is a bar move, (c) routes to a closed decision | `D53` |
+| `hr1-clean-stratum-is-a-microphone-measurement` | both remaining repairs are bar moves | `D54` (this) |
+
+Three is a class, not a coincidence, and the structural question it raises —
+whether the queue needs a disposition for *"legal work, barred mover"* — is on
+this sitting's page as a separate item and is deliberately NOT bundled here.
+This entry asks only about `HR.1`'s bar.
