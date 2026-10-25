@@ -24626,6 +24626,24 @@ ROUTED: lc08-comparator-registered-and-unbought | 2026-10-22 | this sitting's `l
         this promise is arithmetically keepable.
     WAITS-ON: none | the ruling needs no other row: the design is closed and the
         only input is this desk's judgement on priority against `T1.08`.
+    BUILDER-TRACE: 6c55559 | launched 2026-10-25 13:19 UTC — THE PURCHASE IS EXECUTING.
+        The Review's own 10-25 FOR THE BUILDER (item 3) named this row as the
+        builder's live successor order, which is the desk direction this date
+        was waiting for; the buy was launched the same sitting via the
+        sanctioned detached lane: `launch_detached.sh` payload
+        `python -c "import experiments.tests.lc_08_binding_term_comparator as m; m.run()"`
+        (module-direct per the LC.03 precedent — NOT `experiments.run LC.08`,
+        whose runner lane categorically refuses cpu<48h; a first launch
+        through that wrong payload died at the 15 s check, recorded in the
+        journal, zero compute spent, its dead AWAITING row harvested and
+        cleared in the same breath). Receipts: wrapper pid 3376407 ADMITTED by
+        the day meter (heartbeat-billed), AWAITING LC.08 row live, declared in
+        declared_pids, log /data/jack-logs/lc08_registered.log, 3 spawn
+        workers verified computing at ~1 core each, nice 19, ~1.24 GB tree.
+        Both ruling conjuncts are in the spec source byte-unmoved (PAIRED;
+        scored on lg_margin_null + lg_margin_twin). ETA ~4.8 h wall; the row
+        lands for a later slot to harvest as found. The stamp stays the
+        desk's.
 
 ROUTED: t306-probe-returned-an-undeclared-combination-and-v2-false-alarms | 2026-10-22 | `/data/t306_null_walker_probe.json` + `.log` (2026-10-21 05:20, `wall_s` 643.78, 3 seeds, 120 goal cells), read at source this sitting; branch predicates re-derived from `experiments/tests/t306_null_walker_probe.py:361-374`; the `V2` boundary arithmetic recomputed over all four reported mismatches against the guard at `:252-253` and the docstring at `:59-60` | OPEN
     TWO questions, from one artifact, deliberately on one row because one run
