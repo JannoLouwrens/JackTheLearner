@@ -11769,6 +11769,93 @@ price a repair. It asks only **who owns a world/body capability defect now that
 the decision that used to own the class has closed.** The default answers that
 and nothing else, which is why silence can safely adopt it.
 
+## D55 — The Review desk is the project's bottleneck organ and has been for a month: 18 of its last 22 sweeps died `rc=124` on the wall clock, its queue's calendar is now booked to the measured capacity every single day twelve days out, and arrivals exceed disposals by ~1.3 rows a cycle with the drain printing UNBOUNDED. The desk cannot fix this by working harder inside a 20-minute box. (2026-10-26, Review, DAILY)
+
+DECIDE: D55
+  class:     conduct
+  blocks:    nothing registered — this is the CONSUMING organ for
+             `docs/REVIEW_QUEUE.md`, so what it blocks is every dated promise
+             in a 173-row file, including six rows that have each now broken
+             five dates.
+  default:   THROTTLE THE INTAKE AT THE DESK, AND BUY NO EXTRA CLOCK. From the
+             next sitting, this desk routes NO new queue row unless it either
+             (i) closes one in the same sitting, or (ii) records in the row why
+             it outranks something already live. The 20m/40m `timeout` in
+             `scripts/review.sh` is NOT raised, the usage gate is NOT touched,
+             and the cadence is unchanged. **This is the CONSERVATIVE default
+             on purpose: it is the only arm that costs no model spend, takes no
+             clock from the builder or the other tenants on this box, and
+             cannot be gamed into looking productive — it makes the desk
+             SMALLER rather than claiming it can be faster.** Silence adopts
+             this. MONOTONE in the directions that matter: it moves no
+             threshold, edits no constitution text, deletes no row, drops no
+             `DUE:`, stales no certificate, spends no GPU-hour and withdraws no
+             finding.
+  decide_by: 2026-11-09
+
+**THE RECOMMENDATION, quoted verbatim from this sitting's `FOR THE OWNER` item 1:**
+
+> **The organ that reports organ liveness is the one that is broken, and that
+> is exactly why no audit has ever said so. I am reporting myself. 18 of this
+> desk's last 22 logged sweeps ended `rc=124` — the `timeout` wall-clock kill,
+> not max-turns — and six further calendar days logged no sweep at all; the
+> desk is absent or truncated roughly three days in four. Yesterday's Sunday
+> FULL ran, was killed at 13:02:09Z, and auto-sealed its own `PROGRESS.md` with
+> "INCOMPLETE RUN — THIS IS A DRAFT" on a page whose body says "the run
+> completed". All ten rows it had been dated to dispose went OVERDUE at
+> midnight. The contrast is what convicts me rather than the infrastructure:
+> the BUILDER is at full liveness — every hourly slot `rc=0` since
+> 2026-10-25T10:49Z, zero dark slots — so `D30`'s blackout default does not
+> fire today, and every prior re-date on these rows blamed a builder blackout
+> that is now over. The promises kept breaking anyway. My recommendation is to
+> adopt the throttle and NOT to buy me more clock. More minutes would raise
+> this project's share of a usage meter that is shared with four customer
+> agents and with the builder, and the builder is currently the organ actually
+> producing — it registered `LG.15`, harvested `T2.05` and passed `LC.08` in
+> the same stretch of hours I spent dying. The honest reading of
+> `review-queue`'s own arithmetic is that this desk has been writing cheques
+> against a capacity it does not have: 4.14 rows arrive per cycle, 2.86 leave,
+> every date from 2026-10-27 to 2026-11-06 is at the measured ceiling of 6, and
+> there was no free date inside the horizon for the eight rows I re-dated this
+> morning. A desk that cannot keep a promise should make fewer promises, not
+> ask for a bigger budget to keep making them.**
+
+### The three arms, and why I rank the cheap one first
+
+**(a) THROTTLE THE INTAKE — the default, and my recommendation.** Costs
+nothing, is reversible in one sitting, and attacks the measured term: arrivals.
+It is also the only arm that is honest about which number is broken. Risk,
+named: findings that would have become rows get written into commit messages
+and the journal instead, which is a weaker channel — the
+`ladder-log-holds-uncommitted-findings` class. I judge that acceptable against
+a 173-row file nobody can drain.
+
+**(b) BUY THE DESK MORE CLOCK** — raise `TMOUT`/`MINUTES` in
+`scripts/review.sh` (currently 20m DAILY / 40m FULL, with `TURNS_PER_MIN=6`
+making `timeout` the binding ceiling by deliberate design, per that file's own
+comments). **I did not take this myself even though the file is in the repo
+and I am permitted to edit it**, because it spends a shared usage meter that
+gates the builder and sits on a box with four customer agents. That is a
+resource allocation, and it is yours. Note it does not obviously work: three of
+the four Sunday FULL runs at 40m died too.
+
+**(c) DECLARE THE BACKLOG UNBOUNDED AND TRIAGE IT FORMALLY** — admit that 173
+rows will never be drained at 2.86/cycle, and bulk-DECLINE a class rather than
+re-dating it row by row. This is the only arm that makes the file's dates
+mean something again. It is ranked last because it destroys findings, and
+because a desk that is failing should not be trusted to pick which of its own
+debts to forgive.
+
+### What I am doing WITHOUT asking, so this entry is a fork and not a permission slip
+
+The per-sitting scope discipline is desk-executable and I am not asking for it:
+this sitting committed each disposition as it was made (five commits before
+this page was written), ranked the eight re-dates with the reason recorded in
+each row, and named the weak promise as weak in the row text. If the answer to
+this entry is silence, that discipline continues under the default above.
+
+---
+
 ## D54 — `HR.1`'s fixture repair removed 82.6% of the channel leak and the family root still FAILS, because one seed misses the bar by a SINGLE trial out of 160. The only two repairs left are both bar moves, and no desk may make one. (2026-10-25, Review, SUNDAY FULL)
 
 DECIDE: D54
