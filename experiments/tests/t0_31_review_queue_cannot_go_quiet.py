@@ -189,7 +189,7 @@ SPEC_ID = "T0.31"
 IMPL_DEPS = ["experiments/review_queue.py", "docs/REVIEW_QUEUE.md",
              "docs/PROGRESS_LOG.md"]
 
-N_PROPERTIES = 24
+N_PROPERTIES = 25
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -1204,6 +1204,84 @@ def _probe(blind: bool) -> dict:
     if blind or not hold_ok:
         failed.append("p24_a_declined_window_is_abandoned_not_opened")
 
+    # P25 — A SECOND DECLARATION IS MALFORMED UNLESS IT IS AN EXPLICIT RE-ARM
+    # (`hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-
+    # one`, ruled 2026-10-26). The scar is double: `d10` carried EIGHT
+    # `BLOCKED-BY:` occurrences under silent last-write, and `adverse-
+    # verdicts-are-re-derived-by-nobody`'s 10-21 re-point to `none` was
+    # written ABOVE the line it superseded, so the parser read the stale
+    # target and printed a phantom WAITS-ON-A-CLOSED-WINDOW for five days.
+    # Conjunct (i) pins the ruling's own repro — a wrapped prose line that
+    # begins with a field name OVERWRITES the genuine declaration — and pins
+    # it against BOTH halves of the ruling: the new repeat finding fires AND
+    # the pre-existing referential check (part (a), shipped at `05a582d` and
+    # standing at HEAD when the ruling called it absent) fires on the corpse
+    # the prose names, so neither half can silently regress. Conjuncts:
+    # (i) the repro doc fires exactly TWO MALFORMED findings on the live row —
+    # the repeat, naming BOTH values so the ambiguity is readable, and the
+    # corpse reference — and a marker AFTER a blank line blesses nothing,
+    # because a blank line ends the declaration's wrapped block; (ii) a repeat
+    # carrying RE-PARENTED in its own wrapped block is LEGAL — on its first
+    # line OR on the indented continuation directly below it, which is where
+    # `d10`'s two legitimate re-parents actually wrote the verb — zero
+    # violations, and last-write still decides the parsed value, because a
+    # flag that re-interpreted the field would change a hold by stealth;
+    # (iii) the same contract binds `WAITS-ON:` — a markerless repeat fires,
+    # a RE-POINTED one does not; (iv) a TERMINAL row's repeats are frozen
+    # history and exempt, symmetrically with P22(v) and P23(iii) — demanding
+    # edits to closed bodies would rewrite history to quiet a reader.
+    rd1 = audit(_doc([
+        ("rd-genuine-root", "2026-08-30", "OPEN", []),
+        ("rd-bad", "2026-08-30", "OPEN",
+         ["BLOCKED-BY: rd-genuine-root | the genuine declaration",
+          "BLOCKED-BY: rd-no-such-row | a wrapped prose line, meant as prose",
+          "",
+          "    RE-PARENTED — too late: a blank line ended the block above"]),
+    ]), None, TODAY)
+    rd1_mal = [w for cc, rid, w in rd1["findings"]
+               if cc == "MALFORMED" and rid == "rd-bad"]
+    rd1_ok = (rd1["total"] == 2 and len(rd1_mal) == 2
+              and any("declared twice" in w and "rd-genuine-root" in w
+                      and "rd-no-such-row" in w for w in rd1_mal)
+              and any("not a row here" in w for w in rd1_mal))
+    rd2_doc = _doc([
+        ("rd-old-root", "2026-08-30", "OPEN", []),
+        ("rd-new-root", "2026-08-30", "OPEN", []),
+        ("rd-rearmed", "2026-08-30", "OPEN",
+         ["BLOCKED-BY: rd-old-root | original",
+          "BLOCKED-BY: rd-new-root | RE-PARENTED 2026-10-20, window moved"]),
+        ("rd-rearmed-below-the-fold", "2026-08-30", "OPEN",
+         ["BLOCKED-BY: rd-old-root | original",
+          "BLOCKED-BY: rd-new-root |",
+          "    RE-PARENTED 2026-10-20 on the continuation line, the idiom",
+          "    the file's legitimate re-parents actually use"]),
+    ])
+    rd2 = audit(rd2_doc, None, TODAY)
+    rd2_rows = {r["id"]: r for r in parse(rd2_doc)}
+    rd2_ok = (rd2["total"] == 0
+              and rd2_rows["rd-rearmed"]["blocked_by"] == "rd-new-root"
+              and rd2_rows["rd-rearmed-below-the-fold"]["blocked_by"]
+                  == "rd-new-root")
+    rd3 = audit(_doc([
+        ("rd-live-root", "2026-08-30", "OPEN", []),
+        ("rd-waits", "2026-08-30", "OPEN",
+         ["WAITS-ON: none | RE-POINTED 2026-10-21 from the old target",
+          "WAITS-ON: rd-live-root | the stale original left below"]),
+        ("rd-waits-marked", "2026-08-30", "OPEN",
+         ["WAITS-ON: rd-live-root | first",
+          "WAITS-ON: none | RE-POINTED 2026-10-26 at disposition"]),
+    ]), None, TODAY)
+    rd3_mal = {rid for cc, rid, _ in rd3["findings"] if cc == "MALFORMED"}
+    rd3_ok = (rd3_mal == {"rd-waits"} and rd3["total"] == 1)
+    rd4 = audit(_doc([
+        ("rd-closed", "2026-01-01", "ACTED 2026-01-02 (deadbeef)",
+         ["WAITS-ON: none | first",
+          "WAITS-ON: none | second, markerless — frozen history"]),
+    ]), None, TODAY)
+    rd4_ok = rd4["total"] == 0
+    if blind or not (rd1_ok and rd2_ok and rd3_ok and rd4_ok):
+        failed.append("p25_a_second_declaration_is_an_explicit_rearm_or_malformed")
+
     # The live desk's own numbers, recorded in the ledger row so the reading
     # that motivated P15 is dated and attributable rather than quoted from an
     # audit page. `-1` is the honest value for "no git baseline in this
@@ -1285,6 +1363,11 @@ def _control(seed: int) -> dict:
     can neither surface a finished-but-unstamped row nor tell an opened window
     from an abandoned one — the 09-28 sitting's finding, executable.
 
+    P25 it fails by construction for the same reason one field over: a row
+    count parses no declaration at all, so a repeated `BLOCKED-BY:` silently
+    replacing a genuine hold — the 10-26 ruling's wrapped-prose repro — is
+    not even expressible to it.
+
     P18 it fails for P17's reason one column over: a row count carries no DUE:
     dates and no notion of the consumer's cadence, so it cannot say that
     fourteen promises fall on one sitting that has ever discharged six. But
@@ -1323,6 +1406,7 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p22_a_coupling_against_a_corpse_is_a_false_statement",
                            "p23_a_receipt_is_visible_and_buys_nothing",
                            "p24_a_declined_window_is_abandoned_not_opened",
+                           "p25_a_second_declaration_is_an_explicit_rearm_or_malformed",
                            } <= control_names)
     return bool(experiment_clean and control_broken)
 

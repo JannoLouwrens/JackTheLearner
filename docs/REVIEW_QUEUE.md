@@ -6043,7 +6043,7 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
         that now carries the remaining work. Nothing else: status stays
         `DISPOSITIONED`, the 10-18 date is KEPT and not re-promised, no clock is
         dropped, and nothing is relabelled `HELD`.
-    WAITS-ON: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign
+    WAITS-ON: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | RE-POINTED with the 2026-10-09 re-parent above (marker migrated 2026-10-26 under the re-arm contract; value unchanged)
     STOP-RULE, ARMED 2026-10-09 AGAINST THIS DESK, and it is a NEW rule because
         the defect has changed shape under it. The 09-15 stop-rule forbade a
         fourth DATE on an unreachable run, and it fired correctly. What no rule
@@ -8923,7 +8923,9 @@ ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Rev
         Dated 2026-10-26 for the narrow remainder: confirm `D47` reached the
         owner's desk and record the ruling. Not stacked on 10-24 or 10-25,
         which this sitting already spent.
-    WAITS-ON: none | declared at this disposition; this row was one of the three
+    WAITS-ON: none | RE-AFFIRMED at this disposition (was "declared at this
+        disposition"; marker migrated 2026-10-26 under the re-arm contract,
+        value unchanged); this row was one of the three
         undeclared rows making `review_queue` print "2026-10-17 WITHHELD — 3 of
         6 rows undeclared". Part (a) needed only the PASS set and the ledger,
         both of which were readable all along.
@@ -17362,7 +17364,11 @@ ROUTED: adverse-verdicts-are-re-derived-by-nobody | 2026-09-26 | one-off fresh-p
         capacity and is not a date this sitting is otherwise filling.
     WAITS-ON: none | RE-POINTED 2026-10-21 from `lg12-abstention-knob-has-no-
         resolution`, which is ACTED and terminal. Nothing live gates this.
-    WAITS-ON: lg12-abstention-knob-has-no-resolution | DUE 2026-09-28, and not
+    SUPERSEDED by the RE-POINTED line above (desk act 2026-10-21; demoted from
+        a parsed declaration 2026-10-26, because under last-write this stale
+        line was STILL the parsed value — the instrument printed a phantom
+        WAITS-ON-A-CLOSED-WINDOW on this row for five days while the desk's
+        own re-point sat one line up) — WAITS-ON: lg12-abstention-knob-has-no-resolution | DUE 2026-09-28, and not
         for its ANSWER but for its ORDER: that row is due two days before this
         one and it prices a redesign against `LG.12`'s FAIL. Whoever sits it
         should know the FAIL reconstructs by hand and does NOT replay

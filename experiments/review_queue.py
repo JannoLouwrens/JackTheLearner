@@ -79,6 +79,30 @@ because there was never anything to release. Prose dates are NOT read. `w0-too-s
 prose date was migrated into a `DUE:` line by hand, once, in the commit that
 added this module — a migration is a human act, an inference is a bug.
 
+A REPEATED `BLOCKED-BY:` OR `WAITS-ON:` IS MALFORMED UNLESS IT IS AN EXPLICIT
+RE-ARM (`hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-
+one`, ruled 2026-10-26). `DUE:` is re-armed by design and keeps last-write;
+these two fields had no such contract, and silent last-write over an unbounded
+number of matches is not a contract anyone can read: `d10`'s body carried
+EIGHT `BLOCKED-BY:` occurrences, and on `adverse-verdicts-are-re-derived-by-
+nobody` a 2026-10-21 re-point to `none` was written ABOVE the line it
+superseded, so the parser kept reading the stale target and printed a phantom
+`WAITS-ON-A-CLOSED-WINDOW` for five days. The ruling's own repro is worse
+still: a PROSE line that wraps so the continuation begins with a field name
+parses as a declaration and silently OVERWRITES the genuine one. So a second
+declaration of either field on a LIVE row must carry an explicit re-arm
+marker — `RE-PARENTED` / `RE-POINTED` / `RE-AFFIRMED` / `RE-ARMED`, case
+blind, within the declaration's own wrapped block (its first line or the
+continuation indented STRICTLY DEEPER directly below it, ending at the next
+declaration, a blank line, a line back at the declaration's own indent, or
+the body's end — where the file's legitimate re-parents have always
+written the verb) — or the row is
+MALFORMED, naming both values so the ambiguity is readable. Last-write still
+decides the parsed value either way (flagging must not silently change what a
+field means); TERMINAL rows are exempt, symmetrically with every other check —
+their repeats are frozen history that hold nobody, and demanding edits to
+closed bodies would rewrite history to quiet a reader.
+
 THE FIVE STATUSES, from the file's own contract plus the two the consumer's
 practice forced: `OPEN`, `HELD` (the bundling rule, 2026-08-25),
 `DISPOSITIONED`, `ACTED`, `DECLINED`. `ACTED`/`DECLINED` are TERMINAL and
@@ -337,6 +361,20 @@ _LOG_ROW = re.compile(r"^\|\s*(\d{4}-\d{2}-\d{2})\s*\|")
 #: ACTED contract; the rare all-digit abbreviated sha loses to that trade and
 #: the repair is to paste one more character of it.
 _COMMIT = re.compile(r"\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\b")
+#: An explicit re-arm on a REPEATED `BLOCKED-BY:`/`WAITS-ON:` declaration.
+#: Checked over the repeat's OWN WRAPPED BLOCK — its first line plus the
+#: continuation indented STRICTLY DEEPER directly below it, ending at the
+#: next declaration, a blank line, a line back at the declaration's own
+#: indent, or the body's end — because that is where the file has actually
+#: written the verb: `d10`'s two legitimate re-parents both carry
+#: `RE-PARENTED <date>` on the continuation line after the fold, and a check
+#: that read only the first physical line would call them markerless, which
+#: would make the finding's own text false. The four verbs are the ones the
+#: file has written (`RE-PARENTED` d10, `RE-POINTED` adverse-verdicts,
+#: `re-affirmed` gpu-receipt); `RE-ARMED` is the generic form the ruling
+#: names. A marker beyond the block's end blesses nothing — by then the
+#: repeat has already been recorded.
+_REARM = re.compile(r"\bRE-(?:ARM(?:ED)?|PARENTED|POINTED|AFFIRMED)\b", re.I)
 
 
 def _date(s: str):
@@ -386,9 +424,20 @@ def parse(doc: str) -> list[dict]:
     """
     rows: list[dict] = []
     cur: dict | None = None
+
+    def _flush(row: dict) -> None:
+        # A pending repeat whose own wrapped block ended without a re-arm
+        # marker is final; it becomes a recorded redeclaration.
+        p = row.pop("_pending", None)
+        row.pop("_pending_indent", None)
+        if p is not None:
+            row["redecl"].append(p)
+
     for raw in doc.splitlines():
         m = _ROUTED.match(raw)              # column 0 only: prose quoting the
         if m:                               # word cannot open a row
+            if cur is not None:
+                _flush(cur)
             fields = [f.strip() for f in m.group(1).split("|")]
             cur = {"fields": len(fields), "raw": raw, "bad": [],
                    "id": fields[0] if fields else "",
@@ -396,7 +445,7 @@ def parse(doc: str) -> list[dict]:
                    "due": None, "due_text": "", "blocked_by": "", "blocked_text": "",
                    "waits_on": "", "waits_text": "",
                    "trace": "", "trace_text": "",
-                   "ordered": []}
+                   "ordered": [], "redecl": []}
             if len(fields) != 4:
                 cur["bad"].append(f"{len(fields)} pipe-separated fields, expected 4")
             else:
@@ -413,13 +462,33 @@ def parse(doc: str) -> list[dict]:
             continue
         if cur is None:
             continue
-        if raw.strip() and not raw[:1].isspace():
+        if not raw.strip():
+            _flush(cur)                     # a blank line ends a declaration's
+            continue                        # wrapped block
+        if not raw[:1].isspace():
+            _flush(cur)
             cur = None                      # a non-indented line ends the body
             continue
         d = _DECL.match(raw.strip())
         if not d:
+            # A continuation line may carry the re-arm marker for the repeat
+            # declared directly above it — the file's actual idiom puts the
+            # verb after the fold (`_REARM`'s comment). Its wrapped text is
+            # indented STRICTLY DEEPER than the declaration line; a line back
+            # at (or above) the declaration's own indent is a sibling
+            # paragraph and ends the block — without this, prose 13 lines
+            # down (`"this row is NOT re-parented a fourth time"`, d10)
+            # blesses a repeat it never read.
+            if cur.get("_pending") is not None:
+                indent = len(raw) - len(raw.lstrip())
+                if indent <= cur["_pending_indent"]:
+                    _flush(cur)
+                elif _REARM.search(raw):
+                    cur.pop("_pending")
+                    cur.pop("_pending_indent", None)
             continue
-        key, rest = d.group(1), d.group(2)
+        _flush(cur)                         # the next declaration ends the
+        key, rest = d.group(1), d.group(2)  # previous one's wrapped block
         head = rest.split("|")[0].strip()
         if key == "DUE":
             if cur["due"] is not None:      # a second DUE is a re-arm, and the
@@ -446,12 +515,20 @@ def parse(doc: str) -> list[dict]:
         elif key == "WAITS-ON":
             # Declaration-only (module docstring). Backticks shed as ORDERED
             # sheds them; a later line overwrites an earlier one, as a re-armed
-            # DUE: does. `none` is itself a declaration — of independence —
+            # DUE: does — but unlike DUE:, a repeat must SAY it is one (the
+            # re-arm contract, module docstring): a markerless repeat is
+            # recorded and audit() calls it MALFORMED on a live row. Recorded,
+            # not `bad`, because terminal rows' repeats are frozen history.
+            # `none` is itself a declaration — of independence —
             # and an empty head is neither a coupling nor an independence.
             if not head.strip("`"):
                 cur["bad"].append("WAITS-ON: declares nothing — a row id, or the "
                                   "explicit `none`")
             else:
+                if cur["waits_on"] and not _REARM.search(rest):
+                    cur["_pending"] = (
+                        "WAITS-ON", cur["waits_on"], head.strip("`"))
+                    cur["_pending_indent"] = len(raw) - len(raw.lstrip())
                 cur["waits_on"] = head.strip("`")
                 cur["waits_text"] = rest
         elif key == "BUILDER-TRACE":
@@ -472,7 +549,16 @@ def parse(doc: str) -> list[dict]:
         else:
             if not head:
                 cur["bad"].append("BLOCKED-BY: names no row")
+            elif cur["blocked_by"] and not _REARM.search(rest):
+                # The re-arm contract (module docstring): a second BLOCKED-BY
+                # whose wrapped block carries no explicit marker is recorded;
+                # audit() calls it MALFORMED on a live row. Last-write still
+                # decides the value.
+                cur["_pending"] = ("BLOCKED-BY", cur["blocked_by"], head)
+                cur["_pending_indent"] = len(raw) - len(raw.lstrip())
             cur["blocked_by"], cur["blocked_text"] = head, rest
+    if cur is not None:
+        _flush(cur)
     return rows
 
 
@@ -675,8 +761,11 @@ def next_consumer_cycle(run_dates: list[_dt.date], today: _dt.date,
 # resolution … whoever closes `D24` inherits these four" — and `D24` had
 # closed four days earlier, on 2026-09-12, with a ruling under which the
 # inherit event can never occur. Nothing owns those four now, and because the
-# row is ACTED (terminal), `HOLD-ON-A-RESOLVED-BLOCKER` — which checks only
-# HELD rows' `BLOCKED-BY:` — will never look at it again. This is that check's
+# row is ACTED (terminal), `HOLD-ON-A-RESOLVED-BLOCKER` — which checks LIVE
+# rows' `BLOCKED-BY:` (OPEN/HELD/DISPOSITIONED; this sentence said "only HELD"
+# until 2026-10-26, three hundred lines of drift from its own code, and the
+# stale wording was load-bearing in the 10-20 routing that mis-audited the
+# instrument) — will never look at a terminal row again. This is that check's
 # ACTED-row analogue, over prose instead of a declared field.
 #
 # A READING, never a violation and never floored: re-parenting to a decision
@@ -813,6 +902,21 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
                              "one is DISPOSITIONED, which keeps ageing"))
         if r["status"] not in LIVE:
             continue
+        for key, old, new in r["redecl"]:
+            # The re-arm contract (module docstring; ruled 2026-10-26 on
+            # `hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-
+            # declared-one`). Both values are named because the harm is the
+            # AMBIGUITY: last-write may have landed on a wrapped prose line,
+            # not on the author's intent — that is exactly how a 10-21
+            # re-point stayed invisible for five days.
+            findings.append(("MALFORMED", rid,
+                             f"{key}: declared twice without an explicit "
+                             f"re-arm — {old!r} then {new!r}; last-write is "
+                             f"not a readable contract, so a repeat must "
+                             f"carry RE-PARENTED / RE-POINTED / RE-AFFIRMED "
+                             f"/ RE-ARMED in its own wrapped block (or the "
+                             f"superseded line must stop parsing as a "
+                             f"declaration)"))
         if r["blocked_by"]:
             tgt = by_id.get(r["blocked_by"])
             if tgt is None:
