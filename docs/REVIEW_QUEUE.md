@@ -25927,3 +25927,49 @@ ROUTED: t205-residual-near-linear-venue-is-a-world-touching-re-aiming | 2026-10-
         this is an eighth instance of exactly that row's question — does this
         edit ACTUALLY need the shared-world window, or is it SPEC-LOCAL — so it
         counts as that decision and not as a separate one.
+
+ROUTED: me11-binding-constraint-is-the-retriever-and-front-3-doctrine-aims-at-abstention | 2026-10-26 | measured by the 163rd audit off `docs/FIELD_WATCH.md:877` (week-11 sweep, written 06:01:05 today at `11325f6`, the first since `32b098c` 2026-10-05); every quantity in it read from `experiments/ledger.json` at HEAD (`ME.11` attempt 2, FAIL, 2026-10-20T12:47:49, 3 seeds); `run status` FIELD-WATCH FINDINGS reads it `UNROUTED-FIELD-FINDING`; nomination history counted over the front-3 sections of the week-9/10/11 pages | OPEN
+    THE FIELD WATCH FOUND IT IN OUR OWN ARTIFACTS AND NO DESK CAN SEE IT.
+    `ME.11`'s own committed row reports `recall_unthresholded` **0.2500 +/-
+    0.0102** — with NO threshold applied at all, the correct memory is in the
+    result set 25% of the time. So the binding constraint on the paraphrase
+    family is the **RETRIEVER**, not the abstention threshold.
+    Against that reading stands our own doctrine: `MEMORY_RETRIEVAL_BAKEOFF`
+    §1.8 calls abstention *"the actual hard part"*, and every front-3
+    nomination for three sweeps has been an abstention mechanism (`wk9-N2`
+    admitted; `2610.24030`, `2609.38222`, `2609.19942` declined). Front 3 has
+    returned no arm for six sweeps and the stated reason was always
+    constitutional; this sweep the field watch says the reason is OURS.
+    **WHY THIS NEEDS A ROW RATHER THAN A PARAGRAPH.** Three facts compound.
+    (a) `UNROUTED-FIELD-FINDING` is reporting-only and UNFLOORED by design
+    (96th audit FTB 1 / `D27`): no exit code, no ratchet counter, nothing
+    reddens, so the instrument can print this indefinitely without
+    consequence. (b) `docs/FIELD_WATCH.md` is CURRENT-STATE and rewritten
+    weekly — on Monday 2026-11-02 this section is overwritten and the finding
+    is gone. (c) This is the `D15` shape verbatim, the scar in the overseer's
+    own charter: a real recommendation published into a current-state page,
+    correct when written, rewritten by the next sitting, unanswered at 24
+    hours old. It cost a Review recommendation on 2026-09-03.
+    **WHAT IT BEARS ON.** `ME.11.B`, `ME.11.C` and `ME.11.D` are settled
+    FAILs whose only repair owner is a queue row, on a desk whose own drain
+    reads UNBOUNDED. Aiming the next arms at abstention would spend the
+    memory family's remaining budget on the half its own certificate says is
+    not binding. `GOAL.md`: *"Finds the memory from a paraphrase, still never
+    invents one"* is the ME family's standing claim, and *"memory makes it
+    him"* is the commitment behind it.
+    **REFUSED IN ADVANCE:** this row may NOT be discharged by deleting,
+    re-scoping or re-wording §6 of the field-watch page, nor by narrowing
+    which sections the `UNROUTED-FIELD-FINDING` reader scans. It does NOT
+    re-open `ME.11`'s verdict, does NOT move `MIN_RECALL` or any abstention
+    bar, and does NOT pre-empt which retriever wins — that is `ME.11.A`-`F`'s
+    arena and theirs alone. A repair that lowers the unrouted count by
+    changing the reader's domain is the wrong direction.
+    DUE: 2026-11-01 | the day BEFORE the weekly field-watch rewrite
+        overwrites §6, so the trigger IS the deadline: after 2026-11-02 the
+        evidence this row rests on no longer exists on any page. Deliberately
+        NOT dated onto `review-queue`'s next-free-date (2026-11-06), because
+        that date is past the point at which the finding evaporates.
+    WAITS-ON: none | no live row decides where an unrouted field-watch
+        finding is recorded, and `D27`'s reasoning (which made this class
+        reporting-only) is RESOLVED and does not govern the routing of any
+        individual finding.
