@@ -292,6 +292,20 @@ not disobeyed. The split changes; every bar stays:
     generation, not training, dominates. The Kaggle `_submit` path is kept in
     the file but is not this execution's lane.
 
+THE STOP FIRED — ARM 3 IS WITHDRAWN (registered run, attempt 1, VOID,
+2026-10-26T08:24:50, commit a7daea7; 795 s, 3 seeds, local CPU).
+`vis_open_min` 0.3625 against VIS_OPEN_MIN 0.60 (per-seed 0.3625/0.825/0.60,
+heldout_sectors [0,2]/[4,5]/[2,7]): the alive-proof died on the sector split,
+so per THE PRE-REGISTERED STOP above, the held-out sector was a venue change
+after all. Every other lane was green (sep_guard_ok 0.2511 >= 0.25, min_sep
+0.2713, whiff_frac_min 0.8958, canary 165 stable, hash_overlap 0, controls
+and vis_occ all under 0.22) and odour_occ_min 0.1333 is NOT quotable — under
+the VOID the nose was never tested. DO NOT RE-DISPATCH UNCHANGED: the sector
+draw is seeded, seed 0's holdout stands, and a re-run buys the identical
+VOID. The next split design is the Review's
+(`sm03-stop-fired-sector-holdout-blinds-the-alive-proof`, routed 2026-10-26,
+DUE 2026-11-06); no bar moved in either direction.
+
 COVERS: smell (claim).
 """
 
