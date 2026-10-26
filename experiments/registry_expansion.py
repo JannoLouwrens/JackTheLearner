@@ -2854,7 +2854,17 @@ EXPANSION: list[Spec] = [
                        "PLACEBO channel of matched dimension carrying noise, "
                        "trained identically, must sit at chance.",
          metric="occluded_direction_accuracy_vs_chance",
-         budget=Budget.GPU_SHORT, seeds=3, depends_on=["SM.01", "PG.6"],
+         # Budget re-classed GPU_SHORT -> CPU_LONG 2026-10-26 (builder,
+         # executing THE F1 RULING on `sm03-heldout-split-saturated`, whose
+         # own pricing is "Execution is CPU-only and needs no GPU hour"):
+         # dataset generation dominates and is CPU-bound, the full-size pilot
+         # ran in 8 min/seed on this box, and _experiment now runs locally —
+         # a GPU_SHORT declaration would demand a GPU-hours projection for a
+         # run that spends none. Not a bar: a cost-class declaration matching
+         # the delivered venue. Consequence accepted in the same commit:
+         # `gpu<20min` goes empty and coverage reads red, the exact red its
+         # own comment pre-registered for "when SM.03 settles".
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["SM.01", "PG.6"],
          control="SHUFFLED FIELD (SM.02's control, kept): odour input drawn "
                  "from a DIFFERENT layout's field must fall to chance - "
                  "above-chance there means the readout keys on something "
