@@ -12023,6 +12023,22 @@ ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026
         a DECLINE or an execution rather than a third date — recorded here so
         the successor sitting inherits the judgement and not just the clock.
         10-30 carries measured room under the 6/cycle capacity.
+    BUILDER REFUSAL 2026-10-26 (a receipt of NOT acting, not a disposition —
+        only the desk may stamp): the 10-21 re-date's premise — "the (i) half,
+        unchanged and unblocked" — is FALSE at the decisions register. `D37`
+        RESOLVED BY ARMED DEFAULT on 2026-10-05 (140th audit, transcribed at
+        `DECISIONS_RESOLVED.md` D37) as **(iii) HOLD `D29` AS IT STANDS — the
+        `Δ_k` collapse readout is NOT built. Option (i) BUILD THE DIAGNOSTIC
+        was NOT taken and remains the owner's to rule at any time.** This
+        row's own 09-27 ruling says (i) is "CONTINGENT ON `D37`" because "this
+        desk may not reverse a resolved decision by writing a `DUE:` against
+        it" — and a builder may not either, so this builder read the row as
+        executable work (first undelivered DISPOSITIONED row by DUE order),
+        checked the register per the standing contingency, and REFUSED to
+        build. Verified before refusing: no owner ruling on D37 option (i)
+        exists after the 10-05 firing (register + journal grepped). The
+        remaining lawful moves on this row are the desk's DECLINE citing
+        D37's firing, or an owner ruling reopening (i) — not an execution.
     WAITS-ON: none
 
 **THE DISAGREEMENT, in two greps.** `docs/research/LEARNING_CORE.md` §5.4,
@@ -13644,6 +13660,30 @@ ROUTED: d27-screen-measures-95-percent-false | 2026-09-21 | `D27` firing (overse
         (3) the decorative-metric reading added under its own name. NOT owed: a
         floored counter, any refusal, or a substitution of (3) for `D27`'s screen.
     WAITS-ON: none | declared 2026-10-20 (builder, 156th audit FTB 3; declaration-only, buys nothing). The deletion executes D27's own authorised branch, and both replacement orders are self-contained apparatus edits; nothing upstream holds them.
+    BUILDER-TRACE: 22209be | all three ordered parts executed 2026-10-26
+        ~02:xx, four days before the 10-30 date. (1) DELETED:
+        `experiments/unread_metrics.py` removed, `print_unread_metrics_block`
+        and `run unread` gone from `run.py`, reason (19/20, cannot be floored,
+        D27's own authorised branch) written into `DECISIONS_RESOLVED.md`
+        under D27 as the ruling requires. (2) THE MEASUREMENT, as a NUMBER:
+        instances of D27's actual class on the adjudicated 20-draw with
+        subscripts and helper calls followed = **0** — zero is written under
+        D27 as an answer, per the ruling's own branch. The measurement also
+        refutes the narrowing it tested: 3/13 substance-read false positives
+        removed, 5/6 genuinely-unread context keys wrongly absorbed (object-
+        variable granularity), and the dominant residual channel is DYNAMIC
+        KEY COMPOSITION (`out[f"{arm}/clears@{t}"]`), invisible to any static
+        join — so a narrowed screen is NOT warranted. Method committed as
+        `experiments/d27_followed_reads.py`, self-contained, invoked by
+        nothing. (3) ADOPTED: `experiments/literal_metrics.py` under its own
+        name in `run status` + `run literal-metrics`, never quotable as
+        answering D27 (fixture P8 binds the disclaimer). Day-one reading: 2
+        decorative literals — T0.06 `steps_ok=5` (the scar) and T0.24
+        `properties_checked=8` (NEW, `t0_24:334`, the battery-count shape
+        T0.19/T0.22 pin and T0.24 decorates; repair rides the next edit that
+        bills T0.24, nothing refused per D27's reporting-only default). Bills
+        paid in-slot: T0.22/T0.33/T0.36 (run.py), T0.21/T0.28/T0.31 (this
+        edit). What remains on this row is the DESK's ACTED stamp.
     DUE: 2026-10-21 | RE-DATED 2026-10-17 (Review DAILY, OVERDUE FIRST, act 6 — the builder
         half of a 28-row OVERDUE class). **THE PREVIOUS DATE'S STATED REASON IS
         NOW FALSE, AND THAT IS WHY THIS RE-DATE IS NOT THE SIXTH TURN OF A
