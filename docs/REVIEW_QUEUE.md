@@ -4371,6 +4371,46 @@ ROUTED: dp04-graded-measure-passed-its-guard-and-did-not-cure-the-venue | 2026-1
     updated so coverage keeps refusing a pilot that would buy the predicted
     VOID. Seeds 92/93 unspent. No bar moved, no world edited, no GPU spent.
     The stamp is the desk's.
+    BUILDER-TRACE: a491945 | option (ii) CALIBRATION PROBE, dispatched
+    2026-10-25T23:20:20Z (pid 3655975, detached, ADMITTED + metered 531.96 s,
+    probe sha 34817434e3587c76f46ffc49ae5e86230b76315d6aff30fe7be10b61321eaa37,
+    artifact /data/dp04_knob_probe.json), harvested 2026-10-26 00:4x. **THE
+    ORDERED DIFFICULTY EDIT WAS NOT EXECUTED — this trace is a measurement that
+    says the ordered knob CANNOT satisfy the row's own two-conjunct acceptance
+    test, and the row returns to the desk with the numbers.** Selection rule
+    frozen at dispatch, before any number: smallest k in {1.5, 2.0, 2.5}
+    scaling DEPLETE (base [0.01, 0.008]) with min-task null headroom200 >=
+    HEADROOM_MIN_NEED 56.0 AND LC.00's exact gate arithmetic passing; if none
+    clears, the finding routes back here. **NO CANDIDATE FIRES, and both
+    conjuncts fail at every k:**
+    (1) HEADROOM (conjunct 2): min-task headroom200 = 21.79 (k1.5, binds res2)
+    / 25.72 (k2.0, binds res3) / 22.19 (k2.5, binds res8) vs 56.0; baseline
+    k1.0 read 20.47. Across a 2.5x knob span the MINIMUM moves 20.47 -> 25.72
+    at best. The binding task ROTATES instead of lifting: k2.5 raises res2 to
+    57.12 — above the bar in isolation — while collapsing res8 46.05 -> 28.83
+    -> 22.19. Depletion scaling re-ranks which task a cloned policy finds
+    easiest; it never lifts the floor.
+    (2) RESOLUTION (conjunct 1, computed at harvest from the artifact's
+    per-life ni200 arrays, NEED_MIN_GAIN-wide band = 35.0): pooled band mass
+    0.7500 / 0.8307 / 0.7865 vs the condemned 0.7428 — band mass RISES with
+    depletion; median/max 0.9944 / 0.9900 / 0.9844 vs the 0.9990 bar, never
+    "well under". Mechanism, legible in the distributions: deepening the
+    sawtooth drives need to its ceiling FASTER, so MORE lives pin the
+    need-integral at its maximum (~199.96 at cap 200) — the knob moves the
+    resolution conjunct the WRONG WAY.
+    LC.00's gate is NOT the binding constraint in this range: gate_pass true at
+    all three k (clearing 3/2/2 cores, frozen control never clears, null_mean
+    -10.7 / -5.7 / +0.8) — so learnability survives 2.5x depletion while
+    neither acceptance conjunct comes close. Caveats disclosed: R=2 restarts vs
+    the precheck's 8, E=48, spent seed 94 only, headroom read at the 200 mark
+    of cap-400 runs; blindness held (no verbal arm constructed, no gain
+    statistic exists in the artifact). Per the frozen rule:
+    lc_00_gridworld_decidable.py is UNEDITED, the LC.00+DP.00 bill is NOT
+    owed and was not paid, NEED_MIN_GAIN 35.0 and HEADROOM_MIN_NEED 56.0 are
+    byte-unmoved. **THE FINDING FOR THE DESK: depletion alone cannot cure the
+    venue on either conjunct — the repair space left is a different world edit
+    (topology, task geometry, cap) or a different venue/statistic, and which is
+    the desk's call, not a dispatch.** The stamp is the desk's.
 
 ## ROUTED: OPEN — `champions-language-grounding-arena`: the 51st audit ordered a
 ## seat to name `LG.00` as its ring, and naming it is the move this file's own
