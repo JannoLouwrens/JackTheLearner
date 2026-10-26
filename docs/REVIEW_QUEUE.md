@@ -19505,6 +19505,52 @@ ROUTED: root-modules-outside-every-staleness-bill-are-six-files-not-one | 2026-0
         preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
         live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
         4 each. Every date below takes its day to AT MOST 6 and none above it.
+    BUILDER-TRACE: 93b70c5 | 2026-10-26 01:1x slot — **THE (iv)-TEST IS
+        EXECUTED IN FULL, and the measurement SELECTS (iv) for every module on
+        every measured venue.** Method as ordered: a line-trace filtered to the
+        six files around each reaching spec's `_experiment(seed 0)` called
+        directly (zero ledger writes), 8 CPU reaching standing-PASS venues
+        (T0.06, T0.03, T0.04, T1.03, T1.04, T1.05, PL.00, T1.13); then NINE
+        behavioral perturbations on EXECUTED lines, implicated spec re-run,
+        file restored byte-identically (tree verified clean after every pair),
+        metrics diffed against a clean×2 determinism baseline. **Result: no
+        perturbation moved any deterministic or gated metric anywhere.**
+        Per module: Persistence / TaskManager / AudioListener — import-only
+        execution (defs and default-arg expressions); perturbed constants left
+        T0.06's gated keys (`nu`, `action_space_dim`, `ctrl_write_error`,
+        control) unmoved; only `last_reward` moved, which moves between two
+        CLEAN runs too (nondeterministic at fixed seed, and `_check` never
+        reads it). Personality — one runtime line beyond import in every
+        brain-constructing venue, `get_pad_baseline` (:286) feeding
+        `emotional_state`; `openness 0.85→0.15` (moves `pad_baseline`) left
+        T0.03 byte-identical. InnerMonologue — runtime lines are `__init__`
+        alone; `max_history 50→7` left T0.03 byte-identical. mocap_cmu —
+        perturbed TWICE on executed parse lines (root-rotation slice, retarget
+        name): T1.13's metrics INCLUDING raw `_feats` byte-identical. NO RNG
+        call site among any executed lines, so the draw-count channel is
+        closed by the trace. **THREE CENSUS CORRECTIONS:** (a) T0.01 declares
+        ALL FIVE companion modules in `IMPL_DEPS` since 2026-09-27 — the
+        "declared by NOBODY" clause was stale the day this row was ruled, and
+        an edit to any of the six ALREADY stales a standing PASS; (b) T1.13
+        declares `mocap_cmu.py` DIRECTLY (its docstring records this exact
+        function-local-import gap) and T2.14 has since 09-30 — the mocap
+        population is fully declared by the specs whose science consumes it;
+        (c) per-spec construction is now measured, not assumed. **UNMEASURED
+        REMAINDER, named not capped:** 11 GPU-class reaching specs + T1.12
+        (1141 s CPU, untraced); their evidence is the identical
+        construction-path trace across all five brain-constructing CPU venues
+        plus a static sweep reading ZERO hits for
+        emotional/personality/monologue/pad_baseline in all 12 metric
+        codepaths. **ONE NEW HAZARD FOR THE DESK, found by the UNMOVED
+        verdict itself: `MoCapLoader.py:649-654` serves features from
+        `/data/jack-data/retarget-cache/*.npz` keyed PER CLIP, not per parser
+        version — so a `mocap_cmu.py` parse edit stales T1.13's certificate
+        (the declaration catches it) but a RE-BUY would silently recompute on
+        the poisoned cache and certify the OLD parser's features.** Not
+        routed by this trace (routing is the desk's call on this row's
+        stamp); stated here so the stamp can carry it. No `IMPL_DEPS` edited,
+        no bar moved, bill 0 certificates as priced — the (iv) branch orders
+        no declaration. Full numbers in `docs/LOOP_JOURNAL.md` at 93b70c5.
 
 **THE RULING 2026-10-08 (Review DAILY).**
 
