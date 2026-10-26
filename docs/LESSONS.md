@@ -22077,3 +22077,50 @@ blind until the harm is finished, or was never built.** That sentence is now
 true of three independent mechanisms measured inside forty-eight hours, which
 makes it a property of how this project builds instruments rather than three
 coincidences.
+
+## A ratchet that may shrink has to be TOLD when it shrinks, or the shrink becomes headroom — and a SET-shaped baseline keeps exempting the defect that healed
+
+**The measurement (163rd audit, 2026-10-26).** Two commits six hours apart did
+unambiguously good work: `90acbbf` executed `SM.03`'s arm 3 with a *new* gated
+conjunct and nine bars byte-unmoved, and `71e5b96` re-classed its budget
+`GPU_SHORT -> CPU_LONG` because the runner had been correctly refusing to
+dispatch a CPU-bound spec that declared GPU. Between them they moved two ratchet
+counters in the *allowed* direction — `claim_dead` **3 -> 2** (the `smell`
+commitment regained a live falsifiable path) and `park_release_pairs` **3 -> 2**
+(`SM.02->SM.03` became a walkable release). `git show --stat` on each: one file,
+one file. **Neither ran `run ratchets record`.**
+
+Nothing was falsified and no bar moved, so every instinct says this is
+housekeeping. It is not, for two separate reasons.
+
+**1. An unbanked honest shrink is stored slack.** The floor stays where it was
+while the live reading falls below it, so the gap is headroom the next
+regression spends silently. The counter will read `AT floor — ok` all the way
+back up to the old value. The rule printed beside every moved counter —
+*"if a committed change justifies it, `run ratchets record` in that commit"* —
+is usually read as a permission. It is an **obligation**, and it binds hardest
+in exactly the case that feels least urgent: when the movement is good news.
+
+**2. A `frozenset` baseline is worse than a number, because its stale member is
+an exemption rather than a gap.** `PARK_RELEASE_BASELINE` (`coverage.py:579`)
+still names `SM.02->SM.03` after that pair healed, and the tool's own closing
+line is an instruction, not a reading: *"1 baseline pair(s) are WALKABLE again
+and must be removed."* Set membership silences the member. `SM.03` carries a
+**pre-registered STOP** that can withdraw arm 3 — so the documented exit
+condition of the very run this edit enabled would return the pair to unwalkable,
+where it reads *baseline-blessed* and never banners again. The commitment would
+go claim-dead a second time behind a green check.
+
+**THE GENERALISATION.** `T0.31` and its siblings watch for a count lowered
+*dishonestly* — the tidy-up that quiets an instrument. This is the mirror image
+and no gate in the project looks at it: a count lowered **honestly** and not
+written down. The asymmetry is the lesson. A dishonest shrink is an act someone
+chose and can be caught in a diff; an honest shrink left unbanked is an
+**omission inside a good commit**, which is the one place this project's
+reviewers reliably stop reading. So the audit question is not only *"did a
+number fall for a bad reason?"* but *"did a number fall for a good reason and
+nobody tell the ratchet?"* — and for any set-shaped baseline, *"does it still
+name something that has recovered?"*, because there the cost is not a missing
+record but a standing immunity. This sits directly beside the lesson one shelf
+up: a counter that hides an immunity reads safer than nothing at all. Here the
+immunity is granted by a line of bookkeeping nobody owed anyone.
