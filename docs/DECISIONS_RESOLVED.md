@@ -1582,6 +1582,73 @@ set the build order); `experiments/unread_metrics.py` (the four exclusions, the
 fixture, and `sample()` — the draw is reproducible);
 `docs/OVERSIGHT.md` `FOR THE BUILDER` item 2 (the order).
 
+### D27 CLOSURE ADDENDUM — the screen is DELETED, and the answer to D27 is ZERO (builder, 2026-10-26 ~02:xx UTC, executing the Review's 2026-09-29 ruling on `d27-screen-measures-95-percent-false`)
+
+**THE DELETION.** `metric_recorded_but_unread` is deleted from `run status` and
+`experiments/unread_metrics.py` is removed from the tree (the module, its
+`print_unread_metrics_block` call site and the `run unread` command — the exact
+reversal recipe the entry above pre-registered). **The reason, so the
+instrument's disappearance is distinguishable from one nobody liked:** its
+measured false-positive rate was **19/20 = 95%** (hand-adjudicated 2026-09-21,
+seed 27, table above), `D27`'s own text says the counter *"gets floored or
+deleted once it exists"*, at 19/20 it cannot be floored, and the Review's
+2026-09-29 ruling held that **delete is therefore the branch `D27` armed, not a
+reversal of it**. The screen's final reading before deletion: 563 metrics on 60
+certificates — a number that, at 95% false, could not be acted on spec-by-spec
+and never once printed an instance of its own subject. The module and its
+history remain in git at the commit carrying this addendum.
+
+**THE ORDERED MEASUREMENT, and it returns ZERO.** The ruling ordered: *"follow
+subscripts and helper calls on the same 20-draw and report how many instances
+of D27's actual class appear."* Executed as
+`experiments/d27_followed_reads.py` (self-contained — the 20 pairs are
+hardcoded as adjudicated, so the measurement outlives the deleted screen;
+invoked by nothing, rendered on no board). A transitive reach from `_check`'s
+reads over local-variable assignments, string subscript slices and module-local
+helper bodies, applied to the 2026-09-21 pairs:
+
+- **Instances of `D27`'s actual class** — *the run measured the quantity that
+  would have indicted it and then did not look at it* — **in the followed
+  residue: 0.** Zero is the honest answer to `D27`, written down as an answer
+  per the ruling rather than left as an absence.
+- **And the narrowing itself is REFUTED as a screen**, which is the part the
+  ruling could not know in advance: following subscripts and helper calls
+  removed only **3 of the 13** known substance-read false positives
+  (`SO.09 synth_lo_refused` — the subscript exemplar — plus `T0.26`,
+  `LG.02 null_abs_div`) while wrongly absorbing **5 of the 6** genuinely-unread
+  context keys (e.g. `ME.1 events` = `len(mem)`: sharing the broad object
+  variable `mem` with gated keys is not being read by the gate). The dominant
+  residual channel is **dynamic key composition** — `LC.02`'s
+  `wm-latent/clears@1.0` is minted as `out[f"{arm}/clears@{t}"]`, so the helper
+  exemplar is invisible to ANY static join, the same reason the deleted screen
+  marked dynamic `_check` subscripts UNDECIDABLE. A narrowed screen is NOT
+  warranted: deeper following degrades precision in both directions.
+
+**THE DECORATIVE-METRIC DETECTOR — ADOPTED UNDER ITS OWN NAME, per the same
+ruling, explicitly NOT as `D27`'s screen.** `experiments/literal_metrics.py`,
+printed by `run status` and `run literal-metrics`: metrics whose every
+recording site inside `_experiment`/`_control` is a bare constant.
+Reporting-only, unfloored, P8 of its fixture asserts the not-D27 disclaimer
+cannot be dropped from its render. Day-one reading: **2 decorative metrics on
+2 certificates** — `T0.06 steps_ok=5` (the known scar) and **`T0.24
+properties_checked=8`, a new genuine instance** (`t0_24_*.py:334`: the count is
+hardcoded, never counted, and `_check` reads only `properties_failed` — the
+exact battery shape `T0.19`/`T0.22` pin with `properties_checked ==
+N_PROPERTIES`). Not acted on here: this reading refuses nothing by `D27`'s own
+default; the `T0.24` repair rides with the next edit that bills `T0.24` anyway,
+the same convention as the `T0.22` comment note on the gates row. Two
+conservatism rules were bought by measured near-misses on day one and are
+recorded in the module docstring with fixture properties P9/P10 (a self-test
+fixture dict is not a recording site — `VO.02 cic`; branch-selected literals
+are computed by control flow — `LT.01 c2_branch`).
+
+**Invariants:** no threshold moved, no control loosened, no certificate
+invalidated, nothing re-runs, nothing refuses. The owner's option (ii) — raise
+Part 2's sample — remains theirs and is unaffected. Bills disclosed and paid in
+the same slot: `experiments/run.py` is in `T0.22`/`T0.33`/`T0.36`'s
+`IMPL_DEPS` (re-bought after the commit); the queue-row trace bills
+`T0.21`/`T0.28`/`T0.31`.
+
 ---
 
 ## D28 — RESOLVED BY ARMED DEFAULT (fired 2026-09-22 ~07:0x UTC by the REVIEW, DAILY, on the day it came due): **(a) OVERDUE FIRST** — the Review's daily sitting spends its first act disposing the OVERDUE class, ACT / DECLINE / re-date with a reason, before routing anything new.

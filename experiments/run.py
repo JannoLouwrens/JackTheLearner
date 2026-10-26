@@ -972,7 +972,7 @@ def cmd_status(ledger: Ledger) -> int:
     breaches = print_ratchet_block(ledger)
     print_steering_block()
     print_fieldwatch_block()
-    print_unread_metrics_block()
+    print_literal_metrics_block()
     print_resolution_block(ledger)
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     # 121st audit FTB 3. `cmd_status` used to `return 0` here unconditionally
@@ -1004,29 +1004,29 @@ def print_resolution_block(ledger: Ledger) -> None:
         print()
 
 
-def print_unread_metrics_block() -> None:
-    """Which recorded numbers did the gate never look at? (`D27`, fired
-    2026-09-21 by the overseer's 107th audit, default (i).)
+def print_literal_metrics_block() -> None:
+    """Metrics whose recorded value is a bare literal in `_experiment`/
+    `_control` — constants wearing a measurement's name (the `T0.06 steps_ok`
+    scar). Adopted by the Review's 2026-09-29 ruling on
+    `d27-screen-measures-95-percent-false`, SEPARATELY from `D27` and never
+    quotable as answering it — `D27`'s answer is 0, recorded in
+    `DECISIONS_RESOLVED.md` under `D27` beside the deletion of the 19/20-false
+    `metric_recorded_but_unread` screen this block replaced (deleted by the
+    same ruling; history at that entry and in git).
 
-    REPORTING-ONLY and UNFLOORED by that default's own text, and it prints its
-    own MEASURED FALSE-POSITIVE RATE in the same sentence as its count — 19 of
-    20 hand-adjudicated on the day it shipped. An instrument nobody can read
-    without also reading how often it is wrong cannot be quoted as if it were
-    clean, and at 19/20 this one may not be acted on spec-by-spec at all.
-
-    See `experiments/unread_metrics.py` for the four exclusions, which of them
-    is arithmetic rather than taste, and the half of the screen (`bar pairing`)
-    that is deliberately NOT built.
+    REPORTING-ONLY and UNFLOORED: refuses nothing, stales nothing, reddens
+    nothing. See `experiments/literal_metrics.py` for the three conservatism
+    rules and the near-misses that bought each one.
     """
-    from . import unread_metrics
-    unread_metrics._check()
-    print(unread_metrics.render())
+    from . import literal_metrics
+    literal_metrics._check()
+    print(literal_metrics.render())
 
 
-def cmd_unread(ledger: Ledger) -> int:
-    """`run unread` — the same block on its own, with the adjudication draw."""
-    from . import unread_metrics
-    unread_metrics.measure()
+def cmd_literal_metrics(ledger: Ledger) -> int:
+    """`run literal-metrics` — the same block on its own."""
+    from . import literal_metrics
+    literal_metrics.measure()
     return 0
 
 
@@ -5973,7 +5973,7 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "review-queue": cmd_review_queue,
                       "steering": cmd_steering,
                       "fieldwatch": cmd_fieldwatch,
-                      "unread": cmd_unread,
+                      "literal-metrics": cmd_literal_metrics,
                       "ratchets": cmd_ratchets,
                       "lane": cmd_lane,
                       "worst-seed-audit": cmd_worst_seed_audit,
