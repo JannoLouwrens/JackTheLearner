@@ -16,11 +16,16 @@ performs one pre-declared 360° sniff-scan (8 s, one full revolution at the
 5 Hz sniff rate = 40 bilateral samples of the certified `OdourSensor`). From
 that window alone, classify the source's bearing RELATIVE TO THE INITIAL
 HEADING into N_BINS = 8 bins. Train on N_TRAIN_L source layouts, test on
-N_TEST_L layouts whose source positions are ≥ MIN_SEP_M from every training
-position (zero overlap, enforced at generation and recorded) — the
-memorisation route T2.15 measured on language is closed structurally, and a
-raw-bytes hash gate over the discriminative inputs (odour windows, open-world
-frames) must read zero train/test collisions (T3.01 v3's gate).
+N_TEST_L layouts drawn uniformly inside N_HELDOUT_SECTORS panel-aligned 45°
+absolute-bearing sectors the TRAIN draw never enters (arm 3 of THE F1 RULING,
+2026-10-01 — see ARM 3 EXECUTION below; the original euclidean-disc exclusion
+asked 94.2 m² of an 11.06 m² annulus and is retired from the split). A
+SECTOR_GUARD_DEG band is carved out of the TRAIN side of every held-out edge
+so the worst-case train↔test separation still clears MIN_SEP_M by arithmetic
+— that arithmetic is a gated conjunct, not a comment — and the memorisation
+route T2.15 measured on language stays closed structurally: a raw-bytes hash
+gate over the discriminative inputs (odour windows, open-world frames) must
+read zero train/test collisions (T3.01 v3's gate).
 
 THE WORLD, and why it is purpose-built rather than the playground. A ring of
 N_PANELS = 8 identical opaque panels (radius RING_R, height PANEL_H) encloses
@@ -245,6 +250,48 @@ what SM.02's three-repair park is a receipt against. Do NOT flip
 `_GATES_FROZEN`, do NOT dispatch, and do NOT re-run the pilot unchanged — its
 numbers are spent evidence, not a lottery.
 
+ARM 3 EXECUTION (builder, 2026-10-26, executing THE F1 RULING of 2026-10-01 on
+`sm03-heldout-split-saturated`). The pick the paragraph above routed to the
+Review came back — arm 3, hold out by PANEL-ALIGNED ABSOLUTE BEARING SECTOR
+with an 8° guard band — so its "do NOT flip `_GATES_FROZEN`" is discharged,
+not disobeyed. The split changes; every bar stays:
+
+  - HELD-OUT-BY-SECTOR: `_heldout_sectors(seed)` fixes N_HELDOUT_SECTORS = 2
+    of the 8 panel-aligned 45° absolute-theta sectors from the seed's own RNG,
+    declared in source before the run. TEST draws uniformly inside them; TRAIN
+    draws uniformly in the other six minus a SECTOR_GUARD_DEG band at every
+    held-out edge. The euclidean disc exclusion is retired from the split;
+    `_draw_layout` keeps its `avoid` parameter untouched so the committed
+    probes (`sm03_vis_open_probe.py`, `sm03_readout_sweep_probe.py`) replay
+    byte-identically.
+  - WHY SECTORS ARE LEGAL HERE (the ruling's own fact about the label): the
+    label is bearing RELATIVE TO THE HEAD and `h0` is uniform and independent
+    of theta, so holding out absolute sectors does NOT hold out label classes;
+    and the generator is rotation-equivariant with period 45° (8 identical
+    panels, wind source→centre per layout), so a k·45°-aligned sector spans
+    one full panel/gap phase cycle — every phase seen in training, every
+    position in the test region not.
+  - THE NEW CONJUNCT: SEP_GUARD_M = 2·SRC_R_RANGE[0]·sin(SECTOR_GUARD/2) =
+    0.2511 m must clear MIN_SEP_M 0.25, and the realised split's measured
+    `min_sep` must too. Either failing is FAIL — a guard that fails that
+    arithmetic is a FAIL, not a smaller guard.
+  - NOTHING MOVES DOWNWARD: MIN_SEP_M 0.25, VIS_OPEN_MIN 0.60, VIS_OCC_CEIL
+    0.22, CTRL_CEIL 0.22, ODOUR_OCC_MIN 0.25, WHIFF_LAYOUT_MIN 0.80,
+    N_TRAIN_L 480, N_TEST_L 240, HEAD_POOL 8 and SRC_R_RANGE (1.8, 2.6) are
+    byte-unchanged; `_GATES_FROZEN` flips True with every bar at the value
+    pre-registered in GATE PROVENANCE above.
+  - THE PRE-REGISTERED STOP (the ruling's own falsifier): `vis_open_min`
+    below VIS_OPEN_MIN on this split means the held-out sector was a venue
+    change after all — arm 3 is WITHDRAWN and the row routes to
+    `w0-too-shallow`. That outcome arrives as this spec's existing VOID lane.
+    NOT a refutation: `odour_occ` failing ODOUR_OCC_MIN is this spec reporting
+    a result about Jack's nose, which is what it is for.
+  - VENUE: local CPU, per the ruling's own pricing ("Execution is CPU-only
+    and needs no GPU hour and no pilot") — the full-size pilot (8 min/seed)
+    and the readout sweep (631.6 s) both ran on this box's CPU, and dataset
+    generation, not training, dominates. The Kaggle `_submit` path is kept in
+    the file but is not this execution's lane.
+
 COVERS: smell (claim).
 """
 
@@ -299,6 +346,17 @@ N_TRAIN_L = 480                # layouts per seed
 N_TEST_L = 240
 MIN_SEP_M = 0.25               # test source ≥ this from EVERY train source
 
+# ── arm-3 sector holdout (THE F1 RULING 2026-10-01; executed 2026-10-26) ──
+N_HELDOUT_SECTORS = 2          # of the 8 panel-aligned 45° absolute sectors
+SECTOR_W = 2.0 * math.pi / N_PANELS
+SECTOR_GUARD_DEG = 8.0         # carved out of the TRAIN side of each edge
+SECTOR_GUARD = math.radians(SECTOR_GUARD_DEG)
+# Worst-case train↔test pair: both at the inner radius, separated only by the
+# guard band — 2·1.8·sin(4°) = 0.2511 m. Must clear MIN_SEP_M, and the gate
+# lives in _check: a guard that fails this arithmetic is a FAIL, not a
+# smaller guard.
+SEP_GUARD_M = 2.0 * SRC_R_RANGE[0] * math.sin(SECTOR_GUARD / 2.0)
+
 # ── training budget, identical for every arm (T3.01's protocol) ──────────
 LR_GRID = (1e-4, 3e-4, 1e-3)
 EPOCHS = 40
@@ -315,8 +373,12 @@ HEAD_POOL = 8
 BATCH = 64
 WEIGHT_DECAY = 1e-4
 
-# ── gates (PROVISIONAL — the seed-90 pilot LANDED and did not freeze them) ──
-_GATES_FROZEN = False
+# ── gates (FROZEN 2026-10-26, builder, executing THE F1 RULING of
+# 2026-10-01 on `sm03-heldout-split-saturated`: F2 was repaired 2026-09-26
+# by the HEAD_POOL sweep, F1 is repaired here by the sector holdout. Every
+# bar is byte-unchanged from the GATE PROVENANCE block — freezing is the
+# declaration that the redesign is complete, not a move of anything.) ──────
+_GATES_FROZEN = True
 
 # The pilot ran and its own record forbids re-running it, so this spec is
 # pilot-BLOCKED, not pilot-owed. Declared 2026-08-30 (builder) transcribing the
@@ -341,7 +403,12 @@ _PILOT_BLOCKED = (
     "F1 ALONE: the split is still saturated and the repair is a REDESIGN with "
     "at least three runnable arms (shrink N_TRAIN_L, widen SRC_R_RANGE, or hold "
     "out by BEARING SECTOR), the pick owed by the Review "
-    "(`sm03-heldout-split-saturated`, DUE 2026-09-30) — not another pilot."
+    "(`sm03-heldout-split-saturated`, DUE 2026-09-30) — not another pilot. "
+    "F1 IS NOW REPAIRED TOO (builder, 2026-10-26): the Review's arm-3 pick "
+    "(panel-aligned bearing-sector holdout, 8° guard band) is executed and "
+    "the gates are frozen. This declaration stays as the record of why no "
+    "second pilot was ever spent; with _GATES_FROZEN True it no longer "
+    "classifies the spec as pilot-BLOCKED."
 )
 
 CHANCE = 1.0 / N_BINS
@@ -510,13 +577,48 @@ def _odour_window(model, data, src_pos, h0: float, layout_seed: int,
 
 
 # ── dataset generation ───────────────────────────────────────────────────
-def _draw_layout(rng, model, data, avoid: list) -> tuple:
-    """(src_pos, h0, label, n_rejected). Rejection: not occluded, or within
-    MIN_SEP_M of any position in `avoid`."""
+def _heldout_sectors(seed: int) -> tuple:
+    """The N_HELDOUT_SECTORS panel-aligned 45° sectors that are TEST-ONLY for
+    this seed — fixed by the seed's own RNG, in source, before any layout is
+    drawn (THE F1 RULING, 2026-10-01). Same sectors for the seed's train and
+    test splits by construction."""
+    rng = np.random.RandomState(seed * 1_000_003 + 101)
+    return tuple(sorted(int(s) for s in
+                        rng.choice(N_PANELS, N_HELDOUT_SECTORS,
+                                   replace=False)))
+
+
+def _in_heldout(theta: float, sectors: tuple) -> bool:
+    k = int((theta % (2.0 * math.pi)) / SECTOR_W) % N_PANELS
+    return k in sectors
+
+
+def _in_guard(theta: float, sectors: tuple) -> bool:
+    """True inside the SECTOR_GUARD band on the TRAIN side of a held-out
+    edge: [a−g, a) below the sector, [b, b+g) above it, mod 2π."""
+    t = theta % (2.0 * math.pi)
+    two_pi = 2.0 * math.pi
+    for s in sectors:
+        a, b = s * SECTOR_W, (s + 1) * SECTOR_W
+        if ((t - (a - SECTOR_GUARD)) % two_pi) < SECTOR_GUARD:
+            return True
+        if ((t - b) % two_pi) < SECTOR_GUARD:
+            return True
+    return False
+
+
+def _draw_layout(rng, model, data, avoid: list, theta_ok=None) -> tuple:
+    """(src_pos, h0, label, n_rejected). Rejection: theta outside the
+    caller's region (`theta_ok`, the arm-3 sector split), not occluded, or
+    within MIN_SEP_M of any position in `avoid` (the retired euclidean
+    split — kept byte-identical so the committed probes replay)."""
     rej = 0
     for _ in range(4000):
         theta = rng.uniform(0.0, 2.0 * math.pi)
         r = rng.uniform(*SRC_R_RANGE)
+        if theta_ok is not None and not theta_ok(theta):
+            rej += 1
+            continue
         pos = (r * math.cos(theta), r * math.sin(theta), Z_SRC)
         if avoid and min(math.hypot(pos[0] - ax, pos[1] - ay)
                          for ax, ay in avoid) < MIN_SEP_M:
@@ -533,8 +635,20 @@ def _draw_layout(rng, model, data, avoid: list) -> tuple:
     raise RuntimeError("no occluded layout in 4000 draws")
 
 
-def _build_split(seed: int, n: int, base_offset: int, avoid: list) -> dict:
-    """All inputs for one split. Renders occluded AND open panoramas."""
+def _build_split(seed: int, n: int, base_offset: int, role: str) -> dict:
+    """All inputs for one split. Renders occluded AND open panoramas.
+    `role` is "train" or "test" (arm 3, THE F1 RULING): test draws uniformly
+    inside the seed's held-out sectors; train draws uniformly in the rest
+    minus the guard band. No euclidean exclusion — MIN_SEP_M is guaranteed by
+    the guard-band arithmetic and verified on the measured `min_sep`."""
+    assert role in ("train", "test"), role
+    sectors = _heldout_sectors(seed)
+    if role == "test":
+        def theta_ok(th):
+            return _in_heldout(th, sectors)
+    else:
+        def theta_ok(th):
+            return not (_in_heldout(th, sectors) or _in_guard(th, sectors))
     m_occ, d_occ, r_occ = _world(True)
     m_open, d_open, r_open = _world(False)
     rng = np.random.RandomState(seed * 1_000_003 + base_offset)
@@ -542,7 +656,8 @@ def _build_split(seed: int, n: int, base_offset: int, avoid: list) -> dict:
     X_od, X_pl, X_vo, X_vn, y = [], [], [], [], []
     pos_list, rejected, whiffs = [], 0, 0
     for i in range(n):
-        pos, h0, label, rej = _draw_layout(rng, m_occ, d_occ, avoid)
+        pos, h0, label, rej = _draw_layout(rng, m_occ, d_occ, [],
+                                           theta_ok=theta_ok)
         rejected += rej
         lseed = seed * 2_000_003 + base_offset + i
         w, whiff_any = _odour_window(m_occ, d_occ, pos, h0, lseed)
@@ -562,6 +677,7 @@ def _build_split(seed: int, n: int, base_offset: int, avoid: list) -> dict:
         "vis_occ": np.stack(X_vo), "vis_open": np.stack(X_vn),
         "y": np.asarray(y, dtype=np.int64), "positions": pos_list,
         "rejected": rejected, "whiff_frac": whiffs / n,
+        "heldout_sectors": list(sectors),
     }
 
 
@@ -668,10 +784,11 @@ def remote_run(seeds: list, n_train: int | None = None,
         # Progress is printed per stage, flushed: a multi-hour CPU pilot whose
         # log stays at 0 bytes is indistinguishable from one that died at
         # import, and that ambiguity ate this spec's first pilot (2026-08-25).
-        _say(f"seed {seed}: building train split ({n_train} layouts)")
-        tr = _build_split(seed, n_train, 0, avoid=[])
+        _say(f"seed {seed}: building train split ({n_train} layouts, "
+             f"held-out sectors {_heldout_sectors(seed)})")
+        tr = _build_split(seed, n_train, 0, "train")
         _say(f"seed {seed}: building test split ({n_test} layouts)")
-        te = _build_split(seed, n_test, 500_000, avoid=tr["positions"])
+        te = _build_split(seed, n_test, 500_000, "test")
         min_sep = min(
             math.hypot(tx - ax, ty - ay)
             for tx, ty in te["positions"] for ax, ay in tr["positions"])
@@ -728,6 +845,7 @@ def remote_run(seeds: list, n_train: int | None = None,
                 (tr["rejected"] + te["rejected"])
                 / (tr["rejected"] + te["rejected"] + n_train + n_test), 4),
             "min_sep": round(min_sep, 4),
+            "heldout_sectors": tr["heldout_sectors"],
             "hash_overlap_odour": ov_od, "hash_overlap_vis_open": ov_vn,
             "n_params_mlp": n_mlp, "n_params_cnn": n_cnn,
         })
@@ -785,6 +903,13 @@ def _summarise(rows: list, top: dict) -> dict:
                                     r["hash_overlap_vis_open"])
                                 for r in rows),
         "min_sep": min(r["min_sep"] for r in rows),
+        "heldout_sectors": [r["heldout_sectors"] for r in rows],
+        # The arm-3 guard conjunct (THE F1 RULING): pure arithmetic over the
+        # frozen constants, recomputed at read time so a future shrink of
+        # SECTOR_GUARD_DEG below the MIN_SEP_M-clearing value turns the run
+        # FAIL rather than quietly passing with a thinner guarantee.
+        "sep_guard_m": round(SEP_GUARD_M, 4),
+        "sep_guard_ok": bool(SEP_GUARD_M >= MIN_SEP_M),
         "reject_rate_max": max(r["reject_rate"] for r in rows),
         "canary_ok": bool(top.get("canary_ok", False)),
         "canary_colors": min(top.get("canary_colors", 0),
@@ -797,7 +922,14 @@ def _summarise(rows: list, top: dict) -> dict:
 
 def _experiment(seed: int) -> dict:
     if not _CACHE:
-        _CACHE.update(_submit(SEEDS))
+        # Venue per THE F1 RULING's own pricing ("Execution is CPU-only and
+        # needs no GPU hour and no pilot"): dataset generation dominates and
+        # is CPU-bound — the full-size pilot (8 min/seed) and the readout
+        # sweep (631.6 s) both ran on this box's CPU. The Kaggle `_submit`
+        # path above is kept but is not this execution's lane.
+        out = remote_run(SEEDS)
+        out["backend"] = "local-cpu"
+        _CACHE.update(out)
     m = _summarise(_CACHE["seeds"], _CACHE)
     m["gpu"] = _CACHE["gpu"]
     m["backend"] = _CACHE["backend"]
@@ -835,6 +967,12 @@ def _check(m: dict, c: dict):
     # shuffled_fit_min is RECORDED, not gated (SHUF_FIT_FLOOR; 24th-audit
     # demotion): below the floor the control's at-chance test reading proves
     # nothing; the hash gate above carries identity.
+    # Arm-3 sector-split guard (THE F1 RULING, 2026-10-01): the TRAIN-side
+    # guard band must clear MIN_SEP_M by arithmetic AND the realised split
+    # must honour it. A guard that fails that arithmetic is a FAIL, not a
+    # smaller guard.
+    if not m["sep_guard_ok"] or m["min_sep"] < MIN_SEP_M:
+        return Status.FAIL
     # The claim, per seed on both legs:
     return (m["odour_occ_min"] >= ODOUR_OCC_MIN
             and m["vis_occ_max"] <= VIS_OCC_CEIL)
@@ -853,11 +991,16 @@ def run(ledger: Ledger | None = None):
 def _dry():
     base = dict(canary_ok=True, canary_colors=800, vis_open_min=0.95,
                 whiff_frac_min=0.97, hash_overlap_max=0,
-                odour_occ_min=0.34, vis_occ_max=0.15)
+                odour_occ_min=0.34, vis_occ_max=0.15,
+                sep_guard_ok=True, min_sep=1.41)
     ctrl = {"placebo_max": 0.15, "shuffled_max": 0.14,
             "shuffled_fit_min": 0.9}
     cases = [
         ("planted pass", base, ctrl, Status.PASS),
+        ("guard arithmetic broken -> FAIL", {**base, "sep_guard_ok": False},
+         ctrl, Status.FAIL),
+        ("split breaches MIN_SEP_M -> FAIL", {**base, "min_sep": 0.19}, ctrl,
+         Status.FAIL),
         ("odour at chance -> FAIL", {**base, "odour_occ_min": 0.14}, ctrl,
          Status.FAIL),
         ("occlusion decorative -> FAIL", {**base, "vis_occ_max": 0.40}, ctrl,
