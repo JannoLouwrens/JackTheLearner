@@ -24234,7 +24234,7 @@ ROUTED: longrun-population-grew-six-ids-under-a-priced-row | 2026-10-20 | `_long
         under the 6/cycle measurement. Not dated onto a full day, which is
         the act `review_queue_piled_on` counts.
 
-ROUTED: hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-one | 2026-10-20 | `run review-queue` x2 this sitting (both printed `OVERDUE` as the only violation form, 20 then 17) against `d10-successor-rerun-under-adopted-gate`, which was `DISPOSITIONED` (live) declaring `BLOCKED-BY: t108-pipeline-repair-has-no-design`, which is `ACTED 2026-10-08` (terminal); source read at `experiments/review_queue.py:268, 320-322, 649, 785-805` | OPEN
+ROUTED: hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-one | 2026-10-20 | `run review-queue` x2 this sitting (both printed `OVERDUE` as the only violation form, 20 then 17) against `d10-successor-rerun-under-adopted-gate`, which was `DISPOSITIONED` (live) declaring `BLOCKED-BY: t108-pipeline-repair-has-no-design`, which is `ACTED 2026-10-08` (terminal); source read at `experiments/review_queue.py:268, 320-322, 649, 785-805` | DISPOSITIONED 2026-10-26 (Review DAILY, OVERDUE FIRST, act 2 — **THE ASK IS DISCHARGED: the live hypothesis is REFUTED, the instrument was RIGHT, and a DIFFERENT and worse defect is CONFIRMED with a repro. It is LATENT — zero live victims today — and that qualification is part of the finding, not a softening of it.** See THE RULING below; the repair is the builder's, DUE 2026-11-06)
     SUBJECT: an INSTRUMENT's coverage of its own declared violation class.
         No spec, threshold, verdict or claim of Jack's is in question.
     **THE OBSERVATION, stated as measured and no further.** A live row with a
@@ -24277,6 +24277,101 @@ ROUTED: hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-one 
         10-22..10-24 at the capacity of 6, 10-25 at 5). Shares the date with
         this sitting's other routing, which takes 10-25 to 6 — at capacity,
         not over it.
+    DUE: 2026-11-06 | RE-DATED 2026-10-26 (Review DAILY, OVERDUE FIRST) — and
+        the status moved to DISPOSITIONED in the same act, so what this date
+        owes is the EXECUTION of the repair below, not the investigation. The
+        investigation is DONE and its answer is in THE RULING. 2026-11-06 is
+        `review-queue`'s own printed next-free-date under the measured 6/cycle;
+        10-25 and 10-26 are both AMBER and may not take more.
+
+### THE RULING, 2026-10-26 (Review DAILY, OVERDUE FIRST, act 2). **The row asked a yes/no question. The answer is NO, and the instrument owes no apology — but the question found a real defect anyway, one the row did not predict and which is strictly worse than the one it did.**
+
+**(1) THE LIVE HYPOTHESIS IS REFUTED, by measurement rather than by argument.**
+`d10-successor-rerun-under-adopted-gate`'s `BLOCKED-BY:` does **not** parse
+empty. Run at this HEAD, `review_queue.parse()` assigns it
+`blocked_by = 't108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign'`
+with `bad == []`. The row's embedded `| DECISION DELIVERED` inside a `DUE:`
+line — the shape the routing desk suspected — costs nothing.
+
+**(2) THE CLASS DID NOT FIRE BECAUSE IT CORRECTLY MUST NOT.** That blocker is
+`OPEN`, live, `DUE 2026-10-28`. `HOLD-ON-A-RESOLVED-BLOCKER` fires on a
+**terminal** blocker. The blocker is live, so the hold is a real hold and the
+silence is the right answer. **The instrument was right and the reading desk
+was wrong**, and that direction matters: a desk that assumes the tool is broken
+spends its sitting auditing the tool instead of the row.
+
+**(3) WHAT THE ROUTING DESK ACTUALLY READ.** `d10` carries **eight**
+`BLOCKED-BY:` occurrences. The desk read the FIRST
+(`t108-pipeline-repair-has-no-design`, `ACTED`, terminal); the parser takes the
+LAST, which is documented behaviour and identical to how a re-armed `DUE:`
+works. `d10` had been **RE-PARENTED AGAIN on 2026-10-20 onto the live row** —
+the same date this complaint was routed. The desk re-parented the row onto a
+live blocker and then, in the same sitting, filed a defect saying the hold
+class had missed its terminal blocker. It had not; the field had moved.
+
+**(4) THE DEFECT THAT IS REAL, CONFIRMED BY REPRO, AND WORSE THAN THE
+HYPOTHESIS.** The row's own escalation was right about the shape even though it
+was wrong about the instance: *"if a declared field can parse to empty
+silently... that is about any DECLARED field on an oddly shaped row."* It can
+do something worse than parse empty. **A PROSE line that WRAPS so the
+continuation begins with a field name is silently parsed as a declaration, and
+under last-write-wins it OVERWRITES the genuine one.** Minimal repro, run this
+sitting against the shipped parser:
+
+        ROUTED: probe-row | 2026-10-26 | provenance | OPEN
+            BLOCKED-BY: real-blocker-row | the genuine declaration
+            THE PROSE, wrapped so the continuation begins with a field name:
+                the 151st audit warned that a row may silently declare
+            BLOCKED-BY: a-row-that-does-not-exist | ...meant as prose.
+
+        -> blocked_by = 'a-row-that-does-not-exist'   bad = []
+
+The genuine declaration is gone, the row is held by a row that **does not
+exist**, and `bad` is empty — no `MALFORMED`, no warning, nothing. This is the
+151st audit's scar in a second form: there, a 5th pipe field emptied a status
+and silently exempted a `DUE:`; here, a wrapped prose line silently replaces a
+hold. Both convert a declaration into a silent exemption, which is the one
+thing this file's "DECLARED fields only, never prose" contract exists to stop.
+`d10` itself carries four such prose occurrences and escaped only by luck —
+last-write happened to land on the genuine declaration.
+
+**(5) THE DEFECT IS LATENT TODAY AND I WILL NOT REPORT IT AS ACTIVE HARM.**
+Walked live at this HEAD over all 173 rows: **zero** rows declare a
+`BLOCKED-BY:` or a `WAITS-ON:` naming a row that does not exist. Nobody is
+currently mis-held. This is a trap that has not yet sprung, and saying so is
+required — the `check-the-bias-direction-nobody-tested` discipline cuts both
+ways, and an instrument finding inflated into a live harm is the same dishonesty
+as one buried.
+
+**(6) THE REPAIR, ordered as a STRENGTHENING — it adds an assertion and moves
+no threshold, no gate and no verdict.** Two parts, both loud:
+
+  (a) **REFERENTIAL INTEGRITY, as a new MALFORMED finding.** A `BLOCKED-BY:` or
+      `WAITS-ON:` naming an id that is not a `ROUTED:` row in this file is
+      `MALFORMED` (loud), not absent (quiet). This is the check that would have
+      caught the repro, it is the check whose absence let the class be
+      invisible, and it reads 0 violations today — so it ratchets a clean
+      state rather than papering over a dirty one.
+
+  (b) **A SECOND DECLARATION OF THE SAME FIELD IS MALFORMED UNLESS IT IS AN
+      EXPLICIT RE-ARM.** `DUE:` is re-armed by design and keeps last-write.
+      `BLOCKED-BY:`/`WAITS-ON:` have no such contract, and `d10`'s eight
+      occurrences are the proof that silent last-write over an unbounded number
+      of matches is not a contract anyone can read. Either the repeat is
+      flagged, or re-parenting must be written as an explicit `RE-PARENTED`
+      marker the parser recognises. **The author picks which; both are
+      strictly louder than today and neither may be implemented by making the
+      parser quieter.**
+
+**EXPLICITLY NOT ORDERED:** no change to `HOLD-ON-A-RESOLVED-BLOCKER`'s firing
+rule, which is correct as written; no re-parenting of `d10`, whose current
+blocker is live and right; and no fix that narrows what is scanned in order to
+make a count smaller.
+    STALENESS BILL, priced live: this disposition edits `docs/REVIEW_QUEUE.md`
+        only — a PROSE_DOC — and the repro above was run in-process against the
+        shipped parser without editing it. No certificate is staled by this
+        edit. The ordered repair touches `experiments/review_queue.py` and will
+        bill its own re-buys when it lands.
 
 ---
 
