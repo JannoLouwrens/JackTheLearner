@@ -7984,7 +7984,7 @@ that is powerable at free-tier seat counts (more lives per seed is CPU-cheap;
 XL.01's own row shows lives, not seeds, carry the variance). Strengthen-only
 binds any successor; XL.01's FAIL stands as history either way.
 
-ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | DISPOSITIONED 2026-10-18 the design is THE RULING in this row's 2026-10-25 DUE: block (the non-linear reference arm, reported not gated, with no existing threshold moved); execution is the builder's
+ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | ACTED 2026-10-26 427ff48 (Review DAILY, OVERDUE FIRST, act 1 — **THE ORDERED ARM RAN AND IT ANSWERED THE QUESTION THE ROW WAS OPENED ON, 14 HOURS BEFORE THE DATE BROKE.** Verified at the desk against the commit, not taken from the row's own trace: `427ff48` is dated 2026-10-25 12:11:53Z, touches `ledger.json` + the two GPU-accounting files ONLY, and moves no spec file and no threshold — which is exactly what THE RULING ordered (non-linear reference arm, REPORTED not gated) and exactly what it forbade. `T2.05` is still FAIL on the unchanged ridge conjunct, as it was before. **The reading that closes this row:** `nonlinear_headroom` is NEGATIVE on all three seeds (-1.9675, -2.2349, -2.1881) — the 1-NN reference (`mse_nonlinear` 0.3392-0.4174) is ~3x WORSE than ridge (0.1143-0.1309) on identical features and windows. Per the pre-registered dichotomy the SECOND branch fires and the first is refuted: **the venue is near-linear, so "the world model loses to a ridge reference" is a finding about the VENUE, not about the world model.** The instrument is demonstrably alive rather than asserted so — `floor_selftest_ok` 1.0 (reads 0.0 ratio on planted-linear, 0.702-0.770 on planted-quadratic) and `task_not_trivial_all` 1.0 — so the negative headroom is a measurement, not a dead probe. **THE RESIDUAL IS REAL AND IS NOT CLOSED BY THIS STAMP:** the repair the dichotomy names is a world-touching re-aiming (the bundling rule), which is the desk's and not the builder's, and it belongs to the shared-world window rather than to this row. It is routed as its own live row below rather than carried as an invisible remainder on a closed one — the `t215-router-under-lexical-null` pattern, where a two-conjunct row was stamped on one conjunct and the other went unowned for 25 days. **The fifth date on this row did NOT break because the work was late: the work landed 14 h early and no desk sat between 12:11Z and midnight to write the stamp. The unreachable organ was THIS DESK — see today's FOR THE OWNER 1.** PRIOR STATUS, retained because this file never deletes history: DISPOSITIONED 2026-10-18, the design is THE RULING in this row's 2026-10-25 DUE: block (the non-linear reference arm, reported not gated, with no existing threshold moved); execution is the builder's.)
     DUE: 2026-10-04 | RE-DATED 2026-09-24 (Review DAILY). The 2026-09-23 date BROKE — second break. This row is NOT part of the W1 docket and must not inherit its excuse: what it owes is a disposition of the fast/slow world-model fixture — *what does the DP family require of a world model that beats every null but loses to a linear probe?* — and no world edit, no registration and no GPU hour gates it. The honest cause of this break is therefore the plainest one available and it is this desk's alone: **at a DEMONSTRATED disposal rate of ~1 row per sitting, three Review-owned designs cannot share one morning, and this one ranked third of three.** It is dated LAST of today's three for a stated reason rather than by accident — `w1-world-edit-window` blocks five other rows and `w0-too-shallow` holds the project's largest standing result, while this one blocks a FAIL-UNOWNED diagnosis and nothing downstream of it. Dated 2026-10-04 (2 promised against a measured 6), one sitting clear of 10-01 so the two are not made to share a morning the way these three just were. ORIGINAL TEXT FOLLOWS, unchanged. | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | a disposition for the fast/slow world-model fixture: what does the DP family require of a world model that beats every null but loses to a linear probe? Date is `next_free_due` per B4.
     DUE: 2026-10-17 | RE-DATED 2026-10-04 (Review FULL, act 16). **Third break,
         and the cause is this desk's and is the same one its own 09-24 re-date
@@ -25758,3 +25758,31 @@ ROUTED: detached-lane-memory-breach-reaches-no-row-no-receipt-and-no-counter | 2
     WAITS-ON: none | `D18` is RESOLVED and its default already orders the
         report; no live row decides where a detached child's footprint is
         recorded.
+
+ROUTED: t205-residual-near-linear-venue-is-a-world-touching-re-aiming | 2026-10-26 | the dichotomy's second branch, measured at 427ff48 (Review DAILY act 1, stamping `t205-world-model-loses-to-the-ridge-reference` ACTED) | OPEN
+    THE RESIDUAL, split off a closing row rather than carried invisibly on it.
+    `t205`'s ordered non-linear reference arm RAN and its pre-registered
+    dichotomy fired its SECOND branch: `nonlinear_headroom` is negative on all
+    three seeds (-1.9675, -2.2349, -2.1881), the 1-NN reference is ~3x worse
+    than ridge on identical features and windows, and the instrument is alive
+    (`floor_selftest_ok` 1.0, `task_not_trivial_all` 1.0). So **`T2.05`'s FAIL
+    is a finding about the VENUE, not about the world model** — the fixture is
+    near-linear, and a world model cannot be convicted of losing to a linear
+    probe in a world a linear probe already describes.
+    **WHY THIS IS A NEW ROW AND NOT A SENTENCE IN THE STAMP:** the repair the
+    dichotomy names is a world-touching re-aiming (the bundling rule), which is
+    the desk's and not the builder's, and `t205`'s own stamp is explicitly not
+    authorised to order it. The precedent is `t215-router-under-lexical-null`,
+    where a two-conjunct row was stamped on one conjunct and the second went
+    unowned for 25 days before an audit found it. A residual that reaches no
+    row reaches no reader.
+    **WHAT THIS ROW DOES NOT DO:** it does not re-open `T2.05`, does not move
+    the ridge conjunct, and does not pre-empt the shared-world window question.
+    No threshold is touched by routing it.
+    DUE: 2026-11-06 | the first date with room under the measured capacity of
+        6/cycle, per `review-queue`'s own next-free-date arithmetic read this
+        sitting. NOT dated onto 2026-10-25/26, both already AMBER.
+    WAITS-ON: seven-rows-are-held-behind-a-refused-window-and-a-moot-decision |
+        this is an eighth instance of exactly that row's question — does this
+        edit ACTUALLY need the shared-world window, or is it SPEC-LOCAL — so it
+        counts as that decision and not as a separate one.
