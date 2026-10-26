@@ -572,12 +572,19 @@ RELEASE_MARK = re.compile(r"(?<!`)RELEASE:\s*([A-Za-z0-9.]+)")
 # BA.02->LT.08 among them) + 4 UNDECLARED-RELEASE; declaring the four markers'
 # own stated releases removed one prose false-positive (T3.10->SM.02, a
 # precedent citation) and one successor-of-a-successor (BA.02->BA.03, carried
-# by the VOID-FORECLOSED list), leaving these three, all true: a
+# by the VOID-FORECLOSED list), leaving three, all true at seeding: a
 # constitutional sense parked behind a chain of FAILs priced over free quota,
 # and two commitments whose designated successors are themselves
-# PILOT-BLOCKED. All three await the w0/redesign desks (09-06, 09-11).
+# PILOT-BLOCKED. All three awaited the w0/redesign desks (09-06, 09-11).
 PARK_RELEASE_BASELINE: frozenset = frozenset({
-    "BA.02->LT.08", "SH.01->SH.02", "SM.02->SM.03"})
+    "BA.02->LT.08", "SH.01->SH.02"})
+# SM.02->SM.03 removed 2026-10-26 (163rd audit FTB 1): SM.03 became RUNNABLE
+# when its budget was re-classed GPU_SHORT->CPU_LONG (71e5b96) after arm 3
+# shipped with frozen gates (90acbbf), so the release is WALKABLE and the tool
+# itself ordered the removal ("1 baseline pair(s) are WALKABLE again and must
+# be removed"). If SM.03's pre-registered STOP ever withdraws arm 3, the pair
+# must banner RED again rather than read baseline-blessed — that is the point
+# of removing it now.
 
 
 def park_release(by_id: Optional[dict] = None,
@@ -1346,7 +1353,16 @@ def _unreachable_fixture() -> List[str]:
 #               reason here). The number comes back down only by the legal
 #               repairs above — a LIVE row with a DUE:, a repaired_by, or a
 #               FAIL-DISPOSED marker — and the floor must follow it down.
-FAIL_UNOWNED_BASELINE = 6
+#   2026-10-26  6 -> 4: the Review DAILY's morning sweep (5def2f2, b7cfd14 and
+#               siblings) gave two more FAILs live queue-row owners and one a
+#               disposal (owned forms queue-row 27 -> 30, disposed 1 -> 2) —
+#               the legal repairs named above, so per this log's own contract
+#               the floor follows the number down. The 163rd audit's "do not
+#               touch FAIL_UNOWNED_BASELINE (6)" was written at 06:5x while
+#               the live reading WAS 6 at floor; the Review's commits landed
+#               after that sentence, and leaving the floor at 6 would be the
+#               stored-slack defect the same audit's item 1 exists to repair.
+FAIL_UNOWNED_BASELINE = 4
 
 # The readable disposition marker (72nd audit B1: the T3.07 exclusion "must be
 # by a readable marker, not by a hardcoded id"). Lives in `Spec.notes` —

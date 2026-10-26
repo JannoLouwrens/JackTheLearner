@@ -8,16 +8,16 @@
     "value": 4
   },
   "claim_dead": {
-    "at": "2026-09-26",
-    "value": 3
+    "at": "2026-10-26",
+    "value": 2
   },
   "commitments_uncovered": {
     "at": "2026-09-19",
     "value": 0
   },
   "cpu_foreclosed_now": {
-    "at": "2026-10-19",
-    "value": 37
+    "at": "2026-10-26",
+    "value": 0
   },
   "dark_slots": {
     "at": "2026-09-30",
@@ -45,14 +45,14 @@
     "value": 0
   },
   "fail_unowned": {
-    "at": "2026-10-20",
-    "value": 6
+    "at": "2026-10-26",
+    "value": 4
   },
   "fail_unowned_owned_forms": {
-    "at": "2026-10-20",
+    "at": "2026-10-26",
     "value": {
-      "disposed": 1,
-      "queue-row": 27,
+      "disposed": 2,
+      "queue-row": 30,
       "repaired_by": 1
     }
   },
@@ -61,19 +61,19 @@
     "value": 7
   },
   "gpu_hours_no_verdict": {
-    "at": "2026-10-17",
+    "at": "2026-10-26",
     "value": {
       "D1.0": "33.78 h / 2 attempt(s) / 0 verdict(s)",
       "PILOT": "2.00 h / 2 job(s)",
       "PROBE": "3.86 h / 5 job(s)",
       "T1.08": "2.33 h / 4 attempt(s) / 3 verdict(s)",
       "T2.01": "11.16 h / 2 attempt(s) / 2 verdict(s)",
-      "T2.05": "1.93 h / 4 attempt(s) / 1 verdict(s)",
+      "T2.05": "3.70 h / 5 attempt(s) / 2 verdict(s)",
       "T2.07": "0.29 h / 1 attempt(s) / 1 verdict(s)",
       "T2.11": "1.07 h / 2 attempt(s) / 1 verdict(s)",
       "T2.15": "0.31 h / 1 attempt(s) / 1 verdict(s)",
       "T4.02": "0.29 h / 2 attempt(s) / 2 verdict(s)",
-      "TOTAL": "51.47 h",
+      "TOTAL": "53.24 h",
       "UB.10": "0.30 h / 1 attempt(s) / 0 verdict(s)",
       "UNATTRIBUTED": "6.32 h / 21 job(s)"
     }
@@ -87,16 +87,16 @@
     "value": 22
   },
   "park_release_pairs": {
-    "at": "2026-09-03",
-    "value": 3
+    "at": "2026-10-26",
+    "value": 2
   },
   "pass_on_dead_dependency": {
-    "at": "2026-10-17",
+    "at": "2026-10-26",
     "note": "3 -> 5 on 2026-09-26 18:xx, cause READ not reasoned: T0.13 was re-bought to an honest FAIL (28 disarmed conjunct keys, latently red since its 2026-09-02 run at 90 gates and 0 disarmed) and the two new pairs are its dependents, T0.18 <- T0.13 and T0.19 <- T0.13. The floor STAYS at 3 and was NOT raised. The repair is the per-key ruling owed under t013-latently-red-28-disarmed-keys (DUE 2026-10-05); T0.18's own re-buy is owed AND blocked by that same FAIL, so neither pair can be cleared by the builder today. 5 -> 6 on 2026-10-04: the 6th pair is T1.12 <- T1.11 FAIL (T1.11's re-run recorded FAIL at b0a3d56 on an orthogonal added conjunct while T1.12's PASS still cites it); owned by t112-pass-stands-on-t111s-orthogonal-added-conjunct (OPEN, DUE 2026-10-18). Note appended 2026-10-17 (builder, 151st audit FTB 3); the floor STAYS at 3 and was NOT raised.",
-    "value": 6
+    "value": 7
   },
   "projection_vs_estimate": {
-    "at": "2026-10-20",
+    "at": "2026-10-26",
     "value": [
       "T1.07 @445b9e1 2026-W37: authorised 0.5h, attempt declared est_hours 0.4h (1789290929661-24294-kaggle)",
       "T1.08 @3d357c4 2026-W37: authorised 0.6h, attempt declared est_hours 0.3h (1789292618535-31098-kaggle)",
@@ -107,26 +107,25 @@
       "T1.08 @b7aa2bf 2026-W40: authorised 0.75h, attempt declared est_hours 0.5h (1791461828585-1479757-kaggle)",
       "T1.02 @5c9f096 2026-W42: authorised 0.2h, attempt declared est_hours 0.7h (1792498408900-796519-colab)",
       "T1.02 @5c9f096 2026-W42: authorised 0.2h, attempt declared est_hours 0.7h (1792501976274-796519-kaggle)",
-      "T1.09 @77025f3 2026-W42: authorised 0.5h, attempt declared est_hours 0.2h (1792506527168-866178-kaggle)"
+      "T1.09 @77025f3 2026-W42: authorised 0.5h, attempt declared est_hours 0.2h (1792506527168-866178-kaggle)",
+      "T2.05 @2d6a217 2026-W43: authorised 1.0h, attempt declared est_hours 1.2h (1792923207873-3292177-kaggle)"
     ]
   },
   "review_queue_net_arrivals": {
-    "at": "2026-10-20",
-    "value": -5
+    "at": "2026-10-26",
+    "value": 10
   },
   "review_queue_piled_on": {
-    "at": "2026-10-20",
-    "value": 15
+    "at": "2026-10-26",
+    "value": 2
   },
   "review_queue_violation_forms": {
-    "at": "2026-10-20",
-    "value": {
-      "OVERDUE": 16
-    }
+    "at": "2026-10-26",
+    "value": {}
   },
   "review_queue_violations": {
-    "at": "2026-10-20",
-    "value": 16
+    "at": "2026-10-26",
+    "value": 0
   },
   "unreachable": {
     "at": "2026-09-29",
