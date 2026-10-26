@@ -556,6 +556,33 @@ class Budget:
             fcntl.flock(lockf.fileno(), fcntl.LOCK_EX)
             self.data = self._load()
             if job_id and job_id in self.data["charged_jobs"]:
+                # Idempotency is on the AMOUNT, never on the outcome label.
+                # Until 2026-10-26 this returned before reconsidering `ok`,
+                # so a job first charged ok=False by a watcher timeout could
+                # never be re-labelled by the reattach that proved it
+                # succeeded: W42 read 96.0% waste where 47.7% was real
+                # (`gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard`). On a
+                # False->True repeat, move the already-billed hours between
+                # buckets in the record's OWN week — a re-label can land
+                # after that week closed — flip the label, and still return
+                # False so no caller believes fresh hours were billed. The
+                # demotion direction (True->False) is deliberately not
+                # taken: a recorded success is never re-filed as waste.
+                rec = self.data["charged_jobs"][job_id]
+                if ok and not rec.get("ok", True):
+                    bk, hrs = rec["backend"], float(rec["hours"])
+                    wk_rec = self.data["weeks"].setdefault(rec["week"], {})
+                    failed_key = bk + FAILED_SUFFIX
+                    wk_rec[failed_key] = round(wk_rec.get(failed_key, 0.0) - hrs, 4)
+                    wk_rec[bk] = round(wk_rec.get(bk, 0.0) + hrs, 4)
+                    rec["ok"] = True
+                    tmp = self.path.with_suffix(self.path.suffix + ".tmp")
+                    tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
+                    os.replace(tmp, self.path)
+                    print(f"GPU CHARGE RE-LABELLED: {job_id} ok False->True — "
+                          f"{hrs:.4f}h moved {failed_key} -> {bk} in "
+                          f"{rec['week']}; no new hours billed",
+                          file=sys.stderr, flush=True)
                 return False
             key = backend if ok else backend + FAILED_SUFFIX
             wk = self.data["weeks"].setdefault(self._week(), {})

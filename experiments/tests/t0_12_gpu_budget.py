@@ -237,6 +237,60 @@ def _probe_metering(make, td: Path) -> dict:
     quiet.charge("kaggle", 3600.0, ok=True, job_id="kaggle/u/small")
     no_false_overrun = len(quiet.overruns()) == 0
 
+    # (d) Watcher-timeout-then-reattach (the live 2026-W42 shape,
+    # `gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard`): a watcher timeout
+    # files the hours as waste; the reattach that later proves the job
+    # succeeded calls charge(ok=True) on the same job_id. The dedupe guard
+    # must re-label — move the hours between buckets, flip `ok` — WITHOUT
+    # re-billing. Until 2026-10-26 it returned before reconsidering the
+    # label, so W42 read 96.0% waste where 47.7% was real. All record reads
+    # use .get() so a meter that keeps no records (the control) FAILS these
+    # properties rather than crashing the probe.
+    rl_path = td / "relabel.json"
+    rl = make(rl_path)
+    rl.charge("kaggle", 3613.0, ok=False, job_id="kaggle/u/timed-out")
+    rebilled = rl.charge("kaggle", 3613.0, ok=True, job_id="kaggle/u/timed-out")
+    rl_hours = 3613.0 / 3600.0
+    relabel_moves_hours = (abs(rl.productive_hours("kaggle") - round(rl_hours, 4)) < 1e-3
+                           and abs(rl.failed_hours("kaggle")) < 1e-3)
+    relabel_does_not_rebill = (not rebilled
+                               and abs(rl.used_hours("kaggle") - round(rl_hours, 4)) < 1e-3)
+    # The reattach normally lives in a LATER process, so the flipped label
+    # must survive a reload from disk.
+    rl2 = make(rl_path)
+    relabel_survives_reload = (
+        rl2.data["charged_jobs"].get("kaggle/u/timed-out", {}).get("ok") is True)
+
+    # ...and the bucket that moves is the record's OWN week, not the current
+    # one — the live instance was a W42 timeout re-proven in W43, after the
+    # mislabelled week had already closed.
+    past_wk = _foreign_week(14, LIVE_WEEK_FMT)
+    cross_path = td / "relabel_cross.json"
+    cross_path.write_text(json.dumps({
+        "weeks": {past_wk: {"kaggle_failed": 1.0043}},
+        "charged_jobs": {"kaggle/u/old-timeout": {
+            "week": past_wk, "backend": "kaggle", "hours": 1.0043,
+            "ok": False}},
+        "overruns": [],
+    }, indent=2, sort_keys=True) + "\n")
+    cb = make(cross_path)
+    cb.charge("kaggle", 1.0043 * 3600.0, ok=True, job_id="kaggle/u/old-timeout")
+    past = cb.data["weeks"].get(past_wk, {})
+    relabel_files_records_own_week = (
+        abs(past.get("kaggle", 0.0) - 1.0043) < 1e-6
+        and abs(past.get("kaggle_failed", 1.0)) < 1e-6
+        and abs(cb.productive_hours("kaggle")) < 1e-6)
+
+    # The demotion direction must NOT exist: a recorded success stays a
+    # success when a later call reports ok=False for the same job.
+    nd = make(td / "relabel_demote.json")
+    nd.charge("kaggle", 3600.0, ok=True, job_id="kaggle/u/fine")
+    nd.charge("kaggle", 3600.0, ok=False, job_id="kaggle/u/fine")
+    relabel_never_demotes = (
+        nd.data["charged_jobs"].get("kaggle/u/fine", {}).get("ok") is True
+        and abs(nd.productive_hours("kaggle") - 1.0) < 1e-6
+        and abs(nd.failed_hours("kaggle")) < 1e-6)
+
     return {
         "failed_hours_visible": failed_hours_visible,
         "failed_counts_against_quota": failed_counts_against_quota,
@@ -247,6 +301,11 @@ def _probe_metering(make, td: Path) -> dict:
         "overrun_recorded": overrun_recorded,
         "overrun_names_the_job": overrun_names_the_job,
         "no_false_overrun": no_false_overrun,
+        "relabel_moves_hours": relabel_moves_hours,
+        "relabel_does_not_rebill": relabel_does_not_rebill,
+        "relabel_survives_reload": relabel_survives_reload,
+        "relabel_files_records_own_week": relabel_files_records_own_week,
+        "relabel_never_demotes": relabel_never_demotes,
     }
 
 
@@ -760,6 +819,11 @@ def _check(m: dict, c: dict) -> bool:
         and m["overrun_recorded"]
         and m["overrun_names_the_job"]
         and m["no_false_overrun"]
+        and m["relabel_moves_hours"]
+        and m["relabel_does_not_rebill"]
+        and m["relabel_survives_reload"]
+        and m["relabel_files_records_own_week"]
+        and m["relabel_never_demotes"]
         and m["submit_charges_metered_window"]
         and m["submit_buckets_failure_as_waste"]
         and m["submit_reattach_is_free"]
@@ -800,6 +864,12 @@ def _check(m: dict, c: dict) -> bool:
         and (not c["waste_not_counted_as_work"])
         and (not c["charged_once"])
         and (not c["idempotent_across_processes"])
+        # Of the five re-label properties only this one is required of the
+        # control: a meter with no per-job records re-bills the reattach,
+        # which is exactly the coarser disease the guard exists to prevent.
+        # The label-flip properties are inexpressible for a recordless meter
+        # (same vacuity reasoning as `no_receipt_for_skipped_backend`).
+        and (not c["relabel_does_not_rebill"])
         and (not c["overrun_recorded"])
         and (not c["submit_charges_metered_window"])
         and (not c["submit_buckets_failure_as_waste"])
