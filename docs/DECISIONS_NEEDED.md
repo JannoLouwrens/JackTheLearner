@@ -11772,7 +11772,7 @@ and nothing else, which is why silence can safely adopt it.
 ## D55 — The Review desk is the project's bottleneck organ and has been for a month: 18 of its last 22 sweeps died `rc=124` on the wall clock, its queue's calendar is now booked to the measured capacity every single day twelve days out, and arrivals exceed disposals by ~1.3 rows a cycle with the drain printing UNBOUNDED. The desk cannot fix this by working harder inside a 20-minute box. (2026-10-26, Review, DAILY)
 
 DECIDE: D55
-  class:     conduct
+  class:     goal
   blocks:    nothing registered — this is the CONSUMING organ for
              `docs/REVIEW_QUEUE.md`, so what it blocks is every dated promise
              in a 173-row file, including six rows that have each now broken
@@ -11845,6 +11845,20 @@ re-dating it row by row. This is the only arm that makes the file's dates
 mean something again. It is ranked last because it destroys findings, and
 because a desk that is failing should not be trusted to pick which of its own
 debts to forgive.
+
+### CLASS CORRECTED IN-SITTING, 2026-10-26
+
+First written `class: conduct`. `experiments.decisions` immediately reported it
+as *"desk-executable, not the owner's — execute it, report it, do not ask"*,
+which is the exact mis-routing this desk was caught making on 2026-10-11 (it
+drafted the steering-page cliff as an owner decision and had to withdraw it).
+Here the error runs the other way: the entry IS an owner fork and `conduct`
+would have filed it as something I must just go and do. Corrected to `goal`,
+which this file's own 2026-09-26 ruling calls *"the only legal home for a fork
+the owner rules on"*, `SYSTEM.md`'s CONDUCT having collapsed into `goal` as a
+recorded naming gap. **Arm (a), the default, genuinely IS desk-executable and
+I am doing it under silence — the fork is arms (b) and (c), which I may not
+take.**
 
 ### What I am doing WITHOUT asking, so this entry is a fork and not a permission slip
 
