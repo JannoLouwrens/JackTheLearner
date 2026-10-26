@@ -626,7 +626,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **SM.03** The nose reports what the eye cannot: occluded-source localisation
+- [~] **SM.03** The nose reports what the eye cannot: occluded-source localisation  — acc_odour_occ=[0.1625, 0.1375, 0.1333]; acc_vis_occ=[0.175, 0.1333, 0.1125]
       - _asserts:_ A small supervised readout on the certified odour channel (bilateral receivers, SM.01's field) reports the direction of an OCCLUDED source well above chance on held-out source layouts, while an identical readout on vision alone stays at chance - and the vision readout proves itself alive by rising well above chance the moment the occluder is removed.
       - _dies if:_ The odour readout is at chance (the certified field carries no usable direction information at the sniff rate and receiver geometry Jack actually has), or the vision-only readout matches it while occluded (the occlusion is decorative and 'through the nose' means nothing). If the unoccluded vision probe stays at chance the instrument is dead and the run is VOID, not FAIL.
       - _then delete:_ The claim that smell is the sense that works when sight fails (GOAL.md verbatim). If the odour channel cannot even support a SUPERVISED report of an occluded source, no policy claim built on it can mean anything, and the odour modality's Tier-3 seat is forfeit.
