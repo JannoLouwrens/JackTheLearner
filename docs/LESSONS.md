@@ -3993,6 +3993,24 @@ early exit is what killed the run, every time.**
   a session whose exit already killed the thing it promised to harvest. If
   the run genuinely cannot fit the slot, `scripts/launch_detached.sh` is the
   sanctioned form of leaving it behind; a bare background launch never is.
+- **Occurrence 14, 2026-10-26 06:23:12 — and the corpse was then ADVERTISED
+  and still missed.** The 06:0x slot launched `SM.03`'s registered run
+  backgrounded (~06:10, declared in `declared_pids` but WITHOUT
+  `JACK_AWAITING_SPEC`), wrote *"I'll pick up on the completion
+  notification"*, and ended at 06:23:12, killing the run ~13 minutes into
+  ~24. The log stopped at the banner with the LANE WARNING printed above it
+  — the thirteenth time that warning described its own reader. **The new
+  detail:** the 07:07 slot received the loop's own `LIVE NOTICE: declared
+  dispatch 'run_spec SM.03' is EXITED ... the next unskipped iteration
+  should read them` — the exact advertisement occurrences 1–13 lacked — and
+  still spent itself on other work without checking for the promised row.
+  A LIVE NOTICE about an exited dispatch is a WORK ITEM, not a log line:
+  before any other unit, diff the dispatch's promised output (ledger row,
+  artifact path) against disk. The 08:0x slot re-ran through
+  `launch_detached.sh` WITH `JACK_AWAITING_SPEC=SM.03` and harvested
+  in-slot (row at `a7daea7`); the AWAITING marker is what makes the corpse
+  impossible to walk past, and a registered run launched without it is the
+  67th-audit scar re-opened.
 
 ## An absent field is honest; a field that silently records the RECORDER is a false one
 
