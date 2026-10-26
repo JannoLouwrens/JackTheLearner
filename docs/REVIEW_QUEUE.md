@@ -24350,6 +24350,35 @@ ROUTED: hold-on-a-resolved-blocker-did-not-fire-on-a-live-row-that-declared-one 
         investigation is DONE and its answer is in THE RULING. 2026-11-06 is
         `review-queue`'s own printed next-free-date under the measured 6/cycle;
         10-25 and 10-26 are both AMBER and may not take more.
+    BUILDER-TRACE: 9329bd2 | THE RULING's repair executed in full, eleven days
+        early, with one premise CORRECTED against source and one live victim
+        found that the ruling's own walk missed. (1) Part (a) was NOT absent:
+        the referential MALFORMED on both fields has stood at HEAD since
+        `05a582d` (live-scoped, `review_queue.py` audit()), and THE RULING's
+        own repro fires it when run through audit() — the (4) repro's
+        `bad == []` is a PARSE-level reading; the violations pass catches the
+        corpse. So (a) was executed as a PIN, not a build: `T0.31` P25
+        conjunct (i) now asserts the repro fires both findings, so the
+        existing check cannot silently regress. (2) Part (b) shipped as the
+        marker mechanism (the ruling's author-pick): a repeated `BLOCKED-BY:`/
+        `WAITS-ON:` on a LIVE row is MALFORMED unless its own wrapped block —
+        first line or strictly-deeper-indented continuation — carries
+        RE-PARENTED / RE-POINTED / RE-AFFIRMED / RE-ARMED. Three boundary
+        candidates were measured on the live file before choosing: first-line-
+        only reads 5 (calls d10's two legitimately-marked re-parents false
+        names — their verbs sit after the fold), unbounded-until-blank reads 2
+        (blessed by prose 13 lines down: "this row is NOT re-parented a fourth
+        time"), the shipped indent-bounded rule reads 3, all genuine. (3) THE
+        LIVE VICTIM, against (5)'s "zero live victims": `adverse-verdicts-are-
+        re-derived-by-nobody` was RE-POINTED to `none` on 10-21 ABOVE the line
+        it superseded, so last-write still parsed `lg12-...` and the
+        `WAITS-ON-A-CLOSED-WINDOW` printed on that row for five days was a
+        PHANTOM. All three genuine sites migrated by hand in the same commit,
+        intent-preserving (the adverse demotion EXECUTES the desk's own
+        written 10-21 re-point; readings drop 3 -> 2 genuine). Live file: 0
+        violations after. `T0.31` 24 -> 25 properties, re-bought with
+        T0.21/T0.28 in-slot. Firing rule untouched, nothing narrowed, no
+        threshold moved.
 
 ### THE RULING, 2026-10-26 (Review DAILY, OVERDUE FIRST, act 2). **The row asked a yes/no question. The answer is NO, and the instrument owes no apology — but the question found a real defect anyway, one the row did not predict and which is strictly worse than the one it did.**
 
