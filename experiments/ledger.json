@@ -40404,6 +40404,113 @@
       "spec_sha": "2ab47b150a0fd398",
       "status": "PASS"
     },
+    "SM.03": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "805c110",
+      "compute_s": null,
+      "control_metrics": {
+        "acc_placebo": [
+          0.1375,
+          0.1083,
+          0.0958
+        ],
+        "acc_shuffled": [
+          0.0833,
+          0.1125,
+          0.0792
+        ],
+        "placebo_max": 0.1375,
+        "placebo_max_std": 0.0,
+        "shuffled_fit_min": 0.2854,
+        "shuffled_fit_min_std": 0.0,
+        "shuffled_max": 0.1125,
+        "shuffled_max_std": 0.0
+      },
+      "dirty_files": null,
+      "duration_s": 795.13,
+      "gpu_job_id": null,
+      "hardware": "remote/cpu (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "history": [],
+      "impl_sha": "b1bcfcb54324f400",
+      "message": "run did not test the claim; not a refutation",
+      "metrics": {
+        "acc_odour_occ": [
+          0.1625,
+          0.1375,
+          0.1333
+        ],
+        "acc_vis_occ": [
+          0.175,
+          0.1333,
+          0.1125
+        ],
+        "acc_vis_open": [
+          0.3625,
+          0.825,
+          0.6
+        ],
+        "backend": "local-cpu",
+        "canary_colors": 165.0,
+        "canary_colors_std": 0.0,
+        "canary_ok": 1.0,
+        "canary_ok_std": 0.0,
+        "gpu": "cpu",
+        "hash_overlap_max": 0.0,
+        "hash_overlap_max_std": 0.0,
+        "heldout_sectors": [
+          [
+            0,
+            2
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "lrs_odour": [
+          0.001,
+          0.0003,
+          0.001
+        ],
+        "min_sep": 0.2713,
+        "min_sep_std": 0.0,
+        "n_params_cnn": 60728.0,
+        "n_params_cnn_std": 0.0,
+        "n_params_mlp": 70344.0,
+        "n_params_mlp_std": 0.0,
+        "odour_occ_min": 0.1333,
+        "odour_occ_min_std": 0.0,
+        "reject_rate_max": 0.6813,
+        "reject_rate_max_std": 1.11022e-16,
+        "sep_guard_m": 0.2511,
+        "sep_guard_m_std": 0.0,
+        "sep_guard_ok": 1.0,
+        "sep_guard_ok_std": 0.0,
+        "vis_occ_max": 0.175,
+        "vis_occ_max_std": 2.77556e-17,
+        "vis_open_min": 0.3625,
+        "vis_open_min_std": 0.0,
+        "whiff_frac_min": 0.8958,
+        "whiff_frac_min_std": 0.0
+      },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 1185.7,
+      "preserved_impl": null,
+      "ran_at": "2026-10-26T08:24:50",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "SM.03",
+      "spec_sha": "c2887e2daf646532",
+      "status": "VOID"
+    },
     "SO.01": {
       "amended": [],
       "attempt": 7,
