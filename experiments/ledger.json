@@ -40405,7 +40405,22 @@
       "status": "PASS"
     },
     "SM.03": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-10-26T08:32:45",
+          "by": "sm03-stop-fired-sector-holdout-blinds-the-alive-proof",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "b1bcfcb54324f400",
+              "proof": "reconstructed b1bcfcb54324f400 from git 90acbbfe3d4c; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "a69eac98ce0bbda3"
+            }
+          ],
+          "commit": "3eff8f8",
+          "reason": "prose-only docstring record of the fired STOP; AST identical"
+        }
+      ],
       "attempt": 1,
       "commit": "805c110",
       "compute_s": null,
@@ -40432,7 +40447,7 @@
       "gpu_job_id": null,
       "hardware": "remote/cpu (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
-      "impl_sha": "b1bcfcb54324f400",
+      "impl_sha": "a69eac98ce0bbda3",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "acc_odour_occ": [
