@@ -12820,6 +12820,66 @@ ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2
         preference: `review-queue` prices 2026-10-22..10-27 at 6/6/6/10/7/6
         live rows against a measured capacity of 6/cycle, and 10-28..10-31 at
         4 each. Every date below takes its day to AT MOST 6 and none above it.
+    BUILDER-TRACE 2026-10-26 (builder, 05:xx slot — a RECEIPT, not a
+        disposition; harvest of the detached probe the 03:xx slot
+        pre-registered at `bb27ff1` with its full forecast and launched, then
+        died before reading a number). **THE CLAUSE-(d) PREREQUISITE
+        MEASUREMENT IS DELIVERED** — the honest/oracle pair for the
+        drain-rate channel, the one sibling measurement rule 3 held this row
+        on. Artifact /data/ps08_drainrate_reference_probe.json (ran 03:29Z,
+        515.8 s CPU charged in cpu_budget.json as detached:ps08_ref_probe.log);
+        the committed `_collect`/`_speed_score`, full per-seed pipeline, no
+        ledger row, NO floor declared (D51 holds that act, decide_by
+        2026-11-03). REPLAY FAITHFUL: probe {0.500, 0.625, 0.625} and
+        control {0.500, 0.875, 0.875} both reproduce the derived multisets
+        exactly, so every number below is quotable. CLAUSES 2-4 OF THE
+        PRE-REGISTERED FORECAST RESOLVED AGAINST THE CHANNEL AND THE VENUE;
+        clause 5's stated mechanism CONFIRMED:
+        (2) PRIMARY MISSED — in-bout honest {0.500, 0.250, 0.500} by seed vs
+        the forecast ">=0.75 on at least 2 of 3, worst >=0.625": zero seeds
+        at 0.75, worst 0.250, mean 0.417 — BELOW the registered probe's own
+        band (its worst seed is 0.500). The pre-committed interpretation
+        fires verbatim: the drain-rate channel is NOT demonstrably legible
+        at the LEG venue's early window and the clause-(d) coupling cannot
+        be satisfied THERE. The physical reason is in the class means:
+        in-bout drain light-vs-heavy reads 0.0026504/0.0026401,
+        0.0026592/0.0026163, 0.0026101/0.0026481 — separations of roughly
+        +0.4%/+1.6%/-1.4% with the SIGN FLIPPING on seed 2. The "blocked
+        limb does less work" mechanism is not present in the fixed
+        dec4->dec8 window at any usable size.
+        (3) LEAK DISQUALIFIES THE VENUE — oracle-honest reads
+        +0.25/+0.50/+0.375, every seed above the pre-registered 0.125
+        one-quantum bound. Per the registration's own words this is the
+        holdout-lottery reading and it "disqualifies these rows as a floor
+        venue regardless of D51's answer": an 8-trip 4/4 holdout quantises
+        at 1/16 and hands a test-fit oracle 2-4 quanta on any channel.
+        (4) REFERENCE VOID AT THIS VENUE — the clock decoys match or beat
+        the primary's honest cell on EVERY seed (seed 0: clock_c 0.500
+        equals the primary; seed 1: clock_d 0.375 and clock_c 0.500 vs
+        0.250; seed 2: clock_d 0.750 and clock_c 0.625 vs 0.500).
+        (5) LOTTERY MECHANISM CONFIRMED — on both 0.875-control seeds the
+        raw w0 jitter draw ALONE reads 0.875 through the identical
+        2-parameter form. The rate-blind control's above-chance reading IS
+        the fixture's periodic-label-vs-hashed-jitter correlation
+        (LEG_CYCLE makes heavy a deterministic function of trip index j
+        while (t0, e0, w0) are hashed functions of the same j — a 24-sample
+        lottery), NOT interoception. This re-reads the row's FOUNDING
+        datum: the original control's 0.708 +/- 0.156 had a
+        non-interoceptive channel available all along.
+        WHAT THIS BUYS AND WHAT IT DOES NOT: PART 1 remains OWED and is now
+        blocked on a VENUE question rather than a missing measurement — the
+        conjunct floor cannot be declared at the LEG venue (channel
+        illegible there, venue leak-disqualified on every seed, and the
+        fixture's own jitter is class-correlated). Per the registration
+        this is a venue finding for this row and for D51's
+        calibration-venue question — never a reason to move a bar or swap
+        the channel silently. ACC_MIN 0.70 / SHUF_ACC_MAX 0.60 /
+        CONTROL_ACC_MAX 0.60 / CONTROL_MARGIN_MIN 0.10 byte-unmoved.
+        Evidence addendum written under D51 this slot (the oracle cells are
+        the number its venue question "needs a number for", the
+        registration's words). The next move — a different window/venue for
+        the pair, or the conjunct reporting UNREADABLE by design — is the
+        DESK's. No stamp, no re-date.
 
 **THE PS-FAMILY LEGIBILITY RULING — Review DAILY 2026-09-25, disposing
 `ps05` + `ps06` + `ps08` + `ps09` in one act, as all four rows asked.**

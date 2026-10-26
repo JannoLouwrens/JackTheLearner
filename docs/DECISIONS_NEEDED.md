@@ -12131,3 +12131,37 @@ Review as `conduct-desk-expiries-reach-no-reader-no-clock-and-no-exit-code`
 (`DUE: 2026-11-05`) rather than argued here, and the 161st audit did NOT fire
 this default: a tenant-protection question the entry itself puts beyond every
 default is not one an overseer may close by arithmetic.
+
+## D51 — EVIDENCE ADDENDUM, 2026-10-26 ~05:xx UTC (builder). NOT a re-opening, NOT a new decision, NO default fired. It adds the SECOND sibling's honest/oracle pair — the number this entry's calibration-venue question was registered as needing.
+
+PS.08's drain-rate reference pair is now measured (pre-registered with a
+five-clause forecast at `bb27ff1` before any number was read; artifact
+`/data/ps08_drainrate_reference_probe.json`; replay FAITHFUL to the attempt-3
+ledger aggregates — probe {0.500, 0.625, 0.625} and rate-blind control
+{0.500, 0.875, 0.875} reproduce the derived per-seed multisets exactly). Full
+arithmetic on the `ps08-amputation-control-out-reads-the-probe-intero-is-not-
+clock-like` row; what bears on THIS entry:
+
+- **The honest cell reads {0.500, 0.250, 0.500}** — below the registered
+  probe's own worst seed. Where PS.09's strongest honest reference missed a
+  0.90 floor from 0.70, PS.08's candidate cannot even match the probe it
+  would calibrate.
+- **The oracle leak reads +0.25 / +0.50 / +0.375** — every seed above the
+  probe's own pre-registered 0.125 one-quantum bound, which its registration
+  pre-committed as *"disqualifies these rows as a floor venue regardless of
+  D51's answer."* PS.09's leak was <= +0.10 on a 10-trip holdout; PS.08's
+  8-trip 4/4 holdout quantises at 1/16 and hands a test-fit oracle 2-4 quanta
+  on ANY channel — the clock decoys match or beat the honest primary on every
+  seed.
+- **The rate-blind control's above-chance reading is measured to be the
+  fixture's label-vs-jitter lottery, not interoception**: the raw w0 jitter
+  draw alone reads 0.875 through the identical 2-parameter form on both
+  0.875-control seeds (LEG_CYCLE makes the class a deterministic function of
+  trip index while the jitter is a hashed function of the same index).
+
+Bearing on the options, stated without advocacy: option (ii)'s *"declared
+calibration venue DISJOINT from the rows the floor gates"* now has a measured
+example of why the disjointness clause is load-bearing — at PS.08's venue the
+oracle/honest gap is 2-4x the bound on every channel, so any floor calibrated
+there would certify a holdout lottery. No option is taken, no bar moves, the
+default and `decide_by 2026-11-03` are untouched.
