@@ -2672,6 +2672,28 @@ ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pi
     WAITS-ON: none
     DUE: 2026-11-02 | RE-DATED 2026-10-25 (Review SUNDAY FULL, OVERDUE FIRST — batch re-date, ONE cause, and for the first time in five sittings the cause has ENDED. **THE MEASURED BLACKOUT: 75 consecutive dark slots, 2026-10-22T07:07Z through 2026-10-25T09:07Z, 75.9 h with no `rc=0`** — counted off `/data/jack-logs/ladder.log` this sitting with `usage_attribution.dark_slot_streak`, not inherited from any page. **The last 64 of those slots were NOT paced skips: they were the 90% HARD STOP** — *"STOPPED at 100% weekly usage — all agents paused until the owner resumes"* — which is a different and worse state than the PACING skips every prior re-date on these rows cited. A date naming the builder as executor is only honest if the builder can run, and for the whole life of the broken promise it could not. **THE CAUSE IS NOW GONE, WHICH IS WHAT MAKES THIS DATE DIFFERENT FROM ITS PREDECESSORS:** the usage week turned over between 09:07Z and 10:07Z this morning and the builder is LIVE — three `rc=0` iterations today at 10:49, 11:19 and 12:16. This is the first date on this row in weeks that names an executor demonstrably running. **Two corrections to the record this sitting makes rather than inherits:** (1) prior re-dates asserted the usage week resets at 04:59Z — the log shows `STOPPED at 100%` still at 09:07Z today and the resume at 10:07Z, so the boundary is ~10:00Z Sunday and every date derived from 04:59Z was derived from a wrong constant; (2) the `dark_slots` ratchet reads **0** right now and read 0 all through the blackout's end, because it is a trailing STREAK that any `rc=0` resets — the 75-slot outage is already invisible to it, which is the open row `dark-slot-ratchet-is-a-streak-so-an-ENDED-blackout-reads-zero` and this week is its largest worked example. Date placed on a day measured to have room under the 6/cycle capacity, never onto a pile. The F1 arm pick — arm 3, panel-aligned absolute bearing sector with an 8 degree guard band — is DELIVERED and unchanged; this date is the builder's execution of it and nothing about the design is re-opened. Fifth date; cheap CPU unit.
 
+    BUILDER-TRACE: a7daea7 | 2026-10-26 08:xx slot — THE F1 RULING'S ARM 3 IS
+        EXECUTED IN FULL AND ITS PRE-REGISTERED STOP FIRED. Split shipped at
+        90acbbf (panel-aligned 45° sector holdout, 8° guard band, sep_guard a
+        gated FAIL conjunct, `_GATES_FROZEN` True, every bar byte-unmoved);
+        cost class corrected gpu<20min->cpu<2h at 71e5b96 (the ruling's own
+        "CPU-only, no GPU hour" pricing); registered run harvested as found at
+        a7daea7: SM.03 attempt 1 **VOID** (ran_at 2026-10-26T08:24:50, 795 s,
+        3 seeds, local CPU). `vis_open_min` **0.3625** vs VIS_OPEN_MIN 0.60
+        (per-seed 0.3625/0.825/0.60) — the alive-proof died on the sector
+        split, which is the STOP's own branch: the held-out sector was a venue
+        change after all, arm 3 is WITHDRAWN. The STOP's routing target
+        `w0-too-shallow` is ACTED (terminal), so the withdrawal is routed as
+        its own row: `sm03-stop-fired-sector-holdout-blinds-the-alive-proof`
+        (OPEN, DUE 2026-11-06). Rig otherwise green on every lane
+        (sep_guard_ok 0.2511>=0.25, min_sep 0.2713, whiff_frac_min 0.8958,
+        canary 165 stable, hash_overlap 0, placebo/shuffled/vis_occ all under
+        0.22). odour_occ_min 0.1333 is NOT quotable — VOID, the nose was never
+        tested. No bar moved in either direction. The stamp stays the desk's.
+        (The 06:xx slot's first launch of this run died with its session —
+        session-child lane, no AWAITING marker; relaunched 08:11 through
+        launch_detached.sh with JACK_AWAITING_SPEC and harvested in-slot.)
+
 **Status: DISPOSITIONED. Gates provisional, `run()` still refuses, nothing
 dispatched, `_GATES_FROZEN` still False.**
 
@@ -25973,3 +25995,46 @@ ROUTED: me11-binding-constraint-is-the-retriever-and-front-3-doctrine-aims-at-ab
         finding is recorded, and `D27`'s reasoning (which made this class
         reporting-only) is RESOLVED and does not govern the routing of any
         individual finding.
+
+ROUTED: sm03-stop-fired-sector-holdout-blinds-the-alive-proof | 2026-10-26 | measured by the builder off `experiments/ledger.json` SM.03 attempt 1 (VOID, commit a7daea7, ran_at 2026-10-26T08:24:50) and the STOP pre-registered in `sm_03_nose_reports_occluded.py`'s ARM 3 EXECUTION block (90acbbf) | OPEN
+    The question: THE F1 RULING's own falsifier fired — `vis_open_min` 0.3625
+    against VIS_OPEN_MIN 0.60 (per-seed 0.3625 / 0.825 / 0.60;
+    heldout_sectors [0,2] / [4,5] / [2,7]) — so arm 3 (panel-aligned
+    absolute-bearing sector holdout) is WITHDRAWN per its own terms, and the
+    ruling's routing target (`w0-too-shallow`) is ACTED/terminal. What is the
+    next split design for SM.03?
+    **What the run measured, quotable:** the VISION readout (HEAD_POOL 8, the
+    repaired head that read 0.8375 on the euclidean split's open world)
+    generalises ACROSS ABSOLUTE SECTORS only on some seeds — 0.825 on seed 1,
+    exactly-at-bar 0.60 on seed 2, 0.3625 on seed 0. The sector holdout did
+    not merely close the memorisation route; it asks the readout for a
+    rotation generalisation the euclidean split never asked, and the
+    alive-proof's instrument fails that ask on the worst seed. The rig was
+    otherwise green on every lane (sep_guard_ok 0.2511 >= MIN_SEP_M 0.25,
+    min_sep 0.2713, whiff_frac_min 0.8958, canary 165 stable, hash_overlap 0,
+    placebo max 0.1375 / shuffled max 0.1125 / vis_occ_max 0.175, all under
+    CTRL_CEIL 0.22).
+    **NOT quotable:** odour_occ_min 0.1333 — under the VOID the nose claim was
+    never tested, and quoting it as a smell result would be the SM.02-class
+    error. A re-run unchanged buys the identical VOID: the sector draw is
+    seeded and seed 0's holdout stands.
+    **Live consequences:** SM.02 stays PARKED with SM.03 as its stated revival
+    path, so the withdrawal re-arms the park-release question that
+    PARK_RELEASE_BASELINE's cleanup at 805c110 exists to banner honestly;
+    smell's claim path narrows back toward where claim_dead found it. The
+    repair space the STOP leaves: a split that closes memorisation WITHOUT
+    asking rotation generalisation of the alive-proof (e.g. a guard-banded
+    RELATIVE-bearing holdout, or a per-seed sector draw pre-checked against an
+    open-world alive reading), or treating the reading as another instrument
+    on the venue and routing the design with the w0-too-shallow family. The
+    arm pick is the Review's, per this family's own three-repair scar; the
+    builder executes.
+    **THE BILL if the repair edits the spec file:** zero certificates — SM.03
+    holds no PASS and `sm_03_nose_reports_occluded.py` is IMPL_DEPS of no
+    other spec.
+    DUE: 2026-11-06 | the Review owes the next-split disposition; 11-06 is the
+        first day under the measured 6/cycle capacity.
+    WAITS-ON: none | `w0-too-shallow` is ACTED, `sm03-heldout-split-saturated`
+        is DISPOSITIONED-delivered awaiting only the desk's stamp, and nothing
+        live decides this split question; the evidence is on the ledger at
+        a7daea7.
