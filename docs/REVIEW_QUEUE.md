@@ -24666,6 +24666,37 @@ ROUTED: gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard | 2026-10-21 | RE-DERIV
         a tighter date would be a promise bought with no extra truth.
     WAITS-ON: none | the evidence is complete on disk, the guard is read, and
         the repair touches no open row.
+    BUILDER-TRACE: 68e39a4 | EXECUTED 2026-10-26 (05:07 slot), all three ordered
+        parts, in the ordered shape. (1) The repair at `68e39a4`:
+        `Budget.charge`'s dedupe re-labels on a False->True repeat — hours move
+        `{backend}_failed` -> `{backend}` in the record's OWN week (the
+        re-label can land after the week closed), `ok` flips true, the call
+        still returns False so nothing re-bills; the demotion direction
+        (True->False) deliberately not taken. (2) The one live instance
+        re-filed THROUGH the repaired path at `43f9e16`:
+        `jannolouwrens/jack-ladder-1792501976` ok false->true, 1.0043 h moved
+        `kaggle_failed` -> `kaggle` in closed `2026-W42` (productive 0.0828 ->
+        1.0871, failed 1.0043 -> 0.0, colab's genuine 0.9909 h waste and W43
+        both untouched, charge returned False) — the row's own arithmetic,
+        reproduced exactly. (3) The watcher-timeout-then-reattach fixture in
+        `T0.12`'s `_probe_metering`, five pre-registered conjuncts
+        (`relabel_moves_hours` / `_does_not_rebill` / `_survives_reload` /
+        `_files_records_own_week` — the exact cross-week live shape — /
+        `_never_demotes`), verified OFFLINE before any ledger write (all five
+        True on the repaired meter, all five False on the control), control
+        required to fail `relabel_does_not_rebill` (the label-flip properties
+        are inexpressible for a recordless meter). `run blast-radius T0.12`
+        in the commit: BLAST RADIUS none. Bill priced live (`run stale-cost
+        experiments/gpu.py`: T0.12 + T0.22, cpu<1min) and PAID in-slot from
+        the clean tree at `b59c09f` (both PASS attempt 22, dirty_files null,
+        T0.12's new conjuncts armed and green). MUST-NOT clauses held: no
+        amount changed, `remaining()` untouched, no new ratchet key, no gate.
+        THE ADJACENT HALF IS NOT TAKEN AND STAYS OPEN ON THIS ROW, stated
+        rather than skipped quietly: the metered-charge-vs-`compute_s` gap
+        print needs the harvester's join (`charge()` never sees `compute_s`),
+        so taking it bills `run.py`'s certificate set — outside this row's
+        priced repair, and the row itself flags that half reporting-only and
+        NOT CLAIMED.
 
 ## ROUTED: OPEN — `steering-pages-rank-the-frontier-by-blocks-not-frees`: `T0.36`
 ## PASSES on the claim that `frees` is the set a repair buys, and three organs
