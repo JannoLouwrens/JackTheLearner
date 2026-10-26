@@ -3977,6 +3977,15 @@ ROUTED: two-eyes-one-certified | 2026-09-07 | 2b3e8a6 (82nd audit B3; eye adopte
     DUE: 2026-11-07 | RE-DATED 2026-10-26 (Review DAILY, OVERDUE FIRST). **Fifth-or-later date, and I am naming the cause instead of apologising for the last one. The cause is NOT the builder and NOT this row: it is THIS DESK, and it is measured.** All eight rows that broke at midnight were dated onto 2026-10-25, a Sunday FULL sitting that RAN and was KILLED ON THE CLOCK — `rc=124`, sealed at 13:02:09Z, its own `PROGRESS.md` auto-bannered *"INCOMPLETE RUN — THIS IS A DRAFT"*. That is not an isolated death: **18 of this desk's last 22 logged sweeps ended `rc=124`** (`/data/jack-logs/review.log`, counted this sitting), and six further calendar days logged no sweep at all. The organ that disposes this queue is absent or truncated roughly three days in four. **The contrast that makes this the desk's own finding and nobody else's: the builder is at FULL liveness — every hourly slot `rc=0` since 2026-10-25T10:49Z, zero dark slots, so `D30`'s blackout default does not fire today.** Every prior re-date on these rows blamed a builder blackout that was real then and is over now; the promises kept breaking anyway, which identifies the bottleneck.
         **THE DATE IS NOT A FREE CHOICE AND I WILL NOT PRETEND IT IS.** `review-queue`'s pile reads EVERY date from 2026-10-27 through 2026-11-06 at the measured capacity of 6/cycle — **there is no free date inside the horizon.** So this is dated onto the first genuinely open day rather than onto a day that is already full, which is the act the pile is made of. **I am recording plainly that this is a weak promise:** arrivals run 4.14/cycle against 2.86/cycle disposed, `review-queue` prints the drain UNBOUNDED, and a calendar booked to its maximum twelve days out will be full again before this date arrives. Re-dating is the only lawful move left to me here — I may not delete the row, drop its `DUE:`, or relabel it HELD — but it is not a repair, and presenting it as one would be the dishonesty this file exists to prevent. **The repair is structural and is on the owner's desk this morning as the Review's FOR THE OWNER 1.**
         **RANK, so the order is auditable rather than implied:** RANKED 5 OF 8. Genuinely FULL-sized — ruling it requires enumerating EVERY certificate bought under the superseded eye, and the three arms (migrate / grandfather / crossing test) cannot be picked without that enumeration. It ranks below the false-green class because it concerns which eye a certificate was bought under, not whether a claim is demonstrated. It has broken five dates; this desk has never once had the clock to do the enumeration.
+    WAITS-ON: none | ADDED 2026-10-26 (Review DAILY, act 4). This row has
+        never carried the declaration the `waits-on-declared-field` row made
+        mandatory, which is why 2026-11-07's group count prints WITHHELD. It is
+        genuinely independent: the question is which eye a certificate was
+        bought under, and no live row decides that. In particular it does NOT
+        wait on `seven-rows-are-held-behind-a-refused-window-and-a-moot-
+        decision` — that row asks whether an EDIT needs the shared world; this
+        one asks what an already-bought CERTIFICATE rests on. Declaring `none`
+        is an assertion of independence, not an absence of thought.
 **The question as it actually stands** (transcribed from the 82nd audit, which
 found it living only as a sentence inside the `pl02-dependency-on-pl00-verdict-
 vs-table` row's closing `EXECUTED` note, where `run review-queue` counts rows,
@@ -19296,6 +19305,12 @@ ROUTED: freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable
     DUE: 2026-11-07 | RE-DATED 2026-10-26 (Review DAILY, OVERDUE FIRST). **Fifth-or-later date, and I am naming the cause instead of apologising for the last one. The cause is NOT the builder and NOT this row: it is THIS DESK, and it is measured.** All eight rows that broke at midnight were dated onto 2026-10-25, a Sunday FULL sitting that RAN and was KILLED ON THE CLOCK — `rc=124`, sealed at 13:02:09Z, its own `PROGRESS.md` auto-bannered *"INCOMPLETE RUN — THIS IS A DRAFT"*. That is not an isolated death: **18 of this desk's last 22 logged sweeps ended `rc=124`** (`/data/jack-logs/review.log`, counted this sitting), and six further calendar days logged no sweep at all. The organ that disposes this queue is absent or truncated roughly three days in four. **The contrast that makes this the desk's own finding and nobody else's: the builder is at FULL liveness — every hourly slot `rc=0` since 2026-10-25T10:49Z, zero dark slots, so `D30`'s blackout default does not fire today.** Every prior re-date on these rows blamed a builder blackout that was real then and is over now; the promises kept breaking anyway, which identifies the bottleneck.
         **THE DATE IS NOT A FREE CHOICE AND I WILL NOT PRETEND IT IS.** `review-queue`'s pile reads EVERY date from 2026-10-27 through 2026-11-06 at the measured capacity of 6/cycle — **there is no free date inside the horizon.** So this is dated onto the first genuinely open day rather than onto a day that is already full, which is the act the pile is made of. **I am recording plainly that this is a weak promise:** arrivals run 4.14/cycle against 2.86/cycle disposed, `review-queue` prints the drain UNBOUNDED, and a calendar booked to its maximum twelve days out will be full again before this date arrives. Re-dating is the only lawful move left to me here — I may not delete the row, drop its `DUE:`, or relabel it HELD — but it is not a repair, and presenting it as one would be the dishonesty this file exists to prevent. **The repair is structural and is on the owner's desk this morning as the Review's FOR THE OWNER 1.**
         **RANK, so the order is auditable rather than implied:** RANKED 6 OF 8. A gate-design defect: the freeze-release quota can be satisfied by a single FAILING spec. Real, and it would matter the moment anyone tried to release the freeze — but nothing is queued to release it, so the defect is latent and nothing is held behind it today.
+    WAITS-ON: none | ADDED 2026-10-26 (Review DAILY, act 4). The second of the
+        two undeclared rows on 2026-11-07. The defect is in the freeze-release
+        QUOTA's own arithmetic — that it is satisfiable by a single FAILING
+        spec — and that is readable from the condition alone. No live row
+        changes it, and nothing is queued to release the freeze, which is the
+        same reason the row ranks 6 of 8 rather than higher.
 **THE MEASUREMENT, from the runner's own predicate.** The STANDING FREEZE in
 `scripts/ladder_prompt.md` (desk, SYSTEM.md class 3, 2026-09-17) says
 **"Lifting it requires only that `T6.01` runs"**. `registry.ready()` and
@@ -25898,9 +25913,16 @@ ROUTED: t205-residual-near-linear-venue-is-a-world-touching-re-aiming | 2026-10-
     **WHAT THIS ROW DOES NOT DO:** it does not re-open `T2.05`, does not move
     the ridge conjunct, and does not pre-empt the shared-world window question.
     No threshold is touched by routing it.
-    DUE: 2026-11-06 | the first date with room under the measured capacity of
-        6/cycle, per `review-queue`'s own next-free-date arithmetic read this
-        sitting. NOT dated onto 2026-10-25/26, both already AMBER.
+    DUE: 2026-11-08 | CORRECTED IN-SITTING 2026-10-26. First written as
+        2026-11-06 on next-free-date arithmetic alone, which produced a
+        DATE-INVERSION the instrument caught before this edit was committed:
+        this row WAITS-ON `seven-rows-are-held-behind-a-refused-window-and-a-
+        moot-decision`, re-dated to 2026-11-07 in act 3 of the same sitting, so
+        11-06 would have fallen due STRICTLY BEFORE the question it depends on.
+        A date that cannot be met without pre-empting its own blocker is a
+        promise to break one of the two. Moved to 2026-11-08 — the first date
+        AFTER its blocker that is also under the measured 6/cycle. NOT dated
+        onto 2026-10-25/26, both AMBER.
     WAITS-ON: seven-rows-are-held-behind-a-refused-window-and-a-moot-decision |
         this is an eighth instance of exactly that row's question — does this
         edit ACTUALLY need the shared-world window, or is it SPEC-LOCAL — so it
