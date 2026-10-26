@@ -25381,3 +25381,203 @@ ROUTED: lg15-shipped-qa-venue-answers-no-one-at-both-ends | 2026-10-25 | measure
     WAITS-ON: none | the parent row is DELIVERED awaiting stamp and D44's
         firing is transcribed; neither decides whether the shipped venue is
         repaired, and the evidence is on the ledger and in the artifact.
+
+ROUTED: worst-seed-lane-a-is-blind-pre-verdict-and-lane-b-reads-only-the-damage | 2026-10-26 | measured by the 162nd audit: `experiments/worst_seed_audit.py:521` (`if g.key in folds`) read at source; `experiments/ledger.json` WM.01 `history` (PASS a1 `2026-10-25T19:26:45`, commit e3560bc) against the repaired gate at `b68d9e2`; `run worst-seed-audit` re-run live (LANE A 148 pairs / 63 specs, LANE B 17 gates / 13 specs) and each lane-B spec cross-referenced against its ledger status; `crontab -l`, `scripts/*.sh`, `scripts/ladder_prompt.md` and `run status` all grepped for an invocation | OPEN
+    The question: arm (c) can only speak about this class AFTER a wrong
+    verdict is already recorded, and nothing in this project invokes it
+    either way — does the pre-verdict half belong to arm (b) (the recorder
+    refusal, STEP 2 of the parent row), to a widened LANE A, or to a
+    run-time check; and whatever the answer, what READS the tool?
+    **THE WORKED EXAMPLE, 5 h before this row was written.** `WM.01`
+    recorded **PASS attempt 1** on the bare conjunct
+    `m["buffer_vs_no_buffer_margin"] >= MARGIN_MIN` (0.10). `run_spec`
+    aggregates per-seed metrics by MEAN and calls `_check` once, so the
+    gate read the **mean 0.1927** over per-seed margins
+    **{0.4707, 0.0800, 0.0273}** — two of three seeds below the bar the
+    spec's own docstring pre-registered as *"on every seed"*. The builder
+    found it by hand, shipped the worst-seed boolean gate (`b68d9e2`, bars
+    byte-unmoved, strengthen-only), re-ran, and the row is now an honest
+    FAIL. **Nothing is owed on `WM.01` and its repair is not in question** —
+    it is cited as the class's first CONFIRMED false PASS, and the
+    superseded row is still in `history`.
+    **WHY ARM (c) COULD NOT HAVE PREVENTED IT — mechanism, at source.**
+    LANE A appends only when `g.key in folds`, i.e. when the gated key is
+    produced by a `min`/`max`/`len` fold in the SAME file
+    (`worst_seed_audit.py:521`). `buffer_vs_no_buffer_margin` is a bare
+    subtraction, so LANE A is structurally blind to it — and that is the
+    09-30 ruling's own specification of arm (c), not a defect in the build.
+    LANE B WOULD have fired: its bound is `mu +/- sigma*sqrt(2)` (the exact
+    extreme-deviation bound for n=3), and on attempt 1 `mu` 0.1927 with
+    `sigma` 0.1978 gives `mu - bound = -0.087`, on the failing side of
+    `>= 0.10`. **But LANE B reads the COMMITTED RECORD**, so it cannot
+    speak until a row with a `std` exists. For a newly authored spec this
+    class is therefore undetectable before the verdict and detectable only
+    after it, and that asymmetry is written nowhere.
+    **AND NOTHING RUNS IT.** `run worst-seed-audit` appears in no crontab
+    entry, no `scripts/*.sh`, and not in `run status`; `ladder_prompt.md`
+    names the parent ROW (`:894`, `:907`) and orders no run; no ratchet
+    counter exists for either lane; the command always exits 0. Its numbers
+    last reached a committed document on **2026-10-01** (`3204870`,
+    `e56193a`) — 25 days.
+    **WHAT IT SAYS TODAY, AND THE SIX THAT MATTER.** LANE B names 17 gates
+    across 13 specs whose committed record admits a violating seed. Six are
+    **standing PASS**: `LT.01` (`adv_ge_bar > 0` admits -3.44e-07),
+    `ME.10` (`skill_gain >= 0.25` admits 0.236832), `NE.00`
+    (`cycle_best_discounted < 0` admits 0.00702), `PG.4` (4 gates, incl.
+    `icm_dwell_share >= 0.4` admitting -3.44e-07), `PS.02`
+    (`shuffled_r2 <= 0.05` admits 0.0999), `T2.20`
+    (`search_time_ratio_recency >= 0.75` admits 0.57023). Arithmetic
+    spot-checked by hand on two (`ME.10` 0.370367 - 0.0944234*sqrt(2) =
+    0.23684; `T2.20` 0.992033 - 0.29826*sqrt(2) = 0.57024) — the tool is
+    right. **"Admits" means the aggregate cannot EXCLUDE a violating seed,
+    not that one violated** — an unresolvable record, not a refuted one.
+    Of the six, exactly ONE (`PG.4`) carries a caveat a board reader can
+    see; the other five print as bare green ticks.
+    **THE STALE PRICE, which STEP 2 is scheduled to rule on.** The parent
+    row quotes arm (b)'s breakage price as **LANE A 139 fold-flagged
+    pairs**; live it reads **148** across 63 specs. STEP 2 is due 2026-10-26
+    and would be ruled on a figure nine gating sites out of date — a live
+    worked example of the open
+    `register-entries-quote-instrument-readings-that-nothing-re-derives`.
+    **NOT A RE-ROUTE OF `aggregate-hides-worst-seed`, checked at source.**
+    That row's subject is whether `protocol.py:_aggregate` should REFUSE to
+    flatten a worst-case key (its STEP 2, this desk's, DUE 2026-10-26, and
+    note 10-26 now carries 7 live rows and prints AMBER against the
+    measured 6 — the row chose that date because *"10-26 carries
+    nothing"*). This row's subject is that arm (c), the measuring half
+    already shipped, cannot speak pre-verdict and is invoked by nothing.
+    Repairing the recorder does not give the tool a reader, and giving it a
+    reader does not make it speak earlier.
+    **REFUSED IN ADVANCE:** any repair that lowers a worst-seed count by
+    narrowing the audit's domain, reclassifying a WRONG as PROTECTED, or
+    renaming a metric so it stops matching a fold (that last is already
+    pre-refused on `ladder_prompt.md:907`). The honest repairs ADD a
+    reader, ADD a counter, or widen a lane.
+    DUE: 2026-11-06 | every day through 2026-11-05 already carries 6 live
+        dated rows against the measured capacity of 6/cycle, so 11-06 is
+        the first date with room — `review-queue`'s own next-free-date
+        arithmetic, read off the tool this sitting rather than chosen.
+    WAITS-ON: aggregate-hides-worst-seed | its STEP 2 settles the recorder
+        half and whatever it rules changes what the pre-verdict half should
+        be; declaration only — no exemption is claimed, this row still ages
+        and still exits 2 on its own date.
+
+ROUTED: pass-on-dead-dependency-certificates-are-exempt-from-the-only-rebuy-lane | 2026-10-26 | measured by the 162nd audit: `coverage.pass_on_dead_dependency(BY_ID, results)` enumerated live (7 pairs, floor 3); `/data/jack-logs/regate.log` skip lines counted over the whole file (T0.18/T0.19/LF.02 = 96 consecutive sweeps since 2026-10-17T16:43, PL.00 = 34 since 2026-10-23T06:43), the 2026-10-26T00:43:04 sweep read live as it ran; `ran_at` per row off `experiments/ledger.json`; `champions --check` cross-referenced for seat membership | OPEN
+    The question: the rule that protects a PASS whose dependency has fallen
+    from a bookkeeping demotion is the same rule that exempts it from ever
+    being falsified again — should these certificates get a re-measurement
+    path (a lane that records a verdict rather than BLOCKED), an explicit
+    expiry, or a declared marking on the board; and what prints the pair?
+    **THE SEVEN, ENUMERATED — no page in this series has named them.**
+    `T0.19` <- `T0.13` FAIL, last actually ran **2026-08-11** (76 d);
+    `T2.03` <- `T1.08` FAIL, **2026-08-19** (68 d);
+    `T0.18` <- `T0.13` FAIL, 2026-08-30 (57 d);
+    `T2.14` <- `T1.08` FAIL, 2026-08-30 (57 d);
+    `LF.02` <- `T6.03` BLOCKED, 2026-09-06 (50 d);
+    `T1.12` <- `T1.11` FAIL, 2026-09-26 (30 d);
+    `PL.00` <- `T0.07` FAIL, 2026-10-21 (5 d).
+    `pass_on_dead_dependency` reads **7 against a declared floor of 3** —
+    the worst floor breach on the board.
+    **THE COMPOUNDING FACT, off the regate lane's own log.** The rotation is
+    the only organ that routinely re-buys a standing certificate, and it
+    refuses four of the seven every sweep: *"skip T0.18 / T0.19 / PL.00 /
+    LF.02 — rotation would record BLOCKED, not a verdict — dependency red
+    …; owned by its pass_on_dead_dependency row."* The other three are
+    outside the lane for unrelated reasons: `T1.12` is refused as
+    `cpu<10min` against a measured 1141 s, and `T2.03`/`T2.14` are GPU with
+    no legal buyer behind `T1.08`. **So all seven are exempt from
+    re-measurement, four of them by a rule written for their protection.**
+    **THE SKIP IS CORRECT AND THIS ROW DOES NOT ASK FOR IT TO CHANGE.**
+    Rotating them would record `BLOCKED` — destroying a PASS by bookkeeping
+    rather than by measurement, which is strictly worse, and the log line
+    already names the owner. The defect is that `pass_on_dead_dependency`
+    counts the shielding and nothing counts the exemption, so a reader sees
+    "7 certificates on dead foundations" and not "and none of them can be
+    re-measured."
+    **THREE OF THE SEVEN HOLD CHAMPION SEATS**, which is how this reaches
+    the architecture invariant and why two instruments each hold half of it:
+    `T2.03` is the **Vision encoder** arena (seat held BY DEFAULT and
+    already printed `UNCONTESTED`); `PL.00` is **Audio encoder** and the
+    **PLASTIC-ONLY decree** seat (also `UNCONTESTED`); `LF.02` is **Death &
+    persistence**'s only PASS arena member and the file's single
+    `KINDLESS DISCHARGE`. `champions --check` cannot see the dependency
+    death and `coverage` cannot see the seat.
+    **THE FLOOR IS UNREACHABLE BY CONSTRUCTION, stated so no desk re-derives
+    it:** the only honest way down is the dependency going green, and
+    `T0.13` is FAIL, `T1.08` FAIL with a sixth attempt prohibited in
+    writing, `T0.07` FAIL (routed 2026-10-25), `T1.11` FAIL (`D41` fired
+    (iii), no call site added), `T6.03` BLOCKED behind `T2.10` FAIL. Five
+    of five blockers red, four with no reachable repair.
+    **NOT A RE-ROUTE, checked at source against both neighbours.**
+    `pass-certificates-are-not-re-evaluated-when-a-dependency-falls` is
+    `ACTED` 2026-09-22 and terminal — its subject was re-evaluation ON the
+    fall, not permanent exemption after it.
+    `staleness-of-a-standing-pass-reaches-no-exit-code` (OPEN, DUE
+    2026-10-27) is staleness-by-content, a different population and a
+    different cause.
+    **REFUSED IN ADVANCE:** the repair that would make the number fall by
+    letting the rotation record `BLOCKED` on these seven, and any raising
+    of `PASS_ON_DEAD_DEPENDENCY` floor 3 — a floor moves only in the commit
+    that grew the number, with the reason in its growth log, and this organ
+    may not propose a loosening.
+    DUE: 2026-11-06 | the first date with room under the measured capacity
+        of 6/cycle; every day through 11-05 is already at 6. Grouped onto
+        one date with this sitting's two other rows (4 of 6 after them), so
+        no date is piled on.
+    WAITS-ON: none | no live row decides whether a shielded certificate
+        gets a re-measurement path, and the evidence is in the regate log
+        and the ledger rather than behind another disposition.
+
+ROUTED: detached-lane-memory-breach-reaches-no-row-no-receipt-and-no-counter | 2026-10-26 | measured by the 162nd audit: `/data/jack-logs/ladder.log` 2026-10-25T21:23:51 MEMORY line (1736 MB VmHWM, 305 s CPU, the LG.15 `llm_pass` child); `docs/LOOP_JOURNAL.md:24927` (the 21:1x entry, breach unmentioned) against the loop's own line ordering; `experiments/ledger.json` walked for `peak_rss_mb >= 1536` (10 of 164 rows, 1736 not among them); `grep peak_rss_mb` over experiments/ + scripts/ outside tests (protocol.py WRITES only, at :637/:3739/:4248/:4417/:4429); D18's firing record in docs/DECISIONS_RESOLVED.md | OPEN
+    The question: a tenant-memory breach by a detached child lands in no
+    ledger row, no `mem_receipts` entry, no committed document and no
+    counter — which of those is the one to repair, and what reads it?
+    `D18`'s armed default is **MEASURE AND REPORT, GATE NOTHING, RELAX
+    NOTHING**, so this is entirely about the REPORT half.
+    **THE BREACH.** `2026-10-25T21:23:51`: *"MEMORY 3519175:1589127631 —
+    peak rss 1736 MB (VmHWM) over the 1536 MB ceiling, 305s CPU"*, the
+    `lg_15_character_sheet_answers_for_no_one import llm_pass` child —
+    **113% of the ceiling, on a box with four paying tenant agents**, which
+    `SYSTEM.md` and `CLAUDE.md` both rank above the ladder. Not killed, and
+    nothing should have been: the live scan worked exactly as designed.
+    **WHY THE BUILDER DID NOT REPORT IT — mechanism, not blame.** The
+    21:1x journal entry is a full and careful record of `LG.15` and does not
+    mention the breach, because the loop emits the `MEMORY` line at
+    **iteration end (21:23:51)**, after the slot summary has been composed.
+    The organ that caused the breach cannot, by the loop's own ordering,
+    carry it into the durable record.
+    **WHY NO ROW HOLDS IT.** The breaching process was a bare
+    `python -c ... llm_pass()` under `launch_detached.sh`. `run_spec` writes
+    `peak_rss_mb` into the ledger row and a receipt to
+    `/data/jack-logs/mem_receipts` — **this process called neither**, and
+    `LG.15`'s row carries the HARVEST process's footprint, which only reads
+    an artifact. The 142nd-audit receipt repair (`5ad6a0e`) declared this
+    blindness for *a child killed before the receipt line*; this instance
+    is the other half — a child that ran to completion outside `run_spec`
+    entirely.
+    **WHY NO COUNTER SEES IT.** Nothing in `experiments/` or `scripts/`
+    READS `peak_rss_mb`; `protocol.py` only writes it. There is no ratchet
+    key for the class. `D18`'s own firing record states the population as
+    *"own-peak rows over the 1536 MB ceiling: 8 of 69 (12%)"*; walked live
+    it is **10 of 164** (`T1.03` 7389.1, `T0.07` 6897.5, `T0.04` 3407.9,
+    `T0.16` 2737.0, `LC.02` 2132.7, `T1.04` 2073.9, `PG.6` 2073.4, `T0.14`
+    1895.6, `T1.12` 1668.6, `SO.01` 1592.1) — and 1736 is not among them.
+    Nobody re-derived that figure in 54 days because nothing can.
+    **THE CLASS, named because this is its third instance in two days:** the
+    161st audit found both recorders of a lost builder slot erase themselves
+    on recovery; `LESSONS.md` at `495dd4b` recorded that `cpu_budget`'s
+    projection was proved safe in the direction that costs a dispatch and
+    left unexamined in the direction that costs the box. Every counter here
+    that would show this project doing harm either resets when the harm ends
+    or was never built — and this instance's harm is to the tenants.
+    **REFUSED IN ADVANCE:** `JACK_MEM_CEILING_MB` 1536 and `~1.5 GB` in
+    `SYSTEM.md` are byte-unmoved and stay so; nothing is gated, nothing is
+    killed, and no admission check may be added — `D18` fired *GATE
+    NOTHING* and no desk may convert a report into a gate. A repair that
+    makes the number smaller by narrowing which processes are scanned is
+    the wrong direction.
+    DUE: 2026-11-06 | the first date with room under the measured capacity
+        of 6/cycle; grouped with this sitting's two other rows.
+    WAITS-ON: none | `D18` is RESOLVED and its default already orders the
+        report; no live row decides where a detached child's footprint is
+        recorded.

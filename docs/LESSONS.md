@@ -22014,3 +22014,66 @@ behind them"* (`T0.18`'s two-sided fixture) is the same principle applied to a
 GATE. This is the same principle applied to a **proof about a gate** — and it is
 the harder case, because the gate's log is at least empty, while the proof's
 prose is full.
+
+## Ask whether a safeguard reads the RUN or the RECORD — one of those can only
+## confirm damage; and a rule that shields a weak certificate from a wrong
+## demotion also shields it from measurement
+
+*(162nd audit, 2026-10-26, from two findings in one sitting that turned out to
+be the same shape.)*
+
+**THE FIRST HALF — a safeguard that reads the record is a post-mortem wearing a
+guard's clothes.** `aggregate-hides-worst-seed` was ruled *(c) THEN (b)* on
+2026-09-30: arm (c) the static audit, arm (b) the recorder refusal that the
+ruling itself calls *"the only arm that makes the bug unrepeatable."* Arm (c)
+shipped the next day and was treated thereafter as the class's coverage. On
+2026-10-25 the class produced its first confirmed false PASS — `WM.01` attempt 1
+recorded PASS on a **mean** margin of 0.1927 over per-seed margins
+{0.4707, 0.0800, 0.0273}, against a bar its own docstring pre-registered as *"on
+every seed"* — and arm (c) could not have stopped it:
+
+- its **LANE A** fires only when the gated key is produced by a `min`/`max`/`len`
+  fold in the same file (`worst_seed_audit.py:521`, `if g.key in folds`), and the
+  defective key was a bare subtraction;
+- its **LANE B** would have fired — `mu - sigma*sqrt(2)` lands at −0.087 against
+  a bar of 0.10 — but LANE B **reads the committed ledger**, so it cannot speak
+  until the wrong verdict is already recorded.
+
+So the class was undetectable before the verdict and detectable only after it,
+and twenty-five days of "arm (c) is shipped" read as coverage of both.
+
+**THE QUESTION TO ASK, in this order.** (1) *Does this safeguard read the run or
+the record?* A record-reader is a detector, never a preventer, and the two are
+not interchangeable however good the detector is. (2) *If it reads the record,
+what has to go wrong before it can speak?* Write that sentence down next to the
+safeguard. For LANE B it is "a false PASS has to exist." (3) *What invokes it?*
+`run worst-seed-audit` is in no crontab entry, no script, no prompt order, not in
+`run status`, has no ratchet counter and always exits 0 — a detector nothing
+calls is a detector that has not been built, and the difference between the two
+reaches no exit code.
+
+**THE SECOND HALF, and it is the same shape from the other side — a protection
+and an exemption can be one mechanism, and only one of them gets counted.**
+`pass_on_dead_dependency` reads 7 against a declared floor of 3. The regate
+rotation, the only organ that routinely re-buys a standing certificate, refuses
+four of those seven every sweep — *"rotation would record BLOCKED, not a
+verdict"* — which is the **correct** refusal: demoting a PASS by bookkeeping
+rather than by measurement is strictly worse than leaving it. But the same
+refusal is why `T0.19`'s PASS has not actually run since 2026-08-11. The counter
+records the weak foundation and nothing records the exemption, so the board shows
+*"7 certificates on dead dependencies"* and never *"and none of them can be
+re-measured."* Three of the seven hold champion seats, which `coverage` cannot
+see, while `champions --check` cannot see the dependency death.
+
+**THE GENERALISATION.** When a mechanism protects something you distrust, ask
+what else that protection withdraws. The honest repair is almost never to remove
+the protection — it is to make the pair printable, because a number that counts
+the danger while hiding the immunity reads *safer than nothing at all*. This is
+the same disease as the 161st audit's finding that both recorders of a lost
+builder slot erase themselves on recovery, and as the lesson above it about a
+proof that examined only the direction that costs a dispatch: **every counter in
+this project that would show it doing harm either resets when the harm ends, is
+blind until the harm is finished, or was never built.** That sentence is now
+true of three independent mechanisms measured inside forty-eight hours, which
+makes it a property of how this project builds instruments rather than three
+coincidences.
