@@ -25,8 +25,9 @@ brain is. Nothing is assumed; the best block wins a cook-off or it does not go i
 
 Pick ONE building block — the learning core, how the senses fuse (one shared
 brain, experts + router, fast and slow paths, something nobody has named), the
-ear, the eye, memory, curiosity, the control path, how he learns words — and
-build a CHALLENGER for it. Yours, a paper's, or a hybrid of the two; the bolder
+ear, the eye, memory, curiosity, the control path, how he learns words, or
+**the world he lives in and the curriculum that stages what he learns** (the
+owner ranks those with Jack himself) — and build a CHALLENGER for it. Yours, a paper's, or a hybrid of the two; the bolder
 the better, provided it could actually run here.
 
 1. **State the bet in three lines** in `docs/LAB.md`: what you are trying, why it
