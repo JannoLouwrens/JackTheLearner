@@ -38,8 +38,11 @@ claim, not a performance claim — do not gate on how well he does. Pilot ONE
 life first to size it; repair `LF.01` (VOID) only if it is in the path.
 serves: M1 · philosophy 1 (the creature), 4 (controls that must fail).
 **done when:** `LF.03` is registered with both controls and has a verdict.
-state: open — not started. First slot: read `lf_02_*.py`, swap the scripted
-forager for `wm-latent`, pilot one life, record its wall-clock here.
+state: REGISTERED + implemented at d6c59a9 (`tests/lf_03_learner_lives.py`). Pilot, one
+natural life (seed 0, e0=1.0): 503 sim-s ≈ 2,515 decisions, 141 s wall, 860 opt steps.
+Smoke: 5-store resume (learner weights+Adam+replay) bit-exact over 50 decisions.
+Registered run launched detached 22:14 UTC, AWAITING LF.03 (pid 1793344, log
+/data/jack-logs/lf03_run1.log), ~60–75 min. Next: harvest the ledger row; a FAIL is fixed.
 
 ### J1 — Harvest `T1.14`, then give it a control that is run, not described
 **Why.** `T1.14` (seed noise is measured; SNR ≥ 3) now carries 45 specs and

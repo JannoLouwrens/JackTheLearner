@@ -262,3 +262,12 @@ the only code change) and prints 35 of 35. coverage 2 / decisions 0 / champions 
 byte-identical except T0.28's own stale bill. **DECISIONS_NEEDED is 9 KB OVER the 150 KB cap
 and every byte of the overage is live open decisions (D40 alone is 26 KB across 4 sections) —
 left for the Director, see ORDERS S2 state.**
+
+## 2026-11-11 ~22:15 UTC — JACK lane, J3 (worker, Opus)
+Registered `LF.03` (the creature gate) at d6c59a9: wm-latent drives the body in lethal W0 to ≥5
+deaths, all five W0 senses live, world-written diary checked at every respawn, one mid-life
+save/resume in a fresh process carrying weights+Adam+replay, gated bit-exact over 200 decisions;
+frozen-twin and wiped-diary controls read the same detectors and must be flagged. Pilot: one
+natural life = 503 sim-s / 2,515 decisions / 141 s wall / 860 opt steps. Smoke resume bit-exact
+(50/50). Registered run detached 22:14 (pid 1793344, log /data/jack-logs/lf03_run1.log) — not
+yet a verdict. Served: philosophy 1 (the creature, whole, for the first time) and 4 (controls run).
