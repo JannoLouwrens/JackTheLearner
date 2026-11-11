@@ -8396,6 +8396,42 @@ EXPANSION: list[Spec] = [
                "Session persistence is harness composition, not a "
                "constitutional sense."),
 
+    Spec("LF.03", 2, "One whole life with the learner in the loop",
+         hypothesis="The seated learning core (wm-latent) drives the body in "
+                    "lethal W0 across >= 5 deaths with every W0 sense live, "
+                    "updating its weights online; the world-written diary "
+                    "carries every earlier death across every respawn; one "
+                    "mid-life save-and-resume in a fresh process carrying the "
+                    "learner's weights, optimiser and replay continues the "
+                    "uninterrupted life bit-exactly for 200 decisions; no "
+                    "crash, no non-finite state, weights measurably changed.",
+         falsified_by="A crash or non-finite state; weights that did not move "
+                      "(relative L2 < 1e-3 or zero optimiser steps); a respawn "
+                      "at which an earlier death row is missing from the diary; "
+                      "a dead sense (zero variance over the life); a resumed "
+                      "continuation that differs from the uninterrupted one in "
+                      "any bit of world, needs, learner or diary — on ANY seed.",
+         null_baseline="LF.01/LF.02's scripted forager: the harness has only "
+                       "ever run with a script in the learner's seat.",
+         metric="learner_life_integration", budget=Budget.CPU_LONG, seeds=3,
+         depends_on=["LF.02", "PS.01", "LC.02", "XL.00"],
+         control="Two controls, each actually run to 2 deaths, read by the SAME "
+                 "detectors as the experiment and each must be FLAGGED: a frozen "
+                 "twin (optimiser never stepped -> 'weights changed' must read "
+                 "False) and a wiped diary (emptied after every death -> "
+                 "'diary carried' must read False; its weights detector must "
+                 "still read True, so the two detectors are independent).",
+         kills="Every claim about Jack that assumes the creature-as-built runs "
+               "end to end — every performance spec on a whole life.",
+         notes="REGISTERED 2026-11-11 (ORDERS.md J3, the creature gate). An "
+               "INTEGRATION claim, not performance: life spans, eats and steps "
+               "are reported, never gated. Pilot before registration: one "
+               "natural life (e0=1.0) of wm-latent in lethal W0, seed 0 = "
+               "503.0 sim-s (~2,515 decisions), 140.8 s wall, 860 optimiser "
+               "steps — ~20 min/seed with controls, hence cpu<2h. Learner loop "
+               "is survival.run_survival's core path as a stepping object "
+               "(a closure cannot be checkpointed); every piece imported."),
+
     Spec("SO.01", 2, "Jack can be watched: a third-person stream exists and costs what we say it costs",
          hypothesis="A third-person view of a running life renders at >=5 fps at "
                     "320x240 on this box and is deliverable to the owner without "
