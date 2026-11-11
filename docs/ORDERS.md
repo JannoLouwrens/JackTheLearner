@@ -1,4 +1,6 @@
-# ORDERS — what the workers do. Written by the Director; ≤ 12 KB.
+# ORDERS — what the workers do. Written by the Director.
+
+Director sitting: 2026-11-11 20:28 UTC (acting Director — the owner's session)
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5). Machine problems go under INBOX, one

@@ -14,9 +14,10 @@ brain is. Nothing is assumed; the best block wins a cook-off or it does not go i
 
 1. `docs/LAB.md` — what has been tried and how it ended. Do not repeat a dead idea
    without a new reason.
-2. `docs/CHAMPIONS.md` — the seats: who holds each building block, and by what
-   right (verdict, default, decree, vacant). Seats held by DEFAULT or VACANT are
-   open invitations.
+2. The seats, one line each: `grep '^- SEAT:' docs/CHAMPIONS.md` — who holds
+   each building block and by what right (BY VERDICT, DEFAULT, DECREE, VACANT).
+   Seats held by DEFAULT or VACANT are open invitations. Read a seat's own
+   section of that file only once you have picked it (the file is 72 KB).
 3. `docs/LESSONS_CORE.md` — the rules. `docs/FIELD_WATCH.md` — what the outside
    world just published. `docs/ORDERS.md` — what the workers are on (do not
    collide with an open order; build on it or go elsewhere).

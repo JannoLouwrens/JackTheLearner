@@ -18,8 +18,8 @@ never a candidate for a part of him.
    one). Its `state:` lines are the handoff from the last worker. Do not pick
    your own project; do not work the SYSTEM section.
    **If the orders cannot steer you** — the file is missing or broken, no JACK
-   order is open, or `git log -1 --format=%cr -- docs/ORDERS.md` says the
-   Director has not touched it for 3 days — do not idle and do not invent a
+   order is open, or the `Director sitting:` line at its top is missing or more
+   than 3 days old — do not idle and do not invent a
    project: take the top repairable blocker from `$PY -m experiments.run
    blocked`, repair it under the rules below, and add one INBOX line saying the
    orders went stale and what you took.

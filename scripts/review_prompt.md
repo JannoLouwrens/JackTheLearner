@@ -43,7 +43,12 @@ that counts is Jack's code changed, a run landed, a verdict moved. An order with
 two days of `state:` lines and no such evidence is badly specified or too big:
 rewrite it, split it, or replace it.
 
-**2. Rewrite `docs/ORDERS.md`** (the deliverable; ≤ 12 KB).
+**2. Rewrite `docs/ORDERS.md`** (the deliverable).
+- Its second line is your stamp: `Director sitting: YYYY-MM-DD HH:MM UTC`.
+  Workers and the auditor read THAT line to know you are alive — a worker's own
+  commit to the file must never be able to stand in for you.
+- Bounded by structure, not bytes: at most 7 + 3 orders, each at most ~15 lines
+  plus 5 `state:` lines. Nobody shaves bytes off this file.
 - JACK section: **at most 7 open orders, ranked**, with an "Order of work" line.
   Rank by leverage toward a living creature: the earliest unfinished milestone
   in `docs/ROADMAP.md` always has an order; then what a repair frees (`run
@@ -86,7 +91,9 @@ numbers (points per worker run, slots lost to budget, free GPU-hours expired
 this week, age of the oldest unrepaired blocker); anything dead or stuck in the
 machine (an organ silent past twice its cadence, pushes failing, disk low, a
 login or meter that cannot be read); and FOR THE OWNER only if something truly
-needs him. Append one trend line to `docs/PROGRESS_LOG.md`.
+needs him. Append one row to `docs/PROGRESS_LOG.md` in its table's shape
+(`| date | DAILY or FULL | demonstrated | rate | net new | rework | one line |`);
+the launcher writes a bare one if you do not.
 
 **Sundays (FULL), additionally:**
 - The honest paragraph: closer to a creature that lives, learns and is known —
@@ -102,7 +109,7 @@ needs him. Append one trend line to `docs/PROGRESS_LOG.md`.
   never weaken. A spec you turn red is a repair order the same day, with the
   dependency question answered: which downstream specs truly need the new clause?
 - The machine: are the steering files inside their caps (`ladder_prompt.md`
-  ≤ 10 KB, `ORDERS.md` ≤ 12 KB, `LESSONS_CORE.md` ≤ 15 KB, `ROADMAP.md` ≤ 6 KB)?
+  ≤ 10 KB, `LESSONS_CORE.md` ≤ 15 KB, `ROADMAP.md` ≤ 6 KB, `FIELD_WATCH.md` ≤ 12 KB)?
   Is each lane earning its slots? You may edit the prompts in `scripts/`
   directly — smaller, never bigger — and say what you changed in PROGRESS.
 

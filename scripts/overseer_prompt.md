@@ -22,9 +22,13 @@ Read: `GOAL.md`, `docs/LESSONS_CORE.md`, `docs/ORDERS.md`, `docs/PROGRESS.md`,
     $PY -m experiments.champions --check  # can every architecture seat still lose?
     $PY -m experiments.run verify | tail -25   # do recorded verdicts still re-derive?
 
-A commitment with no spec, a decision with no default or past its date, a seat
-whose challenger does not exist, a verdict that no longer re-derives — each is a
-finding. You report it; the Director orders the repair.
+A commitment with NO spec, a decision with no default or past its date, a seat
+whose challenger does not exist, a PASS that no longer re-derives — each is a
+finding. You report it; the Director orders the repair. **Everything else those
+tools print is bookkeeping, not a finding:** shrink-only counters (UNREACHABLE,
+FAIL-UNOWNED, venue baselines) move every time an order registers a spec, and
+several were red before the reorganisation. Do not turn a counter into work —
+that is how October's drift re-enters. One line under FOR THE DIRECTOR at most.
 
 ## Then audit, in this order
 
@@ -56,8 +60,8 @@ do tail -3 /data/jack-logs/$f.log; done`. An organ silent past twice its cadence
 ending `rc≠0` three times running, or refusing every slot (`ABORT`, `STOPPED`,
 `PACING` all day) is a finding with its cause. `git status -sb | head -1` — ahead
 of origin means pushes are failing and GPU jobs clone stale code. `df -h / /data`.
-Did the Director rewrite `docs/ORDERS.md` in the last 36 hours
-(`git log -1 --format=%cr -- docs/ORDERS.md`)?
+Is the `Director sitting:` stamp at the top of `docs/ORDERS.md` less than 36
+hours old? (Read the stamp, not git — workers commit that file every hour.)
 
 **5. Was free compute used?** This ISO week in `experiments/gpu_budget.json`
 against the 30 free Kaggle hours: hours spent with no ledger row are waste;

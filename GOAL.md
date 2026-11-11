@@ -328,17 +328,20 @@ verdict: one shared brain, experts + router, fast/slow and separate towers are
 raced on one ruler (UB.10, BO.01). What is fixed is the end — every sense
 reaches a brain that learns from all of them.
 
-## The path (each stage gated by the ladder — see CHECKLIST.md)
+## The path
 
-1. **Harness + primitives** (Tiers 0–1, DONE): measurement works, every part can learn.
-2. **Capabilities vs null** (Tier 2, in progress): locomotion, grounding, memory,
-   curiosity — each must beat a dumb baseline or be replaced by it.
-3. **Earn your parameters** (Tier 3): every component ablated; dead weight deleted.
-4. **Unison** (Tier 4): senses fused; each proven load-bearing; no modality collapse.
-5. **The claims** (Tier 5): continual learning without forgetting, plasticity
-   that does not die, curiosity that drives real exploration — the thesis itself.
-6. **A living Jack** (Tier 6): runs for hours, remembers across sessions,
-   explores unprompted in his playground world.
+**The route from today to this page is `docs/ROADMAP.md`** — nine milestones,
+from one whole life with the learning brain in control to more worlds, other
+minds and the told world. A milestone is done only when its named specs PASS in
+the ledger. The Director keeps it current and draws the workers' orders from it.
+
+*(Amended 2026-11-11 with the reorganisation. This section used to list six
+"tiers" ending in "a living Jack (Tier 6)". The tiers remain as labels on specs,
+but the Tier-6 gates were written for an earlier brain and an earlier idea — a
+companion session — before the survival world of 2026-08-09; the audit of
+2026-11-11 found the learning this project has actually demonstrated lives on
+the survival stack. The staging above is unchanged: prove each ability, then
+everything at once, and the testing moves in with him.)*
 
 ## Research foundations (docs/research/)
 
@@ -350,4 +353,5 @@ reaches a brain that learns from all of them.
 - `UNIFIED_BRAIN.md` — multimodal fusion that actually fuses (in progress)
 
 **The ledger (`experiments/ledger.json`) is the only scoreboard.** The goal is
-accomplished when Tier 6 passes — not when it feels done.
+accomplished when the last milestone in `docs/ROADMAP.md` passes there — not
+when it feels done.

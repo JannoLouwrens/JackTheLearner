@@ -27,7 +27,13 @@ If you cannot say how, do not do it.
    stop — that repair IS your unit.) If that
    section has no open order, take the oldest line under `## INBOX`, do it if it
    is small, or leave it for the Director if it needs a decision. If both are
-   empty: run the three guards below, fix what they flag, and stop early.
+   empty: run the three guards below and stop early. **Act only on these three
+   things:** a GOAL commitment with NO spec, an open decision with no default,
+   a seat whose challenger does not exist. Everything else they print — ratchet
+   counters such as UNREACHABLE, FAIL-UNOWNED or venue baselines that moved
+   because an ORDER registered a spec — is bookkeeping. Never spend a slot
+   raising a baseline or re-buying certificates to quiet a counter; that is the
+   October drift coming back in through the tools. Note it under INBOX.
    An empty queue is a good day, not a prompt to invent work.
 2. `docs/LESSONS_CORE.md` — the rules.
 3. `tail -40 docs/LOOP_JOURNAL.md`.
@@ -48,9 +54,11 @@ If you cannot say how, do not do it.
   stale cheap certificates on cron for zero model calls. Look for more of that —
   anything an iteration does by rote is a script waiting to be written.
 - **Keep the steering small.** `scripts/ladder_prompt.md` ≤ 10 KB,
-  `scripts/system_prompt.md` ≤ 8 KB, `docs/ORDERS.md` ≤ 12 KB,
-  `docs/LESSONS_CORE.md` ≤ 15 KB, `docs/PROGRESS.md` ≤ 8 KB. If one is over, that
-  is your order. History belongs in git and `docs/archive/`, not in prompts.
+  `scripts/system_prompt.md` ≤ 8 KB, `docs/LESSONS_CORE.md` ≤ 15 KB,
+  `docs/PROGRESS.md` ≤ 8 KB, `docs/FIELD_WATCH.md` ≤ 12 KB. If one is over, that
+  is your order. `docs/ORDERS.md` is bounded by its STRUCTURE (7 + 3 orders, 5
+  state lines each) and is the Director's file — never shave bytes off it.
+  History belongs in git and `docs/archive/`, not in prompts.
 - **Measure the machine by what it costs the Jack lane**: weekly-meter points
   per worker run (`/data/jack-logs/usage_ledger.jsonl`), slots lost to the
   budget (`/data/jack-logs/ladder.log`), free GPU-hours expired

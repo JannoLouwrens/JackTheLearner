@@ -1,6 +1,7 @@
 # SYSTEM.md — how this project decides things
 
-> **Read `GOAL.md` first. Then this. Then `docs/LESSONS.md`.**
+> **Read `GOAL.md` first. Then this. Then `docs/LESSONS_CORE.md`** (the rules, 6 KB —
+> `docs/LESSONS.md` is the archive: grep it, never read it whole).
 > Every agent — the hourly loop, a research subagent, a human, the overseer —
 > starts here. You are not a visitor doing a task. You are one iteration of a
 > system, and the system is the deliverable.
@@ -295,16 +296,22 @@ with a failing arm returns VOID rather than a confident wrong answer.
 
 ## What every agent owes the system
 
-Before you finish, ask: **is the machine better than I found it?** Concretely,
-at least one of:
+Before you finish, ask: **did Jack move — and is what the system says about him
+still true?** That is the debt. It used to read "is the machine better than I
+found it? — add a spec, a guard, a lesson", and that sentence is how the machine
+grew to ~20,000 lines of governance beside ~1,600 lines of creature while the
+share of commits that landed a result fell to 5% (2026-10). The machine may not
+grow. What an agent owes now, in order:
 
-- a new spec that closes a gap someone could have exploited,
-- a guard that makes a class of bug impossible rather than fixed,
-- a lesson appended to `docs/LESSONS.md` (deduplicated, generalisable),
-- a decision resolved in `docs/DECISIONS_RESOLVED.md` with its losers recorded,
-- an owner-decision escalated to `docs/DECISIONS_NEEDED.md` with the evidence.
-
-Fixing one bug is maintenance. Making that bug unrepeatable is building.
+- a FAIL repaired, or the measurement that shows why it cannot be and what must
+  change — fixing one bug is maintenance, and leaving a red spec behind is debt;
+- a decision settled by a cook-off and recorded in `docs/DECISIONS_RESOLVED.md`
+  with its losers — or, only if no measurement can settle it, escalated to the
+  owner with a default and a date;
+- a rule that proved itself general, folded into `docs/LESSONS_CORE.md` by
+  merging or replacing one already there (it is capped — it does not grow);
+- a guard only when a class of failure cannot be fixed any other way, and then
+  one that removes at least as much as it adds.
 
 One more duty, owed to the owner specifically: **owner directives are
 constitutional — and they enter with eyes open.** When the owner sets
