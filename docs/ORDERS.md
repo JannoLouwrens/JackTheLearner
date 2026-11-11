@@ -31,7 +31,11 @@ for exactly those five. `T2.13` (seeds = 1) keeps `T1.08`. (3) Run `T1.14`.
 **done when:** `T1.14` has a verdict, `T1.08` still reads FAIL with 7.0
 byte-unmoved, and `run blocked` no longer lists `T1.08` as blocking `T2.01`,
 `D1.0` or anything in Tier 5/6.
-state: open — not started.
+state: steps 1+2 DONE at 4818a2c — `T1.14` registered (imports T1.08's job, snr>=3 + MDE>0
++ spread control; cv reported not gated); T2.01/T2.02/T2.03/T2.14/D1.0 re-parented, T2.13
+keeps T1.08; t1_08 file untouched. `run blocked`: T1.08 gone, T1.14 NOT_RUN blocks 45.
+Step 3 IN FLIGHT: dispatch watcher pid 1698161, kaggle `jack-ladder-1794429036`, log
+/data/tmp/dispatch_t1_14.log (~1 GPU-h). Next: confirm ledger row, render, mark DONE.
 
 ### J2 — Settle who controls the body (`D1.1`), then re-run "he can move" (`T2.01`)
 **Why.** `D1.0` spent 17.6 GPU-hours and measured it: small plastic head **506**
