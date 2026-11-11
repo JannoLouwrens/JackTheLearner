@@ -189,7 +189,8 @@ REVIEW_QUEUE as the repair; `run verify` exits 2 on a venue baseline and the
 standing `T0.18` KeyError. Prompts now say "ignore these" — a red nobody reads.
 **Do.** Move those counters out of the exit code (still printed). Point
 FAIL-UNOWNED at `docs/ORDERS.md` (owned = named in an open order). Fix the
-`T0.18` KeyError. Nothing that guards a threshold, a control or a seed count
+`T0.18` KeyError. `run status`'s STEERING-PAGE reader parses 0 items from 3
+pages — aim it at this file's orders or delete it. Nothing that guards a threshold, a control or a seed count
 leaves the exit code. Smaller, not bigger.
 serves: philosophy 4, 5 (a truthful machine).
 **done when:** on a clean tree `coverage` and `run verify` exit 0, and each
