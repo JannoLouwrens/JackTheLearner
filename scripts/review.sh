@@ -93,6 +93,12 @@ proc_declare $$ "review.sh consumer slot"
 . "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
 card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_REVIEW_MODEL:-$MANAGER_MODEL}"
+# A manager whose model is at its OWN weekly limit sits on the fallback instead of
+# dying every day until the reset. Before 2026-11-11 the desks ran on opus, which
+# has no separate meter, so this could not bite; on fable it can — week:Fable hit
+# 100% in several measured weeks. Pre-flight here, and after the run any limit
+# (credits, session, weekly model) retries once on the fallback.
+model_gate "$MODEL" say || { say "manager model ${MODEL} is at its own weekly floor — sitting on ${MANAGER_FALLBACK}"; MODEL="$MANAGER_FALLBACK"; }
 # Two gears, one organ (owner, 2026-08-09: "every 24 hours the loop must be
 # reviewed... to fix itself... the senior engineer"). Steering rots in hours
 # — the builder's map went stale twice in one day. Science needs a week of
@@ -142,8 +148,8 @@ usage_ledger review start "$MODEL"    # D15 (d): attribution; model passed, not 
 nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; philosophy_card; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
-if credits_out; then
-  say "OUT OF CREDITS on ${MODEL} — retrying on ${MANAGER_FALLBACK}"
+if limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then
+  say "LIMITED on ${MODEL} (credits, session or weekly model limit) — retrying on ${MANAGER_FALLBACK}"
   mark_log
   MODEL="$MANAGER_FALLBACK"   # the ledger append below must name what RAN (76th B1)
   nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; philosophy_card; cat "$REPO/scripts/review_prompt.md")" \

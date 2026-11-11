@@ -39,6 +39,12 @@ MAXTURNS=90
 . "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
 card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_FIELDWATCH_MODEL:-$MANAGER_MODEL}"
+# A manager whose model is at its OWN weekly limit sits on the fallback instead of
+# dying every day until the reset. Before 2026-11-11 the desks ran on opus, which
+# has no separate meter, so this could not bite; on fable it can — week:Fable hit
+# 100% in several measured weeks. Pre-flight here, and after the run any limit
+# (credits, session, weekly model) retries once on the fallback.
+model_gate "$MODEL" say || { say "manager model ${MODEL} is at its own weekly floor — sitting on ${MANAGER_FALLBACK}"; MODEL="$MANAGER_FALLBACK"; }
 say "sweep start — model ${MODEL}"
 # The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
 # after this moment are this run's own acts. Captured before the agent starts.
@@ -48,8 +54,8 @@ usage_ledger field-watch start "$MODEL"    # D15 (d): attribution; model passed,
 nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(philosophy_card; cat "$REPO/scripts/field_watch_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
-if credits_out; then
-  say "OUT OF CREDITS on ${MODEL} — retrying on ${MANAGER_FALLBACK}"
+if limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then
+  say "LIMITED on ${MODEL} (credits, session or weekly model limit) — retrying on ${MANAGER_FALLBACK}"
   mark_log
   nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(philosophy_card; cat "$REPO/scripts/field_watch_prompt.md")" \
     --model "$MANAGER_FALLBACK" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1

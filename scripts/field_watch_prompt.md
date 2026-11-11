@@ -8,7 +8,7 @@ with.
 READ FIRST: GOAL.md (the constitution: one brain, all senses, needs, the
 survival world, biology as oracle), SYSTEM.md (decisions by bakeoff; the
 unison and free-compute hard constraints), docs/LESSONS_CORE.md (grep the
-megabyte docs/LESSONS.md, never read it whole), docs/CHAMPIONS.md (the seats),
+long docs/LESSONS.md + docs/archive/, never read them whole), docs/CHAMPIONS.md,
 and — so you know what is already on trial — docs/research/LEARNING_CORE.md,
 UNIFIED_BRAIN_BAKEOFF.md, MEMORY_RETRIEVAL_BAKEOFF.md, CURIOSITY_BAKEOFF.md,
 NEEDS_AND_DEATH.md, SURVIVAL_WORLD.md, and docs/DECISIONS_RESOLVED.md
@@ -22,14 +22,19 @@ Search the last ~6 months of the field (WebSearch + arXiv) across the six
 fronts Jack is built from, looking for anything that could ENTER a bakeoff:
 
   1. LEARNING CORES — world models, model-based RL, active inference at scale,
-     sample-efficiency breakthroughs. (Admission bar: all senses into one
-     latent; runs lives at survivable wall-clock on a P100/T4.)
+     sample-efficiency breakthroughs. (Must run lives at survivable wall-clock
+     on this box or a P100/T4. A core that does not take every sense into one
+     shared state may still be nominated — it races scored-and-ineligible, and
+     if it wins that is a finding about how unified his brain should be.)
   2. MULTIMODAL FUSION — binding objectives, unified tokenisation, anything
      that would add an arm to UB.10 or sharpen the ablation matrix.
   3. MEMORY — episodic/agent memory, consolidation, retrieval that stays
      EXTRACTIVE (the constitution forbids generative recall).
-  4. OPEN-ENDEDNESS & CURIOSITY — intrinsic motivation, autotelic agents,
-     environment/curriculum generation across lives.
+  4. CURRICULUM, OPEN-ENDEDNESS & CURIOSITY — the owner ranks the world and
+     the curriculum with Jack himself: how learners are staged (developmental
+     stages, learning-progress and teacher-proposed curricula, unsupervised
+     environment design, worlds that change between lives), intrinsic
+     motivation, autotelic agents.
   5. WORLDS & EMBODIMENT — survival sims, cheap embodied benchmarks, MuJoCo
      ecosystem developments, anything that moves the fidelity ladder.
 

@@ -73,7 +73,12 @@ cd "$REPO" || exit 0
 # the exemption, and the next eligible slot runs exempt again. The guard fails
 # toward MORE oversight, never less (same design as D13's no-op state).
 PACE_DATE_F="$LOGDIR/overseer_pace.date"
-REVIEW_SLOT_H=6    # review.sh's crontab hour (37 6 * * *)
+REVIEW_SLOT_H=0    # 2026-11-11: ONE audit a day now (00:37, before the Director's
+                   # 06:37 sitting so its findings are read the same morning). With
+                   # the old value 6, a 00:37 audit was "before the Review slot" and
+                   # therefore ALWAYS paced, never exempt: on every day the pool sat
+                   # above the pace line the only audit of the day would have been
+                   # skipped. 0 makes the day's first audit the exempt one again.
 RUN_HOUR=$(date -u +%-H)
 if [ "$(cat "$PACE_DATE_F" 2>/dev/null)" = "$(date -u +%F)" ] || [ "$RUN_HOUR" -lt "$REVIEW_SLOT_H" ]; then
   pace_gate say overseer || { say "audit slot paced (D15 clause c, 76th B2 slotting) — the exempt audit is the first completed one at or after the Review's ${REVIEW_SLOT_H}:37 slot; budget held"; exit 0; }
@@ -107,7 +112,7 @@ noop_eligible() {
   [ -f "$NOOP_STATE" ] || return 1
   read -r LAST_HEAD LAST_TS SKIPS < "$NOOP_STATE" || return 1
   [ -n "$LAST_HEAD" ] && [ -n "$LAST_TS" ] || return 1
-  [ "${SKIPS:-3}" -lt 3 ] || return 1                              # (4)
+  [ "${SKIPS:-1}" -lt 1 ] || return 1                              # (4) at most ONE skipped day in a row at daily cadence (was 3 six-hour slots)
   [ "$(git rev-parse HEAD)" = "$LAST_HEAD" ] || return 1           # (1)
   # (2) NAMED, NOT GATED (107th audit, FOR THE BUILDER 3). This counts
   # `iteration start`, which is written BEFORE the exec that may fail — so a
@@ -121,7 +126,7 @@ noop_eligible() {
   ITER=$(awk -v ts="$LAST_TS" '$1 > ts && /iteration start/' \
          "$LOGDIR/ladder.log" 2>/dev/null | wc -l)
   [ "${ITER:-1}" -eq 0 ] || return 1
-  NEXT_SLOT=$(( $(date +%s) + 6*3600 ))                            # (3)
+  NEXT_SLOT=$(( $(date +%s) + 24*3600 ))                           # (3) daily cadence since 2026-11-11 (was 6 h)
   DUES=$(/data/venvs/jackthelearner/bin/python -m experiments.decisions \
          2>/dev/null | grep -oE 'OVERDUE — DEFAULT IS DUE TO FIRE|due [0-9]{4}-[0-9]{2}-[0-9]{2}')
   [ -n "$DUES" ] || return 1     # unreadable is not quiet — audit runs
@@ -144,6 +149,12 @@ fi
 . "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
 card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_OVERSEER_MODEL:-$MANAGER_MODEL}"
+# A manager whose model is at its OWN weekly limit sits on the fallback instead of
+# dying every day until the reset. Before 2026-11-11 the desks ran on opus, which
+# has no separate meter, so this could not bite; on fable it can — week:Fable hit
+# 100% in several measured weeks. Pre-flight here, and after the run any limit
+# (credits, session, weekly model) retries once on the fallback.
+model_gate "$MODEL" say || { say "manager model ${MODEL} is at its own weekly floor — sitting on ${MANAGER_FALLBACK}"; MODEL="$MANAGER_FALLBACK"; }
 # Turn budget derived from the clock, at the Review's own rate of 3 turns/min
 # (60 turns / 20 min), instead of the hard-coded 60 that killed this organ twice
 # with time still on it. `timeout` remains the spend ceiling; this only stops an
@@ -170,13 +181,23 @@ RUN_START=$(date +%s)
 mark_log
 usage_ledger overseer start "$MODEL"    # D15 (d): attribution; model passed, not env-read (76th B1)
 
-nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
-  timeout 25m claude -p "$(philosophy_card; cat "$REPO/scripts/overseer_prompt.md")" \
-    --model "$MODEL" \
-    --dangerously-skip-permissions \
-    --max-turns "$MAXTURNS" \
-    >> "$LOG" 2>&1
+run_audit() {
+  mark_log
+  nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
+    timeout 25m claude -p "$(philosophy_card; cat "$REPO/scripts/overseer_prompt.md")" \
+      --model "$1" \
+      --dangerously-skip-permissions \
+      --max-turns "$MAXTURNS" \
+      >> "$LOG" 2>&1
+}
+run_audit "$MODEL"
 RC=$?
+if limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then
+  say "LIMITED on ${MODEL} (credits, session or weekly model limit) — retrying the audit on ${MANAGER_FALLBACK}"
+  MODEL="$MANAGER_FALLBACK"
+  run_audit "$MODEL"
+  RC=$?
+fi
 usage_ledger overseer end "$MODEL"      # D15 (d): one line whatever RC says
 
 # Same credit-exhaustion trap the builder fell into: the CLI prints a message

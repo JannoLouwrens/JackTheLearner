@@ -59,6 +59,12 @@ re-register it, say exactly why in the commit, and run it again.
 Cheap stale certificates (`cpu<10min`) are re-bought by `scripts/regate.sh` on
 cron with no model call. **Do not spend your iteration re-running them.**
 
+If `run` says another run holds the lock, look at the holder it names
+(`ps -o pid,etime,time,args -p <PID>`). A live run or one an order's `state:`
+claims: leave it and do other work. A holder whose CPU time has not grown in 30
+minutes and that nothing claims is dead and is blocking every spec — kill that
+one PID by number, and say so in the journal.
+
 ## Compute — use what is free
 
 - **Kaggle gives 30 free GPU-hours a week and they expire.** ~200 expired unused
