@@ -66,6 +66,8 @@ LLM/VLM proposing, his own progress choosing), unsupervised environment design
 vs self-chosen by learning progress vs teacher-proposed — same core, same
 world, same lives, metric = survival gain at matched experience; control: a
 shuffled-stage curriculum must not beat the staged one. Pilot before sizing.
+Staged and teacher arms stage the WORLD and what the adults say — never his
+actions; nobody scripts the ladder lesson (GOAL.md).
 **done when:** the doc exists, the seat exists, the cook-off is registered with
 its control and has a pilot number.
 state: open — not started.
@@ -134,13 +136,19 @@ on paraphrase is 0.0); `LC.07` at scale through save/resume on Kaggle CPU;
 
 ## SYSTEM — work on the machine (max 3 open)
 
-### S1 — Measure the reorganisation after 48 hours
-Write the four numbers into `docs/PROGRESS.md` and here: weekly-meter points per
-worker run (was 0.66 on the old 116 KB prompt), slots lost to the budget, free
-GPU-hours expiring this week, age of the oldest unrepaired blocker. If points
-per run did not fall, say why.
-**done when:** the four numbers are on the page with their commands.
-state: open — earliest 2026-11-13.
+### S1 — Free CPU off this box: teach the dispatcher to launch CPU-only Kaggle kernels
+**Why.** Jack's real science is CPU-bound physics simulation, run here on 3 slow
+shared cores (`LC.03` took 2.7 days; `LC.07` is priced at 526 hours). The
+dispatcher (`experiments/gpu.py`) only ever sets `enable_gpu: True`, so the free
+CPU sessions Kaggle gives (reported: no weekly cap, 12 h each) have never been
+used, while ~200 free GPU-hours expired on work that cannot use a GPU.
+**Do.** Add a CPU-only kernel mode that charges no GPU quota; pilot one W0
+survival run there; measure sim-seconds per real second against this box and
+how many sessions can run at once. Save/resume (`LF.02`) covers the 12 h wall.
+serves: every milestone that is simulation-bound (M1–M3, M7) · philosophy 5, 6.
+**done when:** one CPU-kernel survival run has landed a result with the measured
+speed and concurrency written here.
+state: open — not started.
 
 ### S2 — Make the megabyte files small without breaking their readers
 `docs/LESSONS.md` 1.4 MB, `docs/LOOP_JOURNAL.md` 2.4 MB,
@@ -169,8 +177,6 @@ state: open — not started.
 ## INBOX — one line each, workers add, the Director empties
 
 - (owner, 2026-11-11) No spec tests whether a sense ADDED LATER integrates as well as one he had from birth. Wanted as a cook-off: same core raised with the sense from the start vs the sense added mid-life, judged by the existing hide-it / fake-sense / combination tests. Matters before smell, taste, the learned ear and words are wired into the main brain.
-
-- scripts/test_lib_usage.sh has 1 pre-existing failure: 'the skip line prints both meters' assumes the worker model has its own weekly meter (true for fable, not opus). Make the case set its model explicitly.
 
 - Owner 2026-11-11 (GOAL.md inside/around rule): no spec races a LEARNED plastic speech ear or voice-recogniser for Jack — ASR and Speaker ID seats are now VACANT, `ARENA: NONE`. Order one: learned ear vs no-ASR null on a small vocabulary, HR.2's winner as scored-and-ineligible reference and as the parent's ears.
 - Same rule, needs a ruling each: `HR.4` credits `hearing (claim)` through ready-made ASR + embedder; Language-routing seat (`LG.13` meaning-mass, LG.10/12/14) has a frozen LLM phrase Jack's speech ("teachers never choose his words"); `T3.08` uses the LLM as his command encoder; `ME.11.C/D/E` put pretrained embedders in his memory; `PG.6` kills-text "move vision to a frozen tower"; `UnifiedBrain.py` still loads wav2vec2/SmolLM2 inside; `AudioListener._transcribe_api` is a paid endpoint (delete — free compute only).
