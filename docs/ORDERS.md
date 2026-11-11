@@ -1,190 +1,205 @@
 # ORDERS — what the workers do. Written by the Director.
-
-Director sitting: 2026-11-11 20:28 UTC (acting Director — the owner's session)
+Director sitting: 2026-11-11 22:10 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5). Machine problems go under INBOX, one
 line each. The Director rewrites this file daily; git keeps the history.
+Rulings cited here are in `docs/DECISIONS_RESOLVED.md` under the same date.
 
-*This first set was written 2026-11-11 by the acting Director (the owner's
-session), from `docs/research/BOTTLENECK_AUDIT_2026-11.md`. Rulings cited here
-are recorded in `docs/DECISIONS_RESOLVED.md` under the same date.*
+**GPU routing until S2 lands:** Kaggle gave J1's kernel no session for 70
+minutes and billed 1.17 h for it. Send every job of ≤ 2 h to **Colab**; split
+longer jobs into ≤ 2 h pieces (one arm × one seed each) rather than wait.
+**A `state:` line may say "in flight" only with a ledger row or a live backend
+status behind it** — a watcher pid is not evidence.
 
 ---
 
 ## JACK — build the creature, his world and his curriculum (max 7 open, ranked)
 
-*Order of work: J1, then J7 and J5 (world and curriculum — the owner ranks them
-with Jack himself), then J2, J3, J4, J6.*
-
-### J1 — Unbundle `T1.08`: it blocks 45 specs on a bar set from one sample
-**Why.** `T1.08` passed twice in August as "seed noise is small next to the
-effect" (SNR ≥ 3; it measures 10.1 today). On Sep 13 a second claim was added —
-held-out seed CV ≤ 7% — and that bar came from a single early reading. Two
-honest repairs later the CV is 17%: the Stack-B recipe really is that noisy, and
-that stays a red, visible fact. But five of its six direct dependents (`T2.01`,
-`T2.02`, `T2.03`, `T2.14`, `D1.0`) run 3 seeds with their own sigma gate — they
-quote no single-seed number, which is the only thing the 7% clause protects.
-**Ruling (conduct):** the 7% clause and `T1.08`'s FAIL are untouched. The
-original, twice-passed claim becomes its own spec and the multi-seed dependents
-hang off that instead.
-**Do.** (1) Register `T1.14` "Seed noise is measured and published": the August
-gate verbatim — seeds change the outcome (control: a seed-ignoring arm shows zero
-spread), SNR ≥ 3, `min_detectable_effect` recorded. Reuse `T1.08`'s job; one GPU
-run serves both. (2) In the registry, change `depends_on` from `T1.08` to `T1.14`
-for exactly those five. `T2.13` (seeds = 1) keeps `T1.08`. (3) Run `T1.14`.
-**done when:** `T1.14` has a verdict, `T1.08` still reads FAIL with 7.0
-byte-unmoved, and `run blocked` no longer lists `T1.08` as blocking `T2.01`,
-`D1.0` or anything in Tier 5/6.
-state: steps 1+2 DONE at 4818a2c — `T1.14` registered (imports T1.08's job, snr>=3 + MDE>0
-+ spread control; cv reported not gated); T2.01/T2.02/T2.03/T2.14/D1.0 re-parented, T2.13
-keeps T1.08; t1_08 file untouched. `run blocked`: T1.08 gone, T1.14 NOT_RUN blocks 45.
-Step 3 IN FLIGHT: dispatch watcher pid 1698161, kaggle `jack-ladder-1794429036`, log
-/data/tmp/dispatch_t1_14.log (~1 GPU-h). Next: confirm ledger row, render, mark DONE.
-
-### J7 — The world he learns in: finish the deeper world (W1) — `W1.00` FAIL, `W1.04` VOID
-**Why.** Owner, 2026-11-11: the world and the training curriculum are "as important as jack himself".  Nine instruments agree W0 is too shallow: lookahead does not pay in it
-(`DP.05`), a ridge regression beats the world model (`T2.05`). Fast/slow
-(`BO.01`) cannot be raced until a world exists where thinking ahead is worth
-something. `W1.01`, `W1.02` already pass.
-**Do.** Repair `W1.00` and `W1.04`; then re-run `DP.05`'s question in W1.
-**done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
-state: open — not started.
-
-
-### J5 — The curriculum: what he learns, in what order, and who sets it — as a cook-off
-**Why.** Owner, 2026-11-11: *"the world building aspect and the training
-curriculum … as important as jack himself, put as much research into that."*
-Today there is no curriculum at all: he is dropped into W0 and scored. All seven
-curriculum specs (`CU.1`–`CU.7`) and the ladder-climbing family (`LT.03`+) have
-never run, and `docs/CHAMPIONS.md` gives curriculum no seat.
-**Do.** (1) Research pass, cited: how children and animals are staged (reflex →
-reach → feed → avoid harm → shelter → words), and what the field does —
-learning-progress curricula, goal babbling, teacher-proposed goals (the parent
-LLM/VLM proposing, his own progress choosing), unsupervised environment design
-(worlds that mutate between deaths). Write it to `docs/research/CURRICULUM.md`,
-≤ 15 KB. (2) Add a Curriculum seat to `docs/CHAMPIONS.md`, holder VACANT.
-(3) Register ONE cook-off: no curriculum (today, the null) vs a hand-staged one
-vs self-chosen by learning progress vs teacher-proposed — same core, same
-world, same lives, metric = survival gain at matched experience; control: a
-shuffled-stage curriculum must not beat the staged one. Pilot before sizing.
-Staged and teacher arms stage the WORLD and what the adults say — never his
-actions; nobody scripts the ladder lesson (GOAL.md).
-**done when:** the doc exists, the seat exists, the cook-off is registered with
-its control and has a pilot number.
-state: open — not started.
-
-### J2 — Settle who controls the body (`D1.1`), then re-run "he can move" (`T2.01`)
-**Why.** `D1.0` spent 17.6 GPU-hours and measured it: small plastic head **506**
-(paired t = 20.4 against its own untrained twin), MLP 415, the two 57M-trunk
-arms 344–350, SB3 reference 518. It was VOID because untrained twins beat the
-*random-action* null at 3.9σ — in Humanoid an untrained net stands still and
-out-scores flailing. The null was wrong, not the data. `T2.01` has been FAIL
-since Aug 12 running the losing arm.
-**Do.** Register `D1.1`: same four arms, same budget, learning gate = trained vs
-**its own untrained twin**, paired, ≥ 3σ (a harder null — a strengthening);
-margin rule unchanged. Dispatch on Kaggle via `scripts/dispatch.sh` (the week's
-30 free hours are idle). Seat the winner in `docs/CHAMPIONS.md`'s control seat
-BY VERDICT, losers kept as challengers. Then run `T2.01` under the seated
-controller, thresholds unmoved.
-**done when:** `D1.1` has a verdict, the control seat names its holder by
-verdict, and `T2.01` has an attempt dated after it. Needs J1 step 2.
-state: open — blocked on J1.
+*Order of work: **J3 first, always** — it is the earliest milestone, CPU-only,
+and waits on nothing. J1 is a ten-minute harvest when its run lands. Then J2
+and J4 (GPU, the week's free hours expire Sunday), J6, J7, J5. A CPU order and
+a GPU order may be advanced in the same slot.*
 
 ### J3 — One whole life with the learner in the loop (`LF.03`) — the creature gate
-**Why.** Nothing has ever run end to end. The Tier-6 gates (`T6.01` "companion
-session") are written against Stack B, the 57M brain that keeps losing; the
-learning was shown on the survival stack (`cores.py` / `survival.py` / `w0.py`).
-`LF.01`/`LF.02` already compose world + needs + diary + working memory around a
-*scripted* forager. Put the learner where the script is.
-**Do.** Design and register `LF.03`: the seated core (`wm-latent`) driving the
-body in lethal W0 across ≥ 5 deaths — needs, every W0 sense live, diary written
-and carried across death, save-and-resume once mid-life (`LF.02`'s mechanism),
-no crash or NaN, weights measurably changing. Controls that must fail: a frozen
-twin (weights do not change → flagged), a wiped diary (nothing crosses death →
-flagged). It is an integration claim, not a performance claim — do not gate on
-how well he does. Fix `LF.01` (VOID) on the way if it is in the path.
-**done when:** `LF.03` is registered with its controls and has a verdict. From
-then `LF.03`, not `T6.01`, is what "one whole life" means (D35 amended to match).
-state: open — not started. CPU only; pilot one life first to size it.
+**Why.** Nothing has ever run end to end. `LF.01`/`LF.02` already compose world
++ needs + diary + working memory around a *scripted* forager. Put the learner
+where the script is. The auditor's test of this whole reorganisation: does
+`LF.03` exist by the weekend.
+**Do.** Register `LF.03`: the seated core (`wm-latent`, `experiments/cores.py`)
+driving the body in lethal W0 across ≥ 5 deaths — needs, every W0 sense live,
+diary written and carried across death, save-and-resume once mid-life
+(`LF.02`'s mechanism), no crash or NaN, weights measurably changing. Controls
+that must fail, each actually RUN: a frozen twin (weights do not change →
+flagged), a wiped diary (nothing crosses death → flagged). An integration
+claim, not a performance claim — do not gate on how well he does. Pilot ONE
+life first to size it; repair `LF.01` (VOID) only if it is in the path.
+serves: M1 · philosophy 1 (the creature), 4 (controls that must fail).
+**done when:** `LF.03` is registered with both controls and has a verdict.
+state: open — not started. First slot: read `lf_02_*.py`, swap the scripted
+forager for `wm-latent`, pilot one life, record its wall-clock here.
+
+### J1 — Harvest `T1.14`, then give it a control that is run, not described
+**Why.** `T1.14` (seed noise is measured; SNR ≥ 3) now carries 45 specs and
+two standing PASSes (`T2.03`, `T2.14`). Its run failed over to Colab at 21:40
+(`ladder-1794433248`). Its "seed-ignoring arm shows zero spread" control is
+only a property of its own three arms (`t1_14_*.py:68-72`) — never demonstrated.
+**Do.** (1) Read the `T1.14` LEDGER row (not this file). No row and no live
+Colab session → re-dispatch to Colab. (2) Add a real seed-ignoring arm (same
+seed fed to all three runs → spread must read ~0, and the SNR gate must then
+FAIL on it); re-run once. A strengthening; the SNR bar is unmoved. (3) Fix the
+stale comments in `t2_14_imitation_mocap.py:6,170-173` (still name `T1.08`).
+(4) **Do not `ratchets record` `pass_on_dead_dependency` 7 → 5 until `T1.14`
+has a PASS row.** If it does not pass, write here that `T2.03`/`T2.14` stand on
+an unproven floor.
+serves: M3/M4 (unblocks `D1.1`, `T2.01`) · philosophy 4.
+**done when:** `T1.14` has a verdict from a run that includes the seed-ignoring
+arm; `T1.08` still FAIL with 7.0 unmoved.
+state: steps registry+re-parent DONE at 4818a2c. Kaggle attempt died "queued"
+after 70 min (no session ever existed); Colab attempt started 21:40, pid
+1755193. No ledger row as of 22:05.
+
+### J2 — Settle who controls the body (`D1.1`), then re-run "he can move" (`T2.01`)
+**Why.** `D1.0` spent 17.6 GPU-hours: small plastic head **506**, MLP 415, the
+two 57M-trunk arms 344–350, SB3 reference 518 — VOID only because the null
+(random actions) was wrong: an untrained net stands still and out-scores
+flailing. `T2.01` has been FAIL since Aug 12 running the losing arm.
+**Do.** Register `D1.1` NOW (registration needs no GPU and not J1): same four
+arms, same budget, learning gate = trained vs **its own untrained twin**,
+paired, ≥ 3σ; margin rule unchanged. Build it as independent ≤ 2 h jobs (arm ×
+seed) so Colab can carry it while Kaggle is unexplained. Dispatch when `T1.14`
+has a PASS row. Seat the winner in `docs/CHAMPIONS.md` BY VERDICT, losers kept
+as challengers. Then run `T2.01` under the seated controller, bars unmoved.
+serves: M3, M4 · philosophy 3 (raced, not assumed), standing objective 3 (GPU).
+**done when:** `D1.1` has a verdict, the control seat names its holder by
+verdict, `T2.01` has an attempt dated after it.
+state: open — registration unblocked today; dispatch waits on `T1.14` PASS.
 
 ### J4 — Run the one-brain contest (`UB.10`) on the idle GPU
-**Why.** The fusion bakeoff — six arms including A5, experts + router, "if A5
-wins, one brain is the wrong shape" — has sat VOID for 59 days. It is `gpu<2h`
-and frees 4 specs. This is the owner's rule that architecture is raced.
-**Do.** Read the VOID's reason in the ledger row; repair the apparatus (not the
-bar); pilot; dispatch.
-**done when:** `UB.10` has a WINNER/TIE verdict or a VOID with a different,
+**Why.** The fusion bakeoff — six arms including A5, experts + router ("if A5
+wins, one brain is the wrong shape") — has sat VOID for 59 days. `gpu<2h`,
+frees 4 specs. It is how "how unified is the brain" stays raced, not assumed.
+**Do.** Read the VOID's reason in the ledger row; repair the apparatus (not
+the bar); pilot on CPU; dispatch to **Colab**. Does not depend on `T1.14`.
+serves: M3 · philosophy 3 · standing objective 3.
+**done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
 state: open — not started.
 
-### J6 — `NE.01` fails on 2 of ~12 clauses while its claim holds; repair those two
-**Why.** The scripted forager survives 18,000 decisions and random dies — the
-needs ARE a real control problem. It is red on `ok_night_shelter` and
-`ok_spread` and has been untouched 22 days. It frees 7 specs (the whole needs
-family, incl. "life N+1 is faster because he remembers").
-**Do.** Find out why each clause fails — world calibration (shelter thermal
-balance, need-spread across deaths) or a clause that cannot fire. Fix the world
-or the apparatus; never the bar.
-**done when:** `NE.01` has a new attempt with both clauses explained in the
-commit.
+### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
+**Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —
+`ok_night_shelter`, `ok_spread` — and frees 7 specs, the most of any blocker.
+`W.1` (temperature obeys the published heat balance) and `W.2` (needs are a
+conserved ledger that can kill) have been FAIL 73 days with no owner; M2's
+done-when names them, and the shelter clause and the heat balance are very
+likely one fault.
+**Do.** For each failing clause find the cause: world calibration (shelter
+thermal balance, need spread across deaths, a leak in the ledger) or a clause
+that cannot fire. Fix the world or the apparatus; never the bar. Start with
+`W.1` + `ok_night_shelter` together.
+serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
+**done when:** `NE.01`, `W.1`, `W.2` each have a new attempt with every
+formerly-red clause explained in the commit.
 state: open — not started.
 
-**Next up (not open yet):** `XL.01` at proper power (pooled effect is real: food in 19.9 s with memory vs 27.3 s wiped; fails per-seed at n_lives = 8 — size the sample, bar unmoved); `ME.11.B–F` memory-retrieval bakeoff (lexical recall
-on paraphrase is 0.0); `LC.07` at scale through save/resume on Kaggle CPU;
-`HR.1` hearing corpus.
+### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
+**Why.** Owner, 2026-11-11: the world and the curriculum are "as important as
+jack himself". W0 is too shallow: lookahead does not pay in it (`DP.05`), a
+ridge regression beats the world model (`T2.05`). Fast/slow (`BO.01`) cannot be
+raced until thinking ahead is worth something. `W1.01`, `W1.02` already pass.
+**Do.** Repair `W1.00` and `W1.04`; then register `DP.05`'s question in W1.
+serves: M2 · philosophy 5 (his world matters as much as he does).
+**done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
+state: open — not started.
+
+### J5 — The curriculum, as a cook-off
+**Why.** Owner, 2026-11-11: *"the training curriculum … as important as jack
+himself, put as much research into that."* Today there is none: he is dropped
+into W0 and scored. `CU.1`–`CU.7` have never run; curriculum has no seat.
+**Do.** (1) Research pass, cited, to `docs/research/CURRICULUM.md` (≤ 15 KB):
+how children and animals are staged; learning-progress curricula, goal
+babbling, teacher-proposed goals, unsupervised environment design. (2) Add a
+Curriculum seat to `docs/CHAMPIONS.md`, holder VACANT. (3) Register ONE
+cook-off: no curriculum (the null) vs hand-staged vs self-chosen by learning
+progress vs teacher-proposed — same core, world, lives; metric = survival gain
+at matched experience; control: a shuffled-stage curriculum must not beat the
+staged one. Pilot before sizing. Arms stage the WORLD and what the adults say —
+never his actions.
+serves: M2 · philosophy 3, 5.
+**done when:** the doc and the seat exist; the cook-off is registered with its
+control and has a pilot number.
+state: open — not started.
+
+**Next up, in this order, as slots free:**
+1. **Inside/around sweep** — execute the 2026-11-11 Director ruling: re-credit
+   `LG.00`, `HR.4`, `T3.08`, `LG.10/12/13/14`, `ME.11.C/D/E` as *parent-rig*
+   results (not Jack's capability) in coverage and CHAMPIONS; delete the paid
+   `AudioListener._transcribe_api`; strike `PG.6`'s "frozen tower" kill-text.
+2. **Learned ear** — a plastic speech ear vs a no-ASR null on a small
+   vocabulary, `HR.2`'s winner as scored-but-ineligible reference (M5/M6).
+3. **Sense added later vs from birth** — the owner's cook-off (M5), judged by
+   the hide-it / fake-sense / combination tests.
+4. `XL.01` at proper power (bar unmoved); `ME.11.B/F`; `LC.07` at scale via S1.
 
 ---
 
 ## SYSTEM — work on the machine (max 3 open)
 
-### S1 — Free CPU off this box: teach the dispatcher to launch CPU-only Kaggle kernels
-**Why.** Jack's real science is CPU-bound physics simulation, run here on 3 slow
-shared cores (`LC.03` took 2.7 days; `LC.07` is priced at 526 hours). The
-dispatcher (`experiments/gpu.py`) only ever sets `enable_gpu: True`, so the free
-CPU sessions Kaggle gives (reported: no weekly cap, 12 h each) have never been
-used, while ~200 free GPU-hours expired on work that cannot use a GPU.
-**Do.** Add a CPU-only kernel mode that charges no GPU quota; pilot one W0
-survival run there; measure sim-seconds per real second against this box and
-how many sessions can run at once. Save/resume (`LF.02`) covers the 12 h wall.
-serves: every milestone that is simulation-bound (M1–M3, M7) · philosophy 5, 6.
-**done when:** one CPU-kernel survival run has landed a result with the measured
+### S2 — The GPU poller bills for kernels that never ran, and hides why
+**Why.** `experiments/gpu.py:994-1020`: the poll reads only stdout; Kaggle's
+"404 no such kernel" goes to stderr, so a kernel with no session polls as
+"queued" until the full timeout and is charged for all of it (1.17 h today).
+The push's own output is dropped when rc = 0, so the cause was never written.
+The same Kaggle account also runs another project's `next-l1-icsi-*` kernels.
+**Do.** (1) Treat rc≠0 / 404 from the status call as failure after ≤ 5 minutes
+and fail over. (2) Always log the push's stdout+stderr. (3) Charge 0 for a
+kernel that never had a session; re-label today's 1.17 h through the existing
+charge path with the reason. (4) Push one trivial kernel and write down what
+Kaggle says — quota, concurrency, or something else.
+serves: M3/M4 (every GPU order) · philosophy 5 (cheaper, truer), 6.
+**done when:** a test feeds the poller a 404 and sees failover inside 5 min
+with zero charge; the cause of today's no-session is written in `state:`.
+state: open — not started.
+
+### S1 — Free CPU off this box: CPU-only Kaggle kernels
+**Why.** Jack's science is CPU-bound simulation on 3 slow shared cores
+(`LC.03` took 2.7 days; `LC.07` is priced at 526 h). The dispatcher only sets
+`enable_gpu: True`; Kaggle's free CPU sessions (12 h each) have never been used.
+**Do.** After S2 (same file): add a CPU-only kernel mode that charges no GPU
+quota; pilot one W0 survival run; measure sim-seconds per real second against
+this box and how many sessions run at once. Save/resume covers the 12 h wall.
+serves: M1–M3, M7 (everything simulation-bound) · philosophy 5, 6.
+**done when:** one CPU-kernel survival run has landed a result, with measured
 speed and concurrency written here.
 state: open — not started.
 
-### S2 — Make the megabyte files small without breaking their readers
-`docs/LESSONS.md` 1.4 MB, `docs/LOOP_JOURNAL.md` 2.4 MB,
-`docs/DECISIONS_NEEDED.md` 750 KB. Tools and specs reference these PATHS (64, 16
-and many files) — check each real reader (`grep -rn`) before moving a byte. Move
-history to `docs/archive/` and keep each live file ≤ 150 KB at its old path.
-Resolved decisions leave `DECISIONS_NEEDED.md` entirely.
-**done when:** the three live files are under the cap and `coverage`,
-`decisions --check`, `champions --check` and `run status` still exit as before.
-state: SPLIT DONE f2e23fe — 4.57 MB → 422 KB, 4.15 MB verbatim in `docs/archive/`; four
-exit codes unchanged, `decisions --check` byte-identical, T0.28 re-bought PASS at b2d5fd3.
-LOOP_JOURNAL 124 KB, LESSONS 139 KB: under cap, prefix splits, `LESSONS.md:<n>` resolves.
-LEFT, AND THE DIRECTOR'S: DECISIONS_NEEDED is 159 KB and all 9 KB over is live OPEN
-decisions (D40 26 KB over 4 sections, D33 22 KB) — cutting it means archiving addenda.
-
-### S3 — `T0.13` says 13 gate clauses in passing specs can never fire
-`LT.01` (3), `SO.02` (5), `T0.17` (3), `T0.33` (2). A passing spec with a clause
-that cannot fire is a certificate for something untested. Arm each clause or
-remove it with the reason, re-run the spec, and let `T0.13` re-judge.
-**done when:** `T0.13`'s `disarmed_conjunct_keys` is 0 or each survivor is
-explained in its spec.
+### S3 — Guards that are red by design teach everyone to ignore red
+**Why.** `coverage` exits 2 on a shrink-only UNREACHABLE counter that moves
+every time an order registers a spec; its FAIL-UNOWNED check names the closed
+REVIEW_QUEUE as the repair; `run verify` exits 2 on a venue baseline and the
+standing `T0.18` KeyError. Prompts now say "ignore these" — a red nobody reads.
+**Do.** Move those counters out of the exit code (still printed). Point
+FAIL-UNOWNED at `docs/ORDERS.md` (owned = named in an open order). Fix the
+`T0.18` KeyError. Nothing that guards a threshold, a control or a seed count
+leaves the exit code. Smaller, not bigger.
+serves: philosophy 4, 5 (a truthful machine).
+**done when:** on a clean tree `coverage` and `run verify` exit 0, and each
+still exits non-zero when a test plants a PASS-on-FAIL-dependency.
 state: open — not started.
+
+**Next up:** `T0.13`'s 13 gate clauses that can never fire (`LT.01` 3, `SO.02`
+5, `T0.17` 3, `T0.33` 2) — arm or remove with reasons (needs `T0.08` re-bought
+clean first; the 22:43 clerk sweep should do that — check `regate.log`).
 
 ---
 
 ## INBOX — one line each, workers add, the Director empties
 
-- (audit 2026-11-11) The guard tools are red at baseline for reasons ordered work produces: `coverage` exits 2 on a shrink-only UNREACHABLE counter that moves each time an order registers a spec, its FAIL-UNOWNED check names the closed REVIEW_QUEUE as the repair, `run verify` exits 2 on a venue baseline and a standing T0.18 item. Prompts now tell agents to ignore these; the durable repair is a SYSTEM order making those counters reporting-only (out of the exit code).
-
-- (owner, 2026-11-11) No spec tests whether a sense ADDED LATER integrates as well as one he had from birth. Wanted as a cook-off: same core raised with the sense from the start vs the sense added mid-life, judged by the existing hide-it / fake-sense / combination tests. Matters before smell, taste, the learned ear and words are wired into the main brain.
-
-- Owner 2026-11-11 (GOAL.md inside/around rule): no spec races a LEARNED plastic speech ear or voice-recogniser for Jack — ASR and Speaker ID seats are now VACANT, `ARENA: NONE`. Order one: learned ear vs no-ASR null on a small vocabulary, HR.2's winner as scored-and-ineligible reference and as the parent's ears.
-- Same rule, needs a ruling each: `HR.4` credits `hearing (claim)` through ready-made ASR + embedder; Language-routing seat (`LG.13` meaning-mass, LG.10/12/14) has a frozen LLM phrase Jack's speech ("teachers never choose his words"); `T3.08` uses the LLM as his command encoder; `ME.11.C/D/E` put pretrained embedders in his memory; `PG.6` kills-text "move vision to a frozen tower"; `UnifiedBrain.py` still loads wav2vec2/SmolLM2 inside; `AudioListener._transcribe_api` is a paid endpoint (delete — free compute only).
+(empty)
 
 ## DONE (kept one day)
 
-(none yet)
+- **S2-old — megabyte files split** (`f2e23fe`): 4.57 MB → 422 KB, history
+  verbatim in `docs/archive/`. Ruling: `DECISIONS_NEEDED.md`'s cap is met when
+  it holds only OPEN decisions; the four overdue defaults fired today.
+- **J1 steps 1–2** (`4818a2c`): `T1.14` registered, five dependents re-parented.
