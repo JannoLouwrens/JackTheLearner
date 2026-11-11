@@ -11,6 +11,10 @@ is quietly broken and go find it.
     cd /home/opc/jackthelearner
     PY=/data/venvs/jackthelearner/bin/python
 
+**You have 25 minutes on the clock. Write, commit and push the report by minute
+18, then stop** — an audit that is killed mid-sentence reports nothing, and one
+that keeps digging after its report is committed is logged as a failure.
+
 Read: `GOAL.md`, `docs/LESSONS_CORE.md`, `docs/ORDERS.md`, `docs/PROGRESS.md`,
 `docs/ROADMAP.md`. Never open `docs/LESSONS.md`, `docs/LOOP_JOURNAL.md` or
 `docs/DECISIONS_NEEDED.md` end to end — megabytes; `grep` and `tail` them.

@@ -222,6 +222,21 @@ fi
 # hour, so a 06:37 report is not stamped stale when the 12:37 run dies — only a
 # page that has actually outlived the schedule is.
 if [ "$RC" -ne 0 ]; then
+  # The first audit under the new brief wrote and committed its whole report,
+  # then kept working until the 25-minute clock killed it — and this branch
+  # logged "verdict: UNKNOWN (audit did not complete)" over a finished page. A
+  # report committed during this run, clean in the tree and carrying a verdict,
+  # IS the audit; the kill after it is a time-budget note, not a failure.
+  REPORT_C=$(git log -1 --format=%ct -- docs/OVERSIGHT.md 2>/dev/null || echo 0)
+  if [ "${REPORT_C:-0}" -ge "$RUN_START" ] && [ -z "$(git status --porcelain -- docs/OVERSIGHT.md 2>/dev/null)" ] \
+     && grep -qE "ON TRACK|DRIFTING|INTEGRITY RISK" docs/OVERSIGHT.md 2>/dev/null; then
+    VERDICT=$(grep -m1 -oE "ON TRACK|DRIFTING|INTEGRITY RISK" docs/OVERSIGHT.md)
+    git push -q origin HEAD 2>/dev/null
+    say "audit end rc=${RC} — verdict: ${VERDICT} (the report was written and committed during this run; the run was killed on its clock afterwards)"
+    echo "$(git rev-parse HEAD) $(date -Iseconds) 0" > "$NOOP_STATE"
+    [ "$RUN_HOUR" -ge "$REVIEW_SLOT_H" ] && date -u +%F > "$PACE_DATE_F"
+    exit 0
+  fi
   seal_output "$RC" docs/OVERSIGHT.md overseer say 25 "$RUN_START"   # daily cadence since 2026-11-11 (was 6-hourly, 7)
   say "audit end rc=${RC} — verdict: UNKNOWN (audit did not complete)"
   exit 0

@@ -385,6 +385,26 @@ def main(argv: list[str]) -> int:
     if lock_is_held():
         print("ladder lock held by the loop — yielding, these are still stale next tick")
         return 0
+    # NEVER BUY ON A DIRTY TREE (auditor, 2026-11-11, first audit after the
+    # reorganisation). The 20:53 sweep ran while another writer had a launcher
+    # uncommitted, so its fresh rows for T0.08 and T2.08 were stamped `+dirty`;
+    # the ladder then read two clean 90-day certificates as "PASS but STALE",
+    # three specs behind them left reach, and the commit said "no status moved".
+    # A clerk that replaces a good certificate with a worse one is doing
+    # negative work. The test is the RUNNER'S OWN definition of code dirt
+    # (protocol.code_dirt), not a second opinion about which files matter.
+    try:
+        from experiments.protocol import code_dirt
+        por = subprocess.run(["git", "status", "--porcelain"], cwd=REPO,
+                             capture_output=True, text=True, timeout=20).stdout.splitlines()
+        dirt = code_dirt(por)
+    except Exception as e:      # cannot tell -> do not buy (unknown is not clean)
+        print(f"cannot read the tree's state ({type(e).__name__}) — not buying certificates blind")
+        return 0
+    if dirt:
+        print(f"tree has uncommitted code ({', '.join(dirt[:4])}{' …' if len(dirt) > 4 else ''}) — "
+              "skipping: a row bought now would be stamped +dirty and read as STALE")
+        return 0
     # Option (i) of `regate-bought-nine-certificates-from-its-own-uncommitted-
     # tree`: a lane whose purpose is manufacturing trustworthy reds must not be
     # the organ producing unreproducible certificates. `gate_precondition` is
