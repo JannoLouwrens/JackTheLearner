@@ -84,6 +84,24 @@ had reached 116 KB — about 29,000 tokens read before any work began),
 `docs/archive/` and `docs/RUNBOOK.md`. The measurements behind all of this are in
 `docs/research/BOTTLENECK_AUDIT_2026-11.md`.
 
+**Every step carries the philosophy, and it is not left to memory** (owner,
+2026-11-11: *"every step must be aware of the philosophy it must nit forget"*).
+The card at the top of `GOAL.md` is prepended to every model launch by
+`scripts/lib_card.sh` — all three worker lanes, the Director, the Auditor, the
+scout — so no prompt edit can drop it and no copy can drift. Every order names
+what it `serves:`; every cook-off entry is checked against the inside/around
+line; the Auditor asks each day whether anything drifted from it; the Director
+re-reads the whole of `GOAL.md` on Sundays and checks the card against it. That
+is all, on purpose: about 400 tokens per launch.
+
+**And the route is written down.** `docs/ROADMAP.md` holds the milestones from
+today to the goal, each DONE only when named specs pass. When orders finish the
+Director draws the next from it; nobody has to remember what comes after.
+
+**If a manager fails, the workers do not stop.** Orders more than three days
+old, missing or with nothing open send a worker to the top repairable blocker in
+`run blocked`, with an INBOX line saying so.
+
 ## The four laws
 
 1. **A capability is claimed ONLY by a test that could have failed.**
@@ -302,7 +320,7 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 |---|---|
 | `GOAL.md` | the north star: one brain, all senses, learns by living |
 | `SYSTEM.md` | this file: how decisions get made |
-| `docs/LESSONS.md` | methodological memory — read before designing anything |
+| `docs/LESSONS_CORE.md` | the rules, short enough to be read every run (`docs/LESSONS.md` is the 1.4 MB archive — grep it) |
 | `docs/MASTER_PLAN.md` | the dependency graph and phase map |
 | `docs/LOOP_JOURNAL.md` | chronological record; pre-registrations live here |
 | `docs/DECISIONS_NEEDED.md` | blocked on the owner — evidence attached |
@@ -316,6 +334,10 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 | `scripts/overseer.sh` | the adversarial auditor (independent of the builder) |
 | `docs/INTEGRATION_QUEUE.md` | research -> tests, with the mandatory cross-check protocol |
 | `docs/ORDERS.md` | the Director's orders — the only file workers obey |
+| `docs/ROADMAP.md` | the milestones from today to the goal — where the next orders come from |
+| `docs/LAB.md` | the inventor's notebook: ideas tried, and the number that killed or kept each |
+| `scripts/lib_card.sh` | hands the philosophy card to every launch |
+| `scripts/models.env` | the one place models are named |
 | `docs/PROGRESS.md` | the Director's daily page for the owner |
 | `docs/FIELD_WATCH.md` | the scout's nominations (read by the Director every sitting) |
 | `docs/META_AUDIT.md` | the audit of the machine itself |

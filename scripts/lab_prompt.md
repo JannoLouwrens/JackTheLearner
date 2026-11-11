@@ -62,6 +62,6 @@ the better, provided it could actually run here.
 ## Before you stop
 
 1. `docs/LAB.md`: one entry per idea — date, seat, the bet, the number, ALIVE /
-   DEAD / ENTERED. Keep the file ≤ 10 KB; fold old dead ideas into one line each.
+   DEAD / ENTERED, and the line of the philosophy the idea serves. Keep the file ≤ 10 KB; fold old dead ideas into one line each.
 2. Commit with explicit paths (never `git add -A`), numbers in the message, push.
 3. ≤ 5 lines in `docs/LOOP_JOURNAL.md`: date, lane LAB, what was tried.

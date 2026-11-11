@@ -36,6 +36,8 @@ cd "$REPO" || exit 0
 # every one with time left on the clock — see scripts/review.sh.
 MAXTURNS=90
 . "$REPO/scripts/models.env"
+. "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
+card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_FIELDWATCH_MODEL:-$MANAGER_MODEL}"
 say "sweep start — model ${MODEL}"
 # The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
@@ -43,13 +45,13 @@ say "sweep start — model ${MODEL}"
 RUN_START=$(date +%s)
 mark_log
 usage_ledger field-watch start "$MODEL"    # D15 (d): attribution; model passed, not env-read (76th B1)
-nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
+nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(philosophy_card; cat "$REPO/scripts/field_watch_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
 if credits_out; then
   say "OUT OF CREDITS on ${MODEL} — retrying on ${MANAGER_FALLBACK}"
   mark_log
-  nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
+  nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(philosophy_card; cat "$REPO/scripts/field_watch_prompt.md")" \
     --model "$MANAGER_FALLBACK" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 fi

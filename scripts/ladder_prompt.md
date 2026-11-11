@@ -5,26 +5,24 @@ the memory. Do one real unit of work, leave it committed and pushed, stop.
     cd /home/opc/jackthelearner
     PY=/data/venvs/jackthelearner/bin/python
 
-## What Jack is (GOAL.md is the full text — read it if your order touches direction)
-
-A virtual creature with a body, every human sense and one learning brain, living
-in a world that can kill him, who learns from his own lives, remembers them, and
-can be talked to. He must KEEP LEARNING — that is the point. Nothing is claimed
-about him unless a test that could have failed says so.
-
-**Inside him nothing is frozen or borrowed** — ears, eyes, core, fusion, voice
-all learn from scratch; no pretrained weights go in, even as a warm start.
-**Around him pretrained models are wanted** (Whisper, LLMs, VLMs, TTS — free
-ones): the adults of his world, who talk, listen, demonstrate, set tasks and
-score him. A ready-made model in a race is a teacher or a scored-and-ineligible
-reference, never a candidate for a part of him; and it never does his thinking
-or chooses his words.
+**The philosophy above this line is the point of the work — it is handed to
+every agent at every launch.** `GOAL.md` is the full text; read it when your
+order touches direction. One consequence you will meet in cook-offs: a
+ready-made pretrained model is a teacher or a scored-and-ineligible reference,
+never a candidate for a part of him.
 
 ## Read, in this order — and nothing else up front
 
 1. `docs/ORDERS.md` — **your work.** Take the first open order in the JACK
-   section that you can advance. Its `state:` lines are the handoff from the
-   last worker. Do not pick your own project; do not work the SYSTEM section.
+   section that you can advance (follow the "Order of work" line if there is
+   one). Its `state:` lines are the handoff from the last worker. Do not pick
+   your own project; do not work the SYSTEM section.
+   **If the orders cannot steer you** — the file is missing or broken, no JACK
+   order is open, or `git log -1 --format=%cr -- docs/ORDERS.md` says the
+   Director has not touched it for 3 days — do not idle and do not invent a
+   project: take the top repairable blocker from `$PY -m experiments.run
+   blocked`, repair it under the rules below, and add one INBOX line saying the
+   orders went stale and what you took.
 2. `docs/LESSONS_CORE.md` — the rules. 6 KB. They bind.
 3. `tail -40 docs/LOOP_JOURNAL.md` — what the last few iterations did.
 
@@ -95,7 +93,9 @@ cron with no model call. **Do not spend your iteration re-running them.**
 2. In `docs/ORDERS.md`, rewrite your order's `state:` lines (≤ 5 lines): what
    you did, what the numbers were, the exact next step. If it is finished, mark
    it `DONE` with the commit. Never edit another order's text or the ranking.
-3. Append ≤ 8 lines to `docs/LOOP_JOURNAL.md`: date, lane, order id, what moved.
+3. Append ≤ 8 lines to `docs/LOOP_JOURNAL.md`: date, lane, order id, what moved,
+   and which line of the philosophy it served. If you cannot name one, say so —
+   that is a finding for the Director, not something to hide.
 4. `$PY -m experiments.run render` if the ledger changed.
 
 Never: restart Docker or any daemon (customers live on this box); `pkill -f`;

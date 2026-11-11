@@ -52,6 +52,11 @@ PAUSE="$REPO/.loop-paused"
 # machinery, with nobody having decided that. First arg, or JACK_LANE, or jack.
 LANE="${1:-${JACK_LANE:-jack}}"
 case "$LANE" in jack|system|lab) ;; *) LANE=jack;; esac
+case "$LANE" in
+  system) PROMPT_FILE="$REPO/scripts/system_prompt.md";;
+  lab)    PROMPT_FILE="$REPO/scripts/lab_prompt.md";;
+  *)      PROMPT_FILE="$REPO/scripts/ladder_prompt.md";;
+esac
 # LANE `lab` — the INVENTOR (owner, 2026-11-11: "make an agent try new things ...
 # a fable5.2 trying new stuff to beat system ... yes it will fail but go big").
 # It runs on the MANAGER model, because inventing a challenger that can beat a
@@ -81,6 +86,14 @@ say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_procwatch.sh"
 
 pause_gate say || exit 0
+
+# A lane with no instructions is refused HERE, before anything is logged as an
+# iteration or charged to the usage ledger — an empty prompt would otherwise
+# launch a model with only the card and no task, hourly, and look alive.
+if [ ! -s "$PROMPT_FILE" ]; then
+  say "ABORT: lane ${LANE} prompt ${PROMPT_FILE} is missing or empty — refusing to launch"
+  exit 0
+fi
 
 if [ -f "$PAUSE" ]; then
   # Credit-caused pauses SELF-EXPIRE: credits refresh on their own schedule,
@@ -304,12 +317,12 @@ leftover_report() {
   return $rc
 }
 
-case "$LANE" in
-  system) PROMPT_FILE="$REPO/scripts/system_prompt.md";;
-  lab)    PROMPT_FILE="$REPO/scripts/lab_prompt.md";;
-  *)      PROMPT_FILE="$REPO/scripts/ladder_prompt.md";;
-esac
-PROMPT=$(cat "$PROMPT_FILE")
+# THE CARD goes first, every lane, every launch (owner 2026-11-11: "every step
+# must be aware of the philosophy"). Mechanical on purpose: a prompt edit cannot
+# drop it. A missing lane prompt is a loud refusal, not an empty launch.
+. "$REPO/scripts/lib_card.sh"
+card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching lane ${LANE} with the built-in fallback"
+PROMPT="$(philosophy_card)"$'\n\n'"$(cat "$PROMPT_FILE")"   # $(...) strips the card's trailing newlines
 
 run_claude() {
   mark_log            # bound the credit check to THIS run's output

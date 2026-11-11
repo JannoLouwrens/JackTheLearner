@@ -141,6 +141,8 @@ if noop_eligible; then
 fi
 
 . "$REPO/scripts/models.env"
+. "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
+card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_OVERSEER_MODEL:-$MANAGER_MODEL}"
 # Turn budget derived from the clock, at the Review's own rate of 3 turns/min
 # (60 turns / 20 min), instead of the hard-coded 60 that killed this organ twice
@@ -169,7 +171,7 @@ mark_log
 usage_ledger overseer start "$MODEL"    # D15 (d): attribution; model passed, not env-read (76th B1)
 
 nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
-  timeout 25m claude -p "$(cat "$REPO/scripts/overseer_prompt.md")" \
+  timeout 25m claude -p "$(philosophy_card; cat "$REPO/scripts/overseer_prompt.md")" \
     --model "$MODEL" \
     --dangerously-skip-permissions \
     --max-turns "$MAXTURNS" \

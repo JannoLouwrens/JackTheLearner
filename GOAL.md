@@ -1,5 +1,32 @@
 # THE GOAL
 
+<!-- CARD:BEGIN — scripts/lib_card.sh hands the lines between these two markers to EVERY agent at EVERY launch. Keep it under 1,800 bytes. The page below is the full text and wins any disagreement. -->
+**THE PHILOSOPHY — carry this into every step.**
+
+1. **The creature.** Give him a brain, a body and a world, and let him become. Every human sense, one connected learning brain, real human needs — food, water, sleep, warmth, company — in a world that can kill him. He learns everything himself by living, dying and remembering, and he must never stop learning. He can be talked to; he remembers what he hears, says and does.
+2. **Inside him, nothing frozen or borrowed. Around him, everything.** Every part of him learns from scratch. Pretrained models — Whisper, LLMs, anything free — are the adults of his world: teachers, listeners, judges. Never his parts, never his puppeteers.
+3. **Nothing assumed.** Every design choice — which brain, how unified it is, the world, the curriculum — is researched, raced in a cook-off against alternatives, and holds its seat only until something beats it. Biology is the oracle; the field is read continuously.
+4. **Nothing faked.** A capability is claimed only by a test that could have failed — several seeds, a control that must fail, thresholds never weakened. A failure is fixed, not filed.
+5. **The system is what makes him.** Research → test → implement → test → fix. His world and his curriculum matter as much as he does. Work on the machine only where it makes that loop faster, cheaper or truer.
+6. **Limits.** Free compute only. This box serves paying customers. What he must become is the owner's; how he is built is always raced.
+
+Before you finish, ask: which of these did my work serve? If none, it was the wrong work.
+<!-- CARD:END -->
+
+*Why the block above exists (owner, 2026-11-11, verbatim): "but really every
+step must be aware of the philosophy it must nit forget decide whre we can do
+that and how much please". Decided: WHERE — every model launch of every organ
+(the three worker lanes, the Director, the auditor, the scout) receives the card
+mechanically, prepended by the launcher from this one place, so no prompt edit
+can drop it and no copy can drift; every order in `docs/ORDERS.md` names what it
+`serves:`; every cook-off entry is checked against line 2; the auditor asks each
+audit whether anything drifted from it. HOW MUCH — the card and no more at
+launch (about 400 tokens); this whole page for the Director on Sundays, for the
+auditor and the scout, and for any worker whose order touches direction. The
+lesson of the 116 KB prompt is that more words are obeyed less. Cost: a summary
+can drift from the page — so the page wins, and the Director checks the card
+against it every Sunday.*
+
 > ## THE FIRST PRINCIPLE — the only real goal
 > ## **Give him a brain, a body, and a world. Let him naturally become.**
 >
@@ -109,6 +136,17 @@ ship; a small trained core; capabilities added without retraining the world;
 components that must EARN their parameters via ablation or be deleted.
 
 ## The world is the teacher (owner directive, 2026-08-09)
+
+**The world and the curriculum rank with Jack himself (owner, 2026-11-11).**
+Verbatim: *"are we as focused on the world building aspect and the training
+curriculum? i think that's as important as jack himself so we better put as much
+research and stuff into that thw training idea and world where jack learns in?"*
+Read with the paragraph below, not against it: nobody scripts his behaviour —
+there is no "ladder lesson". What is designed, researched and raced is the WORLD
+he meets and the order he meets it in: what exists, what is dangerous, what the
+adults around him say and propose. "No curriculum we write" (needs and curiosity
+alone) is the incumbent arm of that cook-off, and it can win or lose like any
+other.
 
 **Jack has the needs of a human.** He must eat, drink, sleep, stay warm — too
 cold kills him, too hot kills him — and he needs company. Not as decoration:

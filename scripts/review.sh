@@ -90,6 +90,8 @@ cd "$REPO" || exit 0
 . "$REPO/scripts/lib_procwatch.sh"
 proc_declare $$ "review.sh consumer slot"
 . "$REPO/scripts/models.env"
+. "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
+card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_REVIEW_MODEL:-$MANAGER_MODEL}"
 # Two gears, one organ (owner, 2026-08-09: "every 24 hours the loop must be
 # reviewed... to fix itself... the senior engineer"). Steering rots in hours
@@ -137,14 +139,14 @@ say "review start — mode ${MODE}, model ${MODEL}, ${TMOUT} / ${MAXTURNS} turns
 RUN_START=$(date +%s)
 mark_log
 usage_ledger review start "$MODEL"    # D15 (d): attribution; model passed, not env-read (76th B1)
-nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
+nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; philosophy_card; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
 if credits_out; then
   say "OUT OF CREDITS on ${MODEL} — retrying on ${MANAGER_FALLBACK}"
   mark_log
   MODEL="$MANAGER_FALLBACK"   # the ledger append below must name what RAN (76th B1)
-  nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
+  nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; philosophy_card; cat "$REPO/scripts/review_prompt.md")" \
     --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 elif [ "$RC" -ne 0 ] && api_overloaded; then
@@ -153,7 +155,7 @@ elif [ "$RC" -ne 0 ] && api_overloaded; then
   say "API overloaded on ${MODEL} — waiting 120s, retrying once"
   sleep 120
   mark_log
-  nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
+  nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; philosophy_card; cat "$REPO/scripts/review_prompt.md")" \
     --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 fi

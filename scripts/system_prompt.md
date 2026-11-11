@@ -21,7 +21,10 @@ If you cannot say how, do not do it.
 
 ## Read, in this order — and nothing else up front
 
-1. `docs/ORDERS.md` — take the first open order in the SYSTEM section. If that
+1. `docs/ORDERS.md` — take the first open order in the SYSTEM section. (If the
+   file is missing or broken, restore the last good version with `git log --
+   docs/ORDERS.md` / `git show <commit>:docs/ORDERS.md`, say so under INBOX, and
+   stop — that repair IS your unit.) If that
    section has no open order, take the oldest line under `## INBOX`, do it if it
    is small, or leave it for the Director if it needs a decision. If both are
    empty: run the three guards below, fix what they flag, and stop early.
