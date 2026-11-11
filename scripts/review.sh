@@ -11,6 +11,7 @@
 # Stop:     touch /home/opc/jackthelearner/.review-paused
 set -uo pipefail
 REPO=/home/opc/jackthelearner
+. "$REPO/scripts/models.env"   # models AND which claude program — before any gate reads the meter
 LOG=/data/jack-logs/review.log
 PAUSE="$REPO/.review-paused"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
@@ -89,7 +90,6 @@ cd "$REPO" || exit 0
 # of a declared pid are attributed; dead declarations are pruned.
 . "$REPO/scripts/lib_procwatch.sh"
 proc_declare $$ "review.sh consumer slot"
-. "$REPO/scripts/models.env"
 . "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
 card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_REVIEW_MODEL:-$MANAGER_MODEL}"
@@ -139,7 +139,7 @@ MAXTURNS=$(( MINUTES * TURNS_PER_MIN ))
 # seal/INCOMPLETE-row machinery below already reports that death honestly.
 echo "$TODAY" > "$SAT"
 rm -f "$DEFER"
-say "review start — mode ${MODE}, model ${MODEL}, ${TMOUT} / ${MAXTURNS} turns"
+say "review start — mode ${MODE}, model ${MODEL}, cli ${CLAUDE_CLI}, ${TMOUT} / ${MAXTURNS} turns"
 # The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
 # after this moment are this run's own acts. Captured before the agent starts.
 RUN_START=$(date +%s)

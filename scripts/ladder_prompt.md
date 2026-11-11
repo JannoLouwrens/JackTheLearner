@@ -59,11 +59,13 @@ re-register it, say exactly why in the commit, and run it again.
 Cheap stale certificates (`cpu<10min`) are re-bought by `scripts/regate.sh` on
 cron with no model call. **Do not spend your iteration re-running them.**
 
-If `run` says another run holds the lock, look at the holder it names
-(`ps -o pid,etime,time,args -p <PID>`). A live run or one an order's `state:`
-claims: leave it and do other work. A holder whose CPU time has not grown in 30
-minutes and that nothing claims is dead and is blocking every spec — kill that
-one PID by number, and say so in the journal.
+If `run` says another run holds the lock: **never kill a GPU dispatch watcher.**
+A watcher only sleeps and polls Kaggle — zero CPU for an hour is healthy — and
+it times out by itself; killing it throws away the free GPU hours it is waiting
+on. Do other work. Only a LOCAL CPU run can be dead weight: if the holder is a
+CPU-budget spec, has used no CPU for 30+ minutes, and its PID is not listed
+(or is marked EXITED) in `/data/jack-logs/declared_pids`, kill that one PID by
+number and say so in the journal. When unsure, leave it and add an INBOX line.
 
 ## Compute — use what is free
 

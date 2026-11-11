@@ -17,6 +17,7 @@
 set -uo pipefail
 
 REPO=/home/opc/jackthelearner
+. "$REPO/scripts/models.env"   # models AND which claude program — before any gate reads the meter
 LOGDIR=/data/jack-logs
 LOCK=/tmp/jack-overseer.lock
 PAUSE="$REPO/.overseer-paused"
@@ -145,7 +146,6 @@ if noop_eligible; then
   exit 0
 fi
 
-. "$REPO/scripts/models.env"
 . "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
 card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_OVERSEER_MODEL:-$MANAGER_MODEL}"
@@ -160,7 +160,7 @@ model_gate "$MODEL" say || { say "manager model ${MODEL} is at its own weekly fl
 # with time still on it. `timeout` remains the spend ceiling; this only stops an
 # early death by a number nothing derived. See scripts/review.sh.
 MAXTURNS=75
-say "audit start — model ${MODEL}, $(git rev-parse --short HEAD)"
+say "audit start — model ${MODEL}, cli ${CLAUDE_CLI}, $(git rev-parse --short HEAD)"
 
 # WATCH THE ORGAN NEXT DOOR, BEFORE AUDITING ANYTHING. The Review's own
 # instruments cannot see it fail to run — two of its three Sunday FULL slots

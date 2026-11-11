@@ -12,6 +12,7 @@
 # Stop:     touch /home/opc/jackthelearner/.fieldwatch-paused
 set -uo pipefail
 REPO=/home/opc/jackthelearner
+. "$REPO/scripts/models.env"   # models AND which claude program — before any gate reads the meter
 LOG=/data/jack-logs/field_watch.log
 PAUSE="$REPO/.fieldwatch-paused"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
@@ -35,7 +36,6 @@ cd "$REPO" || exit 0
 # 30m timeout), not hard-coded. Seven max-turns deaths across the three organs,
 # every one with time left on the clock — see scripts/review.sh.
 MAXTURNS=90
-. "$REPO/scripts/models.env"
 . "$REPO/scripts/lib_card.sh"   # THE CARD: the philosophy, prepended to every launch
 card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching with the built-in fallback"
 MODEL="${JACK_FIELDWATCH_MODEL:-$MANAGER_MODEL}"
@@ -45,7 +45,7 @@ MODEL="${JACK_FIELDWATCH_MODEL:-$MANAGER_MODEL}"
 # 100% in several measured weeks. Pre-flight here, and after the run any limit
 # (credits, session, weekly model) retries once on the fallback.
 model_gate "$MODEL" say || { say "manager model ${MODEL} is at its own weekly floor — sitting on ${MANAGER_FALLBACK}"; MODEL="$MANAGER_FALLBACK"; }
-say "sweep start — model ${MODEL}"
+say "sweep start — model ${MODEL}, cli ${CLAUDE_CLI}"
 # The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
 # after this moment are this run's own acts. Captured before the agent starts.
 RUN_START=$(date +%s)

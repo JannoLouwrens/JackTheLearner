@@ -238,7 +238,7 @@ BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
 TOTAL=$(/data/venvs/jackthelearner/bin/python -c \
   "from experiments.registry import LADDER; print(len(LADDER))" 2>/dev/null || echo 105)
 
-say "iteration start — lane ${LANE}, ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-$LANE_MODEL}, load ${LOAD}, ${FREE_GB}GB free"
+say "iteration start — lane ${LANE}, ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-$LANE_MODEL}, cli ${CLAUDE_CLI}, load ${LOAD}, ${FREE_GB}GB free"
 usage_ledger builder start "${JACK_LOOP_MODEL:-$LANE_MODEL}"    # D15 (d): the configured primary —
                               # what WILL run is not known until the chain walks (76th B1)
 if [ -s "$LOST" ]; then
@@ -447,8 +447,12 @@ if [ "$RC" = 0 ] && [ -s "$LOST" ] && ! limit_hit; then
   : > "$LOST"
 fi
 
-if [ "$AFTER" -ge "$TOTAL" ]; then
-  say "LADDER COMPLETE — all ${TOTAL} specs demonstrated. Pausing the loop."
-  touch "$PAUSE"
-fi
+# REMOVED 2026-11-11: an auto-pause "when all specs are demonstrated". TOTAL falls
+# back to a constant (105) when the registry import fails for any reason — a
+# half-edited registry at :07, an OOM-killed python — and the ladder now has 108
+# passes, so ONE failed import would have logged LADDER COMPLETE and written an
+# empty .loop-paused: a manual pause that never self-expires and stops all three
+# worker lanes while the managers keep writing orders nobody executes. A ladder
+# that is really complete is something the Director reports, not something a
+# launcher decides from a fallback.
 exit 0
