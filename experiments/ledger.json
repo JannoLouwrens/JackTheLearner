@@ -75714,6 +75714,46 @@
       "spec_sha": "63104c155869a1ac",
       "status": "PASS"
     },
+    "T1.14": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "4818a2c",
+      "compute_s": 6550.25,
+      "control_metrics": {
+        "distinct_results": 3,
+        "spread": 0.0102037
+      },
+      "dirty_files": null,
+      "duration_s": 6561.58,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1794429036,ladder-1794433248",
+      "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "history": [],
+      "impl_sha": "32b72a57230e1b30",
+      "message": "",
+      "metrics": {
+        "backend": "colab",
+        "effect": 0.26517,
+        "gpu": "Tesla T4",
+        "heldout_cv_pct": 17.174,
+        "heldout_mean": 0.02976,
+        "heldout_std": 0.00511,
+        "lr_final_max": 0.0,
+        "min_detectable_effect": 0.01022,
+        "seed_noise": 0.00511,
+        "seeds": 3,
+        "snr": 51.89
+      },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 231.3,
+      "preserved_impl": null,
+      "ran_at": "2026-11-11T22:19:49",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.14",
+      "spec_sha": "8cbc6b6c15a26f21",
+      "status": "PASS"
+    },
     "T2.00": {
       "amended": [],
       "attempt": 5,
