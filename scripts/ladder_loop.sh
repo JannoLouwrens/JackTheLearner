@@ -51,8 +51,19 @@ PAUSE="$REPO/.loop-paused"
 # October 2026 measured 5% of commits landing a result and ~78% tending the
 # machinery, with nobody having decided that. First arg, or JACK_LANE, or jack.
 LANE="${1:-${JACK_LANE:-jack}}"
-case "$LANE" in jack|system) ;; *) LANE=jack;; esac
-FALLBACK_MODELS="${JACK_LOOP_FALLBACK:-$WORKER_FALLBACK}"  # tried in order when the primary is out of credits
+case "$LANE" in jack|system|lab) ;; *) LANE=jack;; esac
+# LANE `lab` — the INVENTOR (owner, 2026-11-11: "make an agent try new things ...
+# a fable5.2 trying new stuff to beat system ... yes it will fail but go big").
+# It runs on the MANAGER model, because inventing a challenger that can beat a
+# seated design is the hardest thinking in the building, and it gets 2 slots a
+# day. Everything it makes enters a cook-off like any other arm; nothing it
+# makes is adopted because it is new.
+if [ "$LANE" = "lab" ]; then
+  LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"
+else
+  LANE_MODEL="$WORKER_MODEL";  LANE_FALLBACK="$WORKER_FALLBACK"
+fi
+FALLBACK_MODELS="${JACK_LOOP_FALLBACK:-$LANE_FALLBACK}"  # tried in order when the primary is out of credits
 MIN_FREE_GB=3
 MAX_LOAD=6.0
 
@@ -214,8 +225,8 @@ BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
 TOTAL=$(/data/venvs/jackthelearner/bin/python -c \
   "from experiments.registry import LADDER; print(len(LADDER))" 2>/dev/null || echo 105)
 
-say "iteration start — lane ${LANE}, ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-$WORKER_MODEL}, load ${LOAD}, ${FREE_GB}GB free"
-usage_ledger builder start "${JACK_LOOP_MODEL:-$WORKER_MODEL}"    # D15 (d): the configured primary —
+say "iteration start — lane ${LANE}, ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-$LANE_MODEL}, load ${LOAD}, ${FREE_GB}GB free"
+usage_ledger builder start "${JACK_LOOP_MODEL:-$LANE_MODEL}"    # D15 (d): the configured primary —
                               # what WILL run is not known until the chain walks (76th B1)
 if [ -s "$LOST" ]; then
   say "inheriting $(wc -l < "$LOST") iteration(s) lost to limits since the last success (see $LOST)"
@@ -293,7 +304,11 @@ leftover_report() {
   return $rc
 }
 
-if [ "$LANE" = "system" ]; then PROMPT_FILE="$REPO/scripts/system_prompt.md"; else PROMPT_FILE="$REPO/scripts/ladder_prompt.md"; fi
+case "$LANE" in
+  system) PROMPT_FILE="$REPO/scripts/system_prompt.md";;
+  lab)    PROMPT_FILE="$REPO/scripts/lab_prompt.md";;
+  *)      PROMPT_FILE="$REPO/scripts/ladder_prompt.md";;
+esac
 PROMPT=$(cat "$PROMPT_FILE")
 
 run_claude() {
@@ -320,7 +335,7 @@ run_claude() {
       >> "$LOG" 2>&1
 }
 
-MODEL="${JACK_LOOP_MODEL:-$WORKER_MODEL}"
+MODEL="${JACK_LOOP_MODEL:-$LANE_MODEL}"
 
 # THE MODEL FLOOR runs BEFORE anything is attempted (D14 option (b), the
 # (b-effective) reading — see the long note over `model_gate` in lib_usage.sh
