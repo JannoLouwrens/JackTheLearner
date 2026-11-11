@@ -3971,7 +3971,7 @@ anyone wants it.
 ## instrument measures whether a claim survives the crossing (builder,
 ## 2026-09-07, per the 82nd audit B3)
 
-ROUTED: two-eyes-one-certified | 2026-09-07 | 2b3e8a6 (82nd audit B3; eye adopted in b7324ba) | OPEN
+ROUTED: two-eyes-one-certified | 2026-09-07 | 2b3e8a6 (82nd audit B3; eye adopted in b7324ba) | DECLINED 2026-11-11 (Director) names no live blocker: no order or milestone waits on it. The crossing question (does a visual claim survive the change of eye) is to be a clause of the vision-seat cook-off when M5 opens an order — a test, not a queue row.
     DUE: 2026-09-26 | RE-DATED 2026-09-14 (Review DAILY). The 2026-09-13 date BROKE — one of THIRTEEN that broke together at midnight, the project's first queue violations (`review_queue_violations` 0 -> 13, a ratchet that had read 0 since 09-03). Re-armed in the open at the desk's DEMONSTRATED disposal rate (~1/cycle), NOT at its measured maximum (6/cycle), and never onto a day already carrying its capacity — promising six a day is the act that built the pile. This flattens the pile; it does not fix the drain, which is `D28`'s. ORIGINAL TEXT FOLLOWS, unchanged. | the Review rules whether existing visual certificates
         migrate to the adopted coarse eye, stay grandfathered under the eye
         they were bought with, or get a crossing test — Sunday FULL.
@@ -16113,7 +16113,7 @@ the 170 core-s `PS.05` reference probe, the 700 core-s across 4 seeds on
 `PS.06`. Everything this ruling needed was already measured and paid for; what
 it added was the decision nobody else is allowed to make.
 
-ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09-25T22:00:21, 16,580.6 s, seeds 0/1/2, clean stamp at `c1114ae`), harvested and _check-replayed this slot | OPEN
+ROUTED: lt03-icm-trap-not-live-in-flight | 2026-09-25 | LT.03 attempt 1 (2026-09-25T22:00:21, 16,580.6 s, seeds 0/1/2, clean stamp at `c1114ae`), harvested and _check-replayed this slot | DECLINED 2026-11-11 (Director) not a live blocker today: `LT.03` is unreachable behind `LT.02` (FAIL) and belongs to roadmap M7, which has no open order. The finding stays on this row; whoever opens the LT order reads it first.
     DUE: 2026-10-16 | **RE-ARMED 2026-10-04 (Review FULL, act 7) from NO DATE
         AT ALL**, which is why this row was STALE rather than merely slow: it
         has been OPEN 9 days past the 8-day consumer cycle with nothing that
@@ -16520,7 +16520,7 @@ ROUTED: ba03-registered-run-foreclosed-by-d20-class-closure | 2026-09-26 | launc
 
 ## ROUTED 2026-09-26 (builder, 08:1x slot): `t028-p10-reads-an-empty-armed-register-as-a-broken-tool` — the certificate's live-document leg asserts the PROJECT's state, not the tool's honesty, and the first healthy-empty register in the tool's history demoted a standing PASS to FAIL
 
-ROUTED: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | 2026-09-26 | T0.28 attempt 22, ledger row FAIL 2026-09-26T08:18:13 (43.78 s, clean tree, failed_names = p10_live_document_is_armed_and_readable, live_armed 0.0) | OPEN
+ROUTED: t028-p10-reads-an-empty-armed-register-as-a-broken-tool | 2026-09-26 | T0.28 attempt 22, ledger row FAIL 2026-09-26T08:18:13 (43.78 s, clean tree, failed_names = p10_live_document_is_armed_and_readable, live_armed 0.0) | DECLINED 2026-11-11 (Director) machine paperwork on a Tier-0 certificate property; blocks no spec and no order. The machine may not grow; if `T0.28` itself goes red it surfaces in `run blocked` and gets an order then.
     DUE: 2026-10-04 | the tool's own next date with room (10-03 carries 6).
         What this row owes is a REDESIGN DECISION on one property of a Tier-0
         certificate, never a bar move: P10's other conjuncts and P1-P17's
@@ -16734,7 +16734,7 @@ ROUTED: doc-declarations-restale-three-tier0-certificates-daily | 2026-09-26 | f
     Cost of deciding: zero — no run, no seeds. The builder's re-buys are already
     on the ledger either way.
 
-ROUTED: t022-p9-reads-a-specs-own-row-as-someone-elses | 2026-09-26 | `T0.22` offline `_check(_experiment(0), _control(0))` = **False** (builder, this slot, dirty-tree run with NO ledger write) | OPEN
+ROUTED: t022-p9-reads-a-specs-own-row-as-someone-elses | 2026-09-26 | `T0.22` offline `_check(_experiment(0), _control(0))` = **False** (builder, this slot, dirty-tree run with NO ledger write) | DECLINED 2026-11-11 (Director) machine paperwork on a Tier-0 certificate property; blocks no spec and no order. If `T0.22` goes red it surfaces in `run blocked` and gets an order then.
     DUE: 2026-10-04 | `review-queue`'s own `next_free_due`, read off the tool
         this slot (09-27, 09-29 and 10-02 are all AMBER at 7 against a measured
         6). Not urgent by compute — nothing is dispatched behind it — but it is
@@ -16802,7 +16802,7 @@ ROUTED: t022-p9-reads-a-specs-own-row-as-someone-elses | 2026-09-26 | `T0.22` of
     `T0.22` re-buy at cpu<10min; `T0.22` is cited by no other certificate
     (`run blast-radius T0.22` before the edit, per the arming contract).
 
-ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run status` and `run stale` both EXIT 0 on 24 staleness rows, 2 of which are standing PASS certificates (builder, this slot, measured immediately after discharging the 121st audit's FTB 3 on the neighbouring class) | OPEN
+ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run status` and `run stale` both EXIT 0 on 24 staleness rows, 2 of which are standing PASS certificates (builder, this slot, measured immediately after discharging the 121st audit's FTB 3 on the neighbouring class) | DECLINED 2026-11-11 (Director) asks for one more exit code; ORDERS S3 (2026-11-11) goes the other way on purpose — fewer by-design reds. PASS-but-STALE is printed by `run blocked` and re-bought by the clerk, which now refuses a dirty tree (7d33eba).
     DUE: 2026-10-04 | `review-queue`'s own `next_free_due`, read off the tool
         this slot (09-27, 09-29 and 10-02 all read AMBER at 7 against a measured
         capacity of 6). Nothing is dispatched behind it and no number moves
@@ -17128,7 +17128,7 @@ disposition.
 ## unmeasured for 24 days, and on today's ladder it reads 28 disarmed conjunct
 ## keys against the 0 it recorded
 
-ROUTED: t013-latently-red-28-disarmed-keys | 2026-09-26 | `f096f29` (the three-readers repair, which staled T0.13 and forced the re-buy) + the T0.13 attempt row recorded this slot, FAIL, 2.0 s | OPEN
+ROUTED: t013-latently-red-28-disarmed-keys | 2026-09-26 | `f096f29` (the three-readers repair, which staled T0.13 and forced the re-buy) + the T0.13 attempt row recorded this slot, FAIL, 2.0 s | DECLINED 2026-11-11 (Director) moved, not dropped: owned by docs/ORDERS.md SYSTEM "Next up" (T0.13's gate clauses that can never fire — arm or remove with reasons). The queue is closed; the order is the live copy.
     WAITS-ON: none | PROMOTED FROM PROSE TO A DECLARED FIELD 2026-10-05 (Review
         DAILY), quoting this row's own words rather than inventing a warrant:
         the original `DUE:` line below already said *"`WAITS-ON: none` | nothing
@@ -17322,7 +17322,7 @@ anything and the per-key adjudication owed on 10-05 is untouched.**
 ## — the 47 non-PASS rows have never had their verdict replayed, and two of
 ## them are decided by a module-global memo rather than by their own record
 
-ROUTED: adverse-verdicts-are-re-derived-by-nobody | 2026-09-26 | one-off fresh-process replay of all 47 adverse ledger rows through their committed `_check` (this slot, script in /tmp, no ledger write, clean tree) | OPEN
+ROUTED: adverse-verdicts-are-re-derived-by-nobody | 2026-09-26 | one-off fresh-process replay of all 47 adverse ledger rows through their committed `_check` (this slot, script in /tmp, no ledger write, clean tree) | DECLINED 2026-11-11 (Director) names no live blocker. `run verify` re-judges recorded verdicts each audit (107 re-judged, 0 failed to re-derive, OVERSIGHT 2026-11-11); a separate lane for adverse rows would grow the machine.
     DUE: 2026-10-20 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date — one
         `DUE:` line, no prior break, no stop-rule engaged.** **RANK 4 of the five
         rows left on today's date**, and like rank 3 the date is DERIVED, not
@@ -17790,7 +17790,7 @@ this row, no threshold touched.
 ## an-unrun-promise` — the 52nd audit's own repair broke the spec that gates
 ## it, because one instrument reads the field's TRUTH and the other its MEANING
 
-ROUTED: t018-explicit-no-control-reads-as-an-unrun-promise | 2026-09-26 | `T0.18` offline `_check(_experiment(0), _control(0))` = **False**, `declared_control_never_ran` = 2 (`T0.01, T0.10`) against the gate's `== 0` (builder, this slot, child process, NO ledger write) | OPEN
+ROUTED: t018-explicit-no-control-reads-as-an-unrun-promise | 2026-09-26 | `T0.18` offline `_check(_experiment(0), _control(0))` = **False**, `declared_control_never_ran` = 2 (`T0.01, T0.10`) against the gate's `== 0` (builder, this slot, child process, NO ledger write) | DECLINED 2026-11-11 (Director) moved, not dropped: `T0.18` is repaired under docs/ORDERS.md S3 (its KeyError and what `run verify` reads from it). The order is the live copy.
     DUE: 2026-10-19 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date — one
         `DUE:` line, no prior break, no stop-rule engaged.** **RANK 3 of the five
         rows left on today's date**, and this date is DERIVED from rank 1's
@@ -18014,7 +18014,7 @@ before the edit).
 ## demoted a Tier-0 certificate eleven hours later; the spec had already
 ## written the correct rule down, one property further on
 
-ROUTED: t023-readonly-conjunct-gates-on-a-ratchet-exit-code | 2026-09-26 | `T0.23` attempt 13, ledger row **FAIL** 2026-09-26T21:4x (58.18 s, clean tree, sole gated failure `readonly_still_works` False at `rc_readonly` 2) — re-bought in this slot | OPEN
+ROUTED: t023-readonly-conjunct-gates-on-a-ratchet-exit-code | 2026-09-26 | `T0.23` attempt 13, ledger row **FAIL** 2026-09-26T21:4x (58.18 s, clean tree, sole gated failure `readonly_still_works` False at `rc_readonly` 2) — re-bought in this slot | DECLINED 2026-11-11 (Director) moved, not dropped: docs/ORDERS.md S3 takes by-design-red ratchets out of the exit codes, which is this row's defect at its source.
     DUE: 2026-10-20 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date — one
         `DUE:` line, no prior break, no stop-rule engaged.** **RANK 5, LAST of
         the five rows left on today's date, and it is last on its own
@@ -19162,7 +19162,7 @@ measuring it is a one-off hand scan of the same shape as
 ## — SUBJECT: a spec's SCIENCE (the estimator that decides a claim about Jack),
 ## not the apparatus. Labelled here per the 124th audit's FOR THE BUILDER item 2.
 
-ROUTED: xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off | 2026-09-27 | XL.01 attempt 2 (FAIL, `265e683`, ran_at 2026-08-19T18:35:10) read this slot; the spec's own v2 change list | OPEN
+ROUTED: xl01-claim-ratio-kept-the-per-seed-form-the-control-was-pooled-off | 2026-09-27 | XL.01 attempt 2 (FAIL, `265e683`, ran_at 2026-08-19T18:35:10) read this slot; the spec's own v2 change list | DECLINED 2026-11-11 (Director) moved, not dropped: `XL.01` at proper power is docs/ORDERS.md JACK "Next up 4" (bar unmoved; claim and control must be scored in the same form — this row's finding is that order's first instruction).
     DUE: 2026-10-07 | `review-queue`'s own "next date with room under the
         measured capacity", read off the tool this slot and not chosen by hand
         (09-27 through 10-06 all carry 6 or 7 against a measured capacity of 6).
