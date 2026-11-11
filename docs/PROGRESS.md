@@ -1,210 +1,111 @@
-> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
-> the Review has missed its schedule: newest row in docs/PROGRESS_LOG.md is 2026-10-26 (16d old; the schedule allows 1d)
-> So everything below is the PREVIOUS run of the review and is a RECORD,
-> not current state: its counts, its "current state" framing and any
-> claim about what has or has not moved describe an older world.
-> Stamped 2026-11-11T21:28:04+00:00 by scripts/lib_seal.sh. It disappears the next time the
-> review completes a run and rewrites this file.
+# PROGRESS — for the owner, on a phone
 
-# PROGRESS.md — the Review's current-state page
+Written 2026-11-11 22:05 UTC by the Director (Sunday-style FULL sitting, the
+first under the new organisation). Rewritten every day; git keeps the old ones.
 
-Written 2026-10-26 by the **DAILY** Review. This page is CURRENT STATE by
-design: it is rewritten each sitting and is not an archive. The durable record
-of every act below is its own commit, and the reasoning lives there — this page
-is the receipt, written last, for commits that already exist.
+## What Jack can do today
 
-**The previous sitting (SUNDAY FULL, 2026-10-25) died `rc=124` at 13:02:09Z**
-and auto-sealed this file with *"INCOMPLETE RUN — THIS IS A DRAFT"* — on a page
-whose own body said *"Those banners are cleared by this rewrite because the run
-completed."* It had not completed. That contradiction is this morning's
-subject, not a footnote to it. The banner is cleared by this rewrite because
-this run reached this line; if it did not, the seal will say so again.
+Nothing new since 26 October — the agents were paused for 16 days and came
+back today. What was already true:
 
----
+- A small learning brain (`wm-latent`) learns to survive in the first world
+  (W0), and carries what it learned across deaths. Four rival brains did not.
+- A hand-scripted forager can live a full life there with needs, a diary and
+  save-and-resume. **The learning brain has never been put in that seat.**
+- The diary and learned skill are separate memories; wiping one leaves the
+  other. (One of its test bars is being tightened — see below.)
+- He cannot yet move well, hear with his own ear, or use words. The "language"
+  passes on the books are a diary plus a ready-made language model speaking —
+  I ruled today that those count as his parent's work, not his.
 
-## Part 1 — the state of progress, last 24 hours
+The test ladder reads **108 of 262** demonstrated. Unchanged today.
 
-### The numbers, re-derived this sitting
+## Where he stands on the route (9 milestones)
 
-| reading | value | how |
-|---|---|---|
-| ladder | **108/261 demonstrated** (41.4%) | `run status` |
-| was, at the last committed page | 106/260 (40.8%) | +2 demonstrated, +1 registered |
-| first-ever verdicts, `2026-W43` (opened 10-25) | **1** — `LC.08` PASS | ledger `history` walk |
-| first-ever verdicts, `2026-W42` | **3** — `T0.21`, `T0.28`, `T0.31` | ledger `history` walk |
-| status changes, `2026-W43` / `2026-W42` | 1 / 9 | ledger `history` walk |
-| rework rate | **135 of 164** specs with any entry are `attempt > 1` = **82.3%** | ledger |
-| queue | **OVERDUE 10 → 0**; 63 OPEN, 18 DISPOSITIONED, 77 ACTED, 15 DECLINED of 173 routed | `run review-queue` |
-| queue arrivals vs disposals | **4.14/cycle in, 2.86/cycle out** — drain **UNBOUNDED** | `run review-queue` |
-| builder liveness | **100%** — every hourly slot `rc=0` since 2026-10-25T10:49Z, **0 dark slots** | `/data/jack-logs/ladder.log` |
-| **Review liveness** | **18 of the last 22 logged sweeps `rc=124`**, + 6 days with no sweep | `/data/jack-logs/review.log` |
-| ratchet movement | `claim_dead` **2, MOVED −1** (was 3 since 09-26) — the good direction | `run ratchets` |
+1. **One whole life** with the learning brain in control — not started. Top order.
+2. **A world and a curriculum that can teach** — deeper world half built; three
+   world-rule tests red; no curriculum yet.
+3. **Brain shape decided by contest** — no seat moved; two contests wait on GPU.
+4. **A body that moves** — failing since August; the fix is queued behind 3.
+5. **Every sense in one brain** — five senses in as summaries; no learned ear.
+6. **Words** — nothing of his own yet.
+7–9. Keeps learning / a living Jack / beyond the jungle — not started.
 
-### Velocity, and the number that actually moved
+## What moved since yesterday
 
-The ladder went 106 → 108 and the registry 260 → 261, so the pass rate rose
-41.1% → 41.4%. **That is a real move and it is the builder's, not this desk's.**
-In the stretch of hours this desk spent dying on the clock, the builder
-registered `LG.15`, harvested `T2.05` attempt 5 off a T4, and passed `LC.08` on
-attempt 1. One first-ever verdict in `2026-W43` against three in `2026-W42` is
-not a slowdown worth alarm — W43 is two days old.
+- The reorganisation went live: workers now read one page of ranked orders.
+- A worker split an over-strict seed-noise test (`T1.08`) so it no longer
+  blocks 45 others; the replacement (`T1.14`) is **running on a free Colab GPU
+  right now** — no result yet.
+- A worker shrank three megabyte-sized log files to a size agents can read.
+- Today I: rewrote the orders; made "one whole life" the first order and told
+  workers not to wait on anything for it; gave two orphaned world tests an
+  owner; settled 8 stale decisions (4 by their pre-agreed defaults — none
+  moved a pass mark); cleared 10 of 65 rows of old backlog.
 
-**Goodhart check: the rate ROSE while the registry grew, which is the honest
-direction.** Registry +1, demonstrated +2. This is the opposite of the
-2026-08-07..09 pattern and it should be said plainly rather than hedged.
+## What did not move
 
-### The frontier, and who is actually on it
+- No test result landed. No part of Jack's code changed. Day 0 — judge from tomorrow.
+- The first GPU job waited 70 minutes on Kaggle for a session that never
+  existed, and our own meter charged 1.17 hours for it. A bug in our poller
+  (it does not notice "no such job"). Repair ordered (S2); short jobs go to
+  Colab meanwhile.
 
-`T2.05`'s ordered non-linear reference arm came back and **refuted the framing
-of the row that ordered it** — `nonlinear_headroom` is negative on all three
-seeds, the 1-NN reference is ~3× worse than ridge on identical features, so
-"the world model loses to a ridge reference" is a finding about the **venue**,
-not about the world model. The instrument proved itself alive
-(`floor_selftest_ok` 1.0 on planted linear *and* planted quadratic) rather than
-asserting it. That is the week's best piece of science and the builder did it.
+## What the workers are on next
 
----
+1. `LF.03` — one whole life: the learning brain living, dying five times,
+   remembering, saved and resumed mid-life. Runs on this box, needs no GPU.
+2. Collect the `T1.14` result, then give it a stronger control.
+3. `D1.1` — the rerun of "which controller moves the body", with a fair
+   comparison this time; then retry "he can move".
+4. `UB.10` — the contest on how unified his brain should be (stuck 59 days).
+5. Fix the red world rules (heat balance, needs ledger, night shelter).
+6. Finish the deeper world; then the curriculum contest.
 
-## THE HONEST PARAGRAPH (no numbers)
+Machine work: fix the GPU poller; make six passing tests hold on **every**
+seed rather than on the average (I found six passes, including the
+diary-vs-skill one, where the average clears the bar but one run may not —
+bars unchanged, tests re-run); stop guard tools being red by design.
 
-We are closer to a creature in one narrow, real way and further in a structural
-one. Closer, because a question this desk asked was answered by an experiment
-that told us we had asked it wrong — the world model is not failing, the world
-we built to test it in is too simple to discriminate. That is the shape of a
-project that is learning rather than accumulating, and it is the single most
-important step toward Jack this cycle. Further, because the organ that is
-supposed to hold the whole thing to account has been dead or truncated most
-mornings for a month, and nobody noticed — because the organ that reports
-liveness is the one that was absent. The builder has been doing honest work
-underneath a desk that kept writing cheques it could not cash and then blaming
-a blackout that had already ended. The drift to name is this: we have been
-measuring Jack diligently and measuring ourselves not at all, and an audit that
-cannot see its own absence will keep reporting that everything is fine right up
-until the backlog it promised to drain is a file nobody can read. Jack is not
-yet a creature that lives, learns and is known. This morning he is at least one
-that is being tested in a world we now know is too small — which is worth more
-than another green tick in it.
+## The four machine numbers
 
----
+| | |
+|---|---|
+| Points per worker run | 0 today (108 → 108; ~3 worker runs since restart) |
+| Slots lost to budget | 0 since restart |
+| Free GPU-hours expired | last week: all 30 (the pause). This week: 0 used of 30, ~3.5 days left |
+| Oldest unrepaired blocker | 73 days (`W.1`, `W.2` — world heat and needs rules); now owned by order J6 |
 
-## Part 2.5 — steering maintenance
+## Dead or stuck
 
-**ORGAN LIVENESS** (each log against its cadence):
+- **Usage meter cannot be trusted tonight.** It read 76% at 21:33 and 0–2% at
+  21:53 inside the same week. One of those is false. The 95% stop acts on
+  whatever it reads; I did not touch it. If the 76% was the true one, the
+  agents may go dark before the meter resets on 13 Nov 04:00 UTC.
+- **Kaggle** gave our job no session, cause unknown (S2 will find out).
+- **Scout** (reads new papers) has not run since the pause; its page is 91 KB
+  against a 12 KB cap and will be rewritten at its next run.
+- The auditor's run was cut off by its clock but its report was complete.
+- Pushes work. Disk: 6.1 GB free on the system disk (workers stop under 3).
+- 55 old backlog rows and 6 stale process decisions remain; I take 10 and 3 a day.
 
-| organ | cadence | last fire | verdict |
-|---|---|---|---|
-| builder | hourly | 2026-10-26T06:23Z | **ALIVE**, 0 dark slots, 100% `rc=0` since 10-25T10:49Z |
-| overseer | 6-hourly | 2026-10-26T06:37Z | ALIVE |
-| field watch | Mondays | 2026-10-26T06:01Z | ALIVE — Week 11 landed 36 min before this sitting |
-| **Review (this desk)** | daily | 2026-10-26 | **FAILING — see FOR THE OWNER 1** |
+## The honest paragraph
 
-**`D30`'s standing default does NOT fire today.** The dark-slot streak is **0**,
-far below 2× the builder's hourly cadence, so no blackout finding and no
-GPU-expiry forecast is owed beside it. This is the first sitting in weeks able
-to say that, and the prior re-dates that blamed the builder are retrospectively
-wrong about the cause even though they were right at the time.
+Closer to a creature, or just busier? This week: busier, in the right
+direction. The ladder has not moved since 26 October and no life has been
+lived by the learning brain. The week's biggest step is not a result — it is
+that "one whole life" is now defined as a concrete test on the brain that
+actually learns, and is the first thing every worker sees. The worst drift is
+old and I am naming it: for two months the machine studied itself (its queue,
+its meters, its own paperwork) while the creature stood still, and some
+passes on the books were about a borrowed language model rather than him.
+Judge the new set-up by one thing: whether `LF.03` exists by the weekend.
 
-**FIELD WATCH — consumed? NO, and dated rather than dropped.** Week 11
-committed at `11325f6`, 06:01Z, thirty-six minutes before this sitting opened.
-Its nominations (an arm, a control, a discipline) and its §7 finding — *two
-sweeps were refused by the gate and no committed file records either refusal* —
-are **not** converted this morning. A shallow consumption of a report that
-arrived mid-sitting is worse than a dated one, and the `fieldwatch-quotation-
-channel-is-0-for-5` row exists because this desk has skimmed before. Queued as
-the next sitting's first act after OVERDUE.
-
-**`scripts/ladder_prompt.md`: 115,923 bytes** — under the standing 125,000-byte
-rule and 15,149 below the `MAX_ARG_STRLEN` exec cliff that killed every slot on
-2026-09-20. **No priority edit made this sitting**, deliberately: the live head
-is `1^22` (2026-10-09, 17 days old), the block stack below it is five deep, and
-reconciling it properly is FULL-sized work that cannot be half-done at the end
-of a DAILY sitting into a file where a careless append stops the builder
-launching. Named here so the staleness is visible rather than silent.
-
-**CHAMPIONS / seat staleness:** not re-read this sitting (Sunday duty). No
-claim is made about seat freshness either way.
-
----
-
-## WHAT THIS SITTING DID — five acts, each committed as it was made
-
-1. **`302edf8`** — `t205-world-model-loses-to-the-ridge-reference` **ACTED** at
-   `427ff48`. Verified at the desk against the commit, not taken from the row's
-   trace. The residual (the world-touching re-aiming) is routed as its **own
-   OPEN row** rather than carried invisibly on a closed one — the
-   `t215-router-under-lexical-null` precedent, where a second conjunct went
-   unowned for 25 days.
-2. **`ddf9b9b`** — `hold-on-a-resolved-blocker-...` **DISPOSITIONED**. Its
-   hypothesis is **refuted** (the field did not parse empty; the blocker is
-   live, so the class correctly stayed silent — **the instrument was right and
-   the reading desk was wrong**). The probe found a **worse defect with a
-   repro**: a prose line wrapping onto a field name is silently parsed as a
-   declaration and overwrites the genuine one. **Latent — zero live victims
-   across all 173 rows**, and reported as latent rather than inflated.
-3. **`5def2f2`** — the remaining **8 OVERDUE re-dated and ranked**, cause named
-   as this desk, each row recording that the promise is **weak**.
-4. **`b7cfd14`** — two missing `WAITS-ON` declarations added (11-07 now prints
-   its group count), and **my own `DATE-INVERSION` corrected before commit**
-   after the instrument caught it.
-5. **`f474db5`** — **`D55` routed** to `docs/DECISIONS_NEEDED.md`.
-
-`run review-queue` ends this sitting at **zero violations of any class** and
-`decisions --check` at **0 unrouted / 0 vanished / 35-of-35 transcribed**.
-
----
-
-## FOR THE BUILDER
-
-1. **The `review_queue.py` parser repair, ordered at `ddf9b9b`, DUE 2026-11-06.**
-   Two parts, both strictly louder than today, and **neither may be implemented
-   by making the parser quieter**: (a) a `BLOCKED-BY:`/`WAITS-ON:` naming an id
-   that is not a `ROUTED:` row in the file is `MALFORMED` (loud), not absent
-   (quiet) — this reads **0 today**, so it ratchets a clean state rather than
-   papering over a dirty one; (b) a repeated `BLOCKED-BY:`/`WAITS-ON:` is
-   `MALFORMED` unless written as an explicit re-arm — `DUE:` is re-armed by
-   design and keeps last-write, those two have no such contract, and `d10`'s
-   **eight** occurrences prove silent last-write is not a readable rule.
-2. **While you are in that file, a third defect I walked into this sitting and
-   verified:** a **non-indented line ends a row body** (`parse`, line 34), so
-   any declaration after unindented prose is invisible to the parser. I lost
-   five of my own re-dates to it before noticing. Swept across all 173 rows:
-   **nine rows carry declarations outside their parsed body, and exactly one is
-   live** (`root-modules-...`), whose lost `WAITS-ON` is harmless because a
-   second declaration inside the body resolves to the same value. **Latent, not
-   biting.** It belongs with (1) because it is the same class — a declaration
-   silently lost — approached from the other side.
+Prompts: I changed none today. All steering files are inside their caps
+except the scout's page (above).
 
 ## FOR THE OWNER
 
-1. **The Review desk is the project's bottleneck organ, and I am reporting
-   myself.** `18 of this desk's last 22 logged sweeps died `rc=124`` — the
-   `timeout` wall-clock kill, not max-turns — plus six calendar days with no
-   sweep at all: absent or truncated roughly three days in four. Yesterday's
-   FULL was killed mid-docket and all ten rows it was dated to dispose went
-   OVERDUE at midnight. The builder, meanwhile, is at **full liveness**, which
-   is what makes this the desk's finding and nobody else's — every prior
-   re-date on those rows blamed a builder blackout that is now over, and the
-   promises kept breaking anyway. The queue's calendar is booked to its measured
-   capacity **every single day** from 2026-10-27 to 2026-11-06; there was no
-   free date inside the horizon for the eight rows I re-dated this morning.
-   **ROUTED AS `D55`** (`class: conduct`, `decide_by 2026-11-09`), with the
-   recommendation quoted verbatim. **My recommendation is to adopt the default —
-   throttle the desk's intake and buy me NO extra clock.** Arm (b), raising
-   `TMOUT` in `scripts/review.sh`, I deliberately did **not** take myself even
-   though that file is in the repo and I may edit it: it spends a usage meter
-   shared with the builder and four customer agents on this box, which is a
-   resource allocation and yours — and three of the four 40-minute Sunday FULL
-   runs died anyway, so it may not even work.
-
-2. NO-DECISION: liveness report, nothing here to rule on. The builder, overseer
-   and field watch are all alive and inside cadence; `D30`'s blackout default
-   does not fire; the GPU-expiry forecast is not owed this morning because the
-   dark-slot streak is 0. Recorded so that a quiet week is distinguishable from
-   an unexamined one.
-
-3. NO-DECISION: ratchet movement, declared not asked. `claim_dead` moved
-   **−1 (3 → 2)** since 2026-09-26 — the shrink direction. I did **not** run
-   `run ratchets record`, because recording a floor move requires naming the
-   committed change that justifies it and I did not have the clock to identify
-   it to the standard this desk holds others to. Flagged for the next sitting
-   rather than recorded on a guess.
+Nothing needs a decision. One thing only you can check: your Kaggle account
+ran several `next-l1-icsi-*` jobs today from another project. If those use
+GPU, Jack's "30 free hours a week" is smaller than our meter assumes.
