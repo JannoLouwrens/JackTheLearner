@@ -1,5 +1,5 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-11 22:10 UTC
+Director sitting: 2026-11-11 21:58 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5). Machine problems go under INBOX, one
@@ -57,7 +57,7 @@ serves: M3/M4 (unblocks `D1.1`, `T2.01`) · philosophy 4.
 arm; `T1.08` still FAIL with 7.0 unmoved.
 state: steps registry+re-parent DONE at 4818a2c. Kaggle attempt died "queued"
 after 70 min (no session ever existed); Colab attempt started 21:40, pid
-1755193. No ledger row as of 22:05.
+1755193. No ledger row as of 21:58.
 
 ### J2 — Settle who controls the body (`D1.1`), then re-run "he can move" (`T2.01`)
 **Why.** `D1.0` spent 17.6 GPU-hours: small plastic head **506**, MLP 415, the
