@@ -21,9 +21,9 @@ from .protocol import Budget, Spec
 # NO THRESHOLD IS TOUCHED (law 4). What changes is what a result MEANS:
 #   T2.03  "pretrained vision beats random" — was a decision, is now
 #          INFORMATION ONLY. Even if pretrained wins, we do not adopt a frozen
-#          encoder; a win would instead be evidence for INITIALISING a plastic
-#          encoder from pretrained weights, which the decree permits (it
-#          forbids freezing, not inheriting).
+#          encoder, and (owner 2026-11-11) we do not INITIALISE his encoder
+#          from pretrained weights either: nothing borrowed is installed in
+#          him. The pretrained model stays a yardstick, or a teacher outside.
 #   T3.08  "ablate the LLM" — still valid and now MORE important: it tests
 #          whether the parent is load-bearing from outside.
 #   T1.05  "frozen stays frozen" — still valid as a MECHANISM test (if we
@@ -5673,11 +5673,11 @@ EXPANSION: list[Spec] = [
                "the cheaper one wins by law 3's TIE rule; an O2 win with O2s "
                "tied says the whole framing was wrong.",
          notes="Matched optimiser steps AND env steps, both reported "
-               "(D1_CONTROL_ARCHITECTURE's lesson). O2 does NOT put a frozen "
-               "model inside Jack: it initialises a PLASTIC policy from "
-               "pretrained weights and continues to train them, which the "
-               "PLASTIC-ONLY decree permits. An arm that froze them would be "
-               "A1's situation and would be scored-but-ineligible. O2 ~ O2s "
+               "(D1_CONTROL_ARCHITECTURE's lesson). O2 installs pretrained "
+               "weights inside Jack as a warm start; since the owner's "
+               "2026-11-11 rule (nothing borrowed inside him, frozen or "
+               "not) O2 and O2s are SCORED-BUT-INELIGIBLE like LG.04's A1 "
+               "- run and recorded, never seated. O2 ~ O2s "
                "is named in advance as a live and arguably likely outcome and "
                "must be reported as loudly as a win. "
                "  COVERS: language (parent) (claim)"),
@@ -7679,10 +7679,11 @@ EXPANSION: list[Spec] = [
     # 2026-09-03 per the INTEGRATION_QUEUE 5-step protocol. Specs verbatim
     # from the doc's §2.4/§3.1/§3.2/§4.1/§4.2/§5.3 drafts; the only additions
     # are notes-only COVERS annotations (the NE.00 registration precedent).
-    # Cross-check (step 1) found no refutation; the PLASTIC-ONLY decree does
-    # not bind jobs (a)/(b) (Whisper/speaker-ID are OUTSIDE the brain, the
-    # LLM-parent status), and HR.6's frozen-tower arm A6 enters as
-    # SCORED-AND-INELIGIBLE per SYSTEM.md's 08-24 amendment. Ordering per
+    # RE-CLASSIFIED 2026-11-11 (owner's inside/around rule, GOAL.md): Whisper
+    # and the speaker embedders are ADULTS in his world — the parent's ears,
+    # world-side labellers, the outside reference. HR.2/HR.3 choose THOSE; they
+    # do not choose Jack's ear, which must be a learned plastic arm (not yet
+    # registered — Director). HR.6's frozen arms A4/A6 are SCORED-AND-INELIGIBLE. Ordering per
     # §6.3: the world-sound arm (HR.5 -> HR.7 -> HR.6 CPU arms) needs no
     # downloads and no disk; the speech arm (HR.1 -> HR.2/HR.3 -> HR.4) is
     # gated on the /data free-space escalation in DECISIONS_NEEDED.md.
@@ -7811,7 +7812,12 @@ EXPANSION: list[Spec] = [
                "because it calls a PAID OpenAI endpoint and SYSTEM.md forbids "
                "paid compute. Deleting the API path is not contingent on this "
                "bakeoff.",
-         notes="ARMS, cost = RTF MEASURED ON THIS BOX at 4 threads, nice 19 "
+         notes="ROLE (2026-11-11, notes-only, no bar touched): every arm here "
+               "is a ready-made model, so this bakeoff picks the ADULTS' ears "
+               "in Jack's world (the parent hearing him; the reference his "
+               "own learned ear is scored against). No arm can hold the ASR "
+               "seat inside him. "
+               "ARMS, cost = RTF MEASURED ON THIS BOX at 4 threads, nice 19 "
                "(peak RSS reported alongside). "
                "THE ARM ORDERING IS ALREADY PARTLY MEASURED, 2026-08-09, on "
                "66 s of speech at beam 5, and it INVERTS the x86 conventional "
@@ -8155,7 +8161,8 @@ EXPANSION: list[Spec] = [
                "A3 A2 + EXPLICIT BEARING FEATURES: per-band interaural level "
                "difference appended as extra channels. Cheap; tests whether "
                "the stem needs help finding what PG.5 proved is there. "
-               "A4 DISCRETE TOKENS, frozen encoder. If run, use DAC 24k "
+               "A4 DISCRETE TOKENS, frozen encoder — SCORED-AND-INELIGIBLE "
+               "(a ready-made codec inside him; owner 2026-11-11). If run, use DAC 24k "
                "(298.7 MB, MIT) — Codec-SUPERB finds DAC the only codec to "
                "significantly beat EnCodec on the NON-SPEECH audio category — "
                "or EnCodec 24k (93.1 MB) as the cheap variant. NOT Mimi: "
@@ -8181,9 +8188,10 @@ EXPANSION: list[Spec] = [
                "temporal localisation, and ContactAudio's output is a "
                "three-parameter synthetic family no YouTube tower has heard. "
                "If A6 WINS, section 1.3 of "
-               "docs/research/HEARING_BAKEOFF.md is wrong and the tower ships "
-               "— as SCORED-AND-INELIGIBLE for the seat until the PLASTIC-ONLY "
-               "champion is formally contested (SYSTEM.md, 2026-08-24). "
+               "docs/research/HEARING_BAKEOFF.md is wrong, the owner is told "
+               "loudly, and the tower stays SCORED-AND-INELIGIBLE: it never "
+               "ships inside him (GOAL.md 2026-11-11); it may teach or score "
+               "his learned ear from outside. "
                "NOT AN ARM: wav2vec2, which UnifiedBrain.AudioEncoder:1020 "
                "currently loads. On HEAR it scores 0.561 on ESC-50 against "
                "PANNs' 0.909 and CED-base's 0.967 — self-supervised SPEECH "

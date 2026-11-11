@@ -12,6 +12,14 @@ in a world that can kill him, who learns from his own lives, remembers them, and
 can be talked to. He must KEEP LEARNING — that is the point. Nothing is claimed
 about him unless a test that could have failed says so.
 
+**Inside him nothing is frozen or borrowed** — ears, eyes, core, fusion, voice
+all learn from scratch; no pretrained weights go in, even as a warm start.
+**Around him pretrained models are wanted** (Whisper, LLMs, VLMs, TTS — free
+ones): the adults of his world, who talk, listen, demonstrate, set tasks and
+score him. A ready-made model in a race is a teacher or a scored-and-ineligible
+reference, never a candidate for a part of him; and it never does his thinking
+or chooses his words.
+
 ## Read, in this order — and nothing else up front
 
 1. `docs/ORDERS.md` — **your work.** Take the first open order in the JACK
@@ -70,7 +78,8 @@ cron with no model call. **Do not spend your iteration re-running them.**
 
 - Two ways to build something and both can be run? **Race them**
   (`experiments/bakeoff.py`) — never argue, never ask. Architecture is always
-  contested: one brain vs fast/slow, which core, which control path.
+  contested: one brain vs fast/slow, which core, which control path — a
+  non-unified or frozen arm still RUNS, scored-and-ineligible.
 - Only a question no measurement can answer (what Jack must BECOME; writing
   outside the repo or `/data`; spending money; deleting a component) goes to
   the owner — as a `DECIDE:` block in `docs/DECISIONS_NEEDED.md` with a default

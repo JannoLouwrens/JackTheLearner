@@ -82,6 +82,28 @@ that is not inside him, it lives in his world and speaks to him. A frozen
 thing in his environment is not a frozen part of him. Counterargument, cost
 and re-open trigger recorded in docs/CHAMPIONS.md.
 
+**INSIDE HIM, nothing borrowed. AROUND HIM, everything (owner, 2026-11-11).**
+Verbatim: *"but we use inference from whisoer from llms from everywhere to
+trwin him right like he's growing up with these things around him? like a real
+human... all these things important... so go a steo farther"*
+
+- **Inside Jack:** nothing frozen, nothing borrowed. Ears, eyes, core, fusion,
+  voice — every part learns, and no pretrained weights are installed in him,
+  frozen or as a warm start.
+- **Around Jack:** pretrained models are welcome and wanted. Whisper, LLMs,
+  VLMs, TTS and anything else free are the ADULTS of his world. They may speak
+  to him, listen to him and understand his sounds, answer, demonstrate,
+  correct, set goals and tasks, and score him. Their inference is teaching.
+- **The boundary is weights, not knowledge.** What they know reaches him as
+  experience and teaching signal; their weights never become part of him.
+- **The guard:** he is not a puppet. He knows things from his own life the
+  teachers cannot (LG.00), and they never do his thinking or choose his words.
+
+*Cost, recorded beside it as SYSTEM.md requires:* an ear learned from scratch
+on free compute will understand a few voices and a small vocabulary, far below
+Whisper. Accepted. A ready-made model that out-scores his own part is a
+reference he is measured against (scored-and-ineligible), never a replacement.
+
 **Flexible above all.** Components that swap as better ones
 ship; a small trained core; capabilities added without retraining the world;
 components that must EARN their parameters via ablation or be deleted.
@@ -157,10 +179,10 @@ while grounding accumulates. The earlier "mouth" framing below is now the
 FALLBACK, kept because LG.00's test applies to any role the model plays.
 
 **The LLM is his mouth, never his mind (owner, 2026-08-09).** Jack must be
-smarter than the language model inside him — not in facts, which it will
+smarter than the language model that speaks beside him — not in facts, which it will
 always win, but in everything that requires having LIVED: his world, his body,
-his history, his people. The borrowed model is frozen and out-of-process
-precisely so that nothing he learns can hide inside it. His knowledge lives in
+his history, his people. The borrowed model is frozen, out-of-process and
+OUTSIDE him precisely so that nothing he learns can hide inside it. His knowledge lives in
 the parts that lived — the learned core and the diary — and language is how he
 reports it, never where it comes from. In the owner's words: he must *"develop
 knowledge and connect it to words instead of just the LLM communicating and

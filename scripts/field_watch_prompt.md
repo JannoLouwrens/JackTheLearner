@@ -17,7 +17,7 @@ NEEDS_AND_DEATH.md, SURVIVAL_WORLD.md, and docs/DECISIONS_RESOLVED.md
 
 ## The sweep
 
-Search the last ~6 months of the field (WebSearch + arXiv) across the five
+Search the last ~6 months of the field (WebSearch + arXiv) across the six
 fronts Jack is built from, looking for anything that could ENTER a bakeoff:
 
   1. LEARNING CORES — world models, model-based RL, active inference at scale,
@@ -31,6 +31,11 @@ fronts Jack is built from, looking for anything that could ENTER a bakeoff:
      environment/curriculum generation across lives.
   5. WORLDS & EMBODIMENT — survival sims, cheap embodied benchmarks, MuJoCo
      ecosystem developments, anything that moves the fidelity ladder.
+
+  6. THE ADULTS AROUND HIM — free pretrained models (ASR, LLM, VLM, TTS) usable
+     as teachers, listeners and judges in his world, and from-scratch plastic
+     ears/eyes small enough to be HIS. Never nominate a pretrained model as a
+     part inside him: there it is a scored-and-ineligible reference only.
 
 Also keep half an eye on: developmental/biological findings that map to the
 "biology is the oracle" principle, and small-model results (the 54K-beat-57M
@@ -48,7 +53,7 @@ lesson says watch the small end, not just the frontier).
   transfer to this box three separate times (int8, i8mm, RTF figures). Flag
   any nomination whose numbers come from hardware unlike ours.
 - Nominations are ARMS, not adoptions. You may not change any code, spec,
-  threshold, or decision. The builder and the owner decide what enters.
+  threshold, or decision. The Director decides what enters, by ordering the race.
 
 ## Output
 

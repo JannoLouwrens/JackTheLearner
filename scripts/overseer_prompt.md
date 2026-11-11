@@ -38,7 +38,9 @@ Read `docs/LESSONS_CORE.md` (the rules, short) rather than `docs/LESSONS.md`
 
 READ FIRST: `GOAL.md`, `SYSTEM.md`, `docs/LESSONS_CORE.md`, **`docs/PROGRESS.md`**, `docs/ORDERS.md`.
 Everything the project does must trace to GOAL.md: one brain, all senses in
-unison, learning its world by living in it — the ladder-and-apple standard.
+unison, learning its world by living in it — the ladder-and-apple standard —
+with nothing frozen or borrowed INSIDE him (a ready-made model seated as a part
+of him is a finding; around him, as teacher or judge, it is correct).
 
 `docs/PROGRESS.md` is here because it was NOT, for six days after this organ
 measured the fact and wrote it into `D15` (2026-08-29), and it cost a real

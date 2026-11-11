@@ -152,6 +152,9 @@ state: open — not started.
 
 - scripts/test_lib_usage.sh has 1 pre-existing failure: 'the skip line prints both meters' assumes the worker model has its own weekly meter (true for fable, not opus). Make the case set its model explicitly.
 
+- Owner 2026-11-11 (GOAL.md inside/around rule): no spec races a LEARNED plastic speech ear or voice-recogniser for Jack — ASR and Speaker ID seats are now VACANT, `ARENA: NONE`. Order one: learned ear vs no-ASR null on a small vocabulary, HR.2's winner as scored-and-ineligible reference and as the parent's ears.
+- Same rule, needs a ruling each: `HR.4` credits `hearing (claim)` through ready-made ASR + embedder; Language-routing seat (`LG.13` meaning-mass, LG.10/12/14) has a frozen LLM phrase Jack's speech ("teachers never choose his words"); `T3.08` uses the LLM as his command encoder; `ME.11.C/D/E` put pretrained embedders in his memory; `PG.6` kills-text "move vision to a frozen tower"; `UnifiedBrain.py` still loads wav2vec2/SmolLM2 inside; `AudioListener._transcribe_api` is a paid endpoint (delete — free compute only).
+
 ## DONE (kept one day)
 
 (none yet)

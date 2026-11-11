@@ -8,9 +8,12 @@ Four research pillars feed it: `research/CAPABILITIES.md`, `research/MEMORY.md`,
 
 ## The one-paragraph theory of Jack
 
-A small trained brain (stems → one shared trunk → flow-matching action expert,
-~58M) sits on frozen swappable towers (DINOv2+CLIP vision 732M, SmolLM2
-language). It learns by **goal-conditioned hindsight regression** (every failure
+A small trained brain (plastic stems → one shared trunk → action head), every
+part of it learned from scratch — no frozen or pretrained tower sits inside him
+(the 2026-08-04 "frozen swappable towers" design is superseded; GOAL.md).
+Pretrained models (LLM parent, VLM, Whisper) live AROUND him as teachers,
+listeners and judges. The organisation itself is raced (UB.10, BO.01), not
+assumed. It learns by **goal-conditioned hindsight regression** (every failure
 is a success at what it did achieve — no RL machinery needed for the flow head),
 practices what **learning progress** says is learnable (noisy-TV-proof,
 saturation-proof, purely data-side), in a **playground** it explores because a

@@ -123,13 +123,16 @@ had reached 116 KB — about 29,000 tokens read before any work began),
 
    > **1. ENDS — fixed by the owner, never measured.**
    >    What Jack must BECOME: he learns from lived experience; he has every
-   >    sense; he dies and remembers; nothing borrowed sits inside him; who he
+   >    sense; he dies and remembers; nothing frozen or borrowed sits inside him
+   >    (pretrained models live AROUND him as teachers — GOAL.md); who he
    >    becomes is not written down. No experiment can answer these, because
    >    they are what "winning" MEANS.
    >
    > **2. ARCHITECTURE — always contested, never assumed.**
-   >    HOW he is built: one brain or fast/slow or separate systems; plastic or
-   >    frozen; which core; which fusion; which control path. **Every one of
+   >    HOW he is built: one brain or fast/slow or separate systems; which
+   >    core; which fusion; which control path; which plastic ear or eye. (A
+   >    frozen or ready-made part may be RACED as a scored-and-ineligible
+   >    reference; it is never seated inside him — that is class 1.) **Every one of
    >    these is a hypothesis. An architectural decree is a CHAMPION, not a
    >    constitution** — it holds its seat until something beats it, and
    >    `docs/CHAMPIONS.md` is where it lives, not here.

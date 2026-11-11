@@ -89,7 +89,9 @@ trend line to `docs/PROGRESS_LOG.md`.
   learning was demonstrated on the survival stack — see the audit §4.5.) Is the
   world deep enough to show what we are testing for? Is every architecture seat
   in `docs/CHAMPIONS.md` still contestable, and is fast/slow still being raced
-  rather than assumed? Turn each answer into an order or a decision.
+  rather than assumed? Does any seat or spec put a ready-made pretrained model
+  INSIDE him (it may only teach, listen or judge from his world, or run as a
+  scored-and-ineligible reference)? Turn each answer into an order or a decision.
 - Field watch: convert what is worth trying into an order; say no to the rest
   in one line.
 - Re-examine 5 passing specs against what has been learned since. You may

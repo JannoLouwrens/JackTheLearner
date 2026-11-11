@@ -15,7 +15,11 @@ however good its number — can touch them. **Bakeoffs decide HOW, never WHAT.**
   The reward EQUATION competes below; the FACT of the needs does not — the
   owner ruled they stay for teaching and for relatability both. An arm showing
   "needless scores higher" changes nothing about this.
-- **All senses in one brain** (constitutional in SYSTEM.md).
+- **Every sense reaches one learning brain.** The END is fixed; the brain's
+  ORGANISATION is raced (UB.10, BO.01 — non-unified arms scored-and-ineligible).
+- **Nothing frozen or borrowed INSIDE him; pretrained models AROUND him are his
+  world's adults** (GOAL.md, 2026-11-11). A ready-made model in a seat's ring is
+  a scored-and-ineligible reference or a teacher/listener/judge — never a holder.
 - **He learns by living, dies, and remembers** — the diary crosses death.
 - **Memory is extractive, never generative** — he quotes his life or says nothing.
 - **He is a someone**: talkable-to, knows his people by name, watchable.
@@ -78,9 +82,9 @@ SYSTEM.md, which outrank this file.
 | Curiosity signal | learning-progress | **BY ANALYSIS** (favourite on pilot data) | LT.03/LT.04 (**registered 2026-08-31**, registry 202→211 with the full LT.01–LT.09 family; the seat's arena now exists and `--check` reads it "pending, not a violation") | ICM/RND enter as controls that certify the trap detectors — the genuine challengers are `disagree` and `metra`, raced against `lp` in LT.04, so the holder can lose its seat there |
 | Episodic retrieval | lexical containment | BY VERDICT (ME.1/ME.9) — **known weakness: 0.000 on paraphrase** | ME.11.A–F (**family SETTLED 2026-08-31**: A PASS as the null, B/C/D FAIL, E/F VOID-FORECLOSED in `7549b79` with the arithmetic verified live) | **measured, not predicted (cell corrected per 55th audit B3 — "potion-8M favourite" was falsified by `e3824bf`):** bm25s 0.000 (a PROVEN lexical ceiling), potion-8M 0.0437, MiniLM 0.0667 — every dense configuration INFEASIBLE (tau_fpr > tau_cov, 3/3 seeds), best unthresholded ceiling 0.250 vs the 0.80 bar; the cascade's premise is dead (Arm C recall@50 measured 0.44, not the pilot's 1.0) and the hybrid's fusion channel scores gold at exactly 0.0 by the fixture's certified construction. **THE FAMILY FINDING: no bi-encoder configuration certifies paraphrase recall at this scale — five configurations, every one hit the same pre-registered INFEASIBLE branch on 3/3 seeds.** The seat keeps its incumbent; the paraphrase weakness is now a REGISTERED CONJUNCT on `T2.10` (Review item 3 executed 2026-08-31, `468772e`), and the seat's own certificate re-ran and recorded **FAIL** (attempt 2: paraphrase recall@1 0.0000 vs both controls 0.0, leaky aliveness 1.0, original templated venue still perfect at 1.0) — the weakness is on the scoreboard, not in prose, and only a scorer that wins the ME.11 arena can re-buy the seat's certificate |
 | Sensory fusion | undecided — token-trunk favourite | — | UB.10 (**PARKED 2026-08-20** — the recipe probe's both-fail branch fired, no uniform recipe trains all six matched-param arms, arm redesign routed to the Review; the one-diagnostic cap is spent). Its prerequisite **`UB.9` is a CLEAN PASS again** — the 08-21 `PASS but STALE` flag is cleared (`run status` on 2026-08-25 flags exactly one stale claim and it is `T2.02`), and `run blocked` no longer ranks UB.9 at all. **What replaced the staleness is a CONDITIONAL, and it is the smaller problem**: per the 26th audit's B3 (`71c879f`) UB.9's registry notes now state that its unimodal at-chance readings rest on the shared-trainer argument alone — no per-arm must-learn target, no recorded loss descent, UB.10's per-arm recipe pathology not excluded — so the PASS is conditional until a re-run records per-arm descent. The seat's only evidence is current code resting on an undischarged assumption. Cell corrected by the Review 2026-08-25 | six arms, matched params |
-| Vision encoder | from-scratch 0.24M | **DEFAULT, never defended — and the FROZEN alternative is now CONTESTED, see below** | T2.03 **PASS 2026-08-13** (pretrained 0.9867/0.9833/0.9533 vs from-scratch 0.4467/0.4667/0.4933 vs random-projection 0.40, seeds 0/1/2 — the gap is measured, ~half the accuracy range; seats nobody frozen per PLASTIC-ONLY) + PL.02 (pending registration). **`T3.01` PASS 2026-08-21 (v3, attempt 5) is the from-scratch encoder's first real defence: acc_full 0.61–0.63 against its own frozen probe's 0.4467 reference, the ablated and pixel-shuffled arms exactly at chance 0.25, hash_overlap 0.0 — the plastic vision path is load-bearing, not decorative.** Added by the Review 2026-08-21 | frozen DINOv2/SigLIP vs adapters vs plastic vs pure; PROGRESS §7 asks the owner to admit a warm-start-plastic arm |
-| ASR (speech→text) | whisper.cpp | BY ANALYSIS (3.8–8.3× measured on this box) | HR bakeoff (queued) | — |
-| Speaker ID | CAM++ / TitaNet-small | BY ANALYSIS (research only) | HR speaker spec (queued) | needs ARM benchmark — no published numbers exist |
+| Vision encoder | from-scratch 0.24M | **DEFAULT, never defended — and the FROZEN alternative is now CONTESTED, see below** | T2.03 **PASS 2026-08-13** (pretrained 0.9867/0.9833/0.9533 vs from-scratch 0.4467/0.4667/0.4933 vs random-projection 0.40, seeds 0/1/2 — the gap is measured, ~half the accuracy range; seats nobody frozen per PLASTIC-ONLY) + PL.02 (pending registration). **`T3.01` PASS 2026-08-21 (v3, attempt 5) is the from-scratch encoder's first real defence: acc_full 0.61–0.63 against its own frozen probe's 0.4467 reference, the ablated and pixel-shuffled arms exactly at chance 0.25, hash_overlap 0.0 — the plastic vision path is load-bearing, not decorative.** Added by the Review 2026-08-21 | plastic from-scratch arms race for the seat; frozen DINOv2/SigLIP and adapters-on-frozen run only as scored-and-ineligible references. The warm-start-plastic ask is ANSWERED NO (owner 2026-11-11: no pretrained weights are installed in him) — a VLM may instead TEACH his eye from outside (labels, goals, scores) |
+| ASR (speech→text) | **VACANT inside him.** His own speech ear must be LEARNED — a plastic from-scratch arm (few voices, small vocabulary; cost accepted in GOAL.md 2026-11-11). `whisper.cpp` (3.8–8.3× measured on this box) is NOT his ear: it is an ADULT in his world — the parent's ears that understand what he says, and the outside reference his learned ear is scored against | — | none yet for the learned ear — `HR.2` races ready-made transcribers, i.e. it picks the ADULTS' ears and the reference, not a seat-holder | learned plastic ear vs the no-ASR null, with the HR.2 winner as scored-and-ineligible reference. Re-classified 2026-11-11 (owner's inside/around rule); was `whisper.cpp BY ANALYSIS` |
+| Speaker ID | **VACANT inside him.** Knowing a voice is his to LEARN (plastic, from scratch). CAM++ / TitaNet-small / the `HR.3` arms are ready-made embedders: world-side labellers and scored-and-ineligible references only | — | none yet for the learned arm — `HR.3` picks the world-side reference | learned plastic voice-recognition vs chance, `HR.3`'s winner as reference. Re-classified 2026-11-11; was `CAM++ / TitaNet-small BY ANALYSIS` |
 | Language model | SmolLM2-360M as a TALKATIVE PARENT — in his world, speaking to him; NOT inside him | **BY DECREE** (owner 2026-08-09; supersedes the earlier 'frozen mouth' framing) | LG.00 anti-puppet applies to any role | any better frozen swap-in |
 | Consolidation | SIESTA wake/sleep, sleep-gated | BY ANALYSIS | NE.05 (queued) | — |
 | World | MuJoCo playground + needs overlays | **BY VERDICT** (measured 4–6× faster than Craftax AND goal-aligned) | W.1–W.5, W.7, W.8 fidelity gates (REGISTERED 2026-08-30, none run) — see the note below the table | rematch at each fidelity stage |
@@ -311,31 +315,8 @@ strengthenings that can only turn a green reading into a VOID.
    sentence is plausibly why four sittings could not settle the direction from
    the row alone.
 
-### Superseded context: the contested phase (kept for the record)
-
-**NOT DECIDED.** docs/research/FROZEN_VS_PLASTIC.md recommends against frozen
-and the reasoning is arithmetic rather than preference: the RESHAPING GAIN —
-does training with sense B improve sense A's own representation? — is
-identically zero for a frozen tower, so a frozen encoder makes one class of
-learning permanently impossible, which GOAL.md's capability target marks as
-suspect by definition. Supporting measurements: OpenVLA 47.0% frozen vs 69.7%
-fine-tuned vs 68.2% LoRA at 1.4% of parameters; Kleinman/Achille/Soatto
-(CVPR 2023) — separately pretrained backbones may fail to encode synergistic
-information, AND IT FAILS SILENTLY (93–94% either way, −20 points only when
-the task needs synergy). Recommended ranking: adapters+plastic fusion >
-fully pure > critical period > current fully-frozen.
-
-**But law 3 governs: this is a RECOMMENDATION, not a verdict.** PL.02 decides
-it and is runnable today. Until PL.02 records a result, no spec, agent or
-document may treat "no frozen encoders" as settled. What IS settled is only
-the LANGUAGE half, by owner decree: the LLM is a parent in his world, not a
-component inside him.
-
-**Three consequences already found, pending action:** the learning-core
-bakeoff's admission criterion U2 excludes every frozen tower BY ARITHMETIC and
-was never run against one; the "Heard, Not Seen" binding test cannot
-discriminate frozen from adapted (it measures readout, not reshaping); and EWC
-in TrainingPipeline.py measures indistinguishable from vanilla at our scale.
+*(The pre-decree "contested phase" text — "no document may treat 'no frozen
+encoders' as settled" — is superseded and lives in git, before 2026-11-11.)*
 
 **Future seats, named so they are not forgotten:** the body itself (Humanoid-v5
 has ball hands; fingers will compete one day) and the cross-life world
@@ -392,8 +373,8 @@ Three rules, each of them a scar:
   status` prints the margin REPORTING-ONLY under the SO.10 vacancy precedent.
   This line is reporting too — no gate moves in either direction.)
 - SEAT: Vision encoder | HELD: BY DEFAULT | ARENA: T2.03, PL.02
-- SEAT: ASR (speech→text) | HELD: BY ANALYSIS | ARENA: NONE
-- SEAT: Speaker ID | HELD: BY ANALYSIS | ARENA: NONE
+- SEAT: ASR (speech→text) | HELD: VACANT | ARENA: NONE
+- SEAT: Speaker ID | HELD: VACANT | ARENA: NONE
 - SEAT: Language model | HELD: BY DECREE | TRIGGER: LG.00 | ARENA: LG.00
 - SEAT: Consolidation | HELD: BY ANALYSIS | ARENA: NE.05
 - SEAT: World | HELD: BY VERDICT | ARENA: W.1–W.5, W.7, W.8

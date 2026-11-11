@@ -7,6 +7,13 @@
 > docs/CHAMPIONS.md. Still standing from this document: the LLM is frozen and
 > swappable — but it is now a PARENT in his world, not a component inside him,
 > so it is not governed by the plastic-only rule.
+>
+> **ALSO SUPERSEDED (2026-11-11):** the diagram below with a frozen text tower
+> and frozen SigLIP2 feeding the adapter — those are towers INSIDE him; his eye
+> and his word-ear are learned. Ready-made models stay around him as teachers
+> (GOAL.md, inside/around rule). And **"API primary … cents per session" for
+> the chat model is VOID: free compute only** (SYSTEM.md) — the parent is a
+> local free model.
 
 # Settled decisions
 
