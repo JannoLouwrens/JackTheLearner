@@ -12,6 +12,13 @@ earliest unfinished milestone. Later milestones may run in parallel when a
 compute lane is free (GPU work beside CPU work). What a milestone IS comes from
 `GOAL.md` and is the owner's; how it is tested may only be strengthened.
 
+**Which Jack.** Two model stacks exist. The learning this project has actually
+demonstrated is on the survival stack (`experiments/cores.py`, `survival.py`,
+`w0.py`); the older 57M-parameter brain (`UnifiedBrain.py`) has lost every
+control race so far. Milestones are judged on whatever holds the seats in
+`docs/CHAMPIONS.md` by verdict — today that is the survival stack — and the old
+brain's parts re-enter only as challengers in a cook-off, never by default.
+
 ---
 
 **M1 — One whole life.** The learning brain lives a life end to end: world,
