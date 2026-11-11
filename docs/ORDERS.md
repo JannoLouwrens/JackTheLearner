@@ -150,15 +150,11 @@ history to `docs/archive/` and keep each live file ≤ 150 KB at its old path.
 Resolved decisions leave `DECISIONS_NEEDED.md` entirely.
 **done when:** the three live files are under the cap and `coverage`,
 `decisions --check`, `champions --check` and `run status` still exit as before.
-state: SPLIT DONE at f2e23fe — 4.57 MB → 422 KB, 4.15 MB verbatim in `docs/archive/`.
-LOOP_JOURNAL 124 KB and LESSONS 139 KB are UNDER cap (prefix splits: `LESSONS.md:<n>`
-citations resolve at the same line in the archive). All four exit codes unchanged,
-`decisions --check` byte-identical (its firing cross-check went 35/35 → 0/0 on the split
-and now reads the archive too). T0.28 re-bought PASS at the next commit.
-**ONE THING LEFT, and it needs the Director, not a worker:** DECISIONS_NEEDED is 159 KB,
-9 KB over cap, and every byte is one of the 15 OPEN decisions (D40 alone is 26 KB across
-one entry + three EVIDENCE ADDENDA; D33 22 KB). Getting under 150 KB means archiving
-superseded addenda of still-open decisions — owner-facing evidence, not a worker's call.
+state: SPLIT DONE f2e23fe — 4.57 MB → 422 KB, 4.15 MB verbatim in `docs/archive/`; four
+exit codes unchanged, `decisions --check` byte-identical, T0.28 re-bought PASS at b2d5fd3.
+LOOP_JOURNAL 124 KB, LESSONS 139 KB: under cap, prefix splits, `LESSONS.md:<n>` resolves.
+LEFT, AND THE DIRECTOR'S: DECISIONS_NEEDED is 159 KB and all 9 KB over is live OPEN
+decisions (D40 26 KB over 4 sections, D33 22 KB) — cutting it means archiving addenda.
 
 ### S3 — `T0.13` says 13 gate clauses in passing specs can never fire
 `LT.01` (3), `SO.02` (5), `T0.17` (3), `T0.33` (2). A passing spec with a clause
