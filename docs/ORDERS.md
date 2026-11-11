@@ -29,7 +29,9 @@ where the script is. The auditor's test of this whole reorganisation: does
 **Do.** Register `LF.03`: the seated core (`wm-latent`, `experiments/cores.py`)
 driving the body in lethal W0 across ≥ 5 deaths — needs, every W0 sense live,
 diary written and carried across death, save-and-resume once mid-life
-(`LF.02`'s mechanism), no crash or NaN, weights measurably changing. Controls
+(`LF.02`'s mechanism), no crash or NaN, weights measurably changing. The checkpoint must carry the
+learner's weights, optimiser and replay (`LF.02` certifies only the scripted
+forager's stores). Controls
 that must fail, each actually RUN: a frozen twin (weights do not change →
 flagged), a wiped diary (nothing crosses death → flagged). An integration
 claim, not a performance claim — do not gate on how well he does. Pilot ONE
@@ -164,16 +166,20 @@ serves: M3/M4 (every GPU order) · philosophy 5 (cheaper, truer), 6.
 with zero charge; the cause of today's no-session is written in `state:`.
 state: open — not started.
 
-### S1 — Free CPU off this box: CPU-only Kaggle kernels
-**Why.** Jack's science is CPU-bound simulation on 3 slow shared cores
-(`LC.03` took 2.7 days; `LC.07` is priced at 526 h). The dispatcher only sets
-`enable_gpu: True`; Kaggle's free CPU sessions (12 h each) have never been used.
-**Do.** After S2 (same file): add a CPU-only kernel mode that charges no GPU
-quota; pilot one W0 survival run; measure sim-seconds per real second against
-this box and how many sessions run at once. Save/resume covers the 12 h wall.
-serves: M1–M3, M7 (everything simulation-bound) · philosophy 5, 6.
-**done when:** one CPU-kernel survival run has landed a result, with measured
-speed and concurrency written here.
+### S4 — Six standing PASSes are gated on a seed AVERAGE that admits a failing seed
+**Why.** `run worst-seed-audit` (reporting-only, read by nobody for weeks):
+`ME.10` (diary vs skill — GOAL.md's "memory makes it him"), `NE.00`, `LT.01`,
+`PG.4`, `PS.02`, `T2.20` each pass a bar on the mean over seeds while the
+recorded mean and spread allow one seed on the failing side (`ME.10`
+`skill_gain`: mean 0.370, a seed may sit at 0.237 against a bar of 0.25). "At
+least 3 seeds" means each seed, not their average. Ordered 2026-09-30, never done.
+**Do.** For each of the six: gate the flagged key per seed (record `_min` /
+`_max` folds and gate on them; bars byte-unmoved), check `depends_on` first,
+re-run. Start with `ME.10` (CPU, minutes). A spec that turns red stays red:
+write its id under INBOX and the Director orders the repair.
+serves: philosophy 4 (several seeds, nothing faked) · M7, M2 (their roots).
+**done when:** the audit's LANE B lists none of the six, each with a verdict
+from a per-seed gate.
 state: open — not started.
 
 ### S3 — Guards that are red by design teach everyone to ignore red
@@ -190,7 +196,11 @@ serves: philosophy 4, 5 (a truthful machine).
 still exits non-zero when a test plants a PASS-on-FAIL-dependency.
 state: open — not started.
 
-**Next up:** `T0.13`'s 13 gate clauses that can never fire (`LT.01` 3, `SO.02`
+**Next up:** (1) **S1 — free CPU off this box**, opens the day S2 closes (same
+file, `experiments/gpu.py`): a CPU-only Kaggle kernel mode that charges no GPU
+quota; pilot one W0 survival run; write down sim-seconds per real second
+against this box and how many sessions run at once (`LC.03` took 2.7 days
+here; `LC.07` is priced at 526 h). (2) `T0.13`'s 13 gate clauses that can never fire (`LT.01` 3, `SO.02`
 5, `T0.17` 3, `T0.33` 2) — arm or remove with reasons (needs `T0.08` re-bought
 clean first; the 22:43 clerk sweep should do that — check `regate.log`).
 
