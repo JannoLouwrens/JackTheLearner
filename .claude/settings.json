@@ -2,7 +2,6 @@
   "permissions": {
     "deny": [
       "Bash(sudo:*)",
-      "Bash(su:*)",
       "Bash(docker:*)",
       "Bash(systemctl:*)",
       "Bash(service:*)",
