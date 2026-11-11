@@ -271,3 +271,9 @@ frozen-twin and wiped-diary controls read the same detectors and must be flagged
 natural life = 503 sim-s / 2,515 decisions / 141 s wall / 860 opt steps. Smoke resume bit-exact
 (50/50). Registered run detached 22:14 (pid 1793344, log /data/jack-logs/lf03_run1.log) — not
 yet a verdict. Served: philosophy 1 (the creature, whole, for the first time) and 4 (controls run).
+
+## 2026-11-11 23:40 UTC · lane LAB
+Seat: Working memory (VACANT; GRU buffer FAILs `WM.01`). Challenger `RingMemory.py` — events rotate the
+held state. Pilot on `WM.01`'s venue, seeds 0–4: 1.000/1.000/1.000/0.871/1.000 at 1,031 params (GRU 0.546 ± 0.203
+at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Registered `WM.02` (claim seeds
+100–104, two must-fail controls), NOT run — handed to the workers via ORDERS INBOX. Served: philosophy 3, 4.

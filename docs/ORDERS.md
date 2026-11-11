@@ -212,7 +212,7 @@ clean first; the 22:43 clerk sweep should do that — check `regate.log`).
 
 ## INBOX — one line each, workers add, the Director empties
 
-(empty)
+- LAB 2026-11-11: run `WM.02` (`python -m experiments.run WM.02`, CPU, ~25 min, 5 seeds; gates in the spec docstring, do not touch them) — ring-memory challenger for the VACANT Working-memory seat; pilot 1.00/1.00/1.00/0.87/1.00 vs GRU 0.55. PASS → seat it BY VERDICT in CHAMPIONS; FAIL → mark it DEAD in `docs/LAB.md`.
 
 ## DONE (kept one day)
 

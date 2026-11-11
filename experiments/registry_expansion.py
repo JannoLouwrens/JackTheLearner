@@ -9347,6 +9347,40 @@ EXPANSION: list[Spec] = [
                "fixed-size recency buffer chosen by accident. "
                "  COVERS: fast/slow (claim)"),
 
+    # LAB, 2026-11-11 — the inventor's challenger for the VACANT
+    # Working-memory seat. WM.01's venue, recipe and bars, imported.
+    Spec("WM.02", 3, "A rotating working memory beats the GRU buffer on the "
+                     "seat's own venue",
+         hypothesis="RingMemory — a store whose events ROTATE the held state "
+                    "(K planes, input-dependent angles, a gated absolute "
+                    "write; every weight learned from scratch) — clears "
+                    "WM.01's 0.10 margin over the no-buffer null on EVERY "
+                    "seed, never loses to the shipped GRU buffer on any seed, "
+                    "and beats it by 0.10 on the mean, at 21% of its "
+                    "parameters and the same 32-float state.",
+         falsified_by="Any seed where the ring's margin over the null is "
+                      "below 0.10 or it trails the GRU by more than 0.02; or "
+                      "a mean lead over the GRU below 0.10; or either control "
+                      "passing.",
+         null_baseline="WM.01's no-buffer arm: attention over the episodic "
+                       "record, no recurrent state (4,883 parameters).",
+         metric="ring_vs_gru_margin", budget=Budget.CPU,
+         depends_on=[], seeds=5,
+         control="MUST FAIL, both RUN: (1) the trained ring's state entries "
+                 "SHUFFLED after every step — accuracy must collapse to <= "
+                 "0.30; (2) the same module trained identically with the "
+                 "rotation disabled and frozen — its margin over the null "
+                 "must stay below 0.10, or rotation is not what earned the "
+                 "slots.",
+         kills="The ring-memory entry: the seat stays VACANT and "
+               "docs/LAB.md records it DEAD with its number.",
+         notes="Pilot 2026-11-11 on seeds 0-4 (claim seeds are 100-104): "
+               "ring 1.000/1.000/1.000/0.871/1.000, incumbent 0.546 +- 0.203 "
+               "on the ledger, null 0.354, no-rotation ablation 0.28-0.32. "
+               "A fixture, not a life: a PASS seats a mechanism to carry "
+               "into ME.8/LF.02/LF.03, nothing more. "
+               "  COVERS: fast/slow (claim)"),
+
     # ==================================================================
     # REGISTERED FROM THE RULING on `personality-is-a-typed-character-sheet-
     # on-the-answer-path` (docs/REVIEW_QUEUE.md, DISPOSITIONED 2026-10-10,

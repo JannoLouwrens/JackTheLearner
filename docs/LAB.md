@@ -17,4 +17,24 @@ A dead idea with a number is a result. Do not retry one without a new reason.
 
 ## Ideas
 
-(none yet)
+- 2026-11-11 · **Working memory** (VACANT; incumbent GRU buffer FAILs `WM.01`
+  on 2 of 3 seeds) · **ENTERED as `WM.02`** · `RingMemory.py`.
+  **Bet:** (1) a store whose events ROTATE the held state — K planes,
+  input-dependent angles, a gated absolute write, everything learned — the
+  head-direction circuit's move. (2) It might beat the GRU because composing
+  events is composing rotations and a rotation cannot forget or blow up, where
+  a gated additive cell must discover modular update the hard way. (3) Killed
+  by: any seed under +0.10 over the no-buffer null, losing to the GRU, or the
+  no-rotation twin doing as well.
+  **Pilot** (seeds 0–4, `WM.01`'s venue/recipe/bars, 1,031 params vs the GRU's
+  4,872): ring **1.000 / 1.000 / 1.000 / 0.871 / 1.000**; GRU 0.546 ± 0.203
+  (ledger); null 0.354; shuffled-state control 0.11–0.14; rotation disabled
+  0.318 / 0.283. Not a one-trick: on the absolute last-write venue ring 0.998 /
+  1.000 / 1.000 (GRU 1.000). Dead variants: angle init ×4 → 0.106 (chance);
+  rotation with no write gate → 0.119.
+  **Registered** with gates declared first, claim seeds 100–104 (never
+  piloted), ~25 CPU-min; run handed to the workers (ORDERS INBOX).
+  **Open after a PASS:** it is a 40-step fixture on a cyclic-group task — next
+  ring should be a non-commutative register, then ME.8 / LF.02 with the ring
+  in place of the GRU. Serves philosophy 3 (a seat raced, biology as oracle)
+  and 4 (two controls that must fail).

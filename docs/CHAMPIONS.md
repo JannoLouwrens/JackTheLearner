@@ -408,7 +408,7 @@ Three rules, each of them a scar:
 - SEAT: Person model (trust, attribution, and whose advice proved true) | HELD: VACANT | ARENA: SO.10, LG.02, SO.08, ME.9
 - SEAT: Told-world anchoring (how a told fact attaches to a lived one) | HELD: VACANT | ARENA: LG.11
 - SEAT: Attention (what he attends to when senses compete) | HELD: VACANT | ARENA: AT.01
-- SEAT: Working memory (the third store, held across a life) | HELD: VACANT | ARENA: WM.01
+- SEAT: Working memory (the third store, held across a life) | HELD: VACANT | ARENA: WM.01, WM.02
 
 **TWO SEATS ADDED 2026-09-06 (Review, FULL — the ANATOMY AUDIT).** Both are
 capabilities `GOAL.md` requires by name and neither had a seat, which means
