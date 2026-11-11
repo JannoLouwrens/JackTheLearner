@@ -117,4 +117,4 @@ needs him. Append one trend line to `docs/PROGRESS_LOG.md`.
    minutes, you are writing for yourself.
 
 Commit with explicit paths (never `git add -A`), push. Never restart a daemon,
-never `pkill -f`, never touch the 90% usage stop, the pace line or `.paused`.
+never `pkill -f`, never touch the usage stop (95% — the owner's number), the pace switch or `.paused`.

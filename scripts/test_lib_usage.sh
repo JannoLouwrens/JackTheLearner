@@ -85,6 +85,13 @@ JACK_USAGE_LEDGER="$TMP/usage_ledger.jsonl"; export JACK_USAGE_LEDGER
 # them on every unreadable/confirm case is a self-test nobody runs.
 JACK_USAGE_RETRY_SLEEP=0; export JACK_USAGE_RETRY_SLEEP
 # shellcheck source=/dev/null
+# The fixtures below are arithmetic at a 90% stop with the pace line ON. The
+# live defaults moved on 2026-11-11 (stop 95%, pacing off — owner's ruling); the
+# MECHANISM is what this file tests, so it pins the constants it was written for.
+export JACK_USAGE_STOP=90 JACK_PACE=on
+# ...and the model whose own meter the fixtures supply (`fable=NN`). The worker
+# default became opus on 2026-11-11, which has no separate meter line.
+export JACK_LOOP_MODEL=fable
 . "$REAL_REPO/scripts/lib_usage.sh"
 
 run_case() { LOGLINE=""; JACK_TEST_MAP="$1"; export JACK_TEST_MAP; : > "$JACK_USAGE_LEDGER"; rm -f "$TMP/scripts/".seq_* 2>/dev/null; }

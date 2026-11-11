@@ -57,7 +57,7 @@ If you cannot say how, do not do it.
   (`experiments/gpu_budget.json`), days each blocker has sat unrepaired
   (`run blocked`). Those four numbers are the scoreboard for this lane.
 - Never weaken a threshold, loosen a control, hand-edit the ledger, or touch the
-  90% usage stop, the pace line, or `.paused`. Never restart a daemon; never
+  usage stop (95% — the owner's number), the pace switch, or `.paused`. Never restart a daemon; never
   `pkill -f`; never `git add -A`. Tenant rules as in `docs/LESSONS_CORE.md` §13.
 - Operational scars live in `docs/RUNBOOK.md` and `docs/LESSONS.md` — `grep`
   them (and `docs/archive/`, which holds the older half), never read them whole.

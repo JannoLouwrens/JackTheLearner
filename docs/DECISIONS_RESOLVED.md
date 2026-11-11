@@ -2879,3 +2879,24 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## 2026-11-11 (later) — owner ruling: the stop is 95%, and nothing else holds the work back
+
+**Verbatim:** *"yes run the director test tonight go for it don't hold anything
+back anymore go to claude 95% then stop only then"*.
+
+- **The hard stop moved from 90% to 95%** of the weekly meter (`USAGE_STOP` in
+  `scripts/lib_usage.sh`). It is still a hard stop for every organ, still read
+  from the real meter, and still refuses to run when the meter is unreadable.
+- **"Stop only then": the pace line is OFF by default** (`JACK_PACE=on` turns it
+  back on). The owner's own rule of 2026-08-09 was *"no throttling nothing just
+  pause all agents"* at the limit; pacing was added later, on 2026-08-24, to
+  spread a starved budget across the week, and over the following weeks it
+  skipped 604 hourly slots against 509 at the stop itself.
+- *Cost, recorded beside the ruling:* in a week where other work on the account
+  takes most of the pool, the agents will now run flat out and go dark once 95%
+  is reached, instead of running thin all week — and free GPU hours that expire
+  inside a dark tail will expire. Only 5 points of the weekly pool are now kept
+  back for everything else on the account.
+- *How to reverse:* `JACK_USAGE_STOP=90` and `JACK_PACE=on` in the crontab
+  lines, or change the two defaults at the top of the pacing block.

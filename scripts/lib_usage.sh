@@ -95,12 +95,27 @@ _usage_pct() {
 # IT FAILS OPEN, AND THAT IS DELIBERATE. If the week's position is unreadable,
 # pacing steps aside rather than inventing a second limit nobody set. The real
 # limit already refused to run on an unreadable meter one function above.
+# THE STOP IS 95%, AND PACING IS OFF — owner, 2026-11-11, verbatim:
+#   "go for it don't hold anything back anymore go to claude 95% then stop only then"
+#
+# Two things changed that day, both the owner's to change and both his words:
+#  - the hard stop moved from 90% to 95% (USAGE_STOP). It is still a hard stop,
+#    still fails CLOSED on an unreadable meter, still read from the real meter.
+#  - "stop only then": the pace line is switched OFF by default. It was never the
+#    owner's rule — his rule of 2026-08-09 was "no throttling nothing just pause
+#    all agents" at the limit — it was added on 2026-08-24 to spread the budget
+#    across the week, and it skipped 604 hourly slots against 509 at the stop.
+#    The machinery below is intact and one variable away (JACK_PACE=on), because
+#    its trade is real: without it a heavy week ends dark instead of thin.
+# Recorded in docs/DECISIONS_RESOLVED.md, 2026-11-11.
+USAGE_STOP=${JACK_USAGE_STOP:-95}
 PACE_FLOOR=${JACK_PACE_FLOOR:-25}
-PACE_CAP=90
+PACE_CAP=$USAGE_STOP
 
 # pace_gate <log-fn> [organ]  -> 0 = proceed, 1 = skip this iteration (not a stop)
 pace_gate() {
   local say_fn="${1:-say}" organ="${2:-unknown}" pct elapsed allow
+  [ "${JACK_PACE:-off}" = "on" ] || return 0     # owner 2026-11-11: "stop only then"
   [ -n "${JACK_NO_PACE:-}" ] && return 0
   [ -f "$REPO/.usage-resumed" ] && return 0
   elapsed=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --week-elapsed 2>/dev/null)
@@ -169,7 +184,7 @@ usage_gate() {
     "$say_fn" "ABORT: usage unreadable — refusing to run"
     usage_ledger "$organ" refused none
     return 1;; esac
-  if [ "$pct" -lt 90 ]; then return 0; fi
+  if [ "$pct" -lt "${USAGE_STOP:-95}" ]; then return 0; fi
 
   local f="$REPO/.usage-resumed"
   if [ -f "$f" ]; then
@@ -177,7 +192,7 @@ usage_gate() {
     override_until=$(awk -F= '/^until=/{print $2}' "$f" | tr -dc '0-9')
     now=$(date +%s)
     if [ -n "$override_until" ] && [ "$now" -ge "$override_until" ]; then
-      "$say_fn" "owner resume EXPIRED at $(date -d @"$override_until" -Iseconds) — back to the 90% stop at ${pct}%"
+      "$say_fn" "owner resume EXPIRED at $(date -d @"$override_until" -Iseconds) — back to the ${USAGE_STOP:-95}% stop at ${pct}%"
       rm -f "$f"
       usage_ledger "$organ" refused none
       return 1
