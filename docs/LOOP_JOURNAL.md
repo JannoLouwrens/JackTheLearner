@@ -250,3 +250,15 @@ recorded, seed-spread control), importing T1.08's GPU job unchanged. Re-parented
 T2.02, T2.03, T2.14, D1.0 from T1.08 to T1.14; T2.13 keeps T1.08. T1.08 FAIL (cv 17.285 vs
 7.0) untouched. Commit 4818a2c, pushed. Dispatched T1.14 to Kaggle (watcher pid 1698161,
 log /data/tmp/dispatch_t1_14.log). Next: harvest verdict; J2 (D1.1) is now unblocked.
+
+## 2026-11-11 ~21:2x UTC — SYSTEM lane, S2 (worker, Opus)
+The three megabyte pages split at `f2e23fe`: LOOP_JOURNAL 2.4 MB → 124 KB, LESSONS 1.4 MB →
+139 KB, DECISIONS_NEEDED 750 KB → 159 KB; 4.15 MB verbatim in `docs/archive/`. Prefix splits
+for the two prose files (no header on the archive), so `LESSONS.md:<n>` citations resolve at
+the same line there; DECISIONS_NEEDED cut by its OWN parser — 146 settled sections out, the
+23 sections of the 15 OPEN ids in. The firing cross-check printed `0 of 0` after the split
+where it had printed `35 of 35`; it now reads the archive too (+10 lines in `decisions.py`,
+the only code change) and prints 35 of 35. coverage 2 / decisions 0 / champions 0 / status 2,
+byte-identical except T0.28's own stale bill. **DECISIONS_NEEDED is 9 KB OVER the 150 KB cap
+and every byte of the overage is live open decisions (D40 alone is 26 KB across 4 sections) —
+left for the Director, see ORDERS S2 state.**
