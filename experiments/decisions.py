@@ -313,6 +313,10 @@ _REPO = Path(__file__).resolve().parent.parent
 DOC = _REPO / "docs" / "DECISIONS_NEEDED.md"
 PROGRESS = _REPO / "docs" / "PROGRESS.md"
 RESOLVED = _REPO / "docs" / "DECISIONS_RESOLVED.md"
+#: Where settled entries go when `DOC` is cut back to its cap. Read only by the
+#: firing cross-check, which must see every firing ever written, not the live
+#: tail — see the comment at its call site.
+ARCHIVE = _REPO / "docs" / "archive"
 
 # Start-of-line only. `coverage.py` learned this the expensive way: "nest" inside
 # "ho-nest" credited a shelter commitment, so an inline mention must never be
@@ -2420,8 +2424,16 @@ def main(argv: list[str]) -> int:
         # `untranscribed_firings` for why a floor does not ship in the same
         # commit as the first reading. Printed even at zero: a counter that
         # only appears when it is nonzero cannot be seen to be at floor.
-        _untr = untranscribed_firings(text, resolved_text)
-        _rec = len(set(_RECORD_HEADING.findall(text)))
+        # THE ARCHIVE IS PART OF THE NEEDED-SIDE SOURCE (2026-11-11, the split
+        # that took this page 750 KB -> 159 KB). The firing act writes a heading
+        # here; settled headings then move to `docs/archive/`. Reading only the
+        # live page took this counter 35/35 -> 0/0 in one commit — a cross-check
+        # that silently stops cross-checking, which is the very shape its own
+        # docstring exists to prevent. Unknown is not zero: read both.
+        _needed = text + "\n" + "\n".join(
+            p.read_text() for p in sorted(ARCHIVE.glob(DOC.stem + "*.md")))
+        _untr = untranscribed_firings(_needed, resolved_text)
+        _rec = len(set(_RECORD_HEADING.findall(_needed)))
         print(f"  firing transcriptions: {_rec - len(_untr)} of {_rec} "
               f"firing(s) recorded on {DOC.name} have a record on "
               f"{RECORD_PAGE.rsplit('/', 1)[-1]}"

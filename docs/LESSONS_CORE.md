@@ -1,10 +1,12 @@
 # LESSONS_CORE — the rules, short enough to actually be read
 
-`docs/LESSONS.md` is 1.4 MB. Nothing can read it at the start of an iteration,
+`docs/LESSONS.md` was 1.4 MB. Nothing can read it at the start of an iteration,
 so for two months it was written to and not learned from — a lessons file
 nobody can load is a diary. **This page is the part that binds.** It is capped
-at 15 KB; adding a rule means merging or cutting another. The long file stays
-as the archive — `grep` it when you hit something that smells familiar.
+at 15 KB; adding a rule means merging or cutting another. The long file is the
+searchable archive — `grep docs/LESSONS.md docs/archive/` when you hit
+something that smells familiar (it is split: live tail ≤ 150 KB, the rest in
+`docs/archive/`, line numbers preserved).
 
 ## About evidence
 

@@ -60,7 +60,7 @@ If you cannot say how, do not do it.
   90% usage stop, the pace line, or `.paused`. Never restart a daemon; never
   `pkill -f`; never `git add -A`. Tenant rules as in `docs/LESSONS_CORE.md` §13.
 - Operational scars live in `docs/RUNBOOK.md` and `docs/LESSONS.md` — `grep`
-  them, do not read them whole.
+  them (and `docs/archive/`, which holds the older half), never read them whole.
 
 ## Before you stop
 
