@@ -164,6 +164,8 @@ state: open — not started.
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (owner, 2026-11-11) No spec tests whether a sense ADDED LATER integrates as well as one he had from birth. Wanted as a cook-off: same core raised with the sense from the start vs the sense added mid-life, judged by the existing hide-it / fake-sense / combination tests. Matters before smell, taste, the learned ear and words are wired into the main brain.
+
 - scripts/test_lib_usage.sh has 1 pre-existing failure: 'the skip line prints both meters' assumes the worker model has its own weekly meter (true for fable, not opus). Make the case set its model explicitly.
 
 - Owner 2026-11-11 (GOAL.md inside/around rule): no spec races a LEARNED plastic speech ear or voice-recogniser for Jack — ASR and Speaker ID seats are now VACANT, `ARENA: NONE`. Order one: learned ear vs no-ASR null on a small vocabulary, HR.2's winner as scored-and-ineligible reference and as the parent's ears.
