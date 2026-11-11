@@ -135,7 +135,9 @@ state: open — not started.
 1. **Inside/around sweep** — execute the 2026-11-11 Director ruling: re-credit
    `LG.00`, `HR.4`, `T3.08`, `LG.10/12/13/14`, `ME.11.C/D/E` as *parent-rig*
    results (not Jack's capability) in coverage and CHAMPIONS; delete the paid
-   `AudioListener._transcribe_api`; strike `PG.6`'s "frozen tower" kill-text.
+   `AudioListener._transcribe_api`; strike `PG.6`'s "frozen tower" kill-text;
+   after `LF.03`, re-run `LG.00` with the learned core in the loop (GOAL.md's
+   "strip the core → answers collapse" half has never been tested).
 2. **Learned ear** — a plastic speech ear vs a no-ASR null on a small
    vocabulary, `HR.2`'s winner as scored-but-ineligible reference (M5/M6).
 3. **Sense added later vs from birth** — the owner's cook-off (M5), judged by

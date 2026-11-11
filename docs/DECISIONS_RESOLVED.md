@@ -2913,9 +2913,15 @@ Language-routing seat's `LG.10/12/13/14` (a frozen LLM phrases his speech) and
 STANDS as measured. What changes is the credit: none of them counts as a
 capability of Jack on the roadmap, in coverage or in a seat. They are kept as
 parent-side tools and as scored-but-ineligible references for the learned
-parts that must replace them. The Language-model and Language-routing seats are
-to read VACANT for his own part until a learned challenger holds them by
-verdict. `PG.6`'s kill-text "move vision to a frozen tower" is struck as a
+parts that must replace them. The Language-model seat (WHICH model the parent
+is) is an around-him seat and keeps its holder; the Language-routing seat —
+where a frozen model phrases HIS speech — is to read VACANT for his own part
+until a learned challenger holds it by verdict. `LG.00` remains GOAL.md's
+puppet guard, and it is half-run: GOAL.md says strip the diary AND the learned
+core and his answers about his own life must collapse; today's `LG.00` has no
+learned core in the loop, so only the diary half has ever been tested. It is
+to be re-run with the seated core in the loop once `LF.03` exists — a
+strengthening. `PG.6`'s kill-text "move vision to a frozen tower" is struck as a
 remedy (a frozen tower inside him is forbidden); `UnifiedBrain.py`'s
 wav2vec2/SmolLM2 loaders stay default-off and may be used only by a
 reference arm; `AudioListener._transcribe_api` is a paid endpoint and is to be
