@@ -32,6 +32,29 @@ pause_gate say || exit 0
 
 cd "$REPO" || exit 0
 
+# THE DEAD-MAN CHECK. Every other liveness check in this project lives inside an
+# organ that needs a model, a readable meter and a working login — so the
+# failures that stop ALL of them (an expired login, an unreadable meter, the
+# disk floor, a launcher that will not start) were reported nowhere the owner
+# looks, by organs that were themselves down. This clerk needs none of those. If
+# no worker has finished a run for 8 hours and nothing is paused, it stamps the
+# owner's page with the reason — the worker log's own last line — and pushes.
+# It only ever ADDS a banner (lib_seal.sh's stale_output, which refuses a dirty
+# file and never stamps twice); the Director's next sitting clears it.
+. "$REPO/scripts/lib_seal.sh"
+LAST_OK=$(grep -a 'iteration end rc=0' /data/jack-logs/ladder.log 2>/dev/null | tail -1 | cut -d' ' -f1)
+if [ -n "$LAST_OK" ]; then
+  LAST_S=$(date -d "$LAST_OK" +%s 2>/dev/null || echo 0)
+  AGE_H=$(( ( $(date +%s) - LAST_S ) / 3600 ))
+  if [ "$LAST_S" -gt 0 ] && [ "$AGE_H" -ge 8 ]; then
+    WHY=$(grep -aE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T' /data/jack-logs/ladder.log | tail -1 | cut -c1-220)
+    say "DEAD-MAN: no worker run has finished for ${AGE_H} h — last log line: ${WHY}"
+    stale_output docs/PROGRESS.md "machine" \
+      "NO WORKER HAS FINISHED A RUN FOR ${AGE_H} HOURS (checked $(date -u '+%F %H:%M') UTC by the clerk, which needs no model). The worker log's last line: ${WHY}" \
+      say && git push -q origin HEAD 2>/dev/null
+  fi
+fi
+
 # Tenant safety, same floors the builder uses: this box serves paying customers
 # and a clerical sweep is never worth making one of them slow.
 LOAD=$(awk '{print $1}' /proc/loadavg)
@@ -76,6 +99,13 @@ STAGE=$("$PY" -c 'import os
 from experiments.protocol import RUNNER_OUTPUTS
 print(" ".join(p for p in RUNNER_OUTPUTS if not p.endswith(".tmp") and os.path.exists(p)))')
 # shellcheck disable=SC2086
+# A manager that is sitting right now may be half-way through a ruling in
+# docs/DECISIONS_RESOLVED.md. That file is also a runner output, so this clerk
+# used to stage it — and would have pushed half a ruling under "regate sweep".
+# While a Director or auditor is alive, the file is theirs to commit.
+if ps -eo args= | awk '/scripts\/(review|overseer)\.sh/ && !/awk/' | grep -q .; then
+  STAGE=$(printf '%s\n' $STAGE | grep -vx 'docs/DECISIONS_RESOLVED.md' | tr '\n' ' ')
+fi
 if [ -n "$STAGE" ] && ! git diff --quiet HEAD -- $STAGE 2>/dev/null; then
   MOVED=$(printf '%s\n' "$OUT" | grep -o 'STATUS MOVED on .*' || true)
   # shellcheck disable=SC2086

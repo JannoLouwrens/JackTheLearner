@@ -131,7 +131,7 @@ model_gate "$MODEL" say || { say "manager model ${MODEL} is at its own weekly fl
 # so the most consequential scheduled run is not killed by an allowance derived
 # from nothing (said here explicitly so no audit reads it as a silent loosening).
 TURNS_PER_MIN=6
-if [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=45m; MINUTES=45; else MODE=DAILY; TMOUT=30m; MINUTES=30; fi   # Director, 2026-11-11: was 40/20, and 40 of 81 sittings died on the clock
+if [ "${JACK_REVIEW_MODE:-}" = "FULL" ] || [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=45m; MINUTES=45; else MODE=DAILY; TMOUT=30m; MINUTES=30; fi   # Director, 2026-11-11: was 40/20, and 40 of 81 sittings died on the clock
 MAXTURNS=$(( MINUTES * TURNS_PER_MIN ))
 # The sitting is now HAPPENING: stamp it and consume any deferral, so retry
 # polls stop attempting today. Stamped before the agent runs, not after — a
@@ -148,7 +148,11 @@ usage_ledger review start "$MODEL"    # D15 (d): attribution; model passed, not 
 nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; philosophy_card; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
-if limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then
+# Only a FAILED run can have been limited. The detectors match limit wording
+# anywhere in the run's output, and a Director that completes a sitting while
+# REPORTING a refused slot quotes exactly that wording — which, without the exit
+# code, would launch the whole sitting a second time and rewrite ORDERS twice.
+if [ "$RC" -ne 0 ] && limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then
   say "LIMITED on ${MODEL} (credits, session or weekly model limit) — retrying on ${MANAGER_FALLBACK}"
   mark_log
   MODEL="$MANAGER_FALLBACK"   # the ledger append below must name what RAN (76th B1)
@@ -223,6 +227,24 @@ before its own append. A trend file that only records the runs that finished
 over-reports the desk's throughput." -- docs/PROGRESS_LOG.md 2>/dev/null \
     && say "wrote the INCOMPLETE trend row for $(date -u +%F)" \
     || say "WARNING: could not commit the INCOMPLETE trend row"
+fi
+# THE TREND ROW IS WRITTEN HERE WHEN THE DIRECTOR DID NOT WRITE IT. Two readers
+# parse `| YYYY-MM-DD | DAILY-or-FULL |` rows in docs/PROGRESS_LOG.md — the
+# auditor's liveness check (lib_liveness.sh) and the seal's tail receipt — and a
+# completed sitting with no such row is stamped STALE that night as if the
+# Director were dead. A duty two machines depend on is not left to a prompt.
+if [ "$RC" -eq 0 ] && ! grep "^| $(date -u +%F) " docs/PROGRESS_LOG.md 2>/dev/null | grep -qvE 'DEFERRED|INCOMPLETE'; then
+  DT=$(/data/venvs/jackthelearner/bin/python -c "
+import json
+from experiments.registry import LADDER
+d=json.load(open('experiments/ledger.json'))['results']
+p=sum(1 for v in d.values() if v['status']=='PASS'); t=len(LADDER)
+print(f'{p}/{t} | {100*p/t:.1f}%')" 2>/dev/null || echo "— | —")
+  echo "| $(date -u +%F) | $MODE | ${DT} | — | — | sitting completed; row written by review.sh because the Director did not append its own. |" >> docs/PROGRESS_LOG.md
+  git add -- docs/PROGRESS_LOG.md 2>/dev/null
+  git commit -q -m "review: trend row for $(date -u +%F) written by review.sh (the sitting completed without one)" -- docs/PROGRESS_LOG.md 2>/dev/null \
+    && { git push -q origin HEAD 2>/dev/null; say "wrote the trend row for $(date -u +%F)"; } \
+    || say "WARNING: could not commit the trend row"
 fi
 say "sweep end rc=${RC} — $(grep -c STRENGTHEN docs/PROGRESS.md 2>/dev/null || echo 0) strengthen lines"
 exit 0

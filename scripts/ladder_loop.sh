@@ -64,9 +64,9 @@ esac
 # day. Everything it makes enters a cook-off like any other arm; nothing it
 # makes is adopted because it is new.
 if [ "$LANE" = "lab" ]; then
-  LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"
+  LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=lab
 else
-  LANE_MODEL="$WORKER_MODEL";  LANE_FALLBACK="$WORKER_FALLBACK"
+  LANE_MODEL="$WORKER_MODEL";  LANE_FALLBACK="$WORKER_FALLBACK";  LEDGER_ORGAN=builder
 fi
 FALLBACK_MODELS="${JACK_LOOP_FALLBACK:-$LANE_FALLBACK}"  # tried in order when the primary is out of credits
 MIN_FREE_GB=3
@@ -239,7 +239,7 @@ TOTAL=$(/data/venvs/jackthelearner/bin/python -c \
   "from experiments.registry import LADDER; print(len(LADDER))" 2>/dev/null || echo 105)
 
 say "iteration start — lane ${LANE}, ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-$LANE_MODEL}, cli ${CLAUDE_CLI}, load ${LOAD}, ${FREE_GB}GB free"
-usage_ledger builder start "${JACK_LOOP_MODEL:-$LANE_MODEL}"    # D15 (d): the configured primary —
+usage_ledger "$LEDGER_ORGAN" start "${JACK_LOOP_MODEL:-$LANE_MODEL}"    # D15 (d): the configured primary —
                               # what WILL run is not known until the chain walks (76th B1)
 if [ -s "$LOST" ]; then
   say "inheriting $(wc -l < "$LOST") iteration(s) lost to limits since the last success (see $LOST)"
@@ -337,7 +337,7 @@ run_claude() {
   # Verified in-slot before this change per the default's own precondition:
   # stdin prompt -> non-empty response, rc=0 (builder, 2026-09-25 01:1x).
   printf '%s' "$PROMPT" | \
-  nice -n 19 ionice -c3 env TMPDIR=/data/tmp OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
+  nice -n 19 ionice -c3 env TMPDIR=/data/tmp XDG_CACHE_HOME=/data/caches/xdg OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
     PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
     HF_HOME=/data/caches/huggingface \
     JACK_ITER_DEADLINE=$(( $(date +%s) + 2940 )) \
@@ -375,7 +375,7 @@ if [ -z "$CHAIN" ]; then
   echo "$(date -Iseconds) model-floor reading=${READING} chain=${MODEL} ${FALLBACK_MODELS}" >> "$LOST"
   harvest_bookkeeping            # a refused slot still owes detached ledger rows
   ITER_ENDED=1
-  usage_ledger builder end none    # D15 (d): a refused slot still writes its pair;
+  usage_ledger "$LEDGER_ORGAN" end none    # D15 (d): a refused slot still writes its pair;
                                    # "none" because NO model ran — recording the configured
                                    # primary here would attribute spend to a model the floor
                                    # just refused (76th B1)
@@ -398,19 +398,19 @@ for M in $CHAIN; do
   RAN="$M"
   run_claude "$M"
   RC=$?
-  limit_hit || break
+  { [ "$RC" -ne 0 ] && limit_hit; } || break   # only a FAILED run can have been limited (the detectors match the wording anywhere)
 done
-if credits_out; then
+if [ "$RC" -ne 0 ] && credits_out; then
   say "OUT OF CREDITS on every model — credit-pausing (self-resumes in 4h)"
   echo "credits $(date -Iseconds)" > "$PAUSE"
   echo "$(date -Iseconds) credits model=${MODEL}" >> "$LOST"
-elif session_limited; then
+elif [ "$RC" -ne 0 ] && session_limited; then
   # No pause: the message names its own reset time, and an hourly ~3 s retry
   # is cheaper than stranding the loop for 4 h past the reset. The marker is
   # the point — a dead iteration must be a number, not a silence.
   say "SESSION LIMIT on every model — marking the lost iteration"
   echo "$(date -Iseconds) session-limit model=${MODEL}" >> "$LOST"
-elif model_limited; then
+elif [ "$RC" -ne 0 ] && model_limited; then
   # The weekly PER-MODEL limit ("You've reached your Fable 5 limit."). No pause
   # for the same reason as the session limit — the ceiling names its own reset
   # and a 3 s hourly retry beats stranding the loop past it. Reaching this
@@ -426,7 +426,7 @@ AFTER=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
 
 ITER_ENDED=1
-usage_ledger builder end "$MODEL"    # D15 (d): one line whatever RC says (KILLED path
+usage_ledger "$LEDGER_ORGAN" end "$MODEL"    # D15 (d): one line whatever RC says (KILLED path
                                # excepted — a dying shell cannot spawn the CLI).
                                # $MODEL is the WALKED model — the chain loop reassigns
                                # it per attempt — so a Fable-pinned day that ran on

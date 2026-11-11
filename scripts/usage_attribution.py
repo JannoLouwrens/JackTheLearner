@@ -128,7 +128,7 @@ def classify(raw: str) -> tuple[str, str | None, int | None]:
 #: is the finding D26 was escalated on, so the split is builder vs everyone
 #: else, and `selftest` is deliberately included: a probe's spend is this
 #: project's spend.
-DESK_ORGANS = ("overseer", "review", "field-watch", "selftest")
+DESK_ORGANS = ("overseer", "review", "field-watch", "selftest", "lab")   # lab = the inventor, a manager-model lane (2026-11-11)
 
 
 def _rows(text: str) -> list[dict]:

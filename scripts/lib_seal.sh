@@ -327,11 +327,20 @@ seal_output() {
   # (mtime >= run start); `left` = everything else dirty, named but untouched.
   local -a swept=()
   local swept_names="" left_names="" _line _p
+  local _worker_live=""
+  flock -n "${JACK_LOOP_LOCK:-/tmp/jack-loop.lock}" true 2>/dev/null || _worker_live=1
   while IFS= read -r _line; do
     [ -n "$_line" ] || continue
     _p="${_line:3}"; _p="${_p##* -> }"
     [ "$_p" = "$file" ] && continue
-    if [ -n "$run_start" ] && [ -e "$_p" ] \
+    # ...and only while no worker is mid-iteration. "Modified since this run
+    # started" is true of every file a concurrently running worker is half-way
+    # through editing, and a dying manager has no way to tell those from its
+    # own — on 2026-10-25 a sweep committed another organ's in-flight
+    # REVIEW_QUEUE.md, DECISIONS_NEEDED.md and the builder's prompt (e70df97)
+    # under its own name. With a worker live, nothing is swept: every path is
+    # NAMED in the banner as left dirty, and whoever owns it commits it.
+    if [ -n "$run_start" ] && [ -e "$_p" ] && [ -z "$_worker_live" ] \
        && [ "$(stat -c %Y "$_p" 2>/dev/null || echo 0)" -ge "$run_start" ]; then
       swept+=("$_p"); swept_names="${swept_names:+$swept_names, }$_p"
     else

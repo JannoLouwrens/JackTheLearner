@@ -51,15 +51,41 @@ say "sweep start — model ${MODEL}, cli ${CLAUDE_CLI}"
 RUN_START=$(date +%s)
 mark_log
 usage_ledger field-watch start "$MODEL"    # D15 (d): attribution; model passed, not env-read (76th B1)
-nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(philosophy_card; cat "$REPO/scripts/field_watch_prompt.md")" \
-  --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
-RC=$?
-if limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then
-  say "LIMITED on ${MODEL} (credits, session or weekly model limit) — retrying on ${MANAGER_FALLBACK}"
+# THE SCOUT IS THE ONE ORGAN THAT READS THE OPEN WEB, so it is the one organ that
+# does NOT run with --dangerously-skip-permissions. This box's user has
+# passwordless sudo and is in the docker group, and paying customers live here:
+# one instruction injected into a fetched page must not be one shell command away
+# from restarting their containers or reading another project's keys. So the
+# scout gets no shell at all (--disallowedTools Bash removes the tool) and may
+# write exactly two files; everything else it may only read. Probed on
+# 2026-11-11 with this exact flag set: web search and fetch work, the two files
+# are writable, a third file is refused, a shell command cannot be attempted.
+# It cannot commit either — the launcher commits its two files below.
+run_scout() {   # $1 = model
   mark_log
-  nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(philosophy_card; cat "$REPO/scripts/field_watch_prompt.md")" \
-    --model "$MANAGER_FALLBACK" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
+  nice -n 19 env TMPDIR=/data/tmp XDG_CACHE_HOME=/data/caches/xdg timeout 30m \
+    claude -p "$(philosophy_card; cat "$REPO/scripts/field_watch_prompt.md")" \
+      --model "$1" --max-turns "$MAXTURNS" \
+      --disallowedTools Bash \
+      --allowedTools Read Grep Glob WebSearch WebFetch "Edit(docs/FIELD_WATCH.md)" "Edit(docs/FIELD_WATCH_LOG.md)" \
+      < /dev/null >> "$LOG" 2>&1
+}
+run_scout "$MODEL"
+RC=$?
+if [ "$RC" -ne 0 ] && limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then   # only a FAILED run can have been limited
+  say "LIMITED on ${MODEL} (credits, session or weekly model limit) — retrying on ${MANAGER_FALLBACK}"
+  MODEL="$MANAGER_FALLBACK"
+  run_scout "$MODEL"
   RC=$?
+fi
+if [ "$RC" -eq 0 ] && [ -n "$(git status --porcelain -- docs/FIELD_WATCH.md docs/FIELD_WATCH_LOG.md 2>/dev/null)" ]; then
+  git add -- docs/FIELD_WATCH.md docs/FIELD_WATCH_LOG.md 2>/dev/null
+  git commit -q -m "field watch: sweep of $(date -u +%F) ($(grep -c NOMINAT docs/FIELD_WATCH.md 2>/dev/null || echo 0) nomination lines)
+
+Committed by field_watch.sh: the scout has no shell (it reads the open web)." \
+    -- docs/FIELD_WATCH.md docs/FIELD_WATCH_LOG.md 2>/dev/null \
+    && { git push -q origin HEAD 2>/dev/null; say "committed and pushed the sweep"; } \
+    || say "WARNING: could not commit the sweep — left dirty for the Director"
 fi
 usage_ledger field-watch end "$MODEL"      # D15 (d): after any retry, one line whatever RC says
 # Same seal as the overseer and the review: a late death leaves a written report

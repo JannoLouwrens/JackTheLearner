@@ -30,6 +30,9 @@ chk() { [ "$2" = "$3" ] && ok "$1" || bad "$1" "expected [$3], got [$2]"; }
 TMP=$(mktemp -d) || exit 1
 trap 'rm -rf "$TMP"' EXIT
 
+# Hermetic: the seal asks whether a worker holds the loop lock. Point it at a
+# lock nobody holds, or this suite fails whenever a real worker is mid-iteration.
+export JACK_LOOP_LOCK="$(mktemp)"
 . "$REAL_REPO/scripts/lib_seal.sh"
 . "$REAL_REPO/scripts/lib_liveness.sh"
 

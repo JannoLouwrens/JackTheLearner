@@ -159,7 +159,7 @@ model_gate "$MODEL" say || { say "manager model ${MODEL} is at its own weekly fl
 # (60 turns / 20 min), instead of the hard-coded 60 that killed this organ twice
 # with time still on it. `timeout` remains the spend ceiling; this only stops an
 # early death by a number nothing derived. See scripts/review.sh.
-MAXTURNS=75
+MAXTURNS=150   # 6/min over the 25-minute clock, the rate review.sh moved to; at 75 (3/min) 6 of 168 audits died on turns with time left
 say "audit start — model ${MODEL}, cli ${CLAUDE_CLI}, $(git rev-parse --short HEAD)"
 
 # WATCH THE ORGAN NEXT DOOR, BEFORE AUDITING ANYTHING. The Review's own
@@ -192,7 +192,7 @@ run_audit() {
 }
 run_audit "$MODEL"
 RC=$?
-if limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then
+if [ "$RC" -ne 0 ] && limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then   # only a FAILED run can have been limited
   say "LIMITED on ${MODEL} (credits, session or weekly model limit) — retrying the audit on ${MANAGER_FALLBACK}"
   MODEL="$MANAGER_FALLBACK"
   run_audit "$MODEL"
@@ -202,7 +202,7 @@ usage_ledger overseer end "$MODEL"      # D15 (d): one line whatever RC says
 
 # Same credit-exhaustion trap the builder fell into: the CLI prints a message
 # and exits in ~3s, which looks identical to a clean fast run.
-if credits_out; then
+if [ "$RC" -ne 0 ] && credits_out; then
   say "OUT OF CREDITS on ${MODEL} — audit skipped, not performed"
   exit 0
 fi

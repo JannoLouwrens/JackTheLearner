@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(su:*)",
+      "Bash(docker:*)",
+      "Bash(systemctl:*)",
+      "Bash(service:*)",
+      "Bash(shutdown:*)",
+      "Bash(reboot:*)",
+      "Bash(pkill:*)",
+      "Bash(killall:*)",
+      "Bash(crontab:*)",
+      "Bash(git stash:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git add -A:*)",
+      "Bash(git add --all:*)",
+      "Bash(git commit -a:*)",
+      "Bash(git commit -am:*)"
+    ]
+  }
+}
