@@ -825,7 +825,7 @@ EXPANSION: list[Spec] = [
                  "beats real retrieval, the metric is not measuring imitation "
                  "but the marginal statistics of the action set.",
          metric="heldout_vs_nn_ratio", budget=Budget.GPU, seeds=3,
-         depends_on=["T1.13", "T1.08"]),
+         depends_on=["T1.13", "T1.14"]),
 
     Spec("T2.15", 2, "Free-form language routes to the right task",
          hypothesis="Novel paraphrases of known commands map to the correct "
@@ -2594,7 +2594,7 @@ EXPANSION: list[Spec] = [
                        "cleared random alone by 2.74 sigma.",
          metric="control_path_margin_at_matched_steps",
          budget=Budget.GPU_LONG, seeds=3,
-         depends_on=["T2.00", "T1.08", "T0.09", "T0.10"],
+         depends_on=["T2.00", "T1.14", "T0.09", "T0.10"],
          control="Untrained twins of ALL FOUR arms must miss the learning "
                  "gate (designed-to-fail, passed as controls= not arms=). "
                  "Report BOTH env-steps and optimiser-steps per arm "

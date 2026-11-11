@@ -454,12 +454,30 @@ LADDER: list[Spec] = [
                "checks the data, only the model, so this is the cheapest test on "
                "the ladder that could have caught the worst bug in it."
                "  COVERS: language (parent) (fixture)"),
+    Spec("T1.14", 1, "Seed noise is measured and published",
+         hypothesis="Across 3 seeds of the shared recipe, seeds change the outcome, the effect is >= 3x the seed spread, and the noise floor (min_detectable_effect) is recorded.",
+         falsified_by="std >= effect/3 — or no finite, positive min_detectable_effect is produced for downstream specs to compare against.",
+         null_baseline="n/a", metric="snr", budget=Budget.GPU, seeds=1,
+         depends_on=["T1.01"],
+         control="Seeds must ACTUALLY change the outcome: three arms differing only by seed must give three distinct held-out results with spread > 1e-6. An arm that ignored its seed would read zero spread.",
+         kills="Any multi-seed comparison that has no published noise floor to beat.",
+         notes="REGISTERED 2026-11-11 (ORDERS.md J1; ruling in "
+               "docs/DECISIONS_RESOLVED.md, same date). T1.08's August claim, "
+               "verbatim, split out as its own spec. T1.08's 7% held-out-CV "
+               "conjunct is NOT here and NOT weakened: it stays on T1.08, which "
+               "stays FAIL. That conjunct protects single-seed quotes only; the "
+               "multi-seed dependents T2.01, T2.02, T2.03, T2.14, D1.0 (each "
+               "seeds=3 with their own sigma gate) now depend on T1.14. T2.13 "
+               "(seeds=1) keeps T1.08. Same GPU job as T1.08, imported, and "
+               "seeds=1 at spec level for the same reason (seeds 0,1,2 run "
+               "inside one job). heldout_cv_pct reported, not gated."),
+
     Spec("T2.01", 2, "Locomotion beats a random policy",
          hypothesis="Trained policy return exceeds random-action return by >5 sigma.",
          falsified_by="Return within seed noise of random.",
          null_baseline="Random policy on Humanoid: ~60-80 return.",
          metric="episode_return", budget=Budget.GPU_LONG, seeds=3,
-         depends_on=["T2.00", "T1.08", "T0.09"],
+         depends_on=["T2.00", "T1.14", "T0.09"],
          control="Untrained network with the same architecture.",
          repaired_by=["D1.0"],
          notes="Budget GPU->GPU_LONG after v3: first healthy run (all seeds "
@@ -483,7 +501,7 @@ LADDER: list[Spec] = [
          falsified_by="The MLP matches or wins.",
          null_baseline="RL-Zoo3 MuJoCo MLP: sac 6232+-280, td3 5567, tqc 7239 at 2M steps.",
          metric="return_at_matched_steps", budget=Budget.GPU_LONG, seeds=3,
-         depends_on=["T2.00", "T1.08", "T0.10"],
+         depends_on=["T2.00", "T1.14", "T0.10"],
          control="UNTRAINED versions of BOTH arms must miss the 3-sigma learning gate. This is the control that produced VOID rather than a verdict: the untrained MLP cleared random by 2.74 sigma, so a gate against random alone is nearly cleared by a network that has never received a gradient.",
          kills="The transformer policy. If a 140K MLP wins, use the MLP.",
          notes="RL-Zoo3 publishes NO PPO row for Humanoid. Treat PPO-Humanoid as "
@@ -506,7 +524,7 @@ LADDER: list[Spec] = [
                     "probe on the current 0.24M from-scratch encoder.",
          falsified_by="From-scratch matches pretrained.",
          null_baseline="Random-projection features of equal dimension.",
-         metric="probe_accuracy", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.08"],
+         metric="probe_accuracy", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.14"],
          control="Shuffled (frame, label) pairing: the same probe on the BEST "
                  "feature family must collapse to chance (1/4) when labels are "
                  "shuffled. If it does not, the probe is leaking labels and no "
