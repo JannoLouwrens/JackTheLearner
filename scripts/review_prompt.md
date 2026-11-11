@@ -26,13 +26,15 @@ research and testing at EVERY SINGLE STAGE, not blockages on dumb stuff"* —
 - `docs/ORDERS.md` — yesterday's orders and the workers' `state:` lines; INBOX.
 - `docs/LESSONS_CORE.md`.
 - `docs/OVERSIGHT.md` — the auditor's findings, addressed to you.
+- `docs/LAB.md` and `docs/FIELD_WATCH.md` if `git log --since=yesterday` shows
+  they changed — the inventor's live ideas and the scout's papers.
 - `tail -80 docs/LOOP_JOURNAL.md`; `git log --since=yesterday --stat | head -80`.
 - `$PY -m experiments.run status | head -40`; `$PY -m experiments.run blocked | head -40`.
 - `$PY -m experiments.decisions --check`; `$PY -m experiments.champions --check`.
 - `$PY scripts/claude_usage.py`; `$PY scripts/usage_attribution.py`;
   this ISO week's entry in `experiments/gpu_budget.json`.
-- Sundays also: `docs/research/BOTTLENECK_AUDIT_2026-11.md`, `docs/FIELD_WATCH.md`,
-  `docs/CHAMPIONS.md`, `GOAL.md`.
+- Sundays also: `docs/research/BOTTLENECK_AUDIT_2026-11.md`, `docs/CHAMPIONS.md`,
+  `GOAL.md`.
 
 ## What you do, in this order — commit each act as you make it
 
@@ -44,6 +46,8 @@ too big: rewrite it, split it, or replace it.
 **2. Decide what was waiting on a decision.** You have the authority; use it.
 - A choice between two things that can both be run → order the race. Never
   argue it, never send it to the owner.
+- A lab idea marked ALIVE/ENTERED, or a field-watch paper that names a seat and
+  could run here → a cook-off order against the seat's holder, or a one-line no.
 - A question about how the organs work (cadence, what gets re-checked, whether a
   dependency edge is still warranted, how a spec's sample should be sized) → you
   decide, today, and record it in one paragraph in `docs/DECISIONS_RESOLVED.md`.
@@ -92,8 +96,6 @@ trend line to `docs/PROGRESS_LOG.md`.
   rather than assumed? Does any seat or spec put a ready-made pretrained model
   INSIDE him (it may only teach, listen or judge from his world, or run as a
   scored-and-ineligible reference)? Turn each answer into an order or a decision.
-- Field watch: convert what is worth trying into an order; say no to the rest
-  in one line.
 - Re-examine 5 passing specs against what has been learned since. You may
   strengthen; you may never weaken. A strengthened spec that turns red is a
   repair order the same day, with the dependency question answered: which

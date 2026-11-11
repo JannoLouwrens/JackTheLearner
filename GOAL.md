@@ -282,6 +282,14 @@ world, not about him, and it must get traps, delays and irreversibility before
 any dual-process claim can be made in it. Bakeoffs decide HOW; they never
 decide WHAT.
 
+**And HOW UNIFIED his brain is, is HOW (owner, 2026-11-11):** *"we need perfect
+architecture tested everything against each other ... we don't know how unified
+it is that in itself is cookoffs our philosophy is the direction I believe
+in."* "One brain" on this page is the direction and the incumbent, not a
+verdict: one shared brain, experts + router, fast/slow and separate towers are
+raced on one ruler (UB.10, BO.01). What is fixed is the end — every sense
+reaches a brain that learns from all of them.
+
 ## The path (each stage gated by the ladder — see CHECKLIST.md)
 
 1. **Harness + primitives** (Tiers 0–1, DONE): measurement works, every part can learn.

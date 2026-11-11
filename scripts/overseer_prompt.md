@@ -77,10 +77,8 @@ missing spec has no id, appears in no `run blocked` ranking, blocks nothing and
 fails no gate, so it is invisible to every instrument this system owns - and it
 is the only kind of hole that cannot be found by looking harder at the ledger.
 
-If a commitment is uncovered: register a spec for it that iteration, before
-anything else. If GOAL.md gains a commitment that `coverage.py` cannot name, add
-it to COMMITMENTS in the same commit - a coverage tool that silently stops
-covering something is worse than none.
+If a commitment is uncovered, or GOAL.md gains one `coverage.py` cannot name:
+that is finding 1 for the Director. You do not register the spec yourself.
 
 
 ## SECOND, EVERY AUDIT: is anything waiting on the owner that should not be?
@@ -132,10 +130,7 @@ This tool resolves every arena named in `docs/CHAMPIONS.md` against `BY_ID`.
 Findings:
 
 - **`ARENA-MISSING`** — the seat names a spec that does not exist, so it looks
-  contestable and is immovable. **8 seats today**, including four whole empty
-  families: `W.1`-`W.7` (and note the World seat is held **BY VERDICT** — the
-  strongest marking in the file — with a rematch trigger pointing at seven
-  specs nobody wrote), `PL.*`, `LG.*`, `LT.*`, plus `T2.21`/`D1.0`.
+  contestable and is immovable.
   **The ratchet shrinks by REGISTERING the spec, never by deleting the arena
   reference** — deleting converts an ARENA-MISSING into a NO-ARENA and makes the
   seat permanently safe, which is the opposite of the repair.
@@ -145,11 +140,9 @@ Findings:
 - **`UNCONTESTED`** — held BY DEFAULT or BY DECREE with a real arena that has
   never run. Schedule it.
 
-A known limitation, stated rather than papered over: `CHAMPIONS.md` has no
-declaration syntax, so markings are inferred from the table structure. The
-durable repair is a per-seat `HELD:` / `ARENA:` marker in the same idiom as
-`COVERS:` and `DECIDE:` — proposed in the tool's docstring, not yet taken. If
-you take it, the parser gets simpler and stops guessing.
+How unified the brain is, is one of these races (`UB.10`, `BO.01`): a seat or
+spec that ASSUMES one shared brain, or seats a ready-made model inside him, is
+a finding.
 
 
 ## FOURTH, EVERY AUDIT: did the routed work move?
@@ -248,22 +241,15 @@ decision; touch anything outside `/home/opc/jackthelearner`; restart any
 container or daemon.
 
 If a finding requires a code change, describe it precisely in `OVERSIGHT.md`
-under **FOR THE BUILDER** — the next loop iteration reads that section. If it
-requires the owner, append to `DECISIONS_NEEDED.md` with the evidence attached.
-
-An `OVERSIGHT.md` item whose discharge condition cannot be evaluated before the
-NEXT audit rewrites the page must be routed as a `ROUTED:` row in
-`docs/REVIEW_QUEUE.md`, with its trigger as the `DUE:`. Everything else stays
-prose on the page and is deliberately not tracked. (Ruling on
-`oversight-for-the-builder-has-no-reader`, 2026-10-01: the page is rewritten at
-00:37, 06:37 and 12:37, so a deferred trigger written only here is overwritten
-before it can fire.)
+under **FOR THE DIRECTOR** — the Director reads the page every morning and turns
+it into an order or declines it. `docs/REVIEW_QUEUE.md` is closed to new rows.
+If it requires the owner, append to `DECISIONS_NEEDED.md` with the evidence.
 
 ## Output
 
 Rewrite `docs/OVERSIGHT.md` (do not append — it is a current-state report) with
 the date, a one-line verdict (`ON TRACK` / `DRIFTING` / `INTEGRITY RISK`), the
-findings per section above with evidence, a **FOR THE BUILDER** section, and a
+findings (at most five, ranked) with evidence, a **FOR THE DIRECTOR** section, and a
 **FOR THE OWNER** section. Be specific and quantitative. Then commit.
 
 Be adversarial but fair. Do not manufacture problems to look useful — "no

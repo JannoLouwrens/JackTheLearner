@@ -57,9 +57,10 @@ place, `scripts/models.env`; nothing else names a model.
 | role | organ | model | when | writes |
 |---|---|---|---|---|
 | **Director** (manager) | `scripts/review.sh` | manager | daily 06:37, long on Sundays | `docs/ORDERS.md`, `docs/PROGRESS.md`, rulings |
-| **Auditor** (manager) | `scripts/overseer.sh` | manager | daily 00:37 | `docs/OVERSIGHT.md` — ≤ 5 findings, for the Director |
-| **Field watch** (manager) | `scripts/field_watch.sh` | manager | Mondays | `docs/FIELD_WATCH.md` |
-| **Worker, lane JACK** | `scripts/ladder_loop.sh jack` | worker | hourly, 20 slots a day | Jack's code, runs, the ledger (through the runner) |
+| **Auditor** (manager) — the QC | `scripts/overseer.sh` | manager | daily 00:37 | `docs/OVERSIGHT.md` — ≤ 5 findings, for the Director |
+| **Field watch** (manager) | `scripts/field_watch.sh` | manager | Mon and Thu | `docs/FIELD_WATCH.md` — papers as arms for a named seat |
+| **Inventor** (manager) | `scripts/ladder_loop.sh lab` | manager | 11h, 23h — 2 slots a day | challenger arms for the cook-offs, `docs/LAB.md` |
+| **Worker, lane JACK** | `scripts/ladder_loop.sh jack` | worker | hourly, 18 slots a day | Jack's code, runs, the ledger (through the runner) |
 | **Worker, lane SYSTEM** | `scripts/ladder_loop.sh system` | worker | 03, 09, 15, 21h — 4 slots a day | the machine itself |
 | **Clerk** (no model) | `scripts/regate.sh` | — | every 2 h | re-buys cheap stale certificates |
 
@@ -132,7 +133,12 @@ had reached 116 KB — about 29,000 tokens read before any work began),
    >    HOW he is built: one brain or fast/slow or separate systems; which
    >    core; which fusion; which control path; which plastic ear or eye. (A
    >    frozen or ready-made part may be RACED as a scored-and-ineligible
-   >    reference; it is never seated inside him — that is class 1.) **Every one of
+   >    reference; it is never seated inside him — that is class 1.)
+   >    **HOW UNIFIED the brain is, is itself a cook-off** (owner, 2026-11-11:
+   >    *"we don't know how unified it is that in itself is cookoffs"*): one
+   >    shared brain vs experts + router vs fast/slow vs separate towers —
+   >    `UB.10`, `BO.01`. The END is that every sense reaches a brain that
+   >    learns; the shape is whatever wins. **Every one of
    >    these is a hypothesis. An architectural decree is a CHAMPION, not a
    >    constitution** — it holds its seat until something beats it, and
    >    `docs/CHAMPIONS.md` is where it lives, not here.
@@ -306,11 +312,12 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 | `experiments/bakeoff.py` | the decision primitive |
 | `experiments/gpu.py` | Colab/Kaggle, budget accounting, failover |
 | `experiments/ledger.json` | the ONLY place a capability may be asserted |
-| `scripts/ladder_loop.sh` | the hourly builder |
+| `scripts/ladder_loop.sh` | the hourly lanes: jack / system / lab |
 | `scripts/overseer.sh` | the adversarial auditor (independent of the builder) |
 | `docs/INTEGRATION_QUEUE.md` | research -> tests, with the mandatory cross-check protocol |
-| `docs/PROGRESS.md` | the weekly Review: big picture + FOR THE BUILDER redesigns |
-| `docs/FIELD_WATCH.md` | the scout's nominations (consumed weekly by the Review) |
+| `docs/ORDERS.md` | the Director's orders — the only file workers obey |
+| `docs/PROGRESS.md` | the Director's daily page for the owner |
+| `docs/FIELD_WATCH.md` | the scout's nominations (read by the Director every sitting) |
 | `docs/META_AUDIT.md` | the audit of the machine itself |
 | `docs/CHAMPIONS.md` | who holds each of Jack's seats, by verdict or default — the buildable current-best Jack |
 
