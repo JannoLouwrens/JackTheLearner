@@ -99,7 +99,8 @@ that cannot fire. Fix the world or the apparatus; never the bar. Start with
 `W.1` + `ok_night_shelter` together.
 serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
 **done when:** `NE.01`, `W.1`, `W.2` each have a new attempt with every
-formerly-red clause explained in the commit.
+formerly-red clause explained in the commit. (D53, fired today, files `SO.07`'s
+VOID here too: the body cannot reach privileged food on 2 of 3 recording worlds.)
 state: open — not started.
 
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID

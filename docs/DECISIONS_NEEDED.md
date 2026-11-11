@@ -541,6 +541,8 @@ on the same day, exactly as this entry's `decide_by` note required.
 
 ---
 
+ANSWERED D33 — superseded by the 2026-11-11 reorganisation (ORDERS J6/J7); Director ruling 7 in docs/DECISIONS_RESOLVED.md.
+
 ## D38 — Two armed defaults each claim the FULL Review's FIRST act, they collide only on Sundays, and today I broke one of them. Which one wins? (2026-09-27, Review, FULL)
 
 **THE COLLISION, stated as the two sentences that produce it.** `D28` (RESOLVED
@@ -647,6 +649,8 @@ DECIDE: D38
   decide_by: 2026-10-04
 
 ---
+
+ANSWERED D38 — superseded by the 2026-11-11 reorganisation; Director ruling 7 in docs/DECISIONS_RESOLVED.md.
 
 ## D39 — The CPU day-ceiling's UNIT has been owner-gated for 27 days, its clock was parented to `D20`, and `D20` closed without ruling on it. One legal detached run still forecloses three consecutive days of the box's CPU schedule by arithmetic. (2026-10-01, Review, DAILY)
 
@@ -1364,6 +1368,8 @@ Being unable to *decide* whether to buy them is.
 
 ---
 
+ANSWERED D46 — superseded by the owner ruling of 2026-11-11 (stop 95%, pace off); Director ruling 7 in docs/DECISIONS_RESOLVED.md.
+
 ## D47 — The Review's queue is not drainable at the Review's own measured rate: 77 live rows against a demonstrated 6/cycle, and `review-queue` prices the drain at 54 cycles. Five consecutive sittings have responded by re-dating. (2026-10-17, Review, DAILY)
 
 class: conduct
@@ -1464,6 +1470,8 @@ DECIDE: D47
   decide_by: 2026-10-24
 
 ---
+
+ANSWERED D47 — superseded by the 2026-11-11 reorganisation (queue closed); Director ruling 7 in docs/DECISIONS_RESOLVED.md.
 
 ## D48 — The Sunday sweep you ordered found the defect class ALREADY GUARDED, and found the real one by accident: a conjunct invented on one spec never reaches its structural siblings. T2.05's FAIL was unattributable for 43 days because the guard that attributes it sits in a PASSING sibling. (2026-10-18, Review, FULL)
 
@@ -1867,6 +1875,8 @@ against ACC_MIN 0.65 is untouched by every branch above.
 
 ---
 
+ANSWERED D51 — resolved by armed default, fired 2026-11-11 by the Director; record in docs/DECISIONS_RESOLVED.md.
+
 ## D47 — EVIDENCE ADDENDUM, 2026-10-22 06:5x UTC (overseer, 159th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS THE NUMBERS THIS ENTRY AND ITS ARMED DEFAULT'S PRICE ARE ARGUED ON: the headline pair (`77 live rows`, `drain 54 cycles`) is a 2026-10-13 reading quoted under a 2026-10-17 freshness claim, and the live reading is ~2x worse than the price the default promises to preserve.
 
 `D47` stays open, `class conduct`, `decide_by 2026-10-24` (2 days away).
@@ -2105,6 +2115,8 @@ price a repair. It asks only **who owns a world/body capability defect now that
 the decision that used to own the class has closed.** The default answers that
 and nothing else, which is why silence can safely adopt it.
 
+ANSWERED D53 — resolved by armed default, fired 2026-11-11 by the Director; record in docs/DECISIONS_RESOLVED.md.
+
 ## D55 — The Review desk is the project's bottleneck organ and has been for a month: 18 of its last 22 sweeps died `rc=124` on the wall clock, its queue's calendar is now booked to the measured capacity every single day twelve days out, and arrivals exceed disposals by ~1.3 rows a cycle with the drain printing UNBOUNDED. The desk cannot fix this by working harder inside a 20-minute box. (2026-10-26, Review, DAILY)
 
 DECIDE: D55
@@ -2206,6 +2218,8 @@ this entry is silence, that discipline continues under the default above.
 
 ---
 
+ANSWERED D55 — resolved by armed default, fired 2026-11-11 by the Director; record in docs/DECISIONS_RESOLVED.md.
+
 ## D54 — `HR.1`'s fixture repair removed 82.6% of the channel leak and the family root still FAILS, because one seed misses the bar by a SINGLE trial out of 160. The only two repairs left are both bar moves, and no desk may make one. (2026-10-25, Review, SUNDAY FULL)
 
 DECIDE: D54
@@ -2305,6 +2319,8 @@ This entry asks only about `HR.1`'s bar.
 
 
 ---
+
+ANSWERED D54 — resolved by armed default, fired 2026-11-11 by the Director; record in docs/DECISIONS_RESOLVED.md.
 
 ## D50 — EVIDENCE ADDENDUM, 2026-10-25 ~12:4x UTC (overseer, 160th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS THIS ENTRY'S CENTRAL PREMISE: the 90% stop does NOT pause every organ. It pauses every READER and leaves the one WRITER running, and in the pause just ended that writer turned a Tier-0 certificate red where no organ could read it.
 > PROVENANCE (scripts/lib_seal.sh, 2026-10-25T12:57:16+00:00): this entry was written by a overseer run that exited rc=1 without completing its own checklist — its report is sealed as an INCOMPLETE RUN draft. The entry's facts are that dead run's, unverified until an audit re-measures them; nothing here is re-dated, weakened or un-armed by this line.

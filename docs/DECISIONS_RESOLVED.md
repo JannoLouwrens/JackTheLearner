@@ -2900,3 +2900,71 @@ back anymore go to claude 95% then stop only then"*.
   back for everything else on the account.
 - *How to reverse:* `JACK_USAGE_STOP=90` and `JACK_PACE=on` in the crontab
   lines, or change the two defaults at the top of the pacing block.
+
+## 2026-11-11 21:58 UTC — Director, first sitting (FULL): rulings
+
+**1. Inside/around: a result whose "Jack" is a ready-made model is a result
+about the parent rig, not about him (conduct; applies GOAL.md's inside/around
+rule — changes no verdict, no threshold).** `LG.00` (frozen SmolLM2-360M plus
+the diary; its own header: "the learned core contributes nothing"), `HR.4`
+(ready-made ASR + embedder), `T3.08` (LLM as his command encoder), the
+Language-routing seat's `LG.10/12/13/14` (a frozen LLM phrases his speech) and
+`ME.11.C/D/E` (pretrained embedders in his memory): every ledger verdict
+STANDS as measured. What changes is the credit: none of them counts as a
+capability of Jack on the roadmap, in coverage or in a seat. They are kept as
+parent-side tools and as scored-but-ineligible references for the learned
+parts that must replace them. The Language-model and Language-routing seats are
+to read VACANT for his own part until a learned challenger holds them by
+verdict. `PG.6`'s kill-text "move vision to a frozen tower" is struck as a
+remedy (a frozen tower inside him is forbidden); `UnifiedBrain.py`'s
+wav2vec2/SmolLM2 loaders stay default-off and may be used only by a
+reference arm; `AudioListener._transcribe_api` is a paid endpoint and is to be
+deleted — the owner's own instruction in the ORDERS inbox of this date (free
+compute only). ROADMAP M6's status line is corrected today; the registry and
+CHAMPIONS edits are ORDERS "Next up 1". *Loser recorded:* voiding the specs —
+they measured what they said they measured; the fault was the reading.
+
+**2. `T1.14` — the record corrected, and the counter not banked (conduct).**
+The acting Director's ruling above says all five re-parented specs sit "behind
+their own sigma gates". True for `T2.01`, `T2.02`, `D1.0`. `T2.03` gates on
+`all_seeds_positive` plus margin floors and `T2.14` on `all_seeds_beat_null` —
+three seeds, no single-seed quote, so the substance holds; the wording did
+not. `pass_on_dead_dependency` 7 → 5 is a re-wiring, not a repair, and is NOT
+to be recorded as a floor until `T1.14` has a PASS row. `T1.14`'s control is
+ordered strengthened with a seed-ignoring arm that is actually run (ORDERS J1).
+
+**3. `W.1`/`W.2` have an owner (conduct).** They stay in M2's done-when — a
+world whose heat balance and needs ledger fail their own published rules is
+not "a world that can teach" — and are owned by ORDERS J6 with `NE.01`.
+
+**4. The clerk buys nothing on a dirty tree (conduct; ratifies `7d33eba`).**
+A certificate stamped `+dirty` is worse than the one it replaces.
+
+**5. `DECISIONS_NEEDED.md`'s cap (conduct).** The page is inside its cap when
+it holds only OPEN decisions; nobody archives a live addendum to shave bytes.
+
+**6. GPU routing (conduct).** Until ORDERS S2 explains why Kaggle gave
+`jack-ladder-1794429036` no session, jobs of ≤ 2 h go to Colab and longer
+jobs are split to fit. Kaggle's "30 free hours" is a figure this repo's own
+file computes; the account is shared with another project, so it is an upper
+bound, not a balance.
+
+**7. Four stale conduct entries are settled by the reorganisation.** `D33`
+(the world-edit design that lost three Sundays): superseded — the deeper
+world is ORDERS J7 and the red W0 rules are J6; an order has no Sunday to
+lose. `D38` (two defaults claiming the FULL Review's first act): superseded —
+the Director's first act is fixed: ORDERS.md inside 15 minutes. `D46` (which
+organs the pace line exempts): superseded by the owner's ruling above — pace
+off, one hard stop at 95% for every organ. `D47` (the Review queue is not
+drainable): superseded — the queue is closed to new rows and the Director
+disposes up to 10 a sitting, oldest first. Still open and stale, to be read
+and ruled three a sitting: `D39`, `D40`, `D48`, `D49`, `D50`, `D52`; `D35`
+stands in force until `LF.03` has a verdict.
+
+## D54 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by 2026-11-08): HOLD THE BAR AND LEAVE `HR.1` RED. `CLEAN_BAR` stays 0.10, `HR.1` stays FAIL, `HR.2`/`HR.3`/`HR.4` stay killed. No threshold moved, nothing deleted, no GPU spent. The hearing family's way forward is not this corpus's bar but a learned ear raced against a no-ASR null (ORDERS "Next up 2"), which needs a corpus whose channel does not identify the speaker — a repair to the recording fixture, never to the bar.
+
+## D51 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by 2026-11-03): THE FLOOR STAYS AND THE REDESIGN ROUTES ONWARD. `KA_SIGNAL_MIN` 0.90 is byte-unmoved; `PS.09` keeps its verdict. The default routed the signal-present arm's redesign to "a Review design row"; the Review queue is closed, so it routes to the Director's order list instead — not opened today (it frees 0 specs; M1 and the repairable blockers outrank it). Any repair that needs the bar to move returns to the owner.
+
+## D53 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by passed): ADOPT (c)'s DIAGNOSIS AND GIVE IT A LIVE OWNER. `SO.07`'s VOID is re-filed as a WORLD/BODY capability defect (the body cannot reach privileged food on 2 of 3 recording worlds), one class with `ba03-null-saturates-the-horizon` and `SH.01`'s `ORACLE_CANNOT`. `REF_MIN_FED` is byte-unmoved at 0.8, nothing re-based, `SO.07` stays VOID. Live owner: ORDERS J6 (the red W0 world rules), in place of the long-closed `D21`.
+
+## D55 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by passed): THROTTLE THE INTAKE AT THE DESK, AND BUY NO EXTRA CLOCK. Adopted in a stricter form than written: since the 2026-11-11 reorganisation `docs/REVIEW_QUEUE.md` takes NO new row at all, and the Director disposes up to 10 old rows a sitting. No timeout raised by this firing, the usage gate untouched.
