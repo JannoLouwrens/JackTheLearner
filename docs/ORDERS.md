@@ -178,6 +178,8 @@ state: open — not started.
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (audit 2026-11-11) The guard tools are red at baseline for reasons ordered work produces: `coverage` exits 2 on a shrink-only UNREACHABLE counter that moves each time an order registers a spec, its FAIL-UNOWNED check names the closed REVIEW_QUEUE as the repair, `run verify` exits 2 on a venue baseline and a standing T0.18 item. Prompts now tell agents to ignore these; the durable repair is a SYSTEM order making those counters reporting-only (out of the exit code).
+
 - (owner, 2026-11-11) No spec tests whether a sense ADDED LATER integrates as well as one he had from birth. Wanted as a cook-off: same core raised with the sense from the start vs the sense added mid-life, judged by the existing hide-it / fake-sense / combination tests. Matters before smell, taste, the learned ear and words are wired into the main brain.
 
 - Owner 2026-11-11 (GOAL.md inside/around rule): no spec races a LEARNED plastic speech ear or voice-recogniser for Jack — ASR and Speaker ID seats are now VACANT, `ARENA: NONE`. Order one: learned ear vs no-ASR null on a small vocabulary, HR.2's winner as scored-and-ineligible reference and as the parent's ears.
