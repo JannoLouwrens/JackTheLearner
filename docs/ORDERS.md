@@ -10,7 +10,10 @@ are recorded in `docs/DECISIONS_RESOLVED.md` under the same date.*
 
 ---
 
-## JACK — build the creature (max 7 open, ranked)
+## JACK — build the creature, his world and his curriculum (max 7 open, ranked)
+
+*Order of work: J1, then J7 and J5 (world and curriculum — the owner ranks them
+with Jack himself), then J2, J3, J4, J6.*
 
 ### J1 — Unbundle `T1.08`: it blocks 45 specs on a bar set from one sample
 **Why.** `T1.08` passed twice in August as "seed noise is small next to the
@@ -36,6 +39,36 @@ state: steps 1+2 DONE at 4818a2c — `T1.14` registered (imports T1.08's job, sn
 keeps T1.08; t1_08 file untouched. `run blocked`: T1.08 gone, T1.14 NOT_RUN blocks 45.
 Step 3 IN FLIGHT: dispatch watcher pid 1698161, kaggle `jack-ladder-1794429036`, log
 /data/tmp/dispatch_t1_14.log (~1 GPU-h). Next: confirm ledger row, render, mark DONE.
+
+### J7 — The world he learns in: finish the deeper world (W1) — `W1.00` FAIL, `W1.04` VOID
+**Why.** Owner, 2026-11-11: the world and the training curriculum are "as important as jack himself".  Nine instruments agree W0 is too shallow: lookahead does not pay in it
+(`DP.05`), a ridge regression beats the world model (`T2.05`). Fast/slow
+(`BO.01`) cannot be raced until a world exists where thinking ahead is worth
+something. `W1.01`, `W1.02` already pass.
+**Do.** Repair `W1.00` and `W1.04`; then re-run `DP.05`'s question in W1.
+**done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
+state: open — not started.
+
+
+### J5 — The curriculum: what he learns, in what order, and who sets it — as a cook-off
+**Why.** Owner, 2026-11-11: *"the world building aspect and the training
+curriculum … as important as jack himself, put as much research into that."*
+Today there is no curriculum at all: he is dropped into W0 and scored. All seven
+curriculum specs (`CU.1`–`CU.7`) and the ladder-climbing family (`LT.03`+) have
+never run, and `docs/CHAMPIONS.md` gives curriculum no seat.
+**Do.** (1) Research pass, cited: how children and animals are staged (reflex →
+reach → feed → avoid harm → shelter → words), and what the field does —
+learning-progress curricula, goal babbling, teacher-proposed goals (the parent
+LLM/VLM proposing, his own progress choosing), unsupervised environment design
+(worlds that mutate between deaths). Write it to `docs/research/CURRICULUM.md`,
+≤ 15 KB. (2) Add a Curriculum seat to `docs/CHAMPIONS.md`, holder VACANT.
+(3) Register ONE cook-off: no curriculum (today, the null) vs a hand-staged one
+vs self-chosen by learning progress vs teacher-proposed — same core, same
+world, same lives, metric = survival gain at matched experience; control: a
+shuffled-stage curriculum must not beat the staged one. Pilot before sizing.
+**done when:** the doc exists, the seat exists, the cook-off is registered with
+its control and has a pilot number.
+state: open — not started.
 
 ### J2 — Settle who controls the body (`D1.1`), then re-run "he can move" (`T2.01`)
 **Why.** `D1.0` spent 17.6 GPU-hours and measured it: small plastic head **506**
@@ -81,16 +114,6 @@ bar); pilot; dispatch.
 recorded cause and the next repair named.
 state: open — not started.
 
-### J5 — `XL.01` "death does not erase what he learned": give it the power to see
-**Why.** Pooled, memory helps (food in 19.9 s with the diary vs 27.3 s wiped,
-ratio 0.73). It fails because 1 seed of 3 clears at n_lives = 8. That is a
-sample too small for the claim, not a refuted claim.
-**Do.** Size n_lives / seeds from the measured spread so the pre-registered
-effect is detectable (pilot, declare, then run). Threshold unmoved. ~12 min CPU
-per attempt.
-**done when:** a run at the declared power has a verdict, whichever way.
-state: open — not started.
-
 ### J6 — `NE.01` fails on 2 of ~12 clauses while its claim holds; repair those two
 **Why.** The scripted forager survives 18,000 decisions and random dies — the
 needs ARE a real control problem. It is red on `ok_night_shelter` and
@@ -103,16 +126,7 @@ or the apparatus; never the bar.
 commit.
 state: open — not started.
 
-### J7 — Finish the deeper world (W1): `W1.00` FAIL, `W1.04` VOID
-**Why.** Nine instruments agree W0 is too shallow: lookahead does not pay in it
-(`DP.05`), a ridge regression beats the world model (`T2.05`). Fast/slow
-(`BO.01`) cannot be raced until a world exists where thinking ahead is worth
-something. `W1.01`, `W1.02` already pass.
-**Do.** Repair `W1.00` and `W1.04`; then re-run `DP.05`'s question in W1.
-**done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
-state: open — not started.
-
-**Next up (not open yet):** `ME.11.B–F` memory-retrieval bakeoff (lexical recall
+**Next up (not open yet):** `XL.01` at proper power (pooled effect is real: food in 19.9 s with memory vs 27.3 s wiped; fails per-seed at n_lives = 8 — size the sample, bar unmoved); `ME.11.B–F` memory-retrieval bakeoff (lexical recall
 on paraphrase is 0.0); `LC.07` at scale through save/resume on Kaggle CPU;
 `HR.1` hearing corpus.
 
