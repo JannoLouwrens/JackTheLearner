@@ -140,7 +140,8 @@ if noop_eligible; then
   exit 0
 fi
 
-MODEL="${JACK_OVERSEER_MODEL:-opus}"
+. "$REPO/scripts/models.env"
+MODEL="${JACK_OVERSEER_MODEL:-$MANAGER_MODEL}"
 # Turn budget derived from the clock, at the Review's own rate of 3 turns/min
 # (60 turns / 20 min), instead of the hard-coded 60 that killed this organ twice
 # with time still on it. `timeout` remains the spend ceiling; this only stops an
@@ -198,7 +199,7 @@ fi
 # hour, so a 06:37 report is not stamped stale when the 12:37 run dies — only a
 # page that has actually outlived the schedule is.
 if [ "$RC" -ne 0 ]; then
-  seal_output "$RC" docs/OVERSIGHT.md overseer say 7 "$RUN_START"
+  seal_output "$RC" docs/OVERSIGHT.md overseer say 25 "$RUN_START"   # daily cadence since 2026-11-11 (was 6-hourly, 7)
   say "audit end rc=${RC} — verdict: UNKNOWN (audit did not complete)"
   exit 0
 fi

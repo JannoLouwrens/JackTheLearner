@@ -35,7 +35,8 @@ cd "$REPO" || exit 0
 # 30m timeout), not hard-coded. Seven max-turns deaths across the three organs,
 # every one with time left on the clock — see scripts/review.sh.
 MAXTURNS=90
-MODEL="${JACK_FIELDWATCH_MODEL:-opus}"
+. "$REPO/scripts/models.env"
+MODEL="${JACK_FIELDWATCH_MODEL:-$MANAGER_MODEL}"
 say "sweep start — model ${MODEL}"
 # The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
 # after this moment are this run's own acts. Captured before the agent starts.
@@ -46,10 +47,10 @@ nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/fiel
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
 if credits_out; then
-  say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
+  say "OUT OF CREDITS on ${MODEL} — retrying on ${MANAGER_FALLBACK}"
   mark_log
   nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
-    --model sonnet --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
+    --model "$MANAGER_FALLBACK" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 fi
 usage_ledger field-watch end "$MODEL"      # D15 (d): after any retry, one line whatever RC says

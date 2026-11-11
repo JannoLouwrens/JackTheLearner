@@ -48,6 +48,41 @@ spawned to do, you are standing somewhere on this loop — know which step,
 do it, and if you find the loop itself broken, that repair outranks your
 task.
 
+## WHO DOES WHAT — managers, workers, and the lane that works on the machine
+
+Owner ruling, 2026-11-11: *"managers being fable 5.2 and workers opus 5.5 … as
+long as some agents work on the system itself."* The models are written in ONE
+place, `scripts/models.env`; nothing else names a model.
+
+| role | organ | model | when | writes |
+|---|---|---|---|---|
+| **Director** (manager) | `scripts/review.sh` | manager | daily 06:37, long on Sundays | `docs/ORDERS.md`, `docs/PROGRESS.md`, rulings |
+| **Auditor** (manager) | `scripts/overseer.sh` | manager | daily 00:37 | `docs/OVERSIGHT.md` — ≤ 5 findings, for the Director |
+| **Field watch** (manager) | `scripts/field_watch.sh` | manager | Mondays | `docs/FIELD_WATCH.md` |
+| **Worker, lane JACK** | `scripts/ladder_loop.sh jack` | worker | hourly, 20 slots a day | Jack's code, runs, the ledger (through the runner) |
+| **Worker, lane SYSTEM** | `scripts/ladder_loop.sh system` | worker | 03, 09, 15, 21h — 4 slots a day | the machine itself |
+| **Clerk** (no model) | `scripts/regate.sh` | — | every 2 h | re-buys cheap stale certificates |
+
+**The Director decides what the work is; the workers do it; the Auditor checks
+that what was claimed is true.** Workers obey one file, `docs/ORDERS.md`, which
+is bounded (≤ 7 Jack orders, ≤ 3 system orders). An auditor's finding reaches a
+worker only by becoming an order. A worker who finds the machine broken writes
+one INBOX line and keeps building.
+
+**The lane split is enforced by cron, not by judgment,** because judgment is
+what drifted: with one builder serving both, the share of commits that landed a
+result fell from 23% (August) to 5% (October) while audit, steering and
+governance rose to about 78% — and nobody had decided that. Four system slots a
+day is the whole allowance, and **the machine may not grow**: an addition to the
+governance code or the standing prose removes at least as much in the same
+commit.
+
+**Steering stays small enough to obey.** `scripts/ladder_prompt.md` ≤ 10 KB (it
+had reached 116 KB — about 29,000 tokens read before any work began),
+`docs/ORDERS.md` ≤ 12 KB, `docs/LESSONS_CORE.md` ≤ 15 KB. History lives in git,
+`docs/archive/` and `docs/RUNBOOK.md`. The measurements behind all of this are in
+`docs/research/BOTTLENECK_AUDIT_2026-11.md`.
+
 ## The four laws
 
 1. **A capability is claimed ONLY by a test that could have failed.**

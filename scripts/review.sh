@@ -89,7 +89,8 @@ cd "$REPO" || exit 0
 # of a declared pid are attributed; dead declarations are pruned.
 . "$REPO/scripts/lib_procwatch.sh"
 proc_declare $$ "review.sh consumer slot"
-MODEL="${JACK_REVIEW_MODEL:-opus}"
+. "$REPO/scripts/models.env"
+MODEL="${JACK_REVIEW_MODEL:-$MANAGER_MODEL}"
 # Two gears, one organ (owner, 2026-08-09: "every 24 hours the loop must be
 # reviewed... to fix itself... the senior engineer"). Steering rots in hours
 # — the builder's map went stale twice in one day. Science needs a week of
@@ -122,7 +123,7 @@ MODEL="${JACK_REVIEW_MODEL:-opus}"
 # so the most consequential scheduled run is not killed by an allowance derived
 # from nothing (said here explicitly so no audit reads it as a silent loosening).
 TURNS_PER_MIN=6
-if [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=40m; MINUTES=40; else MODE=DAILY; TMOUT=20m; MINUTES=20; fi
+if [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=45m; MINUTES=45; else MODE=DAILY; TMOUT=30m; MINUTES=30; fi   # Director, 2026-11-11: was 40/20, and 40 of 81 sittings died on the clock
 MAXTURNS=$(( MINUTES * TURNS_PER_MIN ))
 # The sitting is now HAPPENING: stamp it and consume any deferral, so retry
 # polls stop attempting today. Stamped before the agent runs, not after — a
@@ -140,9 +141,9 @@ nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MOD
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
 if credits_out; then
-  say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
+  say "OUT OF CREDITS on ${MODEL} — retrying on ${MANAGER_FALLBACK}"
   mark_log
-  MODEL=sonnet   # the ledger append below must name what RAN (76th B1)
+  MODEL="$MANAGER_FALLBACK"   # the ledger append below must name what RAN (76th B1)
   nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
     --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?

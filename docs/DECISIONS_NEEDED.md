@@ -4348,12 +4348,16 @@ here so it is visible, dated, and strikeable in one line by the owner.
 
 DECIDE: D35
   class:     conduct
-  default:   In force until T6.01 records a verdict (PASS, FAIL or VOID): no new
+  default:   [AMENDED 2026-11-11, DECISIONS_RESOLVED.md: the lift condition is
+             LF.03 — one life with the learning core in the loop, on the
+             survival stack — not the Stack-B companion spec T6.01. Force and
+             terms otherwise unchanged.]
+             In force until LF.03 records a verdict (PASS, FAIL or VOID): no new
              Tier-0 spec may be registered (Tier 0 closed at 39); no new audit
              organ, checker or ratchet may be built (coverage/decisions/champions
-             keep running, nothing joins them); every iteration names which of
-             T2.01, XL.01 or T6.01 it moved, and "none" is legal at most twice
-             running. Weakens no gate, moves no threshold, edits no GOAL.md,
+             keep running, nothing joins them); JACK-lane work is whatever
+             docs/ORDERS.md ranks first (the Director's file replaces the
+             per-iteration naming rule). Weakens no gate, moves no threshold, edits no GOAL.md,
              widens nothing forbidden. Cannot be lifted by re-labelling or by
              registering a cheaper T6.01 than its title names.
   decide_by: 2026-09-24

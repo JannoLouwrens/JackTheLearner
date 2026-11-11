@@ -2825,3 +2825,39 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## 2026-11-11 — acting Director (owner's session): three rulings made with the reorganisation
+
+**1. `T1.08` is unbundled, not weakened (conduct).** The spec passed twice in
+August on its original claim (seed noise small next to the effect, SNR ≥ 3). On
+2026-09-13 a second claim was added to the same spec — held-out seed CV ≤ 7% —
+with a bar taken from one early reading (the queue row's own name:
+`t108-bar-set-from-n1-is-now-the-projects-largest-blocker`). After two honest
+repairs the CV is 17%; that is a true and standing fact about the Stack-B
+recipe, `MAX_HELDOUT_CV_PCT = 7.0` stays byte-unmoved, and `T1.08` stays FAIL.
+What changes is the WIRING. `T1.08`'s `kills` clause reaches "any single-seed
+claim"; five of its six direct dependents (`T2.01`, `T2.02`, `T2.03`, `T2.14`,
+`D1.0`) run three seeds behind their own sigma gates and quote no single-seed
+number. They are re-pointed to `T1.14`, which carries the original August gate
+verbatim. `T2.13` (seeds = 1) keeps its edge. Dependency edges are how the
+ladder is wired — conduct, which the desks amend — and no gate, threshold or
+control moves. The design question had been open since 2026-09-16 and blocked
+45 specs for eight weeks. *Loser recorded:* "more seeds until it passes" — the
+spec's own Monte Carlo shows the tightness is headroom, not sample; and
+"accept the false-fail rate" — which leaves 45 specs behind a coin.
+
+**2. `D1.0`'s VOID is answered by `D1.1`, not by reinterpretation (means).**
+The learning gate compared arms to a random-action policy; untrained twins
+cleared it at 3.9σ because in Humanoid standing still out-scores flailing. The
+null was wrong. `D1.1` re-registers the same arms with the gate set to trained
+vs own untrained twin, paired — a harder null, so a strengthening — and is run
+fresh on free GPU rather than re-scored from `D1.0`'s rows.
+
+**3. "One whole life" means `LF.03` on the survival stack (conduct; amends
+D35).** D35's freeze named `T6.01` as its lift condition. `T6.01` is a Stack-B
+"companion session" spec written before the survival-world direction of
+2026-08-09; the learning this project has demonstrated is on Stack A. The
+freeze stands unchanged in force and now lifts when `LF.03` — one life with the
+learning core in the loop — records a verdict. Whether Stack B's Tier-6 specs
+are retired, re-parented or kept as challengers is an architecture question and
+goes through `docs/CHAMPIONS.md`, raced, not decreed.

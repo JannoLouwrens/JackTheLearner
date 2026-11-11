@@ -42,7 +42,17 @@ LOCK=/tmp/jack-loop.lock
 # still do CPU work beside it (2026-08-09: the box sat at 4% for hours
 # because those two were the same lock).
 PAUSE="$REPO/.loop-paused"
-FALLBACK_MODELS="${JACK_LOOP_FALLBACK:-opus sonnet}"  # tried in order when the primary is out of credits
+# Models come from ONE file (scripts/models.env): workers on WORKER_MODEL, managers
+# on MANAGER_MODEL. Owner ruling 2026-11-11. The env override stays for one-offs.
+. "$REPO/scripts/models.env"
+# LANE — which kind of work this slot does. `jack` builds the creature; `system`
+# works on the machine itself. The split is enforced by CRON (which slots get
+# which lane), not by an iteration's judgment, because judgment is what drifted:
+# October 2026 measured 5% of commits landing a result and ~78% tending the
+# machinery, with nobody having decided that. First arg, or JACK_LANE, or jack.
+LANE="${1:-${JACK_LANE:-jack}}"
+case "$LANE" in jack|system) ;; *) LANE=jack;; esac
+FALLBACK_MODELS="${JACK_LOOP_FALLBACK:-$WORKER_FALLBACK}"  # tried in order when the primary is out of credits
 MIN_FREE_GB=3
 MAX_LOAD=6.0
 
@@ -204,8 +214,8 @@ BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
 TOTAL=$(/data/venvs/jackthelearner/bin/python -c \
   "from experiments.registry import LADDER; print(len(LADDER))" 2>/dev/null || echo 105)
 
-say "iteration start — ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-opus}, load ${LOAD}, ${FREE_GB}GB free"
-usage_ledger builder start "${JACK_LOOP_MODEL:-opus}"    # D15 (d): the configured primary —
+say "iteration start — lane ${LANE}, ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-$WORKER_MODEL}, load ${LOAD}, ${FREE_GB}GB free"
+usage_ledger builder start "${JACK_LOOP_MODEL:-$WORKER_MODEL}"    # D15 (d): the configured primary —
                               # what WILL run is not known until the chain walks (76th B1)
 if [ -s "$LOST" ]; then
   say "inheriting $(wc -l < "$LOST") iteration(s) lost to limits since the last success (see $LOST)"
@@ -283,7 +293,8 @@ leftover_report() {
   return $rc
 }
 
-PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
+if [ "$LANE" = "system" ]; then PROMPT_FILE="$REPO/scripts/system_prompt.md"; else PROMPT_FILE="$REPO/scripts/ladder_prompt.md"; fi
+PROMPT=$(cat "$PROMPT_FILE")
 
 run_claude() {
   mark_log            # bound the credit check to THIS run's output
@@ -309,7 +320,7 @@ run_claude() {
       >> "$LOG" 2>&1
 }
 
-MODEL="${JACK_LOOP_MODEL:-opus}"
+MODEL="${JACK_LOOP_MODEL:-$WORKER_MODEL}"
 
 # THE MODEL FLOOR runs BEFORE anything is attempted (D14 option (b), the
 # (b-effective) reading — see the long note over `model_gate` in lib_usage.sh
