@@ -77265,14 +77265,22 @@
     },
     "T1.14": {
       "amended": [],
-      "attempt": 2,
-      "commit": "e659d10",
-      "compute_s": 10567.96,
-      "control_metrics": {},
+      "attempt": 3,
+      "commit": "8b7d33f",
+      "compute_s": 3831.18,
+      "control_metrics": {
+        "distinct_results": 3,
+        "ignored_distinct_results": 1,
+        "ignored_flagged": 1.0,
+        "ignored_seeds": "[0, 0, 0]",
+        "ignored_spread": 0.0,
+        "ignored_to_real_spread": 0.0,
+        "spread": 0.0102037
+      },
       "dirty_files": null,
-      "duration_s": 10575.79,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1794442969,ladder-1794449590",
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "duration_s": 3841.57,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1794456542,ladder-1794456545",
+      "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "amended": [],
@@ -77311,21 +77319,57 @@
           ],
           "spec_sha": "8cbc6b6c15a26f21",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 2,
+          "commit": "e659d10",
+          "compute_s": 10567.96,
+          "control_metrics": {},
+          "dirty_files": null,
+          "duration_s": 10575.79,
+          "gpu_job_id": "jannolouwrens/jack-ladder-1794442969,ladder-1794449590",
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "60aa3d01b04ab08a",
+          "message": "RuntimeError: no artifact from colab. message='fetch failed: /content/t108.json: rc=1 exists=False [colab] A new version of Colab CLI is available: 0.8.0 (current: 0.6.0)\\n[colab] Run \\'colab update\\' to update.\\n[colab] To silence this check, set \"enable_update_check\": false in ~/.config/colab-cli/set | attempts: [\\'kaggle: status=queued\\']' stdout_tail='334572, \"mean_baseline\": 0.294927835464477",
+          "metrics": {},
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 299.4,
+          "preserved_impl": null,
+          "ran_at": "2026-11-12T03:19:02",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "4270ae98e8e54f21",
+          "status": "ERROR"
         }
       ],
-      "impl_sha": "60aa3d01b04ab08a",
-      "message": "RuntimeError: no artifact from colab. message='fetch failed: /content/t108.json: rc=1 exists=False [colab] A new version of Colab CLI is available: 0.8.0 (current: 0.6.0)\\n[colab] Run \\'colab update\\' to update.\\n[colab] To silence this check, set \"enable_update_check\": false in ~/.config/colab-cli/set | attempts: [\\'kaggle: status=queued\\']' stdout_tail='334572, \"mean_baseline\": 0.294927835464477",
-      "metrics": {},
+      "impl_sha": "c51bd98015b912a5",
+      "message": "",
+      "metrics": {
+        "artifact_channel": "stdout JACKRESULT line (t108 ruling 9d)",
+        "backend": "colab",
+        "effect": 0.26517,
+        "gpu": "Tesla T4",
+        "heldout_cv_pct": 17.174,
+        "heldout_mean": 0.02976,
+        "heldout_std": 0.00511,
+        "lr_final_max": 0.0,
+        "min_detectable_effect": 0.01022,
+        "seed_noise": 0.00511,
+        "seeds": 3,
+        "snr": 51.89
+      },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 299.4,
+      "peak_rss_mb": 228.5,
       "preserved_impl": null,
-      "ran_at": "2026-11-12T03:19:02",
+      "ran_at": "2026-11-12T05:12:56",
       "seeds": [
         0
       ],
       "spec_id": "T1.14",
       "spec_sha": "4270ae98e8e54f21",
-      "status": "ERROR"
+      "status": "PASS"
     },
     "T2.00": {
       "amended": [],

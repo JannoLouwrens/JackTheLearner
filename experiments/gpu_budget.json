@@ -436,6 +436,12 @@
       "ok": false,
       "week": "2026-W45"
     },
+    "jannolouwrens/jack-ladder-1794460263": {
+      "backend": "kaggle",
+      "hours": 0.0,
+      "ok": false,
+      "week": "2026-W45"
+    },
     "ladder-1786478893": {
       "backend": "colab",
       "hours": 0.9914,
@@ -518,6 +524,18 @@
       "backend": "colab",
       "hours": 1.0977,
       "ok": true,
+      "week": "2026-W45"
+    },
+    "ladder-1794456545": {
+      "backend": "colab",
+      "hours": 1.0642,
+      "ok": true,
+      "week": "2026-W45"
+    },
+    "ladder-1794460259": {
+      "backend": "colab",
+      "hours": 0.0012,
+      "ok": false,
       "week": "2026-W45"
     }
   },
@@ -759,7 +777,8 @@
       "kaggle": 1.7768
     },
     "2026-W45": {
-      "colab": 1.7481,
+      "colab": 2.8123,
+      "colab_failed": 0.0012,
       "kaggle_failed": 0.0
     }
   }
