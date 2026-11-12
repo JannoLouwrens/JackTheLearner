@@ -100,10 +100,10 @@ serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
 formerly-red clause explained in the commit. (D53 files `SO.07`'s VOID here too:
 the body cannot reach privileged food on 2 of 3 recording worlds.)
 state: 11-12 42e7973: W.1 attempt 4 FAIL on (b) only ((a)(c)(d) PASS; (b) = world tau 240 s vs body, Director's ruling, INBOX 20:25).
-21:30 NE.01 ok_night_shelter diagnosed (no ledger row): W0 drives no wind, so e0eecf7 cannot move it. Two faults, per seed
-(experiments/shelter_law_night.py, LAB): s0 body seals (occ 0.997) and the 70 % k-cut COOKS it (cost 1.000 > open 0.498);
-sky-temperature law (Swinbank, open night kept at 0.498) gives 0.110 PASS. s1/s2: pose at grid edge -2.35, sleeper ends occ 0.007.
-Next: race shipped vs sky law (bakeoff, NE.01 night + W.1 + day), AND fix the pose probe to read occ after the bed-down; then W.2.
+NE.01 ok_night_shelter: s0 = the 70 % k-cut cooks a sealed sleeper (1.000; Swinbank sky law .110 PASS, shelter_law_night.py).
+21:45 s1 fault FOUND (experiments/shelter_pose_bed.py): the probe reads occ after a 1 s settle (.667 at -2.35,1.4), but the body
+is still SLIDING: root -2.35,1.40 -> -2.01,1.13 and z .21 -> .34 over decisions 0-30; occ .667 (dec 4-11) -> .333 (20) -> 0 (30+).
+Next: re-register the probe to read occ after _night's own bed-down at rest (apparatus fix, bar untouched); s2; race laws; W.2.
 
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
 **Why.** Owner, 2026-11-11: the world and the curriculum are "as important as

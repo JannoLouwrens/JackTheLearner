@@ -540,3 +540,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   night held at .498) gives .110 PASS on the same night. s1/s2: the pose search picks the grid edge, and the sleeper ends at
   occ .007 under both laws (a fixture fault). Next: race the two laws; probe the pose after bed-down. Served: 1 (a world that
   can kill him honestly, not via a roof that cooks) and 4 (each failing seed attributed; bar untouched).
+
+- 2026-11-12 ~21:50 UTC JACK J6 (no ledger row; short slot). J1 dose2 still running (s93 both arms, harvest ~23:30); J4
+  no GPU backend (Kaggle week spent). NE.01 ok_night_shelter seed 1 localised: _find_shelter_pose reads occlusion after a
+  1 s settle, but the placed body keeps sliding through _night's bed-down (root x -2.35 -> -2.01, y 1.40 -> 1.13, z .21 ->
+  .34 by decision 30); occ .667 -> .333 -> 0.0 before sleep even starts. The fixture certifies a transient, not a resting
+  pose (experiments/shelter_pose_bed.py). Next: re-register the probe to read occ at rest after the real bed-down.
+  Served: 4 (a failing seed attributed to the apparatus with a measurement; bar untouched) and 1 (an honest shelter test).
