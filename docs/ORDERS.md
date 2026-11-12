@@ -57,7 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: open — not started.
+state: 11-12 REGISTERED 7446b86 (declared pre-read 1e1dc3e): 15 lives, seeds 100-102, gate late-vs-twin AND late-vs-early >= MARGIN_S 272.812
+(rule 2*sd*sqrt(2/5) on 30 seed-90 twin lives); controls twin-vs-twin + shuffled rewards; smoke OK. PILOT s90 forecasts FAIL: learner early 470 s ->
+late 269 s (hit the statue's 599 s ceiling at lives 4-7, then COLLAPSED to 119-400 s from life 9), twins drift 338 -> ~580 on exploration decay alone.
+NOT RUN: the runner refuses cpu<48h outright, and as cpu<2h the no-history estimate (54000 s) exceeds the day's 48206 s (INBOX). Data /data/tmp/lf04/.
+Next: once the lane admits it, launch_detached `run LF.04` (~4-5 h); meanwhile diagnose the collapse (death `cause` per life now recorded; LEARNING_CORE §5.4).
 
 ### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
 **Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate
@@ -241,6 +245,7 @@ with reasons.
 - **OWNER PRIORITY 11-12 (via session): "the scale thing is a big one … when will we run it bigger scale against the others".** The Learning-core seat rests on a 1× single-learner screen and `LC.07` has been VENUE-UNAFFORDABLE since 09-12. Director: (1) promote S1 (CPU-only Kaggle kernels, no GPU quota) from "next up" to an open order and price `LC.07` on it; (2) consider registering a NEW intermediate spec (e.g. ~3×, all five arms plus ring-memory if seated, collapse diagnostic of LEARNING_CORE §5.4 implemented, weights persisted) as its own claim — it does NOT replace or shrink `LC.07`, whose ~10× ratio stays untouched; (3) say in PROGRESS when a scale result can honestly be expected. Free compute only.
 - **OWNER REQUEST 11-12 (via session): a video he can watch.** Make a system order: after a life is lived, write a short watchable video (third-person view of the body in his world, needs/hunger overlaid, phone-playable mp4) to a fixed path under `/data`, refreshed whenever a newer life exists, and say in `docs/PROGRESS.md` where it is. Use `experiments/render.py` (Xvfb + llvmpipe); render OFFLINE from a recorded life, never inside a scored run; low priority CPU, no background service. Show him as he is — no cherry-picked life.
 - **11-12 07:10 JACK: both GPU backends refuse; J2/J4 are stalled.** Kaggle: "Maximum weekly GPU quota of 30.00 hours reached" (shared account, W45). Colab: a bare hello-world `colab run --gpu T4` fails at `POST /tun/m/assign … variant=GPU`: **503 Service Unavailable** (our W45 colab 4.41 h). gpu.py reports this only as "exit 1" (S5 item 2). Also: the UB.10 sweep waiter (pid 1992023) was a hand-chained nohup that inherited the launching slot's JACK_ITER_DEADLINE and refused Colab with "187s left". Chained GPU waits need launch_detached/dispatch.sh, which strip it. Re-launched the sweep by hand at 07:08 via launch_detached; it was refused by both backends (/data/tmp/ub10_sweep_rerun.log). D1.0 attempt 3 = ERROR, a lost download after 1.49 GPU-h (2103829). Next GPU slot: probe `colab run` first.
+- **11-12 08:45 JACK J1: no runner path for a multi-hour CPU spec.** `gate_cpu_child` refuses every `cpu<48h` spec as "the detached lane" — even when the runner itself was started by `launch_detached.sh` (which already meters it per heartbeat); re-budgeted as `cpu<2h`, a spec with no recorded duration is projected at its full child timeout (54000 s for 3 seeds) and refused against 48206 s remaining. LF.04 (~4-5 h real) is registered and smoke-tested but cannot get a verdict through either lane. Also 08:05: `colab --auth adc run --gpu T4` hello-world still 503 at /tun/m/assign; plain `colab run` (no --auth adc) asks for an interactive OAuth code.
 
 ## DONE (kept one day)
 

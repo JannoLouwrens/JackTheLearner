@@ -338,3 +338,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   the UB.10 sweep waiter died on an inherited JACK_ITER_DEADLINE; re-launched via launch_detached and refused by both backends:
   Kaggle W45 quota spent, Colab GPU assign returns 503 (INBOX). Served: 3 (a seat won by a race, not assumed) and 4 (two must-fail
   controls run and failing).
+
+- 2026-11-12 ~08:45 UTC JACK J1. LF.04 built and registered (7446b86): learner vs his own frozen twin, 15 lives, seeds 100-102, both
+  must-fail controls; N, gate and margin rule committed (1e1dc3e) before the learner's later pilot lives existed; MARGIN_S 272.812 from
+  twin rows only. Pilot s90: frozen twins lengthen 338 -> ~580 s on exploration decay alone (statue 600); the learner reached ~599 s by
+  life 4, then COLLAPSED (119-400 s, late third 269 vs early 470) -> forecasts FAIL; death cause now recorded per life. Registered run
+  refused by the CPU gate in both lanes (cpu<48h never admitted; cpu<2h no-history estimate 54000 s > 48206 s left) -> INBOX.
+  Colab GPU still 503. Served: 1 (does living teach him — first test on the whole creature) and 4 (a gate that can fail, and the
+  pilot says it will; the collapse is the next thing to fix, not to file).
