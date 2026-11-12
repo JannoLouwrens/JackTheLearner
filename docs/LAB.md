@@ -164,3 +164,18 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   collision artefact of the world, not terrain. NOT yet shown: the contact normal at a stall (next: drive the plinth
   across poolwall2 and log poolwall contact frame normals). Repair to race, World-side: walls raised to a real lip
   vs floor cut (no plane over the pool) - PG specs move, so register before touching playground.py.
+  **The pool lip is a DRIVE TRAP, not a snag (11-12 ~18:30 J1, `experiments/pool_lip_contact.py`, seed 90, 40 dec).**
+  Driving the plinth straight at each pool wall with W0's own full push: it stalls 0.55-1.27 m in (N/W/diag/obj1
+  crossings) while the open-floor control runs +7.20 m. Every pool contact has a VERTICAL normal (foot resting on the
+  wall's top face, coplanar with the floor) - no edge catch; and the drive gate is ON 100% of substeps at the stall. The
+  cause is `playground.WaterVolume.apply` (playground.py:656): `xfrc_applied[bid][:3] = drag` OVERWRITES the drive that
+  `W0.decide` set one line earlier (w0.py:362-364), and `in_pool` inflates the pool footprint by the body's sphere
+  radius (plinth 0.227, pole 0.099) with `z - r < 0`, so a body standing on DRY floor beside the wall is "in water":
+  drive erased, 131 N buoyancy held on. He cannot leave - pushed back north 20 decisions, still at (2.60,-0.62).
+  Counterfactuals (in-probe patch, no certificate moved): water forces OFF -> the 4 crossings run 4.03/5.18/5.12/5.89 m
+  straight over the "pool" on the floor plane (no pit, confirmed dynamically); water forces ADDED to the drive -> 3.84/
+  5.17/5.20/4.89 m. The pole (W0 as built) is trapped too: ends wet on all 4 crossings, 1.14-1.46 m. Food obj1
+  (1.51,-0.73) lies INSIDE the plinth's wet band (y < -0.608): one of W0's three foods is a starvation trap. Also
+  latent: W0.decide clears only xfrc[:2], so buoyancy z persists after a body leaves the band (moot while it cannot).
+  Repair, World-side, ~18 specs read WaterVolume (PG.2, PS.01, NE.01, LF.01, ...): (a) water forces must ADD to
+  xfrc and be cleared each decision - a bug, fixed not raced; (b) pit vs no-pool vs raised lip - raced. Register first.

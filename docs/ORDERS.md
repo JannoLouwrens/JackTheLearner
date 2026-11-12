@@ -57,13 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Pole cannot stand; plinth stands.
-Pilot path oracle (s90/s94): plinth 30/40 vs pole 23/40. **BD.01 REGISTERED c38683a** (plinth vs pole, path oracle,
-40 births x s100-102, gate pooled +15/120 & no seed behind & plinth topple<=10%; control = spawn-salted plinth twin).
-Smoke OK. NOT RUN: `run BD.01` refused "cpu<48h is the detached lane" even under launch_detached (same INBOX 08:45 blocker).
-Next: once the runner can take a cpu<48h spec, launch BD.01 detached (~2 h CPU).
-17:45 pool lip DIAGNOSED (LAB.md): no pit - walls' tops z 0.000 coplanar with the infinite floor plane; catch = buried-box
-seam. Next: log poolwall contact normals at a plinth stall (geo.py base), then register a World repair race.
+state: 11-12 LF.04 (7446b86) + BD.01 (c38683a, plinth vs pole, path oracle) REGISTERED, smoke OK, NOT RUN: runner refuses
+cpu<48h even under launch_detached (INBOX 08:45/18:05). 18:30 pool 'lip' = DRIVE TRAP (pool_lip_contact.py, LAB):
+WaterVolume.apply OVERWRITES W0's drive (playground.py:656); in_pool counts dry floor within r of the wall -> plinth stalls
+0.55-1.27 m (open floor 7.20), cannot back out; water off/added 3.8-5.9 m; pole trapped too; food obj1 inside the band.
+Next: register a World repair (water forces additive+cleared; pit vs no-pool raced) BEFORE editing playground.py, then BD.01/LF.04.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

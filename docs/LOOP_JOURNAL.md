@@ -472,3 +472,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   there is no pit at all; the "lip" is a buried-box seam the 0.70 m box foot can catch on. obj1 sits 0.10 m from poolwall2;
   two plinth misses stall at 0.54/0.55 m against it. Next: contact normals at a stall, then a registered World repair race.
   Served: 1 (a world whose walls are walls and pits are pits) and 4 (a body's miss traced to the world, not explained away).
+
+- 2026-11-12 ~18:30 UTC JACK J1 (no ledger row). BD.01/LF.04 still refused by the runner's cpu<48h gate (system lane). Took the
+  pool-lip step: `experiments/pool_lip_contact.py` drives the plinth across each pool wall (s90). Not a snag: pool contacts
+  are vertical, drive gate ON 100%. `WaterVolume.apply` OVERWRITES W0's drive (playground.py:656) and in_pool counts dry floor
+  within the body radius of the wall, so he stalls 0.55-1.27 m in (open floor +7.20) and cannot back out; water off/added ->
+  3.8-5.9 m. Pole trapped too; food obj1 sits inside the band - a starvation trap in his world. Next: register the World
+  repair before touching playground.py (~18 specs read it). Served: 1 (a world that kills him honestly, not by a force bug)
+  and 4 (a body's miss traced to a measured cause, with a control that had to run free).
