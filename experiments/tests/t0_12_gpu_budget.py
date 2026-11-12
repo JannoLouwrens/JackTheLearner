@@ -26,6 +26,8 @@ Properties, each independently checkable:
      the hours, and the job ids are recoverable by the recorder
      (`gpu.drain_job_ids()`), so the ledger and the receipt log share a join
      key instead of being reconciled by timestamp arithmetic.
+ 12. A kernel Kaggle never ran (push refused on stdout, status 404) fails
+     over inside 5 minutes and bills zero (S2, 2026-11-12).
 
 Uses a temporary budget file; must never touch the real accounting.
 
@@ -697,6 +699,85 @@ def _probe_concurrent(make, td: Path) -> dict:
     }
 
 
+class _FakeClockTime(_NoSleepTime):
+    """`time` facade whose clock advances only by `sleep` — the no-session
+    probe is about WHEN the poller gives up, so the clock is the input."""
+
+    def __init__(self):
+        self.now = time.time()
+
+    def time(self):
+        return self.now
+
+    def sleep(self, s):
+        self.now += s
+
+
+def _prefix_poll(kid, timeout_s, t_open):
+    """The `run_on_kaggle` poll loop EXACTLY as it stood before 2026-11-12:
+    stdout only, so a 404 (on stderr) reads as "queued" to the timeout."""
+    deadline = gpu.time.time() + timeout_s
+    status = "queued"
+    while gpu.time.time() < deadline:
+        gpu.time.sleep(20)
+        _, s_out, _ = gpu._run([gpu.KAGGLE, "kernels", "status", kid], 120)
+        low = s_out.lower()
+        if "complete" in low:
+            status = "complete"; break
+        if "error" in low or "cancel" in low:
+            status = "error"; break
+    return status, gpu.time.time() - t_open, ""
+
+
+_QUOTA_REFUSAL = "Kernel push error: Maximum weekly GPU quota of 30.00 hours reached."
+_STATUS_404 = ("404 Client Error: Not Found for url: https://api.kaggle.com/v1/"
+               "kernels.KernelsApiService/GetKernelSessionStatus")
+
+
+def _probe_nosession(prefix: bool = False) -> dict:
+    """S2 (2026-11-12): drive the SHIPPED `run_on_kaggle` against the two
+    answers Kaggle actually gave for T1.14's phantom kernels — a push refused
+    on stdout with rc=0, and a status call that 404s on stderr forever. Before
+    the fix both polled "queued" to the timeout and billed 1.17 h and 1.84 h.
+    `prefix=True` swaps in the pre-fix push check and poll loop (the control)."""
+    def _cli(push_out):
+        def _fn(cmd, timeout):
+            if "status" in cmd:
+                return 1, "", _STATUS_404
+            if "push" in cmd:
+                return 0, push_out, ""
+            return 0, "", ""
+        return _fn
+
+    real = (gpu._run, gpu.subprocess, gpu.time, gpu._kaggle_poll, gpu._push_refused)
+    out = {}
+    try:
+        gpu.subprocess = _FakeSubprocess()
+        if prefix:
+            gpu._kaggle_poll = _prefix_poll
+            gpu._push_refused = lambda rc, o: rc != 0
+        with tempfile.TemporaryDirectory() as sd:
+            script = Path(sd) / "job.py"
+            script.write_text("print('stub')\n")
+            for name, push_out in (("404", "Kernel version 1 successfully pushed."),
+                                   ("refused", _QUOTA_REFUSAL)):
+                clock = _FakeClockTime()
+                gpu.time, gpu._run = clock, _cli(push_out)
+                t0 = clock.now
+                res = gpu.run_on_kaggle(script, timeout_s=1800)
+                out[name] = (res, clock.now - t0)
+    finally:
+        (gpu._run, gpu.subprocess, gpu.time, gpu._kaggle_poll, gpu._push_refused) = real
+    r404, waited = out["404"]
+    rref, _ = out["refused"]
+    return {
+        "nosession_fails_inside_5min": (not r404.ok) and waited <= 330.0,
+        "nosession_charges_zero": r404.charge_seconds == 0.0,
+        "push_refusal_fails_at_once": (not rref.ok) and rref.charge_seconds == 0.0
+                                      and "quota" in rref.message,
+    }
+
+
 def _experiment(seed: int) -> dict:
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "budget.json"
@@ -706,6 +787,7 @@ def _experiment(seed: int) -> dict:
                                  Path(td) / "submit_receipts.jsonl"))
         out.update(_probe_receipt(gpu.submit, Budget, Path(td) / "receipt"))
         out.update(_probe_reattach())
+        out.update(_probe_nosession())
         out.update(_probe_concurrent(Budget, Path(td)))
         return out
 
@@ -785,6 +867,7 @@ def _control(seed: int) -> dict:
                                  Path(td) / "submit_receipts.jsonl"))
         out.update(_probe_receipt(_prefix_submit, Budget, Path(td) / "receipt"))
         out.update(_probe_reattach_prefix())
+        out.update(_probe_nosession(prefix=True))
         out.update(_probe_concurrent(_ClobberBudget, Path(td)))
         return out
 
@@ -836,6 +919,13 @@ def _check(m: dict, c: dict) -> bool:
         and m["reattach_missing_log_falls_back_upper_bound"]
         and m["fresh_bills_poll_window"]
     )
+    # Property 12 (S2): a kernel Kaggle never ran fails over inside 5 min and
+    # bills nothing; the pre-fix push check + poll loop must fail all three.
+    nosession_ok = (m["nosession_fails_inside_5min"] and m["nosession_charges_zero"]
+                    and m["push_refusal_fails_at_once"])
+    nosession_detected = ((not c["nosession_fails_inside_5min"])
+                          and (not c["nosession_charges_zero"])
+                          and (not c["push_refusal_fails_at_once"]))
     # Property 10: a stale writer cannot erase another process's charges, and
     # idempotency is judged against the file.
     concurrent_ok = (
@@ -905,7 +995,7 @@ def _check(m: dict, c: dict) -> bool:
         and (not c["concurrent_idempotency_reads_disk"])
     )
     return (experiment_ok and billing_ok and receipt_ok and reattach_ok
-            and concurrent_ok
+            and concurrent_ok and nosession_ok and nosession_detected
             and isolation_detected and billing_detected and receipt_detected
             and reattach_detected and concurrent_detected)
 

@@ -416,14 +416,18 @@
     },
     "jannolouwrens/jack-ladder-1794429036": {
       "backend": "kaggle",
-      "hours": 1.1691,
+      "hours": 0.0,
       "ok": false,
+      "refund_reason": "S2 2026-11-12: kernel never existed on Kaggle (status 404 throughout, absent from kernels list); push was refused on stdout with rc=0 - probe push same day answered \"Kernel push error: Maximum weekly GPU quota of 30.00 hours reached.\" (account shared with next-l1-icsi-*)",
+      "refunded_hours": 1.1691,
       "week": "2026-W45"
     },
     "jannolouwrens/jack-ladder-1794442969": {
       "backend": "kaggle",
-      "hours": 1.8378,
+      "hours": 0.0,
       "ok": false,
+      "refund_reason": "S2 2026-11-12: kernel never existed on Kaggle (status 404 throughout, absent from kernels list); push was refused on stdout with rc=0 - probe push same day answered \"Kernel push error: Maximum weekly GPU quota of 30.00 hours reached.\" (account shared with next-l1-icsi-*)",
+      "refunded_hours": 1.8378,
       "week": "2026-W45"
     },
     "ladder-1786478893": {
@@ -737,7 +741,7 @@
     },
     "2026-W45": {
       "colab": 0.6504,
-      "kaggle_failed": 3.0069
+      "kaggle_failed": 0.0
     }
   }
 }

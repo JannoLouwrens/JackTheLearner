@@ -635,6 +635,30 @@ class Budget:
             os.replace(tmp, self.path)
         return True
 
+    def refund(self, job_id: str, reason: str) -> bool:
+        """Zero the charge of a job that never ran remotely, keeping why.
+
+        `charge` never lowers a bill; this exists for one case only — compute
+        that provably did not exist (S2: a Kaggle push refused on stdout,
+        polled as "queued" and billed its whole timeout). The record keeps
+        the hours it carried as `refunded_hours`. Returns True if it refunded.
+        """
+        lock_path = self.path.with_suffix(self.path.suffix + ".lock")
+        with open(lock_path, "w") as lockf:
+            fcntl.flock(lockf.fileno(), fcntl.LOCK_EX)
+            self.data = self._load()
+            rec = self.data["charged_jobs"].get(job_id)
+            if rec is None or "refunded_hours" in rec:
+                return False
+            key = rec["backend"] + ("" if rec.get("ok", True) else FAILED_SUFFIX)
+            wk = self.data["weeks"].setdefault(rec["week"], {})
+            wk[key] = round(wk.get(key, 0.0) - float(rec["hours"]), 4)
+            rec.update(refunded_hours=rec["hours"], hours=0.0, refund_reason=reason)
+            tmp = self.path.with_suffix(self.path.suffix + ".tmp")
+            tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
+            os.replace(tmp, self.path)
+        return True
+
     def afford(self, backend: str, est_hours: float) -> bool:
         return self.remaining(backend) >= est_hours
 
@@ -890,6 +914,45 @@ def reattach_code_check(slug: str, local_sha: Optional[str],
     return "mismatch", info
 
 
+NOSESSION_S = 300.0
+
+
+def _push_refused(rc: int, out: str) -> bool:
+    return rc != 0 or "error" in out.lower()
+
+
+def _kaggle_poll(kid: str, timeout_s: float, t_open: float) -> tuple[str, float, str]:
+    """Poll `kernels status` to a terminal state -> (status, billable_s, note).
+
+    A status call that fails (rc != 0, "404 Client Error" — Kaggle's answer
+    for a kernel that does not exist, written to STDERR) for NOSESSION_S in a
+    row ends the poll, so `submit` fails over in minutes instead of polling
+    blind to the full timeout (S2: 3.01 h billed for two such kernels). If
+    Kaggle never once answered for the kernel it never had a session: bill 0.
+    Otherwise bill up to the last answer.
+    """
+    deadline = time.time() + timeout_s
+    seen_at, fail_since, note = None, None, ""
+    while time.time() < deadline:
+        time.sleep(20)
+        rc, s_out, s_err = _run([KAGGLE, "kernels", "status", kid], 120)
+        if rc != 0 or "404 client error" in (s_out + s_err).lower():
+            fail_since = fail_since or time.time()
+            note = " ".join((s_err or s_out).split())[:200]
+            if time.time() - fail_since >= NOSESSION_S:
+                if seen_at is None:
+                    return "nosession", 0.0, note
+                return "status-failed", seen_at - t_open, note
+            continue
+        fail_since, seen_at = None, time.time()
+        low = s_out.lower()
+        if "complete" in low:
+            return "complete", time.time() - t_open, ""
+        if "error" in low or "cancel" in low:
+            return "error", time.time() - t_open, ""
+    return "queued", time.time() - t_open, note
+
+
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   fetch: Optional[list[str]] = None,
                   journal: Optional[Path] = None) -> JobResult:
@@ -993,11 +1056,16 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     if not reuse:
         rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work),
                              "--accelerator", "nvidiaTeslaT4"], 300)
-        if rc != 0:
-            # A push that never landed ran nothing. Bill zero, not the 300 s the
-            # CLI may have spent failing.
+        said = " ".join((out + " " + err).split())[:400]
+        print(f"kaggle push {job_id}: rc={rc} {said}", file=sys.stderr, flush=True)
+        # S2 (2026-11-12): the CLI refuses a push on STDOUT with rc=0 —
+        # "Kernel push error: Maximum weekly GPU quota of 30.00 hours reached."
+        # (the account is shared with another project). Read as success, two
+        # T1.14 kernels that never existed polled "queued" for 3.01 h and were
+        # billed all of it. A push that never landed ran nothing: bill zero.
+        if _push_refused(rc, out):
             return JobResult("kaggle", False, out, err, time.time() - t0,
-                             message=f"push failed: {err.strip()[:200]}",
+                             message=f"push failed: {said[:300]}",
                              job_id=job_id, billable_s=0.0)
 
     # The metered window opens when the kernel exists on Kaggle and closes when
@@ -1008,17 +1076,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     # kernel ran whether or not anyone here was watching.
     t_meter_open = t0 if reuse else time.time()
 
-    deadline = time.time() + timeout_s
-    status = "queued"
-    while time.time() < deadline:
-        time.sleep(20)
-        _, s_out, _ = _run([KAGGLE, "kernels", "status", f"{username}/{slug}"], 120)
-        low = s_out.lower()
-        if "complete" in low:
-            status = "complete"; break
-        if "error" in low or "cancel" in low:
-            status = "error"; break
-    billable_s = time.time() - t_meter_open
+    status, billable_s, poll_note = _kaggle_poll(job_id, timeout_s, t_meter_open)
 
     # An errored kernel still leaves a console log, and on a reattach that log
     # is the only honest meter (below) — so fetch output for any terminal
@@ -1050,7 +1108,8 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   file=sys.stderr, flush=True)
 
     return JobResult("kaggle", status == "complete", k_out, k_err, time.time() - t0,
-                     artifacts, "", "" if status == "complete" else f"status={status}",
+                     artifacts, "", "" if status == "complete" else
+                     f"status={status}" + (f" ({poll_note})" if poll_note else ""),
                      job_id=job_id, log_path=log_path, billable_s=billable_s)
 
 

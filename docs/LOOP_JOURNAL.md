@@ -300,3 +300,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   arm (a) cannot harden the venue alone (afell 1.0 at every window down to 1.25 ms, logreg and MLP); arm (c) sd=3 puts
   afell at 0.864/0.834, inside [0.80, 0.95]. Next: (c) into ub_10 + seed-90 GPU pilot of A0 for the vision marginal.
   Served: 3 (the one-brain contest raced on a venue that can discriminate, not assumed) and 4 (a gate that can fire).
+
+- 2026-11-12 ~03:00 UTC SYSTEM S2. Kaggle "no session" = the shared account's 30 h weekly GPU quota is spent; the
+  CLI says so on stdout with rc=0, which gpu.py read as a successful push, then polled a nonexistent kernel to the
+  full timeout (3.01 h billed for two T1.14 kernels). Now: push refusal fails over in seconds at 0 h, status 404
+  fails over in 5 min at 0 h, push output always logged; T0.12 property 12 with the pre-fix loop as control;
+  3.01 h refunded. Local budget cannot see the other project's spend — every Kaggle push fails over to Colab
+  until Kaggle's week resets. Served: 5 (cheaper loop) and 6 (free compute not wasted).

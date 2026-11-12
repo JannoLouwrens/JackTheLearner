@@ -177,7 +177,11 @@ Kaggle says — quota, concurrency, or something else.
 serves: M3/M4 (every GPU order) · philosophy 5 (cheaper, truer), 6.
 **done when:** a test feeds the poller a 404 and sees failover inside 5 min
 with zero charge; the cause of today's no-session is written in `state:`.
-state: open — not started.
+state: DONE at COMMIT. Cause: the account's 30.00 h weekly GPU quota was spent (shared with next-l1-icsi-*);
+the CLI refuses on STDOUT with rc=0 ("Kernel push error: Maximum weekly GPU quota of 30.00 hours reached.",
+probe push 2026-11-12), so both T1.14 kernels never existed (404, absent from `kernels list`). Fix: push
+refusal → fail at once, bill 0, push output always logged; status 404/rc≠0 for 5 min → fail over, 0 if never
+seen. T0.12 PASS with property 12 + pre-fix control. Refunded 3.01 h (1.17+1.84) via `Budget.refund`.
 
 ### S4 — Six standing PASSes are gated on a seed AVERAGE that admits a failing seed
 **Why.** `run worst-seed-audit` (reporting-only, read by nobody for weeks):
