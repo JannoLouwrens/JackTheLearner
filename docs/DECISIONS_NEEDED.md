@@ -198,6 +198,8 @@ cover **floors** on existing checkers as well as repairs to them. No new
 decision entry is needed and no `decide_by` moves. Full finding:
 `docs/OVERSIGHT.md` RANK 2, 125th audit.
 
+ANSWERED D35 — resolved — lift condition met (LF.03 PASS), discharged, 2026-11-12 by the Director; record in docs/DECISIONS_RESOLVED.md.
+
 ## D33 — The world-edit design has lost three consecutive Sunday FULLs, an armed default already ordered it FIRST, and this morning I put two more repairs behind it. Is the Review capable of producing this at all? (2026-09-20, Review, FULL)
 
 **THE FACT, and it is about this desk rather than about the ladder.** `D21` was
@@ -739,6 +741,8 @@ is a threshold edit, and (ii) additionally stales every certificate citing
 
 ---
 
+ANSWERED D39 — resolved by armed default, fired, 2026-11-12 by the Director; record in docs/DECISIONS_RESOLVED.md.
+
 ## D40 — `D30`'s recommended repair has been "the owner's to rule at any time" for 18 days inside a closed entry, where nothing can make it answerable. The builder is now 51 slots dark, 73% of the pool is another tenant's, and ~28.9 GPU-hours expire today. (2026-10-03, Review, DAILY)
 
 > **A NOTE ON THIS HEADING, because it is evidence and not housekeeping.** It
@@ -865,6 +869,8 @@ UTC is **not** folded in here: it is a separate defect with a separate repair,
 and bundling it would let one ruling disguise two.
 
 ---
+
+ANSWERED D40 — resolved as superseded by the owner ruling of 2026-11-11, 2026-11-12 by the Director; record in docs/DECISIONS_RESOLVED.md.
 
 ## D40 — EVIDENCE ADDENDUM, 2026-10-07 06:37 UTC (overseer, 144th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS the attribution shares this entry and `D30`'s standing report are argued on: the instrument that measures them is blind to a blackout while the blackout is happening, and its error direction is to blame the builder.
 

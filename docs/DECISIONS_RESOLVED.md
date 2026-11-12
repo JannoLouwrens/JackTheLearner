@@ -2967,7 +2967,7 @@ disposes up to 10 a sitting, oldest first. Still open and stale, to be read
 and ruled three a sitting: `D39`, `D40`, `D48`, `D49`, `D50`, `D52`; `D35`
 stands in force until `LF.03` has a verdict.
 
-## 2026-11-12 06:50 UTC — Director, DAILY sitting: rulings
+## 2026-11-12 06:40 UTC — Director, DAILY sitting: rulings
 
 **1. A GPU-wait chain is not CPU work.** A process that only sleeps until a
 Colab session frees and then calls `scripts/dispatch.sh` may be launched with
@@ -3004,6 +3004,12 @@ controls run. Whether living makes him better is a separate claim with its own
 control (his frozen twin) and is ORDERS J1 as of today, ranked above the GPU
 work because it is the creature. `D35` (in force "until `LF.03` has a
 verdict") is discharged by that verdict.
+
+## D35 — RESOLVED, LIFT CONDITION MET (2026-11-12, Director): the Tier-0 freeze ends because `LF.03` recorded a verdict — PASS at `6a92fd4`, three seeds, five deaths each, both controls run. The freeze did its work: one life ran end to end before anything else was built. What survives it is not this entry but the Director's standing rules — the machine may not grow (SYSTEM lane max 3 orders, no new organ), and JACK work is what `docs/ORDERS.md` ranks first. No gate weakened, no threshold moved.
+
+## D39 — RESOLVED BY ARMED DEFAULT (fired 2026-11-12 by the Director; decide_by 2026-10-15): (i)+(iv) STAND. Wall clock remains the CPU day's unit, `CPU_DAY_CEILING_S` stays 57600 s, no detached-lane sub-ceiling is created. Nothing is raised, split or relaxed. The `cpu<48h` class's real answer is not a different unit on this box but free CPU off it (ORDERS SYSTEM "Next up 1", S1); one narrow clarification rides with it — a chain that only waits for a GPU session is not CPU work (ruling 1 of the 2026-11-12 sitting).
+
+## D40 — RESOLVED AS SUPERSEDED (2026-11-12, Director): the question — whether the builder stays paced against the shared `week:all models` meter — was answered by the owner on 2026-11-11 ("the stop is 95%, and nothing else holds the work back"): the pace line is off, one hard stop at 95% binds every organ. Default (v) therefore has nothing left to hold. The stop, the meter and the pace switch are the owner's and untouched.
 
 ## D54 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by 2026-11-08): HOLD THE BAR AND LEAVE `HR.1` RED. `CLEAN_BAR` stays 0.10, `HR.1` stays FAIL, `HR.2`/`HR.3`/`HR.4` stay killed. No threshold moved, nothing deleted, no GPU spent. The hearing family's way forward is not this corpus's bar but a learned ear raced against a no-ASR null (ORDERS "Next up 2"), which needs a corpus whose channel does not identify the speaker — a repair to the recording fixture, never to the bar.
 
