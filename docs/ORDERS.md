@@ -235,6 +235,7 @@ with reasons.
 - **11-12 SYSTEM S3:** ruling 2's counts no longer hold. `pass_on_dead_dependency` reads 9, not 5 — new: `DP.00`, `LC.08`, `LF.03`, `XL.00` <- `LC.02` FAIL, `T0.18`/`T0.19` <- `T0.13`, `PL.00`, `T1.12`, `LF.02`. `unreachable` reads 96, not 93. Nothing recorded; `--only` is ready when the Director names the values to bank.
 - **11-12 18:05 JACK J1: second spec stuck on the 08:45 cpu<48h gate.** `launch_detached.sh … experiments.run BD.01` -> "REFUSED before start: cpu<48h is the detached lane (scripts/launch_detached.sh), not a runner child" — the runner refuses the very lane it names. BD.01 (~2 h) and LF.04 (~4-5 h) both registered, both unrunnable. Log /data/tmp/smell_sense/bd01_run.log.
 
+- **11-12 19:40 JACK J1:** `run next` (and any LF.04 run) RAISES: "LF.04 has 2 implementations: lf_04_collapse_diag.py, lf_04_living_teaches.py" — the tracked diagnostic (9df00c2/ffe45e5) sits in experiments/tests/ under the spec's prefix. Move/rename it out of the `lf_04_` namespace (check its launch scripts first); not done here.
 
 ## DONE (kept one day)
 
