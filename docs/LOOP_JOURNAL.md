@@ -373,3 +373,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   PASSes (LC.02, LC.08, LF.03; 0.78 CPU-h) that the CPU gate cannot re-buy today. Selftest: "regress" == cores.lc_update bit-exact on
   loss and weights over 5 steps; "awr" differs (the control fires). Next: re-register LF.04 with an AWR learner arm and a matched twin.
   Served: 3 (the fix enters as a raced challenger, default unchanged) and 1 (the path to him learning without wrecking himself).
+
+- 2026-11-12 ~11:45 UTC LAB (no ledger row). Challenger for the curriculum: WEANING — born beside ready floor food, birth radius widens
+  x1.5 per fed life, mother leaves at 8,000 decisions (experiments/wean_pilot.py; W0.spawn_sampler, nothing in him touched). Seed 90,
+  wm-latent+AWR, 13,000 decisions/arm: nursed ate 1,1,1,0,0 while nursed (born 0.12-0.55 m: fed; 1.07 m and 1.64 m: missed); once births
+  were uniform nursed 0 meals = null 0 = decoy-nursed control 0. DEAD at this dose: the meals were contact at birth, not approach.
+  Cause measured after: rays leave at z 0.70 m, floor food tops out at 0.33 m - 0 of 584 legal poses see it; no smell, no x,y in W0's
+  senses. He cannot perceive food before touching it, so LF.04 cannot be won by foraging until the World gives food a sense. Served: 1, 3, 5.

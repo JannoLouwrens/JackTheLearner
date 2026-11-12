@@ -40,3 +40,33 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   ring should be a non-commutative register, then ME.8 / LF.02 with the ring
   in place of the GRU. Serves philosophy 3 (a seat raced, biology as oracle)
   and 4 (two controls that must fail).
+- 2026-11-12 · **Curriculum — weaning** (no seat yet; ORDERS J5's hand-staged
+  arm; null = "dropped into W0") · **DEAD at this dose** · `experiments/wean_pilot.py`.
+  **Bet:** (1) the mother (a spawn rule around him, never his actions) bears
+  each body within r of a ready floor food; a meal widens r ×1.5, a hungry life
+  narrows it; after 8,000 decisions she leaves (uniform spawn, as W0). (2) It
+  might beat the null because J1 found 1 meal in 12 lives — nothing in his
+  life says food ends hunger, so AWR teaches stillness. (3) Killed by: no more
+  meals than BOTH the null and a decoy-nursed twin once births are uniform.
+  **Pilot** (seed 90, wm-latent + AWR, 13,000 decisions/arm, 16 min): nursing
+  lives ate **1, 1, 1, 0, 0** at birth distances 0.55 / 0.51 / 0.12 / 1.07 /
+  1.64 m; null 0 meals, decoy 0. **Weaned window (≈2,950 decisions, uniform
+  births): nursed 0 meals, null 0, decoy 0** — kill clause met. Life spans
+  unchanged (nursed 356–461 s, null 353–471 s).
+  **Why — measured after the kill (seed-90 world, all 584 legal poses): he
+  cannot perceive floor food before he touches it.** His 16 rays leave
+  horizontally at z = 0.70 m; floor food tops out at ~0.33 m (centre 0.19,
+  half-size 0.14). Rays that hit a floor food: **0 of 584 poses**, at every
+  distance band (0–0.75 m: 0/17; 0.75–1.5: 0/50; 1.5–3: 0/171; 3–6: 0/346).
+  W0's observation has no smell channel, and proprio carries no x, y. So the
+  three meals were contact at birth, the first birth past 1 m missed (closest
+  0.70 m), and no curriculum, core or policy loss can teach approach to a
+  thing no sense reports. `LF.04`'s margin needs foraging; in W0 as built
+  foraging is blind bumping.
+  **Next (a World repair, not a curriculum):** give food a distance sense that
+  he must learn to use — smell (`experiments/odour.py`, Smell seat VACANT,
+  `SM.02`) into `W0.observe`, or rays that can look down — raced, then re-run
+  this pilot unchanged: script, decoy control and kill clause stand. Not
+  ruled out by one seed and 5 nursing lives: a slower staircase, a longer dose.
+  Serves philosophy 3 (the curriculum raced with a control, not assumed) and
+  5 (his curriculum matters as much as he does).
