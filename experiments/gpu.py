@@ -136,6 +136,53 @@ PER_JOB_OVERRUN_MARGIN = 0.25
 # remote path. Verified 2026-08-04.
 COLAB_CWD = "/content"
 
+# S5 (2026-11-12): three finished Colab runs (T1.08 x2, T1.14) lost their result
+# when the kept-session DOWNLOAD lost the VM; the stdout had arrived. So a
+# fetching job is wrapped: whatever happens, its `finally` prints each fetch file
+# as one `JACKFILE <basename> <b64 zlib>` line, and a failed download is
+# recovered from that line. `colab run` executes the file as ONE kernel cell, so
+# atexit never fires — try/finally around exec() is the hook that does.
+CARRY_MAX_BYTES = 4_000_000
+STDOUT_DIR = Path("/data/jack-logs/gpu_stdout")
+
+
+def carry_wrap(script: Path, remote_paths: list[str]) -> Path:
+    """A copy of `script` that prints every fetch file to stdout on the way out."""
+    out = script.with_name(script.stem + "_carry.py")
+    out.write_text(
+        f"_JX_BODY = {script.read_text()!r}\n"
+        "try:\n    exec(compile(_JX_BODY, 'job.py', 'exec'))\nfinally:\n"
+        "    import base64 as _b, os as _o, zlib as _z\n"
+        f"    for _p in {list(remote_paths)!r}:\n"
+        f"        if _o.path.isfile(_p) and _o.path.getsize(_p) <= {CARRY_MAX_BYTES}:\n"
+        "            print('JACKFILE', _o.path.basename(_p), _b.b64encode(_z.compress("
+        "open(_p, 'rb').read())).decode(), flush=True)\n")
+    return out
+
+
+def carried_file(stdout: str, key: str) -> Optional[bytes]:
+    """The bytes of the LAST `JACKFILE <key> ...` line in stdout, or None."""
+    import base64, zlib
+    for line in reversed((stdout or "").splitlines()):
+        parts = line.split(" ")
+        if len(parts) == 3 and parts[0] == "JACKFILE" and parts[1] == key:
+            try:
+                return zlib.decompress(base64.b64decode(parts[2]))
+            except Exception:
+                return None
+    return None
+
+
+def colab_busy() -> str:
+    """The server's live Colab sessions, "; "-joined; "" when none (or unreadable).
+    Colab runs ONE session per account: a second job beside a live one dies in
+    seconds as a bare "exit 1" (UB.10 pilot beside T1.14, 2026-11-12)."""
+    try:
+        rc, out, _ = _run([COLAB, "--auth", "adc", "sessions"], 60)
+    except Exception:
+        return ""
+    return "; ".join(ln.strip() for ln in out.splitlines() if "| Hardware:" in ln)
+
 # Kaggle assigns a Tesla P100 (sm_60) regardless of the accelerator requested —
 # nvidiaTeslaT4 and gpuT4x2 both return P100 — while its preinstalled
 # torch 2.10+cu128 ships kernels for sm_70 and above only. Every CUDA op then
@@ -673,7 +720,14 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
     """Provision a fresh Colab VM, run the script, retrieve files, release the VM."""
     t0 = time.time()
     session = f"ladder-{int(t0)}"
+    busy = colab_busy()
+    if busy:
+        return JobResult("colab", False, message=f"session busy — refused before "
+                         f"running: one session per account, server holds {busy[:300]}")
     keep = bool(fetch)
+    if keep:
+        script = carry_wrap(script, [r if r.startswith("/") else f"{COLAB_CWD}/{r}"
+                                     for r in fetch])
     cmd = [COLAB, "--auth", "adc", "run", "--gpu", gpu,
            "--timeout", str(timeout_s - 60), "-s", session]
     if keep:
@@ -708,6 +762,11 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
                 # nothing after a failover -- the job contract held right up until
                 # the moment it mattered.
                 artifacts[key] = str(local)
+            elif carried_file(out, key) is not None:
+                local.write_bytes(carried_file(out, key))
+                artifacts[key] = str(local)
+                fetch_errors.append(f"{remote_abs}: download rc={drc}, "
+                                    f"RECOVERED from stdout JACKFILE")
             else:
                 # A silent download failure is indistinguishable from a job that
                 # never wrote its artifact, and the two need opposite fixes. On
@@ -727,7 +786,7 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
             gpu_name = line.strip()[:80]
             break
 
-    msg = "" if rc == 0 else f"exit {rc}"
+    msg = "" if rc == 0 else f"exit {rc}: stderr {(err or '').strip()[-300:]!r}"
     if fetch_errors:
         msg = (msg + " | " if msg else "") + "fetch failed: " + "; ".join(fetch_errors)
     # A run that produced no stdout at all did not execute the job body: the
@@ -1313,6 +1372,15 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
                             "pid": os.getpid()}, journal)
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
                else run_on_kaggle(script, timeout_s, fetch, journal))
+        stdout_path = ""
+        try:  # the WHOLE stdout, before anything can fail; best-effort
+            STDOUT_DIR.mkdir(parents=True, exist_ok=True)
+            stem = f"{STDOUT_DIR}/{os.environ.get('JACK_SPEC_ID') or 'nospec'}-{attempt_id}"
+            Path(stem + ".stdout").write_text(res.stdout or "")
+            Path(stem + ".stderr").write_text(res.stderr or "")
+            stdout_path = stem + ".stdout"
+        except Exception:
+            pass
         _record_submission({"phase": "result", "attempt_id": attempt_id,
                             "ts": time.time(), "backend": backend,
                             "job_id": res.job_id, "ok": bool(res.ok),
@@ -1320,7 +1388,9 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
                             "charge_seconds": res.charge_seconds,
                             "spec": os.environ.get("JACK_SPEC_ID", ""),
                             "spec_phase": os.environ.get("JACK_SPEC_PHASE", ""),
-                            "message": (res.message or "")[:500]}, journal)
+                            "message": (res.message or "")[:500],
+                            "stderr_tail": (res.stderr or "")[-500:],
+                            "stdout_path": stdout_path}, journal)
         if res.job_id:
             # Failed attempts append too: a crashed kernel still spent quota,
             # and the record should name every remote job the run paid for.

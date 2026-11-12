@@ -28,6 +28,10 @@ Properties, each independently checkable:
      key instead of being reconciled by timestamp arithmetic.
  12. A kernel Kaggle never ran (push refused on stdout, status 404) fails
      over inside 5 minutes and bills zero (S2, 2026-11-12).
+ 13. A Colab run whose artifact DOWNLOAD fails still delivers the artifact,
+     carried on stdout by the job's own `finally` (S5, 2026-11-12).
+ 14. A Colab dispatch while the server holds a session is refused before
+     running, with "session busy" as the reason (S5).
 
 Uses a temporary budget file; must never touch the real accounting.
 
@@ -778,6 +782,61 @@ def _probe_nosession(prefix: bool = False) -> dict:
     }
 
 
+_SESSION_LINE = "[ladder-1] https://x | Hardware: T4 | Variant: GPU"
+
+
+def _probe_colab_delivery(prefix: bool = False) -> dict:
+    """S5: drive the SHIPPED `run_on_colab`. `colab run` really executes the
+    (wrapped) job with this box's python; the download then fails as the lost
+    VM did for T1.14. A second dispatch meets a server that holds a session.
+    `prefix=True` removes the carry wrapper and the busy check (the control)."""
+    import subprocess as _subp
+    import sys as _sys
+    real = (gpu._run, gpu.carry_wrap, gpu.colab_busy)
+    calls: list = []
+    held = {"sessions": ""}
+
+    def _fake(cmd, timeout):
+        calls.append(cmd)
+        if "sessions" in cmd:
+            return 0, held["sessions"] or "[colab] No active sessions found on server.", ""
+        if "run" in cmd:
+            p = _subp.run([_sys.executable, cmd[-1]], capture_output=True, text=True,
+                          timeout=120)
+            return p.returncode, p.stdout, p.stderr
+        if "download" in cmd:
+            return 1, "", "Error: runtime disconnected"
+        return 0, "", ""
+
+    try:
+        gpu._run = _fake
+        if prefix:
+            gpu.carry_wrap = lambda script, paths: script
+            gpu.colab_busy = lambda: ""
+        with tempfile.TemporaryDirectory(dir="/data") as sd:
+            target = Path(sd) / "out.json"
+            script = Path(sd) / "job.py"
+            script.write_text("import json, sys\n"
+                              f"json.dump({{'answer': 42}}, open({str(target)!r}, 'w'))\n"
+                              "print('done')\nsys.exit(0)\n")
+            res = gpu.run_on_colab(script, timeout_s=300, fetch=[str(target)])
+            try:
+                got = gpu.result_json(res, "out.json")
+            except Exception:
+                got = None
+            held["sessions"], n0 = _SESSION_LINE, len(calls)
+            busy = gpu.run_on_colab(script, timeout_s=300, fetch=[str(target)])
+            ran = any("run" in c for c in calls[n0:])
+    finally:
+        gpu._run, gpu.carry_wrap, gpu.colab_busy = real
+    return {
+        "lost_download_delivers": bool(res.ok) and got == {"answer": 42},
+        "lost_download_says_recovered": "RECOVERED" in (res.message or ""),
+        "busy_session_refused": (not busy.ok) and (not ran)
+                                and "session busy" in (busy.message or ""),
+    }
+
+
 def _experiment(seed: int) -> dict:
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "budget.json"
@@ -788,6 +847,7 @@ def _experiment(seed: int) -> dict:
         out.update(_probe_receipt(gpu.submit, Budget, Path(td) / "receipt"))
         out.update(_probe_reattach())
         out.update(_probe_nosession())
+        out.update(_probe_colab_delivery())
         out.update(_probe_concurrent(Budget, Path(td)))
         return out
 
@@ -868,6 +928,7 @@ def _control(seed: int) -> dict:
         out.update(_probe_receipt(_prefix_submit, Budget, Path(td) / "receipt"))
         out.update(_probe_reattach_prefix())
         out.update(_probe_nosession(prefix=True))
+        out.update(_probe_colab_delivery(prefix=True))
         out.update(_probe_concurrent(_ClobberBudget, Path(td)))
         return out
 
@@ -926,6 +987,13 @@ def _check(m: dict, c: dict) -> bool:
     nosession_detected = ((not c["nosession_fails_inside_5min"])
                           and (not c["nosession_charges_zero"])
                           and (not c["push_refusal_fails_at_once"]))
+    # Properties 13-14 (S5): a lost download still delivers; a busy session
+    # refuses before running. The pre-S5 run_on_colab must fail all three.
+    delivery_ok = (m["lost_download_delivers"] and m["lost_download_says_recovered"]
+                   and m["busy_session_refused"])
+    delivery_detected = ((not c["lost_download_delivers"])
+                         and (not c["lost_download_says_recovered"])
+                         and (not c["busy_session_refused"]))
     # Property 10: a stale writer cannot erase another process's charges, and
     # idempotency is judged against the file.
     concurrent_ok = (
@@ -996,6 +1064,7 @@ def _check(m: dict, c: dict) -> bool:
     )
     return (experiment_ok and billing_ok and receipt_ok and reattach_ok
             and concurrent_ok and nosession_ok and nosession_detected
+            and delivery_ok and delivery_detected
             and isolation_detected and billing_detected and receipt_detected
             and reattach_detected and concurrent_detected)
 
