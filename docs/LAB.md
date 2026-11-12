@@ -135,3 +135,12 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   pole; read topple rate + goto_true fed per birth, then re-run the smell oracle v3 on the winner.
   Biology's answer is both a stable base and a learned righting reflex - race, don't assume.
   smell_oracle v3 s93 hung in its wait loop (no line 15:22-16:25, peers 3-6 min); killed pid 2230940.
+  **Plinth race (11-12 16:47 J1, `PROBE_BODY=plinth` body_probe = W0.BAL arm C, parked by D9 since 09-01 and
+  measured upright 1.000 vs 0.002 then).** goto_true, 20 births, adhesion-0.5 arm vs the pole's same arm: toppled
+  0/20 and 1/20 (pole 19/20, 18/20) but **fed 5/20 s90, 10/20 s94 (pole 11/20, 12/20) - standing is solved, feeding
+  is worse.** Every plinth miss (25/25) is stuck UPRIGHT against world geometry, none closer than 1.49 m to food:
+  partners poolwall 17, ramp 6, stair 5, seesaw 3, ladder 1, fulcrum 1. The lying pole was dragged over/around these.
+  So under a standing base the ~1/2 cap is a straight-line instrument in a walled world: a perfect map is not a
+  perfect path. Next: (a) a detouring oracle (grid path around walls) to price the plinth's true ceiling; (b) a
+  base that stands AND climbs a ramp/stair lip (smaller plinth / tripod) - raced, pole stays the default.
+  Logs /data/tmp/smell_sense/plinth/s90.log, s94.log.

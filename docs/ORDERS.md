@@ -58,10 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Smell DEAD at 13k and 52k.
-16:50 body_probe (80 births classified, s90/s94): HE CANNOT STAND. No drive: topples by ~dec 10 in 18/20 births. goto_true
-toppled 19/20, 18/20; every miss toppled, never righted (fed 11-15/20). Push point site/foot 9-13/20, drive 0.5x 7/5, 0.25x 2/1: DEAD.
-Righting from lying: 0/81 postures, <=1/150 random sequences. Oracle v3 s93 hung in its wait loop; killed. Details LAB.md.
-Next: race a standing body as a NEW playground option (default = today's pole): flat foot / tripod / low COM; topple rate + body_probe fed.
+16:50 body_probe: the pole CANNOT STAND (no-drive topple ~dec 10 in 18/20; goto_true toppled 19/20,18/20, fed 11/20,12/20).
+16:47 PLINTH (W0.BAL arm C, `PROBE_BODY=plinth`): toppled 0/20,1/20 but fed 5/20 s90, 10/20 s94 - WORSE. All 25 misses
+stuck upright on geometry (poolwall 17, ramp 6, stair 5, seesaw 3), d_min >= 1.49 m. Straight-line map != path. LAB.md.
+Next: detouring goto oracle (grid path) on pole vs plinth to price each body's ceiling; then a base that stands AND climbs.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

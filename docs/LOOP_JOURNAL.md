@@ -443,3 +443,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   is a topple never righted. Raced the drive (push point site/foot, 0.5x, 0.25x via a probe shim, w0.py untouched): none helps; a weaker
   drive feeds less. Righting from lying is a <1% needle. Killed my lane's hung oracle v3 s93 (pid 2230940, 60 min silent).
   Next: race a passively standing base. Served: 1 (a body that can stand in the world that feeds him) and 4 (failure localised, not softened).
+
+- 2026-11-12 ~16:50 UTC JACK J1 (no ledger row). Short slot. Found the standing-base race already pre-registered and parked
+  (W0.BAL arm C plinth, D9 09-01) and ran it on today's instrument: `PROBE_BODY=plinth` body_probe, goto_true, 20 births
+  x s90/s94. Topple 0/20, 1/20 (pole 19/20, 18/20) but fed 5/20, 10/20 (pole 11/20, 12/20): every miss is stuck UPRIGHT
+  against pool walls/ramps/stairs/seesaw, never within 1.49 m of food. Standing is solved; a straight-line perfect map is
+  not a path in a walled world, and the dragged pole slid past what a standing base jams on. Next: detouring oracle per body.
+  Served: 1 (a body that can stand in the world that feeds him) and 3 (a body choice raced, not assumed, and the
+  parked winner did not win).
