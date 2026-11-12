@@ -8496,6 +8496,32 @@ EXPANSION: list[Spec] = [
                "time - a FAIL reads 'not shown at this power'. Policy is a "
                "privileged instrument, never part of him. ~2 h CPU, detached."),
 
+    Spec("W0.PL", 2, "The pool's water does not trap a body on dry floor",
+         hypothesis="With the shipped playground.Water.apply, pole and "
+                    "plinth driven straight across the W0 pool (4 crossings "
+                    "built from the pool's geometry, 40 decisions, full gated "
+                    "drive) travel >= 0.90 of their water-forces-off travel "
+                    "on every valid crossing of world seeds 100, 101, 102.",
+         falsified_by="Any valid crossing on any seed or body below ratio "
+                      "0.90; or the frozen 11-12 apply (the control) also "
+                      "clearing 0.90.",
+         null_baseline="The same body, crossing and seed with water forces "
+                       "removed (xfrc restored after apply).",
+         metric="min_ratio_shipped_over_off", budget=Budget.CPU,
+         seeds=3, depends_on=[],
+         control="MUST FAIL, RUN through the same gate_fires(): a frozen copy "
+                 "of Water.apply at fe9c917, which overwrites the drive and "
+                 "counts dry floor within r of the pool as water (seed-90 "
+                 "diagnosis: plinth 0.55-1.27 m vs 4.03-5.89 m water-off).",
+         kills="Racing any learner (LF.04, BD.01, J5 staging) in a W0 whose "
+               "pool band stalls the drive; food obj1 sits inside the band.",
+         notes="REGISTERED 2026-11-12 (ORDERS.md J1) BEFORE the repair to "
+               "playground.py; expected to FAIL on today's code until the "
+               "repair lands (additive forces, no water where the floor holds "
+               "the body). Crossings with water-off travel < 2.0 m are "
+               "excluded and reported; < 3 valid per body is VOID. Pit vs "
+               "surface-only pool is a separate raced world-design spec."),
+
     Spec("SO.01", 2, "Jack can be watched: a third-person stream exists and costs what we say it costs",
          hypothesis="A third-person view of a running life renders at >=5 fps at "
                     "320x240 on this box and is deliverable to the owner without "

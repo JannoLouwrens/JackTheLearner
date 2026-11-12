@@ -57,11 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 LF.04 (7446b86) + BD.01 (c38683a, plinth vs pole, path oracle) REGISTERED, smoke OK, NOT RUN: runner refuses
-cpu<48h even under launch_detached (INBOX 08:45/18:05). 18:30 pool 'lip' = DRIVE TRAP (pool_lip_contact.py, LAB):
-WaterVolume.apply OVERWRITES W0's drive (playground.py:656); in_pool counts dry floor within r of the wall -> plinth stalls
-0.55-1.27 m (open floor 7.20), cannot back out; water off/added 3.8-5.9 m; pole trapped too; food obj1 inside the band.
-Next: register a World repair (water forces additive+cleared; pit vs no-pool raced) BEFORE editing playground.py, then BD.01/LF.04.
+state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refuses cpu<48h (INBOX 08:45/18:05).
+Pool = DRIVE TRAP (fe9c917): Water.apply overwrites W0's drive + counts dry floor within r as water. 19:xx REGISTERED
+W0.PL (cpu<10min, tests/w0_pl_pool_is_not_a_trap.py): shipped/off travel >=0.90 every crossing, s100-102, pole+plinth;
+control = frozen fe9c917 apply, smoke s90 ratio 0.15 (must fail: OK). Not run (shipped==legacy today -> FAIL).
+Next: repair Water.apply (additive; no water where the floor holds the body), PG.2 still green, run W0.PL, then BD.01/LF.04.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

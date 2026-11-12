@@ -480,3 +480,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   3.8-5.9 m. Pole trapped too; food obj1 sits inside the band - a starvation trap in his world. Next: register the World
   repair before touching playground.py (~18 specs read it). Served: 1 (a world that kills him honestly, not by a force bug)
   and 4 (a body's miss traced to a measured cause, with a control that had to run free).
+
+- 2026-11-12 ~19:30 UTC JACK J1 (no ledger row). Short slot. Registered the World repair before touching playground.py:
+  `W0.PL` (cpu<10min, tests/w0_pl_pool_is_not_a_trap.py) - pole and plinth driven across the pool's 4 sides (built from the
+  pool's geometry, any seed) must travel >= 0.90 of their water-off travel on every crossing, seeds 100-102; control = frozen
+  fe9c917 Water.apply. Smoke on pilot seed 90: legacy ratio 0.15 (pole 1.17-1.26 m vs 4.05-4.69; plinth 0.79-0.83 vs
+  3.93-5.52), so the control fails as it must. Not run: shipped == legacy until the repair lands. Next: the repair, PG.2, run.
+  Served: 1 (a world that kills him honestly, not by a force bug) and 4 (the fix's gate declared before the fix, control run).
