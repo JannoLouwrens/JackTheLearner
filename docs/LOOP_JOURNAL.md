@@ -393,3 +393,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   0 of 2 seeds -> at most 1 of 3 -> KILLED (LAB). All meals in lives born <=3.4 m from food: seeing food on ~12% of poses did not yield
   approach. s93 left running for the record. Next: race smell (odour.py) as a gradient sense with a shuffled-odour control.
   Served: 3/4 (a world repair raced against a must-fail control, killed by a rule fixed before the seeds were read) and 1.
+
+- 2026-11-12 ~13:45 UTC JACK J1 (no ledger row). food_sense s93 for the record: level 3 / split 3 / blind 3. Raced SMELL as a world repair
+  (experiments/smell_sense.py: odour.py O1 gradient from ready food, bilateral nose, new 12-wide modality, per-process patch, nothing stales).
+  Probe s90: reading never zero, bilateral points to food on 99.5% of 611 poses. Meals/13k s91-93: smell 1/5/2, shuffled-odour control 2/8/0,
+  level 1/2/3 -> KILLED by the rule committed before the seeds were read (d4a7a2e). The sense is there; the learner does not use it at this dose.
+  Declared and launched a 52k dose test (/data/tmp/smell_sense/dose.log). GPU: Colab still 503 at GPU assign 13:10, Kaggle week spent.
+  Served: 1 (a world where what keeps him alive can be sensed) and 3/4 (raced with a must-fail control; killed by a pre-declared rule, not filed).

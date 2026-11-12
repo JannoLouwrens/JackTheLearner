@@ -57,11 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102, MARGIN_S 272.812), NOT RUN (CPU gate, INBOX 08:45). AWR challenger d5d26b0 ends the
-collapse but no arm beats the frozen twin (~578 s): he cannot SEE floor food (LAB 02ecf94). Eye-height race (food_sense.py): split sees food on 76/611 poses.
-12:44 split KILLED by the declared rule: meals/13k s91 level 1 split 1 blind 2; s92 level 2 split 2 blind 2 (0 of 2 wins; all meals in births <=3.4 m).
-s93 still running for the record (/data/tmp/food_sense/run3.log; tally: python /data/tmp/food_sense/tally.py) — append it to LAB, it cannot change the verdict.
-Next: race SMELL (experiments/odour.py OdourSensor, a gradient) as a per-process W0 observe patch, same pilot + a must-fail shuffled-odour control.
+state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). AWR ends the collapse; no arm beats the twin.
+World repairs for food sense, both KILLED by rules declared pre-read (meals/13k, s91-93): eye heights split 1/2/3 vs blind 2/2/3 (e38780a);
+SMELL (experiments/smell_sense.py, O1 gradient, new 12-wide modality) 1/5/2 vs shuffled 2/8/0 vs level 1/2/3 - though bilateral smell points
+to food on 99.5% of poses. Learner is now the bottleneck. 52k DOSE test running (pid 2203663, /data/tmp/smell_sense/dose.log, ~2 h; rule in module
+docstring; tally dose_tally.py credits a life to the half its END falls in). Next: harvest; if dead, diagnose why AWR ignores a perfect gradient.
 
 ### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
 **Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate

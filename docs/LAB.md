@@ -92,5 +92,12 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   floor food on 99.5 % of poses. Control `smell_shuffled` = same field read at
   a random legal pose each decision. s91-93 x 2 arms running
   (/data/tmp/smell_sense/run.log); null = level above (6). Kill rule in module.
+  **KILLED 11-12 13:34 by the declared rule:** meals/13k smell 1/5/2 (8),
+  smell_shuffled 2/8/0 (10), level 1/2/3 (6) - smell out-eats both on 0 of 3
+  seeds; d_mean no lower than shuffled's. A sense that points at food 99.5 %
+  of the time went unused at this dose: the learner, not the world, is now
+  the bottleneck (~1 meal per 2 lives is too little signal). Dose test
+  declared and launched 13:40: same arms, 52k decisions, second-half meals
+  vs shuffled (/data/tmp/smell_sense/dose.log, tally dose_tally.py).
   Serves philosophy 3 (the curriculum raced with a control, not assumed) and
   5 (his curriculum matters as much as he does).
