@@ -59,8 +59,8 @@ serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Smell KILLED at 13k (d4a7a2e).
 Oracle v2 harvested (24 ep x 250 dec, s91/92/93): goto_true .46/.54/.38, nose_yaw .08/.08/.38, nose_blind .13/.04/.21, klinotaxis .25/.17/.21,
-random .08/.33/(s93 pending in oracle2.jsonl). No smell-follower beats random on every seed; a PERFECT map feeds <1/2 of births (v2 apparatus caps it).
-v3 (ready-food births) auto-launches when oracle2 exits: waiter /data/tmp/smell_sense/oracle3_after.sh -> oracle3.log. Dose test (dose.log) ~1 h left.
+random .08/.33/.04. No smell-follower beats random on every seed; a PERFECT map feeds <1/2 of births (v2 apparatus caps it).
+v3 (ready-food births) RUNNING since 14:51 (pid 2230940, /data/tmp/smell_sense/oracle3.log, ~40 min). Dose test (dose.log) ~1 h left.
 Next: harvest oracle3 + dose; if v3 goto_true stays <~0.8 the body (topples on side, hands jam) is the next World repair, before LF.04.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
