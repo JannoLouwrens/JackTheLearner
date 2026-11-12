@@ -420,6 +420,12 @@
       "ok": false,
       "week": "2026-W45"
     },
+    "jannolouwrens/jack-ladder-1794442969": {
+      "backend": "kaggle",
+      "hours": 1.8378,
+      "ok": false,
+      "week": "2026-W45"
+    },
     "ladder-1786478893": {
       "backend": "colab",
       "hours": 0.9914,
@@ -567,6 +573,15 @@
       "billed_hours": 0.6504,
       "est_hours": 0.5,
       "job_id": "ladder-1794433248",
+      "kind": "per_job",
+      "week": "2026-W45"
+    },
+    {
+      "at": "2026-11-12T02:13:10",
+      "backend": "kaggle",
+      "billed_hours": 1.8378,
+      "est_hours": 0.9,
+      "job_id": "jannolouwrens/jack-ladder-1794442969",
       "kind": "per_job",
       "week": "2026-W45"
     }
@@ -722,7 +737,7 @@
     },
     "2026-W45": {
       "colab": 0.6504,
-      "kaggle_failed": 1.1691
+      "kaggle_failed": 3.0069
     }
   }
 }

@@ -2974,3 +2974,21 @@ stands in force until `LF.03` has a verdict.
 ## D53 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by passed): ADOPT (c)'s DIAGNOSIS AND GIVE IT A LIVE OWNER. `SO.07`'s VOID is re-filed as a WORLD/BODY capability defect (the body cannot reach privileged food on 2 of 3 recording worlds), one class with `ba03-null-saturates-the-horizon` and `SH.01`'s `ORACLE_CANNOT`. `REF_MIN_FED` is byte-unmoved at 0.8, nothing re-based, `SO.07` stays VOID. Live owner: ORDERS J6 (the red W0 world rules), in place of the long-closed `D21`.
 
 ## D55 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by passed): THROTTLE THE INTAKE AT THE DESK, AND BUY NO EXTRA CLOCK. Adopted in a stricter form than written: since the 2026-11-11 reorganisation `docs/REVIEW_QUEUE.md` takes NO new row at all, and the Director disposes up to 10 old rows a sitting. No timeout raised by this firing, the usage gate untouched.
+
+## LG.13 — WINNER — meaning-mass
+meaning-mass beats topk-softmax by 4.13 sigma and clears the null by 56.00 sigma.
+
+metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
+
+> **screen rationale** (why these arms are observables, not learners): The arms are OBSERVABLES, not learners, and the rig makes that structural rather than asserted: every arm is a deterministic function of ONE already-cached verdict table (1588 frozen log-probabilities, content-hash keyed) that no arm can perturb, and no arm has a parameter fitted to anything. A low score is therefore a property of the RULE and not evidence that its run broke, which is exactly the case `validity` mode would mis-VOID. The gate is unmoved at 3 sigma and MIN_FINISHERS still applies. Declared in advance and not expected to bind: LG.10's published incumbent reads match 0.60-0.78 against a 0.18 null, so the mode is on the record before any arm number exists rather than switched on after a VOID.
+
+| arm | mean | sigma over null | gate | admitted | cost |
+|---|---|---|---|---|---|
+| meaning-mass | 1.000 | 56.00 | pass | — | 1.0 |
+| topk-softmax | 0.850 | 18.13 | pass | — | 2.0 |
+| softmax-full | 0.694 | 8.59 | pass | — | 1.0 |
+| topk-uniform | 0.661 | 32.52 | pass | — | 1.0 |
+| control:state-free-prompt | 0.064 | -5.02 | FAIL | — | 1.0 |
+
+*admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
+
