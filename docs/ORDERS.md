@@ -60,11 +60,11 @@ an unproven floor.
 serves: M3/M4 (unblocks `D1.1`, `T2.01`) · philosophy 4.
 **done when:** `T1.14` has a verdict from a run that includes the seed-ignoring
 arm; `T1.08` still FAIL with 7.0 unmoved.
-state: 2026-11-12 attempt 2 (5 arms, e659d10) = ERROR: Kaggle quota spent -> colab ran 66 min (1.10 GPU-h), exit 0,
-but the t108.json download lost the VM and the ledger kept only 400 chars of stdout -> nothing recoverable.
-8b7d33f: harvest now reads the job's JACKRESULT stdout line (t108 ruling 9d) + writes full stdout to
-/data/jack-logs/gpu_stdout/; mock-verified; bars unmoved. Re-dispatched 8b7d33f, watcher pid 1921114, log
-/data/tmp/dispatch_t1_14.log. Next: harvest. ignored_flagged 0 -> make the job deterministic, not the bar. Then step 4.
+state: DONE at 73665ca — T1.14 attempt 3 PASS (colab T4): SNR 51.89, seed noise 0.00511; seed-ignoring arm (3 runs
+on seed 0) spread 0.0, ignored_flagged 1. Artifact download failed again; recovered via 8b7d33f's JACKRESULT line.
+T1.08 still FAIL, 7.0 unmoved. Step 3 was done in e659d10. Step 4 NOT done: `ratchets record` rewrites every
+counter at once (8 moved, incl. review_queue_violations 0->73), so recording would bless movers that aren't J1's;
+pass_on_dead_dependency reads 5 live. Director/system: record it or add a per-counter record.
 
 ### J2 — Settle who controls the body (`D1.1`), then re-run "he can move" (`T2.01`)
 **Why.** `D1.0` spent 17.6 GPU-hours: small plastic head **506**, MLP 415, the
@@ -80,11 +80,11 @@ as challengers. Then run `T2.01` under the seated controller, bars unmoved.
 serves: M3, M4 · philosophy 3 (raced, not assumed), standing objective 3 (GPU).
 **done when:** `D1.1` has a verdict, the control seat names its holder by
 verdict, `T2.01` has an attempt dated after it.
-state: 2026-11-12 107b162 — no new id needed: D1.0's 2026-09-12 amended gate IS "D1.1" (paired own-twin G1
-+ raw-margin G1b, control vs frozen twin prior; random recorded only). Its replay of attempt 2 → VOID
-(SPLIT-PENDING): aprime +3.37σ on eval, d_mlp higher final-third train reward. Submission now 13 units
-(arm×seed + SB3 ref; aprime/d_mlp Colab-first, 57M arms Kaggle-first, 25.05 h worst), resume cache by
-impl_sha. Next: when T1.14 re-run has a PASS row → `scripts/dispatch.sh D1.0`; Kaggle 404s (S2) cost one unit.
+state: 2026-11-12 T1.14 PASS -> D1.0 dispatch CHAINED behind the UB.10 pilot (Colab is single-session):
+/data/tmp/ub10_pilot_then_d10.log runs `scripts/dispatch.sh D1.0 --projected-hours 25.05` when the pilot exits
+(pre-flight checked CLEAR at 05:13). Kaggle's week is spent, so the 57M Kaggle-first units will fail over or fail;
+the resume cache keeps finished units. Next: read that log; dispatch log /data/tmp/dispatch_d1_0.log; once a
+D1.0 watcher is alive, never run a second Colab job beside it.
 
 ### J4 — Run the one-brain contest (`UB.10`) on the idle GPU
 **Why.** The fusion bakeoff — six arms including A5, experts + router ("if A5
@@ -95,11 +95,11 @@ the bar); pilot on CPU; dispatch to **Colab**. Does not depend on `T1.14`.
 serves: M3 · philosophy 3 · standing objective 3.
 **done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
-state: 2026-11-12 VOID cause = venue saturated (A0 vslot=afell=1.0); 09-29 ruling orders bakeoff (a) audio window
-vs (c) per-sense noise, criterion: a marginal <=0.95, XNOR intact. CPU audio-side probe (experiments/ub10_venue_probe.py,
-seed 90 only, 1600 eps, 0 XNOR mismatches): (a) FAILS alone — afell 1.0 at every window 100ms..1.25ms (logreg+MLP).
-(c) noise sd=3 at the full window: afell 0.864/0.834, inside [0.80,0.95]; sd=2 is on the edge (0.960/0.944). Next: implement (c) in
-ub_10 (matched sd on both senses) + a seed-90 GPU pilot of A0 reading vslot too (no GL here) → Colab; guard must clear by itself.
+state: 2026-11-12 7897355: venue (c) implemented, VENUE_NOISE_SD 2.5 (sd 3 measured 0.819 on a 2nd draw = on the
+0.80 floor; 2.5 -> 0.919/0.878). Guard strengthened: a different venue's row is no evidence, so run() refuses until
+a seed-90 pilot at this venue records A0 marginals; fixtures red-first OK. Pilot on Colab since 05:15 (chain log
+/data/tmp/ub10_pilot_then_d10.log; "PILOT EXIT"). Next: cp /data/ub10_venue_pilot.json experiments/ and commit with
+A0 vslot/afell + per-arm eligibility; if A0 clears the union bound and arms eligible -> `scripts/dispatch.sh UB.10`.
 
 ### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
 **Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —
@@ -228,6 +228,8 @@ clean first; the 22:43 clerk sweep should do that — check `regate.log`).
 
 - LAB 2026-11-11: run `WM.02` (`python -m experiments.run WM.02`, CPU, ~25 min, 5 seeds; gates in the spec docstring, do not touch them) — ring-memory challenger for the VACANT Working-memory seat; pilot 1.00/1.00/1.00/0.87/1.00 vs GRU 0.55. PASS → seat it BY VERDICT in CHAMPIONS; FAIL → mark it DEAD in `docs/LAB.md`.
 - JACK 2026-11-12: Colab kept-session downloads keep losing the run VM (T1.08 09-14 x2, T1.14 11-12: 1.10 GPU-h lost) and gpu.py stores only a 400-char stdout tail on failure; every JACK_OUT spec but t108_probe/T1.14 lacks the JACKRESULT fallback. Proposal: gpu.submit persists full stdout per job and parses JACKRESULT generically.
+
+- JACK 2026-11-12: Colab allows ONE session per account: the UB.10 pilot exited 1 in 4 s at 05:11 while T1.14 held it, and run_on_colab drops the colab CLI's stderr (message = "exit 1" only). Proposal: say "session busy" and record stderr; dispatch_guard should refuse a Colab-first dispatch while a kept session exists (`colab ls`).
 
 ## DONE (kept one day)
 

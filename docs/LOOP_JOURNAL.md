@@ -314,3 +314,12 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   full stdout on /data; mock-verified both branches; bars unmoved. Re-dispatched (watcher 1921114). INBOX: generic fix
   belongs in gpu.submit. Served: 4 (the seed-ignoring control gets a verdict instead of losing its run) and 6 (free
   GPU hours no longer lost to a download step).
+
+- 2026-11-12 ~05:20 UTC JACK J4 + J1 harvest + J2 dispatch. J4: UB.10 venue (c) is in the test (7897355): matched per-sense
+  noise at sd 2.5 (CPU probe, seed 90: sd 3 gave afell 0.819 on a 2nd draw = on the 0.80 floor; 2.5 gave 0.919/0.878).
+  The guard now refuses on a foreign-venue row until a pilot at this venue records A0's marginals (fixtures OK).
+  J1: T1.14 attempt 3 PASS (SNR 51.89; seed-ignoring arm spread 0.0, flagged; recovered from JACKRESULT after a
+  second lost download) -> DONE 73665ca. Colab is one session per account (pilot failed 4 s beside T1.14), so the
+  UB.10 pilot then the D1.0 dispatch run as one chain (/data/tmp/ub10_pilot_then_d10.log). Ratchet record skipped (whole-file).
+  Served: 3 (the one-brain contest and the control seat raced on venues that can discriminate) and 4 (a control
+  demonstrated failing, and a guard that won't clear on another venue's evidence).
