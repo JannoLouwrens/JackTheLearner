@@ -57,12 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 REGISTERED 7446b86 (15 lives, seeds 100-102, MARGIN_S 272.812). NOT RUN: CPU gate admits no lane (INBOX 08:45).
-Collapse = cores.py:542 l_pi unbounded below for adv<0 (|mu| 1.8->19.3). s90 race, last-4 mean/sat: base 263/0.97, tanh 359/0.96, AWR 536/0.00,
-tanh-AWR 503/0.00; none beats frozen twins (~578 s, 1 meal in 12 lives): only foraging clears MARGIN_S.
-11:10 AWR challenger landed as experiments/policy_loss.py lc_update_with(policy_loss="regress"|"awr") — NOT in cores.py (that edit stales
-LC.02/LC.08/LF.03, 0.78 CPU-h, unpayable now); selftest: "regress" bit-exact to lc_update (loss+weights), "awr" differs. Next: re-register
-LF.04 with an AWR learner arm (_Life4 policy_loss, per-process patch of cores.lc_update in step) + matched frozen twin; log meals/life.
+state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102, MARGIN_S 272.812), NOT RUN (CPU gate, INBOX 08:45). AWR challenger d5d26b0 ends the
+collapse but no arm beats the frozen twin (~578 s): he cannot SEE floor food (LAB 02ecf94). 12:20 food_sense.py races eye heights (vision 32 wide,
+w0 untouched): food visible on level 0/611 poses, low 129, split 76; s90 AWR 13k meals level 0, low 0, split 3. split_blind control verified.
+IN FLIGHT: seeds 91-93 x {level, split, split_blind}, 9 runs (/data/tmp/food_sense/run3.log, ~40 min; kill rule in module docstring).
+Next: read RUN3 EXIT, apply the declared rule; PASS -> register the sense as a W0 challenger + LF.04 with AWR+sense arm; KILL -> race smell (odour.py).
 
 ### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
 **Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate

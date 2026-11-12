@@ -68,5 +68,12 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   `SM.02`) into `W0.observe`, or rays that can look down — raced, then re-run
   this pilot unchanged: script, decoy control and kill clause stand. Not
   ruled out by one seed and 5 nursing lives: a slower staircase, a longer dose.
+  **Repair raced (11-12 J1, `experiments/food_sense.py`, w0.py untouched,
+  vision stays 32 wide):** eye heights. Perception over 611 seed-90 legal
+  poses — level 0/611; `low` (16 rays at 0.15 m) 129/611; `split` (8 level +
+  8 low) 76/611; median nearest hit ~2.5 m. AWR pilot s90, 13k decisions:
+  meals level 0, low 0, split 3. Control `split_blind` (rays pass through
+  food) checked blind 76/76. Seeds 91–93 × {level, split, split_blind}
+  running (/data/tmp/food_sense/run3.log); kill rule declared in the module.
   Serves philosophy 3 (the curriculum raced with a control, not assumed) and
   5 (his curriculum matters as much as he does).

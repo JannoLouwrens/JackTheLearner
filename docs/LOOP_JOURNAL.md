@@ -380,3 +380,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   were uniform nursed 0 meals = null 0 = decoy-nursed control 0. DEAD at this dose: the meals were contact at birth, not approach.
   Cause measured after: rays leave at z 0.70 m, floor food tops out at 0.33 m - 0 of 584 legal poses see it; no smell, no x,y in W0's
   senses. He cannot perceive food before touching it, so LF.04 cannot be won by foraging until the World gives food a sense. Served: 1, 3, 5.
+
+- 2026-11-12 ~12:25 UTC JACK J1 (no ledger row). Raced eye heights so floor food can be seen at all (experiments/food_sense.py,
+  vision stays 32 wide, w0.py untouched, nothing stales). Poses where a ray touches floor food, seed 90, 611 legal: level 0, low (rays at
+  0.15 m) 129, split (8 level + 8 low) 76. AWR learner, 13k decisions: meals level 0, low 0, split 3, one seed, so an anecdote. Added a
+  must-fail control split_blind (rays pass through food; blind 76/76, identical 535/535), declared the kill rule, launched s91-93 x 3 arms
+  (/data/tmp/food_sense/run3.log). GPU: Colab still 503 at GPU assign 12:12 (UB.10 sweep relaunch refused), Kaggle week spent; no watcher.
+  Served: 1 (a world where he can perceive what keeps him alive) and 3/4 (the sense is raced against a control that must fail).
