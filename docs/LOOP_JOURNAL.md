@@ -400,3 +400,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   level 1/2/3 -> KILLED by the rule committed before the seeds were read (d4a7a2e). The sense is there; the learner does not use it at this dose.
   Declared and launched a 52k dose test (/data/tmp/smell_sense/dose.log). GPU: Colab still 503 at GPU assign 13:10, Kaggle week spent.
   Served: 1 (a world where what keeps him alive can be sensed) and 3/4 (raced with a must-fail control; killed by a pre-declared rule, not filed).
+
+- 2026-11-12 ~13:50 UTC JACK J1 (no ledger row). Dose test (52k, smell vs shuffled) confirmed alive, ~2 h left. Started the "why does AWR
+  ignore a perfect gradient" diagnosis: found from code that W0.decide applies the drive as a WORLD-frame force while the nose is BODY-frame
+  and proprio has no heading. Smoke (60 dec, s90): yaw std 0.37-1.53 rad, so the left/right->drive map turns under him. Launched
+  experiments/smell_oracle.py detached (scripted oracle_yaw / blind_fixed / klinotaxis / random, 4k dec, s91-93) to tell world from learner.
+  The scripts are instruments, not parts of him. Served: 1 (a body that can act on what it senses) and 4 (a failure diagnosed, not filed).

@@ -58,11 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). AWR ends the collapse; no arm beats the twin.
-World repairs for food sense, both KILLED by rules declared pre-read (meals/13k, s91-93): eye heights split 1/2/3 vs blind 2/2/3 (e38780a);
-SMELL (experiments/smell_sense.py, O1 gradient, new 12-wide modality) 1/5/2 vs shuffled 2/8/0 vs level 1/2/3 - though bilateral smell points
-to food on 99.5% of poses. Learner is now the bottleneck. 52k DOSE test running (pid 2203663, /data/tmp/smell_sense/dose.log, ~2 h; rule in module
-docstring; tally dose_tally.py credits a life to the half its END falls in). Next: harvest; if dead, diagnose why AWR ignores a perfect gradient.
-
+Food-sense world repairs KILLED by pre-declared rules: eye heights (e38780a); SMELL 1/5/2 vs shuffled 2/8/0 vs level 1/2/3 (d4a7a2e) though
+bilateral smell points to food on 99.5% of poses. 52k DOSE test running (/data/tmp/smell_sense/dose.log, launched 13:34, ~2 h; rule in smell_sense docstring).
+Diagnosis launched 13:38: experiments/smell_oracle.py, scripted followers (oracle_yaw/blind_fixed/klinotaxis/random, 4k dec, s91-93,
+/data/tmp/smell_sense/oracle.log). Suspect: the drive is a WORLD-frame force, the nose is BODY-frame, proprio has no heading; yaw moves 0.4-1.5 rad/60 dec. Next: harvest both.
 ### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
 **Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate
 is now trained-vs-own-untrained-twin (the 09-12 amendment — no new id needed).
