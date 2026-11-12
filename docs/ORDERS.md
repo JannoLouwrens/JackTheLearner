@@ -234,6 +234,7 @@ with reasons.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- **OWNER REQUEST 11-12 (via session): a video he can watch.** Make a system order: after a life is lived, write a short watchable video (third-person view of the body in his world, needs/hunger overlaid, phone-playable mp4) to a fixed path under `/data`, refreshed whenever a newer life exists, and say in `docs/PROGRESS.md` where it is. Use `experiments/render.py` (Xvfb + llvmpipe); render OFFLINE from a recorded life, never inside a scored run; low priority CPU, no background service. Show him as he is — no cherry-picked life.
 
 ## DONE (kept one day)
 
