@@ -58,12 +58,12 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 REGISTERED 7446b86 (15 lives, seeds 100-102, MARGIN_S 272.812). NOT RUN: CPU gate admits no lane (INBOX 08:45).
-09:50 collapse traced to cores.py:542 l_pi=||mu-a||^2*adv (unbounded below for adv<0, mu unsquashed): |mu| 1.8->19.3, 100% saturated.
-10:35 RACE on s90, 12 lives each (lf_04_collapse_diag.py variants; /data/tmp/lf04/diag_s90_*.jsonl): last-4-life mean / sat / |mu| =
-base 263 s/0.97/12.4; tanh 359/0.96/0.98 (COLLAPSES too: bounding mu is not enough, the push-away sign is the bug); AWR 536/0.00/0.16;
-tanh-AWR 503/0.00/0.21. AWR fixes the collapse but does NOT beat the frozen twins (~578 s w/o meals; 1 meal in 12 lives): stillness tops out
-near 600 s and only eating can clear MARGIN_S. Next: add policy_loss="awr" to cores.lc_update as a challenger (default unchanged), then race
-it vs base on LF.04 with a matched frozen twin; measure meal rate per life, since the claim needs him to forage.
+Collapse = cores.py:542 l_pi unbounded below for adv<0 (|mu| 1.8->19.3). s90 race, last-4 mean/sat: base 263/0.97, tanh 359/0.96, AWR 536/0.00,
+tanh-AWR 503/0.00; none beats frozen twins (~578 s, 1 meal in 12 lives): only foraging clears MARGIN_S.
+11:10 AWR challenger landed as experiments/policy_loss.py lc_update_with(policy_loss="regress"|"awr") — NOT in cores.py (that edit stales
+LC.02/LC.08/LF.03, 0.78 CPU-h, unpayable now); selftest: "regress" bit-exact to lc_update (loss+weights), "awr" differs. Next: re-register
+LF.04 with an AWR learner arm (_Life4 policy_loss, per-process patch of cores.lc_update in step) + matched frozen twin; log meals/life.
+
 ### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
 **Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate
 is now trained-vs-own-untrained-twin (the 09-12 amendment — no new id needed).
