@@ -324,6 +324,17 @@ leftover_report() {
 card_readable || say "WARNING: THE CARD could not be read from GOAL.md — launching lane ${LANE} with the built-in fallback"
 PROMPT="$(philosophy_card)"$'\n\n'"$(cat "$PROMPT_FILE")"   # $(...) strips the card's trailing newlines
 
+# SLOT LENGTH. 50 minutes for the hourly slot. `gap_fill.sh` (2026-11-12, owner:
+# "close the gap") launches a SHORTER slot when the hourly worker finished early,
+# sized to end before the next :07 launch — so the fill can never make the next
+# lane's slot skip on the lock. A short slot says so, or the worker plans for 50.
+SLOT_MIN="${JACK_SLOT_MIN:-50}"
+case "$SLOT_MIN" in ''|*[!0-9]*) SLOT_MIN=50;; esac
+[ "$SLOT_MIN" -ge 15 ] && [ "$SLOT_MIN" -le 50 ] || SLOT_MIN=50
+if [ "$SLOT_MIN" -lt 50 ]; then
+  PROMPT="$PROMPT"$'\n\n'"**THIS IS A SHORT SLOT: you have ${SLOT_MIN} minutes, not 50, then you are killed.** Pick a step that fits — advance or check one order, launch long work detached, commit early; do not start anything you cannot commit in time."
+fi
+
 run_claude() {
   mark_log            # bound the credit check to THIS run's output
   # JACK_ITER_DEADLINE: epoch seconds after which this iteration is dead (the
@@ -340,8 +351,8 @@ run_claude() {
   nice -n 19 ionice -c3 env TMPDIR=/data/tmp XDG_CACHE_HOME=/data/caches/xdg OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
     PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
     HF_HOME=/data/caches/huggingface \
-    JACK_ITER_DEADLINE=$(( $(date +%s) + 2940 )) \
-    timeout 50m claude -p \
+    JACK_ITER_DEADLINE=$(( $(date +%s) + SLOT_MIN*60 - 60 )) \
+    timeout "${SLOT_MIN}m" claude -p \
       --model "$1" \
       --dangerously-skip-permissions \
       --max-turns 120 \

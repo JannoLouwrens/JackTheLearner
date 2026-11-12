@@ -1764,3 +1764,12 @@ tower so the chat model stays swappable. Continual learning = actor on CPU under
 Finish by appending one line to `docs/LOOP_JOURNAL.md`: what you attempted, the
 number you measured, and what the next iteration should pick up. That file is how
 the next iteration inherits your reasoning.
+
+## Gap fill (2026-11-12)
+
+Cron runs `scripts/gap_fill.sh` at :22 and :37 of every hour. If no worker holds
+the lock it launches one extra **jack-lane** worker with a short slot
+(`JACK_SLOT_MIN`, 27–42 minutes) that is dead by :04, so the hourly :07 launch
+of any lane is never blocked. A worker still running means the fill does
+nothing. Pause file, 95% usage stop, load and disk guards all apply as usual.
+To switch it off: remove the `gap_fill.sh` line from the crontab.
