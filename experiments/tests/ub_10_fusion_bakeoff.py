@@ -393,6 +393,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from pathlib import Path
 
 import numpy as np
@@ -515,17 +516,38 @@ A0_HEADROOM = 0.05           # A0 slot acc must be <= 1.0 - A0_HEADROOM, per see
 # `ub10-part1-premise-false-marginals-are-what-saturate`. `run()` KEEPS REFUSING
 # until that lands: a dispatch under a foreclosed label is a guaranteed rig VOID
 # and the refusal is part of the gate, not a nuisance beside it.
-_BATTERY_REDESIGN_OWED = (
-    "part 1 of 3 — the ordered 'composite / cross-modal-XOR slots'. Its premise "
-    "is FALSE of this venue: `slot` is ALREADY the cross-modal XOR "
-    "(`slot = XNOR(vslot, afell)`, structural in `hns_scene`) and attempt 1 "
-    "measured `uni_slot_dev_max` 0.0, so no modality carries the answer. What "
-    "saturates is the two MARGINALS — A0 read vslot 1.0 and afell 1.0 — and by "
-    "the union bound any f(vslot, afell) is then at >= 1.0 for A0, so the whole "
-    "family of label re-codings is FORECLOSED and cannot restore headroom. The "
-    "repair must cost a marginal its headroom; the candidates are arms and the "
-    "choice is the Review's "
-    "(`ub10-part1-premise-false-marginals-are-what-saturate`).")
+# PART 1 LANDED 2026-11-12 (ORDERS J4): the Review's 2026-09-29 ruling on
+# `ub10-part1-premise-false-marginals-are-what-saturate` ordered a bakeoff over
+# (a) a shorter audio observation window and (c) per-sense nuisance noise at a
+# declared, matched level; criterion: at least one marginal at <= 0.95 with
+# `slot = XNOR(vslot, afell)` intact. The CPU audio-side probe
+# (`experiments/ub10_venue_probe.py`, PILOT seed 90 only, 1600 episodes, 0 XNOR
+# mismatches; c940397) measured: (a) CANNOT do it alone — afell 1.0 at every
+# window from 100 ms down to 1.25 ms, logreg and MLP. (c) at the full window:
+# sd 2.0 -> 0.960/0.944 (edge), sd 2.5 -> 0.919/0.878, sd 3.0 -> 0.864/0.834
+# and 0.861/0.819 on a second noise draw — i.e. sd 3 sits ON the 0.80 learning
+# floor (MARGINAL_FLOOR) and would disqualify arms for a venue reason. sd 2.5
+# is the one level measured inside [0.80, 0.95] on both probes with margin both
+# sides, so arm (c) at VENUE_NOISE_SD = 2.5 is the venue. Declared here, from
+# the seed-90 pilot, BEFORE any registered seed is read; no bar moves
+# (WINNER_GATE, MARGINAL_FLOOR, NULL_GATE, A0_HEADROOM, SWAP_HURT unchanged).
+#
+# MATCHED means: the same sd in units of each sense's OWN train-set standard
+# deviation, per feature — audio's 14 standardised features get N(0, 2.5^2);
+# each vision patch element gets N(0, (2.5 * its train std)^2) (constant
+# pixels have std 0 and get none: they carry nothing to hide). One fixed draw
+# per EPISODE from a seed-keyed stream disjoint from the data-order stream, so
+# noise is part of the observation (the swap ablation moves it with its
+# episode) and every arm sees identical inputs. Vision almost certainly keeps
+# vslot near 1.0 (36x64 redundant pixels average the noise out); the union
+# bound needs only ONE marginal down, and the guard below checks it with a
+# number, not this paragraph.
+VENUE_NOISE_SD = 2.5
+NOISE_STREAM = 104729        # RandomState(seed * NOISE_STREAM + 17)
+# A pilot at THIS venue writes its A0 marginals here (committed by hand with
+# the pilot's numbers); `_assert_venue_not_foreclosed` reads it when the
+# ledger row belongs to a different venue.
+VENUE_PILOT = Path(__file__).resolve().parents[1] / "ub10_venue_pilot.json"
 SWAP_HURT = 0.10             # a sense's swap must cost at least this, somewhere
 SWAP_ROLL = 37               # coprime with 4-per-quad blocks: crosses quads
 DROP_MAX = 0.02              # UB.9's whole-quad drop budget
@@ -627,6 +649,27 @@ def _assert_venue_not_foreclosed() -> None:
         return        # no committed row to replay: nothing positive to refuse on
     if not row:
         return
+    row_venue = float(row.get("metrics", {}).get("venue_noise_sd", 0.0))
+    if row_venue != VENUE_NOISE_SD:
+        # The committed row measured a DIFFERENT venue, so its marginals say
+        # nothing about this one — and "nothing" is not "clear" (LESSONS_CORE
+        # 11). This venue must show its own anchor marginals first: the seed-90
+        # pilot (`... ub_10_fusion_bakeoff pilot`) writes them to VENUE_PILOT.
+        try:
+            pil = json.loads(VENUE_PILOT.read_text())
+        except Exception:
+            pil = None
+        if not pil or float(pil.get("venue_noise_sd", -1)) != VENUE_NOISE_SD:
+            raise SystemExit(
+                "UB.10 REFUSES: the committed row (attempt "
+                f"{row.get('attempt')}) measured venue_noise_sd {row_venue}, "
+                f"this code's venue is {VENUE_NOISE_SD}, and no pilot record at "
+                f"this venue exists ({VENUE_PILOT.name}). Run the seed-90 "
+                "pilot first (`python -m experiments.tests.ub_10_fusion_bakeoff"
+                " pilot`), commit its record, then dispatch. No ledger row is "
+                "written by this refusal.")
+        row = dict(pil, metrics={"marginal_per_arm_per_seed": {
+            "A0": {t: [pil["a0"][t]] for t in ("vslot", "afell")}}})
     marg, prov = _a0_marginals_from_row(row)
     if not marg:
         return
@@ -676,6 +719,14 @@ def _episode_tensors(seed: int):
     mu, sd = Xa[tr].mean(0), Xa[tr].std(0)
     sd[sd < 1e-9] = 1.0
     Xa = (Xa - mu) / sd
+
+    # Part 1's venue (VENUE_NOISE_SD, declared above): matched per-sense noise.
+    if VENUE_NOISE_SD > 0:
+        nr = np.random.RandomState(seed * NOISE_STREAM + 17)
+        Xa = (Xa + VENUE_NOISE_SD * nr.randn(*Xa.shape)).astype(np.float32)
+        psd = patches[tr].std(0)                               # [36,64]
+        patches = (patches + VENUE_NOISE_SD * psd[None]
+                   * nr.randn(*patches.shape)).astype(np.float32)
 
     return {
         "Xv": patches, "Xa": Xa,
@@ -1070,24 +1121,44 @@ import json
 from experiments.tests.ub_10_fusion_bakeoff import remote_run
 out = remote_run(__SEEDS__, recipes=__RECIPES__)
 json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "ub10.json"), "w"))
+print("JACKRESULT " + json.dumps(out), flush=True)
 print("DONE", out["gpu"], flush=True)
 '''
 
 _CACHE: dict = {}
 
 
-def _submit(seeds: list) -> dict:
+def _submit(seeds: list, prefer: str = "kaggle") -> dict:
+    from .t1_14_seed_noise_published import _payload_from_stdout
     rec = {a: list(_recipe_params(SELECTED)[a]) for a in ARMS}
     body = (JOB.replace("__SEEDS__", repr(list(seeds)))
                .replace("__RECIPES__", repr(rec)))
     job = build_job(body)
-    res = submit(job, prefer="kaggle",
+    res = submit(job, prefer=prefer,
                  est_hours=round(0.20 + 0.35 * len(seeds), 2),
                  timeout_s=2400 + 1500 * len(seeds),
                  fetch=["ub10.json"])
+    # Whole stdout to disk before anything can fail (T1.14 attempt 2 lost
+    # 1.10 GPU-h to a Colab artifact download that killed the VM).
+    try:
+        d = Path("/data/jack-logs/gpu_stdout")
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"UB.10-{res.job_id or 'nojob'}.stdout".replace("/", "_")
+         ).write_text(res.stdout or "")
+    except Exception:
+        pass
     if not res.ok:
         raise RuntimeError(f"UB.10 job failed on {res.backend}: {res.message}")
-    out = json.loads(Path(res.artifacts["ub10.json"]).read_text())
+    path = res.artifacts.get("ub10.json")
+    if path:
+        out = json.loads(Path(path).read_text())
+    else:
+        out = _payload_from_stdout(res.stdout)
+        if out is None:
+            raise RuntimeError(
+                f"UB.10: no artifact and no JACKRESULT line from "
+                f"{res.backend}. message={res.message!r}")
+        out["recovered_from"] = "stdout JACKRESULT line"
     out["backend"] = res.backend
     return out
 
@@ -1176,10 +1247,21 @@ def pilot():
     # would read spec:"" (58th audit B4; SM.02's pattern). Name the spend.
     os.environ["JACK_SPEC_ID"] = "UB.10"
     os.environ["JACK_SPEC_PHASE"] = "pilot"
-    out = _submit([PILOT_SEED])
+    # ORDERS GPU routing: jobs <= 2 h go to Colab (Kaggle's week is spent).
+    out = _submit([PILOT_SEED], prefer="colab")
+    Path("/data/ub10_pilot.json").write_text(json.dumps(out))
     print(json.dumps({"widths": out["widths"]}, indent=1))
     for s in out["seeds"]:
         _print_seed_row(s)
+    s0 = out["seeds"][0]
+    rec = {"venue_noise_sd": VENUE_NOISE_SD, "seed": PILOT_SEED,
+           "attempt": "pilot", "ran_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+           "backend": out.get("backend"),
+           "a0": {t: s0["arms"]["A0"]["acc"][t] for t in TASKS},
+           "acc": {a: s0["arms"][a]["acc"] for a in ARMS},
+           "eligible": {a: not _arm_reasons(s0["arms"][a]) for a in ARMS}}
+    VENUE_PILOT.write_text(json.dumps(rec, indent=1) + "\n")
+    print("VENUE PILOT RECORD", json.dumps(rec))
     return out
 
 
@@ -1434,6 +1516,7 @@ def _aggregate() -> dict:
         # is the union bound `_assert_venue_not_foreclosed` refuses on — it is
         # REPORTED here, never gated on: the pre-dispatch refusal is where it
         # belongs, because by the time a row exists the hours are spent.
+        "venue_noise_sd": VENUE_NOISE_SD,
         "marginal_per_arm_per_seed": {
             a: {t: [s["arms"][a]["acc"][t] for s in rows]
                 for t in ("vslot", "afell")} for a in ARMS},
@@ -1545,16 +1628,6 @@ def _check(m: dict, c: dict):
 
 
 def run(ledger: Ledger | None = None):
-    if _BATTERY_REDESIGN_OWED:
-        raise SystemExit(
-            "UB.10 REFUSES: the battery redesign ordered on "
-            "`ub10-seed-fragility-and-saturated-battery` (2026-09-08, DUE "
-            "2026-09-15) is INCOMPLETE. Parts 2 (A0_HEADROOM) and 3 (per-arm "
-            "stability) are implemented and committed; " +
-            _BATTERY_REDESIGN_OWED +
-            " Implement part 1, delete this constant in the same commit, then "
-            "dispatch via scripts/dispatch.sh UB.10. No ledger row is written "
-            "by this refusal.")
     if SELECTED is None:
         raise SystemExit(
             "UB.10 REFUSES: the matched-tuning-budget grid pilot has not "
@@ -1672,33 +1745,75 @@ def _foreclosure_fixture():
     # refusing on an absence — it fires on positive evidence only.
     assert _a0_marginals_from_row({"metrics": {}})[0] == {}
 
-    # (4) The refusal itself, against the committed row. This is the case the
-    #     guard was written for and it must FIRE today.
-    fired = False
+    # (4) The refusals, through the real `_assert_venue_not_foreclosed`, with
+    #     the ledger row and the pilot record patched through `globals()`.
+    #     Patch through `globals()`, NOT through an `import ... as _self`: run
+    #     as `-m experiments.tests.ub_10_fusion_bakeoff` this file is
+    #     `__main__` and the import would bind a SECOND module object, leaving
+    #     the real lookup unpatched — a fixture that silently tests nothing.
+    import tempfile
+    g = globals()
+    real_pilot, real_ledger_path = g["VENUE_PILOT"], Path(__file__)
+    tmp = Path(tempfile.mkdtemp(prefix="ub10fx_"))
+    (tmp / "tests").mkdir()
+
+    def guard_with(row, pilot):
+        (tmp / "ledger.json").write_text(json.dumps(
+            {"results": {"UB.10": row} if row else {}}))
+        pp = tmp / "pilot.json"
+        if pilot is None:
+            pp.unlink(missing_ok=True)
+        else:
+            pp.write_text(json.dumps(pilot))
+        g["VENUE_PILOT"] = pp
+        g["__file__"] = str(tmp / "tests" / "ub_10_fusion_bakeoff.py")
+        try:
+            _assert_venue_not_foreclosed()
+            return None
+        except SystemExit as e:
+            return str(e)
+        finally:
+            g["VENUE_PILOT"], g["__file__"] = real_pilot, str(real_ledger_path)
+
+    # (4a) A row AT this venue with saturated marginals: the case the guard was
+    #      written for. It must FIRE on the union bound.
+    sat = dict(row1, metrics={"venue_noise_sd": VENUE_NOISE_SD,
+                              "marginal_per_arm_per_seed": {"A0": {
+                                  "vslot": [1.0] * 3, "afell": [1.0] * 3}}})
+    msg = guard_with(sat, None)
+    assert msg and "XNOR" in msg and "1.0000" in msg, msg
+    # (4b) The committed attempt-1 row (venue 0.0) with NO pilot at this venue:
+    #      a different venue's row is not evidence of headroom — must FIRE.
+    msg = guard_with(row1, None)
+    assert msg and "no pilot record" in msg, msg
+    # (4c) A pilot record from yet another venue does not count either.
+    msg = guard_with(row1, {"venue_noise_sd": VENUE_NOISE_SD + 1.0,
+                            "a0": {"vslot": 0.9, "afell": 0.9}})
+    assert msg and "no pilot record" in msg, msg
+    # (4d) A pilot AT this venue whose anchor is still saturated: must FIRE on
+    #      the union bound — a pilot is evidence in both directions.
+    msg = guard_with(row1, {"venue_noise_sd": VENUE_NOISE_SD,
+                            "a0": {"vslot": 1.0, "afell": 0.97}})
+    assert msg and "XNOR" in msg and "0.9700" in msg, msg
+    # (5) ...and it must STAND DOWN once a marginal has headroom, so it is a
+    #     guard and not a permanent stop. Same code path, one number moved —
+    #     from the pilot record, and from a venue-matched row.
+    assert guard_with(row1, {"venue_noise_sd": VENUE_NOISE_SD,
+                             "a0": {"vslot": 1.0, "afell": 0.88}}) is None
+    ok_row = dict(sat, metrics=dict(sat["metrics"], marginal_per_arm_per_seed={
+        "A0": {"vslot": [0.90] * 3, "afell": [1.0] * 3}}))
+    assert guard_with(ok_row, None) is None
+    # (6) And against the REAL committed ledger + real pilot path, today: it
+    #     must refuse until this venue's pilot record exists and clears.
     try:
         _assert_venue_not_foreclosed()
+        live = None
     except SystemExit as e:
-        fired = True
-        msg = str(e)
-        assert "XNOR" in msg and "1.0000" in msg, msg
-    assert fired, "the venue guard did not fire on the committed attempt-1 row"
-
-    # (5) ...and it must STAND DOWN once a marginal has headroom, so it is a
-    #     guard and not a permanent stop. Same code path, one number moved.
-    # Patch through `globals()`, NOT through an `import ... as _self`: run as
-    # `-m experiments.tests.ub_10_fusion_bakeoff` this file is `__main__` and
-    # the import would bind a SECOND module object, leaving the real lookup
-    # unpatched — a fixture that silently tests nothing.
-    g = globals()
-    real = g["_a0_marginals_from_row"]
-    try:
-        g["_a0_marginals_from_row"] = lambda row: (
-            {"vslot": 0.90, "afell": 1.0}, "fixture")
-        _assert_venue_not_foreclosed()            # must NOT raise
-    finally:
-        g["_a0_marginals_from_row"] = real
-    print("FORECLOSURE FIXTURE OK (venue guard fires on the committed row, "
-          "stands down at vslot 0.90)")
+        live = str(e)
+    print("live guard today:", "CLEAR" if live is None else live.splitlines()[0])
+    print("FORECLOSURE FIXTURE OK (venue guard fires on a saturated row at "
+          "this venue, on a foreign-venue row without a pilot, on a saturated "
+          "pilot; stands down at afell 0.88 / vslot 0.90)")
 
 
 def pytest_approx(x, tol=1e-9):
