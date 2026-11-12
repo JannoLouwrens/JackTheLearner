@@ -1,0 +1,52 @@
+{
+ "venue_noise_sd": 2.5,
+ "seed": 90,
+ "attempt": "pilot",
+ "ran_at": "2026-11-12T05:21:31",
+ "backend": "colab",
+ "a0": {
+  "slot": 0.6813,
+  "vslot": 0.7562,
+  "afell": 0.8313
+ },
+ "acc": {
+  "A0": {
+   "slot": 0.6813,
+   "vslot": 0.7562,
+   "afell": 0.8313
+  },
+  "A1": {
+   "slot": 0.7281,
+   "vslot": 0.7969,
+   "afell": 0.85
+  },
+  "A2": {
+   "slot": 0.6469,
+   "vslot": 0.7281,
+   "afell": 0.8531
+  },
+  "A3": {
+   "slot": 0.6906,
+   "vslot": 0.7219,
+   "afell": 0.8625
+  },
+  "A4": {
+   "slot": 0.5375,
+   "vslot": 0.6125,
+   "afell": 0.8812
+  },
+  "A5": {
+   "slot": 0.6906,
+   "vslot": 0.7688,
+   "afell": 0.8625
+  }
+ },
+ "eligible": {
+  "A0": false,
+  "A1": false,
+  "A2": false,
+  "A3": false,
+  "A4": false,
+  "A5": false
+ }
+}

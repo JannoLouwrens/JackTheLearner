@@ -543,6 +543,21 @@ A0_HEADROOM = 0.05           # A0 slot acc must be <= 1.0 - A0_HEADROOM, per see
 # bound needs only ONE marginal down, and the guard below checks it with a
 # number, not this paragraph.
 VENUE_NOISE_SD = 2.5
+# THE MATCHED PREMISE WAS FALSIFIED (ORDERS J4, 2026-11-12). The seed-90 GPU
+# pilot at matched 2.5 (Colab T4, 399 s; experiments/ub10_venue_pilot.json):
+# vision did NOT average the noise out — vslot A0 0.756, A1 0.797, A2 0.728,
+# A3 0.722, A4 0.613, A5 0.769; every unimodal-vision variant 0.74-0.79 — so
+# all six arms are ineligible (marginal + uni_marginal), i.e. a dispatch would
+# VOID on the learning gate for a VENUE reason. Train loss fell to ~4e-4 while
+# test sat at ~0.7: the nets memorise the fixed per-episode draw. afell read
+# 0.83-0.88 (A0 0.831, 0.03 above the floor). So the audio and vision levels
+# are now declared separately (`VENUE_VISION_SD`), and the next venue is chosen
+# by `_select_venue` from a seed-90 sweep over VENUE_SWEEP, under a rule written
+# BEFORE the sweep was read. Bars unchanged.
+VENUE_VISION_SD = 2.5        # vision's level, in units of its own train std
+# (audio_sd, vision_sd), in the order a tie is broken. Matched-but-lower first,
+# then progressively less vision noise; audio alone can carry the union bound.
+VENUE_SWEEP = ((2.0, 2.0), (2.0, 1.0), (2.5, 0.0), (2.0, 0.0))
 NOISE_STREAM = 104729        # RandomState(seed * NOISE_STREAM + 17)
 # A pilot at THIS venue writes its A0 marginals here (committed by hand with
 # the pilot's numbers); `_assert_venue_not_foreclosed` reads it when the
@@ -580,6 +595,13 @@ def _venue_label_identity(n_quads: int = 500, seed: int = 12345) -> dict:
             mismatch += int(s != (v if a else 1 - v))
     return {"n_episodes": n, "mismatches": mismatch,
             "slot_is_xnor": mismatch == 0, "cells": sorted(cells)}
+
+
+def _pilot_venue(rec: dict) -> tuple:
+    """(audio_sd, vision_sd) of a venue record. Records written before the two
+    levels were split carry only `venue_noise_sd`, which was then MATCHED."""
+    a = float(rec.get("venue_noise_sd", -1))
+    return (a, float(rec.get("venue_vision_sd", a)))
 
 
 def _marginal_foreclosure_bound(p: float, q: float) -> float:
@@ -649,8 +671,10 @@ def _assert_venue_not_foreclosed() -> None:
         return        # no committed row to replay: nothing positive to refuse on
     if not row:
         return
-    row_venue = float(row.get("metrics", {}).get("venue_noise_sd", 0.0))
-    if row_venue != VENUE_NOISE_SD:
+    rm = row.get("metrics", {})
+    row_venue = float(rm.get("venue_noise_sd", 0.0))
+    row_vvenue = float(rm.get("venue_vision_sd", row_venue))
+    if (row_venue, row_vvenue) != (VENUE_NOISE_SD, VENUE_VISION_SD):
         # The committed row measured a DIFFERENT venue, so its marginals say
         # nothing about this one — and "nothing" is not "clear" (LESSONS_CORE
         # 11). This venue must show its own anchor marginals first: the seed-90
@@ -659,15 +683,27 @@ def _assert_venue_not_foreclosed() -> None:
             pil = json.loads(VENUE_PILOT.read_text())
         except Exception:
             pil = None
-        if not pil or float(pil.get("venue_noise_sd", -1)) != VENUE_NOISE_SD:
+        if not pil or _pilot_venue(pil) != (VENUE_NOISE_SD, VENUE_VISION_SD):
             raise SystemExit(
                 "UB.10 REFUSES: the committed row (attempt "
                 f"{row.get('attempt')}) measured venue_noise_sd {row_venue}, "
-                f"this code's venue is {VENUE_NOISE_SD}, and no pilot record at "
+                f"this code's venue is ({VENUE_NOISE_SD}, {VENUE_VISION_SD}) "
+                "(audio, vision), and no pilot record at "
                 f"this venue exists ({VENUE_PILOT.name}). Run the seed-90 "
                 "pilot first (`python -m experiments.tests.ub_10_fusion_bakeoff"
                 " pilot`), commit its record, then dispatch. No ledger row is "
                 "written by this refusal.")
+        # A pilot that already shows arms failing the learning gate at this
+        # venue predicts a rig VOID as surely as a saturated anchor does.
+        inel = sorted(a for a, ok in pil.get("eligible", {}).items() if not ok)
+        if inel:
+            raise SystemExit(
+                f"UB.10 REFUSES: the seed-90 pilot at this venue "
+                f"({VENUE_NOISE_SD}, {VENUE_VISION_SD}) found arms INELIGIBLE: "
+                f"{inel} — the registered run would VOID on the learning gate "
+                "for a venue reason. Pick a venue with `venue_sweep` / "
+                "`_select_venue` first. No ledger row is written by this "
+                "refusal.")
         row = dict(pil, metrics={"marginal_per_arm_per_seed": {
             "A0": {t: [pil["a0"][t]] for t in ("vslot", "afell")}}})
     marg, prov = _a0_marginals_from_row(row)
@@ -721,11 +757,13 @@ def _episode_tensors(seed: int):
     Xa = (Xa - mu) / sd
 
     # Part 1's venue (VENUE_NOISE_SD, declared above): matched per-sense noise.
-    if VENUE_NOISE_SD > 0:
+    # Both draws are always taken, audio first, so the stream (and the 2.5/2.5
+    # pilot) reproduces whatever the two levels are.
+    if VENUE_NOISE_SD > 0 or VENUE_VISION_SD > 0:
         nr = np.random.RandomState(seed * NOISE_STREAM + 17)
         Xa = (Xa + VENUE_NOISE_SD * nr.randn(*Xa.shape)).astype(np.float32)
         psd = patches[tr].std(0)                               # [36,64]
-        patches = (patches + VENUE_NOISE_SD * psd[None]
+        patches = (patches + VENUE_VISION_SD * psd[None]
                    * nr.randn(*patches.shape)).astype(np.float32)
 
     return {
@@ -1090,6 +1128,32 @@ def remote_run(seeds: list, recipes: dict | None = None) -> dict:
     return out
 
 
+def remote_venue_sweep(venues: list, recipes: dict | None = None) -> dict:
+    """Runs REMOTELY. Seed-90 pilot of all six arms at each (audio_sd,
+    vision_sd) in `venues`. The rendered world is cached per seed by UB.9, so
+    only the noise and the trainings repeat. Measures; `_select_venue` chooses
+    on the LOCAL side."""
+    import torch
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    rec = ({a: tuple(recipes[a]) for a in ARMS} if recipes else None)
+    out = {"gpu": (torch.cuda.get_device_name(0) if device == "cuda"
+                   else "cpu"),
+           "widths": {a: list(_matched_width(a)) for a in ARMS},
+           "venues": []}
+    g = globals()
+    keep = (g["VENUE_NOISE_SD"], g["VENUE_VISION_SD"])
+    try:
+        for a_sd, v_sd in venues:
+            g["VENUE_NOISE_SD"], g["VENUE_VISION_SD"] = float(a_sd), float(v_sd)
+            row = _run_seed(PILOT_SEED, device, recipes=rec)
+            out["venues"].append({"venue": [float(a_sd), float(v_sd)],
+                                  "seed_row": row})
+            print("VENUE_DONE", a_sd, v_sd, flush=True)
+    finally:
+        g["VENUE_NOISE_SD"], g["VENUE_VISION_SD"] = keep
+    return out
+
+
 def remote_grid_pilot() -> dict:
     """Runs REMOTELY. The matched-tuning-budget grid at seed 90: every GRID
     recipe applied uniformly to all six arms through the full _run_seed (18
@@ -1125,18 +1189,39 @@ print("JACKRESULT " + json.dumps(out), flush=True)
 print("DONE", out["gpu"], flush=True)
 '''
 
+JOB_SWEEP = r'''
+import os as _o
+_o.environ["MUJOCO_GL"] = "egl"   # preamble sets "disabled"; this job renders
+import subprocess as _sp, sys as _sys
+_sp.run([_sys.executable, "-m", "pip", "install", "mujoco==3.11.0"],
+        check=True)
+import json
+from experiments.tests.ub_10_fusion_bakeoff import remote_venue_sweep
+out = remote_venue_sweep(__VENUES__, recipes=__RECIPES__)
+json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "ub10.json"), "w"))
+print("JACKRESULT " + json.dumps(out), flush=True)
+print("DONE", out["gpu"], flush=True)
+'''
+
 _CACHE: dict = {}
 
 
-def _submit(seeds: list, prefer: str = "kaggle") -> dict:
+def _submit(seeds: list, prefer: str = "kaggle",
+            venues: list | None = None) -> dict:
     from .t1_14_seed_noise_published import _payload_from_stdout
     rec = {a: list(_recipe_params(SELECTED)[a]) for a in ARMS}
-    body = (JOB.replace("__SEEDS__", repr(list(seeds)))
-               .replace("__RECIPES__", repr(rec)))
+    if venues is None:
+        body = (JOB.replace("__SEEDS__", repr(list(seeds)))
+                   .replace("__RECIPES__", repr(rec)))
+        n_units = len(seeds)
+    else:
+        body = (JOB_SWEEP.replace("__VENUES__", repr([list(v) for v in venues]))
+                         .replace("__RECIPES__", repr(rec)))
+        n_units = len(venues)
     job = build_job(body)
     res = submit(job, prefer=prefer,
-                 est_hours=round(0.20 + 0.35 * len(seeds), 2),
-                 timeout_s=2400 + 1500 * len(seeds),
+                 est_hours=round(0.20 + 0.35 * n_units, 2),
+                 timeout_s=2400 + 1500 * n_units,
                  fetch=["ub10.json"])
     # Whole stdout to disk before anything can fail (T1.14 attempt 2 lost
     # 1.10 GPU-h to a Colab artifact download that killed the VM).
@@ -1239,6 +1324,120 @@ def _print_seed_row(s: dict):
     print("  CLEAN" if clean else f"  NOT CLEAN: {reasons}")
 
 
+def _venue_record(s0: dict, venue: tuple, backend) -> dict:
+    """The VENUE_PILOT record for one seed-90 row at `venue`."""
+    return {"venue_noise_sd": float(venue[0]),
+            "venue_vision_sd": float(venue[1]), "seed": PILOT_SEED,
+            "attempt": "pilot", "ran_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "backend": backend,
+            "a0": {t: s0["arms"]["A0"]["acc"][t] for t in TASKS},
+            "acc": {a: s0["arms"][a]["acc"] for a in ARMS},
+            "eligible": {a: not _arm_reasons(s0["arms"][a]) for a in ARMS}}
+
+
+def _select_venue(sweep: dict) -> dict:
+    """Choose the venue from a seed-90 sweep. RULE (declared 2026-11-12 before
+    any sweep was read; pure, fixture-tested):
+      a venue QUALIFIES iff every arm is eligible (`_arm_reasons` empty — the
+      registered run's own arm-local VOID conjuncts) AND A0's slot accuracy is
+      <= 1 - A0_HEADROOM (the anchor has headroom — the ruling's criterion
+      through the gate that actually fires).
+      margin = min(min over arms, over vslot/afell, of acc - MARGINAL_FLOOR,
+                   (1 - A0_HEADROOM) - A0 slot acc)
+      the qualifying venue with the LARGEST margin wins (it is the one least
+      likely to fall off either edge on an unseen registered seed); a tie goes
+      to the earlier entry. None qualifies -> chosen None, and the reasons.
+    Never reads any arm's slot accuracy except A0's, so selection cannot tune
+    the claim metric (the same discipline as `_select_recipes`)."""
+    table, best = [], None
+    for i, v in enumerate(sweep["venues"]):
+        arms = v["seed_row"]["arms"]
+        reasons = {a: _arm_reasons(arms[a]) for a in ARMS}
+        a0_slot = float(arms["A0"]["acc"]["slot"])
+        floor_m = min(float(arms[a]["acc"][t]) - MARGINAL_FLOOR
+                      for a in ARMS for t in ("vslot", "afell"))
+        head_m = (1.0 - A0_HEADROOM) - a0_slot
+        ok = (not any(reasons.values())) and head_m >= 0
+        m = round(min(floor_m, head_m), 4)
+        table.append({"venue": list(v["venue"]), "qualifies": ok,
+                      "margin": m, "floor_margin": round(floor_m, 4),
+                      "a0_headroom_margin": round(head_m, 4),
+                      "ineligible": {a: r for a, r in reasons.items() if r}})
+        if ok and (best is None or m > table[best]["margin"]):
+            best = i
+    return {"chosen": (tuple(table[best]["venue"]) if best is not None
+                       else None),
+            "chosen_index": best, "table": table}
+
+
+def venue_sweep():
+    """Seed-90 sweep over VENUE_SWEEP on Colab; writes the raw sweep and the
+    selection to /data (never the tree — see `pilot`). The harvesting worker
+    declares the chosen venue in VENUE_NOISE_SD / VENUE_VISION_SD and commits
+    the chosen venue's record as VENUE_PILOT."""
+    os.environ["JACK_SPEC_ID"] = "UB.10"
+    os.environ["JACK_SPEC_PHASE"] = "pilot"
+    out = _submit([PILOT_SEED], prefer="colab", venues=list(VENUE_SWEEP))
+    Path("/data/ub10_venue_sweep.json").write_text(json.dumps(out))
+    for v in out["venues"]:
+        print("VENUE", v["venue"])
+        _print_seed_row(v["seed_row"])
+    sel = _select_venue(out)
+    print("SELECTION", json.dumps(sel, indent=1))
+    if sel["chosen"] is not None:
+        row = out["venues"][sel["chosen_index"]]["seed_row"]
+        rec = _venue_record(row, sel["chosen"], out.get("backend"))
+        Path("/data/ub10_venue_pilot.json").write_text(
+            json.dumps(rec, indent=1) + "\n")
+        print("VENUE PILOT RECORD (declare the venue, cp "
+              f"/data/ub10_venue_pilot.json {VENUE_PILOT}, commit)",
+              json.dumps(rec))
+    return out, sel
+
+
+def _venue_sweep_fixture():
+    """`_select_venue` on hand-built rows: an ineligible venue loses however
+    wide its margin, a saturated anchor disqualifies, the larger margin wins,
+    ties go to the earlier entry, and nothing-qualifies says so."""
+    def arm(vs, af, slot=0.7):
+        return {"acc": {"slot": slot, "vslot": vs, "afell": af},
+                "loss_first": 1.0, "loss_last": 0.1,
+                "uni_vision_slot": 0.5, "uni_audio_slot": 0.5,
+                "uni_vision_vslot": max(vs, 0.81), "uni_audio_afell": max(af, 0.81),
+                "uni_vision_loss": [1.0, 0.5], "uni_audio_loss": [1.0, 0.5],
+                "swap_drop": {"vision": {t: 0.3 for t in TASKS},
+                              "audio": {t: 0.3 for t in TASKS}},
+                "ens_slot": 0.5}
+
+    def venue(v, vs, af, a0_slot=0.85, bad=None):
+        arms = {a: arm(vs, af) for a in ARMS}
+        arms["A0"]["acc"]["slot"] = a0_slot
+        if bad:
+            arms[bad]["acc"]["vslot"] = 0.70
+        return {"venue": list(v), "seed_row": {"arms": arms}}
+
+    # sanity: the hand-built arm is eligible under the real conjuncts
+    assert not _arm_reasons(arm(0.9, 0.9)), _arm_reasons(arm(0.9, 0.9))
+    sw = {"venues": [venue((2, 2), 0.99, 0.99, bad="A4"),   # ineligible
+                     venue((2, 1), 0.99, 0.92, a0_slot=0.97),  # saturated A0
+                     venue((2.5, 0), 0.99, 0.86, a0_slot=0.85),  # margin .06
+                     venue((2, 0), 0.99, 0.90, a0_slot=0.89)]}   # margin .06
+    sel = _select_venue(sw)
+    assert sel["table"][0]["qualifies"] is False
+    assert sel["table"][1]["qualifies"] is False
+    assert sel["chosen"] == (2.5, 0.0), sel           # tie -> earlier
+    sw["venues"][3] = venue((2, 0), 0.99, 0.89, a0_slot=0.87)  # margin .08
+    assert _select_venue(sw)["chosen"] == (2.0, 0.0)
+    none = {"venues": sw["venues"][:2]}
+    assert _select_venue(none)["chosen"] is None
+    # the falsified 2.5/2.5 pilot record is refused by the strengthened guard
+    rec = json.loads(VENUE_PILOT.read_text()) if VENUE_PILOT.exists() else None
+    if rec and _pilot_venue(rec) == (2.5, 2.5):
+        assert not all(rec["eligible"].values())
+    print("VENUE SWEEP FIXTURE OK (ineligible loses; saturated anchor loses; "
+          "wider margin wins; tie -> earlier; none -> None)")
+
+
 def pilot():
     """Seed-90 pilot at production scale, disjoint from the registered seeds.
     Prints, records nothing; numbers go to the docstring/journal by hand. The
@@ -1254,12 +1453,8 @@ def pilot():
     for s in out["seeds"]:
         _print_seed_row(s)
     s0 = out["seeds"][0]
-    rec = {"venue_noise_sd": VENUE_NOISE_SD, "seed": PILOT_SEED,
-           "attempt": "pilot", "ran_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
-           "backend": out.get("backend"),
-           "a0": {t: s0["arms"]["A0"]["acc"][t] for t in TASKS},
-           "acc": {a: s0["arms"][a]["acc"] for a in ARMS},
-           "eligible": {a: not _arm_reasons(s0["arms"][a]) for a in ARMS}}
+    rec = _venue_record(s0, (VENUE_NOISE_SD, VENUE_VISION_SD),
+                        out.get("backend"))
     # Written to /data, NOT into the tree: the pilot may run chained ahead of
     # another spec's dispatch, and an uncommitted file under experiments/
     # would stamp that run dirty. The harvesting worker copies it to
@@ -1523,6 +1718,7 @@ def _aggregate() -> dict:
         # REPORTED here, never gated on: the pre-dispatch refusal is where it
         # belongs, because by the time a row exists the hours are spent.
         "venue_noise_sd": VENUE_NOISE_SD,
+        "venue_vision_sd": VENUE_VISION_SD,
         "marginal_per_arm_per_seed": {
             a: {t: [s["arms"][a]["acc"][t] for s in rows]
                 for t in ("vslot", "afell")} for a in ARMS},
@@ -1961,6 +2157,11 @@ if __name__ == "__main__":
         _selection_fixture()
         _redesign_fixture()
         _foreclosure_fixture()
+        _venue_sweep_fixture()
+    elif len(sys.argv) > 1 and sys.argv[1] == "venue_sweep":
+        venue_sweep()
+    elif len(sys.argv) > 1 and sys.argv[1] == "venue_fixture":
+        _venue_sweep_fixture()
     elif len(sys.argv) > 1 and sys.argv[1] == "grid_pilot":
         grid_pilot()
     else:
