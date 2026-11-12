@@ -420,3 +420,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   food ready goto_true fed 8/12 (adhesion 0.5) vs 5/12 (adhesion off); 2/12 froze on their side, friction cone saturated or hands jammed.
   Dose test still running (partial s91 second half: smell 1 vs shuffled 4). Served: 4 (a ceiling measured before a learner was blamed against
   it) and 1 (a body that can reach what keeps him alive).
+
+- 2026-11-12 ~14:50 UTC JACK J1 (no ledger row). Short slot, box full (dose 3 workers + oracle2). Harvested oracle v2 s93: goto_true 0.375,
+  nose_yaw 0.375, nose_blind 0.21, klinotaxis 0.21. Across s91-93 the perfect-map ceiling is .46/.54/.38 and no smell-follower beats random
+  (.08/.33) on every seed, so the v2 reading cannot rank smell strategies. Chained v3 (ready-food births) behind oracle2 with a setsid waiter
+  (oracle3_after.sh -> oracle3.log) so the next slot reads it instead of launching it. Served: 4 (the ceiling re-measured before a learner
+  is blamed against it); 5 only weakly (compute chained, nothing in him moved).
