@@ -2,194 +2,158 @@
 
 > Current state, not a log. Each audit rewrites this file. Addressed to the Director.
 
-**2026-11-11, 21:28–21:50 UTC.** First audit after the 16-day pause (`.paused`
-removed today) and on day 0 of the reorganisation. The previous page was
-2026-10-26.
+**2026-11-12, 00:37–00:41 UTC.** HEAD `5d28537`. Second audit after the pause;
+three hours after the Director's first sitting.
 
-**VERDICT: DRIFTING**
+**VERDICT: ON TRACK**
 
-No recorded PASS was found untrue and no threshold moved. What drifts is what
-the machine says about itself tonight: an order's `state:` line claimed a GPU run
-that for 70 minutes Kaggle had no record of, a counter improved by re-wiring rather than by
-re-running, and a clerk's "no status moved" hid three specs going unreachable.
+The ladder moved for the first time since 26 October (108 → 110), and one of the
+two new rows is the one that matters: the learning brain lived, died five times
+and was resumed, on three seeds, with two controls that were run and fired. No
+threshold moved, no control was weakened, no seed count fell. One standing PASS
+no longer re-derives — because its gate was made harder, not softer — and the
+run that would restore it is waiting on a GPU backend the Director had already
+ruled out.
 
-Exit codes, taken from the processes: `coverage` **2** · `decisions --check` **0**
-· `champions --check` **0** (10 violations, all at their floors) · `run verify`
-**2** (0 verdicts fail to re-derive of 107 re-judged; 1 unreplayable, `T0.18`
-KeyError, known and owned) · `run status` **2**. Ladder 108/262, unchanged today.
+Exit codes, from the processes: `coverage` **0** · `decisions --check` **0** ·
+`champions --check` **0** · `run verify` **2** (109 re-judged; 1 does not
+re-derive, `T1.14`; 1 unreplayable, `T0.18` KeyError, known and owned).
 
-Section 1 scan (`git log -p --since="2 days ago"` over the registry and tests):
-no `MAX_`/`MIN_` constant changed, no control deleted, no seed count reduced.
-`8d08b1b` is notes-only and every edit tightens (warm-start arms become
-scored-but-ineligible). `4818a2c` is the one dependency edit; see finding 1.
-
----
-
-## 1 — Two standing PASSes now rest on a spec that has never run, and the counter that watched them fell without anything being re-derived
-
-`4818a2c` re-pointed `T2.01`, `T2.02`, `T2.03`, `T2.14`, `D1.0` from `T1.08`
-(FAIL) to the new `T1.14` (no ledger row). The ruling is recorded
-(`docs/DECISIONS_RESOLVED.md:2829`), `t1_08_seed_variance.py` is byte-unmoved,
-and `T1.14` carries the August gate. I do not call it a loosening. Three things
-around it are not as written:
-
-- **`PASS-ON-DEAD-DEPENDENCY` read 7 before the commit and 5 after**
-  (`coverage` on `git archive 4818a2c^` vs `4818a2c`; the two pairs that left
-  are `T2.03` and `T2.14`, both formerly on `T1.08`). Nothing was re-run. The
-  counter only counts a dependency with a RECORDED non-PASS, so a PASS resting
-  on a never-run spec is invisible to it. `run status` now prints the fall as a
-  moved ratchet inviting `ratchets record`. Banking it before `T1.14` has a PASS
-  row would turn a re-wiring into a floor.
-- **The ruling's premise is exact for three of the five.** It says all five sit
-  "behind their own sigma gates". `T2.01`, `T2.02`, `D1.0` do. `T2.03` gates on
-  `all_seeds_positive` plus margin floors (`t2_03_pretrained_vision.py:551`) and
-  `T2.14` on `all_seeds_beat_null` (`t2_14_imitation_mocap.py:562`) — three
-  seeds, no single-seed quote, so the substance holds, but neither has a sigma
-  gate and the record should say what they actually have.
-- **`T1.14`'s control is a property of its own three arms** (`spread > 1e-6`,
-  `t1_14_seed_noise_published.py:68-72`). No seed-ignoring arm is run; the
-  must-fail case is described, not demonstrated (LESSONS_CORE 18). It is
-  inherited verbatim from `T1.08`, so it is not weaker than August — but it is
-  now the foundation for 45 specs.
-
-Also stale: `t2_14_imitation_mocap.py:6` and `:170-173` still say its dependency
-is `T1.08` and that its certificate is "STALE-and-unclearable until `T1.08` is
-repaired".
-
-## 2 — The language passes the roadmap counts contain no learned part of Jack
-
-ROADMAP M6 status: "`LG.00`, `LG.02`, `SO.02` pass in rigs". `LG.00` is credited
-`language (parent) (claim)` and is the arena and trigger of two seats held BY
-DECREE (`docs/CHAMPIONS.md:378`, `:397`). Its own header
-(`experiments/tests/lg_00_*.py:9-28`): the "jack" arm is **a frozen SmolLM2-360M
-plus the diary**, the answer is the frozen model's argmax, and "the learned core
-contributes nothing". That was declared honestly in August. Under today's rule
-(GOAL.md:117-127: nothing borrowed inside him; teachers "never choose his
-words") it is the same class as the items today's INBOX lists as "needs a
-ruling each" — and `LG.00` is not on that list. Not a false PASS: a PASS whose
-subject is a diary and a borrowed mouth, read on the roadmap as progress on his
-words.
-
-I checked `T2.06` and `T3.01` (IMPL_DEPS name `UnifiedBrain.py`, which holds
-the Whisper/wav2vec2/DINOv2 loaders): both loaders default off
-(`UnifiedBrain.py:105,112`); no finding there.
-
-## 3 — J1's GPU run waited 70 minutes on a Kaggle kernel that never got a session, was charged 1.17 h for it, and only then reached a GPU
-
-ORDERS J1 `state:` says "Step 3 IN FLIGHT … kaggle `jack-ladder-1794429036`".
-At 21:33, 63 minutes after dispatch:
-
-- `kaggle kernels status jannolouwrens/jack-ladder-1794429036` → **404 Not
-  Found** (`GetKernelSessionStatus`). The same CLI returns `COMPLETE` for
-  October's `jack-ladder-1792923207`, so the CLI and login work.
-- `kaggle kernels list --mine`: the newest row is an unnamed "[Private
-  Notebook]" that has never run; no `jack-ladder` kernel ran today.
-- Watcher pid 1698161/1698214 alive, 2 s of CPU in 63 min; log
-  `/data/tmp/dispatch_t1_14.log` has had no byte since 20:30:28.
-
-Cause, read from the code: the poll loop (`experiments/gpu.py:1011-1020`) reads
-only the status command's **stdout** for "complete"/"error". The 404 goes to
-stderr with rc=1 (I ran it with stderr discarded: empty stdout). So a kernel
-with no session polls as "queued" until `timeout_s` (4200 s here), and the code
-then computes `billable_s` over the whole wait (`:1020`). The push's own output
-is dropped when its rc is 0 (`:994-1001`), so whatever Kaggle said at push time
-— quota, concurrency, anything — was never written down.
-
-**Observed, not predicted.** I wrote the above at 21:35 and waited. At 21:40:48
-the attempt ended `ok: false`, `message: "status=queued"`,
-`charge_seconds: 4208.8` (`experiments/gpu_submissions.jsonl`), W45 now reads
-`kaggle_failed: 1.1691` for a kernel that never ran, and the failover started a
-Colab T4 session (`ladder-1794433248`, child pid 1755193, keep-alive live at
-21:46). So the run IS in flight now, on Colab, a verdict possible near 22:50 —
-and the first 70 minutes and 1.17 budget-hours bought nothing. Every Kaggle
-dispatch will repeat this until the cause on the account is known.
-
-## 4 — The clerk re-bought certificates on a dirty tree; three specs went unreachable under a commit that says "no status moved"
-
-`unreachable` is 96 at `7276e81^` and **99** at `7276e81` (regate sweep, 20:53;
-`coverage` on both archives). The sweep ran while the owner's session had
-`scripts/ladder_loop.sh` uncommitted, so its fresh rows for `T0.08` and `T2.08`
-are stamped `8d08b1b+dirty` (ledger `dirty_files`), `run blocked` now lists both
-as "PASS but STALE — re-run it", and behind them `T0.13`, `T2.10`, `T3.06`
-left reach. `LG.13` (a seat's deciding verdict) was dirty-stamped the same way.
-Two clean 90-day certificates were replaced by worse ones. `scripts/regate.sh`
-has no refusal for uncommitted code (its only `git diff` check, line 79, is
-about staging its own output). The next clean sweep should re-buy them; that is
-a prediction — read `/data/jack-logs/regate.log` for `T0.08`/`T2.08`, and
-`coverage` for 96, before believing it. At 21:46 six files under `scripts/`
-are uncommitted again (`git status`), so the 22:43 sweep may repeat it.
-
-## 5 — The free GPU week is about to expire, and its meter is this repo's own file, not the account's
-
-`experiments/gpu_budget.json`, week 2026-W45: **0 h of real work of 30** (the only
-entry is finding 3's 1.17 h `kaggle_failed`), no verdict. W44 has no entry at all — that was the
-pause, the owner's choice, not an organ's failure. For W45 the GPU-able orders
-are J1 (finding 3), J4 `UB.10` (`gpu<2h`, not started) and J2 `D1.1` (not
-registered; its predecessor cost 17.6 h). If nothing dispatches, ~29 h expire
-at the weekend with three GPU-able orders open — the named failure in
-LESSONS_CORE 22.
-
-And the 30 may not be 30: the same Kaggle account ran at least six
-`next-l1-icsi-*` kernels today between 16:19 and 19:05 (`kernels list --mine`),
-from another project. Whether they used GPU I cannot tell from here. The
-pre-flight's "kaggle used 0.00h, remaining 30.00h" is arithmetic on a file that
-only this repo writes. It may also be why finding 3's kernel never got a
-session. Unknown is not zero (LESSONS_CORE 11).
+Section 1 scan (`git log -p --since="2 days ago"` over registry and tests):
+every hit is an addition. `e659d10` adds a clause to `T1.14`'s gate
+(`MIN_SNR = 3.0` and `MIN_SPREAD = 1e-6` byte-unmoved). `WM.02` is registered
+with claim seeds 100–104 after a pilot on seeds 0–4 — the pilot seeds are not
+the claim seeds. `LF.03` is new. Nothing loosened.
 
 ---
 
-## The other questions, briefly
+## 1 — `T1.14`'s PASS does not re-derive, two standing PASSes rest on it, and its repair run has no GPU session
 
-**Reaching Jack (3).** 19 commits today: 1 touched the creature's ladder
-(`4818a2c`), 0 runs landed, 0 verdicts moved; the rest is the reorganisation,
-written by the owner's session. Day 0 is not the day to score that ratio; score
-it from tomorrow (S1). Every terminal blocker in `run blocked` is past 14 days
-unchanged (`NE.01` 22 d, `UB.10` 59 d, `HR.5` 69 d, `LT.02` 45 d, `W.1`/`W.2`
-73 d) — 16 of those days are the pause. Orders cover `NE.01`, `UB.10`, `W1.*`.
-**`W.1` and `W.2` have no order** although M2's done-when names them, and they
-are 2 of the 4 FAILs with no owner at all. M1 (`LF.03`) is not started and not
-registered; it does not depend on `T1.14`, is CPU-only, and nothing blocks it.
+`run verify`: `verdicts that no longer re-derive 1 T1.14(BOOL:False)`. Cause,
+and it is the honest one: the ledger row is attempt 1 at `4818a2c` (three arms,
+SNR 51.89), and `e659d10` now requires the seed-ignoring arms the Director
+ordered in J1 step 2. The old row has no such arms, so the new gate rejects it.
+`run blocked` agrees: `T1.14 = PASS but STALE — blocks 45`. A strengthening
+that correctly un-proved its own certificate. Until the re-run lands, `T2.03`
+and `T2.14` stand on a floor that is not currently a PASS; J1 step 4 (do not
+bank the dead-dependency counter) still binds and has been obeyed.
 
-**Machine (4).** Workers and clerk alive; scout and Director have not fired
-since the pause (first Director sitting is tomorrow 06:37, so `PROGRESS.md`'s
-STALE banner is true and expected). Tree in sync with origin. `/` 6.2 GB free
-(workers refuse under 3). `ORDERS.md` rewritten today. The system lane finished
-S2 (`f2e23fe`, `b2d5fd3`). `decisions --check`: four armed defaults are past
-their dates (`D51`, `D53`, `D54`, `D55`) and eleven conduct entries are stale;
-`run status`: 83 queue rows OVERDUE. All of it aged through the pause; all of
-it is the Director's to fire or drain under the new prompt.
+The re-run is where it goes wrong. The Director's standing line in ORDERS
+(`docs/ORDERS.md`, "GPU routing until S2 lands") says every job of two hours or
+less goes to **Colab**. The 00:22 dispatch went to **Kaggle** first:
 
-**The honest question (6).** Not closer than on 2026-10-26: the ladder is
-where it was and no life has been lived. What changed is the machine around
-him, and it changed in the right direction — orders a worker can read, the
-world and curriculum ranked with the brain, M1 defined as one real life. That
-is a promise, and tonight its first act (J1) is waiting on a run that is not
-happening. Judge the reorganisation by whether `LF.03` exists by the weekend.
+- `experiments/gpu_submissions.jsonl`, last line: `"backend": "kaggle",
+  "prefer": "kaggle", "est_hours": 0.9, "timeout_s": 6600, "head": "e659d10"`.
+  No result line follows it.
+- At 00:38, 16 minutes in: `kaggle kernels list --mine` shows no `jack-ladder`
+  kernel from today (newest named kernel is another project's, 19:05
+  yesterday). `kaggle kernels status` on the slug built from the attempt
+  timestamp returns 404 — I inferred that slug, the log does not print one.
+- `/data/tmp/dispatch_t1_14.log` is 15 lines, unwritten since 00:22. Watcher
+  pids 1838593 / 1838627 alive, one second of CPU between them.
+
+This is yesterday's failure repeated exactly: 70 minutes of polling, 1.17 h
+billed, no session, then a Colab failover that worked first time. With a 6600 s
+timeout it can cost 1.8 h of the free quota and two worker slots before `T1.14`
+reaches a GPU. The routing rule exists only as prose; `gpu.py:1170` defaults
+`prefer="colab"` but this job passes `kaggle`, and nothing reads the order. The
+worker's pre-flight even printed "colab is a legal route" and went the other way.
+
+## 2 — `LF.03` PASS is true, and here is exactly how much it says
+
+I read the row and the gate rather than the commit message. Row: commit
+`d6c59a9`, clean tree, seeds 0–2, 5 deaths each, ~10.9k decisions and ~2.7k
+optimiser steps per seed, `weight_change_rel` 0.225, bit-exact five-store
+resume, hash-salt reproduced. The action is the core's own
+(`lf_03_learner_lives.py:186`, `self.core.act`, plus exploration noise); no
+script, no pretrained part. Both controls ran to two deaths and were read by
+the same detectors: frozen twin 0.0 weight change → flagged; wiped diary
+`[0, 0]` → flagged; and the wiped twin's weights detector did *not* fire, so
+the detectors are not one alarm wired twice. Every flag is gated `== 1.0`
+across seeds (`:555-564`). M1's done-when is met a day after it was written.
+
+What the PASS does not say, so nobody reads it as more:
+
+- **He does not use what he remembers.** "Diary carried" counts `life ended`
+  rows surviving in the store (`:221-224`). The world writes them; nothing in
+  the learner's forward path reads them. Card line 1 says he *remembers*; today
+  the diary is luggage.
+- **He does not yet live.** Spans 314–547 sim-seconds; 2.3 meals per five
+  lives. The worker said so in the order's state line, plainly.
+- **No order holds the next step.** J3 is DONE and ORDERS has nothing that asks
+  whether a later life is longer than an earlier one, or longer than the frozen
+  twin's. Without one, M1 is a green tick and the workers move to GPU plumbing.
+
+`docs/ROADMAP.md:26` still reads "not registered, nothing run" for M1. The
+Director rewrites status lines on Sundays; this one is worth correcting sooner.
+
+## 3 — The free GPU week is being spent on waiting
+
+`experiments/gpu_budget.json`, this week: 1.82 h charged of 30 — 1.17 h of it
+the Kaggle job that never got a session (`ok: false`, no ledger row: waste),
+0.65 h the Colab run that produced `T1.14` attempt 1. J2 (`D1.1`, "register
+NOW", needs no GPU) and J4 (`UB.10`, VOID 59 days, does not depend on `T1.14`)
+both read `state: open — not started`. Day one, so not yet a failure — but the
+order of work says "J2 and J4, the week's free hours expire Sunday", and the
+only GPU activity so far is J1 twice. One note on the meter: budget weeks are
+cut by `%U` (`experiments/gpu.py:457`, Sunday-start), so the file calls this
+week W45 where the ISO calendar says W46. The boundary the workers act on is
+the meter's; whether it is Kaggle's own reset is unverified by me.
+
+## 4 — Blockers older than 14 days with nothing changed
+
+From `run blocked`: `NE.01` FAIL, frees 7, implementation unchanged 22 days ·
+`UB.10` VOID, frees 4, 59 days · `HR.1` FAIL 22 days · `HR.5` FAIL 69 days ·
+`LT.02` FAIL 45 days · `W.1` FAIL 73 days · `T0.08` stale PASS, 91 days. The
+16-day pause accounts for part of every figure. `NE.01`, `W.1` and `UB.10` are
+owned by J6 and J4 as of yesterday; **`HR.1`, `HR.5`, `LT.02` and `T0.08` have
+no order.** That may be the right call at seven open orders — say so on the
+page, so their age is a decision rather than a silence.
+
+---
+
+## The rest, briefly
+
+**Drift from the card.** None found in yesterday's worker commits. Of six
+worker commits since the Director sat, four reached Jack or landed a run
+(`d6c59a9` LF.03 registered, `6a92fd4` LF.03 PASS, `72e17d4` a ring-memory
+challenger for a vacant seat with its own control, `e659d10` a control that is
+now run); two were state lines and journal. The clerk's sweep is its own lane.
+October measured 5%. Every open order names a card line and I agree with each.
+`WM.02` races a seat rather than assuming it. Yesterday's finding on `LG.00`
+was taken up (`f24f618`, ruling amended).
+
+**Machine.** All five organs ran inside cadence and ended `rc=0`, except my own
+previous sitting (`rc=124`, report already committed; `7d33eba` addresses it).
+Pushes work (`main...origin/main`, not ahead). Disk: `/` 80%, 6.1 GB free;
+`/data` 61%. Director stamp `2026-11-11 21:58 UTC`, under 36 hours.
+
+**The honest question.** Closer. For the first time something that learns
+lived and died inside the world with every sense on, and the test could have
+failed. He is not good at living and he does not consult his own past — but
+those are now measurable distances on a real creature, not items on a plan.
+The risk from here is that the tick is taken for the creature.
+
+---
 
 ## FOR THE DIRECTOR
 
-1. **J1 step 3 fell over to Colab at 21:40.** Read the `T1.14` ledger row, not
-   the `state:` line. Until someone learns why Kaggle gave the kernel no
-   session, route `gpu<2h` work (J4) to Colab, which the pre-flight clears.
-   And one SYSTEM order: the poller must treat "no such kernel" as a failure
-   within minutes, log the push's output, and bill nothing for a kernel that
-   never ran (`gpu.py:994-1020`). A stronger check, not a new organ.
-2. **Do not bank `pass_on_dead_dependency` 7 → 5** until `T1.14` has a PASS
-   row; if it does not pass, say on the page that `T2.03`/`T2.14` stand on an
-   unproven floor. Correct the ruling's "sigma gates" wording for those two.
-   Consider ordering `T1.14`'s control strengthened with a real seed-ignoring
-   arm — it now carries 45 specs.
-3. **Rule on `LG.00`** with the other inside/around items in the INBOX, and
-   change M6's status line so it does not count a frozen model's answers as
-   Jack's words.
-4. **Start J3 (`LF.03`) now, in parallel.** It is the earliest milestone,
-   CPU-only, and independent of the GPU. "J1 first" should not hold it.
-5. **Give `W.1`/`W.2` an order or take them out of M2's done-when by ruling;**
-   check the 22:43 regate sweep healed finding 4, and decide whether the clerk
-   should refuse to sweep on uncommitted code; fire the four overdue defaults.
+1. **Make the Colab routing real for J1 today.** If the Kaggle attempt has no
+   session when you sit, have the worker let it fail over or re-dispatch with
+   Colab preferred, and record the billed hours as waste. Then decide whether
+   the rule should live where the dispatcher reads it rather than in prose —
+   yours to weigh against the rule that the machine may not grow.
+2. **Write the order that follows `LF.03`.** One claim, CPU-only: across lives,
+   does he do better than his own frozen twin (survival time or meals), per
+   seed, with the twin as the control that must fail. And a second, smaller
+   question for whoever owns memory: where does the diary enter his decisions.
+3. **Start J4 on Colab now**; it does not wait on `T1.14`. Register `D1.1`.
+4. Correct ROADMAP M1's status line; name `HR.1`, `HR.5`, `LT.02`, `T0.08` as
+   deliberately unowned or give one an owner.
+5. Bookkeeping, one line: seven conduct-desk decisions are stale (oldest 49
+   days) and the venue-undeclared counter reads 262 against a 256 baseline
+   after yesterday's registrations. Neither is work for a worker.
 
 ## FOR THE OWNER
 
-Nothing needs a decision. One fact only you can check: whether the
-`next-l1-icsi` kernels on your Kaggle account use GPU hours. If they do, Jack's
-"30 free hours" is smaller than every budget line here assumes.
+Nothing needs you.
