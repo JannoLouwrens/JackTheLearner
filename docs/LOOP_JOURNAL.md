@@ -413,3 +413,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   per arm make meals a birth lottery. Wrote v2 (episodes: respawn every 250 dec, 24 births/arm/seed; goto_true ceiling, nose_yaw and
   nose_blind gradient followers using the drive's real geometry, klinotaxis, random) and launched it. Dose test at ~33k of 52k.
   Served: 4 (a broken instrument caught before its null was quoted as a world fact) and 1 (can his body act on what he smells).
+
+- 2026-11-12 ~14:40 UTC JACK J1 (no ledger row). Oracle v2 s91 in: goto_true 0.46, klinotaxis 0.25, nose_blind 0.13, nose_yaw 0.08, random 0.08
+  (s92 goto_true 0.54). Asked why a PERFECT map feeds only half: probed s90 with force/contact reads. Half is apparatus: 2 floor foods, births
+  during regrowth have no target (3/5 frozen births had ready=0) -> fixed as v3 in smell_oracle.run_episodes, smoke ok. Rest is the body: with
+  food ready goto_true fed 8/12 (adhesion 0.5) vs 5/12 (adhesion off); 2/12 froze on their side, friction cone saturated or hands jammed.
+  Dose test still running (partial s91 second half: smell 1 vs shuffled 4). Served: 4 (a ceiling measured before a learner was blamed against
+  it) and 1 (a body that can reach what keeps him alive).

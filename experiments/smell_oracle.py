@@ -57,6 +57,21 @@ decisions or on death; reading per arm/seed = fraction of episodes with a meal
 per arm, so the birth lottery averages out. NOT A GATE; nothing in him moves.
 
     nice -n 19 $PY -m experiments.smell_oracle episodes <n_ep> <E> <seed>...
+
+V2 CEILING PROBED (11-12 14:25-14:40, s90 only, scripts in
+/data/tmp/smell_sense/probe/): goto_true fed only 0.46/0.54 on s91/s92, and
+the reason is NOT missing knowledge. (a) APPARATUS: there are only 2 floor
+foods; an episode born while both are still regrowing has NO ready target
+and goto_true sits still - 3 of 5 frozen births in force.py had ready=0, so
+v2's fed_frac is capped by regrowth, for every arm. v3 (now the code) waits for a ready
+food before each birth (adh.py does). (b) BODY: with food ready at birth
+goto_true fed 8/12 (actions 0:6 = 0, i.e. adhesion 0.5 = 450 N glue/hand)
+and 5/12 with adhesion off; frozen-for-the-last-50-decisions 2/12 vs 6/12.
+Frozen bodies lie on their side (quat ~[0.7,-0.7,0,0], z 0.07) with the
+friction cone saturated (torso normal 307 N, tangential 300 N, mu 1.0,
+drive 590 N), or with hands jammed 1.7-3 cm into the floor. So even a
+perfect map reaches food in only ~2/3 of 50-s births on this body: the
+toppling, ground-gated body is a ceiling below any smell learner.
 """
 from __future__ import annotations
 
@@ -150,7 +165,13 @@ def run_episodes(arm: str, seed: int, n_ep: int, E: int) -> dict:
     a = np.zeros(8)
     fed, dmins, firsts, deaths = 0, [], [], 0
     t0 = time.perf_counter()
+    idle = np.r_[np.zeros(4), -1.0, -1.0, 0.0, 0.0]
     for ep in range(n_ep):
+        # v3: never birth into an empty larder (see V2 CEILING PROBED above)
+        while not any(dr.t >= dr._respawn_at[n] for n in floor):
+            w.decide(idle)
+            if w.died_this_decision:
+                w.respawn()
         w.respawn()
         w._sm_nose.reset()
         heading = rng.uniform(-math.pi, math.pi)

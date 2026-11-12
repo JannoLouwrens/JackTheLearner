@@ -101,3 +101,11 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   vs shuffled (/data/tmp/smell_sense/dose.log, tally dose_tally.py).
   Serves philosophy 3 (the curriculum raced with a control, not assumed) and
   5 (his curriculum matters as much as he does).
+  **Can his body even reach food? (11-12 14:40 J1, `experiments/smell_oracle.py`):**
+  v1 oracle was an apparatus bug (world-frame force, no turn). v2 s91 (24 births
+  x 250 dec): goto_true (perfect map) 0.46, klinotaxis 0.25, nose_blind 0.13,
+  nose_yaw 0.08, random 0.08; s92 goto_true 0.54. Probed s90: v2 under-reads
+  because only 2 floor foods exist and births during regrowth have no target;
+  with food ready at birth goto_true fed 8/12, and 2/12 (6/12 with adhesion off)
+  froze lying on the side, friction-saturated or hands jammed. Even a perfect
+  forager reaches food in ~2/3 of births: the body is a ceiling below the learner.

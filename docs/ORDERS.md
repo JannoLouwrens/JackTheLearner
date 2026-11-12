@@ -57,11 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). AWR ends the collapse; no arm beats the twin.
-Food-sense repairs KILLED by declared rules: eye heights (e38780a); SMELL 1/5/2 vs shuffled 2/8/0 vs level 1/2/3 (d4a7a2e). 52k DOSE test
-running (/data/tmp/smell_sense/dose.log, s91/92 at ~33k of 52k at 14:10; s93 + shuffled s92 after; rule in smell_sense docstring).
-Oracle v1 (4k dec) was an APPARATUS BUG: a world-frame force never turns him, so "steer" did nothing; yaw arms 0/0/0, meals = birth lottery.
-v2 launched 14:12 (smell_oracle episodes 24x250 dec, s91-93, goto_true/nose_yaw/nose_blind/klinotaxis/random, /data/tmp/smell_sense/oracle2.log). Next: harvest both.
+state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Smell KILLED at 13k (d4a7a2e).
+52k DOSE test still running (/data/tmp/smell_sense/dose.log; 14:28 partial s91 second-half meals smell 1 vs shuffled 4; s92 shuffled + s93 pending ~1 h).
+Body ceiling (14:40, smell_oracle docstring + LAB): perfect-map goto_true fed 0.46 (s91) / 0.54 (s92). Half of that is APPARATUS (only 2 floor foods,
+births during regrowth have no target; fixed as v3 in code). With food ready, s90 fed 8/12 and 2/12 froze on their side (friction-saturated, hands jammed).
+Next: harvest oracle2 (s93) + dose; then run v3 episodes s91-93; if goto_true stays <~0.8 the body (topples, wedges) is the next World repair, before LF.04.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is
