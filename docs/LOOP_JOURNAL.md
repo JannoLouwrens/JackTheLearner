@@ -517,3 +517,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   and (b) real hours vs a 72x-compressed world (1 h = 50 s gives 33.80 vs 33.767). Only (c), no wind in k_eff, is
   a world gap. Plan in J6 state. Served: 1 (a world that can kill him honestly) and 4 (separate apparatus faults from world
   faults before touching either; no bar moved).
+
+- 2026-11-12 ~20:25 UTC JACK J6 (no ledger row; W.1 run refused at load 7.8 from other projects on the box). e0eecf7:
+  W.1 re-registered so the gated arm is the shipped thermal_step at exactly 1 met (shivering off, as the hypothesis
+  names); needs.k_eff gains a wind input (ASHRAE h_c). Smoke s100: (a) 27.00, (c) 0.3092, (d) pass; (b) 20.0 fails at 1x.
+  Did NOT take the planned compressed-clock (b): W.7's registered control forbids exactly that; routed as a design
+  conflict (INBOX 20:25). Closed loop in 5 m/s wind parks at ~26.5 C, below the 28 C death line. J4 relaunch refused (load).
+  Served: 1 (a world that can kill him honestly - wind now can) and 4 (refused a re-registration that would weaken W.7).

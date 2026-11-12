@@ -99,11 +99,11 @@ serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
 **done when:** `NE.01`, `W.1`, `W.2` each have a new attempt with every
 formerly-red clause explained in the commit. (D53 files `SO.07`'s VOID here too:
 the body cannot reach privileged food on 2 of 3 recording worlds.)
-state: 11-12 ~19:55 W.1 priced from needs.py constants (no run): its 3 red clauses are 2 apparatus + 1 world. (a) shipped arm
-settles 34.0 because shivering is ON; the reference is a 1-met body with NO shivering - shipped open loop T_env+M/K_DRY = 27.0
-(bar 27.55+-1.0: passes). (b) at 72x day compression 1 h = 50.0 s: 20+17exp(-50/240) = 33.80 vs 33.767 (0.1%, bar 1%: passes).
-(c) is real: k_eff has no wind input (ratio 1.0 vs 0.3095). Next: re-register W.1's shipped arm as open-loop + compressed time
-(say why in commit), add wind to k_eff (h_c 3.0 -> 8.6v^.53), then re-run W.1 and NE.01 (night_shelter). Then W.2.
+state: 11-12 ~20:25 e0eecf7: W.1 RE-REGISTERED (gated arm = shipped thermal_step at 1 met, shiver_on=False; k_eff gains wind,
+h_r+max(3,8.6v^.53)). Smoke s100 (no ledger): (a) 27.00 PASS, (c) 0.3092 PASS, (d) PASS; (b) 20.0 FAIL at 1x. (b) NOT compressed:
+W.1 notes + W.7's control forbid it - world tau 240 s vs body 17069 s is a WORLD-DESIGN conflict for the Director (INBOX 20:25).
+Closed loop at 5 m/s 20 C parks ~26.5 C < 28 death: wind makes nights lethal once W.3 drives it. W.1 NOT RUN: load 7.8 (others).
+Next: `run W.1` (13 s) when load < 6 -> expect FAIL on (b) only; then NE.01 night_shelter, W.2; LF.03 is stale by needs.py.
 
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
 **Why.** Owner, 2026-11-11: the world and the curriculum are "as important as
@@ -240,6 +240,7 @@ with reasons.
 - **11-12 18:05 JACK J1: second spec stuck on the 08:45 cpu<48h gate.** `launch_detached.sh … experiments.run BD.01` -> "REFUSED before start: cpu<48h is the detached lane (scripts/launch_detached.sh), not a runner child" — the runner refuses the very lane it names. BD.01 (~2 h) and LF.04 (~4-5 h) both registered, both unrunnable. Log /data/tmp/smell_sense/bd01_run.log.
 
 - **11-12 19:40 JACK J1 [FIXED d05c997, diagnostic moved to experiments/lf04_collapse_diag.py]:** `run next` (and any LF.04 run) RAISES: "LF.04 has 2 implementations: lf_04_collapse_diag.py, lf_04_living_teaches.py" — the tracked diagnostic (9df00c2/ffe45e5) sits in experiments/tests/ under the spec's prefix. Move/rename it out of the `lf_04_` namespace (check its launch scripts first); not done here.
+- **11-12 20:25 JACK J6 -> Director: W.1 (b) vs the world's clock is a design conflict, not a bug.** W.1's notes and W.7's registered control say thermal physics runs at 1x (a 70 kg body's tau = 4.74 h "cannot be sped up by a clock convention"); W0 ships TAU_T = 240 s (~71x compressed) so a 400 s night can chill him at all. Under W.7 the shipped world IS the naive-compression variant. Compressing (b) would pass it at 33.80 but certify what W.7 exists to forbid, so I did not. Rule: re-register W.7/W.1 for a compressed thermal clock, or slow the world's thermal tau (and lose cold nights). Also: J4's state still names waiter 1992023 - it died 06:53 (inherited JACK_ITER_DEADLINE, see 07:10); my 20:07 relaunch via launch_detached was refused at load 6.5 (/data/tmp/ub10_sweep2.log).
 
 ## DONE (kept one day)
 
