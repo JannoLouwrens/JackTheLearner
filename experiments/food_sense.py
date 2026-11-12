@@ -15,6 +15,10 @@ and no certificate stales.
   low     16 level rays from LOW_Z above the ground (whisker / snout height)
   split   even rays as `level`, odd rays as `low` (keeps the high view of
           walls and panel on half the spokes)
+  split_blind  CONTROL THAT MUST FAIL: `split`'s eyes, but every ray passes
+          THROUGH floor food (re-cast 0.35 m past it) — same low view of the
+          floor and walls, no food. If it eats as well as `split`, the meals
+          came from the eye height, not from seeing food.
 
 STEP 1 `perceive`: over every legal spawn pose, the fraction of poses where at
 least one ray's first hit is a floor-food geom, and the nearest such hit.
@@ -22,6 +26,14 @@ The `level` arm must read 0 (the reproduction of the LAB finding — the
 control that must fail to see).
 STEP 2 `pilot`: the AWR learner (wean_pilot's `null` arm: uniform births,
 nothing staged) living `total` decisions with the arm's eyes; meals/1000 dec.
+
+SEED-90 PILOT (13k decisions/arm, AWR): meals level 0 (= wean_pilot null),
+low 0, split 3 (lives 1 and 3). One seed: an anecdote, so —
+DECLARED BEFORE SEEDS 91-93 ARE READ (13k decisions/arm, arms level, split,
+split_blind): KILL `split` if its meals summed over the three seeds are not
+greater than BOTH level's and split_blind's sums, or if it out-eats both on
+fewer than 2 of the 3 seeds. split_blind verified through the real _vision:
+blind on 76/76 seed-90 poses where split sees food, identical on 535/535 others.
 
     nice -n 19 $PY -m experiments.food_sense perceive <arm> [seed]
     nice -n 19 $PY -m experiments.food_sense pilot <arm> [seed] [total]
@@ -33,7 +45,7 @@ import sys
 
 import numpy as np
 
-ARMS = ("level", "low", "split")
+ARMS = ("level", "low", "split", "split_blind")
 LOW_Z = 0.15           # m above the ground: under the 0.33 m top of floor food
 FLOOR_Z = 0.5          # a food geom centred above this is not floor food
 
@@ -53,12 +65,23 @@ def install(arm: str) -> None:
         lo = body.copy()
         lo[2] = LOW_Z
         out = np.empty(W.MODALITIES["vision"], dtype=np.float32)
+        if not hasattr(self, "_fs_floor"):
+            self._fs_floor = {g for g, _ in self.drives._food.values()
+                              if self.data.geom_xpos[g][2] <= FLOOR_Z}
         for k in range(W.N_RAYS):
             pos = lo if (arm == "low" or k % 2 == 1) else hi
             dist = self.mujoco.mj_ray(self.model, self.data, pos,
                                       self._ray_dirs[k], W._RAY_GROUPS, 1,
                                       -1, self._geomid)
             gid = int(self._geomid[0])
+            if arm == "split_blind" and gid in self._fs_floor and dist >= 0:
+                skip = dist + 0.35
+                d2 = self.mujoco.mj_ray(self.model, self.data,
+                                        pos + skip * self._ray_dirs[k],
+                                        self._ray_dirs[k], W._RAY_GROUPS, 1,
+                                        -1, self._geomid)
+                gid = int(self._geomid[0])
+                dist = d2 + skip if d2 >= 0 else -1.0
             if dist < 0 or dist > W.RAY_MAX_RANGE or gid < 0:
                 d, t = 1.0, 0.0
             else:
@@ -82,7 +105,7 @@ def _ray_gids(w, arm):
     gid_buf = np.zeros(1, dtype=np.int32)
     for k in range(W.N_RAYS):
         pos = body.copy()
-        if arm == "low" or (arm == "split" and k % 2 == 1):
+        if arm == "low" or (arm.startswith("split") and k % 2 == 1):
             pos[2] = LOW_Z
         else:
             pos[2] += W.RAY_Z_OFFSET
