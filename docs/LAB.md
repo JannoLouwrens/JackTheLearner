@@ -118,3 +118,20 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   feeds a perfect map ~1/2 of the time. Oracle v3 (ready-food births) s91/s92:
   goto_true 0.54/0.54 (v2 .46/.54), random .08/.25 - ready food does NOT lift the
   ceiling; the cap is the body (/data/tmp/smell_sense/oracle3.log, s93 pending).
+  **Why the perfect map feeds ~1/2: HE CANNOT STAND (11-12 16:50 J1, `experiments/body_probe.py`).**
+  Every birth classified (goto_true, food ready at birth, 250 dec, s90/s94, 20 births each):
+  fed 11/12 of 20 at adhesion 0.5, 15/14 adhesion off; **toppled (upright cos < 0.5) in 19/20, 18/20
+  births**, usually by decision 2-5; **every one of the 9+8 misses toppled and never righted** (most
+  lay stuck: <5 cm in the last 50 dec); fed births mostly fell within reach of food. Races, each
+  through a mujoco shim in the probe (w0.py untouched): push at torso-bottom site 9/13, at the foot
+  12/13 (topple delayed 2 -> 6-7 dec, not prevented) - DEAD; drive 0.5x 7/5, 0.25x 2/1 - DEAD, worse.
+  **With NO drive at all he topples at ~decision 10 (2 sim-s) in 18/20 births** (adhesion 0.5 and
+  off): a capsule on a 9-cm ball foot, COM ~0.37 m up, is a passive inverted pole. Righting from
+  lying (`/data/tmp/smell_sense/probe/righting.py`, s90, 3 topples): held arm postures 0/81, random
+  4-phase arm sequences 0-1/150, with drive 1/150 - possible, a <1 % needle for an explorer.
+  So every learner so far has been scored lying on his side, dragged by the cheat drive.
+  **Next (a BODY repair, raced, a new playground option with today's body the default so no
+  certificate moves):** a base that stands passively (flat foot / tripod / lower COM) vs today's
+  pole; read topple rate + goto_true fed per birth, then re-run the smell oracle v3 on the winner.
+  Biology's answer is both a stable base and a learned righting reflex - race, don't assume.
+  smell_oracle v3 s93 hung in its wait loop (no line 15:22-16:25, peers 3-6 min); killed pid 2230940.

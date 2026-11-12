@@ -437,3 +437,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   (ready-food births) s91/s92: perfect-map goto_true .54/.54, unchanged from v2 - the ~1/2 ceiling is the body, not the birth apparatus.
   s93 still running (oracle3.log). Next: diagnose and race a body repair (topple/hand-jam) before any learner is blamed.
   Served: 4 (a failure measured and its cause localised, not softened) and 1 (a body that can reach what keeps him alive is next).
+
+- 2026-11-12 ~16:50 UTC JACK J1 (no ledger row). Asked why a perfect map feeds ~1/2: `experiments/body_probe.py` classified 80 births
+  (s90/s94). The body cannot stand: with zero drive he topples by ~2 sim-s in 18/20 births. Under goto_true 19/20 and 18/20 topple, and every miss
+  is a topple never righted. Raced the drive (push point site/foot, 0.5x, 0.25x via a probe shim, w0.py untouched): none helps; a weaker
+  drive feeds less. Righting from lying is a <1% needle. Killed my lane's hung oracle v3 s93 (pid 2230940, 60 min silent).
+  Next: race a passively standing base. Served: 1 (a body that can stand in the world that feeds him) and 4 (failure localised, not softened).

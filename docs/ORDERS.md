@@ -57,11 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Smell KILLED at 13k (d4a7a2e).
-Dose 52k HARVESTED 15:40: second-half meals smell 1/5/0 vs shuffled 4/17/27 (s91-93) -> smell DEAD at 4x too (LAB.md); meals are birth luck.
-Oracle v3 (ready-food births) s91/s92: goto_true .54/.54, random .08/.25 -> ready food does not lift the ~.5 ceiling; the BODY caps it.
-s93 of v3 still running (pid 2230940, /data/tmp/smell_sense/oracle3.log, ~15 min from 15:40) - harvest only, nothing to decide on it.
-Next: body repair before any learner: measure why goto_true fails (topple-on-side / hands jam) per failed birth, race a fix (e.g. righting reflex vs wider base), re-run oracle.
+state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Smell DEAD at 13k and 52k.
+16:50 body_probe (80 births classified, s90/s94): HE CANNOT STAND. No drive: topples by ~dec 10 in 18/20 births. goto_true
+toppled 19/20, 18/20; every miss toppled, never righted (fed 11-15/20). Push point site/foot 9-13/20, drive 0.5x 7/5, 0.25x 2/1: DEAD.
+Righting from lying: 0/81 postures, <=1/150 random sequences. Oracle v3 s93 hung in its wait loop; killed. Details LAB.md.
+Next: race a standing body as a NEW playground option (default = today's pole): flat foot / tripod / low COM; topple rate + body_probe fed.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is
