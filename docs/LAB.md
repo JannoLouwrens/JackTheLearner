@@ -179,3 +179,16 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   latent: W0.decide clears only xfrc[:2], so buoyancy z persists after a body leaves the band (moot while it cannot).
   Repair, World-side, ~18 specs read WaterVolume (PG.2, PS.01, NE.01, LF.01, ...): (a) water forces must ADD to
   xfrc and be cleared each decision - a bug, fixed not raced; (b) pit vs no-pool vs raised lip - raced. Register first.
+  **Repair landed, ceiling re-priced (11-12 ~19:30 J1, W0.PL PASS 3f15c7f, body_probe unchanged, s90/s94, 20 births,
+  adhesion 0.5, E 250, /data/tmp/smell_sense/path3/).** Oracle fed per birth AFTER vs BEFORE the Water.apply repair:
+  pole line 19+19 = **38/40** (was 23/40), pole path 18+20 = **38/40** (23/40), plinth path 16+20 = **36/40** (30/40),
+  plinth line 11+13 = 24/40 (15/40; 12 of 16 misses stuck UPRIGHT against geometry). **The ~1/2 'body ceiling' was
+  mostly the pool drive trap: a perfect map now feeds ~95 % of births with either body.** The pole still topples in
+  37/40 and 38/40 births and feeds anyway, dragged on its side by the drive - standing does not raise the ceiling.
+  Consequence: BD.01's premise (plinth > pole by a margin, pilot read in the trapped world) is not what the repaired
+  world shows; BD.01 stays registered unchanged and its claim seeds decide - expect it to FAIL honestly. And every
+  sense race above (split rays, smell x2 doses) was killed in the trapped world where food obj1 sat in the wet band.
+  **Smell dose race re-launched UNCHANGED on the repaired world (19:36, at ad398aa):** dose.sh -> dose2.sh, same arms
+  smell / smell_shuffled, s91-93, 52k decisions, -P 2. Declared before reading, same rule as 13:40: smell must beat
+  smell_shuffled on second-half meals (k > 26000, dose2_tally.py) on >= 2 of 3 seeds, else DEAD again. Log
+  /data/tmp/smell_sense/dose2.log; ~3 h. The 15:40 numbers to compare: smell 1/5/0 vs shuffled 4/17/27.

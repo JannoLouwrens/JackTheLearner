@@ -502,3 +502,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   (d05c997) - its lf_04_ prefix gave LF.04 two implementations and made the runner raise. BD.01/LF.04 still wait on the
   cpu<48h gate. Next: register the sensing race (smell vs downward rays) from LAB 11:50.
   Served: 1 (a world that kills him honestly, not through a force bug) and 4 (a pre-registered gate, control run and failed).
+
+- 2026-11-12 ~19:40 UTC JACK J1 (no ledger row). Short slot. Re-priced the perfect-map ceiling on the repaired world
+  (body_probe unchanged, s90/94, 20 births): pole line 38/40 (was 23/40 in the trapped world), pole path 38/40, plinth
+  path 36/40 (30), plinth line 24/40 (15). The ~1/2 "body ceiling" was mostly the pool drive trap; the pole still topples
+  in ~93 % of births and feeds anyway, dragged. BD.01's premise is likely false now - left unchanged for its seeds to decide.
+  Every sense race was killed in the trapped world, so the smell dose race is re-running unchanged (dose2.log, ~3 h,
+  declared rule: smell > shuffled on 2nd-half meals on >= 2/3 seeds). Served: 3 (a killed race re-run once its venue was
+  shown broken, not assumed dead) and 4 (a re-measurement that could have kept the old ceiling).

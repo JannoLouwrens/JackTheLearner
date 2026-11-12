@@ -58,10 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refuses cpu<48h (INBOX 08:45/18:05).
-19:15 pool trap CLOSED: W0.PL PASS (3f15c7f, seeds 100-102) min travel ratio 0.966 (bar 0.90), legacy control 0.151;
-PS.01, PG.1, PG.2, PG.8 re-PASS on the repaired Water.apply. d05c997 moved the collapse diagnostic out of tests/ (LF.04
-had 2 impls). Playground stales PG.3-6 left to regate (cpu<10min). Next: the LAB 11:50 sensing repair (smell into
-W0.observe vs downward rays — register the race) while BD.01/LF.04 wait on the cpu<48h gate.
+Pool trap CLOSED (W0.PL PASS 3f15c7f). Re-priced oracle on repaired world (s90/94, LAB): pole line 38/40 (was 23), pole
+path 38/40, plinth path 36/40, plinth line 24/40 - the 'body ceiling' was the trap; BD.01 premise likely FAILs, run unchanged.
+19:36 smell-vs-shuffled dose race re-launched unchanged on the repaired world: /data/tmp/smell_sense/dose2.log (~3 h).
+Next: harvest with dose2_tally.py; rule (declared): smell beats shuffled on 2nd-half meals on >=2/3 seeds, else DEAD.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is
