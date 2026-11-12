@@ -61,7 +61,9 @@ state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refus
 Pool trap CLOSED (W0.PL PASS 3f15c7f); oracle on repaired world feeds ~95 % of births (pole 38/40) - body/world not the cap.
 22:30 smell dose2 race HARVESTED -> DEAD by declared rule: 2nd-half meals smell 2/0/3 vs shuffled 20/0/3 (0 of 3 seeds);
 outside one 19-meal shuffled life both arms eat 1-2 meals per ~22 lives (LAB). The gap is the learner, not a sense.
-Next: LF.04 the moment the cpu<48h lane exists (SYSTEM); until then diagnose why the null learner never learns approach.
+22:40 WHY (LAB): gamma .95 = ~20-decision horizon; a PERFECT map needs median 41.5 decisions birth->meal (path3, 136 fed),
+21 % within 20; meal weight at birth gamma^41.5=.12, GAE (g*l)^41.5=.0015. RACE LAUNCHED 22:38: dose2 unchanged but GAMMA .99
+(/data/tmp/smell_sense/gamma99.log, ~3 h). Next: harvest with gamma99_tally.py, apply the rule declared in LAB; LF.04 when cpu<48h exists.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

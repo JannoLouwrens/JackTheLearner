@@ -199,6 +199,26 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   world, a sense is not the gap: the null-arm learner fails to turn ANY food signal into approach in 52k decisions.
   Smell stays DEAD as a seat bet on this learner. Next for the creature: LF.04 (learner vs frozen twin) - the question
   is the learner, not the sense.
+  **Why the learner cannot learn approach — the credit horizon is shorter than the walk (11-12 ~22:40 J1, a reading of
+  files on disk, no run).** The learner's targets (survival._gae, used by _Life/_Life4 and so by LF.04 and every sense
+  race): GAMMA 0.95, GAE_LAMBDA 0.9, SEG 64, advantages normalised per segment, reward = drive decrease (0 until
+  contact). At 5 decisions/sim-s, 0.95 is a ~20-decision (4 sim-s) horizon. A PERFECT map driving the repaired-world
+  body from a uniform birth (path3 oracle logs, 136 fed births of 160) needs median **41.5 decisions** to the first meal
+  (p25-p75 by body/oracle 13-108; max 245); only **21 %** are fed within 20 decisions, 70 % within one 64-segment.
+  At the median, the meal's weight at birth is gamma^41.5 = **0.12** in the value target and (gamma*lambda)^41.5 =
+  **0.0015** in the advantage — and per-segment normalisation rescales a meal-free segment's noise to unit variance, so
+  the policy gradient in the ~2/3 of approach steps more than a segment from food is drawn from noise of the same size
+  as a real signal. Even the oracle's walk is mostly invisible to this learner; a random walker's, entirely.
+  Testable (not yet run): the same null learner with gamma matched to the walk (0.99: 0.99^41.5 = 0.66; still < 1,
+  NEEDS_AND_DEATH 0.2(f) holds) and/or no per-segment normalisation, raced against 0.95, same seeds, smell arm and
+  smell_shuffled control — declare the rule before reading. This is a learner-machinery race, not a threshold change.
+  **Launched 11-12 22:38 (detached, /data/tmp/smell_sense/gamma99.sh, log gamma99.log, out gamma99/):** dose2 byte-for-byte
+  except survival.GAMMA = 0.99 patched per process (survival.py untouched; _gae reads the module global, no other
+  importer copies it). Arms smell / smell_shuffled, s91-93, 52k decisions, -P 2, ~3 h. DECLARED BEFORE ANY SEED IS READ
+  (tally: gamma99_tally.py, second-half meals = lives ending at k > 26000): gamma 0.99 is ALIVE iff smell@0.99 out-eats
+  smell@0.95 (dose2: 2/0/3) on >= 2 of 3 seeds AND out-eats smell_shuffled@0.99 on >= 2 of 3 seeds; else DEAD. If
+  both 0.99 arms beat their 0.95 twins (dose2 shuffled 20/0/3) but smell does not beat shuffled, record it as
+  'horizon helps, smell unused' - not a pass. Not touched: thresholds, controls, seeds, decisions, policy loss.
 - 2026-11-12 · **World: shelter law** (J6, `NE.01` `ok_night_shelter` red every seed) ·
   ALIVE, not shipped. The shipped law cuts k_eff 70 % at occ 1, so shelter's night cost is
   NON-monotone: occ 0.8 → 0.029, sealed roof occ 1.0 → **1.000** (T 39.5, worse than the open

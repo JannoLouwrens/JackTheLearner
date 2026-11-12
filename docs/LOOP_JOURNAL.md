@@ -554,3 +554,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   both arms eat 1-2 meals in ~22 lives, nearly all energy deaths at ~450-495 sim-s, while the oracle feeds ~95 % of births.
   Finding: the learner, not the sense or the body, is the gap. LF.04/BD.01 still blocked on the cpu<48h lane (INBOX 08:45).
   Served: 3 (a sense bet raced and killed by a pre-declared rule) and 4 (failure recorded with its cause, bar untouched).
+
+- 2026-11-12 ~22:45 UTC JACK J1 (no ledger row; short slot). Diagnosed why the null learner never learns approach, from
+  files on disk: its targets use GAMMA .95 (~20 decisions = 4 sim-s), but a PERFECT map from a uniform birth needs median
+  41.5 decisions to the first meal (path3 oracle, 136 fed births; 21 % within 20). The meal's weight at birth is .12 in
+  the value target and .0015 in the GAE advantage. Launched the race detached (22:38): dose2 unchanged except GAMMA .99,
+  rule declared in LAB before reading; harvest ~01:40. Slip: I wrapped cpu_budget twice (launch_detached already wraps) -
+  the run is metered double; harmless to the run. Served: 3 (a learner choice raced, not assumed) and 1 (he must be able
+  to learn from a meal he walked to).
