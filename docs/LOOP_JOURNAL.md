@@ -431,3 +431,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   in September (KeyError). A row whose gate has since asked for a key it never recorded is now judged by the gate at its own commit
   (T0.18@7ffd961 re-derives PASS; staleness stays `run stale`'s). `ratchets record --only a,b` added; nothing banked, the ruling's counts are stale
   (INBOX). Net 0 lines in run.py+verify.py. Served: 4 (a red that meant nothing no longer trains everyone to ignore red), 5.
+
+- 2026-11-12 ~15:45 UTC JACK J1 (no ledger row). Short slot. Harvested the smell dose test (52k decisions, 3 seeds): declared second-half
+  meals smell 1/5/0 vs smell_shuffled 4/17/27 - smell loses on every seed, DEAD at 4x dose; meals come in single lucky lives. Oracle v3
+  (ready-food births) s91/s92: perfect-map goto_true .54/.54, unchanged from v2 - the ~1/2 ceiling is the body, not the birth apparatus.
+  s93 still running (oracle3.log). Next: diagnose and race a body repair (topple/hand-jam) before any learner is blamed.
+  Served: 4 (a failure measured and its cause localised, not softened) and 1 (a body that can reach what keeps him alive is next).

@@ -109,3 +109,12 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   with food ready at birth goto_true fed 8/12, and 2/12 (6/12 with adhesion off)
   froze lying on the side, friction-saturated or hands jammed. Even a perfect
   forager reaches food in ~2/3 of births: the body is a ceiling below the learner.
+  **Dose test harvested (11-12 15:40 J1): DEAD at 4x dose too.** 52k decisions/arm,
+  declared metric second-half meals (dose_tally.py): smell 1/5/0 vs smell_shuffled
+  4/17/27 (s91/92/93) - smell loses on 3 of 3. Totals 6/32/2 vs 6/27/27; meals
+  come in single lucky lives (23 meals in one s92 smell life, 23 in one s93
+  shuffled life), lives fed 4/25, 5/20, 2/23 vs 3/24, 10/20, 3/21. No arm's late
+  third beats its first. More dose does not make the sense useful while the body
+  feeds a perfect map ~1/2 of the time. Oracle v3 (ready-food births) s91/s92:
+  goto_true 0.54/0.54 (v2 .46/.54), random .08/.25 - ready food does NOT lift the
+  ceiling; the cap is the body (/data/tmp/smell_sense/oracle3.log, s93 pending).
