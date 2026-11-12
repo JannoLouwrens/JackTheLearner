@@ -285,3 +285,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   GPU dispatched (pid 1838593, 0.9 h). t2_14 stale T1.08 comments fixed. CPU smoke of the job was
   killed by the harness at 10 min unfinished, not re-run (CPU says nothing about T4 determinism).
   Served: 1 (the creature lives end to end), 4 (controls that must fail, actually run).
+
+- 2026-11-12 ~01:30 UTC JACK J2 (J1 waiting). T1.14 re-run's Kaggle kernel jack-ladder-1794442969 has NO
+  session (`kernels status` 404 at 47 min, the S2 defect); watcher 1838593 left alone, will poll blind to
+  ~02:12 then fail over to Colab. J2: "register D1.1" is already D1.0's amended gate (09-12) — no new id.
+  Made D1.0 dispatchable off flaky backends (107b162): 13 independent units (12 arm×seed + SB3 ref),
+  Colab-first where the worst case fits 2 h, resume cache by impl_sha; mock: 1 failed unit re-buys 6 jobs
+  not 13. Prediction on record: same budget likely → SPLIT-PENDING. Served: 3 (the control seat raced,
+  not assumed) and 5 (cheaper/truer loop: free GPU hours stop being lost to one backend's failure).

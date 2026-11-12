@@ -80,7 +80,11 @@ as challengers. Then run `T2.01` under the seated controller, bars unmoved.
 serves: M3, M4 · philosophy 3 (raced, not assumed), standing objective 3 (GPU).
 **done when:** `D1.1` has a verdict, the control seat names its holder by
 verdict, `T2.01` has an attempt dated after it.
-state: open — registration unblocked today; dispatch waits on `T1.14` PASS.
+state: 2026-11-12 107b162 — no new id needed: D1.0's 2026-09-12 amended gate IS "D1.1" (paired own-twin G1
++ raw-margin G1b, control vs frozen twin prior; random recorded only). Its replay of attempt 2 → VOID
+(SPLIT-PENDING): aprime +3.37σ on eval, d_mlp higher final-third train reward. Submission now 13 units
+(arm×seed + SB3 ref; aprime/d_mlp Colab-first, 57M arms Kaggle-first, 25.05 h worst), resume cache by
+impl_sha. Next: when T1.14 re-run has a PASS row → `scripts/dispatch.sh D1.0`; Kaggle 404s (S2) cost one unit.
 
 ### J4 — Run the one-brain contest (`UB.10`) on the idle GPU
 **Why.** The fusion bakeoff — six arms including A5, experts + router ("if A5
