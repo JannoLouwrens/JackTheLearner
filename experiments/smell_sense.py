@@ -37,6 +37,19 @@ BOTH smell_shuffled's sum and level's (6), or if it out-eats both on fewer
 than 2 of the 3 seeds. Secondary reading, not gated: mean distance to the
 nearest floor food while alive (`d_mean`), smell vs shuffled.
 
+RESULT 11-12 13:34 — KILLED at 13k by the rule above: meals smell 1/5/2 (8),
+smell_shuffled 2/8/0 (10), level 1/2/3 (6); smell out-eats both on 0 of 3.
+d_mean (decision-weighted) smell 6.19/4.69/4.96 vs shuffled 5.43/4.09/6.10.
+The sense is informative (probe: bilateral points to food on 99.5 % of
+poses), so at this dose the learner, not the world, is the bottleneck.
+
+DOSE TEST, DECLARED BEFORE ITS SEEDS ARE READ (11-12 13:40): the same two
+arms, same seeds 91-93, 52k decisions (4x). Reading = meals in decisions
+26k-52k (the second half: learned behaviour, not birth luck), from the
+jsonl `k` column. KILL smell at dose if its second-half meals summed over
+seeds are not greater than smell_shuffled's, or it out-eats shuffled on
+fewer than 2 of 3 seeds. (No level arm at 52k: shuffled is the matched null.)
+
     nice -n 19 $PY -m experiments.smell_sense probe [seed]
     nice -n 19 $PY -m experiments.smell_sense pilot <arm> [seed] [total]
 """
