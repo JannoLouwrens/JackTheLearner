@@ -36,6 +36,8 @@ DRIVE_Z = None   # body-frame height of the push; None = COM (W0 as is)
 DRIVE_SCALE = 1.0  # multiplies W0's gated push (1.0 = W0 as is)
 ORACLE = "line"    # "line" = straight at the food (v3); "path" = grid
                    # detour around inflated geometry (see _Planner)
+SPAWN_SALT = 0     # !=0 reseeds the birth-position stream (BD.01's twin control)
+_ORIG_FRAGMENTS = None
 BODY = "pole"      # "pole" = W0 as built; "plinth" = W0.BAL arm C (wide box
                    # foot, mass moved into it), patched here so no certificate moves
 
@@ -44,13 +46,16 @@ def install_body(body: str) -> None:
     """Swap the rover fragments for W0.BAL arm C's plinth (w0bal_probe's
     exact strings). Refuses if the XML moved, so a pole is never run under
     a plinth label."""
-    global BODY
+    global BODY, _ORIG_FRAGMENTS
+    import playground as pg
+    if _ORIG_FRAGMENTS is None:
+        _ORIG_FRAGMENTS = pg._rover_fragments
+    pg._rover_fragments = _ORIG_FRAGMENTS   # one process may race both bodies
     BODY = body
     if body == "pole":
         return
     if body != "plinth":
         raise SystemExit(f"unknown body {body!r}")
-    import playground as pg
     from .w0bal_probe import (_FOOT_PLINTH, _FOOT_SPHERE, _TORSO_HEAVY,
                               _TORSO_LIGHT)
     orig = pg._rover_fragments
@@ -212,6 +217,8 @@ def classify(seed: int, n_ep: int, E: int, adh: float) -> list:
         raise RuntimeError(f"body {BODY} not carried by the world")
     if DRIVE_Z is not None or DRIVE_SCALE != 1.0:
         w.mujoco = _PushAt(w, DRIVE_Z, DRIVE_SCALE)
+    if SPAWN_SALT:
+        w._spawn_rng = np.random.RandomState(seed * 104729 + 7 + SPAWN_SALT)
     w.observe()
     b = w.rover_bid
     floor = {n: g for n, (g, _) in dr._food.items()
@@ -230,6 +237,7 @@ def classify(seed: int, n_ep: int, E: int, adh: float) -> list:
             if w.died_this_decision:
                 w.respawn()
         w.respawn()
+        birth_xy = [round(float(x), 2) for x in d.xpos[b][:2]]
         m0 = sum(dr.ate_total.values())
         a = np.zeros(8)
         a[4:6] = adh
@@ -290,7 +298,7 @@ def classify(seed: int, n_ep: int, E: int, adh: float) -> list:
             if mine in hands and other in ground_g:
                 hand_pen = max(hand_pen, -float(c.dist))
         rec = {"seed": seed, "body": BODY, "oracle": ORACLE,
-               "path_len0": path_len0, "blocked0": blocked0, "adh": adh, "drive_z": DRIVE_Z, "drive_scale": DRIVE_SCALE, "ep": ep, "fed": fed, "died": died,
+               "birth_xy": birth_xy, "path_len0": path_len0, "blocked0": blocked0, "adh": adh, "drive_z": DRIVE_Z, "drive_scale": DRIVE_SCALE, "ep": ep, "fed": fed, "died": died,
                "toppled": first_topple is not None,
                "first_topple": first_topple, "righted": righted,
                "up_end": round(float(ups[-1]), 2), "stuck": stuck,

@@ -8469,6 +8469,33 @@ EXPANSION: list[Spec] = [
                "so the verdict can say which. ~80 min/seed (2 workers), "
                "hence cpu<48h envelope; run detached."),
 
+    Spec("BD.01", 2, "A body that stands feeds a perfect path-follower more often than the pole",
+         hypothesis="Under a privileged detouring oracle (body_probe "
+                    "ORACLE=path, adhesion 0.5, 250 decisions, food ready at "
+                    "birth), W0.BAL arm C's plinth base feeds in at least "
+                    "MARGIN_BIRTHS=15 more of 120 births (40 x seeds 100, "
+                    "101, 102) than today's pole body, is not behind on ANY "
+                    "seed, and topples in <=10% of its births.",
+         falsified_by="Pooled plinth-minus-pole fed < 15 births, OR the "
+                      "plinth behind on any seed, OR plinth topples >10%; "
+                      "or the control firing the same gate.",
+         null_baseline="Today's pole body (capsule on a ball foot) under the "
+                       "identical oracle, world seed and birth stream.",
+         metric="fed_births_plinth_minus_pole", budget=Budget.CPU_DAYS,
+         seeds=3, depends_on=[],
+         control="MUST FAIL, RUN through the same gate_fires(): the plinth "
+                 "vs its own twin whose birth-position stream is salted — "
+                 "the same body differing ONLY in birth draws; chance spread "
+                 "must not read as a body effect.",
+         kills="Racing any learner (LF.04 and on) in the pole body as if it "
+               "could stand; the body default stays pole until this passes.",
+         notes="REGISTERED 2026-11-12 (ORDERS.md J1). Pilot (unpaired, s90/"
+               "s94 x20): plinth 12+18=30/40 vs pole 7+16=23/40 (+17.5 pp); "
+               "margin = 2 sd of a difference of two 120-birth binomials at "
+               "p=.6 (7.6 births), so a true +17.5 pp clears it ~3/4 of the "
+               "time - a FAIL reads 'not shown at this power'. Policy is a "
+               "privileged instrument, never part of him. ~2 h CPU, detached."),
+
     Spec("SO.01", 2, "Jack can be watched: a third-person stream exists and costs what we say it costs",
          hypothesis="A third-person view of a running life renders at >=5 fps at "
                     "320x240 on this box and is deliverable to the owner without "
