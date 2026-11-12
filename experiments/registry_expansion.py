@@ -8432,6 +8432,43 @@ EXPANSION: list[Spec] = [
                "is survival.run_survival's core path as a stepping object "
                "(a closure cannot be checkpointed); every piece imported."),
 
+    Spec("LF.04", 2, "Does living teach him? The learner outlives his own frozen twin",
+         hypothesis="The seated learning core (wm-latent), living 15 lives "
+                    "in lethal W0 with online updates, lives longer in its "
+                    "last five lives than its own frozen twin (same init, "
+                    "world seed, noise stream and exploration schedule; "
+                    "weights never updated) by at least MARGIN_S sim-s, AND "
+                    "longer than its own first five lives by MARGIN_S, on "
+                    "EVERY claim seed (100, 101, 102).",
+         falsified_by="Any claim seed on which either difference is below "
+                      "MARGIN_S; or either control firing the same gate on "
+                      "any seed.",
+         null_baseline="His own frozen twin: the same creature, never "
+                       "updated. A statue (zero action) is REPORTED as a "
+                       "reference, never gated: it separates foraging from "
+                       "keeping still.",
+         metric="late_life_gain_vs_frozen_twin", budget=Budget.CPU_DAYS,
+         seeds=3, depends_on=["LF.03"],
+         control="MUST FAIL, both RUN through the same gate_fires(): (1) "
+                 "twin-vs-twin — a second frozen twin differing ONLY in its "
+                 "exploration-noise draws, in the learner's place; (2) the "
+                 "learner with rewards permuted across steps inside each GAE "
+                 "segment (same optimiser steps, no credit information).",
+         kills="Card line 1's 'learns everything himself by living' as a "
+               "fact about the creature-as-built; the order then becomes "
+               "'why does the seated core not learn in lethal W0'.",
+         notes="REGISTERED 2026-11-12 (ORDERS.md J1). N, thirds, seeds, the "
+               "gate and the MARGIN RULE were declared in the module "
+               "docstring at commit 1e1dc3e before any learner life past "
+               "life 0 existed; MARGIN_S = max(20, 2*sd_twin*sqrt(2/5)) "
+               "from the 30 seed-90 pilot TWIN lives only = 272.812 "
+               "sim-s (sd_twin 215.7). Frozen twins lengthen 338 -> ~580 s "
+               "on the exploration decay alone; one twin life hit 1591 s. Pilot reference: statue lives 600.0 sim-s vs moving "
+               "frozen twins 338-394 — a survival gain can be learned "
+               "stillness; late meals vs the twin's are reported on the row "
+               "so the verdict can say which. ~80 min/seed (2 workers), "
+               "hence cpu<48h envelope; run detached."),
+
     Spec("SO.01", 2, "Jack can be watched: a third-person stream exists and costs what we say it costs",
          hypothesis="A third-person view of a running life renders at >=5 fps at "
                     "320x240 on this box and is deliverable to the owner without "

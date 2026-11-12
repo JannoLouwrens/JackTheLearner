@@ -35,9 +35,9 @@ learner / twin-A / twin-B, N_PILOT lives each, one per-life JSON line streamed
 to OUT as each life ends. Its job is to pick N and the margin from the twins'
 own life-to-life and twin-to-twin spread, declared before claim seeds are read.
 
-DECLARED 2026-11-12 08:20 UTC, BEFORE ANY LEARNER LIFE PAST LIFE 0 WAS READ
-(pilot launched 08:10; at declaration the file held learner life 0 = 421.2 s
-and twin lives 0-1 only):
+DECLARED 2026-11-12 08:12 UTC (commit 1e1dc3e), BEFORE ANY LEARNER LIFE PAST
+LIFE 0 EXISTED (pilot launched ~08:09; at declaration the file held learner
+life 0 = 421.2 s and twin lives 0-2 only):
   N_LIVES = 15 per arm per seed; thirds = lives 0-4 (early), 10-14 (late).
   MARGIN_S = max(MARGIN_FLOOR_S, 2 * sd_twin * sqrt(2 / 5)), where sd_twin is
     the pooled sample sd of single-life sim-s over ALL 30 pilot twin lives
@@ -59,8 +59,13 @@ and twin lives 0-1 only):
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import subprocess
 import sys
+import tempfile
 import time
+from pathlib import Path
 
 import numpy as np
 
@@ -111,6 +116,7 @@ def live_lives(L: _Life4, n_lives: int, out=None, tag: str = "") -> list:
             row = {"tag": tag, "life": len(lives), "sim_s": round(span, 2),
                    "decisions": k_life, "censored": int(not died),
                    "ate": ate - ate0, "k": L.k, "opt_steps": L.opt_steps,
+                   "cause": w.last_death_cause if died else "",
                    "wall_s": round(time.perf_counter() - t0, 1)}
             lives.append(row)
             if out is not None:
@@ -197,6 +203,129 @@ def margin_from_pilot(path: str = PILOT_FILE) -> dict:
     m = max(MARGIN_FLOOR_S, 2.0 * sd * (2.0 / THIRD) ** 0.5)
     return {"ready": True, "n_twin_lives": len(spans), "sd_twin": sd,
             "margin_s": m}
+
+
+# ── the claim (runs only once MARGIN_S is declared from the pilot) ──────────
+REPO = Path(__file__).resolve().parents[2]
+PY = "/data/venvs/jackthelearner/bin/python"
+_MOD = "experiments.tests.lf_04_living_teaches"
+# From margin_from_pilot() on the 30 seed-90 twin lives, 2026-11-12 08:33:
+# sd_twin 215.677 -> 2*sd*sqrt(2/5) = 272.812. The pooled sd carries the
+# exploration-decay trend (twin lives 338 -> ~580 s, approaching the statue's
+# 600 s) and one lucky 1591 s twin life, so this bar is conservative; it is
+# the DECLARED rule's value and is not revisited. Pilot twin-vs-twin late
+# difference: 204.2 s (A over B) — under the bar, as the control requires.
+MARGIN_S = 272.812
+CHILD_TIMEOUT_S = 4 * 3600
+
+
+def _arms_parallel(arms, seed, tmp):
+    """Run up to two arms side by side as child processes (box: <= 2 workers)."""
+    procs = {}
+    for arm in arms:
+        out = f"{tmp}/{arm}.jsonl"
+        open(out, "w").close()
+        procs[arm] = (subprocess.Popen(
+            ["nice", "-n", "19", PY, "-m", _MOD, "pilot", arm, str(seed),
+             str(N_LIVES), out], cwd=REPO, stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE), out)
+    res = {}
+    for arm, (p, out) in procs.items():
+        _, err = p.communicate(timeout=CHILD_TIMEOUT_S)
+        if p.returncode != 0:
+            raise RuntimeError(f"{arm} child rc={p.returncode}: "
+                               f"{err.decode()[-800:]}")
+        res[arm] = [json.loads(x) for x in open(out)]
+    return res
+
+
+def _spans(rows):
+    """Per-life sim-s, N_LIVES long; a censored final life fills the rest."""
+    sp = [r["sim_s"] for r in rows]
+    if rows and rows[-1]["censored"]:
+        sp += [sp[-1]] * (N_LIVES - len(sp))
+    return sp
+
+
+def _twin_cache(seed):
+    return f"/data/tmp/lf04/claim_twinA_s{seed}.jsonl"
+
+
+def _experiment(seed: int) -> dict:
+    from .lf_03_learner_lives import _calibration
+    s = seed + SEED_OFFSET
+    j0, _, prov = _calibration()
+    m = {"calibrated": float(j0 is not None), **prov}
+    if j0 is None:
+        return m
+    tmp = tempfile.mkdtemp(prefix=f"lf04_s{s}_", dir="/data/tmp")
+    r = _arms_parallel(["learner", "twinA"], s, tmp)
+    shutil.copy(f"{tmp}/twinA.jsonl", _twin_cache(s))
+    L, T = _spans(r["learner"]), _spans(r["twinA"])
+    eL, lL = _thirds(L)
+    eT, lT = _thirds(T)
+    m.update({
+        "twin_censored": float(any(x["censored"] for x in r["twinA"])),
+        "learner_censored": float(any(x["censored"] for x in r["learner"])),
+        "early_learner_s": eL, "late_learner_s": lL,
+        "early_twin_s": eT, "late_twin_s": lT,
+        "gain_vs_twin_s": lL - lT, "gain_vs_self_s": lL - eL,
+        "earns": float(gate_fires(L, T, MARGIN_S)),
+        "meals_late_learner": float(sum(x["ate"] for x in r["learner"][-THIRD:])),
+        "meals_late_twin": float(sum(x["ate"] for x in r["twinA"][-THIRD:])),
+        "spans_learner": json.dumps(L), "spans_twin": json.dumps(T),
+        "margin_s": MARGIN_S,
+    })
+    shutil.rmtree(tmp, ignore_errors=True)
+    return m
+
+
+def _control(seed: int) -> dict:
+    from .lf_03_learner_lives import _calibration
+    s = seed + SEED_OFFSET
+    j0, alpha, _ = _calibration()
+    if j0 is None:
+        return {"calibrated": 0.0}
+    tmp = tempfile.mkdtemp(prefix=f"lf04c_s{s}_", dir="/data/tmp")
+    r = _arms_parallel(["twinB", "shuffled"], s, tmp)
+    if os.path.exists(_twin_cache(s)):
+        twA = [json.loads(x) for x in open(_twin_cache(s))]
+    else:                      # experiment did not leave it: re-live it
+        twA = _arms_parallel(["twinA"], s, tmp)["twinA"]
+    shutil.rmtree(tmp, ignore_errors=True)
+    T, B, S = _spans(twA), _spans(r["twinB"]), _spans(r["shuffled"])
+    with open(PILOT_FILE.replace("pilot_s90", f"statue_s{s}"), "w") as out:
+        _statue_lives(s, j0, alpha, 3, out, f"statue:s{s}")
+    st = [json.loads(x)["sim_s"] for x in
+          open(PILOT_FILE.replace("pilot_s90", f"statue_s{s}"))]
+    return {
+        "twinB_censored": float(any(x["censored"] for x in r["twinB"])),
+        "twin_vs_twin_fired": float(gate_fires(B, T, MARGIN_S)),
+        "shuffled_fired": float(gate_fires(S, T, MARGIN_S)),
+        "late_twinB_s": _thirds(B)[1], "late_shuffled_s": _thirds(S)[1],
+        "statue_mean_life_s": float(np.mean(st)),
+    }
+
+
+def _check(m: dict, c: dict):
+    from ..protocol import Status
+    if m.get("calibrated") != 1.0 or c.get("calibrated", 1.0) != 1.0:
+        return Status.VOID
+    if m.get("twin_censored", 1.0) != 0.0 or c.get("twinB_censored", 1.0) != 0.0:
+        return Status.VOID     # a learning-free life outlived the cap
+    # per-seed 0/1 flags are aggregated as means: 1.0 = every seed, 0.0 = none
+    return bool(m.get("earns") == 1.0
+                and c.get("twin_vs_twin_fired") == 0.0
+                and c.get("shuffled_fired") == 0.0)
+
+
+def run(ledger=None):
+    if MARGIN_S is None:
+        raise SystemExit("LF.04: MARGIN_S not declared from the pilot yet")
+    from ..protocol import run_spec
+    from ..registry import BY_ID
+    return run_spec(BY_ID["LF.04"], _experiment, _check,
+                    control_fn=_control, ledger=ledger)
 
 
 if __name__ == "__main__":
