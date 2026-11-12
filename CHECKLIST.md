@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 110 / 264 demonstrated
+## 107 / 267 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -283,7 +283,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Replaying the exact call order a locomotion spec's kernel performs — untrained eval, rollout, PPO update, trained eval — the action-producing path is in eval mode and returns bit-identical actions for one identical state at BOTH evaluation points.
       - _dies if:_ Either evaluation point runs with dropout live, or two calls of the shipped eval path on one state differ.
       - _then delete:_ Any locomotion number produced by an eval path that bypasses act_deterministic.
-- [x] **T0.17** A verdict that did not come from a run cannot look like one
+- [!] **T0.17** A verdict that did not come from a run cannot look like one  — amendment_is_attributable=True; claim_hash_covers_every_claim_field=True
       - _asserts:_ Every change to a ledger entry that was not produced by run_spec is attributable from the entry itself — author, reason, prior value, commit and time — and no such change can set a status that asserts a capability.
       - _dies if:_ An amendment landing without author or reason; an amendment reaching PASS or FAIL; a run_spec result carrying an `amended` note it did not earn; an unreconstructible attempt count re-asserting an integer after a later run; or an amended verdict re-recorded into history with its amendment stripped.
       - _then delete:_ Nothing. It re-arms the ledger header's own claim that a capability here came from a test that could have failed.
@@ -565,7 +565,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ For each admissible arm: (U1) every modality key reaches the shared state tensor and no modality has a private path to the action; (U2) perturbing modality A's input produces a NONZERO finite-difference gradient at modality B's encoder through the arm's declared binding loss; (U3) each modality can be dropped without a shape error and the core's internal uncertainty CHANGES when it is; (U4) the need-state modality holds at least 1/|M| of the total prediction loss at init.
       - _dies if:_ Any arm failing any of U1-U4. That arm is INELIGIBLE FOR THE SEAT — it cannot be adopted, and it cannot buy adoption with a task score. It is still RUN AND SCORED, and its number is recorded as a standing challenger. [AMENDED 2026-08-24, owner ruling. This clause read 'EXCLUDED from LC.03/LC.04 - not scored and beaten, excluded'. That made the one-brain organisation unfalsifiable: a non-unified arm could not enter, so it could never be shown to win, however badly one-brain lost. An assumption that cannot lose is not a finding. The MEASURED gate is unchanged - the conjunction U1-U4 and its thresholds are byte-identical, and the bar to HOLD the seat is exactly what it was. What changed is that the loser's number is now kept instead of never taken. Strengthen-only: this adds evidence and removes no gate. Requires a re-run to re-buy the certificate under the amended text.]
       - _then delete:_ Bare PPO as a candidate learning core. Per docs/research/LEARNING_CORE.md 3.7, PPO's senses meet only through a scalar reward, so an admissible PPO arm must carry L_masked_cross_modal. Also kills TD-MPC2 outright (arXiv:2310.16828 is state-based proprioception only, no vision, by construction).
-- [x] **LC.02** A core that cannot live a life at survivable wall-clock is not a core
+- [!] **LC.02** A core that cannot live a life at survivable wall-clock is not a core  — action_dim=8.0; action_dim_std=0.0
       - _asserts:_ Every admissible arm sustains at least 5.0 simulated seconds of Jack's life per real second on 3 ARM cores at nice 19 with the learner in the loop, at the train_ratio this spec selects for it; and the selected train_ratio is the largest power-of-two value that clears that floor.
       - _dies if:_ An arm below 5.0 sim-s/real-s at every train_ratio down to its minimum. That arm is EXCLUDED: GOAL.md requires lives, death and cross-life learning, and a core that cannot produce a second life inside a builder iteration cannot deliver them at any sample efficiency.
       - _then delete:_ Any arm's train_ratio above the largest affordable value, and any arm that cannot reach the floor at all. NOTE THE ANTI-GAMING RULE: this spec's _check MAY NOT READ life_gain. Selecting a hyperparameter by its score is tuning on the metric; selection here is on wall-clock fit only, and the chosen value is committed to the ledger before LC.03 runs.
@@ -1141,6 +1141,18 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ The seated learning core (wm-latent) drives the body in lethal W0 across >= 5 deaths with every W0 sense live, updating its weights online; the world-written diary carries every earlier death across every respawn; one mid-life save-and-resume in a fresh process carrying the learner's weights, optimiser and replay continues the uninterrupted life bit-exactly for 200 decisions; no crash, no non-finite state, weights measurably changed.
       - _dies if:_ A crash or non-finite state; weights that did not move (relative L2 < 1e-3 or zero optimiser steps); a respawn at which an earlier death row is missing from the diary; a dead sense (zero variance over the life); a resumed continuation that differs from the uninterrupted one in any bit of world, needs, learner or diary — on ANY seed.
       - _then delete:_ Every claim about Jack that assumes the creature-as-built runs end to end — every performance spec on a whole life.
+- [ ] **LF.04** Does living teach him? The learner outlives his own frozen twin
+      - _asserts:_ The seated learning core (wm-latent), living 15 lives in lethal W0 with online updates, lives longer in its last five lives than its own frozen twin (same init, world seed, noise stream and exploration schedule; weights never updated) by at least MARGIN_S sim-s, AND longer than its own first five lives by MARGIN_S, on EVERY claim seed (100, 101, 102).
+      - _dies if:_ Any claim seed on which either difference is below MARGIN_S; or either control firing the same gate on any seed.
+      - _then delete:_ Card line 1's 'learns everything himself by living' as a fact about the creature-as-built; the order then becomes 'why does the seated core not learn in lethal W0'.
+- [ ] **BD.01** A body that stands feeds a perfect path-follower more often than the pole
+      - _asserts:_ Under a privileged detouring oracle (body_probe ORACLE=path, adhesion 0.5, 250 decisions, food ready at birth), W0.BAL arm C's plinth base feeds in at least MARGIN_BIRTHS=15 more of 120 births (40 x seeds 100, 101, 102) than today's pole body, is not behind on ANY seed, and topples in <=10% of its births.
+      - _dies if:_ Pooled plinth-minus-pole fed < 15 births, OR the plinth behind on any seed, OR plinth topples >10%; or the control firing the same gate.
+      - _then delete:_ Racing any learner (LF.04 and on) in the pole body as if it could stand; the body default stays pole until this passes.
+- [!] **W0.PL** The pool's water does not trap a body on dry floor
+      - _asserts:_ With the shipped playground.Water.apply, pole and plinth driven straight across the W0 pool (4 crossings built from the pool's geometry, 40 decisions, full gated drive) travel >= 0.90 of their water-forces-off travel on every valid crossing of world seeds 100, 101, 102.
+      - _dies if:_ Any valid crossing on any seed or body below ratio 0.90; or the frozen 11-12 apply (the control) also clearing 0.90.
+      - _then delete:_ Racing any learner (LF.04, BD.01, J5 staging) in a W0 whose pool band stalls the drive; food obj1 sits inside the band.
 - [x] **SO.01** Jack can be watched: a third-person stream exists and costs what we say it costs
       - _asserts:_ A third-person view of a running life renders at >=5 fps at 320x240 on this box and is deliverable to the owner without a persistent listening service; the measured render cost is reported as a fraction of the life's compute budget.
       - _dies if:_ Rendering unavailable, OR the render cost pushing the real-time factor below 1.0 (watching would then be slower than living).
@@ -1171,7 +1183,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every launch through scripts/launch_detached.sh is admitted against the same day ledger as the runner's children BEFORE it detaches, and bills its measured wall clock incrementally as it runs — split across the calendar days it spans — so a multi-day child appears in every day it occupied and a group-killed child undercharges by at most one heartbeat.
       - _dies if:_ A detached child that runs without moving the budget, a midnight-straddling interval billed to a single day, or an undercharge after SIGKILL of the process group exceeding one heartbeat plus slack.
       - _then delete:_ Nothing on the ladder; it protects the tenants, which SYSTEM.md ranks above the ladder.
-- [x] **T0.35** An implementation dependency cannot go undeclared
+- [!] **T0.35** An implementation dependency cannot go undeclared
       - _asserts:_ Every registered spec's implementation module, parsed statically (never imported), declares in IMPL_DEPS every repo-root module it imports at ANY nesting depth — except a named, shrink-only grandfather set of today's 35 measured violators, which may only lose entries — and every registered module compile()s (dp_04 carried a statement above its future-import for seven days; ast.parse accepts that, compile() refuses it).
       - _dies if:_ A repo-root import absent from both IMPL_DEPS and the grandfather set (a NEW undeclared dependency, on any spec), a grandfather entry that no longer matches a live violation (stale allowlist = licence for silent regression), a registered module that does not compile, or the detector missing the lazy known-positive fixture / firing on the declarer fixture.
       - _then delete:_ The assumption that a green STALE-CLAIMS lane means the board is fresh. It means the DECLARING third of the board is fresh; this spec makes the other two thirds unable to hide.
