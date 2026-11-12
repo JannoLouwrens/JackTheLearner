@@ -184,6 +184,7 @@ FORAGER_DUTY = 0.10
 APPLE_BURST_DEC = 50          # 10 s full-power: the climb's energy bill
 NIGHT_DECISIONS = 2000        # one 400 s night
 NIGHT_SETTLE_DEC = 25         # awake bed-down shared by fine and coarse twins
+POSE_REST_DEC = 120           # shelter probe reads occ at rest: seed-1 body creeps +x until ~dec 100
 OPEN_SPOT = (-0.8, -1.0)      # flat ground: no ramp, stairs, ladder or pool
 LYING_QUAT = (0.7071, 0.0, 0.7071, 0.0)
 HOME_SPOT = (-1.0, -1.2, 0.30)  # open ground, clear of the ladder/platform —
@@ -413,14 +414,27 @@ def _find_shelter_pose(seed: int) -> dict:
     best_band, best_max = None, (0.0, None)
     q0 = data.qpos.copy()
 
+    from experiments import needs
+
     def probe(x, y):
+        # Read occlusion AT REST after the night's own bed-down, not after a
+        # 1 s settle: measured 11-12 (experiments/shelter_pose_bed.py, seed 1)
+        # the placed body keeps sliding for ~30 decisions (root -2.25,1.34 ->
+        # -2.01,1.13; occ .667 -> .333 -> 0.0), so the old probe certified a
+        # transient the sleeper never holds. Same steps as _night: fresh
+        # layer at nightfall, zero ctrl, _step_decision, POSE_REST_DEC long
+        # (at (-2.5,1.4) occ reads 1.0 -> .889 -> .667 at dec 50 -> .333 from
+        # dec 80 on, root x -2.50 -> -2.18; 50 decisions was still a transient).
         nonlocal best_band, best_max
+        mujoco.mj_resetData(model, data)
         data.qpos[:] = q0
         _place(model, data, qadr, (x, y, 0.25))
-        for _ in range(200):                        # settle 1 s
-            data.ctrl[:] = 0.0
-            mujoco.mj_step(model, data)
-        occ = layer._sky_occlusion(model, data)
+        lay = _layer(model, pool, 0)
+        lay.t = needs.DAY_S
+        lay.state = needs.NeedState(p=0.70)
+        for _ in range(POSE_REST_DEC):
+            _step_decision(model, data, water, lay, np.zeros(model.nu))
+        occ = lay._sky_occlusion(model, data)
         if occ > best_max[0]:
             best_max = (occ, (x, y))
         if 0.5 <= occ <= 0.9:

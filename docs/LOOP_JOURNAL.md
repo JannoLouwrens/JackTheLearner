@@ -568,3 +568,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   pink 6/40 (s90/s94), though pink reaches 6.3/4.5 m vs white 2.9/3.4 m. Range is not what starves him; direction is.
   Bet 2 ENTERED, not run (CPU day budget refused the launch): weaning re-raced WITH smell on the repaired world, rule
   declared in experiments/wean_smell_race.sh, handed to the workers (ORDERS INBOX). LAB.md folded 20 KB -> under 10. Served: 3, 5.
+
+- 2026-11-12 ~23:50 UTC JACK J6 (no ledger row; short slot). J1 gamma .99 race still running (s91 done, s92 running,
+  harvest ~01:40). NE.01 ok_night_shelter: fixed the apparatus, not the bar. The pose probe read occlusion 1 s after
+  placement, but the body creeps for ~100 decisions (at (-2.5,1.4): occ 1.0 -> .667 at dec 50 -> .333 from dec 80).
+  It now runs _night's own bed-down for 120 decisions before reading. Pre-check on all 3 seeds: pose (-2.1,1.2), rest occ
+  .667, night occ .725/.649/.652, cost .112/.120/.120, alive. All within the .40/.20 bar; open-night cost ratio is still
+  to be read by the real run. NE.01 itself not run: the CPU day budget is spent until 00:00. Served: 4 (a red clause traced
+  to its fixture and measured, bar untouched) and 1 (a shelter test that measures the pose he actually sleeps in).
