@@ -78,14 +78,25 @@ def _submit() -> dict:
     # (attempt 1 on a Colab T4: 0.65 GPU-h for three arms incl. setup).
     res = submit(job, prefer="kaggle", est_hours=0.9, timeout_s=6600,
                  fetch=["t108.json"])
+    _keep_stdout(res)
     if not res.ok:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")
     path = res.artifacts.get("t108.json")
-    if not path:
-        raise RuntimeError(
-            f"no artifact from {res.backend}. message={res.message!r} "
-            f"stdout_tail={res.stdout[-400:]!r} stderr_tail={res.stderr[-400:]!r}")
-    d = json.loads(Path(path).read_text())
+    if path:
+        d = json.loads(Path(path).read_text())
+    else:
+        # The artifact download lost the run VM (2026-11-12, attempt 2: colab
+        # exited 0 after 66 min, `fetch failed: /content/t108.json exists=False`,
+        # 1.10 GPU-h of five finished arms thrown away). The JOB prints the
+        # whole payload on one `JACKRESULT {...}` line (t108 ruling §9d) and the
+        # run session's stdout is the channel that survives; read it there.
+        d = _payload_from_stdout(res.stdout)
+        if d is None:
+            raise RuntimeError(
+                f"no artifact and no JACKRESULT line from {res.backend}. "
+                f"message={res.message!r} stdout_tail={res.stdout[-400:]!r} "
+                f"stderr_tail={res.stderr[-400:]!r}")
+        d["recovered_from"] = "stdout JACKRESULT line (t108 ruling 9d)"
     d["backend"] = res.backend
     all_arms = d["arms"]
     n = len(SEEDS)
@@ -94,6 +105,33 @@ def _submit() -> dict:
     d["arms"] = all_arms[:n]                       # the real triple, as before
     d["ignored_arms"] = [all_arms[0]] + all_arms[n:]  # same seed, three runs
     return d
+
+
+STDOUT_DIR = Path("/data/jack-logs/gpu_stdout")
+
+
+def _keep_stdout(res) -> None:
+    """Write the job's WHOLE stdout/stderr to disk before anything can fail.
+    Attempt 2's payload existed only in that stdout, and the ledger kept a
+    400-char tail of it. Best-effort: a failed write never fails the run."""
+    try:
+        STDOUT_DIR.mkdir(parents=True, exist_ok=True)
+        stem = f"T1.14-{res.job_id or 'nojob'}".replace("/", "_")
+        (STDOUT_DIR / f"{stem}.stdout").write_text(res.stdout or "")
+        (STDOUT_DIR / f"{stem}.stderr").write_text(res.stderr or "")
+    except Exception:
+        pass
+
+
+def _payload_from_stdout(stdout: str):
+    """The last parseable `JACKRESULT {...}` line, or None."""
+    for line in reversed((stdout or "").splitlines()):
+        if line.startswith("JACKRESULT "):
+            try:
+                return json.loads(line[len("JACKRESULT "):])
+            except json.JSONDecodeError:
+                return None
+    return None
 
 
 def _seed_clause(held: list) -> tuple:
@@ -124,6 +162,7 @@ def _experiment(seed: int) -> dict:
         # visible beside this verdict. Gating it here would just be T1.08.
         "heldout_cv_pct": round(100 * h_std / max(abs(h_mean), 1e-9), 3),
         "lr_final_max": max(a.get("lr_final", -1.0) for a in arms),
+        "artifact_channel": _CACHE.get("recovered_from", "t108.json download"),
     }
 
 
