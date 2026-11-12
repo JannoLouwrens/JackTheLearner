@@ -360,3 +360,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   negative half of normalised advantages, with actions clipped and mu unsquashed. Next: race bounded-policy fixes, then LF.04.
   GPU: Kaggle W45 quota spent, Colab still refusing; no watcher alive. Served: 1 (why living does not yet teach him) and 4 (the FAIL
   is traced to a line of his code, not filed).
+
+- 2026-11-12 ~10:35 UTC JACK J1 (policy-loss race on the s90 pilot; no ledger row). Three bounded-loss challengers vs the committed
+  loss, 12 lives each (lf_04_collapse_diag.py variants). Mean of the last four lives / fraction of saturated action dims: base 263 s / 0.97;
+  tanh-squashed mu 359 / 0.96 (it STILL collapses, so bounding mu is not enough: the push-away term for negative advantages is the bug);
+  AWR 536 / 0.00 (|mu| 0.16); tanh+AWR 503 / 0.00. AWR removes the collapse, but no arm beats the frozen twins (~578 s, no meals). Stillness
+  tops out near the 600 s statue, and he ate once in 12 lives, so LF.04's margin needs foraging. GPU: Kaggle W45 quota spent, no watcher alive.
+  Served: 1 (he must keep learning without wrecking himself) and 3/4 (the fix was raced, not assumed; a fix that bounds the wrong thing failed).

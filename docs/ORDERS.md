@@ -57,11 +57,13 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 REGISTERED 7446b86 (15 lives, seeds 100-102, MARGIN_S 272.812; controls twin-vs-twin + shuffled). Still NOT RUN: CPU gate admits no lane (INBOX 08:45).
-11-12 09:50 COLLAPSE DIAGNOSED (lf_04_collapse_diag.py, bit-exact replay of s90; /data/tmp/lf04/diag_s90.jsonl): the actor's pre-clip mean RUNS AWAY,
-|mu| 1.8 -> 7.1 -> 19.3 by life 3, 100% of dims past +-0.9 lives 4-7. The "600 s ceiling" lives are a JAMMED saturated body (path 4-5 m/life), not foraging;
-the meal in life 8 (60 m) jolts the weights (dtheta 11.9 -> 15.7) and he dies in 119 s, still saturated. All deaths energy. Cause: cores.py:542 l_pi=||mu-a||^2*adv
-with per-segment-normalised adv (half negative) is UNBOUNDED BELOW, a clipped to +-1, actor unsquashed. Next: race fixes on s90 (tanh-bounded mu / AWR exp(adv) / PPO-clip) as LC challengers, then run LF.04.
+state: 11-12 REGISTERED 7446b86 (15 lives, seeds 100-102, MARGIN_S 272.812). NOT RUN: CPU gate admits no lane (INBOX 08:45).
+09:50 collapse traced to cores.py:542 l_pi=||mu-a||^2*adv (unbounded below for adv<0, mu unsquashed): |mu| 1.8->19.3, 100% saturated.
+10:35 RACE on s90, 12 lives each (lf_04_collapse_diag.py variants; /data/tmp/lf04/diag_s90_*.jsonl): last-4-life mean / sat / |mu| =
+base 263 s/0.97/12.4; tanh 359/0.96/0.98 (COLLAPSES too: bounding mu is not enough, the push-away sign is the bug); AWR 536/0.00/0.16;
+tanh-AWR 503/0.00/0.21. AWR fixes the collapse but does NOT beat the frozen twins (~578 s w/o meals; 1 meal in 12 lives): stillness tops out
+near 600 s and only eating can clear MARGIN_S. Next: add policy_loss="awr" to cores.lc_update as a challenger (default unchanged), then race
+it vs base on LF.04 with a matched frozen twin; measure meal rate per life, since the claim needs him to forage.
 ### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
 **Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate
 is now trained-vs-own-untrained-twin (the 09-12 amendment — no new id needed).
