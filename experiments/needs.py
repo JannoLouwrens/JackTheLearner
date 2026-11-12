@@ -111,6 +111,8 @@ KAPPA_WET = 4.0              # PROPOSAL: soaked skin loses heat 5x dry —
                              # bounded stand-in for water's far higher
                              # conductance; NE.01 measures what it does
 OCC_CUT = 0.7                # §2.3 gives it: full occlusion cuts k_eff by 70 %
+H_R = 4.7                    # W/m2K radiative (ASHRAE; W.1's registry notes)
+H_C_STILL = 3.0              # W/m2K natural convection, still air (same source)
 C_EV = 0.5 * M_BASAL         # W  PROPOSAL: full-wet evaporation sheds half
                              # basal at thermoneutral, more when sweating
 
@@ -242,16 +244,34 @@ def need_drive(e, w, p, T, f, c, i) -> float:
     return float(s ** (1.0 / M_EXP))
 
 
-def metabolic_rate(p_mech: float, T: float, kappa_act: float) -> float:
+def metabolic_rate(p_mech: float, T: float, kappa_act: float,
+                   shiver_on: bool = True) -> float:
     """M = M_basal + kappa_act*P_mech + shiver (§2.3). Shivering is capped at
     2x basal, so deep cold at most TRIPLES the drain — the '3x' in the §2.2
-    interaction table is this cap, not a tuned cross-term."""
-    shiver = min(SHIVER_CAP, C_SH * max(0.0, T_SETPOINT - T))
+    interaction table is this cap, not a tuned cross-term. `shiver_on=False`
+    holds the body at exactly 1 met (W.1's reference body has no
+    thermoregulation); the world itself never passes it."""
+    shiver = (min(SHIVER_CAP, C_SH * max(0.0, T_SETPOINT - T))
+              if shiver_on else 0.0)
     return M_BASAL + kappa_act * p_mech + shiver
 
 
-def k_eff(skin_wetness: float, sky_occlusion: float) -> float:
-    return K_DRY * (1.0 + KAPPA_WET * skin_wetness) * (1.0 - OCC_CUT * sky_occlusion)
+def wind_factor(wind_ms: float) -> float:
+    """Forced convection (W.1 check c): h = h_r + max(h_c_still, 8.6*v^0.53),
+    normalised so still air is exactly 1.0 and K_DRY keeps its meaning.
+    ASHRAE / Gagge constants (h_r 4.7, h_c 3.0 still, 8.6*v^0.53 forced) as
+    cited in W.1's registry notes. W0 drives no wind yet (W.3's business);
+    the term is here so the overlay obeys the published law when it does."""
+    if wind_ms <= 0.0:
+        return 1.0
+    h_c = max(H_C_STILL, 8.6 * wind_ms ** 0.53)
+    return (H_R + h_c) / (H_R + H_C_STILL)
+
+
+def k_eff(skin_wetness: float, sky_occlusion: float,
+          wind_ms: float = 0.0) -> float:
+    return (K_DRY * (1.0 + KAPPA_WET * skin_wetness)
+            * (1.0 - OCC_CUT * sky_occlusion) * wind_factor(wind_ms))
 
 
 def e_evap(skin_wetness: float, T: float) -> float:
@@ -263,11 +283,12 @@ def e_evap(skin_wetness: float, T: float) -> float:
 
 def thermal_step(T: float, p_mech: float, skin_wetness: float,
                  sky_occlusion: float, T_env: float, dt: float,
-                 kappa_act: float) -> float:
+                 kappa_act: float, wind_ms: float = 0.0,
+                 shiver_on: bool = True) -> float:
     """One Euler step of C_eff*dT = M - k_eff*(T - T_env) - E_evap (§2.3).
     Pure, so NE.01's §9 coarse-vs-fine check can drive it at any dt."""
-    m = metabolic_rate(p_mech, T, kappa_act)
-    dT = (m - k_eff(skin_wetness, sky_occlusion) * (T - T_env)
+    m = metabolic_rate(p_mech, T, kappa_act, shiver_on)
+    dT = (m - k_eff(skin_wetness, sky_occlusion, wind_ms) * (T - T_env)
           - e_evap(skin_wetness, T)) / C_EFF
     return T + dT * dt
 

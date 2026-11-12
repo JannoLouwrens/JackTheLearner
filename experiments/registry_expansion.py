@@ -5906,7 +5906,18 @@ EXPANSION: list[Spec] = [
                "thermal model to pass this spec, which would certify the test "
                "rather than the world. Boundary vs `PS.02`: that spec asserts "
                "the field exists, is felt, and kills; this one asserts it obeys "
-               "the published law. Neither subsumes the other."
+               "the published law. Neither subsumes the other.\n"
+               "RE-REGISTRATION NOTE 2026-11-12 (J6): the gated arm is the "
+               "shipped `thermal_step` driven at exactly 1 met "
+               "(`shiver_on=False`), because this hypothesis names 'a body at "
+               "1 met' and the reference has no thermoregulation — the old "
+               "gated arm shivered (M = 200 W at 34 C), comparing unlike "
+               "things on (a) and (c). The world as it runs (shivering on) "
+               "ships beside it as `closed_*`, never gated. needs.py gained a "
+               "wind input to k_eff (h_r + max(3.0, 8.6*v^0.53), ASHRAE) so "
+               "check (c) has a velocity to drive. No bar moved; (b) STAYS at "
+               "1x wall-clock as noted above and as W.7's control requires; "
+               "its compressed-clock reading is reported only."
                "  COVERS: thermal (kills) (fixture)"),
 
     Spec("W.2", 2, "Needs are a conserved ledger, and they can kill",

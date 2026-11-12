@@ -6,6 +6,22 @@ is the bottleneck (LC.03's darkroom control, LC.03 v2's one-learner-in-five,
 DP.05's FAIL, SH.01's ORACLE_CANNOT, SH.02's saturated null). This is the first
 spec that asks the world whether it obeys its own published law.
 
+RE-REGISTERED 2026-11-12 (J6) — READ THIS FIRST
+-----------------------------------------------
+The GATED arm is now the shipped `thermal_step` at exactly 1 met
+(`shiver_on=False`, `_make_ship_1met`). The hypothesis names "a body at 1 met"
+and the reference has no thermoregulation; the old gated arm shivered, so (a)
+read 34.00 (M = 100 W basal + 100 W shiver) and (c) read a closed-loop tau
+ratio. Same code path, no second thermal model. `needs.k_eff` gained a wind
+input (h_r + max(h_c_still, 8.6*v^0.53)), closing finding 3 in the OVERLAY —
+W0 still drives no wind (W.3). The world as it runs ships as `closed_*`.
+Smoke, seed 100: (a) 27.00 PASS, (c) 0.3092 PASS, (d) PASS; (b) 20.0000052
+FAIL at 1x — the world compresses tau ~71x, which W.7's control forbids for
+physics. On the compressed clock (b) reads 33.803 (0.1%), REPORTED ONLY.
+New closed-loop finding: at 5 m/s, 20 C, shivering saturates and the body
+parks at ~26.5 C, below T_COLD_DEATH — a windy night can kill once W.3 adds wind.
+Findings 1-5 below describe the pre-2026-11-12 arm and are kept as history.
+
 WHAT IS UNDER TEST, AND WHAT IS NOT
 -----------------------------------
 The overlay under test is the one SHIPPED in `experiments/needs.py`:
@@ -281,19 +297,38 @@ def _ref_ambient_thermoneutral(T_body_neutral: float) -> float:
 # ══════════════════════════════════════════════════════════════════════════
 def _ship(T: float, T_env: float, dt: float, occ: float = 0.0,
           wet: float = 0.0) -> float:
-    """One step of the world's own thermal ODE. Dry, still, at rest.
-
-    Note what is NOT in this call: a wind velocity. There is no argument to
-    pass one to. That absence is check (c)'s finding, measured below rather
-    than asserted.
-    """
+    """One step of the world's own thermal ODE, AS THE WORLD RUNS IT: dry,
+    still, at rest, shivering on. Since 2026-11-12 this is a REPORTED arm
+    (`closed_*`), not the gated one — see `_ship_1met`."""
     return N.thermal_step(T, 0.0, wet, occ, T_env, dt, 0.0)
+
+
+def _make_ship_1met(wind_ms: float):
+    """THE GATED ARM (re-registered 2026-11-12). The shipped `thermal_step`,
+    unmodified, driven at exactly 1 met (`shiver_on=False`) and at a given
+    wind speed. The registered hypothesis describes "a body at 1 met in still
+    air"; the reference body has no thermoregulation. Shivering raises M above
+    1 met (34.0 C settle = 100 W basal + 100 W shiver), so the old gated arm
+    compared a thermoregulating body with a passive one — unlike things.
+    Same code path, same constants, no second thermal model."""
+    def step(T: float, T_env: float, dt: float, occ: float = 0.0,
+             wet: float = 0.0) -> float:
+        return N.thermal_step(T, 0.0, wet, occ, T_env, dt, 0.0,
+                              wind_ms=wind_ms, shiver_on=False)
+    return step
 
 
 def _ship_flux_w(T: float, T_env: float, occ: float = 0.0,
                  wet: float = 0.0) -> float:
     """Net power crossing the boundary, W — the numerator of the shipped ODE."""
     return (N.metabolic_rate(0.0, T, 0.0)
+            - N.k_eff(wet, occ) * (T - T_env)
+            - N.e_evap(wet, T))
+
+
+def _ship_1met_flux_w(T: float, T_env: float, occ: float = 0.0,
+                      wet: float = 0.0) -> float:
+    return (N.metabolic_rate(0.0, T, 0.0, shiver_on=False)
             - N.k_eff(wet, occ) * (T - T_env)
             - N.e_evap(wet, T))
 
@@ -517,13 +552,42 @@ def _reference_arm(seed: int, wind_blind: bool, tag: str) -> dict:
 
 
 def _experiment(seed: int) -> dict:
-    """THE SHIPPED WORLD: experiments/needs.py's thermal overlay."""
-    # step_wind is None because there is no velocity parameter to pass — a
+    """THE SHIPPED WORLD: experiments/needs.py's thermal overlay at 1 met."""
+    # step_wind is None when there is no velocity parameter to pass — a
     # structural fact, re-derived from the signatures rather than assumed.
     has_wind = bool(_ship_accepts_wind())
-    m = _four_checks(_ship, _ship_flux_w, N.C_EFF,
-                     _ship if has_wind else None, seed=seed, tag="shipped")
+    m = _four_checks(_make_ship_1met(0.0), _ship_1met_flux_w, N.C_EFF,
+                     _make_ship_1met(WIND_V_MS) if has_wind else None,
+                     seed=seed, tag="shipped_1met")
     m["w_signature_accepts_wind"] = float(has_wind)
+
+    # The world AS IT RUNS (shivering on), reported never gated. Its tau ratio
+    # under wind is a closed-loop quantity (K_DRY*f + C_SH)/(K_DRY + C_SH),
+    # not the lumped-capacitance ratio check (c) names.
+    def _ship_wind(T, T_env, dt, occ=0.0, wet=0.0):
+        return N.thermal_step(T, 0.0, wet, occ, T_env, dt, 0.0,
+                              wind_ms=WIND_V_MS)
+    closed = _four_checks(_ship, _ship_flux_w, N.C_EFF,
+                          _ship_wind if has_wind else None, seed=seed,
+                          tag="shipped_closed_loop")
+    for k in ("a_settled_body_c", "a_pass", "b_homogeneous_1h_c", "b_pass",
+              "b_literal_1h_c", "c_tau_still_s", "c_tau_wind_s", "c_tau_ratio",
+              "c_pass", "d_pass", "four_checks_pass"):
+        m["closed_" + k] = closed[k]
+
+    # (b) on the world's own compressed clock (1 h = 3600/k sim-s, k = 72),
+    # REPORTED NEVER GATED: W.1's notes and W.7's registered control both say
+    # the decay check runs at 1x and a 70 kg body's tau cannot be sped up by a
+    # clock convention. The shipped world compresses its thermal tau ~71x, so
+    # (b) at 1x fails BY DESIGN of the world, not of the overlay's form.
+    k_day = 86400.0 / N.SIM_DAY_S
+    if math.isfinite(m["c_tau_still_s"]) and m["c_tau_still_s"] > 0:
+        m["b_compressed_1h_c"] = SCENARIO_TENV_C + (
+            SCENARIO_T0_C - SCENARIO_TENV_C) * math.exp(
+            -(DECAY_T_S / k_day) / m["c_tau_still_s"])
+    else:
+        m["b_compressed_1h_c"] = SCENARIO_T0_C
+    m["b_compressed_rel_err"] = abs(m["b_compressed_1h_c"] - DECAY_1H_C) / DECAY_1H_C
 
     # Provenance of the world's own numbers, so the record does not depend on
     # this file having read them correctly.
@@ -543,9 +607,9 @@ def _experiment(seed: int) -> dict:
     # relaxation is 72.0 s — 3.33x faster than the constant the world names.
     # Reported, not gated: check (b) fails on either value (20.0 vs 20.0000052
     # against 33.767), so no verdict here turns on the distinction.
-    m["w_tau_measured_closed_loop_s"] = m["c_tau_still_s"]
-    m["w_shiver_speedup"] = (float(N.C_EFF / N.K_DRY) / m["c_tau_still_s"]
-                             if m["c_tau_still_s"] > 0 else float("nan"))
+    m["w_tau_measured_closed_loop_s"] = m["closed_c_tau_still_s"]
+    m["w_shiver_speedup"] = (float(N.C_EFF / N.K_DRY) / m["closed_c_tau_still_s"]
+                             if m["closed_c_tau_still_s"] > 0 else float("nan"))
 
     # W.7's transformation, reported never gated (finding 2). Open-loop against
     # open-loop: the reference has a constant source and no feedback term, so
