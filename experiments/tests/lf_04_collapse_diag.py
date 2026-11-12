@@ -20,6 +20,20 @@ Hypotheses this can separate (decided by the readings, not argued):
   H1 learned stillness then a reward/value blow-up (loss_max, v_sd jump at 8-9)
   H2 policy saturation (act_sat -> 1: he runs flat out and starves faster)
   H3 a new death cause appears after the meal (cause changes at life 9)
+
+VARIANTS (the 11-12 policy-loss race; H2 was confirmed and traced to
+cores.py's l_pi = ||mu - a||^2 * adv, unbounded below for adv < 0 with mu
+unsquashed). Each challenger changes ONLY the policy term; world, seed, core,
+critic, binding loss, cadence and exploration are the pilot's:
+  base       cores.lc_update as committed (bit-exact replay of the pilot)
+  tanh       mu = tanh(actor(s)) in rollout AND loss: the loss is bounded,
+             but a negative advantage still pushes mu away from a
+  awr        advantage-weighted regression: weight = min(exp(adv/AWR_BETA),
+             AWR_WMAX) >= 0, so every action is pulled TOWARD, never pushed
+             away; mu unsquashed (it regresses onto clipped actions)
+  tanh-awr   both
+Not a spec: it picks which bounded loss LF.04 should be re-run with; the
+claim is LF.04's, on seeds 100-102, against his frozen twin.
 """
 from __future__ import annotations
 
@@ -29,9 +43,41 @@ import time
 
 import numpy as np
 
+VARIANTS = ("base", "tanh", "awr", "tanh-awr")
+AWR_BETA = 1.0     # advantages are per-segment normalised, so beta=1 (Peng 2019)
+AWR_WMAX = 20.0    # Peng 2019's weight clip
+
+
+def _awr_update(core, batch, targets, opt, *, dropped=()):
+    """cores.lc_update with ONLY the policy term replaced (AWR)."""
+    import torch
+    import torch.nn.functional as F
+
+    from .. import cores
+    was_training = core.training
+    core.train()
+    try:
+        l_bind, _ = core.binding_loss(batch, dropped)
+        z = core.shared_state(batch, dropped)
+        l_v = F.mse_loss(core.critic(z), targets["value"])
+        if getattr(core, "lp", False):
+            l_v = l_v + F.mse_loss(core.critic_lp(z), targets["value_lp"])
+        a = core.act(batch, z)
+        w = torch.clamp(torch.exp(targets["advantage"] / AWR_BETA),
+                        max=AWR_WMAX)
+        l_pi = (((a - targets["action"]) ** 2).mean(-1) * w).mean()
+        loss = l_bind + cores.VALUE_COEF * l_v + l_pi
+        opt.zero_grad(set_to_none=True)
+        loss.backward()
+        opt.step()
+        return float(loss.detach())
+    finally:
+        core.train(was_training)
+
 
 def main(seed: int = 90, n_lives: int = 12,
-         out_path: str = "/data/tmp/lf04/diag_s90.jsonl") -> None:
+         out_path: str = "/data/tmp/lf04/diag_s90.jsonl",
+         variant: str = "base") -> None:
     import torch
 
     from .. import cores
@@ -44,6 +90,13 @@ def main(seed: int = 90, n_lives: int = 12,
         raise SystemExit(f"PS.01 calibration refused: {prov}")
     L = _Life4(seed, j0, alpha, train=True)
     w = L.w
+    if variant not in VARIANTS:
+        raise SystemExit(f"unknown variant {variant!r}; one of {VARIANTS}")
+    if variant.startswith("tanh"):
+        raw_act = L.core.act
+        L.core.act = lambda obs, s: torch.tanh(raw_act(obs, s))
+    if variant.endswith("awr"):
+        cores.lc_update = _awr_update
 
     acc = {"act": [], "val": [], "loss": [], "rew0": len(L.seg["rew"])}
     core_act = L.core.act
@@ -132,4 +185,8 @@ def main(seed: int = 90, n_lives: int = 12,
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    main(int(a[0]) if a else 90, int(a[1]) if len(a) > 1 else 12)
+    variant = a[2] if len(a) > 2 else "base"
+    main(int(a[0]) if a else 90, int(a[1]) if len(a) > 1 else 12,
+         out_path=(a[3] if len(a) > 3 else
+                   f"/data/tmp/lf04/diag_s90{'' if variant == 'base' else '_' + variant}.jsonl"),
+         variant=variant)
