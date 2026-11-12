@@ -38,11 +38,11 @@ claim, not a performance claim — do not gate on how well he does. Pilot ONE
 life first to size it; repair `LF.01` (VOID) only if it is in the path.
 serves: M1 · philosophy 1 (the creature), 4 (controls that must fail).
 **done when:** `LF.03` is registered with both controls and has a verdict.
-state: REGISTERED + implemented at d6c59a9 (`tests/lf_03_learner_lives.py`). Pilot, one
-natural life (seed 0, e0=1.0): 503 sim-s ≈ 2,515 decisions, 141 s wall, 860 opt steps.
-Smoke: 5-store resume (learner weights+Adam+replay) bit-exact over 50 decisions.
-Registered run launched detached 22:14 UTC, AWAITING LF.03 (pid 1793344, log
-/data/jack-logs/lf03_run1.log), ~60–75 min. Next: harvest the ledger row; a FAIL is fixed.
+state: DONE at 6a92fd4 — LF.03 PASS (3 seeds x 5 deaths, run of d6c59a9). Spans 412/547/373/314/397
+sim-s, ~10.9k decisions + ~2.7k opt steps/seed, weight_change_rel 0.225, diary carried, 5-store
+resume bit-exact, senses live, finite; frozen twin (0.0 change) and wiped diary ([0,0]) both
+flagged after 2 deaths each; hash-salt reproduced. Integration only: ate 2.3x per 5 lives — he
+does not yet forage. That is the next creature gap (no order holds it yet).
 
 ### J1 — Harvest `T1.14`, then give it a control that is run, not described
 **Why.** `T1.14` (seed noise is measured; SNR ≥ 3) now carries 45 specs and
@@ -60,9 +60,11 @@ an unproven floor.
 serves: M3/M4 (unblocks `D1.1`, `T2.01`) · philosophy 4.
 **done when:** `T1.14` has a verdict from a run that includes the seed-ignoring
 arm; `T1.08` still FAIL with 7.0 unmoved.
-state: steps registry+re-parent DONE at 4818a2c. Kaggle attempt died "queued"
-after 70 min (no session ever existed); Colab attempt started 21:40, pid
-1755193. No ledger row as of 21:58.
+state: (1) T1.14 attempt 1 PASS 22:19 (colab T4, SNR 51.89, spread 0.0102). (2) seed-ignoring
+arm implemented e659d10: 5 arms (0,1,2 + seed 0 twice), same clause must REJECT (0,0',0'');
+dispatched 2026-11-12, watcher pid 1838593, log /data/tmp/dispatch_t1_14.log, 0.9 GPU-h projected.
+(3) t2_14 comments fixed e659d10. Next: harvest the T1.14 row. FAIL with ignored_flagged 0 = T4
+non-determinism >1e-6 → fix the job (deterministic algorithms), not the bar. Then step 4.
 
 ### J2 — Settle who controls the body (`D1.1`), then re-run "he can move" (`T2.01`)
 **Why.** `D1.0` spent 17.6 GPU-hours: small plastic head **506**, MLP 415, the

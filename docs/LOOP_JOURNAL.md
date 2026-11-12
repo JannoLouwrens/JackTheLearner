@@ -277,3 +277,11 @@ Seat: Working memory (VACANT; GRU buffer FAILs `WM.01`). Challenger `RingMemory.
 held state. Pilot on `WM.01`'s venue, seeds 0–4: 1.000/1.000/1.000/0.871/1.000 at 1,031 params (GRU 0.546 ± 0.203
 at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Registered `WM.02` (claim seeds
 100–104, two must-fail controls), NOT run — handed to the workers via ORDERS INBOX. Served: philosophy 3, 4.
+
+- 2026-11-12 JACK J3+J1. Harvested LF.03 PASS (6a92fd4): the learner lived 5 deaths x 3 seeds with
+  weights moving (0.225), diary across death, bit-exact resume; frozen + wiped controls both fired.
+  J3 DONE. Caveat: ate 2.3x per 5 lives — integration, not competence. J1: T1.14's seed-ignoring
+  control made a RUN arm (e659d10; seed 0 x3 must be rejected by the same clause, bars unmoved);
+  GPU dispatched (pid 1838593, 0.9 h). t2_14 stale T1.08 comments fixed. CPU smoke of the job was
+  killed by the harness at 10 min unfinished, not re-run (CPU says nothing about T4 determinism).
+  Served: 1 (the creature lives end to end), 4 (controls that must fail, actually run).
