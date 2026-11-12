@@ -921,11 +921,13 @@
         "TA.01": 371.39,
         "W0.DIAG": 732.99,
         "W1.02": 741.31,
+        "WM.02": 1495.63,
         "detached:ub10_pilot_then_d10.log": 404.22,
         "detached:ub10_sweep_after_d10.log": 40.21,
+        "detached:ub10_sweep_rerun.log": 10.49,
         "detached:ub10_venue_pilot.log": 10.28
       },
-      "used_s": 3408.49
+      "used_s": 4914.61
     }
   },
   "overruns": []

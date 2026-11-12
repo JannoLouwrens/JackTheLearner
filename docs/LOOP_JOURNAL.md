@@ -330,3 +330,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   pilot; audio/vision noise split; seed-90 venue sweep (4 venues, one Colab job) with the selection rule declared before reading;
   fixtures + stubbed-render smoke OK. Sweep queued behind D1.0 (/data/tmp/ub10_sweep_after_d10.log). Bars unmoved.
   Served: 3 (the one-brain contest raced on a venue that can discriminate) and 4 (a guard that now fires on the VOID it missed).
+
+- 2026-11-12 ~07:45 UTC JACK J8 (+ J2/J4 exits harvested). WM.02 PASS on claim seeds 100-104: ring memory 0.902±0.196 vs GRU
+  0.579±0.148, no-buffer null 0.347; every seed clears +0.10 over null and never trails GRU; mean lead +0.323; shuffled-state
+  control 0.127, rotation-disabled margin -0.047 (both failed as required); hash-salt clean. Working-memory seat: VACANT -> BY
+  VERDICT (RingMemory, 1,031 params), GRU kept as challenger. Also: D1.0 attempt 3 ERROR (1.49 GPU-h, then a lost download, 2103829);
+  the UB.10 sweep waiter died on an inherited JACK_ITER_DEADLINE; re-launched via launch_detached and refused by both backends:
+  Kaggle W45 quota spent, Colab GPU assign returns 503 (INBOX). Served: 3 (a seat won by a race, not assumed) and 4 (two must-fail
+  controls run and failing).

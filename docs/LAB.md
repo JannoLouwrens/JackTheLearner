@@ -18,7 +18,9 @@ A dead idea with a number is a result. Do not retry one without a new reason.
 ## Ideas
 
 - 2026-11-11 · **Working memory** (VACANT; incumbent GRU buffer FAILs `WM.01`
-  on 2 of 3 seeds) · **ENTERED as `WM.02`** · `RingMemory.py`.
+  on 2 of 3 seeds) · **SEATED — `WM.02` PASS 2026-11-12** (`2103829`) · `RingMemory.py`.
+  **Claim run** (seeds 100–104): ring 0.902 ± 0.196, GRU 0.579, null 0.347; mean lead
+  +0.323; shuffled 0.127, no-rotation margin −0.047 (both controls failed as required).
   **Bet:** (1) a store whose events ROTATE the held state — K planes,
   input-dependent angles, a gated absolute write, everything learned — the
   head-direction circuit's move. (2) It might beat the GRU because composing

@@ -34,7 +34,10 @@ docstring — do not touch them). PASS → seat it BY VERDICT in
 `docs/LAB.md` with the failing clause.
 serves: M3 · philosophy 3 (a seat raced, not assumed).
 **done when:** `WM.02` has a ledger verdict and the seat or the lab page says so.
-state: open — not started.
+state: **DONE 11-12** — WM.02 PASS (seeds 100–104, run at 2103829, hash-salt clean): ring 0.902±0.196 vs GRU 0.579, null 0.347;
+mean lead +0.323 (bar 0.10), every seed earns/not-worse; shuffled 0.127, no-rotate margin −0.047, so both controls failed.
+Seated BY VERDICT in CHAMPIONS (TRIGGER WM.01, WM.02; GRU kept as challenger); LAB entry marked SEATED.
+Open, not this order: a non-commutative register, and ME.8/LF.02 with the ring in place of the GRU.
 
 ### J1 — Does living teach him? (`LF.04`) — the next creature gate
 **Why.** `LF.03` PASSed: the learner lives, dies five times, resumes, and his
