@@ -95,11 +95,11 @@ the bar); pilot on CPU; dispatch to **Colab**. Does not depend on `T1.14`.
 serves: M3 · philosophy 3 · standing objective 3.
 **done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
-state: 2026-11-12 7897355: venue (c) implemented, VENUE_NOISE_SD 2.5 (sd 3 measured 0.819 on a 2nd draw = on the
-0.80 floor; 2.5 -> 0.919/0.878). Guard strengthened: a different venue's row is no evidence, so run() refuses until
-a seed-90 pilot at this venue records A0 marginals; fixtures red-first OK. Pilot on Colab since 05:15 (chain log
-/data/tmp/ub10_pilot_then_d10.log; "PILOT EXIT"). Next: cp /data/ub10_venue_pilot.json experiments/ and commit with
-A0 vslot/afell + per-arm eligibility; if A0 clears the union bound and arms eligible -> `scripts/dispatch.sh UB.10`.
+state: 2026-11-12 5bce9ef: seed-90 pilot at matched sd 2.5 FALSIFIED the venue: vslot A0 .756, arms .61-.80, uni-vision
+.74-.79 -> all 6 arms ineligible (would VOID); afell .83-.88; train loss 4e-4 vs test ~.7 (memorises the fixed draw). Guard now
+refuses an ineligible pilot (live: refuses). Audio/vision levels split; sweep (2,2),(2,1),(2.5,0),(2,0) + _select_venue rule
+declared pre-read. Sweep QUEUED behind D1.0 (Colab single-session): /data/tmp/ub10_sweep_after_d10.log, waiter pid 1992023.
+Next: on "SWEEP EXIT 0" declare the chosen venue in VENUE_NOISE_SD/VENUE_VISION_SD, cp the pilot record, commit, dispatch UB.10.
 
 ### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
 **Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —
@@ -230,6 +230,7 @@ clean first; the 22:43 clerk sweep should do that — check `regate.log`).
 - JACK 2026-11-12: Colab kept-session downloads keep losing the run VM (T1.08 09-14 x2, T1.14 11-12: 1.10 GPU-h lost) and gpu.py stores only a 400-char stdout tail on failure; every JACK_OUT spec but t108_probe/T1.14 lacks the JACKRESULT fallback. Proposal: gpu.submit persists full stdout per job and parses JACKRESULT generically.
 
 - JACK 2026-11-12: Colab allows ONE session per account: the UB.10 pilot exited 1 in 4 s at 05:11 while T1.14 held it, and run_on_colab drops the colab CLI's stderr (message = "exit 1" only). Proposal: say "session busy" and record stderr; dispatch_guard should refuse a Colab-first dispatch while a kept session exists (`colab ls`).
+- JACK 2026-11-12: launch_detached.sh meters WALL clock, so a chain that only waits on a Colab session (zero CPU, hours) bills the 16 h CPU day; cpu_budget exempts GPU children but has no lane for a GPU-wait chain. Launched UB.10's sweep waiter with plain setsid instead.
 
 ## DONE (kept one day)
 

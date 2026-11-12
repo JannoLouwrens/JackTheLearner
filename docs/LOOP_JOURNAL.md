@@ -323,3 +323,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   UB.10 pilot then the D1.0 dispatch run as one chain (/data/tmp/ub10_pilot_then_d10.log). Ratchet record skipped (whole-file).
   Served: 3 (the one-brain contest and the control seat raced on venues that can discriminate) and 4 (a control
   demonstrated failing, and a guard that won't clear on another venue's evidence).
+
+- 2026-11-12 ~06:15 UTC JACK J4 (J2: D1.0 watcher 1973610 alive on Colab unit 1, left alone). UB.10 seed-90 pilot at matched sd 2.5
+  harvested: the "vision averages the noise out" premise was FALSE — vslot A0 0.756, arms 0.61-0.80, every arm ineligible, so the
+  registered run would have VOIDed; the old guard CLEARED it (read only anchor saturation). 5bce9ef: guard refuses an ineligible
+  pilot; audio/vision noise split; seed-90 venue sweep (4 venues, one Colab job) with the selection rule declared before reading;
+  fixtures + stubbed-render smoke OK. Sweep queued behind D1.0 (/data/tmp/ub10_sweep_after_d10.log). Bars unmoved.
+  Served: 3 (the one-brain contest raced on a venue that can discriminate) and 4 (a guard that now fires on the VOID it missed).
