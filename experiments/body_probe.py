@@ -111,11 +111,14 @@ class _Planner:
         self.X, self.Y = np.meshgrid(c, c, indexing="ij")
         self.n, self.half = n, half
         nm = lambda g: mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_GEOM, g) or ""
+        mine = [g for g in range(m.ngeom) if w._body_mask[g]]
+        touches = lambda g: any(
+            (int(m.geom_contype[g]) & int(m.geom_conaffinity[b]))
+            or (int(m.geom_contype[b]) & int(m.geom_conaffinity[g]))
+            for b in mine)      # ladder (contype 4) meets the hands
         self.geoms = [g for g in range(m.ngeom)
                       if not w._body_mask[g] and nm(g) != "floor"
-                      and ((int(m.geom_contype[g]) & 1)
-                           or (int(m.geom_conaffinity[g]) & 1)
-                           or nm(g) == "pool_water")]
+                      and (touches(g) or nm(g) == "pool_water")]
         self.r = INFLATE[BODY]
 
     def occupancy(self, skip):

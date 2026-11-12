@@ -144,3 +144,12 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   perfect path. Next: (a) a detouring oracle (grid path around walls) to price the plinth's true ceiling; (b) a
   base that stands AND climbs a ramp/stair lip (smaller plinth / tripod) - raced, pole stays the default.
   Logs /data/tmp/smell_sense/plinth/s90.log, s94.log.
+  **Detouring oracle (11-12 17:25 J1, `PROBE_ORACLE=path`).** Privileged 8-connected Dijkstra on a 0.1 m grid
+  (every geom that can touch a body geom, aabb footprint inflated 0.25 m pole / 0.55 m plinth, pool pit blocked,
+  replan every 5 decisions, 0.5 m lookahead), goto_true otherwise, 20 births x s90/s94, adhesion 0.5, E 250:
+  **plinth 12/20, 18/20 = 30/40 vs pole 7/20, 16/20 = 23/40** (straight line: plinth 15/40, pole 23/40).
+  A first run with a planner bug (ladder, contype 4, wrongly free) read plinth 13+15, pole 12+15: the plinth's
+  number held (28-30/40), the pole's swung 12->7 on s90 - every pole miss is a topple at decision ~2, the plinth's
+  are 0-1 topples. Plinth misses left (10): pool lip 5 (upright at z 0.64 touching poolwall), ladder 2, ramp 2,
+  open floor 1. So with a path the standing base is the better body (+7/40, both seeds), and its remaining cap is
+  the pool lip/ladder/ramp. 2 seeds, unpaired births: a pilot, not a claim. Logs /data/tmp/smell_sense/path2/.

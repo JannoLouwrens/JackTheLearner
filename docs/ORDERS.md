@@ -58,10 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Smell DEAD at 13k and 52k.
-16:50 body_probe: the pole CANNOT STAND (no-drive topple ~dec 10 in 18/20; goto_true toppled 19/20,18/20, fed 11/20,12/20).
-16:47 PLINTH (W0.BAL arm C, `PROBE_BODY=plinth`): toppled 0/20,1/20 but fed 5/20 s90, 10/20 s94 - WORSE. All 25 misses
-stuck upright on geometry (poolwall 17, ramp 6, stair 5, seesaw 3), d_min >= 1.49 m. Straight-line map != path. LAB.md.
-Next: detouring goto oracle (grid path) on pole vs plinth to price each body's ceiling; then a base that stands AND climbs.
+Pole cannot stand (topples ~dec 2 in 18-19/20). Plinth (W0.BAL arm C) stands (0-1/20) but straight-line feeds 15/40.
+17:25 detouring oracle (`PROBE_ORACLE=path`, grid Dijkstra): plinth 12/20+18/20=30/40 vs pole 7/20+16/20=23/40
+(s90/s94); plinth misses left: pool lip 5, ladder 2, ramp 2. LAB.md. Next: register the body race as a spec
+(pole vs plinth, path oracle, >=3 claim seeds, paired births) and fix the pool-lip catch before any learner run.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

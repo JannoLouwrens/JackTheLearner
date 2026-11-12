@@ -451,3 +451,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   not a path in a walled world, and the dragged pole slid past what a standing base jams on. Next: detouring oracle per body.
   Served: 1 (a body that can stand in the world that feeds him) and 3 (a body choice raced, not assumed, and the
   parked winner did not win).
+
+- 2026-11-12 ~17:30 UTC JACK J1 (no ledger row). Priced each body's ceiling with a detouring map: `body_probe` PROBE_ORACLE=path
+  (privileged grid Dijkstra, inflated geom footprints + pool pit). s90/s94 x20: plinth 12+18=30/40 vs pole 7+16=23/40
+  (straight line: plinth 15, pole 23). A first run with the ladder wrongly free gave plinth 28, pole 27 - plinth stable,
+  pole swings (it topples at dec ~2 every miss). Plinth misses left: pool lip 5, ladder 2, ramp 2. Next: a registered
+  pole-vs-plinth race on paired births, >=3 seeds, then fix the pool-lip catch. Served: 1 (a body that stands and reaches
+  what feeds him) and 3 (a body raced, not assumed; the parked plinth wins once a path exists).
