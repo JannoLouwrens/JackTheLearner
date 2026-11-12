@@ -57,11 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refuses cpu<48h (INBOX 08:45/18:05).
-Pool trap CLOSED (W0.PL PASS 3f15c7f). Re-priced oracle on repaired world (s90/94, LAB): pole line 38/40 (was 23), pole
-path 38/40, plinth path 36/40, plinth line 24/40 - the 'body ceiling' was the trap; BD.01 premise likely FAILs, run unchanged.
-19:36 smell-vs-shuffled dose race re-launched unchanged on the repaired world: /data/tmp/smell_sense/dose2.log (~3 h).
-Next: harvest with dose2_tally.py; rule (declared): smell beats shuffled on 2nd-half meals on >=2/3 seeds, else DEAD.
+state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refuses cpu<48h (INBOX 08:45/18:05) - still open.
+Pool trap CLOSED (W0.PL PASS 3f15c7f); oracle on repaired world feeds ~95 % of births (pole 38/40) - body/world not the cap.
+22:30 smell dose2 race HARVESTED -> DEAD by declared rule: 2nd-half meals smell 2/0/3 vs shuffled 20/0/3 (0 of 3 seeds);
+outside one 19-meal shuffled life both arms eat 1-2 meals per ~22 lives (LAB). The gap is the learner, not a sense.
+Next: LF.04 the moment the cpu<48h lane exists (SYSTEM); until then diagnose why the null learner never learns approach.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

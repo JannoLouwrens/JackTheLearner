@@ -192,6 +192,13 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   smell / smell_shuffled, s91-93, 52k decisions, -P 2. Declared before reading, same rule as 13:40: smell must beat
   smell_shuffled on second-half meals (k > 26000, dose2_tally.py) on >= 2 of 3 seeds, else DEAD again. Log
   /data/tmp/smell_sense/dose2.log; ~3 h. The 15:40 numbers to compare: smell 1/5/0 vs shuffled 4/17/27.
+  **KILLED AGAIN 11-12 22:30 by the declared rule (DOSE2 EXIT, all 6 rc=0):** second-half meals smell 2/0/3 vs
+  smell_shuffled 20/0/3 (s91/92/93): smell beats shuffled on **0 of 3** (loses s91, ties s92, s93). Totals 4/1/3 vs
+  23/2/3 over 21-23 lives per arm. Shuffled's 20 is ONE life of 19 meals (s91); outside it both arms eat 1-2 meals in
+  ~22 lives, 21-22 of them dying of energy at ~452-495 sim-s. Against the oracle's ~95 % fed births on this repaired
+  world, a sense is not the gap: the null-arm learner fails to turn ANY food signal into approach in 52k decisions.
+  Smell stays DEAD as a seat bet on this learner. Next for the creature: LF.04 (learner vs frozen twin) - the question
+  is the learner, not the sense.
 - 2026-11-12 · **World: shelter law** (J6, `NE.01` `ok_night_shelter` red every seed) ·
   ALIVE, not shipped. The shipped law cuts k_eff 70 % at occ 1, so shelter's night cost is
   NON-monotone: occ 0.8 → 0.029, sealed roof occ 1.0 → **1.000** (T 39.5, worse than the open

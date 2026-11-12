@@ -547,3 +547,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   .34 by decision 30); occ .667 -> .333 -> 0.0 before sleep even starts. The fixture certifies a transient, not a resting
   pose (experiments/shelter_pose_bed.py). Next: re-register the probe to read occ at rest after the real bed-down.
   Served: 4 (a failing seed attributed to the apparatus with a measurement; bar untouched) and 1 (an honest shelter test).
+
+- 2026-11-12 ~22:30 UTC JACK J1 (no ledger row; short slot). Harvested the smell-vs-shuffled dose race on the repaired
+  world (dose2, all 6 runs rc=0, 52k decisions): second-half meals smell 2/0/3 vs smell_shuffled 20/0/3 (s91/92/93) ->
+  smell beats shuffled on 0 of 3 -> DEAD by the rule declared at 19:36. Shuffled's 20 is a single 19-meal life; otherwise
+  both arms eat 1-2 meals in ~22 lives, nearly all energy deaths at ~450-495 sim-s, while the oracle feeds ~95 % of births.
+  Finding: the learner, not the sense or the body, is the gap. LF.04/BD.01 still blocked on the cpu<48h lane (INBOX 08:45).
+  Served: 3 (a sense bet raced and killed by a pre-declared rule) and 4 (failure recorded with its cause, bar untouched).
