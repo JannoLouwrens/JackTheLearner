@@ -84,5 +84,13 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   food on 12-21 % of poses at 13k decisions does not make the AWR learner
   approach it. Not ruled out: a longer dose; a sense with a gradient (smell)
   instead of a sparse ray hit. Next: race smell (`experiments/odour.py`).
+  s93 for the record: level 3, split 3, split_blind 3 (sums 6 / 6 / 7).
+  **Smell raced (11-12 13:08 J1, `experiments/smell_sense.py`):** O1 static
+  field (SM.01's exp(-d/2 m)) from each READY food, bilateral OdourSensor as a
+  new 12-wide `smell` modality, per-process patch. Probe s90, 611 poses: food
+  reading 0.056-1.29 (never zero), bilateral difference points to the nearest
+  floor food on 99.5 % of poses. Control `smell_shuffled` = same field read at
+  a random legal pose each decision. s91-93 x 2 arms running
+  (/data/tmp/smell_sense/run.log); null = level above (6). Kill rule in module.
   Serves philosophy 3 (the curriculum raced with a control, not assumed) and
   5 (his curriculum matters as much as he does).
