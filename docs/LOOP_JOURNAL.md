@@ -487,3 +487,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   fe9c917 Water.apply. Smoke on pilot seed 90: legacy ratio 0.15 (pole 1.17-1.26 m vs 4.05-4.69; plinth 0.79-0.83 vs
   3.93-5.52), so the control fails as it must. Not run: shipped == legacy until the repair lands. Next: the repair, PG.2, run.
   Served: 1 (a world that kills him honestly, not by a force bug) and 4 (the fix's gate declared before the fix, control run).
+
+- 2026-11-12 ~18:45 UTC JACK J1. Short slot. Repaired the pool drive trap in `playground.Water.apply`: water now adds to the
+  drive instead of overwriting it, and gives no force to a body held up by the floor plane or wall tops (the band is gone).
+  Smoke on pilot seed 90: min shipped/off travel 0.955 (bar 0.90), legacy control 0.15. PG.1, PG.2 (water physics) and
+  PG.8 re-PASS on the new code. W0.PL logged one ERROR row (my chain ran it before PS.01, stale by the edit, was re-bought).
+  PG.8->PS.01->W0.PL is running detached: /data/tmp/w0pl_chain2.log. Served: 1 (a world that kills him honestly, not
+  through a force bug) and 4 (the fix's gate and control were declared before the fix).

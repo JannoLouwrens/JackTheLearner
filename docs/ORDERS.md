@@ -58,10 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refuses cpu<48h (INBOX 08:45/18:05).
-Pool = DRIVE TRAP (fe9c917): Water.apply overwrites W0's drive + counts dry floor within r as water. 19:xx REGISTERED
-W0.PL (cpu<10min, tests/w0_pl_pool_is_not_a_trap.py): shipped/off travel >=0.90 every crossing, s100-102, pole+plinth;
-control = frozen fe9c917 apply, smoke s90 ratio 0.15 (must fail: OK). Not run (shipped==legacy today -> FAIL).
-Next: repair Water.apply (additive; no water where the floor holds the body), PG.2 still green, run W0.PL, then BD.01/LF.04.
+18:40 Water.apply REPAIRED (additive; no water for a body touching floor/wall-tops; band gone). Smoke s90 (pilot): min
+ratio 0.955 vs legacy 0.15. PG.1, PG.2, PG.8 re-run PASS on it. W0.PL has one ERROR row (ran before PS.01 was re-bought).
+Chain PG.8->PS.01->W0.PL detached: /data/tmp/w0pl_chain2.log (PS.01 ~15 min). Next: harvest W0.PL verdict; if PASS,
+regate other playground-dependent stales, then BD.01/LF.04 once the cpu<48h gate is fixed.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is
