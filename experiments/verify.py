@@ -97,6 +97,7 @@ from __future__ import annotations
 import copy
 import importlib
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from .protocol import (Ledger, NoControlByDecision, Status,
@@ -137,6 +138,7 @@ class Entry:
     control_metrics: Dict[str, Any]
     declared_control: Optional[str]
     unavailable: str = ""      # non-empty = this entry could not be audited
+    issued_at: str = ""        # non-empty = gate loaded from the row's own commit
 
 
 def _verdict(fn: Callable, m: dict, c: dict, spec_id: str = ""):
@@ -182,12 +184,12 @@ def scan(entries: List[Entry]) -> dict:
     undeclared_ran: List[str] = []
     no_control: List[str] = []
     judged = 0
+    issued: List[str] = []
 
     for e in entries:
-        # Self-exclusion is a KNOWN, one-entry hole and is counted apart from
-        # the failure bucket. Folding it into `unavailable` would make the gate
-        # fail on its own second run — the first run has no entry to exclude,
-        # every run after it does. Reported so the hole stays visible.
+        if e.issued_at:
+            issued.append(f"{e.spec_id}@{e.issued_at}")
+        # Self-exclusion: a known one-entry hole, counted apart so it stays visible.
         if e.unavailable == SELF_EXCLUDED:
             self_excluded.append(e.spec_id)
             continue
@@ -196,23 +198,14 @@ def scan(entries: List[Entry]) -> dict:
             continue
 
         # ── C. declaration coherence (independent of whether the gate runs) ──
-        # `declares_a_control`, NOT `bool(e.declared_control)`: the two differ on
-        # the explicit refusal form and the difference was a false positive worth
-        # two entries — see the REFUSAL note in this module's docstring. The
-        # predicate is imported from `protocol` so this probe and the runner's
-        # pre-compute guard cannot drift apart; it is applied HERE, inside the
-        # shipped `scan`, so the known-answer fixture exercises the same branch
-        # the live ledger does (a tidied restatement for the test proves nothing
-        # — T0.13 shipped that bug once already).
+        # `declares_a_control`, not `bool(...)`: see REFUSAL in the docstring;
+        # shared with the runner's guard so the two cannot drift.
         promises_control = declares_a_control(e.declared_control)
         has_control_metrics = bool(e.control_metrics)
         if promises_control and not has_control_metrics:
             declared_never_ran.append(e.spec_id)
         if not promises_control and has_control_metrics:
-            # Catches BOTH directions of the missing declaration: the historic
-            # `control=None` debt, and the refusal that ran a control anyway —
-            # a field asserting "no control here" over recorded control metrics.
-            # The second class was UNREACHABLE while this read `bool(...)`.
+            # Both directions: `control=None` debt, and a refusal that ran one.
             undeclared_ran.append(e.spec_id)
 
         # ── A. re-verdict ────────────────────────────────────────────────────
@@ -268,17 +261,16 @@ def scan(entries: List[Entry]) -> dict:
         "declared_never_ran_detail": ", ".join(sorted(declared_never_ran)),
         "undeclared_ran_detail": ", ".join(sorted(undeclared_ran)),
         "no_control_detail": ", ".join(sorted(no_control)),
+        "issued_gate_detail": ", ".join(sorted(issued)),
     }
 
 
 def collect(ledger: Ledger, exclude: tuple = ()) -> List[Entry]:
     """Build the entry list from the live ledger and the live registry.
 
-    `exclude` exists for one reason and it is the same one T0.13 states: a
-    spec cannot re-judge its OWN entry, because that entry is written after
-    the scan and therefore always reflects the previous version of the file.
-    Excluded ids are still returned, marked unavailable, so they are counted
-    rather than vanishing from the denominator.
+    `exclude`: a spec cannot re-judge its OWN entry (written after the scan);
+    excluded ids are returned marked unavailable, so they are still counted.
+    A row whose gate grew a key since is judged by the gate that issued it.
     """
     from .registry import BY_ID
     from .run import _module_for
@@ -310,8 +302,47 @@ def collect(ledger: Ledger, exclude: tuple = ()) -> List[Entry]:
             out.append(Entry(spec_id, None, metrics, controls, declared,
                              unavailable="no module" if mod is None else "no _check"))
             continue
-        out.append(Entry(spec_id, fn, metrics, controls, declared))
+        issued = ""
+        if r.commit and _missing_key(fn, metrics, controls):
+            fn_at = _check_at(spec_id, r.commit)
+            if fn_at is not None:
+                fn, issued = fn_at, r.commit
+        out.append(Entry(spec_id, fn, metrics, controls, declared,
+                         issued_at=issued))
     return out
+
+
+def _missing_key(fn, m, c) -> bool:
+    """Today's gate asks for a key the row never recorded (gate newer than the
+    row; `run stale` reports that). Any other raise stays unevaluable."""
+    try:
+        fn(dict(m), dict(c))
+    except KeyError as exc:
+        return bool(exc.args) and exc.args[0] not in m and exc.args[0] not in c
+    except Exception:
+        return False
+    return False
+
+
+def _check_at(spec_id: str, commit: str):
+    """`_check` from the spec's test file as it stood at `commit`, or None."""
+    import subprocess
+    import types
+    from .run import _REPO, _module_path_for
+    path = _module_path_for(spec_id)
+    if path is None:
+        return None
+    rel = Path(path).resolve().relative_to(_REPO)
+    try:
+        src = subprocess.run(["git", "show", f"{commit}:{rel}"], cwd=_REPO,
+                             capture_output=True, text=True, timeout=10,
+                             check=True).stdout
+        mod = types.ModuleType(f"experiments.tests._at_{commit}")
+        mod.__package__ = "experiments.tests"
+        exec(compile(src, f"{rel}@{commit}", "exec"), mod.__dict__)
+    except Exception:
+        return None
+    return getattr(mod, "_check", None)
 
 
 # ── the known-answer fixture ────────────────────────────────────────────────

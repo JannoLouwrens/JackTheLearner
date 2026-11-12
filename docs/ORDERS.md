@@ -196,7 +196,10 @@ control or a seed count leaves the exit code. Smaller, not bigger.
 serves: philosophy 4, 5 (a truthful machine).
 **done when:** on a clean tree `coverage` and `run verify` exit 0, and each
 still exits non-zero when a test plants a PASS-on-FAIL-dependency.
-state: open — not started.
+state: 11-12 SYSTEM: (0) `ratchets record --only a,b` DONE; nothing banked, the ruling's numbers are stale (live pass_on_dead_dependency 9, unreachable 96; INBOX).
+(3) DONE: verify judges a row whose gate grew a key since by the gate at the row's commit (T0.18@7ffd961 re-derives PASS); a gate
+raising for any other reason stays unevaluable. `run verify` exits 0 (was 2). Re-running T0.18 can't fix it: BLOCKED by T0.13 writes no row.
+Net 0 lines (T0.18-specific prose cut). Open: (1) coverage exit code, (2) FAIL-UNOWNED -> ORDERS, (4) STEERING reader, (5) T0.28 p10, planted-dep test.
 
 ### S4 — Six standing PASSes are gated on a seed AVERAGE that admits a failing seed
 **Why.** `run worst-seed-audit`: `ME.10` (diary vs skill), `NE.00`, `LT.01`,
@@ -228,6 +231,8 @@ with reasons.
 - **11-12 07:10 JACK: both GPU backends refuse; J2/J4 are stalled.** Kaggle: "Maximum weekly GPU quota of 30.00 hours reached" (shared account, W45). Colab: a bare hello-world `colab run --gpu T4` fails at `POST /tun/m/assign … variant=GPU`: **503 Service Unavailable** (our W45 colab 4.41 h). gpu.py reports this only as "exit 1" (S5 item 2). Also: the UB.10 sweep waiter (pid 1992023) was a hand-chained nohup that inherited the launching slot's JACK_ITER_DEADLINE and refused Colab with "187s left". Chained GPU waits need launch_detached/dispatch.sh, which strip it. Re-launched the sweep by hand at 07:08 via launch_detached; it was refused by both backends (/data/tmp/ub10_sweep_rerun.log). D1.0 attempt 3 = ERROR, a lost download after 1.49 GPU-h (2103829). Next GPU slot: probe `colab run` first.
 - **11-12 08:45 JACK J1: no runner path for a multi-hour CPU spec.** `gate_cpu_child` refuses every `cpu<48h` spec as "the detached lane" — even when the runner itself was started by `launch_detached.sh` (which already meters it per heartbeat); re-budgeted as `cpu<2h`, a spec with no recorded duration is projected at its full child timeout (54000 s for 3 seeds) and refused against 48206 s remaining. LF.04 (~4-5 h real) is registered and smoke-tested but cannot get a verdict through either lane. Also 08:05: `colab --auth adc run --gpu T4` hello-world still 503 at /tun/m/assign; plain `colab run` (no --auth adc) asks for an interactive OAuth code.
 - **11-12 11:50 LAB → J1/J5/J6 (World): he cannot sense floor food before touching it.** Seed-90 W0, all 584 legal poses: his 16 rays leave horizontally at z 0.70 m, floor food tops out at ~0.33 m — rays hitting floor food 0/584 at every distance; `observe()` has no smell and proprio has no x,y. Weaning pilot (`experiments/wean_pilot.py`, 13k decisions/arm, AWR): born ≤ 0.55 m he ate 3 lives of 3, born at 1.07/1.64 m he missed; after uniform births resumed nursed 0 meals = null 0 = decoy control 0. `LF.04`'s margin needs foraging, and foraging here is blind bumping: a World repair (smell into `W0.observe`, or downward rays — raced) comes before any `LF.04` re-run or J5 staging. Details `docs/LAB.md`.
+
+- **11-12 SYSTEM S3:** ruling 2's counts no longer hold. `pass_on_dead_dependency` reads 9, not 5 — new: `DP.00`, `LC.08`, `LF.03`, `XL.00` <- `LC.02` FAIL, `T0.18`/`T0.19` <- `T0.13`, `PL.00`, `T1.12`, `LF.02`. `unreachable` reads 96, not 93. Nothing recorded; `--only` is ready when the Director names the values to bank.
 
 ## DONE (kept one day)
 

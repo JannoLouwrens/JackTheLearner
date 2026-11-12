@@ -3150,32 +3150,35 @@ def print_ratchet_block(ledger: Ledger) -> dict:
     return breaches
 
 
-def cmd_ratchets(ledger: Ledger, record: bool = False) -> int:
+def cmd_ratchets(ledger: Ledger, record: bool = False, only=()) -> int:
     print()
     breaches = print_ratchet_block(ledger)
     if record:
         import datetime
         import json
         live = ratchet_live(ledger)
+        recorded, _prov = committed_ratchet_readings()
+        if only:
+            unknown = sorted(set(only) - set(live))
+            if unknown:
+                print(f"  refusing to record: no counter named {unknown}.")
+                return 2
+            # The rest keep their committed reading (ruling 11-12).
+            live = {n: (v if n in only else
+                        (recorded.get(n) or {}).get("value"), _n)
+                    for n, (v, _n) in live.items()
+                    if n in only or n in recorded}
         lost = sorted(n for n, (v, _n) in live.items() if v is None)
         if lost:
             print(f"  refusing to record: {', '.join(lost)} refused to "
                   f"compute — a recording that\n  papers over a lost "
                   f"instrument is the silence this file exists to prevent.")
             return 2
-        recorded, _prov = committed_ratchet_readings()
         today = datetime.date.today().isoformat()
         payload = {}
         for name, (val, _n) in sorted(live.items()):
             old = recorded.get(name)
-            # Carry the entry FORWARD rather than rebuilding it from two
-            # known keys. `value`/`at` are the only fields this tool computes,
-            # but they are not the only fields an entry may legitimately hold
-            # — `note` says WHEN the class broke, which `at` (the key's
-            # creation date) structurally cannot. Rebuilding erased it on the
-            # next record, which is the 121st audit's FINDING 1 exactly one
-            # file over: a hand-written field list silently drops every field
-            # added after it was written.
+            # Carry the entry forward: hand-listed fields dropped `note` (121st audit F1).
             entry = dict(old) if isinstance(old, dict) else {}
             at = (entry.get("at", today) if entry.get("value") == val
                   else today)
@@ -3586,28 +3589,9 @@ def cmd_review_queue(ledger: Ledger) -> int:
     return check()
 
 
-#: The id `T0.18`'s OWN in-run scan must skip — and which THIS CLI must NOT.
-#:
-#: The exclusion is legitimate exactly once: when `T0.18` runs, the entry it
-#: would be judging has not been written yet, so a scan inside that run can only
-#: ever re-judge the PREVIOUS version of its own file. From the CLI the opposite
-#: is true — the 2026-08-30 row EXISTS and is the standing certificate, so
-#: excluding it is excluding a live claim from the audit of live claims.
-#:
-#: `exclude=("T0.18",)` stood at this call site from `2cd0289` (2026-08-10) and
-#: cost nothing for 48 days. At 12:18 on 2026-09-27 a strengthen-only conjunct
-#: landed in `T0.18`'s `_check` whose key is absent from its own recorded row,
-#: so its replay began raising `KeyError` — and the one entry that now fails the
-#: scan was the one entry the scan excluded. `unevaluable_gates` read 0 with the
-#: exclusion and 1 without it, and no edit was made to the exclusion: the
-#: population moved underneath it (125th audit RANK 1; LESSONS.md, *"An
-#: exclusion is harmless until the excluded thing is the only one that fails"*).
-#:
-#: So this CLI judges everything, and the name survives only to report, per
-#: finding class, what the in-run exclusion WOULD have hidden — the audit's own
-#: repair: *"print BOTH numbers, so the excluded entry cannot be the invisible
-#: one."* Nothing is skipped here; a member of this tuple that is also a finding
-#: is printed twice over, once as the number and once as the shadow.
+#: The id `T0.18`'s OWN in-run scan must skip (its row is written after the
+#: scan) and which THIS CLI must NOT: the standing row is a live claim. Kept to
+#: print, per finding class, what the in-run exclusion would hide (125th audit).
 IN_RUN_SELF_EXCLUDED = ("T0.18",)
 
 
@@ -3753,17 +3737,10 @@ def cmd_verify(ledger: Ledger) -> int:
               f"({r['self_excluded_detail']}) — a spec cannot re-judge its own "
               f"entry;\n      that entry is written after the scan. Its gate is "
               f"exercised by T0.18's control.")
-    else:
-        print(f"\n  ? nothing self-excluded HERE: this CLI judges all "
-              f"{r['entries_seen']} standing PASS entries, including "
-              f"{', '.join(IN_RUN_SELF_EXCLUDED)},\n      whose row exists and "
-              f"is the standing certificate. T0.18's OWN run must skip it — its "
-              f"row is\n      written afterwards — and that exclusion was "
-              f"inherited here for 48 days until the one\n      entry it hides "
-              f"became the one entry that fails (125th audit RANK 1). "
-              + (f"It hides a finding TODAY, in: {'; '.join(shadowed)}."
-                 if shadowed else
-                 "It hides no finding today."))
+    if r["issued_gate_detail"]:
+        print(f"\n  ? judged by the gate that ISSUED the row (today's gate asks "
+              f"for a key the row never\n      recorded; staleness is "
+              f"`run stale`'s to report): {r['issued_gate_detail']}")
 
     _print_venue_comparison(ledger)
 
@@ -3771,21 +3748,14 @@ def cmd_verify(ledger: Ledger) -> int:
     print()
     if not findings and not over_budget:
         return 0
-    # THE EXIT CODE CARRIES THE FINDING (125th audit FTB 2). Named owners, so a
-    # standing red is not mistaken for a fresh one and not mistaken for the
-    # builder's to clear by re-running something.
+    # The exit code carries the finding (125th audit FTB 2).
     print(f"  VERDICT: {findings} finding(s) in the five hard classes"
           + (f" + undeclared_control_ran {r['undeclared_control_ran']} over "
              f"budget {UNDECLARED_CONTROL_BUDGET}" if over_budget else "")
           + " — this tool exits 2.")
     if r["unevaluable_detail"]:
-        print(f"      unevaluable: {r['unevaluable_detail']}. A gate that "
-              f"cannot be replayed is a verdict this scan did NOT\n"
-              f"      re-derive — it is not a pass and it is not a fail. Where "
-              f"that is T0.18, the re-buy is\n      owed by the desk under "
-              f"`t013-latently-red-28-disarmed-keys` and is BLOCKED behind "
-              f"T0.13 (FAIL)\n      until then; re-running it is explicitly NOT "
-              f"the builder's repair (125th audit FTB 4).")
+        print(f"      unevaluable: {r['unevaluable_detail']} — a verdict this "
+              f"scan did NOT re-derive, neither pass nor fail.")
     return 2
 
 
@@ -5996,6 +5966,7 @@ def main() -> int:
     ap.add_argument("spec", nargs="*",
                     help="spec ids, or status / next / blocked / stale / verify / render")
     ap.add_argument("--tier", type=int)
+    ap.add_argument("--only", help="ratchets record: counters a,b only")
     ap.add_argument("--gate", action="store_true", help="re-run all passing tests")
     ap.add_argument("--max-budget", choices=[b.value for b in Budget],
                     help="gate only: re-run only PASSes at or below this cost "
@@ -6048,15 +6019,13 @@ def main() -> int:
     if args.spec and args.spec[0] == "amend":
         return cmd_amend(ledger, args)
 
-    # `ratchets record` carries an argument the READ_ONLY dispatch below would
-    # silently drop — and a dropped argument is the argv-is-a-spend trap in
-    # miniature (the caller believes a recording happened). Handle the argued
-    # form here; the bare `ratchets` flows through READ_ONLY_COMMANDS.
+    # The argued form is handled here; READ_ONLY dispatch would drop the argument.
     if args.spec and args.spec[0] == "ratchets" and args.spec[1:]:
         if args.spec[1:] != ["record"]:
             print("ratchets: the only argument is `record`. Nothing was run.")
             return 2
-        return cmd_ratchets(ledger, record=True)
+        return cmd_ratchets(ledger, record=True,
+                            only=tuple(args.only.split(",")) if args.only else ())
 
     # `run decisions [--check]` / `run champions [--check]` — the forms the
     # governing pages actually document (`ladder_prompt.md:814`,

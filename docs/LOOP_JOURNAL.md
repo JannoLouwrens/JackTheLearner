@@ -426,3 +426,8 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   (.08/.33) on every seed, so the v2 reading cannot rank smell strategies. Chained v3 (ready-food births) behind oracle2 with a setsid waiter
   (oracle3_after.sh -> oracle3.log) so the next slot reads it instead of launching it. Served: 4 (the ceiling re-measured before a learner
   is blamed against it); 5 only weakly (compute chained, nothing in him moved).
+
+- 2026-11-12 ~15:30 UTC SYSTEM S3. `run verify` exits 0 (was 2): T0.18's August row was replayed against a gate that gained `refused_refusal`
+  in September (KeyError). A row whose gate has since asked for a key it never recorded is now judged by the gate at its own commit
+  (T0.18@7ffd961 re-derives PASS; staleness stays `run stale`'s). `ratchets record --only a,b` added; nothing banked, the ruling's counts are stale
+  (INBOX). Net 0 lines in run.py+verify.py. Served: 4 (a red that meant nothing no longer trains everyone to ignore red), 5.
