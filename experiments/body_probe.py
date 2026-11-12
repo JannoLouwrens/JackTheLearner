@@ -19,7 +19,7 @@ Per birth (goto_true, food ready at birth, E decisions):
 Arms: adhesion 0.5 (action 0, what goto_true used) and adhesion 0 (-1).
 Hand-written policy = an instrument, never a part of him.
 
-    nice -n 19 $PY -m experiments.body_probe <n_ep> <E> com|site|foot <adh,..> <seed>...
+    [PROBE_BODY=pole|plinth] nice -n 19 $PY -m experiments.body_probe <n_ep> <E> com|site|foot <adh,..> <seed>...
 """
 from __future__ import annotations
 
@@ -34,6 +34,32 @@ OUT = "/data/tmp/smell_sense/body_probe.jsonl"
 
 DRIVE_Z = None   # body-frame height of the push; None = COM (W0 as is)
 DRIVE_SCALE = 1.0  # multiplies W0's gated push (1.0 = W0 as is)
+BODY = "pole"      # "pole" = W0 as built; "plinth" = W0.BAL arm C (wide box
+                   # foot, mass moved into it), patched here so no certificate moves
+
+
+def install_body(body: str) -> None:
+    """Swap the rover fragments for W0.BAL arm C's plinth (w0bal_probe's
+    exact strings). Refuses if the XML moved, so a pole is never run under
+    a plinth label."""
+    global BODY
+    BODY = body
+    if body == "pole":
+        return
+    if body != "plinth":
+        raise SystemExit(f"unknown body {body!r}")
+    import playground as pg
+    from .w0bal_probe import (_FOOT_PLINTH, _FOOT_SPHERE, _TORSO_HEAVY,
+                              _TORSO_LIGHT)
+    orig = pg._rover_fragments
+
+    def patched(spawn):
+        b, act = orig(spawn)
+        if _TORSO_HEAVY not in b or _FOOT_SPHERE not in b:
+            raise RuntimeError("plinth patch found nothing to replace")
+        return (b.replace(_TORSO_HEAVY, _TORSO_LIGHT)
+                 .replace(_FOOT_SPHERE, _FOOT_PLINTH), act)
+    pg._rover_fragments = patched
 
 
 class _PushAt:
@@ -77,6 +103,10 @@ def classify(seed: int, n_ep: int, E: int, adh: float) -> list:
     L = _Life4(seed, j0, alpha, train=False)
     w, dr = L.w, L.w.drives
     m, d = w.model, w.data
+    gid = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, "rover_foot")
+    is_box = int(m.geom_type[gid]) == int(mujoco.mjtGeom.mjGEOM_BOX)
+    if is_box != (BODY == "plinth"):
+        raise RuntimeError(f"body {BODY} not carried by the world")
     if DRIVE_Z is not None or DRIVE_SCALE != 1.0:
         w.mujoco = _PushAt(w, DRIVE_Z, DRIVE_SCALE)
     w.observe()
@@ -143,7 +173,7 @@ def classify(seed: int, n_ep: int, E: int, adh: float) -> list:
                 partners.add(nm(other))
             if mine in hands and other in ground_g:
                 hand_pen = max(hand_pen, -float(c.dist))
-        rec = {"seed": seed, "adh": adh, "drive_z": DRIVE_Z, "drive_scale": DRIVE_SCALE, "ep": ep, "fed": fed, "died": died,
+        rec = {"seed": seed, "body": BODY, "adh": adh, "drive_z": DRIVE_Z, "drive_scale": DRIVE_SCALE, "ep": ep, "fed": fed, "died": died,
                "toppled": first_topple is not None,
                "first_topple": first_topple, "righted": righted,
                "up_end": round(float(ups[-1]), 2), "stuck": stuck,
@@ -187,11 +217,12 @@ if __name__ == "__main__":
     DRIVE_Z = (None if DRIVE_AT[at] is None
                else float(getattr(pg, DRIVE_AT[at])))
     adhs = [float(x) for x in sys.argv[4].split(",")]
+    install_body(__import__("os").environ.get("PROBE_BODY", "pole"))
     for seed in [int(x) for x in sys.argv[5:]]:
         for adh in adhs:
             t0 = time.perf_counter()
             recs = classify(seed, n_ep, E, adh)
             s = summary(recs)
-            s.update(seed=seed, adh=adh, drive_at=at, drive_scale=DRIVE_SCALE,
+            s.update(seed=seed, body=BODY, adh=adh, drive_at=at, drive_scale=DRIVE_SCALE,
                      wall_s=round(time.perf_counter() - t0, 1))
             print("SUMMARY " + json.dumps(s), flush=True)
