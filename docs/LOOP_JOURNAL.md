@@ -524,3 +524,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   Did NOT take the planned compressed-clock (b): W.7's registered control forbids exactly that; routed as a design
   conflict (INBOX 20:25). Closed loop in 5 m/s wind parks at ~26.5 C, below the 28 C death line. J4 relaunch refused (load).
   Served: 1 (a world that can kill him honestly - wind now can) and 4 (refused a re-registration that would weaken W.7).
+
+- 2026-11-12 ~20:45 UTC JACK J6 + J4. 42e7973: W.1 attempt 4 RUN (load 5.5) -> FAIL on (b) only, exactly as the smoke
+  predicted: (a) 0.55 C, (c) wind tau ratio 0.309, (d) conv 2.0 PASS; (b) 1x 1h 20.0 vs 33.767 FAIL (world clock, Director's
+  ruling pending, INBOX 20:25). Wind-blind control fails (c), both nulls fail all, ref_wind passes all - the apparatus
+  can tell. J4: sweep relaunched detached (deadline stripped) -> Colab T4 assign 503 + Kaggle quota; no backend today,
+  J4 state corrected (the "queued, waiter 1992023" line was 14 h stale). J1 dose2 race still running (harvest ~22:40).
+  Served: 1 (a world whose cold can kill him, now measured with wind) and 4 (a failure attributed clause by clause,
+  bar untouched).

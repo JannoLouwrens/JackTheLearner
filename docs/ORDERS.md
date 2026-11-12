@@ -78,11 +78,11 @@ commit as a known property of the venue, not a thing to tune.
 serves: M3 · philosophy 3 · standing objective 3.
 **done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
-state: 2026-11-12 5bce9ef: seed-90 pilot at matched sd 2.5 FALSIFIED the venue: vslot A0 .756, arms .61-.80, uni-vision
-.74-.79 -> all 6 arms ineligible (would VOID); afell .83-.88; train loss 4e-4 vs test ~.7 (memorises the fixed draw). Guard now
-refuses an ineligible pilot (live: refuses). Audio/vision levels split; sweep (2,2),(2,1),(2.5,0),(2,0) + _select_venue rule
-declared pre-read. Sweep QUEUED behind D1.0 (Colab single-session): /data/tmp/ub10_sweep_after_d10.log, waiter pid 1992023.
-Next: on "SWEEP EXIT 0" declare the chosen venue in VENUE_NOISE_SD/VENUE_VISION_SD, cp the pilot record, commit, dispatch UB.10.
+state: 2026-11-12 5bce9ef: seed-90 pilot at matched sd 2.5 FALSIFIED the venue (all 6 arms ineligible); sweep (2,2),(2,1),
+(2.5,0),(2,0) + _select_venue declared pre-read. The waiter's sweep ran 06:53 -> SWEEP EXIT 1 (Kaggle 30 h spent; Colab
+skipped on an inherited deadline); reruns 12:10 and 20:38 (/data/tmp/ub10_sweep3.log, launch_detached, deadline stripped)
+both: Colab T4 assign -> HTTP 503 Service Unavailable, Kaggle quota. No GPU backend today; nothing in flight, no waiter.
+Next: when Kaggle's week resets or Colab assigns, relaunch the same sweep line; on "SWEEP EXIT 0" apply _select_venue as declared.
 
 ### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
 **Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —
@@ -99,11 +99,11 @@ serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
 **done when:** `NE.01`, `W.1`, `W.2` each have a new attempt with every
 formerly-red clause explained in the commit. (D53 files `SO.07`'s VOID here too:
 the body cannot reach privileged food on 2 of 3 recording worlds.)
-state: 11-12 ~20:25 e0eecf7: W.1 RE-REGISTERED (gated arm = shipped thermal_step at 1 met, shiver_on=False; k_eff gains wind,
-h_r+max(3,8.6v^.53)). Smoke s100 (no ledger): (a) 27.00 PASS, (c) 0.3092 PASS, (d) PASS; (b) 20.0 FAIL at 1x. (b) NOT compressed:
-W.1 notes + W.7's control forbid it - world tau 240 s vs body 17069 s is a WORLD-DESIGN conflict for the Director (INBOX 20:25).
-Closed loop at 5 m/s 20 C parks ~26.5 C < 28 death: wind makes nights lethal once W.3 drives it. W.1 NOT RUN: load 7.8 (others).
-Next: `run W.1` (13 s) when load < 6 -> expect FAIL on (b) only; then NE.01 night_shelter, W.2; LF.03 is stale by needs.py.
+state: 11-12 ~20:40 42e7973: W.1 attempt 4 RUN -> FAIL on (b) only, as predicted: (a) err 0.55 C, (c) tau 74.2/240 = 0.309
+(rel err 0.0011), (d) conv 2.0 all PASS; (b) 1x 1h 20.0 vs ref 33.767 FAIL. Wind-blind control fails (c), both nulls fail
+all four, ref_wind positive control passes all four. (b) = world tau 240 s vs body 17069 s: Director's ruling (INBOX 20:25).
+Closed loop at 5 m/s 20 C parks ~26.5 C < 28 death. LF.03 is stale by needs.py (re-run, minutes).
+Next: NE.01 `ok_night_shelter` with the wind-bearing k_eff (is shelter vs open now separated?), then W.2; W.1 waits on ruling.
 
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
 **Why.** Owner, 2026-11-11: the world and the curriculum are "as important as
