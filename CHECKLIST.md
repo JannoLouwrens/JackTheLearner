@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 107 / 267 demonstrated
+## 108 / 267 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1149,7 +1149,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Under a privileged detouring oracle (body_probe ORACLE=path, adhesion 0.5, 250 decisions, food ready at birth), W0.BAL arm C's plinth base feeds in at least MARGIN_BIRTHS=15 more of 120 births (40 x seeds 100, 101, 102) than today's pole body, is not behind on ANY seed, and topples in <=10% of its births.
       - _dies if:_ Pooled plinth-minus-pole fed < 15 births, OR the plinth behind on any seed, OR plinth topples >10%; or the control firing the same gate.
       - _then delete:_ Racing any learner (LF.04 and on) in the pole body as if it could stand; the body default stays pole until this passes.
-- [!] **W0.PL** The pool's water does not trap a body on dry floor
+- [x] **W0.PL** The pool's water does not trap a body on dry floor
       - _asserts:_ With the shipped playground.Water.apply, pole and plinth driven straight across the W0 pool (4 crossings built from the pool's geometry, 40 decisions, full gated drive) travel >= 0.90 of their water-forces-off travel on every valid crossing of world seeds 100, 101, 102.
       - _dies if:_ Any valid crossing on any seed or body below ratio 0.90; or the frozen 11-12 apply (the control) also clearing 0.90.
       - _then delete:_ Racing any learner (LF.04, BD.01, J5 staging) in a W0 whose pool band stalls the drive; food obj1 sits inside the band.
