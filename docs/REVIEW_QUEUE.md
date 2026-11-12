@@ -2043,7 +2043,7 @@ falsify the expensive half.**
 
 ---
 
-ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v2) | DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — RULED **(c) THEN (b)**, in that order and for that reason: (b) is the only arm that makes the bug unrepeatable and it is the one arm whose blast radius nobody has measured, and (c) is exactly the instrument that measures it without touching the recorder. (a) REFUSED on the row's own argument. See THE RULING below; execution is the builder's, DUE 2026-10-14)
+ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v2) | DISPOSITIONED 2026-11-12 (Director) live blocker, ordered: `docs/ORDERS.md` S4 (gate the six flagged PASSes per seed, `ME.10` first). The order, not this row, is where it is worked. — prior status: DISPOSITIONED 2026-09-30 (Review DAILY, OVERDUE FIRST — RULED **(c) THEN (b)**, in that order and for that reason: (b) is the only arm that makes the bug unrepeatable and it is the one arm whose blast radius nobody has measured, and (c) is exactly the instrument that measures it without touching the recorder. (a) REFUSED on the row's own argument. See THE RULING below; execution is the builder's, DUE 2026-10-14)
     DUE: 2026-09-18 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all.
         This row went STALE — OPEN 9 days past the 8-day consumer cycle with no
         `DUE:` to re-arm it — and that is this desk's fault, not the router's:
@@ -2630,7 +2630,7 @@ not a PASS and no certificate rests on it.
 ## ROUTED 2026-08-30 (builder): `SM.03`'s held-out split is saturated — pick the
 ## repair arm, do not let me pick it
 
-ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pilot_seed90.json) | DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — **THE F1 ARM IS PICKED: arm 3, HOLD OUT BY PANEL-ALIGNED ABSOLUTE BEARING SECTOR with an 8° angular guard band.** Picked by arithmetic off the spec's own constants, not by preference: arms 1 and 2 are each REFUSED by a number this row already carries. The pre-committed fallback — DECLINE to the owner rather than renew a fourth time — is deliberately NOT taken, and the reason is stated rather than skipped: that stop-rule was armed against a fourth SLIP, and this sitting delivers the owed pick instead, which is the thing the stop-rule existed to force. Design in THE F1 RULING below; execution is the builder's, DUE 2026-10-12)
+ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pilot_seed90.json) | DECLINED 2026-11-12 (Director) names no live blocker: the smell seat belongs to roadmap M5, which has no open order; the picked repair arm (hold out by bearing sector) stays on this row for whoever opens the senses order. — prior status: DISPOSITIONED 2026-10-01 (Review DAILY, OVERDUE FIRST — **THE F1 ARM IS PICKED: arm 3, HOLD OUT BY PANEL-ALIGNED ABSOLUTE BEARING SECTOR with an 8° angular guard band.** Picked by arithmetic off the spec's own constants, not by preference: arms 1 and 2 are each REFUSED by a number this row already carries. The pre-committed fallback — DECLINE to the owner rather than renew a fourth time — is deliberately NOT taken, and the reason is stated rather than skipped: that stop-rule was armed against a fourth SLIP, and this sitting delivers the owed pick instead, which is the thing the stop-rule existed to force. Design in THE F1 RULING below; execution is the builder's, DUE 2026-10-12)
     DUE: 2026-09-06 | the Review picks the repair arm — the author must not; and
         F2 (the dead alive-proof) needs its own answer whichever arm wins.
     DUE: 2026-09-07 | the same owed pick, moved to the Monday DAILY — RE-ARMED
@@ -5905,7 +5905,7 @@ rather than deleted silently.
 
 ## ROUTED 2026-09-02 (builder, 60th audit B2): `d10-successor-rerun-under-adopted-gate` — the project's largest unblock returned an honest VOID and became nobody's work in the same motion
 
-ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DISPOSITIONED 2026-09-08 (Review DAILY — VOID-FORECLOSED is REFUSED and the twin-denominator successor gate is ADOPTED, with a cheap pre-registered probe that must run BEFORE any third dispatch. Design below)
+ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DISPOSITIONED 2026-11-12 (Director) live blocker, ordered and RUNNING: `docs/ORDERS.md` J2 — `D1.0` re-dispatched 2026-11-12 05:21 under the adopted twin gate, 13 units on Colab; ACTED when its ledger row lands. — prior status: DISPOSITIONED 2026-09-08 (Review DAILY — VOID-FORECLOSED is REFUSED and the twin-denominator successor gate is ADOPTED, with a cheap pre-registered probe that must run BEFORE any third dispatch. Design below)
     DUE: 2026-09-06 | the Review must either adopt a gate option on the two
     `d10-*` gate rows (then the builder repairs the D1.0 learning gate
     accordingly and dispatches attempt 2 in W36) or direct a VOID-FORECLOSED
@@ -8793,7 +8793,7 @@ smoke regardless of the ruling.
 ## ROUTED 2026-09-12 (Review, DAILY): three gates in two days computed a
 ## different quantity from the one they declared — and nothing here looks for that
 
-ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Review DAILY 09-12 (d61a11b, bc9c5ec; PL.02 ruling 5e39771) | DISPOSITIONED 2026-10-18 question (a) ANSWERED by this sitting's Part 2 sweep (THE SWEEP RESULT below, in this row) and it reframes the class; question (b) is a D35 clause 2 instrument and is ROUTED TO THE OWNER as D48, not decided here
+ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Review DAILY 09-12 (d61a11b, bc9c5ec; PL.02 ruling 5e39771) | DECLINED 2026-11-12 (Director) question (a) was answered by the 10-18 sweep on this row; what remains is owned elsewhere — clauses that cannot fire are ORDERS SYSTEM Next-up 2 (`T0.13`), seed-average gates are S4. No separate blocker left here. — prior status: DISPOSITIONED 2026-10-18 question (a) ANSWERED by this sitting's Part 2 sweep (THE SWEEP RESULT below, in this row) and it reframes the class; question (b) is a D35 clause 2 instrument and is ROUTED TO THE OWNER as D48, not decided here
     DUE: 2026-09-20 | a FULL-sized sweep, dated onto a SUNDAY on purpose: this
         is Part 2 work (test re-examination) and it has already been filed
         against the wrong kind of sitting once this week in the shape of
@@ -9181,7 +9181,7 @@ re-run of `LG.03` (~725 s) if (b) is answered by changing the twin.
 
 ## ROUTED 2026-09-13 (builder, executing `UB.10` part 1): `ub10-part1-premise-false-marginals-are-what-saturate` — the ordered repair is FORECLOSED by arithmetic, and the defect is one layer down
 
-ROUTED: ub10-part1-premise-false-marginals-are-what-saturate | 2026-09-13 | builder (foreclosure + venue guard, `experiments/tests/ub_10_fusion_bakeoff.py`) | DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — the venue IS hardened, so (d) retirement is REFUSED with its reason on the record; the ARM is ordered to a BAKEOFF over (a) and (c) rather than picked here, per SYSTEM.md law 3 and this row's own insistence that the candidates are arms; and (b) is EXCLUDED from that bakeoff on a PRE-DECLARED price, not on an argument about its merit. See THE RULING below)
+ROUTED: ub10-part1-premise-false-marginals-are-what-saturate | 2026-09-13 | builder (foreclosure + venue guard, `experiments/tests/ub_10_fusion_bakeoff.py`) | DISPOSITIONED 2026-11-12 (Director) live blocker, ordered: `docs/ORDERS.md` J4 — venue (c) piloted 2026-11-12 (matched sd 2.5 falsified), 4-venue sweep with a pre-declared selection rule queued; ACTED when `UB.10` has a verdict. — prior status: DISPOSITIONED 2026-09-29 (Review DAILY, OVERDUE FIRST, D28 default (a) — the venue IS hardened, so (d) retirement is REFUSED with its reason on the record; the ARM is ordered to a BAKEOFF over (a) and (c) rather than picked here, per SYSTEM.md law 3 and this row's own insistence that the candidates are arms; and (b) is EXCLUDED from that bakeoff on a PRE-DECLARED price, not on an argument about its merit. See THE RULING below)
     DUE: 2026-09-20 | the Review picks the venue-hardening ARM (or declines to
     harden and retires the spec); this desk may not pick between arms by
     argument (SYSTEM.md law 3) and `run()` refuses until one lands
@@ -9723,7 +9723,7 @@ ROUTED: pass-certificates-are-not-re-evaluated-when-a-dependency-falls | 2026-09
     is no longer what is owed; the ratchet decision is. The builder does not
     get to settle it by having shipped the easy half.
 
-ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-13 | Review FULL (completeness audit, external reference) | DISPOSITIONED 2026-10-11 (Review FULL — **acted on its OWN DATE, not after it.** This row came due TODAY and was therefore invisible to `OVERDUE FIRST`, which looks only at rows that have already broken; the 108th audit's RANK 3 named that blind spot and the fix is to take the row in the same sitting, which is what this is. **WHAT WAS DELIVERED: one gap converted from a named hole into a specific, harder spec design — WORKING MEMORY — and the sensory half re-verified live rather than quoted.** `run senses` at HEAD: 10/10 of the inventory registered, **2/10 load-bearing (sight, voice)**, so the 2026-08-09 scars (voice, smell, taste at zero specs) are CLOSED on the sensory side and stay closed; body schema remains the one owner-listed zero with 0 own specs. **WHAT WAS NOT DELIVERED: eight of the nine cognitive capabilities are still holes and are NOT converted to refusals by this disposition.** The row stays LIVE and ages. See THE WORKING-MEMORY FINDING below; re-armed `DUE 2026-11-01` with the reason written in the open)
+ROUTED: completeness-audit-2026-09-13-the-cognitive-half-is-the-hole | 2026-09-13 | Review FULL (completeness audit, external reference) | DECLINED 2026-11-12 (Director) superseded by `docs/ROADMAP.md` (2026-11-11): the cognitive gaps it named are milestones M3 and M7 with done-when lists; a queue row cannot hold what a milestone holds. — prior status: DISPOSITIONED 2026-10-11 (Review FULL — **acted on its OWN DATE, not after it.** This row came due TODAY and was therefore invisible to `OVERDUE FIRST`, which looks only at rows that have already broken; the 108th audit's RANK 3 named that blind spot and the fix is to take the row in the same sitting, which is what this is. **WHAT WAS DELIVERED: one gap converted from a named hole into a specific, harder spec design — WORKING MEMORY — and the sensory half re-verified live rather than quoted.** `run senses` at HEAD: 10/10 of the inventory registered, **2/10 load-bearing (sight, voice)**, so the 2026-08-09 scars (voice, smell, taste at zero specs) are CLOSED on the sensory side and stay closed; body schema remains the one owner-listed zero with 0 own specs. **WHAT WAS NOT DELIVERED: eight of the nine cognitive capabilities are still holes and are NOT converted to refusals by this disposition.** The row stays LIVE and ages. See THE WORKING-MEMORY FINDING below; re-armed `DUE 2026-11-01` with the reason written in the open)
     DUE: 2026-09-21 | this desk's own docket: convert the named gaps into
     registered specs or into written refusals, cheapest-first. Date is the
     next FULL sitting plus one; 09-20 already carries 5 rows including the
@@ -12019,7 +12019,7 @@ no `IMPL_DEPS` member is touched. Execution is a one-line prompt edit, DUE
 
 ---
 
-ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026-09-14 | `9075d58` (field watch wk7 §6, greps reproduced by the builder at ~06:2x and by this desk at ~07:3x) | DISPOSITIONED 2026-09-27 (Review FULL — the three-way fork is RULED (i)+(iii), and the (iii) half is EXECUTED in this sitting's commit, not merely designed. See THE RULING below)
+ROUTED: a4-mandatory-collapse-diagnostic-is-declared-and-computed-nowhere | 2026-09-14 | `9075d58` (field watch wk7 §6, greps reproduced by the builder at ~06:2x and by this desk at ~07:3x) | DECLINED 2026-11-12 (Director) half (iii) was executed 09-27; the remaining diagnostic blocks no order — the learning-core arena at scale (`LC.07`) is not runnable on this box until free CPU exists (SYSTEM Next-up 1). It becomes a clause of that run, not a row. — prior status: DISPOSITIONED 2026-09-27 (Review FULL — the three-way fork is RULED (i)+(iii), and the (iii) half is EXECUTED in this sitting's commit, not merely designed. See THE RULING below)
     DUE: 2026-09-18 | a fork owed by the Review, and it is three-way: BUILD the
     diagnostic, RE-EXAMINE `A4`'s seat, or AMEND `LEARNING_CORE.md` §5.4. Date
     is `review-queue`'s own `next_free_due`, not chosen by hand (68th audit B7,
@@ -12397,7 +12397,7 @@ ROUTED: hr1-clean-stratum-is-a-microphone-measurement | 2026-09-18 | `5283aad` (
         its bar on the worst seed, i.e. any repair is a STATISTIC or VENUE
         question under the UNSATURATED-NULL rule, never an envelope one.
 
-ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd96a7` (PS.06 attempt 1, FAIL, seeds 0/1/2, clean stamp at 9b40588) | DISPOSITIONED
+ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd96a7` (PS.06 attempt 1, FAIL, seeds 0/1/2, clean stamp at 9b40588) | DECLINED 2026-11-12 (Director) frees 0 specs and no order waits on it; the world half is green on every seed. The probe half returns as a clause when the interoception seat is raced (roadmap M5). — prior status: DISPOSITIONED
     PS.06 measured the `tiring` commitment (GOAL.md:187) and split it cleanly
     in two. THE WORLD HALF IS GREEN ON EVERY SEED: fatigue_gap 0.295 ± 0.003
     against max(0.10, 2× quantum 0.032) — 9.3× the quantum; f_spent 0.529
@@ -12520,7 +12520,7 @@ ROUTED: ps06-legibility-probe-collapses-on-one-mutated-world | 2026-09-19 | `5fd
         above, which is prose no instrument groups on. ROUTED as its own live
         row in this same act: `waits-on-cannot-name-a-decision` below.
 
-ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.05 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
+ROUTED: ps05-legibility-holdout-is-a-band-lottery | 2026-09-19 | `cc38749` (PS.05 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DECLINED 2026-11-12 (Director) same class as `ps06-…`: frees 0 specs, world half green; the hold-out design returns with the M5 senses order. — prior status: DISPOSITIONED
     PS.05 measured the `far` commitment (GOAL.md:187) and split it exactly the
     way its sibling PS.06 split `tiring`, five hours earlier, same day. THE
     WORLD HALF IS GREEN ON EVERY SEED: traversal cost monotone in distance on
@@ -12714,7 +12714,7 @@ ROUTED: ps09-probe-memorizes-trips-while-a-bare-threshold-reads-the-sign | 2026-
         declared form of the 03:0x prose trace above; a RECEIPT, not a stamp
         — the row still ages and only the desk writes ACTED.
 
-ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2026-09-19 | `8f7d1dc` (PS.08 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DISPOSITIONED
+ROUTED: ps08-amputation-control-out-reads-the-probe-intero-is-not-clock-like | 2026-09-19 | `8f7d1dc` (PS.08 attempt 1, FAIL, seeds 0/1/2, clean stamp) | DECLINED 2026-11-12 (Director) same class as `ps06-…`: frees 0 specs, world half green; the finding (interoception is not clock-like) stays on this row for the M5 interoception cook-off. — prior status: DISPOSITIONED
     PS.08 measured the `heavy` commitment (GOAL.md:187) and split it the way
     all three siblings split `far`, `tiring` and `worth-it` this same week.
     THE WORLD HALF IS GREEN ON EVERY SEED: cost per registered 0.4 m of
