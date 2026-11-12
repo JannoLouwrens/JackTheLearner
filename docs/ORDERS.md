@@ -200,7 +200,10 @@ not bank `pass_on_dead_dependency` 7 → 5 without blessing 7 strangers.
 of the exit code (still printed). (2) Point FAIL-UNOWNED at this file (owned =
 named in an open order or in "Next up"). (3) Fix the `T0.18` KeyError.
 (4) `run status`'s STEERING-PAGE reader parses 0 items from 3 pages — aim it
-at this file's `### ` orders or delete it. Nothing that guards a threshold, a
+at this file's `### ` orders or delete it. (5) `T0.28` went FAIL 11-12 00:52 on
+`p10_live_document_is_armed_and_readable`: no decision is armed today (all
+defaults fired), and p10 reads an empty register as a broken one. Make it tell
+empty from unreadable; a planted unreadable page must still fail. Nothing that guards a threshold, a
 control or a seed count leaves the exit code. Smaller, not bigger.
 serves: philosophy 4, 5 (a truthful machine).
 **done when:** on a clean tree `coverage` and `run verify` exit 0, and each
