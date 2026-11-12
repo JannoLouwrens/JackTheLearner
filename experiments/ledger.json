@@ -45114,8 +45114,8 @@
     },
     "SO.04": {
       "amended": [],
-      "attempt": 6,
-      "commit": "906ee31",
+      "attempt": 7,
+      "commit": "5de07b3",
       "compute_s": null,
       "control_metrics": {
         "c_canary_ok": 1.0,
@@ -45136,7 +45136,7 @@
         "c_rng_mismatch_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 53.62,
+      "duration_s": 108.78,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -45453,10 +45453,73 @@
           ],
           "spec_sha": "c5bfb5669b54fc61",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 6,
+          "commit": "906ee31",
+          "compute_s": null,
+          "control_metrics": {
+            "c_canary_ok": 1.0,
+            "c_canary_ok_std": 0.0,
+            "c_detected": 1.0,
+            "c_detected_std": 0.0,
+            "c_detector_catches": 1.0,
+            "c_detector_catches_std": 0.0,
+            "c_first_divergence_step": 40.0,
+            "c_first_divergence_step_std": 0.0,
+            "c_frames_alive": 1.0,
+            "c_frames_alive_std": 0.0,
+            "c_in_render_path": 1.0,
+            "c_in_render_path_std": 0.0,
+            "c_n_frames_ok": 1.0,
+            "c_n_frames_ok_std": 0.0,
+            "c_rng_mismatch": 1.0,
+            "c_rng_mismatch_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 53.62,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "b34b2a15769472ce",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 11 deciding metric(s) reproduced exactly in a fresh process (+53.1s)",
+          "metrics": {
+            "bit_identical": 1.0,
+            "bit_identical_std": 0.0,
+            "canary_mean_diff": 0.0,
+            "canary_mean_diff_std": 0.0,
+            "canary_ok": 1.0,
+            "canary_ok_std": 0.0,
+            "first_divergence_step": -1.0,
+            "first_divergence_step_std": 0.0,
+            "frames_alive": 1.0,
+            "frames_alive_std": 0.0,
+            "n_frames": 50.0,
+            "n_frames_ok": 1.0,
+            "n_frames_ok_std": 0.0,
+            "n_frames_std": 0.0,
+            "rng_match": 1.0,
+            "rng_match_std": 0.0,
+            "seed_gates_ok": 1.0,
+            "seed_gates_ok_std": 0.0,
+            "stats_max_diff": 0.0,
+            "stats_max_diff_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 1211.0,
+          "preserved_impl": null,
+          "ran_at": "2026-10-26T00:47:12",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "c5bfb5669b54fc61",
+          "status": "PASS"
         }
       ],
       "impl_sha": "b34b2a15769472ce",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 11 deciding metric(s) reproduced exactly in a fresh process (+53.1s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 11 deciding metric(s) reproduced exactly in a fresh process (+109.9s)",
       "metrics": {
         "bit_identical": 1.0,
         "bit_identical_std": 0.0,
@@ -45480,9 +45543,9 @@
         "stats_max_diff_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 1211.0,
+      "peak_rss_mb": 1210.3,
       "preserved_impl": null,
-      "ran_at": "2026-10-26T00:47:12",
+      "ran_at": "2026-11-12T14:44:56",
       "seeds": [
         0,
         1,

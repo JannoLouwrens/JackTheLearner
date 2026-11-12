@@ -913,6 +913,7 @@
         "PS.03": 436.52,
         "SM.01": 7.52,
         "SO.01": 92.43,
+        "SO.04": 220.58,
         "T0.02": 5.44,
         "T0.05": 64.12,
         "T0.08": 2.13,
@@ -939,7 +940,10 @@
         "detached:claim.log": 2.23,
         "detached:detached.log": 0.77,
         "detached:diag.log": 1546.66,
+        "detached:dose.log": 4200.01,
         "detached:low.log": 707.28,
+        "detached:oracle.log": 1391.93,
+        "detached:oracle2.log": 1800.0,
         "detached:pilot_learner.log": 1632.57,
         "detached:pilot_statue.log": 266.52,
         "detached:pilot_twinA.log": 1440.16,
@@ -947,7 +951,8 @@
         "detached:race_awr.log": 1552.0,
         "detached:race_tanh-awr.log": 1527.79,
         "detached:race_tanh.log": 1577.83,
-        "detached:run3.log": 1800.0,
+        "detached:run.log": 1401.53,
+        "detached:run3.log": 2081.7,
         "detached:split.log": 674.53,
         "detached:ub10_pilot_then_d10.log": 404.22,
         "detached:ub10_sweep_1210.log": 11.91,
@@ -955,7 +960,7 @@
         "detached:ub10_sweep_rerun.log": 10.49,
         "detached:ub10_venue_pilot.log": 10.28
       },
-      "used_s": 22505.06
+      "used_s": 31800.81
     }
   },
   "overruns": []
