@@ -53,7 +53,7 @@ def _awr_update(core, batch, targets, opt, *, dropped=()):
     import torch
     import torch.nn.functional as F
 
-    from .. import cores
+    from . import cores
     was_training = core.training
     core.train()
     try:
@@ -80,9 +80,9 @@ def main(seed: int = 90, n_lives: int = 12,
          variant: str = "base") -> None:
     import torch
 
-    from .. import cores
-    from .lf_03_learner_lives import _calibration, _flat
-    from .lf_04_living_teaches import LIFE_CAP, _Life4
+    from . import cores
+    from .tests.lf_03_learner_lives import _calibration, _flat
+    from .tests.lf_04_living_teaches import LIFE_CAP, _Life4
 
     torch.set_num_threads(1)
     j0, alpha, prov = _calibration()

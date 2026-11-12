@@ -4,7 +4,7 @@ WHY A SEPARATE MODULE. `cores.lc_update`'s policy term
 `||mu - a||^2 * adv` is unbounded below for adv < 0 with mu unsquashed; the
 11-12 LF.04 collapse diagnostic traced the actor's runaway (|mu| 1.8 -> 19.3,
 every dim saturated) to it, and the policy-loss race on the s90 pilot
-(lf_04_collapse_diag.py, 12 lives/arm) found AWR ends the collapse
+(experiments/lf04_collapse_diag.py, 12 lives/arm) found AWR ends the collapse
 (saturation 0.97 -> 0.00) where tanh-squashing alone does not (0.96).
 AWR is a CHALLENGER, not a fix: the default stays, and it holds a seat only
 if a race on the creature gate says so.
