@@ -99,7 +99,11 @@ serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
 **done when:** `NE.01`, `W.1`, `W.2` each have a new attempt with every
 formerly-red clause explained in the commit. (D53 files `SO.07`'s VOID here too:
 the body cannot reach privileged food on 2 of 3 recording worlds.)
-state: open — not started.
+state: 11-12 ~19:55 W.1 priced from needs.py constants (no run): its 3 red clauses are 2 apparatus + 1 world. (a) shipped arm
+settles 34.0 because shivering is ON; the reference is a 1-met body with NO shivering - shipped open loop T_env+M/K_DRY = 27.0
+(bar 27.55+-1.0: passes). (b) at 72x day compression 1 h = 50.0 s: 20+17exp(-50/240) = 33.80 vs 33.767 (0.1%, bar 1%: passes).
+(c) is real: k_eff has no wind input (ratio 1.0 vs 0.3095). Next: re-register W.1's shipped arm as open-loop + compressed time
+(say why in commit), add wind to k_eff (h_c 3.0 -> 8.6v^.53), then re-run W.1 and NE.01 (night_shelter). Then W.2.
 
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
 **Why.** Owner, 2026-11-11: the world and the curriculum are "as important as

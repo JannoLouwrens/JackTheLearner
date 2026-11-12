@@ -510,3 +510,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   Every sense race was killed in the trapped world, so the smell dose race is re-running unchanged (dose2.log, ~3 h,
   declared rule: smell > shuffled on 2nd-half meals on >= 2/3 seeds). Served: 3 (a killed race re-run once its venue was
   shown broken, not assumed dead) and 4 (a re-measurement that could have kept the old ceiling).
+
+- 2026-11-12 ~19:55 UTC JACK J6 (no ledger row; short slot). J1's smell dose race is running (dose2.log, started 19:27);
+  GPU lanes still refused (Kaggle quota, Colab). Started J6 on W.1: from needs.py constants, two of its three red clauses
+  are the apparatus comparing unlike things - (a) shivering on vs a no-shiver reference (open loop gives 27.0 vs 27.55+-1)
+  and (b) real hours vs a 72x-compressed world (1 h = 50 s gives 33.80 vs 33.767). Only (c), no wind in k_eff, is
+  a world gap. Plan in J6 state. Served: 1 (a world that can kill him honestly) and 4 (separate apparatus faults from world
+  faults before touching either; no bar moved).
