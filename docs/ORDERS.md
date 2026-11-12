@@ -95,7 +95,11 @@ the bar); pilot on CPU; dispatch to **Colab**. Does not depend on `T1.14`.
 serves: M3 · philosophy 3 · standing objective 3.
 **done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
-state: open — not started.
+state: 2026-11-12 VOID cause = venue saturated (A0 vslot=afell=1.0); 09-29 ruling orders bakeoff (a) audio window
+vs (c) per-sense noise, criterion: a marginal <=0.95, XNOR intact. CPU audio-side probe (experiments/ub10_venue_probe.py,
+seed 90 only, 1600 eps, 0 XNOR mismatches): (a) FAILS alone — afell 1.0 at every window 100ms..1.25ms (logreg+MLP).
+(c) noise sd=3 at the full window: afell 0.864/0.834, inside [0.80,0.95]; sd=2 is on the edge (0.960/0.944). Next: implement (c) in
+ub_10 (matched sd on both senses) + a seed-90 GPU pilot of A0 reading vslot too (no GL here) → Colab; guard must clear by itself.
 
 ### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
 **Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —

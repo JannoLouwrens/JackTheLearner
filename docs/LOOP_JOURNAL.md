@@ -293,3 +293,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   Colab-first where the worst case fits 2 h, resume cache by impl_sha; mock: 1 failed unit re-buys 6 jobs
   not 13. Prediction on record: same budget likely → SPLIT-PENDING. Served: 3 (the control seat raced,
   not assumed) and 5 (cheaper/truer loop: free GPU hours stop being lost to one backend's failure).
+
+- 2026-11-12 ~02:20 UTC JACK J4 (J1 waiting: T1.14 watcher 1838593 still polling, left alone). UB.10's VOID is a saturated
+  venue (A0 reads both marginals at 1.0); the 09-29 ruling's bakeoff (a) shorter audio window vs (c) per-sense noise had
+  never been touched. CPU audio-side probe (no GL on this box), pilot seed 90, 1600 eps, XNOR intact (0 mismatches):
+  arm (a) cannot harden the venue alone (afell 1.0 at every window down to 1.25 ms, logreg and MLP); arm (c) sd=3 puts
+  afell at 0.864/0.834, inside [0.80, 0.95]. Next: (c) into ub_10 + seed-90 GPU pilot of A0 for the vision marginal.
+  Served: 3 (the one-brain contest raced on a venue that can discriminate, not assumed) and 4 (a gate that can fire).
