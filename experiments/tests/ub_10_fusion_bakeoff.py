@@ -1260,8 +1260,14 @@ def pilot():
            "a0": {t: s0["arms"]["A0"]["acc"][t] for t in TASKS},
            "acc": {a: s0["arms"][a]["acc"] for a in ARMS},
            "eligible": {a: not _arm_reasons(s0["arms"][a]) for a in ARMS}}
-    VENUE_PILOT.write_text(json.dumps(rec, indent=1) + "\n")
-    print("VENUE PILOT RECORD", json.dumps(rec))
+    # Written to /data, NOT into the tree: the pilot may run chained ahead of
+    # another spec's dispatch, and an uncommitted file under experiments/
+    # would stamp that run dirty. The harvesting worker copies it to
+    # VENUE_PILOT and commits it with the numbers in the message.
+    Path("/data/ub10_venue_pilot.json").write_text(json.dumps(rec, indent=1)
+                                                   + "\n")
+    print("VENUE PILOT RECORD (cp /data/ub10_venue_pilot.json "
+          f"{VENUE_PILOT} and commit)", json.dumps(rec))
     return out
 
 
