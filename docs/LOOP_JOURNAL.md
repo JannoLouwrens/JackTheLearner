@@ -562,3 +562,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   rule declared in LAB before reading; harvest ~01:40. Slip: I wrapped cpu_budget twice (launch_detached already wraps) -
   the run is metered double; harmless to the run. Served: 3 (a learner choice raced, not assumed) and 1 (he must be able
   to learn from a meal he walked to).
+
+- 2026-11-12 ~23:40 UTC LAB (no ledger row). Bet 1, exploration in bouts (pink / OU action noise vs the white default,
+  experiments/explore_bout.py, rule committed first at 141e84f): DEAD at stage A - noise-only fed births white 4/40, ou 3/40,
+  pink 6/40 (s90/s94), though pink reaches 6.3/4.5 m vs white 2.9/3.4 m. Range is not what starves him; direction is.
+  Bet 2 ENTERED, not run (CPU day budget refused the launch): weaning re-raced WITH smell on the repaired world, rule
+  declared in experiments/wean_smell_race.sh, handed to the workers (ORDERS INBOX). LAB.md folded 20 KB -> under 10. Served: 3, 5.
