@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 108 / 261 demonstrated
+## 110 / 264 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -107,6 +107,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every language-action pair fed to training is a genuine observation, and the language is correlated with the motion it is attached to.
       - _dies if:_ Shuffling the language labels across the dataset leaves the training loss statistically unchanged. If the words can be permuted for free, they were never carrying signal.
       - _then delete:_ Every downstream grounding claim. T2.06 and T2.07 measure whether the MODEL learned the mapping; this measures whether a mapping was present to learn. Passing those on fabricated data would be the original disease in a new place.
+- [x] **T1.14** Seed noise is measured and published
+      - _asserts:_ Across 3 seeds of the shared recipe, seeds change the outcome, the effect is >= 3x the seed spread, and the noise floor (min_detectable_effect) is recorded.
+      - _dies if:_ std >= effect/3 — or no finite, positive min_detectable_effect is produced for downstream specs to compare against.
+      - _then delete:_ Any multi-seed comparison that has no published noise floor to beat.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
@@ -1133,6 +1137,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Killing a process mid-life and resuming restores the world state, the need variables, the episodic store and the recurrent state such that the continuation is indistinguishable from the uninterrupted run over the next 1000 steps.
       - _dies if:_ Any of the four stores lost or silently defaulted; a resumed trajectory that diverges beyond float tolerance.
       - _then delete:_ Multi-session lives, hence every life longer than one Kaggle session or one 50-minute loop iteration.
+- [x] **LF.03** One whole life with the learner in the loop
+      - _asserts:_ The seated learning core (wm-latent) drives the body in lethal W0 across >= 5 deaths with every W0 sense live, updating its weights online; the world-written diary carries every earlier death across every respawn; one mid-life save-and-resume in a fresh process carrying the learner's weights, optimiser and replay continues the uninterrupted life bit-exactly for 200 decisions; no crash, no non-finite state, weights measurably changed.
+      - _dies if:_ A crash or non-finite state; weights that did not move (relative L2 < 1e-3 or zero optimiser steps); a respawn at which an earlier death row is missing from the diary; a dead sense (zero variance over the life); a resumed continuation that differs from the uninterrupted one in any bit of world, needs, learner or diary — on ANY seed.
+      - _then delete:_ Every claim about Jack that assumes the creature-as-built runs end to end — every performance spec on a whole life.
 - [x] **SO.01** Jack can be watched: a third-person stream exists and costs what we say it costs
       - _asserts:_ A third-person view of a running life renders at >=5 fps at 320x240 on this box and is deliverable to the owner without a persistent listening service; the measured render cost is reported as a fraction of the life's compute budget.
       - _dies if:_ Rendering unavailable, OR the render cost pushing the real-time factor below 1.0 (watching would then be slower than living).
@@ -1219,6 +1227,10 @@ Every line here is backed by an experiment that could have failed;
 - [!] **WM.01** The working-memory store earns its slots  — buffer_acc=0.5462; buffer_acc_std=0.203408
       - _asserts:_ The shipped recurrent working-memory buffer beats an arm with NO separate buffer — attention over the episodic store alone — at matched parameters and matched steps. GOAL.md builds three stores ('it is two memories, not one', plus the fast/slow LEARNING split); CHAMPIONS.md seats episodic retrieval and consolidation, and the store in the middle was never raced.
       - _dies if:_ The no-buffer arm matches or beats the shipped buffer, in which case the working-memory parameters are decoration and should be deleted.
+- [ ] **WM.02** A rotating working memory beats the GRU buffer on the seat's own venue
+      - _asserts:_ RingMemory — a store whose events ROTATE the held state (K planes, input-dependent angles, a gated absolute write; every weight learned from scratch) — clears WM.01's 0.10 margin over the no-buffer null on EVERY seed, never loses to the shipped GRU buffer on any seed, and beats it by 0.10 on the mean, at 21% of its parameters and the same 32-float state.
+      - _dies if:_ Any seed where the ring's margin over the null is below 0.10 or it trails the GRU by more than 0.02; or a mean lead over the GRU below 0.10; or either control passing.
+      - _then delete:_ The ring-memory entry: the seat stays VACANT and docs/LAB.md records it DEAD with its number.
 
 ### Tier 4 — COMPOSITION — does adding B break A?
 
