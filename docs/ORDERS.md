@@ -58,10 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refuses cpu<48h (INBOX 08:45/18:05).
-18:40 Water.apply REPAIRED (additive; no water for a body touching floor/wall-tops; band gone). Smoke s90 (pilot): min
-ratio 0.955 vs legacy 0.15. PG.1, PG.2, PG.8 re-run PASS on it. W0.PL has one ERROR row (ran before PS.01 was re-bought).
-Chain PG.8->PS.01->W0.PL detached: /data/tmp/w0pl_chain2.log (PS.01 ~15 min). Next: harvest W0.PL verdict; if PASS,
-regate other playground-dependent stales, then BD.01/LF.04 once the cpu<48h gate is fixed.
+19:15 pool trap CLOSED: W0.PL PASS (3f15c7f, seeds 100-102) min travel ratio 0.966 (bar 0.90), legacy control 0.151;
+PS.01, PG.1, PG.2, PG.8 re-PASS on the repaired Water.apply. d05c997 moved the collapse diagnostic out of tests/ (LF.04
+had 2 impls). Playground stales PG.3-6 left to regate (cpu<10min). Next: the LAB 11:50 sensing repair (smell into
+W0.observe vs downward rays — register the race) while BD.01/LF.04 wait on the cpu<48h gate.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is
@@ -235,7 +235,7 @@ with reasons.
 - **11-12 SYSTEM S3:** ruling 2's counts no longer hold. `pass_on_dead_dependency` reads 9, not 5 — new: `DP.00`, `LC.08`, `LF.03`, `XL.00` <- `LC.02` FAIL, `T0.18`/`T0.19` <- `T0.13`, `PL.00`, `T1.12`, `LF.02`. `unreachable` reads 96, not 93. Nothing recorded; `--only` is ready when the Director names the values to bank.
 - **11-12 18:05 JACK J1: second spec stuck on the 08:45 cpu<48h gate.** `launch_detached.sh … experiments.run BD.01` -> "REFUSED before start: cpu<48h is the detached lane (scripts/launch_detached.sh), not a runner child" — the runner refuses the very lane it names. BD.01 (~2 h) and LF.04 (~4-5 h) both registered, both unrunnable. Log /data/tmp/smell_sense/bd01_run.log.
 
-- **11-12 19:40 JACK J1:** `run next` (and any LF.04 run) RAISES: "LF.04 has 2 implementations: lf_04_collapse_diag.py, lf_04_living_teaches.py" — the tracked diagnostic (9df00c2/ffe45e5) sits in experiments/tests/ under the spec's prefix. Move/rename it out of the `lf_04_` namespace (check its launch scripts first); not done here.
+- **11-12 19:40 JACK J1 [FIXED d05c997, diagnostic moved to experiments/lf04_collapse_diag.py]:** `run next` (and any LF.04 run) RAISES: "LF.04 has 2 implementations: lf_04_collapse_diag.py, lf_04_living_teaches.py" — the tracked diagnostic (9df00c2/ffe45e5) sits in experiments/tests/ under the spec's prefix. Move/rename it out of the `lf_04_` namespace (check its launch scripts first); not done here.
 
 ## DONE (kept one day)
 

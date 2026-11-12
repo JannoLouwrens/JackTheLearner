@@ -494,3 +494,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   PG.8 re-PASS on the new code. W0.PL logged one ERROR row (my chain ran it before PS.01, stale by the edit, was re-bought).
   PG.8->PS.01->W0.PL is running detached: /data/tmp/w0pl_chain2.log. Served: 1 (a world that kills him honestly, not
   through a force bug) and 4 (the fix's gate and control were declared before the fix).
+
+- 2026-11-12 ~19:20 UTC JACK J1. Harvested the detached chain: PS.01 re-PASS on the repaired playground (991 s, hash-salt
+  clean), then W0.PL PASS (3f15c7f) on claim seeds 100-102: pole and plinth driven across all four pool sides travel min
+  0.966 of their water-off travel (bar 0.90); the frozen legacy Water.apply control reads 0.151 and does not fire. The
+  pool is no longer a starvation trap in his world. Also moved the LF.04 collapse diagnostic out of experiments/tests/
+  (d05c997) - its lf_04_ prefix gave LF.04 two implementations and made the runner raise. BD.01/LF.04 still wait on the
+  cpu<48h gate. Next: register the sensing race (smell vs downward rays) from LAB 11:50.
+  Served: 1 (a world that kills him honestly, not through a force bug) and 4 (a pre-registered gate, control run and failed).
