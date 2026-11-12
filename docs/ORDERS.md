@@ -58,10 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102, MARGIN_S 272.812), NOT RUN (CPU gate, INBOX 08:45). AWR challenger d5d26b0 ends the
-collapse but no arm beats the frozen twin (~578 s): he cannot SEE floor food (LAB 02ecf94). 12:20 food_sense.py races eye heights (vision 32 wide,
-w0 untouched): food visible on level 0/611 poses, low 129, split 76; s90 AWR 13k meals level 0, low 0, split 3. split_blind control verified.
-IN FLIGHT: seeds 91-93 x {level, split, split_blind}, 9 runs (/data/tmp/food_sense/run3.log, ~40 min; kill rule in module docstring).
-Next: read RUN3 EXIT, apply the declared rule; PASS -> register the sense as a W0 challenger + LF.04 with AWR+sense arm; KILL -> race smell (odour.py).
+collapse but no arm beats the frozen twin (~578 s): he cannot SEE floor food (LAB 02ecf94). Eye-height race (food_sense.py): split sees food on 76/611 poses.
+12:44 split KILLED by the declared rule: meals/13k s91 level 1 split 1 blind 2; s92 level 2 split 2 blind 2 (0 of 2 wins; all meals in births <=3.4 m).
+s93 still running for the record (/data/tmp/food_sense/run3.log; tally: python /data/tmp/food_sense/tally.py) — append it to LAB, it cannot change the verdict.
+Next: race SMELL (experiments/odour.py OdourSensor, a gradient) as a per-process W0 observe patch, same pilot + a must-fail shuffled-odour control.
 
 ### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
 **Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate

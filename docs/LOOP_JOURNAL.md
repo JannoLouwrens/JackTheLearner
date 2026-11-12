@@ -387,3 +387,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   must-fail control split_blind (rays pass through food; blind 76/76, identical 535/535), declared the kill rule, launched s91-93 x 3 arms
   (/data/tmp/food_sense/run3.log). GPU: Colab still 503 at GPU assign 12:12 (UB.10 sweep relaunch refused), Kaggle week spent; no watcher.
   Served: 1 (a world where he can perceive what keeps him alive) and 3/4 (the sense is raced against a control that must fail).
+
+- 2026-11-12 ~12:50 UTC JACK J1 (no ledger row). Harvested the food_sense eye-height race and applied the rule declared before launch:
+  meals per 13k decisions (AWR) s91 level 1 / split 1 / split_blind 2; s92 level 2 / split 2 / split_blind 2. Split out-eats both on
+  0 of 2 seeds -> at most 1 of 3 -> KILLED (LAB). All meals in lives born <=3.4 m from food: seeing food on ~12% of poses did not yield
+  approach. s93 left running for the record. Next: race smell (odour.py) as a gradient sense with a shuffled-odour control.
+  Served: 3/4 (a world repair raced against a must-fail control, killed by a rule fixed before the seeds were read) and 1.

@@ -75,5 +75,14 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   meals level 0, low 0, split 3. Control `split_blind` (rays pass through
   food) checked blind 76/76. Seeds 91–93 × {level, split, split_blind}
   running (/data/tmp/food_sense/run3.log); kill rule declared in the module.
+  **KILLED 11-12 12:44 by the declared rule (split must out-eat level AND
+  split_blind on >= 2 of 3 seeds):** meals per 13k decisions — s91 level 1,
+  split 1, split_blind 2; s92 level 2, split 2, split_blind 2. Split wins
+  0 of 2, so at most 1 of 3 whatever s93 reads (s93 left to finish, ~12:55,
+  for the record). Every meal sat in a life whose birth was <= 3.4 m
+  from food (contact/drift, not approach); split's were all in life 0. Seeing
+  food on 12-21 % of poses at 13k decisions does not make the AWR learner
+  approach it. Not ruled out: a longer dose; a sense with a gradient (smell)
+  instead of a sparse ray hit. Next: race smell (`experiments/odour.py`).
   Serves philosophy 3 (the curriculum raced with a control, not assumed) and
   5 (his curriculum matters as much as he does).
