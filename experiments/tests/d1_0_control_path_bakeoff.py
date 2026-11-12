@@ -378,6 +378,10 @@ LEARN_MARGIN = round(MIN_LEARN_SIGMA
 STEP_TARGET = 750_000
 MINUTES_CAP = {"aprime": 90, "b_split": 150, "c_e2e": 150, "d_mlp": 15}
 _KERNEL_SPLIT = (("aprime", "d_mlp"), ("b_split",), ("c_e2e",))
+                            # HISTORICAL since 2026-11-12: attempt 2's
+                            # grouping. Submission is now one job per
+                            # (arm, seed) — see _job_units(). Kept because
+                            # _submit_full still refuses if it is None.
                             # THREE kernels — the pre-registered escalation
                             # branch fired (no <=2-submission split fits at
                             # any legal STEP_TARGET; arithmetic in the
@@ -931,7 +935,7 @@ import subprocess as _sp, sys as _sys, os as _os
 _sp.run([_sys.executable, "-m", "pip", "install", "-q", "gymnasium[mujoco]"],
         check=True)
 from experiments.tests.d1_0_control_path_bakeoff import remote_run
-remote_run("full", arms=__ARMS__)
+remote_run("full", arms=__ARMS__, seeds=__SEEDS__)
 '''
 
 _REF_JOB = r'''
@@ -973,6 +977,38 @@ def pilot(out_path=_PILOT_ARTIFACT):
 _CACHE: dict = {}
 
 
+_UNIT_CACHE_ROOT = Path("/data/d10_units")
+_UNIT_OVERHEAD_H = 0.15     # pip install + env build + random/untrained evals
+
+
+def _job_units() -> list:
+    """(arm, seed, prefer, est_hours) for every registered unit, in ARMS x
+    SEEDS order. est = frozen cap x 1.15 + overhead; Colab first iff that
+    worst case fits dispatch_guard.COLAB_MAX_HOURS."""
+    from ..dispatch_guard import COLAB_MAX_HOURS
+    units = []
+    for a in ARMS:
+        est = round(MINUTES_CAP[a] / 60.0 * 1.15 + _UNIT_OVERHEAD_H, 2)
+        prefer = "colab" if est <= COLAB_MAX_HOURS else "kaggle"
+        units.extend((a, s, prefer, est) for s in SEEDS)
+    return units
+
+
+def _unit_cache_path(arm: str, seed: int):
+    """Where a finished unit's artifact is kept, keyed by this test's
+    impl_sha (file + IMPL_DEPS), so a unit is only ever reused by the exact
+    code that produced it. None when the sha cannot be read — unknown is not
+    a match (LESSONS_CORE 11), so nothing is reused."""
+    try:
+        from ..protocol import impl_sha_of
+        sha = impl_sha_of(Path(__file__))
+    except Exception:
+        sha = None
+    if not sha:
+        return None
+    return _UNIT_CACHE_ROOT / sha[:16] / f"{arm}_seed{seed}.json"
+
+
 def _submit_full() -> dict:
     if _KERNEL_SPLIT is None:
         raise RuntimeError(
@@ -984,22 +1020,39 @@ def _submit_full() -> dict:
     # its own kernel before any arm trains. If it misses its floor, the run
     # is VOID as a HARNESS fault and the three arm kernels (~15 h) are never
     # submitted — D1_CONTROL_ARCHITECTURE.md section 7's sequencing.
-    ref_job = build_job(_REF_JOB)
-    ref_res = submit(ref_job, prefer="kaggle", est_hours=1.8, timeout_s=10800,
-                     fetch=["d10_ref.json"])
-    if not ref_res.ok:
-        raise RuntimeError(f"reference kernel failed on {ref_res.backend}: "
-                           f"{ref_res.message}")
-    ref_path = ref_res.artifacts.get("d10_ref.json")
-    if not ref_path:
-        raise RuntimeError(f"no artifact from reference kernel: "
-                           f"{ref_res.message!r}")
-    ref = json.loads(Path(ref_path).read_text())
+    # The reference is a unit too (ORDERS J2): kept by impl_sha so a
+    # re-dispatch after an arm-unit failure does not re-buy its 1.8 h.
+    ref_cache = _unit_cache_path("sb3_reference", 0)
+    if ref_cache is not None and ref_cache.exists():
+        ref = json.loads(ref_cache.read_text())
+        ref_reused = str(ref_cache)
+        print(f"D1.0 reference: REUSED {ref_cache}", flush=True)
+    else:
+        ref_reused = None
+        ref_job = build_job(_REF_JOB)
+        ref_res = submit(ref_job, prefer="kaggle", est_hours=1.8,
+                         timeout_s=10800, fetch=["d10_ref.json"])
+        if not ref_res.ok:
+            raise RuntimeError(f"reference kernel failed on {ref_res.backend}"
+                               f": {ref_res.message}")
+        ref_path = ref_res.artifacts.get("d10_ref.json")
+        if not ref_path:
+            raise RuntimeError(f"no artifact from reference kernel: "
+                               f"{ref_res.message!r}")
+        ref = json.loads(Path(ref_path).read_text())
+        ref["_unit"] = {"backend": ref_res.backend, "head": ref_res.head}
+        # Only a reference that CLEARED its floor is kept: a failed G3 must
+        # be re-measured, never replayed into a second VOID.
+        if (ref_cache is not None and ref.get("ref_mean") is not None
+                and ref["ref_mean"] >= SB3_REFERENCE_FLOOR):
+            ref_cache.parent.mkdir(parents=True, exist_ok=True)
+            ref_cache.write_text(json.dumps(ref, indent=1))
     merged["sb3_reference"] = {
         "ref_mean": ref.get("ref_mean"),
         "reference_runs": ref["reference_runs"],
         "gpu": ref["gpu"], "wall_minutes": ref["wall_minutes"],
-        "backend": ref_res.backend, "head": ref_res.head}
+        "backend": ref["_unit"]["backend"], "head": ref["_unit"]["head"],
+        "reused_from": ref_reused}
     merged["random_returns"] = ref["random_returns"]
     ref_mean = ref.get("ref_mean")
     if ref_mean is None or ref_mean < SB3_REFERENCE_FLOOR:
@@ -1007,31 +1060,57 @@ def _submit_full() -> dict:
         # into the G3 VOID. Returning here is what saves the 15 arm-hours.
         merged["reference_failed"] = True
         return merged
-    for arms in _KERNEL_SPLIT:
-        body = _FULL_JOB.replace("__ARMS__", repr(list(arms)))
-        job = build_job(body)
-        est = sum(MINUTES_CAP[a] for a in arms) * len(SEEDS) / 60.0
-        res = submit(job, prefer="kaggle", est_hours=min(est * 1.15, 8.8),
-                     timeout_s=32000, fetch=["d10_full.json"])
-        if not res.ok:
-            raise RuntimeError(f"kernel {arms} failed on {res.backend}: "
-                               f"{res.message}")
-        path = res.artifacts.get("d10_full.json")
-        if not path:
-            raise RuntimeError(f"no artifact from kernel {arms}: "
-                               f"{res.message!r}")
-        d = json.loads(Path(path).read_text())
+    # ARM x SEED UNITS (ORDERS J2, 2026-11-12). Attempt 2 ran the three
+    # _KERNEL_SPLIT kernels in series, 4-6 h each, every one Kaggle-only; one
+    # failed kernel threw away up to three finished arm-seeds, and on
+    # 2026-11-11/12 two Kaggle pushes in a row produced NO session at all
+    # (ORDERS S2: `kernels status` 404, polled blind to timeout). So each
+    # (arm, seed) is now its own job, routed by its frozen cap: a unit whose
+    # worst case fits COLAB_MAX_HOURS goes to Colab first (aprime, d_mlp),
+    # the two 57M-trunk arms (cap 150 min/seed = 2.9 h worst case) need the
+    # session length and go to Kaggle first. Each finished unit's artifact is
+    # kept under /data keyed by impl_sha, so a re-dispatch after a backend
+    # failure re-buys only the units that did not finish. Nothing an arm is
+    # scored on moved: same seeds, same STEP_TARGET, same MINUTES_CAP, same
+    # gates; `remote_run` already took arms= and seeds=.
+    for a, s, prefer, est in _job_units():
+        cached = _unit_cache_path(a, s)
+        if cached is not None and cached.exists():
+            d = json.loads(cached.read_text())
+            print(f"D1.0 unit {a}/seed{s}: REUSED {cached} "
+                  f"(backend {d['_unit']['backend']}, head "
+                  f"{d['_unit']['head']})", flush=True)
+            res_backend, res_head = d["_unit"]["backend"], d["_unit"]["head"]
+            reused = str(cached)
+        else:
+            body = (_FULL_JOB.replace("__ARMS__", repr([a]))
+                    .replace("__SEEDS__", repr([s])))
+            job = build_job(body)
+            res = submit(job, prefer=prefer, est_hours=est,
+                         timeout_s=int(est * 3600 * 1.25) + 1800,
+                         fetch=["d10_full.json"])
+            if not res.ok:
+                raise RuntimeError(f"unit {a}/seed{s} failed on {res.backend}:"
+                                   f" {res.message} — finished units are kept"
+                                   f" under {_UNIT_CACHE_ROOT}; re-dispatch "
+                                   f"re-buys only the rest")
+            path = res.artifacts.get("d10_full.json")
+            if not path:
+                raise RuntimeError(f"no artifact from unit {a}/seed{s}: "
+                                   f"{res.message!r}")
+            d = json.loads(Path(path).read_text())
+            d["_unit"] = {"backend": res.backend, "head": res.head}
+            if cached is not None:
+                cached.parent.mkdir(parents=True, exist_ok=True)
+                cached.write_text(json.dumps(d, indent=1))
+            res_backend, res_head, reused = res.backend, res.head, None
         merged["runs"].extend(d["runs"])
-        # `head` per kernel (59th audit B7): the row's top-level `commit` is
-        # stamped once at run start, but a multi-kernel dispatch can span
-        # pushes. `res.head` is the HEAD `submit` recorded at DISPATCH — the
-        # 80th audit found the previous version called `_head_sha()` HERE,
-        # after the blocking submit returned, stamping harvest-time HEAD:
-        # every kernel of attempt 2 named a commit it did not run.
-        merged["kernels"].append({"arms": list(arms), "gpu": d["gpu"],
+        # `head` per unit (59th audit B7): the HEAD `submit` recorded at
+        # DISPATCH, never harvest-time HEAD (80th audit).
+        merged["kernels"].append({"arms": [a], "seeds": [s], "gpu": d["gpu"],
                                   "wall_minutes": d["wall_minutes"],
-                                  "backend": res.backend,
-                                  "head": res.head})
+                                  "backend": res_backend, "head": res_head,
+                                  "reused_from": reused})
         if "random_returns" not in merged:
             merged["random_returns"] = d["random_returns"]
     return merged
