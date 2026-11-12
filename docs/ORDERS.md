@@ -193,7 +193,11 @@ busy session. Net lines in `gpu.py` should not grow by more than ~60. The live
 serves: M3/M4 (every GPU order) · philosophy 5, 6 (free hours not wasted).
 **done when:** a test loses the download and the verdict still lands from
 stdout; a test plants a busy session and the dispatch refuses with the reason.
-state: open — not started.
+state: **DONE 11-12 d9c94ba** — fetching Colab jobs are wrapped in try/finally that prints each fetch file as a `JACKFILE` stdout line;
+a failed download is recovered from it (generic, all specs, no spec edits). `colab sessions` read before each run: held -> "session busy",
+never runs. Full stdout/stderr kept in /data/jack-logs/gpu_stdout/, result row has stderr_tail. T0.12 PASS clean (props 13-14, pre-S5
+control fails all 3). gpu.py +72 net. Not done: dispatch_guard itself unchanged (the refusal sits in run_on_colab, which every path calls).
+S1 opens (same file now free).
 
 ### S3 — Guards that are red by design teach everyone to ignore red
 **Why.** `coverage` exits 2 on a shrink-only UNREACHABLE counter that moves

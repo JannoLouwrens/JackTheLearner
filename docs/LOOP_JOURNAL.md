@@ -346,3 +346,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   refused by the CPU gate in both lanes (cpu<48h never admitted; cpu<2h no-history estimate 54000 s > 48206 s left) -> INBOX.
   Colab GPU still 503. Served: 1 (does living teach him — first test on the whole creature) and 4 (a gate that can fail, and the
   pilot says it will; the collapse is the next thing to fix, not to file).
+
+- 2026-11-12 ~09:40 UTC SYSTEM S5 (d9c94ba). A finished Colab run no longer dies on its download: run_on_colab wraps fetching jobs so a
+  try/finally prints each fetch file to stdout (JACKFILE line); a lost download is recovered from it, generically (D1.0 too, no spec edits).
+  A held Colab session refuses "session busy" before running instead of a bare "exit 1". Whole stdout/stderr persisted under /data.
+  T0.12 PASS with a planted lost download and planted busy session; pre-S5 control fails all 3. Served: 5 (the loop's GPU results stop
+  leaking at the last step) and 6 (free GPU hours not thrown away: 3 runs, incl. 1.10 GPU-h, were lost this way).
