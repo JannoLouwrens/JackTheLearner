@@ -352,3 +352,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   A held Colab session refuses "session busy" before running instead of a bare "exit 1". Whole stdout/stderr persisted under /data.
   T0.12 PASS with a planted lost download and planted busy session; pre-S5 control fails all 3. Served: 5 (the loop's GPU results stop
   leaking at the last step) and 6 (free GPU hours not thrown away: 3 runs, incl. 1.10 GPU-h, were lost this way).
+
+- 2026-11-12 ~09:50 UTC JACK J1 (diagnosis; no ledger row). Replayed LF.04's seed-90 pilot learner with per-life readings
+  (lf_04_collapse_diag.py; bit-exact: 421.2/332.6 s match). The actor's pre-clip action mean runs away: |mu| 1.8 -> 7.1 -> 19.3 by life 3,
+  every dim saturated lives 4-7. The 600 s lives are a jammed body moving 4-5 m/life, not foraging. One meal (life 8, 60 m) jolts the weights
+  (dtheta 11.9 -> 15.7) and he dies in 119 s. All deaths energy. Root: cores.py:542 policy loss ||mu-a||^2*adv is unbounded below for the
+  negative half of normalised advantages, with actions clipped and mu unsquashed. Next: race bounded-policy fixes, then LF.04.
+  GPU: Kaggle W45 quota spent, Colab still refusing; no watcher alive. Served: 1 (why living does not yet teach him) and 4 (the FAIL
+  is traced to a line of his code, not filed).

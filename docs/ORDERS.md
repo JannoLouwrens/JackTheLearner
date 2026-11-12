@@ -57,12 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 REGISTERED 7446b86 (declared pre-read 1e1dc3e): 15 lives, seeds 100-102, gate late-vs-twin AND late-vs-early >= MARGIN_S 272.812
-(rule 2*sd*sqrt(2/5) on 30 seed-90 twin lives); controls twin-vs-twin + shuffled rewards; smoke OK. PILOT s90 forecasts FAIL: learner early 470 s ->
-late 269 s (hit the statue's 599 s ceiling at lives 4-7, then COLLAPSED to 119-400 s from life 9), twins drift 338 -> ~580 on exploration decay alone.
-NOT RUN: the runner refuses cpu<48h outright, and as cpu<2h the no-history estimate (54000 s) exceeds the day's 48206 s (INBOX). Data /data/tmp/lf04/.
-Next: once the lane admits it, launch_detached `run LF.04` (~4-5 h); meanwhile diagnose the collapse (death `cause` per life now recorded; LEARNING_CORE §5.4).
-
+state: 11-12 REGISTERED 7446b86 (15 lives, seeds 100-102, MARGIN_S 272.812; controls twin-vs-twin + shuffled). Still NOT RUN: CPU gate admits no lane (INBOX 08:45).
+11-12 09:50 COLLAPSE DIAGNOSED (lf_04_collapse_diag.py, bit-exact replay of s90; /data/tmp/lf04/diag_s90.jsonl): the actor's pre-clip mean RUNS AWAY,
+|mu| 1.8 -> 7.1 -> 19.3 by life 3, 100% of dims past +-0.9 lives 4-7. The "600 s ceiling" lives are a JAMMED saturated body (path 4-5 m/life), not foraging;
+the meal in life 8 (60 m) jolts the weights (dtheta 11.9 -> 15.7) and he dies in 119 s, still saturated. All deaths energy. Cause: cores.py:542 l_pi=||mu-a||^2*adv
+with per-segment-normalised adv (half negative) is UNBOUNDED BELOW, a clipped to +-1, actor unsquashed. Next: race fixes on s90 (tanh-bounded mu / AWR exp(adv) / PPO-clip) as LC challengers, then run LF.04.
 ### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
 **Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate
 is now trained-vs-own-untrained-twin (the 09-12 amendment — no new id needed).
