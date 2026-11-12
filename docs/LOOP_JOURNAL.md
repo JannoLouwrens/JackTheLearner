@@ -458,3 +458,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   pole swings (it topples at dec ~2 every miss). Plinth misses left: pool lip 5, ladder 2, ramp 2. Next: a registered
   pole-vs-plinth race on paired births, >=3 seeds, then fix the pool-lip catch. Served: 1 (a body that stands and reaches
   what feeds him) and 3 (a body raced, not assumed; the parked plinth wins once a path exists).
+
+- 2026-11-12 ~18:05 UTC JACK J1 (no ledger row). Short slot. Registered the body race as BD.01 (c38683a): plinth vs pole under
+  the path oracle, 40 births x claim seeds 100-102, gate pooled +15/120 births (2 sd at p=.6), no seed behind, plinth topple
+  <=10%; must-fail control = plinth vs its spawn-salted twin. body_probe gained body restore, SPAWN_SALT, birth_xy (pairing
+  is reported: idle-phase deaths drift the stream, smoke paired 1/2). Smoke (2 births, s90) ran both bodies + control.
+  The detached run was REFUSED by the runner's cpu<48h gate (INBOX 08:45 blocker, now holding two creature specs).
+  Served: 3 (a body choice raced under a pre-registered gate, not assumed) and 4 (margin sized from the pilot, power stated).

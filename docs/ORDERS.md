@@ -57,11 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Smell DEAD at 13k and 52k.
-Pole cannot stand (topples ~dec 2 in 18-19/20). Plinth (W0.BAL arm C) stands (0-1/20) but straight-line feeds 15/40.
-17:25 detouring oracle (`PROBE_ORACLE=path`, grid Dijkstra): plinth 12/20+18/20=30/40 vs pole 7/20+16/20=23/40
-(s90/s94); plinth misses left: pool lip 5, ladder 2, ramp 2. LAB.md. Next: register the body race as a spec
-(pole vs plinth, path oracle, >=3 claim seeds, paired births) and fix the pool-lip catch before any learner run.
+state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). Pole cannot stand; plinth stands.
+Pilot path oracle (s90/s94): plinth 30/40 vs pole 23/40. **BD.01 REGISTERED c38683a** (plinth vs pole, path oracle,
+40 births x s100-102, gate pooled +15/120 & no seed behind & plinth topple<=10%; control = spawn-salted plinth twin).
+Smoke OK. NOT RUN: `run BD.01` refused "cpu<48h is the detached lane" even under launch_detached (same INBOX 08:45 blocker).
+Next: once the runner can take a cpu<48h spec, launch BD.01 detached (~2 h CPU); meanwhile fix the pool-lip catch.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is
@@ -233,6 +233,8 @@ with reasons.
 - **11-12 11:50 LAB → J1/J5/J6 (World): he cannot sense floor food before touching it.** Seed-90 W0, all 584 legal poses: his 16 rays leave horizontally at z 0.70 m, floor food tops out at ~0.33 m — rays hitting floor food 0/584 at every distance; `observe()` has no smell and proprio has no x,y. Weaning pilot (`experiments/wean_pilot.py`, 13k decisions/arm, AWR): born ≤ 0.55 m he ate 3 lives of 3, born at 1.07/1.64 m he missed; after uniform births resumed nursed 0 meals = null 0 = decoy control 0. `LF.04`'s margin needs foraging, and foraging here is blind bumping: a World repair (smell into `W0.observe`, or downward rays — raced) comes before any `LF.04` re-run or J5 staging. Details `docs/LAB.md`.
 
 - **11-12 SYSTEM S3:** ruling 2's counts no longer hold. `pass_on_dead_dependency` reads 9, not 5 — new: `DP.00`, `LC.08`, `LF.03`, `XL.00` <- `LC.02` FAIL, `T0.18`/`T0.19` <- `T0.13`, `PL.00`, `T1.12`, `LF.02`. `unreachable` reads 96, not 93. Nothing recorded; `--only` is ready when the Director names the values to bank.
+- **11-12 18:05 JACK J1: second spec stuck on the 08:45 cpu<48h gate.** `launch_detached.sh … experiments.run BD.01` -> "REFUSED before start: cpu<48h is the detached lane (scripts/launch_detached.sh), not a runner child" — the runner refuses the very lane it names. BD.01 (~2 h) and LF.04 (~4-5 h) both registered, both unrunnable. Log /data/tmp/smell_sense/bd01_run.log.
+
 
 ## DONE (kept one day)
 
