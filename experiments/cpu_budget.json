@@ -896,6 +896,9 @@
     "2026-11-12": {
       "by_spec": {
         "AT.01": 46.12,
+        "DP.00": 214.91,
+        "LC.00": 73.88,
+        "LC.01": 377.75,
         "LG.13": 3.28,
         "NE.00": 9.03,
         "PG.1": 2.56,
@@ -912,22 +915,30 @@
         "T0.22": 4.08,
         "T0.24": 4.86,
         "T0.26": 208.73,
-        "T0.28": 111.47,
-        "T0.29": 92.61,
+        "T0.28": 167.72,
+        "T0.29": 187.85,
+        "T0.30": 38.82,
         "T0.31": 7.89,
-        "T0.33": 2.24,
+        "T0.33": 4.41,
         "T0.34": 24.43,
         "T2.08": 410.03,
         "TA.01": 371.39,
+        "VO.01": 145.92,
         "W0.DIAG": 732.99,
         "W1.02": 741.31,
         "WM.02": 1495.63,
+        "detached:claim.log": 2.23,
+        "detached:detached.log": 0.77,
+        "detached:pilot_learner.log": 1632.57,
+        "detached:pilot_statue.log": 266.52,
+        "detached:pilot_twinA.log": 1440.16,
+        "detached:pilot_twinB.log": 1137.31,
         "detached:ub10_pilot_then_d10.log": 404.22,
         "detached:ub10_sweep_after_d10.log": 40.21,
         "detached:ub10_sweep_rerun.log": 10.49,
         "detached:ub10_venue_pilot.log": 10.28
       },
-      "used_s": 4914.61
+      "used_s": 10399.11
     }
   },
   "overruns": []
