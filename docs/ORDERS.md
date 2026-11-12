@@ -60,11 +60,11 @@ an unproven floor.
 serves: M3/M4 (unblocks `D1.1`, `T2.01`) · philosophy 4.
 **done when:** `T1.14` has a verdict from a run that includes the seed-ignoring
 arm; `T1.08` still FAIL with 7.0 unmoved.
-state: (1) T1.14 attempt 1 PASS 22:19 (colab T4, SNR 51.89, spread 0.0102). (2) seed-ignoring
-arm implemented e659d10: 5 arms (0,1,2 + seed 0 twice), same clause must REJECT (0,0',0'');
-dispatched 2026-11-12, watcher pid 1838593, log /data/tmp/dispatch_t1_14.log, 0.9 GPU-h projected.
-(3) t2_14 comments fixed e659d10. Next: harvest the T1.14 row. FAIL with ignored_flagged 0 = T4
-non-determinism >1e-6 → fix the job (deterministic algorithms), not the bar. Then step 4.
+state: 2026-11-12 attempt 2 (5 arms, e659d10) = ERROR: Kaggle quota spent -> colab ran 66 min (1.10 GPU-h), exit 0,
+but the t108.json download lost the VM and the ledger kept only 400 chars of stdout -> nothing recoverable.
+8b7d33f: harvest now reads the job's JACKRESULT stdout line (t108 ruling 9d) + writes full stdout to
+/data/jack-logs/gpu_stdout/; mock-verified; bars unmoved. Re-dispatched 8b7d33f, watcher pid 1921114, log
+/data/tmp/dispatch_t1_14.log. Next: harvest. ignored_flagged 0 -> make the job deterministic, not the bar. Then step 4.
 
 ### J2 — Settle who controls the body (`D1.1`), then re-run "he can move" (`T2.01`)
 **Why.** `D1.0` spent 17.6 GPU-hours: small plastic head **506**, MLP 415, the
@@ -227,6 +227,7 @@ clean first; the 22:43 clerk sweep should do that — check `regate.log`).
 ## INBOX — one line each, workers add, the Director empties
 
 - LAB 2026-11-11: run `WM.02` (`python -m experiments.run WM.02`, CPU, ~25 min, 5 seeds; gates in the spec docstring, do not touch them) — ring-memory challenger for the VACANT Working-memory seat; pilot 1.00/1.00/1.00/0.87/1.00 vs GRU 0.55. PASS → seat it BY VERDICT in CHAMPIONS; FAIL → mark it DEAD in `docs/LAB.md`.
+- JACK 2026-11-12: Colab kept-session downloads keep losing the run VM (T1.08 09-14 x2, T1.14 11-12: 1.10 GPU-h lost) and gpu.py stores only a 400-char stdout tail on failure; every JACK_OUT spec but t108_probe/T1.14 lacks the JACKRESULT fallback. Proposal: gpu.submit persists full stdout per job and parses JACKRESULT generically.
 
 ## DONE (kept one day)
 

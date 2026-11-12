@@ -307,3 +307,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   fails over in 5 min at 0 h, push output always logged; T0.12 property 12 with the pre-fix loop as control;
   3.01 h refunded. Local budget cannot see the other project's spend — every Kaggle push fails over to Colab
   until Kaggle's week resets. Served: 5 (cheaper loop) and 6 (free compute not wasted).
+
+- 2026-11-12 ~04:00 UTC JACK J1. Harvested T1.14 attempt 2 = ERROR: colab computed all 5 arms (66 min, 1.10 GPU-h, exit 0)
+  but the t108.json download lost the VM; the ledger kept a 400-char stdout tail, so the result is gone. Repair (8b7d33f):
+  the harvest falls back to the job's JACKRESULT stdout line (the §9d channel T1.08's probe already uses) and keeps the
+  full stdout on /data; mock-verified both branches; bars unmoved. Re-dispatched (watcher 1921114). INBOX: generic fix
+  belongs in gpu.submit. Served: 4 (the seed-ignoring control gets a verdict instead of losing its run) and 6 (free
+  GPU hours no longer lost to a download step).
