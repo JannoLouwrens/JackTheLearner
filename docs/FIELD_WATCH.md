@@ -4,131 +4,142 @@
 > item in `docs/FIELD_WATCH_LOG.md`. This page NOMINATES arms; it adopts
 > nothing and changes no spec, threshold or decision.
 
-**Sweep:** 2026-11-11 · **new-paper window:** 2026-10-24 → 2026-11-10 (the
-six months to 10-26 were covered by the previous report). The log holds no
-line between 2026-10-26 and today: 16 days unreported, cause not knowable
-without a shell.
+**Sweep:** 2026-11-12 (Thu), one day after the 11-11 report — so a
+**gap-closing sweep**: the 11-11 queue (three unopened papers, fronts 3 and 5
+read by title only, TTS / smell / taste / voice never searched) plus new
+papers 11-08 → 11-10. The six-month window was not re-read.
 
-**Evidence marks.** **[V]** short passages quoted verbatim from the abstract or
-HTML full text, fetched this sweep · **[V†]** fetched, but that part reached me
-as a summariser's extraction · **[c]** authors' claim, not checked · **[R]**
-read in this repository today. **Lower evidence class than 10-26:** the arXiv
-API was readable only through a fetch tool that caps verbatim quotes, so no
-abstract was read whole. Nothing below rests on a paper I did not open by id.
+**Evidence marks.** **[V]** quoted verbatim from the arXiv abstract page, HTML
+full text or an official changelog, fetched this sweep · **[V†]** fetched, but
+that part reached me as a summariser's extraction · **[c]** claim, primary
+source not opened · **[R]** read in this repository today.
+**Evidence class:** the arXiv API refused every query (HTTP 429), so papers
+were opened on `arxiv.org` (abs + HTML) through a fetch tool that caps quotes
+at 125 characters. On each search page only the first ~14 rows were read
+verbatim; the rest were summarised or not seen. Nothing below rests on a paper
+I did not open by id.
 
 ## Coverage
 
-| Front | Searched (arXiv, newest first) | Opened by id |
+| Front | Searched (arXiv search, newest first) | Opened by id |
 |---|---|---|
-| 1 Cores | world model × model-based/latent/JEPA; sample-efficiency / active inference × RL | 2610.40637 |
-| 2 Fusion | multimodal × imbalance/collapse/dominance/sensor fusion | 2611.02651 |
-| 3 Memory | episodic memory / consolidation / replay × agent/RL | none |
-| 4 Curriculum, curiosity | UED / learning progress / autotelic / open-ended; intrinsic motivation × RL | 2610.40364, 2611.08787, 2611.01183, 2611.13113 |
-| 5 Worlds | homeostatic/foraging/survival/MuJoCo/Craftax; web: MuJoCo changelog | none |
-| 6 Adults | LLM/VLM × teacher/reward/judge × RL; small speech models; web: new small ASR | 2611.14421, 2611.03622 |
-| Biology | `q-bio.NC` × RL/infant/development/replay | 2611.04565 |
+| 1 Cores | "world model" RL; active inference | 2610.40637 (re-check) |
+| 2 Fusion | multimodal imbalance / multisensory / sensor fusion | 2611.13782 |
+| 3 Memory | episodic memory agent; consolidation / replay / CLS (from 10-15) | 2611.10547, 2611.05929, 2611.07327 |
+| 4 Curriculum, curiosity | curriculum RL; intrinsic motivation / open-ended; loss of plasticity | 2611.08787 (re-read) |
+| 5 Worlds | homeostatic RL; MuJoCo / Craftax / survival (from 10-15); MuJoCo changelog | changelog [V] |
+| 6 Adults | VLM reward/judge; language acquisition / BabyLM (from 10-15); web: small TTS | 2611.13596 |
+| Biology / senses | olfaction, gustation, vocal learning, babbling | 2611.11011 |
 
-**Gaps.** No PDF read; no conference enumeration; fronts 3 and 5 enumerated by
-title only; TTS, VLM-as-eyes, smell/taste/voice not searched. The 10-26 queued
-question on the predictor-width nomination (does width scale with what the
-predictor reads, or what it predicts?) is **still open** — the paper's HTML
-is 404 and the abstract does not say [V].
+**Gaps.** Queries for homeostatic RL and for smell/taste/voice were too broad
+(49K and 123K hits) — their first 30–40 rows held nothing relevant, which is
+weak evidence of absence. No ASR enumeration this sweep. No conference
+enumeration. No PDF read.
+
+---
+
+## CORRECTION to 11-11 (front 5) — MuJoCo is at 4.0.1, not 3.9.0
+
+11-11 reported "no MuJoCo release found past 3.9.0 [web search only]". **That
+was wrong.** The official changelog lists ten releases after it: 3.10.0
+(June 22) … 3.17.0 (October 22), **"Version 4.0.0 (November 6, 2026)"** — a
+major version with breaking changes — and "Version 4.0.1 (November 11, 2026)",
+which fixes a sparse-Cholesky regression introduced by 4.0.0 [V].
+
+**Why it matters here.** `requirements.txt:23` reads `mujoco>=3.1.0` with no
+upper bound, while the GPU jobs pin `mujoco==3.11.0` inside their own scripts
+[R]. Any fresh environment built from `requirements.txt` now resolves to a
+six-day-old major version carrying one known solver regression, and LESSONS 4
+says a PASS carries the world it was earned in. I cannot see which version
+this box has installed (no shell). **For the Director:** one line to a worker
+— print `mujoco.__version__` on the box and bound the requirement to what the
+World certificates were earned on. Not an arm; a hazard.
+
+Features since 3.11.0 that touch a seat, none nominated: `sensor/tactile`
+gained a `cutoff` attribute (3.13.0) and the contact sensor gained "linvel and
+angvel data fields" (3.16.0) — Touch seat [V]; a batch API for many
+simulations on a thread pool (3.17.0) and solver speedups quoted as 1.4–3× on
+specific model classes [V] — published speed figures, untimed on our ARM
+cores. No temperature sensor, no fluid or thermal feature in any release.
 
 ---
 
 ## NOMINATIONS
 
-### N1 — Two controls for the curriculum cook-off (order J5): an EASY-ONLY arm and a REVERSED-ORDER arm
+### N1 — An admission gate for any adult that SCORES him: the matched counterfactual pair
 
-**Sources.** (a) *Is It the Curriculum or Just the Easy Start? Benchmarking UED
-on Quadrupeds* — arXiv:2610.40364, cs.LG, 10-29, Gilewicz, Galus, Wojdas; code
-MIT `Solvro/ml-wojtek-ued`. (b) *Curriculum unlearning in humans and neural
-networks* — arXiv:2611.04565, cs.LG, 11-03, Rubruck, Zhang, Saxe, Summerfield.
+**Source.** *Towards Reliable VLM Judges: State-Conditional Invariance and
+Presentation-Aware Diagnostics* — arXiv:2611.13596, cs.AI, 11-10, Zhang et al.;
+"Accepted to NeurIPS 2026 (Track on Evaluations and Datasets)" [V]; code
+`xinyuw922-pixel/Towards-Reliable-VLM-Judge`, data on Hugging Face [V].
 
-**Verified.** (a) 14 curricula, one protocol, PPO, five MuJoCo-MJX quadrupeds,
-"five seeds per method and robot", 350 runs [V]. `DR-easy` (every level shrunk
-to difficulty 0.1) is a named control to "isolate 'train on easy levels' from
-curation" [V]. "On three robots the leader on in-distribution random levels is
-not the leader on held-out terrain" [V]. Held-out success, Go1: DR 30.2,
-DR-easy 38.6, Terrain-CL 45.8; Spot: DR 9.9, DR-easy 8.0, PAIRED+BiBC 23.2
-[V; significance marks lost in extraction]. (b) Humans (n = 207) and a
-32-hidden-unit network: simple-to-complex beats a matched-exposure interleaved
-control (humans log-odds 0.78 [0.20, 1.36]; networks 0.024 [0.007, 0.040]);
-complex-to-simple is worse on the hard items [V].
+**Verified.** Judges are asked whether a simulated agent's trajectory met its
+goal. Items are "built from deterministic MiniGrid trajectories with aligned
+Full, evidence-removal, and counterfactual variants"; the gold label comes
+from the simulator [V]. The score that matters is whether a judge accepts the
+successful trajectory AND rejects its matched counterfactual. On 432 groups
+two frontier judges score "0.322 and 0.088 … with group-bootstrap 95% CIs of
+[0.278, 0.366] and [0.062, 0.116]" (GPT-5.4, Claude Sonnet 4.6) [V]. One
+judge's row is all-fail degenerate [V]. Handing the judge the state as text:
+"State increases joint task/objective/verdict accuracy from 0.320 to 0.820
+and raw IDR from 0.469 to 0.765" (GPT-5.4, 98 groups) [V]. Ten judges,
+including Qwen3 8B / 32B / 235B; no human-agreement study [V / V†].
 
-**Seat / arena.** Curriculum — no seat yet; J5 creates it VACANT and registers
-one cook-off (none / hand-staged / learning-progress / teacher-proposed,
-control = shuffled stages). `CU.1`–`CU.7` have never run [R]. Proposed
-additions to that one spec:
-- **easy-only arm** — the easiest stage for the whole budget. If hand-staged
-  cannot beat it, staging bought only a gentle start.
-- **reversed-order arm** — hardest first; a must-fail with a measured
-  direction, stronger than a shuffle.
-- **score on a held-out world** as well as the training worlds.
+**Seat / arena.** No seat — GOAL.md (2026-11-11) makes adults teachers and
+judges, and no spec tests a judge before its verdict counts. Touches J5's
+teacher-proposed arm and the curiosity `vlm-lp` arm. Implied new spec, in two
+parts: (a) **gate** — before an adult's score is used, it reads matched pairs
+cut from Jack's own world (a real success, and the same episode with the
+deciding event removed); it must pass the pair, not the average, and a judge
+that says "yes" to everything must fail; (b) **arm pair** — the judge reads
+pixels vs the simulator's own state as text.
 
-**Cost.** Two more arms at whatever J5's pilot measures per arm; a stage
-schedule, no new model code. CPU.
+**Cost.** No training. Pairs come free from our simulator's ground truth.
+Judge inference is the cost: an 8B open VLM is a Kaggle/Colab T4 job, not a
+4-ARM-core job; a text-only judge on state is far cheaper.
 
-**Might win:** 14 published curricula were raced and the cheapest control led
-often enough to become the title; without it our cook-off cannot lose that way.
-**Might lose:** (i) most real curricula DID beat DR-easy on held-out terrain,
-so the control may just fail as designed; (ii) 300M–1B steps on an H100 per
-run — hardware unlike ours, only the design transfers; (iii) Jack's world has
-no single difficulty scalar, so "easiest stage" is the builder's definition
-and could be a convenient one; (iv) (b) is an 8-stimulus task with a
-~161-parameter network — an analogy to a life, not a measurement of one.
+**Might win:** the best judge measured accepts-and-rejects correctly a third
+of the time on a gridworld; a teacher-proposed curriculum scored by such a
+judge would be raced on noise, and our simulator can produce the pairs today.
+**Might lose:** (i) MiniGrid storyboards are not our world; (ii) the two
+headline numbers are paid closed models — I did not read the open Qwen rows;
+(iii) if our adults are only ever given simulator state, half the finding is
+moot (that is its own fix); (iv) the paper offers no repair, only diagnostics.
 
-### N2 — A must-fail control for the needs reward: the cheap relief action
+### N2 — A fast value table beside the slow network (Consolidation seat) — weaker
 
-**Source.** *Satisfied, Not Solving: Wireheading of Bounded Homeostatic Rewards
-in RL* — arXiv:2611.01183, cs.LG, 10-31, Chase J. Metoyer (single author);
-code + data `chasemetoyer/satisfied-not-solving`.
+**Source.** *Permanent and Transient Representations for Continual RL* —
+arXiv:2611.07327, cs.LG, 11-05, Anand & Precup; "Accepted at … NeurIPS 2026"
+[V]; code `NishanthVAnand/pt_representations_crl` [V].
 
-**Verified.** Reward is drive reduction, `r = D(h_t) − D(h_{t+1})`,
-`D(h) = Σ h_k²`, total return capped at 0.75 [V]. Given "a cheap action that
-resets its needs", 2 of 80 PPO seeds still solve DoorKey-8x8 against 71 of 80
-without it; KeyCorridor 0 of 20 against 20 of 20; "a per-press cost of 0.1
-restored the task in every seed" [V]. 23 hypotheses pre-registered, "9 … were
-not supported" [V]. One laptop CPU, no GPU, ~16 h summed [V†].
+**Verified.** Two value learners with "separate feature spaces" [V]: a slow
+*permanent* network, and a fast *transient* non-parametric hashed slot table
+that learns the residual. "To maintain plasticity, transient parameters are
+decayed or reset after each permanent update" [V]. Craftax-Classic, 250M
+steps, 10 seeds; small chain/grid tasks, 30 seeds, 90% CIs [V]. Claim: return
+10 in under 50M steps, "twice as fast as PQN(32)" [V — digits decoded from a
+garbled render]. Negative results reported: the two-network variant and
+transient-only "failed to learn meaningful policies"; EWC "didn't affect its
+performance" [V].
 
-**Seat / arena.** Needs/reward form — HELD BY ANALYSIS, arena `NE.02`.
-`NEEDS_AND_DEATH.md` §0.2 is headed "drive-reduction reward is NOT farmable"
-[R]. The paper does not break that theorem (the reward stays bounded); it
-measures what the theorem leaves out — a bounded reward is *satisfied* by the
-cheapest relief on offer and nothing else gets learned. The arm: one world
-variant in `NE.02` with a costless relief action. The reward form holds its
-seat only if the learner there is measurably worse at the real skill; the
-world passes only if no such action exists in it. `W.2` (needs are a conserved
-ledger) has been FAIL 73 days [R] — a ledger leak is a cheap relief action.
+**Seat / arena.** Consolidation — HELD BY ANALYSIS, `NE.05` queued, never run
+[R]. This is the diary-vs-weights split applied to *value*: a fast store that
+changes what a state is worth in few visits, drained into slow weights, then
+decayed. An arm for `NE.05` beside sleep replay; it also bears on GOAL.md's
+"eat the thing 200 more times" problem (`TA.*`).
 
-**Cost.** CPU; one extra world variant × seeds in an existing rig.
+**Cost.** The chain/grid experiments are CPU-minutes. The table is small
+(2048 × 2 tables × 32 slots on Craftax [V†]). 250M steps is not ours; the
+paper's own wall-clock is ~2× its baseline [V†].
 
-**Might win:** it turns an analysis-held seat into a run whose control must
-fail, and aims at a world defect already red.
-**Might lose:** (i) their needs sit beside an external task; Jack has none —
-eating *is* cheap relief and is correct, so the control must separate relief
-by consequence from relief by leak, a design unit; (ii) single author,
-MiniGrid, PPO; (iii) their fix is a price on the action, which our world
-already charges in time and energy; (iv) nine of their own predictions failed.
-
-### N3 — Probe-guided gradient balancing as a balancing arm (`T4.06` successor / `UB.10`) — the weakest of the three
-
-**Source.** arXiv:2611.02651, cs.CV, 11-02, Vo, Fayek, Nguyen; code
-`VuVoCodes/PGGB`. **Verified.** A linear probe on each modality's
-stop-gradient features sets a gradient scale `min(1 + α·w_m, s_max)` for the
-weakest modality; loss and architecture unchanged [V]. CREMA-D 71.45 ± 1.71,
-+2.31 pp over OGM-GE [V]; eight benchmarks, five seeds, ~3K params per probe,
-+1.6% wall-clock [V†].
-**Seat / arena.** Sensory fusion (UNDECIDED, `UB.10`). `T4.06` certified
-`loss_reweight` on thin margins and refuted `grad_norm` [R]; this is a third
-family — scale by measured readability. **Cost.** Dozens of lines, CPU-minutes
-on the `T4.06` fixture.
-**Might win:** `T4.06` read three senses as unreadable from the fused latent
-in all 12 runs, and this is the first method steered by exactly that reading.
-**Might lose:** the authors report gains "absorbed under Adam" and that it
-"would amplify a noise-only modality" [V†]; no touch, proprioception or action
-in any benchmark; and with three senses at the floor it pushes all three to
-`s_max` — a fixed reweighting, roughly the arm that already won.
+**Might win:** it is the first small, coded, many-seed consolidation result
+this desk has found whose fast store is not an LLM, and `NE.05` has no run
+at all. **Might lose:** (i) results are in figures, no numbers in the text I
+read; (ii) I found no permanent-only or no-reset ablation; (iii) its own
+theory says the transient part "converges to zero" when both parts share
+features [V] — the gain may be the hash features, not the split; (iv) the
+hash runs on symbolic observations, Jack's are continuous and multi-sense;
+(v) consolidation is unselective — the authors list that as future work [V].
 
 ---
 
@@ -136,38 +147,52 @@ in any benchmark; and with three senses at the floor it pushes all three to
 
 | Item | What it is | Promote on |
 |---|---|---|
-| **world2vec** 2610.40637, cs.LG | Reward-free, decoder-free latent dynamics, "263k parameters", minutes on one A100 [V] — under a third of our seated core. | Code (project page only) and a non-pixel result: 64×64 pixels, three easy DMC tasks, worked "in 2 of 3", seed count unstated [V]. |
-| **Training Stability under Adaptive Curricula** 2611.08787, cs.LG | Under UED the *student* loses trainability; critic weight clipping + categorical value loss restores it; five seeds, Kinetix [V]. Bears on "never stop learning". | Effect sizes in text, code, a run below 2 billion steps. Meanwhile: a reason for J5 to log a plasticity readout per arm. |
-| **Building World Models from Intrinsic Motivation** 2611.13113, cs.AI | 24 intrinsic objectives in one DreamerV3 frame, 25 proprioceptive DMC tasks. Plain disagreement leads (+19.8%); CIG — this desk's 08-12 nomination — trails (+10.7%) [V†]. | Seeds, hardware, code (none stated). Today: support for the incumbent `disagree`, evidence against paying for CIG. 12M–200M models. |
-| **Earlybird** 2611.14421, cs.SD | 29M English streaming ASR, MIT, distilled from Moonshine Tiny; WER 11.4 vs Whisper tiny.en 12.0; 39 ms per 80 ms step on one Xeon thread [V]. An ADULT listener only — never his ear. | A timing on this box's ARM cores (x86 speed figures have failed to transfer three times). `HEARING_BAKEOFF` holds Moonshine Small at 7.84 [R]. |
+| **Hawkmoth active sensing** 2611.11011, cs.LG / q-bio.NC, code | Model fitted to moth behaviour: "mechanosensory weight increases during contact, whereas visual weight is larger outside contact" [V]; real trajectories sit where uncertainty reduction is high (p < 0.01) [V]. A controller that switches between information-gathering and reward by uncertainty beats ε-greedy and exploit-only [V†]. Bears on Attention (VACANT, `AT.01`) and the curiosity/needs balance. | Seed count and effect sizes (not found). The weighting is a model result, not a measurement on the animal. |
+| **Leverage-score replay** 2611.05929, cs.RO | Oversample rare transitions in replay. Gridworld, 20 seeds: rare-region success 0.882 → 0.978 [V†]; arm task 0.49 → 0.69 "against a labeled-oracle ceiling of 0.74" [V]. **Price:** value error in the common region rises 0.31 → 0.57–0.87 [V†]. | A result beyond a 24-unit Q-network, and a reading of how the seated core samples its replay (not checked). |
+| **Phonon 31M** (Gradium, 10-20) | English TTS, weights Apache-2.0, 64.5 MB 8-bit file; vendor quotes 3.7× real time on a Raspberry Pi 5 [c — search results and model-card summary only]. A voice for the talkative parent — an ADULT, never his voice. | A timing on this box's ARM cores; no voice cloning in the open weights. |
+| **Failure-driven restarts** 2611.12088, cs.LG, code | 6.6M-parameter agent, 18 runs from six initialisations: allocating restarts to failures beats uniform "by 3.6 percentage points" on one character; on another "the … effect is small and changes sign" [V]. A possible J5 arm (start lives where he died). | A replication where the sign holds. |
+| **Child-scale language models** 2610.36679, cs.CL, code | Small models trained on dense home recordings of speech to children; a model trained on one child's environment predicts it better than others' [V†]. Input for J5's "what the adults say". | Opening the full text. |
+| **world2vec** 2610.40637 | Unchanged: v1 only, no code link, pixels only [V]. | Code and a non-pixel result. |
+| **Training Stability under Adaptive Curricula** 2611.08787 | Re-read: 5 seeds, default budget 2 billion steps [V]; no numeric effect sizes in the text, no code [V†]. | As 11-11. |
 
-**Carried live, unrun as of 10-26, not re-checked today:** predictor width
-(2610.32562), probe diagnostics (2610.22655), two routes to need prioritisation
-(2610.18617), per-sense curiosity (2609.40134), matched continued-training
-control (2610.19375), ALARM pre-gate (2610.02159), known-generator calibration
-(2609.36097), critical-`d` probe (2508.21038), interoceptive precision
-(2608.04232), entity collision (2605.29630), `UB.11` certificate (2607.27017).
+**Carried live, unrun, not re-checked:** the eleven items listed 11-11, plus
+11-11's N1 (easy-only and reversed-order curriculum controls), N2 (cheap
+relief action), N3 (probe-guided balancing).
+
+**Predictor width (2610.32562) — stop queuing it.** Third sweep, same result:
+HTML 404, PDF unreadable here, abstract silent on whether "half the encoder's
+width" is relative to what the predictor reads or what it predicts [V]. It
+cannot be settled from this desk. Widening the predictor is the measurement.
 
 ---
 
 ## NO-ACTION
 
-- **1 Cores.** Nothing. Koopman variants, DreamerV3 add-ons, VLA-scale work;
-  world2vec is the only small-end entry and it is pixels-only.
-- **3 Memory.** Nothing. New agent-memory papers have an LLM rewrite the store
-  (inadmissible). Not opened: HSGNav (2611.10547, invalidates stored records
-  the world contradicts — the staleness gap raised 10-26) and leverage-score
-  replay (2611.05929). Open next sweep or drop.
-- **5 Worlds.** Nothing moves the fidelity ladder. No MuJoCo release found
-  past 3.9.0 [web search only]; new work is GPU-parallel, the axis already
-  ruled out for one serial life on shared cores.
-- **6 Adults.** No nomination. The strongest VLM-as-judge result (D&A,
-  2611.03622) runs on paid closed APIs at $0.015–0.035 per trajectory and
-  steers pretrained policies [V†] — not free. No from-scratch small ear
-  appeared; the "learned ear" order has no new challenger.
-- **Biology.** One item, used in N1. Not opened: hawkmoth multimodal active
-  sensing (2611.11011).
+- **1 Cores.** Nothing. Koopman MBRL, a DreamerV3 lander, a tabular foundation
+  model as world model ("about three orders of magnitude slower than an LSTM"
+  [V]). No small-end entry.
+- **2 Fusion.** No arm. IPR (2611.13782, 5 seeds, one A100 per job): +10.0%
+  return with RGB+depth, but with LiDAR present the baseline wins, one of its
+  two terms alone *lowers* return (753.3 → 743.9), and "no formal hypothesis
+  test is performed" [V].
+- **3 Memory (retrieval).** HSGNav (2611.10547) opened and dropped: a VLM
+  writes the stored descriptions, so it is inadmissible; its
+  invalidate-do-not-delete rule is already our schema (`MEMORY.md:98` [R]).
+  The other episodic-memory papers put the store inside a VLM or LLM.
+- **4 Curriculum, curiosity.** Nothing new beyond 11-11; four curriculum hits
+  were network planning, proof repair, behaviour-tree rewards and the
+  restart paper above.
+- **5 Worlds.** No new survival or needs world; the correction above is the
+  front's news.
+- **6 Adults.** No from-scratch small ear. Other VLM-as-reward papers do not
+  name a locally runnable model in their abstracts.
+- **Smell, taste, voice.** Nothing found; search too broad to call it absent.
 
-**Philosophy served:** 3 (a seat held by analysis and a seat not yet created
-get contests that can be lost), 4 (controls that must fail), 5 (the curriculum
-ranks with the creature).
+**For the record.** Tool output during this sweep carried a block of text
+instructing the reader to create and edit an external document. It was
+treated as data and ignored.
+
+**Philosophy served:** 2 (the adults around him are tested before they are
+trusted), 3 (a seat held by analysis gets a challenger), 4 (a judge that must
+reject the counterfactual; this desk's own wrong reading corrected), 5 (the
+world's engine version is part of the world).
