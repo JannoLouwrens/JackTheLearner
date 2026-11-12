@@ -61,7 +61,9 @@ state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, I
 Pilot path oracle (s90/s94): plinth 30/40 vs pole 23/40. **BD.01 REGISTERED c38683a** (plinth vs pole, path oracle,
 40 births x s100-102, gate pooled +15/120 & no seed behind & plinth topple<=10%; control = spawn-salted plinth twin).
 Smoke OK. NOT RUN: `run BD.01` refused "cpu<48h is the detached lane" even under launch_detached (same INBOX 08:45 blocker).
-Next: once the runner can take a cpu<48h spec, launch BD.01 detached (~2 h CPU); meanwhile fix the pool-lip catch.
+Next: once the runner can take a cpu<48h spec, launch BD.01 detached (~2 h CPU).
+17:45 pool lip DIAGNOSED (LAB.md): no pit - walls' tops z 0.000 coplanar with the infinite floor plane; catch = buried-box
+seam. Next: log poolwall contact normals at a plinth stall (geo.py base), then register a World repair race.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

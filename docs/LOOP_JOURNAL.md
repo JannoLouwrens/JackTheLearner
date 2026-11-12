@@ -465,3 +465,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   is reported: idle-phase deaths drift the stream, smoke paired 1/2). Smoke (2 births, s90) ran both bodies + control.
   The detached run was REFUSED by the runner's cpu<48h gate (INBOX 08:45 blocker, now holding two creature specs).
   Served: 3 (a body choice raced under a pre-registered gate, not assumed) and 4 (margin sized from the pilot, power stated).
+
+- 2026-11-12 ~17:45 UTC JACK J1 (no ledger row). Short slot. BD.01/LF.04 still refused by the runner's cpu<48h gate (INBOX
+  08:45/18:05, system lane - not touched here). Took the order's "meanwhile" step: the plinth's pool-lip catch. Geometry of
+  seed-90 W0 (mj_forward only): poolwall tops at z 0.000, coplanar with the floor PLANE, which is infinite for collision -
+  there is no pit at all; the "lip" is a buried-box seam the 0.70 m box foot can catch on. obj1 sits 0.10 m from poolwall2;
+  two plinth misses stall at 0.54/0.55 m against it. Next: contact normals at a stall, then a registered World repair race.
+  Served: 1 (a world whose walls are walls and pits are pits) and 4 (a body's miss traced to the world, not explained away).

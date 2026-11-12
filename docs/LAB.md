@@ -153,3 +153,14 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   are 0-1 topples. Plinth misses left (10): pool lip 5 (upright at z 0.64 touching poolwall), ladder 2, ramp 2,
   open floor 1. So with a path the standing base is the better body (+7/40, both seeds), and its remaining cap is
   the pool lip/ladder/ramp. 2 seeds, unpaired births: a pilot, not a claim. Logs /data/tmp/smell_sense/path2/.
+  **The pool lip is a seam, not a lip (11-12 J1, `/data/tmp/poollip/geo.py`, seed-90 W0 plinth, mj_forward only).**
+  `floor` is a MuJoCo plane (infinite for collision) at z 0; poolwall0-3 are boxes centred z -0.326, half-height 0.326,
+  so their TOPS ARE AT z 0.000, coplanar with the floor; pool_floor sits at z -0.672 under the plane. There is no pit:
+  the floor plane covers the pool, and the walls are buried boxes whose side faces end exactly at floor level. The
+  plinth's 0.70 m box foot (bottom z 0.01) sinks mm into the soft plane and its leading edge can meet a wall's vertical
+  face - a ghost-edge contact with a horizontal normal. All 5 plinth pool misses read z_end 0.64 (= standing height on
+  floor) touching poolwall*; food obj1 (1.51,-0.73) sits 0.10 m from poolwall2 (y -0.835), and misses ep9/ep19 stall
+  at d_min 0.54/0.55 against poolwall1/2. So (i) the planner's blocked 'pool pit' is not a pit, and (ii) the catch is a
+  collision artefact of the world, not terrain. NOT yet shown: the contact normal at a stall (next: drive the plinth
+  across poolwall2 and log poolwall contact frame normals). Repair to race, World-side: walls raised to a real lip
+  vs floor cut (no plane over the pool) - PG specs move, so register before touching playground.py.
