@@ -58,32 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 REGISTERED 7446b86 (15 lives, s100-102), NOT RUN (CPU gate, INBOX 08:45). AWR ends the collapse; no arm beats the twin.
-Food-sense world repairs KILLED by pre-declared rules: eye heights (e38780a); SMELL 1/5/2 vs shuffled 2/8/0 vs level 1/2/3 (d4a7a2e) though
-bilateral smell points to food on 99.5% of poses. 52k DOSE test running (/data/tmp/smell_sense/dose.log, launched 13:34, ~2 h; rule in smell_sense docstring).
-Diagnosis launched 13:38: experiments/smell_oracle.py, scripted followers (oracle_yaw/blind_fixed/klinotaxis/random, 4k dec, s91-93,
-/data/tmp/smell_sense/oracle.log). Suspect: the drive is a WORLD-frame force, the nose is BODY-frame, proprio has no heading; yaw moves 0.4-1.5 rad/60 dec. Next: harvest both.
-### J2 — Settle who controls the body (`D1.0` re-run), then "he can move" (`T2.01`)
-**Why.** `D1.0`'s first run (17.6 GPU-h) was VOID only on a wrong null; the gate
-is now trained-vs-own-untrained-twin (the 09-12 amendment — no new id needed).
-`T2.01` (FAIL since Aug 12, running the losing arm) blocks 38 specs — the
-largest blocker on the ladder.
-**Do.** Each slot: `tail /data/tmp/dispatch_d1_0.log`, the last `D1.0` rows of
-`experiments/gpu_submissions.jsonl`, `colab ls`. Watcher alive → leave it.
-Watcher dead with units missing → FIRST let J4's sweep take the free session
-(it is 30 minutes), THEN re-dispatch (`scripts/dispatch.sh D1.0`; the resume
-cache keeps finished units). A unit lost to a failed download is S5's bug —
-note how many. Colab refusing for usage → write the message here and probe
-Kaggle (`kaggle kernels push` of a trivial kernel) to learn when its week
-resets. On a verdict: seat the winner in `docs/CHAMPIONS.md` BY VERDICT, losers
-kept as challengers; then run `T2.01` under the seated controller, bars unmoved.
-serves: M3, M4 · philosophy 3 · standing objective 3 (GPU).
-**done when:** `D1.0` has a non-VOID verdict, the control seat names its holder
-by verdict, `T2.01` has an attempt dated after it.
-state: 2026-11-12 T1.14 PASS -> D1.0 dispatch CHAINED behind the UB.10 pilot (Colab is single-session):
-/data/tmp/ub10_pilot_then_d10.log runs `scripts/dispatch.sh D1.0 --projected-hours 25.05` when the pilot exits
-(pre-flight checked CLEAR at 05:13). Kaggle's week is spent, so the 57M Kaggle-first units will fail over or fail;
-the resume cache keeps finished units. Next: read that log; dispatch log /data/tmp/dispatch_d1_0.log; once a
-D1.0 watcher is alive, never run a second Colab job beside it.
+Food-sense repairs KILLED by declared rules: eye heights (e38780a); SMELL 1/5/2 vs shuffled 2/8/0 vs level 1/2/3 (d4a7a2e). 52k DOSE test
+running (/data/tmp/smell_sense/dose.log, s91/92 at ~33k of 52k at 14:10; s93 + shuffled s92 after; rule in smell_sense docstring).
+Oracle v1 (4k dec) was an APPARATUS BUG: a world-frame force never turns him, so "steer" did nothing; yaw arms 0/0/0, meals = birth lottery.
+v2 launched 14:12 (smell_oracle episodes 24x250 dec, s91-93, goto_true/nose_yaw/nose_blind/klinotaxis/random, /data/tmp/smell_sense/oracle2.log). Next: harvest both.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

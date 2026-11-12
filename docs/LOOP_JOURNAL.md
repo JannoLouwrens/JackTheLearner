@@ -406,3 +406,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   and proprio has no heading. Smoke (60 dec, s90): yaw std 0.37-1.53 rad, so the left/right->drive map turns under him. Launched
   experiments/smell_oracle.py detached (scripted oracle_yaw / blind_fixed / klinotaxis / random, 4k dec, s91-93) to tell world from learner.
   The scripts are instruments, not parts of him. Served: 1 (a body that can act on what it senses) and 4 (a failure diagnosed, not filed).
+
+- 2026-11-12 ~14:15 UTC JACK J1 (no ledger row). Harvested smell_oracle v1 (4k dec, s91-93, meals): oracle_yaw 0/0/0, blind_fixed 0/0/0,
+  klinotaxis 13/2/3, random 0/1/13. Read it as an apparatus bug, not a world finding: the drive is a world-frame force with no torque, so
+  the v1 oracle's small steer never turned the body and both yaw arms pushed in a near-fixed line into walls (d_mean 3.2-4.5 m); 1-2 lives
+  per arm make meals a birth lottery. Wrote v2 (episodes: respawn every 250 dec, 24 births/arm/seed; goto_true ceiling, nose_yaw and
+  nose_blind gradient followers using the drive's real geometry, klinotaxis, random) and launched it. Dose test at ~33k of 52k.
+  Served: 4 (a broken instrument caught before its null was quoted as a world fact) and 1 (can his body act on what he smells).
