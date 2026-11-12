@@ -532,3 +532,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   J4 state corrected (the "queued, waiter 1992023" line was 14 h stale). J1 dose2 race still running (harvest ~22:40).
   Served: 1 (a world whose cold can kill him, now measured with wind) and 4 (a failure attributed clause by clause,
   bar untouched).
+
+- 2026-11-12 ~21:30 UTC JACK J6 (no ledger row; short slot). J1's dose2 smell race still running (s93 pending, harvest
+  ~23:30; s91 already reads smell 2 vs shuffled 20 second-half meals). NE.01 ok_night_shelter diagnosed: W0 has no wind, so
+  e0eecf7 cannot touch it. The shipped 70 % k-cut makes shelter non-monotone (occ .8 -> cost .029, sealed occ 1 -> 1.000,
+  worse than open .498). NE.01's own fixture per seed: s0 seals and cooks (1.000); a sky-temperature law (Swinbank, open
+  night held at .498) gives .110 PASS on the same night. s1/s2: the pose search picks the grid edge, and the sleeper ends at
+  occ .007 under both laws (a fixture fault). Next: race the two laws; probe the pose after bed-down. Served: 1 (a world that
+  can kill him honestly, not via a roof that cooks) and 4 (each failing seed attributed; bar untouched).

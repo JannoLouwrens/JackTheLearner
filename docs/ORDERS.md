@@ -99,11 +99,11 @@ serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
 **done when:** `NE.01`, `W.1`, `W.2` each have a new attempt with every
 formerly-red clause explained in the commit. (D53 files `SO.07`'s VOID here too:
 the body cannot reach privileged food on 2 of 3 recording worlds.)
-state: 11-12 ~20:40 42e7973: W.1 attempt 4 RUN -> FAIL on (b) only, as predicted: (a) err 0.55 C, (c) tau 74.2/240 = 0.309
-(rel err 0.0011), (d) conv 2.0 all PASS; (b) 1x 1h 20.0 vs ref 33.767 FAIL. Wind-blind control fails (c), both nulls fail
-all four, ref_wind positive control passes all four. (b) = world tau 240 s vs body 17069 s: Director's ruling (INBOX 20:25).
-Closed loop at 5 m/s 20 C parks ~26.5 C < 28 death. LF.03 is stale by needs.py (re-run, minutes).
-Next: NE.01 `ok_night_shelter` with the wind-bearing k_eff (is shelter vs open now separated?), then W.2; W.1 waits on ruling.
+state: 11-12 42e7973: W.1 attempt 4 FAIL on (b) only ((a)(c)(d) PASS; (b) = world tau 240 s vs body, Director's ruling, INBOX 20:25).
+21:30 NE.01 ok_night_shelter diagnosed (no ledger row): W0 drives no wind, so e0eecf7 cannot move it. Two faults, per seed
+(experiments/shelter_law_night.py, LAB): s0 body seals (occ 0.997) and the 70 % k-cut COOKS it (cost 1.000 > open 0.498);
+sky-temperature law (Swinbank, open night kept at 0.498) gives 0.110 PASS. s1/s2: pose at grid edge -2.35, sleeper ends occ 0.007.
+Next: race shipped vs sky law (bakeoff, NE.01 night + W.1 + day), AND fix the pose probe to read occ after the bed-down; then W.2.
 
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
 **Why.** Owner, 2026-11-11: the world and the curriculum are "as important as

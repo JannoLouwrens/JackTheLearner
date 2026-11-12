@@ -192,3 +192,13 @@ A dead idea with a number is a result. Do not retry one without a new reason.
   smell / smell_shuffled, s91-93, 52k decisions, -P 2. Declared before reading, same rule as 13:40: smell must beat
   smell_shuffled on second-half meals (k > 26000, dose2_tally.py) on >= 2 of 3 seeds, else DEAD again. Log
   /data/tmp/smell_sense/dose2.log; ~3 h. The 15:40 numbers to compare: smell 1/5/0 vs shuffled 4/17/27.
+- 2026-11-12 · **World: shelter law** (J6, `NE.01` `ok_night_shelter` red every seed) ·
+  ALIVE, not shipped. The shipped law cuts k_eff 70 % at occ 1, so shelter's night cost is
+  NON-monotone: occ 0.8 → 0.029, sealed roof occ 1.0 → **1.000** (T 39.5, worse than the open
+  0.498) and by day any occ > ~0.43 at rest crosses 40 C. **Bet:** the roof hides the cold
+  night SKY (Swinbank T_sky = 0.0552·T_a^1.5; radiative share h_r/(h_r+h_c) = 0.61), k unchanged,
+  no day effect; night air 27.79 C keeps the open night exactly at 0.498. Monotone: occ 1 → 0.110.
+  NE.01's own fixture (`experiments/shelter_law_night.py`, s0–2): s0 seals (occ 0.997) — cut 1.000
+  FAIL, sky 0.110 PASS; s1/s2 pose at the grid edge x −2.35 (probe 0.667) and the sleeper ends
+  at occ 0.007 — 0.498 under both laws: a fixture/pose fault the law cannot fix. Killed by: the
+  re-stale cost of a needs.py change outweighing it, or a race arm (graded cone) doing better.
