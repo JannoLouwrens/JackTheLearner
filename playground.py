@@ -608,6 +608,27 @@ class Water:
             else:
                 continue
             self._radius[bid] = max(self._radius[bid], float(r))
+        # W0.PL repair (11-12). Two faults made the pool a drive trap on DRY
+        # floor (W0's floor plane covers the pool; there is no pit): apply()
+        # OVERWROTE xfrc_applied[b, :3], erasing W0's gated drive, and counted
+        # a body within `half + r` of the centre as wet while the floor held
+        # it. Now (a) water owns only its own contribution — it removes what
+        # it added last call and adds the new force, leaving any force another
+        # writer put there — and (b) a body touching a static geom whose top
+        # is at or above the surface (the floor plane, the wall tops) is held
+        # dry and gets no water.
+        self._last = np.zeros((model.nbody, 3))
+        self._written = np.zeros((model.nbody, 3))
+        self._dry_geoms = set()
+        for gid in range(model.ngeom):
+            if model.geom_bodyid[gid] != 0:
+                continue
+            if model.geom_contype[gid] == 0 and model.geom_conaffinity[gid] == 0:
+                continue
+            gz = float(model.geom_pos[gid][2])
+            top = gz if model.geom_type[gid] == 0 else gz + float(model.geom_size[gid][2])
+            if top >= self.surface_z - 1e-3:
+                self._dry_geoms.add(gid)
 
     def in_pool(self, pos, radius: float = 0.0) -> bool:
         """Is ANY part of the body in the water?
@@ -620,15 +641,36 @@ class Water:
         against 41.6 N of weight, so it sank until its centre went under. The
         submerged-fraction maths was right; this gate in front of it was wrong.
         """
-        return (abs(pos[0] - self.x) < self.half + radius
-                and abs(pos[1] - self.y) < self.half + radius
+        # Horizontal test on the CENTRE (W0.PL): the old `half + radius` band
+        # counted bodies standing beside the basin as wet.
+        return (abs(pos[0] - self.x) < self.half
+                and abs(pos[1] - self.y) < self.half
                 and pos[2] - radius < self.surface_z)
+
+    def _held_dry(self, data) -> set:
+        """Bodies in contact with a static geom at or above the surface."""
+        held = set()
+        if not self._dry_geoms:
+            return held
+        gb = self.model.geom_bodyid
+        for i in range(data.ncon):
+            c = data.contact[i]
+            g1, g2 = int(c.geom1), int(c.geom2)
+            if g1 in self._dry_geoms:
+                held.add(int(gb[g2]))
+            elif g2 in self._dry_geoms:
+                held.add(int(gb[g1]))
+        return held
 
     def apply(self, model, data) -> None:
         """Add buoyancy + drag to xfrc_applied. Call every step, before mj_step."""
         if not self.enabled:
             return
+        new = np.zeros_like(self._last)
+        held = self._held_dry(data)
         for bid in range(1, model.nbody):
+            if bid in held:
+                continue
             pos = data.xipos[bid]
             r = float(self._radius[bid])
             if r <= 0 or model.body_mass[bid] <= 0:
@@ -653,8 +695,18 @@ class Water:
             drag = -0.5 * WATER_DENSITY * self.cd * area * speed * vel
             drag = drag - self.c_lin * WATER_DENSITY * vol * vel
 
-            data.xfrc_applied[bid][:3] = drag
-            data.xfrc_applied[bid][2] += buoy
+            new[bid] = drag
+            new[bid][2] += buoy
+        # Additive (W0.PL): per component, if nobody rewrote the slot since our
+        # last call, take our old contribution back out; if someone did (W0's
+        # drive, a reset), their fresh value is the base. Then add ours.
+        cur = data.xfrc_applied[:, :3]
+        untouched = cur == self._written
+        base = np.where(untouched, cur - self._last, cur)
+        out = base + new
+        data.xfrc_applied[:, :3] = out
+        self._written = out.copy()
+        self._last = new
 
 
 def humanoid_body_ids(model) -> list:
