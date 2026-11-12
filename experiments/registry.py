@@ -459,7 +459,7 @@ LADDER: list[Spec] = [
          falsified_by="std >= effect/3 — or no finite, positive min_detectable_effect is produced for downstream specs to compare against.",
          null_baseline="n/a", metric="snr", budget=Budget.GPU, seeds=1,
          depends_on=["T1.01"],
-         control="Seeds must ACTUALLY change the outcome: three arms differing only by seed must give three distinct held-out results with spread > 1e-6. An arm that ignored its seed would read zero spread.",
+         control="Seeds must ACTUALLY change the outcome: three arms differing only by seed must give three distinct held-out results with spread > 1e-6. An arm that ignored its seed would read zero spread -- and since 2026-11-12 that arm is RUN: the same job trains seed 0 twice more, and the same spread/distinct clause must REJECT the seed-ignoring triple (arm0, arm0', arm0''), else FAIL (seed noise not separable from run-to-run noise).",
          kills="Any multi-seed comparison that has no published noise floor to beat.",
          notes="REGISTERED 2026-11-11 (ORDERS.md J1; ruling in "
                "docs/DECISIONS_RESOLVED.md, same date). T1.08's August claim, "

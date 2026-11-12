@@ -21,6 +21,21 @@ each run 3 seeds and gate on their own sigma; `T2.13` (seeds = 1) keeps `T1.08`.
 `heldout_cv_pct` is still recorded here so the red fact travels with the green
 one — reported, not gated.
 
+SEED-IGNORING ARM — RUN, NOT DESCRIBED (strengthening, 2026-11-12, ORDERS J1
+step 2). Attempt 1's control ("an arm that ignored its seed would read zero
+spread") was a property of the three real arms only; nothing ever showed the
+detector fires on a seed-ignoring triple. The job now trains FIVE arms in one
+session: seeds 0, 1, 2 (the real triple, exactly as before) and seed 0 twice
+more. The seed-ignoring triple is (arm 0, arm 0', arm 0'') — the same seed fed
+to all three runs. The spec's OWN spread/distinct clause (`_seed_clause`, the
+same code `_check` applies to the real triple, bars unmoved) must REJECT it;
+if it does not — e.g. GPU non-determinism makes same-seed runs differ by more
+than 1e-6, or into three distinct results — then "seed noise" is not
+separable from run-to-run noise on this pipeline and the spec FAILS. Reported
+beside it: the ignored triple's spread and its ratio to the real spread.
+The SNR bar (3.0) and MIN_SPREAD (1e-6) are byte-unmoved. Same `t108.JOB`
+text — only the substituted seed list grows — so the pipeline is unchanged.
+
 SAME JOB. The GPU job, the recipe (STEP 2b mechanisms (i)+(ii)), the task and
 the seeds are imported from `t1_08_seed_variance` unchanged, so both specs
 measure the same pipeline; that file is in IMPL_DEPS and an edit to it stales
@@ -29,8 +44,11 @@ this certificate. `snr` here is computed by the same `_stats` from the same
 """
 from __future__ import annotations
 
+import json
 import math
+from pathlib import Path
 
+from ..gpu import build_job, submit
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 from . import t1_08_seed_variance as t108
@@ -39,14 +57,56 @@ IMPL_DEPS = ["UnifiedBrain.py", "experiments/protocol.py",
              "experiments/tests/t1_08_seed_variance.py"]
 
 SEEDS = t108.SEEDS
+IGNORED_EXTRA = [SEEDS[0], SEEDS[0]]   # two more runs at seed 0: the
+                                      # seed-ignoring triple is arm0, these two
 MIN_SNR = 3.0          # T1.08's August bar, verbatim
 MIN_SPREAD = 1e-6      # T1.08's control, verbatim
 
 _CACHE: dict = {}
 
 
+def _submit() -> dict:
+    """`t108._submit`'s job, with the seed list extended by IGNORED_EXTRA.
+
+    Same JOB text, same build_job/submit/fetch path; the only difference is
+    the substituted `__SEEDS__`. Kept local so `t1_08_seed_variance.py` (and
+    T1.08's standing FAIL certificate) is byte-unmoved.
+    """
+    job = build_job(t108.JOB.replace("__SEEDS__", repr(SEEDS + IGNORED_EXTRA))
+                             .replace("__TAIL_FRAC__", repr(t108.TAIL_FRAC)))
+    # est_hours 0.5 -> 0.9: five arms where attempt 1 trained three
+    # (attempt 1 on a Colab T4: 0.65 GPU-h for three arms incl. setup).
+    res = submit(job, prefer="kaggle", est_hours=0.9, timeout_s=6600,
+                 fetch=["t108.json"])
+    if not res.ok:
+        raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")
+    path = res.artifacts.get("t108.json")
+    if not path:
+        raise RuntimeError(
+            f"no artifact from {res.backend}. message={res.message!r} "
+            f"stdout_tail={res.stdout[-400:]!r} stderr_tail={res.stderr[-400:]!r}")
+    d = json.loads(Path(path).read_text())
+    d["backend"] = res.backend
+    all_arms = d["arms"]
+    n = len(SEEDS)
+    if len(all_arms) != n + len(IGNORED_EXTRA):
+        raise RuntimeError(f"expected {n + len(IGNORED_EXTRA)} arms, got {len(all_arms)}")
+    d["arms"] = all_arms[:n]                       # the real triple, as before
+    d["ignored_arms"] = [all_arms[0]] + all_arms[n:]  # same seed, three runs
+    return d
+
+
+def _seed_clause(held: list) -> tuple:
+    """The spread/distinct clause of `_check`, factored so the SAME code judges
+    the real triple and the seed-ignoring triple. Returns (passes, spread,
+    distinct)."""
+    distinct = len(set(round(h, 9) for h in held))
+    spread = round(max(held) - min(held), 8)
+    return (spread > MIN_SPREAD and distinct == len(SEEDS)), spread, distinct
+
+
 def _experiment(seed: int) -> dict:
-    _CACHE.update(t108._submit())
+    _CACHE.update(_submit())
     arms = _CACHE["arms"]
     imps = [a["improvement"] for a in arms]
     held = [a["heldout"] for a in arms]
@@ -69,9 +129,21 @@ def _experiment(seed: int) -> dict:
 
 def _control(seed: int) -> dict:
     """Seeds must actually change the outcome, or the noise floor is fictional."""
-    held = [a["heldout"] for a in _CACHE["arms"]]
-    return {"distinct_results": len(set(round(h, 9) for h in held)),
-            "spread": round(max(held) - min(held), 8)}
+    ok, spread, distinct = _seed_clause([a["heldout"] for a in _CACHE["arms"]])
+    ig = _CACHE.get("ignored_arms") or []
+    out = {"distinct_results": distinct, "spread": spread,
+           "ignored_seeds": json.dumps([a.get("seed") for a in ig])}
+    if len(ig) == len(SEEDS):
+        ig_ok, ig_spread, ig_distinct = _seed_clause([a["heldout"] for a in ig])
+        out.update({
+            "ignored_spread": ig_spread,
+            "ignored_distinct_results": ig_distinct,
+            # 1.0 iff the clause REJECTS the seed-ignoring triple — the
+            # control must fire for this spec to pass.
+            "ignored_flagged": float(not ig_ok),
+            "ignored_to_real_spread": round(ig_spread / max(spread, 1e-12), 6),
+        })
+    return out
 
 
 def _check(m: dict, c: dict) -> bool:
@@ -79,7 +151,9 @@ def _check(m: dict, c: dict) -> bool:
     return (m["snr"] >= MIN_SNR
             and mde is not None and math.isfinite(mde) and mde > 0
             and c["spread"] > MIN_SPREAD
-            and c["distinct_results"] == len(SEEDS))
+            and c["distinct_results"] == len(SEEDS)
+            # the seed-ignoring arm was RUN and the same clause rejected it
+            and c.get("ignored_flagged") == 1.0)
 
 
 def run(ledger: Ledger | None = None):

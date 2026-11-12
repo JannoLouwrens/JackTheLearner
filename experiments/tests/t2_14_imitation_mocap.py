@@ -3,7 +3,8 @@
 HYPOTHESIS (registry). BC on the CMU corpus reaches held-out action error below
 mean-action AND below nearest-neighbour retrieval. Falsified by: a lookup table
 (NN retrieval) matches the model. Null: mean-action; nearest-neighbour
-retrieval. Metric: heldout_vs_nn_ratio. Deps T1.13, T1.08 (both PASS).
+retrieval. Metric: heldout_vs_nn_ratio. Deps T1.13, T1.14 (re-parented from
+T1.08 on 2026-11-11; T1.14 PASS 2026-11-11).
 
 WHAT THIS MEASURES, SAID PLAINLY. T2.04 proved the shipped action path can be
 supervised into cloning a controller WE WROTE, on trajectories WE GENERATED —
@@ -166,11 +167,12 @@ from ..gpu import build_job, submit
 # as the thing that replaced the loader that "fabricated sinusoids" — the
 # substance of "from REAL motion capture" — while `IMPL_DEPS` named only
 # `MoCapLoader.py`, which reaches it through a function-local import at
-# `MoCapLoader.py:639`. Declared here KNOWING the re-buy is refused: this row's
-# dep `T1.08` is FAIL, so `run_spec` will not re-derive it and this certificate
-# goes STALE-and-unclearable until `T1.08` is repaired. That is the honest
-# state — the alternative is a green board bought by not declaring a dependency
-# we know is load-bearing. Disclosed in the commit and the journal, not quietly.
+# `MoCapLoader.py:639`. Declared here KNOWING the re-buy was then refused: the
+# row's dep was `T1.08` (FAIL), so `run_spec` would not re-derive it. On
+# 2026-11-11 the dep was re-parented to `T1.14` (seed noise published; PASS the
+# same day), so the re-buy is no longer refused by its dependency. The
+# alternative was always a green board bought by not declaring a dependency we
+# know is load-bearing. Disclosed in the commit and the journal, not quietly.
 IMPL_DEPS = ["TrainingPipeline.py", "UnifiedBrain.py", "MoCapLoader.py",
              "mocap_cmu.py"]
 
