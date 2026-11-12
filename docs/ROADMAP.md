@@ -23,8 +23,9 @@ brain's parts re-enter only as challengers in a cook-off, never by default.
 
 **M1 — One whole life.** The learning brain lives a life end to end: world,
 needs, the senses he has, diary, death and retry.
-done when: `LF.03` PASS. · status (11-11): not registered, nothing run; order
-J3, ranked first, waits on nothing.
+done when: `LF.03` PASS. · status (11-12): **MET** — `LF.03` PASS at `6a92fd4`
+(3 seeds × 5 deaths, frozen-twin and wiped-diary controls both fired). He lives
+but does not yet improve or use his diary: `LF.04` (order J1) asks that next.
 
 **M2 — A world and a curriculum that can teach.** A world deep enough that
 passivity dies, outcomes differ, and thinking ahead pays; the order he meets it

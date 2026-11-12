@@ -2967,6 +2967,44 @@ disposes up to 10 a sitting, oldest first. Still open and stale, to be read
 and ruled three a sitting: `D39`, `D40`, `D48`, `D49`, `D50`, `D52`; `D35`
 stands in force until `LF.03` has a verdict.
 
+## 2026-11-12 06:50 UTC — Director, DAILY sitting: rulings
+
+**1. A GPU-wait chain is not CPU work.** A process that only sleeps until a
+Colab session frees and then calls `scripts/dispatch.sh` may be launched with
+plain `setsid`, outside `launch_detached.sh`'s wall-clock CPU meter. It must be
+named, with its log path, in the order's `state:` line; it may not run a
+registered spec itself (the dispatch it calls does, through the sanctioned
+lane). No new budget lane is built for it — the machine may not grow.
+
+**2. Two ratchet movements are earned and may be banked alone.**
+`pass_on_dead_dependency` 7 → 5 (bought by `T1.14` PASS at `73665ca`, which
+includes the run seed-ignoring arm) and `unreachable` 96 → 93. The worker was
+right not to run `ratchets record`, which rewrites every moved counter at once
+and would have blessed `review_queue_violations` 0 → 73 unseen. ORDERS S3
+step 0 adds `--only <counter>`; the other six movers stay unrecorded until
+someone has read each.
+
+**3. Four old blockers are unowned by decision, not by silence.** `HR.1`,
+`HR.5` (voice corpus, playground sounds) wait for the learned-ear order
+("Next up 3") — repairing a corpus for a ready-made ear nobody will seat is
+work for no milestone. `LT.02` (chaos detector) waits for curiosity to be
+raced under J5. `T0.08` re-derives again (clerk sweep, 11-12). Seven JACK
+orders are open; the creature gate, the two GPU cook-offs and the world
+outrank them.
+
+**4. FIELD_WATCH N1 (judge admission gate, arXiv:2611.13596): yes, queued.**
+An adult that scores him must first accept a real success from his own world
+and reject the same episode with the deciding event removed; a yes-to-all
+judge must fail. It opens with J5's teacher-proposed arm, its first user —
+not before, because no adult's score gates anything today.
+
+**5. `LF.03` meets M1's done-when; the follow-on is `LF.04`, not a tick.**
+M1 said "one whole life", an integration claim, and it passed with both
+controls run. Whether living makes him better is a separate claim with its own
+control (his frozen twin) and is ORDERS J1 as of today, ranked above the GPU
+work because it is the creature. `D35` (in force "until `LF.03` has a
+verdict") is discharged by that verdict.
+
 ## D54 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by 2026-11-08): HOLD THE BAR AND LEAVE `HR.1` RED. `CLEAN_BAR` stays 0.10, `HR.1` stays FAIL, `HR.2`/`HR.3`/`HR.4` stay killed. No threshold moved, nothing deleted, no GPU spent. The hearing family's way forward is not this corpus's bar but a learned ear raced against a no-ASR null (ORDERS "Next up 2"), which needs a corpus whose channel does not identify the speaker — a repair to the recording fixture, never to the bar.
 
 ## D51 — RESOLVED BY ARMED DEFAULT (fired 2026-11-11 by the Director; decide_by 2026-11-03): THE FLOOR STAYS AND THE REDESIGN ROUTES ONWARD. `KA_SIGNAL_MIN` 0.90 is byte-unmoved; `PS.09` keeps its verdict. The default routed the signal-present arm's redesign to "a Review design row"; the Review queue is closed, so it routes to the Director's order list instead — not opened today (it frees 0 specs; M1 and the repairable blockers outrank it). Any repair that needs the bar to move returns to the owner.
