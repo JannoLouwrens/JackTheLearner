@@ -997,15 +997,16 @@
         "detached:cr00_race.log": 3706.45,
         "detached:detached.log": 0.77,
         "detached:gamma99.log": 3738.49,
+        "detached:pilot_s90.log": 1200.0,
         "detached:race.log": 7554.56,
         "detached:run.log": 10319.9,
         "detached:run_1113.log": 2278.7,
         "detached:ub10_sweep4.log": 1259.36,
         "detached:w1_00_attempt2.log": 2545.78,
-        "detached:w1_00_attempt3.log": 3000.0,
+        "detached:w1_00_attempt3.log": 4523.64,
         "detached:w1_04_attempt2.log": 4282.0
       },
-      "used_s": 43962.53
+      "used_s": 46686.17
     }
   },
   "overruns": [

@@ -211,14 +211,29 @@ def _borrow():
     return b.values["j0_ms"], b.values["alpha"], 1.0
 
 
+def _pinned(row: dict, ran_at: str) -> Optional[dict]:
+    """The measurement pinned by `ran_at`: the live row, or the same row kept
+    byte-for-byte in that spec's `history` after a later re-run displaced it.
+    Repair 2026-11-13: attempt 2 VOIDed in 0.7 s because T3.06 was re-run on
+    09-22 (attempt 2), moving the pinned 08-30 attempt-1 row into history;
+    the live-row-only lookup made this spec unrunnable forever. Still no
+    re-anchoring: only the exact pinned ran_at is accepted, and a row that has
+    left history entirely (protocol keeps the last 20) VOIDs as before."""
+    for r in [row] + list(row.get("history") or []):
+        if r.get("ran_at") == ran_at:
+            return r
+    return None
+
+
 def _recorded() -> Optional[dict]:
     """The eight Pile A margins, read from the ledger with rows pinned by
     ran_at. Returns None when anything is missing or moved (V2)."""
     path = Path(__file__).resolve().parents[1] / "ledger.json"
     try:
         res = json.loads(path.read_text())["results"]
-        lc, t3 = res["LC.03"], res["T3.06"]
-        if lc["ran_at"] != LC03_RAN_AT or t3["ran_at"] != T306_RAN_AT:
+        lc = _pinned(res["LC.03"], LC03_RAN_AT)
+        t3 = _pinned(res["T3.06"], T306_RAN_AT)
+        if lc is None or t3 is None:
             return None
         lcm, lcc, t3m = lc["metrics"], lc["control_metrics"], t3["metrics"]
         out = {"darkroom": (lcc["darkroom_margin"], lcc["darkroom_margin_std"],
