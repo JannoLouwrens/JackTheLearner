@@ -34,6 +34,14 @@ file and a claim seed, and the second is a finding about Jack, not the rig:
      latent from (state_t, a_t), raced against these as a new arm (re-
      registration = strengthening: one more arm, every gate unmoved).
 
+RE-REGISTERED 2026-11-13 20:40 (strengthening: one more arm, every gate
+  unmoved): `wm-dyn` (cores_dyn.DynWorldCore) is LC.09's SEVENTH arm and a
+  latent arm under the guard. It is the repair of item 2 raced, not
+  substituted: the seated wm-latent still runs and must still clear. The
+  spec now also declares which END-FIT rows each arm serves (CHAMPIONS.md).
+  Still missing before a claim seed: item 1, and wm-dyn's deter carried in
+  survival.py's batch (R2D2 stored state) — `run()` names both.
+
 THE GUARD (LEARNING_CORE.md §5.4; spec `control` text). For every latent arm,
 every GUARD_EVERY decisions, on the last GUARD_BUF observations:
   rank      RankMe effective rank (Garrido et al., arXiv:2210.02885):
@@ -79,8 +87,9 @@ import torch.nn.functional as F
 N_DECISIONS = 1_200_000          # 3x LC.03 v2's 400k
 SEED_OFFSET = 140                # claim seeds 140, 141, 142
 ARMS = ("ppo-needs", "ppo-lp", "dreamer-xs", "wm-efe", "wm-latent",
-        "wm-latent+ring")
-LATENT_ARMS = ("dreamer-xs", "wm-efe", "wm-latent", "wm-latent+ring")
+        "wm-latent+ring", "wm-dyn")          # wm-dyn: re-reg 11-13 20:40
+LATENT_ARMS = ("dreamer-xs", "wm-efe", "wm-latent", "wm-latent+ring",
+               "wm-dyn")
 SIGMA_GATE = 3.0                 # LC.03's two gates, unmoved
 N_LIVES_MIN = 12
 LEAD_SIGMA = 1.5                 # LC.04's seat bar
@@ -261,7 +270,9 @@ class GuardRecorder:
 def run(ledger=None):
     raise RuntimeError(
         "LC.09 not runnable: (1) wm-latent+ring is not built in cores.py/"
-        "survival.py; (2) the world-model arms never train an action- or "
+        "survival.py; (1b) wm-dyn (cores_dyn.DynWorldCore) is built but "
+        "survival.py's i.i.d. replay batch carries no deter (R2D2 stored "
+        "state not wired); (2) the world-model arms never train an action- or "
         "state-reading weight (GRU action cols and weight_hh grad == 0), so "
         "the guard's Delta_5 clause must VOID them (untrained Delta_5 -0.006..-0.008). See the docstring "
         "and ORDERS J3. Nothing recorded.")
