@@ -104,6 +104,8 @@ and ok_forager 2/3 (a sleeper slides into sealed occ~1, hyperthermia at ~3540/36
 11-13 04:40 occlusion-law RACE written + LAUNCHED (experiments/occ_law_race.py/.sh, pid 2503265, log /data/tmp/occrace/race.log, rows
 /data/tmp/occrace/*.jsonl): shipped vs graded (49-ray cos-weighted cone) vs damped sleeper (x3; x5/x8/x20 broke RK4) vs open (must fail),
 seeds 0-4, NE.01's own probes + bars, rule in docstring. Waits for CR.00, ~2 h on 2 workers. Next: on "OCCRACE EXIT" apply the rule; then drop probe.
+11-13 04:45 W.2 DIAGNOSED (ledger 08-30, no run): a/b/d GREEN (integrator 1e-13, ledger resid 0, tau 700/160 exact); red = (c) only: deaths
+hunger 1700 s vs 25200 (k=72, ratio 14.8), thirst 570 vs 3600 (6.3), tol 2x. Cause = needs.py B_E 1/1800, B_W 1/450: needs run ~10x past the declared clock. Same class as W.1(b) - Director ruling (INBOX 04:45).
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
 **Why.** Owner, 2026-11-11: the world and the curriculum are "as important as
 jack himself". W0 is too shallow: lookahead does not pay in it (`DP.05`), a
@@ -251,6 +253,8 @@ with reasons.
 - **11-13 00:55 JACK: wean-with-smell race LAUNCHED** (INBOX 23:35): launch_detached pid 2432985, log /data/tmp/wean_smell/run.log; it idles until gamma99 exits (~01:40), then 2 workers ~4-5 h. Note: the meter bills its idle wait as wall clock. Harvest on "WEAN_SMELL EXIT" with wean_smell_tally.py.
 
 - **11-13 04:25 JACK J4:** a Colab probe with the bare `colab run` prompts for OAuth and looks like "auth broken"; gpu.py uses `/data/venvs/colab/bin/colab --auth adc`, which works. Probe with the latter, or the 503/quota story gets mis-retold.
+
+- **11-13 04:45 JACK J6 -> Director: W.2's only red clause, (c), is the world's needs clock, not a leak.** a/b/d PASS (closed forms 1e-13, conservation resid 0 over 10 days, sleep taus exact). (c): starvation 1700 s vs 21 d/72 = 25200 s (ratio 14.8), dehydration 570 s vs 3 d/72 = 3600 s (6.3); bar is a 2x factor. `needs.py` B_E=1/1800, B_W=1/450 compress needs ~1070x/455x against the clock's declared 72x; human hunger:thirst is 7, W0's is 3.0. No single declared k is honest unless the world declares it: k in [~530, ~910] would pass both, but picking it from this reading fits the bar to the data, so I did not re-register. Rule with W.1(b) (20:25 line), as one question: (i) slow B_E/B_W to k=72 (lives ~10x longer, LF/CR costs x10; world edit, D43 HOLD) or (ii) declare a separate needs compression in W.7/W.2 from a design reason stated before any re-run.
 
 ## DONE (kept one day)
 

@@ -650,3 +650,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   unchanged (launch_detached pid 2506176, /data/tmp/ub10_sweep4.log); live Colab session ladder-1794543804. No numbers yet;
   next slot applies the pre-declared _select_venue on SWEEP EXIT. Served: 3 (the one-brain contest raced, not argued) and 6
   (free GPU used the hour it became available).
+
+- 2026-11-13 ~04:45 UTC JACK J6 (short slot; J4 sweep live on Colab, CR.00 + occ race hold the CPU, J1 waits on D20).
+  Diagnosed W.2 (red 73 days) from its ledger row, no run: checks a/b/d are green (integrator 1e-13, conservation resid 0,
+  sleep taus exact). The only red is (c): starvation at 1700 s vs 25200 s predicted at the declared 72x (14.8x), thirst
+  570 vs 3600 (6.3x), bar 2x. Cause: needs.py B_E/B_W run the needs clock ~10x past the world's declared compression, the
+  same class as W.1(b). Did not re-register to a fitted k (that would fit the bar to the data). Sent to the Director as one
+  ruling with W.1(b). Served: 4 (a red explained, not filed) and 1 (a world that kills on honest deadlines).
