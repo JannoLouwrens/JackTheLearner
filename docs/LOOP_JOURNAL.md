@@ -965,5 +965,5 @@ Served philosophy 3 (every challenger raced at the price its own loop pays) and 
 2026-11-13 23:40 UTC · LAB · 29424ef. Seat: Deliberation (VACANT). Sense lookahead: no actor — a forward model of all his senses (learned
 from babbling, no reward) + a cue-value learned from his own meals; every 5 decisions he imagines 32 pushes and takes the one he wants.
 Rule committed before any seed (want/told must beat babble AND a shuffled control on both seeds, >= 8 of 40). Day CPU ceiling was spent, so
-the pilot went to a free Kaggle CPU kernel (jack-cpu-1794612953; first kernel returned 0 rows, child cwd). Number: see LAB.md / INBOX.
+the pilot went to a free Kaggle CPU kernel (jack-cpu-1794612953; first kernel returned 0 rows, child cwd). Number (kernel 3, 17 min): DEAD - fed births /40 babble 5, want 4, told 6, shuffled control 7; pushes do not point at food.
 Served philosophy 3 (a vacant seat gets a raced challenger), 4 (control that must fail, rule first), 6 (free compute, none of the box's).

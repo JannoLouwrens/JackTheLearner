@@ -94,7 +94,7 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   the workers (ORDERS INBOX); not yet a registered bake-off.
 
 - 11-13 23:10 · **Sense lookahead — he imagines each push, takes the one he
-  wants** (Deliberation, VACANT; holder by default = the reactive actor) ·
+  wants** (Deliberation, VACANT; holder by default = the reactive actor) · **DEAD** ·
   `experiments/sense_lookahead.py`, rule committed first (`29424ef`).
   **Bet:** (1) no actor: a forward model of ALL his senses (learned reward-free
   from babbling) + a linear cue-value learned from his own meals; every 5
@@ -107,9 +107,14 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   given: "more smell") feeds more births than BOTH `babble` (null) and `shuf`
   (push→smell link permuted — must fail) on both seeds and by ≥ 8 of 40.
   END-FIT rows 4, 3, 1; closes none. Philosophy 1, 3, 4.
-  **Number:** IN FLIGHT 23:36 on a free Kaggle CPU kernel `jack-cpu-1794612953`
-  (the box's day CPU ceiling was spent; two kernels died in < 1 min on my job body — child
-  processes lacked the repo cwd). Harvest if no number follows this line:
-  `/data/venvs/kaggle/bin/kaggle kernels output jannolouwrens/jack-cpu-1794612953
-  -p /data/tmp/sense_lookahead/kout`, split `sense_lookahead.json` (name → jsonl
-  text) into `/data/tmp/sense_lookahead/`, then `sense_lookahead tally`.
+  **Number — DEAD 11-13 23:53 by the rule** (Kaggle CPU kernel
+  `jack-cpu-1794612953`, 17 min, 0 box CPU; rows /data/tmp/sense_lookahead/):
+  fed births s90/s94 babble 2/3 = **5/40**, want 2/2 = 4/40, told 5/1 = 6/40,
+  shuf 3/4 = 7/40 (the control ate most). `toward` (cosine of each push to
+  the food's bearing) ≈ 0 everywhere: told +.07/−.01, want −.08/−.11 — even
+  with the want GIVEN he does not climb, so the forward model learned no
+  usable push → smell link from 5k babble decisions; the want put only
+  .15/.07 of its weight on smell (2–4 meals). Not tested, so not claimed:
+  whether f fails for want of data, of heading (the push is world-frame, the
+  nose body-frame), or of signal over 1 s. A new reason must name one of those
+  and show f's held-out push→smell error beats the shuffled net first.
