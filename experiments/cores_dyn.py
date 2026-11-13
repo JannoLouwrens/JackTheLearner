@@ -86,6 +86,22 @@ GRU's +.015 is arbitrary random-init sensitivity that a cosine-on-state
 metric scores as dynamics. Delta_5 vs zero actions cannot tell learned from
 random sensitivity; gap_shuf from an untrained start (~0) can. Next: the
 same gap at K=5 open-loop (prior roll), then a K-step loss to raise it.
+
+MEASURED 2026-11-13 19:45 (`action_share_k`, K=5 OPEN-LOOP, the arm feeding
+its own next_pred back as z; held-out; seeds 0/1/2):
+  * untrained gap_shuf -.014/+.007/-.028; trained +.135/+.108/+.055
+    (gap_zero +.091/+.062/+.021); unexpl_real 1.03/.64/.53 vs copying z_t
+    1.95/1.05/.88 -> beats persistence 3/3. Same run: Delta_5 .0069/.0084/.0085
+    (below its untrained .015).
+READING: 5 decisions out, the trained arm's imagined z depends on the
+actions it is told (untrained: no dependence), on 3/3 seeds - it IS a model
+of what he does, weakly (seed 2 smallest). Delta_5 (`delta5_seq`, LC.09's
+guard form) rolls with z HELD at z_t - a roll this arm never trained on -
+and scores cosine on state: it reads the untrained random GRU as more
+"dynamic" than the trained one. The guard measures the wrong thing for any
+arm whose GRU input is a moving z. Proposed (INBOX; LC.09 is J3's spec, the
+change strengthens it): replace Delta_5 > 0 with gap_shuf(K=5, own-roll)
+> its untrained-init value by a declared margin, on >= 3 seeds.
 """
 from __future__ import annotations
 
@@ -257,6 +273,37 @@ def action_share(core, hist, starts, dropped=("language",)) -> Dict[str, float]:
             "gap_zero": round(u["zero"] - u["real"], 4)}
 
 
+@torch.no_grad()
+def action_share_k(core, hist, starts, K=5, dropped=("language",)) -> Dict[str, float]:
+    """K-step OPEN-LOOP version of `action_share` (11-13 19:40): from the
+    filtered state at t (SEQ burn-in), imagine K decisions feeding the arm's
+    OWN prediction back as the next z (z <- next_pred(deter)), under the real
+    actions a_t..a_{t+K-1}, another window's (shuffled) or zeros; score
+    next_pred(deter_K) against the encoder's z_{t+K}, per-dim normalised by
+    z_{t+K}'s variance. (delta5_seq rolls with z held fixed at z_t, which an
+    arm trained on moving z never saw - this is the roll it was trained for.)"""
+    T = SEQ + K
+    obs, acts = _windows(hist, [i - SEQ for i in starts], T)
+    ss = core.filter_seq(obs, acts, dropped)
+    s_t = ss[SEQ - 1]
+    zK = ss[SEQ - 1 + K]["z"]
+    zvar = zK.var(0, unbiased=False).clamp_min(1e-4)
+    roll_a = acts[SEQ - 1:SEQ - 1 + K]
+    perm = torch.roll(torch.arange(roll_a.shape[1]), 1)
+
+    def roll(a_seq):
+        deter, z = s_t["deter"], s_t["z"]
+        for k in range(K):
+            deter = core.gru(torch.cat([z, a_seq[k]], -1), deter)
+            z = core.next_pred(deter)
+        return float(((z - zK).pow(2) / zvar).mean())
+    r, sh, ze = roll(roll_a), roll(roll_a[:, perm]), roll(torch.zeros_like(roll_a))
+    cp = float(((s_t["z"] - zK).pow(2) / zvar).mean())
+    return {"K": K, "unexpl_real": round(r, 4), "unexpl_shuf": round(sh, 4),
+            "unexpl_zero": round(ze, 4), "unexpl_copy_z_t": round(cp, 4),
+            "gap_shuf": round(sh - r, 4), "gap_zero": round(ze - r, 4)}
+
+
 def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
     from .cores import build_arm, make_optimizer
     from .survival import random_action
@@ -288,6 +335,7 @@ def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
     opt = make_optimizer(core, LC_LR)
     gen = np.random.RandomState(1)
     out["action_share_before"] = action_share(core.eval(), hist, test_i)
+    out["action_share5_before"] = action_share_k(core, hist, test_i)
     out["delta5_test_before"] = round(delta5_seq(core.eval(), hist, test_i), 6)
     out["delta5shuf_test_before"] = round(
         delta5_seq(core, hist, test_i, shuffled=True), 6)
@@ -312,6 +360,7 @@ def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
     out["loss_log"] = log
     out["action_share_after"] = action_share(core, hist, test_i)
     out["action_share_train_after"] = action_share(core, hist, train_i[:300])
+    out["action_share5_after"] = action_share_k(core, hist, test_i)
     out["delta5_test_after"] = round(delta5_seq(core, hist, test_i), 6)
     out["delta5shuf_test_after"] = round(
         delta5_seq(core, hist, test_i, shuffled=True), 6)
