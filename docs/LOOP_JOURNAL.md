@@ -643,3 +643,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   probes and bars, seeds 0-4. Decision rule declared before any row. Smoke at seed 1 caught two harness faults: the open control
   had no bed, and sleeper damping x5/x8/x20 broke the RK4 integrator (NaN qvel). Fixed: open sleeps where shipped would, K=3, and an
   instability counter disqualifies a row. Launched detached behind CR.00. Served: 3 (a world law raced) and 4 (a control that must fail).
+
+- 2026-11-13 ~04:25 UTC JACK J4 (short slot; J8 done, J1 waits on D20 re-budget; J6/J5/J7 wait on CR.00 which holds 3 CPU
+  workers). Probed the GPU backends: Kaggle still at its 30 h week, but Colab now assigns a T4 (hello-world OK via
+  `colab --auth adc`; the bare `colab` binary asks for OAuth, a probe trap noted in INBOX). Relaunched UB.10's venue sweep
+  unchanged (launch_detached pid 2506176, /data/tmp/ub10_sweep4.log); live Colab session ladder-1794543804. No numbers yet;
+  next slot applies the pre-declared _select_venue on SWEEP EXIT. Served: 3 (the one-brain contest raced, not argued) and 6
+  (free GPU used the hour it became available).

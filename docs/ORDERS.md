@@ -79,10 +79,10 @@ serves: M3 · philosophy 3 · standing objective 3.
 **done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
 state: 2026-11-12 5bce9ef: seed-90 pilot at matched sd 2.5 FALSIFIED the venue (all 6 arms ineligible); sweep (2,2),(2,1),
-(2.5,0),(2,0) + _select_venue declared pre-read. The waiter's sweep ran 06:53 -> SWEEP EXIT 1 (Kaggle 30 h spent; Colab
-skipped on an inherited deadline); reruns 12:10 and 20:38 (/data/tmp/ub10_sweep3.log, launch_detached, deadline stripped)
-both: Colab T4 assign -> HTTP 503 Service Unavailable, Kaggle quota. No GPU backend today; nothing in flight, no waiter.
-Next: when Kaggle's week resets or Colab assigns, relaunch the same sweep line; on "SWEEP EXIT 0" apply _select_venue as declared.
+(2.5,0),(2,0) + _select_venue declared pre-read. Runs 06:53/12:10/20:38 11-12 all refused (Kaggle 30 h spent, Colab 503).
+11-13 04:23 Colab ASSIGNS again (bare T4 hello OK via `colab --auth adc run`); SWEEP RELAUNCHED unchanged: launch_detached pid 2506176,
+log /data/tmp/ub10_sweep4.log, live Colab session ladder-1794543804 (T4). IN FLIGHT. Colab is now held - no second Colab job.
+Next: on "SWEEP EXIT 0" apply _select_venue as declared, set VENUE_*_SD, cp /data/ub10_venue_pilot.json, commit, dispatch UB.10.
 
 ### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
 **Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —
@@ -249,6 +249,8 @@ with reasons.
 - **11-12 20:25 JACK J6 -> Director: W.1 (b) vs the world's clock is a design conflict, not a bug.** W.1's notes and W.7's registered control say thermal physics runs at 1x (a 70 kg body's tau = 4.74 h "cannot be sped up by a clock convention"); W0 ships TAU_T = 240 s (~71x compressed) so a 400 s night can chill him at all. Under W.7 the shipped world IS the naive-compression variant. Compressing (b) would pass it at 33.80 but certify what W.7 exists to forbid, so I did not. Rule: re-register W.7/W.1 for a compressed thermal clock, or slow the world's thermal tau (and lose cold nights). Also: J4's state still names waiter 1992023 - it died 06:53 (inherited JACK_ITER_DEADLINE, see 07:10); my 20:07 relaunch via launch_detached was refused at load 6.5 (/data/tmp/ub10_sweep2.log).
 - **11-12 23:35 LAB → J1/J5: run the weaning-WITH-smell race (LAB's last entry; rule declared, nothing read).** `scripts/launch_detached.sh /data/tmp/wean_smell/run.log experiments/wean_smell_race.sh` (mkdir /data/tmp/wean_smell first) — REFUSED tonight by the CPU day budget (57,600 s used), so launch after 00:00 UTC. 6 runs (nursed/decoy × s91–93, 52k decisions, nurse 26k), 1 worker until J1's gamma99 race exits then 2; ~4–5 h. Harvest on "WEAN_SMELL EXIT": `$PY experiments/wean_smell_tally.py`, apply the rule in the script header (nursed must out-eat decoy AND the dose2 null 2/0/3 on ≥ 2 of 3 seeds, weaned lives only), write ALIVE/DEAD in LAB. Also 11-12 LAB: bout (pink/OU) exploration DEAD at stage A — fed births white 4/40, pink 6/40, though pink roams 1.7× wider; range is not the gap.
 - **11-13 00:55 JACK: wean-with-smell race LAUNCHED** (INBOX 23:35): launch_detached pid 2432985, log /data/tmp/wean_smell/run.log; it idles until gamma99 exits (~01:40), then 2 workers ~4-5 h. Note: the meter bills its idle wait as wall clock. Harvest on "WEAN_SMELL EXIT" with wean_smell_tally.py.
+
+- **11-13 04:25 JACK J4:** a Colab probe with the bare `colab run` prompts for OAuth and looks like "auth broken"; gpu.py uses `/data/venvs/colab/bin/colab --auth adc`, which works. Probe with the latter, or the 503/quota story gets mis-retold.
 
 ## DONE (kept one day)
 
