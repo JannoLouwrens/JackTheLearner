@@ -790,3 +790,8 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   have failed k72 through truncation, not the world. The harness scales horizons per arm and leaves bars alone. NE.01's 11-13 row also fails
   gate 5 (5/5 random deaths hyperthermia), which the order did not list. Race launched detached, gated on W1.00 (pid 3130430).
   Served: 3 (the clock is raced, not argued) and 1 (a world whose deadlines leave room for a night to teach him).
+- 2026-11-13 ~15:40 UTC SYSTEM S3(2)+(4) (S1 route built by JACK; its dispatch is blocked on J1's T2.10 chain). `coverage` exited 2 on
+  bookkeeping alone: claim_dead, 6 empty classes, unreachable 115>95, podd 6>3, SM.02 park pair, 3 stale baseline names. Now those are
+  printed, not gated; rc 0, and a planted 7th PASS-on-FAIL pair still gives rc 2 (b7a0364). FAIL-UNOWNED counts an id in an open ORDER
+  as owned (4 -> 1, T2.07). Banked podd 6 and unreachable 115 by ruling 4. coverage.py net -24 lines. Every worker who read rc 2 as
+  "something broke" now gets rc 2 only for a real false claim. Served: 4 (an exit code that means something) and 5.

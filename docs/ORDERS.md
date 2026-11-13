@@ -210,6 +210,7 @@ state: pilot 11-12 (owner): 1 proc 28 dec/s, 2 procs 68 total, 4 no gain.
 fails over, charges 0 GPU-h; T0.12 PASS with property 15 (control = GPU route fails both). Live: jack-cpu-1794560915 accepted
 with GPU quota spent, 47 s, artifact back, 0.0 GPU-h. T0.10 left GPU-only (no GPU quota to re-buy it). Next: `kaggle-cpu` Budget
 class in protocol.py + LF.04's job body (pip mujoco, ≤2 procs, JACKRESULT) and dispatch LF.04. Unmeasured: parallel CPU sessions.
+11-13 15:40 route DONE by JACK (1913430, 93b463b). Dispatch BLOCKED: LF.04 <- LF.03 stale <- LF.02 <- T6.03 <- T2.10 FAIL (J1 INBOX).
 
 ### S3 — A verdict the record cannot re-derive; guards red by design
 **Why.** `run verify` exits 2: `W0.PL`'s gate judges from process memory
@@ -231,8 +232,10 @@ Nothing guarding a threshold, control or seed count leaves an exit code.
 serves: philosophy 4, 5 (a truthful machine).
 **done when:** on a clean tree `run verify` and `coverage` exit 0 and each
 still exits non-zero on a planted PASS-on-FAIL-dependency.
-state: 11-12 `ratchets record --only` DONE; T0.18 KeyError DONE (754b6b0), verify went 0 then red again 4 h later on W0.PL.
-Open: all four items above.
+state: 11-13 15:40 (2)+(4) DONE (b7a0364): coverage rc 2 -> 0; claim_dead, empty classes, unreachable/park growth, stale_* printed
+only; planted 7th PASS-on-FAIL pair -> rc 2. FAIL-UNOWNED reads ORDERS (4 -> 1, T2.07). Banked podd 6, unreachable 115 (ruling 4).
+Open: (1) W0.PL/BD.01 gate reads module state (needs a quiet-box W0.PL re-run); (3) T0.28 p10; (5) four GOAL ends in COMMITMENTS.
+run verify not re-checked this slot. T0.21 now stale (coverage.py edit) — regate's to re-buy.
 
 ### S6 — A video the owner can watch (owner request 11-12)
 **Why.** Owner: "a video he can watch". Card line 1: he can be known.
