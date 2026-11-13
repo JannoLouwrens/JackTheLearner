@@ -591,3 +591,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   1 of 5 is followed by a fed life. He camps on food he stumbled onto, and the next birth starts from zero. A meal-count
   margin for LF.04 would measure jackpots. Wean-with-smell race still running (3 workers, pid 2432985). Served: 3 (a learner
   choice raced and killed by its own rule) and 4 (what the meal count really measures, shown before LF.04 leans on it).
+
+- 2026-11-13 ~01:40 UTC JACK J5 (no ledger row; short slot). J1 waits on wean-with-smell (3 workers, ~4 h left), J4 has no GPU
+  backend, J6's next step needs CPU the box does not have spare, so I took J5's CPU-free steps. Wrote docs/research/CURRICULUM.md:
+  the biology (starting small, provisioning, scaffolding, Goldilocks) and the field (curriculum, learning progress, teacher-student,
+  ALP-GMM, GoalGAN, reverse curriculum, PAIRED/PLR, LLM-proposed goals as a legal adult arm behind the judge gate). Added the
+  Curriculum seat VACANT, ARENA: NONE (honest NO-ARENA, check rc 0). Cook-off CR.00/CR.01 designed, not registered. It scores
+  fed-life fraction + median span, not meal counts (jackpot finding), and adds a matched-meal null beside the shuffled-stage control.
+  Served: 3 (curriculum gets a seat and a race, not an assumption) and 5 (his curriculum treated as part of what makes him).

@@ -131,7 +131,11 @@ what the adults say — never his actions.
 serves: M2 · philosophy 3, 5.
 **done when:** the doc and the seat exist; the cook-off is registered with its
 control and has a pilot number.
-state: open — not started.
+state: 11-13 01:40 steps (1)+(2) DONE: docs/research/CURRICULUM.md (cited menu: Elman, Bengio 09, IAC/SAGG-RIAC, Graves 17, ALP-GMM,
+GoalGAN, reverse curriculum, PAIRED/PLR/ACCEL, ELLM/OMNI) + Curriculum seat VACANT, ARENA: NONE (champions --check rc 0, NO-ARENA honest).
+Cook-off designed (§4), NOT registered: ids CR.00 pilot / CR.01 claim (CU.* is curiosity); exam block of uniform W0 lives scored by
+fed-life fraction + median span (NOT meal counts - jackpots); controls shuffled-stage AND matched-meal null. Next: after J1's
+wean-smell harvest, register CR.00 (1 seed: null, hand-staged, shuffled; ~4 CPU-h detached) and pilot it.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): today
