@@ -664,3 +664,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   to carry venue_vision_sd (no bar moved). UB.10 dispatched on seeds 0-2 (watcher 2541605) - the one-brain contest,
   VOID 59 days, is finally running. CR.00 pilot harvested: exam fed-lives null 5/8, staged 2/8, shuffled 0/9 - the
   hand-staged curriculum does not beat no curriculum on s89. Served: 3 (one brain raced, not assumed; curriculum raced).
+
+- 2026-11-13 ~05:35 UTC JACK J5 (short slot; J8 done, J1 waits on D20, J4 watcher live on UB.10, CPU held by occ race + regate).
+  Built CR.01's machine arms in the CR.00 harness: self-chosen by absolute learning progress (ALP bandit over the 5 birth bins),
+  GoalGAN frontier band, and the matched-meal null control. All of them stage only where he is born. Pure check plus an s88 smoke
+  (lp births None->4.0->2.4, so credit reaches the next choice). Sized CR.01 from the pilot null's spread: a .20 fed-fraction
+  margin at 2 SE needs ~47 exam lives per arm-seed, ~2.8M decisions, ~39 CPU-h. That is a Kaggle-CPU (S1) job, so it is not
+  registered here (D20). Served: 3 and 5 (the curriculum raced, with a control that must fail, sized before claim seeds).

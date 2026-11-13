@@ -136,11 +136,11 @@ what the adults say — never his actions.
 serves: M2 · philosophy 3, 5.
 **done when:** the doc and the seat exist; the cook-off is registered with its
 control and has a pilot number.
-state: 11-13 01:40 steps (1)+(2) DONE: docs/research/CURRICULUM.md + Curriculum seat VACANT, ARENA: NONE (champions --check rc 0).
-11-13 02:40 CR.00 harness 10de6fc (null / staged .6,1.2,2.4,4.0,U / shuffled same blocks; uniform EXAM; fed-life frac + median span).
-11-13 03:38 LAUNCHED detached: experiments/cr00_pilot_race.sh (log /data/tmp/cr00_race.log, rows /data/tmp/cr00/*_s89.jsonl):
-waits for WEAN_SMELL exit, then 3 arms s89 train 40000 exam 20000 no smell in parallel (~60-90 min), then tally. 11-13 05:15 PILOT HARVESTED (s89, exam 8-9 lives/arm): fed null 5/8, staged 2/8,
-shuffled 0/9; median span 516/493/439 (sd 49/19/42) - staged does NOT beat null on the pilot. Next: set N + margin from null's spread, register CR.01.
+state: (1)+(2) DONE 11-13 01:40 (CURRICULUM.md, seat VACANT). CR.00 pilot s89 (10de6fc): exam fed null 5/8, staged 2/8, shuffled 0/9 (N=8: anecdote).
+11-13 05:35 CR.01's machine arms BUILT in experiments/cr00_pilot.py: lp (ALP bandit over the 5 birth bins, W=5, eps .2), frontier (band .2/.8),
+matched (matched-meal null CONTROL: bin uniform per birth). Unit check: lp tracks a rising bin, frontier widens/holds; s88 smoke: lp births
+None->4.0->2.4 (credit->choose live), matched 2.4->0.6 (ate). SIZING from null's spread (p .625, sd/life .484): margin .20 fed-frac at 2 SE
+needs N~47 exam lives/arm/seed = ~117k exam dec; 6 arms x 3 seeds ~2.8M dec ~39 CPU-h -> not this box (D20); Next: Director routes CR.01 to S1 or cuts arms; register then.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): today

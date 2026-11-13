@@ -13,7 +13,21 @@ spawn rule) chooses where each new body is born during TRAINING.
   shuffled  CONTROL THAT MUST FAIL against staged: the SAME multiset of blocks
             in a seeded random order. If it matches staged, ordering carries
             nothing and the "curriculum" is only extra easy lives.
-(The matched-meal null and the LP/frontier/teacher arms belong to CR.01.)
+CR.01's machine arms (added 11-13, docs/research/CURRICULUM.md section 4), all
+over the SAME five birth bins as staged (STAGES), chosen per BIRTH, never per
+action; a bin's outcome is whether the life born in it ate at least once:
+  lp        self-chosen by absolute learning progress (IAC/SAGG-RIAC shape): each
+            bin keeps its fed outcomes; ALP = |mean(last W) - mean(W before)|;
+            a bin with < 2W outcomes is sampled first (lowest count), then
+            eps-greedy on ALP (EPS), ties to the wider bin. Birth-radius bins
+            only: W0 has no food-density knob, so the density axis is absent.
+  frontier  GoalGAN-style band: one radius index, starts at the nearest bin;
+            after every W lives born at it, fed rate > BAND_HI -> widen one bin,
+            < BAND_LO -> narrow one bin, else stay.
+  matched   matched-meal null (CONTROL): each birth draws a bin uniformly from
+            STAGES - the staged arm's expected easy-birth share, with no
+            order and no adaptation. Separates "a curriculum" from "more
+            easy lives". (The teacher arm waits on the Judge admission gate.)
 
 Then every arm lives an identical EXAM: EXAM decisions of uniform W0 lives,
 still learning. Only exam lives are scored, by FED-LIFE FRACTION (lives with
@@ -34,12 +48,60 @@ import time
 
 import numpy as np
 
-ARMS = ("null", "staged", "shuffled")
+ARMS = ("null", "staged", "shuffled", "lp", "frontier", "matched")
+ADAPTIVE = ("lp", "frontier", "matched")   # bin chosen per birth
 STAGES = (0.6, 1.2, 2.4, 4.0, None)   # None = uniform; declared before any run
 FLOOR_Z = 0.5                         # a food geom above this is not floor food
+W, EPS = 5, 0.2                       # LP window (lives) and exploration; declared 11-13
+BAND_LO, BAND_HI = 0.2, 0.8           # frontier band (GoalGAN's ~0.1-0.9, CURRICULUM.md)
+
+
+class BinChooser:
+    """Per-birth bin choice for the adaptive arms. Pure: no world access."""
+
+    def __init__(self, arm: str, seed: int):
+        self.arm, self.n = arm, len(STAGES)
+        self.rng = np.random.RandomState(seed * 6007 + 29)
+        self.hist = [[] for _ in range(self.n)]
+        self.fi, self.fwin = 0, []                # frontier index + its window
+
+    def alp(self, i: int) -> float:
+        h = self.hist[i]
+        if len(h) < 2 * W:
+            return float("nan")
+        return abs(float(np.mean(h[-W:])) - float(np.mean(h[-2 * W:-W])))
+
+    def choose(self) -> int:
+        if self.arm == "matched":
+            return int(self.rng.randint(self.n))
+        if self.arm == "frontier":
+            return self.fi
+        young = [i for i in range(self.n) if len(self.hist[i]) < 2 * W]
+        if young:
+            m = min(len(self.hist[i]) for i in young)
+            return max(i for i in young if len(self.hist[i]) == m)
+        if self.rng.rand() < EPS:
+            return int(self.rng.randint(self.n))
+        a = [self.alp(i) for i in range(self.n)]
+        best = max(a)
+        return max(i for i in range(self.n) if a[i] == best)
+
+    def credit(self, i: int, fed: bool) -> None:
+        self.hist[i].append(int(fed))
+        if self.arm == "frontier" and i == self.fi:
+            self.fwin.append(int(fed))
+            if len(self.fwin) >= W:
+                rate = float(np.mean(self.fwin))
+                if rate > BAND_HI:
+                    self.fi = min(self.n - 1, self.fi + 1)
+                elif rate < BAND_LO:
+                    self.fi = max(0, self.fi - 1)
+                self.fwin = []
 
 
 def block_order(arm: str, seed: int) -> list:
+    if arm in ADAPTIVE:
+        return [None] * len(STAGES)          # placeholder; chosen per birth
     if arm == "null":
         return [None] * len(STAGES)
     if arm == "staged":
@@ -74,6 +136,11 @@ def main(arm: str, seed: int = 89, train: int = 40000, exam: int = 20000,
     floor = {n: gid for n, (gid, _) in dr._food.items()}
     order = block_order(arm, seed)
     block = max(1, train // len(order))
+    chooser = BinChooser(arm, seed) if arm in ADAPTIVE else None
+    cur = {"bin": None, "ate0": 0}          # the living body's birth bin
+
+    def ate_now() -> int:
+        return int(sum(dr.ate_total.values()))
 
     def food_xy(ready_only: bool):
         pts = []
@@ -89,9 +156,22 @@ def main(arm: str, seed: int = 89, train: int = 40000, exam: int = 20000,
     def stage_now():
         if L.k >= train:
             return "exam", None
+        if chooser is not None:
+            return "train", (STAGES[cur["bin"]] if cur["bin"] is not None
+                             else None)
         return "train", order[min(len(order) - 1, L.k // block)]
 
+    def pick_bin():
+        """Credit the dying body's bin, then choose the newborn's."""
+        if chooser is None:
+            return
+        if cur["bin"] is not None:
+            chooser.credit(cur["bin"], ate_now() - cur["ate0"] > 0)
+        cur["bin"] = chooser.choose() if L.k < train else None
+        cur["ate0"] = ate_now()
+
     def sampler(legal_, rng, death_xy):
+        pick_bin()
         _, r = stage_now()
         if r is None:
             return uniform_legal_spawn(legal_, rng, death_xy)
@@ -105,7 +185,9 @@ def main(arm: str, seed: int = 89, train: int = 40000, exam: int = 20000,
         return float(legal_[k][0]), float(legal_[k][1])
 
     w.spawn_sampler = sampler
-    if order[0] is not None:               # the first body is born staged too
+    if chooser is not None:                # the first body is born by choice too
+        w.respawn(at=sampler(w.legal_spawns(), w._spawn_rng, (0.0, 0.0)))
+    elif order[0] is not None:             # the first body is born staged too
         w.respawn(at=sampler(w.legal_spawns(), w._spawn_rng, (0.0, 0.0)))
 
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
