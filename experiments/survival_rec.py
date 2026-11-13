@@ -17,6 +17,10 @@ where a recurrent core must:
     actor/critic read the state the rollout read, and the binding loss's
     L_next sends gradient into the GRU's action columns.
 
+ARMS (11-13 22:30): wm-dyn, and wm-latent+ring (cores_ring.RingWorldCore,
+the seat with RingMemory carried across the life; its stored state is the ring
+state alone, read via `core.stored_now()`; it ignores `efference`).
+
 Scope: policy="core" only. The nulls (random, random-repeat, statue) carry no
 state and run through `survival.run_survival` unchanged. No lp channel, no
 record_xy/record_transitions (LC.09 does not read them). Returns the facts
@@ -38,27 +42,35 @@ from .survival import (D_DEATH, EXPLORE_STD, SEG, _TargetRing, _gae,
                        _updates_due)
 from .w0 import W0
 
-REC_ARMS = ("wm-dyn",)
+REC_ARMS = ("wm-dyn", "wm-latent+ring")
 
 
 def build_rec_arm(name: str):
     if name == "wm-dyn":
         return DynWorldCore()
+    if name == "wm-latent+ring":
+        from .cores_ring import RingWorldCore
+        return RingWorldCore()
     raise ValueError(f"{name!r} is not a recurrent arm {REC_ARMS}")
 
 
 class _StateRing(_TargetRing):
-    """_TargetRing + the stored recurrent state each row was acted from."""
+    """_TargetRing + the stored recurrent state each row was acted from.
+    `stored` is a tuple of 1-d tensors (wm-dyn: deter, z, a; wm-latent+ring:
+    the ring state alone); widths are taken from the first push."""
 
     def __init__(self, obs, cap=None):
         super().__init__(obs) if cap is None else super().__init__(obs, cap)
-        self.h = torch.zeros(self.cap, DETER)
-        self.zp = torch.zeros(self.cap, LATENT)
-        self.ap = torch.zeros(self.cap, ACTION_DIM)
+        self.st: Optional[List[torch.Tensor]] = None
 
     def push_rec(self, obs, action, value_target, advantage, stored):
+        stored = stored if isinstance(stored, tuple) else (stored,)
+        if self.st is None:
+            self.st = [torch.zeros(self.cap, x.shape[-1]) for x in stored]
+            self._tuple = len(stored) > 1
         i = self.n % self.cap
-        self.h[i], self.zp[i], self.ap[i] = stored
+        for buf, x in zip(self.st, stored):
+            buf[i] = x
         self.push(obs, action, value_target, advantage)
 
     def sample_rec(self, gen, size: int = LC_BATCH):
@@ -67,7 +79,8 @@ class _StateRing(_TargetRing):
         batch = {k: self.obs[k][idx] for k in self.keys}
         targets = {"value": self.value[idx], "value_lp": self.value_lp[idx],
                    "action": self.action[idx], "advantage": self.advantage[idx]}
-        return batch, targets, (self.h[idx], self.zp[idx], self.ap[idx])
+        st = tuple(b[idx] for b in self.st)
+        return batch, targets, (st if self._tuple else st[0])
 
 
 def run_survival_rec(seed: int, *, j0: float, alpha: float, n_decisions: int,
@@ -110,16 +123,18 @@ def run_survival_rec(seed: int, *, j0: float, alpha: float, n_decisions: int,
         obs = w.observe()
         obs_t = {kk: torch.from_numpy(v).unsqueeze(0) for kk, v in obs.items()}
         # the state this decision is acted FROM, as step() will read it
-        h_prev = (core._h if core._h is not None
-                  else torch.zeros(1, DETER)).squeeze(0).clone()
-        z_prev = (core._z if core._z is not None
-                  else torch.zeros(1, LATENT)).squeeze(0).clone()
-        a_prev = core._a.squeeze(0).clone()
+        if hasattr(core, "stored_now"):
+            stored = core.stored_now()
+        else:
+            stored = ((core._h if core._h is not None
+                       else torch.zeros(1, DETER)).squeeze(0).clone(),
+                      (core._z if core._z is not None
+                       else torch.zeros(1, LATENT)).squeeze(0).clone(),
+                      core._a.squeeze(0).clone())
         with torch.no_grad():
             s = core.step(obs_t, dropped=W0.DROPPED)
             mean = core.act(obs_t, s["state"]).squeeze(0).numpy()
             v = float(core.critic(s["state"]))
-        stored = (h_prev, z_prev, a_prev)
         frac = min(1.0, k / max(1, n_decisions - 1))
         std = explore_std[0] + (explore_std[1] - explore_std[0]) * frac
         a = np.clip(mean + std * rng.randn(ACTION_DIM), -1.0, 1.0)

@@ -8,7 +8,8 @@ STATUS 2026-11-13 18:30: the COLLAPSE GUARD is built and self-tested here; the
 claim run is NOT — `run()` refuses, naming why. Two things stand between this
 file and a claim seed, and the second is a finding about Jack, not the rig:
 
-  1. the `wm-latent+ring` arm does not exist in `cores.py`/`survival.py`
+  1. [BUILT 11-13 22:30: cores_ring.RingWorldCore via survival_rec; refuses
+     only as UnpricedArm now] the `wm-latent+ring` arm does not exist in `cores.py`/`survival.py`
      (RingMemory.py is seated by WM.02 but never wired into a living core);
   2. THE WORLD-MODEL CORES HAVE NO DYNAMICS. `WorldModelCore.rssm()` feeds the
      GRU a ZERO action and a ZERO hidden state on every call
@@ -301,10 +302,6 @@ def run_arm(arm: str, seed: int, *, j0: float, alpha: float,
     survival_rec.run_survival_rec (R2D2 stored state). Records nothing."""
     if arm not in ARMS:
         raise ValueError(f"{arm!r} not an LC.09 arm {ARMS}")
-    if arm == "wm-latent+ring":
-        raise NotImplementedError(
-            "wm-latent+ring: RingMemory (WM.02) is not wired into a living "
-            "core yet (ORDERS J3 next step)")
     if arm not in ratios:
         raise UnpricedArm(f"{arm}: no LC.02 committed train_ratio")
     hooks = _arm_hooks(arm, seed)
@@ -315,11 +312,11 @@ def run_arm(arm: str, seed: int, *, j0: float, alpha: float,
     common = dict(j0=j0, alpha=alpha, n_decisions=n_decisions, train=train,
                   train_ratio=ratios[arm], e0=E0_LC09,
                   explore_std=EXPLORE_STD_LC09)
-    if arm == "wm-dyn":
+    if arm in ("wm-dyn", "wm-latent+ring"):      # carried state: survival_rec
         if wipe_at_death or "intrinsic_fn" in hooks:
             raise NotImplementedError(
                 "survival_rec has no wipe_at_death / intrinsic channel yet; "
-                "LC.09 control (a) on wm-dyn needs it if wm-dyn leads")
+                f"LC.09 control (a) on {arm} needs it if {arm} leads")
         from ..survival_rec import run_survival_rec
         out = run_survival_rec(seed, arm=arm, **common, **hooks)
     else:
@@ -363,10 +360,10 @@ def _smoke_arms(n: int = 2_200, seed: int = 0) -> dict:
 # ── the registered run: refuses until the arm exists ─────────────────────
 def run(ledger=None):
     raise RuntimeError(
-        "LC.09 not runnable: (1) wm-latent+ring is not built in cores.py/"
-        "survival.py; (1b) wm-dyn (cores_dyn.DynWorldCore) is built but "
-        "survival.py's i.i.d. replay batch carries no deter (R2D2 stored "
-        "state not wired); (2) the world-model arms never train an action- or "
+        "LC.09 not runnable: (1) wm-dyn and wm-latent+ring (built 11-13 22:30, "
+        "cores_ring.py, through survival_rec) have no LC.02 committed "
+        "train_ratio (UnpricedArm); (1b) survival_rec has no wipe_at_death "
+        "for control (a); (2) the world-model arms never train an action- or "
         "state-reading weight (GRU action cols and weight_hh grad == 0), so "
         "the guard's Delta_5 clause must VOID them (untrained Delta_5 -0.006..-0.008). See the docstring "
         "and ORDERS J3. Nothing recorded.")
