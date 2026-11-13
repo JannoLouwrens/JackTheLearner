@@ -52,6 +52,23 @@ MEASURED 2026-11-13 18:50 (probe, W0 seed 0, 1200 random-policy decisions,
     POSITIVE. So Delta_5 > 0 does not certify learned dynamics and the
     "predictable VOID" of the seat is not structural — LC.09's guard needs a
     comparison to the arm's own untrained/shuffled-action roll (INBOX).
+
+MEASURED 2026-11-13 18:39 (L_next NORMALISED by sg per-dim var(z); probe
+seeds 0/1/2, same 1200 dec / 300 upd; + shuffled-action control = roll with
+the NEXT window's actions from the same start):
+  * normalised L_next 4.50/4.79/4.11 -> 0.42/0.42/0.35 (u299), no rebound:
+    ~60% of z's variance at t is predicted from (deter_{t-1}, a_{t-1}).
+    The 18:50 rebound WAS the unnormalised target widening. Loss fix OK.
+  * action grad first update .071/.126/.083, weight_hh .182/.244/.214.
+  * Delta_5 (real - zero actions) before .0147/.0151/.0159 -> after
+    .0069/.0084/.0085 — FALLS on 3/3 seeds. Real - shuffled actions before
+    .0114/.0110/.0119 -> after .0077/.0088/.0078 — also FALLS 3/3.
+    KL sits at the free-bits floor (1.00) from u50: posterior == prior, so
+    the GRU need not carry action information to win L_next; the next
+    latent is predicted from state, and training WASHES OUT the random
+    init's action sensitivity. Not a model of what he does. Open question
+    the probe cannot answer: how much does a random-policy action change
+    W0's observation 5 decisions later at all (the oracle ceiling)?
 """
 from __future__ import annotations
 
@@ -138,8 +155,13 @@ class DynWorldCore(WorldModelCore):
 
     def seq_loss(self, obs_seq, acts, dropped=()) -> Tuple[torch.Tensor, Dict]:
         ss = self.filter_seq(obs_seq, acts, dropped)
-        l_next = torch.stack([F.mse_loss(self.next_pred(s["deter"]),
-                                         s["z"].detach()) for s in ss[1:]]).mean()
+        # NORMALISED (11-13 19:00): MSE divided by the target's own per-dim
+        # variance (stop-grad), so the VICReg hinge widening z cannot inflate
+        # L_next and the term reads "fraction of z's variance unexplained".
+        zt = torch.cat([s["z"] for s in ss[1:]], 0).detach()
+        zvar = zt.var(0, unbiased=False).clamp_min(1e-4)
+        l_next = torch.stack([((self.next_pred(s["deter"]) - s["z"].detach())
+                               .pow(2) / zvar).mean() for s in ss[1:]]).mean()
         l_kl = torch.stack([self._kl(s["post"], s["prior"]) for s in ss]).mean()
         z = torch.cat([s["z"] for s in ss], 0)
         l_var = F.relu(1.0 - z.std(0)).mean()
@@ -158,7 +180,8 @@ def _windows(hist, idx, T):
 
 
 @torch.no_grad()
-def delta5_seq(core, hist, starts, K=5, dropped=("language",)) -> float:
+def delta5_seq(core, hist, starts, K=5, dropped=("language",),
+               shuffled: bool = False) -> float:
     """LC.09's declared Delta_5, with each window FILTERED from its own past
     (W = SEQ decisions of burn-in) instead of a zero state: the roll starts
     from the real posterior at t, the target is the filtered state at t+K."""
@@ -175,8 +198,11 @@ def delta5_seq(core, hist, starts, K=5, dropped=("language",)) -> float:
             deter = core.gru(torch.cat([z, a_seq[k]], -1), deter)
         prior = core._probs(core.prior(deter)).reshape(deter.shape[0], -1)
         return torch.cat([deter, prior], -1)
-    return float((_cos(roll(roll_a), target)
-                  - _cos(roll(torch.zeros_like(roll_a)), target)).mean())
+    real = _cos(roll(roll_a), target)
+    if shuffled:   # control: same start, ANOTHER window's actions
+        perm = torch.roll(torch.arange(roll_a.shape[1]), 1)
+        return float((real - _cos(roll(roll_a[:, perm]), target)).mean())
+    return float((real - _cos(roll(torch.zeros_like(roll_a)), target)).mean())
 
 
 def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
@@ -210,6 +236,8 @@ def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
     opt = make_optimizer(core, LC_LR)
     gen = np.random.RandomState(1)
     out["delta5_test_before"] = round(delta5_seq(core.eval(), hist, test_i), 6)
+    out["delta5shuf_test_before"] = round(
+        delta5_seq(core, hist, test_i, shuffled=True), 6)
     starts_ok = [i - SEQ for i in train_i]
     log = []
     core.train()
@@ -230,6 +258,8 @@ def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
     core.eval()
     out["loss_log"] = log
     out["delta5_test_after"] = round(delta5_seq(core, hist, test_i), 6)
+    out["delta5shuf_test_after"] = round(
+        delta5_seq(core, hist, test_i, shuffled=True), 6)
     # the seated arm through the SAME filtered measurement, for comparison
     torch.manual_seed(9_000)
     seated = build_arm("wm-latent").eval()
@@ -242,6 +272,7 @@ def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
 
 if __name__ == "__main__":
     if (sys.argv[1:] or [""])[0] == "probe":
-        print(json.dumps(_probe(), indent=1))
+        sd = int(sys.argv[2]) if len(sys.argv) > 2 else 0
+        print(json.dumps(_probe(seed=sd), indent=1))
     else:
         raise SystemExit("usage: python -m experiments.cores_dyn probe")

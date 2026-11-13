@@ -865,3 +865,10 @@ columns (.0565) and recurrent weights (.1432), where the seat gets 0.0. But held
 not yet a model of what he does. And the guard's sign was a zero-state artefact: the untrained seat reads +.0147 from a real start,
 so LC.09's Delta_5>0 clause cannot fail for an arm that learned nothing -> INBOX (strengthen vs untrained baseline). No ledger row.
 Served philosophy 3 (a new arm to race the seat) and 4 (a guard that could not fail, found and named).
+
+2026-11-13 19:00 UTC · JACK · J3 · wm-dyn loss normalised + shuffled-action control, 3 seeds. CPU orders still shut (day ceiling).
+Normalised L_next falls 4.5 -> .35-.42 with no rebound (the 18:50 rebound was the widening target). But training makes his actions
+matter LESS to the roll on 3/3 seeds: Delta_5 real-vs-zero .015 -> .007-.0085, real-vs-shuffled .011 -> .008; KL pinned at the
+free-bits floor from u50, so state alone predicts the next latent. wm-dyn is not yet a model of what he does. Next: measure how much
+W0's observation 5 decisions on depends on the action at all (oracle ceiling from a cloned world) before tuning the arm. No ledger row.
+Served philosophy 3 (the arm that would race the seat, tested before it races) and 4 (a control that could fail, and it did).

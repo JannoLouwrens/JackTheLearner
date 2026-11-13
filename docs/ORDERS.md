@@ -170,11 +170,11 @@ shrunk `LC.07`: all five core arms plus the ring working memory, ~3× the
 screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
-sessions needed in `state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms, 1.2M dec/arm-seed). 18:30 guard BUILT (ef335cf); FOUND seated WM cores get 0.0 grad on GRU action/hh.
-11-13 18:50 wm-dyn BUILT (eda11bf, experiments/cores_dyn.py, cores.py untouched): carries deter across decisions, efference copy, next-latent
-pred + KL + VICReg hinge. Probe (1200 dec, 300 upd): action-col grad .0565, hh .1432 (repair works) but held-out Delta_5 .0147 -> .0093 (NOT up).
-ALSO: from a filtered start the UNTRAINED seat reads Delta_5 +.0147 (ef335cf's -.006 = zero-state artefact) -> guard needs an untrained/shuffled baseline (INBOX).
-Next: normalise L_next (cosine or per-dim std), re-probe 3 seeds; then R2D2 stored-state wiring so survival's i.i.d. batch carries deter; re-register LC.09 +wm-dyn.
+sessions needed in `state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms). 18:30 guard BUILT (ef335cf); seated WM cores get 0.0 grad on GRU action/hh.
+18:50 wm-dyn BUILT (eda11bf, experiments/cores_dyn.py): gradient reaches action cols/weight_hh. Guard needs an untrained/shuffled baseline (INBOX).
+19:00 L_next NORMALISED by sg var(z) + shuffled-action control, 3 seeds: L_next 4.5->0.35-0.42 (no rebound, fix OK) but Delta_5 real-zero
+.015->.007-.0085 and real-shuffled .011->.008 FALL 3/3; KL at free-bits floor 1.00 from u50 -> state predicts z, actions washed out.
+Next: measure W0's own action ceiling (|obs_{t+5}(a) - obs_{t+5}(a')| from a cloned W0 state); if real, raise action info (KL/free-bits, longer K loss); then R2D2 wiring.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
