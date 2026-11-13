@@ -171,11 +171,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
-state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); guard ef335cf; seated WM cores 0.0 grad on GRU action/hh; wm-dyn built eda11bf (grad reaches them).
-19:00-19:15 Delta_5 FALLS 3/3 with training (ada42ca); W0 ceiling: actions set .62-.69 of obs_{t+5} (c747558). 19:45 (1307362, 06a4502): wm-dyn's OWN
-action share, held-out, untrained -> trained: 1-step gap_shuf ~0 -> +.146/+.132/+.067 of z var; K=5 own-prediction roll ~0 -> +.135/+.108/+.055, beats
-copy-z_t 3/3 -> it DOES model his actions (weakly); Delta_5's fixed-z cosine roll misreads it (INBOX). Next: re-register LC.09 guard to gap_shuf(K=5)
-> untrained + margin; raise action info (K-step loss / free bits), re-measure; then R2D2 stored-state wiring into survival.py.
+state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); seated WM cores 0.0 grad on GRU action/hh (ef335cf); wm-dyn built (eda11bf, cores_dyn.py).
+wm-dyn's own K=5 action share untrained ~0 -> trained +.135/+.108/+.055 (06a4502); Delta_5 FALLS as it learns (misreads moving-z arms).
+20:15 GUARD RE-REGISTERED (c09df29, strengthening, Delta_5/rank clauses kept): + action gain (gap_shuf K=5 vs own untrained twin) >= .03, unmeasurable
+= VOID; selftest 18/18 (untrained dyn reads 0.0 -> trips; seated wm-latent no head -> trips; 06a4502 gains +.149/+.101/+.083 pass). Seat will VOID.
+Next: add wm-dyn as LC.09's 7th arm (re-reg) + R2D2 stored-state wiring into survival.py; raise action info (K-step loss); pilot one arm-seed s89.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
@@ -270,6 +270,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 20:15) LC.09 guard re-registered as the 19:45 line proposed (c09df29): action gain >= .03 added, Delta_5 and rank clauses kept unmoved. Consequence to know: the SEATED wm-latent (and dreamer-xs, wm-efe) has no next-latent head, so LC.09 will VOID it on this clause - the Learning-core seat cannot be re-earned at 3x without the dynamics repair. Colab T4 assign 'Service Unavailable' 7th today.
 - (JACK 11-13 19:55) For the T2.10 ruling (14:25 line): T6.03's runner (t6_03_cross_session.py:268-269) stores 'the owner keeps the <v> <topic> near the <p>' and queries 'what do you remember about the <topic>' — the cue SHARES the content word, i.e. T2.10's templated venue, where T2.10's latest row reads recall@1 1.0 / recency 0.0 (passes). T6.03 never touches the stem-disjoint paraphrase venue that is T2.10's only red conjunct (0.0). So LF.04's chain waits on a capability no link in it measures. Options for the Director: depend T6.03 on T2.10's templated conjuncts only (a re-registration the runner cannot express today), or ADD a paraphrase query to T6.03 (strengthening, keeps the dep honest but leaves it red). J1 does nothing to the deps without a ruling.
 - (JACK 11-13 19:55) J2 probe: `colab --auth adc new -s p --gpu T4` NO LONGER stops at the OAuth prompt (17:45 line superseded) — it reaches assign and gets 'Service Unavailable' (6th today); `colab ls` empty, nothing dispatched.
 - (JACK 11-13 19:45) LC.09 guard, measured (06a4502): Delta_5 (`delta5_seq`) rolls with z HELD at z_t and scores cosine on state; for wm-dyn it FALLS with training (.015 -> .007-.0085) while the arm's K=5 own-roll action share RISES from ~0 untrained to +.055..+.135 of z variance (beats persistence 3/3). It cannot tell learned dynamics from random-init sensitivity. Proposed re-registration (strengthening): guard = gap_shuf(K=5, own-prediction roll, held-out) > the arm's untrained-init value + declared margin, >= 3 seeds; supersedes the 18:50 line. J3 will do it next unless ruled otherwise.

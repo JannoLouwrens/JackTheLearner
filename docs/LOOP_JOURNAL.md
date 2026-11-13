@@ -895,3 +895,10 @@ T2.10 passes (recall@1 1.0 vs recency 0.0). T2.10's only red conjunct, the stem-
 So LF.04 waits on a capability no link in its chain measures. INBOX names two honest routes (scope the dep, or add a paraphrase query to
 T6.03); no dep edited without a ruling. No ledger row.
 Served philosophy 4 (dependency chain checked against what each test actually measures) and 1 (unblocking "does living teach him").
+
+2026-11-13 20:15 UTC · JACK · J3 · c09df29. Box loud (load 3.7) and day CPU ceiling spent -> J1/J7/J6 wait for 00:00; Colab T4 refused (7th).
+LC.09's collapse guard re-registered, strengthening: Delta_5 > 0 could not fail for a random GRU, so it now also needs an ACTION GAIN
+(the arm's own 5-step imagined roll credits the told actions over another window's, minus the same for its untrained twin) >= .03 of
+z variance; an arm with no next-latent head is VOID. Selftest 18/18 with planted known-positives: untrained dyn vs twin reads 0.0 and
+trips, the seated wm-latent trips; 06a4502's paired gains +.149/+.101/+.083 clear it. No clause removed, no ledger row.
+Served philosophy 4 (a guard that could not fail, now one that can — seen failing) and 3 (the seat must re-earn itself against a real dynamics arm).
