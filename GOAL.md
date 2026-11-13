@@ -355,3 +355,27 @@ everything at once, and the testing moves in with him.)*
 **The ledger (`experiments/ledger.json`) is the only scoreboard.** The goal is
 accomplished when the last milestone in `docs/ROADMAP.md` passes there — not
 when it feels done.
+
+## The finished Jack, in the owner's words (owner, 2026-11-13)
+
+Verbatim: *"jack will have a human like body! jack will be trained by us and
+people get a trained version which just continues learning from that point! and
+people can see him struggle and say like ah cut a tree use the wood make a fire
+make the food on the fire or they can tell him ah build shelter like this when
+they see he is cold"*
+
+Read with everything above, not against it (the words are the owner's; this
+reading is the session's and is open to correction):
+
+- **The body is human-like.** The rover is scaffolding, never the destination.
+- **Trained here, handed over, still learning.** The weights a person receives
+  are HIS OWN, earned by living — nothing borrowed — and on that person's
+  machine he keeps learning from that point without losing what he knew. That is
+  an END; how it is achieved is raced like everything else.
+- **What people say is advice through his ears, never a command channel.** He
+  may try it; his own needs judge it; his diary records whose advice proved true
+  ("His people are part of his world", above).
+- **The examples name the world he must be able to live it in:** trees that
+  yield wood, fire, food cooked on it, a shelter he builds — the W1 and W2 rule
+  depth of `docs/research/SURVIVAL_WORLD.md`.
+
