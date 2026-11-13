@@ -998,6 +998,7 @@
         "detached:cr00_race.log": 3706.45,
         "detached:detached.log": 0.77,
         "detached:gamma99.log": 3738.49,
+        "detached:needs_clock_race.log": 3526.64,
         "detached:pilot_s90.log": 4281.64,
         "detached:race.log": 7554.56,
         "detached:remote_smoke.log": 186.62,
@@ -1006,10 +1007,10 @@
         "detached:ub10_sweep4.log": 1259.36,
         "detached:w1_00_attempt2.log": 2545.78,
         "detached:w1_00_attempt3.log": 4523.64,
-        "detached:w1_00_attempt4.log": 5400.04,
+        "detached:w1_00_attempt4.log": 6092.18,
         "detached:w1_04_attempt2.log": 4282.0
       },
-      "used_s": 55380.42
+      "used_s": 59599.2
     }
   },
   "overruns": [
@@ -1075,6 +1076,34 @@
       "day": "2026-11-12",
       "spec_id": "detached:gamma99.log",
       "used_s": 62433.7
+    },
+    {
+      "at": "2026-11-13T15:09:12",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-13",
+      "spec_id": "detached:needs_clock_race.log",
+      "used_s": 57872.56
+    },
+    {
+      "at": "2026-11-13T15:19:12",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-13",
+      "spec_id": "detached:needs_clock_race.log",
+      "used_s": 58472.56
+    },
+    {
+      "at": "2026-11-13T15:29:12",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-13",
+      "spec_id": "detached:needs_clock_race.log",
+      "used_s": 59072.56
+    },
+    {
+      "at": "2026-11-13T15:37:58",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-13",
+      "spec_id": "detached:needs_clock_race.log",
+      "used_s": 59599.2
     }
   ]
 }
