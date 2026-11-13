@@ -219,16 +219,51 @@ MARGIN_S = 272.812
 CHILD_TIMEOUT_S = 4 * 3600
 
 
-def _arms_parallel(arms, seed, tmp):
-    """Run up to two arms side by side as child processes (box: <= 2 workers)."""
+# S1 / J1(2): LF.04 is refused on this box (D20); its only route is a Kaggle
+# CPU kernel. With LF04_BACKEND=kaggle-cpu the ARM LIVES (the child processes
+# below, all of the compute) run in one CPU kernel per call -- the SAME
+# `pilot` role, seeds, N_LIVES and <= 2 workers -- and come back as their
+# per-life rows. Gate, controls, MARGIN_S and the ledger stay here,
+# byte-unchanged. Empty (default) = local children, as before.
+BACKEND = os.environ.get("LF04_BACKEND", "")
+_JOB = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q", "mujoco"], check=True)
+import json, os
+from experiments.tests.lf_04_living_teaches import _arms_parallel
+r = _arms_parallel(__ARMS__, __SEED__, os.environ["JACK_OUT"], local=False)
+json.dump(r, open(os.path.join(os.environ["JACK_OUT"], "lf04_arms.json"), "w"))
+print("DONE", flush=True)
+'''
+REMOTE_TIMEOUT_S = 6 * 3600   # 2 arms x 15 lives; ~80 min/seed here at 2 workers
+
+
+def _arms(arms, seed, tmp):
+    """The arm lives, wherever BACKEND says. Same rows either way."""
+    if BACKEND != "kaggle-cpu":
+        return _arms_parallel(arms, seed, tmp)
+    from ..gpu import build_job, result_json, submit
+    body = _JOB.replace("__ARMS__", repr(list(arms))).replace(
+        "__SEED__", str(int(seed)))
+    r = submit(build_job(body), prefer="kaggle-cpu", est_hours=2.0,
+               timeout_s=REMOTE_TIMEOUT_S, fetch=["lf04_arms.json"])
+    if not r.ok:
+        raise RuntimeError(f"LF.04 kaggle-cpu arms {arms} s{seed}: {r.message}")
+    return result_json(r, "lf04_arms.json")
+
+
+def _arms_parallel(arms, seed, tmp, local=True):
+    """Run up to two arms side by side as child processes (<= 2 workers).
+    local=False is the kernel's call: its own interpreter, no `nice`."""
     procs = {}
     for arm in arms:
         out = f"{tmp}/{arm}.jsonl"
         open(out, "w").close()
+        cmd = [PY if local else sys.executable, "-m", _MOD, "pilot", arm,
+               str(seed), str(N_LIVES), out]
         procs[arm] = (subprocess.Popen(
-            ["nice", "-n", "19", PY, "-m", _MOD, "pilot", arm, str(seed),
-             str(N_LIVES), out], cwd=REPO, stdout=subprocess.DEVNULL,
-            stderr=subprocess.PIPE), out)
+            (["nice", "-n", "19"] if local else []) + cmd, cwd=REPO,
+            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE), out)
     res = {}
     for arm, (p, out) in procs.items():
         _, err = p.communicate(timeout=CHILD_TIMEOUT_S)
@@ -259,8 +294,9 @@ def _experiment(seed: int) -> dict:
     if j0 is None:
         return m
     tmp = tempfile.mkdtemp(prefix=f"lf04_s{s}_", dir="/data/tmp")
-    r = _arms_parallel(["learner", "twinA"], s, tmp)
-    shutil.copy(f"{tmp}/twinA.jsonl", _twin_cache(s))
+    r = _arms(["learner", "twinA"], s, tmp)
+    with open(_twin_cache(s), "w") as f:      # from rows: remote lives
+        f.writelines(json.dumps(x) + "\n" for x in r["twinA"])  # have no tmp file
     L, T = _spans(r["learner"]), _spans(r["twinA"])
     eL, lL = _thirds(L)
     eT, lT = _thirds(T)
@@ -287,11 +323,11 @@ def _control(seed: int) -> dict:
     if j0 is None:
         return {"calibrated": 0.0}
     tmp = tempfile.mkdtemp(prefix=f"lf04c_s{s}_", dir="/data/tmp")
-    r = _arms_parallel(["twinB", "shuffled"], s, tmp)
+    r = _arms(["twinB", "shuffled"], s, tmp)
     if os.path.exists(_twin_cache(s)):
         twA = [json.loads(x) for x in open(_twin_cache(s))]
     else:                      # experiment did not leave it: re-live it
-        twA = _arms_parallel(["twinA"], s, tmp)["twinA"]
+        twA = _arms(["twinA"], s, tmp)["twinA"]
     shutil.rmtree(tmp, ignore_errors=True)
     T, B, S = _spans(twA), _spans(r["twinB"]), _spans(r["shuffled"])
     with open(PILOT_FILE.replace("pilot_s90", f"statue_s{s}"), "w") as out:
