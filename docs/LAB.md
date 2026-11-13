@@ -30,54 +30,27 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   sat in a drive trap (both below). **RE-ENTERED 11-12 23:30 with a new reason —
   see the last entry.**
 
-- 11-12 · **World/body findings the weaning kill uncovered** (J1 + LAB; each has
-  its module and numbers in git):
-  - *He could not perceive floor food:* rays leave at z 0.70 m, food tops at 0.33 m —
-    0 of 584 poses see it; no smell, no x,y.
-  - *Eye height* (`food_sense.py`): split rays see food on 76/611 poses; meals
-    s91–93 level 1/2/3, split 1/2/3, split_blind 2/2/3 · DEAD by declared rule.
-  - *Smell* (`smell_sense.py`, a 12-wide learned modality; bilateral difference
-    points to food on 99.5 % of poses): 13k meals smell 8 vs shuffled 10 vs level
-    6 · DEAD; 52k (trapped world) second-half smell 1/5/0 vs shuffled 4/17/27 ·
-    DEAD; 52k on the REPAIRED world (dose2) **smell 2/0/3 vs shuffled 20/0/3** ·
-    DEAD (0 of 3 seeds). A sense that works goes unused by this learner.
-  - *Body* (`body_probe.py`): the pole topples in ~19/20 births by decision 2–5
-    and is dragged lying; righting is a < 1 % needle. Plinth stands (0–1/20
-    topple). After the water repair neither body is the cap (next line); `BD.01`
-    stays registered, expect an honest FAIL.
-  - *The pool was a DRIVE TRAP* (`pool_lip_contact.py`): `WaterVolume.apply`
-    overwrote the drive and "wet" reached onto dry floor; food obj1 sat inside the
-    band. Fixed (`W0.PL` PASS `3f15c7f`). **Perfect-map oracle fed per birth:
-    23/40 → 38/40 (pole), 30/40 → 36/40 (plinth path).** Body and world are not
-    the gap; the learner is.
-  - *Credit horizon* (J1, reading of files): GAMMA .95 ≈ 20 decisions; a perfect
-    map needs median 41.5 decisions birth → meal (21 % within 20); meal weight at
-    birth .12 (value), .0015 (GAE), and per-segment normalisation turns meal-free
-    segments into unit-variance noise. **GAMMA .99 race (J1) DEAD by its rule,
-    11-13:** 2nd-half meals smell@.99 22/0/1 vs smell@.95 2/0/3 vs
-    shuffled@.99 20/23/0 → for on s91 only (1 of 3). Horizon alone is not it.
-    *Shape of the meals* (both races, 169 lives): 88 of gamma99's 120 meals are
-    in 5 "jackpot" lives (12–20 meals, 970–1400 s, born 1.6–8 m out, so not
-    birth luck); only 1 of 5 jackpots is followed by a fed life. He can camp on
-    food he stumbled onto; approach from afar does not carry to the next birth.
-    For `LF.04`: a meal-count margin is jackpot-dominated, heavy-tailed noise.
-  Philosophy 3 (each raced with a control), 5 (his world as much as he).
+- 11-12 · **World/body findings the weaning kill uncovered** (J1 + LAB; modules
+  and full numbers in git, long form at `4b4c2e3`), one line each:
+  - He could not perceive floor food (rays pass over it; 0 of 584 poses). *Eye
+    height* (`food_sense.py`) DEAD: meals split 1/2/3 vs blind 2/2/3.
+  - *Smell* (`smell_sense.py`, points to food on 99.5 % of poses) DEAD three
+    times: 13k 8 vs shuffled 10; 52k repaired world **2/0/3 vs shuffled 20/0/3**.
+    A sense that works goes unused by the reactive learner.
+  - *Body* (`body_probe.py`): pole topples ~19/20 births; plinth stands. Not the cap.
+  - *The pool was a DRIVE TRAP*; fixed (`W0.PL` PASS `3f15c7f`). Perfect-map
+    oracle fed per birth 23/40 → **38/40**. Body and world are not the gap; the
+    learner is.
+  - *Credit horizon:* GAMMA .99 race DEAD 11-13 (for on 1 of 3 seeds). 88 of 120
+    meals sit in 5 "jackpot" lives; approach from afar does not carry to the
+    next birth. For `LF.04`: a meal-count margin is heavy-tailed noise.
+  Philosophy 3, 5.
 
-- 11-12 · **World: shelter law** (J6, `NE.01` `ok_night_shelter`) · ALIVE, not
-  shipped. Shipped 70 % k-cut is non-monotone (occ .8 → .029, sealed → 1.000,
-  worse than open .498). Bet: the roof hides the cold night sky (Swinbank), k
-  unchanged: sealed → 0.110 on s0 (`shelter_law_night.py`). s1/s2 are a fixture
-  fault (probe reads a sliding pose, `shelter_pose_bed.py`). Killed by: re-stale
-  cost > gain, or a graded-cone arm doing better.
-  **11-13 OCCLUSION-LAW RACE (`experiments/occ_law_race.py`, rule declared
-  first): NO WINNER.** HOLDS = NE.01 ok_night_shelter AND ok_forager, verbatim,
-  seeds 0-4 (3,4 fresh). shipped 4/5 (s0: forager hyperthermia at 17707/18000,
-  sleep occ .946); graded cone 2/5 (s1/s2/s4 night cost .47/.20/.93 > .20 - the
-  cone picks worse beds); damped sleeper x3 2/5 (s0/s1/s3 forager dies of
-  INJURY at 5005/4015/11942 - stiff sleeping joints hurt him); open control 0/5
-  (fails, as it must). Shipped is not falsified - it holds on both fresh seeds;
-  its one red is s0's knife-edge. By the rule the band-geometry arm (a
-  playground edit) is the next raced. Rows /data/tmp/occrace/*.jsonl.
+- 11-12/13 · **World: shelter law** (J6, `NE.01`) · ALIVE, not shipped; roof hides
+  the cold sky: sealed → 0.110 on s0. **Occlusion-law race 11-13
+  (`occ_law_race.py`): NO WINNER** — shipped 4/5, graded cone 2/5, damped
+  sleeper 2/5 (dies of injury), open control 0/5 (as it must). Band-geometry
+  arm is next. Rows /data/tmp/occrace/.
 
 - 11-12 · **Exploration in bouts** (white vs OU vs pink action noise, noise-only,
   `explore_bout.py`, rule first `141e84f`) · **DEAD at stage A:** fed births
@@ -119,3 +92,21 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   each, pooled ≥ .10) AND, among trials born ≥ 0.7 m, meal above both pooled.
   Then the dose that matters: uniform births, 52k, vs dose2's ruler. Handed to
   the workers (ORDERS INBOX); not yet a registered bake-off.
+
+- 11-13 23:10 · **Sense lookahead — he imagines each push, takes the one he
+  wants** (Deliberation, VACANT; holder by default = the reactive actor) ·
+  `experiments/sense_lookahead.py`, rule committed first (`29424ef`).
+  **Bet:** (1) no actor: a forward model of ALL his senses (learned reward-free
+  from babbling) + a linear cue-value learned from his own meals; every 5
+  decisions he imagines 32 pushes and takes the one that raises the want.
+  (2) `DP.05` killed lookahead in a W0 where he could not sense food; he has a
+  nose now, the reactive learner ignores it for 52k decisions, and push →
+  smell-change is taught by every decision while meals are rare. (3) Killed
+  by: on explore_bout's ruler (white 4/40, oracle 38/40; seeds 90+94, 20 test
+  births each after 5k babble) neither `want` (nothing given) nor `told` (want
+  given: "more smell") feeds more births than BOTH `babble` (null) and `shuf`
+  (push→smell link permuted — must fail) on both seeds and by ≥ 8 of 40.
+  END-FIT rows 4, 3, 1; closes none. Philosophy 1, 3, 4.
+  **Number:** IN FLIGHT on a free Kaggle CPU kernel `jack-cpu-1794611608` (the
+  box's day CPU ceiling was spent). Harvest: `kaggle kernels output`, then
+  `sense_lookahead tally`.
