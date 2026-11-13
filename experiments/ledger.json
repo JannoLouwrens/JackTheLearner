@@ -89629,9 +89629,9 @@
     },
     "UB.10": {
       "amended": [],
-      "attempt": 2,
-      "commit": "3fab32e",
-      "compute_s": 1302.52,
+      "attempt": 3,
+      "commit": "86d28cc",
+      "compute_s": 1127.6,
       "control_metrics": {
         "ctrl_min_over_arms_of_max_swap_drop": 0.3313,
         "ctrl_min_over_arms_of_max_swap_drop_std": 0.0,
@@ -89713,8 +89713,8 @@
         "ctrl_swap_ok_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 1310.38,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1794546585,ladder-1794546588",
+      "duration_s": 1139.92,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1794551045,ladder-1794551048",
       "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
@@ -89932,10 +89932,454 @@
           ],
           "spec_sha": "934670fb41739d17",
           "status": "VOID"
+        },
+        {
+          "amended": [],
+          "attempt": 2,
+          "commit": "3fab32e",
+          "compute_s": 1302.52,
+          "control_metrics": {
+            "ctrl_min_over_arms_of_max_swap_drop": 0.3313,
+            "ctrl_min_over_arms_of_max_swap_drop_std": 0.0,
+            "ctrl_swap_drops": {
+              "A0": {
+                "audio": {
+                  "afell": 0.4313,
+                  "slot": 0.4156,
+                  "vslot": 0.0
+                },
+                "vision": {
+                  "afell": 0.0125,
+                  "slot": 0.7656,
+                  "vslot": 1.0
+                }
+              },
+              "A1": {
+                "audio": {
+                  "afell": 0.4094,
+                  "slot": 0.4125,
+                  "vslot": 0.0
+                },
+                "vision": {
+                  "afell": 0.025,
+                  "slot": 0.75,
+                  "vslot": 1.0
+                }
+              },
+              "A2": {
+                "audio": {
+                  "afell": 0.4531,
+                  "slot": 0.4531,
+                  "vslot": 0.0031
+                },
+                "vision": {
+                  "afell": 0.0094,
+                  "slot": 0.7563,
+                  "vslot": 0.9375
+                }
+              },
+              "A3": {
+                "audio": {
+                  "afell": 0.4688,
+                  "slot": 0.4656,
+                  "vslot": 0.0
+                },
+                "vision": {
+                  "afell": 0.0188,
+                  "slot": 0.7937,
+                  "vslot": 1.0
+                }
+              },
+              "A4": {
+                "audio": {
+                  "afell": 0.4344,
+                  "slot": 0.3844,
+                  "vslot": 0.0344
+                },
+                "vision": {
+                  "afell": 0.0062,
+                  "slot": 0.7125,
+                  "vslot": 0.9563
+                }
+              },
+              "A5": {
+                "audio": {
+                  "afell": 0.4156,
+                  "slot": 0.4,
+                  "vslot": 0.0031
+                },
+                "vision": {
+                  "afell": -0.0281,
+                  "slot": 0.7,
+                  "vslot": 0.9469
+                }
+              }
+            },
+            "ctrl_swap_ok": 1.0,
+            "ctrl_swap_ok_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 1310.38,
+          "gpu_job_id": "jannolouwrens/jack-ladder-1794546585,ladder-1794546588",
+          "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+          "impl_sha": "6a86b79ffc398edc",
+          "message": "run did not test the claim; not a refutation",
+          "metrics": {
+            "a0_eligible": 1.0,
+            "a0_eligible_std": 0.0,
+            "a0_foreclosure_bound": 0.8625,
+            "a0_foreclosure_bound_std": 1.11022e-16,
+            "a0_headroom_margin": 0.0688,
+            "a0_headroom_margin_std": 0.0,
+            "a0_headroom_ok": 1.0,
+            "a0_headroom_ok_std": 0.0,
+            "a0_slot_max": 0.8812,
+            "a0_slot_max_std": 1.11022e-16,
+            "a0_slot_median": 0.8719,
+            "a0_slot_median_std": 0.0,
+            "a0_trained": 1.0,
+            "a0_trained_std": 0.0,
+            "arm_ranking_x_synergy_gap": 0.0156,
+            "arm_ranking_x_synergy_gap_std": 1.73472e-18,
+            "arm_trained_all_seeds": {
+              "A0": 1.0,
+              "A1": 1.0,
+              "A2": 1.0,
+              "A3": 1.0,
+              "A4": 1.0,
+              "A5": 1.0
+            },
+            "backend": "colab",
+            "canary_ok_all": 1.0,
+            "canary_ok_all_std": 0.0,
+            "disqualified_arms": [],
+            "dropped_frac_max": 0.0,
+            "dropped_frac_max_std": 0.0,
+            "ens_slot_max": 0.5281,
+            "ens_slot_max_std": 0.0,
+            "gpu": "Tesla T4",
+            "learn_ok": 1.0,
+            "learn_ok_std": 0.0,
+            "marginal_ok": 0.0,
+            "marginal_ok_std": 0.0,
+            "marginal_per_arm_per_seed": {
+              "A0": {
+                "afell": [
+                  0.8906,
+                  0.8844,
+                  0.8656
+                ],
+                "vslot": [
+                  1.0,
+                  1.0,
+                  0.9969
+                ]
+              },
+              "A1": {
+                "afell": [
+                  0.8875,
+                  0.875,
+                  0.8969
+                ],
+                "vslot": [
+                  1.0,
+                  0.9938,
+                  1.0
+                ]
+              },
+              "A2": {
+                "afell": [
+                  0.9125,
+                  0.8906,
+                  0.9094
+                ],
+                "vslot": [
+                  0.9688,
+                  1.0,
+                  0.9656
+                ]
+              },
+              "A3": {
+                "afell": [
+                  0.9062,
+                  0.8969,
+                  0.9062
+                ],
+                "vslot": [
+                  1.0,
+                  0.9563,
+                  0.9688
+                ]
+              },
+              "A4": {
+                "afell": [
+                  0.8906,
+                  0.8438,
+                  0.8469
+                ],
+                "vslot": [
+                  0.9844,
+                  0.975,
+                  0.4844
+                ]
+              },
+              "A5": {
+                "afell": [
+                  0.85,
+                  0.9094,
+                  0.8844
+                ],
+                "vslot": [
+                  0.9781,
+                  1.0,
+                  0.9688
+                ]
+              }
+            },
+            "n_disqualified": 0.0,
+            "n_disqualified_std": 0.0,
+            "n_eligible_trunk": 5.0,
+            "n_eligible_trunk_std": 0.0,
+            "n_params": {
+              "A0": 306846,
+              "A1": 314886,
+              "A2": 315142,
+              "A3": 323783,
+              "A4": 312366,
+              "A5": 315272
+            },
+            "paired_boot_lo": 0.0052,
+            "paired_boot_lo_std": 0.0,
+            "params_ok": 1.0,
+            "params_ok_std": 0.0,
+            "selected_recipes": {
+              "A0": "base",
+              "A1": "base",
+              "A2": "lolr_warm",
+              "A3": "lolr",
+              "A4": "base",
+              "A5": "base"
+            },
+            "slot_median": {
+              "A0": 0.8719,
+              "A1": 0.8844,
+              "A2": 0.8875,
+              "A3": 0.8844,
+              "A4": 0.8344,
+              "A5": 0.8781
+            },
+            "slot_per_arm_per_seed": {
+              "A0": [
+                0.8719,
+                0.8812,
+                0.8375
+              ],
+              "A1": [
+                0.8844,
+                0.8625,
+                0.9
+              ],
+              "A2": [
+                0.8844,
+                0.8969,
+                0.8875
+              ],
+              "A3": [
+                0.9062,
+                0.8719,
+                0.8844
+              ],
+              "A4": [
+                0.8688,
+                0.8344,
+                0.4969
+              ],
+              "A5": [
+                0.8469,
+                0.9,
+                0.8781
+              ]
+            },
+            "swap_ok_all_arms": 1.0,
+            "swap_ok_all_arms_std": 0.0,
+            "synergy_gap_per_arm": {
+              "A0": 0.3563,
+              "A1": 0.3844,
+              "A2": 0.4063,
+              "A3": 0.3937,
+              "A4": 0.3282,
+              "A5": 0.375
+            },
+            "top1_stable": 0.0,
+            "top1_stable_std": 0.0,
+            "uni_learn_ok": 1.0,
+            "uni_learn_ok_std": 0.0,
+            "uni_marginal_ok": 1.0,
+            "uni_marginal_ok_std": 0.0,
+            "uni_slot_dev_max": 0.05,
+            "uni_slot_dev_max_std": 6.93889e-18,
+            "venue_noise_sd": 2.5,
+            "venue_noise_sd_std": 0.0,
+            "venue_vision_sd": 0.0,
+            "venue_vision_sd_std": 0.0,
+            "widths": {
+              "A0": 120,
+              "A1": 128,
+              "A2": 128,
+              "A3": 128,
+              "A4": 124,
+              "A5": 128
+            },
+            "winner": 2.0,
+            "winner_beats_a0_all_seeds": 1.0,
+            "winner_beats_a0_all_seeds_std": 0.0,
+            "winner_beats_own_ensemble": 1.0,
+            "winner_beats_own_ensemble_std": 0.0,
+            "winner_slot_median": 0.8875,
+            "winner_slot_median_std": 1.11022e-16,
+            "winner_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 301.9,
+          "preserved_impl": null,
+          "ran_at": "2026-11-13T05:31:31",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "934670fb41739d17",
+          "status": "VOID",
+          "supersedes_void": {
+            "commit": "7768a6d",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "890f99a0d7844095",
+            "metrics": {
+              "a0_eligible": 1.0,
+              "a0_eligible_std": 0.0,
+              "a0_slot_median": 1.0,
+              "a0_slot_median_std": 0.0,
+              "arm_ranking_x_synergy_gap": 0.0,
+              "arm_ranking_x_synergy_gap_std": 0.0,
+              "backend": "kaggle",
+              "canary_ok_all": 1.0,
+              "canary_ok_all_std": 0.0,
+              "dropped_frac_max": 0.0,
+              "dropped_frac_max_std": 0.0,
+              "ens_slot_max": 0.75,
+              "ens_slot_max_std": 0.0,
+              "gpu": "Tesla P100-PCIE-16GB",
+              "learn_ok": 1.0,
+              "learn_ok_std": 0.0,
+              "marginal_ok": 0.0,
+              "marginal_ok_std": 0.0,
+              "n_eligible_trunk": 5.0,
+              "n_eligible_trunk_std": 0.0,
+              "n_params": {
+                "A0": 306846,
+                "A1": 314886,
+                "A2": 315142,
+                "A3": 323783,
+                "A4": 312366,
+                "A5": 315272
+              },
+              "paired_boot_lo": -0.0104,
+              "paired_boot_lo_std": 0.0,
+              "params_ok": 1.0,
+              "params_ok_std": 0.0,
+              "selected_recipes": {
+                "A0": "base",
+                "A1": "base",
+                "A2": "lolr_warm",
+                "A3": "lolr",
+                "A4": "base",
+                "A5": "base"
+              },
+              "slot_median": {
+                "A0": 1.0,
+                "A1": 1.0,
+                "A2": 0.9406,
+                "A3": 0.9688,
+                "A4": 1.0,
+                "A5": 1.0
+              },
+              "slot_per_arm_per_seed": {
+                "A0": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "A1": [
+                  1.0,
+                  0.9875,
+                  1.0
+                ],
+                "A2": [
+                  0.5,
+                  1.0,
+                  0.9406
+                ],
+                "A3": [
+                  0.9938,
+                  0.5094,
+                  0.9688
+                ],
+                "A4": [
+                  0.9688,
+                  1.0,
+                  1.0
+                ],
+                "A5": [
+                  1.0,
+                  1.0,
+                  0.9688
+                ]
+              },
+              "swap_ok_all_arms": 1.0,
+              "swap_ok_all_arms_std": 0.0,
+              "synergy_gap_per_arm": {
+                "A0": 0.2656,
+                "A1": 0.4844,
+                "A2": 0.3406,
+                "A3": 0.4938,
+                "A4": 0.4688,
+                "A5": 0.5
+              },
+              "top1_stable": 0.0,
+              "top1_stable_std": 0.0,
+              "uni_learn_ok": 1.0,
+              "uni_learn_ok_std": 0.0,
+              "uni_marginal_ok": 1.0,
+              "uni_marginal_ok_std": 0.0,
+              "uni_slot_dev_max": 0.0,
+              "uni_slot_dev_max_std": 0.0,
+              "widths": {
+                "A0": 120,
+                "A1": 128,
+                "A2": 128,
+                "A3": 128,
+                "A4": 124,
+                "A5": 128
+              },
+              "winner": 1.0,
+              "winner_beats_a0_all_seeds": 0.0,
+              "winner_beats_a0_all_seeds_std": 0.0,
+              "winner_beats_own_ensemble": 1.0,
+              "winner_beats_own_ensemble_std": 0.0,
+              "winner_slot_median": 1.0,
+              "winner_slot_median_std": 0.0,
+              "winner_std": 0.0
+            },
+            "ran_at": "2026-09-01T20:28:15",
+            "spec_changed": false,
+            "spec_sha": "934670fb41739d17",
+            "status": "VOID"
+          }
         }
       ],
-      "impl_sha": "6a86b79ffc398edc",
-      "message": "run did not test the claim; not a refutation",
+      "impl_sha": "32e02fecfa26af87",
+      "message": "pre-registered threshold not met",
       "metrics": {
         "a0_eligible": 1.0,
         "a0_eligible_std": 0.0,
@@ -89945,12 +90389,22 @@
         "a0_headroom_margin_std": 0.0,
         "a0_headroom_ok": 1.0,
         "a0_headroom_ok_std": 0.0,
+        "a0_marginal_ok": 1.0,
+        "a0_marginal_ok_std": 0.0,
         "a0_slot_max": 0.8812,
         "a0_slot_max_std": 1.11022e-16,
         "a0_slot_median": 0.8719,
         "a0_slot_median_std": 0.0,
         "a0_trained": 1.0,
         "a0_trained_std": 0.0,
+        "arm_marginal_all_seeds": {
+          "A0": 1.0,
+          "A1": 1.0,
+          "A2": 1.0,
+          "A3": 1.0,
+          "A4": 0.0,
+          "A5": 1.0
+        },
         "arm_ranking_x_synergy_gap": 0.0156,
         "arm_ranking_x_synergy_gap_std": 1.73472e-18,
         "arm_trained_all_seeds": {
@@ -89964,7 +90418,9 @@
         "backend": "colab",
         "canary_ok_all": 1.0,
         "canary_ok_all_std": 0.0,
-        "disqualified_arms": [],
+        "disqualified_arms": [
+          "A4"
+        ],
         "dropped_frac_max": 0.0,
         "dropped_frac_max_std": 0.0,
         "ens_slot_max": 0.5281,
@@ -90048,9 +90504,9 @@
             ]
           }
         },
-        "n_disqualified": 0.0,
+        "n_disqualified": 1.0,
         "n_disqualified_std": 0.0,
-        "n_eligible_trunk": 5.0,
+        "n_eligible_trunk": 4.0,
         "n_eligible_trunk_std": 0.0,
         "n_params": {
           "A0": 306846,
@@ -90152,9 +90608,9 @@
         "winner_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 301.9,
+      "peak_rss_mb": 251.0,
       "preserved_impl": null,
-      "ran_at": "2026-11-13T05:31:31",
+      "ran_at": "2026-11-13T06:42:57",
       "seeds": [
         0,
         1,
@@ -90162,31 +90618,126 @@
       ],
       "spec_id": "UB.10",
       "spec_sha": "934670fb41739d17",
-      "status": "VOID",
+      "status": "FAIL",
       "supersedes_void": {
-        "commit": "7768a6d",
+        "commit": "3fab32e",
         "dirty": false,
         "impl_changed": true,
-        "impl_sha": "890f99a0d7844095",
+        "impl_sha": "6a86b79ffc398edc",
         "metrics": {
           "a0_eligible": 1.0,
           "a0_eligible_std": 0.0,
-          "a0_slot_median": 1.0,
+          "a0_foreclosure_bound": 0.8625,
+          "a0_foreclosure_bound_std": 1.11022e-16,
+          "a0_headroom_margin": 0.0688,
+          "a0_headroom_margin_std": 0.0,
+          "a0_headroom_ok": 1.0,
+          "a0_headroom_ok_std": 0.0,
+          "a0_slot_max": 0.8812,
+          "a0_slot_max_std": 1.11022e-16,
+          "a0_slot_median": 0.8719,
           "a0_slot_median_std": 0.0,
-          "arm_ranking_x_synergy_gap": 0.0,
-          "arm_ranking_x_synergy_gap_std": 0.0,
-          "backend": "kaggle",
+          "a0_trained": 1.0,
+          "a0_trained_std": 0.0,
+          "arm_ranking_x_synergy_gap": 0.0156,
+          "arm_ranking_x_synergy_gap_std": 1.73472e-18,
+          "arm_trained_all_seeds": {
+            "A0": 1.0,
+            "A1": 1.0,
+            "A2": 1.0,
+            "A3": 1.0,
+            "A4": 1.0,
+            "A5": 1.0
+          },
+          "backend": "colab",
           "canary_ok_all": 1.0,
           "canary_ok_all_std": 0.0,
+          "disqualified_arms": [],
           "dropped_frac_max": 0.0,
           "dropped_frac_max_std": 0.0,
-          "ens_slot_max": 0.75,
+          "ens_slot_max": 0.5281,
           "ens_slot_max_std": 0.0,
-          "gpu": "Tesla P100-PCIE-16GB",
+          "gpu": "Tesla T4",
           "learn_ok": 1.0,
           "learn_ok_std": 0.0,
           "marginal_ok": 0.0,
           "marginal_ok_std": 0.0,
+          "marginal_per_arm_per_seed": {
+            "A0": {
+              "afell": [
+                0.8906,
+                0.8844,
+                0.8656
+              ],
+              "vslot": [
+                1.0,
+                1.0,
+                0.9969
+              ]
+            },
+            "A1": {
+              "afell": [
+                0.8875,
+                0.875,
+                0.8969
+              ],
+              "vslot": [
+                1.0,
+                0.9938,
+                1.0
+              ]
+            },
+            "A2": {
+              "afell": [
+                0.9125,
+                0.8906,
+                0.9094
+              ],
+              "vslot": [
+                0.9688,
+                1.0,
+                0.9656
+              ]
+            },
+            "A3": {
+              "afell": [
+                0.9062,
+                0.8969,
+                0.9062
+              ],
+              "vslot": [
+                1.0,
+                0.9563,
+                0.9688
+              ]
+            },
+            "A4": {
+              "afell": [
+                0.8906,
+                0.8438,
+                0.8469
+              ],
+              "vslot": [
+                0.9844,
+                0.975,
+                0.4844
+              ]
+            },
+            "A5": {
+              "afell": [
+                0.85,
+                0.9094,
+                0.8844
+              ],
+              "vslot": [
+                0.9781,
+                1.0,
+                0.9688
+              ]
+            }
+          },
+          "n_disqualified": 0.0,
+          "n_disqualified_std": 0.0,
           "n_eligible_trunk": 5.0,
           "n_eligible_trunk_std": 0.0,
           "n_params": {
@@ -90197,7 +90748,7 @@
             "A4": 312366,
             "A5": 315272
           },
-          "paired_boot_lo": -0.0104,
+          "paired_boot_lo": 0.0052,
           "paired_boot_lo_std": 0.0,
           "params_ok": 1.0,
           "params_ok_std": 0.0,
@@ -90210,54 +90761,54 @@
             "A5": "base"
           },
           "slot_median": {
-            "A0": 1.0,
-            "A1": 1.0,
-            "A2": 0.9406,
-            "A3": 0.9688,
-            "A4": 1.0,
-            "A5": 1.0
+            "A0": 0.8719,
+            "A1": 0.8844,
+            "A2": 0.8875,
+            "A3": 0.8844,
+            "A4": 0.8344,
+            "A5": 0.8781
           },
           "slot_per_arm_per_seed": {
             "A0": [
-              1.0,
-              1.0,
-              1.0
+              0.8719,
+              0.8812,
+              0.8375
             ],
             "A1": [
-              1.0,
-              0.9875,
-              1.0
+              0.8844,
+              0.8625,
+              0.9
             ],
             "A2": [
-              0.5,
-              1.0,
-              0.9406
+              0.8844,
+              0.8969,
+              0.8875
             ],
             "A3": [
-              0.9938,
-              0.5094,
-              0.9688
+              0.9062,
+              0.8719,
+              0.8844
             ],
             "A4": [
-              0.9688,
-              1.0,
-              1.0
+              0.8688,
+              0.8344,
+              0.4969
             ],
             "A5": [
-              1.0,
-              1.0,
-              0.9688
+              0.8469,
+              0.9,
+              0.8781
             ]
           },
           "swap_ok_all_arms": 1.0,
           "swap_ok_all_arms_std": 0.0,
           "synergy_gap_per_arm": {
-            "A0": 0.2656,
-            "A1": 0.4844,
-            "A2": 0.3406,
-            "A3": 0.4938,
-            "A4": 0.4688,
-            "A5": 0.5
+            "A0": 0.3563,
+            "A1": 0.3844,
+            "A2": 0.4063,
+            "A3": 0.3937,
+            "A4": 0.3282,
+            "A5": 0.375
           },
           "top1_stable": 0.0,
           "top1_stable_std": 0.0,
@@ -90265,8 +90816,12 @@
           "uni_learn_ok_std": 0.0,
           "uni_marginal_ok": 1.0,
           "uni_marginal_ok_std": 0.0,
-          "uni_slot_dev_max": 0.0,
-          "uni_slot_dev_max_std": 0.0,
+          "uni_slot_dev_max": 0.05,
+          "uni_slot_dev_max_std": 6.93889e-18,
+          "venue_noise_sd": 2.5,
+          "venue_noise_sd_std": 0.0,
+          "venue_vision_sd": 0.0,
+          "venue_vision_sd_std": 0.0,
           "widths": {
             "A0": 120,
             "A1": 128,
@@ -90275,16 +90830,16 @@
             "A4": 124,
             "A5": 128
           },
-          "winner": 1.0,
-          "winner_beats_a0_all_seeds": 0.0,
+          "winner": 2.0,
+          "winner_beats_a0_all_seeds": 1.0,
           "winner_beats_a0_all_seeds_std": 0.0,
           "winner_beats_own_ensemble": 1.0,
           "winner_beats_own_ensemble_std": 0.0,
-          "winner_slot_median": 1.0,
-          "winner_slot_median_std": 0.0,
+          "winner_slot_median": 0.8875,
+          "winner_slot_median_std": 1.11022e-16,
           "winner_std": 0.0
         },
-        "ran_at": "2026-09-01T20:28:15",
+        "ran_at": "2026-11-13T05:31:31",
         "spec_changed": false,
         "spec_sha": "934670fb41739d17",
         "status": "VOID"
