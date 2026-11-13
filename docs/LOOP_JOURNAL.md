@@ -612,3 +612,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   std, but t 1.98 < 3 at 3 seeds (and the house t was 1.22x generous), and the white2-white floor, a difference of two draws of
   one law, read 0.0082 on 3 draws. Now n=20 on fresh seeds 300..319, t exact (stricter), sized from attempt 1: E[t] 4.2, power
   ~.87. No bar touched. Not run: the box has 2 race workers on it. Served: 4 (a FAIL at 3 seeds is not a verdict; sized, not softened).
+
+- 2026-11-13 ~02:45 UTC JACK J5 (short slot; no ledger row). J1's wean-smell race is 3 of 6 runs done, the box is at load 6.6,
+  and Kaggle and Colab both still refuse GPU, so I took the CPU-free J5 step: wrote the CR.00 pilot harness (10de6fc). Arms are
+  null, staged (birth radius widening in 5 equal blocks) and shuffled (the same blocks in a seeded order, the control that must
+  fail). All three end in the same uniform exam block, scored on fed-life fraction + median span, not meal counts. Smoke: 800
+  decisions OK, 6 dec/s on the loaded box. Not launched: CPU is full. Served: 3, 5 (the curriculum raced, not assumed).

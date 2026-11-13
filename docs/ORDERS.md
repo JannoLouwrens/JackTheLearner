@@ -135,11 +135,11 @@ what the adults say — never his actions.
 serves: M2 · philosophy 3, 5.
 **done when:** the doc and the seat exist; the cook-off is registered with its
 control and has a pilot number.
-state: 11-13 01:40 steps (1)+(2) DONE: docs/research/CURRICULUM.md (cited menu: Elman, Bengio 09, IAC/SAGG-RIAC, Graves 17, ALP-GMM,
-GoalGAN, reverse curriculum, PAIRED/PLR/ACCEL, ELLM/OMNI) + Curriculum seat VACANT, ARENA: NONE (champions --check rc 0, NO-ARENA honest).
-Cook-off designed (§4), NOT registered: ids CR.00 pilot / CR.01 claim (CU.* is curiosity); exam block of uniform W0 lives scored by
-fed-life fraction + median span (NOT meal counts - jackpots); controls shuffled-stage AND matched-meal null. Next: after J1's
-wean-smell harvest, register CR.00 (1 seed: null, hand-staged, shuffled; ~4 CPU-h detached) and pilot it.
+state: 11-13 01:40 steps (1)+(2) DONE: docs/research/CURRICULUM.md + Curriculum seat VACANT, ARENA: NONE (champions --check rc 0).
+11-13 02:40 CR.00 pilot HARNESS written, not run (10de6fc, experiments/cr00_pilot.py): null / staged (radii .6,1.2,2.4,4.0,U in
+equal train blocks) / shuffled (same blocks, seeded order; s89 = .6,2.4,4.0,1.2,U); then a uniform EXAM block, tally = fed-life
+fraction + median span of exam-born lives. Smoke 800 dec OK. CR00_SMELL=1 installs smell. Next: after WEAN_SMELL EXIT, launch
+3 arms s89 train 40000 exam 20000 (~50 min each at 20 dec/s) via launch_detached, set N+margin from null's spread, register CR.01.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): today
