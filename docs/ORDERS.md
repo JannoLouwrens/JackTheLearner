@@ -136,10 +136,10 @@ serves: M2 · philosophy 3, 5.
 **done when:** the doc and the seat exist; the cook-off is registered with its
 control and has a pilot number.
 state: 11-13 01:40 steps (1)+(2) DONE: docs/research/CURRICULUM.md + Curriculum seat VACANT, ARENA: NONE (champions --check rc 0).
-11-13 02:40 CR.00 pilot HARNESS written, not run (10de6fc, experiments/cr00_pilot.py): null / staged (radii .6,1.2,2.4,4.0,U in
-equal train blocks) / shuffled (same blocks, seeded order; s89 = .6,2.4,4.0,1.2,U); then a uniform EXAM block, tally = fed-life
-fraction + median span of exam-born lives. Smoke 800 dec OK. CR00_SMELL=1 installs smell. Next: after WEAN_SMELL EXIT, launch
-3 arms s89 train 40000 exam 20000 (~50 min each at 20 dec/s) via launch_detached, set N+margin from null's spread, register CR.01.
+11-13 02:40 CR.00 harness 10de6fc (null / staged .6,1.2,2.4,4.0,U / shuffled same blocks; uniform EXAM; fed-life frac + median span).
+11-13 03:38 LAUNCHED detached: experiments/cr00_pilot_race.sh (log /data/tmp/cr00_race.log, rows /data/tmp/cr00/*_s89.jsonl):
+waits for WEAN_SMELL exit, then 3 arms s89 train 40000 exam 20000 no smell in parallel (~60-90 min), then tally. Next: harvest
+(`$PY -m experiments.cr00_pilot tally`), set N + margin from null's exam-life spread, register CR.01 on fresh claim seeds.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): today

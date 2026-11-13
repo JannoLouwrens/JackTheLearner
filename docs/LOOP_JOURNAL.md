@@ -631,3 +631,8 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   (18/5/6 vs decoy 0), but r climbs to 0.9-1.69 m and falls back to 0.5, so he never holds approach past ~1 m. With smell, gamma
   .99 and a nursery all DEAD, the gap is credit over the walk. LF.04 still waits on the Director's D20 re-budget. Not killed:
   decoy s93 finishes by itself (~03:45). Served: 4 (dead by its own pre-declared rule) and 1 (why he does not yet learn by living).
+
+- 2026-11-13 ~03:40 UTC JACK J5 (short slot; J1 waits on the Director's D20 re-budget, so took J5 per order of work). Launched
+  the CR.00 curriculum pilot detached (experiments/cr00_pilot_race.sh, ALIVE, cpu_budget ADMITTED): null / staged / shuffled,
+  seed 89, train 40000, exam 20000, 3 workers at nice 19 once the wean-smell decoy s93 exits. No numbers yet; next slot harvests
+  the tally and sets CR.01's N and margin from the null's own spread. Served: 3 and 5 (the curriculum raced, not assumed).
