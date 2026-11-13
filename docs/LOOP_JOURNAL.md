@@ -657,3 +657,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   570 vs 3600 (6.3x), bar 2x. Cause: needs.py B_E/B_W run the needs clock ~10x past the world's declared compression, the
   same class as W.1(b). Did not re-register to a fitted k (that would fit the bar to the data). Sent to the Director as one
   ruling with W.1(b). Served: 4 (a red explained, not filed) and 1 (a world that kills on honest deadlines).
+
+- 2026-11-13 ~05:15 UTC JACK J4 (+J5 harvest). UB.10's 4-venue sweep finished on Colab; applied the pre-declared
+  _select_venue: (2.5 audio, 0.0 vision) wins, margin .0719, every arm eligible; the two vision-noised venues fail A4.
+  Declared it + committed the pilot record (3fab32e); the foreclosure fixture had assumed a matched venue and was fixed
+  to carry venue_vision_sd (no bar moved). UB.10 dispatched on seeds 0-2 (watcher 2541605) - the one-brain contest,
+  VOID 59 days, is finally running. CR.00 pilot harvested: exam fed-lives null 5/8, staged 2/8, shuffled 0/9 - the
+  hand-staged curriculum does not beat no curriculum on s89. Served: 3 (one brain raced, not assumed; curriculum raced).

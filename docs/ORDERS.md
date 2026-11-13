@@ -78,11 +78,11 @@ commit as a known property of the venue, not a thing to tune.
 serves: M3 · philosophy 3 · standing objective 3.
 **done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
-state: 2026-11-12 5bce9ef: seed-90 pilot at matched sd 2.5 FALSIFIED the venue (all 6 arms ineligible); sweep (2,2),(2,1),
-(2.5,0),(2,0) + _select_venue declared pre-read. Runs 06:53/12:10/20:38 11-12 all refused (Kaggle 30 h spent, Colab 503).
-11-13 04:23 Colab ASSIGNS again (bare T4 hello OK via `colab --auth adc run`); SWEEP RELAUNCHED unchanged: launch_detached pid 2506176,
-log /data/tmp/ub10_sweep4.log, live Colab session ladder-1794543804 (T4). IN FLIGHT. Colab is now held - no second Colab job.
-Next: on "SWEEP EXIT 0" apply _select_venue as declared, set VENUE_*_SD, cp /data/ub10_venue_pilot.json, commit, dispatch UB.10.
+state: 11-13 05:10 SWEEP HARVESTED (Colab, seed 90): _select_venue as declared -> (2.5 audio, 0.0 vision), margin .0719; (2,0) .0125;
+(2,2)/(2,1) fail on A4 vslot .644/.750. All 6 arms eligible (slot A0 .866..A3 .925). Declared + pilot record committed 3fab32e
+(foreclosure fixture rows now carry venue_vision_sd; smoke OK, live guard CLEAR). UB.10 DISPATCHED 05:09: watcher pid 2541605,
+log /data/tmp/dispatch_ub_10.log, seeds 0-2, 1.25 GPU-h, tries Kaggle then Colab. Never kill the watcher.
+Next: on the watcher's exit read the ledger row; WINNER/TIE -> done; VOID -> name the cause from the row, do not re-dispatch unchanged.
 
 ### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
 **Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —
@@ -139,8 +139,8 @@ control and has a pilot number.
 state: 11-13 01:40 steps (1)+(2) DONE: docs/research/CURRICULUM.md + Curriculum seat VACANT, ARENA: NONE (champions --check rc 0).
 11-13 02:40 CR.00 harness 10de6fc (null / staged .6,1.2,2.4,4.0,U / shuffled same blocks; uniform EXAM; fed-life frac + median span).
 11-13 03:38 LAUNCHED detached: experiments/cr00_pilot_race.sh (log /data/tmp/cr00_race.log, rows /data/tmp/cr00/*_s89.jsonl):
-waits for WEAN_SMELL exit, then 3 arms s89 train 40000 exam 20000 no smell in parallel (~60-90 min), then tally. Next: harvest
-(`$PY -m experiments.cr00_pilot tally`), set N + margin from null's exam-life spread, register CR.01 on fresh claim seeds.
+waits for WEAN_SMELL exit, then 3 arms s89 train 40000 exam 20000 no smell in parallel (~60-90 min), then tally. 11-13 05:15 PILOT HARVESTED (s89, exam 8-9 lives/arm): fed null 5/8, staged 2/8,
+shuffled 0/9; median span 516/493/439 (sd 49/19/42) - staged does NOT beat null on the pilot. Next: set N + margin from null's spread, register CR.01.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): today
