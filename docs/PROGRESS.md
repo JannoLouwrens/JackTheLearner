@@ -41,8 +41,10 @@ won, and two were lost for bookkeeping reasons, one of which matters (below).
    cause (the clock above); curriculum research written, six rival curricula
    built and sized; deeper world's two broken tests repaired, not yet run.
 3. **Brain shape decided by contest** — memory seat won. The "one brain or
-   several experts" contest (`UB.10`), stuck 59 days, is running on a free GPU
-   as I write (third attempt this morning). The "who controls the body"
+   several experts" contest (`UB.10`), stuck 59 days, finally has a verdict
+   (06:43 today): **no design wins.** All six sit within 2 points of each
+   other and the best one changes from run to run. The seat stays undecided
+   — raced, not assumed — and I ruled we do not hunt for a kinder test. The "who controls the body"
    contest lost a third finished run to a failed download; that loss is now
    fixed for good and the contest restarts today.
 4. **A body that moves** — waits on that controller contest.
@@ -82,7 +84,7 @@ won, and two were lost for bookkeeping reasons, one of which matters (below).
 
 1. Re-run the speed test on a quiet box (minutes).
 2. Run the two repaired deeper-world tests (about an hour).
-3. Read the one-brain contest's result; then restart the controller contest.
+3. Restart the controller contest on the GPU the one-brain contest just freed.
 4. Race the honest world clock against today's world.
 5. Build the free Kaggle-CPU route and send `LF.04` through it; then the
    curriculum contest (six rivals), then **your scale question**: a new 3×
