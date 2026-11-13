@@ -69,6 +69,15 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   unchanged: sealed → 0.110 on s0 (`shelter_law_night.py`). s1/s2 are a fixture
   fault (probe reads a sliding pose, `shelter_pose_bed.py`). Killed by: re-stale
   cost > gain, or a graded-cone arm doing better.
+  **11-13 OCCLUSION-LAW RACE (`experiments/occ_law_race.py`, rule declared
+  first): NO WINNER.** HOLDS = NE.01 ok_night_shelter AND ok_forager, verbatim,
+  seeds 0-4 (3,4 fresh). shipped 4/5 (s0: forager hyperthermia at 17707/18000,
+  sleep occ .946); graded cone 2/5 (s1/s2/s4 night cost .47/.20/.93 > .20 - the
+  cone picks worse beds); damped sleeper x3 2/5 (s0/s1/s3 forager dies of
+  INJURY at 5005/4015/11942 - stiff sleeping joints hurt him); open control 0/5
+  (fails, as it must). Shipped is not falsified - it holds on both fresh seeds;
+  its one red is s0's knife-edge. By the rule the band-geometry arm (a
+  playground edit) is the next raced. Rows /data/tmp/occrace/*.jsonl.
 
 - 11-12 23:10 · **Exploration in bouts** (learning core's exploration; holder by
   default = white noise, an independent draw every 0.2-s decision) · **DEAD at

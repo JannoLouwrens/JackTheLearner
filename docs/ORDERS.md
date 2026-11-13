@@ -78,11 +78,11 @@ commit as a known property of the venue, not a thing to tune.
 serves: M3 · philosophy 3 · standing objective 3.
 **done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
-state: 11-13 05:50 UB.10 attempt 2 VOID (cdcf1be, Colab T4, s0-2, venue 2.5/0.0). Sole red gate marginal_ok: A4 seed 2 basin collapse
-(vslot .4844 < floor .80, slot .4969; loss still fell, so part-3's `trained` did not catch it). All else green. Medians A0 .872 A1 .884
-A2 .888 A3 .884 A4 .834 A5 .878. Read from the row, NOT a verdict: A2 beats A0 on all seeds, boot_lo .0052, but top1_stable 0 (tops A3/A5/A1).
-Next (repair, then re-dispatch): extend part 3's whole-arm disqualification to the marginal floor (arm failing vslot/afell on any seed ->
-disqualified_arms; A0 failing still VOIDs), update fixture at ub_10 ~l.2114, smoke, dispatch. Expect FAIL on top1_stable unless seeds differ.
+state: 11-13 06:25 part 3 EXTENDED to the marginal floor (86d28cc): a non-anchor arm below vslot/afell .80 on ANY seed is disqualified
+whole-arm (measured, cannot win); A0 below it still VOIDs (a0_marginal_ok). No bar moved. Fixture replays attempt 2's A4-s2 collapse ->
+disq [A4], not VOID; A0 collapse -> VOID; all 4 batteries OK. ATTEMPT 3 DISPATCHED 06:24 (watcher 2576117, log /data/tmp/dispatch_ub_10.log,
+~22 min on T4, seeds 0-2). Expect FAIL on top1_stable (attempt 2: A2>A0 every seed, boot_lo .005, tops A3/A5/A1).
+Next: on watcher exit, read the row; FAIL/WINNER/TIE -> DONE; a new VOID -> name its cause here.
 
 ### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
 **Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —
@@ -103,7 +103,8 @@ state: 11-13 00:45 NE.01 (56c6519) FAIL: ok_night_shelter GREEN 3/3; red ok_spre
 and ok_forager 2/3 (a sleeper slides into sealed occ~1, hyperthermia at ~3540/3600 s - the knife-edge). No world edit (D43 HOLD stands).
 11-13 04:40 occlusion-law RACE written + LAUNCHED (experiments/occ_law_race.py/.sh, pid 2503265, log /data/tmp/occrace/race.log, rows
 /data/tmp/occrace/*.jsonl): shipped vs graded (49-ray cos-weighted cone) vs damped sleeper (x3; x5/x8/x20 broke RK4) vs open (must fail),
-seeds 0-4, NE.01's own probes + bars, rule in docstring. Waits for CR.00, ~2 h on 2 workers. Next: on "OCCRACE EXIT" apply the rule; then drop probe.
+seeds 0-4, NE.01's own probes + bars, rule in docstring. 06:30 HARVESTED, NO WINNER (LAB): shipped 4/5 (s0 knife-edge), graded 2/5, damped
+2/5 (injury), open 0/5. Next by the rule: race the band-geometry arm (playground edit); the drop probe for ok_spread.
 11-13 04:45 W.2 DIAGNOSED (ledger 08-30, no run): a/b/d GREEN (integrator 1e-13, ledger resid 0, tau 700/160 exact); red = (c) only: deaths
 hunger 1700 s vs 25200 (k=72, ratio 14.8), thirst 570 vs 3600 (6.3), tol 2x. Cause = needs.py B_E 1/1800, B_W 1/450: needs run ~10x past the declared clock. Same class as W.1(b) - Director ruling (INBOX 04:45).
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID

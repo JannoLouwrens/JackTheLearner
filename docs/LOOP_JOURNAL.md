@@ -678,3 +678,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   seed (boot_lo .005) but the per-seed top arm changes (top1_stable 0). The arms sit within .02 of each other. Committed the
   harvest (cdcf1be). Next: extend part-3 whole-arm disqualification to the marginal floor, then re-dispatch. Served: 3
   (the one-brain contest raced, not argued) and 4 (a VOID explained, not filed).
+
+- 2026-11-13 ~06:30 UTC JACK J4 (+J6 harvest; short slot, J1 waits on D20). Made UB.10's VOID repair: part 3's whole-arm
+  disqualification now covers the marginal floor. Attempt 2's single A4-seed-2 basin collapse disqualifies A4 and no longer
+  VOIDs the run. A0 below the floor still VOIDs, and no bar moved. The fixture replays the defect, and all 4 batteries are OK (86d28cc).
+  Attempt 3 dispatched (watcher 2576117, Colab T4, ~22 min). J6: the occlusion-law race exited with NO WINNER by its
+  declared rule. Shipped held 4/5 (it held on both fresh seeds), graded 2/5, damped sleeper 2/5 (it dies of injury), and the open
+  control 0/5 as required. Next by the rule is the band-geometry arm. Served: 3 (one brain raced to a verdict) and 4 (VOID repaired, not filed).
