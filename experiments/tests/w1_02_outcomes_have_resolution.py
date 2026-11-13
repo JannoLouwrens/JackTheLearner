@@ -152,8 +152,18 @@ CENSOR_CAP = 0.20
 ROUND_Q = 1e-6
 PILOT_SEED = 90
 
-# pinned recorded row — a moved row VOIDs (V2), never silently re-anchors
-W100_RAN_AT = "2026-09-06T10:30:12"
+# pinned recorded row — a moved row VOIDs (V2), never silently re-anchors.
+# RE-PINNED 2026-11-13 (order J7, explicitly, not silently): the 09-06 pin
+# was W1.00 attempt 1 (seeds 0-2, d_ml_repeat +14.82 s); W1.00 attempt 3
+# (n = 20, fresh seeds 300-319, FAIL (b) "immaterial") re-measured the
+# SELECTION this spec rests on: repeat again the strongest non-learner on the
+# venue outcome, ml_repeat 54.75 +- 3.56 s vs ml_white 41.81 +- 0.99 s,
+# paired d_ml_repeat +12.94 +- 3.50 (t ~16). W1.00's FAIL is on its claim
+# (no Pile A margin moves), not on the selection, so the process this spec
+# runs is unchanged. Note: white is NOT near-deterministic at n=20 (std 0.99,
+# not 0.078) — the docstring's reason for not running white is weaker, the
+# reason "repeat is the measured strongest null" stands.
+W100_RAN_AT = "2026-11-13T14:48:04"
 
 
 def _borrow():
@@ -178,8 +188,12 @@ def _recorded_ok() -> bool:
     the process this spec runs. Selection was W1.00's job, not this spec's."""
     path = Path(__file__).resolve().parents[1] / "ledger.json"
     try:
-        row = json.loads(path.read_text())["results"]["W1.00"]
-        return (row["ran_at"] == W100_RAN_AT
+        live = json.loads(path.read_text())["results"]["W1.00"]
+        # history-aware (W1.00's _pinned, 3a2513b): a later W1.00 re-run
+        # moves this exact row into history; that is not a moved measurement.
+        row = next((r for r in [live] + list(live.get("history") or [])
+                    if r.get("ran_at") == W100_RAN_AT), None)
+        return (row is not None
                 and row["metrics"]["selected_null"] == "repeat")
     except (OSError, KeyError, TypeError, ValueError):
         return False
