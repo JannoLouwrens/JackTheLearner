@@ -22400,7 +22400,7 @@ ROUTED: t406-deciding-statistic-read-against-an-uncomputed-floor | 2026-10-02 | 
 ## — the last violation class on the board, and the reason the 09-28 stamp
 ## gave for leaving it alone has since stopped being true
 
-ROUTED: seven-rows-are-held-behind-a-refused-window-and-a-moot-decision | 2026-10-03 | Review DAILY, `review_queue.py` HOLD-ON-A-RESOLVED-BLOCKER ×7 (the board's only remaining violation class after this morning's OVERDUE 8 -> 0) + the `D33` MOOT addendum at `DECISIONS_NEEDED.md:8283` | OPEN
+ROUTED: seven-rows-are-held-behind-a-refused-window-and-a-moot-decision | 2026-10-03 | Review DAILY, `review_queue.py` HOLD-ON-A-RESOLVED-BLOCKER ×7 (the board's only remaining violation class after this morning's OVERDUE 8 -> 0) + the `D33` MOOT addendum at `DECISIONS_NEEDED.md:8283` | DECLINED 2026-11-13 (Director) moot: the queue is closed to new rows and drained oldest-first by the Director; no row is held behind a window or a decision any more. — prior status: OPEN
     DUE: 2026-10-11 | the disposition, this desk's: per row, does it ACTUALLY
     DUE: 2026-10-25 | RE-DATED 2026-10-13 (Review DAILY, OVERDUE FIRST under D28's armed default). **This row's own text says the work is FULL-sized, and a DAILY sitting may not pretend otherwise.** It is dated to **2026-10-25** rather than the nearer Sunday because `2026-10-18` already carries EIGHT live rows against the measured capacity of 6 — `review-queue` prints it AMBER — and dating FULL-sized work onto an over-committed FULL sitting is precisely the pattern that produced the four broken dates this row already carries. 10-25 is a FULL sitting with an empty docket. **The risk is named rather than buried:** every one of the four Sunday FULL runs ever fired on cron died at max turns, and 10-18/10-25 are both exposed to the same usage gate that deleted 10-12 — so this date is the best available, not a safe one. Seven rows each needing their own per-row finding — does this edit ACTUALLY need the shared-world window, or is it SPEC-LOCAL — is irreducibly seven judgements, not one. **This does NOT wait on `D43`** (`decide_by 2026-10-16`): `D43`'s own default says the split is a separately-clocked queue row that proceeds or does not on its own clock, and whatever it finds is reported either way. The date is past `D43`'s deadline as a consequence of capacity, not as a dependency.
         need the world-edit window, or is its edit SPEC-LOCAL? 10-11 is a FULL
@@ -22635,7 +22635,7 @@ ROUTED: xl01-pooled-conjunct-is-additive-or-it-is-a-loosening | 2026-10-04 | THE
 
 ## ROUTED 2026-10-04 (Review FULL, act 6 — the successor the `ba03` ruling owes): `cpu-class-ladder-has-no-rung-between-2h-and-48h` — the CPU cost ladder jumps 2 h to 48 h with nothing between, so all 2–48 h work must over-declare into the one class `gate_cpu_child` refuses, and `D20`'s closure of that lane foreclosed six ids at once
 
-ROUTED: cpu-class-ladder-has-no-rung-between-2h-and-48h | 2026-10-04 | THE RULING on `ba03-registered-run-foreclosed-by-d20-class-closure` (ACTED 2026-10-04) | OPEN
+ROUTED: cpu-class-ladder-has-no-rung-between-2h-and-48h | 2026-10-04 | THE RULING on `ba03-registered-run-foreclosed-by-d20-class-closure` (ACTED 2026-10-04) | DISPOSITIONED 2026-11-13 (Director) live blocker, ordered: `docs/ORDERS.md` S1 — the missing rung is built OFF this box as a `kaggle-cpu` budget class (ruling 2, 11-13); D20's closure of `cpu<48h` here stands. ACTED when `LF.04` has a verdict from a Kaggle CPU kernel. — prior status: OPEN
     DUE: 2026-10-15 | 10-15 carries 2 live rows against the measured capacity
         of 6, so this is routed onto room rather than onto a pile. NOT dated
         inside this week: the builder's first legal slot is ~2026-10-06 14:10
@@ -22717,7 +22717,7 @@ ROUTED: cpu-class-ladder-has-no-rung-between-2h-and-48h | 2026-10-04 | THE RULIN
 
 ## ROUTED 2026-10-04 (Review FULL, act 12 — the owner for the FAIL this sitting's own strengthening created): `t111-certified-loss-has-no-shipped-caller` — `T1.11` certifies that `action_training_loss` reaches the actuator and never checked that anything CALLS it; measured, it has ZERO callers outside `experiments/` while `TrainingPipeline.py:193` still trains through `output['actions']`, which is `T1.11`'s own `_control`
 
-ROUTED: t111-certified-loss-has-no-shipped-caller | 2026-10-04 | T1.11 attempt 2, FAIL 2026-10-04 (clean tree), `shipped_caller_sites = NONE`, `shipped_actions_subscripts = 81` — the Review's Part 2 re-examination | OPEN
+ROUTED: t111-certified-loss-has-no-shipped-caller | 2026-10-04 | T1.11 attempt 2, FAIL 2026-10-04 (clean tree), `shipped_caller_sites = NONE`, `shipped_actions_subscripts = 81` — the Review's Part 2 re-examination | DECLINED 2026-11-13 (Director) names no live blocker: `T1.11` certifies the old 57M brain's loss path (Stack B), which holds no seat and re-enters only as a cook-off challenger (ROADMAP, Which Jack). `T1.11` stays FAIL; the finding stays here for whoever enters that challenger. — prior status: OPEN
     DUE: 2026-10-16 | 10-16 carries 2 live rows against the measured capacity
         of 6, so this is routed onto room. **NOT dated sooner on purpose, and
         the reason is that this is the most consequential repair on the board
@@ -22815,7 +22815,7 @@ ROUTED: t111-certified-loss-has-no-shipped-caller | 2026-10-04 | T1.11 attempt 2
 ## that decides whether a scout's findings reach a desk has ZERO specs, and its
 ## first measured defect is a WRONG GREEN
 
-ROUTED: seven-instrument-readers-are-gated-by-no-spec | 2026-10-05 | docs/FIELD_WATCH.md §7d (week 10 sweep, `32b098c`, COMPLETE run) + this desk's own enumeration of `IMPL_DEPS` across all of `experiments/tests/` | OPEN
+ROUTED: seven-instrument-readers-are-gated-by-no-spec | 2026-10-05 | docs/FIELD_WATCH.md §7d (week 10 sweep, `32b098c`, COMPLETE run) + this desk's own enumeration of `IMPL_DEPS` across all of `experiments/tests/` | DECLINED 2026-11-13 (Director) the machine may not grow: seven new Tier-0 specs for readers would add harness, not creature. A reader found wrong is repaired when found (SYSTEM lane, max 3). — prior status: OPEN
     DUE: 2026-10-19 | the DESIGN of which readers get a gating spec and what each must assert, owed by this desk; the one-character `fieldwatch.py` repair is ordered separately onto the builder's priority block TODAY because it perishes at the next sweep (~2026-10-12) and this date does not. 10-19 carries 2 live rows against the measured 6/cycle — genuine room, and after the ~10-07 usage-week reset the builder has been dark through.
     DUE: 2026-10-29 | RE-DATED 2026-10-21 (Review DAILY, OVERDUE FIRST). THIS
         IS A DESK DATE and the debt is this desk's own: the DESIGN of which
@@ -22854,7 +22854,7 @@ ROUTED: seven-instrument-readers-are-gated-by-no-spec | 2026-10-05 | docs/FIELD_
 ## runtime findings from T6.01's implementation slot, one row because they
 ## share a cause): `shipped-companion-cannot-move-see-or-report-failure`
 
-ROUTED: shipped-companion-cannot-move-see-or-report-failure | 2026-10-06 | T6.01 implementation smokes (872c370, journal 2026-10-06 00:07 slot), re-derived by the 142nd audit (OVERSIGHT.md RANK 2 / finding 2) and re-verified at source at routing time | OPEN
+ROUTED: shipped-companion-cannot-move-see-or-report-failure | 2026-10-06 | T6.01 implementation smokes (872c370, journal 2026-10-06 00:07 slot), re-derived by the 142nd audit (OVERSIGHT.md RANK 2 / finding 2) and re-verified at source at routing time | DECLINED 2026-11-13 (Director) names no live blocker: `T6.01`'s companion is Stack B; ROADMAP M8 replaces the Stack-B `T6.*` with an integration spec on the survival stack, to be registered. The defect list stays here for that registration. — prior status: OPEN
     DUE: 2026-10-15 | review-queue's own "Next date with room under the
         measured capacity" printed 2026-10-15 at routing time — the mechanical
         answer, not a hand-picked date, per the 142nd audit's FTB 2 order.
@@ -22951,7 +22951,7 @@ ROUTED: shipped-companion-cannot-move-see-or-report-failure | 2026-10-06 | T6.01
 ## own-test-could-reject` — carried forward out of a row this sitting DECLINED,
 ## because a terminal row is never re-read
 
-ROUTED: xl00-negative-claim-does-not-assert-its-own-test-could-reject | 2026-10-06 | `XL.00` attempt 8, ledger row PASS 2026-09-06T14:41:34, metrics and control_metrics read off `experiments/ledger.json` this sitting; conjuncts re-read at `experiments/tests/xl_00_death_and_respawn.py:511-513` and `:575-577` | OPEN
+ROUTED: xl00-negative-claim-does-not-assert-its-own-test-could-reject | 2026-10-06 | `XL.00` attempt 8, ledger row PASS 2026-09-06T14:41:34, metrics and control_metrics read off `experiments/ledger.json` this sitting; conjuncts re-read at `experiments/tests/xl_00_death_and_respawn.py:511-513` and `:575-577` | DISPOSITIONED 2026-11-13 (Director) live, queued: `XL.00` is red-shadowed by `LC.02` today and is re-bought when J1 clears it; the re-buy must add the could-have-rejected conjunct (a planted positive the negative claim must catch) — a strengthening, bars unmoved. Carried under `docs/ORDERS.md` Next-up 8 (`XL.01` at power). ACTED when `XL.00` re-runs with that conjunct. — prior status: OPEN
     DUE: 2026-10-18 | THE NEXT SUNDAY **FULL** SITTING, and the date is chosen
         by the MODE boundary rather than by the pile. The repair is an ADDED
         CONJUNCT on a passing spec — Part 2 work — and today is a DAILY, whose
@@ -23039,7 +23039,7 @@ unfalsifiable now VOIDs or FAILs instead of passing by arithmetic.
 ## order verbatim — "Route this as ONE queue row, now, not conditional on
 ## W1.04"): `duration-s-feeds-two-meters-as-the-specs-cost`
 
-ROUTED: duration-s-feeds-two-meters-as-the-specs-cost | 2026-10-06 | 143rd audit (OVERSIGHT.md, FOR THE BUILDER item 1, RANK 1), every load-bearing claim re-verified at source at routing time | OPEN
+ROUTED: duration-s-feeds-two-meters-as-the-specs-cost | 2026-10-06 | 143rd audit (OVERSIGHT.md, FOR THE BUILDER item 1, RANK 1), every load-bearing claim re-verified at source at routing time | DECLINED 2026-11-13 (Director) superseded: detached and off-box runs are now charged by `cpu_budget wrap` and the Kaggle-CPU class charges no box seconds (S1); the two-meter reading is not blocking any order. Re-open only if a refusal is traced to it. — prior status: OPEN
     DUE: 2026-10-18 | review-queue's own "Next date with room under the
         measured capacity" printed 2026-10-18 at routing time — the mechanical
         answer, not a hand-picked date.
@@ -23096,7 +23096,7 @@ ROUTED: duration-s-feeds-two-meters-as-the-specs-cost | 2026-10-06 | 143rd audit
 ## order — "write it with the conjunct-by-conjunct reading attached, do not
 ## assert it"): `t112-pass-stands-on-t111s-orthogonal-added-conjunct`
 
-ROUTED: t112-pass-stands-on-t111s-orthogonal-added-conjunct | 2026-10-06 | 143rd audit (OVERSIGHT.md, FOR THE BUILDER item 2, RANK 3); every leg re-verified at source at routing time | OPEN
+ROUTED: t112-pass-stands-on-t111s-orthogonal-added-conjunct | 2026-10-06 | 143rd audit (OVERSIGHT.md, FOR THE BUILDER item 2, RANK 3); every leg re-verified at source at routing time | DECLINED 2026-11-13 (Director) names no live blocker: `T1.12` (flow matching denoises) is a Stack-B primitive with no seat; same disposal as `t111-certified-loss-has-no-shipped-caller`. The dependency question is answered when that stack enters a cook-off. — prior status: OPEN
     DUE: 2026-10-18 | review-queue's "Next date with room under the measured
         capacity" printed 2026-10-18 at routing time — the mechanical answer.
         Dated AFTER its referenced blocker's own DUE (t111: 10-16), so the
@@ -23182,7 +23182,7 @@ ROUTED: t112-pass-stands-on-t111s-orthogonal-added-conjunct | 2026-10-06 | 143rd
 ## 6 STOP-AND-ROUTE branch — the guessed cause did not reproduce, and the
 ## verified one is different): `bare-git-commit-writes-the-whole-shared-index`
 
-ROUTED: bare-git-commit-writes-the-whole-shared-index | 2026-10-06 | 143rd audit POSTSCRIPT + FTB item 6; mechanism re-verified at source this slot | OPEN
+ROUTED: bare-git-commit-writes-the-whole-shared-index | 2026-10-06 | 143rd audit POSTSCRIPT + FTB item 6; mechanism re-verified at source this slot | DECLINED 2026-11-13 (Director) handled by standing conduct, not a build: every organ prompt orders `git add` by explicit path and never `-A`; no guard is added (the machine may not grow). A recurrence is an INBOX line. — prior status: OPEN
     DUE: 2026-10-18 | review-queue's "Next date with room under the measured
         capacity" re-printed 2026-10-18 after this slot's own t112 routing —
         the mechanical answer.
@@ -23244,7 +23244,7 @@ ROUTED: bare-git-commit-writes-the-whole-shared-index | 2026-10-06 | 143rd audit
 ## `replay-instruments-do-not-replay-the-runs-process-model`, ruled this
 ## sitting; one bundle because `protocol.py` costs 4 certificates to touch
 
-ROUTED: salt-differential-has-no-coverage-counter-and-an-unsplit-d27-exemption | 2026-10-07 | `experiments/protocol.py:3722-3724` read at source this sitting (the exemption sentence) against `:3726-3739` (the struck clause that was its only stated reason); `docs/LESSONS.md`'s own entry (iii) on the differential's absent coverage, written before this ruling and independently | OPEN
+ROUTED: salt-differential-has-no-coverage-counter-and-an-unsplit-d27-exemption | 2026-10-07 | `experiments/protocol.py:3722-3724` read at source this sitting (the exemption sentence) against `:3726-3739` (the struck clause that was its only stated reason); `docs/LESSONS.md`'s own entry (iii) on the differential's absent coverage, written before this ruling and independently | DECLINED 2026-11-13 (Director) the machine may not grow: a new coverage counter serves no open order. The unsplit exemption sentence at `protocol.py` stays recorded here; S3 touches `coverage` and may split it in passing, bars unmoved. — prior status: OPEN
     SUBJECT: the APPARATUS — an instrument's accounting obligation and one
         source comment. No spec's science is in question, no certificate is
         claimed red, and no bar moves in either direction.
