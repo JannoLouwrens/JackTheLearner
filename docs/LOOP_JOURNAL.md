@@ -685,3 +685,8 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   Attempt 3 dispatched (watcher 2576117, Colab T4, ~22 min). J6: the occlusion-law race exited with NO WINNER by its
   declared rule. Shipped held 4/5 (it held on both fresh seeds), graded 2/5, damped sleeper 2/5 (it dies of injury), and the open
   control 0/5 as required. Next by the rule is the band-geometry arm. Served: 3 (one brain raced to a verdict) and 4 (VOID repaired, not filed).
+- 2026-11-13 ~06:50 UTC JACK J4 DONE. UB.10 attempt 3 returned FAIL (de563c4), the one-brain contest's first non-VOID verdict
+  in 59 days. Rig green, A4 disqualified. A2 beats A0 on every seed (boot_lo .005), but the per-seed top arm changes (A3/A2/A1).
+  The medians span .016, and the experts+router arm A5 did not beat one brain. The CHAMPIONS fusion row now says UNDECIDED, raced,
+  no arm separates. The UB.11-13/TA.03 dependency question went to INBOX. Served: 3 and 4 (a FAIL recorded with every
+  number, no venue hunted).

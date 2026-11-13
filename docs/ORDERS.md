@@ -53,9 +53,10 @@ write the six medians and "no arm separates from A0 on this venue" in
 `TA.03` truly need a winner vs only a run, under INBOX. Do not hunt venues.
 serves: M3 · philosophy 3.
 **done when:** `UB.10` has a non-VOID verdict and the seat page says what it found.
-state: 11-13 06:24 ATTEMPT 3 DISPATCHED (watcher 2576117, log /data/tmp/dispatch_ub_10.log, Colab T4, seeds 0-2) after part 3
-was extended to the marginal floor (86d28cc; fixture replays attempt 2's A4-s2 collapse -> disq [A4]; A0 collapse still VOIDs).
-Attempt 2 read (not a verdict): A2>A0 every seed, boot_lo .005, top1_stable 0 (tops A3/A5/A1).
+state: **DONE 11-13 06:50 — UB.10 attempt 3 FAIL (de563c4)**, first non-VOID verdict. Rig green; A4 disqualified (s2 collapse, 86d28cc rule).
+Medians A0 .8719 A1 .8844 A2 .8875 A3 .8844 A4 .8344 A5 .8781; A2 beats A0 every seed (boot_lo .0052) but tops A3/A2/A1 -> top1_stable 0,
+the sole red clause. CHAMPIONS fusion row: UNDECIDED, raced, no arm separates from A0. Per-arm numbers bit-identical to attempt 2.
+UB.11-13/TA.03 need-a-winner question -> INBOX.
 
 ### J2 — The control-path contest (`D1.0`) — the seat is VACANT and had no order
 **Why.** `T2.01` (he moves better than random) is the biggest blocker in the
@@ -212,6 +213,8 @@ it at this file or delete it. (4) `T0.33` `slack_predicts_refusal` reads False.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+
+- **11-13 06:50 JACK J4 -> Director: UB.10 FAIL; what it blocks.** `UB.11`, `UB.12`, `UB.13` have `depends_on=["UB.10"]` and nothing else in the registry names a winner. Each tests a property of *the* fusion trunk (ablation matrix, synergy over the ensemble, retrieval gate), so they need a trunk to RUN on, not a won contest. The trunk can be the incumbent A0 or the median-top A2, declared before the run. `TA.03` depends on `TA.02`+`UB.11` and only needs UB.11 run. Ruling needed: relax the four to 'UB.10 has a non-VOID verdict' with the trunk declared, or hold them until a venue separates the arms. (Not done here: changing depends_on is a registration act.)
 
 ## DONE (kept one day)
 
