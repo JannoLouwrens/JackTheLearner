@@ -1,7 +1,22 @@
 # PROGRESS — for the owner, on a phone
 
-Written 2026-11-13 06:45 UTC by the Director (daily sitting). Rewritten every
-day; git keeps the old ones.
+Written 2026-11-13 08:50 UTC by the Director (second sitting today, after
+your END-FIT session). Rewritten every day; git keeps the old ones.
+
+## Your picture of the finished Jack — where I put it
+
+Human-like body; trained here, handed to people, still learning there;
+advised in words. It now judges every brain design (the END-FIT table). Today:
+- **Ordered now (J8): the hand-over test.** Train him here, move the one saved
+  file to a different machine, and check he still knows what he knew AND
+  learns more there. Two fakes must fail (a stripped file, a fresh brain).
+- **On the route map:** the tool chain (tree → wood → fire → cooked food,
+  buildable shelter) under milestone 2; hands that hold and strike under 4;
+  advice in words under 6. They open one at a time behind the hand-over test —
+  the chain needs the deeper world's fire built first, hands need a controller.
+- Corrected a stale line that described his language input as a ready-made
+  text model. Nothing ready-made goes inside him.
+- The "does living teach him" test (`LF.04`) still comes first, as you wrote.
 
 ## What Jack can do today
 
@@ -10,12 +25,10 @@ lives in the first world (W0): hunger, thirst, cold, his senses, a diary
 carried across deaths (test `LF.03`, milestone 1). **He does not yet learn to
 find food by living**, and yesterday the workers found out a lot about why:
 
-- They tried six cheap explanations, each with a pass/fail rule written down
-  before looking — eyes too high to see floor food, no smell, a too-short
-  planning horizon, too-timid wandering, being born too far from food, being
-  "nursed" near food and then weaned. **All six are dead.** Nursing does feed
-  him, but once weaned he drifts away again. He cannot yet connect "I walked
-  this way" with "then I ate".
+- Six cheap explanations were tested by rules written down first (eye height,
+  smell, planning horizon, timid wandering, birth distance, nursing then
+  weaning). **All six are dead.** He cannot yet connect "I walked this way"
+  with "then I ate".
 - A second suspect turned up in the world itself: **his body clock is wrong.**
   The world says one of its days is 20 minutes (72× faster than life). Cold
   obeys that. Hunger and thirst run 6–15× faster still: he dies of thirst in
@@ -27,8 +40,7 @@ New: he has a better short-term memory. A "ring" memory invented in the lab
 beat the old one (0.90 against 0.58 on five fresh runs, both fakes caught) and
 now holds that seat by contest (`WM.02`).
 
-The test ladder reads **107 of 267** (109 of 264 yesterday). Two tests were
-won, and two were lost for bookkeeping reasons, one of which matters (below).
+The test ladder reads **107 of 267** (109 of 264 yesterday).
 
 ## Where he stands on the route (9 milestones)
 
@@ -44,9 +56,9 @@ won, and two were lost for bookkeeping reasons, one of which matters (below).
    several experts" contest (`UB.10`), stuck 59 days, finally has a verdict
    (06:43 today): **no design wins.** All six sit within 2 points of each
    other and the best one changes from run to run. The seat stays undecided
-   — raced, not assumed — and I ruled we do not hunt for a kinder test. The "who controls the body"
-   contest lost a third finished run to a failed download; that loss is now
-   fixed for good and the contest restarts today.
+   — raced, not assumed — and I ruled we do not hunt for a kinder test. The
+   "who controls the body" contest is **running now** on a free Colab GPU
+   (attempt 4, about 25 GPU-hours in 13 resumable pieces).
 4. **A body that moves** — waits on that controller contest.
 5–9. Senses / words / keeps learning / living Jack / beyond — unchanged.
 
@@ -62,8 +74,6 @@ won, and two were lost for bookkeeping reasons, one of which matters (below).
 - The one-brain contest: test bed chosen by a rule fixed in advance, run
   twice on a real GPU, one defect repaired without moving any pass mark.
 - Finished GPU runs can no longer be lost to a failed download (`S5`).
-- Kaggle will run CPU-only jobs for free even when the GPU hours are gone
-  (measured in your session), and faster per learner than this box.
 
 ## What did not move
 
@@ -74,28 +84,30 @@ won, and two were lost for bookkeeping reasons, one of which matters (below).
   could not run. Fixed today: it runs on free Kaggle CPU, building that route
   is the first machine order, and no new side-experiments start until it has
   a verdict.
-- The controller contest: no GPU ran for ~21 hours (Kaggle spent by the other
-  project, Colab refusing) — and my order for it had fallen out of yesterday's
-  page by mistake. The auditor caught it. Restored.
+- The speed test could not be re-run: other projects kept the box busy all
+  morning (load 3–7). Workers now try it first in every slot.
+- The free Kaggle-CPU route has no code yet. It is `LF.04`'s only road.
 - "He can move" (`T2.01`), the biggest single blocker (25 tests behind it):
   still waiting on that contest.
 
 ## What the workers are on next
 
-1. Re-run the speed test on a quiet box (minutes).
-2. Run the two repaired deeper-world tests (about an hour).
-3. Restart the controller contest on the GPU the one-brain contest just freed.
-4. Race the honest world clock against today's world.
-5. Build the free Kaggle-CPU route and send `LF.04` through it; then the
+1. Re-run the speed test the minute the box is quiet; otherwise build the
+   Kaggle-CPU route.
+2. Deeper world: one repaired test is running now (its prerequisite re-passed
+   at 07:56); the second follows.
+3. Watch the controller contest on the GPU.
+4. Race the honest world clock against today's world (both clock tests were
+   re-written against the one declared clock this morning).
+5. Register the hand-over test. Finish the free Kaggle-CPU route and send
+   `LF.04` through it; then the
    curriculum contest (six rivals), then **your scale question**: a new 3×
    contest of all the learning brains plus the ring memory.
 6. Your video: a phone-playable clip of his latest life, hunger and thirst
    overlaid, at `/data/jack-video/latest.mp4` once built. Not built yet.
 
-**When can a bigger-scale result honestly be expected?** The 3× contest needs
-the Kaggle-CPU route (a day or two of building), then a pilot to price it.
-Realistically a first 3× verdict in one to two weeks. The full 10× (`LC.07`)
-is 200–270 Kaggle session-hours — weeks, and only after 3× shows it is worth it.
+**Bigger scale, honestly:** a first 3× verdict in one to two weeks (needs the
+Kaggle-CPU route, then a pricing pilot). The full 10× is weeks after that.
 
 ## The four machine numbers
 
@@ -103,7 +115,7 @@ is 200–270 Kaggle session-hours — weeks, and only after 3× shows it is wort
 |---|---|
 | Points per worker run | −0.04 (109 → 107 over 51 runs: 2 won, 4 lost, among them the speed test under load and one machine self-check) |
 | Slots lost to budget | 0 worker slots. But the CPU day ran out at 22:48 and refused three experiments |
-| Free GPU-hours expired | None of ours: Kaggle's 30 h were used by your other project. Colab 5.1 h used this week |
+| Free GPU-hours expired | None of ours: Kaggle's 30 h were used by your other project. Colab 5.4 h used this week, contest running |
 | Oldest unrepaired blocker | 93 days: "he moves better than random" (`T2.01`). The 73-day world rules are diagnosed and ordered |
 
 ## Dead or stuck
@@ -115,8 +127,10 @@ is 200–270 Kaggle session-hours — weeks, and only after 3× shows it is wort
 - Usage meter: 5% of the new week (resets 20 Nov). Readable.
 - Two tools exit red (`coverage`, `run verify`): one by design, one because a
   new test's pass cannot be re-checked from its record. Repair ordered (S3).
-- Old paperwork: 4 stale process decisions and the old review backlog were not
-  touched today — the clock went to the rulings above.
+- Old paperwork: the 4 stale process decisions are closed (each by its
+  written default, nothing built); the old backlog is 35 rows, down 20 today.
+- Our GPU budget file says Kaggle has 30 h left; Kaggle says 0 (your other
+  project used them). Workers trust Kaggle. A small fix is queued.
 
 ## FOR THE OWNER
 
