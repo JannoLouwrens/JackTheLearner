@@ -6146,11 +6146,24 @@ EXPANSION: list[Spec] = [
                        "from k = 72 is measuring nothing.",
          metric="compression_invariance_error", budget=Budget.CPU, seeds=1,
          depends_on=["W.1", "W.2"],
-         control="A NAIVE-COMPRESSION variant that scales the physics timestep "
-                 "instead of the needs clock MUST fail W.1's decay check, "
-                 "because a 70 kg body's tau = 4.74 h is a property of m*c_p/hA "
-                 "and cannot be sped up by a clock convention. This is the "
-                 "specific mistake the spec exists to make impossible.",
+         control="RE-REGISTERED 2026-11-13 (Director ruling 1, ORDERS J6(a)): "
+                 "W0 has ONE declared clock, k = 72. Every rate-bearing channel "
+                 "— thermal tau (4.74 h), thirst deadline (3 days), starvation "
+                 "deadline (3 weeks), sleep tau_wake — must have sim-time "
+                 "constant = its sourced human constant / 72, each asserted "
+                 "against the DECLARED k (never against another channel or "
+                 "SIM_DAY_S). A channel whose implied k differs from 72 by more "
+                 "than the tolerance (the bars' own: W.1(b)'s 1% bar admits "
+                 "~+/-11.6% in k) MUST fail. Planted controls that must fail: "
+                 "a channel at k = 1 and at k = 60. Expected on the shipped "
+                 "world: thermal PASSES (TAU_T 240 s = 17069 s / 71.1); the "
+                 "needs FAIL (needs.py B_E 1/1800 starves at ~1700 s vs "
+                 "25200, k ~1067; B_W 1/450 kills of thirst at ~570 s vs "
+                 "3600, k ~455) until the needs-clock race (J6(b)) ships. "
+                 "SUPERSEDED original control: 'a NAIVE-COMPRESSION variant "
+                 "that scales the physics timestep MUST fail W.1's decay "
+                 "check' — the ruling makes the compressed thermal clock the "
+                 "declared one, and W.1(b) now reads on it.",
          kills="Every cost estimate in SURVIVAL_WORLD.md. Without compression a "
                "single 24 h life is 1.70 core-hours (measured) and no 3-seed "
                "study is affordable; with UNVERIFIED compression every thermal "
@@ -6168,7 +6181,15 @@ EXPANSION: list[Spec] = [
                "a k, whether or not anybody declared it — so k is already in "
                "the code and this spec's job is to find out whether it was "
                "DECLARED or merely IMPLIED. An undeclared k is the failure "
-               "mode, not a missing feature."),
+               "mode, not a missing feature.\n"
+               "RE-REGISTRATION NOTE 2026-11-13 (J6(a)): the hypothesis's "
+               "'the physics integrates in REAL seconds and only the "
+               "need-accumulation clock is scaled' and its 'W.1's checks "
+               "bit-identical across k' clause are SUPERSEDED by Director "
+               "ruling 1 (one declared clock, k = 72, for thermal AND needs); "
+               "the control above is the binding form. W.1(b) was "
+               "re-registered onto the same declared clock the same day. "
+               "Still NO implementation (tests/w_7_*.py does not exist)."),
 
     Spec("W.8", 5, "Rule depth: the world contains more than we enumerated",
          hypothesis="The count of distinct REACHED rule-interaction events — "
