@@ -169,6 +169,44 @@ class DynWorldCore(WorldModelCore):
         a = torch.zeros(n, ACTION_DIM) if a_prev is None else a_prev
         return self._cell(zp, a, h, z)
 
+    # -- R2D2 stored state (survival_rec.py, 11-13 20:50) --------------------
+    # The rollout keeps (deter_{t-1}, z_{t-1}, a_{t-1}) with each observation;
+    # a replay batch hands them back through `use_stored` before lc_update, so
+    # shared_state/binding_loss advance ONE GRU step from the stored state
+    # (Kapturowski et al. 2019, stored-state strategy, burn-in 0; the stored
+    # deter was made by older weights - declared staleness, not hidden).
+    _stored: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor]] = None
+
+    def use_stored(self, stored) -> None:
+        self._stored = stored
+
+    def _from_stored(self, obs, dropped):
+        st = self._stored
+        if st is None:
+            return self.rssm(obs, dropped)
+        h, zp, a = st
+        return self.rssm(obs, dropped, h=h, z_prev=zp, a_prev=a)
+
+    def shared_state(self, obs, dropped=()):
+        return self._from_stored(obs, dropped)["state"]
+
+    def binding_loss(self, obs, dropped=()):
+        """With a stored state: the one-step form of `seq_loss` (L_next from
+        (deter_{t-1}, a_{t-1}) normalised by z's batch variance + KL + VICReg),
+        so gradient reaches the GRU's action columns from i.i.d. replay.
+        Without one: the seated WorldModelCore binding loss, unchanged."""
+        if self._stored is None:
+            return super().binding_loss(obs, dropped)
+        s = self._from_stored(obs, dropped)
+        zt = s["z"].detach()
+        zvar = zt.var(0, unbiased=False).clamp_min(1e-4)
+        l_next = ((self.next_pred(s["deter"]) - zt).pow(2) / zvar).mean()
+        l_kl = self._kl(s["post"], s["prior"])
+        l_var = F.relu(1.0 - s["z"].std(0)).mean()
+        total = l_next + l_kl + VAR_COEF * l_var
+        return total, {"next": l_next.detach(), "kl": l_kl.detach(),
+                       "var": l_var.detach()}
+
     # -- learning on real sequences ------------------------------------------
     def filter_seq(self, obs_seq: List[Dict[str, torch.Tensor]],
                    acts: torch.Tensor, dropped=()) -> List[Dict]:
