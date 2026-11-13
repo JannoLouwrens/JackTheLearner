@@ -104,11 +104,11 @@ seeds 300–319, ~65 min on 3 workers, `launch_detached.sh`), one at a time.
 Then register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 5.
 **done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
-state: 11-13 01:45 W1.04 REPAIRED 8495d56 (not run); expect control green + claim FAIL (c).
-11-13 02:40 W1.00 RE-REGISTERED attempt 2 (not run): n 3 -> 20 fresh seeds, exact t, power ~.87; no bar/control touched.
-11-13 07:40 W1.04 LAUNCHED detached (wrapper pid 2608642, log /data/tmp/w1_04_attempt2.log) behind a W1.02 re-buy.
-11-13 07:56 W1.02 PASS re-bought (8b70243). 08:39 W1.04 still running (pid 2608652).
-Next: harvest W1.04's row; then W1.00 attempt 2 detached (one at a time); W1.01 is stale — re-buy it in the same job.
+state: 11-13 10:40 W1.04 HARVESTED (row 08:48, 640e329): FAIL on (c) only, as predicted. 5th-pct life is 54.3 s (W1.01) and 52.0 s (W1.02)
+vs a 5600 s horizon; deaths ~272/275 energy. Control, ratio, tag and claimset all ok. Same fault as J6's W0 needs clock: energy drains past the world's clock.
+W1.00 refused: W0.DIAG stale <- PS.01 stale (blocks 21). 10:38 LAUNCHED detached pid 3050089, log /data/tmp/w1_00_attempt2.log:
+PS.01 && W0.DIAG && W1.00 (attempt 2); then W1.01 re-buy. W1.04 is stale again (impl e804d0 -> 65a3c3).
+Next: harvest those 4 rows; then repair W1's energy clock by a race (as J6(b)), never by shortening the horizon; re-run W1.04; register DP.05-in-W1.
 
 ### J8 — The hand-over gate: a Jack trained here still learns on another machine
 **Why.** Owner 11-13: the finished Jack is "trained here, handed to people,

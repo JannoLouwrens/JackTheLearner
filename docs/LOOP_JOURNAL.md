@@ -725,3 +725,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   Attempt 22 PASS on it: planted 2.41, foreign max .75, T 6.57-8.07. J2: attempt 5 ERROR at 0 GPU-h (2d41481). The SB3 reference was
   cached and reused (the INBOX said otherwise), and Colab T4 assign was Service Unavailable. Served: 4 (a red explained and made
   honestly un-fakeable both ways) and 1 (LF.04's dependency green).
+- 2026-11-13 ~10:40 UTC JACK J7 (J1 step 2 waits on S1's Budget class, SYSTEM lane). Harvested W1.04's 08:48 row: FAIL on (c) only, as predicted.
+  5th-pct survival is 54.3 s and 52.0 s against a 5600 s horizon; ~272 of 275 deaths are energy. Every other clause is green. This is the same
+  fault as J6's W0 needs clock: he starves long before any late payoff can teach him. W1.00 attempt 2 was refused because its chain is stale
+  (W0.DIAG <- PS.01, and PS.01 blocks 21). Launched PS.01 -> W0.DIAG -> W1.00 -> W1.01 detached (pid 3050089, /data/tmp/w1_00_attempt2.log).
+  The first launch died because $PY was unset in a fresh shell; launch_detached caught it at 15 s. Served: 1 (a world whose clock lets living
+  teach) and 4 (a red read to its cause, not filed).
