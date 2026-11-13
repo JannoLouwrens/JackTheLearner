@@ -554,7 +554,17 @@ VENUE_NOISE_SD = 2.5
 # are now declared separately (`VENUE_VISION_SD`), and the next venue is chosen
 # by `_select_venue` from a seed-90 sweep over VENUE_SWEEP, under a rule written
 # BEFORE the sweep was read. Bars unchanged.
-VENUE_VISION_SD = 2.5        # vision's level, in units of its own train std
+# SWEEP HARVESTED 2026-11-13 (Colab T4, /data/ub10_venue_sweep.json; seed 90
+# only, no registered seed read). `_select_venue` applied as declared:
+#   (2.0,2.0) fails: A4 marginal (vslot .644), margin -.156
+#   (2.0,1.0) fails: A4 marginal (vslot .750)
+#   (2.5,0.0) qualifies, margin .0719 (floor .0719, A0 headroom .0844)  <- CHOSEN
+#   (2.0,0.0) qualifies, margin .0125 (A0 slot .9375 vs ceiling .95)
+# So vision is clean and audio alone carries the union bound (vslot ~1.0 for
+# every arm; afell .87-.92). A0 train loss .21 vs ~4e-4 at matched 2.5: the
+# memorise-the-draw gap is smaller here but the fixed per-episode draw is
+# still a known property of the venue, not a thing to tune. Bars unchanged.
+VENUE_VISION_SD = 0.0        # vision's level, in units of its own train std
 # (audio_sd, vision_sd), in the order a tie is broken. Matched-but-lower first,
 # then progressively less vision noise; audio alone can carry the union bound.
 VENUE_SWEEP = ((2.0, 2.0), (2.0, 1.0), (2.5, 0.0), (2.0, 0.0))
@@ -1980,6 +1990,7 @@ def _foreclosure_fixture():
     # (4a) A row AT this venue with saturated marginals: the case the guard was
     #      written for. It must FIRE on the union bound.
     sat = dict(row1, metrics={"venue_noise_sd": VENUE_NOISE_SD,
+                              "venue_vision_sd": VENUE_VISION_SD,
                               "marginal_per_arm_per_seed": {"A0": {
                                   "vslot": [1.0] * 3, "afell": [1.0] * 3}}})
     msg = guard_with(sat, None)
@@ -1990,17 +2001,20 @@ def _foreclosure_fixture():
     assert msg and "no pilot record" in msg, msg
     # (4c) A pilot record from yet another venue does not count either.
     msg = guard_with(row1, {"venue_noise_sd": VENUE_NOISE_SD + 1.0,
+                            "venue_vision_sd": VENUE_VISION_SD,
                             "a0": {"vslot": 0.9, "afell": 0.9}})
     assert msg and "no pilot record" in msg, msg
     # (4d) A pilot AT this venue whose anchor is still saturated: must FIRE on
     #      the union bound — a pilot is evidence in both directions.
     msg = guard_with(row1, {"venue_noise_sd": VENUE_NOISE_SD,
+                            "venue_vision_sd": VENUE_VISION_SD,
                             "a0": {"vslot": 1.0, "afell": 0.97}})
     assert msg and "XNOR" in msg and "0.9700" in msg, msg
     # (5) ...and it must STAND DOWN once a marginal has headroom, so it is a
     #     guard and not a permanent stop. Same code path, one number moved —
     #     from the pilot record, and from a venue-matched row.
     assert guard_with(row1, {"venue_noise_sd": VENUE_NOISE_SD,
+                             "venue_vision_sd": VENUE_VISION_SD,
                              "a0": {"vslot": 1.0, "afell": 0.88}}) is None
     ok_row = dict(sat, metrics=dict(sat["metrics"], marginal_per_arm_per_seed={
         "A0": {"vslot": [0.90] * 3, "afell": [1.0] * 3}}))

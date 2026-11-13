@@ -1,52 +1,53 @@
 {
  "venue_noise_sd": 2.5,
+ "venue_vision_sd": 0.0,
  "seed": 90,
  "attempt": "pilot",
- "ran_at": "2026-11-12T05:21:31",
+ "ran_at": "2026-11-13T04:44:21",
  "backend": "colab",
  "a0": {
-  "slot": 0.6813,
-  "vslot": 0.7562,
-  "afell": 0.8313
+  "slot": 0.8656,
+  "vslot": 1.0,
+  "afell": 0.8719
  },
  "acc": {
   "A0": {
-   "slot": 0.6813,
-   "vslot": 0.7562,
-   "afell": 0.8313
+   "slot": 0.8656,
+   "vslot": 1.0,
+   "afell": 0.8719
   },
   "A1": {
-   "slot": 0.7281,
-   "vslot": 0.7969,
-   "afell": 0.85
-  },
-  "A2": {
-   "slot": 0.6469,
-   "vslot": 0.7281,
-   "afell": 0.8531
-  },
-  "A3": {
-   "slot": 0.6906,
-   "vslot": 0.7219,
-   "afell": 0.8625
-  },
-  "A4": {
-   "slot": 0.5375,
-   "vslot": 0.6125,
+   "slot": 0.8781,
+   "vslot": 1.0,
    "afell": 0.8812
   },
+  "A2": {
+   "slot": 0.9031,
+   "vslot": 0.9969,
+   "afell": 0.9031
+  },
+  "A3": {
+   "slot": 0.925,
+   "vslot": 1.0,
+   "afell": 0.9156
+  },
+  "A4": {
+   "slot": 0.8531,
+   "vslot": 0.9875,
+   "afell": 0.8875
+  },
   "A5": {
-   "slot": 0.6906,
-   "vslot": 0.7688,
-   "afell": 0.8625
+   "slot": 0.8906,
+   "vslot": 1.0,
+   "afell": 0.8906
   }
  },
  "eligible": {
-  "A0": false,
-  "A1": false,
-  "A2": false,
-  "A3": false,
-  "A4": false,
-  "A5": false
+  "A0": true,
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true
  }
 }
