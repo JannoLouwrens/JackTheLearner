@@ -313,12 +313,12 @@ def run_arm(arm: str, seed: int, *, j0: float, alpha: float,
                   train_ratio=ratios[arm], e0=E0_LC09,
                   explore_std=EXPLORE_STD_LC09)
     if arm in ("wm-dyn", "wm-latent+ring"):      # carried state: survival_rec
-        if wipe_at_death or "intrinsic_fn" in hooks:
+        if "intrinsic_fn" in hooks:
             raise NotImplementedError(
-                "survival_rec has no wipe_at_death / intrinsic channel yet; "
-                f"LC.09 control (a) on {arm} needs it if {arm} leads")
+                f"survival_rec has no intrinsic channel ({arm})")
         from ..survival_rec import run_survival_rec
-        out = run_survival_rec(seed, arm=arm, **common, **hooks)
+        out = run_survival_rec(seed, arm=arm, wipe_at_death=wipe_at_death,
+                               **common, **hooks)
     else:
         from ..survival import run_survival
         out = run_survival(seed, policy="core", arm=arm,
@@ -362,8 +362,8 @@ def run(ledger=None):
     raise RuntimeError(
         "LC.09 not runnable: (1) wm-dyn and wm-latent+ring (built 11-13 22:30, "
         "cores_ring.py, through survival_rec) have no LC.02 committed "
-        "train_ratio (UnpricedArm); (1b) survival_rec has no wipe_at_death "
-        "for control (a); (2) the world-model arms never train an action- or "
+        "train_ratio (UnpricedArm); [(1b) survival_rec wipe_at_death BUILT "
+        "11-13 22:50 for control (a)]; (2) the world-model arms never train an action- or "
         "state-reading weight (GRU action cols and weight_hh grad == 0), so "
         "the guard's Delta_5 clause must VOID them (untrained Delta_5 -0.006..-0.008). See the docstring "
         "and ORDERS J3. Nothing recorded.")

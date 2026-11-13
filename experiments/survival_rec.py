@@ -87,21 +87,33 @@ def run_survival_rec(seed: int, *, j0: float, alpha: float, n_decisions: int,
                      arm: str = "wm-dyn", train: bool = True,
                      train_ratio: float = 0.25, e0: float = 1.0,
                      explore_std: tuple = EXPLORE_STD,
-                     reward_fn=None,
+                     reward_fn=None, wipe_at_death: bool = False,
                      return_core: bool = False) -> dict:
     """`reward_fn(r_h, w, obs, core) -> float`: survival.run_survival's hook,
     same call point (after `w.decide`, before the segment push), so LC.09's
-    GuardRecorder rides this loop unchanged. None = homeo-dr unchanged."""
+    GuardRecorder rides this loop unchanged. None = homeo-dr unchanged.
+
+    `wipe_at_death=True` is survival.run_survival's wiped twin (LC.09 control
+    (a)): at every death the core is rebuilt from the SAME init seed, with a
+    fresh optimiser and an empty replay ring, so nothing learned crosses a
+    death (weights, Adam moments, stored rows, ring state). The world's diary
+    crosses regardless, as in survival.py."""
     w = W0(seed=seed, j0=j0, alpha=alpha, lethal=True)
     if e0 != 1.0:
         w.drives.state = drives.DriveState(e=e0)
     rng = np.random.RandomState(seed * 6553 + 11)       # survival.py's seeds
     gen = torch.Generator().manual_seed(seed * 7919 + 3)
-    torch.manual_seed(9_000 + seed)
-    core = build_rec_arm(arm)
-    core.eval()
-    opt = make_optimizer(core) if train else None
+    init_seed = 9_000 + seed
+
+    def _fresh_learner():
+        torch.manual_seed(init_seed)
+        c = build_rec_arm(arm)
+        c.eval()
+        return c, (make_optimizer(c) if train else None)
+
+    core, opt = _fresh_learner()
     ring = _StateRing(w.observe())
+    wipes = 0
 
     seg: List[tuple] = []          # (obs, a, r, v, stored)
     optimiser_steps = 0
@@ -168,6 +180,11 @@ def run_survival_rec(seed: int, *, j0: float, alpha: float, n_decisions: int,
             core.reset()
             if e0 != 1.0:
                 w.drives.state = drives.DriveState(e=e0)
+            if wipe_at_death:
+                core, opt = _fresh_learner()     # fresh core: reset() implied
+                ring = _StateRing(w.observe())
+                seg = []
+                wipes += 1
 
     spans = list(w.life_lengths)
     third = len(spans) // 3
@@ -188,6 +205,7 @@ def run_survival_rec(seed: int, *, j0: float, alpha: float, n_decisions: int,
         "wall_s": float(time.perf_counter() - t_wall0),
         "life_ends": life_ends,
         "params": float(n_params(core)),
+        "wipes": float(wipes),
     }
     if return_core:
         out["core"] = core
@@ -224,5 +242,54 @@ def _smoke(n: int = 400) -> dict:
     return res
 
 
+def _smoke_wipe(n: int = 400, arms=REC_ARMS) -> dict:
+    """Wiring check for LC.09 control (a) (records nothing; j0 = alpha = 1.0
+    world, used only because it dies often - read no lives from it). With
+    wipe_at_death, on the first decision after every death the core must be
+    bit-identical to its seed-init core (checked inside reward_fn, which runs
+    before that decision's update); the persistent twin must NOT be once it
+    has trained (its deaths before the first optimiser step DO equal init -
+    nothing has been learned yet - so the control reads its LAST post-death
+    check), and a wiped run must report one wipe per death."""
+    res = {}
+    for arm in arms:
+        torch.manual_seed(9_000)
+        init = {k: v.detach().clone()
+                for k, v in build_rec_arm(arm).state_dict().items()}
+        for wipe in (True, False):
+            seen = {"prev_died": False, "post_death": 0, "equal": 0,
+                    "last_equal": None}
+
+            def hook(r, w, obs, core, seen=seen):
+                if seen["prev_died"]:
+                    seen["post_death"] += 1
+                    sd = core.state_dict()
+                    eq = all(torch.equal(sd[k], init[k]) for k in init)
+                    seen["equal"] += int(eq)
+                    seen["last_equal"] = eq
+                seen["prev_died"] = bool(w.died_this_decision)
+                return r
+
+            out = run_survival_rec(0, arm=arm, j0=1.0, alpha=1.0,
+                                   n_decisions=n, train=True,
+                                   reward_fn=hook, wipe_at_death=wipe)
+            res[(arm, wipe)] = dict(n_lives=out["n_lives"], wipes=out["wipes"],
+                                    steps=out["optimiser_steps"],
+                                    post_death=seen["post_death"],
+                                    equal_init=seen["equal"],
+                                    last_equal=seen["last_equal"])
+    print(res)
+    for arm in arms:
+        on, off = res[(arm, True)], res[(arm, False)]
+        assert on["post_death"] >= 3 and off["post_death"] >= 3, "too few deaths"
+        assert on["equal_init"] == on["post_death"], f"{arm}: wipe leaked"
+        assert on["wipes"] == on["n_lives"], f"{arm}: wipes != deaths"
+        assert off["last_equal"] is False, f"{arm}: persistent twin at init"
+        assert off["equal_init"] < off["post_death"]
+        assert off["wipes"] == 0
+    return res
+
+
 if __name__ == "__main__":
-    _smoke()
+    import sys
+    _smoke_wipe() if "wipe" in sys.argv[1:] else _smoke()
