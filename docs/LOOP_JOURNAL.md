@@ -902,3 +902,11 @@ LC.09's collapse guard re-registered, strengthening: Delta_5 > 0 could not fail 
 z variance; an arm with no next-latent head is VOID. Selftest 18/18 with planted known-positives: untrained dyn vs twin reads 0.0 and
 trips, the seated wm-latent trips; 06a4502's paired gains +.149/+.101/+.083 clear it. No clause removed, no ledger row.
 Served philosophy 4 (a guard that could not fail, now one that can — seen failing) and 3 (the seat must re-earn itself against a real dynamics arm).
+
+2026-11-13 20:40 UTC · JACK · J3 (+J2 probe) · b1a4160. Box loud (load 1.7-2.6), day CPU ceiling spent -> J1/J7/J6 wait for 00:00.
+J2: Colab T4 assign 'Service Unavailable' again (8th today); no session left, nothing dispatched.
+J3: LC.09 re-registered, strengthening: wm-dyn (the world-model core that carries its state and predicts what his actions do) is
+the 7th arm, raced against the seat, not substituted for it; it sits under the collapse guard with every gate unmoved. The spec now
+names the END-FIT rows each arm serves (owner 11-13). Selftest ok. Still refuses to run: ring arm unbuilt, wm-dyn's state not yet
+carried in survival.py's batch. No ledger row.
+Served philosophy 3 (a challenger that holds its seat only by verdict) and 7 (END-FIT declared in the cook-off's registration).

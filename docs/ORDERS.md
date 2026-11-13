@@ -171,11 +171,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
-state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); seated WM cores 0.0 grad on GRU action/hh (ef335cf); wm-dyn built (eda11bf, cores_dyn.py).
-wm-dyn's own K=5 action share untrained ~0 -> trained +.135/+.108/+.055 (06a4502); Delta_5 FALLS as it learns (misreads moving-z arms).
-20:15 GUARD RE-REGISTERED (c09df29, strengthening, Delta_5/rank clauses kept): + action gain (gap_shuf K=5 vs own untrained twin) >= .03, unmeasurable
-= VOID; selftest 18/18 (untrained dyn reads 0.0 -> trips; seated wm-latent no head -> trips; 06a4502 gains +.149/+.101/+.083 pass). Seat will VOID.
-Next: add wm-dyn as LC.09's 7th arm (re-reg) + R2D2 stored-state wiring into survival.py; raise action info (K-step loss); pilot one arm-seed s89.
+state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); seated WM cores 0.0 grad on GRU action/hh (ef335cf); wm-dyn built (eda11bf, cores_dyn.py),
+learns action dependence K=5 +.135/+.108/+.055 (06a4502). 20:15 guard + action gain >= .03 vs untrained twin (c09df29, selftest 18/18).
+20:40 RE-REGISTERED (b1a4160, strengthening): wm-dyn = 7th arm + latent arm under the guard; END-FIT rows declared per arm (all->2, ring->4,
+wm-dyn->4,1; row 3 untouched). Selftest ok. run() refuses on: ring arm unbuilt; wm-dyn deter not in survival.py's batch.
+Next: R2D2 stored-state wiring of wm-dyn into survival.py (deter kept per ring slot); build wm-latent+ring; K-step loss; pilot wm-dyn s89.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
