@@ -696,3 +696,8 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   the push because the shared account's 30 h weekly quota is reached, while gpu_budget.json reads 0.00 h used (INBOX). The dispatch
   failed over to Colab T4 session ladder-1794554302, and watcher 2598887 is live. J6(a) needs W.7 implemented from scratch, so it was
   scoped and not started. Served: 3 (the vacant control-path seat raced on free GPU) and 6 (yielded the box to its other tenants).
+- 2026-11-13 ~07:45 UTC JACK J7 (short slot; J1 step 1 still not runnable: load 3.2-5.0, mostly another project's proof_r8 at 100%).
+  W1.04 (float-clock repair 8495d56) refused to start: BLOCKED by its dependency W1.02, whose PASS is stale (code moved). Regate
+  skipped it on 11-12 because PS.01 was stale then. Launched one detached job that re-buys W1.02 and then runs W1.04
+  (wrapper 2608642, log /data/tmp/w1_04_attempt2.log). Its 3 niced W1.02 workers were at ~94% CPU each at 07:42. There is no verdict
+  yet; the next slot harvests it. Served: 1 (the world's horizon measured against his real lives) and 5 (the world tested before claims cite it).

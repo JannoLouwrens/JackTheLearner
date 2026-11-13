@@ -109,6 +109,9 @@ serves: M2 · philosophy 5.
 **done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
 state: 11-13 01:45 W1.04 REPAIRED 8495d56 (not run); expect control green + claim FAIL (c).
 11-13 02:40 W1.00 RE-REGISTERED attempt 2 (not run): n 3 -> 20 fresh seeds, exact t, power ~.87; no bar/control touched.
+11-13 07:40 W1.04 LAUNCHED detached (wrapper pid 2608642, log /data/tmp/w1_04_attempt2.log): it was BLOCKED by stale W1.02,
+so the job re-buys W1.02 (~14 min, 3 workers) && then runs W1.04 (~40-60 min). Load 3-5 from other projects (not a wall-clock claim).
+Next: harvest both rows from the log/ledger; then W1.00 attempt 2 detached (one at a time).
 
 ### J5 — The curriculum cook-off (`CR.01`)
 **Why.** Owner 11-11: the curriculum is "as important as jack himself". The
