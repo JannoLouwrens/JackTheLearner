@@ -170,15 +170,11 @@ shrunk `LC.07`: all five core arms plus the ring working memory, ~3× the
 screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
-sessions needed in `state:`. Runs third on S1.
-serves: M3 · END-FIT row 2 (the collapse guard is this spec's §5.4 diagnostic; state per arm its weight count —
-it must stay small enough to learn in real time on a personal computer) · philosophy 3, 7.
-**done when:** the spec is registered, priced from a pilot, and dispatched.
-state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms = 5 cores + wm-latent+ring, 1.2M dec/arm-seed = 3x LC.03 v2;
-LC.03's two 3-sigma gates unmoved; LC.04 1.5-sigma lead + D12 convergence check for the seat; controls wiped-store/randrew/frozen must fail;
-collapse guard RankMe + per-dim std + ActSWM Delta_5 every 1k dec, VOID if final-third Delta_5<=0 or rank<.10 dim; weights as JACKFILE).
-Priced from arithmetic only: ~9.8 h/learner-run at S1's 34 dec/s, ~11 sessions. CHAMPIONS Learning-core TRIGGER+ARENA += LC.09. No runner.
-Next: build the runner (tests/lc_09_*.py, collapse-guard selftest with a planted rank-1 latent), then pilot wm-latent s89 on Kaggle CPU.
+sessions needed in `state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms, 1.2M dec/arm-seed, LC.03 gates unmoved; ~11 sessions by arithmetic).
+11-13 18:30 GUARD BUILT (ef335cf, tests/lc_09_learning_core_3x.py): RankMe/std/ActSWM Delta_5, selftest 11/11 (planted rank-1 trips); run() refuses.
+FOUND: dreamer-xs/wm-efe/wm-latent have NO DYNAMICS: rssm() feeds zero action + zero h every call; GRU action cols + weight_hh grad == 0.0 after
+20 lc_updates; wm-latent predicts its own CURRENT latent. Untrained Delta_5 -0.006..-0.008 (5 inits) -> guard will VOID every WM arm, the seat too.
+Next: build an action-conditioned next-latent core (state across decisions, predicts z_t+1 from (s_t,a_t)) + wm-latent+ring; re-register LC.09 +1 arm.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
@@ -273,6 +269,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 18:30) J3 finding for the Learning-core seat (CHAMPIONS): the seated wm-latent (and dreamer-xs, wm-efe) is a world model in name only. `cores.py` rssm() steps the GRU once from a zero state with a zero action, so no weight that reads an action or a past state ever gets gradient (measured 0.0, ef335cf). LC.03 v2 seated a feed-forward encoder. LC.09's ActSWM guard will VOID it; the repair (a real action-conditioned dynamics arm) touches cores.py + survival.py and stales LC.01/02/03/07/08, LF.03, SH.01/02. Ruling wanted only on ORDER (J3 builds it next vs after LF.04), not on whether to race it.
 - (JACK 11-13 17:45) J2 probe: `colab new -s p --gpu T4` now stops at an OAuth prompt ('To authorize colab-cli, visit this URL', 'Enter the authorization code') — the Colab CLI token has expired since 16:40; only the owner's browser can re-authorise. Every Colab dispatch fails until then. Nothing dispatched.
 - (JACK 11-13 17:20) J2 probe: Colab T4 assign 'Service Unavailable' 5th time today (`colab sessions` empty); nothing dispatched.
 - (JACK 11-13 16:40) Colab CLI 0.6.0: `colab ls` lists FILES in a session, not sessions; the session list is `colab sessions` (empty output = none). ORDERS J2 / the 'GPU today' header say `colab ls` first. Also: CPU-runtime assign works while T4 is refused, so a T4 probe is the only honest pre-flight; dispatch.sh could run it before writing any row.

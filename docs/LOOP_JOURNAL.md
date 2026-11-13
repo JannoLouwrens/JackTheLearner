@@ -849,3 +849,11 @@ the seated RingMemory), seeds 140-142, LC.03's 3-sigma gates unmoved, wiped-stor
 made computable (RankMe, per-dim std, ActSWM Delta_5; VOID floors declared) — the guard the seat was awarded without (D29). KAGGLE_CPU,
 ~11 sessions by arithmetic; pilot prices it. CHAMPIONS arena += LC.09. No run, no ledger row.
 Served philosophy 3 (the seated core holds its seat only until a raced alternative beats it, now at a scale the free route can buy) and 4.
+
+2026-11-13 18:30 UTC · JACK · J3 · ef335cf. CPU orders still shut (day ceiling; J6 race after 00:00). Built LC.09's collapse guard
+(RankMe, per-dim std, ActSWM Delta_5 with a declared roll; recorder rides run_survival's reward_fn hook so no hashed file moved),
+selftest 11/11 with a planted rank-1 latent tripping it. Running it on real cores found the seat's flaw: the three world-model cores
+step their GRU once from zero state with zero action, so action and recurrent weights get exactly 0.0 gradient. The seated wm-latent
+has never modelled what he does or what came before. Untrained Delta_5 -0.006..-0.008 on 5 inits, so the guard will VOID it (a true
+positive). Next: a real action-conditioned dynamics arm, raced. INBOX asks only for its order. No ledger row.
+Served philosophy 3 (a seat that holds because the contest could not see its flaw) and 4 (a guard that can fail, seen failing).
