@@ -837,6 +837,48 @@ def _probe_colab_delivery(prefix: bool = False) -> dict:
     }
 
 
+def _probe_cpu_kernel(budget: Budget, journal: Path, prefix: bool = False) -> dict:
+    """S1: drive the SHIPPED `submit(prefer="kaggle-cpu")` with the CLI stubbed.
+    A CPU kernel must ask Kaggle for no GPU, charge 0 GPU-h on success or
+    failure, and never fail over to colab. `prefix=True` sends the same job
+    the only way that existed before S1 (`prefer="kaggle"`): the control."""
+    pushed: list = []
+    calls: list = []
+
+    def _cli(cmd, timeout):
+        calls.append(cmd)
+        if "push" in cmd:
+            meta = Path(cmd[cmd.index("-p") + 1]) / "kernel-metadata.json"
+            pushed.append((cmd, json.loads(meta.read_text())))
+            return 0, "Kernel version 1 successfully pushed.", ""
+        if "status" in cmd:
+            return 0, 'has status "KernelWorkerStatus.COMPLETE"', ""
+        return 0, "", ""
+
+    real = (gpu._run, gpu.subprocess, gpu.time, gpu.run_on_colab)
+    colab_called: list = []
+    try:
+        gpu._run, gpu.subprocess, gpu.time = _cli, _FakeSubprocess(), _FakeClockTime()
+        gpu.run_on_colab = lambda *a, **k: (colab_called.append(1)
+                                            or JobResult("colab", False, message="stub"))
+        with tempfile.TemporaryDirectory(dir="/data") as sd:
+            script = Path(sd) / "job.py"
+            script.write_text("print('cpu job')\n")
+            res = gpu.submit(script, prefer="kaggle" if prefix else "kaggle-cpu",
+                             est_hours=0.1, timeout_s=600, budget=budget, journal=journal)
+    finally:
+        gpu._run, gpu.subprocess, gpu.time, gpu.run_on_colab = real
+    fresh = Budget(budget.path)
+    cmd, meta = pushed[-1] if pushed else ([], {})
+    return {
+        "cpu_kernel_requests_no_gpu": bool(pushed) and meta.get("enable_gpu") is False
+                                      and "--accelerator" not in cmd,
+        "cpu_kernel_charges_zero_gpu_h": bool(res.ok)
+                                         and fresh.used_hours("kaggle") == 0.0
+                                         and fresh.failed_hours("kaggle") == 0.0,
+    }
+
+
 def _experiment(seed: int) -> dict:
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "budget.json"
@@ -848,6 +890,7 @@ def _experiment(seed: int) -> dict:
         out.update(_probe_reattach())
         out.update(_probe_nosession())
         out.update(_probe_colab_delivery())
+        out.update(_probe_cpu_kernel(Budget(Path(td) / "cpu.json"), Path(td) / "cpu.jsonl"))
         out.update(_probe_concurrent(Budget, Path(td)))
         return out
 
@@ -929,6 +972,8 @@ def _control(seed: int) -> dict:
         out.update(_probe_reattach_prefix())
         out.update(_probe_nosession(prefix=True))
         out.update(_probe_colab_delivery(prefix=True))
+        out.update(_probe_cpu_kernel(Budget(Path(td) / "cpu.json"), Path(td) / "cpu.jsonl",
+                                     prefix=True))
         out.update(_probe_concurrent(_ClobberBudget, Path(td)))
         return out
 
@@ -987,6 +1032,11 @@ def _check(m: dict, c: dict) -> bool:
     nosession_detected = ((not c["nosession_fails_inside_5min"])
                           and (not c["nosession_charges_zero"])
                           and (not c["push_refusal_fails_at_once"]))
+    # Property 15 (S1): a Kaggle CPU kernel asks for no GPU and bills 0 GPU-h;
+    # the pre-S1 route (the GPU kernel) must fail both.
+    cpu_ok = m["cpu_kernel_requests_no_gpu"] and m["cpu_kernel_charges_zero_gpu_h"]
+    cpu_detected = ((not c["cpu_kernel_requests_no_gpu"])
+                    and (not c["cpu_kernel_charges_zero_gpu_h"]))
     # Properties 13-14 (S5): a lost download still delivers; a busy session
     # refuses before running. The pre-S5 run_on_colab must fail all three.
     delivery_ok = (m["lost_download_delivers"] and m["lost_download_says_recovered"]
@@ -1064,6 +1114,7 @@ def _check(m: dict, c: dict) -> bool:
     )
     return (experiment_ok and billing_ok and receipt_ok and reattach_ok
             and concurrent_ok and nosession_ok and nosession_detected
+            and cpu_ok and cpu_detected
             and delivery_ok and delivery_detected
             and isolation_detected and billing_detected and receipt_detected
             and reattach_detected and concurrent_detected)

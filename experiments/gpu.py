@@ -900,7 +900,13 @@ def result_json(res: "JobResult", name: str) -> dict:
         f"{len(res.stdout or '')} chars of stdout")
 
 
-def _kernel_sha256(script: Path) -> Optional[str]:
+def _kernel_body(body: str, cpu: bool = False) -> str:
+    """kernel.py as pushed. A CPU kernel (S1) skips the Pascal torch fix: it
+    pulls a 780 MB CUDA wheel that a CPU-only session cannot use."""
+    return body if cpu else KAGGLE_TORCH_FIX + "\n" + body
+
+
+def _kernel_sha256(script: Path, cpu: bool = False) -> Optional[str]:
     """sha256 of EXACTLY the bytes `run_on_kaggle` pushes as kernel.py.
 
     Computed from the same construction (`KAGGLE_TORCH_FIX + "\\n" + script`)
@@ -914,7 +920,7 @@ def _kernel_sha256(script: Path) -> Optional[str]:
         body = script.read_text()
     except OSError:
         return None
-    return hashlib.sha256((KAGGLE_TORCH_FIX + "\n" + body).encode()).hexdigest()
+    return hashlib.sha256(_kernel_body(body, cpu).encode()).hexdigest()
 
 
 def reattach_code_check(slug: str, local_sha: Optional[str],
@@ -940,7 +946,7 @@ def reattach_code_check(slug: str, local_sha: Optional[str],
     attempt receipt's `ts`).
     """
     attempts = [r for r in receipts if r.get("phase") == "attempt"
-                and r.get("backend") == "kaggle"]
+                and str(r.get("backend", "")).startswith("kaggle")]
     # Join 1: a result line that names this kernel points at its attempt_id.
     ids = {r.get("attempt_id") for r in receipts
            if r.get("phase") == "result"
@@ -1014,8 +1020,12 @@ def _kaggle_poll(kid: str, timeout_s: float, t_open: float) -> tuple[str, float,
 
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   fetch: Optional[list[str]] = None,
-                  journal: Optional[Path] = None) -> JobResult:
+                  journal: Optional[Path] = None, cpu: bool = False) -> JobResult:
     """Push a kernel, poll to completion, retrieve output.
+
+    `cpu=True` (S1, backend "kaggle-cpu"): `enable_gpu:false`, no accelerator,
+    so the session draws on no GPU quota — billable_s is 0 and `submit` charges
+    nothing. Measured 11-12: a CPU kernel is accepted with the GPU quota spent.
 
     Kaggle has no ephemeral-run primitive — a kernel is pushed, queued, and its
     output collected afterwards, so this polls rather than blocking on a process.
@@ -1028,13 +1038,14 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     """
     t0 = time.time()
     work = Path(tempfile.mkdtemp(dir="/data"))
+    backend = "kaggle-cpu" if cpu else "kaggle"
 
     # `kaggle config view` prints text, not JSON; read the username from it.
     cfg = subprocess.run([KAGGLE, "config", "view"], capture_output=True, text=True).stdout
     username = next((l.split(":", 1)[1].strip() for l in cfg.splitlines()
                      if l.strip().startswith("- username")), None)
     if not username:
-        return JobResult("kaggle", False, message="could not determine Kaggle username")
+        return JobResult(backend, False, message="could not determine Kaggle username")
 
     # REATTACH, not resubmit. If the local runner dies while a kernel runs
     # (session restart SIGPIPEd T2.01 v3's waiter at ~80 min in), the kernel
@@ -1055,9 +1066,9 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         except ValueError:
             pass
     else:
-        slug = f"jack-ladder-{int(t0)}"
-    # Pascal-compatible torch first, then the job itself.
-    (work / "kernel.py").write_text(KAGGLE_TORCH_FIX + "\n" + script.read_text())
+        slug = f"jack-{'cpu' if cpu else 'ladder'}-{int(t0)}"
+    # Pascal-compatible torch first (GPU only), then the job itself.
+    (work / "kernel.py").write_text(_kernel_body(script.read_text(), cpu))
 
     (work / "kernel-metadata.json").write_text(json.dumps({
         "id": f"{username}/{slug}",
@@ -1066,7 +1077,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         "language": "python",
         "kernel_type": "script",
         "is_private": True,
-        "enable_gpu": True,
+        "enable_gpu": not cpu,
         "enable_internet": True,
     }, indent=2))
 
@@ -1078,12 +1089,12 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         # the local script has since diverged, refuse before anything is
         # fetched or recorded — the kernel and its artifact stay on Kaggle, and
         # reattaching from the submitting commit recovers them at zero quota.
-        local_sha = _kernel_sha256(script)
+        local_sha = _kernel_sha256(script, cpu)
         verdict, info = reattach_code_check(slug, local_sha, submissions(journal))
         if verdict == "mismatch":
             if not os.environ.get("JACK_REATTACH_ACCEPT_MISMATCH", "").strip():
                 return JobResult(
-                    "kaggle", False, job_id=job_id, billable_s=0.0,
+                    backend, False, job_id=job_id, billable_s=0.0,
                     message=(f"reattach refused: kernel {job_id} was pushed with "
                              f"code sha {info['recorded_sha'][:16]}… (attempt "
                              f"{info['attempt_id']}, head {info['submitted_head']}) "
@@ -1113,8 +1124,8 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   f"cannot be checked", file=sys.stderr, flush=True)
 
     if not reuse:
-        rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work),
-                             "--accelerator", "nvidiaTeslaT4"], 300)
+        rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work)]
+                            + ([] if cpu else ["--accelerator", "nvidiaTeslaT4"]), 300)
         said = " ".join((out + " " + err).split())[:400]
         print(f"kaggle push {job_id}: rc={rc} {said}", file=sys.stderr, flush=True)
         # S2 (2026-11-12): the CLI refuses a push on STDOUT with rc=0 —
@@ -1123,7 +1134,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         # T1.14 kernels that never existed polled "queued" for 3.01 h and were
         # billed all of it. A push that never landed ran nothing: bill zero.
         if _push_refused(rc, out):
-            return JobResult("kaggle", False, out, err, time.time() - t0,
+            return JobResult(backend, False, out, err, time.time() - t0,
                              message=f"push failed: {said[:300]}",
                              job_id=job_id, billable_s=0.0)
 
@@ -1166,7 +1177,9 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   f"that includes idle time since submission",
                   file=sys.stderr, flush=True)
 
-    return JobResult("kaggle", status == "complete", k_out, k_err, time.time() - t0,
+    if cpu:
+        billable_s = 0.0   # a CPU session spends no GPU-hours (S1)
+    return JobResult(backend, status == "complete", k_out, k_err, time.time() - t0,
                      artifacts, "", "" if status == "complete" else
                      f"status={status}" + (f" ({poll_note})" if poll_note else ""),
                      job_id=job_id, log_path=log_path, billable_s=billable_s)
@@ -1302,12 +1315,16 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
     """
     budget = budget or Budget()
     order = ["colab", "kaggle"] if prefer == "colab" else ["kaggle", "colab"]
+    if prefer == "kaggle-cpu":
+        # S1: a CPU job never fails over onto a GPU backend — that would spend
+        # the scarce quota on work that needs none.
+        order = ["kaggle-cpu"]
     attempts = []
     # Reattaching to an already-finished kernel consumes no quota, so it must
     # not be blocked by the affordability gate — that exact gate turned a
     # zero-cost recovery of T2.01 v4 into a Colab failover and an ERROR.
     reuse = bool(os.environ.get("JACK_REUSE_KERNEL", "").strip())
-    if reuse:
+    if reuse and prefer != "kaggle-cpu":
         # A reattach names ONE Kaggle kernel. Walking the normal order would run
         # `prefer="colab"` first — paying a full fresh job to recover a finished
         # free one, and returning a DIFFERENT run's numbers if it succeeded.
@@ -1367,11 +1384,12 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
                             # sha of the exact kernel a kaggle push would send,
                             # recorded so a later reattach can prove the kernel
                             # it recovers ran THIS code (overseer 20th-audit B1).
-                            "kernel_sha256": (_kernel_sha256(script)
-                                              if backend == "kaggle" else None),
+                            "kernel_sha256": (_kernel_sha256(script, backend == "kaggle-cpu")
+                                              if backend.startswith("kaggle") else None),
                             "pid": os.getpid()}, journal)
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
-               else run_on_kaggle(script, timeout_s, fetch, journal))
+               else run_on_kaggle(script, timeout_s, fetch, journal,
+                                  cpu=backend == "kaggle-cpu"))
         stdout_path = ""
         try:  # the WHOLE stdout, before anything can fail; best-effort
             STDOUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -1398,8 +1416,9 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
         _SUBMITTED_CHARGE_S.append(res.charge_seconds)
         # Charge the metered window, labelled by outcome, once per remote job.
         # All three of those qualifiers were missing until 2026-08-09.
-        budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id,
-                      est_hours=est_hours)
+        if backend != "kaggle-cpu":   # S1: CPU kernels draw no GPU-hours
+            budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id,
+                          est_hours=est_hours)
         if res.ok:
             # Repair (ii) of `gpu-receipt-head-is-push-time-not-kernel-time`:
             # the job certified the HEAD it actually checked out; a row whose
