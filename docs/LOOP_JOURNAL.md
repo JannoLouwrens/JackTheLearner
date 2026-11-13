@@ -754,3 +754,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   frozen hand-over twin by LF.04's 272.8 s; controls stripped-ckpt and fresh-weights must fail; same hardware -> VOID. No run, no ledger row.
   Did NOT edit cores.py's 'frozen text tower' comment: it would stale 8 certificates incl. LC.03 (~90 core-h); INBOX for a ruling.
   Served: 7 (END-FIT row 2 now has a test that can fail) and 4.
+- 2026-11-13 ~12:40 UTC JACK J7 harvest + J8 (load 3.9; W1.00 attempt 2 holds the lock at 3 workers, so no J1(1)/J6 runs). Committed W0.DIAG
+  attempt 15 PASS on a clean tree (d7eebcc; its hash-salt child timed out again, reporting-only). J8: built LF.06's module (e7b45bd) on LF.03's
+  five-store checkpoint, with strip (weights only) and fresh-init controls, the frozen exam and the declared TOL_S rule. A selftest proves the
+  full file carries ring 64 + optimiser state 83 + diary and strip zeroes all three with the same weights. The first selftest ran 40
+  decisions and proved nothing about the ring, so I made it step until the optimiser had stepped. Seed-90 exam pilot launched detached
+  (pid 3090026), gated to start when W1.00's chain exits. Served: 7 (the hand-over gate gets a working apparatus) and 4.

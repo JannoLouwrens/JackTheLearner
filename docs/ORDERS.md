@@ -132,10 +132,11 @@ the `language` slot is "words through his own learned ear; EMPTY today", not
 serves: M7, M8 · END-FIT row 2 · philosophy 1, 2, 7.
 **done when:** the spec is registered with both controls and queued on S1
 behind `LF.04`; `cores.py` no longer names a frozen tower inside him.
-state: 11-13 12:30 REGISTERED LF.06 (not LF.05: refused stub id) in registry_expansion.py, both controls (stripped ckpt must fail a|b,
-fresh weights must fail a), N_HERE=10, M_THERE=10, seeds 110-112, MARGIN_S=LF.04's 272.812, TOL_S from a seed-90 exam pilot (T1.14's
-noise is loss units, not sim-s — rule in notes). Budget CPU_DAYS until S1's kaggle-cpu class; queued behind LF.04. cores.py:75 comment
-NOT edited: 8 certs hash cores.py raw (LC.02/LC.03/LF.03/SH.01...) — INBOX. Next: module tests/lf_06_*.py (exam + ckpt strip), seed-90 exam pilot -> TOL_S.
+state: 11-13 12:30 REGISTERED LF.06 (registry_expansion.py; LF.05 is a refused stub). Budget CPU_DAYS until S1's kaggle-cpu class.
+11-13 12:38 BUILT experiments/tests/lf_06_handover.py (e7b45bd; no run(), no ledger): handover = LF.03 _capture; strip()/fresh() controls;
+frozen exam; tol_from_pilot. Selftest OK: full ckpt carries ring 64 + opt state 83 + diary; strip -> 0/0/0 with same weights; fresh differs.
+Seed-90 exam pilot LAUNCHED detached (pid 3090026, /data/tmp/lf06/pilot_s90.log -> exam_pilot_s90.jsonl), waits for W1.00 chain 3070760 to exit.
+Next: harvest pilot -> TOL_S via tol_from_pilot(); write run() (here/there roles for S1). cores.py:75 comment still awaits INBOX ruling.
 
 ### J5 — The curriculum cook-off (`CR.01`)
 **Why.** Owner 11-11: the curriculum is "as important as jack himself". The
