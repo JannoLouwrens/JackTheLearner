@@ -618,6 +618,7 @@ class Water:
         # is at or above the surface (the floor plane, the wall tops) is held
         # dry and gets no water.
         self._last = np.zeros((model.nbody, 3))
+        self._last_any = False      # does _last hold a nonzero contribution?
         self._written = np.zeros((model.nbody, 3))
         self._dry_geoms = set()
         for gid in range(model.ngeom):
@@ -666,16 +667,26 @@ class Water:
         """Add buoyancy + drag to xfrc_applied. Call every step, before mj_step."""
         if not self.enabled:
             return
-        new = np.zeros_like(self._last)
-        held = self._held_dry(data)
+        # Throughput (LC.02, 11-13): the W0.PL version below cost 30.6 us per
+        # call vs 16.4 before it and took W0's physics-alone null_T from 10.62
+        # to 9.46 sim-s/real-s (interleaved A/B, 9 runs each). Two exact
+        # shortcuts: the contact scan runs only once some body is actually in
+        # the water (`held` is only consulted for such bodies), and a call that
+        # adds nothing when nothing was added last call returns untouched — with
+        # `_last` zero, `base == cur` on both branches, so the old path wrote
+        # back the values already there and `_written` is never read.
+        new = None
+        held = None
         for bid in range(1, model.nbody):
-            if bid in held:
-                continue
             pos = data.xipos[bid]
             r = float(self._radius[bid])
             if r <= 0 or model.body_mass[bid] <= 0:
                 continue
             if not self.in_pool(pos, r):
+                continue
+            if held is None:
+                held = self._held_dry(data)
+            if bid in held:
                 continue
             # Spherical-cap submerged fraction.
             d = self.surface_z - pos[2]          # depth of centre below surface
@@ -695,8 +706,14 @@ class Water:
             drag = -0.5 * WATER_DENSITY * self.cd * area * speed * vel
             drag = drag - self.c_lin * WATER_DENSITY * vol * vel
 
+            if new is None:
+                new = np.zeros_like(self._last)
             new[bid] = drag
             new[bid][2] += buoy
+        if new is None:
+            if not self._last_any:
+                return
+            new = np.zeros_like(self._last)
         # Additive (W0.PL): per component, if nobody rewrote the slot since our
         # last call, take our old contribution back out; if someone did (W0's
         # drive, a reset), their fresh value is the base. Then add ours.
@@ -707,6 +724,7 @@ class Water:
         data.xfrc_applied[:, :3] = out
         self._written = out.copy()
         self._last = new
+        self._last_any = bool(new.any())
 
 
 def humanoid_body_ids(model) -> list:
