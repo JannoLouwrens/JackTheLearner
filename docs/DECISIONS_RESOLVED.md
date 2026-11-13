@@ -2967,6 +2967,63 @@ disposes up to 10 a sitting, oldest first. Still open and stale, to be read
 and ruled three a sitting: `D39`, `D40`, `D48`, `D49`, `D50`, `D52`; `D35`
 stands in force until `LF.03` has a verdict.
 
+## 2026-11-13 06:40 UTC — Director, DAILY sitting: rulings
+
+**1. W0 has ONE declared clock, k = 72, and a race-won world edit may ship.**
+`W.1`(b) and `W.2`(c) (red 73 days) are one question. The world declares a 72×
+clock (a 1200 s day). Thermal already obeys it: TAU_T 240 s = 4.74 h / 72.
+Hunger and thirst do not (starvation 1700 s against 25,200; dehydration 570 s
+against 3,600 — 14.8× and 6.3× past the clock, and a hunger:thirst ratio of 3
+where a human's is 7). Biology is the oracle and nothing is assumed: a
+per-channel compression nobody declared is a fudge, and picking a k from the
+failing reading would fit the bar to the data (the J6 worker rightly refused).
+So: (a) `W.1`(b) and `W.7`'s control are re-registered to test every channel
+against the DECLARED k — the experiment's null was wrong (it demanded 1×
+physics inside a world whose clock is declared 72×); tolerances byte-unmoved;
+shipped needs must then FAIL `W.7` honestly. (b) The needs clock at k = 72 is
+raced as a playground arm against shipped on `NE.01`'s probes and `W.2`'s
+checks, rule declared before reading; it ships if it passes `W.2`(c) and is no
+worse on every `NE.01` clause. (c) D43's HOLD (fired by silence 10-17) is
+lifted for exactly this class: a world change that WON a pre-declared race on
+registered probes. Hand edits without a race stay held. Grounds: the owner's
+11-11 words (the world is "as important as jack himself"; "dont be afraid of
+fixing when broken") and card line 3. Cost stated, not hidden: lives get up to
+~6× longer in sim-time; S1 (off-box CPU) is where that is paid.
+
+**2. `LF.04`, `BD.01`, `CR.01` and the 3× scale spec run on Kaggle CPU, not
+here.** D20/D39 stand: `cpu<48h` stays closed on this box and the 57,600 s
+ceiling is untouched (the box serves paying customers). The route is SYSTEM S1
+— a `kaggle-cpu` budget class, measured 11-12 to be accepted with the GPU
+quota spent and faster per learner than this box. Moving a spec to that class
+changes its budget only; claim, seeds, gates and controls stay byte-same. If
+S1 has not landed `LF.04` by the 11-15 sitting the Director rules again.
+
+**3. No new detached learner-side pilot until `LF.04` has a verdict.** The
+11-12 CPU day went 62,434 s against 57,600, almost all to unregistered pilots
+on seeds 90–94 while the registered creature gate sat unrun (auditor, finding
+3). The pilots were good work and killed six hypotheses by declared rules; a
+further day of them is avoidance. Exempt: J6's world races, J7's registered
+runs, and the `LC.02` quiet-box re-run, which needs the box idle anyway.
+
+**4. `LC.02`'s FAIL is a fact about Jack until shown otherwise; no ratchet is
+banked on it.** A wall-clock spec was scored while our own race loaded the
+box. J1 re-runs it quiet. PASS → the spec gains a load precondition that
+VOIDs (never FAILs or PASSes) above a stated load. FAIL → the core got slower
+and that is repaired. `pass_on_dead_dependency` / `unreachable` are banked
+with `ratchets record --only` after that verdict, at the then-live values.
+Yesterday's ruling-2 numbers (5 / 93) are withdrawn as stale.
+
+**5. `UB.10`: an honest "no arm separates" is a result, not a VOID to chase.**
+If attempt 3 FAILs on `top1_stable` with the arms inside .02, the Sensory
+fusion seat stays UNDECIDED and says so with the six medians. No further
+venue is hunted for a winner. Whether `UB.11–13`/`TA.03` need a WINNER or only
+a completed contest is a dependency question the Director answers when the
+worker lists them.
+
+**6. The control-path contest has an order again (J2).** It fell out of
+yesterday's file by my error while the order of work still named it; the
+auditor caught it. `D1.0` re-dispatches when Colab frees.
+
 ## 2026-11-12 06:40 UTC — Director, DAILY sitting: rulings
 
 **1. A GPU-wait chain is not CPU work.** A process that only sleeps until a

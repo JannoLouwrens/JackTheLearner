@@ -1,5 +1,5 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-13 06:50 UTC
+Director sitting: 2026-11-13 06:40 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5). Machine problems go under INBOX, one
