@@ -6322,7 +6322,7 @@ EXPANSION: list[Spec] = [
                        "zero, so the metric's floor is the seed spread of "
                        "the fresh null runs, not an assumption.",
          metric="max_pile_a_margin_shift_over_own_std",
-         budget=Budget.CPU, seeds=3, depends_on=["W0.DIAG"],
+         budget=Budget.CPU_LONG, seeds=20, depends_on=["W0.DIAG"],
          control="The selection rule run BOTH ways and printed: if picking "
                  "the best null by the NULL'S own outcome ever selects a "
                  "DIFFERENT process than picking by the CLAIM arm's margin, "
@@ -6338,7 +6338,13 @@ EXPANSION: list[Spec] = [
                "nothing that already PASSed is re-opened — the upgrade can "
                "only RAISE a null, nothing that passed can pass more "
                "easily.",
-         notes="REGISTERED 2026-09-06 (builder) from the Review FULL's "
+         notes="RE-REGISTERED 2026-11-13 (attempt 2): seeds 3 -> 20 on FRESH seeds 300..319, budget cpu<10min -> cpu<2h, t-stat made exact "
+               "(mean*sqrt(n-1)/std_pop; attempt 1 was 1.22x generous). Attempt 1 FAIL (b) "
+               "was underpowered: dwell shift 0.101 = 16.2x own std but t 1.98 < 3 at "
+               "n=3 and the white2-white floor (expected 0) read 0.0082 on 3 draws. "
+               "Sized from attempt 1 spreads: per-seed d 0.93, E[t] 4.2 at n=20. No "
+               "bar, control or channel changed. "
+               "REGISTERED 2026-09-06 (builder) from the Review FULL's "
                "published W1 design on the `w0-too-shallow` row — Pile A / "
                "measurement repair, runs on W0 AS BUILT, no world edit, no "
                "staleness bill. CROSS-CHECK (protocol step 1), constraints "

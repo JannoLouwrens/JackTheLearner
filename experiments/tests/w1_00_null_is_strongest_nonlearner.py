@@ -136,7 +136,21 @@ THE CLAIM (branch named in `claim_branch` either way, BA.03's lesson):
   metric: max_pile_a_margin_shift_over_own_std = max_j shift_j/std_j,
   printed with every per-finding ratio.
 
-COST: 12 runs x ~144 s = ~29 core-min; ~10 min wall on the 3-worker pool
+RE-REGISTRATION 2026-11-13 (attempt 2; no bar, control or channel touched).
+Attempt 1 (seeds 0-2, FAIL (b) "immaterial") was UNDERPOWERED, not a
+reading: the dwell finding shifted 0.101 = 16.2x its recorded std 0.0062,
+but real_j read t = 1.98 < 3 (house t, mean*sqrt(3)/std_pop) and floor_ok_j
+read |f_dw| 0.0082 > 0.0062, where f_dw = white2 - white is a difference of
+two draws of ONE law (expected 0) whose 3-seed mean is mostly sampling
+noise (per-seed sd 0.0083). Sizing from attempt 1's own spreads, exact t:
+effect d = 0.101 / (0.0888*sqrt(3/2)) = 0.93 per seed, so E[t] = 0.93
+sqrt(n): 3.2 at n=12 (power ~0.6), 4.2 at n=20 (~0.85); floor mean SE at
+n=20 = 0.0083/sqrt(20) = 0.0019, P(|f_dw| > 0.0062) < 0.01 if the law holds.
+Declared: n = 20, FRESH seeds 300..319, the t made exact (stricter). If it
+FAILs at n=20 it is a reading, branch named as before.
+
+COST: 4 x 20 = 80 runs x ~144 s = ~192 core-min; ~65 min wall on the
+3-worker pool (attempt 1: 12 runs, ~10 min)
 (w0_diag's pattern). cpu<10min by the coverage class that named this spec
 fillable today.
 """
@@ -173,6 +187,10 @@ N_CELLS = GRID_N * GRID_N                              # 484
 _SQRT2 = math.sqrt(2.0)
 PROCS = ("white", "white2", "repeat", "colored")
 PILOT_SEED = 90
+# RE-REGISTERED 2026-11-13 (attempt 2): FRESH claim seeds 300..319
+# (`SEED_OFFSET` + the runner's 0..19). Attempt 1 read seeds 0-2; those are
+# spent on the sizing below and are not re-used for the verdict.
+SEED_OFFSET = 300
 
 # pinned recorded rows — a moved row VOIDs (V2), never silently re-anchors
 LC03_RAN_AT = "2026-08-23T21:11:17"
@@ -375,15 +393,20 @@ def _control_metrics(b: Dict[str, dict]) -> dict:
 
 
 def _experiment(seed: int) -> dict:
-    return _claim_metrics(_bundle(seed))
+    return _claim_metrics(_bundle(seed + SEED_OFFSET))
 
 
 def _control(seed: int) -> dict:
-    return _control_metrics(_bundle(seed))
+    return _control_metrics(_bundle(seed + SEED_OFFSET))
 
 
 def _tstat(m: dict, key: str) -> float:
-    return m.get(key, 0.0) * math.sqrt(3) / max(m.get(f"{key}_std", 0.0), 1e-9)
+    """One-sample t over seeds. `_aggregate` reports the POPULATION std
+    (ddof 0), so the exact statistic is mean*sqrt(n-1)/std_pop. Attempt 1
+    used mean*sqrt(3)/std_pop at n=3 — 1.22x generous; this is the exact t,
+    i.e. the gate only got stricter (re-registration 2026-11-13)."""
+    n = BY_ID["W1.00"].seeds
+    return m.get(key, 0.0) * math.sqrt(n - 1) / max(m.get(f"{key}_std", 0.0), 1e-9)
 
 
 def _void(m: dict, reason: str):
@@ -470,12 +493,12 @@ def _check(m: dict, c: dict):
 
 
 def run(ledger: Ledger | None = None):
-    """12 (seed, process) tasks over 3 single-threaded niced workers
+    """4 x spec.seeds (seed, process) tasks over 3 single-threaded niced workers
     (w0_diag's pool pattern), memoised into run_spec."""
     import multiprocessing as mp
 
     spec = BY_ID["W1.00"]
-    seeds = list(range(spec.seeds))
+    seeds = [s + SEED_OFFSET for s in range(spec.seeds)]
     tasks = [(s, p) for s in seeds for p in PROCS]
     ctx = mp.get_context("spawn")
     with ctx.Pool(3, initializer=_worker_init) as pool:

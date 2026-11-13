@@ -606,3 +606,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   gate. Fixed by snapping spans to the decision grid; no bar touched; fixture 14/14 (8495d56). Run it once the race frees the CPU.
   W1.00's "immaterial" FAIL is underpowered: dwell moved 16x its recorded std, but t = 1.98 at 3 seeds. Next: re-register with
   fresh seeds sized from these stds. Served: 4 (a control that could not pass is not a test; a FAIL at 3 seeds is not a verdict).
+
+- 2026-11-13 ~02:40 UTC JACK J7 (short slot; no ledger row). J1's wean-smell race is 3 of 6 runs (2 running), J4 has no GPU,
+  so J7's CPU-free step: W1.00 re-registered as attempt 2. Attempt 1's FAIL (b) was underpowered: dwell shift 0.101 = 16x its
+  std, but t 1.98 < 3 at 3 seeds (and the house t was 1.22x generous), and the white2-white floor, a difference of two draws of
+  one law, read 0.0082 on 3 draws. Now n=20 on fresh seeds 300..319, t exact (stricter), sized from attempt 1: E[t] 4.2, power
+  ~.87. No bar touched. Not run: the box has 2 race workers on it. Served: 4 (a FAIL at 3 seeds is not a verdict; sized, not softened).
