@@ -996,9 +996,10 @@
         "detached:race.log": 7554.56,
         "detached:run.log": 10319.9,
         "detached:run_1113.log": 2278.7,
-        "detached:ub10_sweep4.log": 1259.36
+        "detached:ub10_sweep4.log": 1259.36,
+        "detached:w1_04_attempt2.log": 2402.28
       },
-      "used_s": 32848.51
+      "used_s": 35250.79
     }
   },
   "overruns": [
