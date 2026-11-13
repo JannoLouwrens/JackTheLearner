@@ -13161,7 +13161,7 @@ ROUTED: lt02-the-venue-has-no-true-positive-body-chaos-is-reducible | 2026-09-19
 ## defect left as prose inside a terminal row is a rule that exists for
 ## exactly as long as nobody needs it
 
-ROUTED: lt02-deciding-gate-is-nan-and-nan-reads-as-FAIL | 2026-10-03 | Review DAILY, reading `experiments/ledger.json` LT.02 attempt 4 (`cce6cef`, 2026-09-28T11:47:16, FAIL) against the row it was closing | OPEN
+ROUTED: lt02-deciding-gate-is-nan-and-nan-reads-as-FAIL | 2026-10-03 | Review DAILY, reading `experiments/ledger.json` LT.02 attempt 4 (`cce6cef`, 2026-09-28T11:47:16, FAIL) against the row it was closing | DECLINED 2026-11-13 (Director) names no live blocker: `LT.02` is parked BY DECISION until curiosity is raced (roadmap M7, no open order); a NaN that reads as FAIL errs on the safe side. The defect stays on this row for whoever opens the curiosity order. — prior status: OPEN
     DUE: 2026-10-16 | the design answer, this desk's: does an UNCOMPUTABLE
         deciding gate refute the claim, or report UNREADABLE? 10-16 carries 1
         live row against a measured capacity of 6 — chosen off the
@@ -16922,7 +16922,7 @@ ROUTED: staleness-of-a-standing-pass-reaches-no-exit-code | 2026-09-26 | `run st
 ## two sitting inside its own noise of the bar. Declared "routed onward" on
 ## 2026-09-13 and never given a row.
 
-ROUTED: pl02-void-gate-quantifies-over-its-own-nulls | 2026-09-26 | `PL.02` attempt 2 VOID (2026-09-13T01:11:50, commit `7ffd3c8+dirty`, 2928.18 s, seeds 0/1/2), read off `ledger.json:results.PL.02` this slot | OPEN
+ROUTED: pl02-void-gate-quantifies-over-its-own-nulls | 2026-09-26 | `PL.02` attempt 2 VOID (2026-09-13T01:11:50, commit `7ffd3c8+dirty`, 2928.18 s, seeds 0/1/2), read off `ledger.json:results.PL.02` this slot | DECLINED 2026-11-13 (Director) undischargeable as constituted (D49) and names no live blocker: `PL.02` is the Vision-encoder arena, roadmap M5, no open order. The gate defect stays recorded here for the senses order. — prior status: OPEN
     DUE: 2026-10-17 | RE-DATED 2026-10-05 (Review DAILY). **FIRST re-date — one
         `DUE:` line, no prior break, no stop-rule engaged.** **RANK 2 of the five
         rows left on today's date**, and it ranks here for a reason that is
@@ -18923,7 +18923,7 @@ building it, made from measurement rather than from the freeze.
 ## it never was, so the FAIL spent an hour owned by a row about a different
 ## question.
 
-ROUTED: lt02-c2-passed-on-the-epsilon-not-on-a-measurement | 2026-09-27 | `LT.02` attempt 3, ledger row **FAIL** 2026-09-27T02:40:10 (800.24 s, seeds 0/1/2, clean stamp at `f047060`), read off `experiments/ledger.json` this slot | OPEN
+ROUTED: lt02-c2-passed-on-the-epsilon-not-on-a-measurement | 2026-09-27 | `LT.02` attempt 3, ledger row **FAIL** 2026-09-27T02:40:10 (800.24 s, seeds 0/1/2, clean stamp at `f047060`), read off `experiments/ledger.json` this slot | DECLINED 2026-11-13 (Director) same disposal as its sibling `lt02-deciding-gate-is-nan`: `LT.02` is parked BY DECISION until curiosity is raced; the spec is FAIL, so nothing is certified on the epsilon today. — prior status: OPEN
     DUE: 2026-10-16 | **RE-DATED 2026-10-06 (Review DAILY) ONTO ITS TWIN'S
         DATE, because this row and `lt02-deciding-gate-is-nan-and-nan-reads-as-
         FAIL` are ONE decision and were being carried as two.** That row was
@@ -19281,7 +19281,7 @@ through an upstream unblock.
     both re-bought in slot). No spec file is edited, `XL.01` is a no-certificate
     FAIL row and nothing cites it, so no re-run is owed by any spec named here.
 
-ROUTED: freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-failing-spec | 2026-09-27 | `registry.ready()` / `Ledger.blocked_by` evaluated this slot against the live ledger; `run blocked`'s own `T1.08` blocks set; the freeze text in `scripts/ladder_prompt.md` | OPEN
+ROUTED: freeze-release-condition-is-five-specs-deep-and-its-quota-is-satisfiable-by-one-failing-spec | 2026-09-27 | `registry.ready()` / `Ledger.blocked_by` evaluated this slot against the live ledger; `run blocked`'s own `T1.08` blocks set; the freeze text in `scripts/ladder_prompt.md` | DECLINED 2026-11-13 (Director) moot: the Tier-0 freeze ended 2026-11-12 (D35, lift condition met by `LF.03` PASS); there is no release condition left to repair. — prior status: OPEN
     SUBJECT: the APPARATUS — this is about a governance rule's arithmetic, not
         about any spec's science. Declared per the 124th audit FTB 2 so the next
         audit reads the classification off the row instead of re-deriving it.
@@ -20827,7 +20827,7 @@ terms, whatever the words say.
 
 ---
 
-ROUTED: parent-llm-is-a-submodule-and-96-percent-of-the-brain | 2026-09-27 | `UnifiedBrain.py:105-127, 1296-1327, 3901, 4176` read statically; `LLMEncoder` and `UnifiedBrain` CONSTRUCTED in this venv and their `named_parameters()` trees measured; the real SmolLM2-1.7B checkpoint loaded once from `/data/caches/huggingface`; `T1.03`'s recorded metrics read off `experiments/ledger.json`; all 31 spec files that build the brain scanned for the guard. Builder, this slot, NO ledger write, NO spec or root module edited | OPEN
+ROUTED: parent-llm-is-a-submodule-and-96-percent-of-the-brain | 2026-09-27 | `UnifiedBrain.py:105-127, 1296-1327, 3901, 4176` read statically; `LLMEncoder` and `UnifiedBrain` CONSTRUCTED in this venv and their `named_parameters()` trees measured; the real SmolLM2-1.7B checkpoint loaded once from `/data/caches/huggingface`; `T1.03`'s recorded metrics read off `experiments/ledger.json`; all 31 spec files that build the brain scanned for the guard. Builder, this slot, NO ledger write, NO spec or root module edited | DECLINED 2026-11-13 (Director) superseded: ROADMAP 'Which Jack' (2026-11-11) judges milestones on the survival stack and the old 57M brain re-enters only as a challenger; the inside/around ruling of 11-11 and ORDERS Next-up 2 hold what remains. No separate blocker here. — prior status: OPEN
     DUE: 2026-10-13 | `next_free_due`'s literal answer, taken without special
         pleading. Live dated promises per day, counted off the tool this slot:
         09-28 through 10-08 are ALL at or over the measured capacity of 6 (six
@@ -21144,7 +21144,7 @@ and made, and for the same reason.
 
 ---
 
-ROUTED: taskmanager-decompose-documents-a-learned-path-with-no-call-site | 2026-09-27 | `TaskManager.py:80-143, 389-513` and `UnifiedBrain.py:232, 2045-2067, 3975-3976, 4393` read statically; `TaskManager.py` parsed with `ast` in this venv and the two tables + `_decompose`'s call set enumerated MECHANICALLY rather than by eye; `UnifiedBrainConfig()` instantiated to read the shipped default; `run stale-cost` priced before the edit; `run next`/`run status` read for `T2.15`/`T3.04`'s recorded state. Builder, this slot. NO ledger write. ONE root-module edit, PROSE-ONLY and verified so (docstring-stripped ASTs identical across the diff) | OPEN
+ROUTED: taskmanager-decompose-documents-a-learned-path-with-no-call-site | 2026-09-27 | `TaskManager.py:80-143, 389-513` and `UnifiedBrain.py:232, 2045-2067, 3975-3976, 4393` read statically; `TaskManager.py` parsed with `ast` in this venv and the two tables + `_decompose`'s call set enumerated MECHANICALLY rather than by eye; `UnifiedBrainConfig()` instantiated to read the shipped default; `run stale-cost` priced before the edit; `run next`/`run status` read for `T2.15`/`T3.04`'s recorded state. Builder, this slot. NO ledger write. ONE root-module edit, PROSE-ONLY and verified so (docstring-stripped ASTs identical across the diff) | DECLINED 2026-11-13 (Director) names no live blocker: `TaskManager`/`UnifiedBrain` are the old stack, which holds no seat and is on no open order (ROADMAP 'Which Jack'). The finding stays on this row if that stack is ever entered as a challenger. — prior status: OPEN
     DUE: 2026-10-14 | past the tool's own mechanical answer, on the 09-27 FULL's
         rule and with the arithmetic quoted. `review-queue` says *"Next date with
         room under the measured capacity: 2026-10-08"* and 10-08 carries 5 of 6,
@@ -21343,7 +21343,7 @@ certificates** — `T0.01` (cpu<1min) <- `TaskManager.py`, `T0.21` (cpu<1min) an
 `T0.31` (cpu<10min) <- `docs/REVIEW_QUEUE.md` — **0.00 CPU-h, 1 slot**, so
 payable in slot and paid from the clean tree after this commit.
 
-ROUTED: certified-diary-is-not-the-memory-the-shipped-brain-carries | 2026-09-28 | `UnifiedBrain.py:4040,2856-2909`, `VirtualWorld.py:1265-1333,1611-1641` read statically; construction sites of all six memory-family root-module classes swept over `*.py` (root) vs `experiments/tests/*.py`; certificates per organ read from `run stale-cost`, not grep. Builder, 05:0x slot, NO ledger write, NO spec or root module edited | OPEN
+ROUTED: certified-diary-is-not-the-memory-the-shipped-brain-carries | 2026-09-28 | `UnifiedBrain.py:4040,2856-2909`, `VirtualWorld.py:1265-1333,1611-1641` read statically; construction sites of all six memory-family root-module classes swept over `*.py` (root) vs `experiments/tests/*.py`; certificates per organ read from `run stale-cost`, not grep. Builder, 05:0x slot, NO ledger write, NO spec or root module edited | DECLINED 2026-11-13 (Director) superseded: on the stack that holds the seats the diary is carried across death by `LF.03`, and whether his decisions READ it is ORDERS JACK Next-up 1 (opens on `LF.04`'s verdict). The old brain's memory organs are not on any order. — prior status: OPEN
     DUE: 2026-10-12 | counted off this slot's `review-queue` listing: 09-28
     DUE: 2026-10-24 | RE-DATED 2026-10-13 (Review DAILY, OVERDUE FIRST under D28's armed default). This sitting has disposed SEVEN rows against a measured capacity of 6/cycle — two ACTED (`so10`, `lg13`, finished work whose only defect was a missing stamp), four re-dated onto the gate, one RULED (`detached-metering-lane`) — plus arming `D46` and repairing two false live orders on the builder's page. **Capacity is the reason this row is re-dated and not ruled, and it is a reason, not an excuse: naming it is what stops an eighth empty promise.** The twelve-row OVERDUE class this sitting inherited exists because no Review sat on 2026-10-12 at all — every scheduled slot that day was DEFERRED by the usage gate, which is the fact routed to the owner as `D46`. Dated past the usage-week reset of **2026-10-19 04:59Z** per `D46`'s measurement (builder dark since 2026-10-08T16:31Z, 119 consecutive PACING slots). 10-24 carries no live rows at all, so this is not dated onto a day already scheduled to break.
         through 10-08 are at or over the measured capacity of 6, 10-09 carries
@@ -22141,7 +22141,7 @@ ROUTED: gpu-receipt-head-is-push-time-not-kernel-time | 2026-09-30 | experiments
 ## parent they were lost to (builder, 2026-09-30, OVERSIGHT FTB 2 — the
 ## builder-legal arm of "fix GOAL.md's text or route the revival")
 
-ROUTED: gen-four-revival-needs-an-affordable-lc07-successor | 2026-09-30 | coverage at HEAD: `4 NEW unrunnable citation(s) — GEN.02, GEN.03, GEN.06, GEN.09`, all welded<-LC.07; D24 closed 2026-09-12 with zero GEN mentions (grep of its whole DECISIONS_RESOLVED.md section: 0 hits) | OPEN
+ROUTED: gen-four-revival-needs-an-affordable-lc07-successor | 2026-09-30 | coverage at HEAD: `4 NEW unrunnable citation(s) — GEN.02, GEN.03, GEN.06, GEN.09`, all welded<-LC.07; D24 closed 2026-09-12 with zero GEN mentions (grep of its whole DECISIONS_RESOLVED.md section: 0 hits) | DISPOSITIONED 2026-11-13 (Director) live blocker, ordered: `docs/ORDERS.md` J3 (a new ~3x learning-core spec, its own claim, `LC.07` untouched) on the Kaggle-CPU route S1 builds. Whether `GEN.02/03/06/09` may hang on the 3x spec instead of `LC.07` is ruled when J3 is registered. ACTED when J3 has a verdict. — prior status: OPEN
     DUE: 2026-10-11 | `next_free_due`'s literal answer (every day 10-01..10-10
     DUE: 2026-10-24 | RE-DATED 2026-10-13 (Review DAILY, OVERDUE FIRST under D28's armed default). This sitting has disposed SEVEN rows against a measured capacity of 6/cycle — two ACTED (`so10`, `lg13`, finished work whose only defect was a missing stamp), four re-dated onto the gate, one RULED (`detached-metering-lane`) — plus arming `D46` and repairing two false live orders on the builder's page. **Capacity is the reason this row is re-dated and not ruled, and it is a reason, not an excuse: naming it is what stops an eighth empty promise.** The twelve-row OVERDUE class this sitting inherited exists because no Review sat on 2026-10-12 at all — every scheduled slot that day was DEFERRED by the usage gate, which is the fact routed to the owner as `D46`. Dated past the usage-week reset of **2026-10-19 04:59Z** per `D46`'s measurement (builder dark since 2026-10-08T16:31Z, 119 consecutive PACING slots). 10-24 carries no live rows. **One fact this sitting adds to the row rather than leaving it to be re-derived:** the affordability question it turns on got sharper, not softer — `2026-W41` holds 30.0 free Kaggle hours with 0.000 drawn, all expiring Saturday 2026-10-17, and that is the fifth consecutive week the quota expires substantially unbought. An `LC.07` successor's cost case cannot keep being argued against hours that keep evaporating unspent.
         already carries >= 6 live rows or is otherwise full per the tool's own
@@ -22244,7 +22244,7 @@ ROUTED: detached-metering-lane-is-opt-in-and-was-bypassed-for-22-minutes | 2026-
 
 ## ROUTED 2026-10-02 (Review DAILY, Part 2.5 duty 2): `field-watch-rc124-page-is-untrustable-and-then-deleted` — a sweep that dies at the end produces a page no desk may trust, and the next sweep deletes it; week 9's three nominations were four days from being lost unread
 
-ROUTED: field-watch-rc124-page-is-untrustable-and-then-deleted | 2026-10-02 | Review DAILY 10-02, consuming docs/FIELD_WATCH.md at 51cce28 | OPEN
+ROUTED: field-watch-rc124-page-is-untrustable-and-then-deleted | 2026-10-02 | Review DAILY 10-02, consuming docs/FIELD_WATCH.md at 51cce28 | DECLINED 2026-11-13 (Director) names no live blocker today: the scout's last sweep (2026-11-12 06:00) ended rc=0 and committed its page. If an rc=124 page recurs it goes to ORDERS INBOX, not here. — prior status: OPEN
     DUE: 2026-10-13 | Dated onto `review-queue`'s own printed next-date-with-room.
         The INSTANCE is already discharged (week 9's nominations are consumed into
         `docs/INTEGRATION_QUEUE.md` in this commit, so nothing perishes on
@@ -22325,7 +22325,7 @@ ROUTED: field-watch-rc124-page-is-untrustable-and-then-deleted | 2026-10-02 | Re
 
 ## ROUTED 2026-10-02 (Review DAILY, from the week-9 field watch §6): `t406-deciding-statistic-read-against-an-uncomputed-floor` — the scout says `T4.06`'s deciding statistic was scored against a floor nobody computed, and it says so from a run that did not complete, so the claim must be RE-DERIVED before it is believed or dismissed
 
-ROUTED: t406-deciding-statistic-read-against-an-uncomputed-floor | 2026-10-02 | Review DAILY 10-02, routing docs/FIELD_WATCH.md §6 (week 9, INCOMPLETE/rc=124) | OPEN
+ROUTED: t406-deciding-statistic-read-against-an-uncomputed-floor | 2026-10-02 | Review DAILY 10-02, routing docs/FIELD_WATCH.md §6 (week 9, INCOMPLETE/rc=124) | DECLINED 2026-11-13 (Director) names no live blocker: `T4.06` is on no open order and its tier waits on the control contest (J2) and `T2.01`. The uncomputed-floor defect stays on this row for the order that re-opens Tier 4. — prior status: OPEN
     DUE: 2026-10-13 | Dated onto `review-queue`'s printed next-date-with-room. The
         FIRST unit is cheap and is not the ruling: re-derive the arithmetic from
         the ledger. Only if it survives does this become a question about a
