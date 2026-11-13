@@ -172,10 +172,10 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
 state: LC.09 REGISTERED 17:45, re-reg 20:15 (act-gain guard) + 20:40 (wm-dyn); R2D2 loop b877604; guard hook d2070c4; arm runner f79f271.
-11-13 22:35 wm-latent+ring BUILT (d80d85c, experiments/cores_ring.py): RingMemory reads z, readout ADDED to z before the RSSM (seat dims
-unchanged, +5,329 params), rest-state h0 at death, R2D2 stored ring state via survival_rec. Living 600 dec: every ring weight moves, frozen 0.0.
-run_arm 1100 dec 41 cpu-s, guard VOIDs it on Delta_5 like the seat (registered). All 7 arms now built; wm-dyn + ring refuse only as UNPRICED.
-Next: price wm-dyn AND wm-latent+ring in LC.02 (quiet box, one re-run) OR rule their ratio; survival_rec wipe_at_death for control (a); pilot s89.
+11-13 22:35 wm-latent+ring BUILT (d80d85c): all 7 arms built; wm-dyn + ring refuse only as UNPRICED (no LC.02 train_ratio).
+11-13 22:50 control (a) for the recurrent arms BUILT (c014834): survival_rec wipe_at_death = same-seed core + fresh Adam + empty ring at
+every death; smoke: wiped core == init on 8/8 (wm-dyn), 4/4 (ring) post-death checks, persistent twin's last check != init.
+Next: price wm-dyn AND wm-latent+ring in LC.02 (quiet box, one re-run) OR rule their ratio; then pilot s89 on Kaggle CPU to price sessions.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core

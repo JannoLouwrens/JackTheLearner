@@ -947,3 +947,10 @@ Found and fixed in the same slot: the learned resting state got 0.0 gradient (fi
 Living smoke: every ring weight moves, frozen twin's stay 0.0; the guard VOIDs it on Delta_5 as it does the seat. All 7 arms built;
 two (wm-dyn, ring) refuse only for lack of an LC.02 price.
 Served philosophy 1 (a working memory inside him, carried across a life, learned from scratch) and 3 (the seated memory raced in a body).
+
+2026-11-13 22:50 UTC · JACK · J3 · c014834. Day CPU ceiling spent until 00:00 -> J1/J7/J6 wait; J2 Colab still needs owner OAuth (INBOX 20:50).
+J3: LC.09's control (a) now exists for the two recurrent arms. survival_rec.wipe_at_death rebuilds the core from the same init seed, with
+fresh Adam and an empty replay ring, at every death, so nothing he learned crosses it. Wiring smoke (records nothing): the wiped core
+equals its seed-init on every post-death check (8/8 wm-dyn, 4/4 ring); the persistent twin does not once it has trained; wipes == deaths.
+LC.09's only remaining refusal is the missing LC.02 price for wm-dyn/ring.
+Served philosophy 4 (a control that must fail now exists for the challengers) and 1 (what crosses death is made testable).
