@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 108 / 267 demonstrated
+## 108 / 268 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1145,6 +1145,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ The seated learning core (wm-latent), living 15 lives in lethal W0 with online updates, lives longer in its last five lives than its own frozen twin (same init, world seed, noise stream and exploration schedule; weights never updated) by at least MARGIN_S sim-s, AND longer than its own first five lives by MARGIN_S, on EVERY claim seed (100, 101, 102).
       - _dies if:_ Any claim seed on which either difference is below MARGIN_S; or either control firing the same gate on any seed.
       - _then delete:_ Card line 1's 'learns everything himself by living' as a fact about the creature-as-built; the order then becomes 'why does the seated core not learn in lethal W0'.
+- [ ] **LF.06** The hand-over: a Jack trained here still learns on another machine
+      - _asserts:_ The seated learning core (wm-latent), after N_HERE = 10 lives in lethal W0 on THIS box, is saved as ONE checkpoint (learner weights, optimiser state, replay, world-written diary, needs, and every working-memory store the creature carries at run time) and loaded on a DIFFERENT machine (a Kaggle CPU kernel: other OS image, other CPU). On EVERY claim seed (110, 111, 112): (a) the frozen exam there matches the frozen exam here, |exam_there - exam_here| <= TOL_S; (b) after M_THERE = 10 more learning lives there, his last five lives there outlive the same five lives of his own FROZEN HAND-OVER TWIN (the same checkpoint loaded there, never updated, same world seeds and noise stream) by >= MARGIN_S.
+      - _dies if:_ Any claim seed failing (a) or (b); either control passing the clause it must fail on any seed; or the two runs' hardware strings being equal (the hand-over did not cross machines -> VOID, not PASS).
+      - _then delete:_ END-FIT row 2 ('trained here, handed to people, still learning on their machines') as a claim about the creature as built; no winner may then be seated that the gate cannot be run on.
 - [ ] **BD.01** A body that stands feeds a perfect path-follower more often than the pole
       - _asserts:_ Under a privileged detouring oracle (body_probe ORACLE=path, adhesion 0.5, 250 decisions, food ready at birth), W0.BAL arm C's plinth base feeds in at least MARGIN_BIRTHS=15 more of 120 births (40 x seeds 100, 101, 102) than today's pole body, is not behind on ANY seed, and topples in <=10% of its births.
       - _dies if:_ Pooled plinth-minus-pole fed < 15 births, OR the plinth behind on any seed, OR plinth topples >10%; or the control firing the same gate.
