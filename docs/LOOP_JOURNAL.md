@@ -834,3 +834,10 @@ CR.01 as sized by the CR.00 pilot: 6 arms (null, staged, lp, frontier + shuffled
 margin .20 fed-fraction (2 SE) vs null AND matched every seed, staged also vs shuffled; teacher arm listed-absent; VOID on no-room null.
 Budget KAGGLE_CPU (39 CPU-h, S1 behind LF.04). Curriculum seat's arena NONE -> CR.01. No run, no ledger row.
 Served philosophy 3 (the curriculum is raced with controls that must fail, not chosen) and 5 (his world's staging is part of the loop).
+
+2026-11-13 17:35 UTC · JACK · J5 · 777b150. CPU orders shut (day ceiling spent; J1 waits on T2.10 ruling, J6 race after 00:00, J7 needs
+CPU). Built CR.01's runner: experiment = null/staged/lp/frontier, control = shuffled/matched, via cr00_pilot with a new exam-by-LIVES
+mode (stop at 47 ended exam lives, cap 200k). Gate selftest 13/13 on planted rows (10/47 margin fires, 9/47 holds, 2-of-3 seeds fails,
+matched-close and span clauses block, staged needs shuffled). One small real smoke (lp s7, 2 exam lives, 275 s): ~47 ms/decision ->
+~1.8 h per arm-seed, matching the 39 CPU-h sizing. Kaggle-CPU route as LF.04's. No ledger row.
+Served philosophy 3 (the curriculum is raced, with controls that must fail) and 5 (his curriculum is part of the loop).

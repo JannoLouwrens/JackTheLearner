@@ -158,7 +158,8 @@ state: (1)+(2) DONE 11-13 (CURRICULUM.md). CR.00 pilot s89: exam fed null 5/8, s
 11-13 17:20 CR.01 REGISTERED (KAGGLE_CPU, dep LC.02, seeds 130-132; CHAMPIONS arena NONE -> CR.01): TRAIN 40k, N_EXAM 47 lives (cap 200k),
 X wins iff on every seed fed(X)-fed(null)>=.20 AND -fed(matched)>=.20 (staged also vs shuffled), pooled median span >= null's; VOID if
 null 0/47 or 47/47 or < 47 exam lives. If J6 ships a W0 edit first: re-pilot null on s89, re-declare N by the same 2-SE rule, MARGIN fixed.
-Next: CR.01 runner module (tests/cr_01_*.py wrapping cr00_pilot.main with exam-by-lives) -> queue on S1 behind LF.04.
+11-13 17:35 RUNNER BUILT (777b150, tests/cr_01_curriculum_cookoff.py): cr00_pilot exam-by-lives mode; selftest 13/13; smoke ~47 ms/dec
+-> ~1.8 h per arm-seed, 2 per Kaggle kernel, 9 kernels. Next: queue CR.01 on S1 behind LF.04 (`run CR.01` dispatches its own kernels).
 
 ### J3 — The learning core at 3× scale (owner priority 11-12)
 **Why.** Owner: "when will we run it bigger scale against the others". The
