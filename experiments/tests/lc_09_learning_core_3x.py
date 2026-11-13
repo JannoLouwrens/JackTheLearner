@@ -49,7 +49,21 @@ every GUARD_EVERY decisions, on the last GUARD_BUF observations:
   state = [deter_5 | prior(deter_5)]; the target is the core's own
   `rssm(obs_{t+5})["state"]`. Identical for all three world-model arms.
   VOID the arm (not clearer, not loser) iff over its final third
-  mean Delta_5 <= 0 OR mean rank < RANK_FRAC x state dim.
+  mean Delta_5 <= 0 OR mean rank < RANK_FRAC x state dim OR mean action
+  gain < ACT_MARGIN (or unmeasurable).
+
+RE-REGISTERED 2026-11-13 20:15 (strengthening, no clause removed):
+  Delta_5 > 0 cannot fail for an arm that learned nothing — the untrained
+  seated core reads +.0147 from a filtered start (eda11bf), and Delta_5 FELL
+  (.015 -> .007-.0085) while wm-dyn learned what his actions do (06a4502).
+  Added: act_gain = gap_shuf(K=5) of the arm - gap_shuf(K=5) of its own
+  UNTRAINED init twin, same buffered windows (`act_gap`, i.e.
+  cores_dyn.action_share_k: own open-loop roll, z fed back from next_pred).
+  Must reach ACT_MARGIN = .03 of z_{t+5}'s variance over the final third.
+  Planted known-positives in the selftest: untrained dyn arm vs its twin
+  reads exactly 0 and trips; the seated wm-latent (no next-latent head)
+  trips as unmeasurable. Paired gains from 06a4502's probe (300 updates,
+  held-out): +.149/+.101/+.083 — the clause can pass a learner.
 """
 from __future__ import annotations
 
@@ -74,6 +88,13 @@ GUARD_EVERY = 1_000              # decisions between guard readings
 GUARD_BUF = 256                  # observations per reading
 ROLL_K = 5                       # ActSWM's Delta_5
 RANK_FRAC = 0.10                 # VOID if mean rank < .10 x dim
+ACT_K = 5                        # action-gain roll length (re-reg 11-13 20:15)
+ACT_MARGIN = 0.03                # VOID unless final-third mean of
+                                 # gap_shuf(trained) - gap_shuf(init twin)
+                                 # >= .03 of z_{t+K}'s variance. Declared from
+                                 # cores_dyn probes (06a4502): untrained
+                                 # gap_shuf -.028/+.007/-.014 (sd ~.018),
+                                 # trained @300 updates +.055/+.108/+.135.
 
 
 # ── the guard's arithmetic: pure functions ────────────────────────────────
@@ -128,7 +149,30 @@ def guard_void(readings: List[dict], dim: int) -> Optional[str]:
         return f"collapse guard: final-third Delta_5 {d5:.4g} <= 0"
     if rk < RANK_FRAC * dim:
         return f"collapse guard: final-third rank {rk:.2f} < {RANK_FRAC} x {dim}"
+    gains = [r.get("act_gain") for r in tail]
+    if any(g is None or not math.isfinite(g) for g in gains):
+        # Unknown is not zero (LESSONS_CORE 11): an arm with no action-
+        # conditioned prediction of its own future cannot show it models
+        # what he does, so it cannot clear.
+        return ("collapse guard: action gain unmeasurable (arm has no "
+                "next-latent prediction / filtered sequence)")
+    ag = float(np.mean(gains))
+    if ag < ACT_MARGIN:
+        return (f"collapse guard: final-third action gain {ag:.4g} < "
+                f"{ACT_MARGIN} over the untrained init twin")
     return None
+
+
+@torch.no_grad()
+def act_gap(core, hist, starts) -> Optional[float]:
+    """gap_shuf of `cores_dyn.action_share_k` (K=ACT_K, the arm's OWN open-
+    loop roll, z fed back from next_pred): the share of z_{t+K}'s variance
+    the arm credits to the actions it was told vs another window's. None
+    if the arm has no next-latent head or sequence filter."""
+    if not (hasattr(core, "next_pred") and hasattr(core, "filter_seq")):
+        return None
+    from ..cores_dyn import action_share_k
+    return float(action_share_k(core, hist, starts, K=ACT_K)["gap_shuf"])
 
 
 # ── the guard in a living run, from outside survival.py ──────────────────
@@ -140,8 +184,14 @@ class GuardRecorder:
     hashed file changes. Windows crossing a death are dropped."""
 
     def __init__(self, inner: Optional[Callable] = None,
-                 every: int = GUARD_EVERY, buf: int = GUARD_BUF):
+                 every: int = GUARD_EVERY, buf: int = GUARD_BUF,
+                 init_core=None):
         self.inner, self.every, self.buf = inner, every, buf
+        # The arm's UNTRAINED twin for the action-gain clause. The runner
+        # passes the twin built from the arm's init seed; if it does not,
+        # the core is copied at the recorder's first call (before any
+        # update the recorder has seen).
+        self.init_core = init_core
         self.k = 0
         self.hist: List[tuple] = []          # (obs, action, life_id)
         self.readings: List[dict] = []
@@ -160,6 +210,9 @@ class GuardRecorder:
     def __call__(self, r_h, w, obs, core):
         if self._w is not w:
             self._wrap(w)
+            if self.init_core is None:
+                import copy
+                self.init_core = copy.deepcopy(core).eval()
             r_out = self.inner(r_h, w, obs, core) if self.inner else r_h
             return r_out                     # the first action predates the wrap
         self.hist.append((obs, self._last_a, self.life))
@@ -192,6 +245,15 @@ class GuardRecorder:
                                    batch([i + ROLL_K for i in starts]))
         else:
             out["delta5"] = float("nan")
+        from ..cores_dyn import SEQ
+        a_starts = [i for i in range(SEQ, n - ACT_K)
+                    if self.hist[i - SEQ][2] == self.hist[i + ACT_K][2]]
+        g_now = act_gap(core, self.hist, a_starts) if a_starts else None
+        g_init = (act_gap(self.init_core, self.hist, a_starts)
+                  if a_starts and self.init_core is not None else None)
+        out["act_gap"], out["act_gap_init"] = g_now, g_init
+        out["act_gain"] = (None if g_now is None or g_init is None
+                           else g_now - g_init)
         return out
 
 
@@ -214,14 +276,22 @@ def _selftest() -> dict:
     res["rankme_full_high"] = rankme(full) > 0.5 * 64
     res["rankme_rank1_low"] = rankme(rank1) < 1.5
     res["rankme_constant_zero"] = rankme(np.ones((50, 8))) == 0.0
-    good = [{"delta5": 0.02, "rank": 40.0}] * 9
+    good = [{"delta5": 0.02, "rank": 40.0, "act_gain": 0.10}] * 9
     res["healthy_passes"] = guard_void(good, 64) is None
     res["planted_rank1_trips"] = "rank" in (guard_void(
-        [{"delta5": 0.02, "rank": rankme(rank1)}] * 9, 64) or "")
+        [{"delta5": 0.02, "rank": rankme(rank1), "act_gain": 0.10}] * 9, 64) or "")
     res["delta_nonpos_trips"] = "Delta_5" in (guard_void(
-        good[:6] + [{"delta5": -0.01, "rank": 40.0}] * 3, 64) or "")
+        good[:6] + [{"delta5": -0.01, "rank": 40.0, "act_gain": 0.10}] * 3, 64) or "")
     res["early_collapse_forgiven"] = guard_void(
-        [{"delta5": -1.0, "rank": 1.0}] * 6 + good[:3], 64) is None
+        [{"delta5": -1.0, "rank": 1.0, "act_gain": -1.0}] * 6 + good[:3], 64) is None
+    # the action-gain clause (re-registered 11-13 20:15)
+    res["act_gain_below_margin_trips"] = "action gain" in (guard_void(
+        good[:6] + [{"delta5": 0.02, "rank": 40.0,
+                     "act_gain": ACT_MARGIN - 1e-3}] * 3, 64) or "")
+    res["act_gain_at_margin_passes"] = guard_void(
+        [{"delta5": 0.02, "rank": 40.0, "act_gain": ACT_MARGIN}] * 9, 64) is None
+    res["act_gain_missing_trips"] = "unmeasurable" in (guard_void(
+        good[:6] + [{"delta5": 0.02, "rank": 40.0, "act_gain": None}] * 3, 64) or "")
     res["empty_is_void"] = guard_void([], 64) is not None
     # the recorder on a real world-model core, synthetic observations
     from ..cores import build_arm, ACTION_DIM
@@ -242,6 +312,25 @@ def _selftest() -> dict:
     r = g.readings[-1]
     res["recorder_dim_is_state"] = r["dim"] == core.state_dim
     res["recorder_delta5_finite"] = math.isfinite(r["delta5"])
+    # known-positive through the real recorder: the seated wm-latent has no
+    # next-latent head -> act_gain None -> the guard VOIDs it
+    res["seated_act_gain_none"] = r["act_gain"] is None
+    res["seated_guard_trips"] = "unmeasurable" in (guard_void(
+        [{**rr, "rank": 40.0, "delta5": 0.02} for rr in g.readings], 64) or "")
+    # an UNTRAINED dynamics arm vs its own init twin reads gain exactly 0
+    # and must trip: the clause cannot pass an arm that learned nothing
+    from ..cores_dyn import DynWorldCore
+    torch.manual_seed(0)
+    dyn = DynWorldCore().eval()
+    w2, g2 = _W(), GuardRecorder(every=50, buf=64)
+    for t in range(201):
+        obs = {k: rng.randn(d).astype(np.float32) for k, d in dyn.dims.items()}
+        w2.decide(rng.uniform(-1, 1, ACTION_DIM))
+        g2(0.0, w2, obs, dyn)
+    res["dyn_untrained_gain_zero"] = all(
+        rr["act_gain"] == 0.0 for rr in g2.readings) and len(g2.readings) == 4
+    res["dyn_untrained_trips"] = "action gain" in (guard_void(
+        [{**rr, "rank": 40.0, "delta5": 0.02} for rr in g2.readings], 64) or "")
     res["ok"] = all(bool(v) for v in res.values())
     return res
 
