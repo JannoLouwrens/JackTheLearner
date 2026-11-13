@@ -939,3 +939,11 @@ Smoke, 1,100 decisions, seed 0, calibrated W0 (wiring only): all runnable arms f
 Found: wm-dyn has no LC.02 throughput certificate, so the spec's "LC.02's committed train_ratio" does not exist for it;
 the runner refuses it instead of borrowing a sibling's ratio. wm-latent+ring still unbuilt (refuses by name).
 Served philosophy 3 (the challenger now stands in the same race as the seat) and 4 (a missing price refused, not guessed).
+
+2026-11-13 22:35 UTC · JACK · J3 · d80d85c. Day CPU ceiling spent until 00:00 -> J1/J7/J6 wait; J2 Colab still needs owner OAuth (INBOX).
+J3: the last unbuilt LC.09 arm exists. wm-latent+ring = the seated core with the seated ring memory carried through each life: the ring
+reads his fused latent, adds what it holds back onto it before the world model, rests at death, and learns from replay via stored state.
+Found and fixed in the same slot: the learned resting state got 0.0 gradient (first-of-life rows stored it detached); now flagged, it learns.
+Living smoke: every ring weight moves, frozen twin's stay 0.0; the guard VOIDs it on Delta_5 as it does the seat. All 7 arms built;
+two (wm-dyn, ring) refuse only for lack of an LC.02 price.
+Served philosophy 1 (a working memory inside him, carried across a life, learned from scratch) and 3 (the seated memory raced in a body).

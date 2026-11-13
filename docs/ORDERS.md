@@ -171,11 +171,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
-state: LC.09 REGISTERED 17:45, re-reg 20:15 (act-gain guard) + 20:40 (wm-dyn); R2D2 loop b877604; guard hook d2070c4.
-11-13 22:00 ARM RUNNER BUILT (lc_09 run_arm/_smoke_arms, `... lc_09_learning_core_3x smoke N`): stateless arms -> run_survival, wm-dyn ->
-run_survival_rec, GuardRecorder on all 5 latent arms. Smoke 1100 dec s0 (PS.01 world, NOT a reading): 5 arms run 43-56 cpu-s each, 0 deaths,
-guard fires 1x per latent arm. wm-dyn REFUSES as UNPRICED: LC.02 committed no train_ratio for it (spec says "LC.02's committed ratio").
-Next: price wm-dyn in LC.02 (add arm; needs quiet box) OR rule its ratio; build wm-latent+ring; survival_rec wipe_at_death for control (a).
+state: LC.09 REGISTERED 17:45, re-reg 20:15 (act-gain guard) + 20:40 (wm-dyn); R2D2 loop b877604; guard hook d2070c4; arm runner f79f271.
+11-13 22:35 wm-latent+ring BUILT (d80d85c, experiments/cores_ring.py): RingMemory reads z, readout ADDED to z before the RSSM (seat dims
+unchanged, +5,329 params), rest-state h0 at death, R2D2 stored ring state via survival_rec. Living 600 dec: every ring weight moves, frozen 0.0.
+run_arm 1100 dec 41 cpu-s, guard VOIDs it on Delta_5 like the seat (registered). All 7 arms now built; wm-dyn + ring refuse only as UNPRICED.
+Next: price wm-dyn AND wm-latent+ring in LC.02 (quiet box, one re-run) OR rule their ratio; survival_rec wipe_at_death for control (a); pilot s89.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
