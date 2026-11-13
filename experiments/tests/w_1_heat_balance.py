@@ -6,8 +6,19 @@ is the bottleneck (LC.03's darkroom control, LC.03 v2's one-learner-in-five,
 DP.05's FAIL, SH.01's ORACLE_CANNOT, SH.02's saturated null). This is the first
 spec that asks the world whether it obeys its own published law.
 
-RE-REGISTERED 2026-11-12 (J6) — READ THIS FIRST
------------------------------------------------
+RE-REGISTERED 2026-11-13 (J6(a)) — CHECK (b) IS ON THE DECLARED CLOCK
+---------------------------------------------------------------------
+Director ruling 1: W0 has ONE declared clock, k = 72 (`K_DECLARED`, a constant
+here, never read off the world). (b) is read at 3600/72 = 50 sim-s against
+the unmoved 33.767 C +/- 1%; the claim also requires 86400/SIM_DAY_S == 72.
+The control yardstick runs on the declared clock (C / 72), and two planted
+off-clock yardsticks (k = 1, k = 60) must FAIL (b). Smoke seed 0: shipped (b)
+33.803 PASS, control 33.767 PASS, k=1 36.95 FAIL, k=60 34.26 FAIL. The 1x
+reading stays reported as `b_1x_*`. The 2026-11-12 text below saying (b)
+stays at 1x is superseded.
+
+RE-REGISTERED 2026-11-12 (J6)
+-----------------------------
 The GATED arm is now the shipped `thermal_step` at exactly 1 met
 (`shiver_on=False`, `_make_ship_1met`). The hypothesis names "a body at 1 met"
 and the reference has no thermoregulation; the old gated arm shivered, so (a)
@@ -249,6 +260,19 @@ WIND_V_MS = 5.0
 FLUX_TOL_FRAC = 5e-3         # check (d), at the fine dt
 FLUX_CONVERGENCE_LO, FLUX_CONVERGENCE_HI = 1.8, 2.2   # first order in dt
 
+# ── W0's ONE DECLARED CLOCK (ruling 1, Director 2026-11-13; ORDERS J6(a)) ──
+# One Jack-day = 86400/K_DECLARED sim-s. A DECLARED constant, never derived
+# from the world: (b) is read at DECAY_T_S / K_DECLARED sim-s, and the gate
+# also asserts the world's own SIM_DAY_S sits on this clock — a world whose
+# day and whose thermal tau were both moved to some other k would agree with
+# itself perfectly and must still fail (W.7's notes: assert against the
+# DECLARED constant, not against each other).
+K_DECLARED = 72.0
+# Planted off-clock arms. 1x physics (k = 1, the pre-ruling reading) and a
+# channel 1/6 slower than declared (k = 60) must FAIL (b) on the declared clock;
+# with the 1% bar unmoved, (b) tolerates a rate error of ~+/-11.6% in k.
+K_PLANTED_OFF = (1.0, 60.0)
+
 # Integrator settings. 1x WALL-CLOCK PHYSICS, as the spec demands: dt is in
 # simulated seconds and one simulated second is one real second here. The
 # compressed Jack-day clock is W.7's business and is only *reported* below.
@@ -397,7 +421,7 @@ def _measured_tau(step, T_env: float, T_eq: float, dt: float = DT_S,
 # The four checks, run against any (stepper, flux, c_eff) triple.
 # ══════════════════════════════════════════════════════════════════════════
 def _four_checks(step, flux, c_eff: float, step_wind, seed: int,
-                 tag: str) -> dict:
+                 tag: str, k_read: float = K_DECLARED) -> dict:
     """`step_wind` is the SAME model driven at WIND_V_MS, or None when the
     model has no velocity input at all to drive. The distinction is the whole
     of check (c): the registered control passes a stepper that ACCEPTS wind and
@@ -453,23 +477,29 @@ def _four_checks(step, flux, c_eff: float, step_wind, seed: int,
     # The homogeneous response of the arm's own measured time constant. This is
     # the reading that reproduces the registered 33.767 and the only one the
     # registered control can pass; see the docstring.
+    # Read on the DECLARED clock: 1 Jack-hour = DECAY_T_S / k_read sim-s.
     if math.isfinite(tau_still) and tau_still > 0:
         b_homog = SCENARIO_TENV_C + (SCENARIO_T0_C - SCENARIO_TENV_C) * math.exp(
-            -DECAY_T_S / tau_still)
+            -(DECAY_T_S / k_read) / tau_still)
     else:
         b_homog = SCENARIO_T0_C       # never relaxes: it is still at 37
     m["b_homogeneous_1h_c"] = b_homog
     m["b_rel_err"] = abs(b_homog - DECAY_1H_C) / DECAY_1H_C
     m["b_pass"] = float(m["b_rel_err"] <= DECAY_TOL_FRAC)
+    m["b_k_read"] = float(k_read)
     m["b_ref_1h_c"] = SCENARIO_TENV_C + 17.0 * math.exp(-DECAY_T_S / _tau_ref(0.0))
+    # the pre-ruling 1x reading, REPORTED never gated
+    m["b_1x_homogeneous_1h_c"] = (SCENARIO_TENV_C + 17.0 * math.exp(
+        -DECAY_T_S / tau_still) if math.isfinite(tau_still) and tau_still > 0
+        else SCENARIO_T0_C)
 
     # the LITERAL reading, reported not gated: run the arm as it ships
     T = SCENARIO_T0_C
-    for _ in range(int(round(DECAY_T_S / DT_S))):
+    for _ in range(int(round(DECAY_T_S / k_read / DT_S))):
         T = step(T, SCENARIO_TENV_C, DT_S)
     b_lit = T
     T2 = T
-    for _ in range(int(round(DECAY_T_S / DT_S))):
+    for _ in range(int(round(DECAY_T_S / k_read / DT_S))):
         T2 = step(T2, SCENARIO_TENV_C, DT_S)
     m["b_literal_1h_c"] = b_lit
     m["b_literal_rel_err"] = abs(b_lit - DECAY_1H_C) / DECAY_1H_C
@@ -521,15 +551,23 @@ def _four_checks(step, flux, c_eff: float, step_wind, seed: int,
 # ══════════════════════════════════════════════════════════════════════════
 # Arms
 # ══════════════════════════════════════════════════════════════════════════
-def _reference_arm(seed: int, wind_blind: bool, tag: str) -> dict:
+def _reference_arm(seed: int, wind_blind: bool, tag: str,
+                   k_body: float = K_DECLARED) -> dict:
     """The sourced lumped-capacitance yardstick. A model, never a world.
 
     `wind_blind=True` is the REGISTERED CONTROL: h_c is pinned at its natural
     value, so the arm still ACCEPTS a velocity and simply does not respond to
     it. `wind_blind=False` is the positive reference that proves check (c) is
     clearable at all.
+
+    `k_body` is the clock the yardstick body runs on: its heat capacity is
+    divided by k_body, so every time constant is the sourced one / k_body and
+    nothing else moves (equilibria, the wind ratio and the flux identity are
+    k-free). At K_DECLARED it is the sourced body on W0's declared clock, which
+    is what (b) now reads; at K_PLANTED_OFF it is a channel off that clock and
+    must fail (b).
     """
-    c_eff = M_BODY_KG * C_P_BURTON
+    c_eff = M_BODY_KG * C_P_BURTON / k_body
 
     def make(v_ms: float):
         hA = _hA_ref(v_ms, wind_blind=wind_blind)
@@ -575,8 +613,8 @@ def _experiment(seed: int) -> dict:
               "c_pass", "d_pass", "four_checks_pass"):
         m["closed_" + k] = closed[k]
 
-    # (b) on the world's own compressed clock (1 h = 3600/k sim-s, k = 72),
-    # REPORTED NEVER GATED: W.1's notes and W.7's registered control both say
+    # (b) with k DERIVED from the world's day (diagnostic; the GATED (b) above
+    # uses the declared constant K_DECLARED, 2026-11-13). Pre-ruling text: W.1's notes and W.7's registered control both say
     # the decay check runs at 1x and a 70 kg body's tau cannot be sped up by a
     # clock convention. The shipped world compresses its thermal tau ~71x, so
     # (b) at 1x fails BY DESIGN of the world, not of the overlay's form.
@@ -647,6 +685,18 @@ def _experiment(seed: int) -> dict:
     # or check (c) is a gate nothing in this file can clear (the VO.02 lesson).
     ref_wind = _reference_arm(seed, wind_blind=False, tag="ref_wind_aware")
 
+    # PLANTED OFF-CLOCK ARMS: the wind-aware yardstick on k = 1 and k = 60.
+    # Each must FAIL (b) on the declared clock, or (b) cannot tell a channel
+    # on the declared clock from one off it (J6(a)).
+    for kb in K_PLANTED_OFF:
+        off = _reference_arm(seed, wind_blind=False, tag=f"ref_k{kb:g}",
+                             k_body=kb)
+        m[f"off_k{kb:g}_b_pass"] = off["b_pass"]
+        m[f"off_k{kb:g}_b_homogeneous_1h_c"] = off["b_homogeneous_1h_c"]
+    m["w_day_k"] = 86400.0 / N.SIM_DAY_S
+    m["w_day_on_declared_clock"] = float(
+        abs(m["w_day_k"] - K_DECLARED) / K_DECLARED <= 1e-9)
+
     for src, pre in ((null_off, "null_off_"), (null_amb, "null_amb_"),
                      (ref_wind, "ref_wind_")):
         for k in ("a_pass", "b_pass", "c_pass", "d_pass", "four_checks_pass"):
@@ -677,7 +727,11 @@ def _check(m: dict, c: dict) -> bool:
     # equilibrium depends on h (falsified_by's third clause).
     experiment_ok = (m["four_checks_pass"] == 1.0
                      and m["all_finite"] == 1.0
-                     and m["e_equilibrium_depends_on_h"] == 1.0)
+                     and m["e_equilibrium_depends_on_h"] == 1.0
+                     and m["w_day_on_declared_clock"] == 1.0)
+
+    # (b) MUST SEPARATE CLOCKS: a channel off K_DECLARED fails it (J6(a)).
+    off_clock_ok = all(m[f"off_k{kb:g}_b_pass"] == 0.0 for kb in K_PLANTED_OFF)
 
     # THE CONTROL: fails (c) while passing (a) and (b), exactly as registered.
     control_ok = (c["c_pass"] == 0.0 and c["a_pass"] == 1.0
@@ -696,7 +750,8 @@ def _check(m: dict, c: dict) -> bool:
                 and m["null_amb_b_pass"] == 0.0
                 and m["null_amb_c_pass"] == 0.0)
 
-    return bool(experiment_ok and control_ok and positive_ok and nulls_ok)
+    return bool(experiment_ok and control_ok and positive_ok and nulls_ok
+                and off_clock_ok)
 
 
 def run(ledger: Ledger | None = None):
