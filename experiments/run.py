@@ -3100,7 +3100,7 @@ def print_ratchet_block(ledger: Ledger) -> dict:
                 from .coverage import fail_unowned as _fu
                 owned = _fu()["owned"]
                 forms = ["repaired_by", "disposed", "queue-row",
-                         "held-on-blocker", "mention-only"]
+                         "held-on-blocker", "mention-only", "order"]
                 c = {k: sum(1 for v in owned.values() if v == k)
                      for k in forms}
                 print("        owned: " + ", ".join(f"{c[k]} {k}"

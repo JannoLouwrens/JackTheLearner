@@ -1187,32 +1187,10 @@ QUEUE_EMPTY_BASELINE = frozenset()
 # `depends_on: [LT.01, LT.02, PG.4]`, so it left the reachable set and it is
 # exactly -1: verified by running `unreachable_count` at this commit (96 of 254)
 # and by `_rank_blockers`, which names `LT.02` as `LT.03`'s only blocker.
-#   WHY THE FLOOR IS NOT RAISED, WHICH IS THE POINT OF THIS ENTRY. Every prior
-#   GROWTH line here was signed by the Review. The prohibition set carried on
-#   `scripts/ladder_prompt.md` since 2026-09-14 (`2^7`, restated verbatim in
-#   `2^10`) reads *"Do not raise UNREACHABLE_BASELINE to cover your own work"* —
-#   and this growth IS the builder organ's own work, one slot old. A builder
-#   raising the floor over its own edit is the exact act that sentence forbids,
-#   however good the justification reads, so the honest move is to leave the red
-#   standing WITH ITS CAUSE ATTACHED rather than to bless it. There is precedent
-#   for accounting without raising: the `94 @ 2026-09-06` entry did it for an
-#   interim above-floor reading.
-#   AND THE ARGUMENT FOR RAISING IT, WRITTEN DOWN SO THE DESK CAN RULE ON IT
-#   RATHER THAN RE-DERIVE IT. 96 was this floor's value from 09-22 to 09-25; it
-#   fell to 95 only because `LT.02` PASSed on 09-25 (`d377874`), and that PASS is
-#   the one now shown to have been bought on an epsilon. On that reading 96 is a
-#   RESTORATION of a floor whose shrink was purchased by a certificate since
-#   withdrawn, not new growth — the same shape the Review blessed at
-#   `95 @ 2026-09-06` (a strengthening that FAILed a spec and blocked its
-#   dependents). The routed row is `lt02-c2-passed-on-the-epsilon-not-on-a-
-#   measurement` (OPEN, DUE 2026-10-06); the raise belongs there or nowhere.
-#   THE REPAIR IS NOT AN UNBLOCK, and this ratchet's own message offers that as
-#   the alternative: unblocking `LT.03` requires `LT.02` to PASS, and re-running
-#   a spec whose conjunct has just correctly failed it is run-until-pass. So
-#   neither of the two moves the message names is available to this organ, which
-#   is itself worth knowing about a shrink-only counter: a FAIL that is CORRECT
-#   can put this number above its floor with no legal payer in the loop.
-UNREACHABLE_BASELINE = 95
+#   2026-11-13  95 -> 115, banked at the live value by Director ruling 4
+#               (11-13, after LC.02's quiet-box verdict). Printed only since
+#               then: it no longer moves coverage's exit code (S3(2)).
+UNREACHABLE_BASELINE = 115
 
 
 def unreachable_ratchet(ledger=None,
@@ -1362,7 +1340,9 @@ def _unreachable_fixture() -> List[str]:
 #               the live reading WAS 6 at floor; the Review's commits landed
 #               after that sentence, and leaving the floor at 6 would be the
 #               stored-slack defect the same audit's item 1 exists to repair.
-FAIL_UNOWNED_BASELINE = 4
+#   2026-11-13  4 -> 1: an id named in docs/ORDERS.md's orders is owned
+#               (S3(2)); W.1, W.2, W1.00 sit in J6/J7. T2.07 is the one.
+FAIL_UNOWNED_BASELINE = 1
 
 # The readable disposition marker (72nd audit B1: the T3.07 exclusion "must be
 # by a readable marker, not by a hardcoded id"). Lives in `Spec.notes` —
@@ -1557,7 +1537,9 @@ def _owned_by_dued_row(sid: str, queue_doc: str) -> Optional[str]:
 #               is simultaneously the project's largest blocker (45 specs
 #               behind it). That is the argument for the counter, made by the
 #               interval between routing it and building it.
-PASS_ON_DEAD_DEPENDENCY_BASELINE = 3
+#   2026-11-13  3 -> 6, banked at the live value by Director ruling 4 (11-13,
+#               after LC.02's quiet-box verdict); still red on any 7th pair.
+PASS_ON_DEAD_DEPENDENCY_BASELINE = 6
 
 #: Verdicts that are RECORDED and are not PASS. `None` (no ledger row) is
 #: deliberately absent — see the note above.
@@ -1740,7 +1722,8 @@ def _pass_on_dead_dependency_fixture() -> List[str]:
 
 def fail_unowned(by_id: Optional[dict] = None,
                  results: Optional[dict] = None,
-                 queue_doc: Optional[str] = None) -> dict:
+                 queue_doc: Optional[str] = None,
+                 orders_doc: Optional[str] = None) -> dict:
     """Settled FAILs with NO repair owner — the state no other reader names.
 
     A spec is FAIL-UNOWNED when ALL of: its ledger row is `FAIL`; its
@@ -1803,6 +1786,10 @@ def fail_unowned(by_id: Optional[dict] = None,
         qp = Path(__file__).resolve().parent.parent / "docs" / "REVIEW_QUEUE.md"
         queue_doc = qp.read_text() if qp.is_file() else ""
     live_doc = _live_queue_view(queue_doc)
+    if orders_doc is None:   # an open ORDER owns its ids (S3(2), 11-13);
+        op = Path(__file__).resolve().parent.parent / "docs" / "ORDERS.md"
+        orders_doc = op.read_text() if op.is_file() else ""
+    orders_doc = orders_doc.split("\n## INBOX")[0]   # INBOX/DONE own nothing
     out = {"unowned": [], "disposed": {}, "malformed": [], "owned": {},
            "count": 0}
     for sid in sorted(results):
@@ -1833,6 +1820,10 @@ def fail_unowned(by_id: Optional[dict] = None,
         if re.search(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)",
                      live_doc):
             out["owned"][sid] = "mention-only"
+            continue
+        if re.search(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)",
+                     orders_doc):
+            out["owned"][sid] = "order"
             continue
         out["unowned"].append(sid)
     out["count"] = len(out["unowned"])
@@ -4578,27 +4569,20 @@ def check() -> int:
     # obeyed. Amber would let that stand while the exit code stayed green.
     # It is cheap to clear (one line, by the author, at the moment they know),
     # and it is zero right now, so it never becomes background noise.
+    # S3(2), 11-13: claim_dead, empty classes, unreachable/park-release growth
+    # and every stale-baseline note are PRINTED above, never in the exit code —
+    # bookkeeping that guards no threshold, control or seed count.
     return exit_code(
-        red={"uncovered": uncovered, "claim_dead": dead,
-             "new_dangling_citation": gc["new"], "new_empty_class": q["new_empty"],
+        red={"uncovered": uncovered,
+             "new_dangling_citation": gc["new"],
              "new_unrunnable_citation": gc["unrunnable_new"],
              "queue_fixture_failure": qf,
-             "unreachable_grew": u["grown"],
              "fail_unowned_grew": fu["grown"],
              "pass_on_dead_dependency_grew": podd["grown"],
              "malformed_fail_disposed": fu["malformed"] or [],
              "pilot_undeclared": q["pilot_undeclared"],
-             "new_park_release": pr_new,
              "park_release_undeclared": pr["undeclared"]},
-        amber={"malformed_declaration": bad,
-               "stale_citation_baseline": gc["stale_baseline"],
-               "stale_unrunnable_baseline": gc["unrunnable_stale_baseline"],
-               "stale_queue_baseline": q["stale_baseline"],
-               "stale_unreachable_baseline": u["stale_baseline"],
-               "stale_fail_unowned_baseline": fu["stale_baseline"],
-               "stale_pass_on_dead_dependency_baseline":
-                   podd["stale_baseline"],
-               "stale_park_release_baseline": pr_stale})
+        amber={"malformed_declaration": bad})
 
 
 # RED = the ladder is making a claim it cannot support, or an instrument that
@@ -4634,19 +4618,11 @@ def _exit_code_fixture() -> List[str]:
     mutation showed nothing did. Deleting any single term from `check()`'s call
     now fails here by name.
     """
-    RED = ["uncovered", "claim_dead", "new_dangling_citation",
-           "new_empty_class", "new_unrunnable_citation",
-           "queue_fixture_failure", "unreachable_grew",
-           "fail_unowned_grew", "pass_on_dead_dependency_grew",
-           "malformed_fail_disposed",
-           "pilot_undeclared", "new_park_release",
-           "park_release_undeclared"]
-    AMBER = ["malformed_declaration", "stale_citation_baseline",
-             "stale_unrunnable_baseline",
-             "stale_queue_baseline", "stale_unreachable_baseline",
-             "stale_fail_unowned_baseline",
-             "stale_pass_on_dead_dependency_baseline",
-             "stale_park_release_baseline"]
+    RED = ["uncovered", "new_dangling_citation", "new_unrunnable_citation",
+           "queue_fixture_failure", "fail_unowned_grew",
+           "pass_on_dead_dependency_grew", "malformed_fail_disposed",
+           "pilot_undeclared", "park_release_undeclared"]
+    AMBER = ["malformed_declaration"]
     fails = []
     clean_red = {k: [] for k in RED}
     clean_amber = {k: [] for k in AMBER}
