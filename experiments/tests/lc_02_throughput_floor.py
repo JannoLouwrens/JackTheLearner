@@ -104,7 +104,23 @@ from ..cores import (ACTION_DIM, CANDIDATE_ARMS, LC_BATCH, build_arm,
                      lc_targets, lc_update, make_optimizer, n_params)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
+from ..survival_rec import REC_ARMS, build_rec_arm
 from ..w0 import W0, SIM_S_PER_DECISION
+
+# ── CHALLENGER PRICING (ORDERS J3, 2026-11-13 23:00) ────────────────────
+# LC.09 races two arms that CARRY STATE (survival_rec.REC_ARMS: wm-dyn and
+# wm-latent+ring) and its registration says each runs at "LC.02's committed
+# train_ratio". Their update is not CANDIDATE_ARMS' update: every replay row
+# hands its stored recurrent state back through `core.use_stored` before
+# `lc_update`, and every decision advances the state with `core.step` +
+# `core.efference`. So they are timed through THEIR loop (`_run_rec`), never
+# borrowed from a sibling's ratio. Same floor, same walk, same keys
+# (`<arm>/clears@<r>`), same conservative `committed_ratio`. They are PRICED
+# here, not admitted: they do not enter `throughput_floor_conjunction` (the
+# registered claim is about CANDIDATE_ARMS and its gate is byte-unmoved). A
+# challenger that clears no ratio is EXCLUDED from LC.09 by LC.09 itself
+# (no committed ratio -> UnpricedArm), which is LC.02's own exclusion rule.
+CHALLENGER_ARMS = REC_ARMS
 
 # This spec certifies a property of the WORLD, so the world hashes into
 # impl_sha. Change playground.py and this certificate goes stale loudly
@@ -116,7 +132,10 @@ from ..w0 import W0, SIM_S_PER_DECISION
 # exactly the direction the guard exists to cover.
 IMPL_DEPS = ["playground.py", "experiments/w0.py", "experiments/drives.py",
              # 2026-10-20 widened domain (T0.35): nested `from ..cores import`
-             "experiments/cores.py"]
+             "experiments/cores.py",
+             # 11-13: the challengers' loop and cores are timed here too
+             "experiments/cores_dyn.py", "experiments/cores_ring.py",
+             "experiments/survival_rec.py"]
 
 FLOOR = 5.0                      # sim-s per real-s, LEARNING_CORE.md §5.1
 N_THREADS = 3                    # "3 ARM cores of this box"
@@ -274,6 +293,94 @@ def _run(seed: int, arm, train_ratio, timed: int = TIMED) -> dict:
     return out
 
 
+class _RecBuffer(_Buffer):
+    """_Buffer + the recurrent state each row was acted from (R2D2 stored
+    state, as survival_rec._StateRing), sampled with the SAME indices."""
+
+    def __init__(self, obs, cap: int = BUFFER):
+        super().__init__(obs, cap)
+        self.st = None
+
+    def add_rec(self, obs, stored) -> None:
+        stored = stored if isinstance(stored, tuple) else (stored,)
+        if self.st is None:
+            self.st = [torch.zeros(self.cap, x.shape[-1]) for x in stored]
+        i = self.n % self.cap
+        for b, x in zip(self.st, stored):
+            b[i] = x
+        self.add(obs)
+
+    def sample_rec(self, gen, size: int = LC_BATCH):
+        hi = min(self.n, self.cap)
+        idx = torch.randint(0, hi, (size,), generator=gen)
+        st = tuple(b[idx] for b in self.st)
+        return ({k: self.buf[k][idx] for k in self.keys},
+                st if len(st) > 1 else st[0])
+
+
+def _stored_now(core):
+    """The state this decision is acted FROM (survival_rec's expression)."""
+    from ..cores import DETER, LATENT
+    if hasattr(core, "stored_now"):
+        return core.stored_now()
+    return ((core._h if core._h is not None
+             else torch.zeros(1, DETER)).squeeze(0).clone(),
+            (core._z if core._z is not None
+             else torch.zeros(1, LATENT)).squeeze(0).clone(),
+            core._a.squeeze(0).clone())
+
+
+def _run_rec(seed: int, arm: str, train_ratio, timed: int = TIMED) -> dict:
+    """`_run` for a core that carries state, through its REAL loop: step +
+    efference every decision, stored state handed back on every update.
+    Same world, seeds, warm-up, stopwatch and NOISE targets as `_run`."""
+    w = W0(seed=seed, j0=J0_TIMING_ONLY, alpha=ALPHA_TIMING_ONLY)
+    gen = torch.Generator().manual_seed(seed * 7919 + 3)
+    torch.manual_seed(9_000 + seed)
+    core = build_rec_arm(arm)
+    core.eval()
+    opt = make_optimizer(core)
+    buf = _RecBuffer(w.observe())
+
+    def one() -> None:
+        obs = w.observe()
+        buf.add_rec(obs, _stored_now(core))
+        obs_t = _to_tensor(obs)
+        with torch.no_grad():
+            s = core.step(obs_t, dropped=W0.DROPPED)
+            a = core.act(obs_t, s["state"]).squeeze(0).numpy()
+        core.efference(a)
+        w.decide(a)
+        if train_ratio >= 1.0:
+            n_up = int(train_ratio)
+        else:
+            n_up = 1 if (w.decisions % int(round(1.0 / train_ratio)) == 0) else 0
+        for _ in range(n_up):
+            batch, st = buf.sample_rec(gen)
+            core.use_stored(st)
+            try:
+                lc_update(core, batch, lc_targets(gen), opt,
+                          dropped=W0.DROPPED)
+            finally:
+                core.use_stored(None)
+
+    for _ in range(WARMUP):
+        one()
+    j0 = _cpu_jiffies()
+    t0 = time.perf_counter()
+    for _ in range(timed):
+        one()
+    wall = time.perf_counter() - t0
+    j1 = _cpu_jiffies()
+    out = {"T": timed * SIM_S_PER_DECISION / wall,
+           "foreign_cores": _foreign_cores(j0, j1, wall),
+           "decisions_per_s": timed / wall,
+           "core_s_per_1k": 1000.0 * wall / timed,
+           "params": float(n_params(core))}
+    out.update(w.report())
+    return out
+
+
 def _body_sanity(seed: int) -> dict:
     """PG.8's question for the rover: is anybody home, and does the drive gate?
 
@@ -310,6 +417,38 @@ def _body_sanity(seed: int) -> dict:
             "upright_cos_after_20": r["upright_cos"]}
 
 
+def _walk(seed: int, arm: str, runner, m: dict, foreign: list) -> int:
+    """THE SELECTION RULE for one arm on one seed; writes its keys into m."""
+    chosen, t_min, n_measured = None, None, 0
+    clears = {r: 0.0 for r in TRAIN_RATIOS}
+    times: dict = {r: None for r in TRAIN_RATIOS}
+    for r in TRAIN_RATIOS:
+        rr = runner(seed, arm, r)
+        t = rr["T"]
+        foreign.append(rr["foreign_cores"])
+        times[r], n_measured = t, n_measured + 1
+        if t_min is None:
+            t_min = t
+        if t >= FLOOR:
+            clears[r], chosen = 1.0, r
+        else:
+            # Monotonicity, not an assumption: more gradient steps per
+            # decision cannot make a decision cheaper. Everything above a
+            # failing ratio fails, so the walk stops and those ratios are
+            # recorded as not-cleared with their time left UNMEASURED
+            # (null, never a zero — LESSONS.md, "a default of zero is not
+            # 'unknown'"). `ratios_measured` says how far the walk got.
+            break
+    for r in TRAIN_RATIOS:
+        m[f"{arm}/clears@{r}"] = clears[r]
+        m[f"{arm}/T@{r}"] = times[r]
+    m[f"{arm}/train_ratio_this_seed"] = float(chosen or 0.0)
+    m[f"{arm}/cleared"] = float(chosen is not None)
+    m[f"{arm}/T_at_min_ratio"] = float(t_min)
+    m[f"{arm}/ratios_measured"] = float(n_measured)
+    return int(chosen is not None)
+
+
 def _experiment(seed: int) -> dict:
     nice_level, threads = _nice_and_threads()
     m: dict = {"nice": nice_level, "torch_threads": threads,
@@ -327,34 +466,11 @@ def _experiment(seed: int) -> dict:
 
     n_cleared = 0
     for arm in CANDIDATE_ARMS:
-        chosen, t_min, n_measured = None, None, 0
-        clears = {r: 0.0 for r in TRAIN_RATIOS}
-        times: dict = {r: None for r in TRAIN_RATIOS}
-        for r in TRAIN_RATIOS:
-            rr = _run(seed, arm, r)
-            t = rr["T"]
-            foreign.append(rr["foreign_cores"])
-            times[r], n_measured = t, n_measured + 1
-            if t_min is None:
-                t_min = t
-            if t >= FLOOR:
-                clears[r], chosen = 1.0, r
-            else:
-                # Monotonicity, not an assumption: more gradient steps per
-                # decision cannot make a decision cheaper. Everything above a
-                # failing ratio fails, so the walk stops and those ratios are
-                # recorded as not-cleared with their time left UNMEASURED
-                # (null, never a zero — LESSONS.md, "a default of zero is not
-                # 'unknown'"). `ratios_measured` says how far the walk got.
-                break
-        for r in TRAIN_RATIOS:
-            m[f"{arm}/clears@{r}"] = clears[r]
-            m[f"{arm}/T@{r}"] = times[r]
-        m[f"{arm}/train_ratio_this_seed"] = float(chosen or 0.0)
-        m[f"{arm}/cleared"] = float(chosen is not None)
-        m[f"{arm}/T_at_min_ratio"] = float(t_min)
-        m[f"{arm}/ratios_measured"] = float(n_measured)
-        n_cleared += int(chosen is not None)
+        n_cleared += _walk(seed, arm, _run, m, foreign)
+    # Challengers: priced, never gating (see CHALLENGER_ARMS).
+    m["challengers_cleared"] = float(sum(
+        _walk(seed, arm, _run_rec, m, foreign) for arm in CHALLENGER_ARMS))
+    m["challengers_probed"] = float(len(CHALLENGER_ARMS))
 
     m["foreign_cores_max"] = float(max(foreign))
     # Per seed 0/1, so the across-seed MEAN is > 0 iff ANY seed was contended.

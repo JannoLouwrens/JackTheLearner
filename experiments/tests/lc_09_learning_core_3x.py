@@ -278,6 +278,27 @@ class UnpricedArm(RuntimeError):
     rig choice, so the runner refuses instead (wm-dyn today)."""
 
 
+def _borrow_lc09():
+    """LC.03's `_borrow` (PS.01 j0/alpha + CANDIDATE_ARMS' LC.02 ratios) plus
+    the challengers' own LC.02 ratios (lc_02 CHALLENGER_ARMS, timed through
+    survival_rec's loop since 11-13 23:00). A challenger LC.02 has not priced,
+    or priced at no ratio, is simply absent -> run_arm raises UnpricedArm:
+    LC.02's exclusion, never a sibling's ratio."""
+    from ..protocol import borrow_metrics
+    from .lc_02_throughput_floor import (CHALLENGER_ARMS, TRAIN_RATIOS,
+                                         committed_ratio)
+    from .lc_03_survival_screening import _borrow
+    cal, prov = _borrow()
+    if cal is None:
+        return cal, prov
+    for arm in CHALLENGER_ARMS:
+        b = borrow_metrics("LC.02", [f"{arm}/clears@{r}" for r in TRAIN_RATIOS])
+        r = committed_ratio(b.values, arm) if b.ok else None
+        if r is not None:
+            cal["ratios"][arm] = r
+    return cal, prov
+
+
 def _arm_hooks(arm: str, seed: int) -> dict:
     """LC.03's reward machinery, fresh per run (closures carry state)."""
     from .lc_03_survival_screening import (KAPPA_EFE, _lp_intrinsic_factory,
@@ -336,8 +357,7 @@ def _smoke_arms(n: int = 2_200, seed: int = 0) -> dict:
     """Wiring check, records nothing: every runnable arm runs n decisions in
     PS.01's calibrated world (values passed in, not borrowed, so it runs
     without a ledger) with the guard attached. NOT a reading of any arm."""
-    from .lc_03_survival_screening import _borrow
-    cal, prov = _borrow()
+    cal, prov = _borrow_lc09()
     if cal is None:
         return {"refused": prov}
     res = {}
@@ -446,9 +466,8 @@ def _probe(n_init: int = 5, n_dec: int = 300) -> dict:
     from ..cores import build_arm, make_optimizer, lc_update, lc_targets, LATENT
     from ..survival import random_action
     from ..w0 import W0
-    from .lc_03_survival_screening import _borrow
     torch.set_num_threads(1)
-    cal, prov = _borrow()
+    cal, prov = _borrow_lc09()
     assert cal is not None, prov
     out = {"grad": {}, "delta5_untrained": {}}
     for arm in ("dreamer-xs", "wm-efe", "wm-latent"):
