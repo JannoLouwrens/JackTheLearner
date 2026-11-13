@@ -948,6 +948,7 @@
         "detached:diag.log": 1546.66,
         "detached:dose.log": 6820.19,
         "detached:dose2.log": 10584.81,
+        "detached:gamma99.log": 4864.26,
         "detached:low.log": 707.28,
         "detached:oracle.log": 1391.93,
         "detached:oracle2.log": 2494.9,
@@ -979,8 +980,79 @@
         "detached:w0pl_chain2.log": 2097.4,
         "detached:w0pl_chain_1839.log": 10.78
       },
-      "used_s": 57569.44
+      "used_s": 62433.7
+    },
+    "2026-11-13": {
+      "by_spec": {
+        "detached:gamma99.log": 2335.75,
+        "detached:run_1113.log": 1800.0
+      },
+      "used_s": 4135.75
     }
   },
-  "overruns": []
+  "overruns": [
+    {
+      "at": "2026-11-12T22:48:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 58169.44
+    },
+    {
+      "at": "2026-11-12T22:58:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 58769.44
+    },
+    {
+      "at": "2026-11-12T23:08:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 59369.44
+    },
+    {
+      "at": "2026-11-12T23:18:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 59969.44
+    },
+    {
+      "at": "2026-11-12T23:28:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 60569.44
+    },
+    {
+      "at": "2026-11-12T23:38:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 61169.44
+    },
+    {
+      "at": "2026-11-12T23:48:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 61769.44
+    },
+    {
+      "at": "2026-11-12T23:58:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 62369.44
+    },
+    {
+      "at": "2026-11-13T00:08:55",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-12",
+      "spec_id": "detached:gamma99.log",
+      "used_s": 62433.7
+    }
+  ]
 }
