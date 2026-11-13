@@ -599,3 +599,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   Curriculum seat VACANT, ARENA: NONE (honest NO-ARENA, check rc 0). Cook-off CR.00/CR.01 designed, not registered. It scores
   fed-life fraction + median span, not meal counts (jackpot finding), and adds a matched-meal null beside the shuffled-stage control.
   Served: 3 (curriculum gets a seat and a race, not an assumption) and 5 (his curriculum treated as part of what makes him).
+
+- 2026-11-13 ~01:45 UTC JACK J7 (short slot; no ledger row). J1 waits on wean-smell (1 of 6 runs done), J4 has no GPU, so I took J7.
+  W1.04's 59-day VOID was an apparatus bug, not the world. W0's clock adds floats, so after 28000 decisions it reads 5599.999999997 s.
+  The lethal=False control's life, censored at the 5600 s horizon, could therefore never meet its own "p5 >= H, equality expected"
+  gate. Fixed by snapping spans to the decision grid; no bar touched; fixture 14/14 (8495d56). Run it once the race frees the CPU.
+  W1.00's "immaterial" FAIL is underpowered: dwell moved 16x its recorded std, but t = 1.98 at 3 seeds. Next: re-register with
+  fresh seeds sized from these stds. Served: 4 (a control that could not pass is not a test; a FAIL at 3 seeds is not a verdict).

@@ -113,7 +113,11 @@ raced until thinking ahead is worth something. `W1.01`, `W1.02` already pass.
 **Do.** Repair `W1.00` and `W1.04`; then register `DP.05`'s question in W1.
 serves: M2 · philosophy 5 (his world matters as much as he does).
 **done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
-state: open — not started.
+state: 11-13 01:45 W1.04 VOID = float-clock apparatus fault, REPAIRED 8495d56 (not run): W0 clock after 28000 decisions reads
+5599.999999997 < HORIZON 5600.0, so the censored control could never meet its declared p5>=H; spans now snapped to the decision
+grid (fixture 14/14). Expect control green + claim FAIL (c) (p5 ~55 s). Run `W1.04` (CPU_LONG, ~2 h, 3 workers) after wean-smell exits.
+W1.00 FAIL looks UNDERPOWERED, not immaterial: dwell shift 0.101 = 16.2x recorded std, but t(d_dw_repeat)=1.98<3 at 3 seeds and floor
+f_dw .0082 > std .0062 (floor mean shrinks with n). Next: declare seed count from these stds (~8, FRESH seeds, not 0-2) and re-register.
 
 ### J5 — The curriculum, as a cook-off
 **Why.** Owner, 2026-11-11: *"the training curriculum … as important as jack
