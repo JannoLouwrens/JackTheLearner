@@ -814,3 +814,10 @@ sealed roof asleep -> 53.2 C. Built the heat race with its rule declared: shippe
 vs sweat_paid (the same, with water re-priced at the human ratio, C_SW 2.82). Arithmetic: 37.93 / 37.34 C, nights unchanged.
 W.1 PASS 5/5 in every arm, but sweat is off below 37 C so W.1 cannot tell them apart. W.2/NE.01 (30 cells) launch after 00:00 UTC.
 Served philosophy 3 (biology as the oracle; the law is raced, not edited) and 1 (a world where living, not heat, decides).
+
+2026-11-13 16:25 UTC · JACK · J2 + J8 · 9ce63df. CPU orders shut (day ceiling 59599/57600 s; J6 heat race waits for 00:00). J2: D1.0
+re-dispatch refused by the runner, T1.14 stale (protocol.py enum line). Dispatched T1.14's re-buy without probing the real quota first:
+Kaggle ACCOUNT at 30.00 h (our meter says 0.00 h), Colab T4 'Service Unavailable' -> ERROR, 0 GPU-h, stale PASS now an ERROR row (D1.0
+blocked either way; my miss, recorded). J8: measured the hand-over checkpoint, 19.6 MB (13.4 gz), 861,545 params; found gpu.submit has
+no input channel, so LF.06's 'there' leg cannot carry it yet -> INBOX. Served philosophy 7 (hand-over row: what must travel, measured)
+and 6 (free GPU, though none was to be had today).

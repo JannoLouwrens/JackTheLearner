@@ -68,9 +68,11 @@ serves: M3, M4 · END-FIT row 1 (human-like body) · philosophy 3, 7 · objectiv
 On a verdict, write in the seat row which END-FIT rows the winner leaves reachable (fast loop inside one brain; hands).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-13 10:20 attempt 5 ERROR at 0 GPU-h (2d41481): the SB3 reference unit WAS saved (S5 stdout recovery, /data/d10_units/3fbc6d0c,
-ref_mean 650.5 >= 450) and was reused; unit aprime/seed0 refused: Colab T4 assign "Service Unavailable" (2nd today), Kaggle weekly quota spent.
-Next: when `colab new`/assign works or Kaggle's week resets, re-dispatch unchanged (`dispatch.sh D1.0 --projected-hours 25.05`); 12 arm units left.
+state: 11-13 16:25 re-dispatch REFUSED by the runner: D1.0 BLOCKED by T1.14 (PASS but stale; 93b463b's KAGGLE_CPU enum line in protocol.py
+moved its impl_sha). T1.14 re-buy dispatched -> ERROR 8 s, 0 GPU-h (9ce63df): Kaggle ACCOUNT quota 30.00 h reached (shared; our W45 meter reads 0.00 h),
+Colab T4 assign 'Service Unavailable' again (3rd today; CLI 0.6.0, 0.8.0 out). T1.14 row now ERROR att 4 (PASS att 3 in history).
+Next: check `kaggle kernels push` quota / `colab new --gpu T4` BEFORE dispatching; when either takes work: `dispatch.sh T1.14 --projected-hours 1.2`,
+then `dispatch.sh D1.0 --projected-hours 25.05` unchanged (12 arm units left).
 
 ### J6 — W0's red world rules: one clock (`W.1`, `W.2`), then `NE.01`
 **Why.** `W.1`(b) and `W.2`(c) are one fault, ruled today (ruling 1): **W0 has
@@ -136,8 +138,9 @@ behind `LF.04`; `cores.py` no longer names a frozen tower inside him.
 state: LF.06 REGISTERED 11-13 12:30; experiments/tests/lf_06_handover.py BUILT (e7b45bd; strip/fresh controls, selftest OK). Budget CPU_DAYS.
 11-13 14:25 pilot HARVESTED: TOL_S 20.0 (= floor; sd_exam 1.31, n 10). Exams 597.6-601.2 s, all energy deaths, ate<=1; both pilot
 salts byte-identical (salt changed nothing; suspect L.k=HORIZON pins std; n is really 5). ARM/x86 gap 18.2 s (LF.04 smoke) = 0.91 of TOL.
-LF.06 depends on LF.03, so it shares J1's T2.10 block. Next: write run() (here/there roles for S1); switch budget to KAGGLE_CPU.
-cores.py:75 comment still awaits its INBOX ruling.
+LF.06 depends on LF.03 (J1's T2.10 block). 11-13 16:25 MEASURED the hand-over file: 19.6 MB (13.4 MB gz), ~all learner
+(861,545 params + Adam + ring); world/needs/diary < 16 KB. gpu.submit has NO input channel (repo clone + fetch-out only) -> INBOX.
+Next: run() with here/there roles once S1 names the channel (Kaggle private dataset as kernel source is the obvious one); budget -> KAGGLE_CPU.
 
 ### J5 — The curriculum cook-off (`CR.01`)
 **Why.** Owner 11-11: the curriculum is "as important as jack himself". The
@@ -262,6 +265,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 16:25) J2/J8, two machine gaps. (1) `gpu.submit`/`build_job` can only clone the repo and fetch outputs: no way to SEND a file to a kernel. LF.06's 'there' leg must carry a 19.6 MB (13.4 MB gz) checkpoint made here; committing it to git x3 seeds is wrong. S1 needs an input channel (private Kaggle dataset attached as dataset_sources?). (2) dispatch pre-flight reads our own gpu_budget.json (W45: 0.00 h used) but the Kaggle ACCOUNT is shared and was at its 30.00 h cap; a dispatch that will be refused still writes an ERROR row (T1.14 PASS-stale -> ERROR today). Pre-flight should probe the real quota; also protocol.py in IMPL_DEPS stales GPU certificates (T1.14 -> D1.0) on enum additions. Colab CLI 0.6.0 (0.8.0 out), T4 assign 'Service Unavailable' 3x today.
 - (JACK 11-13 15:45) J1 could not take its next step (XL.00 re-run, ~20 min): the day CPU ceiling was already spent (58472/57600 s at 15:20, needs_clock_race + w1_00_attempt4 meters), so `admit` refuses. J1 still waits on the T2.10 ruling below; slot went to J7.
 - (JACK 11-13 14:25) J1(2) is blocked one level deeper than the order says: LF.04 <- LF.03 (stale) <- LF.02 (stale) <- T6.03 BLOCKED <- T2.10 FAIL (paraphrase recall@1 0.0, conjunct added 08-31, ME.11's known weakness). LF.02 cannot re-certify save/resume while a language-memory paraphrase claim is red, so the creature gate (and LF.06) waits on T2.10. Ruling wanted: is T6.03->LF.02 a true prerequisite of 'a life can be saved and resumed', or does J1 now include repairing T2.10? Note CHAMPIONS.md:102: the ME.11 arena SETTLED 08-31 with all five scorers INFEASIBLE on paraphrase (even pretrained MiniLM .0667, ineligible inside him anyway), so T2.10 has no known path to green and LF.04 waits indefinitely without a ruling.
 - (JACK 11-13 12:30) J8's cores.py:75 comment fix (`language` = 'his own learned ear; EMPTY today') NOT made: impl_sha hashes cores.py raw bytes for 8 specs (LC.01/02/03/07/08, LF.03, SH.01/02), so a comment edit stales LC.02 (needs a quiet box) and LC.03 (~90 core-h) for no code change. Ruling wanted: batch it with the next real cores.py change, or make IMPL_DEPS hashing comment-blind (SYSTEM).
