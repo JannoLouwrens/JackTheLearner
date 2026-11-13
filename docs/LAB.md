@@ -92,9 +92,21 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   number). Philosophy 3 (a default raced), 4 (rule first, dead by it).
 
 - 11-12 23:30 · **Curriculum — weaning, re-raced WITH smell on the repaired
-  world** (curriculum, no seat; J5) · **ENTERED, not yet run** (CPU day budget
-  spent: `launch_detached` REFUSED at 57,600 s; handed to the workers, ORDERS
-  INBOX) · `experiments/wean_smell_race.sh`, tally `experiments/wean_smell_tally.py`.
+  world** (curriculum, no seat; J5) · **DEAD 11-13 03:35 by the declared rule**
+  (null clause 1 of 3) · `experiments/wean_smell_race.sh`, tally `experiments/wean_smell_tally.py`.
+  **Number** (weaned meals, uniform lives k>26000): nursed **1/9/1**, decoy 0/0/·,
+  null 2/0/3. vs decoy 2 of 2 read (s93 decoy still running at 29.6k/52k; cannot
+  change the verdict); vs null s92 only → **1 of 3, DEAD.** Fed lives nursed
+  1/1/1 of 9/10/11 vs null 2/0/3 of 11/12/12 — no better. s92's 9 meals are ONE
+  life born 0.70 m (the jackpot pattern again); weaned lives born > 1.6 m: 1 meal
+  in ~28. Secondary: nursing does feed him (nurse meals 18/5/6 vs decoy 0) but r
+  never holds — it climbs to 0.9–1.69 m and falls back to 0.5 every few lives,
+  ending at 0.75/0.75/1.12 against uniform births of median 3.1–3.9 m. **What it
+  says:** with a nose and a nursery he still cannot hold approach past ~1 m: the
+  nursery taught eating-where-born, not walking-up-a-gradient. The gap is in the
+  learner's credit over the walk (gamma .99 also DEAD 11-13), not in birth
+  distance alone; staged widening (CR.00, J5) is the remaining world-side arm.
+  Philosophy 4 (rule first, dead by it), 5.
   **Bet:** (1) the 11-12 weaning arms unchanged (nursed / decoy), but now he has
   a nose and no trap; nurse 26k of 52k decisions, s91–93. (2) Every result above
   says the same thing from a different side: with uniform births a meal is 41

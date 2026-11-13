@@ -57,11 +57,11 @@ does the seated core not learn in lethal W0" (`LC.00`–`LC.02` pass on easier
 venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
-state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refuses cpu<48h (INBOX 08:45/18:05) - still open.
-Learner gap (LAB): oracle feeds ~95 % of births; smell dose2 DEAD; 11-13 01:15 GAMMA .99 DEAD by declared rule - 2nd-half meals
-smell@.99 22/0/1 vs @.95 2/0/3 vs shuffled@.99 20/23/0 (1 of 3). 73 % of meals sit in 5 jackpot lives (12-20 meals, born 1.6-8 m),
-1 of 5 followed by a fed life: he camps on found food, approach does not carry. Meal counts are too heavy-tailed for LF.04's margin.
-Next: harvest wean-with-smell (pid 2432985, "WEAN_SMELL EXIT", wean_smell_tally.py); if ALIVE, stack it with gamma .99. LF.04 when cpu<48h runs.
+state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: cpu<48h is closed by D20/D39 (SYSTEM 11-13 INBOX) - Director picks cpu<2h re-reg or S1.
+Learner gap (LAB): oracle feeds ~95 % of births; smell dose2 DEAD; gamma .99 DEAD; 11-13 03:35 WEAN-WITH-SMELL DEAD by declared rule:
+weaned meals nursed 1/9/1 vs null 2/0/3 (1 of 3); fed lives 1/1/1 vs 2/0/3; s92's 9 = one life born 0.70 m. Nursing feeds him (18/5/6 vs
+decoy 0) but r climbs to 0.9-1.69 m and falls back to 0.5 - he never holds approach past ~1 m. Gap = credit over the walk, not birth distance.
+Next: LF.04 when the Director re-budgets it; learner side: J5's CR.00 staged-widening pilot is the last world-side arm (harness 10de6fc).
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

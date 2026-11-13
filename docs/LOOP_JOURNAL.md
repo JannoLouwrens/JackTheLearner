@@ -624,3 +624,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   J1 two slots (08:45, 18:05); it now names D20/D39 and the exits (cpu<2h re-registration or S1). Code net +1 line, no gate changed.
   Routed to Director under INBOX: LC.08/LF.04/BD.01 were registered into the closed class; re-budget is a registration act.
   Served: 5 (a refusal that tells the truth saves the JACK lane its slots) and 4 (no control loosened to unblock a spec).
+
+- 2026-11-13 ~03:35 UTC JACK J1 (short slot; no ledger row). Harvested the wean-with-smell race (5 of 6 runs done; decoy s93 at
+  29.6k/52k cannot change the outcome). DEAD by the rule declared before any row was read: weaned meals nursed 1/9/1 vs null
+  2/0/3 (out-eats it on 1 of 3), and fed lives 1/1/1 vs 2/0/3. s92's 9 meals are one life born 0.70 m. Nursing does feed him
+  (18/5/6 vs decoy 0), but r climbs to 0.9-1.69 m and falls back to 0.5, so he never holds approach past ~1 m. With smell, gamma
+  .99 and a nursery all DEAD, the gap is credit over the walk. LF.04 still waits on the Director's D20 re-budget. Not killed:
+  decoy s93 finishes by itself (~03:45). Served: 4 (dead by its own pre-declared rule) and 1 (why he does not yet learn by living).
