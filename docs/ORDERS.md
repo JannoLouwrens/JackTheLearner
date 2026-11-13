@@ -171,11 +171,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
-state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); RE-REG 20:15 (act-gain guard, c09df29) + 20:40 (wm-dyn 7th arm, b1a4160).
-R2D2 stored-state loop BUILT (b877604, experiments/survival_rec.py; survival.py untouched). 21:40 (d2070c4): 120-lives oddity EXPLAINED -
-smoke world j0=alpha=1.0 is uncalibrated, every death INTEGRITY at 0.2-1 s (wm-latent 55/8, random 96 too); PS.01's world: 0 deaths/400 dec.
-survival_rec now takes reward_fn: GuardRecorder rides it; calibrated s0 400 dec act_gain +.008/+.015/+.013 trained, 0.0 frozen twin (control).
-Next: write LC.09's arm runner (wm-dyn -> run_survival_rec, others -> run_survival, both with GuardRecorder); build wm-latent+ring; pilot wm-dyn s89.
+state: LC.09 REGISTERED 17:45, re-reg 20:15 (act-gain guard) + 20:40 (wm-dyn); R2D2 loop b877604; guard hook d2070c4.
+11-13 22:00 ARM RUNNER BUILT (lc_09 run_arm/_smoke_arms, `... lc_09_learning_core_3x smoke N`): stateless arms -> run_survival, wm-dyn ->
+run_survival_rec, GuardRecorder on all 5 latent arms. Smoke 1100 dec s0 (PS.01 world, NOT a reading): 5 arms run 43-56 cpu-s each, 0 deaths,
+guard fires 1x per latent arm. wm-dyn REFUSES as UNPRICED: LC.02 committed no train_ratio for it (spec says "LC.02's committed ratio").
+Next: price wm-dyn in LC.02 (add arm; needs quiet box) OR rule its ratio; build wm-latent+ring; survival_rec wipe_at_death for control (a).
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core

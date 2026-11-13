@@ -266,6 +266,100 @@ class GuardRecorder:
         return out
 
 
+# ── one arm-seed run (built 11-13 22:00, ORDERS J3) ──────────────────────
+EXPLORE_STD_LC09 = (0.3, 0.3)    # spec: "constant explore_std 0.3"
+E0_LC09 = 1.0                    # spec: "e0 1.0"
+
+
+class UnpricedArm(RuntimeError):
+    """The arm has no LC.02 committed train_ratio. The spec says "LC.02's
+    committed train_ratio"; borrowing a sibling's would be an undeclared
+    rig choice, so the runner refuses instead (wm-dyn today)."""
+
+
+def _arm_hooks(arm: str, seed: int) -> dict:
+    """LC.03's reward machinery, fresh per run (closures carry state)."""
+    from .lc_03_survival_screening import (KAPPA_EFE, _lp_intrinsic_factory,
+                                           _uncertainty_reward_factory)
+    h: dict = {}
+    if arm == "wm-efe":
+        h["reward_fn"] = _uncertainty_reward_factory(+1.0, KAPPA_EFE)
+    if arm == "ppo-lp":
+        h["intrinsic_fn"] = _lp_intrinsic_factory(seed)
+    return h
+
+
+def run_arm(arm: str, seed: int, *, j0: float, alpha: float,
+            ratios: Dict[str, float], n_decisions: int = N_DECISIONS,
+            train: bool = True, wipe_at_death: bool = False,
+            guard: bool = True) -> dict:
+    """One arm-seed of LC.09 (arm, its frozen twin with train=False, or its
+    wiped-store control with wipe_at_death=True). Latent arms carry the
+    GuardRecorder; its readings and guard_void verdict come back under
+    `guard_readings` / `guard_void`. Stateless arms run through
+    survival.run_survival exactly as LC.03 does; wm-dyn through
+    survival_rec.run_survival_rec (R2D2 stored state). Records nothing."""
+    if arm not in ARMS:
+        raise ValueError(f"{arm!r} not an LC.09 arm {ARMS}")
+    if arm == "wm-latent+ring":
+        raise NotImplementedError(
+            "wm-latent+ring: RingMemory (WM.02) is not wired into a living "
+            "core yet (ORDERS J3 next step)")
+    if arm not in ratios:
+        raise UnpricedArm(f"{arm}: no LC.02 committed train_ratio")
+    hooks = _arm_hooks(arm, seed)
+    rec = None
+    if guard and arm in LATENT_ARMS:
+        rec = GuardRecorder(inner=hooks.pop("reward_fn", None))
+        hooks["reward_fn"] = rec
+    common = dict(j0=j0, alpha=alpha, n_decisions=n_decisions, train=train,
+                  train_ratio=ratios[arm], e0=E0_LC09,
+                  explore_std=EXPLORE_STD_LC09)
+    if arm == "wm-dyn":
+        if wipe_at_death or "intrinsic_fn" in hooks:
+            raise NotImplementedError(
+                "survival_rec has no wipe_at_death / intrinsic channel yet; "
+                "LC.09 control (a) on wm-dyn needs it if wm-dyn leads")
+        from ..survival_rec import run_survival_rec
+        out = run_survival_rec(seed, arm=arm, **common, **hooks)
+    else:
+        from ..survival import run_survival
+        out = run_survival(seed, policy="core", arm=arm,
+                           wipe_at_death=wipe_at_death, **common, **hooks)
+    if rec is not None:
+        dim = rec.readings[0]["dim"] if rec.readings else 0
+        out["guard_readings"] = rec.readings
+        out["guard_void"] = (guard_void(rec.readings, dim) if rec.readings
+                             else "no guard reading (run shorter than "
+                                  f"{GUARD_EVERY} decisions)")
+    return out
+
+
+def _smoke_arms(n: int = 2_200, seed: int = 0) -> dict:
+    """Wiring check, records nothing: every runnable arm runs n decisions in
+    PS.01's calibrated world (values passed in, not borrowed, so it runs
+    without a ledger) with the guard attached. NOT a reading of any arm."""
+    from .lc_03_survival_screening import _borrow
+    cal, prov = _borrow()
+    if cal is None:
+        return {"refused": prov}
+    res = {}
+    for arm in ARMS:
+        t0 = __import__("time").process_time()
+        try:
+            out = run_arm(arm, seed, j0=cal["j0"], alpha=cal["alpha"],
+                          ratios=cal["ratios"], n_decisions=n)
+        except (NotImplementedError, UnpricedArm) as e:
+            res[arm] = {"refused": str(e)}
+            continue
+        res[arm] = {"cpu_s": round(__import__("time").process_time() - t0, 1),
+                    "n_lives": out["n_lives"],
+                    "optimiser_steps": out["optimiser_steps"],
+                    "guard_n": len(out.get("guard_readings", [])),
+                    "guard_void": out.get("guard_void")}
+    return res
+
+
 # ── the registered run: refuses until the arm exists ─────────────────────
 def run(ledger=None):
     raise RuntimeError(
@@ -399,5 +493,8 @@ if __name__ == "__main__":
         print(json.dumps(_selftest(), indent=1))
     elif mode == "probe":
         print(json.dumps(_probe(), indent=1))
+    elif mode == "smoke":
+        print(json.dumps(_smoke_arms(int(sys.argv[2]) if len(sys.argv) > 2
+                                     else 2_200), indent=1, default=str))
     else:
-        raise SystemExit("usage: python -m experiments.tests.lc_09_learning_core_3x selftest|probe")
+        raise SystemExit("usage: python -m experiments.tests.lc_09_learning_core_3x selftest|probe|smoke [n]")

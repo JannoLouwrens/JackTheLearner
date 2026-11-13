@@ -931,3 +931,11 @@ j0 = alpha = 1.0 is not the calibrated W0 (PS.01: 2.255 ms / .0275), so every de
 The recurrent loop now takes LC.09's guard hook: the trained wm-dyn's action gain reads +.008..+.015 early; its frozen twin reads
 exactly 0.0 (the control holds). No ledger row.
 Served philosophy 4 (an unexplained number chased to its cause before anyone read it as a finding) and 3 (the challenger's race wired one step closer).
+
+2026-11-13 22:00 UTC · JACK · J3. Day CPU ceiling spent until 00:00 -> J1/J7/J6 wait; J3 took its named next step.
+LC.09's per-arm runner is built (run_arm + smoke mode in lc_09_learning_core_3x.py): the five LC.03 arms run through
+run_survival with LC.03's reward hooks, wm-dyn through the recurrent loop, and every latent arm carries the collapse guard.
+Smoke, 1,100 decisions, seed 0, calibrated W0 (wiring only): all runnable arms finish in 43-56 CPU-s, guard reads once each.
+Found: wm-dyn has no LC.02 throughput certificate, so the spec's "LC.02's committed train_ratio" does not exist for it;
+the runner refuses it instead of borrowing a sibling's ratio. wm-latent+ring still unbuilt (refuses by name).
+Served philosophy 3 (the challenger now stands in the same race as the seat) and 4 (a missing price refused, not guessed).
