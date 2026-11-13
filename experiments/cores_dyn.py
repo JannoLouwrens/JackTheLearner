@@ -69,6 +69,23 @@ the NEXT window's actions from the same start):
     init's action sensitivity. Not a model of what he does. Open question
     the probe cannot answer: how much does a random-policy action change
     W0's observation 5 decisions later at all (the oracle ceiling)?
+
+MEASURED 2026-11-13 19:35 (`action_share`, same probe, seeds 0/1/2; held-out
+test windows unless marked; units = fraction of z_t's per-dim variance):
+  * untrained: gap_shuf -.013/-.004/-.015 (the random init credits nothing
+    to the action it is told), unexpl_real 6.4/5.5/4.9.
+  * after 300 updates: gap_shuf +.146/+.132/+.067 (train windows +.064/
+    +.084/+.067), gap_zero +.081/+.066/+.028; unexpl_real 1.01/.53/.45
+    (train .42/.39/.44: seed 0 overfits 884 windows); copying z_{t-1} as the
+    guess leaves 1.97/.96/.76 -> the arm beats persistence on 3/3.
+READING: training does NOT wash actions out of ONE step - it goes from 0 to
+~.07-.15 of z's variance credited to the told action (world ceiling for one
+decision: .43 of OBS variance, a different space, so a rough bound). The
+Delta_5 fall (ada42ca) is therefore not "actions washed out"; the untrained
+GRU's +.015 is arbitrary random-init sensitivity that a cosine-on-state
+metric scores as dynamics. Delta_5 vs zero actions cannot tell learned from
+random sensitivity; gap_shuf from an untrained start (~0) can. Next: the
+same gap at K=5 open-loop (prior roll), then a K-step loss to raise it.
 """
 from __future__ import annotations
 
@@ -205,6 +222,41 @@ def delta5_seq(core, hist, starts, K=5, dropped=("language",),
     return float((real - _cos(roll(torch.zeros_like(roll_a)), target)).mean())
 
 
+@torch.no_grad()
+def action_share(core, hist, starts, dropped=("language",)) -> Dict[str, float]:
+    """The arm's OWN one-step action share (11-13 19:30), on held-out windows
+    filtered from their past: at each step t >= 1 of a SEQ window,
+    pred_real = next_pred(GRU([z_{t-1}, a_{t-1}], h_{t-1})) vs the same with
+    a_{t-1} replaced by ANOTHER window's action (shuffled) and by zeros.
+    Errors are per-dim normalised by z_t's variance (as L_next), so
+      unexpl_real  = fraction of z_t's variance the arm leaves unexplained;
+      gap_shuf     = unexpl_shuf - unexpl_real = share of z_t's variance
+                     the arm credits to the ACTION it was told.
+    The world's ceiling for one decision is .43 of obs variance (K=1,
+    w0_action_ceiling_probe); gap_shuf ~ 0 means the arm predicts from
+    state alone."""
+    obs, acts = _windows(hist, [i - SEQ for i in starts], SEQ)
+    ss = core.filter_seq(obs, acts, dropped)
+    zt = torch.cat([s["z"] for s in ss[1:]], 0)
+    zvar = zt.var(0, unbiased=False).clamp_min(1e-4)
+    perm = torch.roll(torch.arange(acts.shape[1]), 1)
+    err = {"real": [], "shuf": [], "zero": [], "copy": []}
+    for t in range(1, SEQ):
+        h, zp, a = ss[t - 1]["deter"], ss[t - 1]["z"], acts[t - 1]
+        z = ss[t]["z"]
+        for k, aa in (("real", a), ("shuf", a[perm]),
+                      ("zero", torch.zeros_like(a))):
+            d = core.gru(torch.cat([zp, aa], -1), h)
+            err[k].append(((core.next_pred(d) - z).pow(2) / zvar).mean())
+        err["copy"].append(((zp - z).pow(2) / zvar).mean())   # z_{t-1} as guess
+    u = {k: float(torch.stack(v).mean()) for k, v in err.items()}
+    return {"unexpl_real": round(u["real"], 4), "unexpl_shuf": round(u["shuf"], 4),
+            "unexpl_zero": round(u["zero"], 4),
+            "unexpl_copy_prev_z": round(u["copy"], 4),
+            "gap_shuf": round(u["shuf"] - u["real"], 4),
+            "gap_zero": round(u["zero"] - u["real"], 4)}
+
+
 def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
     from .cores import build_arm, make_optimizer
     from .survival import random_action
@@ -235,6 +287,7 @@ def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
     core = DynWorldCore()
     opt = make_optimizer(core, LC_LR)
     gen = np.random.RandomState(1)
+    out["action_share_before"] = action_share(core.eval(), hist, test_i)
     out["delta5_test_before"] = round(delta5_seq(core.eval(), hist, test_i), 6)
     out["delta5shuf_test_before"] = round(
         delta5_seq(core, hist, test_i, shuffled=True), 6)
@@ -257,6 +310,8 @@ def _probe(n_dec: int = 1200, n_updates: int = 300, seed: int = 0) -> dict:
             log.append({"u": u, **{k: round(v, 5) for k, v in parts.items()}})
     core.eval()
     out["loss_log"] = log
+    out["action_share_after"] = action_share(core, hist, test_i)
+    out["action_share_train_after"] = action_share(core, hist, train_i[:300])
     out["delta5_test_after"] = round(delta5_seq(core, hist, test_i), 6)
     out["delta5shuf_test_after"] = round(
         delta5_seq(core, hist, test_i, shuffled=True), 6)
