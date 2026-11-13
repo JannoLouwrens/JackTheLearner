@@ -172,11 +172,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms). 18:30 guard BUILT (ef335cf); seated WM cores get 0.0 grad on GRU action/hh.
 18:50 wm-dyn BUILT (eda11bf, experiments/cores_dyn.py): gradient reaches action cols/weight_hh. Guard needs an untrained/shuffled baseline (INBOX).
-19:00 L_next NORMALISED by sg var(z) + shuffled-action control, 3 seeds: L_next 4.5->0.35-0.42 (no rebound, fix OK) but Delta_5 real-zero
-.015->.007-.0085 and real-shuffled .011->.008 FALL 3/3; KL at free-bits floor 1.00 from u50 -> state predicts z, actions washed out.
-19:15 W0 ACTION CEILING MEASURED (experiments/w0_action_ceiling_probe.py, cloned world, 0/120 determinism fails): actions set .62-.69 of obs_{t+5}
-variance (held .69-.72; K=1 .43; proprio .88, vision .54-.62) -> the world carries it; wm-dyn washes it out. Next: on held-out windows measure the
-arm's own action share of z_{t+1} (next_pred real vs shuffled a_{t-1}) against .43; then raise action info (KL/free-bits, K-step loss); then R2D2 wiring.
+19:00 L_next normalised (ada42ca): Delta_5 FALLS 3/3. 19:15 W0 ceiling (c747558): actions set .62-.69 of obs_{t+5} (K=1 .43).
+19:45 ARM'S OWN ACTION SHARE (1307362, 06a4502; held-out, untrained -> trained, seeds 0/1/2): one step gap_shuf ~0 -> +.146/+.132/+.067 of z var;
+K=5 OPEN-LOOP own-prediction roll ~0 -> +.135/+.108/+.055, beats copy-z_t 3/3 -> wm-dyn DOES model his actions (weakly); Delta_5 (z held fixed,
+cosine) misreads it (INBOX: guard -> gap_shuf vs untrained init). Next: re-register LC.09 guard clause to gap_shuf(K=5) > untrained + margin;
+then raise action info (K-step loss / free-bits) and measure gap_shuf; then R2D2 stored-state wiring into survival.py.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
@@ -271,6 +271,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 19:45) LC.09 guard, measured (06a4502): Delta_5 (`delta5_seq`) rolls with z HELD at z_t and scores cosine on state; for wm-dyn it FALLS with training (.015 -> .007-.0085) while the arm's K=5 own-roll action share RISES from ~0 untrained to +.055..+.135 of z variance (beats persistence 3/3). It cannot tell learned dynamics from random-init sensitivity. Proposed re-registration (strengthening): guard = gap_shuf(K=5, own-prediction roll, held-out) > the arm's untrained-init value + declared margin, >= 3 seeds; supersedes the 18:50 line. J3 will do it next unless ruled otherwise.
 - (JACK 11-13 18:50) LC.09 guard correction (supersedes my 18:30 "predictable VOID"): the -0.006..-0.008 untrained Delta_5 came from rolling a ZERO start state. Filtered from 16 decisions of real past, the UNTRAINED seated wm-latent reads +0.0147 (eda11bf probe). A random GRU gives Delta_5 > 0, so the ">0" clause cannot fail for an arm that learned nothing. Strengthening wanted before any claim seed: Delta_5 must beat the arm's own untrained init (or a shuffled-action roll) on the same windows. Re-registration, not a loosening.
 - (JACK 11-13 18:30) J3 finding for the Learning-core seat (CHAMPIONS): the seated wm-latent (and dreamer-xs, wm-efe) is a world model in name only. `cores.py` rssm() steps the GRU once from a zero state with a zero action, so no weight that reads an action or a past state ever gets gradient (measured 0.0, ef335cf). LC.03 v2 seated a feed-forward encoder. LC.09's ActSWM guard will VOID it; the repair (a real action-conditioned dynamics arm) touches cores.py + survival.py and stales LC.01/02/03/07/08, LF.03, SH.01/02. Ruling wanted only on ORDER (J3 builds it next vs after LF.04), not on whether to race it.
 - (JACK 11-13 17:45) J2 probe: `colab new -s p --gpu T4` now stops at an OAuth prompt ('To authorize colab-cli, visit this URL', 'Enter the authorization code') — the Colab CLI token has expired since 16:40; only the owner's browser can re-authorise. Every Colab dispatch fails until then. Nothing dispatched.

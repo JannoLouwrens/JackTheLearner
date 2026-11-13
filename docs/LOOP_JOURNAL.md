@@ -880,3 +880,10 @@ set .62/.69/.62 of what he senses 5 decisions on (seeds 0/1/2; held .69-.72; one
 is not the limit: wm-dyn's falling Delta_5 is the arm discarding action information the world plainly carries. Next: the arm's own
 action share of z_{t+1} against the .43 ceiling, then raise action info in its loss. No ledger row.
 Served philosophy 4 (the arm's failure localised by a measurement of the world, with a known-negative) and 3 (the challenger to the seat).
+
+2026-11-13 19:50 UTC · JACK · J3 · 1307362, 06a4502. Box loud (load ~5, foreign pytest); CPU orders still shut by the day ceiling.
+Measured wm-dyn's OWN action share on held-out windows: the told action vs another window's. Untrained it credits ~0 of z's variance
+to the action; after 300 updates +.146/+.132/+.067 one step out and +.135/+.108/+.055 five steps out in its own imagined roll, beating
+"nothing changes" 3/3. So the arm is learning what his actions do (weakly) — the falling Delta_5 was the guard's fixed-z cosine roll
+misreading it. INBOX: re-register LC.09's guard on gap_shuf vs the untrained init. No ledger row.
+Served philosophy 4 (a guard that could not tell learned from random, replaced by a measure with a known-negative) and 3 (the challenger).
