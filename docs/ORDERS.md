@@ -49,14 +49,11 @@ serves: M1→M7 · philosophy 1 (learns by living), 4.
 worker who finds the box loud does S1's first step instead of idling. Try
 `LC.02` FIRST in every slot, before launching anything detached; if no quiet
 minute comes by the 11-14 sitting the Director rules on the precondition.
-state: 11-13 10:30 J1(1) DONE: LC.02 attempt 21 PASS on a quiet box (load .10; 4b67b0b) -> the reds were contention (+ c510b92, fixed ede21ca).
-Contention precondition shipped e9e07c2: FAIL with >1.0 foreign core in any timed window -> VOID, PASS stands; meter = /proc/stat minus own
-jiffies, planted 2-spinner load must read >=1.5 every seed. Attempt 22 PASS on it (planted 2.41, foreign max .75; T 6.57-8.07; trunk .34).
-11-13 13:30 J1(2): LF.04 kaggle-cpu arm route built (1913430, LF04_BACKEND=kaggle-cpu; gate/ledger stay local). Live 1-life smoke,
-s90, 183 s, 0 GPU-h: learner 416.0 / twin 347.2 s. Same commit HERE: twin 365.4 s (ate 1 vs 0) -> frozen lives are NOT bit-equal across
-ARM/x86 (paired arms share one kernel, so LF.04 is unaffected; LF.06(a)'s TOL must absorb this).
-11-13 13:55 Budget class + routing DONE (93b463b): KAGGLE_CPU 'kcpu<12h', LF.04 moved to it (budget only), arms route by budget. Next:
-`launch_detached.sh` `run LF.04` (6 kernels ~1.3 h each, holds the run lock ~8 h -> start after W1.00 att 3 exits); LF.03 is STALE (code moved).
+state: J1(1) DONE 11-13: LC.02 PASS quiet (4b67b0b) + contention->VOID precondition (e9e07c2). J1(2) route DONE: kaggle-cpu arms (1913430),
+KAGGLE_CPU budget + routing (93b463b); smoke 183 s, ARM/x86 frozen lives not bit-equal (twin 365.4 vs 347.2 s).
+11-13 14:25 LF.04 CANNOT RUN: its dep LF.03 is stale; re-running LF.03 records BLOCKED (LF.02, XL.00 stale); re-running LF.02 records
+BLOCKED (T6.03 BLOCKED <- T2.10 FAIL since 10-20, paraphrase recall@1 0.0). Root of the creature gate = T2.10's paraphrase conjunct (INBOX).
+Next: re-run XL.00 (clean, cpu ~20 min) when the lock frees; then repair T2.10 or get the ruling; then LF.02 -> LF.03 -> LF.04 detached.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 4 in flight on Colab
 **Why.** `T2.01` (he moves better than random) is the biggest blocker in the
@@ -136,11 +133,11 @@ the `language` slot is "words through his own learned ear; EMPTY today", not
 serves: M7, M8 · END-FIT row 2 · philosophy 1, 2, 7.
 **done when:** the spec is registered with both controls and queued on S1
 behind `LF.04`; `cores.py` no longer names a frozen tower inside him.
-state: 11-13 12:30 REGISTERED LF.06 (registry_expansion.py; LF.05 is a refused stub). Budget CPU_DAYS until S1's kaggle-cpu class.
-11-13 12:38 BUILT experiments/tests/lf_06_handover.py (e7b45bd; no run(), no ledger): handover = LF.03 _capture; strip()/fresh() controls;
-frozen exam; tol_from_pilot. Selftest OK: full ckpt carries ring 64 + opt state 83 + diary; strip -> 0/0/0 with same weights; fresh differs.
-Seed-90 exam pilot LAUNCHED detached (pid 3090026, /data/tmp/lf06/pilot_s90.log -> exam_pilot_s90.jsonl), waits for W1.00 chain 3070760 to exit.
-Next: harvest pilot -> TOL_S via tol_from_pilot(); write run() (here/there roles for S1). cores.py:75 comment still awaits INBOX ruling.
+state: LF.06 REGISTERED 11-13 12:30; experiments/tests/lf_06_handover.py BUILT (e7b45bd; strip/fresh controls, selftest OK). Budget CPU_DAYS.
+11-13 14:25 pilot HARVESTED: TOL_S 20.0 (= floor; sd_exam 1.31, n 10). Exams 597.6-601.2 s, all energy deaths, ate<=1; both pilot
+salts byte-identical (salt changed nothing; suspect L.k=HORIZON pins std; n is really 5). ARM/x86 gap 18.2 s (LF.04 smoke) = 0.91 of TOL.
+LF.06 depends on LF.03, so it shares J1's T2.10 block. Next: write run() (here/there roles for S1); switch budget to KAGGLE_CPU.
+cores.py:75 comment still awaits its INBOX ruling.
 
 ### J5 — The curriculum cook-off (`CR.01`)
 **Why.** Owner 11-11: the curriculum is "as important as jack himself". The
@@ -262,6 +259,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 14:25) J1(2) is blocked one level deeper than the order says: LF.04 <- LF.03 (stale) <- LF.02 (stale) <- T6.03 BLOCKED <- T2.10 FAIL (paraphrase recall@1 0.0, conjunct added 08-31, ME.11's known weakness). LF.02 cannot re-certify save/resume while a language-memory paraphrase claim is red, so the creature gate (and LF.06) waits on T2.10. Ruling wanted: is T6.03->LF.02 a true prerequisite of 'a life can be saved and resumed', or does J1 now include repairing T2.10?
 - (JACK 11-13 12:30) J8's cores.py:75 comment fix (`language` = 'his own learned ear; EMPTY today') NOT made: impl_sha hashes cores.py raw bytes for 8 specs (LC.01/02/03/07/08, LF.03, SH.01/02), so a comment edit stales LC.02 (needs a quiet box) and LC.03 (~90 core-h) for no code change. Ruling wanted: batch it with the next real cores.py change, or make IMPL_DEPS hashing comment-blind (SYSTEM).
 - (JACK 11-13 11:50) W0.DIAG's hash-salt differential child hangs rather than computes: errored TimeoutExpired after ~25 min in the 10:38 chain (spec itself 0.03 s), and a clean re-run's child sat at 1 s CPU for 10 min. Costs every W0.DIAG re-buy ~25 min of lock; also a dirty doc (docs/LAB.md) stamped W0.DIAG dirty and blocked W1.00 even though prose docs are meant to be exempt.
 - (LAB 11-13 11:40) Meal memory (salience-kept replay ring, `experiments/meal_memory.py`) pilot ALIVE, thinly: fed .484 vs fifo .370 vs yoked control .376 (s91–93, 9 runs, ~55 CPU-min). Claim gate is declared in the module docstring; the run to grind, once ruling 3 lifts: seeds 94–98 × 3 arms × 13k (`meal_memory run <arm> <seed> 13000`, ~15 runs × 13 min, 2 at a time), then `tally`. Not yet a registered bake-off — Director to say whether it enters under the Consolidation seat (`NE.05`) or the learning core's.

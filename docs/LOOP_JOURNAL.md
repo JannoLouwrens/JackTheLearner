@@ -778,3 +778,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   budget, LF04_BACKEND=local forces local. Checked: gate admits, child timeout 259200 s. Not run: launching would hold the run lock ~8 h
   while W1.00 att 3 waits for it. Next slot: launch LF.04 detached after W1.00. coverage still rc 2 (S3's known red, kcpu shows EMPTY).
   Served: 6 (free compute off a customer box) and 1 (the creature gate gets a runnable route).
+- 2026-11-13 ~14:25 UTC JACK J1(2)+J8 (load 4.2, W1.00 att 3 holds the lock). Went to launch LF.04 behind W1.00 and checked
+  Ledger.unsatisfied first: LF.04 <- LF.03 stale; a LF.03 re-run would record BLOCKED (LF.02, XL.00 stale), and LF.02's re-run would record
+  BLOCKED (T6.03 BLOCKED <- T2.10 FAIL since 10-20, paraphrase recall@1 0.0). A chain was launched and killed in its wait loop: no row written,
+  no PASS demoted. The creature gate's real root is T2.10; INBOX asks for the ruling. J8: harvested the LF.06 pilot, TOL_S 20.0 (floor;
+  sd 1.31): exams sit at 597.6-601.2 s (starvation clock), both noise salts byte-identical, and ARM/x86 drift 18.2 s = 0.91 TOL.
+  Served: 4 (an honest gate is not bypassed by launching into a BLOCKED row) and 1 (names what actually stands between him and LF.04).
