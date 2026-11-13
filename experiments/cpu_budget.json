@@ -1001,10 +1001,10 @@
         "detached:run.log": 10319.9,
         "detached:run_1113.log": 2278.7,
         "detached:ub10_sweep4.log": 1259.36,
-        "detached:w1_00_attempt2.log": 2.28,
+        "detached:w1_00_attempt2.log": 2545.78,
         "detached:w1_04_attempt2.log": 4282.0
       },
-      "used_s": 38419.03
+      "used_s": 40962.53
     }
   },
   "overruns": [
