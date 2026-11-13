@@ -1654,9 +1654,27 @@ def _aggregate() -> dict:
     # it did, which is a seed lottery wearing a conjunct's clothes.
     trained = {a: all(s["arms"][a]["loss_last"] < s["arms"][a]["loss_first"]
                       for s in rows) for a in ARMS}
-    elig = tuple(a for a in selected if trained[a])
+    # PART 3, EXTENDED 2026-11-13 to the marginal floor (attempt 2's VOID).
+    # Attempt 2 (cdcf1be) VOIDed on `marginal_ok` alone: ONE arm-seed, A4 seed 2,
+    # collapsed into a basin (vslot .4844 < MARGINAL_FLOOR .80, slot .4969)
+    # while its loss still FELL, so `trained` above did not catch it. That is
+    # the same fragility part 3 was written for — one arm's bad basin on one
+    # seed hiding every other arm's reading in a VOID that names nobody — so it
+    # gets the same treatment, WHOLE-ARM: an arm whose vslot or afell is below
+    # MARGINAL_FLOOR on ANY registered seed is disqualified, measured, recorded,
+    # and cannot win or carry a conjunct. MARGINAL_FLOOR is untouched. The
+    # ANCHOR stays the exception: A0 below the floor on any seed still VOIDs
+    # (`a0_marginal_ok`), because without a null there is no claim. Declared
+    # before attempt 3 is drawn; it cannot favour any claim, since a
+    # disqualified arm only LEAVES the field (attempt 2's A4 had the lowest
+    # median, .834, so the top arm per seed is unchanged by removing it).
+    marg_floor = {a: all(s["arms"][a]["acc"][t] >= MARGINAL_FLOOR
+                         for s in rows for t in ("vslot", "afell"))
+                  for a in ARMS}
+    qualified = {a: trained[a] and marg_floor[a] for a in ARMS}
+    elig = tuple(a for a in selected if qualified[a])
     elig_trunk = tuple(a for a in TRUNK_ARMS if a in elig)
-    disq = tuple(a for a in selected if not trained[a])
+    disq = tuple(a for a in selected if not qualified[a])
 
     slot = {a: [s["arms"][a]["acc"]["slot"] for s in rows] for a in ARMS}
     med = {a: float(np.median(slot[a])) for a in ARMS}
@@ -1664,9 +1682,13 @@ def _aggregate() -> dict:
     top1 = ([max(elig_trunk, key=lambda a: s["arms"][a]["acc"]["slot"])
              for s in rows] if elig_trunk else [])
 
+    # `marginal_ok` keeps attempt 2's population (every selected arm that
+    # TRAINED) and meaning, so the number stays comparable; it is now REPORTED,
+    # and its failure routes to `disqualified_arms` (part 3, extended).
     marginal_ok = all(
         s["arms"][a]["acc"][t] >= MARGINAL_FLOOR
-        for s in rows for a in elig for t in ("vslot", "afell"))
+        for s in rows for a in selected if trained[a]
+        for t in ("vslot", "afell"))
     # `learn_ok` keeps its ORIGINAL population (every SELECTED arm) and its
     # original meaning, so the recorded number stays comparable across attempts.
     # What changed is its CONSEQUENCE: it no longer VOIDs the run — part 3 routes
@@ -1718,6 +1740,8 @@ def _aggregate() -> dict:
         # Redesign part 3: who trained everywhere, and who lost a seat for not.
         "arm_trained_all_seeds": {a: float(trained[a]) for a in ARMS},
         "a0_trained": float(trained["A0"]),
+        "arm_marginal_all_seeds": {a: float(marg_floor[a]) for a in ARMS},
+        "a0_marginal_ok": float(marg_floor["A0"]),
         "disqualified_arms": list(disq),
         "n_disqualified": float(len(disq)),
         "slot_per_arm_per_seed": slot,
@@ -1812,11 +1836,13 @@ def _check(m: dict, c: dict):
         return Status.VOID          # no null, no claim
     if m["n_eligible_trunk"] < 1.0:
         return Status.VOID          # non-learners cannot arbitrate (T2.02)
-    if m["marginal_ok"] != 1.0:
-        return Status.VOID          # a non-learner cannot arbitrate (T2.02).
-                                    # `learn_ok` is REPORTED here, not gating:
-                                    # part 3 moved that failure to
-                                    # `disqualified_arms` so the run names the
+    if m["a0_marginal_ok"] != 1.0:
+        return Status.VOID          # the ANCHOR below the marginal floor on a
+                                    # seed: no null, no claim (T2.02).
+                                    # `learn_ok` and `marginal_ok` are REPORTED,
+                                    # not gating: part 3 (extended 11-13) moves
+                                    # a non-anchor arm's failure of either to
+                                    # `disqualified_arms`, so the run names the
                                     # fragile arm instead of hiding it in a VOID.
     if m["uni_marginal_ok"] != 1.0 or m["uni_learn_ok"] != 1.0:
         return Status.VOID          # a dead unimodal variant blinds the
@@ -2059,7 +2085,7 @@ def _redesign_fixture():
         k = int(round(acc * N_EX))
         return [1.0] * k + [0.0] * (N_EX - k)
 
-    def rows(a0_slot, a0_trains=True, a1_trains=True):
+    def rows(a0_slot, a0_trains=True, a1_trains=True, collapse=None):
         return [{"seed": sd,
                  "quads_test": [q for q in range(10) for _ in range(4)],
                  "arms": {a: {"loss_first": 1.0,
@@ -2067,7 +2093,12 @@ def _redesign_fixture():
                                             and (a != "A1" or a1_trains)
                                             else 2.0),
                               "acc": {"slot": a0_slot if a == "A0" else 0.90,
-                                      "vslot": 1.0, "afell": 1.0},
+                                      # `collapse=(arm, seed)`: attempt 2's
+                                      # A4-seed-2 basin — loss falls, vslot
+                                      # sits below the marginal floor.
+                                      "vslot": (0.4844 if (a, sd) == collapse
+                                                else 1.0),
+                                      "afell": 1.0},
                               "ens_slot": 0.5,
                               # Per-example correctness for the paired
                               # bootstrap, consistent with `acc["slot"]` above.
@@ -2122,8 +2153,25 @@ def _redesign_fixture():
     assert m["a0_trained"] == 0.0 and "A0" in m["disqualified_arms"], m
     assert _check(m, ctrl_ok) is Status.VOID, "no null, no claim"
 
+    # PART 3 EXTENDED (11-13) — attempt 2's exact defect: one non-anchor arm
+    # below the marginal floor on ONE seed while its loss fell. Disqualified
+    # and named, not a VOID; the reported `marginal_ok` still reads 0.
+    m = agg(a0_slot=0.60, collapse=("A4", SEEDS[-1]))
+    assert m["arm_trained_all_seeds"]["A4"] == 1.0, "loss fell, as on the row"
+    assert m["disqualified_arms"] == ["A4"], m["disqualified_arms"]
+    assert m["marginal_ok"] == 0.0, "the number keeps attempt 2's meaning"
+    assert m["arm_marginal_all_seeds"]["A4"] == 0.0
+    assert _check(m, ctrl_ok) is not Status.VOID, \
+        "a collapsed non-anchor arm is a scored disqualification, not a VOID"
+    assert ARMS[int(m["winner"])] != "A4", "a disqualified arm cannot win"
+    # ...the ANCHOR below the floor on one seed still VOIDs.
+    m = agg(a0_slot=0.60, collapse=("A0", SEEDS[0]))
+    assert m["a0_marginal_ok"] == 0.0 and "A0" in m["disqualified_arms"], m
+    assert _check(m, ctrl_ok) is Status.VOID, "no null, no claim"
+
     _CACHE.clear()
-    print("REDESIGN FIXTURE OK (A0_HEADROOM fires; stability disqualifies)")
+    print("REDESIGN FIXTURE OK (A0_HEADROOM fires; stability disqualifies; "
+          "marginal floor disqualifies)")
 
 
 if __name__ == "__main__":
