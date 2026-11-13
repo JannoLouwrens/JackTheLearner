@@ -766,3 +766,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   exact pinned ran_at is accepted from history too; all 8 margins resolve to the registered values; no bar moved. W1.00 attempt 3 launched
   detached (pid 3099380), gated on the pilot's exit. W1.02 cascaded because the chain re-ran it after its pin moved: re-pin, don't re-run.
   Served: 4 (a VOID read to its cause and repaired, not filed) and 5 (W1's null certificate unblocked so its energy clock can be raced).
+- 2026-11-13 ~13:30 UTC JACK J1(2) (load 5.4: no LC.02-style work). Built LF.04's route off the box (1913430): with LF04_BACKEND=kaggle-cpu
+  the arm lives run in a Kaggle CPU kernel through the same `pilot` role, seeds, N_LIVES and <=2 workers. The gate, controls, MARGIN_S and the
+  ledger stay local and unchanged. Live smoke (1 life, s90, not a ledger run): 183 s round trip, 0 GPU-h, learner 416.0 / twin 347.2 sim-s.
+  The same commit on this box gives the frozen twin 365.4 s (1 meal vs 0): his lives are not bit-equal across ARM/x86. LF.04 pairs its arms
+  in one kernel, so it is safe. This is a real input to LF.06's hand-over tolerance. S1's Budget class + runner routing remain before LF.04
+  can run. Served: 6 (free compute off a customer box) and 1 (the creature gate's route).
