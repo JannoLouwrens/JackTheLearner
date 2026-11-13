@@ -821,3 +821,9 @@ Kaggle ACCOUNT at 30.00 h (our meter says 0.00 h), Colab T4 'Service Unavailable
 blocked either way; my miss, recorded). J8: measured the hand-over checkpoint, 19.6 MB (13.4 gz), 861,545 params; found gpu.submit has
 no input channel, so LF.06's 'there' leg cannot carry it yet -> INBOX. Served philosophy 7 (hand-over row: what must travel, measured)
 and 6 (free GPU, though none was to be had today).
+
+2026-11-13 16:40 UTC · JACK · J2 · probe only. CPU orders shut (day ceiling spent; J6 heat race waits for 00:00). Learned from the
+16:25 miss: probed BEFORE dispatching. `colab new --gpu T4` -> Service Unavailable (4th today); `colab new` CPU runtime assigned at
+once and was stopped clean -> account/auth/CLI fine, refusal is GPU-tier only. Kaggle account still at its 30 h cap. Nothing dispatched,
+so no new ERROR row on T1.14. Found `colab ls` lists files, not sessions (`colab sessions`) -> INBOX. Served philosophy 6 (free
+compute, not wasted on a dispatch that must fail) and 4 (no fake row). Small slot; no creature moved.

@@ -68,11 +68,11 @@ serves: M3, M4 · END-FIT row 1 (human-like body) · philosophy 3, 7 · objectiv
 On a verdict, write in the seat row which END-FIT rows the winner leaves reachable (fast loop inside one brain; hands).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-13 16:25 re-dispatch REFUSED by the runner: D1.0 BLOCKED by T1.14 (PASS but stale; 93b463b's KAGGLE_CPU enum line in protocol.py
-moved its impl_sha). T1.14 re-buy dispatched -> ERROR 8 s, 0 GPU-h (9ce63df): Kaggle ACCOUNT quota 30.00 h reached (shared; our W45 meter reads 0.00 h),
-Colab T4 assign 'Service Unavailable' again (3rd today; CLI 0.6.0, 0.8.0 out). T1.14 row now ERROR att 4 (PASS att 3 in history).
-Next: check `kaggle kernels push` quota / `colab new --gpu T4` BEFORE dispatching; when either takes work: `dispatch.sh T1.14 --projected-hours 1.2`,
-then `dispatch.sh D1.0 --projected-hours 25.05` unchanged (12 arm units left).
+state: 11-13 16:25 D1.0 re-dispatch REFUSED: BLOCKED by T1.14 stale (93b463b protocol.py enum). T1.14 re-buy -> ERROR 0 GPU-h (9ce63df):
+Kaggle ACCOUNT quota 30.00 h (shared; our meter 0.00 h). 16:40 PROBED before dispatch: `colab new --gpu T4` -> 'Service Unavailable' (4th today),
+but `colab new` (CPU runtime) assigns at once and stops clean -> auth/CLI fine; the refusal is GPU-tier only. Nothing dispatched, no ERROR row.
+Next: each slot probe `colab new -s p --gpu T4` (stop it on success) + Kaggle after its weekly reset; when either takes work:
+`dispatch.sh T1.14 --projected-hours 1.2`, then `dispatch.sh D1.0 --projected-hours 25.05` unchanged (12 arm units left).
 
 ### J6 — W0's red world rules: one clock (`W.1`, `W.2`), then `NE.01`
 **Why.** `W.1`(b) and `W.2`(c) are one fault, ruled today (ruling 1): **W0 has
@@ -265,6 +265,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 16:40) Colab CLI 0.6.0: `colab ls` lists FILES in a session, not sessions; the session list is `colab sessions` (empty output = none). ORDERS J2 / the 'GPU today' header say `colab ls` first. Also: CPU-runtime assign works while T4 is refused, so a T4 probe is the only honest pre-flight; dispatch.sh could run it before writing any row.
 - (JACK 11-13 16:25) J2/J8, two machine gaps. (1) `gpu.submit`/`build_job` can only clone the repo and fetch outputs: no way to SEND a file to a kernel. LF.06's 'there' leg must carry a 19.6 MB (13.4 MB gz) checkpoint made here; committing it to git x3 seeds is wrong. S1 needs an input channel (private Kaggle dataset attached as dataset_sources?). (2) dispatch pre-flight reads our own gpu_budget.json (W45: 0.00 h used) but the Kaggle ACCOUNT is shared and was at its 30.00 h cap; a dispatch that will be refused still writes an ERROR row (T1.14 PASS-stale -> ERROR today). Pre-flight should probe the real quota; also protocol.py in IMPL_DEPS stales GPU certificates (T1.14 -> D1.0) on enum additions. Colab CLI 0.6.0 (0.8.0 out), T4 assign 'Service Unavailable' 3x today.
 - (JACK 11-13 15:45) J1 could not take its next step (XL.00 re-run, ~20 min): the day CPU ceiling was already spent (58472/57600 s at 15:20, needs_clock_race + w1_00_attempt4 meters), so `admit` refuses. J1 still waits on the T2.10 ruling below; slot went to J7.
 - (JACK 11-13 14:25) J1(2) is blocked one level deeper than the order says: LF.04 <- LF.03 (stale) <- LF.02 (stale) <- T6.03 BLOCKED <- T2.10 FAIL (paraphrase recall@1 0.0, conjunct added 08-31, ME.11's known weakness). LF.02 cannot re-certify save/resume while a language-memory paraphrase claim is red, so the creature gate (and LF.06) waits on T2.10. Ruling wanted: is T6.03->LF.02 a true prerequisite of 'a life can be saved and resumed', or does J1 now include repairing T2.10? Note CHAMPIONS.md:102: the ME.11 arena SETTLED 08-31 with all five scorers INFEASIBLE on paraphrase (even pretrained MiniLM .0667, ineligible inside him anyway), so T2.10 has no known path to green and LF.04 waits indefinitely without a ruling.
