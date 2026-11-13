@@ -671,3 +671,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   (lp births None->4.0->2.4, so credit reaches the next choice). Sized CR.01 from the pilot null's spread: a .20 fed-fraction
   margin at 2 SE needs ~47 exam lives per arm-seed, ~2.8M decisions, ~39 CPU-h. That is a Kaggle-CPU (S1) job, so it is not
   registered here (D20). Served: 3 and 5 (the curriculum raced, with a control that must fail, sized before claim seeds).
+
+- 2026-11-13 ~05:50 UTC JACK J4 (short slot). UB.10's watcher exited: attempt 2 VOID on Colab T4 (seeds 0-2, venue 2.5/0.0).
+  Named the cause from the row: a single arm-seed, A4 s2, collapsed (vslot .48, slot .50), which zeroes the all-arms marginal_ok.
+  Every other rig gate is green. Read from the row (not a verdict): the claim would not fire anyway, since A2 beats A0 on every
+  seed (boot_lo .005) but the per-seed top arm changes (top1_stable 0). The arms sit within .02 of each other. Committed the
+  harvest (cdcf1be). Next: extend part-3 whole-arm disqualification to the marginal floor, then re-dispatch. Served: 3
+  (the one-brain contest raced, not argued) and 4 (a VOID explained, not filed).

@@ -78,11 +78,11 @@ commit as a known property of the venue, not a thing to tune.
 serves: M3 · philosophy 3 · standing objective 3.
 **done when:** `UB.10` has a WINNER/TIE verdict, or a VOID with a different,
 recorded cause and the next repair named.
-state: 11-13 05:10 SWEEP HARVESTED (Colab, seed 90): _select_venue as declared -> (2.5 audio, 0.0 vision), margin .0719; (2,0) .0125;
-(2,2)/(2,1) fail on A4 vslot .644/.750. All 6 arms eligible (slot A0 .866..A3 .925). Declared + pilot record committed 3fab32e
-(foreclosure fixture rows now carry venue_vision_sd; smoke OK, live guard CLEAR). UB.10 DISPATCHED 05:09: watcher pid 2541605,
-log /data/tmp/dispatch_ub_10.log, seeds 0-2, 1.25 GPU-h, tries Kaggle then Colab. Never kill the watcher.
-Next: on the watcher's exit read the ledger row; WINNER/TIE -> done; VOID -> name the cause from the row, do not re-dispatch unchanged.
+state: 11-13 05:50 UB.10 attempt 2 VOID (cdcf1be, Colab T4, s0-2, venue 2.5/0.0). Sole red gate marginal_ok: A4 seed 2 basin collapse
+(vslot .4844 < floor .80, slot .4969; loss still fell, so part-3's `trained` did not catch it). All else green. Medians A0 .872 A1 .884
+A2 .888 A3 .884 A4 .834 A5 .878. Read from the row, NOT a verdict: A2 beats A0 on all seeds, boot_lo .0052, but top1_stable 0 (tops A3/A5/A1).
+Next (repair, then re-dispatch): extend part 3's whole-arm disqualification to the marginal floor (arm failing vslot/afell on any seed ->
+disqualified_arms; A0 failing still VOIDs), update fixture at ub_10 ~l.2114, smoke, dispatch. Expect FAIL on top1_stable unless seeds differ.
 
 ### J6 — The W0 world rules that are red: `NE.01`, `W.1`, `W.2`
 **Why.** `NE.01` (needs are a real control problem) fails 2 of ~12 clauses —
