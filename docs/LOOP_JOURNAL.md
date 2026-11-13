@@ -961,3 +961,9 @@ advanced each decision, stored state handed back on each update) instead of borr
 gate, so its claim is unmoved. Contended smoke (not a price): wm-dyn 7.99 sim-s/real-s at 1/8, ring 3.43 - the ring may not clear 5.0.
 LC.02 is stale by design until one quiet-box re-run after 00:00.
 Served philosophy 3 (every challenger raced at the price its own loop pays) and 4 (no borrowed number stands in for a measurement).
+
+2026-11-13 23:40 UTC · LAB · 29424ef. Seat: Deliberation (VACANT). Sense lookahead: no actor — a forward model of all his senses (learned
+from babbling, no reward) + a cue-value learned from his own meals; every 5 decisions he imagines 32 pushes and takes the one he wants.
+Rule committed before any seed (want/told must beat babble AND a shuffled control on both seeds, >= 8 of 40). Day CPU ceiling was spent, so
+the pilot went to a free Kaggle CPU kernel (jack-cpu-1794612865; first kernel returned 0 rows, child cwd). Number: see LAB.md / INBOX.
+Served philosophy 3 (a vacant seat gets a raced challenger), 4 (control that must fail, rule first), 6 (free compute, none of the box's).

@@ -107,6 +107,9 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   given: "more smell") feeds more births than BOTH `babble` (null) and `shuf`
   (push→smell link permuted — must fail) on both seeds and by ≥ 8 of 40.
   END-FIT rows 4, 3, 1; closes none. Philosophy 1, 3, 4.
-  **Number:** IN FLIGHT on a free Kaggle CPU kernel `jack-cpu-1794611608` (the
-  box's day CPU ceiling was spent). Harvest: `kaggle kernels output`, then
-  `sense_lookahead tally`.
+  **Number:** IN FLIGHT 23:34 on a free Kaggle CPU kernel `jack-cpu-1794612865`
+  (the box's day CPU ceiling was spent; first kernel returned 0 rows — child
+  processes lacked the repo cwd). Harvest if no number follows this line:
+  `/data/venvs/kaggle/bin/kaggle kernels output jannolouwrens/jack-cpu-1794612865
+  -p /data/tmp/sense_lookahead/kout`, split `sense_lookahead.json` (name → jsonl
+  text) into `/data/tmp/sense_lookahead/`, then `sense_lookahead tally`.
