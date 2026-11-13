@@ -225,7 +225,17 @@ CHILD_TIMEOUT_S = 4 * 3600
 # `pilot` role, seeds, N_LIVES and <= 2 workers -- and come back as their
 # per-life rows. Gate, controls, MARGIN_S and the ledger stay here,
 # byte-unchanged. Empty (default) = local children, as before.
-BACKEND = os.environ.get("LF04_BACKEND", "")
+# The registered budget routes it: KAGGLE_CPU -> kernels. LF04_BACKEND=local
+# forces local children (pilots, debugging); any other value overrides.
+_ENV_BACKEND = os.environ.get("LF04_BACKEND", "")
+
+
+def _backend() -> str:
+    if _ENV_BACKEND:
+        return "" if _ENV_BACKEND == "local" else _ENV_BACKEND
+    from ..registry import BY_ID
+    return ("kaggle-cpu" if BY_ID["LF.04"].budget.value == "kcpu<12h"
+            else "")
 _JOB = r'''
 import subprocess as _s, sys as _y
 _s.run([_y.executable, "-m", "pip", "install", "-q", "mujoco"], check=True)
@@ -240,7 +250,7 @@ REMOTE_TIMEOUT_S = 6 * 3600   # 2 arms x 15 lives; ~80 min/seed here at 2 worker
 
 def _arms(arms, seed, tmp):
     """The arm lives, wherever BACKEND says. Same rows either way."""
-    if BACKEND != "kaggle-cpu":
+    if _backend() != "kaggle-cpu":
         return _arms_parallel(arms, seed, tmp)
     from ..gpu import build_job, result_json, submit
     body = _JOB.replace("__ARMS__", repr(list(arms))).replace(

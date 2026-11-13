@@ -33,6 +33,7 @@ from dataclasses import dataclass
 # (do not re-copy it anywhere — T0.14's pasted-constant scar).
 BUDGET_SECONDS = {
     "cpu<1min": 300, "cpu<10min": 1800, "cpu<2h": 9000, "cpu<48h": 172800,
+    "kcpu<12h": 43200,  # one Kaggle CPU session cap per experiment call
     "gpu<20min": 3600, "gpu<2h": 10800, "gpu<8h": 36000,
 }
 

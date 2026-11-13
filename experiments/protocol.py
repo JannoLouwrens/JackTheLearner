@@ -399,6 +399,10 @@ class Budget(str, Enum):
     # measured ~90 core-h against CPU_LONG's label; a declaration machinery
     # reads is code, and run.py kills a child at the declared budget's timeout
     # — the T2.08 routing lesson and the T2.01 timeout scar, one tier up)
+    KAGGLE_CPU = "kcpu<12h"  # S1: a Kaggle CPU kernel (enable_gpu:false),
+    # 12 h session cap, <= 2 workers. Charges NO GPU-hours and NO box
+    # CPU-seconds (not "cpu"-prefixed, so the tenant gate passes it as
+    # remote); the spec's own run() submits via gpu.submit(prefer="kaggle-cpu").
     GPU_SHORT = "gpu<20min"
     GPU = "gpu<2h"
     GPU_LONG = "gpu<8h"      # must checkpoint; Kaggle caps sessions at 12h

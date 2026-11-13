@@ -8502,7 +8502,7 @@ EXPANSION: list[Spec] = [
                        "updated. A statue (zero action) is REPORTED as a "
                        "reference, never gated: it separates foraging from "
                        "keeping still.",
-         metric="late_life_gain_vs_frozen_twin", budget=Budget.CPU_DAYS,
+         metric="late_life_gain_vs_frozen_twin", budget=Budget.KAGGLE_CPU,
          seeds=3, depends_on=["LF.03"],
          control="MUST FAIL, both RUN through the same gate_fires(): (1) "
                  "twin-vs-twin — a second frozen twin differing ONLY in its "
@@ -8522,7 +8522,10 @@ EXPANSION: list[Spec] = [
                "frozen twins 338-394 — a survival gain can be learned "
                "stillness; late meals vs the twin's are reported on the row "
                "so the verdict can say which. ~80 min/seed (2 workers), "
-               "hence cpu<48h envelope; run detached."),
+               "hence cpu<48h envelope; run detached. Budget MOVED "
+               "CPU_DAYS -> KAGGLE_CPU 2026-11-13 (ORDERS S1/J1(2), budget "
+               "only: claim, seeds, gate, controls, MARGIN_S byte-same); "
+               "the arm lives run in Kaggle CPU kernels, the gate here."),
 
     Spec("LF.06", 2, "The hand-over: a Jack trained here still learns on another machine",
          hypothesis="The seated learning core (wm-latent), after N_HERE = 10 "
