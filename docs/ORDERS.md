@@ -92,11 +92,11 @@ race-won edit may ship (ruling 1 lifts D43's hold for exactly that); re-run
 serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow them) · philosophy 1, 3, 4.
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: 11-13 04:45 W.2 red (c) only: starve 1700 s vs 25200, thirst 570 vs 3600. NE.01 red ok_spread/ok_forager AND gate 5 (random deaths 5/5 hyperthermia, share 1.0>.60).
-11-13 08:25 (a) DONE: W.1(b) on k=72 (fa0f7fc), W.7 control (98134d7). 12:20 W.7 IMPLEMENTED (2685dd9); sleep taus also off-clock (k72 wants 910/210 s).
-11-13 15:45 (b) RACE DONE (e4c10cd, docs/research/NEEDS_CLOCK_RACE.md): k72 does NOT ship. W.2(c) k72 5/5 vs 0/5, but NE.01 ok_forager .2 vs .8,
-exercised 0 vs 1, ok_spread 0 vs .4; cause share 1.0 HYPERTHERMIA both arms (random lives die of heat ~500 dec either clock; k72 forager cooks asleep,
-occ .998, no thirst wake). Heat is W0's binding fault. Next: (c) declare+race heat/shelter geometry and a thirst-independent forager heat rule, then re-race.
+state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) RACE DONE (e4c10cd): k72 does NOT ship; every death both arms HYPERTHERMIA.
+11-13 16:40 (c) ROOT FOUND + RACE BUILT (d63b827, experiments/heat_race.py): W0 charges sweat (C_SW water drain) but never pays it -
+e_evap cools only pool-wet skin, so a dry body sheds heat through k_dry alone (open day M300 T* 51.0 C; sealed roof 53.2 C = the "oven").
+Arms shipped / sweat (Gagge G_SW 2.0 M_b/K) / sweat_paid (+C_SW 2.82); rule declared. W.1 PASS 5/5 all arms (cannot discriminate).
+Next: after 00:00 UTC `scripts/launch_detached.sh /data/tmp/heat_race.log sh experiments/heat_race.sh` (30 cells ~1.5 CPU-h), then tally.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow

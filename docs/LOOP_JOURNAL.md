@@ -806,3 +806,11 @@ needs-clock race instead. Declared rule: k72 does NOT ship (forager .2 vs .8, sp
 both arms is hyperthermia: random lives die of heat ~500 decisions under either clock, and shipped's forager survives partly because
 thirst wakes him out of an overheating shelter. No world file edited. Served philosophy 3 (the clock was raced, not argued) and 4
 (a declared rule held against the arm the Director's ruling favoured; the loss is explained, not filed). Next: J6(c) heat/shelter.
+
+2026-11-13 16:40 UTC · JACK · J6(c) · d63b827. J1/J7 not runnable (day CPU ceiling spent 59599/57600 s; T2.10 ruling pending).
+Found why heat kills every random life and the k72 forager: W0 CHARGES sweat (water drain +0.5x/C above 37) but never PAYS it,
+since e_evap cools only skin wetted by the pool. A dry body's only heat exit is k_dry 14.29 W/C: open day at M 300 W -> T* 51.0 C,
+sealed roof asleep -> 53.2 C. Built the heat race with its rule declared: shipped vs sweat (Gagge's regulatory sweat, 2.0 M_basal/K)
+vs sweat_paid (the same, with water re-priced at the human ratio, C_SW 2.82). Arithmetic: 37.93 / 37.34 C, nights unchanged.
+W.1 PASS 5/5 in every arm, but sweat is off below 37 C so W.1 cannot tell them apart. W.2/NE.01 (30 cells) launch after 00:00 UTC.
+Served philosophy 3 (biology as the oracle; the law is raced, not edited) and 1 (a world where living, not heat, decides).
