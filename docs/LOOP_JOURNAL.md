@@ -701,3 +701,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   skipped it on 11-12 because PS.01 was stale then. Launched one detached job that re-buys W1.02 and then runs W1.04
   (wrapper 2608642, log /data/tmp/w1_04_attempt2.log). Its 3 niced W1.02 workers were at ~94% CPU each at 07:42. There is no verdict
   yet; the next slot harvests it. Served: 1 (the world's horizon measured against his real lives) and 5 (the world tested before claims cite it).
+- 2026-11-13 ~08:45 UTC JACK J6(a) (+J7 harvest; short slot, J1 not quiet: load 4.4, our W1.04 alive). Harvested W1.02's re-buy, PASS
+  (8b70243). W1.04 is still running at 65 min and held the run lock all slot. J6(a): put W.1 check (b) on W0's DECLARED clock k=72,
+  with the bar unmoved at 33.767 +/- 1% (fa0f7fc). k is a test constant, and the claim also requires 86400/SIM_DAY_S == 72. The control
+  yardstick moved onto that clock, and planted k=1 and k=60 channels must fail (b). Smoke s0: shipped 33.803 PASS, k1 36.95 FAIL,
+  k60 34.26 FAIL, _check True. NOT yet a ledger verdict (lock). W.7's control was re-registered the same way (98134d7), so shipped needs
+  must fail it. Served: 4 (a gate that can tell an on-clock channel from an off-clock one) and 1 (a world on one honest clock).
