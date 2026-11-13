@@ -105,11 +105,11 @@ seeds 300–319, ~65 min on 3 workers, `launch_detached.sh`), one at a time.
 Then register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 5.
 **done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
-state: 11-13 10:40 W1.04 HARVESTED (640e329): FAIL on (c) only — 5th-pct life 54.3/52.0 s vs 5600 s horizon, ~272/275 deaths energy.
-11-13 11:45 chain pid 3050089 harvested (bfa09b8): PS.01 PASS (850.6 s, hash-salt clean), W0.DIAG PASS but DIRTY stamp (docs/LAB.md uncommitted)
--> W1.00 refused on it; W1.01 refused on stale W1.02. A foreground clean W0.DIAG re-run hung in its hash-salt child (1 s CPU in 10 min; killed).
-11:49 LAUNCHED detached pid 3070760, log /data/tmp/w1_00_attempt3.log: W0.DIAG && W1.00 (attempt 2); W1.02 && W1.01 (re-buys), clean tree.
-Next: harvest; then repair W1's energy clock by a race (as J6(b)), never by shortening the horizon; re-run W1.04; register DP.05-in-W1.
+state: 11-13 10:40 W1.04 FAIL on (c) only (640e329): 5th-pct life 54.3/52.0 s vs 5600 s horizon, ~272/275 deaths energy.
+11-13 13:05 W1.00 attempt 2 VOID 'recorded inputs moved' (0.71 s): its pinned T3.06 attempt-1 row moved to history when T3.06 re-ran 09-22.
+REPAIRED 3a2513b (_pinned reads the exact ran_at from live row or history; 8 margins = registered values). W1.02 att 9 VOID (pin to W1.00 att 1 moved).
+13:08 LAUNCHED W1.00 attempt 3 detached (pid 3099380, /data/tmp/w1_00_attempt4.log), gated on LF.06 pilot pid 3090035 exiting (~65 min, 3 workers).
+Next: harvest W1.00; re-pin W1.02 to its verdict (do NOT re-run W1.02 first); then race W1's energy clock (as J6(b)); re-run W1.04; register DP.05-in-W1.
 
 ### J8 — The hand-over gate: a Jack trained here still learns on another machine
 **Why.** Owner 11-13: the finished Jack is "trained here, handed to people,
@@ -264,6 +264,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 - (JACK 11-13 10:30) LC.02 contention: J1(1)'s PASS branch shipped (e9e07c2, VOID-on-contended-FAIL); the 11-14 ruling below may be moot. Foreign load on a 'quiet' box read up to .75 core in one timed window vs the 1.0 threshold.
 - (JACK 11-13 09:45) LC.02: a W0.PL correctness commit (c510b92) silently cost 11% physics throughput; nothing caught it except LC.02 going red a day later under noise. LC.02's T is timed over 40 decisions (5 updates at tr .125), so one stall moves an arm-seed by 2+ sim-s/real-s (dreamer-xs probe 5.31-7.93). For the 11-14 ruling: VOID-above-load, or a longer timed window re-registered.
 - (SYSTEM 11-13 09:12) J2: `D1.0` attempt 4 ERROR 09:01 (ledger, committed by SYSTEM): unit 1 ran 1.71 h on Colab then "fetch failed"; unit 2 hit Colab `Service Unavailable`, Kaggle refused (quota). S5 stdout recovery did not save unit 1 — J2 to diagnose. [JACK 10:20: wrong — unit 1 = the SB3 reference, recovered + cached + reused by attempt 5; the ERROR is unit 2's Colab assign.] `W1.04` FAIL 08:48 also committed unread (J7).
+- 11-13 13:10 JACK/J7: ran_at-pinned recorded rows read only the LIVE ledger row, so any re-run of the pinned spec VOIDs the pinner forever (W1.00 sat 52 d on T3.06; W1.02 now on W1.00). W1.00 fixed locally (_pinned, 3a2513b); a shared history-aware helper + a check for pins whose row left live would catch the rest (grep RAN_AT in experiments/tests).
 
 ## DONE (kept one day)
 

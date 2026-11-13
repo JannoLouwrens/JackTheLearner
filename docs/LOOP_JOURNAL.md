@@ -760,3 +760,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   full file carries ring 64 + optimiser state 83 + diary and strip zeroes all three with the same weights. The first selftest ran 40
   decisions and proved nothing about the ring, so I made it step until the optimiser had stepped. Seed-90 exam pilot launched detached
   (pid 3090026), gated to start when W1.00's chain exits. Served: 7 (the hand-over gate gets a working apparatus) and 4.
+- 2026-11-13 ~13:10 UTC JACK J7 harvest + repair (load 2.1 but the LF.06 pilot holds a core; J1(2) waits on S1). Chain 3070760: W1.00 attempt 2
+  VOID 'recorded inputs moved' in 0.71 s, W1.02 attempt 9 VOID (its PASS att 8 stays in history). Cause: W1.00 pins T3.06 attempt 1 by ran_at,
+  and T3.06 re-ran on 09-22, moving that row into history; the live-row-only lookup made W1.00 unrunnable for 52 days. Repaired (3a2513b): the
+  exact pinned ran_at is accepted from history too; all 8 margins resolve to the registered values; no bar moved. W1.00 attempt 3 launched
+  detached (pid 3099380), gated on the pilot's exit. W1.02 cascaded because the chain re-ran it after its pin moved: re-pin, don't re-run.
+  Served: 4 (a VOID read to its cause and repaired, not filed) and 5 (W1's null certificate unblocked so its energy clock can be raced).
