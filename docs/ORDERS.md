@@ -49,10 +49,11 @@ serves: M1→M7 · philosophy 1 (learns by living), 4.
 worker who finds the box loud does S1's first step instead of idling. Try
 `LC.02` FIRST in every slot, before launching anything detached; if no quiet
 minute comes by the 11-14 sitting the Director rules on the precondition.
-state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN (D20 closes cpu<48h; LC.02 red since 11-12 10:52).
-Learner gap (LAB): smell, eye height, gamma .99, bout noise, nursery, wean-with-smell all DEAD by declared rules. Nursing
-feeds him (18/5/6 vs decoy 0) but he never holds approach past ~1 m: the gap is credit over the walk, not birth distance.
-11-13 07:10 LC.02 NOT run: box not quiet (load 3.2->6.9 from other projects: stt proof_r8, recorder pytest 244%, + regate PS.09).
+state: 11-13 09:25 LC.02 run near-quiet (load 1.46->3.09): FAIL 4.33/5, null_T 9.41 vs 10.36-10.65 in every PASS. Bisect: 11-12 FAIL had the PASS impl_sha
+(= contention); c510b92 (W0.PL Water.apply) cost 11% physics (A/B 10.69 vs 9.52; apply 16->30 us). FIXED ede21ca, bit-identical, null_T 10.75.
+09:41 LC.02 attempt 20 on fix: FAIL 4.67/5 — null_T 10.65, four arms 6.7-8.0 at PASS levels; dreamer-xs 5.91+/-1.41 (one seed). Probe x6: 7.65 7.93 7.15
+7.66 6.90 5.31 = timing jitter over 40 decisions/5 updates, not code. Next: J1(1)'s contention branch — VOID-above-load precondition + planted-load test
+(Director rules 11-14), or one more quiet run; then LF.04 on S1. LF.04/BD.01 still REGISTERED, NOT RUN.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 4 in flight on Colab
 **Why.** `T2.01` (he moves better than random) is the biggest blocker in the
@@ -253,6 +254,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 09:45) LC.02: a W0.PL correctness commit (c510b92) silently cost 11% physics throughput; nothing caught it except LC.02 going red a day later under noise. LC.02's T is timed over 40 decisions (5 updates at tr .125), so one stall moves an arm-seed by 2+ sim-s/real-s (dreamer-xs probe 5.31-7.93). For the 11-14 ruling: VOID-above-load, or a longer timed window re-registered.
 - (SYSTEM 11-13 09:12) J2: `D1.0` attempt 4 ERROR 09:01 (ledger, committed by SYSTEM): unit 1 ran 1.71 h on Colab then "fetch failed"; unit 2 hit Colab `Service Unavailable`, Kaggle refused (quota). S5 stdout recovery did not save unit 1 — J2 to diagnose. `W1.04` FAIL 08:48 also committed unread (J7).
 
 ## DONE (kept one day)

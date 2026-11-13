@@ -712,3 +712,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   control and fails both). Live pilot with the account's GPU quota spent: a CPU kernel was accepted, 47 s round trip, artifact back,
   0.0 GPU-h. Committed the runner's uncommitted W1.04 FAIL and D1.0 attempt-4 ERROR rows unread; both are in INBOX for J2/J7.
   Served: 6 (free compute only, the GPU quota untouched) and 5 (LF.04's only route off this box is now half-built).
+- 2026-11-13 ~09:45 UTC JACK J1 step 1 (box near-quiet, load 1.46 at start). LC.02 attempt 19 FAILed, 4.33/5. But null_T (physics alone) was 9.41
+  against 10.36-10.65 in every PASS. Bisect: the 11-12 FAIL had the PASS impl_sha, so it was contention. c510b92 (W0.PL Water.apply)
+  cost 11% physics: interleaved A/B gave 10.69 vs 9.52, and apply() went from 16 to 30 us per call. Fixed in ede21ca with two exact
+  shortcuts, bit-identical to HEAD over 12 trajectories incl. wet runs; null_T is 10.75. Re-bought PG.1/PG.8. LC.02 attempt 20 FAIL 4.67/5:
+  four arms back at PASS levels, dreamer-xs 5.91+/-1.41 on one seed. A probe x6 (7.65..5.31) shows timing jitter, not code. Contention
+  ruling to INBOX. Served: 4 (a red fixed at its cause, not re-rolled) and 1 (his world runs 11% faster again, so more lives per hour).
