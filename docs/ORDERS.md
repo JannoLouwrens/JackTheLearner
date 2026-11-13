@@ -62,8 +62,9 @@ Pool trap CLOSED (W0.PL PASS 3f15c7f); oracle on repaired world feeds ~95 % of b
 22:30 smell dose2 race HARVESTED -> DEAD by declared rule: 2nd-half meals smell 2/0/3 vs shuffled 20/0/3 (0 of 3 seeds);
 outside one 19-meal shuffled life both arms eat 1-2 meals per ~22 lives (LAB). The gap is the learner, not a sense.
 22:40 WHY (LAB): gamma .95 = ~20-decision horizon; a PERFECT map needs median 41.5 decisions birth->meal (path3, 136 fed),
-21 % within 20; meal weight at birth gamma^41.5=.12, GAE (g*l)^41.5=.0015. RACE LAUNCHED 22:38: dose2 unchanged but GAMMA .99
-(/data/tmp/smell_sense/gamma99.log, ~3 h). Next: harvest with gamma99_tally.py, apply the rule declared in LAB; LF.04 when cpu<48h exists.
+21 % within 20; meal weight at birth gamma^41.5=.12, GAE (g*l)^41.5=.0015.
+11-13 00:50 gamma99 race partial (rule in LAB): s91 smell 22 / shuf 20 (for), s92 smell 0 / shuf 23 (against), s93 running (k~26k,
+both 0 so far; GAMMA99 EXIT ~01:40). Horizon alone lifts shuffled s92 0->23. Next: harvest gamma99_tally.py, apply the rule; LF.04 when cpu<48h exists.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is
@@ -101,11 +102,11 @@ serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
 **done when:** `NE.01`, `W.1`, `W.2` each have a new attempt with every
 formerly-red clause explained in the commit. (D53 files `SO.07`'s VOID here too:
 the body cannot reach privileged food on 2 of 3 recording worlds.)
-state: 11-12 42e7973: W.1 attempt 4 FAIL on (b) only ((a)(c)(d) PASS; (b) = world tau 240 s vs body, Director's ruling, INBOX 20:25).
-23:50 NE.01 ok_night_shelter APPARATUS FIXED (uncommitted->this commit): _find_shelter_pose read occ after a 1 s settle; the body
-creeps until ~dec 100 (occ 1.0->.889->.667->.333). Probe now runs _night's own zero-ctrl steps for POSE_REST_DEC=120 then reads.
-Pre-check (not the spec): all 3 seeds pick (-2.1,1.2), rest occ .667; night occ .725/.649/.652, cost .112/.120/.120, alive (bar .40/.20).
-Next: after 00:00 UTC (CPU day budget) launch_detached `experiments.run NE.01` (~35 min); then ok_spread; race the sky laws; W.2.
+state: 11-13 00:45 NE.01 attempt (56c6519): FAIL, but ok_night_shelter now GREEN 3/3 (shelter cost .117 vs open .498, occ .675, alive).
+Red: ok_spread 1/3 = integrity i .248 (per-seed drop probe .304/.201/.239). Measured (/data/tmp/ne01/drop12.py): PS.01's 12-cycle
+schedule dies of HYPERTHERMIA from the flail (T 40.0-40.4 at 200-320 s); drop+rest without flail spans i .645/.680/.652 (dies injury
+x2, dehydration). The world admits i's range; the 3-drop flail probe truncates it. NEW red ok_forager 2/3: one seed's sleeping body
+slides into sealed occ~1 and dies hyperthermia at ~3540 s/3600 (sleep occ .84+-.17) - the knife-edge occlusion. Next: graded-occ race, then re-register the drop probe.
 
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
 **Why.** Owner, 2026-11-11: the world and the curriculum are "as important as

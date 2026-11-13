@@ -985,9 +985,9 @@
     "2026-11-13": {
       "by_spec": {
         "detached:gamma99.log": 2335.75,
-        "detached:run_1113.log": 1800.0
+        "detached:run_1113.log": 2278.7
       },
-      "used_s": 4135.75
+      "used_s": 4614.45
     }
   },
   "overruns": [

@@ -576,3 +576,11 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   .667, night occ .725/.649/.652, cost .112/.120/.120, alive. All within the .40/.20 bar; open-night cost ratio is still
   to be read by the real run. NE.01 itself not run: the CPU day budget is spent until 00:00. Served: 4 (a red clause traced
   to its fixture and measured, bar untouched) and 1 (a shelter test that measures the pose he actually sleeps in).
+
+- 2026-11-13 ~00:50 UTC JACK J6 (ledger: NE.01 FAIL, new attempt). Ran NE.01 on the fixed shelter probe: ok_night_shelter
+  GREEN 3/3 (cost .117 vs open .498, occ .675, alive), red since 08-24 because the probe read a pose the body creeps out of.
+  Still red: ok_spread (integrity .248). Measured why: the 3-drop probe with flail caps i, PS.01's 12-cycle schedule cooks him
+  (hyperthermia, T 40+, 200-320 s), drops without flail span i .65-.68 to an injury death, so the world admits the range and the
+  probe truncates it. New red: ok_forager 2/3 (one seed sleeps into sealed occ~1, hyperthermia at 3540/3600 s), the knife-edge
+  occlusion again. J1 gamma99 race 1 for, 1 against, s93 running. Served: 4 (a 81-day red clause made honestly green, the
+  remaining reds measured to cause, no bar touched) and 1 (a world whose shelter works and can still kill him).
