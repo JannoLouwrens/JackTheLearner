@@ -58,13 +58,10 @@ venues) — diagnose, do not soften.
 serves: M1→M2/M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` is registered with both controls and has a verdict.
 state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN: runner refuses cpu<48h (INBOX 08:45/18:05) - still open.
-Pool trap CLOSED (W0.PL PASS 3f15c7f); oracle on repaired world feeds ~95 % of births (pole 38/40) - body/world not the cap.
-22:30 smell dose2 race HARVESTED -> DEAD by declared rule: 2nd-half meals smell 2/0/3 vs shuffled 20/0/3 (0 of 3 seeds);
-outside one 19-meal shuffled life both arms eat 1-2 meals per ~22 lives (LAB). The gap is the learner, not a sense.
-22:40 WHY (LAB): gamma .95 = ~20-decision horizon; a PERFECT map needs median 41.5 decisions birth->meal (path3, 136 fed),
-21 % within 20; meal weight at birth gamma^41.5=.12, GAE (g*l)^41.5=.0015.
-11-13 00:50 gamma99 race partial (rule in LAB): s91 smell 22 / shuf 20 (for), s92 smell 0 / shuf 23 (against), s93 running (k~26k,
-both 0 so far; GAMMA99 EXIT ~01:40). Horizon alone lifts shuffled s92 0->23. Next: harvest gamma99_tally.py, apply the rule; LF.04 when cpu<48h exists.
+Learner gap (LAB): oracle feeds ~95 % of births; smell dose2 DEAD; 11-13 01:15 GAMMA .99 DEAD by declared rule - 2nd-half meals
+smell@.99 22/0/1 vs @.95 2/0/3 vs shuffled@.99 20/23/0 (1 of 3). 73 % of meals sit in 5 jackpot lives (12-20 meals, born 1.6-8 m),
+1 of 5 followed by a fed life: he camps on found food, approach does not carry. Meal counts are too heavy-tailed for LF.04's margin.
+Next: harvest wean-with-smell (pid 2432985, "WEAN_SMELL EXIT", wean_smell_tally.py); if ALIVE, stack it with gamma .99. LF.04 when cpu<48h runs.
 
 ### J4 — Run the one-brain contest (`UB.10`) on a venue that can tell arms apart
 **Why.** Six fusion arms incl. A5, experts + router ("if A5 wins, one brain is

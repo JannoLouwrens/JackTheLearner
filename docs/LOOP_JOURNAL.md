@@ -584,3 +584,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   probe truncates it. New red: ok_forager 2/3 (one seed sleeps into sealed occ~1, hyperthermia at 3540/3600 s), the knife-edge
   occlusion again. J1 gamma99 race 1 for, 1 against, s93 running. Served: 4 (a 81-day red clause made honestly green, the
   remaining reds measured to cause, no bar touched) and 1 (a world whose shelter works and can still kill him).
+
+- 2026-11-13 ~01:15 UTC JACK J1 (no ledger row). Harvested the GAMMA .99 learner race and applied the rule declared in LAB
+  before reading: DEAD, 1 of 3 seeds (2nd-half meals smell@.99 22/0/1 vs @.95 2/0/3 vs shuffled@.99 20/23/0). Read the
+  per-life rows: 88 of 120 meals sit in 5 jackpot lives (12-20 meals, born 1.6-8 m from food, so not birth luck), and only
+  1 of 5 is followed by a fed life. He camps on food he stumbled onto, and the next birth starts from zero. A meal-count
+  margin for LF.04 would measure jackpots. Wean-with-smell race still running (3 workers, pid 2432985). Served: 3 (a learner
+  choice raced and killed by its own rule) and 4 (what the meal count really measures, shown before LF.04 leans on it).

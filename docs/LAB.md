@@ -53,11 +53,14 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   - *Credit horizon* (J1, reading of files): GAMMA .95 ≈ 20 decisions; a perfect
     map needs median 41.5 decisions birth → meal (21 % within 20); meal weight at
     birth .12 (value), .0015 (GAE), and per-segment normalisation turns meal-free
-    segments into unit-variance noise. **Race in flight (J1's, launched 22:38):**
-    dose2 unchanged but GAMMA .99, `/data/tmp/smell_sense/gamma99/`, tally
-    `gamma99_tally.py`. Rule: ALIVE iff smell@.99 out-eats smell@.95 (2/0/3) AND
-    smell_shuffled@.99 on ≥ 2 of 3 seeds (second-half meals); both arms up but
-    smell ≤ shuffled = "horizon helps, smell unused", not a pass.
+    segments into unit-variance noise. **GAMMA .99 race (J1) DEAD by its rule,
+    11-13:** 2nd-half meals smell@.99 22/0/1 vs smell@.95 2/0/3 vs
+    shuffled@.99 20/23/0 → for on s91 only (1 of 3). Horizon alone is not it.
+    *Shape of the meals* (both races, 169 lives): 88 of gamma99's 120 meals are
+    in 5 "jackpot" lives (12–20 meals, 970–1400 s, born 1.6–8 m out, so not
+    birth luck); only 1 of 5 jackpots is followed by a fed life. He can camp on
+    food he stumbled onto; approach from afar does not carry to the next birth.
+    For `LF.04`: a meal-count margin is jackpot-dominated, heavy-tailed noise.
   Philosophy 3 (each raced with a control), 5 (his world as much as he).
 
 - 11-12 · **World: shelter law** (J6, `NE.01` `ok_night_shelter`) · ALIVE, not
