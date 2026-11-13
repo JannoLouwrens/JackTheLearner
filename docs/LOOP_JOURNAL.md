@@ -707,3 +707,8 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   yardstick moved onto that clock, and planted k=1 and k=60 channels must fail (b). Smoke s0: shipped 33.803 PASS, k1 36.95 FAIL,
   k60 34.26 FAIL, _check True. NOT yet a ledger verdict (lock). W.7's control was re-registered the same way (98134d7), so shipped needs
   must fail it. Served: 4 (a gate that can tell an on-clock channel from an off-clock one) and 1 (a world on one honest clock).
+- 2026-11-13 ~09:12 UTC SYSTEM S1 step 1. Built the `kaggle-cpu` backend in gpu.py (06b87bd). It pushes enable_gpu:false with no
+  accelerator, never fails over to a GPU backend, and charges 0 GPU-h. T0.12 PASS with property 15 (the pre-S1 GPU route is the
+  control and fails both). Live pilot with the account's GPU quota spent: a CPU kernel was accepted, 47 s round trip, artifact back,
+  0.0 GPU-h. Committed the runner's uncommitted W1.04 FAIL and D1.0 attempt-4 ERROR rows unread; both are in INBOX for J2/J7.
+  Served: 6 (free compute only, the GPU quota untouched) and 5 (LF.04's only route off this box is now half-built).

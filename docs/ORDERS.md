@@ -199,8 +199,11 @@ and dispatch `LF.04`. Extend `T0.10`/`T0.12` with a CPU-kernel round-trip
 that must show 0 GPU-h charged. Net growth ≤ ~80 lines.
 serves: M1→M7, M2, M3 (J1, J5, J3) · philosophy 5, 6 (free compute only).
 **done when:** `LF.04` has a ledger verdict that came from a Kaggle CPU kernel.
-state: pilot measured 11-12 07:35 (owner session, kernel jack-cpu-pilot-1794467678): 1 proc 28 dec/s, 2 procs 68 total, 4 procs
-no gain. 11-13 08:45 still NO CODE — this is J1's critical path; first step: the `enable_gpu:false` submit path + T0.10 round-trip. Unmeasured: how many CPU sessions run side by side. No code yet.
+state: pilot 11-12 (owner): 1 proc 28 dec/s, 2 procs 68 total, 4 no gain.
+11-13 09:10 step 1 DONE (06b87bd): `submit(prefer="kaggle-cpu")` pushes enable_gpu:false, no accelerator, no torch fix, never
+fails over, charges 0 GPU-h; T0.12 PASS with property 15 (control = GPU route fails both). Live: jack-cpu-1794560915 accepted
+with GPU quota spent, 47 s, artifact back, 0.0 GPU-h. T0.10 left GPU-only (no GPU quota to re-buy it). Next: `kaggle-cpu` Budget
+class in protocol.py + LF.04's job body (pip mujoco, ≤2 procs, JACKRESULT) and dispatch LF.04. Unmeasured: parallel CPU sessions.
 
 ### S3 — A verdict the record cannot re-derive; guards red by design
 **Why.** `run verify` exits 2: `W0.PL`'s gate judges from process memory
@@ -249,6 +252,8 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+
+- (SYSTEM 11-13 09:12) J2: `D1.0` attempt 4 ERROR 09:01 (ledger, committed by SYSTEM): unit 1 ran 1.71 h on Colab then "fetch failed"; unit 2 hit Colab `Service Unavailable`, Kaggle refused (quota). S5 stdout recovery did not save unit 1 — J2 to diagnose. `W1.04` FAIL 08:48 also committed unread (J7).
 
 ## DONE (kept one day)
 
