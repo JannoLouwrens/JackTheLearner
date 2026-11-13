@@ -92,7 +92,10 @@ picking a balance mechanism by argument is exactly what law 3 forbids.
 from __future__ import annotations
 
 import os
+import subprocess
+import sys
 import time
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -129,6 +132,63 @@ BUFFER = 256                     # decisions of replay; LC_BATCH is drawn from i
 # cannot move a wall-clock number, and nothing in this spec reads e, i or w.
 # PS.01 must measure them before any spec reads the drive state as a quantity.
 J0_TIMING_ONLY, ALPHA_TIMING_ONLY = 1.0, 0.01
+
+# ── CONTENTION PRECONDITION (ORDERS J1 step 1, 2026-11-13) ──────────────
+# This is a wall-clock claim on a SHARED 4-core box. Attempt 19's FAIL on
+# 11-12 carried the PASS impl_sha and was taken while a detached race loaded
+# the box; attempt 20's one red arm-seed (dreamer-xs 5.91) was taken at load
+# ~2 and the same code read 7.41 on a quiet box (attempt 21, PASS). Other
+# tenants' CPU can only make a decision SLOWER, never faster, so:
+#   * a PASS earned under contention is a valid lower bound and STANDS;
+#   * a would-be FAIL earned while other processes used more than
+#     FOREIGN_MAX_CORES of the box inside any timed window is VOID (it could
+#     not test the claim: the floor was measured on cores we did not have).
+# The meter reads the thing itself, not loadavg (which counts our own 3
+# threads): box-wide busy jiffies from /proc/stat minus this process's own
+# utime+stime, over exactly the stopwatch window. 4 cores - our 3 threads =
+# 1 core others may use before they take one of ours.
+# It is proven live on every seed by a PLANTED load: two niced spinners for
+# a fixed window must read >= PLANTED_MIN_CORES, else the meter is blind and
+# the run is VOID (LESSONS_CORE 9). No bar, control or ratio moved.
+FOREIGN_MAX_CORES = 1.0
+PLANTED_SPINNERS = 2
+PLANTED_MIN_CORES = 1.5
+_CLK = os.sysconf("SC_CLK_TCK")
+
+
+def _cpu_jiffies() -> tuple:
+    """(box busy jiffies, this process's jiffies) — all threads included."""
+    f = Path("/proc/stat").read_text().split("\n", 1)[0].split()[1:]
+    v = [int(x) for x in f]
+    # user nice system idle iowait irq softirq steal [guest guest_nice]:
+    # guest time is already inside user/nice, so it is not added again.
+    busy = v[0] + v[1] + v[2] + v[5] + v[6] + (v[7] if len(v) > 7 else 0)
+    st = Path("/proc/self/stat").read_text().rsplit(")", 1)[1].split()
+    own = int(st[11]) + int(st[12])          # utime, stime (fields 14, 15)
+    return busy, own
+
+
+def _foreign_cores(j0: tuple, j1: tuple, wall: float) -> float:
+    """Cores' worth of CPU used by OTHER processes between two readings."""
+    foreign = (j1[0] - j0[0]) - (j1[1] - j0[1])
+    return max(0.0, foreign / _CLK / max(wall, 1e-9))
+
+
+def _planted_load_reading(window: float = 1.0) -> float:
+    """Known positive: plant PLANTED_SPINNERS busy processes, read the meter."""
+    code = ("import os, time\nos.nice(19)\ne = time.time() + %f\n"
+            "while time.time() < e:\n    pass\n" % (window + 0.6))
+    procs = [subprocess.Popen([sys.executable, "-I", "-c", code])
+             for _ in range(PLANTED_SPINNERS)]
+    try:
+        time.sleep(0.3)                      # past interpreter start-up
+        j0, t0 = _cpu_jiffies(), time.perf_counter()
+        time.sleep(window)
+        j1, wall = _cpu_jiffies(), time.perf_counter() - t0
+    finally:
+        for p in procs:
+            p.wait(timeout=10)
+    return _foreign_cores(j0, j1, wall)
 
 
 def _nice_and_threads() -> tuple:
@@ -197,12 +257,15 @@ def _run(seed: int, arm, train_ratio, timed: int = TIMED) -> dict:
 
     for _ in range(WARMUP):
         one()
+    j0 = _cpu_jiffies()
     t0 = time.perf_counter()
     for _ in range(timed):
         one()
     wall = time.perf_counter() - t0
+    j1 = _cpu_jiffies()
 
     out = {"T": timed * SIM_S_PER_DECISION / wall,
+           "foreign_cores": _foreign_cores(j0, j1, wall),
            "decisions_per_s": timed / wall,
            "core_s_per_1k": 1000.0 * wall / timed}
     out.update(w.report())
@@ -252,8 +315,13 @@ def _experiment(seed: int) -> dict:
     m: dict = {"nice": nice_level, "torch_threads": threads,
                "floor": FLOOR, "timed_decisions": float(TIMED)}
     m.update(_body_sanity(seed))
+    planted = _planted_load_reading()
+    m["meter_planted_cores"] = planted
+    m["meter_live"] = float(planted >= PLANTED_MIN_CORES)
+    foreign: list = []
 
     null = _run(seed, None, None)
+    foreign.append(null["foreign_cores"])
     m["null_T"] = null["T"]
     m["null_decisions_per_s"] = null["decisions_per_s"]
 
@@ -263,7 +331,9 @@ def _experiment(seed: int) -> dict:
         clears = {r: 0.0 for r in TRAIN_RATIOS}
         times: dict = {r: None for r in TRAIN_RATIOS}
         for r in TRAIN_RATIOS:
-            t = _run(seed, arm, r)["T"]
+            rr = _run(seed, arm, r)
+            t = rr["T"]
+            foreign.append(rr["foreign_cores"])
             times[r], n_measured = t, n_measured + 1
             if t_min is None:
                 t_min = t
@@ -286,6 +356,9 @@ def _experiment(seed: int) -> dict:
         m[f"{arm}/ratios_measured"] = float(n_measured)
         n_cleared += int(chosen is not None)
 
+    m["foreign_cores_max"] = float(max(foreign))
+    # Per seed 0/1, so the across-seed MEAN is > 0 iff ANY seed was contended.
+    m["contended"] = float(max(foreign) > FOREIGN_MAX_CORES)
     m["arms_cleared"] = float(n_cleared)
     m["arms_probed"] = float(len(CANDIDATE_ARMS))
     m["throughput_floor_conjunction"] = float(
@@ -337,18 +410,29 @@ def _check(m: dict, c: dict):
         return Status.VOID                      # a 36.7M transformer clearing a
         # 5.0 floor means the stopwatch, not the trunk, is what we measured
 
-    if m.get("null_T", 0.0) < FLOOR:
-        return Status.VOID                      # the WORLD cannot be lived in
-        # at this speed; no arm can, and that is a world result, not an arm one
+    if m.get("meter_live", 0.0) < 1.0:
+        return Status.VOID                      # the contention meter could
+        # not see a planted load on some seed: it is blind, so a FAIL below
+        # could not be told from contention
 
     # ── the claim ───────────────────────────────────────────────────────
     # Every admissible arm must have a train_ratio it can afford ON EVERY SEED.
     # An arm with none is EXCLUDED (the spec's `falsified_by`) and the
     # hypothesis "every admissible arm sustains 5.0" is false.
-    for arm in CANDIDATE_ARMS:
-        if committed_ratio(m, arm) is None:
-            return False
-    return bool(m.get("throughput_floor_conjunction", 0.0) == 1.0)
+    ok = (m.get("null_T", 0.0) >= FLOOR
+          and all(committed_ratio(m, arm) is not None for arm in CANDIDATE_ARMS)
+          and m.get("throughput_floor_conjunction", 0.0) == 1.0)
+    if ok:
+        return True                             # contention only slows: a
+        # PASS under load is a lower bound and stands
+    if m.get("contended", 1.0) > 0.0:
+        return Status.VOID                      # a red measured on cores other
+        # tenants were using (> FOREIGN_MAX_CORES in a timed window) cannot
+        # test the claim; re-run on a quiet box
+    if m.get("null_T", 0.0) < FLOOR:
+        return Status.VOID                      # the WORLD cannot be lived in
+        # at this speed; no arm can, and that is a world result, not an arm one
+    return False
 
 
 def run(ledger: Ledger | None = None):
