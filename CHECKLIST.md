@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 107 / 268 demonstrated
+## 106 / 268 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -107,7 +107,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every language-action pair fed to training is a genuine observation, and the language is correlated with the motion it is attached to.
       - _dies if:_ Shuffling the language labels across the dataset leaves the training loss statistically unchanged. If the words can be permuted for free, they were never carrying signal.
       - _then delete:_ Every downstream grounding claim. T2.06 and T2.07 measure whether the MODEL learned the mapping; this measures whether a mapping was present to learn. Passing those on fabricated data would be the original disease in a new place.
-- [x] **T1.14** Seed noise is measured and published
+- [!] **T1.14** Seed noise is measured and published
       - _asserts:_ Across 3 seeds of the shared recipe, seeds change the outcome, the effect is >= 3x the seed spread, and the noise floor (min_detectable_effect) is recorded.
       - _dies if:_ std >= effect/3 — or no finite, positive min_detectable_effect is produced for downstream specs to compare against.
       - _then delete:_ Any multi-seed comparison that has no published noise floor to beat.

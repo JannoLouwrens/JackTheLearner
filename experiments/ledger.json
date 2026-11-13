@@ -83717,22 +83717,14 @@
     },
     "T1.14": {
       "amended": [],
-      "attempt": 3,
-      "commit": "8b7d33f",
-      "compute_s": 3831.18,
-      "control_metrics": {
-        "distinct_results": 3,
-        "ignored_distinct_results": 1,
-        "ignored_flagged": 1.0,
-        "ignored_seeds": "[0, 0, 0]",
-        "ignored_spread": 0.0,
-        "ignored_to_real_spread": 0.0,
-        "spread": 0.0102037
-      },
+      "attempt": 4,
+      "commit": "818b21a",
+      "compute_s": 8.28,
+      "control_metrics": {},
       "dirty_files": null,
-      "duration_s": 3841.57,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1794456542,ladder-1794456545",
-      "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "duration_s": 18.97,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1794587016,ladder-1794587023",
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
           "amended": [],
@@ -83794,34 +83786,65 @@
           ],
           "spec_sha": "4270ae98e8e54f21",
           "status": "ERROR"
+        },
+        {
+          "amended": [],
+          "attempt": 3,
+          "commit": "8b7d33f",
+          "compute_s": 3831.18,
+          "control_metrics": {
+            "distinct_results": 3,
+            "ignored_distinct_results": 1,
+            "ignored_flagged": 1.0,
+            "ignored_seeds": "[0, 0, 0]",
+            "ignored_spread": 0.0,
+            "ignored_to_real_spread": 0.0,
+            "spread": 0.0102037
+          },
+          "dirty_files": null,
+          "duration_s": 3841.57,
+          "gpu_job_id": "jannolouwrens/jack-ladder-1794456542,ladder-1794456545",
+          "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+          "impl_sha": "c51bd98015b912a5",
+          "message": "",
+          "metrics": {
+            "artifact_channel": "stdout JACKRESULT line (t108 ruling 9d)",
+            "backend": "colab",
+            "effect": 0.26517,
+            "gpu": "Tesla T4",
+            "heldout_cv_pct": 17.174,
+            "heldout_mean": 0.02976,
+            "heldout_std": 0.00511,
+            "lr_final_max": 0.0,
+            "min_detectable_effect": 0.01022,
+            "seed_noise": 0.00511,
+            "seeds": 3,
+            "snr": 51.89
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 228.5,
+          "preserved_impl": null,
+          "ran_at": "2026-11-12T05:12:56",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "4270ae98e8e54f21",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "c51bd98015b912a5",
-      "message": "",
-      "metrics": {
-        "artifact_channel": "stdout JACKRESULT line (t108 ruling 9d)",
-        "backend": "colab",
-        "effect": 0.26517,
-        "gpu": "Tesla T4",
-        "heldout_cv_pct": 17.174,
-        "heldout_mean": 0.02976,
-        "heldout_std": 0.00511,
-        "lr_final_max": 0.0,
-        "min_detectable_effect": 0.01022,
-        "seed_noise": 0.00511,
-        "seeds": 3,
-        "snr": 51.89
-      },
+      "impl_sha": "2257fd45c5b9e14d",
+      "message": "RuntimeError: GPU job failed on colab: all backends failed: kaggle: push failed: Warning: Looks like you're using an outdated `kaggle` version (installed: 2.2.4), please consider upgrading to the latest version (2.2.5) Kernel push error: Maximum weekly GPU quota of 30.00 hours reached.; colab: exit 1: stderr '                        \u2502\\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+      "metrics": {},
       "peak_rss_inherited": false,
-      "peak_rss_mb": 228.5,
+      "peak_rss_mb": 299.1,
       "preserved_impl": null,
-      "ran_at": "2026-11-12T05:12:56",
+      "ran_at": "2026-11-13T16:23:51",
       "seeds": [
         0
       ],
       "spec_id": "T1.14",
       "spec_sha": "4270ae98e8e54f21",
-      "status": "PASS"
+      "status": "ERROR"
     },
     "T2.00": {
       "amended": [],
