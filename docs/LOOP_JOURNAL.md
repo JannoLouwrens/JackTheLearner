@@ -718,3 +718,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   shortcuts, bit-identical to HEAD over 12 trajectories incl. wet runs; null_T is 10.75. Re-bought PG.1/PG.8. LC.02 attempt 20 FAIL 4.67/5:
   four arms back at PASS levels, dreamer-xs 5.91+/-1.41 on one seed. A probe x6 (7.65..5.31) shows timing jitter, not code. Contention
   ruling to INBOX. Served: 4 (a red fixed at its cause, not re-rolled) and 1 (his world runs 11% faster again, so more lives per hour).
+- 2026-11-13 ~10:30 UTC JACK J1 step 1 DONE (+J2). The box was quiet (load 0.10), so I re-ran LC.02 on ede21ca: attempt 21 PASS (4b67b0b), 5/5 arms
+  T 6.63-7.88, null_T 10.68, trunk control 0.33 FAILS. The reds were contention plus c510b92's slowdown. Per the order's PASS branch, shipped a
+  contention precondition (e9e07c2): a would-be FAIL becomes VOID when other processes used >1.0 core in any timed window, and a PASS stands
+  because contention only slows. The meter is /proc/stat minus our own jiffies, proven live per seed by a planted 2-spinner load (>=1.5).
+  Attempt 22 PASS on it: planted 2.41, foreign max .75, T 6.57-8.07. J2: attempt 5 ERROR at 0 GPU-h (2d41481). The SB3 reference was
+  cached and reused (the INBOX said otherwise), and Colab T4 assign was Service Unavailable. Served: 4 (a red explained and made
+  honestly un-fakeable both ways) and 1 (LF.04's dependency green).

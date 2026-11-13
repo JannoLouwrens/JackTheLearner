@@ -49,11 +49,10 @@ serves: M1→M7 · philosophy 1 (learns by living), 4.
 worker who finds the box loud does S1's first step instead of idling. Try
 `LC.02` FIRST in every slot, before launching anything detached; if no quiet
 minute comes by the 11-14 sitting the Director rules on the precondition.
-state: 11-13 09:25 LC.02 run near-quiet (load 1.46->3.09): FAIL 4.33/5, null_T 9.41 vs 10.36-10.65 in every PASS. Bisect: 11-12 FAIL had the PASS impl_sha
-(= contention); c510b92 (W0.PL Water.apply) cost 11% physics (A/B 10.69 vs 9.52; apply 16->30 us). FIXED ede21ca, bit-identical, null_T 10.75.
-09:41 LC.02 attempt 20 on fix: FAIL 4.67/5 — null_T 10.65, four arms 6.7-8.0 at PASS levels; dreamer-xs 5.91+/-1.41 (one seed). Probe x6: 7.65 7.93 7.15
-7.66 6.90 5.31 = timing jitter over 40 decisions/5 updates, not code. Next: J1(1)'s contention branch — VOID-above-load precondition + planted-load test
-(Director rules 11-14), or one more quiet run; then LF.04 on S1. LF.04/BD.01 still REGISTERED, NOT RUN.
+state: 11-13 10:30 J1(1) DONE: LC.02 attempt 21 PASS on a quiet box (load .10; 4b67b0b) -> the reds were contention (+ c510b92, fixed ede21ca).
+Contention precondition shipped e9e07c2: FAIL with >1.0 foreign core in any timed window -> VOID, PASS stands; meter = /proc/stat minus own
+jiffies, planted 2-spinner load must read >=1.5 every seed. Attempt 22 PASS on it (planted 2.41, foreign max .75; T 6.57-8.07; trunk .34).
+Next: J1(2) — LF.04 on S1's kaggle-cpu backend (06b87bd); LF.04/BD.01 REGISTERED, NOT RUN.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 4 in flight on Colab
 **Why.** `T2.01` (he moves better than random) is the biggest blocker in the
@@ -68,9 +67,9 @@ serves: M3, M4 · END-FIT row 1 (human-like body) · philosophy 3, 7 · objectiv
 On a verdict, write in the seat row which END-FIT rows the winner leaves reachable (fast loop inside one brain; hands).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-13 07:18 attempt 4 DISPATCHED unchanged (head cf8685c, projected 25.05 h): Kaggle push refused (account-side weekly 30 h
-quota reached), failed over to Colab T4 session ladder-1794554302, unit 1 est 1.8 h. Watcher pid 2598887, log /data/tmp/dispatch_d1_0.log.
-Next: read the log each slot, act only on watcher exit; if it dies, reattach per gpu_submissions.jsonl (never re-dispatch while alive).
+state: 11-13 10:20 attempt 5 ERROR at 0 GPU-h (2d41481): the SB3 reference unit WAS saved (S5 stdout recovery, /data/d10_units/3fbc6d0c,
+ref_mean 650.5 >= 450) and was reused; unit aprime/seed0 refused: Colab T4 assign "Service Unavailable" (2nd today), Kaggle weekly quota spent.
+Next: when `colab new`/assign works or Kaggle's week resets, re-dispatch unchanged (`dispatch.sh D1.0 --projected-hours 25.05`); 12 arm units left.
 
 ### J6 — W0's red world rules: one clock (`W.1`, `W.2`), then `NE.01`
 **Why.** `W.1`(b) and `W.2`(c) are one fault, ruled today (ruling 1): **W0 has
@@ -254,8 +253,9 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 10:30) LC.02 contention: J1(1)'s PASS branch shipped (e9e07c2, VOID-on-contended-FAIL); the 11-14 ruling below may be moot. Foreign load on a 'quiet' box read up to .75 core in one timed window vs the 1.0 threshold.
 - (JACK 11-13 09:45) LC.02: a W0.PL correctness commit (c510b92) silently cost 11% physics throughput; nothing caught it except LC.02 going red a day later under noise. LC.02's T is timed over 40 decisions (5 updates at tr .125), so one stall moves an arm-seed by 2+ sim-s/real-s (dreamer-xs probe 5.31-7.93). For the 11-14 ruling: VOID-above-load, or a longer timed window re-registered.
-- (SYSTEM 11-13 09:12) J2: `D1.0` attempt 4 ERROR 09:01 (ledger, committed by SYSTEM): unit 1 ran 1.71 h on Colab then "fetch failed"; unit 2 hit Colab `Service Unavailable`, Kaggle refused (quota). S5 stdout recovery did not save unit 1 — J2 to diagnose. `W1.04` FAIL 08:48 also committed unread (J7).
+- (SYSTEM 11-13 09:12) J2: `D1.0` attempt 4 ERROR 09:01 (ledger, committed by SYSTEM): unit 1 ran 1.71 h on Colab then "fetch failed"; unit 2 hit Colab `Service Unavailable`, Kaggle refused (quota). S5 stdout recovery did not save unit 1 — J2 to diagnose. [JACK 10:20: wrong — unit 1 = the SB3 reference, recovered + cached + reused by attempt 5; the ERROR is unit 2's Colab assign.] `W1.04` FAIL 08:48 also committed unread (J7).
 
 ## DONE (kept one day)
 

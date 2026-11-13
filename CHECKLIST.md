@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 107 / 267 demonstrated
+## 108 / 267 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -565,7 +565,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ For each admissible arm: (U1) every modality key reaches the shared state tensor and no modality has a private path to the action; (U2) perturbing modality A's input produces a NONZERO finite-difference gradient at modality B's encoder through the arm's declared binding loss; (U3) each modality can be dropped without a shape error and the core's internal uncertainty CHANGES when it is; (U4) the need-state modality holds at least 1/|M| of the total prediction loss at init.
       - _dies if:_ Any arm failing any of U1-U4. That arm is INELIGIBLE FOR THE SEAT — it cannot be adopted, and it cannot buy adoption with a task score. It is still RUN AND SCORED, and its number is recorded as a standing challenger. [AMENDED 2026-08-24, owner ruling. This clause read 'EXCLUDED from LC.03/LC.04 - not scored and beaten, excluded'. That made the one-brain organisation unfalsifiable: a non-unified arm could not enter, so it could never be shown to win, however badly one-brain lost. An assumption that cannot lose is not a finding. The MEASURED gate is unchanged - the conjunction U1-U4 and its thresholds are byte-identical, and the bar to HOLD the seat is exactly what it was. What changed is that the loser's number is now kept instead of never taken. Strengthen-only: this adds evidence and removes no gate. Requires a re-run to re-buy the certificate under the amended text.]
       - _then delete:_ Bare PPO as a candidate learning core. Per docs/research/LEARNING_CORE.md 3.7, PPO's senses meet only through a scalar reward, so an admissible PPO arm must carry L_masked_cross_modal. Also kills TD-MPC2 outright (arXiv:2310.16828 is state-based proprioception only, no vision, by construction).
-- [!] **LC.02** A core that cannot live a life at survivable wall-clock is not a core  — action_dim=8.0; action_dim_std=0.0
+- [x] **LC.02** A core that cannot live a life at survivable wall-clock is not a core
       - _asserts:_ Every admissible arm sustains at least 5.0 simulated seconds of Jack's life per real second on 3 ARM cores at nice 19 with the learner in the loop, at the train_ratio this spec selects for it; and the selected train_ratio is the largest power-of-two value that clears that floor.
       - _dies if:_ An arm below 5.0 sim-s/real-s at every train_ratio down to its minimum. That arm is EXCLUDED: GOAL.md requires lives, death and cross-life learning, and a core that cannot produce a second life inside a builder iteration cannot deliver them at any sample efficiency.
       - _then delete:_ Any arm's train_ratio above the largest affordable value, and any arm that cannot reach the floor at all. NOTE THE ANTI-GAMING RULE: this spec's _check MAY NOT READ life_gain. Selecting a hyperparameter by its score is tuning on the metric; selection here is on wall-clock fit only, and the chosen value is committed to the ledger before LC.03 runs.
