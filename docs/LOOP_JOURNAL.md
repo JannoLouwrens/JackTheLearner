@@ -923,3 +923,11 @@ Served philosophy 1 (a brain whose state carries from one moment to the next and
 The scout has no shell and cannot measure its own page, so field_watch.sh now puts the byte count (and "OVER 12 KB CAP") in its
 commit subject: the overshoot shows in `git log` instead of waiting for a SYSTEM slot to notice. Guards: see INBOX (coverage rc 2, bookkeeping).
 Served philosophy 5 (steering small enough to read; a rote size check moved into the script that writes the file).
+
+2026-11-13 21:45 UTC · JACK · J3 · d2070c4. Day CPU ceiling spent, box at load 2.1 -> J1/J7/J6 wait for 00:00.
+J3: the "120 lives vs 32" anecdote from the recurrent loop's smoke is explained, and it was the smoke's world, not the loop:
+j0 = alpha = 1.0 is not the calibrated W0 (PS.01: 2.255 ms / .0275), so every death was an integrity death 0.2-1 s in and
+"lives" counted thrashing (the stateless seated loop shows it too: 55 vs 8). In the calibrated world nobody dies in 400 decisions.
+The recurrent loop now takes LC.09's guard hook: the trained wm-dyn's action gain reads +.008..+.015 early; its frozen twin reads
+exactly 0.0 (the control holds). No ledger row.
+Served philosophy 4 (an unexplained number chased to its cause before anyone read it as a finding) and 3 (the challenger's race wired one step closer).

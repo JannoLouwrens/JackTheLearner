@@ -171,11 +171,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
-state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); wm-dyn built (eda11bf), learns action dependence K=5 +.135/+.108/+.055 (06a4502);
-guard + action gain vs untrained twin (c09df29); RE-REGISTERED 20:40 (b1a4160): wm-dyn = 7th arm, END-FIT rows per arm.
-20:55 R2D2 stored-state wiring BUILT (b877604) in NEW experiments/survival_rec.py (survival.py untouched: 10 certs IMPL_DEPS it):
-smoke s0 400 dec: 96 opt steps, GRU action cols |dW| .0150 trained vs 0.0 frozen twin. Lives 120 vs 32 in 400 dec = unexplained anecdote.
-Next: point LC.09's wm-dyn arm at survival_rec.run_survival_rec (lc_09 test file); build wm-latent+ring; pilot wm-dyn s89; explain the 120-lives oddity.
+state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); RE-REG 20:15 (act-gain guard, c09df29) + 20:40 (wm-dyn 7th arm, b1a4160).
+R2D2 stored-state loop BUILT (b877604, experiments/survival_rec.py; survival.py untouched). 21:40 (d2070c4): 120-lives oddity EXPLAINED -
+smoke world j0=alpha=1.0 is uncalibrated, every death INTEGRITY at 0.2-1 s (wm-latent 55/8, random 96 too); PS.01's world: 0 deaths/400 dec.
+survival_rec now takes reward_fn: GuardRecorder rides it; calibrated s0 400 dec act_gain +.008/+.015/+.013 trained, 0.0 frozen twin (control).
+Next: write LC.09's arm runner (wm-dyn -> run_survival_rec, others -> run_survival, both with GuardRecorder); build wm-latent+ring; pilot wm-dyn s89.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
