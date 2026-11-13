@@ -9,6 +9,7 @@
 4. **Nothing faked.** A capability is claimed only by a test that could have failed — several seeds, a control that must fail, thresholds never weakened. A failure is fixed, not filed.
 5. **The system is what makes him.** Research → test → implement → test → fix. His world and his curriculum matter as much as he does. Work on the machine only where it makes that loop faster, cheaper or truer.
 6. **Limits.** Free compute only. This box serves paying customers. What he must become is the owner's; how he is built is always raced.
+7. **The finished Jack judges every design:** human-like body; trained here, handed to people, still learning on their machines; advised in words. No winner may close one off (CHAMPIONS.md END-FIT).
 
 Before you finish, ask: which of these did my work serve? If none, it was the wrong work.
 <!-- CARD:END -->
@@ -363,6 +364,11 @@ people get a trained version which just continues learning from that point! and
 people can see him struggle and say like ah cut a tree use the wood make a fire
 make the food on the fire or they can tell him ah build shelter like this when
 they see he is cold"*
+
+And the same day: *"our architecture must be like the points I mentioned"*.
+That makes these points binding on every architecture seat — what each one
+demands of the brain, its gate, and where the living brain stands is the
+END-FIT table at the top of `docs/CHAMPIONS.md`.
 
 Read with everything above, not against it (the words are the owner's; this
 reading is the session's and is open to correction):

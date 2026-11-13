@@ -18,6 +18,8 @@ brain is. Nothing is assumed; the best block wins a cook-off or it does not go i
    each building block and by what right (BY VERDICT, DEFAULT, DECREE, VACANT).
    Seats held by DEFAULT or VACANT are open invitations. Read a seat's own
    section of that file only once you have picked it (the file is 72 KB).
+   Read END-FIT first (`sed -n '/^## END-FIT/,/^## The rules/p' docs/CHAMPIONS.md`):
+   a challenger says which of its rows it serves, and may close none.
 3. `docs/LESSONS_CORE.md` — the rules. `docs/FIELD_WATCH.md` — what the outside
    world just published. `docs/ORDERS.md` — what the workers are on (do not
    collide with an open order; build on it or go elsewhere).

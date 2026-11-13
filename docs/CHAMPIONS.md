@@ -37,6 +37,25 @@ If a spec, arm, or verdict appears to conflict with this layer, the verdict
 loses and the conflict escalates to DECISIONS_NEEDED.md. Sources: GOAL.md and
 SYSTEM.md, which outrank this file.
 
+## END-FIT — the finished Jack binds every seat (owner, 2026-11-13)
+
+Owner, verbatim: *"our architecture must be like the points I mentioned"* — the
+points are the closing section of `GOAL.md`. They are ENDS. Seats still change
+hands only by verdict, but **a winner is ADOPTED only if every row below is
+still reachable under it**, and every architecture cook-off says in its
+registration which rows its arms were built to serve. A row is closed by a
+PASSING spec, never by argument. "Today" is the living brain (`wm-latent` on
+the survival stack) read from the code on 2026-11-13; the Director keeps that
+column current.
+
+| the finished Jack | what it demands of the architecture | gate | today |
+|---|---|---|---|
+| **Human-like body** | the ONE brain drives the humanoid in the survival world; balance needs a faster loop than choosing does, inside one brain (fast and slow); hands that hold, carry and strike | `T2.01`, `LT.08`, `DP.02`; a grip rule: none registered | rover only (`cores.ACTION_DIM = 8`); one decision per 0.2 s; no hand holds anything |
+| **Trained here, handed over, still learning** | everything learned travels in one checkpoint to another machine; long learning without forgetting, without plasticity dying, without the latent going flat; small enough to live AND learn in real time on a person's own computer | `LF.02`, `T5.03`, `T5.04`, `NE.06`; hand-over gate, collapse guard, size cook-off: none registered | bit-exact resume proven on this box only; ~860k weights (fits); the other gates unrun; LEARNING_CORE §5.4's collapse diagnostic never built |
+| **Advised in words, never commanded** | words reach the same brain through his own learned ear; what he hears can change what he tries; no path from words to action that bypasses his needs; who said it, and whether it proved true, is kept and used | `HR.*`, `LG.03`–`LG.06`, `LG.02`, `SO.10` | no ear, no words; the `language` slot in `cores.MODALITIES` is still specified as "a sentence embedding from the frozen text tower" — stale against GOAL's "through his ears", to be re-specified before any language arm is built; Person-model seat VACANT |
+| **Chains with a late payoff** (tree → wood → fire → cooked food; shelter before the cold) | credit over hundreds of decisions; thinking ahead, raced; a memory that holds a told plan; the diary read by his decisions | `DP.*`, `BO.01`, `W1.04`, `WM.02`, `NE.08`; W2 specs: none registered | `survival.GAMMA = 0.95` (~20 decisions); no imagination step in `survival.py`; replay of 256; ring memory seated, not wired into the living brain; diary carried, not read |
+| **Watched while he struggles** | he learns online inside the life being watched; watching changes nothing | `SO.01`, `SO.04`, `LF.04` | learns online; `LF.04` unrun |
+
 ## The rules of the title
 
 1. **Held BY VERDICT or BY DEFAULT — and the difference is marked.** A

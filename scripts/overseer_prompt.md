@@ -26,6 +26,10 @@ Read: `GOAL.md`, `docs/LESSONS_CORE.md`, `docs/ORDERS.md`, `docs/PROGRESS.md`,
     $PY -m experiments.champions --check  # can every architecture seat still lose?
     $PY -m experiments.run verify | tail -25   # do recorded verdicts still re-derive?
 
+Then read END-FIT at the top of `docs/CHAMPIONS.md` (the owner's finished
+Jack). An adoption, an order or a registered arm that closes one of its rows is
+a finding.
+
 A commitment with NO spec, a decision with no default or past its date, a seat
 whose challenger does not exist, a PASS that no longer re-derives — each is a
 finding. You report it; the Director orders the repair. **Everything else those

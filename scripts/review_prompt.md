@@ -105,6 +105,9 @@ the launcher writes a bare one if you do not.
 - Update every `status:` line in `docs/ROADMAP.md` from the ledger.
 - Is every seat in `docs/CHAMPIONS.md` still contestable (`champions --check`),
   and is how unified the brain is still being raced rather than assumed?
+- END-FIT (top of `docs/CHAMPIONS.md`, the owner's finished Jack): bring its
+  "today" column up to date from the code and the ledger; order a spec for any
+  gate that reads "none registered"; adopt no winner that closes a row.
 - Re-examine 5 passing specs against what has been learned since. Strengthen,
   never weaken. A spec you turn red is a repair order the same day, with the
   dependency question answered: which downstream specs truly need the new clause?
