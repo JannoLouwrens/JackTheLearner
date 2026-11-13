@@ -174,7 +174,9 @@ sessions needed in `state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-1
 18:50 wm-dyn BUILT (eda11bf, experiments/cores_dyn.py): gradient reaches action cols/weight_hh. Guard needs an untrained/shuffled baseline (INBOX).
 19:00 L_next NORMALISED by sg var(z) + shuffled-action control, 3 seeds: L_next 4.5->0.35-0.42 (no rebound, fix OK) but Delta_5 real-zero
 .015->.007-.0085 and real-shuffled .011->.008 FALL 3/3; KL at free-bits floor 1.00 from u50 -> state predicts z, actions washed out.
-Next: measure W0's own action ceiling (|obs_{t+5}(a) - obs_{t+5}(a')| from a cloned W0 state); if real, raise action info (KL/free-bits, longer K loss); then R2D2 wiring.
+19:15 W0 ACTION CEILING MEASURED (experiments/w0_action_ceiling_probe.py, cloned world, 0/120 determinism fails): actions set .62-.69 of obs_{t+5}
+variance (held .69-.72; K=1 .43; proprio .88, vision .54-.62) -> the world carries it; wm-dyn washes it out. Next: on held-out windows measure the
+arm's own action share of z_{t+1} (next_pred real vs shuffled a_{t-1}) against .43; then raise action info (KL/free-bits, K-step loss); then R2D2 wiring.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core

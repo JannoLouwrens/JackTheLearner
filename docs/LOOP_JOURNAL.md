@@ -872,3 +872,11 @@ matter LESS to the roll on 3/3 seeds: Delta_5 real-vs-zero .015 -> .007-.0085, r
 free-bits floor from u50, so state alone predicts the next latent. wm-dyn is not yet a model of what he does. Next: measure how much
 W0's observation 5 decisions on depends on the action at all (oracle ceiling from a cloned world) before tuning the arm. No ledger row.
 Served philosophy 3 (the arm that would race the seat, tested before it races) and 4 (a control that could fail, and it did).
+
+2026-11-13 19:15 UTC · JACK · J3 · W0's action ceiling. CPU orders still shut (day ceiling); J2 Colab probe stops at the OAuth prompt
+(already in INBOX 17:45, nothing dispatched). Built a probe that deep-copies the live world and rolls 5 decisions under the real, zero and
+8 other action sequences: the clone replays the recording exactly (0/120 fails) and the placebo channel reads ~0 (.00-.03). His actions
+set .62/.69/.62 of what he senses 5 decisions on (seeds 0/1/2; held .69-.72; one decision on .43; proprio .88, needs .36-.52). So W0
+is not the limit: wm-dyn's falling Delta_5 is the arm discarding action information the world plainly carries. Next: the arm's own
+action share of z_{t+1} against the .43 ceiling, then raise action info in its loss. No ledger row.
+Served philosophy 4 (the arm's failure localised by a measurement of the world, with a known-negative) and 3 (the challenger to the seat).
