@@ -636,3 +636,10 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   the CR.00 curriculum pilot detached (experiments/cr00_pilot_race.sh, ALIVE, cpu_budget ADMITTED): null / staged / shuffled,
   seed 89, train 40000, exam 20000, 3 workers at nice 19 once the wean-smell decoy s93 exits. No numbers yet; next slot harvests
   the tally and sets CR.01's N and margin from the null's own spread. Served: 3 and 5 (the curriculum raced, not assumed).
+
+- 2026-11-13 ~04:40 UTC JACK J6 (J8 done, J1 waits on D20 re-budget, J4 no GPU, J7 needs CPU that CR.00 holds; J6's next step
+  is CPU-free to write). Built the occlusion knife-edge race the REVIEW row asked for, as a lab script that edits no world file
+  (D43 HOLD): shipped 9-ray law vs graded 49-ray cosine sky vs damped sleeper vs an open control that must fail, on NE.01's own
+  probes and bars, seeds 0-4. Decision rule declared before any row. Smoke at seed 1 caught two harness faults: the open control
+  had no bed, and sleeper damping x5/x8/x20 broke the RK4 integrator (NaN qvel). Fixed: open sleeps where shipped would, K=3, and an
+  instability counter disqualifies a row. Launched detached behind CR.00. Served: 3 (a world law raced) and 4 (a control that must fail).

@@ -99,12 +99,11 @@ serves: M2 · philosophy 1 (a world that can kill him, honestly), 4.
 **done when:** `NE.01`, `W.1`, `W.2` each have a new attempt with every
 formerly-red clause explained in the commit. (D53 files `SO.07`'s VOID here too:
 the body cannot reach privileged food on 2 of 3 recording worlds.)
-state: 11-13 00:45 NE.01 attempt (56c6519): FAIL, but ok_night_shelter now GREEN 3/3 (shelter cost .117 vs open .498, occ .675, alive).
-Red: ok_spread 1/3 = integrity i .248 (per-seed drop probe .304/.201/.239). Measured (/data/tmp/ne01/drop12.py): PS.01's 12-cycle
-schedule dies of HYPERTHERMIA from the flail (T 40.0-40.4 at 200-320 s); drop+rest without flail spans i .645/.680/.652 (dies injury
-x2, dehydration). The world admits i's range; the 3-drop flail probe truncates it. NEW red ok_forager 2/3: one seed's sleeping body
-slides into sealed occ~1 and dies hyperthermia at ~3540 s/3600 (sleep occ .84+-.17) - the knife-edge occlusion. Next: graded-occ race, then re-register the drop probe.
-
+state: 11-13 00:45 NE.01 (56c6519) FAIL: ok_night_shelter GREEN 3/3; red ok_spread 1/3 (3-drop flail probe truncates i; drop+rest spans .65)
+and ok_forager 2/3 (a sleeper slides into sealed occ~1, hyperthermia at ~3540/3600 s - the knife-edge). No world edit (D43 HOLD stands).
+11-13 04:40 occlusion-law RACE written + LAUNCHED (experiments/occ_law_race.py/.sh, pid 2503265, log /data/tmp/occrace/race.log, rows
+/data/tmp/occrace/*.jsonl): shipped vs graded (49-ray cos-weighted cone) vs damped sleeper (x3; x5/x8/x20 broke RK4) vs open (must fail),
+seeds 0-4, NE.01's own probes + bars, rule in docstring. Waits for CR.00, ~2 h on 2 workers. Next: on "OCCRACE EXIT" apply the rule; then drop probe.
 ### J7 — The deeper world (W1): `W1.00` FAIL, `W1.04` VOID
 **Why.** Owner, 2026-11-11: the world and the curriculum are "as important as
 jack himself". W0 is too shallow: lookahead does not pay in it (`DP.05`), a
