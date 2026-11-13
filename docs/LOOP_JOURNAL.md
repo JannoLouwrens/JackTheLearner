@@ -784,3 +784,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   no PASS demoted. The creature gate's real root is T2.10; INBOX asks for the ruling. J8: harvested the LF.06 pilot, TOL_S 20.0 (floor;
   sd 1.31): exams sit at 597.6-601.2 s (starvation clock), both noise salts byte-identical, and ARM/x86 drift 18.2 s = 0.91 TOL.
   Served: 4 (an honest gate is not bypassed by launching into a BLOCKED row) and 1 (names what actually stands between him and LF.04).
+- 2026-11-13 ~14:50 UTC JACK J6(b) (load 3.5, W1.00 att 3 holds the lock with 3 workers, alive at ~40 CPU-min each). Built the needs-clock
+  race (386bfba): shipped vs k=72 (B_E 1/25200, B_W 1/3600, TAU_WAKE 910, TAU_SLEEP 210), rule declared before any run. Arithmetic found
+  W.2's own horizons were sized from shipped constants (3000 s < k72's 3720 s thirst / 25500 s hunger deadlines), so W.2 as written would
+  have failed k72 through truncation, not the world. The harness scales horizons per arm and leaves bars alone. NE.01's 11-13 row also fails
+  gate 5 (5/5 random deaths hyperthermia), which the order did not list. Race launched detached, gated on W1.00 (pid 3130430).
+  Served: 3 (the clock is raced, not argued) and 1 (a world whose deadlines leave room for a night to teach him).
