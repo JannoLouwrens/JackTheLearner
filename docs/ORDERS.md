@@ -170,11 +170,11 @@ shrunk `LC.07`: all five core arms plus the ring working memory, ~3× the
 screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
-sessions needed in `state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms, 1.2M dec/arm-seed, LC.03 gates unmoved; ~11 sessions by arithmetic).
-11-13 18:30 GUARD BUILT (ef335cf, tests/lc_09_learning_core_3x.py): RankMe/std/ActSWM Delta_5, selftest 11/11 (planted rank-1 trips); run() refuses.
-FOUND: dreamer-xs/wm-efe/wm-latent have NO DYNAMICS: rssm() feeds zero action + zero h every call; GRU action cols + weight_hh grad == 0.0 after
-20 lc_updates; wm-latent predicts its own CURRENT latent. Untrained Delta_5 -0.006..-0.008 (5 inits) -> guard will VOID every WM arm, the seat too.
-Next: build an action-conditioned next-latent core (state across decisions, predicts z_t+1 from (s_t,a_t)) + wm-latent+ring; re-register LC.09 +1 arm.
+sessions needed in `state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms, 1.2M dec/arm-seed). 18:30 guard BUILT (ef335cf); FOUND seated WM cores get 0.0 grad on GRU action/hh.
+11-13 18:50 wm-dyn BUILT (eda11bf, experiments/cores_dyn.py, cores.py untouched): carries deter across decisions, efference copy, next-latent
+pred + KL + VICReg hinge. Probe (1200 dec, 300 upd): action-col grad .0565, hh .1432 (repair works) but held-out Delta_5 .0147 -> .0093 (NOT up).
+ALSO: from a filtered start the UNTRAINED seat reads Delta_5 +.0147 (ef335cf's -.006 = zero-state artefact) -> guard needs an untrained/shuffled baseline (INBOX).
+Next: normalise L_next (cosine or per-dim std), re-probe 3 seeds; then R2D2 stored-state wiring so survival's i.i.d. batch carries deter; re-register LC.09 +wm-dyn.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
@@ -269,6 +269,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 18:50) LC.09 guard correction (supersedes my 18:30 "predictable VOID"): the -0.006..-0.008 untrained Delta_5 came from rolling a ZERO start state. Filtered from 16 decisions of real past, the UNTRAINED seated wm-latent reads +0.0147 (eda11bf probe). A random GRU gives Delta_5 > 0, so the ">0" clause cannot fail for an arm that learned nothing. Strengthening wanted before any claim seed: Delta_5 must beat the arm's own untrained init (or a shuffled-action roll) on the same windows. Re-registration, not a loosening.
 - (JACK 11-13 18:30) J3 finding for the Learning-core seat (CHAMPIONS): the seated wm-latent (and dreamer-xs, wm-efe) is a world model in name only. `cores.py` rssm() steps the GRU once from a zero state with a zero action, so no weight that reads an action or a past state ever gets gradient (measured 0.0, ef335cf). LC.03 v2 seated a feed-forward encoder. LC.09's ActSWM guard will VOID it; the repair (a real action-conditioned dynamics arm) touches cores.py + survival.py and stales LC.01/02/03/07/08, LF.03, SH.01/02. Ruling wanted only on ORDER (J3 builds it next vs after LF.04), not on whether to race it.
 - (JACK 11-13 17:45) J2 probe: `colab new -s p --gpu T4` now stops at an OAuth prompt ('To authorize colab-cli, visit this URL', 'Enter the authorization code') — the Colab CLI token has expired since 16:40; only the owner's browser can re-authorise. Every Colab dispatch fails until then. Nothing dispatched.
 - (JACK 11-13 17:20) J2 probe: Colab T4 assign 'Service Unavailable' 5th time today (`colab sessions` empty); nothing dispatched.

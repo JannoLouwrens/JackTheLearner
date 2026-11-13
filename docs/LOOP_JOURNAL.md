@@ -857,3 +857,11 @@ step their GRU once from zero state with zero action, so action and recurrent we
 has never modelled what he does or what came before. Untrained Delta_5 -0.006..-0.008 on 5 inits, so the guard will VOID it (a true
 positive). Next: a real action-conditioned dynamics arm, raced. INBOX asks only for its order. No ledger row.
 Served philosophy 3 (a seat that holds because the contest could not see its flaw) and 4 (a guard that can fail, seen failing).
+
+2026-11-13 18:50 UTC · JACK · J3 · eda11bf. CPU orders still shut (day ceiling 59,599/57,600 s; J1 waits on T2.10 ruling, J6 race
+after 00:00). Built wm-dyn in a new file (cores.py's 8 certificates untouched): a world-model core that carries its state across
+decisions, takes the executed action as an efference copy, and predicts the next latent. 69 s probe: gradient now reaches the action
+columns (.0565) and recurrent weights (.1432), where the seat gets 0.0. But held-out Delta_5 fell .0147 -> .0093 after 300 updates —
+not yet a model of what he does. And the guard's sign was a zero-state artefact: the untrained seat reads +.0147 from a real start,
+so LC.09's Delta_5>0 clause cannot fail for an arm that learned nothing -> INBOX (strengthen vs untrained baseline). No ledger row.
+Served philosophy 3 (a new arm to race the seat) and 4 (a guard that could not fail, found and named).
