@@ -74,7 +74,11 @@ def run_survival_rec(seed: int, *, j0: float, alpha: float, n_decisions: int,
                      arm: str = "wm-dyn", train: bool = True,
                      train_ratio: float = 0.25, e0: float = 1.0,
                      explore_std: tuple = EXPLORE_STD,
+                     reward_fn=None,
                      return_core: bool = False) -> dict:
+    """`reward_fn(r_h, w, obs, core) -> float`: survival.run_survival's hook,
+    same call point (after `w.decide`, before the segment push), so LC.09's
+    GuardRecorder rides this loop unchanged. None = homeo-dr unchanged."""
     w = W0(seed=seed, j0=j0, alpha=alpha, lethal=True)
     if e0 != 1.0:
         w.drives.state = drives.DriveState(e=e0)
@@ -125,6 +129,8 @@ def run_survival_rec(seed: int, *, j0: float, alpha: float, n_decisions: int,
         w.decide(a)
         died = w.died_this_decision
         r = d_before - (D_DEATH if died else w.drives.state.d())
+        if reward_fn is not None:
+            r = float(reward_fn(r, w, obs, core))
         reward_sum += r
         act_log.append(a)
         seg.append(({kk: torch.from_numpy(vv.copy()) for kk, vv in obs.items()},
@@ -177,7 +183,15 @@ def _smoke(n: int = 400) -> dict:
     """Wiring check (records nothing): a short trained life must take
     optimiser steps and MOVE the GRU's action columns (the seated stateless
     path gives them exactly 0.0 gradient, ef335cf); the untrained twin must
-    leave them bit-identical (control)."""
+    leave them bit-identical (control).
+
+    WORLD: j0 = alpha = 1.0 is NOT the calibrated W0 (PS.01: j0 2.255 ms,
+    alpha .0275). Measured 11-13 21:40 (seed 0, 400 dec): every death here is
+    an INTEGRITY death after 0.2-1.0 sim-s, so `n_lives` counts how hard the
+    body thrashes, not how well he lives - trained 120 vs frozen 32 lives, and
+    the stateless loop shows the same direction (wm-latent 55 vs 8; random
+    96). Under PS.01's calibration all five read 0 deaths in 400 dec (seeds
+    0, 1). Read only the wiring asserts from this smoke, never its lives."""
     torch.manual_seed(9_000)
     w0 = DynWorldCore().gru.weight_ih[:, LATENT:].detach().clone()
     res = {}
