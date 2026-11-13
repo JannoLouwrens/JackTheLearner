@@ -1,112 +1,126 @@
 # PROGRESS — for the owner, on a phone
 
-Written 2026-11-12 06:45 UTC by the Director (daily sitting). Rewritten every
+Written 2026-11-13 06:45 UTC by the Director (daily sitting). Rewritten every
 day; git keeps the old ones.
 
 ## What Jack can do today
 
-**New since yesterday: the learning brain has lived whole lives.** In the
-first world (W0) the brain that learns — not a script — drove the body through
-five deaths on each of three runs, with hunger, thirst, cold and every W0 sense
-on, a diary carried across each death, and a save-and-resume in mid-life that
-came back bit-for-bit. His weights changed as he lived (by 22%). Two fakes
-were run to prove the test can fail: a frozen copy of him (caught: nothing
-changed) and a copy with its diary wiped (caught). This is test `LF.03`, and
-it is roadmap milestone 1.
+Same as yesterday, with one honest sharpening. The learning brain lives whole
+lives in the first world (W0): hunger, thirst, cold, his senses, a diary
+carried across deaths (test `LF.03`, milestone 1). **He does not yet learn to
+find food by living**, and yesterday the workers found out a lot about why:
 
-What that does **not** mean, so it is not oversold:
+- They tried six cheap explanations, each with a pass/fail rule written down
+  before looking — eyes too high to see floor food, no smell, a too-short
+  planning horizon, too-timid wandering, being born too far from food, being
+  "nursed" near food and then weaned. **All six are dead.** Nursing does feed
+  him, but once weaned he drifts away again. He cannot yet connect "I walked
+  this way" with "then I ate".
+- A second suspect turned up in the world itself: **his body clock is wrong.**
+  The world says one of its days is 20 minutes (72× faster than life). Cold
+  obeys that. Hunger and thirst run 6–15× faster still: he dies of thirst in
+  about 9½ simulated minutes — less than half a day, before a night has ever
+  passed. I ruled today that the world has one clock, and ordered the fix
+  raced against the current world before it ships.
 
-- He is bad at living. He ate about twice in five lives; lives last 5–9
-  simulated minutes. Nothing yet shows a later life going better than an
-  earlier one.
-- He carries his diary but does not consult it — nothing in his decisions
-  reads it yet.
-- He still cannot move well, hear with his own ear, or use words.
+New: he has a better short-term memory. A "ring" memory invented in the lab
+beat the old one (0.90 against 0.58 on five fresh runs, both fakes caught) and
+now holds that seat by contest (`WM.02`).
 
-The test ladder reads **109 of 264** demonstrated (108 yesterday).
+The test ladder reads **107 of 267** (109 of 264 yesterday). Two tests were
+won, and two were lost for bookkeeping reasons, one of which matters (below).
 
 ## Where he stands on the route (9 milestones)
 
-1. **One whole life** — **met** (`LF.03` passed, a day after it was ordered).
-2. **A world and a curriculum that can teach** — three world-rule tests still
-   red, deeper world half built, no curriculum. Not touched yet.
-3. **Brain shape decided by contest** — the "who controls the body" contest
-   is running on a free GPU right now; the "how unified is the brain" contest
-   is being repaired (see below). A memory contest is ready to run.
-4. **A body that moves** — waits on the controller contest in 3.
-5. **Every sense in one brain** — unchanged. 6. **Words** — nothing of his own.
-7–9. Keeps learning / a living Jack / beyond the jungle — not started.
+1. **One whole life** — met, with a caveat that appeared yesterday: a speed
+   test it leans on (`LC.02`, "the brain is fast enough to live a life") went
+   red while our own experiments were loading the box. Probably the box, not
+   the brain. First job today is to re-run it on a quiet box and know.
+2. **A world and a curriculum that can teach** — now really moving. Shelter
+   rule fixed; the two 73-day-old red world rules are diagnosed down to one
+   cause (the clock above); curriculum research written, six rival curricula
+   built and sized; deeper world's two broken tests repaired, not yet run.
+3. **Brain shape decided by contest** — memory seat won. The "one brain or
+   several experts" contest (`UB.10`), stuck 59 days, is running on a free GPU
+   as I write (third attempt this morning). The "who controls the body"
+   contest lost a third finished run to a failed download; that loss is now
+   fixed for good and the contest restarts today.
+4. **A body that moves** — waits on that controller contest.
+5–9. Senses / words / keeps learning / living Jack / beyond — unchanged.
 
-## What moved since yesterday (9 worker runs, all completed)
+## What moved since yesterday (51 worker runs, none failed)
 
-- `LF.03` passed — above.
-- `T1.14` ("our measurements are bigger than run-to-run noise") passed with a
-  new control that is actually run: feed the same random seed three times and
-  the test must reject it. It did. 45 tests that hung on this are unblocked.
-- The body-controller contest (`D1.0`, four rival controllers, each judged
-  against its own untrained twin) was rebuilt as 13 small jobs and started on
-  Colab at 05:21. It needs about 25 GPU-hours.
-- The one-brain contest (`UB.10`): a worker found its test bed could not tell
-  the rivals apart, tried a harder one on a real GPU, and that one failed the
-  other way (every rival fell below the "has learned anything" floor). The
-  worker did not tune it by eye: four candidate settings and the rule for
-  choosing between them were written down before any is run.
-- The Kaggle mystery is solved: your Kaggle account's 30 free hours were
-  already used up this week by the other project (`next-l1-icsi-*`). Our code
-  mistook Kaggle's refusal for success and then billed itself for waiting.
-  Fixed; 3 wrongly billed hours refunded on our meter.
+- `WM.02` passed — the ring memory, above.
+- `LF.04` ("does living make him better", him against a frozen copy of
+  himself) was written and registered with both fakes. **It has not run** —
+  see below.
+- The world: shelter clause green on all three runs; the cause of the two
+  oldest red tests found; a four-way race of "how the sky chills a sleeper"
+  run to an honest no-winner.
+- The one-brain contest: test bed chosen by a rule fixed in advance, run
+  twice on a real GPU, one defect repaired without moving any pass mark.
+- Finished GPU runs can no longer be lost to a failed download (`S5`).
+- Kaggle will run CPU-only jobs for free even when the GPU hours are gone
+  (measured in your session), and faster per learner than this box.
 
 ## What did not move
 
-- The world repairs, the deeper world and the curriculum: not started. The
-  workers spent the day on the creature test and the two GPU contests, which
-  is the order I gave them.
-- One finished GPU run (1.1 h) was lost because the result file's download
-  failed after the computing was done. Third time this has happened. Repair
-  ordered today (S5) — the result will also be read from the job's printed
-  output.
-- One machine test (`T0.28`) turned red overnight as a side effect of my
-  settling old decisions: it treats "no decision is waiting" as "the page is
-  broken". Repair ordered.
+- **`LF.04` — the most important test — sat unrun for 46 hours.** An old rule
+  (correctly) forbids 4-hour jobs on this box, which serves paying customers;
+  meanwhile unregistered experiments used the whole CPU day (62,000 s against
+  a 57,600 s ceiling). That was my order's fault: I ordered a test the box
+  could not run. Fixed today: it runs on free Kaggle CPU, building that route
+  is the first machine order, and no new side-experiments start until it has
+  a verdict.
+- The controller contest: no GPU ran for ~21 hours (Kaggle spent by the other
+  project, Colab refusing) — and my order for it had fallen out of yesterday's
+  page by mistake. The auditor caught it. Restored.
+- "He can move" (`T2.01`), the biggest single blocker (25 tests behind it):
+  still waiting on that contest.
 
 ## What the workers are on next
 
-1. `WM.02` — a 25-minute run: a new working-memory design from the lab against
-   the current one, for a seat nobody holds.
-2. **`LF.04` — does living teach him?** His later lives against his own
-   frozen twin's, on every run, not on average. If he does not improve, that
-   is the finding and finding out why becomes the work.
-3. Watch the controller contest; seat the winner; retry "he can move".
-4. Finish choosing the one-brain test bed, then run that contest.
-5. The red world rules; the deeper world; the curriculum contest.
-Then: make the diary enter his decisions.
+1. Re-run the speed test on a quiet box (minutes).
+2. Run the two repaired deeper-world tests (about an hour).
+3. Read the one-brain contest's result; then restart the controller contest.
+4. Race the honest world clock against today's world.
+5. Build the free Kaggle-CPU route and send `LF.04` through it; then the
+   curriculum contest (six rivals), then **your scale question**: a new 3×
+   contest of all the learning brains plus the ring memory.
+6. Your video: a phone-playable clip of his latest life, hunger and thirst
+   overlaid, at `/data/jack-video/latest.mp4` once built. Not built yet.
 
-Machine work (3 orders): never lose a finished GPU run to a download; stop
-guard tools being red by design; six passes must hold on every run, not the
-average.
+**When can a bigger-scale result honestly be expected?** The 3× contest needs
+the Kaggle-CPU route (a day or two of building), then a pilot to price it.
+Realistically a first 3× verdict in one to two weeks. The full 10× (`LC.07`)
+is 200–270 Kaggle session-hours — weeks, and only after 3× shows it is worth it.
 
 ## The four machine numbers
 
 | | |
 |---|---|
-| Points per worker run | 0.11 (108 → 109 over 9 runs: two first-ever passes, one machine test lost) |
-| Slots lost to budget | 0 |
-| Free GPU-hours expired | 0 so far. Used this week: 2.9 h Colab. Kaggle's 30 h went to the other project. The controller contest wants ~25 h on Colab alone — Colab may cut it off; if so the rest waits for Kaggle's weekly reset |
-| Oldest unrepaired blocker | 73 days (`W.1`, `W.2`, world heat and needs rules) — owned, not started |
+| Points per worker run | −0.04 (109 → 107 over 51 runs: 2 won, 4 lost, among them the speed test under load and one machine self-check) |
+| Slots lost to budget | 0 worker slots. But the CPU day ran out at 22:48 and refused three experiments |
+| Free GPU-hours expired | None of ours: Kaggle's 30 h were used by your other project. Colab 5.1 h used this week |
+| Oldest unrepaired blocker | 93 days: "he moves better than random" (`T2.01`). The 73-day world rules are diagnosed and ordered |
 
 ## Dead or stuck
 
-- Nothing is dead. All five agents ran on time and finished cleanly. Pushes
-  work. Disk: 6.1 GB free on the system disk (workers stop under 3).
-- Usage meter: reads 19% of the week (resets 13 Nov 04:00 UTC). Last night's
-  76% reading was the false one; 63% of what has been used is not this
-  project's.
-- Colab allows one job at a time on your account, so the two GPU contests
-  queue behind each other.
-- Old paperwork: 4 stale process decisions and 63 backlog rows remain (I
-  settled 3 and 10 today, none moved a pass mark).
+- Nothing is dead. Workers, auditor, re-checker and this review all ran on
+  time; pushes work. The paper scout last ran 12 Nov 06:00.
+- Disk: 5.6 GB free on the system disk (workers stop under 3) — shrinking
+  about half a GB a day; I will order a clean-up if it reaches 4.5.
+- Usage meter: 5% of the new week (resets 20 Nov). Readable.
+- Two tools exit red (`coverage`, `run verify`): one by design, one because a
+  new test's pass cannot be re-checked from its record. Repair ordered (S3).
+- Old paperwork: 4 stale process decisions and the old review backlog were not
+  touched today — the clock went to the rulings above.
 
 ## FOR THE OWNER
 
-Nothing needs a decision. For your information only: Jack's free Kaggle hours
-are shared with your other project, and this week it took all 30.
+Nothing needs you. One thing you should know I decided, because it changes his
+world: **hunger and thirst will be slowed to match the world's own clock
+(roughly 6–15× slower), if that version wins its race.** Lives get longer and
+cost more compute, but he will live through nights and have time to learn. It
+replaces an October hold on world edits that fired because nobody answered. If
+you disagree, one sentence in `docs/ORDERS.md` under INBOX undoes it.
