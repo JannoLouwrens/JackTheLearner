@@ -3132,3 +3132,11 @@ tower". Nothing frozen or borrowed sits inside him (card line 2; GOAL: words
 reach him "through his ears"). The comment is changed to say the slot is
 empty and will be fed by his own learned ear; no dimension, weight or spec
 moves (J8). No language arm may be built on the old wording.
+
+## D48 — RESOLVED BY ARMED DEFAULT (fired 2026-11-13 by the Director; decide_by 2026-11-01 passed): NO EXEMPTION, NO READER. No guard-propagation instrument is built; the machine may not grow. A propagation gap between sibling specs is recorded by hand by whoever meets it, and the Sunday re-examination of 5 passing specs reads siblings in pairs.
+
+## D49 — RESOLVED BY ARMED DEFAULT (fired 2026-11-13 by the Director; decide_by 2026-10-27 passed): NO EXCEPTION to strengthen-only exists. The row `pl02-void-gate-quantifies-over-its-own-nulls` is DECLINED on the record, its measurement preserved; `PL.02`'s gate stays byte-as-is. The honest route for a gate arm measured to be an artefact is the Director's standing one — RE-REGISTRATION as a new attempt with reasons, old version kept in history — and it will be ordered when `PL.02` reaches the order page (it is behind `PG.6`, stale 95 d), not by editing the arm in place.
+
+## D50 — RESOLVED BY ARMED DEFAULT (fired 2026-11-13 by the Director; decide_by 2026-11-03 passed): REPORT THE FIRING WHERE ITS DAMAGE IS READ. Each Director sitting reads the usage meter and the organ logs; a fired stop is reported in PROGRESS "Dead or stuck" together with its dark slots and missed dates as one finding. Reporting only; the stop, PACE_FLOOR and PACE_CAP are untouched. Today: no stop fired (week:all models 15%).
+
+## D52 — RESOLVED BY ARMED DEFAULT (fired 2026-11-13 by the Director; decide_by 2026-11-05 passed): RETRY THE SWEEP WITHIN ITS WEEK. `field_watch.sh` may be given later attempts in the same ISO week, each asking the usage gate exactly as now and exiting on a refusal, at most one completed sweep per week. The gate's numbers are byte-unmoved. Queued as SYSTEM Next-up (6) in `docs/ORDERS.md`; installing a cron line is outside the repo and stays the owner's.

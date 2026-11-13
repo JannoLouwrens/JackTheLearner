@@ -243,7 +243,8 @@ admits a failing seed (`ME.10`, `NE.00`, `LT.01`, `PG.4`, `PS.02`, `T2.20`):
 gate per seed, bars unmoved, start with `ME.10`. (2) `T0.13`'s 13 gate clauses
 that can never fire. (3) `run status`'s STEERING reader parses 0 items — aim
 it at this file or delete it. (4) `T0.33` `slack_predicts_refusal` reads False. (5) the dispatch
-BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Kaggle refuses — print UNKNOWN unless probed.
+BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Kaggle refuses — print UNKNOWN unless probed. (6) D52 fired:
+`field_watch.sh` retries within its ISO week on a gate refusal, one completed sweep per week at most.
 
 ---
 

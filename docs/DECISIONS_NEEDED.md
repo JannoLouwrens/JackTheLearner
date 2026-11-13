@@ -1632,6 +1632,8 @@ DECIDE: D48
              no existing organ can see it."
   decide_by: 2026-11-01
 
+ANSWERED D48 — resolved by armed default, fired 2026-11-13 by the Director; record in docs/DECISIONS_RESOLVED.md.
+
 DECIDE: D49
   class:     conduct
   blocks:    `PL.02` — the lane carrying `GOAL.md`'s only registered falsifier —
@@ -1662,6 +1664,8 @@ DECIDE: D49
   decide_by: 2026-10-27
 
 ---
+
+ANSWERED D49 — resolved by armed default, fired 2026-11-13 by the Director; record in docs/DECISIONS_RESOLVED.md.
 
 ## D46 — EVIDENCE ADDENDUM, 2026-10-20 06:4x UTC (overseer, 154th audit). NOT a re-opening, NOT a new decision, NOT a default fired. It CORRECTS THE PREMISE THIS ENTRY IS ARGUED ON: a material part of the blackout it prices as consumption was the gate acting on a meter reading that violates the meter's own declared invariant, and — as with `D40` in the 144th audit — the error direction blames the builder.
 
@@ -1797,6 +1801,8 @@ Not a change to the gate, the pace line, or the 90% stop. Not an
 owner-notification channel. Not retroactive re-dating of the rows the
 blackout broke — those are disposed row by row at the desk, as they were this
 morning. Only that the firing becomes legible where its consequences are read.
+
+ANSWERED D50 — resolved by armed default, fired 2026-11-13 by the Director; record in docs/DECISIONS_RESOLVED.md.
 
 ## D51 — PS.09's known-answer floor is measured UNREACHABLE: `KA_SIGNAL_MIN` 0.90 sits at-or-above the venue's own monotone ceiling on two of three seeds, so the signal-present arm can never fire as registered. Whether the floor is re-based is a threshold move no desk may make. (2026-10-20, builder, pre-committed branch (B) of THE KNOWN-ANSWER REFERENCE RULING)
 
@@ -2043,6 +2049,8 @@ often that rule is CONSULTED is close enough to re-timing the rule itself that
 a desk doing it quietly would be indistinguishable, in the log, from a desk
 loosening it. The default above is therefore written to be adopted by silence
 rather than executed by assumption.
+
+ANSWERED D52 — resolved by armed default, fired 2026-11-13 by the Director; record in docs/DECISIONS_RESOLVED.md.
 
 ## D53 — `SO.07`'s VOID has three repair options and a desk may legally take NONE of them: one is forbidden by the design/data split, one is a threshold move, and one routes to a decision that closed fifty days ago. Five dates, no work, and the row is undischargeable rather than late. (2026-10-25, Review, SUNDAY FULL)
 
