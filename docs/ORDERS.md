@@ -107,10 +107,10 @@ Then register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 5.
 **done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
 state: 11-13 10:40 W1.04 FAIL on (c) only (640e329): 5th-pct life 54.3/52.0 s vs 5600 s horizon, ~272/275 deaths energy.
-11-13 13:05 W1.00 attempt 2 VOID 'recorded inputs moved' (0.71 s): its pinned T3.06 attempt-1 row moved to history when T3.06 re-ran 09-22.
-REPAIRED 3a2513b (_pinned reads the exact ran_at from live row or history; 8 margins = registered values). W1.02 att 9 VOID (pin to W1.00 att 1 moved).
-13:08 LAUNCHED W1.00 attempt 3 detached (pid 3099380, /data/tmp/w1_00_attempt4.log), gated on LF.06 pilot pid 3090035 exiting (~65 min, 3 workers).
-Next: harvest W1.00; re-pin W1.02 to its verdict (do NOT re-run W1.02 first); then race W1's energy clock (as J6(b)); re-run W1.04; register DP.05-in-W1.
+11-13 15:45 W1.00 att 3 HARVESTED (edd3e61): FAIL (b) "immaterial" at n=20, a reading. Selection real (repeat ml 54.75 vs white 41.81 s,
+t~16); no Pile A margin fires: dwell ratio 6.94 but t~1.5 and floor f_dw .136 = 22x its std (att-1 sizing assumed sd .0083; measured .244).
+W1.02 RE-PINNED to att 3 + history-aware pin (edd3e61); not run (day CPU ceiling spent, 58472/57600 s).
+Next: run W1.02 (cpu, 3 seeds x 28k decisions) when the day budget admits; then race W1's energy clock (as J6(b)); re-run W1.04; register DP.05-in-W1.
 
 ### J8 — The hand-over gate: a Jack trained here still learns on another machine
 **Why.** Owner 11-13: the finished Jack is "trained here, handed to people,
@@ -262,6 +262,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 15:45) J1 could not take its next step (XL.00 re-run, ~20 min): the day CPU ceiling was already spent (58472/57600 s at 15:20, needs_clock_race + w1_00_attempt4 meters), so `admit` refuses. J1 still waits on the T2.10 ruling below; slot went to J7.
 - (JACK 11-13 14:25) J1(2) is blocked one level deeper than the order says: LF.04 <- LF.03 (stale) <- LF.02 (stale) <- T6.03 BLOCKED <- T2.10 FAIL (paraphrase recall@1 0.0, conjunct added 08-31, ME.11's known weakness). LF.02 cannot re-certify save/resume while a language-memory paraphrase claim is red, so the creature gate (and LF.06) waits on T2.10. Ruling wanted: is T6.03->LF.02 a true prerequisite of 'a life can be saved and resumed', or does J1 now include repairing T2.10? Note CHAMPIONS.md:102: the ME.11 arena SETTLED 08-31 with all five scorers INFEASIBLE on paraphrase (even pretrained MiniLM .0667, ineligible inside him anyway), so T2.10 has no known path to green and LF.04 waits indefinitely without a ruling.
 - (JACK 11-13 12:30) J8's cores.py:75 comment fix (`language` = 'his own learned ear; EMPTY today') NOT made: impl_sha hashes cores.py raw bytes for 8 specs (LC.01/02/03/07/08, LF.03, SH.01/02), so a comment edit stales LC.02 (needs a quiet box) and LC.03 (~90 core-h) for no code change. Ruling wanted: batch it with the next real cores.py change, or make IMPL_DEPS hashing comment-blind (SYSTEM).
 - (JACK 11-13 11:50) W0.DIAG's hash-salt differential child hangs rather than computes: errored TimeoutExpired after ~25 min in the 10:38 chain (spec itself 0.03 s), and a clean re-run's child sat at 1 s CPU for 10 min. Costs every W0.DIAG re-buy ~25 min of lock; also a dirty doc (docs/LAB.md) stamped W0.DIAG dirty and blocked W1.00 even though prose docs are meant to be exempt.

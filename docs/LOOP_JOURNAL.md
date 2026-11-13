@@ -795,3 +795,8 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   printed, not gated; rc 0, and a planted 7th PASS-on-FAIL pair still gives rc 2 (b7a0364). FAIL-UNOWNED counts an id in an open ORDER
   as owned (4 -> 1, T2.07). Banked podd 6 and unreachable 115 by ruling 4. coverage.py net -24 lines. Every worker who read rc 2 as
   "something broke" now gets rc 2 only for a real false claim. Served: 4 (an exit code that means something) and 5.
+- 2026-11-13 ~15:45 UTC JACK J7 (J1 skipped: day CPU ceiling spent 58472/57600 s, admit refuses XL.00; T2.10 ruling still pending).
+  Harvested W1.00 att 3, recorded at 14:48 but uncommitted: FAIL (b) "immaterial" at n=20, a reading by its own registration. Repeat is
+  the real strongest non-learner (ml 54.75 vs 41.81 s, t~16) but no Pile A margin moves: dwell ratio 6.94, t~1.5, and the white2-white
+  floor in dwell is .136 +- .244, 30x the per-seed sd attempt 1 sized from. Re-pinned W1.02 to att 3, history-aware (edd3e61); not run.
+  Served: 4 (a pre-registered n=20 FAIL is read and kept, not re-sized) and 3 (the W1 venue's null is now the measured one).
