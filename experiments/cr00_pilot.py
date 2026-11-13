@@ -111,7 +111,10 @@ def block_order(arm: str, seed: int) -> list:
 
 
 def main(arm: str, seed: int = 89, train: int = 40000, exam: int = 20000,
-         out_path: str = "", smell: bool = False) -> None:
+         out_path: str = "", smell: bool = False, exam_lives: int = 0) -> None:
+    """exam = exam DECISIONS (CR.00). exam_lives > 0 (CR.01): stop once that
+    many exam lives have ENDED, `exam` then being the cap (EXAM_CAP); the
+    counted lives are never censored, so fed fraction is over complete lives."""
     import torch
 
     from . import cores
@@ -194,8 +197,10 @@ def main(arm: str, seed: int = 89, train: int = 40000, exam: int = 20000,
     t0 = time.perf_counter()
     life, k_life, ate0 = 0, 0, 0
     born = stage_now()
+    n_exam_done = 0
     with open(out_path, "w") as out:
-        while L.k < train + exam:
+        while L.k < train + exam and (exam_lives <= 0
+                                      or n_exam_done < exam_lives):
             L.step()
             k_life += 1
             died = w.died_this_decision
@@ -211,6 +216,8 @@ def main(arm: str, seed: int = 89, train: int = 40000, exam: int = 20000,
                        "wall_s": round(time.perf_counter() - t0, 1)}
                 out.write(json.dumps(row) + "\n")
                 out.flush()
+                if born[0] == "exam" and died:
+                    n_exam_done += 1
                 life, k_life, ate0 = life + 1, 0, ate
                 born = stage_now()
 
@@ -239,4 +246,5 @@ if __name__ == "__main__":
              int(a[2]) if len(a) > 2 else 40000,
              int(a[3]) if len(a) > 3 else 20000,
              a[4] if len(a) > 4 else "",
-             smell=os.environ.get("CR00_SMELL") == "1")
+             smell=os.environ.get("CR00_SMELL") == "1",
+             exam_lives=int(a[5]) if len(a) > 5 else 0)
