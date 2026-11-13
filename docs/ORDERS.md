@@ -94,9 +94,9 @@ serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow the
 formerly-red clause explained.
 state: 11-13 04:45 W.2 red (c) only: starve 1700 s vs 25200, thirst 570 vs 3600. NE.01 red ok_spread/ok_forager AND gate 5 (random deaths 5/5 hyperthermia, share 1.0>.60).
 11-13 08:25 (a) DONE: W.1(b) on k=72 (fa0f7fc), W.7 control (98134d7). 12:20 W.7 IMPLEMENTED (2685dd9); sleep taus also off-clock (k72 wants 910/210 s).
-11-13 14:45 (b) race harness BUILT (386bfba, experiments/needs_clock_race.py; rule declared in docstring). W.2's horizons are sized from shipped
-constants (DEPRIVED 3000 s < k72 thirst 3720/hunger 25500) -> harness scales per arm; W.2 needs that re-registration before k72 ships.
-LAUNCHED detached (pid 3130430, /data/tmp/needs_clock_race.log), gated on W1.00; 2 workers, 20 cells -> /data/jack-logs/needs_race. Next: tally; W.7/W.1 runs.
+11-13 15:45 (b) RACE DONE (e4c10cd, docs/research/NEEDS_CLOCK_RACE.md): k72 does NOT ship. W.2(c) k72 5/5 vs 0/5, but NE.01 ok_forager .2 vs .8,
+exercised 0 vs 1, ok_spread 0 vs .4; cause share 1.0 HYPERTHERMIA both arms (random lives die of heat ~500 dec either clock; k72 forager cooks asleep,
+occ .998, no thirst wake). Heat is W0's binding fault. Next: (c) declare+race heat/shelter geometry and a thirst-independent forager heat rule, then re-race.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow

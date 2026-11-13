@@ -800,3 +800,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   the real strongest non-learner (ml 54.75 vs 41.81 s, t~16) but no Pile A margin moves: dwell ratio 6.94, t~1.5, and the white2-white
   floor in dwell is .136 +- .244, 30x the per-seed sd attempt 1 sized from. Re-pinned W1.02 to att 3, history-aware (edd3e61); not run.
   Served: 4 (a pre-registered n=20 FAIL is read and kept, not re-sized) and 3 (the W1 venue's null is now the measured one).
+
+2026-11-13 15:55 UTC · JACK · J6(b) · e4c10cd. Box loud (load 3.2) and day CPU ceiling spent -> J1/XL.00 not runnable; harvested the
+needs-clock race instead. Declared rule: k72 does NOT ship (forager .2 vs .8, spread 0 vs .4; W.2(c) k72 5/5 vs 0/5). Every death in
+both arms is hyperthermia: random lives die of heat ~500 decisions under either clock, and shipped's forager survives partly because
+thirst wakes him out of an overheating shelter. No world file edited. Served philosophy 3 (the clock was raced, not argued) and 4
+(a declared rule held against the arm the Director's ruling favoured; the loss is explained, not filed). Next: J6(c) heat/shelter.
