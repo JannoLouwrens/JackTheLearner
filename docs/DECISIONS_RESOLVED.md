@@ -3093,3 +3093,42 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## 2026-11-13 08:45 UTC — Director, second DAILY sitting (after the owner's END-FIT): rulings
+
+**5. `UB.11`–`UB.13` and `TA.03` need the fusion contest RUN, not WON; the
+trunk is A0.** `UB.10` returned FAIL on attempt 3 (`de563c4`): rig green, no
+arm separates from the incumbent A0 (medians within .016; A2 beats A0 on every
+seed but the top arm changes by seed). The three specs test properties of the
+trunk — ablation matrix, synergy over the ensemble, retrieval gate — and
+nothing in them reads a winner. The edge as written (`UB.10` PASS) makes a
+legitimate "nobody won" block four specs forever, and hunting a venue until
+someone wins is the thing card line 4 forbids. So: their dependency becomes
+"`UB.10` has a non-VOID verdict", asserted inside each spec from the ledger,
+and each declares its trunk before running — A0, the incumbent, because no
+challenger earned the seat. Where cheap, A2 (median top) is carried as a
+second, reported arm. No bar, control or seed count changes. If a later venue
+separates the arms, the four are re-run on the winner. They queue on the GPU
+after `D1.0`.
+
+**6. END-FIT is placed on the route; it does not jump the queue.** The owner's
+finished Jack (GOAL.md's closing section; END-FIT in `CHAMPIONS.md`) is what
+he must BECOME — the owner's to say, and said. Placement: ROADMAP M2 gains W2
+(the tool chain and buildable shelter), M3's done-when gains END-FIT's gates,
+M4 gains hands, M6 the advice gate, M7 the hand-over. Of the gates END-FIT
+lists as "none registered", ONE is ordered now — the hand-over gate (J8),
+because it is cheap, it needs only the off-box CPU route S1 is already
+building, and it protects every later seat decision; it is exempt from
+repair-before-register as a spec an order needs. The collapse guard rides in
+J3 (the 3× core race implements LEARNING_CORE §5.4). The grip rule, the size
+cook-off, the advice gate and W2 are Next-up 6, opened one at a time: W2
+cannot be specified honestly before W1 has fire and parts, and hands before
+the control seat has a holder. `LF.04` stays first, as the owner's session
+itself wrote.
+
+**7. The `language` slot's specification is stale and is corrected in words
+only.** `cores.py:75` calls it "a sentence embedding from the frozen text
+tower". Nothing frozen or borrowed sits inside him (card line 2; GOAL: words
+reach him "through his ears"). The comment is changed to say the slot is
+empty and will be fed by his own learned ear; no dimension, weight or spec
+moves (J8). No language arm may be built on the old wording.

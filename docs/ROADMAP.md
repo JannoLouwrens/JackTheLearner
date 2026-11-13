@@ -5,11 +5,10 @@ this week. This page is the bridge: the milestones in between, so the Director
 always knows what comes next when the current orders are finished — in month
 two, month six, with nobody watching.
 
-**Rules.** A milestone is DONE only when its named specs PASS in the ledger —
-never by argument. The Director updates the `status:` lines every Sunday, adds
-spec ids as they are registered, and keeps at least one open order on the
-earliest unfinished milestone. Later milestones may run in parallel when a
-compute lane is free (GPU work beside CPU work). What a milestone IS comes from
+**Rules.** A milestone is DONE only when its named specs PASS in the ledger.
+The Director updates `status:` every Sunday, adds spec ids as registered, and
+keeps an open order on the earliest unfinished milestone; later ones may run
+in parallel when a compute lane is free. What a milestone IS comes from
 `GOAL.md` and is the owner's; how it is tested may only be strengthened.
 
 **Which Jack.** Two model stacks exist. The learning this project has actually
@@ -31,24 +30,28 @@ but does not yet improve or use his diary: `LF.04` (order J1) asks that next.
 passivity dies, outcomes differ, and thinking ahead pays; the order he meets it
 in decided by cook-off ("no curriculum we write" is the incumbent arm).
 done when: `W1.00`–`W1.04` and the world-rule gates `W.1`–`W.8` PASS; `DP.05`'s
-question passes in W1; `NE.01` PASS; the curriculum cook-off has a winner.
-· status (11-11): `W1.01`, `W1.02` pass; `W1.00` FAIL, `W1.04` VOID; `W.1`, `W.2`,
-`NE.01` FAIL; curriculum not started (orders J6, J7, J5).
+question passes in W1; `NE.01` PASS; the curriculum cook-off has a winner; then
+W2 (owner 11-13): tree → wood → fire → cooked food and a buildable shelter exist
+as specs and PASS. · status (11-13): `W1.02` passes; `W1.00` FAIL, `W1.04`
+re-running; `W.1`, `W.2`, `NE.01` FAIL (one clock ruled, k = 72); curriculum
+arms built, unraced; W2 unregistered (orders J6, J7, J5).
 
 **M3 — The shape of his brain, by verdict.** Every architecture seat in
 `docs/CHAMPIONS.md` held BY VERDICT, none by default or decree: the control path
 (`D1.1`), the learning core at scale (`LC.07`), how the senses fuse and how
 unified the brain is (`UB.10`, `BO.01`), fast and slow (`DP.01`–`DP.03`), and
 its size (a size cook-off, to be registered).
-done when: those seats read BY VERDICT. · status (11-11): no architecture seat
-moved this week; control VACANT (`D1.1` unregistered), fusion UNDECIDED
-(`UB.10` VOID 59 d), learning core's verdict is a VOID (orders J2, J4).
+done when: those seats read BY VERDICT and the seated brain passes END-FIT's
+gates (`CHAMPIONS.md`). · status (11-13): working memory BY VERDICT (`WM.02`);
+fusion raced, UNDECIDED (`UB.10` FAIL, no arm separates); control VACANT
+(`D1.0` running); learning core's verdict is a VOID (orders J2, J3).
 
 **M4 — One body that moves.** He moves well, in the same body he survives in —
 today movement is tested on a humanoid and survival on a wheeled climber.
 done when: `T2.01` PASS under the seated controller; the survival world runs
-with the humanoid body (`LT.08`). · status (11-11): `T2.01` FAIL since Aug 12, behind `T1.14` (running) and
-`D1.1` (orders J1, J2).
+with the humanoid body (`LT.08`); hands that hold, carry and strike, the grip
+rule won in a cook-off (unregistered). · status (11-13): `T2.01` FAIL since
+Aug 12, behind `D1.0` (order J2).
 
 **M5 — Every sense, in the one brain, each load-bearing.** Sight from his own
 eye, hearing with his own learned ear, touch, balance, smell, taste, pain,
@@ -64,7 +67,8 @@ ear (`HR.1` FAIL, bar held by D54's default); language slot empty.
 says true things about himself, is nobody's puppet, and can be talked to.
 done when: the word-grounding cook-off (`LG.03`–`LG.06`) has a winner; `LG.00`,
 `LG.02`, `SO.02`, `NE.09` PASS with his own ear and voice in the loop; `HR.*`
-claim specs PASS without a ready-made model inside him. · status (11-11): no
+claim specs PASS without a ready-made model inside him; advice in words makes
+him try a step sooner and a lying adviser loses him. · status (11-11): no
 learned part of Jack speaks or hears yet. `LG.00`, `LG.02`, `SO.02` pass in
 rigs whose speaker is the diary plus a ready-made model — parent-rig results,
 not his words (Director ruling 11-11); nothing connected in his world.
@@ -74,7 +78,8 @@ not his words (Director ruling 11-11); nothing connected in his world.
 `ME.7`), explores because he wants to (`CU.1`–`CU.7`, `T5.06`), does not
 saturate (`T5.08`), and death does not erase what he learned (`XL.01`, `NE.08`).
 The ladder and the apple: he climbs it unprompted (`LT.03`+).
-done when: those PASS. · status (11-11): none run; `XL.01` close but failing.
+Handed to another machine he keeps what he knew and learns more (order J8).
+done when: those PASS. · status (11-13): none run; `XL.01` close but failing.
 
 **M8 — A living Jack.** Hours-long lives with everything at once; he remembers
 across sessions and deaths; he can be watched, talked to and left things.
