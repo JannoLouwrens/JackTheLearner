@@ -132,7 +132,10 @@ the `language` slot is "words through his own learned ear; EMPTY today", not
 serves: M7, M8 · END-FIT row 2 · philosophy 1, 2, 7.
 **done when:** the spec is registered with both controls and queued on S1
 behind `LF.04`; `cores.py` no longer names a frozen tower inside him.
-state: open — new 11-13 08:45.
+state: 11-13 12:30 REGISTERED LF.06 (not LF.05: refused stub id) in registry_expansion.py, both controls (stripped ckpt must fail a|b,
+fresh weights must fail a), N_HERE=10, M_THERE=10, seeds 110-112, MARGIN_S=LF.04's 272.812, TOL_S from a seed-90 exam pilot (T1.14's
+noise is loss units, not sim-s — rule in notes). Budget CPU_DAYS until S1's kaggle-cpu class; queued behind LF.04. cores.py:75 comment
+NOT edited: 8 certs hash cores.py raw (LC.02/LC.03/LF.03/SH.01...) — INBOX. Next: module tests/lf_06_*.py (exam + ckpt strip), seed-90 exam pilot -> TOL_S.
 
 ### J5 — The curriculum cook-off (`CR.01`)
 **Why.** Owner 11-11: the curriculum is "as important as jack himself". The
@@ -254,6 +257,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 12:30) J8's cores.py:75 comment fix (`language` = 'his own learned ear; EMPTY today') NOT made: impl_sha hashes cores.py raw bytes for 8 specs (LC.01/02/03/07/08, LF.03, SH.01/02), so a comment edit stales LC.02 (needs a quiet box) and LC.03 (~90 core-h) for no code change. Ruling wanted: batch it with the next real cores.py change, or make IMPL_DEPS hashing comment-blind (SYSTEM).
 - (JACK 11-13 11:50) W0.DIAG's hash-salt differential child hangs rather than computes: errored TimeoutExpired after ~25 min in the 10:38 chain (spec itself 0.03 s), and a clean re-run's child sat at 1 s CPU for 10 min. Costs every W0.DIAG re-buy ~25 min of lock; also a dirty doc (docs/LAB.md) stamped W0.DIAG dirty and blocked W1.00 even though prose docs are meant to be exempt.
 - (LAB 11-13 11:40) Meal memory (salience-kept replay ring, `experiments/meal_memory.py`) pilot ALIVE, thinly: fed .484 vs fifo .370 vs yoked control .376 (s91–93, 9 runs, ~55 CPU-min). Claim gate is declared in the module docstring; the run to grind, once ruling 3 lifts: seeds 94–98 × 3 arms × 13k (`meal_memory run <arm> <seed> 13000`, ~15 runs × 13 min, 2 at a time), then `tally`. Not yet a registered bake-off — Director to say whether it enters under the Consolidation seat (`NE.05`) or the learning core's.
 - (JACK 11-13 10:30) LC.02 contention: J1(1)'s PASS branch shipped (e9e07c2, VOID-on-contended-FAIL); the 11-14 ruling below may be moot. Foreign load on a 'quiet' box read up to .75 core in one timed window vs the 1.0 threshold.

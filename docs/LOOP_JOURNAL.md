@@ -748,3 +748,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   New: the sleep clocks are off-clock too (tau_wake k 93.6, tau_sleep 94.5), so J6(b)'s k=72 arm must carry them. Controls good: planted k1/k60
   fail, k72 passes, the k=1 null rejects. No ledger row yet (lock). Served: 4 (a test that could fail, and does, with a named cause) and 1
   (a world on one honest clock, so a night can teach him before thirst kills him).
+- 2026-11-13 ~12:30 UTC JACK J8 (load 3.7, so not J1(1)-style work; J1(2) waits on S1's kaggle-cpu Budget class; W1.00 holds the lock for
+  J7/J6, healthy at 3x96% CPU). Registered LF.06, the hand-over gate: trained 10 lives here, one checkpoint, loaded on a Kaggle CPU kernel;
+  (a) frozen exam there = exam here within TOL_S (LF.04's margin rule in exam units, from a seed-90 pilot), (b) 10 more lives there beat his
+  frozen hand-over twin by LF.04's 272.8 s; controls stripped-ckpt and fresh-weights must fail; same hardware -> VOID. No run, no ledger row.
+  Did NOT edit cores.py's 'frozen text tower' comment: it would stale 8 certificates incl. LC.03 (~90 core-h); INBOX for a ruling.
+  Served: 7 (END-FIT row 2 now has a test that can fail) and 4.

@@ -8524,6 +8524,67 @@ EXPANSION: list[Spec] = [
                "so the verdict can say which. ~80 min/seed (2 workers), "
                "hence cpu<48h envelope; run detached."),
 
+    Spec("LF.06", 2, "The hand-over: a Jack trained here still learns on another machine",
+         hypothesis="The seated learning core (wm-latent), after N_HERE = 10 "
+                    "lives in lethal W0 on THIS box, is saved as ONE checkpoint "
+                    "(learner weights, optimiser state, replay, world-written "
+                    "diary, needs, and every working-memory store the creature "
+                    "carries at run time) and loaded on a DIFFERENT machine (a "
+                    "Kaggle CPU kernel: other OS image, other CPU). On EVERY "
+                    "claim seed (110, 111, 112): (a) the frozen exam there "
+                    "matches the frozen exam here, |exam_there - exam_here| <= "
+                    "TOL_S; (b) after M_THERE = 10 more learning lives there, "
+                    "his last five lives there outlive the same five lives of "
+                    "his own FROZEN HAND-OVER TWIN (the same checkpoint loaded "
+                    "there, never updated, same world seeds and noise stream) "
+                    "by >= MARGIN_S.",
+         falsified_by="Any claim seed failing (a) or (b); either control "
+                      "passing the clause it must fail on any seed; or the "
+                      "two runs' hardware strings being equal (the hand-over "
+                      "did not cross machines -> VOID, not PASS).",
+         null_baseline="His own frozen hand-over twin (for b) and the exam "
+                       "taken here (for a): the creature that does not travel, "
+                       "or travels and stops learning.",
+         metric="handover_exam_match_and_gain_vs_frozen_twin",
+         budget=Budget.CPU_DAYS, seeds=3, depends_on=["LF.03"],
+         control="MUST FAIL, both RUN through the same two gates: (1) a "
+                 "STRIPPED checkpoint — weights only, diary emptied and "
+                 "optimiser + replay reset — must fail (a) or (b); (2) a "
+                 "FRESH-WEIGHTS twin (same architecture, new init, same "
+                 "exam) must fail (a). If (1) passes both, the stores the "
+                 "hand-over carries are not load-bearing and the spec FAILs "
+                 "as registered; that is a finding, not a reason to drop it.",
+         kills="END-FIT row 2 ('trained here, handed to people, still "
+               "learning on their machines') as a claim about the creature "
+               "as built; no winner may then be seated that the gate cannot "
+               "be run on.",
+         notes="REGISTERED 2026-11-13 (ORDERS.md J8; exempt from "
+               "repair-before-register by that order). Id LF.05 is skipped: "
+               "it is a REFUSED stub above (T5.08 owns it). DECLARED BEFORE "
+               "ANY RUN: EXAM = K_EXAM 5 frozen lives (optimiser never "
+               "stepped, exploration at its schedule's END value), exam world "
+               "seeds 9000+10*seed+i, one fixed noise salt; exam_* = mean "
+               "sim-s of those 5 lives; LIFE_CAP 12,000 decisions as LF.04; "
+               "a censored exam or twin life -> VOID. TOL_S = max(20, 2 * "
+               "sd_exam * sqrt(2/5)), sd_exam the pooled single-life sd of "
+               "the seed-90 pilot exam over 2 noise salts HERE — LF.04's "
+               "MARGIN rule in the exam's own units. T1.14's published "
+               "seed_noise is a held-out loss of the training recipe, not "
+               "sim-s of a life, so the order's 'within T1.14's noise' is "
+               "honoured by T1.14's FORM (a noise floor measured before the "
+               "claim), not by its number. MARGIN_S = LF.04's declared "
+               "272.812 sim-s (same venue, same 5-life-mean contrast). "
+               "Sizing from LF.03 (lives 313-547 sim-s, ~2,180 decisions, "
+               "~141 s wall each): here 10 lives x 3 seeds ~70 min on this "
+               "box; there per seed 10 learner + 10 twin + 2x(5 exam) + "
+               "controls ~ 40 lives ~ 1.6 h at Kaggle's 34 dec/s, 2 procs: "
+               "one Kaggle CPU session. Budget is CPU_DAYS until S1 creates "
+               "the kaggle-cpu class; it moves there budget-only, claim "
+               "byte-same, and is queued on S1 BEHIND LF.04 (if LF.04 FAILs, "
+               "(b) is expected to fail and (a) still stands as a finding). "
+               "Ring memory is not in the creature today (Next-up 3); if it "
+               "is seated before this runs, it rides in the checkpoint."),
+
     Spec("BD.01", 2, "A body that stands feeds a perfect path-follower more often than the pole",
          hypothesis="Under a privileged detouring oracle (body_probe "
                     "ORACLE=path, adhesion 0.5, 250 decisions, food ready at "
