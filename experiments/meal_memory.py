@@ -45,6 +45,17 @@ fed fraction over read trials. `meal` is ALIVE iff it beats `fifo` on >= 2 of
 exceeds each of theirs by >= 0.10. Otherwise DEAD. Secondary, not gated:
 median decisions-to-meal among fed trials.
 
+PILOT 11-13 11:34 — ALIVE by the rule, thinly: read fed meal 46/95 = .484,
+fifo 30/81 = .370, yoked 32/85 = .376; seed wins 2/3 and 3/3. Rows
+/data/tmp/meal_memory/*.jsonl. Most meals land within 5-16 decisions of birth,
+so the ruler is dominated by birth luck.
+
+CLAIM GATE, DECLARED BEFORE ANY CLAIM ROW (seeds 94-98, never piloted; 13000
+decisions/arm-seed; same arms, WARM, BIRTH_R, TRIAL): `meal` wins iff it beats
+`fifo` on >= 4 of 5 seeds AND `yoked` on >= 4 of 5 AND pooled fed fraction
+exceeds each by >= 0.10 AND, among read trials with born_d >= 0.7 m, its pooled
+fed fraction exceeds each of theirs. Anything else: DEAD, and it stays dead.
+
     nice -n 19 $PY -m experiments.meal_memory run <arm> <seed> [total] [out]
     $PY -m experiments.meal_memory tally [dir]
     $PY -m experiments.meal_memory selftest

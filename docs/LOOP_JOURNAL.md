@@ -731,3 +731,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   (W0.DIAG <- PS.01, and PS.01 blocks 21). Launched PS.01 -> W0.DIAG -> W1.00 -> W1.01 detached (pid 3050089, /data/tmp/w1_00_attempt2.log).
   The first launch died because $PY was unset in a fresh shell; launch_detached caught it at 15 s. Served: 1 (a world whose clock lets living
   teach) and 4 (a red read to its cause, not filed).
+
+## 2026-11-13 11:40 UTC — lane LAB (inventor)
+Tried: MEAL MEMORY — a second replay ring that keeps segments containing a meal (8+8 batches) vs the FIFO-256 holder vs a yoked
+meal-free ring (control). Rule committed first (dabd2bf). Nursery trials, s91-93, 6.5k: fed meal .484 (46/95), fifo .370, yoked .376;
+seed wins 2/3, 3/3; margins .114/.108 vs .10 -> ALIVE, thinly (ruler is mostly birth luck; walks > 20 decisions 16 vs 6 vs 10).
+Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers via ORDERS INBOX. No ledger row, no spec.
