@@ -992,12 +992,12 @@
         "VO.01": 155.54,
         "detached:cr00_race.log": 3706.45,
         "detached:gamma99.log": 3738.49,
-        "detached:race.log": 4200.01,
+        "detached:race.log": 4800.02,
         "detached:run.log": 10319.9,
         "detached:run_1113.log": 2278.7,
         "detached:ub10_sweep4.log": 1259.36
       },
-      "used_s": 28189.02
+      "used_s": 28789.03
     }
   },
   "overruns": [
