@@ -54,8 +54,9 @@ Contention precondition shipped e9e07c2: FAIL with >1.0 foreign core in any time
 jiffies, planted 2-spinner load must read >=1.5 every seed. Attempt 22 PASS on it (planted 2.41, foreign max .75; T 6.57-8.07; trunk .34).
 11-13 13:30 J1(2): LF.04 kaggle-cpu arm route built (1913430, LF04_BACKEND=kaggle-cpu; gate/ledger stay local). Live 1-life smoke,
 s90, 183 s, 0 GPU-h: learner 416.0 / twin 347.2 s. Same commit HERE: twin 365.4 s (ate 1 vs 0) -> frozen lives are NOT bit-equal across
-ARM/x86 (paired arms share one kernel, so LF.04 is unaffected; LF.06(a)'s TOL must absorb this). Next: S1's Budget class + runner
-routing (LF.04 still CPU_DAYS), then `LF04_BACKEND=kaggle-cpu` run LF.04 detached: 6 kernels (3 seeds x exp+ctrl), ~1.3 h each.
+ARM/x86 (paired arms share one kernel, so LF.04 is unaffected; LF.06(a)'s TOL must absorb this).
+11-13 13:55 Budget class + routing DONE (93b463b): KAGGLE_CPU 'kcpu<12h', LF.04 moved to it (budget only), arms route by budget. Next:
+`launch_detached.sh` `run LF.04` (6 kernels ~1.3 h each, holds the run lock ~8 h -> start after W1.00 att 3 exits); LF.03 is STALE (code moved).
 
 ### J2 — The control-path contest (`D1.0`) — attempt 4 in flight on Colab
 **Why.** `T2.01` (he moves better than random) is the biggest blocker in the

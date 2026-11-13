@@ -772,3 +772,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   The same commit on this box gives the frozen twin 365.4 s (1 meal vs 0): his lives are not bit-equal across ARM/x86. LF.04 pairs its arms
   in one kernel, so it is safe. This is a real input to LF.06's hand-over tolerance. S1's Budget class + runner routing remain before LF.04
   can run. Served: 6 (free compute off a customer box) and 1 (the creature gate's route).
+- 2026-11-13 ~13:55 UTC JACK J1(2) (load 3.5-4.5: no LC.02-style work). Built S1's remaining piece (93b463b): Budget KAGGLE_CPU 'kcpu<12h'
+  (43200 s per experiment call; not cpu-prefixed, so the tenant gate admits it as remote, 0 box CPU-s, 0 GPU-h), and LF.04 moved
+  CPU_DAYS -> KAGGLE_CPU (budget only, claim/gate/controls byte-same); its arm lives now route to Kaggle CPU kernels by the registered
+  budget, LF04_BACKEND=local forces local. Checked: gate admits, child timeout 259200 s. Not run: launching would hold the run lock ~8 h
+  while W1.00 att 3 waits for it. Next slot: launch LF.04 detached after W1.00. coverage still rc 2 (S3's known red, kcpu shows EMPTY).
+  Served: 6 (free compute off a customer box) and 1 (the creature gate gets a runnable route).
