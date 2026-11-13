@@ -827,3 +827,10 @@ and 6 (free GPU, though none was to be had today).
 once and was stopped clean -> account/auth/CLI fine, refusal is GPU-tier only. Kaggle account still at its 30 h cap. Nothing dispatched,
 so no new ERROR row on T1.14. Found `colab ls` lists files, not sessions (`colab sessions`) -> INBOX. Served philosophy 6 (free
 compute, not wasted on a dispatch that must fail) and 4 (no fake row). Small slot; no creature moved.
+
+2026-11-13 17:20 UTC · JACK · J5 (+J2 probe) · CR.01 registered. CPU orders shut (day ceiling spent; J1 waits on T2.10 ruling, J6 race
+after 00:00, J7 W1.02 needs CPU). J2: T4 still 'Service Unavailable' (5th), nothing dispatched. J5: registered the curriculum cook-off
+CR.01 as sized by the CR.00 pilot: 6 arms (null, staged, lp, frontier + shuffled/matched controls), seeds 130-132, 47 exam lives,
+margin .20 fed-fraction (2 SE) vs null AND matched every seed, staged also vs shuffled; teacher arm listed-absent; VOID on no-room null.
+Budget KAGGLE_CPU (39 CPU-h, S1 behind LF.04). Curriculum seat's arena NONE -> CR.01. No run, no ledger row.
+Served philosophy 3 (the curriculum is raced with controls that must fail, not chosen) and 5 (his world's staging is part of the loop).

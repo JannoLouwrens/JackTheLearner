@@ -219,7 +219,7 @@ registered challengers already fighting with no ring to fight in.
 
 | seat | champion | held | arena | challenger status |
 |---|---|---|---|---|
-| Curriculum (how his WORLD and his adults are staged across his lives) | **VACANT** — he is born into lethal W0 at a uniform pose and scored; no staging exists. Arms may stage only the world and what the adults say, never his actions (`docs/research/CURRICULUM.md`) | — | **NONE yet** — the cook-off (`CR.00` pilot, `CR.01` claim: null vs hand-staged vs learning-progress vs frontier vs teacher-proposed, shuffled-stage and matched-meal nulls as controls that must fail) is designed in `CURRICULUM.md` §4 and NOT registered | Unbuilt ring, stated as such. Opens after J1's wean-with-smell harvest decides what the hand-staged arm inherits |
+| Curriculum (how his WORLD and his adults are staged across his lives) | **VACANT** — he is born into lethal W0 at a uniform pose and scored; no staging exists. Arms may stage only the world and what the adults say, never his actions (`docs/research/CURRICULUM.md`) | — | `CR.01` (registered 11-13, not run; KAGGLE_CPU, behind `LF.04` on S1) — the cook-off (`CR.00` pilot, `CR.01` claim: null vs hand-staged vs learning-progress vs frontier vs teacher-proposed, shuffled-stage and matched-meal nulls as controls that must fail) is designed in `CURRICULUM.md` §4; teacher arm listed and absent until the Judge gate | Unbuilt ring, stated as such. Opens after J1's wean-with-smell harvest decides what the hand-staged arm inherits |
 
 ### DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK.
 
@@ -434,7 +434,7 @@ Three rules, each of them a scar:
 - SEAT: Told-world anchoring (how a told fact attaches to a lived one) | HELD: VACANT | ARENA: LG.11
 - SEAT: Attention (what he attends to when senses compete) | HELD: VACANT | ARENA: AT.01
 - SEAT: Working memory (the third store, held across a life) | HELD: BY VERDICT | VERDICT: WM.02 | TRIGGER: WM.01, WM.02 | ARENA: WM.01, WM.02
-- SEAT: Curriculum (how his WORLD and his adults are staged across his lives) | HELD: VACANT | ARENA: NONE
+- SEAT: Curriculum (how his WORLD and his adults are staged across his lives) | HELD: VACANT | ARENA: CR.01
 
 **TWO SEATS ADDED 2026-09-06 (Review, FULL — the ANATOMY AUDIT).** Both are
 capabilities `GOAL.md` requires by name and neither had a seat, which means

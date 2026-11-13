@@ -154,8 +154,11 @@ teacher-proposed arm joins later, behind the judge gate. If J6 ships the
 k = 72 needs clock first, re-pilot the null's spread before the claim seeds.
 serves: M2 · philosophy 3, 5.
 **done when:** `CR.01` is registered with both controls and has a verdict.
-state: (1)+(2) DONE 11-13 (CURRICULUM.md, seat VACANT). CR.00 pilot s89: exam fed null 5/8, staged 2/8, shuffled 0/9 (anecdote).
-11-13 05:35 machine arms BUILT in experiments/cr00_pilot.py (lp, frontier, matched); sizing 2.8M decisions ~39 CPU-h.
+state: (1)+(2) DONE 11-13 (CURRICULUM.md). CR.00 pilot s89: exam fed null 5/8, staged 2/8, shuffled 0/9 (anecdote); arms built 05:35.
+11-13 17:20 CR.01 REGISTERED (KAGGLE_CPU, dep LC.02, seeds 130-132; CHAMPIONS arena NONE -> CR.01): TRAIN 40k, N_EXAM 47 lives (cap 200k),
+X wins iff on every seed fed(X)-fed(null)>=.20 AND -fed(matched)>=.20 (staged also vs shuffled), pooled median span >= null's; VOID if
+null 0/47 or 47/47 or < 47 exam lives. If J6 ships a W0 edit first: re-pilot null on s89, re-declare N by the same 2-SE rule, MARGIN fixed.
+Next: CR.01 runner module (tests/cr_01_*.py wrapping cr00_pilot.main with exam-by-lives) -> queue on S1 behind LF.04.
 
 ### J3 — The learning core at 3× scale (owner priority 11-12)
 **Why.** Owner: "when will we run it bigger scale against the others". The
@@ -265,6 +268,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 17:20) J2 probe: Colab T4 assign 'Service Unavailable' 5th time today (`colab sessions` empty); nothing dispatched.
 - (JACK 11-13 16:40) Colab CLI 0.6.0: `colab ls` lists FILES in a session, not sessions; the session list is `colab sessions` (empty output = none). ORDERS J2 / the 'GPU today' header say `colab ls` first. Also: CPU-runtime assign works while T4 is refused, so a T4 probe is the only honest pre-flight; dispatch.sh could run it before writing any row.
 - (JACK 11-13 16:25) J2/J8, two machine gaps. (1) `gpu.submit`/`build_job` can only clone the repo and fetch outputs: no way to SEND a file to a kernel. LF.06's 'there' leg must carry a 19.6 MB (13.4 MB gz) checkpoint made here; committing it to git x3 seeds is wrong. S1 needs an input channel (private Kaggle dataset attached as dataset_sources?). (2) dispatch pre-flight reads our own gpu_budget.json (W45: 0.00 h used) but the Kaggle ACCOUNT is shared and was at its 30.00 h cap; a dispatch that will be refused still writes an ERROR row (T1.14 PASS-stale -> ERROR today). Pre-flight should probe the real quota; also protocol.py in IMPL_DEPS stales GPU certificates (T1.14 -> D1.0) on enum additions. Colab CLI 0.6.0 (0.8.0 out), T4 assign 'Service Unavailable' 3x today.
 - (JACK 11-13 15:45) J1 could not take its next step (XL.00 re-run, ~20 min): the day CPU ceiling was already spent (58472/57600 s at 15:20, needs_clock_race + w1_00_attempt4 meters), so `admit` refuses. J1 still waits on the T2.10 ruling below; slot went to J7.
