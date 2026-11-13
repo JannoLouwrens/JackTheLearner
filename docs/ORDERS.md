@@ -170,13 +170,12 @@ shrunk `LC.07`: all five core arms plus the ring working memory, ~3× the
 screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
-sessions needed in `state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms). 18:30 guard BUILT (ef335cf); seated WM cores get 0.0 grad on GRU action/hh.
-18:50 wm-dyn BUILT (eda11bf, experiments/cores_dyn.py): gradient reaches action cols/weight_hh. Guard needs an untrained/shuffled baseline (INBOX).
-19:00 L_next normalised (ada42ca): Delta_5 FALLS 3/3. 19:15 W0 ceiling (c747558): actions set .62-.69 of obs_{t+5} (K=1 .43).
-19:45 ARM'S OWN ACTION SHARE (1307362, 06a4502; held-out, untrained -> trained, seeds 0/1/2): one step gap_shuf ~0 -> +.146/+.132/+.067 of z var;
-K=5 OPEN-LOOP own-prediction roll ~0 -> +.135/+.108/+.055, beats copy-z_t 3/3 -> wm-dyn DOES model his actions (weakly); Delta_5 (z held fixed,
-cosine) misreads it (INBOX: guard -> gap_shuf vs untrained init). Next: re-register LC.09 guard clause to gap_shuf(K=5) > untrained + margin;
-then raise action info (K-step loss / free-bits) and measure gap_shuf; then R2D2 stored-state wiring into survival.py.
+sessions needed in `state:`.
+state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); guard ef335cf; seated WM cores 0.0 grad on GRU action/hh; wm-dyn built eda11bf (grad reaches them).
+19:00-19:15 Delta_5 FALLS 3/3 with training (ada42ca); W0 ceiling: actions set .62-.69 of obs_{t+5} (c747558). 19:45 (1307362, 06a4502): wm-dyn's OWN
+action share, held-out, untrained -> trained: 1-step gap_shuf ~0 -> +.146/+.132/+.067 of z var; K=5 own-prediction roll ~0 -> +.135/+.108/+.055, beats
+copy-z_t 3/3 -> it DOES model his actions (weakly); Delta_5's fixed-z cosine roll misreads it (INBOX). Next: re-register LC.09 guard to gap_shuf(K=5)
+> untrained + margin; raise action info (K-step loss / free bits), re-measure; then R2D2 stored-state wiring into survival.py.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
