@@ -104,11 +104,11 @@ seeds 300–319, ~65 min on 3 workers, `launch_detached.sh`), one at a time.
 Then register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 5.
 **done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
-state: 11-13 10:40 W1.04 HARVESTED (row 08:48, 640e329): FAIL on (c) only, as predicted. 5th-pct life is 54.3 s (W1.01) and 52.0 s (W1.02)
-vs a 5600 s horizon; deaths ~272/275 energy. Control, ratio, tag and claimset all ok. Same fault as J6's W0 needs clock: energy drains past the world's clock.
-W1.00 refused: W0.DIAG stale <- PS.01 stale (blocks 21). 10:38 LAUNCHED detached pid 3050089, log /data/tmp/w1_00_attempt2.log:
-PS.01 && W0.DIAG && W1.00 (attempt 2); then W1.01 re-buy. W1.04 is stale again (impl e804d0 -> 65a3c3).
-Next: harvest those 4 rows; then repair W1's energy clock by a race (as J6(b)), never by shortening the horizon; re-run W1.04; register DP.05-in-W1.
+state: 11-13 10:40 W1.04 HARVESTED (640e329): FAIL on (c) only — 5th-pct life 54.3/52.0 s vs 5600 s horizon, ~272/275 deaths energy.
+11-13 11:45 chain pid 3050089 harvested (bfa09b8): PS.01 PASS (850.6 s, hash-salt clean), W0.DIAG PASS but DIRTY stamp (docs/LAB.md uncommitted)
+-> W1.00 refused on it; W1.01 refused on stale W1.02. A foreground clean W0.DIAG re-run hung in its hash-salt child (1 s CPU in 10 min; killed).
+11:49 LAUNCHED detached pid 3070760, log /data/tmp/w1_00_attempt3.log: W0.DIAG && W1.00 (attempt 2); W1.02 && W1.01 (re-buys), clean tree.
+Next: harvest; then repair W1's energy clock by a race (as J6(b)), never by shortening the horizon; re-run W1.04; register DP.05-in-W1.
 
 ### J8 — The hand-over gate: a Jack trained here still learns on another machine
 **Why.** Owner 11-13: the finished Jack is "trained here, handed to people,
@@ -253,6 +253,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 11:50) W0.DIAG's hash-salt differential child hangs rather than computes: errored TimeoutExpired after ~25 min in the 10:38 chain (spec itself 0.03 s), and a clean re-run's child sat at 1 s CPU for 10 min. Costs every W0.DIAG re-buy ~25 min of lock; also a dirty doc (docs/LAB.md) stamped W0.DIAG dirty and blocked W1.00 even though prose docs are meant to be exempt.
 - (LAB 11-13 11:40) Meal memory (salience-kept replay ring, `experiments/meal_memory.py`) pilot ALIVE, thinly: fed .484 vs fifo .370 vs yoked control .376 (s91–93, 9 runs, ~55 CPU-min). Claim gate is declared in the module docstring; the run to grind, once ruling 3 lifts: seeds 94–98 × 3 arms × 13k (`meal_memory run <arm> <seed> 13000`, ~15 runs × 13 min, 2 at a time), then `tally`. Not yet a registered bake-off — Director to say whether it enters under the Consolidation seat (`NE.05`) or the learning core's.
 - (JACK 11-13 10:30) LC.02 contention: J1(1)'s PASS branch shipped (e9e07c2, VOID-on-contended-FAIL); the 11-14 ruling below may be moot. Foreign load on a 'quiet' box read up to .75 core in one timed window vs the 1.0 threshold.
 - (JACK 11-13 09:45) LC.02: a W0.PL correctness commit (c510b92) silently cost 11% physics throughput; nothing caught it except LC.02 going red a day later under noise. LC.02's T is timed over 40 decisions (5 updates at tr .125), so one stall moves an arm-seed by 2+ sim-s/real-s (dreamer-xs probe 5.31-7.93). For the 11-14 ruling: VOID-above-load, or a longer timed window re-registered.

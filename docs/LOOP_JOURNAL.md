@@ -737,3 +737,8 @@ Tried: MEAL MEMORY — a second replay ring that keeps segments containing a mea
 meal-free ring (control). Rule committed first (dabd2bf). Nursery trials, s91-93, 6.5k: fed meal .484 (46/95), fifo .370, yoked .376;
 seed wins 2/3, 3/3; margins .114/.108 vs .10 -> ALIVE, thinly (ruler is mostly birth luck; walks > 20 decisions 16 vs 6 vs 10).
 Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers via ORDERS INBOX. No ledger row, no spec.
+- 2026-11-13 ~11:50 UTC JACK J7 harvest (short slot; load 2.5, not quiet, so not J1). Chain pid 3050089: PS.01 PASS (850.6 s, hash-salt clean),
+  W0.DIAG PASS stamped DIRTY by an uncommitted docs/LAB.md, so W1.00 refused on it; W1.01 refused on a stale W1.02. Committed the rows (bfa09b8).
+  A foreground clean W0.DIAG re-run hung in its hash-salt child (1 s CPU in 10 min; this was my own run, so I killed it; INBOX). Relaunched
+  W0.DIAG && W1.00; W1.02 && W1.01 detached on a clean tree (pid 3070760, /data/tmp/w1_00_attempt3.log). No verdict moved on the creature.
+  Served: 5 (W1's base certificates bought so its starvation fault can be raced), thinly — mostly plumbing.
