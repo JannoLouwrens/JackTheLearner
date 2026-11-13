@@ -984,10 +984,20 @@
     },
     "2026-11-13": {
       "by_spec": {
-        "detached:gamma99.log": 2335.75,
-        "detached:run_1113.log": 2278.7
+        "LC.02": 648.19,
+        "PS.02": 484.73,
+        "PS.03": 496.14,
+        "PS.05": 479.01,
+        "T2.08": 422.5,
+        "VO.01": 155.54,
+        "detached:cr00_race.log": 3706.45,
+        "detached:gamma99.log": 3738.49,
+        "detached:race.log": 4200.01,
+        "detached:run.log": 10319.9,
+        "detached:run_1113.log": 2278.7,
+        "detached:ub10_sweep4.log": 1259.36
       },
-      "used_s": 4614.45
+      "used_s": 28189.02
     }
   },
   "overruns": [
