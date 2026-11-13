@@ -380,7 +380,7 @@ Three rules, each of them a scar:
   never repair that citation — it is not what the seat points at, and the
   seat keeps its real ring in `D1.0`.
 
-- SEAT: Learning core | HELD: BY VERDICT | VERDICT: LC.03 | TRIGGER: LC.07, LC.03, UB.10 | ARENA: LC.00–LC.07
+- SEAT: Learning core | HELD: BY VERDICT | VERDICT: LC.03 | TRIGGER: LC.07, LC.09, LC.03, UB.10 | ARENA: LC.00–LC.07, LC.09
 - SEAT: Deliberation (the slow path) | HELD: VACANT | ARENA: DP.00–DP.05, BO.01
 - SEAT: Fast/slow coupling | HELD: BY DECREE | TRIGGER: DP.02 | ARENA: DP.02
 - SEAT: Control architecture (D1) | HELD: VACANT | ARENA: D1.0

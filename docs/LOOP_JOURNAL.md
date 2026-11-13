@@ -841,3 +841,11 @@ mode (stop at 47 ended exam lives, cap 200k). Gate selftest 13/13 on planted row
 matched-close and span clauses block, staged needs shuffled). One small real smoke (lp s7, 2 exam lives, 275 s): ~47 ms/decision ->
 ~1.8 h per arm-seed, matching the 39 CPU-h sizing. Kaggle-CPU route as LF.04's. No ledger row.
 Served philosophy 3 (the curriculum is raced, with controls that must fail) and 5 (his curriculum is part of the loop).
+
+2026-11-13 17:45 UTC · JACK · J3 (+J2 probe). Box CPU orders still shut (day ceiling; J1 waits on the T2.10 ruling, J6 race after
+00:00, J7 needs CPU; J8/J5 wait on S1's input channel / LF.04). J2: Colab CLI token EXPIRED (T4 probe stops at an OAuth prompt) -> INBOX,
+nothing dispatched. J3: registered LC.09, the learning-core screen at 3x (1.2M decisions/arm-seed), six arms (5 cores + wm-latent with
+the seated RingMemory), seeds 140-142, LC.03's 3-sigma gates unmoved, wiped-store/randrew/frozen must fail, and the §5.4 collapse guard
+made computable (RankMe, per-dim std, ActSWM Delta_5; VOID floors declared) — the guard the seat was awarded without (D29). KAGGLE_CPU,
+~11 sessions by arithmetic; pilot prices it. CHAMPIONS arena += LC.09. No run, no ledger row.
+Served philosophy 3 (the seated core holds its seat only until a raced alternative beats it, now at a scale the free route can buy) and 4.

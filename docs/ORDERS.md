@@ -174,7 +174,11 @@ sessions needed in `state:`. Runs third on S1.
 serves: M3 · END-FIT row 2 (the collapse guard is this spec's §5.4 diagnostic; state per arm its weight count —
 it must stay small enough to learn in real time on a personal computer) · philosophy 3, 7.
 **done when:** the spec is registered, priced from a pilot, and dispatched.
-state: open — waits on S1's route for its pilot; registration can start now.
+state: 11-13 17:45 LC.09 REGISTERED (KAGGLE_CPU, seeds 140-142, 6 arms = 5 cores + wm-latent+ring, 1.2M dec/arm-seed = 3x LC.03 v2;
+LC.03's two 3-sigma gates unmoved; LC.04 1.5-sigma lead + D12 convergence check for the seat; controls wiped-store/randrew/frozen must fail;
+collapse guard RankMe + per-dim std + ActSWM Delta_5 every 1k dec, VOID if final-third Delta_5<=0 or rank<.10 dim; weights as JACKFILE).
+Priced from arithmetic only: ~9.8 h/learner-run at S1's 34 dec/s, ~11 sessions. CHAMPIONS Learning-core TRIGGER+ARENA += LC.09. No runner.
+Next: build the runner (tests/lc_09_*.py, collapse-guard selftest with a planted rank-1 latent), then pilot wm-latent s89 on Kaggle CPU.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
@@ -269,6 +273,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 17:45) J2 probe: `colab new -s p --gpu T4` now stops at an OAuth prompt ('To authorize colab-cli, visit this URL', 'Enter the authorization code') — the Colab CLI token has expired since 16:40; only the owner's browser can re-authorise. Every Colab dispatch fails until then. Nothing dispatched.
 - (JACK 11-13 17:20) J2 probe: Colab T4 assign 'Service Unavailable' 5th time today (`colab sessions` empty); nothing dispatched.
 - (JACK 11-13 16:40) Colab CLI 0.6.0: `colab ls` lists FILES in a session, not sessions; the session list is `colab sessions` (empty output = none). ORDERS J2 / the 'GPU today' header say `colab ls` first. Also: CPU-runtime assign works while T4 is refused, so a T4 probe is the only honest pre-flight; dispatch.sh could run it before writing any row.
 - (JACK 11-13 16:25) J2/J8, two machine gaps. (1) `gpu.submit`/`build_job` can only clone the repo and fetch outputs: no way to SEND a file to a kernel. LF.06's 'there' leg must carry a 19.6 MB (13.4 MB gz) checkpoint made here; committing it to git x3 seeds is wrong. S1 needs an input channel (private Kaggle dataset attached as dataset_sources?). (2) dispatch pre-flight reads our own gpu_budget.json (W45: 0.00 h used) but the Kaggle ACCOUNT is shared and was at its 30.00 h cap; a dispatch that will be refused still writes an ERROR row (T1.14 PASS-stale -> ERROR today). Pre-flight should probe the real quota; also protocol.py in IMPL_DEPS stales GPU certificates (T1.14 -> D1.0) on enum additions. Colab CLI 0.6.0 (0.8.0 out), T4 assign 'Service Unavailable' 3x today.
