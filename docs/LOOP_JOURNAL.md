@@ -618,3 +618,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   null, staged (birth radius widening in 5 equal blocks) and shuffled (the same blocks in a seeded order, the control that must
   fail). All three end in the same uniform exam block, scored on fed-life fraction + median span, not meal counts. Smoke: 800
   decisions OK, 6 dec/s on the loaded box. Not launched: CPU is full. Served: 3, 5 (the curriculum raced, not assumed).
+
+- 2026-11-13 ~03:15 UTC SYSTEM (no open SYSTEM order; took J1's INBOX blocker). The cpu<48h refusal of LF.04/BD.01 is not a bug: it
+  enforces D20/D39 (class closed to registered specs in both lanes). Its message pointed workers TO the detached lane, which cost
+  J1 two slots (08:45, 18:05); it now names D20/D39 and the exits (cpu<2h re-registration or S1). Code net +1 line, no gate changed.
+  Routed to Director under INBOX: LC.08/LF.04/BD.01 were registered into the closed class; re-budget is a registration act.
+  Served: 5 (a refusal that tells the truth saves the JACK lane its slots) and 4 (no control loosened to unblock a spec).

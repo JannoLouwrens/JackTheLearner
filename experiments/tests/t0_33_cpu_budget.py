@@ -185,7 +185,7 @@ PROBE_DURATION_S = 100.0       # synthetic measurement for property 13
 
 def _runner_cpu_specs() -> list:
     """The lane this meter gates: cpu specs the runner spawns as children.
-    cpu<48h is the detached lane (property 4's routing reason)."""
+    cpu<48h is closed to specs in both lanes (D20/D39; property 4)."""
     return [s for s in BY_ID.values()
             if s.budget.value.startswith("cpu")
             and s.budget.value != "cpu<48h"]

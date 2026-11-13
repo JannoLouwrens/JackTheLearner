@@ -16,11 +16,11 @@ Scope, stated honestly:
     planner writing core-hours must divide by the workload's thread width
     before comparing against `CPU_DAY_CEILING_S`.
   - The metered child is `run.py:_run_isolated`'s — the only lane
-    `cmd_run` (and therefore `--gate`) uses. The gate still refuses `cpu<48h`
-    with a ROUTING reason: that class belongs to the detached lane, which
-    since T0.34 keeps its own accounts (`admit_detached` + the heartbeat
-    wrapper below, called by `scripts/launch_detached.sh`). A module invoked
-    BY HAND remains unmetered — a human at a shell is the owner's lane.
+    `cmd_run` (and therefore `--gate`) uses. The gate refuses `cpu<48h`
+    outright: D20/D39 CLOSED that class to registered spec work in BOTH
+    lanes. The detached lane (`admit_detached` + the heartbeat wrapper below,
+    `scripts/launch_detached.sh`) meters lab and waiter jobs, not specs. A
+    module invoked BY HAND is unmetered — a human at a shell is the owner's.
   - GPU-budget children are not charged: their wall clock is mostly waiting on
     a remote kernel, and billing waiting as box CPU would make the meter read
     harm where there is none. Their remote cost is T0.12's.
@@ -294,8 +294,9 @@ def gate_cpu_child(spec, *, path: Path | None = None,
                            f"metered by T0.12")
     if budget == "cpu<48h":
         return CpuDecision(False, 0.0, 0.0, load,
-                           "cpu<48h is the detached lane "
-                           "(scripts/launch_detached.sh), not a runner child")
+                           "cpu<48h is CLOSED to registered specs in the "
+                           "runner AND the detached lane (D20, D39); "
+                           "re-register in cpu<2h or run off-box (S1)")
     est, prov = child_estimate_s(spec, ledger_path)
     if load > LOAD_CEILING:
         return CpuDecision(False, est, CpuBudget(path).remaining_s(), load,
