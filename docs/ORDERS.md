@@ -171,11 +171,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
-state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); seated WM cores 0.0 grad on GRU action/hh (ef335cf); wm-dyn built (eda11bf, cores_dyn.py),
-learns action dependence K=5 +.135/+.108/+.055 (06a4502). 20:15 guard + action gain >= .03 vs untrained twin (c09df29, selftest 18/18).
-20:40 RE-REGISTERED (b1a4160, strengthening): wm-dyn = 7th arm + latent arm under the guard; END-FIT rows declared per arm (all->2, ring->4,
-wm-dyn->4,1; row 3 untouched). Selftest ok. run() refuses on: ring arm unbuilt; wm-dyn deter not in survival.py's batch.
-Next: R2D2 stored-state wiring of wm-dyn into survival.py (deter kept per ring slot); build wm-latent+ring; K-step loss; pilot wm-dyn s89.
+state: LC.09 REGISTERED 17:45 (KAGGLE_CPU, 140-142); wm-dyn built (eda11bf), learns action dependence K=5 +.135/+.108/+.055 (06a4502);
+guard + action gain vs untrained twin (c09df29); RE-REGISTERED 20:40 (b1a4160): wm-dyn = 7th arm, END-FIT rows per arm.
+20:55 R2D2 stored-state wiring BUILT (b877604) in NEW experiments/survival_rec.py (survival.py untouched: 10 certs IMPL_DEPS it):
+smoke s0 400 dec: 96 opt steps, GRU action cols |dW| .0150 trained vs 0.0 frozen twin. Lives 120 vs 32 in 400 dec = unexplained anecdote.
+Next: point LC.09's wm-dyn arm at survival_rec.run_survival_rec (lc_09 test file); build wm-latent+ring; pilot wm-dyn s89; explain the 120-lives oddity.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
@@ -270,6 +270,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 20:50) Colab CLI asks for OAuth AGAIN (`colab new -s p --gpu T4` prints an accounts.google.com consent URL, aborted): at 19:55 it did not. J2's GPU route needs the owner to re-auth; nothing dispatched.
 - (JACK 11-13 20:15) LC.09 guard re-registered as the 19:45 line proposed (c09df29): action gain >= .03 added, Delta_5 and rank clauses kept unmoved. Consequence to know: the SEATED wm-latent (and dreamer-xs, wm-efe) has no next-latent head, so LC.09 will VOID it on this clause - the Learning-core seat cannot be re-earned at 3x without the dynamics repair. Colab T4 assign 'Service Unavailable' 7th today.
 - (JACK 11-13 19:55) For the T2.10 ruling (14:25 line): T6.03's runner (t6_03_cross_session.py:268-269) stores 'the owner keeps the <v> <topic> near the <p>' and queries 'what do you remember about the <topic>' — the cue SHARES the content word, i.e. T2.10's templated venue, where T2.10's latest row reads recall@1 1.0 / recency 0.0 (passes). T6.03 never touches the stem-disjoint paraphrase venue that is T2.10's only red conjunct (0.0). So LF.04's chain waits on a capability no link in it measures. Options for the Director: depend T6.03 on T2.10's templated conjuncts only (a re-registration the runner cannot express today), or ADD a paraphrase query to T6.03 (strengthening, keeps the dep honest but leaves it red). J1 does nothing to the deps without a ruling.
 - (JACK 11-13 19:55) J2 probe: `colab --auth adc new -s p --gpu T4` NO LONGER stops at the OAuth prompt (17:45 line superseded) — it reaches assign and gets 'Service Unavailable' (6th today); `colab ls` empty, nothing dispatched.

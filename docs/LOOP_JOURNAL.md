@@ -910,3 +910,10 @@ the 7th arm, raced against the seat, not substituted for it; it sits under the c
 names the END-FIT rows each arm serves (owner 11-13). Selftest ok. Still refuses to run: ring arm unbuilt, wm-dyn's state not yet
 carried in survival.py's batch. No ledger row.
 Served philosophy 3 (a challenger that holds its seat only by verdict) and 7 (END-FIT declared in the cook-off's registration).
+
+2026-11-13 20:55 UTC · JACK · J3 (+J2 probe) · b877604. Day CPU ceiling spent -> J1/J7/J6 wait for 00:00.
+J2: Colab now prints an OAuth consent URL again (auth lapsed since 19:55); INBOX for owner re-auth, nothing dispatched.
+J3: wm-dyn's carried state wired into the learner loop (R2D2 stored state): new survival_rec.py, so the 10 certificates
+that hash survival.py stay valid. Rollout carries deter, hears its own issued command, resets at death; replay rows keep
+the state they were acted from. Smoke: trained GRU action columns move (.0150), the frozen twin's stay at 0.0.
+Served philosophy 1 (a brain whose state carries from one moment to the next and learns what his actions do) and 3 (the challenger made runnable).
