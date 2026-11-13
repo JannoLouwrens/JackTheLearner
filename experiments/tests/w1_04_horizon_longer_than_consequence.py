@@ -165,11 +165,25 @@ def _repeat_rollout(seed: int, j0: float, alpha: float, lethal: bool,
     }
 
 
+def _on_grid(span_s: float) -> float:
+    """Snap a span to the decision grid it lives on. W0's clock is a float
+    accumulator (`sim_seconds += SUBSTEPS * dt`): after 28000 decisions it
+    reads 5599.999999997098, not 5600.0, so a life censored AT the horizon
+    measured 3e-9 s short of it and the control's `p5 >= HORIZON_S` (equality
+    declared legal and expected) could never hold — attempt 1's VOID
+    (p5_ctrl printed 5600.0, p5_ok 0). Every span is a whole number of
+    decisions, so rounding to the grid is the exact reading, not a tolerance;
+    it moves no span by more than float drift (< 1e-6 s)."""
+    return float(round(span_s / SIM_S_PER_DECISION)) * SIM_S_PER_DECISION
+
+
 def _spans_and_causes(lives: list, frag_span: float) -> Tuple[list, dict]:
     """All survival spans (completed + fragment censored at the horizon)
     and the per-cause counts. Censored spans enter at censoring time —
-    this can only understate survival (see docstring)."""
-    spans = [s for s, _c in lives]
+    this can only understate survival (see docstring). Spans are read on
+    the decision grid (`_on_grid`)."""
+    frag_span = _on_grid(frag_span)
+    spans = [_on_grid(s) for s, _c in lives]
     counts = {"energy": 0.0, "integrity": 0.0, "other": 0.0,
               "censored": 0.0}
     for _s, cause in lives:
@@ -465,7 +479,20 @@ def _fixtures() -> int:
     assert _check(m, gc(p5_ok=0.0)) is Status.VOID
     n_pass += 1
 
-    print(f"fixtures: {n_pass}/13 green")
+    # 14 the W0 clock's float drift: a life censored AT the horizon, its
+    # span accumulated exactly as W0 accumulates it, must reach p5 == H
+    # (attempt 1's VOID); and the grid must not lift a life one decision short
+    clk = 0.0
+    for _ in range(N_DEC):
+        clk += 40 * 0.005                     # W0: SUBSTEPS * dt per decision
+    assert clk < H                            # the drift is real
+    sp, _cc = _spans_and_causes([], clk)
+    assert _p5(sp) >= H
+    sp, _cc = _spans_and_causes([], clk - SIM_S_PER_DECISION)
+    assert _p5(sp) < H
+    n_pass += 1
+
+    print(f"fixtures: {n_pass}/14 green")
     return n_pass
 
 
