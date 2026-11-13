@@ -994,19 +994,22 @@
         "T0.12": 4.39,
         "T2.08": 422.5,
         "VO.01": 155.54,
+        "detached:chain_lf03_lf04.log": 25.95,
         "detached:cr00_race.log": 3706.45,
         "detached:detached.log": 0.77,
         "detached:gamma99.log": 3738.49,
-        "detached:pilot_s90.log": 1800.01,
+        "detached:pilot_s90.log": 4281.64,
         "detached:race.log": 7554.56,
+        "detached:remote_smoke.log": 186.62,
         "detached:run.log": 10319.9,
         "detached:run_1113.log": 2278.7,
         "detached:ub10_sweep4.log": 1259.36,
         "detached:w1_00_attempt2.log": 2545.78,
         "detached:w1_00_attempt3.log": 4523.64,
+        "detached:w1_00_attempt4.log": 5400.04,
         "detached:w1_04_attempt2.log": 4282.0
       },
-      "used_s": 47286.18
+      "used_s": 55380.42
     }
   },
   "overruns": [
