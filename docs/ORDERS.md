@@ -171,11 +171,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
-state: LC.09 REGISTERED 17:45, re-reg 20:15 (act-gain guard) + 20:40 (wm-dyn); R2D2 loop b877604; guard hook d2070c4; arm runner f79f271.
-11-13 22:35 wm-latent+ring BUILT (d80d85c): all 7 arms built; wm-dyn + ring refuse only as UNPRICED (no LC.02 train_ratio).
-11-13 22:50 control (a) for the recurrent arms BUILT (c014834): survival_rec wipe_at_death = same-seed core + fresh Adam + empty ring at
-every death; smoke: wiped core == init on 8/8 (wm-dyn), 4/4 (ring) post-death checks, persistent twin's last check != init.
-Next: price wm-dyn AND wm-latent+ring in LC.02 (quiet box, one re-run) OR rule their ratio; then pilot s89 on Kaggle CPU to price sessions.
+state: LC.09 REGISTERED 17:45 (+re-regs 20:15, 20:40); all 7 arms built (d80d85c); control (a) wipe_at_death built (c014834).
+11-13 23:00 PRICING ROUTE BUILT (4969084): LC.02 now times wm-dyn + wm-latent+ring through their own loop (_run_rec: step+efference,
+stored state per update); priced, NOT in LC.02's gate; lc_09 _borrow_lc09 adds their ratios. Contended smoke (foreign 1.1-1.7, not a
+price): wm-dyn 7.99 @1/8; ring 3.43 @1/8 (may be EXCLUDED by the floor). LC.02 is STALE by this commit (LC.03/LC.09 refuse until re-run).
+Next: re-run LC.02 on a quiet box once the day ceiling admits (>00:00 UTC), read the challengers' ratios; then pilot s89 on Kaggle CPU.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core

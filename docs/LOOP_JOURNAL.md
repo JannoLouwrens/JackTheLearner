@@ -954,3 +954,10 @@ fresh Adam and an empty replay ring, at every death, so nothing he learned cross
 equals its seed-init on every post-death check (8/8 wm-dyn, 4/4 ring); the persistent twin does not once it has trained; wipes == deaths.
 LC.09's only remaining refusal is the missing LC.02 price for wm-dyn/ring.
 Served philosophy 4 (a control that must fail now exists for the challengers) and 1 (what crosses death is made testable).
+
+2026-11-13 23:00 UTC · JACK · J3 · 4969084. Day CPU ceiling spent until 00:00 -> J1/J7/J6 wait; J2 Colab still needs owner OAuth.
+J3: the two recurrent LC.09 arms can now be priced honestly. LC.02 times wm-dyn and wm-latent+ring through their real loop (state
+advanced each decision, stored state handed back on each update) instead of borrowing a sibling's ratio; priced but outside LC.02's
+gate, so its claim is unmoved. Contended smoke (not a price): wm-dyn 7.99 sim-s/real-s at 1/8, ring 3.43 - the ring may not clear 5.0.
+LC.02 is stale by design until one quiet-box re-run after 00:00.
+Served philosophy 3 (every challenger raced at the price its own loop pays) and 4 (no borrowed number stands in for a measurement).
