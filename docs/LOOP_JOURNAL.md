@@ -690,3 +690,9 @@ at 4,872; null 0.354); no-rotation twin 0.28–0.32; shuffled 0.11–0.14. Regis
   The medians span .016, and the experts+router arm A5 did not beat one brain. The CHAMPIONS fusion row now says UNDECIDED, raced,
   no arm separates. The UB.11-13/TA.03 dependency question went to INBOX. Served: 3 and 4 (a FAIL recorded with every
   number, no venue hunted).
+- 2026-11-13 ~07:25 UTC JACK J2 (+J1 step 1 tried). LC.02 not run: the box was not quiet (load 3.2 rising to 6.9 from other
+  projects' jobs, stt proof_r8 and a recorder pytest at 244% CPU, plus regate PS.09). J7's 3-worker W1.04 was held for the same reason.
+  Colab had been free since UB.10 ended, so I dispatched D1.0 attempt 4 unchanged (head cf8685c, projected 25.05 h). Kaggle refused
+  the push because the shared account's 30 h weekly quota is reached, while gpu_budget.json reads 0.00 h used (INBOX). The dispatch
+  failed over to Colab T4 session ladder-1794554302, and watcher 2598887 is live. J6(a) needs W.7 implemented from scratch, so it was
+  scoped and not started. Served: 3 (the vacant control-path seat raced on free GPU) and 6 (yielded the box to its other tenants).

@@ -41,6 +41,7 @@ serves: M1→M7 · philosophy 1 (learns by living), 4.
 state: 11-12 LF.04 (7446b86) + BD.01 (c38683a) REGISTERED, NOT RUN (D20 closes cpu<48h; LC.02 red since 11-12 10:52).
 Learner gap (LAB): smell, eye height, gamma .99, bout noise, nursery, wean-with-smell all DEAD by declared rules. Nursing
 feeds him (18/5/6 vs decoy 0) but he never holds approach past ~1 m: the gap is credit over the walk, not birth distance.
+11-13 07:10 LC.02 NOT run: box not quiet (load 3.2->6.9 from other projects: stt proof_r8, recorder pytest 244%, + regate PS.09).
 
 ### J4 — The one-brain contest (`UB.10`): attempt 3 is in flight
 **Why.** Six fusion arms incl. A5 (experts + router); VOID 59 days until this
@@ -70,7 +71,9 @@ VERDICT, then re-run `T2.01` under it.
 serves: M3, M4 · philosophy 3 · standing objective 3 (spend the free GPU).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-12 07:07 attempt 3 ERROR (lost download, 1.49 GPU-h, 2103829). Not re-dispatched since: backends refused until 11-13 04:25.
+state: 11-13 07:18 attempt 4 DISPATCHED unchanged (head cf8685c, projected 25.05 h): Kaggle push refused (account-side weekly 30 h
+quota reached), failed over to Colab T4 session ladder-1794554302, unit 1 est 1.8 h. Watcher pid 2598887, log /data/tmp/dispatch_d1_0.log.
+Next: read the log each slot, act only on watcher exit; if it dies, reattach per gpu_submissions.jsonl (never re-dispatch while alive).
 
 ### J6 — W0's red world rules: one clock (`W.1`, `W.2`), then `NE.01`
 **Why.** `W.1`(b) and `W.2`(c) are one fault, ruled today (ruling 1): **W0 has
@@ -213,6 +216,7 @@ it at this file or delete it. (4) `T0.33` `slack_predicts_refusal` reads False.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-13 JACK: dispatch guard said 'kaggle used 0.00h, remaining 30.00h' for W45 while Kaggle itself refused the D1.0 push ('Maximum weekly GPU quota of 30.00 hours reached') - the shared account's other projects are invisible to gpu_budget.json, so the BUDGET clear reads a proxy (unknown != zero).
 
 - **11-13 06:50 JACK J4 -> Director: UB.10 FAIL; what it blocks.** `UB.11`, `UB.12`, `UB.13` have `depends_on=["UB.10"]` and nothing else in the registry names a winner. Each tests a property of *the* fusion trunk (ablation matrix, synergy over the ensemble, retrieval gate), so they need a trunk to RUN on, not a won contest. The trunk can be the incumbent A0 or the median-top A2, declared before the run. `TA.03` depends on `TA.02`+`UB.11` and only needs UB.11 run. Ruling needed: relax the four to 'UB.10 has a non-VOID verdict' with the trunk declared, or hold them until a venue separates the arms. (Not done here: changing depends_on is a registration act.)
 
