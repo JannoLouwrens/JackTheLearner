@@ -742,3 +742,9 @@ Claim gate declared (seeds 94-98, 13k, born >= 0.7 m clause); handed to workers 
   A foreground clean W0.DIAG re-run hung in its hash-salt child (1 s CPU in 10 min; this was my own run, so I killed it; INBOX). Relaunched
   W0.DIAG && W1.00; W1.02 && W1.01 detached on a clean tree (pid 3070760, /data/tmp/w1_00_attempt3.log). No verdict moved on the creature.
   Served: 5 (W1's base certificates bought so its starvation fault can be raced), thinly — mostly plumbing.
+- 2026-11-13 ~12:20 UTC JACK J6 (load 4.6, so J1 step 1 was not possible; J1(2) waits on S1; W1.00 holds the lock for J7). Implemented W.7
+  (2685dd9). It measures six rate channels on the running world through W.1/W.2's harnesses, implied k = human constant / sim constant,
+  judged on the declared k=72 at the registered +/-11.6%. Smoke s0 FAIL as registered: thermal 71.1 ok, thirst 455 and hunger 1067 FAIL.
+  New: the sleep clocks are off-clock too (tau_wake k 93.6, tau_sleep 94.5), so J6(b)'s k=72 arm must carry them. Controls good: planted k1/k60
+  fail, k72 passes, the k=1 null rejects. No ledger row yet (lock). Served: 4 (a test that could fail, and does, with a named cause) and 1
+  (a world on one honest clock, so a night can teach him before thirst kills him).

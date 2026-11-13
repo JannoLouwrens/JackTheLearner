@@ -91,10 +91,11 @@ race-won edit may ship (ruling 1 lifts D43's hold for exactly that); re-run
 serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow them) · philosophy 1, 3, 4.
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: 11-13 00:45 NE.01 (56c6519) FAIL: night_shelter GREEN 3/3; red ok_spread 1/3, ok_forager 2/3. 06:30 occlusion-law race NO WINNER (LAB): shipped 4/5, graded 2/5, damped 2/5 (injury), open control 0/5 as required.
-11-13 04:45 W.2: a/b/d GREEN; red = (c) only: starve 1700 s vs 25200, thirst 570 vs 3600; cause needs.py B_E 1/1800, B_W 1/450.
-11-13 08:25 (a) DONE in registry: W.1(b) on declared k=72 (fa0f7fc; smoke s0 shipped 33.803 PASS, k=1/k=60 arms FAIL) and W.7's
-control (98134d7). W.7 itself is UNIMPLEMENTED; W.1 not yet re-run. Next: run W.1; implement+run W.7; then race (b).
+state: 11-13 04:45 W.2 red (c) only: starve 1700 s vs 25200, thirst 570 vs 3600 (needs.py B_E 1/1800, B_W 1/450). NE.01 red ok_spread/ok_forager.
+11-13 08:25 (a) DONE in registry: W.1(b) on k=72 (fa0f7fc), W.7 control (98134d7). W.1 not yet re-run (lock).
+11-13 12:20 W.7 IMPLEMENTED (2685dd9), smoke s0 FAIL as registered: thermal k 71.1 ok; thirst 455, hunger 1067 FAIL; NEW: sleep clocks
+also off-clock: tau_wake 700 s -> k 93.6, tau_sleep 160 -> 94.5 (k=72 wants 910 / 210 s). Controls good (k1/k60 fail, k72 passes, null rejects).
+Next: when the lock frees, `run W.7` and `run W.1` (no ledger rows yet); then race (b) with the sleep taus in the k=72 arm (or a 3rd arm), seeds 0-4.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow
