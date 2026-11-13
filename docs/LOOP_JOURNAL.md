@@ -887,3 +887,11 @@ to the action; after 300 updates +.146/+.132/+.067 one step out and +.135/+.108/
 "nothing changes" 3/3. So the arm is learning what his actions do (weakly) — the falling Delta_5 was the guard's fixed-z cosine roll
 misreading it. INBOX: re-register LC.09's guard on gap_shuf vs the untrained init. No ledger row.
 Served philosophy 4 (a guard that could not tell learned from random, replaced by a measure with a known-negative) and 3 (the challenger).
+
+2026-11-13 19:55 UTC · JACK · J1 (+J2 probe). Box loud (load 3.8) and the day CPU ceiling spent (59,599/57,600 s) -> no XL.00.
+J2: Colab no longer asks for OAuth; GPU assign still 'Service Unavailable', nothing dispatched. J1: read what blocks the creature gate.
+T6.03 (save/resume recall) asks "what do you remember about the <topic>" of facts that contain <topic> — T2.10's templated venue, which
+T2.10 passes (recall@1 1.0 vs recency 0.0). T2.10's only red conjunct, the stem-disjoint paraphrase (0.0), is never exercised by T6.03.
+So LF.04 waits on a capability no link in its chain measures. INBOX names two honest routes (scope the dep, or add a paraphrase query to
+T6.03); no dep edited without a ruling. No ledger row.
+Served philosophy 4 (dependency chain checked against what each test actually measures) and 1 (unblocking "does living teach him").

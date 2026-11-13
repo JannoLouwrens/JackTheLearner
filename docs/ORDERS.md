@@ -49,11 +49,11 @@ serves: M1→M7 · philosophy 1 (learns by living), 4.
 worker who finds the box loud does S1's first step instead of idling. Try
 `LC.02` FIRST in every slot, before launching anything detached; if no quiet
 minute comes by the 11-14 sitting the Director rules on the precondition.
-state: J1(1) DONE 11-13: LC.02 PASS quiet (4b67b0b) + contention->VOID precondition (e9e07c2). J1(2) route DONE: kaggle-cpu arms (1913430),
-KAGGLE_CPU budget + routing (93b463b); smoke 183 s, ARM/x86 frozen lives not bit-equal (twin 365.4 vs 347.2 s).
-11-13 14:25 LF.04 CANNOT RUN: its dep LF.03 is stale; re-running LF.03 records BLOCKED (LF.02, XL.00 stale); re-running LF.02 records
-BLOCKED (T6.03 BLOCKED <- T2.10 FAIL since 10-20, paraphrase recall@1 0.0). Root of the creature gate = T2.10's paraphrase conjunct (INBOX).
-Next: re-run XL.00 (clean, cpu ~20 min) when the lock frees; then repair T2.10 or get the ruling; then LF.02 -> LF.03 -> LF.04 detached.
+state: J1(1) DONE (4b67b0b, e9e07c2). J1(2) route DONE (1913430, 93b463b); smoke 183 s, ARM/x86 frozen lives not bit-equal.
+LF.04 CANNOT RUN: LF.03 stale -> BLOCKED on LF.02, XL.00 stale; LF.02 -> BLOCKED on T6.03 <- T2.10 FAIL (paraphrase recall@1 0.0).
+11-13 19:55 READ (no run): T6.03 queries 'what do you remember about the <topic>' of facts containing <topic> = T2.10's TEMPLATED venue,
+which T2.10's latest row passes (recall@1 1.0 vs recency 0.0); the red paraphrase conjunct is never exercised by T6.03 (INBOX 19:55, ruling).
+Next: re-run XL.00 when the day CPU ceiling admits (after 00:00 UTC); then per ruling: re-register T6.03's dep or repair T2.10; LF.02 -> LF.03 -> LF.04.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 4 in flight on Colab
 **Why.** `T2.01` (he moves better than random) is the biggest blocker in the
@@ -270,6 +270,8 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-13 19:55) For the T2.10 ruling (14:25 line): T6.03's runner (t6_03_cross_session.py:268-269) stores 'the owner keeps the <v> <topic> near the <p>' and queries 'what do you remember about the <topic>' — the cue SHARES the content word, i.e. T2.10's templated venue, where T2.10's latest row reads recall@1 1.0 / recency 0.0 (passes). T6.03 never touches the stem-disjoint paraphrase venue that is T2.10's only red conjunct (0.0). So LF.04's chain waits on a capability no link in it measures. Options for the Director: depend T6.03 on T2.10's templated conjuncts only (a re-registration the runner cannot express today), or ADD a paraphrase query to T6.03 (strengthening, keeps the dep honest but leaves it red). J1 does nothing to the deps without a ruling.
+- (JACK 11-13 19:55) J2 probe: `colab --auth adc new -s p --gpu T4` NO LONGER stops at the OAuth prompt (17:45 line superseded) — it reaches assign and gets 'Service Unavailable' (6th today); `colab ls` empty, nothing dispatched.
 - (JACK 11-13 19:45) LC.09 guard, measured (06a4502): Delta_5 (`delta5_seq`) rolls with z HELD at z_t and scores cosine on state; for wm-dyn it FALLS with training (.015 -> .007-.0085) while the arm's K=5 own-roll action share RISES from ~0 untrained to +.055..+.135 of z variance (beats persistence 3/3). It cannot tell learned dynamics from random-init sensitivity. Proposed re-registration (strengthening): guard = gap_shuf(K=5, own-prediction roll, held-out) > the arm's untrained-init value + declared margin, >= 3 seeds; supersedes the 18:50 line. J3 will do it next unless ruled otherwise.
 - (JACK 11-13 18:50) LC.09 guard correction (supersedes my 18:30 "predictable VOID"): the -0.006..-0.008 untrained Delta_5 came from rolling a ZERO start state. Filtered from 16 decisions of real past, the UNTRAINED seated wm-latent reads +0.0147 (eda11bf probe). A random GRU gives Delta_5 > 0, so the ">0" clause cannot fail for an arm that learned nothing. Strengthening wanted before any claim seed: Delta_5 must beat the arm's own untrained init (or a shuffled-action roll) on the same windows. Re-registration, not a loosening.
 - (JACK 11-13 18:30) J3 finding for the Learning-core seat (CHAMPIONS): the seated wm-latent (and dreamer-xs, wm-efe) is a world model in name only. `cores.py` rssm() steps the GRU once from a zero state with a zero action, so no weight that reads an action or a past state ever gets gradient (measured 0.0, ef335cf). LC.03 v2 seated a feed-forward encoder. LC.09's ActSWM guard will VOID it; the repair (a real action-conditioned dynamics arm) touches cores.py + survival.py and stales LC.01/02/03/07/08, LF.03, SH.01/02. Ruling wanted only on ORDER (J3 builds it next vs after LF.04), not on whether to race it.
