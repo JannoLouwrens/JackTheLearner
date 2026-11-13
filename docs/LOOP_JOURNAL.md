@@ -917,3 +917,9 @@ J3: wm-dyn's carried state wired into the learner loop (R2D2 stored state): new 
 that hash survival.py stay valid. Rollout carries deter, hears its own issued command, resets at death; replay rows keep
 the state they were acted from. Smoke: trained GRU action columns move (.0150), the frozen twin's stay at 0.0.
 Served philosophy 1 (a brain whose state carries from one moment to the next and learns what his actions do) and 3 (the challenger made runnable).
+
+2026-11-13 21:15 UTC · SYSTEM. S1 blocked (T2.10 ruling), so took the over-cap steering file: docs/FIELD_WATCH.md 12,877 -> 12,264 B
+(cap 12,288) — cut a stale injection note, compressed the evidence-class, predictor-width and no-action prose; no nomination touched.
+The scout has no shell and cannot measure its own page, so field_watch.sh now puts the byte count (and "OVER 12 KB CAP") in its
+commit subject: the overshoot shows in `git log` instead of waiting for a SYSTEM slot to notice. Guards: see INBOX (coverage rc 2, bookkeeping).
+Served philosophy 5 (steering small enough to read; a rote size check moved into the script that writes the file).

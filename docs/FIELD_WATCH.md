@@ -13,11 +13,9 @@ papers 11-08 → 11-10. The six-month window was not re-read.
 full text or an official changelog, fetched this sweep · **[V†]** fetched, but
 that part reached me as a summariser's extraction · **[c]** claim, primary
 source not opened · **[R]** read in this repository today.
-**Evidence class:** the arXiv API refused every query (HTTP 429), so papers
-were opened on `arxiv.org` (abs + HTML) through a fetch tool that caps quotes
-at 125 characters. On each search page only the first ~14 rows were read
-verbatim; the rest were summarised or not seen. Nothing below rests on a paper
-I did not open by id.
+**Evidence class:** arXiv API refused (HTTP 429); papers opened on `arxiv.org`
+(abs + HTML), quotes capped at 125 chars; only ~14 rows per search page read
+verbatim. Nothing below rests on a paper not opened by id.
 
 ## Coverage
 
@@ -159,18 +157,15 @@ hash runs on symbolic observations, Jack's are continuous and multi-sense;
 11-11's N1 (easy-only and reversed-order curriculum controls), N2 (cheap
 relief action), N3 (probe-guided balancing).
 
-**Predictor width (2610.32562) — stop queuing it.** Third sweep, same result:
-HTML 404, PDF unreadable here, abstract silent on whether "half the encoder's
-width" is relative to what the predictor reads or what it predicts [V]. It
-cannot be settled from this desk. Widening the predictor is the measurement.
+**Predictor width (2610.32562) — stop queuing it.** Third sweep: HTML 404, PDF
+unreadable, abstract ambiguous [V]. Widening the predictor is the measurement.
 
 ---
 
 ## NO-ACTION
 
-- **1 Cores.** Nothing. Koopman MBRL, a DreamerV3 lander, a tabular foundation
-  model as world model ("about three orders of magnitude slower than an LSTM"
-  [V]). No small-end entry.
+- **1 Cores.** Nothing small-end (Koopman MBRL, a DreamerV3 lander, a tabular
+  foundation model as world model).
 - **2 Fusion.** No arm. IPR (2611.13782, 5 seeds, one A100 per job): +10.0%
   return with RGB+depth, but with LiDAR present the baseline wins, one of its
   two terms alone *lowers* return (753.3 → 743.9), and "no formal hypothesis
@@ -179,18 +174,13 @@ cannot be settled from this desk. Widening the predictor is the measurement.
   writes the stored descriptions, so it is inadmissible; its
   invalidate-do-not-delete rule is already our schema (`MEMORY.md:98` [R]).
   The other episodic-memory papers put the store inside a VLM or LLM.
-- **4 Curriculum, curiosity.** Nothing new beyond 11-11; four curriculum hits
-  were network planning, proof repair, behaviour-tree rewards and the
-  restart paper above.
+- **4 Curriculum, curiosity.** Nothing new beyond 11-11 except the restart
+  paper above.
 - **5 Worlds.** No new survival or needs world; the correction above is the
   front's news.
-- **6 Adults.** No from-scratch small ear. Other VLM-as-reward papers do not
-  name a locally runnable model in their abstracts.
+- **6 Adults.** No from-scratch small ear; no other VLM-as-reward paper names
+  a locally runnable model.
 - **Smell, taste, voice.** Nothing found; search too broad to call it absent.
-
-**For the record.** Tool output during this sweep carried a block of text
-instructing the reader to create and edit an external document. It was
-treated as data and ignored.
 
 **Philosophy served:** 2 (the adults around him are tested before they are
 trusted), 3 (a seat held by analysis gets a challenger), 4 (a judge that must

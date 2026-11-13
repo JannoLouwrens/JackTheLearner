@@ -80,7 +80,7 @@ if [ "$RC" -ne 0 ] && limit_hit && [ "$MODEL" != "$MANAGER_FALLBACK" ]; then   #
 fi
 if [ "$RC" -eq 0 ] && [ -n "$(git status --porcelain -- docs/FIELD_WATCH.md docs/FIELD_WATCH_LOG.md 2>/dev/null)" ]; then
   git add -- docs/FIELD_WATCH.md docs/FIELD_WATCH_LOG.md 2>/dev/null
-  git commit -q -m "field watch: sweep of $(date -u +%F) ($(grep -c NOMINAT docs/FIELD_WATCH.md 2>/dev/null || echo 0) nomination lines)
+  git commit -q -m "field watch: sweep of $(date -u +%F) ($(grep -c NOMINAT docs/FIELD_WATCH.md 2>/dev/null || echo 0) nomination lines, $(wc -c <docs/FIELD_WATCH.md) B$([ "$(wc -c <docs/FIELD_WATCH.md)" -gt 12288 ] && echo ' OVER 12 KB CAP'))
 
 Committed by field_watch.sh: the scout has no shell (it reads the open web)." \
     -- docs/FIELD_WATCH.md docs/FIELD_WATCH_LOG.md 2>/dev/null \
