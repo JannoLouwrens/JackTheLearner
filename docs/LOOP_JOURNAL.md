@@ -1166,3 +1166,8 @@ Kaggle's 2 CPU sessions sat idle because `admit` refuses detached pollers (48.5k
 130:lp:frontier = jack-cpu-1794672505, 130:shuffled:matched = jack-cpu-1794672525, both RUNNING. Receipt kernel_sha256 equals the local sha for both. Unit cache: 1/9 cached, 2/9 in flight.
 Found: the reattach guard misjoins kernels pushed 20 s apart (…505 "unverifiable", …525 false "mismatch" against …505's receipt). Logged in INBOX; harvest command with the override is in J5 state.
 Served philosophy 3 (the curriculum cook-off advanced) and 6 (free Kaggle CPU used instead of idling, 0 box CPU).
+
+2026-11-14 16:58 UTC · JACK · J6(c) (J1 DONE; J5 CR.01 kernels …505/…525 RUNNING, harvest after ~18:10; J2 D1.0 GPU kernel moved QUEUED -> RUNNING, watcher alive) · this commit.
+Ran swp_k72 s1+s2 death probes in-session, nice 19, 2 cores. s1 = 4/5 (dehydration at 9066-13839 dec, 1 life censored at 39158). s2 hit its 1900 s timeout and is moot.
+Gate 2 needs 5/5 on every seed, so swp_k72 fails like hum30 and hum34 (3/5 on s2). No k72-family arm survives gate 2. A cell costs ~31 CPU-min, not 18.
+Served philosophy 3 and 4: a world-rule race closed by a test that could fail and did, with no threshold moved.
