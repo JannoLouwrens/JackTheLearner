@@ -115,11 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30, hum34 and swp_k72 all FAIL gate 2 (3/5, 3/5, 4/5 on one seed; NEEDS_CLOCK_RACE.md). (b) still held by the detached cap.
-11-14 17:35 (d) step 1 DIAGNOSED (no ledger): the censored random lives DRINK. Replays with the same rng show 26/59/34 gulps (first at dec 1847/69/162) after they drift into the pool,
-whose near edge is 0.92-1.26 m from spawn. The died-on-clock twin drank 0 (died 9150, apparatus reproduced). Passive mouth-near-surface plus a 30 s refractory = a gulp every ~150 dec.
-So no K_DRY/thermal arm can fix gate 2. Next: declare and race (A) pool beyond a flailer's one-T_thirst drift, (B) drink needs an act (still head / swallow), (C) both, on the
-random-death probe first (bars unmoved). Write the declaration before any cell. `experiments/random_life_drink_probe.py` is the replay tool.
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) step 1 `5d59b57`: censored random lives survive by DRINKING (passive gulps, pool 0.9-1.3 m from spawn).
+11-14 18:25 (d) step 2 race DECLARED `4c316fa` (NEEDS_CLOCK_RACE.md): dA pool far (arena ceiling 4.6 m vs flailer drift 1.86-7.71 m -> predicted to fail alone), dB swallow (1.0 s still mouth, <0.2 m/s), dC both; humid_race rule + gate 2 >= 4/5.
+`c9dd457` dB BUILT (`experiments/drink_race.py`): apparatus (ii) PASS (dB0 byte-same to swp_k72, 26 gulps). Under dB, censored s1 l3 drinks 0 and dies at 9116; a still body in the pool drinks 3/80 s under both arms.
+dA/dC not built: the pool (2.6,-2.4) is a literal in playground.py:421/886 + ne_01:334 + needs.py:820, so building them is a world-file refactor that re-bills certificates (a Director call).
+Next: Kaggle-CPU runner for drink_race cells (NE.01/W.1/W.2 × s0-4 × dB; reuse swp_k72/shipped cells from /data/jack-logs/water_race), behind CR.01's kcpu slots, then tally under the declared rule.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

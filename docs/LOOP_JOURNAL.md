@@ -1191,3 +1191,9 @@ Harvested CR.01 s130 from Kaggle CPU at zero quota: 130:lp:frontier (…505) and
 Unofficial s130 exam fed fractions from the rows: null .255, frontier .255, staged .213, lp .043, shuffled .128, matched .085. Null also has the longest median span (504 s).
 No staging arm beats no staging by the registered .20 on s130. A WIN needs every seed, so CR.01 cannot crown a curriculum. That is a finding about the curriculum ideas, not a reason to move the bar. The verdict still waits for s131/s132.
 Served philosophy 3 (the curriculum raced, not assumed; so far nothing beats the null) and 6 (free Kaggle CPU, 0 box CPU).
+
+2026-11-14 18:35 UTC · JACK · J6(d) step 2 (J2: D1.0 …135 RUNNING, T1.14 …242 QUEUED, no exit; J5: CR.01 s131 kernels in flight, harvest ~20:15) · `4c316fa`, `c9dd457`.
+Declared the DRINK race before any cell. dA = pool far, whose arena ceiling is 4.6 m while flailers drift 1.86-7.71 m, so it is predicted to fail alone. dB = a drink needs a swallow (mouth still for 1.0 s, < 0.2 m/s). dC = both. Rule = humid_race's rule plus gate 2 ≥ 4/5.
+Built dB. Apparatus: the dB0 limit arm replays swp_k72 s1 l3 byte-same (26 gulps). Under dB that censored flailer drinks 0 and dies of dehydration at 9116. A still body in the pool still drinks 3/80 s.
+dA/dC need the playground pool-literal refactor (it re-bills certificates), so they were not built. Next: Kaggle-CPU cells for dB.
+Served philosophy 1 (a world where water is earned by an act, not by luck) and 4 (the race declared and its wrapper proven a no-op before any cell).
