@@ -1127,3 +1127,8 @@ LC.09 run() refusal rewritten: item (1) gone (LC.02 prices all 7 arms), item (2)
 Kaggle-CPU pilot path built (s89, 6k decisions × 4 arms + frozen twin, guard on); selftest ok. Price from LC.02's box rates: one 1.2M-decision arm-seed = 9.6–12.3 h,
 ppo-needs over Kaggle's 12 h session before its twin and nulls -> the claim run likely needs checkpoint chaining. Pilot not dispatched: Kaggle CPU concurrency unmeasured, LF.04 must not be starved.
 Served philosophy 3 (the 3× core race made payable) and 4 (priced before paid; the seat's VOID left as the finding).
+
+2026-11-14 12:44 UTC · JACK · J5 (1) · 3299560. LF.04 (kcpu call 1) and D1.0 in flight, no exit. `run CR.01` is blocked by the kcpu run lock, and its runner submitted 9 pair kernels serially (~18 h) and re-bought every kernel on any rerun.
+Built: kernel unit cache keyed by impl_sha (file + new IMPL_DEPS on cr00_pilot and the lives it imports) and `prefetch SEED:A:B` (one registered pair kernel, no lock, no ledger). Gate untouched, selftest ok.
+Dispatched 130:null:staged -> `jack-cpu-1794659928` RUNNING beside LF.04's kcpu kernel: Kaggle accepts 2 parallel CPU sessions. D1.0's GPU kernel QUEUED 12:08→12:41+ — whether that's a shared session cap is not yet known; held at 2.
+Served philosophy 3 and 5 (the curriculum cook-off put in flight on free compute, kernels made reusable instead of re-bought).

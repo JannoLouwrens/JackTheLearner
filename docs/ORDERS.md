@@ -89,7 +89,11 @@ seeds 94–98 × 3 arms × 13k, `meal_memory run <arm> <seed> 13000`, then
 docstring, unchanged. Clears → register it against `NE.05`'s seat; dies → say so.
 serves: M2, M7 · philosophy 3, 5.
 **done when:** `CR.01` has a verdict and the meal-memory tally is written.
-state: `CR.01` REGISTERED 11-13 17:20 (seeds 130–132, N 47 exam lives, margin .20); runner built (`777b150`), ~1.8 h per arm-seed.
+state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`. 11-14 12:38 `3299560`: kernel unit cache keyed by impl_sha (+IMPL_DEPS),
+`… cr_01_curriculum_cookoff prefetch SEED:A:B` runs one registered pair kernel with no run lock / no ledger; `run CR.01` reuses units under the same sha (`units` lists them).
+PARALLEL: Kaggle ACCEPTS 2 concurrent CPU sessions — prefetch 130:null:staged `jack-cpu-1794659928` RUNNING beside LF.04's `jack-cpu-1794658139` (log /data/tmp/cr01_pf_130a.log).
+But D1.0's GPU kernel `jack-ladder-1794658135` was still QUEUED at 12:41 (since 12:08) — a session cap may be shared; check before a 3rd kernel.
+Next: harvest unit (~2 h); if D1.0 still queued while 2 kcpu run, hold kcpu at 1; else prefetch 130:lp:frontier, 130:shuffled:matched, … then `run CR.01` when the lock frees.
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
 **Why.** `W.1` is PASS (05:28). `W.2` and `NE.01` are red. Four races (k = 72,
