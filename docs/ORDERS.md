@@ -116,8 +116,7 @@ serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
 state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) step 1 `5d59b57`: censored random lives survive by DRINKING (passive gulps, pool 0.9-1.3 m from spawn).
-11-14 18:25 (d) step 2 race DECLARED `4c316fa` (NEEDS_CLOCK_RACE.md): dA pool far (arena ceiling 4.6 m vs flailer drift 1.86-7.71 m -> predicted to fail alone), dB swallow (1.0 s still mouth, <0.2 m/s), dC both; humid_race rule + gate 2 >= 4/5.
-`c9dd457` dB BUILT (`experiments/drink_race.py`): apparatus (ii) PASS (dB0 byte-same to swp_k72, 26 gulps). Under dB, censored s1 l3 drinks 0 and dies at 9116; a still body in the pool drinks 3/80 s under both arms.
+11-14 18:25 (d) step 2 race DECLARED `4c316fa` (NEEDS_CLOCK_RACE.md): dA pool far (arena ceiling 4.6 m vs flailer drift 1.86-7.71 m -> predicted to fail alone), dB swallow (1.0 s still mouth, <0.2 m/s), dC both; humid_race rule + gate 2 >= 4/5. `c9dd457` dB BUILT (`experiments/drink_race.py`): apparatus (ii) PASS (dB0 byte-same to swp_k72, 26 gulps). Under dB, censored s1 l3 drinks 0 and dies at 9116; a still body in the pool drinks 3/80 s under both arms.
 dA/dC not built (pool literal in playground.py:421/886 + ne_01 + needs.py:820 = world-file refactor, Director call). 18:40 RUNNER BUILT `dfc577c` (`experiments/drink_race_kcpu.py`, cells stamped with code shas).
 STALE: shipped (00:27) + swp_k72 (03:50) NE.01 cells predate NE.01 re-reg (10:13) -> need 15 NE.01 (3 arms x s0-4) + 10 dB W.1/W.2, fresh. Next, when a kcpu slot frees (after CR.01): push in-session `> log`:
 `$PY -m experiments.drink_race_kcpu kernel dB:NE.01:0,swp_k72:NE.01:0,shipped:NE.01:0` (per seed), reattach with JACK_REUSE_KERNEL; `... status` lists current/stale/missing. Tally under the declared rule still to write.
