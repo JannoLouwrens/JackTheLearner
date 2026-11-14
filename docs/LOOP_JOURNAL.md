@@ -1031,3 +1031,10 @@ J6(c): water race mid-NE.01 (s1 of 5), not harvestable. Built the humidity arms 
 hum34 (34 C day, 20 C night, RH 0.5 open -> 1.0 sealed) kills the resting statue under the roof in 186 s, so W.2(c)'s hot route works again AS REGISTERED. Open air, the pool
 and full power in the open all survive, and the cold route is unchanged. hum30 (no temperature edit) kills only exertion under a seal (78 s), which would need W.2 re-aimed. Race to declare after the tally.
 Served philosophy 1 (a world that kills the way a body dies, with a learnable trap and a refuge) and 3 (candidate worlds measured before they are raced).
+
+2026-11-14 04:45 UTC · JACK · J6(c) (J1/J2 checked) · b1272c3. LC.02 waits: own water race (2 workers) + a foreign stt proofs.py at 100% of a core (load 3.2). J2: D1.0 watcher 3422501 alive, no exit.
+J6(c): declared the humidity race (heat race's rule, hum30/hum34 vs shipped, seeds 0-4) and ran its W.1/W.2 legs plus the apparatus (swp_k72 W.2 s0 replays byte-exact).
+NONE SHIPS, and that is settled before NE.01, so NE.01 was not spent (~2 h CPU). hum34 makes W.2(c)'s hot route pass on 5/5 seeds, the first arm to do so since sweat, but it breaks W.2(a):
+at 34 C the deprived statue sits above 37 C and sweats, so thirst leaves its closed form (err 0.158). That loss is real, and it was a declared cost. Both arms also fail W.1(d) on s2 because of how the arm was built:
+humidity lives only in thermal_step, and W.1's flux ledger reads raw e_evap. Next: one shared humidity function, then K_DRY re-derived for 34 C, raced.
+Served philosophy 1 (a world that kills the way a body dies) and 4 (a race lost by its own declared rule, and the loss split into world vs apparatus, not argued away).

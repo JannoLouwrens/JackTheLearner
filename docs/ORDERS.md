@@ -92,11 +92,11 @@ race-won edit may ship (ruling 1 lifts D43's hold for exactly that); re-run
 serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow them) · philosophy 1, 3, 4.
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) HEAT RACE: NONE SHIPS (af9b980; NEEDS_CLOCK_RACE.md).
-11-14 03:24 WATER RACE running (3d7c0a0), log /data/tmp/water_race.log; 04:20 NE.01 s1 cells running, s2-s4 left (~50 min). FINDING (40d47e4): sweat kills W.2(c)'s hot route.
-11-14 04:25 HUMID ROUTE TABLE (3286c97, experiments/humid_race.py): hum34 (34C day/20C night, RH .5 open -> 1.0 sealed) kills the resting roofed statue
-in 186 s = W.2 hot route AS REGISTERED; open/pool/full-open survive; hum30 kills only full power under a seal (78 s). Cold route unchanged (70 s).
-Next: harvest `python -m experiments.water_clock_race tally`; then declare in humid_race.py heat_race's rule for hum30, hum34 vs shipped (seeds 0-4) + run_cell/tally, launch detached.
+state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) HEAT RACE: NONE SHIPS (af9b980). FINDING (40d47e4): sweat kills W.2(c)'s hot route.
+11-14 WATER RACE running (3d7c0a0), log /data/tmp/water_race.log; 04:35 NE.01 s2 cells running, s3-s4 left (~45 min). Harvest: `python -m experiments.water_clock_race tally`.
+11-14 04:40 HUMID RACE (b1272c3, rule declared first, apparatus OK): NONE SHIPS before NE.01. hum34 W.2 c_pass 5/5 (first since sweat) but W.2 a_pass 0/5
+(34C breaks K_DRY's 37C fixed point, deprived statue sweats; real cost) + W.1 d 4/5 on s2 (arm defect: humid f only in thermal_step, W.1 flux reads raw e_evap). hum30 same d defect, c 0/5.
+Next: put humidity in a shared needs fn read by thermal_step AND W.1's _ship_flux_w; race hum34 + K_DRY re-derived for T_DAY 34 (declared first); NE.01 legs via experiments/humid_race.sh.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow
