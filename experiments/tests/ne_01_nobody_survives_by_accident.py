@@ -10,6 +10,9 @@ WORLD + integrator pair, before anything trains under it.
 
 1. RANGE     every need's delta traverses >= 0.3 (p90-p10), none pinned.
 2. RANDOM    a random agent dies within 300-6,000 decisions, every life.
+             (Since 2026-11-14, ruling 4: every window is a multiple of the
+             world's lethal times — 300-6,000 is [2/19, 40/19] T_thirst, gate
+             4's 3 sim-days is 12/7 T_hunger; see `_windows()`.)
 3. STATUE    (control i) doing nothing is lethal, cause RECORDED — under
              §2.3's own constants that cause is DEHYDRATION at ~570 s (450 s
              tank + 120 s grace), NOT starvation (1,800 + 300 s); the registry
@@ -178,6 +181,10 @@ CTRL_SCALE = 0.4              # PS.01's random policy, the regime j0 describes
 N_RANDOM_LIVES = 5
 RANDOM_LIFE_CAP = 6000        # gate 2's own upper bound: one full sim-day
 DEATH_MIN_DEC, DEATH_MAX_DEC = 300, 6000
+# ^ these window constants (with FORAGER_DECISIONS, NIGHT_DECISIONS and
+# MIN_SLEEP_DEC below) are the SHIPPED world's values, kept for readers and
+# old tools. The run reads `_windows()`, which derives every window from the
+# LIVE needs module (ruling 4, 2026-11-14) — see the re-registration block.
 N_PUSH_DECISIONS = 1500       # the random object-pushing occlusion probe
 FORAGER_DECISIONS = 18000     # 3 sim-days, gate 4 verbatim
 FORAGER_DUTY = 0.10
@@ -210,6 +217,85 @@ MIN_DAMAGING = 2              # the drop probe must have produced its events
 DROP_MAX_CYCLES = 40          # option A's stop: injury death, or this many falls
 MIN_MEALS, MIN_DRINKS, MIN_SLEEP_DEC = 5, 3, 1000
 STATUE_DEATH_FRAC = 0.8       # the control's death must be OBSERVED (PS.01 v2)
+
+# ── RE-REGISTRATION 2026-11-14 (Director ruling 4): windows in the world's
+# own time units. Written BEFORE any run under it. The windows were sized in
+# seconds on the fast needs clock (thirst kills in 570 s), so a world on the
+# human clock (k = 72: thirst ~3 world-days, hunger ~21) could not pass gate 2
+# without being more lethal than a human world — the TEST refused the arm,
+# not the world (docs/research/NEEDS_CLOCK_RACE.md, gate-2 probe). Each window
+# is now the multiple of a lethal time that it ALREADY IS on the shipped clock,
+# so the shipped world's windows are byte-same (`_window_selftest`) and
+# nothing is easier for it. Bars unmoved: 5/5 random deaths, spread 0.30,
+# 5 meals, 3 drinks, 60 % cause share, every night/shelter number.
+#   T_thirst = 1/B_W + DEATH_W_S  (full tank -> dead of dehydration; 570 s)
+#   T_hunger = 1/B_E + DEATH_E_S  (full energy -> dead of starvation; 2100 s)
+# Anchors, and why:
+#   random-life window [2/19, 40/19] T_thirst (60 s, 1200 s): a random life
+#     races the FASTEST need-depletion clock, which is thirst in every arm
+#     built; the floor (learnability) scales too, which can only be harder.
+#   forager horizon 12/7 T_hunger (3600 s = 3 sim-days): the oracle must
+#     outlive the SLOWEST depletion clock by today's margin, and MIN_MEALS 5
+#     must fit inside the same multiple of the hunger clock it fits in today.
+#   statue: STATUE_DEATH_FRAC of the random-life cap, as before.
+#   night probe NIGHT_S, sleep event gate NIGHT_S/2: a night is the day
+#     clock's unit, not a lethal time (the coarse twin already read NIGHT_S
+#     live; the fine twin read a constant — now one source).
+# NOT rescaled, stated: the drop probe (option A runs to injury death, its own
+# schedule-free stop; cap DROP_MAX_CYCLES), the push probe (recorded, never
+# gated), and physics settle times (POSE_REST_DEC, NIGHT_SETTLE_DEC,
+# APPLE_BURST_DEC).
+from fractions import Fraction as _F  # noqa: E402
+
+DEATH_MIN_X_THIRST = _F(2, 19)
+DEATH_MAX_X_THIRST = _F(40, 19)   # also the random-life and statue cap
+FORAGER_X_HUNGER = _F(12, 7)
+MIN_SLEEP_X_NIGHT = _F(1, 2)
+WINDOW_OVERRIDE: dict = {}        # smoke tools only (occ_law_race --smoke)
+
+
+def _windows() -> dict:
+    """Every window, in decisions, from the needs module AS IT IS NOW (an arm
+    that patches B_W/B_E/DEATH_*/NIGHT_S gets its own world's windows)."""
+    from experiments import needs as N
+    t_thirst = _F(1.0 / N.B_W) + _F(N.DEATH_W_S)
+    t_hunger = _F(1.0 / N.B_E) + _F(N.DEATH_E_S)
+
+    def dec(s):
+        return int(round(s / _F(SIM_S_PER_DECISION)))
+    w = {"t_thirst_s": float(t_thirst), "t_hunger_s": float(t_hunger),
+         "death_min": dec(DEATH_MIN_X_THIRST * t_thirst),
+         "death_max": dec(DEATH_MAX_X_THIRST * t_thirst),
+         "forager": dec(FORAGER_X_HUNGER * t_hunger),
+         "night": dec(_F(N.NIGHT_S)),
+         "min_sleep": dec(MIN_SLEEP_X_NIGHT * _F(N.NIGHT_S))}
+    w["life_cap"] = w["death_max"]
+    w.update(WINDOW_OVERRIDE)
+    return w
+
+
+def _window_selftest() -> dict:
+    """On the shipped needs constants every derived window equals the value
+    registered on the fast clock — the re-registration moves nothing for the
+    shipped world. And a k = 72 thirst clock (B_W 1/3600, the water race's
+    arm) must scale gate 2's window, or the derivation is decorative."""
+    from experiments import needs as N
+    w = _windows()
+    res = {"shipped_byte_same": (
+        (w["death_min"], w["death_max"], w["life_cap"], w["forager"],
+         w["night"], w["min_sleep"])
+        == (DEATH_MIN_DEC, DEATH_MAX_DEC, RANDOM_LIFE_CAP, FORAGER_DECISIONS,
+            NIGHT_DECISIONS, MIN_SLEEP_DEC))}
+    old = N.B_W
+    try:
+        N.B_W = 1.0 / 3600.0
+        k = _windows()
+    finally:
+        N.B_W = old
+    res["k72_thirst_scales"] = k["death_max"] == int(round(
+        _F(40, 19) * (_F(3600) + _F(N.DEATH_W_S)) / _F(SIM_S_PER_DECISION)))
+    res["restored"] = _windows() == w
+    return res
 SWEEP_DTN = (6.0, 8.0, 10.0, 12.0, 14.0)
 CAUSES = ("dehydration", "starvation", "hyperthermia", "hypothermia",
           "injury", "drowning")
@@ -327,6 +413,7 @@ def _random_lives(seed: int) -> dict:
 
     deaths, js, occs, trajs = [], [], [], []
     null_dead = 0
+    cap = _windows()["life_cap"]
     for life in range(N_RANDOM_LIVES):
         p, model, data, water, pool = _build(seed)
         layer = _layer(model, pool, seed * 131 + life)
@@ -334,7 +421,7 @@ def _random_lives(seed: int) -> dict:
         rng = np.random.RandomState(seed * 9973 + life * 17)
         rows = []
         k = 0
-        while not layer.dead and k < RANDOM_LIFE_CAP:
+        while not layer.dead and k < cap:
             n0 = layer.n_onsets
             ctrl = rng.uniform(-CTRL_SCALE, CTRL_SCALE, model.nu) * layer.gear_scale()
             _step_decision(model, data, water, layer, ctrl, null=null)
@@ -512,7 +599,7 @@ def _night(seed: int, xy, rng_salt: int, coarse: bool) -> dict:
         remaining = needs.NIGHT_S - NIGHT_SETTLE_DEC * SIM_S_PER_DECISION
         layer.sleep_coarse_step(remaining, dt_int=1.0)
     else:
-        n = NIGHT_DECISIONS - NIGHT_SETTLE_DEC
+        n = _windows()["night"] - NIGHT_SETTLE_DEC
         for _ in range(n):
             if layer.dead:
                 break
@@ -583,7 +670,7 @@ def _forager(seed: int, shelter_xy) -> dict:
     sleep_dec = 0
     relocations = 0
     _place(model, data, qadr, HOME_SPOT)
-    for k in range(FORAGER_DECISIONS):
+    for k in range(_windows()["forager"]):
         if layer.dead:
             break
         s = layer.state
@@ -738,7 +825,8 @@ def _experiment(seed: int) -> dict:
 
     deaths = rnd["deaths"]
     n_died = sum(d["died"] for d in deaths)
-    in_window = sum(d["died"] and DEATH_MIN_DEC <= d["decisions"] <= DEATH_MAX_DEC
+    win = _windows()
+    in_window = sum(d["died"] and win["death_min"] <= d["decisions"] <= win["death_max"]
                     for d in deaths)
     dtimes = [d["decisions"] for d in deaths if d["died"]]
     cause_counts = {c: sum(d["cause"] == c for d in deaths) for c in CAUSES}
@@ -797,10 +885,10 @@ def _experiment(seed: int) -> dict:
         "forager_sleep_occ": for_["sleep_occ_mean"],
         "forager_relocations": for_["relocations"],
         "ok_forager": int(for_["alive"] == 1
-                          and for_["survived_dec"] >= FORAGER_DECISIONS),
+                          and for_["survived_dec"] >= win["forager"]),
         "ok_forager_exercised": int(for_["meals"] >= MIN_MEALS
                                     and for_["drinks"] >= MIN_DRINKS
-                                    and for_["sleep_dec"] >= MIN_SLEEP_DEC),
+                                    and for_["sleep_dec"] >= win["min_sleep"]),
         # instrument-alive event gates (PS.01 v2's medicine)
         "n_damaging": drop["n_damaging"],
         "n_rest_decisions": drop["n_rest"],
@@ -815,7 +903,8 @@ def _experiment(seed: int) -> dict:
         "null_spread": rnd["null_spread"],
         "null_dead": rnd["null_dead"],
         "ok_null_flat": int(rnd["null_spread"] == 0.0 and rnd["null_dead"] == 0),
-        # recorded, not gated
+        # recorded, not gated: the windows this run judged by (ruling 4)
+        **{f"win_{k}": float(v) for k, v in win.items()},
         "j0_p95_measured": float(np.percentile(js, 95)) if js else -1.0,
         "j0_borrowed": b.values["j0_ms"],
         "alpha_borrowed": b.values["alpha"],
@@ -846,7 +935,8 @@ def _control(seed: int) -> dict:
     layer = _layer(model, pool, seed * 547 + 13)
     rows, i_min = [], 1.0
     k = 0
-    while not layer.dead and k < RANDOM_LIFE_CAP:
+    cap = _windows()["life_cap"]
+    while not layer.dead and k < cap:
         _step_decision(model, data, water, layer, np.zeros(model.nu))
         rows.append(_deltas_row(layer))
         i_min = min(i_min, layer.state.i)
@@ -863,7 +953,7 @@ def _control(seed: int) -> dict:
         "statue_ate": int(sum(layer.ate_total.values())),
         "statue_drank": int(layer.drank_total),
         "ok_statue_death_observed": int(layer.dead
-                                        and k < STATUE_DEATH_FRAC * RANDOM_LIFE_CAP),
+                                        and k < STATUE_DEATH_FRAC * cap),
     }
     del model, data, water
     return m

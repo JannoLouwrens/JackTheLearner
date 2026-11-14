@@ -35,8 +35,8 @@ def run(arm: str, seed: int) -> Path:
     ne = mods["NE.01"]
     r = ne._random_lives(int(seed))
     rec = {"arm": arm, "seed": int(seed), "deaths": r["deaths"],
-           "cap": ne.RANDOM_LIFE_CAP,
-           "window": [ne.DEATH_MIN_DEC, ne.DEATH_MAX_DEC]}
+           "cap": ne._windows()["life_cap"],
+           "window": [ne._windows()["death_min"], ne._windows()["death_max"]]}
     OUT.mkdir(parents=True, exist_ok=True)
     p = OUT / f"{arm}_s{seed}.json"
     p.write_text(json.dumps(rec))

@@ -137,8 +137,7 @@ def run_one(arm: str, seed: int, out: str, smoke: bool = False) -> dict:
     from experiments.tests import ne_01_nobody_survives_by_accident as ne
 
     if smoke:
-        ne.FORAGER_DECISIONS = 300
-        ne.NIGHT_DECISIONS = 120
+        ne.WINDOW_OVERRIDE.update(forager=300, night=120)
         ne.POSE_REST_DEC = 20
     pose = ne._find_shelter_pose(seed) if arm == "open" else None
     _patch(arm, ne)
@@ -170,7 +169,7 @@ def run_one(arm: str, seed: int, out: str, smoke: bool = False) -> dict:
     holds_night = bad[0] == 0 and bool(n_sh["alive"] == 1 and n_sh["occ_mean"] >= ne.SHELTER_OCC_MIN
                        and n_sh["cost"] <= ne.SHELTER_COST_MAX
                        and n_sh["cost"] <= ne.SHELTER_RATIO_MAX * max(n_op["cost"], 1e-9))
-    holds_for = bool(fo["alive"] == 1 and fo["survived_dec"] >= ne.FORAGER_DECISIONS)
+    holds_for = bool(fo["alive"] == 1 and fo["survived_dec"] >= ne._windows()["forager"])
     row = {"arm": arm, "seed": seed, "smoke": smoke,
            "pose_xy": [float(v) for v in pose["xy"]], "occ_probe": pose["occ_probe"],
            "occ_max": pose["occ_max_reachable"],
