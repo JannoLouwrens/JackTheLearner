@@ -80,3 +80,20 @@ Apparatus: sweat_paid W.2 s0 replays the heat race's cell exactly; W.1 `_check` 
   hot route honest — exertion in hotter sun, a fire, a sealed hot space whose air temperature actually exceeds skin,
   or humidity capping evaporation — raced, not assumed. Next arm to declare: sweat_paid + k72 clock + one such
   hazard, with W.2's roof route pointed at it (re-registered with this reason; bar 40 C unmoved).
+
+## J6(c) pre-declaration: which heat hazard CAN kill a sweating Jack (2026-11-14 03:55 UTC, no ledger)
+
+`python -m experiments.heat_hazard_table` (pure arithmetic on needs.thermal_step under the sweat_paid patch; output
+`/data/tmp/heat_hazard_table.txt`). Humidity modelled, declared in the module, as a vapour-gradient factor
+f = (p_sat(35) - RH*p_sat(T_env))/p_sat(35) on the sweat clamp (580 W).
+* **Exertion cannot do it.** Full power adds only 200 W (kappa_act = 2*M_BASAL/p_max): M_max = 300 W. Dry air needs
+  T_env >= **59.6 C** at full power in the open to reach 40 C for 20 s. No dry-heat hazard at a physical temperature exists.
+* **Humidity can, at biological thresholds.** Rest survives 35 C/80%, 40 C/20%, 45 C/20%; dies at 35 C/100% (240 s),
+  40 C/80% (106 s), 45 C/50% (115 s). Full power dies already at 35 C/80% (94 s), 40 C/50% (96 s), and at shipped
+  T_DAY 30 C only near saturation (30/80% roof 258 s, 30/100% open 322 s). Anchor: Vecellio 2022's uncompensable line
+  (~31 C wet-bulb, light activity: ~36/80%, ~40/50%) sits between this table's rest and full-power rows, as it should.
+* The roof is NOT protective in humid heat: 30 C/80% full power dies under the roof (258 s) and survives in the open
+  (k_eff 4.29 vs 14.29) — sealed air is the hazard, which is the biology the W.2 roof route meant to probe.
+=> Next arm to declare (on swp_k72's clocks once the water race tallies): humidity as a W0 world field (f on the sweat
+clamp; humid hot spell or sealed humid shelter), W.2(c)'s hot route re-aimed to "sealed humid heat" with this table's
+arithmetic as its pre-registration; bar 40 C unmoved. Unmeasured: what humidity does to NE.01's random-death causes.
