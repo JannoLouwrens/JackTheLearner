@@ -1158,5 +1158,5 @@ Cheaper: no more 12-25 min × 3-core salt hangs, and detached jobs can no longer
 
 2026-11-14 15:50 UTC · JACK · J6(c) (J1 DONE; J5 next prefetch REFUSED by `admit`: detached 48.5k s > 34.6k cap; D1.0 GPU still QUEUED since 12:08 with no kcpu running) · 8079d00.
 Tallied the humidity death probes under the re-registered gate-2 window [1958, 39158]: hum30 5/5, 5/5, 3/5 and hum34 5/5, 5/5, 3/5. Both have 2 lives censored at the cap on s2, so both fail gate 2.
-swp_k72 is now the only k72-family arm still alive for gate 2 (s0 5/5). s1 was probed in-session: see the state line. s2-4 wait for a day `admit` allows.
+swp_k72 is now the only k72-family arm still alive for gate 2 (s0 5/5). s1 probe timed out in-session at 24 min with no result (rc 124). s2-4 wait for a day `admit` allows.
 Served philosophy 3 and 4: a world-rule race narrowed by a test that could fail and did, on 2 of 3 arms.

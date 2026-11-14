@@ -116,7 +116,7 @@ serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 formerly-red clause explained.
 state: (a) DONE `e054e0a`. (c) re-read, no ledger (`cce754f` `35e3ebe`, NEEDS_CLOCK_RACE.md): k = 72 gate 2 window [1958, 39158]; pre-sweat k72 0/5 (heat deaths <1958 dec).
 11-14 15:25 probe tally (gate 2 needs 5/5 deaths in-window on EVERY seed): hum30 s0 5/5, s1 5/5, **s2 3/5**; hum34 s0 5/5, s1 5/5, **s2 3/5** (2 censored at 39158 each)
--> both humidity arms FAIL gate 2 on s2 under the honest window; swp_k72 s0 5/5 (8735-25458). swp_k72 s1 probe re-run in-session 15:34 (first try killed by the harness at 10 min).
+-> both humidity arms FAIL gate 2 on s2 under the honest window; swp_k72 s0 5/5 (8735-25458). swp_k72 s1: NO result: timed out at 24 min in-session (rc 124; s0 took 18 min) -> s1 needs a detached cell.
 Next: swp_k72 s2-4 (~18 min/cell, detached once `admit` allows: today it refuses at 48.5k s). If 5/5 everywhere, its NE.01 legs go on Kaggle CPU (one kernel/seed).
 (b) unblocked by the lock (LF.04 done), but held by the detached cap today.
 
