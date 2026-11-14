@@ -87491,22 +87491,14 @@
     },
     "T1.14": {
       "amended": [],
-      "attempt": 5,
-      "commit": "3f3e121",
-      "compute_s": 3673.15,
-      "control_metrics": {
-        "distinct_results": 3,
-        "ignored_distinct_results": 1,
-        "ignored_flagged": 1.0,
-        "ignored_seeds": "[0, 0, 0]",
-        "ignored_spread": 0.0,
-        "ignored_to_real_spread": 0.0,
-        "spread": 0.01028484
-      },
+      "attempt": 6,
+      "commit": "ce97e39",
+      "compute_s": 6611.53,
+      "control_metrics": {},
       "dirty_files": null,
-      "duration_s": 3683.58,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1794615228",
-      "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "duration_s": 6619.53,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1794676242,ladder-1794682851",
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
           "amended": [],
@@ -87635,34 +87627,65 @@
           ],
           "spec_sha": "4270ae98e8e54f21",
           "status": "ERROR"
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "3f3e121",
+          "compute_s": 3673.15,
+          "control_metrics": {
+            "distinct_results": 3,
+            "ignored_distinct_results": 1,
+            "ignored_flagged": 1.0,
+            "ignored_seeds": "[0, 0, 0]",
+            "ignored_spread": 0.0,
+            "ignored_to_real_spread": 0.0,
+            "spread": 0.01028484
+          },
+          "dirty_files": null,
+          "duration_s": 3683.58,
+          "gpu_job_id": "jannolouwrens/jack-ladder-1794615228",
+          "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+          "impl_sha": "2257fd45c5b9e14d",
+          "message": "",
+          "metrics": {
+            "artifact_channel": "t108.json download",
+            "backend": "kaggle",
+            "effect": 0.26502,
+            "gpu": "Tesla T4",
+            "heldout_cv_pct": 17.285,
+            "heldout_mean": 0.0299,
+            "heldout_std": 0.005169,
+            "lr_final_max": 0.0,
+            "min_detectable_effect": 0.010337,
+            "seed_noise": 0.005169,
+            "seeds": 3,
+            "snr": 51.28
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 229.2,
+          "preserved_impl": null,
+          "ran_at": "2026-11-14T01:15:07",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "4270ae98e8e54f21",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "2257fd45c5b9e14d",
-      "message": "",
-      "metrics": {
-        "artifact_channel": "t108.json download",
-        "backend": "kaggle",
-        "effect": 0.26502,
-        "gpu": "Tesla T4",
-        "heldout_cv_pct": 17.285,
-        "heldout_mean": 0.0299,
-        "heldout_std": 0.005169,
-        "lr_final_max": 0.0,
-        "min_detectable_effect": 0.010337,
-        "seed_noise": 0.005169,
-        "seeds": 3,
-        "snr": 51.28
-      },
+      "impl_sha": "d48f53ae0543d945",
+      "message": "RuntimeError: GPU job failed on colab: all backends failed: kaggle: status=queued; colab: exit 1: stderr '                        \u2502\\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\\nColabRequestError: Failed to issue request POST \\nhttps://colab.research.google.com/tun/m/assign?nbh=5c3d74d1_5899_4a4b_910a_9929e\\n94d9930........&variant=GPU&accelerator=T4: Service U",
+      "metrics": {},
       "peak_rss_inherited": false,
-      "peak_rss_mb": 229.2,
+      "peak_rss_mb": 300.8,
       "preserved_impl": null,
-      "ran_at": "2026-11-14T01:15:07",
+      "ran_at": "2026-11-14T19:00:58",
       "seeds": [
         0
       ],
       "spec_id": "T1.14",
       "spec_sha": "4270ae98e8e54f21",
-      "status": "PASS"
+      "status": "ERROR"
     },
     "T2.00": {
       "amended": [],
