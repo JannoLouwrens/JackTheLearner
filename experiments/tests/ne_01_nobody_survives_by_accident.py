@@ -207,6 +207,7 @@ SHELTER_RATIO_MAX = 0.50
 COARSE_FINE_T_MAX = 0.20      # §9's gate, verbatim
 OPEN_OCC_MAX = 0.15           # instrument gate: an "open" night must be open
 MIN_DAMAGING = 2              # the drop probe must have produced its events
+DROP_MAX_CYCLES = 40          # option A's stop: injury death, or this many falls
 MIN_MEALS, MIN_DRINKS, MIN_SLEEP_DEC = 5, 3, 1000
 STATUE_DEATH_FRAC = 0.8       # the control's death must be OBSERVED (PS.01 v2)
 SWEEP_DTN = (6.0, 8.0, 10.0, 12.0, 14.0)
@@ -360,7 +361,16 @@ def _random_lives(seed: int) -> dict:
 
 
 # ── probe 2: drop/rest (exercises i; PS.01 v2's mixed-fixture reasoning) ──
-def _drop_probe(seed: int) -> dict:
+def _drop_probe(seed: int, from_ladder: bool = True) -> dict:
+    """Integrity's admitted range, exercised TO ITS EDGE (option A,
+    docs/research/NE_01_SPREAD_I.md, declared 2026-11-14 before any run of
+    it): cycles of (drop, 74 random, 200 rest) repeat until injury death or
+    DROP_MAX_CYCLES, the integrity analogue of the statue dying of thirst.
+    The old fixed 3-cycle schedule read a ratchet whose p90-p10 was set by
+    how many falls the schedule happened to hold. `from_ladder=False` is the
+    planted control: the same schedule placed at ground height (no fall)
+    must NOT clear SPREAD_MIN on integrity, or the gate is reading the
+    random flailing, not the world's fall damage."""
     import numpy as np
     sys.path.insert(0, str(REPO))
     from playground import LADDER_X, LADDER_Y, SPAWN_Z, humanoid_index
@@ -371,10 +381,11 @@ def _drop_probe(seed: int) -> dict:
     qadr = humanoid_index(model)["qposadr"]
     b = _borrowed()
     j0 = b.values["j0_ms"]
-    drop_xyz = (LADDER_X, LADDER_Y + 0.45 + 0.9, p.ladder_height + SPAWN_Z)
+    drop_xyz = (LADDER_X, LADDER_Y + 0.45 + 0.9,
+                (p.ladder_height if from_ladder else 0.0) + SPAWN_Z)
 
     rows, n_damaging, n_rest = [], 0, 0
-    sched = (["drop"] + ["random"] * 74 + ["rest"] * 200) * 3
+    sched = (["drop"] + ["random"] * 74 + ["rest"] * 200) * DROP_MAX_CYCLES
     for mode in sched:
         if layer.dead:
             break
@@ -390,7 +401,14 @@ def _drop_probe(seed: int) -> dict:
         if layer.last_rest_dt > 0.5 * layer.last_dt:
             n_rest += 1
         rows.append(_deltas_row(layer))
-    return {"traj": np.array(rows), "n_damaging": n_damaging, "n_rest": n_rest}
+    tr = np.array(rows)
+    ii = NEED_KEYS.index("i")
+    return {"traj": tr, "n_damaging": n_damaging, "n_rest": n_rest,
+            "died": int(layer.dead),
+            "cause": str((getattr(layer, "death_record", None) or {}).get("cause", "")),
+            "n_decisions": len(rows),
+            "spread_i": float(np.percentile(tr[:, ii], 90)
+                              - np.percentile(tr[:, ii], 10)) if len(tr) >= 10 else 0.0}
 
 
 # ── probe 3: the sheltered sleeping pose the world admits ───────────────
@@ -705,6 +723,7 @@ def _experiment(seed: int) -> dict:
 
     rnd = _random_lives(seed)
     drop = _drop_probe(seed)
+    drop_ctrl = _drop_probe(seed, from_ladder=False)
     pose = _find_shelter_pose(seed)
     night_open = _night(seed, OPEN_SPOT, 21, coarse=False)
     night_open_coarse = _night(seed, OPEN_SPOT, 21, coarse=True)
@@ -786,6 +805,12 @@ def _experiment(seed: int) -> dict:
         "n_damaging": drop["n_damaging"],
         "n_rest_decisions": drop["n_rest"],
         "ok_probe_exercised": int(drop["n_damaging"] >= MIN_DAMAGING),
+        "drop_died": drop["died"],
+        "drop_cause": drop["cause"],
+        "drop_n_decisions": drop["n_decisions"],
+        "drop_ctrl_spread_i": drop_ctrl["spread_i"],
+        "drop_ctrl_n_damaging": drop_ctrl["n_damaging"],
+        "ok_drop_control": int(drop_ctrl["spread_i"] < SPREAD_MIN),
         # the null rode random life 0
         "null_spread": rnd["null_spread"],
         "null_dead": rnd["null_dead"],
@@ -857,6 +882,7 @@ def _check(m: dict, c: dict):
         # 1. every need traverses a usable range, no need pinned, every seed
         and m["ok_spread"] == 1.0
         and m["ok_probe_exercised"] == 1.0
+        and m.get("ok_drop_control", 0.0) == 1.0
         and m["ok_forager_exercised"] == 1.0
         # 2. a random agent dies, inside [300, 6000], every life, every seed
         and m["ok_random_deaths"] == 1.0

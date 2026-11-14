@@ -45,3 +45,16 @@ in world terms:
     It would have to be raced (ruling 1's race rule), and PS.01 would go stale.
 The recommendation is (A). It mirrors how every other LETHAL need is exercised (to the edge), and it is
 schedule-free once the stop rule is declared. It needs the spec's notes amended before the run, with this file cited.
+
+## (A) implemented and probed — 2026-11-14 ~06:55 UTC (JACK, J6(c)); no ledger run
+`_drop_probe` now repeats (drop, 74 random, 200 rest) until death or `DROP_MAX_CYCLES` = 40. A **planted control**
+was added beside it: the same schedule placed at ground height, so nothing falls. NE.01 now also requires
+`ok_drop_control`: the control's spread_i must stay below SPREAD_MIN (0.30, unmoved). That is a strengthening, because
+gate 1 can no longer be passed by the random flailing alone. Probe (scratch `/data/tmp/ne01_dropA/probe.py`):
+| seed | ladder spread_i | ends | decisions | control spread_i (control ends) |
+|---|---|---|---|---|
+| 0 | 0.835 | injury (i=1.0) | 2204 | 0.032 (dehydration) |
+| 1 | 0.569 | dehydration (i max .92) | 1953 | 0.106 (hyperthermia) |
+| 2 | 0.785 | dehydration (i max .94) | 1909 | — |
+Under the fast clock thirst kills him before the edge on 2/3 seeds, so the stop rule is "first death". That is recorded
+per seed as `drop_cause`, not hidden. Seeds 3-4 were not probed. NE.01 is not re-run until the gate-2 ruling (INBOX 05:25).
