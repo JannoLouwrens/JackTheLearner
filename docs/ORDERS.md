@@ -114,11 +114,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: races k72/heat/water/humidity: NONE ships (`e4c10cd` `af9b980` `21188f3` `b1272c3`). Option (A) i-probe built `33a1acc` (ctrl s0/s1 .032/.106).
-11-14 10:40 (a) DONE `e054e0a`: windows = multiples of lethal times, read live by `_windows()` — random [2/19, 40/19] T_thirst, forager 12/7 T_hunger,
-statue .8×cap, night NIGHT_S; shipped byte-same (300/6000/18000/2000/1000, selftest), statue s0 reproduces ledger (2567 dec); k72 thirst → [1958, 39158].
-11-13 run's reds: ok_spread .33 (spread_i .248 → option A), ok_forager .67, cause share 5/5 hyperthermia. Run (b) NOT started: LF.04's Kaggle poll holds
-the CPU run lock until ~17:30 (INBOX). Next: (b) `launch_detached.sh … run NE.01` when the lock frees (inside ruling 3's cap), then (c).
+state: (a) DONE `e054e0a`. 11-14 13:40 (c) re-read, no ledger (`cce754f` `35e3ebe`, NEEDS_CLOCK_RACE.md): k = 72 windows are gate 2 [1958, 39158], forager 218571 dec.
+k72 (pre-sweat) gate 2 goes 1.0 -> 0.0: 25/25 heat deaths at 445-549 dec, below the 1958 floor. swp_k72 s0 now PASSES gate 2: 5/5 dehydration deaths at 8735-25458 (0/5 at cap 6000);
+hum34 s0 5/5 (was 3/5). So the fast-clock window was the obstacle, not the world. Probe still running: hum30 s0-2, hum34 s1-2 (`/data/tmp/rdp_reg_{a,b}.log`).
+Next: `python -m experiments.random_death_probe tally`; probe swp_k72 s1-4 (~18 min/cell). If 5/5 on every seed, put swp_k72's NE.01 legs on Kaggle CPU (one kernel/seed).
+(b) is still held by the kcpu run lock (LF.04).
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

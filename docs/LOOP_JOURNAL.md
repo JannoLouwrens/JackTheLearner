@@ -1137,3 +1137,9 @@ Served philosophy 3 and 5 (the curriculum cook-off put in flight on free compute
 LF.06 legs reversed per ruling 7 and run() built in a worktree (main tree never dirty mid-LF.04): kernel trains 10 lives + hands over + exam_here; box does exam, 10 more lives, frozen twin, both controls (control 1 now runs its own exam), each child billed to the CPU day.
 Smoke s110 at N=M=K=1 (metered detached, ~340 s): ckpt 14.0 MB, exam here = there = strip 45.8 s byte-same, twin frozen, learner trains. Finding: an UNTRAINED init's exam is 577.6 s, against 597.6–601.2 for the s90 pilot's trained exams — control 2 (fresh must fail (a)) may not fail.
 Not dispatched: box legs ~11.7k s, today's CPU 42k/57.6k. Served philosophy 7 and 1 (the hand-over gate — trained here, still learning there — made runnable) and 4 (a control that may expose the exam as weight-blind, reported before the run).
+
+2026-11-14 13:45 UTC · JACK · J6(c) · cce754f 35e3ebe. In flight, no exits: LF.04 (kcpu call 5), CR.01 prefetch (RUNNING), D1.0 GPU kernel still QUEUED since 12:08. The run lock holds J6(b).
+Re-read the needs-clock arms against the re-registered NE.01, with no ledger write. Pre-sweat k72 gate 2 goes 1.0 -> 0.0 (25/25 heat deaths at 445-549 dec, under the 1958 floor), re-scored from saved cells.
+Re-ran the gate-2 probe at the new cap of 39158: swp_k72 s0 5/5 dehydration deaths at 8735-25458 (0/5 before), hum34 s0 5/5 (3/5 before). This overturns the 05:25 claim that "no k72 arm can meet gate 2".
+The window was the obstacle, not the world. Still running detached: hum30 s0-2, hum34 s1-2. Next: probe swp_k72 s1-4, then its long NE.01 legs on Kaggle CPU.
+Served philosophy 3 and 4: a red re-read under the honest test instead of being filed, plus a world that kills by human-timed thirst.
