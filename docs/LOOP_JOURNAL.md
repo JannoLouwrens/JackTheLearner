@@ -1108,3 +1108,6 @@ LF.04 on Kaggle CPU call 2 (call 1 ok 1630 s); D1.0 watcher alive 8.5 h; J5/J6(b
 Fixtures 15/15; pilot s90: fresh lives die at 52.8–54.6 s of energy, control censors 3/3. Control priced ~11 core-h -> KAGGLE_CPU.
 Finding: (a)'s W1.02 t2c and (c)'s W1.02 survival still contradict on one process — written to J7 state for a ruling. No ledger change.
 Served: philosophy 4 (a test that could have passed now can) and 3 (the world's depth gate made answerable).
+- 2026-11-14 10:50 JACK J1 (short slot): LF.04 on Kaggle CPU — calls 1–3 ok (27/23/14 min), call 4 running; ETA ~11:45 not 17:30, so J5/J6/J7's kcpu lock frees early.
+  Checked: calls cloned 4 different heads; LF.04's code paths unchanged across them (only NE.01/W1.04 moved) — verdict stays clean. INBOX: pin later calls to call 1's head.
+  J8 (unblocked now LF.04 is dispatched) has no run() and needs the fetch-out leg — too big for 27 min, left for a full slot. Served: philosophy 4 (the verdict's integrity), 5.

@@ -57,7 +57,9 @@ state: 11-14 07:10 step (1) DONE `76a85dc`. Step (2) DONE: `T6.03` PASS att 3 (`
 `LF.03` PASS att 2 09:32, 2386 s, salt differential: all deciding metrics reproduced (`1400d81`, pushed).
 Step (3) DISPATCHED 09:33: `launch_detached.sh /data/tmp/lf04_run.log run LF.04` (wrap pid 3708266, runner 3708275) at head `1400d81`; call 1 = Kaggle CPU kernel `jannolouwrens/jack-cpu-1794648797`, RUNNING 09:38.
 Calls run serially (6 calls, ≤6 h timeout each, ~8 h total); each later call gets a new `jack-cpu-<epoch>` slug in gpu_submissions.jsonl.
-Next: read `/data/tmp/lf04_run.log` each slot; act only on its exit. When the verdict lands in ledger.json: commit by path + render. A FAIL is the finding: diagnose, do not soften.
+11-14 10:45 calls 1–3 DONE ok (27/23/14 min, slugs -1794648797/-1794650429/-1794651790), call 4 started 10:37 → whole run ~11:45, not 17:30.
+Each call cloned the THEN-current HEAD (1400d81, 4068b7f, cb28752, b1a1035); diff 1400d81..b1a1035 touches only NE.01/W1.04 + their tests — LF.04's code paths byte-same.
+Next: read `/data/tmp/lf04_run.log`; on exit commit ledger by path + render. A FAIL is the finding: diagnose, do not soften.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 5 in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
@@ -249,6 +251,8 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 
 - 11-14 SYSTEM: `coverage` exits 2 again at HEAD (bookkeeping only: GEN.06 new unrunnable citation, SM.02→SM.03 release pair, UNREACHABLE/PASS-ON-DEAD baselines lagging) — not touched. Real finding from S3(2): GOAL ends "advised not commanded" and "tree-fire-shelter world" have NO live claim spec (CLAIM-DEAD) — the advice gate and W2/`W.5` in JACK Next-up 6.
 - 11-14 JACK: a Kaggle-CPU (`kcpu<12h`) run holds `/tmp/jack-ladder.lock` for its whole remote poll — `_lock_for` and `_holders.remote_only` count only `gpu*` budgets as remote, so LF.04 (runner 3708275, ~8 h of polling, 0 CPU) refuses every local spec AND the overflow slot, and every other kcpu dispatch (J5 `CR.01`, J6(b) `NE.01`) until ~17:30. Fix: treat `kcpu` as remote in both places (`experiments/run.py:71`, `:251`).
+
+- 11-14 JACK: multi-call Kaggle-CPU specs re-clone the CURRENT HEAD on every call (LF.04 calls ran on 4 different heads) — a code commit mid-run would silently mix versions inside one verdict; pin calls 2..N to call 1's head. Harmless for LF.04 today (code paths unchanged).
 
 ## DONE (kept one day)
 
