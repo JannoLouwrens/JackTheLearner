@@ -3140,3 +3140,77 @@ moves (J8). No language arm may be built on the old wording.
 ## D50 — RESOLVED BY ARMED DEFAULT (fired 2026-11-13 by the Director; decide_by 2026-11-03 passed): REPORT THE FIRING WHERE ITS DAMAGE IS READ. Each Director sitting reads the usage meter and the organ logs; a fired stop is reported in PROGRESS "Dead or stuck" together with its dark slots and missed dates as one finding. Reporting only; the stop, PACE_FLOOR and PACE_CAP are untouched. Today: no stop fired (week:all models 15%).
 
 ## D52 — RESOLVED BY ARMED DEFAULT (fired 2026-11-13 by the Director; decide_by 2026-11-05 passed): RETRY THE SWEEP WITHIN ITS WEEK. `field_watch.sh` may be given later attempts in the same ISO week, each asking the usage gate exactly as now and exiting on a refusal, at most one completed sweep per week. The gate's numbers are byte-unmoved. Queued as SYSTEM Next-up (6) in `docs/ORDERS.md`; installing a cron line is outside the repo and stays the owner's.
+
+## 2026-11-14 06:50 UTC — Director, DAILY sitting: rulings
+
+**1. `T6.03` no longer depends on `T2.10`; it measures what it needs itself.**
+`LF.04 ← LF.03 ← LF.02 ← T6.03 ← T2.10 FAIL` held the creature gate for two
+days. `T2.10` is red on one conjunct only — paraphrase recall on the
+stem-disjoint fixture (added 08-31, 0.0, the ME.11 arena's known weakness).
+`T6.03` stores and queries on the templated venue (cue shares the content
+word; `t6_03_cross_session.py:268-269`), where `T2.10` reads recall@1 1.0
+against recency 0.0. `LF.02` takes from `T6.03` only "stores survive a session
+boundary". No link in the chain measures or uses paraphrase recall, and the
+runner cannot express a per-conjunct edge. So: `T6.03` gains a clause in its
+own run — on its own store and cues the scorer's recall@1 must beat
+recency-only by ≥ 0.10, `T2.10`'s own margin — and its `depends_on` becomes
+`["T0.05", "T0.08"]`. This is a strengthening of `T6.03` (it now fails by
+itself if retrieval is no better than recency) and the removal of an edge
+that carried an unrelated red. `T2.10` is byte-untouched and stays FAIL; its
+owner is JACK Next-up 2 (a learned scorer raced on the certified fixture).
+
+**2. A green certificate on J1's path is not edited for a lower order.**
+`LC.02`'s quiet-box PASS (att 22, 06:10, foreign load 0.66 of a 1.0 limit) is
+the standing verdict; its VOID-on-contention precondition stays as built.
+Until `LF.04` is dispatched, `cores.py`, `survival.py`, `w0.py`, `needs.py`
+and the `LC.02`/`LF.02`–`LF.04` test files are frozen to every other order —
+including comment edits and race-won world edits. Last night an edit for the
+7th-ranked order staled step 1 of the 1st. Venue: `LC.02` stays on this box
+(it is a claim about this box's throughput); no Kaggle timing.
+
+**3. The CPU day is split.** Of the 57,600 s ceiling, detached jobs (races,
+pilots) may use at most 34,560 s in total, and at most 2 detached worker
+processes may be alive at once across all jobs; 23,040 s are reserved for
+registered runs and the clerk. Workers apply it by hand today; SYSTEM S2
+makes `admit`/`launch_detached.sh` enforce it. Reason: 11-13 ended at
+59,599 s with every registered run refused for six hours and load 6.7 on a
+box that serves paying tenants.
+
+**4. `NE.01` is re-registered in the world's own time units; ruling 1 of
+11-13 (one clock, k = 72) stands.** Its windows (random deaths within one
+day; meals in three days; probe lengths) were sized in seconds on the fast
+needs clock, so a world on the human clock cannot pass them without being
+more lethal than a human one — the test, not the world, refused the k = 72
+arm. Each window becomes a multiple of the world's lethal times (the multiple
+it has today on the shipped clock, written before any run, so the shipped
+world's windows are numerically unchanged and nothing is easier for it). The
+integrity probe, measured to be a ratchet whose reading is set by its
+schedule (`docs/research/NE_01_SPREAD_I.md`), becomes option (A) with the
+one schedule-free stop rule: falls until injury death — the same "to the
+lethal edge" exercise every other need gets. Bars unmoved: 5/5 random deaths,
+spread 0.30, 5 meals. Old version kept in history.
+
+**5. `W1.04`(c) is re-registered on independent lives.** As registered it
+cannot pass in any world (p5 capped at 266.6 s against 5600 s; `93f4040`). New
+(c): ≥ 20 independent fresh lives per arm-seed, censored at 5600 s, bar and
+control unchanged. The passive arm leaves (c): `W1.01` claims that arm dies,
+and a clause demanding it also survive contradicted the spec beside it. That
+death stays asserted by `W1.01`, so nothing is loosened.
+
+**6. Meal memory (LAB, ALIVE) enters under the Consolidation seat** as a lab
+cook-off: its declared grind (seeds 94–98 × 3 arms × 13k) runs on Kaggle CPU
+kernels behind `CR.01` — no box CPU, so the 11-13 hold on local learner
+pilots is not touched. It is registered against `NE.05`'s seat only if the
+tally clears the gate already written in its module docstring.
+
+**7. `LF.06` runs with its legs reversed.** Train in a Kaggle CPU kernel,
+fetch the checkpoint out, examine and continue on this box. The claim is
+"handed to another machine he keeps what he knew and learns more"; which
+machine is which does not enter it. No input channel is built — the machine
+does not grow.
+
+**8. `LC.09` runs as registered; the seat is not repaired first.** The seated
+wm-latent trains no action- or state-reading weight and the guard will VOID
+it. That is the race's finding about the seat. wm-dyn is the
+action-conditioned challenger already built; a repair to the seated arm
+enters, if at all, as a new arm after the verdict.
