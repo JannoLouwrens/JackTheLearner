@@ -987,3 +987,6 @@ J6(c): 45/45 cells, apparatus 10/10 replay. Declared rule: NONE SHIPS. Sweat mov
 ok_random_deaths (some flailers outlive the day), ok_spread (core T spread 0.283: a body that now thermoregulates) and share 1.0 (one clock kills all).
 Next arm: sweat_paid + water clock toward k=72. Tables in docs/research/NEEDS_CLOCK_RACE.md.
 Served philosophy 1 (a world that kills him the way a human body dies) and 3/4 (the world raced, rule declared first, a loss recorded as declared).
+2026-11-14 01:55 UTC · JACK · J2 · T1.14 PASS harvested (9d24f8d; Kaggle T4 3673 GPU-s, heldout_cv 17.3%). D1.0 DISPATCHED unchanged under D56's default
+(pre-flight CLEAR, Kaggle W45 1.02h used); first unit assigned to Colab T4, watcher pid 3422501, log /data/tmp/dispatch_d1_0.log. LC.02 still waits: a foreign stt replay at 100% of a core.
+Served philosophy 3 (the control-path contest back on free GPU, decided by measurement) and 6 (free compute that would expire is being spent).

@@ -67,10 +67,10 @@ serves: M3, M4 · END-FIT row 1 (human-like body) · philosophy 3, 7 · objectiv
 On a verdict, write in the seat row which END-FIT rows the winner leaves reachable (fast loop inside one brain; hands).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-14 00:12 Colab T4 ASSIGNS again with `colab --auth adc new` (plain `colab sessions` still asks OAuth; gpu.py uses adc, fine); probe stopped.
-11-14 00:13 Kaggle weekly GPU quota RESET: `dispatch.sh T1.14 --projected-hours 1.2` -> kernel jack-ladder-1794615228 RUNNING on Kaggle GPU
-(watcher pid 3387508, log /data/tmp/dispatch_t1_14.log). D1.0 stays refused until T1.14 has a verdict.
-Next: read the T1.14 log; on a verdict `dispatch.sh D1.0 --projected-hours 25.05` unchanged (12 arm units left; Colab and Kaggle both open).
+state: 11-14 00:12 Colab T4 assigns with `colab --auth adc new`. 11-14 01:15 T1.14 PASS on Kaggle T4 (9d24f8d; 3673 GPU-s, heldout_cv 17.3%).
+11-14 ~01:55 D1.0 DISPATCHED unchanged, `dispatch.sh D1.0 --projected-hours 25.05` (D56 default: smallest-first, quota refusal final, overflow Colab);
+pre-flight CLEAR (Kaggle W45 used 1.02h, 28.98h left); watcher pid 3422501, log /data/tmp/dispatch_d1_0.log.
+Next: read that log each slot, act only on an exit; never kill the watcher. On a verdict seat the winner BY VERDICT, re-run T2.01, write END-FIT rows.
 
 ### J6 — W0's red world rules: one clock (`W.1`, `W.2`), then `NE.01`
 **Why.** `W.1`(b) and `W.2`(c) are one fault, ruled today (ruling 1): **W0 has
