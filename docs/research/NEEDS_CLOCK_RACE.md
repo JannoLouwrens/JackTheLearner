@@ -97,3 +97,33 @@ f = (p_sat(35) - RH*p_sat(T_env))/p_sat(35) on the sweat clamp (580 W).
 => Next arm to declare (on swp_k72's clocks once the water race tallies): humidity as a W0 world field (f on the sweat
 clamp; humid hot spell or sealed humid shelter), W.2(c)'s hot route re-aimed to "sealed humid heat" with this table's
 arithmetic as its pre-registration; bar 40 C unmoved. Unmeasured: what humidity does to NE.01's random-death causes.
+
+## J6(c) humidity arm — route table on the swp_k72 body (2026-11-14 04:25 UTC, no ledger)
+
+`python -m experiments.humid_race check` (output `/data/tmp/humid_route_table.txt`). Each candidate world is
+swp_k72 + humidity patched into `needs.thermal_step` itself (same signature; f scales BOTH the sweat clamp and the
+wet-skin channel; RH_local = RH_OPEN + (RH_SEALED - RH_OPEN) * occlusion — sealed air saturates with his own vapour).
+Fixed ambient, 3000 s, DEATH_T_S dwell.
+
+| route (start 37 C)   | swp_k72 (no humidity) | hum30: 30 C, RH .5 -> 1.0 sealed | hum34: 34 C day / 20 C night, RH .5 -> 1.0 |
+|----------------------|-----------------------|----------------------------------|--------------------------------------------|
+| rest, open, day      | lives (37.00)         | lives (37.00)                    | lives (37.48)                              |
+| rest, roof, day (W.2 hot route) | lives (37.34) | lives (38.31)                 | **hyperthermia 186 s** (40.25)             |
+| rest, soak, day      | lives                 | lives                            | lives (refuge: pool)                       |
+| full power, open, day| lives (37.93)         | lives (38.44)                    | lives (39.15)                              |
+| full power, roof, day| lives (38.32)         | **hyperthermia 78 s**            | **hyperthermia 59 s**                      |
+| rest, soak, night (W.2 cold route) | hypothermia 70 s | hypothermia 71 s            | hypothermia 71 s                           |
+| rest, roof / open, night | lives             | lives                            | lives                                      |
+
+* **hum34 restores W.2(c)'s hot route AS REGISTERED** — the resting statue under the roof dies of hyperthermia —
+  with the pool as refuge and open air survivable, so no re-registration of the route is needed. Its cost: T_DAY
+  30 -> 34 breaks W.2's documented fixed point K_DRY = M_BASAL/(T_SETPOINT - T_DAY) (only a dry NON-sweating statue
+  depended on it) and re-opens NE.01's DELTA_T_NIGHT calibration (held at a 20 C night by DELTA 14).
+* **hum30 changes no temperature** and kills only EXERTION under a seal (exertional heat stroke), so W.2's hot route
+  would have to be re-aimed to "work under a seal" (re-registration, reason this table) to be reachable.
+* Both make the roof the learnable trap the W.2 docstring calls "the most GOAL-shaped thing this measurement
+  found" — but now for a biological reason (sealed humid air), not a missing sweat gland.
+* Note: f < 1 everywhere RH > 0, so the shipped e_evap is implicitly bone-dry air; humid arms shed less heat at
+  every ambient. Unmeasured: NE.01 random-death causes under either (flailers peak 39.15 C in hum34's open sun).
+=> Race to declare after the water race tallies: hum30, hum34 vs shipped on heat_race's rule, seeds 0-4,
+W.1/W.2/NE.01; reported, not gated: `c_hot_reachable`, cause shares, decisions per random life.

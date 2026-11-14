@@ -1032,9 +1032,10 @@
         "T2.08": 422.62,
         "T2.10": 12.82,
         "W1.02": 761.96,
-        "detached:heat_race.log": 5817.5
+        "detached:heat_race.log": 5817.5,
+        "detached:water_race.log": 2400.0
       },
-      "used_s": 7834.23
+      "used_s": 10234.23
     }
   },
   "overruns": [
