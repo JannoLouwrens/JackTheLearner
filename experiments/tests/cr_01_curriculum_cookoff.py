@@ -52,6 +52,16 @@ PY = "/data/venvs/jackthelearner/bin/python"
 CHILD_TIMEOUT_S = 6 * 3600
 REMOTE_TIMEOUT_S = 11 * 3600            # under Kaggle's 12 h session
 _ENV_BACKEND = os.environ.get("CR01_BACKEND", "")
+# What an arm-seed's rows are a function of: the lives (cr00_pilot and the
+# creature/world code it imports). Hashed with this file into the unit
+# cache key, so a cached kernel result is reused only by the exact code
+# that produced it (D1.0's unit-cache rule, LESSONS_CORE 11).
+IMPL_DEPS = ["experiments/cr00_pilot.py", "experiments/cores.py",
+             "experiments/policy_loss.py", "experiments/w0.py",
+             "experiments/drives.py", "playground.py",
+             "experiments/tests/lf_03_learner_lives.py",
+             "experiments/tests/lf_04_living_teaches.py"]
+UNIT_ROOT = Path("/data/tmp/cr01/units")
 
 
 def _cache(arm: str, s: int) -> str:
@@ -118,23 +128,55 @@ def _arms_parallel(arms, s, tmp, local=True):
     return res
 
 
+def _unit_path(pair, s):
+    """Where one kernel's (pair, seed) result is kept, keyed by impl_sha
+    (this file + IMPL_DEPS). None when the sha cannot be read: unknown is
+    not a match, so nothing is reused."""
+    try:
+        from ..protocol import impl_sha_of
+        sha = impl_sha_of(Path(__file__))
+    except Exception:
+        sha = None
+    if not sha:
+        return None
+    return UNIT_ROOT / sha[:16] / f"{'+'.join(pair)}_s{int(s)}.json"
+
+
+def _kernel(pair, s) -> dict:
+    """One Kaggle-CPU kernel for `pair` at seed s; reuse its unit if the
+    exact code already produced it (a kernel killed by a guard, or run
+    ahead by `prefetch`, is not re-bought)."""
+    up = _unit_path(pair, s)
+    if up is not None and up.exists():
+        print(f"CR.01 {pair} s{s}: REUSED {up}", flush=True)
+        return json.loads(up.read_text())
+    from ..gpu import build_job, result_json, submit
+    body = _JOB.replace("__ARMS__", repr(list(pair))).replace(
+        "__SEED__", str(int(s)))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=5.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["cr01_arms.json"])
+    if not sub.ok:
+        raise RuntimeError(f"CR.01 kaggle-cpu {pair} s{s}: {sub.message}")
+    r = result_json(sub, "cr01_arms.json")
+    if up is not None and set(r) == set(pair):
+        up.parent.mkdir(parents=True, exist_ok=True)
+        up.write_text(json.dumps(r))
+    return r
+
+
+def _pairs(arms):
+    return [tuple(arms[i:i + 2]) for i in range(0, len(arms), 2)]
+
+
 def _arms(arms, s) -> dict:
     """Run `arms` at seed s in pairs; cache every arm-seed's rows."""
     os.makedirs(CACHE, exist_ok=True)
     res = {}
-    for i in range(0, len(arms), 2):
-        pair = list(arms[i:i + 2])
+    for pair in _pairs(arms):
         if _backend() != "kaggle-cpu":
-            r = _arms_parallel(pair, s, CACHE)
+            r = _arms_parallel(list(pair), s, CACHE)
         else:
-            from ..gpu import build_job, result_json, submit
-            body = _JOB.replace("__ARMS__", repr(pair)).replace(
-                "__SEED__", str(int(s)))
-            sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=5.0,
-                         timeout_s=REMOTE_TIMEOUT_S, fetch=["cr01_arms.json"])
-            if not sub.ok:
-                raise RuntimeError(f"CR.01 kaggle-cpu {pair} s{s}: {sub.message}")
-            r = result_json(sub, "cr01_arms.json")
+            r = _kernel(pair, s)
         for arm, rows in r.items():
             with open(_cache(arm, s), "w") as f:
                 f.writelines(json.dumps(x) + "\n" for x in rows)
@@ -285,5 +327,22 @@ def _selftest() -> dict:
 if __name__ == "__main__":
     if sys.argv[1:] == ["selftest"]:
         print(json.dumps(_selftest(), indent=1))
+    elif sys.argv[1:2] == ["units"]:
+        for k in range(3):
+            for p in _pairs(EXPERIMENT_ARMS) + _pairs(CONTROL_ARMS):
+                u = _unit_path(p, k + SEED_OFFSET)
+                print(k + SEED_OFFSET, "+".join(p),
+                      "cached" if u is not None and u.exists() else "-", u)
+    elif sys.argv[1:2] == ["prefetch"] and len(sys.argv) == 3:
+        # One registered kernel, run ahead of `run CR.01` (it holds no local
+        # CPU, so it needs no run lock). Writes the unit cache, never the
+        # ledger; `run CR.01` reuses it only under the same impl_sha.
+        s, *pair = sys.argv[2].split(":")
+        assert int(s) in (130, 131, 132), "claim seeds only"
+        assert tuple(pair) in _pairs(EXPERIMENT_ARMS) + _pairs(CONTROL_ARMS), \
+            f"{pair}: not a registered pair {_pairs(EXPERIMENT_ARMS) + _pairs(CONTROL_ARMS)}"
+        r = _kernel(tuple(pair), int(s))
+        print("PREFETCHED", s, pair, {a: len(v) for a, v in r.items()})
     else:
-        raise SystemExit("usage: python -m experiments.tests.cr_01_curriculum_cookoff selftest")
+        raise SystemExit("usage: python -m experiments.tests.cr_01_curriculum_cookoff "
+                         "selftest | units | prefetch SEED:ARM_A:ARM_B")
