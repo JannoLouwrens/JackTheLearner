@@ -277,3 +277,37 @@ and the BODY's drink rule. Raceable arms to declare before any cell:
 Biology: an infant lying face-down in water aspirates; it does not drink.
 (C) both. Gate 2's bar (every life dies inside the window) stays unmoved. Whether "a flailer that lies in a pool lives"
 is survival BY ACCIDENT is exactly what NE.01's title forbids, so (B) is the arm closest to the gate's intent.
+
+## J6(d) step 2 — DRINK race DECLARED (2026-11-14 18:25 UTC, before any cell, no ledger)
+
+**Geometry measured first (playground.py, no run).** Walls at ±`arena_size` 6.0 m. Spawn (0, -1.6) (`LADDER_Y` -2.6 +
+`SPAWN_OFFSET_Y` 1.0). The farthest a pool of half-size h can sit inside the arena is centre (6-h-0.05, 6-h-0.05). For
+h = 1.5 its near edge is then **4.6 m** (Chebyshev) from spawn, against today's 0.92-1.26 m. The five step-1 replays
+reached a maximum drift of 1.86, 3.03, 4.60, 5.84 and 7.71 m from their k=500 position (`/data/tmp/j6d/*.json`, ≤ 25.5k dec,
+T_thirst = 3720 s = 18600 dec on swp_k72). The walls bound a random walk and do not stop it.
+**WRITTEN PREDICTION: (A) alone does not clear gate 2** (2 of 5 lives already drift past its 4.6 m ceiling).
+
+**Arms (base = `swp_k72`, through `water_clock_race._apply`; every other constant byte-same):**
+- `dA` POOL FAR: pool centre = (6 - h - 0.05, 6 - h - 0.05) per seed (h = that seed's mutated `pool_size`). The water
+  plane, the visual pool geoms and the `pool` tuple NeedLayer reads all move together. The forager's teleport reads the tuple, so it follows.
+- `dB` DRINK IS AN ACT (a swallow): a gulp fires only after the mouth has been inside the drink zone (today's square,
+  `DRINK_DEPTH_M` 0.25 unchanged) **continuously for SWALLOW_S = 1.0 s of sim time** with every mouth geom's speed
+  **< 0.2 m/s throughout**. Leaving the zone or moving faster resets the timer. `NU_DRINK` 0.9 and the 30 s refractory are unchanged.
+  Biology: a human mouthful swallow (oral + pharyngeal phase) takes ~1 s and needs the head held still; a body face-down and
+  thrashing in water aspirates, it does not drink. Both constants are fixed here and never tuned on a cell.
+- `dC` both.
+
+**Rule (humid_race's rule verbatim, `experiments/humid_race.py` docstring):** seeds 0-4, W.1 / W.2 / NE.01 through each
+spec's own `_experiment` (+ `_control`/`_check` for W.1). X SHIPS iff (1) every W.1/W.2 boolean `*_pass` and every NE.01
+`ok_*` seed-mean ≥ shipped's, (2) the NE.01 pooled max random-death cause share is STRICTLY below shipped's, (3) W.1 `_check`
+passes on every seed shipped's does. **Added to the rule because it is the race's subject:** (4) NE.01 gate 2 `ok_*` passes on
+≥ 4/5 seeds (shipped and swp_k72 fail it: 3/5 and 4/5 lives on one seed). Bars unmoved (5/5 random deaths in-window, spread 0.30, 5 meals, 3 drinks).
+If more than one ships: dB beats dC beats dA. dB is the body rule closest to the gate's intent and moves no world geometry.
+**Apparatus checks (each VOIDs its arm, they do not count as a FAIL):** (i) `dA` builds with no other world geom's AABB
+intersecting the pool AABB. (ii) `dB` with SWALLOW_S = 0 and the speed cap = ∞ reproduces swp_k72 s1 l3's 26 gulps exactly in
+`random_life_drink_probe.py`. That proves the wrapper is a no-op at the limit. (iii) the NE.01 forager drinks ≥ 3 times on every seed.
+If it cannot, the arm breaks the one life that MUST live, and it is reported as world-breaking.
+**Reported, not gated:** gulps per random life, per-life drift, random-death cause mix, W.2 c_pass.
+**Compute:** NE.01 legs at k72 are long (life_cap 39158 dec × 5 lives × 5 seeds). They run in Kaggle CPU kernels (J6(c) rule),
+2 sessions at a time behind CR.01's s131/s132 units. Only the probe-level apparatus checks (seconds to minutes) run on the box.
+**Next:** build `experiments/drink_race.py` (`_apply(arm)` on `WR._apply("swp_k72")` + the probe flag), run apparatus checks (i)-(iii), then dispatch.
