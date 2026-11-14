@@ -70,11 +70,10 @@ the week (D56) — resume the remaining units on Colab.
 serves: M3, M4 · END-FIT row 1 · philosophy 3, 7 · objective 3 (free GPU).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-14 19:15 D1.0 kernel `jack-ladder-1794658135` COMPLETE on Kaggle (unharvested; reattach blocked until `T1.14` is fresh). `T1.14` att 6 ERROR 19:00: its watcher timed out (6611 s)
-while kernel `jack-ladder-1794676242` sat QUEUED behind …135 (still QUEUED 19:07); colab T4 503. Att 7 = refused reattach (code-sha mismatch). Proven pin-only: pulled kernel = 24ae07f8, its one
-ce97e39 checkout line -> HEAD gives local 7af1696a exactly; ce97e39..HEAD touches no T1.14 path. 19:14 reattached with ACCEPT_MISMATCH (watcher 3863272, log /data/tmp/dispatch_t1_14.log).
-Next: on T1.14 PASS -> `JACK_REUSE_KERNEL=jannolouwrens/jack-ladder-1794658135 JACK_REATTACH_ACCEPT_MISMATCH=1 scripts/dispatch.sh D1.0` (verify pin-only the same way: `kaggle kernels pull`, sed the sha, sha256).
-Remaining fresh units after it: c_e2e s0-2 (kaggle 3.02 h each), d_mlp s0-2 (colab .44 h). T1.14 FAIL = finding, D1.0 stays blocked.
+state: 11-14 21:24 REATTACHED D1.0 to COMPLETE kernel `jack-ladder-1794658135` (watcher 3899526, log /data/tmp/dispatch_d1_0.log), T1.14 PASS att 8 fresh. Pin-only PROVEN: receipt
+28e7b086 = pulled bytes (no misjoin this time); its one f90881f checkout line -> fc52aca gives 398179cc = the guard's local_sha exactly; f90881f..HEAD leaves d1_0_*.py, gpu.py, cores/brain untouched
+(protocol.py/run.py moved only in local salt/lock/receipt code). Next: read the log for the harvest; on a verdict seat BY VERDICT + re-run T2.01; if it asks for the remaining
+units (c_e2e s0-2 kaggle 3.02 h each, d_mlp s0-2 colab .44 h) let the watcher run, never kill it. An ERROR with a lost download = re-reattach the same slug.
 
 ### J5 — The Kaggle-CPU queue: curriculum cook-off (`CR.01`), then meal memory
 **Why.** Owner 11-11: the curriculum is "as important as jack himself".

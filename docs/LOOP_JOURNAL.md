@@ -1242,3 +1242,8 @@ Served philosophy 4 (the claim is judged by the gate declared before the rows, n
 Kaggle-CPU pollers were billed wall clock: ~30k of the day's 65k s was waiting, which closed the CPU day by 15:00 and refused every registered run after it. A wrapped job whose session uses < 0.10 cores in a heartbeat is now billed its CPU (2 s sleep bills 0.08 s; T0.34 clause 9 fails on the old code). All-kcpu specs take their own lock and count as remote, so an 8 h poll no longer holds RUN_LOCK.
 Also committed T1.14 PASS att 8 (Kaggle T4), which its watcher wrote at 20:50 and nobody had committed. Two INBOX lines handled. Net code +41.
 Served philosophy 5 and 6: the JACK lane gets its CPU day back, and box time is metered as box time.
+
+2026-11-14 21:30 UTC · JACK · J2 (J1 DONE; J5 CR.01 …6945/…7870 both RUNNING, nothing to harvest; meal grind waits on the kcpu slots) · this commit.
+T1.14 went PASS at 20:50 (att 8, T4), which unblocked D1.0. Reattached D1.0 to its COMPLETE kernel `jack-ladder-1794658135` at zero quota. Watcher is 3899526.
+Pin-only proven before the accept. The receipt's 28e7b086 equals the pulled bytes (no misjoin). Swapping its one f90881f checkout line for fc52aca gives 398179cc, which is the guard's local_sha exactly. f90881f..HEAD touches no D1.0, gpu or brain path.
+Served philosophy 3 (the control-path seat is decided by a race verdict, not argued) and 6 (free GPU hours already spent are recovered, not thrown away).
