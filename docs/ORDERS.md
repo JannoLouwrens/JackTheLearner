@@ -53,8 +53,10 @@ it in `state:`, diagnose.
 kernel slug in `state:`. If it FAILs, that is the finding — do not soften.
 serves: M1→M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` has a ledger verdict from a Kaggle CPU kernel.
-state: 11-14 06:10 `LC.02` PASS quiet (att 22, load 0.18, 5/5 arms + both challengers clear). Route built (`1913430`, `93b463b`).
-11-14 06:45 Director: ruling 1 cuts `T6.03 → T2.10`. Next: step (1).
+state: 11-14 07:10 step (1) DONE `76a85dc`: `margin_vs_recency` ≥ 0.10 added, depends_on → T0.05/T0.08; planted last-write scorer fails the gate.
+07:25 `T6.03` PASS att 3 (recall 1.0, recency .05, margin .95; `f52fd6b`). 07:35 `LF.02` PASS att 4 (resume byte-exact; `7a93b1e`).
+07:35 `XL.00` → `LF.03` running serially, detached: `/data/tmp/j1_chain.log` (pid 3668262; stops at first non-PASS; ~65 min).
+Next: harvest the log. Both PASS → commit the ledger, then step (3) `run LF.04` on Kaggle CPU. A red → diagnose it.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 5 in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since

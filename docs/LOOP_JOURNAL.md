@@ -1064,3 +1064,9 @@ J6(c): built the integrity probe as option A. The drop/random/rest cycles now re
 Probe, no ledger: with the ladder, spread_i on s0/s1/s2 = .835/.569/.785. s0 died of injury at 2204 decisions; on s1 and s2 thirst killed him first (fast clock). Control on s0/s1 = .032/.106. The clause tells falls from flailing.
 NE.01 not re-run. It waits on the gate-2 ruling so that one ~2 h run settles both gates.
 Served philosophy 4 (a gate that could only read its own schedule now has a stop rule declared before any run, plus a control that must fail and does).
+
+2026-11-14 07:38 UTC · JACK · J1(1)+(2) (J2 checked) · 76a85dc, f52fd6b, 7a93b1e. J2: D1.0 watcher 3422501 alive (5h36m), no exit.
+J1(1): ruling 1 implemented. T6.03 now measures retrieval vs recency in its own run, on its own store: margin_vs_recency = recall@1 − ME.1's recency null (the latest write answers every cue), bar 0.10. depends_on T2.10 → T0.08.
+Out-of-band check on s0: margin .95, and a planted last-write scorer fails the gate. Said plainly in the docstring: on templated cues this clause is easy and does NOT certify paraphrase recall. T2.10 stays FAIL and still owns that red.
+J1(2): T6.03 PASS att 3 (its first verdict since the 09-13 BLOCKED). LF.02 PASS att 4 (SIGKILL resume byte-exact; null max delta 5.24). XL.00 → LF.03 chain detached (pid 3668262), stops at first non-PASS.
+Served philosophy 1 (the chain to "does living teach him", LF.04, is one harvest from dispatch) and 4 (a dependency that blocked a claim it did not support was replaced by a clause measured in-run, with a planted control that fails).
