@@ -1150,3 +1150,8 @@ and the twin is already 562-569 s from exploration decay alone. A non-eater can 
 s102 collapsed 598->158 s on the unbounded cores.py:542 loss; AWR won that race on 11-12 and was never seated. Next: seat the bounded loss, then a learner that forages on s90.
 INBOX: the CPU meter bills kcpu pollers wall clock (11.4k s billed for 8 s of CPU). D1.0 GPU kernel QUEUED since 12:08. CR.01 unit 130:null:staged cached (6,429 s kernel).
 Served philosophy 1 and 4: the first honest answer to "does living teach him" (not yet), traced to what he fails to do (eat) and a line of his code, not filed.
+
+2026-11-14 15:45 UTC · SYSTEM · S2 · d95d569. S3(1)'s W0.PL re-run held (probe alive, CPU day 62k/57.6k), so S2. Ruling 3 is now enforced by `admit`: refuse past 34,560 s
+of `detached:*` (+ optional est) or with 2 detached wraps alive. It refuses live today at 47.9k s. T0.34 plants both cases. The salt-differential child runs in its own process group on 1 core,
+times out at max(60, 20×run) s, and the whole group is killed (a planted hanging Pool died at 5 s, 0 orphans). `docs/LAB.md` is prose dirt now. Net +7 lines after cutting 52 lines of history prose.
+Cheaper: no more 12-25 min × 3-core salt hangs, and detached jobs can no longer starve registered runs. Served philosophy 5, 6.

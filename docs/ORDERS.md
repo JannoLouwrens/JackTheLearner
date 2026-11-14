@@ -232,7 +232,7 @@ add it to the prose-exempt set (`PROSE_DOCS`); a dirty code file must still stam
 Net growth ≤ ~40 lines.
 serves: philosophy 5, 6 (this box serves paying customers).
 **done when:** both tests pass and a day ends with `detached:*` ≤ 34,560 s.
-state: 11-14 15:40 (1)(2)(3) BUILT `HEAD`: `admit` refuses when today's `detached:*` + est (`JACK_DETACHED_EST_S`) > 34,560 s or ≥ 2 wraps alive (live now: REFUSED, 47.9k s);
+state: 11-14 15:40 (1)(2)(3) BUILT `d95d569`: `admit` refuses when today's `detached:*` + est (`JACK_DETACHED_EST_S`) > 34,560 s or ≥ 2 wraps alive (live now: REFUSED, 47.9k s);
 T0.34 `cap_refused` plants both (green via _experiment/_control, not re-run: day over ceiling). Salt child: own process group, 1 core, nice 19, max(60, 20×run) s, whole group
 killed, note `TIMED-OUT` (planted hanging Pool(3): killed at 5 s, 0 orphans). `docs/LAB.md` in PROSE_DOCS (code dirt still stamps). Net +7 lines (−52 history prose).
 Open: a day ending ≤ 34,560 s (first chance 11-15); protocol.py stales 17 T0 certs → regate. Kcpu pollers still count as live wraps and bill wall (INBOX).
