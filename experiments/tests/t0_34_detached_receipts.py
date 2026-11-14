@@ -128,6 +128,13 @@ def _wrap_cmd(label: str, *payload: str) -> list:
             label, *payload]
 
 
+def _busy(sec: float, tag: str = "t0_34") -> list:
+    """A payload that holds a core for `sec` s. Since 11-14 an idle tree
+    bills its CPU, not its wall, so wall-billing probes must really work."""
+    return [sys.executable, "-c", f"# {tag}\nimport time\n"
+            f"t = time.time() + {sec}\nwhile time.time() < t: pass"]
+
+
 def _experiment(seed: int) -> dict:
     live_load = _loadavg()
 
@@ -211,7 +218,7 @@ def _experiment(seed: int) -> dict:
         # ── 3. bills while alive ──────────────────────────────────────────
         hb_file = td / "hb.json"
         proc = subprocess.Popen(
-            _wrap_cmd("t0_34_hb", "/bin/sh", "-c", "sleep 3"),
+            _wrap_cmd("t0_34_hb", *_busy(3)),
             cwd=REPO, env=env_for(hb_file))
         alive_billing = False
         deadline = time.time() + 30.0
@@ -226,9 +233,9 @@ def _experiment(seed: int) -> dict:
 
         # ── 4. group SIGKILL bounded by one heartbeat ─────────────────────
         kill_file = td / "kill.json"
-        marker = "sleep 30.417"
+        marker = "t0_34_kill_30417"
         kproc = subprocess.Popen(
-            _wrap_cmd("t0_34_kill", "/bin/sh", "-c", marker),
+            _wrap_cmd("t0_34_kill", *_busy(30.417, marker)),
             cwd=REPO, env=env_for(kill_file), start_new_session=True)
         k0 = time.time()
         time.sleep(KILL_AFTER_S)
@@ -255,7 +262,7 @@ def _experiment(seed: int) -> dict:
         log = td / "probe.log"
         r = subprocess.run(
             ["sh", str(REPO / "scripts" / "launch_detached.sh"), str(log),
-             "/bin/sh", "-c", "sleep 17"],
+             *_busy(17)],
             cwd=REPO, env=env_for(e2e_file),
             capture_output=True, text=True, timeout=90)
         launcher_ok = r.returncode == 0 and "ALIVE" in r.stdout
@@ -275,9 +282,10 @@ def _experiment(seed: int) -> dict:
         # so a double-charge is unmistakable), then sleeps again so the
         # charge sits strictly inside the wrapped life.
         dj_file = td / "disjoint.json"
-        stub = ("import sys, time; sys.path.insert(0, %r); time.sleep(0.7); "
-                "from experiments.cpu_budget import charge_cpu_child; "
-                "charge_cpu_child('t0_34_stubspec', 5.0); time.sleep(0.3)"
+        stub = ("import sys, time; sys.path.insert(0, %r)\n"
+                "def busy(s):\n t = time.time() + s\n while time.time() < t: pass\n"
+                "busy(0.7)\nfrom experiments.cpu_budget import charge_cpu_child\n"
+                "charge_cpu_child('t0_34_stubspec', 5.0)\nbusy(0.3)"
                 % str(REPO))
         w0 = time.time()
         dj_rc = subprocess.run(
@@ -293,6 +301,14 @@ def _experiment(seed: int) -> dict:
                        and dj_stub_billed == 0.0
                        and dj_day_total >= 0.9              # billing alive
                        and dj_day_total <= dj_wall + TEST_HB_S + SLACK_S)
+
+        # ── 9. an idle tree (a remote poller) bills CPU, not wall ─────────
+        idle_file = td / "idle.json"
+        subprocess.run(_wrap_cmd("t0_34_idle", "/bin/sh", "-c", "sleep 2"),
+                       cwd=REPO, env=env_for(idle_file), timeout=60,
+                       capture_output=True, start_new_session=True)
+        idle_billed = _label_total(idle_file, "t0_34_idle")
+        idle_cheap = idle_billed < 0.5     # 2 s asleep; wall billing = 2.0
 
         # default heartbeat is what the docstring promises
         default_hb_ok = HEARTBEAT_S == 600.0
@@ -325,6 +341,8 @@ def _experiment(seed: int) -> dict:
         "dj_stub_billed_s": round(dj_stub_billed, 3),
         "disjoint_ok": disjoint_ok,
         "default_hb_ok": default_hb_ok,
+        "idle_billed_s": round(idle_billed, 3),
+        "idle_cheap": idle_cheap,
     }
 
 
@@ -398,6 +416,7 @@ def _check(m: dict, c: dict):
             and m["live_receipt"] is True
             and m["disjoint_ok"] is True
             and m["default_hb_ok"] is True
+            and m["idle_cheap"] is True
             and c["alive"] is True
             and c["lump_misbills"] is True
             and c["dj_alive"] is True

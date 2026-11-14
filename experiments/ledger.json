@@ -87491,14 +87491,22 @@
     },
     "T1.14": {
       "amended": [],
-      "attempt": 7,
+      "attempt": 8,
       "commit": "648fa5b",
-      "compute_s": 0.0,
-      "control_metrics": {},
+      "compute_s": 3434.23,
+      "control_metrics": {
+        "distinct_results": 3,
+        "ignored_distinct_results": 1,
+        "ignored_flagged": 1.0,
+        "ignored_seeds": "[0, 0, 0]",
+        "ignored_spread": 0.0,
+        "ignored_to_real_spread": 0.0,
+        "spread": 0.01028484
+      },
       "dirty_files": null,
-      "duration_s": 4.53,
+      "duration_s": 6060.1,
       "gpu_job_id": "jannolouwrens/jack-ladder-1794676242",
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "amended": [],
@@ -87694,21 +87702,57 @@
           ],
           "spec_sha": "4270ae98e8e54f21",
           "status": "ERROR"
+        },
+        {
+          "amended": [],
+          "attempt": 7,
+          "commit": "648fa5b",
+          "compute_s": 0.0,
+          "control_metrics": {},
+          "dirty_files": null,
+          "duration_s": 4.53,
+          "gpu_job_id": "jannolouwrens/jack-ladder-1794676242",
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "d48f53ae0543d945",
+          "message": "RuntimeError: GPU job failed on kaggle: all backends failed: kaggle: reattach refused: kernel jannolouwrens/jack-ladder-1794676242 was pushed with code sha 24ae07f85f250853\u2026 (attempt 1794676242918-3833372-kaggle, head ce97e39) but the local script hashes to 7af1696a2fe54205\u2026. The certificate would claim code that did not run. Either reattach from the submitting commit, or \u2014 if the divergence is pr",
+          "metrics": {},
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 301.3,
+          "preserved_impl": null,
+          "ran_at": "2026-11-14T19:08:14",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "4270ae98e8e54f21",
+          "status": "ERROR"
         }
       ],
       "impl_sha": "d48f53ae0543d945",
-      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: kaggle: reattach refused: kernel jannolouwrens/jack-ladder-1794676242 was pushed with code sha 24ae07f85f250853\u2026 (attempt 1794676242918-3833372-kaggle, head ce97e39) but the local script hashes to 7af1696a2fe54205\u2026. The certificate would claim code that did not run. Either reattach from the submitting commit, or \u2014 if the divergence is pr",
-      "metrics": {},
+      "message": "",
+      "metrics": {
+        "artifact_channel": "t108.json download",
+        "backend": "kaggle",
+        "effect": 0.26502,
+        "gpu": "Tesla T4",
+        "heldout_cv_pct": 17.285,
+        "heldout_mean": 0.0299,
+        "heldout_std": 0.005169,
+        "lr_final_max": 0.0,
+        "min_detectable_effect": 0.010337,
+        "seed_noise": 0.005169,
+        "seeds": 3,
+        "snr": 51.28
+      },
       "peak_rss_inherited": false,
       "peak_rss_mb": 301.3,
       "preserved_impl": null,
-      "ran_at": "2026-11-14T19:08:14",
+      "ran_at": "2026-11-14T20:50:17",
       "seeds": [
         0
       ],
       "spec_id": "T1.14",
       "spec_sha": "4270ae98e8e54f21",
-      "status": "ERROR"
+      "status": "PASS"
     },
     "T2.00": {
       "amended": [],

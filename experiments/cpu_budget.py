@@ -34,18 +34,10 @@ Estimates come from the spec's own measured duration (`child_estimate_s`
 returns `min(enum, SAFETY x measured + overhead)`, so it can only LOWER an
 estimate); the enum worst case foreclosed 53 of 152 specs (69th audit B4).
 
-Accounting ownership (68th audit B1): when two billers meter one resource,
-their charges must be DISJOINT, and the owner here is the OUTERMOST wrapper.
-`_wrap` bills the whole tree's wall clock under its label and exports
-JACK_CPU_WRAPPED into the payload's environment; `charge_cpu_child` — the
-runner lane's only debit path — skips under that marker, because every second
-a wrapped descendant spends is already inside the interval the wrapper's
-heartbeat bills. A nested `wrap` likewise defers to the outer one. Before
-this, a detached sweep was billed once by the wrapper and again by each
-`run_spec` grandchild: 1.7x overcharge, measured live on 2026-09-04, ~35
-minutes from foreclosing 53 of 152 CPU specs on 2.4% of the ceiling genuinely
-spent. The wrapper owns the charge because it is the only process whose wall
-clock covers the tree end to end, including the seams no child bills.
+Accounting ownership (68th audit B1): charges must be DISJOINT, and the
+OUTERMOST `_wrap` owns the tree's: it exports JACK_CPU_WRAPPED, under which
+`charge_cpu_child` and nested wraps bill nothing (before: 1.7x overcharge,
+2026-09-04). It bills wall per heartbeat, or CPU when the tree idles.
 """
 from __future__ import annotations
 
@@ -63,23 +55,12 @@ ENV_OVERRIDE = "JACK_CPU_BUDGET"   # tests point this at a temp file
 ENV_WRAPPED = "JACK_CPU_WRAPPED"   # set by _wrap: the tree's charge has an owner
 
 # The ladder's children may occupy at most this much wall clock per calendar
-# day. 16 h: (a) it ADMITS the largest legal child from a fresh day — cpu<2h
-# x 3 seeds x 2 = 54000 s; a tighter ceiling would foreclose that class by
-# arithmetic, the ME.11.E disease, and T0.33 gates `cpu_foreclosed == []` so
-# the property is checked, not assumed; (b) this meter counts WALL CLOCK, and
-# the sentence that used to stand here — "children are single-process Python,
-# so 16 h is <= 1/6 of this 4-core box's core-day" — was FALSIFIED on
-# 2026-10-25 (161st audit RANK 1): a legal `cpu<48h` detached dispatch
-# (LC.08) ran THREE concurrent single-core workers, spending 51,841
-# core-seconds while 16,912 wall-seconds were billed — a 3.07x undercount,
-# >= 16.58 core-hours given up against the old premise's stated 16 while this
-# meter read 43%. So what the ceiling actually bounds is wall time at
-# (workers x billed) core cost, with the worker count uncapped by this file;
-# the premise holds only for the runner lane's single-process children. The
-# instantaneous protection is the load gate below plus the mem watchdog, and
-# on 2026-10-25 the load gate is what actually held (peak 4.87 vs 6.0).
-# Whether the DAY meter should count core-seconds instead is D39 — the
-# owner's, docs/DECISIONS_NEEDED.md — and this comment moves no constant.
+# day. 16 h ADMITS the largest legal child from a fresh day (cpu<2h x 3
+# seeds x 2 = 54000 s; T0.33 gates `cpu_foreclosed == []`). It counts WALL,
+# so a multi-worker job costs (workers x billed) core-seconds — LC.08 ran
+# 51,841 core-s against 16,912 billed (161st audit, 2026-10-25); the load
+# gate and mem watchdog are the instantaneous guard. Core-seconds is D39,
+# the owner's, and this comment moves no constant.
 CPU_DAY_CEILING_S = 57600.0
 
 # Must equal `ladder_loop.sh`'s MAX_LOAD — one threshold, two languages;
@@ -477,6 +458,37 @@ def admit_detached(label: str, *, path: Path | None = None,
                        f"{_heartbeat_s():.0f}s heartbeat")
 
 
+# Under this many cores over a heartbeat the tree is WAITING (a Kaggle-CPU
+# poller: 5 s CPU billed 6,600 s wall, day foreclosed by 15:00 on 11-14):
+# bill its CPU. Busier intervals bill wall as before (D39 untouched).
+IDLE_CORES_BILL = 0.10
+
+
+def _session_ticks() -> dict:
+    """{pid: utime+stime+cutime+cstime} for every process in this session.
+    `launch_detached.sh` setsids the wrapper, so the session is the job; a
+    process that exits is reaped into its parent's c-times, still counted."""
+    sid, out = os.getsid(0), {}
+    for d in os.listdir("/proc"):
+        if not d.isdigit():
+            continue
+        try:
+            raw = open(f"/proc/{d}/stat").read()
+            f = raw[raw.rindex(")") + 2:].split()
+            if int(f[3]) == sid:
+                out[int(d)] = sum(int(x) for x in f[11:15])
+        except (OSError, ValueError, IndexError):
+            continue
+    return out
+
+
+def _cpu_delta_s(prev: dict, cur: dict) -> float:
+    """CPU seconds between two samples; an unseen pid counts whole, a vanished
+    one's tail is lost but its reaper's c-times jump (the safe direction)."""
+    tick = os.sysconf("SC_CLK_TCK")
+    return sum(max(0, v - prev.get(p, 0)) for p, v in cur.items()) / tick
+
+
 def _wrap(label: str, argv: list) -> int:
     """Run argv as a child, bill its wall clock every heartbeat, propagate
     its exit code. SIGTERM is forwarded so a polite kill of the wrapper
@@ -499,7 +511,7 @@ def _wrap(label: str, argv: list) -> int:
               file=sys.stderr)
         return 127
     signal.signal(signal.SIGTERM, lambda s, f: proc.terminate())
-    last = time.time()
+    last, ticks = time.time(), _session_ticks()
     while True:
         try:
             proc.wait(timeout=_heartbeat_s())
@@ -508,8 +520,13 @@ def _wrap(label: str, argv: list) -> int:
             done = False
         now = time.time()
         if owner and now > last:
-            bill_interval(label, last, now)
-            last = now
+            cur = _session_ticks()
+            cpu = _cpu_delta_s(ticks, cur)
+            if cpu < IDLE_CORES_BILL * (now - last):
+                bill_interval(label, now - cpu, now)
+            else:
+                bill_interval(label, last, now)
+            last, ticks = now, cur
         if done:
             return int(proc.returncode)
 

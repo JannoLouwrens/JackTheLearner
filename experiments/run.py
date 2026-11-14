@@ -70,6 +70,10 @@ def _lock_for(spec_ids) -> str:
     budgets = {(_B[i].budget.value if i in _B else "") for i in spec_ids}
     if budgets and all(b.startswith("gpu") for b in budgets):
         return "/tmp/jack-ladder-gpu.lock"
+    # Kaggle-CPU specs poll a remote kernel too (11-14: LF.04 held RUN_LOCK
+    # ~8 h at 0 CPU and refused every local spec); their own lock.
+    if budgets and all(b.startswith("kcpu") for b in budgets):
+        return "/tmp/jack-ladder-kcpu.lock"
     return RUN_LOCK
 
 
@@ -249,7 +253,8 @@ def _holders(lock_path: str):
                 # --gate, a tier sweep, an unrecognised argv — is treated as
                 # local CPU work, which is the safe direction.
                 "remote_only": bool(specs) and all(
-                    BY_ID[s].budget.value.startswith("gpu") for s in specs),
+                    BY_ID[s].budget.value.startswith(("gpu", "kcpu"))
+                    for s in specs),
                 "cores": _cpu_fraction(pid),
             })
         except (OSError, ValueError, IndexError):
