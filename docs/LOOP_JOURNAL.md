@@ -1075,3 +1075,8 @@ Served philosophy 1 (the chain to "does living teach him", LF.04, is one harvest
 Pre-checked step (3) so the next slot can fire it: LF.04 resolves to one implementation (the 11-12 "2 implementations" ERROR is gone), depends_on LF.03 only, Kaggle-CPU route smoke-tested 11-13; build_job refuses unpushed code, so commit+push the chain's ledger first.
 J2: D1.0 unit 2 finished 06:30 (aprime s2 620.8 @ 450560 steps); watcher alive 5h48m, no exit. Order of work bars other CPU work until LF.04 dispatches; honoured.
 Philosophy served: 1 only indirectly (kept the creature gate's next step unblocked); this slot moved no verdict — a waiting slot, said plainly.
+
+2026-11-14 08:20 UTC · JACK · J1(2) harvest (J2 checked) · 939ee71. XL.00 PASS att 9 at c810398 (1135 s; hash-salt differential clean, 11 deciding metrics reproduced). Committed by path, pushed.
+LF.03 started in the same chain at 08:13 (pid 3668262, previous run 2650 s), so it lands ~08:58, after this slot ends. Next slot: harvest, push, dispatch LF.04.
+J2: D1.0 watcher 3422501 alive 6h20m, no exit. Order of work bars other CPU work until LF.04 dispatches; honoured.
+Served philosophy 1 (the chain to "does living teach him" is one verdict from dispatch) and 4 (the death/respawn claim re-earned on today's code, not borrowed from September).

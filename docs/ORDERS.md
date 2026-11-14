@@ -54,10 +54,9 @@ kernel slug in `state:`. If it FAILs, that is the finding — do not soften.
 serves: M1→M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` has a ledger verdict from a Kaggle CPU kernel.
 state: 11-14 07:10 step (1) DONE `76a85dc`: `margin_vs_recency` ≥ 0.10 added, depends_on → T0.05/T0.08; planted last-write scorer fails the gate.
-07:25 `T6.03` PASS att 3 (recall 1.0, recency .05, margin .95; `f52fd6b`). 07:35 `LF.02` PASS att 4 (resume byte-exact; `7a93b1e`).
-07:35 `XL.00` → `LF.03` running serially, detached: `/data/tmp/j1_chain.log` (pid 3668262; stops at first non-PASS; ~65 min).
-07:38 chain alive (XL.00 running, 1 core); LF.04 pre-checked: one impl (old 2-impl ERROR gone), depends_on LF.03 only, kcpu route smoke-tested 11-13.
-Next: harvest `/data/tmp/j1_chain.log` (~08:40). Both PASS → commit ledger + push (build_job refuses unpushed code), then `launch_detached.sh` `run LF.04` (~8 h, 6 kernel calls). A red → diagnose it.
+07:25 `T6.03` PASS att 3 (`f52fd6b`). 07:35 `LF.02` PASS att 4 (`7a93b1e`). 08:13 `XL.00` PASS att 9, 1135 s, salt differential clean (`939ee71`).
+08:13 `LF.03` started in the chain (`/data/tmp/j1_chain.log`, pid 3668262; last took 2650 s → expect ~08:58).
+Next: harvest the log. `LF.03` PASS → commit ledger.json by path + push (build_job refuses unpushed code), then `launch_detached.sh` `run LF.04` (~8 h, 6 kernel calls) and write the kernel slug here. A red → stop, diagnose.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 5 in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
