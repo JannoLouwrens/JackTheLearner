@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 110 / 270 demonstrated
+## 111 / 270 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -254,7 +254,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T6.02** Long-run stability
       - _asserts:_ Hours of continuous operation without drift into degenerate behaviour.
       - _dies if:_ Action saturation, mood lock, or memory unbounded growth.
-- [-] **T6.03** Cross-session persistence  — dependencies not satisfied: T2.10 (FAIL)
+- [x] **T6.03** Cross-session persistence
       - _asserts:_ Save, restart, and the companion recalls prior interaction.
       - _dies if:_ State lost or corrupted across restart.
 - [ ] **T6.04** Everything at once, end to end
@@ -1189,7 +1189,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 0 — HARNESS — can we measure anything?
 
-- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.203; ceiling_admitted=False
+- [!] **T0.32** The real-time factor is measured, recorded, and gates long runs  — achieved_s=1.226; ceiling_admitted=False
       - _asserts:_ For any declared control path, the harness measures sim-seconds per real second before a long run starts, and REFUSES a run whose projected duration exceeds the spec's timeout or the box's tenant-safety budget.
       - _dies if:_ A long run launching with a projected duration past its own timeout, OR a projection that differs from the achieved duration by >25%.
       - _then delete:_ Nothing directly; it prevents burning a Sunday quota on a run that could never have finished.
