@@ -1025,3 +1025,9 @@ dry heat cannot below 59.6 C ambient (full power adds only 200 W in W0); humidit
 (rest 40C/80% dies in 106 s, 35C/80% survives; full power 35C/80% dies) — and a sealed roof becomes the trap, not the refuge, in humid heat.
 So the next arm is a humidity field, not hotter sun or exertion. No ledger change.
 Served philosophy 1 (a world that kills the way a human body dies) and 3 (the hazard is measured before it is raced, not assumed).
+
+2026-11-14 04:25 UTC · JACK · J6(c) (J1/J2 checked) · 3286c97. LC.02 waits: own water race (2 workers) + a foreign stt test_invariants at 97% of a core (load 3.4). J2: D1.0 unit 1 done (RECOVERED from stdout), unit 2 on Colab, watcher 3422501 alive.
+J6(c): water race mid-NE.01 (s1 of 5), not harvestable. Built the humidity arms on swp_k72's body inside needs.thermal_step itself, then measured every W.1/W.2 thermal route:
+hum34 (34 C day, 20 C night, RH 0.5 open -> 1.0 sealed) kills the resting statue under the roof in 186 s, so W.2(c)'s hot route works again AS REGISTERED. Open air, the pool
+and full power in the open all survive, and the cold route is unchanged. hum30 (no temperature edit) kills only exertion under a seal (78 s), which would need W.2 re-aimed. Race to declare after the tally.
+Served philosophy 1 (a world that kills the way a body dies, with a learnable trap and a refuge) and 3 (candidate worlds measured before they are raced).

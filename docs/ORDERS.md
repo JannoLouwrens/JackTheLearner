@@ -93,10 +93,10 @@ serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow the
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
 state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) HEAT RACE: NONE SHIPS (af9b980; NEEDS_CLOCK_RACE.md).
-11-14 03:24 WATER RACE running (3d7c0a0), log /data/tmp/water_race.log; 03:55 W.1+W.2 cells done, NE.01 cells ~60 min left. FINDING (40d47e4): sweat makes W.2(c) hot route unreachable.
-11-14 03:55 HAZARD TABLE (7389073, experiments/heat_hazard_table.py): no dry heat below 59.6 C can kill a sweating Jack (full power = +200 W only);
-humidity kills at biological thresholds (rest 40C/80% 106 s, 45C/50% 115 s; full 35C/80% 94 s); sealed roof is LETHAL in humid heat (30C/80% full).
-Next: harvest `python -m experiments.water_clock_race tally`; then declare swp_k72 + humidity field (f on sweat clamp), W.2(c) hot route = sealed humid heat, bar 40 C unmoved.
+11-14 03:24 WATER RACE running (3d7c0a0), log /data/tmp/water_race.log; 04:20 NE.01 s1 cells running, s2-s4 left (~50 min). FINDING (40d47e4): sweat kills W.2(c)'s hot route.
+11-14 04:25 HUMID ROUTE TABLE (3286c97, experiments/humid_race.py): hum34 (34C day/20C night, RH .5 open -> 1.0 sealed) kills the resting roofed statue
+in 186 s = W.2 hot route AS REGISTERED; open/pool/full-open survive; hum30 kills only full power under a seal (78 s). Cold route unchanged (70 s).
+Next: harvest `python -m experiments.water_clock_race tally`; then declare in humid_race.py heat_race's rule for hum30, hum34 vs shipped (seeds 0-4) + run_cell/tally, launch detached.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow
