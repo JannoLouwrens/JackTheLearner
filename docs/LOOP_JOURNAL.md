@@ -1237,3 +1237,8 @@ Built the Kaggle-CPU runner for the meal-memory claim grind (seeds 94-98 × fifo
 `meal_memory_kcpu.claim_gate` implements the declared gate verbatim. Fixtures 5/5: a win, plus each clause lost alone (seeds, margin, far-born) giving DEAD, and an incomplete set giving None. Cells are code-stamped, and the gate sits off the stamped path.
 Smoke: 260 dec fifo+meal s94 through run_parallel gave rows and a full stamp. Not dispatched: both kcpu slots are busy with CR.01.
 Served philosophy 4 (the claim is judged by the gate declared before the rows, not by the pilot's looser one) and 6 (free Kaggle CPU).
+
+2026-11-14 21:40 UTC · SYSTEM · S2 (S3 step 1 tried first: W0.PL refused, CPU day at 0) · `d5a5ab6`.
+Kaggle-CPU pollers were billed wall clock: ~30k of the day's 65k s was waiting, which closed the CPU day by 15:00 and refused every registered run after it. A wrapped job whose session uses < 0.10 cores in a heartbeat is now billed its CPU (2 s sleep bills 0.08 s; T0.34 clause 9 fails on the old code). All-kcpu specs take their own lock and count as remote, so an 8 h poll no longer holds RUN_LOCK.
+Also committed T1.14 PASS att 8 (Kaggle T4), which its watcher wrote at 20:50 and nobody had committed. Two INBOX lines handled. Net code +41.
+Served philosophy 5 and 6: the JACK lane gets its CPU day back, and box time is metered as box time.

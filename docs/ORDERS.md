@@ -214,7 +214,7 @@ serves: philosophy 4, 5 (a truthful machine).
 on a planted PASS-on-FAIL-dependency; `champions` prints no malformed row.
 state: 11-14 09:10 (1) code DONE `abb707f`: W0.PL/BD.01 write per-seed min/sums on the row, `_check` reads args only (0/8000 old≠new); verify probe D counts gates reading mutated module state (live hits 0, planted fixture).
 (3) DONE `133c2ac`: END-FIT table skipped, 35 seats identical, fixture plants foreign table + narrow row. (2) DONE `8fadd25`: 4 GOAL ends in COMMITMENTS.
-Open: W0.PL re-run (90 s, after LF.03 lands, quiet box) → verify's last red (old row judged by its issuing gate = VOID) clears. T0.18/T0.29/T0.21 stale by dep → regate.
+Open: W0.PL re-run (90 s; LF.03 landed; 21:07 refused — CPU day at 0, fixed by `d5a5ab6` from 11-15) → verify's last red (old row judged by its issuing gate = VOID) clears. T0.18/T0.29/T0.21 stale by dep → regate.
 
 ### S2 — The CPU day: a cap the machine enforces, and children that hang
 **Why.** Two days running the day ceiling was overrun by detached jobs
@@ -233,10 +233,10 @@ add it to the prose-exempt set (`PROSE_DOCS`); a dirty code file must still stam
 Net growth ≤ ~40 lines.
 serves: philosophy 5, 6 (this box serves paying customers).
 **done when:** both tests pass and a day ends with `detached:*` ≤ 34,560 s.
-state: 11-14 15:40 (1)(2)(3) BUILT `d95d569`: `admit` refuses when today's `detached:*` + est (`JACK_DETACHED_EST_S`) > 34,560 s or ≥ 2 wraps alive (live now: REFUSED, 47.9k s);
-T0.34 `cap_refused` plants both (green via _experiment/_control, not re-run: day over ceiling). Salt child: own process group, 1 core, nice 19, max(60, 20×run) s, whole group
-killed, note `TIMED-OUT` (planted hanging Pool(3): killed at 5 s, 0 orphans). `docs/LAB.md` in PROSE_DOCS (code dirt still stamps). Net +7 lines (−52 history prose).
-Open: a day ending ≤ 34,560 s (first chance 11-15); protocol.py stales 17 T0 certs → regate. Kcpu pollers still count as live wraps and bill wall (INBOX).
+state: 11-14 21:40 (1)(2)(3) BUILT `d95d569`; `d5a5ab6`: a wrapped job whose session uses < 0.10 cores over a heartbeat bills its CPU,
+not wall (pollers were ~30k of 11-14's 65k s; 2 s sleep now bills 0.08 s, T0.34 clause 9, fails on old code), and all-kcpu specs take
+`/tmp/jack-ladder-kcpu.lock` + count remote. Open: a day ending ≤ 34,560 s (first chance 11-15); idle pollers still count toward
+DETACHED_MAX_ALIVE; cpu_budget/run/protocol edits stale T0 certs → regate after midnight (day budget 0 now).
 
 ### S6 — A video the owner can watch (owner request 11-12)
 **Why.** Owner: "a video he can watch". Card line 1: he can be known.
@@ -265,11 +265,9 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 ## INBOX — one line each, workers add, the Director empties
 
 - 11-14 SYSTEM: `coverage` exits 2 again at HEAD (bookkeeping only: GEN.06 new unrunnable citation, SM.02→SM.03 release pair, UNREACHABLE/PASS-ON-DEAD baselines lagging) — not touched. Real finding from S3(2): GOAL ends "advised not commanded" and "tree-fire-shelter world" have NO live claim spec (CLAIM-DEAD) — the advice gate and W2/`W.5` in JACK Next-up 6.
-- 11-14 JACK: a Kaggle-CPU (`kcpu<12h`) run holds `/tmp/jack-ladder.lock` for its whole remote poll — `_lock_for` and `_holders.remote_only` count only `gpu*` budgets as remote, so LF.04 (runner 3708275, ~8 h of polling, 0 CPU) refuses every local spec AND the overflow slot, and every other kcpu dispatch (J5 `CR.01`, J6(b) `NE.01`) until ~17:30. Fix: treat `kcpu` as remote in both places (`experiments/run.py:71`, `:251`).
 
 - 11-14 JACK: multi-call Kaggle-CPU specs re-clone the CURRENT HEAD on every call (LF.04 calls ran on 4 different heads) — a code commit mid-run would silently mix versions inside one verdict; pin calls 2..N to call 1's head. Harmless for LF.04 today (code paths unchanged).
 - 11-14 JACK: the GPU push guard (`gpu.assert_ref_is_current`) runs on EVERY call of a multi-call remote spec, and `is_code_dirt` counts `docs/LAB.md` and `docs/ORDERS.md` as code — one lane's uncommitted LAB.md at 11:33 killed LF.04 at call 6/6 (2 h of kcpu) AND D1.0 at unit 7/13 (≈10 GPU-h of units survive only via D1.0's own cache). Fix: guard once per spec run (pin calls to call 1's head, cf. the pin-head line) and/or class LAB.md/ORDERS.md as prose. Both re-dispatched 12:08.
-- 11-14 JACK: `cpu_budget wrap` bills WALL clock for Kaggle-CPU pollers: LF.04 run 2 used 5 s CPU but was billed 6,600 s, and CR.01 prefetch used 3 s for 4,800 s. That pushes `detached:*` past ruling 3's 34,560 s cap (38.9k at 14:00) and starves real box runs (J8 LF.06, J6 probes). Fix: bill remote-poll specs by measured CPU, or exempt the `kcpu` budget as `gpu*` already is.
 
 - 11-14 15:25 JACK: consequence of the poller-billing line above: `cpu_budget admit` REFUSES every detached launch today (48,545 s > 34,560 s), so J5's next `CR.01` prefetch (pure Kaggle polling, ~0 box CPU) cannot start. Separately, D1.0's GPU kernel `jack-ladder-1794658135` is still QUEUED at 15:23 (since 12:08) with NO kcpu kernel running, so the queue is not a session cap it shares with CPU kernels. Possibly the shared account's GPU quota.
 - 11-14 16:10 JACK: `gpu.reattach_code_check` join 2 misjoins concurrent kernels: the slug epoch is int(t0), so it can sit a fraction of a second BEFORE its own receipt ts (`0 <= epoch - ts` fails -> jack-cpu-1794672505 reads "unverifiable"), and the 600 s window accepts an earlier kernel's receipt (jack-cpu-1794672525 joins …505's -> false "mismatch"). Fix: allow ts within ±2 s of epoch and pick the nearest receipt, or record the slug in the attempt receipt.
