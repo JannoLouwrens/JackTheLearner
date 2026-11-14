@@ -1051,12 +1051,13 @@
         "W1.02": 761.96,
         "detached:heat_race.log": 5817.5,
         "detached:lf04_run.log": 7212.46,
+        "detached:lf04_run2.log": 1800.0,
         "detached:pilot.log": 1242.08,
         "detached:random_death_probe.log": 1632.01,
         "detached:stage1.log": 474.18,
         "detached:water_race.log": 5996.78
       },
-      "used_s": 36676.26
+      "used_s": 38476.26
     }
   },
   "overruns": [
