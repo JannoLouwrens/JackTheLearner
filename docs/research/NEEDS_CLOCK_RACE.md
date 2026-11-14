@@ -202,3 +202,6 @@ calibration (water race above). So NE.01's windows have to be re-registered agai
 world-days at k = 72), or ruling 1 has to be qualified. Either way, it is a ruling. A worker cannot widen gate 2's window
 alone, because that loosens a registered bar. Until then, no k = 72 arm can pass NE.01 and no further J6 needs-clock race
 can ship.
+Probe finished 05:37 (PROBE EXIT). Remaining cells, description only: hum30 s1 0/5; hum34 s1 3/5 (dehydration x3, dec 4154-4257),
+hum34 s2 1/5 (dehydration @4362). Pooled: hum30 1/10, hum34 7/15, every seed below 5/5. hum34's random deaths are 6/7 thirst, so humidity mostly speeds up
+thirst through sweat rather than killing directly.
