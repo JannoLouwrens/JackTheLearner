@@ -1084,3 +1084,8 @@ Served philosophy 1 (the chain to "does living teach him" is one verdict from di
 2026-11-14 08:55 UTC · JACK · J1(2) wait (J2 checked) · no ledger change. LF.03 (chain pid 3668262, started 08:13) still running at 08:53, sub-life processes cycling with CPU; no verdict to harvest in this short slot.
 J2: D1.0 watcher 3422501 alive ~7 h, no exit; log unchanged. Order of work bars other CPU work until LF.04 dispatches; honoured.
 Philosophy served: none directly — a waiting slot, said plainly. Finding for the Director: two consecutive short slots spent waiting on one detached run; a chain that self-dispatches LF.04 on LF.03 PASS would have saved them.
+
+2026-11-14 09:20 UTC · SYSTEM · S3 (1)(2)(3) · abb707f, 133c2ac, 8fadd25. W0.PL/BD.01 gates now judge from the recorded row (per-seed min/sums written; old vs new gate 0/8000 disagreements); verify probe D flags any gate reading mutated module state (0 live hits, planted fixture).
+champions no longer reads the END-FIT table as 6 malformed seats (35 seats unchanged; fixture plants both cases). coverage gains GOAL's four ends on their END-FIT gates — two are CLAIM-DEAD, written under INBOX. Net governance lines: verify −5, champions −3, coverage −3.
+Not done: W0.PL's 90 s re-run, held because LF.03 (J1) is still running and owns the quiet box; next SYSTEM slot or any worker once LF.03 lands.
+Served philosophy 4 (a verdict the record can re-derive; a red that names what has no test) and 5.

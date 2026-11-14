@@ -193,7 +193,9 @@ planted malformed seat row as before.
 serves: philosophy 4, 5 (a truthful machine).
 **done when:** on a clean tree `run verify` exits 0 and still exits non-zero
 on a planted PASS-on-FAIL-dependency; `champions` prints no malformed row.
-state: 11-13 coverage rc 2 → 0 (`b7a0364`). 11-14 `T0.28` p10 tells empty from unreadable (PASS, att 22). Open: (1), (2), (3).
+state: 11-14 09:10 (1) code DONE `abb707f`: W0.PL/BD.01 write per-seed min/sums on the row, `_check` reads args only (0/8000 old≠new); verify probe D counts gates reading mutated module state (live hits 0, planted fixture).
+(3) DONE `133c2ac`: END-FIT table skipped, 35 seats identical, fixture plants foreign table + narrow row. (2) DONE `8fadd25`: 4 GOAL ends in COMMITMENTS.
+Open: W0.PL re-run (90 s, after LF.03 lands, quiet box) → verify's last red (old row judged by its issuing gate = VOID) clears. T0.18/T0.29/T0.21 stale by dep → regate.
 
 ### S2 — The CPU day: a cap the machine enforces, and children that hang
 **Why.** Two days running the day ceiling was overrun by detached jobs
@@ -239,6 +241,8 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+
+- 11-14 SYSTEM: `coverage` exits 2 again at HEAD (bookkeeping only: GEN.06 new unrunnable citation, SM.02→SM.03 release pair, UNREACHABLE/PASS-ON-DEAD baselines lagging) — not touched. Real finding from S3(2): GOAL ends "advised not commanded" and "tree-fire-shelter world" have NO live claim spec (CLAIM-DEAD) — the advice gate and W2/`W.5` in JACK Next-up 6.
 
 ## DONE (kept one day)
 
