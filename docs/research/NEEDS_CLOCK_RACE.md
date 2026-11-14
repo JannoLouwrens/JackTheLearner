@@ -127,3 +127,27 @@ Fixed ambient, 3000 s, DEATH_T_S dwell.
   every ambient. Unmeasured: NE.01 random-death causes under either (flailers peak 39.15 C in hum34's open sun).
 => Race to declare after the water race tallies: hum30, hum34 vs shipped on heat_race's rule, seeds 0-4,
 W.1/W.2/NE.01; reported, not gated: `c_hot_reachable`, cause shares, decisions per random life.
+
+## J6(c) humidity race — W.1/W.2 legs, rule declared first (2026-11-14 ~04:40 UTC, no ledger)
+
+Rule declared in `experiments/humid_race.py` before any cell (heat/water race rule verbatim, arms hum30, hum34 vs
+shipped, seeds 0-4; apparatus = swp_k72 W.2 s0 through the humid wrapper must equal the water race's cell).
+Apparatus **OK** (byte-equal). W.1 + W.2 legs run (20 cells + apparatus); NE.01 NOT run: the verdict is already fixed.
+
+| arm | W.2 c_pass (s0-4) | lost vs shipped (rule 1/3) |
+|---|---|---|
+| shipped, swp_k72 | 0/5 | — |
+| hum30 | 0/5 | W.1 d_pass 0.8 (s2), W.1 _check lost s2 |
+| hum34 | **5/5** | W.1 d_pass 0.8 (s2), W.1 _check lost s2, **W.2 a_pass 0/5** |
+
+**=> NONE SHIPS** under the declared rule, whatever NE.01 reads. Why each loss happens:
+- **W.2(a), hum34: real, and the declared cost.** (a) checks thirst against `1 - B_W t` on the deprived statue. That form
+  assumes 37 C is the fixed point (`K_DRY = M_BASAL/(T_SETPOINT - T_DAY)`, shipped). At T_DAY 34 the open statue settles
+  above 37 C and sweats, so water drains faster: a_err_w 0.158 vs INTEGRATOR_TOL 0.01. A hot world needs either K_DRY
+  re-derived for the new T_DAY, or (a) re-registered against the sweating closed form. Racing those options is the next step.
+- **W.1(d), both arms: the arm's own build is the fault, not the world.** (d) integrates `_ship_flux_w`, which reads `N.e_evap`
+  directly; the humid arms scale evaporation by f(RH, T_env) only inside `thermal_step` (e_evap has no ambient
+  argument). Where s2's scenario sweats, the stepper and the flux ledger diverge (d_rel_err_fine 0.0091 vs 5e-3,
+  convergence ratio 0.95 vs 2.0). Repair: move humidity into a shared needs function (e.g. `evap_factor(T_env, occ)`)
+  that both `thermal_step` and W.1's flux read, then re-run the W.1 leg.
+hum34 is the first arm since sweat to make W.2(c) pass on every seed: the hot route as registered works again.

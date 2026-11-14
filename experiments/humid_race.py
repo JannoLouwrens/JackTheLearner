@@ -27,12 +27,33 @@ Routes (fixed ambient, 3000 s, death = DEATH_T_S continuous dwell past a thresho
   full_open_day / full_roof_day                   M = 3 x basal (kappa_act*p_max = 2 M_BASAL)
   rest_soak_night (W.2's cold route) / rest_roof_night / rest_open_night
 
-Usage: python -m experiments.humid_race check      (seconds; prints JSON)
+DECLARED RULE (written 2026-11-14 ~04:40 UTC, before any cell of this race):
+  heat_race's / water_clock_race's rule verbatim, arms (hum30, hum34) vs shipped
+  (shipped cells REUSED from /data/jack-logs/heat_race, byte-same code path),
+  seeds 0-4, W.1 / W.2 / NE.01 through each spec's own _experiment
+  (+_control/_check for W.1):
+  X SHIPS iff (1) every W.1/W.2 boolean `*_pass` and every NE.01 `ok_*`
+  seed-mean >= shipped's (keys whose values are not 0/1 excluded, the tally fix),
+  (2) NE.01 pooled max random-death cause share STRICTLY below shipped's,
+  (3) W.1 _check passes on every seed shipped's does.
+  If both win: hum30 (the smaller edit: no temperature constant moves).
+  ADDITIONALLY reported, not gated: W.2 c_pass per seed (ruling 1's target),
+  each arm's flags against swp_k72 (the water race's cells — the body both
+  humid arms sit on), random-life decisions, causes.
+  APPARATUS (known positive): swp_k72 W.2 s0 run through THIS module's _apply
+  must equal the water race's swp_k72 W.2 s0 cell exactly, else VOID (proves
+  the humidity wrapper is a no-op on its base arm).
+
+Usage (nice 19, <= 2 workers, detached via experiments/humid_race.sh):
+  python -m experiments.humid_race check      (seconds; route table JSON)
+  python -m experiments.humid_race run ARM SPEC SEED
+  python -m experiments.humid_race tally
 """
 from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 
 from experiments import heat_race as H
 from experiments import water_clock_race as WR
@@ -100,9 +121,75 @@ def check() -> dict:
     return out
 
 
+OUT = Path("/data/jack-logs/humid_race")
+RACE_ARMS = tuple(HUMID)
+
+
+def run_cell(arm: str, spec: str, seed: int) -> Path:
+    _, mods = _apply(arm)
+    mod = mods[spec]
+    m = mod._experiment(int(seed))
+    rec = {"arm": arm, "spec": spec, "seed": int(seed), "metrics": m}
+    if spec == "W.1":
+        c = mod._control(int(seed))
+        rec["control"] = c
+        rec["check"] = bool(mod._check(m, c))
+    OUT.mkdir(parents=True, exist_ok=True)
+    p = OUT / f"{arm}_{spec}_s{seed}.json"
+    p.write_text(json.dumps(rec, default=H._jsonable))
+    return p
+
+
+def _apparatus() -> dict:
+    a, b = OUT / "swp_k72_W.2_s0.json", WR.OUT / "swp_k72_W.2_s0.json"
+    if not (a.exists() and b.exists()):
+        return {"compared": 0, "mismatched": [], "ok": False}
+    ma, mb = json.loads(a.read_text())["metrics"], json.loads(b.read_text())["metrics"]
+    bad = sorted(k for k in set(ma) | set(mb) if ma.get(k) != mb.get(k))[:6]
+    return {"compared": 1, "mismatched": bad, "ok": not bad}
+
+
+def tally() -> dict:
+    res: dict = {"apparatus": _apparatus()}
+    res["shipped"] = WR._summ(WR._load(H.OUT, "shipped"))
+    res["swp_k72_ref"] = WR._summ(WR._load(WR.OUT, "swp_k72"))
+    for arm in RACE_ARMS:
+        res[arm] = WR._summ(WR._load(OUT, arm))
+    complete = all(res[a][f"n_{s}"] == len(H.SEEDS)
+                   for a in ("shipped",) + RACE_ARMS for s in H.SPECS)
+    for arm in RACE_ARMS:                    # reported, not gated
+        ref = res["swp_k72_ref"]["flags"]
+        res[arm]["vs_swp_k72"] = {k: [ref.get(k), v] for k, v in res[arm]["flags"].items()
+                                  if ref.get(k) != v}
+    if not complete:
+        res["verdict"] = None
+        return res
+    if not res["apparatus"]["ok"]:
+        res["verdict"] = "VOID (humidity wrapper did not replay swp_k72 W.2 s0)"
+        return res
+    base, wins = res["shipped"], {}
+    for arm in RACE_ARMS:
+        r = res[arm]
+        worse = [k for k, v in base["flags"].items() if r["flags"].get(k, 0.0) < v]
+        share = r["max_cause_share"] < base["max_cause_share"]
+        w1 = all(r["W.1_check_by_seed"].get(s) for s, ok in
+                 base["W.1_check_by_seed"].items() if ok)
+        r["lost_on"] = worse + ([] if share else ["max_cause_share not lower"]) \
+            + ([] if w1 else ["W.1 check lost a seed shipped passes"])
+        wins[arm] = not r["lost_on"]
+    res["wins"] = wins
+    res["verdict"] = ("hum30" if wins["hum30"] else
+                      "hum34" if wins["hum34"] else "none ships")
+    return res
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "check"
     if cmd == "check":
         print(json.dumps(check(), indent=1))
+    elif cmd == "run":
+        print(run_cell(sys.argv[2], sys.argv[3], int(sys.argv[4])))
+    elif cmd == "tally":
+        print(json.dumps(tally(), indent=1, default=str))
     else:
         sys.exit(f"unknown command {cmd!r}")
