@@ -1117,3 +1117,7 @@ Served: philosophy 4 (a test that could have passed now can) and 3 (the world's 
 (2) Gain-field (bilinear sense × push) forward model (Deliberation): stage 1 PASSED on fresh seeds (.291/.235 vs MLP .207/.044, shuffled −.007/−.060); stage 2 DEAD — fed births told 4/40, want 9/40 (9/0), shuffled 5/40, babble 5/40.
 Lead left in LAB.md, not claimed: the learned want fed 8 of 18 births after its first meal on s90 and never got a first meal on s94. ~45 core-min on the box (2 workers, nice 19, metered), no ledger row, no world file touched.
 Served philosophy 3 (two seats contested, biology as oracle) and 4 (controls that failed as required; both kills by rules declared before the seeds were read).
+
+2026-11-14 12:10 UTC · JACK · J1(3) + J2 · f90881f. Both remote runs died at 11:33/11:38 on the GPU push guard: another lane's uncommitted docs/LAB.md counts as code dirt, and the guard runs on every call. LF.04: calls 1–5 ok, call 6 refused -> ERROR, no verdict. D1.0: unit 7/13 refused -> ERROR att 6.
+Rows committed by path; LF.04 re-dispatched 12:08 (kcpu, lf04_run2.log, ~2 h); D1.0 resumed 12:08 from its 6 cached units (7 left, 13.4 h projected, W45 kaggle 9.28 h used). INBOX: guard once per run / class LAB.md+ORDERS.md as prose.
+Served philosophy 1 and 4 (the creature gate and the control contest put back in flight instead of being left as ERROR rows) and 6 (free GPU hours not left expiring).

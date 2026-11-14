@@ -53,13 +53,11 @@ it in `state:`, diagnose.
 kernel slug in `state:`. If it FAILs, that is the finding — do not soften.
 serves: M1→M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` has a ledger verdict from a Kaggle CPU kernel.
-state: 11-14 07:10 step (1) DONE `76a85dc`. Step (2) DONE: `T6.03` PASS att 3 (`f52fd6b`), `LF.02` PASS att 4 (`7a93b1e`), `XL.00` PASS att 9 (`939ee71`),
-`LF.03` PASS att 2 09:32, 2386 s, salt differential: all deciding metrics reproduced (`1400d81`, pushed).
-Step (3) DISPATCHED 09:33: `launch_detached.sh /data/tmp/lf04_run.log run LF.04` (wrap pid 3708266, runner 3708275) at head `1400d81`; call 1 = Kaggle CPU kernel `jannolouwrens/jack-cpu-1794648797`, RUNNING 09:38.
-Calls run serially (6 calls, ≤6 h timeout each, ~8 h total); each later call gets a new `jack-cpu-<epoch>` slug in gpu_submissions.jsonl.
-11-14 10:45 calls 1–3 DONE ok (27/23/14 min, slugs -1794648797/-1794650429/-1794651790), call 4 started 10:37 → whole run ~11:45, not 17:30.
-Each call cloned the THEN-current HEAD (1400d81, 4068b7f, cb28752, b1a1035); diff 1400d81..b1a1035 touches only NE.01/W1.04 + their tests — LF.04's code paths byte-same.
-Next: read `/data/tmp/lf04_run.log`; on exit commit ledger by path + render. A FAIL is the finding: diagnose, do not soften.
+state: 11-14 steps (1)(2) DONE (`76a85dc`; T6.03/LF.02/XL.00/LF.03 PASS, `1400d81`). Run 1 (09:33): calls 1–5 ok, call 6 REFUSED 11:33 by the GPU push
+guard on another lane's uncommitted `docs/LAB.md` -> ERROR att 1, no verdict (`f90881f`). RE-DISPATCHED 12:08 at `f90881f`: `launch_detached.sh
+/data/tmp/lf04_run2.log run LF.04` (wrap pid 3751098), call 1 submitted 12:08:59 (kaggle-cpu). ~2 h if calls run like run 1 (14–27 min each).
+Next: read `/data/tmp/lf04_run2.log`; on exit commit ledger by path + render. A FAIL is the finding: diagnose, do not soften.
+Any tracked non-prose edit left uncommitted at a call boundary kills the run again (INBOX) — commit docs edits in one step.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 5 in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
@@ -72,8 +70,10 @@ the week (D56) — resume the remaining units on Colab.
 serves: M3, M4 · END-FIT row 1 · philosophy 3, 7 · objective 3 (free GPU).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-14 01:15 `T1.14` PASS on Kaggle T4 (`9d24f8d`). 01:55 `D1.0` dispatched unchanged (25.05 h projected, 13 units).
-04:25 unit 1 done. 06:30 unit 2 done (`RUN aprime seed 2 620.8 @ 450560 steps`, gpu_stdout). 07:38 watcher 3422501 alive 5 h 48 m, no exit.
+state: 11-14 01:55 `D1.0` dispatched (13 units). Units ref + aprime s0–2 + b_split s0–1 done and cached (`/data/d10_units/3fbc6d0c8a49a898`).
+11:38 ERROR att 6: unit 7's submit refused by the push guard on another lane's uncommitted `docs/LAB.md` (not a quota, not a download).
+12:08 RESUMED via `dispatch.sh D1.0 --projected-hours 13.4` (watcher 3751053, head `f90881f`): cache reused, b_split s2 submitted first; 7 units left
+(b_split s2, c_e2e s0–2 kaggle 3.02 h each; d_mlp s0–2 colab .44 h). Kaggle week W45 used 9.28 h before this. Next: read the log; act only on an exit.
 
 ### J5 — The Kaggle-CPU queue: curriculum cook-off (`CR.01`), then meal memory
 **Why.** Owner 11-11: the curriculum is "as important as jack himself".
@@ -253,6 +253,7 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 - 11-14 JACK: a Kaggle-CPU (`kcpu<12h`) run holds `/tmp/jack-ladder.lock` for its whole remote poll — `_lock_for` and `_holders.remote_only` count only `gpu*` budgets as remote, so LF.04 (runner 3708275, ~8 h of polling, 0 CPU) refuses every local spec AND the overflow slot, and every other kcpu dispatch (J5 `CR.01`, J6(b) `NE.01`) until ~17:30. Fix: treat `kcpu` as remote in both places (`experiments/run.py:71`, `:251`).
 
 - 11-14 JACK: multi-call Kaggle-CPU specs re-clone the CURRENT HEAD on every call (LF.04 calls ran on 4 different heads) — a code commit mid-run would silently mix versions inside one verdict; pin calls 2..N to call 1's head. Harmless for LF.04 today (code paths unchanged).
+- 11-14 JACK: the GPU push guard (`gpu.assert_ref_is_current`) runs on EVERY call of a multi-call remote spec, and `is_code_dirt` counts `docs/LAB.md` and `docs/ORDERS.md` as code — one lane's uncommitted LAB.md at 11:33 killed LF.04 at call 6/6 (2 h of kcpu) AND D1.0 at unit 7/13 (≈10 GPU-h of units survive only via D1.0's own cache). Fix: guard once per spec run (pin calls to call 1's head, cf. the pin-head line) and/or class LAB.md/ORDERS.md as prose. Both re-dispatched 12:08.
 
 ## DONE (kept one day)
 
