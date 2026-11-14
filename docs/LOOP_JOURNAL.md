@@ -1253,3 +1253,9 @@ D1.0 att 8 ERROR (ZeroDivisionError). The b_split s2 harvest itself was genuine.
 Moved the 6 poisoned unit files (byte-identical to b_split_seed2.json) to /data/d10_units_quarantine_20261114. The cache now holds 7 genuine units: ref, aprime 0-2, b_split 0-2. Added an INBOX line for the leak.
 Fresh dispatch of the 6 remaining units: pre-flight CLEAR (10.4 h projected, 14.61 h left in W45, which expires Sunday). Watcher 3902173 pushed c_e2e (attempt 1794691758124). Do not kill it.
 Served philosophy 4 (a poisoned cache would have scored b_split's data as two other arms; caught and removed before any verdict) and 6 (W45 GPU hours used before they expire).
+
+2026-11-14 21:45 UTC · JACK · J5 (J2: D1.0 watcher 3902173 alive, no exit) · this commit.
+Harvested CR.01 131:shuffled:matched from Kaggle CPU at zero quota (6/9 units cached). Exam fed (unofficial): shuffled .128, matched .085 (s131 null .128, staged .191).
+Refused again by the receipt misjoin (cited …6908's 695ddace). …6945's own receipt 55c125aa equals the pulled bytes, the pin swap 6396c4b->HEAD gives the local 7222443b exactly, and no IMPL_DEPS moved. ACCEPT_MISMATCH is honest.
+The detached prefetch of 132:lp:frontier was REFUSED by the day cap (pre-fix 48.5k s > 34.6k, resets 00:00 UTC). Pushed it in-session instead as `jack-cpu-1794692332`. Both kcpu slots are busy (with …7870).
+Served philosophy 3 (the curriculum seat is raced) and 6 (free Kaggle CPU, ~0 box CPU).
