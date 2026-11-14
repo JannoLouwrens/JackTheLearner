@@ -232,3 +232,18 @@ re-registration lets a k72-clock world meet gate 2 at all.
 **Price of the long NE.01 legs (J6 c).** The forager horizon at k72 is 218571 dec, 12.1x shipped's 18000. The 11-13 k72 NE.01
 cells took ~40 min/seed on the box with the 18000 horizon. A k72-clock NE.01 seed is therefore several hours of CPU, one Kaggle CPU
 kernel per seed, never the box.
+
+**Probe cells landed (13:42, re-registered windows, cap 39158):**
+
+| cell | died | decisions | causes | gate 2 | at cap 6000 (05:25) |
+|---|---|---|---|---|---|
+| swp_k72 s0 | 5/5 | 13839, 25458, 8979, 9135, 8735 | dehydration x5 | **PASS** | 0/5 FAIL |
+| hum34 s0 | 5/5 | 20622, 10006, 4150, 4143, 3664 | dehydration x4, hyperthermia | **PASS** | 3/5 FAIL |
+
+**This reverses the 05:25 conclusion that "no k = 72 arm can meet gate 2".** Ruling 4's window, sized in the world's own thirst
+time, is met by the sweating body on THIRST ALONE, with no acute killer: every swp_k72 flailer dies of dehydration at 1.8-6.8 sim-hours
+(window 0.1-2.2 T_thirst). The fast-clock window was the obstacle, not the world. One seed only so far. hum30 s0-2 and hum34 s1-2 were still
+running at commit; the files at those names are the cap-6000 ones until their mtimes pass 13:23. swp_k72 s1-4 have not been probed.
+Next: tally the remaining cells, probe swp_k72 s1-4 (same tool, ~18 min/cell). If swp_k72 holds 5/5 on every seed, it is the arm whose
+long NE.01 legs (forager 218571 dec) earn a Kaggle CPU kernel per seed. Gate 1 (spread_e) and gate 4 (5 meals in the horizon) are
+the clauses left to read there.
