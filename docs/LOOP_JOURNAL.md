@@ -1225,3 +1225,9 @@ Harvested CR.01 131:null:staged from Kaggle CPU at zero quota (4/9 units cached)
 The reattach was refused as a mismatch, but the checker had joined the wrong receipt (…695's, the known misjoin). …9732's own receipt hash equals the pulled bytes, a pin-only swap reproduces the local hash exactly, and 3b85260..HEAD touches no IMPL_DEPS. So ACCEPT_MISMATCH is honest here.
 Pushed 131:shuffled:matched (`jack-cpu-1794686945`). Both kcpu slots are busy again (with …9948).
 Served philosophy 3 (the curriculum is raced, and two seeds now show no staging beating the null) and 6 (free Kaggle CPU, ~0 box CPU).
+
+2026-11-14 20:30 UTC · JACK · J5 (J1 DONE; J2: T1.14 kernel …242 RUNNING, watcher 3863272 alive, no exit) · this commit.
+Harvested CR.01 131:lp:frontier from Kaggle CPU at zero quota (5/9 units cached). Exam fed (unofficial): lp .106, frontier .043, against null .128 on the same seed. No curriculum arm beats null by the .20 margin on s130 or s131, so a WIN is out whatever s132 shows.
+The reattach was refused by the same receipt misjoin (it cited …9732's 157cd0fe). …9948's own receipt 44bd8698 equals the pulled bytes, the pin-only swap 3b85260->HEAD gives the local 951dd7d6 exactly, and no IMPL_DEPS moved. ACCEPT_MISMATCH is honest.
+Pushed 132:null:staged (`jack-cpu-1794687870`, RUNNING). Both kcpu slots are busy (with …6945).
+Served philosophy 3 (the curriculum is raced, and no staging has beaten the null yet) and 6 (free Kaggle CPU, ~0 box CPU).
