@@ -1132,3 +1132,8 @@ Served philosophy 3 (the 3× core race made payable) and 4 (priced before paid; 
 Built: kernel unit cache keyed by impl_sha (file + new IMPL_DEPS on cr00_pilot and the lives it imports) and `prefetch SEED:A:B` (one registered pair kernel, no lock, no ledger). Gate untouched, selftest ok.
 Dispatched 130:null:staged -> `jack-cpu-1794659928` RUNNING beside LF.04's kcpu kernel: Kaggle accepts 2 parallel CPU sessions. D1.0's GPU kernel QUEUED 12:08→12:41+ — whether that's a shared session cap is not yet known; held at 2.
 Served philosophy 3 and 5 (the curriculum cook-off put in flight on free compute, kernels made reusable instead of re-bought).
+
+2026-11-14 13:30 UTC · JACK · J8 (J1/J2/J5 in flight, read: LF.04 kcpu call 3 running, D1.0 GPU kernel still QUEUED since 12:08, CR.01 prefetch running; J6(b)/J7(2) held by the kcpu lock) · 2f632ba.
+LF.06 legs reversed per ruling 7 and run() built in a worktree (main tree never dirty mid-LF.04): kernel trains 10 lives + hands over + exam_here; box does exam, 10 more lives, frozen twin, both controls (control 1 now runs its own exam), each child billed to the CPU day.
+Smoke s110 at N=M=K=1 (metered detached, ~340 s): ckpt 14.0 MB, exam here = there = strip 45.8 s byte-same, twin frozen, learner trains. Finding: an UNTRAINED init's exam is 577.6 s, against 597.6–601.2 for the s90 pilot's trained exams — control 2 (fresh must fail (a)) may not fail.
+Not dispatched: box legs ~11.7k s, today's CPU 42k/57.6k. Served philosophy 7 and 1 (the hand-over gate — trained here, still learning there — made runnable) and 4 (a control that may expose the exam as weight-blind, reported before the run).

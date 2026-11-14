@@ -149,8 +149,11 @@ lives. Claim, seeds, bars and both controls unchanged. No input channel is
 built. Runs after `LF.04` is dispatched and `LF.03` is green.
 serves: M7, M8 · END-FIT row 2 · philosophy 1, 2, 7.
 **done when:** `LF.06` has a verdict.
-state: `LF.06` REGISTERED 11-13, runner built (`e7b45bd`), TOL_S 20.0, ARM/x86 gap 18.2 s (0.91 of TOL). `cores.py:75` comment fixed (`389ffca`).
-Hand-over file measured: 19.6 MB (13.4 MB gz), nearly all learner (861,545 params + Adam + ring).
+state: 11-14 13:30 legs REVERSED + run() BUILT `2f632ba` (re-registered before any run: budget KAGGLE_CPU, TOL_S 20.0 fixed). Kernel per seed = 10 lives + file + exam_here,
+fetched + sha-checked; box = exam, learner, frozen twin, strip(+own exam), exam_fresh, <=2 niced children billed `LF.06:there:<role>`. Smoke s110 N=M=K=1: all roles ok,
+exam here=there=strip 45.8 s, twin frozen (opt 464), learner trains (464->861). FINDING: fresh-init exam 577.6 s vs s90 pilot's trained exams 597.6-601.2 -> control 2 may not fail (a).
+Box price ~3.9k s billed/seed (~11.7k s for 3) -> needs a fresh CPU day (today 42k/57.6k used). Next: `launch_detached.sh /data/tmp/lf06_run.log $PY -m experiments.run LF.06`
+early on a quiet day, after LF.04's verdict and behind CR.01's kcpu slots (it takes 1 kcpu session/seed, serial). A control-2 FAIL is the finding — do not soften.
 
 ### J3 — The learning core at 3× scale (`LC.09`)
 **Why.** Owner 11-12: "when will we run it bigger scale against the others".
