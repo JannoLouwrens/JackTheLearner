@@ -91,10 +91,10 @@ docstring, unchanged. Clears → register it against `NE.05`'s seat; dies → sa
 serves: M2, M7 · philosophy 3, 5.
 **done when:** `CR.01` has a verdict and the meal-memory tally is written.
 state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`. Kaggle takes 2 parallel CPU sessions, not shared with the GPU queue.
-11-14 18:10 HARVESTED s130 (3/9 cached; …525 needed ACCEPT_MISMATCH, misjoin per INBOX). s130 exam fed (unofficial tally from the rows, gate not run): null .255, frontier .255,
-staged .213, lp .043, shuffled .128, matched .085; median span null 504 s is the highest. No arm clears fed(X)-fed(null) >= .20 on s130, so no WIN is possible (needs EVERY seed); verdict still needs all 9 units.
-In flight: 131:null:staged = `jack-cpu-1794679732`, 131:lp:frontier = `jack-cpu-1794679948` (both pushed 18:08-18:12, ~2 h). Next (~20:15): `JACK_REUSE_KERNEL=jannolouwrens/<slug> $PY -m
-experiments.tests.cr_01_curriculum_cookoff prefetch 131:<a>:<b>` for each, then push 131:shuffled:matched + 132:null:staged; push in-session with `> log`, never via a pipe (a killed `| tail` loses the slug).
+s130 (3 units) cached: fed null .255, frontier .255, staged .213, lp .043, shuffled .128, matched .085 (unofficial, rows). No WIN possible (needs every seed); verdict needs all 9.
+11-14 20:25 HARVESTED 131:null:staged (…9732, 4/9 cached): fed null .128 vs staged .191 (+.063 < .20), median span 464 vs 463 s. ACCEPT_MISMATCH proven: checker misjoined …695's receipt
+(INBOX 16:10); …9732's own receipt 157cd0fe = pulled bytes, pin swap 3b85260->HEAD = local 695ddace, 3b85260..HEAD touches no IMPL_DEPS. In flight: 131:lp:frontier `jack-cpu-1794679948`,
+131:shuffled:matched `jack-cpu-1794686945` (pushed 20:22, ~2 h). Next: prefetch each with JACK_REUSE_KERNEL (verify pin-only the same way), then push 132:null:staged + 132:lp:frontier.
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
 **Why.** `W.1` is PASS (05:28). `W.2` and `NE.01` are red. Four races (k = 72,

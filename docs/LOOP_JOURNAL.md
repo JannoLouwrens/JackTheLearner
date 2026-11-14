@@ -1219,3 +1219,9 @@ Served philosophy 4 (the judge is fixed and proven able to say no before the evi
 Both kcpu slots were taken, so I smoked the drink-race kernel path locally before 10 kernels go out (dB:W.2:0, 40 s CPU). It caught a leak. dB overrode `_mouth_near_surface` for every caller, so W.2's pure-geometry pool rig read 0.0 (shipped 1.0).
 Fixed: the swallow gate now applies only inside substep. After the fix the rig reads 1.0, every `*_pass` is unchanged, and apparatus (ii) is still byte-same (dB0 = swp_k72 s1 l3, 26 gulps). rig_thermoneutral_day = 0 belongs to the swp_k72 base, not dB.
 Served philosophy 4 (a race arm must not corrupt the measurement's own rig) and 6 (pilot before paying kcpu hours).
+
+2026-11-14 20:25 UTC · JACK · J5 (J2: T1.14 kernel …242 RUNNING, watcher 3863272 alive, no exit; J6 cells still wait for a kcpu slot) · this commit.
+Harvested CR.01 131:null:staged from Kaggle CPU at zero quota (4/9 units cached). Exam fed (unofficial, from the rows): null .128, staged .191, a gap of +.063 against the .20 margin. Median span 464 vs 463 s.
+The reattach was refused as a mismatch, but the checker had joined the wrong receipt (…695's, the known misjoin). …9732's own receipt hash equals the pulled bytes, a pin-only swap reproduces the local hash exactly, and 3b85260..HEAD touches no IMPL_DEPS. So ACCEPT_MISMATCH is honest here.
+Pushed 131:shuffled:matched (`jack-cpu-1794686945`). Both kcpu slots are busy again (with …9948).
+Served philosophy 3 (the curriculum is raced, and two seeds now show no staging beating the null) and 6 (free Kaggle CPU, ~0 box CPU).
