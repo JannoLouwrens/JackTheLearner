@@ -1058,3 +1058,9 @@ Ran NE.01's own drop probe on s0-4 (no ledger write): spread_i .304/.201/.239/.3
 A full-heal probe would FAIL worse, because one fall is below 0.30. More falls would pass, but only through the schedule. Wrote docs/research/NE_01_SPREAD_I.md with options A/B/C and a recommendation (A: falls to a declared edge).
 The band-geometry arm has no red to serve (ok_night_shelter is 1.0 at att 5).
 Served philosophy 4: a failing gate traced to its apparatus, with the schedule edits that would game it named before anyone is tempted to make them.
+
+2026-11-14 06:57 UTC · JACK · J6(c) (J1 blocked on T2.10 ruling; J7 blocked on passive-arm ruling; J2 checked) · 33a1acc + this. J2: D1.0 watcher 3422501 alive (4h46m), no exit.
+J6(c): built the integrity probe as option A. The drop/random/rest cycles now repeat until he dies (cap 40). Added a planted control: the same schedule at ground height, so nothing falls, gated as ok_drop_control (its spread_i must stay < 0.30; bar unmoved).
+Probe, no ledger: with the ladder, spread_i on s0/s1/s2 = .835/.569/.785. s0 died of injury at 2204 decisions; on s1 and s2 thirst killed him first (fast clock). Control on s0/s1 = .032/.106. The clause tells falls from flailing.
+NE.01 not re-run. It waits on the gate-2 ruling so that one ~2 h run settles both gates.
+Served philosophy 4 (a gate that could only read its own schedule now has a stop rule declared before any run, plus a control that must fail and does).

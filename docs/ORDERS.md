@@ -93,10 +93,10 @@ serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow the
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
 state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) heat/water/humid NONE (af9b980, 21188f3, b1272c3); gate-2 RULING asked (INBOX 05:25).
-11-14 06:25 ok_spread DIAGNOSED (docs/research/NE_01_SPREAD_I.md): the binding need is spread_i, NOT f/T (f .38, T .76 clear every seed; ok_night_shelter already 1.0 -> band-geometry arm has no red to serve).
-Drop probe s0-4 spread_i .304/.201/.239/.338/.198 (2/5). One ladder fall = .10-.14 delta_i, and a 40 s rest leg heals .044 (RHO_HEAL 1/900), so the trace is a ratchet and p90-p10 is set by the SCHEDULE.
-Full-heal probe would read ~1 fall (<.30, worse); more falls would read ~1. Next: amend NE.01 notes to declare the i-probe as (A) "falls until a stated delta_i or injury death"
-(the doc's recommendation; bar .30 unmoved), then re-run NE.01 only after the gate-2 ruling (05:25) so one run settles both.
+11-14 06:25 ok_spread DIAGNOSED (docs/research/NE_01_SPREAD_I.md): binding need is spread_i (probe schedule = ratchet), not f/T; band-geometry arm has no red.
+11-14 06:55 (A) IMPLEMENTED (33a1acc, no ledger): drop cycles until death (cap 40) + planted ground-height control, new gate ok_drop_control (ctrl spread_i < .30).
+Probe: ladder s0/s1/s2 spread_i .835/.569/.785 (s0 injury death; s1/s2 thirst kills first, fast clock); control s0/s1 .032/.106.
+Next: after the gate-2 ruling (INBOX 05:25) re-run NE.01 ONCE (detached, ~2 h CPU) so one run settles gates 1+2.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow
