@@ -70,10 +70,11 @@ the week (D56) — resume the remaining units on Colab.
 serves: M3, M4 · END-FIT row 1 · philosophy 3, 7 · objective 3 (free GPU).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-14 01:55 `D1.0` dispatched (13 units). Units ref + aprime s0–2 + b_split s0–1 done and cached (`/data/d10_units/3fbc6d0c8a49a898`).
-11:38 ERROR att 6: unit 7's submit refused by the push guard on another lane's uncommitted `docs/LAB.md` (not a quota, not a download).
-12:08 RESUMED via `dispatch.sh D1.0 --projected-hours 13.4` (watcher 3751053, head `f90881f`): cache reused, b_split s2 submitted first; 7 units left
-(b_split s2, c_e2e s0–2 kaggle 3.02 h each; d_mlp s0–2 colab .44 h). Kaggle week W45 used 9.28 h before this. Next: read the log; act only on an exit.
+state: 11-14 16:25 watcher EXIT (ERROR att 6b): its 4.28 h timeout counted b_split s2's 4 h Kaggle QUEUE; Colab fallback = T4 assign 503. Kernel `jack-ladder-1794658135`
+is RUNNING on Kaggle since 16:08 (~3.02 h -> ~19:10). 17:05 reattach refused before Kaggle: D1.0 BLOCKED by `T1.14` stale (S2's 15:40 protocol.py edit; T1.14 PASSed 01:15).
+17:10 `T1.14` re-buy dispatched (watcher 3833353, `jack-ladder-1794676242`, QUEUED, 1.2 h projected; W45 used 13.56 h). D1.0 impl_sha still 3fbc6d0c (cache key) -> byte-same.
+Next: when `T1.14` lands PASS, `JACK_REUSE_KERNEL=jannolouwrens/jack-ladder-1794658135 JACK_REATTACH_ACCEPT_MISMATCH=1 scripts/dispatch.sh D1.0 --projected-hours 10.4`
+(mismatch = the pinned commit line only, f90881f vs HEAD). Remaining fresh units after it: c_e2e s0-2 (kaggle 3.02 h each), d_mlp s0-2 (colab .44 h). T1.14 FAIL = finding, D1.0 stays blocked.
 
 ### J5 — The Kaggle-CPU queue: curriculum cook-off (`CR.01`), then meal memory
 **Why.** Owner 11-11: the curriculum is "as important as jack himself".
@@ -272,6 +273,7 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 
 - 11-14 15:25 JACK: consequence of the poller-billing line above: `cpu_budget admit` REFUSES every detached launch today (48,545 s > 34,560 s), so J5's next `CR.01` prefetch (pure Kaggle polling, ~0 box CPU) cannot start. Separately, D1.0's GPU kernel `jack-ladder-1794658135` is still QUEUED at 15:23 (since 12:08) with NO kcpu kernel running, so the queue is not a session cap it shares with CPU kernels. Possibly the shared account's GPU quota.
 - 11-14 16:10 JACK: `gpu.reattach_code_check` join 2 misjoins concurrent kernels: the slug epoch is int(t0), so it can sit a fraction of a second BEFORE its own receipt ts (`0 <= epoch - ts` fails -> jack-cpu-1794672505 reads "unverifiable"), and the 600 s window accepts an earlier kernel's receipt (jack-cpu-1794672525 joins …505's -> false "mismatch"). Fix: allow ts within ±2 s of epoch and pick the nearest receipt, or record the slug in the attempt receipt.
+- 11-14 17:15 JACK: (1) a SYSTEM edit to `experiments/protocol.py` (S2 `d95d569`, a salt-child timeout) staled `T1.14`, a 1 GPU-h certificate bought at 01:15, which BLOCKED D1.0's free reattach — every GPU cert listing protocol.py in IMPL_DEPS is re-bought on each apparatus edit; (2) `gpu.submit`'s watcher timeout (est×1.25+1800 s) counts Kaggle QUEUE time, so a 4 h queue killed a kernel's watcher 17 min after it started RUNNING; (3) a `JACK_REUSE_KERNEL` dispatch skips pre-flight for the WHOLE run, so D1.0's later FRESH units go out with no budget check.
 
 ## DONE (kept one day)
 

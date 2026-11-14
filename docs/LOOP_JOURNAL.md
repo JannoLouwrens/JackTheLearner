@@ -1171,3 +1171,10 @@ Served philosophy 3 (the curriculum cook-off advanced) and 6 (free Kaggle CPU us
 Ran swp_k72 s1+s2 death probes in-session, nice 19, 2 cores. s1 = 4/5 (dehydration at 9066-13839 dec, 1 life censored at 39158). s2 hit its 1900 s timeout and is moot.
 Gate 2 needs 5/5 on every seed, so swp_k72 fails like hum30 and hum34 (3/5 on s2). No k72-family arm survives gate 2. A cell costs ~31 CPU-min, not 18.
 Served philosophy 3 and 4: a world-rule race closed by a test that could fail and did, with no threshold moved.
+
+2026-11-14 17:15 UTC · JACK · J2 (J1 DONE; J5 CR.01 kernels …505/…525 still RUNNING on Kaggle CPU, harvest after ~18:10) · this commit.
+D1.0's watcher EXITED 16:25 (ERROR): its 4.28 h timeout counted b_split s2's 4 h Kaggle queue, and the Colab fallback got a T4 assign 503. Kaggle says the kernel `jack-ladder-1794658135` is RUNNING (since 16:08, ~3 h).
+Reattach (free) was refused before touching Kaggle: D1.0 is BLOCKED because `T1.14` went stale. That certificate was bought at 01:15 for 1 GPU-h and staled by S2's 15:40 protocol.py edit.
+D1.0's own impl_sha is unchanged (3fbc6d0c, the unit-cache key). Dispatched the T1.14 re-buy (watcher 3833353, `jack-ladder-1794676242`, QUEUED, 1.2 h; W45 used 13.56/30 h). The reattach command is in J2 state.
+INBOX: apparatus edits re-bill GPU certificates; the watcher timeout counts queue time; a reattach skips pre-flight for later fresh units.
+Served philosophy 6 (a running free-GPU kernel kept recoverable, not abandoned) and 3 (the control-path race, not argued, kept moving).
