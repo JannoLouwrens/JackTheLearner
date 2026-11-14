@@ -151,3 +151,30 @@ Apparatus **OK** (byte-equal). W.1 + W.2 legs run (20 cells + apparatus); NE.01 
   convergence ratio 0.95 vs 2.0). Repair: move humidity into a shared needs function (e.g. `evap_factor(T_env, occ)`)
   that both `thermal_step` and W.1's flux read, then re-run the W.1 leg.
 hum34 is the first arm since sweat to make W.2(c) pass on every seed: the hot route as registered works again.
+
+## J6(c) water race — harvested 2026-11-14 05:10 UTC (cells `/data/jack-logs/water_race/`, log `/data/tmp/water_race.log`)
+
+All 65 cells done (rc 0). Apparatus **OK** (2/2 byte-equal replays). Verdict under the declared rule: **NONE SHIPS.**
+
+| arm | NE.01 ok_random_deaths | random lives died | ok_spread | ok_forager_exercised | min spread (s0) | lost vs shipped |
+|---|---|---|---|---|---|---|
+| shipped | 1.0 | 25/25, all hyperthermia (dec 460-574) | 0.4 | 1.0 | — | — |
+| sweat_paid (s0 only, apparatus) | — | 5/5, **all dehydration**, last at dec 2479 | — | — | f 0.228 | — |
+| swp_w72 | **0.0** | **0/25** | 0.0 | 1.0 | f 0.254 | random deaths, spread, cause share |
+| swp_k72 | **0.0** | **0/25** | 0.0 | **0.0** (2-3 meals/3 days vs MIN_MEALS 5) | **e 0.082** | + forager_exercised |
+
+What this settles:
+* **Under sweat, thirst was the only thing that killed a random flailer.** sweat_paid s0 had 5/5 dehydration deaths.
+  Slow thirst to k = 72 (3600 s; about 1150 s at the flailer's 3.5x drain, against RANDOM_LIFE_CAP = 6000 dec = 1200 s)
+  and nobody dies inside NE.01's one-day window. The knife-edge arithmetic in the module was too optimistic: 0 of 25.
+* So NE.01 gate 2 (5/5 random lives die within one day) **cannot be met by any k = 72 arm that lacks an acute killer.**
+  Shipped holds ok_random_deaths = 1.0, so under rule (1) no such arm can ship, whatever its other clauses read.
+  Of the arms built so far, only the humidity arms add an acute killer. Gate 2 is probed alone under hum30/hum34
+  (`experiments/random_death_probe.py`, NE.01's own `_random_lives`) before their NE.01 legs (~2 h) are spent.
+* **The k = 72 energy clock collapses NE.01 gates 1 and 4.** spread_e falls to 0.082 (bar 0.30) because energy hardly moves
+  in a probe of at most 3 sim-days when starvation takes 21. The forager eats 2-3 times in 3 days against MIN_MEALS 5.
+  These gates were calibrated on the fast clock. A k = 72 world will need them re-registered against the declared clock
+  (e.g. probe length scaled to it), with the reason stated, before any full-k72 arm can pass NE.01. That is a fact
+  about the experiment, not the world, and it goes to the Director with the T2.10-style ruling queue.
+* ok_spread also fails for shipped (0.4): spread_f 0.228 and spread_T 0.283 sit below 0.30 in every arm. That is
+  (c)'s band-geometry item, still open.
