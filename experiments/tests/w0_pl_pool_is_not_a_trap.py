@@ -188,13 +188,24 @@ def _control(seed: int) -> dict:
     return c
 
 
+def _record_extremes(m: dict, c: dict) -> None:
+    """Write onto the row the per-seed extremes the gate judges (the runner
+    aggregates to means), so `run verify` re-derives the verdict from the
+    record alone. Recording only — `_check` reads its arguments, nothing else."""
+    m["n_seeds"], c["n_seeds"] = len(_SEEDS), len(_CTRL)
+    for rows, d, k in ((_SEEDS, m, "min_ratio"), (_SEEDS, m, "valid_min"),
+                       (_CTRL, c, "legacy_min_ratio"), (_CTRL, c, "valid_min")):
+        v = [x[k] for x in rows]
+        d[f"{k}_min"] = min(v) if v and np.all(np.isfinite(v)) else float("nan")
+
+
 def _check(m: dict, c: dict):
-    if not _SEEDS or len(_SEEDS) != len(_CTRL):
+    if not m.get("n_seeds") or m["n_seeds"] != c.get("n_seeds"):
         return Status.VOID
-    if any(x["valid_min"] < 3 for x in _SEEDS + _CTRL):
+    if min(m["valid_min_min"], c["valid_min_min"]) < 3:
         return Status.VOID
-    fired = gate_fires([x["min_ratio"] for x in _SEEDS])
-    legacy = gate_fires([x["legacy_min_ratio"] for x in _CTRL])
+    fired = gate_fires([m["min_ratio_min"]])
+    legacy = gate_fires([c["legacy_min_ratio_min"]])
     m["gate_fires"] = 1.0 if fired else 0.0
     c["legacy_gate_fires"] = 1.0 if legacy else 0.0
     return fired and not legacy
@@ -203,5 +214,9 @@ def _check(m: dict, c: dict):
 def run(ledger: Ledger | None = None):
     _SEEDS.clear()
     _CTRL.clear()
-    return run_spec(BY_ID["W0.PL"], _experiment, _check,
+
+    def check(m, c):
+        _record_extremes(m, c)
+        return _check(m, c)
+    return run_spec(BY_ID["W0.PL"], _experiment, check,
                     control_fn=_control, ledger=ledger)

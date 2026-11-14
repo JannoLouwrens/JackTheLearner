@@ -54,37 +54,12 @@ Three probes, and they fail differently.
      it at 19, then at 20 — it grows. A ratchet is the honest form: the debt
      stays visible, and it may only ever be paid down.
 
-     REFUSAL IS NOT A PROMISE (2026-09-27, and it cost a measured false
-     positive in the one instrument that re-judges the record). This probe
-     asked `bool(e.declared_control)`, which answers *"is the field
-     non-empty?"* — a different question. `T0.01` and `T0.10` declare
-     `"NONE, BY DECISION (52nd audit B5): …"`, a refusal the 52nd audit wrote
-     INTO the field rather than setting `control=None`, precisely so an
-     auditor would read a decision instead of a blank. Truthy. So probe C
-     reported `declared_control_never_ran = 2` — *two safeguards promised and
-     never run* — about two specs that promise nothing, against a `T0.18` gate
-     that wants 0, and the number sat in `PROGRESS.md` as a standing red with
-     nobody able to clear it without moving a threshold.
+     A refusal (`protocol.NoControlByDecision`, falsy) promises nothing;
+     one that ran a control anyway is flagged. History: git, 2026-09-27.
 
-     THE BAR DID NOT MOVE AND NO DETECTOR HERE WAS NARROWED. The two refusals
-     are now `protocol.NoControlByDecision`, a `str` subclass that is FALSY, so
-     `bool(...)` answers the question it was always asking and answers it
-     correctly. This probe reads `protocol.declares_a_control` — shared with
-     the runner's pre-compute guard, so the two readers of one field cannot
-     drift — and that function is an identity test, never a text match. The
-     queue row `t018-explicit-no-control-reads-as-an-unrun-promise` priced the
-     text-match repair as option (ii) and named it to be REFUSED: an exemption
-     claimable by typing a sentence into the field under audit is not an
-     exemption, it is a switch. This is that row's option (i).
-
-     And narrowing a detector's population is a weakening unless the same edit
-     closes what it opens, so it does, in BOTH places: an entry whose
-     declaration refuses a control while `control_metrics` is non-empty is now
-     flagged under `undeclared_control_ran` (a class this probe could not
-     reach while it read `bool(...)` — both branches were satisfied by the
-     same truthiness), and `run_spec` now REFUSES that combination before any
-     compute. `FIX.refused` and `FIX.refused_ran` plant both halves, because a
-     detector's fixture set is exactly the list of defects it can still see.
+  D. MODULE STATE. A `_check` that reads a list its own module fills while
+     running judges from process memory, so the record cannot re-derive it
+     (W0.PL, 11-14): such an entry is counted as one that could not be audited.
 
 Everything that could not be inspected is COUNTED, never skipped. A gate whose
 module will not import, that exposes no `_check`, or that raises when replayed
@@ -94,6 +69,7 @@ number (T0.13 shipped that bug once already).
 """
 from __future__ import annotations
 
+import ast
 import copy
 import importlib
 from dataclasses import dataclass
@@ -106,21 +82,8 @@ from .protocol import (Ledger, NoControlByDecision, Status,
 #: Marker for the one entry a scan may legitimately not judge: its own.
 SELF_EXCLUDED = "self-excluded"
 
-#: The number of PASS entries that record `control_metrics` while their spec
-#: declares `control=None`. A DEBT, measured 2026-08-10, and a ratchet: this
-#: constant may be LOWERED as declarations are backfilled and must never be
-#: raised. Raising it would convert a guard against the audit surface rotting
-#: further into a rubber stamp — the overseer watched this number go 19 -> 20
-#: across two audits with nothing to stop it.
-#:
-#: **PAID OFF 2026-08-10, 19 -> 0.** All twenty undeclared controls (the 19 the
-#: ledger showed, plus T2.02 which is VOID and so never appeared in a scan of
-#: PASSes) now declare what the control is and WHICH WAY it must fail. The debt
-#: cannot silently return: `protocol.UndeclaredControl` refuses to run a spec
-#: that passes `control_fn` without declaring it, checked before any compute.
-#: The ratchet stays as the RECORD-side half of that guard — the raise only
-#: fires when a spec runs, and 47 entries predate `impl_sha` and may not re-run
-#: for weeks.
+#: PASS entries recording `control_metrics` while their spec declares none.
+#: Paid off 2026-08-10 (19 -> 0); may only be lowered. History: git.
 UNDECLARED_CONTROL_BUDGET = 0
 
 
@@ -302,6 +265,11 @@ def collect(ledger: Ledger, exclude: tuple = ()) -> List[Entry]:
             out.append(Entry(spec_id, None, metrics, controls, declared,
                              unavailable="no module" if mod is None else "no _check"))
             continue
+        state = gate_reads_module_state(Path(mod.__file__).read_text())
+        if state:
+            out.append(Entry(spec_id, None, metrics, controls, declared,
+                             unavailable="gate reads module state " + "/".join(state)))
+            continue
         issued = ""
         if r.commit and _missing_key(fn, metrics, controls):
             fn_at = _check_at(spec_id, r.commit)
@@ -310,6 +278,30 @@ def collect(ledger: Ledger, exclude: tuple = ()) -> List[Entry]:
         out.append(Entry(spec_id, fn, metrics, controls, declared,
                          issued_at=issued))
     return out
+
+
+_MUTATORS = {"append", "extend", "clear", "pop", "update", "insert",
+             "setdefault", "popitem", "add", "remove"}
+
+
+def gate_reads_module_state(src: str) -> list:
+    """Module-level containers this module MUTATES that its `_check` reads."""
+    t = ast.parse(src)
+    box = set()
+    for n in t.body:
+        v = getattr(n, "value", None)
+        tg = n.targets if isinstance(n, ast.Assign) else [getattr(n, "target", None)]
+        if isinstance(v, (ast.List, ast.Dict, ast.Set)) or (
+                isinstance(v, ast.Call) and getattr(v.func, "id", "") in ("list", "dict", "set")):
+            box |= {x.id for x in tg if isinstance(x, ast.Name)}
+    hit = {x.func.value.id for x in ast.walk(t) if isinstance(x, ast.Call)
+           and isinstance(x.func, ast.Attribute) and x.func.attr in _MUTATORS
+           and isinstance(x.func.value, ast.Name)}
+    hit |= {x.value.id for x in ast.walk(t) if isinstance(x, ast.Subscript)
+            and isinstance(x.ctx, ast.Store) and isinstance(x.value, ast.Name)}
+    ch = [n for n in t.body if isinstance(n, ast.FunctionDef) and n.name == "_check"]
+    return sorted({x.id for c in ch for x in ast.walk(c)
+                   if isinstance(x, ast.Name)} & box & hit)
 
 
 def _missing_key(fn, m, c) -> bool:
@@ -487,6 +479,9 @@ def assert_detector_works() -> dict:
                 "declared_never_ran_detail", "undeclared_ran_detail"):
         if "FIX.healthy" in r[key]:
             bad.append(f"the healthy fixture was flagged in {key}")
+    planted = "_S = []\nK = [1]\ndef _e(): _S.append(1)\ndef _check(m, c): return _S and K\n"
+    if gate_reads_module_state(planted) != ["_S"]:
+        bad.append("probe D missed a planted gate reading module state")
     if bad:
         raise RuntimeError(
             "the record verifier failed its own known-answer fixture (" +

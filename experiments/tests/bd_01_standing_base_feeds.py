@@ -141,19 +141,28 @@ _SEEDS: list = []
 _CTRL: list = []
 
 
+def _record_extremes(m: dict, c: dict) -> None:
+    """Write onto the row the per-seed sums and worst-seed margin the gate
+    judges (the runner aggregates to means), so `run verify` re-derives the
+    verdict from the record alone. `_check` reads its arguments, nothing else."""
+    for rows, d, p in ((_SEEDS, m, "race"), (_CTRL, c, "twin")):
+        d["n_seeds"] = len(rows)
+        for k in ("fed_a", "fed_b", "toppled_a", "n"):
+            d[f"{p}_{k}_sum"] = sum(r[f"{p}_{k}"] for r in rows)
+        d[f"{p}_diff_min"] = min((r[f"{p}_fed_a"] - r[f"{p}_fed_b"]
+                                  for r in rows), default=-1)
+
+
+def _gate(d: dict, p: str) -> bool:
+    return gate_fires([d[f"{p}_fed_a_sum"]], [d[f"{p}_fed_b_sum"]],
+                      d[f"{p}_toppled_a_sum"], d[f"{p}_n_sum"]) \
+        and d[f"{p}_diff_min"] >= 0
+
+
 def _check(m: dict, c: dict):
-    # Per-seed rows are read from the module lists the runner filled in
-    # order (the aggregated dicts hold only means); one row per seed each.
-    if len(_SEEDS) != len(_CTRL) or not _SEEDS:
+    if not m.get("n_seeds") or m["n_seeds"] != c.get("n_seeds"):
         return Status.VOID
-    fired = gate_fires([r["race_fed_a"] for r in _SEEDS],
-                       [r["race_fed_b"] for r in _SEEDS],
-                       sum(r["race_toppled_a"] for r in _SEEDS),
-                       sum(r["race_n"] for r in _SEEDS))
-    twin_fired = gate_fires([r["twin_fed_a"] for r in _CTRL],
-                            [r["twin_fed_b"] for r in _CTRL],
-                            sum(r["twin_toppled_a"] for r in _CTRL),
-                            sum(r["twin_n"] for r in _CTRL))
+    fired, twin_fired = _gate(m, "race"), _gate(c, "twin")
     m["gate_fires"] = 1.0 if fired else 0.0
     c["twin_gate_fires"] = 1.0 if twin_fired else 0.0
     return fired and not twin_fired
@@ -162,5 +171,9 @@ def _check(m: dict, c: dict):
 def run(ledger: Ledger | None = None):
     _SEEDS.clear()
     _CTRL.clear()
-    return run_spec(BY_ID["BD.01"], _experiment, _check,
+
+    def check(m, c):
+        _record_extremes(m, c)
+        return _check(m, c)
+    return run_spec(BY_ID["BD.01"], _experiment, check,
                     control_fn=_control, ledger=ledger)
