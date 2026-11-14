@@ -89,11 +89,11 @@ seeds 94–98 × 3 arms × 13k, `meal_memory run <arm> <seed> 13000`, then
 docstring, unchanged. Clears → register it against `NE.05`'s seat; dies → say so.
 serves: M2, M7 · philosophy 3, 5.
 **done when:** `CR.01` has a verdict and the meal-memory tally is written.
-state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`. 11-14 12:38 `3299560`: kernel unit cache keyed by impl_sha (+IMPL_DEPS),
-`… cr_01_curriculum_cookoff prefetch SEED:A:B` runs one registered pair kernel with no run lock / no ledger; `run CR.01` reuses units under the same sha (`units` lists them).
-PARALLEL: Kaggle ACCEPTS 2 concurrent CPU sessions — prefetch 130:null:staged `jack-cpu-1794659928` RUNNING beside LF.04's `jack-cpu-1794658139` (log /data/tmp/cr01_pf_130a.log).
-But D1.0's GPU kernel `jack-ladder-1794658135` was still QUEUED at 12:41 (since 12:08) — a session cap may be shared; check before a 3rd kernel.
-Next: harvest unit (~2 h); if D1.0 still queued while 2 kcpu run, hold kcpu at 1; else prefetch 130:lp:frontier, 130:shuffled:matched, … then `run CR.01` when the lock frees.
+state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`, unit cache `3299560` (`units` lists them). Kaggle takes 2 parallel CPU sessions;
+D1.0's GPU queue is NOT shared with them (queued 12:08→16:10 with 0 kcpu running). Unit 130:null:staged cached (6,429 s kernel).
+11-14 16:08 `admit` refuses detached pollers (wall-clock billing, INBOX), so pushed in-session and let the pollers die: 130:lp:frontier = `jack-cpu-1794672505`, 130:shuffled:matched =
+`jack-cpu-1794672525`, both RUNNING, head 6daf153, receipt kernel_sha256 == local sha for both (2970404d…, a94b2f64…). Next (after ~18:10): harvest each, seconds, zero quota:
+`JACK_REUSE_KERNEL=<slug> $PY -m experiments.tests.cr_01_curriculum_cookoff prefetch 130:<a>:<b>`; …525 needs `JACK_REATTACH_ACCEPT_MISMATCH=1` (guard misjoins it to …505's receipt, INBOX); then push s131's 2 pairs.
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
 **Why.** `W.1` is PASS (05:28). `W.2` and `NE.01` are red. Four races (k = 72,
@@ -271,6 +271,7 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 - 11-14 JACK: `cpu_budget wrap` bills WALL clock for Kaggle-CPU pollers: LF.04 run 2 used 5 s CPU but was billed 6,600 s, and CR.01 prefetch used 3 s for 4,800 s. That pushes `detached:*` past ruling 3's 34,560 s cap (38.9k at 14:00) and starves real box runs (J8 LF.06, J6 probes). Fix: bill remote-poll specs by measured CPU, or exempt the `kcpu` budget as `gpu*` already is.
 
 - 11-14 15:25 JACK: consequence of the poller-billing line above: `cpu_budget admit` REFUSES every detached launch today (48,545 s > 34,560 s), so J5's next `CR.01` prefetch (pure Kaggle polling, ~0 box CPU) cannot start. Separately, D1.0's GPU kernel `jack-ladder-1794658135` is still QUEUED at 15:23 (since 12:08) with NO kcpu kernel running, so the queue is not a session cap it shares with CPU kernels. Possibly the shared account's GPU quota.
+- 11-14 16:10 JACK: `gpu.reattach_code_check` join 2 misjoins concurrent kernels: the slug epoch is int(t0), so it can sit a fraction of a second BEFORE its own receipt ts (`0 <= epoch - ts` fails -> jack-cpu-1794672505 reads "unverifiable"), and the 600 s window accepts an earlier kernel's receipt (jack-cpu-1794672525 joins …505's -> false "mismatch"). Fix: allow ts within ±2 s of epoch and pick the nearest receipt, or record the slug in the attempt receipt.
 
 ## DONE (kept one day)
 

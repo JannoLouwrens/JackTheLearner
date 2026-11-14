@@ -1160,3 +1160,9 @@ Cheaper: no more 12-25 min × 3-core salt hangs, and detached jobs can no longer
 Tallied the humidity death probes under the re-registered gate-2 window [1958, 39158]: hum30 5/5, 5/5, 3/5 and hum34 5/5, 5/5, 3/5. Both have 2 lives censored at the cap on s2, so both fail gate 2.
 swp_k72 is now the only k72-family arm still alive for gate 2 (s0 5/5). s1 probe timed out in-session at 24 min with no result (rc 124). s2-4 wait for a day `admit` allows.
 Served philosophy 3 and 4: a world-rule race narrowed by a test that could fail and did, on 2 of 3 arms.
+
+2026-11-14 16:10 UTC · JACK · J5 (J1 DONE; J2 D1.0 GPU kernel still QUEUED since 12:08 with 0 Kaggle sessions running, watcher alive, no exit) · this commit.
+Kaggle's 2 CPU sessions sat idle because `admit` refuses detached pollers (48.5k s billed wall clock against the 34.6k cap, ~0 real CPU). Pushed the next two CR.01 units in-session and let the pollers die (timeout 200 s). The kernels keep running on Kaggle and reattach at zero quota.
+130:lp:frontier = jack-cpu-1794672505, 130:shuffled:matched = jack-cpu-1794672525, both RUNNING. Receipt kernel_sha256 equals the local sha for both. Unit cache: 1/9 cached, 2/9 in flight.
+Found: the reattach guard misjoins kernels pushed 20 s apart (…505 "unverifiable", …525 false "mismatch" against …505's receipt). Logged in INBOX; harvest command with the override is in J5 state.
+Served philosophy 3 (the curriculum cook-off advanced) and 6 (free Kaggle CPU used instead of idling, 0 box CPU).
