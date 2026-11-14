@@ -78,6 +78,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 from typing import Callable, Dict, List, Optional
 
@@ -377,16 +378,99 @@ def _smoke_arms(n: int = 2_200, seed: int = 0) -> dict:
     return res
 
 
-# ── the registered run: refuses until the arm exists ─────────────────────
+# ── Kaggle-CPU pilot: PRICE an arm-seed's session before paying (J3 step 2) ──
+# Pilot before you pay (LESSONS_CORE 7). LC.02's box rates (11-14 06:10, ARM,
+# 3 torch threads, committed ratio) price one 1.2M-decision arm-seed at
+# 1.2e6 / (5 x T_at_ratio) s: ppo-needs 12.3 h, ppo-lp 9.6, dreamer-xs 10.3,
+# wm-efe 10.3, wm-latent 10.1, wm-dyn 11.1, ring 11.1 -- every one against a
+# 12 h Kaggle session, before its untrained twin, nulls or guard readings.
+# The box is the wrong meter for an x86 kernel (LF.06: ARM/x86 gap), so this
+# pilot measures the kernel itself: s89 (no claim seed), PILOT_N decisions per
+# arm, guard ON (its readings are part of the price), plus wm-latent's frozen
+# twin. Reads nothing into any claim; writes no ledger row.
+PILOT_SEED = 89
+PILOT_N = 6_000
+PILOT_ARMS = ("wm-latent", "wm-dyn", "wm-latent+ring", "ppo-needs")
+
+_PILOT_JOB = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q", "mujoco"], check=True)
+import json, os
+os.chdir("/tmp/jack")
+from experiments.tests.lc_09_learning_core_3x import _pilot_local
+r = _pilot_local(__CAL__)
+json.dump(r, open(os.path.join(os.environ["JACK_OUT"], "lc09_pilot.json"), "w"))
+print("RESULT " + json.dumps(r), flush=True)
+'''
+
+
+def _pilot_local(cal: dict, n: int = PILOT_N, seed: int = PILOT_SEED) -> dict:
+    """Time each pilot arm (trained, guard on) and wm-latent's frozen twin
+    for n decisions; project wall hours for N_DECISIONS. Runs in the kernel."""
+    import os
+    import platform
+    import time
+    out = {"host": platform.machine(), "cpus": os.cpu_count(),
+           "torch_threads": torch.get_num_threads(), "n": n, "seed": seed,
+           "arms": {}}
+    legs = [(a, True) for a in PILOT_ARMS] + [("wm-latent", False)]
+    for arm, train in legs:
+        t0, c0 = time.time(), time.process_time()
+        try:
+            r = run_arm(arm, seed, j0=cal["j0"], alpha=cal["alpha"],
+                        ratios=cal["ratios"], n_decisions=n, train=train)
+        except Exception as e:                      # a refusal is a reading
+            out["arms"][f"{arm}/{'train' if train else 'frozen'}"] = {
+                "error": f"{type(e).__name__}: {e}"[:400]}
+            continue
+        wall = time.time() - t0
+        out["arms"][f"{arm}/{'train' if train else 'frozen'}"] = {
+            "wall_s": round(wall, 1),
+            "cpu_s": round(time.process_time() - c0, 1),
+            "dec_per_s": round(n / wall, 2),
+            "h_at_1_2M": round(N_DECISIONS / (n / wall) / 3600, 2),
+            "n_lives": r.get("n_lives"),
+            "guard_n": len(r.get("guard_readings", []))}
+    return out
+
+
+def pilot_dispatch() -> dict:
+    """Submit the pilot to a Kaggle CPU kernel (blocks until it returns;
+    launch it through scripts/launch_detached.sh). Calibration is borrowed
+    HERE from the ledger and passed in, so the kernel prices exactly the
+    values a claim run would borrow."""
+    from ..gpu import build_job, result_json, submit
+    cal, prov = _borrow_lc09()
+    if cal is None:
+        return {"refused": prov}
+    missing = [a for a in PILOT_ARMS if a not in cal["ratios"]]
+    if missing:
+        return {"refused": f"unpriced pilot arms {missing}"}
+    c = {"j0": cal["j0"], "alpha": cal["alpha"], "ratios": cal["ratios"]}
+    body = _PILOT_JOB.replace("__CAL__", repr(c))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=2.0,
+                 timeout_s=4 * 3600, fetch=["lc09_pilot.json"])
+    if not sub.ok:
+        return {"refused": f"kaggle-cpu: {sub.message}"}
+    r = result_json(sub, "lc09_pilot.json")
+    os.makedirs("/data/tmp", exist_ok=True)
+    with open("/data/tmp/lc09_pilot.json", "w") as f:
+        json.dump(r, f, indent=1)
+    return r
+
+
+# ── the registered run: refuses until the claim path exists ─────────────
 def run(ledger=None):
+    # Item (1) is gone: LC.02 (11-14 06:10, PASS att 22) prices all 7 arms.
+    # Item (2) is NOT a refusal (ruling 8, 11-14): the guard VOIDing the seat
+    # is the race's finding. What still refuses is the claim path itself.
     raise RuntimeError(
-        "LC.09 not runnable: (1) wm-dyn and wm-latent+ring (built 11-13 22:30, "
-        "cores_ring.py, through survival_rec) have no LC.02 committed "
-        "train_ratio (UnpricedArm); [(1b) survival_rec wipe_at_death BUILT "
-        "11-13 22:50 for control (a)]; (2) the world-model arms never train an action- or "
-        "state-reading weight (GRU action cols and weight_hh grad == 0), so "
-        "the guard's Delta_5 clause must VOID them (untrained Delta_5 -0.006..-0.008). See the docstring "
-        "and ORDERS J3. Nothing recorded.")
+        "LC.09 not runnable yet: no Kaggle-CPU claim path. At LC.02's box "
+        "rates one 1.2M-decision arm-seed is 9.6-12.3 h (ppo-needs over a 12 h "
+        "session) before twin/nulls; `pilot` prices it on the kernel first "
+        "(ORDERS J3 step 2). Item (2) -- the world-model arms train no action-"
+        "or state-reading weight -- is the finding the guard will report as "
+        "VOID, not a reason to refuse (ruling 8). Nothing recorded.")
 
 
 # ── selftest: planted latents through the real guard code ────────────────
@@ -509,8 +593,10 @@ if __name__ == "__main__":
         print(json.dumps(_selftest(), indent=1))
     elif mode == "probe":
         print(json.dumps(_probe(), indent=1))
+    elif mode == "pilot":
+        print(json.dumps(pilot_dispatch(), indent=1, default=str))
     elif mode == "smoke":
         print(json.dumps(_smoke_arms(int(sys.argv[2]) if len(sys.argv) > 2
                                      else 2_200), indent=1, default=str))
     else:
-        raise SystemExit("usage: python -m experiments.tests.lc_09_learning_core_3x selftest|probe|smoke [n]")
+        raise SystemExit("usage: python -m experiments.tests.lc_09_learning_core_3x selftest|probe|smoke [n]|pilot")
