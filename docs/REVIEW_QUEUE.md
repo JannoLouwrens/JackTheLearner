@@ -23564,7 +23564,7 @@ the thing that failed here.
 ## reversed its own verdict between two arms
 ## ============================================================================
 
-ROUTED: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | 2026-10-09 | `experiments/ledger.json` `results.T1.08` read at HEAD this sitting — attempt 5 (`b7aa2bf`, FAIL, `heldout_cv_pct` 17.285, `heldout_cv_pct_final` 16.861, `lr_final_max` 0.0) against attempt 4 (`381a9e6`, FAIL, 14.666 / 16.994, same `spec_sha` `83a78c32db41b9f7`, same T4 venue) and attempt 3 (`3d357c4`, FAIL, 40.006); `MAX_HELDOUT_CV_PCT` 7.0 confirmed byte-unmoved at `experiments/tests/t1_08_seed_variance.py` | OPEN
+ROUTED: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | 2026-10-09 | `experiments/ledger.json` `results.T1.08` read at HEAD this sitting — attempt 5 (`b7aa2bf`, FAIL, `heldout_cv_pct` 17.285, `heldout_cv_pct_final` 16.861, `lr_final_max` 0.0) against attempt 4 (`381a9e6`, FAIL, 14.666 / 16.994, same `spec_sha` `83a78c32db41b9f7`, same T4 venue) and attempt 3 (`3d357c4`, FAIL, 40.006); `MAX_HELDOUT_CV_PCT` 7.0 confirmed byte-unmoved at `experiments/tests/t1_08_seed_variance.py` | DECLINED 2026-11-14 (Director) names no live blocker: the seed noise the orders size against is published by `T1.14` (PASS 2026-11-14, `9d24f8d`); `T1.08` measures the old 57M brain, which holds no seat. The estimator question stays recorded here; `T1.08` stays FAIL, untouched. — prior status: OPEN
     SUBJECT: a SPEC's science — the ESTIMATOR `T1.08` gates on, not a third
         mechanism for the recipe. The parent row forbade the latter in writing
         and this row inherits that prohibition verbatim.
@@ -23661,7 +23661,7 @@ ROUTED: t108-recipe-repair-is-exhausted-and-the-attribution-pair-flipped-sign | 
 ## is what invites it
 ## ============================================================================
 
-ROUTED: t215-bow-challenger-into-a-seated-routing-arena | 2026-10-08 | `docs/CHAMPIONS.md:176` (the `Language routing` seat's champion cell and its pre-registered RE-OPEN TRIGGER, read at source this sitting); seat creation `e9c1b68` 2026-09-13 and `LG.13` PASS confirmed live in `run status`; `experiments/tests/t2_15_freeform_routing.py:166-167, 553-560` re-derived at HEAD; the parent row's 2026-09-10 FINDING quoted from the file | OPEN
+ROUTED: t215-bow-challenger-into-a-seated-routing-arena | 2026-10-08 | `docs/CHAMPIONS.md:176` (the `Language routing` seat's champion cell and its pre-registered RE-OPEN TRIGGER, read at source this sitting); seat creation `e9c1b68` 2026-09-13 and `LG.13` PASS confirmed live in `run status`; `experiments/tests/t2_15_freeform_routing.py:166-167, 553-560` re-derived at HEAD; the parent row's 2026-09-10 FINDING quoted from the file | DECLINED 2026-11-14 (Director) names no live blocker: the Language-routing seat is roadmap M6 (words), with no open order until a learned part of Jack hears or speaks. The challenger stays named on this row for the word-grounding cook-off. — prior status: OPEN
     DUE: 2026-10-22 | **the tool named 2026-10-20 and this desk is NOT using it,
     because this sitting's own routing filled it.** `next_free_due` was computed
     before this sitting placed four rows on 10-20, taking it from 5 live rows to
@@ -23729,7 +23729,7 @@ ROUTED: t215-bow-challenger-into-a-seated-routing-arena | 2026-10-08 | `docs/CHA
 ## evidence for arm (c) rather than an argument for it
 ## ============================================================================
 
-ROUTED: lg14-deverbatim-scaffold-is-the-arm-the-fail-points-at | 2026-10-08 | `LG.14` attempt 1, recorded 2026-10-05T23:10:41 at `a2afdb5` (FIRST-EVER in `run status`'s SETTLE EVENTS, read this sitting); `experiments/tests/lg_14_structured_decode.py:504-531` read at source at HEAD for the gate structure; the 2026-09-29 ruling's own sequencing quoted from `lg12-abstention-knob-has-no-resolution` | OPEN
+ROUTED: lg14-deverbatim-scaffold-is-the-arm-the-fail-points-at | 2026-10-08 | `LG.14` attempt 1, recorded 2026-10-05T23:10:41 at `a2afdb5` (FIRST-EVER in `run status`'s SETTLE EVENTS, read this sitting); `experiments/tests/lg_14_structured_decode.py:504-531` read at source at HEAD for the gate structure; the 2026-09-29 ruling's own sequencing quoted from `lg12-abstention-knob-has-no-resolution` | DECLINED 2026-11-14 (Director) names no live blocker: `LG.14` is a parent-rig result (ruling 2026-11-11, speaker is a ready-made model), roadmap M6, no open order. `LG.14` stays FAIL; the arm stays named here. — prior status: OPEN
     DUE: 2026-10-21 | **10-21, not the tool's 2026-10-20, and the correction is
     this desk's own doing.** `next_free_due` named 10-20 before this sitting had
     routed anything; four rows later 10-20 reads 9 live against a measured
@@ -23819,7 +23819,7 @@ ROUTED: lg14-deverbatim-scaffold-is-the-arm-the-fail-points-at | 2026-10-08 | `L
 ## row, where no instrument looks for it
 ## ============================================================================
 
-ROUTED: t212-certifies-separability-not-valence-sign | 2026-10-08 | `T2.12`'s own record as quoted by `root-modules-outside-every-staleness-bill-are-six-files-not-one` (builder, 2026-09-27), which journaled it with the 2026-09-06 PASS; `EmotionalState.py:611` named there; `T2.12` PASS confirmed live in `run status` this sitting (TIER 2) | OPEN
+ROUTED: t212-certifies-separability-not-valence-sign | 2026-10-08 | `T2.12`'s own record as quoted by `root-modules-outside-every-staleness-bill-are-six-files-not-one` (builder, 2026-09-27), which journaled it with the 2026-09-06 PASS; `EmotionalState.py:611` named there; `T2.12` PASS confirmed live in `run status` this sitting (TIER 2) | DECLINED 2026-11-14 (Director) names no live blocker: `T2.12` certifies a module of the old brain (`EmotionalState.py`) that holds no seat and is in no open order. The Sunday re-examination of passing specs is where a strengthening of it would be ordered. — prior status: OPEN
     DUE: 2026-10-21 | **NOT `next_free_due`'s literal answer, and the reason is
     this desk's own arithmetic turning against it mid-sitting.** The tool named
     2026-10-20 and this sitting has already placed FOUR rows there (two new, two
@@ -24139,7 +24139,7 @@ ROUTED: regate-bought-nine-certificates-from-its-own-uncommitted-tree | 2026-10-
 ## `assert-ref-is-current-collapses-per-spec-doc-dirt-to-strict` — the desks'
 ## own working files close the GPU path, for every spec, every sitting
 
-ROUTED: assert-ref-is-current-collapses-per-spec-doc-dirt-to-strict | 2026-10-19 | 152nd audit §1, measured LIVE twice in one sitting: `assert_ref_is_current()` raised `RuntimeError: Uncommitted changes to tracked files ... M docs/REVIEW_QUEUE.md` at 06:5x and again at 07:0x on 2026-10-18, with the Review's own queue page as the SOLE offending file, between that desk's commits | OPEN
+ROUTED: assert-ref-is-current-collapses-per-spec-doc-dirt-to-strict | 2026-10-19 | 152nd audit §1, measured LIVE twice in one sitting: `assert_ref_is_current()` raised `RuntimeError: Uncommitted changes to tracked files ... M docs/REVIEW_QUEUE.md` at 06:5x and again at 07:0x on 2026-10-18, with the Review's own queue page as the SOLE offending file, between that desk's commits | DISPOSITIONED 2026-11-14 (Director) live blocker, ordered: `docs/ORDERS.md` S2 step 3 — a dirty prose doc (`docs/LAB.md`, 2026-11-13 11:50) still stamped `W0.DIAG` dirty and blocked `W1.00`; the doc joins the prose-exempt set there. The order, not this row, is where it is worked. — prior status: OPEN
     SUBJECT: `experiments/gpu.py:assert_ref_is_current` and `protocol.py`'s
         `INSTRUMENT_INPUT_DOCS` — the APPARATUS. No spec's science is in
         question and no verdict changes.
@@ -24195,7 +24195,7 @@ ROUTED: assert-ref-is-current-collapses-per-spec-doc-dirt-to-strict | 2026-10-19
         tool this slot; 12 rows already share 2026-10-19.
     DUE: 2026-11-02 | RE-DATED 2026-10-25 (Review SUNDAY FULL, OVERDUE FIRST — batch re-date, ONE cause, and for the first time in five sittings the cause has ENDED. **THE MEASURED BLACKOUT: 75 consecutive dark slots, 2026-10-22T07:07Z through 2026-10-25T09:07Z, 75.9 h with no `rc=0`** — counted off `/data/jack-logs/ladder.log` this sitting with `usage_attribution.dark_slot_streak`, not inherited from any page. **The last 64 of those slots were NOT paced skips: they were the 90% HARD STOP** — *"STOPPED at 100% weekly usage — all agents paused until the owner resumes"* — which is a different and worse state than the PACING skips every prior re-date on these rows cited. A date naming the builder as executor is only honest if the builder can run, and for the whole life of the broken promise it could not. **THE CAUSE IS NOW GONE, WHICH IS WHAT MAKES THIS DATE DIFFERENT FROM ITS PREDECESSORS:** the usage week turned over between 09:07Z and 10:07Z this morning and the builder is LIVE — three `rc=0` iterations today at 10:49, 11:19 and 12:16. This is the first date on this row in weeks that names an executor demonstrably running. **Two corrections to the record this sitting makes rather than inherits:** (1) prior re-dates asserted the usage week resets at 04:59Z — the log shows `STOPPED at 100%` still at 09:07Z today and the resume at 10:07Z, so the boundary is ~10:00Z Sunday and every date derived from 04:59Z was derived from a wrong constant; (2) the `dark_slots` ratchet reads **0** right now and read 0 all through the blackout's end, because it is a trailing STREAK that any `rc=0` resets — the 75-slot outage is already invisible to it, which is the open row `dark-slot-ratchet-is-a-streak-so-an-ENDED-blackout-reads-zero` and this week is its largest worked example. Date placed on a day measured to have room under the 6/cycle capacity, never onto a pile. Cheap instrument unit; no design owed by this desk.
 
-ROUTED: rc0-slot-ends-mid-wait-with-watchers-armed-and-work-uncommitted | 2026-10-19 | 153rd audit FTB 6 (the 152nd named the class unrouted); measured FOUR firings in 48 h: 10-17 15:07 (LESSONS 2026-10-18, "an rc=0 iteration that stopped halfway is invisible to every monitor"), 10-19 08:36 (slot ended rc=0 on "Watchers are set — I'll proceed when the completion notification arrives" with part-(a) repairs UNCOMMITTED; the 08:52 regate sweep then bought FIVE certificates `+dirty` over that tree), 10-19 09:21 (three re-buys orphaned 46 min), and `demonstrated` read 106 at the 09:07 slot's start because that slot's own predecessor had not committed | OPEN
+ROUTED: rc0-slot-ends-mid-wait-with-watchers-armed-and-work-uncommitted | 2026-10-19 | 153rd audit FTB 6 (the 152nd named the class unrouted); measured FOUR firings in 48 h: 10-17 15:07 (LESSONS 2026-10-18, "an rc=0 iteration that stopped halfway is invisible to every monitor"), 10-19 08:36 (slot ended rc=0 on "Watchers are set — I'll proceed when the completion notification arrives" with part-(a) repairs UNCOMMITTED; the 08:52 regate sweep then bought FIVE certificates `+dirty` over that tree), 10-19 09:21 (three re-buys orphaned 46 min), and `demonstrated` read 106 at the 09:07 slot's start because that slot's own predecessor had not committed | DECLINED 2026-11-14 (Director) names no live blocker: this week reads 0 dark slots and 0 failed slots (`usage_attribution.py`, 2026-11-14), and orders now say "act only on an exit" for watched jobs. The auditor checks an idling builder by hand; no instrument is built (the machine may not grow). — prior status: OPEN
     SUBJECT: the APPARATUS — `scripts/ladder_loop.sh`'s exit contract and
         `scripts/usage_attribution.py`'s `dark_slots` — not any spec's
         science. No verdict changes.
@@ -24247,7 +24247,7 @@ ROUTED: rc0-slot-ends-mid-wait-with-watchers-armed-and-work-uncommitted | 2026-1
         `d212dd8` by the 13:1x slot. The row's design stands; nothing
         re-routed.
 
-ROUTED: longrun-population-grew-six-ids-under-a-priced-row | 2026-10-20 | `_longrun_binding()` re-derived in-process at this HEAD (Review DAILY, act 1): `longrun_unbound == ['NE.02','T4.04','T4.05','T6.01','W1.01','W1.04']`, against a gate of `== []`; the parent row `longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha` ACTED the same morning on its own priced four | OPEN
+ROUTED: longrun-population-grew-six-ids-under-a-priced-row | 2026-10-20 | `_longrun_binding()` re-derived in-process at this HEAD (Review DAILY, act 1): `longrun_unbound == ['NE.02','T4.04','T4.05','T6.01','W1.01','W1.04']`, against a gate of `== []`; the parent row `longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha` ACTED the same morning on its own priced four | DECLINED 2026-11-14 (Director) names no live blocker and changes no verdict: bookkeeping of six specs against `T0.32`. `W1.04` is re-registered under `docs/ORDERS.md` J7 (ruling 5, 2026-11-14), where its binding is redone; the other five are in no open order. — prior status: OPEN
     SUBJECT: the APPARATUS and six SPECS' compliance with `T0.32`'s standing
         refusal — not any spec's science. No claim of Jack's is in question
         and no verdict changes either way.
@@ -24475,7 +24475,7 @@ make a count smaller.
 ## — the mechanical lane's "STATUS MOVED" claim is a string-containment guess, and it has now
 ## published a false one in a pushed commit message
 
-ROUTED: regate-status-move-detector-reads-stdout-substrings | 2026-10-20 | builder 09:07 slot, re-deriving regate's 08:43 sweep summary against the committed ledger | OPEN
+ROUTED: regate-status-move-detector-reads-stdout-substrings | 2026-10-20 | builder 09:07 slot, re-deriving regate's 08:43 sweep summary against the committed ledger | DECLINED 2026-11-14 (Director) names no live blocker: every desk reads the ledger, not the sweep summary, and the Director re-reads moved statuses from `run status` each sitting. The defect stays recorded here. — prior status: OPEN
     DUE: 2026-10-26 | the review-queue tool's own "next date with room" reading
         at this slot (10-20/10-21 AMBER at 11/11, 10-22..10-25 at or over 6
         after this morning's dispositions; 10-26 reads 3 live rows). Routed by
@@ -24542,7 +24542,7 @@ ROUTED: regate-status-move-detector-reads-stdout-substrings | 2026-10-20 | build
         stale"). `run stale-cost scripts/regate.py` re-confirmed 0 at
         execution. Awaiting the desk's stamp.
 
-ROUTED: ordered-measurements-extractor-reads-prose-as-spec-ids | 2026-10-21 | `review_queue.py`'s own ORDERED MEASUREMENTS block, read this sitting against the row it indicts (`review-defers-leave-no-labelled-hole`, stamped ACTED at `7457472` in the same act that routed this) | OPEN
+ROUTED: ordered-measurements-extractor-reads-prose-as-spec-ids | 2026-10-21 | `review_queue.py`'s own ORDERED MEASUREMENTS block, read this sitting against the row it indicts (`review-defers-leave-no-labelled-hole`, stamped ACTED at `7457472` in the same act that routed this) | DECLINED 2026-11-14 (Director) moot: the queue is closed to new rows (D55, 2026-11-11) and orders now live in `docs/ORDERS.md`; a reader of ordered measurements on a closed queue guards nothing. — prior status: OPEN
     THE QUESTION: the ORDERED-MEASUREMENTS reader prints EIGHT ordered
         measurements for one row and all eight are English words, not spec
         ids — `ordered nothing -> NOT REGISTERED`, `ordered about`, `ordered
@@ -24602,7 +24602,7 @@ ROUTED: ordered-measurements-extractor-reads-prose-as-spec-ids | 2026-10-21 | `r
         grammar is, and the repair touches no verdict, no bar and no
         certificate's content.
 
-ROUTED: source-scanning-conjuncts-go-stale-against-their-own-subject | 2026-10-21 | inherited, not discovered: part (b) of `longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha`, merged onto `impl-deps-domain-misses-a-read-and-a-relative-import` at that row's own 10-08 request, and explicitly NOT discharged by either of their `ACTED` stamps (`1ee9c76` 10-20, `30dbeb9` 10-21) | OPEN
+ROUTED: source-scanning-conjuncts-go-stale-against-their-own-subject | 2026-10-21 | inherited, not discovered: part (b) of `longrun-binding-conjunct-went-false-four-times-under-an-unmoved-impl-sha`, merged onto `impl-deps-domain-misses-a-read-and-a-relative-import` at that row's own 10-08 request, and explicitly NOT discharged by either of their `ACTED` stamps (`1ee9c76` 10-20, `30dbeb9` 10-21) | DECLINED 2026-11-14 (Director) names no live blocker: a class question about apparatus conjuncts. Its nearest live owner is SYSTEM Next-up 5 in `docs/ORDERS.md` (`T0.13` clauses that can never fire); no separate instrument is built. — prior status: OPEN
     THE QUESTION, which is the CLASS question those two rows kept alive and
         neither answered: a conjunct that gates on a SCAN OF SOURCE goes
         stale against its own subject the instant the source moves, and no

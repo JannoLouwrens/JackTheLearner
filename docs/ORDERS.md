@@ -205,6 +205,8 @@ processes alive at once; a planted over-cap launch must be refused in a test.
 (2) The hash-salt differential child (reporting-only) hung 12 min × 3 workers
 on `W1.02` and ~25 min on `W0.DIAG`: give it a timeout of 60 s or 20× the
 spec's own run time, whichever is larger, 1 worker, and print TIMED-OUT.
+(3) `docs/LAB.md` dirt stamped `W0.DIAG` dirty and blocked `W1.00` (11-13):
+add it to the prose-exempt set (`PROSE_DOCS`); a dirty code file must still stamp.
 Net growth ≤ ~40 lines.
 serves: philosophy 5, 6 (this box serves paying customers).
 **done when:** both tests pass and a day ends with `detached:*` ≤ 34,560 s.

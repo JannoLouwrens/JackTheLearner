@@ -22,9 +22,11 @@ brain's parts re-enter only as challengers in a cook-off, never by default.
 
 **M1 — One whole life.** The learning brain lives a life end to end: world,
 needs, the senses he has, diary, death and retry.
-done when: `LF.03` PASS. · status (11-12): **MET** — `LF.03` PASS at `6a92fd4`
-(3 seeds × 5 deaths, frozen-twin and wiped-diary controls both fired). He lives
-but does not yet improve or use his diary: `LF.04` (order J1) asks that next.
+done when: `LF.03` PASS. · status (11-14): **MET on 11-12, certificate now
+STALE** — `LF.03` passed at `6a92fd4` (3 seeds × 5 deaths, both controls fired)
+but its dependencies were re-run or edited since, so it must be re-bought
+before it counts again (order J1 step 2). He lives but does not yet improve or
+use his diary: `LF.04` (J1) asks that next and has never run.
 
 **M2 — A world and a curriculum that can teach.** A world deep enough that
 passivity dies, outcomes differ, and thinking ahead pays; the order he meets it
@@ -32,9 +34,10 @@ in decided by cook-off ("no curriculum we write" is the incumbent arm).
 done when: `W1.00`–`W1.04` and the world-rule gates `W.1`–`W.8` PASS; `DP.05`'s
 question passes in W1; `NE.01` PASS; the curriculum cook-off has a winner; then
 W2 (owner 11-13): tree → wood → fire → cooked food and a buildable shelter exist
-as specs and PASS. · status (11-13): `W1.02` passes; `W1.00` FAIL, `W1.04`
-re-running; `W.1`, `W.2`, `NE.01` FAIL (one clock ruled, k = 72); curriculum
-arms built, unraced; W2 unregistered (orders J6, J7, J5).
+as specs and PASS. · status (11-14): `W.1`, `W1.02` pass; `W.2`, `NE.01`,
+`W1.00`, `W1.04` FAIL (`NE.01` and `W1.04` being re-registered, bars unmoved);
+four world races shipped nothing; `CR.01` registered, dispatch ordered; W2
+unregistered (orders J6, J7, J5).
 
 **M3 — The shape of his brain, by verdict.** Every architecture seat in
 `docs/CHAMPIONS.md` held BY VERDICT, none by default or decree: the control path
