@@ -980,3 +980,10 @@ J8: cores.py's `language` slot no longer says "a sentence embedding from the fro
 Comment-only: `stale` diff shows only LC.02 newly stale; `amend LC.02 --doc-only` re-stamped it via prose_only_delta (still VOID, still owes a quiet run).
 Route note in J8 state: LF.06 can skip the missing kernel input channel by reversing legs (train on Kaggle, fetch out, continue here).
 Served philosophy 2 (no frozen part named inside him) and 7 (hand-over gate's route).
+
+2026-11-14 01:55 UTC · JACK · J6(c) · heat race harvested. Box loud at 01:07 (our race + another tenant's proof job) -> LC.02/W1.02 wait; T1.14 still RUNNING on Kaggle GPU.
+J6(c): 45/45 cells, apparatus 10/10 replay. Declared rule: NONE SHIPS. Sweat moves W0's binding fault off heat - random deaths hyperthermia 25/25
+-> dehydration 19/25 (sweat), 23/25 (paid), clustered at a clock-set ~2400 / ~1450 decisions; forager 5/5 alive 3 days (shipped 4/5). Lost on
+ok_random_deaths (some flailers outlive the day), ok_spread (core T spread 0.283: a body that now thermoregulates) and share 1.0 (one clock kills all).
+Next arm: sweat_paid + water clock toward k=72. Tables in docs/research/NEEDS_CLOCK_RACE.md.
+Served philosophy 1 (a world that kills him the way a human body dies) and 3/4 (the world raced, rule declared first, a loss recorded as declared).

@@ -92,14 +92,11 @@ race-won edit may ship (ruling 1 lifts D43's hold for exactly that); re-run
 serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow them) · philosophy 1, 3, 4.
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) RACE DONE (e4c10cd): k72 does NOT ship; every death both arms HYPERTHERMIA.
-11-13 16:40 (c) ROOT (d63b827, experiments/heat_race.py): W0 charges sweat (C_SW) but never pays it; dry skin sheds heat by k_dry only (open day T* 51.0 C).
-Arms shipped / sweat (Gagge G_SW 2.0 M_b/K) / sweat_paid (+C_SW 2.82); rule declared. W.1 PASS 5/5 all arms (cannot discriminate).
-11-14 00:11 heat race LAUNCHED detached (pid 3386493, log /data/tmp/heat_race.log); W.2 15/15 cells done by 00:15, NE.01 15 cells ~70 min wall.
-11-14 01:10 PARTIAL tally (NE.01 3/2/2 of 5 seeds; apparatus 8/8 replay OK): sweat moves the fault - random deaths hyperthermia 15/15 -> dehydration
-8/8 (sweat) 9/9 (paid), random life 460-574 -> 2364-5835 / 1437-2479 dec, forager 4/4 alive 3 days (shipped 2/3); but ok_random_deaths 0/.5 (a random life
-outlives the 6000-dec day) and T spread 0.28 < .30 -> clauses (1)+(2) on course to 'none ships'. Note: W.2:c_widest_tol_* is caught as a *_pass flag (lower=better), tied 14.82 here.
-Next: harvest 'HEAT RACE EXIT' + tally, apply the rule as declared; if none ships, the next arm is sweat_paid + the water clock (fault now = thirst).
+state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd); every death HYPERTHERMIA.
+(c) HEAT RACE HARVESTED 11-14 01:49: NONE SHIPS as declared (tables: docs/research/NEEDS_CLOCK_RACE.md). Apparatus 10/10 replay.
+Sweat moves the fault: random deaths hyperthermia 25/25 -> dehydration 19/25, 23/25 (clock-set clusters ~2400 / ~1450 dec); forager 5/5 alive.
+Lost: ok_random_deaths (some random lives outlive the day), ok_spread (T spread 0.283 = thermoregulated), share still 1.0 (one clock kills all).
+Next: declare + run arm sweat_paid + water clock toward k=72 (fix tally's *_pass catching W.2:c_widest_tol first); question NE.01 T-spread clause for a homeotherm.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow

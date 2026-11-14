@@ -25,3 +25,37 @@ Why k72 lost — every loss is HEAT, in both arms, not hunger or thirst:
 Finding: NE.01's red gate 5 (share 1.0 hyperthermia) is the binding fault of W0; the needs clock is downstream of it.
 Next (not done, needs declaration first): race the heat channel / shelter geometry (J6(c)), and a forager whose
 heat rule does not depend on thirst, before any needs-clock re-race. No world file was edited.
+
+## J6(c) — the heat race (sweat), harvested 2026-11-14 01:49 UTC
+
+`experiments/heat_race.py`, rule declared 11-13 ~16:30 before any cell; seeds 0-4, 45 cells, log
+`/data/tmp/heat_race.log`, cells `/data/jack-logs/heat_race/`. Apparatus known-positive: shipped replays the J6(b)
+cells 10/10 exactly. **Verdict as declared: NONE SHIPS.** No world file edited.
+
+| NE.01 (seed-mean)          | shipped            | sweat               | sweat_paid          |
+|----------------------------|--------------------|---------------------|---------------------|
+| ok_random_deaths           | 1.0                | 0.2                 | 0.6                 |
+| ok_spread                  | 0.4                | 0.0                 | 0.0                 |
+| ok_forager                 | 0.8                | 1.0                 | 1.0                 |
+| other ok_* (7)             | 1.0                | 1.0                 | 1.0                 |
+| random deaths, cause       | 25/25 hyperthermia | 19/25 dehydration   | 23/25 dehydration   |
+| max cause share            | 1.0                | 1.0                 | 1.0                 |
+| random-life decisions      | 460-574            | 2364-5835           | 1433-5489           |
+| forager survives 3 days    | 4/5 (1 heat death) | 5/5                 | 5/5                 |
+| spread_T (every seed)      | 0.72-0.81          | 0.283               | 0.283               |
+
+W.1 and W.2: identical flags in all three arms (W.2(c) still red, needs-clock rate; W.1 PASS 5/5).
+Lost on: both arms — `ok_random_deaths`, `ok_spread`, clause (2) `max_cause_share not lower`.
+
+What it shows:
+* Sweat does what biology says: it moves W0's binding fault off heat. Random flailers no longer cook in ~100 s; they
+  die of THIRST, in tight clock-set clusters (sweat ~2365-2440 dec, paid ~1435-1510 dec in 8 of 10 seeds) — the water
+  clock, not behaviour, decides the moment. The fault is now the one J6(b) named: thirst runs ~6.3x past k = 72.
+* `ok_random_deaths` falls because 2-6 of 25 random lives per arm outlive the 6000-decision day (deaths are not all
+  in-window); `ok_spread` falls because a sweating body regulates core T (spread 0.283 on all 10 seeds — a
+  thermoregulated homeotherm, which NE.01's ">= 0.30 on every need" gate reads as a fault) and min spread 0.14-0.25.
+* Gate 5 (one cause < 60%) cannot pass in a world whose random deaths are all set by one clock, whichever clock it is.
+Apparatus note: the tally's `*_pass` suffix also catches `W.2:c_widest_tol_that_would_pass` (a tolerance, lower is
+better); tied at 14.82 in all arms, so this verdict is unaffected — fix before the next race re-uses `tally()`.
+Next arm (declare first): sweat_paid + the water clock moved toward k = 72 together, on the same probes; and ask
+whether NE.01's T-spread clause is right for a body that thermoregulates (re-register with a reason if not).
