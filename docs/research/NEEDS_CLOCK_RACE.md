@@ -59,3 +59,24 @@ Apparatus note: the tally's `*_pass` suffix also catches `W.2:c_widest_tol_that_
 better); tied at 14.82 in all arms, so this verdict is unaffected — fix before the next race re-uses `tally()`.
 Next arm (declare first): sweat_paid + the water clock moved toward k = 72 together, on the same probes; and ask
 whether NE.01's T-spread clause is right for a body that thermoregulates (re-register with a reason if not).
+
+## J6(c) next arm — the water clock on the sweating body (launched 2026-11-14 03:24 UTC, `3d7c0a0`)
+
+`experiments/water_clock_race.py`: swp_w72 (sweat_paid + B_W 1/3600) and swp_k72 (sweat_paid + full k72 clock) vs
+shipped, the heat race's rule verbatim, declared in the module before any cell; cells `/data/jack-logs/water_race/`,
+log `/data/tmp/water_race.log` (NE.01 cells ~10-17 min each, harvest with `python -m experiments.water_clock_race tally`).
+Apparatus: sweat_paid W.2 s0 replays the heat race's cell exactly; W.1 `_check` passes 10/10.
+
+**Finding read off the first cells (s0 W.2; heat race cells re-read):** sweat makes heat death UNREACHABLE in W0.
+* W.2(c) `c_hot_reachable` = 1 for shipped on all 5 seeds (roof route peaks 40.33 C), **0 for sweat and sweat_paid on
+  all 5 seeds** (roof route peaks 37.34 C). The heat race's "W.1 and W.2: identical flags in all three arms" was true
+  of the `*_pass` aggregates only — (c) was already red on the clocks, so this sub-clause's flip was masked.
+* Hyperthermia deaths across both sweat arms: 0 of 50 random lives, 0 of 10 three-day forager runs.
+* swp_k72 puts BOTH clocks inside W.2(c)'s 2x band (thirst ratio 0.97, hunger 1.30 — as k72 did in J6(b)) and still
+  fails (c) on `c_hot_reachable` alone. swp_w72 fails (c) on hunger (widest tol 14.79), as arithmetic said.
+* So no sweating arm can pass W.2(c) as registered, whatever its clock. This is biology talking, not a harness bug:
+  at T_DAY 30 C with an evaporative channel a resting human does not cook, under a roof or not. W0's only heat death
+  was the missing sweat. A world that kills him "the way a human body dies" needs a REAL heat hazard to keep (c)'s
+  hot route honest — exertion in hotter sun, a fire, a sealed hot space whose air temperature actually exceeds skin,
+  or humidity capping evaporation — raced, not assumed. Next arm to declare: sweat_paid + k72 clock + one such
+  hazard, with W.2's roof route pointed at it (re-registered with this reason; bar 40 C unmoved).
