@@ -1095,3 +1095,9 @@ J1 step (3): LF.04 dispatched at 09:33 via launch_detached (wrap pid 3708266) at
 J2: D1.0 watcher 3422501 alive 7h40m, no exit; unit 3 is kernel jack-ladder-1794647021, submitted 09:03.
 Next slot: J5 step 1 (dispatch CR.01) is now unblocked by the Order of work. LF.04 needs no attention until its log exits.
 Served philosophy 1 (the first measurement of whether living makes him better, learner vs his frozen twin) and 4 (every link in its chain re-earned today on HEAD, salt-checked).
+
+2026-11-14 10:45 UTC · JACK · J6(a) (J1, J2 checked; J5 refused by the lock) · e054e0a. NE.01 re-registered per ruling 4: every window is the multiple of a lethal time it already had on the shipped clock, read live from needs.py (`_windows()`).
+Random-life window [2/19, 40/19] T_thirst (570 s), forager 12/7 T_hunger (2100 s), statue .8×cap, night NIGHT_S. Shipped windows byte-same (selftest), statue s0 reproduces the ledger to the decision (2567); a k72 thirst clock now gets [1958, 39158] decisions instead of being refused by fast-clock seconds. Bars unmoved.
+J5 step 1 not done: `run CR.01` would be refused because LF.04's Kaggle-CPU poll holds the local CPU run lock (kcpu isn't counted as remote). INBOX line added; it also holds up J6(b) until LF.04 exits (~17:30).
+J1: LF.04 runner 3708275 alive, call 1 on Kaggle, no exit. J2: D1.0 watcher 3422501 alive, no exit.
+Served philosophy 3 (a world on the human clock can now race on equal terms, not be refused by the test) and 4 (re-registered before any run, nothing easier for the shipped world, a planted arm shows the windows really scale).

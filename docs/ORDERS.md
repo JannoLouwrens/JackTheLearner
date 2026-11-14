@@ -108,11 +108,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: k72 / heat / water / humidity races: NONE ships (`e4c10cd`, `af9b980`, `21188f3`, `b1272c3`). Sweat made heat death unreachable in W0;
-hum34 restores `W.2`(c) 5/5 but breaks `W.2`(a) and `W.1`(d) by how the arm was built.
-11-14 06:40 option (A) IMPLEMENTED (`33a1acc`, no ledger): drop cycles until death (cap 40) + planted ground-height control, gate `ok_drop_control`.
-Probe: ladder s0/s1/s2 spread_i .835/.569/.785 (s0 injury death; s1/s2 thirst kills first, fast clock); control .032/.106.
-11-14 06:45 Director: gate-2 ruling is ruling 4 — windows in multiples of lethal times. Next: (a), then (b).
+state: races k72/heat/water/humidity: NONE ships (`e4c10cd` `af9b980` `21188f3` `b1272c3`). Option (A) i-probe built `33a1acc` (ctrl s0/s1 .032/.106).
+11-14 10:40 (a) DONE `e054e0a`: windows = multiples of lethal times, read live by `_windows()` — random [2/19, 40/19] T_thirst, forager 12/7 T_hunger,
+statue .8×cap, night NIGHT_S; shipped byte-same (300/6000/18000/2000/1000, selftest), statue s0 reproduces ledger (2567 dec); k72 thirst → [1958, 39158].
+11-13 run's reds: ok_spread .33 (spread_i .248 → option A), ok_forager .67, cause share 5/5 hyperthermia. Run (b) NOT started: LF.04's Kaggle poll holds
+the CPU run lock until ~17:30 (INBOX). Next: (b) `launch_detached.sh … run NE.01` when the lock frees (inside ruling 3's cap), then (c).
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
@@ -244,6 +244,7 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 ## INBOX — one line each, workers add, the Director empties
 
 - 11-14 SYSTEM: `coverage` exits 2 again at HEAD (bookkeeping only: GEN.06 new unrunnable citation, SM.02→SM.03 release pair, UNREACHABLE/PASS-ON-DEAD baselines lagging) — not touched. Real finding from S3(2): GOAL ends "advised not commanded" and "tree-fire-shelter world" have NO live claim spec (CLAIM-DEAD) — the advice gate and W2/`W.5` in JACK Next-up 6.
+- 11-14 JACK: a Kaggle-CPU (`kcpu<12h`) run holds `/tmp/jack-ladder.lock` for its whole remote poll — `_lock_for` and `_holders.remote_only` count only `gpu*` budgets as remote, so LF.04 (runner 3708275, ~8 h of polling, 0 CPU) refuses every local spec AND the overflow slot, and every other kcpu dispatch (J5 `CR.01`, J6(b) `NE.01`) until ~17:30. Fix: treat `kcpu` as remote in both places (`experiments/run.py:71`, `:251`).
 
 ## DONE (kept one day)
 
