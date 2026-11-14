@@ -178,3 +178,27 @@ What this settles:
   about the experiment, not the world, and it goes to the Director with the T2.10-style ruling queue.
 * ok_spread also fails for shipped (0.4): spread_f 0.228 and spread_T 0.283 sit below 0.30 in every arm. That is
   (c)'s band-geometry item, still open.
+
+## J6(c) gate-2 probe — humidity arms vs NE.01's random flailers (2026-11-14 05:25 UTC, no ledger)
+
+`experiments/random_death_probe.py` runs NE.01's own `_random_lives` under `humid_race._apply`. Log `/data/tmp/random_death_probe.log`.
+
+| arm, seed 0 | died | decisions at death (cap 6000) | causes |
+|---|---|---|---|
+| swp_k72 (apparatus, known negative) | 0/5 | — | reproduces the water race's cell |
+| hum30 | 1/5 | 5996 | dehydration |
+| hum34 | 3/5 | 3664, 4143, 4150 | hyperthermia, dehydration x2 |
+
+Gate 2 needs 5/5 deaths inside [300, 6000] on a seed, and shipped's seed-mean is 1.0. Seed 0 alone puts both humidity arms
+below that, so **neither humidity arm can ship under the declared rule, whatever NE.01's other clauses or seeds read.**
+Their NE.01 legs (~2 h CPU) are not spent. Cells s1/s2 were left to finish as description only.
+
+**The conflict, stated plainly.** Ruling 1 gives W0 one clock, k = 72. At that clock thirst kills in about 3 world-days and
+hunger in about 21, which is what a human body does. NE.01 gate 2 demands that EVERY random flailer die within ONE world-day
+(RANDOM_LIFE_CAP 6000 dec = 1200 s). That was calibrated when thirst killed in 570 s. Under k = 72 only an acute hazard that
+kills nearly every random life within a day can meet it. A world that lethal is not the human one ruling 1 asked for:
+hum34, the harshest arm built, kills 3/5. Gates 1 (spread_e) and 4 (MIN_MEALS 5 in 3 days) carry the same fast-clock
+calibration (water race above). So NE.01's windows have to be re-registered against the declared clock (probe lengths in
+world-days at k = 72), or ruling 1 has to be qualified. Either way, it is a ruling. A worker cannot widen gate 2's window
+alone, because that loosens a registered bar. Until then, no k = 72 arm can pass NE.01 and no further J6 needs-clock race
+can ship.

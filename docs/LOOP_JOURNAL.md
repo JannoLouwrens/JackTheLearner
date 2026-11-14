@@ -1038,3 +1038,10 @@ NONE SHIPS, and that is settled before NE.01, so NE.01 was not spent (~2 h CPU).
 at 34 C the deprived statue sits above 37 C and sweats, so thirst leaves its closed form (err 0.158). That loss is real, and it was a declared cost. Both arms also fail W.1(d) on s2 because of how the arm was built:
 humidity lives only in thermal_step, and W.1's flux ledger reads raw e_evap. Next: one shared humidity function, then K_DRY re-derived for 34 C, raced.
 Served philosophy 1 (a world that kills the way a body dies) and 4 (a race lost by its own declared rule, and the loss split into world vs apparatus, not argued away).
+
+2026-11-14 05:30 UTC · JACK · J6(c) (J1/J2 checked) · 21188f3 + this. LC.02 waits: our PS.09 regate at 100% of a core + a foreign stt guard_check (load 2.1). J2: D1.0 watcher 3422501 alive, no exit.
+J6(c): harvested the water race. NONE SHIPS (apparatus 2/2 exact). Under sweat, THIRST was the only thing killing random flailers (sweat_paid 5/5 dehydration), so slowing it to k=72 left 0/25 random deaths.
+Probed gate 2 alone under the humidity arms (NE.01's own _random_lives): hum30 kills 1/5, hum34 3/5, apparatus swp_k72 0/5 reproduced. Neither can ship, so their ~2 h NE.01 legs were not spent.
+Root cause: NE.01's windows (random deaths within ONE day, energy spread 0.30, 5 meals in 3 days) were calibrated on the fast clock. Ruling 1's k=72 makes them unreachable without a world lethal beyond the human one.
+Ruling asked (INBOX 05:25, default: re-register NE.01's windows in k72 world-days, bars unmoved). Probe cells s1/s2 still finishing, description only.
+Served philosophy 4 (a gate measured before being paid for, and a test/clock conflict named instead of raced around) and 1 (a world that kills the way a human body does, not faster).

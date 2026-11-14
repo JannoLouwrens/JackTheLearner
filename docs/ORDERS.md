@@ -92,11 +92,11 @@ race-won edit may ship (ruling 1 lifts D43's hold for exactly that); re-run
 serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow them) · philosophy 1, 3, 4.
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) HEAT RACE: NONE SHIPS (af9b980). FINDING (40d47e4): sweat kills W.2(c)'s hot route.
-11-14 WATER RACE running (3d7c0a0), log /data/tmp/water_race.log; 04:35 NE.01 s2 cells running, s3-s4 left (~45 min). Harvest: `python -m experiments.water_clock_race tally`.
-11-14 04:40 HUMID RACE (b1272c3, rule declared first, apparatus OK): NONE SHIPS before NE.01. hum34 W.2 c_pass 5/5 (first since sweat) but W.2 a_pass 0/5
-(34C breaks K_DRY's 37C fixed point, deprived statue sweats; real cost) + W.1 d 4/5 on s2 (arm defect: humid f only in thermal_step, W.1 flux reads raw e_evap). hum30 same d defect, c 0/5.
-Next: put humidity in a shared needs fn read by thermal_step AND W.1's _ship_flux_w; race hum34 + K_DRY re-derived for T_DAY 34 (declared first); NE.01 legs via experiments/humid_race.sh.
+state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) heat NONE (af9b980), water NONE (21188f3), humid NONE (b1272c3).
+11-14 05:25 WATER harvest + GATE-2 PROBE (21188f3, this commit): under sweat thirst was the only random killer; at k72 random lives die 0/25 (swp_w72, swp_k72),
+hum30 1/5, hum34 3/5 (s0; apparatus swp_k72 0/5 reproduced). NE.01 gate 2 needs 5/5 within ONE day (6000 dec), calibrated when thirst killed in 570 s;
+gates 1 (spread_e 0.082 at k72) and 4 (meals 2-3 vs 5) share that calibration. => no k=72 arm can pass NE.01; RULING asked (INBOX 05:25). NE.01 legs not spent.
+Next (no ruling needed): (c)'s band-geometry arm for spread_f/spread_T (<0.30 even in shipped); the humid shared-evap refactor waits on the ruling.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow
@@ -268,6 +268,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-14 05:25 JACK J6: ruling 1 (one clock k=72) vs NE.01: gate 2 needs every random flailer dead within ONE world-day, gates 1/4 need energy to move 0.30 and 5 meals in 3 days. All calibrated on the fast clock; at k72 thirst takes 3 days, so random deaths are 0/25 (swp arms), 1/5 hum30, 3/5 hum34 (docs/research/NEEDS_CLOCK_RACE.md). Re-register NE.01's windows in k72 world-days, or qualify ruling 1? Default: re-register (probe lengths scaled to k=72, bars unmoved).
 - 11-14 02:40 JACK J7: W1.04 (c) can never PASS (max p5 266.6 s vs 5600 s, 93f4040). Re-registration drops W1.01's PASSIVE arm from (c) (its claim is that it dies) — strengthen or loosen? Default: drop it, measure (c) on independent lives, bar unchanged.
 
 - 11-14 02:35 JACK: W1.02's HASH-SALT DIFFERENTIAL (reporting-only) timed out (TimeoutExpired) and took ~12 min of 3 workers for a 0.22 s test; it costs the box and still reports nothing.
