@@ -66,58 +66,20 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   eating-where-born, not walking up a gradient. Staged widening (`CR.00`, J5) is
   the remaining world-side arm. Philosophy 4, 5.
 
-- 11-13 11:20 · **Meal memory — what he replays** (Consolidation / the core's
-  replay; holder by default = one FIFO ring of 256) · **ALIVE (thin) 11-13 11:34** ·
-  `experiments/meal_memory.py`, rule committed first (`dabd2bf`).
-  **Bet:** (1) a second ring of 256 keeps every segment that had a meal in it;
-  batches are 8 FIFO + 8 meal — same batch, updates, core and loss. (2) Today a
-  meal is sampled ~16× and overwritten 51 s later, so smell is never paired with
-  food often enough to become a conditioned reinforcer; brains replay what was
-  rewarded far out of proportion (reverse replay; self-imitation, Oh 2018).
-  (3) Killed by: on nursery trials (born hungry ≤ 1.2 m from ready food, 250
-  decisions, s91–93, 6.5k, read k ≥ 2000) fed fraction not above BOTH `fifo` and
-  `yoked` (same ring, filled with the last meal-FREE segment — must fail) on
-  ≥ 2 of 3 seeds and by ≥ .10 pooled. END-FIT rows 4 (late payoff: "replay of
-  256") and 2 (no forgetting); closes none. Philosophy 3, 4.
-  **Number** (read fed trials, s91/92/93): meal **17/33, 13/29, 16/33 = .484**;
-  fifo 9/26, 17/33, 4/22 = .370; yoked 7/25, 10/28, 15/32 = .376 (the control
-  failed, as it must). Seed wins 2/3 vs fifo, 3/3 vs yoked; pooled margins
-  .114 / .108 against a .10 bar — ALIVE by the rule, by a hair. Post hoc, not
-  gated: meals that took > 20 decisions (a walk, not a birth on the food) meal
-  16, fifo 6, yoked 10; born ≥ 0.7 m fed .39 vs .32 / .33. Most meals land in
-  5–16 decisions, so this ruler is mostly birth luck: the pilot shows a lean,
-  not approach from afar.
-  **Claim gate, declared now, before any claim row** (module docstring): fresh
-  seeds 94–98, 13k decisions, same three arms, same rule (≥ 4 of 5 seeds vs
-  each, pooled ≥ .10) AND, among trials born ≥ 0.7 m, meal above both pooled.
-  Then the dose that matters: uniform births, 52k, vs dose2's ruler. Handed to
-  the workers (ORDERS INBOX); not yet a registered bake-off.
+- 11-13 · **Meal memory — what he replays** (Consolidation; `meal_memory.py`,
+  rule first `dabd2bf`) · **ALIVE (thin), with the workers (J5).** A second ring
+  keeps every segment with a meal; batches 8 FIFO + 8 meal. Nursery trials
+  s91–93: fed **.484** vs fifo .370 vs yoked control .376; wins 2/3 and 3/3,
+  margins .114/.108 vs a .10 bar. Mostly birth luck (meals land in 5–16
+  decisions): a lean, not approach from afar. Claim gate in the module
+  docstring (s94–98, 13k, born ≥ 0.7 m clause). END-FIT 4, 2. Philosophy 3, 4.
 
-- 11-13 23:10 · **Sense lookahead — he imagines each push, takes the one he
-  wants** (Deliberation, VACANT; holder by default = the reactive actor) · **DEAD** ·
-  `experiments/sense_lookahead.py`, rule committed first (`29424ef`).
-  **Bet:** (1) no actor: a forward model of ALL his senses (learned reward-free
-  from babbling) + a linear cue-value learned from his own meals; every 5
-  decisions he imagines 32 pushes and takes the one that raises the want.
-  (2) `DP.05` killed lookahead in a W0 where he could not sense food; he has a
-  nose now, the reactive learner ignores it for 52k decisions, and push →
-  smell-change is taught by every decision while meals are rare. (3) Killed
-  by: on explore_bout's ruler (white 4/40, oracle 38/40; seeds 90+94, 20 test
-  births each after 5k babble) neither `want` (nothing given) nor `told` (want
-  given: "more smell") feeds more births than BOTH `babble` (null) and `shuf`
-  (push→smell link permuted — must fail) on both seeds and by ≥ 8 of 40.
-  END-FIT rows 4, 3, 1; closes none. Philosophy 1, 3, 4.
-  **Number — DEAD 11-13 23:53 by the rule** (Kaggle CPU kernel
-  `jack-cpu-1794612953`, 17 min, 0 box CPU; rows /data/tmp/sense_lookahead/):
-  fed births s90/s94 babble 2/3 = **5/40**, want 2/2 = 4/40, told 5/1 = 6/40,
-  shuf 3/4 = 7/40 (the control ate most). `toward` (cosine of each push to
-  the food's bearing) ≈ 0 everywhere: told +.07/−.01, want −.08/−.11 — even
-  with the want GIVEN he does not climb, so the forward model learned no
-  usable push → smell link from 5k babble decisions; the want put only
-  .15/.07 of its weight on smell (2–4 meals). Not tested, so not claimed:
-  whether f fails for want of data, of heading (the push is world-frame, the
-  nose body-frame), or of signal over 1 s. A new reason must name one of those
-  and show f's held-out push→smell error beats the shuffled net first.
+- 11-13 · **Sense lookahead** (Deliberation, VACANT; `sense_lookahead.py`, rule
+  first `29424ef`) · **DEAD.** No actor: an MLP forward model of all senses +
+  a linear want learned from meals; imagines 32 pushes every 5 decisions. Fed
+  births s90+s94 (Kaggle CPU): babble **5/40**, want 4, told 6, shuffled
+  control 7; `toward` ≈ 0 even with the want given — f learned no push → smell
+  link. Re-opened 11-14 by the gain-field entry below. Philosophy 1, 3, 4.
 
 - 11-14 · **The drive in his own frame** (World seat; `ego_drive.py`, rule first
   `d265f78`) · **DEAD at stage 1.** Bet: push = (forward, left) in his body's
@@ -132,15 +94,22 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   himself from all senses; a world push makes a map usable) and .005 in ego.
   Philosophy 3, 4.
 
-- 11-14 12:10 · **Gain-field forward model** (Deliberation, VACANT; re-opens
-  sense lookahead with the reason its post-mortem asked for) · **PILOT RUNNING** ·
-  `experiments/gain_field.py`, rule committed first.
-  **Bet:** (1) f becomes a bilinear map — every sense × every push, ridge
-  (= batch RLS), refitted every birth; want, chooser and ruler untouched.
-  (2) What a push does to smell is a PRODUCT of state and action; the MLP put
-  .086/.044 of its prediction on the push, the bilinear map .32 on the
-  exploration seed (shuffled twin .004). Parietal gain fields. (3) Killed by:
-  stage 1 (fresh seeds 91, 94) share < .10, or ≤ the MLP's on the same bouts,
-  or shuffled ≥ half; stage 2 (s90+94, 20 births) sense_lookahead's own rule
-  vs babble 5/40 and gain-shuf, AND +8 of 40 over the MLP arm (told 6, want 4).
-  END-FIT rows 4, 3, 1; closes none.
+- 11-14 · **Gain-field forward model** (Deliberation, VACANT; `gain_field.py`,
+  rule first `25e10c0`) · **DEAD at stage 2.** Bet: f becomes a bilinear map —
+  every sense × every push, ridge (batch RLS), refitted every birth — because
+  what a push does to smell is a product of state and action and the MLP
+  does not find a product in 4k rows. Killed by sense_lookahead's own rule
+  plus +8/40 over the MLP arm.
+  **Stage 1 PASSED** (fresh s91/s94, push's share of held-out smell
+  prediction): gain **.291/.235**, MLP .207/.044, shuffled twin −.007/−.060
+  (failed, as it must). Held-out r² is still negative for both: more of the
+  prediction rides on the push, the prediction is not yet good.
+  **Stage 2 DEAD** (fed births s90/s94 of 20): told 2/2 = **4/40**, want 9/0 =
+  9/40, shuffled 3/2 = 5/40, babble 5/40; `toward` told +.17/−.02. With the
+  want GIVEN he still does not climb: a share of .25 is not a compass.
+  Post hoc, one seed, not a claim: `want` s90 fed 8 of its 18 births after
+  its first meal (babble rate 2/20); s94 never had a first meal in 5k babble
+  + 20 births, so its want stayed zero and it sat still. A re-entry must
+  name that: a want cannot start without a meal — give first meals by
+  nursing (weaning's arm) on FRESH seeds, and read fed-after-first-meal
+  against a want-shuffled control. Philosophy 3, 4.

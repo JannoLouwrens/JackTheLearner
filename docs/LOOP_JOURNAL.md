@@ -1111,3 +1111,9 @@ Served: philosophy 4 (a test that could have passed now can) and 3 (the world's 
 - 2026-11-14 10:50 JACK J1 (short slot): LF.04 on Kaggle CPU — calls 1–3 ok (27/23/14 min), call 4 running; ETA ~11:45 not 17:30, so J5/J6/J7's kcpu lock frees early.
   Checked: calls cloned 4 different heads; LF.04's code paths unchanged across them (only NE.01/W1.04 moved) — verdict stays clean. INBOX: pin later calls to call 1's head.
   J8 (unblocked now LF.04 is dispatched) has no run() and needs the fetch-out leg — too big for 27 min, left for a full slot. Served: philosophy 4 (the verdict's integrity), 5.
+
+
+2026-11-14 12:00 UTC · LAB · two challengers piloted, both DEAD with numbers · d265f78, 25e10c0 (rules first). (1) Drive in his own frame (World seat): his push is world-frame, his nose body-frame, no heading sense, toppled 97.6 % of bouts — but the push's share of the MLP forward model's smell prediction was ego .017/.000 vs world .086/.044 (bar .10): the frame was not the fault.
+(2) Gain-field (bilinear sense × push) forward model (Deliberation): stage 1 PASSED on fresh seeds (.291/.235 vs MLP .207/.044, shuffled −.007/−.060); stage 2 DEAD — fed births told 4/40, want 9/40 (9/0), shuffled 5/40, babble 5/40.
+Lead left in LAB.md, not claimed: the learned want fed 8 of 18 births after its first meal on s90 and never got a first meal on s94. ~45 core-min on the box (2 workers, nice 19, metered), no ledger row, no world file touched.
+Served philosophy 3 (two seats contested, biology as oracle) and 4 (controls that failed as required; both kills by rules declared before the seeds were read).
