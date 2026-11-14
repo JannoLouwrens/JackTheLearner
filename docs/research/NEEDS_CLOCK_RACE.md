@@ -260,13 +260,14 @@ exactly (dehydration at 9150 dec). Logs and JSON are in `/data/tmp/j6d/`.
 | swp_k72 s1 l3 (censored)     | none @39158      | alive @14000     | 26     | 1847              | -0.64 m (inside)        |
 | hum30 s2 l0 (censored)       | none @39158      | alive @12000     | 59     | 69                | -1.00 m                 |
 | hum34 s2 l2 (censored)       | none @39158      | alive @12000     | 34     | 162               | -1.02 m                 |
+| swp_k72 s0 l1                | died 25458       | died 25458 dehyd. | 61    | 1741 (last 14444) | inside, then +6.0 m at death |
 
 **Mechanism.** A random flailer that drifts into the pool drinks. `needs._mouth_near_surface` fires when the mouth is in the
 pool square and within `DRINK_DEPTH_M` 0.25 m of the surface, so a body lying or wading there gets a gulp on every
 `DRINK_REFRACTORY_S` 30 s refractory (the drink decisions run at ~150-dec spacing, 1847, 1997, 2178, 2328, ...).
 The pool (centre 2.6,-2.4, half-size 1.34-1.68 by seed) has its near edge 0.92-1.26 m (Chebyshev) from spawn. On the
 fast clock, flailers cooked at ~500 dec, before they could drift there. Every k72-family arm gives them the ~1-2k decisions it takes.
-The wide spread of random death times (4150-38788) points to the same cause: lives that drink a few times and then wander off.
+The wide spread of random death times (4150-38788) has the same cause. swp_k72 s0 l1 drank 61 times through dec 14444, wandered 6 m away, and died 11014 dec after its last gulp, which is the k72 thirst clock. That replay also reproduced its probe death to the decision.
 
 **What this changes.** (d) as ordered ("humidity with K_DRY re-derived") cannot remove these survivors. They survive on
 WATER, not heat, so no thermal constant reaches them. Gate 2 under k72 is now a question about the WORLD's pool geometry
