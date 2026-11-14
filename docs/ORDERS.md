@@ -49,11 +49,10 @@ serves: M1→M7 · philosophy 1 (learns by living), 4.
 worker who finds the box loud does S1's first step instead of idling. Try
 `LC.02` FIRST in every slot, before launching anything detached; if no quiet
 minute comes by the 11-14 sitting the Director rules on the precondition.
-state: J1(1) DONE (4b67b0b, e9e07c2). J1(2) route DONE (1913430, 93b463b); smoke 183 s, ARM/x86 frozen lives not bit-equal.
-LF.04 CANNOT RUN: LF.03 stale -> BLOCKED on LF.02, XL.00 stale; LF.02 -> BLOCKED on T6.03 <- T2.10 FAIL (paraphrase recall@1 0.0).
-11-13 19:55 READ (no run): T6.03 queries 'what do you remember about the <topic>' of facts containing <topic> = T2.10's TEMPLATED venue,
-which T2.10's latest row passes (recall@1 1.0 vs recency 0.0); the red paraphrase conjunct is never exercised by T6.03 (INBOX 19:55, ruling).
-Next: re-run XL.00 when the day CPU ceiling admits (after 00:00 UTC); then per ruling: re-register T6.03's dep or repair T2.10; LF.02 -> LF.03 -> LF.04.
+state: J1(1) DONE (4b67b0b, e9e07c2). J1(2) route DONE (1913430, 93b463b). LF.04 <- LF.03 <- LF.02 <- T6.03 <- T2.10 FAIL (ruling pending, INBOX 19:55).
+11-14 00:08 LC.02 re-run (3f3e121): VOID, foreign_cores_max 1.92 > 1.0 at midnight (another tenant's stt proof job + root pmdalinux, ~1 core each);
+contended reading 4/5 arms clear (ppo-lp 7.89, ppo-needs 7.22, wm-efe 6.19, dreamer-xs 6.01; wm-latent 4.97). XL.00 needs LC.02 -> not run.
+Next: LC.02 again when `top` shows no foreign busy process (not just load<1.5) AND heat_race has exited; then XL.00; then per T2.10 ruling.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 4 in flight on Colab
 **Why.** `T2.01` (he moves better than random) is the biggest blocker in the
@@ -68,11 +67,10 @@ serves: M3, M4 · END-FIT row 1 (human-like body) · philosophy 3, 7 · objectiv
 On a verdict, write in the seat row which END-FIT rows the winner leaves reachable (fast loop inside one brain; hands).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-13 16:25 D1.0 re-dispatch REFUSED: BLOCKED by T1.14 stale (93b463b protocol.py enum). T1.14 re-buy -> ERROR 0 GPU-h (9ce63df):
-Kaggle ACCOUNT quota 30.00 h (shared; our meter 0.00 h). 16:40 PROBED before dispatch: `colab new --gpu T4` -> 'Service Unavailable' (4th today),
-but `colab new` (CPU runtime) assigns at once and stops clean -> auth/CLI fine; the refusal is GPU-tier only. Nothing dispatched, no ERROR row.
-Next: each slot probe `colab new -s p --gpu T4` (stop it on success) + Kaggle after its weekly reset; when either takes work:
-`dispatch.sh T1.14 --projected-hours 1.2`, then `dispatch.sh D1.0 --projected-hours 25.05` unchanged (12 arm units left).
+state: 11-14 00:12 Colab T4 ASSIGNS again with `colab --auth adc new` (plain `colab sessions` still asks OAuth; gpu.py uses adc, fine); probe stopped.
+11-14 00:13 Kaggle weekly GPU quota RESET: `dispatch.sh T1.14 --projected-hours 1.2` -> kernel jack-ladder-1794615228 RUNNING on Kaggle GPU
+(watcher pid 3387508, log /data/tmp/dispatch_t1_14.log). D1.0 stays refused until T1.14 has a verdict.
+Next: read the T1.14 log; on a verdict `dispatch.sh D1.0 --projected-hours 25.05` unchanged (12 arm units left; Colab and Kaggle both open).
 
 ### J6 — W0's red world rules: one clock (`W.1`, `W.2`), then `NE.01`
 **Why.** `W.1`(b) and `W.2`(c) are one fault, ruled today (ruling 1): **W0 has
@@ -95,10 +93,10 @@ serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow the
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
 state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) RACE DONE (e4c10cd): k72 does NOT ship; every death both arms HYPERTHERMIA.
-11-13 16:40 (c) ROOT FOUND + RACE BUILT (d63b827, experiments/heat_race.py): W0 charges sweat (C_SW water drain) but never pays it -
-e_evap cools only pool-wet skin, so a dry body sheds heat through k_dry alone (open day M300 T* 51.0 C; sealed roof 53.2 C = the "oven").
+11-13 16:40 (c) ROOT (d63b827, experiments/heat_race.py): W0 charges sweat (C_SW) but never pays it; dry skin sheds heat by k_dry only (open day T* 51.0 C).
 Arms shipped / sweat (Gagge G_SW 2.0 M_b/K) / sweat_paid (+C_SW 2.82); rule declared. W.1 PASS 5/5 all arms (cannot discriminate).
-Next: after 00:00 UTC `scripts/launch_detached.sh /data/tmp/heat_race.log sh experiments/heat_race.sh` (30 cells ~1.5 CPU-h), then tally.
+11-14 00:11 heat race LAUNCHED detached (pid 3386493, log /data/tmp/heat_race.log); W.2 15/15 cells done by 00:15, NE.01 15 cells ~70 min wall.
+Next: harvest /data/tmp/heat_race.log ('HEAT RACE EXIT' + tally); apply the declared rule; a winning arm may ship, then re-run W.2/NE.01/LF.03.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow
@@ -111,8 +109,8 @@ serves: M2 · END-FIT row 4 · philosophy 5.
 state: 11-13 10:40 W1.04 FAIL on (c) only (640e329): 5th-pct life 54.3/52.0 s vs 5600 s horizon, ~272/275 deaths energy.
 11-13 15:45 W1.00 att 3 HARVESTED (edd3e61): FAIL (b) "immaterial" at n=20, a reading. Selection real (repeat ml 54.75 vs white 41.81 s,
 t~16); no Pile A margin fires: dwell ratio 6.94 but t~1.5 and floor f_dw .136 = 22x its std (att-1 sizing assumed sd .0083; measured .244).
-W1.02 RE-PINNED to att 3 + history-aware pin (edd3e61); not run (day CPU ceiling spent, 58472/57600 s).
-Next: run W1.02 (cpu, 3 seeds x 28k decisions) when the day budget admits; then race W1's energy clock (as J6(b)); re-run W1.04; register DP.05-in-W1.
+11-14 00:15 W1.02 (re-pinned to att 3, edd3e61) started then KILLED by me at 10 min (my own PIDs, no ledger row): it spawns 3 workers, with heat_race's 2 -> load 6.7/4 cores.
+Next: run W1.02 once heat_race has exited (alone, ~10+ min of 3 workers; use launch_detached if the session is short); then race W1's energy clock; re-run W1.04; register DP.05-in-W1.
 
 ### J8 — The hand-over gate: a Jack trained here still learns on another machine
 **Why.** Owner 11-13: the finished Jack is "trained here, handed to people,
@@ -270,6 +268,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- (JACK 11-14 00:30) Supersedes 20:50: Colab needs NO owner re-auth - `colab --auth adc new -s p --gpu T4` assigned a T4 at 00:12 (plain `colab sessions` without `--auth adc` still prints the OAuth URL; gpu.py always passes adc). Kaggle GPU quota also reset by 00:13 (T1.14 running). LC.02 VOID at midnight from foreign load (another tenant's stt proof job + root pmdalinux ~1 core each) - a 'quiet box' may not come on its own; Director may want the 11-14 precondition ruling anyway.
 - (LAB 11-13 23:55) Sense lookahead (`experiments/sense_lookahead.py`, Deliberation seat) pilot DEAD by its rule: fed births /40 babble 5, want 4, told 6, shuffled control 7 (LAB.md). Nothing to grind. Route note for S1: a kernel body that spawns `python -m experiments.*` children must pass `cwd="/tmp/jack"` — without it the kernel ran 48 s, 8x ModuleNotFoundError, and `submit` reported ok=True with no rows; 8 arm-seeds of 10k physics decisions took 17 min at 2 procs.
 - (SYSTEM 11-13 21:15) Guards: decisions/champions exit 0; coverage exits 2 on PASS-ON-DEAD-DEPENDENCY 8 vs banked 6 (new: T2.03, T2.14 <- T1.14 ERROR) — by design, repair is re-runs, not the baseline; also 3 GOAL_UNRUNNABLE_BASELINE entries (DP.02, DP.03, LC.04) live again, and champions parses the END-FIT table (CHAMPIONS.md:51-57) as 6 MALFORMED-ROW seats. All bookkeeping, untouched. S1 still blocked on the T2.10 ruling.
 - (JACK 11-13 20:50) Colab CLI asks for OAuth AGAIN (`colab new -s p --gpu T4` prints an accounts.google.com consent URL, aborted): at 19:55 it did not. J2's GPU route needs the owner to re-auth; nothing dispatched.

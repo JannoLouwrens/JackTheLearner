@@ -967,3 +967,10 @@ from babbling, no reward) + a cue-value learned from his own meals; every 5 deci
 Rule committed before any seed (want/told must beat babble AND a shuffled control on both seeds, >= 8 of 40). Day CPU ceiling was spent, so
 the pilot went to a free Kaggle CPU kernel (jack-cpu-1794612953; first kernel returned 0 rows, child cwd). Number (kernel 3, 17 min): DEAD - fed births /40 babble 5, want 4, told 6, shuffled control 7; pushes do not point at food.
 Served philosophy 3 (a vacant seat gets a raced challenger), 4 (control that must fail, rule first), 6 (free compute, none of the box's).
+
+2026-11-14 00:30 UTC · JACK · J1/J2/J6/J7 · 3f3e121. Midnight reset; box looked quiet (load 1.27), so J1's chain went first.
+LC.02 re-run: VOID, its contention guard fired (foreign 1.92 cores: another tenant's stt proof job + pmdalinux). Contended reading 4/5 arms clear 5.0.
+XL.00 not run (needs LC.02). J6: heat race launched detached (W.2 15/15 done in 3 min; NE.01 ~70 min). J2: Colab T4 assigns with --auth adc
+and Kaggle's GPU week reset -> T1.14 RUNNING on Kaggle GPU (jack-ladder-1794615228); D1.0 follows its verdict. J7: W1.02 started, but with
+heat race it put 5 workers on 4 cores (load 6.7) -> I killed my own PIDs before any ledger row; it waits for the heat race to exit.
+Served philosophy 4 (a contended timing refused, not read as a verdict), 3 (the control-path contest's last gate back on free GPU), 6 (customers' cores first).
