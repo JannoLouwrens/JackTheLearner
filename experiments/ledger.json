@@ -14842,31 +14842,17 @@
       "status": "VOID"
     },
     "LF.02": {
-      "amended": [
-        {
-          "at": "2026-09-07T10:10:28",
-          "by": "PROGRESS-FTB-2-2026-09-07",
-          "changes": [
-            {
-              "field": "impl_sha",
-              "from": "21586a829f9f05cb",
-              "proof": "reconstructed 21586a829f9f05cb from git 6502d36d6eaa; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
-              "to": "cd3d3803261610e1"
-            }
-          ],
-          "commit": "ce33621+dirty",
-          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
-        }
-      ],
-      "attempt": 3,
-      "commit": "6502d36",
+      "amended": [],
+      "attempt": 4,
+      "commit": "c810398",
       "compute_s": null,
       "control_metrics": {
         "corrupt_outcomes": "world:CorruptStore;needs:CorruptStore;diary:CorruptStore;wm:CorruptStore",
         "corrupt_raised_frac": 1.0,
         "corrupt_raised_frac_std": 0.0
       },
-      "duration_s": 266.97,
+      "dirty_files": null,
+      "duration_s": 261.12,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -14973,15 +14959,90 @@
           ],
           "spec_sha": "7b8b9249ebd74f81",
           "status": "PASS"
+        },
+        {
+          "amended": [
+            {
+              "at": "2026-09-07T10:10:28",
+              "by": "PROGRESS-FTB-2-2026-09-07",
+              "changes": [
+                {
+                  "field": "impl_sha",
+                  "from": "21586a829f9f05cb",
+                  "proof": "reconstructed 21586a829f9f05cb from git 6502d36d6eaa; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+                  "to": "cd3d3803261610e1"
+                }
+              ],
+              "commit": "ce33621+dirty",
+              "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+            }
+          ],
+          "attempt": 3,
+          "commit": "6502d36",
+          "compute_s": null,
+          "control_metrics": {
+            "corrupt_outcomes": "world:CorruptStore;needs:CorruptStore;diary:CorruptStore;wm:CorruptStore",
+            "corrupt_raised_frac": 1.0,
+            "corrupt_raised_frac_std": 0.0
+          },
+          "duration_s": 266.97,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "cd3d3803261610e1",
+          "message": "",
+          "metrics": {
+            "borrowed_commit": "6c57954",
+            "borrowed_from": "PS.01",
+            "borrowed_impl_sha": "fd34401fe44e7ea6",
+            "borrowed_ran_at": "2026-09-03T00:30:29",
+            "borrowed_status": "PASS",
+            "calibrated": 1.0,
+            "calibrated_std": 0.0,
+            "ckpt_decision": 287.0,
+            "ckpt_decision_std": 30.210373,
+            "ckpt_in_window": 1.0,
+            "ckpt_in_window_std": 0.0,
+            "killed_by_sigkill": 1.0,
+            "killed_by_sigkill_std": 0.0,
+            "null_g_match_frac": 0.0,
+            "null_g_match_frac_std": 0.0,
+            "null_max_delta": 8.098797,
+            "null_max_delta_std": 2.711038,
+            "prefix_ok": 1.0,
+            "prefix_ok_std": 0.0,
+            "restore_roundtrip_ok": 1.0,
+            "restore_roundtrip_ok_std": 0.0,
+            "resume_dy_match_frac": 1.0,
+            "resume_dy_match_frac_std": 0.0,
+            "resume_g_match_frac": 1.0,
+            "resume_g_match_frac_std": 0.0,
+            "resume_max_delta": 0.0,
+            "resume_max_delta_std": 0.0,
+            "resume_wm_match_frac": 1.0,
+            "resume_wm_match_frac_std": 0.0,
+            "wall_s": 88.966667,
+            "wall_s_std": 9.16309
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 239.4,
+          "preserved_impl": null,
+          "ran_at": "2026-09-06T12:23:19",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "7b8b9249ebd74f81",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "cd3d3803261610e1",
-      "message": "",
+      "impl_sha": "8dfcd7ac61522eb4",
+      "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 2 non-deciding metric(s) diverged (wall_s, wall_s_std) \u2014 a blemish on numbers nothing gated stands on (+262.4s)",
       "metrics": {
-        "borrowed_commit": "6c57954",
+        "borrowed_commit": "076e160",
         "borrowed_from": "PS.01",
-        "borrowed_impl_sha": "fd34401fe44e7ea6",
-        "borrowed_ran_at": "2026-09-03T00:30:29",
+        "borrowed_impl_sha": "3274c87d7dbe5d86",
+        "borrowed_ran_at": "2026-11-13T10:52:48",
         "borrowed_status": "PASS",
         "calibrated": 1.0,
         "calibrated_std": 0.0,
@@ -14993,8 +15054,8 @@
         "killed_by_sigkill_std": 0.0,
         "null_g_match_frac": 0.0,
         "null_g_match_frac_std": 0.0,
-        "null_max_delta": 8.098797,
-        "null_max_delta_std": 2.711038,
+        "null_max_delta": 5.235783,
+        "null_max_delta_std": 3.290523,
         "prefix_ok": 1.0,
         "prefix_ok_std": 0.0,
         "restore_roundtrip_ok": 1.0,
@@ -15007,13 +15068,13 @@
         "resume_max_delta_std": 0.0,
         "resume_wm_match_frac": 1.0,
         "resume_wm_match_frac_std": 0.0,
-        "wall_s": 88.966667,
-        "wall_s_std": 9.16309
+        "wall_s": 86.966667,
+        "wall_s_std": 9.806234
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 239.4,
+      "peak_rss_mb": 337.4,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T12:23:19",
+      "ran_at": "2026-11-14T07:30:41",
       "seeds": [
         0,
         1,
