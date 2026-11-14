@@ -70,6 +70,28 @@ but the CERTIFICATE is owed and is bought only when T2.10 is repaired.
 inspectable rather than asserted; `train_loss_fell` is gated so a training
 block that silently no-ops cannot satisfy `train_moved_weights` with noise.
 
+The 11-14 re-registration (Director ruling 1 — strictly additive, no bar moved)
+--------------------------------------------------------------------------------
+T6.03 depended on T2.10, whose only red conjunct is PARAPHRASE recall. This
+spec stores and queries on its own templated venue and never touches a
+paraphrase, so that dependency blocked a claim it does not support. The
+ruling cuts it and moves the retrieval-vs-recency question INSIDE this run,
+on this spec's own store and its own cues:
+
+  recency_recall_at_1      ME.1's recency null, carried over: the most recently
+                           stored memory in the RESTORED store (latest
+                           timestamp, ties broken by insertion order) answers
+                           every cue.
+  margin_vs_recency        recall_after_restart - recency_recall_at_1, which must
+                           be >= MIN_RECENCY_MARGIN = 0.10 (T2.10's own
+                           MIN_PARA_MARGIN).
+
+Said plainly: on 20 distinct templated facts this clause is expected to clear
+by a wide margin (recency can hit at most one cue in 20). It certifies that
+the restored scorer is RETRIEVING, not replaying the last write. It does not
+certify paraphrase recall. T2.10 still owns that red and stays FAIL.
+depends_on is now ["T0.05", "T0.08"].
+
 NULL (fresh instance with no memory, per spec): session 2 BEFORE load_all —
 same process, same queries, empty memory. Recall must be <= 0.05.
 
@@ -116,6 +138,7 @@ PLACES = ["shelf", "porch", "kitchen", "hallway", "attic", "garden"]
 MIN_RECALL = 0.90         # recall_after_restart, the registered metric
 NULL_MAX = 0.05           # fresh instance with no memory
 MIN_GAP = 0.80
+MIN_RECENCY_MARGIN = 0.10  # 11-14 ruling 1: T2.10's own margin, on this store
 PAD_POST_TOL = 1e-5       # restored PAD must match the saved one
 PAD_PRE_MIN = 1e-3        # virgin PAD must have been measurably elsewhere
 
@@ -310,6 +333,11 @@ with contextlib.redirect_stdout(io.StringIO()):
     p.load_all(brain, r1["save_path"])
 
 post = snapshot(brain)
+# 11-14 ruling 1: ME.1's recency null on the RESTORED store — the latest write
+# answers every cue (ties on timestamp broken by insertion order).
+_mems = brain.memory.memories
+recency_answer = (max(enumerate(_mems), key=lambda im: (im[1]["timestamp"], im[0]))[1]["text"]
+                  if _mems else None)
 probe_post = probe_loss(brain, _cfg)          # the RESTORED brain, same reading
 # The restored history must still BE a MoodHistory: .record() must work.
 brain.emotional_state.history.record(999.0, (0.0, 0.0, 0.0), "probe", event="post-restore")
@@ -317,6 +345,7 @@ post["record_still_works"] = len(brain.emotional_state.history.entries) == post[
 
 json.dump({"pre": pre, "post": post, "null_answers": null_answers,
            "probe_pre": probe_pre, "probe_post": probe_post,
+           "recency_answer": recency_answer,
            "answers": answer(brain, r1["queries"])},
           open(tmpdir + "/report2.json", "w"))
 """
@@ -381,6 +410,7 @@ def _experiment(seed: int) -> dict:
     facts = r1["facts"]
     recall = sum(r2["answers"][t] == facts[t] for t in facts) / len(facts)
     null_recall = sum(r2["null_answers"][t] == facts[t] for t in facts) / len(facts)
+    recency_recall = sum(r2["recency_answer"] == facts[t] for t in facts) / len(facts)
 
     hist_ok = (post["hist_len"] == r1["hist_len"] > 0
                and post["hist_last"] == r1["hist_last"]
@@ -407,6 +437,9 @@ def _experiment(seed: int) -> dict:
         "recall_after_restart": round(recall, 4),
         "null_recall": round(null_recall, 4),
         "gap": round(recall - null_recall, 4),
+        # 11-14 ruling 1: retrieval beats recency on this spec's own store
+        "recency_recall_at_1": round(recency_recall, 4),
+        "margin_vs_recency": round(recall - recency_recall, 4),
         "weights_match": int(post["digest"] == r1["digest"]),
         "weights_differ_preload": int(pre["digest"] != r1["digest"]),
         "pad_dev_postload": round(_pad_dev(post["pad"], r1["pad"]), 8),
@@ -448,6 +481,8 @@ def _check(m: dict, c: dict) -> bool:
             and m["recall_after_restart"] >= MIN_RECALL
             and m["null_recall"] <= NULL_MAX
             and m["gap"] >= MIN_GAP
+            # --- 11-14 ruling 1: replaces the T2.10 dependency ---
+            and m["margin_vs_recency"] >= MIN_RECENCY_MARGIN
             and m["weights_match"] == 1.0
             and m["weights_differ_preload"] == 1.0
             and m["pad_dev_postload"] <= PAD_POST_TOL
