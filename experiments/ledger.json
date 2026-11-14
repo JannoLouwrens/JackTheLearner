@@ -7832,7 +7832,22 @@
       "status": "PASS"
     },
     "LC.02": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-11-14T00:39:02",
+          "by": "J8",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "fa50c896640f8858",
+              "proof": "reconstructed fa50c896640f8858 from git 49690841efa1; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: experiments/cores.py",
+              "to": "dd8116ced1c6ce63"
+            }
+          ],
+          "commit": "389ffca",
+          "reason": "cores.py:75 comment-only edit (language slot no longer names a frozen text tower); prose_only_delta"
+        }
+      ],
       "attempt": 22,
       "commit": "99a2edd",
       "compute_s": null,
@@ -12162,7 +12177,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "fa50c896640f8858",
+      "impl_sha": "dd8116ced1c6ce63",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "action_dim": 8.0,

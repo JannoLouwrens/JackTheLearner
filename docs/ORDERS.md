@@ -138,7 +138,8 @@ state: LF.06 REGISTERED 11-13 12:30; experiments/tests/lf_06_handover.py BUILT (
 salts byte-identical (salt changed nothing; suspect L.k=HORIZON pins std; n is really 5). ARM/x86 gap 18.2 s (LF.04 smoke) = 0.91 of TOL.
 LF.06 depends on LF.03 (J1's T2.10 block). 11-13 16:25 MEASURED the hand-over file: 19.6 MB (13.4 MB gz), ~all learner
 (861,545 params + Adam + ring); world/needs/diary < 16 KB. gpu.submit has NO input channel (repo clone + fetch-out only) -> INBOX.
-Next: run() with here/there roles once S1 names the channel (Kaggle private dataset as kernel source is the obvious one); budget -> KAGGLE_CPU.
+11-14 00:40 cores.py:75 comment fixed (389ffca): language = 'words through his own learned ear; EMPTY today'; only LC.02 staled, re-stamped by amend --doc-only (prose_only_delta).
+Next: run() with here/there roles once S1 names the channel; OR reverse legs (no input channel needed: 'here' = Kaggle kernel trains + fetch-out, 'there' = this box) - Director's call; LF.03 dep still blocks.
 
 ### J5 — The curriculum cook-off (`CR.01`)
 **Why.** Owner 11-11: the curriculum is "as important as jack himself". The

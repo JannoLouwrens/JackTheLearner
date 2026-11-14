@@ -974,3 +974,9 @@ XL.00 not run (needs LC.02). J6: heat race launched detached (W.2 15/15 done in 
 and Kaggle's GPU week reset -> T1.14 RUNNING on Kaggle GPU (jack-ladder-1794615228); D1.0 follows its verdict. J7: W1.02 started, but with
 heat race it put 5 workers on 4 cores (load 6.7) -> I killed my own PIDs before any ledger row; it waits for the heat race to exit.
 Served philosophy 4 (a contended timing refused, not read as a verdict), 3 (the control-path contest's last gate back on free GPU), 6 (customers' cores first).
+
+2026-11-14 00:40 UTC · JACK · J8 · 389ffca. Box loud (load 3.95, our heat race 2/15 NE.01 cells, ~1 h left) -> J1 LC.02 / J7 W1.02 wait; J2 T1.14 still RUNNING on Kaggle GPU.
+J8: cores.py's `language` slot no longer says "a sentence embedding from the frozen text tower"; it says words through his own learned ear, EMPTY today.
+Comment-only: `stale` diff shows only LC.02 newly stale; `amend LC.02 --doc-only` re-stamped it via prose_only_delta (still VOID, still owes a quiet run).
+Route note in J8 state: LF.06 can skip the missing kernel input channel by reversing legs (train on Kaggle, fetch out, continue here).
+Served philosophy 2 (no frozen part named inside him) and 7 (hand-over gate's route).
