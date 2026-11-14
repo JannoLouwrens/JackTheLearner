@@ -318,3 +318,9 @@ If it cannot, the arm breaks the one life that MUST live, and it is reported as 
 - Positive control (not gated): a body placed lying still in the pool with zero ctrl gets 3 gulps in 80 s under BOTH swp_k72 and dB (seeds 0-2). The swallow rule takes water from the flailer, not from a drinker.
 - `dA`/`dC` NOT BUILT: the pool position is a literal in playground.py:421/886, ne_01._build and needs.py:820. Moving it is a world-file refactor that re-bills every certificate resting on playground.py, and it is predicted to fail alone anyway.
 - Next: race dB vs swp_k72 vs shipped under the declared rule. NE.01 s0-4 + W.1/W.2 cells run in Kaggle CPU kernels (cr_01-style `_JOB`), and check (iii) (forager ≥ 3 drinks) comes from the NE.01 cell itself.
+
+### J6(d) step 2c — pre-dispatch smoke caught a gate leak (2026-11-14 19:45 UTC, no ledger)
+- Local smoke of the kernel path (`run_parallel(_parse("dB:W.2:0"))`, 40 s CPU, 100 MB) read W.2 `rig_pool_mouth_near_surface` = **0.0** under dB (shipped and swp_k72: 1.0). Cause: dB overrode `NeedLayer._mouth_near_surface` for every caller, and W.2's rig asks that method a pure-geometry question with no swallow time accumulated.
+- Fix: the swallow gate now applies only inside `substep` (the drink site, needs.py:509). Outside callers get today's geometry. After the fix: rig = 1.0, and every other metric is identical to the pre-fix cell (a/b/d_pass 1, c_pass 0). The leak changed only the rig record, not a gated `*_pass`.
+- (ii) re-PASS after the fix: `random_life_drink_probe.py dB0 1 3 14000` and `swp_k72 1 3 14000` outputs are byte-identical (`cmp`), with 26 gulps.
+- Reported, not gated: `rig_thermoneutral_day` = 0 under dB, inherited from the swp_k72 base (swp_k72 W.2 s0 reads 0 too, shipped 1). Every dB/swp_k72 W.2 cell is therefore rig-VOID by W.2's own `rig_ok`, while the declared tally gates on `*_pass` only. That is the base world's property, not dB's.

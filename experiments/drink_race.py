@@ -49,13 +49,24 @@ def _patch_swallow(N, swallow_s: float, vmax: float) -> None:
             self._sw_t = getattr(self, "_sw_t", 0.0) + dt
         else:
             self._sw_t = 0.0
-        orig_substep(self, model, data, dt)
+        self._sw_in = True
+        try:
+            orig_substep(self, model, data, dt)
+        finally:
+            self._sw_in = False
 
     orig_near = L._mouth_near_surface
 
     def _mouth_near_surface(self, data):
+        # The swallow gate applies ONLY at the drink site (needs.py:509, inside
+        # substep). Outside callers ask the geometric question and get today's
+        # answer: W.2's rig `rig_pool_mouth_near_surface` read 0.0 under dB
+        # (smoke 11-14 19:45) because the gate leaked into it, which would have
+        # VOIDed every dB W.2 cell.
         if not orig_near(self, data):
             return False
+        if not getattr(self, "_sw_in", False):
+            return True
         ok = getattr(self, "_sw_t", 0.0) >= swallow_s - 1e-12
         if ok:
             self._sw_t = 0.0      # one swallow, one gulp
