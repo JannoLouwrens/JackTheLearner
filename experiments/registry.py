@@ -480,7 +480,7 @@ LADDER: list[Spec] = [
          depends_on=["T2.00", "T1.14", "T0.09"],
          control="Untrained network with the same architecture.",
          repaired_by=["D1.0"],
-         notes="Budget GPU->GPU_LONG after v3: first healthy run (all seeds "
+         notes="COVERS: human-like body (claim). Budget GPU->GPU_LONG after v3: first healthy run (all seeds "
                "beat random, curve climbing at cutoff) failed only effect "
                "size, 2.21 sigma at 192K steps/seed. Threshold unchanged. "
                "REPAIRED_BY D1.0 (69th audit B3, 2026-09-04): this is the "
@@ -981,7 +981,7 @@ LADDER: list[Spec] = [
          falsified_by="Catastrophic forgetting equal to naive sequential fine-tuning.",
          null_baseline="Naive sequential fine-tuning (expected: severe forgetting).",
          metric="backward_transfer", budget=Budget.GPU_LONG, seeds=3, depends_on=["T4.04"],
-         notes="COVERS: plasticity (claim)"),
+         notes="COVERS: plasticity (claim), handed over still learning (claim)"),
 
     Spec("T5.04", 5, "Plasticity does not die",
          hypothesis="After N consolidation cycles the model still learns a NEW task as "

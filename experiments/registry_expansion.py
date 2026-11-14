@@ -4033,7 +4033,7 @@ EXPANSION: list[Spec] = [
                "only has to STAY under a roof to survive still shows no "
                "drive-coupled sheltering, the thermal drive teaches nothing "
                "at any horizon, and the shelter story is ours, not his.",
-         notes="SUCCESSOR TO SH.01 (parked 2026-08-25), designed around the "
+         notes="COVERS: tree-fire-shelter world (claim). SUCCESSOR TO SH.01 (parked 2026-08-25), designed around the "
                "park note's own constraint: a successor that does not "
                "require the core to learn SEEKING from an outside spawn. "
                "SH.01's oracle pilot localised the failure exactly there - "
@@ -5086,7 +5086,7 @@ EXPANSION: list[Spec] = [
          kills="Any scripted-trust design. If trust must be initialised, "
                "annotated or hard-coded to diverge, the emergence claim is "
                "dead and GOAL.md's 'trust earned and checked' is decoration.",
-         notes="THE LIAR TEST, owner-designed 2026-08-09, waiting in "
+         notes="COVERS: advised not commanded (fixture). THE LIAR TEST, owner-designed 2026-08-09, waiting in "
                "INTEGRATION_QUEUE.md since then: 'the emergence stone's first "
                "falsifiable claim: trust earned, checked, and unscripted.' "
                "Advice enters through the world like any parent utterance; "
@@ -6104,7 +6104,7 @@ EXPANSION: list[Spec] = [
          kills="Cooking, warmth-seeking, and the entire fire branch of the tech "
                "tree. Also kills any claim that Jack 'discovered fire' — "
                "discovery of an inconsistent rule is memorisation of noise.",
-         notes="The rule text in section 4.2 IS the oracle. This is the point of "
+         notes="COVERS: tree-fire-shelter world (fixture). The rule text in section 4.2 IS the oracle. This is the point of "
                "the caveman reframing: we are not approximating combustion, we "
                "are asserting that the implementation obeys a rule we wrote "
                "down first. Deliberately Minecraft-shaped rather than "
@@ -7533,7 +7533,7 @@ EXPANSION: list[Spec] = [
                  "(2510.06203) reports exactly this failure at 69 DoF.",
          kills="Nothing on its own — a FAIL here with LT.03 passing scopes the "
                "claim honestly to the reduced body and points at throughput.",
-         notes="BLOCKED until T2.01/T2.02 pass. Also blocked on throughput: at "
+         notes="COVERS: human-like body (claim). BLOCKED until T2.01/T2.02 pass. Also blocked on throughput: at "
                "T2.01's measured ~128 env-steps/s a 20M-step arm-seed costs "
                "43 h, so 3 seeds exceed a whole week of Kaggle quota for ONE "
                "arm. Getting the 45.5M trunk out of the inner loop makes it "
@@ -8438,7 +8438,7 @@ EXPANSION: list[Spec] = [
                  "never silently default. T6.03's byteflip control is the model.",
          kills="Multi-session lives, hence every life longer than one Kaggle "
                "session or one 50-minute loop iteration.",
-         notes="T0.03/T0.04 prove the weights round-trip; T6.03 proves stores "
+         notes="COVERS: handed over still learning (fixture). T0.03/T0.04 prove the weights round-trip; T6.03 proves stores "
                "survive a session boundary; ME.1 is the episodic store itself. "
                "This spec is their composition at the life level: ALL FOUR "
                "stores or the resume is a different life wearing the same "
@@ -8561,7 +8561,7 @@ EXPANSION: list[Spec] = [
                "learning on their machines') as a claim about the creature "
                "as built; no winner may then be seated that the gate cannot "
                "be run on.",
-         notes="REGISTERED 2026-11-13 (ORDERS.md J8; exempt from "
+         notes="COVERS: handed over still learning (claim). REGISTERED 2026-11-13 (ORDERS.md J8; exempt from "
                "repair-before-register by that order). Id LF.05 is skipped: "
                "it is a REFUSED stub above (T5.08 owns it). DECLARED BEFORE "
                "ANY RUN: EXAM = K_EXAM 5 frozen lives (optimiser never "
@@ -9556,7 +9556,7 @@ EXPANSION: list[Spec] = [
                "FAIL-UNOWNED by declaration rather than by an incidental "
                "mention inside a row about something else (158th audit, FOR "
                "THE BUILDER 2). "
-               "  COVERS: social/other agents (rule)"),
+               "  COVERS: social/other agents (rule), advised not commanded (rule)"),
 
     # SIZING: `lg_10._measure` is 0.01 s of process time per (seed, selector)
     # against a 124 KB cached verdict table — measured 2026-09-13 before this

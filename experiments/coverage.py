@@ -163,6 +163,11 @@ COMMITMENTS: Dict[str, Tuple[str, str]] = {
     "far":                (r"\b(far|distance|distant|navigat\w*|wayfind\w*)\b", "GOAL 187: survival-earned primitive"),
     "tiring":             (r"\b(tiring|fatigue\w*|exhaust\w*|stamina|effortful)\b", "GOAL 187: survival-earned primitive"),
     "worth-it":           (r"\b(worth|payoff|cost.benefit|trade.?off|forgo\w*)\b", "GOAL 187: survival-earned primitive"),
+    # The four ends of GOAL.md's closing section; each `why` names its END-FIT gate (CHAMPIONS.md).
+    "human-like body":    (r"\b(humanoid|human.like|grip|grasp)\b", "END-FIT row 1: T2.01, LT.08, DP.02; grip rule unregistered"),
+    "handed over still learning": (r"\b(hand.over|checkpoint|another machine|resum\w*)\b", "END-FIT row 2: LF.06, LF.02, T5.03, T5.04, NE.06"),
+    "advised not commanded": (r"\b(advice|advis\w*|told|liar|trust)\b", "END-FIT row 3: HR.*, LG.02-LG.06, SO.10; advice gate unregistered"),
+    "tree-fire-shelter world": (r"\b(fire|wood|tree|cook\w*|shelter)\b", "END-FIT row 4: W.5, SH.02, W1.04; W2 specs unregistered"),
 }
 
 # `COVERS: a, b` — consumes to end of line, sentence, or string. A spec may
@@ -192,16 +197,8 @@ DECLARATION = re.compile(r"(?<!`)COVERS:\s*(\w[^\n.;]*)", re.I)
 #   rule    — a gate/admission criterion enforced on candidates
 #   sensor  — an instrument measures/emits a channel; nothing acts on it yet
 #
-# WHY ABSENT IS AN ERROR AND NOT A DEFAULT (Overseer, 12th audit). v1 of the
-# kind mechanism defaulted a kindless declaration to `claim`. The mechanism
-# shipped, was applied to 2 of 78 declarations, and the other 76 inherited the
-# default — at least ten of them apparatus or sensor-legibility by their own
-# titles — so `coverage.py` reported 9 zero-pass commitments when the honest
-# figure was 15+, and the standing zero-pass rule steered off the flattered
-# list for two days. A default on a field that routes work IS the defect: the
-# only safe meaning for silence is a report. (The old defaulting rule stays
-# executable via `default_kind=` because T0.21 keeps it as the control that
-# must fail.)
+# A missing kind is an ERROR, never a default (12th audit: a `claim` default
+# flattered 76 of 78 declarations). T0.21's control keeps `default_kind=`.
 #
 # Parsing order is load-bearing: canonical names themselves end in parentheses
 # — `thermal (kills)`, `language (parent)` — so the full name is looked up
