@@ -115,12 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) step 1 `5d59b57`: censored random lives survive by DRINKING (passive gulps, pool 0.9-1.3 m from spawn).
-11-14 18:25 (d) step 2 race DECLARED `4c316fa` (NEEDS_CLOCK_RACE.md): dA pool far (arena ceiling 4.6 m vs flailer drift 1.86-7.71 m -> predicted to fail alone), dB swallow (1.0 s still mouth, <0.2 m/s), dC both; humid_race rule + gate 2 >= 4/5. `c9dd457` dB BUILT (`experiments/drink_race.py`): apparatus (ii) PASS (dB0 byte-same to swp_k72, 26 gulps). Under dB, censored s1 l3 drinks 0 and dies at 9116; a still body in the pool drinks 3/80 s under both arms.
-dA/dC not built (pool literal in playground.py:421/886 + ne_01 + needs.py:820 = world-file refactor, Director call). 18:40 RUNNER BUILT `dfc577c` (`experiments/drink_race_kcpu.py`, cells stamped with code shas).
-STALE old cells (no code stamp, predate NE.01 re-reg) -> none reused. 19:25 TALLY BUILT `184c4c1` (`experiments/drink_race_tally.py`, fixtures 6/6 in `drink_race_tally_check`): verdict needs 30 current cells
-(shipped + dB x NE.01/W.1/W.2 x s0-4; swp_k72's 15 reported only). Next, when a kcpu slot frees (after CR.01): push in-session `> log`:
-`$PY -m experiments.drink_race_kcpu kernel dB:NE.01:0,shipped:NE.01:0,dB:W.1:0` (3 cells/kernel), reattach with JACK_REUSE_KERNEL; `... status` lists missing; then `$PY -m experiments.drink_race_tally`.
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) declared `4c316fa`, dB built `c9dd457`, kcpu runner `dfc577c`, tally `184c4c1` (needs 30 current cells).
+dA/dC not built (pool literal in playground.py:421/886 + ne_01 + needs.py:820 = world-file refactor, Director call). 11-14 19:50 `647d45c`: pre-dispatch smoke of the kernel path (dB:W.2:0, 40 s) caught dB's swallow
+gate leaking into W.2's geometry rig (rig_pool 0.0). Fixed so the gate applies only inside substep: rig 1.0, *_pass unchanged, (ii) re-PASS byte-same. Note: rig_thermoneutral_day = 0 is the swp_k72 base's (shipped 1). No cells exist yet, so none are stale.
+Next, when a kcpu slot frees (after CR.01's queue): push in-session `> log`: `$PY -m experiments.drink_race_kcpu kernel dB:NE.01:0,shipped:NE.01:0,dB:W.1:0` (3 cells/kernel),
+reattach with JACK_REUSE_KERNEL; `... status` lists missing; then `$PY -m experiments.drink_race_tally`.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

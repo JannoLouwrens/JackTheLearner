@@ -1214,3 +1214,8 @@ Wrote the DRINK race tally before any cell exists: dB vs shipped under the decla
 It counts only cells whose code stamp matches the current tree. It lives in its own module, because a tally inside drink_race_kcpu.py would stale every finished cell the moment the tally is edited.
 Fixtures 6/6 + incomplete (a known win, each lost clause, a world-breaking arm, one stale cell gives None). The live tally reads 0 current cells. A verdict needs 30 (shipped and dB × 3 specs × 5 seeds).
 Served philosophy 4 (the judge is fixed and proven able to say no before the evidence arrives) and 3 (the race decides the world rule).
+
+2026-11-14 19:50 UTC · JACK · J6(d) (J2: T1.14 kernel …242 still QUEUED, watcher 3863272 alive, no exit; J5: CR.01 s131 …9732/…9948 RUNNING, harvest ~20:15) · `647d45c`.
+Both kcpu slots were taken, so I smoked the drink-race kernel path locally before 10 kernels go out (dB:W.2:0, 40 s CPU). It caught a leak. dB overrode `_mouth_near_surface` for every caller, so W.2's pure-geometry pool rig read 0.0 (shipped 1.0).
+Fixed: the swallow gate now applies only inside substep. After the fix the rig reads 1.0, every `*_pass` is unchanged, and apparatus (ii) is still byte-same (dB0 = swp_k72 s1 l3, 26 gulps). rig_thermoneutral_day = 0 belongs to the swp_k72 base, not dB.
+Served philosophy 4 (a race arm must not corrupt the measurement's own rig) and 6 (pilot before paying kcpu hours).
