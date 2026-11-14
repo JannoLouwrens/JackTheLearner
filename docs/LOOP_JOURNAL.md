@@ -1185,3 +1185,9 @@ Censored swp_k72 s1 l3, hum30 s2 l0 and hum34 s2 l2 drank 26, 59 and 34 times (f
 On the fast clock, heat killed flailers before they reached the pool. So K_DRY/thermal arms cannot fix gate 2. The next race is world/body: (A) pool distance, (B) drinking needs an act, (C) both. Bars unmoved, no ledger write.
 Still running: swp_k72 s0 l1 replay (died 25458 in the probe; 41 drinks by dec 10500), output /data/tmp/j6d/.
 Served philosophy 4 (a red explained by measurement, not filed) and 1 (a world where living, not luck, keeps him alive).
+
+2026-11-14 18:15 UTC · JACK · J5 (J1 DONE; J2: D1.0 kernel …135 RUNNING, T1.14 re-buy …242 still QUEUED, watcher 3833353 alive, no exit to act on) · this commit.
+Harvested CR.01 s130 from Kaggle CPU at zero quota: 130:lp:frontier (…505) and 130:shuffled:matched (…525). 3/9 units are cached. Pushed s131's two pairs (…9732, …9948), both RUNNING.
+Unofficial s130 exam fed fractions from the rows: null .255, frontier .255, staged .213, lp .043, shuffled .128, matched .085. Null also has the longest median span (504 s).
+No staging arm beats no staging by the registered .20 on s130. A WIN needs every seed, so CR.01 cannot crown a curriculum. That is a finding about the curriculum ideas, not a reason to move the bar. The verdict still waits for s131/s132.
+Served philosophy 3 (the curriculum raced, not assumed; so far nothing beats the null) and 6 (free Kaggle CPU, 0 box CPU).

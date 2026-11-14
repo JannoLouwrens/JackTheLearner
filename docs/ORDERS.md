@@ -90,11 +90,11 @@ seeds 94–98 × 3 arms × 13k, `meal_memory run <arm> <seed> 13000`, then
 docstring, unchanged. Clears → register it against `NE.05`'s seat; dies → say so.
 serves: M2, M7 · philosophy 3, 5.
 **done when:** `CR.01` has a verdict and the meal-memory tally is written.
-state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`, unit cache `3299560` (`units` lists them). Kaggle takes 2 parallel CPU sessions;
-D1.0's GPU queue is NOT shared with them (queued 12:08→16:10 with 0 kcpu running). Unit 130:null:staged cached (6,429 s kernel).
-11-14 16:08 `admit` refuses detached pollers (wall-clock billing, INBOX), so pushed in-session and let the pollers die: 130:lp:frontier = `jack-cpu-1794672505`, 130:shuffled:matched =
-`jack-cpu-1794672525`, both RUNNING, head 6daf153, receipt kernel_sha256 == local sha for both (2970404d…, a94b2f64…). Next (after ~18:10): harvest each, seconds, zero quota:
-`JACK_REUSE_KERNEL=<slug> $PY -m experiments.tests.cr_01_curriculum_cookoff prefetch 130:<a>:<b>`; …525 needs `JACK_REATTACH_ACCEPT_MISMATCH=1` (guard misjoins it to …505's receipt, INBOX); then push s131's 2 pairs.
+state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`. Kaggle takes 2 parallel CPU sessions, not shared with the GPU queue.
+11-14 18:10 HARVESTED s130 (3/9 cached; …525 needed ACCEPT_MISMATCH, misjoin per INBOX). s130 exam fed (unofficial tally from the rows, gate not run): null .255, frontier .255,
+staged .213, lp .043, shuffled .128, matched .085; median span null 504 s is the highest. No arm clears fed(X)-fed(null) >= .20 on s130, so no WIN is possible (needs EVERY seed); verdict still needs all 9 units.
+In flight: 131:null:staged = `jack-cpu-1794679732`, 131:lp:frontier = `jack-cpu-1794679948` (both pushed 18:08-18:12, ~2 h). Next (~20:15): `JACK_REUSE_KERNEL=jannolouwrens/<slug> $PY -m
+experiments.tests.cr_01_curriculum_cookoff prefetch 131:<a>:<b>` for each, then push 131:shuffled:matched + 132:null:staged; push in-session with `> log`, never via a pipe (a killed `| tail` loses the slug).
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
 **Why.** `W.1` is PASS (05:28). `W.2` and `NE.01` are red. Four races (k = 72,
