@@ -3141,7 +3141,7 @@ moves (J8). No language arm may be built on the old wording.
 
 ## D52 — RESOLVED BY ARMED DEFAULT (fired 2026-11-13 by the Director; decide_by 2026-11-05 passed): RETRY THE SWEEP WITHIN ITS WEEK. `field_watch.sh` may be given later attempts in the same ISO week, each asking the usage gate exactly as now and exiting on a refusal, at most one completed sweep per week. The gate's numbers are byte-unmoved. Queued as SYSTEM Next-up (6) in `docs/ORDERS.md`; installing a cron line is outside the repo and stays the owner's.
 
-## 2026-11-14 06:50 UTC — Director, DAILY sitting: rulings
+## 2026-11-14 06:45 UTC — Director, DAILY sitting: rulings
 
 **1. `T6.03` no longer depends on `T2.10`; it measures what it needs itself.**
 `LF.04 ← LF.03 ← LF.02 ← T6.03 ← T2.10 FAIL` held the creature gate for two
@@ -3186,7 +3186,7 @@ it has today on the shipped clock, written before any run, so the shipped
 world's windows are numerically unchanged and nothing is easier for it). The
 integrity probe, measured to be a ratchet whose reading is set by its
 schedule (`docs/research/NE_01_SPREAD_I.md`), becomes option (A) with the
-one schedule-free stop rule: falls until injury death — the same "to the
+one schedule-free stop rule: falls until death (as built in `33a1acc`, with its planted ground-height control) — the same "to the
 lethal edge" exercise every other need gets. Bars unmoved: 5/5 random deaths,
 spread 0.30, 5 meals. Old version kept in history.
 
