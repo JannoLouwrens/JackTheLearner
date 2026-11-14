@@ -1464,13 +1464,13 @@
     },
     "D1.0": {
       "amended": [],
-      "attempt": 5,
-      "commit": "4b67b0b",
-      "compute_s": 7.42,
+      "attempt": 6,
+      "commit": "0406deb",
+      "compute_s": 35211.65,
       "control_metrics": {},
       "dirty_files": null,
-      "duration_s": 13.91,
-      "gpu_job_id": "ladder-1794565213,jannolouwrens/jack-ladder-1794565220",
+      "duration_s": 35247.05,
+      "gpu_job_id": "ladder-1794621055,ladder-1794626517,jannolouwrens/jack-ladder-1794626525,ladder-1794632189,jannolouwrens/jack-ladder-1794632197,jannolouwrens/jack-ladder-1794637811,jannolouwrens/jack-ladder-1794647021",
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2803,15 +2803,313 @@
             "spec_sha": "cd0486bc936769c8",
             "status": "VOID"
           }
+        },
+        {
+          "amended": [],
+          "attempt": 5,
+          "commit": "4b67b0b",
+          "compute_s": 7.42,
+          "control_metrics": {},
+          "dirty_files": null,
+          "duration_s": 13.91,
+          "gpu_job_id": "ladder-1794565213,jannolouwrens/jack-ladder-1794565220",
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "3fbc6d0c8a49a898",
+          "message": "RuntimeError: unit aprime/seed0 failed on kaggle: all backends failed: colab: exit 1: stderr '                        \u2502\\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\\nColabRequestError: Failed to issue request POST \\nhttps://colab.research.google.com/tun/m/assign?nbh=95d605e1_17bf_49a0_b361_685e4\\n13d3983........&variant=GPU&accelerator=T4: Service Unavailable' ",
+          "metrics": {},
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 296.2,
+          "preserved_impl": null,
+          "ran_at": "2026-11-13T10:20:22",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "f94eee34863d50b9",
+          "status": "ERROR",
+          "supersedes_void": {
+            "commit": "3a4ccfd",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "4db15d96b0312e50",
+            "metrics": {
+              "arms": {
+                "aprime": {
+                  "aux_optimiser_steps": [
+                    1472,
+                    1472,
+                    1472
+                  ],
+                  "consistency": 0.06,
+                  "env_steps": [
+                    753664,
+                    753664,
+                    753664
+                  ],
+                  "final_third_reward": 5.303,
+                  "final_third_slope": 1.74e-07,
+                  "mean": 506.4,
+                  "optimiser_steps": [
+                    7360,
+                    7360,
+                    7360
+                  ],
+                  "paired_t": 20.41,
+                  "ppo_trainable_params": 281763,
+                  "sigma_vs_random": 13.02,
+                  "std": 30.36,
+                  "step_match": 1.005,
+                  "trained_means": [
+                    502.6,
+                    538.5,
+                    478.1
+                  ],
+                  "untrained_means": [
+                    196.3,
+                    203.5,
+                    195.4
+                  ],
+                  "updates_per_env_step": 0.009766
+                },
+                "b_split": {
+                  "aux_optimiser_steps": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "consistency": 0.056,
+                  "env_steps": [
+                    753664,
+                    753664,
+                    753664
+                  ],
+                  "final_third_reward": 5.228,
+                  "final_third_slope": 4.07e-07,
+                  "mean": 344.0,
+                  "optimiser_steps": [
+                    7360,
+                    7360,
+                    7360
+                  ],
+                  "paired_t": 6.0,
+                  "ppo_trainable_params": 57830650,
+                  "sigma_vs_random": 10.53,
+                  "std": 19.32,
+                  "step_match": 1.005,
+                  "trained_means": [
+                    357.2,
+                    321.8,
+                    353.1
+                  ],
+                  "untrained_means": [
+                    101.3,
+                    113.9,
+                    212.9
+                  ],
+                  "updates_per_env_step": 0.009766
+                },
+                "c_e2e": {
+                  "aux_optimiser_steps": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "consistency": 0.057,
+                  "env_steps": [
+                    753664,
+                    753664,
+                    753664
+                  ],
+                  "final_third_reward": 5.211,
+                  "final_third_slope": -8.6e-08,
+                  "mean": 350.0,
+                  "optimiser_steps": [
+                    7360,
+                    7360,
+                    7360
+                  ],
+                  "paired_t": 9.25,
+                  "ppo_trainable_params": 57363705,
+                  "sigma_vs_random": 10.8,
+                  "std": 20.12,
+                  "step_match": 1.005,
+                  "trained_means": [
+                    330.8,
+                    370.9,
+                    348.3
+                  ],
+                  "untrained_means": [
+                    136.4,
+                    142.2,
+                    191.9
+                  ],
+                  "updates_per_env_step": 0.009766
+                },
+                "d_mlp": {
+                  "aux_optimiser_steps": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "consistency": 0.056,
+                  "env_steps": [
+                    753664,
+                    753664,
+                    753664
+                  ],
+                  "final_third_reward": 5.411,
+                  "final_third_slope": 3.01e-07,
+                  "mean": 415.0,
+                  "optimiser_steps": [
+                    7360,
+                    7360,
+                    7360
+                  ],
+                  "paired_t": 16.96,
+                  "ppo_trainable_params": 530339,
+                  "sigma_vs_random": 12.99,
+                  "std": 23.41,
+                  "step_match": 1.005,
+                  "trained_means": [
+                    426.3,
+                    430.7,
+                    388.1
+                  ],
+                  "untrained_means": [
+                    196.1,
+                    200.3,
+                    196.3
+                  ],
+                  "updates_per_env_step": 0.009766
+                }
+              },
+              "kernels": [
+                {
+                  "arms": [
+                    "aprime",
+                    "d_mlp"
+                  ],
+                  "backend": "kaggle",
+                  "gpu": "Tesla P100-PCIE-16GB",
+                  "head": "1ee4a3a",
+                  "wall_minutes": 241.2
+                },
+                {
+                  "arms": [
+                    "b_split"
+                  ],
+                  "backend": "kaggle",
+                  "gpu": "Tesla P100-PCIE-16GB",
+                  "head": "321d786",
+                  "wall_minutes": 357.0
+                },
+                {
+                  "arms": [
+                    "c_e2e"
+                  ],
+                  "backend": "kaggle",
+                  "gpu": "Tesla P100-PCIE-16GB",
+                  "head": "ce2b56b",
+                  "wall_minutes": 356.1
+                }
+              ],
+              "margin_sigma": 3.37,
+              "margin_sigma_std": 4.44089e-16,
+              "random_mean": 111.0,
+              "random_mean_std": 0.0,
+              "random_std": 22.12,
+              "random_std_std": 0.0,
+              "runner_up": "d_mlp",
+              "sb3_reference": {
+                "backend": "kaggle",
+                "gpu": "Tesla P100-PCIE-16GB",
+                "head": "3a4ccfd",
+                "ref_mean": 518.5386594019477,
+                "reference_runs": [
+                  {
+                    "env_steps": 751616,
+                    "params": 124707,
+                    "seed": 0,
+                    "trained_mean": 514.4618583478447,
+                    "trained_returns": [
+                      455.0776648117774,
+                      728.7264583205426,
+                      588.2409929142757,
+                      389.4788723020882,
+                      410.78530339053935
+                    ],
+                    "untrained_mean": 172.88871751673287,
+                    "untrained_returns": [
+                      174.40087517681022,
+                      179.51014265996372,
+                      165.61846488945343,
+                      174.16987935731905,
+                      170.74422550011792
+                    ]
+                  },
+                  {
+                    "env_steps": 751616,
+                    "params": 124707,
+                    "seed": 1,
+                    "trained_mean": 555.8257624072063,
+                    "trained_returns": [
+                      477.18545767233195,
+                      627.3467993881678,
+                      479.09015295627114,
+                      667.407986165318,
+                      528.0984158539425
+                    ],
+                    "untrained_mean": 184.41660170420997,
+                    "untrained_returns": [
+                      183.3671081453563,
+                      184.9132578395167,
+                      185.64406528178148,
+                      184.64119418442885,
+                      183.51738306996648
+                    ]
+                  },
+                  {
+                    "env_steps": 751616,
+                    "params": 124707,
+                    "seed": 2,
+                    "trained_mean": 485.32835745079194,
+                    "trained_returns": [
+                      647.2462038378413,
+                      383.6713344605046,
+                      502.7456258200668,
+                      557.9062596417238,
+                      335.07236349382293
+                    ],
+                    "untrained_mean": 168.10088961000775,
+                    "untrained_returns": [
+                      169.91819065667167,
+                      166.1061211721682,
+                      168.63157269345808,
+                      168.39828323313563,
+                      167.4502802946052
+                    ]
+                  }
+                ],
+                "wall_minutes": 88.8
+              },
+              "verdict": "VOID \u2014 untrained twin(s) cleared the learning gate: aprime at 3.95 sigma (bar 3.0), d_mlp at 3.91 sigma (bar 3.0). The gate is measuring architectural bias, not learning.",
+              "winner": "aprime"
+            },
+            "ran_at": "2026-09-07T01:57:12",
+            "spec_changed": true,
+            "spec_sha": "cd0486bc936769c8",
+            "status": "VOID"
+          }
         }
       ],
       "impl_sha": "3fbc6d0c8a49a898",
-      "message": "RuntimeError: unit aprime/seed0 failed on kaggle: all backends failed: colab: exit 1: stderr '                        \u2502\\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\\nColabRequestError: Failed to issue request POST \\nhttps://colab.research.google.com/tun/m/assign?nbh=95d605e1_17bf_49a0_b361_685e4\\n13d3983........&variant=GPU&accelerator=T4: Service Unavailable' ",
+      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\nM docs/LAB.md\nCommit and push first.",
       "metrics": {},
       "peak_rss_inherited": false,
-      "peak_rss_mb": 296.2,
+      "peak_rss_mb": 304.7,
       "preserved_impl": null,
-      "ran_at": "2026-11-13T10:20:22",
+      "ran_at": "2026-11-14T11:38:18",
       "seeds": [
         0,
         1,
@@ -15270,6 +15568,33 @@
       "spec_id": "LF.03",
       "spec_sha": "2e5587b9f49e7407",
       "status": "PASS"
+    },
+    "LF.04": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "1400d81",
+      "compute_s": 0.0,
+      "control_metrics": {},
+      "dirty_files": null,
+      "duration_s": 7208.14,
+      "gpu_job_id": "jannolouwrens/jack-cpu-1794648797,jannolouwrens/jack-cpu-1794650429,jannolouwrens/jack-cpu-1794651790,jannolouwrens/jack-cpu-1794652624,jannolouwrens/jack-cpu-1794654402",
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "0a6e5ff0a6179d24",
+      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\nM docs/LAB.md\nCommit and push first.",
+      "metrics": {},
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 343.9,
+      "preserved_impl": null,
+      "ran_at": "2026-11-14T11:33:22",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "LF.04",
+      "spec_sha": "114e0998255149fa",
+      "status": "ERROR"
     },
     "LG.00": {
       "amended": [],

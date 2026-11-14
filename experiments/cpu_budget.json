@@ -1050,11 +1050,13 @@
         "W0.PL": 90.68,
         "W1.02": 761.96,
         "detached:heat_race.log": 5817.5,
-        "detached:lf04_run.log": 3600.0,
+        "detached:lf04_run.log": 7212.46,
+        "detached:pilot.log": 1242.08,
         "detached:random_death_probe.log": 1632.01,
+        "detached:stage1.log": 474.18,
         "detached:water_race.log": 5996.78
       },
-      "used_s": 31347.54
+      "used_s": 36676.26
     }
   },
   "overruns": [
