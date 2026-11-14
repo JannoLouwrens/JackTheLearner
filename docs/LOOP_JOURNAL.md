@@ -1247,3 +1247,9 @@ Served philosophy 5 and 6: the JACK lane gets its CPU day back, and box time is 
 T1.14 went PASS at 20:50 (att 8, T4), which unblocked D1.0. Reattached D1.0 to its COMPLETE kernel `jack-ladder-1794658135` at zero quota. Watcher is 3899526.
 Pin-only proven before the accept. The receipt's 28e7b086 equals the pulled bytes (no misjoin). Swapping its one f90881f checkout line for fc52aca gives 398179cc, which is the guard's local_sha exactly. f90881f..HEAD touches no D1.0, gpu or brain path.
 Served philosophy 3 (the control-path seat is decided by a race verdict, not argued) and 6 (free GPU hours already spent are recovered, not thrown away).
+
+2026-11-14 21:45 UTC · JACK · J2 (continued) · 2f81b1d + this commit.
+D1.0 att 8 ERROR (ZeroDivisionError). The b_split s2 harvest itself was genuine. But JACK_REUSE_KERNEL leaked to all 6 uncached units, so c_e2e s0-2 and d_mlp s0-2 each "reattached" …135 and cached b_split s2's runs under their own keys. Those arms then had 0 runs, and `_stats([])` divided by zero. No false verdict was written.
+Moved the 6 poisoned unit files (byte-identical to b_split_seed2.json) to /data/d10_units_quarantine_20261114. The cache now holds 7 genuine units: ref, aprime 0-2, b_split 0-2. Added an INBOX line for the leak.
+Fresh dispatch of the 6 remaining units: pre-flight CLEAR (10.4 h projected, 14.61 h left in W45, which expires Sunday). Watcher 3902173 pushed c_e2e (attempt 1794691758124). Do not kill it.
+Served philosophy 4 (a poisoned cache would have scored b_split's data as two other arms; caught and removed before any verdict) and 6 (W45 GPU hours used before they expire).

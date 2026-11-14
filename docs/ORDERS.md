@@ -73,7 +73,7 @@ not a lost download.
 state: 11-14 21:27 D1.0 att 8 ERROR (ZeroDivisionError): the reattach of COMPLETE `…135` (= b_split s2, pin-only proven: receipt 28e7b086 = pulled bytes, pin->fc52aca = 398179cc =
 local_sha) harvested b_split s2 OK, but JACK_REUSE_KERNEL+ACCEPT_MISMATCH applied to EVERY uncached unit: c_e2e s0-2 and d_mlp s0-2 each "reattached" …135 and cached b_split s2's runs under
 their own keys; their arms then had 0 runs -> _stats([]) /0. No false verdict was written. The 6 poisoned files moved to /data/d10_units_quarantine_20261114 (byte-identical to b_split_seed2.json).
-Cache now 7 genuine: ref + aprime 0-2 + b_split 0-2. Fresh dispatch of the 6 remaining units (projected 10.4 h; W45 kaggle left 14.61 h): see journal for watcher pid.
+Cache now 7 genuine: ref + aprime 0-2 + b_split 0-2. Fresh dispatch of the 6 remaining units 21:29 (10.4 h proj, W45 left 14.61 h): watcher 3902173, first unit c_e2e (attempt …1758124).
 Next: read /data/tmp/dispatch_d1_0.log; on a verdict seat BY VERDICT + re-run T2.01. NEVER reattach a multi-unit spec with JACK_REUSE_KERNEL again (INBOX).
 
 ### J5 — The Kaggle-CPU queue: curriculum cook-off (`CR.01`), then meal memory
