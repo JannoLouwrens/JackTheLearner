@@ -1017,7 +1017,7 @@
         "BA.01": 464.16,
         "HR.5": 16.09,
         "HR.7": 364.64,
-        "J1-chain": 4200.0,
+        "J1-chain": 7592.11,
         "LC.02": 595.08,
         "ME.11.B": 19.99,
         "ME.11.C": 93.71,
@@ -1050,10 +1050,11 @@
         "W0.PL": 90.68,
         "W1.02": 761.96,
         "detached:heat_race.log": 5817.5,
+        "detached:lf04_run.log": 3600.0,
         "detached:random_death_probe.log": 1632.01,
         "detached:water_race.log": 5996.78
       },
-      "used_s": 24355.43
+      "used_s": 31347.54
     }
   },
   "overruns": [
