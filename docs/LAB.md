@@ -119,18 +119,28 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   nose body-frame), or of signal over 1 s. A new reason must name one of those
   and show f's held-out push→smell error beats the shuffled net first.
 
-- 11-14 11:30 · **The drive in his own frame** (World seat — W0's drive law;
-  rival repair under Proprioception & balance, VACANT) · **PILOT RUNNING** ·
-  `experiments/ego_drive.py`, rule committed first.
-  **Bet:** (1) his push becomes (forward, left) in his body's heading instead
-  of a world x,y force — same 600 N, same gate; rival `compass` keeps the world
-  push and adds a heading sense. (2) His nose is body-frame, his push
-  world-frame, and he senses no heading: toppled 97.6 % of bouts, heading
-  uniform, turning .29 rad/s; smell change correlates .50 with (L−R × push on
-  his own lateral axis) vs .18/.03 on world x/y (s90, 588 bouts). "Which push
-  raises smell" is learnable only in his frame — would explain smell ×3,
-  weaning and the lookahead dying. (3) Killed by: stage 1, the push's share of
-  the forward model's held-out smell prediction < .10 on either seed (90, 94),
-  or not above `world`, or `scram` (random frame — must fail) ≥ half of it;
-  stage 2, sense_lookahead's own rule in the ego frame AND +8 of 40 over the
-  same arm in the world frame (told 6, want 4). END-FIT rows 1, 4; closes none.
+- 11-14 · **The drive in his own frame** (World seat; `ego_drive.py`, rule first
+  `d265f78`) · **DEAD at stage 1.** Bet: push = (forward, left) in his body's
+  heading, because his nose is body-frame, his push world-frame, he senses no
+  heading (toppled 97.6 % of bouts, heading uniform, turns .29 rad/s; smell
+  change corr .50 with L−R × own-lateral push vs .18/.03 on world x/y).
+  **Number** (push's share of the MLP forward model's held-out smell
+  prediction, s90/s94, bar .10): ego **.017/.000**, world .086/.044, compass
+  .105/−.048, scram −.001/.036. The frame was not what broke f. Post hoc on
+  s90: the hand feature holds at corr .49 held-out, the MLP does not find it;
+  a bilinear map reads the push at .32 in the WORLD frame (he can place
+  himself from all senses; a world push makes a map usable) and .005 in ego.
+  Philosophy 3, 4.
+
+- 11-14 12:10 · **Gain-field forward model** (Deliberation, VACANT; re-opens
+  sense lookahead with the reason its post-mortem asked for) · **PILOT RUNNING** ·
+  `experiments/gain_field.py`, rule committed first.
+  **Bet:** (1) f becomes a bilinear map — every sense × every push, ridge
+  (= batch RLS), refitted every birth; want, chooser and ruler untouched.
+  (2) What a push does to smell is a PRODUCT of state and action; the MLP put
+  .086/.044 of its prediction on the push, the bilinear map .32 on the
+  exploration seed (shuffled twin .004). Parietal gain fields. (3) Killed by:
+  stage 1 (fresh seeds 91, 94) share < .10, or ≤ the MLP's on the same bouts,
+  or shuffled ≥ half; stage 2 (s90+94, 20 births) sense_lookahead's own rule
+  vs babble 5/40 and gain-shuf, AND +8 of 40 over the MLP arm (told 6, want 4).
+  END-FIT rows 4, 3, 1; closes none.

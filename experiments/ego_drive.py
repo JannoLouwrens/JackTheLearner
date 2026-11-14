@@ -135,7 +135,8 @@ def _world(frame: str, seed: int):
     return _Life4(seed, j0, alpha, train=False).w
 
 
-def fcheck(frame: str, seed: int, babble: int = 5000) -> dict:
+def babble_bouts(frame: str, seed: int, babble: int = 5000):
+    """Random-repeat babble in `frame`: (bouts, smell slice, obs width)."""
     from . import sense_lookahead as SL
     from . import smell_sense as S
     w = _world(frame, seed)
@@ -168,6 +169,12 @@ def fcheck(frame: str, seed: int, babble: int = 5000) -> dict:
         if dead or since >= SL.E:              # explore_bout's 250-decision births
             w.respawn()
             a_prev, since = np.zeros(8), 0
+    return bouts, smell, dim, k
+
+
+def fcheck(frame: str, seed: int, babble: int = 5000) -> dict:
+    from . import sense_lookahead as SL
+    bouts, smell, dim, k = babble_bouts(frame, seed, babble)
     cut = int(0.8 * len(bouts))
     mind = SL.Mind(dim, smell, seed)
     for b in bouts[:cut]:
