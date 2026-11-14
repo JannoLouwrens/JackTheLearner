@@ -1015,7 +1015,7 @@
     "2026-11-14": {
       "by_spec": {
         "BA.01": 464.16,
-        "LC.02": 187.01,
+        "LC.02": 595.08,
         "ME.11.B": 19.99,
         "ME.11.C": 93.71,
         "ME.11.E": 4.48,
@@ -1041,10 +1041,10 @@
         "W.2": 97.47,
         "W1.02": 761.96,
         "detached:heat_race.log": 5817.5,
-        "detached:random_death_probe.log": 600.0,
+        "detached:random_death_probe.log": 1632.01,
         "detached:water_race.log": 5996.78
       },
-      "used_s": 17150.88
+      "used_s": 18590.96
     }
   },
   "overruns": [

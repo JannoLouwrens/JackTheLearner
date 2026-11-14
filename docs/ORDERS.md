@@ -50,9 +50,9 @@ worker who finds the box loud does S1's first step instead of idling. Try
 `LC.02` FIRST in every slot, before launching anything detached; if no quiet
 minute comes by the 11-14 sitting the Director rules on the precondition.
 state: J1(1) DONE (4b67b0b, e9e07c2). J1(2) route DONE (1913430, 93b463b). LF.04 <- LF.03 <- LF.02 <- T6.03 <- T2.10 FAIL (ruling pending, INBOX 19:55).
-11-14 00:08 LC.02 re-run (3f3e121): VOID, foreign_cores_max 1.92 > 1.0 at midnight (another tenant's stt proof job + root pmdalinux, ~1 core each);
-contended reading 4/5 arms clear (ppo-lp 7.89, ppo-needs 7.22, wm-efe 6.19, dreamer-xs 6.01; wm-latent 4.97). XL.00 needs LC.02 -> not run.
-Next: LC.02 again when `top` shows no foreign busy process (not just load<1.5) AND heat_race has exited; then XL.00; then per T2.10 ruling.
+11-14 06:10 LC.02 PASS QUIET (att 22, this commit): load 0.18 before, foreign_cores_max 0.66, contended 0; 5/5 arms clear (ppo-lp 8.07, ppo-needs 8.04,
+wm-efe 7.76, dreamer-xs 7.72, wm-latent 6.63) + both challengers (wm-dyn 8.22 @.5, ring 6.03 @.125). Unblocks CR.01 (now in `next`), LC.03, LC.09 pricing.
+XL.00 is stale cpu<10min -> regate re-buys it (not run here). Next: nothing runnable in J1 until the T2.10 ruling; then LF.03 -> LF.04 on S1.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 4 in flight on Colab
 **Why.** `T2.01` (he moves better than random) is the biggest blocker in the
@@ -170,11 +170,11 @@ screen's experience, ≥ 3 seeds, the collapse diagnostic of
 `docs/research/LEARNING_CORE.md` §5.4 implemented, weights persisted, a
 control that must fail. Pilot one arm-seed on Kaggle CPU to price it; write
 sessions needed in `state:`.
-state: LC.09 REGISTERED 17:45 (+re-regs 20:15, 20:40); all 7 arms built (d80d85c); control (a) wipe_at_death built (c014834).
-11-13 23:00 PRICING ROUTE BUILT (4969084): LC.02 now times wm-dyn + wm-latent+ring through their own loop (_run_rec: step+efference,
-stored state per update); priced, NOT in LC.02's gate; lc_09 _borrow_lc09 adds their ratios. Contended smoke (foreign 1.1-1.7, not a
-price): wm-dyn 7.99 @1/8; ring 3.43 @1/8 (may be EXCLUDED by the floor). LC.02 is STALE by this commit (LC.03/LC.09 refuse until re-run).
-Next: re-run LC.02 on a quiet box once the day ceiling admits (>00:00 UTC), read the challengers' ratios; then pilot s89 on Kaggle CPU.
+state: LC.09 REGISTERED 17:45 (+re-regs 20:15, 20:40); all 7 arms built (d80d85c); control (a) wipe_at_death built (c014834); pricing route (4969084).
+11-14 06:10 LC.02 PASS quiet (see J1): _borrow_lc09 now prices ALL 7 arms from LC.02 3d2845d: ppo-needs .5, ppo-lp/dreamer-xs/wm-efe .25,
+wm-latent .125, wm-dyn .5, wm-latent+ring .125 (ring cleared the floor, NOT excluded). run()'s refusal item (1) UnpricedArm is gone; item (2)
+(world-model arms train no action/state weight -> guard VOIDs them) stands, and run() still hard-raises. Next: rewrite run()'s refusal to item (2)
+only, build a Kaggle-CPU pilot path (one arm-seed, s89, like cr_01's _JOB) and price sessions; no local learner pilot (ruling 3).
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core

@@ -1045,3 +1045,9 @@ Probed gate 2 alone under the humidity arms (NE.01's own _random_lives): hum30 k
 Root cause: NE.01's windows (random deaths within ONE day, energy spread 0.30, 5 meals in 3 days) were calibrated on the fast clock. Ruling 1's k=72 makes them unreachable without a world lethal beyond the human one.
 Ruling asked (INBOX 05:25, default: re-register NE.01's windows in k72 world-days, bars unmoved). Probe cells s1/s2 still finishing, description only.
 Served philosophy 4 (a gate measured before being paid for, and a test/clock conflict named instead of raced around) and 1 (a world that kills the way a human body does, not faster).
+
+2026-11-14 06:20 UTC · JACK · J1(1) (+J3 reading; J2 checked) · this commit. Box quiet at last (load 0.18, top showed no foreign busy process, our only job the D1.0 GPU watcher).
+LC.02 re-run: PASS, att 22, foreign_cores_max 0.66, contended 0. All 5 arms clear the floor of 5 (wm-latent lowest at 6.63), and so do both challengers (wm-dyn 8.22, ring 6.03 at ratio .125).
+So the 11-12 FAIL and the 00:08 VOID were contention, as J1(1)'s VOID precondition already assumes. CR.01 is now runnable; LC.03 and LC.09 can price. LC.09's borrow now prices all 7 arms, so its UnpricedArm refusal is gone.
+J2: D1.0 watcher 3422501 alive, no exit. J6(c) band-geometry arm read but not started: the current NE.01 shipped row's lowest spread is spread_i 0.248, while spread_f (0.38) and spread_T (0.76) clear in the seed mean, so the order's "spread_f/spread_T < 0.30" needs per-seed rows before an arm is declared.
+Served philosophy 4 (a wall-clock gate's red split into contention vs code, measured on a quiet box rather than argued) and 3 (the challenger cores are now priced for the 3x race).
