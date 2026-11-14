@@ -1121,3 +1121,9 @@ Served philosophy 3 (two seats contested, biology as oracle) and 4 (controls tha
 2026-11-14 12:10 UTC · JACK · J1(3) + J2 · f90881f. Both remote runs died at 11:33/11:38 on the GPU push guard: another lane's uncommitted docs/LAB.md counts as code dirt, and the guard runs on every call. LF.04: calls 1–5 ok, call 6 refused -> ERROR, no verdict. D1.0: unit 7/13 refused -> ERROR att 6.
 Rows committed by path; LF.04 re-dispatched 12:08 (kcpu, lf04_run2.log, ~2 h); D1.0 resumed 12:08 from its 6 cached units (7 left, 13.4 h projected, W45 kaggle 9.28 h used). INBOX: guard once per run / class LAB.md+ORDERS.md as prose.
 Served philosophy 1 and 4 (the creature gate and the control contest put back in flight instead of being left as ERROR rows) and 6 (free GPU hours not left expiring).
+
+2026-11-14 12:40 UTC · JACK · J3 (1)(2) · 8ee2edd. LF.04 (kcpu call 1) and D1.0 (watcher) in flight, logs read, no exit; the kcpu run lock blocks J5/J6(b)/J7(2).
+LC.09 run() refusal rewritten: item (1) gone (LC.02 prices all 7 arms), item (2) is the guard's finding per ruling 8, not a refusal; it now refuses only on the missing claim path.
+Kaggle-CPU pilot path built (s89, 6k decisions × 4 arms + frozen twin, guard on); selftest ok. Price from LC.02's box rates: one 1.2M-decision arm-seed = 9.6–12.3 h,
+ppo-needs over Kaggle's 12 h session before its twin and nulls -> the claim run likely needs checkpoint chaining. Pilot not dispatched: Kaggle CPU concurrency unmeasured, LF.04 must not be starved.
+Served philosophy 3 (the 3× core race made payable) and 4 (priced before paid; the seat's VOID left as the finding).

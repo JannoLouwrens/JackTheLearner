@@ -162,6 +162,10 @@ serves: M3 · END-FIT rows 2, 3 · philosophy 3.
 **done when:** `LC.09` has a verdict.
 state: `LC.09` REGISTERED 11-13 (+2 strengthenings of its guard); arms built (`d80d85c`); wipe-at-death control built (`c014834`).
 11-14 06:10 all 7 arms priced from `LC.02`: ppo-needs .5, ppo-lp / dreamer-xs / wm-efe .25, wm-latent .125, wm-dyn .5, ring .125.
+11-14 12:40 (1) DONE + (2) BUILT `8ee2edd`: run() now refuses only on the missing kcpu claim path; `… lc_09_learning_core_3x pilot` = Kaggle-CPU kernel,
+s89, 6k dec × wm-latent/wm-dyn/ring/ppo-needs + frozen twin, guard on -> /data/tmp/lc09_pilot.json. Box price (LC.02 T×5 dec/s): one 1.2M arm-seed = 9.6–12.3 h
+(ppo-needs 12.3 > Kaggle's 12 h) before twin/nulls -> the claim path likely needs per-session checkpoint chaining. NOT dispatched (CPU-session concurrency unknown; LF.04 in flight).
+Next: after LF.04's verdict, `launch_detached.sh /data/tmp/lc09_pilot.log $PY -m experiments.tests.lc_09_learning_core_3x pilot`; write kernel h_at_1_2M here.
 
 **Next up, in this order, as slots free:**
 1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
