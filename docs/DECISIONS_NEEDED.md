@@ -2549,3 +2549,28 @@ example of why the disjointness clause is load-bearing — at PS.08's venue the
 oracle/honest gap is 2-4x the bound on every channel, so any floor calibrated
 there would certify a holdout lottery. No option is taken, no bar moves, the
 default and `decide_by 2026-11-03` are untouched.
+
+---
+
+## D56 — The free Kaggle GPU week is one account shared by two of your projects, and last week the other one used all of it (overseer)
+
+Kaggle refused every Jack GPU dispatch from Nov 11 to Nov 13 with "Maximum
+weekly GPU quota of 30.00 hours reached"; `experiments/gpu_budget.json` shows
+15 refused Kaggle dispatches and 0.00 Jack hours for that week (the refund
+notes name the other user of the account: kernels `next-l1-icsi-*`). The
+seed-noise spec `T1.14` (blocks 46 specs) and the control-path contest `D1.0`
+(needs 25.05 of the 30 hours) waited on it. The quota reset on Nov 14 and
+`T1.14` is running, but `D1.0` plus any use by the other project cannot both
+fit in one week. How the 30 hours are split between your projects is yours;
+no desk here can see or limit the other project.
+
+DECIDE: D56
+  class:     conduct
+  blocks:    D1.0
+  default:   NO SPLIT IS ASSUMED. Jack dispatches smallest-first (`T1.14`,
+             then `D1.0` in its resumable units), treats a Kaggle quota
+             refusal as final for that week, and overflows to Colab. Nothing
+             belonging to the other project is touched, paused or metered.
+             Silence adopts this; the cost is that `D1.0` may again lose a
+             week whenever the other project runs first.
+  decide_by: 2026-11-21

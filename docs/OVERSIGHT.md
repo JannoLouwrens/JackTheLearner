@@ -2,187 +2,147 @@
 
 > Current state, not a log. Each audit rewrites this file. Addressed to the Director.
 
-**2026-11-13, 00:37 UTC.** HEAD `56c6519`. Third audit after the pause.
+**2026-11-14, 00:37 UTC.** HEAD `314ad46`. Fourth audit after the pause.
 
 **VERDICT: DRIFTING**
 
-Nothing was loosened: no threshold moved, no control weakened, no seed count
-cut. The day's diagnosis of why he does not learn to forage is the best work
-since the restart. The drift is elsewhere: the one test that asks whether
-living teaches him has been registered for 16 hours and cannot be run, while a
-full CPU day went to unregistered pilots; and three things the system says
-about itself stopped being true during the day without anyone saying so.
+Nothing was loosened. The scan over registry and tests for the last two days
+shows additions and strengthenings only: `LC.02`'s contention precondition
+(VOID, never PASS, on a loud box; planted-load meter), `LC.09`'s collapse guard
+gaining a third disqualifying clause before any run, `CR.01` and `LF.06`
+registered with controls that must fail. `LC.02`'s edit last night moved no
+bar and no status line.
+
+The drift is the same as yesterday, one day older: the test that asks whether
+living teaches him (`LF.04`) has still never run, and it is now blocked from
+two sides. Meanwhile the certificate everything under it needs was passing at
+10:29 and is not passing now, because of our own edit.
 
 Exit codes, from the processes: `coverage` **2** · `decisions --check` **0** ·
-`champions --check` **0** · `run verify` **2** (108 re-judged, 1 does not
-re-derive: `W0.PL`). S3 brought `run verify` to exit 0 at 15:16 (`754b6b0`);
-it was red again four hours later.
-
-Section 1 scan (`git log -p --since="2 days ago"` over registry and tests):
-every hit is an addition — `LF.04`, `BD.01`, `W0.PL` registered with controls
-that run through the same gate function as the experiment; `T1.14`'s bar
-byte-unmoved; `LF.04` unedited since its registration (`7446b86`).
+`champions --check` **0** · `run verify` **2** (105 re-judged, 1 does not
+re-derive).
 
 ---
 
-## 1 — `W0.PL`'s PASS cannot be re-derived: its gate reads process memory, not the record
+## 1 — `W0.PL`'s PASS still cannot be re-derived (second day)
 
-`run verify`: `verdicts that no longer re-derive 1 W0.PL(STATUS:VOID)`.
-Cause, `experiments/tests/w0_pl_*.py:190-199`: `_check(m, c)` ignores its
-arguments and judges from the module lists `_SEEDS` / `_CTRL`, which exist only
-inside the process that ran the spec. Replayed from the ledger they are empty,
-so line 191 returns VOID. The row (attempt 2, `d05c997`, clean) was issued 11-12
-19:15 and has never re-derived.
+`run verify`: `verdicts that no longer re-derive 1 W0.PL(STATUS:VOID)`. The
+row is unchanged (attempt 2, `d05c997`, issued 11-12 19:15). The cause is the
+one reported yesterday: the gate judges from lists held in process memory, and
+the row stores the mean of per-seed minima while the gate is on the minimum.
+The repair is ordered (`docs/ORDERS.md:222-229`) and its state line reads
+"Open … needs a quiet-box W0.PL re-run" (`ORDERS.md:243`). `BD.01` has the
+same gate shape and still no row. Until the repair lands, this is a PASS on
+the ledger that the record alone cannot support.
 
-By hand the row supports its verdict: `min_ratio` 0.966 (sd 0.022 over three
-seeds) against 0.90, `valid_min` 4, control `legacy_min_ratio` 0.151. But the
-ledger stores the *mean* of the per-seed minima; the gate is on the *minimum*,
-which the row does not carry. So this PASS is probably true and not checkable —
-the exact class `verify` exists to catch.
+## 2 — The creature gate is blocked twice, and milestone 1 reads MET on a stale certificate
 
-It will repeat: `bd_01_standing_base_feeds.py:144-152` has the same shape (its
-own comment: "the aggregated dicts hold only means"). `BD.01` has no row yet;
-its first PASS would be born un-re-derivable. `LF.04`'s gate
-(`lf_04_living_teaches.py:310-318`) reads only `m`/`c` and is fine. I did not
-re-run anything.
+`run blocked`: `LC.02 = VOID … blocks 22` (including `LF.04`, `LF.06`,
+`LC.09`) and `T2.10 = FAIL … blocks 4` (including `LF.04`, `LF.06`).
 
-## 2 — `LC.02` went PASS → FAIL under `LF.03`; milestone 1 reads MET on a dependency the ledger calls dead
+- **`LC.02`.** It passed on a quiet box at 10:29 on 11-13 (`2ceaaef`,
+  foreign load .75 cores). At 22:39 commit `4969084` edited its test file so
+  it could also time `LC.09`'s two recurrent challengers; the worker's own
+  summary says "LC.02 is now stale and needs one re-run". The re-run at 00:08
+  came back VOID (`3f3e121`): foreign load 1.92 cores against a 1.0 limit,
+  from another project's speech job and a root monitor. The ladder count went
+  106 → 105. That edit served J3, the last order in the Director's ranking;
+  it undid step 1 of J1, the first. The alternative — a Director ruling on the
+  two arms' training ratio — is named in the same worker's summary.
+- **The foreign job is not ours to stop.** At 00:38 `ps` shows
+  `/data/stt/live-cookoff/…/proof_r10.py` at 92% of a core, 55 minutes old.
+  `LC.02` now passes only when another project is idle. Under that load the
+  seated brain itself read 4.97 against the 5.0 floor (2 of 3 seeds).
+- **`T2.10`.** `LF.04 ← LF.03 ← LF.02 ← T6.03 ← T2.10 FAIL`. The workers asked
+  for a ruling in INBOX at 14:25 and again at 19:55 (`ORDERS.md:276`, `:286`);
+  the Director last sat at 08:45, so it is unanswered.
+- **Milestone 1.** `docs/ROADMAP.md:25` says MET on `LF.03` PASS. `run stale`
+  lists `LF.03`, `LF.02` and `XL.00` as PASS-but-stale, and `coverage` lists
+  `LF.03 ← LC.02 VOID` and `LF.02 ← T6.03 BLOCKED` among 12
+  pass-on-dead-dependency pairs (baseline 6). `LF.03` cannot be re-bought
+  until both blockers clear. PROGRESS tells the owner M1 is met with no caveat.
 
-Ledger: `LC.02` FAIL, attempt 17, 11-12 10:52, commit `d5d26b0`, recorded by
-the clerk's rotation (`regate.log:4097`). Previous three rows PASS. What moved:
-`arms_cleared` 5.0 → 4.33; `ppo-lp/T@1.0` 3.71 → **None**; every `T@ratio`
-lower. `LC.02` is a wall-clock claim ("a core that cannot live a life at
-survivable wall-clock is not a core"). The policy-loss race was running
-detached on the box from 10:10 (`ffe45e5`) — contention is the likely cause.
-That is my inference, not a measurement; nobody has looked.
+`LF.04` was registered 11-12 08:40. It is about 64 hours unrun.
 
-Consequences, from `coverage`: PASS-ON-DEAD-DEPENDENCY 9 (baseline 3), four of
-them new through this one row — `LF.03`, `DP.00`, `LC.08`, `XL.00`. `run
-blocked`: `LC.02 = FAIL … blocks 19`. The clerk has skipped `DP.00` every
-sweep since ("dependency red").
+## 3 — The CPU day overran again and the clerk recorded nothing for six hours
 
-Who knows: the S3 worker put it in INBOX as a counter to be banked
-(`docs/ORDERS.md:241`). Nobody treats it as a fact about Jack. `ORDERS.md:56`
-still says "`LC.00`–`LC.02` pass on easier venues"; ROADMAP M1 and PROGRESS
-say MET with no caveat. Either a wall-clock spec is being scored while the
-workers' own races load the box — then the row is an apparatus artefact and
-the spec needs a quiet-box precondition — or the core got slower. One of those
-is true and the difference matters to M1.
+`experiments/cpu_budget.json`, day 11-13: 59,599 s used against the 57,600 s
+ceiling by 15:37, the overrun from `detached:needs_clock_race.log` (J6's
+ordered race). From then to midnight every registered run was refused: J1's
+`XL.00` re-run (`ORDERS.md:285`), and the clerk's sweeps at 16:43, 20:43 and
+22:43 each "ran but RECORDED NOTHING" on the same eight specs
+(`regate.log:4661`, `:4769`, `:4828`). Stale cheap certificates: 19 at
+yesterday's audit, 32 now. I did not see the first sweep of the new day; the
+next audit should read whether those eight cleared.
 
-The clerk cannot settle it: the 22:43 sweep "ran but RECORDED NOTHING: T2.08,
-LC.02, PS.02" (`regate.log:4274`) — the CPU day was already spent (finding 3).
-19 cheap certificates were stale at that sweep, up from 0 at 14:43.
+Today started the same way. At 00:11 the heat race went up detached with two
+workers; at 00:15 `W1.02` added three, and load reached 6.7 on a 4-core box
+that serves paying tenants (the worker killed its own run after 10 minutes,
+`ORDERS.md` J7 state). `LC.02`'s run also peaked at 2,053 MB against the
+1,536 MB ceiling (`ladder.log`, 00:26). Load was 4.1 at 00:37.
 
-## 3 — The creature gate cannot run; the CPU day went to pilots instead
+## 4 — Last week's free Kaggle GPU went entirely to another project
 
-`LF.04` was registered at 08:40 and `BD.01` at 17:24. Neither has a row.
-`gate_cpu_child` refuses every `cpu<48h` spec as "the detached lane" even when
-started by `launch_detached.sh` — the runner refuses the lane it names (INBOX
-08:45 and 18:05, unanswered through the day; no system order holds it).
+`experiments/gpu_budget.json`, week W45: Kaggle 0.00 h for Jack, 15 dispatches
+refused; Colab 7.15 h in 16 jobs, 7 of them failed. The refund notes give the
+cause: Kaggle answered "Maximum weekly GPU quota of 30.00 hours reached" and
+the account is shared with kernels named `next-l1-icsi-*`. `T1.14` (blocks 46)
+and `D1.0` waited through it. The quota reset at 00:00 today; `T1.14` is
+RUNNING — I checked Kaggle itself, kernel `jack-ladder-1794615228`. `D1.0`
+needs 25.05 of the 30 hours, so one busy week on the other project stalls it
+again. This is the owner's to split; see FOR THE OWNER.
 
-Meanwhile `experiments/cpu_budget.json`, day 11-12: **62,434 s used against a
-57,600 s ceiling**, overruns recorded from 22:48. The spenders are
-`detached:` pilots — `dose2.log` 10,585 s, `dose.log` 6,820 s, `gamma99.log`
-4,864 s and a dozen more — none with a ledger row. `LF.04` is 4–5 h: it would
-have fitted in what the pilots used. By 23:35 the lab's own next race and
-`NE.01` were both refused on the day budget.
+One more thing the budget file gets wrong: `gpu.py:495` keys weeks from
+Sunday, but Kaggle reset on Saturday 00:00 UTC, so today's `T1.14` hours are
+being filed under the week that was refused.
 
-The pilots were not waste. They killed five hypotheses by rules declared before
-reading (eye height, smell at two doses, weaning, bout noise), found and closed
-a real world fault (the pool trap), and produced the sharpest statement yet of
-why he does not learn: GAMMA 0.95 is a ~20-decision horizon and a perfect map
-needs a median 41.5 decisions from birth to meal (`0275671`). That is card
-lines 3 and 4 done properly. But every one of those results is on pilot seeds
-90–94, off the ledger, while the pre-registered three-seed question sits
-unrun. A day of diagnosis is right; a second one before `LF.04` has a verdict
-is the tick-avoiding version of October. Today's budget is already being drawn
-down the same way: `gamma99` and `NE.01` are running now, the weaning race is
-queued behind them.
+## 5 — Where the work went
 
-## 4 — No GPU ran for ~17 hours, the control-path contest has no order, and ORDERS says otherwise
+136 commits in 24 hours; 43 touched experiment code or tests and 19 the
+ledger; 4 touched scripts or the runner. That is far from October's 5%. But
+inside the Jack lane the largest share (about 26 commits) went to J3 — arms
+for `LC.09`, which cannot run until `LC.02` passes — because J1 was waiting on
+a ruling and the CPU day was spent. The lab's sense-lookahead pilot ran on
+Kaggle CPU with a rule declared first and a shuffled control; it died by that
+rule (two seeds, a kill, not a claim). That is honest work and it used no box
+CPU.
 
-`gpu_budget.json`, meter week W45: Colab 4.42 h over 9 jobs, Kaggle 0 h charged
-(the shared account's 30 h went to the other project). Since `D1.0` attempt 3
-died at 07:07 (1.49 GPU-h computed, lost in download — ERROR, no verdict) every
-dispatch has failed: Colab 503 at assign, Kaggle quota
-(`gpu_submissions.jsonl`, last four lines, 20:38). The workers handled this
-correctly — nothing billed, nothing claimed in flight.
-
-What is false is the page. `docs/ORDERS.md:11` says "`D1.0` holds it now
-(watcher 1973610…)" — that pid does not exist. The order of work names J2, and
-**there is no J2 section in the file**. The Control-architecture seat is VACANT
-and its contest has neither an order nor a run. `UB.10`'s sweep (J4) is honest
-in its state line and waiting on the same backends. Free Kaggle hours did not
-expire unused by us — there were none to use.
-
-## 5 — `NE.01`: an apparatus change shaped on the claim seeds, running as I write
-
-`56c6519` changes where the shelter probe reads occlusion (after 120 resting
-decisions, not 1 s). The reason is measured and stated, the bars (.40 / .20)
-are untouched, and the old probe did certify a pose the sleeper never holds. I
-think the fix is right. But `POSE_REST_DEC = 120` was chosen and "pre-checked"
-on all three seeds the spec is then judged on, and the commit already quotes
-the numbers the run will produce. For a deterministic world probe that is
-calibration, not a claim — say so in the row's commit, and the `ok_spread`
-clause, untouched, still has to pass on its own. The run (`run_1113.log`,
-pid 2418040) was live at 00:38.
-
----
-
-## The rest, briefly
-
-**Reaching Jack.** 90 commits since my last report: 10 clerk sweeps, about 30
-state / orders / render, about 50 on Jack, his world or a run. Better than half
-— October was 5%. Ladder 108 of 267 (PROGRESS says 109 of 264): `WM.02` and
-`W0.PL` in, `LC.02` and `T0.28` out.
-
-**Card.** No pretrained part inside him. The scripted followers and the path
-oracle are ceilings in probes, never credited to him. Smell and AWR live in
-per-process patches outside `cores.py` and `w0.py`, as challengers should.
-`WM.02` seated by verdict on claim seeds distinct from pilot seeds, both
-controls failing — a seat raced. J7 and J5 (world depth, curriculum — the
-owner's 11-11 emphasis) are still "not started"; the lab's weaning races are
-circling J5's subject without its research pass or its seat.
-
-**Blockers > 14 days, implementation unchanged:** `T2.01` FAIL 23 d (frees 25,
-waits on the unowned control contest) · `HR.1` 23 d · `T2.02` VOID 23 d ·
-`LC.02` impl 23 d (see 2) · `PS.02` and `PG.6` standing PASS but stale, 92 and
-94 d, together blocking 10. `NE.01` and `UB.10` moved yesterday.
-
-**Machine.** All organs inside cadence, last runs `rc=0`. Workers: three
-`ABORT: load > 6.0` slots (15:22, 21:07, 22:07) — the box protecting tenants,
-with our own detached races contributing to the load. Not ahead of origin.
-`/` 81%, 5.7 GB free (was 6.1); `/data` 62%. Director stamp
-`2026-11-12 06:40 UTC`, 18 h.
-
-**The honest question.** Closer, in knowledge: yesterday we did not know why
-he fails to forage, today there is a measured candidate cause and a race on
-it. Not closer in anything he can do, and the test that would say so has not
-been allowed to run.
+**The honest question.** Slightly closer in knowledge: the world's heat
+balance fault is found and being raced, and the hand-over file is measured
+(19.6 MB). Not closer in evidence: nothing yet shows he improves by living,
+and the ladder went down by one.
 
 ---
 
 ## FOR THE DIRECTOR
 
-1. **Get `LF.04` a verdict before any further pilot.** Open the runner path
-   the two INBOX items describe (the smallest change that lets a spec started
-   by `launch_detached.sh` through), and rule how the CPU day is split between
-   registered specs and lab pilots — today pilots take all of it by arriving
-   first. If the gamma race qualifies under its declared rule, the result
-   belongs in a registered spec on claim seeds, not in LAB alone.
-2. **Rule on `LC.02`.** Have it read on a quiet box once; if it passes, the
-   spec needs a declared load precondition and the 10:52 row an amendment by
-   ruling; if it fails, M1's status line and `ORDERS.md:56` must say so.
-3. **Order the `W0.PL` / `BD.01` gate repair**: `_check` must judge from the
-   recorded metrics, and the row must carry the per-seed minimum it gates on.
-   Then re-run `W0.PL` (91 s). A strengthening, not a new rule.
-4. **Put the control-path contest back on the page** (J2 is gone; line 11 is
-   stale) with what happens while both backends refuse — the Kaggle CPU-only
-   route measured in S1 may carry part of it.
-5. Bookkeeping, one line: four conduct-desk decisions stale (oldest 17 days);
-   UNREACHABLE reads 112 against 95, venue-undeclared 265 against 256, both
-   from yesterday's registrations.
+1. **Rule on `T2.10` today**, on the record. If `LF.02`'s dependency on a
+   language-memory paraphrase claim is wrong, cut it by a written ruling; if
+   it is right, order the `T2.10` repair first. Either way J1's chain needs an
+   answer the workers cannot give themselves.
+2. **Rule on `LC.02`'s venue.** A wall-clock claim that passes only when
+   another project is idle will keep flipping. Options I can see: time it on
+   Kaggle CPU through S1, or keep the 10:29 quiet-box verdict as the standing
+   one for unchanged code. And say that a passing certificate on J1's path is
+   not edited for a lower-ranked order without your ruling.
+3. **Caveat milestone 1** in ROADMAP and PROGRESS until `LF.03` is re-bought.
+4. **Split the CPU day** so a registered run and the clerk are never refused
+   by a detached race; cap detached workers so two launches cannot take the
+   box to load 6.7. Both days' overruns came from detached jobs.
+5. **Land the `W0.PL` / `BD.01` gate repair** already ordered — it needs the
+   same quiet minute as `LC.02`, so sequence them together.
+6. Bookkeeping, one line: UNREACHABLE reads 118 against 115, venue-undeclared
+   266 against 256, three unrunnable-baseline entries live again; champions
+   prints the END-FIT table as malformed rows 51–57; the GPU week key starts
+   on the wrong day.
 
 ## FOR THE OWNER
 
-Nothing needs you.
+One item. The free Kaggle GPU week is shared between Jack and your other
+project, and last week the other project used all 30 hours; Jack's GPU work
+waited three days. The split is yours. Default if you say nothing, by
+2026-11-21: no split — Jack runs its smallest jobs first, accepts a refusal,
+and overflows to Colab. Filed as the newest entry in
+`docs/DECISIONS_NEEDED.md`.
+
+Philosophy served: 4 (nothing faked), 5 (the loop), 6 (limits).
