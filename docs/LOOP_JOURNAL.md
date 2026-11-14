@@ -1101,3 +1101,10 @@ Random-life window [2/19, 40/19] T_thirst (570 s), forager 12/7 T_hunger (2100 s
 J5 step 1 not done: `run CR.01` would be refused because LF.04's Kaggle-CPU poll holds the local CPU run lock (kcpu isn't counted as remote). INBOX line added; it also holds up J6(b) until LF.04 exits (~17:30).
 J1: LF.04 runner 3708275 alive, call 1 on Kaggle, no exit. J2: D1.0 watcher 3422501 alive, no exit.
 Served philosophy 3 (a world on the human clock can now race on equal terms, not be refused by the test) and 4 (re-registered before any run, nothing easier for the shipped world, a planted arm shows the windows really scale).
+
+## 2026-11-14 10:55 UTC — JACK J7(1) — W1.04(c) re-registered on independent lives (`eeeb1ff`)
+LF.04 on Kaggle CPU call 2 (call 1 ok 1630 s); D1.0 watcher alive 8.5 h; J5/J6(b) blocked by the kcpu lock (INBOX), so J7 step 1.
+(c) now reads 20 fresh worlds per arm-seed (W1.01 oracle, W1.02 repeat) to first death or censored at 5600 s; passive arm out (ruling 5).
+Fixtures 15/15; pilot s90: fresh lives die at 52.8–54.6 s of energy, control censors 3/3. Control priced ~11 core-h -> KAGGLE_CPU.
+Finding: (a)'s W1.02 t2c and (c)'s W1.02 survival still contradict on one process — written to J7 state for a ruling. No ledger change.
+Served: philosophy 4 (a test that could have passed now can) and 3 (the world's depth gate made answerable).

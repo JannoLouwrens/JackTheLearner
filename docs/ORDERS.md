@@ -126,7 +126,11 @@ leaves (c) — `W1.01` already claims it dies, and that claim stays. (2) Run it
 (4) Register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 4, 5.
 **done when:** `W1.04` and `W1.00` have new verdicts and `DP.05`-in-W1 is registered.
-state: 11-13 15:45 `W1.00` att 3 FAIL (b) at n = 20 (`edd3e61`). 11-14 02:35 `W1.02` att 10 PASS. 02:40 `W1.04` unpassable proven (`93f4040`).
+state: 11-13 15:45 `W1.00` att 3 FAIL (b) at n = 20 (`edd3e61`). 11-14 02:40 `W1.04` unpassable proven (`93f4040`).
+11-14 10:55 (1) DONE `eeeb1ff`: (c) = 20 fresh worlds/arm-seed (oracle + repeat), censored 5600 s; passive out; fixtures 15/15; pilot s90 lives ~53 s, ctrl censors.
+Priced 0.024 s/dec: control alone ~11 core-h -> budget KAGGLE_CPU. FINDING for the Director: (a)'s W1.02 t2c (>=20 completed SEQUENTIAL repeat lives,
+mean <= H/3) and (c)'s W1.02 p5 >= H on the SAME process still contradict in any survivable world — W1.04 can only FAIL until that is ruled.
+Next: (2) `run W1.04` on Kaggle CPU once the kcpu lock frees (LF.04 ~17:30); expected FAIL (c) at ~53 s — the honest reading of today's world.
 
 ### J8 — The hand-over gate (`LF.06`): trained there, still learning here
 **Why.** Owner 11-13: the finished Jack is "trained here, handed to people,
