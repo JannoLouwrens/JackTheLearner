@@ -1018,6 +1018,7 @@
         "HR.5": 16.09,
         "HR.7": 364.64,
         "J1-chain": 7592.11,
+        "J6:rdp_swp_k72_s1": 2039.96,
         "LC.02": 595.08,
         "ME.11.B": 19.99,
         "ME.11.C": 93.71,
@@ -1056,12 +1057,12 @@
         "detached:lf06_smoke.log": 342.56,
         "detached:pilot.log": 1242.08,
         "detached:random_death_probe.log": 1632.01,
-        "detached:rdp_reg_a.log": 4200.0,
+        "detached:rdp_reg_a.log": 6644.23,
         "detached:rdp_reg_b.log": 3597.03,
         "detached:stage1.log": 474.18,
         "detached:water_race.log": 5996.78
       },
-      "used_s": 60402.22
+      "used_s": 64886.41
     }
   },
   "overruns": [
@@ -1197,6 +1198,69 @@
       "day": "2026-11-14",
       "spec_id": "detached:lf04_run2.log",
       "used_s": 60402.22
+    },
+    {
+      "at": "2026-11-14T14:43:46",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "detached:rdp_reg_a.log",
+      "used_s": 61002.22
+    },
+    {
+      "at": "2026-11-14T14:53:46",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "detached:rdp_reg_a.log",
+      "used_s": 61602.22
+    },
+    {
+      "at": "2026-11-14T15:03:46",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "detached:rdp_reg_a.log",
+      "used_s": 62202.22
+    },
+    {
+      "at": "2026-11-14T15:13:46",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "detached:rdp_reg_a.log",
+      "used_s": 62802.22
+    },
+    {
+      "at": "2026-11-14T15:14:30",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "detached:rdp_reg_a.log",
+      "used_s": 62846.45
+    },
+    {
+      "at": "2026-11-14T15:33:22",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "J6:rdp_swp_k72_s1",
+      "used_s": 63446.45
+    },
+    {
+      "at": "2026-11-14T15:43:32",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "J6:rdp_swp_k72_s1",
+      "used_s": 64046.45
+    },
+    {
+      "at": "2026-11-14T15:53:32",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "J6:rdp_swp_k72_s1",
+      "used_s": 64646.45
+    },
+    {
+      "at": "2026-11-14T15:57:32",
+      "ceiling_s": 57600.0,
+      "day": "2026-11-14",
+      "spec_id": "J6:rdp_swp_k72_s1",
+      "used_s": 64886.41
     }
   ]
 }
