@@ -247,3 +247,32 @@ running at commit; the files at those names are the cap-6000 ones until their mt
 Next: tally the remaining cells, probe swp_k72 s1-4 (same tool, ~18 min/cell). If swp_k72 holds 5/5 on every seed, it is the arm whose
 long NE.01 legs (forager 218571 dec) earn a Kaggle CPU kernel per seed. Gate 1 (spread_e) and gate 4 (5 meals in the horizon) are
 the clauses left to read there.
+
+## J6(d) step 1 — why 1-2 random lives per seed outlive 39158 dec: they DRINK (2026-11-14 17:35 UTC, no ledger)
+
+`experiments/random_life_drink_probe.py` replays ONE life of NE.01's `_random_lives` under the arm's own `_apply`, with
+byte-same rng seeds. It logs `drank_total`, w and root xy. Apparatus check: swp_k72 s1 life 0 reproduces its probe cell
+exactly (dehydration at 9150 dec). Logs and JSON are in `/data/tmp/j6d/`.
+
+| life (probe cell)            | outcome in probe | replay           | drinks | first drink (dec) | min dist past pool edge |
+|------------------------------|------------------|------------------|--------|-------------------|-------------------------|
+| swp_k72 s1 l0                | died 9150        | died 9150 dehyd. | 0      | —                 | +1.22 m (never reached) |
+| swp_k72 s1 l3 (censored)     | none @39158      | alive @14000     | 26     | 1847              | -0.64 m (inside)        |
+| hum30 s2 l0 (censored)       | none @39158      | alive @12000     | 59     | 69                | -1.00 m                 |
+| hum34 s2 l2 (censored)       | none @39158      | alive @12000     | 34     | 162               | -1.02 m                 |
+
+**Mechanism.** A random flailer that drifts into the pool drinks. `needs._mouth_near_surface` fires when the mouth is in the
+pool square and within `DRINK_DEPTH_M` 0.25 m of the surface, so a body lying or wading there gets a gulp on every
+`DRINK_REFRACTORY_S` 30 s refractory (the drink decisions run at ~150-dec spacing, 1847, 1997, 2178, 2328, ...).
+The pool (centre 2.6,-2.4, half-size 1.34-1.68 by seed) has its near edge 0.92-1.26 m (Chebyshev) from spawn. On the
+fast clock, flailers cooked at ~500 dec, before they could drift there. Every k72-family arm gives them the ~1-2k decisions it takes.
+The wide spread of random death times (4150-38788) points to the same cause: lives that drink a few times and then wander off.
+
+**What this changes.** (d) as ordered ("humidity with K_DRY re-derived") cannot remove these survivors. They survive on
+WATER, not heat, so no thermal constant reaches them. Gate 2 under k72 is now a question about the WORLD's pool geometry
+and the BODY's drink rule. Raceable arms to declare before any cell:
+(A) pool placed beyond the reach of a random flailer's drift in one T_thirst (measure the drift distribution first, from these replays).
+(B) a drink needs an act: mouth at the surface while the head is still, or a swallow actuator. Today it is passive contact.
+Biology: an infant lying face-down in water aspirates; it does not drink.
+(C) both. Gate 2's bar (every life dies inside the window) stays unmoved. Whether "a flailer that lies in a pool lives"
+is survival BY ACCIDENT is exactly what NE.01's title forbids, so (B) is the arm closest to the gate's intent.

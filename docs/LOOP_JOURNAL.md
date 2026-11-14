@@ -1178,3 +1178,10 @@ Reattach (free) was refused before touching Kaggle: D1.0 is BLOCKED because `T1.
 D1.0's own impl_sha is unchanged (3fbc6d0c, the unit-cache key). Dispatched the T1.14 re-buy (watcher 3833353, `jack-ladder-1794676242`, QUEUED, 1.2 h; W45 used 13.56/30 h). The reattach command is in J2 state.
 INBOX: apparatus edits re-bill GPU certificates; the watcher timeout counts queue time; a reattach skips pre-flight for later fresh units.
 Served philosophy 6 (a running free-GPU kernel kept recoverable, not abandoned) and 3 (the control-path race, not argued, kept moving).
+
+2026-11-14 17:40 UTC · JACK · J6(d) step 1 (J2: D1.0 kernel …135 RUNNING, T1.14 re-buy …242 QUEUED, no exit; J5: CR.01 …505/…525 RUNNING, harvest after ~18:10) · this commit.
+Found why 1-2 random lives per seed outlive gate 2's 39158-dec window: they DRINK. Single-life replays use the same rng (`experiments/random_life_drink_probe.py`, apparatus reproduced swp_k72 s1 l0's death at 9150 with 0 drinks).
+Censored swp_k72 s1 l3, hum30 s2 l0 and hum34 s2 l2 drank 26, 59 and 34 times (first gulp at dec 1847, 69 and 162). Each drifted into the pool, whose edge is 0.92-1.26 m from spawn, and drank by passive mouth contact every 30 s.
+On the fast clock, heat killed flailers before they reached the pool. So K_DRY/thermal arms cannot fix gate 2. The next race is world/body: (A) pool distance, (B) drinking needs an act, (C) both. Bars unmoved, no ledger write.
+Still running: swp_k72 s0 l1 replay (died 25458 in the probe; 41 drinks by dec 10500), output /data/tmp/j6d/.
+Served philosophy 4 (a red explained by measurement, not filed) and 1 (a world where living, not luck, keeps him alive).

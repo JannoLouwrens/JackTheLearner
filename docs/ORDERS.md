@@ -115,11 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) re-read, no ledger (`cce754f` `35e3ebe`, NEEDS_CLOCK_RACE.md): k = 72 gate 2 window [1958, 39158]; pre-sweat k72 0/5 (heat deaths <1958 dec).
-11-14 15:25 humidity probes: hum30 and hum34 each 5/5, 5/5, **3/5** (s2) -> both FAIL gate 2. 16:54 swp_k72 s1 = **4/5** (deaths 9066-13839 dehydration, 1 censored at 39158; 31 min/cell
-in-session, not 18) -> swp_k72 FAILS gate 2 too (s2 killed at its 1900 s timeout, moot). All three k72-family arms are dead on gate 2 (why the censored lives survive is unmeasured).
-Next: (d) the humidity function with `K_DRY` re-derived must first show why 1-2 random lives per seed outlive 39158 dec, then be raced by the same rule; nothing goes to NE.01 legs.
-(b) unblocked by the lock (LF.04 done), but held by the detached cap today.
+state: (a) DONE `e054e0a`. (c) DONE: hum30, hum34 and swp_k72 all FAIL gate 2 (3/5, 3/5, 4/5 on one seed; NEEDS_CLOCK_RACE.md). (b) still held by the detached cap.
+11-14 17:35 (d) step 1 DIAGNOSED (no ledger): the censored random lives DRINK. Replays with the same rng show 26/59/34 gulps (first at dec 1847/69/162) after they drift into the pool,
+whose near edge is 0.92-1.26 m from spawn. The died-on-clock twin drank 0 (died 9150, apparatus reproduced). Passive mouth-near-surface plus a 30 s refractory = a gulp every ~150 dec.
+So no K_DRY/thermal arm can fix gate 2. Next: declare and race (A) pool beyond a flailer's one-T_thirst drift, (B) drink needs an act (still head / swallow), (C) both, on the
+random-death probe first (bars unmoved). Write the declaration before any cell. `experiments/random_life_drink_probe.py` is the replay tool.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
