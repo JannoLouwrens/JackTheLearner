@@ -87491,13 +87491,13 @@
     },
     "T1.14": {
       "amended": [],
-      "attempt": 6,
-      "commit": "ce97e39",
-      "compute_s": 6611.53,
+      "attempt": 7,
+      "commit": "648fa5b",
+      "compute_s": 0.0,
       "control_metrics": {},
       "dirty_files": null,
-      "duration_s": 6619.53,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1794676242,ladder-1794682851",
+      "duration_s": 4.53,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1794676242",
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -87671,15 +87671,38 @@
           ],
           "spec_sha": "4270ae98e8e54f21",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 6,
+          "commit": "ce97e39",
+          "compute_s": 6611.53,
+          "control_metrics": {},
+          "dirty_files": null,
+          "duration_s": 6619.53,
+          "gpu_job_id": "jannolouwrens/jack-ladder-1794676242,ladder-1794682851",
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "d48f53ae0543d945",
+          "message": "RuntimeError: GPU job failed on colab: all backends failed: kaggle: status=queued; colab: exit 1: stderr '                        \u2502\\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\\nColabRequestError: Failed to issue request POST \\nhttps://colab.research.google.com/tun/m/assign?nbh=5c3d74d1_5899_4a4b_910a_9929e\\n94d9930........&variant=GPU&accelerator=T4: Service U",
+          "metrics": {},
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 300.8,
+          "preserved_impl": null,
+          "ran_at": "2026-11-14T19:00:58",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "4270ae98e8e54f21",
+          "status": "ERROR"
         }
       ],
       "impl_sha": "d48f53ae0543d945",
-      "message": "RuntimeError: GPU job failed on colab: all backends failed: kaggle: status=queued; colab: exit 1: stderr '                        \u2502\\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\\nColabRequestError: Failed to issue request POST \\nhttps://colab.research.google.com/tun/m/assign?nbh=5c3d74d1_5899_4a4b_910a_9929e\\n94d9930........&variant=GPU&accelerator=T4: Service U",
+      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: kaggle: reattach refused: kernel jannolouwrens/jack-ladder-1794676242 was pushed with code sha 24ae07f85f250853\u2026 (attempt 1794676242918-3833372-kaggle, head ce97e39) but the local script hashes to 7af1696a2fe54205\u2026. The certificate would claim code that did not run. Either reattach from the submitting commit, or \u2014 if the divergence is pr",
       "metrics": {},
       "peak_rss_inherited": false,
-      "peak_rss_mb": 300.8,
+      "peak_rss_mb": 301.3,
       "preserved_impl": null,
-      "ran_at": "2026-11-14T19:00:58",
+      "ran_at": "2026-11-14T19:08:14",
       "seeds": [
         0
       ],

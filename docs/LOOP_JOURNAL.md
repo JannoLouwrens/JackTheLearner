@@ -1202,3 +1202,9 @@ Served philosophy 1 (a world where water is earned by an act, not by luck) and 4
 Built the Kaggle-CPU runner for the DRINK race (`experiments/drink_race_kcpu.py`): 1-3 cells per kernel, each cell stamped with the sha256 of every file on its code path, and a `status` that sorts cells into current, stale and missing.
 Found that the reusable comparison cells are stale. shipped NE.01 (00:27) and swp_k72 NE.01 (03:50) were written before NE.01's re-registration (06:40/10:13), so the race needs 15 fresh NE.01 cells plus 10 dB W.1/W.2 cells. All 3 arms load; each sha path resolves. Not dispatched: both Kaggle CPU slots belong to CR.01.
 Served philosophy 4 (a race cannot quietly compare against cells from a different spec) and 6 (free Kaggle CPU, not the box).
+
+2026-11-14 19:15 UTC · JACK · J2 (J5: CR.01 s131 …9732/…9948 RUNNING, harvest ~20:15; J6 cells wait for a kcpu slot) · this commit.
+`T1.14`'s re-buy watcher hit its 6611 s timeout at 19:00 while kernel …242 was still QUEUED on Kaggle (behind D1.0's …135, now COMPLETE). The colab fallback got a T4 503. That is ERROR att 6.
+My first reattach was refused for a code-sha mismatch (att 7). I proved the divergence is the pin alone: the pulled kernel hashes to the receipt's 24ae07f8, and swapping only its checkout sha ce97e39 -> HEAD gives the local 7af1696a byte-exact. ce97e39..HEAD touches no T1.14 file.
+Reattached with ACCEPT_MISMATCH (watcher 3863272). D1.0 waits on it; its 3 h of finished GPU work sits on Kaggle at zero quota.
+Served philosophy 6 (paid-for free GPU hours recovered, not re-bought) and 3 (the control-path race moves toward a verdict).
