@@ -114,11 +114,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. 11-14 13:40 (c) re-read, no ledger (`cce754f` `35e3ebe`, NEEDS_CLOCK_RACE.md): k = 72 windows are gate 2 [1958, 39158], forager 218571 dec.
-k72 (pre-sweat) gate 2 goes 1.0 -> 0.0: 25/25 heat deaths at 445-549 dec, below the 1958 floor. swp_k72 s0 now PASSES gate 2: 5/5 dehydration deaths at 8735-25458 (0/5 at cap 6000);
-hum34 s0 5/5 (was 3/5). So the fast-clock window was the obstacle, not the world. Probe still running: hum30 s0-2, hum34 s1-2 (`/data/tmp/rdp_reg_{a,b}.log`).
-Next: `python -m experiments.random_death_probe tally`; probe swp_k72 s1-4 (~18 min/cell). If 5/5 on every seed, put swp_k72's NE.01 legs on Kaggle CPU (one kernel/seed).
-(b) is still held by the kcpu run lock (LF.04).
+state: (a) DONE `e054e0a`. (c) re-read, no ledger (`cce754f` `35e3ebe`, NEEDS_CLOCK_RACE.md): k = 72 gate 2 window [1958, 39158]; pre-sweat k72 0/5 (heat deaths <1958 dec).
+11-14 15:25 probe tally (gate 2 needs 5/5 deaths in-window on EVERY seed): hum30 s0 5/5, s1 5/5, **s2 3/5**; hum34 s0 5/5, s1 5/5, **s2 3/5** (2 censored at 39158 each)
+-> both humidity arms FAIL gate 2 on s2 under the honest window; swp_k72 s0 5/5 (8735-25458). swp_k72 s1 probe re-run in-session 15:34 (first try killed by the harness at 10 min).
+Next: swp_k72 s2-4 (~18 min/cell, detached once `admit` allows: today it refuses at 48.5k s). If 5/5 everywhere, its NE.01 legs go on Kaggle CPU (one kernel/seed).
+(b) unblocked by the lock (LF.04 done), but held by the detached cap today.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
@@ -269,6 +269,8 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 - 11-14 JACK: multi-call Kaggle-CPU specs re-clone the CURRENT HEAD on every call (LF.04 calls ran on 4 different heads) — a code commit mid-run would silently mix versions inside one verdict; pin calls 2..N to call 1's head. Harmless for LF.04 today (code paths unchanged).
 - 11-14 JACK: the GPU push guard (`gpu.assert_ref_is_current`) runs on EVERY call of a multi-call remote spec, and `is_code_dirt` counts `docs/LAB.md` and `docs/ORDERS.md` as code — one lane's uncommitted LAB.md at 11:33 killed LF.04 at call 6/6 (2 h of kcpu) AND D1.0 at unit 7/13 (≈10 GPU-h of units survive only via D1.0's own cache). Fix: guard once per spec run (pin calls to call 1's head, cf. the pin-head line) and/or class LAB.md/ORDERS.md as prose. Both re-dispatched 12:08.
 - 11-14 JACK: `cpu_budget wrap` bills WALL clock for Kaggle-CPU pollers: LF.04 run 2 used 5 s CPU but was billed 6,600 s, and CR.01 prefetch used 3 s for 4,800 s. That pushes `detached:*` past ruling 3's 34,560 s cap (38.9k at 14:00) and starves real box runs (J8 LF.06, J6 probes). Fix: bill remote-poll specs by measured CPU, or exempt the `kcpu` budget as `gpu*` already is.
+
+- 11-14 15:25 JACK: consequence of the poller-billing line above: `cpu_budget admit` REFUSES every detached launch today (48,545 s > 34,560 s), so J5's next `CR.01` prefetch (pure Kaggle polling, ~0 box CPU) cannot start. Separately, D1.0's GPU kernel `jack-ladder-1794658135` is still QUEUED at 15:23 (since 12:08) with NO kcpu kernel running, so the queue is not a session cap it shares with CPU kernels. Possibly the shared account's GPU quota.
 
 ## DONE (kept one day)
 
