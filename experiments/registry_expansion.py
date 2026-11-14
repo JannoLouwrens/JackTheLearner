@@ -6580,7 +6580,11 @@ EXPANSION: list[Spec] = [
                     "harder) THE LIFE IS LONGER THAN THE HORIZON: the "
                     "MEASURED survival time — 5th percentile across "
                     "lives, NOT the mean — is >= the declared episode "
-                    "horizon, with the per-life termination CAUSE "
+                    "horizon (RE-REGISTERED 2026-11-14, ruling 5: over "
+                    ">= 20 INDEPENDENT fresh lives per arm-seed, each "
+                    "censored at the horizon, for W1.01's oracle and "
+                    "W1.02's repeat process; the passive arm is not in "
+                    "(c) — W1.01 asserts it dies), with the per-life termination CAUSE "
                     "reported on the row. BA.03 and LF.01 are one defect "
                     "seen from two ends: a blind twin holding 98.9% of a "
                     "12.0 s horizon and a forager dying of integrity at "
@@ -6608,7 +6612,7 @@ EXPANSION: list[Spec] = [
                        "never measure the life against it) is the null "
                        "this spec replaces.",
          metric="horizon_ratio_min_and_p5_survival_vs_horizon",
-         budget=Budget.CPU_LONG, seeds=3, depends_on=["W1.02"],
+         budget=Budget.KAGGLE_CPU, seeds=3, depends_on=["W1.02"],
          control="A twin run with the terminating mechanism disabled "
                  "must show the 5th-percentile survival rise above the "
                  "horizon under the identical measurement — a survival "
@@ -6638,7 +6642,20 @@ EXPANSION: list[Spec] = [
                "stated in W1.02's graded-outcome venue — last of the "
                "family by the design's own ordering. Registration "
                "staleness bill: 0 certificates (run stale-cost, LG.14 "
-               "precedent).",),
+               "precedent). RE-REGISTERED 2026-11-14 (ruling 5, "
+               "DECISIONS_RESOLVED; finding 93f4040, docs/research/"
+               "W1_04_UNPASSABLE.md): as registered (c) read lives "
+               "SEQUENTIAL inside one 5600 s rollout while V4 demanded "
+               ">= 20 completed ones, capping p5 at 266.6 s in ANY world "
+               "— a reading of the apparatus. (c) now reads N_FRESH = 20 "
+               "independent fresh worlds per arm-seed (seeds 500+100s+i), "
+               "each to first death or censored at 5600 s; bar 5600 s, "
+               "5th percentile, cause tags and the death-off control "
+               "(the same fresh-life measurement, lethal=False, must "
+               "reach the horizon) unchanged. The passive arm leaves (c); "
+               "its death stays asserted by W1.01. (a) unchanged. "
+               "Budget CPU_LONG -> KAGGLE_CPU: the control alone is 60 "
+               "lives x 28000 decisions (~672 s each measured, ~11 core-h).",),
 
     Spec("T0.28", 0, "The escalation tool can be shown catching a deadlock "
                      "and a claim-death",

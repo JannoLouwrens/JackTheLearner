@@ -51,6 +51,13 @@ TIME-TO-CONSEQUENCE, measured per claim per seed, never typed:
   Conjunct (a): HORIZON_S / t2c >= RATIO_MIN (3.0, the design's "3x") for
   every claim on every seed.
 
+RE-REGISTERED 2026-11-14 (ruling 5): conjunct (c) now reads N_FRESH = 20
+INDEPENDENT fresh lives per arm-seed (`_fresh_arm`: a new world each, W1.01's
+oracle or W1.02's repeat loop, to first death or censored at HORIZON_S). The
+passive arm leaves (c); the control is the same fresh-life measurement with
+lethal=False. The paragraph below is the ORIGINAL (sequential) reading, kept
+for history: it capped p5 at 266.6 s in any world (93f4040).
+
 SURVIVAL, conjunct (c), measured per claim per seed. Spans of ALL lives:
 completed spans plus the trailing fragment censored at the horizon (NE.08
 conventions via W1.02's C3 — cause-tagged, censored-vs-fatal by tag).
@@ -109,6 +116,7 @@ from ..registry import BY_ID
 from ..survival import HOLD_K
 from ..w0 import SIM_S_PER_DECISION, W0, random_action
 from .w0_diag_exploration_reaches_food import E0
+from .w1_01_passivity_dies import _Oracle
 from .w1_01_passivity_dies import _rollout as _w101_rollout
 from .w1_02_outcomes_have_resolution import N_DEC, _borrow
 from . import w1_01_passivity_dies as _w101_mod
@@ -126,6 +134,14 @@ HORIZON_S = float(N_DEC) * SIM_S_PER_DECISION   # 5600.0 s
 
 RATIO_MIN = 3.0          # the design's "horizon >= 3x time-to-consequence"
 MIN_LIVES = 20           # measurement floor for a 5th percentile (V4)
+# RE-REGISTERED 2026-11-14 (ruling 5, DECISIONS_RESOLVED; finding 93f4040):
+# conjunct (c) reads INDEPENDENT fresh lives — N_FRESH per arm-seed, each a
+# new world run until its first death or censored at HORIZON_S — because
+# sequential lives inside one 5600 s rollout cap p5 at 266.6 s in ANY world.
+N_FRESH = 20             # = MIN_LIVES: the same 5th-percentile floor
+FRESH_SEED_BASE = 100    # life i of seed s runs world seed 500+s*100+i,
+                         # disjoint from every sequential-rollout seed
+                         # (0..2, pilot 90) and inside W0's 2**32 seed range
 KNOWN_W1 = {"W1.00", "W1.01", "W1.02", "W1.04"}
 PILOT_SEED = 90
 
@@ -163,6 +179,58 @@ def _repeat_rollout(seed: int, j0: float, alpha: float, lethal: bool,
                                      and np.all(np.isfinite(w.data.qvel)))),
         "wall_s": float(time.perf_counter() - t0),
     }
+
+
+def _fresh_life(life_seed: int, j0: float, alpha: float, policy: str,
+                lethal: bool, n_decisions: int = N_DEC) -> tuple:
+    """ONE independent life (ruling 5): a fresh W0 at E0, driven by the
+    claim's own process — W1.01's oracle or W1.02's repeat-action loop
+    (the same loops as the sequential arms, verbatim) — until its first
+    death, else censored at the horizon. Returns (span_s, cause, finite);
+    cause "censored" for a life that reached the horizon."""
+    w = W0(seed=life_seed, j0=j0, alpha=alpha, lethal=lethal)
+    w.drives.state = drives.DriveState(e=E0)
+    oracle = _Oracle(w) if policy == "oracle" else None
+    rng = np.random.RandomState(life_seed * 6553 + 11)
+    held_a, held_left = None, 0
+    for _ in range(n_decisions):
+        if oracle is not None:
+            a = oracle.act()
+        else:
+            if held_left == 0:
+                held_a, held_left = random_action(rng), HOLD_K
+            a, held_left = held_a, held_left - 1
+        w.decide(a)
+        if w.died_this_decision:
+            span, cause = float(w.life_lengths[-1]), str(w.last_death_cause)
+            break
+    else:
+        span, cause = float(w.sim_seconds - w._life_started_at), "censored"
+    finite = float(bool(np.all(np.isfinite(w.data.qpos))
+                        and np.all(np.isfinite(w.data.qvel))))
+    return span, cause, finite
+
+
+def _fresh_arm(seed: int, j0: float, alpha: float, policy: str,
+               lethal: bool, n_lives: int = N_FRESH,
+               n_decisions: int = N_DEC) -> dict:
+    t0 = time.perf_counter()
+    lives = [_fresh_life(500 + seed * FRESH_SEED_BASE + i, j0, alpha,
+                         policy, lethal, n_decisions)
+             for i in range(n_lives)]
+    return {"fresh": [(s, c) for s, c, _f in lives],
+            "physics_finite": min(f for _s, _c, f in lives),
+            "wall_s": float(time.perf_counter() - t0)}
+
+
+def _fresh_spans_and_causes(fresh: list) -> Tuple[list, dict]:
+    """Spans of independent lives on the decision grid; a censored life
+    enters at its censoring time (understates survival, never overstates)."""
+    counts = {"energy": 0.0, "integrity": 0.0, "other": 0.0,
+              "censored": 0.0}
+    for _s, cause in fresh:
+        counts[cause if cause in counts else "other"] += 1.0
+    return [_on_grid(s) for s, _c in fresh], counts
 
 
 def _on_grid(span_s: float) -> float:
@@ -214,8 +282,12 @@ def _arm(seed: int, arm: str) -> Optional[dict]:
             return None
         if arm == "w102":
             _CACHE[key] = _repeat_rollout(seed, j0, alpha, lethal=True)
-        elif arm == "ctrl":
-            _CACHE[key] = _repeat_rollout(seed, j0, alpha, lethal=False)
+        elif arm == "fo":      # (c) W1.01: fresh oracle lives
+            _CACHE[key] = _fresh_arm(seed, j0, alpha, "oracle", lethal=True)
+        elif arm == "fr":      # (c) W1.02: fresh repeat-process lives
+            _CACHE[key] = _fresh_arm(seed, j0, alpha, "repeat", lethal=True)
+        elif arm == "ctrl":    # control: fr with the one flag off
+            _CACHE[key] = _fresh_arm(seed, j0, alpha, "repeat", lethal=False)
         else:   # w101p / w101o — W1.01's own arms, its loop, its oracle
             out = _w101_rollout(seed, j0, alpha,
                                 "oracle" if arm == "w101o" else "passive",
@@ -230,15 +302,15 @@ def _arm(seed: int, arm: str) -> Optional[dict]:
 
 
 def _experiment(seed: int) -> dict:
-    p = _arm(seed, "w101p")
-    o = _arm(seed, "w101o")
-    r = _arm(seed, "w102")
-    if p is None or o is None or r is None:
+    p = _arm(seed, "w101p")     # sequential: (a)'s t2c for W1.01
+    r = _arm(seed, "w102")      # sequential: (a)'s t2c for W1.02
+    fo = _arm(seed, "fo")       # fresh: (c) for W1.01 (oracle)
+    fr = _arm(seed, "fr")       # fresh: (c) for W1.02 (repeat)
+    if p is None or r is None or fo is None or fr is None:
         return {"borrowed_ok": 0.0}
 
-    sp_p, cc_p = _spans_and_causes(p["lives"], p["frag_span"])
-    sp_o, cc_o = _spans_and_causes(o["lives"], o["frag_span"])
-    sp_r, cc_r = _spans_and_causes(r["lives"], r["frag_span"])
+    sp_o, cc_o = _fresh_spans_and_causes(fo["fresh"])
+    sp_r, cc_r = _fresh_spans_and_causes(fr["fresh"])
 
     # conjunct (a): measured time-to-consequence per claim
     t2c_w101 = _mean_completed(p["lives"])   # the statue's death
@@ -246,32 +318,40 @@ def _experiment(seed: int) -> dict:
     ratio_w101 = HORIZON_S / t2c_w101 if t2c_w101 > 0.0 else 0.0
     ratio_w102 = HORIZON_S / t2c_w102 if t2c_w102 > 0.0 else 0.0
 
-    # conjunct (c): 5th-pct survival per claim; W1.01 gated at its worse arm
-    p5_w101 = min(_p5(sp_p), _p5(sp_o))
+    # conjunct (c), re-registered (ruling 5): 5th-pct survival over
+    # N_FRESH independent lives per claim. The passive arm LEAVES (c):
+    # W1.01 asserts it dies (its (a), deaths <= H/3), and that stays there.
+    p5_w101 = _p5(sp_o)
     p5_w102 = _p5(sp_r)
 
-    lethal_ns = [len(p["lives"]), len(o["lives"]), len(r["lives"])]
-    tagged = all(c != "" for arm_out in (p, o, r)
-                 for _s, c in arm_out["lives"])
-    causes = {k: cc_p[k] + cc_o[k] + cc_r[k] for k in cc_p}
+    # V4 floor: (a)'s means need >= MIN_LIVES completed sequential lives;
+    # (c)'s percentile needs N_FRESH independent lives (by construction)
+    lethal_ns = [len(p["lives"]), len(r["lives"])]
+    fresh_ok = (len(fo["fresh"]) >= N_FRESH and len(fr["fresh"]) >= N_FRESH)
+    tagged = (all(c != "" for arm_out in (p, r)
+                  for _s, c in arm_out["lives"])
+              and all(c != "" for arm_out in (fo, fr)
+                      for _s, c in arm_out["fresh"]))
+    causes = {k: cc_o[k] + cc_r[k] for k in cc_o}
 
     return {
         "borrowed_ok": 1.0,
         "claimset_ok": _claimset_ok(),
-        "physics_finite": min(p["physics_finite"], o["physics_finite"],
-                              r["physics_finite"]),
-        "min_lives_ok": float(min(lethal_ns) >= MIN_LIVES),
+        "physics_finite": min(p["physics_finite"], r["physics_finite"],
+                              fo["physics_finite"], fr["physics_finite"]),
+        "min_lives_ok": float(min(lethal_ns) >= MIN_LIVES and fresh_ok),
         "tagged_ok": float(tagged),
         "horizon_s": HORIZON_S,
         "t2c_w101": t2c_w101, "t2c_w102": t2c_w102,
         "ratio_w101": ratio_w101, "ratio_w102": ratio_w102,
         "ratio_ok": float(ratio_w101 >= RATIO_MIN
                           and ratio_w102 >= RATIO_MIN),
-        "p5_w101_passive": _p5(sp_p), "p5_w101_oracle": _p5(sp_o),
+        "p5_w101_oracle": p5_w101,
         "p5_w101": p5_w101, "p5_w102": p5_w102,
         "p5_ok": float(p5_w101 >= HORIZON_S and p5_w102 >= HORIZON_S),
-        "n_w101p": float(len(p["lives"])), "n_w101o": float(len(o["lives"])),
-        "n_w102": float(len(r["lives"])),
+        "n_w101p": float(len(p["lives"])), "n_w102": float(len(r["lives"])),
+        "n_fresh_o": float(len(fo["fresh"])),
+        "n_fresh_r": float(len(fr["fresh"])),
         "cause_energy": causes["energy"],
         "cause_integrity": causes["integrity"],
         "cause_other": causes["other"],
@@ -280,7 +360,7 @@ def _experiment(seed: int) -> dict:
                          and t2c_w102 * 3.0 < HORIZON_S
                          and p5_w101 >= HORIZON_S
                          and p5_w102 >= HORIZON_S),
-        "wall_s": p["wall_s"] + o["wall_s"] + r["wall_s"],
+        "wall_s": p["wall_s"] + r["wall_s"] + fo["wall_s"] + fr["wall_s"],
     }
 
 
@@ -289,8 +369,8 @@ def _control(seed: int) -> dict:
     t = _arm(seed, "ctrl")
     if t is None:
         return {"borrowed_ok": 0.0}
-    spans, _cc = _spans_and_causes(t["lives"], t["frag_span"])
-    p5 = _p5(spans)
+    spans, _cc = _fresh_spans_and_causes(t["fresh"])
+    p5 = _p5(spans) if len(spans) >= N_FRESH else 0.0
     return {
         "borrowed_ok": 1.0,
         "claimset_ok": _claimset_ok(),
@@ -298,7 +378,7 @@ def _control(seed: int) -> dict:
         "horizon_s": HORIZON_S,
         "p5_ctrl": p5,
         "p5_ok": float(p5 >= HORIZON_S),
-        "n_ctrl_lives": float(len(t["lives"])),
+        "n_ctrl_lives": float(len(t["fresh"])),
         "wall_s": t["wall_s"],
     }
 
@@ -392,7 +472,7 @@ def run(ledger: Ledger | None = None):
     spec = BY_ID["W1.04"]
     tasks = [(seed, arm)
              for seed in range(spec.seeds)
-             for arm in ("w101p", "w101o", "w102", "ctrl")]
+             for arm in ("w101p", "w102", "fo", "fr", "ctrl")]
     ctx = mp.get_context("spawn")
     with ctx.Pool(3, initializer=_worker_init) as pool:
         for key, out in pool.map(_run_task, tasks):
@@ -492,7 +572,23 @@ def _fixtures() -> int:
     assert _p5(sp) < H
     n_pass += 1
 
-    print(f"fixtures: {n_pass}/14 green")
+    # 15 ruling 5: on independent lives (c) is ATTAINABLE — 20 lives each
+    # censored at the horizon give p5 == H — and today's world (lives ~54 s,
+    # one censored) still reads far under it; the passive arm is not in (c)
+    clk_spans = [(clk, "censored")] * N_FRESH
+    sp, cc = _fresh_spans_and_causes(clk_spans)
+    assert _p5(sp) >= H and cc["censored"] == N_FRESH
+    sp, cc = _fresh_spans_and_causes([(54.0, "energy")] * (N_FRESH - 1)
+                                     + [(clk, "censored")])
+    assert _p5(sp) < 100.0 and cc["energy"] == N_FRESH - 1
+    # one death in twenty (5%) at 54 s still sits ON the 5th percentile's
+    # interpolation: p5 < H, so (c) demands ~all lives reach the horizon
+    sp, _cc = _fresh_spans_and_causes([(54.0, "energy")]
+                                      + [(clk, "censored")] * (N_FRESH - 1))
+    assert _p5(sp) < H
+    n_pass += 1
+
+    print(f"fixtures: {n_pass}/15 green")
     return n_pass
 
 
@@ -503,13 +599,14 @@ def _pilot(n_decisions: int = 3000):
     if not ok:
         print("pilot: borrow unavailable")
         return
-    for arm, leth in (("w102", True), ("ctrl", False)):
-        out = _repeat_rollout(PILOT_SEED, j0, alpha, lethal=leth,
-                              n_decisions=n_decisions)
-        spans, cc = _spans_and_causes(out["lives"], out["frag_span"])
-        print(f"{arm}: lives {len(out['lives'])} p5 {_p5(spans):.1f}s "
-              f"causes {cc} frag {out['frag_span']:.1f}s "
-              f"finite {out['physics_finite']} wall {out['wall_s']:.1f}s")
+    for arm, pol, leth in (("fo", "oracle", True), ("fr", "repeat", True),
+                           ("ctrl", "repeat", False)):
+        out = _fresh_arm(PILOT_SEED, j0, alpha, pol, leth, n_lives=3,
+                         n_decisions=n_decisions)
+        spans, cc = _fresh_spans_and_causes(out["fresh"])
+        print(f"{arm}: fresh {out['fresh']} p5 {_p5(spans):.1f}s "
+              f"causes {cc} finite {out['physics_finite']} "
+              f"wall {out['wall_s']:.1f}s")
 
 
 if __name__ == "__main__":
