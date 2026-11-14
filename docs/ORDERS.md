@@ -70,10 +70,11 @@ the week (D56) — resume the remaining units on Colab.
 serves: M3, M4 · END-FIT row 1 · philosophy 3, 7 · objective 3 (free GPU).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-14 21:24 REATTACHED D1.0 to COMPLETE kernel `jack-ladder-1794658135` (watcher 3899526, log /data/tmp/dispatch_d1_0.log), T1.14 PASS att 8 fresh. Pin-only PROVEN: receipt
-28e7b086 = pulled bytes (no misjoin this time); its one f90881f checkout line -> fc52aca gives 398179cc = the guard's local_sha exactly; f90881f..HEAD leaves d1_0_*.py, gpu.py, cores/brain untouched
-(protocol.py/run.py moved only in local salt/lock/receipt code). Next: read the log for the harvest; on a verdict seat BY VERDICT + re-run T2.01; if it asks for the remaining
-units (c_e2e s0-2 kaggle 3.02 h each, d_mlp s0-2 colab .44 h) let the watcher run, never kill it. An ERROR with a lost download = re-reattach the same slug.
+state: 11-14 21:27 D1.0 att 8 ERROR (ZeroDivisionError): the reattach of COMPLETE `…135` (= b_split s2, pin-only proven: receipt 28e7b086 = pulled bytes, pin->fc52aca = 398179cc =
+local_sha) harvested b_split s2 OK, but JACK_REUSE_KERNEL+ACCEPT_MISMATCH applied to EVERY uncached unit: c_e2e s0-2 and d_mlp s0-2 each "reattached" …135 and cached b_split s2's runs under
+their own keys; their arms then had 0 runs -> _stats([]) /0. No false verdict was written. The 6 poisoned files moved to /data/d10_units_quarantine_20261114 (byte-identical to b_split_seed2.json).
+Cache now 7 genuine: ref + aprime 0-2 + b_split 0-2. Fresh dispatch of the 6 remaining units (projected 10.4 h; W45 kaggle left 14.61 h): see journal for watcher pid.
+Next: read /data/tmp/dispatch_d1_0.log; on a verdict seat BY VERDICT + re-run T2.01. NEVER reattach a multi-unit spec with JACK_REUSE_KERNEL again (INBOX).
 
 ### J5 — The Kaggle-CPU queue: curriculum cook-off (`CR.01`), then meal memory
 **Why.** Owner 11-11: the curriculum is "as important as jack himself".
