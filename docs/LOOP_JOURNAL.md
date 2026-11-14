@@ -1208,3 +1208,9 @@ Served philosophy 4 (a race cannot quietly compare against cells from a differen
 My first reattach was refused for a code-sha mismatch (att 7). I proved the divergence is the pin alone: the pulled kernel hashes to the receipt's 24ae07f8, and swapping only its checkout sha ce97e39 -> HEAD gives the local 7af1696a byte-exact. ce97e39..HEAD touches no T1.14 file.
 Reattached with ACCEPT_MISMATCH (watcher 3863272). D1.0 waits on it; its 3 h of finished GPU work sits on Kaggle at zero quota.
 Served philosophy 6 (paid-for free GPU hours recovered, not re-bought) and 3 (the control-path race moves toward a verdict).
+
+2026-11-14 19:25 UTC · JACK · J6(d) (J2: T1.14 kernel …242 still QUEUED, watcher 3863272 alive, no exit; J5: CR.01 s131 …9732/…9948 RUNNING, harvest ~20:15) · `184c4c1`.
+Wrote the DRINK race tally before any cell exists: dB vs shipped under the declared clauses (1)-(4), plus apparatus (iii) (forager drinks ≥ 3 on every seed, otherwise the arm is WORLD-BREAKING). swp_k72 is reported, not gated. dA/dC are marked NOT BUILT.
+It counts only cells whose code stamp matches the current tree. It lives in its own module, because a tally inside drink_race_kcpu.py would stale every finished cell the moment the tally is edited.
+Fixtures 6/6 + incomplete (a known win, each lost clause, a world-breaking arm, one stale cell gives None). The live tally reads 0 current cells. A verdict needs 30 (shipped and dB × 3 specs × 5 seeds).
+Served philosophy 4 (the judge is fixed and proven able to say no before the evidence arrives) and 3 (the race decides the world rule).
