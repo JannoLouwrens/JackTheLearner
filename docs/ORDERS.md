@@ -275,6 +275,8 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 - 11-14 16:10 JACK: `gpu.reattach_code_check` join 2 misjoins concurrent kernels: the slug epoch is int(t0), so it can sit a fraction of a second BEFORE its own receipt ts (`0 <= epoch - ts` fails -> jack-cpu-1794672505 reads "unverifiable"), and the 600 s window accepts an earlier kernel's receipt (jack-cpu-1794672525 joins …505's -> false "mismatch"). Fix: allow ts within ±2 s of epoch and pick the nearest receipt, or record the slug in the attempt receipt.
 - 11-14 17:15 JACK: (1) a SYSTEM edit to `experiments/protocol.py` (S2 `d95d569`, a salt-child timeout) staled `T1.14`, a 1 GPU-h certificate bought at 01:15, which BLOCKED D1.0's free reattach — every GPU cert listing protocol.py in IMPL_DEPS is re-bought on each apparatus edit; (2) `gpu.submit`'s watcher timeout (est×1.25+1800 s) counts Kaggle QUEUE time, so a 4 h queue killed a kernel's watcher 17 min after it started RUNNING; (3) a `JACK_REUSE_KERNEL` dispatch skips pre-flight for the WHOLE run, so D1.0's later FRESH units go out with no budget check.
 
+- 11-14 19:15 JACK: every reattach after ANY push is refused as a code mismatch, because the kernel pins the dispatch HEAD sha (by design) and `_kernel_sha256` hashes that pin. Each refusal also writes an ERROR ledger row (T1.14 att 7). The proof is mechanical: pull the kernel, swap the pin to HEAD, compare sha, and check `git diff pin..HEAD` against IMPL_DEPS. `reattach_code_check` could do this itself and drop the hand-set ACCEPT_MISMATCH.
+
 ## DONE (kept one day)
 
 - **`LC.02` PASS on a quiet box** (`68e1207`, att 22): the 11-12 FAIL and the
