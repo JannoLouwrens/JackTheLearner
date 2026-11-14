@@ -311,3 +311,10 @@ If it cannot, the arm breaks the one life that MUST live, and it is reported as 
 **Compute:** NE.01 legs at k72 are long (life_cap 39158 dec × 5 lives × 5 seeds). They run in Kaggle CPU kernels (J6(c) rule),
 2 sessions at a time behind CR.01's s131/s132 units. Only the probe-level apparatus checks (seconds to minutes) run on the box.
 **Next:** build `experiments/drink_race.py` (`_apply(arm)` on `WR._apply("swp_k72")` + the probe flag), run apparatus checks (i)-(iii), then dispatch.
+
+### J6(d) step 2b — dB built + apparatus (2026-11-14 ~18:45 UTC, no ledger; `experiments/drink_race.py`)
+- (ii) PASS: `dB0` (SWALLOW_S 0, vmax ∞) replays swp_k72 s1 l3 **byte-same** (26 gulps, identical drink decisions and logged rows, 14000 dec).
+- Probe (reported, not gated): under `dB` the same censored flailer gets **0 gulps** and dies of dehydration at dec 9116. Its no-drink twin s1 l0 died at 9150.
+- Positive control (not gated): a body placed lying still in the pool with zero ctrl gets 3 gulps in 80 s under BOTH swp_k72 and dB (seeds 0-2). The swallow rule takes water from the flailer, not from a drinker.
+- `dA`/`dC` NOT BUILT: the pool position is a literal in playground.py:421/886, ne_01._build and needs.py:820. Moving it is a world-file refactor that re-bills every certificate resting on playground.py, and it is predicted to fail alone anyway.
+- Next: race dB vs swp_k72 vs shipped under the declared rule. NE.01 s0-4 + W.1/W.2 cells run in Kaggle CPU kernels (cr_01-style `_JOB`), and check (iii) (forager ≥ 3 drinks) comes from the NE.01 cell itself.

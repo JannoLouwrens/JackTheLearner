@@ -1,6 +1,6 @@
 """J6(d) diagnosis: why do some NE.01 random lives outlive the gate-2 window?
 Usage: python experiments/random_life_drink_probe.py ARM SEED LIFE DEC_CAP  (nice 19)
-Replays ONE life of ne_01._random_lives under an arm's _apply, byte-same rng
+Replays ONE life of ne_01._random_lives under an arm's _apply (humid_race, or drink_race for dB/dB0), byte-same rng
 seeds, and logs every 500 decisions: drank_total, w, root xy, Chebyshev distance past the pool edge (<0 = inside).
 No ledger, no threshold."""
 import os, sys, json
@@ -9,7 +9,8 @@ os.chdir(REPO); sys.path.insert(0, REPO)
 import numpy as np
 from experiments import humid_race as HR
 arm, seed, life, dcap = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
-_, mods = HR._apply(arm)
+from experiments import drink_race as DR
+_, mods = (DR._apply(arm) if arm in DR.ARMS[1:] else HR._apply(arm))
 ne = mods["NE.01"]
 cap = min(ne._windows()["life_cap"], dcap)
 p, model, data, water, pool = ne._build(seed)
