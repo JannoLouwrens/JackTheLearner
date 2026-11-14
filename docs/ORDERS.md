@@ -93,8 +93,8 @@ serves: M2, M7 · philosophy 3, 5.
 state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`. Kaggle takes 2 parallel CPU sessions, not shared with the GPU queue. 5/9 units cached (unofficial, rows):
 s130 fed null .255 staged .213 lp .043 frontier .255 shuffled .128 matched .085; s131 null .128 staged .191 lp .106 frontier .043. No arm beats null by .20 on s130 or s131 -> no WIN possible.
 11-14 20:25 HARVESTED 131:lp:frontier (…9948; med span lp 538 frontier 482 s). Same receipt misjoin (cited …9732's 157cd0fe); …9948's own receipt 44bd8698 = pulled bytes, pin 3b85260->HEAD = local 951dd7d6, no IMPL_DEPS moved.
-In flight: 131:shuffled:matched `jack-cpu-1794686945` (pushed 20:09), 132:null:staged `jack-cpu-1794687870` (pushed 20:24), ~2 h each. Next: prefetch each with JACK_REUSE_KERNEL
-(verify pin-only the same way), then push 132:lp:frontier + 132:shuffled:matched; on 9/9 `run CR.01` for the verdict.
+In flight (20:40 both RUNNING): 131:shuffled:matched `jack-cpu-1794686945`, 132:null:staged `jack-cpu-1794687870`. Next: prefetch each with JACK_REUSE_KERNEL (verify pin-only), push 132:lp:frontier + 132:shuffled:matched; on 9/9 `run CR.01`.
+(2) 11-14 20:50 runner + CLAIM gate BUILT (this commit, `experiments/meal_memory_kcpu.py`): `meal_memory.tally` grades by the PILOT rule (2/3), not the declared claim gate (4/5 + born_d>=0.7) -> claim_gate verbatim, fixtures 5/5 (each clause fails alone). Smoke 260 dec fifo+meal s94 ok. 15 cells, 3/kernel, ~20 min each. After CR.01's queue: `$PY -m experiments.meal_memory_kcpu kernel fifo:94,meal:94,yoked:94` (…95…98), then `… gate`.
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
 **Why.** `W.1` is PASS (05:28). `W.2` and `NE.01` are red. Four races (k = 72,

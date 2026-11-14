@@ -1231,3 +1231,9 @@ Harvested CR.01 131:lp:frontier from Kaggle CPU at zero quota (5/9 units cached)
 The reattach was refused by the same receipt misjoin (it cited …9732's 157cd0fe). …9948's own receipt 44bd8698 equals the pulled bytes, the pin-only swap 3b85260->HEAD gives the local 951dd7d6 exactly, and no IMPL_DEPS moved. ACCEPT_MISMATCH is honest.
 Pushed 132:null:staged (`jack-cpu-1794687870`, RUNNING). Both kcpu slots are busy (with …6945).
 Served philosophy 3 (the curriculum is raced, and no staging has beaten the null yet) and 6 (free Kaggle CPU, ~0 box CPU).
+
+2026-11-14 20:50 UTC · JACK · J5 step 2 (J2: T1.14 kernel …242 RUNNING, watcher 3863272 alive, no exit; J5 CR.01 …6945/…7870 RUNNING; both kcpu slots full) · this commit.
+Built the Kaggle-CPU runner for the meal-memory claim grind (seeds 94-98 × fifo/meal/yoked × 13000 dec). Found that `meal_memory.tally` grades by the PILOT rule (≥2 of 3 seeds), not the declared claim gate (≥4 of 5, margin .10, and the born_d ≥ 0.7 m clause). Running the claim rows through it would have used a weaker rule.
+`meal_memory_kcpu.claim_gate` implements the declared gate verbatim. Fixtures 5/5: a win, plus each clause lost alone (seeds, margin, far-born) giving DEAD, and an incomplete set giving None. Cells are code-stamped, and the gate sits off the stamped path.
+Smoke: 260 dec fifo+meal s94 through run_parallel gave rows and a full stamp. Not dispatched: both kcpu slots are busy with CR.01.
+Served philosophy 4 (the claim is judged by the gate declared before the rows, not by the pilot's looser one) and 6 (free Kaggle CPU).
