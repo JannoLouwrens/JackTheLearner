@@ -8563,11 +8563,12 @@ EXPANSION: list[Spec] = [
 
     Spec("LF.06", 2, "The hand-over: a Jack trained here still learns on another machine",
          hypothesis="The seated learning core (wm-latent), after N_HERE = 10 "
-                    "lives in lethal W0 on THIS box, is saved as ONE checkpoint "
+                    "lives in lethal W0 on ONE machine, is saved as ONE checkpoint "
                     "(learner weights, optimiser state, replay, world-written "
                     "diary, needs, and every working-memory store the creature "
-                    "carries at run time) and loaded on a DIFFERENT machine (a "
-                    "Kaggle CPU kernel: other OS image, other CPU). On EVERY "
+                    "carries at run time) and loaded on a DIFFERENT machine "
+                    "(other OS image, other CPU; legs per ruling 7: trained in "
+                    "a Kaggle CPU kernel, loaded on this box). On EVERY "
                     "claim seed (110, 111, 112): (a) the frozen exam there "
                     "matches the frozen exam here, |exam_there - exam_here| <= "
                     "TOL_S; (b) after M_THERE = 10 more learning lives there, "
@@ -8583,7 +8584,7 @@ EXPANSION: list[Spec] = [
                        "taken here (for a): the creature that does not travel, "
                        "or travels and stops learning.",
          metric="handover_exam_match_and_gain_vs_frozen_twin",
-         budget=Budget.CPU_DAYS, seeds=3, depends_on=["LF.03"],
+         budget=Budget.KAGGLE_CPU, seeds=3, depends_on=["LF.03"],
          control="MUST FAIL, both RUN through the same two gates: (1) a "
                  "STRIPPED checkpoint — weights only, diary emptied and "
                  "optimiser + replay reset — must fail (a) or (b); (2) a "
@@ -8620,7 +8621,20 @@ EXPANSION: list[Spec] = [
                "byte-same, and is queued on S1 BEHIND LF.04 (if LF.04 FAILs, "
                "(b) is expected to fail and (a) still stands as a finding). "
                "Ring memory is not in the creature today (Next-up 3); if it "
-               "is seated before this runs, it rides in the checkpoint."),
+               "is seated before this runs, it rides in the checkpoint. "
+               "LEGS REVERSED 2026-11-14, BEFORE ANY RUN (ruling 7, "
+               "DECISIONS_RESOLVED 2026-11-14 #7; ORDERS J8): 'here' = one "
+               "Kaggle CPU kernel per claim seed (N_HERE lives, the hand-over "
+               "file, exam_here), the file fetched out and sha-checked per "
+               "store; 'there' = this box (exam_there, M_THERE lives, the "
+               "frozen hand-over twin, both controls, each control also "
+               "taking its own exam). Claim, seeds, bars, TOL rule and both "
+               "controls unchanged; which machine is which does not enter "
+               "the claim. TOL_S = 20.0 from the s90 pilot (sd_exam 1.31, "
+               "n 10 -> the floor). Budget KAGGLE_CPU (cpu<48h is closed to "
+               "registered specs; the move was declared above). The box legs "
+               "(~40 lives/seed, <= 2 niced children) are billed to the CPU "
+               "day as LF.06:there:<role> by cpu_budget wrap."),
 
     Spec("LC.09", 5, "The learning-core screen at 3x experience: all five cores plus the ring working memory, with the collapse guard computed",
          hypothesis="At 3x LC.03 v2's per-arm-seed envelope (1,200,000 "
