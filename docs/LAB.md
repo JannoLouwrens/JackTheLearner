@@ -118,3 +118,19 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   whether f fails for want of data, of heading (the push is world-frame, the
   nose body-frame), or of signal over 1 s. A new reason must name one of those
   and show f's held-out push→smell error beats the shuffled net first.
+
+- 11-14 11:30 · **The drive in his own frame** (World seat — W0's drive law;
+  rival repair under Proprioception & balance, VACANT) · **PILOT RUNNING** ·
+  `experiments/ego_drive.py`, rule committed first.
+  **Bet:** (1) his push becomes (forward, left) in his body's heading instead
+  of a world x,y force — same 600 N, same gate; rival `compass` keeps the world
+  push and adds a heading sense. (2) His nose is body-frame, his push
+  world-frame, and he senses no heading: toppled 97.6 % of bouts, heading
+  uniform, turning .29 rad/s; smell change correlates .50 with (L−R × push on
+  his own lateral axis) vs .18/.03 on world x/y (s90, 588 bouts). "Which push
+  raises smell" is learnable only in his frame — would explain smell ×3,
+  weaning and the lookahead dying. (3) Killed by: stage 1, the push's share of
+  the forward model's held-out smell prediction < .10 on either seed (90, 94),
+  or not above `world`, or `scram` (random frame — must fail) ≥ half of it;
+  stage 2, sense_lookahead's own rule in the ego frame AND +8 of 40 over the
+  same arm in the world frame (told 6, want 4). END-FIT rows 1, 4; closes none.
