@@ -997,3 +997,10 @@ J7: W1.02 att 10 PASS (was VOID at att 9): the graded outcome resolves W0 (96 di
 ratio 0.0083 vs bar 1/3, a MIN_GAIN injection seen at t=15.9, a zero injection quiet at t=0.08, incumbent fails as its control must).
 The DP-family now has a metric that can see a 5-point gain; next is W1's energy clock (lives ~54 s vs 5600 s horizon).
 Served philosophy 4 (a gate with a control that must fail, passed honestly) and 3 (the venue for the fast/slow race gets its ruler).
+
+2026-11-14 02:45 UTC · JACK · J7 (J1/J2 checked) · 93f4040. LC.02 waits: a foreign tenant's python test bursts at ~94% of a core (load 1.2-1.3). J2: D1.0 watcher 3422501 alive, no exit.
+J7: before racing W1's energy clock I checked whether any clock could green W1.04. None can. Each arm is one 5600 s rollout with lives in
+sequence; V4 VOIDs below 20 completed lives; so (c)'s 5th-pct span is capped at 266.6 s (computed through the spec's own _spans_and_causes/_p5)
+against a 5600 s bar. The ledger's FAIL (p5 54/52 s) reads the apparatus, not only the world. (c) also gates W1.01's passive arm, whose claim is that it dies.
+Re-registration on independent lives proposed in docs/research/W1_04_UNPASSABLE.md, with an INBOX line on the passive arm. No ledger change.
+Served philosophy 4 (a test that could not fail the other way is not a test — caught before an energy-clock race was spent on it) and 5.
