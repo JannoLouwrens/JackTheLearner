@@ -72,7 +72,7 @@ MODALITIES: Dict[str, int] = {
     "touch": 8,       # contact sensors
     "proprio": 12,    # climber-rover, 8 actuated DoF + body pose
     "needs": 6,       # drive vector [e, i, w, d(h), e_dot, i_dot]
-    "language": 32,   # a sentence embedding from the frozen text tower
+    "language": 32,   # words through his own learned ear; EMPTY today (no frozen tower inside him)
 }
 PLACEBO_KEY = "placebo"
 PLACEBO_DIM = MODALITIES["needs"]      # matched dimension to the need-state
