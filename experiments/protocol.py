@@ -26,6 +26,7 @@ import json
 import math
 import os
 import platform
+import signal
 import subprocess
 import sys
 import tempfile
@@ -136,8 +137,10 @@ RUNNER_OUTPUTS = ("experiments/ledger.json",
 #: which is the scar the fork was built for. The move cannot rot silently:
 #: `undeclared_doc_readers` gates `PROSE_DOCS` minus `WRITE_ONLY_DOCS`, so if
 #: any spec ever starts reading this page, `T0.17` P11 goes red.
+#: `docs/LAB.md` joined 2026-11-14 (S2): no spec reads it, and its dirt
+#: stamped `W0.DIAG` dirty, blocked `W1.00` and killed two remote runs.
 PROSE_DOCS = ("CHECKLIST.md", "docs/LOOP_JOURNAL.md", "docs/LESSONS.md",
-              "docs/OVERSIGHT.md")
+              "docs/OVERSIGHT.md", "docs/LAB.md")
 
 #: The old name for the prose class, kept because two specs and the gate import
 #: it: `T0.22` and `T0.30` assert on it by name.
@@ -3856,19 +3859,8 @@ def _report_mem_receipt(label: str, peak_mb) -> None:
 # exact, nothing to calibrate — which is why it does not collide with D27
 # (which prices heuristic screens).
 #
-# THE CLAUSE THAT USED TO SIT HERE — *"zero false positives"* — IS FALSIFIED
-# BY MEASUREMENT AND REMOVED (2026-09-27). It was the stated reason this
-# instrument escapes D27's pricing, it was never tested, and its first live
-# hit on a DECIDING metric was a false positive: 19 of 19 reported divergent
-# keys on `XL.01` were the re-run's own cold module cache, reproducible at
-# salt 0. "Exact" survives — a differential compares recorded numbers to
-# re-run numbers and invents nothing — but exactness is a property of the
-# COMPARISON, and the false positive lived in what was compared. A
-# comparison is only as exact as the replay it compares against, and the
-# replay is the part this file controls. Its false-positive rate is now
-# 1 measured instance of 1 live hit on a deciding metric, repaired below;
-# no spec certifies this instrument, so that rate rests on one case and
-# says so.
+# "Zero false positives" was falsified 2026-09-27 (XL.01, a cold-cache
+# replay, repaired below): the comparison is exact, the replay must match.
 #
 # THE RULE (verbatim from the disposition): run the second-salt differential
 # on a metric only when it is DECIDING, which is exactly two cases —
@@ -3979,38 +3971,12 @@ def _salt_importable(f: Optional[Callable]) -> Optional[tuple]:
     return mod, name
 
 
-# THE PROCESS MODEL IS PART OF THE MEASUREMENT, and getting it wrong cost this
-# instrument its first live hit — measured and refuted the same day (XL.01,
-# 2026-09-27). `run_spec` runs EVERY experiment seed and THEN every control
-# seed in ONE process (`runs = [fn(s) for s in seeds]`, then the control
-# comprehension on the next line). The first version of this differential ran
-# each (fn, seed) in a fresh process of its own, so any spec whose `_control`
-# reads state its `_experiment` cached at module level — the standard way not
-# to pay for an arm twice, and 20+ specs here do it — took its COLD-CACHE
-# branch in the re-run and diverged from the record on every salt, salt 0
-# included. XL.01's `c_fixture_ok` read 1.0 in the row and 0.0 in the re-run;
-# it is `_check`'s fourth VOID lane, so the note reported a creature gate's
-# verdict as a function of the interpreter's salt when it was a function of
-# THIS FILE.
-#
-# MEASURED, both directions, before this edit:
-#   `_control(0)` alone           -> c_fixture_ok 0.0 at PYTHONHASHSEED 0, 1, 7
-#   `_experiment(0)` then `_control(0)`, one process, salt 1
-#                                 -> c_fixture_ok 1.0, alien_seed 101,
-#                                    alien_min_dist 2.0634, alien_rows 2
-#   and the divergence set accounts EXACTLY: 1 deciding + 18 non-deciding = 19
-#   = every numeric control key except `c_fixture_ok_std` (0.0 either way),
-#   while all 40 numeric EXPERIMENT metrics reproduced bit-exactly. Zero of
-#   the divergence was salt.
-#
-# So the child now mirrors the run's own call sequence and the differential
-# varies the salt and nothing else. What it therefore STOPS seeing is stated
-# plainly rather than left as a silent narrowing: a metric that depends on
-# call ORDER or on cross-seed process state is also not a function of
-# (code, seed, data), and this instrument no longer probes that. It never
-# measured it either — it could only ever report it as salt, which is a wrong
-# attribution, not a weak one. That measurement is a different instrument and
-# is routed, not built here.
+# THE PROCESS MODEL IS PART OF THE MEASUREMENT: the child mirrors `run_spec`
+# (every experiment seed, then every control seed, ONE process), because
+# `_control`s read caches `_experiment` left at module level; one process per
+# call diverged on XL.01 at every salt, salt 0 included (2026-09-27). What it
+# does not probe: call-order or cross-seed state dependence (a different
+# instrument, routed not built).
 _SALT_RUNNER_CODE = (
     "import importlib,json,sys\n"
     "def _d(o):\n"
@@ -4035,14 +4001,27 @@ def _salt_rerun(exp: tuple, ctl: Optional[tuple], seeds: List[int],
     process, exactly as `run_spec` does. Returns (metrics, control_metrics)
     aggregated by the same `_aggregate` the runner used; `ctl=None` yields {}."""
     ref = lambda t: f"{t[0]}:{t[1]}"            # noqa: E731 — argv, not logic
-    p = subprocess.run(
+    # S2 (11-14): the child hung 12-25 min because `subprocess.run`'s timeout
+    # killed only the child while its Pool workers held the pipes open. It now
+    # runs in its own process group, pinned to ONE core at nice 19, and the
+    # whole group is killed at the deadline.
+    core = {max(os.sched_getaffinity(0))}
+    p = subprocess.Popen(
         [sys.executable, "-c", _SALT_RUNNER_CODE, ref(exp),
          ref(ctl) if ctl else "-", ",".join(str(s) for s in seeds)],
         env=env, cwd=str(Path(__file__).resolve().parent.parent),
-        capture_output=True, text=True, timeout=timeout_s)
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        start_new_session=True,
+        preexec_fn=lambda: (os.sched_setaffinity(0, core), os.nice(19)))
+    try:
+        out, err = p.communicate(timeout=timeout_s)
+    except subprocess.TimeoutExpired:
+        os.killpg(p.pid, signal.SIGKILL)
+        p.communicate()
+        raise TimeoutError(f"TIMED-OUT after {timeout_s:.0f}s (group killed)")
     if p.returncode != 0:
-        raise RuntimeError(f"rc={p.returncode}: {p.stderr.strip()[-160:]}")
-    marks = [l for l in p.stdout.splitlines()
+        raise RuntimeError(f"rc={p.returncode}: {err.strip()[-160:]}")
+    marks = [l for l in out.splitlines()
              if l.startswith("JACK_SALT_DIFF_RESULT:")]
     if not marks:
         raise RuntimeError("no result marker on stdout")
@@ -4098,12 +4077,11 @@ def _hash_salt_differential(spec: Spec, fn: Callable, check: Callable,
     # record (the LG.13 duplicate precedent) — bakeoff.py honors this.
     env["JACK_SALT_DIFF_DECISIONS"] = os.path.join(
         tempfile.gettempdir(), "jack_salt_diff_decisions.md")
-    # One child now does the whole sequence, so the ceiling is 3x the run it is
-    # differentiating rather than 3x a per-call share of it — the same total
-    # worst case, minus five interpreter startups.
-    tmo = max(120.0, 3.0 * float(elapsed_s))
+    tmo = max(60.0, 20.0 * float(elapsed_s))   # S2: on one core, not three
     try:
         m2, c2 = _salt_rerun(imp, cimp, seeds, tmo, env)
+    except TimeoutError as e:
+        return f"HASH-SALT DIFFERENTIAL {e} ({why}; reporting-only)"[:280]
     except Exception as e:
         return (f"HASH-SALT DIFFERENTIAL ERRORED ({why}; reporting-only): "
                 f"{type(e).__name__}: {e}"[:280])

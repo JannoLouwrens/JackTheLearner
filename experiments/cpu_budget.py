@@ -30,25 +30,9 @@ Scope, stated honestly:
     meter, an overrun past the ceiling is OBSERVED with a mark, while the
     refusal stops new work from starting.
 
-Estimating on the enum instead of the measurement (69th audit B4): until
-2026-09-04 this gate refused on `spec_child_timeout_seconds` alone — the
-child-KILL allowance, which is deliberately the worst case a budget class may
-legally reach. Across the 108 runner-lane cpu specs that carry a recorded
-duration the median ratio of that allowance to the spec's actual cost is
-**257x** (`W0.DIAG` 0.02 s against 10800 s; `LG.02` 1.9 s against 54000 s),
-and the consequence was measured live: **3600 s of routine housekeeping —
-6.25% of the ceiling — foreclosed 53 of 152 CPU specs**, because any `cpu<2h`
-spec estimates at 54000 s and the day only ever holds 57600 s.
-
-The projection is bounded on the side that matters: `child_estimate_s` returns
-`min(enum, SAFETY x measured + overhead)`, so it can only ever LOWER an
-estimate. Admission is therefore never tighter than it was before this change,
-and the hard ceiling is untouched — `run.py` still kills the child at
-`spec_child_timeout_seconds`, so an admitted child's true worst case is exactly
-what it always was, and a projection that undershoots costs a MARKED overrun
-(the posture `admit_detached` already takes) rather than an unbounded run.
-`SAFETY` and the overhead are engineering choices, not measurements, and are
-declared as such at their definitions.
+Estimates come from the spec's own measured duration (`child_estimate_s`
+returns `min(enum, SAFETY x measured + overhead)`, so it can only LOWER an
+estimate); the enum worst case foreclosed 53 of 152 specs (69th audit B4).
 
 Accounting ownership (68th audit B1): when two billers meter one resource,
 their charges must be DISJOINT, and the owner here is the OUTERMOST wrapper.
@@ -434,13 +418,50 @@ def bill_interval(label: str, t0: float, t1: float,
         t0 = seg
 
 
+# Ruling 3 (2026-11-14): detached jobs share at most this much of the day,
+# and at most this many run at once. Before it, detached jobs overran the
+# whole day twice (59,599 s on 11-13) and starved registered runs.
+DETACHED_DAY_CAP_S = 34560.0
+DETACHED_MAX_ALIVE = 2
+
+
+def detached_used_s(path: Path | None = None) -> float:
+    by = CpuBudget(path).data["days"].get(_day(), {}).get("by_spec", {})
+    return sum(v for k, v in by.items() if k.startswith("detached:"))
+
+
+def detached_alive() -> int:
+    """Live outermost `cpu_budget wrap` processes — one per detached job."""
+    n = 0
+    for d in os.listdir("/proc"):
+        try:
+            argv = open(f"/proc/{d}/cmdline", "rb").read().split(b"\0")
+        except (OSError, ValueError):
+            continue
+        if b"experiments.cpu_budget" in argv and b"wrap" in argv:
+            n += 1
+    return n
+
+
 def admit_detached(label: str, *, path: Path | None = None,
-                   loadavg: float | None = None) -> CpuDecision:
-    """Admit or refuse a detached launch BEFORE setsid. Est-free by design —
-    a cpu<48h child cannot pre-fit a 16 h day, so the gate asks only whether
-    TODAY has headroom and the box is calm; the ceiling binds the running
-    child through `charge`'s overrun marks, never through a kill."""
+                   loadavg: float | None = None, est_s: float = 0.0,
+                   alive: int | None = None) -> CpuDecision:
+    """Admit or refuse a detached launch BEFORE setsid. The gate asks whether
+    TODAY has headroom, the detached share (`DETACHED_DAY_CAP_S`, plus the
+    caller's optional estimate) and the concurrency cap have room, and the
+    box is calm; the ceiling binds a running child through `charge`'s
+    overrun marks, never through a kill."""
     load = _loadavg() if loadavg is None else loadavg
+    alive = detached_alive() if alive is None else alive
+    if alive >= DETACHED_MAX_ALIVE:
+        return CpuDecision(False, est_s, 0.0, load,
+                           f"detached cap: {alive} detached jobs alive "
+                           f"(max {DETACHED_MAX_ALIVE}, ruling 3)")
+    det = detached_used_s(path)
+    if label.startswith("detached:") and det + est_s > DETACHED_DAY_CAP_S:
+        return CpuDecision(False, est_s, 0.0, load,
+                           f"detached cap: {det:.0f}s + est {est_s:.0f}s > "
+                           f"{DETACHED_DAY_CAP_S:.0f}s today (ruling 3)")
     if load > LOAD_CEILING:
         return CpuDecision(False, 0.0, CpuBudget(path).remaining_s(), load,
                            f"load {load:.2f} above {LOAD_CEILING} — leaving "
@@ -496,13 +517,14 @@ def _wrap(label: str, argv: list) -> int:
 def _main(argv: list) -> int:
     import sys
     if len(argv) >= 2 and argv[0] == "admit":
-        d = admit_detached(argv[1])
+        d = admit_detached(argv[1], est_s=float(argv[2]) if len(argv) > 2
+                           else 0.0)
         print(("ADMITTED: " if d.admitted else "REFUSED: ") + d.reason)
         return 0 if d.admitted else 1
     if len(argv) >= 3 and argv[0] == "wrap":
         return _wrap(argv[1], argv[2:])
     print("usage: python -m experiments.cpu_budget "
-          "{admit LABEL | wrap LABEL CMD [ARG...]}", file=sys.stderr)
+          "{admit LABEL [EST_S] | wrap LABEL CMD [ARG...]}", file=sys.stderr)
     return 2
 
 
