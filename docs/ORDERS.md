@@ -93,10 +93,10 @@ serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow the
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
 state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) HEAT RACE: NONE SHIPS (af9b980; NEEDS_CLOCK_RACE.md).
-11-14 03:24 WATER RACE LAUNCHED (3d7c0a0): swp_w72 (sweat_paid+B_W 1/3600), swp_k72 (+full k72) vs shipped, heat-race rule; tally fix in; apparatus 2/2 exact (W.2+NE.01 s0). Log /data/tmp/water_race.log.
-FINDING (40d47e4): sweat makes heat death UNREACHABLE: W.2(c) c_hot_reachable 1->0 on 10/10 sweat seeds (roof 40.33->37.34 C), 0/60 heat deaths.
-swp_k72 has both clocks in band (thirst 0.97, hunger 1.30) and still fails (c) on that alone -> no sweating arm can pass W.2(c) as registered.
-Next: harvest `python -m experiments.water_clock_race tally` (~80 min); then declare sweat_paid+k72+a REAL heat hazard (hot sun/fire/humidity), roof route re-aimed.
+11-14 03:24 WATER RACE running (3d7c0a0), log /data/tmp/water_race.log; 03:55 W.1+W.2 cells done, NE.01 cells ~60 min left. FINDING (40d47e4): sweat makes W.2(c) hot route unreachable.
+11-14 03:55 HAZARD TABLE (7389073, experiments/heat_hazard_table.py): no dry heat below 59.6 C can kill a sweating Jack (full power = +200 W only);
+humidity kills at biological thresholds (rest 40C/80% 106 s, 45C/50% 115 s; full 35C/80% 94 s); sealed roof is LETHAL in humid heat (30C/80% full).
+Next: harvest `python -m experiments.water_clock_race tally`; then declare swp_k72 + humidity field (f on sweat clamp), W.2(c) hot route = sealed humid heat, bar 40 C unmoved.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow

@@ -1018,3 +1018,10 @@ First cells already settle one thing: sweat makes heat death UNREACHABLE in W0 �
 0/60 sweat lives died of heat. The heat race's "W.2 flags identical" hid it behind (c)'s clock failure. swp_k72 brings both clocks into band (0.97, 1.30)
 and fails (c) on that alone. W0's only heat death was the missing sweat; the next arm needs a real heat hazard, raced.
 Served philosophy 1 (a world that can kill him the way a human body dies — and it just lost a way) and 4 (a masked sub-clause read, not summarised away).
+
+2026-11-14 03:58 UTC · JACK · J6(c) (J1/J2 checked) · 7389073. LC.02 waits: own water race (2 workers) + foreign stt proof_r10 at 100% of a core. J2: D1.0 watcher 3422501 alive, no exit.
+J6(c): water race mid-NE.01, not harvestable. Measured, before declaring the next arm, which heat hazard can kill a sweating Jack at all:
+dry heat cannot below 59.6 C ambient (full power adds only 200 W in W0); humidity can, at the thresholds human physiology shows
+(rest 40C/80% dies in 106 s, 35C/80% survives; full power 35C/80% dies) — and a sealed roof becomes the trap, not the refuge, in humid heat.
+So the next arm is a humidity field, not hotter sun or exertion. No ledger change.
+Served philosophy 1 (a world that kills the way a human body dies) and 3 (the hazard is measured before it is raced, not assumed).
