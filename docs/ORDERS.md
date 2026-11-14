@@ -53,11 +53,11 @@ it in `state:`, diagnose.
 kernel slug in `state:`. If it FAILs, that is the finding — do not soften.
 serves: M1→M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` has a ledger verdict from a Kaggle CPU kernel.
-state: 11-14 steps (1)(2) DONE (`76a85dc`; T6.03/LF.02/XL.00/LF.03 PASS, `1400d81`). Run 1 (09:33): calls 1–5 ok, call 6 REFUSED 11:33 by the GPU push
-guard on another lane's uncommitted `docs/LAB.md` -> ERROR att 1, no verdict (`f90881f`). RE-DISPATCHED 12:08 at `f90881f`: `launch_detached.sh
-/data/tmp/lf04_run2.log run LF.04` (wrap pid 3751098), call 1 submitted 12:08:59 (kaggle-cpu). ~2 h if calls run like run 1 (14–27 min each).
-Next: read `/data/tmp/lf04_run2.log`; on exit commit ledger by path + render. A FAIL is the finding: diagnose, do not soften.
-Any tracked non-prose edit left uncommitted at a call boundary kills the run again (INBOX) — commit docs edits in one step.
+state: DONE (step 3) `bc631a8`: `LF.04` **FAIL** att 2, Kaggle CPU (6 kernels, f90881f). Late learner vs twin +4/-127/-230 s (margin 272.8), vs self +49/+29/-176;
+controls held (twinB 0/3, shuffled 0/3); statue 599.9 s. FINDING (`docs/research/LF_04_FAIL.md`): all 120 lives died of energy, late meals 0/3/0. Twin is already
+562-569 s, so a non-eater can gain at most 31-38 s: only FORAGING passes (>= 5 floor meals/life at rest, ~14 at 1.5x drain, or 1 apple). s102 collapses
+598->158 s: the unbounded `cores.py:542` loss from 11-12, AWR raced then and never seated. Next (Director): seat a bounded loss (re-buys LC.02/LC.08/LF.03),
+then a learner that forages on s90 (wm-dyn in LC.09, CR.01). Re-run LF.04 unchanged only when a s90 pilot reaches >= 5 meals/life.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 5 in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
@@ -265,6 +265,7 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 
 - 11-14 JACK: multi-call Kaggle-CPU specs re-clone the CURRENT HEAD on every call (LF.04 calls ran on 4 different heads) — a code commit mid-run would silently mix versions inside one verdict; pin calls 2..N to call 1's head. Harmless for LF.04 today (code paths unchanged).
 - 11-14 JACK: the GPU push guard (`gpu.assert_ref_is_current`) runs on EVERY call of a multi-call remote spec, and `is_code_dirt` counts `docs/LAB.md` and `docs/ORDERS.md` as code — one lane's uncommitted LAB.md at 11:33 killed LF.04 at call 6/6 (2 h of kcpu) AND D1.0 at unit 7/13 (≈10 GPU-h of units survive only via D1.0's own cache). Fix: guard once per spec run (pin calls to call 1's head, cf. the pin-head line) and/or class LAB.md/ORDERS.md as prose. Both re-dispatched 12:08.
+- 11-14 JACK: `cpu_budget wrap` bills WALL clock for Kaggle-CPU pollers: LF.04 run 2 used 5 s CPU but was billed 6,600 s, and CR.01 prefetch used 3 s for 4,800 s. That pushes `detached:*` past ruling 3's 34,560 s cap (38.9k at 14:00) and starves real box runs (J8 LF.06, J6 probes). Fix: bill remote-poll specs by measured CPU, or exempt the `kcpu` budget as `gpu*` already is.
 
 ## DONE (kept one day)
 

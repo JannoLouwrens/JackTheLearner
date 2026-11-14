@@ -1143,3 +1143,10 @@ Re-read the needs-clock arms against the re-registered NE.01, with no ledger wri
 Re-ran the gate-2 probe at the new cap of 39158: swp_k72 s0 5/5 dehydration deaths at 8735-25458 (0/5 before), hum34 s0 5/5 (3/5 before). This overturns the 05:25 claim that "no k72 arm can meet gate 2".
 The window was the obstacle, not the world. Still running detached: hum30 s0-2, hum34 s1-2. Next: probe swp_k72 s1-4, then its long NE.01 legs on Kaggle CPU.
 Served philosophy 3 and 4: a red re-read under the honest test instead of being filed, plus a world that kills by human-timed thirst.
+
+2026-11-14 14:55 UTC · JACK · J1 step 3 · bc631a8. Harvested LF.04 att 2 (Kaggle CPU, 6 kernels): **FAIL**, the creature gate's first verdict. Late learner vs frozen twin +4/-127/-230 s
+(margin 272.8); controls held (twinB 0/3, shuffled 0/3). Diagnosed from the kernels' own rows (docs/research/LF_04_FAIL.md): all 120 lives died of energy, late meals 0/3/0, statue 599.9 s,
+and the twin is already 562-569 s from exploration decay alone. A non-eater can gain at most 31-38 s, so only foraging passes (>= 5 floor meals/life at rest, or 1 apple). The world can supply that.
+s102 collapsed 598->158 s on the unbounded cores.py:542 loss; AWR won that race on 11-12 and was never seated. Next: seat the bounded loss, then a learner that forages on s90.
+INBOX: the CPU meter bills kcpu pollers wall clock (11.4k s billed for 8 s of CPU). D1.0 GPU kernel QUEUED since 12:08. CR.01 unit 130:null:staged cached (6,429 s kernel).
+Served philosophy 1 and 4: the first honest answer to "does living teach him" (not yet), traced to what he fails to do (eat) and a line of his code, not filed.
