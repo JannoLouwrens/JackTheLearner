@@ -53,10 +53,11 @@ it in `state:`, diagnose.
 kernel slug in `state:`. If it FAILs, that is the finding — do not soften.
 serves: M1→M7 · philosophy 1 (learns by living), 4.
 **done when:** `LF.04` has a ledger verdict from a Kaggle CPU kernel.
-state: 11-14 07:10 step (1) DONE `76a85dc`: `margin_vs_recency` ≥ 0.10 added, depends_on → T0.05/T0.08; planted last-write scorer fails the gate.
-07:25 `T6.03` PASS att 3 (`f52fd6b`). 07:35 `LF.02` PASS att 4 (`7a93b1e`). 08:13 `XL.00` PASS att 9, 1135 s, salt differential clean (`939ee71`).
-08:13 `LF.03` started in the chain (`/data/tmp/j1_chain.log`, pid 3668262; last took 2650 s). 08:53 still running (sub-lives cycling, alive), no verdict yet.
-Next: harvest the log (`grep '^=== ' /data/tmp/j1_chain.log`). `LF.03` PASS → commit ledger.json by path + push (build_job refuses unpushed code), then `launch_detached.sh` `run LF.04` (~8 h, 6 kernel calls) and write the kernel slug here. A red → stop, diagnose.
+state: 11-14 07:10 step (1) DONE `76a85dc`. Step (2) DONE: `T6.03` PASS att 3 (`f52fd6b`), `LF.02` PASS att 4 (`7a93b1e`), `XL.00` PASS att 9 (`939ee71`),
+`LF.03` PASS att 2 09:32, 2386 s, salt differential: all deciding metrics reproduced (`1400d81`, pushed).
+Step (3) DISPATCHED 09:33: `launch_detached.sh /data/tmp/lf04_run.log run LF.04` (wrap pid 3708266, runner 3708275) at head `1400d81`; call 1 = Kaggle CPU kernel `jannolouwrens/jack-cpu-1794648797`, RUNNING 09:38.
+Calls run serially (6 calls, ≤6 h timeout each, ~8 h total); each later call gets a new `jack-cpu-<epoch>` slug in gpu_submissions.jsonl.
+Next: read `/data/tmp/lf04_run.log` each slot; act only on its exit. When the verdict lands in ledger.json: commit by path + render. A FAIL is the finding: diagnose, do not soften.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 5 in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
