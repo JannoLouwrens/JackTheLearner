@@ -860,25 +860,35 @@ def resolve(ref: str, by_id: dict) -> List[str]:
 
 def parse(text: str) -> List[dict]:
     """Seats from CHAMPIONS.md: the anatomy table, plus the decree sections.
-
-    Column POSITIONS come from the table's own header row rather than being
-    assumed, and they persist across the blank line at CHAMPIONS.md:79 that
-    splits the anatomy table into two — the second half (Smell, Taste, Voice,
-    Language acquisition) has no header of its own, so a strict per-table
-    parser silently drops four seats.
-    """
+    Column positions come from the seat header and persist across a blank line
+    (the anatomy table's headerless second half). A table headed by anything
+    else (END-FIT) is skipped; a narrow row under a seat header is malformed."""
     seats: List[dict] = []
     cols: Dict[str, int] = {}
+    foreign = False      # inside a headed table that is not the seat table
+    lines = text.splitlines()
 
-    for lineno, line in enumerate(text.splitlines(), 1):
+    def is_sep(cells):
+        return all(_SEP.match(_clean(c) or "-") for c in cells)
+
+    def row(line):
+        return [c.strip() for c in line.strip().strip("|").split("|")]
+
+    for lineno, line in enumerate(lines, 1):
         if not line.lstrip().startswith("|"):
             continue
-        cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if all(_SEP.match(_clean(c) or "-") for c in cells):
+        cells = row(line)
+        if is_sep(cells):
             continue
         lowered = [_clean(c).lower() for c in cells]
         if "seat" in lowered and "arena" in lowered:
-            cols = {name: i for i, name in enumerate(lowered)}
+            cols, foreign = {name: i for i, name in enumerate(lowered)}, False
+            continue
+        nxt = lines[lineno] if lineno < len(lines) else ""
+        if nxt.lstrip().startswith("|") and is_sep(row(nxt)):
+            foreign = True   # another table's header (END-FIT): not seats
+            continue
+        if foreign:
             continue
         if not cols or len(cells) <= max(cols.values()):
             # A row narrower than the header is malformed, not a seat. Reported
@@ -924,18 +934,10 @@ def parse(text: str) -> List[dict]:
     return seats
 
 
-# A ledger status that is a VERDICT. `SYSTEM.md`: a bakeoff arm that fails the
-# learning gate returns VOID rather than a confident wrong answer, and the
-# instruction is "fix the arm, do not decide" — so a VOID has decided nothing
-# and cannot discharge a seat. ERROR and SKIP are not verdicts either.
+# Statuses that are verdicts: a VOID, ERROR or SKIP decided nothing (SYSTEM.md).
 VERDICTS = ("PASS", "FAIL")
 
-# Kinds that seat no challenger, imported from `coverage.py` rather than
-# re-listed: it learned on the 8th-12th audits that a fixture/rule/sensor buys
-# no claim credit, and this file cited that scar in its own docstring and then
-# reproduced it one document over. When you build an instrument by analogy to
-# an existing one, port its SCARS as well as its shape — the fix is an import,
-# not a design.
+# Kinds that seat no challenger — `coverage.py`'s scar (8th-12th audits).
 NON_CHALLENGER_KINDS = ("fixture", "rule", "sensor")
 
 
@@ -1421,8 +1423,13 @@ def _fixture() -> None:
     verdict when the real ladder grows.
     """
     doc = """
+| the finished Jack | gate | today |
+|---|---|---|
+| A foreign table's row | `OK.01` | not a seat |
+
 | seat | champion | held | arena | challenger status |
 |---|---|---|---|---|
+| Planted narrow seat row | incumbent |
 | Healthy verdict seat | thing-that-won | **BY VERDICT** (OK.01) | OK.01 (registered) | a challenger |
 | Default seat a claim spec defended | incumbent | **DEFAULT, never defended** | OK.01–OK.02 (registered) | a challenger |
 | Default seat only a fixture answered | incumbent | **DEFAULT, never defended** | OK.04 + OK.05 (registered) | a challenger |
@@ -1515,15 +1522,12 @@ This section names ZZ.09 and must contribute no seat and no violation.
     for kind, seat, _why in violations:
         flagged.setdefault(seat, set()).add(kind)
 
-    # THE TWO ROWS THIS GUARD EXISTS FOR (43rd audit). Each is a distinct
-    # false positive for "defended" that the old `all(... NOT_RUN)` quantifier
-    # scored as healthy, and each row is NAMED for what it is — the previous
-    # fixture called such a row "Healthy default seat" and asserted it was not
-    # flagged, so the bug was tested-in and blessed by the one battery whose
-    # purpose is catching it.
+    # The two false "defended" rows of the 43rd audit, named for what they are.
     assert flagged.get("Default seat only a fixture answered") == {"UNCONTESTED"}, flagged
     assert flagged.get("Default seat whose only run went VOID") == {"UNCONTESTED"}, flagged
     assert flagged.get("Phantom arena seat") == {"ARENA-MISSING"}, flagged
+    bad = [s["champion"] for s in seats if s["kind"] == "malformed"]
+    assert bad == ["| Planted narrow seat row | incumbent |"], bad   # END-FIT skipped
 
     # THE CLOSABILITY SPLIT (2026-08-30). Both seats below are ARENA-MISSING and
     # the old code printed them identically; only one of them can be discharged
@@ -1544,16 +1548,9 @@ This section names ZZ.09 and must contribute no seat and no violation.
     assert "CORRECT THE CITATION" not in by_seat["Phantom arena seat"], by_seat
     assert flagged.get("No arena at all") == {"NO-ARENA"}, flagged
     assert flagged.get("Uncontested decree seat") == {"UNCONTESTED"}, flagged
-    # THE REACHABILITY CLASS (54th audit B4). Four shapes that must fire, one
-    # that must not, and one out of scope — each pinned to the real seat it
-    # stands in for. A foreclosed ring, a ring parented under one (the
-    # Fast/slow shape: DP.02 behind LC.03), a ring parked (the Smell shape,
-    # were Smell unearned), and the Learning-core shape: a challenger once ran
-    # and every REMAINING door is welded — which must fire even though
-    # `challenger_runs` is non-empty, because contestability is about the
-    # future. None of the four may ALSO read UNCONTESTED: "real but
-    # unanswered" about a door that cannot open is `run blocked`'s LC.03
-    # misreport, the exact cheap reading B2 removed one instrument over.
+    # REACHABILITY (54th audit B4): foreclosed, parented under a foreclosure,
+    # parked, and contested-then-welded rings fire, and none ALSO reads
+    # UNCONTESTED (contestability is about the future doors).
     assert flagged.get("Default seat whose ring is foreclosed") == {"ARENA-UNREACHABLE"}, flagged
     assert flagged.get("Default seat behind a foreclosure") == {"ARENA-UNREACHABLE"}, flagged
     assert flagged.get("Default seat contested once, then welded") == {"ARENA-UNREACHABLE"}, flagged
