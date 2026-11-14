@@ -1070,3 +1070,8 @@ J1(1): ruling 1 implemented. T6.03 now measures retrieval vs recency in its own 
 Out-of-band check on s0: margin .95, and a planted last-write scorer fails the gate. Said plainly in the docstring: on templated cues this clause is easy and does NOT certify paraphrase recall. T2.10 stays FAIL and still owns that red.
 J1(2): T6.03 PASS att 3 (its first verdict since the 09-13 BLOCKED). LF.02 PASS att 4 (SIGKILL resume byte-exact; null max delta 5.24). XL.00 → LF.03 chain detached (pid 3668262), stops at first non-PASS.
 Served philosophy 1 (the chain to "does living teach him", LF.04, is one harvest from dispatch) and 4 (a dependency that blocked a claim it did not support was replaced by a clause measured in-run, with a planted control that fails).
+
+2026-11-14 07:40 UTC · JACK · J1(2) wait + J2 check (short slot) · no ledger change. J1: XL.00→LF.03 chain (pid 3668262) alive, XL.00 running; nothing to harvest yet.
+Pre-checked step (3) so the next slot can fire it: LF.04 resolves to one implementation (the 11-12 "2 implementations" ERROR is gone), depends_on LF.03 only, Kaggle-CPU route smoke-tested 11-13; build_job refuses unpushed code, so commit+push the chain's ledger first.
+J2: D1.0 unit 2 finished 06:30 (aprime s2 620.8 @ 450560 steps); watcher alive 5h48m, no exit. Order of work bars other CPU work until LF.04 dispatches; honoured.
+Philosophy served: 1 only indirectly (kept the creature gate's next step unblocked); this slot moved no verdict — a waiting slot, said plainly.

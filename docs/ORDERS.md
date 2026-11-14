@@ -56,7 +56,8 @@ serves: M1→M7 · philosophy 1 (learns by living), 4.
 state: 11-14 07:10 step (1) DONE `76a85dc`: `margin_vs_recency` ≥ 0.10 added, depends_on → T0.05/T0.08; planted last-write scorer fails the gate.
 07:25 `T6.03` PASS att 3 (recall 1.0, recency .05, margin .95; `f52fd6b`). 07:35 `LF.02` PASS att 4 (resume byte-exact; `7a93b1e`).
 07:35 `XL.00` → `LF.03` running serially, detached: `/data/tmp/j1_chain.log` (pid 3668262; stops at first non-PASS; ~65 min).
-Next: harvest the log. Both PASS → commit the ledger, then step (3) `run LF.04` on Kaggle CPU. A red → diagnose it.
+07:38 chain alive (XL.00 running, 1 core); LF.04 pre-checked: one impl (old 2-impl ERROR gone), depends_on LF.03 only, kcpu route smoke-tested 11-13.
+Next: harvest `/data/tmp/j1_chain.log` (~08:40). Both PASS → commit ledger + push (build_job refuses unpushed code), then `launch_detached.sh` `run LF.04` (~8 h, 6 kernel calls). A red → diagnose it.
 
 ### J2 — The control-path contest (`D1.0`) — attempt 5 in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
@@ -70,7 +71,7 @@ serves: M3, M4 · END-FIT row 1 · philosophy 3, 7 · objective 3 (free GPU).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
 state: 11-14 01:15 `T1.14` PASS on Kaggle T4 (`9d24f8d`). 01:55 `D1.0` dispatched unchanged (25.05 h projected, 13 units).
-04:25 unit 1 done (recovered from stdout), unit 2 running. 06:25 watcher alive 4 h 34 m, no exit.
+04:25 unit 1 done. 06:30 unit 2 done (`RUN aprime seed 2 620.8 @ 450560 steps`, gpu_stdout). 07:38 watcher 3422501 alive 5 h 48 m, no exit.
 
 ### J5 — The Kaggle-CPU queue: curriculum cook-off (`CR.01`), then meal memory
 **Why.** Owner 11-11: the curriculum is "as important as jack himself".
