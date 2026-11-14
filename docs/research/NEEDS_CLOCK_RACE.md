@@ -205,3 +205,30 @@ can ship.
 Probe finished 05:37 (PROBE EXIT). Remaining cells, description only: hum30 s1 0/5; hum34 s1 3/5 (dehydration x3, dec 4154-4257),
 hum34 s2 1/5 (dehydration @4362). Pooled: hum30 1/10, hum34 7/15, every seed below 5/5. hum34's random deaths are 6/7 thirst, so humidity mostly speeds up
 thirst through sweat rather than killing directly.
+
+## J6(c) re-read against the re-registered NE.01 (`e054e0a`, windows in T_thirst/T_hunger) — 2026-11-14 13:35 UTC, no ledger
+
+Windows under each arm's own `_apply` (read live from `_windows()`, computed in-process):
+
+| arm | T_thirst s | T_hunger s | gate 2 window (dec) | life cap | forager horizon (dec) | night |
+|---|---|---|---|---|---|---|
+| shipped | 570 | 2100 | [300, 6000] | 6000 | 18000 | 2000 |
+| k72 / swp_k72 / hum30 / hum34 | 3720 | 25500 | [1958, 39158] | 39158 | 218571 | 2000 |
+
+**k72 (needs-clock race, 11-13 cells, re-scored from saved metrics — no run).** Every one of the 25 random lives died of
+hyperthermia at decisions 445-549 (per-seed min/max 451/549, 475/546, 483/510, 445/533, 453/528). The re-registered window opens
+at 1958 (2/19 T_thirst = 391.6 s). In-window 0/5 on every seed -> `ok_random_deaths` 1.0 -> **0.0** under the registered spec.
+The old PASS was the fast-clock window admitting a ~100 s heat death; on the k72 clock that death is far too early to be "a
+random life that dies of its needs". Rule (2) needs seed-mean >= shipped's 1.0, so k72 is now refused on gate 2 as well as
+on forager/spread (e4c10cd). The pre-sweat body is the cause; swp_k72 (sweat paid) is the arm that replaced it.
+
+**Humidity + swp_k72 gate 2 (probe re-run in flight).** The 05:25 probe ran at cap 6000 (copied to
+`/data/jack-logs/random_death_probe_cap6000_1114/`). `random_death_probe` reads `_windows()`, so re-running it IS the re-read:
+cells swp_k72 s0, hum30 s0-2, hum34 s0-2 relaunched 13:23 (logs `/data/tmp/rdp_reg_{a,b}.log`, 2 niced workers). Lives now run to
+39158 dec, so cells take >10 min each (cap 6000 cells took ~2-12). Next worker: `python -m experiments.random_death_probe tally`.
+Either way neither humidity arm ships yet: hum34 fails W.2(a) and both fail W.1(d) (b1272c3); this reading says only whether the
+re-registration lets a k72-clock world meet gate 2 at all.
+
+**Price of the long NE.01 legs (J6 c).** The forager horizon at k72 is 218571 dec, 12.1x shipped's 18000. The 11-13 k72 NE.01
+cells took ~40 min/seed on the box with the 18000 horizon. A k72-clock NE.01 seed is therefore several hours of CPU, one Kaggle CPU
+kernel per seed, never the box.
