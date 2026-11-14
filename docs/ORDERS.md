@@ -92,11 +92,11 @@ race-won edit may ship (ruling 1 lifts D43's hold for exactly that); re-run
 serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow them) · philosophy 1, 3, 4.
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) heat NONE (af9b980), water NONE (21188f3), humid NONE (b1272c3).
-11-14 05:25 WATER harvest + GATE-2 PROBE (21188f3, this commit): under sweat thirst was the only random killer; at k72 random lives die 0/25 (swp_w72, swp_k72),
-hum30 1/5, hum34 3/5 (s0; apparatus swp_k72 0/5 reproduced). NE.01 gate 2 needs 5/5 within ONE day (6000 dec), calibrated when thirst killed in 570 s;
-gates 1 (spread_e 0.082 at k72) and 4 (meals 2-3 vs 5) share that calibration. => no k=72 arm can pass NE.01; RULING asked (INBOX 05:25). NE.01 legs not spent.
-Next (no ruling needed): (c)'s band-geometry arm for spread_f/spread_T (<0.30 even in shipped); the humid shared-evap refactor waits on the ruling.
+state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) heat/water/humid NONE (af9b980, 21188f3, b1272c3); gate-2 RULING asked (INBOX 05:25).
+11-14 06:25 ok_spread DIAGNOSED (docs/research/NE_01_SPREAD_I.md): the binding need is spread_i, NOT f/T (f .38, T .76 clear every seed; ok_night_shelter already 1.0 -> band-geometry arm has no red to serve).
+Drop probe s0-4 spread_i .304/.201/.239/.338/.198 (2/5). One ladder fall = .10-.14 delta_i, and a 40 s rest leg heals .044 (RHO_HEAL 1/900), so the trace is a ratchet and p90-p10 is set by the SCHEDULE.
+Full-heal probe would read ~1 fall (<.30, worse); more falls would read ~1. Next: amend NE.01 notes to declare the i-probe as (A) "falls until a stated delta_i or injury death"
+(the doc's recommendation; bar .30 unmoved), then re-run NE.01 only after the gate-2 ruling (05:25) so one run settles both.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow

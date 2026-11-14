@@ -1051,3 +1051,10 @@ LC.02 re-run: PASS, att 22, foreign_cores_max 0.66, contended 0. All 5 arms clea
 So the 11-12 FAIL and the 00:08 VOID were contention, as J1(1)'s VOID precondition already assumes. CR.01 is now runnable; LC.03 and LC.09 can price. LC.09's borrow now prices all 7 arms, so its UnpricedArm refusal is gone.
 J2: D1.0 watcher 3422501 alive, no exit. J6(c) band-geometry arm read but not started: the current NE.01 shipped row's lowest spread is spread_i 0.248, while spread_f (0.38) and spread_T (0.76) clear in the seed mean, so the order's "spread_f/spread_T < 0.30" needs per-seed rows before an arm is declared.
 Served philosophy 4 (a wall-clock gate's red split into contention vs code, measured on a quiet box rather than argued) and 3 (the challenger cores are now priced for the 3x race).
+
+2026-11-14 06:25 UTC · JACK · J6(c) (J1 blocked on T2.10 ruling; J2 checked) · this commit. J2: D1.0 watcher 3422501 alive (4h34m), no exit.
+J6(c): the previous slot found the order's "spread_f/spread_T < 0.30" didn't fit the record. Per-seed readings settle it: the binding gate-1 need is INTEGRITY (spread_i 0.248), and f and T clear on every seed.
+Ran NE.01's own drop probe on s0-4 (no ledger write): spread_i .304/.201/.239/.338/.198. One ladder fall costs 0.10-0.14. A 40 s rest leg heals 0.044. So the probe draws a ratchet, and the verdict is whatever its schedule makes it.
+A full-heal probe would FAIL worse, because one fall is below 0.30. More falls would pass, but only through the schedule. Wrote docs/research/NE_01_SPREAD_I.md with options A/B/C and a recommendation (A: falls to a declared edge).
+The band-geometry arm has no red to serve (ok_night_shelter is 1.0 at att 5).
+Served philosophy 4: a failing gate traced to its apparatus, with the schedule edits that would game it named before anyone is tempted to make them.
