@@ -264,6 +264,7 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 
 ## INBOX — one line each, workers add, the Director empties
 
+- 11-14 21:40 JACK: `JACK_REUSE_KERNEL` (+ACCEPT_MISMATCH) leaks to every `submit()` of a multi-unit spec: D1.0 att 8 reattached one kernel (b_split s2) for 7 different unit bodies and cached its runs under c_e2e/d_mlp keys (quarantined to /data/d10_units_quarantine_20261114). Each attempt row recorded the slug with the new body's sha, so the mismatch chain looked tolerated. Scope reuse to the first submit, or refuse a second body on the same slug.
 - 11-14 SYSTEM: `coverage` exits 2 again at HEAD (bookkeeping only: GEN.06 new unrunnable citation, SM.02→SM.03 release pair, UNREACHABLE/PASS-ON-DEAD baselines lagging) — not touched. Real finding from S3(2): GOAL ends "advised not commanded" and "tree-fire-shelter world" have NO live claim spec (CLAIM-DEAD) — the advice gate and W2/`W.5` in JACK Next-up 6.
 
 - 11-14 JACK: multi-call Kaggle-CPU specs re-clone the CURRENT HEAD on every call (LF.04 calls ran on 4 different heads) — a code commit mid-run would silently mix versions inside one verdict; pin calls 2..N to call 1's head. Harmless for LF.04 today (code paths unchanged).
