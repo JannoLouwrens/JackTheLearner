@@ -241,8 +241,8 @@ serves: philosophy 4, 5 (a truthful machine).
 still exits non-zero on a planted PASS-on-FAIL-dependency.
 state: 11-13 15:40 (2)+(4) DONE (b7a0364): coverage rc 2 -> 0; claim_dead, empty classes, unreachable/park growth, stale_* printed
 only; planted 7th PASS-on-FAIL pair -> rc 2. FAIL-UNOWNED reads ORDERS (4 -> 1, T2.07). Banked podd 6, unreachable 115 (ruling 4).
-Open: (1) W0.PL/BD.01 gate reads module state (needs a quiet-box W0.PL re-run); (3) T0.28 p10; (5) four GOAL ends in COMMITMENTS.
-run verify not re-checked this slot. T0.21 now stale (coverage.py edit) — regate's to re-buy.
+11-14 (3) DONE (see journal): p10 passes an empty register only if DECIDE blocks parse and every open id has one; planted page with
+mangled DECIDE lines still fails. Probe: exp 20/20 clean, ctl 13 fail, _check True. T0.28 stale -> regate. Open: (1) needs quiet box; (5).
 
 ### S6 — A video the owner can watch (owner request 11-12)
 **Why.** Owner: "a video he can watch". Card line 1: he can be known.

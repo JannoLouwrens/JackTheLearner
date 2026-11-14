@@ -704,19 +704,34 @@ def _probe(safety_enforced: bool) -> dict:
     # never appeared in any report anyone read. A clause nobody can read is an
     # unreviewed clause, and the check that would catch a truncation is
     # whether the LONGEST live default's last words survive to stdout.
-    live_v, live_rows = audit(DOC.read_text(), TODAY)
-    buf = io.StringIO()
-    with contextlib.redirect_stdout(buf):
-        main([])
-    printed = re.sub(r"\s+", " ", buf.getvalue())
+    # EMPTY IS NOT UNREADABLE (S3(3), 11-14): with every owner decision fired
+    # the live register holds no armed row, which this check read as broken. A
+    # register is READABLE when it declares DECIDE blocks and every open id has
+    # one; only then may zero rows pass. A planted page whose DECIDE lines the
+    # parser cannot see must still fail.
+    def _p10_fails(text: str) -> bool:
+        v, rows = audit(text, TODAY)
+        decls, cands, _ = parse(text)
+        if (not decls or any(c not in decls for c in cands)
+                or any(x[0] in ("SAFETY-CLAIM-DEAD", "MEANS-ESCALATED",
+                                "CLASS", "DATE", "NO-DEFAULT") for x in v)
+                or any(not r["default"] or not isinstance(r["due"], _dt.date)
+                       for r in rows)):
+            return True
+        if not rows:
+            return False
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            main([])
+        printed = re.sub(r"\s+", " ", buf.getvalue())
+        longest = max((r["default"] for r in rows), key=len)
+        return (len(longest) < 200
+                or re.sub(r"\s+", " ", longest)[-60:] not in printed)
+    live_text = DOC.read_text()
+    live_v, live_rows = audit(live_text, TODAY)
     longest = max((r["default"] for r in live_rows), key=len, default="")
-    tail = re.sub(r"\s+", " ", longest)[-60:]
-    if (not live_rows
-            or any(v[0] in ("SAFETY-CLAIM-DEAD", "MEANS-ESCALATED", "CLASS",
-                            "DATE", "NO-DEFAULT") for v in live_v)
-            or any(not r["default"] or not isinstance(r["due"], _dt.date)
-                   for r in live_rows)
-            or len(longest) < 200 or tail not in printed):
+    if (_p10_fails(live_text)
+            or not _p10_fails(live_text.replace("DECIDE:", "DECIDE -"))):
         failed.append("p10_live_document_is_armed_and_readable")
 
     # P11 — THE SECOND DESK. An item under `## FOR THE OWNER` that reaches no

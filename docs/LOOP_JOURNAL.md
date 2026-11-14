@@ -1004,3 +1004,10 @@ sequence; V4 VOIDs below 20 completed lives; so (c)'s 5th-pct span is capped at 
 against a 5600 s bar. The ledger's FAIL (p5 54/52 s) reads the apparatus, not only the world. (c) also gates W1.01's passive arm, whose claim is that it dies.
 Re-registration on independent lives proposed in docs/research/W1_04_UNPASSABLE.md, with an INBOX line on the passive arm. No ledger change.
 Served philosophy 4 (a test that could not fail the other way is not a test — caught before an energy-clock race was spent on it) and 5.
+
+2026-11-14 03:10 UTC · SYSTEM · S3(3). S1 still blocked on the T2.10 ruling (INBOX 11-13 14:25), so took S3's next open item.
+T0.28 p10 read an empty decision register as a broken one: every owner decision has fired, `audit()` returns 0 armed rows
+(only D56, a conduct-desk entry, is open), and `not live_rows` failed the certificate on a healthy file. Now zero rows pass only
+when the page is readable (DECIDE blocks parse, every open id is declared); the live page with its DECIDE lines mangled must fail, and does.
+_probe: experiment 20/20 clean, control 13 failures incl. all 11 required, _check True. No ledger write; regate re-buys T0.28.
+Served philosophy 4 (a guard that fires on a healthy state teaches everyone to ignore it) and 5.
