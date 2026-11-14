@@ -1197,3 +1197,8 @@ Declared the DRINK race before any cell. dA = pool far, whose arena ceiling is 4
 Built dB. Apparatus: the dB0 limit arm replays swp_k72 s1 l3 byte-same (26 gulps). Under dB that censored flailer drinks 0 and dies of dehydration at 9116. A still body in the pool still drinks 3/80 s.
 dA/dC need the playground pool-literal refactor (it re-bills certificates), so they were not built. Next: Kaggle-CPU cells for dB.
 Served philosophy 1 (a world where water is earned by an act, not by luck) and 4 (the race declared and its wrapper proven a no-op before any cell).
+
+2026-11-14 18:40 UTC · JACK · J6(d) (J1 DONE; J2: T1.14 watcher 3833353 alive, D1.0 log = BLOCKED by stale T1.14, no exit to act on; J5: CR.01 s131 kernels …9732/…9948 RUNNING, harvest ~20:15) · `dfc577c`.
+Built the Kaggle-CPU runner for the DRINK race (`experiments/drink_race_kcpu.py`): 1-3 cells per kernel, each cell stamped with the sha256 of every file on its code path, and a `status` that sorts cells into current, stale and missing.
+Found that the reusable comparison cells are stale. shipped NE.01 (00:27) and swp_k72 NE.01 (03:50) were written before NE.01's re-registration (06:40/10:13), so the race needs 15 fresh NE.01 cells plus 10 dB W.1/W.2 cells. All 3 arms load; each sha path resolves. Not dispatched: both Kaggle CPU slots belong to CR.01.
+Served philosophy 4 (a race cannot quietly compare against cells from a different spec) and 6 (free Kaggle CPU, not the box).
