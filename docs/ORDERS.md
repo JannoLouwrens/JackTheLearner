@@ -92,11 +92,11 @@ race-won edit may ship (ruling 1 lifts D43's hold for exactly that); re-run
 serves: M2 · END-FIT row 4 (late payoffs need a world whose deadlines allow them) · philosophy 1, 3, 4.
 **done when:** `W.1`, `W.2`, `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd); every death HYPERTHERMIA.
-(c) HEAT RACE HARVESTED 11-14 01:49: NONE SHIPS as declared (tables: docs/research/NEEDS_CLOCK_RACE.md). Apparatus 10/10 replay.
-Sweat moves the fault: random deaths hyperthermia 25/25 -> dehydration 19/25, 23/25 (clock-set clusters ~2400 / ~1450 dec); forager 5/5 alive.
-Lost: ok_random_deaths (some random lives outlive the day), ok_spread (T spread 0.283 = thermoregulated), share still 1.0 (one clock kills all).
-Next: declare + run arm sweat_paid + water clock toward k=72 (fix tally's *_pass catching W.2:c_widest_tol first); question NE.01 T-spread clause for a homeotherm.
+state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) k72 RACE: does NOT ship (e4c10cd). (c) HEAT RACE: NONE SHIPS (af9b980; NEEDS_CLOCK_RACE.md).
+11-14 03:24 WATER RACE LAUNCHED (3d7c0a0): swp_w72 (sweat_paid+B_W 1/3600), swp_k72 (+full k72) vs shipped, heat-race rule; tally fix in. Log /data/tmp/water_race.log.
+FINDING (40d47e4): sweat makes heat death UNREACHABLE: W.2(c) c_hot_reachable 1->0 on 10/10 sweat seeds (roof 40.33->37.34 C), 0/60 heat deaths.
+swp_k72 has both clocks in band (thirst 0.97, hunger 1.30) and still fails (c) on that alone -> no sweating arm can pass W.2(c) as registered.
+Next: harvest `python -m experiments.water_clock_race tally` (~80 min); then declare sweat_paid+k72+a REAL heat hazard (hot sun/fire/humidity), roof route re-aimed.
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow

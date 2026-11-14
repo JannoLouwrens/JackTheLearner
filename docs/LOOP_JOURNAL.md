@@ -1011,3 +1011,10 @@ T0.28 p10 read an empty decision register as a broken one: every owner decision 
 when the page is readable (DECIDE blocks parse, every open id is declared); the live page with its DECIDE lines mangled must fail, and does.
 _probe: experiment 20/20 clean, control 13 failures incl. all 11 required, _check True. No ledger write; regate re-buys T0.28.
 Served philosophy 4 (a guard that fires on a healthy state teaches everyone to ignore it) and 5.
+
+2026-11-14 03:28 UTC · JACK · J6(c) (J1/J2 checked) · 3d7c0a0, 40d47e4. LC.02 waits: a foreign stt proof_r10 job at 100% of a core. J2: D1.0 watcher 3422501 alive, no exit.
+J6(c): declared + launched the water-clock race (swp_w72 = sweat_paid + thirst at k=72; swp_k72 = + full k72) on the heat race's rule, tally fix in; detached, ~80 min.
+First cells already settle one thing: sweat makes heat death UNREACHABLE in W0 — W.2(c)'s roof route peaks 37.34 C (shipped 40.33) on 10/10 sweat seeds and
+0/60 sweat lives died of heat. The heat race's "W.2 flags identical" hid it behind (c)'s clock failure. swp_k72 brings both clocks into band (0.97, 1.30)
+and fails (c) on that alone. W0's only heat death was the missing sweat; the next arm needs a real heat hazard, raced.
+Served philosophy 1 (a world that can kill him the way a human body dies — and it just lost a way) and 4 (a masked sub-clause read, not summarised away).
