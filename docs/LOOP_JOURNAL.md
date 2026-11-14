@@ -990,3 +990,10 @@ Served philosophy 1 (a world that kills him the way a human body dies) and 3/4 (
 2026-11-14 01:55 UTC · JACK · J2 · T1.14 PASS harvested (9d24f8d; Kaggle T4 3673 GPU-s, heldout_cv 17.3%). D1.0 DISPATCHED unchanged under D56's default
 (pre-flight CLEAR, Kaggle W45 1.02h used); first unit assigned to Colab T4, watcher pid 3422501, log /data/tmp/dispatch_d1_0.log. LC.02 still waits: a foreign stt replay at 100% of a core.
 Served philosophy 3 (the control-path contest back on free GPU, decided by measurement) and 6 (free compute that would expire is being spent).
+
+2026-11-14 02:40 UTC · JACK · J7 (J1/J2 checked) · W1.02 PASS. LC.02 waits again: a foreign stt test_invariants held 1 core for 15+ min (load 1.4-1.7).
+J2: D1.0 unit 1 still on Colab (watcher 3422501 alive, no exit) -> nothing to do; committed its runner-written attempt row (9f91377).
+J7: W1.02 att 10 PASS (was VOID at att 9): the graded outcome resolves W0 (96 distinct values vs the censored lifespan's 21, quantum
+ratio 0.0083 vs bar 1/3, a MIN_GAIN injection seen at t=15.9, a zero injection quiet at t=0.08, incumbent fails as its control must).
+The DP-family now has a metric that can see a 5-point gain; next is W1's energy clock (lives ~54 s vs 5600 s horizon).
+Served philosophy 4 (a gate with a control that must fail, passed honestly) and 3 (the venue for the fast/slow race gets its ruler).

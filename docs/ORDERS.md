@@ -107,10 +107,10 @@ Then register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 5.
 **done when:** both have new verdicts and `DP.05`-in-W1 is registered or run.
 state: 11-13 10:40 W1.04 FAIL on (c) only (640e329): 5th-pct life 54.3/52.0 s vs 5600 s horizon, ~272/275 deaths energy.
-11-13 15:45 W1.00 att 3 HARVESTED (edd3e61): FAIL (b) "immaterial" at n=20, a reading. Selection real (repeat ml 54.75 vs white 41.81 s,
-t~16); no Pile A margin fires: dwell ratio 6.94 but t~1.5 and floor f_dw .136 = 22x its std (att-1 sizing assumed sd .0083; measured .244).
-11-14 00:15 W1.02 (re-pinned to att 3, edd3e61) started then KILLED by me at 10 min (my own PIDs, no ledger row): it spawns 3 workers, with heat_race's 2 -> load 6.7/4 cores.
-Next: run W1.02 once heat_race has exited (alone, ~10+ min of 3 workers; use launch_detached if the session is short); then race W1's energy clock; re-run W1.04; register DP.05-in-W1.
+11-13 15:45 W1.00 att 3 HARVESTED (edd3e61): FAIL (b) "immaterial" at n=20, a reading (dwell ratio 6.94 but t~1.5).
+11-14 02:35 W1.02 att 10 PASS (re-pinned to att 3; was VOID): graded outcome 96 distinct vs incumbent 21, quantum ratio 0.0083 (bar <=1/3),
+injected MIN_GAIN t=15.9, zero-injection t=0.08 quiet; incumbent fails as it must. W1.01/W1.03 may now quote quantum 0.0138.
+Next: race W1's energy clock (W1.04 (c): lives ~54 s vs 5600 s horizon, deaths energy); re-run W1.04; register DP.05-in-W1 quoting W1.02's quantum.
 
 ### J8 — The hand-over gate: a Jack trained here still learns on another machine
 **Why.** Owner 11-13: the finished Jack is "trained here, handed to people,
@@ -269,6 +269,7 @@ BUDGET line prints the shared Kaggle account's quota as 'remaining 30 h' when Ka
 
 ## INBOX — one line each, workers add, the Director empties
 
+- 11-14 02:35 JACK: W1.02's HASH-SALT DIFFERENTIAL (reporting-only) timed out (TimeoutExpired) and took ~12 min of 3 workers for a 0.22 s test; it costs the box and still reports nothing.
 - (JACK 11-14 00:30) Supersedes 20:50: Colab needs NO owner re-auth - `colab --auth adc new -s p --gpu T4` assigned a T4 at 00:12 (plain `colab sessions` without `--auth adc` still prints the OAuth URL; gpu.py always passes adc). Kaggle GPU quota also reset by 00:13 (T1.14 running). LC.02 VOID at midnight from foreign load (another tenant's stt proof job + root pmdalinux ~1 core each) - a 'quiet box' may not come on its own; Director may want the 11-14 precondition ruling anyway.
 - (LAB 11-13 23:55) Sense lookahead (`experiments/sense_lookahead.py`, Deliberation seat) pilot DEAD by its rule: fed births /40 babble 5, want 4, told 6, shuffled control 7 (LAB.md). Nothing to grind. Route note for S1: a kernel body that spawns `python -m experiments.*` children must pass `cwd="/tmp/jack"` — without it the kernel ran 48 s, 8x ModuleNotFoundError, and `submit` reported ok=True with no rows; 8 arm-seeds of 10k physics decisions took 17 min at 2 procs.
 - (SYSTEM 11-13 21:15) Guards: decisions/champions exit 0; coverage exits 2 on PASS-ON-DEAD-DEPENDENCY 8 vs banked 6 (new: T2.03, T2.14 <- T1.14 ERROR) — by design, repair is re-runs, not the baseline; also 3 GOAL_UNRUNNABLE_BASELINE entries (DP.02, DP.03, LC.04) live again, and champions parses the END-FIT table (CHAMPIONS.md:51-57) as 6 MALFORMED-ROW seats. All bookkeeping, untouched. S1 still blocked on the T2.10 ruling.
