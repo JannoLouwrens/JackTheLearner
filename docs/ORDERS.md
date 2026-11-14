@@ -96,7 +96,10 @@ state: (a) DONE (fa0f7fc, 98134d7, 2685dd9). (b) RACE DONE (e4c10cd): k72 does N
 11-13 16:40 (c) ROOT (d63b827, experiments/heat_race.py): W0 charges sweat (C_SW) but never pays it; dry skin sheds heat by k_dry only (open day T* 51.0 C).
 Arms shipped / sweat (Gagge G_SW 2.0 M_b/K) / sweat_paid (+C_SW 2.82); rule declared. W.1 PASS 5/5 all arms (cannot discriminate).
 11-14 00:11 heat race LAUNCHED detached (pid 3386493, log /data/tmp/heat_race.log); W.2 15/15 cells done by 00:15, NE.01 15 cells ~70 min wall.
-Next: harvest /data/tmp/heat_race.log ('HEAT RACE EXIT' + tally); apply the declared rule; a winning arm may ship, then re-run W.2/NE.01/LF.03.
+11-14 01:10 PARTIAL tally (NE.01 3/2/2 of 5 seeds; apparatus 8/8 replay OK): sweat moves the fault - random deaths hyperthermia 15/15 -> dehydration
+8/8 (sweat) 9/9 (paid), random life 460-574 -> 2364-5835 / 1437-2479 dec, forager 4/4 alive 3 days (shipped 2/3); but ok_random_deaths 0/.5 (a random life
+outlives the 6000-dec day) and T spread 0.28 < .30 -> clauses (1)+(2) on course to 'none ships'. Note: W.2:c_widest_tol_* is caught as a *_pass flag (lower=better), tied 14.82 here.
+Next: harvest 'HEAT RACE EXIT' + tally, apply the rule as declared; if none ships, the next arm is sweat_paid + the water clock (fault now = thirst).
 
 ### J7 — The deeper world (W1): run the two repaired specs
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`); fast/slow
