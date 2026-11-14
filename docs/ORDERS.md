@@ -116,8 +116,8 @@ serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 formerly-red clause explained.
 state: (a) DONE `e054e0a`. (c) re-read, no ledger (`cce754f` `35e3ebe`, NEEDS_CLOCK_RACE.md): k = 72 gate 2 window [1958, 39158]; pre-sweat k72 0/5 (heat deaths <1958 dec).
 11-14 15:25 humidity probes: hum30 and hum34 each 5/5, 5/5, **3/5** (s2) -> both FAIL gate 2. 16:54 swp_k72 s1 = **4/5** (deaths 9066-13839 dehydration, 1 censored at 39158; 31 min/cell
-in-session, not 18) -> swp_k72 FAILS gate 2 too (s2 killed at its 1900 s timeout, moot). All three k72-family arms are dead on gate 2: the flailer that finds water never dies.
-Next: (d) the humidity function with `K_DRY` re-derived needs an acute killer for the censored life (all censored lives are water-finders), raced by the same rule; nothing goes to NE.01 legs.
+in-session, not 18) -> swp_k72 FAILS gate 2 too (s2 killed at its 1900 s timeout, moot). All three k72-family arms are dead on gate 2 (why the censored lives survive is unmeasured).
+Next: (d) the humidity function with `K_DRY` re-derived must first show why 1-2 random lives per seed outlive 39158 dec, then be raced by the same rule; nothing goes to NE.01 legs.
 (b) unblocked by the lock (LF.04 done), but held by the detached cap today.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
