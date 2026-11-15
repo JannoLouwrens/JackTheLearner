@@ -1,8 +1,7 @@
 # OUTSIDER — 2026-11-15
 
-Read cold: GOAL, PROGRESS, ROADMAP, LF_04_FAIL, POLICY_LOSS_RACE, `cores.py`,
-`survival.py`, `w0.py`, `drives.py`, `forager_race.py` header. One 14 s probe
-run (seed 153, read-only). Not read: END-FIT, `needs.py`.
+Read cold, plus one 14 s read-only probe (seed 153). Not read: END-FIT,
+`needs.py`.
 
 ## 1. The one thing most likely wrong: he cannot see food
 
@@ -19,18 +18,17 @@ about where food is, so no brain can win that race.
 - Touch is a force and a contact flag on four body parts (`w0.py:280-295`); it
   does not say what was touched. The first sign of food is energy rising after
   he has already bumped into it.
-- The scripted forager's 24–27 meals come from reading `geom_xpos`
-  (`lf_01`, `_food_xy`). They prove the food is there, not that he can find it.
+- The scripted forager's 24–27 meals come from reading `geom_xpos` (`lf_01`):
+  they prove the food is there, not that he can find it.
 
-Median spawn-to-food distance is 3.8 m in a 12 m arena. He is asked to find two
-fist-sized objects blind. PROGRESS says a smell sense died in the lab; if so, it
+Median spawn-to-food distance is 3.8 m. PROGRESS says a smell sense died in the lab; if so, it
 died on top of the four faults below, so that death does not acquit the eyes.
 
 Four faults that would keep a sighted Jack hungry too:
 
 - **Eating at birth pays nothing.** d = (1−e)² (`drives.py:192-197`). A floor
   meal pays 0 at e = 1.0 (clipped), 0.0025 at e = 0.95, 0.074 at e = 0.5. Food
-  is worth something only once he is weak (`gear_scale`, `drives.py:200`).
+  pays only once he is weak (`drives.py:200`).
 - **The reward is a pure difference of d** (`survival.py:290-294`), so every
   life that starves sums to exactly −1 whether he ate 0 meals or 20. Only
   γ = 0.95 (`survival.py:63`, a 4-second horizon) makes eating preferable. Death
@@ -54,8 +52,8 @@ different side losses; only `wm-dyn` and the ring arm carry anything.
 ## 2. Is the first job the right job?
 
 Foraging first: yes. A seven-brain race: no. A strong group would first show
-the task is learnable at all — one plain learner, food visible, standard
-settings, a million decisions — and race brains only after one of them eats.
+the task is learnable at all — one plain learner, food visible, a million
+decisions — and race brains only after one eats.
 "Learnable within 15 lives" (LF_04_FAIL §b) is a second untested assumption:
 from-scratch agents on comparable tasks are given 10⁵–10⁶ steps, and a 12-hour
 free kernel is 1.2 M decisions.
@@ -81,31 +79,28 @@ exists); d as now / d linear in (1−e) so a meal pays ν at any hunger. Cost:
 8 cells × 10 h, two kernels. Prediction: only γ 0.995 + held noise + linear d
 reaches 5 meals per life, between 300k and 600k decisions; today's corner stays
 at 0. A winner fixes the learner settings before any brain race and prices the
-15-life rule. No cell eating means the brain is the problem and the race is
-justified.
+15-life rule. If no cell eats, the brain is the problem and the race is right.
 
 ## 4. What the field already knows
 
 - **Potential-based shaping** (Ng, Harada, Russell 1999): a reward that is only
-  Φ(s) − Φ(s′) ranks policies by where they end, not by what they did. Keramati
-  & Gutkin (2014) need the discount for this reason; at a 4 s horizon it is not
-  enough.
+  Φ(s) − Φ(s′) ranks policies by where they end, not by what they did.
+  Keramati & Gutkin (2014) rely on the discount; a 4 s horizon is too short.
 - **Correlated exploration**: Eberhard et al., "Pink Noise Is All You Need"
   (ICLR 2023); Hollenstein et al. (AAAI 2024) for on-policy; gSDE (Raffin 2021).
 - **DreamerV3** (Hafner 2023): the RSSM carries state and action between steps,
   returns are scaled by a running percentile range and never per segment, the
   replay holds 10⁶ steps and is reused tens to hundreds of times per step.
   Prioritised replay (Schaul 2016) keeps rare events.
-- **Deep homeostatic RL** (Yoshida et al., PNAS Nexus 2024) gets foraging from
-  drive reduction with agents that can see the food — worth checking their
-  step counts against the 15-life rule.
+- **Deep homeostatic RL** (Yoshida et al., PNAS Nexus 2024): foraging from
+  drive reduction, by agents that can see the food.
 - **Biology**: no mammal forages at birth. It is fed, learns what food tastes
   and looks like, then searches. An adult that carries food to him is a teacher
-  around him, allowed by rule 2. The weaning pilot fed him by contact at birth,
-  when the meal pays 0 (first fault above).
+  around him, allowed by rule 2. The weaning pilot fed him at birth, when a meal
+  pays 0.
 
 ## 5. What they are doing right
 
-Rules fixed before the run, controls that must fail, and a statue baseline:
-these are why LF.04's failure can be believed. LF_04_FAIL's arithmetic
-(5 meals or 1 apple) is the kind of bar most groups never write down.
+Rules fixed before the run, controls that must fail, a statue baseline: these
+are why LF.04's failure can be believed. LF_04_FAIL's arithmetic (5 meals or
+1 apple) is a bar most groups never write down.
