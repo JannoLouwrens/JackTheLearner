@@ -93,7 +93,7 @@ serves: M2, M7 · philosophy 3, 5.
 state: (1) DONE `f519826`: `CR.01` **FAIL** att 1, 9/9 units on Kaggle CPU (s130-132, N 47). Pooled fed fraction: null .163, staged .156, lp .064, frontier .163. Controls: shuffled .121, matched .085.
 No arm beats null by .20 on any seed. The Curriculum seat stays with null BY VERDICT. FINDING (same root cause as LF.04): every exam death is energy. A learner that cannot forage leaves a curriculum nothing to teach, so re-race CR.01 after a foraging learner exists.
 Last unit …4643: its own receipt ace8b516 = the pulled bytes; the pin swap 84cbc7d->5ccd70b = local 0d56b7e4 (guard misjoined, cited ac0cdcd5).
-(2) 11-15 00:55 meal-memory grind 9/15 cells current: s94/s95/s96 LANDED, 0 errors (rows fifo/meal/yoked: s94 70/77/68, s95 68/88/96, s96 54/84/86).
+(2) 11-15 00:55 meal-memory grind 9/15 cells current: s94/s95/s96 LANDED, 0 errors (rows fifo/meal/yoked: s94 70/77/68, s95 68/88/96, s96 71/86/62).
 In flight (2 pollers): s97 `jack-cpu-1794703172` (meal_kcpu_s97.log), s98 `jack-cpu-1794703940` (meal_kcpu_s98.log). These are the last cells the grind declared.
 Next: when both logs end in a `{...}` line, run `$PY -m experiments.meal_memory_kcpu status` (expect 15 current), then `... gate`. Record the verdict as declared: clears -> register against NE.05's seat; dies -> say so. Dead poller -> reattach `JACK_REUSE_KERNEL=<slug>` (single-unit).
 
