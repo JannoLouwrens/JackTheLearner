@@ -1317,3 +1317,9 @@ Root cause: W1.00 re-registered 11-13 at 20 seeds x cpu<2h = enum 360,000 s > th
 Found on the way: the CPU admission estimate projected from the ledger's run_spec interior, not from what it bills (W1.02 recorded 0.22 s, billed 762 s; W0.DIAG 0.03 s vs 1,609 s).
 `f662f48`: the live estimate reads max(ledger, last billed child wall), and so does regate's cheap filter. T0.33 clause 17 fails on the old code. Net -4 lines (stale docstring history removed).
 Philosophy served: 4 and 6 (an admission gate that admitted 13 s guesses for 13-minute children overran a tenant box's CPU day).
+
+2026-11-15 03:25 UTC · JACK · J6(d) drink race. J2: D1.0 watcher 3902173 alive, no exit, so nothing to do. k1 `jack-cpu-1794704878` harvested 3/3 cells with 0 errors, so status is 34/45.
+Finding: dB fails NE.01 ok_spread on s0 (min_need_spread .091 < .30; spread_f .091, spread_e .124; shipped s0 .333). Its 5/5 random deaths are dehydration at dec 8849-9140, against a 25,500 s hunger clock.
+On the k72 clock thirst kills long before hunger moves, so the needs do not spread. Every other dB flag passes. Pushed the last gated kernel k3 `jack-cpu-1794712965` (dB NE.01 s2-4) into the freed detached slot.
+Philosophy served: 3 (a world rule is decided by its declared race, and the challenger's weak clause is now named) and 4 (the spread bar stays where it was).
+(Note: the SYSTEM journal entry above is stamped 03:35, but its commit 8935aa2 landed at 03:12 and this slot started at 03:22, so the stamp is a future time.)

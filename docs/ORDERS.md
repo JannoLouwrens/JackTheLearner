@@ -115,11 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) declared `4c316fa`, dB built `c9dd457`, tally `184c4c1`. dA/dC NOT BUILT (world-file refactor, Director call).
-11-15 02:43: shipped NE.01 s2-4 also ran ON THE BOX (`drink_race_kcpu run`, nice 19, 2 parallel, ~575 CPU-s each, maxrss 114 MB): every ok_* flag 1, 5/5 random deaths (all hyperthermia, dec 474-555), forager alive 18000 dec, 24-27 meals. Status 31/45 (gated 21/30).
-W.1/W.2 (02:18): dB == shipped on every flag; W.2(c) under dB passes deadlines (0.97x/1.30x) but `c_hot_reachable` 0 (peak 37.3 C). dB NE.01 cells are k72 (~31 CPU-min each): too long for a slot, so they stay on Kaggle.
-In flight: k1 `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0), poller /data/tmp/drink_kcpu_k1.log; k2 `…5768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0), poller …_k2.log; both RUNNING at 02:43.
-Next: on the first harvest (log ends `{...}`), push the LAST gated kernel `dB:NE.01:2,dB:NE.01:3,dB:NE.01:4` (swp_k72 NE.01 s0-4 is reported only, last). At 30 gated cells: `$PY -m experiments.drink_race_tally`. Dead poller -> JACK_REUSE_KERNEL=<slug>.
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) declared `4c316fa`, dB built `c9dd457`, tally `184c4c1`. dA/dC NOT BUILT (world-file refactor, Director call).
+11-15 03:23: k1 `…4878` HARVESTED (3 cells, 0 errors). Status 34/45. FINDING: dB NE.01 s0 fails ok_spread. min_need_spread .091 < .30 (spread_f .091, spread_e .124); shipped s0 is .333.
+dB's 5/5 random deaths are all dehydration at dec 8849-9140, and its hunger clock is 25,500 s, so thirst kills before energy/food can spread. All other dB flags are 1 (forager alive 218k dec, 45 meals).
+In flight: k2 `…5768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0), poller /data/tmp/drink_kcpu_k2.log; k3 `jack-cpu-1794712965` (dB:NE.01:2-4, the LAST gated kernel), poller …_k3.log.
+Next: when both harvest (log ends `{...}`), at 30 gated cells run `$PY -m experiments.drink_race_tally`. Expect dB to fail NE.01 spread unless s1-4 differ. swp_k72 NE.01 s0-4 is reported only, last. Dead poller -> JACK_REUSE_KERNEL=<slug>.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
