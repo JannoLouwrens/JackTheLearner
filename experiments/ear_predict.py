@@ -61,7 +61,28 @@ THE RULE (written before any seed is run; pilot seeds 0,1,2)
   Broken-code readings: label at N = 125 under 60% (the net cannot learn
   words at all), or shuf beating label by >= 5 (the pretext leaks labels).
 
-USAGE  python -m experiments.ear_predict cache          # features, once
+RESULT OF THE RULE ABOVE (11-15, seeds 0-2): DEAD at both clocks. N = 25:
+200 ms label 60.3, pred 62.2 (+1.8; per seed +2.4 +0.6 +2.5), wm 61.3, shuf
+59.8; 40 ms label 62.4, pred 64.7 (+2.3; +2.5 +5.8 -1.3), shuf 62.7. The
+docstring's worry was wrong: he DOES predict the next tick (MSE 0.41 at 200
+ms, 0.13 at 40 ms, against 0.91 / 0.89 shuffled) - and it buys his words
+almost nothing. Predictable sound is not word-bearing sound.
+
+SECOND BET, NEW REASON (rule written before seeds 3,4,5 are run). The record's
+ear that halved phone errors (CPC, 1807.03748) is CONTRASTIVE: it must pick
+the true next tick out of other ticks, so loudness and silence - what an MSE
+loss is paid for - earn nothing. Arms, 200 ms clock only (his clock):
+  label   as above.
+  cpc     listen first: W h_t must pick its own next tick's ear embedding
+          e_(t+1) out of every tick in the batch (InfoNCE, cosine, temp 0.1).
+  cshuf   CONTROL THAT MUST FAIL: the "own next tick" is another clip's.
+  Same three clauses, same bar, same cell: ALIVE iff cpc - label >= +5.0
+  points at N = 25, cpc ahead on 3 of 3 seeds, cshuf's gain under half of
+  cpc's. DEAD otherwise, and then "his ear needs a labelled or narrated loss"
+  stands as the record already says (section 7: 0.135 without a loss on the
+  sound channel) - no third pretext is tried without a new prior.
+
+USAGE  python -m experiments.ear_predict cache         # features, once
        python -m experiments.ear_predict run --seed 0   # one seed, all cells
        python -m experiments.ear_predict tally          # the table + the rule
 """
@@ -83,6 +104,7 @@ POOL_N, CAND_N, VAL_N = 20000, 300, 100
 SHIFT = 10                       # frames = 100 ms
 CLOCKS = {"200ms": 20, "40ms": 4}
 ARMS = ["label", "pred", "wm", "shuf"]
+ARMS2 = ["label", "cpc", "cshuf"]            # the second bet, 200 ms only
 NS = [5, 25, 125]
 PRE_EPOCHS, LABEL_STEPS, CKPTS, BATCH = 8, 1200, (300, 1200), 64
 
@@ -172,13 +194,14 @@ def build(T, seed):
             s.word = nn.Linear(64, len(WORDS))
             s.now = nn.Sequential(nn.Linear(64, 128), nn.ReLU(), nn.Linear(128, T * N_MELS))
             s.nxt = nn.Sequential(nn.Linear(64, 128), nn.ReLU(), nn.Linear(128, T * N_MELS))
+            s.nce = nn.Linear(64, 64, bias=False)              # built last
 
-        def states(s, x):                                      # x: B, 100, 40
+        def states(s, x, ear=False):                           # x: B, 100, 40
             B = x.shape[0]
             c = x.reshape(B * (FRAMES // T), T, N_MELS).transpose(1, 2)
-            e = torch.relu(s.fc(torch.relu(s.conv(c)).flatten(1)))
-            h, _ = s.core(e.reshape(B, FRAMES // T, 64))
-            return h                                           # B, ticks, 64
+            e = torch.relu(s.fc(torch.relu(s.conv(c)).flatten(1))).reshape(B, FRAMES // T, 64)
+            h, _ = s.core(e)
+            return (h, e) if ear else h                        # B, ticks, 64
 
         def logits(s, x):
             return s.word(s.states(x).mean(1))
@@ -206,13 +229,21 @@ def listen(net, arm, T, pool, seed):
         order = rng.permutation(len(pool)); tot = []
         for i in range(0, len(order) - 127, 128):
             x = _shift(torch.from_numpy(pool[order[i:i + 128]].astype(np.float32)), rng)
-            h = net.states(x)
+            h, e = net.states(x, ear=True)
+            if arm in ("cpc", "cshuf"):
+                nf = torch.nn.functional
+                z = e[torch.randperm(x.shape[0])] if arm == "cshuf" else e
+                q = nf.normalize(net.nce(h[:, :-1]).reshape(-1, 64), dim=1)
+                k = nf.normalize(z[:, 1:].reshape(-1, 64), dim=1)
+                loss = nf.cross_entropy(q @ k.T / 0.1, torch.arange(len(q)))
+                opt.zero_grad(); loss.backward(); opt.step(); tot.append(loss.item())
+                continue
             tk = x.reshape(x.shape[0], FRAMES // T, T * N_MELS)
             tgt = tk[torch.randperm(x.shape[0])] if arm == "shuf" else tk
             loss = ((net.nxt(h[:, :-1]) - tgt[:, 1:]) ** 2).mean()
             if arm == "wm":
                 loss = loss + ((net.now(h) - tk) ** 2).mean()
-            opt.zero_grad(); loss.backward(); opt.step(); tot.append(float(loss))
+            opt.zero_grad(); loss.backward(); opt.step(); tot.append(loss.item())
         last = {"epoch": ep, "loss": float(np.mean(tot))}
     return last
 
@@ -245,7 +276,7 @@ def narrate(net, X, y, F, seed):
     return {"val": out[best]["val"], "test": out[best]["test"], "ckpt": best, "all": out}
 
 
-def run(seed):
+def run(seed, clocks=None, arms=None):
     import copy
     import torch
     torch.set_num_threads(2)
@@ -255,7 +286,9 @@ def run(seed):
                                for k in range(len(WORDS))]) for N in NS}
     path = os.path.join(OUT, f"seed{seed}.jsonl")
     for clock, T in CLOCKS.items():
-        for arm in ARMS:
+        if clocks and clock not in clocks:
+            continue
+        for arm in arms or ARMS:
             t0 = time.time()
             base = build(T, seed)                 # same init for every arm of a seed
             pre = listen(base, arm, T, F["pool"], seed) if arm != "label" else {}
@@ -264,7 +297,7 @@ def run(seed):
                 r = narrate(net, F["cand"][draw[N]], F["cand_y"][draw[N]], F, seed)
                 row = {"seed": seed, "clock": clock, "arm": arm, "N": N, **r, "pre": pre,
                        "params": sum(p.numel() for n, p in net.named_parameters()
-                                     if not n.startswith(("now", "nxt"))),
+                                     if not n.startswith(("now", "nxt", "nce"))),
                        "secs": round(time.time() - t0, 1)}
                 with open(path, "a") as f:
                     f.write(json.dumps(row) + "\n")
@@ -272,7 +305,10 @@ def run(seed):
                       flush=True)
 
 
-def tally(seeds):
+def tally(seeds, clocks=None, arms=None):
+    ARMS = arms or globals()["ARMS"]
+    CLOCKS = clocks or list(globals()["CLOCKS"])
+    chal, ctrl = [a for a in ARMS if a not in ("label", "shuf", "cshuf")], ARMS[-1]
     rows = [json.loads(l) for s in seeds for l in open(os.path.join(OUT, f"seed{s}.jsonl"))]
     cell = lambda c, a, N, k: np.array([r[k] for s in seeds for r in rows
                                         if (r["seed"], r["clock"], r["arm"], r["N"]) == (s, c, a, N)])
@@ -283,9 +319,9 @@ def tally(seeds):
                 f"{a} {100 * cell(c, a, N, 'test').mean():5.1f} ({' '.join(f'{100 * v:.1f}' for v in cell(c, a, N, 'test'))})"
                 for a in ARMS))
         lab = cell(c, "label", 25, "test")
-        ch = max(("pred", "wm"), key=lambda a: cell(c, a, 25, "val").mean())
+        ch = max(chal, key=lambda a: cell(c, a, 25, "val").mean())
         g = 100 * (cell(c, ch, 25, "test") - lab)
-        gs = 100 * (cell(c, "shuf", 25, "test") - lab)
+        gs = 100 * (cell(c, ctrl, 25, "test") - lab)
         ok = g.mean() >= 5.0 and (g > 0).all() and gs.mean() < g.mean() / 2
         print(f"  RULE N=25: challenger (by validation) = {ch}; gain {g.mean():+.1f} "
               f"(per seed {' '.join(f'{v:+.1f}' for v in g)}); shuf gain {gs.mean():+.1f} "
@@ -299,5 +335,8 @@ if __name__ == "__main__":
     ap.add_argument("cmd", choices=["cache", "run", "tally"])
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])
+    ap.add_argument("--clock", nargs="+", choices=list(CLOCKS))   # split a seed under the box's 15 CPU-min
+    ap.add_argument("--arms", nargs="+", choices=ARMS + ARMS2[1:])
     a = ap.parse_args()
-    {"cache": cache, "run": lambda: run(a.seed), "tally": lambda: tally(a.seeds)}[a.cmd]()
+    {"cache": cache, "run": lambda: run(a.seed, a.clock, a.arms),
+     "tally": lambda: tally(a.seeds, a.clock, a.arms)}[a.cmd]()
