@@ -376,7 +376,23 @@ LEARN_MARGIN = round(MIN_LEARN_SIGMA
 # STEP_TARGET must stay strictly above T2.01 v5's 704,512 env-steps/seed
 # (arm C's "more steps" clause).
 STEP_TARGET = 750_000
-MINUTES_CAP = {"aprime": 90, "b_split": 150, "c_e2e": 150, "d_mlp": 15}
+MINUTES_CAP = {"aprime": 195, "b_split": 325, "c_e2e": 325, "d_mlp": 15}
+                            # RE-DERIVED 2026-11-15 from attempt 9's T4 units
+                            # (was 90/150/150/15, frozen from the 2026-09-01
+                            # P100 pilot). Kaggle now assigns Tesla T4 (all 9
+                            # Kaggle units of att 9 record it); at the P100
+                            # caps the three trunk arms stopped at 60/60/61%
+                            # of STEP_TARGET and _check VOIDed the run, saying
+                            # "Raise that arm's MINUTES_CAP". Slowest measured
+                            # T4 seed: aprime 450,560 steps / 90 min -> 150
+                            # min to 750k; b_split 450,560 / 150 -> 250;
+                            # c_e2e 458,752 / 150 -> 245. Caps = that x 1.3
+                            # (the pilot froze 1.26-1.67x). d_mlp reached
+                            # 753,664 in <= 11.5 min on T4: 15 holds (1.3x).
+                            # _train_arm stops at STEP_TARGET, so a cap only
+                            # bounds a slow GPU; it moves no gate.
+                            # STEP_TARGET, MIN_STEP_MATCH, both sigma bars and
+                            # every control are unchanged.
 _KERNEL_SPLIT = (("aprime", "d_mlp"), ("b_split",), ("c_e2e",))
                             # HISTORICAL since 2026-11-12: attempt 2's
                             # grouping. Submission is now one job per
