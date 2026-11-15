@@ -64,11 +64,10 @@ Kaggle CPU kernels, launched the way `forager_race3` launched its cells; only
 a 2-seed smoke of each row runs on the box. Write (f) and its rule first.
 serves: M2 · PLAN stage 1 "a first rung he can live on", "proof the task can be learned" · philosophy 4, 5.
 **done when:** `WORLD_CARD.md` has the seven rows and the three answers.
-state: 11-15 built+launched: rule, rows a–g in `world_card.py`. HARVESTED: b (0.52 floor meals/life, 302 s), a (0 meals, 600 s; §8 floor gate holds), f **FAIL 6/20** (4.13/life), g control **0/20** (2.97/life blind), c pink (0.44/life, 491 s; paired vs b t −0.70 — correlated noise finds no more food). Card + raw in `docs/research/world_card_data/`.
-state: 20:10 g says f is blind after life 0: lives 1–9 f 3.22 vs g 2.99 (paired t 0.57, 11/20); life 0 12.35 vs 2.75 (t 5.6). Answer (2) in the card: every death sums −1.00.
-state: f2 FROZEN at F2_BAN_S=inf (`75330078`): smoke 153/154 7.6/7.7 meals/life, lives 1–9 7.4/6.0 — the collapse was the ruler's rules, not the world.
-state: RUNNING on Kaggle CPU (5/5 sessions, all ours): e (18:37), d8 (19:23), d32 (20:10), f2 (20:12, seeds 221–240), g2 (20:33). Pollers write `/data/jack-logs/world_card/<row>.jsonl`.
-state: next: harvest each row as its jsonl appears → `world_card_data/`, table, sha; launch b2 (`scripts/launch_detached.sh /data/jack-logs/world_card_b2.log $PY -m experiments.world_card kernel b2`, push first) into the first freed session; score(f2,b2,F2_SEEDS), g2 must miss. Then answers 1 (beside e) and 3 (from f/g/f2) final.
+state: 11-15 HARVESTED (card + raw in `docs/research/world_card_data/`): a 0 meals/600 s; b 0.52/life 302 s; c pink 0.44 (no better than b); f FAIL 6/20 (4.13); g control 0/20 (2.97, f blind after life 0); answer (2): every death sums −1.00.
+state: 21:25 d8 (held 8) 1.16/life vs b 0.52: 2.24×, paired t 7.29, 19/20 seeds — mostly longer life (539 vs 302 s; per 100 s 1.25×, t 2.59). d8 is the best random row (`f565a4ee`).
+state: f2 FROZEN at F2_BAN_S=inf (`75330078`), smoke 7.6/7.7 meals/life. RUNNING on Kaggle CPU (5/5 sessions ours): e (18:37), d32 (20:10), f2 (20:12, seeds 221–240), g2 (20:33), b2 (21:22). Pollers write `/data/jack-logs/world_card/<row>.jsonl`.
+state: next: harvest each row as its jsonl appears (copy to `world_card_data/`, table row + sha in the header, paired vs b/d8); then score(f2,b2,F2_SEEDS) with g2 must miss; then answers 1 (beside e) and 3 (from f/g/f2) final → J1 DONE.
 
 ### J2 — A first rung he can live on: the difficulty dial and the record's setup, as wrapper options
 part: His world, needs and lessons + Learning to eat · stage: 1 · step: 2 (combine) · prior: §3 "Take as-is", "Staging"; §1 table "Ours beside theirs"

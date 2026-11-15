@@ -1558,3 +1558,8 @@ Philosophy served: 5 (his world — the first rung he can live on is being built
 `scripts/life_video.py`: lives one random-action life in `jack_env` (seed 153), records poses per decision, replays them with mj_forward under Xvfb+llvmpipe (no world RNG touched), third-person orbit cam → `/data/jack-video/latest.mp4`: 294 s life (energy death, 1 meal) in 41 s, 854x480 H.264 12 fps, 1.6 MB, 105 s wall at nice 19.
 Gotchas: his body is geom group 3 (hidden in the default MjvOption — first render had no Jack in it); no system ffmpeg, libx264 comes from /data/stt/bin/ffmpeg.
 Philosophy served: 1 (he can be known — the owner can watch him live and die), 5 (machine work the owner asked for, one slot, no cron, no service).
+
+## 2026-11-15 21:40 · JACK · J1 row d8 harvested, b2 launched (short slot)
+Row d8 (random action held 8 decisions) back from Kaggle, 200 lives on seeds 201–220: 1.16 floor meals/life vs white b 0.52 — 2.24×, paired per seed t 7.29, d8 above b on 19/20 (vs pink c 2.62×, 18/20). Most of the gain is a longer life (539 vs 302 s); per 100 s alive 0.212 vs 0.170 (1.25×, t 2.59, 15/20). The record's 2.5–4× for correlated noise roughly holds for held actions per life, not for pink noise. Why held arms live longer is not measured. d8 is now the best random row — J2's d0 rule ("J1's best random row") points at it.
+b2 launched into d8's freed Kaggle session (21:22); all 5 sessions ours again (e, d32, f2, g2, b2). Spawn-distance dial for J2 not started: did not fit the remaining slot safely.
+Philosophy served: 4 (a published prediction tested with paired seeds; held where it held, refused where it did not), 5 (his world measured before any brain).
