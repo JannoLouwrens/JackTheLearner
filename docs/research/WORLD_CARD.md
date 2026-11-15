@@ -11,14 +11,14 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; e running, d8 launched 19:23, d32 launched 20:10; f2 launched 20:12 on 221–240, g2/b2 pending a session)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; d8 harvested 21:25, `d8.jsonl` sha256 f4a24125…; e running, d32 launched 20:10; f2 launched 20:12 on 221–240, g2 launched 20:33, b2 launched 21:22)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
 | a | do-nothing | 599.9 ± 0.2 (599.4–600.0) | 0 (0/200 lives ≥1) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | b | random, white per decision | 301.7 ± 16.4 (278–376) | 0.52 ± 0.76 (max 4; 76/200 lives ≥1; per-seed means 0.1–0.9) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | c | pink noise per life | 491.5 ± 30.1 (443–677) | 0.44 ± 0.86 (max 6; 58/200 lives ≥1; 1/200 ≥5; per-seed means 0.0–1.8) | 0 | n/a | energy 200/200 | −1.00 (all) |
-| d8 | action held 8 | | | | n/a | | |
+| d8 | action held 8 | 539.4 ± 53.6 (493–775) | 1.16 ± 1.46 (max 7; 110/200 lives ≥1; 9/200 ≥5; per-seed means 0.4–2.1) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | d32 | action held 32 | | | | n/a | | |
 | e | privileged NE.01 forager | | | | n/a | | |
 | f | hand forager, observation only | 742.1 ± 278.9 (6–1800; median 696) | 4.13 ± 4.98 (max 28; 168/200 lives ≥1; 59/200 ≥5; per-seed means 1.6–7.7, median 4.05) | 0 | n/a | energy 189, integrity 10, censored 1 | −1.00 (199 lives); −0.88 (the 1 censored) |
@@ -170,6 +170,19 @@ not eat more: 0.44 vs 0.52 floor meals/life, per-seed paired difference
 The §1 prediction (correlated noise finds 2.5–4× more food) does NOT hold for
 pink noise on this world. The longer life is presumably a cheaper action
 stream (less arm power; NOT measured) — it is not food found. d8/d32 owed.
+
+## Row d8 against b and c (harvested 21:25; same seeds 201–220)
+
+Holding each random action for 8 decisions eats **1.16 vs 0.52** floor
+meals/life (b): per-seed paired difference +0.64, t = 7.29 (p 6e-7), d8 above
+b on 19/20 seeds, ratio **2.24×**; against pink c 2.62× (t 4.93, 18/20).
+Most of it is a longer life (539 vs 302 s): per 100 s alive d8 eats 0.212 vs
+b 0.170 (1.25×, paired t 2.59, 15/20). The §1 prediction (2.5–4× more food
+for correlated noise) holds roughly for held actions per life (2.24×, just
+under the band) and not for pink noise (row c). Why held arms live longer is
+NOT measured (guess: slides saturate and stop drawing power). 0/20 seeds reach
+f's bar; d8 is now the best random row, so J2's d0 is measured against it.
+d32 owed.
 
 ## Answers (owed after the registered rows)
 
