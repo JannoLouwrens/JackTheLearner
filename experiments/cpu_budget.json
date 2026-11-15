@@ -1095,7 +1095,8 @@
         "T0.29": 225.33,
         "T0.31": 4.23,
         "T0.32": 7.55,
-        "T0.33": 4.02,
+        "T0.33": 6.33,
+        "T0.34": 26.61,
         "T0.35": 9.71,
         "T0.36": 74.06,
         "T1.03": 188.59,
@@ -1111,7 +1112,7 @@
         "detached:fatigue_probe_shipped": 223.97,
         "detached:fatigue_probe_swp_k72": 89.76,
         "detached:humid_kcpu_h1.log": 318.4,
-        "detached:humid_kcpu_h2.log": 165.59,
+        "detached:humid_kcpu_h2.log": 304.06,
         "detached:meal_kcpu_s94.log": 131.01,
         "detached:meal_kcpu_s95.log": 25.87,
         "detached:meal_kcpu_s96.log": 26.05,
@@ -1119,7 +1120,7 @@
         "detached:meal_kcpu_s98.log": 28.73,
         "detached:plr_s150.log": 50.33
       },
-      "used_s": 6450.05
+      "used_s": 6617.44
     }
   },
   "last_child_s": {
@@ -1140,7 +1141,8 @@
     "T0.28": 80.69,
     "T0.29": 112.96,
     "T0.31": 4.23,
-    "T0.33": 1.97,
+    "T0.33": 2.31,
+    "T0.34": 26.61,
     "T0.36": 74.06,
     "T1.03": 188.59,
     "T1.05": 53.21,

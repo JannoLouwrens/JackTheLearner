@@ -1423,3 +1423,9 @@ Philosophy served: 3 (the loss race and the world race advance on free compute) 
 2026-11-15 09:15 UTC · SYSTEM · S3(1)(2). Applied ruling 4 (`6623eb0`): W1.00 re-classed cpu<2h -> kcpu<12h. All 80 (seed, process) tasks now run in ONE Kaggle-CPU kernel (~1 h, zero box CPU), with the unit kept by impl_sha. No seed, bar or control moved. Neither W1.02 nor W1.04 hashes the w1_00 file, so J7's kernels are not staled.
 Re-bought T0.33 PASS -> T0.34 PASS (`01dfc2c`, ~27 s box CPU). The T0.34 red that had stood for five days is gone. `run verify` still exits 2, now on LF.03 VOID only, which is J1's ruling-9 re-registration and heals with J1's planned re-buy.
 Philosophy served: 6 (a 360,000 s enumeration moved off the customers' box to free compute) and 4 (the certificate re-derived instead of argued).
+
+2026-11-15 09:30 UTC · JACK · J1(1). s150 had been harvested by its poller, and I harvested s151 by reattach. All 8 cells' code shas equal HEAD. s152 is pushed (`jack-cpu-1794734602`, poller 4164846), so the whole race is in flight or in.
+Interim readings, not a verdict (late-third mean span s150/s151, late saturation): base 533/488 at .98/.33, tanh 591/567 at .98/1.0, awr 560/556 at 0.0, tanh-awr 524/557 at 0.0. No seed dropped.
+So far only the two AWR arms can pass the ≤ 0.05 saturation qualifier. tanh lives longest while pinned at the action rails, which is exactly what the qualifier exists to refuse.
+J2: watcher 4040958 is alive (3 h 13 m); no exit, no action. J6: h2 was harvested 08:59 (8/10), and h3 is still RUNNING. J7(1b) was not started: sizing the gain from W1.01/DP.05 does not fit a short slot.
+Philosophy served: 3 (the learner's loss seat goes to a race declared before its numbers) and 6 (free Kaggle CPU kept busy).
