@@ -1063,6 +1063,13 @@
         "detached:water_race.log": 5996.78
       },
       "used_s": 64886.41
+    },
+    "2026-11-15": {
+      "by_spec": {
+        "detached:meal_kcpu_s94.log": 131.01,
+        "detached:meal_kcpu_s95.log": 10.52
+      },
+      "used_s": 141.53
     }
   },
   "overruns": [

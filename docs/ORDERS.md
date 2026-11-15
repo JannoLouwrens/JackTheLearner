@@ -93,8 +93,9 @@ serves: M2, M7 · philosophy 3, 5.
 state: (1) DONE `f519826`: `CR.01` **FAIL** att 1, 9/9 units on Kaggle CPU (s130-132, N 47). Pooled fed fraction: null .163, staged .156, lp .064, frontier .163. Controls: shuffled .121, matched .085.
 No arm beats null by .20 on any seed. The Curriculum seat stays with null BY VERDICT. FINDING (same root cause as LF.04): every exam death is energy. A learner that cannot forage leaves a curriculum nothing to teach, so re-race CR.01 after a foraging learner exists.
 Last unit …4643: its own receipt ace8b516 = the pulled bytes; the pin swap 84cbc7d->5ccd70b = local 0d56b7e4 (guard misjoined, cited ac0cdcd5).
-(2) 11-15 00:24 meal-memory claim grind STARTED: s94 `jack-cpu-1794702252` (log /data/tmp/meal_kcpu_s94.log), s95 `jack-cpu-1794702287` (meal_kcpu_s95.log), detached pollers, ~20-40 min each. The gate is `meal_memory_kcpu.claim_gate` (4/5 + born_d), fixtures 5/5.
-Next: check each log for "written"; if a poller died, reattach with `JACK_REUSE_KERNEL=<slug>`. Then launch s96+s97, then s98 (`kernel fifo:96,meal:96,yoked:96` …), then `$PY -m experiments.meal_memory_kcpu status` and `… gate`.
+(2) 11-15 00:38 meal-memory grind 3/15 cells current: s94 `jack-cpu-1794702252` LANDED (fifo 70, meal 77, yoked 68 rows, no errors, 718 s). s95 `jack-cpu-1794702287` still polling (meal_kcpu_s95.log).
+s96 `jack-cpu-1794703065` pushed 00:37 (meal_kcpu_s96.log). Two pollers alive = ruling 3's cap; box detached spend 11-15 is 142 s. Gate reads `need 15 current cells`.
+Next: check s95/s96 logs for "written" (dead poller -> reattach `JACK_REUSE_KERNEL=<slug>`, single-unit only). Then launch s97, then s98, then `$PY -m experiments.meal_memory_kcpu gate`.
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
 **Why.** `W.1` is PASS (05:28). `W.2` and `NE.01` are red. Four races (k = 72,
