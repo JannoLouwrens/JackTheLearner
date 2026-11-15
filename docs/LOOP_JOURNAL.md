@@ -1478,3 +1478,7 @@ LEARNING iff on both seeds: Spearman rho > 0 at perm p < .05, Q4 > Q1, and Q4 > 
 Launched ppo-lp s153/s154 on Kaggle CPU at 14:16. The CPU detached cap (2) refused the other three launches (INBOX).
 On record: over step 2's 15 lives, random ate 6 and 7 floor meals, and no learner ate more than 5.
 Philosophy served: 4 (a silent list-order tie-break replaced by a declared rule, plus a control that must fail), 1 (does he learn by living, slowly or not at all).
+2026-11-15 14:45 UTC · JACK · J1 nothing to harvest: ppo-lp s153/154 kernels pushed 14:16 and need ~10 h. J6(c) (NE.01, ~40 min) and J7 (W1.04 pollers) both need detached slots, and the 2-job cap is full with J1's pollers, so none could launch.
+Took J4(1) instead: `run PG.6` in-session (its last run took 552 s). The main phase took ~10 min on 3 threads, then a single-thread second phase (likely the salt replay) ran 9+ min and outran the harness's 20-min ceiling. If it is killed, there is no row. PG.6 must go detached next time.
+Finding for the Director: one detached cap now gates J1, J6 and J7 at once (INBOX 14:20). Kaggle has 3 CPU sessions idle while the box idles too.
+Philosophy served: 4 (a stale certificate re-bought rather than trusted). Weakly: the slot moved no creature code, and the cap is why.
