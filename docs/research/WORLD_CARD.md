@@ -11,7 +11,7 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; a,f,g running, e launched 18:37, c,d8,d32 pending a session)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a,g,e running, c launched 19:07, d8,d32 pending a session)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
@@ -21,11 +21,49 @@ hand forager (row f). No learner, no ledger row: these are rulers.
 | d8 | action held 8 | | | | n/a | | |
 | d32 | action held 32 | | | | n/a | | |
 | e | privileged NE.01 forager | | | | n/a | | |
-| f | hand forager, observation only | | | | n/a | | |
+| f | hand forager, observation only | 742.1 ± 278.9 (6–1800; median 696) | 4.13 ± 4.98 (max 28; 168/200 lives ≥1; 59/200 ≥5; per-seed means 1.6–7.7, median 4.05) | 0 | n/a | energy 189, integrity 10, censored 1 | −1.00 (199 lives); −0.88 (the 1 censored) |
 | g | control: (f) with rays shuffled | | | | n/a | | |
 
 Bar for (f), unmoved from `LF_04_FAIL.md`: per seed, mean floor meals per life
 ≥ 5 and above row b on the same seed, on ≥ 18 of 20 seeds. (g) must miss it.
+
+**Row f against its bar: FAIL — 6 of 20 seeds (needs 18).** `score(f, b)`:
+every seed is above random (20/20; pooled 4.13 against 0.52 floor meals per
+life, 7.9×), but only seeds 204, 205, 207, 208, 211, 215 reach 5.0 per life.
+The bar is not moved and f is not retuned on these seeds. Row b against the
+same bar: 0 of 20 (the §8 floor-arm gate holds for b; a is pending).
+
+What the 200 lives show, and why f missed (the diagnosis is on smoke seed 154,
+box, `/data/tmp/wc_diag` — tuning seed, NOT evidence):
+- **He eats in his first life and not after.** Mean floor meals by life index:
+  12.35, 6.45, 4.70, 3.00, 2.75, 2.70, 2.15, 2.55, 2.15, 2.55. Life 0 alone:
+  12.35 ± 7.77 meals, 1,147 s, ≥ 5 meals on 17 of 20 seeds (post-hoc reading,
+  not the registered bar). Lives 1–9: 3.22 meals, 697 s. The smoke that tuned
+  f ran 2 lives per seed, so it never saw this.
+- **Cause 1, the ruler:** f's memory carries across lives and its bans are
+  permanent. On seed 154 it learned both true food textures (0.43, 0.80) in
+  life 0, and by the end of life 1 had demoted and banned both (3 misses in a
+  row each). In life 2 it chased something on 4% of decisions (63% in life 0)
+  and ate 3 meals, all by bumping into food while wandering.
+- **Cause 2, the world:** floor food is a loose body that regrows where it
+  lies, and he eats it by driving into it — so every meal shoves it. On seed
+  154 food 0 went from (−1.0, −0.4) to (−5.8, −3.4), against a wall, in life 0
+  and never left; food 1 ended against another wall (y = 5.75) in life 1. A
+  forager given a blank memory each life (diagnostic arm) still ate only 6 and
+  4 meals in lives 1 and 2 against 23 in life 0, chasing 99% of the time, and
+  mislearned which texture pays (credited 0.25 / 0.24, banned 0.80).
+- **Even the best case does not sustain him.** Life 0 pooled intake is
+  0.86e-3 /s = 0.52× the idle drain; all 200 lives pooled 0.45e-3 /s = 0.27×.
+  One life in 200 reached the 1,800 s cap (seed 215, 28 meals).
+- **Ten lives ended in 6–57 s by integrity (injury), not hunger** (9 seeds),
+  all at lives 1–9, none in row b's 200. A full-drive forager respawning into
+  a used world can kill himself in seconds; cause not yet traced.
+- **Next, by rule (a FAIL is fixed, not filed):** f stays FAILED on 201–220.
+  A repaired ruler (bans that expire; food memory re-earned each life) is a
+  new row `f2`, tuned on 153/154 over all 10 lives, its rule committed first,
+  run on fresh seeds 221–240 against the same unmoved bar with its own
+  shuffled control. The wall-pinned food is a world fact for J2 (1): the
+  record's "instant re-placement at a new random place" removes it.
 
 ## Smoke (box, seeds 153/154 — tuning seeds, NOT evidence)
 

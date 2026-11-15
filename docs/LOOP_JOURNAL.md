@@ -1519,3 +1519,11 @@ Measured the rover's own drain (power from `drives.last_power_w`): idle 1.67e-3/
 Philosophy served: 5 (his world measured before any brain is judged in it), 4 (the ceiling is measured in the physics, not asserted from the humanoid's constants).
 
 - 2026-11-15 18:40 · JACK · J1 · Row b (random, white noise) harvested from Kaggle: 200 lives / 20 registered seeds, life 301.7±16.4 s, 0.52 floor meals/life (per-seed 0.1–0.9), every life ends in an energy death with summed reward −1.00. Table row + raw jsonl committed. b's freed Kaggle session given to row e (privileged forager), pushed 18:37. a,f,g still running; c,d8,d32 wait for a session. Served philosophy 4 (the random baseline that f must beat per seed is now measured, not assumed) and 5 (the world is tested before the brain).
+
+## 2026-11-15 19:20 · JACK · J1 row f harvested: FAIL, and why
+Row f (hand forager, observation only) back from Kaggle, 200 lives / 20 registered seeds: 4.13±4.98 floor meals/life against random's 0.52 (above b on 20/20 seeds), life 742±279 s — but only 6 of 20 seeds reach the unmoved bar of 5 meals/life (needs 18). FAIL recorded, bar and ruler untouched.
+By life index he eats 12.35, 6.45, 4.70, 3.00, then ~2.5: first life fine (17/20 seeds ≥ 5, post-hoc), later lives not. Pooled intake 0.27× the idle drain (life 0: 0.52×). Ten lives ended by integrity in 6–57 s (none in row b).
+Diagnosed on smoke seed 154 (two arms, 3 lives each): the ruler bans both true food textures for good by the end of life 1 (chasing 63% → 4% of decisions); and the world lets him shove loose food against the walls, where even a blank-memory forager eats 23 → 6 → 4.
+Row c (pink noise) launched 19:07 into f's freed session; a, g, e still RUNNING (Kaggle status checked 19:10). d8/d32 wait.
+Next: f2 (expiring bans, tuned over all 10 lives, fresh seeds 221–240, rule first); wall-pinned food goes to J2 (1).
+Philosophy served: 4 (a test that could fail did, and the bar stayed where it was; the failure is traced, not filed), 5 (his world measured before any brain is judged in it).
