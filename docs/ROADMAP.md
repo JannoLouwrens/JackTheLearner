@@ -1,95 +1,91 @@
 # ROADMAP — the route from today to the goal (≤ 6 KB, Director-maintained)
 
-`GOAL.md` says what Jack must become. `docs/ORDERS.md` says what the workers do
-this week. This page is the bridge: the milestones in between, so the Director
-always knows what comes next when the current orders are finished — in month
-two, month six, with nobody watching.
+`GOAL.md`: what Jack must become. `docs/PLAN.md`: HOW (research → combine →
+reproduce → test the last 10% → put it in him; stages 0–4). `docs/ORDERS.md`:
+this week. This page: the milestones between, each with what it `needs:` and
+the plan `stage:` it sits in.
 
-**Rules.** A milestone is DONE only when its named specs PASS in the ledger.
-The Director updates `status:` every Sunday, adds spec ids as registered, and
-keeps an open order on the earliest unfinished milestone; later ones may run
-in parallel when a compute lane is free. What a milestone IS comes from
-`GOAL.md` and is the owner's; how it is tested may only be strengthened.
-
-**Which Jack.** Two model stacks exist. The learning this project has actually
-demonstrated is on the survival stack (`experiments/cores.py`, `survival.py`,
-`w0.py`); the older 57M-parameter brain (`UnifiedBrain.py`) has lost every
-control race so far. Milestones are judged on whatever holds the seats in
-`docs/CHAMPIONS.md` by verdict — today that is the survival stack — and the old
-brain's parts re-enter only as challengers in a cook-off, never by default.
+**Rules.** DONE only when the named specs PASS in the ledger. The Director
+updates `status:` every Sunday and keeps an order on the earliest unfinished
+milestone. What a milestone IS is the owner's; its tests may only be
+strengthened. **Order (11-15):** the numbers are not a queue. The `needs:`
+lines are: the instrument and the brain (M3's first half, plan stages 1–2)
+come before anything is grown on it (M2's curriculum, M4–M7, stage 3).
+**Which Jack.** Results so far are on the survival stack (`cores.py`,
+`survival.py`, `w0.py`) with home-made learners; tests of the world and the
+machine stand, results about his brain are "to earn again" on the brain
+stage 2 chooses. `UnifiedBrain.py` re-enters only as a challenger.
 
 ---
 
-**M1 — One whole life.** The learning brain lives a life end to end: world,
-needs, the senses he has, diary, death and retry.
-done when: `LF.03` PASS. · status (11-15): **MET** — `LF.03` PASS, re-bought 11-14
-(3 seeds × 5 deaths, both controls fired). He lives, dies and resumes; he does
-not yet improve (`LF.04` FAIL 11-14: every life ends of energy — order J1).
+**M1 — One whole life.** World, needs, senses, diary, death and retry, end to end.
+needs: nothing. · stage: done before the plan.
+done when: `LF.03` PASS. · status (11-15): **MET** (re-bought 11-15 on the
+seated loss). He lives, dies, resumes; he does not improve (`LF.04` FAIL).
 
-**M2 — A world and a curriculum that can teach.** A world deep enough that
-passivity dies, outcomes differ, and thinking ahead pays; the order he meets it
-in decided by cook-off ("no curriculum we write" is the incumbent arm).
-done when: `W1.00`–`W1.04` and the world-rule gates `W.1`–`W.8` PASS; `DP.05`'s
-question passes in W1; `NE.01` PASS; the curriculum cook-off has a winner; then
-W2 (owner 11-13): tree → wood → fire → cooked food and a buildable shelter exist
-as specs and PASS. · status (11-15): `W.1`, `W1.02` pass; `W.2`, `NE.01`,
-`W1.00`, `W1.04` FAIL; five world races shipped nothing (humidity in flight);
-`CR.01` FAIL — no curriculum beats none, re-race waits for a learner that
-forages; W2: `W.5` unbuilt (orders J6, J7, J9).
+**M2 — A world and a curriculum that can teach.** Passivity dies, outcomes
+differ, thinking ahead pays; the order he meets it in is decided by test.
+needs: world mechanics — nothing; the curriculum — a brain that forages (M3,
+stage 2); tree → wood → fire → shelter being USED — hands (M4).
+stage: mechanics repairs now; curriculum and W2 in stage 3, after research.
+done when: `W1.00`–`W1.04`, `W.1`–`W.8`, `NE.01` PASS; `DP.05`'s question
+passes in W1; the curriculum test has a winner; W2 exists as specs and PASSES.
+status (11-15): `W.1`, `W1.02` pass; `W.2`, `NE.01`, `W1.00`, `W1.04` FAIL;
+six world races shipped nothing and are stopped (no prior); `CR.01` FAIL
+(order J7; research asked on clocks, fire).
 
-**M3 — The shape of his brain, by verdict.** Every architecture seat in
-`docs/CHAMPIONS.md` held BY VERDICT, none by default or decree: the control path
-(`D1.1`), the learning core at scale (`LC.07`), how the senses fuse and how
-unified the brain is (`UB.10`, `BO.01`), fast and slow (`DP.01`–`DP.03`), and
-its size (a size cook-off, to be registered).
-done when: those seats read BY VERDICT and the seated brain passes END-FIT's
-gates (`CHAMPIONS.md`). · status (11-15): working memory BY VERDICT (`WM.02`);
-fusion raced, UNDECIDED (`UB.10` FAIL); control VACANT (`D1.0` att 9 VOID,
-re-buying to ~W48); learning core's verdict is a VOID — seven arms raced on
-foraging first (orders J1, J2).
+**M3 — His brain, by evidence.** First the instrument (stage 1): his world
+behind the standard interface; brain A (Dreamer-style world model) and B
+(replay learner) from published code, each reproducing published numbers;
+proof the task is learnable from his senses. Then the choice (stage 2): A
+against B, 1,000,000 decisions, rule written first. Then every other seat in
+`docs/CHAMPIONS.md` BY VERDICT or BY RECORD, none by decree.
+needs: M1; research review 2. · stage: 1 now, then 2.
+done when: stage 2's rule names a brain; `D1.1`, `LC.07`, `UB.10`/`BO.01`,
+`DP.01`–`DP.03` and a size test are held by evidence; END-FIT's gates pass.
+status (11-15): stage 1 ordered today (J1–J5), nothing built yet. Seven
+home-made learners raced on food: none eats (a pilot, 40k decisions, below
+every published budget). Working memory BY VERDICT (`WM.02`); fusion
+UNDECIDED; control VACANT (`D1.0` paused for the body review).
 
-**M4 — One body that moves.** He moves well, in the same body he survives in —
-today movement is tested on a humanoid and survival on a wheeled climber.
-done when: `T2.01` PASS under the seated controller; the survival world runs
-with the humanoid body (`LT.08`); hands that hold, carry and strike, the grip
-rule won in a cook-off (unregistered). · status (11-15): `T2.01` FAIL since
-Aug 12, behind `D1.0` (order J2).
+**M4 — One body that moves.** He moves well in the same body he survives in;
+hands that hold, carry and strike.
+needs: the chosen brain (M3); the body review (no published learner does a
+human-like body with hands that also survives). · stage: 3, last and hardest.
+done when: `T2.01` PASS under the seated controller; `LT.08`; a grip test.
+status (11-15): `T2.01` FAIL since Aug 12; `D1.0` paused, 3 units cached.
 
-**M5 — Every sense, in the one brain, each load-bearing.** Sight from his own
-eye, hearing with his own learned ear, touch, balance, smell, taste, pain,
-temperature, hunger and thirst, voice — each wired into the main brain, each
-passing the hide-it, fake-sense and combination tests; nothing ready-made
-inside him. Includes the cook-off of a sense added later vs present from birth.
-done when: `experiments.coverage` shows a passing CLAIM spec for every sense
-and the unison gates pass under the seated brain. · status: 5 senses in the
-brain as short summaries; smell and taste tested in separate rigs; no learned
-ear (`HR.1` FAIL, bar held by D54's default); language slot empty.
+**M5 — Every sense, in the one brain, each load-bearing.** Eye, learned ear,
+touch, balance, smell, taste, pain, temperature, hunger, thirst, voice — each
+passing hide-it, fake-sense and combination tests; nothing ready-made inside.
+needs: the chosen brain (M3); the eye first (the record: words need sight).
+stage: 3. · done when: `coverage` shows a passing CLAIM per sense in the
+seated brain and the unison gates pass.
+status (11-15): of 22 passing claims, 1 runs in the living stack (`PS.03`);
+the rest are bench or parent-rig proofs, to earn again in him. No learned ear.
 
 **M6 — Words.** The parent voice teaches him; he ties words to his own life,
-says true things about himself, is nobody's puppet, and can be talked to.
-done when: the word-grounding cook-off (`LG.03`–`LG.06`) has a winner; `LG.00`,
-`LG.02`, `SO.02`, `NE.09` PASS with his own ear and voice in the loop; `HR.*`
-claim specs PASS without a ready-made model inside him; advice in words makes
-him try a step sooner and a lying adviser loses him. · status (11-11): no
-learned part of Jack speaks or hears yet. `LG.00`, `LG.02`, `SO.02` pass in
-rigs whose speaker is the diary plus a ready-made model — parent-rig results,
-not his words (Director ruling 11-11); nothing connected in his world.
+says true things about himself, can be advised and is nobody's puppet.
+needs: eye and ear in the brain (M5); memory (M7). · stage: 3, then 4 (words
+from a raw voice tied to his own life is unpublished).
+done when: `LG.03`–`LG.06` have a winner; `LG.00`, `LG.02`, `SO.02`, `NE.09`
+PASS with his own ear and voice; `HR.*` PASS with nothing ready-made inside;
+true advice helps and a lying adviser loses him.
+status (11-15): no learned part of him speaks or hears; research running.
 
-**M7 — He keeps learning.** The thesis: he learns without forgetting
-(`T5.03`), stays plastic (`T5.04`), consolidates in sleep (`T5.05`, `NE.05`,
-`ME.7`), explores because he wants to (`CU.1`–`CU.7`, `T5.06`), does not
-saturate (`T5.08`), and death does not erase what he learned (`XL.01`, `NE.08`).
-The ladder and the apple: he climbs it unprompted (`LT.03`+).
-Handed to another machine he keeps what he knew and learns more (order J8).
-done when: those PASS. · status (11-15): `LF.04` ran and FAILED
-(he does not forage; J1); `LF.06` built, parked; `XL.01` behind `PS.02` (J4).
+**M7 — He keeps learning.** No forgetting (`T5.03`), stays plastic (`T5.04`),
+sleep consolidates (`T5.05`, `NE.05`, `ME.7`), explores (`CU.*`, `T5.06`),
+death does not erase (`XL.01`, `NE.08`), hand-over (`LF.06`), the ladder and
+the apple unprompted (`LT.03`+). Its first gate, `LF.04` (living improves
+him), is stage 3's first job on the chosen brain.
+needs: a brain that eats (M3); `PS.02` for `XL.01`. · stage: 3, then 4.
+done when: those PASS. · status (11-15): `LF.04` FAIL; `LF.06` built, waits.
 
-**M8 — A living Jack.** Hours-long lives with everything at once; he remembers
-across sessions and deaths; he can be watched, talked to and left things.
-done when: an integration spec on the survival stack for a multi-hour life
-with all of M1–M7 live PASSES (to be registered; replaces the Stack-B `T6.*`).
-· status: not started.
+**M8 — A living Jack.** Hours-long lives, everything at once; remembered
+across sessions and deaths; watched, talked to, left things.
+needs: M1–M7. · stage: 3–4. · done when: a multi-hour integration spec
+PASSES (to be registered). · status: not started; the first film is order S6.
 
-**M9 — Beyond the jungle.** More worlds and transfer between them (`GEN.06`),
-other minds (`GEN.02`, `GEN.03`, `GEN.09`), the told world (`LG.11`).
-done when: those PASS. · status: not started.
+**M9 — Beyond the jungle.** More worlds, transfer (`GEN.06`), other minds
+(`GEN.02`, `GEN.03`, `GEN.09`), the told world (`LG.11`).
+needs: M8. · stage: 4. · status: not started.

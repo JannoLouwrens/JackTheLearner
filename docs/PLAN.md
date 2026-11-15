@@ -26,8 +26,8 @@ The Director keeps this table current at every sitting. Step: 0 not started, 1 r
 
 | Part of Jack | Step | Known: take it from the record | The last 10%: ours to find out |
 |---|---|---|---|
-| His brain | 1 research: first review done, build review running | A Dreamer-style world model: one brain that learns by predicting every sense, proven from scratch on 150+ tasks. A simple replay learner (SAC type) as the control. | Does it hold at our small size and on free hardware? Which one wins in his world? |
-| Learning to eat | 2 combine: the setup is known, not built yet | Keep everything he lived (a large replay). Look 40 seconds ahead, not 4. Move in sustained runs, not jitter. Pay him when he eats. Food near at first. 100,000 to 1,000,000 decisions. | Can 16 distance rays tell food from a wall? |
+| His brain | 1 research: first review done, build review running. Step 2 ordered 11-15 (J2: B from Stable-Baselines3; J3: A from the official code), nothing built yet | A Dreamer-style world model: one brain that learns by predicting every sense, proven from scratch on 150+ tasks. A simple replay learner (SAC type) as the control. | Does it hold at our small size and on free hardware? Which one wins in his world? |
+| Learning to eat | 2 combine: ordered 11-15 (J1 his world behind the standard interface + noise probe; J5 the setup; J4 rays-only forager), not built yet | Keep everything he lived (a large replay). Look 40 seconds ahead, not 4. Move in sustained runs, not jitter. Pay him when he eats. Food near at first. 100,000 to 1,000,000 decisions. | Can 16 distance rays tell food from a wall? |
 | His world, needs and lessons | 1 research running | How the survival worlds that did teach agents were built and staged. | Trees, wood, fire, cooking and shelter learned from scratch in a physics world. |
 | Eye | 0 not started | World models learn from camera images. | What it costs on our hardware. Small details. |
 | Memory and sleep | 1 research running | A small recurrent memory. Keeping old experience. Layer-norm and weight decay to stay able to learn. | Memory across lives beyond weights and replay. What sleep should do. |
