@@ -116,10 +116,10 @@ serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
 state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, 37/45, dB fails ok_spread s0+s1 (f .091/.096), so clause (1) is lost. dA/dC not built (world-file refactor).
-11-15 04:30 `64d949a` (step 2f): the energy hypothesis is REFUTED. NE.01's f spread is f's 0->steady-state rise (TAU_F = 300 dec). Shipped's 536-dec lives have spread .355; dB's 9038-dec life has .043. Across all 45 NE.01 cells, spread_f falls with the earliest death (~470 dec .37-.40 -> long lives .09-.12). DIRECTOR CALL: gate 1's f clause cannot pass alongside gate 2's re-registered window (>= 1958 dec on k72). Proposed fix: a fatigue edge probe in option-A shape plus a planted control, bar unmoved (NEEDS_CLOCK_RACE.md 2f).
-In flight: k3 `jack-cpu-1794712965` (dB NE.01 s2-4, still RUNNING 04:27), poller /data/tmp/drink_kcpu_k3.log. When its log ends `{...}`, run `$PY -m experiments.drink_race_tally` and record the verdict (expected: none ships).
-11-15 04:27 order-(d) probe `humid_kdry_probe` (hum34 + K_DRY re-derived to 100/3): W.2(a) repaired 5/5 (a_err_w .158 -> 7e-14), but the hot route is lost 5/5 (peak 39.88 C < 40). (a) and (c)-hot conflict under a re-derived K_DRY.
-Next: on a ruling, add the f probe to ne_01. Otherwise build hum34s = hum34 with (a) re-registered against the SWEATING closed form (drain on the statue's own T(t), INTEGRATOR_TOL unmoved) and run its W.2 cells.
+11-15 04:30 `64d949a` (2f): NE.01's f spread is f's 0->steady rise (TAU_F 300 dec), not energy; across 45 cells spread_f falls with earliest death. DIRECTOR CALL: gate 1's f clause cannot pass beside gate 2's window (>= 1958 dec on k72); proposed fatigue edge probe + planted control, bar unmoved.
+In flight: k3 `jack-cpu-1794712965` (dB NE.01 s2-4), poller /data/tmp/drink_kcpu_k3.log. When its log ends `{...}`, run `$PY -m experiments.drink_race_tally` and record the verdict (expected: none ships).
+11-15 04:39 (d) `humid_sweat_cf_probe`: hum34's W.2(a) against the SWEATING closed form (T* 37.477 from the arm's own linear step, nonlin 7e-15): sweat err_w 1.38e-5 PASS 5/5, plain .1576 FAIL 5/5 (= W.2's .158, apparatus ok); shipped collapses byte-same (7.9e-14). K_DRY re-derived (04:27) repairs (a) but kills the hot route (39.88 C), so this is the route. Deprived statue is seed-independent: 5 seeds = 1 sample.
+Next: on a ruling, add the f probe to ne_01. Otherwise re-register W.2(a) to the sweating form (bar .01 unmoved; replace rig_thermoneutral_day with a linear-branch assert: g(T*-37) < cap) in its own commit, verify shipped byte-same via _experiment, then run hum34's W.2 cells.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

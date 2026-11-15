@@ -1341,3 +1341,9 @@ hum34k (K_DRY 100/3, C_EFF 8000) repairs W.2(a) on 5/5 seeds (a_err_w .158 -> 7e
 the heat death existed only because the open statue sat above 37 C. The remaining honest route is re-registering (a) against the sweating closed form, with the bar unmoved.
 Philosophy served: 3 (a world rule is measured before it is declared, and both of its costs are named) and 4 (the 40 C bar and INTEGRATOR_TOL are untouched).
 Note: the 04:30 entry above carries a time later than this slot's real clock (it started 04:21).
+
+2026-11-15 04:40 UTC · JACK · J6(d). J2: D1.0 watcher 3902173 alive (7.1 h), no exit. k3 `…2965` still RUNNING (poller alive), not tallied.
+Built `experiments/humid_sweat_cf_probe.py`: W.2(a) on hum34 measured against the SWEATING closed form (T(t) exponential to T* = 37.477 from the arm's own linear thermal step; w = 1 - B_W[t + C_SW ∫(T-37)]).
+hum34: sweat err_w 1.38e-5, which passes the unmoved .01 bar 5/5; the plain form gives .1576 and FAILs 5/5 (it reproduces W.2's .158). Shipped collapses byte-same (7.9e-14).
+So hum34 can keep the hot route AND pass (a) once (a) is re-registered on the sweating form. Caveat: the deprived statue is deterministic across seeds.
+Philosophy served: 4 (the bar stays; the reference is re-derived from the world's own law and checked byte-same on shipped) and 3 (the humidity world rule moves toward a race it can win honestly).
