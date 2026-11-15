@@ -68,7 +68,8 @@ curve if needed) is in `docs/research/FORAGER_RACE.md`.
 state: 11-15 11:58 (1) DONE: WINNER tanh-awr (`f72aac0`), SEATED `a2bd4df`. Re-buys: LC.02 PASS (`eaa9302`); **LF.03 PASS** at eaa9302 (attempt 3, statue twin told apart: statue_flagged 1, ate 0; learner ate 1.67±.47; salt replay clean on deciding metrics). LC.08 REFUSED cpu<48h (INBOX, Director).
 (2) DONE `5a088e0`: 7/7 arms in, **NONE CLEARS** (`docs/research/FORAGER_RACE.md`). Best late floor meals 0.4/0.2 (ppo-needs) vs bar 5; 0 apples in any late life; all arms outlive random (365-457 s vs 291 s) without eating. Not blind (sight probe 19-24%).
 (3) 11-15 14:20 RULE `821cd8b` (experiments/forager_race3.py, selftest 13/13): tie-break = none picked post hoc, ALL 3 tied arms run -> ppo-needs, ppo-lp, dreamer-xs, ring + random control, s153/154 x 60 lives. LEARNING iff both seeds rho>0 p<.05, Q4>Q1, Q4>random; random reading as learning = VOID. 12 h cap: 1 cell/kernel + 11 h deadline keeps finished lives (<45 = INCOMPLETE).
-    In flight: ppo-lp s153 (jack-cpu-1794752194), s154 (…2209), launched 14:16, ~10-11 h. The CPU detached cap (2) refused ring/random (INBOX). Next: as a poller exits, launch `forager_race3 kernel` for ring 153, ring 154, random, ppo-needs 153/154, dreamer-xs 153/154 (logs /data/tmp/forager3_*.log); `forager_race3 tally` when all 10 are in.
+    In flight (4 Kaggle CPU, the header's cap): ppo-lp s153 `…2194`, s154 `…2209` (14:16); **random control `…6367` + ppo-needs s153 `…6406` (15:26)**, launched from a clean worktree `/data/tmp/wt_forager3` @23fe24e (main tree had another session's dashboard dirt; receipts symlinked to main's log; KEEP the worktree until these two harvest, ~02:00 11-16). Pilot by PUBLISHED_PRIORS §1 (60 lives ≈160k decisions vs published 10^5–10^6).
+    Next: as a poller exits, launch the rest (ppo-needs 154, dreamer-xs 153/154, ring 153/154) with `forager_race3 kernel <arm> <seed>` (logs /data/tmp/forager3_*.log), then `forager_race3 tally` when all 10 are in.
 
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
@@ -272,6 +273,7 @@ bookkeeping). (7) D52 scout retry; `run status` STEERING reader parses 0.
 
 - 11-15 06:43 JACK/J7: Kaggle's batch CPU cap MEASURED = 5 (6th push refused "Maximum batch CPU session count of 5 reached"; 5 CPU + 1 GPU ran together). Header's "use 4" leaves 1 spare; until ~11:00 one slot holds W1.04 s0 `jack-cpu-1794724769`, a pre-ruling-2 pilot with no unit value (pushed before the 06:40 rewrite reached me).
 - 11-15 12:25 JACK/J2: the GPU submit path's dirty-tree guard is TREE-WIDE — D1.0's W46 slice died at 12:08 (ERROR, 21392 s GPU metered) because the S6 session left `dashboard/page.html`, `dashboard/config.json`, `scripts/dashboard_status.py` uncommitted, none of which D1.0 imports. Units ref+aprime:0,1 survived in `/data/d10_units/873e861e…`; the other 5 units of the slice were never bought. Same dirt stamped my W1.02 re-buy `+dirty`. Guard should check the spec's import closure (or the session should commit dashboard work promptly).
+- 11-15 15:30 JACK/J1: the submit guard tripped AGAIN on uncommitted `dashboard/terminal/{uitest.mjs,www/index.html}` (a session's work); I launched J1 kernels from a clean worktree via a temp copy of `launch_detached.sh` (its REPO is hard-coded). A `--repo`/`JACK_REPO` override on launch_detached, or the dashboard sessions committing promptly, would end this workaround.
 ## DONE (kept one day)
 
 - **`LF.04` FAIL** att 2 (`bc631a8`, Kaggle CPU, controls held): living does

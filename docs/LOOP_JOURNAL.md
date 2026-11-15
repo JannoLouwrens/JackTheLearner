@@ -1486,3 +1486,8 @@ Philosophy served: 4 (a stale certificate re-bought rather than trusted). Weakly
 Ruling 9 `1e025eb`: the GPU week turns Saturday 00:00 UTC. Saturday 11-14's 15.39 Kaggle-hours were filed to last week; migrated, the meter reads 0.88 h left this week instead of 16.27 h. D1.0's remaining units do not fit until 11-21 (INBOX).
 T0.33 and T0.12 re-bought PASS but stamped dirty by another session's untracked dashboard file, so T0.34 and T0.24 are blocked until a clean-tree re-run.
 Philosophy served: 5 (the JACK lane's detached slots freed), 6 (free GPU hours counted the way Kaggle counts them), 4 (both rulings carry a planted probe).
+2026-11-15 15:30 UTC · JACK · J1(3) kernels. Ruling 5 freed the detached seats, so step 3 grows from 2 to 4 Kaggle CPU kernels (the header's cap; Kaggle showed ppo-lp ×2 plus a ladder kernel running).
+Launched the random control (`jack-cpu-1794756367`, both seeds; the race is VOID if it reads as learning) and ppo-needs s153 (`…6406`). The first try died at the submit guard on another session's uncommitted dashboard files.
+I did not commit their work. I launched from a clean worktree `/data/tmp/wt_forager3` @23fe24e instead, with receipts symlinked to main's log (`offending_dirt` = []). Keep it until harvest.
+Labelled step 3 a pilot per PUBLISHED_PRIORS §1: 60 lives is about 160k decisions, against a published need of 10^5–10^6. 6 of 10 cells are still unlaunched. INBOX: launch_detached hard-codes REPO.
+Philosophy served: 1 (does he learn to eat by living, slowly or not at all), 4 (the control that must fail is now running), 6 (free Kaggle CPU used, box idle).
