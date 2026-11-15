@@ -66,9 +66,8 @@ serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 **done when:** the loss seat is ruled by tally and step 2's table (and 3's
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
 state: 11-15 11:58 (1) DONE: WINNER tanh-awr (`f72aac0`), SEATED `a2bd4df`. Re-buys: LC.02 PASS (`eaa9302`); **LF.03 PASS** at eaa9302 (attempt 3, statue twin told apart: statue_flagged 1, ate 0; learner ate 1.67±.47; salt replay clean on deciding metrics). LC.08 REFUSED cpu<48h (INBOX, Director).
-(2) forager race: **K3 HARVESTED** (`…8507`, JACK_REATTACH_ACCEPT_MISMATCH=1: only the pinned sha differs, no imported file/ledger/cal changed eaa9302..HEAD). wm-efe late floor meals 0.0/0.0, apples 0/0, span 384/395 s vs random floor 0.0/0.2 meals, span 291/292 s: wm-efe does NOT clear (lives longer, eats nothing).
-K0 `…8176` (poller pid 88890), K1 `…8207`, K2 `…8357` RUNNING on Kaggle at 11:50.
-Next: when each is COMPLETE: `JACK_REATTACH_ACCEPT_MISMATCH=1 JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-<id> $PY -m experiments.forager_race kernel K` (K0's poller may harvest itself; check `forager_race status`), then `forager_race tally` -> docs/research/FORAGER_RACE.md.
+(2) forager race 5/7 arms in, NONE CLEARS (late floor meals s153/s154, apples, span; random floor 0/.2, 0, 291/292 s): ppo-needs .4/.2, 0, 415/376; dreamer-xs .2/.2, 0, 383/373; wm-efe 0/0, 0, 384/395; wm-latent 0/0, 0, 449/457; wm-dyn 0/0, 0, 365/367. All live longer than random, none eats. K0 self-harvested 12:3x, K2 harvested 12:55 (ACCEPT_MISMATCH, pinned sha only), K3 earlier.
+K1 `jack-cpu-1794738207` (ppo-lp, wm-latent+ring) RUNNING at 12:56. Next: when COMPLETE `JACK_REATTACH_ACCEPT_MISMATCH=1 JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-1794738207 $PY -m experiments.forager_race kernel 1`, then `forager_race tally` -> docs/research/FORAGER_RACE.md; if none clears -> step (3): top two by late floor meals (ppo-needs, dreamer-xs on today's numbers) at 4x lives with the meals-per-life curve.
 
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
