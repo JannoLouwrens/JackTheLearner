@@ -1570,3 +1570,9 @@ No world-card row back from Kaggle (e, d32, f2, g2, b2 still running), so J2 adv
 Proof `test_jack_env_spawn` PASS, seeds 153–155: d=0 spawns 0.25–0.45 m from food; d=0.25 ≤ 4.59 m (bound 4.75); control: today's world breaks the 0.5 m bound on 12/12 spawns. Its guard was first written as ≥1 respawn per seed and failed only because at d=0 two seeds never died in 400 decisions; re-written pooled before commit. Dial proof re-run PASS; random floor eats pooled d=0 17 vs d=1 3.
 Next: floor-food count, then item 2.
 Philosophy served: 5 (his world: the first rung's easy end now puts food in reach, per the published dial), 4 (proved with a control that must fail).
+
+## 2026-11-15 22:45 · JACK · J1 row d32 harvested; J2 item 1 finished (food count)
+J1: row d32 (random action held 32) back from Kaggle: 1.01 floor meals/life — 1.96× white b (t 3.96, 15/20) but 0.87× d8 (t −1.12, 6/20). Per 100 s alive 0.164 = b's 0.170: the whole gain is a longer life (607 s), none faster foraging. d8 stays the best random row (`379ab631`). e, f2, g2, b2 still running.
+J2: the dial's last part — at low d W0's own obj2..obj4 become floor food (up to 5 at d=0; seeds whose world draws 4 objects get up to 4). Proof `test_jack_env_foodcount` PASS (`c73a8fdb`). The first run crashed on seed 155 (no obj4 there — the test, not the code, assumed it). The spawn proof then FAILED: it measured distance to obj0/obj1 only; re-pointed at all floor foods, bound unchanged, PASS. Dial and J1 identity proofs PASS.
+Seen: at d=0 (instant regrowth) a body resting on a food eats every decision (seed 153: 84 eats in 400 decisions), so d=0 "meals" partly counts contact time — item 5 must count all floor foods and read that.
+Philosophy served: 5 (his world: the first rung's easy end now has more food in reach), 4 (a held-action claim tested with paired seeds; each option proven with a control that must fail; a failing proof fixed for its cause, not loosened).

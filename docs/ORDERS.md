@@ -66,7 +66,8 @@ serves: M2 · PLAN stage 1 "a first rung he can live on", "proof the task can be
 **done when:** `WORLD_CARD.md` has the seven rows and the three answers.
 state: 11-15 HARVESTED (card + raw in `docs/research/world_card_data/`): a 0 meals/600 s; b 0.52/life 302 s; c pink 0.44 (no better than b); f FAIL 6/20 (4.13); g control 0/20 (2.97, f blind after life 0); answer (2): every death sums −1.00.
 state: 21:25 d8 (held 8) 1.16/life vs b 0.52: 2.24×, paired t 7.29, 19/20 seeds — mostly longer life (539 vs 302 s; per 100 s 1.25×, t 2.59). d8 is the best random row (`f565a4ee`).
-state: f2 FROZEN at F2_BAN_S=inf (`75330078`), smoke 7.6/7.7 meals/life. RUNNING on Kaggle CPU (5/5 sessions ours): e (18:37), d32 (20:10), f2 (20:12, seeds 221–240), g2 (20:33), b2 (21:22). Pollers write `/data/jack-logs/world_card/<row>.jsonl`.
+state: 22:10 d32 (held 32) 1.01/life: 1.96× b (t 3.96) but 0.87× d8 (t −1.12); per 100 s alive 0.164 = b's 0.170 — all longer life (607 s). d8 stays best random row (`379ab631`).
+state: f2 FROZEN at F2_BAN_S=inf (`75330078`). RUNNING on Kaggle CPU (4 sessions): e (18:37), f2 (20:12, seeds 221–240), g2 (20:33), b2 (21:22). Pollers write `/data/jack-logs/world_card/<row>.jsonl`.
 state: next: harvest each row as its jsonl appears (copy to `world_card_data/`, table row + sha in the header, paired vs b/d8); then score(f2,b2,F2_SEEDS) with g2 must miss; then answers 1 (beside e) and 3 (from f/g/f2) final → J1 DONE.
 
 ### J2 — A first rung he can live on: the difficulty dial and the record's setup, as wrapper options
@@ -92,8 +93,9 @@ serves: M2 · PLAN stage 1 lines 2, 5 · philosophy 5 (his world matters as much
 **done when:** options and tests are committed and `WORLD_CARD.md` names `d0` with its table.
 state: 20:35 items 3+4 DONE (`14e637c4`): `reward=` "dr100-eat" (100×drive reduction + 100/eat, EVAAA) and "dr100-eat-pos" (alive never negative); `max_episode_decisions` → truncated, world untouched, life carries on. Proof `tests/test_jack_env_options.py` PASS 3 seeds; J1 identity proof PASS unchanged.
 state: 20:55 item 1 PART (`9c4341db`): `difficulty=` dials floor-food meal (1.0 at d=0 → 0.08 at d=1) and regrowth (d×66.9 s); d=1 byte-identical. Proof `test_jack_env_dial` PASS 3 seeds (seed 153 d=0: 6 meals vs 1 in 400 decisions).
-state: 21:45 item 1 spawn distance (`de2a4efc`): birth + every respawn uniform over W0's legal cells within 0.5+17d m of the nearest floor food (via W0's spawn_sampler hook, no world file). Proof `test_jack_env_spawn` PASS (d=0 spawns 0.25–0.45 m; control 12/12 outside); dial proof re-run PASS.
-state: next: last part of item 1 — floor-food count (FOOD_GEOMS names only obj0/obj1; extra obj2..4 as food at low d via jack_env's per-instance `_food`/`_respawn_at`/`ate_total`, no world file), unit test; then item 2, then 5 (measure d0).
+state: 21:45 item 1 spawn distance (`de2a4efc`): birth + every respawn within 0.5+17d m of the nearest floor food. Proof `test_jack_env_spawn` PASS.
+state: 22:45 item 1 DONE — food count (`c73a8fdb`): obj2..4 become floor food at low d (up to 5 at d=0; 4-object seed worlds max 4). `test_jack_env_foodcount` PASS; spawn proof re-pointed at all foods, PASS; dial + J1 identity PASS. Caveat for 5: at d=0 a body resting on food eats every decision (seed 153: 84 eats/400) — world_card's floor_meals counts obj0+obj1 only; count all `floor_foods` and read contact-eats.
+state: next: item 2 (random starting needs + random layout each life, as options, unit test with control), then 5 (measure d0 against d8).
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
