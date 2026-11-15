@@ -25830,7 +25830,7 @@ ROUTED: worst-seed-lane-a-is-blind-pre-verdict-and-lane-b-reads-only-the-damage 
         be; declaration only — no exemption is claimed, this row still ages
         and still exits 2 on its own date.
 
-ROUTED: pass-on-dead-dependency-certificates-are-exempt-from-the-only-rebuy-lane | 2026-10-26 | measured by the 162nd audit: `coverage.pass_on_dead_dependency(BY_ID, results)` enumerated live (7 pairs, floor 3); `/data/jack-logs/regate.log` skip lines counted over the whole file (T0.18/T0.19/LF.02 = 96 consecutive sweeps since 2026-10-17T16:43, PL.00 = 34 since 2026-10-23T06:43), the 2026-10-26T00:43:04 sweep read live as it ran; `ran_at` per row off `experiments/ledger.json`; `champions --check` cross-referenced for seat membership | OPEN
+ROUTED: pass-on-dead-dependency-certificates-are-exempt-from-the-only-rebuy-lane | 2026-10-26 | measured by the 162nd audit: `coverage.pass_on_dead_dependency(BY_ID, results)` enumerated live (7 pairs, floor 3); `/data/jack-logs/regate.log` skip lines counted over the whole file (T0.18/T0.19/LF.02 = 96 consecutive sweeps since 2026-10-17T16:43, PL.00 = 34 since 2026-10-23T06:43), the 2026-10-26T00:43:04 sweep read live as it ran; `ran_at` per row off `experiments/ledger.json`; `champions --check` cross-referenced for seat membership | DECLINED 2026-11-15 (Director) the stale-dependency skip in regate is real but is a certificate-bookkeeping gap on specs whose brains are now 'to earn again' (PLAN 11-15); re-buys on a clean tree are regate's standing job (ORDERS SYSTEM next-up), and a new exemption lane would be machine growth — prior status: OPEN
     The question: the rule that protects a PASS whose dependency has fallen
     from a bookkeeping demotion is the same rule that exempts it from ever
     being falsified again — should these certificates get a re-measurement
@@ -25896,7 +25896,7 @@ ROUTED: pass-on-dead-dependency-certificates-are-exempt-from-the-only-rebuy-lane
         gets a re-measurement path, and the evidence is in the regate log
         and the ledger rather than behind another disposition.
 
-ROUTED: detached-lane-memory-breach-reaches-no-row-no-receipt-and-no-counter | 2026-10-26 | measured by the 162nd audit: `/data/jack-logs/ladder.log` 2026-10-25T21:23:51 MEMORY line (1736 MB VmHWM, 305 s CPU, the LG.15 `llm_pass` child); `docs/LOOP_JOURNAL.md:24927` (the 21:1x entry, breach unmentioned) against the loop's own line ordering; `experiments/ledger.json` walked for `peak_rss_mb >= 1536` (10 of 164 rows, 1736 not among them); `grep peak_rss_mb` over experiments/ + scripts/ outside tests (protocol.py WRITES only, at :637/:3739/:4248/:4417/:4429); D18's firing record in docs/DECISIONS_RESOLVED.md | OPEN
+ROUTED: detached-lane-memory-breach-reaches-no-row-no-receipt-and-no-counter | 2026-10-26 | measured by the 162nd audit: `/data/jack-logs/ladder.log` 2026-10-25T21:23:51 MEMORY line (1736 MB VmHWM, 305 s CPU, the LG.15 `llm_pass` child); `docs/LOOP_JOURNAL.md:24927` (the 21:1x entry, breach unmentioned) against the loop's own line ordering; `experiments/ledger.json` walked for `peak_rss_mb >= 1536` (10 of 164 rows, 1736 not among them); `grep peak_rss_mb` over experiments/ + scripts/ outside tests (protocol.py WRITES only, at :637/:3739/:4248/:4417/:4429); D18's firing record in docs/DECISIONS_RESOLVED.md | DECLINED 2026-11-15 (Director) a detached-job memory breach that reaches no row is true and unrepaired, but no breach has recurred since the 10-25 LG.15 child and stage 1 sends every long run to Kaggle CPU kernels, off the box; re-raise in OVERSIGHT if a box breach is seen again — prior status: OPEN
     The question: a tenant-memory breach by a detached child lands in no
     ledger row, no `mem_receipts` entry, no committed document and no
     counter — which of those is the one to repair, and what reads it?
@@ -25950,7 +25950,7 @@ ROUTED: detached-lane-memory-breach-reaches-no-row-no-receipt-and-no-counter | 2
         report; no live row decides where a detached child's footprint is
         recorded.
 
-ROUTED: t205-residual-near-linear-venue-is-a-world-touching-re-aiming | 2026-10-26 | the dichotomy's second branch, measured at 427ff48 (Review DAILY act 1, stamping `t205-world-model-loses-to-the-ridge-reference` ACTED) | OPEN
+ROUTED: t205-residual-near-linear-venue-is-a-world-touching-re-aiming | 2026-10-26 | the dichotomy's second branch, measured at 427ff48 (Review DAILY act 1, stamping `t205-world-model-loses-to-the-ridge-reference` ACTED) | DECLINED 2026-11-15 (Director) T2.05's venue question concerns a home-made world model; PLAN 11-15 replaces it with brain A from published code, whose known-answer rows (PUBLISHED_PRIORS §2) are the check — the old arm is not re-aimed — prior status: OPEN
     THE RESIDUAL, split off a closing row rather than carried invisibly on it.
     `t205`'s ordered non-linear reference arm RAN and its pre-registered
     dichotomy fired its SECOND branch: `nonlinear_headroom` is negative on all
@@ -25985,7 +25985,7 @@ ROUTED: t205-residual-near-linear-venue-is-a-world-touching-re-aiming | 2026-10-
         edit ACTUALLY need the shared-world window, or is it SPEC-LOCAL — so it
         counts as that decision and not as a separate one.
 
-ROUTED: me11-binding-constraint-is-the-retriever-and-front-3-doctrine-aims-at-abstention | 2026-10-26 | measured by the 163rd audit off `docs/FIELD_WATCH.md:877` (week-11 sweep, written 06:01:05 today at `11325f6`, the first since `32b098c` 2026-10-05); every quantity in it read from `experiments/ledger.json` at HEAD (`ME.11` attempt 2, FAIL, 2026-10-20T12:47:49, 3 seeds); `run status` FIELD-WATCH FINDINGS reads it `UNROUTED-FIELD-FINDING`; nomination history counted over the front-3 sections of the week-9/10/11 pages | OPEN
+ROUTED: me11-binding-constraint-is-the-retriever-and-front-3-doctrine-aims-at-abstention | 2026-10-26 | measured by the 163rd audit off `docs/FIELD_WATCH.md:877` (week-11 sweep, written 06:01:05 today at `11325f6`, the first since `32b098c` 2026-10-05); every quantity in it read from `experiments/ledger.json` at HEAD (`ME.11` attempt 2, FAIL, 2026-10-20T12:47:49, 3 seeds); `run status` FIELD-WATCH FINDINGS reads it `UNROUTED-FIELD-FINDING`; nomination history counted over the front-3 sections of the week-9/10/11 pages | DECLINED 2026-11-15 (Director) ME.11's retriever as the binding constraint is answered by the record (PUBLISHED_PRIORS §6: retrieval keys from learned state, not word matching); carried as JACK next-up 7 for stage 3, ruling 20 of 11-15 16:57 — prior status: OPEN
     THE FIELD WATCH FOUND IT IN OUR OWN ARTIFACTS AND NO DESK CAN SEE IT.
     `ME.11`'s own committed row reports `recall_unthresholded` **0.2500 +/-
     0.0102** — with NO threshold applied at all, the correct memory is in the
@@ -26031,7 +26031,7 @@ ROUTED: me11-binding-constraint-is-the-retriever-and-front-3-doctrine-aims-at-ab
         reporting-only) is RESOLVED and does not govern the routing of any
         individual finding.
 
-ROUTED: sm03-stop-fired-sector-holdout-blinds-the-alive-proof | 2026-10-26 | measured by the builder off `experiments/ledger.json` SM.03 attempt 1 (VOID, commit a7daea7, ran_at 2026-10-26T08:24:50) and the STOP pre-registered in `sm_03_nose_reports_occluded.py`'s ARM 3 EXECUTION block (90acbbf) | OPEN
+ROUTED: sm03-stop-fired-sector-holdout-blinds-the-alive-proof | 2026-10-26 | measured by the builder off `experiments/ledger.json` SM.03 attempt 1 (VOID, commit a7daea7, ran_at 2026-10-26T08:24:50) and the STOP pre-registered in `sm_03_nose_reports_occluded.py`'s ARM 3 EXECUTION block (90acbbf) | DECLINED 2026-11-15 (Director) SM.03's VOID under its own pre-registered STOP stands as recorded; smell is a stage-3 sense (PLAN table: other senses, step 0) and is rebuilt inside the chosen brain, not repaired on the bench arm — prior status: OPEN
     The question: THE F1 RULING's own falsifier fired — `vis_open_min` 0.3625
     against VIS_OPEN_MIN 0.60 (per-seed 0.3625 / 0.825 / 0.60;
     heldout_sectors [0,2] / [4,5] / [2,7]) — so arm 3 (panel-aligned
