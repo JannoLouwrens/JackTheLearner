@@ -190,7 +190,9 @@ class Core(nn.Module):
         return self.encode(obs, dropped)
 
     def act(self, obs: Dict[str, torch.Tensor], s: torch.Tensor) -> torch.Tensor:
-        return self.actor(s)                      # `obs` deliberately unused
+        # tanh-squashed mean: the POLICY SEAT (see POLICY_SEAT below). The
+        # world clips actions to [-1, 1]; an unsquashed mean ran to |mu| 19.
+        return torch.tanh(self.actor(s))          # `obs` deliberately unused
 
     def act_deterministic(self, obs: Dict[str, torch.Tensor],
                           dropped: Iterable[str] = ()) -> torch.Tensor:
@@ -263,7 +265,7 @@ class LeakyPPOCore(PPOCore):
         self.private = nn.Linear(self.dims["proprio"], ACTION_DIM)
 
     def act(self, obs, z):
-        return self.actor(z) + self.private(obs["proprio"])
+        return torch.tanh(self.actor(z) + self.private(obs["proprio"]))
 
 
 # ---------------------------------------------------------------------------
@@ -514,6 +516,22 @@ LC_BATCH = 16                # observations per gradient step
 LC_LR = 3e-4                 # Adam, F9's separate policy/value heads
 VALUE_COEF = 0.5
 
+# POLICY SEAT — held BY TALLY, not by argument: the J1 policy-loss race
+# (experiments/policy_loss_race.py, rule committed before any cell; verdict in
+# docs/research/POLICY_LOSS_RACE.md, f72aac0) on fresh seeds 150-152 x 12
+# lives: WINNER tanh-awr, late-third mean 604.5 s at saturated-action fraction
+# 0.0, against awr 563.1 (0.0001), tanh 579.3 (0.99, disqualified) and base
+# 438.2 (0.65, disqualified). So: mu = tanh(actor(s)) in rollout AND loss (Core.act),
+# and the policy term is advantage-weighted regression (Peng et al. 2019,
+# arXiv:1910.00177): weight = min(exp(adv / AWR_BETA), AWR_WMAX) >= 0, so every
+# taken action is pulled toward, never pushed away. The old term
+# ||mu - a||^2 * adv was unbounded below for adv < 0 (LF_04_FAIL.md: s102 598 ->
+# 158 s). The seat holds until a race beats it: policy_loss.py keeps "regress"
+# as the challenger.
+POLICY_SEAT = "tanh-awr"
+AWR_BETA = 1.0     # advantages are per-segment normalised, so beta=1 (Peng 2019)
+AWR_WMAX = 20.0    # Peng 2019's weight clip
+
 
 def make_optimizer(core: Core, lr: float = LC_LR) -> "torch.optim.Optimizer":
     return torch.optim.Adam(core.parameters(), lr=lr, eps=1e-5)
@@ -539,8 +557,8 @@ def lc_update(core: Core, batch: Dict[str, torch.Tensor],
         if getattr(core, "lp", False):
             l_v = l_v + F.mse_loss(core.critic_lp(z), targets["value_lp"])
         a = core.act(batch, z)
-        l_pi = (((a - targets["action"]) ** 2).mean(-1)
-                * targets["advantage"]).mean()
+        w = torch.clamp(torch.exp(targets["advantage"] / AWR_BETA), max=AWR_WMAX)
+        l_pi = (((a - targets["action"]) ** 2).mean(-1) * w).mean()
         loss = l_bind + VALUE_COEF * l_v + l_pi
         opt.zero_grad(set_to_none=True)
         loss.backward()

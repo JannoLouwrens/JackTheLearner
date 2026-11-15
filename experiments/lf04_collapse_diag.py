@@ -92,6 +92,13 @@ def main(seed: int = 90, n_lives: int = 12,
     w = L.w
     if variant not in VARIANTS:
         raise SystemExit(f"unknown variant {variant!r}; one of {VARIANTS}")
+    if getattr(cores, "POLICY_SEAT", "base") != "base":
+        # The four arms are defined against the PRE-seat core (unsquashed mu,
+        # regress term). Since 11-15 cores.py seats tanh-awr, so "tanh" would
+        # squash twice and "base" would no longer be base. Replay the race at
+        # its stamped tree (git checkout 1c06417 -- experiments/cores.py) instead.
+        raise SystemExit(f"cores.POLICY_SEAT={cores.POLICY_SEAT}: the diag's arms "
+                         "are pre-seat; replay at 1c06417")
     if variant.startswith("tanh"):
         raw_act = L.core.act
         L.core.act = lambda obs, s: torch.tanh(raw_act(obs, s))
