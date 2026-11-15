@@ -116,10 +116,10 @@ serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
 state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. f-spread DIRECTOR CALL open (`64d949a`). W.2(a) re-reg sweating CF `bc7b99f`; W.1 wrapper fix `39d8a66`.
-11-15 06:25 `2131a04`: 25 stale W.2 cells re-run, no *_pass flag moved. Humid tally stale [] apparatus ok; W.2 four_checks shipped 0/5, hum30 0/5, hum34 5/5.
-**DRINK race verdict: none ships** (40 cells current): dB loses only NE.01 ok_spread 0/5 vs 5/5 (the f-spread call). Humid verdict waits on NE.01 (0/5 both arms):
-h1 `jack-cpu-1794720356` = hum34 s0-2 (/data/tmp/humid_kcpu_h1.log); h2 = hum34 s3-4 + hum30 s0 (/data/tmp/humid_kcpu_h2.log, 06:17).
-Next: harvest h1/h2 (cells land in /data/jack-logs/humid_race), then dispatch hum30 s1-3 and s4 as sessions free; then `humid_race tally`.
+`2131a04` W.2 cells current (hum34 5/5, shipped+hum30 0/5). **DRINK race verdict: none ships** (40 cells current): dB loses only NE.01 ok_spread 0/5 vs 5/5 (the f-spread call). Humid verdict waits on NE.01 (0/5 both arms).
+11-15 06:31 ALL 10 humid NE.01 cells in flight on Kaggle CPU: h1 `…0356` hum34 s0-2, h2 `…3424` hum34 s3-4+hum30 s0 (pollers alive), h3 `…3809` hum30 s1-3, h4 `…4063` hum30 s4
+(h3/h4 pushed in-session, pollers let die — detached cap 2 was full). MEASURED: Kaggle runs 4 CPU sessions + 1 GPU at once (all RUNNING 06:30), not 2.
+Next: h1/h2 land by themselves; harvest h3/h4 with `JACK_REUSE_KERNEL=jannolouwrens/<slug> $PY -m experiments.humid_race_kcpu kernel <same cells>` (logs /data/tmp/humid_kcpu_h{3,4}.log), then `humid_race tally`.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
@@ -264,6 +264,7 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-15 06:31 JACK: Kaggle accepts >= 4 parallel CPU sessions beside a GPU kernel (measured: h1-h4 + D1.0 all RUNNING). The "2 kcpu sessions" belief in J3/J5/J7 states is stale; the binding limit is ruling 3's 2-detached-poller cap, so pushes go in-session + JACK_REUSE_KERNEL harvest. A non-detached kcpu harvester would free this.
 
 - 11-14 21:40 JACK: `JACK_REUSE_KERNEL` (+ACCEPT_MISMATCH) leaks to every `submit()` of a multi-unit spec: D1.0 att 8 reattached one kernel (b_split s2) for 7 different unit bodies and cached its runs under c_e2e/d_mlp keys (quarantined to /data/d10_units_quarantine_20261114). Each attempt row recorded the slug with the new body's sha, so the mismatch chain looked tolerated. Scope reuse to the first submit, or refuse a second body on the same slug.
 - 11-14 SYSTEM: `coverage` exits 2 again at HEAD (bookkeeping only: GEN.06 new unrunnable citation, SM.02→SM.03 release pair, UNREACHABLE/PASS-ON-DEAD baselines lagging) — not touched. Real finding from S3(2): GOAL ends "advised not commanded" and "tree-fire-shelter world" have NO live claim spec (CLAIM-DEAD) — the advice gate and W2/`W.5` in JACK Next-up 6.

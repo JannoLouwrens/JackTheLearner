@@ -1371,3 +1371,8 @@ Harvested `651c805`. Re-derived the caps from the measured T4 rates x1.3 (`db262
 Added JACK_D10_ONLY so each week buys a declared slice that ends PARTIAL with no verdict (`70505b3`), and dispatched W46's slice (21.2 h). The verdict lands about W48.
 J6: re-ran the 25 stale W.2 cells; no pass flag moved. Humid tally now clean (hum34 W.2 5/5 vs shipped 0/5), NE.01 legs on Kaggle (h2 dispatched). DRINK race verdict on all-current cells: none ships (dB ok_spread 0/5).
 Philosophy served: 4 (a VOID was fixed in the apparatus, not filed; a verdict was refused on stale numbers) and 3 (the control-path contest moves toward a verdict on free GPU hours that would otherwise expire).
+
+2026-11-15 06:32 UTC · JACK · J6(d) + J2 check. J2: D1.0 W46 slice watcher 4040958 alive, GPU kernel `jack-ladder-1794723070` RUNNING, no exit.
+J6: the remaining humid NE.01 legs were waiting on "2 kcpu sessions". GPU was already RUNNING, so a test push couldn't delay it. Pushed hum30 s1-3 (`jack-cpu-1794723809`) and hum30 s4 (`…4063`) in-session, because the 2-poller detached cap refused a third.
+Kaggle ran all 4 CPU kernels and the GPU kernel at once. The "2 sessions" limit was never measured past 2 (INBOX). All 10 humid NE.01 cells are now in flight; harvest command is in J6 state.
+Philosophy served: 3 (the humidity race moves to a verdict decided by the world) and 6 (free Kaggle CPU that sat unused because of an untested belief).
