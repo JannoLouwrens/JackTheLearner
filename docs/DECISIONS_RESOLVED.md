@@ -3279,3 +3279,21 @@ spec whose minutes cap was frozen from a P100 pilot re-derives it from a
 measured T4 rate before its next dispatch (no gate moves; step targets are
 the matched quantity). `D1.0` tries one long unit on Colab this week so the
 verdict need not wait for W48.
+
+**9. Five passing specs re-examined (Sunday); three are strengthened, none
+weakened.** `LF.03` (one whole life) would pass for a body that never acts:
+no clause reads behaviour, and its row's spans (433–599 s) sit at or below
+the statue's 599.9 s. It gains a statue-twin control the gate must detect;
+"he eats" is NOT added — that is `LF.04`'s claim, not milestone 1's. Its
+train cadence is read from `LC.02`'s row instead of a hard-coded 0.25 the row
+does not certify. Downstream: `LF.04` and `LF.06` truly need it and are both
+parked, so the re-buy inside order J1 costs nothing extra. `T0.12` (GPU-hour
+accounting) checks the week key against itself; Saturday's hours file under
+the week Kaggle has already closed. It gains a boundary probe in the same
+commit that fixes the key (order S3); `T0.24` and `T0.33` re-buy. `W1.02`
+(outcomes have resolution) detects an injection as large as the outcome's
+own mean; the injection is re-registered at the smallest gain a W1 claim
+must resolve (order J7). `W1.04` truly needs the new clause; `W1.01` shares
+only the horizon constant and is simply re-run. `LC.02` is sound as what it
+is — a throughput floor; the action-reading guard belongs to `LC.09` and to
+J1's forager race, where it is on. `LF.02` is sound (restart fidelity only).

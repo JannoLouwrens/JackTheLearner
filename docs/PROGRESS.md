@@ -1,122 +1,146 @@
 # PROGRESS — for the owner, on a phone
 
-Written 2026-11-14 06:50 UTC by the Director (daily sitting). Rewritten every
-day; git keeps the old ones.
+Written 2026-11-15 (Sunday) by the Director, full weekly sitting. Rewritten
+every day; git keeps the old ones.
 
 ## The short version
 
-The most important test in the project — **does living make him better?**
-(`LF.04`) — has still never run, 70 hours after it was written. Yesterday it
-was stuck behind two things. Both are cleared this morning: the speed test
-passed on a quiet machine at 06:10, and I cut a wrongly-drawn link that made
-it wait on an unrelated language-memory test. The workers' first job today,
-before anything else, is to re-check the three tests under it and send it off
-to free cloud CPU.
+The most important test in the project finally ran, and **it failed
+honestly: living does not yet make him better, because he never learns to
+eat.** In 120 lives he died of hunger 120 times. The curriculum contest ran
+too and said the same thing from the other side: no way of ordering his
+early life beats no ordering at all, because a learner that cannot find food
+has nothing to be taught. Both tests had their cheating-controls in place
+and no pass mark was touched.
+
+That is real progress — we now know exactly what is wrong — and it changes
+the work. **From today the workers' first job, every hour, is: get him to
+forage.**
 
 ## What Jack can do today
 
-The learning brain lives whole lives in the first world (W0): hunger, thirst,
-cold, his senses, a diary carried across deaths. **He does not yet learn to
-find food by living** — nothing shows him improving. That is what `LF.04`
-asks, against a frozen copy of himself.
+He lives whole lives in the first world (W0): hunger, thirst, heat and cold,
+his senses, a diary that survives death, death and retry. That is milestone
+1 and its test passes again (re-bought 14 Nov).
 
-One honest caveat on milestone 1 ("one whole life"): its test passed on
-12 Nov, but files underneath it were re-run or edited since, so the pass is
-marked stale and must be bought again before I count it. I expect it to pass
-again; I am not counting it until it does.
+What he cannot do: get better at it. Numbers a phone can hold:
+- A body that does nothing at all lives 600 seconds. An untrained brain
+  lives about 565. His trained brain lives about the same — and in one of
+  three runs it wrecked itself, falling from 598 to 158 seconds, because of
+  a known flaw in how his actions are trained (it can push without limit).
+- To pass, he needs about 5 small meals per life, or one apple. He got 0,
+  3 and 0. The world does contain enough food: a scripted forager eats 24–27
+  meals in it.
 
-Something the workers found that matters: the brain currently holding the
-"learning core" seat is a "world model" in name only — the part meant to
-predict what his actions do never gets trained. The bigger-scale race you
-asked for (`LC.09`) includes a challenger that does it properly, and will
-disqualify the current seat-holder on that point. That is the race working.
-
-The test ladder reads **110 of 270** (107 of 267 yesterday).
+The test ladder reads **110 of 270** (same as yesterday).
 
 ## Where he stands on the route (9 milestones)
 
-1. **One whole life** — met 12 Nov, pass now stale; re-buy ordered first.
-2. **A world and curriculum that can teach** — in work, and the hard part
-   this week. See below.
-3. **Brain shape by contest** — working memory decided; fusion raced, no
-   winner; the movement-controller contest (`D1.0`) is running on free GPU.
-4. **One body that moves** — waits on that contest.
-5–9. Senses, words, never-stops-learning, a living Jack, more worlds — not
-   started, except single tests.
+1. **One whole life** — MET (test `LF.03` passes, current).
+2. **A world and curriculum that can teach** — in work. World-rule tests
+   still red; curriculum contest lost by every arm (see above).
+3. **Brain shape by contest** — working memory decided. The
+   movement-controller contest (`D1.0`) must be re-bought (below). Seven
+   candidate learning brains are built; they now race on foraging.
+4. **One body that moves** — waits on that controller contest.
+5–6. Senses, words — not started beyond single tests.
+7. **He keeps learning** — first test run (`LF.04`): FAIL, see top.
+8–9. A living Jack, more worlds — not started.
 
-## What moved since yesterday (57 worker runs, none failed)
+## What moved since yesterday (59 worker runs; 3 ran out of time, none lost to budget)
 
-- **Speed test green again** (`LC.02`). Its two reds were other programs
-  loading the machine, not his brain getting slower. It now refuses to give a
-  verdict on a busy machine instead of failing.
-- **Seed-noise test passed** on Kaggle GPU (`T1.14`) — it says how much two
-  identical runs differ, which every other test's margins lean on.
-- **The world's heat rule passes** (`W.1`).
-- **The world, honestly:** four contests were run to fix his body clock and
-  the heat (slower hunger/thirst, sweat, water, humidity). **None won.** But
-  they found real things: once he can sweat, heat can no longer kill him in
-  W0 at all; humid heat can, the way it kills people. And two of the losses
-  were the *test's* fault — the "nobody survives by accident" test (`NE.01`)
-  measured time in seconds tuned to the old fast clock, and its injury check
-  measured its own schedule. I ruled both today: time is measured in the
-  world's own units, injury is tested to the lethal edge. No pass mark moved.
-- **The deeper world (W1):** one of its tests was proven impossible to pass
-  in *any* world (a counting mistake in how lives were lined up). Ordered
-  rebuilt with the same pass mark.
-- The cloud-CPU route (free Kaggle machines without GPU) is built and tested.
-- The curriculum contest (`CR.01`) is ready to run — six ways of ordering his
-  early life, against "no ordering at all".
+- **"Does living teach him?" (`LF.04`) ran: FAIL.** Described above.
+- **Curriculum contest (`CR.01`) ran: FAIL for all arms.** "No curriculum"
+  keeps the seat by verdict. It will be re-raced once he can forage.
+- **A lab idea died honestly:** "remember where meals were" beat its rivals
+  on 5 of 5 runs but missed its pre-set margin by a hair (0.0985 against
+  0.10). The bar was set before the run, so it stays dead.
+- **The world:** a fifth rule contest (how he drinks) shipped nothing. A
+  humid-heat rule is the first to fix one of the two red world tests on all
+  5 runs; its last ten runs are in flight on free cloud machines. The
+  workers also found the other red test partly measures its own stopwatch
+  (how tired he gets "varies" only because lives are short). I ruled that
+  check rebuilt as a real exhaustion-and-rest test, pass mark unchanged.
+- **Free cloud CPU works well:** Kaggle runs 4 of our CPU jobs at once
+  beside the GPU job. Almost all experiments now run there, not on your box.
+- **Controller contest (`D1.0`): attempt 9 was void.** Kaggle quietly
+  swapped its GPU for a slower model, so three of four contestants got only
+  60% of their training. Time limits re-measured (no pass mark moved). The
+  full contest now needs ~40 GPU-hours against 30 free a week, so it is
+  being bought in slices; I ordered a try on Colab to finish next week
+  rather than in three.
 
 ## What did not move
 
-- `LF.04` — see top. A day lost to a link nobody had authority to cut until
-  this sitting, and to our own edit last night that staled the speed test.
-  I have frozen the files under it until it is sent off.
-- The video you asked for: not started, third day. It is next in the machine
-  lane after one repair.
+- **The video you asked for** — not started, fourth day. No good reason:
+  the machine lane spent its slots on repairs. It is now second in that
+  lane with "a rough 30-second clip today" as the instruction.
 - "He moves better than random" (`T2.01`) — waits on the controller contest.
+- The deeper world (W1): one test contradicted itself; ruled today.
 
 ## What the workers are on next
 
-1. Re-check the three tests under `LF.04`, then run it on free cloud CPU.
-2. Send the curriculum contest to free cloud CPU (it needs none of ours).
-3. Rebuild the two mis-measuring world tests and re-run them.
-4. The hand-over test (train on one machine, keep learning on another).
-5. The bigger-scale brain race, priced and sent to cloud CPU.
-6. Watch the controller contest on GPU (25 hours of work, in 13 pieces).
+1. **Foraging.** First a three-run contest to fix the flaw that wrecks
+   him; then all seven candidate brains plus a random baseline raced on
+   meals per life. If none eats, the two best get four times longer, to
+   tell "slow learner" from "cannot learn this".
+2. Harvest the humid-heat runs; rebuild the tiredness check; re-run.
+3. The deeper world's contradicting test, then its hunger clock.
+4. Two old broken tests nobody owned (cold is felt before it kills: 94 days).
+5. Write the missing tests for fire and for "advised, not commanded".
+6. Machine lane: make the all-tests re-check green; your video; then close
+   a hole that nearly put mislabelled results into the controller verdict
+   (a crash saved it — nothing wrong was recorded).
+
+Parked until he can forage, because they would only measure the same
+failure again: the hand-over test, the bigger-scale brain race you asked
+for (its seven brains are what race in step 1), the curriculum re-race.
+
+## The honest paragraph (Sunday)
+
+Closer, not just busier — for the first time in weeks. The week's biggest
+step: the creature test ran with honest controls and told us the truth, and
+milestone 1 holds. The worst drift: it took 70 hours to run a test that was
+ready, and about 70 of every 119 commits were workers updating notes rather
+than changing Jack. And a caution I owe you: a dozen cheap ideas to make
+him find food (smell, a food sense, weaning, longer memory of reward) have
+already died in the lab. Foraging may need a different brain rather than a
+tweak. That is exactly what step 1 measures.
 
 ## The four machine numbers
 
 | | |
 |---|---|
-| Points per worker run | +0.05 (107 → 110 over 57 runs) |
-| Slots lost to budget | 0 worker slots. But the CPU day overran again (59,599 of 57,600 s) and refused tests for six hours. Now capped: races may use 60% of the day, 2 processes at once |
-| Free GPU-hours expired | None unused: last week's 30 Kaggle hours all went to your other project. This week the controller contest holds them |
-| Oldest unrepaired blocker | 94 days: "he moves better than random" (`T2.01`), behind the running contest |
+| Points per worker run | 0.00 (110 → 110 over 59 runs; the two big verdicts were both FAILs, which score nothing and are worth more) |
+| Slots lost to budget | 0. The CPU day overran a third time on 14 Nov (64,886 of 57,600 s; idle cloud-watchers were billed as work — fixed at midnight). Today so far: 4,700 s |
+| Free GPU-hours expired | None that I can show unused; this week 7.8 h spent + 21 h in flight of 30. The weekly counter starts on the wrong day (known, queued) |
+| Oldest unrepaired blocker | 95 days: "he moves better than random" (`T2.01`), behind the controller contest |
 
 ## Dead or stuck
 
-- Nothing is dead. Workers, auditor, re-checker and this review ran on time;
-  pushes work. The paper scout last ran 12 Nov (weekly).
-- Disk: 5.6 GB free on the system disk (workers stop under 3). Unchanged.
-- Usage: 57% of the week used, resets 20 Nov; the stop is at your 95%. The
-  meter gave one impossible reading on 13 Nov (fell from 69% to 26%); two
-  thirds of this week's use is not this project's.
-- `run verify` (re-checks every pass from its record) is red for the third
-  day on one test whose pass cannot be re-derived. Repair is first in the
-  machine lane, and needs the quiet machine we have this morning.
-- The speed test peaked at 2.1 GB of memory against our 1.5 GB limit. Brief,
-  nothing was harmed; I am watching it.
-- Old backlog: 25 rows left (35 yesterday).
+- Nothing is dead. Workers hourly, auditor, re-checker, this review all on
+  time; pushes work. Paper scout last ran 12 Nov (weekly, due Monday).
+- Disk: 5.5 GB free on the system disk (workers stop under 3). Unchanged.
+- Usage: 68% of the week used across everything (57% on this model), resets
+  20 Nov; the stop is at your 95%. More than half of this week's use is not
+  this project's. The meter gave two impossible readings (11 and 13 Nov).
+- `run verify` (re-derives every pass from its record) is red a fifth day,
+  now on one bookkeeping test about CPU budgets. Cause known; ruled today;
+  first item in the machine lane.
+- Old backlog: 15 rows left (25 yesterday).
+- Steering files are all inside their size caps. I changed no prompts.
+- Weekly re-check of 5 passing tests: 3 were too easy (the "one whole
+  life" test would pass a body that never moves). Ordered strengthened.
 
 ## FOR THE OWNER
 
-One thing, and it has a default so nothing waits on you. **The free Kaggle
-GPU week is shared with your other project, which used all 30 hours last
-week; Jack's GPU work waited three days.** If you want a split, say so. If
-you say nothing by 21 Nov: no split — Jack runs smallest jobs first, takes a
-refusal as final for the week, and overflows to Colab.
+Nothing new. The standing one has a default so nothing waits on you: the
+free Kaggle GPU week is shared with your other project. If you say nothing
+by 21 Nov: no split — Jack takes a refusal as final for the week and
+overflows to Colab.
 
-Philosophy served today: 1 (he learns by living — the test that asks it is
-unblocked), 4 (two tests that could not be passed honestly are rebuilt, no
-pass mark moved), 6 (the box's CPU is capped for the paying customers).
+Philosophy served today: 1 (he must learn by living — the work is now aimed
+at the one thing stopping it), 3 (the brain that forages is chosen by a
+race, not by me), 4 (three tests ruled where they measured themselves; no
+pass mark moved; a near-miss stays dead), 7 (the finished-Jack table is
+current).

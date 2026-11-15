@@ -48,7 +48,11 @@ seeds 150–152 × 12 lives, as on 11-12 (`experiments/policy_loss.py`). Winner
 = highest mean late-third life span among arms with saturated-action
 fraction ≤ 0.05 and no seed whose late third is below half its early third.
 Seat the winner in `cores.py` BY that tally; re-buy `LC.02`, `LC.08`,
-`LF.03`. No arm qualifies → say so and go on with base.
+`LF.03`. No arm qualifies → say so and go on with base. **Before that
+`LF.03` re-buy (ruling 9):** it gains a statue twin (zero action, training on)
+that its gate must tell from the learner, else FAIL; meals per seed go on the
+row; and its `TRAIN_RATIO` is read from `LC.02`'s committed ratio for the
+seated arm (the row says 0.125; `lf_03:109` hard-codes 0.25).
 (2) **Forager race**, Kaggle CPU, 4 kernels at a time: all 7 `LC.09` arms
 (reuse its `pilot` path, guard on) + a random-policy floor × fresh seeds
 153–154 × 15 lives. Readout per arm-seed: floor meals and apples per life,
@@ -113,6 +117,10 @@ lives end at ~53 s against a 5600 s horizon: the energy clock is the defect.
 clause: the oracle's p5 must exceed the repeat arm's p95 (survival by
 competence, not by a soft world). (a) is unchanged. Re-register, fixtures,
 then `run W1.04` once on Kaggle CPU; a FAIL at ~53 s is the honest reading.
+(1b) Ruling 9: `W1.02`'s detection clause injects +5.0 into an outcome whose
+mean is 5.4 — it cannot miss. Re-register the injection at the smallest gain
+a W1 claim must resolve (size declared from `W1.01`/`DP.05` before any run),
+bar ≥ 3σ unmoved. A red is W1's resolution finding and joins step 2's judges.
 (2) Race W1's energy clock (`W1.00`(b)): ≥ 3 clocks declared first, judged
 by `W1.00`–`W1.04` unchanged. (3) Register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 4, 5.
@@ -172,6 +180,9 @@ there (a class says where a run really goes). `T0.33`'s clauses untouched.
 (3) Ruling 5 in `cpu_budget`: a detached process billing < 0.10 cores is a
 poller — not counted in the 2-alive cap, capped at 6; planted 7th refused.
 (4) Write in state the `detached:*` total for 11-15 at day end.
+(5) Ruling 9, one commit: the GPU week key (`gpu.py:495`) follows Kaggle's
+reset (Saturday 00:00 UTC, `gmtime`), and `T0.12` gains a fake-clock probe —
+Fri 23:59:59 and Sat 00:00:01 land in different weeks; re-buy `T0.12`, `T0.24`.
 serves: philosophy 4, 5, 6.
 **done when:** `run verify` exits 0 on a clean tree and still exits non-zero
 on a planted PASS-on-FAIL-dependency; one day ends with `detached:*` ≤ 34,560 s.
@@ -217,8 +228,7 @@ serves: philosophy 4 (no mislabelled data in a verdict), 5.
 passes with no override, and a planted IMPL_DEPS change is refused.
 state: open — ordered 11-15 (INBOX lines of 11-14/15 folded in here).
 
-**Next up:** (1) the GPU week key (`gpu.py:495`) on Kaggle's Saturday reset;
-pre-flight prints UNKNOWN for the shared account unless probed. (2) **S4** —
+**Next up:** (1) pre-flight prints UNKNOWN for the shared account unless probed. (2) **S4** —
 six PASSes gated on a seed AVERAGE that admits a failing seed (`ME.10`
 first). (3) `ran_at`-pinned rows read only the live ledger row. (4) `T0.13`'s
 13 clauses that can never fire. (5) `protocol.py` in IMPL_DEPS stales GPU
