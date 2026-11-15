@@ -7,6 +7,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0b0d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Terminal">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>Jack Terminal</title>
 <link rel="stylesheet" href="xterm.css">
 <style>
@@ -113,6 +118,15 @@ button{font:inherit;color:inherit}
 .tips li:first-child{border-top:0}
 .tips b{color:var(--ink);font-weight:600}
 
+.field.mono{height:auto;min-height:190px;max-height:46vh;padding:12px 14px;font-family:var(--mono);font-size:12px;line-height:1.4;resize:none;white-space:pre;overflow:auto;margin-bottom:14px}
+ol.steps{margin:0 0 16px;padding-left:22px;color:var(--ink2);font-size:16px;line-height:1.5}
+ol.steps li{margin-bottom:8px}
+/* opened from the home screen there is no browser around it: no way "back", so no back link */
+html.app .bar .back{display:none}
+html.app .bar h1{text-align:left;padding-left:10px}
+html.app #menu [data-m="install"]{display:none}
+html:not(.app) #menu [data-m="dash"]{display:none}
+
 /* centre notice while joining or when the server is away */
 #notice{position:absolute;left:0;right:0;top:38%;z-index:2;text-align:center;padding:0 24px;color:var(--ink2);font-size:15px;pointer-events:none}
 #notice b{display:block;color:var(--ink);font-size:17px;font-weight:600;margin-bottom:4px}
@@ -133,10 +147,16 @@ button{font:inherit;color:inherit}
 
   <div id="menu" hidden role="menu">
     <button data-m="chat" role="menuitem">Open my Claude chat</button>
-    <button data-m="tips" role="menuitem">How to use this</button>
+    <button data-m="copy" role="menuitem">Copy what is on screen</button>
+    <hr>
+    <button data-m="newwin" role="menuitem">New window</button>
+    <button data-m="nextwin" role="menuitem">Next window</button>
     <hr>
     <div class="size">Text size <div><button data-m="smaller" aria-label="Smaller text">A−</button><span id="sizeval">13</span><button data-m="bigger" aria-label="Larger text">A+</button></div></div>
     <hr>
+    <button data-m="tips" role="menuitem">How to use this</button>
+    <button data-m="install" role="menuitem">Add to Home Screen</button>
+    <button data-m="dash" role="menuitem">Open the dashboard</button>
     <button data-m="reconnect" role="menuitem">Reconnect</button>
     <button data-m="signout" role="menuitem" class="danger">Sign out on this device</button>
   </div>
@@ -162,9 +182,32 @@ button{font:inherit;color:inherit}
         <li><b>Your chat</b><span>Type <code>jackchat</code> and press return, or choose “Open my Claude chat” in the menu. It keeps running when you close this page.</span></li>
         <li><b>Scroll back</b><span>Swipe up and down on the terminal, or use the page keys.</span></li>
         <li><b>esc, ctrl</b><span>Tap esc to interrupt Claude. Tap ctrl, then a letter, for a control key; ^C is on its own key.</span></li>
-        <li><b>Same window</b><span>From your SSH app, run <code>jt</code> to land in this same terminal.</span></li>
+        <li><b>Windows</b><span>“New window” in the menu opens a second shell beside your chat; a strip along the bottom shows which one you are in.</span></li>
+        <li><b>As an app</b><span>Choose “Add to Home Screen” in the menu. It then opens full screen from its own icon and stays signed in.</span></li>
       </ul>
       <button class="cta" data-close="tips">Done</button>
+    </div>
+  </div>
+
+  <div class="scrim" id="install" hidden>
+    <div class="sheet">
+      <div class="grab"></div>
+      <h2>Add to Home Screen</h2>
+      <p>Then it opens from its own icon, full screen, straight into the terminal.</p>
+      <ol class="steps" id="installsteps"></ol>
+      <button class="cta" id="installgo" type="button" hidden>Install</button>
+      <button class="plain" data-close="install" type="button">Done</button>
+    </div>
+  </div>
+
+  <div class="scrim" id="copy" hidden>
+    <div class="sheet">
+      <div class="grab"></div>
+      <h2>Copy text</h2>
+      <p>What is on the terminal screen now. Select part of it, or copy it all. To copy something further up, scroll back first.</p>
+      <textarea class="field mono" id="copytext" readonly aria-label="Text on the terminal screen"></textarea>
+      <button class="cta" id="copyall" type="button">Copy all</button>
+      <button class="plain" data-close="copy" type="button">Done</button>
     </div>
   </div>
 </div>
@@ -178,13 +221,14 @@ var $=function(s){return document.querySelector(s)};
 var enc=new TextEncoder(), dec=new TextDecoder();
 var LS={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},del:function(k){try{localStorage.removeItem(k)}catch(e){}}};
 var SIZE="jack.term.size", TIPPED="jack.term.tipped";
-/* The password travels as a cookie, because a browser will not put a password
-   header on a WebSocket. The web server turns the cookie into the header the
-   terminal server checks. Strict same-site, HTTPS only: no other site can make
-   this browser send it. */
-function getTok(){var m=document.cookie.match(/(?:^|;\s*)jt=([^;]+)/);return m?m[1]:null}
-function setTok(v,keep){document.cookie="jt="+v+"; Path=/; SameSite=Strict"+(location.protocol==="https:"?"; Secure":"")+(keep?"; Max-Age=31536000":"")}
-function dropTok(){document.cookie="jt=; Path=/; Max-Age=0; SameSite=Strict"+(location.protocol==="https:"?"; Secure":"")}
+/* Signing in. The password is posted once; the web server hands it back as a
+   cookie that no script can read, that only this site receives, and that is
+   sent only to the terminal. Because the server sets it, it lasts: the app
+   stays signed in. The terminal server is what checks it. */
+function api(path,opt){return fetch(path,Object.assign({cache:"no-store",credentials:"same-origin"},opt||{}))}
+function fetchToken(){return api("/term/token").then(function(r){if(r.status===401)return null;if(!r.ok)throw new Error("down");return r.json().then(function(j){return j.token||null})})}
+var APP=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+if(APP)document.documentElement.classList.add("app");
 var coarse=window.matchMedia&&matchMedia("(pointer:coarse)").matches;
 var fontSize=+(LS.get(SIZE)||0)||(Math.min(innerWidth,innerHeight)<380?12:coarse?13:15);
 
@@ -202,7 +246,7 @@ term.open($("#term"));
 window.jackTerm=term;                                 /* for the interface tests */
 
 /* ───── connection: ttyd's own wire format ───── */
-var ws=null, token=getTok(), wantOpen=false, tries=0, timer=null, pending=0, paused=false, everLive=false;
+var ws=null, token=null, wantOpen=false, tries=0, timer=null, pending=0, paused=false, everLive=false;
 function setState(kind,text){var el=$("#state");el.className="state "+kind;el.lastElementChild.textContent=text}
 function notice(title,body){var n=$("#notice");if(!title){n.hidden=true;return}n.innerHTML="<b></b><span></span>";n.firstChild.textContent=title;n.lastChild.textContent=body||"";n.hidden=false}
 function send(bytes){if(ws&&ws.readyState===1)ws.send(bytes)}
@@ -239,13 +283,19 @@ function connect(){
     if(ev.code===1008||ev.code===1011&&!everLive){forget();askPassword("That password was not accepted.");return}
     if(!wantOpen){if(token)setState("off","Closed");else setState("","Signed out");return}
     tries++;var wait=Math.min(10000,500*Math.pow(2,Math.min(tries,5)));
+    if(tries===2)fetchToken().then(function(t){if(!t&&wantOpen){wantOpen=false;clearTimeout(timer);token=null;askPassword("Please sign in again.")}}).catch(function(){});
     setState(tries>3?"off":"wait",tries>3?"Server not answering":"Reconnecting");
     if(tries>3)notice("Cannot reach the terminal","Trying again every few seconds. Your session on the server is still there.");
     timer=setTimeout(connect,wait);
   };
   sock.onerror=function(){};
 }
-function forget(){token=null;dropTok()}
+function forget(){token=null;return api("/term-logout",{method:"POST"}).catch(function(){})}
+function start(){
+  setState("wait","Connecting");
+  fetchToken().then(function(t){if(t){token=t;tries=0;connect()}else askPassword()}).catch(function(){
+    setState("off","Server not answering");notice("Cannot reach the terminal","Trying again in a few seconds.");timer=setTimeout(start,4000)});
+}
 function disconnect(){wantOpen=false;clearTimeout(timer);if(ws){try{ws.close()}catch(e){}}}
 
 /* ───── sign in: the password is checked by the terminal server, never by this page ───── */
@@ -259,14 +309,16 @@ $("#signform").addEventListener("submit",function(e){
   var pw=$("#pw").value.trim();if(!pw){$("#err").textContent="Paste the terminal password first.";return}
   var tok;try{tok=btoa("jack:"+pw)}catch(x){$("#err").textContent="That password has characters this page cannot send.";return}
   $("#go").disabled=true;$("#go").textContent="Checking";$("#err").textContent="";
-  setTok(tok,$("#keep").checked);
-  fetch("/term/token",{cache:"no-store",credentials:"same-origin"}).then(function(r){
-    if(r.status===401)throw new Error("wrong");
+  api($("#keep").checked?"/term-login":"/term-login-session",{method:"POST",headers:{"X-Jack-Token":tok}}).then(function(r){
     if(!r.ok)throw new Error("down");
-    token=tok;
-    $("#pw").value="";$("#signin").hidden=true;tries=0;connect();
+    return fetchToken();
+  }).then(function(t){
+    if(!t)throw new Error("wrong");
+    token=t;$("#pw").value="";$("#signin").hidden=true;tries=0;
+    try{history.replaceState(null,"",location.pathname)}catch(x){}      /* lets the phone offer to remember the password */
+    connect();
   }).catch(function(x){
-    dropTok();
+    if(x.message==="wrong")api("/term-logout",{method:"POST"}).catch(function(){});
     $("#go").disabled=false;$("#go").textContent="Open";
     $("#err").textContent=x.message==="wrong"?"That password was not accepted.":"The terminal on the server is not answering. Try again in a moment.";
   });
@@ -400,23 +452,51 @@ document.addEventListener("click",function(e){
     if(a==="bigger"){setSize(fontSize+1);return}
     $("#menu").hidden=true;
     if(a==="chat"){input("jackchat\r");term.focus()}
+    else if(a==="newwin"){input("\x02c");term.focus()}
+    else if(a==="nextwin"){input("\x02n");term.focus()}
+    else if(a==="copy"){
+      var b=term.buffer.active,L=[];for(var i=b.viewportY;i<b.viewportY+term.rows;i++){var ln=b.getLine(i);L.push(ln?ln.translateToString(true):"")}
+      while(L.length&&!L[L.length-1])L.pop();
+      $("#copytext").value=L.join("\n");$("#copyall").textContent="Copy all";$("#copy").hidden=false;
+    }
+    else if(a==="install")showInstall();
+    else if(a==="dash")location.href="../";
     else if(a==="tips")$("#tips").hidden=false;
     else if(a==="reconnect"){disconnect();tries=0;setTimeout(connect,150)}
     else if(a==="signout"){disconnect();forget();askPassword()}
     return;
   }
   var c=e.target.closest("[data-close]");if(c){$("#"+c.dataset.close).hidden=true;if(!coarse)term.focus();return}
-  if(e.target.id==="tips"){$("#tips").hidden=true;return}
+  if(e.target.id==="tips"||e.target.id==="install"||e.target.id==="copy"){e.target.hidden=true;return}
   if(!$("#menu").hidden&&!e.target.closest("#menu"))$("#menu").hidden=true;
 });
-document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("#menu").hidden){$("#menu").hidden=true;e.stopPropagation()}else if(!$("#tips").hidden){$("#tips").hidden=true;e.stopPropagation()}}},true);
+document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;var open=["menu","tips","install","copy"].filter(function(i){return !$("#"+i).hidden})[0];if(open){$("#"+open).hidden=true;e.stopPropagation()}},true);
+
+/* ───── copy, and adding it to the home screen ───── */
+$("#copyall").addEventListener("click",function(){
+  var ta=$("#copytext"),done=function(){$("#copyall").textContent="Copied"};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(ta.value).then(done).catch(function(){ta.focus();ta.select();try{document.execCommand("copy");done()}catch(e){}});
+  else{ta.focus();ta.select();try{document.execCommand("copy");done()}catch(e){}}
+});
+var installEvent=null;
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();installEvent=e});
+function showInstall(){
+  var ua=navigator.userAgent,ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1),android=/Android/.test(ua),steps;
+  if(ios)steps=["Open this page in Safari.","Tap the Share button, the square with an arrow.","Choose Add to Home Screen, then Add."];
+  else if(installEvent)steps=["Tap Install below and confirm."];
+  else if(android)steps=["Open the browser menu, the three dots.","Choose Install app, or Add to Home screen."];
+  else steps=["In Chrome or Edge, use the install button at the right of the address bar.","In Safari on a Mac, choose File, then Add to Dock."];
+  $("#installsteps").innerHTML=steps.map(function(x){var li=document.createElement("li");li.textContent=x;return li.outerHTML}).join("");
+  $("#installgo").hidden=!installEvent;$("#install").hidden=false;
+}
+$("#installgo").addEventListener("click",function(){if(installEvent){installEvent.prompt();installEvent=null;$("#install").hidden=true}});
 
 /* ───── come back to life with the page ───── */
 document.addEventListener("visibilitychange",function(){if(!document.hidden&&wantOpen&&!ws){tries=0;connect()}});
 window.addEventListener("online",function(){if(wantOpen&&!ws){tries=0;connect()}});
 window.addEventListener("pageshow",function(ev){if(ev.persisted&&wantOpen&&!ws){tries=0;connect()}});
 
-connect();
+start();
 })();
 </script>
 </body>

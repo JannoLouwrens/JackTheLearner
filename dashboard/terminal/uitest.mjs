@@ -70,6 +70,32 @@ async function geometry(page) {
 
 const browser = await pw[engineName].launch({ args: engineName === 'chromium' ? [`--host-resolver-rules=MAP ${HOST} 10.0.0.135`, '--no-sandbox'] : [] });
 
+{
+  const R = { profile: 'The app itself, no dashboard password', id: 'app', engine: engineName, checks: [], timing: {}, errors: [] };
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage(); const C = R.checks;
+  try {
+    const resp = await page.goto(`${BASE}/terminal/`, { waitUntil: 'load' });
+    await page.waitForSelector('#signin:not([hidden])', { timeout: 8000 });
+    check(C, 'Terminal app opens with no dashboard password, straight to its own sign-in', resp.status() === 200);
+    const man = await page.evaluate(() => fetch('manifest.webmanifest').then((r) => r.json()));
+    check(C, 'Manifest says: stand-alone app that starts in the terminal', man.display === 'standalone' && man.start_url === '/terminal/' && man.icons.length >= 2, `${man.short_name}, ${man.display}`);
+    const icon = await page.evaluate(() => new Promise((res) => { const i = new Image(); i.onload = () => res([i.naturalWidth, i.naturalHeight]); i.onerror = () => res([0, 0]); i.src = 'icon-512.png'; }));
+    const touch = await page.evaluate(() => { const l = document.querySelector('link[rel="apple-touch-icon"]'); return l ? fetch(l.href).then((r) => r.status) : 0; });
+    check(C, 'Home-screen icons load', icon[0] === 512 && icon[1] === 512 && touch === 200, `${icon.join('×')}, touch icon ${touch}`);
+    const dash = await ctx.request.get(`${BASE}/`).then((r) => r.status());
+    const tok = await ctx.request.get(`${BASE}/term/token`).then((r) => r.status());
+    check(C, 'Dashboard and terminal backend still refuse without their passwords', dash === 401 && tok === 401, `dashboard ${dash}, backend ${tok}`);
+    const jar = await ctx.cookies(); 
+    await page.fill('#pw', LONG); await page.keyboard.press('Enter');
+    const tc = await waitState(page, 'Connected');
+    const ck = (await ctx.cookies()).find((c) => c.name === 'jt');
+    check(C, 'Sign-in works from here and the phone keeps it for a year, unreadable by scripts', tc >= 0 && ck && ck.httpOnly && ck.secure && ck.sameSite === 'Strict' && ck.path === '/term' && (ck.expires - Date.now() / 1000) > 300 * 86400, ck ? `httpOnly ${ck.httpOnly}, ${Math.round((ck.expires - Date.now() / 1000) / 86400)} days` : 'no cookie');
+    await ctx.close();
+  } catch (e) { check(C, 'App checks completed', false, String(e).slice(0, 300)); await ctx.close().catch(() => {}); }
+  results.push(R);
+}
+
 for (const p of PROFILES) {
   const R = { profile: p.label, id: p.id, engine: engineName, checks: [], timing: {}, errors: [] };
   const ctx = await browser.newContext({
@@ -237,6 +263,44 @@ for (const p of PROFILES) {
     await page.keyboard.press('Escape').catch(() => {}); await page.mouse.click(5, p.h / 2).catch(() => {}); await sleep(200);
     if (await page.isVisible('#menu')) { if (p.touch) await page.tap('#more'); else await page.click('#more'); }
 
+    // 13b. a second window: a strip appears, switching works, closing it removes the strip
+    const menu = async (item) => { if (!(await page.isVisible('#menu'))) { if (p.touch) await page.tap('#more'); else await page.click('#more'); await page.waitForSelector('#menu:not([hidden])'); } if (p.touch) await page.tap(`[data-m="${item}"]`); else await page.click(`[data-m="${item}"]`); await sleep(250); };
+    await menu('newwin');
+    const strip = await waitText(page, '1 bash', 5000);
+    await focusTerm(page, p); await page.keyboard.type(`echo WINTWO-${mark}`); await page.keyboard.press('Enter');
+    const w2 = await waitText(page, `WINTWO-${mark}`, 5000);
+    await menu('nextwin');
+    const w1 = await waitText(page, `${mark}-STILL-HERE`, 5000);
+    await menu('nextwin'); await waitText(page, `WINTWO-${mark}`, 5000);
+    await focusTerm(page, p); await page.keyboard.type('exit'); await page.keyboard.press('Enter');
+    const t9 = Date.now(); let stripGone = false;
+    while (Date.now() - t9 < 5000) { const sc = await screen(page); if (!sc.includes('1 bash') && sc.includes(`${mark}-STILL-HERE`)) { stripGone = true; break; } await sleep(80); }
+    check(C, 'A second window opens, switching works, closing it tidies up', strip >= 0 && w2 >= 0 && w1 >= 0 && stripGone, `strip ${strip} ms, second ${w2} ms, back ${w1} ms, tidy ${stripGone}`);
+
+    // 13c. copy what is on screen
+    await menu('copy');
+    await page.waitForSelector('#copy:not([hidden])'); await sleep(350);
+    const copied = await page.inputValue('#copytext');
+    await page.screenshot({ path: `${OUT}${p.id}-7-copy.png` });
+    if (p.touch) await page.tap('#copyall'); else await page.click('#copyall');
+    await sleep(300);
+    const clip = engineName === 'chromium' ? await page.evaluate(() => navigator.clipboard.readText().catch(() => '')) : copied;
+    check(C, 'Copy sheet holds the screen text and copies it', copied.includes(`${mark}-STILL-HERE`) && clip.includes(`${mark}-STILL-HERE`) && (await page.textContent('#copyall')) === 'Copied');
+    if (p.touch) await page.tap('#copy [data-close]'); else await page.click('#copy [data-close]');
+
+    // 13d. the home-screen help, and how it looks once opened as an app
+    await menu('install');
+    await page.waitForSelector('#install:not([hidden])'); await sleep(350);
+    const steps = await page.$$eval('#installsteps li', (n) => n.length);
+    await page.screenshot({ path: `${OUT}${p.id}-8-install.png` });
+    check(C, 'Add-to-Home-Screen help shows steps for this device', steps >= 1, `${steps} step(s)`);
+    if (p.touch) await page.tap('#install [data-close]'); else await page.click('#install [data-close]');
+    await page.evaluate(() => document.documentElement.classList.add('app')); await sleep(200);
+    const appOK = await page.evaluate(() => getComputedStyle(document.querySelector('.bar .back')).display === 'none' && getComputedStyle(document.querySelector('[data-m="install"]')).display === 'none' && getComputedStyle(document.querySelector('[data-m="dash"]')).display !== 'none');
+    await page.screenshot({ path: `${OUT}${p.id}-9-app.png` });
+    check(C, 'Opened as an app: no back link, menu offers the dashboard instead', appOK);
+    await page.evaluate(() => document.documentElement.classList.remove('app'));
+
     // 14. a reload comes straight back in, with the screen as it was (the session lives on the server)
     await page.screenshot({ path: `${OUT}${p.id}-3-terminal.png` });
     await page.reload({ waitUntil: 'load' });
@@ -261,7 +325,8 @@ for (const p of PROFILES) {
     await page.waitForSelector('#menu:not([hidden])');
     if (p.touch) await page.tap('[data-m="signout"]'); else await page.click('[data-m="signout"]');
     await page.waitForSelector('#signin:not([hidden])', { timeout: 5000 });
-    const gone = await page.evaluate(() => !/(?:^|;\s*)jt=/.test(document.cookie));
+    await sleep(400);
+    const gone = await page.evaluate(() => fetch('/term/token', { cache: 'no-store' }).then((r) => r.status === 401));
     check(C, 'Sign out closes the terminal and forgets the password', gone && (await state(page)) === 'Signed out');
     check(C, 'No script or security-policy errors in the page', R.errors.length === 0, R.errors.slice(0, 3).join(' | '));
   } catch (e) {

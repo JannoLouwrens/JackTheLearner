@@ -1074,10 +1074,10 @@ def publish(pub: Path) -> None:
             if old.name not in have:
                 old.unlink(missing_ok=True)
     # The terminal page and the one library it loads, both from this server.
-    page, vendor = CFG / "terminal" / "index.html", OUT / "vendor"
-    if page.is_file() and vendor.is_dir():
+    www, vendor = CFG / "terminal" / "www", OUT / "vendor"
+    if www.is_dir() and vendor.is_dir():
         (pub / "terminal").mkdir(exist_ok=True)
-        for src in [page] + sorted(f for f in vendor.iterdir() if f.is_file()):
+        for src in sorted(f for d in (www, vendor) for f in d.iterdir() if f.is_file()):
             dst = pub / "terminal" / src.name
             if (not dst.exists() or dst.stat().st_size != src.stat().st_size
                     or dst.stat().st_mtime < src.stat().st_mtime):
