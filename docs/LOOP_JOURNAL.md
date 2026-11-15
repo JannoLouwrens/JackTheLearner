@@ -1553,3 +1553,8 @@ No world-card row came back from Kaggle (e, d8, d32, f2, g2 still running; nothi
 Proof `test_jack_env_dial` PASS, 3 seeds × 400 random decisions: d=1 byte-identical to default; meal size and regrowth timers as stated at d=0/0.5/1; control: d=0 differs from today's world (seed 153 random eats 6 vs 1). Seed 154 eats nothing at any d — food count and distance are the missing dial parts, next.
 J1 identity proof not re-run (default path only adds a dict copy; (a) shows d=1 == default).
 Philosophy served: 5 (his world — the first rung he can live on is being built from the published dial), 4 (each option proven with a control that must fail).
+
+## 2026-11-15 21:10 · SYSTEM · S6 step 1: a video of one life
+`scripts/life_video.py`: lives one random-action life in `jack_env` (seed 153), records poses per decision, replays them with mj_forward under Xvfb+llvmpipe (no world RNG touched), third-person orbit cam → `/data/jack-video/latest.mp4`: 294 s life (energy death, 1 meal) in 41 s, 854x480 H.264 12 fps, 1.6 MB, 105 s wall at nice 19.
+Gotchas: his body is geom group 3 (hidden in the default MjvOption — first render had no Jack in it); no system ffmpeg, libx264 comes from /data/stt/bin/ffmpeg.
+Philosophy served: 1 (he can be known — the owner can watch him live and die), 5 (machine work the owner asked for, one slot, no cron, no service).
