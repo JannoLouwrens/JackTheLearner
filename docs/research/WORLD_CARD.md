@@ -11,7 +11,7 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; d8 harvested 21:25, `d8.jsonl` sha256 f4a24125…; d32 harvested 22:10, `d32.jsonl` sha256 7a371c53…; e running; f2 launched 20:12 on 221–240, g2 launched 20:33, b2 launched 21:22)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; d8 harvested 21:25, `d8.jsonl` sha256 f4a24125…; d32 harvested 22:10, `d32.jsonl` sha256 7a371c53…; e running; f2 launched 20:12 on 221–240, g2 launched 20:33, b2 harvested 22:50 on 221–240, `b2.jsonl` sha256 2ce802b8…)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
@@ -23,6 +23,7 @@ hand forager (row f). No learner, no ledger row: these are rulers.
 | e | privileged NE.01 forager | | | | n/a | | |
 | f | hand forager, observation only | 742.1 ± 278.9 (6–1800; median 696) | 4.13 ± 4.98 (max 28; 168/200 lives ≥1; 59/200 ≥5; per-seed means 1.6–7.7, median 4.05) | 0 | n/a | energy 189, integrity 10, censored 1 | −1.00 (199 lives); −0.88 (the 1 censored) |
 | g | control: (f) with rays shuffled | 701.5 ± 155.7 (7–1037; median 715) | 2.97 ± 2.05 (max 10; 180/200 lives ≥1; 41/200 ≥5; per-seed means 1.5–3.9) | 0 | n/a | energy 193, integrity 7 | −1.00 (all) |
+| b2 | random, white per decision, seeds 221–240 (f2's baseline) | 302.1 ± 19.6 (278–421) | 0.47 ± 0.83 (max 4; 61/200 lives ≥1; 0/200 ≥5; per-seed means 0.0–1.0) | 0 | n/a | energy 200/200 | −1.00 (all) |
 
 Bar for (f), unmoved from `LF_04_FAIL.md`: per seed, mean floor meals per life
 ≥ 5 and above row b on the same seed, on ≥ 18 of 20 seeds. (g) must miss it.
@@ -125,6 +126,8 @@ box, `/data/tmp/wc_diag` — tuning seed, NOT evidence):
 - **Frozen: F2_BAN_S = inf** (commit with this table). f2, g2, b2 launch on
   fresh seeds 221–240 against the unmoved bar. Two tuning seeds at ~7.6 are
   not a prediction of 18/20 — the registered run decides.
+
+**Row b2 (22:50):** random on f2's fresh seeds 221–240 reproduces row b on 201–220 — 302 s vs 302 s, 0.47 vs 0.52 floor meals/life, per 100 s alive 0.156 vs 0.170: the new seeds are not an easier world. 0/20 seeds reach 5 per life, so b2 is the per-seed floor f2 is scored against; f2 and g2 still running.
 
 ## Smoke (box, seeds 153/154 — tuning seeds, NOT evidence)
 
