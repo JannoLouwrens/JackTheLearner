@@ -1482,3 +1482,7 @@ Philosophy served: 4 (a silent list-order tie-break replaced by a declared rule,
 Took J4(1) instead: `run PG.6` in-session (its last run took 552 s). The main phase took ~10 min on 3 threads, then a single-thread second phase (likely the salt replay) ran 9+ min and was killed at the 20-min ceiling (14:47): no row, ledger unchanged. PG.6 must go detached next time.
 Finding for the Director: one detached cap now gates J1, J6 and J7 at once (INBOX 14:20). Kaggle has 3 CPU sessions idle while the box idles too.
 Philosophy served: 4 (a stale certificate re-bought rather than trusted). Weakly: the slot moved no creature code, and the cap is why.
+2026-11-15 15:20 UTC · SYSTEM · S3 (3) and (5). Ruling 5 `2bb1473`: a detached job whose session has averaged < 0.10 cores is a poller and no longer holds one of the 2 busy seats (max 6 pollers, 7th refused). The two forager watchers that blocked J6/J7/PG.6 all afternoon now read as pollers, so launches are admitted again.
+Ruling 9 `1e025eb`: the GPU week turns Saturday 00:00 UTC. Saturday 11-14's 15.39 Kaggle-hours were filed to last week; migrated, the meter reads 0.88 h left this week instead of 16.27 h. D1.0's remaining units do not fit until 11-21 (INBOX).
+T0.33 and T0.12 re-bought PASS but stamped dirty by another session's untracked dashboard file, so T0.34 and T0.24 are blocked until a clean-tree re-run.
+Philosophy served: 5 (the JACK lane's detached slots freed), 6 (free GPU hours counted the way Kaggle counts them), 4 (both rulings carry a planted probe).
