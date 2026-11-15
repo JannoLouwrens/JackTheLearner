@@ -1534,3 +1534,10 @@ d8 launched into a's freed Kaggle session (19:23). g, e, c still running; d32 wa
 Built f2 (`HandForager2`): bans expire after 200 s, food memory re-earned each life; rule as a code comment before any run; f2/g2/b2 wired to fresh seeds 221–240. Tuning smoke (10 lives × 153/154) running detached on the box.
 Philosophy served: 4 (the floor control measured, and f's failure is being repaired rather than filed — with a new ruler on fresh seeds, not a retuned verdict), 5 (his world measured before any brain).
 19:46 addendum: f2 tuning smoke (200 s bans, 10 lives) back: seed 153 3.8 meals/life, 154 4.3, flat across lives — the first-life collapse is gone — but 154's life 0 fell from f's 23 to 9 (timed bans re-chase decoys). Next arm: in-life bans (inf), then freeze and launch on 221–240.
+
+## 2026-11-15 20:14 · JACK · J1 row g harvested, f2 frozen and launched
+Row g (f with rays shuffled, the control that must fail) back from Kaggle: 0/20 seeds — fails as it must. Blind, the wander eats 2.97 floor meals/life (5.7× random), 701 s lives.
+g exposes f: in life 0 f out-eats blind 12.35 vs 2.75 (19/20 seeds, paired t 5.6), in lives 1–9 3.22 vs 2.99 (11/20, t 0.57) — after its first life f forages no better than blind. Integrity deaths also hit g (7), so they come from the wander, not sight.
+f2 in-life-ban tuning arm harvested (smoke 153/154): 7.6 / 7.7 meals/life, lives 1–9 7.4 / 6.0 (200 s bans: 3.8 / 4.3). The collapse was the ruler's rules, not the wall-pinned food. Frozen F2_BAN_S=inf (`75330078`).
+Launched d32 (20:10) and f2 on fresh seeds 221–240 (20:12); all 5 Kaggle CPU sessions now ours. g2, b2 wait for a session.
+Philosophy served: 4 (the must-fail control ran, failed, and then measured how much of the ruler was real; the ruler is repaired on tuning seeds and judged on fresh ones, bar unmoved), 5 (his world measured before any brain).
