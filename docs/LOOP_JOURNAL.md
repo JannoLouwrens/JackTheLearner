@@ -1546,3 +1546,10 @@ Philosophy served: 4 (the must-fail control ran, failed, and then measured how m
 Row c (pink noise per life) back from Kaggle, 200 lives: 491.5 s/life (white b 301.7) but 0.44 floor meals/life (b 0.52; paired per seed −0.07, t −0.70, c>b 7/20). The record's "correlated noise finds 2.5–4× more food" does not hold for pink noise here; longer life ≠ food found. g2 launched into c's freed session (20:33).
 J2 (waiting on kernels): `jack_env` gains `reward="dr100-eat"`/`"dr100-eat-pos"` and `max_episode_decisions` (truncation, world untouched, life carries). New proof PASS on 3 seeds — its own "a meal was seen" guard fired on seed 154 (no meal in 300 decisions) and was pooled across seeds, formula still checked every decision; J1 identity proof re-run PASS.
 Philosophy served: 4 (a published prediction tested and it failed here; new options proved with controls that must fail), 5 (his world: death and administrative stops now distinct, and a reward with no profit in dying is available for J2's measurement).
+
+## 2026-11-15 20:55 · JACK · J2 item 1 part: the difficulty dial (meal size + regrowth) (short slot)
+No world-card row came back from Kaggle (e, d8, d32, f2, g2 still running; nothing new in /data/jack-logs/world_card/), so J2 advanced.
+`jack_env` gains `difficulty=`: None/1.0 = today's world untouched; below 1 the floor foods give a bigger meal (a full bar at d=0, Avalon's size) and regrow faster (d×66.9 s, instant at d=0). Wrapper-level only — drives.py untouched, no certificate moved.
+Proof `test_jack_env_dial` PASS, 3 seeds × 400 random decisions: d=1 byte-identical to default; meal size and regrowth timers as stated at d=0/0.5/1; control: d=0 differs from today's world (seed 153 random eats 6 vs 1). Seed 154 eats nothing at any d — food count and distance are the missing dial parts, next.
+J1 identity proof not re-run (default path only adds a dict copy; (a) shows d=1 == default).
+Philosophy served: 5 (his world — the first rung he can live on is being built from the published dial), 4 (each option proven with a control that must fail).
