@@ -35,7 +35,8 @@ Rows       a  do-nothing: the zero action (arms mid, adhesion 0.5, no drive).
               `colorednoise` package used by Eberhard et al. 2023), scaled to
               uniform's std (1/sqrt 3), clipped to [-1,1].
            d8, d32  uniform(-1,1)^8 held 8 / 32 decisions.
-           e  the privileged NE.01 forager (next slot; hook only here).
+           e  the privileged NE.01 forager: floor food served onto him when
+              due (see PrivilegedServe; added 11-15 18:xx, before any row-e run).
            f  the HAND-WRITTEN forager below, fed ONLY the observation vector
               (74 floats). No positions, no geom ids, no world state.
            g  CONTROL that must fail: (f) with its 16 rays' (distance, texture)
@@ -102,7 +103,7 @@ LIVES = 10
 LIFE_CAP_DECISIONS = 9000
 BAR_MEALS = 5.0
 BAR_SEEDS = 18
-ROWS = ("a", "b", "c", "d8", "d32", "f", "g")      # e: next slot
+ROWS = ("a", "b", "c", "d8", "d32", "e", "f", "g")
 
 # observation layout (jack_env SENSES order; widths from cores.MODALITIES)
 N_RAYS = 16
@@ -325,7 +326,97 @@ class HandForager:
         return a
 
 
-def make_policy(row: str, seed: int):
+# ── row e: the privileged NE.01 forager, ported to the rover ────────────────
+# NE.01's probe 5 (`tests/ne_01_nobody_survives_by_accident._forager`) abstracts
+# LOCOMOTION and nothing else: each floor food is served onto his body the
+# moment its regrowth clock says it is due and e < 0.95, and the meal still
+# fires through the world's real contact test, clocks and all. Idle, he acts at
+# duty FORAGER_DUTY with uniform(-CTRL_SCALE, CTRL_SCALE) actions (NE.01's
+# constants). Ported differences, declared: (1) floor food only — no apple, no
+# pool, no night: J1's answer (1) asks whether FLOOR food alone sustains him,
+# and the rover has no water/sleep needs; (2) the food is placed at rest BESIDE
+# his torso capsule (radius + its radius - SERVE_OVERLAP, first of 8 directions
+# that touches him and no wall, at the torso's height or resting on the floor), not dropped
+# on top — a dropped object on the rover tipped him over on smoke seed 153;
+# (3) the zero action is the idle action, as row a. It reads world state (food
+# clocks, positions): privileged, a ceiling on floor-food intake, never a
+# candidate for any part of him.
+SERVE_OVERLAP = 0.01           # m of overlap with the torso capsule: a contact
+SERVE_E_MAX = 0.95             # NE.01: serve only if s.e < 0.95
+FORAGER_DUTY = 0.10            # NE.01
+CTRL_SCALE = 0.4               # NE.01 / PS.01's random policy
+
+
+class PrivilegedServe:
+    FOODS = ("obj0", "obj1")
+
+    def __init__(self, seed, env):
+        self.env = env
+        self.rng = np.random.RandomState(seed * 613 + 11)     # NE.01's stream
+        m = env.w.model
+        self.food = {}
+        for name in self.FOODS:
+            try:
+                bid = int(m.body(name).id)
+                gid = int(m.geom(name).id)
+            except (KeyError, ValueError):
+                continue                      # a mutated world may not carry it
+            ja = int(m.body_jntadr[bid])
+            self.food[name] = (int(m.jnt_qposadr[ja]), int(m.jnt_dofadr[ja]),
+                               float(m.geom_size[gid][0]))
+        self.served, self.failed = 0, 0
+
+    def new_life(self): pass
+
+    def _serve(self, name):
+        """Place the food at rest against his torso capsule (slight overlap),
+        trying 8 directions and keeping the first that mj_forward shows in
+        contact with one of his geoms and not with a wall. Returns success."""
+        w = self.env.w
+        m, d = w.model, w.data
+        qa, da, sz = self.food[name]
+        gid = int(m.geom(name).id)
+        tg = w.ix["geom"]["rover_torso"]
+        r = float(m.geom_size[tg][0])
+        c = np.asarray(d.geom_xpos[tg]).copy()
+        mine = w.body_gids
+        for k in range(8):
+            ang = 2 * math.pi * k / 8
+            off = r + sz - SERVE_OVERLAP
+            d.qpos[qa:qa + 3] = (c[0] + off * math.cos(ang), c[1] + off * math.sin(ang),
+                                 max(c[2], sz + 0.005))
+            d.qpos[qa + 3:qa + 7] = (1.0, 0.0, 0.0, 0.0)
+            d.qvel[da:da + 6] = 0.0
+            w.mujoco.mj_forward(m, d)
+            touch_me, touch_other = False, False
+            for i in range(d.ncon):
+                g1, g2 = int(d.contact[i].geom1), int(d.contact[i].geom2)
+                if gid not in (g1, g2):
+                    continue
+                o = g2 if g1 == gid else g1
+                if o in mine:
+                    touch_me = True
+                elif o not in w.ground_gids:
+                    touch_other = True
+            if touch_me and not touch_other:
+                self.served += 1
+                return True
+        self.failed += 1
+        return False
+
+    def act(self, o):
+        dl = self.env.w.drives
+        if dl.state.e < SERVE_E_MAX:
+            for name in self.food:
+                if name in dl._respawn_at and dl.t >= dl._respawn_at[name]:
+                    self._serve(name)
+                    break                     # one serve per decision
+        if self.rng.random_sample() < FORAGER_DUTY:
+            return self.rng.uniform(-CTRL_SCALE, CTRL_SCALE, 8)
+        return np.zeros(8)
+
+
+def make_policy(row: str, seed: int, env=None):
     if row == "a":
         return DoNothing(seed)
     if row == "b":
@@ -338,7 +429,9 @@ def make_policy(row: str, seed: int):
         return HandForager(seed)
     if row == "g":
         return HandForager(seed, shuffle_rays=True)
-    raise ValueError(f"row {row!r} not built here (row e is the next slot)")
+    if row == "e":
+        return PrivilegedServe(seed, env)
+    raise ValueError(f"row {row!r} unknown")
 
 
 # ── the runner ───────────────────────────────────────────────────────────────
@@ -347,7 +440,7 @@ def run_seed(row: str, seed: int, lives: int = LIVES,
     from experiments.jack_env import JackEnv
     env = JackEnv(seed=seed)
     o, info = env.reset(seed=seed)
-    pol = make_policy(row, seed)
+    pol = make_policy(row, seed, env)
     out = []
     for life in range(lives):
         pol.new_life()
