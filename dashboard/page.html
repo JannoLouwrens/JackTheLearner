@@ -412,14 +412,14 @@ function viewWatch(){
   $("#view-watch").innerHTML=h;
 }
 function viewTalk(){
-  var c=S.chat||{},h='<div class="card"><h2>Talk to Claude</h2>';
-  if(c.url)h+='<p class="sub">Opens the same Claude session that runs on your server'+(c.name?", named "+esc(c.name):"")+', in the Claude app or your browser.</p><p style="margin:14px 0 4px"><a class="cta" href="'+esc(c.url)+'" target="_blank" rel="noopener">Open the chat</a></p>';
-  else h+='<p class="sub">You can talk to the Claude session on your server from the Claude app on your phone. It needs switching on once.</p><ol class="steps">'+
-    "<li>In the terminal where Claude is running, type <code>/remote-control</code> and press return.</li>"+
-    "<li>Open the Claude app, go to Code, and pick the session from the list. The terminal also prints a link you can open.</li>"+
-    "<li>Tell Claude that link once, and a button will appear here that opens it.</li></ol>"+
-    '<p class="foot" style="padding:8px 0 0">Keep that terminal inside tmux so the session stays up when you disconnect. The chat cannot be shown inside this page; it opens in the app.</p>';
-  h+="</div>";
+  var c=S.chat||{},sess=c.session||"jack";
+  var h='<div class="card"><h2>Talk to Claude</h2><p class="sub">The chat stays where it is today: in your terminal app, over SSH, between your phone and your server only.</p>';
+  if(c.url)h+='<p style="margin:14px 0 6px"><a class="cta" href="'+esc(c.url)+'">'+esc(c.label||"Open the terminal app")+"</a></p>"+
+    '<p class="foot" style="padding:6px 0 0">The button opens the app. Tap your server there to connect. A web page cannot start the connection for you or hold the terminal itself.</p>';
+  h+='<h3 class="h3">To land straight in the chat</h3><ol class="steps">'+
+    "<li>Once, on the server: start the chat inside a named session with <code>tmux new -s "+esc(sess)+"</code>, then <code>claude --resume</code> and pick this conversation.</li>"+
+    "<li>In the terminal app, set your server's startup command to <code>tmux attach -t "+esc(sess)+"</code>.</li>"+
+    "<li>From then on, connecting drops you into the same conversation, and it keeps running when your phone sleeps.</li></ol></div>";
   $("#view-talk").innerHTML=h;
 }
 

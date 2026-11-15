@@ -1,7 +1,5 @@
 {
-  "chat_url": "",
-  "chat_name": "",
-  "watch_note": "",
+  "chat_url": "termius://",
   "plain_names": {
     "D1.0": "The body-controller contest",
     "LF.03": "One whole life, re-checked",
@@ -15,5 +13,7 @@
     "NE.01": "Nobody survives by accident",
     "W1.04": "Does acting now pay off later?",
     "T1.14": "How much two identical runs differ"
-  }
+  },
+  "chat_label": "Open Termius",
+  "chat_session": "jack"
 }

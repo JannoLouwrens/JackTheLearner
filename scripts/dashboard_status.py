@@ -43,6 +43,10 @@ from pathlib import Path
 REPO = Path(os.environ.get("JACK_REPO", "/home/opc/jackthelearner"))
 CFG = Path(os.environ.get("JACK_DASH_CFG", str(REPO / "dashboard")))
 OUT = Path(os.environ.get("JACK_DASH_OUT", "/data/jack-dashboard"))
+# Where the web server can see the page. Only index.html, status.json and the
+# film are copied there; the working files above (history, the Kaggle cache)
+# are never served.
+PUBLISH = os.environ.get("JACK_DASH_PUBLISH") or None
 LOGS = Path(os.environ.get("JACK_DASH_LOGS", "/data/jack-logs"))
 sys.path.insert(0, str(REPO))
 
@@ -810,7 +814,8 @@ def build() -> dict:
         "jobs": job_list,
         "resources": guarded(lambda: resources(job_list), {}),
         "watch": guarded(watch, {"video": None, "made": None, "note": "", "title": "", "summary": "", "facts": [], "events": [], "source": ""}),
-        "chat": {"url": cfg.get("chat_url") or None, "name": cfg.get("chat_name") or None},
+        "chat": {"url": cfg.get("chat_url") or None, "label": cfg.get("chat_label") or None,
+                 "session": cfg.get("chat_session") or None},
         "errors": ERRORS,
     }
     return status
@@ -845,9 +850,40 @@ def main() -> int:
         tmp = OUT / (name + ".tmp")
         tmp.write_text(text)
         os.replace(tmp, OUT / name)
+    if PUBLISH:
+        try:
+            publish(Path(PUBLISH))
+        except OSError as e:
+            ERRORS.append(f"publish: {e}")
     if ERRORS:
         print(f"{iso(NOW)} dashboard: {len(ERRORS)} section(s) failed: {'; '.join(ERRORS)}", file=sys.stderr)
     return 0
+
+
+def publish(pub: Path) -> None:
+    (pub / "media").mkdir(parents=True, exist_ok=True)
+    for name in ("index.html", "status.json"):
+        tmp = pub / (name + ".tmp")
+        shutil.copyfile(OUT / name, tmp)
+        os.replace(tmp, pub / name)
+    live = set()
+    for f in (OUT / "media").glob("latest.*") if (OUT / "media").is_dir() else []:
+        if f.suffix not in (".mp4", ".webm"):
+            continue
+        live.add(f.name)
+        dst = pub / "media" / f.name
+        a, b = f.stat(), (dst.stat() if dst.exists() else None)
+        if b is None or (a.st_ino, a.st_size, a.st_mtime) != (b.st_ino, b.st_size, b.st_mtime):
+            tmp = dst.with_suffix(".tmp")
+            tmp.unlink(missing_ok=True)
+            try:
+                os.link(f, tmp)
+            except OSError:
+                shutil.copy2(f, tmp)
+            os.replace(tmp, dst)
+    for old in (pub / "media").glob("latest.*"):
+        if old.name not in live:
+            old.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
