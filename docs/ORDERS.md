@@ -92,7 +92,8 @@ serves: M2 · PLAN stage 1 lines 2, 5 · philosophy 5 (his world matters as much
 **done when:** options and tests are committed and `WORLD_CARD.md` names `d0` with its table.
 state: 20:35 items 3+4 DONE (`14e637c4`): `reward=` "dr100-eat" (100×drive reduction + 100/eat, EVAAA) and "dr100-eat-pos" (alive never negative); `max_episode_decisions` → truncated, world untouched, life carries on. Proof `tests/test_jack_env_options.py` PASS 3 seeds; J1 identity proof PASS unchanged.
 state: 20:55 item 1 PART (`9c4341db`): `difficulty=` dials floor-food meal (1.0 at d=0 → 0.08 at d=1) and regrowth (d×66.9 s); d=1 byte-identical. Proof `test_jack_env_dial` PASS 3 seeds (seed 153 d=0: 6 meals vs 1 in 400 decisions).
-state: next: rest of item 1 — floor-food count and distance from spawn (Avalon: 0.5 m in front at d=0; needs playground placement, read `playground.py` L438 n_objects), each with a unit test; then item 2, then 5 (measure d0).
+state: 21:45 item 1 spawn distance (`de2a4efc`): birth + every respawn uniform over W0's legal cells within 0.5+17d m of the nearest floor food (via W0's spawn_sampler hook, no world file). Proof `test_jack_env_spawn` PASS (d=0 spawns 0.25–0.45 m; control 12/12 outside); dial proof re-run PASS.
+state: next: last part of item 1 — floor-food count (FOOD_GEOMS names only obj0/obj1; extra obj2..4 as food at low d via jack_env's per-instance `_food`/`_respawn_at`/`ate_total`, no world file), unit test; then item 2, then 5 (measure d0).
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5

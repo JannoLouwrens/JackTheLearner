@@ -1563,3 +1563,10 @@ Philosophy served: 1 (he can be known — the owner can watch him live and die),
 Row d8 (random action held 8 decisions) back from Kaggle, 200 lives on seeds 201–220: 1.16 floor meals/life vs white b 0.52 — 2.24×, paired per seed t 7.29, d8 above b on 19/20 (vs pink c 2.62×, 18/20). Most of the gain is a longer life (539 vs 302 s); per 100 s alive 0.212 vs 0.170 (1.25×, t 2.59, 15/20). The record's 2.5–4× for correlated noise roughly holds for held actions per life, not for pink noise. Why held arms live longer is not measured. d8 is now the best random row — J2's d0 rule ("J1's best random row") points at it.
 b2 launched into d8's freed Kaggle session (21:22); all 5 sessions ours again (e, d32, f2, g2, b2). Spawn-distance dial for J2 not started: did not fit the remaining slot safely.
 Philosophy served: 4 (a published prediction tested with paired seeds; held where it held, refused where it did not), 5 (his world measured before any brain).
+
+## 2026-11-15 21:45 · JACK · J2 item 1 part: spawn distance on the dial (short slot)
+No world-card row back from Kaggle (e, d32, f2, g2, b2 still running), so J2 advanced.
+`jack_env` difficulty now also places birth and every respawn uniformly over W0's legal cells within r(d) = 0.5 + 17d m of the nearest floor food (Avalon: food 0.5 m away at d=0). Uses W0's existing spawn_sampler hook; default path untouched, no world file, no certificate moved. DIFFERS: distance, not "in front" (W0 spawns at one fixed yaw).
+Proof `test_jack_env_spawn` PASS, seeds 153–155: d=0 spawns 0.25–0.45 m from food; d=0.25 ≤ 4.59 m (bound 4.75); control: today's world breaks the 0.5 m bound on 12/12 spawns. Its guard was first written as ≥1 respawn per seed and failed only because at d=0 two seeds never died in 400 decisions; re-written pooled before commit. Dial proof re-run PASS; random floor eats pooled d=0 17 vs d=1 3.
+Next: floor-food count, then item 2.
+Philosophy served: 5 (his world: the first rung's easy end now puts food in reach, per the published dial), 4 (proved with a control that must fail).
