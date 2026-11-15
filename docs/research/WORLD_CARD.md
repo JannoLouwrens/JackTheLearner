@@ -11,11 +11,11 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a,g,e running, c launched 19:07, d8,d32 pending a session)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g,e running, c launched 19:07, d8 launched 19:23, d32 pending a session)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
-| a | do-nothing | | | | n/a | | |
+| a | do-nothing | 599.9 ± 0.2 (599.4–600.0) | 0 (0/200 lives ≥1) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | b | random, white per decision | 301.7 ± 16.4 (278–376) | 0.52 ± 0.76 (max 4; 76/200 lives ≥1; per-seed means 0.1–0.9) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | c | pink noise per life | | | | n/a | | |
 | d8 | action held 8 | | | | n/a | | |
@@ -30,8 +30,14 @@ Bar for (f), unmoved from `LF_04_FAIL.md`: per seed, mean floor meals per life
 **Row f against its bar: FAIL — 6 of 20 seeds (needs 18).** `score(f, b)`:
 every seed is above random (20/20; pooled 4.13 against 0.52 floor meals per
 life, 7.9×), but only seeds 204, 205, 207, 208, 211, 215 reach 5.0 per life.
-The bar is not moved and f is not retuned on these seeds. Row b against the
-same bar: 0 of 20 (the §8 floor-arm gate holds for b; a is pending).
+The bar is not moved and f is not retuned on these seeds. Rows a and b against the
+same bar: 0 of 20 each — **the §8 floor-arm gate holds** (a + b = 0 seeds ≤ 1).
+
+**Row a (statue) outlives row b (random) 2.0×: 600 s against 302 s.** Random
+flailing draws 2.42× the idle drain (answer 1's table) and its 0.52 meals
+cannot repay it. So under any reward that pays for time alive, the statue is
+the better of the two floor arms, and a learner's first easy optimum is to
+keep still — J2 (3)'s reward option must be judged against that.
 
 What the 200 lives show, and why f missed (the diagnosis is on smoke seed 154,
 box, `/data/tmp/wc_diag` — tuning seed, NOT evidence):

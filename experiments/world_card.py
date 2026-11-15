@@ -103,7 +103,9 @@ LIVES = 10
 LIFE_CAP_DECISIONS = 9000
 BAR_MEALS = 5.0
 BAR_SEEDS = 18
-ROWS = ("a", "b", "c", "d8", "d32", "e", "f", "g")
+ROWS = ("a", "b", "c", "d8", "d32", "e", "f", "g", "f2", "g2", "b2")
+F2_ROWS = ("f2", "g2", "b2")
+F2_SEEDS = tuple(range(221, 241))   # fresh: never run by any row before f2's registered launch
 
 # observation layout (jack_env SENSES order; widths from cores.MODALITIES)
 N_RAYS = 16
@@ -326,6 +328,48 @@ class HandForager:
         return a
 
 
+# ── row f2: the repaired ruler (added 11-15 19:30, after f's FAIL; rule here
+# before any f2 run). f FAILED its bar on 201-220 (6/20) and stays FAILED.
+# Diagnosis on smoke seed 154: f's knowledge persisted across lives and its
+# bans were permanent, so both true food textures were banned by the end of
+# life 1. f2 changes exactly two things and nothing else:
+#   (1) bans EXPIRE: a texture f would ban is instead off-limits for
+#       F2_BAN_S sim-seconds, then untried again (its miss counts cleared);
+#   (2) knowledge is RE-EARNED each life: food/miss/ban/cooldown memory is
+#       cleared in new_life() (the world's regrowth clocks still carry).
+# F2_BAN_S is the one tunable, set on smoke seeds 153/154 over all 10 lives
+# and frozen in the commit that launches the registered run.
+# Registered run: rows f2, g2 (f2 with rays shuffled, must fail) and b2 (row
+# b's random policy) on FRESH seeds 221-240, 10 lives each. Bar unmoved:
+# score(f2, b2, F2_SEEDS) needs >= 18 of 20 seeds at >= 5.0 floor meals/life
+# and above b2 on the same seed; g2 must not pass, else f2's pass is VOID.
+F2_BAN_S = 200.0
+
+
+class HandForager2(HandForager):
+    def __init__(self, seed, shuffle_rays: bool = False):
+        self.ban_until = {}
+        super().__init__(seed, shuffle_rays)
+
+    def new_life(self):
+        super().new_life()
+        self.food, self.miss, self.banned = set(), {}, set()
+        self.cool, self.food_miss, self.ban_until = {}, {}, {}
+
+    def _prio(self, tex):
+        if self.ban_until.get(self._key(tex), -1.0) > self.clock:
+            return 0.0
+        return super()._prio(tex)
+
+    def act(self, o):
+        for k in list(self.banned):        # a permanent ban becomes a timed one
+            self.ban_until[k] = self.clock + F2_BAN_S
+            self.miss.pop(k, None)
+            self.food_miss.pop(k, None)
+        self.banned.clear()
+        return super().act(o)
+
+
 # ── row e: the privileged NE.01 forager, ported to the rover ────────────────
 # NE.01's probe 5 (`tests/ne_01_nobody_survives_by_accident._forager`) abstracts
 # LOCOMOTION and nothing else: each floor food is served onto his body the
@@ -431,6 +475,12 @@ def make_policy(row: str, seed: int, env=None):
         return HandForager(seed, shuffle_rays=True)
     if row == "e":
         return PrivilegedServe(seed, env)
+    if row == "f2":
+        return HandForager2(seed)
+    if row == "g2":
+        return HandForager2(seed, shuffle_rays=True)
+    if row == "b2":
+        return WhiteRandom(seed)
     raise ValueError(f"row {row!r} unknown")
 
 
@@ -491,9 +541,11 @@ CHILD_TIMEOUT_S = int(11.0 * 3600)
 REMOTE_TIMEOUT_S = int(12.2 * 3600)
 
 
-def kernel_cells(row: str, seeds=REGISTERED_SEEDS) -> list:
+def kernel_cells(row: str, seeds=None) -> list:
     if row not in ROWS:
         raise ValueError(f"kernel: row {row!r} not in {ROWS}")
+    if seeds is None:
+        seeds = F2_SEEDS if row in F2_ROWS else REGISTERED_SEEDS
     seeds = list(seeds)
     k = -(-len(seeds) // CELLS_PER_KERNEL)
     return [(row, seeds[i:i + k]) for i in range(0, len(seeds), k)]
