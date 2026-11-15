@@ -11,7 +11,7 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; d8 harvested 21:25, `d8.jsonl` sha256 f4a24125…; d32 harvested 22:10, `d32.jsonl` sha256 7a371c53…; e running; f2 launched 20:12 on 221–240, g2 launched 20:33, b2 harvested 22:50 on 221–240, `b2.jsonl` sha256 2ce802b8…)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; d8 harvested 21:25, `d8.jsonl` sha256 f4a24125…; d32 harvested 22:10, `d32.jsonl` sha256 7a371c53…; e running; b2 harvested 22:50 on 221–240, `b2.jsonl` sha256 2ce802b8…; f2 harvested 22:40 on 221–240, `f2.jsonl` sha256 f11fad34…; g2 harvested 22:40, `g2.jsonl` sha256 32e0cfa2…)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
@@ -23,6 +23,8 @@ hand forager (row f). No learner, no ledger row: these are rulers.
 | e | privileged NE.01 forager | | | | n/a | | |
 | f | hand forager, observation only | 742.1 ± 278.9 (6–1800; median 696) | 4.13 ± 4.98 (max 28; 168/200 lives ≥1; 59/200 ≥5; per-seed means 1.6–7.7, median 4.05) | 0 | n/a | energy 189, integrity 10, censored 1 | −1.00 (199 lives); −0.88 (the 1 censored) |
 | g | control: (f) with rays shuffled | 701.5 ± 155.7 (7–1037; median 715) | 2.97 ± 2.05 (max 10; 180/200 lives ≥1; 41/200 ≥5; per-seed means 1.5–3.9) | 0 | n/a | energy 193, integrity 7 | −1.00 (all) |
+| f2 | hand forager, F2_BAN_S = inf, seeds 221–240 | 903.7 ± 326.9 (504–1800; median 773) | 6.91 ± 7.47 (max 33; 183/200 lives ≥1; 88/200 ≥5; per-seed means 3.0–13.5, median 6.55) | 0 | n/a | energy 188, censored 8, integrity 4 | −1.00 (192 lives); −0.71 to −1.03 (the 8 censored) |
+| g2 | control: f2 with rays shuffled, seeds 221–240 | 668.6 ± 76.5 (592–987; median 644) | 1.69 ± 1.72 (max 9; 146/200 lives ≥1; 13/200 ≥5; per-seed means 0.8–2.9) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | b2 | random, white per decision, seeds 221–240 (f2's baseline) | 302.1 ± 19.6 (278–421) | 0.47 ± 0.83 (max 4; 61/200 lives ≥1; 0/200 ≥5; per-seed means 0.0–1.0) | 0 | n/a | energy 200/200 | −1.00 (all) |
 
 Bar for (f), unmoved from `LF_04_FAIL.md`: per seed, mean floor meals per life
@@ -128,6 +130,13 @@ box, `/data/tmp/wc_diag` — tuning seed, NOT evidence):
   not a prediction of 18/20 — the registered run decides.
 
 **Row b2 (22:50):** random on f2's fresh seeds 221–240 reproduces row b on 201–220 — 302 s vs 302 s, 0.47 vs 0.52 floor meals/life, per 100 s alive 0.156 vs 0.170: the new seeds are not an easier world. 0/20 seeds reach 5 per life, so b2 is the per-seed floor f2 is scored against; f2 and g2 still running.
+
+**Row f2 against the unmoved bar (22:40): FAIL — 13 of 20 seeds (needs 18); control g2 misses, 0 of 20.** `score(f2, b2, F2_SEEDS)`. Short of 5.0 per life: 223 (3.0), 225 (4.9), 226 (4.2), 228 (3.4), 234 (4.0), 236 (4.5), 237 (3.4). Every seed is above b2 (20/20, paired t 9.31; pooled 6.91 vs 0.47, 14.7×).
+- **Sight now carries every life, not just the first.** f2 beats its blind control on 20/20 seeds (t 8.02). Life 0: f2 11.25 vs g2 2.30 (17/20, t 4.28). Lives 1–9: f2 6.43 vs g2 1.62 (20/20, t 6.67) — on f/g it was 3.22 vs 2.99 (t 0.57). Removing the bans fixed the collapse on fresh seeds, as the tuning smoke said. By life: 11.25 10.15 8.05 7.60 4.20 6.10 5.75 6.60 4.20 5.20 — still a slow decline, now from a much higher floor.
+- **Floor food CAN sustain a full life: 8 of 200 lives reach the 1800 s cap alive** (27–33 floor meals each, seeds 221/222/224×2/227/233/235/236). That is a measurement for answer (1): the arithmetic says intake can beat drain, and an observation-only ruler shows it does, sometimes. Typical: 0.77 floor meals per 100 s alive (b2 0.16, g2 0.25).
+- **Blind wander got worse, not better, on these seeds:** g2 1.69/life vs g's 2.97 — the f/g gap was partly that g's wander ate more on 201–220. 4 integrity deaths in f2 (504–915 s, lives 0–9), none in g2.
+- **Answer (3), provisional until e lands:** 16 rays DO tell food from walls and decoys well enough to beat blind 4× per life — but not reliably enough for 5 meals/life on 7 of 20 seeds. Spread is per-world (3.0–13.5 per-seed means), so the misses are layouts, which J2 (2)'s random layout each life will mix.
+- Bar stays; no retune on 221–240. A further ruler would need new fresh seeds and its rule first — not this order's step.
 
 ## Smoke (box, seeds 153/154 — tuning seeds, NOT evidence)
 
