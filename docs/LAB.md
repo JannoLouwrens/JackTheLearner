@@ -67,7 +67,10 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   the remaining world-side arm. Philosophy 4, 5.
 
 - 11-13 · **Meal memory — what he replays** (Consolidation; `meal_memory.py`,
-  rule first `dabd2bf`) · **ALIVE (thin), with the workers (J5).** A second ring
+  rule first `dabd2bf`) · **DEAD at the claim gate (11-15, s94–98, 13k, Kaggle
+  CPU).** Pooled fed: meal .450 vs fifo .277 vs yoked .352; seed wins 5/5, 4/5;
+  far (born ≥ 0.7 m) .335 vs .230/.332. Margin vs yoked **.0985 < .10**, the only red
+  clause. Stays dead as declared. Pilot below. A second ring
   keeps every segment with a meal; batches 8 FIFO + 8 meal. Nursery trials
   s91–93: fed **.484** vs fifo .370 vs yoked control .376; wins 2/3 and 3/3,
   margins .114/.108 vs a .10 bar. Mostly birth luck (meals land in 5–16

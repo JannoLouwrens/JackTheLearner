@@ -90,12 +90,11 @@ seeds 94–98 × 3 arms × 13k, `meal_memory run <arm> <seed> 13000`, then
 docstring, unchanged. Clears → register it against `NE.05`'s seat; dies → say so.
 serves: M2, M7 · philosophy 3, 5.
 **done when:** `CR.01` has a verdict and the meal-memory tally is written.
-state: (1) DONE `f519826`: `CR.01` **FAIL** att 1, 9/9 units on Kaggle CPU (s130-132, N 47). Pooled fed fraction: null .163, staged .156, lp .064, frontier .163. Controls: shuffled .121, matched .085.
+state: J5 DONE (both parts). (1) DONE `f519826`: `CR.01` **FAIL** att 1, 9/9 units on Kaggle CPU (s130-132, N 47). Pooled fed fraction: null .163, staged .156, lp .064, frontier .163. Controls: shuffled .121, matched .085.
 No arm beats null by .20 on any seed. The Curriculum seat stays with null BY VERDICT. FINDING (same root cause as LF.04): every exam death is energy. A learner that cannot forage leaves a curriculum nothing to teach, so re-race CR.01 after a foraging learner exists.
 Last unit …4643: its own receipt ace8b516 = the pulled bytes; the pin swap 84cbc7d->5ccd70b = local 0d56b7e4 (guard misjoined, cited ac0cdcd5).
-(2) 11-15 00:55 meal-memory grind 9/15 cells current: s94/s95/s96 LANDED, 0 errors (rows fifo/meal/yoked: s94 70/77/68, s95 68/88/96, s96 71/86/62).
-In flight (2 pollers): s97 `jack-cpu-1794703172` (meal_kcpu_s97.log), s98 `jack-cpu-1794703940` (meal_kcpu_s98.log). These are the last cells the grind declared.
-Next: when both logs end in a `{...}` line, run `$PY -m experiments.meal_memory_kcpu status` (expect 15 current), then `... gate`. Record the verdict as declared: clears -> register against NE.05's seat; dies -> say so. Dead poller -> reattach `JACK_REUSE_KERNEL=<slug>` (single-unit).
+(2) DONE (this commit): meal-memory claim gate **DEAD**, 15/15 cells current (s94-98 x fifo/meal/yoked, 13k, Kaggle CPU, 0 errors). Pooled fed meal .450 / fifo .277 / yoked .352;
+seed wins 5/5 and 4/5; far (born >= 0.7 m) .335 / .230 / .332. The only red clause is the margin vs yoked, .0985 < .10. As declared, it stays dead and is NOT registered against NE.05. Gate output: /data/tmp/meal_memory_gate_20261115.log. LAB entry updated.
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
 **Why.** `W.1` is PASS (05:28). `W.2` and `NE.01` are red. Four races (k = 72,
@@ -119,8 +118,8 @@ formerly-red clause explained.
 state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) declared `4c316fa`, dB built `c9dd457`, kcpu runner `dfc577c`, tally `184c4c1` (needs 30 current cells).
 dA/dC not built (pool literal in playground.py:421/886 + ne_01 + needs.py:820 = world-file refactor, Director call). 11-14 19:50 `647d45c`: pre-dispatch smoke of the kernel path (dB:W.2:0, 40 s) caught dB's swallow
 gate leaking into W.2's geometry rig (rig_pool 0.0). Fixed so the gate applies only inside substep: rig 1.0, *_pass unchanged, (ii) re-PASS byte-same. Note: rig_thermoneutral_day = 0 is the swp_k72 base's (shipped 1). No cells exist yet, so none are stale.
-Next, when a kcpu slot frees (after CR.01's queue): push in-session `> log`: `$PY -m experiments.drink_race_kcpu kernel dB:NE.01:0,shipped:NE.01:0,dB:W.1:0` (3 cells/kernel),
-reattach with JACK_REUSE_KERNEL; `... status` lists missing; then `$PY -m experiments.drink_race_tally`.
+11-15 01:08 kernel 1 PUSHED: `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0), poller /data/tmp/drink_kcpu_k1.log. drink status 0/30 current.
+Next: harvest k1 (log ends in `{...}`); push the next 3 missing cells from `$PY -m experiments.drink_race_kcpu status` (2 kcpu kernels at a time); at 30 current run `$PY -m experiments.drink_race_tally`. Dead poller -> JACK_REUSE_KERNEL=<slug> (single-unit).
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

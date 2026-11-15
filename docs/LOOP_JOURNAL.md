@@ -1284,3 +1284,10 @@ s96 pushed as jack-cpu-1794703065. Gate is now 3/15 cells. J2: D1.0 watcher 3902
 Served: 3 (the meal-memory consolidation lab gets its declared race, not a seat by argument) and 6 (Kaggle CPU, ~0 box CPU).
   00:50: s95 landed (68/88/96 rows); s97 pushed jack-cpu-1794703172. Grind at 6/15; s98 goes next, once a poller frees up.
   00:55: s96 landed (71/86/62 rows; corrected, e6ec50f misquoted 54/84/86); s98 pushed jack-cpu-1794703940. All 15 cells have now landed or are in flight; next slot runs the gate.
+
+2026-11-15 01:10 UTC · JACK · J5 step 2 → DONE; J6 kernel 1 pushed. J2: D1.0 watcher 3902173 alive (3 h 38 m), no exit.
+s97 (64/81/79 rows) and s98 (84/103/79) landed, so meal_memory_kcpu status reads 15/15 current. The declared claim gate came back **DEAD**: pooled fed meal .450 vs fifo .277 vs yoked .352,
+seed wins 5/5 and 4/5, far .335/.230/.332. Only the margin vs yoked failed (.0985 < .10). Not registered against NE.05; it stays dead as declared, and LAB is updated.
+The yoked control took most of the gain (+.075 of the +.173 over fifo), so replaying more segments, whichever they are, explains much of it.
+J6: pushed drink-race kernel 1 `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0) on the freed kcpu slot. 0/30 cells.
+Served philosophy 4 (the gate could fail and did, by 0.0015, with no threshold moved) and 3 (a consolidation idea raced and lost; no seat by argument).
