@@ -83,7 +83,8 @@ THE FOUR CONJUNCTS, computed per seed, for BOTH metrics on the SAME lives:
      uncensored-only mean stands alone — `mean_G_all_lives` prints the
      fragment-inclusive mean beside the claim statistic).
   C4 KNOWN-ANSWER (BINDING, wk5-N3; the one that matters): a synthetic arm
-     with an injected advantage of EXACTLY MIN_GAIN — a DECLARED
+     with an injected advantage of EXACTLY MIN_GAIN (INJ_G since
+     2026-11-15, re-registered below) — a DECLARED
      outcome-level arithmetic transform, +MIN_GAIN added to arm B's measured
      per-life outcomes, never a delta-e write (PURPOSE_AND_SCAFFOLDING
      section 5/G-A would ERROR a physics-level injection) — must be detected:
@@ -91,6 +92,34 @@ THE FOUR CONJUNCTS, computed per seed, for BOTH metrics on the SAME lives:
      >= SIGMA_GATE. Second leg: the same detector at ZERO injection must NOT
      fire (|t_zero| < SIGMA_GATE) — a detector that fires on nothing
      measures nothing.
+
+C4 RE-REGISTERED 2026-11-15 (Director ruling 9, order J7(1b)) — DECLARED
+BEFORE ANY RUN UNDER IT. The +MIN_GAIN injection could not miss: 5.0 is 0.93x
+the outcome's own mean (G 5.38 +- 1.60, attempt 10 row 2026-11-14T02:23:44,
+t_inj 15.9). The injection is now INJ_G = 2.41 satisfied-seconds, the
+smallest gain a registered W1 claim has had to resolve, sized as follows:
+  - W1.01 (PASS 2026-10-06T05:59:23) measured its oracle-vs-passive gap
+    DIRECTLY in G: gap 2.410437 (roof 8.155 - floor 5.745). Taken: it is
+    in this outcome's own unit and venue family, no conversion.
+  - DP.05 (FAIL 2026-08-24) gap_s 13.27 s of LIFESPAN (plan_h4 141.1 vs
+    react 119.9). Converted by the measured marginal rate dG/dspan = 0.184
+    satisfied-s per span-s (repeat lives, pilot seed 90, 12000 decisions, 42
+    lives, OLS G = 0.184*span - 4.68, r = 0.998; ratio-through-origin
+    rejected because lives under ~25 s score ~0): 2.44. Corroborates, not
+    taken (a W0 rig, a converted unit).
+  - W1.01's 10.2 s span gap (70.2 vs 60.0) converts to 1.88 by the same
+    rate; NOT taken, because W1.01's own G reading of the same arms (2.41)
+    supersedes a conversion of their span.
+The bar (SIGMA_GATE = 3) is unmoved; the zero leg (V6) is unchanged; the
+old +MIN_GAIN reading stays on the row as `t_mingain`, REPORTING-ONLY; and
+`mdg_3sigma` = 3 x se (the smallest injection this run would detect) rides
+on the row so W1's resolution is printed in G, not inferred. Predicted from
+the attempt-10 row, not assumed: 2.41 / (1.60 * sqrt(2/48)) ~ 7.4 sigma.
+FINDING RECORDED WITH THIS RE-REGISTRATION (for the Director, not acted on
+here): W1.01's bar is 3 x THIS spec's C2 quantum (~0.04 G). The quantum is
+a single-life granularity (GMD/48), not a detection power: at n = 48/arm a
+3-sigma detection needs ~0.61 sd ~ 1 G. W1.01's gap (2.41) clears both, but
+its bar certifies a resolution this spec has never shown.
 
 THE CLAIM: the replacement (G) passes C1 AND C2 AND C3 AND C4 on EVERY seed.
 FAIL names the failed conjunct(s) in `claim_branch` (BA.03's lesson: the
@@ -164,6 +193,12 @@ PILOT_SEED = 90
 # not 0.078) — the docstring's reason for not running white is weaker, the
 # reason "repeat is the measured strongest null" stands.
 W100_RAN_AT = "2026-11-13T14:48:04"
+
+# C4's injection, re-registered 2026-11-15 (ruling 9) — see the docstring.
+# W1.01's measured oracle-passive gap in G (row 2026-10-06T05:59:23), pinned
+# as a number, not read live: W1.01 reads THIS spec's row, so a live read
+# would be a cycle.
+INJ_G = 2.41
 
 
 def _borrow():
@@ -245,11 +280,14 @@ def _gmd(x: np.ndarray) -> float:
 
 
 def _conjuncts(vals: np.ndarray, min_gain: float,
-               censor_rate: float, causes_ok: bool) -> dict:
+               censor_rate: float, causes_ok: bool,
+               inj: float = INJ_G) -> dict:
     a, b = vals[0::2], vals[1::2]
     se = math.sqrt(np.var(a, ddof=1) / E_ARM + np.var(b, ddof=1) / E_ARM)
     se = max(se, 1e-12)
-    t_inj = (float(np.mean(b)) + min_gain - float(np.mean(a))) / se
+    t_inj = (float(np.mean(b)) + inj - float(np.mean(a))) / se
+    # reporting-only since 2026-11-15: the pre-ruling-9 injection
+    t_mingain = (float(np.mean(b)) + min_gain - float(np.mean(a))) / se
     t_zero = (float(np.mean(b)) - float(np.mean(a))) / se
     distinct = len(np.unique(np.round(vals / ROUND_Q) * ROUND_Q))
     quantum = _gmd(vals) / E_ARM
@@ -257,6 +295,9 @@ def _conjuncts(vals: np.ndarray, min_gain: float,
         "distinct": float(distinct),
         "quantum": quantum,
         "t_inj": t_inj,
+        "inj_g": float(inj),
+        "t_mingain": t_mingain,
+        "mdg_3sigma": SIGMA_GATE * se,
         "t_zero": t_zero,
         "c1_ok": float(distinct >= K_DISTINCT),
         "c2_ok": float(quantum <= min_gain / 3.0),

@@ -6460,8 +6460,16 @@ EXPANSION: list[Spec] = [
          metric="synthetic_min_gain_detected_and_quantum_ratio",
          budget=Budget.CPU, seeds=3, depends_on=["PS.01"],
          control="KNOWN-ANSWER, BINDING (wk5-N3): a synthetic arm with an "
-                 "injected advantage of exactly MIN_GAIN must be detected "
-                 "at >= 3 sigma by the replacement metric. CROSS-CHECK "
+                 "injected advantage of exactly INJ_G must be detected "
+                 "at >= 3 sigma by the replacement metric. RE-REGISTERED "
+                 "2026-11-15 (Director ruling 9, order J7(1b)): INJ_G was "
+                 "MIN_GAIN = 5.0, 0.93x the outcome's own mean (5.38), an "
+                 "injection that could not miss (t_inj 15.9); it is now "
+                 "the smallest gain a W1 claim has had to resolve, 2.41 "
+                 "satisfied-s (W1.01's oracle-passive gap, measured in G), "
+                 "declared before any run; bar 3 sigma unmoved; the old "
+                 "MIN_GAIN reading stays on the row, reporting-only. "
+                 "CROSS-CHECK "
                  "CONSTRAINT, designed in: the injection is a DECLARED "
                  "arithmetic transform applied to the measured per-life "
                  "outcomes (the known-answer pattern W0.DIAG's control 1 "
