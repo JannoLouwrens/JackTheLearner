@@ -3,7 +3,7 @@
 > `SYSTEM.md` law 3a (owner, 2026-11-15): read before you race. This is the
 > standing reference for the PRIOR every race order must carry. One section per
 > question; the Researcher (`scripts/research_prompt.md`) adds and refreshes
-> them. Keep it ≤ 40 KB. Long form with every source link:
+> them. One section per question, each ≤ 6 KB. Long form of §1 with every source link:
 > `docs/research/PUBLISHED_EVIDENCE_2026-11-15.md` (six-part review, 2026-11-15;
 > its raw notes are in `/data/jack-research/research_notes/`).
 > **(inf)** = arithmetic or reasoning from published numbers, measured by nobody.
@@ -208,3 +208,39 @@ Long form: `/data/jack-research/research_notes/Published evidence for building J
 **The last 10%** (designs, costs and predictions in the long form): one human-like body that both moves and forages, flat against a frozen reflex controller against a learning one; how slow the brain may decide; the control-path contest as a clean, checkable test (small actor, large actor, large trunk as critic only, on humanoid-walk, pass mark 600); whether his own energy need yields an economical gait; staged release of the hands; a growing body; the rover brain moved into a walking body; hold, carry and strike with a grab primitive before fingers; throughput on our own machines (predicted: 500–2,000 rover decisions a second per 4-core kernel after the simulator changes, from 28).
 
 **Not verified:** MuJoCo Warp on a T4, Kaggle CPU and M4-class figures (none published); the T4 MJX figure is one unmerged measurement; two source conflicts (SAC on humanoid-walk at 1M: 274 against 2) are flagged in the long form.
+
+## 5. Building brain B (the replay learner) and the PPO reference correctly (2026-11-15; serves order J2, M3; plan part "His brain")
+
+Long form: `/data/jack-research/research_notes/Published evidence for building Jack/control_arm_engineering.md` (223 KB, 219 links; update timings measured on this server under load and marked so).
+
+**Already known**
+- **The RL Zoo benchmark table is ONE run per entry, often the best case.** The public Open RL Benchmark run store (anonymous read access) holds 10–22 seeds of the same configurations, and those are the references: SAC Pendulum-v1 at 20,000 steps, mean of all 100 training episodes −298.4 ± 10.3 (13 seeds); SAC on sparse MountainCarContinuous-v0 at 50,000 solved on 9 of 10 seeds; PPO Pendulum-v1 at 102,400, −184.5 ± 80.7; DQN CartPole-v1 392 ± 150 where the table says 500. **§1's "Pendulum about −157 in 20k" came from that one-run table: use the rows below instead.**
+- Plain SAC (2×256, 2 updates per decision) is strong on easy low-dimensional tasks and unreliable early on sparse ones: DMC cartpole-swingup 853.0 ± 9.2 at 50K decisions; swingup_sparse 93.8 ± 166.1 at 50K and 776.5 ± 30.2 at 150K (10 seeds, per-seed files in the SimBa repository).
+- PPO is the slow, seed-fragile reference: default SB3 PPO has a median of 127 over 28 DMC tasks at 500K decisions where replay and model-based learners have 613–927; on sparse swing-up three sources give 7, 76 and 391. About four parallel environments is its published optimum.
+- **Gradient updates are not free on our CPUs** (measured here, under load, upper bounds): one SAC update at batch 256 is about 50 ms of an ARM core in PyTorch SB3, about 20 ms in SBX (JAX) with 2×256 networks, about 1.9 ms in SBX with 2×64. Big-critic methods (CrossQ, SimBa, BRO, MR.Q) are GPU methods.
+- Exploration that holds a direction is what solves the sparse classic task: the Zoo recipe is gSDE with a FIXED entropy coefficient 0.1, discount 0.9999, no random warm-up. Traps: the pink-noise package also changes the noise inside SAC's updates and consumes its sequence three times per step; SBX implements `use_sde` as a held noise draw, not SB3's gSDE.
+- Memory in a replay learner has one well-documented design (Ni et al. 2022): separate GRU-128 encoders for actor and critic, 64-step windows; −168.6 ± 3.5 on velocity-only Pendulum at 51,000 steps; it fails with a 5-step window (about −1,380) or a shared encoder (about −422). Costly: about 0.3 s per update on a CPU. A stack of 4 observations equals a GRU on position-only tasks and fails on recalling an early cue.
+- A Q-learner over 9 joint actions is a legitimate alternative for a 2-dimensional drive (DecQN matches D4PG on 1- and 2-dimensional tasks). No maintained library has prioritised replay or a recurrent off-policy learner.
+- Silent bugs to test for: time limit against death, next observation at episode ends, tanh correction, action scaling, target updates, normalisation statistics, evaluation mode, recurrent state.
+
+**Take as-is** (code, never weights)
+- A fresh environment for the standard-task checks (not the venv his world is certified in): Python 3.12; `stable-baselines3==2.9.2`, `sb3-contrib==2.9.2`, `sbx-rl==0.28.0`, `rl-zoo3==2.9.2`, `gymnasium==1.4.0`, `mujoco==3.17.0` with `dm-control==1.0.50` (MuJoCo 4.0 is days old and later `dm-control` requires it), `shimmy==2.0.1`, `pink-noise-rl==2.0.1`. `box2d` has no Linux aarch64 wheel (LunarLander only on Kaggle).
+- **Arm B:** SBX `SAC` (SB3's SAC does not expose LayerNorm), `policy_kwargs=dict(layer_norm=True)`, 2×256, learning rate 3e-4, batch 256, replay ≥ the whole run, tau 0.005, gamma 0.99 to start, 5,000–10,000 warm-up decisions, 1–2 updates per decision, observations normalised, no resets. Death is `terminated=True`, every administrative stop `truncated=True`.
+- Exploration for B: the Zoo's sparse-task recipe (in PyTorch SB3, where its public record is) or pink noise with the sequence as long as a life; never both; either must pass row 3 below in the library actually used.
+- B with memory: first the last 4 observations stacked; then Ni et al.'s design with its published sizes. PPO reference: SB3 defaults with `VecNormalize`, four simulator processes, gSDE sample period 4. A teacher showing food: keep the demonstration transitions in replay permanently and draw a fixed share of each batch from them (RLPD, DDPGfD).
+
+**Reproduce first** (references are distributions; "accept" is the range for a 5-seed mean)
+
+| # | task | run | steps | target |
+|---|---|---|---|---|
+| 1 | Pendulum-v1 | SAC, Zoo entry (lr 1e-3): the unmodified library first, then ours | 20,000 | mean return of all 100 training episodes −298.4 ± 10.3; accept −314.7 to −282.1 |
+| 2 | Pendulum-v1 | PPO, Zoo entry | 102,400 | last-100-episode training return −187.6 ± 17.0; accept −213.2 to −162.0 |
+| 3 | MountainCarContinuous-v0 (sparse) | SAC, Zoo entry with gSDE, PyTorch SB3; any SBX or pink-noise variant must pass the same | 50,000 | deterministic evaluation > 90 on ≥ 3 of 5 seeds (public: 9 of 10 in 93.4–95.3) |
+| 4 | MountainCarContinuous-v0 | PPO, Zoo entry | 20,000 | training return 87.5 ± 4.2 |
+| 5 | DMC cartpole-swingup, action repeat 2 | plain SAC 2×256, 2 updates per decision | 50K decisions | 853.0 ± 9.2 |
+| 6 | DMC cartpole-swingup_sparse, reacher-easy, reacher-hard | same | 150K decisions | 776.5 ± 30.2, 968.0 ± 23.2, 955.8 ± 30.5; sparse near zero at 50K on most seeds |
+| 7 | velocity-only Pendulum | recurrent SAC, Ni et al.'s configuration | 51,000 | −168.6 ± 3.5, and both controls must fail |
+
+**The last 10%** (each 5 seeds per arm, fixed budget, one outcome: meals per 1,000 decisions over the last 50,000; costs and predictions in the long form). First three measurements, about 2 kernel-hours: how often a random and a noise-driven policy reaches food in a life, and the gap between meals for a hand-written ray-follower (it decides the discount); whether four simulator processes give 4× the decisions; update timings on a Kaggle kernel. Then: a narrow network at a high update ratio against the standard one; which exploration plumbing finds food first (predicted: SAC's automatic entropy coefficient collapses below 0.01 before the first meal); whether memory is needed on the rover; continuous actor against nine discrete actions; how far behind PPO is; whether one demonstration of eating helps; 3-step returns; discount 0.99 against 0.995.
+
+**Not verified:** the pink-noise paper's tables and the replay-ratio-barrier paper (blocked); all our timings (one sample, load average 5–13). Three of the notes' sections were condensed from sub-drafts, 12 values spot-checked.
