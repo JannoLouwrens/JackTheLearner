@@ -1582,3 +1582,10 @@ J1: b2 (random on f2's fresh seeds 221–240) back from Kaggle: 302 s, 0.47 floo
 J2: `jack_env` option `random_needs=s` — energy and integrity drawn uniform in [1−s, 1] at birth and every respawn, from the env's own RNG (trp_env's ±1/6 → s=1/6; DIFFERS: our needs are one-sided so only the hungry side is drawn). The needs sense's change-since-last reads 0 at a drawn start instead of a fake drop. Proof `test_jack_env_needs` PASS seeds 153–155, 3 forced respawns each (apparatus: starvation at fixed decisions, since a life is ~1,500 decisions): off byte-identical, all starts in bounds and distinct, W0 RNG states equal default, control stream differs (`b800a247`). J1 identity test not re-run: default path unchanged and (a) checks it byte for byte.
 Next: random layout each life, then item 5.
 Philosophy served: 5 (his world: lives now start hungry by the published recipe), 4 (proved with a control that must fail; a fresh-seed baseline checked before f2 is scored on it).
+
+## 2026-11-15 22:45 · JACK · J1 (short slot)
+- Harvested Kaggle rows f2 + g2 (`82d81ec2`). f2 (observation-only hand forager, no bans) FAIL 13/20 seeds at ≥5 floor meals/life (bar 18, unmoved, no retune); 6.91/life vs random 0.47. g2 (rays shuffled) 0/20 — control holds.
+- Ban removal fixed the after-first-life collapse on fresh seeds: lives 1–9 f2 6.43 vs blind 1.62 (20/20, t 6.67), was t 0.57 on f/g.
+- 8/200 f2 lives reached the 1800 s cap alive on floor food alone — first measured evidence the floor can sustain a life; misses are per-layout (seed means 3.0–13.5).
+- Row e still running on Kaggle; then answers 1 and 3 close J1.
+- Philosophy 4 (bar and control unmoved, failure stated) and 5 (his world measured before any brain is judged in it).

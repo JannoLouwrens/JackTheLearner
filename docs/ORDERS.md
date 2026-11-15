@@ -65,10 +65,9 @@ a 2-seed smoke of each row runs on the box. Write (f) and its rule first.
 serves: M2 · PLAN stage 1 "a first rung he can live on", "proof the task can be learned" · philosophy 4, 5.
 **done when:** `WORLD_CARD.md` has the seven rows and the three answers.
 state: 11-15 HARVESTED (card + raw in `docs/research/world_card_data/`): a 0 meals/600 s; b 0.52/life 302 s; c pink 0.44 (no better than b); f FAIL 6/20 (4.13); g control 0/20 (2.97, f blind after life 0); answer (2): every death sums −1.00.
-state: 21:25 d8 (held 8) 1.16/life vs b 0.52: 2.24×, paired t 7.29, 19/20 seeds — mostly longer life (539 vs 302 s; per 100 s 1.25×, t 2.59). d8 is the best random row (`f565a4ee`).
-state: 22:10 d32 (held 32) 1.01/life: 1.96× b (t 3.96) but 0.87× d8 (t −1.12); per 100 s alive 0.164 = b's 0.170 — all longer life (607 s). d8 stays best random row (`379ab631`).
-state: 23:05 b2 harvested (`aa5e5b37`): random on 221–240 302 s, 0.47 meals/life (b: 302 s, 0.52), 0/20 seeds ≥5 — fresh seeds not easier. STILL RUNNING on Kaggle CPU: e (18:37), f2 (20:12), g2 (20:33); pollers write `/data/jack-logs/world_card/<row>.jsonl`.
-state: next: harvest each row as its jsonl appears (copy to `world_card_data/`, table row + sha in the header, paired vs b/d8); then score(f2,b2,F2_SEEDS) with g2 must miss; then answers 1 (beside e) and 3 (from f/g/f2) final → J1 DONE.
+state: 22:10 d8 1.16/life (2.24× b, 19/20) is the best random row; d32 1.01 adds only lifetime (`379ab631`). b2 on 221–240 = b (0.47/life, `aa5e5b37`).
+state: 22:40 f2+g2 HARVESTED (`82d81ec2`): f2 FAIL 13/20 seeds ≥5 (needs 18; 6.91/life, 20/20 > b2), g2 control 0/20 holds. Sight now beats blind on lives 1–9 too (6.43 vs 1.62, 20/20, t 6.67). 8/200 f2 lives survive the 1800 s cap on floor food alone (27–33 meals). Bar not moved, no retune.
+state: next: row e still RUNNING on Kaggle CPU (18:37), poller → `/data/jack-logs/world_card/e.jsonl`. Harvest it, then write answers 1 (arithmetic beside e AND f2's 8 surviving lives) and 3 final (provisional text in card under f2) → J1 DONE.
 
 ### J2 — A first rung he can live on: the difficulty dial and the record's setup, as wrapper options
 part: His world, needs and lessons + Learning to eat · stage: 1 · step: 2 (combine) · prior: §3 "Take as-is", "Staging"; §1 table "Ours beside theirs"
