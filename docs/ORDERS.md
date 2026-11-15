@@ -129,7 +129,7 @@ state: 11-15 06:39 kcpu PATH BUILT `36ce96d`: run() = 1 Kaggle-CPU kernel/seed (
 Pushed s0 under the PRE-ruling-2 spec (`jack-cpu-1794724769`, RUNNING; ruling landed mid-slot). That kernel is a PILOT only: re-registration changes impl_sha -> no unit reuse, and multi-unit reattach is forbidden (ruling 6).
 s1/s2 pushes REFUSED: "Maximum batch CPU session count of 5 reached" (measured: 5 CPU + 1 GPU concurrent, cap is 5).
 (1) DONE `f6c6177`: re-registered per ruling 2 BEFORE any run: (c) = oracle p5 >= 5600 s AND oracle p5 > p95(fresh repeat); repeat p5 reported only; fixtures 16/16; impl_sha 9cbe4f1e.
-Next: when kcpu slots free (5 max; s0 pilot ends ~4 h), launch 3 detached pollers `launch_detached.sh /data/tmp/w104_kcpu_s<s>.log $PY -m experiments.tests.w1_04_horizon_longer_than_consequence kernel <s>` (s=0,1,2), then `run W1.04` reuses the units.
+Next: do (1b) FIRST — `w1_02_outcomes_have_resolution.py` is in W1.04's IMPL_DEPS (and its depends_on), so editing it after the kernels re-keys and stales them. Then, as kcpu slots free (5 max; s0 pilot ends ~4 h), launch 3 detached pollers `launch_detached.sh /data/tmp/w104_kcpu_s<s>.log $PY -m experiments.tests.w1_04_horizon_longer_than_consequence kernel <s>` (s=0,1,2), then `run W1.04` reuses the units.
 
 ### J4 — The oldest blockers nobody owns (`PS.02`, `PG.6`, `T2.03`)
 **Why.** `PS.02` (cold is felt before it kills) is FAIL with its code
