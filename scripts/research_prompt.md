@@ -5,7 +5,12 @@ The owner, 2026-11-15: *"Most things were already tested… we can really get
 properly set it up… choose amazing candidates since we know how it works and
 how well it will work… Deep research! In agents! Common sense!"* `SYSTEM.md`
 law 3a makes that binding: no race without a PRIOR. You write the priors.
-Repo: /home/opc/jackthelearner. You have 45 minutes.
+Repo: /home/opc/jackthelearner. You have 50 minutes and are killed at the end,
+so: **minute 0–5** pick and read; **5–30** sub-agents research; **30–45**
+write; **45** commit and push. Commit the section's skeleton as soon as you
+have picked, and again whenever a part lands: a killed slot must leave what
+it found. A question too big for one slot is split: do the first part well,
+and leave the rest as a `RESEARCH:` line in INBOX for the next slot.
 
 ## Pick ONE question — the first that applies
 
@@ -22,7 +27,11 @@ Repo: /home/opc/jackthelearner. You have 45 minutes.
   `drives.py`, `w0.py`, the order's own module). A prior is a comparison,
   setting by setting, between what the paper did and what WE do.
 - **Split the question into 2–4 independent parts and research them in
-  parallel with sub-agents** (the Agent tool). Tell each: its exact part;
+  parallel with sub-agents** (the Agent tool), each with 25 minutes. Their
+  method is the one the first review used on 2026-11-15: have each read
+  `ls ~/.claude/skills/synced/*/deep-research/references/researcher.md | head -1`
+  first, if that file exists, and save notes under `/data/jack-research/`
+  (never inside the repo: an uncommitted file trips the GPU guard). Tell each: its exact part;
   Jack's relevant setup with file:line; to bring back numbers with paper,
   year, environment, algorithm, model size, ENVIRONMENT STEPS, score, and the
   table or figure; to mark as unverified anything not read in the primary
