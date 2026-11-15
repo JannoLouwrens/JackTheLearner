@@ -432,3 +432,42 @@ Order: rows 1–6 and 11 (no GPU) catch most B and PPO bugs; row 7 is A's first 
 - In-world battery (inf): one faculty per task, one difficulty number, held-out evaluation seeds, random + own-senses scripted + public-family anchors, scores normalised to [0, 1]; for needs, EVAAA's two probes (choose the resource matching the larger deficit; reverse after an imposed need change).
 
 **Not verified:** no learner timed on a Kaggle x86 core or a T4; bsuite per-level targets are inferred from per-experiment means; the battery and Dreamer notes give different Dreamer cartpole numbers at 100K (528 ± 36 vs 478 ± 20) and attribute the official curves to different model sizes; recompute from the per-seed file before use.
+
+## 10. The Mac mini M6: expected speeds, the software path, and the first day (2026-11-15; serves the decisive test in PLAN, order J5, and the move to the Mac)
+
+Long form: `/data/jack-research/reports/Mac mini M6 speed for Jack.md`. No MuJoCo, SAC or Dreamer timing exists for any M6; every workload number is scaled **(inf)**.
+
+**Already known**
+- **Measured on the M6:** Geekbench 6 4,698 / 21,302 (A1 core ≈ 1,100; our VM ≈ 3,500; Kaggle 786 / 1,687). Cores: 2 super + 4 performance (4.5–4.8 GHz) + 6 efficiency (2.9 GHz). Wall power 2.1–4 W idle, about 55 W sustained, 70–74 W peak; fan ≤ 42 dB(A). 32 GB is the ceiling and cannot be added later.
+- **MuJoCo, scaled:** a fast M6 core is 2.5–4× an Ampere core. The basis is Geekbench discounted by the one Apple MuJoCo figure (M3 Max 650K humanoid steps/s, all cores). Jack's world per fast core: RK4 7,000–12,500 sub-steps/s, implicitfast 26,000–48,000. Loop today 85–150 decisions/s (RK4) and 160–250 (implicitfast); after the loop fixes 300–800. Whole chip 4.5–8× our VM and 10–16× a Kaggle session; the efficiency cores add +15–35%.
+- **SAC update (2×256, batch 256), scaled:** SB3 on the processor 3–15 ms; SBX 2–7 ms; MPS no faster. A 1M-decision B run takes 1.7–5.6 h; **20 runs take 6–22 h on six fast cores (inf).**
+- **Dreamer, scaled, steps/s for 0.64M / 9.7M:** JAX on the processor 2–6 / 0.15–0.4; PyTorch on the processor 3–10 / 0.2–0.6; MPS 3–12 / 0.8–2.5; MLX (not yet written) 6–25 / 1.5–5. T4 arithmetic: 20–50 / 2–5. So the Mac is **0.2–0.6× a T4 on PyTorch and 0.3–1× on MLX**. Basis: T4 beat an M3 Pro 1.6–1.8× on ResNet-50; a GRU cell ran 2.1–3.5× slower on MPS than on the processor (M3 Max).
+- **Decisive test for A at 0.64M, full ratio (inf):** 460–1,860 Mac h (3–11 weeks). The T4 alone needs 4–9 weeks; **the two together need 1.6–5 weeks.** 9.7M at full ratio: 2,200–7,000 Mac h, not affordable anywhere.
+- **No Dreamer code has been reported running on Apple silicon.** JAX has no Mac GPU route (jax-metal abandoned). MuJoCo on the Mac GPU is not usable.
+
+**Take as-is**
+- Physics: native MuJoCo on the processor, one process per world, 6 on fast cores (≤ 12 in all), `nstep=40` in one call. No GPU physics.
+- B: SBX on the processor, `OMP_NUM_THREADS=1`, 4–6 runs side by side; SB3 on the processor as the reference. Not MPS.
+- A 0.64M: keep the fastest of official JAX (processor), sheeprl `dreamer_v3_5_1M` (processor) and sheeprl on MPS. A 9.7M: sheeprl on MPS. An MLX port only after it reproduces §2's DMC rows.
+- **Never `nice 19`, `taskpolicy -b` or a launchd `ProcessType` of Background**: background priority pins work to efficiency cores (2–3× loss, no error). Cap worker counts in code instead.
+- `sudo pmset -a sleep 0 disksleep 0 autorestart 1`; App Nap off; long runs under `caffeinate -dimsu`.
+- **The camera needs a logged-in desktop session** (the CGL renderer hangs otherwise). Auto-login a dedicated user (FileVault off, or `fdesetup authrestart`), add an HDMI dummy plug, and run GPU and render jobs as that user's LaunchAgents; processor-only services as LaunchDaemons. A ray-cast eye needs neither.
+- Data on an external case-sensitive APFS drive; paths from env vars. float32 before MPS; checkpoint and restart every N hours; compare with Linux statistically.
+
+**Reproduce first** (first day; each replaces an estimate above)
+1. `sysctl hw.perflevel0.physicalcpu hw.perflevel1.physicalcpu`, `pmset -g`, all versions: the core layout.
+2. `testspeed humanoid.xml` at 1, 6 and 12 threads: 50–90K steps/s per fast core.
+3. `mj_step(m, d, nstep=40000)` on Jack's world, integrators 0, 1 and 3: the RK4 and implicitfast rows.
+4. Decision loop for 60 s, one process, with `powermetrics --samplers cpu_power`: 85–150 / 160–250 decisions/s.
+5. The same loop as 1, 2, 4, 6, 8 and 12 processes: 750–1,300 today; +15–35% from efficiency cores.
+6. SAC update, 200 warm-up and 2,000 timed: SB3 on the processor (1 and 4 threads), SBX, SB3-MPS; then 1–6 runs at once: 70–300 / 150–500 / 50–200 updates/s.
+7. 4096² matmul in fp32 and bf16 on MPS and MLX: 2.5–5 TFLOPS.
+8. GRU cell forward and backward on processor, MPS and MLX: 15–30 µs per GPU job.
+9. Dreamer steps/s after 500 warm-up steps, dummy 30-number world: JAX on the processor, sheeprl on the processor, sheeprl-MPS (`PYTORCH_ENABLE_MPS_FALLBACK=0`) at 1M, then 12M for the best two. Run the same script on the T4 after 21 Nov: the Dreamer rows and the T4 arithmetic.
+10. 2,000 sheeprl steps from a fixed seed on processor and MPS; compare losses and per-module gradient norms. Any divergence bars MPS (PyTorch issue 204359).
+11. 2,000 renders at 64×64 with the user logged in, then over SSH, from a LaunchAgent and from a LaunchDaemon after a reboot; `torch.backends.mps.is_available()` in each: 300–2,000 fps, and which contexts work.
+12. A 24 h soak (6 worlds plus 1 MPS learner) behind a wall meter, logging steps/s, `vm_stat` and `powermetrics` each minute: 55 W, about $7 a month, no throttling, no creep, and the slowdown from sharing the chip.
+
+**The last 10%** (first anywhere; publish the logs): MuJoCo per-core speed on an M4-or-later core and on the M6's performance and efficiency tiers; SAC and Dreamer timings on any Apple chip; MPS against processor against MLX on a recurrent world model; Apple against T4 on the same Dreamer script; offscreen render fps on macOS; whether MPS runs in a no-login LaunchDaemon; whether two Dreamer learners (one on MPS, one on the processor) beat one; a multi-day training soak on a Mac mini.
+
+**Not verified:** prices ($1,499 for 32/512 from Abt and AppleInsider listings; $1,299 for 32/256 from one blog; not read on Apple's store); the M6 GPU's 4.9 TFLOPS (an estimate); T4 datasheet figures (not re-read); the clock and per-clock speed of the performance cores; MLX's 1.3–2.5× gain over MPS (one M5 repository); launchd key names; multi-day thermals.
