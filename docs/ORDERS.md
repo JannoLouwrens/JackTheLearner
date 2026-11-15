@@ -65,9 +65,10 @@ different orders. An arm clears → write it here; the Director orders
 serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 **done when:** the loss seat is ruled by tally and step 2's table (and 3's
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
-state: 11-15 08:45 (1) TWO CELLS IN FLIGHT: s150 `jannolouwrens/jack-cpu-1794730958` (08:22, poller 4079623 lands it) + s151 `jannolouwrens/jack-cpu-1794731873` (08:38, in-session push, poller let die: detached cap 2/2). s152 NOT pushed: kcpu 5/5 at 08:40 (h2 …3424, h3 …3809, w104 s0 …4769, plr s150, s151).
-(2) forager race rule COMMITTED before any cell `e9b14f3`; its cells wait for step 1's seat (cores.py stamped).
-Next: harvest s151 when COMPLETE: `JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-1794731873 $PY -m experiments.policy_loss_race kernel 151` (code at HEAD 1882030 — run from that tree or reattach refuses). On a free slot: `launch_detached.sh /data/tmp/plr_s152.log $PY -m experiments.policy_loss_race kernel 152` -> `policy_loss_race tally` -> seat + re-buy LC.02/LC.08/LF.03 -> forager kernels K=0..3 -> `forager_race tally`.
+state: 11-15 09:25 (1) s150+s151 HARVESTED (8/12 cells current, code shas = HEAD). s152 PUSHED `jannolouwrens/jack-cpu-1794734602` 09:23 (poller pid 4164846, log /data/tmp/plr_s152.log; lands ~1.5 h).
+INTERIM, not a verdict (late mean s150/s151; late sat): base 533/488 (.98/.33 FAILS sat) · tanh 591/567 (.98/1.0 FAILS sat) · awr 560/556 (0.0) · tanh-awr 524/557 (0.0). No seed dropped. Only AWR arms can qualify so far.
+(2) forager race rule COMMITTED `e9b14f3`; cells wait for step 1's seat (cores.py stamped).
+Next: when s152 COMPLETE (poller writes it; if it died: `JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-1794734602 $PY -m experiments.policy_loss_race kernel 152`) -> `policy_loss_race tally` -> seat BY tally in cores.py + re-buy LC.02/LC.08/LF.03 -> forager kernels K=0..3 -> `forager_race tally`.
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
