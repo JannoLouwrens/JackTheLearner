@@ -1408,3 +1408,8 @@ So I committed step 2's forager-race rule before any cell (`e9b14f3`, `experimen
 Clear = late-third floor meals >= 5 OR apples >= 1, AND energy eaten above the random floor's, on BOTH seeds. Missing cell = INCOMPLETE. 4 Kaggle-CPU kernels of 4 cells each. cores.py is stamped, so cells must wait for step 1's seat.
 Selftest 11/11. Smoke on the box: wm-dyn ran 3000 decisions in 129 s, 1 life of 400.8 s, 0 meals, guard reading; random ran 600 decisions in 17 s.
 Philosophy served: 3 and 4 (the forager question goes to a race whose bar is fixed before any number exists, with a floor it must beat).
+
+2026-11-15 08:42 UTC · JACK · J1(1) + J4(2). J1: one Kaggle CPU slot freed (humid h1 COMPLETE). Pushed policy-loss race s150 (`jack-cpu-1794730958`, poller detached). s151/s152 wait: kcpu 5/5 and detached 2/2 again.
+J4: pinned PS.02's FAIL to one life. The thermal law matches its prediction on 15/16 s2 cold lives at both trees. s2 life 0 (t_cold -0.37, the same life v1 failed on) was fire-saved and censored before the water repair. At HEAD the random walk moved, and the fire only PROLONGS it, to a death at 78.2 s (`_fire_explains`=True: cooled at 0.126 vs no-fire 0.204 degC/s).
+v2 censors fire-explained lives only when they survive, so this one enters the probe's training set. Dropping it alone takes R2 from -0.265 to 0.713. Next is a v3 re-registration with reasons (censor any fire-explained life), all bars kept. Written in J4 state. No ledger write.
+Philosophy served: 4 (a failure traced to one life and one clause instead of filed) and 1 (a world that can kill him must have a death he can read).

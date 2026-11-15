@@ -67,7 +67,7 @@ serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
 state: 11-15 08:24 (1) FIRST CELL IN FLIGHT: s150 kernel `jannolouwrens/jack-cpu-1794730958` pushed 08:22 (poller pid 4079623, log /data/tmp/plr_s150.log, lands itself). s151/s152 NOT pushed: kcpu 5/5 RUNNING at 08:25 (h2 …3424, h3 …3809, h4 …4063, w104 s0 …4769, plr s150) and detached cap 2/2 (h2 poller + plr s150). h1 …0356 COMPLETE, written.
 (2) forager race rule COMMITTED before any cell `e9b14f3`; its cells wait for step 1's seat (cores.py stamped).
-Next: as kcpu slots free: `launch_detached.sh /data/tmp/plr_s<S>.log $PY -m experiments.policy_loss_race kernel <S>` S=150,151,152 -> `policy_loss_race tally` -> seat + re-buy LC.02/LC.08/LF.03 -> `launch_detached.sh /data/tmp/forager_k<K>.log $PY -m experiments.forager_race kernel <K>` K=0..3 -> `forager_race tally`.
+Next: as kcpu slots free: `launch_detached.sh /data/tmp/plr_s<S>.log $PY -m experiments.policy_loss_race kernel <S>` S=151,152 (150 in flight) -> `policy_loss_race tally` -> seat + re-buy LC.02/LC.08/LF.03 -> `launch_detached.sh /data/tmp/forager_k<K>.log $PY -m experiments.forager_race kernel <K>` K=0..3 -> `forager_race tally`.
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
@@ -143,9 +143,9 @@ state; then repair the world or the body, or — if the test is wrong —
 re-register with reasons. Bars unmoved.
 serves: M2, M5, M7 · philosophy 4 (a failure is fixed, not filed).
 **done when:** `PG.6`, `T2.03` are current and `PS.02` has a new verdict.
-state: 11-15 08:30 (2) PS.02 CAUSE: not 94 days rotten. It PASSed through 11-12 (d5d26b0, probe R2 0.6165, reproduced bit-exact every time) and FAILed from 11-13 (db72d97, impl_sha 362ee2->0ce154). Test code is unchanged since Aug. In that window the only change PS.02 imports is `playground.Water` (`c510b92`, W0.PL repair: apply() is now additive and no longer erases W0's drive; the in_pool band is gone). needs.py/e0eecf7 is not imported by W0 or thermal. So the world moved under the test.
-Per-seed _experiment at HEAD (no ledger write): s0 R2 0.511 ok, s1 0.706 ok, s2 FAIL: death_s_max 78.2 > 70 AND R2 -0.265 (one long cold life the probe cannot read). Bars unmoved.
-BISECT: at c510b92~1 s2 PASSES (R2 0.570, max 33.8 s, 1 censored life fire-explained), so the water repair broke it. The fire-saved life most likely now dies at 78 s. Next: dump s2's cold lives at both trees (death_s, min_dist to fire, in_pool), then decide whether it is a thermal-model gap (wet/immersion cooling unmodelled) to repair in thermal, or a lethality-band re-registration with reasons.
+state: 11-15 08:42 (2) PS.02 CAUSE PINNED (dump, no ledger write): the thermal law is fine. 15/16 s2 cold lives die within ~2 s of `time_to_lethal_s` at both trees. Exactly ONE differs: s2 life 0 (t_cold -0.37, predicted 48.8 s, the same life v1 FAILed on). Before c510b92 it was censored at 80 s (fire-saved). At HEAD the water repair moved the random walk, so the fire PROLONGS it to a death at 78.2 s: min_dist 0.84 m, cooling 0.126 vs no-fire 0.204 degC/s, `_fire_explains`=True.
+Censoring (v2) covers only fire-explained lives that SURVIVE, so this one enters the probe's training set and the death_s_max gate. Dropping that life alone moves R2 from -0.265 to 0.713.
+Next: re-register v3 with reasons. A fire-explained life is censored whether or not it dies, because its time-to-death depends on future random visits to the fire, which no sense can know. Keep CENSORED_MAX=2 and keep every bar. Then selftest and run PS.02 on all 3 seeds. Dump script: /data/tmp/ps02dump/{dump,diag}.py.
 
 ### J9 — The two ends with no test: fire (`W.5`) and advice
 **Why.** `coverage`: GOAL's "tree → fire → shelter world" and "advised, not
