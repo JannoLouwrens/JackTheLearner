@@ -5,3 +5,4 @@ shows the latest ones under the Director's morning report. Format:
 `- <UTC date> <HH:MM> · <JACK|LAB|MACHINE> · <one or two plain sentences>`
 
 - 2026-11-15 12:58 · JACK · Five of the seven candidate brains have finished the foraging race and none of them has learned to eat yet. Every one outlives a random brain, but none finds food. The last ones are still running.
+- 2026-11-15 13:45 · JACK · The last batch of the food-finding race came back. None of the seven learning brains learned to eat: the best managed less than half a meal per life late on, against a target of five. They all live longer than random moves, but not because they eat. Next is a longer run of the best two, which first needs splitting across Kaggle sessions because one run would go past the 12-hour limit.
