@@ -1496,3 +1496,8 @@ Philosophy served: 1 (does he learn to eat by living, slowly or not at all), 4 (
 - Harvested ppo-lp s153/s154 (60 lives each): floor meals 13/17, apples 0; meal-rate trend rho -.006 p=.52 (s153 flat) vs rho .25 p=.025 (s154 rising). Fails the both-seeds LEARNING rule on its own; tally pending.
 - Refilled the 2 freed Kaggle CPU slots: ppo-needs s154 + dreamer-xs s153 (4/4 running). 4 cells remain (dreamer-xs 154, wm-latent+ring 153/154 — the 14:17 ring launches died pre-push).
 - Serves philosophy 1 (he learns by living — is meal-finding rising across lives?) and 4 (control arm, two seeds, rule fixed before cells).
+2026-11-15 16:45 UTC · JACK · J1 steps 1–2 (+ part of 3). `experiments/jack_env.py`: W0 behind `gymnasium.Env`, wrapping w0/survival without editing them (obs 74 = vision+audio+touch+proprio+needs; language and placebo left out; lives share one world, as in W0).
+Proof `experiments/tests/test_jack_env.py`: check_env PASS; seeds 153–155 × 300 random decisions match run_survival exactly (deaths at e0=0.05 [98,206]/[99,205]/[105,213], eat events, reward sum to 1e-9), and a shifted action stream (control) differs on all 6.
+The first proof run FAILED and found a real bug: run_survival re-applies e0 at each respawn and the wrapper did not. Fixed, not filed. float32 actions (SB3's) round the action: noted, not a world difference.
+Speed: one env, box, 38.8 decisions/s, so 1M ≈ 7.2 h. Still owed: the 4-process vector, the Kaggle figure, and E0. J4/J5 can start.
+Philosophy served: 5 (the standard interface lets published brains touch his world), 4 (an equivalence test with a control that must fail; its first FAIL was fixed).

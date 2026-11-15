@@ -59,7 +59,10 @@ toy figure; this calibrates it). No learner, no seat, no ledger row.
 serves: M3→M7 · PLAN stage 1 line 1 · philosophy 3, 5.
 **done when:** (2) and (3) are in the module docstring and E0's table is in
 `docs/research/E0_NOISE_PROBE.md`.
-state: open — ordered 11-15 15:55.
+state: 11-15 16:45 (1)+(2) done `9ee9965`: `experiments/jack_env.py` (obs 74, act 8), check_env PASS; 3 seeds × 300
+random decisions identical to run_survival (deaths, eats, reward sum 1e-9; control differs). First proof run caught
+a wrapper bug (e0 not re-applied at respawn), fixed. (3) one env on box 38.8 dec/s (1M ≈ 7.2 h). NEXT: (3) 4-proc
+vector + one Kaggle CPU figure; then (4) E0 — commit the rule first. J4/J5 are unblocked.
 
 ### J2 — Brain B from published code reproduces published numbers
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §1 "B" and "Known-answer checks"
