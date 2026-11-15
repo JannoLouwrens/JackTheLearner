@@ -1391,3 +1391,8 @@ No cell was dispatched because kcpu is 5/5 busy (humid h1-h4 and the W1.04 s0 pi
 Found a sequencing trap: the raced learner is LF.03's `_Life`, which has TRAIN_RATIO hard-coded at 0.25. LC.02 clears wm-latent there on only 2/3 seeds, against 3/3 at 0.125. Ruling 9's LF.03 edit therefore has to land BEFORE the race kernels, or it stales every cell. Order written in J1 state.
 J2/J6 not touched this slot (all 5 kcpu kernels RUNNING at 07:20).
 Philosophy served: 3 (the learner's loss seat goes to a race declared before its numbers exist) and 4 (the race runs at the cadence that is actually certified, not a stale constant).
+
+2026-11-15 08:05 UTC · JACK · J1(1). Re-registered LF.03 per ruling 9 before any race cell (`ad6a644`). TRAIN_RATIO is now read live from LC.02's PASS (committed_ratio for wm-latent = 0.125). It was hard-coded at 0.25, which cleared on only 2/3 seeds. If the value is unreadable, the run goes VOID.
+Added a statue twin (zero action, training on). On a 400-decision smoke it read weights_changed=True just like the learner, so the old gate could not tell a statue from him. New drives_body detector, which must be True on every seed and False on the statue: action RMS >= 0.05 AND corr(executed action, policy mean) >= 0.05. Smoke: learner 0.52/0.42, statue 0/0. No bar moved. meals_by_seed is now on the row.
+The race kernel for s150 was REFUSED by the detached cap (2/2). The launch command is in J1 state.
+Philosophy served: 4 (a control that must fail where the old gate could not, plus a cadence read from its certificate instead of pasted in).
