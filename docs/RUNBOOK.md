@@ -1796,7 +1796,8 @@ To switch it off: remove the `gap_fill.sh` line from the crontab.
   `dashboard/vitals.json` lists the measured numbers (a ledger metric, its
   floor, its pass mark). `dashboard/config.json` holds plain names for jobs
   and the link to the owner's chat session.
-- A recorded life plays on the Watch tab when a file exists at
-  `/data/jack-dashboard/media/latest.mp4`.
+- A recorded life plays on the Watch tab when ORDERS S6 has written
+  `/data/jack-video/latest.mp4` (or `.webm`); the script links it into
+  `/data/jack-dashboard/media/` and shows `latest.txt` beside it as the caption.
 - To switch it off: remove the `dashboard_status.py` line from the crontab.
 

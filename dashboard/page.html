@@ -387,7 +387,7 @@ function nextUp(t){var ts=t.members.map(function(m){return m.next}).filter(Boole
 /* ───────── Watch, Talk ───────── */
 function viewWatch(){
   var w=S.watch||{},h='<div class="card"><h2>Watch him</h2>';
-  if(w.video)h+='<p class="sub">The most recent recorded life.</p><video controls playsinline preload="metadata" src="'+esc(w.video)+'"></video>';
+  if(w.video)h+='<p class="sub">His most recent recorded life'+(w.made?", filmed "+day(w.made):"")+'. It is a recording: the life was lived first and drawn afterwards.</p><video controls playsinline preload="metadata" src="'+esc(w.video)+'"></video>'+(w.note?'<p class="foot" style="padding:10px 0 0">'+esc(w.note)+"</p>":"");
   else{
     var o=(S.orders||[]).filter(function(x){return /video|watch/i.test(x.title)})[0];
     h+='<p class="sub">No recording yet.</p><p style="color:var(--ink2);font-size:16px;max-width:40em">A short video of one of his lives is on order'+(o?" ("+esc(o.id)+")":"")+". It will play here as soon as a worker has made it. Seeing him live, as it happens, needs a machine with a graphics chip; this server has none.</p>"+

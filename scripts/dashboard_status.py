@@ -725,6 +725,39 @@ def score_history(ab: dict, passing: int, total: int) -> list:
     return [{"d": r["d"], "v": r["overall"]} for r in rows[-60:]]
 
 
+# ── watch: a recorded life, if a worker has made one ────────────────────────
+def watch() -> dict:
+    """ORDERS S6 writes the newest recorded life to /data/jack-video/latest.mp4.
+    The page can only play what sits beside it, so the file is linked (same
+    disk, no copy) into the dashboard's own folder. Nothing is rendered here."""
+    media = OUT / "media"
+    for src_dir in (Path("/data/jack-video"), media):
+        for ext in ("mp4", "webm"):
+            src = src_dir / f"latest.{ext}"
+            if not (src.is_file() and src.stat().st_size > 0):
+                continue
+            dst = media / f"latest.{ext}"
+            if src != dst:
+                media.mkdir(exist_ok=True)
+                a, b = src.stat(), (dst.stat() if dst.exists() else None)
+                if b is None or (a.st_ino, a.st_size, a.st_mtime) != (b.st_ino, b.st_size, b.st_mtime):
+                    tmp = dst.with_suffix(".tmp")
+                    tmp.unlink(missing_ok=True)
+                    try:
+                        os.link(src, tmp)
+                    except OSError:
+                        shutil.copy2(src, tmp)
+                    os.replace(tmp, dst)
+            note = ""
+            for side in (src_dir / "latest.txt", src_dir / "latest.md"):
+                if side.is_file():
+                    note = clean(side.read_text(errors="replace"))[:300]
+                    break
+            return {"video": f"media/latest.{ext}", "note": note,
+                    "made": iso(dt.datetime.fromtimestamp(src.stat().st_mtime, UTC))}
+    return {"video": None, "made": None, "note": ""}
+
+
 # ── assemble ────────────────────────────────────────────────────────────────
 def build() -> dict:
     by_id, results = load_tests()
@@ -737,7 +770,6 @@ def build() -> dict:
     cfg = guarded(lambda: json.load(open(CFG / "config.json")), {})
     PLAIN.update(cfg.get("plain_names", {}))
     job_list = guarded(lambda: jobs(by_id), [])
-    media = OUT / "media"
     status = {
         "generated": iso(NOW), "refresh_s": 120,
         "head": sh(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"]).strip() or None,
@@ -755,8 +787,7 @@ def build() -> dict:
         "team": guarded(team, {"members": [], "paused": False, "running": 0}),
         "jobs": job_list,
         "resources": guarded(lambda: resources(job_list), {}),
-        "watch": {"video": "media/latest.mp4" if (media / "latest.mp4").exists() else None,
-                  "note": cfg.get("watch_note", "")},
+        "watch": guarded(watch, {"video": None, "made": None, "note": ""}),
         "chat": {"url": cfg.get("chat_url") or None, "name": cfg.get("chat_name") or None},
         "errors": ERRORS,
     }
