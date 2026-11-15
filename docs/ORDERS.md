@@ -120,8 +120,8 @@ serves: M2 · END-FIT row 4 · philosophy 4, 5.
 state: 11-15 06:39 kcpu PATH BUILT `36ce96d`: run() = 1 Kaggle-CPU kernel/seed (5 arms, 4-worker pool), units cached by impl_sha in /data/tmp/w104/units, `… w1_04_horizon_longer_than_consequence kernel <seed>` buys a seed ahead. Fixtures 15/15.
 Pushed s0 under the PRE-ruling-2 spec (`jack-cpu-1794724769`, RUNNING; ruling landed mid-slot). That kernel is a PILOT only: re-registration changes impl_sha -> no unit reuse, and multi-unit reattach is forbidden (ruling 6).
 s1/s2 pushes REFUSED: "Maximum batch CPU session count of 5 reached" (measured: 5 CPU + 1 GPU concurrent, cap is 5).
-Next: (1) re-register per ruling 2 (registry hypothesis + _experiment/_check + fixtures for p5_oracle >= H and p5_oracle > p95_fr; fr still computed), commit, push;
-then 3 detached `kernel <s>` pollers (pollers don't count toward the 2-cap, <= 6 alive) as kcpu slots free, then `run W1.04` reuses the units.
+(1) DONE `f6c6177`: re-registered per ruling 2 BEFORE any run: (c) = oracle p5 >= 5600 s AND oracle p5 > p95(fresh repeat); repeat p5 reported only; fixtures 16/16; impl_sha 9cbe4f1e.
+Next: when kcpu slots free (5 max; s0 pilot ends ~4 h), launch 3 detached pollers `launch_detached.sh /data/tmp/w104_kcpu_s<s>.log $PY -m experiments.tests.w1_04_horizon_longer_than_consequence kernel <s>` (s=0,1,2), then `run W1.04` reuses the units.
 
 ### J4 — The oldest blockers nobody owns (`PS.02`, `PG.6`, `T2.03`)
 **Why.** `PS.02` (cold is felt before it kills) is FAIL with its code

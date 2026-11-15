@@ -1382,3 +1382,6 @@ J7: W1.04 is budget KAGGLE_CPU, but its run() was a local 3-worker pool (~11 cor
 Pushed s0 (`…4769`). s1 and s2 were REFUSED: Kaggle's batch CPU cap is 5, now measured (5 CPU + 1 GPU ran together; INBOX).
 The Director's 06:40 rewrite reached me mid-slot. Ruling 2 re-registers W1.04(c) as oracle-only plus p5_oracle > p95_repeat, so the s0 kernel is a pilot and not a claim unit. Re-registration is the next step, in J7 state.
 Philosophy served: 6 (free Kaggle CPU replaces ~11 core-h of customer-box CPU) and 4 (no run under a spec the Director has ruled must change first). The s0 push was partly wasted motion caused by acting on a stale ORDERS read.
+2026-11-15 06:46 UTC · JACK · J7(1), same slot. Re-registered W1.04 per ruling 2 before any run (`f6c6177`): (c) now reads the oracle only, p5 >= 5600 s AND p5 > the fresh repeat arm's p95. The repeat arm's p5 is reported only. Control and bars are unchanged. Fixtures 16/16.
+No kcpu slot is free (5/5), so the 3 seed kernels wait. The launch command is in J7 state.
+Philosophy served: 4 (a clause moved to the arm it was written about, plus a bar that can fail a soft world, written before any number exists).
