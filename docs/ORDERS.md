@@ -70,11 +70,11 @@ the week (D56) — resume the remaining units on Colab.
 serves: M3, M4 · END-FIT row 1 · philosophy 3, 7 · objective 3 (free GPU).
 **done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
 not a lost download.
-state: 11-14 21:27 D1.0 att 8 ERROR (ZeroDivisionError): the reattach of COMPLETE `…135` (= b_split s2, pin-only proven: receipt 28e7b086 = pulled bytes, pin->fc52aca = 398179cc =
-local_sha) harvested b_split s2 OK, but JACK_REUSE_KERNEL+ACCEPT_MISMATCH applied to EVERY uncached unit: c_e2e s0-2 and d_mlp s0-2 each "reattached" …135 and cached b_split s2's runs under
-their own keys; their arms then had 0 runs -> _stats([]) /0. No false verdict was written. The 6 poisoned files moved to /data/d10_units_quarantine_20261114 (byte-identical to b_split_seed2.json).
-Cache now 7 genuine: ref + aprime 0-2 + b_split 0-2. Fresh dispatch of the 6 remaining units 21:29 (10.4 h proj, W45 left 14.61 h): watcher 3902173, first unit c_e2e (attempt …1758124).
-Next: read /data/tmp/dispatch_d1_0.log; on a verdict seat BY VERDICT + re-run T2.01. NEVER reattach a multi-unit spec with JACK_REUSE_KERNEL again (INBOX).
+state: 11-15 05:51 D1.0 att 9 **VOID** (harvested `651c805`): on T4 aprime/b_split/c_e2e hit 60/60/61% of STEP_TARGET 750k under P100-frozen caps 90/150/150 (d_mlp 100%, ~11 min).
+Means (not a verdict): aprime 459 > d_mlp 422 > c_e2e 305 > b_split 259; margin .33 sigma. Fix `db262d9`: MINUTES_CAP 195/325/325/15 (T4-measured x1.3; no gate moved) -> all 13 units re-buy,
+~40 GPU-h expected / 53 worst > 30/week. `70505b3`: JACK_D10_ONLY buys a declared subset; omitted units -> PARTIAL ERROR (no verdict), bought units cached by impl_sha 873e861e.
+06:11 W46 slice dispatched (21.2 h proj vs 22.22 left): ref, aprime 0-2, d_mlp 0-2 (Colab), b_split 0; watcher 4040958. It ENDS in a PARTIAL ERROR by design.
+Next: on that exit, W47 (Sun 11-22): JACK_D10_ONLY=b_split:1,b_split:2,c_e2e:0,c_e2e:1 (~25.5 h), W48: c_e2e:2 -> verdict. Never JACK_REUSE_KERNEL on a multi-unit spec.
 
 ### J5 — The Kaggle-CPU queue: curriculum cook-off (`CR.01`), then meal memory
 **Why.** Owner 11-11: the curriculum is "as important as jack himself".
@@ -115,10 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, fails ok_spread s0+s1. f-spread DIRECTOR CALL open (`64d949a`). W.2(a) re-reg sweating CF `bc7b99f`; W.1 wrapper flux fix `39d8a66` (both arms >= shipped on W.1/W.2 flags).
-11-15 05:50 `f65ad58`: humid tally now reads shipped from drink_race/ (heat_race's NE.01 cells predate e054e0a: 73 vs 87 keys, 18-41 metrics differ/seed) + a stale-cell guard (cell mtime < spec test's last commit -> no verdict).
-Guard flags 15 W.2 cells: shipped (drink_race) s0-4, hum30 s0-4 (11-14 04:25, pre-re-reg, never re-run), hum34 s0-4 (run on bc7b99f before it was committed). Next: re-run those 15 W.2 cells (~1 min each, detached nice 19).
-NE.01 on Kaggle CPU: h1 `jack-cpu-1794720356` = hum34 s0-2 (log /data/tmp/humid_kcpu_h1.log); k3 `…2965` holds the 2nd kcpu session. Then hum34 s3-4 + hum30 s0-4 (3 kernels) as sessions free.
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. f-spread DIRECTOR CALL open (`64d949a`). W.2(a) re-reg sweating CF `bc7b99f`; W.1 wrapper fix `39d8a66`.
+11-15 06:25 `2131a04`: 25 stale W.2 cells re-run, no *_pass flag moved. Humid tally stale [] apparatus ok; W.2 four_checks shipped 0/5, hum30 0/5, hum34 5/5.
+**DRINK race verdict: none ships** (40 cells current): dB loses only NE.01 ok_spread 0/5 vs 5/5 (the f-spread call). Humid verdict waits on NE.01 (0/5 both arms):
+h1 `jack-cpu-1794720356` = hum34 s0-2 (/data/tmp/humid_kcpu_h1.log); h2 = hum34 s3-4 + hum30 s0 (/data/tmp/humid_kcpu_h2.log, 06:17).
+Next: harvest h1/h2 (cells land in /data/jack-logs/humid_race), then dispatch hum30 s1-3 and s4 as sessions free; then `humid_race tally`.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
@@ -277,6 +278,7 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 - 11-14 19:15 JACK: every reattach after ANY push is refused as a code mismatch, because the kernel pins the dispatch HEAD sha (by design) and `_kernel_sha256` hashes that pin. Each refusal also writes an ERROR ledger row (T1.14 att 7). The proof is mechanical: pull the kernel, swap the pin to HEAD, compare sha, and check `git diff pin..HEAD` against IMPL_DEPS. `reattach_code_check` could do this itself and drop the hand-set ACCEPT_MISMATCH.
 
 - 11-15 SYSTEM: `T0.33` FAIL since regate 02:49 (latent since `e90cf86` 11-13): `W1.00` re-registered at 20 seeds x `cpu<2h` = enum 360,000 s > the 57,600 s day. T0.33's no-foreclosure and slack clauses go red, which blocks `T0.34` and keeps `run verify` at exit 2 (S3). Even `cpu<10min` would give 72,000 s. W1.00 actually ran detached (4.5-6.1k CPU-s). Options: route it `kcpu`/detached, or rule the enum x seeds arithmetic for specs that pool their seeds internally. Not changed by SYSTEM.
+- 11-15 JACK (J2): Kaggle now assigns Tesla T4 (all 9 Kaggle units of D1.0 att 9), ~0.47-0.6x the P100 throughput; `gpu.py:186` still says P100 regardless. Any GPU spec with minutes caps frozen from a P100 pilot will VOID on step-match the same way — audit them before their next dispatch.
 
 ## DONE (kept one day)
 
