@@ -470,6 +470,17 @@ class JobResult:
         return self.duration_s if self.billable_s is None else self.billable_s
 
 
+def week_key(t: float | None = None) -> str:
+    """Quota week of epoch `t`. Kaggle resets SATURDAY 00:00 UTC (ruling 9,
+    2026-11-15): shift a day forward and take the Sunday-start %U week in
+    gmtime, so Sun-Fri keep their old labels and only Saturday moves on. The
+    old local-time %U key filed all 15.39 Kaggle-h of Sat 11-14 under W45
+    while Kaggle billed them to W46 (migrated in the same commit). Before
+    that, an ISO %G-W%V key (retired 2026-08-08) shared this namespace."""
+    return time.strftime("%Y-W%U", time.gmtime(
+        (time.time() if t is None else t) + 86400))
+
+
 class Budget:
     """Weekly GPU-hour accounting, so a run cannot quietly exhaust the quota.
 
@@ -493,15 +504,7 @@ class Budget:
 
     @staticmethod
     def _week() -> str:
-        # %U weeks start SUNDAY, matching Kaggle's actual quota reset. The
-        # original %G-W%V (ISO, Monday-start) kept charging Sunday's runs to
-        # the exhausted week, so the tracker refused jobs for the entire first
-        # day of every fresh Kaggle quota. Usage recorded under the old keys
-        # was migrated on 2026-08-08 — migrated, not copied: the two formats
-        # share a namespace ("2026-W32" means Aug 3-9 in ISO but Aug 9-15 in
-        # %U), so a leftover ISO entry silently blocks the %U week it collides
-        # with. Old-format keys must be REMOVED once their hours are re-filed.
-        return time.strftime("%Y-W%U")
+        return week_key()
 
     def productive_hours(self, backend: str) -> float:
         """Hours that bought a result."""

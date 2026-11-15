@@ -512,43 +512,43 @@
       "backend": "kaggle",
       "hours": 1.0203,
       "ok": true,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "jannolouwrens/jack-ladder-1794626525": {
       "backend": "kaggle",
       "hours": 1.5709,
       "ok": true,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "jannolouwrens/jack-ladder-1794632197": {
       "backend": "kaggle",
       "hours": 1.5575,
       "ok": true,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "jannolouwrens/jack-ladder-1794637811": {
       "backend": "kaggle",
       "hours": 2.5561,
       "ok": true,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "jannolouwrens/jack-ladder-1794647021": {
       "backend": "kaggle",
       "hours": 2.5756,
       "ok": true,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "jannolouwrens/jack-ladder-1794658135": {
       "backend": "kaggle",
       "hours": 4.2757,
       "ok": true,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "jannolouwrens/jack-ladder-1794676242": {
       "backend": "kaggle",
       "hours": 1.8347,
       "ok": true,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "jannolouwrens/jack-ladder-1794691758": {
       "backend": "kaggle",
@@ -758,31 +758,31 @@
       "backend": "colab",
       "hours": 1.5166,
       "ok": true,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "ladder-1794626517": {
       "backend": "colab",
       "hours": 0.0021,
       "ok": false,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "ladder-1794632189": {
       "backend": "colab",
       "hours": 0.0022,
       "ok": false,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "ladder-1794673531": {
       "backend": "colab",
       "hours": 0.0021,
       "ok": false,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "ladder-1794682851": {
       "backend": "colab",
       "hours": 0.0018,
       "ok": false,
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     "ladder-1794719801": {
       "backend": "colab",
@@ -890,7 +890,7 @@
       "est_hours": 3.02,
       "job_id": "jannolouwrens/jack-ladder-1794658135",
       "kind": "per_job",
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     {
       "at": "2026-11-14T19:00:51",
@@ -899,7 +899,7 @@
       "est_hours": 0.9,
       "job_id": "jannolouwrens/jack-ladder-1794676242",
       "kind": "per_job",
-      "week": "2026-W45"
+      "week": "2026-W46"
     }
   ],
   "projections": [
@@ -1055,35 +1055,35 @@
       "head": "3f3e121",
       "hours": 1.2,
       "spec": "T1.14",
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     {
       "at": "2026-11-14T01:50:50",
       "head": "0406deb",
       "hours": 25.05,
       "spec": "D1.0",
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     {
       "at": "2026-11-14T12:08:51",
       "head": "f90881f",
       "hours": 13.4,
       "spec": "D1.0",
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     {
       "at": "2026-11-14T17:10:38",
       "head": "ce97e39",
       "hours": 1.2,
       "spec": "T1.14",
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     {
       "at": "2026-11-14T21:29:13",
       "head": "f5b6644",
       "hours": 10.4,
       "spec": "D1.0",
-      "week": "2026-W45"
+      "week": "2026-W46"
     },
     {
       "at": "2026-11-15T06:11:06",
@@ -1150,14 +1150,15 @@
       "kaggle": 1.7768
     },
     "2026-W45": {
-      "colab": 8.6621,
-      "colab_failed": 0.0229,
-      "kaggle": 15.3908,
+      "colab": 7.1455,
+      "colab_failed": 0.0147,
+      "kaggle": 0.0,
       "kaggle_failed": 0.0
     },
     "2026-W46": {
-      "colab": 0.5802,
-      "kaggle": 13.7251
+      "colab": 2.0968,
+      "kaggle": 29.1159,
+      "colab_failed": 0.0082
     }
   }
 }

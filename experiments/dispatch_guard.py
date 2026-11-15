@@ -122,7 +122,7 @@ import sys
 import time
 from pathlib import Path
 
-from experiments.gpu import BUDGET_FILE, KAGGLE_WEEKLY_HOURS, Budget
+from experiments.gpu import BUDGET_FILE, KAGGLE_WEEKLY_HOURS, Budget, week_key
 from experiments.protocol import (Ledger, impl_sha_of, module_path_for,
                                   undeclared_impl_imports)
 
@@ -293,8 +293,8 @@ def projection_vs_estimate(projections: list, attempts: list) -> list[str]:
         if a.get("phase") != "attempt" or a.get("est_hours") is None:
             continue
         try:
-            wk = _dt.datetime.strptime(a.get("iso", ""),
-                                       "%Y-%m-%dT%H:%M:%S").strftime("%Y-W%U")
+            wk = week_key(_dt.datetime.strptime(   # iso is box-local
+                a.get("iso", ""), "%Y-%m-%dT%H:%M:%S").timestamp())
         except ValueError:
             continue
         key = (a.get("spec"), a.get("head"), wk)

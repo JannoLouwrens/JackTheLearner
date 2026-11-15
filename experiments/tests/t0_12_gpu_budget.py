@@ -106,7 +106,7 @@ from pathlib import Path
 from .. import gpu
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
-from ..gpu import Budget, JobResult, KAGGLE_WEEKLY_HOURS
+from ..gpu import Budget, JobResult, KAGGLE_WEEKLY_HOURS, week_key
 
 # Every property here is a property of `experiments/gpu.py`, so a change to that
 # file must retire this certificate. Without this line the meter could be
@@ -117,12 +117,12 @@ from ..gpu import Budget, JobResult, KAGGLE_WEEKLY_HOURS
 # for an iteration that can spend it. Named here so it is not lost.
 IMPL_DEPS = ["experiments/gpu.py"]
 
-LIVE_WEEK_FMT = "%Y-W%U"       # what Budget._week() produces (Sunday-start)
 RETIRED_WEEK_FMT = "%G-W%V"    # the ISO key format retired on 2026-08-08
 
 
-def _foreign_week(days_ago: int, fmt: str) -> str:
-    return time.strftime(fmt, time.localtime(time.time() - days_ago * 86400))
+def _foreign_week(days_ago: int, fmt: str | None = None) -> str:
+    t = time.time() - days_ago * 86400
+    return week_key(t) if fmt is None else time.strftime(fmt, time.localtime(t))
 
 
 def _probe(b: Budget, path: Path) -> dict:
@@ -152,10 +152,17 @@ def _probe(b: Budget, path: Path) -> dict:
     # used the retired ISO format, so it wrote into a key space Budget._week()
     # no longer produces — the assertion could not have touched the mechanism
     # even if it had been discriminating.
-    live_key = _foreign_week(0, LIVE_WEEK_FMT)
+    live_key = _foreign_week(0)
     fmt_matches_live_code = live_key == Budget._week()
+    # Ruling 9, on a fake clock: Kaggle's week turns at Saturday 00:00 UTC.
+    import calendar
+    fri = calendar.timegm((2026, 11, 20, 23, 59, 59))
+    sat = calendar.timegm((2026, 11, 21, 0, 0, 1))
+    saturday_reset_ok = (week_key(fri) != week_key(sat)
+                         and week_key(sat) == week_key(fri + 7 * 86400)
+                         and week_key(fri) == week_key(sat - 7 * 86400 + 2))
 
-    foreign = _foreign_week(14, LIVE_WEEK_FMT)
+    foreign = _foreign_week(14)
     assert foreign != live_key, "foreign week key collided with the live one"
     b.data["weeks"][foreign] = {"kaggle": 29.0}
     weeks_isolated = abs(b.remaining("kaggle") - 28.0) < 1e-6
@@ -190,6 +197,7 @@ def _probe(b: Budget, path: Path) -> dict:
         "stale_format_key_isolated": stale_format_isolated,
         "stale_key_collided_with_live": stale_collides,
         "test_key_format_matches_live_code": fmt_matches_live_code,
+        "saturday_reset_ok": saturday_reset_ok,
     }
 
 
@@ -270,7 +278,7 @@ def _probe_metering(make, td: Path) -> dict:
     # ...and the bucket that moves is the record's OWN week, not the current
     # one — the live instance was a W42 timeout re-proven in W43, after the
     # mislabelled week had already closed.
-    past_wk = _foreign_week(14, LIVE_WEEK_FMT)
+    past_wk = _foreign_week(14)
     cross_path = td / "relabel_cross.json"
     cross_path.write_text(json.dumps({
         "weeks": {past_wk: {"kaggle_failed": 1.0043}},
@@ -995,6 +1003,7 @@ def _check(m: dict, c: dict) -> bool:
         and m["stale_format_key_isolated"]
         and not m["stale_key_collided_with_live"]
         and m["test_key_format_matches_live_code"]
+        and m["saturday_reset_ok"]
     )
     # What the meter charges, to which bucket, how often, and whether crossing
     # the ceiling leaves a mark.
