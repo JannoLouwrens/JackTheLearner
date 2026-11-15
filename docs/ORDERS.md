@@ -65,6 +65,8 @@ a 2-seed smoke of each row runs on the box. Write (f) and its rule first.
 serves: M2 · PLAN stage 1 "a first rung he can live on", "proof the task can be learned" · philosophy 4, 5.
 **done when:** `WORLD_CARD.md` has the seven rows and the three answers.
 state: 11-15 16:45 `jack_env.py` + `test_jack_env.py` done `9ee9965` (obs 74, act 8, check_env PASS, 3 seeds identical to run_survival, control differs); 38.8 dec/s one env on the box.
+state: 11-15 18:05 rule + rows a,b,c,d8,d32,f,g committed in `experiments/world_card.py` (registered seeds 201–220, smoke 153/154 only). Hand forager (f) learns food textures from its own energy jumps; smoke f 9,3 / 23,17 floor meals per life vs control g 6,3 / 3,2. Every death-ended life sums to exactly −1.0 reward (telescoping: answer 2 is arithmetic). Table + tuning history in `WORLD_CARD.md`.
+state: next: (1) row e hook (NE.01 forager) in `world_card.make_policy`; (2) a `kernel` entry copying `forager_race3.kernel` (`gpu.submit(prefer="kaggle-cpu")`, 4 cells/kernel via subprocesses, one row×5 seeds per cell) and launch rows a–g on 201–220; do NOT retune f after launch.
 
 ### J2 — A first rung he can live on: the difficulty dial and the record's setup, as wrapper options
 part: His world, needs and lessons + Learning to eat · stage: 1 · step: 2 (combine) · prior: §3 "Take as-is", "Staging"; §1 table "Ours beside theirs"

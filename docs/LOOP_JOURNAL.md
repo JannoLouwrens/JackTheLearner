@@ -1501,3 +1501,8 @@ Proof `experiments/tests/test_jack_env.py`: check_env PASS; seeds 153–155 × 3
 The first proof run FAILED and found a real bug: run_survival re-applies e0 at each respawn and the wrapper did not. Fixed, not filed. float32 actions (SB3's) round the action: noted, not a world difference.
 Speed: one env, box, 38.8 decisions/s, so 1M ≈ 7.2 h. Still owed: the 4-process vector, the Kaggle figure, and E0. J4/J5 can start.
 Philosophy served: 5 (the standard interface lets published brains touch his world), 4 (an equivalence test with a control that must fail; its first FAIL was fixed).
+2026-11-15 18:05 UTC · JACK · J1 the test card's rule and rulers. `experiments/world_card.py`: rule committed before any registered run (seeds 201–220 × 10 lives, bar for f unmoved from LF_04: ≥5 floor meals/life and > random on ≥18/20; shuffled-rays control g must miss; §8 floor-arm gate). Rows a, b, c (pink, FFT), d8, d32, f, g built; e is next slot.
+The hand forager reads only the 74-float observation and finds out which textures are food by touching things and watching its energy jump. Two flaws found on smoke seeds and fixed (wall-corner blobs chased forever; meals bumped en route credited to the wrong texture).
+Smoke (2 lives × seeds 153/154): f 9,3 / 23,17 floor meals per life (best life 1,673 s, 2.8× the statue); g 6,3 / 3,2. Straight-line wandering alone out-eats random ~10×.
+Found: the default reward telescopes — every death-ended life sums to exactly −1.000 whatever its length or meals. Undiscounted, eating is worth nothing; J2(3) must break it.
+Philosophy served: 4 (a ruler with a control that must fail, rule fixed before the registered seeds), 5 (his world measured before any brain is judged in it).
