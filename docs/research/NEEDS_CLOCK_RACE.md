@@ -343,3 +343,17 @@ If it cannot, the arm breaks the one life that MUST live, and it is reported as 
 - What `f` is: FATIGUE (needs.py:9), not food. Its dynamics (needs.py:549, TAU_F 60 s) carry no need clock, so the k72/drink clocks do not slow it directly.
   Hypothesis (UNTESTED): f's within-life p90-p10 comes from the power swing that `gear_scale` = (1-f)*min(e,i) drives as e falls. On shipped, e moves .33 in ~500 dec. On dB a thirst-limited life moves e only .12-.22, so f sits near its steady state (spread ~.09).
   Test before any new arm: log e, f and gear_scale along one dB random life (s0, life 0) and see whether f's spread tracks e's.
+
+### J6(d) step 2f — fatigue's spread is a start-up transient; the gate-1 f clause cannot pass in any world gate 2 now asks for (2026-11-15 04:30 UTC, no ledger)
+- Probe `experiments/fatigue_spread_probe.py` (one NE.01 random life + the drop probe, logging e/f/T/gear/P per decision; arm map = `drink_race_kcpu._apply`). Box, nice 19, ~6 CPU-min.
+- **Step 2e's hypothesis is REFUTED.** shipped s0 l0: 536 dec, hyperthermia, f p10/p50/p90 .167/.443/.522, spread .355. dB s0 l0: 9038 dec, dehydration, f .529/.551/.572, spread .043; e moves .12 and corr(f, e) = -.15.
+  f starts at 0 and relaxes to its steady state P/p_max (~.52-.55 under random flailing) with TAU_F 60 s = 300 dec (needs.py:549). A 536-dec life spends ~half its samples on that rise, so its p10 sits on the rise.
+  A 9038-dec life spends ~97% at steady state, so p90-p10 is just the flailing noise. corr(f, e) of -.94 on shipped is two monotone trends in a short life, not a mechanism.
+- Drop probe (74 random / 200 rest cycles, the same in every arm): spread_f .095 (shipped) / .108 (dB). Neither arm's f range comes from it, and no NE.01 probe drives fatigue to its edge.
+- **Across all 45 NE.01 cells on disk** (`/data/jack-logs/{needs,heat,water,drink}_race`), spread_f falls monotonically with the earliest random death. Deaths at 445-486 dec give .37-.40, sweat_paid at ~1440 gives .22-.24, sweat at ~2370 gives .14-.25, and swp_k72/dB (long lives) give .09-.12.
+  Every clock arm raced since 11-12 that slowed random deaths lost `ok_spread` on fatigue for that reason alone.
+- **Contradiction:** NE.01 as re-registered (ruling 4) puts gate 2's death window at >= 1958 dec on the k72 clock, but the f clause clears 0.30 only on random lives short enough to be dominated by f's 300-dec rise (empirically < ~1000 dec).
+  On this apparatus, no world with in-window k72 deaths can pass both gate 1 and gate 2. It is the integrity probe's disease (ruling 4, option A): the spread reads the probe's schedule, not the world's range.
+- Caveat: my dB drop probe (ARM box) ran 2204 dec, while the Kaggle cell (x86) recorded 1929 and a max spread_f of .091. The flailing is chaotic across CPUs, so the probe is diagnostic, not byte-same to the cells. The mechanism does not depend on that.
+- Proposed fix (NOT applied, Director call; it changes a gate apparatus mid-race): a fatigue edge probe in the shape of option A. Sustained max-|ctrl| effort until f plateaus, then rest until f < .05, repeated 3x. Planted control: the same schedule at CTRL_SCALE/10 must NOT clear 0.30.
+  Bar 0.30 unmoved. Then re-tally the drink race with the probe on all three arms. Clause (2) (dB 10/10 dehydration, so share 1.0, not strictly below shipped's 1.0) would still fail dB as things stand.
