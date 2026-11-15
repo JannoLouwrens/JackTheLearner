@@ -65,8 +65,8 @@ different orders. An arm clears → write it here; the Director orders
 serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 **done when:** the loss seat is ruled by tally and step 2's table (and 3's
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
-state: 11-15 08:30 (1) rule `fdb3318` + LF.03 ruling-9 re-reg `ad6a644` landed; NO cell yet. At 08:10 all 5 Kaggle CPU sessions RUNNING (humid h1-h4, w104 s0) and the detached cap 2/2 (humid pollers h1/h2).
-(2) forager race rule COMMITTED before any cell `e9b14f3` (`experiments/forager_race.py`): 7 LC.09 arms (guard on, reported, not gated) + random floor x s153-154 x 15 lives, LIFE_CAP 12000 censor-fill; clear = late-third floor>=5 OR apple>=1, AND late_nu > floor's, on both seeds. cores.py is stamped, so its cells wait for step 1's seat. Selftest 11/11; smoke wm-dyn 3000 dec = 129 s on the box, 1 life 400.8 s, 0 meals, guard reads.
+state: 11-15 08:24 (1) FIRST CELL IN FLIGHT: s150 kernel `jannolouwrens/jack-cpu-1794730958` pushed 08:22 (poller pid 4079623, log /data/tmp/plr_s150.log, lands itself). s151/s152 NOT pushed: kcpu 5/5 RUNNING at 08:25 (h2 …3424, h3 …3809, h4 …4063, w104 s0 …4769, plr s150) and detached cap 2/2 (h2 poller + plr s150). h1 …0356 COMPLETE, written.
+(2) forager race rule COMMITTED before any cell `e9b14f3`; its cells wait for step 1's seat (cores.py stamped).
 Next: as kcpu slots free: `launch_detached.sh /data/tmp/plr_s<S>.log $PY -m experiments.policy_loss_race kernel <S>` S=150,151,152 -> `policy_loss_race tally` -> seat + re-buy LC.02/LC.08/LF.03 -> `launch_detached.sh /data/tmp/forager_k<K>.log $PY -m experiments.forager_race kernel <K>` K=0..3 -> `forager_race tally`.
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
