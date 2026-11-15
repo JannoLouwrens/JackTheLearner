@@ -1159,7 +1159,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **CR.01** The curriculum cook-off: does staging his world teach him more than no staging?
+- [!] **CR.01** The curriculum cook-off: does staging his world teach him more than no staging?  — exam_lives_frontier=47.0; exam_lives_frontier_std=0.0
       - _asserts:_ The seated learning core (wm-latent) lives TRAIN = 40,000 training decisions in lethal W0 under one of the curriculum arms below (each stages ONLY where a new body is born, never his actions, weights or rewards), then an identical, unstaged EXAM of uniform-birth W0 lives, still learning. Scored on the exam only, by FED-LIFE FRACTION (exam lives with >= 1 meal / N_EXAM = 47 exam lives). At least one curriculum arm X in {staged, lp, frontier} WINS: on EVERY claim seed (130, 131, 132), fed(X) - fed(null) >= MARGIN = 0.20 AND fed(X) - fed(matched) >= 0.20; for X = staged also fed(staged) - fed(shuffled) >= 0.20; and, pooled over the 3 seeds, X's median exam span (sim-s) >= null's. Among winners, the seat goes to the highest pooled fed fraction.
       - _dies if:_ No curriculum arm satisfies every clause (the seat is then held by null BY VERDICT: no staging beats no staging). VOID, not FAIL, if any arm-seed ends fewer than N_EXAM exam lives inside EXAM_CAP = 200,000 exam decisions, or if null's exam fed fraction is 0/47 or 47/47 on any seed (no room to move in either direction).
       - _then delete:_ 'Staging his world helps him learn' as a fact about W0 and the seated core; the Curriculum seat then stays with null BY VERDICT until a challenger (the teacher arm, a density axis in W1) re-opens it.
