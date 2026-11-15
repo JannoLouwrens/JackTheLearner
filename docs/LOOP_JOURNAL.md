@@ -1443,3 +1443,8 @@ Philosophy served: 3 (the learner's loss seat was won in a race, not argued) and
 J7(1b): measured, nothing edited. W1.02's committed row: G mean 5.38 s, sd 1.60, t_inj 15.9 for the +5.0 injection, which confirms ruling 9 (+5.0 is 0.93x the mean, so it cannot miss). The 3-sigma detection floor at 48/arm is 0.98 s of G.
 The size candidates are DP.05's 13.3 s and W1.01's 10.2 s span gaps, but they are in lifespan seconds, not satisfied-seconds. Converting them is the next step, before any edit to w1_02.
 Philosophy served: 4 (a known-answer test whose injection cannot miss is priced against what the instrument can actually resolve).
+
+2026-11-15 11:40 UTC · LAB · Run-and-tumble (`run_tumble.py`, declared 11-14, never run) raced on this box, each rule committed before its seeds.
+told (keep a push iff smell rose) DEAD 8/40 vs babble 6, yoked 5, but toward +.44/+.20. steer (tumble on a fall, steer among rising pushes) ALIVE with the want given: fed 14/40 vs babble 3/40, coin-yoked 2/40 (s142/143).
+steerwant (same rule on a want learned from his meals) DEAD 7/40 vs babble 5, shuffled 7 (s144/145): the want does not find smell from 14 meals.
+The gap moved from direction to the want. Philosophy 3, 4 (first arm of nine to beat babble on the fed-births ruler; its learned form killed by its own control).

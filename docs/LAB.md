@@ -77,42 +77,37 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   decisions): a lean, not approach from afar. Claim gate in the module
   docstring (s94–98, 13k, born ≥ 0.7 m clause). END-FIT 4, 2. Philosophy 3, 4.
 
-- 11-13 · **Sense lookahead** (Deliberation, VACANT; `sense_lookahead.py`, rule
-  first `29424ef`) · **DEAD.** No actor: an MLP forward model of all senses +
-  a linear want learned from meals; imagines 32 pushes every 5 decisions. Fed
-  births s90+s94 (Kaggle CPU): babble **5/40**, want 4, told 6, shuffled
-  control 7; `toward` ≈ 0 even with the want given — f learned no push → smell
-  link. Re-opened 11-14 by the gain-field entry below. Philosophy 1, 3, 4.
+- 11-13/14 · **Predict-then-push, three arms** (Deliberation, VACANT; long form
+  at `1a18168`), all DEAD on the fed-births ruler (babble 5/40):
+  *sense lookahead* (`sense_lookahead.py`, MLP forward model + linear want)
+  told 6/40, want 4, shuffled 7; *drive in his own frame* (`ego_drive.py`)
+  push's share of held-out smell prediction ego .017/.000 vs world .086/.044
+  (bar .10); *gain-field model* (`gain_field.py`, bilinear ridge) stage 1
+  PASSED (.291/.235 vs MLP .207/.044) but fed told 4/40, want 9/40, shuffled
+  5/40. Held-out r² < 0 throughout: he cannot yet predict what a push does to
+  his nose. A want cannot start without a meal (s94 had none). Philosophy 3, 4.
 
-- 11-14 · **The drive in his own frame** (World seat; `ego_drive.py`, rule first
-  `d265f78`) · **DEAD at stage 1.** Bet: push = (forward, left) in his body's
-  heading, because his nose is body-frame, his push world-frame, he senses no
-  heading (toppled 97.6 % of bouts, heading uniform, turns .29 rad/s; smell
-  change corr .50 with L−R × own-lateral push vs .18/.03 on world x/y).
-  **Number** (push's share of the MLP forward model's held-out smell
-  prediction, s90/s94, bar .10): ego **.017/.000**, world .086/.044, compass
-  .105/−.048, scram −.001/.036. The frame was not what broke f. Post hoc on
-  s90: the hand feature holds at corr .49 held-out, the MLP does not find it;
-  a bilinear map reads the push at .32 in the WORLD frame (he can place
-  himself from all senses; a world push makes a map usable) and .005 in ego.
-  Philosophy 3, 4.
-
-- 11-14 · **Gain-field forward model** (Deliberation, VACANT; `gain_field.py`,
-  rule first `25e10c0`) · **DEAD at stage 2.** Bet: f becomes a bilinear map —
-  every sense × every push, ridge (batch RLS), refitted every birth — because
-  what a push does to smell is a product of state and action and the MLP
-  does not find a product in 4k rows. Killed by sense_lookahead's own rule
-  plus +8/40 over the MLP arm.
-  **Stage 1 PASSED** (fresh s91/s94, push's share of held-out smell
-  prediction): gain **.291/.235**, MLP .207/.044, shuffled twin −.007/−.060
-  (failed, as it must). Held-out r² is still negative for both: more of the
-  prediction rides on the push, the prediction is not yet good.
-  **Stage 2 DEAD** (fed births s90/s94 of 20): told 2/2 = **4/40**, want 9/0 =
-  9/40, shuffled 3/2 = 5/40, babble 5/40; `toward` told +.17/−.02. With the
-  want GIVEN he still does not climb: a share of .25 is not a compass.
-  Post hoc, one seed, not a claim: `want` s90 fed 8 of its 18 births after
-  its first meal (babble rate 2/20); s94 never had a first meal in 5k babble
-  + 20 births, so its want stayed zero and it sat still. A re-entry must
-  name that: a want cannot start without a meal — give first meals by
-  nursing (weaning's arm) on FRESH seeds, and read fed-after-first-meal
-  against a want-shuffled control. Philosophy 3, 4.
+- 11-14/15 · **Run and tumble — climb without predicting** (Deliberation,
+  VACANT; `run_tumble.py`, each rule committed before its seeds: `c0db7e6`,
+  `f61386f`, `1a18168`). Bet: keep a push while what he wants rises, redraw
+  when it falls — one measured bit, no model. Killed by: no lead of +8/40
+  over babble AND over a coin-yoked twin on both fresh seeds.
+  - *told* (keep iff smell rose; s140/141) **DEAD: 8/40** vs babble 6, yoked 5
+    — but `toward` +.44/+.20 vs +.02/+.03: first arm to point him at food.
+    Any bearing within 90° raises smell, so he climbs slowly (4.2 → 2.9 m).
+  - *steer* (tumble on a fall; while rising, best push + small perturbation,
+    accepted only if its rise on log smell beat the best's; s142/143)
+    **ALIVE with the want GIVEN: fed 8/6 = 14/40 vs babble 3/40, coin-yoked
+    2/40** (failed, as it must). First arm of nine to beat babble on this ruler
+    (oracle 38/40).
+  - *steerwant* (same rule on a want LEARNED from his meals: logistic over
+    all senses, nursery of ~31 births / 14 fed; s144/145) **DEAD: 7/40** vs
+    babble 5, label-shuffled 7. The want puts .08–.11 of its weight on smell,
+    the shuffled twin .10–.14: 14 meals do not teach a 1-of-all-senses cue.
+  **Where the gap is now:** not direction (a measured bit steers him) but the
+  WANT — what to climb. Next bets, unrun: a want learned from the CHANGE in
+  each sense over the bout before a meal (smell rises before every meal;
+  levels do not separate); the critic's value as the want; `steer` as the
+  exploration inside the seated learner (J1). Not entered: only the given-want
+  arm lives, and a given want is advice, not his. END-FIT 1, 3, 4.
+  Philosophy 1, 3, 4.
