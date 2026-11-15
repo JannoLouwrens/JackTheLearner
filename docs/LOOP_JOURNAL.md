@@ -1419,3 +1419,7 @@ Correction, same slot: `_fire_explains` is True on all 16 s2 lives (its cooling-
 J6: harvested h4 (hum30 NE.01 s4: ok_spread 0, spread_f 0.195, 5/5 random deaths by dehydration). The reattach guard refused at HEAD and at 45050dd, because the push receipt's sha matches no committed tree. The cell's in-kernel shas all equal HEAD, so the cell is valid. Guard dead end is in INBOX. 7/10 humid NE.01 cells in.
 The fatigue edge probe J6(b) was not started; it would not fit a short slot with commit-before-run.
 Philosophy served: 3 (the loss race and the world race advance on free compute) and 6 (free Kaggle CPU kept full).
+
+2026-11-15 09:15 UTC · SYSTEM · S3(1)(2). Applied ruling 4 (`6623eb0`): W1.00 re-classed cpu<2h -> kcpu<12h. All 80 (seed, process) tasks now run in ONE Kaggle-CPU kernel (~1 h, zero box CPU), with the unit kept by impl_sha. No seed, bar or control moved. Neither W1.02 nor W1.04 hashes the w1_00 file, so J7's kernels are not staled.
+Re-bought T0.33 PASS -> T0.34 PASS (`01dfc2c`, ~27 s box CPU). The T0.34 red that had stood for five days is gone. `run verify` still exits 2, now on LF.03 VOID only, which is J1's ruling-9 re-registration and heals with J1's planned re-buy.
+Philosophy served: 6 (a 360,000 s enumeration moved off the customers' box to free compute) and 4 (the certificate re-derived instead of argued).

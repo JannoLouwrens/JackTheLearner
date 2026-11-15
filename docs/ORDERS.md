@@ -191,14 +191,10 @@ Fri 23:59:59 and Sat 00:00:01 land in different weeks; re-buy `T0.12`, `T0.24`.
 serves: philosophy 4, 5, 6.
 **done when:** `run verify` exits 0 on a clean tree and still exits non-zero
 on a planted PASS-on-FAIL-dependency; one day ends with `detached:*` ≤ 34,560 s.
-state: 11-14 09:10 (1) code DONE `abb707f`: W0.PL/BD.01 write per-seed min/sums on the row, `_check` reads args only (0/8000 old≠new); verify probe D counts gates reading mutated module state (live hits 0, planted fixture).
-(3) DONE `133c2ac`: END-FIT table skipped, 35 seats identical, fixture plants foreign table + narrow row. (2) DONE `8fadd25`: 4 GOAL ends in COMMITMENTS.
-11-15 03:30 W0.PL re-run DONE by regate 02:49 (PASS a4); verify no longer flags it. verify's last red is now T0.34(KeyError: `cap_refused`): T0.34 is blocked by
-T0.33, which regate re-bought FAIL at 02:49 because W1.00's 11-13 re-registration (20 seeds x cpu<2h, enum 360,000 s) is foreclosed by the 57,600 s ceiling (INBOX: Director call).
-state: (from S2, now folded in) 11-14 21:40 (1)(2)(3) BUILT `d95d569`; `d5a5ab6`: a wrapped job whose session uses < 0.10 cores over a heartbeat bills its CPU,
-not wall (pollers were ~30k of 11-14's 65k s; 2 s sleep now bills 0.08 s, T0.34 clause 9, fails on old code). `f662f48`: admission estimate reads the wall last BILLED (W1.02 0.22 s recorded vs 762 s billed), T0.33 clause 17. All-kcpu specs take
-`/tmp/jack-ladder-kcpu.lock` + count remote. Open: a day ending ≤ 34,560 s (first chance 11-15); idle pollers still count toward
-DETACHED_MAX_ALIVE; cpu_budget/run/protocol edits stale T0 certs → regate after midnight (day budget 0 now).
+state: 11-15 09:15 (1) DONE `6623eb0`: W1.00 kcpu<12h, all 80 tasks = ONE Kaggle-CPU kernel (~1 h, 0 box CPU; `... w1_00_null_is_strongest_nonlearner kernel` buys it ahead). cpu_foreclosed [W1.00] -> [].
+(2) T0.33 PASS -> T0.34 PASS `01dfc2c`. `run verify` still exits 2 on ONE red: LF.03 STATUS:VOID (J1's ruling-9 re-registration `ad6a644`; heals with J1's LF.03 re-buy, not ours).
+BD.01 still has no row: budget CPU_DAYS (3 seeds), no kcpu path; needs a re-class like W1.00 before it can run (Director: say if ruling 4 covers it).
+Earlier: (3)-pollers built `d95d569`/`d5a5ab6`/`f662f48`; W0.PL PASS a4. Open: (3) idle pollers still count toward DETACHED_MAX_ALIVE (ruling 5 code), (4) day-end detached total 11-15, (5) GPU week key + T0.12 probe.
 
 ### S6 — A video the owner can watch (owner request 11-12) — START TODAY
 **Why.** Owner: "a video he can watch". Card line 1: he can be known.
