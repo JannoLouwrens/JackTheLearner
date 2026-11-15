@@ -1491,3 +1491,8 @@ Launched the random control (`jack-cpu-1794756367`, both seeds; the race is VOID
 I did not commit their work. I launched from a clean worktree `/data/tmp/wt_forager3` @23fe24e instead, with receipts symlinked to main's log (`offending_dirt` = []). Keep it until harvest.
 Labelled step 3 a pilot per PUBLISHED_PRIORS §1: 60 lives is about 160k decisions, against a published need of 10^5–10^6. 6 of 10 cells are still unlaunched. INBOX: launch_detached hard-codes REPO.
 Philosophy served: 1 (does he learn to eat by living, slowly or not at all), 4 (the control that must fail is now running), 6 (free Kaggle CPU used, box idle).
+
+## 2026-11-15 15:40 · JACK · J1(3)
+- Harvested ppo-lp s153/s154 (60 lives each): floor meals 13/17, apples 0; meal-rate trend rho -.006 p=.52 (s153 flat) vs rho .25 p=.025 (s154 rising). Fails the both-seeds LEARNING rule on its own; tally pending.
+- Refilled the 2 freed Kaggle CPU slots: ppo-needs s154 + dreamer-xs s153 (4/4 running). 4 cells remain (dreamer-xs 154, wm-latent+ring 153/154 — the 14:17 ring launches died pre-push).
+- Serves philosophy 1 (he learns by living — is meal-finding rising across lives?) and 4 (control arm, two seeds, rule fixed before cells).
