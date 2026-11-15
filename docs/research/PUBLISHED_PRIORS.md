@@ -471,3 +471,48 @@ Long form: `/data/jack-research/reports/Mac mini M6 speed for Jack.md`. No MuJoC
 **The last 10%** (first anywhere; publish the logs): MuJoCo per-core speed on an M4-or-later core and on the M6's performance and efficiency tiers; SAC and Dreamer timings on any Apple chip; MPS against processor against MLX on a recurrent world model; Apple against T4 on the same Dreamer script; offscreen render fps on macOS; whether MPS runs in a no-login LaunchDaemon; whether two Dreamer learners (one on MPS, one on the processor) beat one; a multi-day training soak on a Mac mini.
 
 **Not verified:** prices ($1,499 for 32/512 from Abt and AppleInsider listings; $1,299 for 32/256 from one blog; not read on Apple's store); the M6 GPU's 4.9 TFLOPS (an estimate); T4 datasheet figures (not re-read); the clock and per-clock speed of the performance cores; MLX's 1.3–2.5× gain over MPS (one M5 repository); launchd key names; multi-day thermals.
+
+## 11. Porting Dreamer to MLX, and renting a GPU for the large runs (2026-11-15; serves order J5, the decisive test in PLAN, and the move to the Mac)
+
+Long form: `/data/jack-research/reports/Porting Dreamer to Apple MLX.md` (62-item contract with line links: `research_notes/Porting Dreamer to Apple MLX/dreamer_port_spec.md` §2).
+
+**Already known**
+- **Reference:** `danijar/dreamerv3` at `e01491f`; agent unchanged since Dec 2024; about 1,130 of 10,360 lines are the algorithm. Port for 74 inputs and 8 continuous actions: about 1,170 lines translated, 430 fresh plumbing lines, 700 test lines (about 2,300). Faithful PyTorch ports: 2,300–2,800 lines plus tests.
+- **Sizes for Jack:** `size1m` 647,705 trainable parameters, `size12m` 9,765,209 (slow critic 66,111 / 853,503). Rule matches r2dreamer's and TorchRL's counts exactly.
+- **Corrections:** latents are 32 variables × **4 classes (1M) / 16 (12M)**, not 32 × 32. The 12M recurrent width is 2,048, not 1,024. The optimiser constant is 0.999 (paper 0.99). There is a 1,000-update warm-up, and the first update uses learning rate 0. Two-hot is computed in raw space on exponential bins (the paper says otherwise). Actor samples are not squashed. The return scale is not debiased.
+- **MLX 0.32.4** (14 Oct 2026): has grad, compile, stop_gradient, JAX-style keys, sort, gather/scatter. **Lacks** scan, percentile and LaProp. Its GRU is the PyTorch cell; its norm eps default is 1e-5 (Dreamer 1e-4). Compile freezes any state not passed in. Gradient fixes landed in 0.32.0–0.32.1. No MLX Dreamer or RL agent exists.
+- **Where it runs:** Linux wheels need glibc ≥ 2.35. On our server it runs only in a Debian 12 container (checked). CUDA needs SM ≥ 7.5, so the T4 is at the floor.
+- **Earlier ports:** about 20 bookkeeping bugs against about 18 maths bugs; bookkeeping bugs lived longest (about 8 months). Fidelity came only from same-weights, same-batch loss and gradient comparison (sheeprl PR #377).
+- **Rent, $/h (RunPod / Vast median, 11-12 / 11-15):** 3090 0.22–0.50 / 0.26; A5000 0.16–0.27 / 0.23; 4090 0.34–0.89 / 0.54; 5090 0.69–1.39 / 0.87; A100 1.39–2.19 / 0.80. Per-second, prepaid. **(inf)** job costs: Job 1, reproduction at 9.7M, $5–18; Job 2, decisive test, $4–34 at 0.64M and $72–409 at 9.7M; Job 3, a month-long lifetime, $115–266 (3090) to $338–511 (4090).
+
+**Take as-is**
+- Reference commit `e01491f`. Pin `mlx==0.32.4` and re-run rungs 1–11 on any upgrade. Port the config values, never class defaults. Import official weights by name (MLX kernels are transposed; the decoder input is [stoch, deter]); never re-seed.
+- **Build order** (each step 1–2 slots; no step before the rung below it passes): stage 0 spike (container; Kaggle install; compile time and memory at both sizes; golden v0 reproducible) → config → maths → returns/normaliser → optimiser → layers → names → golden v1 → RSSM step → 64-step pass → heads and world-model loss → imagination and actor-critic → gradients → train step → acting step → compiled re-run → replay → driver → ratio loop → checkpoint → smoke. About 60–110 slots **(inf)**. Policy-only slice for owners' devices: about 15–25 slots.
+- **Minimal plumbing:** in-memory replay of 65-step samples with stored latents, write-back and online queue; one-world driver; Ratio loop starting at 1,024 items; full-state checkpoint. Leave out images, discrete actions, multi-device, the logger and prioritised replay.
+- **Staging:** official JAX only on paid cards; the port never sits on the paid path. Order: free proving → 1–2 h test on a 4090 with ≥ 24 cores (about $1–2) → Job 1 → Job 2 (only after reproduction, resume on a rented host, watchdog fired once, run sheet frozen) → Job 3. Self-destruct on exit or after 20–30 minutes stalled; small prepaid balance; delete, never stop. No spend authorised yet.
+
+**Reproduce first** (G = golden file from the official code, made once on Kaggle CPU in float32 with the compiler off and noise from file)
+0. Names, shapes, counts: exact (G).
+1. Maths (symlog, bins, two-hot, unimix, KL with free bits, straight-through, Normal, Bernoulli): 1e-6; uniform and mirrored decode exactly 0, also under `mx.compile` (NumPy reference).
+2. λ-returns and percentile normaliser: relative 1e-6 (NumPy).
+3. Optimiser over 5 steps: relative 1e-6; warm-up schedule exact (G).
+4. Initialiser statistics within 2%; zero heads exact.
+5. Layers: 1e-5 (G).
+6. One RSSM step: 1e-5 (G).
+7. 64-step pass, golden samples forced on near-ties: 1e-4, no flips (G).
+8. World-model losses: relative 1e-5 (G).
+9. Imagination and actor-critic losses: relative 1e-4 (G).
+10. Gradients: relative norm 1e-4 (1e-3 for RSSM leaves), cosine ≥ 0.9999 (G).
+11. Five optimiser steps, step 1 changes nothing: 1e-3 on masked updates, 1e-6 on weights (G).
+12. Bookkeeping (action alignment, reset flags, queue, write-back, death vs time-out, ratio count, bit-identical resume): exact.
+13. Step-0 answers: ln 255 = 5.541263, std 0.8927, scale 1.
+14. Curves: ≥ 5 seeds × 2–3 tasks, port against official; confidence intervals overlap. Official runs are shared with §2's `size1m` test.
+
+**The last 10%** (first anywhere)
+- MLX trace and compile time and peak memory for the full unrolled step (64-step pass + 15-step imagination from 1,024 starts, with gradients) at both sizes. This is gate G0: proceed if `size12m` compiles in under 10 min and peaks under 8 GB **(threshold is ours)**.
+- MLX speed on CUDA (T4, rented cards) and on the M6. Projected 6–25 / 1.5–5 steps/s on the Mac **(inf)**.
+- Agreement between chip types (CPU, Metal, CUDA) over a 64-step unroll.
+- Dreamer of any kind on Apple silicon.
+- Real T4 and 4090 Dreamer steps/s, and the gain from packing several runs on one card.
+
+**Not verified:** Kaggle's glibc and driver for MLX; the optax first-step-LR semantics (rung 3 settles it); the dependency versions of the published runs (unrecorded); rental speeds (scaled from one 3080 Ti figure); the 1e-4 unroll tolerance; whether owners' devices other than Macs can use MLX.
