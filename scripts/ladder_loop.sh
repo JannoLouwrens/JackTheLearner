@@ -51,10 +51,11 @@ PAUSE="$REPO/.loop-paused"
 # October 2026 measured 5% of commits landing a result and ~78% tending the
 # machinery, with nobody having decided that. First arg, or JACK_LANE, or jack.
 LANE="${1:-${JACK_LANE:-jack}}"
-case "$LANE" in jack|system|lab) ;; *) LANE=jack;; esac
+case "$LANE" in jack|system|lab|outsider) ;; *) LANE=jack;; esac
 case "$LANE" in
   system) PROMPT_FILE="$REPO/scripts/system_prompt.md";;
   lab)    PROMPT_FILE="$REPO/scripts/lab_prompt.md";;
+  outsider) PROMPT_FILE="$REPO/scripts/outsider_prompt.md";;
   *)      PROMPT_FILE="$REPO/scripts/ladder_prompt.md";;
 esac
 # LANE `lab` — the INVENTOR (owner, 2026-11-11: "make an agent try new things ...
@@ -63,7 +64,12 @@ esac
 # seated design is the hardest thinking in the building, and it gets 2 slots a
 # day. Everything it makes enters a cook-off like any other arm; nothing it
 # makes is adopted because it is new.
-if [ "$LANE" = "lab" ]; then
+# LANE `outsider` (owner, 2026-11-15: "we need smart minds on this system I'm
+# serious") — a manager-model reader who sees the goal and the results but NOT
+# the project's own lessons and plans, and says what it is getting wrong.
+if [ "$LANE" = "outsider" ]; then
+  LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=outsider
+elif [ "$LANE" = "lab" ]; then
   LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=lab
 else
   LANE_MODEL="$WORKER_MODEL";  LANE_FALLBACK="$WORKER_FALLBACK";  LEDGER_ORGAN=builder

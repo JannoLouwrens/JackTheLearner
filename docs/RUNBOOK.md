@@ -1773,3 +1773,13 @@ the lock it launches one extra **jack-lane** worker with a short slot
 of any lane is never blocked. A worker still running means the fill does
 nothing. Pause file, 95% usage stop, load and disk guards all apply as usual.
 To switch it off: remove the `gap_fill.sh` line from the crontab.
+
+## Outsider and strong-worker slots (2026-11-15)
+
+- `ladder_loop.sh outsider` — cron `5 13 * * 0,3`. A manager-model reader that
+  may not read the team's lessons, orders or decisions; writes `docs/OUTSIDER.md`.
+  It takes the worker lock, so the 13:07 jack slot skips on those two days.
+- Jack-lane slots at 07:07 and 19:07 run with `JACK_LOOP_MODEL=fable
+  JACK_LOOP_FALLBACK=opus`. To undo: put hours 7 and 19 back on the plain jack
+  line and delete the fable line.
+
