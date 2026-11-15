@@ -2574,3 +2574,28 @@ DECIDE: D56
              Silence adopts this; the cost is that `D1.0` may again lose a
              week whenever the other project runs first.
   decide_by: 2026-11-21
+
+---
+
+## D57 — Recordings of how people move: a judge outside him, or a part inside him? (Director, 2026-11-15)
+
+Research review 2 (`docs/research/PUBLISHED_PRIORS.md` §4) found that
+motion capture — recordings of real people moving — "buys style and
+exploration, not return", and that it can be used two ways: standing outside
+him as a judge that scores how human his movement looks, or distilled into a
+movement module that is then a part of him. The review says plainly that
+which is allowed is the owner's rule, not the record's. No measurement can
+settle it: it is a question of what Jack is. Nothing is blocked today — the
+human-like body is stage 3 of `docs/PLAN.md`.
+
+DECIDE: D57
+  class:     goal
+  blocks:    nothing today (stage 3, the human-like body)
+  default:   OUTSIDE ONLY. Under philosophy line 2 ("inside him, nothing
+             frozen or borrowed; around him, everything") recordings of
+             people may judge or reward how he moves, as an adult of his
+             world would; no module trained on them is ever put inside him.
+             Silence adopts this; the cost is that he may walk less
+             human-like, or learn to walk more slowly, than a creature
+             given a borrowed movement module.
+  decide_by: 2026-11-29

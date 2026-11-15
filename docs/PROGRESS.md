@@ -1,141 +1,139 @@
 # PROGRESS — for the owner, on a phone
 
-Written 2026-11-15 (Sunday) 16:00 UTC by the Director — the second sitting
-today, the one you asked for after writing the plan. Rewritten every day; git
-keeps the old ones.
+Written 2026-11-15 (Sunday) 17:00 UTC by the Director — the third sitting
+today, called when your session filed research review 2. Rewritten every
+day; git keeps the old ones.
 
 ## The short version
 
-**Your plan is now what the workers do.** Until this afternoon they raced
-brains we wrote ourselves. All seven failed to learn to eat — and the
-published record had predicted that: we gave each about 40,000 decisions
-where published agents need 100,000 to millions, and our "brains" were not
-what their names said. So the racing has stopped. The work order now is your
-five steps: research → combine → reproduce → test the last 10% → put it in him.
+**Review 2 changed what comes first: his world, then the measuring tools,
+then any brain.** The published record says two cheap faults would have
+spoiled even a perfect brain contest:
 
-We are in **stage 1, "the instrument"**: make the thing that judges brains
-right before judging any brain. Nothing is built yet — the orders were
-written an hour ago. This page says honestly where each part stands.
+- **His world starves him by design.** One floor meal refills 8% of his
+  energy bar. In every published world that taught an agent to survive, a
+  first meal refills 44–100%. On our own numbers the easy food only delays
+  death; to live he must first master the hardest skill (the ladder apple).
+- **Our statistics were never tested on themselves.** A well-known package
+  for comparing learners gave twice its stated false-alarm rate when your
+  session checked it.
+
+So the orders were re-ranked an hour after they were written. Nothing was
+thrown away; the brain work that needs no world runs beside.
 
 ## What Jack can do today
 
 He lives whole lives in his first world: hunger, thirst, heat and cold, his
 senses, a diary that survives death, death and retry (milestone 1; its test
 passes). He does **not** get better by living: 120 lives, 120 deaths of
-hunger. A scripted forager eats 24–27 meals in the same world, so the food
-is there. The test ladder reads **111 of 270**. Of 22 passing "he can…"
-tests, only 1 runs inside the living Jack; the rest were earned on a bench
-and must be earned again inside the brain we choose.
+hunger. The test ladder reads **111 of 270**. Of 22 passing "he can…" tests,
+1 runs inside the living Jack; the rest were earned on a bench and must be
+earned again inside the brain we choose.
 
 ## Each part of the plan: the step it is on (0–5)
 
-- **His brain — step 1 (research), step 2 ordered.** Review 1 done; review 2
-  running. Ordered today: brain B (a simple replay learner) taken from a
-  published library, not written by us, and made to reproduce published
-  scores on small standard tasks; brain A (the Dreamer world model) from its
-  authors' code, run unmodified, its speed measured on free hardware.
-- **Learning to eat — step 2 (combine), ordered, not built.** His world put
-  behind the standard interface every published learner plugs into; a probe
-  of which kind of random movement finds food at all; the published setup
-  (pay him when he eats, hunger varied at birth, food near first) as switches.
-- **Can the task be learned with his senses? — step 4, ordered.** A
-  hand-written forager that may use only what he senses. If it cannot eat,
-  the fault is his senses, not any brain. Nobody has published this answer.
-- **His world, needs and lessons — step 1.** World-rule contests stopped (no
-  published basis). Plain repairs of red world tests continue.
-- **Memory and sleep, body, ear, words — step 1** (review 2 is reading).
+- **His brain — step 2 (combine).** Research filed. Nothing built. Ordered:
+  brain B (a simple learner from a public library) must reproduce published
+  scores — now the corrected, many-run scores, not the one-run table the
+  first order used; brain A (the Dreamer world model, authors' design) gets
+  its source pinned and its speed measured on a free GPU; the test harness
+  must pass its own checks. The rule for choosing between A and B is written
+  down now, before any run (what is measured, how many runs, and that "no
+  clear difference" means "take the cheaper, simpler one").
+- **Learning to eat — step 2.** *Moved today:* his world now sits behind the
+  standard interface every published learner plugs into, and three lives
+  through it match the old loop exactly (the first comparison failed, found a
+  real bug, and the bug was fixed).
+- **His world, needs and lessons — step 2** (was 1). *Moved today:* research
+  filed, and two orders: a "test card" on today's world (what happens to a
+  body that does nothing, moves at random, forages by script, forages using
+  only his senses), then a difficulty dial — meal size, amount of food,
+  distance, how fast it reappears — with today's world at the hard end. He
+  starts easy; he is always judged on the hard, unassisted world.
+- **Body and movement — step 1.** Research filed. The record already answers
+  the controller contest we were spending GPU on (a bigger movement network
+  does not help), and says walking in a single world fails at our budgets.
+  Both are closed until stage 3; no pass mark was touched.
+- **Memory and sleep, ear, words — step 1.** Research filed today.
 - **Eye; all senses together — step 0.**
 
-## Where he stands on the route (9 milestones; the page now says what each needs)
+## Where he stands on the route (9 milestones)
 
-1. One whole life — MET.
-2. A world and curriculum that can teach — blocked on: a brain that eats (3).
-3. His brain, by evidence — the current work (stage 1, then the A-against-B choice).
-4. One body that moves — blocked on: the chosen brain, and the body research.
-5. Every sense in the one brain — blocked on: the chosen brain; the eye first.
-6. Words — blocked on: eye and ear inside him.
-7. He keeps learning — blocked on: a brain that eats.
-8. A living Jack — blocked on: 1–7. The first film is ordered (below).
-9. More worlds — blocked on: 8.
+1. One whole life — MET. 2. A world that can teach — being measured and
+redesigned (orders 1–2). 3. His brain, by evidence — the current work.
+4–9 (body, senses, words, lifelong learning, a living Jack, more worlds) —
+wait on the chosen brain.
 
-You asked why eating came before the brain. It should not have. The numbers
-are not a queue: the brain (3) comes first and everything else grows on it.
+**The honest date.** Choosing the brain is paced by brain A, which needs the
+free GPU (it cannot train on a free CPU). Its check costs 25–60 GPU-hours
+from 21 November; twenty full runs cost 160–280 — five to nine weeks of free
+quota. **A verdict on free compute is realistically mid-January to February
+2027**, unless every run is shortened, or the Mac mini proves fast. Brain B's
+side takes under a week. The measurement of A's real speed is ordered now.
 
-## What moved today (42 worker runs, none lost)
+## What moved since the last report (one hour ago), and what did not
 
-- **The food race finished: no brain eats.** Best: 0.4 small meals per late
-  life against a pass mark of 5. Four longer runs still on free cloud
-  machines will be collected and filed as a pilot; no more are launched.
-- **One rising sign, not a result:** one learner ate slightly more over 60
-  lives in one of two runs. Two runs rank nothing (the record says about 20).
-- **"He cannot see food"** (the outside reviewer) was measured and is not so:
-  his distance rays touch food on about 1 decision in 5.
-- **The action-training flaw is fixed** by a small race; milestone 1's test
-  was re-bought on it with a new does-nothing twin it must tell apart.
-- **Rulings (7):** the plan adopted and what stops; how a seat is held "by
-  record" (published evidence AND our own build reproducing a published
-  number — design on paper is not enough); a 95-day-old cold test is rebuilt
-  with no fire in its world instead of filtering awkward lives afterwards
-  (pass mark unchanged); your six machine ideas — five adopted, one declined
-  (a separate idea-box file: your words already reach every lane the same day).
-
-## What did not move
-
-- **Your video. Day 4.** Not started. It is now the first machine order "no
-  exceptions". If it is not there tomorrow I will say why, here, first.
-- The movement-controller contest is **paused**, not dropped: your plan says
-  the human-like body gets its research before more compute. Three finished
-  runs are kept.
-- Nothing of stage 1 exists yet.
+- Moved: the standard interface (above); review 2 complete (nine sections);
+  seven orders re-ranked; five rulings; the old review backlog is now empty
+  of open rows (5 declined with reasons).
+- Did not move: **your video — day 4, still not started.** No machine-lane
+  worker has run since it was made the first order. I split it: step 1 is a
+  rough 60-second clip, sized for one run. If it is not there tomorrow, that
+  is the first line of this page.
+- Did not move: the four red world tests (cold, needs, starvation clock).
 
 ## What the workers do next, in order
 
-1. His world behind the standard interface, its speed, the movement probe.
-2. Brain B from the library reproduces published scores; then our old
-   learner takes the same exam — pass or fail, we will finally know.
-3. Brain A from the authors' code, run and timed on a free GPU.
-4. The senses-only forager. 5. The published setup as switches.
-6. Collect the pilots. 7. Repair four plain world tests.
+1. The world test card (includes the senses-only forager and the probe of
+   which random movement finds food). 2. The difficulty dial and the
+   published setup (pay him when he eats; needs and layout varied each life).
+3. Brain B reproduces published scores. 4. The harness checks itself.
+5. Brain A: source and speed on a free GPU. 6. Make the simulator fast (39
+decisions a second today; the known fixes are predicted to give 500–2,000).
+7. Collect the pilot runs; repair the four world tests.
+Idle runs reproduce small published results that depend on no brain choice.
 
-## The machine, in five numbers
+## The machine, in four numbers
 
-- Test points per worker run today: +1 over 42 runs.
-- Worker runs lost to budget: 0. Usage this week: 4% of all models.
-- Free GPU-hours: this Kaggle week 29.1 of 30 used (0.9 left until Saturday).
-  The corrected meter shows the week before — which ended Saturday 14 Nov —
-  recorded no Kaggle use at all: about 30 free hours expired. That is a
-  failure by my own rule. This coming week the only GPU job under the plan is
-  timing brain A; I expect hours to go unused again and will say so.
+- Test points per worker run: +1 over about 43 runs today. Stage 1 builds
+  tools, not ladder points; I will report built-and-proven items instead.
+- Worker runs lost to budget: 0. Usage this week: 26% of all models; the
+  strongest model 50% (resets 18 Nov). Review 2 was the big spend.
+- Free GPU-hours: 0.9 of 30 left this Kaggle week (to Saturday). About 30
+  expired unused the week before — reported last sitting as my failure. Next
+  week has a real GPU job: brain A's check.
 - Oldest unrepaired blocker: "he moves better than random", red 95 days,
-  waiting on the paused controller contest.
-- Notes against work: about 4 in 10 of this week's 510 commits were notes or
-  bookkeeping. Workers now make one note commit per run.
+  holding 25 tests. The record says it should fail at our budget; it stays
+  red and honest until the body's turn (stage 3).
 
 ## Dead or stuck
 
-- The paper scout last ran 12 Nov (weekly; due again by the 19th).
-- The auditor ran once today (00:42); it is paced to one audit a day, so it
-  has not yet read the plan or today's orders. Not dead.
-- The usage meter gave two impossible readings this week (falling inside its
-  own week). It is reporting-only now; no run was refused today.
-- Disk: 4.1 GB free on the main disk (workers stop under 3). Watch it.
-- An owner session's uncommitted dashboard files twice stopped cloud runs
-  today (one cost 5.9 GPU-hours). Ordered fixed (S7): only files a test
-  actually uses may stop it.
+- The paper scout last ran 12 Nov (weekly; due by the 19th). Not dead.
+- The auditor last ran 00:42 today (paced to once a day); it has not yet
+  read the plan. Not dead.
+- Disk: 4.8 GB free on the main disk (workers stop under 3). New software
+  for brain B is ordered onto the big disk.
+- The usage meter gave two impossible readings this week; reporting-only.
+- An owner session's uncommitted dashboard files stopped two cloud runs
+  today; the fix is ordered (S7).
+- Pushes work; nothing is ahead of GitHub.
 
 ## The honest paragraph (Sunday)
 
-Closer, or just busier? This week: closer in knowledge, not in creature.
-The biggest step was yours — the plan. Before it, the week's honest finding
-was that he does not eat; the worst drift was mine: I ordered a seven-brain
-race this morning without asking what the published record predicted, and
-it predicted the result. That question now sits on every order. No pass mark
-was weakened this week, and no ready-made model is inside him.
+Closer, or just busier? Closer in knowledge, not yet in creature. The week's
+biggest step was yours: the plan, and a review that found the fault one
+level above where we were looking — not the learners, the world's economy.
+The worst drift was mine: a seven-brain race ordered this morning without
+asking what the record predicted. One more, smaller: I wrote brain B's pass
+mark from a one-run table; the review caught it before any run. No pass mark
+was weakened this week, and no ready-made model is inside him — brains A and
+B are published code, trained from nothing.
 
 ## FOR THE OWNER
 
-- **The video** is 4 days late (your 48-hour clock, adopted today).
-- **Please commit or stash dashboard work promptly** until S7 lands — it is
-  the one thing in your hands that stops free runs.
-- Nothing else needs you. Review 2's results tonight will sharpen the stage-1
-  orders; workers are told to re-read the record every run.
+- **The video** is 4 days late.
+- **Please commit or stash dashboard work promptly** until S7 lands.
+- One thing only you can say, no hurry (stage 3): motion-capture of people
+  may stand outside him as a judge of how he moves, or be distilled into a
+  part of him. Under your rule "nothing borrowed inside him" I am assuming
+  **outside only**. Say so if you mean otherwise.
