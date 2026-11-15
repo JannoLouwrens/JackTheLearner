@@ -244,3 +244,191 @@ Long form: `/data/jack-research/research_notes/Published evidence for building J
 **The last 10%** (each 5 seeds per arm, fixed budget, one outcome: meals per 1,000 decisions over the last 50,000; costs and predictions in the long form). First three measurements, about 2 kernel-hours: how often a random and a noise-driven policy reaches food in a life, and the gap between meals for a hand-written ray-follower (it decides the discount); whether four simulator processes give 4× the decisions; update timings on a Kaggle kernel. Then: a narrow network at a high update ratio against the standard one; which exploration plumbing finds food first (predicted: SAC's automatic entropy coefficient collapses below 0.01 before the first meal); whether memory is needed on the rover; continuous actor against nine discrete actions; how far behind PPO is; whether one demonstration of eating helps; 3-step returns; discount 0.99 against 0.995.
 
 **Not verified:** the pink-noise paper's tables and the replay-ratio-barrier paper (blocked); all our timings (one sample, load average 5–13). Three of the notes' sections were condensed from sub-drafts, 12 values spot-checked.
+
+## 6. Memory, sleep and learning for a lifetime (2026-11-15; serves M7; plan part "Memory and sleep")
+
+Long form, every source and number: `/data/jack-research/research_notes/Published evidence for building Jack/memory_sleep_continual.md` (115 KB). Nothing below was measured by us.
+
+**Already known**
+- **Working memory:** the GRU is the best-supported small core (POPGym aggregate 0.349, LSTM 0.255, memoryless 0.067). Linear-recurrent cores (FFM, S5, LRU) match it and train faster. Reward-trained memory falters at lengths around 250 steps, and nothing assigns credit across 250 steps. With food in view, memory gives no benefit.
+- **Memory trained from replay must see the whole dependency:** chunks shorter than it give zero success (R2I). Store the recurrent state, add a burn-in (R2D2: 40 of 80 steps), never cross a death, feed previous action and reward.
+- **Event store (the diary):** NEC's value table (learned embedding → best return, read by nearest neighbours) gives a large early gain that fades: 16.7% median Atari score at 1M frames against DQN's −0.7%, overtaken at 40M. Recall of specific past events worked only when what is written is trained by prediction (MERLIN, HCAM), at about 10^9 steps. **Retrieval is always by learned similarity, never by word matching.** That is why our diary scores 0 on reworded questions (inf).
+- **Across episodes:** memory emerges when it is not wiped, the objective spans episodes, and worlds differ between groups of episodes (RL²: second-episode paths 25% shorter after 1,000 mazes). A 100-episode scene memory added +2.1%. In one fixed world, weights fed by retained replay carry "where the tree was" (Mirowski).
+- **Death:** rare, so it leaves replay, is forgotten and repeated unless a few death examples are kept forever (Lipton).
+- **Sleep:** learning while not acting is the most reliable gain on record (Dyna maze: 25 episodes → 3 with 50 planning steps; MuZero Unplugged 126.6% from 20M frames, 99.5% re-analysed). Concentrated: 75,000 critic updates per 10,000 steps beat the same spread evenly, only with dropout, worse above 75,000 (SPEQ, one preprint). Data-free "sleep replay" 48% vs 80% for keeping 0.75% of data.
+- **Not forgetting:** a 50-50 mix of new and reservoir-kept old experience restores 31.4/8.0/18.1 vs 18.0/5.0/10.9 (CLEAR); insensitive from 50-50 to 75-25; works keeping 5M of 900M frames. Keep by reservoir or coverage, never by surprise or reward. Replay is not always enough: SAC replaying everything on Continual World 0.12 vs PackNet 0.80. One preprint: a 17M Dreamer's actor forgets while its model does not.
+- **Staying able to learn:** reset the fast network to a slow averaged copy (Hare and Tortoise: 0.826 → 0.891, free). Hard resets make replay ratio 8–16 usable (BBF). Shrink-and-perturb made one learner worse (0.139 vs 0.243).
+- **Measuring what was kept:** retention + relearning savings + jumpstart, against naive and wrong-memory controls. A probe beats latency (watermaze: 36.0% in the right zone vs 12.5% chance; latency saving not significant).
+
+**Take as-is** (code and designs, never weights)
+- GRU state carried all life; stored-state replay with burn-in; in A, store latents per chunk and carry state across chunks. Long-memory drop-ins for B: FFM, S5, LRU.
+- Diary: keys = the world model's latent state, values = what happened (return, need change); k nearest neighbours, inverse-distance kernel (NEC: ≤5×10^5 rows, 50 neighbours); kept at death.
+- Replay: recent FIFO plus lifetime reservoir, sampled half and half; a permanent small store of deaths and meals; if the world changes locally, evict by neighbourhood, not age.
+- Sleep: burst training of the world model from replay, re-encoding old sequences; a capped dose of imagination training (SPEQ's 75,000 per 10,000 as the upper mark); slow-copy reset during sleep.
+
+**Reproduce first**
+
+| what it checks | task | published |
+|---|---|---|
+| offline updates | Dyna maze, γ 0.95 | ~25 episodes to near-optimal at n = 0, ~5 at n = 5, 3 at n = 50 |
+| recurrent core | passive T-Maze, DDQN | LSTM solves short lengths, falters by 250 |
+| memory module | POPGym tasks | GRU beats MLP wherever memory is needed |
+| chunk length | bsuite memory_len | 64-step chunks fail past 64; 256 succeed |
+| replay buffer | Split MNIST, 200 samples | 80.43 ± 1.89; no replay 19.60; joint 95.57 |
+| state across episodes | RL² bandits, n = 100, k = 5 | 78.7 (Gittins 78.3, random 49.9) |
+
+Rows 1, 5, 6: CPU minutes; rows 2–4: CPU-hours.
+
+**The last 10%** (costs at 100,000 decisions per kernel-hour)
+- How long a memory his foraging needs: zero the state every k steps at evaluation only (k = 1 … never), food in and out of ray range. About 6 kernel-hours. Predicted: flat with food in view, hundreds of steps when search is needed.
+- Which store carries a life's learning in a fixed world: fork 10 seeds after 1M decisions into all kept, replay wiped, weights reset with replay kept, all wiped. About 220 kernel-hours. Predicted: wiping replay changes little at first; forgetting of rarely visited places follows.
+- Does anything beyond weights and replay help him find the last life's food: food re-drawn every K lives; state carried or reset at death; diary kept, wiped or swapped; probe at the start of each life. About 240 kernel-hours. Predicted: no effect if food never moves; value diary helps earliest if it moves.
+- Concentrated against spread sleep at equal updates; model-only against model-and-actor sleep. 160 kernel-hours (B), ~18 T4-hours (A). Predicted: little difference for the model; model-only safest.
+- Also open: re-localising after rebirth (2 kernel-hours); a small Dreamer's actor forgetting (~24 T4-hours); sleep tied to his sleep NEED; diary keys drifting as the model learns (inf: re-encode during sleep).
+
+**Not verified:** SPEQ and the Dreamer-actor result are single preprints; episodic-LSTM and HCAM across-episode numbers are figure-only; almost every memory result is from agents far larger than him.
+
+## 7. Ear, words and advice (2026-11-15; serves M5, M6; plan parts "Ear" and "Words and advice"; answers the open question on advice in words)
+
+Long form: `/data/jack-research/research_notes/Published evidence for building Jack/ear_words_advice.md` (99 KB). Nothing below was measured by us.
+
+**Corrections to the first review (§1):** (1) "No published agent grounds words from raw speech from scratch" is too strong: a ViZDoom agent follows spoken "go to the X" through an FFT ear (Hegde 2021), and robots go to the object named by one of 4 real Speech Commands words (Chang 2019). Still unpublished: doing it with a world model, without a word-label loss, online in one life, with advice. (2) Dynalang is not ~10M: 281M on HomeGrid, 148M on Messenger; HomeGrid cost 3.75 A100-days. (3) SoundSpaces' 0.601 → 0.709 is SPL (path-weighted success), not success rate.
+
+**Already known**
+- **Ear:** every from-scratch hearing agent feeds a spectrum (FFT, log-mel, MFCC), not the raw waveform (about 5× slower and erratic), through a small encoder into the same recurrent core. Non-speech sound is learned in 3×10^7–10^8 steps.
+- **Few words:** 9k–100k weights reach 94–97% on 12 words for unseen speakers with ~3,000 recordings per word from ~2,600 speakers; 95% at 1,000 per word, 90% at 125, falling fast below ~50. Synthetic speech alone: 56.7% (92 voices) to 92.6% (voice-cloned, recogniser-filtered).
+- **Words tied to action:** 4 words, 1,000 recordings each, 1.5–5×10^6 steps, 0.87–0.945 on unheard recordings; **without a loss on the sound channel, 0.135–0.185** (Chang). Reward alone teaches words nothing after millions of episodes (Hermann).
+- **Self-supervised ear:** predicting future audio on 100 h of clean speech halves phone errors (ABX 10.95/20.94 → 6.24/8.17); on realistic child-centred audio, lexically at chance after 1,024 h.
+- **Narrator:** after-the-fact descriptions turn failure into ~80% success, work at 1% of experience, keep 80% of the benefit at 50% noise; a noisy pretrained labeller (54.7% precision) lifted naming 7% → 64%.
+- **Advice (the open question):** (a) **language that merely predicts outcomes is used only when a world model must predict it.** HomeGrid hints raised Dynalang from ≈3.3 to ≈4.8–6.0 at 50M steps (figure reading, 2 seeds). Model-free R2D2 used only reward-correlated language and got worse with more. (b) **An agent raised on good teachers cannot doubt a bad one:** the largest social-learning agent "happily follows an incorrect demonstration". (c) **Learned trust exists only in tabular form, with the reliability given to the agent:** Advise weights each label by a stated accuracy C; an estimate near 0.5 is worth nothing. (d) **No deep-RL study tests hints that are sometimes false.** (e) Pretrained models fit best as narrator, labeller and judge; a language-model reward was exploited ("hallucinogens to dream of the goal state", Motif).
+- **Voice:** syllabic babble in ~7,200 one-second trials; recogniser-guided syllables at 55% word accuracy against 81% for natural speech.
+
+**Take as-is** (never weights inside him)
+- Log-mel or MFCC front end (40 bins, 25–30 ms window, 10 ms hop); 2–3 conv or FC-256 layers; concatenated into the one recurrent state.
+- A loss on the sound channel: in a world model, predict next-step audio features. Words as one unit per step, predicted like any sense; reward only from needs (Dynalang's "advised, not commanded" design).
+- ±100 ms time shift, noise at probability 0.8, many voices; filter synthetic clips through a recogniser.
+- Parent as narrator via TTS, asynchronous and cached (ONI); a few percent of events is enough to start. Stages: eye → ear by prediction → frequent isolated words → multi-word → speaking.
+- Do not take: T5/BERT/SentenceBERT, wav2vec/HuBERT features, goal-suggestion-with-reward, teacher-policy distillation (command channels).
+
+**Reproduce first**
+
+| stage | task | published |
+|---|---|---|
+| ear | Speech Commands, 12 classes, speaker-disjoint; DS-CNN 24K / BC-ResNet-1 9.2K | 94.4% / 96.6–96.9% |
+| data budget | 35 words at all / 1,000 / 125 recordings per word | 97.4 / 94.8 / 90.3% |
+| words in an agent | Chang's 4 words → 4 objects, 5×10^6 steps | 0.945 with label loss, 0.870 without (arm); 0.920 vs 0.135 (navigation) |
+| narrator | ACTRCE hindsight descriptions | ≈80% against no learning; 1% of frames enough |
+| trust | Advise, 5×5 Pac-Man, three teacher settings | at or above baselines; assumed C = 0.55 ≈ no feedback |
+
+Keyword rows: one CPU session each. Chang's rows: 1.5–5×10^6 steps.
+
+**The last 10%** (costs inf)
+- Can prediction replace the word label in his ear? Reward only / + label loss / + next-step audio prediction, ≥5 paired seeds, 5×10^6 steps. Predicted: ≈ no-sound / ≥0.85 / between, above 0.6.
+- One voice or many (1, 4, 16, ~100 TTS voices). CPU hours. Predicted: ~100 voices × ~100 clips gives 55–60% on real speech.
+- Hearings in a stream: no replay / recent only / two-tier. Predicted: no replay near chance; ≥100 hearings per word for ~90%.
+- Words as a sense in a 1–10M world model (15 tokens, then spoken). T4 days. No published number.
+- True, absent and false hints, hungry and sated. Predicted: help a world model only; true-only training does worse than none under false hints; a sated agent ignores food hints (untested anywhere).
+- Whom to trust: two voices (90–100% right against 50% or adversarial), then swap. The open result.
+- A voice that serves his needs and tells the truth. Stage 3 has no precedent.
+
+**Not verified:** HomeGrid hint scores are figure readings from 2 seeds; ages and hours for infant hearing are broad ranges; no live TTS parent heard through a from-scratch ear has been published.
+
+## 8. The correct test method (2026-11-15; serves stage 2 and every step-4 experiment)
+
+Long form: `/data/jack-research/research_notes/Published evidence for building Jack/test_method.md` (163 KB). Power figures are the notes' own exact enumeration or simulation (inf).
+
+**Already known**
+- **Few runs give little.** On one task, bootstrap intervals need 20–30 runs for their stated coverage. Welch's t runs at about 2× its level on skewed scores. Permutation tests are exact at any n but cannot reject below 4–5 runs per arm.
+- **Power for learn-or-not outcomes** (exact test, two-sided 0.05): 10 runs per arm for 0.8 vs 0.2; 15 for a 50-point gap; 25–30 for 40 points. A 30-point gap has 49% power at 20 per arm. A time-to-threshold (log-rank) test is never worse and far better when both arms usually succeed.
+- **Peeking** after every 5 runs without correction gave 12% false positives. Two looks at 0.025–0.0294 hold 5% and save a quarter to a third of the runs when the effect is large.
+- **Selection:** the best of 8 identical settings on 3 seeds looked 38 points better than it was; settings picked on tuning seeds did 4–5× worse on fresh ones. Fresh confirmation seeds remove the bias.
+- **Pairing** on shared world seeds helps learn-or-not tests only if between-arm correlation exceeds ~0.25.
+- **Lesions mislead:** 90% of pixels removed cost 13 points with retraining, 76 without. Retrain without the part.
+- **World model vs model-free:** no single fair budget. Fix decisions as the axis, state update ratio, size and repeat, show compute, and add a matched-update control.
+- **AdaStop warning.** PyPI 0.1.3 rejected 9.7–11.8% of same-against-same comparisons at a stated 5%. The repository fix of 2026-10-17 holds 4.2–5.3%. No fixed release exists; both builds say 0.1.3. On 0/1 scores the bug hides (2.8–6.0%).
+
+**Take as-is**
+- SciPy `boschloo_exact`, `permutation_test`, `logrank`, `ecdf` with censoring, `binomtest(...).proportion_ci("exact")`; statsmodels Holm.
+- AdaStop only from `git+https://github.com/TimotheeMathieu/adastop@f272065a88e36ba571ce41161232d2d9ec4be3ac`, α = 0.05 set explicitly (default 0.01), N = 5, K = 4–6, run once for all comparisons.
+- rliable for plots only at this n. Patterson's 20-error checklist; Eimer's 17-item tuning checklist.
+- Outcomes: time to threshold with censoring; success proportion; expected running time = decisions spent ÷ successes; normalised score (score − random)/(oracle − random).
+
+**The staged design (two brains + PPO, ~100 kernel-sessions)**
+
+| stage | sessions | content |
+|---|---|---|
+| 0 | ~6 | harness self-checks; each arm reproduces its published number; throughput fixes T |
+| 1 | ≤24 | pilot + equal tuning on reserved seeds: default + 3 alternatives × 3 seeds at T/2; freeze configs, threshold, correlation |
+| 2 | ≤57 | fresh seeds: A 20, B 20, PPO 10; random, statue, untrained twin, scripted forager (3 each), shuffled-input (5) |
+| reserve | ~13 | re-runs; B at A's update ratio (5 runs) if A wins |
+
+- **Primary outcome:** decisions until W consecutive lives average ≥ θ meals (θ = 5; scripted forager 24–27, random 0–0.2); unfinished runs censored at T.
+- **Primary test:** A vs B, permutation log-rank, looks at 10 and 20 runs per arm, each at 0.025. Sensitivity: Boschloo on runs that crossed by T. Futility: at look 1, ≤1 run past threshold in both arms → "not learnable at this budget". PPO comparisons with Holm.
+- **Gates:** floor arms ≤1 success in total; scripted forager must pass; else void. No seed replaced; NaN and crashes are outcomes.
+- **Detects:** 4× faster 0.93–1.00; 3× 0.74–0.94; 2× 0.34–0.63. Write in advance that "not distinguished" means "choose on cost and simplicity". A's cost (T4-bound) may force a lower T for all arms; never fewer runs.
+
+**Reproduce first** (harness self-checks)
+1. Same-against-same through the real pipeline, ≥1,000 repetitions, at ≤ the stated rate.
+2. A handicapped copy (learning rate 0) detected with the planned power.
+3. Calibration arms at floor and ceiling.
+4. Same seed twice → identical logs; harness writes the seed list.
+5. Run k sees the same world in every arm.
+6. Resume across a kernel boundary = uninterrupted run.
+7. Every decision counted, including warm-up and prefill.
+8. Reward-forever world gives 1/(1 − γ); true death no bootstrap; last observation true.
+9. Probes on or off leave training logs identical.
+10. Outcome code right on synthetic logs, including edge cases.
+11. Analysis script frozen and hashed in the pre-registration.
+12. Tools checked on a known case: 4/15 vs 0/15 gives Fisher 0.100, Boschloo 0.043.
+13. Runs analysed = runs launched.
+
+**The last 10%** (conservative choices, no literature answer): one run = one observation, never lives; primary outcome from normal living, frozen probes only as diagnostics; death ends the return, the 3,000-decision cap is a truncation; analyse unpaired unless pilot correlation > ~0.3; retention across rebirth = first window after vs last window before death, descriptive only; word every result "on this world, at this budget, as configured".
+
+**Not verified:** no RL paper uses exactly this censored two-look combination; real learning-time distributions are unknown until the pilot; AdaStop's fixed build had one borderline 0.064 that needs re-checking.
+
+## 9. A battery of standard tests for brains (2026-11-15; serves stage 2)
+
+Long form: `/data/jack-research/research_notes/Published evidence for building Jack/capability_battery.md` (144 KB). Install checks and a few timings were run on this server under load (marked M).
+
+**Already known**
+- bsuite and the DeepMind Control proprioceptive tasks are the only places where all three families have numbers on the same task. A = Dreamer, B = DQN (discrete) or SAC (continuous).
+- **A's references come from 10M–200M models at GPU budgets** (bsuite: 200M). Run its checks at the shortest published points or read them relative to B.
+- bsuite is not "<30 CPU-min each": under 30 min per configuration for model-free learners in the paper, 20–290 min in a later measurement; the 468-configuration sweep is not cheap. Two baseline tables disagree by 10–35 points on some categories.
+- Sparse tasks have seed SDs of 300–390 on a 0–1,000 scale: fewer than 5 seeds per arm cannot tell correct from broken. Dense tasks: 2–3 suffice.
+- Version traps move scores more than family gaps: frames vs decisions (action repeat 2), v2 vs v4 environments, MuJoCo 3 vs 4, training vs final metrics.
+
+**Take as-is: the battery, cheapest first** (A / B / PPO references)
+
+| # | task (faculty) | package | budget | A | B | PPO |
+|---|---|---|---|---|---|---|
+| 1 | catch / cartpole (basics, harness) | bsuite 0.3.6 | 10k / 1k episodes | 0.96 / 0.93 | DQN 0.92 / 0.85 | 0.91 / 0.84 |
+| 2 | noise / scale variants | same | 5 levels × 4 seeds | 0.62 / 0.82 | 0.51 / 0.73 | 0.54 / 0.60 |
+| 3 | deep_sea / mountain_car | same | 21 sizes; 1k ep. | 0.00 / 0.92 | 0.00 / 0.93 | 0.00 / 0.10 |
+| 4 | umbrella_length / discounting_chain | same | 23 delays; 20×1k | 0.78 / 0.40 | 0.39 / 0.25 | 0.87 / 0.24 |
+| 5 | memory_len / memory_size | same | 23 / 17 levels | 0.65 / 0.59 | 0.04 / 0.00 | 0.17 / 0.47 |
+| 6 | umbrella_distract | same | 23 counts | 0.74 | 0.30 | 1.00 |
+| 7 | cartpole swingup / walker walk | dm_control 1.0.52 | 100k–500k, repeat 2 | 478 ± 20 at 100K (official file; battery notes say 528 ± 36: recompute) | SAC 835 ± 8 / 708 ± 167 at 100k | 266 ± 27 / 77 ± 33 at 500K |
+| 8 | swingup_sparse / cup catch / pendulum | same | 500k, ≥5 seeds | 504 ± 393 / 966 ± 9 / 785 ± 150 | SAC 531 ± 376 / 978 ± 0 / 408 ± 301 | 2 ± 2 / 503 ± 299 / 0 |
+| 9 | position-only CartPole, Repeat tasks | popgym 1.0.7 | 15M | curves | curves | GRU 1.000; MLP 0.27–0.72 |
+| 10 | passive / active T-Maze | Memory-RL code | 0.2–2M per length | — | LSTM fails at 250 | — |
+| 11 | continual CartPole | C-CHAIN protocol | 10 × 0.16M | — | — | kept 61.8; reset 299.9 |
+| 12 | Craftax-Classic | craftax 1.7.0, T4 | 1M | 47.2 ± 3.9 | — | PPO-GRU 55.5 ± 1.3 |
+
+Cost: rows 1–6 run on a CPU in minutes to hours per configuration for B and PPO; A in bsuite has no CPU figure. Row 7: simulation 1–3 min per 500K steps per core (M); B about 1 hour per 100k decisions on one core (M); A 0.3 A100-days per 500K frames. Row 12: PPO 15–26 min on 8 H100; DreamerV3 2,100 min; T4 unpublished.
+
+**Reproduce first: cheapest checks that catch a broken build**
+1. bsuite catch through the real logging path: PPO 0.91, DQN-style 0.92, Dreamer 0.96; a random agent must give 0.00 (catch), 0.04 (cartpole), 0.10 (mountain_car) (reproduced here, M).
+2. PPO CartPole-v1 → 500 within 100k steps (M: 128 s); SAC Pendulum-v1 at 20k against the seed distribution in §5, not the one-run table.
+3. DMC cartpole swingup, repeat 2: B 835 ± 8 at 100k; A at the official 100K/250K points (§2 table).
+4. Signatures: memoryless fails memory_len above 1; recurrent passes up to its window and fails beyond (recurrent A2C 0.70 at a 30-step window); deep_sea 0.00 for all; PPO 0.10 on mountain_car while DQN and Dreamer reach 0.92–0.93.
+
+Order: rows 1–6 and 11 (no GPU) catch most B and PPO bugs; row 7 is A's first real check, before any in-world Dreamer run; rows 9, 10, 12 measure capability, only after rows 1–8 pass.
+
+**The last 10%** (no small standard test or no reference number)
+- Using a newly added sense: nothing for any family. Design (inf): train to plateau without it; switch on; compare with had-it-from-birth, a same-shape noise channel, and never-had; report the dip and steps to catch up; switch off again.
+- Continual learning for A and B at small scale (two Dreamer MiniGrid studies disagree; no SAC/DQN result on continual Gym control).
+- A below 10M: `size1m` has no score anywhere.
+- Long-delay credit and long memory in continuous control; needs-based survival with continuous actions at small cost; noise and reward-scale robustness for continuous actions.
+- In-world battery (inf): one faculty per task, one difficulty number, held-out evaluation seeds, random + own-senses scripted + public-family anchors, scores normalised to [0, 1]; for needs, EVAAA's two probes (choose the resource matching the larger deficit; reverse after an imposed need change).
+
+**Not verified:** no learner timed on a Kaggle x86 core or a T4; bsuite per-level targets are inferred from per-experiment means; the battery and Dreamer notes give different Dreamer cartpole numbers at 100K (528 ± 36 vs 478 ± 20) and attribute the official curves to different model sizes; recompute from the per-seed file before use.
