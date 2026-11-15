@@ -106,3 +106,41 @@ inferred unit conversion; T4 speed relative to an A100 is an assumption; the
 "2.5–4× more food contacts" for persistent noise is a toy calculation not
 calibrated to W0. No paper ablates our settings jointly, so their ranking is a
 synthesis. No published system combines all of Jack's requirements.
+
+## 2. Building brain A (a Dreamer-style world model) correctly (2026-11-15; serves order J3, M3; plan part "His brain")
+
+Long form, every source and line number: `/data/jack-research/research_notes/Published evidence for building Jack/dreamer_engineering.md` (108 KB). Nothing below was measured by us.
+
+**Already known**
+- The agent is fully specified by the official code, `danijar/dreamerv3` at commit `e01491f` (the 2024–25 "v2" agent of the Nature paper): an 8-block GRU state with 32 categorical latents; symlog vector encoder and decoder; two-hot reward and critic heads (255 bins, zero-initialised); a continuation head; losses `1·rec + 1·rew + 1·con + 1·dyn + 0.1·rep` with 1 free nat; 15-step imagination from all 1,024 replayed states; a REINFORCE actor with entropy 3e-4 and `max(1, S)` percentile return scaling; LaProp + AGC(0.3) at 4e-5 with a 1,000-step warm-up; batches of 16 × 64; replay 5e6.
+- For a 30-number observation: `size1m` ≈ 0.64M parameters, `size12m` ≈ 9.7M (inf).
+- Load-bearing parts, by the paper's ablations: KL balance + free bits (no learning without them on Reacher Hard); return scaling with the `max(1, ·)` floor (sparse swing-up 850 → 200 without it); two-hot regression; reconstruction gives most of the learning signal (100 → 27 without it).
+- The published small-scale scores are 2023 runs of the v1 agent at size S (train ratio 512, action repeat 2, 4 environments): 18-task proprioceptive DMC mean 442 / 626 / 757 at 100K / 200K / 500K env steps. **No score exists for `size1m`, nor for any port's v2 agent.**
+- Where it fails: directed exploration (BSuite exploration 0.01, deep_sea 0.00, with the 200M model); long memory (BSuite memory 0.62); shrinking (12M needs 38M Crafter steps for what 400M reaches at 7M).
+- Train ratio (gradient work per decision): more is better up to the largest published setting, 1024. Cutting 512 → 32 on Walker Walk cost about two thirds of the score (one user report).
+- **Death.** Only the v2 REINFORCE actor learns from termination. The v1 actor for continuous actions (backprop through the dynamics; the default in sheeprl's `dreamer_v3` and in dreamerv3-torch) cannot: InvertedPendulum stayed at return 4. The environment must mark true death and cut-offs differently.
+- A needs-based precedent (EVAAA: Dreamer, drive-reduction reward, termination when a need leaves range): Dreamer survived longest, agents without the needs inputs did not learn, and **some agents learned to end the episode when food could not be found.** Our reward has the same shape.
+- Ports have had silent bugs: terminated/truncated confused (broke CartPole), 1.6% of replayed actions corrupted, resume regressions, a README timing taken from a different agent.
+- Speed is measured nowhere on a T4, P100, CPU or Apple silicon. Arithmetic only, ±2×: T4 `size1m` 20–50 gradient steps/s, T4 `size12m` 2–5, 4-core CPU `size1m` 0.5–2.
+
+**Take as-is** (code and designs, never weights)
+- Reference: the official repo at `e01491f` (its `configs.yaml`, `agent.py`, `rssm.py`, `scores/*.json.gz`). Runner: **sheeprl 0.8.5 `dreamer_v3_5`** with `algo=dreamer_v3_5_1M` or `_12M`: the only maintained port with the v2 agent, a CPU default, and resume with replay (`buffer.checkpoint=True`, `checkpoint.resume_from`). It is six weeks old and has no published scores, so it earns trust only through the checks below.
+- For him: every published value unchanged; one environment; action repeat 1 (a decision is already 0.2 s); train ratio as high as the hardware sustains, up to 1024, and logged; `terminated` only on true death; a meal reward of order 1; needs, touch and rays as one vector; the REINFORCE actor; a 5,000–10,000-decision prefill; DayDreamer's arrangement (one process acts, one learns, shared replay).
+- Later parts that exist as code: R2-Dreamer's decoder-free loss (eye), R2I's memory core, Dynalang's one-token-per-step input (words), a Plan2Explore-style bonus or Curious Replay if exploration stalls.
+
+**Reproduce first.** Protocol of the published runs: v1 agent, size S, ratio 512, repeat 2, 4 environments, 5 seeds; pass = our mean within about 2 SD at each point (from the official per-seed score file).
+
+| task (proprioceptive DMC) | env steps | published mean ± SD |
+|---|---|---|
+| cartpole_balance | 100K / 200K | 794 ± 52 / 966 ± 17 |
+| cartpole_swingup | 100K / 200K / 500K | 478 ± 20 / 778 ± 19 / 853 ± 13 |
+| ball_in_cup_catch (sparse) | 200K | 949 ± 9; 5 of 5 seeds > 900 by 150K |
+| reacher_easy | 200K / 500K | 929 ± 19 / 964 ± 7 |
+| walker_walk | 200K / 500K | 799 ± 87 / 925 ± 34 |
+| cartpole_swingup_sparse | 500K | 492 ± 368: about 3 of 5 seeds near 800, none above 50 before 100K |
+
+Negative controls that must come out low: walker_walk at train ratio 32 (200–300 at 500K); BSuite deep_sea (0.00). A step-0 check from the code (v2, continuous actions): reward and value loss 5.541, `dyn` = `rep` = 1.0, actor std 0.893, predicted reward and value exactly 0. **Cost: the first three rows at 200K × 3 seeds are an estimated 25–60 T4-hours, so A's check takes one to two weeks of free GPU; a CPU cannot do it at the published train ratio.**
+
+**The last 10%** (each an experiment; costs and predictions in the long form): (1) gradient steps per second on our hardware; (2) does a ~1M model reproduce the published S-model curves; (3) what train ratio the rover needs, and whether free-running the learner is safe; (4) can entropy-only Dreamer find food 3.8 m away in a 3,000-decision life (predicted: about half the seeds, more with near-first food or a disagreement bonus); (5) REINFORCE against dynamics-backprop when death ends the life; (6) reward scale under `max(1, S)` (0.01 predicted to stay near random); (7) exact resume across 12-hour sessions; (8) a small Dreamer on BSuite's memory and credit tasks; (9) a life longer than any published run.
+
+**Not verified:** the Nature article itself (arXiv v2 stands in); every speed figure (arithmetic); whether the paper's v2 tables are the 2023 runs (the score files are bit-identical, the author says v2 uses REINFORCE: unresolved).
