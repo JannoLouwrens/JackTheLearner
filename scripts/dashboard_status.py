@@ -222,6 +222,8 @@ def abilities(by_id: dict, results: dict) -> dict:
             "promises": n_prom, "promises_started": started,
             "proofs": n_claims, "proofs_passed": n_passed, "proofs_passed_world": n_world,
             "overall_world": round(100 * n_world / n_claims, 1) if n_claims else 0.0,
+            "in_him": [{"promise": p["name"], "title": t["title"]} for a in aspects for p in a["promises"]
+                       for t in p["tests"] if t["kind"] == "claim" and t["status"] == "PASS" and t["where"] == "world"],
             "senses_for_m5": cfg.get("milestone_promises", {})}
 
 
@@ -393,6 +395,39 @@ def headline() -> dict:
     paras = [clean(p) for p in re.split(r"\n\s*\n", m.group(1).strip())] if m else []
     w = re.search(r"(?m)^Written (.+?)(?:\.|$)", text)
     return {"written": clean(w.group(1)) if w else None, "paras": [p for p in paras if p]}
+
+
+def report() -> dict:
+    """The Director's whole morning report, section by section, for the page
+    to lay out as a report rather than a single note."""
+    text = read(REPO / "docs" / "PROGRESS.md")
+    w = re.search(r"(?m)^Written (.+?)(?:\.|$)", text)
+    secs = []
+    for m in re.finditer(r"(?ms)^## (.+?)\n(.*?)(?=^## |\Z)", text):
+        blocks = []
+        for chunk in re.split(r"\n\s*\n", m.group(2).strip()):
+            for it in re.split(r"(?m)^(?=\s{0,3}(?:[-*]|\d+(?:[–-]\d+)?[.)])\s)", chunk):
+                it = it.strip()
+                if not it:
+                    continue
+                li = re.match(r"(?:[-*]|(\d+(?:[–-]\d+)?)[.)])\s+(.*)", it, re.S)
+                if li:
+                    blocks.append({"t": "li", "n": li.group(1) or "", "text": clean(li.group(2))})
+                else:
+                    blocks.append({"t": "p", "text": clean(it)})
+        if blocks:
+            secs.append({"title": clean(m.group(1)), "blocks": blocks})
+    return {"written": clean(w.group(1)) if w else None, "sections": secs}
+
+
+def updates(n: int = 40) -> list:
+    """The workers' plain-words line after each run (docs/OWNER_UPDATES.md)."""
+    out = []
+    for line in read(REPO / "docs" / "OWNER_UPDATES.md").splitlines():
+        m = re.match(r"-\s*(\d{4}-\d\d-\d\d)[ T](\d\d:\d\d)(?:\s*UTC)?\s*·\s*([A-Za-z]+)\s*·\s*(.+)", line)
+        if m:
+            out.append({"at": f"{m.group(1)}T{m.group(2)}:00Z", "lane": m.group(3).upper(), "text": clean(m.group(4))[:600]})
+    return sorted(out, key=lambda r: r["at"], reverse=True)[:n]
 
 
 def orders() -> list:
@@ -1010,6 +1045,8 @@ def build() -> dict:
         "lives": guarded(lambda: lives(results), None),
         "milestones": guarded(lambda: milestones(by_id, results, ab), []),
         "headline": guarded(headline, {"written": None, "paras": []}),
+        "report": guarded(report, {"written": None, "sections": []}),
+        "updates": guarded(updates, []),
         "orders": guarded(orders, []),
         "recent": guarded(lambda: recent(by_id, results), []),
         "team": guarded(team, {"members": [], "paused": False, "running": 0}),

@@ -75,6 +75,16 @@ button{font:inherit;color:inherit}
 .meter.big{height:12px}
 .meter.warn>i{background:var(--warn)} .meter.crit>i{background:var(--crit)}
 .meter>u{position:absolute;top:0;bottom:0;width:2px;background:var(--ink2);opacity:.55}
+.steps{display:flex;gap:5px;margin:16px 0 6px}
+.steps i{flex:1;height:8px;border-radius:99px;background:var(--track)}
+.steps i.met{background:var(--good)} .steps i.now{background:var(--accent)}
+.stepl{list-style:none;margin:12px 0 0;padding:0}
+.stepl li{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:7px 0;font-size:15px;color:var(--ink3)}
+.stepl li b{font-weight:600;color:var(--ink3);font-variant-numeric:tabular-nums}
+.stepl li.met,.stepl li.now{color:var(--ink)} .stepl li.now b,.stepl li.met b{color:var(--ink)}
+.stepl li.now span:nth-child(2){font-weight:600}
+.stepl li small{display:block;font-size:13px;font-weight:400;color:var(--ink2);margin-top:2px}
+.stepl li em{font-style:normal;font-size:13px;color:var(--ink3);white-space:nowrap}
 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}
 .tile{background:var(--inset);border-radius:16px;padding:12px 12px 10px;min-width:0}
 .tile .v{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
@@ -107,6 +117,25 @@ div.row{cursor:default}
 .chip{display:inline-block;font-size:12px;font-weight:600;color:var(--ink2);background:var(--inset);border-radius:8px;padding:2px 8px;white-space:nowrap}
 
 /* director's note */
+.report .lead p{margin:0 0 12px;font-size:17px;line-height:1.5;color:var(--ink);max-width:42em}
+.report p{margin:0 0 10px;font-size:15px;line-height:1.5;color:var(--ink2);max-width:44em}
+.report p strong,.report li strong{color:var(--ink)}
+.report .foryou{margin:6px 0 10px;padding:12px 14px;border-radius:14px;background:var(--track)}
+.report .foryou p:last-child{margin-bottom:0}
+.rs{border-top:1px solid var(--line)}
+.rs summary{list-style:none;cursor:pointer;padding:13px 0;font-size:16px;font-weight:600;color:var(--ink);display:flex;justify-content:space-between;align-items:center;min-height:44px;box-sizing:border-box}
+.rs summary::-webkit-details-marker{display:none}
+.rs summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--ink3);border-bottom:2px solid var(--ink3);transform:rotate(45deg);transition:transform .2s;margin:0 4px 4px 12px;flex:none}
+.rs[open] summary::after{transform:rotate(-135deg);margin-bottom:-4px}
+.rl{list-style:none;margin:0 0 10px;padding:0}
+.rl li{display:flex;gap:10px;padding:5px 0;font-size:15px;line-height:1.5;color:var(--ink2)}
+.rl li::before{content:"";flex:none;width:5px;height:5px;border-radius:50%;background:var(--ink3);margin-top:9px}
+.rl li:has(b.n)::before{display:none}
+.rl li b.n{flex:none;min-width:14px;color:var(--ink3);font-weight:600}
+.feed{list-style:none;margin:10px 0 0;padding:0}
+.feed li{padding:11px 0;border-top:1px solid var(--line);font-size:15px;line-height:1.5;color:var(--ink2)}
+.feed li:first-child{border-top:0}
+.feed li em{display:block;font-style:normal;font-size:13px;color:var(--ink3);margin-bottom:2px}
 .note p{margin:0 0 10px;font-size:16px;line-height:1.5;color:var(--ink2);max-width:40em}
 .note p strong{color:var(--ink)}
 .note.clamp .body{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;overflow:hidden}
@@ -238,7 +267,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
 <script>
 (function(){
 "use strict";
-var S=null, openKey=null, lastFocus=null, noteOpen=false;
+var S=null, openKey=null, lastFocus=null, noteOpen=false, repOpen={}, upAll=false;
 var $=function(s){return document.querySelector(s)};
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function bold(s){return esc(s).replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}
@@ -270,18 +299,58 @@ function spark(vals){
 }
 
 /* ───────── Jack ───────── */
+document.addEventListener("toggle",function(e){var d=e.target;if(d&&d.dataset&&d.dataset.rep)repOpen[d.dataset.rep]=d.open},true);
 function viewJack(){
   var a=S.abilities, L=S.ladder, ms=S.milestones||[], met=ms.filter(function(m){return m.state==="met"}).length;
   var hist=(L.history||[]).map(function(x){return x.v}), wk=hist.length>7?L.passing-hist[hist.length-8]:null;
   var o=Math.round(a.overall_world||0),beside=a.proofs_passed-(a.proofs_passed_world||0);
   var h='<div class="col">';
-  h+='<div class="card hero"><p class="eyebrow">Proven in Jack himself</p>'+
-     '<div><span class="num">'+o+'</span><span class="of">/ 100</span></div>'+
-     '<p class="say">of what the goal promises is proven in the living Jack: the brain he has today, in his own world.</p>'+
-     meter2(a.overall_world||0,a.overall,"big")+
-     '<p class="say" style="margin:12px 0 0;font-size:15px">'+(beside>0?"Another "+beside+" proof"+(beside===1?" passes":"s pass")+" beside him, on a test bench or with an earlier brain (the lighter bar). They show a part works by itself; each has to be earned again inside him once his brain is chosen.":"Nothing is proven only on a test bench.")+"</p>"+
+  var RP=S.report||{},secs=RP.sections||[],hd=S.headline||{};
+  function blocks(B){var o="",inl=false;B.forEach(function(b){
+      if(b.t==="li"){if(!inl){o+='<ul class="rl">';inl=true}o+="<li>"+(b.n?'<b class="n">'+esc(b.n)+"</b>":"")+"<span>"+bold(b.text)+"</span></li>"}
+      else{if(inl){o+="</ul>";inl=false}o+="<p>"+bold(b.text)+"</p>"}});
+    return o+(inl?"</ul>":"")}
+  function sec(re){return secs.filter(function(x){return re.test(x.title)})[0]}
+  var short=sec(/short version/i),forme=sec(/for the owner/i),rest=secs.filter(function(x){return x!==short&&x!==forme&&!/route/i.test(x.title)});
+  if(short||(hd.paras&&hd.paras.length)){
+    var when=RP.written||hd.written||"",d0=/^\d{4}-\d\d-\d\d/.test(when)?when.slice(0,10):"";
+    h+='<div class="card report span"><p class="eyebrow">Today\u2019s report'+(d0?" · "+day(d0+"T12:00"):"")+'</p>'+
+       '<div class="lead">'+(short?blocks(short.blocks):hd.paras.map(function(p){return "<p>"+bold(p)+"</p>"}).join(""))+"</div>"+
+       (forme?'<div class="foryou"><p class="eyebrow">For you</p>'+blocks(forme.blocks.filter(function(b){return !/^Philosophy served/i.test(b.text)}))+"</div>":"")+
+       rest.map(function(x){return '<details class="rs"'+(repOpen[x.title]?" open":"")+' data-rep="'+esc(x.title)+'"><summary>'+esc(x.title.replace(/\s*\(.*\)\s*$/,""))+"</summary>"+blocks(x.blocks)+"</details>"}).join("")+
+       '<p class="foot" style="padding:12px 0 0">Written by the Director every morning, about 07:00 UTC, after reading everything the workers did.</p></div>';
+  }
+  var U=S.updates||[];
+  h+='<div class="card span"><h2>Since the report</h2><p class="sub">A short note from the workers after every run, about once an hour.</p>'+
+     (U.length?'<ul class="feed">'+U.slice(0,upAll?40:5).map(function(u){return "<li><em>"+esc(ago(u.at))+" · "+esc(({JACK:"Jack",LAB:"Lab",MACHINE:"Machine",SYSTEM:"Machine",OUTSIDER:"Outsider"})[u.lane]||u.lane)+"</em><span>"+bold(u.text)+"</span></li>"}).join("")+"</ul>"+
+        (U.length>5?'<button class="link" data-act="ups">'+(upAll?"Show fewer":"Show all "+U.length)+"</button>":""):'<p class="empty">No notes yet. The first arrives after the next worker run.</p>')+"</div>";
+
+  var cur=ms.filter(function(m){return m.state!=="met"})[0],job=(S.orders||[])[0];
+  var PLAIN={1:["He lives one whole life","With a simple starter brain: born, moves, gets hungry, dies. The loop works end to end."],
+    2:["He learns to stay alive","A world that can teach him, and lessons in the right order. He must find food and eat."],
+    3:["The best brain design wins","He has had a simple starter brain since step 1. Here rival designs race on the same tasks, and the winners replace it part by part."],
+    4:["A body that moves","He walks and balances in the same human-like body he survives in."],
+    5:["All his senses, in that one brain","Sight, hearing, touch, smell, taste and the rest, each wired into the chosen brain and shown to matter."],
+    6:["Words","He hears a parent's voice and ties words to his own life."],
+    7:["He keeps learning","He learns new things without forgetting the old ones."],
+    8:["A living Jack","Long lives with everything at once. This is when he is worth watching and advising."],
+    9:["Beyond the jungle","New worlds, and carrying what he knows between them."]};
+  function nm(m){return (PLAIN[m.n]||[m.title])[0]}
+  h+='<div class="card hero"><p class="eyebrow">Where Jack is</p>'+
+     '<div><span class="num">'+(cur?cur.n:ms.length)+'</span><span class="of">of '+ms.length+' steps</span></div>'+
+     '<p class="say">'+(cur?"He is on step "+cur.n+": <strong>"+esc(nm(cur).charAt(0).toLowerCase()+nm(cur).slice(1))+"</strong>. "+esc((PLAIN[cur.n]||["",""])[1]):"Every step is met.")+(job?" The team's job right now: "+esc(job.title.charAt(0).toLowerCase()+job.title.slice(1))+".":"")+"</p>"+
+     '<div class="steps" aria-hidden="true">'+ms.map(function(m){return '<i class="'+(m.state==="met"?"met":cur&&m.n===cur.n?"now":"")+'"></i>'}).join("")+"</div>"+
+     '<ol class="stepl">'+ms.map(function(m){var c=m.state==="met"?"met":cur&&m.n===cur.n?"now":"";
+        return '<li class="'+c+'"><b>'+m.n+"</b><span>"+esc(nm(m))+(c==="now"&&PLAIN[m.n]?'<small>'+esc(PLAIN[m.n][1])+"</small>":"")+"</span><em>"+(c==="met"?"done":c==="now"?"here now":m.state==="in work"?"started":"later")+"</em></li>"}).join("")+"</ol>"+
+     '<p class="say" style="margin:12px 0 0;font-size:15px">The steps build on each other. "Started" means parts are being built and tested on their own, on a bench, ahead of time. He has a starter brain from step 1, and eating is the first thing any brain has to manage, so it is also the task the rival brains race on. The winning design is settled at step 3, and only at step 5 are all his senses wired into it. Until then a sense that passes its test works on the bench, not yet in him.</p></div>';
+
+  var mine=a.in_him||[];
+  h+='<div class="card"><h2>Proven in Jack himself</h2><p class="sub">Of the '+a.proofs+" proofs the goal asks for, "+(a.proofs_passed_world||0)+(mine.length===1?" is":" are")+" earned by the living Jack: the brain he has today, in his own world.</p>"+
+     (mine.length?'<div class="items">'+mine.map(function(x){return '<div class="item"><span class="name">'+esc(x.promise)+"</span>"+st("PASS")+'<span class="role">'+esc(x.title)+"</span></div>"}).join("")+"</div>":'<p class="empty">Nothing yet.</p>')+
+     meter2(a.overall_world||0,a.overall,"big").replace('class="meter','style="margin-top:14px" class="meter')+
+     '<p class="say" style="margin:10px 0 0;font-size:15px;color:var(--ink2)">'+(beside>0?"The lighter bar is "+beside+" more proofs that pass beside him, on a test bench or with an earlier brain. Each has to be earned again inside him.":"")+"</p>"+
      '<div class="tiles">'+
-       '<div class="tile"><div class="v">'+met+'</div><div class="l">of '+ms.length+' milestones met</div></div>'+
+       '<div class="tile"><div class="v">'+met+'</div><div class="l">of '+ms.length+' steps done</div></div>'+
        '<div class="tile"><div class="v">'+(a.proofs_passed_world||0)+'</div><div class="l">of '+a.proofs+' proofs earned in him</div></div>'+
        '<div class="tile"><div class="v">'+L.passing+'</div><div class="l">of all '+L.total+' tests pass'+(wk!=null?" · "+(wk>=0?"+":"")+wk+" in 7 days":"")+'</div>'+spark(hist.slice(-30))+'</div>'+
      '</div>'+
@@ -294,12 +363,6 @@ function viewJack(){
       return '<div class="look"><span class="st '+l[2]+'"><b aria-hidden="true">'+l[0]+'</b><span style="position:absolute;left:-9999px">'+l[1]+"</span></span><span>"+esc(a.text)+"</span></div>"}).join("")+"</div></div>";
   }
 
-  var hd=S.headline||{};
-  if(hd.paras&&hd.paras.length){
-    h+='<div class="card note'+(noteOpen?"":" clamp")+'"><p class="eyebrow">From the Director'+(hd.written&&/^\d{4}-\d\d-\d\d/.test(hd.written)?" · "+day(hd.written.slice(0,10)+"T12:00"):"")+'</p><div class="body">'+
-       hd.paras.map(function(p){return "<p>"+bold(p)+"</p>"}).join("")+'</div>'+
-       '<button class="link" data-act="note">'+(noteOpen?"Show less":"Read it all")+'</button></div>';
-  }
 
   h+='<div class="card"><h2>What he can do</h2><p class="sub">The number is what is proven in Jack himself. Tap a bar for the tests behind it.</p>'+
      '<div class="key2"><span><i></i>in Jack himself</span><span><i class="w"></i>only on a test bench, or an earlier brain</span></div><ul class="rows wide">'+
@@ -589,7 +652,7 @@ document.addEventListener("click",function(e){
     v.scrollIntoView({block:"center"})}return}
   if(t.dataset.sheet)openSheet(t.dataset.sheet);
   else if(t.dataset.act==="close")closeSheet();
-  else if(t.dataset.act==="note"){noteOpen=!noteOpen;viewJack()}
+  else if(t.dataset.act==="ups"){upAll=!upAll;viewJack()}
   else if(t.dataset.act==="journal"){journalAll=!journalAll;viewJack()}
   else if(t.dataset.act==="signout"){fetch("logout",{method:"POST",cache:"no-store"}).then(function(){location.reload()}).catch(function(){location.reload()})}
   else if(t.dataset.day){journalOpen[t.dataset.day]=!journalOpen[t.dataset.day];t.classList.toggle("open");var jj=(S.journal||[]).filter(function(x){return x.d===t.dataset.day})[0];if(jj&&jj.paras&&jj.paras.length)t.querySelector(".txt").innerHTML=(journalOpen[jj.d]?jj.paras:jj.paras.slice(0,1)).map(bold).join("<br><br>")}

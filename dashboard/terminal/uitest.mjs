@@ -34,6 +34,25 @@ const PROFILES = [
 ].filter((p) => !only || only.split(',').includes(p.id));
 
 const results = [];
+// The tests never touch the owner's live session: they run their own throwaway
+// terminal server and tmux, and the page's connection is carried to it.
+import { spawn } from 'node:child_process';
+const TPORT = 7699, CONF = new URL('./tmux.conf', import.meta.url).pathname;
+try { execSync('tmux -L jacktest kill-server', { stdio: 'ignore' }); } catch {}
+const tty = spawn('/usr/local/bin/ttyd', ['--interface', '127.0.0.1', '--port', String(TPORT), '--base-path', '/term', '--writable',
+  '/usr/bin/tmux', '-u', '-L', 'jacktest', '-f', CONF, 'new-session', '-A', '-s', 'jack', '-c', '/home/opc'], { stdio: 'ignore' });
+function cleanup() { try { tty.kill(); } catch {} try { execSync('tmux -L jacktest kill-server', { stdio: 'ignore' }); } catch {} }
+process.on('exit', cleanup); process.on('SIGINT', () => process.exit(130)); process.on('SIGTERM', () => process.exit(143));
+await sleep(700);
+function bridge(ws) {
+  const up = new WebSocket(`ws://127.0.0.1:${TPORT}/term/ws`, ['tty']); up.binaryType = 'arraybuffer';
+  const q = []; let open = false;
+  up.onopen = () => { open = true; for (const m of q) up.send(m); };
+  ws.onMessage((m) => { if (open) up.send(m); else q.push(m); });
+  up.onmessage = (e) => { try { ws.send(typeof e.data === 'string' ? e.data : Buffer.from(e.data)); } catch {} };
+  up.onclose = () => { try { ws.close(); } catch {} };
+  ws.onClose(() => { try { up.close(); } catch {} });
+}
 function check(list, name, ok, detail = '') { list.push({ name, ok: !!ok, detail: String(detail) }); }
 
 async function screen(page) {
@@ -69,6 +88,7 @@ async function geometry(page) {
 }
 
 const browser = await pw[engineName].launch({ args: engineName === 'chromium' ? [`--host-resolver-rules=MAP ${HOST} 10.0.0.135`, '--no-sandbox'] : [] });
+{ const nc = browser.newContext.bind(browser); browser.newContext = async (o) => { const c = await nc(o); await c.routeWebSocket(/\/term\/ws/, bridge); return c; }; }
 
 {
   const R = { profile: 'The app itself, no dashboard password', id: 'app', engine: engineName, checks: [], timing: {}, errors: [] };
@@ -115,7 +135,7 @@ const browser = await pw[engineName].launch({ args: engineName === 'chromium' ? 
     check(C, 'Right password opens the dashboard and is remembered for a year, unreadable by scripts', ck && ck.httpOnly && ck.secure && (ck.expires - Date.now() / 1000) > 300 * 86400);
     const hero = await page.textContent('#view-jack .hero .eyebrow');
     const tone = await page.$$eval('#view-jack .meter b', (n) => n.length);
-    check(C, 'Headline says what is proven in Jack himself, with the lighter bar for bench proofs', /in Jack himself/i.test(hero) && tone >= 5, `${hero}, ${tone} two-tone bars`);
+    check(C, 'Front page leads with the step he is on, and keeps the two-tone proof bars', /Where Jack is/i.test(hero) && /of \d+ steps/.test(hero) && tone >= 5, `${hero}, ${tone} two-tone bars`);
     await sleep(300); await page.screenshot({ path: `${OUT}jack-1-home.png` });
     const man = await page.evaluate(() => fetch('manifest.webmanifest').then((r) => r.json()));
     const icon = await page.evaluate(() => new Promise((res) => { const i = new Image(); i.onload = () => res(i.naturalWidth); i.onerror = () => res(0); i.src = 'icon-512.png'; }));
@@ -147,10 +167,12 @@ for (const p of PROFILES) {
     colorScheme: 'dark',
     userAgent: p.touch ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' : undefined,
   });
+  await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('t-boxmode')) localStorage.setItem('jt-direct', '1'); } catch {} });
   await ctx.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
   await ctx.request.post(`${BASE}/login-check`, { headers: { Authorization: 'Basic ' + Buffer.from('jack:' + PIN).toString('base64') } });
   // a stand-in for the phone's speech service, so the microphone path can be exercised here
   await ctx.addInitScript(() => { window.SpeechRecognition = window.webkitSpeechRecognition = class { start() { setTimeout(() => { const r = [{ transcript: 'echo SPOKENWORDS' }]; r.isFinal = true; if (this.onresult) this.onresult({ results: [r] }); }, 250); } stop() { if (this.onend) this.onend(); } }; });
+  try { execSync('tmux -L jacktest kill-window -a -t jack:0 2>/dev/null; tmux -L jacktest send-keys -t jack:0 -X cancel 2>/dev/null; true', { stdio: 'ignore', shell: '/bin/bash' }); } catch {}
   const page = await ctx.newPage();
   page.on('console', (m) => { if (m.type() === 'error' && !/status of 401/.test(m.text()) && !R.expectDrop) R.errors.push('console: ' + m.text().slice(0, 200)); });
   page.on('pageerror', (e) => R.errors.push('page: ' + String(e).slice(0, 200)));
@@ -259,6 +281,10 @@ for (const p of PROFILES) {
       const loa = await lowest();
       check(C, 'Swiping down scrolls back through earlier lines', lob !== null && loa !== null && loa < lob, `${lob} → ${loa}`);
       await page.screenshot({ path: `${OUT}${p.id}-4-scrolled.png` });
+      // typing while scrolled back returns to the bottom first, so nothing is lost
+      await page.keyboard.type(`echo BACK-${mark}`); await page.keyboard.press('Enter');
+      const bk = await waitText(page, `\nBACK-${mark}`, 5000);
+      check(C, 'Typing while scrolled back returns to the bottom and runs', bk >= 0, `${bk} ms`);
       await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: yb }] });
       for (let i = 1; i <= 24; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: yb - ((yb - ya) * 2 * i) / 24 }] }); await sleep(12); }
       await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
@@ -313,16 +339,29 @@ for (const p of PROFILES) {
     // 13b. a second window: a strip appears, switching works, closing it removes the strip
     const menu = async (item) => { if (!(await page.isVisible('#menu'))) { if (p.touch) await page.tap('#more'); else await page.click('#more'); await page.waitForSelector('#menu:not([hidden])'); } if (p.touch) await page.tap(`[data-m="${item}"]`); else await page.click(`[data-m="${item}"]`); await sleep(250); };
     await menu('newwin');
-    const strip = await waitText(page, '1 bash', 5000);
+    const tabs = async () => page.$$eval('#wins .win:not(.add)', (n) => n.map((x) => x.classList.contains('on')));
+    const t7 = Date.now(); let strip = -1; while (Date.now() - t7 < 5000) { if ((await tabs()).length === 2) { strip = Date.now() - t7; break; } await sleep(60); }
     await focusTerm(page, p); await page.keyboard.type(`echo WINTWO-${mark}`); await page.keyboard.press('Enter');
     const w2 = await waitText(page, `WINTWO-${mark}`, 5000);
-    await menu('nextwin');
+    if (p.touch) await page.tap('#wins .win >> nth=0'); else await page.click('#wins .win >> nth=0');
     const w1 = await waitText(page, `${mark}-STILL-HERE`, 5000);
-    await menu('nextwin'); await waitText(page, `WINTWO-${mark}`, 5000);
+    const firstOn = (await tabs())[0] === true;
+    const tabsFit = await page.evaluate(() => { const w = document.querySelector('#wins').getBoundingClientRect(), k = document.querySelector('#keys').getBoundingClientRect(); return w.height >= 44 && k.bottom <= innerHeight + 1 && document.documentElement.scrollWidth <= innerWidth; });
+    await sleep(200); await page.screenshot({ path: `${OUT}${p.id}-c-windows.png` });
+    if (p.touch && engineName === 'chromium') {
+      // a sideways swipe on the screen goes to the next window
+      const cdp2 = await ctx.newCDPSession(page); const sy = Math.round(p.h * 0.4), xa = Math.round(p.w * 0.75), xb = Math.round(p.w * 0.25);
+      await cdp2.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: xa, y: sy }] });
+      for (let i = 1; i <= 8; i++) { await cdp2.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: xa + ((xb - xa) * i) / 8, y: sy }] }); await sleep(16); }
+      await cdp2.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      const sw = await waitText(page, `WINTWO-${mark}`, 5000);
+      check(C, 'Swiping sideways goes to the next window', sw >= 0 && (await tabs())[1] === true, `${sw} ms`);
+    } else if (p.touch) await page.tap('#wins .win >> nth=1'); else await page.click('#wins .win >> nth=1');
+    await waitText(page, `WINTWO-${mark}`, 5000);
     await focusTerm(page, p); await page.keyboard.type('exit'); await page.keyboard.press('Enter');
     const t9 = Date.now(); let stripGone = false;
-    while (Date.now() - t9 < 5000) { const sc = await screen(page); if (!sc.includes('1 bash') && sc.includes(`${mark}-STILL-HERE`)) { stripGone = true; break; } await sleep(80); }
-    check(C, 'A second window opens, switching works, closing it tidies up', strip >= 0 && w2 >= 0 && w1 >= 0 && stripGone, `strip ${strip} ms, second ${w2} ms, back ${w1} ms, tidy ${stripGone}`);
+    while (Date.now() - t9 < 5000) { if ((await page.$$('#wins .win:not(.add)')).length === 1 && (await screen(page)).includes(`${mark}-STILL-HERE`)) { stripGone = true; break; } await sleep(80); }
+    check(C, 'Window tabs: a second window gets a tab, tapping switches, closing removes the tabs', strip >= 0 && w2 >= 0 && w1 >= 0 && firstOn && tabsFit && stripGone, `tabs ${strip} ms, second ${w2} ms, back ${w1} ms, first lit ${firstOn}, fits ${tabsFit}, tidy ${stripGone}`);
 
     // 13c. copy what is on screen
     await menu('copy');
@@ -334,6 +373,24 @@ for (const p of PROFILES) {
     const clip = engineName === 'chromium' ? await page.evaluate(() => navigator.clipboard.readText().catch(() => '')) : copied;
     check(C, 'Copy sheet holds the screen text and copies it', copied.includes(`${mark}-STILL-HERE`) && clip.includes(`${mark}-STILL-HERE`) && (await page.textContent('#copyall')) === 'Copied');
     if (p.touch) await page.tap('#copy [data-close]'); else await page.click('#copy [data-close]');
+
+    // 13d. on a phone a tap on the screen opens the message box; it stays open after Send; an empty Send is return
+    if (p.touch) {
+      await page.evaluate(() => { localStorage.removeItem('jt-direct'); sessionStorage.setItem('t-boxmode', '1'); });
+      await page.tap('#term', { position: { x: 60, y: 60 } });
+      const opened = await page.waitForSelector('#compose:not([hidden])', { timeout: 3000 }).then(() => true, () => false);
+      const attrs = await page.evaluate(() => { const t = document.querySelector('#ctext'); return document.activeElement === t && t.getAttribute('autocorrect') === 'on' && t.spellcheck; });
+      await page.fill('#ctext', `echo BOX-${mark}`); await page.tap('#csend');
+      const ran = await waitText(page, `BOX-${mark}`, 5000);
+      const still = await page.evaluate(() => document.querySelector('#compose').hidden && document.activeElement !== document.querySelector('#ctext') && document.activeElement !== window.jackTerm.textarea);
+      await page.tap('#term', { position: { x: 60, y: 60 } }); await page.waitForSelector('#compose:not([hidden])', { timeout: 3000 }).catch(() => {});
+      await page.fill('#ctext', `echo HALF-${mark}`); await page.tap('#cinsert'); await sleep(500); await page.tap('#csend');
+      const ret = await waitText(page, `\nHALF-${mark}`, 5000);
+      await sleep(200); await page.screenshot({ path: `${OUT}${p.id}-b-box.png` });
+      await sleep(150);
+      check(C, 'Tapping the screen opens a message box with autocorrect; Send runs it and puts the keyboard away; empty Send is return', opened && attrs && ran >= 0 && still && ret >= 0 && !(await page.isVisible('#compose')), JSON.stringify({ opened, attrs, ran, still, ret }));
+      await page.evaluate(() => { localStorage.setItem('jt-direct', '1'); sessionStorage.removeItem('t-boxmode'); });
+    }
 
     // 13e. speak: the microphone key opens a box, the words land in it, Send puts them in the terminal
     await press(page, p, 'speak');
@@ -403,6 +460,7 @@ for (const p of PROFILES) {
   await ctx.close();
 }
 await browser.close();
+cleanup();
 fs.writeFileSync(`${OUT}results-${engineName}.json`, JSON.stringify(results, null, 1));
 for (const r of results) {
   const bad = r.checks.filter((c) => !c.ok);

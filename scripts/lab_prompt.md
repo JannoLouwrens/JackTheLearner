@@ -68,3 +68,7 @@ the better, provided it could actually run here.
    DEAD / ENTERED, and the line of the philosophy the idea serves. Keep the file ≤ 10 KB; fold old dead ideas into one line each.
 2. Commit with explicit paths (never `git add -A`), numbers in the message, push.
 3. ≤ 5 lines in `docs/LOOP_JOURNAL.md`: date, lane LAB, what was tried.
+   Then append ONE line to `docs/OWNER_UPDATES.md` for the owner's phone:
+   `- <UTC date> <HH:MM> · LAB · <one or two plain sentences: what you tried and
+   what happened>`. No test ids, hashes or jargon; a failure said as plainly as
+   a win. Commit it with the journal.

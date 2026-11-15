@@ -104,6 +104,10 @@ number and say so in the journal. When unsure, leave it and add an INBOX line.
 3. Append ≤ 8 lines to `docs/LOOP_JOURNAL.md`: date, lane, order id, what moved,
    and which line of the philosophy it served. If you cannot name one, say so —
    that is a finding for the Director, not something to hide.
+   Then append ONE line to `docs/OWNER_UPDATES.md` for the owner's phone:
+   `- <UTC date> <HH:MM> · JACK · <one or two plain sentences: what you tried and
+   what happened>`. No test ids, hashes or jargon; a failure said as plainly as
+   a win. Commit it with the journal.
 4. `$PY -m experiments.run render` if the ledger changed.
 
 Never: restart Docker or any daemon (customers live on this box); `pkill -f`;

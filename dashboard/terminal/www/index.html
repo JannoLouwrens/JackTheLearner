@@ -58,6 +58,14 @@ button{font:inherit;color:inherit}
   .bar{border-bottom-color:transparent;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
 }
 
+/* window tabs: one per shell in the session, shown once there is more than one */
+#wins{flex:none;display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none;padding:6px max(10px,env(safe-area-inset-right,0px)) 6px max(10px,env(safe-area-inset-left,0px));background:var(--bar);border-bottom:1px solid var(--line);z-index:3;touch-action:pan-x}
+#wins::-webkit-scrollbar{display:none}
+.win{flex:none;height:36px;padding:0 14px;border:0;border-radius:99px;background:var(--key);color:var(--ink2);font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
+.win.on{background:var(--key-on);color:#fff}
+.win.add{width:36px;padding:0;font-size:20px;font-weight:500;color:var(--ink)}
+@media (min-width:900px){#wins{background:transparent;border-bottom-color:transparent;padding-left:18px}}
+
 /* key bar */
 #keys{flex:none;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);
   padding:7px max(8px,env(safe-area-inset-right,0px)) calc(7px + var(--bottom-inset,0px)) max(8px,env(safe-area-inset-left,0px));z-index:3}
@@ -151,10 +159,12 @@ html:not(.app) #menu [data-m="dash"]{display:none}
     <button class="icon" id="more" aria-label="More" aria-haspopup="true"><svg viewBox="0 0 22 22" fill="currentColor"><circle cx="4" cy="11" r="2"/><circle cx="11" cy="11" r="2"/><circle cx="18" cy="11" r="2"/></svg></button>
   </header>
 
+  <div id="wins" hidden role="tablist" aria-label="Windows"></div>
+
   <div id="stage"><div id="term"></div><div id="notice" hidden></div><div id="toast" hidden role="status"></div></div>
 
   <div id="compose" hidden>
-    <textarea id="ctext" rows="1" placeholder="Speak or type, then send" aria-label="Message to send into the terminal" autocapitalize="sentences" spellcheck="true" enterkeyhint="send"></textarea>
+    <textarea id="ctext" rows="1" placeholder="Message" aria-label="Message to send into the terminal" autocapitalize="sentences" autocorrect="on" autocomplete="on" spellcheck="true" enterkeyhint="send"></textarea>
     <div class="crow">
       <button class="key" id="cmic" type="button" aria-pressed="false"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="1.8" width="5" height="9" rx="2.5"/><path d="M3.8 8.6a5.2 5.2 0 0 0 10.4 0M9 13.8v2.6"/></svg><span>Listen</span></button>
       <span class="hint" id="chint"></span>
@@ -172,7 +182,6 @@ html:not(.app) #menu [data-m="dash"]{display:none}
     <hr>
     <button data-m="wins" role="menuitem">Windows</button>
     <button data-m="newwin" role="menuitem">New window</button>
-    <button data-m="nextwin" role="menuitem">Next window</button>
     <hr>
     <div class="size">Text size <div><button data-m="smaller" aria-label="Smaller text">A−</button><span id="sizeval">13</span><button data-m="bigger" aria-label="Larger text">A+</button></div></div>
     <hr>
@@ -202,11 +211,13 @@ html:not(.app) #menu [data-m="dash"]{display:none}
       <h2>How to use this</h2>
       <ul class="tips">
         <li><b>Your chat</b><span>Type <code>jackchat</code> and press return, or choose “Open my Claude chat” in the menu. It keeps running when you close this page.</span></li>
+        <li><b>Windows</b><span>The tabs at the top are your windows. Tap one to switch, tap + for another, or swipe the screen sideways. They all keep running on the server.</span></li>
+        <li><b>Write</b><span>On a phone, tap the screen or the pencil for a message box where suggestions and autocorrect work. Send with nothing in it is the return key. The keyboard key types straight into the terminal instead.</span></li>
         <li><b>Speak</b><span>Tap the microphone. Your words appear in a box you can correct, then Send puts them in the terminal.</span></li>
         <li><b>Photos</b><span>Tap the camera to take or choose a picture. It is saved on your server and its location is typed into your message.</span></li>
         <li><b>Scroll back</b><span>Swipe up and down on the terminal, or use the page keys.</span></li>
         <li><b>esc, ctrl</b><span>Tap esc to interrupt Claude. Tap ctrl, then a letter, for a control key; ^C is on its own key.</span></li>
-        <li><b>Windows</b><span>“New window” in the menu opens a second shell beside your chat. “Windows” lists them all: pick one with the arrow keys and return.</span></li>
+        <li><b>Windows</b><span>“New window” in the menu opens a second shell beside your chat. Tabs then appear under the title: tap one to switch, tap + for another. Type <code>exit</code> to close one.</span></li>
         <li><b>As an app</b><span>Choose “Add to Home Screen” in the menu. It then opens full screen from its own icon and stays signed in.</span></li>
       </ul>
       <button class="cta" data-close="tips">Done</button>
@@ -274,8 +285,10 @@ var ws=null, token=null, wantOpen=false, tries=0, timer=null, pending=0, paused=
 function setState(kind,text){var el=$("#state");el.className="state "+kind;el.lastElementChild.textContent=text}
 function notice(title,body){var n=$("#notice");if(!title){n.hidden=true;return}n.innerHTML="<b></b><span></span>";n.firstChild.textContent=title;n.lastChild.textContent=body||"";n.hidden=false}
 function send(bytes){if(ws&&ws.readyState===1)ws.send(bytes)}
+var inMode=false;                                     /* scrolled back in the server's history */
 function input(s){
   if(!ws||ws.readyState!==1)return;
+  if(inMode&&!/^(\x1b\[<6[45];|\x1b\[[56]~)/.test(s)){inMode=false;s="q"+s}   /* typing returns to the bottom first */
   var b=enc.encode(s),p=new Uint8Array(b.length+1);p[0]=48;p.set(b,1);ws.send(p);
 }
 function sendSize(){send(enc.encode("1"+JSON.stringify({columns:term.cols,rows:term.rows})))}
@@ -358,14 +371,33 @@ term.onData(function(d){
 });
 term.onResize(function(){sendSize()});
 
+/* ───── window tabs, from what tmux reports in the terminal title ───── */
+var NAMES={bash:"Shell",claude:"Claude",node:"Claude",python:"Python",python3:"Python",vim:"Editor",nano:"Editor",htop:"Monitor",top:"Monitor"};
+var winCount=1,winNames={};
+term.onTitleChange(function(t){
+  if(!/^JWm?\|/.test(t))return;
+  inMode=t.charAt(2)==="m";
+  var W=t.split("|").slice(1).filter(Boolean).map(function(x){var on=/\*$/.test(x),p=x.replace(/\*$/,"").split("=");var n=p.slice(1).join("=")||"shell";if(n==="[tmux]")n=winNames[p[0]]||"shell";else winNames[p[0]]=n;return {i:p[0],n:n,on:on}});
+  var el=$("#wins"),was=el.hidden;
+  el.hidden=W.length<2&&innerHeight<500;winCount=W.length;   /* a phone held sideways keeps the row unless it is needed */
+  el.innerHTML=W.map(function(w,k){var b=document.createElement("button");b.className="win"+(w.on?" on":"");b.setAttribute("role","tab");b.setAttribute("aria-selected",w.on?"true":"false");b.dataset.win=w.i;b.textContent=(k+1)+"  "+(NAMES[w.n]||w.n);return b.outerHTML}).join("")+'<button class="win add" data-win="+" aria-label="New window">+</button>';
+  if(was!==el.hidden)layout();
+  var cur=el.querySelector(".on");if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:"nearest",inline:"nearest"});
+});
+$("#wins").addEventListener("click",function(e){var b=e.target.closest("[data-win]");if(!b)return;
+  if(b.dataset.win==="+")input("\x02c");else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else input("\x02:select-window -t "+b.dataset.win+"\r");
+  if(!coarse)term.focus()});
+
 /* ───── the extra keys ───── */
 function csi(a,b){return term.modes&&term.modes.applicationCursorKeysMode?"\x1bO"+a:"\x1b["+a}
 var ARROW='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14V4M4.5 8.5 9 4l4.5 4.5"/></svg>';
 function rot(deg){return ARROW.replace("<svg ",'<svg style="transform:rotate('+deg+'deg)" ')}
 var MIC='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="1.8" width="5" height="9" rx="2.5"/><path d="M3.8 8.6a5.2 5.2 0 0 0 10.4 0M9 13.8v2.6"/></svg>';
 var CAM='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.3a1.6 1.6 0 0 1 1.6-1.6h1.6l1-1.6h5.6l1 1.6h1.6A1.6 1.6 0 0 1 16 6.3v6.8a1.6 1.6 0 0 1-1.6 1.6H3.6A1.6 1.6 0 0 1 2 13.1z"/><circle cx="9" cy="9.5" r="2.8"/></svg>';
+var PEN='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11.8 3.2l3 3L6.3 14.7l-3.8.8.8-3.8z"/></svg>';
 var KEYS=[
   {k:"speak",h:MIC,a:"Speak or type a message"},
+  {k:"write",h:PEN,a:"Write a message with autocorrect"},
   {k:"photo",h:CAM,a:"Add a photo"},
   {sep:1},
   {k:"esc",t:"esc",s:"\x1b",a:"Escape"},
@@ -394,13 +426,14 @@ KEYS.forEach(function(K){
 function act(k){
   var K=KEYS.filter(function(x){return x.k===k})[0];if(!K)return;
   if(k==="speak"){if($("#compose").hidden)openCompose(true);else closeCompose();return}
+  if(k==="write"){LS.del(DIRECT);if($("#compose").hidden)openCompose(false);else closeCompose();return}
   if(k==="photo"){$("#photo").click();return}
   if(k==="ctrl"){setCtrl(!ctrlArmed);return}
   if(k==="paste"){
     if(navigator.clipboard&&navigator.clipboard.readText)navigator.clipboard.readText().then(function(t){if(t)term.paste(t)}).catch(function(){});
     return;
   }
-  if(k==="kbd"){var ta=term.textarea;if(document.activeElement===ta)ta.blur();else term.focus();return}
+  if(k==="kbd"){var ta=term.textarea;if(document.activeElement===ta)ta.blur();else{LS.set(DIRECT,"1");if(!$("#compose").hidden)closeCompose();term.focus()}return}
   var s=K.f?K.f():K.s;
   if(ctrlArmed){setCtrl(false)}
   input(s);
@@ -445,12 +478,17 @@ function startListening(){
   try{rec.start();setListening(true)}catch(e){$("#chint").textContent="Tap the microphone on your keyboard to speak."}
 }
 function stopListening(){if(rec&&listening){try{rec.stop()}catch(e){}}}
-function openCompose(listen){$("#compose").hidden=false;$("#chint").textContent="";grow();$("#ctext").focus();if(listen)startListening()}
+var stay=false, DIRECT="jt-direct";
+function openCompose(listen){stay=coarse&&!listen;$("#compose").hidden=false;$("#chint").textContent="";grow();$("#ctext").focus();if(listen)startListening()}
 function closeCompose(){stopListening();$("#compose").hidden=true;layout();if(!coarse)term.focus()}
 function sendCompose(enter){
   var v=$("#ctext").value;stopListening();
-  if(v.trim()){term.paste(v);if(enter)setTimeout(function(){input("\r")},80)}
-  $("#ctext").value="";closeCompose();
+  term.scrollToBottom();
+  if(v.trim()){term.paste(v);if(enter)setTimeout(function(){input("\r")},80+Math.min(400,v.length/10))}
+  else if(enter)input("\r");
+  $("#ctext").value="";
+  if(stay&&!enter){grow();layout();$("#ctext").focus()}        /* Insert: keep writing */
+  else{$("#ctext").blur();closeCompose()}                        /* Send: the box and the keyboard close */
 }
 $("#cmic").addEventListener("click",function(){if(listening)stopListening();else startListening()});
 $("#cinsert").addEventListener("click",function(){sendCompose(false)});
@@ -487,23 +525,33 @@ $("#photo").addEventListener("change",function(){var f=[].slice.call(this.files|
 function edges(){var r=row;r.style.setProperty("--l",r.scrollLeft>2?"22px":"0px");r.style.setProperty("--r",r.scrollLeft+r.clientWidth<r.scrollWidth-2?"22px":"0px")}
 row.addEventListener("scroll",edges,{passive:true});window.addEventListener("resize",edges);edges();
 
-/* ───── swipe to scroll back ───── */
+/* ───── swipe to scroll back: follows the finger, then glides to a stop ───── */
 (function(){
-  var st=$("#stage"),y0=null,acc=0;
-  function cellH(){var r=term.rows||24;return Math.max(10,$("#term").clientHeight/r)}
-  st.addEventListener("touchstart",function(e){if(e.touches.length===1){y0=e.touches[0].clientY;acc=0}},{passive:true,capture:true});
+  var st=$("#stage"),y0=null,t0=0,acc=0,vel=0,raf=null,ys=0,ts=0,far=0,xs=0,dxs=0,side=false;
+  function cellH(){return Math.max(10,$("#term").clientHeight/(term.rows||24))}
+  function move(dy){
+    acc+=dy;var h=cellH(),n=acc>0?Math.floor(acc/h):Math.ceil(acc/h);if(!n)return;acc-=n*h;
+    var mouse=term.modes&&term.modes.mouseTrackingMode&&term.modes.mouseTrackingMode!=="none";
+    if(mouse){var code=n>0?64:65,seq="";for(var i=0;i<Math.min(Math.abs(n),40);i++)seq+="\x1b[<"+code+";1;1M";input(seq)}
+    else term.scrollLines(-n);
+  }
+  function glide(){vel*=0.94;if(Math.abs(vel)<0.02){raf=null;return}move(vel*16);raf=requestAnimationFrame(glide)}
+  st.addEventListener("touchstart",function(e){if(raf){cancelAnimationFrame(raf);raf=null}if(e.touches.length===1){y0=ys=e.touches[0].clientY;xs=e.touches[0].clientX;dxs=0;side=false;t0=ts=e.timeStamp;acc=0;vel=0;far=0}},{passive:true,capture:true});
   st.addEventListener("touchmove",function(e){
     if(y0===null||e.touches.length!==1)return;
-    var y=e.touches[0].clientY;acc+=y-y0;y0=y;var h=cellH(),n=0;
-    while(Math.abs(acc)>=h){n+=acc>0?1:-1;acc-=acc>0?h:-h}
-    if(n){
-      var mouse=term.modes&&term.modes.mouseTrackingMode&&term.modes.mouseTrackingMode!=="none";
-      if(mouse){var code=n>0?64:65,seq="";for(var i=0;i<Math.abs(n);i++)seq+="\x1b[<"+code+";1;1M";input(seq)}
-      else term.scrollLines(-n);
-    }
+    var y=e.touches[0].clientY,dy=y-y0,dt=Math.max(1,e.timeStamp-t0);y0=y;t0=e.timeStamp;
+    dxs=e.touches[0].clientX-xs;
+    if(!side&&far<12&&Math.abs(dxs)>24&&Math.abs(dxs)>2*Math.abs(y-ys))side=true;
+    if(side){if(e.cancelable)e.preventDefault();e.stopPropagation();return}
+    far=Math.max(far,Math.abs(y-ys));if(far<6)return;
+    vel=0.7*vel+0.3*(dy/dt);move(dy);
     if(e.cancelable)e.preventDefault();e.stopPropagation();
   },{passive:false,capture:true});
-  st.addEventListener("touchend",function(){y0=null},{passive:true,capture:true});
+  st.addEventListener("touchend",function(e){
+    if(side){side=false;y0=null;if(Math.abs(dxs)>70)input("\x02"+(dxs<0?"n":"p"));if(e.cancelable)e.preventDefault();e.stopPropagation();return}
+    if(y0!==null&&far<6&&e.timeStamp-ts<450&&coarse&&!LS.get(DIRECT)&&$("#compose").hidden&&e.target.closest("#term")){
+      if(e.cancelable)e.preventDefault();e.stopPropagation();y0=null;openCompose(false);return}
+    if(y0!==null&&e.timeStamp-t0<80&&Math.abs(vel)>0.25)raf=requestAnimationFrame(glide);y0=null},{passive:false,capture:true});
 })();
 
 /* ───── size: follow the visible screen, so the keys sit on top of the keyboard ───── */
@@ -539,7 +587,7 @@ document.addEventListener("click",function(e){
     if(a==="chat"){input("jackchat\r");term.focus()}
     else if(a==="wins"){input("\x02w");term.focus()}
     else if(a==="newwin"){input("\x02c");term.focus()}
-    else if(a==="nextwin"){input("\x02n");term.focus()}
+
     else if(a==="copy"){
       var b=term.buffer.active,L=[];for(var i=b.viewportY;i<b.viewportY+term.rows;i++){var ln=b.getLine(i);L.push(ln?ln.translateToString(true):"")}
       while(L.length&&!L[L.length-1])L.pop();

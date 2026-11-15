@@ -77,3 +77,7 @@ If you cannot say how, do not do it.
 2. In `docs/ORDERS.md` rewrite your order's `state:` lines (≤ 5 lines), or mark
    it `DONE` with the commit; delete an INBOX line you handled.
 3. Append ≤ 6 lines to `docs/LOOP_JOURNAL.md`: date, lane SYSTEM, what changed.
+   Then append ONE line to `docs/OWNER_UPDATES.md` for the owner's phone:
+   `- <UTC date> <HH:MM> · MACHINE · <one or two plain sentences: what you tried and
+   what happened>`. No test ids, hashes or jargon; a failure said as plainly as
+   a win. Commit it with the journal.
