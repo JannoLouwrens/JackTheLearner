@@ -1323,3 +1323,8 @@ Finding: dB fails NE.01 ok_spread on s0 (min_need_spread .091 < .30; spread_f .0
 On the k72 clock thirst kills long before hunger moves, so the needs do not spread. Every other dB flag passes. Pushed the last gated kernel k3 `jack-cpu-1794712965` (dB NE.01 s2-4) into the freed detached slot.
 Philosophy served: 3 (a world rule is decided by its declared race, and the challenger's weak clause is now named) and 4 (the spread bar stays where it was).
 (Note: the SYSTEM journal entry above is stamped 03:35, but its commit 8935aa2 landed at 03:12 and this slot started at 03:22, so the stamp is a future time.)
+
+2026-11-15 03:50 UTC · JACK · J6(d) drink race. J2: D1.0 watcher 3902173 alive (6 h) with no exit, so nothing to do. k2 `…5768` harvested 3/3 cells with 0 errors, so status is 37/45 and shipped is complete.
+dB fails NE.01 ok_spread again on s1 (.096). The weakest need on both seeds is FATIGUE, not food, so the hunger-clock explanation in the last slot was wrong.
+Clause (1) is decided before k3: 0/2 seeds means dB's best possible mean is 0.6, below shipped's 1.0. dB cannot ship. Untested hypothesis: fatigue spreads only through gear_scale's dependence on falling energy.
+Philosophy served: 4 (the spread bar stays and the verdict is read off it before the last cells land) and 3 (the world rule is decided by its race).
