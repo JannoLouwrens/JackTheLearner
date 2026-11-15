@@ -44,7 +44,7 @@ The Director keeps this table current at every sitting. Step: 0 not started, 1 r
 
 - His world behind the standard interface that every published learner plugs into, with its speed measured and then raised: the simulator, not the learner, is the bottleneck (about 30 decisions a second today; the known fixes are estimated at 500 to 2,000).
 - A first rung he can live on: difficulty as a dial (meal size, amount of food, distance, how fast it reappears), starting easy, with today's world near the hard end.
-- Two brains built from published code: A, the Dreamer-style world model; B, the simple replay learner. No home-made learner is a candidate until it passes the next line.
+- Two brains built from published code: A, the Dreamer-style world model; B, the simple replay learner. Our own home-made brains are not ruled out (owner, 2026-11-15: "they need a fair chance"): each takes the same checks in the next line, and none is a candidate until it passes them.
 - Each brain reproduces published numbers on small standard tasks.
 - The setup the record supports: large replay, long horizon, sustained exploration, payment on eating, hunger varied at birth, food near at first.
 - The test harness passes its own thirteen checks first (for example: a learner compared with itself must come out "no difference").
@@ -52,6 +52,8 @@ The Director keeps this table current at every sitting. Step: 0 not started, 1 r
 - The prediction for stage 2, written down from the record.
 
 **Stage 2: choose the brain (the simple brain's runs take under a week; Dreamer's runs set the date: on the free GPU alone, a verdict around mid-January to February 2027).** A against B in his own world, 1,000,000 decisions each, with enough repeated runs to believe the result (the number is set by a 20-run pilot). The record predicts that B eats reliably after 100,000 to 200,000 decisions and that A is close behind on today's simple body. Both also take a battery of standard tests: memory, exploration, delayed reward, and adding a new sense, where the record says A should pull ahead. The rule is written before the runs. A brain must pass its known-answer checks, learn to eat within the budget, and show the advantage the record predicts for it. If A does not and B does, B is his brain until evidence says otherwise. If both pass and tie on the rover, the battery and the added sense break the tie, because that is where he is going. Twenty full-length Dreamer runs are an estimated 160 to 280 hours of the free GPU, five to nine weeks of quota. Four things can shorten that, each with a price: a shorter run for every brain, less training per decision for Dreamer, letting its learner run freely beside the simulator, or the Mac mini once its speed is measured. Fewer runs is not one of them: it would throw away the ability to see a difference at all.
+
+**A fair chance for our own brains.** The seven home-made brains failed a race that was too short, in a world whose reward gave no credit for eating. That says nothing final about them. Each gets the same standard-task checks as the published brains, then the same pilot runs in the repaired world: same length, same worlds, the same improved settings available to it, and a pass rule written before the runs. Any that learns goes into the decisive test beside A and B. Any that cannot pass the standard-task checks is set aside with its numbers on record, and may return if it is repaired.
 
 **The decisive test, and what must be ready before the Mac arrives (owner, 2026-11-15).** The verdict on the brain comes from long runs: about twenty full-length runs per brain, a few hundred machine-hours in all, on the Mac mini (expected late December, running day and night) together with the free GPU. Until then, free compute has one job: to make sure every Mac hour is an hour of the real test, not of setup. Ready-list:
 
@@ -74,7 +76,7 @@ What that test will tell us: which brain learns to survive in his first world, a
 
 ## What stops today, and what continues
 
-- Stops: new races between home-made learners; inventing a challenger with no published basis; world-rule races with no published basis.
+- Stops: racing home-made learners before the instrument is right; inventing a challenger with no published basis; world-rule races with no published basis.
 - The long food-finding runs already on the free machines finish as pilots. No more of them are launched.
 - Continues: repairs to the machine, tests of the world's mechanics, harvesting what is running.
 - Old results: tests of the world and of the machine stand. Results about his brain that were earned with unchecked learners are marked "to earn again" on the proven brain.
