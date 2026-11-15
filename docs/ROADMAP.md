@@ -22,11 +22,9 @@ brain's parts re-enter only as challengers in a cook-off, never by default.
 
 **M1 — One whole life.** The learning brain lives a life end to end: world,
 needs, the senses he has, diary, death and retry.
-done when: `LF.03` PASS. · status (11-14): **MET on 11-12, certificate now
-STALE** — `LF.03` passed at `6a92fd4` (3 seeds × 5 deaths, both controls fired)
-but its dependencies were re-run or edited since, so it must be re-bought
-before it counts again (order J1 step 2). He lives but does not yet improve or
-use his diary: `LF.04` (J1) asks that next and has never run.
+done when: `LF.03` PASS. · status (11-15): **MET** — `LF.03` PASS, re-bought 11-14
+(3 seeds × 5 deaths, both controls fired). He lives, dies and resumes; he does
+not yet improve (`LF.04` FAIL 11-14: every life ends of energy — order J1).
 
 **M2 — A world and a curriculum that can teach.** A world deep enough that
 passivity dies, outcomes differ, and thinking ahead pays; the order he meets it
@@ -34,10 +32,10 @@ in decided by cook-off ("no curriculum we write" is the incumbent arm).
 done when: `W1.00`–`W1.04` and the world-rule gates `W.1`–`W.8` PASS; `DP.05`'s
 question passes in W1; `NE.01` PASS; the curriculum cook-off has a winner; then
 W2 (owner 11-13): tree → wood → fire → cooked food and a buildable shelter exist
-as specs and PASS. · status (11-14): `W.1`, `W1.02` pass; `W.2`, `NE.01`,
-`W1.00`, `W1.04` FAIL (`NE.01` and `W1.04` being re-registered, bars unmoved);
-four world races shipped nothing; `CR.01` registered, dispatch ordered; W2
-unregistered (orders J6, J7, J5).
+as specs and PASS. · status (11-15): `W.1`, `W1.02` pass; `W.2`, `NE.01`,
+`W1.00`, `W1.04` FAIL; five world races shipped nothing (humidity in flight);
+`CR.01` FAIL — no curriculum beats none, re-race waits for a learner that
+forages; W2: `W.5` unbuilt (orders J6, J7, J9).
 
 **M3 — The shape of his brain, by verdict.** Every architecture seat in
 `docs/CHAMPIONS.md` held BY VERDICT, none by default or decree: the control path
@@ -45,15 +43,16 @@ unregistered (orders J6, J7, J5).
 unified the brain is (`UB.10`, `BO.01`), fast and slow (`DP.01`–`DP.03`), and
 its size (a size cook-off, to be registered).
 done when: those seats read BY VERDICT and the seated brain passes END-FIT's
-gates (`CHAMPIONS.md`). · status (11-13): working memory BY VERDICT (`WM.02`);
-fusion raced, UNDECIDED (`UB.10` FAIL, no arm separates); control VACANT
-(`D1.0` running); learning core's verdict is a VOID (orders J2, J3).
+gates (`CHAMPIONS.md`). · status (11-15): working memory BY VERDICT (`WM.02`);
+fusion raced, UNDECIDED (`UB.10` FAIL); control VACANT (`D1.0` att 9 VOID,
+re-buying to ~W48); learning core's verdict is a VOID — seven arms raced on
+foraging first (orders J1, J2).
 
 **M4 — One body that moves.** He moves well, in the same body he survives in —
 today movement is tested on a humanoid and survival on a wheeled climber.
 done when: `T2.01` PASS under the seated controller; the survival world runs
 with the humanoid body (`LT.08`); hands that hold, carry and strike, the grip
-rule won in a cook-off (unregistered). · status (11-13): `T2.01` FAIL since
+rule won in a cook-off (unregistered). · status (11-15): `T2.01` FAIL since
 Aug 12, behind `D1.0` (order J2).
 
 **M5 — Every sense, in the one brain, each load-bearing.** Sight from his own
@@ -82,7 +81,8 @@ not his words (Director ruling 11-11); nothing connected in his world.
 saturate (`T5.08`), and death does not erase what he learned (`XL.01`, `NE.08`).
 The ladder and the apple: he climbs it unprompted (`LT.03`+).
 Handed to another machine he keeps what he knew and learns more (order J8).
-done when: those PASS. · status (11-13): none run; `XL.01` close but failing.
+done when: those PASS. · status (11-15): `LF.04` ran and FAILED
+(he does not forage; J1); `LF.06` built, parked; `XL.01` behind `PS.02` (J4).
 
 **M8 — A living Jack.** Hours-long lives with everything at once; he remembers
 across sessions and deaths; he can be watched, talked to and left things.
