@@ -3297,3 +3297,76 @@ must resolve (order J7). `W1.04` truly needs the new clause; `W1.01` shares
 only the horizon constant and is simply re-run. `LC.02` is sound as what it
 is — a throughput floor; the action-reading guard belongs to `LC.09` and to
 J1's forager race, where it is on. `LF.02` is sound (restart fidelity only).
+
+## 2026-11-15 15:55 UTC — Director, FULL sitting (called by the owner the day `docs/PLAN.md` was written): rulings
+
+**Ruling 10 — the plan is adopted; what stops and what is paused.** `docs/PLAN.md`
+binds. Stopped today: new cells of the forager race (the four kernels in flight
+finish and are written up as a PILOT; no seat moves on them); the humid and DRINK
+world races and the W1 energy-clock race (none had a published prior; each is a
+`RESEARCH:` line); new specs with no prior. `D1.0` is PAUSED, not abandoned: PLAN
+stage 3 says the human-like body "gets its review before any more compute is
+spent on it", the week's Kaggle GPU meter has 0.88 h, and its cached units keep.
+It resumes, changed or unchanged, when the Researcher's body section says what
+the record predicts for its four arms. Rulings 7 (parking behind foraging) and
+the 06:40 freeze note are superseded: `LF.06`, `LC.09`, `CR.01`, `LF.04` re-runs
+are "to earn again" on the brain stage 2 chooses. No in-house learner is a
+candidate until it has a known-answer row. No threshold moved.
+
+**Ruling 11 — a seat held BY RECORD.** A seat may read BY RECORD when three
+things are on its row: the `PUBLISHED_PRIORS.md` section that supports the
+design; a known-answer row showing OUR build of it reproduces a published
+number (design on paper is not enough — the forager race was lost by builds that
+were not what they were named); and the route by which a challenger contests it
+(a challenger needs its own prior and its own known-answer row, then a step-4
+race). BY RECORD ranks below BY VERDICT: any verdict in his own world replaces
+it. Nobody is seated BY RECORD today — no build has a known-answer row. Order S8
+teaches `champions --check` the three conditions.
+
+**Ruling 12 — `PS.02` v3: remove the confound, do not censor it.** The cause
+(11-15 08:42): random walks pass a fire, which prolongs one life to a death the
+felt-cold probe cannot predict; `_fire_explains` is true on all 16 lives, so any
+censoring threshold is a knob chosen after seeing the outcome. The claim is
+"cold is felt before it kills". v3 runs the probe's lives in a world with no
+fire, so cold alone decides each death and nothing is censored. Bars, seeds and
+the frozen-temperature control unchanged; v2's reading stays on the row as
+reporting-only. Whether fire's warmth is felt is `W.5`'s question, not this
+spec's. Downstream (`LF.01`, `SH.01`, `SH.02`, `XL.01`) need only the verdict.
+
+**Ruling 13 — `W1.01`'s bar and pin.** The finding stands (its bar is a
+granularity of ~0.04 G where `W1.02` now measures ~1 G of detection power at
+n=48). It is not re-registered today: W1's venue is under research (clock
+`RESEARCH:` line) and a bar set before that lands would be set twice. `W1.01`
+stays honestly stale; nothing may cite it as current.
+
+**Ruling 14 — budget classes that cannot run.** Ruling 4 covers `BD.01`: its
+class is changed to where it really runs (`kcpu<12h`), clauses untouched.
+`LC.08` is NOT re-bought: it certifies a property of the in-house learner,
+which is a suspect until J2's known-answer row; its October PASS stays stale.
+
+**Ruling 15 — the owner's six machine ideas (INBOX 10:48).** (1) Stalled-first-
+order alarm: ADOPTED as practice, not machinery — PROGRESS "Dead or stuck" names
+the first order whenever it has no verdict and no named wait for 24 h; no clerk
+is built (the machine may not grow). (2) Owner requests have a clock: ADOPTED —
+PROGRESS leads FOR THE OWNER with any request older than 48 h and why; the
+video is that line today. (3) Fewer note commits: ADOPTED — one state+journal
+commit per slot is now in the ORDERS header; the fifth machine number (commits
+that changed Jack, his world or a verdict / all) is reported on Sundays. (4)
+Lessons expire: ADOPTED — three entries re-read each Sunday. (5) Proposals for
+the owner: ADOPTED as a PROGRESS section when there is one. (6) An owner idea
+box file: DECLINED — INBOX already carries his words to every lane the same
+day; a second file is a second place to miss them.
+
+**Ruling 16 — smaller items.** The lab's `steer` rule (fed 14/40 with the want
+given): a one-line NO as a forager's exploration for now — the record's
+exploration (pink or held noise) is tested first in E0, and `steer` may return
+at step 4 with a prior (bacterial chemotaxis is published) against the E0
+winner. OUTSIDER's "he cannot see food" is answered by measurement (`56bf1dc`:
+rays hit floor food on ~20% of random decisions); its four other faults are the
+record's own table and are fixed by orders J2 and J5. The owner's questions
+"only 120 iterations?" and "how do we know the winner is the best brain?" are
+answered by PLAN stage 2: 1,000,000 decisions each, runs sized by a 20-run
+pilot, a rule written first — and the 15-life race is now called a pilot. The
+`where` marker on `coverage` is SYSTEM Next-up 1. `LC.02`'s salt replay
+diverging on wall-clock metrics is a real flaw in the replay (it measures box
+load): SYSTEM Next-up 6. The tree-wide dirt guard and `launch_detached` are S7.
