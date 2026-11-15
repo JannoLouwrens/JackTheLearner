@@ -368,3 +368,9 @@ Apparatus OK: hum34 W.2 s0 re-run here equals humid_race's cell on all 100 keys.
   re-derived K_DRY, W.2(a) and W.2(c)-hot conflict on s0. The remaining route is the order's other option: re-register (a) against the sweating closed form
   (drain (1 + C_SW*max(0, T-37))*B_W integrated on the statue's own T(t)), with the bar INTEGRATOR_TOL unmoved.
 - Seeds 1-4 (04:27): byte-identical flags on all 5 seeds in both arms. W.2's rig does not vary by seed on these keys, so it reads 5/5: hum34k a 5/5, c 0/5 (peak 39.877 C); hum34 a 0/5, c 5/5.
+
+### J6(d) — stale W.2 cells re-run; DRINK race verdict "none ships" on all-current cells (2026-11-15 06:25 UTC, no ledger)
+- Re-ran the 15 W.2 cells the humid tally's stale-cell guard (`f65ad58`) flagged, plus both swp_k72 W.2 s0 apparatus cells, plus drink_race's dB/swp_k72 W.2 s0-4 (also stale on bc7b99f). Box, nice 19, 2 workers, 20-36 s each. Old cells: `/data/jack-logs/stale_w2_20261115/`.
+- Old vs new: shipped +2 keys (2 differ), hum30 / swp_k72 +1 key (5 differ), hum34 0 keys differ (its old cells already ran bc7b99f's code). **No `*_pass` flag moved in any cell.**
+- Humid tally (`/data/tmp/j6_w2/tally.json`): stale_cells [], apparatus ok. W.2 four_checks_pass: shipped 0/5, hum30 0/5, **hum34 5/5** (c_pass 1.0). Verdict still None: hum30/hum34 NE.01 0/5 cells (Kaggle CPU: h1 `…0356` = hum34 s0-2; h2 = hum34 s3-4 + hum30 s0).
+- **DRINK race: verdict "none ships"** (`drink_race_tally`, 40 cells current, 0 stale). dB loses on exactly one clause: NE.01 `ok_spread` 0/5 vs shipped 5/5 — step 2f's fatigue start-up transient, Director call `64d949a` still open. swp_k72's NE.01 (reference, not gated) is missing 0/5.
