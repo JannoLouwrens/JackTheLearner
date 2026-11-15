@@ -24653,7 +24653,7 @@ ROUTED: source-scanning-conjuncts-go-stale-against-their-own-subject | 2026-10-2
     WAITS-ON: none | nothing another live row decides changes which conjuncts
         scan source.
 
-ROUTED: metric-reader-rate-is-unmeasured-against-the-corrected-reader | 2026-10-21 | the `3491dc9` repair stamped ACTED this sitting (act 10) on `metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order`, whose 10-08 ruling ordered causes (C)/(D)/(E) FIRST precisely so this re-measurement could happen on a correct instrument | OPEN
+ROUTED: metric-reader-rate-is-unmeasured-against-the-corrected-reader | 2026-10-21 | the `3491dc9` repair stamped ACTED this sitting (act 10) on `metric-reader-false-positives-were-60-percent-and-one-landed-on-the-audits-own-repair-order`, whose 10-08 ruling ordered causes (C)/(D)/(E) FIRST precisely so this re-measurement could happen on a correct instrument | DECLINED 2026-11-15 (Director) names no live blocker: the metric reader is reporting-only and gates nothing on Jack's lane; re-measuring its false-positive rate is machine work that makes no run faster, cheaper or truer (SYSTEM lane is capped at 3 orders). — prior status: OPEN
     THE QUESTION: the 60% false-positive rate that the parent row's whole
         menu argues over was measured by a reader comparing the wrong
         numbers. `3491dc9` fixed the three correctness defects — the
@@ -24699,7 +24699,7 @@ ROUTED: metric-reader-rate-is-unmeasured-against-the-corrected-reader | 2026-10-
     WAITS-ON: none | the corrected reader is already at HEAD, so nothing this
         row needs is behind another live row's answer.
 
-ROUTED: waits-on-closed-window-prints-and-nobody-acts | 2026-10-21 | `adverse-verdicts-are-re-derived-by-nobody`, found this sitting waiting since 2026-10-08 on `lg12-abstention-knob-has-no-resolution`, which was stamped ACTED (terminal) on that date | OPEN
+ROUTED: waits-on-closed-window-prints-and-nobody-acts | 2026-10-21 | `adverse-verdicts-are-re-derived-by-nobody`, found this sitting waiting since 2026-10-08 on `lg12-abstention-knob-has-no-resolution`, which was stamped ACTED (terminal) on that date | DECLINED 2026-11-15 (Director) this queue is closed to new rows and is being drained; a re-reader for `WAITS-ON` on a retiring file is machine growth. The one row it held was released on 10-21. — prior status: OPEN
     THE FINDING, measured and not hypothetical: a `WAITS-ON` is written once
         at routing time and is NEVER re-read when its target closes. One live
         row sat held for THIRTEEN DAYS, through its own 10-20 break, on a
@@ -24744,7 +24744,7 @@ ROUTED: waits-on-closed-window-prints-and-nobody-acts | 2026-10-21 | `adverse-ve
     WAITS-ON: none | the two instances are already on the page; nothing
         upstream decides what this field means.
 
-ROUTED: waits-on-cannot-name-a-decision | 2026-10-21 | `review-queue`'s own `MALFORMED` class, fired twice against this sitting's re-dates of `ps05-legibility-holdout-is-a-band-lottery` and `ps06-legibility-probe-collapses-on-one-mutated-world` | OPEN
+ROUTED: waits-on-cannot-name-a-decision | 2026-10-21 | `review-queue`'s own `MALFORMED` class, fired twice against this sitting's re-dates of `ps05-legibility-holdout-is-a-band-lottery` and `ps06-legibility-probe-collapses-on-one-mutated-world` | DECLINED 2026-11-15 (Director) same disposal as its sibling `waits-on-closed-window-prints-and-nobody-acts`: the field's vocabulary retires with the queue; the decisions register (`decisions --check`, exit 0 today) is the reader for owner decisions. — prior status: OPEN
     THE FINDING: `WAITS-ON`'s vocabulary is QUEUE ROWS and `none`. A row held
         by an ARMED OWNER DECISION therefore cannot say so in the one field
         built for declaring what holds it — writing `WAITS-ON: D51` returns
@@ -24792,7 +24792,7 @@ ROUTED: waits-on-cannot-name-a-decision | 2026-10-21 | `review-queue`'s own `MAL
 ## (overseer, 158th audit — CARRYING the 157th audit's FINDING 1, whose own
 ## declared routing never reached this file; see the provenance field)
 
-ROUTED: gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard | 2026-10-21 | RE-DERIVED LIVE AT HEAD by the 158th audit, not inherited: `experiments/gpu_budget.json` `charged_jobs["jannolouwrens/jack-ladder-1792501976"]` = `{"backend":"kaggle","hours":1.0043,"ok":false,"week":"2026-W42"}` against `experiments/ledger.json` `T1.02` **PASS** (`commit 7ffd491`, `ran_at 2026-10-20T14:27:54`) naming that exact id as its `gpu_job_id` with `metrics.device "cuda"` and `compute_s 4136.44`; guard read at `experiments/gpu.py:558` | OPEN
+ROUTED: gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard | 2026-10-21 | RE-DERIVED LIVE AT HEAD by the 158th audit, not inherited: `experiments/gpu_budget.json` `charged_jobs["jannolouwrens/jack-ladder-1792501976"]` = `{"backend":"kaggle","hours":1.0043,"ok":false,"week":"2026-W42"}` against `experiments/ledger.json` `T1.02` **PASS** (`commit 7ffd491`, `ran_at 2026-10-20T14:27:54`) naming that exact id as its `gpu_job_id` with `metrics.device "cuda"` and `compute_s 4136.44`; guard read at `experiments/gpu.py:558` | DECLINED 2026-11-15 (Director) names no live blocker: the charged HOURS are right and the weekly quota gate reads hours, not the `ok` label. The label defect stays on this row for whoever next edits `Budget.charge` (ORDERS SYSTEM Next-up 1, the week key). — prior status: OPEN
     THE FINDING: `Budget.charge` returns `False` on a known `job_id` BEFORE the
         `ok` label is reconsidered, so idempotency on the AMOUNT was
         implemented as idempotency on the whole RECORD, outcome label
@@ -24895,7 +24895,7 @@ ROUTED: gpu-charge-ok-flag-is-frozen-by-the-dedupe-guard | 2026-10-21 | RE-DERIV
 ## by `frees` is `NE.01` (7), unrun for 58 days, CPU-only, and named by nobody
 ## (overseer, 158th audit)
 
-ROUTED: steering-pages-rank-the-frontier-by-blocks-not-frees | 2026-10-21 | `run blocked` at HEAD: `NE.01 = FAIL frees 7 (blocks 8)`, `UB.10 = VOID frees 4`, `T1.08 = FAIL frees 3 (blocks 45)`; `T0.36` PASS, whose own `control` field reads *"it claims `T1.08` frees 41 where repair buys 3 — a 38-spec overstatement"*; `docs/PROGRESS.md` FOR THE BUILDER 0 (*"`T1.08` is the project's largest unblocker"*); `docs/OVERSIGHT.md` 157th (*"`T1.08`'s ruling frees 45 specs"*) | OPEN
+ROUTED: steering-pages-rank-the-frontier-by-blocks-not-frees | 2026-10-21 | `run blocked` at HEAD: `NE.01 = FAIL frees 7 (blocks 8)`, `UB.10 = VOID frees 4`, `T1.08 = FAIL frees 3 (blocks 45)`; `T0.36` PASS, whose own `control` field reads *"it claims `T1.08` frees 41 where repair buys 3 — a 38-spec overstatement"*; `docs/PROGRESS.md` FOR THE BUILDER 0 (*"`T1.08` is the project's largest unblocker"*); `docs/OVERSIGHT.md` 157th (*"`T1.08`'s ruling frees 45 specs"*) | DECLINED 2026-11-15 (Director) discharged by the 11-11 reorganisation: the steering pages it names were replaced by `docs/ORDERS.md`, whose ranking rule and today's orders (J2 `T2.01` frees 25, J6 `NE.01` frees 8, J4 `PS.02` frees 4) quote `frees`. The instrument was always correct. — prior status: OPEN
     THE FINDING: the instrument is CORRECT and the prose that reads it is not.
         `run blocked` prints `frees` and `blocks` as separate columns;
         `T0.36`'s certified claim is that **`frees` is the set repair buys**,
@@ -24953,7 +24953,7 @@ ROUTED: steering-pages-rank-the-frontier-by-blocks-not-frees | 2026-10-21 | `run
 ## and 11 of the 26 FAILs the counter calls owned are owned the same way
 ## (overseer, 158th audit)
 
-ROUTED: fail-ownership-is-conferred-by-an-incidental-mention | 2026-10-21 | measured at HEAD with `coverage.fail_unowned(queue_doc=...)` against `git show 3a7f36b:docs/REVIEW_QUEUE.md`: count **6 -> 7**, the arriving member is `SO.10`, and `fail_unowned_owned_forms` moved `queue-row 27 -> 26`; the lost owner is `declared-venue-vs-delivered-venue-has-no-comparator`, stamped **ACTED** at 06:40 today (`5e7fa6a`), whose only contact with `SO.10` is two body lines citing *"the `SO.10` vacancy precedent"* | OPEN
+ROUTED: fail-ownership-is-conferred-by-an-incidental-mention | 2026-10-21 | measured at HEAD with `coverage.fail_unowned(queue_doc=...)` against `git show 3a7f36b:docs/REVIEW_QUEUE.md`: count **6 -> 7**, the arriving member is `SO.10`, and `fail_unowned_owned_forms` moved `queue-row 27 -> 26`; the lost owner is `declared-venue-vs-delivered-venue-has-no-comparator`, stamped **ACTED** at 06:40 today (`5e7fa6a`), whose only contact with `SO.10` is two body lines citing *"the `SO.10` vacancy precedent"* | DECLINED 2026-11-15 (Director) the `queue-row` ownership form retires with this queue; FAIL ownership is now an open order in `docs/ORDERS.md` or nothing. No live blocker. — prior status: OPEN
     THE FINDING: `fail_unowned` classed that row as `SO.10`'s **`queue-row`**
         owner — the STRONGEST queue form, documented as *"a row ABOUT the
         spec ... carries a `DUE:`, a dated promise"*. A row about a venue
@@ -25017,7 +25017,7 @@ ROUTED: fail-ownership-is-conferred-by-an-incidental-mention | 2026-10-21 | meas
     WAITS-ON: none | the measurement is complete and reproducible from this
         file's own git history; no live row decides it.
 
-ROUTED: lc08-comparator-registered-and-unbought | 2026-10-22 | this sitting's `lc03-five-controls-never-switch-off-the-term-a4-is-named-for` stamp (act 2, `da9ece0` verified at HEAD); `LC.08` confirmed ABSENT from `experiments/ledger.json` results this sitting; `experiments/tests/lc_08_binding_term_comparator.py:19-21` for the declared budget | OPEN
+ROUTED: lc08-comparator-registered-and-unbought | 2026-10-22 | this sitting's `lc03-five-controls-never-switch-off-the-term-a4-is-named-for` stamp (act 2, `da9ece0` verified at HEAD); `LC.08` confirmed ABSENT from `experiments/ledger.json` results this sitting; `experiments/tests/lc_08_binding_term_comparator.py:19-21` for the declared budget | DECLINED 2026-11-15 (Director) discharged on the ledger: `LC.08` PASS att 1, 2026-10-25. Order J1 (11-15) re-buys it when the policy loss is seated. Not stamped ACTED because this row's sitting did not execute it. — prior status: OPEN
     The question: `LC.08` is registered with both ruling conjuncts intact and has
     never been run, so the Learning-core seat-quality finding the `lc03` row was
     opened for — **is 17.3% of the seated `A4` arm dead weight?** — is answerable
@@ -25083,7 +25083,7 @@ ROUTED: lc08-comparator-registered-and-unbought | 2026-10-22 | this sitting's `l
         desk's; nothing here moves an LC.03 verdict and the champions-entry
         edit remains the Review's.
 
-ROUTED: t306-probe-returned-an-undeclared-combination-and-v2-false-alarms | 2026-10-22 | `/data/t306_null_walker_probe.json` + `.log` (2026-10-21 05:20, `wall_s` 643.78, 3 seeds, 120 goal cells), read at source this sitting; branch predicates re-derived from `experiments/tests/t306_null_walker_probe.py:361-374`; the `V2` boundary arithmetic recomputed over all four reported mismatches against the guard at `:252-253` and the docstring at `:59-60` | OPEN
+ROUTED: t306-probe-returned-an-undeclared-combination-and-v2-false-alarms | 2026-10-22 | `/data/t306_null_walker_probe.json` + `.log` (2026-10-21 05:20, `wall_s` 643.78, 3 seeds, 120 goal cells), read at source this sitting; branch predicates re-derived from `experiments/tests/t306_null_walker_probe.py:361-374`; the `V2` boundary arithmetic recomputed over all four reported mismatches against the guard at `:252-253` and the docstring at `:59-60` | DECLINED 2026-11-15 (Director) names no live blocker: `T3.06` is VOID on the old stack behind `T2.01`; the Curiosity seat's arena is `LT.03`/`LT.04` (roadmap M7, no open order). The probe's uncovered branch stays recorded here for the curiosity order. — prior status: OPEN
     TWO questions, from one artifact, deliberately on one row because one run
     produced both and they share a subject:
     **(1) THE BRANCH MENU DOES NOT COVER WHAT WAS MEASURED.** Occupancy 1.0556,
@@ -25140,7 +25140,7 @@ ROUTED: t306-probe-returned-an-undeclared-combination-and-v2-false-alarms | 2026
         was. The branch-menu half (the UNDECLARED combination) is untouched —
         that ruling is the desk's, as the row says. Stale-cost at execution: 0.
 
-ROUTED: register-entries-quote-instrument-readings-that-nothing-re-derives | 2026-10-22 | RE-DERIVED LIVE by the 159th audit using the instrument's own `review_queue.throughput()` against every October revision of this file in git, method validated by reproducing today's printed reading exactly (`arrived 16 / 2.29`, `disposed 21 / 3.00`, `live 72`, `drain 100.8` vs `101` printed); `D47`'s quoted figures traced to `8aea5db`..`2adfc24` and `2839b0b` (both 2026-10-13) | OPEN
+ROUTED: register-entries-quote-instrument-readings-that-nothing-re-derives | 2026-10-22 | RE-DERIVED LIVE by the 159th audit using the instrument's own `review_queue.throughput()` against every October revision of this file in git, method validated by reproducing today's printed reading exactly (`arrived 16 / 2.29`, `disposed 21 / 3.00`, `live 72`, `drain 100.8` vs `101` printed); `D47`'s quoted figures traced to `8aea5db`..`2adfc24` and `2839b0b` (both 2026-10-13) | DECLINED 2026-11-15 (Director) the register holds one open entry today and the Director re-derives each number it acts on at the sitting; a mechanical re-deriver for register prose is machine growth with no blocker behind it. — prior status: OPEN
     The question: `docs/DECISIONS_NEEDED.md` entries argue their case — and
     PRICE THEIR ARMED DEFAULTS — on numbers quoted from named instruments, and
     **no reader in this repo re-derives a single one of them.** `T0.22` exists
@@ -25193,7 +25193,7 @@ ROUTED: register-entries-quote-instrument-readings-that-nothing-re-derives | 202
     WAITS-ON: none | the finding is re-derivable from git at any time and no
         live row decides it.
 
-ROUTED: overdue-reconstitutes-overnight-from-rows-the-desk-could-see | 2026-10-22 | measured by the 159th audit against `d5e4fd5` (*"the OVERDUE class is 27 -> 0"*, 2026-10-21 06:51) and `run review-queue` at 06:37 today; the added `DUE:` lines of that commit extracted with `git show d5e4fd5 -- docs/REVIEW_QUEUE.md` | OPEN
+ROUTED: overdue-reconstitutes-overnight-from-rows-the-desk-could-see | 2026-10-22 | measured by the 159th audit against `d5e4fd5` (*"the OVERDUE class is 27 -> 0"*, 2026-10-21 06:51) and `run review-queue` at 06:37 today; the added `DUE:` lines of that commit extracted with `git show d5e4fd5 -- docs/REVIEW_QUEUE.md` | DECLINED 2026-11-15 (Director) the OVERDUE count is no longer a reported achievement: the queue is closed and drained oldest-first, ten rows a sitting. Nothing to repair. — prior status: OPEN
     The question: **`OVERDUE -> 0` is reported as a disposal achievement and
     does not survive the night.** On 2026-10-21 the Review disposed 27 OVERDUE
     rows and published the class at **0**. By 06:37 on 10-22 it read **11**.
