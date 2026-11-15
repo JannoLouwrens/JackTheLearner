@@ -87,6 +87,17 @@ RULE: `steer` ALIVE iff it feeds more births than `babble` on BOTH seeds
 not enough on this body in 250 decisions. ALIVE = the rule works with the
 want GIVEN; the learned want (stage 2, nursery) is then the entry.
 
+RESULT 11-15 11:28 — `steer` ALIVE: fed 8/6 = 14/40 vs babble 3/0 = 3/40,
+steeryoked 2/0 = 2/40 (failed, as it must); toward +.275/+.128.
+
+STAGE 2 FOR `steer`, DECLARED 11-15 BEFORE ANY BIRTH IS READ ON SEEDS
+144/145: `steerwant` = the steer rule on the LEARNED want (stage 2's Want
+and nursery, unchanged; its logit read as is), `steerwantshuf` = CONTROL
+THAT MUST FAIL (meal labels permuted before every fit), `babble` re-run.
+ALIVE iff `steerwant` feeds more test births than `babble` on BOTH seeds and
+by >= 8 of 40, AND more than `steerwantshuf` likewise. Else: the rule works
+on a given want and his meals do not yet teach one at this dose.
+
     nice -n 19 $PY -m experiments.run_tumble run <arm> <seed> [n_test]
     $PY -m experiments.run_tumble tally
     $PY -m experiments.run_tumble selftest
@@ -100,8 +111,9 @@ import sys
 
 import numpy as np
 
-ARMS = ("babble", "told", "yoked", "want", "wantshuf", "steer", "steeryoked")
-SEEDS2 = (142, 143)
+ARMS = ("babble", "told", "yoked", "want", "wantshuf", "steer", "steeryoked",
+        "steerwant", "steerwantshuf")
+SEEDS2, SEEDS3 = (142, 143), (144, 145)
 HOLD, STD, E, N_TEST, MEAL_H, MARGIN = 5, 0.5, 250, 20, 25, 8   # SL's ruler
 NURSE = 5000           # phase-1 decisions (want arms only) = SL's BABBLE
 R_NURSE = 0.6          # m — wean_pilot's R0
@@ -217,8 +229,8 @@ def run(arm: str, seed: int, n_test: int = N_TEST, out_path: str = "",
     keys = list(obs)
     off = int(sum(np.asarray(obs[k]).size for k in keys[:keys.index("smell")]))
     x0 = _vec(obs)
-    learned = arm in ("want", "wantshuf")
-    want = Want(len(x0), arm == "wantshuf", seed)
+    learned = arm in ("want", "wantshuf", "steerwant", "steerwantshuf")
+    want = Want(len(x0), arm.endswith("wantshuf"), seed)
     floor = {n: g for n, (g, _) in dr._food.items()
              if d.geom_xpos[g][2] <= 0.5}
     legal = w.legal_spawns()
@@ -259,7 +271,7 @@ def run(arm: str, seed: int, n_test: int = N_TEST, out_path: str = "",
         fed, dmin, born_d, k, bouts, kept = None, 1e9, None, 0, 0, 0
         steer = rule in ("steer", "steeryoked")
         abest, rbest, n_acc, n_tum = None, None, 0, 0
-        lg = (lambda v: float(np.log(max(v, 1e-12)))) if steer else float
+        lg = (lambda v: float(np.log(max(v, 1e-12)))) if steer and not learned else float
         while k < E and fed is None:
             p0 = np.array(d.xpos[b][:2])
             r0 = ready()
@@ -338,7 +350,8 @@ def run(arm: str, seed: int, n_test: int = N_TEST, out_path: str = "",
                                   "want_smell_share": round(sm, 3)}) + "\n")
             out.flush()
         for ep in range(n_test):
-            r = trial(arm, nursed=False)
+            r = trial("steer" if arm.startswith("steerwant") else arm,
+                      nursed=False)
             if learned:
                 want.fit()                   # he keeps learning, every birth
             out.write(json.dumps(dict(r, arm=arm, seed=seed, phase="test",
@@ -356,7 +369,7 @@ def tally(dirname: str = OUT, seeds=SEEDS) -> dict:
     fed = {}
     for p in sorted(glob.glob(f"{dirname}/*_s*.jsonl")):
         te = [r for r in map(json.loads, open(p)) if r["phase"] == "test"]
-        if len(te) < N_TEST or te[0]["seed"] not in SEEDS + SEEDS2:
+        if len(te) < N_TEST or te[0]["seed"] not in SEEDS + SEEDS2 + SEEDS3:
             continue
         a, s = te[0]["arm"], te[0]["seed"]
         fed[(a, s)] = sum(r["fed"] is not None for r in te)
@@ -368,7 +381,9 @@ def tally(dirname: str = OUT, seeds=SEEDS) -> dict:
     for stage, x, nulls, seeds in ((1, "told", ("babble", "yoked"), SEEDS),
                                    (2, "want", ("babble", "wantshuf"), SEEDS),
                                    ("steer", "steer", ("babble", "steeryoked"),
-                                    SEEDS2)):
+                                    SEEDS2),
+                                   ("steerwant", "steerwant",
+                                    ("babble", "steerwantshuf"), SEEDS3)):
         if any((a, s) not in fed for a in (x,) + nulls for s in seeds):
             print(f"STAGE {stage}: INCOMPLETE, no verdict")
             continue
