@@ -77,8 +77,8 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          truncation"; Crafter caps at 10,000 steps. DIFFERS:
                          Crafter's cap builds a new world; ours keeps it
                          (lives persist in W0).
-  difficulty=None       J2 item 1, PART (meal size, regrowth delay, spawn
-                         distance; food count still owed). None
+  difficulty=None       J2 item 1 (meal size, regrowth delay, spawn
+                         distance, food count). None
                          or 1.0 = today's world, untouched. At d in [0,1):
                          floor-food meal nu(d) = 1.0 + d*(0.08 - 1.0) (a
                          full bar at d=0) and regrowth delay d*66.9 s
@@ -91,6 +91,34 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          Avalon puts the food 0.5 m IN FRONT; W0 spawns
                          every body facing one fixed yaw, so ours is a
                          distance, not a heading; the linear map is ours.
+                         Food count: W0's non-food floor objects obj2, obj3,
+                         obj4 become floor food (same meal and regrowth
+                         dial) — the first round-half-up 3*(1-d) of them
+                         that the seed's world carries (W0 draws 4 or 6
+                         objects per seed; seed 155 and seeds 201-202 have
+                         no obj4): up to 5 floor foods at d=0, 4 at d<1/2,
+                         3 at d<5/6, 2 above.
+                         Each keeps W0's own per-geom ray texture, so to
+                         his eyes each food is its own stable texture, as
+                         obj0/obj1 already are. Counted in `meals` and
+                         `ate_total` (world_card's floor_meals still counts
+                         obj0+obj1 only — J2 item 5 must count all).
+                         DIFFERS: Avalon raises food count by placing new
+                         items; ours re-labels objects already in the room
+                         (no world file), at their W0 places.
+                         FOOD-COUNT PROOF (2026-11-15, `python -m
+                         experiments.tests.test_jack_env_foodcount 400`,
+                         seeds 153-155): d=1 == None byte for byte, food set
+                         unchanged; at d=0/0.25/0.6/0.9 the food set, meal
+                         and regrowth are as stated; extras eaten 4 times
+                         (seed 153); control with extras stripped: eaten 0
+                         times, stream differs. PASS. Seen there: at d=0
+                         (instant regrowth) a body resting on a food eats
+                         every decision — seed 153 stripped ate obj1 84
+                         times in 400 decisions, with extras 20 — so d=0
+                         "meals" partly counts contact time (J2 item 5 must
+                         read that). Spawn proof re-run against all floor
+                         foods PASS; dial proof PASS (pooled d=0 eats 31).
                          SPAWN PROOF (2026-11-15, `python -m experiments.
                          tests.test_jack_env_spawn 400`, seeds 153-155,
                          e0=0.05): every d=0 spawn 0.25-0.45 m from food,
@@ -143,6 +171,9 @@ from gymnasium import spaces
 SENSES = ("vision", "audio", "touch", "proprio", "needs")
 REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
 FLOOR_FOODS = ("obj0", "obj1")
+# J2 item 1, food count: W0's own non-food floor objects that the dial turns
+# into floor food at low d, in this order (obj5 is never food).
+EXTRA_FOODS = ("obj2", "obj3", "obj4")
 MEAL_AT_D0 = 1.0     # Avalon: a food fills the bar (PUBLISHED_PRIORS §3 table)
 SPAWN_R_D0 = 0.5     # m; Avalon eat: food 0.5 m in front of the agent at d=0
 SPAWN_R_SPAN = 17.0  # m; ~ the arena diagonal (2*sqrt(2)*6): r(1) covers all
@@ -151,6 +182,12 @@ SPAWN_R_SPAN = 17.0  # m; ~ the arena diagonal (2*sqrt(2)*6): r(1) covers all
 def dial_spawn_radius(d: float) -> float:
     """Spawn-to-nearest-floor-food radius at dial d: 0.5 m at d=0, linear."""
     return SPAWN_R_D0 + d * SPAWN_R_SPAN
+
+
+def dial_extra_foods(d: float) -> int:
+    """Extra floor foods at dial d: 3 at d=0 (5 in all), 0 at d=1, linear,
+    rounded half up: d<1/6 -> 3, <1/2 -> 2, <5/6 -> 1, else 0."""
+    return int(np.floor(len(EXTRA_FOODS) * (1.0 - d) + 0.5))
 
 
 def dial_meal(nu1: float, d: float) -> float:
@@ -208,7 +245,10 @@ class JackEnv(gym.Env):
                     diary=self.diary,
                     spawn_sampler=(None if self.difficulty is None
                                    else self._near_food_spawn))
+        self.floor_foods = FLOOR_FOODS
         if self.difficulty is not None:
+            # J2 item 1, food count: extras are food before birth is placed.
+            self._add_extra_foods()
             # J2 item 1: birth too is placed by the dial (W0's own respawn,
             # drawn from W0's spawn stream); d=1 never reaches here.
             self.w.respawn()
@@ -218,10 +258,36 @@ class JackEnv(gym.Env):
         self._truncated = False
         if self.difficulty is not None:
             # J2 item 1 (part): meal size, per instance; drives.py untouched.
-            for name in FLOOR_FOODS:
+            for name in self.floor_foods:
                 if name in self.w.drives._food:
                     gid, nu = self.w.drives._food[name]
                     self.w.drives._food[name] = (gid, dial_meal(nu, self.difficulty))
+
+    def _add_extra_foods(self) -> None:
+        """J2 item 1, food count: make the first dial_extra_foods(d) of
+        EXTRA_FOODS floor food in THIS world's drive layer, exactly as
+        drives.DriveLayer.__init__ registers obj0/obj1 (geom id, today's
+        NU_FLOORFOOD before the meal dial, regrowth timer 0, eat counter 0).
+        drives.substep looks the regrowth delay up in the module dict
+        RESPAWN_S by name, so the extras' entries (= the floor food's) are
+        added there; no FOOD_GEOMS entry is added, so no other world ever
+        treats them as food. Must run before the first respawn draw that
+        should see them: _build calls it just before the dial's birth
+        respawn."""
+        from experiments import drives
+        dl = self.w.drives
+        added = []
+        for name in EXTRA_FOODS[:dial_extra_foods(self.difficulty)]:
+            try:
+                gid = int(self.w.model.geom(name).id)
+            except (KeyError, ValueError):
+                continue
+            drives.RESPAWN_S.setdefault(name, drives.RESPAWN_FLOORFOOD_S)
+            dl._food[name] = (gid, drives.NU_FLOORFOOD)
+            dl._respawn_at[name] = 0.0
+            dl.ate_total[name] = 0
+            added.append(name)
+        self.floor_foods = FLOOR_FOODS + tuple(added)
 
     def _near_food_spawn(self, legal: np.ndarray, rng: np.random.RandomState,
                          death_xy) -> tuple:
@@ -233,7 +299,8 @@ class JackEnv(gym.Env):
         w0.uniform_legal_spawn. Same RNG stream (W0's _spawn_rng)."""
         w = self.w
         foods = np.array([w.data.xpos[w.model.body(n).id][:2]
-                          for n in FLOOR_FOODS if n in w.drives._food])
+                          for n in getattr(self, "floor_foods", FLOOR_FOODS)
+                          if n in w.drives._food])
         if len(foods) == 0:
             k = int(rng.randint(len(legal)))
             return float(legal[k][0]), float(legal[k][1])
@@ -253,7 +320,7 @@ class JackEnv(gym.Env):
         delay is never shorter than the rest of that decision (<= 0.2 s)."""
         from experiments.drives import RESPAWN_S
         dl = self.w.drives
-        for name in FLOOR_FOODS:
+        for name in self.floor_foods:
             if name in dl.ate_total and dl.ate_total[name] > ate_before.get(name, 0):
                 dl._respawn_at[name] -= (1.0 - self.difficulty) * RESPAWN_S[name]
 

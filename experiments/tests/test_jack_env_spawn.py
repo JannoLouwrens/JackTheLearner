@@ -2,7 +2,10 @@
 and every respawn near floor food.
 
 Independent measurement: after birth and after every death, the rover body's
-x, y (read from MuJoCo, not from the sampler) against the floor foods' bodies.
+x, y (read from MuJoCo, not from the sampler) against the floor foods' bodies — ALL of
+the env's floor foods (env.floor_foods: obj0, obj1 + the dial's extras since
+the food-count part; measured against obj0/obj1 only, the new run FAILED
+because spawns near an extra food read as far).
 (a) d=0: every spawn is within max(0.5 m, nearest legal cell) of the nearest
     floor food (+ 1e-6).
 (b) d=0.25: every spawn within 0.5 + 17*0.25 = 4.75 m (or nearest legal cell).
@@ -31,7 +34,7 @@ def spawn_dists(seed, cal, d):
 
     def measure():
         xy = w.data.xpos[w.rover_bid][:2]
-        f = np.array([w.data.xpos[w.model.body(n).id][:2] for n in FLOOR_FOODS])
+        f = np.array([w.data.xpos[w.model.body(n).id][:2] for n in env.floor_foods])
         nearest_legal = np.min(np.linalg.norm(legal[:, None] - f[None], axis=2))
         return float(np.min(np.linalg.norm(f - xy, axis=1))), float(nearest_legal)
 
