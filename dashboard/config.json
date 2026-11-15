@@ -15,5 +15,6 @@
     "T1.14": "How much two identical runs differ"
   },
   "chat_label": "Open Termius",
-  "chat_session": "jack"
+  "terminal_url": "terminal/",
+  "site_url": "https://jack.worldtwin.duckdns.org/"
 }

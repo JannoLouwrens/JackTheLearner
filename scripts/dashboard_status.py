@@ -815,7 +815,8 @@ def build() -> dict:
         "resources": guarded(lambda: resources(job_list), {}),
         "watch": guarded(watch, {"video": None, "made": None, "note": "", "title": "", "summary": "", "facts": [], "events": [], "source": ""}),
         "chat": {"url": cfg.get("chat_url") or None, "label": cfg.get("chat_label") or None,
-                 "session": cfg.get("chat_session") or None},
+                 "terminal": cfg.get("terminal_url") or None},
+        "site": cfg.get("site_url") or None,
         "errors": ERRORS,
     }
     return status
@@ -845,8 +846,16 @@ def main() -> int:
         blob = re.sub(re.escape(handle) + r"/?", "", blob, flags=re.I)
     page = read(CFG / "page.html")
     inlined = page.replace("__SNAPSHOT__", blob.replace("</", "<\\/"))
+    # The preview copy lives on another site, so its link to the terminal must be whole.
+    away = status
+    if status["chat"].get("terminal") and status.get("site"):
+        away = dict(status, chat=dict(status["chat"], terminal=status["site"].rstrip("/") + "/" + status["chat"]["terminal"]))
+    away_blob = json.dumps(away, ensure_ascii=False, separators=(",", ":"))
+    if handle:
+        away_blob = re.sub(re.escape(handle) + r"/?", "", away_blob, flags=re.I)
+    preview = page.replace("__SNAPSHOT__", away_blob.replace("</", "<\\/"))
     for name, text in (("status.json", blob), ("index.html", SKELETON.replace("__PAGE__", inlined)),
-                       ("artifact.html", inlined)):
+                       ("artifact.html", preview), ("artifact-status.json", away_blob)):
         tmp = OUT / (name + ".tmp")
         tmp.write_text(text)
         os.replace(tmp, OUT / name)
@@ -884,6 +893,17 @@ def publish(pub: Path) -> None:
     for old in (pub / "media").glob("latest.*"):
         if old.name not in live:
             old.unlink(missing_ok=True)
+    # The terminal page and the one library it loads, both from this server.
+    page, vendor = CFG / "terminal" / "index.html", OUT / "vendor"
+    if page.is_file() and vendor.is_dir():
+        (pub / "terminal").mkdir(exist_ok=True)
+        for src in [page] + sorted(f for f in vendor.iterdir() if f.is_file()):
+            dst = pub / "terminal" / src.name
+            if (not dst.exists() or dst.stat().st_size != src.stat().st_size
+                    or dst.stat().st_mtime < src.stat().st_mtime):
+                tmp = dst.with_suffix(dst.suffix + ".tmp")
+                shutil.copyfile(src, tmp)
+                os.replace(tmp, dst)
 
 
 if __name__ == "__main__":

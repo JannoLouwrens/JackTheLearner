@@ -1,0 +1,5 @@
+# The shell inside the shared terminal: the owner's usual environment, with a
+# prompt short enough for a phone and one line saying how to reach the chat.
+[ -f ~/.bash_profile ] && . ~/.bash_profile
+PS1='\[\e[38;5;75m\]\W\[\e[0m\] \$ '
+case $- in *i*) printf '\e[2mType \e[0mjackchat\e[2m to open your conversation with Claude.\e[0m\n';; esac

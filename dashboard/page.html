@@ -412,14 +412,14 @@ function viewWatch(){
   $("#view-watch").innerHTML=h;
 }
 function viewTalk(){
-  var c=S.chat||{},sess=c.session||"jack";
-  var h='<div class="card"><h2>Talk to Claude</h2><p class="sub">The chat stays where it is today: in your terminal app, over SSH, between your phone and your server only.</p>';
-  if(c.url)h+='<p style="margin:14px 0 6px"><a class="cta" href="'+esc(c.url)+'">'+esc(c.label||"Open the terminal app")+"</a></p>"+
-    '<p class="foot" style="padding:6px 0 0">The button opens the app. Tap your server there to connect. A web page cannot start the connection for you or hold the terminal itself.</p>';
-  h+='<h3 class="h3">To land straight in the chat</h3><ol class="steps">'+
-    "<li>Once, on the server: start the chat inside a named session with <code>tmux new -s "+esc(sess)+"</code>, then <code>claude --resume</code> and pick this conversation.</li>"+
-    "<li>In the terminal app, set your server's startup command to <code>tmux attach -t "+esc(sess)+"</code>.</li>"+
-    "<li>From then on, connecting drops you into the same conversation, and it keeps running when your phone sleeps.</li></ol></div>";
+  var c=S.chat||{};
+  var h='<div class="card"><h2>Talk to Claude</h2><p class="sub">A full terminal on your server, private between this device and the server. It opens the same session every time, so the conversation is still there when you come back.</p>';
+  if(c.terminal)h+='<p style="margin:14px 0 6px"><a class="cta" href="'+esc(c.terminal)+'">Open the terminal</a></p>'+
+    '<p class="foot" style="padding:6px 0 0">It asks once for its own long password. To see it, run <code>cat ~/.jack-terminal-password</code> in your SSH app. Inside, type <code>jackchat</code> to pick up the conversation.</p>';
+  else h+='<p class="foot" style="padding:6px 0 0">The terminal opens from the live page on your server, not from this snapshot.</p>';
+  h+='<h3 class="h3">From your SSH app</h3><p class="sub" style="margin:0 0 4px">Run <code>jt</code> after connecting, or set it as the startup command, and you land in that same terminal.</p>';
+  if(c.url)h+='<p style="margin:12px 0 0"><a class="link" href="'+esc(c.url)+'">'+esc(c.label||"Open the SSH app")+"</a></p>";
+  h+="</div>";
   $("#view-talk").innerHTML=h;
 }
 

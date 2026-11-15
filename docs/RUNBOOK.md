@@ -1799,16 +1799,47 @@ To switch it off: remove the `gap_fill.sh` line from the crontab.
 - A recorded life plays on the Watch tab when ORDERS S6 has written
   `/data/jack-video/latest.mp4` (or `.webm`); the script links it into
   `/data/jack-dashboard/media/` and shows `latest.txt` beside it as the caption.
-- **Where the owner opens it:** `https://worldtwin.duckdns.org/jack/` (name
-  `jack`, the password the owner chose on 2026-11-15). The cron line sets
+- **Where the owner opens it:** `https://jack.worldtwin.duckdns.org/` (name
+  `jack`, the short password the owner chose). It has a name of its own so no
+  other site on this box shares its origin; DuckDNS answers for every sub-name
+  of `worldtwin.duckdns.org`, so it needed no DNS work. The first address,
+  `worldtwin.duckdns.org/jack/`, redirects there. The cron line sets
   `JACK_DASH_PUBLISH=/data/cache/_jackdash`, and the script copies only
-  `index.html`, `status.json` and the film there — the one folder the web
-  server's container already sees. The route, its password hash and two blocks
-  that stop the same files being read through the public `/api/cache/` path
-  are in `/home/opc/openclaw-platform/Caddyfile` (outside this repo; the copy
-  from before the change is `Caddyfile.bak-20261115-jack`). Agents never edit
-  that file: it is the ingress for every tenant.
-- The Talk tab only opens the owner's terminal app. The owner keeps the chat
-  on SSH and has declined Claude's Remote Control.
+  `index.html`, `status.json`, the film and the terminal page there — the one
+  folder the web server's container already sees. The site block, and two
+  blocks that stop the same files being read through the public `/api/cache/`
+  path, are in `/home/opc/openclaw-platform/Caddyfile` (outside this repo;
+  copies from before each change are `Caddyfile.bak-20261115-jack*`). Agents
+  never edit that file: it is the ingress for every tenant.
+
+### The owner's terminal (2026-11-15)
+
+The owner asked for a full terminal on the dashboard, private to their own
+server ("put the full terminal there must be a way do it"), and declined
+Claude's Remote Control.
+
+- `https://jack.worldtwin.duckdns.org/terminal/` — `dashboard/terminal/index.html`,
+  a static page with xterm.js served from this box (`fetch_vendor.sh` pins and
+  verifies it). It talks to **ttyd** (`/usr/local/bin/ttyd`, release 1.7.7,
+  checksum verified) run by `jack-terminal.service` (a copy of the unit is in
+  `dashboard/terminal/`). ttyd listens on `172.19.0.1:7681` only — the web
+  server's own network, not the internet.
+- **Two passwords, on purpose.** The short one opens the dashboard. The
+  terminal checks a 28-character one of its own, in `~/.jack-terminal-password`
+  and `~/.config/jack-terminal/env` (owner-only files, never in this repo). The
+  page sends it as a strict same-site cookie; the web server turns the cookie
+  into the header ttyd checks, and holds no secret itself.
+- **One shared session.** Every way in runs `dashboard/terminal/attach.sh`:
+  `tmux -L jack … new-session -A -s jack`, a tmux server of its own with
+  `tmux.conf` and `bashrc` beside it. `~/bin/jt` does the same from an SSH app;
+  `~/bin/jackchat` resumes the owner's conversation with Claude inside it. The
+  unit has `KillMode=process`: restarting the helper never ends the session.
+- **Tests:** `dashboard/terminal/uitest.mjs` drives a real browser against the
+  real site at six screen sizes (see its header). It types into the shared
+  session, so run it when the owner is not using it.
+- This is the one background helper added to the box against its standing
+  "no extra services" rule, on the owner's instruction; it uses about 1 MB.
+  To remove: `sudo systemctl disable --now jack-terminal`, delete the
+  `jack.worldtwin.duckdns.org` block from the Caddyfile, `caddy reload`.
 - To switch it off: remove the `dashboard_status.py` line from the crontab.
 

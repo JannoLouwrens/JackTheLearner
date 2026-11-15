@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0b0d">
+<title>Jack Terminal</title>
+<link rel="stylesheet" href="xterm.css">
+<style>
+/* One dark look by design: a terminal. Glass bars above and below a deep panel;
+   every control is at least 44 px so a thumb can use it. */
+:root{
+  color-scheme:dark;
+  --bg:#0b0b0d; --panel:#0b0b0d; --bar:rgba(22,22,24,.82); --key:#2a2a2e; --key-hi:#3a3a3f; --key-on:#0a84ff;
+  --ink:#f2f2f7; --ink2:#aeaeb2; --ink3:#77777d; --line:rgba(255,255,255,.10);
+  --accent:#0a84ff; --good:#30d158; --warn:#ff9f0a; --crit:#ff453a;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--font);overflow:hidden;overscroll-behavior:none}
+body{position:fixed;inset:0;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* the app follows the visible part of the screen, so the keys ride on the keyboard */
+#app{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;flex-direction:column;will-change:height,transform}
+
+.bar{display:flex;align-items:center;gap:8px;min-height:48px;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  padding:calc(4px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 4px max(10px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);flex:none;z-index:3}
+.bar .back{display:inline-flex;align-items:center;gap:2px;height:44px;padding:0 10px 0 4px;border-radius:12px;color:var(--accent);text-decoration:none;font-size:17px;white-space:nowrap}
+.bar .back svg{width:12px;height:20px}
+.bar h1{flex:1;min-width:0;margin:0;text-align:center;font-size:17px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.state{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:99px;background:rgba(255,255,255,.07);font-size:13px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.state i{width:8px;height:8px;border-radius:50%;background:var(--ink3)}
+.state.live i{background:var(--good)} .state.wait i{background:var(--warn);animation:pulse 1.2s ease-in-out infinite} .state.off i{background:var(--crit)}
+@keyframes pulse{50%{opacity:.3}}
+.icon{width:44px;height:44px;display:grid;place-items:center;border:0;background:none;border-radius:12px;cursor:pointer;color:var(--ink)}
+.icon:active{background:rgba(255,255,255,.08)}
+.icon svg{width:22px;height:22px}
+
+#stage{position:relative;flex:1;min-height:0;background:var(--panel);padding:6px 4px 2px 8px;touch-action:none}
+#term{width:100%;height:100%}
+.xterm{height:100%}
+.xterm .xterm-viewport{background:transparent!important;scrollbar-width:none}
+.xterm .xterm-viewport::-webkit-scrollbar{display:none}
+@media (min-width:900px){
+  #stage{margin:14px 18px 6px;border-radius:18px;padding:14px 12px 10px 16px;box-shadow:0 0 0 1px var(--line),0 24px 60px rgba(0,0,0,.5)}
+  .bar{border-bottom-color:transparent;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+
+/* key bar */
+#keys{flex:none;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);
+  padding:7px max(8px,env(safe-area-inset-right,0px)) calc(7px + var(--bottom-inset,0px)) max(8px,env(safe-area-inset-left,0px));z-index:3}
+#keys .row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x}
+#keys .row::-webkit-scrollbar{display:none}
+/* a soft fade at whichever edge has more keys beyond it */
+#keys .row{--l:0px;--r:0px;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--l),#000 calc(100% - var(--r)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--l),#000 calc(100% - var(--r)),transparent 100%)}
+.key{flex:none;min-width:46px;height:44px;padding:0 13px;border:0;border-radius:11px;background:var(--key);color:var(--ink);font-size:15px;font-weight:600;letter-spacing:-.01em;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;transition:background .08s,transform .08s}
+.key svg{width:18px;height:18px}
+.key.down{background:var(--key-hi);transform:scale(.96)}
+.key.on{background:var(--key-on);color:#fff}
+.key.wide{padding:0 16px}
+.sep{flex:none;width:1px;margin:8px 2px;background:var(--line)}
+@media (min-width:900px){#keys{background:transparent;border-top-color:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;padding-bottom:14px}#keys .row{justify-content:center}}
+@media (prefers-reduced-motion:reduce){.key{transition:none}.state.wait i{animation:none}.sheet,.scrim,#menu{animation:none}}
+/* a phone held sideways has little height: give the rows to the terminal */
+@media (max-height:460px){
+  .bar{min-height:38px;padding-top:calc(1px + env(safe-area-inset-top,0px));padding-bottom:1px}
+  .bar .back,.icon{height:36px} .state{height:24px}
+  #stage{padding-top:3px}
+  #keys{padding-top:4px;padding-bottom:calc(4px + var(--bottom-inset,0px))}
+  .key{height:36px;min-width:44px}
+  #menu{top:calc(42px + env(safe-area-inset-top,0px));max-height:calc(100% - 50px);overflow:auto}
+}
+
+/* menu */
+#menu{position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:calc(54px + env(safe-area-inset-top,0px));z-index:6;min-width:248px;background:rgba(40,40,44,.92);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);border-radius:16px;box-shadow:0 0 0 1px var(--line),0 18px 50px rgba(0,0,0,.55);padding:6px;transform-origin:top right;animation:pop .14s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.94)}}
+#menu button,#menu .size{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:44px;padding:0 12px;border:0;background:none;border-radius:10px;font-size:16px;text-align:left;cursor:pointer}
+#menu button:active{background:rgba(255,255,255,.08)}
+#menu hr{border:0;border-top:1px solid var(--line);margin:4px 8px}
+#menu .size{cursor:default}
+#menu .size span{color:var(--ink2);font-variant-numeric:tabular-nums;min-width:26px;text-align:center}
+#menu .size div{display:flex;gap:6px;align-items:center}
+#menu .size button{width:44px;min-height:36px;justify-content:center;background:var(--key);font-weight:700;padding:0}
+#menu .danger{color:var(--crit)}
+
+/* sheets */
+.scrim{position:absolute;inset:0;z-index:8;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;animation:fade .16s ease-out}
+@keyframes fade{from{opacity:0}}
+.sheet{width:100%;max-width:440px;max-height:100%;overflow:auto;background:#1c1c1e;border-radius:26px 26px 0 0;padding:10px 22px calc(22px + var(--bottom-inset,0px));box-shadow:0 0 0 1px var(--line);animation:rise .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{transform:translateY(24px);opacity:0}}
+@media (min-width:600px){.scrim{align-items:center}.sheet{border-radius:26px;padding-bottom:22px}}
+.sheet .grab{width:38px;height:5px;border-radius:99px;background:#48484a;margin:0 auto 14px}
+.sheet h2{font-size:24px;line-height:1.2;font-weight:700;letter-spacing:-.02em;margin:0 0 6px}
+.sheet p{margin:0 0 14px;color:var(--ink2);font-size:15px;line-height:1.45}
+.sheet code{font-family:var(--mono);font-size:13px;background:#2c2c2e;border-radius:6px;padding:2px 6px;color:var(--ink);white-space:nowrap}
+.field{display:block;width:100%;height:50px;border:0;border-radius:13px;background:#2c2c2e;color:var(--ink);font:inherit;font-size:17px;padding:0 14px;outline:none;-webkit-appearance:none}
+.field:focus{box-shadow:0 0 0 2px var(--accent)}
+.check{display:flex;align-items:center;gap:10px;margin:14px 2px 16px;font-size:15px;color:var(--ink2);cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--accent)}
+.cta{display:flex;align-items:center;justify-content:center;width:100%;height:50px;border:0;border-radius:14px;background:var(--accent);color:#fff;font-size:17px;font-weight:600;cursor:pointer}
+.cta[disabled]{opacity:.5}
+.plain{display:flex;align-items:center;justify-content:center;width:100%;height:46px;border:0;background:none;color:var(--accent);font-size:17px;cursor:pointer;margin-top:4px}
+.err{color:var(--crit);font-size:14px;min-height:20px;margin:8px 2px 0}
+.tips{margin:0 0 16px;padding:0;list-style:none}
+.tips li{display:grid;grid-template-columns:86px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:15px;color:var(--ink2);line-height:1.4;align-items:start}
+.tips li:first-child{border-top:0}
+.tips b{color:var(--ink);font-weight:600}
+
+/* centre notice while joining or when the server is away */
+#notice{position:absolute;left:0;right:0;top:38%;z-index:2;text-align:center;padding:0 24px;color:var(--ink2);font-size:15px;pointer-events:none}
+#notice b{display:block;color:var(--ink);font-size:17px;font-weight:600;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="bar">
+    <a class="back" href="../" aria-label="Back to the dashboard"><svg viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 2 10l8 8"/></svg>Jack</a>
+    <h1>Terminal</h1>
+    <span class="state" id="state" role="status"><i></i><span>Signed out</span></span>
+    <button class="icon" id="more" aria-label="More" aria-haspopup="true"><svg viewBox="0 0 22 22" fill="currentColor"><circle cx="4" cy="11" r="2"/><circle cx="11" cy="11" r="2"/><circle cx="18" cy="11" r="2"/></svg></button>
+  </header>
+
+  <div id="stage"><div id="term"></div><div id="notice" hidden></div></div>
+
+  <div id="keys" aria-label="Extra keys"><div class="row" id="keyrow"></div></div>
+
+  <div id="menu" hidden role="menu">
+    <button data-m="chat" role="menuitem">Open my Claude chat</button>
+    <button data-m="tips" role="menuitem">How to use this</button>
+    <hr>
+    <div class="size">Text size <div><button data-m="smaller" aria-label="Smaller text">A−</button><span id="sizeval">13</span><button data-m="bigger" aria-label="Larger text">A+</button></div></div>
+    <hr>
+    <button data-m="reconnect" role="menuitem">Reconnect</button>
+    <button data-m="signout" role="menuitem" class="danger">Sign out on this device</button>
+  </div>
+
+  <div class="scrim" id="signin" hidden>
+    <form class="sheet" id="signform" autocomplete="on">
+      <div class="grab"></div>
+      <h2>Open the terminal</h2>
+      <p>This is a full terminal on your server. It has its own long password, kept on the server. To see it, run <code>cat ~/.jack-terminal-password</code> in your SSH app, then paste it here.</p>
+      <input type="text" name="username" value="jack" autocomplete="username" hidden>
+      <input class="field" id="pw" name="password" type="password" autocomplete="current-password" placeholder="Terminal password" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Terminal password">
+      <label class="check"><input type="checkbox" id="keep" checked> Keep me signed in on this device</label>
+      <button class="cta" id="go" type="submit">Open</button>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+  </div>
+
+  <div class="scrim" id="tips" hidden>
+    <div class="sheet">
+      <div class="grab"></div>
+      <h2>How to use this</h2>
+      <ul class="tips">
+        <li><b>Your chat</b><span>Type <code>jackchat</code> and press return, or choose “Open my Claude chat” in the menu. It keeps running when you close this page.</span></li>
+        <li><b>Scroll back</b><span>Swipe up and down on the terminal, or use the page keys.</span></li>
+        <li><b>esc, ctrl</b><span>Tap esc to interrupt Claude. Tap ctrl, then a letter, for a control key; ^C is on its own key.</span></li>
+        <li><b>Same window</b><span>From your SSH app, run <code>jt</code> to land in this same terminal.</span></li>
+      </ul>
+      <button class="cta" data-close="tips">Done</button>
+    </div>
+  </div>
+</div>
+
+<script src="xterm.js"></script>
+<script src="addon-fit.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+var enc=new TextEncoder(), dec=new TextDecoder();
+var LS={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},del:function(k){try{localStorage.removeItem(k)}catch(e){}}};
+var SIZE="jack.term.size", TIPPED="jack.term.tipped";
+/* The password travels as a cookie, because a browser will not put a password
+   header on a WebSocket. The web server turns the cookie into the header the
+   terminal server checks. Strict same-site, HTTPS only: no other site can make
+   this browser send it. */
+function getTok(){var m=document.cookie.match(/(?:^|;\s*)jt=([^;]+)/);return m?m[1]:null}
+function setTok(v,keep){document.cookie="jt="+v+"; Path=/; SameSite=Strict"+(location.protocol==="https:"?"; Secure":"")+(keep?"; Max-Age=31536000":"")}
+function dropTok(){document.cookie="jt=; Path=/; Max-Age=0; SameSite=Strict"+(location.protocol==="https:"?"; Secure":"")}
+var coarse=window.matchMedia&&matchMedia("(pointer:coarse)").matches;
+var fontSize=+(LS.get(SIZE)||0)||(Math.min(innerWidth,innerHeight)<380?12:coarse?13:15);
+
+var term=new Terminal({
+  fontFamily:getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(),
+  fontSize:fontSize, lineHeight:1.15, letterSpacing:0, cursorBlink:true, cursorStyle:"bar", cursorWidth:2,
+  scrollback:8000, allowProposedApi:true, macOptionIsMeta:true, convertEol:false, drawBoldTextInBrightColors:false,
+  theme:{background:"#0b0b0d",foreground:"#e9e9ee",cursor:"#0a84ff",cursorAccent:"#0b0b0d",selectionBackground:"rgba(10,132,255,.38)",
+    black:"#1c1c1e",red:"#ff453a",green:"#30d158",yellow:"#ffd60a",blue:"#0a84ff",magenta:"#bf5af2",cyan:"#64d2ff",white:"#d1d1d6",
+    brightBlack:"#7c7c82",brightRed:"#ff6961",brightGreen:"#5ee27c",brightYellow:"#ffe566",brightBlue:"#409cff",brightMagenta:"#da8fff",brightCyan:"#8be0ff",brightWhite:"#ffffff"}
+});
+var fit=new FitAddon.FitAddon();
+term.loadAddon(fit);
+term.open($("#term"));
+window.jackTerm=term;                                 /* for the interface tests */
+
+/* ───── connection: ttyd's own wire format ───── */
+var ws=null, token=getTok(), wantOpen=false, tries=0, timer=null, pending=0, paused=false, everLive=false;
+function setState(kind,text){var el=$("#state");el.className="state "+kind;el.lastElementChild.textContent=text}
+function notice(title,body){var n=$("#notice");if(!title){n.hidden=true;return}n.innerHTML="<b></b><span></span>";n.firstChild.textContent=title;n.lastChild.textContent=body||"";n.hidden=false}
+function send(bytes){if(ws&&ws.readyState===1)ws.send(bytes)}
+function input(s){
+  if(!ws||ws.readyState!==1)return;
+  var b=enc.encode(s),p=new Uint8Array(b.length+1);p[0]=48;p.set(b,1);ws.send(p);
+}
+function sendSize(){send(enc.encode("1"+JSON.stringify({columns:term.cols,rows:term.rows})))}
+function connect(){
+  if(!token){askPassword();return}
+  if(ws&&(ws.readyState===0||ws.readyState===1))return;
+  wantOpen=true;clearTimeout(timer);
+  setState("wait",tries?"Reconnecting":"Connecting");
+  if(!everLive)notice("Connecting","Opening the terminal on your server.");
+  var sock=ws=new WebSocket((location.protocol==="https:"?"wss://":"ws://")+location.host+"/term/ws",["tty"]);
+  sock.binaryType="arraybuffer";
+  sock.onopen=function(){
+    doFit();
+    sock.send(enc.encode(JSON.stringify({AuthToken:token,columns:term.cols,rows:term.rows})));
+    tries=0;pending=0;paused=false;everLive=true;setState("live","Connected");notice(null);
+    if(!coarse)term.focus();
+    if(!LS.get(TIPPED)){LS.set(TIPPED,"1");setTimeout(function(){if(!$("#signin").hidden)return;$("#tips").hidden=false},600)}
+  };
+  sock.onmessage=function(ev){
+    var u=new Uint8Array(ev.data);if(!u.length)return;
+    if(u[0]===48){                                     /* output */
+      var body=u.subarray(1);pending+=body.length;
+      if(!paused&&pending>2000000){paused=true;send(enc.encode("2"))}
+      term.write(body,function(){pending-=body.length;if(paused&&pending<200000){paused=false;send(enc.encode("3"))}});
+    }else if(u[0]===49){document.title=dec.decode(u.subarray(1))||"Jack Terminal"}
+  };
+  sock.onclose=function(ev){
+    if(ws!==sock)return;ws=null;
+    if(ev.code===1008||ev.code===1011&&!everLive){forget();askPassword("That password was not accepted.");return}
+    if(!wantOpen){if(token)setState("off","Closed");else setState("","Signed out");return}
+    tries++;var wait=Math.min(10000,500*Math.pow(2,Math.min(tries,5)));
+    setState(tries>3?"off":"wait",tries>3?"Server not answering":"Reconnecting");
+    if(tries>3)notice("Cannot reach the terminal","Trying again every few seconds. Your session on the server is still there.");
+    timer=setTimeout(connect,wait);
+  };
+  sock.onerror=function(){};
+}
+function forget(){token=null;dropTok()}
+function disconnect(){wantOpen=false;clearTimeout(timer);if(ws){try{ws.close()}catch(e){}}}
+
+/* ───── sign in: the password is checked by the terminal server, never by this page ───── */
+function askPassword(msg){
+  setState("","Signed out");notice(null);
+  $("#err").textContent=msg||"";$("#signin").hidden=false;$("#go").disabled=false;$("#go").textContent="Open";
+  setTimeout(function(){try{$("#pw").focus()}catch(e){}},60);
+}
+$("#signform").addEventListener("submit",function(e){
+  e.preventDefault();
+  var pw=$("#pw").value.trim();if(!pw){$("#err").textContent="Paste the terminal password first.";return}
+  var tok;try{tok=btoa("jack:"+pw)}catch(x){$("#err").textContent="That password has characters this page cannot send.";return}
+  $("#go").disabled=true;$("#go").textContent="Checking";$("#err").textContent="";
+  setTok(tok,$("#keep").checked);
+  fetch("/term/token",{cache:"no-store",credentials:"same-origin"}).then(function(r){
+    if(r.status===401)throw new Error("wrong");
+    if(!r.ok)throw new Error("down");
+    token=tok;
+    $("#pw").value="";$("#signin").hidden=true;tries=0;connect();
+  }).catch(function(x){
+    dropTok();
+    $("#go").disabled=false;$("#go").textContent="Open";
+    $("#err").textContent=x.message==="wrong"?"That password was not accepted.":"The terminal on the server is not answering. Try again in a moment.";
+  });
+});
+
+/* ───── typing ───── */
+var ctrlArmed=false;
+function setCtrl(on){ctrlArmed=on;var k=document.querySelector('[data-k="ctrl"]');if(k)k.classList.toggle("on",on)}
+function ctrlOf(ch){var c=ch.toUpperCase().charCodeAt(0);if(ch===" ")return "\x00";if(ch==="?")return "\x7f";return c>=64&&c<=95?String.fromCharCode(c&31):null}
+term.onData(function(d){
+  if(ctrlArmed){setCtrl(false);if(d.length===1){var c=ctrlOf(d);if(c!==null){input(c);return}}}
+  input(d);
+});
+term.onResize(function(){sendSize()});
+
+/* ───── the extra keys ───── */
+function csi(a,b){return term.modes&&term.modes.applicationCursorKeysMode?"\x1bO"+a:"\x1b["+a}
+var ARROW='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14V4M4.5 8.5 9 4l4.5 4.5"/></svg>';
+function rot(deg){return ARROW.replace("<svg ",'<svg style="transform:rotate('+deg+'deg)" ')}
+var KEYS=[
+  {k:"esc",t:"esc",s:"\x1b",a:"Escape"},
+  {k:"tab",t:"tab",s:"\t",a:"Tab"},
+  {k:"ctrl",t:"ctrl",a:"Control, then a letter"},
+  {k:"up",h:ARROW,f:function(){return csi("A")},rep:1,a:"Up"},
+  {k:"down",h:rot(180),f:function(){return csi("B")},rep:1,a:"Down"},
+  {k:"left",h:rot(270),f:function(){return csi("D")},rep:1,a:"Left"},
+  {k:"right",h:rot(90),f:function(){return csi("C")},rep:1,a:"Right"},
+  {k:"ret",t:"return",s:"\r",w:1,a:"Return"},
+  {sep:1},
+  {k:"intr",t:"^C",s:"\x03",a:"Control C, stop"},
+  {k:"stab",t:"⇧tab",s:"\x1b[Z",a:"Shift Tab"},
+  {k:"pgup",t:"page ↑",s:"\x1b[5~",rep:1,a:"Scroll back"},
+  {k:"pgdn",t:"page ↓",s:"\x1b[6~",rep:1,a:"Scroll forward"},
+  {k:"paste",t:"paste",a:"Paste from the clipboard"},
+  {k:"kbd",t:"keyboard",a:"Show or hide the keyboard"}
+];
+var row=$("#keyrow");
+KEYS.forEach(function(K){
+  if(K.sep){var s=document.createElement("span");s.className="sep";row.appendChild(s);return}
+  var b=document.createElement("button");b.type="button";b.className="key"+(K.w?" wide":"");b.dataset.k=K.k;b.setAttribute("aria-label",K.a);
+  if(K.h)b.innerHTML=K.h;else b.textContent=K.t;
+  row.appendChild(b);
+});
+function act(k){
+  var K=KEYS.filter(function(x){return x.k===k})[0];if(!K)return;
+  if(k==="ctrl"){setCtrl(!ctrlArmed);return}
+  if(k==="paste"){
+    if(navigator.clipboard&&navigator.clipboard.readText)navigator.clipboard.readText().then(function(t){if(t)term.paste(t)}).catch(function(){});
+    return;
+  }
+  if(k==="kbd"){var ta=term.textarea;if(document.activeElement===ta)ta.blur();else term.focus();return}
+  var s=K.f?K.f():K.s;
+  if(ctrlArmed){setCtrl(false)}
+  input(s);
+}
+/* Keys act on press, like real keys, and never take the focus away from the
+   terminal, so the on-screen keyboard stays where it is. A drag along the row
+   scrolls it instead of pressing. */
+(function(){
+  var held=null,rep=null,x0=0,moved=false;
+  function stop(){clearTimeout(rep);clearInterval(rep);rep=null;if(held){held.classList.remove("down");held=null}}
+  row.addEventListener("pointerdown",function(e){
+    var b=e.target.closest(".key");if(!b)return;
+    if(e.pointerType==="mouse"){e.preventDefault()}
+    held=b;x0=e.clientX;moved=false;b.classList.add("down");
+    var K=KEYS.filter(function(x){return x.k===b.dataset.k})[0];
+    if(e.pointerType==="mouse"){act(b.dataset.k);if(K&&K.rep)rep=setTimeout(function(){rep=setInterval(function(){act(b.dataset.k)},70)},380)}
+  });
+  row.addEventListener("pointermove",function(e){if(held&&Math.abs(e.clientX-x0)>10){moved=true;held.classList.remove("down")}});
+  row.addEventListener("pointerup",function(e){
+    var b=held;var wasMouse=e.pointerType==="mouse";stop();
+    if(b&&!moved&&!wasMouse)act(b.dataset.k);
+  });
+  row.addEventListener("pointercancel",stop);row.addEventListener("pointerleave",function(e){if(e.pointerType==="mouse")stop()});
+  /* touch: keep focus (and the keyboard) on the terminal */
+  row.addEventListener("touchend",function(e){if(e.target.closest(".key")&&e.cancelable)e.preventDefault()},{passive:false});
+  row.addEventListener("mousedown",function(e){if(e.target.closest(".key"))e.preventDefault()});
+})();
+
+/* show that the key row scrolls */
+function edges(){var r=row;r.style.setProperty("--l",r.scrollLeft>2?"22px":"0px");r.style.setProperty("--r",r.scrollLeft+r.clientWidth<r.scrollWidth-2?"22px":"0px")}
+row.addEventListener("scroll",edges,{passive:true});window.addEventListener("resize",edges);edges();
+
+/* ───── swipe to scroll back ───── */
+(function(){
+  var st=$("#stage"),y0=null,acc=0;
+  function cellH(){var r=term.rows||24;return Math.max(10,$("#term").clientHeight/r)}
+  st.addEventListener("touchstart",function(e){if(e.touches.length===1){y0=e.touches[0].clientY;acc=0}},{passive:true,capture:true});
+  st.addEventListener("touchmove",function(e){
+    if(y0===null||e.touches.length!==1)return;
+    var y=e.touches[0].clientY;acc+=y-y0;y0=y;var h=cellH(),n=0;
+    while(Math.abs(acc)>=h){n+=acc>0?1:-1;acc-=acc>0?h:-h}
+    if(n){
+      var mouse=term.modes&&term.modes.mouseTrackingMode&&term.modes.mouseTrackingMode!=="none";
+      if(mouse){var code=n>0?64:65,seq="";for(var i=0;i<Math.abs(n);i++)seq+="\x1b[<"+code+";1;1M";input(seq)}
+      else term.scrollLines(-n);
+    }
+    if(e.cancelable)e.preventDefault();e.stopPropagation();
+  },{passive:false,capture:true});
+  st.addEventListener("touchend",function(){y0=null},{passive:true,capture:true});
+})();
+
+/* ───── size: follow the visible screen, so the keys sit on top of the keyboard ───── */
+var fitTimer=null;
+function doFit(){try{fit.fit()}catch(e){}}
+function layout(){
+  var vv=window.visualViewport,app=$("#app");
+  if(vv){
+    app.style.height=vv.height+"px";app.style.transform="translateY("+vv.offsetTop+"px)";
+    var kb=(window.innerHeight-vv.height-vv.offsetTop)>120;
+    document.documentElement.style.setProperty("--bottom-inset",kb?"0px":"env(safe-area-inset-bottom,0px)");
+  }
+  clearTimeout(fitTimer);fitTimer=setTimeout(doFit,60);
+}
+if(window.visualViewport){visualViewport.addEventListener("resize",layout);visualViewport.addEventListener("scroll",layout)}
+window.addEventListener("resize",layout);window.addEventListener("orientationchange",function(){setTimeout(layout,250)});
+if(window.ResizeObserver)new ResizeObserver(function(){clearTimeout(fitTimer);fitTimer=setTimeout(doFit,60)}).observe($("#stage"));
+document.documentElement.style.setProperty("--bottom-inset","env(safe-area-inset-bottom,0px)");
+layout();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(doFit);
+
+/* ───── menu and sheets ───── */
+function setSize(n){fontSize=Math.max(9,Math.min(22,n));term.options.fontSize=fontSize;LS.set(SIZE,String(fontSize));$("#sizeval").textContent=fontSize;doFit()}
+$("#sizeval").textContent=fontSize;
+$("#more").addEventListener("click",function(e){e.stopPropagation();$("#menu").hidden=!$("#menu").hidden});
+document.addEventListener("click",function(e){
+  var m=e.target.closest("[data-m]");
+  if(m){
+    var a=m.dataset.m;
+    if(a==="smaller"){setSize(fontSize-1);return}
+    if(a==="bigger"){setSize(fontSize+1);return}
+    $("#menu").hidden=true;
+    if(a==="chat"){input("jackchat\r");term.focus()}
+    else if(a==="tips")$("#tips").hidden=false;
+    else if(a==="reconnect"){disconnect();tries=0;setTimeout(connect,150)}
+    else if(a==="signout"){disconnect();forget();askPassword()}
+    return;
+  }
+  var c=e.target.closest("[data-close]");if(c){$("#"+c.dataset.close).hidden=true;if(!coarse)term.focus();return}
+  if(e.target.id==="tips"){$("#tips").hidden=true;return}
+  if(!$("#menu").hidden&&!e.target.closest("#menu"))$("#menu").hidden=true;
+});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("#menu").hidden){$("#menu").hidden=true;e.stopPropagation()}else if(!$("#tips").hidden){$("#tips").hidden=true;e.stopPropagation()}}},true);
+
+/* ───── come back to life with the page ───── */
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&wantOpen&&!ws){tries=0;connect()}});
+window.addEventListener("online",function(){if(wantOpen&&!ws){tries=0;connect()}});
+window.addEventListener("pageshow",function(ev){if(ev.persisted&&wantOpen&&!ws){tries=0;connect()}});
+
+connect();
+})();
+</script>
+</body>
+</html>

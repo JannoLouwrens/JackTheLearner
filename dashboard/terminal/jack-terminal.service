@@ -1,0 +1,20 @@
+[Unit]
+Description=Jack terminal: the owner's chat window for the dashboard (ttyd, reachable only from the web server's network)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+User=opc
+Group=opc
+WorkingDirectory=/home/opc
+Environment=LANG=C.UTF-8
+EnvironmentFile=/home/opc/.config/jack-terminal/env
+ExecStart=/usr/local/bin/ttyd --interface 172.19.0.1 --port 7681 --base-path /term --writable --check-origin --max-clients 4 --terminal-type xterm-256color --credential jack:${JACK_TERM_PASSWORD} /home/opc/jackthelearner/dashboard/terminal/attach.sh
+Restart=always
+RestartSec=5
+# Stopping or restarting this helper must never end the chat: only ttyd itself
+# is signalled, the tmux session and whatever runs in it stay.
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
