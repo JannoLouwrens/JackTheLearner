@@ -1291,3 +1291,7 @@ seed wins 5/5 and 4/5, far .335/.230/.332. Only the margin vs yoked failed (.098
 The yoked control took most of the gain (+.075 of the +.173 over fifo), so replaying more segments, whichever they are, explains much of it.
 J6: pushed drink-race kernel 1 `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0) on the freed kcpu slot. 0/30 cells.
 Served philosophy 4 (the gate could fail and did, by 0.0015, with no threshold moved) and 3 (a consolidation idea raced and lost; no seat by argument).
+
+2026-11-15 01:25 UTC · JACK · J6(d) drink race. J2: D1.0 watcher 3902173 alive (3 h 53 m), no exit, so nothing to do. k1 `jack-cpu-1794704878` RUNNING (poller alive).
+Pushed k2 `jack-cpu-1794705768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0) on the second kcpu slot; Kaggle shows both RUNNING. 0/30 cells current, 6 in flight; nothing measured yet.
+Served philosophy 3 (a world rule gets its declared race against the shipped world, not a seat by argument) and 6 (Kaggle CPU, ~0 box CPU).
