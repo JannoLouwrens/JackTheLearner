@@ -1,0 +1,142 @@
+[
+ {
+  "id": "meals",
+  "label": "Meals per life",
+  "spec": "LF.04",
+  "value": "meals_late_learner",
+  "scale": 0.2,
+  "floor": 0,
+  "target": 5,
+  "unit": "meals",
+  "digits": 1,
+  "where": "living",
+  "floor_label": "none",
+  "target_label": "pass mark",
+  "note": "Average over his last five lives in each of three runs, after ten lives of practice. The pass mark, set before the run, is five small meals a life."
+ },
+ {
+  "id": "fed",
+  "label": "Lives in which he eats",
+  "spec": "CR.01",
+  "value": "fed_null",
+  "scale": 100,
+  "floor": 0,
+  "target": 100,
+  "unit": "%",
+  "digits": 0,
+  "where": "living",
+  "floor_label": "never",
+  "target_label": "every life",
+  "note": "Share of 47 exam lives in which he ate at least once, with no curriculum. None of the six curricula tried did better."
+ },
+ {
+  "id": "lifespan",
+  "label": "Length of a life",
+  "spec": "LF.04",
+  "value": "late_learner_s",
+  "floor": "late_twin_s",
+  "target": {
+   "sum": [
+    "late_twin_s",
+    "margin_s"
+   ]
+  },
+  "refs": [
+   {
+    "label": "doing nothing at all",
+    "value": "statue_mean_life_s"
+   }
+  ],
+  "unit": "s",
+  "digits": 0,
+  "where": "living",
+  "floor_label": "untrained twin",
+  "target_label": "pass mark",
+  "note": "His last five lives against an untrained copy of himself. To pass he must outlive that twin by a margin fixed before the run. Without food no life can pass 600 seconds."
+ },
+ {
+  "id": "learn",
+  "label": "What living adds",
+  "spec": "LF.04",
+  "value": "gain_vs_twin_s",
+  "floor": 0,
+  "target": "margin_s",
+  "unit": "s",
+  "digits": 0,
+  "signed": true,
+  "where": "living",
+  "floor_label": "no gain",
+  "target_label": "pass mark",
+  "note": "Seconds of life his practice bought him over the untrained twin. A negative number means training made him worse."
+ },
+ {
+  "id": "xlife",
+  "label": "Finds food sooner in his next life",
+  "spec": "XL.01",
+  "value": "pooled_search_time_ratio",
+  "floor": 1.0,
+  "target": 0.5,
+  "unit": "of the time",
+  "digits": 2,
+  "where": "living",
+  "floor_label": "no faster",
+  "target_label": "twice as fast",
+  "note": "Time to his first meal in a new life when he keeps what he learned, as a share of the time when it is wiped. Lower is better; the pass mark is half."
+ },
+ {
+  "id": "wm",
+  "label": "Short-term memory",
+  "spec": "WM.02",
+  "value": "ring_acc",
+  "scale": 100,
+  "floor": {
+   "key": "nobuffer_acc",
+   "scale": 100
+  },
+  "target": 100,
+  "refs": [
+   {
+    "label": "the older memory design",
+    "value": {
+     "key": "gru_acc",
+     "scale": 100
+    }
+   }
+  ],
+  "unit": "%",
+  "digits": 0,
+  "where": "rig",
+  "floor_label": "no memory",
+  "target_label": "perfect",
+  "note": "How often the new ring memory recalls what it was shown, on five fresh runs. Tested on a bench: it holds the seat but is not yet wired into the living Jack."
+ },
+ {
+  "id": "move",
+  "label": "Walking, against random flailing",
+  "spec": "T2.01",
+  "value": "sigma_advantage",
+  "floor": 0,
+  "target": 5.0,
+  "unit": "σ",
+  "digits": 2,
+  "where": "old",
+  "floor_label": "no better",
+  "target_label": "pass mark",
+  "note": "How far the trained walker stands above a random one, in units of run-to-run spread. Measured in August on the old, large brain; the living Jack still rides a rover."
+ },
+ {
+  "id": "taste",
+  "label": "Learns a poison from one taste",
+  "spec": "TA.02",
+  "value": "one_trial_avoidance_rate",
+  "scale": 100,
+  "floor": 0,
+  "target": 100,
+  "unit": "%",
+  "digits": 0,
+  "where": "rig",
+  "floor_label": "never",
+  "target_label": "always",
+  "note": "After a single sub-lethal dose, how often he avoids that food next time. Tested on a bench in August, not in the living Jack."
+ }
+]

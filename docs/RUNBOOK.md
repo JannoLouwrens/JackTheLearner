@@ -1783,3 +1783,20 @@ To switch it off: remove the `gap_fill.sh` line from the crontab.
   JACK_LOOP_FALLBACK=opus`. To undo: put hours 7 and 19 back on the plain jack
   line and delete the fable line.
 
+## The owner's dashboard (2026-11-15)
+
+- `scripts/dashboard_status.py` (cron, every 2 minutes, no model) writes
+  `/data/jack-dashboard/status.json` and `index.html`. It only reads: the
+  ledger, `experiments/coverage.py`, `docs/ROADMAP.md`, `docs/ORDERS.md`,
+  `docs/PROGRESS.md`, the organs' logs, the crontab, `ps`, the GPU/CPU journals.
+  Its one network call asks Kaggle which sent jobs still run, at most every
+  ten minutes per job.
+- `dashboard/page.html` is the page; it draws what the script computed.
+- `dashboard/abilities.json` files each promise in GOAL.md under a bar.
+  `dashboard/vitals.json` lists the measured numbers (a ledger metric, its
+  floor, its pass mark). `dashboard/config.json` holds plain names for jobs
+  and the link to the owner's chat session.
+- A recorded life plays on the Watch tab when a file exists at
+  `/data/jack-dashboard/media/latest.mp4`.
+- To switch it off: remove the `dashboard_status.py` line from the crontab.
+

@@ -1,0 +1,151 @@
+{
+  "_about": "How the dashboard groups the goal's promises into bars. The promises and their tests come from experiments/coverage.py; this file only says which bar each promise sits under and what to call it in plain words. A promise not listed here still appears, under 'Other promises'.",
+  "aspects": [
+    {
+      "id": "alive",
+      "name": "Staying alive",
+      "blurb": "Eating and drinking, keeping warm, sleeping, sheltering, using what the world offers, dying and trying again.",
+      "promises": [
+        "hunger/thirst",
+        "thermal (kills)",
+        "sleep",
+        "death & retry",
+        "shelter/building",
+        "tool use",
+        "tree-fire-shelter world"
+      ]
+    },
+    {
+      "id": "body",
+      "name": "Body",
+      "blurb": "A human-like body that balances, knows where its own limbs are, and moves well in the world he survives in.",
+      "promises": [
+        "human-like body",
+        "balance",
+        "proprioception"
+      ]
+    },
+    {
+      "id": "senses",
+      "name": "Senses",
+      "blurb": "Every sense a human has, each one feeding the same brain and each one making a difference.",
+      "promises": [
+        "sight",
+        "hearing",
+        "touch/contact",
+        "smell",
+        "taste",
+        "damage/nociception"
+      ]
+    },
+    {
+      "id": "memory",
+      "name": "Memory",
+      "blurb": "What he lived stays with him, across sleep and across death.",
+      "promises": [
+        "memory across lives"
+      ]
+    },
+    {
+      "id": "learning",
+      "name": "Learning",
+      "blurb": "He explores because he wants to, keeps learning without forgetting, and carries what he knows to new places and new machines.",
+      "promises": [
+        "curiosity",
+        "plasticity",
+        "generality",
+        "handed over still learning"
+      ]
+    },
+    {
+      "id": "brain",
+      "name": "One brain",
+      "blurb": "All his senses meet in one learning brain that acts at once when it can and thinks first when it must.",
+      "promises": [
+        "one brain / unison",
+        "fast/slow"
+      ]
+    },
+    {
+      "id": "words",
+      "name": "Words",
+      "blurb": "He hears words and ties them to his own life, has a voice, takes advice, and can learn from being told.",
+      "promises": [
+        "language (parent)",
+        "voice",
+        "advised not commanded",
+        "told world"
+      ]
+    },
+    {
+      "id": "people",
+      "name": "People",
+      "blurb": "He knows the people around him, learns whom to trust, and can be watched without it changing him.",
+      "promises": [
+        "social/other agents",
+        "spectating / being watched"
+      ]
+    },
+    {
+      "id": "world",
+      "name": "Knowing his world",
+      "blurb": "The handful of ideas that only living teaches: what is heavy, what is far, what is tiring, what is worth it.",
+      "promises": [
+        "heavy",
+        "far",
+        "tiring",
+        "worth-it"
+      ]
+    }
+  ],
+  "promise_names": {
+    "hunger/thirst": "Hunger and thirst",
+    "thermal (kills)": "Heat and cold",
+    "sleep": "Sleep",
+    "death & retry": "Dying and trying again",
+    "shelter/building": "Shelter",
+    "tool use": "Tools",
+    "tree-fire-shelter world": "Trees, fire and cooking",
+    "human-like body": "A human-like body",
+    "balance": "Balance",
+    "proprioception": "Sense of his own body",
+    "sight": "Sight",
+    "hearing": "Hearing",
+    "touch/contact": "Touch",
+    "smell": "Smell",
+    "taste": "Taste",
+    "damage/nociception": "Pain",
+    "memory across lives": "Remembering across lives",
+    "curiosity": "Curiosity",
+    "plasticity": "Staying able to learn",
+    "generality": "Carrying skills to new places",
+    "handed over still learning": "Still learning after hand-over",
+    "one brain / unison": "All senses in one brain",
+    "fast/slow": "Acting fast, thinking slow",
+    "language (parent)": "Understanding and using words",
+    "voice": "A voice of his own",
+    "advised not commanded": "Taking advice, not orders",
+    "told world": "Learning from being told",
+    "social/other agents": "Other people and minds",
+    "spectating / being watched": "Can be watched",
+    "heavy": "Heavy",
+    "far": "Far",
+    "tiring": "Tiring",
+    "worth-it": "Worth it"
+  },
+  "milestone_promises": {
+    "5": [
+      "sight",
+      "hearing",
+      "touch/contact",
+      "balance",
+      "proprioception",
+      "smell",
+      "taste",
+      "damage/nociception",
+      "thermal (kills)",
+      "hunger/thirst",
+      "voice"
+    ]
+  }
+}

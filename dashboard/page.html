@@ -1,0 +1,489 @@
+<title>Jack the Learner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one calm column of rounded cards on a soft grouped ground, a floating
+   glass tab bar, one hero number, bars everywhere else; detail rises in a sheet. */
+:root{
+  --bg:#f2f3f7; --card:#ffffff; --inset:#f3f4f8; --ink:#0c0d11; --ink2:#494d57; --ink3:#7f8490;
+  --line:rgba(12,16,28,.09); --accent:#2a78d6; --accent-weak:#86b6ef; --track:#dfe9f8;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b; --mute:#a3a7b0;
+  --glass:rgba(250,250,252,.78); --scrim:rgba(10,12,20,.38);
+  --shadow:0 1px 2px rgba(12,16,28,.04),0 12px 32px rgba(12,16,28,.06);
+  --lift:0 1px 3px rgba(12,16,28,.14);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#000000; --card:#17181b; --inset:#222327; --ink:#f4f4f7; --ink2:#c5c7ce; --ink3:#8f939c;
+    --line:rgba(255,255,255,.11); --accent:#3987e5; --accent-weak:#1c5cab; --track:#152e52;
+    --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b; --mute:#6c7079;
+    --glass:rgba(30,31,35,.74); --scrim:rgba(0,0,0,.6);
+    --shadow:0 0 0 1px rgba(255,255,255,.05); --lift:0 0 0 1px rgba(255,255,255,.08);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --card:#17181b; --inset:#222327; --ink:#f4f4f7; --ink2:#c5c7ce; --ink3:#8f939c;
+  --line:rgba(255,255,255,.11); --accent:#3987e5; --accent-weak:#1c5cab; --track:#152e52;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b; --mute:#6c7079;
+  --glass:rgba(30,31,35,.74); --scrim:rgba(0,0,0,.6);
+  --shadow:0 0 0 1px rgba(255,255,255,.05); --lift:0 0 0 1px rgba(255,255,255,.08);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 120px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:10px}
+
+/* header */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 4px 16px}
+.top h1{font-size:34px;line-height:1.1;font-weight:700;letter-spacing:-.022em;margin:0}
+.top p{margin:4px 0 0;color:var(--ink3);font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:99px;font-size:13px;font-weight:600;background:var(--card);color:var(--ink2);box-shadow:var(--shadow);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mute);flex:none}
+.dot.good{background:var(--good)} .dot.warn{background:var(--warn)} .dot.crit{background:var(--crit)} .dot.accent{background:var(--accent)}
+.dot.live{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.dot.live{animation:none} *{scroll-behavior:auto!important;transition:none!important}}
+
+/* cards and sections */
+.view{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.card{background:var(--card);border-radius:26px;box-shadow:var(--shadow);padding:20px;min-width:0}
+.card>h2{font-size:22px;line-height:1.2;font-weight:700;letter-spacing:-.015em;margin:0 0 2px;text-wrap:balance}
+.card>.sub{margin:0 0 6px;color:var(--ink3);font-size:14px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px}
+.link{background:none;border:0;padding:0;color:var(--accent);font-weight:600;font-size:14px;cursor:pointer}
+@media (min-width:860px){
+  .view.two{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);align-items:start}
+  .view.two>.span{grid-column:1/-1}
+  .col{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:859px){.col{display:contents}}
+
+/* hero */
+.hero .num{font-size:76px;line-height:.95;font-weight:700;letter-spacing:-.045em}
+.hero .of{font-size:22px;font-weight:600;color:var(--ink3);letter-spacing:-.01em;margin-left:4px}
+.hero .say{margin:8px 0 14px;color:var(--ink2);font-size:16px;max-width:36em}
+.meter{height:8px;border-radius:99px;background:var(--track);overflow:hidden;position:relative}
+.meter>i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.meter.big{height:12px}
+.meter.warn>i{background:var(--warn)} .meter.crit>i{background:var(--crit)}
+.meter>u{position:absolute;top:0;bottom:0;width:2px;background:var(--ink2);opacity:.55}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}
+.tile{background:var(--inset);border-radius:16px;padding:12px 12px 10px;min-width:0}
+.tile .v{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.tile .v small{font-size:14px;font-weight:600;color:var(--ink3);letter-spacing:0}
+.tile .l{font-size:12px;color:var(--ink3);line-height:1.3;margin-top:2px}
+.tile svg{display:block;width:100%;height:26px;margin-top:6px}
+
+/* meter list rows */
+.rows{margin:6px 0 0;padding:0;list-style:none}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:baseline;width:100%;padding:14px 0;border:0;border-top:1px solid var(--line);background:none;text-align:left;cursor:pointer}
+.rows>li:first-child .row,.rows>.row:first-child{border-top:0}
+.row .name{font-size:17px;font-weight:600;letter-spacing:-.01em;min-width:0}
+.row .fig{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .fig i{font-style:normal;color:var(--ink3);font-weight:500;margin-left:6px}
+.row .meter,.row .cap{grid-column:1/-1}
+.row .cap{font-size:13px;color:var(--ink3);margin-top:-2px}
+div.row{cursor:default}
+@media (min-width:560px){
+  .rows.wide .row{grid-template-columns:190px minmax(0,1fr) 74px;align-items:center}
+  .rows.wide .row .meter{grid-column:2;grid-row:1}
+  .rows.wide .row .fig{grid-column:3;grid-row:1;text-align:right}
+  .rows.wide .row .cap{grid-column:2/-1}
+}
+
+/* status chips: icon carries the colour, words stay in ink */
+.st{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.st b{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:700;color:#fff;background:var(--mute)}
+.st.good b{background:var(--good)} .st.crit b{background:var(--crit)} .st.serious b{background:var(--serious)}
+.st.warn b{background:var(--warn);color:#0b0b0b} .st.accent b{background:var(--accent)}
+.chip{display:inline-block;font-size:12px;font-weight:600;color:var(--ink2);background:var(--inset);border-radius:8px;padding:2px 8px;white-space:nowrap}
+
+/* director's note */
+.note p{margin:0 0 10px;font-size:16px;line-height:1.5;color:var(--ink2);max-width:40em}
+.note p strong{color:var(--ink)}
+.note.clamp .body{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;overflow:hidden}
+
+/* vital signs */
+.vital{padding:16px 0;border-top:1px solid var(--line);cursor:pointer;display:block;width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left}
+.vitals>.vital:first-child{border-top:0;padding-top:8px}
+.vital .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.vital .lab{font-size:15px;font-weight:600}
+.vital .val{font-size:28px;font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-top:2px}
+.vital .val small{font-size:15px;font-weight:600;color:var(--ink3);letter-spacing:0;margin-left:4px}
+.range{position:relative;height:8px;border-radius:99px;background:var(--track);margin:14px 7px 8px}
+.range>i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--accent)}
+.range>b{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--card)}
+.ends{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.ends span:last-child{text-align:right}
+
+/* lives chart */
+.chart{position:relative;margin-top:10px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--font);font-size:10px;fill:var(--ink3)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--card);font-size:12px;font-weight:600;line-height:1.35;padding:6px 9px;border-radius:10px;transform:translate(-50%,-100%);white-space:nowrap;z-index:5}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{display:inline-block;width:8px;height:12px;border-radius:3px 3px 0 0;background:var(--accent)}
+.legend u{display:inline-block;width:16px;height:2px;border-radius:2px;background:var(--ink2)}
+details{margin-top:10px;font-size:13px;color:var(--ink2)}
+details summary{cursor:pointer;color:var(--accent);font-weight:600}
+table{border-collapse:collapse;margin-top:8px;font-variant-numeric:tabular-nums}
+td,th{padding:3px 12px 3px 0;text-align:right;font-weight:500}
+th{color:var(--ink3);font-weight:600}
+.scroll{overflow-x:auto}
+
+/* milestones */
+.ms{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.ms .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;background:var(--inset);color:var(--ink2);grid-row:1/3}
+.ms.met .n{background:var(--good);color:#fff}
+.ms .name{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.ms .meter{grid-column:2/-1}
+
+/* team, jobs, orders, verdicts */
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:13px 0;border-top:1px solid var(--line)}
+.items>.item:first-child{border-top:0}
+.item .name{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.item>.chip,.item>.st{align-self:start;margin-top:2px}
+.item .role,.item .meta{grid-column:1/-1;font-size:13px;color:var(--ink3)}
+.item .meta{color:var(--ink2)}
+.item .meter{grid-column:1/-1;margin-top:8px}
+.item.tap{cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left}
+.empty{color:var(--ink3);font-size:15px;margin:8px 0 0}
+.banner{background:var(--card);border-radius:20px;padding:14px 16px;box-shadow:var(--shadow);display:flex;gap:10px;align-items:center;font-weight:600}
+
+/* watch and talk */
+video{display:block;width:100%;border-radius:18px;background:#000}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;font-weight:600;font-size:17px;padding:13px 22px;border-radius:99px;text-decoration:none;border:0;cursor:pointer}
+ol.steps{margin:10px 0 0;padding-left:22px;color:var(--ink2);font-size:16px;line-height:1.5}
+ol.steps li{margin-bottom:8px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em;background:var(--inset);border-radius:6px;padding:1px 6px}
+
+/* floating tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;pointer-events:none;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.tabs .bar{pointer-events:auto;display:flex;gap:2px;padding:5px;border-radius:99px;background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);box-shadow:0 10px 34px rgba(0,0,0,.16),0 0 0 1px var(--line)}
+.tabs button{border:0;background:none;font-size:15px;font-weight:600;color:var(--ink2);padding:10px 16px;border-radius:99px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:var(--lift)}
+@media (max-width:380px){.tabs button{padding:10px 12px;font-size:14px}}
+
+/* sheet */
+.scrim{position:fixed;inset:0;z-index:30;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);width:100%;max-width:640px;max-height:90%;overflow:auto;border-radius:28px 28px 0 0;padding:8px max(20px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));overscroll-behavior:contain}
+.sheet .grab{width:38px;height:5px;border-radius:99px;background:var(--mute);opacity:.5;margin:2px auto 10px}
+.sheet .x{position:sticky;top:6px;float:right;width:32px;height:32px;border-radius:50%;border:0;background:var(--inset);color:var(--ink2);font-size:15px;font-weight:700;cursor:pointer;z-index:2}
+.sheet h3{font-size:24px;line-height:1.2;font-weight:700;letter-spacing:-.02em;margin:6px 44px 4px 0;text-wrap:balance}
+.sheet h4{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:22px 0 4px}
+.sheet p{color:var(--ink2);font-size:16px;line-height:1.5;margin:6px 0;max-width:38em}
+.sheet .bigp{font-size:44px;font-weight:700;letter-spacing:-.04em;line-height:1;margin:10px 0 10px}
+.sheet .bigp small{font-size:18px;color:var(--ink3);font-weight:600;letter-spacing:0;margin-left:4px}
+.tests{list-style:none;margin:8px 0 0;padding:0}
+.tests li{display:grid;grid-template-columns:118px minmax(0,1fr);gap:2px 10px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
+.tests .tt{font-size:15px;line-height:1.35}
+.tests .mt{grid-column:2;font-size:12px;color:var(--ink3)}
+@media (min-width:700px){.scrim{align-items:center}.sheet{border-radius:28px;max-height:84%}.sheet .grab{visibility:hidden}}
+.foot{color:var(--ink3);font-size:13px;padding:6px 4px;max-width:46em}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div><h1>Jack</h1><p id="stamp">&nbsp;</p></div>
+    <span class="pill" id="live"><span class="dot"></span><span>Loading</span></span>
+  </header>
+
+  <main>
+    <section class="view two" id="view-jack"></section>
+    <section class="view two" id="view-machine" hidden></section>
+    <section class="view" id="view-watch" hidden></section>
+    <section class="view" id="view-talk" hidden></section>
+  </main>
+</div>
+
+<nav class="tabs" aria-label="Sections"><div class="bar" role="tablist">
+  <button role="tab" data-tab="jack" id="tab-jack" aria-selected="true">Jack</button>
+  <button role="tab" data-tab="machine" id="tab-machine" aria-selected="false">Machine</button>
+  <button role="tab" data-tab="watch" id="tab-watch" aria-selected="false">Watch</button>
+  <button role="tab" data-tab="talk" id="tab-talk" aria-selected="false">Talk</button>
+</div></nav>
+
+<div class="scrim" id="scrim" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1"></div></div>
+
+<script id="snapshot" type="application/json">__SNAPSHOT__</script>
+<script>
+(function(){
+"use strict";
+var S=null, openKey=null, lastFocus=null, noteOpen=false;
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function bold(s){return esc(s).replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}
+function num(x,d){return Number(x).toLocaleString(undefined,{minimumFractionDigits:d||0,maximumFractionDigits:d||0})}
+function T(s){return s?new Date(s.length===16?s+":00Z":s):null}
+function clock(s){var t=T(s);return t?t.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}):""}
+function day(s){var t=T(s);return t?t.toLocaleDateString(undefined,{day:"numeric",month:"short"}):""}
+function span(ms){var m=Math.round(Math.abs(ms)/60000);if(m<1)return "under a minute";if(m<60)return m+" min";var h=Math.floor(m/60),r=m%60;if(h<24)return h+" h"+(r?" "+r+" min":"");var d=Math.floor(h/24);return d+(d===1?" day":" days")}
+function ago(s){var t=T(s);if(!t)return "";var ms=Date.now()-t;return ms<60000?"just now":span(ms)+" ago"}
+function until(s){var t=T(s);if(!t)return "";var ms=t-Date.now();return ms<=0?"due now":"in "+span(ms)}
+function when(s){var t=T(s);if(!t)return "";return (Date.now()-t<20*3600000&&t.getDate()===new Date().getDate())?clock(s):day(s)+", "+clock(s)}
+function meter(p,cls,mark){p=Math.max(0,Math.min(100,p));return '<div class="meter '+(cls||"")+'"><i style="width:'+p+'%"></i>'+(mark!=null?'<u style="left:calc('+mark+'% - 1px)"></u>':"")+"</div>"}
+var ST={PASS:["✓","Passed","good"],FAIL:["✕","Failed","crit"],VOID:["?","No verdict","warn"],ERROR:["!","Broke down","serious"],BLOCKED:["=","Blocked","warn"],NONE:["·","Not run yet",""],UNWRITTEN:["·","Not written yet",""]};
+function st(code){var s=ST[code]||ST.NONE;return '<span class="st '+s[2]+'"><b aria-hidden="true">'+s[0]+"</b>"+s[1]+"</span>"}
+var KIND={claim:"Proves the ability",fixture:"Checks the test bench",rule:"Checks a rule of his world",sensor:"Checks the sense delivers",parked:"Set aside for now"};
+var WHERE={living:"Measured on the living Jack",rig:"Measured on a test bench",old:"Measured on the old, large brain"};
+
+function spark(vals){
+  if(!vals||vals.length<2)return "";
+  var w=120,h=26,lo=Math.min.apply(null,vals),hi=Math.max.apply(null,vals),r=(hi-lo)||1;
+  var pts=vals.map(function(v,i){return [2+i*(w-8)/(vals.length-1),h-4-(v-lo)/r*(h-9)]});
+  var d=pts.map(function(p){return p[0].toFixed(1)+","+p[1].toFixed(1)}).join(" ");
+  var e=pts[pts.length-1];
+  return '<svg viewBox="0 0 '+w+" "+h+'" preserveAspectRatio="none" aria-hidden="true"><polyline points="'+d+'" fill="none" stroke="var(--mute)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="'+e[0].toFixed(1)+'" cy="'+e[1].toFixed(1)+'" r="3" fill="var(--accent)"/></svg>';
+}
+
+/* ───────── Jack ───────── */
+function viewJack(){
+  var a=S.abilities, L=S.ladder, ms=S.milestones||[], met=ms.filter(function(m){return m.state==="met"}).length;
+  var hist=(L.history||[]).map(function(x){return x.v}), wk=hist.length>7?L.passing-hist[hist.length-8]:null;
+  var o=Math.round(a.overall);
+  var h='<div class="col">';
+  h+='<div class="card hero"><p class="eyebrow">Proven so far</p>'+
+     '<div><span class="num">'+o+'</span><span class="of">/ 100</span></div>'+
+     '<p class="say">of what the goal promises has been proven by a test that could have failed.</p>'+
+     meter(a.overall,"big")+
+     '<div class="tiles">'+
+       '<div class="tile"><div class="v">'+met+'</div><div class="l">of '+ms.length+' milestones met</div></div>'+
+       '<div class="tile"><div class="v">'+a.proofs_passed+'</div><div class="l">of '+a.proofs+' proofs of ability pass</div></div>'+
+       '<div class="tile"><div class="v">'+L.passing+'</div><div class="l">of all '+L.total+' tests pass'+(wk!=null?" · "+(wk>=0?"+":"")+wk+" in 7 days":"")+'</div>'+spark(hist.slice(-30))+'</div>'+
+     '</div>'+
+     '<p style="margin:14px 0 0"><button class="link" data-sheet="method">How these numbers are made</button></p></div>';
+
+  var hd=S.headline||{};
+  if(hd.paras&&hd.paras.length){
+    h+='<div class="card note'+(noteOpen?"":" clamp")+'"><p class="eyebrow">From the Director'+(hd.written&&/^\d{4}-\d\d-\d\d/.test(hd.written)?" · "+day(hd.written.slice(0,10)+"T12:00"):"")+'</p><div class="body">'+
+       hd.paras.map(function(p){return "<p>"+bold(p)+"</p>"}).join("")+'</div>'+
+       '<button class="link" data-act="note">'+(noteOpen?"Show less":"Read it all")+'</button></div>';
+  }
+
+  h+='<div class="card"><h2>What he can do</h2><p class="sub">Each bar is the share of that ability\'s proofs that pass. Tap one for the tests behind it.</p><ul class="rows wide">'+
+     a.aspects.map(function(x){
+       var c=x.proofs,p=x.passed;
+       return '<li><button class="row" data-sheet="aspect:'+esc(x.id)+'"><span class="name">'+esc(x.name)+'</span><span class="fig">'+x.pct+'<i>›</i></span>'+meter(x.pct)+
+              '<span class="cap">'+p+" of "+c+" proofs pass, across "+x.promises.length+(x.promises.length===1?" promise":" promises")+"</span></button></li>"}).join("")+
+     "</ul></div>";
+  h+="</div><div class=\"col\">";
+
+  var V=S.vitals||[];
+  if(V.length){
+    h+='<div class="card"><h2>Measured</h2><p class="sub">Real numbers from his tests. The bar runs from the floor (a Jack who has learned nothing) to the pass mark.</p><div class="vitals">'+
+       V.map(function(v){
+         var lo=Math.min(v.floor,v.target),hi=Math.max(v.floor,v.target);
+         var under=v.target>v.floor?v.value<v.floor:v.value>v.floor;
+         return '<button class="vital" data-sheet="vital:'+esc(v.id)+'"><div class="hd"><span class="lab">'+esc(v.label)+'</span>'+st(v.test.status)+"</div>"+
+           '<div class="val">'+num(v.value,v.digits)+"<small>"+esc(v.unit)+"</small></div>"+
+           '<div class="range"><i style="width:'+v.score+'%"></i><b style="left:'+v.score+'%"></b></div>'+
+           '<div class="ends"><span>'+esc(v.floor_label)+" · "+num(v.floor,v.digits)+"</span><span>"+esc(v.target_label)+" · "+num(v.target,v.digits)+"</span></div>"+
+           '<div class="ends" style="margin-top:6px"><span>'+(under?"Below the floor":v.score+" of 100 of the way")+"</span><span>"+esc(WHERE[v.where]||"")+"</span></div></button>"}).join("")+
+       "</div></div>";
+  }
+  if(S.lives)h+=livesCard(S.lives);
+
+  h+='<div class="card"><h2>The route</h2><p class="sub">Nine milestones from today to the finished Jack. A milestone is met only when its tests pass.</p><ul class="rows">'+
+     ms.map(function(m){
+       var lab=m.state==="met"?st("PASS").replace("Passed","Met"):m.state==="in work"?'<span class="st accent"><b aria-hidden="true">›</b>In work</span>':'<span class="st"><b aria-hidden="true">·</b>Not started</span>';
+       return '<li><button class="row ms '+(m.state==="met"?"met":"")+'" data-sheet="milestone:'+m.n+'"><span class="n">'+m.n+'</span><span class="name">'+esc(m.title)+"</span>"+lab+meter(m.pct)+"</button></li>"}).join("")+
+     "</ul></div>";
+
+  var R=S.recent||[];
+  if(R.length){
+    h+='<div class="card"><h2>Latest verdicts</h2><div class="items">'+
+       R.map(function(t){return '<div class="item"><span class="name" style="font-weight:500;font-size:15px">'+esc(t.title)+"</span>"+st(t.status)+'<span class="meta" style="color:var(--ink3)">'+esc(t.id)+" · "+ago(t.ran)+"</span></div>"}).join("")+
+       "</div></div>";
+  }
+  h+="</div>";
+  $("#view-jack").innerHTML=h;
+  wireChart();
+}
+
+function livesCard(L){
+  var W=340,H=176,ml=30,mr=6,mt=12,mb=22,pw=W-ml-mr,ph=H-mt-mb,n=L.learner.length;
+  var top=Math.max(700,Math.ceil(Math.max.apply(null,L.learner.concat(L.twin||[],[L.nothing]))/100)*100);
+  var y=function(v){return mt+ph-(v/top)*ph}, band=pw/n, bw=Math.min(24,Math.round(band*0.58)), g="";
+  [0,200,400,600].filter(function(t){return t<=top}).forEach(function(t){g+='<line x1="'+ml+'" x2="'+(W-mr)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(ml-6)+'" y="'+(y(t)+3)+'" text-anchor="end">'+t+"</text>"});
+  g+='<line x1="'+ml+'" x2="'+(W-mr)+'" y1="'+y(L.nothing)+'" y2="'+y(L.nothing)+'" stroke="var(--ink3)" stroke-width="1"/><text x="'+(W-mr)+'" y="'+(y(L.nothing)-5)+'" text-anchor="end">doing nothing lasts '+Math.round(L.nothing)+" s</text>";
+  L.learner.forEach(function(v,i){
+    var x=ml+i*band+(band-bw)/2,yy=y(v),hh=mt+ph-yy,r=Math.min(4,hh);
+    g+='<path d="M'+x+","+(mt+ph)+"V"+(yy+r)+"q0,-"+r+" "+r+",-"+r+"H"+(x+bw-r)+"q"+r+",0 "+r+","+r+"V"+(mt+ph)+'Z" fill="var(--accent)"/>';
+    if(i===0||i===n-1||(i+1)%5===0)g+='<text x="'+(x+bw/2)+'" y="'+(H-7)+'" text-anchor="middle">'+(i+1)+"</text>";
+  });
+  if(L.twin){
+    var pts=L.twin.map(function(v,i){return (ml+i*band+band/2).toFixed(1)+","+y(v).toFixed(1)});
+    g+='<polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--card)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>'+
+       '<polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    var e=pts[pts.length-1].split(",");
+    g+='<circle cx="'+e[0]+'" cy="'+e[1]+'" r="4" fill="var(--ink2)" stroke="var(--card)" stroke-width="2"/>';
+  }
+  L.learner.forEach(function(v,i){g+='<rect class="hit" data-i="'+i+'" x="'+(ml+i*band)+'" y="'+mt+'" width="'+band+'" height="'+ph+'" fill="transparent" tabindex="0" aria-label="Life '+(i+1)+": Jack "+Math.round(v)+" seconds"+(L.twin?", untrained twin "+Math.round(L.twin[i])+" seconds":"")+'"/>'});
+  var rows=L.learner.map(function(v,i){return "<tr><td>"+(i+1)+"</td><td>"+num(v,0)+"</td>"+(L.twin?"<td>"+num(L.twin[i],0)+"</td>":"")+"</tr>"}).join("");
+  return '<div class="card"><h2>Fifteen lives, one after another</h2><p class="sub">How long each life lasted, in seconds, in one run of the test that asks whether living teaches him ('+day(L.ran)+'). If he were learning, the bars would climb past the line.</p>'+
+    '<div class="chart" id="lives"><svg viewBox="0 0 '+W+" "+H+'" role="img" aria-label="Length of fifteen consecutive lives">'+g+'</svg></div>'+
+    '<div class="legend"><span><i></i>Jack, learning as he lives</span>'+(L.twin?"<span><u></u>His untrained twin</span>":"")+"</div>"+
+    '<details><summary>Show the numbers</summary><div class="scroll"><table><tr><th>Life</th><th>Jack (s)</th>'+(L.twin?"<th>Twin (s)</th>":"")+"</tr>"+rows+"</table></div></details></div>";
+}
+function wireChart(){
+  var c=$("#lives");if(!c||!S.lives)return;var L=S.lives,tip=null;
+  function show(el){var i=+el.getAttribute("data-i"),b=el.getBoundingClientRect(),p=c.getBoundingClientRect();
+    if(!tip){tip=document.createElement("div");tip.className="tip";c.appendChild(tip)}
+    tip.innerHTML="Life "+(i+1)+"<br>Jack "+Math.round(L.learner[i])+" s"+(L.twin?" · twin "+Math.round(L.twin[i])+" s":"");
+    tip.style.left=Math.max(70,Math.min(p.width-70,b.left-p.left+b.width/2))+"px";tip.style.top=(b.top-p.top-4)+"px";tip.hidden=false}
+  function hide(){if(tip)tip.hidden=true}
+  c.querySelectorAll(".hit").forEach(function(el){
+    el.addEventListener("pointerenter",function(){show(el)});el.addEventListener("pointerleave",hide);
+    el.addEventListener("focus",function(){show(el)});el.addEventListener("blur",hide);
+    el.addEventListener("click",function(){show(el)})});
+}
+
+/* ───────── Machine ───────── */
+function viewMachine(){
+  var t=S.team||{members:[]}, J=S.jobs||[], R=S.resources||{}, h='<div class="col">';
+  if(t.paused)h+='<div class="banner"><span class="dot warn"></span>All agents are paused. Nothing new will start until they are resumed.</div>';
+  var running=t.members.filter(function(m){return m.running});
+  h+='<div class="card"><h2>Running now</h2><p class="sub">'+(running.length+J.length?running.length+(running.length===1?" agent":" agents")+" and "+J.length+(J.length===1?" job":" jobs")+" at work.":"Nothing is running this minute.")+'</p><div class="items">'+
+    running.map(function(m){return '<div class="item"><span class="name">'+esc(m.name)+'</span><span class="st accent"><b aria-hidden="true">›</b>Thinking</span><span class="meta">Started '+clock(m.since)+" · "+span(Date.now()-T(m.since))+" so far"+(m.model?" · "+esc(cap(m.model)):"")+"</span></div>"}).join("")+
+    J.map(function(j){
+      var pc=j.progress!=null?Math.round(j.progress*100):null;
+      return '<div class="item"><span class="name">'+esc(j.name)+'</span><span class="chip">'+esc(j.where)+'</span><span class="meta">'+
+        (j.state==="waiting to start"?"Waiting to start":"Running "+span(Date.now()-T(j.since)))+(j.est_hours?" of about "+num(j.est_hours,j.est_hours%1?1:0)+" h expected":"")+(j.test?" · "+esc(j.test):"")+"</span>"+
+        (pc!=null?meter(pc):"")+"</div>"}).join("")+
+    (running.length+J.length?"":'<p class="empty">The next agent starts '+until(nextUp(t))+".</p>")+"</div></div>";
+
+  h+='<div class="card"><h2>The team</h2><p class="sub">Who works on Jack, when each last ran and when each runs next.</p><div class="items">'+
+    t.members.map(function(m){
+      var s=m.running?'<span class="st accent"><b aria-hidden="true">›</b>Running</span>':m.last_ok===false?'<span class="st serious"><b aria-hidden="true">!</b>Last run cut short</span>':m.last_end?'<span class="st good"><b aria-hidden="true">✓</b>Idle</span>':'<span class="st"><b aria-hidden="true">·</b>Not run yet</span>';
+      var meta=[];if(m.last_end)meta.push("Last finished "+when(m.last_end));if(m.next)meta.push("next "+when(m.next)+" ("+until(m.next)+")");meta.push(m.model?cap(m.model):"No model");
+      return '<div class="item"><span class="name">'+esc(m.name)+"</span>"+s+'<span class="role">'+esc(m.role)+(m.detail?" "+esc(m.detail)+".":"")+'</span><span class="meta">'+meta.join(" · ")+"</span></div>"}).join("")+
+    "</div></div></div><div class=\"col\">";
+
+  h+='<div class="card"><h2>Resources</h2><p class="sub">What the work is allowed to use, and how much is used.</p><ul class="rows">';
+  function res(name,fig,p,cap,cls,mark){h+='<li><div class="row"><span class="name" style="font-size:16px">'+name+'</span><span class="fig" style="font-size:15px">'+fig+"</span>"+meter(p,cls,mark)+(cap?'<span class="cap">'+cap+"</span>":"")+"</div></li>"}
+  if(R.claude){var c=R.claude,near=c.pct>=c.stop?"crit":c.pct>=c.stop-10?"warn":"";
+    res("Claude, this week",c.pct+"%",c.pct,(c.pct>=c.stop?"Stopped: the agents pause until the reset.":"Agents stop at "+c.stop+"%.")+(c.resets?" Resets "+esc(c.resets)+".":"")+(c.fable_pct!=null?" The strongest model's own line reads "+c.fable_pct+"%.":""),near,c.stop)}
+  if(R.cpu_day){var u=R.cpu_day,p=100*u.used_s/u.ceiling_s;res("Processor time on this box, today",num(u.used_s/3600,1)+" of "+num(u.ceiling_s/3600,0)+" h",p,"The rest of the box belongs to its other tenants.",p>=100?"crit":p>=85?"warn":"")}
+  if(R.cloud_cpu){res("Free cloud processors",R.cloud_cpu.running+" of "+R.cloud_cpu.cap+" in use",100*R.cloud_cpu.running/R.cloud_cpu.cap,"Kaggle runs five at once at no cost.")}
+  if(R.gpu_week){var g=R.gpu_week;res("Free GPU hours, this week",num(g.kaggle_h,1)+" of "+num(g.kaggle_cap_h,0)+" h",100*g.kaggle_h/g.kaggle_cap_h,"By the project's own count on Kaggle"+(g.colab_h?", plus "+num(g.colab_h,1)+" h on Colab":"")+".")}
+  (R.disk||[]).forEach(function(d){var p=100*d.used_gb/d.total_gb;res(esc(d.label),num(d.free_gb,1)+" GB free",p,num(d.used_gb,0)+" of "+num(d.total_gb,0)+" GB used.",p>=92?"crit":p>=85?"warn":"")});
+  if(R.memory){res("Memory",num(R.memory.used_gb,1)+" of "+num(R.memory.total_gb,0)+" GB",100*R.memory.used_gb/R.memory.total_gb,"")}
+  if(R.load){var l=R.load,p2=100*l.now/l.ceiling;res("Load on the box",num(l.now,1),p2,"New work is refused above "+num(l.ceiling,0)+". The box has "+l.cores+" cores.",p2>=100?"crit":p2>=80?"warn":"",null)}
+  h+="</ul></div>";
+
+  var O=S.orders||[];
+  if(O.length){h+='<div class="card"><h2>Orders</h2><p class="sub">What the Director has the workers on, first job first. Tap one for where it stands.</p><div class="items">'+
+    O.map(function(o){return '<button class="item tap" data-sheet="order:'+esc(o.id)+'"><span class="name">'+esc(o.title)+'</span><span class="chip">'+esc(o.lane)+"</span></button>"}).join("")+"</div></div>"}
+  h+="</div>";
+  $("#view-machine").innerHTML=h;
+}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function nextUp(t){var ts=t.members.map(function(m){return m.next}).filter(Boolean).sort();return ts[0]}
+
+/* ───────── Watch, Talk ───────── */
+function viewWatch(){
+  var w=S.watch||{},h='<div class="card"><h2>Watch him</h2>';
+  if(w.video)h+='<p class="sub">The most recent recorded life.</p><video controls playsinline preload="metadata" src="'+esc(w.video)+'"></video>';
+  else{
+    var o=(S.orders||[]).filter(function(x){return /video|watch/i.test(x.title)})[0];
+    h+='<p class="sub">No recording yet.</p><p style="color:var(--ink2);font-size:16px;max-width:40em">A short video of one of his lives is on order'+(o?" ("+esc(o.id)+")":"")+". It will play here as soon as a worker has made it. Seeing him live, as it happens, needs a machine with a graphics chip; this server has none.</p>"+
+       (o&&o.state?'<p class="foot" style="padding:0">Where it stands: '+esc(o.state)+"</p>":"");
+  }
+  h+="</div>";
+  $("#view-watch").innerHTML=h;
+}
+function viewTalk(){
+  var c=S.chat||{},h='<div class="card"><h2>Talk to Claude</h2>';
+  if(c.url)h+='<p class="sub">Opens the same Claude session that runs on your server'+(c.name?", named "+esc(c.name):"")+', in the Claude app or your browser.</p><p style="margin:14px 0 4px"><a class="cta" href="'+esc(c.url)+'" target="_blank" rel="noopener">Open the chat</a></p>';
+  else h+='<p class="sub">You can talk to the Claude session on your server from the Claude app on your phone. It needs switching on once.</p><ol class="steps">'+
+    "<li>In the terminal where Claude is running, type <code>/remote-control</code> and press return.</li>"+
+    "<li>Open the Claude app, go to Code, and pick the session from the list. The terminal also prints a link you can open.</li>"+
+    "<li>Tell Claude that link once, and a button will appear here that opens it.</li></ol>"+
+    '<p class="foot" style="padding:8px 0 0">Keep that terminal inside tmux so the session stays up when you disconnect. The chat cannot be shown inside this page; it opens in the app.</p>';
+  h+="</div>";
+  $("#view-talk").innerHTML=h;
+}
+
+/* ───────── sheets ───────── */
+function tests(list){return '<ul class="tests">'+list.map(function(t){return "<li>"+st(t.status)+'<span class="tt">'+esc(t.title)+'</span><span class="mt">'+[t.kind?KIND[t.kind]:null,t.id,t.ran?"ran "+day(t.ran):null].filter(Boolean).map(esc).join(" · ")+"</span></li>"}).join("")+"</ul>"}
+function sheetHTML(key){
+  var k=key.split(":"),id=k.slice(1).join(":"),x;
+  if(k[0]==="aspect"){x=S.abilities.aspects.filter(function(a){return a.id===id})[0];if(!x)return null;
+    return "<h3 id=\"sheet-title\">"+esc(x.name)+'</h3><div class="bigp">'+x.pct+"<small>/ 100</small></div>"+meter(x.pct,"big")+"<p>"+esc(x.blurb)+"</p>"+
+      x.promises.map(function(p){
+        var cl=p.tests.filter(function(t){return t.kind==="claim"}),gr=p.tests.filter(function(t){return t.kind!=="claim"});
+        return "<h4>"+esc(p.name)+'</h4><div class="ends" style="margin-bottom:6px"><span>'+(p.claims?p.passed+" of "+p.claims+(p.claims===1?" proof passes":" proofs pass"):"No proof has been written for this yet")+"</span><span>"+p.pct+" / 100</span></div>"+meter(p.pct)+
+          (cl.length?tests(cl):"")+(gr.length?'<p class="foot" style="padding:12px 0 0">Groundwork, not counted in the score ('+p.ground_passed+" of "+p.ground+" pass)</p>"+tests(gr):"")}).join("")}
+  if(k[0]==="milestone"){x=S.milestones.filter(function(m){return String(m.n)===id})[0];if(!x)return null;
+    return '<p class="eyebrow">Milestone '+x.n+" of "+S.milestones.length+'</p><h3 id="sheet-title">'+esc(x.title)+"</h3><p>"+esc(x.about)+"</p>"+
+      (x.done_when?"<h4>Met when</h4><p>"+esc(x.done_when)+"</p>":"")+
+      (x.status?"<h4>Where it stands"+(x.as_of?" ("+esc(x.as_of)+")":"")+"</h4><p>"+bold(x.status)+"</p>":"")+
+      '<div class="ends" style="margin:16px 0 6px"><span>'+x.passed+" of "+x.total+" gates pass</span><span>"+x.pct+" / 100</span></div>"+meter(x.pct)+
+      (x.tests.length?tests(x.tests):"")+
+      (x.promises&&x.promises.length?'<ul class="tests">'+x.promises.map(function(p){return "<li>"+st(p.passed>0?"PASS":p.claims?"FAIL":"UNWRITTEN").replace("Passed","Has a proof").replace("Failed","No proof yet")+'<span class="tt">'+esc(p.name)+'</span><span class="mt">'+p.passed+" of "+p.claims+" proofs pass</span></li>"}).join("")+"</ul>":"")}
+  if(k[0]==="vital"){x=S.vitals.filter(function(v){return v.id===id})[0];if(!x)return null;
+    return '<p class="eyebrow">'+esc(WHERE[x.where]||"")+'</p><h3 id="sheet-title">'+esc(x.label)+'</h3><div class="bigp">'+num(x.value,x.digits)+"<small>"+esc(x.unit)+"</small></div>"+
+      '<div class="range"><i style="width:'+x.score+'%"></i><b style="left:'+x.score+'%"></b></div><div class="ends"><span>'+esc(x.floor_label)+" · "+num(x.floor,x.digits)+" "+esc(x.unit)+"</span><span>"+esc(x.target_label)+" · "+num(x.target,x.digits)+" "+esc(x.unit)+"</span></div>"+
+      "<p>"+esc(x.note)+"</p>"+(x.refs||[]).map(function(r){return "<p>For comparison, "+esc(r.label)+": "+num(r.value,x.digits)+" "+esc(x.unit)+".</p>"}).join("")+
+      "<h4>How the "+x.score+" is worked out</h4><p>The distance from the floor to his number, divided by the distance from the floor to the pass mark, held between 0 and 100.</p><h4>The test it comes from</h4>"+tests([x.test])}
+  if(k[0]==="order"){x=S.orders.filter(function(o){return o.id===id})[0];if(!x)return null;
+    return '<p class="eyebrow">Order '+esc(x.id)+" · "+esc(x.lane)+'</p><h3 id="sheet-title">'+esc(x.title)+"</h3><h4>Where it stands</h4><p>"+(x.state?bold(x.state):"No note yet.")+"</p>"}
+  if(k[0]==="method"){var a=S.abilities;
+    return '<h3 id="sheet-title">How these numbers are made</h3>'+
+      "<h4>Proven</h4><p>The goal makes "+a.promises+" promises about Jack: each sense, each need, memory, words and so on. Each promise has proofs, which are tests that would show he can really do it. There are "+a.proofs+" proofs in all, and "+a.proofs_passed+" pass today. Every bar is the same sum: proofs that pass, divided by proofs there are. The headline does that sum over everything; each ability does it over the promises filed under it.</p>"+
+      "<p>A promise that has no proof written yet counts as one proof still owed. Tests that only check his world or an instrument are shown as groundwork and never counted. "+a.promises_started+" of the "+a.promises+" promises have at least one proof that passes.</p>"+
+      "<p>Two things to keep in mind. A promise with one easy proof reads full until harder ones are written, so the count beside a bar matters as much as the bar. And some proofs still pass on a test bench beside him, not in the living Jack; the Director is re-labelling those.</p>"+
+      "<h4>Measured</h4><p>A real number from a test, placed between a floor and a pass mark that were fixed before the test ran. The floor is what a Jack who has learned nothing scores. The score is how far along that stretch he is, from 0 to 100.</p>"+
+      "<h4>The route</h4><p>The Director's nine milestones. Each names the tests that must pass; a test the roadmap names but nobody has written yet counts against it.</p>"+
+      "<h4>Where it comes from</h4><p>A small script on the server reads the test ledger, the roadmap, the agents' logs and Kaggle's job list every two minutes. No model is involved and nothing here is typed by hand."+(S.head?" Built from version "+esc(S.head)+".":"")+"</p>"}
+  return null;
+}
+function openSheet(key){
+  var html=sheetHTML(key);if(!html)return;
+  if(!openKey)lastFocus=document.activeElement;
+  openKey=key;
+  var sh=$("#sheet");sh.innerHTML='<div class="grab"></div><button class="x" data-act="close" aria-label="Close">✕</button>'+html;
+  $("#scrim").hidden=false;sh.scrollTop=0;sh.focus();
+}
+function closeSheet(){openKey=null;$("#scrim").hidden=true;if(lastFocus&&lastFocus.focus)try{lastFocus.focus()}catch(e){}}
+
+/* ───────── frame ───────── */
+function stampNow(){
+  if(!S)return;var age=Date.now()-T(S.generated),live=age<6*60000,el=$("#live");
+  el.innerHTML='<span class="dot '+(live?"good live":"warn")+'"></span><span>'+(live?"Live":"Snapshot")+"</span>";
+  $("#stamp").textContent=(live?"Updated "+ago(S.generated):"As it stood "+day(S.generated)+", "+clock(S.generated))+(S.errors&&S.errors.length?" · "+S.errors.length+" part"+(S.errors.length>1?"s":"")+" could not be read":"");
+}
+function render(){
+  if(!S){$("#view-jack").innerHTML='<div class="card"><h2>No data yet</h2><p class="sub">The status file has not been written. It appears within two minutes of the server script first running.</p></div>';return}
+  viewJack();viewMachine();viewWatch();viewTalk();stampNow();
+  if(openKey){var y=$("#sheet").scrollTop;var html=sheetHTML(openKey);if(html){$("#sheet").innerHTML='<div class="grab"></div><button class="x" data-act="close" aria-label="Close">✕</button>'+html;$("#sheet").scrollTop=y}else closeSheet()}
+}
+var TABS=["jack","machine","watch","talk"];
+function showTab(name){
+  if(TABS.indexOf(name)<0)name="jack";
+  TABS.forEach(function(t){$("#view-"+t).hidden=t!==name;$("#tab-"+t).setAttribute("aria-selected",t===name?"true":"false")});
+}
+function refresh(){
+  fetch("status.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){
+    if(j&&j.generated&&(!S||j.generated!==S.generated)){S=j;render()}}).catch(function(){});
+}
+document.addEventListener("click",function(e){
+  var t=e.target.closest("[data-sheet],[data-act],[data-tab]");
+  if(e.target.id==="scrim"){closeSheet();return}
+  if(!t)return;
+  if(t.dataset.sheet)openSheet(t.dataset.sheet);
+  else if(t.dataset.act==="close")closeSheet();
+  else if(t.dataset.act==="note"){noteOpen=!noteOpen;viewJack()}
+  else if(t.dataset.tab){showTab(t.dataset.tab);try{history.replaceState(null,"","#"+t.dataset.tab)}catch(err){location.hash=t.dataset.tab}window.scrollTo(0,0)}
+});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&openKey)closeSheet()});
+window.addEventListener("hashchange",function(){showTab(location.hash.slice(1))});
+try{S=JSON.parse(document.getElementById("snapshot").textContent)}catch(e){S=null}
+render();showTab(location.hash.slice(1)||"jack");refresh();
+setInterval(refresh,60000);setInterval(stampNow,15000);
+})();
+</script>
