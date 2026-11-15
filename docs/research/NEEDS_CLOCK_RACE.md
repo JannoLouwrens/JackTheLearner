@@ -324,3 +324,12 @@ If it cannot, the arm breaks the one life that MUST live, and it is reported as 
 - Fix: the swallow gate now applies only inside `substep` (the drink site, needs.py:509). Outside callers get today's geometry. After the fix: rig = 1.0, and every other metric is identical to the pre-fix cell (a/b/d_pass 1, c_pass 0). The leak changed only the rig record, not a gated `*_pass`.
 - (ii) re-PASS after the fix: `random_life_drink_probe.py dB0 1 3 14000` and `swp_k72 1 3 14000` outputs are byte-identical (`cmp`), with 26 gulps.
 - Reported, not gated: `rig_thermoneutral_day` = 0 under dB, inherited from the swp_k72 base (swp_k72 W.2 s0 reads 0 too, shipped 1). Every dB/swp_k72 W.2 cell is therefore rig-VOID by W.2's own `rig_ok`, while the declared tally gates on `*_pass` only. That is the base world's property, not dB's.
+
+### J6(d) step 2d — the short cells run on the box (2026-11-15 02:00-02:18 UTC, no ledger)
+- The W.1 and W.2 cells are cheap: W.1 takes 3.3-3.5 s, W.2 takes 20 s (shipped), 35 s (swp_k72) or 40 s (dB). They ran here through `drink_race_kcpu run` (nice 19, serially, ~520 CPU-s in total), not in Kaggle kernels.
+  The tally does not care where a cell ran: a cell counts by its `code` stamp, and the code path is unchanged since 647d45c. This cuts the kernels the race needs from 8 to 2 (the 6 gated NE.01 cells, 3 per kernel).
+- Status: 28/45 current. Shipped and dB have W.1 s1-4 and W.2 s0-4; swp_k72 has W.1/W.2 s0-4. The rest (dB/shipped NE.01 s0-1 and W.1 s0) are in flight in kernels …4878 and …5768.
+- Interim reading (not the verdict, NE.01 is absent): on W.1 and W.2, dB and shipped have identical `*_pass` flags on every seed. W.1: four_checks 1 and check True on s1-4. W.2: a/b/d 1, c 0.
+- W.2(c) is red in BOTH arms, but for different reasons. Shipped misses the deadlines (thirst 6.32x, hunger 14.82x short). Under dB (k72 base) both deadlines pass: thirst 0.968x, hunger 1.305x, inside the factor-2 band.
+  dB's only red sub-clause is `c_hot_reachable` 0: the hot route peaks at 37.3 °C over a 2079 s life and never reaches hyperthermia (shipped: 40.3 °C at 182 s). The k72 clock repairs (c)'s deadlines and breaks its hot route.
+  That is W.2's next fix, and it is a heat-side question, not a drink question.

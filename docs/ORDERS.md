@@ -115,12 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) declared `4c316fa`, dB built `c9dd457`, kcpu runner `dfc577c`, tally `184c4c1` (needs 30 current cells).
-dA/dC not built (pool literal in playground.py:421/886 + ne_01 + needs.py:820 = world-file refactor, Director call). 11-14 19:50 `647d45c`: pre-dispatch smoke of the kernel path (dB:W.2:0, 40 s) caught dB's swallow
-gate leaking into W.2's geometry rig (rig_pool 0.0). Fixed so the gate applies only inside substep: rig 1.0, *_pass unchanged, (ii) re-PASS byte-same. Note: rig_thermoneutral_day = 0 is the swp_k72 base's (shipped 1). No cells exist yet, so none are stale.
-11-15 01:23 k1 `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0) RUNNING, poller /data/tmp/drink_kcpu_k1.log; k2 `jack-cpu-1794705768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0)
-RUNNING, poller /data/tmp/drink_kcpu_k2.log (2 kcpu sessions in parallel, both accepted). 01:40 check: both still RUNNING on Kaggle, pollers 3961402/3964925 alive, 0/30 current, 6 in flight; 3rd kcpu push held by ruling 3's 2-process cap (J7 W1.04 waits on the same slot). Next: harvest (log ends in `{...}`); push the next 3 missing cells
-(`status` prints only the first 6 missing; read `status()` in full) 2 kernels at a time; at 30 current run `$PY -m experiments.drink_race_tally`. Dead poller -> JACK_REUSE_KERNEL=<slug> (single-unit).
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) declared `4c316fa`, dB built `c9dd457`, tally `184c4c1`. dA/dC NOT BUILT (world-file refactor, Director call).
+11-15 02:18: the short cells ran ON THE BOX (`drink_race_kcpu run`, W.1 3.4 s, W.2 20-40 s, ~520 CPU-s total), so status is 28/45 current (gated shipped+dB 18/30). This cuts the kernels from 8 to 2. Interim: W.1/W.2 flags dB == shipped on every seed.
+W.2(c) is red in both arms. Under dB the deadlines PASS (0.97x/1.30x vs shipped 6.3x/14.8x), but `c_hot_reachable` 0: the hot route peaks at 37.3 C and never kills under the k72 clock (NEEDS_CLOCK_RACE.md step 2d).
+In flight: k1 `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0), poller /data/tmp/drink_kcpu_k1.log; k2 `…5768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0), poller …_k2.log; both RUNNING at 02:18.
+Next: on each harvest (log ends `{...}`), push ONE kernel of 3 NE.01 cells per freed slot: `shipped:NE.01:2,shipped:NE.01:3,shipped:NE.01:4`, then `dB:NE.01:2,dB:NE.01:3,dB:NE.01:4` (swp_k72 NE.01 s0-4 is reported only and comes last). At 30 gated cells: `$PY -m experiments.drink_race_tally`. Dead poller -> JACK_REUSE_KERNEL=<slug>.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

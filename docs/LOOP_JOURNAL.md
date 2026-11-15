@@ -1300,3 +1300,9 @@ Served philosophy 3 (a world rule gets its declared race against the shipped wor
 Kaggle reports both drink-race kernels RUNNING (k1 …4878 since 01:08, k2 …5768 since 01:23), pollers alive, 0/30 gated cells current. With both pollers up, ruling 3's
 2-process detached cap is full, so no third kcpu push (J6 cells 7-9, J7 W1.04 and J8 LF.06 all wait for a free slot). Box load 0.15. No measurement this slot.
 Philosophy served: only 6 (box CPU and the cap kept). No creature line moved, which is a finding: the kcpu queue is serial at 2, and J6/J7/J8/J3 all sit behind it.
+
+2026-11-15 02:20 UTC · JACK · J6(d) drink race: the queue shrank from 8 kernels to 2. J2: D1.0 watcher 3902173 alive, no exit. Both drink kernels still RUNNING on Kaggle.
+The W.1/W.2 cells cost seconds, not hours (W.1 3.4 s, W.2 20-40 s), so all 28 short cells ran on the box through the runner's own `run` path (nice 19, serial, ~520 CPU-s). They count by code stamp; the code is unchanged since 647d45c.
+Status 28/45 (gated 18/30). Only 6 gated NE.01 cells are left beyond the 6 in flight, which is 2 kernels. Interim: dB == shipped on every W.1/W.2 flag.
+Finding: W.2(c) under dB passes both deadlines (0.97x, 1.30x vs 6.3x/14.8x shipped) but loses `c_hot_reachable` (37.3 C peak, never hyperthermic). The k72 clock trades (c)'s deadline for its hot route.
+Philosophy served: 5 (the loop got faster and cheaper; the race no longer waits a day on the 2-session queue) and 3 (a world rule is decided by its declared race).
