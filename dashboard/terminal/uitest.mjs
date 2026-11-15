@@ -382,16 +382,23 @@ for (const p of PROFILES) {
     // a sign-in link from the server tool becomes a button; a link to anywhere but Claude is ignored
     await focusTerm(page, p); await page.keyboard.type('claude-account --emit-login https://evil.example.com/oauth'); await page.keyboard.press('Enter'); await sleep(900);
     const badShown = await page.isVisible('#acct');
-    await page.keyboard.type('claude-account --emit-login https://claude.com/cai/oauth/authorize'); await page.keyboard.press('Enter');
+    const LINK = "https://claude.com/cai/oauth/authorize?code=true&client_id=test-client&response_type=code&redirect_uri=https%3A%2F%2Fplatform.claude.com%2Foauth%2Fcode%2Fcallback&scope=user%3Aprofile+user%3Ainference&code_challenge=abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG&code_challenge_method=S256&state=abcdefghijklmnopqrstuvwxyz0123456789";
+    await page.keyboard.type("claude-account --emit-login '" + LINK + "'"); await page.keyboard.press('Enter');
     const goodShown = await page.waitForSelector('#acctlogin:not([hidden])', { timeout: 6000 }).then(() => true, () => false);
     const href = await page.getAttribute('#acctopen', 'href');
+    const shownUrl = await page.inputValue('#accturl');
+    if (p.touch) await page.tap('#acctcopy'); else await page.click('#acctcopy');
+    await sleep(300);
+    const linkClip = await page.evaluate(() => navigator.clipboard.readText().catch(() => 'DENIED'));
+    const linkCopied = shownUrl === LINK && (linkClip === shownUrl || linkClip === 'DENIED') && /Copied/.test(await page.textContent('#acctcopy'));
+    const signFits = await page.evaluate(() => document.querySelector('#acct .sheet').getBoundingClientRect().bottom <= innerHeight + 1 && document.documentElement.scrollWidth <= innerWidth);
     await sleep(200); await page.screenshot({ path: `${OUT}${p.id}-f-signin.png` });
     await page.fill('#acctcode', `echo CODE-${mark}`); if (p.touch) await page.tap('#acctfinish'); else await page.click('#acctfinish');
     const typed = await waitText(page, `CODE-${mark}`, 5000);
     await sleep(400);
     const ran = (await screen(page)).split('\n').filter((l) => l.trim() === `CODE-${mark}`).length >= 1;
     await page.evaluate(() => { document.querySelector('#acct').hidden = true; });
-    check(C, 'A sign-in link from the server becomes a button, only for Claude pages, and the pasted code is typed in and entered', !badShown && goodShown && (href || '').startsWith('https://claude.com/') && typed >= 0 && ran, JSON.stringify({ badShown, goodShown, typed, ran }));
+    check(C, 'A sign-in link from the server is shown with a Copy button, only for Claude pages, and the pasted code is typed in and entered', !badShown && goodShown && (href || '').startsWith('https://claude.com/') && linkCopied && signFits && typed >= 0 && ran, JSON.stringify({ badShown, goodShown, linkCopied, clipOk: linkClip === shownUrl, signFits, typed, ran }));
 
     // 13c. copy what is on screen
     await menu('copy');
