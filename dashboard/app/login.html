@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Jack">
+<meta name="theme-color" content="#f2f3f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<title>Jack</title>
+<style>
+:root{--bg:#f2f3f7;--card:#fff;--inset:#f3f4f8;--ink:#0c0d11;--ink2:#494d57;--ink3:#7f8490;--accent:#2a78d6;--crit:#d03b3b;--shadow:0 1px 2px rgba(12,16,28,.04),0 12px 32px rgba(12,16,28,.06);color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--card:#17181b;--inset:#222327;--ink:#f4f4f7;--ink2:#c5c7ce;--ink3:#8f939c;--accent:#3987e5;--crit:#e66767;--shadow:0 0 0 1px rgba(255,255,255,.05);color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(16px,env(safe-area-inset-left,0px))}
+form{width:100%;max-width:380px;background:var(--card);border-radius:28px;box-shadow:var(--shadow);padding:28px 24px 22px;text-align:center}
+img{width:76px;height:76px;border-radius:18px;display:block;margin:0 auto 14px}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 4px}
+p{margin:0 0 20px;color:var(--ink3);font-size:15px;line-height:1.4}
+input[type=password]{display:block;width:100%;height:50px;border:0;border-radius:13px;background:var(--inset);color:var(--ink);font:inherit;font-size:17px;padding:0 14px;outline:none;text-align:center;letter-spacing:.12em;-webkit-appearance:none}
+input[type=password]:focus{box-shadow:0 0 0 2px var(--accent)}
+label{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 16px;font-size:15px;color:var(--ink2);cursor:pointer}
+label input{width:20px;height:20px;accent-color:var(--accent)}
+button{display:block;width:100%;height:50px;border:0;border-radius:14px;background:var(--accent);color:#fff;font:inherit;font-size:17px;font-weight:600;cursor:pointer}
+button[disabled]{opacity:.5}
+.err{color:var(--crit);font-size:14px;min-height:20px;margin:10px 0 0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<form id="f" autocomplete="on">
+  <img src="/icon-192.png" alt="">
+  <h1>Jack</h1>
+  <p>Sign in to see how he is doing.</p>
+  <input type="text" name="username" value="jack" autocomplete="username" hidden>
+  <input id="pw" name="password" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Password" aria-label="Password" enterkeyhint="go" autofocus>
+  <label><input type="checkbox" id="keep" checked> Keep me signed in on this device</label>
+  <button id="go" type="submit">Open</button>
+  <div class="err" id="err" role="alert"></div>
+</form>
+<script>
+(function(){
+  var f=document.getElementById("f"),pw=document.getElementById("pw"),go=document.getElementById("go"),err=document.getElementById("err");
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    var v=pw.value.trim();if(!v){err.textContent="Enter the password.";return}
+    var tok;try{tok=btoa("jack:"+v)}catch(x){err.textContent="That password has characters this page cannot send.";return}
+    go.disabled=true;go.textContent="Checking";err.textContent="";
+    fetch(document.getElementById("keep").checked?"/login-check":"/login-check-session",{method:"POST",headers:{Authorization:"Basic "+tok},cache:"no-store",credentials:"same-origin"}).then(function(r){
+      if(r.status===204){location.replace("/");return}
+      throw new Error(r.status===401?"wrong":"down");
+    }).catch(function(x){
+      go.disabled=false;go.textContent="Open";pw.select();
+      err.textContent=x.message==="wrong"?"That password was not accepted.":"The server is not answering. Try again in a moment.";
+    });
+  });
+})();
+</script>
+</body>
+</html>

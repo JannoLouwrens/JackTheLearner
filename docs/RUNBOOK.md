@@ -1834,6 +1834,22 @@ Claude's Remote Control.
   `tmux.conf` and `bashrc` beside it. `~/bin/jt` does the same from an SSH app;
   `~/bin/jackchat` resumes the owner's conversation with Claude inside it. The
   unit has `KillMode=process`: restarting the helper never ends the session.
+- **Two apps for a home screen.** `/` is "Jack" (`dashboard/app/`: manifest,
+  icons, `login.html`) and `/terminal/` is "Terminal" (`dashboard/terminal/www/`).
+  Neither uses the browser's own password box, which a home-screen app would
+  show at every launch. The dashboard's short password is posted once to
+  `/login-check` (still checked against its hash) and the terminal's long one
+  to `/term-login`; each comes back as a cookie the server sets — HttpOnly,
+  Secure, one year — so a phone keeps it. The dashboard's cookie carries a
+  session secret that lives only in the Caddyfile and
+  `~/.config/jack-terminal/dashboard-session`.
+- **Speak and photos.** The terminal's microphone key opens a box where speech
+  (the phone's own service, or the keyboard's microphone) can be corrected and
+  sent. The camera key posts a picture to `/term/upload`; `upload_server.py`
+  saves it under `/data/jack-uploads/` (30 days, 500 MB at most) and the page
+  types the path into the chat. That helper is started by
+  `jack-upload.socket` only when a photo arrives and exits after two idle
+  minutes.
 - **Tests:** `dashboard/terminal/uitest.mjs` drives a real browser against the
   real site at six screen sizes (see its header). It types into the shared
   session, so run it when the owner is not using it.
@@ -1847,6 +1863,13 @@ Claude's Remote Control.
   one a week to 90 days, then one a month, never more than 400 MB — the
   constants are at `archive_films` in the script). Text history is a few
   kilobytes a month.
+- **In Jack himself, or only beside him.** `where_ran()` reads each proof's own
+  test file: it counts as "in Jack himself" only if it runs the living stack
+  (`run_survival`, `W0`); a test of a part by itself is "on a test bench", one
+  that uses `UnifiedBrain` is "the earlier brain". The page leads with the
+  first number and draws the rest as the lighter part of each bar. The owner
+  asked how hearing could read as proven before a brain is chosen; this is
+  the answer the page now gives.
 - **Worth a look.** `attention()` in the script lists what the owner may want
   to act on: a pause, usage near the stop, the Auditor's verdict, a run cut
   short, an owner request not done, a first job that has not moved in a day,

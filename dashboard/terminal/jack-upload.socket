@@ -1,0 +1,10 @@
+[Unit]
+Description=Jack terminal: waits for a photo from the owner's terminal page (web server's network only)
+
+[Socket]
+ListenStream=172.19.0.1:7682
+FreeBind=true
+Accept=no
+
+[Install]
+WantedBy=sockets.target

@@ -1,0 +1,8 @@
+[Unit]
+Description=Jack terminal: saves a photo sent from the owner's terminal page, then exits when idle
+
+[Service]
+User=opc
+Group=opc
+EnvironmentFile=/home/opc/.config/jack-terminal/env
+ExecStart=/usr/bin/python3 /home/opc/jackthelearner/dashboard/terminal/upload_server.py

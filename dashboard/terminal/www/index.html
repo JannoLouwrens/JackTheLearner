@@ -83,6 +83,16 @@ button{font:inherit;color:inherit}
   #menu{top:calc(42px + env(safe-area-inset-top,0px));max-height:calc(100% - 50px);overflow:auto}
 }
 
+/* composer: speak or type a message, look it over, send it into the terminal */
+#compose{flex:none;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);padding:8px max(10px,env(safe-area-inset-right,0px)) 2px max(10px,env(safe-area-inset-left,0px));z-index:3}
+#ctext{display:block;width:100%;height:44px;max-height:132px;border:0;border-radius:14px;background:#2c2c2e;color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.35;padding:10px 12px;resize:none;outline:none;-webkit-appearance:none}
+#ctext:focus{box-shadow:0 0 0 2px var(--accent)}
+.crow{display:flex;align-items:center;gap:8px;margin-top:8px}
+.crow .hint{flex:1;min-width:0;font-size:13px;line-height:1.3;color:var(--ink2)}
+.key.rec{background:var(--crit);color:#fff}
+#toast{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:4;max-width:calc(100% - 28px);background:rgba(52,52,56,.96);color:var(--ink);font-size:14px;font-weight:600;line-height:1.3;padding:9px 14px;border-radius:99px;box-shadow:0 8px 26px rgba(0,0,0,.5),0 0 0 1px var(--line);text-align:center}
+@media (min-width:900px){#compose{background:transparent;border-top-color:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;max-width:860px;width:100%;margin:0 auto}}
+
 /* menu */
 #menu{position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:calc(54px + env(safe-area-inset-top,0px));z-index:6;min-width:248px;background:rgba(40,40,44,.92);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);border-radius:16px;box-shadow:0 0 0 1px var(--line),0 18px 50px rgba(0,0,0,.55);padding:6px;transform-origin:top right;animation:pop .14s ease-out}
 @keyframes pop{from{opacity:0;transform:scale(.94)}}
@@ -141,7 +151,18 @@ html:not(.app) #menu [data-m="dash"]{display:none}
     <button class="icon" id="more" aria-label="More" aria-haspopup="true"><svg viewBox="0 0 22 22" fill="currentColor"><circle cx="4" cy="11" r="2"/><circle cx="11" cy="11" r="2"/><circle cx="18" cy="11" r="2"/></svg></button>
   </header>
 
-  <div id="stage"><div id="term"></div><div id="notice" hidden></div></div>
+  <div id="stage"><div id="term"></div><div id="notice" hidden></div><div id="toast" hidden role="status"></div></div>
+
+  <div id="compose" hidden>
+    <textarea id="ctext" rows="1" placeholder="Speak or type, then send" aria-label="Message to send into the terminal" autocapitalize="sentences" spellcheck="true" enterkeyhint="send"></textarea>
+    <div class="crow">
+      <button class="key" id="cmic" type="button" aria-pressed="false"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="1.8" width="5" height="9" rx="2.5"/><path d="M3.8 8.6a5.2 5.2 0 0 0 10.4 0M9 13.8v2.6"/></svg><span>Listen</span></button>
+      <span class="hint" id="chint"></span>
+      <button class="key" id="cinsert" type="button">Insert</button>
+      <button class="key on" id="csend" type="button">Send</button>
+    </div>
+  </div>
+  <input type="file" id="photo" accept="image/*" multiple hidden>
 
   <div id="keys" aria-label="Extra keys"><div class="row" id="keyrow"></div></div>
 
@@ -180,6 +201,8 @@ html:not(.app) #menu [data-m="dash"]{display:none}
       <h2>How to use this</h2>
       <ul class="tips">
         <li><b>Your chat</b><span>Type <code>jackchat</code> and press return, or choose “Open my Claude chat” in the menu. It keeps running when you close this page.</span></li>
+        <li><b>Speak</b><span>Tap the microphone. Your words appear in a box you can correct, then Send puts them in the terminal.</span></li>
+        <li><b>Photos</b><span>Tap the camera to take or choose a picture. It is saved on your server and its location is typed into your message.</span></li>
         <li><b>Scroll back</b><span>Swipe up and down on the terminal, or use the page keys.</span></li>
         <li><b>esc, ctrl</b><span>Tap esc to interrupt Claude. Tap ctrl, then a letter, for a control key; ^C is on its own key.</span></li>
         <li><b>Windows</b><span>“New window” in the menu opens a second shell beside your chat; a strip along the bottom shows which one you are in.</span></li>
@@ -338,7 +361,12 @@ term.onResize(function(){sendSize()});
 function csi(a,b){return term.modes&&term.modes.applicationCursorKeysMode?"\x1bO"+a:"\x1b["+a}
 var ARROW='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14V4M4.5 8.5 9 4l4.5 4.5"/></svg>';
 function rot(deg){return ARROW.replace("<svg ",'<svg style="transform:rotate('+deg+'deg)" ')}
+var MIC='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="1.8" width="5" height="9" rx="2.5"/><path d="M3.8 8.6a5.2 5.2 0 0 0 10.4 0M9 13.8v2.6"/></svg>';
+var CAM='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.3a1.6 1.6 0 0 1 1.6-1.6h1.6l1-1.6h5.6l1 1.6h1.6A1.6 1.6 0 0 1 16 6.3v6.8a1.6 1.6 0 0 1-1.6 1.6H3.6A1.6 1.6 0 0 1 2 13.1z"/><circle cx="9" cy="9.5" r="2.8"/></svg>';
 var KEYS=[
+  {k:"speak",h:MIC,a:"Speak or type a message"},
+  {k:"photo",h:CAM,a:"Add a photo"},
+  {sep:1},
   {k:"esc",t:"esc",s:"\x1b",a:"Escape"},
   {k:"tab",t:"tab",s:"\t",a:"Tab"},
   {k:"ctrl",t:"ctrl",a:"Control, then a letter"},
@@ -364,6 +392,8 @@ KEYS.forEach(function(K){
 });
 function act(k){
   var K=KEYS.filter(function(x){return x.k===k})[0];if(!K)return;
+  if(k==="speak"){if($("#compose").hidden)openCompose(true);else closeCompose();return}
+  if(k==="photo"){$("#photo").click();return}
   if(k==="ctrl"){setCtrl(!ctrlArmed);return}
   if(k==="paste"){
     if(navigator.clipboard&&navigator.clipboard.readText)navigator.clipboard.readText().then(function(t){if(t)term.paste(t)}).catch(function(){});
@@ -397,6 +427,60 @@ function act(k){
   row.addEventListener("touchend",function(e){if(e.target.closest(".key")&&e.cancelable)e.preventDefault()},{passive:false});
   row.addEventListener("mousedown",function(e){if(e.target.closest(".key"))e.preventDefault()});
 })();
+
+/* ───── speak or type a message, look it over, send it ───── */
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition,rec=null,listening=false,baseText="";
+function grow(){var ta=$("#ctext");ta.style.height="44px";ta.style.height=Math.min(132,Math.max(44,ta.scrollHeight))+"px";layout()}
+function setListening(on){listening=on;var b=$("#cmic");b.classList.toggle("rec",on);b.setAttribute("aria-pressed",on?"true":"false");b.lastElementChild.textContent=on?"Stop":"Listen";
+  if(on)$("#chint").textContent="Listening. Tap Stop when you have finished.";else if($("#chint").textContent.indexOf("Listening")===0)$("#chint").textContent=""}
+function startListening(){
+  if(listening)return;
+  if(!SR){$("#chint").textContent="Tap the microphone on your keyboard to speak.";$("#ctext").focus();return}
+  try{rec=new SR();rec.continuous=true;rec.interimResults=true;rec.lang=navigator.language||"en-US"}catch(e){$("#chint").textContent="Tap the microphone on your keyboard to speak.";return}
+  baseText=$("#ctext").value;if(baseText&&!/\s$/.test(baseText))baseText+=" ";
+  rec.onresult=function(ev){var fin="",inter="";for(var i=0;i<ev.results.length;i++){var r=ev.results[i];if(r.isFinal)fin+=r[0].transcript;else inter+=r[0].transcript}$("#ctext").value=baseText+fin+inter;grow()};
+  rec.onerror=function(ev){var m={"not-allowed":"The microphone was not allowed. The microphone on your keyboard still works.","service-not-allowed":"Speech is not available here. Use the microphone on your keyboard.","audio-capture":"No microphone was found.","network":"Speech needs a connection here. Use the microphone on your keyboard.","no-speech":"Nothing was heard. Tap Listen to try again."}[ev.error];if(m)$("#chint").textContent=m};
+  rec.onend=function(){setListening(false)};
+  try{rec.start();setListening(true)}catch(e){$("#chint").textContent="Tap the microphone on your keyboard to speak."}
+}
+function stopListening(){if(rec&&listening){try{rec.stop()}catch(e){}}}
+function openCompose(listen){$("#compose").hidden=false;$("#chint").textContent="";grow();$("#ctext").focus();if(listen)startListening()}
+function closeCompose(){stopListening();$("#compose").hidden=true;layout();if(!coarse)term.focus()}
+function sendCompose(enter){
+  var v=$("#ctext").value;stopListening();
+  if(v.trim()){term.paste(v);if(enter)setTimeout(function(){input("\r")},80)}
+  $("#ctext").value="";closeCompose();
+}
+$("#cmic").addEventListener("click",function(){if(listening)stopListening();else startListening()});
+$("#cinsert").addEventListener("click",function(){sendCompose(false)});
+$("#csend").addEventListener("click",function(){sendCompose(true)});
+$("#ctext").addEventListener("input",grow);
+$("#ctext").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();sendCompose(true)}else if(e.key==="Escape"){e.preventDefault();closeCompose()}});
+
+/* ───── a photo: saved on the server, its location typed into the message ───── */
+var toastTimer=null;
+function toast(msg,ms){var t=$("#toast");clearTimeout(toastTimer);if(!msg){t.hidden=true;return}t.textContent=msg;t.hidden=false;if(ms)toastTimer=setTimeout(function(){t.hidden=true},ms)}
+function shrink(file){return new Promise(function(res){
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type))return res(file);          /* anything else goes as it is; the server decides */
+  var url=URL.createObjectURL(file),img=new Image();
+  img.onload=function(){
+    var w=img.naturalWidth,h=img.naturalHeight,m=Math.max(w,h),k=m>2200?2200/m:1;
+    if(k===1&&file.size<1500000){URL.revokeObjectURL(url);return res(file)}
+    var c=document.createElement("canvas");c.width=Math.round(w*k);c.height=Math.round(h*k);
+    var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
+    c.toBlob(function(b){URL.revokeObjectURL(url);res(b||file)},"image/jpeg",0.86)};
+  img.onerror=function(){URL.revokeObjectURL(url);res(file)};img.src=url})}
+function sendPhotos(files){
+  var i=0,paths=[];
+  (function next(){
+    if(i>=files.length){if(paths.length){term.paste(paths.join(" ")+" ");toast(paths.length===1?"Photo added to your message":paths.length+" photos added to your message",2800);if(!coarse)term.focus()}return}
+    toast("Sending photo"+(files.length>1?" "+(i+1)+" of "+files.length:"")+"…",0);
+    shrink(files[i]).then(function(blob){return api("/term/upload",{method:"POST",body:blob,headers:{"Content-Type":blob.type||"application/octet-stream"}})})
+      .then(function(r){return r.json().catch(function(){return {}}).then(function(j){if(!r.ok||!j.path)throw new Error(r.status===401?"sign in again first":(j.error||"the server did not take it"));paths.push(j.path);i++;next()})})
+      .catch(function(e){toast("Photo not sent: "+(e&&e.message?e.message:"try again"),4500)});
+  })();
+}
+$("#photo").addEventListener("change",function(){var f=[].slice.call(this.files||[]);this.value="";if(f.length)sendPhotos(f)});
 
 /* show that the key row scrolls */
 function edges(){var r=row;r.style.setProperty("--l",r.scrollLeft>2?"22px":"0px");r.style.setProperty("--r",r.scrollLeft+r.clientWidth<r.scrollWidth-2?"22px":"0px")}

@@ -60,7 +60,7 @@ async function focused(page) { return page.evaluate(() => document.activeElement
 async function geometry(page) {
   return page.evaluate(() => {
     const r = (s) => { const b = document.querySelector(s).getBoundingClientRect(); return { top: Math.round(b.top), bottom: Math.round(b.bottom), left: Math.round(b.left), right: Math.round(b.right), h: Math.round(b.height), w: Math.round(b.width) }; };
-    const keys = [...document.querySelectorAll('.key')].map((k) => k.getBoundingClientRect());
+    const keys = [...document.querySelectorAll('#keyrow .key')].map((k) => k.getBoundingClientRect());
     return { vw: innerWidth, vh: innerHeight, scrollW: document.documentElement.scrollWidth, scrollH: document.documentElement.scrollHeight,
       app: r('#app'), bar: r('.bar'), stage: r('#stage'), keysBar: r('#keys'), cols: window.jackTerm.cols, rows: window.jackTerm.rows,
       minKeyH: Math.round(Math.min(...keys.map((k) => k.height))), minKeyW: Math.round(Math.min(...keys.map((k) => k.width))),
@@ -83,7 +83,7 @@ const browser = await pw[engineName].launch({ args: engineName === 'chromium' ? 
     const icon = await page.evaluate(() => new Promise((res) => { const i = new Image(); i.onload = () => res([i.naturalWidth, i.naturalHeight]); i.onerror = () => res([0, 0]); i.src = 'icon-512.png'; }));
     const touch = await page.evaluate(() => { const l = document.querySelector('link[rel="apple-touch-icon"]'); return l ? fetch(l.href).then((r) => r.status) : 0; });
     check(C, 'Home-screen icons load', icon[0] === 512 && icon[1] === 512 && touch === 200, `${icon.join('×')}, touch icon ${touch}`);
-    const dash = await ctx.request.get(`${BASE}/`).then((r) => r.status());
+    const dash = await ctx.request.get(`${BASE}/status.json`).then((r) => r.status());
     const tok = await ctx.request.get(`${BASE}/term/token`).then((r) => r.status());
     check(C, 'Dashboard and terminal backend still refuse without their passwords', dash === 401 && tok === 401, `dashboard ${dash}, backend ${tok}`);
     const jar = await ctx.cookies(); 
@@ -96,14 +96,61 @@ const browser = await pw[engineName].launch({ args: engineName === 'chromium' ? 
   results.push(R);
 }
 
+{
+  const R = { profile: 'The Jack app (dashboard)', id: 'jack', engine: engineName, checks: [], timing: {}, errors: [] };
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage(); const C = R.checks;
+  page.on('pageerror', (e) => R.errors.push(String(e).slice(0, 200)));
+  try {
+    await page.goto(`${BASE}/`, { waitUntil: 'load' });
+    await page.waitForSelector('#pw', { timeout: 8000 });
+    await sleep(300); await page.screenshot({ path: `${OUT}jack-0-signin.png` });
+    check(C, 'Front door shows its own sign-in page, not a browser password box', (await page.textContent('h1')) === 'Jack');
+    await page.fill('#pw', '000000'); await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.querySelector('#err').textContent.length > 0, null, { timeout: 8000 });
+    check(C, 'Wrong password is refused with a message', (await page.textContent('#err')).includes('not accepted'));
+    await page.fill('#pw', PIN); await page.keyboard.press('Enter');
+    await page.waitForSelector('#view-jack .hero', { timeout: 10000 });
+    const ck = (await ctx.cookies()).find((c) => c.name === 'jd');
+    check(C, 'Right password opens the dashboard and is remembered for a year, unreadable by scripts', ck && ck.httpOnly && ck.secure && (ck.expires - Date.now() / 1000) > 300 * 86400);
+    const hero = await page.textContent('#view-jack .hero .eyebrow');
+    const tone = await page.$$eval('#view-jack .meter b', (n) => n.length);
+    check(C, 'Headline says what is proven in Jack himself, with the lighter bar for bench proofs', /in Jack himself/i.test(hero) && tone >= 5, `${hero}, ${tone} two-tone bars`);
+    await sleep(300); await page.screenshot({ path: `${OUT}jack-1-home.png` });
+    const man = await page.evaluate(() => fetch('manifest.webmanifest').then((r) => r.json()));
+    const icon = await page.evaluate(() => new Promise((res) => { const i = new Image(); i.onload = () => res(i.naturalWidth); i.onerror = () => res(0); i.src = 'icon-512.png'; }));
+    check(C, 'Jack has its own app name and icon', man.name === 'Jack' && man.display === 'standalone' && man.start_url === '/' && icon === 512);
+    await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#view-jack .hero', { timeout: 10000 });
+    check(C, 'Reopening does not ask for the password again', !(await page.$('#pw')));
+    await page.tap('#tab-talk'); await sleep(200);
+    check(C, 'In Safari the Talk tab links to the terminal', (await page.$$eval('#view-talk a.cta', (n) => n.length)) === 1);
+    // opened from the home screen, Jack stays Jack: no link that would turn it into the terminal
+    const ctx2 = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, storageState: await ctx.storageState() });
+    await ctx2.addInitScript(() => { Object.defineProperty(navigator, 'standalone', { value: true }); });
+    const p2 = await ctx2.newPage(); await p2.goto(`${BASE}/#talk`, { waitUntil: 'load' }); await p2.waitForSelector('#view-talk .card');
+    const appTalk = await p2.evaluate(() => ({ links: document.querySelectorAll('#view-talk a').length, text: document.querySelector('#view-talk').textContent }));
+    await sleep(250); await p2.screenshot({ path: `${OUT}jack-2-app-talk.png` });
+    check(C, 'As a home-screen app, Jack stays Jack and points to the Terminal app', appTalk.links === 0 && /Terminal app/.test(appTalk.text.replace(/\s+/g, ' ')) || /Terminal\s*app/.test(appTalk.text));
+    await ctx2.close();
+    await page.tap('[data-act="signout"]'); await page.waitForSelector('#pw', { timeout: 8000 });
+    check(C, 'Sign out returns to the sign-in page', true);
+    check(C, 'No script errors', R.errors.length === 0, R.errors.join(' | '));
+    await ctx.close();
+  } catch (e) { check(C, 'Jack app checks completed', false, String(e).slice(0, 300)); await ctx.close().catch(() => {}); }
+  results.push(R);
+}
+
 for (const p of PROFILES) {
   const R = { profile: p.label, id: p.id, engine: engineName, checks: [], timing: {}, errors: [] };
   const ctx = await browser.newContext({
     viewport: { width: p.w, height: p.h }, deviceScaleFactor: p.dpr, isMobile: p.touch && engineName !== 'firefox', hasTouch: p.touch,
-    httpCredentials: { username: 'jack', password: PIN }, colorScheme: 'dark',
+    colorScheme: 'dark',
     userAgent: p.touch ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' : undefined,
   });
   await ctx.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
+  await ctx.request.post(`${BASE}/login-check`, { headers: { Authorization: 'Basic ' + Buffer.from('jack:' + PIN).toString('base64') } });
+  // a stand-in for the phone's speech service, so the microphone path can be exercised here
+  await ctx.addInitScript(() => { window.SpeechRecognition = window.webkitSpeechRecognition = class { start() { setTimeout(() => { const r = [{ transcript: 'echo SPOKENWORDS' }]; r.isFinal = true; if (this.onresult) this.onresult({ results: [r] }); }, 250); } stop() { if (this.onend) this.onend(); } }; });
   const page = await ctx.newPage();
   page.on('console', (m) => { if (m.type() === 'error' && !/status of 401/.test(m.text()) && !R.expectDrop) R.errors.push('console: ' + m.text().slice(0, 200)); });
   page.on('pageerror', (e) => R.errors.push('page: ' + String(e).slice(0, 200)));
@@ -287,6 +334,25 @@ for (const p of PROFILES) {
     const clip = engineName === 'chromium' ? await page.evaluate(() => navigator.clipboard.readText().catch(() => '')) : copied;
     check(C, 'Copy sheet holds the screen text and copies it', copied.includes(`${mark}-STILL-HERE`) && clip.includes(`${mark}-STILL-HERE`) && (await page.textContent('#copyall')) === 'Copied');
     if (p.touch) await page.tap('#copy [data-close]'); else await page.click('#copy [data-close]');
+
+    // 13e. speak: the microphone key opens a box, the words land in it, Send puts them in the terminal
+    await press(page, p, 'speak');
+    await page.waitForSelector('#compose:not([hidden])');
+    await page.waitForFunction(() => document.querySelector('#ctext').value.includes('SPOKENWORDS'), null, { timeout: 5000 });
+    const cg = await page.evaluate(() => { const c = document.querySelector('#compose').getBoundingClientRect(), k = document.querySelector('#keys').getBoundingClientRect(); return { above: c.bottom <= k.top + 1, inView: k.bottom <= innerHeight + 1, listening: document.querySelector('#cmic').classList.contains('rec') }; });
+    await sleep(250); await page.screenshot({ path: `${OUT}${p.id}-a-speak.png` });
+    if (p.touch) await page.tap('#csend'); else await page.click('#csend');
+    const t8 = Date.now(); let spoke = false;
+    while (Date.now() - t8 < 6000) { const sc = (await screen(page)).replace(/\n/g, ''); if ((sc.match(/SPOKENWORDS/g) || []).length >= 2) { spoke = true; break; } await sleep(80); }
+    check(C, 'Microphone: words appear in a box above the keys and Send runs them', cg.above && cg.inView && cg.listening && spoke && !(await page.isVisible('#compose')), JSON.stringify(cg));
+
+    // 13f. a photo: sent to the server, its location typed into the terminal
+    await page.setInputFiles('#photo', '/home/opc/jackthelearner/dashboard/terminal/www/icon-192.png');
+    await page.waitForFunction(() => /added/.test(document.querySelector('#toast').textContent), null, { timeout: 15000 });
+    await sleep(300); await page.screenshot({ path: `${OUT}${p.id}-b-photo.png` });
+    const pm = (await screen(page)).replace(/\n/g, '').match(/\/data\/jack-uploads\/[0-9-]+\/photo-[0-9]+-[0-9a-f]+\.(?:png|jpg)/);
+    check(C, 'Photo: saved on the server and its location typed in', !!pm && fs.existsSync(pm[0]) && fs.statSync(pm[0]).size > 500, pm ? pm[0] : 'no path on screen');
+    await press(page, p, 'intr'); await sleep(250);
 
     // 13d. the home-screen help, and how it looks once opened as an app
     await menu('install');

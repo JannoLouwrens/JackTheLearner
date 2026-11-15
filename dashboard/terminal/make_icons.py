@@ -26,3 +26,20 @@ d.rounded_rectangle((540, 640, 740, 640 + w), radius=w / 2, fill=(242, 242, 247)
 for n in (180, 192, 512):
     im.resize((n, n), Image.LANCZOS).save(out / f"icon-{n}.png", optimize=True)
 print("icons written to", out)
+
+# The dashboard's own icon ("Jack"): a plain white figure on blue.
+app = out.parent.parent / "app"
+if app.is_dir():
+    jk = Image.new("RGB", (S, S))
+    px = jk.load()
+    for y in range(S):
+        t = y / (S - 1)
+        c = (round(64 - 36 * t), round(146 - 54 * t), round(246 - 75 * t))
+        for x in range(S):
+            px[x, y] = c
+    d = ImageDraw.Draw(jk)
+    d.ellipse((512 - 128, 268, 512 + 128, 524), fill=(255, 255, 255))            # head
+    d.ellipse((512 - 300, 590, 512 + 300, 1190), fill=(255, 255, 255))           # shoulders, cut by the edge
+    for n in (180, 192, 512):
+        jk.resize((n, n), Image.LANCZOS).save(app / f"icon-{n}.png", optimize=True)
+    print("icons written to", app)

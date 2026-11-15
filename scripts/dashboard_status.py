@@ -14,8 +14,12 @@ Every number is read from something the project already keeps honest:
                 passing CLAIM tests / registered CLAIM tests.
             Fixtures, rules and sensors are groundwork: listed, never counted
             (coverage.report() makes the same split, for the same reason).
-            An aspect is the mean of its promises; overall is the mean of the
-            aspects. The grouping lives in dashboard/abilities.json.
+            A bar is the same ratio over every promise filed under it, and the
+            headline over all of them; a promise with no proof written yet
+            owes one. The grouping lives in dashboard/abilities.json. Each
+            proof is also marked by where it was earned (`where_ran`): in the
+            living Jack, on a test bench, or with the earlier brain. The page
+            leads with "in Jack himself".
   measured  dashboard/vitals.json — a number from a ledger row, with its floor
             (what an untrained or do-nothing Jack scores) and its pass mark:
                 score = (value - floor) / (pass mark - floor), clipped 0..100.
@@ -118,9 +122,42 @@ def load_tests():
     return by_id, results
 
 
+_TEST_FILES: dict = {}
+_WHERE: dict = {}
+
+
+def where_ran(sid: str) -> str | None:
+    """Where a test's proof was earned, read from the test's own code:
+    'world'  it runs the living Jack — today's brain inside his world;
+    'old'    it runs the earlier, larger brain;
+    'bench'  it tests a part by itself on a test bench.
+    The owner asked how hearing can read as proven before a brain is chosen:
+    it cannot, in him. Only 'world' counts as Jack himself."""
+    if sid in _WHERE:
+        return _WHERE[sid]
+    if not _TEST_FILES:
+        _TEST_FILES.update({f.stem: f for f in (REPO / "experiments" / "tests").glob("*.py")})
+    fam, _, num = sid.partition(".")
+    key = (fam + "_" + num.replace(".", "_")).lower()
+    f = next((p for b, p in _TEST_FILES.items() if b == key or b.startswith(key + "_")), None)
+    out = None
+    if f is not None:
+        src = read(f)
+        if "UnifiedBrain" in src:
+            out = "old"
+        elif re.search(r"run_survival|\bW0\(|experiments\.(survival|w0)\b"
+                       r"|from\s+\.+\s*import[^\n]*\b(survival|w0)\b|from\s+\.+(survival|w0)\s+import", src):
+            out = "world"
+        else:
+            out = "bench"
+    _WHERE[sid] = out
+    return out
+
+
 def test_row(sid: str, by_id: dict, results: dict, kind: str | None = None) -> dict:
     spec, res = by_id.get(sid), results.get(sid) or {}
     return {
+        "where": where_ran(sid) if spec else None,
         "id": sid,
         "title": getattr(spec, "title", None) or "(a test named in the plan, not written yet)",
         "status": res.get("status") or ("NONE" if spec else "UNWRITTEN"),
@@ -142,7 +179,9 @@ def abilities(by_id: dict, results: dict) -> dict:
         claims = [i for i in r["specs"] if kinds.get(i) == "claim"]
         ground = [i for i in r["specs"] if kinds.get(i) != "claim"]
         frac = (r["n_pass"] / len(claims)) if claims else 0.0
+        in_him = sum(1 for i in claims if (results.get(i) or {}).get("status") == "PASS" and where_ran(i) == "world")
         return {
+            "passed_world": in_him,
             "id": name, "name": names.get(name, name[:1].upper() + name[1:]),
             "why": r["why"], "frac": frac, "pct": round(100 * frac),
             "claims": len(claims), "passed": r["n_pass"],
@@ -156,8 +195,10 @@ def abilities(by_id: dict, results: dict) -> dict:
         # nobody has written a proof for yet still owes one, so it counts as one.
         need = sum(max(p["claims"], 1) for p in ps)
         got = sum(p["passed"] for p in ps)
-        return {"id": ident, "name": name, "blurb": blurb, "proofs": need, "passed": got,
-                "pct": round(100 * got / need) if need else 0, "promises": ps}
+        him = sum(p["passed_world"] for p in ps)
+        return {"id": ident, "name": name, "blurb": blurb, "proofs": need, "passed": got, "passed_world": him,
+                "pct": round(100 * got / need) if need else 0,
+                "pct_world": round(100 * him / need) if need else 0, "promises": ps}
 
     aspects, used = [], set()
     for a in cfg["aspects"]:
@@ -172,13 +213,15 @@ def abilities(by_id: dict, results: dict) -> dict:
     n_claims = sum(a["proofs"] for a in aspects)
     n_passed = sum(a["passed"] for a in aspects)
     overall = (n_passed / n_claims) if n_claims else 0.0
+    n_world = sum(a["passed_world"] for a in aspects)
     started = sum(1 for a in aspects for p in a["promises"] if p["passed"] > 0)
     for a in aspects:
         for p in a["promises"]:
             del p["frac"]
     return {"overall": round(100 * overall, 1), "aspects": aspects,
             "promises": n_prom, "promises_started": started,
-            "proofs": n_claims, "proofs_passed": n_passed,
+            "proofs": n_claims, "proofs_passed": n_passed, "proofs_passed_world": n_world,
+            "overall_world": round(100 * n_world / n_claims, 1) if n_claims else 0.0,
             "senses_for_m5": cfg.get("milestone_promises", {})}
 
 
@@ -720,7 +763,7 @@ def score_history(ab: dict, passing: int, total: int) -> list:
         except ValueError:
             continue
     today = NOW.strftime("%Y-%m-%d")
-    row = {"d": today, "overall": ab["overall"], "passing": passing, "total": total,
+    row = {"d": today, "overall": ab["overall"], "overall_world": ab.get("overall_world"), "passing": passing, "total": total,
            "aspects": {a["id"]: a["pct"] for a in ab["aspects"]}}
     rows = [r for r in rows if r.get("d") != today] + [row]
     tmp = path.with_suffix(".tmp")
@@ -991,6 +1034,14 @@ SKELETON = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Jack">
+<meta name="theme-color" content="#f2f3f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
 body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head><body>
@@ -1073,6 +1124,16 @@ def publish(pub: Path) -> None:
         for old in parc.iterdir():
             if old.name not in have:
                 old.unlink(missing_ok=True)
+    # The dashboard's sign-in page, manifest and icons (dashboard/app).
+    app = CFG / "app"
+    if app.is_dir():
+        for src in sorted(f for f in app.iterdir() if f.is_file()):
+            dst = pub / src.name
+            if (not dst.exists() or dst.stat().st_size != src.stat().st_size
+                    or dst.stat().st_mtime < src.stat().st_mtime):
+                tmp = dst.with_suffix(dst.suffix + ".tmp")
+                shutil.copyfile(src, tmp)
+                os.replace(tmp, dst)
     # The terminal page and the one library it loads, both from this server.
     www, vendor = CFG / "terminal" / "www", OUT / "vendor"
     if www.is_dir() and vendor.is_dir():

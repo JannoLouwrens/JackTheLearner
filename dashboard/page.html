@@ -66,7 +66,12 @@ button{font:inherit;color:inherit}
 .hero .of{font-size:22px;font-weight:600;color:var(--ink3);letter-spacing:-.01em;margin-left:4px}
 .hero .say{margin:8px 0 14px;color:var(--ink2);font-size:16px;max-width:36em}
 .meter{height:8px;border-radius:99px;background:var(--track);overflow:hidden;position:relative}
-.meter>i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.meter>i{display:block;position:relative;height:100%;border-radius:99px;background:var(--accent)}
+.meter>b{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--accent-weak)}
+.key2{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);margin:2px 0 4px}
+.key2 span{display:inline-flex;align-items:center;gap:7px}
+.key2 i{display:inline-block;width:18px;height:8px;border-radius:99px;background:var(--accent)}
+.key2 i.w{background:var(--accent-weak)}
 .meter.big{height:12px}
 .meter.warn>i{background:var(--warn)} .meter.crit>i{background:var(--crit)}
 .meter>u{position:absolute;top:0;bottom:0;width:2px;background:var(--ink2);opacity:.55}
@@ -246,6 +251,10 @@ function ago(s){var t=T(s);if(!t)return "";var ms=Date.now()-t;return ms<60000?"
 function until(s){var t=T(s);if(!t)return "";var ms=t-Date.now();return ms<=0?"due now":"in "+span(ms)}
 function when(s){var t=T(s);if(!t)return "";return (Date.now()-t<20*3600000&&t.getDate()===new Date().getDate())?clock(s):day(s)+", "+clock(s)}
 function meter(p,cls,mark){p=Math.max(0,Math.min(100,p));return '<div class="meter '+(cls||"")+'"><i style="width:'+p+'%"></i>'+(mark!=null?'<u style="left:calc('+mark+'% - 1px)"></u>':"")+"</div>"}
+/* two tones of one blue: solid for what is proven in Jack himself, lighter for what is proven only beside him */
+function meter2(him,all,cls){him=Math.max(0,Math.min(100,him));all=Math.max(him,Math.min(100,all));return '<div class="meter '+(cls||"")+'"><b style="width:'+all+'%"></b><i style="width:'+him+'%"></i></div>'}
+var RAN={world:"In Jack himself",bench:"On a test bench",old:"With the earlier brain"};
+var APP=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
 var ST={PASS:["✓","Passed","good"],FAIL:["✕","Failed","crit"],VOID:["?","No verdict","warn"],ERROR:["!","Broke down","serious"],BLOCKED:["=","Blocked","warn"],NONE:["·","Not run yet",""],UNWRITTEN:["·","Not written yet",""]};
 function st(code){var s=ST[code]||ST.NONE;return '<span class="st '+s[2]+'"><b aria-hidden="true">'+s[0]+"</b>"+s[1]+"</span>"}
 var KIND={claim:"Proves the ability",fixture:"Checks the test bench",rule:"Checks a rule of his world",sensor:"Checks the sense delivers",parked:"Set aside for now"};
@@ -264,15 +273,16 @@ function spark(vals){
 function viewJack(){
   var a=S.abilities, L=S.ladder, ms=S.milestones||[], met=ms.filter(function(m){return m.state==="met"}).length;
   var hist=(L.history||[]).map(function(x){return x.v}), wk=hist.length>7?L.passing-hist[hist.length-8]:null;
-  var o=Math.round(a.overall);
+  var o=Math.round(a.overall_world||0),beside=a.proofs_passed-(a.proofs_passed_world||0);
   var h='<div class="col">';
-  h+='<div class="card hero"><p class="eyebrow">Proven so far</p>'+
+  h+='<div class="card hero"><p class="eyebrow">Proven in Jack himself</p>'+
      '<div><span class="num">'+o+'</span><span class="of">/ 100</span></div>'+
-     '<p class="say">of what the goal promises has been proven by a test that could have failed.</p>'+
-     meter(a.overall,"big")+
+     '<p class="say">of what the goal promises is proven in the living Jack: the brain he has today, in his own world.</p>'+
+     meter2(a.overall_world||0,a.overall,"big")+
+     '<p class="say" style="margin:12px 0 0;font-size:15px">'+(beside>0?"Another "+beside+" proof"+(beside===1?" passes":"s pass")+" beside him, on a test bench or with an earlier brain (the lighter bar). They show a part works by itself; each has to be earned again inside him once his brain is chosen.":"Nothing is proven only on a test bench.")+"</p>"+
      '<div class="tiles">'+
        '<div class="tile"><div class="v">'+met+'</div><div class="l">of '+ms.length+' milestones met</div></div>'+
-       '<div class="tile"><div class="v">'+a.proofs_passed+'</div><div class="l">of '+a.proofs+' proofs of ability pass</div></div>'+
+       '<div class="tile"><div class="v">'+(a.proofs_passed_world||0)+'</div><div class="l">of '+a.proofs+' proofs earned in him</div></div>'+
        '<div class="tile"><div class="v">'+L.passing+'</div><div class="l">of all '+L.total+' tests pass'+(wk!=null?" · "+(wk>=0?"+":"")+wk+" in 7 days":"")+'</div>'+spark(hist.slice(-30))+'</div>'+
      '</div>'+
      '<p style="margin:14px 0 0"><button class="link" data-sheet="method">How these numbers are made</button></p></div>';
@@ -291,11 +301,12 @@ function viewJack(){
        '<button class="link" data-act="note">'+(noteOpen?"Show less":"Read it all")+'</button></div>';
   }
 
-  h+='<div class="card"><h2>What he can do</h2><p class="sub">Each bar is the share of that ability\'s proofs that pass. Tap one for the tests behind it.</p><ul class="rows wide">'+
+  h+='<div class="card"><h2>What he can do</h2><p class="sub">The number is what is proven in Jack himself. Tap a bar for the tests behind it.</p>'+
+     '<div class="key2"><span><i></i>in Jack himself</span><span><i class="w"></i>only on a test bench, or an earlier brain</span></div><ul class="rows wide">'+
      a.aspects.map(function(x){
-       var c=x.proofs,p=x.passed;
-       return '<li><button class="row" data-sheet="aspect:'+esc(x.id)+'"><span class="name">'+esc(x.name)+'</span><span class="fig">'+x.pct+'<i>›</i></span>'+meter(x.pct)+
-              '<span class="cap">'+p+" of "+c+" proofs pass, across "+x.promises.length+(x.promises.length===1?" promise":" promises")+"</span></button></li>"}).join("")+
+       var him=x.passed_world||0,bes=x.passed-him;
+       return '<li><button class="row" data-sheet="aspect:'+esc(x.id)+'"><span class="name">'+esc(x.name)+'</span><span class="fig">'+(x.pct_world||0)+'<i>›</i></span>'+meter2(x.pct_world||0,x.pct)+
+              '<span class="cap">'+him+" in him · "+bes+" on a bench · "+x.proofs+" proofs in all</span></button></li>"}).join("")+
      "</ul></div>";
   h+="</div><div class=\"col\">";
 
@@ -494,26 +505,27 @@ function viewWatch(){
   $("#view-watch").innerHTML=h;
 }
 function viewTalk(){
-  var c=S.chat||{};
+  var c=S.chat||{},live=S.site&&location.origin+"/"===S.site;
   var h='<div class="card"><h2>Talk to Claude</h2><p class="sub">A full terminal on your server, private between this device and the server. It opens the same session every time, so the conversation is still there when you come back.</p>';
-  if(c.terminal)h+='<p style="margin:14px 0 6px"><a class="cta" href="'+esc(c.terminal)+'">Open the terminal</a></p>'+
-    '<p class="foot" style="padding:6px 0 0">It asks once for its own long password. To see it, run <code>cat ~/.jack-terminal-password</code> in your SSH app. Inside, type <code>jackchat</code> to pick up the conversation.</p>';
+  if(APP)h+='<p style="color:var(--ink2);font-size:16px;max-width:40em;margin:12px 0 0">Open the <strong>Terminal</strong> app from your home screen. If it is not there yet, open the terminal once in Safari, tap its menu, and choose Add to Home Screen.</p>';
+  else if(c.terminal)h+='<p style="margin:14px 0 6px"><a class="cta" href="'+esc(c.terminal)+'">Open the terminal</a></p>'+
+    '<p class="foot" style="padding:6px 0 0">It asks once for its own long password and then remembers this device. Inside, type <code>jackchat</code> to pick up the conversation. From its menu you can add it to your home screen as its own app.</p>';
   else h+='<p class="foot" style="padding:6px 0 0">The terminal opens from the live page on your server, not from this snapshot.</p>';
-  h+='<h3 class="h3">From your SSH app</h3><p class="sub" style="margin:0 0 4px">Run <code>jt</code> after connecting, or set it as the startup command, and you land in that same terminal.</p>';
-  if(c.url)h+='<p style="margin:12px 0 0"><a class="link" href="'+esc(c.url)+'">'+esc(c.label||"Open the SSH app")+"</a></p>";
   h+="</div>";
+  if(live)h+='<div class="card"><h2>This device</h2><p class="sub">You stay signed in here until you sign out.'+(APP?"":" To keep Jack on your home screen, use Share, then Add to Home Screen.")+'</p><p style="margin:10px 0 0"><button class="link" data-act="signout">Sign out on this device</button></p></div>';
   $("#view-talk").innerHTML=h;
 }
 
 /* ───────── sheets ───────── */
-function tests(list){return '<ul class="tests">'+list.map(function(t){return "<li>"+st(t.status)+'<span class="tt">'+esc(t.title)+'</span><span class="mt">'+[t.kind?KIND[t.kind]:null,t.id,t.ran?"ran "+day(t.ran):null].filter(Boolean).map(esc).join(" · ")+"</span></li>"}).join("")+"</ul>"}
+function tests(list){return '<ul class="tests">'+list.map(function(t){return "<li>"+st(t.status)+'<span class="tt">'+esc(t.title)+'</span><span class="mt">'+[t.where?RAN[t.where]:null,t.kind&&t.kind!=="claim"?KIND[t.kind]:null,t.id,t.ran?"ran "+day(t.ran):null].filter(Boolean).map(esc).join(" · ")+"</span></li>"}).join("")+"</ul>"}
 function sheetHTML(key){
   var k=key.split(":"),id=k.slice(1).join(":"),x;
   if(k[0]==="aspect"){x=S.abilities.aspects.filter(function(a){return a.id===id})[0];if(!x)return null;
-    return "<h3 id=\"sheet-title\">"+esc(x.name)+'</h3><div class="bigp">'+x.pct+"<small>/ 100</small></div>"+meter(x.pct,"big")+"<p>"+esc(x.blurb)+"</p>"+
+    return "<h3 id=\"sheet-title\">"+esc(x.name)+'</h3><div class="bigp">'+(x.pct_world||0)+"<small>/ 100 in Jack himself</small></div>"+meter2(x.pct_world||0,x.pct,"big")+
+      '<div class="ends" style="margin:8px 0 0"><span>'+(x.passed_world||0)+" in him · "+(x.passed-(x.passed_world||0))+" on a test bench or an earlier brain</span><span>"+x.proofs+" proofs in all</span></div><p>"+esc(x.blurb)+"</p>"+
       x.promises.map(function(p){
         var cl=p.tests.filter(function(t){return t.kind==="claim"}),gr=p.tests.filter(function(t){return t.kind!=="claim"});
-        return "<h4>"+esc(p.name)+'</h4><div class="ends" style="margin-bottom:6px"><span>'+(p.claims?p.passed+" of "+p.claims+(p.claims===1?" proof passes":" proofs pass"):"No proof has been written for this yet")+"</span><span>"+p.pct+" / 100</span></div>"+meter(p.pct)+
+        return "<h4>"+esc(p.name)+'</h4><div class="ends" style="margin-bottom:6px"><span>'+(p.claims?(p.passed_world||0)+" in him · "+(p.passed-(p.passed_world||0))+" beside him · "+p.claims+(p.claims===1?" proof":" proofs"):"No proof has been written for this yet")+"</span></div>"+meter2(p.claims?100*(p.passed_world||0)/p.claims:0,p.pct)+
           (cl.length?tests(cl):"")+(gr.length?'<p class="foot" style="padding:12px 0 0">Groundwork, not counted in the score ('+p.ground_passed+" of "+p.ground+" pass)</p>"+tests(gr):"")}).join("")}
   if(k[0]==="milestone"){x=S.milestones.filter(function(m){return String(m.n)===id})[0];if(!x)return null;
     return '<p class="eyebrow">Milestone '+x.n+" of "+S.milestones.length+'</p><h3 id="sheet-title">'+esc(x.title)+"</h3><p>"+esc(x.about)+"</p>"+
@@ -529,14 +541,14 @@ function sheetHTML(key){
       "<h4>How the "+x.score+" is worked out</h4><p>The distance from the floor to his number, divided by the distance from the floor to the pass mark, held between 0 and 100.</p><h4>The test it comes from</h4>"+tests([x.test])}
   if(k[0]==="order"){x=S.orders.filter(function(o){return o.id===id})[0];if(!x)return null;
     return '<p class="eyebrow">Order '+esc(x.id)+" · "+esc(x.lane)+'</p><h3 id="sheet-title">'+esc(x.title)+"</h3><h4>Where it stands</h4><p>"+(x.state?bold(x.state):"No note yet.")+"</p>"}
-  if(k[0]==="method"){var a=S.abilities;
+  if(k[0]==="method"){var a=S.abilities,him=a.proofs_passed_world||0;
     return '<h3 id="sheet-title">How these numbers are made</h3>'+
-      "<h4>Proven</h4><p>The goal makes "+a.promises+" promises about Jack: each sense, each need, memory, words and so on. Each promise has proofs, which are tests that would show he can really do it. There are "+a.proofs+" proofs in all, and "+a.proofs_passed+" pass today. Every bar is the same sum: proofs that pass, divided by proofs there are. The headline does that sum over everything; each ability does it over the promises filed under it.</p>"+
-      "<p>A promise that has no proof written yet counts as one proof still owed. Tests that only check his world or an instrument are shown as groundwork and never counted. "+a.promises_started+" of the "+a.promises+" promises have at least one proof that passes.</p>"+
-      "<p>Two things to keep in mind. A promise with one easy proof reads full until harder ones are written, so the count beside a bar matters as much as the bar. And some proofs still pass on a test bench beside him, not in the living Jack; the Director is re-labelling those.</p>"+
+      "<h4>Proven in Jack himself</h4><p>The goal makes "+a.promises+" promises about Jack: each sense, each need, memory, words and so on. Each promise has proofs: tests that would show he can really do it. There are "+a.proofs+" proofs in all. The headline counts only those that pass in the living Jack, meaning the brain he has today running inside his own world. That is "+him+" of "+a.proofs+".</p>"+
+      "<h4>Proven beside him</h4><p>"+(a.proofs_passed-him)+" more proofs pass on a test bench, where one part is tried by itself, or with the earlier, larger brain. That is how a sense can read as working before his brain is settled: the ear was shown to work on a bench, not in him. These are the lighter part of each bar. They are real results, but every one has to be earned again inside the brain that is finally chosen.</p>"+
+      "<p>Every bar is the same sum: proofs that pass, divided by proofs there are. A promise that has no proof written yet counts as one still owed. Tests that only check his world or an instrument are shown as groundwork and never counted.</p>"+
       "<h4>Measured</h4><p>A real number from a test, placed between a floor and a pass mark that were fixed before the test ran. The floor is what a Jack who has learned nothing scores. The score is how far along that stretch he is, from 0 to 100.</p>"+
       "<h4>The route</h4><p>The Director's nine milestones. Each names the tests that must pass; a test the roadmap names but nobody has written yet counts against it.</p>"+
-      "<h4>Where it comes from</h4><p>A small script on the server reads the test ledger, the roadmap, the agents' logs and Kaggle's job list every two minutes. No model is involved and nothing here is typed by hand."+(S.head?" Built from version "+esc(S.head)+".":"")+"</p>"}
+      "<h4>Where it comes from</h4><p>A small script on the server reads the test ledger, the roadmap, the agents' logs and Kaggle's job list every two minutes. Where each proof ran is read from the test's own code. No model is involved and nothing here is typed by hand."+(S.head?" Built from version "+esc(S.head)+".":"")+"</p>"}
   return null;
 }
 function openSheet(key){
@@ -579,6 +591,7 @@ document.addEventListener("click",function(e){
   else if(t.dataset.act==="close")closeSheet();
   else if(t.dataset.act==="note"){noteOpen=!noteOpen;viewJack()}
   else if(t.dataset.act==="journal"){journalAll=!journalAll;viewJack()}
+  else if(t.dataset.act==="signout"){fetch("logout",{method:"POST",cache:"no-store"}).then(function(){location.reload()}).catch(function(){location.reload()})}
   else if(t.dataset.day){journalOpen[t.dataset.day]=!journalOpen[t.dataset.day];t.classList.toggle("open");var jj=(S.journal||[]).filter(function(x){return x.d===t.dataset.day})[0];if(jj&&jj.paras&&jj.paras.length)t.querySelector(".txt").innerHTML=(journalOpen[jj.d]?jj.paras:jj.paras.slice(0,1)).map(bold).join("<br><br>")}
   else if(t.dataset.film!=null){watchPick=t.dataset.film===""?null:+t.dataset.film;watchSig=null;viewWatch();var vv=$("#vid");if(vv){vv.scrollIntoView({block:"center"});var pp=vv.play&&vv.play();if(pp&&pp.catch)pp.catch(function(){})}}
   else if(t.dataset.tab){showTab(t.dataset.tab);try{history.replaceState(null,"","#"+t.dataset.tab)}catch(err){location.hash=t.dataset.tab}window.scrollTo(0,0)}
