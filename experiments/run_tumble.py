@@ -62,6 +62,31 @@ and is never counted):
 Read only, not gated: `toward` (mean cosine of each bout's displacement with
 the bearing of the nearest ready floor food), keep-rate, median d_min.
 
+RESULT 11-15 11:15 — STAGE 1 DEAD by the rule above: fed told 5/3 = 8/40,
+babble 2/4 = 6/40, yoked 3/2 = 5/40 (lead +2 < 8; s141 told < babble).
+Read only: `toward` told +.442/+.196 vs babble +.024/+.032, yoked
++.023/+.107 — the first arm in five that points him at food. Post hoc on
+s90 (never counted): unfed told births end nearer than born (4.2 -> 2.9 m
+median; babble 5.2 -> 5.3) with keep-rate .80, several still closing at
+decision 250. ANY bearing within 90 deg of the food raises the smell, so
+d > 0 keeps a bad bearing as readily as a good one: he climbs, slowly.
+
+RE-ENTRY WITH THAT REASON — `steer`, DECLARED 11-15 BEFORE ANY BIRTH IS READ
+ON SEEDS 142/143 (s90 explored first, never counted). The same bit, used
+twice: tumble on d <= 0 as before; while rising, the next push is the best
+push so far plus a small perturbation (0.5 x a fresh draw), and a push
+becomes the best only if its rise beat the best's (which fades x0.7 per
+losing bout). d is read on log smell, so a rise means bearing, not nearness.
+  steer       the rule above, want GIVEN (log of the same L+R sum).
+  steeryoked  CONTROL THAT MUST FAIL: same machinery, but tumble and accept
+              are coins at `steer`'s own measured rates on that seed.
+  babble      the null, re-run on the same seeds.
+RULE: `steer` ALIVE iff it feeds more births than `babble` on BOTH seeds
+(142, 143; 20 births each) and by >= 8 of 40 in sum, AND more than
+`steeryoked` likewise. Else DEAD, and a given want with a measured bit is
+not enough on this body in 250 decisions. ALIVE = the rule works with the
+want GIVEN; the learned want (stage 2, nursery) is then the entry.
+
     nice -n 19 $PY -m experiments.run_tumble run <arm> <seed> [n_test]
     $PY -m experiments.run_tumble tally
     $PY -m experiments.run_tumble selftest
@@ -75,7 +100,8 @@ import sys
 
 import numpy as np
 
-ARMS = ("babble", "told", "yoked", "want", "wantshuf")
+ARMS = ("babble", "told", "yoked", "want", "wantshuf", "steer", "steeryoked")
+SEEDS2 = (142, 143)
 HOLD, STD, E, N_TEST, MEAL_H, MARGIN = 5, 0.5, 250, 20, 25, 8   # SL's ruler
 NURSE = 5000           # phase-1 decisions (want arms only) = SL's BABBLE
 R_NURSE = 0.6          # m — wean_pilot's R0
@@ -148,6 +174,26 @@ def _told_rate(seed: int) -> float:
     return sum(r["kept"] for r in te) / max(1, sum(r["bouts"] for r in te))
 
 
+def _steer_rates(seed: int) -> tuple:
+    p = f"{OUT}/steer_s{seed}.jsonl"
+    if not os.path.exists(p):
+        raise SystemExit(f"steeryoked needs steer's rates first: {p} missing")
+    te = [json.loads(x) for x in open(p)]
+    b = max(1, sum(r["bouts"] for r in te))
+    tum = sum(r["tum"] for r in te)
+    return tum / b, sum(r["acc"] for r in te) / max(1, b - tum)
+
+
+def steer_step(yoked: bool, dv: float, rbest, coin: float, coin2: float,
+               rates: tuple) -> tuple:
+    """(tumble, accept) for one finished bout."""
+    if yoked:
+        tum = coin < rates[0]
+        return tum, (not tum) and coin2 < rates[1]
+    tum = dv <= 0.0
+    return tum, (not tum) and (rbest is None or dv > rbest)
+
+
 def run(arm: str, seed: int, n_test: int = N_TEST, out_path: str = "",
         nurse: int = NURSE) -> None:
     import torch
@@ -160,6 +206,7 @@ def run(arm: str, seed: int, n_test: int = N_TEST, out_path: str = "",
     torch.set_num_threads(1)
     torch.manual_seed(41_000 + seed)
     rate = _told_rate(seed) if arm == "yoked" else 0.0
+    srates = _steer_rates(seed) if arm == "steeryoked" else (0.0, 0.0)
     S.install("smell", seed)
     j0, alpha, prov = _calibration()
     if j0 is None:
@@ -210,10 +257,13 @@ def run(arm: str, seed: int, n_test: int = N_TEST, out_path: str = "",
         a = np.clip(STD * prng.randn(8), -1.0, 1.0)
         xs_trial, cos = [], []
         fed, dmin, born_d, k, bouts, kept = None, 1e9, None, 0, 0, 0
+        steer = rule in ("steer", "steeryoked")
+        abest, rbest, n_acc, n_tum = None, None, 0, 0
+        lg = (lambda v: float(np.log(max(v, 1e-12)))) if steer else float
         while k < E and fed is None:
             p0 = np.array(d.xpos[b][:2])
             r0 = ready()
-            v0 = value(_vec(w.observe()))
+            v0 = lg(value(_vec(w.observe())))
             dead = False
             for _ in range(HOLD):
                 xs_trial.append(_vec(w.observe()))
@@ -245,12 +295,31 @@ def run(arm: str, seed: int, n_test: int = N_TEST, out_path: str = "",
             bouts += 1
             fresh = np.clip(STD * prng.randn(8), -1.0, 1.0)   # always drawn:
             coin = float(crng.rand())                          # streams align
-            if keep(rule, value(_vec(w.observe())) - v0, coin, rate):
+            dv = lg(value(_vec(w.observe()))) - v0
+            if steer:
+                tum, acc = steer_step(rule == "steeryoked", dv, rbest, coin,
+                                      float(crng.rand()), srates)
+                if tum:
+                    a, abest, rbest, n_tum = fresh, None, None, n_tum + 1
+                else:
+                    if acc or abest is None:
+                        abest, rbest, n_acc = a.copy(), dv, n_acc + 1
+                    else:
+                        rbest *= 0.7
+                    a = np.clip(abest + 0.5 * fresh, -1.0, 1.0)
+            elif keep(rule, dv, coin, rate):
                 kept += 1
             else:
                 a = fresh
         want.add_trial(xs_trial, fed)
-        return {"fed": fed, "born_d": round(born_d or -1, 2),
+        pe = np.array(d.xpos[b][:2])                 # read only (post hoc)
+        d_end = min([float(np.linalg.norm(q - pe)) for q in ready()] or [-1])
+        d_high = min([float(np.linalg.norm(np.array(d.geom_xpos[g][:2]) - pe))
+                      for n, (g, _) in dr._food.items()
+                      if n not in floor and dr.t >= dr._respawn_at[n]] or [-1])
+        return {"d_end": round(d_end, 2), "d_high": round(d_high, 2),
+                "acc": n_acc, "tum": n_tum,
+                "fed": fed, "born_d": round(born_d or -1, 2),
                 "d_min": round(dmin, 2), "n": k, "bouts": bouts, "kept": kept,
                 "toward": round(float(np.mean(cos)), 3) if cos else 0.0}
 
@@ -287,7 +356,7 @@ def tally(dirname: str = OUT, seeds=SEEDS) -> dict:
     fed = {}
     for p in sorted(glob.glob(f"{dirname}/*_s*.jsonl")):
         te = [r for r in map(json.loads, open(p)) if r["phase"] == "test"]
-        if len(te) < N_TEST or te[0]["seed"] not in seeds:
+        if len(te) < N_TEST or te[0]["seed"] not in SEEDS + SEEDS2:
             continue
         a, s = te[0]["arm"], te[0]["seed"]
         fed[(a, s)] = sum(r["fed"] is not None for r in te)
@@ -296,8 +365,10 @@ def tally(dirname: str = OUT, seeds=SEEDS) -> dict:
               f"{sum(r['kept'] for r in te) / max(1, sum(r['bouts'] for r in te)):.2f}"
               f"  d_min med {np.median([r['d_min'] for r in te]):.2f}")
     verdict = {}
-    for stage, x, nulls in ((1, "told", ("babble", "yoked")),
-                            (2, "want", ("babble", "wantshuf"))):
+    for stage, x, nulls, seeds in ((1, "told", ("babble", "yoked"), SEEDS),
+                                   (2, "want", ("babble", "wantshuf"), SEEDS),
+                                   ("steer", "steer", ("babble", "steeryoked"),
+                                    SEEDS2)):
         if any((a, s) not in fed for a in (x,) + nulls for s in seeds):
             print(f"STAGE {stage}: INCOMPLETE, no verdict")
             continue
@@ -337,6 +408,10 @@ def selftest() -> None:
     assert not _alive({**f, ("yoked", 141): 8}, "told", ("babble", "yoked"))
     assert not _alive({**f, ("told", 140): 6, ("told", 141): 6},
                       "told", ("babble", "yoked"))            # +7 < 8
+    assert steer_step(False, -0.1, 0.2, 0, 0, (0, 0)) == (True, False)
+    assert steer_step(False, 0.3, 0.2, 0, 0, (0, 0)) == (False, True)
+    assert steer_step(False, 0.1, 0.2, 0, 0, (0, 0)) == (False, False)
+    assert steer_step(True, 9.0, 0.2, 0.9, 0.9, (0.5, 0.5)) == (False, False)
     wt = Want(6, False, 0)
     rng = np.random.RandomState(1)
     for _ in range(40):
