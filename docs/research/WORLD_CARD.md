@@ -11,7 +11,7 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g,e running, c launched 19:07, d8 launched 19:23, d32 pending a session)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; e running, c launched 19:07, d8 launched 19:23, d32 pending a session)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
@@ -22,7 +22,7 @@ hand forager (row f). No learner, no ledger row: these are rulers.
 | d32 | action held 32 | | | | n/a | | |
 | e | privileged NE.01 forager | | | | n/a | | |
 | f | hand forager, observation only | 742.1 ± 278.9 (6–1800; median 696) | 4.13 ± 4.98 (max 28; 168/200 lives ≥1; 59/200 ≥5; per-seed means 1.6–7.7, median 4.05) | 0 | n/a | energy 189, integrity 10, censored 1 | −1.00 (199 lives); −0.88 (the 1 censored) |
-| g | control: (f) with rays shuffled | | | | n/a | | |
+| g | control: (f) with rays shuffled | 701.5 ± 155.7 (7–1037; median 715) | 2.97 ± 2.05 (max 10; 180/200 lives ≥1; 41/200 ≥5; per-seed means 1.5–3.9) | 0 | n/a | energy 193, integrity 7 | −1.00 (all) |
 
 Bar for (f), unmoved from `LF_04_FAIL.md`: per seed, mean floor meals per life
 ≥ 5 and above row b on the same seed, on ≥ 18 of 20 seeds. (g) must miss it.
@@ -32,6 +32,20 @@ every seed is above random (20/20; pooled 4.13 against 0.52 floor meals per
 life, 7.9×), but only seeds 204, 205, 207, 208, 211, 215 reach 5.0 per life.
 The bar is not moved and f is not retuned on these seeds. Rows a and b against the
 same bar: 0 of 20 each — **the §8 floor-arm gate holds** (a + b = 0 seeds ≤ 1).
+
+**Row g (the control that must fail) fails: 0 of 20 seeds** — the control
+works. But it shows how little of f's score is sight. Blind, the same wander
+eats 2.97 floor meals per life (5.7× random, above b on 20/20 seeds), and f
+beats g on only 14 of 20 seeds. Split by life (paired over the 20 seeds,
+post-hoc reading):
+- **life 0:** f 12.35, g 2.75 — f ahead on 19/20 seeds, paired t = 5.6. Sight works.
+- **lives 1–9:** f 3.22, g 2.99 — f ahead on 11/20, paired t = 0.57. **After its
+  first life, f forages no better than blind.** This is cause 1 below, now on
+  the registered seeds: once its permanent bans cover the true food textures,
+  f stops chasing and is the wander alone.
+- **Integrity deaths are the wander's, not sight's:** g has 7 (7–67 s, lives
+  2–9), f had 10. Straight full-drive runs kill him in a used world with no
+  vision involved — a world/body fact for answer (3) and J2.
 
 **Row a (statue) outlives row b (random) 2.0×: 600 s against 302 s.** Random
 flailing draws 2.42× the idle drain (answer 1's table) and its 0.52 meals
@@ -92,6 +106,25 @@ box, `/data/tmp/wc_diag` — tuning seed, NOT evidence):
   which on 154 ate 23 → 6 → 4, the decline then being the wall-pinned food
   (cause 2). If that arm also stays under 5 on lives 1–9, the ruler is
   limited by the world, not by its rules, and J2 (1)'s re-placement is the fix.
+
+**In-life-ban arm (F2_BAN_S = inf), 2026-11-15 19:46–20:09**, box, raw
+`world_card_data/smoke_f2_baninf.jsonl`. All 20 lives energy deaths.
+
+| seed | lives 0–9 floor meals | mean | lives 1–9 | lifetimes s |
+|---|---|---|---|---|
+| 153 | 9, 1, 7, 4, 11, 8, 4, 20, 2, 10 | 7.6 | 7.4 | 646–1527 |
+| 154 | 23, 5, 0, 12, 8, 2, 5, 7, 2, 13 | 7.7 | 6.0 | 599–1673 |
+
+- Life 0 is f's again (154: 23; 153: 9, both identical to f's smoke lives —
+  the same code path until the first new_life), and later lives no longer
+  collapse: lives 1–9 eat 6.0–7.4, against f's ~2.5 on 201–220 and the
+  200 s arm's 3.5. **The collapse was the ruler's rules, not the world.**
+- Wall-pinned food still shows as spread, not as decline: lives of 0–2 meals
+  sit beside lives of 12–20. J2 (1)'s re-placement may tighten it; it is no
+  longer the limit.
+- **Frozen: F2_BAN_S = inf** (commit with this table). f2, g2, b2 launch on
+  fresh seeds 221–240 against the unmoved bar. Two tuning seeds at ~7.6 are
+  not a prediction of 18/20 — the registered run decides.
 
 ## Smoke (box, seeds 153/154 — tuning seeds, NOT evidence)
 

@@ -343,7 +343,9 @@ class HandForager:
 # b's random policy) on FRESH seeds 221-240, 10 lives each. Bar unmoved:
 # score(f2, b2, F2_SEEDS) needs >= 18 of 20 seeds at >= 5.0 floor meals/life
 # and above b2 on the same seed; g2 must not pass, else f2's pass is VOID.
-F2_BAN_S = 200.0
+# FROZEN 11-15 20:12 (smoke 153/154, 10 lives): 200 s -> 3.8 / 4.3 meals/life;
+# inf (ban for the rest of the life, cleared at new_life) -> 7.6 / 7.7. inf wins.
+F2_BAN_S = float("inf")
 
 
 class HandForager2(HandForager):
