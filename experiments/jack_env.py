@@ -135,6 +135,31 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          and food count, not meal size or regrowth (no
                          survival world ablates those alone, §3 "Not
                          verified"); the linear map is ours.
+  random_needs=None     J2 item 2 (part). None = today (birth and every
+                         respawn at e=e0, i=1, w=0). A float s in (0, 1]:
+                         at birth and at EVERY respawn, energy e and
+                         integrity i are each drawn uniform in [1-s, 1]
+                         (their distance from the setpoint up to s of the
+                         distance to death; w, not lethal, stays 0). Drawn
+                         from the env's own RNG seeded by (seed, 2), never
+                         W0's, so the world's streams are untouched. Needs
+                         e0 == 1.0 (it replaces e0). Theirs: trp_env draws
+                         each internal state uniform within +/-1/6 of the
+                         setpoint at every reset (two_resource_env.py L88,
+                         L297-300; long form line 341) -> s = 1/6 is the
+                         published value (NEEDS_S_TRP). DIFFERS: trp_env's
+                         needs are two-sided (too full also kills), so it
+                         draws both sides; ours are one-sided (full is the
+                         setpoint), so only the hungry side is drawn. The
+                         needs sense's change-since-last reads 0 at a drawn
+                         start (W0 would report a fake drop from full).
+                         NEEDS PROOF (2026-11-15, `python -m experiments.
+                         tests.test_jack_env_needs 600`, seeds 153-155, 3
+                         forced respawns each): None == default byte for
+                         byte; s=1/6 starts e 0.842-0.952, s=0.5 e
+                         0.526-0.857, all in bounds, every life a new draw;
+                         W0's RNG states equal the default's; control (s=0.5)
+                         stream differs. PASS. Random LAYOUT each life: owed.
   OPTIONS PROOF (measured 2026-11-15, `python -m
   experiments.tests.test_jack_env_options 300`, seeds 153/154/155): (a)
   explicit defaults == JackEnv() byte for byte; (b) dr100-eat == 100*homeo-dr
@@ -174,6 +199,7 @@ FLOOR_FOODS = ("obj0", "obj1")
 # J2 item 1, food count: W0's own non-food floor objects that the dial turns
 # into floor food at low d, in this order (obj5 is never food).
 EXTRA_FOODS = ("obj2", "obj3", "obj4")
+NEEDS_S_TRP = 1.0 / 6.0  # trp_env: start state uniform within +/-1/6 of setpoint
 MEAL_AT_D0 = 1.0     # Avalon: a food fills the bar (PUBLISHED_PRIORS §3 table)
 SPAWN_R_D0 = 0.5     # m; Avalon eat: food 0.5 m in front of the agent at d=0
 SPAWN_R_SPAN = 17.0  # m; ~ the arena diagonal (2*sqrt(2)*6): r(1) covers all
@@ -210,7 +236,8 @@ class JackEnv(gym.Env):
                  e0: float = 1.0, diary=None, reward: str = "homeo-dr",
                  eat_pay: float = 100.0,
                  max_episode_decisions: Optional[int] = None,
-                 difficulty: Optional[float] = None):
+                 difficulty: Optional[float] = None,
+                 random_needs: Optional[float] = None):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -227,6 +254,12 @@ class JackEnv(gym.Env):
         # None and 1.0 are both today's world: nothing is touched.
         self.difficulty = (None if difficulty is None or float(difficulty) == 1.0
                            else float(difficulty))
+        if random_needs is not None:
+            if not 0.0 < float(random_needs) <= 1.0:
+                raise ValueError(f"random_needs must be in (0, 1], got {random_needs!r}")
+            if float(e0) != 1.0:
+                raise ValueError("random_needs replaces e0; leave e0 = 1.0")
+        self.random_needs = None if random_needs is None else float(random_needs)
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -254,6 +287,10 @@ class JackEnv(gym.Env):
             self.w.respawn()
         if self.e0 != 1.0:      # survival.run_survival's e0, applied the same way
             self.w.drives.state = drives.DriveState(e=self.e0)
+        if self.random_needs is not None:
+            # J2 item 2: own stream, so W0's RNG streams are the default run's
+            self._needs_rng = np.random.default_rng([seed, 2])
+            self._draw_needs()
         self._eats_at_life_start = 0
         self._truncated = False
         if self.difficulty is not None:
@@ -262,6 +299,17 @@ class JackEnv(gym.Env):
                 if name in self.w.drives._food:
                     gid, nu = self.w.drives._food[name]
                     self.w.drives._food[name] = (gid, dial_meal(nu, self.difficulty))
+
+    def _draw_needs(self) -> None:
+        """J2 item 2: e and i uniform in [1-s, 1], w = 0 (see OPTIONS)."""
+        from experiments import drives
+        lo = 1.0 - self.random_needs
+        e, i = self._needs_rng.uniform(lo, 1.0, size=2)
+        self.w.drives.state = drives.DriveState(e=float(e), i=float(i))
+        # the needs sense reports change since the last decision; a body born
+        # hungry has not just LOST energy, so its first change reads zero.
+        self.w._prev_drive = drives.DriveState(e=float(e), i=float(i))
+        self.last_start_needs = (float(e), float(i))
 
     def _add_extra_foods(self) -> None:
         """J2 item 1, food count: make the first dial_extra_foods(d) of
@@ -382,6 +430,8 @@ class JackEnv(gym.Env):
             # second life lived on the world's default energy).
             from experiments import drives
             w.drives.state = drives.DriveState(e=self.e0)
+        if self._died and self.random_needs is not None:
+            self._draw_needs()      # same place e0 is re-applied: before observe()
         o = self._obs(w.observe())
         self._ep_decisions += 1
         self._truncated = (not self._died
