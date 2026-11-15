@@ -1112,10 +1112,10 @@
         "detached:fatigue_probe_dB": 200.46,
         "detached:fatigue_probe_shipped": 223.97,
         "detached:fatigue_probe_swp_k72": 89.76,
-        "detached:forager_k0.log": 23.51,
+        "detached:forager_k0.log": 78.41,
         "detached:humid_kcpu_h1.log": 318.4,
         "detached:humid_kcpu_h2.log": 304.06,
-        "detached:lf03_rebuy.log": 1200.02,
+        "detached:lf03_rebuy.log": 2788.17,
         "detached:meal_kcpu_s94.log": 131.01,
         "detached:meal_kcpu_s95.log": 25.87,
         "detached:meal_kcpu_s96.log": 26.05,
@@ -1124,7 +1124,7 @@
         "detached:plr_s150.log": 50.33,
         "detached:plr_s152.log": 50.34
       },
-      "used_s": 8539.67
+      "used_s": 10182.72
     }
   },
   "last_child_s": {

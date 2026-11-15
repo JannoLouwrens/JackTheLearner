@@ -65,10 +65,11 @@ different orders. An arm clears → write it here; the Director orders
 serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 **done when:** the loss seat is ruled by tally and step 2's table (and 3's
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
-state: 11-15 10:30 (1) DONE: tally WINNER tanh-awr (`f72aac0`, docs/research/POLICY_LOSS_RACE.md): late mean 604.5 sat 0 > awr 563.1 sat .0001; base .65/tanh .99 sat fail q1. Lead rests on s152 (732). SEATED `a2bd4df` (Core.act=tanh, lc_update=AWR; policy_loss selftest flipped ok).
-Re-buys: LC.02 PASS at a2bd4df (`eaa9302`; ratio stays 0.125; salt replay diverged, INBOX). LF.03 RUNNING detached (pid 88692, /data/tmp/lf03_rebuy.log, ~40 min). LC.08 REFUSED: cpu<48h closed (D20/D39), old PASS stands stale — needs re-registration or an off-box path (Director).
-(2) forager race PUSHED 10:20-10:28, all 4 kernels: K0 `jack-cpu-1794738176` (poller pid 88890), K1 `…8207`, K2 `…8357`, K3 `…8507` (in-session, pollers died; detached cap counted K0's poller, INBOX).
-Next: harvest LF.03 row (commit ledger, `run render`); harvest each K when COMPLETE: `JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-<id> $PY -m experiments.forager_race kernel K` (guard may refuse in-session pushes: JACK_REATTACH_ACCEPT_MISMATCH=1, then check `forager_race status` = current); then `forager_race tally` -> FORAGER_RACE.md.
+state: 11-15 11:58 (1) DONE: WINNER tanh-awr (`f72aac0`), SEATED `a2bd4df`. Re-buys: LC.02 PASS (`eaa9302`); **LF.03 PASS** at eaa9302 (attempt 3, statue twin told apart: statue_flagged 1, ate 0; learner ate 1.67±.47; salt replay clean on deciding metrics). LC.08 REFUSED cpu<48h (INBOX, Director).
+(2) forager race: **K3 HARVESTED** (`…8507`, JACK_REATTACH_ACCEPT_MISMATCH=1: only the pinned sha differs, no imported file/ledger/cal changed eaa9302..HEAD). wm-efe late floor meals 0.0/0.0, apples 0/0, span 384/395 s vs random floor 0.0/0.2 meals, span 291/292 s: wm-efe does NOT clear (lives longer, eats nothing).
+K0 `…8176` (poller pid 88890), K1 `…8207`, K2 `…8357` RUNNING on Kaggle at 11:50.
+Next: when each is COMPLETE: `JACK_REATTACH_ACCEPT_MISMATCH=1 JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-<id> $PY -m experiments.forager_race kernel K` (K0's poller may harvest itself; check `forager_race status`), then `forager_race tally` -> docs/research/FORAGER_RACE.md.
+
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since

@@ -1448,3 +1448,7 @@ Philosophy served: 4 (a known-answer test whose injection cannot miss is priced 
 told (keep a push iff smell rose) DEAD 8/40 vs babble 6, yoked 5, but toward +.44/+.20. steer (tumble on a fall, steer among rising pushes) ALIVE with the want given: fed 14/40 vs babble 3/40, coin-yoked 2/40 (s142/143).
 steerwant (same rule on a want learned from his meals) DEAD 7/40 vs babble 5, shuffled 7 (s144/145): the want does not find smell from 14 meals.
 The gap moved from direction to the want. Philosophy 3, 4 (first arm of nine to beat babble on the fed-births ruler; its learned form killed by its own control).
+
+2026-11-15 11:58 UTC · JACK · J1(1)(2). LF.03 re-buy on the seated tanh-AWR core: **PASS** (attempt 3 at eaa9302). The new statue twin (zero action, training on) was told apart from the learner (statue_flagged 1, ate 0); the learner ate 1.67±.47; deciding metrics reproduced under the salt replay.
+Forager race K3 harvested (only the pinned sha differed; reattach mismatch accepted and recorded): wm-efe ate 0 floor meals and 0 apples late on both seeds, against a random floor of 0.0/0.2. It lives longer (384/395 s vs 291/292 s) but does not forage, so it does not clear. K0–K2 are still running on Kaggle.
+Philosophy served: 4 (a re-bought certificate now carries a control that had to fail and did; a world-model arm's longer life is not counted as eating).
