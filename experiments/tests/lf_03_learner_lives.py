@@ -55,6 +55,13 @@ CONTROLS THAT MUST FAIL, EACH ACTUALLY RUN (registry):
                 The SAME detector that must read "everything crossed" on the
                 real life (at every respawn, the diary holds every earlier
                 life's death row) must read "lost" on it.
+  statue twin   (ruling 9, 2026-11-15) zero action, optimiser ON, diary on.
+                It passes 'weights changed' and 'diary carried' (smoke s0,
+                400 decisions: 43 opt steps, weights moved), so the old gate
+                could not tell it from the learner. The 'drives the body'
+                detector — executed-action RMS >= DRIVE_RMS_MIN AND Pearson
+                (executed action, policy mean) >= DRIVE_CORR_MIN — must read
+                False on it (smoke: learner 0.52 / 0.42, statue 0 / 0).
   Each control lives to CONTROL_DEATHS deaths (>= 2, so it crosses death
   twice) — smaller than the real life on purpose: the control tests the
   DETECTOR, and a detector that fires at 2 crossings fires at 5.
@@ -106,7 +113,11 @@ ARM = "wm-latent"              # the Learning-core seat holder (CHAMPIONS.md)
 N_DEATHS = 5                   # the order's ">= 5 deaths"
 DECISION_CAP = 30_000          # ~2.4x the piloted 5-death length; past it VOID
 HORIZON = 15_000               # exploration std decays over this many decisions
-TRAIN_RATIO = 0.25             # LC.02's certified cadence (run_survival default)
+# TRAIN_RATIO is NOT a constant (ruling 9, 2026-11-15): it is read live from
+# LC.02's PASS via `train_ratio()` — the largest ratio wm-latent cleared on
+# EVERY seed (`committed_ratio`). The old hard-coded 0.25 cleared on 2/3 seeds.
+DRIVE_RMS_MIN = 0.05           # executed-action RMS, of the [-1, 1] range
+DRIVE_CORR_MIN = 0.05          # Pearson(executed action, policy mean), pooled
 K_SAVE_BASE, K_SAVE_STEP = 6_000, 97   # save in life ~3, drifting by seed
 SAVE_MIN_INTO_LIFE = 100       # the save is MID-life, not at a respawn
 RESUME_CHECK = 200             # decisions of bit-exact continuation compared
@@ -125,6 +136,27 @@ def _calibration():
     return b.values["j0_ms"], b.values["alpha"], b.provenance
 
 
+_RATIO: list = []
+
+
+def train_ratio():
+    """(ratio, provenance) — LC.02's committed ratio for ARM, or (None, why).
+
+    Ruling 9: the cadence the learner lives at is the one LC.02 certified on
+    every seed, read through borrow_metrics (refuses on a stale/absent source)
+    and LC.02's own conservative rule. Unknown is not zero: None refuses."""
+    if not _RATIO:
+        from .lc_02_throughput_floor import TRAIN_RATIOS, committed_ratio
+        b = borrow_metrics("LC.02", tuple(f"{ARM}/clears@{r}"
+                                          for r in TRAIN_RATIOS))
+        prov = {f"ratio_{k}": v for k, v in b.provenance.items()}
+        r = committed_ratio(b.values, ARM) if b.ok else None
+        if not b.ok:
+            prov["ratio_borrow_refusal"] = b.refusal
+        _RATIO.append((r, prov))
+    return _RATIO[0]
+
+
 def _flat(core):
     import torch
     return torch.cat([p.detach().reshape(-1) for p in core.parameters()])
@@ -134,13 +166,22 @@ class _Life:
     """run_survival's core path as a stepping object (see the docstring)."""
 
     def __init__(self, seed: int, j0: float, alpha: float, *,
-                 train: bool = True, wipe_diary: bool = False):
+                 train: bool = True, wipe_diary: bool = False,
+                 statue: bool = False):
         import torch
 
         from ..cores import build_arm, make_optimizer
         from ..survival import _TargetRing
         torch.set_num_threads(1)
         self.seed, self.train, self.wipe_diary = seed, train, wipe_diary
+        self.statue = statue          # zero action, training ON (ruling 9)
+        self.train_ratio, _ = train_ratio()
+        if train and self.train_ratio is None:
+            raise RuntimeError("LC.02 committed ratio unreadable: refusing "
+                               "to guess a training cadence")
+        # executed action vs the policy's mean: the 'he drives' detector
+        self.act_n = 0
+        self.act_sums = np.zeros(5)   # sum a, sum m, sum a*a, sum m*m, sum a*m
         self.diary = EpisodicMemory()
         self.w = W0(seed=seed, j0=j0, alpha=alpha, lethal=True,
                     diary=self.diary)
@@ -188,6 +229,11 @@ class _Life:
         frac = min(1.0, self.k / max(1, HORIZON - 1))
         std = EXPLORE_STD[0] + (EXPLORE_STD[1] - EXPLORE_STD[0]) * frac
         a = np.clip(mean + std * self.rng.randn(ACTION_DIM), -1.0, 1.0)
+        if self.statue:
+            a = np.zeros_like(a)      # same rng draw, so the streams stay paired
+        self.act_n += a.size
+        self.act_sums += (a.sum(), mean.sum(), (a * a).sum(),
+                          (mean * mean).sum(), (a * mean).sum())
 
         d_before = w.drives.state.d()
         w.decide(a)
@@ -207,7 +253,7 @@ class _Life:
         if died or len(self.seg["rew"]) >= SEG:
             self._close_segment(boot=v, terminal=died)
         if self.train and self.ring.n >= LC_BATCH:
-            for _ in range(_updates_due(w.decisions, TRAIN_RATIO)):
+            for _ in range(_updates_due(w.decisions, self.train_ratio)):
                 batch, targets = self.ring.sample(self.gen)
                 loss = lc_update(self.core, batch, targets, self.opt,
                                  dropped=W0.DROPPED)
@@ -280,7 +326,17 @@ class _Life:
             "carried": list(self.carried),
             "diary_rows": len(self.diary.events),
             "ate_total": int(sum(w.drives.ate_total.values())),
+            **self._drive(),
         }
+
+    def _drive(self) -> dict:
+        n = max(1, self.act_n)
+        sa, sm, saa, smm, sam = self.act_sums / n
+        va, vm = saa - sa * sa, smm - sm * sm
+        corr = ((sam - sa * sm) / (va * vm) ** 0.5
+                if va > 1e-12 and vm > 1e-12 else 0.0)
+        return {"action_rms": float(max(0.0, saa) ** 0.5),
+                "action_policy_corr": float(corr)}
 
     @property
     def _dims(self) -> dict:
@@ -467,6 +523,18 @@ def _weights_changed(f: dict) -> bool:
     return f["optimiser_steps"] > 0 and f["weight_change_rel"] >= WEIGHT_CHANGE_MIN
 
 
+def _drives_body(f: dict) -> bool:
+    """He drives the body: the executed action is non-trivial AND follows his
+    own policy's output. A statue (zero action, still training, still keeping
+    a diary) passes weights_changed and diary_carried; it must fail this."""
+    return (f["action_rms"] >= DRIVE_RMS_MIN
+            and f["action_policy_corr"] >= DRIVE_CORR_MIN)
+
+
+_MEALS: dict = {}     # seed -> meals; ONE shared object on every seed's row,
+                      # so _aggregate's runs[0] value carries all seeds
+
+
 def _diary_carried(f: dict) -> bool:
     return len(f["carried"]) >= 1 and all(f["carried"])
 
@@ -475,8 +543,12 @@ def _experiment(seed: int) -> dict:
     import shutil
     j0, alpha, prov = _calibration()
     m: dict = {"calibrated": float(j0 is not None), **prov}
-    if j0 is None:
+    r, rprov = train_ratio()
+    m.update(rprov)
+    m["ratio_borrowed"] = float(r is not None)
+    if j0 is None or r is None:
         return m
+    m["train_ratio"] = r
     tmp = tempfile.mkdtemp(prefix=f"lf03_s{seed}_", dir="/data/tmp")
     t0 = time.perf_counter()
     try:
@@ -506,6 +578,11 @@ def _experiment(seed: int) -> dict:
     m["diary_carried"] = float(_diary_carried(f))
     m["diary_rows"] = float(f["diary_rows"])
     m["ate_total"] = float(f["ate_total"])
+    _MEALS[str(seed)] = int(f["ate_total"])
+    m["meals_by_seed"] = _MEALS
+    m["action_rms"] = f["action_rms"]
+    m["action_policy_corr"] = f["action_policy_corr"]
+    m["drives_body"] = float(_drives_body(f))
     for s, v in f["sense_std"].items():
         m[f"sense_std_{s}"] = v
     m["senses_live"] = float(all(v > 0 for v in f["sense_std"].values()))
@@ -528,6 +605,7 @@ def _control(seed: int) -> dict:
         return {"calibrated": 0.0}
     fz = _live_to(_Life(seed, j0, alpha, train=False), CONTROL_DEATHS)
     wd = _live_to(_Life(seed, j0, alpha, wipe_diary=True), CONTROL_DEATHS)
+    st = _live_to(_Life(seed, j0, alpha, statue=True), CONTROL_DEATHS)
     return {
         "frozen_deaths": float(fz["deaths"]),
         "frozen_weight_change_rel": fz["weight_change_rel"],
@@ -538,18 +616,28 @@ def _control(seed: int) -> dict:
         # the wiped twin still learns: its weights detector must NOT fire,
         # or the two detectors are not independent
         "wiped_weights_changed": float(_weights_changed(wd)),
+        # ruling 9: the statue twin trains and keeps a diary; the gate must
+        # still tell it from the learner (it must NOT read as driving)
+        "statue_deaths": float(st["deaths"]),
+        "statue_ate": float(st["ate_total"]),
+        "statue_action_rms": st["action_rms"],
+        "statue_weights_changed": float(_weights_changed(st)),
+        "statue_flagged": float(not _drives_body(st)),
     }
 
 
 def _check(m: dict, c: dict):
     if m.get("calibrated") != 1.0 or c.get("calibrated", 1.0) != 1.0:
         return Status.VOID
+    if m.get("ratio_borrowed") != 1.0:
+        return Status.VOID     # LC.02's cadence unreadable: refuse, never guess
     if m.get("saved") != 1.0:
         return Status.VOID     # no mid-life save point before the cap
     if m.get("reached_deaths") != 1.0:
         return Status.VOID     # he outlived the apparatus; not a refutation
     if (c.get("frozen_deaths", 0) < CONTROL_DEATHS
-            or c.get("wiped_deaths", 0) < CONTROL_DEATHS):
+            or c.get("wiped_deaths", 0) < CONTROL_DEATHS
+            or c.get("statue_deaths", 0) < CONTROL_DEATHS):
         return Status.VOID     # a control that never crossed death tested nothing
     # every per-seed flag is 0/1 and aggregated as a mean: == 1.0 is EVERY seed
     return bool(
@@ -561,7 +649,9 @@ def _check(m: dict, c: dict):
         and m.get("finite") == 1.0
         and c.get("frozen_flagged") == 1.0
         and c.get("wiped_flagged") == 1.0
-        and c.get("wiped_weights_changed") == 1.0)
+        and c.get("wiped_weights_changed") == 1.0
+        and m.get("drives_body") == 1.0
+        and c.get("statue_flagged") == 1.0)
 
 
 def run(ledger: Ledger | None = None):
