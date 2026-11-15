@@ -117,11 +117,11 @@ then `run W1.04` once on Kaggle CPU; a FAIL at ~53 s is the honest reading.
 by `W1.00`–`W1.04` unchanged. (3) Register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 4, 5.
 **done when:** `W1.04` and `W1.00` have new verdicts and `DP.05`-in-W1 is registered.
-state: 11-13 15:45 `W1.00` att 3 FAIL (b) at n = 20 (`edd3e61`). 11-14 02:40 `W1.04` unpassable proven (`93f4040`).
-11-14 10:55 (1) DONE `eeeb1ff`: (c) = 20 fresh worlds/arm-seed (oracle + repeat), censored 5600 s; passive out; fixtures 15/15; pilot s90 lives ~53 s, ctrl censors.
-Priced 0.024 s/dec: control alone ~11 core-h -> budget KAGGLE_CPU. FINDING for the Director: (a)'s W1.02 t2c (>=20 completed SEQUENTIAL repeat lives,
-mean <= H/3) and (c)'s W1.02 p5 >= H on the SAME process still contradict in any survivable world — W1.04 can only FAIL until that is ruled.
-Next: (2) `run W1.04` on Kaggle CPU once the kcpu lock frees (LF.04 ~17:30); expected FAIL (c) at ~53 s — the honest reading of today's world.
+state: 11-15 06:39 kcpu PATH BUILT `36ce96d`: run() = 1 Kaggle-CPU kernel/seed (5 arms, 4-worker pool), units cached by impl_sha in /data/tmp/w104/units, `… w1_04_horizon_longer_than_consequence kernel <seed>` buys a seed ahead. Fixtures 15/15.
+Pushed s0 under the PRE-ruling-2 spec (`jack-cpu-1794724769`, RUNNING; ruling landed mid-slot). That kernel is a PILOT only: re-registration changes impl_sha -> no unit reuse, and multi-unit reattach is forbidden (ruling 6).
+s1/s2 pushes REFUSED: "Maximum batch CPU session count of 5 reached" (measured: 5 CPU + 1 GPU concurrent, cap is 5).
+Next: (1) re-register per ruling 2 (registry hypothesis + _experiment/_check + fixtures for p5_oracle >= H and p5_oracle > p95_fr; fr still computed), commit, push;
+then 3 detached `kernel <s>` pollers (pollers don't count toward the 2-cap, <= 6 alive) as kcpu slots free, then `run W1.04` reuses the units.
 
 ### J4 — The oldest blockers nobody owns (`PS.02`, `PG.6`, `T2.03`)
 **Why.** `PS.02` (cold is felt before it kills) is FAIL with its code
@@ -229,6 +229,7 @@ bookkeeping). (7) D52 scout retry; `run status` STEERING reader parses 0.
 
 ## INBOX — one line each, workers add, the Director empties
 
+- 11-15 06:43 JACK/J7: Kaggle's batch CPU cap MEASURED = 5 (6th push refused "Maximum batch CPU session count of 5 reached"; 5 CPU + 1 GPU ran together). Header's "use 4" leaves 1 spare; until ~11:00 one slot holds W1.04 s0 `jack-cpu-1794724769`, a pre-ruling-2 pilot with no unit value (pushed before the 06:40 rewrite reached me).
 ## DONE (kept one day)
 
 - **`LF.04` FAIL** att 2 (`bc631a8`, Kaggle CPU, controls held): living does
