@@ -3370,3 +3370,66 @@ pilot, a rule written first — and the 15-life race is now called a pilot. The
 `where` marker on `coverage` is SYSTEM Next-up 1. `LC.02`'s salt replay
 diverging on wall-clock metrics is a real flaw in the replay (it measures box
 load): SYSTEM Next-up 6. The tree-wide dirt guard and `launch_detached` are S7.
+
+## 2026-11-15 16:57 UTC — Director, FULL sitting (third of the day, called when review 2 was filed): rulings
+
+**17. The world and the harness come before any brain.** Review 2
+(`PUBLISHED_PRIORS.md` §3, §8) shows two faults that would void a perfect
+brain comparison: a floor meal is 8% of the bar where every published
+teachable world gives 44–100% (so a sustained life needs the hardest skill
+first), and the statistics were never checked against themselves. Orders are
+re-ranked: J1 the world test card on today's world (do-nothing, random under
+four kinds of noise, the privileged forager, a forager using only his senses,
+the shuffled-ray control; the rover's own intake arithmetic; the
+self-termination question), J2 the difficulty dial as wrapper options with
+today's world at d = 1, J4 the harness's own checks. No brain is compared in
+his world until J1, J2 and J4 are done. Brain work that needs no world (B's
+and A's known answers) runs beside. Nothing here moves a bar: judging stays on
+fixed layouts at d = 1, and `LF_04_FAIL.md`'s 5-meal bar is carried unmoved.
+
+**18. J3's (was J2's) known-answer rows are §5's.** The 15:55 order's
+"Pendulum ≈ −157 by 20k, pass ≥ −200" came from a one-run table. The public
+multi-seed record is the mean of all 100 training episodes, −298.4 ± 10.3
+(13 seeds); a 5-seed mean is accepted in −314.7 to −282.1. No run was made
+under the old bar, so this corrects a reference at its source, before any
+result; it is not a threshold moved after a reading. The LayerNorm arm is SBX
+`SAC` (SB3's does not expose it); the standard-task checks live in their own
+Python 3.12 environment under `/data`, and the project venv keeps the MuJoCo
+his world is certified on.
+
+**19. Stage 2's rule, written now from §8, before any run exists.** Primary
+outcome: decisions until W consecutive lives average ≥ 5 meals in normal
+living, unfinished runs censored at T; one run is one observation. Primary
+test: A against B, permutation log-rank, two looks at 10 and 20 runs per arm,
+each at 0.025; Boschloo on runs that crossed by T as the sensitivity check;
+PPO comparisons with Holm. Futility: at look 1, ≤ 1 run past the mark in both
+arms reads "not learnable at this budget". Gates: the floor arms (random,
+statue, untrained twin) ≤ 1 success in total and the scripted forager must
+pass, else the comparison is void. Fresh confirmation seeds, never the
+tuning seeds; no seed replaced; a crash or NaN is an outcome. **"Not
+distinguished" means: choose on cost and simplicity** — written in advance.
+W, T and the seed list are fixed by the pilot and committed before the
+confirmation runs. If A's T4 cost forces it, T is lowered for ALL arms; the
+number of runs is never cut. J4 implements the outcome code against this text.
+
+**20. Paused work the record now answers.** `D1.0`: §4's two direct tests
+(SimBa, BRO) found a bigger actor does not help and a bigger critic does; our
+void attempts pointed the same way. No more GPU goes to the 57M arena. The
+control-path seat becomes the first candidate to be held BY RECORD once S8
+lands and the holder's build has a known-answer row; if a verdict of our own
+is wanted later it is §4's clean version (DeepMind Control humanoid-walk,
+pass mark 600), ordered at stage 3 with the body. `T2.01`: failing since
+August is what published one-world learners do below about a million steps;
+no more single-world walking attempts with plain learners — the reflex-
+controller recipe on the T4, or the 2018 CPU recipe, at stage 3. The spec
+stays registered and red; nothing is rewritten so it passes. The diary's
+word-matching retrieval: §6 says keys from learned state; stage 3, "Next up" 7.
+
+**21. Organs.** (a) Idle slots: a worker slot that can advance no order
+takes one brain-independent reproduction from JACK "Next up" 1 — a published
+number, a row in `KNOWN_ANSWERS.md`, no spec. (b) S6 (the owner's video) was
+four days unstarted because it was one large order behind others; it is
+split into three steps and heads the SYSTEM lane with step 1 sized to one
+slot. (c) The simulator's integrator is a world change: J6 measures and
+lists the certificates it would stale; the Director rules on the switch with
+that list in hand, not before.

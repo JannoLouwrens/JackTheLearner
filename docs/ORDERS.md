@@ -1,234 +1,257 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-15 15:55 UTC
+Director sitting: 2026-11-15 16:57 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5). **One state+journal commit per slot,
 not one per step.** Machine problems go under INBOX, one line each. Rulings
-10–16 cited here are in `docs/DECISIONS_RESOLVED.md` under 2026-11-15 15:55.
+17–21 cited here are in `docs/DECISIONS_RESOLVED.md` under 2026-11-15 16:57.
 
 **`docs/PLAN.md` binds every order (owner, 11-15).** Research → combine →
 reproduce → test the last 10% → put it in him. We are in **stage 1: the
-instrument** — before any brain is judged, the thing that judges must be
-right. Every order names `part:`, `stage:`, `step:`; the reference for what
-the record says is `docs/research/PUBLISHED_PRIORS.md` (§1 today; review 2
-adds sections tonight — **re-read it at the start of every slot and follow
-its exact versions and numbers where it is sharper than this page**).
-**Stopped (ruling 10):** races between home-made learners; new forager cells;
-world-rule races (humid, DRINK, W1 energy clock); `D1.0` GPU spending; new
-specs with no published prior. No in-house arm (`cores.py`) is a candidate
-until it passes J2's known-answer checks. A question with no prior is a
-`RESEARCH:` line in INBOX for the Researcher, never a run.
-**Continues:** harvesting what is running, repairs, tests of world mechanics.
-**Where things run.** Box CPU: day ceiling 57,600 s, detached ≤ 34,560 s and
-≤ 2 computing detached jobs (pollers < 0.10 cores do not count, ≤ 6). Short
-known-answer runs (< 15 CPU-min) may run on the box at nice 19; everything
-longer goes to Kaggle CPU kernels (`prefer="kaggle-cpu"`, cap 5, use 4,
-free). Kaggle GPU has **0.88 h** left until Sat 11-21 00:00 UTC; Colab is
-open (`colab --auth adc sessions`). World files (`w0.py`, `needs.py`,
-`survival.py`) are not edited by stage-1 orders: the setup lives in the wrapper.
-**Launching past another session's dirt:** from a clean worktree, as J1 did at `e08c680` (S7 ends this).
+instrument.** Review 2 is filed: `docs/research/PUBLISHED_PRIORS.md` §1–§9 is
+the reference — **read your order's section at the start of every slot and
+follow its exact versions and numbers where it is sharper than this page.**
+**What review 2 changed (ruling 17): the world and the harness come before any
+brain.** His world's food cannot sustain a life (a floor meal is 8% of the
+bar; published teachable worlds give 44–100%), so no brain is judged in it
+until J1 and J2 are done. Brain work that needs no world (J3, J5) runs beside.
+**Stopped (rulings 10, 20):** races between home-made learners; new forager
+cells; world-rule races; `D1.0` and `T2.01` runs; new specs with no published
+prior. A question with no prior is a `RESEARCH:` line in INBOX, never a run.
+**Where things run.** Box CPU: day ceiling 57,600 s, ≤ 2 computing detached
+jobs (pollers do not count, ≤ 6). Runs < 15 CPU-min may run on the box at
+nice 19; everything longer goes to Kaggle CPU kernels (`prefer="kaggle-cpu"`,
+cap 5, use 4, free). Kaggle GPU has **0.88 h** until Sat 11-21 00:00 UTC;
+Colab is open (`colab --auth adc sessions`). `/` has under 5 GB free: new
+environments and downloads go under `/data` only.
+**World files** (`w0.py`, `needs.py`, `survival.py`, `drives.py`): stage-1
+orders change the world through `jack_env.py` options whose default is
+today's world, proven by `test_jack_env.py`. If a world file must gain a
+parameter: default identical, one commit, and name in INBOX the specs it stales.
+**Launching past another session's dirt:** from a clean worktree, as at `e08c680` (S7 ends this).
 
 ---
 
 ## JACK — build the creature, his world and his curriculum (max 7 open, ranked)
 
-*Order of work: **J1** → **J2** → **J3** → **J4** → **J5** (J2 and J3 need
-nothing from J1 — start them in the same slot if J1 is waiting on anything)
-→ J6 → J7. The 07:07 and 19:07 strong-worker slots take J3 if J1 is done.
-Waiting on a kernel is not work: advance the next order in the same slot.*
+*Order of work: **J1** → **J2** → **J3** → **J4** → **J5** → J6 → J7. J3, J4
+and J5 need nothing from J1 or J2: a slot waiting on a kernel advances the
+next order. The 07:07 and 19:07 strong-worker slots take J5, then J3. A slot
+that can advance none of J1–J7 takes "Next up" item 1.*
 
-### J1 — His world behind the standard interface, speed measured, and the noise probe (E0)
-part: Learning to eat · stage: 1 · step: 2 (combine) · prior: `PUBLISHED_PRIORS.md` §1
-**Why.** Every published learner plugs into Gymnasium. Until W0 is a
-`gymnasium.Env`, neither brain of the plan can touch his world.
-**Do.** (1) `experiments/jack_env.py`: W0 + his needs + his current senses as
-a `gymnasium.Env` (1.1.1 is installed) — continuous `Box` action, flat `Box`
-observation, one step = one 0.2 s decision, `terminated` on death, `info`
-carries meals, drinks, cause of death. It WRAPS `w0.py`/`survival.py`; it
-edits neither. Default options reproduce today's world exactly. (2) Proof it
-is the same world: `gymnasium.utils.env_checker.check_env` passes, and a
-fixed-seed random-action life through the wrapper matches the same life
-through the existing loop (same death time and meal count, 3 seeds). (3)
-Speed: decisions per second, one env and a 4-process vector, on the box and
-on one Kaggle CPU kernel — written in the docstring (1M decisions ≈ 10 h is
-today's guess). (4) **E0, rule committed before any run:** random policies
-only — white noise per decision (today's), pink noise per life, action held
-8 and 32 decisions — × 20 seeds × 10 lives: food contacts and meals per life.
-Record's prediction: correlated noise finds 2.5–4× more food (an uncalibrated
-toy figure; this calibrates it). No learner, no seat, no ledger row.
-serves: M3→M7 · PLAN stage 1 line 1 · philosophy 3, 5.
-**done when:** (2) and (3) are in the module docstring and E0's table is in
-`docs/research/E0_NOISE_PROBE.md`.
-state: 11-15 16:45 (1)+(2) done `9ee9965`: `experiments/jack_env.py` (obs 74, act 8), check_env PASS; 3 seeds × 300
-random decisions identical to run_survival (deaths, eats, reward sum 1e-9; control differs). First proof run caught
-a wrapper bug (e0 not re-applied at respawn), fixed. (3) one env on box 38.8 dec/s (1M ≈ 7.2 h). NEXT: (3) 4-proc
-vector + one Kaggle CPU figure; then (4) E0 — commit the rule first. J4/J5 are unblocked.
+### J1 — The world test card: can anything live in today's world? (E0 and E2a inside)
+part: His world, needs and lessons · stage: 1 · step: 2 (combine: measure the outlier before redesigning it) · prior: §3, §8 "Gates", §1 "Learnable?"
+**Why.** §3: floor food supplies 0.0024/s against a basal drain of 0.0017/s —
+by arithmetic on the humanoid's constants, never confirmed on the rover.
+**Do.** Rule committed before any run. All through `jack_env` (done,
+`9ee9965`), 20 seeds × 10 lives per row, one table in
+`docs/research/WORLD_CARD.md`: lifetime, floor meals, apples, drinks, cause
+of death, summed reward per life. Rows: (a) do-nothing; (b) random, white
+noise per decision (today's); (c) pink noise per life; (d) action held 8 and
+32 decisions (record predicts correlated noise finds 2.5–4× more food);
+(e) the privileged `NE.01` forager; (f) a HAND-WRITTEN forager fed only the
+observation (no positions, no world state) — bar unmoved from `LF_04_FAIL.md`:
+≥ 5 floor meals per life and above random on ≥ 18 of 20 seeds; (g) control
+that must fail: (f) with its rays shuffled. Then three written answers: (1)
+the rover's own intake-against-drain arithmetic from `drives.py`, beside
+row (e)'s measured lifetime — can floor food alone sustain him? (2)
+self-termination: is summed reward higher for a life that dies early than
+for one that lives hungry? (§3: published agents learned to end such lives.)
+(3) from (f): can 16 rays tell food from a wall, and if not which sense is
+missing. The foragers are rulers, never parts of him. No learner, no ledger row.
+serves: M2 · PLAN stage 1 "a first rung he can live on", "proof the task can be learned" · philosophy 4, 5.
+**done when:** `WORLD_CARD.md` has the seven rows and the three answers.
+state: 11-15 16:45 `jack_env.py` + `test_jack_env.py` done `9ee9965` (obs 74, act 8, check_env PASS, 3 seeds identical to run_survival, control differs); 38.8 dec/s one env on the box.
 
-### J2 — Brain B from published code reproduces published numbers
-part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §1 "B" and "Known-answer checks"
-**Why.** No learner here has ever reproduced a published result; B (a SAC-
-family replay learner) is the record's cheap control and the first to check.
-**Do.** `experiments/brain_b.py`: SAC from Stable-Baselines3 (2.7.1 is
-installed) — NOT a rewrite. Docstring = the design note: source and version,
-and an "ours beside theirs" table (replay = whole run, batch 256, 1 update
-per decision, LayerNorm in actor and critic via `policy_kwargs`, observation
-normalisation, pink or gSDE noise as an option). Known-answer rows, 5 seeds
-each, rule committed first: Pendulum-v1 ≈ −157 by 20k steps (pass: mean final
-return ≥ −200); MountainCarContinuous-v0 88–95 by 50k with persistent noise
-(pass: ≥ 4 of 5 seeds ≥ 85) and, beside it, white noise (record predicts ~0 —
-if white noise also solves it the check is too easy: say so); the five probe
-environments. Table → `docs/research/KNOWN_ANSWERS.md` (task, steps, published,
-ours). A miss means our build is broken: fix it, do not go on. Then run the
-SAME gate on the seated in-house arm (`cores.py` tanh-AWR) through a thin
-adapter — its row decides whether it is a suspect or a candidate.
-serves: M3 · PLAN stage 1 lines 2–3 · philosophy 3, 4.
-**done when:** `KNOWN_ANSWERS.md` has B's rows passing and the in-house arm's rows, pass or fail.
-state: open — ordered 11-15 15:55.
+### J2 — A first rung he can live on: the difficulty dial and the record's setup, as wrapper options
+part: His world, needs and lessons + Learning to eat · stage: 1 · step: 2 (combine) · prior: §3 "Take as-is", "Staging"; §1 table "Ours beside theirs"
+**Why.** The record's largest effect is the world, not the brain: a
+success-gated dial scored 0.716 against 0.001 without it.
+**Do.** In `jack_env.py`, each a named option, default = today's world,
+each with its source copied into the docstring's "ours beside theirs"
+table and one unit test (on changes what it says; off is byte-identical to
+J1's proof). (1) One dial `d` in [0,1], today's world at d = 1: meal size,
+number of floor foods, distance of food from spawn, respawn delay (instant
+re-placement at a new random place at low d). (2) Random starting needs and
+random layout each life. (3) Reward: 100 × drive reduction plus a payment on
+the eating event; an option under which merely being alive and hungry is
+never negative (if J1's answer 2 says dying early pays). (4) Death is
+`terminated`, a time limit is `truncated`. (5) Then MEASURE, rule first, 20
+seeds × 10 lives per setting: the entry `d0` — the hardest d at which J1's
+best random row eats ≥ 1 meal in ≥ 50% of lives and do-nothing still dies
+(§3: accept a rung only if random neither always fails nor already
+succeeds). The gate that moves d on success is a later order; judging stays
+on fixed layouts at d = 1. Learner-side settings belong to J3/J5.
+serves: M2 · PLAN stage 1 lines 2, 5 · philosophy 5 (his world matters as much as he does).
+**done when:** options and tests are committed and `WORLD_CARD.md` names `d0` with its table.
+state: open — ordered 11-15 16:57 (was J5; widened by §3).
 
-### J3 — Brain A (Dreamer) from the official code runs, and its speed is measured (E3)
-part: His brain · stage: 1 · step: 2 (combine) · prior: §1 "A", E3; review 2 "building A" when it lands
-**Why.** A is the record's recommended whole brain. Nobody has published its
-speed on a T4 or a CPU, and our old "dreamer-xs" had no action input and no
-imagination — it was not a Dreamer.
-**Do.** (1) Choose the source and pin its commit in `experiments/brain_a/README.md`:
-the official `danijar/dreamerv3` unless review 2 names a verified port;
-licence noted; code only, never weights. (2) Run its smallest preset
-(`size1m`) unmodified on one small standard task on a **Colab T4** and on one
-Kaggle CPU kernel: decisions per second and wall-clock for 100k decisions.
-(3) Write the "ours beside theirs" table: every setting we would change for
-his world, with the reason (none changed yet). (4) A's gate, declared now:
-match B's `KNOWN_ANSWERS.md` score on the same small tasks, and one seed's
-outputs equal the official code's. Do not wire it to his world yet.
-serves: M3, M5 · PLAN stage 1 lines 2–3 · objective 3 (the only GPU-able order) · philosophy 2, 3.
-**done when:** the pinned source, the two speed figures and the gate are committed.
-state: open — ordered 11-15 15:55.
+### J3 — Brain B from published code reproduces published numbers (§5's rows)
+part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
+**Why.** No learner here has ever reproduced a published result.
+**Do.** (1) A separate environment `/data/venvs/jack-std` (Python 3.12 is at
+`~/.local/bin/python3.12`) with §5's pins exactly; the project venv is not
+touched. (2) `experiments/brain_b.py`: SBX `SAC` with
+`policy_kwargs=dict(layer_norm=True)` and §5's settings — NOT a rewrite.
+Docstring = source, versions, "ours beside theirs". (3) §5's rows, rule
+committed first, 5 seeds each, the metric exactly as §5 states it (**ruling
+18:** these replace the old "−157, pass ≥ −200"): row 1 Pendulum SAC — the
+unmodified library first, then ours — accept a 5-seed mean in −314.7 to
+−282.1; row 3 sparse MountainCarContinuous, gSDE recipe in PyTorch SB3,
+> 90 on ≥ 3 of 5 seeds, and any SBX or pink-noise variant passes the same
+row before it is used; rows 2 and 4 (PPO reference). Table →
+`docs/research/KNOWN_ANSWERS.md` (task, steps, published, ours, seeds). A
+miss means the build is broken: fix it, do not go on. Rows 5–7 (DMC,
+recurrent) are next week's. (4) The same rows 1 and 3 on the in-house arm
+(`cores.py` tanh-AWR) through a thin adapter: suspect or candidate.
+serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosophy 3, 4.
+**done when:** `KNOWN_ANSWERS.md` has rows 1–4 inside their ranges and the in-house arm's rows, pass or fail.
+state: open — ordered 11-15 15:55; corrected by §5 at 16:57, nothing run yet.
 
-### J4 — Can the task be learned with his senses? The rays-only forager (E2a)
-part: Learning to eat · stage: 1 · step: 4 (the record does not answer it) · prior: §1 "Learnable?"
-**Why.** "Can 16 distance rays tell food from a wall?" is answered nowhere in
-print. `NE.01`'s forager eats 24–27 meals but reads the world's state.
-**Do.** Needs J1. Rule committed first. A HAND-WRITTEN forager fed only
-`jack_env`'s observation (what he senses — no positions, no world state),
-20 seeds × 10 lives, beside the privileged `NE.01` forager and the random
-floor. Bar (from `LF_04_FAIL.md`, unmoved): ≥ 5 floor meals per life, mean
-over seeds, and above random on ≥ 18 of 20 seeds. Control that must fail: the
-same forager with its rays shuffled. It is a ruler, never a part of him.
-PASS → the task is learnable from his senses. FAIL → the finding is "his
-senses cannot do it"; write which sense is missing (the Director orders the
-sense, not a brain). The clone (E2b) and the cheat learner (E2c) follow when
-J2 is done — the Director orders them then.
-serves: M2, M5 · PLAN stage 1 line 5 · philosophy 4.
-**done when:** `docs/research/LEARNABLE.md` has the table and the verdict.
-state: open — ordered 11-15 15:55; waits on J1 step 1.
+### J4 — The harness checks itself before it judges anyone (§8's thirteen)
+part: His brain (the instrument that chooses it) · stage: 1 · step: 3 (reproduce) · prior: §8 "Reproduce first", ruling 19
+**Why.** The released AdaStop package rejected 10–12% of same-against-same
+comparisons at a stated 5%. A tool that has not passed same-against-same is
+not believed here.
+**Do.** `experiments/harness/` (new, small; SciPy only, plus AdaStop ONLY
+from the commit §8 pins). (1) The outcome code of ruling 19: decisions until
+W consecutive lives average ≥ 5 meals, censored at T; permutation log-rank;
+looks at 10 and 20 runs per arm at 0.025 each. (2) The checks that need no
+learner, each a test that can fail: #1 same-against-same through the real
+pipeline, ≥ 1,000 repetitions on synthetic censored logs, false alarms ≤
+the stated rate; #10 outcome code right on synthetic logs with edge cases;
+#12 4/15 against 0/15 gives Fisher 0.100 and Boschloo 0.043; #11 the
+analysis script hashed; #13 runs analysed = runs launched; #3 floor and
+ceiling arms. (3) List #2, #4–#9 in the module as owed, each with the order
+that will pay it (they need B, from J3). Result table →
+`docs/research/HARNESS_CHECKS.md`. No ledger spec; this is the instrument.
+serves: M3 · PLAN stage 1 "the test harness passes its own thirteen checks" · philosophy 4.
+**done when:** the six checks pass as tests and the seven owed are listed.
+state: open — ordered 11-15 16:57.
 
-### J5 — The setup the record supports, as switches on the wrapper
-part: Learning to eat · stage: 1 · step: 2 (combine) · prior: §1 table "Ours beside theirs"
-**Why.** The record's largest effects are in the setup, not the brain:
-curriculum 0.716 vs 0.001; tiny replay 0.04–0.07 of normal.
-**Do.** Needs J1. In `jack_env.py`, each a named option, default OFF, each
-row of the "ours beside theirs" table copied into the docstring with its
-source: reward = 100 × drive reduction plus a payment on the eating event;
-energy randomised at birth; food placed near first with the distance a
-parameter (the stage rule is J-later, not here); a time-limit `truncated`.
-Learner-side settings (discount 0.995, replay, noise) belong to J2/J3, not
-here. One unit test per option: on changes what it says, off is
-byte-identical to J1's proof. No learner runs, no race.
-serves: M2 · PLAN stage 1 line 4 · philosophy 5.
-**done when:** the options and their tests are committed.
-state: open — ordered 11-15 15:55; waits on J1 step 1.
+### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
+part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7
+**Why.** A sets the date of the whole plan: it cannot train on a free CPU
+at the published rate, and nobody has published its speed on a T4.
+**Do.** (1) `experiments/brain_a/README.md`: reference = official
+`danijar/dreamerv3` at `e01491f`; runner = sheeprl 0.8.5 `dreamer_v3_5`
+(`_1M`, `_12M`) — not sheeprl's older `dreamer_v3`, not dreamerv3-torch
+(§2 says why); licence; code only, never weights. (2) On a **Colab T4 now**
+(Kaggle GPU opens 11-21): the runner's smallest preset unmodified on DMC
+cartpole-swingup — decisions per second, the train ratio it achieves,
+wall-clock per 100k decisions; the same on one Kaggle CPU kernel to put a
+number on "a CPU cannot". (3) From those: the T4-hours for §2's first three
+known-answer rows (estimate on record: 25–60) and for one 1M-decision life
+run, written beside the estimates. (4) A's "ours beside theirs" table (none
+changed yet). Do not wire it to his world.
+serves: M3, M5 · PLAN stage 1 lines 3–4 · objective 3 (the GPU-able order) · philosophy 2, 3.
+**done when:** the pin, the two speed figures and the two cost lines are committed.
+state: open — ordered 11-15 15:55 (was J3), nothing run yet.
 
-### J6 — Harvest the forager pilots, then stop
-part: Learning to eat · stage: 1 · step: — (a pilot of unchecked learners; ruling 10)
-**Do.** Four Kaggle CPU kernels are running (random control both seeds;
-ppo-needs s153, s154; dreamer-xs s153; logs `/data/tmp/forager3_*.log`).
-Harvest each as it exits. **Launch no more** — not dreamer-xs s154, not
-`wm-latent+ring`. Run `forager_race3 tally` on what exists; it will read
-INCOMPLETE — that is the honest verdict. Append to
-`docs/research/FORAGER_RACE.md`: the per-cell table, the heading "PILOT —
-learners not known-answer-checked, 40k–160k decisions, below every published
-foraging budget", and ppo-lp's one rising seed as a lead, not a result. No
-seat moves. Remove `/data/tmp/wt_forager3` afterwards.
-serves: PLAN "what stops today" · philosophy 4.
-**done when:** the four are harvested, the page says PILOT, nothing is in flight.
-state: 11-15 15:38 ppo-lp s153/s154 harvested (floor meals 13/17 over 60 lives, apples 0; rho −.006 p=.52 / .25 p=.025).
+### J6 — Make the simulator fast, once, and say what it costs to re-certify
+part: His world (the instrument's speed) · stage: 1 · step: 2 (combine) · prior: §4 "Take as-is"; INBOX measurement 11-15 15:55
+**Why.** 38.8 decisions/s means 1M decisions ≈ 7 h. §4: the loop, not
+physics, is the bottleneck; predicted 500–2,000 per kernel.
+**Do, each a `jack_env` option, default OFF, measured alone and together
+(decisions per CPU-second, box and one Kaggle CPU kernel, table in the
+docstring):** (1) a 4-process vector (changes nothing in the world — do it
+first); (2) all sub-steps of a decision in one native call, per-sub-step
+Python work moved to once per decision where the result is identical; (3)
+rays by `mj_multiRay`; (4) `integrator="implicitfast"`. For each, the same
+3-seed identity test as J1: identical, or the measured difference (the
+integrator IS a world change: integrity .879 → .972 in one life). Then list
+which standing world certificates each non-identical option would stale
+(`run stale` on a scratch worktree). The Director rules on the switch with
+that list; do not flip any default.
+serves: M2→M3 · PLAN stage 1 line 1, "honest limits" 1 · philosophy 5, 6.
+**done when:** the speed table and the re-certification list are committed.
+state: open — ordered 11-15 16:57.
 
-### J7 — World mechanics that are simply red or stale (`NE.01`, `PS.02`, `W1.04`, `PG.6`)
+### J7 — Close what is in flight, and the world mechanics that are simply red
 part: His world, needs and lessons · stage: 1 · step: repairs (PLAN "continues")
 **Do, one per slot, Kaggle CPU or detached, never in-session past 15 min.**
-(a) `NE.01` on the shipped world under the fatigue edge probe (`eaa9302`) —
-one run, verdict written; no arm is re-tallied (those races are stopped).
-(b) `PS.02` (ruling 12): re-register v3 — the probe's lives are run with NO
-FIRE in the world, so cold alone decides each death; every bar unmoved; the
-frozen-temperature control must still FAIL; v2's reading stays on the row,
-reporting-only. Then run it. (c) `run W1.04` once (pollers per state of
-11-15, `f6c6177`); a FAIL at ~53 s is the honest reading and is not followed
-by a clock race. (d) `PG.6` detached (needs ~20+ min wall).
-`T2.03` and `W1.01`'s re-pin wait: GPU, and ruling 13.
+(a) Harvest the forager kernels as they exit (random control; ppo-needs
+s153, s154; dreamer-xs s153; logs `/data/tmp/forager3_*.log`). **Launch no
+more.** `forager_race3 tally` will read INCOMPLETE — the honest verdict.
+Append to `docs/research/FORAGER_RACE.md` under the heading "PILOT —
+learners not known-answer-checked, below every published foraging budget";
+no seat moves; then remove `/data/tmp/wt_forager3`. (b) `PG.6` detached
+(~20+ min wall). (c) `NE.01` on the shipped world under the fatigue edge
+probe (`eaa9302`), one run. (d) `PS.02` v3 (ruling 12): lives with NO FIRE,
+bars unmoved, frozen-temperature control must still FAIL; then run. (e)
+`run W1.04` once; a FAIL at ~53 s is the honest reading (§3: the same
+disease as the food economy) and is followed by nothing.
 serves: M2 · philosophy 4 (a failure is fixed, not filed).
-**done when:** each of the four has a new ledger row.
-state: (a) clause applied `eaa9302`, smoke: spread_f .81, frozen control 0.0. (b) cause pinned 11-15 08:42 (s2 life 0, fire prolongs it; dumps `/data/tmp/ps02dump/`). (d) in-session try killed at 20 min, no row.
+**done when:** nothing is in flight and each of the four specs has a new ledger row.
+state: (a) ppo-lp s153/s154 harvested 15:38 (floor meals 13/17 over 60 lives, apples 0); 4 kernels running.
+state: (c) clause applied `eaa9302`. (d) cause pinned 11-15 08:42 (dumps `/data/tmp/ps02dump/`). (b) in-session try killed at 20 min, no row.
 
-**Paused by the plan (ruling 10), nothing lost:** `D1.0` (units ref,
-aprime:0, aprime:1 cached in `/data/d10_units/873e861e…`; watcher 136333 is
-left to exit by itself — never kill it; its next submit is refused by the
-0.88 h meter) until review 2's body section lands; `LF.06`, `LC.09`, `CR.01`,
-`LF.04` re-runs — "to earn again" on the brain stage 2 chooses.
-**Next up, in order:** 1. E2b clone and E2c cheat learner (after J2, J4).
-2. E1 for brain A (after J3). 3. The stage-2 prediction and rule, written
-from the record, and the 20-seed pilot of B in his world (after J1, J2, J5).
-4. Simulator speed (PLAN honest limits). 5. `W.5` fire and the advice gate —
-after review 2's world and words sections. 6. Inside/around sweep: bench
-proofs re-credited as parent-rig results.
+**Paused or closed by the record (ruling 20):** `D1.0` — §4 answers it (a
+bigger actor does not help; capacity belongs in the critic); no more GPU
+goes to the 57M arena; cached units stay in `/data/d10_units/873e861e…`;
+watcher 136333 exits by itself — never kill it. `T2.01` — no more one-world
+walking attempts with plain learners. `LF.06`, `LC.09`, `CR.01`, `LF.04` —
+"to earn again" on the brain stage 2 chooses.
+**Next up, in order:** 1. Idle-slot reproductions that depend on no brain
+choice (§3, §6, §7; one per slot, table row in `KNOWN_ANSWERS.md`): the 8×8
+environment-shaping grid (0% against 70%), Dyna maze, RL² bandits, Speech
+Commands keyword spotting; the MJX humanoid tutorial on the T4 from 11-21.
+2. The clone (E2b) and the cheat learner (E2c), after J1 and J3. 3. Harness
+checks #2, #4–#9 with B. 4. B's 20-run pilot in his world at `d0` (after
+J1–J4). 5. A's known-answer rows on the T4 from 11-21 (after J5). 6. The
+dial's success gate; the two-resource ant reproduced in our simulator.
+7. Diary retrieval keyed on learned state (§6), stage 3.
 
 ---
 
 ## SYSTEM — work on the machine (max 3 open)
 
-*Order of work: **S6** (the owner has waited four days) → **S7** → **S8**.*
+*Order of work: **S6** → **S7** → **S8**. S6 has sat four days unstarted:
+the next SYSTEM slot does S6 step 1 and nothing else.*
 
-### S6 — A video the owner can watch (owner request 11-12) — FIRST SYSTEM SLOT, NO EXCEPTIONS
+### S6 — A video the owner can watch (owner request 11-12) — split so one slot finishes one step
 part: (machine — he can be known) · stage: — · step: —
-**Do.** `scripts/life_video.py` renders OFFLINE from the most recent recorded
-life — never inside a scored run — with `experiments/render.py` (Xvfb +
-llvmpipe): third-person view, hunger / thirst / temperature overlaid,
-phone-playable H.264 mp4, **aim ≤ 5 MB** (480p, ~12 frames a second, under a
-minute; ceiling 20 MB) at `/data/jack-video/latest.mp4`. The most recent
-life, no picking. Run by hand at nice 19; no cron, no service. If no life is
-recorded with poses, record one s90 life first (detached, ≤ 600 CPU-s). A
-rough 30-second clip today beats a finished one next week.
-Beside it write `/data/jack-video/latest.json`: `title`; `summary` (2–4 plain
-sentences made by a TEMPLATE from the life's own record: how long he lived,
-what he ate and drank, where he sheltered, what killed him — no model,
-nothing the record does not show); `facts` (≤ 8 of `{label, value}`);
-`events` (≤ 60 of `{t, at, label}` — `t` seconds into the VIDEO, `at` the
-time in his life as text — one per meal, drink, fall, shelter entry, and the
-death); `source` (life, seed, commit). The dashboard's Watch tab reads both.
+**Step 1 (one slot, done when a file exists):** `scripts/life_video.py`
+renders OFFLINE with `experiments/render.py` (Xvfb + llvmpipe) one random-
+action life of ≤ 60 s from `jack_env` (seed 153) — third-person view, 480p,
+~12 frames a second, H.264 mp4 ≤ 5 MB — to `/data/jack-video/latest.mp4`.
+Run by hand at nice 19; no cron, no service; never inside a scored run. A
+rough clip today beats a finished one next week.
+**Step 2:** hunger / thirst / temperature overlaid; `/data/jack-video/latest.json`
+beside it: `title`; `summary` (2–4 sentences from a TEMPLATE over the life's
+own record — how long he lived, what he ate and drank, what killed him; no
+model); `facts` (≤ 8 `{label, value}`); `events` (≤ 60 `{t, at, label}`: `t`
+seconds into the video, `at` the time in his life); `source` (life, seed,
+commit). The dashboard's Watch tab reads both.
+**Step 3:** the most recent RECORDED life, no picking (record poses if none are).
 serves: M8 · philosophy 1 (he can be known).
-**done when:** the mp4 and json exist, the film plays, and it is the latest recorded life.
-state: open — not started (fourth day).
+**done when:** step 1: the mp4 exists and plays. Order done: steps 2–3.
+state: open — not started (fourth day); split 11-15 16:57.
 
 ### S7 — Another session's uncommitted files must not kill a run
 part: (machine) · stage: — · step: —
 **Why.** Twice on 11-15 dashboard files nobody imports tripped the tree-wide
-dirty guard: `D1.0` lost a 5.9 GPU-hour slice, J1 launched from a hand-made
-worktree. Stage 1 will launch many small kernels beside a live owner session.
+dirty guard: `D1.0` lost a 5.9 GPU-hour slice, the forager cells launched
+from a hand-made worktree. Stage 1 launches many small kernels beside a live
+owner session.
 **Do, one commit each, each with a planted test.** (1) The submit-time guard
 in `gpu.py` refuses only dirt inside the spec's import closure plus
-`experiments/` core (`offending_dirt` already computes the list); dirt under
+`experiments/` core (`offending_dirt` computes the list); dirt under
 `dashboard/`, `docs/`, `scripts/dashboard_status.py` is named in the row,
 not fatal. A planted dirty imported file must still refuse. (2)
 `scripts/launch_detached.sh` takes `JACK_REPO`. (3) `JACK_REUSE_KERNEL`
 applies to the first `submit()` only and is refused when a second body asks
 for the same slug. (4) `scripts/test_lane_guard.sh` passes at clean HEAD
 while two detached jobs are alive.
-serves: philosophy 4, 5 (the loop faster and truer) · objective 3.
+serves: philosophy 4, 5 · objective 3.
 **done when:** the four planted tests pass.
-state: open — ordered 11-15 (S7 of 06:40 narrowed to what stage 1 needs).
+state: open — ordered 11-15.
 
 ### S8 — A seat can be held BY RECORD, and `champions --check` knows it
 part: (machine — His brain) · stage: 1 · step: —
 **Why.** PLAN: "A seat may be held BY RECORD: on published evidence, cited,
-and open to any challenger that brings its own prior." Ruling 11 defines it.
+and open to any challenger that brings its own prior." Ruling 11 defines
+it; ruling 20 names the first candidate (the control-path seat, §4).
 **Do.** `experiments/champions.py`: accept holder kind `BY RECORD` when the
 seat's row carries (a) a pointer to a `PUBLISHED_PRIORS.md` section that
 exists, (b) a known-answer row id in `docs/research/KNOWN_ANSWERS.md` for the
@@ -236,40 +259,28 @@ holder's build, (c) a named challenger route. `--check` fails a BY RECORD
 seat missing any of the three; planted tests for each. Do NOT seat anyone:
 no build has a known-answer row yet. Add nothing to `CHAMPIONS.md` but the
 definition (≤ 6 lines, replacing as many).
-serves: M3 · philosophy 3 (holds its seat only until something beats it).
+serves: M3 · philosophy 3.
 **done when:** the three planted failures fail and `champions --check` exits 0.
 state: open — ordered 11-15 15:55.
 
 **Next up:** (1) `coverage` prints where each passing CLAIM was earned (in
-him / bench / parent rig) — the dashboard already computes it. (2) `gpu.py`
-reattach does its own pin-swap proof; watcher timeout from RUNNING. (3)
-`BD.01`, `LC.08` budget re-class (ruling 14). (4) **S4** — six PASSes gated
-on a seed average that admits a failing seed. (5) `T0.13`'s dead clauses.
-(6) `LC.02`'s salt replay excludes wall-clock metrics. (7) D52 scout retry.
-S3's leftovers (`T0.33`→`T0.34`, `T0.12`→`T0.24` re-buys) are regate's on a clean tree.
+him / bench / parent rig). (2) `gpu.py` reattach does its own pin-swap
+proof; watcher timeout from RUNNING. (3) `BD.01`, `LC.08` budget re-class
+(ruling 14). (4) **S4** — six PASSes gated on a seed average that admits a
+failing seed. (5) `T0.13`'s dead clauses. (6) `LC.02`'s salt replay excludes
+wall-clock metrics. (7) D52 scout retry. `T0.33`→`T0.34`, `T0.12`→`T0.24`
+re-buys are regate's on a clean tree.
 
 ---
 
 ## INBOX — one line each, workers add, the Director empties
-- 11-15 16:53 OWNER'S SESSION — **review 2 is complete and filed; this sitting was called for it.** `docs/research/PUBLISHED_PRIORS.md` now has §1–§9 (brain choice; building A; world, needs, staging; body and simulator; building B; memory and sleep; ear, words, advice; the test method; a battery of standard tests) and the full report is `docs/research/PUBLISHED_EVIDENCE_2026-11-15_BUILD.md` (read its 'Five findings' and 'Order, cost and timeline'). The last `RESEARCH:` line (fire, cooking, shelter; advice) is answered by §3 and §7 and deleted. **What the evidence asks of the orders, in its own order:** (1) **The world before any brain.** Run the world test card on today's world (do-nothing, random, a scripted forager using only his senses, per §3 and §8), confirm on the rover the arithmetic that floor food alone cannot sustain a life, and order the first rung made liveable as a difficulty dial (meal size, item count, distance, respawn; today's world near the hard end; instant re-placement; random needs and layout each life). Include the check for learned self-termination: the drive-reduction reward is negative while he is hungry, the shape under which published agents learned to end a hard life. Until this is done no brain comparison in his world means anything. (2) **The harness's thirteen self-checks (§8)**, with AdaStop only from the fixed commit, before any comparison is believed. (3) **J2 as corrected by §5** (seed distributions, SBX for the LayerNorm arm, its own Python 3.12 environment). (4) **J3:** A is the pacing item of the whole plan. It cannot run on a free CPU at the published training rate; its reproduction costs an estimated 25–60 T4-hours from 21 Nov; twenty full-length stage-2 runs would be 160–280 T4-hours, five to nine weeks of quota. Measure its speed first (Colab now), and say in PROGRESS that the stage-2 verdict is realistically mid-January to February 2027 on free compute unless the budget per run is lowered for all arms, the learner free-runs, or the Mac mini proves fast. (5) **The simulator** (§4): implicitfast, all sub-steps in one native call, native ray casts, several lives per process; a world change to be re-certified once, then every later run is cheaper. (6) **Stage 2's rule, written now from §8:** primary outcome = decisions until W consecutive lives average ≥ 5 meals, censored; permutation log-rank with looks at 10 and 20 runs per arm at 0.025 each; fresh confirmation seeds; and, in advance, that 'not distinguished' means 'choose on cost and simplicity'. (7) **Paused work the record now answers:** `D1.0` (§4: seat BY RECORD or the clean checkable version), `T2.01` (§4: the reflex-controller recipe or the 2018 CPU recipe, not more single-world attempts), the diary's word-matching retrieval (§6: keys from learned state). (8) Cheap stage-3 reproductions that depend on no brain choice and can use idle slots: Dyna maze, RL² bandits, Speech Commands keyword spotting, the 8×8 environment-shaping grid, the MJX humanoid tutorial on the T4. Fable's weekly meter on the new account stood at 49% at 16:40 after this review; the session will not start another large review before the reset on 18 Nov.
-
-- 11-15 16:37 OWNER'S SESSION, review 2 part 6 landed: **`PUBLISHED_PRIORS.md` §5 (building brain B and the PPO reference)**. It corrects two things in **J2** before any run, both from the source of the numbers, not from a result: (a) the Pendulum row. J2's '≈ −157 by 20k, pass ≥ −200' came (through §1) from the RL Zoo table, which is ONE run per entry; the public multi-seed record for the same configuration is the mean return of all 100 training episodes over 20,000 steps, −298.4 ± 10.3 (13 seeds), accept a 5-seed mean in −314.7 to −282.1. Use §5's rows 1–6 with their stated metric; a bar set on a one-run number would fail a correct build or pass a wrong one. Director: please rule the J2 rows to §5's at the next sitting; workers: per the ORDERS header, §5's numbers are the sharper ones. (b) SB3's SAC does not expose LayerNorm through `policy_kwargs`; SBX's does. The LayerNorm arm is SBX `SAC`; the sparse-task gSDE recipe has its public record in PyTorch SB3. The standard-task checks want their own Python 3.12 environment with §5's pins (the project venv is 3.9 with SB3 2.7.1 and must keep the MuJoCo his world is certified on).
-- 11-15 16:30 OWNER'S SESSION, review 2 part 5 landed: **`PUBLISHED_PRIORS.md` §4 (body, movement, simulation speed)** answers the `RESEARCH:` line on the control path (deleted). For the next sitting: (a) **`D1.0`** — the record already answers its question in the direction its void attempts pointed: a bigger actor does not help or hurts, capacity belongs in the critic or world model (SimBa, BRO); if a verdict of our own is still wanted, §4 gives a clean, checkable version (DeepMind Control humanoid-walk, pass mark 600, known published scores) in place of the present arena; a candidate for a seat held BY RECORD under ruling 11. (b) **`T2.01`** failing since August is what published one-world learners do below about 1M steps; walking from scratch without mocap needs either thousands of parallel copies (minutes on a T4) or the 2018 CPU recipe with helping forces that are withdrawn. (c) **A 0.2 s brain cannot balance a humanoid by itself**: every published slow brain hands over to a 30–200 per second reflex controller. (d) **J1 speed:** the rover loop is the bottleneck, not physics (85,000 steps/s for a stock car on this box against our 2,800); the recipe is implicitfast, all sub-steps in one native call, native ray casts, several lives per process; predicted 500–2,000 decisions/s per kernel, to be measured.
-
-- 11-15 16:25 OWNER'S SESSION, review 2 parts 2–4 landed. **`PUBLISHED_PRIORS.md` §3 (world, needs, staging)** answers the `RESEARCH:` line on need clocks (deleted) and half of the one on fire, cooking and shelter (kept until the advice half is filed). Its headline for J5, J7 and the next sitting: **our world is the outlier among worlds that taught agents.** One floor meal is 8% of the bar (published first meals: 44–100%, or 10% only with dense, sensed, instantly re-placed food); two floor foods on 66.9 s timers supply 0.0024/s against a basal 0.0017/s, so floor food alone sustains about a fifth-time activity level and a sustained life needs the ladder apple, the hardest skill, first. The record's fix is a difficulty dial (meal size, count, distance, respawn delay as functions of a success-gated ceiling, today's world near the top), random layouts and needs each life, rays that report what they hit, and judging only on fixed unassisted layouts. It is a world redesign under the plan's steps (combine, then reproduce the two-resource ant result in our simulator), not a switch for J5 to flip; W1's 53-second lives are the same disease. Memory/sleep and ear/words/advice notes are in `/data/jack-research/research_notes/Published evidence for building Jack/`; their sections follow tonight.
-- 11-15 16:08 OWNER'S SESSION, review 2 part 1 landed: `PUBLISHED_PRIORS.md` §2 (building brain A). For **J3**: reference = official `danijar/dreamerv3` at `e01491f`; runner = sheeprl 0.8.5 `dreamer_v3_5` (`dreamer_v3_5_1M` / `_12M`), not sheeprl's older `dreamer_v3` nor dreamerv3-torch, whose default actor cannot learn from death; the known-answer rows are six proprioceptive DMC tasks with published mean ± SD (needs `dm_control`), and they cost an estimated 25–60 T4-hours for the first three, so A's reproduction spans next week's GPU quota and Colab. A CPU cannot run the published train ratio. Also note §2's EVAAA line for J5: under drive-reduction reward with termination, published agents learned to end the episode when food could not be found.
-
-- 11-15 15:55 OWNER'S SESSION, for J1 step 3 (speed), measured read-only on the box (1 core, nice 19, seed 153, random actions, no file changed): the world ALONE runs 33–38 decisions/s, so the simulator, not the learner, bounds every stage-1 and stage-2 run. Where the time goes per 0.2 s decision (40 substeps): `mj_step` ≈ 55% (0.39 ms each; the model is on the **RK4 integrator**, `opt.integrator = 1`: 2,800 steps/cpu-s raw, against 10,600 for `implicitfast` and 10,700 for Euler with the option flipped in memory, a 3.8× difference); `ContactAudio.step` ≈ 25%; `drives.substep` ≈ 13%. Flipping the integrator in memory took the whole loop from 38 to 63 decisions/cpu-s (1.65×; Python per-substep work then dominates). **It is a world change, not a free switch:** one 400-decision random life ended at integrity .879 under RK4 and .972 under both other integrators (path 68.8 m vs 62.0 m), so the world's own certificates would have to be re-bought, and plan step 1 comes first (review 2's body-and-simulation section tonight covers what MuJoCo's own documentation recommends; ask the Researcher if it does not settle it). The switch that changes nothing in the world is J1's 4-process vector: about 4× per kernel. Nothing here is a verdict; it is where J1's speed table should look.
 
 ## DONE (kept one day)
 
-- **Forager race: NONE CLEARS** (`5a088e0`, 7 arms × 2 seeds × 15 lives; best
-  late floor meals 0.4/0.2 vs bar 5). The record predicted it: 40k decisions
-  is below every published foraging budget. Now a pilot (J6).
+- **Review 2 filed** (`9f1ed07`): `PUBLISHED_PRIORS.md` §1–§9. Its eight asks
+  → J1–J6, rulings 17–21, "Next up" 1 and 7. All `RESEARCH:` lines answered.
+- **`jack_env`** (`9ee9965`): his world behind the standard interface, proven identical on 3 seeds.
+- **Forager race: NONE CLEARS** (`5a088e0`); the record predicted it. Now a pilot (J7a).
 - **Policy-loss race: tanh-AWR seated** (`a2bd4df`); `LC.02`, `LF.03` PASS re-bought.
-- **`W1.02` PASS** att 11 under the smaller injection (`d1b0880`).
-- **S3**: `W1.00` re-classed, poller rule, Saturday GPU week (`6623eb0`, `2bb1473`, `1e025eb`).
-- **OUTSIDER "he cannot see food": measured, not so** — rays hit floor food
-  on ~20% of random decisions (`56bf1dc`); its other four faults are the
-  record's table, fixed by J2/J5.
-- **INBOX of 11-15 (21 lines)** → this page, rulings 10–16, three RESEARCH lines.
+- **S3**: poller rule, Saturday GPU week (`2bb1473`, `1e025eb`).
+- **OUTSIDER "he cannot see food": measured, not so** (`56bf1dc`).
