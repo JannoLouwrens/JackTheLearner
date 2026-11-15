@@ -1353,3 +1353,10 @@ I re-registered W.2(a) against the closed form of the world's own sweating thirs
 Shipped is byte-same: A == 0.0 exactly, and all 194 ledger keys are equal on s0-2. hum34's W.2 cells went from VOID (a_err_w .158) to four_checks_pass 1.0 on 5/5 seeds (err_w 1.38e-5). The old cells are backed up.
 hum34 still does not ship: W.1 passes on 4/5 seeds against shipped's 5/5, and its NE.01 cells are missing. Next step: find out which W.1 check fails on that seed.
 Philosophy served: 4 (the test measured its own reference, not the integrator; the reference is fixed, the bar is not) and 3 (the humidity rule's race is now decided by the world, not by an apparatus artifact).
+
+2026-11-15 05:27 UTC · JACK · J6(d). J2: D1.0 watcher 3902173 alive (7.9 h), no exit. k3 `…2965` (dB NE.01 s2-4) still RUNNING, not tallied.
+Diagnosed hum34's last W.1 red: seed 2 (T_init 37.74, so the body sweats) failed check (d), ratio .953 against the 1.8-2.2 band, the error flat in dt. hum30 failed identically.
+Cause: the race wrapper. Humidity lived only in its thermal_step, while W.1 rebuilds the flux from dry N.e_evap, so (d) integrated a flux the step never used. swp_k72 is identical under both fluxes.
+Fix `39d8a66`: W.1 gets the arm's own numerator (asserted equal to the step). s2 ratio is now 2.00002, every other key is byte-same, and W.1 _check passes 5/5 on both arms. Both humid arms are now >= shipped on every W.1/W.2 flag.
+Dispatched hum34 NE.01 s0-2 to Kaggle CPU (`jack-cpu-1794720356`) via the new humid_race_kcpu.py. Caution written in state: humid tally's shipped NE.01 cells are stale.
+Philosophy served: 4 (a red was the apparatus's own inconsistency, measured to be so, with bars untouched) and 3 (the humidity world's race moves toward a verdict decided by the world).

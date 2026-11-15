@@ -115,11 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, fails ok_spread s0+s1 -> clause (1) lost. f-spread DIRECTOR CALL still open (`64d949a`: f clause vs gate-2 window; fatigue edge probe proposed).
-11-15 05:15 W.2(a) RE-REGISTERED (this commit, bar .01 unmoved): w traced on the closed form of the world's own sweating law (T* from the arm's thermal_step, linearity asserted); rig gate = A>=0, linear, T in [37,T*] over the window.
-Shipped byte-same: A == 0.0, all 194 ledger keys equal s0-2 (a_err_w 7.87766e-14). hum34 W.2 cells re-run (old in /data/jack-logs/humid_race/pre_w2a_rereg_20261115): VOID -> a_pass 1 (err_w 1.38e-5), four_checks_pass 1.0 on 5/5.
-hum34 still can't ship: W.1 four_checks .8 < shipped 1.0 (gate 1), and its NE.01 cells are absent (tally verdict null). k3 `…2965` (dB NE.01 s2-4) still RUNNING; when its log ends `{...}` run drink_race_tally.
-Next: diagnose hum34's failing W.1 seed (which check, why) — it is now the ONLY red between hum34 and a full W.2 pass; then its NE.01 legs on Kaggle CPU.
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, fails ok_spread s0+s1. f-spread DIRECTOR CALL still open (`64d949a`). W.2(a) re-registered on sweating closed form `bc7b99f`.
+11-15 05:25 `39d8a66`: hum30/hum34 W.1 s2's red (d ratio .953) was the RACE WRAPPER. Humidity lived only in thermal_step, while W.1 rebuilt its flux from dry N.e_evap. Fixed: W.1 now gets the arm's own numerator (rig-asserted equal), bars unmoved.
+s2 d ratio 2.00002, other seeds byte-same, W.1 _check 5/5 both arms. Both arms are now >= shipped on EVERY W.1/W.2 flag; only NE.01 is missing. Old cells: humid_race/pre_w1d_flux_20261115.
+NE.01 on Kaggle CPU via new `experiments/humid_race_kcpu.py`: kernel h1 `jack-cpu-1794720356` = hum34 NE.01 s0-2 (log /data/tmp/humid_kcpu_h1.log). Next: hum34 s3-4 + hum30 s0-4 (3 more kernels, 2 kcpu sessions max; k3 `…2965` still holds one).
+CAUTION for the tally: humid_race.tally reads shipped NE.01 from heat_race/ (it predates NE.01's re-registration). Compare against drink_race/shipped_NE.01_s* (current code) before any verdict.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
