@@ -1776,6 +1776,16 @@ To switch it off: remove the `gap_fill.sh` line from the crontab.
 
 ## Outsider and strong-worker slots (2026-11-15)
 
+- `ladder_loop.sh research` — cron `5 4,16 * * *` (owner 2026-11-15: "Deep
+  research! In agents! Common sense!"). The research desk: a manager-model
+  lane that writes the PRIOR `SYSTEM.md` law 3a requires before any race, from
+  primary sources, with sub-agents in parallel. Prompt
+  `scripts/research_prompt.md`; writes `docs/research/PUBLISHED_PRIORS.md`, an
+  order's `prior:` lines, one INBOX line, one line in `docs/OWNER_UPDATES.md`.
+  Ask it a question with an INBOX line that starts `RESEARCH:`. Its two slots
+  were taken from lane jack (hours 4 and 16 removed from the jack cron line).
+  To remove: delete its cron line, put 4 and 16 back in the jack line. Crontab
+  backup from before: `/data/tmp/crontab.bak-20261115-research`.
 - `ladder_loop.sh outsider` — cron `5 13 * * 0,3`. A manager-model reader that
   may not read the team's lessons, orders or decisions; writes `docs/OUTSIDER.md`.
   It takes the worker lock, so the 13:07 jack slot skips on those two days.

@@ -60,6 +60,7 @@ place, `scripts/models.env`; nothing else names a model.
 | **Director** (manager) | `scripts/review.sh` | manager | daily 06:37, long on Sundays | `docs/ORDERS.md`, `docs/PROGRESS.md`, rulings |
 | **Auditor** (manager) — the QC | `scripts/overseer.sh` | manager | daily 00:37 | `docs/OVERSIGHT.md` — ≤ 5 findings, for the Director |
 | **Field watch** (manager) | `scripts/field_watch.sh` | manager | Mon and Thu | `docs/FIELD_WATCH.md` — papers as arms for a named seat |
+| **Researcher** (manager) | `scripts/ladder_loop.sh research` | manager | 04h, 16h — 2 slots a day | `docs/research/PUBLISHED_PRIORS.md`, an order's `prior:` lines (law 3a) |
 | **Inventor** (manager) | `scripts/ladder_loop.sh lab` | manager | 11h, 23h — 2 slots a day | challenger arms for the cook-offs, `docs/LAB.md` |
 | **Worker, lane JACK** | `scripts/ladder_loop.sh jack` | worker | hourly, 18 slots a day | Jack's code, runs, the ledger (through the runner) |
 | **Worker, lane SYSTEM** | `scripts/ladder_loop.sh system` | worker | 03, 09, 15, 21h — 4 slots a day | the machine itself |

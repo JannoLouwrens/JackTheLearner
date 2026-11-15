@@ -51,11 +51,12 @@ PAUSE="$REPO/.loop-paused"
 # October 2026 measured 5% of commits landing a result and ~78% tending the
 # machinery, with nobody having decided that. First arg, or JACK_LANE, or jack.
 LANE="${1:-${JACK_LANE:-jack}}"
-case "$LANE" in jack|system|lab|outsider) ;; *) LANE=jack;; esac
+case "$LANE" in jack|system|lab|outsider|research) ;; *) LANE=jack;; esac
 case "$LANE" in
   system) PROMPT_FILE="$REPO/scripts/system_prompt.md";;
   lab)    PROMPT_FILE="$REPO/scripts/lab_prompt.md";;
   outsider) PROMPT_FILE="$REPO/scripts/outsider_prompt.md";;
+  research) PROMPT_FILE="$REPO/scripts/research_prompt.md";;
   *)      PROMPT_FILE="$REPO/scripts/ladder_prompt.md";;
 esac
 # LANE `lab` — the INVENTOR (owner, 2026-11-11: "make an agent try new things ...
@@ -67,7 +68,14 @@ esac
 # LANE `outsider` (owner, 2026-11-15: "we need smart minds on this system I'm
 # serious") — a manager-model reader who sees the goal and the results but NOT
 # the project's own lessons and plans, and says what it is getting wrong.
-if [ "$LANE" = "outsider" ]; then
+# LANE `research` (owner, 2026-11-15: "I can't believe you didn't do proper
+# research! How do we fix that! Deep research! In agents! Common sense!") — a
+# manager-model desk that reads the published record, in depth and from primary
+# sources, and writes the PRIOR that SYSTEM.md law 3a requires before any race:
+# what others already tested, which candidates that supports, what to expect.
+if [ "$LANE" = "research" ]; then
+  LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=research
+elif [ "$LANE" = "outsider" ]; then
   LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=outsider
 elif [ "$LANE" = "lab" ]; then
   LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=lab

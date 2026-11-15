@@ -526,7 +526,7 @@ def team() -> dict:
     worker_alive = _alive("scripts/ladder_loop.sh")
     day_ago = NOW - dt.timedelta(hours=24)
 
-    default_model = {"jack": "opus", "system": "opus", "lab": "fable", "outsider": "fable"}
+    default_model = {"jack": "opus", "system": "opus", "lab": "fable", "outsider": "fable", "research": "fable"}
 
     def runs_text(n: int) -> str:
         return "No runs in the last day" if not n else f"{n} run{'s' if n != 1 else ''} in the last day"
@@ -565,7 +565,7 @@ def team() -> dict:
         d.update(kw)
         return d
 
-    jack, system, lab, outsider = lane("jack"), lane("system"), lane("lab"), lane("outsider")
+    jack, system, lab, outsider, research = lane("jack"), lane("system"), lane("lab"), lane("outsider"), lane("research")
     verdict = aud["ends"][-1][2].strip() if aud["ends"] else None
     members = [
         pack(rev, id="director", name="Director", role="Reads everything each morning, writes the orders and your progress page.",
@@ -585,6 +585,8 @@ def team() -> dict:
              detail=runs_text(system["runs_24h"]), next=nxt("ladder_loop.sh system")),
         pack(lab, id="inventor", name="Inventor", role="Tries a new idea against whatever holds a seat in his brain or world.",
              detail=runs_text(lab["runs_24h"]), next=nxt("ladder_loop.sh lab")),
+        pack(research, id="researcher", name="Researcher", role="Reads what other groups already tested, in depth, and writes what to expect before the team builds or races anything.",
+             detail=runs_text(research["runs_24h"]), next=nxt("ladder_loop.sh research")),
         pack(outsider, id="outsider", name="Outsider", role="Reads the goal and the results cold, and says what the team is getting wrong.",
              detail="Twice a week", next=nxt("ladder_loop.sh outsider")),
         pack(sco, id="scout", name="Paper scout", role="Reads new research twice a week and nominates challengers.",
