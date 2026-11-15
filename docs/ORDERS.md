@@ -207,6 +207,15 @@ naming the life, seed and commit). The most recent life, no picking. Run by
 hand at nice 19; no cron, no service. If no life is recorded with poses,
 record one statue-free s90 life first (detached, ≤ 600 CPU-s). A first
 rough 30-second clip today beats a finished one next week.
+**Also (owner 11-15, via session: "will it have description thingy"):** write
+`/data/jack-video/latest.json` beside the mp4 — `title`; `summary` (2–4 plain
+sentences made by a TEMPLATE from the life's own record: how long he lived,
+what he ate and drank, where he sheltered, what killed him — no model, nothing
+the record does not show); `facts` (≤ 8 of `{label, value}`); `events` (≤ 60 of
+`{t, at, label}` — `t` is seconds into the VIDEO, `at` the time in his life as
+text — one per meal, drink, fall, shelter entry, and the death); `source`
+(life, seed, commit). The dashboard's Watch tab shows the summary under the
+film and jumps to a moment when it is tapped (`dashboard_status.py:watch`).
 serves: M8 (he can be watched) · philosophy 1.
 **done when:** the mp4 exists, plays, and is of the latest recorded life.
 state: open — not started (fourth day). Next SYSTEM slot after S3 step 1–2.
@@ -240,6 +249,7 @@ bookkeeping). (7) D52 scout retry; `run status` STEERING reader parses 0.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- **OWNER 11-15 (via session): the film gets a description.** S6's **Do** was amended in place by the session (the `latest.json` paragraph) so the worker who films it writes it the same day — Director, keep that paragraph when you rewrite the order.
 - **OWNER 11-15 (via session): a dashboard that QUANTIFIES Jack ("we need to quantify the stuff man you know but well").** Built by the session, in the repo: `scripts/dashboard_status.py` + `dashboard/` (see RUNBOOK). Every bar is `experiments/coverage.py`'s own count — passing CLAIM specs / CLAIM specs per commitment — so a `COVERS:` marker with the wrong kind now shows on the owner's phone. Director: (1) S6 keeps its own path, `/data/jack-video/latest.mp4` (H.264 mp4; a `latest.txt` beside it naming the life is shown as the caption) — the dashboard links it in and the Watch tab plays it; (2) when a race yields a real measurement of the living Jack (forager race: meals per life per arm), add it to `dashboard/vitals.json` with its floor and its pre-registered pass mark — never a number without both; (3) the inside/around sweep (Next-up 2) matters more now: bench-only proofs currently read as proven (People 42, Words 29).
 - **OWNER 11-15 (via session): "we need smart minds on this system I'm serious".** Done by the session: (a) new lane `outsider` (`scripts/outsider_prompt.md`, manager model): reads GOAL, PROGRESS, results and Jack's code but NOT lessons/orders/decisions, writes `docs/OUTSIDER.md` and one INBOX line; cron Wed+Sun 13:05. Director: treat each OUTSIDER finding like an Auditor finding — an order or a reasoned decline. (b) the jack-lane slots at 07:07 and 19:07 now run on the manager model (`JACK_LOOP_MODEL=fable`, fallback opus) so the FIRST order gets the strongest worker twice a day; revert by restoring the hours in the crontab. (c) SYSTEM: `scripts/test_lane_guard.sh` reads 3 FAILURES at clean HEAD while two detached jobs are live (the wrap is refused by the 2-job cap) — make the test independent of live load.
 - **OWNER 11-15 (via session): "how can we improve all that?" — the machine's own weak spots, as the session described them to the owner. Director: turn each into a SYSTEM order or decline it with a reason.** (1) STALLED-FIRST-ORDER ALARM: the order ranked first with no verdict and no named external wait for 24 h is printed at the top of PROGRESS by the clerk (`regate.sh`, no model) and is an Auditor finding — `LF.04` waited 70 h. (2) OWNER REQUESTS HAVE A CLOCK: anything the owner asked for is delivered within 48 h or heads PROGRESS with the reason — the video is on day 4. (3) FEWER NOTE COMMITS: one state+journal commit per worker slot, not one per step; the Director reports "commits that changed Jack, his world or a verdict / all commits" as a fifth machine number (70 of 119 were notes this week). (4) LESSONS CAN EXPIRE: each Sunday the Director re-reads 3 entries of `LESSONS_CORE.md` against current evidence and deletes or rewrites any that no longer hold. (5) MACHINE PROPOSALS: changes the agents cannot make themselves (schedule, lanes, locks) are listed in PROGRESS under "Proposals for the owner", one line each with the expected gain, instead of being worked around. (6) AN OWNER IDEA BOX: `docs/OWNER_IDEAS.md`, plain words, read by the lab each slot before it picks a bet.

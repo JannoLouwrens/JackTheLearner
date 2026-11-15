@@ -753,9 +753,31 @@ def watch() -> dict:
                 if side.is_file():
                     note = clean(side.read_text(errors="replace"))[:300]
                     break
+            # The description that travels with the film (owner 11-15: "will it
+            # have description thingy"). Written by whoever renders the video,
+            # from the life's own record; this script only passes it on.
+            info = {}
+            try:
+                info = json.loads((src_dir / "latest.json").read_text(errors="replace"))
+            except (OSError, ValueError):
+                pass
+            if not isinstance(info, dict):
+                info = {}
+
+            def txt(x, n):
+                return clean(str(x))[:n] if isinstance(x, (str, int, float)) else ""
+
+            facts = [{"label": txt(f.get("label"), 40), "value": txt(f.get("value"), 40)}
+                     for f in (info.get("facts") or []) if isinstance(f, dict)][:8]
+            events = [{"t": round(float(e["t"]), 1), "label": txt(e.get("label"), 120), "at": txt(e.get("at"), 40)}
+                      for e in (info.get("events") or [])
+                      if isinstance(e, dict) and isinstance(e.get("t"), (int, float))][:60]
             return {"video": f"media/latest.{ext}", "note": note,
-                    "made": iso(dt.datetime.fromtimestamp(src.stat().st_mtime, UTC))}
-    return {"video": None, "made": None, "note": ""}
+                    "made": iso(dt.datetime.fromtimestamp(src.stat().st_mtime, UTC)),
+                    "title": txt(info.get("title"), 120), "summary": txt(info.get("summary"), 900),
+                    "facts": facts, "events": events, "source": txt(info.get("source"), 160)}
+    return {"video": None, "made": None, "note": "", "title": "", "summary": "",
+            "facts": [], "events": [], "source": ""}
 
 
 # ── assemble ────────────────────────────────────────────────────────────────
@@ -787,7 +809,7 @@ def build() -> dict:
         "team": guarded(team, {"members": [], "paused": False, "running": 0}),
         "jobs": job_list,
         "resources": guarded(lambda: resources(job_list), {}),
-        "watch": guarded(watch, {"video": None, "made": None, "note": ""}),
+        "watch": guarded(watch, {"video": None, "made": None, "note": "", "title": "", "summary": "", "facts": [], "events": [], "source": ""}),
         "chat": {"url": cfg.get("chat_url") or None, "name": cfg.get("chat_name") or None},
         "errors": ERRORS,
     }
