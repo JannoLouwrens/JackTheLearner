@@ -1283,3 +1283,4 @@ Served philosophy 3 (the curriculum seat was raced and lost to no-staging, not a
 s96 pushed as jack-cpu-1794703065. Gate is now 3/15 cells. J2: D1.0 watcher 3902173 alive, no exit, so nothing to do. J1 done (LF.04 FAIL, foraging finding).
 Served: 3 (the meal-memory consolidation lab gets its declared race, not a seat by argument) and 6 (Kaggle CPU, ~0 box CPU).
   00:50: s95 landed (68/88/96 rows); s97 pushed jack-cpu-1794703172. Grind at 6/15; s98 goes next, once a poller frees up.
+  00:55: s96 landed (54/84/86 rows); s98 pushed jack-cpu-1794703940. All 15 cells have now landed or are in flight; next slot runs the gate.

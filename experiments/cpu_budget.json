@@ -1076,10 +1076,10 @@
         "T2.10": 12.65,
         "detached:meal_kcpu_s94.log": 131.01,
         "detached:meal_kcpu_s95.log": 25.87,
-        "detached:meal_kcpu_s96.log": 10.64,
+        "detached:meal_kcpu_s96.log": 26.05,
         "detached:meal_kcpu_s97.log": 10.72
       },
-      "used_s": 269.41
+      "used_s": 284.82
     }
   },
   "overruns": [
