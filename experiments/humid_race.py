@@ -172,9 +172,40 @@ def _apparatus() -> dict:
     return {"compared": 1, "mismatched": bad, "ok": not bad}
 
 
+# Shipped cells: drink_race's, run under the CURRENT NE.01 (re-registered
+# e054e0a). heat_race's shipped NE.01 cells predate it (73 keys vs 87, 18-41
+# metrics differ per seed); its W.1/W.2 cells are metric-equal to these.
+SHIPPED_OUT = Path("/data/jack-logs/drink_race")
+
+
+def _spec_epoch(spec: str) -> int:
+    """Commit time of the last change to the spec's own test module."""
+    import subprocess
+    f = "experiments/tests/" + H.SPECS[spec].rsplit(".", 1)[1] + ".py"
+    out = subprocess.run(["git", "log", "-1", "--format=%ct", "--", f],
+                         capture_output=True, text=True,
+                         cwd=Path(__file__).resolve().parent.parent).stdout.strip()
+    return int(out) if out else 0
+
+
+def _stale(arms) -> list:
+    """Cells written before their spec's test was last changed: their numbers
+    are not the current spec's. Any stale cell blocks the verdict."""
+    bad = []
+    for spec in H.SPECS:
+        t0 = _spec_epoch(spec)
+        for arm, d in arms:
+            for c in sorted(d.glob(f"{arm}_{spec}_s*.json")):
+                if c.stat().st_mtime < t0:
+                    bad.append(f"{d.name}/{c.name}")
+    return bad
+
+
 def tally() -> dict:
     res: dict = {"apparatus": _apparatus()}
-    res["shipped"] = WR._summ(WR._load(H.OUT, "shipped"))
+    res["stale_cells"] = _stale([("shipped", SHIPPED_OUT)]
+                                + [(a, OUT) for a in RACE_ARMS])
+    res["shipped"] = WR._summ(WR._load(SHIPPED_OUT, "shipped"))
     res["swp_k72_ref"] = WR._summ(WR._load(WR.OUT, "swp_k72"))
     for arm in RACE_ARMS:
         res[arm] = WR._summ(WR._load(OUT, arm))
@@ -184,7 +215,7 @@ def tally() -> dict:
         ref = res["swp_k72_ref"]["flags"]
         res[arm]["vs_swp_k72"] = {k: [ref.get(k), v] for k, v in res[arm]["flags"].items()
                                   if ref.get(k) != v}
-    if not complete:
+    if not complete or res["stale_cells"]:
         res["verdict"] = None
         return res
     if not res["apparatus"]["ok"]:
