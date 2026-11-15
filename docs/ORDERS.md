@@ -143,7 +143,9 @@ state; then repair the world or the body, or — if the test is wrong —
 re-register with reasons. Bars unmoved.
 serves: M2, M5, M7 · philosophy 4 (a failure is fixed, not filed).
 **done when:** `PG.6`, `T2.03` are current and `PS.02` has a new verdict.
-state: open — ordered 11-15.
+state: 11-15 08:30 (2) PS.02 CAUSE: not 94 days rotten. It PASSed through 11-12 (d5d26b0, probe R2 0.6165, reproduced bit-exact every time) and FAILed from 11-13 (db72d97, impl_sha 362ee2->0ce154). Test code is unchanged since Aug. In that window the only change PS.02 imports is `playground.Water` (`c510b92`, W0.PL repair: apply() is now additive and no longer erases W0's drive; the in_pool band is gone). needs.py/e0eecf7 is not imported by W0 or thermal. So the world moved under the test.
+Per-seed _experiment at HEAD (no ledger write): s0 R2 0.511 ok, s1 0.706 ok, s2 FAIL: death_s_max 78.2 > 70 AND R2 -0.265 (one long cold life the probe cannot read). Bars unmoved.
+Not yet proven: c510b92 by bisect. Next: run /tmp-style probe seed 2 in a worktree at c510b92~1 vs c510b92 (~70 s each); if water is the cause, look at s2's 78 s life (where it was: pool edge?) and decide whether it is a thermal-model gap (wet/immersion cooling unmodelled) to repair in thermal, or a lethality-band re-registration with reasons.
 
 ### J9 — The two ends with no test: fire (`W.5`) and advice
 **Why.** `coverage`: GOAL's "tree → fire → shelter world" and "advised, not

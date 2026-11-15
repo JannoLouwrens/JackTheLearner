@@ -1396,3 +1396,8 @@ Philosophy served: 3 (the learner's loss seat goes to a race declared before its
 Added a statue twin (zero action, training on). On a 400-decision smoke it read weights_changed=True just like the learner, so the old gate could not tell a statue from him. New drives_body detector, which must be True on every seed and False on the statue: action RMS >= 0.05 AND corr(executed action, policy mean) >= 0.05. Smoke: learner 0.52/0.42, statue 0/0. No bar moved. meals_by_seed is now on the row.
 The race kernel for s150 was REFUSED by the detached cap (2/2). The launch command is in J1 state.
 Philosophy served: 4 (a control that must fail where the old gate could not, plus a cadence read from its certificate instead of pasted in).
+
+2026-11-15 08:30 UTC · JACK · J4(2). J1 is blocked on compute this slot: all 5 Kaggle CPU sessions are RUNNING (h1-h4 and w104 s0), and the detached cap is 2/2, held by the humid pollers. So I took J4's PS.02 diagnosis.
+PS.02 is not 94 days rotten. It PASSed through 11-12 (probe R2 0.6165, bit-exact repeats) and FAILed from 11-13. Its test code is unchanged. The only imported change in that window is `playground.Water` (c510b92, the W0.PL repair), so the world moved under it.
+Per-seed run at HEAD, no ledger write: s0 0.511, s1 0.706, s2 FAIL (death_s_max 78.2 > 70, R2 -0.265). Bisect at c510b92~1 vs c510b92 is the next step. Written in J4 state.
+Philosophy served: 4 (a failure traced to its cause instead of filed; no bar moved).
