@@ -1,0 +1,26 @@
+{
+ "n_per_seed": 4000,
+ "hold": 5,
+ "respawn": 40,
+ "low_z": 0.12,
+ "seated": {
+  "ray_hits_food_frac_train": 0.211,
+  "ray_hits_food_frac_test": 0.19375,
+  "median_dist_m": 3.9055232582887864,
+  "ridge_vision": -0.6254630743067561,
+  "mlp_vision": -0.7969597578048706,
+  "ridge_all": -0.5667297766511639,
+  "mlp_all": -0.43788382411003113,
+  "control_shuffled_mlp_all": -2.3298370838165283
+ },
+ "low_0.12": {
+  "ray_hits_food_frac_train": 0.2395,
+  "ray_hits_food_frac_test": 0.24025,
+  "median_dist_m": 3.9055232582887864,
+  "ridge_vision": -0.536179857851848,
+  "mlp_vision": -0.5844148397445679,
+  "ridge_all": -0.4617780849585168,
+  "mlp_all": -0.47055137157440186,
+  "control_shuffled_mlp_all": -3.0731945037841797
+ }
+}
