@@ -1334,3 +1334,10 @@ I tested step 2e's hypothesis (fatigue spreads through gear_scale as energy fall
 All 45 NE.01 cells on disk agree: spread_f falls monotonically with the earliest random death. Every clock arm since 11-12 lost ok_spread on fatigue for that reason alone. Gate 1's f clause and the re-registered gate-2 window cannot both pass. I proposed a fatigue edge probe (bar unmoved) and left it as a Director call (`64d949a`).
 I also caught my own probe bug before it cost a reading: humid_race's "shipped" is swp_k72; the race's shipped arm is heat_race's.
 Philosophy served: 4 (a gate clause that could not fire for any slow-clock world is named with a measurement, and the bar is not touched) and 3 (the world races were being decided by a probe artifact).
+
+2026-11-15 04:28 UTC · JACK · J6 order step (d). J2: D1.0 watcher 3902173 is alive (6.9 h) with no exit, so nothing to do. k3 `…2965` is still RUNNING on Kaggle, so I did not tally.
+Probed the order's "K_DRY re-derived" on hum34, the only post-sweat arm whose hot route passes (`experiments/humid_kdry_probe.py`). Apparatus: the hum34 W.2 s0 replay matched 100/100 keys.
+hum34k (K_DRY 100/3, C_EFF 8000) repairs W.2(a) on 5/5 seeds (a_err_w .158 -> 7e-14). It loses the hot route on 5/5 (peak 39.88 C vs the 40 C bar; c_hot_reachable 1->0). So K_DRY cannot simply be re-derived:
+the heat death existed only because the open statue sat above 37 C. The remaining honest route is re-registering (a) against the sweating closed form, with the bar unmoved.
+Philosophy served: 3 (a world rule is measured before it is declared, and both of its costs are named) and 4 (the 40 C bar and INTEGRATOR_TOL are untouched).
+Note: the 04:30 entry above carries a time later than this slot's real clock (it started 04:21).

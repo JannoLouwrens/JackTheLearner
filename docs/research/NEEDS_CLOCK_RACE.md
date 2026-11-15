@@ -366,4 +366,5 @@ Apparatus OK: hum34 W.2 s0 re-run here equals humid_race's cell on all 100 keys.
   But **c_hot_reachable 1 -> 0**: the hot route peaks at 39.88 C (742 s) and c_pass goes 1 -> 0. The thirst deadline also moves, ratio 1.83 -> 0.97.
 - Reading: hum34's hot route existed only because K_DRY was left at its 30 C value. Pinning the statue at 37 C costs the heat death. With one T_DAY and one
   re-derived K_DRY, W.2(a) and W.2(c)-hot conflict on s0. The remaining route is the order's other option: re-register (a) against the sweating closed form
-  (drain (1 + C_SW*max(0, T-37))*B_W integrated on the statue's own T(t)), with the bar INTEGRATOR_TOL unmoved. One cell only (s0): seeds 1-4 not run.
+  (drain (1 + C_SW*max(0, T-37))*B_W integrated on the statue's own T(t)), with the bar INTEGRATOR_TOL unmoved.
+- Seeds 1-4 (04:27): byte-identical flags on all 5 seeds in both arms. W.2's rig does not vary by seed on these keys, so it reads 5/5: hum34k a 5/5, c 0/5 (peak 39.877 C); hum34 a 0/5, c 5/5.
