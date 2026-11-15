@@ -367,6 +367,32 @@ for (const p of PROFILES) {
     if (!stripGone) { await page.screenshot({ path: `${OUT}${p.id}-d-tidy.png` }); R.tidy = { tabs: await page.$$eval('#wins .win', (n) => n.map((x) => x.textContent + (x.classList.contains('on') ? '*' : ''))), dlg }; console.log('TIDY', JSON.stringify(R.tidy)); }
     check(C, 'Window tabs: a second window gets a tab, tapping switches, closing removes the tabs', strip >= 0 && w2 >= 0 && w1 >= 0 && firstOn && tabsFit && stripGone, `tabs ${strip} ms, second ${w2} ms, back ${w1} ms, first lit ${firstOn}, fits ${tabsFit}, tidy ${stripGone}`);
 
+    // 13b2. Claude account: the menu opens a sheet drawn from what the server tool reports; closing it tidies up
+    await menu('account');
+    const acOpen = await page.waitForSelector('#acct:not([hidden]) .acrow', { timeout: 25000 }).then(() => true, () => false);
+    const ac = await page.evaluate(() => ({ rows: document.querySelectorAll('#acctlist .acrow:not(.add)').length, on: document.querySelectorAll('#acctlist .acrow.on').length, add: !!document.querySelector('#acctlist .acrow.add'),
+      fits: document.querySelector('#acct .sheet').getBoundingClientRect().bottom <= innerHeight + 1 && document.documentElement.scrollWidth <= innerWidth }));
+    await page.evaluate(() => document.querySelectorAll('#acctlist .acrow:not(.add) b').forEach((b, i) => { b.textContent = 'account' + (i + 1) + '@example.com'; }));   // keep the real address out of screenshots
+    await sleep(200); await page.screenshot({ path: `${OUT}${p.id}-e-account.png` });
+    await sleep(450);
+    if (p.touch) await page.tap('#acctclose'); else await page.click('#acctclose');
+    const t11 = Date.now(); let acTidy = false;
+    while (Date.now() - t11 < 8000) { if (!(await page.isVisible('#acct')) && (await page.$$('#wins .win:not(.add)')).length === 1) { acTidy = true; break; } await sleep(100); }
+    check(C, 'Claude account: the menu lists the saved accounts with the one in use marked, and closing returns to one window', acOpen && ac.rows >= 1 && ac.on === 1 && ac.add && ac.fits && acTidy, JSON.stringify({ acOpen, ...ac, acTidy }));
+    // a sign-in link from the server tool becomes a button; a link to anywhere but Claude is ignored
+    await focusTerm(page, p); await page.keyboard.type('claude-account --emit-login https://evil.example.com/oauth'); await page.keyboard.press('Enter'); await sleep(900);
+    const badShown = await page.isVisible('#acct');
+    await page.keyboard.type('claude-account --emit-login https://claude.com/cai/oauth/authorize'); await page.keyboard.press('Enter');
+    const goodShown = await page.waitForSelector('#acctlogin:not([hidden])', { timeout: 6000 }).then(() => true, () => false);
+    const href = await page.getAttribute('#acctopen', 'href');
+    await sleep(200); await page.screenshot({ path: `${OUT}${p.id}-f-signin.png` });
+    await page.fill('#acctcode', `echo CODE-${mark}`); if (p.touch) await page.tap('#acctfinish'); else await page.click('#acctfinish');
+    const typed = await waitText(page, `CODE-${mark}`, 5000);
+    await sleep(400);
+    const ran = (await screen(page)).split('\n').filter((l) => l.trim() === `CODE-${mark}`).length >= 1;
+    await page.evaluate(() => { document.querySelector('#acct').hidden = true; });
+    check(C, 'A sign-in link from the server becomes a button, only for Claude pages, and the pasted code is typed in and entered', !badShown && goodShown && (href || '').startsWith('https://claude.com/') && typed >= 0 && ran, JSON.stringify({ badShown, goodShown, typed, ran }));
+
     // 13c. copy what is on screen
     await menu('copy');
     await page.waitForSelector('#copy:not([hidden])'); await sleep(350);

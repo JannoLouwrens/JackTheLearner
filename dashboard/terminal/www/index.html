@@ -123,6 +123,13 @@ button{font:inherit;color:inherit}
 .sheet h2{font-size:24px;line-height:1.2;font-weight:700;letter-spacing:-.02em;margin:0 0 6px}
 .sheet p{margin:0 0 14px;color:var(--ink2);font-size:15px;line-height:1.45}
 .sheet code{font-family:var(--mono);font-size:13px;background:#2c2c2e;border-radius:6px;padding:2px 6px;color:var(--ink);white-space:nowrap}
+.acrow{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;width:100%;min-height:58px;margin:0 0 8px;padding:8px 14px;border:0;border-radius:13px;background:#2c2c2e;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.acrow b{font-size:16px;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acrow span{font-size:13px;color:var(--ink2)}
+.acrow.on{box-shadow:inset 0 0 0 2px #0a84ff;cursor:default}
+.acrow.add b{color:#0a84ff}
+#acctlogin .cta{display:flex;align-items:center;justify-content:center;text-decoration:none;margin-bottom:12px}
+#acctlogin .field{margin-bottom:12px}
 .field{display:block;width:100%;height:50px;border:0;border-radius:13px;background:#2c2c2e;color:var(--ink);font:inherit;font-size:17px;padding:0 14px;outline:none;-webkit-appearance:none}
 .field:focus{box-shadow:0 0 0 2px var(--accent)}
 .check{display:flex;align-items:center;gap:10px;margin:14px 2px 16px;font-size:15px;color:var(--ink2);cursor:pointer}
@@ -179,6 +186,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
   <div id="menu" hidden role="menu">
     <button data-m="chat" role="menuitem">Open my Claude chat</button>
     <button data-m="copy" role="menuitem">Copy what is on screen</button>
+    <button data-m="account" role="menuitem">Claude account</button>
     <hr>
     <button data-m="wins" role="menuitem">Windows</button>
     <button data-m="newwin" role="menuitem">New window</button>
@@ -232,6 +240,21 @@ html:not(.app) #menu [data-m="dash"]{display:none}
       <ol class="steps" id="installsteps"></ol>
       <button class="cta" id="installgo" type="button" hidden>Install</button>
       <button class="plain" data-close="install" type="button">Done</button>
+    </div>
+  </div>
+
+  <div class="scrim" id="acct" hidden>
+    <div class="sheet">
+      <div class="grab"></div>
+      <h2 id="accth">Claude account</h2>
+      <p id="acctp"></p>
+      <div id="acctlist"></div>
+      <div id="acctlogin" hidden>
+        <a class="cta" id="acctopen" target="_blank" rel="noopener">Open the sign-in page</a>
+        <input class="field mono" id="acctcode" placeholder="Paste the code here" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-label="Sign-in code">
+        <button class="cta" id="acctfinish" type="button">Finish</button>
+      </div>
+      <button class="plain" id="acctclose" type="button">Close</button>
     </div>
   </div>
 
@@ -393,9 +416,44 @@ term.onTitleChange(function(t){
   if(was!==el.hidden)layout();
   var cur=el.querySelector(".on");if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:"nearest",inline:"nearest"});
 });
-$("#wins").addEventListener("click",function(e){var b=e.target.closest("[data-win]");if(!b)return;
+/* A tab acts when the finger lifts on it. A phone can withhold the click when a tap follows another
+   touch closely (it reads a double tap), so the click is only the fallback. */
+var winDown=null,winActed=0;
+$("#wins").addEventListener("pointerdown",function(e){winDown=e.target.closest("[data-win]")});
+$("#wins").addEventListener("pointercancel",function(){winDown=null});
+$("#wins").addEventListener("pointerup",function(e){var b=e.target.closest("[data-win]"),d=winDown;winDown=null;if(b&&b===d){winActed=Date.now();winAct(b)}});
+$("#wins").addEventListener("click",function(e){var b=e.target.closest("[data-win]");if(!b||Date.now()-winActed<700)return;winAct(b)});
+function winAct(b){
   if(b.dataset.win==="x"){if(window.confirm("Close this window? Anything running in it stops."))input("\x02X")}
   else if(b.dataset.win==="+")input("\x02c");else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else input("\x02:select-window -t "+b.dataset.win+"\r");
+  if(!coarse)term.focus()}
+
+/* ───── Claude account: the tool on the server says what to show (one private escape sequence) ───── */
+var acctState="";
+var CLAUDE_PAGE=new RegExp("^https://([a-z0-9-]+[.])*(claude[.]com|claude[.]ai|console[.]anthropic[.]com|platform[.]claude[.]com)/","i");
+function acct(m){
+  var S=$("#acct"),L=$("#acctlist"),G=$("#acctlogin"),H=$("#accth"),P=$("#acctp");
+  if(!m||m.t==="closed"){S.hidden=true;acctState="";return}
+  if(m.t==="login"&&!CLAUDE_PAGE.test(m.url||""))return;   /* only Claude's own sign-in pages */
+  acctState=m.t;S.hidden=false;L.hidden=m.t!=="accounts";G.hidden=m.t!=="login";
+  if(m.t==="accounts"){
+    H.textContent="Claude account";P.textContent="Everything on this server follows the account you pick: this chat, and the team that builds Jack.";
+    L.innerHTML="";
+    (m.list||[]).forEach(function(a){var b=document.createElement("button"),e=document.createElement("b"),s=document.createElement("span");
+      b.type="button";b.className="acrow"+(a.cur?" on":"");b.dataset.acct=a.n;e.textContent=a.email;s.textContent=[a.plan,a.cur?"in use":""].filter(Boolean).join(" · ");
+      b.appendChild(e);if(s.textContent)b.appendChild(s);L.appendChild(b)});
+    var add=document.createElement("button"),t=document.createElement("b");add.type="button";add.className="acrow add";add.dataset.acct="a";t.textContent="Sign in with another account";add.appendChild(t);L.appendChild(add);
+  }else if(m.t==="working"){H.textContent="Changing account";P.textContent="Changing to "+m.email+" and checking that it works."}
+  else if(m.t==="login"){H.textContent="Sign in to Claude";P.textContent="Open the sign-in page and sign in with the account you want. Claude then shows a code: copy it, come back here, paste it and press Finish.";
+    $("#acctopen").href=m.url;$("#acctcode").value=""}
+  else if(m.t==="done"){H.textContent=m.ok?"Done":"Not changed";P.textContent=(m.msg||"")+(m.usage?" This week: "+m.usage+".":"")}
+}
+term.parser.registerOscHandler(7777,function(d){var m=null;try{m=JSON.parse(decodeURIComponent(escape(atob(d))))}catch(e){}if(m&&typeof m==="object")acct(m);return true});
+$("#acctlist").addEventListener("click",function(e){var b=e.target.closest("[data-acct]");if(!b||b.classList.contains("on"))return;input(b.dataset.acct+"\r")});
+$("#acctfinish").addEventListener("click",function(){var v=$("#acctcode").value.trim();if(!v)return;input(v);setTimeout(function(){input("\r")},150);
+  $("#acctlogin").hidden=true;$("#accth").textContent="Checking the code";$("#acctp").textContent="One moment."});
+$("#acctclose").addEventListener("click",function(){var st=acctState;$("#acct").hidden=true;acctState="";
+  if(st==="accounts")input("q\r");else if(st==="login")input("\x03");else if(st==="done")input("\r");
   if(!coarse)term.focus()});
 
 /* ───── the extra keys ───── */
@@ -608,6 +666,7 @@ document.addEventListener("click",function(e){
     if(a==="chat"){input("jackchat\r");term.focus()}
     else if(a==="wins"){input("\x02w");term.focus()}
     else if(a==="newwin"){input("\x02c");term.focus()}
+    else if(a==="account"){input("\x02c");setTimeout(function(){input(" claude-account --app; exit\r")},500)}   /* in a window of its own, never typed into a running chat */
 
     else if(a==="copy"){
       var b=term.buffer.active,L=[];for(var i=b.viewportY;i<b.viewportY+term.rows;i++){var ln=b.getLine(i);L.push(ln?ln.translateToString(true):"")}

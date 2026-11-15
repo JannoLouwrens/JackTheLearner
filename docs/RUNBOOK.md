@@ -1776,6 +1776,19 @@ To switch it off: remove the `gap_fill.sh` line from the crontab.
 
 ## Outsider and strong-worker slots (2026-11-15)
 
+- **Claude account switcher (2026-11-15).** `claude-account` (`~/bin/claude-account`
+  → `dashboard/terminal/claude_account.py`), also the Terminal menu item
+  "Claude account". It keeps a copy of each login the owner has signed in with
+  in `~/.claude-accounts/<email>/` (owner-only, outside the repo) and changes
+  the live login (`~/.claude/.credentials.json` and the account name in
+  `~/.claude.json`) to the one picked. **Everything on the box follows the
+  change: the owner's chat AND every cron lane, and the usage meters (and so
+  the 95% stop) then read the new account.** Signing in to a new account is
+  always the CLI's own `claude auth login`; the tool only hands the sign-in
+  link to the page. `claude-account --selftest` checks the save/change logic
+  in a throwaway home. The live keys from before the last change are kept at
+  `~/.claude-accounts/.before-last-change.json`. To remove: delete the menu
+  item in `www/index.html`, `~/bin/claude-account` and `~/.claude-accounts/`.
 - `ladder_loop.sh research` — cron `5 4,16 * * *` (owner 2026-11-15: "Deep
   research! In agents! Common sense!"). The research desk: a manager-model
   lane that writes the PRIOR `SYSTEM.md` law 3a requires before any race, from
