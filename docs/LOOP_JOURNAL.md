@@ -1541,3 +1541,8 @@ g exposes f: in life 0 f out-eats blind 12.35 vs 2.75 (19/20 seeds, paired t 5.6
 f2 in-life-ban tuning arm harvested (smoke 153/154): 7.6 / 7.7 meals/life, lives 1–9 7.4 / 6.0 (200 s bans: 3.8 / 4.3). The collapse was the ruler's rules, not the wall-pinned food. Frozen F2_BAN_S=inf (`75330078`).
 Launched d32 (20:10) and f2 on fresh seeds 221–240 (20:12); all 5 Kaggle CPU sessions now ours. g2, b2 wait for a session.
 Philosophy served: 4 (the must-fail control ran, failed, and then measured how much of the ruler was real; the ruler is repaired on tuning seeds and judged on fresh ones, bar unmoved), 5 (his world measured before any brain).
+
+## 2026-11-15 20:36 · JACK · J1 row c harvested, J2 items 3+4 built (short slot)
+Row c (pink noise per life) back from Kaggle, 200 lives: 491.5 s/life (white b 301.7) but 0.44 floor meals/life (b 0.52; paired per seed −0.07, t −0.70, c>b 7/20). The record's "correlated noise finds 2.5–4× more food" does not hold for pink noise here; longer life ≠ food found. g2 launched into c's freed session (20:33).
+J2 (waiting on kernels): `jack_env` gains `reward="dr100-eat"`/`"dr100-eat-pos"` and `max_episode_decisions` (truncation, world untouched, life carries). New proof PASS on 3 seeds — its own "a meal was seen" guard fired on seed 154 (no meal in 300 decisions) and was pooled across seeds, formula still checked every decision; J1 identity proof re-run PASS.
+Philosophy served: 4 (a published prediction tested and it failed here; new options proved with controls that must fail), 5 (his world: death and administrative stops now distinct, and a reward with no profit in dying is available for J2's measurement).
