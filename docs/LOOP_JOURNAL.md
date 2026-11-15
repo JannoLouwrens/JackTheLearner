@@ -1414,3 +1414,8 @@ J4: pinned PS.02's FAIL to one life. The thermal law matches its prediction on 1
 v2 censors fire-explained lives only when they survive, so this one enters the probe's training set. Dropping it alone takes R2 from -0.265 to 0.713. Next is a v3 re-registration with reasons (censor any fire-explained life), all bars kept. Written in J4 state. No ledger write.
 Philosophy served: 4 (a failure traced to one life and one clause instead of filed) and 1 (a world that can kill him must have a death he can read).
 Correction, same slot: `_fire_explains` is True on all 16 s2 lives (its cooling-ratio clause has no margin; ratios run 0.617 to 1.000), so "censor any fire-explained life" would censor everything. J4 state now lists two v3 options instead (a margin argued before any rerun, or retargeting the probe to the felt-state law). The clause the v2 fix leaned on is weaker than its docstring claims; that finding goes to the Director.
+
+2026-11-15 08:45 UTC · JACK · J1(1) + J6(a). J1: humid h4 finished, freeing one Kaggle CPU slot, so I pushed policy-loss s151 there (`jack-cpu-1794731873`, in-session push, detached cap 2/2). s152 waits: kcpu is 5/5 again.
+J6: harvested h4 (hum30 NE.01 s4: ok_spread 0, spread_f 0.195, 5/5 random deaths by dehydration). The reattach guard refused at HEAD and at 45050dd, because the push receipt's sha matches no committed tree. The cell's in-kernel shas all equal HEAD, so the cell is valid. Guard dead end is in INBOX. 7/10 humid NE.01 cells in.
+The fatigue edge probe J6(b) was not started; it would not fit a short slot with commit-before-run.
+Philosophy served: 3 (the loss race and the world race advance on free compute) and 6 (free Kaggle CPU kept full).

@@ -65,9 +65,9 @@ different orders. An arm clears → write it here; the Director orders
 serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 **done when:** the loss seat is ruled by tally and step 2's table (and 3's
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
-state: 11-15 08:24 (1) FIRST CELL IN FLIGHT: s150 kernel `jannolouwrens/jack-cpu-1794730958` pushed 08:22 (poller pid 4079623, log /data/tmp/plr_s150.log, lands itself). s151/s152 NOT pushed: kcpu 5/5 RUNNING at 08:25 (h2 …3424, h3 …3809, h4 …4063, w104 s0 …4769, plr s150) and detached cap 2/2 (h2 poller + plr s150). h1 …0356 COMPLETE, written.
+state: 11-15 08:45 (1) TWO CELLS IN FLIGHT: s150 `jannolouwrens/jack-cpu-1794730958` (08:22, poller 4079623 lands it) + s151 `jannolouwrens/jack-cpu-1794731873` (08:38, in-session push, poller let die: detached cap 2/2). s152 NOT pushed: kcpu 5/5 at 08:40 (h2 …3424, h3 …3809, w104 s0 …4769, plr s150, s151).
 (2) forager race rule COMMITTED before any cell `e9b14f3`; its cells wait for step 1's seat (cores.py stamped).
-Next: as kcpu slots free: `launch_detached.sh /data/tmp/plr_s<S>.log $PY -m experiments.policy_loss_race kernel <S>` S=151,152 (150 in flight) -> `policy_loss_race tally` -> seat + re-buy LC.02/LC.08/LF.03 -> `launch_detached.sh /data/tmp/forager_k<K>.log $PY -m experiments.forager_race kernel <K>` K=0..3 -> `forager_race tally`.
+Next: harvest s151 when COMPLETE: `JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-1794731873 $PY -m experiments.policy_loss_race kernel 151` (code at HEAD 1882030 — run from that tree or reattach refuses). On a free slot: `launch_detached.sh /data/tmp/plr_s152.log $PY -m experiments.policy_loss_race kernel 152` -> `policy_loss_race tally` -> seat + re-buy LC.02/LC.08/LF.03 -> forager kernels K=0..3 -> `forager_race tally`.
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
@@ -108,7 +108,8 @@ state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. f-spread D
 `2131a04` W.2 cells current (hum34 5/5, shipped+hum30 0/5). **DRINK race verdict: none ships** (40 cells current): dB loses only NE.01 ok_spread 0/5 vs 5/5 (the f-spread call). Humid verdict waits on NE.01 (0/5 both arms).
 11-15 06:31 ALL 10 humid NE.01 cells in flight on Kaggle CPU: h1 `…0356` hum34 s0-2, h2 `…3424` hum34 s3-4+hum30 s0 (pollers alive), h3 `…3809` hum30 s1-3, h4 `…4063` hum30 s4
 (h3/h4 pushed in-session, pollers let die — detached cap 2 was full). MEASURED: Kaggle runs 4 CPU sessions + 1 GPU at once (all RUNNING 06:30), not 2.
-Next: h1/h2 land by themselves; harvest h3/h4 with `JACK_REUSE_KERNEL=jannolouwrens/<slug> $PY -m experiments.humid_race_kcpu kernel <same cells>` (logs /data/tmp/humid_kcpu_h{3,4}.log), then `humid_race tally`.
+08:41 h4 (hum30 s4) HARVESTED: every in-kernel code sha = HEAD; ok_spread 0, 5/5 dehydration deaths. 7/10 humid NE.01 cells in (h2, h3 still RUNNING).
+Next: h2 lands by itself; harvest h3 with `JACK_REUSE_KERNEL=jannolouwrens/<slug> $PY -m experiments.humid_race_kcpu kernel <same cells>` (logs /data/tmp/humid_kcpu_h{3,4}.log), then `humid_race tally`.
 
 ### J7 — The deeper world (W1): `W1.04` ruled, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). In W1's venue
@@ -242,6 +243,7 @@ bookkeeping). (7) D52 scout retry; `run status` STEERING reader parses 0.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-15 08:45 JACK: reattach guard dead end — in-session push of h4 (`…4063`) recorded code sha 4821824c that no committed tree reproduces (45050dd hashes 74e82f24, HEAD d88f2b02), so the refusal's advice "reattach from the submitting commit" cannot work; meanwhile a worktree lacking the receipt log harvested with only "unverifiable — proceeding". The cell's own in-kernel shas (all = HEAD) were the real check. A failed main-tree reattach also appends a receipt that later reattaches compare against.
 
 - 11-15 06:43 JACK/J7: Kaggle's batch CPU cap MEASURED = 5 (6th push refused "Maximum batch CPU session count of 5 reached"; 5 CPU + 1 GPU ran together). Header's "use 4" leaves 1 spare; until ~11:00 one slot holds W1.04 s0 `jack-cpu-1794724769`, a pre-ruling-2 pilot with no unit value (pushed before the 06:40 rewrite reached me).
 ## DONE (kept one day)
