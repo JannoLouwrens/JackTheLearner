@@ -111,3 +111,31 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   exploration inside the seated learner (J1). Not entered: only the given-want
   arm lives, and a given want is advice, not his. END-FIT 1, 3, 4.
   Philosophy 1, 3, 4.
+
+- 11-15 · **Ear — taught by his own prediction of sound, at his own clock**
+  (ASR, VACANT; PLAN "Ear" right column; `ear_predict.py`, each rule committed
+  before its seeds: `30a411da`, `837b4c6f`). Bet: an ear + GRU core (70k
+  weights) that first only LISTENS to 20,000 unlabelled Speech Commands clips
+  (predict the next 200 ms tick of log-mel from the core state — the loss a
+  world-model brain already pays), then gets N narrated hearings per word,
+  beats the same net given the N hearings alone. Kill: under +5.0 points at
+  N = 25 (10 words, official speaker-disjoint test), or not 3/3 seeds, or a
+  shuffled-target twin gaining half as much. Prior: Data2Vec on compact
+  keyword transformers +8.2 to +11.2 points with scarce labels (2210.01703);
+  CPC/APC learn phones from 100–360 h. Ours: 5.5 h — below it.
+  - *next-tick MSE* (seeds 0–2) **DEAD at both clocks.** 200 ms: label 60.3,
+    pred **62.2 (+1.8**; +2.4 +0.6 +2.5), reconstruct+predict 61.3, shuffled
+    59.8. 40 ms: 62.4 vs **64.7 (+2.3**; +2.5 +5.8 −1.3), shuffled 62.7.
+    N = 125: 80.4 vs 81.3. He DOES predict the next tick (MSE .41 / .13 vs
+    .91 / .89 shuffled) and it buys his words almost nothing; the clock is
+    not the reason.
+  - *contrastive next tick* (CPC, 200 ms, seeds 3–5) **DEAD: 58.9 vs label
+    58.5 (+0.5**; +2.9 −1.6 +0.1); shuffled twin 61.0. Solved its own task
+    (loss 2.2 vs 6.0) — no word gain.
+  **Reading:** at 5.5 h of listening and 70k weights, the free world-model
+  loss on sound is not an ear; §7's "needs a loss on the sound channel that
+  names things" stands. Not entered. Unrun, each needs its own prior first:
+  listening hours as the dial (the published gains start at 100 h); the
+  narrator's label as the loss in a stream. Data now on the box:
+  `/data/jack_corpora/speech_commands_v2`, features `/data/tmp/ear_predict/`.
+  END-FIT 3. Philosophy 2, 3, 4.

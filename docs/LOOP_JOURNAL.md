@@ -1589,3 +1589,10 @@ Philosophy served: 5 (his world: lives now start hungry by the published recipe)
 - 8/200 f2 lives reached the 1800 s cap alive on floor food alone — first measured evidence the floor can sustain a life; misses are per-layout (seed means 3.0–13.5).
 - Row e still running on Kaggle; then answers 1 and 3 close J1.
 - Philosophy 4 (bar and control unmoved, failure stated) and 5 (his world measured before any brain is judged in it).
+
+## 2026-11-15 23:56 · LAB · Ear: can his own prediction of sound replace word labels? (`ear_predict.py`)
+- Bet (PLAN "Ear", right column; prior 2210.01703 +8–11 points, CPC/APC at 100–360 h): listen to 20,000 unlabelled clips by next-tick prediction, then N narrated hearings per word, vs the N hearings alone. Rules first (`30a411da`, `837b4c6f`).
+- DEAD twice at N = 25, bar +5.0: next-tick MSE +1.8 (200 ms clock) / +2.3 (40 ms), seeds 0–2; contrastive +0.5, seeds 3–5. Controls flat (−0.5, +0.4) or ahead (+2.5). He predicts the next tick (MSE .41 vs .91) and it does not teach words.
+- Not entered; no order. Speech Commands v0.02 is now at `/data/jack_corpora/speech_commands_v2` (3.3 GB) for the "Next up" keyword row.
+- Box CPU: ~75 CPU-min in all at nice 19; the three 40 ms pieces ran ~20 CPU-min each, over the 15-minute line — should have gone to Kaggle.
+- Philosophy 3 (the free loss was raced, not assumed), 4 (bars and controls unmoved), 2 (every arm learns from scratch).
