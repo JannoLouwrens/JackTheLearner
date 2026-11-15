@@ -77,13 +77,28 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          truncation"; Crafter caps at 10,000 steps. DIFFERS:
                          Crafter's cap builds a new world; ours keeps it
                          (lives persist in W0).
-  difficulty=None       J2 item 1, PART (meal size + regrowth delay only;
-                         food count and spawn distance still owed). None
+  difficulty=None       J2 item 1, PART (meal size, regrowth delay, spawn
+                         distance; food count still owed). None
                          or 1.0 = today's world, untouched. At d in [0,1):
                          floor-food meal nu(d) = 1.0 + d*(0.08 - 1.0) (a
                          full bar at d=0) and regrowth delay d*66.9 s
                          (instant at d=0, floored at the rest of the eating
                          decision, <= 0.2 s). The apple is not dialled.
+                         Spawn distance: birth and every respawn are drawn
+                         uniformly from W0's legal cells within r(d) = 0.5 +
+                         17*d m of the nearest floor food's current x, y
+                         (nearest legal cell if none is that close). DIFFERS:
+                         Avalon puts the food 0.5 m IN FRONT; W0 spawns
+                         every body facing one fixed yaw, so ours is a
+                         distance, not a heading; the linear map is ours.
+                         SPAWN PROOF (2026-11-15, `python -m experiments.
+                         tests.test_jack_env_spawn 400`, seeds 153-155,
+                         e0=0.05): every d=0 spawn 0.25-0.45 m from food,
+                         every d=0.25 spawn <= 4.59 m (bound 4.75); control:
+                         today's world breaks the 0.5 m bound on 12/12
+                         spawns (0.91-6.22 m). PASS. test_jack_env_dial re-run
+                         PASS (d=1 byte-identical; pooled floor eats d=0 17,
+                         d=0.5 3, d=1 3 in 3x400 random decisions).
                          Theirs: Avalon eat, one ceiling d in [0,1] per task,
                          food 0.5 m in front at d=0 so "even random agents
                          succeed"; Avalon food restores 100% of the bar
@@ -129,6 +144,13 @@ SENSES = ("vision", "audio", "touch", "proprio", "needs")
 REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
 FLOOR_FOODS = ("obj0", "obj1")
 MEAL_AT_D0 = 1.0     # Avalon: a food fills the bar (PUBLISHED_PRIORS §3 table)
+SPAWN_R_D0 = 0.5     # m; Avalon eat: food 0.5 m in front of the agent at d=0
+SPAWN_R_SPAN = 17.0  # m; ~ the arena diagonal (2*sqrt(2)*6): r(1) covers all
+
+
+def dial_spawn_radius(d: float) -> float:
+    """Spawn-to-nearest-floor-food radius at dial d: 0.5 m at d=0, linear."""
+    return SPAWN_R_D0 + d * SPAWN_R_SPAN
 
 
 def dial_meal(nu1: float, d: float) -> float:
@@ -183,7 +205,13 @@ class JackEnv(gym.Env):
         from experiments import drives
         from experiments.w0 import W0
         self.w = W0(seed=seed, j0=self.j0, alpha=self.alpha, lethal=True,
-                    diary=self.diary)
+                    diary=self.diary,
+                    spawn_sampler=(None if self.difficulty is None
+                                   else self._near_food_spawn))
+        if self.difficulty is not None:
+            # J2 item 1: birth too is placed by the dial (W0's own respawn,
+            # drawn from W0's spawn stream); d=1 never reaches here.
+            self.w.respawn()
         if self.e0 != 1.0:      # survival.run_survival's e0, applied the same way
             self.w.drives.state = drives.DriveState(e=self.e0)
         self._eats_at_life_start = 0
@@ -194,6 +222,28 @@ class JackEnv(gym.Env):
                 if name in self.w.drives._food:
                     gid, nu = self.w.drives._food[name]
                     self.w.drives._food[name] = (gid, dial_meal(nu, self.difficulty))
+
+    def _near_food_spawn(self, legal: np.ndarray, rng: np.random.RandomState,
+                         death_xy) -> tuple:
+        """W0 spawn_sampler at dial d: uniform over the LEGAL cells whose
+        distance to the nearest floor food (its body's current x, y — the
+        foods are free bodies and get pushed) is <= dial_spawn_radius(d).
+        If no legal cell is that close (25x25 grid, 0.44 m pitch), the
+        nearest legal cell(s) are used. `death_xy` unused, as in
+        w0.uniform_legal_spawn. Same RNG stream (W0's _spawn_rng)."""
+        w = self.w
+        foods = np.array([w.data.xpos[w.model.body(n).id][:2]
+                          for n in FLOOR_FOODS if n in w.drives._food])
+        if len(foods) == 0:
+            k = int(rng.randint(len(legal)))
+            return float(legal[k][0]), float(legal[k][1])
+        dist = np.min(np.linalg.norm(legal[:, None, :] - foods[None, :, :],
+                                     axis=2), axis=1)
+        r = max(dial_spawn_radius(self.difficulty), float(dist.min()) + 1e-9)
+        cand = np.flatnonzero(dist <= r)
+        k = int(cand[rng.randint(len(cand))])
+        self.last_spawn_food_dist = float(dist[k])
+        return float(legal[k][0]), float(legal[k][1])
 
     def _dial_respawn(self, ate_before: dict) -> None:
         """Shorten the floor-food regrowth timer just set by an eat event.
