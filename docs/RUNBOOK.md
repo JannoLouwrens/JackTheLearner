@@ -1841,5 +1841,15 @@ Claude's Remote Control.
   "no extra services" rule, on the owner's instruction; it uses about 1 MB.
   To remove: `sudo systemctl disable --now jack-terminal`, delete the
   `jack.worldtwin.duckdns.org` block from the Caddyfile, `caddy reload`.
+- **History, inside a fixed amount of disk.** `/data/jack-dashboard/` holds
+  `score_history.jsonl` (one row a day), `journal.jsonl` (each day's short
+  version of PROGRESS.md) and `media/archive/` (films: all for 14 days, then
+  one a week to 90 days, then one a month, never more than 400 MB — the
+  constants are at `archive_films` in the script). Text history is a few
+  kilobytes a month.
+- **Worth a look.** `attention()` in the script lists what the owner may want
+  to act on: a pause, usage near the stop, the Auditor's verdict, a run cut
+  short, an owner request not done, a first job that has not moved in a day,
+  a low system disk.
 - To switch it off: remove the `dashboard_status.py` line from the crontab.
 

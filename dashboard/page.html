@@ -135,6 +135,23 @@ td,th{padding:3px 12px 3px 0;text-align:right;font-weight:500}
 th{color:var(--ink3);font-weight:600}
 .scroll{overflow-x:auto}
 
+/* worth a look */
+.look{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;padding:11px 0;border-top:1px solid var(--line);font-size:15px;line-height:1.4;color:var(--ink2);align-items:start}
+.looks>.look:first-child{border-top:0}
+.look .st{margin-top:1px}
+
+/* looking back */
+#hist{position:relative;margin-top:10px}
+#hist svg{display:block;width:100%;height:auto;overflow:visible;touch-action:pan-y}
+#hist text{font-family:var(--font);font-size:11px;fill:var(--ink3)}
+.day{display:block;width:100%;padding:13px 0;border:0;border-top:1px solid var(--line);background:none;text-align:left;cursor:pointer}
+.days>.day:first-child{border-top:0}
+.day .when{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.day .when b{color:var(--ink);font-size:15px;font-weight:600}
+.day .txt{margin-top:4px;font-size:15px;line-height:1.45;color:var(--ink2);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.day.open .txt{display:block}
+.day .txt strong{color:var(--ink)}
+
 /* milestones */
 .ms{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:4px 12px;align-items:center}
 .ms .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;background:var(--inset);color:var(--ink2);grid-row:1/3}
@@ -260,6 +277,13 @@ function viewJack(){
      '</div>'+
      '<p style="margin:14px 0 0"><button class="link" data-sheet="method">How these numbers are made</button></p></div>';
 
+  var A=S.attention||[];
+  if(A.length){
+    var LV={crit:["!","Urgent","crit"],warn:["!","Look","warn"],info:["i","Note",""]};
+    h+='<div class="card"><h2>Worth a look</h2><div class="looks">'+A.map(function(a){var l=LV[a.level]||LV.info;
+      return '<div class="look"><span class="st '+l[2]+'"><b aria-hidden="true">'+l[0]+'</b><span style="position:absolute;left:-9999px">'+l[1]+"</span></span><span>"+esc(a.text)+"</span></div>"}).join("")+"</div></div>";
+  }
+
   var hd=S.headline||{};
   if(hd.paras&&hd.paras.length){
     h+='<div class="card note'+(noteOpen?"":" clamp")+'"><p class="eyebrow">From the Director'+(hd.written&&/^\d{4}-\d\d-\d\d/.test(hd.written)?" · "+day(hd.written.slice(0,10)+"T12:00"):"")+'</p><div class="body">'+
@@ -303,9 +327,56 @@ function viewJack(){
        "</div></div>";
   }
   h+="</div>";
+  var Jn=S.journal||[], Hs=(S.ladder.history||[]);
+  if(Hs.length>2||Jn.length){
+    var shown=journalAll?Jn:Jn.slice(0,5);
+    h+='<div class="card span"><h2>Looking back</h2><p class="sub">Tests passing, day by day, since the first one in August. Flat stretches are days the agents were paused.</p>'+
+       (Hs.length>2?'<div id="hist"></div><details><summary>Show the numbers</summary><div class="scroll"><table><tr><th>Day</th><th>Passing</th></tr>'+Hs.slice().reverse().map(function(x){return "<tr><td>"+day(x.d+"T12:00")+"</td><td>"+x.v+"</td></tr>"}).join("")+"</table></div></details>":"")+
+       (Jn.length?'<h3 class="h3">Day by day</h3><div class="days">'+shown.map(function(j,i){
+          var open=journalOpen[j.d];
+          return '<button class="day'+(open?" open":"")+'" data-day="'+esc(j.d)+'"><span class="when"><b>'+day(j.d+"T12:00")+"</b>"+(j.passing!=null?"<span>"+j.passing+" of "+j.total+" tests</span>":"")+'</span><span class="txt">'+(j.paras&&j.paras.length?(open?j.paras:j.paras.slice(0,1)).map(bold).join("<br><br>"):bold(j.line))+"</span></button>"}).join("")+"</div>"+
+          (Jn.length>5?'<p style="margin:12px 0 0"><button class="link" data-act="journal">'+(journalAll?"Show fewer":"Show all "+Jn.length+" days")+"</button></p>":""):"")+
+       "</div>";
+  }
   $("#view-jack").innerHTML=h;
-  wireChart();
+  wireChart();drawHistory();
 }
+var journalAll=false,journalOpen={};
+function drawHistory(){
+  var el=$("#hist"),H=(S&&S.ladder.history)||[];if(!el||H.length<3)return;
+  var W=Math.max(280,Math.round(el.clientWidth||320)),Ht=W<520?190:230,ml=30,mr=34,mt=12,mb=24,pw=W-ml-mr,ph=Ht-mt-mb;
+  var pts=H.map(function(x){return {t:+new Date(x.d+"T12:00:00Z"),v:x.v,d:x.d}}),t0=pts[0].t,t1=pts[pts.length-1].t;
+  var top=Math.max(50,Math.ceil(Math.max.apply(null,pts.map(function(p){return p.v}))/50)*50);
+  var X=function(t){return ml+(t-t0)/(t1-t0||1)*pw},Y=function(v){return mt+ph-(v/top)*ph},g="";
+  for(var v=0;v<=top;v+=50)g+='<line x1="'+ml+'" x2="'+(W-mr)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(ml-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+v+"</text>";
+  var d=new Date(t0);d=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,1));
+  while(+d<=t1){g+='<text x="'+X(+d)+'" y="'+(Ht-6)+'" text-anchor="middle">'+d.toLocaleDateString(undefined,{month:"short",timeZone:"UTC"})+"</text>";d=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,1))}
+  var line=pts.map(function(p,i){return (i?"L":"M")+X(p.t).toFixed(1)+","+Y(p.v).toFixed(1)}).join("");
+  var last=pts[pts.length-1];
+  g+='<path d="'+line+"L"+X(t1).toFixed(1)+","+Y(0)+"L"+X(t0).toFixed(1)+","+Y(0)+'Z" fill="var(--accent)" opacity=".10"/>'+
+     '<path d="'+line+'" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'+
+     '<circle cx="'+X(last.t)+'" cy="'+Y(last.v)+'" r="4" fill="var(--accent)" stroke="var(--card)" stroke-width="2"/>'+
+     '<text x="'+(X(last.t)+8)+'" y="'+(Y(last.v)+4)+'" style="fill:var(--ink);font-weight:600">'+last.v+"</text>"+
+     '<line id="hx" x1="0" x2="0" y1="'+mt+'" y2="'+(mt+ph)+'" stroke="var(--ink3)" stroke-width="1" visibility="hidden"/>'+
+     '<circle id="hd" r="4" fill="var(--accent)" stroke="var(--card)" stroke-width="2" visibility="hidden"/>'+
+     '<rect id="hr" x="'+ml+'" y="'+mt+'" width="'+pw+'" height="'+ph+'" fill="transparent"/>';
+  el.innerHTML='<svg viewBox="0 0 '+W+" "+Ht+'" role="img" aria-label="Tests passing each day since August, now '+last.v+'">'+g+"</svg>";
+  var tip=null;
+  function at(e){
+    var b=el.getBoundingClientRect(),x=(e.clientX-b.left)/b.width*W,best=pts[0];
+    pts.forEach(function(p){if(Math.abs(X(p.t)-x)<Math.abs(X(best.t)-x))best=p});
+    var hx=el.querySelector("#hx"),hdot=el.querySelector("#hd");
+    hx.setAttribute("x1",X(best.t));hx.setAttribute("x2",X(best.t));hx.setAttribute("visibility","visible");
+    hdot.setAttribute("cx",X(best.t));hdot.setAttribute("cy",Y(best.v));hdot.setAttribute("visibility","visible");
+    if(!tip){tip=document.createElement("div");tip.className="tip";el.appendChild(tip)}
+    tip.textContent=day(best.d+"T12:00")+" · "+best.v+" passing";tip.hidden=false;
+    tip.style.left=Math.max(70,Math.min(b.width-70,X(best.t)/W*b.width))+"px";tip.style.top=(Y(best.v)/Ht*b.height-10)+"px";
+  }
+  function off(){if(tip)tip.hidden=true;var a=el.querySelector("#hx"),c=el.querySelector("#hd");if(a)a.setAttribute("visibility","hidden");if(c)c.setAttribute("visibility","hidden")}
+  var r=el.querySelector("#hr");r.addEventListener("pointermove",at);r.addEventListener("pointerdown",at);
+  r.addEventListener("pointerleave",function(e){if(e.pointerType!=="touch")off()});   /* a tap keeps its label until the next tap */
+}
+var histTimer=null;window.addEventListener("resize",function(){clearTimeout(histTimer);histTimer=setTimeout(drawHistory,150)});
 
 function livesCard(L){
   var W=340,H=176,ml=30,mr=6,mt=12,mb=22,pw=W-ml-mr,ph=H-mt-mb,n=L.learner.length;
@@ -388,26 +459,37 @@ function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 function nextUp(t){var ts=t.members.map(function(m){return m.next}).filter(Boolean).sort();return ts[0]}
 
 /* ───────── Watch, Talk ───────── */
-var watchSig=null;
+var watchSig=null,watchPick=null,filmInfo={};
 function mmss(t){t=Math.max(0,Math.round(t));return Math.floor(t/60)+":"+("0"+t%60).slice(-2)}
 function viewWatch(){
-  var w=S.watch||{},o=(S.orders||[]).filter(function(x){return /video|watch/i.test(x.title)})[0];
-  var sig=JSON.stringify([w,o&&!w.video?o.state:null]);
+  var w=S.watch||{},arc=w.archive||[],o=(S.orders||[]).filter(function(x){return /video|watch/i.test(x.title)})[0];
+  if(watchPick!=null&&!arc[watchPick])watchPick=null;
+  var f=watchPick==null?w:Object.assign({},arc[watchPick],filmInfo[arc[watchPick].video]||{});
+  var sig=JSON.stringify([f,arc.map(function(a){return a.video}),o&&!w.video?o.state:null]);
   if(sig===watchSig)return;            /* a refresh must not restart a film that is playing */
   watchSig=sig;
+  if(watchPick!=null&&arc[watchPick].info&&!filmInfo[arc[watchPick].video]){
+    var key=arc[watchPick].video;
+    fetch(arc[watchPick].info,{cache:"no-store"}).then(function(r){return r.ok?r.json():{}}).then(function(j){filmInfo[key]={facts:j.facts||[],events:j.events||[],source:j.source||""};watchSig=null;viewWatch()}).catch(function(){filmInfo[key]={}});
+  }
   var h='<div class="card"><h2>Watch him</h2>';
-  if(w.video){
-    h+='<p class="sub">'+(w.title?esc(w.title)+". ":"")+"Filmed "+day(w.made)+'. It is a recording: the life was lived first and drawn afterwards.</p>'+
-       '<video id="vid" controls playsinline preload="metadata" src="'+esc(w.video)+'"></video>';
-    if(w.summary)h+='<p class="story">'+esc(w.summary)+"</p>";
-    if(w.facts&&w.facts.length)h+='<div class="tiles facts">'+w.facts.map(function(f){return '<div class="tile"><div class="v" style="font-size:19px">'+esc(f.value)+'</div><div class="l">'+esc(f.label)+"</div></div>"}).join("")+"</div>";
-    if(w.events&&w.events.length)h+='<h3 class="h3">Moments</h3><p class="sub" style="margin:0">Tap one to jump there in the film.</p><div class="items">'+
-       w.events.map(function(e){return '<button class="item tap" data-seek="'+e.t+'"><span class="name" style="font-weight:500;font-size:15px">'+esc(e.label)+'</span><span class="chip">'+esc(e.at||mmss(e.t))+"</span></button>"}).join("")+"</div>";
-    if(w.source||w.note)h+='<p class="foot" style="padding:12px 0 0">'+esc([w.source,w.note].filter(Boolean).join(" · "))+"</p>";
+  if(f.video){
+    h+='<p class="sub">'+(f.title?esc(f.title)+". ":"")+"Filmed "+day(f.made)+'. It is a recording: the life was lived first and drawn afterwards.</p>'+
+       '<video id="vid" controls playsinline preload="metadata" src="'+esc(f.video)+'"></video>';
+    if(f.summary)h+='<p class="story">'+esc(f.summary)+"</p>";
+    if(f.facts&&f.facts.length)h+='<div class="tiles facts">'+f.facts.map(function(x){return '<div class="tile"><div class="v" style="font-size:19px">'+esc(x.value)+'</div><div class="l">'+esc(x.label)+"</div></div>"}).join("")+"</div>";
+    if(f.events&&f.events.length)h+='<h3 class="h3">Moments</h3><p class="sub" style="margin:0">Tap one to jump there in the film.</p><div class="items">'+
+       f.events.map(function(e){return '<button class="item tap" data-seek="'+e.t+'"><span class="name" style="font-weight:500;font-size:15px">'+esc(e.label)+'</span><span class="chip">'+esc(e.at||mmss(e.t))+"</span></button>"}).join("")+"</div>";
+    if(f.source||f.note)h+='<p class="foot" style="padding:12px 0 0">'+esc([f.source,f.note].filter(Boolean).join(" · "))+"</p>";
   }else{
     h+='<p class="sub">No recording yet.</p><p style="color:var(--ink2);font-size:16px;max-width:40em">A short film of one of his lives is on order'+(o?" ("+esc(o.id)+")":"")+". When a worker has made it, it plays here with a few sentences on what happened in that life and a list of moments you can jump to: each meal, each fall, how it ended. Seeing him live, as it happens, needs a machine with a graphics chip; this server has none.</p>"+
        (o&&o.state?'<p class="foot" style="padding:0">Where it stands: '+esc(o.state)+"</p>":"");
   }
+  h+="</div>";
+  h+='<div class="card"><h2>Earlier films</h2><p class="sub">Every film from the last two weeks, then one a week, then one a month. The whole shelf is held to '+(w.archive_cap_mb||400)+" MB"+(arc.length?"; it holds "+((w.archive_mb||0)<0.1?"under 0.1":num(w.archive_mb,1))+" MB now":"")+".</p>";
+  if(arc.length)h+='<div class="items">'+(watchPick!=null?'<button class="item tap" data-film=""><span class="name" style="font-size:15px">Back to the newest film</span><span class="chip">now</span></button>':"")+
+    arc.map(function(a,i){return '<button class="item tap" data-film="'+i+'"><span class="name" style="font-size:15px;font-weight:'+(i===watchPick?700:500)+'">'+esc(a.title||"A life")+'</span><span class="chip">'+day(a.made)+"</span>"+(a.summary?'<span class="role">'+esc(a.summary)+"</span>":"")+"</button>"}).join("")+"</div>";
+  else h+='<p class="empty">Nothing here yet. Each new film is kept automatically.</p>';
   h+="</div>";
   $("#view-watch").innerHTML=h;
 }
@@ -487,13 +569,18 @@ function refresh(){
     if(j&&j.generated&&(!S||j.generated!==S.generated)){S=j;render()}}).catch(function(){});
 }
 document.addEventListener("click",function(e){
-  var t=e.target.closest("[data-sheet],[data-act],[data-tab],[data-seek]");
+  var t=e.target.closest("[data-sheet],[data-act],[data-tab],[data-seek],[data-day],[data-film]");
   if(e.target.id==="scrim"){closeSheet();return}
   if(!t)return;
-  if(t.dataset.seek!=null){var v=$("#vid");if(v){try{v.currentTime=+t.dataset.seek}catch(err){}var pl=v.play&&v.play();if(pl&&pl.catch)pl.catch(function(){});v.scrollIntoView({block:"center"})}return}
+  if(t.dataset.seek!=null){var v=$("#vid");if(v){var to=+t.dataset.seek,go=function(){try{v.currentTime=to}catch(err){}var pl=v.play&&v.play();if(pl&&pl.catch)pl.catch(function(){})};
+    if(v.readyState>=1)go();else{v.addEventListener("loadedmetadata",go,{once:true});try{v.load()}catch(err){}}   /* a film still loading jumps as soon as it can */
+    v.scrollIntoView({block:"center"})}return}
   if(t.dataset.sheet)openSheet(t.dataset.sheet);
   else if(t.dataset.act==="close")closeSheet();
   else if(t.dataset.act==="note"){noteOpen=!noteOpen;viewJack()}
+  else if(t.dataset.act==="journal"){journalAll=!journalAll;viewJack()}
+  else if(t.dataset.day){journalOpen[t.dataset.day]=!journalOpen[t.dataset.day];t.classList.toggle("open");var jj=(S.journal||[]).filter(function(x){return x.d===t.dataset.day})[0];if(jj&&jj.paras&&jj.paras.length)t.querySelector(".txt").innerHTML=(journalOpen[jj.d]?jj.paras:jj.paras.slice(0,1)).map(bold).join("<br><br>")}
+  else if(t.dataset.film!=null){watchPick=t.dataset.film===""?null:+t.dataset.film;watchSig=null;viewWatch();var vv=$("#vid");if(vv){vv.scrollIntoView({block:"center"});var pp=vv.play&&vv.play();if(pp&&pp.catch)pp.catch(function(){})}}
   else if(t.dataset.tab){showTab(t.dataset.tab);try{history.replaceState(null,"","#"+t.dataset.tab)}catch(err){location.hash=t.dataset.tab}window.scrollTo(0,0)}
 });
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&openKey)closeSheet()});

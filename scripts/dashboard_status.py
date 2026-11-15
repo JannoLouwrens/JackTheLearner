@@ -701,7 +701,7 @@ def resources(job_list: list) -> dict:
 
 
 # ── history ─────────────────────────────────────────────────────────────────
-def ladder_history(days: int = 45) -> list:
+def ladder_history(days: int = 400) -> list:
     last: dict[str, int] = {}
     for m in re.finditer(r"(?m)^(\d{4}-\d\d-\d\d)T\S+ iteration (?:start — lane \w+, (\d+)/\d+|end rc=\S+ — \d+ -> (\d+))",
                          read(LOGS / "ladder.log")):
@@ -729,13 +729,172 @@ def score_history(ab: dict, passing: int, total: int) -> list:
     return [{"d": r["d"], "v": r["overall"]} for r in rows[-60:]]
 
 
+# ── looking back: one entry a day ───────────────────────────────────────────
+def journal() -> list:
+    """The Director's log line for every day since August, and — from the day
+    this page was built — that day's plain-words note, kept here because
+    PROGRESS.md itself is rewritten daily. A few kilobytes a month."""
+    rows: dict = {}
+    for line in read(REPO / "docs" / "PROGRESS_LOG.md").splitlines():
+        m = re.match(r"\|\s*(\d{4}-\d\d-\d\d)\s*\|\s*\w+\s*\|\s*(\d+)/(\d+)\s*\|[^|]*\|[^|]*\|[^|]*\|\s*(.+?)\s*\|?\s*$", line)
+        if m:
+            rows[m.group(1)] = {"d": m.group(1), "passing": int(m.group(2)), "total": int(m.group(3)),
+                                "line": clean(m.group(4))[:340], "paras": []}
+    path, kept = OUT / "journal.jsonl", {}
+    for line in read(path).splitlines():
+        try:
+            r = json.loads(line)
+            kept[r["d"]] = r
+        except (ValueError, KeyError):
+            continue
+    h = headline()
+    m = re.match(r"(\d{4}-\d\d-\d\d)", h.get("written") or "")
+    if m and h["paras"] and kept.get(m.group(1), {}).get("paras") != h["paras"]:
+        kept[m.group(1)] = {"d": m.group(1), "paras": h["paras"]}
+        tmp = path.with_suffix(".tmp")
+        tmp.write_text("".join(json.dumps(kept[k], ensure_ascii=False) + "\n" for k in sorted(kept)[-800:]))
+        os.replace(tmp, path)
+    for d, r in kept.items():
+        rows.setdefault(d, {"d": d, "passing": None, "total": None, "line": "", "paras": []})["paras"] = r["paras"][:3]
+    return sorted(rows.values(), key=lambda r: r["d"], reverse=True)[:120]
+
+
+# ── worth a look: what the owner might want to act on ───────────────────────
+def attention(st: dict) -> list:
+    out = []
+
+    def add(level, text, tab="machine"):
+        out.append({"level": level, "text": text, "tab": tab})
+
+    if st["team"].get("paused"):
+        add("crit", "All agents are paused. Nothing new starts until they are resumed.")
+    c = st["resources"].get("claude")
+    if c and c.get("pct") is not None:
+        if c["pct"] >= c["stop"]:
+            add("crit", f"The agents have stopped: this week's Claude usage reached {c['pct']}%. It resets {c.get('resets') or 'at the weekly reset'}.")
+        elif c["pct"] >= c["stop"] - 15:
+            add("warn", f"Claude usage is at {c['pct']}% for the week. The agents pause at {c['stop']}%; it resets {c.get('resets') or 'at the weekly reset'}.")
+    for m in st["team"]["members"]:
+        if m["id"] == "auditor" and (m.get("verdict") or "").upper() not in ("", "ON TRACK"):
+            add("warn", f"The Auditor's last verdict was {m['verdict'].title()}. The Director's note on the Jack page says what is being done.", "jack")
+        if m.get("last_ok") is False and not m.get("running"):
+            add("info", f"{m['name']}: the last run was cut short or failed.")
+    year = NOW.year
+    for i, o in enumerate(st["orders"]):
+        m = re.match(r"(\d\d)-(\d\d) (\d\d):(\d\d)", o["state"])
+        when = None
+        if m:
+            try:
+                when = dt.datetime(year, int(m.group(1)), int(m.group(2)), int(m.group(3)), int(m.group(4)), tzinfo=UTC)
+                if when > NOW + dt.timedelta(days=2):
+                    when = when.replace(year=year - 1)
+            except ValueError:
+                when = None
+        asked = re.search(r"owner request (\d\d)-(\d\d)", o["title"])
+        if asked and not re.search(r"\bDONE\b", o["state"]):
+            try:
+                since = dt.datetime(year, int(asked.group(1)), int(asked.group(2)), tzinfo=UTC)
+                days = (NOW - since).days
+                title = re.sub(r"\s*\(owner request[^)]*\)", "", o["title"]).split(" — ")[0]
+                add("warn" if days >= 2 else "info",
+                    f"You asked for this {days} day{'s' if days != 1 else ''} ago and it is not done: {title}.")
+            except ValueError:
+                pass
+        elif i == 0 and when and (NOW - when).total_seconds() > 24 * 3600 and not re.search(r"\bDONE\b", o["state"][:40]):
+            add("warn", f"The first job has not moved for {int((NOW - when).total_seconds() // 3600)} hours: {o['title']}.")
+    for d in st["resources"].get("disk", []):
+        if d["label"].startswith("System") and d["free_gb"] < 4.5:
+            add("warn", f"The system disk has {d['free_gb']} GB free. The workers stop below 3 GB.")
+    if st.get("errors"):
+        add("info", f"{len(st['errors'])} part(s) of this page could not be read this time.")
+    order = {"crit": 0, "warn": 1, "info": 2}
+    return sorted(out, key=lambda a: order[a["level"]])
+
+
+# ── films kept to look back on, inside a fixed amount of disk ───────────────
+VIDEO_DIR = Path(os.environ.get("JACK_VIDEO_DIR", "/data/jack-video"))
+ARCHIVE_CAP_MB = 400      # the most disk the film archive may ever hold
+KEEP_ALL_DAYS = 14        # every film this recent is kept
+WEEKLY_UNTIL_DAYS = 90    # older than that: one a week; older still: one a month
+
+
+def archive_films() -> list:
+    """Each new latest.mp4 is linked (same disk, no copy) under a dated name.
+    Recent films are all kept, older ones thin to one a week, then one a month,
+    and the whole archive never exceeds ARCHIVE_CAP_MB — oldest go first."""
+    arc = OUT / "media" / "archive"
+    for ext in ("mp4", "webm"):
+        src = VIDEO_DIR / f"latest.{ext}"
+        if not (src.is_file() and src.stat().st_size > 0):
+            continue
+        arc.mkdir(parents=True, exist_ok=True)
+        st = src.stat()
+        if any(f.stat().st_ino == st.st_ino or (f.stat().st_size, int(f.stat().st_mtime)) == (st.st_size, int(st.st_mtime))
+               for f in arc.glob(f"*.{ext}")):
+            break
+        stamp = dt.datetime.fromtimestamp(st.st_mtime, UTC).strftime("%Y%m%d-%H%M%S")
+        dst = arc / f"{stamp}.{ext}"
+        try:
+            os.link(src, dst)
+        except OSError:
+            shutil.copy2(src, dst)
+        side = VIDEO_DIR / "latest.json"
+        if side.is_file():
+            shutil.copyfile(side, arc / f"{stamp}.json")
+        break
+    if not arc.is_dir():
+        return []
+    films = sorted((f for f in arc.iterdir() if f.suffix in (".mp4", ".webm")), key=lambda f: f.name, reverse=True)
+
+    def drop(f):
+        f.unlink(missing_ok=True)
+        f.with_suffix(".json").unlink(missing_ok=True)
+
+    seen, keep = set(), []
+    for f in films:                                   # newest first
+        try:
+            t = dt.datetime.strptime(f.stem, "%Y%m%d-%H%M%S").replace(tzinfo=UTC)
+        except ValueError:
+            continue
+        age = (NOW - t).days
+        if age <= KEEP_ALL_DAYS:
+            keep.append(f)
+            continue
+        y, w, _ = t.isocalendar()
+        slot = ("w", y, w) if age <= WEEKLY_UNTIL_DAYS else ("m", t.year, t.month)
+        if slot in seen:
+            drop(f)
+        else:
+            seen.add(slot)
+            keep.append(f)
+    total = sum(f.stat().st_size for f in keep)
+    while keep and total > ARCHIVE_CAP_MB * 2**20:
+        f = keep.pop()                                # the oldest
+        total -= f.stat().st_size
+        drop(f)
+    out = []
+    for f in keep[:60]:
+        info = {}
+        try:
+            info = json.loads(f.with_suffix(".json").read_text(errors="replace"))
+        except (OSError, ValueError):
+            pass
+        t = dt.datetime.strptime(f.stem, "%Y%m%d-%H%M%S").replace(tzinfo=UTC)
+        out.append({"video": f"media/archive/{f.name}", "made": iso(t),
+                    "info": f"media/archive/{f.stem}.json" if f.with_suffix(".json").exists() else None,
+                    "title": clean(str(info.get("title") or ""))[:120] if isinstance(info, dict) else "",
+                    "summary": clean(str(info.get("summary") or ""))[:400] if isinstance(info, dict) else "",
+                    "mb": round(f.stat().st_size / 2**20, 1)})
+    return out
+
+
 # ── watch: a recorded life, if a worker has made one ────────────────────────
 def watch() -> dict:
     """ORDERS S6 writes the newest recorded life to /data/jack-video/latest.mp4.
     The page can only play what sits beside it, so the file is linked (same
     disk, no copy) into the dashboard's own folder. Nothing is rendered here."""
     media = OUT / "media"
-    for src_dir in (Path("/data/jack-video"), media):
+    for src_dir in (VIDEO_DIR, media):
         for ext in ("mp4", "webm"):
             src = src_dir / f"latest.{ext}"
             if not (src.is_file() and src.stat().st_size > 0):
@@ -817,8 +976,14 @@ def build() -> dict:
         "chat": {"url": cfg.get("chat_url") or None, "label": cfg.get("chat_label") or None,
                  "terminal": cfg.get("terminal_url") or None},
         "site": cfg.get("site_url") or None,
+        "journal": guarded(journal, []),
         "errors": ERRORS,
     }
+    films = guarded(archive_films, [])
+    status["watch"]["archive"] = films
+    status["watch"]["archive_mb"] = round(sum(f["mb"] for f in films), 1)
+    status["watch"]["archive_cap_mb"] = ARCHIVE_CAP_MB
+    status["attention"] = guarded(lambda: attention(status), [])
     return status
 
 
@@ -893,6 +1058,21 @@ def publish(pub: Path) -> None:
     for old in (pub / "media").glob("latest.*"):
         if old.name not in live:
             old.unlink(missing_ok=True)
+    # the film archive, mirrored by hard link; what was thinned out goes here too
+    arc, parc = OUT / "media" / "archive", pub / "media" / "archive"
+    have = {f.name for f in arc.iterdir()} if arc.is_dir() else set()
+    if have or parc.is_dir():
+        parc.mkdir(parents=True, exist_ok=True)
+        for name in have:
+            dst = parc / name
+            if not dst.exists():
+                try:
+                    os.link(arc / name, dst)
+                except OSError:
+                    shutil.copy2(arc / name, dst)
+        for old in parc.iterdir():
+            if old.name not in have:
+                old.unlink(missing_ok=True)
     # The terminal page and the one library it loads, both from this server.
     page, vendor = CFG / "terminal" / "index.html", OUT / "vendor"
     if page.is_file() and vendor.is_dir():
