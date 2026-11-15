@@ -170,6 +170,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
     <button data-m="chat" role="menuitem">Open my Claude chat</button>
     <button data-m="copy" role="menuitem">Copy what is on screen</button>
     <hr>
+    <button data-m="wins" role="menuitem">Windows</button>
     <button data-m="newwin" role="menuitem">New window</button>
     <button data-m="nextwin" role="menuitem">Next window</button>
     <hr>
@@ -205,7 +206,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
         <li><b>Photos</b><span>Tap the camera to take or choose a picture. It is saved on your server and its location is typed into your message.</span></li>
         <li><b>Scroll back</b><span>Swipe up and down on the terminal, or use the page keys.</span></li>
         <li><b>esc, ctrl</b><span>Tap esc to interrupt Claude. Tap ctrl, then a letter, for a control key; ^C is on its own key.</span></li>
-        <li><b>Windows</b><span>“New window” in the menu opens a second shell beside your chat; a strip along the bottom shows which one you are in.</span></li>
+        <li><b>Windows</b><span>“New window” in the menu opens a second shell beside your chat. “Windows” lists them all: pick one with the arrow keys and return.</span></li>
         <li><b>As an app</b><span>Choose “Add to Home Screen” in the menu. It then opens full screen from its own icon and stays signed in.</span></li>
       </ul>
       <button class="cta" data-close="tips">Done</button>
@@ -536,6 +537,7 @@ document.addEventListener("click",function(e){
     if(a==="bigger"){setSize(fontSize+1);return}
     $("#menu").hidden=true;
     if(a==="chat"){input("jackchat\r");term.focus()}
+    else if(a==="wins"){input("\x02w");term.focus()}
     else if(a==="newwin"){input("\x02c");term.focus()}
     else if(a==="nextwin"){input("\x02n");term.focus()}
     else if(a==="copy"){
