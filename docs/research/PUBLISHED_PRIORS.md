@@ -175,3 +175,36 @@ Long form with file-and-line parameters: `/data/jack-research/research_notes/Pub
 **The last 10%** (costs and predictions in the long form): a need-driven two-step chain in physics (free the fruit, then eat); warmth from a fire he must keep fed; making fire (predicted: not from undirected play at 10^7 decisions); cooking for his own hunger with no shaped reward (predicted: only with early provisioning); shelter for warmth and sleep (entering and closing: 10^6–10^7; building from parts: beyond a free budget unless much simplified); one value estimate per need; provisioning that fades in a persistent life.
 
 **Not verified:** EVAAA's true need rates (its runtime configs are not published) and its reward (stated three ways in paper and code); no ablation of meal size or food distance alone exists in any survival world; the entry settings at which a ray-sensing rover's random policy eats must be measured here.
+
+## 4. Body, movement and simulation speed (2026-11-15; serves the paused `D1.0`, `T2.01`, M4, J1's speed table; answers the INBOX `RESEARCH:` line on the control path)
+
+Long form: `/data/jack-research/research_notes/Published evidence for building Jack/body_motor_simulation.md` (106 sources; a few figures measured on this server under load and marked so).
+
+**Already known**
+- **Walking with no motion capture is routine only with thousands of parallel copies and PPO:** 2×10^7–4×10^8 steps; 4–6 minutes on an A100; 13–18 minutes for 3×10^7 steps on a free T4 (one community measurement). Policies are small: 4×32 up to 512-256-128.
+- **In ONE world, a first walk takes about 1M steps with TD-MPC2, BRO or SimBa** (DeepMind Control humanoid-walk 628–672), and the score is at the random floor before about 200k. Plain SAC, PPO, A3C and DreamerV3 sit at the floor for 1–4 million steps. **`T2.01` failing since August is the published expectation at our budgets.**
+- A CPU can do it: a 29-DoF humanoid walked with no mocap after 10–30M samples, 3×64 networks, 4–15 h on 8 threads, given a mirror-symmetry loss and helping forces that are withdrawn; without the help it only stood or fell (Yu et al. 2018).
+- **The control path (D1's question) is largely answered.** In the two direct tests (SimBa, BRO) a bigger actor did not help or hurt, and a bigger critic helped. Working humanoid controllers are 4×32 to 512-256-128; the largest from-scratch model acting every step on a humanoid is about 5M parameters. `D1.0`'s reading (the 0.5M controller leads the 57M trunk) is what the record predicts. The exact 57M contest is not in print.
+- **A 0.2 s brain needs a reflex layer.** Published slow brains decide 6–10 times a second over controllers at 30–200 a second; no humanoid balances on decisions slower than 15–20 a second. He decides 5 times a second.
+- Flat learners match hierarchy on shaped walking; hierarchy wins on sparse, long or object tasks, mostly through exploration. Where flat failed and two-level succeeded on humanoids (forage, carry, dribble) the low level came from mocap; Heess 2016 is the no-mocap precedent.
+- **Hands on a walking humanoid are unsolved from scratch:** every HumanoidBench manipulation task misses its target; 10 billion samples gave 56% carry success; tool use emerged only with an abstract grab action.
+- Mocap buys style and exploration, not return. It can stand outside as a judge (a style reward) or be distilled into a module inside him; which is allowed is the owner's rule, not the record's.
+- Body curricula work when well scheduled (withdrawn forces, strong-to-weak torque limits, a child-then-adult body, hands frozen while learning to walk); a poor schedule can be worse than none.
+- **Physics is not our bottleneck; our loop is.** A stock wheeled car steps 85,000 times a second on one loaded core of this server and a stock humanoid 20,000; the rover world manages about 2,800 because it uses the RK4 integrator (3.7× slower, measured) and does per-sub-step work and ray casts in Python. Published factors for fixing that pattern: 23× (logic moved out of Python), 2–3× (batching).
+
+**Take as-is**
+- Simulator: `integrator="implicitfast"` (or Euler); all sub-steps of a decision in one native call; `mujoco.batch`/rollout for several lives per process; `mj_multiRay` or rangefinder sensors for rays. T4: MJX with Brax PPO and the Playground environments. Mac: native MuJoCo on all performance cores (650K humanoid steps/s on an M3 Max, per the docs); no GPU physics there.
+- Reflex walking controller, no mocap: PD joint targets at 20–50 a second; reward and weights from the Playground G1 joystick config, or Yu et al.'s three terms with the mirror loss; termination on torso contact; random pushes; a 3×64 to 512-256-128 MLP. Aids to copy: withdrawn balance and propulsion forces; an effort cost raised only while the task is met; hands frozen at first.
+- One-world learner settings with humanoid evidence: SimBa (actor 1×128 block, critic 2×512 blocks, 2 updates per step, batch 256, weight decay 1e-2) or TD-MPC2 defaults.
+- Two-level design: the brain emits a velocity or target command every 0.1–0.2 s to the reflex controller; a rover-trained brain can be kept as the high level over a new body-specific low level.
+
+**Reproduce first** (cheapest first)
+- Gymnasium Humanoid-v5 floor: random actions 110 ± 30 in 23.5 steps; zero actions 199 ± 3 in 40 steps (seconds).
+- Raw physics speed on each of our machines (minutes). The MJX tutorial humanoid on a T4: its reward curve, wall-clock within 1.5× of 13–18 min.
+- SAC on Gymnasium Humanoid: about 5,200–5,500 at 1M steps (one CPU kernel, hours).
+- The 2018 CPU recipe: walks unaided, symmetry index about 0.01, and the no-help ablation only stands or falls (one 12 h kernel).
+- DeepMind Control humanoid-walk with SimBa or TD-MPC2: 628–668 at 1M, ≤ 2 at 200k (3–30 T4-hours a seed).
+
+**The last 10%** (designs, costs and predictions in the long form): one human-like body that both moves and forages, flat against a frozen reflex controller against a learning one; how slow the brain may decide; the control-path contest as a clean, checkable test (small actor, large actor, large trunk as critic only, on humanoid-walk, pass mark 600); whether his own energy need yields an economical gait; staged release of the hands; a growing body; the rover brain moved into a walking body; hold, carry and strike with a grab primitive before fingers; throughput on our own machines (predicted: 500–2,000 rover decisions a second per 4-core kernel after the simulator changes, from 28).
+
+**Not verified:** MuJoCo Warp on a T4, Kaggle CPU and M4-class figures (none published); the T4 MJX figure is one unmerged measurement; two source conflicts (SAC on humanoid-walk at 1M: 274 against 2) are flagged in the long form.
