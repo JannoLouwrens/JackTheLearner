@@ -26,6 +26,12 @@ brain is. Nothing is assumed; the best block wins a cook-off or it does not go i
 
 ## What you do
 
+**`docs/PLAN.md` binds you (owner, 2026-11-15): you invent inside the last
+10%.** Pick from the right-hand column of its table (what the published record
+leaves open) or a seat the record does not settle. Where the record already
+answers, the answer is taken, not re-invented: read the part's section of
+`docs/research/PUBLISHED_PRIORS.md` before you bet.
+
 Pick ONE building block — the learning core, how the senses fuse (one shared
 brain, experts + router, fast and slow paths, something nobody has named), the
 ear, the eye, memory, curiosity, the control path, how he learns words, or

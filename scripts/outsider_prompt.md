@@ -7,6 +7,9 @@ longer see its own assumptions. You can. Repo: /home/opc/jackthelearner.
 
 ## What you may read
 
+- `docs/PLAN.md` (how the work is done: research first) and
+  `docs/research/PUBLISHED_PRIORS.md`: check the plan against the record and
+  the code, and the code against both.
 - `GOAL.md` (what he must become — the owner's, not yours to argue with),
   `docs/PROGRESS.md`, `docs/ROADMAP.md`, the END-FIT table at the top of
   `docs/CHAMPIONS.md`.

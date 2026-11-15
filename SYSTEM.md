@@ -25,12 +25,17 @@ make that impossible to repeat.
 
 ## THE LOOP — the kernel everything else specializes
 
-    RESEARCH -> TEST -> IMPLEMENT -> TEST -> FIX -> (repeat)
+    RESEARCH -> COMBINE -> REPRODUCE -> TEST THE LAST 10% -> PUT IT IN HIM
 
-That is the whole system. It runs at two levels with the same steps:
+That is the whole system (owner, 2026-11-15; `docs/PLAN.md`, law 3b below). It
+replaced `RESEARCH -> TEST -> IMPLEMENT -> TEST -> FIX`, under which "research"
+shrank to choosing what to build and the team raced its own inventions without
+first reading what the world had already tested. It runs at two levels:
 
-- **On Jack**: research a question, write the falsifiable test, implement,
-  run it, fix what breaks. This is how every capability is built.
+- **On Jack**: read what is published; build from the proven parts; make our
+  build reproduce a published number; spend our own falsifiable tests only on
+  what the record leaves open; put what passes into him and check it there.
+  A FAIL is still an instruction: find why, fix, run again.
 - **On itself**: when the LOOP malfunctions — a test lied, integration nearly
   registered garbage, an agent died silently — the SAME steps run on the
   system: the failure is researched, a guard is specced, implemented,
@@ -168,6 +173,18 @@ old, missing or with nothing open send a worker to the top repairable blocker in
    never a verdict: published results do not seat anyone, and a surprise against
    the prior is a finding to report. `docs/research/PUBLISHED_PRIORS.md` is the
    standing reference; whoever writes a new prior adds it there.
+
+   **3b. THE FIVE STEPS (owner, 2026-11-15; `docs/PLAN.md`).** *"We must
+   research before we try our own stuff… see what we can combine from this
+   research to build our own, and then we test for the last 10%. This is a
+   fact, it must be like this."* Every part of Jack goes RESEARCH → COMBINE →
+   REPRODUCE → TEST THE LAST 10% → PUT IT IN HIM, and none skips a step. 3a's
+   PRIOR is step 1. Building from published designs and code (never weights)
+   is step 2. Reproducing a published number with our build is step 3. The
+   bakeoff of law 3 is step 4 and nothing else. A question the record answers
+   is answered by citing it, and a seat may be held BY RECORD, contestable by
+   any challenger that brings its own prior. `docs/PLAN.md` holds the stages
+   and where each part stands; every order names its part, stage and step.
 
    **THE INVARIANT THAT KEEPS THAT SAFE — and it takes THREE classes, not two.**
    The first version of this section had two, and the owner caught the hole the
@@ -364,7 +381,7 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 | `GOAL.md` | the north star: one brain, all senses, learns by living |
 | `SYSTEM.md` | this file: how decisions get made |
 | `docs/LESSONS_CORE.md` | the rules, short enough to be read every run (`docs/LESSONS.md` is the 1.4 MB archive — grep it) |
-| `docs/MASTER_PLAN.md` | the dependency graph and phase map |
+| `docs/PLAN.md` | HOW the work is done: the five steps, the stages, where each part stands (owner 2026-11-15) |
 | `docs/LOOP_JOURNAL.md` | chronological record; pre-registrations live here |
 | `docs/DECISIONS_NEEDED.md` | blocked on the owner — evidence attached |
 | `docs/DECISIONS_RESOLVED.md` | settled by bakeoff, losers included |

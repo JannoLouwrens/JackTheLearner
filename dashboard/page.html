@@ -132,6 +132,13 @@ div.row{cursor:default}
 .rl li::before{content:"";flex:none;width:5px;height:5px;border-radius:50%;background:var(--ink3);margin-top:9px}
 .rl li:has(b.n)::before{display:none}
 .rl li b.n{flex:none;min-width:14px;color:var(--ink3);font-weight:600}
+.pl summary{gap:12px;align-items:center;font-weight:400;padding:11px 0}
+.pl .pn{min-width:0;font-weight:600}.pl .pn small{display:block;font-size:13px;font-weight:400;color:var(--ink2);margin-top:2px}
+.pl summary::after{display:none}
+.s5{display:flex;gap:4px;flex:none}.s5 i{width:20px;height:8px;border-radius:99px;background:var(--track)}
+.s5 i.met{background:var(--good)}.s5 i.now{background:var(--accent)}
+.s5key{display:flex;flex-wrap:wrap;gap:4px 14px;margin:10px 0 6px;font-size:13px;color:var(--ink3)}.s5key b{color:var(--ink2)}
+a.link{text-decoration:none}
 a.rlink{display:block;text-decoration:none;color:inherit}
 a.rlink .name{color:var(--accent)}
 .feed{list-style:none;margin:10px 0 0;padding:0}
@@ -327,7 +334,14 @@ function viewJack(){
      (U.length?'<ul class="feed">'+U.slice(0,upAll?40:5).map(function(u){return "<li><em>"+esc(ago(u.at))+" · "+esc(({JACK:"Jack",LAB:"Lab",MACHINE:"Machine",SYSTEM:"Machine",OUTSIDER:"Outsider"})[u.lane]||u.lane)+"</em><span>"+bold(u.text)+"</span></li>"}).join("")+"</ul>"+
         (U.length>5?'<button class="link" data-act="ups">'+(upAll?"Show fewer":"Show all "+U.length)+"</button>":""):'<p class="empty">No notes yet. The first arrives after the next worker run.</p>')+"</div>";
 
-  var RS=S.research||[];
+  var PL=S.plan||{},PP=PL.parts||[],STEPN=["Not started","Research","Combine","Reproduce","Test the last 10%","In him"];
+  if(PP.length)h+='<div class="card span"><h2>How we build him</h2><p class="sub">Research first. Build from what others have proved. Test only what is new. Each part of Jack is on one of five steps; tap a part for what is already known and what is ours to find out.</p>'+
+     '<div class="s5key" aria-hidden="true">'+STEPN.slice(1).map(function(n,k){return "<span><b>"+(k+1)+"</b> "+esc(n)+"</span>"}).join("")+"</div>"+
+     PP.map(function(p){return '<details class="rs pl"'+(repOpen["plan:"+p.name]?" open":"")+' data-rep="plan:'+esc(p.name)+'"><summary><span class="pn">'+esc(p.name)+'<small>'+esc(STEPN[p.step]||"")+(p.note?" · "+esc(p.note):"")+'</small></span>'+
+        '<span class="s5" role="img" aria-label="Step '+p.step+' of 5">'+[1,2,3,4,5].map(function(k){return '<i class="'+(k<p.step?"met":k===p.step?"now":"")+'"></i>'}).join("")+"</span></summary>"+
+        '<p><strong>Already known.</strong> '+esc(p.known)+'</p><p><strong>Ours to find out.</strong> '+esc(p.ours)+"</p></details>"}).join("")+
+     (PL.href?'<p style="margin:14px 0 0"><a class="link" href="'+esc(PL.href)+'">Read the whole plan</a></p>':"")+"</div>";
+  var RS=(S.research||[]).filter(function(r){return r.kind!=="the plan"});
   if(RS.length)h+='<div class="card span"><h2>What others already tested</h2><p class="sub">Before the team builds or races anything, it reads what published research already shows. These are the reports.</p><div class="items">'+
      RS.map(function(r){return '<a class="item rlink" href="'+esc(r.href)+'"><span class="name">'+esc(r.title)+'</span><span class="role">'+esc(r.kind.charAt(0).toUpperCase()+r.kind.slice(1))+" · about "+Math.max(1,Math.round(r.words/230))+" min read · updated "+esc(ago(r.updated))+"</span></a>"}).join("")+"</div></div>";
 

@@ -17,7 +17,9 @@ and leave the rest as a `RESEARCH:` line in INBOX for the next slot.
 1. An INBOX line in `docs/ORDERS.md` that starts `RESEARCH:`.
 2. The first open JACK order in `docs/ORDERS.md` that starts or continues a
    race, cook-off or learning run and has no `prior:` lines.
-3. The earliest unfinished milestone in `docs/ROADMAP.md` with no section in
+3. A part in `docs/PLAN.md`'s table at step 0 or 1 with no section yet (say
+   so in your INBOX line, so the Director can move it to step 2). Then the
+   earliest unfinished milestone in `docs/ROADMAP.md` with no section in
    `docs/research/PUBLISHED_PRIORS.md`, or one older than 30 days.
 4. Otherwise the oldest section of that file: re-check it against new work.
 

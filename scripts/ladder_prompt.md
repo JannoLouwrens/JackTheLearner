@@ -32,14 +32,17 @@ a specific scar (GPU dispatch, detached runs, Kaggle pins, stale certificates).
 
 ## The loop you are one turn of
 
-    RESEARCH -> TEST -> IMPLEMENT -> TEST -> FIX -> (repeat)
+    RESEARCH -> COMBINE -> REPRODUCE -> TEST THE LAST 10% -> PUT IT IN HIM
 
-**RESEARCH means the published record first** (`SYSTEM.md` 3a, owner 11-15).
-Before any race or learning run, the order's `prior:` lines must exist: what
-the literature predicts for each arm and at how many steps, the authors'
-necessary settings beside ours, a known-answer check of the arm. If they are
-missing, writing them (with sources; `docs/research/PUBLISHED_PRIORS.md` first)
-IS your iteration. A run funded below the published need is a pilot: say so.
+**`docs/PLAN.md` binds you (owner, 2026-11-15).** Your order names its part,
+stage and step: do that step, never a later one. RESEARCH: what the published
+record says, in `docs/research/PUBLISHED_PRIORS.md` (missing → writing it, with
+sources, IS your iteration). COMBINE: build from published designs and code,
+never weights, and list every setting that differs from the published recipe.
+REPRODUCE: our build hits a published number on a small standard task before
+it is trusted. TEST: only what the record does not answer, pre-registered, at
+a size the record says can show something; anything less is a pilot, and you
+say so. Do not write a new home-made learner, and do not race one.
 
 **A verdict is the middle, not the end.** A FAIL is an instruction: find why,
 change Jack's code or the experiment's apparatus, run it again. For two months

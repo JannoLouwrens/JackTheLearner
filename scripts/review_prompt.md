@@ -22,6 +22,11 @@ still done its job. Everything else comes second.
 
 ## Read (bounded — never open the megabyte files end to end)
 
+- **`docs/PLAN.md` first (owner, 2026-11-15). It binds you.** Research →
+  combine → reproduce → test the last 10% → put it in him. Every order names
+  `part:`, `stage:`, `step:`; none skips a step; the current stage's steps
+  outrank everything but a dead machine. Keep its table "Where each part
+  stands" current (the `Step` cell starts with the digit 0–5).
 - `docs/ORDERS.md` (orders, workers' `state:` lines, INBOX); `docs/ROADMAP.md`
   (the milestones — what comes next when orders finish); `docs/LESSONS_CORE.md`.
 - `docs/OVERSIGHT.md` — the auditor's findings, addressed to you.
@@ -91,7 +96,8 @@ live blocker, otherwise DECLINE with the reason. Never delete or relabel a row.
 
 **5. Write `docs/PROGRESS.md` for the owner** — he reads it on a phone when he
 comes back and asks "any progress?". ≤ 8 KB, plain words, every project term
-glossed: what Jack can do today; where he stands on the roadmap; what moved
+glossed: what Jack can do today; where he stands on the roadmap; for each part
+in `docs/PLAN.md`'s table the step it is on and what moved it; what moved
 since yesterday and what did not; what the workers are on next; the four machine
 numbers (points per worker run, slots lost to budget, free GPU-hours expired
 this week, age of the oldest unrepaired blocker); anything dead or stuck in the

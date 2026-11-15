@@ -53,7 +53,11 @@ loosening is the most serious failure this system can have. Say it loudly.
 serves none. Then the specific betrayals: a ready-made pretrained model INSIDE
 him (seated as a part, or loaded in the code path of a spec credited to him); an
 architecture — including one shared brain — ASSUMED where it should be raced;
-behaviour scripted where it should be learned; a claim made from one seed.
+behaviour scripted where it should be learned; a claim made from one seed; a
+step of `docs/PLAN.md` skipped (a race or learning run with no published
+prior, a learner never reproduced against a published number, something
+home-made where a published design exists, a run below the published need
+read as a verdict).
 
 **3. Is the work reaching Jack?** Of yesterday's worker commits, how many
 changed Jack's code or landed a run, and how many tended the machine? (October

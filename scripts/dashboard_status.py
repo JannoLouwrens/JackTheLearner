@@ -1051,6 +1051,7 @@ def build() -> dict:
         "report": guarded(report, {"written": None, "sections": []}),
         "updates": guarded(updates, []),
         "research": guarded(research_pages, []),
+        "plan": guarded(plan_parts, {"parts": [], "href": ""}),
         "orders": guarded(orders, []),
         "recent": guarded(lambda: recent(by_id, results), []),
         "team": guarded(team, {"members": [], "paused": False, "running": 0}),
@@ -1158,6 +1159,15 @@ def md_to_html(md: str) -> str:
                 i += 1
             out.append('<div class="tw"><table><thead><tr>' + "".join(f"<th>{inline(c)}</th>" for c in head) + "</tr></thead><tbody>"
                        + "".join("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in rows) + "</tbody></table></div>")
+        elif re.match(r"\s*\d+[.)]\s+", ln):
+            items = []
+            while i < len(lines) and (re.match(r"\s*\d+[.)]\s+", lines[i]) or (lines[i].startswith("  ") and lines[i].strip() and items)):
+                if re.match(r"\s*\d+[.)]\s+", lines[i]):
+                    items.append(re.sub(r"^\s*\d+[.)]\s+", "", lines[i]))
+                else:
+                    items[-1] += " " + lines[i].strip()
+                i += 1
+            out.append("<ol>" + "".join(f"<li>{inline(x)}</li>" for x in items) + "</ol>")
         elif re.match(r"\s*[-*]\s+", ln):
             items = []
             while i < len(lines) and (re.match(r"\s*[-*]\s+", lines[i]) or (lines[i].startswith("  ") and lines[i].strip() and items)):
@@ -1175,7 +1185,7 @@ def md_to_html(md: str) -> str:
             out.append("<blockquote>" + inline(" ".join(buf)) + "</blockquote>")
         else:
             buf = []
-            while i < len(lines) and lines[i].strip() and not re.match(r"(#{1,4}\s|\s*[-*]\s+|>|\s*\|)", lines[i]):
+            while i < len(lines) and lines[i].strip() and not re.match(r"(#{1,4}\s|\s*[-*]\s+|\s*\d+[.)]\s+|>|\s*\|)", lines[i]):
                 buf.append(lines[i].strip())
                 i += 1
             out.append("<p>" + inline(" ".join(buf)) + "</p>")
@@ -1193,7 +1203,7 @@ a{color:var(--accent)}.back{display:inline-block;margin:6px 0 14px;font-weight:6
 article{background:var(--card);border-radius:22px;padding:22px 20px;overflow-wrap:anywhere}
 h1{font-size:28px;line-height:1.15;letter-spacing:-.02em;margin:0 0 14px}h2{font-size:22px;line-height:1.2;margin:30px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
 h3{font-size:18px;margin:22px 0 8px}h4{font-size:16px;margin:18px 0 6px}p,li{color:var(--ink2)}p strong,li strong,td strong{color:var(--ink)}
-ul{padding-left:1.2em}li{margin:4px 0}code{font:14px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--track);padding:1px 5px;border-radius:5px}
+ul,ol{padding-left:1.3em}li{margin:6px 0}code{font:14px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--track);padding:1px 5px;border-radius:5px}
 blockquote{margin:0 0 14px;padding:10px 14px;border-radius:12px;background:var(--track);color:var(--ink2);font-size:15px}
 .tw{overflow-x:auto;margin:12px -6px;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:14px;line-height:1.4;min-width:100%}
 th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line);min-width:7em}th{color:var(--ink);font-weight:600;background:var(--track)}td{color:var(--ink2)}
@@ -1209,7 +1219,7 @@ def research_pages() -> list:
     dst = OUT / "research"
     dst.mkdir(parents=True, exist_ok=True)
     rows, keep = [], set()
-    for src in sorted((REPO / "docs" / "research").glob("PUBLISHED_*.md")):
+    for src in [REPO / "docs" / "PLAN.md"] + sorted((REPO / "docs" / "research").glob("PUBLISHED_*.md")):
         md = read(src)
         if not md.strip():
             continue
@@ -1224,11 +1234,29 @@ def research_pages() -> list:
         os.replace(tmp, dst / name)
         keep.add(name)
         rows.append({"title": title, "href": "research/" + name, "updated": when.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                     "words": len(md.split()), "kind": "standing reference" if "PRIORS" in src.stem else "full report"})
+                     "words": len(md.split()), "kind": "the plan" if src.stem == "PLAN" else "standing reference" if "PRIORS" in src.stem else "full report"})
     for old in dst.glob("*.html"):
         if old.name not in keep:
             old.unlink(missing_ok=True)
-    return sorted(rows, key=lambda r: r["kind"] != "full report")
+    return sorted(rows, key=lambda r: ("the plan", "full report", "standing reference").index(r["kind"]))
+
+
+def plan_parts() -> dict:
+    """The table "Where each part stands" in docs/PLAN.md: each part of Jack
+    and which of the five steps it is on. The Director keeps it current."""
+    text = read(REPO / "docs" / "PLAN.md")
+    m = re.search(r"(?ms)^## Where each part stands\s*\n(.*?)(?=^## |\Z)", text)
+    parts = []
+    for line in (m.group(1).splitlines() if m else []):
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 4 or not re.match(r"\d", cells[1]):
+            continue
+        step = min(5, int(cells[1][0]))
+        note = clean(re.sub(r"^\d\s*", "", cells[1]))
+        note = re.sub(r"^(not started|research|combine|reproduce|test the last 10%|in him)\s*[:,.]?\s*", "", note, flags=re.I)
+        parts.append({"name": clean(cells[0]), "step": step, "note": note,
+                      "known": clean(cells[2]), "ours": clean(cells[3])})
+    return {"parts": parts, "href": "research/plan.html"}
 
 
 def publish(pub: Path) -> None:
