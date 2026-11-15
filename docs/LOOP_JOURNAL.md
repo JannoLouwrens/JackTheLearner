@@ -1265,3 +1265,9 @@ Harvested CR.01 132:null:staged from Kaggle CPU at zero quota (7/9 units cached)
 The reattach guard misjoined again (cited …7807, INBOX 16:10 line). …7870's own receipt 9a3f91e3 matches the local body exactly once the pin is swapped, and no IMPL_DEPS moved, so ACCEPT_MISMATCH is honest. Pin-only is pre-proven for …2332 too.
 Pushed the last unit, 132:shuffled:matched, as `jack-cpu-1794694643`. Both kcpu slots are busy again. The meal-memory grind waits behind them.
 Served philosophy 3 (the curriculum seat is raced) and 6 (free Kaggle CPU, ~0 box CPU).
+
+2026-11-15 00:15 UTC · JACK · J5 (J1 DONE; J2: D1.0 watcher 3902173 alive, c_e2e unit returned ok at 00:03 and the next unit was pushed, no exit) · this commit.
+Harvested CR.01 132:lp:frontier from Kaggle CPU at zero quota (8/9 units cached). Exam fed (unofficial): lp .043, frontier .191 (s132 null .106). frontier gains +.085, short of the .20 margin. All 94 exam lives died of energy.
+The reattach guard misjoined again (cited …6945's 7222443b). …2332's pulled bytes = its own receipt 25904654. Swapping the 01a2954 pin for c0db7e6 gives the local e4285e1b exactly, and 01a2954..c0db7e6 touches no IMPL_DEPS, so ACCEPT_MISMATCH is honest.
+Last unit 132:shuffled:matched (…4643) is still RUNNING. On 9/9, `run CR.01` (expected FAIL: no curriculum beats null by .20 on any seed).
+Served philosophy 3 (the curriculum seat is raced, and no staging has beaten the null) and 6 (free Kaggle CPU, ~0 box CPU).

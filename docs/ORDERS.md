@@ -90,11 +90,11 @@ seeds 94–98 × 3 arms × 13k, `meal_memory run <arm> <seed> 13000`, then
 docstring, unchanged. Clears → register it against `NE.05`'s seat; dies → say so.
 serves: M2, M7 · philosophy 3, 5.
 **done when:** `CR.01` has a verdict and the meal-memory tally is written.
-state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`. Kaggle takes 2 parallel CPU sessions, not shared with the GPU queue. 7/9 units cached (unofficial exam fed):
-s130 null .255 staged .213 lp .043 frontier .255 shuffled .128 matched .085; s131 null .128 staged .191 lp .106 frontier .043 shuffled .128 matched .085; s132 null .106 staged .064 (all exam deaths energy). No WIN possible.
-11-14 22:16 HARVESTED 132:null:staged (…7870, 6755 s). Guard misjoined again (cited …7807's 951dd7d6); …7870's own receipt 9a3f91e3 = local with pin 0028cc9 swapped in, no IMPL_DEPS moved 0028cc9->HEAD -> ACCEPT_MISMATCH honest.
-Pin-only ALSO PROVEN for 132:lp:frontier `…2332` (receipt 25904654 = local with pin 01a2954). Pushed last unit 132:shuffled:matched `jack-cpu-1794694643` (head 84cbc7d, 22:17). Both RUNNING.
-Next: when each is COMPLETE, `JACK_REATTACH_ACCEPT_MISMATCH=1 JACK_REUSE_KERNEL=<slug> $PY -m experiments.tests.cr_01_curriculum_cookoff prefetch 132:<a>:<b>` (re-prove pin for …4643 vs 84cbc7d); on 9/9 `run CR.01`.
+state: `CR.01` REGISTERED 11-13 (seeds 130–132, N 47, margin .20); runner `777b150`. Kaggle takes 2 parallel CPU sessions, not shared with the GPU queue. 8/9 units cached (unofficial exam fed):
+s130 null .255 staged .213 lp .043 frontier .255 shuffled .128 matched .085; s131 null .128 staged .191 lp .106 frontier .043 shuffled .128 matched .085; s132 null .106 staged .064 lp .043 frontier .191 (all exam deaths energy). No WIN possible.
+11-15 00:10 HARVESTED 132:lp:frontier (…2332, 8983 s). Guard misjoined again (cited …6945's 7222443b); …2332's own receipt 25904654 = pulled bytes, pin 01a2954->c0db7e6 swap = local e4285e1b exactly, 01a2954..c0db7e6 touches no IMPL_DEPS -> ACCEPT_MISMATCH honest.
+Last unit 132:shuffled:matched `jack-cpu-1794694643` (head 84cbc7d, pushed 22:17) RUNNING at 00:10.
+Next: when COMPLETE, pull it, prove pin-only vs HEAD, `JACK_REATTACH_ACCEPT_MISMATCH=1 JACK_REUSE_KERNEL=jack-cpu-1794694643 $PY -m experiments.tests.cr_01_curriculum_cookoff prefetch 132:shuffled:matched`; then `run CR.01` (9/9 reused).
 (2) 11-14 20:50 runner + CLAIM gate BUILT (this commit, `experiments/meal_memory_kcpu.py`): `meal_memory.tally` grades by the PILOT rule (2/3), not the declared claim gate (4/5 + born_d>=0.7) -> claim_gate verbatim, fixtures 5/5 (each clause fails alone). Smoke 260 dec fifo+meal s94 ok. 15 cells, 3/kernel, ~20 min each. After CR.01's queue: `$PY -m experiments.meal_memory_kcpu kernel fifo:94,meal:94,yoked:94` (…95…98), then `… gate`.
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
