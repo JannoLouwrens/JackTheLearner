@@ -132,6 +132,8 @@ div.row{cursor:default}
 .rl li::before{content:"";flex:none;width:5px;height:5px;border-radius:50%;background:var(--ink3);margin-top:9px}
 .rl li:has(b.n)::before{display:none}
 .rl li b.n{flex:none;min-width:14px;color:var(--ink3);font-weight:600}
+a.rlink{display:block;text-decoration:none;color:inherit}
+a.rlink .name{color:var(--accent)}
 .feed{list-style:none;margin:10px 0 0;padding:0}
 .feed li{padding:11px 0;border-top:1px solid var(--line);font-size:15px;line-height:1.5;color:var(--ink2)}
 .feed li:first-child{border-top:0}
@@ -324,6 +326,10 @@ function viewJack(){
   h+='<div class="card span"><h2>Since the report</h2><p class="sub">A short note from the workers after every run, about once an hour.</p>'+
      (U.length?'<ul class="feed">'+U.slice(0,upAll?40:5).map(function(u){return "<li><em>"+esc(ago(u.at))+" · "+esc(({JACK:"Jack",LAB:"Lab",MACHINE:"Machine",SYSTEM:"Machine",OUTSIDER:"Outsider"})[u.lane]||u.lane)+"</em><span>"+bold(u.text)+"</span></li>"}).join("")+"</ul>"+
         (U.length>5?'<button class="link" data-act="ups">'+(upAll?"Show fewer":"Show all "+U.length)+"</button>":""):'<p class="empty">No notes yet. The first arrives after the next worker run.</p>')+"</div>";
+
+  var RS=S.research||[];
+  if(RS.length)h+='<div class="card span"><h2>What others already tested</h2><p class="sub">Before the team builds or races anything, it reads what published research already shows. These are the reports.</p><div class="items">'+
+     RS.map(function(r){return '<a class="item rlink" href="'+esc(r.href)+'"><span class="name">'+esc(r.title)+'</span><span class="role">'+esc(r.kind.charAt(0).toUpperCase()+r.kind.slice(1))+" · about "+Math.max(1,Math.round(r.words/230))+" min read · updated "+esc(ago(r.updated))+"</span></a>"}).join("")+"</div></div>";
 
   var cur=ms.filter(function(m){return m.state!=="met"})[0],job=(S.orders||[])[0];
   var PLAIN={1:["He lives one whole life","With a simple starter brain: born, moves, gets hungry, dies. The loop works end to end."],

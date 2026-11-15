@@ -36,6 +36,7 @@ ledger, the repo, or a running job.
 from __future__ import annotations
 
 import datetime as dt
+import html
 import json
 import os
 import re
@@ -1049,6 +1050,7 @@ def build() -> dict:
         "headline": guarded(headline, {"written": None, "paras": []}),
         "report": guarded(report, {"written": None, "sections": []}),
         "updates": guarded(updates, []),
+        "research": guarded(research_pages, []),
         "orders": guarded(orders, []),
         "recent": guarded(lambda: recent(by_id, results), []),
         "team": guarded(team, {"members": [], "paused": False, "running": 0}),
@@ -1124,12 +1126,127 @@ def main() -> int:
     return 0
 
 
+# ── research the owner can read on a phone ──────────────────────────────────
+def md_to_html(md: str) -> str:
+    """Just enough Markdown for the research reports: headings, paragraphs,
+    lists, tables, quotes, bold, code and links. Everything is escaped first."""
+    def inline(t: str) -> str:
+        t = html.escape(t, quote=False)
+        t = re.sub(r"`([^`]+)`", r"<code>\1</code>", t)
+        t = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2" target="_blank" rel="noopener">\1</a>', t)
+        t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+        return re.sub(r"(?<![\w*])\*([^*\s][^*]*?)\*(?![\w*])", r"<em>\1</em>", t)
+
+    out, lines, i = [], md.splitlines(), 0
+    while i < len(lines):
+        ln = lines[i]
+        if not ln.strip():
+            i += 1
+            continue
+        m = re.match(r"(#{1,4})\s+(.*)", ln)
+        if m:
+            n = len(m.group(1))
+            out.append(f"<h{n}>{inline(m.group(2))}</h{n}>")
+            i += 1
+        elif ln.lstrip().startswith("|") and i + 1 < len(lines) and re.match(r"\s*\|[\s:|-]+\|\s*$", lines[i + 1]):
+            cells = lambda r: [c.strip() for c in r.strip().strip("|").split("|")]
+            head = cells(ln)
+            i += 2
+            rows = []
+            while i < len(lines) and lines[i].lstrip().startswith("|"):
+                rows.append(cells(lines[i]))
+                i += 1
+            out.append('<div class="tw"><table><thead><tr>' + "".join(f"<th>{inline(c)}</th>" for c in head) + "</tr></thead><tbody>"
+                       + "".join("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in rows) + "</tbody></table></div>")
+        elif re.match(r"\s*[-*]\s+", ln):
+            items = []
+            while i < len(lines) and (re.match(r"\s*[-*]\s+", lines[i]) or (lines[i].startswith("  ") and lines[i].strip() and items)):
+                if re.match(r"\s*[-*]\s+", lines[i]):
+                    items.append(re.sub(r"^\s*[-*]\s+", "", lines[i]))
+                else:
+                    items[-1] += " " + lines[i].strip()
+                i += 1
+            out.append("<ul>" + "".join(f"<li>{inline(x)}</li>" for x in items) + "</ul>")
+        elif ln.startswith(">"):
+            buf = []
+            while i < len(lines) and lines[i].startswith(">"):
+                buf.append(lines[i].lstrip("> ").rstrip())
+                i += 1
+            out.append("<blockquote>" + inline(" ".join(buf)) + "</blockquote>")
+        else:
+            buf = []
+            while i < len(lines) and lines[i].strip() and not re.match(r"(#{1,4}\s|\s*[-*]\s+|>|\s*\|)", lines[i]):
+                buf.append(lines[i].strip())
+                i += 1
+            out.append("<p>" + inline(" ".join(buf)) + "</p>")
+    return "\n".join(out)
+
+
+RESEARCH_PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>__TITLE__</title>
+<style>
+:root{color-scheme:light dark;--bg:#f2f4f8;--card:#fff;--ink:#0c101c;--ink2:#444b5c;--line:rgba(12,16,28,.1);--accent:#2a78d6;--track:#eef2f9}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0d12;--card:#151821;--ink:#f1f3f8;--ink2:#b3b9c7;--line:rgba(255,255,255,.12);--accent:#5aa2ff;--track:#1c2130}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:46em;margin:0 auto;padding:18px 16px 80px}
+a{color:var(--accent)}.back{display:inline-block;margin:6px 0 14px;font-weight:600;text-decoration:none}
+article{background:var(--card);border-radius:22px;padding:22px 20px;overflow-wrap:anywhere}
+h1{font-size:28px;line-height:1.15;letter-spacing:-.02em;margin:0 0 14px}h2{font-size:22px;line-height:1.2;margin:30px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
+h3{font-size:18px;margin:22px 0 8px}h4{font-size:16px;margin:18px 0 6px}p,li{color:var(--ink2)}p strong,li strong,td strong{color:var(--ink)}
+ul{padding-left:1.2em}li{margin:4px 0}code{font:14px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--track);padding:1px 5px;border-radius:5px}
+blockquote{margin:0 0 14px;padding:10px 14px;border-radius:12px;background:var(--track);color:var(--ink2);font-size:15px}
+.tw{overflow-x:auto;margin:12px -6px;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:14px;line-height:1.4;min-width:100%}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line);min-width:7em}th{color:var(--ink);font-weight:600;background:var(--track)}td{color:var(--ink2)}
+.foot{color:var(--ink2);font-size:13px;margin:14px 4px 0}
+</style></head><body><main><a class="back" href="../">&#8249; Jack</a><article>
+__BODY__
+</article><p class="foot">__FOOT__</p></main></body></html>"""
+
+
+def research_pages() -> list:
+    """Every docs/research/PUBLISHED_*.md becomes a plain page under research/,
+    behind the same sign-in as the dashboard."""
+    dst = OUT / "research"
+    dst.mkdir(parents=True, exist_ok=True)
+    rows, keep = [], set()
+    for src in sorted((REPO / "docs" / "research").glob("PUBLISHED_*.md")):
+        md = read(src)
+        if not md.strip():
+            continue
+        m = re.search(r"(?m)^#\s+(.+)$", md)
+        title = clean(m.group(1)) if m else src.stem.replace("_", " ").title()
+        name = src.stem.lower().replace("_", "-") + ".html"
+        when = dt.datetime.fromtimestamp(src.stat().st_mtime, dt.timezone.utc)
+        page = (RESEARCH_PAGE.replace("__TITLE__", html.escape(title)).replace("__BODY__", md_to_html(md))
+                .replace("__FOOT__", html.escape(f"From {src.relative_to(REPO)} in the project, as of {when:%d %b %Y %H:%M} UTC.")))
+        tmp = dst / (name + ".tmp")
+        tmp.write_text(page)
+        os.replace(tmp, dst / name)
+        keep.add(name)
+        rows.append({"title": title, "href": "research/" + name, "updated": when.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                     "words": len(md.split()), "kind": "standing reference" if "PRIORS" in src.stem else "full report"})
+    for old in dst.glob("*.html"):
+        if old.name not in keep:
+            old.unlink(missing_ok=True)
+    return sorted(rows, key=lambda r: r["kind"] != "full report")
+
+
 def publish(pub: Path) -> None:
     (pub / "media").mkdir(parents=True, exist_ok=True)
     for name in ("index.html", "status.json"):
         tmp = pub / (name + ".tmp")
         shutil.copyfile(OUT / name, tmp)
         os.replace(tmp, pub / name)
+    if (OUT / "research").is_dir():
+        (pub / "research").mkdir(exist_ok=True)
+        names = {f.name for f in (OUT / "research").glob("*.html")}
+        for name in names:
+            tmp = pub / "research" / (name + ".tmp")
+            shutil.copyfile(OUT / "research" / name, tmp)
+            os.replace(tmp, pub / "research" / name)
+        for old in (pub / "research").glob("*.html"):
+            if old.name not in names:
+                old.unlink(missing_ok=True)
     live = set()
     for f in (OUT / "media").glob("latest.*") if (OUT / "media").is_dir() else []:
         if f.suffix not in (".mp4", ".webm"):
