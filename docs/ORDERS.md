@@ -115,11 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) declared `4c316fa`, dB built `c9dd457`, tally `184c4c1`. dA/dC NOT BUILT (world-file refactor, Director call).
-11-15 03:50: k1 and k2 HARVESTED. Status 37/45, shipped complete (all NE.01 ok_* 1.0 except night_shelter .8; 25/25 deaths hyperthermia). dB fails ok_spread on s0 AND s1 (.091/.096, both fatigue `f`),
-so its best possible mean is 0.6 < 1.0. Clause (1) is LOST before k3: the race will read "none ships". All dB deaths so far are dehydration (10/10). Notes: NEEDS_CLOCK_RACE.md step 2e.
-In flight: k3 `jack-cpu-1794712965` (dB NE.01 s2-4), poller /data/tmp/drink_kcpu_k3.log. When its log ends `{...}`, run `$PY -m experiments.drink_race_tally` and record the verdict.
-Next (diagnose, don't file): log e/f/gear_scale along one dB random life to test whether fatigue's spread is driven by energy falling (hypothesis in step 2e). swp_k72 NE.01 is report-only, last.
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, 37/45, dB fails ok_spread s0+s1 (f .091/.096), so clause (1) is lost. dA/dC not built (world-file refactor).
+11-15 04:30 `64d949a` (step 2f): the energy hypothesis is REFUTED. NE.01's f spread is f's 0->steady-state rise (TAU_F = 300 dec). Shipped's 536-dec lives have spread .355; dB's 9038-dec life has .043. Across all 45 NE.01 cells, spread_f falls with the earliest death
+(~470 dec .37-.40 -> long lives .09-.12). DIRECTOR CALL: gate 1's f clause cannot pass alongside gate 2's re-registered window (>= 1958 dec on k72). Proposed fix: a fatigue edge probe in option-A shape plus a planted control, bar unmoved (NEEDS_CLOCK_RACE.md 2f).
+In flight: k3 `jack-cpu-1794712965` (dB NE.01 s2-4, RUNNING 04:07), poller /data/tmp/drink_kcpu_k3.log. When its log ends `{...}`, run `$PY -m experiments.drink_race_tally` and record the verdict (expected: none ships).
+Next: on a ruling, add the f probe to ne_01 and re-tally. Without one, record the verdict and move to W.2(c)'s hot route (dB peaks at 37.3 C, step 2d).
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

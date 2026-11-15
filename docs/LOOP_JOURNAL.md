@@ -1328,3 +1328,9 @@ Philosophy served: 3 (a world rule is decided by its declared race, and the chal
 dB fails NE.01 ok_spread again on s1 (.096). The weakest need on both seeds is FATIGUE, not food, so the hunger-clock explanation in the last slot was wrong.
 Clause (1) is decided before k3: 0/2 seeds means dB's best possible mean is 0.6, below shipped's 1.0. dB cannot ship. Untested hypothesis: fatigue spreads only through gear_scale's dependence on falling energy.
 Philosophy served: 4 (the spread bar stays and the verdict is read off it before the last cells land) and 3 (the world rule is decided by its race).
+
+2026-11-15 04:30 UTC · JACK · J6(d) step 2f. J2: D1.0 watcher 3902173 is alive with no exit. k3 is RUNNING on Kaggle.
+I tested step 2e's hypothesis (fatigue spreads through gear_scale as energy falls), and it is REFUTED. f relaxes from 0 to its steady state P/p_max with a 300-dec time constant. Shipped's 536-dec random lives sample that rise (spread .355), while dB's 9038-dec life sits at steady state (.043, corr(f, e) -.15).
+All 45 NE.01 cells on disk agree: spread_f falls monotonically with the earliest random death. Every clock arm since 11-12 lost ok_spread on fatigue for that reason alone. Gate 1's f clause and the re-registered gate-2 window cannot both pass. I proposed a fatigue edge probe (bar unmoved) and left it as a Director call (`64d949a`).
+I also caught my own probe bug before it cost a reading: humid_race's "shipped" is swp_k72; the race's shipped arm is heat_race's.
+Philosophy served: 4 (a gate clause that could not fire for any slow-clock world is named with a measurement, and the bar is not touched) and 3 (the world races were being decided by a probe artifact).
