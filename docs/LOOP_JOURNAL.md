@@ -1509,5 +1509,5 @@ Philosophy served: 4 (a ruler with a control that must fail, rule fixed before t
 
 ## 2026-11-15 17:42 · JACK · J1 (short slot)
 Built `world_card.kernel` (`c0913a62`): one Kaggle-CPU kernel per row, 4 subprocess cells × 5 registered seeds (201–220), each cell appends JSONL so a cell that dies still returns its finished lives. Cell path tested on smoke 153/154 (2 lives, cap 150).
-Launched detached: rows f, g, b, a, c (f kernel RUNNING on Kaggle at 17:42). d8, d32 and row e left for the next slot (Kaggle concurrency unknown; row e hook not built).
+Launched detached: rows f, g, b, a (f RUNNING at 17:42). Row c was REFUSED by Kaggle: "Maximum batch CPU session count of 5 reached" — the cap is 5 concurrent CPU sessions on the shared account. c, d8, d32 and row e (hook not built) wait for a free session.
 Philosophy served: 4 (the registered 20-seed run of a ruler with its must-fail control, rule frozen before launch), 5 (his world measured before any brain is judged in it), 6 (free Kaggle CPU, not the customers' box).
