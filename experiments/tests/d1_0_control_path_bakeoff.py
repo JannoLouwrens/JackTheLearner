@@ -1010,6 +1010,25 @@ def _job_units() -> list:
     return units
 
 
+def _only_units():
+    """JACK_D10_ONLY="aprime:0,aprime:1,..." limits which UNCACHED arm units
+    this dispatch buys, so a run larger than one Kaggle quota week (att 10:
+    ~40 h expected vs 30 h/week) is bought across weeks with a projection that
+    is true for each (dispatch_guard R1: "state a smaller projection AND make
+    it true"). The SB3 reference is always bought first (G3). Any unit left
+    out makes the run end PARTIAL (ERROR, no verdict). Unset = every unit."""
+    raw = os.environ.get("JACK_D10_ONLY", "").strip()
+    if not raw:
+        return None
+    units = {u.strip() for u in raw.split(",") if u.strip()}
+    known = {f"{a}:{s}" for a, s, _, _ in _job_units()}
+    bad = units - known
+    if bad:
+        raise RuntimeError(f"JACK_D10_ONLY names unknown units {sorted(bad)}"
+                           f"; known: {sorted(known)}")
+    return units
+
+
 def _unit_cache_path(arm: str, seed: int):
     """Where a finished unit's artifact is kept, keyed by this test's
     impl_sha (file + IMPL_DEPS), so a unit is only ever reused by the exact
@@ -1089,8 +1108,14 @@ def _submit_full() -> dict:
     # failure re-buys only the units that did not finish. Nothing an arm is
     # scored on moved: same seeds, same STEP_TARGET, same MINUTES_CAP, same
     # gates; `remote_run` already took arms= and seeds=.
+    only = _only_units()
+    deferred = []
     for a, s, prefer, est in _job_units():
         cached = _unit_cache_path(a, s)
+        if (only is not None and f"{a}:{s}" not in only
+                and not (cached is not None and cached.exists())):
+            deferred.append(f"{a}:{s}")
+            continue
         if cached is not None and cached.exists():
             d = json.loads(cached.read_text())
             print(f"D1.0 unit {a}/seed{s}: REUSED {cached} "
@@ -1129,6 +1154,14 @@ def _submit_full() -> dict:
                                   "reused_from": reused})
         if "random_returns" not in merged:
             merged["random_returns"] = d["random_returns"]
+    if deferred:
+        # No verdict on a partial set: every bought unit is cached above, so
+        # the next dispatch (next quota week) re-buys only these.
+        raise RuntimeError(
+            f"PARTIAL BY DECLARATION (JACK_D10_ONLY): {len(merged['kernels'])}"
+            f" of {len(_job_units())} arm units in hand, deferred "
+            f"{','.join(deferred)} — no verdict; finished units are kept "
+            f"under {_UNIT_CACHE_ROOT}, re-dispatch buys only the deferred")
     return merged
 
 
