@@ -65,10 +65,10 @@ different orders. An arm clears → write it here; the Director orders
 serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 **done when:** the loss seat is ruled by tally and step 2's table (and 3's
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
-state: 11-15 09:25 (1) s150+s151 HARVESTED (8/12 cells current, code shas = HEAD). s152 PUSHED `jannolouwrens/jack-cpu-1794734602` 09:23 (poller pid 4164846, log /data/tmp/plr_s152.log; lands ~1.5 h).
-INTERIM, not a verdict (late mean s150/s151; late sat): base 533/488 (.98/.33 FAILS sat) · tanh 591/567 (.98/1.0 FAILS sat) · awr 560/556 (0.0) · tanh-awr 524/557 (0.0). No seed dropped. Only AWR arms can qualify so far.
-(2) forager race rule COMMITTED `e9b14f3`; cells wait for step 1's seat (cores.py stamped).
-Next: when s152 COMPLETE (poller writes it; if it died: `JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-1794734602 $PY -m experiments.policy_loss_race kernel 152`) -> `policy_loss_race tally` -> seat BY tally in cores.py + re-buy LC.02/LC.08/LF.03 -> forager kernels K=0..3 -> `forager_race tally`.
+state: 11-15 10:30 (1) DONE: tally WINNER tanh-awr (`f72aac0`, docs/research/POLICY_LOSS_RACE.md): late mean 604.5 sat 0 > awr 563.1 sat .0001; base .65/tanh .99 sat fail q1. Lead rests on s152 (732). SEATED `a2bd4df` (Core.act=tanh, lc_update=AWR; policy_loss selftest flipped ok).
+Re-buys: LC.02 PASS at a2bd4df (`eaa9302`; ratio stays 0.125; salt replay diverged, INBOX). LF.03 RUNNING detached (pid 88692, /data/tmp/lf03_rebuy.log, ~40 min). LC.08 REFUSED: cpu<48h closed (D20/D39), old PASS stands stale — needs re-registration or an off-box path (Director).
+(2) forager race PUSHED 10:20-10:28, all 4 kernels: K0 `jack-cpu-1794738176` (poller pid 88890), K1 `…8207`, K2 `…8357`, K3 `…8507` (in-session, pollers died; detached cap counted K0's poller, INBOX).
+Next: harvest LF.03 row (commit ledger, `run render`); harvest each K when COMPLETE: `JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-<id> $PY -m experiments.forager_race kernel K` (guard may refuse in-session pushes: JACK_REATTACH_ACCEPT_MISMATCH=1, then check `forager_race status` = current); then `forager_race tally` -> FORAGER_RACE.md.
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
@@ -107,11 +107,9 @@ serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 formerly-red clause explained.
 state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. f-spread DIRECTOR CALL open (`64d949a`). W.2(a) re-reg sweating CF `bc7b99f`; W.1 wrapper fix `39d8a66`.
 `2131a04` W.2 cells current (hum34 5/5, shipped+hum30 0/5). **DRINK race verdict: none ships** (40 cells current): dB loses only NE.01 ok_spread 0/5 vs 5/5 (the f-spread call). Humid verdict waits on NE.01 (0/5 both arms).
-11-15 06:31 ALL 10 humid NE.01 cells in flight on Kaggle CPU: h1 `…0356` hum34 s0-2, h2 `…3424` hum34 s3-4+hum30 s0 (pollers alive), h3 `…3809` hum30 s1-3, h4 `…4063` hum30 s4
-(h3/h4 pushed in-session, pollers let die — detached cap 2 was full). MEASURED: Kaggle runs 4 CPU sessions + 1 GPU at once (all RUNNING 06:30), not 2.
-08:41 h4 (hum30 s4) HARVESTED: every in-kernel code sha = HEAD; ok_spread 0, 5/5 dehydration deaths. 7/10 humid NE.01 cells in (h2, h3 still RUNNING).
-09:55 h2 COMPLETE (harvested 08:59, 8/10). h3 `jack-cpu-1794723809` still RUNNING (3.5 h). (b) WRITTEN, NOT APPLIED: `docs/research/NE_01_FATIGUE_EDGE.patch` (3x[600 exert, 600 rest] decisions, never asleep; f p90-p10 >= 0.30 unmoved + every rest undoes >= 0.5 of its rise; frozen-f planted control must stay < 0.30; old reading kept as spread_f_transient). Held back because editing ne_01 stales h3's in-kernel shas before harvest.
-Next: harvest h3 (`JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-1794723809 $PY -m experiments.humid_race_kcpu kernel <h3 cells>`), `humid_race tally`; THEN `git apply docs/research/NE_01_FATIGUE_EDGE.patch`, review, commit BEFORE any run, then (c) on Kaggle CPU.
+10:25 (a) DONE: h3 harvested (ACCEPT_MISMATCH; in-kernel shas current) -> 10/10 (h1's stamp differs only by f65ad58's tally-only humid_race.py edit). `humid_race tally`: **NONE SHIPS** — hum30/hum34 NE.01 ok_spread 0/5 (f-spread), ok_random_deaths .6/.8; shipped ok_spread 1.0.
+(b) APPLIED + COMMITTED before any run `eaa9302`. Found in review: the 720 s probe would die of thirst on shipped (water kills at 570 s), so all non-f needs are held at start (FATIGUE_HELD). Apparatus smoke s0 shipped (no ledger): spread_f .81, rise .87, rest undoes .87, no death; frozen control 0.0.
+Next (c): NE.01 on shipped + dB + hum34 under the new clause, Kaggle CPU (kcpu full now: 4 forager + ladder) -> re-tally DRINK and humid against it.
 
 ### J7 — The deeper world (W1): `W1.04` ruled, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). In W1's venue
@@ -241,6 +239,9 @@ bookkeeping). (7) D52 scout retry; `run status` STEERING reader parses 0.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-15 10:30 JACK/J1: LC.02 re-buy PASS but HASH-SALT replay diverged on 3 deciding wall-clock metrics (meter_live, wm-latent/clears@0.125, conjunction 1->0) — a throughput floor is load-dependent, so its salt replay measures box load, not determinism; earlier LC.02 replays were clean.
+- 11-15 10:30 JACK/J1: LC.08 cannot be re-bought as ordered: registered cpu<48h, which the runner refuses (D20/D39); its 0.03 s Oct PASS now sits stale on the seat change. Needs re-class/off-box route.
+- 11-15 10:30 JACK: launch_detached's cap counts a Kaggle poller as one of the 2 detached jobs (refused K1-K3 with LF.03 + K0's poller alive), contrary to ruling 5 (pollers < 0.10 cores don't count); workers fall back to in-session pushes, which feed the reattach-guard dead end above.
 - **OWNER QUESTIONS 11-15 (via session): "only 120 iterations? isn't that too little" and "how do we know winner of this is best brain overall and not tweaks or more training needed".** Session reading, for the Director to rule: (1) the forager race (2 seeds × 15 lives) is a SCREEN, not a crowning — write its result as "eats within 15 lives / does not", never as "best brain"; no seat changes hands on it without the owner's CONVERGENCE CHECK (Addendum 2: runner-up's late slope ≤ 0 or crossover beyond 3× budget, else extend both) and ≥ 3 seeds. (2) Add ONE long-horizon run per top arm — ~1M decisions on one Kaggle CPU kernel each (~10 h, free) — with the meals-per-life curve, so "slow learner" and "cannot learn" are told apart with room to spare; 4× (≈160k decisions) may still be below where this family starts to learn (LC.03 needed 400k for a small gain). (3) Say in the race write-up what each arm was NOT given: tuning effort per arm, and whether any arm's hyperparameters were touched after seeing results. (4) A foraging winner still owes END-FIT (body, hand-over, words, chains) before adoption — unchanged.
 - 11-15 08:45 JACK: reattach guard dead end — in-session push of h4 (`…4063`) recorded code sha 4821824c that no committed tree reproduces (45050dd hashes 74e82f24, HEAD d88f2b02), so the refusal's advice "reattach from the submitting commit" cannot work; meanwhile a worktree lacking the receipt log harvested with only "unverifiable — proceeding". The cell's own in-kernel shas (all = HEAD) were the real check. A failed main-tree reattach also appends a receipt that later reattaches compare against.
 
