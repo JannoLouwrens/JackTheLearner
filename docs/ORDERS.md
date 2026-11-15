@@ -110,7 +110,8 @@ state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. f-spread D
 11-15 06:31 ALL 10 humid NE.01 cells in flight on Kaggle CPU: h1 `…0356` hum34 s0-2, h2 `…3424` hum34 s3-4+hum30 s0 (pollers alive), h3 `…3809` hum30 s1-3, h4 `…4063` hum30 s4
 (h3/h4 pushed in-session, pollers let die — detached cap 2 was full). MEASURED: Kaggle runs 4 CPU sessions + 1 GPU at once (all RUNNING 06:30), not 2.
 08:41 h4 (hum30 s4) HARVESTED: every in-kernel code sha = HEAD; ok_spread 0, 5/5 dehydration deaths. 7/10 humid NE.01 cells in (h2, h3 still RUNNING).
-Next: h2 lands by itself; harvest h3 with `JACK_REUSE_KERNEL=jannolouwrens/<slug> $PY -m experiments.humid_race_kcpu kernel <same cells>` (logs /data/tmp/humid_kcpu_h{3,4}.log), then `humid_race tally`.
+09:55 h2 COMPLETE (harvested 08:59, 8/10). h3 `jack-cpu-1794723809` still RUNNING (3.5 h). (b) WRITTEN, NOT APPLIED: `docs/research/NE_01_FATIGUE_EDGE.patch` (3x[600 exert, 600 rest] decisions, never asleep; f p90-p10 >= 0.30 unmoved + every rest undoes >= 0.5 of its rise; frozen-f planted control must stay < 0.30; old reading kept as spread_f_transient). Held back because editing ne_01 stales h3's in-kernel shas before harvest.
+Next: harvest h3 (`JACK_REUSE_KERNEL=jannolouwrens/jack-cpu-1794723809 $PY -m experiments.humid_race_kcpu kernel <h3 cells>`), `humid_race tally`; THEN `git apply docs/research/NE_01_FATIGUE_EDGE.patch`, review, commit BEFORE any run, then (c) on Kaggle CPU.
 
 ### J7 — The deeper world (W1): `W1.04` ruled, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). In W1's venue

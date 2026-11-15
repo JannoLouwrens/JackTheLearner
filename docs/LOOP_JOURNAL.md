@@ -1429,3 +1429,7 @@ Interim readings, not a verdict (late-third mean span s150/s151, late saturation
 So far only the two AWR arms can pass the ≤ 0.05 saturation qualifier. tanh lives longest while pinned at the action rails, which is exactly what the qualifier exists to refuse.
 J2: watcher 4040958 is alive (3 h 13 m); no exit, no action. J6: h2 was harvested 08:59 (8/10), and h3 is still RUNNING. J7(1b) was not started: sizing the gain from W1.01/DP.05 does not fit a short slot.
 Philosophy served: 3 (the learner's loss seat goes to a race declared before its numbers) and 6 (free Kaggle CPU kept busy).
+
+2026-11-15 09:57 UTC · JACK · J1(1) wait + J6(b). J1: s152 (`jack-cpu-1794734602`) is RUNNING with its poller alive, so there was nothing to harvest. J6(a): h2 was already in; h3 is still RUNNING at 3.5 h.
+J6(b): I wrote ruling 3's fatigue edge probe for NE.01: 3 cycles of 600 exertion decisions then 600 rest, never asleep. The bar is f spread ≥ 0.30, unmoved, plus a new recovery clause (each rest undoes ≥ 0.5 of its rise). A frozen-f planted control must stay below 0.30, and the old transient reading stays on the row, reporting-only. It imports cleanly. It is committed as a PATCH (`docs/research/NE_01_FATIGUE_EDGE.patch`) and is not applied, because editing ne_01 now would stale h3's in-kernel shas before its harvest. Nothing was run and the ledger is untouched.
+Philosophy served: 4 (a clause that read the life's length gets replaced by one that can fail on fatigue itself, with a control that must fail).
