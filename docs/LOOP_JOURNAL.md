@@ -1438,3 +1438,8 @@ Philosophy served: 4 (a clause that read the life's length gets replaced by one 
 Re-buys: LC.02 PASS (ratio stays 0.125; salt replay diverged on wall-clock metrics, INBOX). LF.03 is running detached (pid 88692). LC.08 was REFUSED (cpu<48h closed, INBOX). Forager race: all 4 kernels pushed to Kaggle CPU (K0 `…8176`, K1 `…8207`, K2 `…8357`, K3 `…8507`).
 J6: h3 harvested, 10/10. Humid verdict: none ships (NE.01 ok_spread 0/5 in both arms). Applied the fatigue edge probe, after fixing a defect found in review before any run: the probe outlived shipped water (720 s vs the 570 s kill), so its non-f needs are now held. Smoke s0: spread .81 and recovers; the frozen control reads 0.
 Philosophy served: 3 (the learner's loss seat was won in a race, not argued) and 4 (a clause that read life length was replaced by one that can fail on fatigue, and an apparatus that would have failed for thirst was fixed before it could).
+
+2026-11-15 10:47 UTC · JACK · J1 wait + J7(1b) sizing. J1: LF.03 (pid 88692) is 15 min into ~40; forager K0-K3 are all RUNNING on Kaggle. Nothing to harvest.
+J7(1b): measured, nothing edited. W1.02's committed row: G mean 5.38 s, sd 1.60, t_inj 15.9 for the +5.0 injection, which confirms ruling 9 (+5.0 is 0.93x the mean, so it cannot miss). The 3-sigma detection floor at 48/arm is 0.98 s of G.
+The size candidates are DP.05's 13.3 s and W1.01's 10.2 s span gaps, but they are in lifespan seconds, not satisfied-seconds. Converting them is the next step, before any edit to w1_02.
+Philosophy served: 4 (a known-answer test whose injection cannot miss is priced against what the instrument can actually resolve).
