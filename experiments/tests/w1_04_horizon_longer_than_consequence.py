@@ -266,6 +266,17 @@ def _p5(spans: list) -> float:
     return float(np.percentile(spans, 5.0)) if spans else 0.0
 
 
+def _p95(spans: list) -> float:
+    return float(np.percentile(spans, 95.0)) if spans else 0.0
+
+
+def _c_ok(p5_oracle: float, p95_repeat: float) -> bool:
+    """Conjunct (c), 2026-11-15 ruling 2: the COMPETENT arm (the oracle)
+    outlives the horizon (p5 >= H) AND survives by competence, not by a soft
+    world: its p5 strictly exceeds the repeat arm's p95."""
+    return p5_oracle >= HORIZON_S and p5_oracle > p95_repeat
+
+
 def _mean_completed(lives: list) -> float:
     spans = [s for s, _c in lives]
     return float(np.mean(spans)) if spans else 0.0
@@ -321,8 +332,13 @@ def _experiment(seed: int) -> dict:
     # conjunct (c), re-registered (ruling 5): 5th-pct survival over
     # N_FRESH independent lives per claim. The passive arm LEAVES (c):
     # W1.01 asserts it dies (its (a), deaths <= H/3), and that stays there.
+    # 2026-11-15 ruling 2: (a) and (c) both read W1.02's repeat arm and
+    # contradicted. (c) is measured on the oracle only; the repeat arm
+    # leaves (c) as the passive arm did, and its fresh lives now supply
+    # only the competence bar: oracle p5 > repeat p95.
     p5_w101 = _p5(sp_o)
-    p5_w102 = _p5(sp_r)
+    p5_w102 = _p5(sp_r)          # REPORTED, no longer gated
+    p95_w102 = _p95(sp_r)
 
     # V4 floor: (a)'s means need >= MIN_LIVES completed sequential lives;
     # (c)'s percentile needs N_FRESH independent lives (by construction)
@@ -348,7 +364,8 @@ def _experiment(seed: int) -> dict:
                           and ratio_w102 >= RATIO_MIN),
         "p5_w101_oracle": p5_w101,
         "p5_w101": p5_w101, "p5_w102": p5_w102,
-        "p5_ok": float(p5_w101 >= HORIZON_S and p5_w102 >= HORIZON_S),
+        "p95_w102": p95_w102,
+        "p5_ok": float(_c_ok(p5_w101, p95_w102)),
         "n_w101p": float(len(p["lives"])), "n_w102": float(len(r["lives"])),
         "n_fresh_o": float(len(fo["fresh"])),
         "n_fresh_r": float(len(fr["fresh"])),
@@ -358,8 +375,7 @@ def _experiment(seed: int) -> dict:
         "cause_censored": causes["censored"],
         "trivial": float(t2c_w101 * 3.0 < HORIZON_S
                          and t2c_w102 * 3.0 < HORIZON_S
-                         and p5_w101 >= HORIZON_S
-                         and p5_w102 >= HORIZON_S),
+                         and _c_ok(p5_w101, p95_w102)),
         "wall_s": p["wall_s"] + r["wall_s"] + fo["wall_s"] + fr["wall_s"],
     }
 
@@ -439,10 +455,12 @@ def _check(m: dict, c: dict):
             f"W1.02 {m.get('ratio_w102', float('nan')):.2f} vs {RATIO_MIN})")
     if not p5_ok:
         failed.append(
-            "(c) lives end before the horizon closes (5th-pct survival "
-            f"W1.01 {m.get('p5_w101', float('nan')):.1f} s, "
-            f"W1.02 {m.get('p5_w102', float('nan')):.1f} s vs horizon "
-            f"{HORIZON_S:.0f} s) — the horizon is fiction, and it may NOT "
+            "(c) the competent arm does not outlive the horizon by "
+            "competence (oracle 5th-pct survival "
+            f"{m.get('p5_w101', float('nan')):.1f} s vs horizon "
+            f"{HORIZON_S:.0f} s, and must exceed the repeat arm's 95th-pct "
+            f"{m.get('p95_w102', float('nan')):.1f} s) — the horizon is "
+            "fiction or the world is soft, and it may NOT "
             "be repaired by shortening the horizon to fit the deaths")
     m["claim_branch"] = "FAILED conjunct(s): " + "; ".join(failed)
     return False
@@ -658,7 +676,12 @@ def _fixtures() -> int:
     assert _p5(sp) < H
     n_pass += 1
 
-    print(f"fixtures: {n_pass}/15 green")
+    # 16 ruling-2 (c): both boundaries of each half
+    assert _c_ok(H, H - 1e-9) and not _c_ok(H, H)
+    assert not _c_ok(H - 1e-9, 0.0) and _c_ok(H + 1.0, H)
+    n_pass += 1
+
+    print(f"fixtures: {n_pass}/16 green")
     return n_pass
 
 

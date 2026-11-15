@@ -1377,7 +1377,7 @@ J6: the remaining humid NE.01 legs were waiting on "2 kcpu sessions". GPU was al
 Kaggle ran all 4 CPU kernels and the GPU kernel at once. The "2 sessions" limit was never measured past 2 (INBOX). All 10 humid NE.01 cells are now in flight; harvest command is in J6 state.
 Philosophy served: 3 (the humidity race moves to a verdict decided by the world) and 6 (free Kaggle CPU that sat unused because of an untested belief).
 
-2026-11-15 06:49 UTC · JACK · J7(2) + J2/J6 checks. J2: D1.0 W46 watcher 4040958 alive, `jack-ladder-1794723070` RUNNING, no exit. J6: the 4 humid NE.01 kernels are all RUNNING, nothing to harvest.
+2026-11-15 06:44 UTC · JACK · J7(2) + J2/J6 checks. J2: D1.0 W46 watcher 4040958 alive, `jack-ladder-1794723070` RUNNING, no exit. J6: the 4 humid NE.01 kernels are all RUNNING, nothing to harvest.
 J7: W1.04 is budget KAGGLE_CPU, but its run() was a local 3-worker pool (~11 core-h for the control alone). Built the Kaggle-CPU path (`36ce96d`): 1 kernel per seed, units cached by impl_sha, `kernel <seed>` buys a seed ahead. Fixtures 15/15.
 Pushed s0 (`…4769`). s1 and s2 were REFUSED: Kaggle's batch CPU cap is 5, now measured (5 CPU + 1 GPU ran together; INBOX).
 The Director's 06:40 rewrite reached me mid-slot. Ruling 2 re-registers W1.04(c) as oracle-only plus p5_oracle > p95_repeat, so the s0 kernel is a pilot and not a claim unit. Re-registration is the next step, in J7 state.
