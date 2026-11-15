@@ -1799,5 +1799,16 @@ To switch it off: remove the `gap_fill.sh` line from the crontab.
 - A recorded life plays on the Watch tab when ORDERS S6 has written
   `/data/jack-video/latest.mp4` (or `.webm`); the script links it into
   `/data/jack-dashboard/media/` and shows `latest.txt` beside it as the caption.
+- **Where the owner opens it:** `https://worldtwin.duckdns.org/jack/` (name
+  `jack`, the password the owner chose on 2026-11-15). The cron line sets
+  `JACK_DASH_PUBLISH=/data/cache/_jackdash`, and the script copies only
+  `index.html`, `status.json` and the film there — the one folder the web
+  server's container already sees. The route, its password hash and two blocks
+  that stop the same files being read through the public `/api/cache/` path
+  are in `/home/opc/openclaw-platform/Caddyfile` (outside this repo; the copy
+  from before the change is `Caddyfile.bak-20261115-jack`). Agents never edit
+  that file: it is the ingress for every tenant.
+- The Talk tab only opens the owner's terminal app. The owner keeps the chat
+  on SSH and has declined Claude's Remote Control.
 - To switch it off: remove the `dashboard_status.py` line from the crontab.
 
