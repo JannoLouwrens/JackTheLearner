@@ -1401,3 +1401,4 @@ Philosophy served: 4 (a control that must fail where the old gate could not, plu
 PS.02 is not 94 days rotten. It PASSed through 11-12 (probe R2 0.6165, bit-exact repeats) and FAILed from 11-13. Its test code is unchanged. The only imported change in that window is `playground.Water` (c510b92, the W0.PL repair), so the world moved under it.
 Per-seed run at HEAD, no ledger write: s0 0.511, s1 0.706, s2 FAIL (death_s_max 78.2 > 70, R2 -0.265). Bisect at c510b92~1 vs c510b92 is the next step. Written in J4 state.
 Philosophy served: 4 (a failure traced to its cause instead of filed; no bar moved).
+Bisect same slot: at c510b92~1, PS.02 s2 PASSES (R2 0.570, max 33.8 s), so the W0.PL water repair is the cause.
