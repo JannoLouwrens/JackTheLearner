@@ -211,7 +211,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
       <h2>How to use this</h2>
       <ul class="tips">
         <li><b>Your chat</b><span>Type <code>jackchat</code> and press return, or choose “Open my Claude chat” in the menu. It keeps running when you close this page.</span></li>
-        <li><b>Windows</b><span>The tabs at the top are your windows. Tap one to switch, tap + for another, or swipe the screen sideways. They all keep running on the server.</span></li>
+        <li><b>Windows</b><span>The tabs at the top are your windows. Tap one to switch, + for another, \u00d7 to close the one you are in, or swipe the screen sideways. They all keep running on the server.</span></li>
         <li><b>Write</b><span>On a phone, tap the screen or the pencil for a message box where suggestions and autocorrect work. Send with nothing in it is the return key. The keyboard key types straight into the terminal instead.</span></li>
         <li><b>Speak</b><span>Tap the microphone. Your words appear in a box you can correct, then Send puts them in the terminal.</span></li>
         <li><b>Photos</b><span>Tap the camera to take or choose a picture. It is saved on your server and its location is typed into your message.</span></li>
@@ -288,7 +288,9 @@ function send(bytes){if(ws&&ws.readyState===1)ws.send(bytes)}
 var inMode=false;                                     /* scrolled back in the server's history */
 function input(s){
   if(!ws||ws.readyState!==1)return;
-  if(inMode&&!/^(\x1b\[<6[45];|\x1b\[[56]~)/.test(s)){inMode=false;s="q"+s}   /* typing returns to the bottom first */
+  var scroll=/^(\x1b\[<6[45];|\x1b\[[56]~)/.test(s);
+  if(!scroll&&window.stopGlide)window.stopGlide();                 /* typing ends a glide, so it cannot scroll away again */
+  if(inMode&&!scroll){inMode=false;s="q"+s}   /* typing returns to the bottom first */
   var b=enc.encode(s),p=new Uint8Array(b.length+1);p[0]=48;p.set(b,1);ws.send(p);
 }
 function sendSize(){send(enc.encode("1"+JSON.stringify({columns:term.cols,rows:term.rows})))}
@@ -373,19 +375,27 @@ term.onResize(function(){sendSize()});
 
 /* ───── window tabs, from what tmux reports in the terminal title ───── */
 var NAMES={bash:"Shell",claude:"Claude",node:"Claude",python:"Python",python3:"Python",vim:"Editor",nano:"Editor",htop:"Monitor",top:"Monitor"};
-var winCount=1,winNames={};
+var winCount=1,winNames={},winKey="";
 term.onTitleChange(function(t){
   if(!/^JWm?\|/.test(t))return;
   inMode=t.charAt(2)==="m";
+  var key=t.replace(/^JWm?/,"")+"|"+(innerHeight<500);if(key===winKey)return;winKey=key;   /* same windows: leave the buttons alone, a tap may be in progress */
   var W=t.split("|").slice(1).filter(Boolean).map(function(x){var on=/\*$/.test(x),p=x.replace(/\*$/,"").split("=");var n=p.slice(1).join("=")||"shell";if(n==="[tmux]")n=winNames[p[0]]||"shell";else winNames[p[0]]=n;return {i:p[0],n:n,on:on}});
   var el=$("#wins"),was=el.hidden;
   el.hidden=W.length<2&&innerHeight<500;winCount=W.length;   /* a phone held sideways keeps the row unless it is needed */
-  el.innerHTML=W.map(function(w,k){var b=document.createElement("button");b.className="win"+(w.on?" on":"");b.setAttribute("role","tab");b.setAttribute("aria-selected",w.on?"true":"false");b.dataset.win=w.i;b.textContent=(k+1)+"  "+(NAMES[w.n]||w.n);return b.outerHTML}).join("")+'<button class="win add" data-win="+" aria-label="New window">+</button>';
+  /* change the buttons in place where possible: replacing one under a finger loses the tap */
+  var tabs=el.querySelectorAll(".win:not(.add)"),hasX=!!el.querySelector(".win.x");
+  if(tabs.length!==W.length||hasX!==(W.length>1)||!el.querySelector('[data-win="+"]')){
+    el.innerHTML=W.map(function(){return '<button class="win" role="tab"></button>'}).join("")+(W.length>1?'<button class="win add x" data-win="x" aria-label="Close this window">\u00d7</button>':"")+'<button class="win add" data-win="+" aria-label="New window">+</button>';
+    tabs=el.querySelectorAll(".win:not(.add)");
+  }
+  W.forEach(function(w,k){var b=tabs[k],txt=(k+1)+"  "+(NAMES[w.n]||w.n);b.classList.toggle("on",w.on);b.setAttribute("aria-selected",w.on?"true":"false");b.dataset.win=w.i;if(b.textContent!==txt)b.textContent=txt});
   if(was!==el.hidden)layout();
   var cur=el.querySelector(".on");if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:"nearest",inline:"nearest"});
 });
 $("#wins").addEventListener("click",function(e){var b=e.target.closest("[data-win]");if(!b)return;
-  if(b.dataset.win==="+")input("\x02c");else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else input("\x02:select-window -t "+b.dataset.win+"\r");
+  if(b.dataset.win==="x"){if(window.confirm("Close this window? Anything running in it stops."))input("\x02X")}
+  else if(b.dataset.win==="+")input("\x02c");else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else input("\x02:select-window -t "+b.dataset.win+"\r");
   if(!coarse)term.focus()});
 
 /* ───── the extra keys ───── */
@@ -494,6 +504,16 @@ $("#cmic").addEventListener("click",function(){if(listening)stopListening();else
 $("#cinsert").addEventListener("click",function(){sendCompose(false)});
 $("#csend").addEventListener("click",function(){sendCompose(true)});
 $("#ctext").addEventListener("input",grow);
+/* the box is there only while the keyboard is: putting the keyboard away puts the box away */
+var holdBox=0;
+$("#compose").addEventListener("pointerdown",function(e){if(e.target.closest("button"))holdBox=Date.now()+700},true);
+$("#ctext").addEventListener("blur",function(){setTimeout(function(){
+  if($("#compose").hidden||Date.now()<holdBox||listening||document.activeElement===$("#ctext")||!document.hasFocus())return;
+  closeCompose()},220)});
+(function(){var vv=window.visualViewport,up=false;if(!vv)return;
+  vv.addEventListener("resize",function(){var now=innerHeight-vv.height>120;
+    if(up&&!now&&!$("#compose").hidden&&!listening&&Date.now()>holdBox){$("#ctext").blur();closeCompose()}
+    up=now})})();
 $("#ctext").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();sendCompose(true)}else if(e.key==="Escape"){e.preventDefault();closeCompose()}});
 
 /* ───── a photo: saved on the server, its location typed into the message ───── */
@@ -535,6 +555,7 @@ row.addEventListener("scroll",edges,{passive:true});window.addEventListener("res
     if(mouse){var code=n>0?64:65,seq="";for(var i=0;i<Math.min(Math.abs(n),40);i++)seq+="\x1b[<"+code+";1;1M";input(seq)}
     else term.scrollLines(-n);
   }
+  window.stopGlide=function(){if(raf){cancelAnimationFrame(raf);raf=null}vel=0};
   function glide(){vel*=0.94;if(Math.abs(vel)<0.02){raf=null;return}move(vel*16);raf=requestAnimationFrame(glide)}
   st.addEventListener("touchstart",function(e){if(raf){cancelAnimationFrame(raf);raf=null}if(e.touches.length===1){y0=ys=e.touches[0].clientY;xs=e.touches[0].clientX;dxs=0;side=false;t0=ts=e.timeStamp;acc=0;vel=0;far=0}},{passive:true,capture:true});
   st.addEventListener("touchmove",function(e){

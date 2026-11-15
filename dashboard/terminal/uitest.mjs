@@ -48,7 +48,7 @@ function bridge(ws) {
   const up = new WebSocket(`ws://127.0.0.1:${TPORT}/term/ws`, ['tty']); up.binaryType = 'arraybuffer';
   const q = []; let open = false;
   up.onopen = () => { open = true; for (const m of q) up.send(m); };
-  ws.onMessage((m) => { if (open) up.send(m); else q.push(m); });
+  ws.onMessage((m) => { if (process.env.JACK_UITEST_TRACE) fs.appendFileSync(OUT + 'trace.log', `${Date.now() % 1000000} ${typeof m} ${JSON.stringify(Buffer.from(m).toString('latin1')).slice(0, 120)}\n`); if (open) up.send(m); else q.push(m); });
   up.onmessage = (e) => { try { ws.send(typeof e.data === 'string' ? e.data : Buffer.from(e.data)); } catch {} };
   up.onclose = () => { try { ws.close(); } catch {} };
   ws.onClose(() => { try { up.close(); } catch {} });
@@ -133,7 +133,7 @@ const browser = await pw[engineName].launch({ args: engineName === 'chromium' ? 
     await page.waitForSelector('#view-jack .hero', { timeout: 10000 });
     const ck = (await ctx.cookies()).find((c) => c.name === 'jd');
     check(C, 'Right password opens the dashboard and is remembered for a year, unreadable by scripts', ck && ck.httpOnly && ck.secure && (ck.expires - Date.now() / 1000) > 300 * 86400);
-    const hero = await page.textContent('#view-jack .hero .eyebrow');
+    const hero = (await page.textContent('#view-jack .hero')).slice(0, 60);
     const tone = await page.$$eval('#view-jack .meter b', (n) => n.length);
     check(C, 'Front page leads with the step he is on, and keeps the two-tone proof bars', /Where Jack is/i.test(hero) && /of \d+ steps/.test(hero) && tone >= 5, `${hero}, ${tone} two-tone bars`);
     await sleep(300); await page.screenshot({ path: `${OUT}jack-1-home.png` });
@@ -358,9 +358,12 @@ for (const p of PROFILES) {
       check(C, 'Swiping sideways goes to the next window', sw >= 0 && (await tabs())[1] === true, `${sw} ms`);
     } else if (p.touch) await page.tap('#wins .win >> nth=1'); else await page.click('#wins .win >> nth=1');
     await waitText(page, `WINTWO-${mark}`, 5000);
-    await focusTerm(page, p); await page.keyboard.type('exit'); await page.keyboard.press('Enter');
+    let dlg = 0; page.once('dialog', (d) => { dlg++; d.accept(); });
+    await sleep(600);   // a tap straight after another touch is read as a double tap by the emulated phone
+    if (p.touch) await page.tap('#wins .win.x'); else await page.click('#wins .win.x');
     const t9 = Date.now(); let stripGone = false;
     while (Date.now() - t9 < 5000) { if ((await page.$$('#wins .win:not(.add)')).length === 1 && (await screen(page)).includes(`${mark}-STILL-HERE`)) { stripGone = true; break; } await sleep(80); }
+    if (!stripGone) { await page.screenshot({ path: `${OUT}${p.id}-d-tidy.png` }); R.tidy = { tabs: await page.$$eval('#wins .win', (n) => n.map((x) => x.textContent + (x.classList.contains('on') ? '*' : ''))), dlg }; console.log('TIDY', JSON.stringify(R.tidy)); }
     check(C, 'Window tabs: a second window gets a tab, tapping switches, closing removes the tabs', strip >= 0 && w2 >= 0 && w1 >= 0 && firstOn && tabsFit && stripGone, `tabs ${strip} ms, second ${w2} ms, back ${w1} ms, first lit ${firstOn}, fits ${tabsFit}, tidy ${stripGone}`);
 
     // 13c. copy what is on screen
@@ -381,7 +384,7 @@ for (const p of PROFILES) {
       const opened = await page.waitForSelector('#compose:not([hidden])', { timeout: 3000 }).then(() => true, () => false);
       const attrs = await page.evaluate(() => { const t = document.querySelector('#ctext'); return document.activeElement === t && t.getAttribute('autocorrect') === 'on' && t.spellcheck; });
       await page.fill('#ctext', `echo BOX-${mark}`); await page.tap('#csend');
-      const ran = await waitText(page, `BOX-${mark}`, 5000);
+      const ran = await waitText(page, `\nBOX-${mark}`, 5000);
       const still = await page.evaluate(() => document.querySelector('#compose').hidden && document.activeElement !== document.querySelector('#ctext') && document.activeElement !== window.jackTerm.textarea);
       await page.tap('#term', { position: { x: 60, y: 60 } }); await page.waitForSelector('#compose:not([hidden])', { timeout: 3000 }).catch(() => {});
       await page.fill('#ctext', `echo HALF-${mark}`); await page.tap('#cinsert'); await sleep(500); await page.tap('#csend');
