@@ -388,7 +388,96 @@ def score(f_rows: list, b_rows: list, seeds=REGISTERED_SEEDS) -> dict:
     return {"seeds_meeting": len(ok), "of": len(seeds), "passes": len(ok) >= BAR_SEEDS}
 
 
+# ── the off-box runner: Kaggle CPU, the way forager_race3 launched ──────────
+# One kernel per row: 4 child processes, each one cell = this row x 5 seeds,
+# run sequentially, written as JSONL. Worst case per cell 5 x 10 x 9000 =
+# 450k decisions (~3.3 h at the box's 38.8/s); the children time out at 11 h.
+OUT = Path("/data/jack-logs/world_card")
+CELLS_PER_KERNEL = 4
+CHILD_TIMEOUT_S = int(11.0 * 3600)
+REMOTE_TIMEOUT_S = int(12.2 * 3600)
+
+
+def kernel_cells(row: str, seeds=REGISTERED_SEEDS) -> list:
+    if row not in ROWS:
+        raise ValueError(f"kernel: row {row!r} not in {ROWS}")
+    seeds = list(seeds)
+    k = -(-len(seeds) // CELLS_PER_KERNEL)
+    return [(row, seeds[i:i + k]) for i in range(0, len(seeds), k)]
+
+
+def run_parallel(cells: list, outdir) -> dict:
+    import subprocess
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    procs = []
+    for row, seeds in cells:
+        name = f"{row}_s{seeds[0]}-{seeds[-1]}"
+        f = outdir / f"{name}.jsonl"
+        procs.append((name, f, subprocess.Popen(
+            [sys.executable, "-m", "experiments.world_card", "cell", row,
+             ",".join(map(str, seeds)), str(f)], cwd=REPO,
+            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)))
+    res = {}
+    for name, f, p in procs:
+        try:
+            _, err = p.communicate(timeout=CHILD_TIMEOUT_S)
+        except subprocess.TimeoutExpired:
+            p.kill()
+            _, err = p.communicate()
+        lives = ([json.loads(x) for x in f.read_text().splitlines() if x.strip()]
+                 if f.exists() else [])
+        res[name] = {"lives": lives, "rc": p.returncode}
+        if p.returncode != 0:
+            res[name]["error"] = f"rc={p.returncode}: {err.decode()[-800:]}"
+    return res
+
+
+_JOB = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q", "mujoco", "gymnasium"], check=True)
+import json, os
+os.chdir("/tmp/jack")
+from experiments.world_card import run_parallel
+r = run_parallel(__CELLS__, os.environ["JACK_OUT"])
+json.dump(r, open(os.path.join(os.environ["JACK_OUT"], "world_card_cells.json"), "w"))
+print("DONE", flush=True)
+'''
+
+
+def kernel(row: str) -> dict:
+    """Submit one row (20 registered seeds) as one Kaggle CPU kernel; write
+    every returned life to OUT/<row>.jsonl (partial cells are kept: a cell
+    that dies mid-way still returns the lives it finished)."""
+    from experiments.gpu import build_job, result_json, submit
+    cells = kernel_cells(row)
+    body = _JOB.replace("__CELLS__", repr(cells))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=4.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["world_card_cells.json"])
+    if not sub.ok:
+        raise RuntimeError(f"world_card kcpu row {row}: {sub.message}")
+    r = result_json(sub, "world_card_cells.json")
+    OUT.mkdir(parents=True, exist_ok=True)
+    with open(OUT / f"{row}.jsonl", "w") as fh:
+        for name, rec in r.items():
+            for life in rec["lives"]:
+                fh.write(json.dumps(life) + "\n")
+            print(f"{name}: {len(rec['lives'])} lives"
+                  + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
+    return r
+
+
 def main(argv):
+    if len(argv) >= 5 and argv[1] == "cell":      # cell <row> <s1,s2,..> <out.jsonl>
+        for s in argv[3].split(","):
+            res = run_seed(argv[2], int(s))
+            with open(argv[4], "a") as fh:
+                fh.write("\n".join(json.dumps(r) for r in res) + "\n")
+        return 0
+    if len(argv) >= 3 and argv[1] == "kernel":    # kernel <row>
+        r = kernel(argv[2])
+        print(json.dumps({k: ("error" in v) for k, v in r.items()}))
+        return 0
     if len(argv) >= 2 and argv[1] == "smoke":
         lives = int(argv[2]) if len(argv) > 2 else 2
         rows = argv[3].split(",") if len(argv) > 3 else list(ROWS)
