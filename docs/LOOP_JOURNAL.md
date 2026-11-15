@@ -1402,3 +1402,9 @@ PS.02 is not 94 days rotten. It PASSed through 11-12 (probe R2 0.6165, bit-exact
 Per-seed run at HEAD, no ledger write: s0 0.511, s1 0.706, s2 FAIL (death_s_max 78.2 > 70, R2 -0.265). Bisect at c510b92~1 vs c510b92 is the next step. Written in J4 state.
 Philosophy served: 4 (a failure traced to its cause instead of filed; no bar moved).
 Bisect same slot: at c510b92~1, PS.02 s2 PASSES (R2 0.570, max 33.8 s), so the W0.PL water repair is the cause.
+
+2026-11-15 08:30 UTC · JACK · J1(2). Step 1 is still compute-blocked: at 08:10 all 5 Kaggle CPU sessions were RUNNING (h1-h4 and w104 s0) and the detached cap was 2/2.
+So I committed step 2's forager-race rule before any cell (`e9b14f3`, `experiments/forager_race.py`): the 7 LC.09 arms with the guard on (reported, not gated) plus a random floor, x seeds 153-154 x 15 lives. Meals are counted per life through the reward_fn hook, so no world file changed.
+Clear = late-third floor meals >= 5 OR apples >= 1, AND energy eaten above the random floor's, on BOTH seeds. Missing cell = INCOMPLETE. 4 Kaggle-CPU kernels of 4 cells each. cores.py is stamped, so cells must wait for step 1's seat.
+Selftest 11/11. Smoke on the box: wm-dyn ran 3000 decisions in 129 s, 1 life of 400.8 s, 0 meals, guard reading; random ran 600 decisions in 17 s.
+Philosophy served: 3 and 4 (the forager question goes to a race whose bar is fixed before any number exists, with a floor it must beat).

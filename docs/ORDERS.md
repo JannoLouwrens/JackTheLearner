@@ -65,9 +65,9 @@ different orders. An arm clears → write it here; the Director orders
 serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 **done when:** the loss seat is ruled by tally and step 2's table (and 3's
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
-state: 11-15 08:05 (1) rule committed `fdb3318`. LF.03 RE-REGISTERED per ruling 9 `ad6a644` (before any cell): TRAIN_RATIO = LC.02 committed_ratio via borrow_metrics (0.125; unreadable -> VOID/refuse); statue twin (zero action, training on) + `drives_body` detector (action RMS >= 0.05 AND corr(executed, policy mean) >= 0.05); meals_by_seed on the row. Smoke s0 400 dec: learner 0.52/0.42 True, statue 0/0 False while still reading weights_changed True (old gate blind to it). Race selftest still green; _Life4 inherits the ratio.
-NO cell yet: `kernel 150` REFUSED at 08:03 by detached cap (2/2 alive, ruling 3). LF.03 itself not re-bought (cpu<2h).
-Next: as a detached slot + kcpu slot free: `launch_detached.sh /data/tmp/plr_s<S>.log $PY -m experiments.policy_loss_race kernel <S>` for S=150,151,152; then `policy_loss_race tally`; then re-buy LC.02/LC.08/LF.03 under the winner.
+state: 11-15 08:30 (1) rule `fdb3318` + LF.03 ruling-9 re-reg `ad6a644` landed; NO cell yet. At 08:10 all 5 Kaggle CPU sessions RUNNING (humid h1-h4, w104 s0) and the detached cap 2/2 (humid pollers h1/h2).
+(2) forager race rule COMMITTED before any cell `e9b14f3` (`experiments/forager_race.py`): 7 LC.09 arms (guard on, reported, not gated) + random floor x s153-154 x 15 lives, LIFE_CAP 12000 censor-fill; clear = late-third floor>=5 OR apple>=1, AND late_nu > floor's, on both seeds. cores.py is stamped, so its cells wait for step 1's seat. Selftest 11/11; smoke wm-dyn 3000 dec = 129 s on the box, 1 life 400.8 s, 0 meals, guard reads.
+Next: as kcpu slots free: `launch_detached.sh /data/tmp/plr_s<S>.log $PY -m experiments.policy_loss_race kernel <S>` S=150,151,152 -> `policy_loss_race tally` -> seat + re-buy LC.02/LC.08/LF.03 -> `launch_detached.sh /data/tmp/forager_k<K>.log $PY -m experiments.forager_race kernel <K>` K=0..3 -> `forager_race tally`.
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
