@@ -1533,3 +1533,4 @@ Row a (do-nothing) back from Kaggle, 200 lives / 20 seeds: 599.9±0.2 s, 0 meals
 d8 launched into a's freed Kaggle session (19:23). g, e, c still running; d32 waits.
 Built f2 (`HandForager2`): bans expire after 200 s, food memory re-earned each life; rule as a code comment before any run; f2/g2/b2 wired to fresh seeds 221–240. Tuning smoke (10 lives × 153/154) running detached on the box.
 Philosophy served: 4 (the floor control measured, and f's failure is being repaired rather than filed — with a new ruler on fresh seeds, not a retuned verdict), 5 (his world measured before any brain).
+19:46 addendum: f2 tuning smoke (200 s bans, 10 lives) back: seed 153 3.8 meals/life, 154 4.3, flat across lives — the first-life collapse is gone — but 154's life 0 fell from f's 23 to 9 (timed bans re-chase decoys). Next arm: in-life bans (inf), then freeze and launch on 221–240.

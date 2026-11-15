@@ -71,6 +71,28 @@ box, `/data/tmp/wc_diag` — tuning seed, NOT evidence):
   shuffled control. The wall-pinned food is a world fact for J2 (1): the
   record's "instant re-placement at a new random place" removes it.
 
+
+### f2 tuning smoke (box, seeds 153/154, 10 lives each — tuning seeds, NOT evidence)
+
+2026-11-15 19:25–19:45, `world_card row f2 <seed>`, F2_BAN_S = 200 s, raw
+`world_card_data/smoke_f2_ban200.jsonl`. (lifetime s, floor meals) per life; all energy deaths.
+
+| seed | lives 0–9 floor meals | mean | lifetimes s |
+|---|---|---|---|
+| 153 | 2, 5, 8, 7, 4, 5, 1, 1, 2, 3 | 3.8 | 604–978 |
+| 154 | 9, 6, 5, 5, 4, 4, 0, 5, 3, 2 | 4.3 | 597–1011 |
+
+- **The first-life collapse is gone** (f on 201–220: 12.35 then ~2.5): f2 eats
+  about the same in every life. Re-earning memory each life works.
+- **But it eats less in life 0:** on 154, f ate 23 in life 0 and f2 ate 9. f2
+  differs from f only in the timed ban, so inside a life a 200 s ban costs
+  more than it saves: f2 returns to decoy textures every 200 s.
+- Both seeds stay under 5.0. Next tuning arm: ban for the rest of the life
+  (F2_BAN_S = inf; still cleared at new_life) — the diagnostic "fresh" arm,
+  which on 154 ate 23 → 6 → 4, the decline then being the wall-pinned food
+  (cause 2). If that arm also stays under 5 on lives 1–9, the ruler is
+  limited by the world, not by its rules, and J2 (1)'s re-placement is the fix.
+
 ## Smoke (box, seeds 153/154 — tuning seeds, NOT evidence)
 
 2026-11-15, box, nice 19, `python -m experiments.world_card smoke 2 f|g`,
