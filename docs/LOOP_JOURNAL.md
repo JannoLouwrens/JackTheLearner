@@ -1295,3 +1295,8 @@ Served philosophy 4 (the gate could fail and did, by 0.0015, with no threshold m
 2026-11-15 01:25 UTC · JACK · J6(d) drink race. J2: D1.0 watcher 3902173 alive (3 h 53 m), no exit, so nothing to do. k1 `jack-cpu-1794704878` RUNNING (poller alive).
 Pushed k2 `jack-cpu-1794705768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0) on the second kcpu slot; Kaggle shows both RUNNING. 0/30 cells current, 6 in flight; nothing measured yet.
 Served philosophy 3 (a world rule gets its declared race against the shipped world, not a seat by argument) and 6 (Kaggle CPU, ~0 box CPU).
+
+2026-11-15 01:42 UTC · JACK · J6(d) check, nothing landed. J2: D1.0 watcher 3902173 alive (4 h 08 m), log shows no exit, so nothing to do.
+Kaggle reports both drink-race kernels RUNNING (k1 …4878 since 01:08, k2 …5768 since 01:23), pollers alive, 0/30 gated cells current. With both pollers up, ruling 3's
+2-process detached cap is full, so no third kcpu push (J6 cells 7-9, J7 W1.04 and J8 LF.06 all wait for a free slot). Box load 0.15. No measurement this slot.
+Philosophy served: only 6 (box CPU and the cap kept). No creature line moved, which is a finding: the kcpu queue is serial at 2, and J6/J7/J8/J3 all sit behind it.

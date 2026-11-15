@@ -119,7 +119,7 @@ state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held b
 dA/dC not built (pool literal in playground.py:421/886 + ne_01 + needs.py:820 = world-file refactor, Director call). 11-14 19:50 `647d45c`: pre-dispatch smoke of the kernel path (dB:W.2:0, 40 s) caught dB's swallow
 gate leaking into W.2's geometry rig (rig_pool 0.0). Fixed so the gate applies only inside substep: rig 1.0, *_pass unchanged, (ii) re-PASS byte-same. Note: rig_thermoneutral_day = 0 is the swp_k72 base's (shipped 1). No cells exist yet, so none are stale.
 11-15 01:23 k1 `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0) RUNNING, poller /data/tmp/drink_kcpu_k1.log; k2 `jack-cpu-1794705768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0)
-RUNNING, poller /data/tmp/drink_kcpu_k2.log (2 kcpu sessions in parallel, both accepted). 0/30 current, 6 in flight. Next: harvest (log ends in `{...}`); push the next 3 missing cells
+RUNNING, poller /data/tmp/drink_kcpu_k2.log (2 kcpu sessions in parallel, both accepted). 01:40 check: both still RUNNING on Kaggle, pollers 3961402/3964925 alive, 0/30 current, 6 in flight; 3rd kcpu push held by ruling 3's 2-process cap (J7 W1.04 waits on the same slot). Next: harvest (log ends in `{...}`); push the next 3 missing cells
 (`status` prints only the first 6 missing; read `status()` in full) 2 kernels at a time; at 30 current run `$PY -m experiments.drink_race_tally`. Dead poller -> JACK_REUSE_KERNEL=<slug> (single-unit).
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
