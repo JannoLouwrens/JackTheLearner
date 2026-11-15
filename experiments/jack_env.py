@@ -19,10 +19,10 @@ world `survival.run_survival` lives in.
                it, because the placebo draw consumes the world's RNG.
   step         one 0.2 s decision (W0.SUBSTEPS x timestep).
   reward       homeo-dr, as survival.py: d(h_t) - d(h_{t+1}); a death
-               charges d_before - survival.D_DEATH. (J5 adds the record's
-               reward options; default stays this.)
-  terminated   True on the decision he dies (W0 lethal).
-  truncated    always False here (J5 adds a time limit as an option).
+               charges d_before - survival.D_DEATH. Options: see OPTIONS.
+  terminated   True on the decision he dies (W0 lethal). Death only.
+  truncated    False by default; True when the `max_episode_decisions`
+               administrative cap is hit (OPTIONS). Never on a death step.
   info         meals (total eat events, all foods, cumulative over the world),
                ate_total (per food, cumulative), meals_this_life, death_cause
                ("" alive / "energy" / "integrity"), life, decisions, sim_s.
@@ -42,6 +42,50 @@ PROOF IT IS THE SAME WORLD: experiments/tests/test_jack_env.py —
 match the same runs through `survival.run_survival(policy="random")`
 decision for decision (life ends, eat events). Numbers: see SPEED / PROOF
 below, filled from measured runs only.
+
+OPTIONS (ORDERS J2 items 3 and 4; every default = today's world, proof:
+experiments/tests/test_jack_env_options.py). Ours beside theirs:
+
+  reward="homeo-dr"      default, above. Unchanged.
+  reward="dr100-eat"     r = 100*(d_t - d_{t+1}) + eat_pay * (eat events this
+                         decision); a death charges 100*(d_before - D_DEATH).
+                         Theirs: EVAAA main text pays drive reduction
+                         sum_i beta_i (D_i(t) - D_i(t+1)); EVAAA's released code
+                         has a branch paying +100 on consuming a resource
+                         (evaaa_train/envs/interoceptiveAI.py L177-204;
+                         PUBLISHED_PRIORS §3 long form line 70). DIFFERS: we
+                         pay BOTH (the order's recipe), one beta (100) over
+                         our 3 needs, eat_pay default 100 = their branch.
+  reward="dr100-eat-pos" as dr100-eat, but an ALIVE decision is never
+                         negative: the drive term is max(0, .) while alive
+                         (being alive and hungry costs nothing); a death
+                         still charges 100*(d_before - D_DEATH) < 0. Theirs:
+                         §3 "remove any way to profit from ending a life";
+                         a reward paying on intake/drive reduction has no
+                         sign problem (long form line 161). DIFFERS: no
+                         published world uses exactly this clip; it is the
+                         order's "never negative while alive" option.
+  max_episode_decisions  None (default) = no cap. N = after N decisions
+                         since the last reset() with no death, truncated=True.
+                         The world is NOT touched: reset() after a
+                         truncation hands back that step's observation (no
+                         extra observe(), so the world RNG stream is the
+                         uncapped run's) and the life continues (life,
+                         meals_this_life carry on). Theirs: §5 "death is
+                         terminated=True, every administrative stop
+                         truncated=True"; §8 "the 3,000-decision cap is a
+                         truncation"; Crafter caps at 10,000 steps. DIFFERS:
+                         Crafter's cap builds a new world; ours keeps it
+                         (lives persist in W0).
+  OPTIONS PROOF (measured 2026-11-15, `python -m
+  experiments.tests.test_jack_env_options 300`, seeds 153/154/155): (a)
+  explicit defaults == JackEnv() byte for byte; (b) dr100-eat == 100*homeo-dr
+  + 100*eats on every decision (eats on 153/155); (c) pos: all alive
+  decisions >= 0, deaths < 0, plain dr100-eat had negative alive ones; (d)
+  K=40: 6 truncations + 2 deaths per seed, observations/rewards/deaths equal
+  the uncapped run, meals_this_life carries; control stream differs. PASS.
+  The J1 proof (test_jack_env) re-run after the change: PASS, unchanged.
+  Still owed for J2: item 1 (the dial d), item 2 (random needs/layout), 5.
 
 PROOF (measured 2026-11-15, `python -m experiments.tests.test_jack_env 300`):
   check_env PASS. Seeds 153/154/155 x 300 random decisions, against
@@ -67,6 +111,7 @@ import numpy as np
 from gymnasium import spaces
 
 SENSES = ("vision", "audio", "touch", "proprio", "needs")
+REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
 
 
 def default_cal() -> dict:
@@ -81,13 +126,22 @@ class JackEnv(gym.Env):
 
     def __init__(self, *, j0: Optional[float] = None,
                  alpha: Optional[float] = None, seed: int = 0,
-                 e0: float = 1.0, diary=None):
+                 e0: float = 1.0, diary=None, reward: str = "homeo-dr",
+                 eat_pay: float = 100.0,
+                 max_episode_decisions: Optional[int] = None):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
             j0 = c["j0"] if j0 is None else j0
             alpha = c["alpha"] if alpha is None else alpha
         self.j0, self.alpha, self.e0, self.diary = float(j0), float(alpha), float(e0), diary
+        if reward not in REWARDS:
+            raise ValueError(f"reward must be one of {REWARDS}, got {reward!r}")
+        self.reward, self.eat_pay = reward, float(eat_pay)
+        self.max_episode_decisions = (None if max_episode_decisions is None
+                                      else int(max_episode_decisions))
+        self._ep_decisions = 0
+        self._truncated = False
         self._seed = int(seed)
         self.w = None
         self._build(self._seed)
@@ -105,6 +159,7 @@ class JackEnv(gym.Env):
         if self.e0 != 1.0:      # survival.run_survival's e0, applied the same way
             self.w.drives.state = drives.DriveState(e=self.e0)
         self._eats_at_life_start = 0
+        self._truncated = False
 
     @staticmethod
     def _obs(o: dict) -> np.ndarray:
@@ -133,15 +188,21 @@ class JackEnv(gym.Env):
             # no observation held (e.g. reset mid-life): the world's next one
             self._pending_obs = self._obs(self.w.observe())
         o, self._pending_obs = self._pending_obs, None
+        continuing = self._truncated and not self._died
         self._died = False
-        self._eats_at_life_start = self._meals()
+        self._truncated = False
+        self._ep_decisions = 0
+        if not continuing:          # a truncation does not start a new life
+            self._eats_at_life_start = self._meals()
         return o, self._info()
 
     def step(self, action):
         from experiments.survival import D_DEATH
         w = self.w
         d_before = w.drives.state.d()
+        meals_before = self._meals()
         w.decide(np.asarray(action, dtype=float))
+        eats = self._meals() - meals_before
         self._died = bool(w.died_this_decision)
         d_after = D_DEATH if self._died else w.drives.state.d()
         info = self._info()
@@ -156,6 +217,18 @@ class JackEnv(gym.Env):
             from experiments import drives
             w.drives.state = drives.DriveState(e=self.e0)
         o = self._obs(w.observe())
-        if self._died:
+        self._ep_decisions += 1
+        self._truncated = (not self._died
+                           and self.max_episode_decisions is not None
+                           and self._ep_decisions >= self.max_episode_decisions)
+        if self._died or self._truncated:
             self._pending_obs = o
-        return o, float(d_before - d_after), self._died, False, info
+        dr = float(d_before - d_after)
+        if self.reward == "homeo-dr":
+            r = dr
+        else:
+            drive = 100.0 * dr
+            if self.reward == "dr100-eat-pos" and not self._died:
+                drive = max(0.0, drive)
+            r = drive + self.eat_pay * eats
+        return o, r, self._died, self._truncated, info

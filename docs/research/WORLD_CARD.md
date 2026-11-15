@@ -11,13 +11,13 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; e running, c launched 19:07, d8 launched 19:23, d32 launched 20:10; f2 launched 20:12 on 221–240, g2/b2 pending a session)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; e running, d8 launched 19:23, d32 launched 20:10; f2 launched 20:12 on 221–240, g2/b2 pending a session)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
 | a | do-nothing | 599.9 ± 0.2 (599.4–600.0) | 0 (0/200 lives ≥1) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | b | random, white per decision | 301.7 ± 16.4 (278–376) | 0.52 ± 0.76 (max 4; 76/200 lives ≥1; per-seed means 0.1–0.9) | 0 | n/a | energy 200/200 | −1.00 (all) |
-| c | pink noise per life | | | | n/a | | |
+| c | pink noise per life | 491.5 ± 30.1 (443–677) | 0.44 ± 0.86 (max 6; 58/200 lives ≥1; 1/200 ≥5; per-seed means 0.0–1.8) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | d8 | action held 8 | | | | n/a | | |
 | d32 | action held 32 | | | | n/a | | |
 | e | privileged NE.01 forager | | | | n/a | | |
@@ -161,6 +161,15 @@ decide):
   as misses; v2 credited meals bumped en route to the chased texture and
   starved chasing 3 false "foods" on 154 → credit only within 0.6 m, demote a
   food texture after 3 straight misses.
+
+## Row c against b (harvested 20:35; same seeds 201–220)
+
+Pink noise per life outlives white noise by 63% (491.5 vs 301.7 s) but does
+not eat more: 0.44 vs 0.52 floor meals/life, per-seed paired difference
+−0.07 (t = −0.70), c above b on 7/20 seeds; 0/20 seeds reach f's bar.
+The §1 prediction (correlated noise finds 2.5–4× more food) does NOT hold for
+pink noise on this world. The longer life is presumably a cheaper action
+stream (less arm power; NOT measured) — it is not food found. d8/d32 owed.
 
 ## Answers (owed after the registered rows)
 
