@@ -87,8 +87,8 @@ serves: M3, M4 · END-FIT row 1 · philosophy 3, 7 · objective 3 (free GPU).
 state: 11-15 05:51 D1.0 att 9 **VOID** (harvested `651c805`): on T4 aprime/b_split/c_e2e hit 60/60/61% of STEP_TARGET 750k under P100-frozen caps 90/150/150 (d_mlp 100%, ~11 min).
 Means (not a verdict): aprime 459 > d_mlp 422 > c_e2e 305 > b_split 259; margin .33 sigma. Fix `db262d9`: MINUTES_CAP 195/325/325/15 (T4-measured x1.3; no gate moved) -> all 13 units re-buy,
 ~40 GPU-h expected / 53 worst > 30/week. `70505b3`: JACK_D10_ONLY buys a declared subset; omitted units -> PARTIAL ERROR (no verdict), bought units cached by impl_sha 873e861e.
-06:11 W46 slice dispatched (21.2 h proj vs 22.22 left): ref, aprime 0-2, d_mlp 0-2 (Colab), b_split 0; watcher 4040958. It ENDS in a PARTIAL ERROR by design.
-Next: on that exit, W47 (Sun 11-22): JACK_D10_ONLY=b_split:1,b_split:2,c_e2e:0,c_e2e:1 (~25.5 h), W48: c_e2e:2 -> verdict. Never JACK_REUSE_KERNEL on a multi-unit spec.
+06:11 W46 slice dispatched (ref, aprime 0-2, d_mlp 0-2, b_split 0); 12:08 EXIT = ERROR (21392 s GPU metered): submit-time dirty-tree guard tripped on S6's uncommitted dashboard files (INBOX). CACHED in /data/d10_units/873e861e…: ref, aprime:0, aprime:1. NOT bought: aprime:2, d_mlp:0-2, b_split:0. W46 kaggle 13.73 h used, 16.27 left.
+Next: when `git status` shows no code dirt: `JACK_D10_ONLY=aprime:2,d_mlp:0,d_mlp:1,d_mlp:2,b_split:0 scripts/dispatch.sh D1.0 --projected-hours 11.6` (3.89+6.38 kaggle, 3x0.44 colab). Then W47: b_split:1,b_split:2,c_e2e:0,c_e2e:1; W48: c_e2e:2 -> verdict. Never JACK_REUSE_KERNEL on a multi-unit spec.
 
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
 **Why.** `NE.01` frees 8, `W.2` frees 3. Five races shipped nothing; the last
@@ -129,12 +129,10 @@ bar ≥ 3σ unmoved. A red is W1's resolution finding and joins step 2's judges.
 by `W1.00`–`W1.04` unchanged. (3) Register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 4, 5.
 **done when:** `W1.04` and `W1.00` have new verdicts and `DP.05`-in-W1 is registered.
-state: 11-15 06:39 kcpu PATH BUILT `36ce96d`: run() = 1 Kaggle-CPU kernel/seed (5 arms, 4-worker pool), units cached by impl_sha in /data/tmp/w104/units, `… w1_04_horizon_longer_than_consequence kernel <seed>` buys a seed ahead. Fixtures 15/15.
-Pushed s0 under the PRE-ruling-2 spec (`jack-cpu-1794724769`, RUNNING; ruling landed mid-slot). That kernel is a PILOT only: re-registration changes impl_sha -> no unit reuse, and multi-unit reattach is forbidden (ruling 6).
-s1/s2 pushes REFUSED: "Maximum batch CPU session count of 5 reached" (measured: 5 CPU + 1 GPU concurrent, cap is 5).
-(1) DONE `f6c6177`: re-registered per ruling 2 BEFORE any run: (c) = oracle p5 >= 5600 s AND oracle p5 > p95(fresh repeat); repeat p5 reported only; fixtures 16/16; impl_sha 9cbe4f1e.
-11-15 10:45 (1b) MEASURED, spec not yet edited: W1.02 row (9f91377) G mean 5.38 s, sd 1.60, t_inj 15.9 at +5.0 (ruling 9 confirmed: +5.0 = 0.93x the mean). 3-sigma floor at n=48/arm = 3*1.60*sqrt(2/48) = 0.98 s of G, so G resolves ~1 s; +5.0 tests 5x coarser than that. Candidate sizes to convert into G units before declaring: DP.05 gap_s 13.3 s span (plan 141 vs react 120), W1.01 oracle-passive gap 10.2 s span (70.2 vs 60.0). Units differ (span s vs satisfied-s), so no number is declared yet.
-Next: do (1b) FIRST — `w1_02_outcomes_have_resolution.py` is in W1.04's IMPL_DEPS (and its depends_on), so editing it after the kernels re-keys and stales them. Then, as kcpu slots free (5 max; s0 pilot ends ~4 h), launch 3 detached pollers `launch_detached.sh /data/tmp/w104_kcpu_s<s>.log $PY -m experiments.tests.w1_04_horizon_longer_than_consequence kernel <s>` (s=0,1,2), then `run W1.04` reuses the units.
+state: (1) DONE `f6c6177` (ruling 2: (c) on the oracle, p5 >= 5600 s AND > repeat p95). kcpu path `36ce96d` (1 kernel/seed, units by impl_sha in /data/tmp/w104/units).
+(1b) DONE `d1b0880` + re-buy 11-15 12:26 **W1.02 PASS** (att 11, +dirty from S6's dashboard files, not imported): C4 injection +5.0 -> INJ_G 2.41 G = W1.01's measured G gap (DP.05's 13.3 s x measured dG/dspan .184 = 2.44 corroborates); t_inj 7.69+-1.37 (old +5.0: 15.87, reporting-only); mdg_3sigma 0.98+-0.17 G.
+FINDING (Director): W1.01's bar = 3 x W1.02 quantum (~0.04 G) is a granularity, not a detection power (~1 G at n=48); W1.01's pin W102_RAN_AT is 09-06 and now two re-buys stale -> W1.01 VOIDs on re-run until re-pinned.
+Next: launch 3 detached pollers when kcpu frees (5/5 at 12:10: forager K0-K2, ladder, s0 pilot) `launch_detached.sh /data/tmp/w104_kcpu_s<s>.log $PY -m experiments.tests.w1_04_horizon_longer_than_consequence kernel <s>` (s=0,1,2), then `run W1.04`.
 
 ### J4 — The oldest blockers nobody owns (`PS.02`, `PG.6`, `T2.03`)
 **Why.** `PS.02` (cold is felt before it kills) is FAIL with its code

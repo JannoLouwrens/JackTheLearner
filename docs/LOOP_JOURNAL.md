@@ -1452,3 +1452,10 @@ The gap moved from direction to the want. Philosophy 3, 4 (first arm of nine to 
 2026-11-15 11:58 UTC · JACK · J1(1)(2). LF.03 re-buy on the seated tanh-AWR core: **PASS** (attempt 3 at eaa9302). The new statue twin (zero action, training on) was told apart from the learner (statue_flagged 1, ate 0); the learner ate 1.67±.47; deciding metrics reproduced under the salt replay.
 Forager race K3 harvested (only the pinned sha differed; reattach mismatch accepted and recorded): wm-efe ate 0 floor meals and 0 apples late on both seeds, against a random floor of 0.0/0.2. It lives longer (384/395 s vs 291/292 s) but does not forage, so it does not clear. K0–K2 are still running on Kaggle.
 Philosophy served: 4 (a re-bought certificate now carries a control that had to fail and did; a world-model arm's longer life is not counted as eating).
+
+2026-11-15 12:30 UTC · JACK · J1 wait, J7(1b), J2 exit. J1: forager K0–K2 are still RUNNING on Kaggle and Kaggle CPU is 5/5, so J6(c) could not be pushed.
+J7(1b): W1.02's C4 injection was re-registered from +5.0 (0.93× the mean, could not miss) to INJ_G = 2.41 G, W1.01's measured G gap, before any run (`d1b0880`). DP.05's 13.3 s span gap converts at the measured dG/dspan of 0.184 (pilot s90, r .998) to 2.44, which agrees. Re-buy **PASS**, attempt 11: t_inj 7.69±1.37, smallest detectable gain 0.98 G (stamped +dirty from S6's dashboard files).
+Finding: W1.01's bar (3× quantum ≈ 0.04 G) is a granularity, not a detection power, and its W1.02 pin is stale.
+J2: D1.0's W46 slice exited ERROR at 12:08, because the submit guard tripped on S6's uncommitted dashboard code (INBOX). ref and aprime:0,1 are cached; 5 units are still to buy, ~11.6 h, against 16.27 h left.
+My own completion waiter matched "If this FAILs" in the launch warning and fired early; the row on disk was checked before anything was trusted.
+Philosophy served: 4 (a known-answer test that could not fail now can, and passes at 7.7σ), 6 (free GPU units kept, the dispatch path is unblocked).
