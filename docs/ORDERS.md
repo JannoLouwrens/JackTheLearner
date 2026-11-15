@@ -116,10 +116,10 @@ serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
 state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (b) held by the detached cap. (d) declared `4c316fa`, dB built `c9dd457`, tally `184c4c1`. dA/dC NOT BUILT (world-file refactor, Director call).
-11-15 02:18: the short cells ran ON THE BOX (`drink_race_kcpu run`, W.1 3.4 s, W.2 20-40 s, ~520 CPU-s total), so status is 28/45 current (gated shipped+dB 18/30). This cuts the kernels from 8 to 2. Interim: W.1/W.2 flags dB == shipped on every seed.
-W.2(c) is red in both arms. Under dB the deadlines PASS (0.97x/1.30x vs shipped 6.3x/14.8x), but `c_hot_reachable` 0: the hot route peaks at 37.3 C and never kills under the k72 clock (NEEDS_CLOCK_RACE.md step 2d).
-In flight: k1 `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0), poller /data/tmp/drink_kcpu_k1.log; k2 `…5768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0), poller …_k2.log; both RUNNING at 02:18.
-Next: on each harvest (log ends `{...}`), push ONE kernel of 3 NE.01 cells per freed slot: `shipped:NE.01:2,shipped:NE.01:3,shipped:NE.01:4`, then `dB:NE.01:2,dB:NE.01:3,dB:NE.01:4` (swp_k72 NE.01 s0-4 is reported only and comes last). At 30 gated cells: `$PY -m experiments.drink_race_tally`. Dead poller -> JACK_REUSE_KERNEL=<slug>.
+11-15 02:43: shipped NE.01 s2-4 also ran ON THE BOX (`drink_race_kcpu run`, nice 19, 2 parallel, ~575 CPU-s each, maxrss 114 MB): every ok_* flag 1, 5/5 random deaths (all hyperthermia, dec 474-555), forager alive 18000 dec, 24-27 meals. Status 31/45 (gated 21/30).
+W.1/W.2 (02:18): dB == shipped on every flag; W.2(c) under dB passes deadlines (0.97x/1.30x) but `c_hot_reachable` 0 (peak 37.3 C). dB NE.01 cells are k72 (~31 CPU-min each): too long for a slot, so they stay on Kaggle.
+In flight: k1 `jack-cpu-1794704878` (dB:NE.01:0, shipped:NE.01:0, dB:W.1:0), poller /data/tmp/drink_kcpu_k1.log; k2 `…5768` (shipped:NE.01:1, dB:NE.01:1, shipped:W.1:0), poller …_k2.log; both RUNNING at 02:43.
+Next: on the first harvest (log ends `{...}`), push the LAST gated kernel `dB:NE.01:2,dB:NE.01:3,dB:NE.01:4` (swp_k72 NE.01 s0-4 is reported only, last). At 30 gated cells: `$PY -m experiments.drink_race_tally`. Dead poller -> JACK_REUSE_KERNEL=<slug>.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

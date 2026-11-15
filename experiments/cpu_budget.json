@@ -1066,6 +1066,9 @@
     },
     "2026-11-15": {
       "by_spec": {
+        "J6:drink:shipped_NE.01_s2": 582.04,
+        "J6:drink:shipped_NE.01_s3": 585.46,
+        "J6:drink:shipped_NE.01_s4": 573.02,
         "ME.11.B": 19.99,
         "T0.13": 2.88,
         "T0.15": 3.51,
@@ -1074,14 +1077,15 @@
         "T0.22": 4.23,
         "T0.27": 2.64,
         "T2.10": 12.65,
-        "detached:drink_kcpu_k1.log": 10.51,
+        "detached:drink_kcpu_k1.log": 91.42,
+        "detached:drink_kcpu_k2.log": 81.96,
         "detached:meal_kcpu_s94.log": 131.01,
         "detached:meal_kcpu_s95.log": 25.87,
         "detached:meal_kcpu_s96.log": 26.05,
         "detached:meal_kcpu_s97.log": 25.9,
         "detached:meal_kcpu_s98.log": 28.73
       },
-      "used_s": 339.24
+      "used_s": 2242.63
     }
   },
   "overruns": [

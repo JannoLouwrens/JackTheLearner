@@ -1306,3 +1306,9 @@ The W.1/W.2 cells cost seconds, not hours (W.1 3.4 s, W.2 20-40 s), so all 28 sh
 Status 28/45 (gated 18/30). Only 6 gated NE.01 cells are left beyond the 6 in flight, which is 2 kernels. Interim: dB == shipped on every W.1/W.2 flag.
 Finding: W.2(c) under dB passes both deadlines (0.97x, 1.30x vs 6.3x/14.8x shipped) but loses `c_hot_reachable` (37.3 C peak, never hyperthermic). The k72 clock trades (c)'s deadline for its hot route.
 Philosophy served: 5 (the loop got faster and cheaper; the race no longer waits a day on the 2-session queue) and 3 (a world rule is decided by its declared race).
+
+2026-11-15 02:44 UTC · JACK · J6(d) drink race. J2: D1.0 watcher 3902173 alive, no exit, so nothing to do. Both drink kernels still RUNNING on Kaggle (k1 95 min, k2 80 min).
+A shipped-clock NE.01 cell costs ~575 CPU-s (measured), not the ~31 CPU-min of a k72 cell. So shipped NE.01 s2-4 ran on the box through `drink_race_kcpu run`, wrapped by cpu_budget, nice 19, 2 parallel, maxrss 114 MB.
+All three pass every NE.01 flag: 5/5 random deaths in window (all hyperthermia, dec 474-555), forager alive at 18000 dec with 24-27 meals, drop control dies, null flat. Status 31/45 (gated 21/30).
+Only one gated kernel remains (dB NE.01 s2-4) after the 2 in flight. Kernels needed overall went from 8 to 2, then to 1 more push.
+Philosophy served: 5 (the race loop got cheaper and faster by measuring cell cost instead of assuming it) and 3 (a world rule is decided by its declared race).
