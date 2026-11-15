@@ -81,6 +81,29 @@ def _apply(arm: str):
                   - f_humid(rh, T_env) * dry_e_evap(skin_wetness, T)) / N.C_EFF
             return T + dT * dt
         N.thermal_step = thermal_step
+
+        # W.1(d) FLUX FIX (2026-11-15). W.1 rebuilds the net flux from the
+        # world's parts (`N.e_evap(wet, T)`), but this arm puts humidity only
+        # into thermal_step. While the body sweats (T > 37 C), check (d)
+        # integrated a flux that step never used: hum30/hum34 W.1 s2
+        # (T_init 37.74) failed d with ratio .953, the error not shrinking with
+        # dt. Fix: hand W.1 the arm's OWN numerator, the humid evap term
+        # included. Rig gate below: it must equal thermal_step's dT*C_EFF.
+        # W.1's test text is unchanged, and so are its bars.
+        w1 = mods["W.1"]
+
+        def _flux(T, T_env, occ, wet, shiver_on):
+            rh = h["RH_OPEN"] + (h["RH_SEALED"] - h["RH_OPEN"]) * occ
+            return (N.metabolic_rate(0.0, T, 0.0, shiver_on)
+                    - N.k_eff(wet, occ) * (T - T_env)
+                    - f_humid(rh, T_env) * dry_e_evap(wet, T))
+        w1._ship_flux_w = lambda T, T_env, occ=0.0, wet=0.0: _flux(T, T_env, occ, wet, True)
+        w1._ship_1met_flux_w = lambda T, T_env, occ=0.0, wet=0.0: _flux(T, T_env, occ, wet, False)
+        for T, Te, oc, wt, sh in ((38.5, 34.0, 0.0, 0.0, False), (37.9, 27.0, 1.0, 1.0, True),
+                                  (36.0, 20.0, 0.5, 0.3, True), (39.2, 30.0, 0.2, 0.0, False)):
+            dT = (thermal_step(T, 0.0, wt, oc, Te, 1.0, 0.0, shiver_on=sh) - T) * N.C_EFF
+            assert abs(dT - _flux(T, Te, oc, wt, sh)) <= 1e-9 * max(1.0, abs(dT)), \
+                "humid W.1 flux != thermal_step numerator"
     return N, mods
 
 
