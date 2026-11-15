@@ -1,146 +1,141 @@
 # PROGRESS — for the owner, on a phone
 
-Written 2026-11-15 (Sunday) by the Director, full weekly sitting. Rewritten
-every day; git keeps the old ones.
+Written 2026-11-15 (Sunday) 16:00 UTC by the Director — the second sitting
+today, the one you asked for after writing the plan. Rewritten every day; git
+keeps the old ones.
 
 ## The short version
 
-The most important test in the project finally ran, and **it failed
-honestly: living does not yet make him better, because he never learns to
-eat.** In 120 lives he died of hunger 120 times. The curriculum contest ran
-too and said the same thing from the other side: no way of ordering his
-early life beats no ordering at all, because a learner that cannot find food
-has nothing to be taught. Both tests had their cheating-controls in place
-and no pass mark was touched.
+**Your plan is now what the workers do.** Until this afternoon they raced
+brains we wrote ourselves. All seven failed to learn to eat — and the
+published record had predicted that: we gave each about 40,000 decisions
+where published agents need 100,000 to millions, and our "brains" were not
+what their names said. So the racing has stopped. The work order now is your
+five steps: research → combine → reproduce → test the last 10% → put it in him.
 
-That is real progress — we now know exactly what is wrong — and it changes
-the work. **From today the workers' first job, every hour, is: get him to
-forage.**
+We are in **stage 1, "the instrument"**: make the thing that judges brains
+right before judging any brain. Nothing is built yet — the orders were
+written an hour ago. This page says honestly where each part stands.
 
 ## What Jack can do today
 
-He lives whole lives in the first world (W0): hunger, thirst, heat and cold,
-his senses, a diary that survives death, death and retry. That is milestone
-1 and its test passes again (re-bought 14 Nov).
+He lives whole lives in his first world: hunger, thirst, heat and cold, his
+senses, a diary that survives death, death and retry (milestone 1; its test
+passes). He does **not** get better by living: 120 lives, 120 deaths of
+hunger. A scripted forager eats 24–27 meals in the same world, so the food
+is there. The test ladder reads **111 of 270**. Of 22 passing "he can…"
+tests, only 1 runs inside the living Jack; the rest were earned on a bench
+and must be earned again inside the brain we choose.
 
-What he cannot do: get better at it. Numbers a phone can hold:
-- A body that does nothing at all lives 600 seconds. An untrained brain
-  lives about 565. His trained brain lives about the same — and in one of
-  three runs it wrecked itself, falling from 598 to 158 seconds, because of
-  a known flaw in how his actions are trained (it can push without limit).
-- To pass, he needs about 5 small meals per life, or one apple. He got 0,
-  3 and 0. The world does contain enough food: a scripted forager eats 24–27
-  meals in it.
+## Each part of the plan: the step it is on (0–5)
 
-The test ladder reads **110 of 270** (same as yesterday).
+- **His brain — step 1 (research), step 2 ordered.** Review 1 done; review 2
+  running. Ordered today: brain B (a simple replay learner) taken from a
+  published library, not written by us, and made to reproduce published
+  scores on small standard tasks; brain A (the Dreamer world model) from its
+  authors' code, run unmodified, its speed measured on free hardware.
+- **Learning to eat — step 2 (combine), ordered, not built.** His world put
+  behind the standard interface every published learner plugs into; a probe
+  of which kind of random movement finds food at all; the published setup
+  (pay him when he eats, hunger varied at birth, food near first) as switches.
+- **Can the task be learned with his senses? — step 4, ordered.** A
+  hand-written forager that may use only what he senses. If it cannot eat,
+  the fault is his senses, not any brain. Nobody has published this answer.
+- **His world, needs and lessons — step 1.** World-rule contests stopped (no
+  published basis). Plain repairs of red world tests continue.
+- **Memory and sleep, body, ear, words — step 1** (review 2 is reading).
+- **Eye; all senses together — step 0.**
 
-## Where he stands on the route (9 milestones)
+## Where he stands on the route (9 milestones; the page now says what each needs)
 
-1. **One whole life** — MET (test `LF.03` passes, current).
-2. **A world and curriculum that can teach** — in work. World-rule tests
-   still red; curriculum contest lost by every arm (see above).
-3. **Brain shape by contest** — working memory decided. The
-   movement-controller contest (`D1.0`) must be re-bought (below). Seven
-   candidate learning brains are built; they now race on foraging.
-4. **One body that moves** — waits on that controller contest.
-5–6. Senses, words — not started beyond single tests.
-7. **He keeps learning** — first test run (`LF.04`): FAIL, see top.
-8–9. A living Jack, more worlds — not started.
+1. One whole life — MET.
+2. A world and curriculum that can teach — blocked on: a brain that eats (3).
+3. His brain, by evidence — the current work (stage 1, then the A-against-B choice).
+4. One body that moves — blocked on: the chosen brain, and the body research.
+5. Every sense in the one brain — blocked on: the chosen brain; the eye first.
+6. Words — blocked on: eye and ear inside him.
+7. He keeps learning — blocked on: a brain that eats.
+8. A living Jack — blocked on: 1–7. The first film is ordered (below).
+9. More worlds — blocked on: 8.
 
-## What moved since yesterday (59 worker runs; 3 ran out of time, none lost to budget)
+You asked why eating came before the brain. It should not have. The numbers
+are not a queue: the brain (3) comes first and everything else grows on it.
 
-- **"Does living teach him?" (`LF.04`) ran: FAIL.** Described above.
-- **Curriculum contest (`CR.01`) ran: FAIL for all arms.** "No curriculum"
-  keeps the seat by verdict. It will be re-raced once he can forage.
-- **A lab idea died honestly:** "remember where meals were" beat its rivals
-  on 5 of 5 runs but missed its pre-set margin by a hair (0.0985 against
-  0.10). The bar was set before the run, so it stays dead.
-- **The world:** a fifth rule contest (how he drinks) shipped nothing. A
-  humid-heat rule is the first to fix one of the two red world tests on all
-  5 runs; its last ten runs are in flight on free cloud machines. The
-  workers also found the other red test partly measures its own stopwatch
-  (how tired he gets "varies" only because lives are short). I ruled that
-  check rebuilt as a real exhaustion-and-rest test, pass mark unchanged.
-- **Free cloud CPU works well:** Kaggle runs 4 of our CPU jobs at once
-  beside the GPU job. Almost all experiments now run there, not on your box.
-- **Controller contest (`D1.0`): attempt 9 was void.** Kaggle quietly
-  swapped its GPU for a slower model, so three of four contestants got only
-  60% of their training. Time limits re-measured (no pass mark moved). The
-  full contest now needs ~40 GPU-hours against 30 free a week, so it is
-  being bought in slices; I ordered a try on Colab to finish next week
-  rather than in three.
+## What moved today (42 worker runs, none lost)
+
+- **The food race finished: no brain eats.** Best: 0.4 small meals per late
+  life against a pass mark of 5. Four longer runs still on free cloud
+  machines will be collected and filed as a pilot; no more are launched.
+- **One rising sign, not a result:** one learner ate slightly more over 60
+  lives in one of two runs. Two runs rank nothing (the record says about 20).
+- **"He cannot see food"** (the outside reviewer) was measured and is not so:
+  his distance rays touch food on about 1 decision in 5.
+- **The action-training flaw is fixed** by a small race; milestone 1's test
+  was re-bought on it with a new does-nothing twin it must tell apart.
+- **Rulings (7):** the plan adopted and what stops; how a seat is held "by
+  record" (published evidence AND our own build reproducing a published
+  number — design on paper is not enough); a 95-day-old cold test is rebuilt
+  with no fire in its world instead of filtering awkward lives afterwards
+  (pass mark unchanged); your six machine ideas — five adopted, one declined
+  (a separate idea-box file: your words already reach every lane the same day).
 
 ## What did not move
 
-- **The video you asked for** — not started, fourth day. No good reason:
-  the machine lane spent its slots on repairs. It is now second in that
-  lane with "a rough 30-second clip today" as the instruction.
-- "He moves better than random" (`T2.01`) — waits on the controller contest.
-- The deeper world (W1): one test contradicted itself; ruled today.
+- **Your video. Day 4.** Not started. It is now the first machine order "no
+  exceptions". If it is not there tomorrow I will say why, here, first.
+- The movement-controller contest is **paused**, not dropped: your plan says
+  the human-like body gets its research before more compute. Three finished
+  runs are kept.
+- Nothing of stage 1 exists yet.
 
-## What the workers are on next
+## What the workers do next, in order
 
-1. **Foraging.** First a three-run contest to fix the flaw that wrecks
-   him; then all seven candidate brains plus a random baseline raced on
-   meals per life. If none eats, the two best get four times longer, to
-   tell "slow learner" from "cannot learn this".
-2. Harvest the humid-heat runs; rebuild the tiredness check; re-run.
-3. The deeper world's contradicting test, then its hunger clock.
-4. Two old broken tests nobody owned (cold is felt before it kills: 94 days).
-5. Write the missing tests for fire and for "advised, not commanded".
-6. Machine lane: make the all-tests re-check green; your video; then close
-   a hole that nearly put mislabelled results into the controller verdict
-   (a crash saved it — nothing wrong was recorded).
+1. His world behind the standard interface, its speed, the movement probe.
+2. Brain B from the library reproduces published scores; then our old
+   learner takes the same exam — pass or fail, we will finally know.
+3. Brain A from the authors' code, run and timed on a free GPU.
+4. The senses-only forager. 5. The published setup as switches.
+6. Collect the pilots. 7. Repair four plain world tests.
 
-Parked until he can forage, because they would only measure the same
-failure again: the hand-over test, the bigger-scale brain race you asked
-for (its seven brains are what race in step 1), the curriculum re-race.
+## The machine, in five numbers
 
-## The honest paragraph (Sunday)
-
-Closer, not just busier — for the first time in weeks. The week's biggest
-step: the creature test ran with honest controls and told us the truth, and
-milestone 1 holds. The worst drift: it took 70 hours to run a test that was
-ready, and about 70 of every 119 commits were workers updating notes rather
-than changing Jack. And a caution I owe you: a dozen cheap ideas to make
-him find food (smell, a food sense, weaning, longer memory of reward) have
-already died in the lab. Foraging may need a different brain rather than a
-tweak. That is exactly what step 1 measures.
-
-## The four machine numbers
-
-| | |
-|---|---|
-| Points per worker run | 0.00 (110 → 110 over 59 runs; the two big verdicts were both FAILs, which score nothing and are worth more) |
-| Slots lost to budget | 0. The CPU day overran a third time on 14 Nov (64,886 of 57,600 s; idle cloud-watchers were billed as work — fixed at midnight). Today so far: 4,700 s |
-| Free GPU-hours expired | None that I can show unused; this week 7.8 h spent + 21 h in flight of 30. The weekly counter starts on the wrong day (known, queued) |
-| Oldest unrepaired blocker | 95 days: "he moves better than random" (`T2.01`), behind the controller contest |
+- Test points per worker run today: +1 over 42 runs.
+- Worker runs lost to budget: 0. Usage this week: 4% of all models.
+- Free GPU-hours: this Kaggle week 29.1 of 30 used (0.9 left until Saturday).
+  The corrected meter shows the week before — which ended Saturday 14 Nov —
+  recorded no Kaggle use at all: about 30 free hours expired. That is a
+  failure by my own rule. This coming week the only GPU job under the plan is
+  timing brain A; I expect hours to go unused again and will say so.
+- Oldest unrepaired blocker: "he moves better than random", red 95 days,
+  waiting on the paused controller contest.
+- Notes against work: about 4 in 10 of this week's 510 commits were notes or
+  bookkeeping. Workers now make one note commit per run.
 
 ## Dead or stuck
 
-- Nothing is dead. Workers hourly, auditor, re-checker, this review all on
-  time; pushes work. Paper scout last ran 12 Nov (weekly, due Monday).
-- Disk: 5.5 GB free on the system disk (workers stop under 3). Unchanged.
-- Usage: 68% of the week used across everything (57% on this model), resets
-  20 Nov; the stop is at your 95%. More than half of this week's use is not
-  this project's. The meter gave two impossible readings (11 and 13 Nov).
-- `run verify` (re-derives every pass from its record) is red a fifth day,
-  now on one bookkeeping test about CPU budgets. Cause known; ruled today;
-  first item in the machine lane.
-- Old backlog: 15 rows left (25 yesterday).
-- Steering files are all inside their size caps. I changed no prompts.
-- Weekly re-check of 5 passing tests: 3 were too easy (the "one whole
-  life" test would pass a body that never moves). Ordered strengthened.
+- The paper scout last ran 12 Nov (weekly; due again by the 19th).
+- The auditor ran once today (00:42); it is paced to one audit a day, so it
+  has not yet read the plan or today's orders. Not dead.
+- The usage meter gave two impossible readings this week (falling inside its
+  own week). It is reporting-only now; no run was refused today.
+- Disk: 4.1 GB free on the main disk (workers stop under 3). Watch it.
+- An owner session's uncommitted dashboard files twice stopped cloud runs
+  today (one cost 5.9 GPU-hours). Ordered fixed (S7): only files a test
+  actually uses may stop it.
+
+## The honest paragraph (Sunday)
+
+Closer, or just busier? This week: closer in knowledge, not in creature.
+The biggest step was yours — the plan. Before it, the week's honest finding
+was that he does not eat; the worst drift was mine: I ordered a seven-brain
+race this morning without asking what the published record predicted, and
+it predicted the result. That question now sits on every order. No pass mark
+was weakened this week, and no ready-made model is inside him.
 
 ## FOR THE OWNER
 
-Nothing new. The standing one has a default so nothing waits on you: the
-free Kaggle GPU week is shared with your other project. If you say nothing
-by 21 Nov: no split — Jack takes a refusal as final for the week and
-overflows to Colab.
-
-Philosophy served today: 1 (he must learn by living — the work is now aimed
-at the one thing stopping it), 3 (the brain that forages is chosen by a
-race, not by me), 4 (three tests ruled where they measured themselves; no
-pass mark moved; a near-miss stays dead), 7 (the finished-Jack table is
-current).
+- **The video** is 4 days late (your 48-hour clock, adopted today).
+- **Please commit or stash dashboard work promptly** until S7 lands — it is
+  the one thing in your hands that stops free runs.
+- Nothing else needs you. Review 2's results tonight will sharpen the stage-1
+  orders; workers are told to re-read the record every run.
