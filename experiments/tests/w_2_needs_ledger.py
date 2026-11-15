@@ -46,6 +46,26 @@ THE FOUR REGISTERED CHECKS
         e(t) = 1 - B_E t          w(t) = 1 - B_W t
         p(t) = 1 - (1 - p0) exp(-t / TAU_WAKE)
 
+    RE-REGISTERED 2026-11-15 (J6(d), bar unmoved): the plain forms above are
+    the special case T* = 37 of the closed form of the world's OWN published
+    law. A world whose open dry statue settles ABOVE 37 C by day (hum34,
+    T_DAY 34) sweats, and its thirst follows w' = -(1 + C_SW max(0,T-37)) B_W.
+    Above 37 with no shiver the day thermal law is linear,
+    dT/dt = A - Bk (T-37), read off the world's own `thermal_step` and
+    ASSERTED linear on [37, max(T*, 38)]; so T(t) = T* - (T*-37) exp(-Bk t) and
+
+        w(t) = 1 - B_W [ t + C_SW ((T*-37) t - (T*-37)(1 - exp(-Bk t))/Bk) ]
+
+    with e and p unchanged (no shiver above 37, so M == M_BASAL). The old
+    reference scored hum34's EXACT integrator .158 off — measuring the
+    reference, not the integrator. The rig gate (`rig_thermoneutral_day`)
+    now asserts the regime the form needs: A >= 0, linear, and the statue's
+    measured T inside [37, T*] over the window — so a shivering or capped
+    world VOIDs (a) rather than being scored against the wrong law. On the
+    shipped world A == 0.0 exactly, T* == 37, and every number is byte-same
+    (a_err_w 7.87766e-14). hum34 on the new form: 1.38e-5, 5/5 seeds; on the
+    plain form: .1576, 5/5 (`experiments/humid_sweat_cf_probe.py`).
+
     "Within 1%" is read against FULL METER SCALE — these are meters normalised
     to [0, 1] and a relative bar would be unbounded at the zero crossing the
     thirst meter makes inside the window. Stated, not assumed: the bar is
@@ -300,6 +320,8 @@ TAU_FIT_LO, TAU_FIT_HI = 0.15, 0.90   # the |p - fixed point| band fitted
 TAU_FIT_LO_SLEEP = 0.02
 NEED_TOPUP = 0.5                 # the homeostat attends to a meter below this
 THERMONEUTRAL_EPS_C = 1e-9       # the day fixed point must be EXACT
+THERMAL_LINEAR_TOL = 1e-9        # C/s: (a)'s thermal law must be a straight line
+THERMAL_LINE_POINTS = 9          # samples across [37, max(T*, 38)] for that assert
 CLOSED_FORM_WINDOW_S = 1.0 / N.B_W    # 450 s: where thirst clips. Set by the
                                       # world, not chosen by this file.
 
@@ -312,6 +334,37 @@ def _borrowed():
         _BORROW_CACHE["b"] = borrow_metrics(
             "PS.01", ("j0_ms", "alpha", "mean_power_w_full_strength"))
     return _BORROW_CACHE["b"]
+
+
+def _day_thermal_line() -> dict:
+    """(a)'s thermal law for the dry, open statue by day, read off the world's OWN step.
+
+    Above 37 C with p_mech = 0, wet = 0, occ = 0 and T_env = T_DAY there is no
+    shiver, so the published law is LINEAR in T: dT/dt = A - Bk (T - 37), whose
+    exact solution from T(0) = 37 is T(t) = T* - (T* - 37) exp(-Bk t) with
+    T* = 37 + A/Bk. A and Bk are read at 37 and 38 C. Linearity is ASSERTED at
+    THERMAL_LINE_POINTS temperatures across [37, max(T*, 38)] rather than
+    believed: a cap or a kink inside that band makes the closed form below
+    invalid, and the rig gate then VOIDs (a) instead of scoring it.
+    """
+    def rate(T):
+        return N.thermal_step(T, 0.0, 0.0, 0.0, N.T_DAY, 1.0, 1.0) - T
+    r37, r38 = rate(N.T_SETPOINT), rate(N.T_SETPOINT + 1.0)
+    A, Bk = r37, r37 - r38
+    t_star = N.T_SETPOINT + (A / Bk if Bk > 0 else 0.0)
+    hi = max(t_star, N.T_SETPOINT + 1.0)
+    nonlin = max(abs(rate(T) - (A - Bk * (T - N.T_SETPOINT)))
+                 for T in np.linspace(N.T_SETPOINT, hi, THERMAL_LINE_POINTS))
+    return {"A": float(A), "Bk": float(Bk), "T_star": float(t_star),
+            "nonlin": float(nonlin)}
+
+
+def _sweat_integral(line: dict, t: float) -> float:
+    """∫_0^t max(0, T(s) - 37) ds on the closed-form T(s). Exactly 0 when T* = 37."""
+    d0 = line["T_star"] - N.T_SETPOINT
+    if d0 == 0.0 or line["Bk"] <= 0.0:
+        return 0.0
+    return d0 * t - d0 * (1.0 - math.exp(-line["Bk"] * t)) / line["Bk"]
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -450,7 +503,9 @@ def _drive(rig: Rig, lay, mode: str, horizon_s: float, *,
     max_dev_e = max_dev_w = 0.0
     # (a)'s closed-form trace.
     p0 = lay.state.p
+    line = _day_thermal_line() if trace_closed_form else None
     cf_e = cf_w = cf_p = 0.0
+    cf_t_min = cf_t_max = lay.state.T     # T over (a)'s window only (its rig gate)
     cf_until = min(CLOSED_FORM_WINDOW_S, horizon_s)
     t_min_c, t_max_c = lay.state.T, lay.state.T
     s_below_cold = s_above_hot = 0.0
@@ -502,9 +557,13 @@ def _drive(rig: Rig, lay, mode: str, horizon_s: float, *,
 
         if trace_closed_form and t <= cf_until + 1e-9:
             cf_e = max(cf_e, abs(new.e - (1.0 - N.B_E * t)))
-            cf_w = max(cf_w, abs(new.w - (1.0 - N.B_W * t)))
+            # The published thirst law, w' = -(1 + C_SW max(0, T-37)) B_W, closed
+            # over the closed-form T(t). Plain 1 - B_W t when T* = 37 (shipped).
+            cf_w = max(cf_w, abs(new.w - (1.0 - N.B_W * (
+                t + N.C_SW * _sweat_integral(line, t)))))
             cf_p = max(cf_p, abs(new.p - (1.0 - (1.0 - p0)
                                           * math.exp(-t / N.TAU_WAKE))))
+            cf_t_min, cf_t_max = min(cf_t_min, new.T), max(cf_t_max, new.T)
         t_min_c = min(t_min_c, new.T)
         t_max_c = max(t_max_c, new.T)
         # Dwell inside each lethal band. `_check_death` needs DEATH_T_S = 20 s
@@ -534,6 +593,8 @@ def _drive(rig: Rig, lay, mode: str, horizon_s: float, *,
         "drink_events": int(lay.drank_total),
         "cf_err_e": cf_e, "cf_err_w": cf_w, "cf_err_p": cf_p,
         "cf_window_s": float(cf_until),
+        "cf_line": line, "cf_t_min_c": float(cf_t_min),
+        "cf_t_max_c": float(cf_t_max),
         "resid_e": max_dev_e, "resid_w": max_dev_w,
         "drain_e": drain_e, "drain_w": drain_w,
         "intake_e": intake_e, "intake_w": intake_w,
@@ -617,11 +678,18 @@ def _experiment(seed: int) -> dict:
     m["a_window_s"] = dep["cf_window_s"]
     m["a_worst"] = max(dep["cf_err_e"], dep["cf_err_w"], dep["cf_err_p"])
     m["a_pass"] = float(m["a_worst"] <= INTEGRATOR_TOL)
-    # The regime the closed forms assume, asserted rather than believed: by day
-    # the dry statue's T is an EXACT fixed point of the shipped thermal step.
+    # The regime the closed forms assume, asserted rather than believed
+    # (re-registered 2026-11-15, see the docstring's (a)): the day thermal law
+    # is a straight line above 37 with T* >= 37 (no shiver, so e and p keep
+    # their plain forms), and the statue's MEASURED T stays inside [37, T*].
+    # On the shipped world T* = 37 and this is the old exact-fixed-point gate.
+    ln = dep["cf_line"]
+    m["a_T_star_c"] = ln["T_star"]
+    m["a_thermal_nonlin"] = ln["nonlin"]
     m["rig_thermoneutral_day"] = float(
-        abs(dep["t_max_c"] - N.T_SETPOINT) <= THERMONEUTRAL_EPS_C
-        and abs(dep["t_min_c"] - N.T_SETPOINT) <= THERMONEUTRAL_EPS_C)
+        ln["A"] >= 0.0 and ln["nonlin"] <= THERMAL_LINEAR_TOL
+        and dep["cf_t_min_c"] >= N.T_SETPOINT - THERMONEUTRAL_EPS_C
+        and dep["cf_t_max_c"] <= ln["T_star"] + THERMONEUTRAL_EPS_C)
 
     # _round6 on the aggregate would erase a 1e-13 residual to 0.0, so the
     # order of magnitude ships beside it and the record keeps what was measured.

@@ -115,11 +115,11 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, 37/45, dB fails ok_spread s0+s1 (f .091/.096), so clause (1) is lost. dA/dC not built (world-file refactor).
-11-15 04:30 `64d949a` (2f): NE.01's f spread is f's 0->steady rise (TAU_F 300 dec), not energy; across 45 cells spread_f falls with earliest death. DIRECTOR CALL: gate 1's f clause cannot pass beside gate 2's window (>= 1958 dec on k72); proposed fatigue edge probe + planted control, bar unmoved.
-In flight: k3 `jack-cpu-1794712965` (dB NE.01 s2-4), poller /data/tmp/drink_kcpu_k3.log. When its log ends `{...}`, run `$PY -m experiments.drink_race_tally` and record the verdict (expected: none ships).
-11-15 04:39 (d) `humid_sweat_cf_probe`: hum34's W.2(a) against the SWEATING closed form (T* 37.477 from the arm's own linear step, nonlin 7e-15): sweat err_w 1.38e-5 PASS 5/5, plain .1576 FAIL 5/5 (= W.2's .158, apparatus ok); shipped collapses byte-same (7.9e-14). K_DRY re-derived (04:27) repairs (a) but kills the hot route (39.88 C), so this is the route. Deprived statue is seed-independent: 5 seeds = 1 sample.
-Next: on a ruling, add the f probe to ne_01. Otherwise re-register W.2(a) to the sweating form (bar .01 unmoved; replace rig_thermoneutral_day with a linear-branch assert: g(T*-37) < cap) in its own commit, verify shipped byte-same via _experiment, then run hum34's W.2 cells.
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, fails ok_spread s0+s1 -> clause (1) lost. f-spread DIRECTOR CALL still open (`64d949a`: f clause vs gate-2 window; fatigue edge probe proposed).
+11-15 05:15 W.2(a) RE-REGISTERED (this commit, bar .01 unmoved): w traced on the closed form of the world's own sweating law (T* from the arm's thermal_step, linearity asserted); rig gate = A>=0, linear, T in [37,T*] over the window.
+Shipped byte-same: A == 0.0, all 194 ledger keys equal s0-2 (a_err_w 7.87766e-14). hum34 W.2 cells re-run (old in /data/jack-logs/humid_race/pre_w2a_rereg_20261115): VOID -> a_pass 1 (err_w 1.38e-5), four_checks_pass 1.0 on 5/5.
+hum34 still can't ship: W.1 four_checks .8 < shipped 1.0 (gate 1), and its NE.01 cells are absent (tally verdict null). k3 `…2965` (dB NE.01 s2-4) still RUNNING; when its log ends `{...}` run drink_race_tally.
+Next: diagnose hum34's failing W.1 seed (which check, why) — it is now the ONLY red between hum34 and a full W.2 pass; then its NE.01 legs on Kaggle CPU.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
