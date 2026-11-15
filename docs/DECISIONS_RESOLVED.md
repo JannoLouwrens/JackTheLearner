@@ -3214,3 +3214,68 @@ wm-latent trains no action- or state-reading weight and the guard will VOID
 it. That is the race's finding about the seat. wm-dyn is the
 action-conditioned challenger already built; a repair to the seated arm
 enters, if at all, as a new arm after the verdict.
+
+## 2026-11-15 06:40 UTC — Director, FULL sitting: rulings
+
+**1. Foraging is the first order; the 11-14 freeze is lifted.** `LF.04` FAIL
+and `CR.01` FAIL share one cause: every life ends of energy and he does not
+learn to eat (`docs/research/LF_04_FAIL.md`). `cores.py` may be edited under
+order J1 only. The policy loss is seated by a tally on three fresh seeds
+(150–152), rule written first: highest mean late-third span among arms with
+saturated fraction ≤ 0.05 and no seed whose late third is under half its
+early third; the winner re-buys `LC.02`, `LC.08`, `LF.03`. The 11-12 race
+(one seed, already read) nominated AWR; it does not seat it. Then all seven
+built learning-core arms and a random floor are raced on meals per life
+(seeds 153–154, 15 lives), bar fixed from the FAIL analysis: ≥ 5 floor meals
+or ≥ 1 apple per late life on both seeds.
+
+**2. `W1.04`: conjuncts (a) and (c) read different arms.** They contradicted
+because both read `W1.02`'s repeat arm: (a) needs it to complete ≥ 20 lives
+inside the horizon, (c) needed its 5th percentile to reach the horizon. (c)
+exists to show the window is survivable "by the lives that are supposed to
+fill it" — the competent arm. (c) is measured on the oracle only (20 fresh
+lives per seed, censored at 5600 s, control unchanged), and gains a clause:
+the oracle's p5 must exceed the repeat arm's p95, so survival is by
+competence and not by a soft world. (a) is unchanged. The repeat arm leaves
+(c) for the reason the passive arm did under 11-14 ruling 5. Net: one clause
+moved to the arm it was written about, one clause added.
+
+**3. `NE.01`'s fatigue-spread clause becomes an edge probe.** Measured
+(`64d949a`): the fatigue spread in a random life is fatigue's start-up
+transient (TAU_F 300 decisions); it falls monotonically with life length
+(.37–.40 at ~470 decisions, .09–.12 on long-lived arms), correlation with
+energy −.15. The clause therefore scores how early the life ended, and it
+cannot pass together with the gate-2 window on any world. Re-registered in
+the shape of the integrity probe (11-14 ruling 4): exertion to exhaustion
+then rest; fatigue must cross ≥ 0.30 of its range and recover; a planted
+control with fatigue frozen must FAIL. Bar 0.30 unmoved; written before any
+run; the old reading stays on the row, reporting-only.
+
+**4. A budget class says where a run really goes.** `W1.00` (20 pooled seeds)
+was classed `cpu<2h`, enumerating 360,000 s against a 57,600 s day, and ran
+detached anyway; `T0.33` correctly went red. `W1.00` is re-classed
+`kcpu<12h` and runs on Kaggle CPU. `T0.33`'s clauses are not touched.
+
+**5. The 2-alive detached cap counts computing processes.** Amends 11-14
+ruling 3. The cap protects the customers' CPU; a Kaggle poller billing under
+0.10 cores is not load. Pollers are capped separately at 6. The 34,560 s
+detached day and 57,600 s ceiling stand. Kaggle ran 4 CPU kernels beside a
+GPU kernel (measured 11-15 06:30); orders may use 4.
+
+**6. Reattach.** `JACK_REUSE_KERNEL` is forbidden on any multi-unit spec
+until order S7 lands (scope to the first submit; the pin-swap proof done by
+the tool; calls 2..N pinned to call 1's HEAD). `D1.0` att 8 would have put
+mislabelled units into a seat verdict had it not crashed.
+
+**7. Parked behind a forager:** `LF.06`, the `LC.09` claim run, a `CR.01`
+re-race, an `LF.04` re-run, the diary-in-decisions order. Each measures a
+learner improving; with a learner that starves each would only re-measure
+`LF.04`'s finding (the `LF.06` smoke already shows a fresh brain's exam at
+577.6 s against 597.6–601.2 trained). Meal memory stays DEAD as declared
+(.0985 < .10) — the bar is not re-read after the fact.
+
+**8. T4, not P100.** Kaggle assigns T4 (all 9 `D1.0` att 9 units). Any GPU
+spec whose minutes cap was frozen from a P100 pilot re-derives it from a
+measured T4 rate before its next dispatch (no gate moves; step targets are
+the matched quantity). `D1.0` tries one long unit on Colab this week so the
+verdict need not wait for W48.

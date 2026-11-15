@@ -1,117 +1,100 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-14 06:45 UTC
+Director sitting: 2026-11-15 06:40 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5). Machine problems go under INBOX, one
 line each. The Director rewrites this file daily; git keeps the history.
-Rulings 1–8 cited here are in `docs/DECISIONS_RESOLVED.md` under 2026-11-14.
+Rulings 1–8 cited here are in `docs/DECISIONS_RESOLVED.md` under 2026-11-15.
 
-**The creature gate is unblocked today.** `LC.02` passed on a quiet box at
-06:10 and ruling 1 cuts the edge that held `LF.04` behind a language-memory
-claim no link in its chain measures. `LF.04` is 70 h unrun: it comes first,
-in every slot, until it is dispatched.
-**Frozen until `LF.04` is dispatched (ruling 2):** `cores.py`, `survival.py`,
-`w0.py`, `needs.py`, `lc_02*.py`, `lf_0[2-4]*.py`. No lower order edits them —
-not a comment, not a race-won world edit. A stale certificate on J1's path
-costs a day.
-**CPU (ruling 3).** Day ceiling 57,600 s. Detached jobs (races, pilots) may
-use at most **34,560 s a day in total and 2 worker processes at once across
-all of them**; the rest is reserved for registered runs and the clerk. Before
-launching anything detached: sum today's `detached:*` in
-`experiments/cpu_budget.json` and `pgrep -f launch_detached`. Used by 06:40
-today: 18,591 s (detached 13,447 s).
-**GPU.** `D1.0` holds Kaggle (watcher pid 3422501). Colab: one session per
-account — list them with `colab --auth adc sessions` (NOT `colab ls`).
+**He does not eat.** `LF.04` FAIL and `CR.01` FAIL say one thing: every life
+ends of energy, a brain that learned nothing lives as long as one that did,
+and no curriculum can teach a learner that cannot forage. Until an arm
+forages, every creature-level cook-off only re-measures that. **J1 is
+foraging and comes first in every JACK slot.** Parked behind it (ruling 7):
+`LF.06`, the `LC.09` claim run, any `CR.01` re-race, an `LF.04` re-run.
+**The freeze of 11-14 is lifted** (`LF.04` was dispatched): `cores.py` may be
+edited under J1 only. World files (`w0.py`, `needs.py`, `survival.py`) still
+change only when a raced arm wins.
+**CPU (ruling 5).** Day ceiling 57,600 s; detached jobs ≤ 34,560 s a day and
+≤ 2 COMPUTING detached processes at once. A Kaggle poller (billing < 0.10
+cores) does not count toward the 2; at most 6 pollers alive. Kaggle runs
+≥ 4 CPU kernels beside a GPU kernel (measured 11-15) — use 4.
 **Kaggle CPU kernels** (`prefer="kaggle-cpu"`) cost no box CPU and no GPU
-hours: every learner-side run goes there. A kernel body that spawns
-`python -m experiments.*` children must pass `cwd="/tmp/jack"`.
+hours: every learner-side run goes there, `cwd="/tmp/jack"` for children.
+**Reattach.** Never `JACK_REUSE_KERNEL` on a multi-unit spec (S7 closes the
+hole). Single-kernel harvests may use it with the pin-swap proof in the commit.
+**GPU.** `D1.0` holds Kaggle (watcher 4040958). Kaggle serves T4 now, not
+P100. Colab: `colab --auth adc sessions`, one session per account.
 
 ---
 
 ## JACK — build the creature, his world and his curriculum (max 7 open, ranked)
 
-*Order of work. CPU: **J1** (steps in order; nothing else until `LF.04` is
-dispatched) → **J5** step 1 (a dispatch, minutes) → **J6** → **J7** → J8 → J3.
-GPU: **J2** — read the log, act only on an exit. A CPU order and a GPU order
-may be advanced in the same slot.*
+*Order of work. CPU: **J1** (every slot, steps in order) → **J6** (harvest
+what lands, then the fatigue re-registration) → **J7** → J4 → J9. GPU: **J2**
+— read the log, act only on an exit. A CPU order and a GPU order may be
+advanced in the same slot. Waiting on a kernel is not work: push the next
+order's kernel in the same slot.*
 
-### J1 — Does living teach him? (`LF.04`) — the creature gate, 70 h unrun
-**Why.** `LF.03` shows he lives, dies and resumes; nothing shows he gets
-BETTER. `LF.04` (learner vs his own frozen twin, two controls) has never run.
-Its chain was `LF.04 ← LF.03 ← LF.02 ← T6.03 ← T2.10 FAIL`. `T2.10`'s only red
-conjunct is paraphrase recall; `T6.03` stores and queries on the templated
-venue and never touches it (ruling 1).
-**Do, in this order, one commit each.**
-(1) `T6.03`: add a clause measured in its own run, on its own store and cues —
-the scorer's recall@1 must beat recency-only by ≥ 0.10 (`T2.10`'s own margin),
-else FAIL. Then change its `depends_on` to `["T0.05", "T0.08"]`. `T2.10` is
-untouched and stays FAIL. Check with `_experiment`/`_control` before the run.
-(2) Re-run `T6.03` → `LF.02` → `XL.00` → `LF.03`, serially, box quiet
-(`uptime` < 1.5), nothing detached alive. A red here is a finding: stop, write
-it in `state:`, diagnose.
-(3) Dispatch `LF.04` on Kaggle CPU (`run LF.04`; route `1913430`). Write the
-kernel slug in `state:`. If it FAILs, that is the finding — do not soften.
-serves: M1→M7 · philosophy 1 (learns by living), 4.
-**done when:** `LF.04` has a ledger verdict from a Kaggle CPU kernel.
-state: DONE (step 3) `bc631a8`: `LF.04` **FAIL** att 2, Kaggle CPU (6 kernels, f90881f). Late learner vs twin +4/-127/-230 s (margin 272.8), vs self +49/+29/-176;
-controls held (twinB 0/3, shuffled 0/3); statue 599.9 s. FINDING (`docs/research/LF_04_FAIL.md`): all 120 lives died of energy, late meals 0/3/0. Twin is already
-562-569 s, so a non-eater can gain at most 31-38 s: only FORAGING passes (>= 5 floor meals/life at rest, ~14 at 1.5x drain, or 1 apple). s102 collapses
-598->158 s: the unbounded `cores.py:542` loss from 11-12, AWR raced then and never seated. Next (Director): seat a bounded loss (re-buys LC.02/LC.08/LF.03),
-then a learner that forages on s90 (wm-dyn in LC.09, CR.01). Re-run LF.04 unchanged only when a s90 pilot reaches >= 5 meals/life.
+### J1 — He must learn to eat: a loss that does not wreck him, then a forager
+**Why.** `docs/research/LF_04_FAIL.md`: 120/120 lives died of energy; late
+meals 0/3/0; the unbounded policy loss (`cores.py:542`) collapsed s102 from
+598 to 158 s. The world can feed him (`NE.01`'s forager: 24–27 meals). Lab
+bets on senses, weaning, credit horizon and meal memory all died — the
+untested lever is the learner itself: 7 arms are built (`LC.09`).
+**Do — declare each rule in the module docstring and commit BEFORE any cell.**
+(1) **Policy-loss race**, Kaggle CPU: base / tanh / AWR / tanh+AWR × fresh
+seeds 150–152 × 12 lives, as on 11-12 (`experiments/policy_loss.py`). Winner
+= highest mean late-third life span among arms with saturated-action
+fraction ≤ 0.05 and no seed whose late third is below half its early third.
+Seat the winner in `cores.py` BY that tally; re-buy `LC.02`, `LC.08`,
+`LF.03`. No arm qualifies → say so and go on with base.
+(2) **Forager race**, Kaggle CPU, 4 kernels at a time: all 7 `LC.09` arms
+(reuse its `pilot` path, guard on) + a random-policy floor × fresh seeds
+153–154 × 15 lives. Readout per arm-seed: floor meals and apples per life,
+late third. Bar (from `LF_04_FAIL.md`, fixed): ≥ 5 floor meals or ≥ 1 apple
+per late life on BOTH seeds, and above the random floor.
+(3) No arm clears → run the top two at 4× the lives and write the meals-per-
+life curve: slow learning and no learning are different findings and lead to
+different orders. An arm clears → write it here; the Director orders
+`LF.04` re-run and the seat contest the next morning.
+serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
+**done when:** the loss seat is ruled by tally and step 2's table (and 3's
+curve if needed) is in `docs/research/FORAGER_RACE.md`.
+state: open — ordered 11-15. Parts exist: `policy_loss.py` (4 arms), `lc_09_learning_core_3x pilot` (`8ee2edd`, s89, 4 arms — extend to 7 + seeds).
 
-### J2 — The control-path contest (`D1.0`) — attempt 5 in flight
+### J2 — The control-path contest (`D1.0`) — W46 slice in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since
 Aug 12, waiting on which controller holds the seat.
 **Do.** Read `/data/tmp/dispatch_d1_0.log` each slot; act only on an exit;
-never kill the watcher. On a verdict: seat the winner BY VERDICT, write in the
-seat row which END-FIT rows it leaves reachable (fast loop inside one brain;
-hands), re-run `T2.01` under it. On a Kaggle quota refusal: that is final for
-the week (D56) — resume the remaining units on Colab.
+never kill the watcher. The W46 slice ends PARTIAL by design. **Shorten the
+three-week plan:** this week also run one `c_e2e` unit on Colab
+(`JACK_D10_ONLY`, units cache by impl_sha) — if a Colab session survives a
+325-min unit, run the rest there and the verdict lands in W47. Before any
+OTHER GPU spec is dispatched, re-derive a P100-frozen `MINUTES_CAP` from a
+T4 rate (ruling 8). On a verdict: seat the winner BY VERDICT, write which
+END-FIT rows it leaves reachable, re-run `T2.01` under it.
 serves: M3, M4 · END-FIT row 1 · philosophy 3, 7 · objective 3 (free GPU).
-**done when:** `D1.0` has a verdict, or an ERROR with a named cause that is
-not a lost download.
+**done when:** `D1.0` has a verdict.
 state: 11-15 05:51 D1.0 att 9 **VOID** (harvested `651c805`): on T4 aprime/b_split/c_e2e hit 60/60/61% of STEP_TARGET 750k under P100-frozen caps 90/150/150 (d_mlp 100%, ~11 min).
 Means (not a verdict): aprime 459 > d_mlp 422 > c_e2e 305 > b_split 259; margin .33 sigma. Fix `db262d9`: MINUTES_CAP 195/325/325/15 (T4-measured x1.3; no gate moved) -> all 13 units re-buy,
 ~40 GPU-h expected / 53 worst > 30/week. `70505b3`: JACK_D10_ONLY buys a declared subset; omitted units -> PARTIAL ERROR (no verdict), bought units cached by impl_sha 873e861e.
 06:11 W46 slice dispatched (21.2 h proj vs 22.22 left): ref, aprime 0-2, d_mlp 0-2 (Colab), b_split 0; watcher 4040958. It ENDS in a PARTIAL ERROR by design.
 Next: on that exit, W47 (Sun 11-22): JACK_D10_ONLY=b_split:1,b_split:2,c_e2e:0,c_e2e:1 (~25.5 h), W48: c_e2e:2 -> verdict. Never JACK_REUSE_KERNEL on a multi-unit spec.
 
-### J5 — The Kaggle-CPU queue: curriculum cook-off (`CR.01`), then meal memory
-**Why.** Owner 11-11: the curriculum is "as important as jack himself".
-`CR.01` is registered, built, depends only on `LC.02` (green since 06:10) and
-`run next` lists it. It needs no box CPU. Nothing is waiting but the dispatch.
-**Do.** (1) `run CR.01` now (it dispatches its own kernels, 2 arm-seeds each,
-9 kernels). Dispatch 2 kernels first and write whether Kaggle accepts parallel
-CPU sessions; then the rest as it allows. Harvest as they land. (2) Meal
-memory (LAB, ALIVE: fed .484 vs fifo .370 vs yoked .376) enters under the
-Consolidation seat as a lab cook-off (ruling 6): run its declared grind —
-seeds 94–98 × 3 arms × 13k, `meal_memory run <arm> <seed> 13000`, then
-`tally` — in Kaggle CPU kernels behind `CR.01`. Gate as declared in the module
-docstring, unchanged. Clears → register it against `NE.05`'s seat; dies → say so.
-serves: M2, M7 · philosophy 3, 5.
-**done when:** `CR.01` has a verdict and the meal-memory tally is written.
-state: J5 DONE (both parts). (1) DONE `f519826`: `CR.01` **FAIL** att 1, 9/9 units on Kaggle CPU (s130-132, N 47). Pooled fed fraction: null .163, staged .156, lp .064, frontier .163. Controls: shuffled .121, matched .085.
-No arm beats null by .20 on any seed. The Curriculum seat stays with null BY VERDICT. FINDING (same root cause as LF.04): every exam death is energy. A learner that cannot forage leaves a curriculum nothing to teach, so re-race CR.01 after a foraging learner exists.
-Last unit …4643: its own receipt ace8b516 = the pulled bytes; the pin swap 84cbc7d->5ccd70b = local 0d56b7e4 (guard misjoined, cited ac0cdcd5).
-(2) DONE (this commit): meal-memory claim gate **DEAD**, 15/15 cells current (s94-98 x fifo/meal/yoked, 13k, Kaggle CPU, 0 errors). Pooled fed meal .450 / fifo .277 / yoked .352;
-seed wins 5/5 and 4/5; far (born >= 0.7 m) .335 / .230 / .332. The only red clause is the margin vs yoked, .0985 < .10. As declared, it stays dead and is NOT registered against NE.05. Gate output: /data/tmp/meal_memory_gate_20261115.log. LAB entry updated.
-
 ### J6 — W0's red world rules (`W.2`, `NE.01`)
-**Why.** `W.1` is PASS (05:28). `W.2` and `NE.01` are red. Four races (k = 72,
-heat, water, humidity) shipped nothing, and two of the reasons were the
-test's, not the world's: `NE.01`'s windows were sized on the fast clock, and
-its integrity probe measured its own schedule. Both are ruled (ruling 4).
-**Do.** (a) Finish re-registering `NE.01`: every window stated as a multiple
-of the world's own lethal times (the multiples it has today on the shipped
-clock, computed and written BEFORE any run — the shipped world's numbers must
-come out byte-same). The integrity probe is option (A), falls until death,
-with its planted control (`33a1acc` — accepted). Bars (5/5 random deaths,
-spread 0.30, 5 meals) unmoved. (b) Re-run `NE.01` once on the shipped world
-(detached, inside ruling 3's cap, after J1 step 2 has had its quiet box).
-(c) Re-read the k = 72 and humidity arms against the re-registered spec;
-their long `NE.01` legs run in a Kaggle CPU kernel, not on the box. (d) Then
-the shared humidity function with `K_DRY` re-derived, raced by the same rule.
-No world file changes until an arm wins AND `LF.04` is dispatched.
+**Why.** `NE.01` frees 8, `W.2` frees 3. Five races shipped nothing; the last
+red both arms share is `NE.01`'s fatigue-spread clause, which reads fatigue's
+start-up transient — it measures how short the life was (`64d949a`).
+**Do.** (a) Harvest the 10 humid `NE.01` cells as they land (commands in
+state), `humid_race tally`, write the verdict. (b) Ruling 3: re-register
+`NE.01`'s fatigue clause as an edge probe in the shape of the integrity one
+— exertion to exhaustion then rest; fatigue must cross ≥ 0.30 of its range
+and recover; planted control with fatigue frozen must FAIL; bar 0.30
+unmoved; written and committed before any run; the old transient reading
+stays on the row, reporting-only. (c) Re-run `NE.01` on shipped, then
+re-tally DRINK (dB) and humid (hum34) against it — on Kaggle CPU. (d) An arm
+that wins ships; then `W.2` and `NE.01` are re-run on the shipped world.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
@@ -121,16 +104,17 @@ state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. f-spread D
 (h3/h4 pushed in-session, pollers let die — detached cap 2 was full). MEASURED: Kaggle runs 4 CPU sessions + 1 GPU at once (all RUNNING 06:30), not 2.
 Next: h1/h2 land by themselves; harvest h3/h4 with `JACK_REUSE_KERNEL=jannolouwrens/<slug> $PY -m experiments.humid_race_kcpu kernel <same cells>` (logs /data/tmp/humid_kcpu_h{3,4}.log), then `humid_race tally`.
 
-### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
-**Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is
-proven unpassable in any world (`docs/research/W1_04_UNPASSABLE.md`): lives
-run in sequence inside one 5600 s rollout, so its 5th-percentile span is
-capped at 266.6 s against a 5600 s bar.
-**Do.** (1) Re-register `W1.04`(c) (ruling 5): independent fresh lives, ≥ 20
-per arm-seed, censored at 5600 s, bar and control unchanged; the passive arm
-leaves (c) — `W1.01` already claims it dies, and that claim stays. (2) Run it
-(detached, inside ruling 3's cap). (3) Race W1's energy clock for `W1.00`(b).
-(4) Register `DP.05`'s question in W1.
+### J7 — The deeper world (W1): `W1.04` ruled, then its energy clock
+**Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). In W1's venue
+lives end at ~53 s against a 5600 s horizon: the energy clock is the defect.
+**Do.** (1) Ruling 2: `W1.04`(a) and (c) contradicted because both read
+`W1.02`'s repeat arm. (c) is measured on the COMPETENT arm only — the oracle,
+20 fresh lives per seed, p5 ≥ horizon, control unchanged — plus one new
+clause: the oracle's p5 must exceed the repeat arm's p95 (survival by
+competence, not by a soft world). (a) is unchanged. Re-register, fixtures,
+then `run W1.04` once on Kaggle CPU; a FAIL at ~53 s is the honest reading.
+(2) Race W1's energy clock (`W1.00`(b)): ≥ 3 clocks declared first, judged
+by `W1.00`–`W1.04` unchanged. (3) Register `DP.05`'s question in W1.
 serves: M2 · END-FIT row 4 · philosophy 4, 5.
 **done when:** `W1.04` and `W1.00` have new verdicts and `DP.05`-in-W1 is registered.
 state: 11-13 15:45 `W1.00` att 3 FAIL (b) at n = 20 (`edd3e61`). 11-14 02:40 `W1.04` unpassable proven (`93f4040`).
@@ -139,156 +123,121 @@ Priced 0.024 s/dec: control alone ~11 core-h -> budget KAGGLE_CPU. FINDING for t
 mean <= H/3) and (c)'s W1.02 p5 >= H on the SAME process still contradict in any survivable world — W1.04 can only FAIL until that is ruled.
 Next: (2) `run W1.04` on Kaggle CPU once the kcpu lock frees (LF.04 ~17:30); expected FAIL (c) at ~53 s — the honest reading of today's world.
 
-### J8 — The hand-over gate (`LF.06`): trained there, still learning here
-**Why.** Owner 11-13: the finished Jack is "trained here, handed to people,
-still learning on their machines". `LF.06` is registered and built; it stalled
-on having no way to SEND a 19.6 MB checkpoint to a kernel.
-**Do.** Reverse the legs (ruling 7): "here" = a Kaggle CPU kernel trains and
-the checkpoint comes back through the existing fetch-out; "there" = this box
-(other OS image, other CPU) runs the first frozen exam and the M further
-lives. Claim, seeds, bars and both controls unchanged. No input channel is
-built. Runs after `LF.04` is dispatched and `LF.03` is green.
-serves: M7, M8 · END-FIT row 2 · philosophy 1, 2, 7.
-**done when:** `LF.06` has a verdict.
-state: 11-14 13:30 legs REVERSED + run() BUILT `2f632ba` (re-registered before any run: budget KAGGLE_CPU, TOL_S 20.0 fixed). Kernel per seed = 10 lives + file + exam_here,
-fetched + sha-checked; box = exam, learner, frozen twin, strip(+own exam), exam_fresh, <=2 niced children billed `LF.06:there:<role>`. Smoke s110 N=M=K=1: all roles ok,
-exam here=there=strip 45.8 s, twin frozen (opt 464), learner trains (464->861). FINDING: fresh-init exam 577.6 s vs s90 pilot's trained exams 597.6-601.2 -> control 2 may not fail (a).
-Box price ~3.9k s billed/seed (~11.7k s for 3) -> needs a fresh CPU day (today 42k/57.6k used). Next: `launch_detached.sh /data/tmp/lf06_run.log $PY -m experiments.run LF.06`
-early on a quiet day, after LF.04's verdict and behind CR.01's kcpu slots (it takes 1 kcpu session/seed, serial). A control-2 FAIL is the finding — do not soften.
+### J4 — The oldest blockers nobody owns (`PS.02`, `PG.6`, `T2.03`)
+**Why.** `PS.02` (cold is felt before it kills) is FAIL with its code
+unchanged 94 days and frees `LF.01`, `SH.01`, `SH.02`, `XL.01`; `PG.6` and
+`T2.03` are PASS-but-stale (96 and 82 days) and free 3 by a re-run alone.
+**Do.** (1) Re-run `PG.6` and `T2.03` (GPU ones wait for `D1.0`'s slice).
+(2) `PS.02`: one slot to read its last row and code and write the cause in
+state; then repair the world or the body, or — if the test is wrong —
+re-register with reasons. Bars unmoved.
+serves: M2, M5, M7 · philosophy 4 (a failure is fixed, not filed).
+**done when:** `PG.6`, `T2.03` are current and `PS.02` has a new verdict.
+state: open — ordered 11-15.
 
-### J3 — The learning core at 3× scale (`LC.09`)
-**Why.** Owner 11-12: "when will we run it bigger scale against the others".
-All 7 arms are built and priced. Finding: the seated core (wm-latent) trains
-no weight that reads an action or a past state — a world model in name only.
-**Do.** `LC.09` runs as registered (ruling 8): the guard will VOID the seated
-arm and that is the finding, not a reason to repair the seat first — wm-dyn is
-the action-conditioned challenger already in the race. (1) Rewrite `run()`'s
-refusal to item (2) only. (2) Build the Kaggle-CPU pilot path (one arm-seed,
-s89, like `cr_01`'s `_JOB`), price sessions, write them in `state:`. (3)
-Dispatch behind `CR.01`. No edit to the frozen files; no local learner pilot.
-serves: M3 · END-FIT rows 2, 3 · philosophy 3.
-**done when:** `LC.09` has a verdict.
-state: `LC.09` REGISTERED 11-13 (+2 strengthenings of its guard); arms built (`d80d85c`); wipe-at-death control built (`c014834`).
-11-14 06:10 all 7 arms priced from `LC.02`: ppo-needs .5, ppo-lp / dreamer-xs / wm-efe .25, wm-latent .125, wm-dyn .5, ring .125.
-11-14 12:40 (1) DONE + (2) BUILT `8ee2edd`: run() now refuses only on the missing kcpu claim path; `… lc_09_learning_core_3x pilot` = Kaggle-CPU kernel,
-s89, 6k dec × wm-latent/wm-dyn/ring/ppo-needs + frozen twin, guard on -> /data/tmp/lc09_pilot.json. Box price (LC.02 T×5 dec/s): one 1.2M arm-seed = 9.6–12.3 h
-(ppo-needs 12.3 > Kaggle's 12 h) before twin/nulls -> the claim path likely needs per-session checkpoint chaining. NOT dispatched (CPU-session concurrency unknown; LF.04 in flight).
-Next: after LF.04's verdict, `launch_detached.sh /data/tmp/lc09_pilot.log $PY -m experiments.tests.lc_09_learning_core_3x pilot`; write kernel h_at_1_2M here.
+### J9 — The two ends with no test: fire (`W.5`) and advice
+**Why.** `coverage`: GOAL's "tree → fire → shelter world" and "advised, not
+commanded" have no live claim spec; END-FIT reads "none registered".
+**Do.** Register only (no build): `W.5` fire (wood burns, warms, cooks; a
+control that must fail) and the advice gate (true advice makes him try
+sooner; a lying adviser loses him; a mute adviser control). Each with
+seeds, bar and control written before any code.
+serves: M2, M6 · END-FIT · philosophy 4, 7.
+**done when:** both are in the registry and `coverage` no longer lists the two ends CLAIM-DEAD.
+state: open — ordered 11-15; lowest rank, one slot.
 
-**Next up, in this order, as slots free:**
-1. **The diary in his decisions** (opens when `LF.04` has a verdict): core
-   with retrieved diary rows in its input vs without; wiped-diary twin must lose (M7).
-2. **Paraphrase recall** (`T2.10`'s red conjunct): a learned scorer raced
-   against the seated one on the certified fixture — the honest owner of that red.
-3. **Inside/around sweep** (ruling 11-11): re-credit `LG.00`, `HR.4`, `T3.08`,
-   `LG.10/12/13/14`, `ME.11.C/D/E` as parent-rig results; delete the paid
-   `AudioListener._transcribe_api`; re-run `LG.00` with the learned core in the loop.
-4. **Ring memory in the creature**: `ME.8`/`LF.02` with the seated ring in place of the GRU.
-5. **Learned ear** vs a no-ASR null (M5/M6); `HR.1`, `HR.5` repaired under it.
-6. **END-FIT's unregistered gates**, one order each: W2 (tree→wood→fire→cooked
-   food, shelter; `W.5` fire first — it is runnable and unbuilt); the grip-rule
-   cook-off; the advice gate; the size cook-off.
-7. **`UB.11`–`UB.13`, `TA.03`** on trunk A0 — GPU, after `D1.0`.
-8. Sense added later vs from birth (M5); `XL.01` at power; `PS.02` (frees 3).
+**Parked behind J1 (ruling 7), built and ready:** `LF.06` hand-over (`2f632ba`);
+`LC.09` claim run (`8ee2edd`; needs checkpoint chaining past 12 h); `CR.01`
+re-race; `LF.04` re-run (unchanged). The diary in his decisions likewise.
+**Next up, as slots free:** 1. Paraphrase recall (`T2.10`): a learned scorer
+vs the seated one. 2. Inside/around sweep (ruling 11-11): re-credit `LG.00`,
+`HR.4`, `T3.08`, `LG.10/12/13/14`, `ME.11.C/D/E` as parent-rig results; delete
+`AudioListener._transcribe_api`. 3. Ring memory in the creature (`ME.8`/`LF.02`).
+4. Learned ear vs a no-ASR null; `HR.1`, `HR.5` under it. 5. Grip-rule and
+size cook-offs. 6. `UB.11`–`UB.13`, `TA.03` (GPU, after `D1.0`). 7. Sense
+added later vs from birth; `XL.01` at power.
 
 ---
 
 ## SYSTEM — work on the machine (max 3 open)
 
-*Order of work: **S3 step 1** while the box is quiet → **S2** → S6.*
+*Order of work: **S3** (minutes) → **S6** (the owner has waited four days) → **S7**.*
 
-### S3 — A verdict the record cannot re-derive (`W0.PL`, `BD.01`)
-**Why.** `run verify` exits 2 for the third day: `W0.PL`'s gate judges from
-process memory (`_SEEDS`/`_CTRL`), and its row stores the MEAN of per-seed
-minima while the gate is on the MINIMUM. `BD.01` has the same shape.
-**Do.** (1) Both specs: record the per-seed `_min`/`_max` the gate uses; make
-`_check(m, c)` read only its arguments; re-run `W0.PL` on a quiet box (bars
-unmoved). Add to `T0.13` or `verify` a check that fails any spec whose gate
-reads module state. (2) `coverage.py` COMMITMENTS gains one line for each of
-the four ends in GOAL.md's closing section, each naming its END-FIT gate.
-(3) `champions` reads the END-FIT table (`CHAMPIONS.md:51-57`) as six
-malformed seats: skip a table that is not the seat table, and fail on a
-planted malformed seat row as before.
-serves: philosophy 4, 5 (a truthful machine).
-**done when:** on a clean tree `run verify` exits 0 and still exits non-zero
-on a planted PASS-on-FAIL-dependency; `champions` prints no malformed row.
+### S3 — `run verify` exits 0, and the CPU cap is seen to hold
+**Why.** `verify` is red a fifth day. Its last red is `T0.34` behind `T0.33`,
+FAIL because `W1.00` is classed `cpu<2h` × 20 seeds = 360,000 s > the day.
+**Do.** (1) Ruling 4: `W1.00`'s budget class becomes `kcpu<12h` and it runs
+there (a class says where a run really goes). `T0.33`'s clauses untouched.
+(2) Re-buy `T0.33` → `T0.34` → `run verify`; `BD.01` gets its first row.
+(3) Ruling 5 in `cpu_budget`: a detached process billing < 0.10 cores is a
+poller — not counted in the 2-alive cap, capped at 6; planted 7th refused.
+(4) Write in state the `detached:*` total for 11-15 at day end.
+serves: philosophy 4, 5, 6.
+**done when:** `run verify` exits 0 on a clean tree and still exits non-zero
+on a planted PASS-on-FAIL-dependency; one day ends with `detached:*` ≤ 34,560 s.
 state: 11-14 09:10 (1) code DONE `abb707f`: W0.PL/BD.01 write per-seed min/sums on the row, `_check` reads args only (0/8000 old≠new); verify probe D counts gates reading mutated module state (live hits 0, planted fixture).
 (3) DONE `133c2ac`: END-FIT table skipped, 35 seats identical, fixture plants foreign table + narrow row. (2) DONE `8fadd25`: 4 GOAL ends in COMMITMENTS.
 11-15 03:30 W0.PL re-run DONE by regate 02:49 (PASS a4); verify no longer flags it. verify's last red is now T0.34(KeyError: `cap_refused`): T0.34 is blocked by
 T0.33, which regate re-bought FAIL at 02:49 because W1.00's 11-13 re-registration (20 seeds x cpu<2h, enum 360,000 s) is foreclosed by the 57,600 s ceiling (INBOX: Director call).
-
-### S2 — The CPU day: a cap the machine enforces, and children that hang
-**Why.** Two days running the day ceiling was overrun by detached jobs
-(59,599 s on 11-13); registered runs and the clerk were refused for six hours
-and stale cheap certificates went 19 → 32. Load hit 6.7 on a 4-core box that
-serves paying customers.
-**Do.** In the existing `admit` / `launch_detached.sh` path only (ruling 3):
-(1) refuse a detached launch when today's `detached:*` total plus its
-estimate exceeds 34,560 s, or when it would put more than 2 detached worker
-processes alive at once; a planted over-cap launch must be refused in a test.
-(2) The hash-salt differential child (reporting-only) hung 12 min × 3 workers
-on `W1.02` and ~25 min on `W0.DIAG`: give it a timeout of 60 s or 20× the
-spec's own run time, whichever is larger, 1 worker, and print TIMED-OUT.
-(3) `docs/LAB.md` dirt stamped `W0.DIAG` dirty and blocked `W1.00` (11-13):
-add it to the prose-exempt set (`PROSE_DOCS`); a dirty code file must still stamp.
-Net growth ≤ ~40 lines.
-serves: philosophy 5, 6 (this box serves paying customers).
-**done when:** both tests pass and a day ends with `detached:*` ≤ 34,560 s.
-state: 11-14 21:40 (1)(2)(3) BUILT `d95d569`; `d5a5ab6`: a wrapped job whose session uses < 0.10 cores over a heartbeat bills its CPU,
+state: (from S2, now folded in) 11-14 21:40 (1)(2)(3) BUILT `d95d569`; `d5a5ab6`: a wrapped job whose session uses < 0.10 cores over a heartbeat bills its CPU,
 not wall (pollers were ~30k of 11-14's 65k s; 2 s sleep now bills 0.08 s, T0.34 clause 9, fails on old code). `f662f48`: admission estimate reads the wall last BILLED (W1.02 0.22 s recorded vs 762 s billed), T0.33 clause 17. All-kcpu specs take
 `/tmp/jack-ladder-kcpu.lock` + count remote. Open: a day ending ≤ 34,560 s (first chance 11-15); idle pollers still count toward
 DETACHED_MAX_ALIVE; cpu_budget/run/protocol edits stale T0 certs → regate after midnight (day budget 0 now).
 
-### S6 — A video the owner can watch (owner request 11-12)
+### S6 — A video the owner can watch (owner request 11-12) — START TODAY
 **Why.** Owner: "a video he can watch". Card line 1: he can be known.
 **Do.** `scripts/life_video.py` renders OFFLINE from the most recent recorded
 life — never inside a scored run — with `experiments/render.py` (Xvfb +
 llvmpipe): third-person view, hunger / thirst / temperature overlaid,
 phone-playable H.264 mp4 ≤ 20 MB at `/data/jack-video/latest.mp4` (+ a line
 naming the life, seed and commit). The most recent life, no picking. Run by
-hand at nice 19; no cron, no service.
+hand at nice 19; no cron, no service. If no life is recorded with poses,
+record one statue-free s90 life first (detached, ≤ 600 CPU-s). A first
+rough 30-second clip today beats a finished one next week.
 serves: M8 (he can be watched) · philosophy 1.
 **done when:** the mp4 exists, plays, and is of the latest recorded life.
-state: open — not started (third day; it is the next SYSTEM slot after S3 step 1).
+state: open — not started (fourth day). Next SYSTEM slot after S3 step 1–2.
 
-**Next up:** (1) the GPU week key (`gpu.py:495`) starts Sunday; Kaggle resets
-Saturday 00:00 UTC — key it on Kaggle's reset. (2) Dispatch pre-flight prints
-the shared account's quota as "remaining" — print UNKNOWN unless probed, and
-write no ERROR row on a refusal. (3) **S4** — six PASSes gated on a seed
-AVERAGE that admits a failing seed (`ME.10` first). (4) `ran_at`-pinned rows
-read only the live ledger row (a shared history-aware helper). (5) `T0.13`'s
-13 clauses that can never fire. (6) `protocol.py` in IMPL_DEPS stales GPU
-certificates on an enum addition. (7) D52: `field_watch.sh` retries within its
-ISO week. (8) `run status`'s STEERING reader parses 0 items.
+### S7 — A remote run is one code version, and a reattach proves itself
+**Why.** `D1.0` att 8: a hand-set reattach leaked to 7 unit bodies and a seat
+verdict was saved only by a crash. The guard it overrides refuses every
+reattach after any push, so it is overridden by hand in every harvest.
+**Do, in `gpu.py`, smaller if possible, one commit each.** (1) `JACK_REUSE_KERNEL`
+applies to the first `submit()` only and is refused when a second body asks
+for the same slug; a reuse does not skip pre-flight for later fresh units.
+(2) `reattach_code_check` does the pin-swap proof itself (pull, swap pin to
+HEAD, compare sha, `git diff pin..HEAD` ∩ IMPL_DEPS empty) and matches the
+receipt by slug (± 2 s, nearest); drop `ACCEPT_MISMATCH`. A refusal writes
+no ERROR ledger row. (3) A multi-call spec pins calls 2..N to call 1's HEAD
+and runs the push guard once; `docs/LAB.md`, `docs/ORDERS.md` are prose.
+(4) The watcher timeout starts at RUNNING, not at QUEUED; `gpu.py:186`
+reports the device Kaggle actually gave. Each with a planted test.
+serves: philosophy 4 (no mislabelled data in a verdict), 5.
+**done when:** a planted second-body reuse is refused, a pin-only reattach
+passes with no override, and a planted IMPL_DEPS change is refused.
+state: open — ordered 11-15 (INBOX lines of 11-14/15 folded in here).
+
+**Next up:** (1) the GPU week key (`gpu.py:495`) on Kaggle's Saturday reset;
+pre-flight prints UNKNOWN for the shared account unless probed. (2) **S4** —
+six PASSes gated on a seed AVERAGE that admits a failing seed (`ME.10`
+first). (3) `ran_at`-pinned rows read only the live ledger row. (4) `T0.13`'s
+13 clauses that can never fire. (5) `protocol.py` in IMPL_DEPS stales GPU
+certificates on an enum addition. (6) `coverage` baselines (exit 2,
+bookkeeping). (7) D52 scout retry; `run status` STEERING reader parses 0.
 
 ---
 
 ## INBOX — one line each, workers add, the Director empties
-- 11-15 06:31 JACK: Kaggle accepts >= 4 parallel CPU sessions beside a GPU kernel (measured: h1-h4 + D1.0 all RUNNING). The "2 kcpu sessions" belief in J3/J5/J7 states is stale; the binding limit is ruling 3's 2-detached-poller cap, so pushes go in-session + JACK_REUSE_KERNEL harvest. A non-detached kcpu harvester would free this.
-
-- 11-14 21:40 JACK: `JACK_REUSE_KERNEL` (+ACCEPT_MISMATCH) leaks to every `submit()` of a multi-unit spec: D1.0 att 8 reattached one kernel (b_split s2) for 7 different unit bodies and cached its runs under c_e2e/d_mlp keys (quarantined to /data/d10_units_quarantine_20261114). Each attempt row recorded the slug with the new body's sha, so the mismatch chain looked tolerated. Scope reuse to the first submit, or refuse a second body on the same slug.
-- 11-14 SYSTEM: `coverage` exits 2 again at HEAD (bookkeeping only: GEN.06 new unrunnable citation, SM.02→SM.03 release pair, UNREACHABLE/PASS-ON-DEAD baselines lagging) — not touched. Real finding from S3(2): GOAL ends "advised not commanded" and "tree-fire-shelter world" have NO live claim spec (CLAIM-DEAD) — the advice gate and W2/`W.5` in JACK Next-up 6.
-
-- 11-14 JACK: multi-call Kaggle-CPU specs re-clone the CURRENT HEAD on every call (LF.04 calls ran on 4 different heads) — a code commit mid-run would silently mix versions inside one verdict; pin calls 2..N to call 1's head. Harmless for LF.04 today (code paths unchanged).
-- 11-14 JACK: the GPU push guard (`gpu.assert_ref_is_current`) runs on EVERY call of a multi-call remote spec, and `is_code_dirt` counts `docs/LAB.md` and `docs/ORDERS.md` as code — one lane's uncommitted LAB.md at 11:33 killed LF.04 at call 6/6 (2 h of kcpu) AND D1.0 at unit 7/13 (≈10 GPU-h of units survive only via D1.0's own cache). Fix: guard once per spec run (pin calls to call 1's head, cf. the pin-head line) and/or class LAB.md/ORDERS.md as prose. Both re-dispatched 12:08.
-
-- 11-14 15:25 JACK: consequence of the poller-billing line above: `cpu_budget admit` REFUSES every detached launch today (48,545 s > 34,560 s), so J5's next `CR.01` prefetch (pure Kaggle polling, ~0 box CPU) cannot start. Separately, D1.0's GPU kernel `jack-ladder-1794658135` is still QUEUED at 15:23 (since 12:08) with NO kcpu kernel running, so the queue is not a session cap it shares with CPU kernels. Possibly the shared account's GPU quota.
-- 11-14 16:10 JACK: `gpu.reattach_code_check` join 2 misjoins concurrent kernels: the slug epoch is int(t0), so it can sit a fraction of a second BEFORE its own receipt ts (`0 <= epoch - ts` fails -> jack-cpu-1794672505 reads "unverifiable"), and the 600 s window accepts an earlier kernel's receipt (jack-cpu-1794672525 joins …505's -> false "mismatch"). Fix: allow ts within ±2 s of epoch and pick the nearest receipt, or record the slug in the attempt receipt.
-- 11-14 17:15 JACK: (1) a SYSTEM edit to `experiments/protocol.py` (S2 `d95d569`, a salt-child timeout) staled `T1.14`, a 1 GPU-h certificate bought at 01:15, which BLOCKED D1.0's free reattach — every GPU cert listing protocol.py in IMPL_DEPS is re-bought on each apparatus edit; (2) `gpu.submit`'s watcher timeout (est×1.25+1800 s) counts Kaggle QUEUE time, so a 4 h queue killed a kernel's watcher 17 min after it started RUNNING; (3) a `JACK_REUSE_KERNEL` dispatch skips pre-flight for the WHOLE run, so D1.0's later FRESH units go out with no budget check.
-
-- 11-14 19:15 JACK: every reattach after ANY push is refused as a code mismatch, because the kernel pins the dispatch HEAD sha (by design) and `_kernel_sha256` hashes that pin. Each refusal also writes an ERROR ledger row (T1.14 att 7). The proof is mechanical: pull the kernel, swap the pin to HEAD, compare sha, and check `git diff pin..HEAD` against IMPL_DEPS. `reattach_code_check` could do this itself and drop the hand-set ACCEPT_MISMATCH.
-
-- 11-15 SYSTEM: `T0.33` FAIL since regate 02:49 (latent since `e90cf86` 11-13): `W1.00` re-registered at 20 seeds x `cpu<2h` = enum 360,000 s > the 57,600 s day. T0.33's no-foreclosure and slack clauses go red, which blocks `T0.34` and keeps `run verify` at exit 2 (S3). Even `cpu<10min` would give 72,000 s. W1.00 actually ran detached (4.5-6.1k CPU-s). Options: route it `kcpu`/detached, or rule the enum x seeds arithmetic for specs that pool their seeds internally. Not changed by SYSTEM.
-- 11-15 JACK (J2): Kaggle now assigns Tesla T4 (all 9 Kaggle units of D1.0 att 9), ~0.47-0.6x the P100 throughput; `gpu.py:186` still says P100 regardless. Any GPU spec with minutes caps frozen from a P100 pilot will VOID on step-match the same way — audit them before their next dispatch.
 
 ## DONE (kept one day)
 
-- **`LC.02` PASS on a quiet box** (`68e1207`, att 22): the 11-12 FAIL and the
-  midnight VOID were contention. Unblocks `CR.01`, `LC.03`, `LC.09` pricing.
-- **S1 — Kaggle CPU route built** (`06b87bd`, `1913430`, `93b463b`): CPU
-  kernels accepted with the GPU quota spent, 0 GPU-h charged. First customer
-  is `LF.04` (J1 step 3).
-- **`T1.14` PASS** on Kaggle T4 (`9d24f8d`); **`W.1` PASS**, **`T0.28` PASS**
-  (regate 05:28); `W1.02` PASS att 10.
-- **INBOX of 11-13/14 (24 lines)**: ruled or placed — rulings 1–8, S2, S3(3),
-  SYSTEM Next-up 1, 2, 4, 6. Sense-lookahead pilot: dead by its own rule, closed.
+- **`LF.04` FAIL** att 2 (`bc631a8`, Kaggle CPU, controls held): living does
+  not yet teach him — 120/120 lives die of energy. Finding → J1.
+- **`CR.01` FAIL** att 1 (`f519826`): no curriculum beats none (.163); the
+  Curriculum seat stays with null BY VERDICT. Re-race parked behind J1.
+- **Meal memory DEAD at its claim gate** (`f0c5e4e`): margin vs yoked .0985
+  < .10 as declared; not registered. **DRINK race: none ships** (`2131a04`).
+- **`T6.03` re-registered and PASS; `LF.03` PASS** re-bought 11-14 08:52 (M1).
+- **`W0.PL` PASS a4** (regate 02:49); S2's cap, poller billing and timeout
+  built (`d95d569`, `d5a5ab6`, `f662f48`) — folded into S3.
+- **INBOX of 11-14/15 (11 lines)**: rulings 4, 5, 8; S7; SYSTEM Next-up 5, 6.
