@@ -11,12 +11,12 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: pending — Kaggle CPU)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; a,f,g running, e launched 18:37, c,d8,d32 pending a session)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
 | a | do-nothing | | | | n/a | | |
-| b | random, white per decision | | | | n/a | | |
+| b | random, white per decision | 301.7 ± 16.4 (278–376) | 0.52 ± 0.76 (max 4; 76/200 lives ≥1; per-seed means 0.1–0.9) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | c | pink noise per life | | | | n/a | | |
 | d8 | action held 8 | | | | n/a | | |
 | d32 | action held 32 | | | | n/a | | |
