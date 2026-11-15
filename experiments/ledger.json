@@ -16350,8 +16350,8 @@
     },
     "LG.00": {
       "amended": [],
-      "attempt": 12,
-      "commit": "8309737",
+      "attempt": 13,
+      "commit": "fb2787f",
       "compute_s": null,
       "control_metrics": {
         "advantage_general": -0.2,
@@ -16412,7 +16412,7 @@
         "wrong_margin_std": 0.0423408
       },
       "dirty_files": null,
-      "duration_s": 1.35,
+      "duration_s": 1.33,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -18226,6 +18226,193 @@
           ],
           "spec_sha": "0c06aa4612ede938",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 12,
+          "commit": "8309737",
+          "compute_s": null,
+          "control_metrics": {
+            "advantage_general": -0.2,
+            "advantage_general_s0": -0.2,
+            "advantage_general_s0_std": 2.77556e-17,
+            "advantage_general_s1": -0.2,
+            "advantage_general_s1_std": 2.77556e-17,
+            "advantage_general_s2": -0.2,
+            "advantage_general_s2_std": 2.77556e-17,
+            "advantage_general_std": 2.77556e-17,
+            "general_retention": 0.7273,
+            "general_retention_s0": 0.7273,
+            "general_retention_s0_std": 0.0,
+            "general_retention_s1": 0.7273,
+            "general_retention_s1_std": 0.0,
+            "general_retention_s2": 0.7273,
+            "general_retention_s2_std": 0.0,
+            "general_retention_std": 0.0,
+            "jack_acc_general": 0.5333,
+            "jack_acc_general_s0": 0.5333,
+            "jack_acc_general_s0_std": 0.0,
+            "jack_acc_general_s1": 0.5333,
+            "jack_acc_general_s1_std": 0.0,
+            "jack_acc_general_s2": 0.5333,
+            "jack_acc_general_s2_std": 0.0,
+            "jack_acc_general_std": 0.0,
+            "null_acc_general": 0.7333,
+            "null_acc_general_s0": 0.7333,
+            "null_acc_general_s0_std": 0.0,
+            "null_acc_general_s1": 0.7333,
+            "null_acc_general_s1_std": 0.0,
+            "null_acc_general_s2": 0.7333,
+            "null_acc_general_s2_std": 0.0,
+            "null_acc_general_std": 0.0,
+            "verdicts_missing": 0.0,
+            "verdicts_missing_s0": 0.0,
+            "verdicts_missing_s0_std": 0.0,
+            "verdicts_missing_s1": 0.0,
+            "verdicts_missing_s1_std": 0.0,
+            "verdicts_missing_s2": 0.0,
+            "verdicts_missing_s2_std": 0.0,
+            "verdicts_missing_std": 0.0,
+            "wrong_acc_life": 0.251633,
+            "wrong_acc_life_s0": 0.2353,
+            "wrong_acc_life_s0_std": 2.77556e-17,
+            "wrong_acc_life_s1": 0.2745,
+            "wrong_acc_life_s1_std": 0.0,
+            "wrong_acc_life_s2": 0.2451,
+            "wrong_acc_life_s2_std": 0.0,
+            "wrong_acc_life_std": 0.0166568,
+            "wrong_margin": -0.0196,
+            "wrong_margin_s0": 0.0392,
+            "wrong_margin_s0_std": 0.0,
+            "wrong_margin_s1": -0.0392,
+            "wrong_margin_s1_std": 0.0,
+            "wrong_margin_s2": -0.0588,
+            "wrong_margin_s2_std": 0.0,
+            "wrong_margin_std": 0.0423408
+          },
+          "dirty_files": null,
+          "duration_s": 1.35,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "e2d9b4d0350951b5",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 11 deciding metric(s) reproduced exactly in a fresh process (+0.2s)",
+          "metrics": {
+            "grounded_knowledge_advantage": 0.532667,
+            "grounded_knowledge_advantage_s0": 0.598,
+            "grounded_knowledge_advantage_s0_std": 0.0,
+            "grounded_knowledge_advantage_s1": 0.4804,
+            "grounded_knowledge_advantage_s1_std": 0.0,
+            "grounded_knowledge_advantage_s2": 0.5196,
+            "grounded_knowledge_advantage_s2_std": 0.0,
+            "grounded_knowledge_advantage_std": 0.048891,
+            "jack_acc_certified": 0.730133,
+            "jack_acc_certified_s0": 0.7439,
+            "jack_acc_certified_s0_std": 0.0,
+            "jack_acc_certified_s1": 0.7,
+            "jack_acc_certified_s1_std": 1.11022e-16,
+            "jack_acc_certified_s2": 0.7465,
+            "jack_acc_certified_s2_std": 0.0,
+            "jack_acc_certified_std": 0.0213339,
+            "jack_acc_life": 0.8039,
+            "jack_acc_life_s0": 0.7941,
+            "jack_acc_life_s0_std": 1.11022e-16,
+            "jack_acc_life_s1": 0.7941,
+            "jack_acc_life_s1_std": 1.11022e-16,
+            "jack_acc_life_s2": 0.8235,
+            "jack_acc_life_s2_std": 0.0,
+            "jack_acc_life_std": 0.0138593,
+            "n_certified": 74.333333,
+            "n_certified_s0": 82.0,
+            "n_certified_s0_std": 0.0,
+            "n_certified_s1": 70.0,
+            "n_certified_s1_std": 0.0,
+            "n_certified_s2": 71.0,
+            "n_certified_s2_std": 0.0,
+            "n_certified_std": 5.436502,
+            "n_general": 30.0,
+            "n_general_s0": 30.0,
+            "n_general_s0_std": 0.0,
+            "n_general_s1": 30.0,
+            "n_general_s1_std": 0.0,
+            "n_general_s2": 30.0,
+            "n_general_s2_std": 0.0,
+            "n_general_std": 0.0,
+            "n_life": 102.0,
+            "n_life_s0": 102.0,
+            "n_life_s0_std": 0.0,
+            "n_life_s1": 102.0,
+            "n_life_s1_std": 0.0,
+            "n_life_s2": 102.0,
+            "n_life_s2_std": 0.0,
+            "n_life_std": 0.0,
+            "null_acc_certified": 0.0,
+            "null_acc_certified_s0": 0.0,
+            "null_acc_certified_s0_std": 0.0,
+            "null_acc_certified_s1": 0.0,
+            "null_acc_certified_s1_std": 0.0,
+            "null_acc_certified_s2": 0.0,
+            "null_acc_certified_s2_std": 0.0,
+            "null_acc_certified_std": 0.0,
+            "null_acc_life": 0.271233,
+            "null_acc_life_s0": 0.1961,
+            "null_acc_life_s0_std": 2.77556e-17,
+            "null_acc_life_s1": 0.3137,
+            "null_acc_life_s1_std": 0.0,
+            "null_acc_life_s2": 0.3039,
+            "null_acc_life_s2_std": 0.0,
+            "null_acc_life_std": 0.0532777,
+            "retained_min_per_category": 23.0,
+            "retained_min_per_category_s0": 26.0,
+            "retained_min_per_category_s0_std": 0.0,
+            "retained_min_per_category_s1": 22.0,
+            "retained_min_per_category_s1_std": 0.0,
+            "retained_min_per_category_s2": 21.0,
+            "retained_min_per_category_s2_std": 0.0,
+            "retained_min_per_category_std": 2.160247,
+            "retrieval_hit_rate_general": 0.0333,
+            "retrieval_hit_rate_general_s0": 0.0333,
+            "retrieval_hit_rate_general_s0_std": 0.0,
+            "retrieval_hit_rate_general_s1": 0.0333,
+            "retrieval_hit_rate_general_s1_std": 0.0,
+            "retrieval_hit_rate_general_s2": 0.0333,
+            "retrieval_hit_rate_general_s2_std": 0.0,
+            "retrieval_hit_rate_general_std": 0.0,
+            "retrieval_hit_rate_life": 1.0,
+            "retrieval_hit_rate_life_s0": 1.0,
+            "retrieval_hit_rate_life_s0_std": 0.0,
+            "retrieval_hit_rate_life_s1": 1.0,
+            "retrieval_hit_rate_life_s1_std": 0.0,
+            "retrieval_hit_rate_life_s2": 1.0,
+            "retrieval_hit_rate_life_s2_std": 0.0,
+            "retrieval_hit_rate_life_std": 0.0,
+            "sigma_life": 7.363333,
+            "sigma_life_s0": 7.81,
+            "sigma_life_s0_std": 0.0,
+            "sigma_life_s1": 7.0,
+            "sigma_life_s1_std": 0.0,
+            "sigma_life_s2": 7.28,
+            "sigma_life_s2_std": 0.0,
+            "sigma_life_std": 0.33589,
+            "verdicts_missing": 0.0,
+            "verdicts_missing_s0": 0.0,
+            "verdicts_missing_s0_std": 0.0,
+            "verdicts_missing_s1": 0.0,
+            "verdicts_missing_s1_std": 0.0,
+            "verdicts_missing_s2": 0.0,
+            "verdicts_missing_s2_std": 0.0,
+            "verdicts_missing_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 280.6,
+          "preserved_impl": null,
+          "ran_at": "2026-10-26T02:46:13",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "0c06aa4612ede938",
+          "status": "PASS"
         }
       ],
       "impl_sha": "e2d9b4d0350951b5",
@@ -18337,9 +18524,9 @@
         "verdicts_missing_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 280.6,
+      "peak_rss_mb": 303.5,
       "preserved_impl": null,
-      "ran_at": "2026-10-26T02:46:13",
+      "ran_at": "2026-11-15T04:44:27",
       "seeds": [
         0,
         1,
@@ -18351,8 +18538,8 @@
     },
     "LG.01": {
       "amended": [],
-      "attempt": 10,
-      "commit": "8309737",
+      "attempt": 11,
+      "commit": "fb2787f",
       "compute_s": null,
       "control_metrics": {
         "stripped_oracle_acc": 0.2616,
@@ -18361,7 +18548,7 @@
         "stripped_retained_std": 5.436502
       },
       "dirty_files": null,
-      "duration_s": 1.29,
+      "duration_s": 1.27,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -19281,6 +19468,109 @@
           ],
           "spec_sha": "5ce5472d03c5448a",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 10,
+          "commit": "8309737",
+          "compute_s": null,
+          "control_metrics": {
+            "stripped_oracle_acc": 0.2616,
+            "stripped_oracle_acc_std": 0.0215566,
+            "stripped_retained": 74.333333,
+            "stripped_retained_std": 5.436502
+          },
+          "dirty_files": null,
+          "duration_s": 1.29,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "38f7ec87bf4d4ccc",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+0.1s)",
+          "metrics": {
+            "calib_acc": 0.8333,
+            "calib_acc_std": 0.0,
+            "excluded": [
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the dark moss?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the amber seeds?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the red reeds?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the red seeds?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the grey flint?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the amber root?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the green stones?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the ladder up the flat hedge?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the lantern up the split rock?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the basket up the hollow cairn?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the basket up the split ford?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the net up the crooked hedge?"
+              }
+            ],
+            "llm_mean_frac": 0.271233,
+            "llm_mean_frac_std": 0.0532777,
+            "n_excluded": 27.666667,
+            "n_excluded_std": 5.436502,
+            "n_generated": 102.0,
+            "n_generated_std": 0.0,
+            "n_retained": 74.333333,
+            "n_retained_std": 5.436502,
+            "oracle_acc_on_retained": 1.0,
+            "oracle_acc_on_retained_std": 0.0,
+            "retained_his_body": 24.666667,
+            "retained_his_body_std": 0.942809,
+            "retained_his_history": 26.333333,
+            "retained_his_history_std": 2.054805,
+            "retained_his_world": 23.333333,
+            "retained_his_world_std": 2.624669,
+            "retained_min_per_category": 23.0,
+            "retained_min_per_category_std": 2.160247,
+            "verdicts_missing": 0.0,
+            "verdicts_missing_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 279.6,
+          "preserved_impl": null,
+          "ran_at": "2026-10-26T02:46:09",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "5ce5472d03c5448a",
+          "status": "PASS"
         }
       ],
       "impl_sha": "38f7ec87bf4d4ccc",
@@ -19360,9 +19650,9 @@
         "verdicts_missing_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 279.6,
+      "peak_rss_mb": 302.5,
       "preserved_impl": null,
-      "ran_at": "2026-10-26T02:46:09",
+      "ran_at": "2026-11-15T04:44:24",
       "seeds": [
         0,
         1,
@@ -30490,8 +30780,8 @@
     },
     "ME.10": {
       "amended": [],
-      "attempt": 8,
-      "commit": "8309737",
+      "attempt": 9,
+      "commit": "fb2787f",
       "compute_s": null,
       "control_metrics": {
         "revert_recall": 1.0,
@@ -30504,7 +30794,7 @@
         "wipe_skill_std": 0.0453564
       },
       "dirty_files": null,
-      "duration_s": 39.99,
+      "duration_s": 41.17,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -30916,10 +31206,69 @@
           ],
           "spec_sha": "aaec583a9ad63252",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 8,
+          "commit": "8309737",
+          "compute_s": null,
+          "control_metrics": {
+            "revert_recall": 1.0,
+            "revert_recall_std": 0.0,
+            "revert_skill": 0.574067,
+            "revert_skill_std": 0.052373,
+            "wipe_recall": 0.0,
+            "wipe_recall_std": 0.0,
+            "wipe_skill": 0.944433,
+            "wipe_skill_std": 0.0453564
+          },
+          "dirty_files": null,
+          "duration_s": 39.99,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "10efbd3921d6cc07",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 7 deciding metric(s) reproduced exactly in a fresh process (+40.3s)",
+          "metrics": {
+            "distractor_abstention": 1.0,
+            "distractor_abstention_std": 0.0,
+            "distractor_evaluated": 36.0,
+            "distractor_evaluated_std": 0.0,
+            "distractor_excluded": 0.0,
+            "distractor_excluded_std": 0.0,
+            "n_heldout": 36.0,
+            "n_heldout_std": 0.0,
+            "n_train_episodes": 84.0,
+            "n_train_episodes_std": 0.0,
+            "null_skill_heldout": 0.574067,
+            "null_skill_heldout_std": 0.052373,
+            "recall_kept_x_skill_gained": 0.370367,
+            "recall_kept_x_skill_gained_std": 0.0944234,
+            "recall_post": 1.0,
+            "recall_post_std": 0.0,
+            "recall_pre": 1.0,
+            "recall_pre_std": 0.0,
+            "skill_gain": 0.370367,
+            "skill_gain_std": 0.0944234,
+            "skill_heldout": 0.944433,
+            "skill_heldout_std": 0.0453564,
+            "store_on_heldout": 0.0,
+            "store_on_heldout_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 357.7,
+          "preserved_impl": null,
+          "ran_at": "2026-10-26T02:47:00",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "aaec583a9ad63252",
+          "status": "PASS"
         }
       ],
       "impl_sha": "10efbd3921d6cc07",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 7 deciding metric(s) reproduced exactly in a fresh process (+40.3s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 7 deciding metric(s) reproduced exactly in a fresh process (+38.8s)",
       "metrics": {
         "distractor_abstention": 1.0,
         "distractor_abstention_std": 0.0,
@@ -30947,9 +31296,9 @@
         "store_on_heldout_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 357.7,
+      "peak_rss_mb": 383.9,
       "preserved_impl": null,
-      "ran_at": "2026-10-26T02:47:00",
+      "ran_at": "2026-11-15T04:45:16",
       "seeds": [
         0,
         1,
@@ -36012,8 +36361,8 @@
     },
     "ME.4": {
       "amended": [],
-      "attempt": 9,
-      "commit": "8309737",
+      "attempt": 10,
+      "commit": "fb2787f",
       "compute_s": null,
       "control_metrics": {
         "nosup_stale_rate": 1.0,
@@ -36022,7 +36371,7 @@
         "nosup_update_acc_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 2.65,
+      "duration_s": 2.66,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -36419,6 +36768,59 @@
           ],
           "spec_sha": "fd9819780aa933ef",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 9,
+          "commit": "8309737",
+          "compute_s": null,
+          "control_metrics": {
+            "nosup_stale_rate": 1.0,
+            "nosup_stale_rate_std": 0.0,
+            "nosup_update_acc": 0.0,
+            "nosup_update_acc_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 2.65,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "000822a6793c6b1d",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 4 deciding metric(s) reproduced exactly in a fresh process (+1.5s)",
+          "metrics": {
+            "fifo_retention_acc": 0.0,
+            "fifo_retention_acc_std": 0.0,
+            "fifo_size": 150.0,
+            "fifo_size_std": 0.0,
+            "n_retention_q": 16.0,
+            "n_retention_q_std": 0.0,
+            "n_update_q": 8.0,
+            "n_update_q_std": 0.0,
+            "retention_acc": 1.0,
+            "retention_acc_std": 0.0,
+            "retention_vs_fifo": 1.0,
+            "retention_vs_fifo_std": 0.0,
+            "smart_size": 150.0,
+            "smart_size_std": 0.0,
+            "stale_rate": 0.0,
+            "stale_rate_std": 0.0,
+            "unbounded_retention_acc": 1.0,
+            "unbounded_retention_acc_std": 0.0,
+            "unbounded_size": 1200.0,
+            "unbounded_size_std": 0.0,
+            "update_acc": 1.0,
+            "update_acc_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 280.1,
+          "preserved_impl": null,
+          "ran_at": "2026-10-26T02:46:17",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "fd9819780aa933ef",
+          "status": "PASS"
         }
       ],
       "impl_sha": "000822a6793c6b1d",
@@ -36448,9 +36850,9 @@
         "update_acc_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 280.1,
+      "peak_rss_mb": 303.5,
       "preserved_impl": null,
-      "ran_at": "2026-10-26T02:46:17",
+      "ran_at": "2026-11-15T04:44:32",
       "seeds": [
         0,
         1,
@@ -61293,14 +61695,14 @@
     },
     "T0.03": {
       "amended": [],
-      "attempt": 10,
-      "commit": "c371f36",
+      "attempt": 11,
+      "commit": "fb2787f",
       "compute_s": null,
       "control_metrics": {
         "output_delta": 6.027286052704
       },
       "dirty_files": null,
-      "duration_s": 7.41,
+      "duration_s": 7.38,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -61543,10 +61945,41 @@
           ],
           "spec_sha": "25f446ff5b1ed6f3",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 10,
+          "commit": "c371f36",
+          "compute_s": null,
+          "control_metrics": {
+            "output_delta": 6.027286052704
+          },
+          "dirty_files": null,
+          "duration_s": 7.41,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "e14107a2ae852d0a",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+7.7s)",
+          "metrics": {
+            "checkpoint_mb": 233.1,
+            "missing_keys": 0,
+            "output_delta": 0.0,
+            "tensors_compared": 7,
+            "unexpected_keys": 0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 1058.2,
+          "preserved_impl": null,
+          "ran_at": "2026-10-26T04:43:18",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "25f446ff5b1ed6f3",
+          "status": "PASS"
         }
       ],
       "impl_sha": "e14107a2ae852d0a",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+7.7s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+8.2s)",
       "metrics": {
         "checkpoint_mb": 233.1,
         "missing_keys": 0,
@@ -61555,9 +61988,9 @@
         "unexpected_keys": 0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 1058.2,
+      "peak_rss_mb": 1139.3,
       "preserved_impl": null,
-      "ran_at": "2026-10-26T04:43:18",
+      "ran_at": "2026-11-15T04:46:10",
       "seeds": [
         0
       ],
@@ -62426,15 +62859,15 @@
     },
     "T0.06": {
       "amended": [],
-      "attempt": 12,
-      "commit": "c371f36",
+      "attempt": 13,
+      "commit": "fb2787f",
       "compute_s": null,
       "control_metrics": {
         "raised": 5,
         "wrong_widths_tried": 5
       },
       "dirty_files": null,
-      "duration_s": 1.71,
+      "duration_s": 1.67,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -62716,6 +63149,40 @@
           ],
           "spec_sha": "6c385987b0deee11",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 12,
+          "commit": "c371f36",
+          "compute_s": null,
+          "control_metrics": {
+            "raised": 5,
+            "wrong_widths_tried": 5
+          },
+          "dirty_files": null,
+          "duration_s": 1.71,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "ea9d54600ef13868",
+          "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (last_reward) \u2014 a blemish on numbers nothing gated stands on (+2.0s)",
+          "metrics": {
+            "action_space_dim": 17,
+            "ctrl_write_error": 0.0,
+            "expected_nu": 17,
+            "last_reward": 4.918,
+            "nu": 17,
+            "obs_dim": 348,
+            "steps_ok": 5
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 331.6,
+          "preserved_impl": null,
+          "ran_at": "2026-10-26T04:43:07",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "6c385987b0deee11",
+          "status": "PASS"
         }
       ],
       "impl_sha": "ea9d54600ef13868",
@@ -62724,15 +63191,15 @@
         "action_space_dim": 17,
         "ctrl_write_error": 0.0,
         "expected_nu": 17,
-        "last_reward": 4.918,
+        "last_reward": 4.8994,
         "nu": 17,
         "obs_dim": 348,
         "steps_ok": 5
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 331.6,
+      "peak_rss_mb": 357.2,
       "preserved_impl": null,
-      "ran_at": "2026-10-26T04:43:07",
+      "ran_at": "2026-11-15T04:45:59",
       "seeds": [
         0
       ],
@@ -81597,99 +82064,17 @@
     "T0.33": {
       "amended": [],
       "attempt": 22,
-      "commit": "a4517a0",
+      "commit": "fb2787f",
       "compute_s": null,
       "control_metrics": {
         "alive": true,
         "leak_visible": true
       },
       "dirty_files": null,
-      "duration_s": 1.32,
+      "duration_s": 1.34,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "97edbb4",
-          "compute_s": null,
-          "control_metrics": {
-            "alive": true,
-            "leak_visible": true
-          },
-          "dirty_files": null,
-          "duration_s": 1.3,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "1b70b2bd6bf8bf66",
-          "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (shipped_refusal_s) \u2014 a blemish on numbers nothing gated stands on (+0.1s)",
-          "metrics": {
-            "affords_small": true,
-            "charged_moves": true,
-            "class_slack": [
-              {
-                "budget": "cpu<2h",
-                "n": 59,
-                "n_foreclosed": 0,
-                "slack_s": 3600.0,
-                "used_s": 472.55
-              },
-              {
-                "budget": "cpu<10min",
-                "n": 86,
-                "n_foreclosed": 0,
-                "slack_s": 46800.0,
-                "used_s": 472.55
-              },
-              {
-                "budget": "cpu<1min",
-                "n": 26,
-                "n_foreclosed": 0,
-                "slack_s": 56547.56,
-                "used_s": 472.55
-              }
-            ],
-            "corrupt_ledger_fails_closed": true,
-            "cpu_foreclosed": [],
-            "cpu_quota_enforced": 1.0,
-            "detached_routed": true,
-            "empty_ledger_falls_back": true,
-            "est_above_enum": [],
-            "exhausted_refused": true,
-            "fresh_admits_worst": true,
-            "gpu_unbound": true,
-            "isolation_ok": true,
-            "live_load": 0.15,
-            "live_remaining_s": 57127.45,
-            "load_refused": true,
-            "loop_load_agrees": true,
-            "n_foreclosed_enum": 0,
-            "n_foreclosed_now": 0,
-            "n_foreclosed_unmeasured": 0,
-            "overrun_marked": true,
-            "persists": true,
-            "projection_binds": true,
-            "projection_only_tightens": true,
-            "receipt_committable": true,
-            "refuses_oversized": true,
-            "remaining_mid_s": 57000.0,
-            "shipped_refusal": true,
-            "shipped_refusal_s": 0.02,
-            "slack_predicts_refusal": true,
-            "stale_writer_safe": true,
-            "starts_full": true,
-            "wiring_ok": true
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 234.4,
-          "preserved_impl": null,
-          "ran_at": "2026-09-29T10:43:06",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "5fa065bb96101742",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -83253,9 +83638,93 @@
           ],
           "spec_sha": "5fa065bb96101742",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "a4517a0",
+          "compute_s": null,
+          "control_metrics": {
+            "alive": true,
+            "leak_visible": true
+          },
+          "dirty_files": null,
+          "duration_s": 1.32,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "1efaef2430ce1020",
+          "message": "pre-registered threshold not met",
+          "metrics": {
+            "affords_small": true,
+            "charged_moves": true,
+            "class_slack": [
+              {
+                "budget": "cpu<2h",
+                "n": 62,
+                "n_foreclosed": 0,
+                "slack_s": 3600.0,
+                "used_s": 2623.75
+              },
+              {
+                "budget": "cpu<10min",
+                "n": 92,
+                "n_foreclosed": 0,
+                "slack_s": 46800.0,
+                "used_s": 2623.75
+              },
+              {
+                "budget": "cpu<1min",
+                "n": 26,
+                "n_foreclosed": 0,
+                "slack_s": 56547.56,
+                "used_s": 2623.75
+              }
+            ],
+            "corrupt_ledger_fails_closed": true,
+            "cpu_foreclosed": [
+              "W1.00"
+            ],
+            "cpu_quota_enforced": 1.0,
+            "detached_routed": true,
+            "empty_ledger_falls_back": true,
+            "est_above_enum": [],
+            "exhausted_refused": true,
+            "fresh_admits_worst": true,
+            "gpu_unbound": true,
+            "isolation_ok": true,
+            "live_load": 1.02,
+            "live_remaining_s": 54976.25,
+            "load_refused": true,
+            "loop_load_agrees": true,
+            "n_foreclosed_enum": 1,
+            "n_foreclosed_now": 0,
+            "n_foreclosed_unmeasured": 0,
+            "overrun_marked": true,
+            "persists": true,
+            "projection_binds": true,
+            "projection_only_tightens": true,
+            "receipt_committable": true,
+            "refuses_oversized": true,
+            "remaining_mid_s": 57000.0,
+            "shipped_refusal": true,
+            "shipped_refusal_s": 0.036,
+            "slack_predicts_refusal": false,
+            "stale_writer_safe": true,
+            "starts_full": true,
+            "wiring_ok": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 321.1,
+          "preserved_impl": null,
+          "ran_at": "2026-11-15T02:49:25",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "5fa065bb96101742",
+          "status": "FAIL"
         }
       ],
-      "impl_sha": "1efaef2430ce1020",
+      "impl_sha": "53d55eb5edc81dee",
       "message": "pre-registered threshold not met",
       "metrics": {
         "affords_small": true,
@@ -83264,23 +83733,23 @@
           {
             "budget": "cpu<2h",
             "n": 62,
-            "n_foreclosed": 0,
+            "n_foreclosed": 37,
             "slack_s": 3600.0,
-            "used_s": 2623.75
+            "used_s": 4275.03
           },
           {
             "budget": "cpu<10min",
             "n": 92,
             "n_foreclosed": 0,
             "slack_s": 46800.0,
-            "used_s": 2623.75
+            "used_s": 4275.03
           },
           {
             "budget": "cpu<1min",
             "n": 26,
             "n_foreclosed": 0,
             "slack_s": 56547.56,
-            "used_s": 2623.75
+            "used_s": 4275.03
           }
         ],
         "corrupt_ledger_fails_closed": true,
@@ -83291,17 +83760,18 @@
         "detached_routed": true,
         "empty_ledger_falls_back": true,
         "est_above_enum": [],
+        "estimate_reads_billed": true,
         "exhausted_refused": true,
         "fresh_admits_worst": true,
         "gpu_unbound": true,
         "isolation_ok": true,
-        "live_load": 1.02,
-        "live_remaining_s": 54976.25,
+        "live_load": 0.14,
+        "live_remaining_s": 53324.97,
         "load_refused": true,
         "loop_load_agrees": true,
-        "n_foreclosed_enum": 1,
-        "n_foreclosed_now": 0,
-        "n_foreclosed_unmeasured": 0,
+        "n_foreclosed_enum": 60,
+        "n_foreclosed_now": 37,
+        "n_foreclosed_unmeasured": 36,
         "overrun_marked": true,
         "persists": true,
         "projection_binds": true,
@@ -83317,15 +83787,84 @@
         "wiring_ok": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 321.1,
+      "peak_rss_mb": 321.2,
       "preserved_impl": null,
-      "ran_at": "2026-11-15T02:49:25",
+      "ran_at": "2026-11-15T04:43:06",
       "seeds": [
         0
       ],
       "spec_id": "T0.33",
       "spec_sha": "5fa065bb96101742",
-      "status": "FAIL"
+      "status": "FAIL",
+      "supersedes_fail": {
+        "commit": "a4517a0",
+        "dirty": false,
+        "impl_changed": true,
+        "impl_sha": "1efaef2430ce1020",
+        "metrics": {
+          "affords_small": true,
+          "charged_moves": true,
+          "class_slack": [
+            {
+              "budget": "cpu<2h",
+              "n": 62,
+              "n_foreclosed": 0,
+              "slack_s": 3600.0,
+              "used_s": 2623.75
+            },
+            {
+              "budget": "cpu<10min",
+              "n": 92,
+              "n_foreclosed": 0,
+              "slack_s": 46800.0,
+              "used_s": 2623.75
+            },
+            {
+              "budget": "cpu<1min",
+              "n": 26,
+              "n_foreclosed": 0,
+              "slack_s": 56547.56,
+              "used_s": 2623.75
+            }
+          ],
+          "corrupt_ledger_fails_closed": true,
+          "cpu_foreclosed": [
+            "W1.00"
+          ],
+          "cpu_quota_enforced": 1.0,
+          "detached_routed": true,
+          "empty_ledger_falls_back": true,
+          "est_above_enum": [],
+          "exhausted_refused": true,
+          "fresh_admits_worst": true,
+          "gpu_unbound": true,
+          "isolation_ok": true,
+          "live_load": 1.02,
+          "live_remaining_s": 54976.25,
+          "load_refused": true,
+          "loop_load_agrees": true,
+          "n_foreclosed_enum": 1,
+          "n_foreclosed_now": 0,
+          "n_foreclosed_unmeasured": 0,
+          "overrun_marked": true,
+          "persists": true,
+          "projection_binds": true,
+          "projection_only_tightens": true,
+          "receipt_committable": true,
+          "refuses_oversized": true,
+          "remaining_mid_s": 57000.0,
+          "shipped_refusal": true,
+          "shipped_refusal_s": 0.036,
+          "slack_predicts_refusal": false,
+          "stale_writer_safe": true,
+          "starts_full": true,
+          "wiring_ok": true
+        },
+        "ran_at": "2026-11-15T02:49:25",
+        "spec_changed": false,
+        "spec_sha": "5fa065bb96101742",
+        "status": "FAIL"
+      }
     },
     "T0.34": {
       "amended": [],
@@ -85404,67 +85943,24 @@
     "T0.36": {
       "amended": [],
       "attempt": 22,
-      "commit": "cb16a52",
+      "commit": "fb2787f",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
-        "ladder_size": 261.0,
-        "overstated_roots": 2.0,
+        "ladder_size": 270.0,
+        "overstated_roots": 3.0,
         "properties_checked": 7.0,
         "properties_failed": 4.0,
-        "scar_root_claims": 41.0,
-        "unreachable": 96.0,
-        "worst_overstatement": 38.0,
-        "worst_root_is_the_scar": 1.0
+        "scar_root_claims": 0.0,
+        "unreachable": 101.0,
+        "worst_overstatement": 7.0,
+        "worst_root_is_the_scar": 0.0
       },
       "dirty_files": null,
-      "duration_s": 37.44,
+      "duration_s": 42.72,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "ca68c4d",
-          "compute_s": null,
-          "control_metrics": {
-            "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
-            "ladder_size": 254.0,
-            "overstated_roots": 1.0,
-            "properties_checked": 7.0,
-            "properties_failed": 4.0,
-            "scar_root_claims": 41.0,
-            "unreachable": 95.0,
-            "worst_overstatement": 38.0,
-            "worst_root_is_the_scar": 1.0
-          },
-          "dirty_files": null,
-          "duration_s": 35.05,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "b8e891f6c4f8e226",
-          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+24.3s)",
-          "metrics": {
-            "failed_names": "",
-            "ladder_size": 254.0,
-            "overstated_roots": 0.0,
-            "properties_checked": 7.0,
-            "properties_failed": 0.0,
-            "scar_root_claims": 3.0,
-            "unreachable": 95.0,
-            "worst_overstatement": 0.0,
-            "worst_root_is_the_scar": 0.0
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 226.2,
-          "preserved_impl": null,
-          "ran_at": "2026-09-26T09:18:35",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "0255a8f809a1cc0e",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -86285,25 +86781,68 @@
           ],
           "spec_sha": "0255a8f809a1cc0e",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "cb16a52",
+          "compute_s": null,
+          "control_metrics": {
+            "failed_names": "p1_frees_is_the_set_that_repair_actually_buys,p3_chain_fixture_frees_only_the_next_verdict,p5_chain_fixture_names_the_pair_in_groups,p7_a_void_intermediate_is_a_root_like_a_fail",
+            "ladder_size": 261.0,
+            "overstated_roots": 2.0,
+            "properties_checked": 7.0,
+            "properties_failed": 4.0,
+            "scar_root_claims": 41.0,
+            "unreachable": 96.0,
+            "worst_overstatement": 38.0,
+            "worst_root_is_the_scar": 1.0
+          },
+          "dirty_files": null,
+          "duration_s": 37.44,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "11b2c30c9974afde",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+26.3s)",
+          "metrics": {
+            "failed_names": "",
+            "ladder_size": 261.0,
+            "overstated_roots": 0.0,
+            "properties_checked": 7.0,
+            "properties_failed": 0.0,
+            "scar_root_claims": 3.0,
+            "unreachable": 96.0,
+            "worst_overstatement": 0.0,
+            "worst_root_is_the_scar": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 236.0,
+          "preserved_impl": null,
+          "ran_at": "2026-10-26T02:23:41",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "0255a8f809a1cc0e",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "11b2c30c9974afde",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+26.3s)",
+      "impl_sha": "770593ab337756f7",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+30.6s)",
       "metrics": {
         "failed_names": "",
-        "ladder_size": 261.0,
+        "ladder_size": 270.0,
         "overstated_roots": 0.0,
         "properties_checked": 7.0,
         "properties_failed": 0.0,
-        "scar_root_claims": 3.0,
-        "unreachable": 96.0,
+        "scar_root_claims": 0.0,
+        "unreachable": 101.0,
         "worst_overstatement": 0.0,
         "worst_root_is_the_scar": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 236.0,
+      "peak_rss_mb": 326.2,
       "preserved_impl": null,
-      "ran_at": "2026-10-26T02:23:41",
+      "ran_at": "2026-11-15T04:43:50",
       "seeds": [
         0
       ],
