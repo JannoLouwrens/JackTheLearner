@@ -65,6 +65,12 @@ rewrite it, split it, or replace it.
 
 **3. Decide what was waiting on a decision.** You have the authority; use it.
 - Two things that can both be run → order the race. Never argue it, never ask.
+  **But read before you race (`SYSTEM.md` 3a, owner 11-15):** a race order
+  carries `prior:` lines — what published work predicts for each arm and the
+  steps it took, beside ours; the authors' necessary settings beside ours;
+  whether each arm has reproduced a published number; whether one plain learner
+  has shown the task learnable. No prior, no race: order the prior first.
+  `docs/research/PUBLISHED_PRIORS.md` is the reference.
 - A lab idea marked ALIVE/ENTERED, or a paper that names a seat and could run
   here → a cook-off order against the seat's holder, or a one-line no.
 - How the organs work (cadence, what is re-checked, whether a dependency edge is

@@ -34,6 +34,13 @@ a specific scar (GPU dispatch, detached runs, Kaggle pins, stale certificates).
 
     RESEARCH -> TEST -> IMPLEMENT -> TEST -> FIX -> (repeat)
 
+**RESEARCH means the published record first** (`SYSTEM.md` 3a, owner 11-15).
+Before any race or learning run, the order's `prior:` lines must exist: what
+the literature predicts for each arm and at how many steps, the authors'
+necessary settings beside ours, a known-answer check of the arm. If they are
+missing, writing them (with sources; `docs/research/PUBLISHED_PRIORS.md` first)
+IS your iteration. A run funded below the published need is a pilot: say so.
+
 **A verdict is the middle, not the end.** A FAIL is an instruction: find why,
 change Jack's code or the experiment's apparatus, run it again. For two months
 this project recorded failures and walked away from them — every blocker sat

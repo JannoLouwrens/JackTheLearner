@@ -34,7 +34,10 @@ owner ranks those with Jack himself) — and build a CHALLENGER for it. Yours, a
 the better, provided it could actually run here.
 
 1. **State the bet in three lines** in `docs/LAB.md`: what you are trying, why it
-   might beat the holder, and what result would kill it.
+   might beat the holder, and what result would kill it. Add the **prior**
+   (`SYSTEM.md` 3a): the nearest published result for this idea, the steps and
+   settings it needed, and whether your budget can reach them. An idea the
+   published record already killed or proved is cited, not re-run.
 2. **Build it small** as an arm that fits the seat's existing arena (same
    inputs, same world, same metric, matched parameters or matched compute — see
    `experiments/bakeoff.py`, `experiments/cores.py:build_arm`).

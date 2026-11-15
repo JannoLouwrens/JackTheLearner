@@ -133,6 +133,41 @@ old, missing or with nothing open send a worker to the top repairable blocker in
    arms can both be run is not an escalation. It is an experiment somebody has
    not written yet.**
 
+   **3a. READ BEFORE YOU RACE (owner, 2026-11-15).** *"Most things were already
+   tested… we can get so much from others' effort in testing and choose amazing
+   candidates, since we know how it works and how well it will work… go in
+   knowing the method and what to expect and how to properly set it up."* The
+   bakeoff still decides, but it decides among candidates the published record
+   supports, at a size the published record says can show something. On
+   2026-11-15 seven in-house learners were raced for 15 lives each (about
+   40,000 decisions) and none ate. Nobody had written down that from-scratch
+   agents on comparable tasks are given 10^5 to 10^6 steps, that five of the
+   seven arms were one reactive learner under different names, or that none had
+   ever reproduced a published score. The race measured our setup, not the
+   arms. So every race or learning claim carries a **PRIOR**, written before
+   any cell is run:
+
+   > **(a) Expected.** What published work predicts for each arm on the nearest
+   >     published task: the score, and the environment steps it took, with the
+   >     paper. Beside it, the steps OUR run gives. A run funded below the
+   >     published need is a pilot and is called one; it cannot seat or unseat.
+   > **(b) Setup.** The settings the arm's own authors and careful replications
+   >     call necessary (reward scale, discount, exploration, replay size, reuse
+   >     per step, memory handling, normalisation), beside ours, each difference
+   >     either removed or justified in one line.
+   > **(c) Known answer.** The arm's implementation has reproduced a published
+   >     number on a small standard task, or the row says it has not. An arm
+   >     that has not is a suspect, not a contestant.
+   > **(d) Learnable.** Before brains are raced on a task, one plain learner
+   >     with standard settings and a generous budget has shown the task can be
+   >     learned at all with his senses.
+
+   If the published record already answers the question, cite it and spend the
+   compute on what it does not answer. A prior is a prediction to be checked,
+   never a verdict: published results do not seat anyone, and a surprise against
+   the prior is a finding to report. `docs/research/PUBLISHED_PRIORS.md` is the
+   standing reference; whoever writes a new prior adds it there.
+
    **THE INVARIANT THAT KEEPS THAT SAFE — and it takes THREE classes, not two.**
    The first version of this section had two, and the owner caught the hole the
    same day (2026-08-24): *"this project won't work if you can't let them
