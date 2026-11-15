@@ -1094,17 +1094,18 @@
         "W0.PL": 90.64,
         "detached:drink_kcpu_k1.log": 677.63,
         "detached:drink_kcpu_k2.log": 549.02,
-        "detached:drink_kcpu_k3.log": 82.27,
+        "detached:drink_kcpu_k3.log": 164.49,
         "detached:fatigue_probe_dB": 200.46,
         "detached:fatigue_probe_shipped": 223.97,
         "detached:fatigue_probe_swp_k72": 89.76,
+        "detached:humid_kcpu_h1.log": 41.32,
         "detached:meal_kcpu_s94.log": 131.01,
         "detached:meal_kcpu_s95.log": 25.87,
         "detached:meal_kcpu_s96.log": 26.05,
         "detached:meal_kcpu_s97.log": 25.9,
         "detached:meal_kcpu_s98.log": 28.73
       },
-      "used_s": 4462.85
+      "used_s": 4586.39
     }
   },
   "last_child_s": {

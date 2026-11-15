@@ -1547,13 +1547,46 @@
     },
     "D1.0": {
       "amended": [],
-      "attempt": 8,
-      "commit": "fc52aca",
-      "compute_s": 64774.44,
-      "control_metrics": {},
+      "attempt": 9,
+      "commit": "f5b6644",
+      "compute_s": 30106.26,
+      "control_metrics": {
+        "untrained_aprime_drift_tol": 7.86,
+        "untrained_aprime_drift_tol_std": 0.0,
+        "untrained_aprime_excess": 1.31,
+        "untrained_aprime_excess_std": 0.0,
+        "untrained_aprime_mean": 198.4,
+        "untrained_aprime_mean_std": 0.0,
+        "untrained_aprime_sigma": 2.28,
+        "untrained_aprime_sigma_std": 0.0,
+        "untrained_b_split_drift_tol": 73.14,
+        "untrained_b_split_drift_tol_std": 0.0,
+        "untrained_b_split_excess": -28.78,
+        "untrained_b_split_excess_std": 0.0,
+        "untrained_b_split_mean": 142.7,
+        "untrained_b_split_mean_std": 0.0,
+        "untrained_b_split_sigma": 0.46,
+        "untrained_b_split_sigma_std": 0.0,
+        "untrained_c_e2e_drift_tol": 124.27,
+        "untrained_c_e2e_drift_tol_std": 0.0,
+        "untrained_c_e2e_excess": -22.59,
+        "untrained_c_e2e_excess_std": 0.0,
+        "untrained_c_e2e_mean": 156.8,
+        "untrained_c_e2e_mean_std": 0.0,
+        "untrained_c_e2e_sigma": 1.15,
+        "untrained_c_e2e_sigma_std": 0.0,
+        "untrained_d_mlp_drift_tol": 3.5,
+        "untrained_d_mlp_drift_tol_std": 0.0,
+        "untrained_d_mlp_excess": -0.15,
+        "untrained_d_mlp_excess_std": 0.0,
+        "untrained_d_mlp_mean": 197.6,
+        "untrained_d_mlp_mean_std": 0.0,
+        "untrained_d_mlp_sigma": 2.26,
+        "untrained_d_mlp_sigma_std": 0.0
+      },
       "dirty_files": null,
-      "duration_s": 185.76,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1794658135",
+      "duration_s": 30141.66,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1794691758,jannolouwrens/jack-ladder-1794701015,jannolouwrens/jack-ladder-1794710514,ladder-1794719801,ladder-1794720515,ladder-1794721175",
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3780,15 +3813,708 @@
             "spec_sha": "cd0486bc936769c8",
             "status": "VOID"
           }
+        },
+        {
+          "amended": [],
+          "attempt": 8,
+          "commit": "fc52aca",
+          "compute_s": 64774.44,
+          "control_metrics": {},
+          "dirty_files": null,
+          "duration_s": 185.76,
+          "gpu_job_id": "jannolouwrens/jack-ladder-1794658135",
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "3fbc6d0c8a49a898",
+          "message": "ZeroDivisionError: division by zero | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 28e7b08680e85c6d (head f90881f), local script hashed 398179ccbebf1d47 \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 398179ccbebf1d47 (head fc52aca), local script hashed fa87cb81150d9be3 \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha fa87cb81150d9be3 (head fc52aca), local script hashed 5f7f1cfdf30833b3 \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 5f7f1cfdf30833b3 (head fc52aca), local script hashed 4b72e2743896433c \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 4b72e2743896433c (head fc52aca), local script hashed 82b5a81747a40cdd \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 82b5a81747a40cdd (head fc52aca), local script hashed 2112d044d37b13b9 \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 2112d044d37b13b9 (head fc52aca), local script hashed a95df0ece940628f \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl",
+          "metrics": {},
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 305.5,
+          "preserved_impl": null,
+          "ran_at": "2026-11-14T21:27:20",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "f94eee34863d50b9",
+          "status": "ERROR",
+          "supersedes_void": {
+            "commit": "3a4ccfd",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "4db15d96b0312e50",
+            "metrics": {
+              "arms": {
+                "aprime": {
+                  "aux_optimiser_steps": [
+                    1472,
+                    1472,
+                    1472
+                  ],
+                  "consistency": 0.06,
+                  "env_steps": [
+                    753664,
+                    753664,
+                    753664
+                  ],
+                  "final_third_reward": 5.303,
+                  "final_third_slope": 1.74e-07,
+                  "mean": 506.4,
+                  "optimiser_steps": [
+                    7360,
+                    7360,
+                    7360
+                  ],
+                  "paired_t": 20.41,
+                  "ppo_trainable_params": 281763,
+                  "sigma_vs_random": 13.02,
+                  "std": 30.36,
+                  "step_match": 1.005,
+                  "trained_means": [
+                    502.6,
+                    538.5,
+                    478.1
+                  ],
+                  "untrained_means": [
+                    196.3,
+                    203.5,
+                    195.4
+                  ],
+                  "updates_per_env_step": 0.009766
+                },
+                "b_split": {
+                  "aux_optimiser_steps": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "consistency": 0.056,
+                  "env_steps": [
+                    753664,
+                    753664,
+                    753664
+                  ],
+                  "final_third_reward": 5.228,
+                  "final_third_slope": 4.07e-07,
+                  "mean": 344.0,
+                  "optimiser_steps": [
+                    7360,
+                    7360,
+                    7360
+                  ],
+                  "paired_t": 6.0,
+                  "ppo_trainable_params": 57830650,
+                  "sigma_vs_random": 10.53,
+                  "std": 19.32,
+                  "step_match": 1.005,
+                  "trained_means": [
+                    357.2,
+                    321.8,
+                    353.1
+                  ],
+                  "untrained_means": [
+                    101.3,
+                    113.9,
+                    212.9
+                  ],
+                  "updates_per_env_step": 0.009766
+                },
+                "c_e2e": {
+                  "aux_optimiser_steps": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "consistency": 0.057,
+                  "env_steps": [
+                    753664,
+                    753664,
+                    753664
+                  ],
+                  "final_third_reward": 5.211,
+                  "final_third_slope": -8.6e-08,
+                  "mean": 350.0,
+                  "optimiser_steps": [
+                    7360,
+                    7360,
+                    7360
+                  ],
+                  "paired_t": 9.25,
+                  "ppo_trainable_params": 57363705,
+                  "sigma_vs_random": 10.8,
+                  "std": 20.12,
+                  "step_match": 1.005,
+                  "trained_means": [
+                    330.8,
+                    370.9,
+                    348.3
+                  ],
+                  "untrained_means": [
+                    136.4,
+                    142.2,
+                    191.9
+                  ],
+                  "updates_per_env_step": 0.009766
+                },
+                "d_mlp": {
+                  "aux_optimiser_steps": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "consistency": 0.056,
+                  "env_steps": [
+                    753664,
+                    753664,
+                    753664
+                  ],
+                  "final_third_reward": 5.411,
+                  "final_third_slope": 3.01e-07,
+                  "mean": 415.0,
+                  "optimiser_steps": [
+                    7360,
+                    7360,
+                    7360
+                  ],
+                  "paired_t": 16.96,
+                  "ppo_trainable_params": 530339,
+                  "sigma_vs_random": 12.99,
+                  "std": 23.41,
+                  "step_match": 1.005,
+                  "trained_means": [
+                    426.3,
+                    430.7,
+                    388.1
+                  ],
+                  "untrained_means": [
+                    196.1,
+                    200.3,
+                    196.3
+                  ],
+                  "updates_per_env_step": 0.009766
+                }
+              },
+              "kernels": [
+                {
+                  "arms": [
+                    "aprime",
+                    "d_mlp"
+                  ],
+                  "backend": "kaggle",
+                  "gpu": "Tesla P100-PCIE-16GB",
+                  "head": "1ee4a3a",
+                  "wall_minutes": 241.2
+                },
+                {
+                  "arms": [
+                    "b_split"
+                  ],
+                  "backend": "kaggle",
+                  "gpu": "Tesla P100-PCIE-16GB",
+                  "head": "321d786",
+                  "wall_minutes": 357.0
+                },
+                {
+                  "arms": [
+                    "c_e2e"
+                  ],
+                  "backend": "kaggle",
+                  "gpu": "Tesla P100-PCIE-16GB",
+                  "head": "ce2b56b",
+                  "wall_minutes": 356.1
+                }
+              ],
+              "margin_sigma": 3.37,
+              "margin_sigma_std": 4.44089e-16,
+              "random_mean": 111.0,
+              "random_mean_std": 0.0,
+              "random_std": 22.12,
+              "random_std_std": 0.0,
+              "runner_up": "d_mlp",
+              "sb3_reference": {
+                "backend": "kaggle",
+                "gpu": "Tesla P100-PCIE-16GB",
+                "head": "3a4ccfd",
+                "ref_mean": 518.5386594019477,
+                "reference_runs": [
+                  {
+                    "env_steps": 751616,
+                    "params": 124707,
+                    "seed": 0,
+                    "trained_mean": 514.4618583478447,
+                    "trained_returns": [
+                      455.0776648117774,
+                      728.7264583205426,
+                      588.2409929142757,
+                      389.4788723020882,
+                      410.78530339053935
+                    ],
+                    "untrained_mean": 172.88871751673287,
+                    "untrained_returns": [
+                      174.40087517681022,
+                      179.51014265996372,
+                      165.61846488945343,
+                      174.16987935731905,
+                      170.74422550011792
+                    ]
+                  },
+                  {
+                    "env_steps": 751616,
+                    "params": 124707,
+                    "seed": 1,
+                    "trained_mean": 555.8257624072063,
+                    "trained_returns": [
+                      477.18545767233195,
+                      627.3467993881678,
+                      479.09015295627114,
+                      667.407986165318,
+                      528.0984158539425
+                    ],
+                    "untrained_mean": 184.41660170420997,
+                    "untrained_returns": [
+                      183.3671081453563,
+                      184.9132578395167,
+                      185.64406528178148,
+                      184.64119418442885,
+                      183.51738306996648
+                    ]
+                  },
+                  {
+                    "env_steps": 751616,
+                    "params": 124707,
+                    "seed": 2,
+                    "trained_mean": 485.32835745079194,
+                    "trained_returns": [
+                      647.2462038378413,
+                      383.6713344605046,
+                      502.7456258200668,
+                      557.9062596417238,
+                      335.07236349382293
+                    ],
+                    "untrained_mean": 168.10088961000775,
+                    "untrained_returns": [
+                      169.91819065667167,
+                      166.1061211721682,
+                      168.63157269345808,
+                      168.39828323313563,
+                      167.4502802946052
+                    ]
+                  }
+                ],
+                "wall_minutes": 88.8
+              },
+              "verdict": "VOID \u2014 untrained twin(s) cleared the learning gate: aprime at 3.95 sigma (bar 3.0), d_mlp at 3.91 sigma (bar 3.0). The gate is measuring architectural bias, not learning.",
+              "winner": "aprime"
+            },
+            "ran_at": "2026-09-07T01:57:12",
+            "spec_changed": true,
+            "spec_sha": "cd0486bc936769c8",
+            "status": "VOID"
+          }
         }
       ],
       "impl_sha": "3fbc6d0c8a49a898",
-      "message": "ZeroDivisionError: division by zero | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 28e7b08680e85c6d (head f90881f), local script hashed 398179ccbebf1d47 \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 398179ccbebf1d47 (head fc52aca), local script hashed fa87cb81150d9be3 \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha fa87cb81150d9be3 (head fc52aca), local script hashed 5f7f1cfdf30833b3 \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 5f7f1cfdf30833b3 (head fc52aca), local script hashed 4b72e2743896433c \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 4b72e2743896433c (head fc52aca), local script hashed 82b5a81747a40cdd \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 82b5a81747a40cdd (head fc52aca), local script hashed 2112d044d37b13b9 \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl | REATTACH CODE MISMATCH tolerated: kernel jannolouwrens/jack-ladder-1794658135 ran code sha 2112d044d37b13b9 (head fc52aca), local script hashed a95df0ece940628f \u2014 impl_sha names code that did not run remotely; see gpu_submissions.jsonl",
-      "metrics": {},
+      "message": "run did not test the claim; not a refutation",
+      "metrics": {
+        "arms": {
+          "aprime": {
+            "aux_optimiser_steps": [
+              880,
+              912,
+              880
+            ],
+            "consistency": 0.328,
+            "env_steps": [
+              450560,
+              466944,
+              450560
+            ],
+            "final_third_reward": 5.197,
+            "final_third_slope": 1.37e-07,
+            "learn_margin": 260.76,
+            "mean": 459.2,
+            "optimiser_steps": [
+              4400,
+              4560,
+              4400
+            ],
+            "paired_t": 2.97,
+            "ppo_trainable_params": 281763,
+            "sigma_vs_random": 2.29,
+            "std": 150.78,
+            "step_match": 0.601,
+            "trained_means": [
+              322.3,
+              434.4,
+              620.8
+            ],
+            "untrained_means": [
+              196.3,
+              203.5,
+              195.4
+            ],
+            "updates_per_env_step": 0.009766
+          },
+          "b_split": {
+            "aux_optimiser_steps": [
+              0,
+              0,
+              0
+            ],
+            "consistency": 0.098,
+            "env_steps": [
+              548864,
+              483328,
+              450560
+            ],
+            "final_third_reward": 5.099,
+            "final_third_slope": 5.64e-07,
+            "learn_margin": 116.58,
+            "mean": 259.3,
+            "optimiser_steps": [
+              5360,
+              4720,
+              4400
+            ],
+            "paired_t": 3.97,
+            "ppo_trainable_params": 57830650,
+            "sigma_vs_random": 3.94,
+            "std": 25.53,
+            "step_match": 0.601,
+            "trained_means": [
+              229.8,
+              274.3,
+              273.7
+            ],
+            "untrained_means": [
+              101.3,
+              113.9,
+              212.9
+            ],
+            "updates_per_env_step": 0.009766
+          },
+          "c_e2e": {
+            "aux_optimiser_steps": [
+              0,
+              0,
+              0
+            ],
+            "consistency": 0.114,
+            "env_steps": [
+              532480,
+              491520,
+              458752
+            ],
+            "final_third_reward": 5.116,
+            "final_third_slope": -2.74e-07,
+            "learn_margin": 147.82,
+            "mean": 304.6,
+            "optimiser_steps": [
+              5200,
+              4800,
+              4480
+            ],
+            "paired_t": 8.74,
+            "ppo_trainable_params": 57363705,
+            "sigma_vs_random": 5.17,
+            "std": 34.82,
+            "step_match": 0.612,
+            "trained_means": [
+              264.5,
+              323.7,
+              325.8
+            ],
+            "untrained_means": [
+              136.4,
+              142.2,
+              191.9
+            ],
+            "updates_per_env_step": 0.009766
+          },
+          "d_mlp": {
+            "aux_optimiser_steps": [
+              0,
+              0,
+              0
+            ],
+            "consistency": 0.1,
+            "env_steps": [
+              753664,
+              753664,
+              753664
+            ],
+            "final_third_reward": 5.38,
+            "final_third_slope": 1.9e-08,
+            "learn_margin": 224.58,
+            "mean": 422.1,
+            "optimiser_steps": [
+              7360,
+              7360,
+              7360
+            ],
+            "paired_t": 9.71,
+            "ppo_trainable_params": 530339,
+            "sigma_vs_random": 7.25,
+            "std": 42.39,
+            "step_match": 1.005,
+            "trained_means": [
+              404.7,
+              470.5,
+              391.2
+            ],
+            "untrained_means": [
+              196.1,
+              200.3,
+              196.3
+            ],
+            "updates_per_env_step": 0.009766
+          }
+        },
+        "kernels": [
+          {
+            "arms": [
+              "aprime"
+            ],
+            "backend": "colab",
+            "gpu": "Tesla T4",
+            "head": "0406deb",
+            "reused_from": "/data/d10_units/3fbc6d0c8a49a898/aprime_seed0.json",
+            "seeds": [
+              0
+            ],
+            "wall_minutes": 90.4
+          },
+          {
+            "arms": [
+              "aprime"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla T4",
+            "head": "70b5787",
+            "reused_from": "/data/d10_units/3fbc6d0c8a49a898/aprime_seed1.json",
+            "seeds": [
+              1
+            ],
+            "wall_minutes": 90.7
+          },
+          {
+            "arms": [
+              "aprime"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla T4",
+            "head": "b7cd7a3",
+            "reused_from": "/data/d10_units/3fbc6d0c8a49a898/aprime_seed2.json",
+            "seeds": [
+              2
+            ],
+            "wall_minutes": 90.7
+          },
+          {
+            "arms": [
+              "b_split"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla T4",
+            "head": "50377a7",
+            "reused_from": "/data/d10_units/3fbc6d0c8a49a898/b_split_seed0.json",
+            "seeds": [
+              0
+            ],
+            "wall_minutes": 150.6
+          },
+          {
+            "arms": [
+              "b_split"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla T4",
+            "head": "a8648ab",
+            "reused_from": "/data/d10_units/3fbc6d0c8a49a898/b_split_seed1.json",
+            "seeds": [
+              1
+            ],
+            "wall_minutes": 151.3
+          },
+          {
+            "arms": [
+              "b_split"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla T4",
+            "head": "fc52aca",
+            "reused_from": "/data/d10_units/3fbc6d0c8a49a898/b_split_seed2.json",
+            "seeds": [
+              2
+            ],
+            "wall_minutes": 151.3
+          },
+          {
+            "arms": [
+              "c_e2e"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla T4",
+            "head": "f5b6644",
+            "reused_from": null,
+            "seeds": [
+              0
+            ],
+            "wall_minutes": 150.9
+          },
+          {
+            "arms": [
+              "c_e2e"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla T4",
+            "head": "c0db7e6",
+            "reused_from": null,
+            "seeds": [
+              1
+            ],
+            "wall_minutes": 151.4
+          },
+          {
+            "arms": [
+              "c_e2e"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla T4",
+            "head": "988bc93",
+            "reused_from": null,
+            "seeds": [
+              2
+            ],
+            "wall_minutes": 151.5
+          },
+          {
+            "arms": [
+              "d_mlp"
+            ],
+            "backend": "colab",
+            "gpu": "Tesla T4",
+            "head": "bc7b99f",
+            "reused_from": null,
+            "seeds": [
+              0
+            ],
+            "wall_minutes": 11.3
+          },
+          {
+            "arms": [
+              "d_mlp"
+            ],
+            "backend": "colab",
+            "gpu": "Tesla T4",
+            "head": "1cc6ccc",
+            "reused_from": null,
+            "seeds": [
+              1
+            ],
+            "wall_minutes": 10.4
+          },
+          {
+            "arms": [
+              "d_mlp"
+            ],
+            "backend": "colab",
+            "gpu": "Tesla T4",
+            "head": "b9f6e3e",
+            "reused_from": null,
+            "seeds": [
+              2
+            ],
+            "wall_minutes": 11.5
+          }
+        ],
+        "margin_sigma": 0.33,
+        "margin_sigma_std": 0.0,
+        "random_mean": 114.6,
+        "random_mean_std": 1.42109e-14,
+        "random_std": 36.73,
+        "random_std_std": 0.0,
+        "runner_up": "d_mlp",
+        "sb3_reference": {
+          "backend": "colab",
+          "gpu": "Tesla T4",
+          "head": "cf8685c",
+          "ref_mean": 650.5236473621384,
+          "reference_runs": [
+            {
+              "env_steps": 751616,
+              "params": 124707,
+              "seed": 0,
+              "trained_mean": 710.6204955812412,
+              "trained_returns": [
+                615.9515602007423,
+                784.548413680171,
+                842.866098267179,
+                558.4606116004286,
+                751.2757941576858
+              ],
+              "untrained_mean": 172.888723438549,
+              "untrained_returns": [
+                174.4008806234658,
+                179.5101523344171,
+                165.618471345418,
+                174.16988384363935,
+                170.74422904580473
+              ]
+            },
+            {
+              "env_steps": 751616,
+              "params": 124707,
+              "seed": 1,
+              "trained_mean": 562.9518153275969,
+              "trained_returns": [
+                524.7612773850909,
+                758.8026317166874,
+                536.5902416489603,
+                491.83039327430265,
+                502.77453261294346
+              ],
+              "untrained_mean": 184.41544316692426,
+              "untrained_returns": [
+                183.3671134262714,
+                184.91326172166336,
+                185.64407169180924,
+                184.64119825283635,
+                183.51157074204107
+              ]
+            },
+            {
+              "env_steps": 751616,
+              "params": 124707,
+              "seed": 2,
+              "trained_mean": 677.9986311775771,
+              "trained_returns": [
+                858.0813184108425,
+                517.9555403999251,
+                466.53956941523546,
+                809.2039709401098,
+                738.212756721772
+              ],
+              "untrained_mean": 168.10088739842874,
+              "untrained_returns": [
+                169.91818817416976,
+                166.10611949561903,
+                168.63156987190752,
+                168.39828127243013,
+                167.45027817801736
+              ]
+            }
+          ],
+          "reused_from": "/data/d10_units/3fbc6d0c8a49a898/sb3_reference_seed0.json",
+          "wall_minutes": 101.3
+        },
+        "verdict": "VOID \u2014 not at matched experience: aprime reached 60% of STEP_TARGET 750000 (floor 90%), b_split reached 60% of STEP_TARGET 750000 (floor 90%), c_e2e reached 61% of STEP_TARGET 750000 (floor 90%). Raise that arm's MINUTES_CAP; do not compare.",
+        "winner": "aprime"
+      },
       "peak_rss_inherited": false,
       "peak_rss_mb": 305.5,
       "preserved_impl": null,
-      "ran_at": "2026-11-14T21:27:20",
+      "ran_at": "2026-11-15T05:51:35",
       "seeds": [
         0,
         1,
@@ -3796,7 +4522,7 @@
       ],
       "spec_id": "D1.0",
       "spec_sha": "f94eee34863d50b9",
-      "status": "ERROR",
+      "status": "VOID",
       "supersedes_void": {
         "commit": "3a4ccfd",
         "dirty": false,
