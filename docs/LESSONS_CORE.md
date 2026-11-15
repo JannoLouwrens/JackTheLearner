@@ -62,13 +62,17 @@ decision". Each reported success while watching the wrong thing.
 ## About deciding
 
 16. **A measurement chooses among architectures; it never chooses the ends.**
-    ENDS (what Jack must become) are the owner's. ARCHITECTURE (how he is
-    built) is always raced, never assumed — no seat without a registered,
-    existing challenger. CONDUCT (how the organs work) the desks amend
-    themselves and report.
-17. **A fork whose arms can both be run is an experiment, not an escalation.**
-    Only what a measurement cannot answer goes to the owner, and then with a
-    default and a deadline so silence cannot deadlock it.
+    ENDS (what Jack must become) are the owner's. ARCHITECTURE is held by
+    evidence — BY VERDICT in his world, or BY RECORD (published, cited, and our
+    build reproducing a published number) — and stays contestable. CONDUCT
+    (how the organs work) the desks amend themselves and report.
+17. **Read before you race (`docs/PLAN.md`, owner 11-15).** Seven home-made
+    learners raced on food at 40,000 decisions; the published record needs
+    100,000 to millions and had predicted "none eats". A fork is an experiment
+    only where the record is silent, between candidates the record supports,
+    at a size the record says can show something — and only after each
+    learner has reproduced a published number. What cannot be measured goes
+    to the owner with a default and a deadline.
 18. **An assumption that cannot lose is not a finding.** An excluded
     alternative, an alternative cast as the must-fail control, a property test
     standing in for a contest, a falsifier that was never registered — all four
