@@ -77,6 +77,21 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          truncation"; Crafter caps at 10,000 steps. DIFFERS:
                          Crafter's cap builds a new world; ours keeps it
                          (lives persist in W0).
+  difficulty=None       J2 item 1, PART (meal size + regrowth delay only;
+                         food count and spawn distance still owed). None
+                         or 1.0 = today's world, untouched. At d in [0,1):
+                         floor-food meal nu(d) = 1.0 + d*(0.08 - 1.0) (a
+                         full bar at d=0) and regrowth delay d*66.9 s
+                         (instant at d=0, floored at the rest of the eating
+                         decision, <= 0.2 s). The apple is not dialled.
+                         Theirs: Avalon eat, one ceiling d in [0,1] per task,
+                         food 0.5 m in front at d=0 so "even random agents
+                         succeed"; Avalon food restores 100% of the bar
+                         (§3 table); two-resource ant: instant respawn at
+                         10% meals (trp_env). DIFFERS: Avalon dials distance
+                         and food count, not meal size or regrowth (no
+                         survival world ablates those alone, §3 "Not
+                         verified"); the linear map is ours.
   OPTIONS PROOF (measured 2026-11-15, `python -m
   experiments.tests.test_jack_env_options 300`, seeds 153/154/155): (a)
   explicit defaults == JackEnv() byte for byte; (b) dr100-eat == 100*homeo-dr
@@ -112,6 +127,13 @@ from gymnasium import spaces
 
 SENSES = ("vision", "audio", "touch", "proprio", "needs")
 REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
+FLOOR_FOODS = ("obj0", "obj1")
+MEAL_AT_D0 = 1.0     # Avalon: a food fills the bar (PUBLISHED_PRIORS §3 table)
+
+
+def dial_meal(nu1: float, d: float) -> float:
+    """Meal size at dial d: today's nu1 at d=1, a full bar at d=0, linear."""
+    return MEAL_AT_D0 + d * (nu1 - MEAL_AT_D0)
 
 
 def default_cal() -> dict:
@@ -128,7 +150,8 @@ class JackEnv(gym.Env):
                  alpha: Optional[float] = None, seed: int = 0,
                  e0: float = 1.0, diary=None, reward: str = "homeo-dr",
                  eat_pay: float = 100.0,
-                 max_episode_decisions: Optional[int] = None):
+                 max_episode_decisions: Optional[int] = None,
+                 difficulty: Optional[float] = None):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -140,6 +163,11 @@ class JackEnv(gym.Env):
         self.reward, self.eat_pay = reward, float(eat_pay)
         self.max_episode_decisions = (None if max_episode_decisions is None
                                       else int(max_episode_decisions))
+        if difficulty is not None and not 0.0 <= float(difficulty) <= 1.0:
+            raise ValueError(f"difficulty must be in [0, 1], got {difficulty!r}")
+        # None and 1.0 are both today's world: nothing is touched.
+        self.difficulty = (None if difficulty is None or float(difficulty) == 1.0
+                           else float(difficulty))
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -160,6 +188,24 @@ class JackEnv(gym.Env):
             self.w.drives.state = drives.DriveState(e=self.e0)
         self._eats_at_life_start = 0
         self._truncated = False
+        if self.difficulty is not None:
+            # J2 item 1 (part): meal size, per instance; drives.py untouched.
+            for name in FLOOR_FOODS:
+                if name in self.w.drives._food:
+                    gid, nu = self.w.drives._food[name]
+                    self.w.drives._food[name] = (gid, dial_meal(nu, self.difficulty))
+
+    def _dial_respawn(self, ate_before: dict) -> None:
+        """Shorten the floor-food regrowth timer just set by an eat event.
+
+        drives.substep set `_respawn_at = t_eat + RESPAWN_S`; at dial d it
+        becomes t_eat + d*RESPAWN_S. Applied at the decision boundary, so the
+        delay is never shorter than the rest of that decision (<= 0.2 s)."""
+        from experiments.drives import RESPAWN_S
+        dl = self.w.drives
+        for name in FLOOR_FOODS:
+            if name in dl.ate_total and dl.ate_total[name] > ate_before.get(name, 0):
+                dl._respawn_at[name] -= (1.0 - self.difficulty) * RESPAWN_S[name]
 
     @staticmethod
     def _obs(o: dict) -> np.ndarray:
@@ -201,7 +247,10 @@ class JackEnv(gym.Env):
         w = self.w
         d_before = w.drives.state.d()
         meals_before = self._meals()
+        ate_before = dict(w.drives.ate_total)
         w.decide(np.asarray(action, dtype=float))
+        if self.difficulty is not None:
+            self._dial_respawn(ate_before)
         eats = self._meals() - meals_before
         self._died = bool(w.died_this_decision)
         d_after = D_DEATH if self._died else w.drives.state.d()
