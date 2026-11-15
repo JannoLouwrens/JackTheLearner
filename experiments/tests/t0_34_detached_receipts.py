@@ -97,9 +97,11 @@ import time
 from pathlib import Path
 
 from ..cpu_budget import (CPU_DAY_CEILING_S, DETACHED_DAY_CAP_S,
-                          DETACHED_MAX_ALIVE, ENV_HEARTBEAT, ENV_OVERRIDE,
+                          DETACHED_MAX_ALIVE, DETACHED_MAX_POLLERS,
+                          ENV_HEARTBEAT, ENV_OVERRIDE,
                           ENV_WRAPPED, HEARTBEAT_S, LOAD_CEILING, CpuBudget,
-                          _loadavg, admit_detached, bill_interval)
+                          _loadavg, admit_detached, bill_interval,
+                          is_poller)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
@@ -183,6 +185,19 @@ def _experiment(seed: int) -> dict:
         cap_refused = (under and not over.admitted
                        and "detached cap" in over.reason
                        and not crowd.admitted and "alive" in crowd.reason)
+
+        # ruling 5: pollers hold no busy seat, but a planted 7th is refused;
+        # a fresh or busy session is never classed a poller
+        waiting = admit_detached("detached:p", path=fresh, loadavg=0.0,
+                                 alive=DETACHED_MAX_ALIVE - 1,
+                                 pollers=DETACHED_MAX_POLLERS - 1).admitted
+        seventh = admit_detached("detached:p", path=fresh, loadavg=0.0,
+                                 alive=0, pollers=DETACHED_MAX_POLLERS)
+        poller_cap_ok = (waiting and not seventh.admitted
+                         and "pollers" in seventh.reason
+                         and is_poller(5.0, 6600.0)
+                         and not is_poller(5.0, 30.0)
+                         and not is_poller(700.0, 6600.0))
 
         drained = td / "drained.json"
         CpuBudget(drained).charge("t0_34_drain", CPU_DAY_CEILING_S)
@@ -333,6 +348,7 @@ def _experiment(seed: int) -> dict:
         "payload_died": payload_died,
         "wiring_ok": wiring_ok,
         "cap_refused": cap_refused,
+        "poller_cap_ok": poller_cap_ok,
         "launcher_ok": launcher_ok,
         "e2e_total_s": round(e2e_total, 3),
         "live_receipt": live_receipt,
@@ -412,6 +428,7 @@ def _check(m: dict, c: dict):
             and m["payload_died"] is True
             and m["wiring_ok"] is True
             and m["cap_refused"] is True
+            and m["poller_cap_ok"] is True
             and m["launcher_ok"] is True
             and m["live_receipt"] is True
             and m["disjoint_ok"] is True

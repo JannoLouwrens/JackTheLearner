@@ -409,33 +409,61 @@ def detached_used_s(path: Path | None = None) -> float:
     return sum(v for k, v in by.items() if k.startswith("detached:"))
 
 
-def detached_alive() -> int:
-    """Live outermost `cpu_budget wrap` processes — one per detached job."""
-    n = 0
+# Ruling 5 (2026-11-15): a job whose session has averaged under
+# IDLE_CORES_BILL cores since launch is a POLLER (a Kaggle watcher) — it does
+# not hold one of the DETACHED_MAX_ALIVE seats, but at most this many may
+# wait at once. Younger than POLLER_MIN_AGE_S it counts busy (safe side).
+DETACHED_MAX_POLLERS = 6
+POLLER_MIN_AGE_S = 60.0
+
+
+def is_poller(cpu_s: float, age_s: float) -> bool:
+    return age_s >= POLLER_MIN_AGE_S and cpu_s < IDLE_CORES_BILL * age_s
+
+
+def detached_jobs() -> tuple:
+    """(busy, pollers) over live `cpu_budget wrap` processes, one per
+    detached job; each is classed by its setsid session's lifetime CPU."""
+    tick = os.sysconf("SC_CLK_TCK")
+    uptime = float(open("/proc/uptime").read().split()[0])
+    wraps, sess = {}, {}
     for d in os.listdir("/proc"):
-        try:
-            argv = open(f"/proc/{d}/cmdline", "rb").read().split(b"\0")
-        except (OSError, ValueError):
+        if not d.isdigit():
             continue
-        if b"experiments.cpu_budget" in argv and b"wrap" in argv:
-            n += 1
-    return n
+        try:
+            raw = open(f"/proc/{d}/stat").read()
+            f = raw[raw.rindex(")") + 2:].split()
+            sid = int(f[3])
+            sess[sid] = sess.get(sid, 0) + sum(int(x) for x in f[11:15])
+            argv = open(f"/proc/{d}/cmdline", "rb").read().split(b"\0")
+            if b"experiments.cpu_budget" in argv and b"wrap" in argv:
+                wraps[int(d)] = (sid, uptime - int(f[19]) / tick)
+        except (OSError, ValueError, IndexError):
+            continue
+    pollers = sum(is_poller(sess.get(sid, 0) / tick, age)
+                  for sid, age in wraps.values())
+    return len(wraps) - pollers, pollers
 
 
 def admit_detached(label: str, *, path: Path | None = None,
                    loadavg: float | None = None, est_s: float = 0.0,
-                   alive: int | None = None) -> CpuDecision:
+                   alive: int | None = None,
+                   pollers: int | None = None) -> CpuDecision:
     """Admit or refuse a detached launch BEFORE setsid. The gate asks whether
     TODAY has headroom, the detached share (`DETACHED_DAY_CAP_S`, plus the
     caller's optional estimate) and the concurrency cap have room, and the
     box is calm; the ceiling binds a running child through `charge`'s
     overrun marks, never through a kill."""
     load = _loadavg() if loadavg is None else loadavg
-    alive = detached_alive() if alive is None else alive
-    if alive >= DETACHED_MAX_ALIVE:
+    if alive is None:
+        alive, live_pollers = detached_jobs()
+        pollers = live_pollers if pollers is None else pollers
+    pollers = pollers or 0
+    if alive >= DETACHED_MAX_ALIVE or pollers >= DETACHED_MAX_POLLERS:
         return CpuDecision(False, est_s, 0.0, load,
-                           f"detached cap: {alive} detached jobs alive "
-                           f"(max {DETACHED_MAX_ALIVE}, ruling 3)")
+                           f"detached cap: {alive} busy detached jobs alive "
+                           f"(max {DETACHED_MAX_ALIVE}, ruling 3), {pollers} "
+                           f"pollers (max {DETACHED_MAX_POLLERS}, ruling 5)")
     det = detached_used_s(path)
     if label.startswith("detached:") and det + est_s > DETACHED_DAY_CAP_S:
         return CpuDecision(False, est_s, 0.0, load,
