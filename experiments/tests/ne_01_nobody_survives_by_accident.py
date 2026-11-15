@@ -218,6 +218,36 @@ DROP_MAX_CYCLES = 40          # option A's stop: injury death, or this many fall
 MIN_MEALS, MIN_DRINKS, MIN_SLEEP_DEC = 5, 3, 1000
 STATUE_DEATH_FRAC = 0.8       # the control's death must be OBSERVED (PS.01 v2)
 
+# ── RE-REGISTRATION 2026-11-15 (Director ruling 3, J6(b)): fatigue's spread
+# was read off random lives, so it measured fatigue's START-UP transient —
+# i.e. how short the life was (`64d949a`). It is now read by an EDGE PROBE in
+# the shape of the integrity one: FATIGUE_CYCLES x (FATIGUE_EXERT_DEC decisions
+# of full-amplitude random exertion, then FATIGUE_REST_DEC of zero-ctrl rest),
+# never sleeping (sleep onset zeroes f by §2.3 and would fake the recovery).
+# Gate: f's p90-p10 over the probe >= SPREAD_MIN (0.30, UNMOVED) AND f
+# recovers — at the end of every rest phase f has fallen back by at least
+# FATIGUE_RECOVER_FRAC of that cycle's rise. Planted control: the same
+# schedule with f FROZEN at its start value each decision must NOT clear
+# SPREAD_MIN. The old random-life reading stays on the row as
+# `spread_f_transient`, reporting-only. Written and committed before any run.
+# ISOLATION (added before any run, same day): the probe lasts
+# FATIGUE_CYCLES x (EXERT + REST) x 0.2 s = 720 s, and on the shipped clock
+# water empties at 450 s and kills at 570 s (needs.py, B_W = 1/450), so the probe
+# would die of thirst in cycle 3. `complete` = 0 would then fail
+# ok_fatigue_recovers for a reason that is not fatigue. So after every
+# decision, every need except f (FATIGUE_HELD) is restored to its value at the
+# probe's start. That covers both arms, the probe and its frozen-f control. f's
+# law (needs.py: df = P/(P_max TAU_F_RISE) - f/TAU_F_FALL) reads only the
+# body's power, and holding e/i at their start values keeps the gear at its
+# fresh value, so exertion is not softened by hunger. A death in the probe is
+# still recorded (`fatigue_died`) and still fails `complete`.
+FATIGUE_CYCLES = 3
+FATIGUE_EXERT_DEC = 600         # 120 s = 2 x TAU_F_RISE of exertion
+FATIGUE_REST_DEC = 600          # 120 s = 2 x TAU_F_FALL of rest
+FATIGUE_CTRL_SCALE = 1.0        # exertion = full-amplitude random ctrl
+FATIGUE_RECOVER_FRAC = 0.5      # rest must undo >= half of the cycle's rise
+FATIGUE_HELD = ("e", "w", "p", "T", "c", "i")   # held at start; only f moves
+
 # ── RE-REGISTRATION 2026-11-14 (Director ruling 4): windows in the world's
 # own time units. Written BEFORE any run under it. The windows were sized in
 # seconds on the fast needs clock (thirst kills in 570 s), so a world on the
@@ -496,6 +526,60 @@ def _drop_probe(seed: int, from_ladder: bool = True) -> dict:
             "n_decisions": len(rows),
             "spread_i": float(np.percentile(tr[:, ii], 90)
                               - np.percentile(tr[:, ii], 10)) if len(tr) >= 10 else 0.0}
+
+
+# ── probe 2b: exertion/rest (exercises f to its edge; ruling 3) ─────────
+def _fatigue_probe(seed: int, frozen: bool = False) -> dict:
+    """Fatigue's admitted range, exercised TO ITS EDGE: FATIGUE_CYCLES of
+    (exert, rest). `frozen=True` is the planted control: f is pinned at its
+    start value after every decision, so a gate that still clears SPREAD_MIN
+    is reading something other than the fatigue integrator."""
+    import numpy as np
+    from dataclasses import replace
+
+    p, model, data, water, pool = _build(seed)
+    layer = _layer(model, pool, seed * 613 + 7)
+    rng = np.random.RandomState(seed * 41 + 9)
+    fi = NEED_KEYS.index("f")
+    f0 = float(layer.state.f)
+    held = {k: getattr(layer.state, k) for k in FATIGUE_HELD}
+    fs, rises, falls = [], [], []
+    for _ in range(FATIGUE_CYCLES):
+        if layer.dead:
+            break
+        f_start = float(layer.state.f)
+        f_peak = f_start
+        for phase, n in (("exert", FATIGUE_EXERT_DEC), ("rest", FATIGUE_REST_DEC)):
+            for _k in range(n):
+                if layer.dead:
+                    break
+                ctrl = (rng.uniform(-FATIGUE_CTRL_SCALE, FATIGUE_CTRL_SCALE, model.nu)
+                        * layer.gear_scale() if phase == "exert"
+                        else np.zeros(model.nu))
+                _step_decision(model, data, water, layer, ctrl)
+                pin = dict(held, f=f0) if frozen else held
+                layer.state = replace(layer.state, **pin)
+                fs.append(_deltas_row(layer)[fi])
+            if phase == "exert":
+                f_peak = float(layer.state.f)
+        f_end = float(layer.state.f)
+        rises.append(f_peak - f_start)
+        falls.append(f_peak - f_end)
+    tr = np.array(fs) if fs else np.zeros(0)
+    complete = int(len(rises) == FATIGUE_CYCLES and not layer.dead)
+    recovered = int(complete and all(
+        r > 0 and fl >= FATIGUE_RECOVER_FRAC * r for r, fl in zip(rises, falls)))
+    out = {"spread_f": float(np.percentile(tr, 90) - np.percentile(tr, 10))
+           if len(tr) >= 10 else 0.0,
+           "f_max": float(tr.max()) if len(tr) else 0.0,
+           "rise_min": float(min(rises)) if rises else 0.0,
+           "fall_frac_min": float(min((fl / r if r > 0 else 0.0)
+                                      for r, fl in zip(rises, falls)))
+           if rises else 0.0,
+           "complete": complete, "recovered": recovered,
+           "died": int(layer.dead)}
+    del model, data, water, layer
+    return out
 
 
 # ── probe 3: the sheltered sleeping pose the world admits ───────────────
@@ -811,6 +895,8 @@ def _experiment(seed: int) -> dict:
     rnd = _random_lives(seed)
     drop = _drop_probe(seed)
     drop_ctrl = _drop_probe(seed, from_ladder=False)
+    fat = _fatigue_probe(seed)
+    fat_ctrl = _fatigue_probe(seed, frozen=True)
     pose = _find_shelter_pose(seed)
     night_open = _night(seed, OPEN_SPOT, 21, coarse=False)
     night_open_coarse = _night(seed, OPEN_SPOT, 21, coarse=True)
@@ -821,6 +907,10 @@ def _experiment(seed: int) -> dict:
     trajs = (rnd["trajs"] + [drop["traj"], night_open["traj"],
                              night_shel["traj"], for_["traj"]])
     sp = _spreads(trajs)
+    # ruling 3: f's spread is the edge probe's; the random-life reading of
+    # fatigue's start-up transient is kept, reporting-only.
+    spread_f_transient = sp["per_need"]["f"]
+    sp["per_need"]["f"] = fat["spread_f"]
     min_spread = min(sp["per_need"].values())
 
     deaths = rnd["deaths"]
@@ -899,6 +989,16 @@ def _experiment(seed: int) -> dict:
         "drop_ctrl_spread_i": drop_ctrl["spread_i"],
         "drop_ctrl_n_damaging": drop_ctrl["n_damaging"],
         "ok_drop_control": int(drop_ctrl["spread_i"] < SPREAD_MIN),
+        # ruling 3 — fatigue's edge probe and its frozen-f planted control
+        "spread_f_transient": spread_f_transient,
+        "fatigue_f_max": fat["f_max"],
+        "fatigue_rise_min": fat["rise_min"],
+        "fatigue_fall_frac_min": fat["fall_frac_min"],
+        "fatigue_complete": fat["complete"],
+        "fatigue_died": fat["died"],
+        "ok_fatigue_recovers": fat["recovered"],
+        "fatigue_ctrl_spread_f": fat_ctrl["spread_f"],
+        "ok_fatigue_control": int(fat_ctrl["spread_f"] < SPREAD_MIN),
         # the null rode random life 0
         "null_spread": rnd["null_spread"],
         "null_dead": rnd["null_dead"],
@@ -973,6 +1073,8 @@ def _check(m: dict, c: dict):
         and m["ok_spread"] == 1.0
         and m["ok_probe_exercised"] == 1.0
         and m.get("ok_drop_control", 0.0) == 1.0
+        and m.get("ok_fatigue_recovers", 0.0) == 1.0
+        and m.get("ok_fatigue_control", 0.0) == 1.0
         and m["ok_forager_exercised"] == 1.0
         # 2. a random agent dies, inside [300, 6000], every life, every seed
         and m["ok_random_deaths"] == 1.0
