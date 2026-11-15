@@ -66,5 +66,23 @@ decide):
 ## Answers (owed after the registered rows)
 
 1. Intake against drain, from `drives.py`, beside row e's lifetime.
+   **Arithmetic, now on the rover's own body** (2026-11-15, box probe, seeds
+   153/201, 550 decisions each after a 50-decision settle, `last_power_w`):
+   | policy | mean power W | drain /s | × basal |
+   |---|---|---|---|
+   | zero action (row a) | 0.0 | 1.667e-3 | 1.000 |
+   | duty 0.10, ±0.4 (row e's idle) | 30.3 / 23.4 | 1.737e-3 / 1.721e-3 | 1.04 |
+   | uniform(−1,1) every decision (row b) | 1018.6 / 1029.0 | 4.03e-3 / 4.06e-3 | 2.42 |
+   Supply if BOTH floor foods are eaten the instant they regrow:
+   2 × 0.08 / 66.9 s = **2.392e-3 /s** — 1.44× an idle rover, 1.38× row e's
+   idler, 0.59× a full random flailer (break-even: random arms ≤ 30% of
+   decisions). The horizontal drive is an applied force (`xfrc_applied`),
+   not an actuator, so **driving costs nothing**: only the four arm slides
+   draw `KAPPA` power. So floor food CAN sustain a rover that drives with its
+   arms still — but only at near-perfect harvest: one meal every 33 s. Smoke
+   f's best life ate one per 73 s (1.1e-3 /s, 0.66× basal) and starved.
+   Row e (food served when due) measures whether the ceiling holds in the
+   physics: probe, seeds 153/201, 1 life × 1,500 decisions: 9 serves → 9
+   meals, energy held at 1.00, censored. Registered row e: pending (Kaggle).
 2. Does dying early pay (summed reward against lifetime)?
 3. Can 16 rays tell food from a wall; if not, which sense is missing?

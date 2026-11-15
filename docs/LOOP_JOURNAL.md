@@ -1511,3 +1511,9 @@ Philosophy served: 4 (a ruler with a control that must fail, rule fixed before t
 Built `world_card.kernel` (`c0913a62`): one Kaggle-CPU kernel per row, 4 subprocess cells × 5 registered seeds (201–220), each cell appends JSONL so a cell that dies still returns its finished lives. Cell path tested on smoke 153/154 (2 lives, cap 150).
 Launched detached: rows f, g, b, a (f RUNNING at 17:42). Row c was REFUSED by Kaggle: "Maximum batch CPU session count of 5 reached" — the cap is 5 concurrent CPU sessions on the shared account. c, d8, d32 and row e (hook not built) wait for a free session.
 Philosophy served: 4 (the registered 20-seed run of a ruler with its must-fail control, rule frozen before launch), 5 (his world measured before any brain is judged in it), 6 (free Kaggle CPU, not the customers' box).
+
+## 2026-11-15 18:25 · JACK · J1 row e + answer (1)'s arithmetic
+Rows f,g,b,a still RUNNING on Kaggle CPU; the account's 5th session is not ours, so c (17:41) and e (18:18) were refused by the 5-session cap — no kernel to harvest this slot.
+Built row e (`b84c349b`): NE.01's privileged forager ported to the rover — each floor food is placed against his torso the moment its regrowth clock is due (e < 0.95), eaten through the world's real contact test; idle duty 0.10. First port (food dropped on top / below the root) fired 1 meal in 3; the contact-checked placement fires 9/9 (seeds 153/201, 300 s, e held 1.00).
+Measured the rover's own drain (power from `drives.last_power_w`): idle 1.67e-3/s, duty-10 1.73e-3, random every decision 4.04e-3 (2.42× basal). Perfect floor harvest supplies 2.39e-3/s: sustains a still-armed driver (1.44×), not a flailer (0.59×). The drive is an applied force, so locomotion is free — only the arms cost energy. Smoke f's best life ate at 0.66× basal.
+Philosophy served: 5 (his world measured before any brain is judged in it), 4 (the ceiling is measured in the physics, not asserted from the humanoid's constants).
