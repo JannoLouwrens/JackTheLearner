@@ -464,20 +464,90 @@ def _worker_init():
         os.nice(19 - os.nice(0))
 
 
-def run(ledger: Ledger | None = None):
-    """12 arm tasks over 3 single-threaded niced workers (W1.01/W1.02's
-    pool pattern), memoised into run_spec."""
-    import multiprocessing as mp
+ARMS = ("w101p", "w102", "fo", "fr", "ctrl")
+UNIT_ROOT = "/data/tmp/w104/units"
+REMOTE_TIMEOUT_S = 11 * 3600            # under Kaggle's 12 h session
 
-    spec = BY_ID["W1.04"]
-    tasks = [(seed, arm)
-             for seed in range(spec.seeds)
-             for arm in ("w101p", "w102", "fo", "fr", "ctrl")]
+# One Kaggle-CPU kernel per claim seed: its 5 arms over a 4-worker pool
+# (a Kaggle CPU session has 4 cores). The spec is budget KAGGLE_CPU; the
+# control alone is ~11 core-h, which ruling 3 forbids on the box.
+_JOB = r"""
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q", "mujoco"], check=True)
+import json, os
+from experiments.tests.w1_04_horizon_longer_than_consequence import _seed_local
+r = _seed_local(__SEED__, workers=4)
+json.dump(r, open(os.path.join(os.environ["JACK_OUT"], "w104_seed.json"), "w"),
+          default=lambda o: o.item())   # numpy scalars -> exact Python values
+print("DONE", flush=True)
+"""
+
+
+def _seed_local(seed: int, workers: int = 3) -> dict:
+    """All 5 arms of one seed over a spawn pool; {arm: arm_output}."""
+    import multiprocessing as mp
     ctx = mp.get_context("spawn")
-    with ctx.Pool(3, initializer=_worker_init) as pool:
-        for key, out in pool.map(_run_task, tasks):
+    with ctx.Pool(workers, initializer=_worker_init) as pool:
+        outs = pool.map(_run_task, [(int(seed), a) for a in ARMS])
+    return {a: out for (_s, a), out in outs}
+
+
+def _backend() -> str:
+    import os
+    env = os.environ.get("W104_BACKEND", "")
+    if env:
+        return "" if env == "local" else env
+    return ("kaggle-cpu" if BY_ID["W1.04"].budget.value.startswith("kcpu")
+            else "")
+
+
+def _unit_path(seed: int):
+    """Where one seed's kernel result is kept, keyed by impl_sha (this file
+    + IMPL_DEPS); None when the sha is unreadable (unknown never matches)."""
+    from pathlib import Path
+    try:
+        from ..protocol import impl_sha_of
+        sha = impl_sha_of(Path(__file__))
+    except Exception:
+        sha = None
+    if not sha:
+        return None
+    return Path(UNIT_ROOT) / sha[:16] / f"s{int(seed)}.json"
+
+
+def _seed_kernel(seed: int) -> dict:
+    """One Kaggle-CPU kernel for `seed`; a unit already bought by the exact
+    code (e.g. by `kernel <seed>` run ahead in parallel) is reused."""
+    import json
+    up = _unit_path(seed)
+    if up is not None and up.exists():
+        print(f"W1.04 s{seed}: REUSED {up}", flush=True)
+        return json.loads(up.read_text())
+    from ..gpu import build_job, result_json, submit
+    sub = submit(build_job(_JOB.replace("__SEED__", str(int(seed)))),
+                 prefer="kaggle-cpu", est_hours=5.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["w104_seed.json"])
+    if not sub.ok:
+        raise RuntimeError(f"W1.04 kaggle-cpu s{seed}: {sub.message}")
+    r = result_json(sub, "w104_seed.json")
+    if up is not None and set(r) == set(ARMS):
+        up.parent.mkdir(parents=True, exist_ok=True)
+        up.write_text(json.dumps(r))
+    return r
+
+
+def run(ledger: Ledger | None = None):
+    """Per seed, the 5 arms: one Kaggle-CPU kernel (budget KAGGLE_CPU), or
+    3 niced local workers under W104_BACKEND=local. Memoised into run_spec.
+    JSON turns the (span, cause) tuples into lists; every reader unpacks
+    them, so the arithmetic is unchanged."""
+    spec = BY_ID["W1.04"]
+    kc = _backend() == "kaggle-cpu"
+    for seed in range(spec.seeds):
+        r = _seed_kernel(seed) if kc else _seed_local(seed)
+        for arm, out in r.items():
             if out is not None:
-                _CACHE[key] = out
+                _CACHE[(seed, arm)] = out
     return run_spec(spec, _experiment, _check, control_fn=_control,
                     ledger=ledger or Ledger())
 
@@ -613,5 +683,7 @@ if __name__ == "__main__":
     import sys
     if "--pilot" in sys.argv:
         _pilot()
+    elif len(sys.argv) == 3 and sys.argv[1] == "kernel":
+        _seed_kernel(int(sys.argv[2]))   # buy one seed's unit ahead
     else:
         _fixtures()
