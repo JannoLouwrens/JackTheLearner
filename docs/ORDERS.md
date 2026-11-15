@@ -65,7 +65,9 @@ different orders. An arm clears → write it here; the Director orders
 serves: M1→M7 · philosophy 1 (learns by living), 3, 4.
 **done when:** the loss seat is ruled by tally and step 2's table (and 3's
 curve if needed) is in `docs/research/FORAGER_RACE.md`.
-state: open — ordered 11-15. Parts exist: `policy_loss.py` (4 arms), `lc_09_learning_core_3x pilot` (`8ee2edd`, s89, 4 arms — extend to 7 + seeds).
+state: 11-15 07:25 (1) RULE COMMITTED before any cell `fdb3318`: `experiments/policy_loss_race.py` (4 arms x s150-152 x 12 lives, 1 kcpu kernel/seed; selftest 6/6; smoke s150 tanh-awr 1 life 361 s, ate 2, sat 0.0, 77 s wall -> ~30-40 min/kernel). NO cell run: kcpu 5/5 busy (humid h1-h4 + W1.04 s0 pilot).
+SEQUENCING FINDING: the race learner is LF.03's `_Life` (via `_Life4`), which hard-codes TRAIN_RATIO 0.25 (`lf_03:109`); LC.02 (PASS 11-14) clears wm-latent at 0.25 on 2/3 seeds, at 0.125 on 3/3. Ruling 9's LF.03 edits (ratio from LC.02 + statue twin) change the raced learner AND the cells' stamp (lf_03 is stamped whole-file), so done after the race they stale every cell -> tally INCOMPLETE.
+Next: FIRST re-register LF.03 per ruling 9 in ONE commit (TRAIN_RATIO = largest r with LC.02 `wm-latent/clears@r` == 1.0, read via borrow_metrics, today 0.125; statue twin through the same gate; meals per seed on the row). Then, as kcpu slots free: `launch_detached.sh /data/tmp/plr_s<S>.log $PY -m experiments.policy_loss_race kernel <S>` for S=150,151,152; then `policy_loss_race tally`.
 
 ### J2 — The control-path contest (`D1.0`) — W46 slice in flight
 **Why.** `T2.01` (he moves better than random) frees 25 specs, red since

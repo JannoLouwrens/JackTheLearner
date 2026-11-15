@@ -1385,3 +1385,9 @@ Philosophy served: 6 (free Kaggle CPU replaces ~11 core-h of customer-box CPU) a
 2026-11-15 06:46 UTC · JACK · J7(1), same slot. Re-registered W1.04 per ruling 2 before any run (`f6c6177`): (c) now reads the oracle only, p5 >= 5600 s AND p5 > the fresh repeat arm's p95. The repeat arm's p5 is reported only. Control and bars are unchanged. Fixtures 16/16.
 No kcpu slot is free (5/5), so the 3 seed kernels wait. The launch command is in J7 state.
 Philosophy served: 4 (a clause moved to the arm it was written about, plus a bar that can fail a soft world, written before any number exists).
+
+2026-11-15 07:25 UTC · JACK · J1(1). Committed the policy-loss race rule before any cell (`fdb3318`, `experiments/policy_loss_race.py`): 4 arms x fresh seeds 150-152 x 12 lives, one Kaggle-CPU kernel per seed. Qualify = pooled late-third act_sat <= 0.05 and no seed's late third below half its early third; winner = highest late-third span; a missing cell makes the tally INCOMPLETE. Selftest 6/6 (each clause fires on a planted cell); smoke s150 tanh-awr 1 life, 361 s, ate 2, 77 s wall.
+No cell was dispatched because kcpu is 5/5 busy (humid h1-h4 and the W1.04 s0 pilot).
+Found a sequencing trap: the raced learner is LF.03's `_Life`, which has TRAIN_RATIO hard-coded at 0.25. LC.02 clears wm-latent there on only 2/3 seeds, against 3/3 at 0.125. Ruling 9's LF.03 edit therefore has to land BEFORE the race kernels, or it stales every cell. Order written in J1 state.
+J2/J6 not touched this slot (all 5 kcpu kernels RUNNING at 07:20).
+Philosophy served: 3 (the learner's loss seat goes to a race declared before its numbers exist) and 4 (the race runs at the cadence that is actually certified, not a stale constant).
