@@ -357,3 +357,13 @@ If it cannot, the arm breaks the one life that MUST live, and it is reported as 
 - Caveat: my dB drop probe (ARM box) ran 2204 dec, while the Kaggle cell (x86) recorded 1929 and a max spread_f of .091. The flailing is chaotic across CPUs, so the probe is diagnostic, not byte-same to the cells. The mechanism does not depend on that.
 - Proposed fix (NOT applied, Director call; it changes a gate apparatus mid-race): a fatigue edge probe in the shape of option A. Sustained max-|ctrl| effort until f plateaus, then rest until f < .05, repeated 3x. Planted control: the same schedule at CTRL_SCALE/10 must NOT clear 0.30.
   Bar 0.30 unmoved. Then re-tally the drink race with the probe on all three arms. Clause (2) (dB 10/10 dehydration, so share 1.0, not strictly below shipped's 1.0) would still fail dB as things stand.
+
+### J6 order step (d) — hum34 with K_DRY re-derived: (a) repaired, (c)'s hot route lost (2026-11-15 04:25 UTC, no ledger)
+Probe `experiments/humid_kdry_probe.py`. It is hum34 plus K_DRY := M_BASAL/(T_SETPOINT - T_DAY) = 100/3 (shipped 100/7) and C_EFF := K_DRY*TAU_T. No arm is declared and nothing is raced.
+Apparatus OK: hum34 W.2 s0 re-run here equals humid_race's cell on all 100 keys.
+- Route table (3000 s, fixed ambient): rest under the roof by day still dies, but at 867 s and a peak of only 40.02 C (hum34: 186 s, 40.25). That is 0.02 C above the 40 C bar, a knife edge.
+- W.2 s0 through W.2's own `_experiment`: **a_err_w 0.158 -> 7e-14 (a_pass 0 -> 1)**. The open statue sits at exactly 37.0 C, so the closed form holds again.
+  But **c_hot_reachable 1 -> 0**: the hot route peaks at 39.88 C (742 s) and c_pass goes 1 -> 0. The thirst deadline also moves, ratio 1.83 -> 0.97.
+- Reading: hum34's hot route existed only because K_DRY was left at its 30 C value. Pinning the statue at 37 C costs the heat death. With one T_DAY and one
+  re-derived K_DRY, W.2(a) and W.2(c)-hot conflict on s0. The remaining route is the order's other option: re-register (a) against the sweating closed form
+  (drain (1 + C_SW*max(0, T-37))*B_W integrated on the statue's own T(t)), with the bar INTEGRATOR_TOL unmoved. One cell only (s0): seeds 1-4 not run.
