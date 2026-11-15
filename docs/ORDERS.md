@@ -59,6 +59,9 @@ self-termination: is summed reward higher for a life that dies early than
 for one that lives hungry? (§3: published agents learned to end such lives.)
 (3) from (f): can 16 rays tell food from a wall, and if not which sense is
 missing. The foragers are rulers, never parts of him. No learner, no ledger row.
+**Where.** A full row is up to ~600k decisions (~4 CPU-h at 38.8/s): rows go to
+Kaggle CPU kernels, launched the way `forager_race3` launched its cells; only
+a 2-seed smoke of each row runs on the box. Write (f) and its rule first.
 serves: M2 · PLAN stage 1 "a first rung he can live on", "proof the task can be learned" · philosophy 4, 5.
 **done when:** `WORLD_CARD.md` has the seven rows and the three answers.
 state: 11-15 16:45 `jack_env.py` + `test_jack_env.py` done `9ee9965` (obs 74, act 8, check_env PASS, 3 seeds identical to run_survival, control differs); 38.8 dec/s one env on the box.
