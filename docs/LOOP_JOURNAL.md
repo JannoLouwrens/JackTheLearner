@@ -1271,3 +1271,10 @@ Harvested CR.01 132:lp:frontier from Kaggle CPU at zero quota (8/9 units cached)
 The reattach guard misjoined again (cited …6945's 7222443b). …2332's pulled bytes = its own receipt 25904654. Swapping the 01a2954 pin for c0db7e6 gives the local e4285e1b exactly, and 01a2954..c0db7e6 touches no IMPL_DEPS, so ACCEPT_MISMATCH is honest.
 Last unit 132:shuffled:matched (…4643) is still RUNNING. On 9/9, `run CR.01` (expected FAIL: no curriculum beats null by .20 on any seed).
 Served philosophy 3 (the curriculum seat is raced, and no staging has beaten the null) and 6 (free Kaggle CPU, ~0 box CPU).
+
+2026-11-15 00:30 UTC · JACK · J5 (J1 DONE; J2: D1.0 watcher 3902173 alive at 2 h 53 m, no exit) · f519826 + this commit.
+Harvested the last CR.01 unit, 132:shuffled:matched (…4643). Its own receipt ace8b516 equals the pulled bytes. Swapping the pin 84cbc7d->5ccd70b gives the local 0d56b7e4 exactly; the guard misjoined again (cited ac0cdcd5). 84cbc7d..HEAD touches only run_tumble.py, which nothing imports.
+`run CR.01` came back **FAIL** att 1. Pooled fed fraction: null .163, staged .156, lp .064, frontier .163. Controls: shuffled .121, matched .085. No arm reaches +.20 on any seed, so the Curriculum seat stays with null BY VERDICT.
+Every exam death is energy, the same wall LF.04 hit: a creature that cannot forage gives a curriculum nothing to teach.
+Started the meal-memory claim grind on the freed Kaggle CPU slots: s94 …2252 and s95 …2287, detached pollers.
+Served philosophy 3 (the curriculum seat was raced and lost to no-staging, not assumed) and 4 (the FAIL stands, and its cause is named).
