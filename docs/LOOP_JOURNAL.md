@@ -1312,3 +1312,8 @@ A shipped-clock NE.01 cell costs ~575 CPU-s (measured), not the ~31 CPU-min of a
 All three pass every NE.01 flag: 5/5 random deaths in window (all hyperthermia, dec 474-555), forager alive at 18000 dec with 24-27 meals, drop control dies, null flat. Status 31/45 (gated 21/30).
 Only one gated kernel remains (dB NE.01 s2-4) after the 2 in flight. Kernels needed overall went from 8 to 2, then to 1 more push.
 Philosophy served: 5 (the race loop got cheaper and faster by measuring cell cost instead of assuming it) and 3 (a world rule is decided by its declared race).
+2026-11-15 03:35 UTC · SYSTEM · S3 is now at its last red: W0.PL had already been re-run by regate at 02:49. verify fails only on T0.34(KeyError), which is blocked by T0.33 going FAIL at 02:49.
+Root cause: W1.00 re-registered 11-13 at 20 seeds x cpu<2h = enum 360,000 s > the 57,600 s day. This needs a Director call (INBOX), so no spec was changed.
+Found on the way: the CPU admission estimate projected from the ledger's run_spec interior, not from what it bills (W1.02 recorded 0.22 s, billed 762 s; W0.DIAG 0.03 s vs 1,609 s).
+`f662f48`: the live estimate reads max(ledger, last billed child wall), and so does regate's cheap filter. T0.33 clause 17 fails on the old code. Net -4 lines (stale docstring history removed).
+Philosophy served: 4 and 6 (an admission gate that admitted 13 s guesses for 13-minute children overran a tenant box's CPU day).

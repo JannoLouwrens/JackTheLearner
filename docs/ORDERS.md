@@ -214,7 +214,8 @@ serves: philosophy 4, 5 (a truthful machine).
 on a planted PASS-on-FAIL-dependency; `champions` prints no malformed row.
 state: 11-14 09:10 (1) code DONE `abb707f`: W0.PL/BD.01 write per-seed min/sums on the row, `_check` reads args only (0/8000 old≠new); verify probe D counts gates reading mutated module state (live hits 0, planted fixture).
 (3) DONE `133c2ac`: END-FIT table skipped, 35 seats identical, fixture plants foreign table + narrow row. (2) DONE `8fadd25`: 4 GOAL ends in COMMITMENTS.
-Open: W0.PL re-run (90 s; LF.03 landed; 21:07 refused — CPU day at 0, fixed by `d5a5ab6` from 11-15) → verify's last red (old row judged by its issuing gate = VOID) clears. T0.18/T0.29/T0.21 stale by dep → regate.
+11-15 03:30 W0.PL re-run DONE by regate 02:49 (PASS a4); verify no longer flags it. verify's last red is now T0.34(KeyError: `cap_refused`): T0.34 is blocked by
+T0.33, which regate re-bought FAIL at 02:49 because W1.00's 11-13 re-registration (20 seeds x cpu<2h, enum 360,000 s) is foreclosed by the 57,600 s ceiling (INBOX: Director call).
 
 ### S2 — The CPU day: a cap the machine enforces, and children that hang
 **Why.** Two days running the day ceiling was overrun by detached jobs
@@ -234,7 +235,7 @@ Net growth ≤ ~40 lines.
 serves: philosophy 5, 6 (this box serves paying customers).
 **done when:** both tests pass and a day ends with `detached:*` ≤ 34,560 s.
 state: 11-14 21:40 (1)(2)(3) BUILT `d95d569`; `d5a5ab6`: a wrapped job whose session uses < 0.10 cores over a heartbeat bills its CPU,
-not wall (pollers were ~30k of 11-14's 65k s; 2 s sleep now bills 0.08 s, T0.34 clause 9, fails on old code), and all-kcpu specs take
+not wall (pollers were ~30k of 11-14's 65k s; 2 s sleep now bills 0.08 s, T0.34 clause 9, fails on old code). `f662f48`: admission estimate reads the wall last BILLED (W1.02 0.22 s recorded vs 762 s billed), T0.33 clause 17. All-kcpu specs take
 `/tmp/jack-ladder-kcpu.lock` + count remote. Open: a day ending ≤ 34,560 s (first chance 11-15); idle pollers still count toward
 DETACHED_MAX_ALIVE; cpu_budget/run/protocol edits stale T0 certs → regate after midnight (day budget 0 now).
 
@@ -275,6 +276,8 @@ ISO week. (8) `run status`'s STEERING reader parses 0 items.
 - 11-14 17:15 JACK: (1) a SYSTEM edit to `experiments/protocol.py` (S2 `d95d569`, a salt-child timeout) staled `T1.14`, a 1 GPU-h certificate bought at 01:15, which BLOCKED D1.0's free reattach — every GPU cert listing protocol.py in IMPL_DEPS is re-bought on each apparatus edit; (2) `gpu.submit`'s watcher timeout (est×1.25+1800 s) counts Kaggle QUEUE time, so a 4 h queue killed a kernel's watcher 17 min after it started RUNNING; (3) a `JACK_REUSE_KERNEL` dispatch skips pre-flight for the WHOLE run, so D1.0's later FRESH units go out with no budget check.
 
 - 11-14 19:15 JACK: every reattach after ANY push is refused as a code mismatch, because the kernel pins the dispatch HEAD sha (by design) and `_kernel_sha256` hashes that pin. Each refusal also writes an ERROR ledger row (T1.14 att 7). The proof is mechanical: pull the kernel, swap the pin to HEAD, compare sha, and check `git diff pin..HEAD` against IMPL_DEPS. `reattach_code_check` could do this itself and drop the hand-set ACCEPT_MISMATCH.
+
+- 11-15 SYSTEM: `T0.33` FAIL since regate 02:49 (latent since `e90cf86` 11-13): `W1.00` re-registered at 20 seeds x `cpu<2h` = enum 360,000 s > the 57,600 s day. T0.33's no-foreclosure and slack clauses go red, which blocks `T0.34` and keeps `run verify` at exit 2 (S3). Even `cpu<10min` would give 72,000 s. W1.00 actually ran detached (4.5-6.1k CPU-s). Options: route it `kcpu`/detached, or rule the enum x seeds arithmetic for specs that pool their seeds internally. Not changed by SYSTEM.
 
 ## DONE (kept one day)
 
