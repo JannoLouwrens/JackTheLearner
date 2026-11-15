@@ -115,11 +115,10 @@ No world file changes until an arm wins AND `LF.04` is dispatched.
 serves: M2 · END-FIT row 4 · philosophy 1, 3, 4.
 **done when:** `W.2` and `NE.01` each have a new verdict with every
 formerly-red clause explained.
-state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, fails ok_spread s0+s1. f-spread DIRECTOR CALL still open (`64d949a`). W.2(a) re-registered on sweating closed form `bc7b99f`.
-11-15 05:25 `39d8a66`: hum30/hum34 W.1 s2's red (d ratio .953) was the RACE WRAPPER. Humidity lived only in thermal_step, while W.1 rebuilt its flux from dry N.e_evap. Fixed: W.1 now gets the arm's own numerator (rig-asserted equal), bars unmoved.
-s2 d ratio 2.00002, other seeds byte-same, W.1 _check 5/5 both arms. Both arms are now >= shipped on EVERY W.1/W.2 flag; only NE.01 is missing. Old cells: humid_race/pre_w1d_flux_20261115.
-NE.01 on Kaggle CPU via new `experiments/humid_race_kcpu.py`: kernel h1 `jack-cpu-1794720356` = hum34 NE.01 s0-2 (log /data/tmp/humid_kcpu_h1.log). Next: hum34 s3-4 + hum30 s0-4 (3 more kernels, 2 kcpu sessions max; k3 `…2965` still holds one).
-CAUTION for the tally: humid_race.tally reads shipped NE.01 from heat_race/ (it predates NE.01's re-registration). Compare against drink_race/shipped_NE.01_s* (current code) before any verdict.
+state: (a) DONE `e054e0a`. (c) DONE: hum30/hum34/swp_k72 FAIL gate 2. (d) dB built `c9dd457`, fails ok_spread s0+s1. f-spread DIRECTOR CALL open (`64d949a`). W.2(a) re-reg sweating CF `bc7b99f`; W.1 wrapper flux fix `39d8a66` (both arms >= shipped on W.1/W.2 flags).
+11-15 05:50 `f65ad58`: humid tally now reads shipped from drink_race/ (heat_race's NE.01 cells predate e054e0a: 73 vs 87 keys, 18-41 metrics differ/seed) + a stale-cell guard (cell mtime < spec test's last commit -> no verdict).
+Guard flags 15 W.2 cells: shipped (drink_race) s0-4, hum30 s0-4 (11-14 04:25, pre-re-reg, never re-run), hum34 s0-4 (run on bc7b99f before it was committed). Next: re-run those 15 W.2 cells (~1 min each, detached nice 19).
+NE.01 on Kaggle CPU: h1 `jack-cpu-1794720356` = hum34 s0-2 (log /data/tmp/humid_kcpu_h1.log); k3 `…2965` holds the 2nd kcpu session. Then hum34 s3-4 + hum30 s0-4 (3 kernels) as sessions free.
 
 ### J7 — The deeper world (W1): re-register `W1.04`, then its energy clock
 **Why.** W0 is too shallow for thinking ahead to pay (`DP.05`). `W1.04`(c) is

@@ -1360,3 +1360,8 @@ Cause: the race wrapper. Humidity lived only in its thermal_step, while W.1 rebu
 Fix `39d8a66`: W.1 gets the arm's own numerator (asserted equal to the step). s2 ratio is now 2.00002, every other key is byte-same, and W.1 _check passes 5/5 on both arms. Both humid arms are now >= shipped on every W.1/W.2 flag.
 Dispatched hum34 NE.01 s0-2 to Kaggle CPU (`jack-cpu-1794720356`) via the new humid_race_kcpu.py. Caution written in state: humid tally's shipped NE.01 cells are stale.
 Philosophy served: 4 (a red was the apparatus's own inconsistency, measured to be so, with bars untouched) and 3 (the humidity world's race moves toward a verdict decided by the world).
+
+2026-11-15 05:50 UTC · JACK · J6(d). J2: D1.0 watcher 3902173 alive (8.2 h), no exit. h1 `…0356` and k3 `…2965` hold both kcpu sessions, so I dispatched nothing.
+Acted on the previous slot's CAUTION. The humid tally now reads shipped cells from drink_race/: heat_race's shipped NE.01 cells predate the NE.01 re-registration (73 vs 87 keys, 18-41 metrics differ per seed), while its W.1/W.2 cells are metric-equal. Added a stale-cell guard: a cell written before its spec's test was last committed blocks the verdict (`f65ad58`).
+The guard found a second stale input that nobody had named: hum30's W.2 cells (11-14) were never re-run after the W.2(a) re-registration. All 15 W.2 cells must be re-run before any humidity verdict.
+Philosophy served: 4 (the tally could have shipped or killed an arm on numbers from a superseded spec; now it cannot).
