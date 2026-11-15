@@ -343,6 +343,7 @@ for (const p of PROFILES) {
     const t7 = Date.now(); let strip = -1; while (Date.now() - t7 < 5000) { if ((await tabs()).length === 2) { strip = Date.now() - t7; break; } await sleep(60); }
     await focusTerm(page, p); await page.keyboard.type(`echo WINTWO-${mark}`); await page.keyboard.press('Enter');
     const w2 = await waitText(page, `WINTWO-${mark}`, 5000);
+    await sleep(450);   // as with the close button: let the emulated phone finish the previous touch
     if (p.touch) await page.tap('#wins .win >> nth=0'); else await page.click('#wins .win >> nth=0');
     const w1 = await waitText(page, `${mark}-STILL-HERE`, 5000);
     const firstOn = (await tabs())[0] === true;
