@@ -507,18 +507,63 @@ def _check(m: dict, c: dict):
     return False
 
 
-def run(ledger: Ledger | None = None):
-    """4 x spec.seeds (seed, process) tasks over 3 single-threaded niced workers
-    (w0_diag's pool pattern), memoised into run_spec."""
-    import multiprocessing as mp
+# Ruling 4 (11-15): budget KAGGLE_CPU. 20 seeds x 4 processes enumerate
+# 360,000 s as cpu<2h, past the box's 57,600 s day; measured cost is ~180 s
+# per task (attempt 1: 548 s wall, 12 tasks, 3 workers), so all 80 tasks fit
+# ONE Kaggle-CPU kernel (4 cores, ~1 h). W100_BACKEND=local keeps the pool.
+UNIT_ROOT = "/data/tmp/w100/units"
+_JOB = r"""
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q", "mujoco"], check=True)
+import json, os
+from experiments.tests.w1_00_null_is_strongest_nonlearner import _tasks_local
+json.dump(_tasks_local(4), open(os.path.join(os.environ["JACK_OUT"],
+          "w100_tasks.json"), "w"))
+print("DONE", flush=True)
+"""
 
+
+def _tasks_local(workers: int = 3) -> list:
+    """Every (seed, process) task over a spawn pool; [[seed, proc, out]]."""
+    import multiprocessing as mp
     spec = BY_ID["W1.00"]
-    seeds = [s + SEED_OFFSET for s in range(spec.seeds)]
-    tasks = [(s, p) for s in seeds for p in PROCS]
-    ctx = mp.get_context("spawn")
-    with ctx.Pool(3, initializer=_worker_init) as pool:
-        for seed, proc, out in pool.map(_run_task, tasks):
-            _CACHE.setdefault(seed, {})[proc] = out
+    tasks = [(s + SEED_OFFSET, p) for s in range(spec.seeds) for p in PROCS]
+    with mp.get_context("spawn").Pool(workers,
+                                      initializer=_worker_init) as pool:
+        return [list(t) for t in pool.map(_run_task, tasks)]
+
+
+def _tasks_kernel() -> list:
+    """One Kaggle-CPU kernel; its result is kept by impl_sha so a crash after
+    harvest does not re-buy it (unknown sha never matches)."""
+    import json
+    from ..protocol import impl_sha_of
+    sha = impl_sha_of(Path(__file__))
+    up = Path(UNIT_ROOT) / f"{sha[:16]}.json" if sha else None
+    if up is not None and up.exists():
+        print(f"W1.00: REUSED {up}", flush=True)
+        return json.loads(up.read_text())
+    from ..gpu import build_job, result_json, submit
+    sub = submit(build_job(_JOB), prefer="kaggle-cpu", est_hours=2.0,
+                 timeout_s=11 * 3600, fetch=["w100_tasks.json"])
+    if not sub.ok:
+        raise RuntimeError(f"W1.00 kaggle-cpu: {sub.message}")
+    r = result_json(sub, "w100_tasks.json")
+    if up is not None:
+        up.parent.mkdir(parents=True, exist_ok=True)
+        up.write_text(json.dumps(r))
+    return r
+
+
+def run(ledger: Ledger | None = None):
+    """All 4 x spec.seeds tasks on one Kaggle-CPU kernel (or 3 niced local
+    workers under W100_BACKEND=local), memoised into run_spec."""
+    import os
+    spec = BY_ID["W1.00"]
+    local = (os.environ.get("W100_BACKEND") == "local"
+             or not spec.budget.value.startswith("kcpu"))
+    for seed, proc, out in (_tasks_local() if local else _tasks_kernel()):
+        _CACHE.setdefault(int(seed), {})[proc] = out
     return run_spec(spec, _experiment, _check, control_fn=_control,
                     ledger=ledger or Ledger())
 
@@ -553,4 +598,8 @@ def _pilot():
 
 
 if __name__ == "__main__":
-    _pilot()
+    import sys
+    if sys.argv[1:] == ["kernel"]:
+        _tasks_kernel()   # buy the unit ahead (detached poller)
+    else:
+        _pilot()
