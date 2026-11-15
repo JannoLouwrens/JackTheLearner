@@ -333,3 +333,13 @@ If it cannot, the arm breaks the one life that MUST live, and it is reported as 
 - W.2(c) is red in BOTH arms, but for different reasons. Shipped misses the deadlines (thirst 6.32x, hunger 14.82x short). Under dB (k72 base) both deadlines pass: thirst 0.968x, hunger 1.305x, inside the factor-2 band.
   dB's only red sub-clause is `c_hot_reachable` 0: the hot route peaks at 37.3 °C over a 2079 s life and never reaches hyperthermia (shipped: 40.3 °C at 182 s). The k72 clock repairs (c)'s deadlines and breaks its hot route.
   That is W.2's next fix, and it is a heat-side question, not a drink question.
+
+### J6(d) step 2e — k2 harvested; dB's clause (1) is already lost (2026-11-15 03:50 UTC, no ledger)
+- k2 `jack-cpu-1794705768` harvested 3/3 cells (shipped NE.01 s1, dB NE.01 s1, shipped W.1 s0), 0 errors. Status 37/45. Shipped is COMPLETE (15/15). dB 12/15, and k3 holds s2-4.
+- Shipped NE.01 seed-means: every `ok_*` 1.0 except `ok_night_shelter` 0.8. Random deaths 25/25 hyperthermia, so max_cause_share 1.0. Forager drinks 26-31.
+- dB NE.01 s1: `ok_spread` 0 again (min_need_spread .096 = spread_f; spread_e .218). 5/5 random deaths are dehydration (dec 8906-16165). `ok_night_shelter` 0 here, and shipped s1 also reads 0 on the same probe numbers.
+- **Clause (1) is decided before k3 lands.** It needs dB's NE.01 `ok_spread` seed-mean to be >= shipped's 1.0. With 0/2 seeds passing, dB's best possible mean is 3/5 = 0.6.
+  The tally will read "none ships" whatever s2-4 show. k3 still matters for completeness and for clause (2): dB is 10/10 dehydration so far, so its share is 1.0 and it needs strictly < 1.0.
+- What `f` is: FATIGUE (needs.py:9), not food. Its dynamics (needs.py:549, TAU_F 60 s) carry no need clock, so the k72/drink clocks do not slow it directly.
+  Hypothesis (UNTESTED): f's within-life p90-p10 comes from the power swing that `gear_scale` = (1-f)*min(e,i) drives as e falls. On shipped, e moves .33 in ~500 dec. On dB a thirst-limited life moves e only .12-.22, so f sits near its steady state (spread ~.09).
+  Test before any new arm: log e, f and gear_scale along one dB random life (s0, life 0) and see whether f's spread tracks e's.
