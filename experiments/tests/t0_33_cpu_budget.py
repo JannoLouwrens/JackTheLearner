@@ -86,31 +86,13 @@ implementation including a broken one):
      would admit everything on the day its input broke — the failure mode
      T0.12's "+inf load" rule exists for, pointed the other way because here
      the conservative side is the LARGER number.
- 16. THE SLACK LINE PREDICTS THE REFUSAL (added 2026-09-04, 70th audit B4).
-     `run status` prints, per cost class, `slack_s = CPU_DAY_CEILING_S −
-     max(child_estimate_s over the class's live population)` — the day's
-     spend at which the class starts foreclosing — because the bare count it
-     used to print has no floor and no denominator and GROWS with the
-     registry (three specs registered on 09-04 moved it 36 → 39 and nothing
-     went amber). A printed number that does not bind is decoration, so the
-     equivalence `used_s > slack_s` <=> `n_foreclosed >= 1` is asserted, at a
-     MID-RANGE value: one second either side of the tightest class's own
-     slack on a temp day, where the wrong side of the comparison flips the
-     answer. Plus, on the LIVE day, that the two readers of the same
-     arithmetic add up — `sum(n_foreclosed)` equals `n_foreclosed_now` and
-     `sum(n)` equals this file's INDEPENDENT count of the gated population,
-     so a class row can never disagree with the refusal it predicts.
-     Instrumentation only: the ceiling is D20's and the owner's and nothing
-     here moves it.
-
-What B4 did NOT fix, recorded here because the metric below is the only place
-it shows: the residual foreclosure is entirely specs with NO recorded duration
-— `CPU_DAY_CEILING_S` (57600 s) is only 1.067x the largest legal child
-(54000 s), so any never-run `cpu<2h` spec is refused past 6.25% of a day
-whatever this projection does. Measured at the certificate: 53 foreclosed on
-the enum, 36 on the projection, and all 36 are unmeasured specs. That is a
-CEILING question (raising it loosens a tenant protection), routed to
-`cpu48h-class-self-forecloses-the-day-meter` rather than fixed here.
+ 16. THE SLACK LINE PREDICTS THE REFUSAL (70th audit B4): `run status`'s
+     per-class `slack_s` binds — `used_s > slack_s` <=> `n_foreclosed >= 1`,
+     asserted one second either side of the tightest class's slack, and on
+     the live day the two readers of that arithmetic add up.
+ 17. THE ESTIMATE PREDICTS WHAT IS BILLED (2026-11-15): the live estimate
+     reads the wall last billed for a child when it exceeds the ledger's
+     run_spec interior (W1.02: 0.22 s recorded, 762 s billed on 11-14).
 
 Control (registry: "A leaky accountant must FAIL isolation, and the assertion
 must be made at a MID-RANGE value"): `_LeakyBudget` collapses every day into
@@ -131,13 +113,6 @@ VOID lane: a live 1-minute load above LOAD_CEILING is a co-tenant condition —
 the shipped-path refusal would fire for load rather than budget and the
 admission properties cannot be honestly asserted. Instrument fault, not
 refutation.
-
-The STILL OPEN paragraph that stood here is CLOSED by T0.34 (2026-09-04):
-the detached lane (`launch_detached.sh`, cpu<48h) now admits against the
-same day ledger and bills per heartbeat — this spec's cpu<48h property
-still checks only the ROUTING (the runner must not pretend to meter a lane
-it never sees); the routed-to lane's receipts are T0.34's claim. Modules
-invoked BY HAND remain unmetered: a human at a shell is the owner's lane.
 
 Uses temp budget files; must never touch the real accounting.
 """
@@ -177,6 +152,7 @@ IMPL_DEPS = ["experiments/cpu_budget.py", "experiments/protocol.py",
 MID_CHARGE_S = 600.0          # the mid-range value the isolation assert uses
 WORST_LEGAL_CHILD_S = 54000.0  # cpu<2h x 3 seeds x 2 — must fit a fresh day
 GPU_WITNESS = "T2.01"          # gpu<8h — must be unbound by this meter
+BILLED_WITNESS = "W1.02"       # ledger interior 0.22 s, billed 762 s
 DETACHED_WITNESS = "PS.04"     # cpu<48h — must be refused with a routing reason
 SHIPPED_WITNESS = "T0.01"      # cheap real spec offered to the shipped path
 WORST_WITNESS = "XL.01"        # cpu<2h, 3 seeds: the largest legal child
@@ -429,6 +405,26 @@ def _experiment(seed: int) -> dict:
                            and ledger_path.read_bytes() == before
                            and shipped_s < 2.0)   # refused, not run-and-failed
 
+        # 17. THE ESTIMATE PREDICTS WHAT IS BILLED (2026-11-15): a child the
+        # runner billed 100 s for must not be admitted on a 0.22 s ledger
+        # interior (W1.02 billed 762 s on 11-14). Red on the tree before it.
+        billed = Path(td) / "billed.json"
+        CpuBudget(billed).charge(BILLED_WITNESS, 100.0, child=True)
+        os.environ[ENV_OVERRIDE] = str(billed)
+        try:
+            b_est = child_estimate_s(BY_ID[BILLED_WITNESS])
+        finally:
+            if old_env is None:
+                os.environ.pop(ENV_OVERRIDE, None)
+            else:
+                os.environ[ENV_OVERRIDE] = old_env
+        from ..cpu_budget import charge_cpu_child
+        estimate_reads_billed = (
+            b_est[0] >= 100.0 and b_est[1].startswith("MEASURED 100.00")
+            and child_estimate_s(BY_ID[BILLED_WITNESS], empty_ledger)[1]
+            .startswith("ENUM")             # an explicit ledger stays sealed
+            and "child=True" in inspect.getsource(charge_cpu_child))
+
     return {
         "cpu_quota_enforced": float(shipped_refusal and exhausted_refused),
         "live_load": round(live_load, 2),
@@ -452,6 +448,7 @@ def _experiment(seed: int) -> dict:
         "n_foreclosed_enum": n_foreclosed_enum,
         "n_foreclosed_unmeasured": n_foreclosed_unmeasured,
         "slack_predicts_refusal": slack_predicts_refusal,
+        "estimate_reads_billed": estimate_reads_billed,
         "class_slack": [{k: r[k] for k in ("budget", "n", "slack_s",
                                            "used_s", "n_foreclosed")}
                         for r in live_rows],
@@ -510,6 +507,7 @@ def _check(m: dict, c: dict):
             and m["empty_ledger_falls_back"] is True
             and m["corrupt_ledger_fails_closed"] is True
             and m["slack_predicts_refusal"] is True
+            and m.get("estimate_reads_billed") is True
             and m["loop_load_agrees"] is True
             and m["receipt_committable"] is True
             and m["wiring_ok"] is True

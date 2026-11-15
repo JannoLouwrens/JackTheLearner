@@ -68,25 +68,17 @@ CPU_DAY_CEILING_S = 57600.0
 LOAD_CEILING = 6.0
 
 # ── The admission estimate (69th audit B4) ──────────────────────────────────
-# The ledger is the only per-spec record of what a child ACTUALLY cost:
-# `Result.duration_s`, the wall clock of `run_spec` inside the child.
+# Two per-spec records of what a child cost: the ledger's `duration_s`
+# (run_spec's interior only) and `last_child_s`, the wall the runner last
+# BILLED for it (`charge_cpu_child`). The gate predicts what it bills, so the
+# live estimate reads the larger. The ledger alone undercounted by 3,500x on
+# 2026-11-14: W1.02 recorded 0.22 s and billed 762 s, W0.DIAG 0.03 s vs 1,609 s
+# (pools built in run() before run_spec's timer, and the hash-salt child).
 LEDGER_FILE = Path(__file__).parent / "ledger.json"
 
-# Two engineering constants, and they are NOT measurements — say so plainly,
-# because this file's own first law is that a number is claimed only by
-# something that could have failed:
-#   - CHILD_OVERHEAD_S is the one piece with data behind it. The gate meters
-#     the CHILD's wall (interpreter start + imports + run_spec) while the
-#     ledger records only run_spec's interior; the difference measured across
-#     the eight runner children billed on 2026-09-03/04 was 0.55 s (T0.34) to
-#     5.38 s (T0.33). 10 s is ~2x the largest observed.
-#   - PROJECTION_SAFETY covers run-to-run variance and implementation drift
-#     since the recorded run, and there is NO data for it here: the ledger
-#     keeps one duration per spec and its `history[]` entries carry none, so
-#     per-spec variance is unmeasured. 4x is a choice whose cost of being
-#     wrong is bounded by the enum clamp below and by the child-kill timeout,
-#     which this projection does not touch. If `history[]` ever carries
-#     durations, derive it instead of declaring it.
+# Engineering constants, not measurements: CHILD_OVERHEAD_S is interpreter
+# start + imports (0.55-5.38 s observed 09-03/04); PROJECTION_SAFETY covers
+# run-to-run variance, which is unmeasured. Both are bounded by the enum clamp.
 PROJECTION_SAFETY = 4.0
 CHILD_OVERHEAD_S = 10.0
 
@@ -153,7 +145,7 @@ class CpuBudget:
         return est_s <= self.remaining_s(day)
 
     def charge(self, spec_id: str, seconds: float,
-               day: str | None = None) -> None:
+               day: str | None = None, child: bool = False) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         lock_path = self.path.with_suffix(self.path.suffix + ".lock")
         with open(lock_path, "w") as lockf:
@@ -165,6 +157,8 @@ class CpuBudget:
             bucket["used_s"] = round(bucket["used_s"] + seconds, 2)
             by = bucket["by_spec"]
             by[spec_id] = round(by.get(spec_id, 0.0) + seconds, 2)
+            if child:
+                self.data.setdefault("last_child_s", {})[spec_id] = round(seconds, 2)
             if bucket["used_s"] > CPU_DAY_CEILING_S:
                 self.data["overruns"].append({
                     "day": key, "used_s": bucket["used_s"],
@@ -210,17 +204,21 @@ def _durations(ledger_path: Path | None = None) -> dict:
 
 def measured_child_seconds(spec_id: str,
                            ledger_path: Path | None = None) -> float | None:
-    """The spec's last recorded child duration, or None if there is no
-    measurement to project from.
-
-    Fails to None on ANY read problem — a missing, truncated or unparseable
-    ledger falls back to the enum, which is the RESTRICTIVE side. (T0.12's
-    "a meter that fails open is not a limit" points the other way for a
-    reading; here the projection's failure mode is to keep today's behaviour,
-    so failing closed is the same instinct pointed correctly.)
-    """
-    d = _durations(ledger_path).get(spec_id)
-    return d if d and d > 0.0 else None
+    """The spec's last measured cost, or None (-> the enum, the RESTRICTIVE
+    side, on any read problem). The live reading (no `ledger_path`) is the
+    larger of the ledger's duration and the wall last billed for the child;
+    an explicit ledger path is read alone, so T0.33's fixtures stay sealed."""
+    d = _durations(ledger_path).get(spec_id) or 0.0
+    if ledger_path is None:
+        try:
+            p = _budget_path()
+            key = ("billed", str(p), p.stat().st_mtime_ns)
+            if key not in _DURATION_CACHE:
+                _DURATION_CACHE[key] = CpuBudget(p).data.get("last_child_s", {})
+            d = max(d, float(_DURATION_CACHE[key].get(spec_id, 0.0)))
+        except Exception:
+            pass
+    return d if d > 0.0 else None
 
 
 def child_estimate_s(spec, ledger_path: Path | None = None) -> tuple:
@@ -358,7 +356,7 @@ def charge_cpu_child(spec_id: str, seconds: float,
     wrapper owns the tree's charge)."""
     if os.environ.get(ENV_WRAPPED):
         return
-    CpuBudget(path).charge(spec_id, seconds)
+    CpuBudget(path).charge(spec_id, seconds, child=True)
 
 
 # ── The detached lane (T0.34) ────────────────────────────────────────────────
