@@ -1528,7 +1528,7 @@ Row c (pink noise) launched 19:07 into f's freed session; a, g, e still RUNNING 
 Next: f2 (expiring bans, tuned over all 10 lives, fresh seeds 221–240, rule first); wall-pinned food goes to J2 (1).
 Philosophy served: 4 (a test that could fail did, and the bar stayed where it was; the failure is traced, not filed), 5 (his world measured before any brain is judged in it).
 
-## 2026-11-15 19:36 · JACK · J1 row a harvested, f2 built (short slot)
+## 2026-11-15 19:26 · JACK · J1 row a harvested, f2 built (short slot)
 Row a (do-nothing) back from Kaggle, 200 lives / 20 seeds: 599.9±0.2 s, 0 meals, all energy deaths, 0/20 seeds on f's bar. §8 floor-arm gate holds (a + b = 0 seeds). The statue outlives random 2.0× (600 vs 302 s): random's arm power costs more than its 0.52 meals return, so "keep still" is the first easy optimum any alive-paying reward will meet (note for J2 (3)).
 d8 launched into a's freed Kaggle session (19:23). g, e, c still running; d32 waits.
 Built f2 (`HandForager2`): bans expire after 200 s, food memory re-earned each life; rule as a code comment before any run; f2/g2/b2 wired to fresh seeds 221–240. Tuning smoke (10 lives × 153/154) running detached on the box.
