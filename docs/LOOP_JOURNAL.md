@@ -1907,3 +1907,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found: one SBX worker spreads over cores (2 runs scale 1.28×), so the "1–6 runs at once" row would measure contention, not scaling; XLA single-thread flags added to the worker.
 - Philosophy served: 6 and 7 (the Mac's hours go to the decisive test, not to setup; the finished Jack runs on owners' Apple machines, and this measures that ground first).
 - 22:47 addendum: the re-run checking the XLA single-thread fix (SBX 2 runs) was cut by its own 300 s timeout at box load ~5 and wrote no row → the fix is UNVERIFIED; next box slot: `--quick --procs 2 --only 6` with a 600 s timeout and compare per-run rate with 1 run (61.5).
+
+## 2026-11-16 23:40 · LAB · the eye: a row of 128 rays finds food, the planned 16×16 grid does not
+- Inherited the 11:52 sitting's registered bet (`eye_streak.py`, rule `bddffac4`; 16 of 20 worlds on disk, never fitted, no LAB entry): collected 416–419, ran the frozen fit. ALIVE: HIT streak .900, grid16 .517, seated16 .528, grid32 .758, row256 .907; blind .19, shuffled .21.
+- Azimuth dial (rule `e583c41e` before worlds 420–429; frames identical on world 400): row 16/32/64/128/256 = .540/.696/.856/.909/.925, knee 128. The second (+8°) row buys nothing.
+- Handed on by INBOX: build `row128` as the retina; proposed forager gate needs a ruling against ruling 23. No ledger row, no seat moved.
+- Philosophy served: 1 (a sense that reaches his food), 3 (the planned grid was an assumption; it lost), 4 (two controls that failed, rule before worlds).

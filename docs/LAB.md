@@ -78,64 +78,49 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   docstring (s94–98, 13k, born ≥ 0.7 m clause). END-FIT 4, 2. Philosophy 3, 4.
 
 - 11-13/14 · **Predict-then-push, three arms** (Deliberation, VACANT; long form
-  at `1a18168`), all DEAD on the fed-births ruler (babble 5/40):
-  *sense lookahead* (`sense_lookahead.py`, MLP forward model + linear want)
-  told 6/40, want 4, shuffled 7; *drive in his own frame* (`ego_drive.py`)
-  push's share of held-out smell prediction ego .017/.000 vs world .086/.044
-  (bar .10); *gain-field model* (`gain_field.py`, bilinear ridge) stage 1
-  PASSED (.291/.235 vs MLP .207/.044) but fed told 4/40, want 9/40, shuffled
-  5/40. Held-out r² < 0 throughout: he cannot yet predict what a push does to
-  his nose. A want cannot start without a meal (s94 had none). Philosophy 3, 4.
+  `1a18168`) · all DEAD on fed births (babble 5/40): sense lookahead 6/40,
+  ego-frame drive .017 vs bar .10, gain-field model 4/40 (want 9, shuffled 5).
+  He cannot yet predict what a push does to his nose. Philosophy 3, 4.
 
-- 11-14/15 · **Run and tumble — climb without predicting** (Deliberation,
-  VACANT; `run_tumble.py`, each rule committed before its seeds: `c0db7e6`,
-  `f61386f`, `1a18168`). Bet: keep a push while what he wants rises, redraw
-  when it falls — one measured bit, no model. Killed by: no lead of +8/40
-  over babble AND over a coin-yoked twin on both fresh seeds.
-  - *told* (keep iff smell rose; s140/141) **DEAD: 8/40** vs babble 6, yoked 5
-    — but `toward` +.44/+.20 vs +.02/+.03: first arm to point him at food.
-    Any bearing within 90° raises smell, so he climbs slowly (4.2 → 2.9 m).
-  - *steer* (tumble on a fall; while rising, best push + small perturbation,
-    accepted only if its rise on log smell beat the best's; s142/143)
-    **ALIVE with the want GIVEN: fed 8/6 = 14/40 vs babble 3/40, coin-yoked
-    2/40** (failed, as it must). First arm of nine to beat babble on this ruler
-    (oracle 38/40).
-  - *steerwant* (same rule on a want LEARNED from his meals: logistic over
-    all senses, nursery of ~31 births / 14 fed; s144/145) **DEAD: 7/40** vs
-    babble 5, label-shuffled 7. The want puts .08–.11 of its weight on smell,
-    the shuffled twin .10–.14: 14 meals do not teach a 1-of-all-senses cue.
-  **Where the gap is now:** not direction (a measured bit steers him) but the
-  WANT — what to climb. Next bets, unrun: a want learned from the CHANGE in
-  each sense over the bout before a meal (smell rises before every meal;
-  levels do not separate); the critic's value as the want; `steer` as the
-  exploration inside the seated learner (J1). Not entered: only the given-want
-  arm lives, and a given want is advice, not his. END-FIT 1, 3, 4.
-  Philosophy 1, 3, 4.
+- 11-14/15 · **Run and tumble — climb without predicting** (Deliberation;
+  `run_tumble.py`, long form `837b4c6f`) · *told* DEAD 8/40 vs babble 6;
+  *steer* **ALIVE with the want GIVEN: 14/40 vs babble 3, coin-yoked 2** (first
+  arm of nine to beat babble; oracle 38/40); *steerwant* (want learned from 14
+  meals) DEAD 7/40 vs shuffled 7. The gap is the WANT, not direction. Unrun: a
+  want from the CHANGE in each sense before a meal; the critic's value as the
+  want. Not entered (a given want is advice, not his). Philosophy 1, 3, 4.
 
-- 11-15 · **Ear — taught by his own prediction of sound, at his own clock**
-  (ASR, VACANT; PLAN "Ear" right column; `ear_predict.py`, each rule committed
-  before its seeds: `30a411da`, `837b4c6f`). Bet: an ear + GRU core (70k
-  weights) that first only LISTENS to 20,000 unlabelled Speech Commands clips
-  (predict the next 200 ms tick of log-mel from the core state — the loss a
-  world-model brain already pays), then gets N narrated hearings per word,
-  beats the same net given the N hearings alone. Kill: under +5.0 points at
-  N = 25 (10 words, official speaker-disjoint test), or not 3/3 seeds, or a
-  shuffled-target twin gaining half as much. Prior: Data2Vec on compact
-  keyword transformers +8.2 to +11.2 points with scarce labels (2210.01703);
-  CPC/APC learn phones from 100–360 h. Ours: 5.5 h — below it.
-  - *next-tick MSE* (seeds 0–2) **DEAD at both clocks.** 200 ms: label 60.3,
-    pred **62.2 (+1.8**; +2.4 +0.6 +2.5), reconstruct+predict 61.3, shuffled
-    59.8. 40 ms: 62.4 vs **64.7 (+2.3**; +2.5 +5.8 −1.3), shuffled 62.7.
-    N = 125: 80.4 vs 81.3. He DOES predict the next tick (MSE .41 / .13 vs
-    .91 / .89 shuffled) and it buys his words almost nothing; the clock is
-    not the reason.
-  - *contrastive next tick* (CPC, 200 ms, seeds 3–5) **DEAD: 58.9 vs label
-    58.5 (+0.5**; +2.9 −1.6 +0.1); shuffled twin 61.0. Solved its own task
-    (loss 2.2 vs 6.0) — no word gain.
-  **Reading:** at 5.5 h of listening and 70k weights, the free world-model
-  loss on sound is not an ear; §7's "needs a loss on the sound channel that
-  names things" stands. Not entered. Unrun, each needs its own prior first:
-  listening hours as the dial (the published gains start at 100 h); the
-  narrator's label as the loss in a stream. Data now on the box:
-  `/data/jack_corpora/speech_commands_v2`, features `/data/tmp/ear_predict/`.
-  END-FIT 3. Philosophy 2, 3, 4.
+- 11-15 · **Ear — taught by his own prediction of sound** (ASR, VACANT;
+  `ear_predict.py`, long form `837b4c6f`; 70k weights, 5.5 h of unlabelled
+  Speech Commands, then 25 hearings per word) · **DEAD:** next-tick MSE +1.8
+  points at 200 ms, +2.3 at 40 ms (bar +5.0; shuffled twin −0.5 / +0.3); CPC
+  +0.5. He predicts the next tick and it buys his words nothing; published
+  gains start at 100 h. Unrun: listening hours as the dial; the narrator's
+  label as the loss. Data `/data/jack_corpora/speech_commands_v2`. Philosophy 2, 3, 4.
+
+- 11-16 · **Eye — a streak, not a grid** (Vision encoder, BY DEFAULT; PLAN
+  "Learning to eat" right column and §12's open question; `eye_streak.py`,
+  rule first `bddffac4`, dial rule `e583c41e`). Bet: his food is a 0.2 m thing
+  on the floor, so 16 azimuths miss it whatever rows are stacked above; the
+  same 256 rays as 128 azimuths × 2 rows find it (ground foragers have a
+  horizontal streak). Kill: no lead of +.05 over the 16×16 grid and +.10 over
+  today's 16 rays on ≥ 16 of 20 worlds. Prior: Habitat depth SPL .79 vs RGB
+  .46; "What if Eye" — detection needs resolution; nothing published on ray
+  geometry for a floor object at a 0.12 m eye. Ruler: at the entry rung, a
+  per-world table material → food (≤ 81 numbers, adult's label) points along
+  the nearest food-coloured ray; HIT = within 20° of a food ≤ 4 m away.
+  - **ALIVE (worlds 400–419): streak .900 vs grid16 .517 vs seated16 .528**
+    (ahead 20/20, 20/20); grid32 (1,024 rays) .758; blind twin .19, shuffled
+    table .21 — both fail as they must. **§12's question answered: the 16×16
+    grid does NOT beat today's 16 rays** (−.012, ahead 7/20).
+  - The second row buys nothing: one level row of 256 scores .907 (streak
+    ahead 6/20). Dial (worlds 420–429): row 16 / 32 / 64 / 128 / 256 = .540 /
+    .696 / .856 / .909 / .925 — **knee at 128**. Food 4–8 m away: today's eye
+    sees it on 14% of frames, row128 on 74%.
+  **Reading:** today he is blind to food beyond ~1 m about half the time, and
+  the retina planned in "Next up" 3 would not cure it; azimuth in the floor
+  band does, for 256 numbers and ~0.1 ms. What this cannot say: whether a
+  BRAIN learns to use it (the table is an adult-taught ceiling). ENTERED as
+  an INBOX line: build `row128` as a `jack_env` option, then race it under a
+  learner. Not tried: a fovea (dense ahead, sparse behind) at 64 rays.
+  END-FIT 1, 5. Philosophy 1, 3, 4.

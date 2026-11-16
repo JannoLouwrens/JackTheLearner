@@ -96,6 +96,11 @@ DIAL — declared before worlds 420-429 are generated (EYE_STREAK_ARMS=dial):
   dial world existed, a first draft that compared means across different
   worlds: 10 worlds cannot hold a 0.03 band.)
 
+DIAL RESULT (worlds 420-429, 11-16; identity on world 400 exact;
+  /data/tmp/eye_streak_dial/fit_420_10.json): mean HIT row16 .540, row32
+  .696, row64 .856, row128 .909, row256 .925 (blind .17-.20, shuffled
+  .18-.20).  KNEE = row128.  Food 4-8 m away: .27 / .38 / .56 / .77 / .86.
+
     nice -n 19 $PY -m experiments.eye_streak collect <seed> [<seed> ...]
     nice -n 19 $PY -m experiments.eye_streak fit <first_seed> <n_worlds>
 """
