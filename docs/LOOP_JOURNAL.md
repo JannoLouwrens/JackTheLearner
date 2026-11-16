@@ -1842,3 +1842,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - #8 PASS (death/cap half), rule `5382c940` first: real pilot plumbing, buffer `dones` at every life end — 2 deaths done 1, 3 caps done 0, 0/4,480 inner nonzero; control (cap reported as terminated) fails as it must. The trained-critic 1/(1−γ) half stays owed.
 - Scar: `pgrep -f <module>` inside a wait loop matches the loop's own command line — two waiters spun on themselves; read the process by its interpreter path instead.
 - Philosophy served: 4 (the pilot's verdict will rest on a harness proven to count every decision and not to bootstrap through death).
+
+## 2026-11-16 19:07 · JACK · J8 (5): harness #5 paid — every pilot arm lives in the same world
+- J8: k4 f0 f1 f2 still hold all 4 Kaggle CPU sessions (watchers alive) → nothing to launch or harvest; J3/J6/J10 wait on a session. Took item (5) again: #5 needs no session.
+- Rule `641308fd` first. Six arm stacks built exactly as `run_b`/`run_floor` build them (learner constructed, so its seeding side effects happen), driven by one fixed action sequence: 2,002 raw-obs hashes identical across b blr0 bwhite bpink noop held8, incl. an energy death at 1,459 and its respawn. Control seed 302 differs at decision 0.
+- Owed on the harness for B: #2 (lr-0 detected at planned power — the pilot's blr0 arm will give it), #6, #9.
+- Philosophy served: 4 (the pilot's arms differ only in the learner, proven, so a gap between them can be read as learning).
