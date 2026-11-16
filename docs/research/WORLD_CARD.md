@@ -283,3 +283,20 @@ of lives and do-nothing still dies — is ALREADY met at d = 1: d8 eats ≥ 1 in
 110/200 lives (55%) and a dies 200/200. Read literally, `d0` = 1 = today's
 world, the one this card shows no non-privileged policy can live in. The
 rule is not changed here (it is the Director's); INBOX carries the question.
+
+## J2 item 5 — the entry rung `d0` (rule `8af5f2e1`, registered 2026-11-16 00:2x; RUNNING)
+
+Rule in `experiments/world_card.py` docstring ("THE ENTRY-RUNG RULE"), committed
+before any run. Dial only (`JackEnv(difficulty=d)`, fixed layout, needs
+default), seeds 201–220 × 10 lives, cap 9,000 decisions, rows a (do-nothing)
+and d8 (held-8 random, J1's best random row; same policy streams as J1).
+d = 1 is J1's rows a/d8 (at d = 1 regrowth is 66.9 s, so every eat is its own
+bout: d8 110/200 lives ≥ 1, a 0/200 capped — the rule holds there). Per life,
+new: `floor_eats_all` (every food the dial made) and `floor_bouts` (eats more
+than 5 decisions after the last eat of the same food — d = 0's resting-body
+eats counted once). Reported: `d0` as written, and beside it `d_sus` (largest
+d with ≥ 1 capped d8 life) with the capped share per d.
+Kaggle CPU, one kernel per d: d=0.75 `jack-cpu-1794788783`, d=0.5
+`jack-cpu-1794788798`, d=0.25 and d=0 launched 00:28 (logs
+`/data/jack-logs/world_card/entry_dXX.log`, lives → `entry_dXX.jsonl`).
+Table owed at harvest.
