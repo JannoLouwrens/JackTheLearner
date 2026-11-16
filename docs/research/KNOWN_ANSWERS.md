@@ -15,7 +15,8 @@ Rules are in that file's docstring, committed before each run.
 | 2 | Pendulum-v1 | PPO, Zoo entry | 102,400 | −187.6 ± 17.0; accept −213.2…−162.0 | — | — | — |
 | 3 | MountainCarContinuous-v0 | SB3 SAC gSDE Zoo entry unmodified (`r3lib`; rule `824b0a2a`) | 50,000 | deterministic eval > 90 on ≥ 3 of 5 (public 9/10 in 93.4–95.3) | 94.8 94.5 95.5 95.0 93.5 — 5 of 5 | 0–4 | **REPRODUCES** |
 | 3 | MountainCarContinuous-v0 | control `r3ctrl` (no gradient step), must fail | 50,000 | VOID if > 90 on any seed | −0.3 −2.8 −3.5 −0.9 −0.8 — 0 of 5 | 0–4 | holds |
-| 3b | MountainCarContinuous-v0 | Brain B `r3ours`: SBX SAC + LayerNorm, Zoo numbers (rule `b09adb6a`); ctrl `r3octrl` | 50,000 | same bar | running (Kaggle jack-cpu-1794805793) | 0–4 | — |
+| 3b | MountainCarContinuous-v0 | Brain B `r3ours`: SBX SAC + LayerNorm, Zoo numbers (rule `b09adb6a`); ctrl `r3octrl` | 50,000 | same bar | 96.0 96.0 94.9 95.2 95.5 — 5 of 5 (Kaggle jack-cpu-1794805793) | 0–4 | **REPRODUCES** |
+| 3b | MountainCarContinuous-v0 | control `r3octrl` (SBX, no gradient step), must fail | 50,000 | VOID if > 90 on any seed | −0.3 −0.1 −20.6 −0.1 −0.0 — 0 of 5 | 0–4 | holds |
 | 4 | MountainCarContinuous-v0 | PPO, Zoo entry | 20,000 | 87.5 ± 4.2 | — | — | — |
 
 ## Row 1 — the miss, and what it is not (11-16)
@@ -77,3 +78,17 @@ and SBX's `use_sde` holds one noise draw between `reset_noise()` calls (every
 32-step rollout here), which is not gSDE's state-dependent noise matrix. So
 row 3b tests whether B as built explores well enough for sparse reward under
 the Zoo's numbers; a miss sends B to the pink-noise rule (§5), not a re-run.
+
+## Row 3b — Brain B reproduces on sparse reward (11-16 05:19, kernel jack-cpu-1794805793)
+
+`r3ours` (SBX SAC + LayerNorm, Zoo numbers, rule `b09adb6a`) solved all 5
+seeds: deterministic eval 94.9–96.0 (worst single eval episode 94.5), against
+the bar > 90 on ≥ 3 of 5 and the public store's 93.4–95.3. First training
+episode above 90 at episode 1–4; 402–532 training episodes in 50k steps;
+~335 s a seed. Control `r3octrl` (SBX, uniform random, no gradient step):
+−20.6 … −0.0, 0 of 5 → valid. Stack: Python 3.13.18, sbx-rl 0.28.0, jax/jaxlib
+0.11.1, flax 0.12.12, gymnasium 1.4.0.
+So the two SBX departures named before the run (std starts ≈ 1; noise held
+per 32-step rollout rather than gSDE) did not cost the sparse-reward row:
+B may use its own exploration as built; the pink-noise fallback is not
+triggered. Rows 1b and 3b are both reproduced by B; owed: rows 2 and 4 (PPO).
