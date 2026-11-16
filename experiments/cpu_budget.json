@@ -1158,17 +1158,37 @@
         "detached:world_card_c.log": 392.42,
         "detached:world_card_d32.log": 416.4,
         "detached:world_card_d8.log": 516.53,
-        "detached:world_card_e.log": 273.46,
+        "detached:world_card_e.log": 428.24,
         "detached:world_card_f.log": 407.25,
         "detached:world_card_f2.log": 709.85,
         "detached:world_card_g.log": 366.39,
         "detached:world_card_g2.log": 436.36
       },
-      "used_s": 23988.14
+      "used_s": 24142.92
+    },
+    "2026-11-16": {
+      "by_spec": {
+        "DP.00": 213.3,
+        "LC.00": 53.99,
+        "LC.01": 17.47,
+        "NE.00": 8.93,
+        "PG.1": 2.55,
+        "PG.8": 15.43,
+        "T0.30": 37.5,
+        "W0.DIAG": 661.97,
+        "detached:entry_d00.log": 31.37,
+        "detached:entry_d25.log": 31.16,
+        "detached:entry_d50.log": 31.1,
+        "detached:entry_d75.log": 30.75
+      },
+      "used_s": 1135.52
     }
   },
   "last_child_s": {
     "AT.01": 42.86,
+    "DP.00": 213.3,
+    "LC.00": 53.99,
+    "LC.01": 17.47,
     "LC.02": 648.36,
     "LG.00": 2.24,
     "LG.01": 2.13,
@@ -1182,7 +1202,10 @@
     "ME.4": 4.85,
     "ME.8": 216.89,
     "ME.9": 2.72,
+    "NE.00": 8.93,
+    "PG.1": 2.55,
     "PG.7": 200.47,
+    "PG.8": 15.43,
     "T0.01": 5.01,
     "T0.02": 5.46,
     "T0.03": 16.42,
@@ -1201,6 +1224,7 @@
     "T0.26": 227.84,
     "T0.28": 148.66,
     "T0.29": 117.68,
+    "T0.30": 37.5,
     "T0.31": 3.96,
     "T0.33": 2.36,
     "T0.34": 26.74,
@@ -1210,6 +1234,7 @@
     "T1.13": 3.76,
     "T2.12": 39.49,
     "W.2": 94.77,
+    "W0.DIAG": 661.97,
     "W1.02": 691.61
   },
   "overruns": [
