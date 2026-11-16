@@ -1899,3 +1899,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Traps measured (and corrected my own first read: the 0.25 "layer-norm gradient error" was finite differences over a float32-precision forward, not a wrong gradient): float64 `exp`/sigmoid/softmax/logsumexp at rel 3e-7–2e-6, `mx.fast.layer_norm` f64 at 4e-7 → rung-1 64-bit references must be NumPy.
 - Next: 0.2 on a Kaggle CPU session (PyPI wheel + official e01491f `debug` preset 200 steps; smoke there too). INBOX asks for it as an order.
 - Philosophy served: 3 and 7 (the Mac lane for brain A, and a trained Jack running on owners' Apple machines, can only be raced if the port's ground is measured); 4 (a "64-bit passes" claim narrowed to what was actually shown).
+
+## 2026-11-16 22:40 · JACK · Next up 2: the Mac's first-day speed test is one command
+- J8: f2 f3 e0 RUNNING on Kaggle (checked), W1.04 holds the 4th session → nothing to launch/harvest; J3 J6 J10 and MLX 0.2 each wait on a session → "Next up" 2.
+- `scripts/mac_first_day.py` (`61cb3bda`): §10's measurements 1–8 and 11's MPS-context line, each in a child process with a timeout; a missing device/library is a SKIP with its reason, never a zero; a JSON is written after every row beside the estimate it replaces. Never lowers its own priority (background QoS pins macOS work to efficiency cores). 9, 10, 12 are NOT_AUTOMATED and print the by-hand command.
+- Box smoke (`--quick --procs 1,2`): decisions/s shipped 50.2, implicitfast 73.0, +lazy audio 124.3 (agrees with J6's 41/70/108 per CPU-s); 2 procs 98.8 / 234.3; raw sub-steps/s RK4 4,876, implicitfast 16,561; SAC upd/s SB3 t1 32.7, t4 55.6, SBX 63.3.
+- Found: one SBX worker spreads over cores (2 runs scale 1.28×), so the "1–6 runs at once" row would measure contention, not scaling; XLA single-thread flags added to the worker.
+- Philosophy served: 6 and 7 (the Mac's hours go to the decisive test, not to setup; the finished Jack runs on owners' Apple machines, and this measures that ground first).
