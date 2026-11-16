@@ -82,7 +82,7 @@ serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · 
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
 state: (1)-(3) DONE `6f197f94` (pilot_b.py, harness sustained mark, rule); (4) builder `5d66b69b`; smoke 40.2 decisions/s wall, 25.9/CPU-s → T 300,000 stands.
 state: 11-16 09:24 prereg FROZEN `f0dc9fd7`: `docs/research/prereg/pilot_b_vs_{blr0,floor}.json` (mark sustained, W 1, T 300k; manifest asserted = kernel_groups' 35 runs).
-state: LAUNCHED k0-k3 (B seeds 301-316) as Kaggle CPU kernels jack-cpu-1794821007 / -034 / -068 / -097, all RUNNING 09:30; local pollers write /data/jack-logs/pilot_b/kN.json (est ~4-7 h).
+state: LAUNCHED k0-k3 (B seeds 301-316) as Kaggle CPU kernels jack-cpu-1794821007 / -034 / -068 / -097 09:30; still RUNNING 14:15; pollers write /data/jack-logs/pilot_b/kN.json. LC.02 stale since J9 and regate never re-buys it (648 s > 600 s label) → re-bought on the box 14:14 (log /data/jack-logs/j8/lc02_rebuy.log); `run stale` must be clear of LC.02 before k4.
 state: harness #4 PASS on the box: seed 301 ×2, 20k decisions → 8/8 lives identical field for field (row in HARNESS_CHECKS.md); 38.05 decisions/s.
 state: next: as kernels free (≤4 sessions), launch k4 then f0-f3 (`launch_detached.sh` waits out the 60 s young-poller busy count — launch one per minute); harvest kN.json; then (6) register the two exploration arms.
 
@@ -114,9 +114,9 @@ serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosop
 **done when:** `KNOWN_ANSWERS.md` has rows 1–4 inside their ranges and one row pair per in-house arm, pass or fail.
 state: (1)(2) DONE `1d12bb9a`. Row 1 PASSED (1b, 15 seeds: ours −302.0); row 2b REPRODUCES (−199.5); row 3 / 3b REPRODUCE 5/5 (`5d794fba`).
 state: row 4 / 4b MISSED (15-seed 72.6 ± 25.7; seeds solve then collapse). Stack hunt: published stack (py3.9, SB3 1.7.0, gym 0.21) has no behavioural source diff; row 4c on it VOID on its per-seed control (lr-0 seed 0 = 98.0), data 82.3 ± 11.6 / 20, misses 4b's band itself (KNOWN_ANSWERS §Row 4c).
-state: row 4d n=20 (`8591dec1`): INCONCLUSIVE by rule — ours 74.2 ± 16.0 (4/20 < 60) vs pub 81.8 ± 15.8 (1/20); HL −7.0, 90% CI [−15.7, −0.8]; MW p .064; ctrl holds (1/20 ≥ 60). Extension seeds 40–59 RUNNING detached since 13:07 (log /data/jack-logs/brain_b/row4d_ext.log, writes row4d/verdict_ext.json, ~14:00).
+state: row 4d at 40/arm (rule's one extension) = **MISSES** (11-16 14:15): ours 72.6 ± 19.0 (9/40 < 60) vs published code 73.4 ± 28.5 (6/40); HL −3.75, 90% CI [−9.1, +0.6] (width 9.7, sized for 6.5); MW p .16. The published code on this box: 60 seeds, 76.4, 7/60 collapse — it does not meet its own 87.5 ± 4.2. KNOWN_ANSWERS §Row 4d extension; INBOX asks the Director to close or re-register row 4.
 state: (4) RULE `3054fbe6` `experiments/inhouse_rows.py`: arm core + seated update through one adapter; rows 1 (60k) and 3 (150k), 5 seeds + frozen-twin ctrl; smoke ppo-needs 5.7 ms/step, wm-latent 15.9 ms/step (≈2.4 / ≈7 CPU-h per arm).
-state: next: harvest verdict_ext.json → KNOWN_ANSWERS §Row 4d; then `inhouse_rows run /data/jack-logs/inhouse ppo-needs` (box, detached, 2 workers, ~1.3 h wall) — or a Kaggle CPU kernel per arm once J8's k4/f0–f3 have their sessions.
+state: next: `inhouse_rows run … ppo-needs` is ≈2.4 CPU-h → Kaggle CPU kernel (not the box: > 15 CPU-min), after J8's k4/f0–f3 hold their sessions.
 
 ### J9 — What death looks like: the dying body's last observation (before brain A touches his world)
 part: His world (the interface) · stage: 1 (ready-list item 3) · step: 2 (combine) · prior: §5 "next observation at episode ends", §8 self-check 8; INBOX code review 11-15 17:02
@@ -184,7 +184,8 @@ serves: M2→M3 · PLAN stage 1 line 1, "honest limits" 1 · philosophy 5, 6.
 state: open — ordered 11-15 16:57. 11-16: item (3) now also serves his first eye (§12: a ray retina from the same one call) — measure 16 rays AND a 16×16 and 32×32 [depth, material] grid.
 state: (1) DONE `7f3af75d` 11-16 13:50: `jack_env.make_vec(n, seeds=…)` (AsyncVectorEnv, SAME_STEP autoreset, terminal obs in info["final_obs"]); proof `experiments/tests/test_jack_env_vec.py` PASS: 3 seeds × 300 steps, 144 ends, streams == single env exactly (reborn + dying 6/6), controls differ 2/2. World untouched → stales nothing (`run stale`: 0 jack_env lines).
 state: box speed at load 3.8: single 35.3 dec/wall-s, vec2 56.2 (1.59×), per CPU-s unchanged (35.9 vs 33.3). Hand cal j0=alpha=1.0 (default_cal refuses while LC.02 stale; identity is cal-independent).
-state: next: (2) all sub-steps of a decision in one native call — read `W0.decide`'s per-sub-step Python first; the 4-process row rides the first Kaggle CPU kernel free after J8.
+state: profile `experiments/sim_profile.py` (11-16 14:15, box): 28 ms/decision = mj_step×40 under the shipped **RK4** 15–16 ms (54–58%) + Python 12.6 ms (ContactAudio ~27%, drives.substep ~12%). Zero-Python ceiling only 61–66 /CPU-s (1.9×); implicitfast physics 3.9–4.2 ms (RK4 costs 3.9×) → ~60 with today's Python, ~240 ceiling with both. §4's 500–2,000 needs (2) AND (4).
+state: next: (2) — ContactAudio.step first (largest Python cost: 24 mj_contactForce/substep), identity test as J1; the 4-process row rides the first Kaggle CPU kernel free after J8.
 
 ### J10 — The walking layer starts now, by reproducing a published walk (owner, 11-15 19:18)
 part: Body and movement · stage: 1 side job (stage 3's part, independent of the brain) · step: 3 (reproduce) · prior: §4 "Reproduce first", "Take as-is"
@@ -322,6 +323,8 @@ re-buys are regate's on a clean tree.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-16 14:15 JACK: regate SKIPS LC.02 every 2 h ("measured 648 s against the label's 600 s — not cheap until re-labelled; stays with the loop"), so the J9-stale LC.02 that gates `default_cal()` (and J8's k4/f0–f3) had no owner; I re-bought it on the box detached. The label (or regate's 8% tolerance) wants a system-lane look.
+- 11-16 14:15 JACK: J3 row 4 — the published SB3 code itself, 60 seeds on this box, gives 76.4 with 7/60 collapses against the store's 87.5 ± 4.2 (n 10); ±5 equivalence is unreachable at 40/arm (CI width 9.7). Rule: close row 4 as "reference does not reproduce its own number", or re-register at n ≈ 100/arm (~3 Kaggle-CPU-h)?
 - 11-16 12:42 JACK: J9's `w0.py` edit (`cfb49f25`) stales 9 certificates — PASS: LC.02, BA.01, LF.02, LF.03, PS.03, W0.DIAG, W1.02, XL.00; FAIL: PS.02 (scratch-worktree `run stale` diff, 48 → 57). **LC.02 stale makes `default_cal()` refuse ("calibration unborrowable"), and `pilot_b` builds `JackEnv` without j0/alpha — so J8's k4/f0–f3 must NOT be launched until regate has re-bought LC.02 (~5 CPU-min; `run stale` clear of it), or they crash at birth on Kaggle.** I did not re-buy LC.02 myself: it is a throughput floor and the box is carrying row 4d's 2 workers.
 - 11-16 12:10 JACK: J3 row 4d (60 cells × ~60 CPU-s ≈ 60 CPU-min total, each cell < 2 min) runs on the box although the header says runs > 15 CPU-min go to Kaggle CPU — all 4 Kaggle sessions are held by J8 k0–k3 and J8 queues 5 more; rule the unit (whole run vs cell) if this was wrong.
 

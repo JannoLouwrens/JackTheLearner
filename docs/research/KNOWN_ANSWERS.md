@@ -26,7 +26,9 @@ Rules are in that file's docstring, committed before each run.
 | 4b | MountainCarContinuous-v0 | control `r4ctrl`, must fail | 20,000 | VOID unless every seed < 82.4 | 18.7 −1.5 −4.4 −9.5 −6.3 | 5–9 | holds |
 | 4c | MountainCarContinuous-v0 | stack hunt: same entry under the PUBLIC store's own stack (py3.9, SB3 1.7.0, gym 0.21.0, torch 1.12.0, numpy 1.23.1; `r4pub`, rule `aa209cd5`, `experiments/row4_stack.py`, box) | 20,000 | reading A ≥ 3/20 collapse (< 60) / B ≤ 1 and mean in 82.6…92.4 / C otherwise | 82.3 ± 11.6, median 84.2 (86.0 82.4 82.7 78.9 83.9 91.4 80.1 88.6 93.5 82.0 88.3 42.1 92.4 68.7 88.9 84.0 85.9 84.4 69.2 92.0); 1/20 < 60 (seed 11 solved then collapsed), 2 more partial; vs ours (rows 4+4b, 20 seeds, 74.0 ± 23.9, 4/20): Mann-Whitney p 0.66, Fisher collapses p 0.34 | 0–19 | **VOID** (control) — data: C |
 | 4c | MountainCarContinuous-v0 | control `r4pubctrl` lr 0, must fail | 20,000 | VOID unless every seed < 60 | **98.0** −2.1 −1.6 −8.6 −0.7 — seed 0's frozen initial policy solves every episode (98 each, 191–430 steps) | 0–4 | **BREACHED** |
-| 4d | MountainCarContinuous-v0 | same-against-same, both stacks on the box: ours `r4dours` (SB3 2.9.2/gymnasium 1.4) vs published `r4dpub` (SB3 1.7.0/gym 0.21); rule `5d62e91a`, `experiments/row4d.py` | 20,000 | REPRODUCES iff Hodges-Lehmann 90% CI of ours − pub ⊂ ±5 AND collapse Fisher p ≥ .05; DIFFERS iff MW or Fisher p < .05; else extend to 40/arm | n 20: ours 74.2 ± 16.0 (4/20 < 60), pub 81.8 ± 15.8 (1/20 < 60; seed 25 = 20.6); HL −7.0, 90% CI [−15.7, −0.8]; MW p 0.064; Fisher p 0.34 | 20–39 | **INCONCLUSIVE** at 20 → extension (seeds 40–59) RUNNING 13:07 |
+| 4d | MountainCarContinuous-v0 | same-against-same, both stacks on the box: ours `r4dours` (SB3 2.9.2/gymnasium 1.4) vs published `r4dpub` (SB3 1.7.0/gym 0.21); rule `5d62e91a`, `experiments/row4d.py` | 20,000 | REPRODUCES iff Hodges-Lehmann 90% CI of ours − pub ⊂ ±5 AND collapse Fisher p ≥ .05; DIFFERS iff MW or Fisher p < .05; else extend to 40/arm | n 20: ours 74.2 ± 16.0 (4/20 < 60), pub 81.8 ± 15.8 (1/20 < 60; seed 25 = 20.6); HL −7.0, 90% CI [−15.7, −0.8]; MW p 0.064; Fisher p 0.34 | 20–39 | **INCONCLUSIVE** at 20 → extension (seeds 40–59) harvested below |
+| 4d | MountainCarContinuous-v0 | the one pre-registered extension, pooled n 40 per arm (same rule, `experiments/row4d.py`) | 20,000 | same three readings; INCONCLUSIVE at 40 = MISSES | ours 72.6 ± 19.0, median 79.4, 9/40 < 60 (seeds 40–59: 71.0); pub 73.4 ± 28.5, median 83.1, 6/40 < 60 (seeds 40–59: 65.0, three runs end below 0); HL −3.75, 90% CI [−9.1, +0.6]; MW p 0.16; Fisher collapses p 0.57 | 20–59 | **MISSES** (not shown equivalent at 40) |
+| 4d | MountainCarContinuous-v0 | control lr 0, 10 per stack | 20,000 | VOID if > 3/20 reach 60 or learners-vs-ctrl Fisher p ≥ .001 | 1/20 ≥ 60; learners vs ctrl Fisher p 2.3e−10 | 20–29 | holds |
 | 4d | MountainCarContinuous-v0 | control lr 0, 10 per stack, on its distribution | 20,000 | VOID if > 3/20 reach 60 or learners-vs-ctrl Fisher p ≥ .001 | 1/20 ≥ 60 (pub seed 29 = 86.4; two more at 53.6, 50.4); Fisher p 3.7e−10 | 20–29 | holds |
 
 ## Row 1 — the miss, and what it is not (11-16)
@@ -140,3 +142,30 @@ Mann-Whitney p is 0.064 — ours scores lower, mostly by partial runs (30.4,
 54.9, 58.4, 59.6) rather than more total collapses (4 vs 1, p 0.34). Row 4c's
 20 seeds pointed the other way (HL −1.3, MW p 0.66). The rule's one
 extension (seeds 40–59, 40/arm) decides; no verdict is read from these 20.
+
+## Row 4d — the extension, 40 seeds per arm (11-16 14:15)
+
+**Verdict by the rule: MISSES** — the HL 90% CI of ours − published,
+[−9.1, +0.6], does not fit inside ±5, and neither DIFFERS clause fires
+(Mann-Whitney p 0.16, collapse Fisher p 0.57). The control held (1/20 frozen
+inits ≥ 60; learners vs control p 2e−10).
+
+**What the 40 seeds say beyond the verdict.** The two means are now 0.8 apart
+(ours 72.6, published code 73.4). The 20-seed lean against ours (HL −7.0)
+did not survive: on seeds 40–59 the published stack scored LOWER (65.0 vs
+71.0), with three runs ending below zero (−8.4, −9.7, −4.6). The published
+code, on this box, at 40 seeds, gives 73.4 ± 28.5 with 6/40 collapses —
+against the store's 87.5 ± 4.2 at n 10, which is the number row 4's band was
+built from. The rule's sizing note predicted a CI width of ~6.5 at n 40; the
+realised width is 9.7, because the reference itself is that spread out.
+Equivalence within ±5 cannot be shown between two learners each with sd
+19–28 at 40 seeds unless the point estimate sits near zero (the width shrinks only as 1/√n: ~6.1 at n 100).
+
+**Reading.** Row 4's published number does not reproduce with the published
+code on this machine (rows 4c and 4d, 60 seeds of the public stack: 76.4
+pooled mean, 7/60 collapses). Our build is not shown different from that
+code (two tests, MW p 0.66 and 0.16), and not shown equivalent. No
+threshold is moved; rows 4, 4b, 4d stay MISSES. No further extension exists
+in the rule. Whether row 4 is closed as "the reference does not reproduce
+its own number" or re-registered at a size that can show ±5 is the
+Director's (INBOX, 11-16 14:15).

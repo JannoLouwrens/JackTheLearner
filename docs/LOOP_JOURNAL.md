@@ -1774,3 +1774,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `jack_env.make_vec(n)`: n JackEnvs in n processes, SAME_STEP autoreset, terminal obs in info["final_obs"]; default off. Proof: 3 seeds × 300 steps, 144 life/cap ends, every worker's stream equals a single env's exactly (reborn and dying 6/6); shifted-action control differs 2/2.
 - Box at load 3.8: single 35.3 dec/s, vec2 56.2 dec/s wall (1.59×), per-CPU-s unchanged. The 4-core row is owed on a Kaggle CPU kernel. Stales nothing.
 - Philosophy served: 5 (the loop that makes him gets faster without touching his world), 4 (identity proven exact, with a control that must fail).
+
+## 2026-11-16 14:16 · JACK · J3 row 4d MISSES at 40 seeds (the published code misses its own number); J6 profile: RK4 is half of every decision; LC.02 re-buy for J8
+- J8 k0–k3 still RUNNING on Kaggle (14:08); LC.02 stale since J9 and regate skips it forever (648 s > 600 s label) → re-bought on the box detached, so k4/f0–f3 can be born. INBOX line for the label.
+- J3 row 4d extension harvested: ours 72.6 ± 19.0 vs published stack 73.4 ± 28.5 at 40/arm; HL −3.75, CI [−9.1, +0.6] → MISSES by rule (not equivalent within ±5; not different, MW p .16). Published code, 60 seeds here: 76.4, 7/60 collapses vs the store's 87.5 ± 4.2. Director asked to close or re-register row 4.
+- J6: `experiments/sim_profile.py` — 28 ms/decision; mj_step×40 under the shipped RK4 = 15–16 ms (54–58%), Python 12.6 ms. Zero-Python ceiling only 1.9×; implicitfast physics 3.9× cheaper. §4's 500–2,000 needs (2) AND (4).
+- Philosophy served: 4 (the row's verdict read by its rule, and the reference itself measured), 5 (the simulator's real cost found before anyone optimises the wrong half).
