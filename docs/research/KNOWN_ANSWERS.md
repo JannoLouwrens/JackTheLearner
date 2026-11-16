@@ -26,6 +26,8 @@ Rules are in that file's docstring, committed before each run.
 | 4b | MountainCarContinuous-v0 | control `r4ctrl`, must fail | 20,000 | VOID unless every seed < 82.4 | 18.7 −1.5 −4.4 −9.5 −6.3 | 5–9 | holds |
 | 4c | MountainCarContinuous-v0 | stack hunt: same entry under the PUBLIC store's own stack (py3.9, SB3 1.7.0, gym 0.21.0, torch 1.12.0, numpy 1.23.1; `r4pub`, rule `aa209cd5`, `experiments/row4_stack.py`, box) | 20,000 | reading A ≥ 3/20 collapse (< 60) / B ≤ 1 and mean in 82.6…92.4 / C otherwise | 82.3 ± 11.6, median 84.2 (86.0 82.4 82.7 78.9 83.9 91.4 80.1 88.6 93.5 82.0 88.3 42.1 92.4 68.7 88.9 84.0 85.9 84.4 69.2 92.0); 1/20 < 60 (seed 11 solved then collapsed), 2 more partial; vs ours (rows 4+4b, 20 seeds, 74.0 ± 23.9, 4/20): Mann-Whitney p 0.66, Fisher collapses p 0.34 | 0–19 | **VOID** (control) — data: C |
 | 4c | MountainCarContinuous-v0 | control `r4pubctrl` lr 0, must fail | 20,000 | VOID unless every seed < 60 | **98.0** −2.1 −1.6 −8.6 −0.7 — seed 0's frozen initial policy solves every episode (98 each, 191–430 steps) | 0–4 | **BREACHED** |
+| 4d | MountainCarContinuous-v0 | same-against-same, both stacks on the box: ours `r4dours` (SB3 2.9.2/gymnasium 1.4) vs published `r4dpub` (SB3 1.7.0/gym 0.21); rule `5d62e91a`, `experiments/row4d.py` | 20,000 | REPRODUCES iff Hodges-Lehmann 90% CI of ours − pub ⊂ ±5 AND collapse Fisher p ≥ .05; DIFFERS iff MW or Fisher p < .05; else extend to 40/arm | n 20: ours 74.2 ± 16.0 (4/20 < 60), pub 81.8 ± 15.8 (1/20 < 60; seed 25 = 20.6); HL −7.0, 90% CI [−15.7, −0.8]; MW p 0.064; Fisher p 0.34 | 20–39 | **INCONCLUSIVE** at 20 → extension (seeds 40–59) RUNNING 13:07 |
+| 4d | MountainCarContinuous-v0 | control lr 0, 10 per stack, on its distribution | 20,000 | VOID if > 3/20 reach 60 or learners-vs-ctrl Fisher p ≥ .001 | 1/20 ≥ 60 (pub seed 29 = 86.4; two more at 53.6, 50.4); Fisher p 3.7e−10 | 20–29 | holds |
 
 ## Row 1 — the miss, and what it is not (11-16)
 
@@ -127,3 +129,14 @@ sign solves this task; ours drew 0 of 10 such inits, the public stack 1 of 5.
 A per-seed "every control below" clause is brittle on a task a lucky init can
 solve; the next rule must state its control on the control's distribution,
 written before it runs, not relaxed after it.
+
+## Row 4d — same-against-same, first 20 seeds (11-16 13:05)
+
+Both stacks on the box, fresh seeds 20–39, so host and seeds are not factors.
+The control held on its distribution (1 of 20 frozen inits reach 60). At 20
+seeds the reading is INCONCLUSIVE by the rule, but not neutral: the 90% CI of
+ours − published, [−15.7, −0.8], lies wholly below zero (point −7.0) and the
+Mann-Whitney p is 0.064 — ours scores lower, mostly by partial runs (30.4,
+54.9, 58.4, 59.6) rather than more total collapses (4 vs 1, p 0.34). Row 4c's
+20 seeds pointed the other way (HL −1.3, MW p 0.66). The rule's one
+extension (seeds 40–59, 40/arm) decides; no verdict is read from these 20.
