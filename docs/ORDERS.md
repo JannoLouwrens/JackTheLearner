@@ -89,11 +89,11 @@ succeeds). The gate that moves d on success is a later order; judging stays
 on fixed layouts at d = 1. Learner-side settings belong to J3/J5.
 serves: M2 · PLAN stage 1 lines 2, 5 · philosophy 5 (his world matters as much as he does).
 **done when:** options and tests are committed and `WORLD_CARD.md` names `d0` with its table.
-state: 20:35 items 3+4 DONE (`14e637c4`): `reward=` "dr100-eat" (100×drive reduction + 100/eat, EVAAA) and "dr100-eat-pos" (alive never negative); `max_episode_decisions` → truncated, world untouched, life carries on. Proof `tests/test_jack_env_options.py` PASS 3 seeds; J1 identity proof PASS unchanged.
-state: 20:55–21:45 item 1 meal/regrowth (`9c4341db`) + spawn distance (`de2a4efc`): proofs `test_jack_env_dial`, `test_jack_env_spawn` PASS.
+state: items 1, 3, 4 DONE 11-15: reward options dr100-eat/-pos + truncation (`14e637c4`); dial meal/regrowth (`9c4341db`), spawn distance (`de2a4efc`); proofs test_jack_env_options/_dial/_spawn PASS, J1 identity PASS.
 state: 22:45 item 1 DONE — food count (`c73a8fdb`): obj2..4 become floor food at low d (up to 5 at d=0; 4-object seed worlds max 4). `test_jack_env_foodcount` PASS; spawn proof re-pointed at all foods, PASS; dial + J1 identity PASS. Caveat for 5: at d=0 a body resting on food eats every decision (seed 153: 84 eats/400) — world_card's floor_meals counts obj0+obj1 only; count all `floor_foods` and read contact-eats.
 state: 23:05 item 2 needs (`b800a247`): `random_needs=s` (trp_env s=1/6), proof PASS.
 state: 11-16 item 2 DONE — `random_layout=True` (`55cc10f0`): foods re-placed at random legal grid cells every life, body by today's rule or the dial's; proof `test_jack_env_layout` PASS 3 seeds (off byte-identical, control FAILS on today's world). Caveat: at d=0 the body lands exactly 0.44 m (one cell) from a food. next: item 5 (d0) — but its rule is met at d=1 already (J1 flag, INBOX); measure with the rule as written AND report the d at which random also sustains ≥1 life, counting all floor foods and contact-eats.
+state: 11-16 00:29 item 5 RULE committed before any run (`8af5f2e1`, world_card docstring "ENTRY-RUNG RULE"): d0 = largest d in {1 (J1 rows), .75, .5, .25, 0} where d8 eats ≥1 floor bout in ≥50% of lives and a caps ≤1/200; d_sus (≥1 capped d8 life) beside it; new per-life floor_eats_all + floor_bouts. RUNNING on Kaggle CPU, one kernel per d: jack-cpu-1794788783 (.75), …798 (.5), …920 (.25), …935 (0); watchers detached, lives → /data/jack-logs/world_card/entry_dXX.jsonl. next: harvest the four, table + d0 + d_sus into WORLD_CARD.md's J2 item 5 section; then J2 DONE.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5

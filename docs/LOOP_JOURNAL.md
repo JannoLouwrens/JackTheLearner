@@ -1602,3 +1602,9 @@ J1: row e (privileged forager, food served when due) back from Kaggle: 200/200 l
 Found: J2 (5)'s d0 rule is already met at d=1 (d8 eats ≥1 in 55% of lives) — INBOX ruling asked.
 J2: `random_layout=True` — every floor food re-placed at a random legal cell each life, body drawn after (`55cc10f0`). Proof PASS 3 seeds × 4 lives, off byte-identical, control check FAILS on today's world. Box CPU ~4 min (proof 3.0 CPU-min, nice 19).
 Philosophy served: 5 (his world measured before a brain is judged in it; lives now get new layouts as published worlds do), 4 (a prior claim corrected by its own data; control that must fail).
+
+## 2026-11-16 00:37 · JACK · J2 item 5 (entry rung d0): rule committed, four Kaggle kernels running (short slot)
+Rule first (`8af5f2e1`): d0 = largest d in {1, .75, .5, .25, 0} where held-8 random eats ≥ 1 floor BOUT in ≥ 50% of lives and do-nothing reaches the cap in ≤ 1/200; d = 1 is J1's rows (rule already holds there, INBOX). Beside it d_sus = largest d with ≥ 1 capped random life (1,800 s burns ≥ 3 bars, so a capped life ate). world_card gains a_dXX/d8_dXX rows, floor_eats_all (every dialled food) and floor_bouts (eats > 5 decisions apart per food).
+Launched on Kaggle CPU, one kernel per d: jack-cpu-1794788783/798/920/935 (.75/.5/.25/0). First two launches of .25/0 were refused — by the 60 s young-watcher rule, then by the GPU dirty-tree guard on my own uncommitted WORLD_CARD edit; relaunched after commit.
+Box smoke (tuning seeds 153/154, 1 life, ~6 CPU-min nice 19): no crash; d=0 a dies at 600 s both; d8 at d=0 seed 153 logged 254 eats and STILL starved at 692 s — eats while full beside its spawn food, then wandered off. Raw eats at low d overstate feeding; bouts and capped share are the readings.
+Philosophy served: 5 (his world: finding the rung he can live on), 4 (rule and its readings fixed before any registered life).
