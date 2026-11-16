@@ -1721,3 +1721,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Test: the split launches exactly the rule's 35 runs once (seeds 301–320 / 301–305), ≤4 per kernel, job compiles; harness suite 35/35.
 - Box plumbing, b/blr0/noop seed 301 at 5,200 decisions (past the 5,000 warm-up, so B and blr0 did train): all three rc 0, 4/4/2 lives logged. No kernel launched: the prereg freeze (B vs blr0) comes first and did not fit a 27-minute slot.
 - Philosophy served: 4 (the runs launched are mechanically the runs registered), 6 (free Kaggle CPU sized to fit).
+
+## 2026-11-16 · SYSTEM · S7(1): another lane's dashboard dirt no longer kills a GPU run (`36e20081`)
+- `gpu.assert_ref_is_current` now refuses only code dirt the VM could load: anything under `experiments/`, or a file experiment code names. Dashboard files and `scripts/dashboard_status.py` are recorded as `foreign_dirt` in the attempt row instead — the exact dirt that ended D1.0's slice after 5.9 GPU-h on 11-15.
+- The `+dirty` stamp predicate (`offending_dirt`, pinned by T0.22 P15) is unchanged. Planted test 4/4, including the old predicate as the must-fail control.
+- Philosophy served: 5, 6 (free GPU hours no longer lost to a neighbour's uncommitted files).

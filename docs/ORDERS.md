@@ -259,7 +259,8 @@ for the same slug. (4) `scripts/test_lane_guard.sh` passes at clean HEAD
 while two detached jobs are alive.
 serves: philosophy 4, 5 · objective 3.
 **done when:** the four planted tests pass.
-state: open — ordered 11-15.
+state: 11-16 (1) DONE `36e20081`: guard refuses only dirt the VM could load (under `experiments/`, or named by experiment code); dashboard/status-script dirt goes into the attempt row as `foreign_dirt`. Planted test `experiments/tests/test_gpu_dirt_guard.py` 4/4.
+state: next: (2) `launch_detached.sh` takes `JACK_REPO`; (3) `JACK_REUSE_KERNEL` first submit only; (4) `test_lane_guard.sh` with two live jobs.
 
 ### S6 — A video the owner can watch (owner request 11-12) — split so one slot finishes one step
 part: (machine — he can be known) · stage: — · step: —
