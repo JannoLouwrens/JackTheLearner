@@ -1633,3 +1633,9 @@ Box CPU < 2 min. Philosophy served: 4 (a failure investigated against the record
 #1 rule committed before any run (`80f63594`): `compare()` = ruling 19's two looks (10/20 runs, 0.025 each, futility at look 1); same-against-same on two synthetic scenarios (S1 mixed, ~31% censored; S2 ties, ~76% censored), 1,000 reps each, n_perm 2000; pass iff false alarms ≤ 0.050 in each; control judged at 0.05 per look must exceed 0.050 or the check is VOID.
 Running detached on the box (2 workers, nice 19, ~1 h): at ~40 reps S1 0.048, S2 0.000, control 0.119 — no reading yet. The running processes' header hash is `80f63594`'s harness file; later appends touch no code `compare` calls.
 Philosophy served: 4 (the instrument that will choose his brain must pass a same-against-same test that could fail — the published tool failed it at 10–12%).
+
+## 2026-11-16 02:55 · JACK · J4 #3 PASS (J2's four kernels, J3 row 1b and J4 #1 all still running; nothing to harvest)
+#3 floor/ceiling calibration: `calibration_gate` in new `experiments/harness/calibration.py` = §8's gate — floor arms ≤ 1 success in total, every scripted-forager run crosses by T (no seed replaced), a missing or empty arm VOIDs. Through the real `outcome`→`compare`: record-like ceiling (24–27 meals) vs floor (Poisson 0.1) = A_DIFFERS at look 1; floor vs floor = FUTILE. Mutations (gate no-op; limit 1→2) turn 2 tests red. 21 harness tests PASS.
+Verified the predecessor's claim: #1's recorded hash 1b9ed0cf = `80f63594`'s `__init__.py`; kept #3 out of that file so the pin stays meaningful.
+#1 interim at ~350/1000: S1 0.040, S2 0.017, uncorrected control 0.060/0.063 — INCOMPLETE, not a reading.
+Philosophy served: 4 (the instrument that will choose his brain now refuses to judge when its floor arms succeed or its ceiling fails).

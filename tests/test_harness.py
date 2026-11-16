@@ -125,6 +125,56 @@ def test_13_dropped_extra_duplicate_and_missing_arm_all_raise():
         raise AssertionError(f"expected ValueError for {launched} vs {analysed}")
 
 
+# ---- #3: calibration arms at floor and ceiling ------------------------------
+def _calib_runs(kind, n, seed):
+    """Synthetic per-life logs through the real `outcome`: floor = the record's
+    random arm (0-0.2 meals/life -> Poisson 0.1), ceiling = its scripted
+    forager (24-27 meals/life). 1,000-decision lives, W=3, T=60,000."""
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    runs = []
+    for _ in range(n):
+        if kind == "floor":
+            lives = [(1000, int(rng.poisson(0.1))) for _ in range(60)]
+        else:
+            lives = [(1000, int(rng.integers(24, 28))) for _ in range(60)]
+        runs.append(outcome(lives, 3, 60_000))
+    return runs
+
+
+def test_3_gate_valid_on_record_like_arms():
+    from experiments.harness.calibration import calibration_gate
+    floor = {a: _calib_runs("floor", 3, i) for i, a in enumerate(("random", "statue", "twin"))}
+    floor["shuffled"] = _calib_runs("floor", 5, 9)
+    g = calibration_gate(floor, {"scripted": _calib_runs("ceiling", 3, 4)})
+    assert g.valid and g.floor_successes == 0 and g.ceiling_misses == 0, g
+
+
+def test_3_gate_voids_two_floor_successes_or_one_ceiling_miss():
+    from experiments.harness.calibration import calibration_gate
+    hit, miss = Outcome(3000.0, True), Outcome(60_000.0, False)
+    ceil = {"scripted": [hit] * 3}
+    assert calibration_gate({"random": [hit, miss, miss]}, ceil).valid          # 1 in total: allowed
+    assert not calibration_gate({"random": [hit, miss], "statue": [hit]}, ceil).valid  # 2 across arms
+    assert not calibration_gate({"random": [miss] * 3}, {"scripted": [hit, miss, hit]}).valid
+
+
+def test_3_gate_voids_missing_or_empty_arms():
+    from experiments.harness.calibration import calibration_gate
+    hit, miss = Outcome(3000.0, True), Outcome(60_000.0, False)
+    assert not calibration_gate({}, {"scripted": [hit]}).valid
+    assert not calibration_gate({"random": [miss]}, {}).valid
+    assert not calibration_gate({"random": []}, {"scripted": [hit]}).valid
+
+
+def test_3_pipeline_separates_ceiling_from_floor_and_floor_is_futile():
+    from experiments.harness import compare
+    floor, ceil = _calib_runs("floor", 20, 11), _calib_runs("ceiling", 20, 12)
+    v = compare(ceil, floor, n_perm=500, rng=0)
+    assert v.decision == "A_DIFFERS" and v.look == 1, v
+    assert compare(floor, _calib_runs("floor", 20, 13), n_perm=200, rng=0).decision == "FUTILE"
+
+
 if __name__ == "__main__":
     import sys
     fails = 0

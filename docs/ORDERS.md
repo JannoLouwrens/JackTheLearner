@@ -139,10 +139,10 @@ that will pay it (they need B, from J3). Result table →
 `docs/research/HARNESS_CHECKS.md`. No ledger spec; this is the instrument.
 serves: M3 · PLAN stage 1 "the test harness passes its own thirteen checks" · philosophy 4.
 **done when:** the six checks pass as tests and the seven owed are listed.
-state: 11-16 01:50 (1) outcome code + permutation log-rank + Fisher/Boschloo in `experiments/harness/` (`42495306`), SciPy only. Crash/NaN = censored at T (our reading of ruling 19, in docstring).
-state: (2) #10 PASS (10 edge-case tests; mutation turns 4 red), #12 PASS (Fisher 0.0996, Boschloo 0.0433). Run: `python -m tests.test_harness` (no pytest in venv). Table `docs/research/HARNESS_CHECKS.md`; (3) #2,#4–#9 listed owed with their orders.
-state: 11-16 02:30 #13 PASS (`check_runs_accounted`, dropped/extra/duplicate/missing-arm all raise; no-op mutation turns it red). #1 rule committed before any run (`80f63594`): `compare()` = ruling 19's two looks + futility; `same_vs_same.py` S1 mixed (31% censored) / S2 ties (76%), 1,000 reps each, n_perm 2000, PASS iff ≤ 0.050 each, control 0.05/look must exceed 0.050 else VOID.
-state: #1 RUNNING detached (box, nice 19, ~16 reps/min each, done ~03:30): `/data/jack-logs/harness/svs_S{1,2}.jsonl`; at 42/38 reps S1 0.048, S2 0.000, control 0.119. next: `python -m experiments.harness.same_vs_same tally <S1> <S2>` → HARNESS_CHECKS row 1; a FAIL is fixed in the harness. Then #3 floor/ceiling arms, #11 (freeze `analysis_hash`).
+state: 11-16 (1) outcome code + permutation log-rank + Fisher/Boschloo (`42495306`). #10 PASS, #12 PASS (Fisher 0.0996, Boschloo 0.0433), #13 PASS (`check_runs_accounted`). Tests: `python -m tests.test_harness` (21 PASS). Table `docs/research/HARNESS_CHECKS.md`; #2,#4–#9 listed owed.
+state: 11-16 02:55 #3 PASS — `experiments/harness/calibration.py` `calibration_gate` (§8: floor ≤ 1 success total, every ceiling run crosses, missing arm VOID); 4 tests incl. ceiling-vs-floor A_DIFFERS at look 1, floor-vs-floor FUTILE; two mutations turn it red. `__init__.py` untouched: #1's pinned hash 1b9ed0cf = `80f63594`'s file, verified; HEAD differs only by `53a21fb9`'s append.
+state: #1 RUNNING detached (rule `80f63594`), at ~350/1000 reps: S1 0.040 (CP95 .022–.066), S2 0.017, control 0.060/0.063 — INCOMPLETE, no reading. Logs `/data/jack-logs/harness/svs_S{1,2}.jsonl`, done ~03:30.
+state: next: `python -m experiments.harness.same_vs_same tally <S1> <S2>` → HARNESS_CHECKS row 1 (a FAIL is fixed in the harness); then #11: freeze `analysis_hash()` of `__init__.py`+`calibration.py` into a pre-registration file the comparison refuses to run without. Then J4 DONE.
 
 ### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
 part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7

@@ -7,7 +7,7 @@ Code: `experiments/harness/__init__.py`. Tests: `python -m tests.test_harness` (
 |---|---|---|---|
 | 1 | same-against-same ≥ 1,000 reps, false alarms ≤ stated rate | RUNNING 11-16 | rule committed first (`80f63594`, `experiments/harness/same_vs_same.py` docstring): `compare()` = two looks 10/20 at 0.025 + futility, n_perm 2000; S1 mixed (34% censored), S2 ties (78% censored), 1,000 reps each; PASS iff ≤ 0.050 each; control 0.05/look must exceed 0.050 else VOID. Logs `/data/jack-logs/harness/svs_S{1,2}.jsonl`. |
 | 2 | handicapped copy (lr 0) detected at planned power | OWED (needs B, J3) | — |
-| 3 | floor and ceiling calibration arms | OWED (J4) | — |
+| 3 | floor and ceiling calibration arms | PASS 11-16 | `experiments/harness/calibration.py` `calibration_gate(floor, ceiling)` = §8 gate: floor arms ≤ 1 success in total, every ceiling (scripted forager) run crosses by T, missing/empty arm → VOID (our readings in its docstring: success = `Outcome.event`; "must pass" = every run, no seed replaced). 4 tests: record-like arms (floor Poisson 0.1 meals/life, ceiling 24–27) VALID; 1 floor success allowed, 2 across arms VOID, 1 ceiling miss VOID; missing/empty arms VOID; through `outcome`→`compare` ceiling vs floor = A_DIFFERS at look 1, floor vs floor = FUTILE. Mutations (gate a no-op; floor limit 1→2) turn 2 tests red. Separate file so `__init__.py` (hash pinned by #1) is untouched. |
 | 4 | same seed twice → identical logs | OWED (J3) | — |
 | 5 | run k sees same world in every arm | OWED (J2/J3 wiring) | — |
 | 6 | resume across kernel boundary = uninterrupted | OWED (J3/J5) | — |
