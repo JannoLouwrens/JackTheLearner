@@ -1063,6 +1063,28 @@ def _kaggle_poll(kid: str, timeout_s: float, t_open: float) -> tuple[str, float,
     return "queued", time.time() - t_open, note
 
 
+_REUSED_SLUGS: set[str] = set()
+
+
+def _claim_reuse(reuse: str) -> Optional[str]:
+    """S7 (3): JACK_REUSE_KERNEL is consumed by the FIRST kaggle submission in
+    a process. The env var outlives that call, so a second body (the next seed
+    of a multi-seed spec) used to reattach the same kernel and record the first
+    seed's numbers as its own. Now any later ask for a reattached slug is
+    refused. Returns the refusal message, or None (and marks the slug used).
+    """
+    if not reuse:
+        return None
+    slug = reuse.split("/", 1)[1] if "/" in reuse else reuse
+    if slug in _REUSED_SLUGS:
+        return (f"reattach refused: JACK_REUSE_KERNEL={reuse} was already "
+                f"used by an earlier submission in this process; a second "
+                f"body would record that kernel's output as its own. Unset "
+                f"JACK_REUSE_KERNEL to push this job fresh.")
+    _REUSED_SLUGS.add(slug)
+    return None
+
+
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   fetch: Optional[list[str]] = None,
                   journal: Optional[Path] = None, cpu: bool = False) -> JobResult:
@@ -1082,8 +1104,11 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     the real log — a refusal with no cause in the test's own inputs.
     """
     t0 = time.time()
-    work = Path(tempfile.mkdtemp(dir="/data"))
     backend = "kaggle-cpu" if cpu else "kaggle"
+    refusal = _claim_reuse(os.environ.get("JACK_REUSE_KERNEL", "").strip())
+    if refusal:
+        return JobResult(backend, False, billable_s=0.0, message=refusal)
+    work = Path(tempfile.mkdtemp(dir="/data"))
 
     # `kaggle config view` prints text, not JSON; read the username from it.
     cfg = subprocess.run([KAGGLE, "config", "view"], capture_output=True, text=True).stdout
@@ -1097,8 +1122,8 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     # keeps computing and its artifact survives on Kaggle — the only thing lost
     # is the process that was waiting. JACK_REUSE_KERNEL=<slug or user/slug>
     # skips the push and polls/fetches that kernel instead, so recovering a
-    # finished run costs zero GPU quota. One-shot by design: the env var names
-    # ONE kernel, so only the next kaggle submission reuses it.
+    # finished run costs zero GPU quota. One-shot (S7 (3)): `_claim_reuse`
+    # lets only the first submission in a process reattach.
     reuse = os.environ.get("JACK_REUSE_KERNEL", "").strip()
     if reuse:
         slug = reuse.split("/", 1)[1] if "/" in reuse else reuse

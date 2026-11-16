@@ -606,6 +606,7 @@ def _probe_reattach() -> dict:
             receipts = Path(sd) / "receipts.jsonl"
 
             gpu._run = _fake_cli(write_log=True)
+            gpu._REUSED_SLUGS.discard(slug)  # S7(3): each probe is its own recovery
             os.environ["JACK_REUSE_KERNEL"] = slug
             try:
                 reattach = gpu.run_on_kaggle(script, timeout_s=120,
@@ -614,6 +615,7 @@ def _probe_reattach() -> dict:
                 del os.environ["JACK_REUSE_KERNEL"]
 
             gpu._run = _fake_cli(write_log=False)
+            gpu._REUSED_SLUGS.discard(slug)
             os.environ["JACK_REUSE_KERNEL"] = slug
             try:
                 no_log = gpu.run_on_kaggle(script, timeout_s=120,
