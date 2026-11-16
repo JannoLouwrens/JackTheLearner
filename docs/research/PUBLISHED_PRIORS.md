@@ -498,3 +498,9 @@ Long form: `/data/jack-research/reports/PRIORS section 12.md`.
 - `size1m` from 64x64 on the T4: speed, and whether it learns.
 
 **Not verified:** R2-Dreamer and TD-MPC2 pixel scores (curves); DreamerV3's size table; Mac render speed (unpublished); Achille's loss size (figures); Safety Gym / Animal-AI rays vs pixels (none found).
+
+## 13. The lie-still trap: movement cost, and the reward that got agents eating (2026-11-16; serves J8; answers the INBOX `RESEARCH:` line of 11-16 16:04)
+
+Long form: `/data/jack-research/research_notes/j8_lie_still/` (three parts). SKELETON — the published side is being read now.
+
+**Our own arithmetic first (inf, from `drives.py:117-118`, `:192`, `jack_env.py:606-613`; measured by nobody):** with only energy off its set point the drive is (1 − e)², so under `dr100-eat` a whole life's undiscounted return is 100·(d_birth − 1) + 100·meals + the meals' drive gain: every life pays about −100 however it is lived, and +100 or more per meal (checks against the pilot: +16 at 1.15 meals, −78 at 0.20). Lying still does not shrink the bill, it only DELAYS it past the 40 s horizon: per decision the bill is 0.067·(1 − e) at rest and 0.133·(1 − e) under random motion. A random mover's meals are worth 100 × 1.15 / 1,370 decisions = +0.084 per decision, more than the extra 0.067·(1 − e) it pays — so stillness is NOT the optimum of this reward even at a 40 s horizon; it is a trap of learning (a sure dense signal learned before a rare large one). The death step itself costs ~0 in all three rewards (d ≈ 1 = D_DEATH when energy runs out).
