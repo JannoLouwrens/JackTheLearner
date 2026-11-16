@@ -88,6 +88,38 @@ REPRODUCES; ours -302.0 +- 22.2 REPRODUCES; ctrl -1227.7 (valid). Secondary:
 Mann-Whitney vs the reference's 14 runs lib p = 0.011, ours p = 0.42; below
 the reference's worst lib 5/15, ours 2/15. Next: row 3.
 
+=============================================================================
+THE RULE — row 3, committed before any run (11-16).
+=============================================================================
+Task       gymnasium 1.4.0 `MountainCarContinuous-v0`, default (999-step time
+           limit = truncated; reward +100 at the flag minus 0.1*action^2),
+           wrapped in SB3 `Monitor`. Sparse: no shaping.
+Steps      50,000 environment steps.
+Arms       r3lib   SB3 SAC (PyTorch) with the rl-zoo3 2.9.2 `sac.yml` entry
+                   `MountainCarContinuous-v0` UNMODIFIED: lr 3e-4, buffer
+                   50,000, batch 512, ent_coef 0.1 (fixed), train_freq 32,
+                   gradient_steps 32, gamma 0.9999, tau 0.01, learning_starts
+                   0, use_sde True, policy_kwargs log_std_init -3.67,
+                   net_arch [64, 64], use_expln True; all else library default.
+           r3ctrl  CONTROL THAT MUST FAIL: r3lib with learning_starts =
+                   50,001 — SB3's warm-up (uniform random actions) for all
+                   50k steps and no gradient step (learning removed, plumbing
+                   kept); evaluated with its untrained deterministic policy.
+Metric     per seed, after training: the mean return of 10 deterministic
+           evaluation episodes (`deterministic=True`) on a fresh Monitor-
+           wrapped env reset with seed 10_000 + seed (§5 row 3: "deterministic
+           evaluation"; the Zoo's own evaluation also uses 10 episodes).
+           Training returns are recorded beside it and do not decide.
+Seeds      0, 1, 2, 3, 4.
+Accept     r3lib REPRODUCES iff its metric is > 90 on >= 3 of the 5 seeds
+           (§5: public store 9 of 10 seeds solved, 93.4-95.3). VOID if r3ctrl
+           scores > 90 on any seed.
+           A miss means the build is broken: the stack hunt, not row 3b.
+Order      r3lib first. An SBX (`ours`) or pink-noise variant is a LATER rule,
+           registered only after r3lib reproduces (§5: SBX's use_sde is a
+           held noise draw, not SB3's gSDE — it is a different recipe and
+           must pass this row on its own before it is used).
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |
@@ -117,6 +149,11 @@ ROW1_SEEDS = (0, 1, 2, 3, 4)
 ROW1_STEPS = 20_000
 ROW1_BAND = (-314.7, -282.1)
 ROW1_ARMS = ("lib", "ours", "ctrl")
+ROW3_SEEDS = (0, 1, 2, 3, 4)
+ROW3_STEPS = 50_000
+ROW3_ARMS = ("r3lib", "r3ctrl")
+ROW3_EVAL_EPISODES = 10
+ROW3_SOLVED = 90.0
 ROW1B_SEEDS = tuple(range(5, 20))
 ROW1B_CTRL_SEEDS = tuple(range(5, 10))
 PINS = ["stable-baselines3==2.9.2", "sb3-contrib==2.9.2", "sbx-rl==0.28.0",
@@ -304,11 +341,103 @@ def row1b_kernel() -> dict:
     return r
 
 
+def make_row3(arm: str, seed: int, steps: int = ROW3_STEPS):
+    """Row 3: the Zoo's sparse-MountainCar SAC gSDE entry, unmodified."""
+    _single_thread()
+    import gymnasium as gym
+    import torch
+    torch.set_num_threads(1)
+    from stable_baselines3 import SAC
+    from stable_baselines3.common.monitor import Monitor
+    if arm not in ROW3_ARMS:
+        raise ValueError(f"arm {arm!r} not in {ROW3_ARMS}")
+    env = Monitor(gym.make("MountainCarContinuous-v0"))
+    return SAC("MlpPolicy", env, learning_rate=3e-4, buffer_size=50_000,
+               batch_size=512, ent_coef=0.1, train_freq=32, gradient_steps=32,
+               gamma=0.9999, tau=0.01,
+               learning_starts=(steps + 1 if arm == "r3ctrl" else 0),
+               use_sde=True, seed=seed, device="cpu",
+               policy_kwargs=dict(log_std_init=-3.67, net_arch=[64, 64], use_expln=True))
+
+
+def run_row3_cell(arm: str, seed: int, steps: int = ROW3_STEPS,
+                  n_eval: int = ROW3_EVAL_EPISODES) -> dict:
+    t0 = time.time()
+    model = make_row3(arm, seed, steps)
+    model.learn(total_timesteps=steps)
+    train = [float(r) for r in model.get_env().envs[0].get_episode_rewards()]
+    import gymnasium as gym
+    ev = gym.make("MountainCarContinuous-v0")
+    obs, _ = ev.reset(seed=10_000 + seed)
+    rets = []
+    for _ in range(n_eval):
+        done, tot = False, 0.0
+        while not done:
+            a, _ = model.predict(obs, deterministic=True)
+            obs, r, term, trunc, _ = ev.step(a)
+            tot += float(r)
+            done = term or trunc
+        rets.append(tot)
+        obs, _ = ev.reset()
+    return {"row": 3, "arm": arm, "seed": seed, "steps": steps,
+            "eval_returns": rets, "eval_mean": sum(rets) / len(rets),
+            "episodes": len(train), "mean_return": sum(train) / max(1, len(train)),
+            "train_returns": train, "wall_s": round(time.time() - t0, 1),
+            "versions": versions()}
+
+
+def verdict_row3(cells: list) -> dict:
+    by = {}
+    for c in cells:
+        by.setdefault(c["arm"], []).append(c)
+    out = {}
+    for arm, cs in by.items():
+        cs = sorted(cs, key=lambda c: c["seed"])
+        out[arm] = {"seeds": [c["seed"] for c in cs],
+                    "eval_per_seed": [round(c["eval_mean"], 1) for c in cs],
+                    "solved": sum(c["eval_mean"] > ROW3_SOLVED for c in cs),
+                    "complete": [c["seed"] for c in cs] == list(ROW3_SEEDS)}
+    ctrl, lib = out.get("r3ctrl"), out.get("r3lib")
+    void = ctrl is None or not ctrl["complete"] or ctrl["solved"] > 0
+    ok = lib is not None and lib["complete"] and lib["solved"] >= 3
+    out["verdict"] = "VOID" if void else ("r3lib REPRODUCES" if ok else "r3lib MISSES (build broken)")
+    return out
+
+
+def row3_cells() -> list:
+    return [(a, s) for a in ROW3_ARMS for s in ROW3_SEEDS]   # r3lib first
+
+
+def row3_kernel() -> dict:
+    """Submit row 3 (r3lib, r3ctrl x 5 seeds) as one Kaggle CPU kernel."""
+    from experiments.gpu import build_job, result_json, submit
+    body = (_JOB.replace("__CELLS__", repr(row3_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
+            .replace("from experiments.brain_b import run_parallel, verdict_row1",
+                     "from experiments.brain_b import run_parallel, verdict_row3")
+            .replace("__VERDICT__", "verdict_row3(ok)"))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=3.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_row1.json"])
+    if not sub.ok:
+        raise RuntimeError(f"brain_b row3 kernel: {sub.message}")
+    r = result_json(sub, "brain_b_row1.json")
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / "row3.json").write_text(json.dumps(r, indent=1))
+    print(json.dumps(r.get("verdict"), indent=1), flush=True)
+    return r
+
+
 def main(argv):
     if len(argv) >= 5 and argv[1] == "cell":      # cell <arm> <seed> <out.json> [steps]
-        steps = int(argv[5]) if len(argv) > 5 else ROW1_STEPS
-        rec = run_row1_cell(argv[2], int(argv[3]), steps)
+        if argv[2] in ROW3_ARMS:
+            steps = int(argv[5]) if len(argv) > 5 else ROW3_STEPS
+            rec = run_row3_cell(argv[2], int(argv[3]), steps)
+        else:
+            steps = int(argv[5]) if len(argv) > 5 else ROW1_STEPS
+            rec = run_row1_cell(argv[2], int(argv[3]), steps)
         Path(argv[4]).write_text(json.dumps(rec))
+        return 0
+    if len(argv) >= 2 and argv[1] == "row3-kernel":
+        row3_kernel()
         return 0
     if len(argv) >= 2 and argv[1] == "row1b-kernel":
         row1b_kernel()
