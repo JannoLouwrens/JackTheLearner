@@ -3451,3 +3451,79 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## 2026-11-16 06:50 UTC — Director, DAILY sitting: rulings
+
+**22. Stage 2's mark is strengthened to a sustained life, and the entry rung
+is d0 = 0.75.** Ruling 19 was written before J1 measured the world. J1: a
+life is sustained only at ≥ 70% of perfect harvest (about 37 floor meals per
+1800 s at d = 1); a forager averaging 6.9 meals clears "≥ 5 meals" while all
+200 of its lives end in hunger. So, strengthening only: the PRIMARY outcome
+is decisions until W consecutive lives are each SUSTAINED — the life reaches
+the time cap AND its food intake over the life is at least its basal drain
+(intake ≥ drain, computed from `drives.py` at the rung being run; at d = 1
+that is the 70% line). The 5-meal mark (θ = 5) stays in the harness as a
+reported secondary, "first signs of eating"; it decides nothing. Everything
+else in ruling 19 stands (log-rank, two looks, floors, fresh seeds, no run
+count cut). The harness gains the sustained mark as a second outcome with
+its own edge-case tests (J8 item 3 uses it; check #10 is re-run on it).
+The gate: "the scripted forager must pass" is read with the PRIVILEGED row e
+as the ceiling arm — it proves the mark is reachable in the world, which is
+all a ceiling arm can prove. Proof that his SENSES suffice is a separate
+stage-1 item (ruling 23), and stage 2 is not run at a rung where that proof
+is still negative. Entry rung: J2's rule as written names d = 1, where
+nothing lives; §3 says a rung is accepted only where random "neither always
+fails nor already succeeds". The rule gains its missing lower clause: held-8
+random must reach the cap in ≥ 1 and ≤ 20 of 200 lives, with do-nothing ≤ 1
+of 200 and ≥ 1 bout in ≥ 50% of lives as before. On the four tables already
+in (this clause is written AFTER they were read — stated plainly; it selects
+the HARDER of the two settings that qualify, 0.75 over 0.5): **d0 = 0.75**
+(random capped 2/200, statue 0/200, 69% eat). d ≤ 0.25 fails (statue capped
+6 and 24 of 200); no rung below 0.5 is used until the dial's easy end is
+repaired (instant re-placement must not land food on a body that stands
+still) — not ordered now, the ladder needs only 0.75 → 1.
+
+**23. J1's learnability answer is NEGATIVE at d = 1, and no third ruler is
+tuned.** `f` (6/20) and `f2` (13/20, tuned after `f`, fresh seeds) both
+missed 18/20. A third hand-tuned forager on the same bar would be a search.
+The proof now comes the way PLAN names it: the clone of a forager inside his
+own network (E2b) and the learner given the direction to food (E2c), at d0,
+plus J8 itself (a plain published learner in his world). ROADMAP M3 records
+the negative.
+
+**24. The fair chance for the seven in-house brains (owner, 11-15 19:31).**
+Adopted as asked. They have no published scores, so "passes a row" is:
+reaches the row's published band within 3× the published learner's steps on
+≥ 3 of 5 seeds, its own never-trains control failing — rule committed in
+J3(4) before any run. Passing arms enter the pilot after B on the same
+seeds, length and rule, twice each (own settings; §1's settings). A failing
+arm is set aside with its numbers and may return repaired. PROGRESS reports
+when each half happens.
+
+**25. One hook in `w0.py`, for the dying body's observation.** Stage-1 orders
+may not edit world files; this is the exception, because the alternative is
+a world model that learns a false picture of death (§5, §8 check 8). Terms:
+default byte-identical, the world's random stream untouched (identity proof
+with the option off AND on), one commit, the staled certificates named and
+re-bought by regate. Ordered as J9.
+
+**26. B may be piloted now.** B's step 3 is its two SAC rows (1 and 3), each
+reproduced with a failing control, row 1 on 15 fresh seeds. Rows 2 and 4 are
+the PPO reference and rows 5–7 are next week's; none is a precondition of a
+pilot that moves no seat. The pilot (J8) fixes W and T; the decisive test
+still requires every row.
+
+**27. The owner's five asks of 11-15 evening, ranked (auditor finding 5).**
+(1) B's pilot in his world → J8, top of the lane, today. (2) The fair chance
+→ J3(4), second (ruling 24). (3) The walking layer → J10, a side job on
+Kaggle CPU that takes no slot from J8/J3/J5. (4) The ready-list as stage
+1's deadline → adopted; PROGRESS carries the list with done/not done. (5)
+The MLX port and the Mac first-day script → "Next up" 1 and 2, NOT open
+orders today: the lane holds seven, the instrument is half built, and the
+port's own first step (golden files) wants J5's runner working. The port's
+stage 0 opens the day J5's speed figures land; the script is due 12-15.
+Nothing is authorised to be spent. The strong-slot rule binds over waiting
+harvests (finding 3): it was ordered and not followed at its first firing;
+it now says so in the order of work. Why a burning `D1.0` dispatch was not
+stopped when ruling 20 closed its arena: nobody was ordered to stop it; a
+ruling that closes an arena now names the in-flight job and who stops it.
