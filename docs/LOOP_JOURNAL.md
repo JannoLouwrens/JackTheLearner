@@ -1828,3 +1828,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found a setting gap before touching anything: the released humanoid script trains 5 M samples; the paper reports 10–30 M. Arithmetic: 4 Kaggle cores ≈ 3.5–6.3 h for 5 M (fits), 7–37 h for the paper's range (does not).
 - Rule drafted in KNOWN_ANSWERS §Row J10-2, not yet committed; next is a build-only smoke on Kaggle (does DART compile there?) then the rule, then the kernel.
 - Philosophy served: 3 (the walking layer is built from a published recipe, its differences listed before it runs), 6 (sized to free compute before spending any).
+
+## 2026-11-16 18:30 · JACK · J10 (2): walking-recipe rule committed; last slot's "fits one kernel" was wrong
+- J8: k4 f0 f1 f2 still hold all 4 Kaggle CPU sessions (pids alive, nothing exited) → nothing to launch/harvest; J3, J6 wait on a session; J9, J5 done → J10 (2).
+- Read the published loop before committing: `num_timesteps=5M` is `max_timesteps` PER curriculum stage (~22 force stages, each ends early on success), so the total is the paper's 10–30 M, not 5 M. The 17:55 pre-flight's "fits one kernel" is corrected in KNOWN_ANSWERS; the full run needs chained kernels resumed from the authors' own 10-iteration saves.
+- `-np 4` dropped from the draft (it halves the 20k batch); 8 ranks oversubscribed instead. Pins: DART v6.3.0 `8090aaec`, pydart2 `113132ac`, TF 1.15.5/py3.7 via uv; FCL 0.5.0 the one automatic fallback. Smoke kernel = staged build log + a 20-min slice measuring s/iteration (parser reads progress.json — the authors' logger writes no CSV, caught before launch).
+- Smoke not launched: the 5th Kaggle session stays unused per "use 4".
+- Philosophy served: 3 (the walking layer copies a published recipe with every difference listed), 4 (a wrong budget figure caught by reading the code, not by a failed 12-hour kernel), 6 (sized to free compute).

@@ -209,3 +209,27 @@ if time allows); accept iff the final policy walks UNAIDED (forces at 0)
 for a full rollout and its symmetry index is within the published class
 (≈ 0.01; Table 2 walk 0.0082). A build that will not compile on Kaggle is
 recorded here as such, not worked around with a different simulator.
+
+**11-16 18:30 — correction and RULE COMMITTED (`experiments/yu2018_walk.py`).**
+The pre-flight above misread the budget: `num_timesteps=5,000,000` is passed
+as `max_timesteps` to EACH curriculum stage's `learn` call
+(`training_utils.py:65-80`), and a stage ends early once rollouts outlast
+`assist_schedule[2][0]/dt` at > 0.5 × target speed (`pposgd_mirror.py:337-350`).
+Forces start at 2,000 N and shrink ×0.75 per stage to < 5 N, then one unaided
+stage: ≈ 22 stages. The released script's TOTAL is therefore what the
+curriculum takes — expect the paper's 10–30 M — and "5 M fits one kernel" was
+wrong; the full run needs chained kernels resumed from the authors' own
+10-iteration saves (their commented hook, `training_utils.py:54-55`).
+`-np 4` is dropped from the draft: it would halve the 20k batch. Ours keeps
+8 ranks, oversubscribed on 4 cores (the batch kept, wall clock ≈ 2×).
+Rule (full text in the module docstring): smoke first — one Kaggle CPU
+kernel, build only + a 20-minute slice, recording every build stage and the
+measured s/iteration; then kernels = ⌈1,500 × s/it ÷ 11 h⌉ registered in a
+follow-up commit. Seeds 0, 1, 2 (one landing = PILOT). Primary accept: the
+final policy, forces at 0, deterministic, ≥ 9 of 10 full 500-step rollouts
+at ≥ 0.75 m/s mean forward speed (the script's own stage criterion); control
+= the same seed's iteration-0 policy must fail it, else VOID. Symmetry index
+reported only until its definition is pinned from the paper text. Pins:
+DART v6.3.0 = `8090aaec`, pydart2 `113132ac`, TF 1.15.5 on Python 3.7 (uv),
+FCL 0.5.0 from source as the one automatic fallback if the image's FCL 0.7
+breaks DART 6.3.
