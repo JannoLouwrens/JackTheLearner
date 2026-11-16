@@ -1869,3 +1869,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - All launched step-3 kernels had exited: 7 of 10 cells, 60 lives each. dreamer-xs s154 was never launched, and both wm-latent+ring launches died before the push. Today's tree reads every cell as stale (one stamp, and only J9's w0.py has moved), so I ran the frozen `tally_cells` on the cells under their own stamp.
 - Reading: INCOMPLETE, and the control holds. ppo-needs and ppo-lp are NOT LEARNING (ppo-lp's s154 trend, rho .25 p .025, is one seed of the two the rule needs). Floor meals over 60 lives: learners 13–17, random 22–27. Apples: 0 everywhere. Table in FORAGER_RACE.md §PILOT. `/data/tmp/wt_forager3` removed.
 - Philosophy served: 4 (a pre-registered tally read honestly, incomplete cells named rather than filled in) and 5 (closes a stale in-flight item, so the next slots work on B rather than tending old kernels).
+
+## 2026-11-16 20:40 · JACK · J7 (c)+(e): NE.01 harvested (FAIL, heat); W1.04 unblocked and launched
+- J8: k4 f0 f1 f2 all RUNNING on Kaggle (checked) → nothing to launch or harvest; J3/J6/J10 wait on a session; J9/J5 done → J7.
+- NE.01 new row FAIL (2,836 s). The 11-15 fatigue edge probe works: spread_f 0.81, every rest undoes ≥ 0.87 of the rise, frozen-f control 0. Reds: gate 5, 5/5 random deaths hyperthermia (share 1.0, the world's standing fault since NEEDS_CLOCK_RACE); gate 4, the hand-written forager died of heat at ~1,180 s on 1 of 3 seeds (3/3 alive on the previous run).
+- W1.04 refused: W1.02 stale since J9's w0.py edit and regate skips it (692 s vs its 600 s label) — LC.02's hole again, INBOX. Waited out the load guard (6.12) and NE.01's lock, re-bought W1.02 → PASS, launched W1.04 detached 20:39.
+- Philosophy served: 4 (a world test re-run honestly and its red named, not filed; a silent stale block found and cleared). Weakly 5: heat, not the needs clock, is what kills everything in his world — that wants a world order.
