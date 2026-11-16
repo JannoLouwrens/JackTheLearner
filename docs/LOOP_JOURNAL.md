@@ -1613,5 +1613,5 @@ Philosophy served: 5 (his world: finding the rung he can live on), 4 (rule and i
 J2 item 5: kernels jack-cpu-1794788783/798/920/935 all RUNNING on Kaggle at 01:07; watchers alive. Nothing to harvest.
 J3 (1) DONE: `/data/venvs/jack-std` (Python 3.12.13) with §5's pins exactly; project venv untouched. (2) `experiments/brain_b.py`: Brain B = SBX SAC + layer_norm, not a rewrite.
 J3 (3) row 1 rule first (`1d12bb9a`): Pendulum-v1 Zoo entry, 20k steps, seeds 0–4, accept 5-seed mean of all-100-training-episode returns in [−314.7, −282.1]; unmodified SB3 SAC first, ours counts only if it reproduces; control (never trains) must fail — on the box it read −1227.6 ± 35.5 over 5 seeds, holds.
-Box smoke (1k steps, ~1 CPU-min): lib 28 ms/update → ~10 min/seed, so the 15 cells went to Kaggle CPU: jack-cpu-1794791632.
+Box smoke (1k steps, ~1 CPU-min): lib 28 ms/update → ~10 min/seed, so the 15 cells went to Kaggle CPU: jack-cpu-1794791696 (first try …632 died in pip — Kaggle is Python 3.13 and dm-control's labmaze has no wheel; the kernel now installs only the three pins row 1 imports).
 Philosophy served: 4 (no learner here has reproduced a published number; the rule and a must-fail control are fixed before the run), 3 (Brain B holds its seat by record only after it lands the record's number).

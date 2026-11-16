@@ -117,7 +117,7 @@ serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosop
 **done when:** `KNOWN_ANSWERS.md` has rows 1–4 inside their ranges and the in-house arm's rows, pass or fail.
 state: 11-16 01:15 (1) DONE: `/data/venvs/jack-std` built, §5 pins exact (torch 2.15.0+cpu, jax 0.11.2 resolved). (2) `experiments/brain_b.py` = SBX SAC + layer_norm, docstring with sources and ours-beside-theirs (`1d12bb9a`).
 state: (3) row 1 RULE committed before any run (`1d12bb9a`): Pendulum Zoo entry 20k, seeds 0–4, mean of all 100 training episodes in [−314.7, −282.1]; lib first, ours counts only if lib reproduces; ctrl (never trains) must fail — box ctrl 5 seeds −1227.6, holds. Box smoke: lib 28 ms/update, ours ~5 min per 20k.
-state: RUNNING on Kaggle CPU: jack-cpu-1794791632 (lib/ours/ctrl × 5), watcher detached, result → /data/jack-logs/brain_b/row1.json. Table skeleton `docs/research/KNOWN_ANSWERS.md`. next: harvest row 1 into KNOWN_ANSWERS (a lib miss = apparatus broken, fix before anything else); then row 3's rule (SB3 SAC gSDE Zoo entry, 50k) and rows 2/4 (PPO).
+state: RUNNING on Kaggle CPU: jack-cpu-1794791696 (lib/ours/ctrl × 5; first try …632 died in pip: Kaggle is Py3.13, labmaze has no wheel — kernel now installs only sb3/sbx/gymnasium pins), watcher detached, result → /data/jack-logs/brain_b/row1.json. Table skeleton `docs/research/KNOWN_ANSWERS.md`. next: harvest row 1 into KNOWN_ANSWERS (a lib miss = apparatus broken, fix before anything else); then row 3's rule (SB3 SAC gSDE Zoo entry, 50k) and rows 2/4 (PPO).
 
 ### J4 — The harness checks itself before it judges anyone (§8's thirteen)
 part: His brain (the instrument that chooses it) · stage: 1 · step: 3 (reproduce) · prior: §8 "Reproduce first", ruling 19
