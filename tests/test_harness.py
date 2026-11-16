@@ -102,6 +102,29 @@ def test_compare_two_looks_and_futility():
     assert v.decision == "NOT_DISTINGUISHED" and v.look == 2
 
 
+# ---- #13: runs analysed = runs launched ------------------------------------
+def test_13_books_balance():
+    from experiments.harness import check_runs_accounted
+    o = Outcome(float(T), False)
+    check_runs_accounted({"A": [0, 1], "B": [0, 1]},
+                         {"A": {0: o, 1: o}, "B": {0: o, 1: o}})
+
+
+def test_13_dropped_extra_duplicate_and_missing_arm_all_raise():
+    from experiments.harness import check_runs_accounted
+    o = Outcome(float(T), False)
+    bad = [({"A": [0, 1]}, {"A": {0: o}}),                 # a run dropped
+           ({"A": [0]}, {"A": {0: o, 7: o}}),              # a run never launched
+           ({"A": [0, 0]}, {"A": {0: o}}),                 # duplicate seed
+           ({"A": [0], "B": [0]}, {"A": {0: o}})]          # a whole arm missing
+    for launched, analysed in bad:
+        try:
+            check_runs_accounted(launched, analysed)
+        except ValueError:
+            continue
+        raise AssertionError(f"expected ValueError for {launched} vs {analysed}")
+
+
 if __name__ == "__main__":
     import sys
     fails = 0

@@ -141,7 +141,8 @@ serves: M3 · PLAN stage 1 "the test harness passes its own thirteen checks" · 
 **done when:** the six checks pass as tests and the seven owed are listed.
 state: 11-16 01:50 (1) outcome code + permutation log-rank + Fisher/Boschloo in `experiments/harness/` (`42495306`), SciPy only. Crash/NaN = censored at T (our reading of ruling 19, in docstring).
 state: (2) #10 PASS (10 edge-case tests; mutation turns 4 red), #12 PASS (Fisher 0.0996, Boschloo 0.0433). Run: `python -m tests.test_harness` (no pytest in venv). Table `docs/research/HARNESS_CHECKS.md`; (3) #2,#4–#9 listed owed with their orders.
-state: next: #1 same-against-same — 1,000 reps of `perm_logrank` on synthetic censored logs (20 v 20, n_perm ~500; time it, detach if > few min, nice 19); then #13, #3, #11 (freeze `analysis_hash`).
+state: 11-16 02:30 #13 PASS (`check_runs_accounted`, dropped/extra/duplicate/missing-arm all raise; no-op mutation turns it red). #1 rule committed before any run (`80f63594`): `compare()` = ruling 19's two looks + futility; `same_vs_same.py` S1 mixed (31% censored) / S2 ties (76%), 1,000 reps each, n_perm 2000, PASS iff ≤ 0.050 each, control 0.05/look must exceed 0.050 else VOID.
+state: #1 RUNNING detached (box, nice 19, ~16 reps/min each, done ~03:30): `/data/jack-logs/harness/svs_S{1,2}.jsonl`; at 42/38 reps S1 0.048, S2 0.000, control 0.119. next: `python -m experiments.harness.same_vs_same tally <S1> <S2>` → HARNESS_CHECKS row 1; a FAIL is fixed in the harness. Then #3 floor/ceiling arms, #11 (freeze `analysis_hash`).
 
 ### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
 part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7

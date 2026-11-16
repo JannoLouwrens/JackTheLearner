@@ -90,7 +90,7 @@ def _cp(k, n):
 
 
 def tally(paths):
-    ok, ctrl_fail, rows = True, False, []
+    ok, ctrl_fail, done, rows = True, False, True, []
     for p in paths:
         recs = [json.loads(l) for l in open(p)]
         head = [x for x in recs if "header" in x][-1]
@@ -103,15 +103,16 @@ def tally(paths):
         cfa = sum(x["p1"] <= 0.05 or (x["p2"] is not None and x["p2"] <= 0.05) for x in rs)
         cens = 1 - sum(x["ev"] for x in rs) / (40 * n)
         lo, hi = _cp(fa, n)
-        passed = n >= REPS and fa / n <= RATE
+        passed = fa / n <= RATE
+        done &= n >= REPS
         ok &= passed
         ctrl_fail |= cfa / n > RATE
         rows.append(f"{head['header']}: n={n} false-alarm {fa}/{n}={fa/n:.3f} "
                     f"(CP95 {lo:.3f}-{hi:.3f}; look1 {l1/n:.3f}, look2 {(fa-l1)/n:.3f}) "
                     f"futile {fut/n:.3f} censored {cens:.2f} | control(0.05/look) "
-                    f"{cfa/n:.3f} | {'PASS' if passed else 'FAIL'} hash {head['hash'][:12]}")
+                    f"{cfa/n:.3f} | {('PASS' if passed else 'FAIL') if n >= REPS else 'INCOMPLETE'} hash {head['hash'][:12]}")
     print("\n".join(rows))
-    verdict = "VOID (control did not fail)" if not ctrl_fail else ("PASS" if ok else "FAIL")
+    verdict = "INCOMPLETE" if not done else "VOID (control did not fail)" if not ctrl_fail else ("PASS" if ok else "FAIL")
     print("CHECK #1:", verdict)
     return verdict
 

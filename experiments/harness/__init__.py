@@ -23,13 +23,13 @@ Ours beside theirs (§8 "Take as-is"):
 The thirteen self-checks (§8 "Reproduce first") and who pays each:
   PAID BY TESTS HERE (tests/test_harness.py):
     #10 outcome code right on synthetic logs, edge cases
+    #13 runs analysed = runs launched (`check_runs_accounted`)
     #12 tools on a known case: 4/15 vs 0/15 -> Fisher 0.100, Boschloo 0.043
   OWED IN J4 (no learner needed):
     #1  same-against-same, >= 1,000 repetitions through `compare`
         (experiments/harness/same_vs_same.py, rule in its docstring)
     #3  floor and ceiling calibration arms
     #11 analysis script frozen and hashed (`analysis_hash`)
-    #13 runs analysed = runs launched (`check_runs_accounted`)
   OWED BY ORDERS THAT BUILD A LEARNER (need Brain B from J3):
     #2  handicapped copy (lr 0) detected at planned power   -> J3 then J4
     #4  same seed twice -> identical logs                    -> J3
@@ -163,3 +163,29 @@ def compare(a, b, n_perm: int = 2000, rng=None,
         return Verdict("FUTILE", 1, p1, float("nan"))
     p2 = perm_logrank(a[:n2], b[:n2], n_perm, rng)
     return Verdict("A_DIFFERS" if p2 <= alpha else "NOT_DISTINGUISHED", 2, p1, p2)
+
+
+def check_runs_accounted(launched, analysed) -> None:
+    """Check #13: runs analysed = runs launched, per arm, by run id.
+
+    `launched`: {arm: [run_id, ...]} as written at launch time (the
+    manifest, never reconstructed from what came back). `analysed`:
+    {arm: {run_id: Outcome}}. A launched run with no log must be entered as
+    a crash (censored at T) by the caller, never dropped (ruling 19: no seed
+    replaced, a crash is an outcome). Raises ValueError naming every
+    missing, extra or duplicated run; returns None when the books balance.
+    """
+    errs = []
+    for arm in sorted(set(launched) | set(analysed)):
+        ids = list(launched.get(arm, []))
+        got = analysed.get(arm, {})
+        if len(set(ids)) != len(ids):
+            errs.append(f"{arm}: duplicate run ids in the launch manifest")
+        miss = sorted(set(ids) - set(got))
+        extra = sorted(set(got) - set(ids))
+        if miss:
+            errs.append(f"{arm}: launched but not analysed {miss}")
+        if extra:
+            errs.append(f"{arm}: analysed but never launched {extra}")
+    if errs:
+        raise ValueError("; ".join(errs))
