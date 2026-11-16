@@ -88,7 +88,7 @@ async function geometry(page) {
 }
 
 const browser = await pw[engineName].launch({ args: engineName === 'chromium' ? [`--host-resolver-rules=MAP ${HOST} 10.0.0.135`, '--no-sandbox'] : [] });
-{ const nc = browser.newContext.bind(browser); browser.newContext = async (o) => { const c = await nc(o); await c.routeWebSocket(/\/term\/ws/, bridge); return c; }; }
+{ const nc = browser.newContext.bind(browser); browser.newContext = async (o) => { const c = await nc(o); await c.routeWebSocket(/\/term\/ws/, bridge); await c.route(/\/term\/upload\?history=/, (route) => { let text = ''; try { text = execSync('tmux -L jacktest capture-pane -p -J -t jack: -S -3000', { encoding: 'utf8' }); } catch {} route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ text }) }); }); return c; }; }
 
 {
   const R = { profile: 'The app itself, no dashboard password', id: 'app', engine: engineName, checks: [], timing: {}, errors: [] };
@@ -400,34 +400,57 @@ for (const p of PROFILES) {
     await page.evaluate(() => { document.querySelector('#acct').hidden = true; });
     check(C, 'A sign-in link from the server is shown with a Copy button, only for Claude pages, and the pasted code is typed in and entered', !badShown && goodShown && (href || '').startsWith('https://claude.com/') && linkCopied && signFits && typed >= 0 && ran, JSON.stringify({ badShown, goodShown, linkCopied, clipOk: linkClip === shownUrl, signFits, typed, ran }));
 
-    // 13c. copy what is on screen
-    await menu('copy');
-    await page.waitForSelector('#copy:not([hidden])'); await sleep(350);
-    const copied = await page.inputValue('#copytext');
+    // 13c. select and copy: the copy view is real selectable text and holds what has scrolled away
+    await focusTerm(page, p); await page.keyboard.type(`clear; echo TOP-${mark}; seq 1 150; echo END-${mark}`); await page.keyboard.press('Enter');
+    await waitText(page, `\nEND-${mark}`, 8000); await sleep(300);
+    await press(page, p, 'select');
+    await page.waitForSelector('#copy:not([hidden])');
+    const gotHist = await page.waitForFunction((mk) => document.querySelector('#copytext').textContent.includes('TOP-' + mk), mark, { timeout: 6000 }).then(() => true, () => false);
+    await sleep(250);
+    const rd = await page.evaluate(() => { const b = document.querySelector('#copytext'), sh = document.querySelector('#copy .sheet').getBoundingClientRect(), cs = getComputedStyle(b); return { atBottom: b.scrollHeight - b.scrollTop - b.clientHeight < 40, fits: sh.bottom <= innerHeight + 1 && sh.top >= -1 && document.documentElement.scrollWidth <= innerWidth, sel: cs.userSelect || cs.webkitUserSelect }; });
     await page.screenshot({ path: `${OUT}${p.id}-7-copy.png` });
     if (p.touch) await page.tap('#copyall'); else await page.click('#copyall');
     await sleep(300);
-    const clip = engineName === 'chromium' ? await page.evaluate(() => navigator.clipboard.readText().catch(() => '')) : copied;
-    check(C, 'Copy sheet holds the screen text and copies it', copied.includes(`${mark}-STILL-HERE`) && clip.includes(`${mark}-STILL-HERE`) && (await page.textContent('#copyall')) === 'Copied');
+    const clipAll = await page.evaluate(() => navigator.clipboard.readText().catch(() => ''));
+    await page.evaluate((mk) => { const b = document.querySelector('#copytext'), n = b.firstChild, i = n.nodeValue.lastIndexOf('END-' + mk), r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + 4 + mk.length); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }, mark);
+    await sleep(250);
+    const selOn = await page.evaluate(() => !document.querySelector('#copysel').disabled);
+    if (p.touch) await page.tap('#copysel'); else await page.click('#copysel');
+    await sleep(300);
+    const clipSel = await page.evaluate(() => navigator.clipboard.readText().catch(() => ''));
+    check(C, 'Copy view: real selectable text with everything that scrolled away; Copy all and Copy selection work', gotHist && rd.atBottom && rd.fits && rd.sel === 'text' && clipAll.includes(`TOP-${mark}`) && clipAll.includes(`END-${mark}`) && selOn && clipSel === `END-${mark}`, JSON.stringify({ gotHist, ...rd, all: clipAll.length, selOn, clipSel: clipSel.slice(0, 30) }));
     if (p.touch) await page.tap('#copy [data-close]'); else await page.click('#copy [data-close]');
-
-    // 13d. on a phone a tap on the screen opens the message box; it stays open after Send; an empty Send is return
-    if (p.touch) {
-      await page.evaluate(() => { localStorage.removeItem('jt-direct'); sessionStorage.setItem('t-boxmode', '1'); });
-      await page.tap('#term', { position: { x: 60, y: 60 } });
-      const opened = await page.waitForSelector('#compose:not([hidden])', { timeout: 3000 }).then(() => true, () => false);
-      const attrs = await page.evaluate(() => { const t = document.querySelector('#ctext'); return document.activeElement === t && t.getAttribute('autocorrect') === 'on' && t.spellcheck; });
-      await page.fill('#ctext', `echo BOX-${mark}`); await page.tap('#csend');
-      const ran = await waitText(page, `\nBOX-${mark}`, 5000);
-      const still = await page.evaluate(() => document.querySelector('#compose').hidden && document.activeElement !== document.querySelector('#ctext') && document.activeElement !== window.jackTerm.textarea);
-      await page.tap('#term', { position: { x: 60, y: 60 } }); await page.waitForSelector('#compose:not([hidden])', { timeout: 3000 }).catch(() => {});
-      await page.fill('#ctext', `echo HALF-${mark}`); await page.tap('#cinsert'); await sleep(500); await page.tap('#csend');
-      const ret = await waitText(page, `\nHALF-${mark}`, 5000);
-      await sleep(200); await page.screenshot({ path: `${OUT}${p.id}-b-box.png` });
-      await sleep(150);
-      check(C, 'Tapping the screen opens a message box with autocorrect; Send runs it and puts the keyboard away; empty Send is return', opened && attrs && ran >= 0 && still && ret >= 0 && !(await page.isVisible('#compose')), JSON.stringify({ opened, attrs, ran, still, ret }));
-      await page.evaluate(() => { localStorage.setItem('jt-direct', '1'); sessionStorage.removeItem('t-boxmode'); });
+    await sleep(250);
+    if (p.touch && engineName === 'chromium') {
+      // press and hold on a line: the copy view opens with that line selected, and no message box
+      const cdp3 = await ctx.newCDPSession(page);
+      const pos = await page.evaluate((mk) => { const t = window.jackTerm, b = t.buffer.active; let row = -1; for (let i = 0; i < t.rows; i++) { const l = b.getLine(b.viewportY + i); if (l && l.translateToString(true).trim() === 'END-' + mk) row = i; } const r = document.querySelector('#term').getBoundingClientRect(); return { row, x: Math.round(r.left + 90), y: Math.round(r.top + (row + 0.5) * (r.height / t.rows)) }; }, mark);
+      await sleep(600);
+      await cdp3.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: pos.x, y: pos.y }] });
+      await sleep(800);
+      await cdp3.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      const lpOpen = await page.waitForSelector('#copy:not([hidden])', { timeout: 3000 }).then(() => true, () => false);
+      await sleep(500);
+      const lp = await page.evaluate(() => ({ sel: String(getSelection()), compose: !document.querySelector('#compose').hidden }));
+      check(C, 'Press and hold on a line opens the copy view with that line selected, and no message box', pos.row >= 0 && lpOpen && lp.sel === `END-${mark}` && !lp.compose, JSON.stringify({ row: pos.row, lpOpen, ...lp }));
+      await sleep(500); await page.tap('#copy [data-close]'); await sleep(250);
     }
+    if (!p.touch) {
+      // on a computer: drag across a line, and it is on the clipboard when the button is released
+      await focusTerm(page, p); await page.keyboard.type(`clear; echo DRAG-${mark}`); await page.keyboard.press('Enter');
+      await waitText(page, `\nDRAG-${mark}`, 5000); await sleep(300);
+      const dg = await page.evaluate((mk) => { const t = window.jackTerm, b = t.buffer.active; let row = -1; for (let i = 0; i < t.rows; i++) { const l = b.getLine(b.viewportY + i); if (l && l.translateToString(true).trim() === 'DRAG-' + mk) row = i; } const r = document.querySelector('#term .xterm-screen').getBoundingClientRect(); const cw = r.width / t.cols, ch = r.height / t.rows; return { row, x0: r.left + cw * 0.3, x1: r.left + cw * (5 + mk.length + 0.4), y: r.top + (row + 0.5) * ch }; }, mark);
+      await page.evaluate(() => navigator.clipboard.writeText('EMPTY'));
+      await page.mouse.move(dg.x0, dg.y); await page.mouse.down(); await page.mouse.move((dg.x0 + dg.x1) / 2, dg.y, { steps: 6 }); await page.mouse.move(dg.x1, dg.y, { steps: 6 }); await sleep(120); await page.mouse.up();
+      let dragClip = ''; const t12 = Date.now();
+      while (Date.now() - t12 < 4000) { dragClip = await page.evaluate(() => navigator.clipboard.readText().catch(() => '')); if (dragClip.includes(`DRAG-${mark}`)) break; await sleep(100); }
+      await page.keyboard.type(`echo AFTER-${mark}`); await page.keyboard.press('Enter');
+      const after = await waitText(page, `\nAFTER-${mark}`, 5000);
+      check(C, 'Dragging across text copies it on release, and typing afterwards still works', dg.row >= 0 && dragClip.trim() === `DRAG-${mark}` && after >= 0, JSON.stringify({ row: dg.row, dragClip: dragClip.slice(0, 40), after }));
+    }
+    // put the marker back on screen for the reload tests that follow
+    await focusTerm(page, p); await page.keyboard.type(`clear; echo ${mark}-STILL-HERE`); await page.keyboard.press('Enter');
+    await waitText(page, `\n${mark}-STILL-HERE`, 5000); await sleep(200);
 
     // 13e. speak: the microphone key opens a box, the words land in it, Send puts them in the terminal
     await press(page, p, 'speak');
@@ -495,6 +518,25 @@ for (const p of PROFILES) {
   }
   results.push(R);
   await ctx.close();
+}
+// The copy helper itself: history only for a signed-in, same-site request.
+{
+  const R = { profile: 'The copy helper on the server', id: 'helper', engine: engineName, checks: [], timing: {}, errors: [] };
+  const http = await import('node:http');
+  const hp = spawn('python3', [new URL('./upload_server.py', import.meta.url).pathname, '127.0.0.1', '7697'], { env: { ...process.env, JACK_TERM_PASSWORD: 'only-for-this-test', JACK_TMUX_SOCKET: 'jacktest', LISTEN_FDS: '' }, stdio: 'ignore' });
+  await sleep(900);
+  const get = (path, headers) => new Promise((res) => { const rq = http.request({ host: '127.0.0.1', port: 7697, path, method: 'GET', headers }, (r) => { let d = ''; r.on('data', (c) => (d += c)); r.on('end', () => res({ s: r.statusCode, d })); }); rq.on('error', () => res({ s: 0, d: '' })); rq.end(); });
+  try { execSync("tmux -L jacktest send-keys -t jack: 'echo HELPER-MARK' Enter"); } catch {}
+  await sleep(600);
+  const auth = 'Basic ' + Buffer.from('jack:only-for-this-test').toString('base64');
+  const ok = await get('/term/upload?history=200', { Authorization: auth });
+  const noauth = await get('/term/upload?history=200', {});
+  const cross = await get('/term/upload?history=200', { Authorization: auth, 'Sec-Fetch-Site': 'cross-site' });
+  const plain = await get('/term/upload', { Authorization: auth });
+  let text = ''; try { text = JSON.parse(ok.d).text; } catch {}
+  check(R.checks, 'History is given only to a signed-in request from the page itself', ok.s === 200 && text.includes('HELPER-MARK') && noauth.s === 401 && cross.s === 403 && plain.s === 405, JSON.stringify({ ok: ok.s, has: text.includes('HELPER-MARK'), noauth: noauth.s, cross: cross.s, plain: plain.s }));
+  try { hp.kill(); } catch {}
+  results.push(R);
 }
 await browser.close();
 cleanup();

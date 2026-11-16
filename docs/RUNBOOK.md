@@ -1776,6 +1776,21 @@ To switch it off: remove the `gap_fill.sh` line from the crontab.
 
 ## Outsider and strong-worker slots (2026-11-15)
 
+- **Selecting and copying in the web terminal (2026-11-16).** Three ways in.
+  (1) The copy view: the copy key on the key bar, the menu item, or a
+  press-and-hold on the screen opens the window as plain selectable text,
+  including what has scrolled away; "Copy selection", "Copy screen", "Copy
+  all". The history comes from `GET /term/upload?history=N` on the upload
+  helper (`upload_server.py`: `tmux capture-pane`, same password header and
+  same-site check as photo upload, nothing stored; the web server already
+  routes that path, so no Caddy change was needed). (2) On a computer a drag
+  selects in tmux and tmux hands the text to the page (OSC 52,
+  `set-clipboard external`, `MouseDragEnd1Pane` → `copy-pipe-no-clear` in
+  `tmux.conf`); the page puts it on the clipboard, or shows "Tap here to
+  copy" where the browser demands a tap. (3) Shift-drag selects in the page
+  itself and copies on release. Mouse reports are exempt from the page's
+  "typing returns to the bottom" rule, or a drag would cancel its own
+  selection. Tests: `uitest.mjs` 13c and the helper block at its end.
 - **Claude account switcher (2026-11-15).** `claude-account` (`~/bin/claude-account`
   → `dashboard/terminal/claude_account.py`), also the Terminal menu item
   "Claude account". It keeps a copy of each login the owner has signed in with

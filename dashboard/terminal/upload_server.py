@@ -17,6 +17,8 @@ Storage: pictures older than 30 days are deleted, and the folder is held to
 import base64, hmac, json, os, secrets, socket, sys, threading, time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from urllib.parse import parse_qs
+import subprocess
 
 DIR = Path(os.environ.get("JACK_UPLOAD_DIR", "/data/jack-uploads"))
 MAX_BYTES = 30 * 2**20
@@ -25,6 +27,25 @@ IDLE_EXIT_S = 120
 PASSWORD = os.environ.get("JACK_TERM_PASSWORD", "")
 EXPECT = "Basic " + base64.b64encode(("jack:" + PASSWORD).encode()).decode()
 last = [time.time()]
+
+
+TMUX_SOCKET = os.environ.get("JACK_TMUX_SOCKET", "jack")      # the one shared session the page shows
+TMUX_SESSION = os.environ.get("JACK_TMUX_SESSION", "jack")
+MAX_HISTORY = 5000
+
+
+def history(lines: int) -> str:
+    """The current window as plain text, newest at the bottom: what has scrolled
+    away plus what is on screen. The page's copy view shows it, because a phone
+    cannot select text inside a terminal and the terminal itself holds only one
+    screenful. Nothing is stored: tmux is asked each time."""
+    n = max(0, min(int(lines), MAX_HISTORY))
+    out = subprocess.run(["/usr/bin/tmux", "-L", TMUX_SOCKET, "capture-pane", "-p", "-J",
+                          "-t", TMUX_SESSION + ":", "-S", f"-{n}"],
+                         capture_output=True, timeout=5)
+    if out.returncode != 0:
+        raise RuntimeError("tmux refused")
+    return out.stdout.decode("utf-8", "replace")
 
 
 def kind(head: bytes):
@@ -107,7 +128,24 @@ class H(BaseHTTPRequestHandler):
         self.reply(200, {"path": str(path), "bytes": n})
 
     def do_GET(self):
-        self.reply(405, {"error": "post a picture"})
+        last[0] = time.time()
+        path, _, query = self.path.partition("?")
+        want = parse_qs(query).get("history")
+        if path != "/term/upload" or not want:
+            return self.reply(405, {"error": "post a picture"})
+        if not PASSWORD or not hmac.compare_digest(self.headers.get("Authorization", ""), EXPECT):
+            return self.reply(401, {"error": "sign in to the terminal first"})
+        # Only the terminal page itself may read this. Its sign-in cookie is
+        # same-site only and no cross-origin header is ever sent, so another
+        # site could not read the reply; a fetch that says it comes from
+        # elsewhere is refused outright as well.
+        if self.headers.get("Sec-Fetch-Site", "same-origin") not in ("same-origin", "none"):
+            return self.reply(403, {"error": "wrong site"})
+        try:
+            text = history(int(want[0]))
+        except (ValueError, RuntimeError, OSError, subprocess.SubprocessError):
+            return self.reply(503, {"error": "the terminal session could not be read"})
+        self.reply(200, {"text": text})
 
 
 def main():

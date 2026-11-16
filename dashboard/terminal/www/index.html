@@ -95,6 +95,12 @@ button{font:inherit;color:inherit}
 #compose{flex:none;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);padding:8px max(10px,env(safe-area-inset-right,0px)) 2px max(10px,env(safe-area-inset-left,0px));z-index:3}
 #ctext{display:block;width:100%;height:44px;max-height:132px;border:0;border-radius:14px;background:#2c2c2e;color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.35;padding:10px 12px;resize:none;outline:none;-webkit-appearance:none}
 #ctext:focus{box-shadow:0 0 0 2px var(--accent)}
+#copytext{height:min(56vh,520px);min-height:150px;max-height:none;white-space:pre-wrap;overflow-wrap:anywhere;overflow-y:auto;-webkit-overflow-scrolling:touch;-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;cursor:text;line-height:1.45;margin-bottom:10px}
+.copyrow{display:flex;gap:8px;margin-bottom:4px}
+.copyrow .key{flex:1;min-width:0;height:46px;padding:0 6px;font-size:15px}
+.copyrow .key:disabled{opacity:.4}
+#stage{-webkit-touch-callout:none}
+#toast{cursor:pointer}
 .crow{display:flex;align-items:center;gap:8px;margin-top:8px}
 .crow .hint{flex:1;min-width:0;font-size:13px;line-height:1.3;color:var(--ink2)}
 .key.rec{background:var(--crit);color:#fff}
@@ -188,7 +194,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
 
   <div id="menu" hidden role="menu">
     <button data-m="chat" role="menuitem">Open my Claude chat</button>
-    <button data-m="copy" role="menuitem">Copy what is on screen</button>
+    <button data-m="copy" role="menuitem">Select and copy text</button>
     <button data-m="account" role="menuitem">Claude account</button>
     <hr>
     <button data-m="wins" role="menuitem">Windows</button>
@@ -222,6 +228,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
       <h2>How to use this</h2>
       <ul class="tips">
         <li><b>Your chat</b><span>Type <code>jackchat</code> and press return, or choose “Open my Claude chat” in the menu. It keeps running when you close this page.</span></li>
+        <li><b>Copy</b><span>Press and hold the screen, or tap the copy key, for a view of everything as plain text, including what has scrolled away. Select there and copy. On a computer, drag across text: it is copied when you let go.</span></li>
         <li><b>Windows</b><span>The tabs at the top are your windows. Tap one to switch, + for another, \u00d7 to close the one you are in, or swipe the screen sideways. They all keep running on the server.</span></li>
         <li><b>Write</b><span>On a phone, tap the screen or the pencil for a message box where suggestions and autocorrect work. Send with nothing in it is the return key. The keyboard key types straight into the terminal instead.</span></li>
         <li><b>Speak</b><span>Tap the microphone. Your words appear in a box you can correct, then Send puts them in the terminal.</span></li>
@@ -266,11 +273,15 @@ html:not(.app) #menu [data-m="dash"]{display:none}
   <div class="scrim" id="copy" hidden>
     <div class="sheet">
       <div class="grab"></div>
-      <h2>Copy text</h2>
-      <p>What is on the terminal screen now. Select part of it, or copy it all. To copy something further up, scroll back first.</p>
-      <textarea class="field mono" id="copytext" readonly aria-label="Text on the terminal screen"></textarea>
-      <button class="cta" id="copyall" type="button">Copy all</button>
-      <button class="plain" data-close="copy" type="button">Done</button>
+      <h2>Select and copy</h2>
+      <p>Press and hold a word, then drag the handles. Everything that has scrolled away is here too: scroll up.</p>
+      <div class="field mono" id="copytext" tabindex="0" aria-label="Text from the terminal"></div>
+      <div class="copyrow">
+        <button class="key" id="copysel" type="button" disabled>Copy selection</button>
+        <button class="key" id="copyscreen" type="button">Copy screen</button>
+        <button class="key on" id="copyall" type="button">Copy all</button>
+      </div>
+      <button class="plain" data-close="copy" id="copydone" type="button">Done</button>
     </div>
   </div>
 </div>
@@ -317,8 +328,9 @@ var inMode=false;                                     /* scrolled back in the se
 function input(s){
   if(!ws||ws.readyState!==1)return;
   var scroll=/^(\x1b\[<6[45];|\x1b\[[56]~)/.test(s);
-  if(!scroll&&window.stopGlide)window.stopGlide();                 /* typing ends a glide, so it cannot scroll away again */
-  if(inMode&&!scroll){inMode=false;s="q"+s}   /* typing returns to the bottom first */
+  var mouse=/^\x1b\[(<|M)/.test(s);                               /* a click or drag reported to tmux is not typing */
+  if(!scroll&&!mouse&&window.stopGlide)window.stopGlide();          /* typing ends a glide, so it cannot scroll away again */
+  if(inMode&&!scroll&&!mouse){inMode=false;s="q"+s}   /* typing returns to the bottom first */
   var b=enc.encode(s),p=new Uint8Array(b.length+1);p[0]=48;p.set(b,1);ws.send(p);
 }
 function sendSize(){send(enc.encode("1"+JSON.stringify({columns:term.cols,rows:term.rows})))}
@@ -403,13 +415,14 @@ term.onResize(function(){sendSize()});
 
 /* ───── window tabs, from what tmux reports in the terminal title ───── */
 var NAMES={bash:"Shell",claude:"Claude",node:"Claude",python:"Python",python3:"Python",vim:"Editor",nano:"Editor",htop:"Monitor",top:"Monitor"};
-var winCount=1,winNames={},winKey="";
+var winCount=1,winNames={},winKey="",activeWin="";
 term.onTitleChange(function(t){
   if(!/^JWm?\|/.test(t))return;
   inMode=t.charAt(2)==="m";
   var key=t.replace(/^JWm?/,"")+"|"+(innerHeight<500);if(key===winKey)return;winKey=key;   /* same windows: leave the buttons alone, a tap may be in progress */
   var W=t.split("|").slice(1).filter(Boolean).map(function(x){var on=/\*$/.test(x),p=x.replace(/\*$/,"").split("=");var n=p.slice(1).join("=")||"shell";if(n==="[tmux]")n=winNames[p[0]]||"shell";else winNames[p[0]]=n;return {i:p[0],n:n,on:on}});
   var el=$("#wins"),was=el.hidden;
+  activeWin=(W.filter(function(w){return w.on})[0]||{}).i||"";
   el.hidden=W.length<2&&innerHeight<500;winCount=W.length;   /* a phone held sideways keeps the row unless it is needed */
   /* change the buttons in place where possible: replacing one under a finger loses the tap */
   var tabs=el.querySelectorAll(".win:not(.add)"),hasX=!!el.querySelector(".win.x");
@@ -430,7 +443,9 @@ $("#wins").addEventListener("pointerup",function(e){var b=e.target.closest("[dat
 $("#wins").addEventListener("click",function(e){var b=e.target.closest("[data-win]");if(!b||Date.now()-winActed<700)return;winAct(b)});
 function winAct(b){
   if(b.dataset.win==="x"){if(window.confirm("Close this window? Anything running in it stops."))input("\x02X")}
-  else if(b.dataset.win==="+")input("\x02c");else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else input("\x02:select-window -t "+b.dataset.win+"\r");
+  else if(b.dataset.win==="+")input("\x02c");
+  else{var want=b.dataset.win,go=function(){if(+want<10)input("\x02"+want);else input("\x02:select-window -t "+want+"\r")};
+    go();setTimeout(function(){if(activeWin!==want&&document.querySelector('#wins [data-win="'+want+'"]'))go()},700)}   /* if tmux did not switch, ask once more: selecting twice is harmless */
   if(!coarse)term.focus()}
 
 /* ───── Claude account: the tool on the server says what to show (one private escape sequence) ───── */
@@ -465,6 +480,20 @@ $("#acctclose").addEventListener("click",function(){var st=acctState;$("#acct").
   if(st==="accounts")input("q\r");else if(st==="login")input("\x03");else if(st==="done")input("\r");
   if(!coarse)term.focus()});
 
+/* ───── copying on a computer: a drag selects in tmux; on release tmux sends the text here (OSC 52) ───── */
+var clipWaiting="";
+function putClip(text){
+  if(!text)return;
+  var ok=function(){clipWaiting="";toast("Copied",1300)},later=function(){clipWaiting=text;toast("Tap here to copy",8000)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(ok).catch(later);else later();
+}
+term.parser.registerOscHandler(52,function(d){
+  var i=d.indexOf(";"),b=i<0?"":d.slice(i+1);if(!b||b==="?")return true;
+  try{putClip(dec.decode(Uint8Array.from(atob(b),function(c){return c.charCodeAt(0)})))}catch(e){}
+  return true});
+$("#toast").addEventListener("click",function(){if(!clipWaiting)return;var t=clipWaiting;clipWaiting="";copyOut(t,null)});
+$("#term").addEventListener("mouseup",function(){if(term.hasSelection())putClip(term.getSelection())});
+
 /* ───── the extra keys ───── */
 function csi(a,b){return term.modes&&term.modes.applicationCursorKeysMode?"\x1bO"+a:"\x1b["+a}
 var ARROW='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14V4M4.5 8.5 9 4l4.5 4.5"/></svg>';
@@ -472,10 +501,12 @@ function rot(deg){return ARROW.replace("<svg ",'<svg style="transform:rotate('+d
 var MIC='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="1.8" width="5" height="9" rx="2.5"/><path d="M3.8 8.6a5.2 5.2 0 0 0 10.4 0M9 13.8v2.6"/></svg>';
 var CAM='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.3a1.6 1.6 0 0 1 1.6-1.6h1.6l1-1.6h5.6l1 1.6h1.6A1.6 1.6 0 0 1 16 6.3v6.8a1.6 1.6 0 0 1-1.6 1.6H3.6A1.6 1.6 0 0 1 2 13.1z"/><circle cx="9" cy="9.5" r="2.8"/></svg>';
 var PEN='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11.8 3.2l3 3L6.3 14.7l-3.8.8.8-3.8z"/></svg>';
+var SEL='<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="9.5" height="11" rx="2"/><path d="M12 15.5H4.5a2 2 0 0 1-2-2V5.5"/></svg>';
 var KEYS=[
   {k:"speak",h:MIC,a:"Speak or type a message"},
   {k:"write",h:PEN,a:"Write a message with autocorrect"},
   {k:"photo",h:CAM,a:"Add a photo"},
+  {k:"select",h:SEL,a:"Select and copy text"},
   {sep:1},
   {k:"esc",t:"esc",s:"\x1b",a:"Escape"},
   {k:"tab",t:"tab",s:"\t",a:"Tab"},
@@ -504,6 +535,7 @@ function act(k){
   var K=KEYS.filter(function(x){return x.k===k})[0];if(!K)return;
   if(k==="speak"){if($("#compose").hidden)openCompose(true);else closeCompose();return}
   if(k==="write"){LS.del(DIRECT);if($("#compose").hidden)openCompose(false);else closeCompose();return}
+  if(k==="select"){openReader(null);return}
   if(k==="photo"){$("#photo").click();return}
   if(k==="ctrl"){setCtrl(!ctrlArmed);return}
   if(k==="paste"){
@@ -614,7 +646,7 @@ row.addEventListener("scroll",edges,{passive:true});window.addEventListener("res
 
 /* ───── swipe to scroll back: follows the finger, then glides to a stop ───── */
 (function(){
-  var st=$("#stage"),y0=null,t0=0,acc=0,vel=0,raf=null,ys=0,ts=0,far=0,xs=0,dxs=0,side=false;
+  var st=$("#stage"),y0=null,t0=0,acc=0,vel=0,raf=null,ys=0,ts=0,far=0,xs=0,dxs=0,side=false,lp=null,lpFired=false;
   function cellH(){return Math.max(10,$("#term").clientHeight/(term.rows||24))}
   function move(dy){
     acc+=dy;var h=cellH(),n=acc>0?Math.floor(acc/h):Math.ceil(acc/h);if(!n)return;acc-=n*h;
@@ -622,13 +654,20 @@ row.addEventListener("scroll",edges,{passive:true});window.addEventListener("res
     if(mouse){var code=n>0?64:65,seq="";for(var i=0;i<Math.min(Math.abs(n),40);i++)seq+="\x1b[<"+code+";1;1M";input(seq)}
     else term.scrollLines(-n);
   }
+  function lineAt(cy){var r=$("#term").getBoundingClientRect(),row=Math.max(0,Math.min(term.rows-1,Math.floor((cy-r.top)/cellH()))),b=term.buffer.active,ln=b.getLine(b.viewportY+row);return ln?ln.translateToString(true):""}
   window.stopGlide=function(){if(raf){cancelAnimationFrame(raf);raf=null}vel=0};
   function glide(){vel*=0.94;if(Math.abs(vel)<0.02){raf=null;return}move(vel*16);raf=requestAnimationFrame(glide)}
-  st.addEventListener("touchstart",function(e){if(raf){cancelAnimationFrame(raf);raf=null}if(e.touches.length===1){y0=ys=e.touches[0].clientY;xs=e.touches[0].clientX;dxs=0;side=false;t0=ts=e.timeStamp;acc=0;vel=0;far=0}},{passive:true,capture:true});
+  st.addEventListener("touchstart",function(e){if(raf){cancelAnimationFrame(raf);raf=null}if(e.touches.length===1){y0=ys=e.touches[0].clientY;xs=e.touches[0].clientX;dxs=0;side=false;t0=ts=e.timeStamp;acc=0;vel=0;far=0;
+      lpFired=false;clearTimeout(lp);var cy=ys,tg=e.target;
+      lp=setTimeout(function(){if(y0===null||far>=8||Math.abs(dxs)>=8||!(tg.closest&&tg.closest("#term")))return;
+        lpFired=true;if(navigator.vibrate){try{navigator.vibrate(8)}catch(_){}}openReader(lineAt(cy))},520)}},{passive:true,capture:true});
+  st.addEventListener("touchcancel",function(){clearTimeout(lp);lpFired=false;y0=null},{passive:true,capture:true});
   st.addEventListener("touchmove",function(e){
     if(y0===null||e.touches.length!==1)return;
     var y=e.touches[0].clientY,dy=y-y0,dt=Math.max(1,e.timeStamp-t0);y0=y;t0=e.timeStamp;
     dxs=e.touches[0].clientX-xs;
+    if(Math.abs(y-ys)>7||Math.abs(dxs)>7)clearTimeout(lp);
+    if(lpFired){if(e.cancelable)e.preventDefault();e.stopPropagation();return}
     if(!side&&far<12&&Math.abs(dxs)>24&&Math.abs(dxs)>2*Math.abs(y-ys))side=true;
     if(side){if(e.cancelable)e.preventDefault();e.stopPropagation();return}
     far=Math.max(far,Math.abs(y-ys));if(far<6)return;
@@ -636,6 +675,8 @@ row.addEventListener("scroll",edges,{passive:true});window.addEventListener("res
     if(e.cancelable)e.preventDefault();e.stopPropagation();
   },{passive:false,capture:true});
   st.addEventListener("touchend",function(e){
+    clearTimeout(lp);
+    if(lpFired){lpFired=false;side=false;y0=null;if(e.cancelable)e.preventDefault();e.stopPropagation();return}
     if(side){side=false;y0=null;if(Math.abs(dxs)>70)input("\x02"+(dxs<0?"n":"p"));if(e.cancelable)e.preventDefault();e.stopPropagation();return}
     if(y0!==null&&far<6&&e.timeStamp-ts<450&&coarse&&!LS.get(DIRECT)&&$("#compose").hidden&&e.target.closest("#term")){
       if(e.cancelable)e.preventDefault();e.stopPropagation();y0=null;openCompose(false);return}
@@ -677,11 +718,7 @@ document.addEventListener("click",function(e){
     else if(a==="newwin"){input("\x02c");term.focus()}
     else if(a==="account"){input("\x02c");setTimeout(function(){input(" claude-account --app; exit\r")},500)}   /* in a window of its own, never typed into a running chat */
 
-    else if(a==="copy"){
-      var b=term.buffer.active,L=[];for(var i=b.viewportY;i<b.viewportY+term.rows;i++){var ln=b.getLine(i);L.push(ln?ln.translateToString(true):"")}
-      while(L.length&&!L[L.length-1])L.pop();
-      $("#copytext").value=L.join("\n");$("#copyall").textContent="Copy all";$("#copy").hidden=false;
-    }
+    else if(a==="copy")openReader(null);
     else if(a==="install")showInstall();
     else if(a==="dash")location.href="../";
     else if(a==="tips")$("#tips").hidden=false;
@@ -696,11 +733,47 @@ document.addEventListener("click",function(e){
 document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;var open=["menu","tips","install","copy"].filter(function(i){return !$("#"+i).hidden})[0];if(open){$("#"+open).hidden=true;e.stopPropagation()}},true);
 
 /* ───── copy, and adding it to the home screen ───── */
-$("#copyall").addEventListener("click",function(){
-  var ta=$("#copytext"),done=function(){$("#copyall").textContent="Copied"};
-  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(ta.value).then(done).catch(function(){ta.focus();ta.select();try{document.execCommand("copy");done()}catch(e){}});
-  else{ta.focus();ta.select();try{document.execCommand("copy");done()}catch(e){}}
-});
+/* ───── select and copy: a view of real, selectable text ─────
+   A phone cannot select text inside a terminal, and the terminal holds only one
+   screenful. So the copy view shows the window as plain text, with everything
+   that has scrolled away (asked from the server), and the phone's own selection
+   handles work in it. */
+var readerScreen="", lastSel="";
+function screenText(){var b=term.buffer.active,L=[];for(var i=b.viewportY;i<b.viewportY+term.rows;i++){var ln=b.getLine(i);L.push(ln?ln.translateToString(true):"")}while(L.length&&!L[L.length-1])L.pop();return L.join("\n")}
+function tidyText(t){return t.split("\n").map(function(l){return l.replace(/\s+$/,"")}).join("\n").replace(/^\n+|\n+$/g,"")}
+function findLine(line){var box=$("#copytext"),node=box.firstChild,want=(line||"").replace(/\s+$/,"");if(!node||!want.trim())return null;
+  var i=node.nodeValue.lastIndexOf(want);if(i<0)return null;var r=document.createRange();r.setStart(node,i);r.setEnd(node,i+want.length);return r}
+function showRange(r,select){var box=$("#copytext");if(!r){box.scrollTop=box.scrollHeight;return}
+  var rr=r.getBoundingClientRect(),br=box.getBoundingClientRect();box.scrollTop+=rr.top-br.top-(select?box.clientHeight/2:8);
+  if(select){var s=window.getSelection();s.removeAllRanges();s.addRange(r)}}
+function openReader(pressed){
+  var box=$("#copytext");readerScreen=screenText();lastSel="";box.textContent=readerScreen;
+  $("#copysel").disabled=true;$("#copysel").textContent="Copy selection";$("#copyscreen").textContent="Copy screen";$("#copyall").textContent="Copy all";
+  $("#copysel").classList.remove("on");$("#copyall").classList.add("on");
+  $("#menu").hidden=true;$("#copy").hidden=false;
+  var first=readerScreen.split("\n").filter(function(l){return l.trim()})[0]||"";
+  function place(){if(pressed&&pressed.trim())showRange(findLine(pressed),true);else showRange(inMode?findLine(first):null,false)}
+  place();
+  fetch("/term/upload?history=3000",{credentials:"same-origin",cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){
+    if(!j||typeof j.text!=="string"||$("#copy").hidden)return;
+    var full=tidyText(j.text);if(full.length<=box.textContent.length)return;
+    var s=window.getSelection(),mine=s&&s.rangeCount&&box.contains(s.anchorNode)&&String(s).length>0;
+    if(mine&&!(pressed&&pressed.trim()))return;          /* a selection has been started: leave the text under it alone */
+    box.textContent=full;place();
+  }).catch(function(){});
+}
+function copyOut(text,btn){
+  if(!text)return;var done=function(){if(btn)btn.textContent="Copied";toast("Copied",1300)};
+  var old=function(){var ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:-999px;top:0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){}document.body.removeChild(ta)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done).catch(old);else old();
+}
+document.addEventListener("selectionchange",function(){if($("#copy").hidden)return;var s=window.getSelection(),box=$("#copytext");
+  if(s&&s.rangeCount&&box.contains(s.anchorNode)&&String(s).length>0){lastSel=String(s);$("#copysel").disabled=false;$("#copysel").textContent="Copy selection";$("#copysel").classList.add("on");$("#copyall").classList.remove("on")}});
+$("#copysel").addEventListener("pointerdown",function(e){e.preventDefault()});       /* a tap on the button must not drop the selection */
+$("#copysel").addEventListener("click",function(){copyOut(String(window.getSelection())||lastSel,this)});
+$("#copyscreen").addEventListener("click",function(){copyOut(readerScreen,this)});
+$("#copyall").addEventListener("click",function(){copyOut($("#copytext").textContent,this)});
+$("#copydone").addEventListener("click",function(){try{window.getSelection().removeAllRanges()}catch(e){}});
 var installEvent=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();installEvent=e});
 function showInstall(){
