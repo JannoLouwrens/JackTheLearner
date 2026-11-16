@@ -317,13 +317,133 @@ def harness_lives(run: dict, mark: str = "sustained") -> list:
     return [(l["decisions"], l["floor_meals"] + l["apples"]) for l in run["lives"]]
 
 
+# ---- Kaggle CPU kernels (J8 item 4) ---------------------------------------
+T_RUN = 300_000
+B_SEEDS = tuple(range(301, 321))
+FLOOR_SEEDS = tuple(range(301, 306))
+FLOOR_ARMS = ("noop", "held8", "blr0")
+# §5's pins exactly (brain_b.PINS) for what a cell imports; mujoco pinned for W0.
+# No dm-control: Kaggle is Python 3.13 and labmaze has no wheel (brain_b scar).
+KERNEL_PINS = ["stable-baselines3==2.9.2", "sbx-rl==0.28.0", "gymnasium==1.4.0",
+               "mujoco==3.17.0"]
+# Box smoke: 25.9 decisions per CPU-s, JAX ~1.55 cores -> 300k = 3.2 CPU-h a
+# run; 4 runs on Kaggle's 4 cores (~6.2 cores asked) ~ 3.2-5 h wall.
+CHILD_TIMEOUT_S = int(8.5 * 3600)
+REMOTE_TIMEOUT_S = int(9.5 * 3600)
+
+
+def run_cell(arm: str, seed: int, T: int = T_RUN) -> dict:
+    if arm == "b":
+        return run_b(seed, T)
+    if arm == "blr0":
+        return run_b(seed, T, lr=0.0, arm="blr0")
+    if arm in ("noop", "held8"):
+        return run_floor(arm, seed, T)
+    raise ValueError(f"unknown arm {arm!r}")
+
+
+def all_cells() -> list:
+    """The registered 35 runs: B x20 then the three floor arms x5."""
+    return ([("b", s) for s in B_SEEDS]
+            + [(a, s) for a in FLOOR_ARMS for s in FLOOR_SEEDS])
+
+
+def kernel_groups() -> dict:
+    """B in 5 kernels (k0..k4), floor in 4 (f0..f3), <= 4 cells each. Floor
+    cells are interleaved by seed so no kernel carries more than two blr0
+    learners (noop/held8 cost almost nothing)."""
+    b = [("b", s) for s in B_SEEDS]
+    groups = {f"k{i}": b[4 * i:4 * i + 4] for i in range(5)}
+    floor = [(a, s) for s in FLOOR_SEEDS for a in FLOOR_ARMS]
+    for i in range(4):
+        groups[f"f{i}"] = floor[4 * i:4 * i + 4]
+    return groups
+
+
+def run_parallel(cells: list, outdir, T: int = T_RUN) -> dict:
+    """All cells at once as child processes; a dead/timed-out cell keeps rc+err."""
+    import subprocess
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    procs = []
+    for arm, seed in cells:
+        f = outdir / f"pilot_{arm}_s{seed}.json"
+        procs.append((arm, seed, f, subprocess.Popen(
+            [sys.executable, "-m", "experiments.pilot_b", "cell", "--arm", arm,
+             "--seed", str(seed), "--decisions", str(T), "--out", str(f)],
+            cwd=REPO, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)))
+    res = {}
+    t0 = time.time()
+    for arm, seed, f, p in procs:
+        try:
+            _, err = p.communicate(timeout=max(1, CHILD_TIMEOUT_S - (time.time() - t0)))
+        except subprocess.TimeoutExpired:
+            p.kill()
+            _, err = p.communicate()
+        rec = (json.loads(f.read_text()) if f.exists()
+               else {"arm": arm, "seed": seed, "lives": []})
+        rec["rc"] = p.returncode
+        if p.returncode != 0:
+            rec["error"] = f"rc={p.returncode}: {err.decode()[-800:]}"
+        res[f"{arm}_s{seed}"] = rec
+        print(f"{arm} s{seed}: rc {p.returncode}, {len(rec['lives'])} lives", flush=True)
+    return res
+
+
+_JOB = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
+import json, os
+os.chdir("/tmp/jack")
+from experiments.pilot_b import run_parallel
+from experiments.brain_b import versions
+r = run_parallel(__CELLS__, os.environ["JACK_OUT"], __T__)
+json.dump({"cells": r, "versions": versions()},
+          open(os.path.join(os.environ["JACK_OUT"], "pilot_b_cells.json"), "w"))
+print("DONE", flush=True)
+'''
+
+
+def job_body(cells: list, T: int = T_RUN) -> str:
+    return (_JOB.replace("__CELLS__", repr(list(cells)))
+            .replace("__PINS__", repr(KERNEL_PINS)).replace("__T__", repr(int(T))))
+
+
+def kernel(name: str) -> dict:
+    """Submit one group (k0..k4, f0..f3) as one Kaggle CPU kernel; write the
+    returned runs to OUT/<name>.json (failed cells kept with their error)."""
+    from experiments.gpu import build_job, result_json, submit
+    cells = kernel_groups()[name]
+    sub = submit(build_job(job_body(cells)), prefer="kaggle-cpu", est_hours=5.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["pilot_b_cells.json"])
+    if not sub.ok:
+        raise RuntimeError(f"pilot_b kernel {name}: {sub.message}")
+    r = result_json(sub, "pilot_b_cells.json")
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / f"{name}.json").write_text(json.dumps(r, indent=1) + "\n")
+    for k, rec in r["cells"].items():
+        print(f"{k}: {len(rec['lives'])} lives"
+              + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
+    return r
+
+
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["smoke"])
+    p.add_argument("cmd", choices=["smoke", "cell", "kernel"])
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--decisions", type=int, default=20_000)
+    p.add_argument("--arm", default="b")
+    p.add_argument("--out", default=None)
+    p.add_argument("--name", default=None)
     a = p.parse_args(argv)
+    if a.cmd == "cell":
+        res = run_cell(a.arm, a.seed, a.decisions)
+        Path(a.out).write_text(json.dumps(res) + "\n")
+        return
+    if a.cmd == "kernel":
+        kernel(a.name)
+        return
     if a.cmd == "smoke":
         OUT.mkdir(parents=True, exist_ok=True)
         res = run_b(a.seed, a.decisions, arm="b-smoke")

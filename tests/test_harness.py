@@ -319,6 +319,31 @@ def test_22_judge_scores_the_frozen_mark():
     assert prereg.judge(pre, runs, require_committed=False, root=d).decision == "FUTILE"
 
 
+def test_pilot_b_kernels_cover_the_registered_35_runs_once():
+    """J8 item 4: the kernel split launches exactly the rule's runs — B x20
+    (301-320), noop/held8/blr0 x5 (301-305) — each once, <= 4 per kernel,
+    and the job body the kernel ships is valid Python with the pins in it."""
+    from experiments import pilot_b as p
+    g = p.kernel_groups()
+    flat = [c for v in g.values() for c in v]
+    assert len(flat) == len(set(flat)) == 35
+    assert sorted(flat) == sorted(p.all_cells())
+    assert {s for a, s in flat if a == "b"} == set(range(301, 321))
+    for arm in p.FLOOR_ARMS:
+        assert {s for a, s in flat if a == arm} == set(range(301, 306))
+    assert all(len(v) <= 4 for v in g.values())
+    assert all(sum(a == "blr0" for a, _ in v) <= 2 for v in g.values())
+    body = p.job_body(g["k0"])
+    compile(body, "job", "exec")
+    assert "sbx-rl==0.28.0" in body and "300000" in body
+    try:
+        p.run_cell("nope", 1, 10)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("an unknown arm must refuse")
+
+
 if __name__ == "__main__":
     import sys
     fails = 0
@@ -331,3 +356,4 @@ if __name__ == "__main__":
                 fails += 1
                 print("FAIL", name, repr(exc))
     sys.exit(1 if fails else 0)
+
