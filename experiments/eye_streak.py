@@ -90,8 +90,11 @@ DIAL — declared before worlds 420-429 are generated (EYE_STREAK_ARMS=dial):
   frames, same table learner, 10 worlds.  Reported: mean HIT each, and the
   KNEE = the smallest row within 0.05 mean HIT of row256.  Decides nothing by
   itself; it sizes the eye the workers build (2 numbers per ray into the
-  brain).  Reading fixed now: if row16 here is not within 0.03 of seated16's
-  registered .528, the dial's frames differ from the race's and it is VOID.
+  brain).  VOID unless the dial's row16 and row256 arrays for world 400
+  (re-collected) equal the race's seated16 and row256 arrays bit for bit —
+  the dial reads the same frames or it reads nothing.  (Replaces, before any
+  dial world existed, a first draft that compared means across different
+  worlds: 10 worlds cannot hold a 0.03 band.)
 
     nice -n 19 $PY -m experiments.eye_streak collect <seed> [<seed> ...]
     nice -n 19 $PY -m experiments.eye_streak fit <first_seed> <n_worlds>
