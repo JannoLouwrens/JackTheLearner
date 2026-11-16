@@ -82,7 +82,7 @@ def cells():
             + [("r4pubctrl", s) for s in CTRL_SEEDS])
 
 
-def run_cell(arm: str, seed: int) -> dict:
+def run_cell(arm: str, seed: int, row: str = "4c") -> dict:
     os.environ.setdefault("OMP_NUM_THREADS", "1")
     import torch
     torch.set_num_threads(1)
@@ -94,7 +94,7 @@ def run_cell(arm: str, seed: int) -> dict:
     env = VecNormalize(make_vec_env("MountainCarContinuous-v0", n_envs=1, seed=seed),
                        gamma=0.9999)
     model = PPO("MlpPolicy", env, batch_size=256, n_steps=8, gamma=0.9999,
-                learning_rate=(0.0 if arm == "r4pubctrl" else 7.77e-05),
+                learning_rate=(0.0 if arm.endswith("ctrl") else 7.77e-05),
                 ent_coef=0.00429, clip_range=0.1, n_epochs=10, gae_lambda=0.9,
                 max_grad_norm=5, vf_coef=0.19, use_sde=True,
                 policy_kwargs=dict(log_std_init=-3.29, ortho_init=False),
@@ -102,12 +102,12 @@ def run_cell(arm: str, seed: int) -> dict:
     model.learn(total_timesteps=STEPS)
     last = [float(e["r"]) for e in model.ep_info_buffer]
     lens = [int(e["l"]) for e in model.ep_info_buffer]
-    try:
+    if sb3.__version__.startswith("1."):
         import gym as g
-    except ImportError:
+    else:
         import gymnasium as g
     import numpy
-    return {"row": "4c", "arm": arm, "seed": seed, "steps": STEPS,
+    return {"row": row, "arm": arm, "seed": seed, "steps": STEPS,
             "timesteps": int(model.num_timesteps), "last_n": len(last),
             "mean_return": sum(last) / max(1, len(last)), "last_returns": last,
             "last_lens": lens, "wall_s": round(time.time() - t0, 1),
