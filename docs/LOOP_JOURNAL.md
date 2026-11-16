@@ -1644,3 +1644,9 @@ Philosophy served: 4 (the instrument that will choose his brain now refuses to j
 `scripts/life_video.py` draws fed / unhurt / wet bars, his age in the life and a 2 s banner per moment on every frame, and writes `/data/jack-video/latest.json` (title, template summary, 8 facts, ≤ 60 events with film-time and life-time, source) — no model; the dashboard's Watch tab already reads it.
 Seed 153: 4:54, died of hunger, 1 meal, hurt once → 41 s, 1.66 MB, 105 s wall at nice 19 (unchanged). The order asked for thirst and temperature; the world has neither, so the film shows the three needs it has and says so. Next: step 3.
 Philosophy served: 1 (he can be known — the owner can watch a life and read what happened in it).
+
+## 2026-11-16 03:30 · JACK · J4 #1 PASS, #11 PASS, and #11 caught a real bug in the comparison (J2's four kernels and J3 row 1b still RUNNING on Kaggle at 03:23)
+#1 tally (sha 1b9ed0cf): S1 40/1000 = 0.040, S2 28/1000 = 0.028 ≤ 0.050; uncorrected control 0.073/0.065 > 0.050, so the check can tell a broken stopping rule → PASS.
+#11 (`b79cca33`): `experiments/harness/prereg.py` — `judge()` refuses with no pre-registration, moved analysis code (sha256), an uncommitted pre-registration, or runs that do not match the launch manifest; mutations turn tests red.
+Its identical-arms test failed: if every run in both arms crosses at the same decision count, SciPy's log-rank is NaN, every permutation counts as a non-hit, p = 1/(n+1), and identical arms read A_DIFFERS. Fixed in `logrank_stat`; the old code fails 2 tests. That moved the pinned file, so #1 is re-running detached on sha a814799b (~1 h).
+Philosophy served: 4 (the instrument that will choose his brain failed a test that could fail; fixed it, and re-ran the check on the fixed code).

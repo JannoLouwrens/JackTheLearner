@@ -139,10 +139,10 @@ that will pay it (they need B, from J3). Result table →
 `docs/research/HARNESS_CHECKS.md`. No ledger spec; this is the instrument.
 serves: M3 · PLAN stage 1 "the test harness passes its own thirteen checks" · philosophy 4.
 **done when:** the six checks pass as tests and the seven owed are listed.
-state: 11-16 (1) outcome code + permutation log-rank + Fisher/Boschloo (`42495306`). #10 PASS, #12 PASS (Fisher 0.0996, Boschloo 0.0433), #13 PASS (`check_runs_accounted`). Tests: `python -m tests.test_harness` (21 PASS). Table `docs/research/HARNESS_CHECKS.md`; #2,#4–#9 listed owed.
-state: 11-16 02:55 #3 PASS — `experiments/harness/calibration.py` `calibration_gate` (§8: floor ≤ 1 success total, every ceiling run crosses, missing arm VOID); 4 tests incl. ceiling-vs-floor A_DIFFERS at look 1, floor-vs-floor FUTILE; two mutations turn it red. `__init__.py` untouched: #1's pinned hash 1b9ed0cf = `80f63594`'s file, verified; HEAD differs only by `53a21fb9`'s append.
-state: #1 RUNNING detached (rule `80f63594`), at ~350/1000 reps: S1 0.040 (CP95 .022–.066), S2 0.017, control 0.060/0.063 — INCOMPLETE, no reading. Logs `/data/jack-logs/harness/svs_S{1,2}.jsonl`, done ~03:30.
-state: next: `python -m experiments.harness.same_vs_same tally <S1> <S2>` → HARNESS_CHECKS row 1 (a FAIL is fixed in the harness); then #11: freeze `analysis_hash()` of `__init__.py`+`calibration.py` into a pre-registration file the comparison refuses to run without. Then J4 DONE.
+state: 11-16 (1) outcome code + permutation log-rank + Fisher/Boschloo (`42495306`). PASS: #10, #12 (Fisher 0.0996, Boschloo 0.0433), #13, #3 (`calibration.py`). #2,#4–#9 listed owed. Tests `python -m tests.test_harness` (26 PASS). Table `docs/research/HARNESS_CHECKS.md`.
+state: 03:25 #1 tallied on sha 1b9ed0cf: S1 0.040, S2 0.028, uncorrected control 0.073/0.065 → PASS, not VOID. #11 PASS (`b79cca33`): `experiments/harness/prereg.py` freeze()/judge() — judge refuses with no prereg, moved code, uncommitted prereg, unbalanced runs; 3 mutations red.
+state: #11's test found a real bug: identical all-tied arms → NaN log-rank → p=1/(n+1) → A_DIFFERS. Fixed in `logrank_stat` (0 on zero variance); old code fails 2 tests. File sha now a814799b, so #1 RE-RUNNING detached on it (1,000 × S1/S2, ~1 h, `/data/jack-logs/harness/svs2_S{1,2}.jsonl`).
+state: next: `python -m experiments.harness.same_vs_same tally /data/jack-logs/harness/svs2_S1.jsonl /data/jack-logs/harness/svs2_S2.jsonl`; check hash a814799b in its header line; PASS → row 1 PASS in HARNESS_CHECKS, J4 DONE. FAIL → fix in the harness.
 
 ### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
 part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7
