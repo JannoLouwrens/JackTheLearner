@@ -89,11 +89,9 @@ succeeds). The gate that moves d on success is a later order; judging stays
 on fixed layouts at d = 1. Learner-side settings belong to J3/J5.
 serves: M2 · PLAN stage 1 lines 2, 5 · philosophy 5 (his world matters as much as he does).
 **done when:** options and tests are committed and `WORLD_CARD.md` names `d0` with its table.
-state: items 1–4 DONE 11-15/16: reward dr100-eat/-pos + truncation (`14e637c4`); dial meal/regrowth/spawn/food count (`9c4341db`, `de2a4efc`, `c73a8fdb`); `random_needs` (`b800a247`), `random_layout` (`55cc10f0`); all proofs PASS, J1 identity PASS.
-state: item 5 RULE `8af5f2e1` (world_card docstring ENTRY-RUNG RULE), Kaggle CPU one kernel per d.
-state: 04:40 d=0.75 HARVESTED: d8 eats ≥1 bout in 138/200 (69%), 2/200 capped, 2.40 bouts/life, life 694 s; a 0/200 capped. ⇒ **d0 = 1 as written** (d=1 already holds, 55%) and **d_sus = 0.75** — both fixed whatever the rest show. Table in WORLD_CARD.md J2 item 5.
-state: 05:35 d=0.5 HARVESTED (`4b3634d8`): d8 ≥1 bout 137/200 (68%), capped 7/200, 3.32 bouts/life; do-nothing capped 1/200 (seed 214) = exactly AT the ≤1 bound. d0, d_sus unchanged.
-state: 05:39 d=0.25 HARVESTED (`34671a75`): do-nothing capped 6/200 → "a still dies" FAILS there; d8 ≥1 bout 142/200 (71%), capped 13/200, 5.04 bouts/life. Owed: d=0 (`…935`, watcher 466895, Kaggle RUNNING 05:40) → /data/jack-logs/world_card/entry_d00.jsonl; tally a/d8 as in WORLD_CARD, then J2 DONE. INBOX flag stands (d0=1 is not a teachable rung) — Director's call.
+state: DONE 11-16 (`9178993c`). Items 1–4: reward dr100-eat/-pos + truncation (`14e637c4`), dial (`9c4341db`, `de2a4efc`, `c73a8fdb`), `random_needs` (`b800a247`), `random_layout` (`55cc10f0`); proofs PASS, J1 identity PASS.
+state: item 5 (rule `8af5f2e1`), all four rows in WORLD_CARD.md: **d0 = 1 as written, d_sus = 0.75.** d8 ≥1 bout 55/69/68/71/85% at d = 1/.75/.5/.25/0; d8 capped 0/2/7/13/11; do-nothing capped 0/0/1/6/24 of 200.
+state: finding: below d = 0.5 the dial feeds a statue (at d = 0 standing still is capped 2× as often as random search) — no rung under 0.5 can tell a learner from luck. INBOX flag stands: the rule's lower clause cannot name a teachable entry — Director's call.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
@@ -118,8 +116,8 @@ serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosop
 state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/brain_b.py` = SBX SAC + layer_norm (`1d12bb9a`).
 state: row 1 PASSED on 1b (15 seeds): lib −309.3, ours −302.0, ctrl −1227.7; lib vs reference MW p 0.011. Row 3 REPRODUCES 5/5 (lib) and 3b 5/5 (Brain B, eval 94.9–96.0); ctrl 0/5 both.
 state: row 2 (5 seeds) MISSED −221.5; row 2b (15 fresh seeds, band unchanged) REPRODUCES: r2lib mean −199.5 ± 24.1 in [−213.2, −162.0]; ctrl ≈ −1239 valid (`5d794fba`).
-state: 06:10 row 4 RULE `5d794fba` (Zoo PPO MountainCarContinuous verbatim, VecNormalize γ 0.9999; band [80.6, 94.4] = 87.5 ± 3·4.2·√(1/5+1/10), the long form's formula; ctrl lr 0 < 80.6 all 5). Box smoke 4k: lib 80.0, ctrl −1.0. RUNNING jack-cpu-1794809416 → /data/jack-logs/brain_b/row4.json.
-state: next: harvest row 4 into KNOWN_ANSWERS.md (miss → 15-seed re-registration as 1b/2b); then (4) rows 1 and 3 on the in-house tanh-AWR arm via a thin adapter.
+state: row 4 (rule `5d794fba`, jack-cpu-1794809416) MISSED: 87.4 92.9 84.0 82.1 44.9, mean 78.2 vs [80.6, 94.4]; seed 4 solved then collapsed late; ctrl −1…−8 valid.
+state: 06:24 row 4b RULE `9147eef5` (15 fresh seeds 5..19, ctrl 5..9, band STRICTER = formula at k 15 → [82.4, 92.6]) RUNNING jack-cpu-1794810241 → /data/jack-logs/brain_b/row4b.json. next: harvest 4b into KNOWN_ANSWERS.md (miss → stack hunt, not row 5); then (4) rows 1 and 3 on the in-house tanh-AWR arm via a thin adapter.
 
 ### J4 — The harness checks itself before it judges anyone (§8's thirteen)
 part: His brain (the instrument that chooses it) · stage: 1 · step: 3 (reproduce) · prior: §8 "Reproduce first", ruling 19

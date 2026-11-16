@@ -1692,3 +1692,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Harvested jack-cpu-1794808095: SB3 PPO Zoo Pendulum entry on 15 fresh seeds, mean −199.5 ± 24.1 (SE 6.2) inside the unchanged band [−213.2, −162.0]; ctrl ≈ −1239 on all 5 (valid). Row 2's 5-seed miss stays on the record; the larger sample says heavy tail, not a broken stack.
 - Row 4 rule `5d794fba`: rl-zoo3 2.9.2 `ppo.yml` MountainCarContinuous entry read verbatim (incl. Zoo's VecNormalize with γ 0.9999); §5 gave no band, so it comes from the long form's own formula m ± 3s√(1/k+1/n) → [80.6, 94.4]. Box smoke 4k steps: lib 80.0, ctrl −1.0. Kaggle jack-cpu-1794809416 RUNNING.
 - Philosophy served: 4 (a band derived by the published formula before the run, not after), 3 (the PPO reference must reproduce before it judges anything).
+
+## 2026-11-16 06:27 · JACK · J2 DONE (d=0 harvested); J3 row 4 (PPO MountainCar) MISSES, 4b registered stricter and running
+- J2 d=0 (jack-cpu-1794788935): do-nothing capped 24/200 vs d8 11/200 — instant re-placement feeds a statue; d8 ≥1 bout 85%. All four dial rows in: d0 = 1, d_sus = 0.75. J2 DONE `9178993c`; INBOX flag (d0 not teachable) left for the Director.
+- J3 row 4 (jack-cpu-1794809416): Zoo PPO MountainCarContinuous 87.4 92.9 84.0 82.1 44.9, mean 78.2 vs [80.6, 94.4] → MISS; seed 4 solved then collapsed to ≈0 over its last 12 episodes; ctrl valid.
+- Row 4b `9147eef5`: 15 fresh seeds, band TIGHTENED to the formula's own k=15 value [82.4, 92.6] (rows 1b/2b kept their k=5 bands; this one does not get the looser one). Kaggle jack-cpu-1794810241 RUNNING. A 4b miss → stack hunt.
+- Philosophy served: 4 (a miss recorded, the re-test stronger not looser), 5 (his world's dial measured to its floor).

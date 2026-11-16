@@ -20,7 +20,9 @@ Rules are in that file's docstring, committed before each run.
 | 3 | MountainCarContinuous-v0 | control `r3ctrl` (no gradient step), must fail | 50,000 | VOID if > 90 on any seed | −0.3 −2.8 −3.5 −0.9 −0.8 — 0 of 5 | 0–4 | holds |
 | 3b | MountainCarContinuous-v0 | Brain B `r3ours`: SBX SAC + LayerNorm, Zoo numbers (rule `b09adb6a`); ctrl `r3octrl` | 50,000 | same bar | 96.0 96.0 94.9 95.2 95.5 — 5 of 5 (Kaggle jack-cpu-1794805793) | 0–4 | **REPRODUCES** |
 | 3b | MountainCarContinuous-v0 | control `r3octrl` (SBX, no gradient step), must fail | 50,000 | VOID if > 90 on any seed | −0.3 −0.1 −20.6 −0.1 −0.0 — 0 of 5 | 0–4 | holds |
-| 4 | MountainCarContinuous-v0 | SB3 PPO, Zoo `ppo.yml` entry unmodified (`r4lib`; rule `5d794fba`), ctrl `r4ctrl` lr 0 | 20,000 | training return 87.5 ± 4.2 (n 10); accept 80.6…94.4 (m ± 3s√(1/5+1/10)) | RUNNING jack-cpu-1794809416 | 0–4 | — |
+| 4 | MountainCarContinuous-v0 | SB3 PPO, Zoo `ppo.yml` entry unmodified (`r4lib`; rule `5d794fba`), ctrl `r4ctrl` lr 0 | 20,000 | training return 87.5 ± 4.2 (n 10); accept 80.6…94.4 (m ± 3s√(1/5+1/10)) | 78.2 (87.4 92.9 84.0 82.1 44.9; seed 4 solved, then collapsed to ≈0 over its last 12 episodes; Kaggle jack-cpu-1794809416) | 0–4 | **MISSES** |
+| 4 | MountainCarContinuous-v0 | control `r4ctrl`, must fail | 20,000 | VOID unless every seed < 80.6 | −1.0 −7.8 −2.2 −6.2 −4.9 | 0–4 | holds |
+| 4b | MountainCarContinuous-v0 | re-registration, 15 fresh seeds, `r4lib` (rule `9147eef5`) | 20,000 | STRICTER: formula at k 15 → 82.4…92.6 (k 5 band reported only) | RUNNING jack-cpu-1794810241 | 5–19 (ctrl 5–9) | — |
 
 ## Row 1 — the miss, and what it is not (11-16)
 
