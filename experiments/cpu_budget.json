@@ -1209,10 +1209,12 @@
         "detached:entry_d50.log": 589.54,
         "detached:entry_d75.log": 692.02,
         "detached:h4.log": 1065.43,
-        "detached:launch_k0.log": 265.23,
-        "detached:launch_k1.log": 264.65,
-        "detached:launch_k2.log": 254.24,
-        "detached:launch_k3.log": 253.49,
+        "detached:launch_k0.log": 438.03,
+        "detached:launch_k1.log": 340.64,
+        "detached:launch_k2.log": 341.51,
+        "detached:launch_k3.log": 341.63,
+        "detached:lc02_rebuy.log": 765.87,
+        "detached:lc02_rebuy2.log": 399.51,
         "detached:row1.log": 344.2,
         "detached:row1b.log": 246.83,
         "detached:row2.log": 9.67,
@@ -1223,12 +1225,14 @@
         "detached:row4b.log": 127.73,
         "detached:row4c.log": 1511.84,
         "detached:row4d.log": 3296.25,
-        "detached:row4d_ext.log": 600.01,
+        "detached:row4d_ext.log": 2271.24,
         "detached:smoke_s0.log": 505.75,
         "detached:speed_colab.log": 2.7,
         "detached:speed_colab2.log": 2.76,
         "detached:speed_colab3.log": 2.96,
         "detached:speed_colab4.log": 4.62,
+        "detached:speed_colab5.log": 3.77,
+        "detached:speed_colab6.log": 4.43,
         "detached:speed_kcpu.log": 1.54,
         "detached:speed_kcpu2.log": 1.18,
         "detached:speed_kcpu3.log": 398.07,
@@ -1237,7 +1241,7 @@
         "detached:svs_S1.log": 2461.57,
         "detached:svs_S2.log": 2385.86
       },
-      "used_s": 28640.31
+      "used_s": 31909.32
     }
   },
   "last_child_s": {
