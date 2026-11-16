@@ -1,0 +1,48 @@
+{
+ "T": 300000,
+ "W": 1,
+ "analysis_sha256": {
+  "__init__.py": "382cf304951df29bf6f8a9c9bbcbfaa0748eec96f6a2cf9b7bc90faec9710627",
+  "calibration.py": "ee0f9507177fd7031a737c3b28c3bebb58262abd8336d19dc1c2f7aa3679dbeb"
+ },
+ "arms": [
+  "b",
+  "blr0"
+ ],
+ "launched": {
+  "b": [
+   "b_s301",
+   "b_s302",
+   "b_s303",
+   "b_s304",
+   "b_s305",
+   "b_s306",
+   "b_s307",
+   "b_s308",
+   "b_s309",
+   "b_s310",
+   "b_s311",
+   "b_s312",
+   "b_s313",
+   "b_s314",
+   "b_s315",
+   "b_s316",
+   "b_s317",
+   "b_s318",
+   "b_s319",
+   "b_s320"
+  ],
+  "blr0": [
+   "blr0_s301",
+   "blr0_s302",
+   "blr0_s303",
+   "blr0_s304",
+   "blr0_s305"
+  ]
+ },
+ "mark": "sustained",
+ "n_perm": 2000,
+ "question": "J8 pilot (harness check #2): does Brain B (SBX SAC+LN, lr 3e-4) cross ruling 22's sustained mark (capped AND intake >= basal drain) at W=1 by T=300,000 decisions more often than the same plumbing at lr 0? JackEnv d0.75 dr100-eat random_needs 1/6 random_layout, cap 9,000. Pilot: moves no seat.",
+ "seed": 0,
+ "theta": 5.0
+}

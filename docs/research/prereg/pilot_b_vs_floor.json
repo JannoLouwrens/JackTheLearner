@@ -1,0 +1,58 @@
+{
+ "T": 300000,
+ "W": 1,
+ "analysis_sha256": {
+  "__init__.py": "382cf304951df29bf6f8a9c9bbcbfaa0748eec96f6a2cf9b7bc90faec9710627",
+  "calibration.py": "ee0f9507177fd7031a737c3b28c3bebb58262abd8336d19dc1c2f7aa3679dbeb"
+ },
+ "arms": [
+  "b",
+  "floor"
+ ],
+ "launched": {
+  "b": [
+   "b_s301",
+   "b_s302",
+   "b_s303",
+   "b_s304",
+   "b_s305",
+   "b_s306",
+   "b_s307",
+   "b_s308",
+   "b_s309",
+   "b_s310",
+   "b_s311",
+   "b_s312",
+   "b_s313",
+   "b_s314",
+   "b_s315",
+   "b_s316",
+   "b_s317",
+   "b_s318",
+   "b_s319",
+   "b_s320"
+  ],
+  "floor": [
+   "noop_s301",
+   "held8_s301",
+   "blr0_s301",
+   "noop_s302",
+   "held8_s302",
+   "blr0_s302",
+   "noop_s303",
+   "held8_s303",
+   "blr0_s303",
+   "noop_s304",
+   "held8_s304",
+   "blr0_s304",
+   "noop_s305",
+   "held8_s305",
+   "blr0_s305"
+  ]
+ },
+ "mark": "sustained",
+ "n_perm": 2000,
+ "question": "J8 pilot floor gate: Brain B (20 runs) vs the pooled floor (noop + held8 + blr0, 5 each) on ruling 22's sustained mark at W=1 by T=300,000; floor must total <= 1/15 or the pilot is VOID. Pilot: moves no seat.",
+ "seed": 0,
+ "theta": 5.0
+}
