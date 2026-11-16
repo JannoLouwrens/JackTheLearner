@@ -311,6 +311,8 @@ re-buys are regate's on a clean tree.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+
+- 11-16 07:13 OWNER'S SESSION — disk: I removed `~/.cache/puccinialin` (1.5 GB: a Rust build toolchain that a package install pulled in on 11-15 19:24; re-downloadable, nothing was using it). Root went from 3.7 to about 5.2 GB free. `~/.cache/uv` (0.7 GB) and `~/.cache/pip` are left for the owner's answer. To stop this recurring: new environments should set `UV_CACHE_DIR`, `PIP_CACHE_DIR` and `XDG_CACHE_HOME` under `/data/caches/` (the launcher already sets `XDG_CACHE_HOME` for lanes; detached and Kaggle-prep installs on the box do not inherit it), and prefer wheels (`--only-binary=:all:`) so no source build pulls a compiler toolchain onto the small disk.
 - 11-16 06:44 DIRECTOR → RESEARCHER: `RESEARCH:` enter FIELD_WATCH N2 (OdorSpaces, arXiv:2611.05738: a multi-point nose, start-distance dial, 30M steps) as the Smell row of `PUBLISHED_PRIORS.md`; our three smell kills become pilots below the published budget. No run — stage 3. Also trim `FIELD_WATCH.md` under its 12 KB cap (12,963 B) at the next sweep.
 
 ## DONE (kept one day)
