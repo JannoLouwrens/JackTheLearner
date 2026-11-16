@@ -1,7 +1,7 @@
 # Brain A — a Dreamer-style world model: source pin (J5 step 1)
 
 PLAN part "His brain", stage 1, step 2 (combine). Prior: `docs/research/PUBLISHED_PRIORS.md` §2, §9 row 7.
-**Code only, never weights.** Run so far: a speed pilot only (below); no score has been read from it.
+**Code only, never weights.** Runs so far: speed pilots only (below); no score has been read from them.
 Brain A is a candidate for one of his parts, so every line of it learns from zero.
 
 ## The pins (checked against GitHub and PyPI on 2026-11-16)
@@ -81,12 +81,15 @@ nobody discovers them later:
 
 A speed pilot: one seed, no score read from it. Unmodified runner, `dreamer_v3_5_1M`, DMC
 cartpole-swingup from vectors, 4 envs, action repeat 2, train ratio 512, `32-true`. A decision =
-one policy step of one environment. Raw result: `/data/jack-logs/brain_a/speed_colab.json`.
+one policy step of one environment. Raw results: `/data/jack-logs/brain_a/speed_colab.json` (run 1), `speed_colab2.json` (compiled / bf16 / ×3).
 
 | machine | arm | gradient steps/s | decisions/s | wall per 100k decisions | note |
 |---|---|---|---|---|---|
 | Colab T4 (2 vCPU, torch 2.14.1+cu130, py 3.13) | default (not compiled) | **2.64** (runner's own timer 2.67) | **5.28** | **5.26 h** | GPU 27% busy, 475 MiB: the Python loop on 2 vCPUs is the limit, not the T4. One 95 s interval (steps 2000→2500) — thin |
-| same | `algo.compile.enabled=True` | not measured | — | — | no training step logged in 520 s: compilation ate the whole budget |
+| same | `algo.compile.enabled=True`, 520 s budget (run 1) | not measured | — | — | no training step logged in 520 s: compilation ate the whole budget |
+| Colab T4 (`speed colab2`, 11-16, same stack) | **`algo.compile.enabled=True`**, 2,100 s budget | **25.9** (runner's train timer 28.1) | **51.8** | **0.54 h** | 1,274 s steady (steps 2000→68000, 132 log intervals); ratio held (cumulative 0.49 of 0.5); GPU 72%; ~840 s before step 2000 = prefill + compilation, paid once per run |
+| same | `fabric.precision=bf16-mixed` | 2.09 | 4.17 | 6.65 h | slower than `32-true`: a T4 has no bf16 tensor cores; GPU 38% |
+| same | default ×3 runs sharing one T4 (seeds 42–44) | 0.98 each, **2.93 summed** | 1.96 each, **5.86 summed** | 14.2 h each = **4.74 T4-h per 100k** | GPU 91%, 1,419 MiB; 1.11× one run — the 2 vCPUs, not the T4, are the limit; 764 s steady (thin) |
 | this box (ARM, nice 19, 1 thread) | default | 0.64 | 1.28 | 21.6 h | 109 s smoke |
 | Kaggle CPU kernel (4 vCPU, torch 2.11.0+cpu, py 3.13) | default threads | **0.853** (runner's own timer 0.858) | **1.71** | **16.3 h** | `jack-cpu-1794813567`, 2,227 s steady (steps 1200→5000) |
 | same | `num_threads=4` | 0.831 | 1.66 | 16.7 h | same kernel, 2,227 s steady; extra threads buy nothing |
@@ -96,14 +99,32 @@ on one Kaggle CPU kernel ≈ 16.5 h, past the 9-hour kernel limit; §2's three r
 CPU-kernel-hours. "A CPU cannot" now has its number: it can, at a third of the T4's rate.
 
 **The record's arithmetic was 20–50 gradient steps/s on a T4 for `size1m`; the unmodified port
-does 2.6 — 8 to 19 times slower.** The achieved ratio is the configured one (the runner enforces
+does 2.6 — 8 to 19 times slower — and compiled it does 25.9, inside the record's band.** One switch
+(`algo.compile.enabled=True`, the official code's `jax.jit` analogue) buys 9.8×; bf16 and sharing
+the T4 buy nothing. Uncompiled, the achieved ratio is the configured one (the runner enforces
 it synchronously); environment stepping alone runs at ~1,150 decisions/s, so learning is >99% of
 the wall clock.
 
 Install note: on Python 3.13 (Colab and Kaggle) `pip install dm_control` fails building
 `labmaze`; the probe installs dm_control without it (the control suite does not import it).
 
-## What that costs (J5 step 3) — at the measured 2.64 steps/s, uncompiled
+## What that costs (J5 step 3) — at the compiled 25.9 steps/s (fastest arm; uncompiled figures kept below)
+
+- §2's first three known-answer rows (cartpole_balance, cartpole_swingup, ball_in_cup_catch to
+  200K env steps = 100k decisions each, 3 seeds, ratio 512): 9 runs × (0.54 h + ~0.23 h prefill and
+  compilation) = **≈ 7 T4-hours** (estimate on record 25–60; uncompiled 47). Five seeds: ≈ 12.
+  One Kaggle GPU week (30 h) holds the three rows at 5 seeds twice over.
+- One 1M-decision life in his world (action repeat 1, ratio 512 → 500k gradient steps):
+  learning alone 500k / 25.9 = **≈ 5.4 T4-hours** (uncompiled 53); ratio 1024 ≈ 10.7.
+  **But in his world the learner is no longer the limit:** his simulator costs 28 ms per decision
+  on one core (J6 profile), so run serially one life ≈ 1M × (19 ms + 28 ms) ≈ **13 T4-hours**,
+  and a 20-seed test ≈ 260 — nine Kaggle weeks. J6's simulator speed-up, or overlapping
+  simulation with learning, now sets A's price; the learner does not.
+- Caveats: one seed, one Colab session, cartpole from vectors (A's networks on his senses will be
+  larger); compilation cost will recur per run and per shape change. No score is read from these
+  runs (the compiled run's episode reward at step 68k was 702 — logged, not claimed).
+
+### Uncompiled, as first measured (2.64 steps/s)
 
 - §2's first three known-answer rows (cartpole_balance, cartpole_swingup, ball_in_cup_catch to
   200K env steps = 100k decisions each, 3 seeds, ratio 512): 9 runs × 5.26 h = **≈ 47 T4-hours**
@@ -116,5 +137,6 @@ Install note: on Python 3.13 (Colab and Kaggle) `pip install dm_control` fails b
 
 ## What comes next in J5
 
-4. Kaggle CPU row harvested (11-16 13:26). LAUNCHED `speed colab2`: the compiled / `bf16-mixed` / 3-runs-per-T4 arms on Colab,
-   25 min of training each, and re-do the two cost lines. Do not wire A to his world in J5.
+J5 is DONE (pin, two speed figures, two cost lines). Next for A, not in J5: the §2 known-answer
+rows with `algo.compile.enabled=True` (≈ 7 T4-h at 3 seeds) when Kaggle GPU opens 11-21.
+Do not wire A to his world before those rows reproduce.
