@@ -138,7 +138,9 @@ that will pay it (they need B, from J3). Result table →
 `docs/research/HARNESS_CHECKS.md`. No ledger spec; this is the instrument.
 serves: M3 · PLAN stage 1 "the test harness passes its own thirteen checks" · philosophy 4.
 **done when:** the six checks pass as tests and the seven owed are listed.
-state: open — ordered 11-15 16:57.
+state: 11-16 01:50 (1) outcome code + permutation log-rank + Fisher/Boschloo in `experiments/harness/` (`42495306`), SciPy only. Crash/NaN = censored at T (our reading of ruling 19, in docstring).
+state: (2) #10 PASS (10 edge-case tests; mutation turns 4 red), #12 PASS (Fisher 0.0996, Boschloo 0.0433). Run: `python -m tests.test_harness` (no pytest in venv). Table `docs/research/HARNESS_CHECKS.md`; (3) #2,#4–#9 listed owed with their orders.
+state: next: #1 same-against-same — 1,000 reps of `perm_logrank` on synthetic censored logs (20 v 20, n_perm ~500; time it, detach if > few min, nice 19); then #13, #3, #11 (freeze `analysis_hash`).
 
 ### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
 part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7

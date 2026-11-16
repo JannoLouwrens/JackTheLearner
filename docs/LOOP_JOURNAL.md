@@ -1615,3 +1615,9 @@ J3 (1) DONE: `/data/venvs/jack-std` (Python 3.12.13) with §5's pins exactly; pr
 J3 (3) row 1 rule first (`1d12bb9a`): Pendulum-v1 Zoo entry, 20k steps, seeds 0–4, accept 5-seed mean of all-100-training-episode returns in [−314.7, −282.1]; unmodified SB3 SAC first, ours counts only if it reproduces; control (never trains) must fail — on the box it read −1227.6 ± 35.5 over 5 seeds, holds.
 Box smoke (1k steps, ~1 CPU-min): lib 28 ms/update → ~10 min/seed, so the 15 cells went to Kaggle CPU: jack-cpu-1794791696 (first try …632 died in pip — Kaggle is Python 3.13 and dm-control's labmaze has no wheel; the kernel now installs only the three pins row 1 imports).
 Philosophy served: 4 (no learner here has reproduced a published number; the rule and a must-fail control are fixed before the run), 3 (Brain B holds its seat by record only after it lands the record's number).
+
+## 2026-11-16 01:50 · JACK · J4 (J2's four entry-rung kernels and J3's row-1 kernel all RUNNING on Kaggle at 01:37; nothing to harvest)
+J4 started: `experiments/harness/` — ruling 19's outcome (decisions until W lives average ≥ 5 meals, censored at T), permutation log-rank, Fisher/Boschloo; SciPy only (`42495306`).
+#10 PASS: 10 synthetic edge cases (exact θ, window mean, < W lives, crossing at T vs past T, crash/NaN censored at T, no reach-back across a crash). Mutating `>=`→`>` and the T bound turns 4 red — the tests can fail.
+#12 PASS: 4/15 vs 0/15 → Fisher 0.0996, Boschloo 0.0433 (record: 0.100, 0.043). Owed list (#2, #4–#9 → J3/J5) in the module and `HARNESS_CHECKS.md`. Box CPU < 1 min.
+Philosophy served: 4 (the instrument that will choose his brain must first pass tests that could fail).
