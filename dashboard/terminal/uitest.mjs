@@ -344,6 +344,14 @@ for (const p of PROFILES) {
     await focusTerm(page, p); await page.keyboard.type(`echo WINTWO-${mark}`); await page.keyboard.press('Enter');
     const w2 = await waitText(page, `WINTWO-${mark}`, 5000);
     await sleep(450);   // as with the close button: let the emulated phone finish the previous touch
+    // a burst of keys in one go (a focus report, then prefix + number, as a click on a tab sends on a computer)
+    // must still reach tmux's own keys: tmux's paste guess used to swallow the third key
+    await page.evaluate(() => { window.input('\x1b[O'); window.input('\x020'); window.input('\x1b[I'); });
+    const burst = await waitText(page, `${mark}-STILL-HERE`, 4000);
+    await page.evaluate(() => { window.input('\x021'); });
+    const burstBack = await waitText(page, `WINTWO-${mark}`, 4000);
+    check(C, 'A burst of three keys still switches windows (no paste guessing)', burst >= 0 && burstBack >= 0, `${burst} ms, back ${burstBack} ms`);
+    await sleep(450);
     if (p.touch) await page.tap('#wins .win >> nth=0'); else await page.click('#wins .win >> nth=0');
     const w1 = await waitText(page, `${mark}-STILL-HERE`, 5000);
     const firstOn = (await tabs())[0] === true;

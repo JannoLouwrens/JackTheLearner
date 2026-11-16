@@ -415,7 +415,7 @@ term.onResize(function(){sendSize()});
 
 /* ───── window tabs, from what tmux reports in the terminal title ───── */
 var NAMES={bash:"Shell",claude:"Claude",node:"Claude",python:"Python",python3:"Python",vim:"Editor",nano:"Editor",htop:"Monitor",top:"Monitor"};
-var winCount=1,winNames={},winKey="",activeWin="",winRetry=null;
+var winCount=1,winNames={},winKey="",activeWin="";
 term.onTitleChange(function(t){
   if(!/^JWm?\|/.test(t))return;
   inMode=t.charAt(2)==="m";
@@ -442,14 +442,9 @@ $("#wins").addEventListener("pointercancel",function(){winDown=null});
 $("#wins").addEventListener("pointerup",function(e){var b=e.target.closest("[data-win]"),d=winDown;winDown=null;if(b&&b===d){winActed=Date.now();winAct(b)}});
 $("#wins").addEventListener("click",function(e){var b=e.target.closest("[data-win]");if(!b||Date.now()-winActed<700)return;winAct(b)});
 function winAct(b){
-  if(b.dataset.win==="x"||b.dataset.win==="+")clearTimeout(winRetry);
   if(b.dataset.win==="x"){if(window.confirm("Close this window? Anything running in it stops."))input("\x02X")}
   else if(b.dataset.win==="+")input("\x02c");
-  else{var want=b.dataset.win,before=activeWin,go=function(){if(+want<10)input("\x02"+want);else input("\x02:select-window -t "+want+"\r")};
-    clearTimeout(winRetry);go();
-    /* If tmux did not switch at all (the press was lost), ask once more. Only when nothing else has
-       changed since: if the window moved anywhere in the meantime, the owner did that, and it stands. */
-    if(before!==want)winRetry=setTimeout(function(){if(activeWin===before&&document.querySelector('#wins [data-win="'+want+'"]'))go()},700)}
+  else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else input("\x02:select-window -t "+b.dataset.win+"\r");
   if(!coarse)term.focus()}
 
 /* ───── Claude account: the tool on the server says what to show (one private escape sequence) ───── */
@@ -681,7 +676,7 @@ row.addEventListener("scroll",edges,{passive:true});window.addEventListener("res
   st.addEventListener("touchend",function(e){
     clearTimeout(lp);
     if(lpFired){lpFired=false;side=false;y0=null;if(e.cancelable)e.preventDefault();e.stopPropagation();return}
-    if(side){side=false;y0=null;if(Math.abs(dxs)>70){clearTimeout(winRetry);}if(Math.abs(dxs)>70)input("\x02"+(dxs<0?"n":"p"));if(e.cancelable)e.preventDefault();e.stopPropagation();return}
+    if(side){side=false;y0=null;if(Math.abs(dxs)>70)input("\x02"+(dxs<0?"n":"p"));if(e.cancelable)e.preventDefault();e.stopPropagation();return}
     if(y0!==null&&far<6&&e.timeStamp-ts<450&&coarse&&!LS.get(DIRECT)&&$("#compose").hidden&&e.target.closest("#term")){
       if(e.cancelable)e.preventDefault();e.stopPropagation();y0=null;openCompose(false);return}
     if(y0!==null&&e.timeStamp-t0<80&&Math.abs(vel)>0.25)raf=requestAnimationFrame(glide);y0=null},{passive:false,capture:true});
