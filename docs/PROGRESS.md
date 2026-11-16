@@ -122,6 +122,8 @@ harder, and the ruling says so in the open.
   folder, outside what I may delete (see below).
 - Free Kaggle GPU: none until Saturday 21 Nov. Colab's is open.
 - The usage meter gave two impossible readings last week; reporting only.
+- One self-check is red: 33 old failed tests lost their named owner when
+  the review backlog was closed. Ordered today (each gets a named fate).
 - All organs ran in the last day; pushes work; nothing is ahead of GitHub.
 
 ## FOR THE OWNER

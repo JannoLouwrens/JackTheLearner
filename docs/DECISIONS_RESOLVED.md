@@ -3537,3 +3537,10 @@ default. It moves no seat. N2 (a published smell learner): no run; a
 `RESEARCH:` line — the Smell row of the reference, stage 3. LAB: nothing new
 ALIVE since ruling 16; the label-free ear pilot is DEAD at its own bar and
 no order had asked for it.
+
+**29. Who owns a settled FAIL now that the review queue is closed.** The
+queue was the owner `coverage` recognised; draining it (11-15, 11-16) left
+33 FAILs unowned and `coverage` exiting 2. The baseline is not raised. An
+open order owns them (S9) and gives each a fate: `repaired_by`, a
+`FAIL-DISPOSED` note citing the ruling that answered it, or an INBOX ask.
+S8 steps down to "Next up" to keep SYSTEM at three.

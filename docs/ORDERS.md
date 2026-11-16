@@ -233,7 +233,7 @@ retrieval keyed on learned state (§6), stage 3.
 
 ## SYSTEM — work on the machine (max 3 open)
 
-*Order of work: **S7** → **S6** (step 3) → **S8**.*
+*Order of work: **S7** → **S9** → **S6** (step 3).*
 
 ### S7 — Another session's uncommitted files must not kill a run
 part: (machine) · stage: — · step: —
@@ -277,23 +277,29 @@ state: steps 1–2 DONE (`070cea18`, `10b72b29`): seed 153 random life, 4:54, di
 temperature yet — the overlay shows the three needs it has and the summary says so.
 Next: step 3 (most recent RECORDED life; poses already replayed per decision).
 
-### S8 — A seat can be held BY RECORD, and `champions --check` knows it
-part: (machine — His brain) · stage: 1 · step: —
-**Why.** PLAN: "A seat may be held BY RECORD: on published evidence, cited,
-and open to any challenger that brings its own prior." Ruling 11 defines
-it; ruling 20 names the first candidate (the control-path seat, §4).
-**Do.** `experiments/champions.py`: accept holder kind `BY RECORD` when the
-seat's row carries (a) a pointer to a `PUBLISHED_PRIORS.md` section that
-exists, (b) a known-answer row id in `docs/research/KNOWN_ANSWERS.md` for the
-holder's build, (c) a named challenger route. `--check` fails a BY RECORD
-seat missing any of the three; planted tests for each. Do NOT seat anyone:
-no build has a known-answer row yet. Add nothing to `CHAMPIONS.md` but the
-definition (≤ 6 lines, replacing as many).
-serves: M3 · philosophy 3.
-**done when:** the three planted failures fail and `champions --check` exits 0.
-state: open — ordered 11-15 15:55.
+### S9 — Every settled FAIL gets a named fate (the queue that owned them is closed)
+part: (machine — nothing faked) · stage: — · step: —
+**Why.** `coverage` exits 2: closing the review queue removed
+the "owner" of 33 settled FAILs. They are owned by THIS order until each has
+a fate; a FAIL nobody owns is a failure filed, not fixed (philosophy 4).
+**Do, ≤ 8 ids per slot, each one of three, never a baseline raise, never a
+re-run for a better number.** (i) `repaired_by` in the registry when an open
+order or roadmap milestone will re-earn it (name it). (ii) A `FAIL-DISPOSED:
+<authority> <date> — reason` note (format as `registry.py:847`) when a
+ruling already answered the question — e.g. ruling 10/20 for "to earn again
+on the chosen brain", ruling 20 for one-world walking. (iii) A one-line ask
+in INBOX when it is a live defect that needs a JACK order. The ids: DP.05,
+HR.1, HR.5, LG.10, LG.12, LG.14, LT.02, ME.11, ME.11.B, ME.11.C, ME.11.D,
+PS.05, PS.06, PS.08, T0.07, T0.17, T0.23, T0.27, T0.32, T0.35, T1.08, T1.11,
+T2.05, T2.07, T2.10, T2.11, T2.15, T3.09, T4.02, W.2, W1.00, WM.01, XL.01.
+In the first slot also lower the floors `coverage` says fell (UNREACHABLE
+115 → 101, PASS-ON-DEAD-DEPENDENCY 6 → 4; FAIL-UNOWNED 1 → 0 only when the
+id list above is empty) with `run ratchets record` — `coverage` stays 2 until then.
+serves: philosophy 4 · the auditor's exit codes.
+**done when:** `coverage` exits 0 with this order's id list deleted.
+state: open — ordered 11-16 06:47.
 
-**Next up:** (1) `coverage` prints where each passing CLAIM was earned (in
+**Next up:** (0) **S8** — a seat held BY RECORD in `champions --check` (ruling 11; text in git at `b953e9db`; no build is a candidate until S8's known-answer rows exist, so it waits behind S9). (1) `coverage` prints where each passing CLAIM was earned (in
 him / bench / parent rig). (2) `gpu.py` reattach does its own pin-swap
 proof; watcher timeout from RUNNING. (3) `BD.01`, `LC.08` budget re-class
 (ruling 14). (4) **S4** — six PASSes gated on a seed average that admits a
