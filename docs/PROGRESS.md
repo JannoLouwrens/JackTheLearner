@@ -52,7 +52,7 @@ instrument, not ladder points.
   when he dies" (today he is shown his next body's senses; harmless to B,
   wrong for Dreamer; ordered).
 - **Eye — step 1** (was 0). *Moved:* research filed. His first eye should be
-  a small grid of distance rays (200 times cheaper than a camera here); the
+  a small grid of distance rays (about 100 times cheaper than a camera here); the
   camera becomes the sense we add later in the decisive test.
 - **Body and movement — step 1.** Your question on walking is now an order:
   reproduce a published walk on free machines, as a side job.

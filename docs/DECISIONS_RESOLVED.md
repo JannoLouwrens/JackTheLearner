@@ -3527,3 +3527,13 @@ harvests (finding 3): it was ordered and not followed at its first firing;
 it now says so in the order of work. Why a burning `D1.0` dispatch was not
 stopped when ruling 20 closed its arena: nobody was ordered to stop it; a
 ruling that closes an arena now names the in-flight job and who stops it.
+
+**28. The scout's two nominations (11-16 sweep).** N1 (coloured noise at
+action selection only; 30 seeds; gSDE trails white noise on sparse tasks):
+yes, as two reported-only arms inside J8 — it is published evidence on the
+exact fork §5 left open, and it contradicts the exploration B reproduced row
+3 with, so it is measured in his world before the decisive test fixes a
+default. It moves no seat. N2 (a published smell learner): no run; a
+`RESEARCH:` line — the Smell row of the reference, stage 3. LAB: nothing new
+ALIVE since ruling 16; the label-free ear pilot is DEAD at its own bar and
+no order had asked for it.

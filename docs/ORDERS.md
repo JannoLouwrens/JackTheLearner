@@ -71,6 +71,12 @@ through `experiments/harness` (`prereg.freeze` first). FIRST add ruling
 intake ≥ basal drain; edge-case tests like #10's) — primary = that mark; the old 5-meal mark reported beside it; floor arms
 ≤ 1 success in total or VOID. (4) Kaggle CPU, 4 runs per kernel. (5) Pay
 harness checks #2 and #4–#9 where B's logs allow, rows in `HARNESS_CHECKS.md`.
+(6) After the 20 + 15 are launched, two REPORTED-ONLY exploration arms, 5
+seeds each, same T (ruling 28; FIELD_WATCH N1, arXiv:2611.11868 — 30 seeds,
+sparse tasks: gSDE learned SLOWER than white noise, z −0.75; pink +0.35):
+plain white noise, and pink noise applied only when the action is chosen
+(never inside the update). They choose nothing; they say whether row 3b's
+exploration is the right default for the decisive test.
 No seat moves on a pilot; it fixes W and T for the decisive test.
 serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · philosophy 1, 4.
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
@@ -298,6 +304,7 @@ re-buys are regate's on a clean tree.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-16 06:44 DIRECTOR → RESEARCHER: `RESEARCH:` enter FIELD_WATCH N2 (OdorSpaces, arXiv:2611.05738: a multi-point nose, start-distance dial, 30M steps) as the Smell row of `PUBLISHED_PRIORS.md`; our three smell kills become pilots below the published budget. No run — stage 3. Also trim `FIELD_WATCH.md` under its 12 KB cap (12,963 B) at the next sweep.
 
 ## DONE (kept one day)
 
