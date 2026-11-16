@@ -236,6 +236,29 @@ Accept  r4lib REPRODUCES iff the 5-seed mean lies in [80.6, 94.4]. VOID unless
         A miss is recorded as a miss; a re-registration (more seeds) is a new
         rule with its reason, as 1 -> 1b and 2 -> 2b.
 
+ROW 4 RESULT (11-16, kernel jack-cpu-1794809416): r4lib per seed 87.4 92.9
+84.0 82.1 44.9, mean 78.2 — MISSES [80.6, 94.4]; median 84.0 is inside; seed 4
+alone carries the miss (it solved — 18 of its first 21 episodes at 77-96 —
+then collapsed to ~0 returns over its last 12 episodes; seeds 2 and 3 show
+the same late dips, smaller). r4ctrl -1.0 -7.8 -2.2 -6.2 -4.9 (valid).
+
+THE RULE — row 4b, the re-registration, committed before any run (11-16 06:35).
+Why: as 1 -> 1b and 2 -> 2b. One collapsed seed in five moves a 5-seed mean
+by ~8; 5 seeds cannot tell "broken" from "heavy tail". Row 4 STAYS RECORDED
+AS A MISS; 4b is a stronger test on fresh seeds, not a re-scoring.
+Seeds   r4lib 5..19 (15 fresh); r4ctrl 5..9 (void check only).
+Task, steps, metric, settings: exactly row 4's.
+Band    STRICTER than row 4's: the same formula at k = 15,
+        87.5 +/- 3*4.2*sqrt(1/15 + 1/10) = 87.5 +/- 5.1 = [82.4, 92.6].
+        (Rows 1b/2b kept their k=5 bands; at k=15 the formula would have given
+        2b [-205.2, -170.0], which its -199.5 also meets.) Also reported, not
+        judged: the unchanged k=5 band [80.6, 94.4], and the count of seeds
+        whose metric is < 60 (collapses).
+Accept  r4lib REPRODUCES iff the 15-seed mean lies in [82.4, 92.6]. VOID unless
+        r4ctrl completes and every r4ctrl seed is below 82.4.
+If r4lib misses 4b: the collapse is the suspect — the stack hunt (SB3 2.9.2 /
+gymnasium 1.4 vs the public runs) comes next, not row 5.
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |
@@ -282,6 +305,9 @@ ROW4_ARMS = ("r4lib", "r4ctrl")
 ROW4_SEEDS = (0, 1, 2, 3, 4)
 ROW4_STEPS = 20_000
 ROW4_BAND = (80.6, 94.4)
+ROW4B_SEEDS = tuple(range(5, 20))
+ROW4B_CTRL_SEEDS = tuple(range(5, 10))
+ROW4B_BAND = (82.4, 92.6)
 ROW1B_CTRL_SEEDS = tuple(range(5, 10))
 PINS = ["stable-baselines3==2.9.2", "sb3-contrib==2.9.2", "sbx-rl==0.28.0",
         "rl-zoo3==2.9.2", "gymnasium==1.4.0", "mujoco==3.17.0",
@@ -653,7 +679,10 @@ def run_row4_cell(arm: str, seed: int, steps: int = ROW4_STEPS) -> dict:
             "wall_s": round(time.time() - t0, 1), "versions": versions()}
 
 
-def verdict_row4(cells: list) -> dict:
+def verdict_row4(cells: list, seeds=None, ctrl_seeds=None, band=None) -> dict:
+    seeds = list(seeds or ROW4_SEEDS)
+    ctrl_seeds = list(ctrl_seeds or seeds)
+    band = tuple(band or ROW4_BAND)
     by = {}
     for c in cells:
         by.setdefault(c["arm"], []).append(c)
@@ -664,17 +693,26 @@ def verdict_row4(cells: list) -> dict:
         out[arm] = {"seeds": [c["seed"] for c in cs],
                     "per_seed": [round(v, 1) for v in vals],
                     "mean": round(sum(vals) / len(vals), 1),
-                    "complete": [c["seed"] for c in cs] == list(ROW4_SEEDS)}
+                    "complete": [c["seed"] for c in cs] == (ctrl_seeds if arm == "r4ctrl" else seeds),
+                    "collapsed_lt60": sum(v < 60 for v in vals)}
     ctrl, lib = out.get("r4ctrl"), out.get("r4lib")
-    void = ctrl is None or not ctrl["complete"] or max(ctrl["per_seed"]) >= ROW4_BAND[0]
+    void = ctrl is None or not ctrl["complete"] or max(ctrl["per_seed"]) >= band[0]
     ok = (lib is not None and lib["complete"]
-          and ROW4_BAND[0] <= lib["mean"] <= ROW4_BAND[1])
+          and band[0] <= lib["mean"] <= band[1])
+    out["band"] = list(band)
+    if lib is not None:
+        out["in_k5_band_reported_only"] = ROW4_BAND[0] <= lib["mean"] <= ROW4_BAND[1]
     out["verdict"] = "VOID" if void else ("r4lib REPRODUCES" if ok else "r4lib MISSES")
     return out
 
 
 def row4_cells() -> list:
     return [(a, s) for a in ROW4_ARMS for s in ROW4_SEEDS]   # r4lib first
+
+
+def row4b_cells() -> list:
+    return ([("r4lib", s) for s in ROW4B_SEEDS]
+            + [("r4ctrl", s) for s in ROW4B_CTRL_SEEDS])
 
 
 def row2_cells() -> list:
@@ -724,6 +762,12 @@ def main(argv):
         row2_kernel(row2b_cells(), "row2b",
                     f"verdict_row2(ok, seeds={list(ROW2B_SEEDS)!r}, "
                     f"ctrl_seeds={list(ROW2B_CTRL_SEEDS)!r})")
+        return 0
+    if len(argv) >= 2 and argv[1] == "row4b-kernel":
+        row2_kernel(row4b_cells(), "row4b",
+                    f"verdict_row4(ok, seeds={list(ROW4B_SEEDS)!r}, "
+                    f"ctrl_seeds={list(ROW4B_CTRL_SEEDS)!r}, band={ROW4B_BAND!r})",
+                    "from experiments.brain_b import run_parallel, verdict_row4")
         return 0
     if len(argv) >= 2 and argv[1] == "row4-kernel":
         row2_kernel(row4_cells(), "row4", "verdict_row4(ok)",
