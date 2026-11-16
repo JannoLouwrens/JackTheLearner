@@ -199,6 +199,43 @@ Accept  band UNCHANGED [-213.2, -162.0] on the 15-seed mean. VOID unless
 If r2lib misses 2b: the stack is the suspect (SB3 2.9.2 / gymnasium 1.4 /
 Python 3.13 vs the reference's), the stack hunt comes next, not row 4.
 
+ROW 2B RESULT (11-16, kernel jack-cpu-1794808095): r2lib 15-seed mean -199.5
+(per seed -195.8 -192.7 -195.0 -260.9 -211.6 -228.9 -165.6 -193.2 -173.7
+-189.8 -183.3 -177.8 -217.2 -192.7 -214.2) — INSIDE [-213.2, -162.0]:
+r2lib REPRODUCES. r2ctrl -1241.5 -1229.3 -1224.5 -1266.3 -1235.5 (valid).
+Row 2 (5 seeds) stays a miss on the record; 2b is the stronger test.
+
+THE RULE — row 4, the PPO reference on MountainCarContinuous, committed before any run (11-16).
+Source  rl-zoo3 2.9.2 `hyperparams/ppo.yml`, entry `MountainCarContinuous-v0`,
+        read verbatim from the pinned package in /data/venvs/jack-std (11-16 06:15):
+          normalize: true / n_envs: 1 / n_timesteps: 20000 / policy: MlpPolicy /
+          batch_size: 256 / n_steps: 8 / gamma: 0.9999 / learning_rate: 7.77e-05 /
+          ent_coef: 0.00429 / clip_range: 0.1 / n_epochs: 10 / gae_lambda: 0.9 /
+          max_grad_norm: 5 / vf_coef: 0.19 / use_sde: True /
+          policy_kwargs: dict(log_std_init=-3.29, ortho_init=False)
+        `normalize: true` = VecNormalize with the Zoo's own default kwargs plus
+        gamma=0.9999 (exp_manager.py line 438 copies the entry's gamma in).
+        batch_size 256 > the 8-step buffer: SB3 then uses the whole 8 as one
+        mini-batch; kept verbatim (it is what the public runs ran).
+        Everything not listed: SB3 2.9.2 PPO defaults.
+Arms    r4lib   SB3 PPO (PyTorch), that entry, make_vec_env(1 env, DummyVecEnv,
+                Monitor) wrapped in VecNormalize(gamma=0.9999); device cpu, one
+                torch thread.
+        r4ctrl  CONTROL THAT MUST FAIL: r4lib with learning_rate = 0.0.
+Seeds   r4lib 0..4; r4ctrl 0..4.
+Metric  §5 row 4 "training return" = the long form's "Final train (last 100
+        episodes)": mean of ep_info_buffer at the end of learn() (Monitor sits
+        INSIDE VecNormalize, so these are raw, unnormalised returns). At
+        20,000 steps that is every finished episode (~20+), not 100.
+Band    The long form's own acceptance formula (control_arm_engineering.md,
+        "Acceptance rule ... m +/- 3 s sqrt(1/k + 1/n)", which produced rows 1
+        and 2's bands): m 87.5, s 4.2, n 10 public seeds, k 5 ->
+        87.5 +/- 6.9 = [80.6, 94.4].
+Accept  r4lib REPRODUCES iff the 5-seed mean lies in [80.6, 94.4]. VOID unless
+        r4ctrl completes all 5 seeds and every r4ctrl seed is BELOW 80.6.
+        A miss is recorded as a miss; a re-registration (more seeds) is a new
+        rule with its reason, as 1 -> 1b and 2 -> 2b.
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |
@@ -241,6 +278,10 @@ ROW2B_CTRL_SEEDS = tuple(range(5, 10))
 ROW3_EVAL_EPISODES = 10
 ROW3_SOLVED = 90.0
 ROW1B_SEEDS = tuple(range(5, 20))
+ROW4_ARMS = ("r4lib", "r4ctrl")
+ROW4_SEEDS = (0, 1, 2, 3, 4)
+ROW4_STEPS = 20_000
+ROW4_BAND = (80.6, 94.4)
 ROW1B_CTRL_SEEDS = tuple(range(5, 10))
 PINS = ["stable-baselines3==2.9.2", "sb3-contrib==2.9.2", "sbx-rl==0.28.0",
         "rl-zoo3==2.9.2", "gymnasium==1.4.0", "mujoco==3.17.0",
@@ -581,6 +622,61 @@ def verdict_row2(cells: list, seeds=None, ctrl_seeds=None) -> dict:
     return out
 
 
+def make_row4(arm: str, seed: int, steps: int = ROW4_STEPS):
+    """Row 4: the Zoo's MountainCarContinuous-v0 PPO entry, unmodified (rule above)."""
+    _single_thread()
+    import torch
+    torch.set_num_threads(1)
+    from stable_baselines3 import PPO
+    from stable_baselines3.common.env_util import make_vec_env
+    from stable_baselines3.common.vec_env import VecNormalize
+    if arm not in ROW4_ARMS:
+        raise ValueError(f"arm {arm!r} not in {ROW4_ARMS}")
+    env = VecNormalize(make_vec_env("MountainCarContinuous-v0", n_envs=1, seed=seed),
+                       gamma=0.9999)
+    return PPO("MlpPolicy", env, batch_size=256, n_steps=8, gamma=0.9999,
+               learning_rate=(0.0 if arm == "r4ctrl" else 7.77e-05),
+               ent_coef=0.00429, clip_range=0.1, n_epochs=10, gae_lambda=0.9,
+               max_grad_norm=5, vf_coef=0.19, use_sde=True,
+               policy_kwargs=dict(log_std_init=-3.29, ortho_init=False),
+               seed=seed, device="cpu")
+
+
+def run_row4_cell(arm: str, seed: int, steps: int = ROW4_STEPS) -> dict:
+    t0 = time.time()
+    model = make_row4(arm, seed, steps)
+    model.learn(total_timesteps=steps)
+    last = [float(e["r"]) for e in model.ep_info_buffer]
+    return {"row": 4, "arm": arm, "seed": seed, "steps": steps,
+            "timesteps": int(model.num_timesteps), "last_n": len(last),
+            "mean_return": sum(last) / max(1, len(last)), "last_returns": last,
+            "wall_s": round(time.time() - t0, 1), "versions": versions()}
+
+
+def verdict_row4(cells: list) -> dict:
+    by = {}
+    for c in cells:
+        by.setdefault(c["arm"], []).append(c)
+    out = {}
+    for arm, cs in by.items():
+        cs = sorted(cs, key=lambda c: c["seed"])
+        vals = [c["mean_return"] for c in cs]
+        out[arm] = {"seeds": [c["seed"] for c in cs],
+                    "per_seed": [round(v, 1) for v in vals],
+                    "mean": round(sum(vals) / len(vals), 1),
+                    "complete": [c["seed"] for c in cs] == list(ROW4_SEEDS)}
+    ctrl, lib = out.get("r4ctrl"), out.get("r4lib")
+    void = ctrl is None or not ctrl["complete"] or max(ctrl["per_seed"]) >= ROW4_BAND[0]
+    ok = (lib is not None and lib["complete"]
+          and ROW4_BAND[0] <= lib["mean"] <= ROW4_BAND[1])
+    out["verdict"] = "VOID" if void else ("r4lib REPRODUCES" if ok else "r4lib MISSES")
+    return out
+
+
+def row4_cells() -> list:
+    return [(a, s) for a in ROW4_ARMS for s in ROW4_SEEDS]   # r4lib first
+
+
 def row2_cells() -> list:
     return [(a, s) for a in ROW2_ARMS for s in ROW2_SEEDS]   # r2lib first
 
@@ -590,12 +686,12 @@ def row2b_cells() -> list:
             + [("r2ctrl", s) for s in ROW2B_CTRL_SEEDS])
 
 
-def row2_kernel(cells=None, name: str = "row2", verdict: str = "verdict_row2(ok)") -> dict:
+def row2_kernel(cells=None, name: str = "row2", verdict: str = "verdict_row2(ok)",
+                imp: str = "from experiments.brain_b import run_parallel, verdict_row2") -> dict:
     """Submit row 2 (r2lib, r2ctrl x 5 seeds) — or row 2b — as one Kaggle CPU kernel."""
     from experiments.gpu import build_job, result_json, submit
     body = (_JOB.replace("__CELLS__", repr(cells or row2_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
-            .replace("from experiments.brain_b import run_parallel, verdict_row1",
-                     "from experiments.brain_b import run_parallel, verdict_row2")
+            .replace("from experiments.brain_b import run_parallel, verdict_row1", imp)
             .replace("__VERDICT__", verdict))
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=3.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_row1.json"])
@@ -610,7 +706,10 @@ def row2_kernel(cells=None, name: str = "row2", verdict: str = "verdict_row2(ok)
 
 def main(argv):
     if len(argv) >= 5 and argv[1] == "cell":      # cell <arm> <seed> <out.json> [steps]
-        if argv[2] in ROW2_ARMS:
+        if argv[2] in ROW4_ARMS:
+            steps = int(argv[5]) if len(argv) > 5 else ROW4_STEPS
+            rec = run_row4_cell(argv[2], int(argv[3]), steps)
+        elif argv[2] in ROW2_ARMS:
             steps = int(argv[5]) if len(argv) > 5 else ROW2_STEPS
             rec = run_row2_cell(argv[2], int(argv[3]), steps)
         elif argv[2] in ROW3_ARMS + ROW3B_ARMS:
@@ -625,6 +724,10 @@ def main(argv):
         row2_kernel(row2b_cells(), "row2b",
                     f"verdict_row2(ok, seeds={list(ROW2B_SEEDS)!r}, "
                     f"ctrl_seeds={list(ROW2B_CTRL_SEEDS)!r})")
+        return 0
+    if len(argv) >= 2 and argv[1] == "row4-kernel":
+        row2_kernel(row4_cells(), "row4", "verdict_row4(ok)",
+                    "from experiments.brain_b import run_parallel, verdict_row4")
         return 0
     if len(argv) >= 2 and argv[1] == "row2-kernel":
         row2_kernel()
