@@ -1848,3 +1848,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Rule `641308fd` first. Six arm stacks built exactly as `run_b`/`run_floor` build them (learner constructed, so its seeding side effects happen), driven by one fixed action sequence: 2,002 raw-obs hashes identical across b blr0 bwhite bpink noop held8, incl. an energy death at 1,459 and its respawn. Control seed 302 differs at decision 0.
 - Owed on the harness for B: #2 (lr-0 detected at planned power — the pilot's blr0 arm will give it), #6, #9.
 - Philosophy served: 4 (the pilot's arms differ only in the learner, proven, so a gap between them can be read as learning).
+
+## 2026-11-16 19:15 · JACK · J8: the pilot's reading is now one command, tested before the data is complete
+- 19:07 strong slot: J5 is DONE → J8. k4 f0 f1 f2 all RUNNING on Kaggle (4 sessions held) → nothing to launch or harvest.
+- Built `experiments/pilot_b_report.py`: transcribes the frozen rule (≥ 5 of 20 at W 1; floor ≤ 1 of 15 or VOID; θ = 5 at W 3; W and T fixes), scores through the frozen harness, refuses a reading while any of the 35 registered runs is missing. 11 planted tests (each of the four answers, the bars' edges, crash = outcome, duplicate run); 6 mutations each turn them red.
+- Found before the harvest: `prereg.judge` cannot run on the pilot — its two-look test needs 20 runs in each arm; the floor has 15 and the lr-0 twin 5. The report runs judge's three refusals itself and counts. INBOX line for the system lane.
+- Corrected a state line: seed 315's "recovery" is one life cut off by T while eating 24 meals at 3.2× its drain; its finished lives end at 0.10 meals/life. The table now shows every cut-off life.
+- PILOT_B.md Results: PARTIAL, 16 of 35 (B: 1,878 lives, 0 capped, median life 496 s, 0.42 meals/life). Harness #6 and #9 written down as not payable on the pilot (no resume, no probe).
+- Philosophy served: 4 (the verdict will be read by a tested transcription of a rule fixed in advance, not by hand after seeing the numbers), 5 (harvest → reading in one step).
