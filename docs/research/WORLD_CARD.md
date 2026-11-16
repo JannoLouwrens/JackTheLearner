@@ -11,7 +11,7 @@ registered run.** Registered seeds 201–220, 10 lives each, through `jack_env`
 with today's world. Smoke seeds 153/154 only were used to write and tune the
 hand forager (row f). No learner, no ledger row: these are rulers.
 
-## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; d8 harvested 21:25, `d8.jsonl` sha256 f4a24125…; d32 harvested 22:10, `d32.jsonl` sha256 7a371c53…; e running; b2 harvested 22:50 on 221–240, `b2.jsonl` sha256 2ce802b8…; f2 harvested 22:40 on 221–240, `f2.jsonl` sha256 f11fad34…; g2 harvested 22:40, `g2.jsonl` sha256 32e0cfa2…)
+## Rows (registered run: Kaggle CPU; b harvested 11-15 18:31, raw `world_card_data/b.jsonl` sha256 4dc9ef93…; f harvested 19:04, `f.jsonl` sha256 8076f639…; a harvested 19:25, `a.jsonl` sha256 65ceb0cb…; g harvested 20:10, `g.jsonl` sha256 bb1dc832…; c harvested 20:35, `c.jsonl` sha256 c9491ddb…; d8 harvested 21:25, `d8.jsonl` sha256 f4a24125…; d32 harvested 22:10, `d32.jsonl` sha256 7a371c53…; e harvested 11-16 (landed 11-15 23:58), `e.jsonl` sha256 ba26eed3…; b2 harvested 22:50 on 221–240, `b2.jsonl` sha256 2ce802b8…; f2 harvested 22:40 on 221–240, `f2.jsonl` sha256 f11fad34…; g2 harvested 22:40, `g2.jsonl` sha256 32e0cfa2…)
 
 | row | policy | lifetime s (mean ± sd) | floor meals / life | apples | drinks | cause of death | summed reward / life |
 |---|---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ hand forager (row f). No learner, no ledger row: these are rulers.
 | c | pink noise per life | 491.5 ± 30.1 (443–677) | 0.44 ± 0.86 (max 6; 58/200 lives ≥1; 1/200 ≥5; per-seed means 0.0–1.8) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | d8 | action held 8 | 539.4 ± 53.6 (493–775) | 1.16 ± 1.46 (max 7; 110/200 lives ≥1; 9/200 ≥5; per-seed means 0.4–2.1) | 0 | n/a | energy 200/200 | −1.00 (all) |
 | d32 | action held 32 | 606.9 ± 78.5 (560–1121) | 1.01 ± 1.84 (max 13; 87/200 lives ≥1; 9/200 ≥5; per-seed means 0.0–1.9) | 0 | n/a | energy 200/200 | −1.00 (all) |
-| e | privileged NE.01 forager | | | | n/a | | |
+| e | privileged NE.01 forager | 1800.0 ± 0 (200/200 at the cap) | 53.49 ± 0.50 (53–54; 200/200 ≥5; per-seed means 53.3–53.6) | 0 | n/a | censored 200/200 | −0.001 (−0.003 to 0.000) |
 | f | hand forager, observation only | 742.1 ± 278.9 (6–1800; median 696) | 4.13 ± 4.98 (max 28; 168/200 lives ≥1; 59/200 ≥5; per-seed means 1.6–7.7, median 4.05) | 0 | n/a | energy 189, integrity 10, censored 1 | −1.00 (199 lives); −0.88 (the 1 censored) |
 | g | control: (f) with rays shuffled | 701.5 ± 155.7 (7–1037; median 715) | 2.97 ± 2.05 (max 10; 180/200 lives ≥1; 41/200 ≥5; per-seed means 1.5–3.9) | 0 | n/a | energy 193, integrity 7 | −1.00 (all) |
 | f2 | hand forager, F2_BAN_S = inf, seeds 221–240 | 903.7 ± 326.9 (504–1800; median 773) | 6.91 ± 7.47 (max 33; 183/200 lives ≥1; 88/200 ≥5; per-seed means 3.0–13.5, median 6.55) | 0 | n/a | energy 188, censored 8, integrity 4 | −1.00 (192 lives); −0.71 to −1.03 (the 8 censored) |
@@ -133,7 +133,7 @@ box, `/data/tmp/wc_diag` — tuning seed, NOT evidence):
 
 **Row f2 against the unmoved bar (22:40): FAIL — 13 of 20 seeds (needs 18); control g2 misses, 0 of 20.** `score(f2, b2, F2_SEEDS)`. Short of 5.0 per life: 223 (3.0), 225 (4.9), 226 (4.2), 228 (3.4), 234 (4.0), 236 (4.5), 237 (3.4). Every seed is above b2 (20/20, paired t 9.31; pooled 6.91 vs 0.47, 14.7×).
 - **Sight now carries every life, not just the first.** f2 beats its blind control on 20/20 seeds (t 8.02). Life 0: f2 11.25 vs g2 2.30 (17/20, t 4.28). Lives 1–9: f2 6.43 vs g2 1.62 (20/20, t 6.67) — on f/g it was 3.22 vs 2.99 (t 0.57). Removing the bans fixed the collapse on fresh seeds, as the tuning smoke said. By life: 11.25 10.15 8.05 7.60 4.20 6.10 5.75 6.60 4.20 5.20 — still a slow decline, now from a much higher floor.
-- **Floor food CAN sustain a full life: 8 of 200 lives reach the 1800 s cap alive** (27–33 floor meals each, seeds 221/222/224×2/227/233/235/236). That is a measurement for answer (1): the arithmetic says intake can beat drain, and an observation-only ruler shows it does, sometimes. Typical: 0.77 floor meals per 100 s alive (b2 0.16, g2 0.25).
+- **[CORRECTED 11-16 under answer (1): these 8 lives ate below basal drain and were ended by the cap, not sustained.]** **Floor food CAN sustain a full life: 8 of 200 lives reach the 1800 s cap alive** (27–33 floor meals each, seeds 221/222/224×2/227/233/235/236). That is a measurement for answer (1): the arithmetic says intake can beat drain, and an observation-only ruler shows it does, sometimes. Typical: 0.77 floor meals per 100 s alive (b2 0.16, g2 0.25).
 - **Blind wander got worse, not better, on these seeds:** g2 1.69/life vs g's 2.97 — the f/g gap was partly that g's wander ate more on 201–220. 4 integrity deaths in f2 (504–915 s, lives 0–9), none in g2.
 - **Answer (3), provisional until e lands:** 16 rays DO tell food from walls and decoys well enough to beat blind 4× per life — but not reliably enough for 5 meals/life on 7 of 20 seeds. Spread is per-world (3.0–13.5 per-seed means), so the misses are layouts, which J2 (2)'s random layout each life will mix.
 - Bar stays; no retune on 221–240. A further ruler would need new fresh seeds and its rule first — not this order's step.
@@ -208,7 +208,7 @@ lumpier (sd 1.84, max 13; 113/200 lives eat nothing vs d8's 90). **d8 stays the
 best random row** (higher per life point estimate and per 100 s), so J2's d0
 rule keeps pointing at d8. Why held arms live longer stays NOT measured.
 
-## Answers (owed after the registered rows)
+## Answers (written 2026-11-16 after all registered rows)
 
 1. Intake against drain, from `drives.py`, beside row e's lifetime.
    **Arithmetic, now on the rover's own body** (2026-11-15, box probe, seeds
@@ -228,6 +228,58 @@ rule keeps pointing at d8. Why held arms live longer stays NOT measured.
    f's best life ate one per 73 s (1.1e-3 /s, 0.66× basal) and starved.
    Row e (food served when due) measures whether the ceiling holds in the
    physics: probe, seeds 153/201, 1 life × 1,500 decisions: 9 serves → 9
-   meals, energy held at 1.00, censored. Registered row e: pending (Kaggle).
+   meals, energy held at 1.00, censored.
+   **Registered row e (seeds 201–220, 200 lives): every life reaches the
+   1,800 s cap**, 53.49 floor meals each = 2.377e-3 /s, **99.4% of the
+   2.392e-3 ceiling** — the physics delivers the arithmetic: no meal is lost
+   to contact, clocks or the serve. Energy stays near full (summed reward
+   −0.001). As a ruler it passes the bar on 20/20 seeds.
+   **Beside it, the observation-only ruler: no f2 life was sustained.** The 8
+   f2 lives that reached the cap ate 27–33 meals = 1.20–1.47e-3 /s, **0.72–0.88×
+   an idle rover's drain** (f2 drives by force, so its drain is at least
+   basal). Each was in deficit the whole way and lived on its birth energy
+   (1.0 + 2.4 eaten − ≥3.0 drained ≈ ≤0.4 left at 1,800 s); with no cap they
+   would starve later. So the 22:40 line "floor food CAN sustain a full life"
+   is corrected: the cap, not the food, ended those lives.
+   **Answer (1): floor food alone CAN sustain him, with a margin of 1.44×
+   — but only at ≥ 70% of perfect harvest (one meal per 48 s, arms still).**
+   Measured harvest: e 99%; f2's best life 61%, typical f2 0.77 meals/100 s
+   alive = 26%; best random row d8 7%. No non-privileged policy has yet
+   sustained a life. The gap e → f2 (2.97 vs 0.77 meals per 100 s, 3.9×) is
+   the cost of finding and reaching food, which J2's dial exists to shrink.
 2. Does dying early pay (summed reward against lifetime)?
+   **Yes — under today's reward, dying never costs more than living hungry.**
+   All 1,991 deaths on this card (rows a–g2, b2; checked to ±0.005) sum to −1.00 whatever its
+   length or meals (the telescoping sum, smoke section). A life that reaches
+   the cap sums `d(h_birth) − d(h_end)`: row e, fed, ≈ 0; but f2's eight
+   capped lives sum −0.71 to −1.03, and **seed 221 life 2 (27 meals, 1,800 s)
+   sums −1.026, below every death.** Undiscounted, eating is worth at most
+   +1 over a whole life and a hungry life can be worth less than dying; with
+   any discount the drain's early cost dominates. This is the §3 setting in
+   which published agents learned to end their lives. J2 (3)'s
+   `dr100-eat` / `dr100-eat-pos` options (`14e637c4`) pay on the eating event
+   and keep "alive and hungry" non-negative; a learner is judged under one of
+   them, never under today's default.
 3. Can 16 rays tell food from a wall; if not, which sense is missing?
+   **Yes — the rays tell food from walls and decoys; no missing sense is
+   shown.** With sight, f2 eats 6.91 meals/life against 1.69 with its rays
+   shuffled (20/20 seeds, t 8.02; lives 1–9 6.43 vs 1.62, t 6.67), and the
+   control's collapse is the measured value of the 16 rays. What they do not
+   yet buy is RATE: f2 harvests 26% of the ceiling against the ≥ 70% a
+   sustained life needs, and per-seed means spread 3.0–13.5 by layout. That
+   gap is search and locomotion (food shoved against walls by eating, cause
+   2; straight full-drive runs that injure him, 4 integrity deaths in f2),
+   not discrimination. Not measured here and so not claimed: whether a
+   richer sense (smell gradient, wider field) would close it — a question
+   for a learner at J2's `d0`, not a further ruler. The foragers stay
+   rulers, never parts of him.
+
+**J1 verdict.** The venue can tell a forager from a non-forager (floor arms
+a, b, c, d: 0/20 seeds; e 20/20; f2 13/20 with its control 0/20), and the food
+can sustain a life only near perfect harvest. No random row survives a life
+(0/1,000 random lives reach the cap). **Flag for J2 (5):** its rule as
+written — the hardest d at which the best random row eats ≥ 1 meal in ≥ 50%
+of lives and do-nothing still dies — is ALREADY met at d = 1: d8 eats ≥ 1 in
+110/200 lives (55%) and a dies 200/200. Read literally, `d0` = 1 = today's
+world, the one this card shows no non-privileged policy can live in. The
+rule is not changed here (it is the Director's); INBOX carries the question.
