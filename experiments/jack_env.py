@@ -191,6 +191,26 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          distinct per run; same seed same layout, next seed
                          differs; control: the same check on today's world
                          FAILS on all 3 seeds, layout stream differs. PASS.
+  terminal_obs           "reborn" (default, today's) | "dying" (J9). On the
+                         decision he dies, "reborn" returns the RESPAWNED
+                         body's first senses with terminated=True; "dying"
+                         returns the DYING body's (its place, its empty need,
+                         its last sounds), captured by `W0.observe_pure()`
+                         before the respawn, and reset() hands out the reborn
+                         one exactly as before. The world's random stream is
+                         not touched: every other observation, reward and
+                         death equals the default run's. TERMINAL PROOF
+                         (2026-11-16, `python -m experiments.tests.
+                         test_jack_env_terminal 300`, seeds 153-155): (1) J1
+                         identity vs run_survival, OFF and ON, e0 1.0 and
+                         0.05 (deaths @98/206, 99/205, 105/213): 12/12 MATCH,
+                         controls differ; (2) ON stream == OFF stream on
+                         every non-terminal step and reset, 6 deaths, each
+                         OFF terminal obs == ON next reset(); (3) ON terminal
+                         proprio+needs == a draw-free spy on W0.respawn, e 0.0
+                         at death vs 0.05 reborn; control (OFF terminal)
+                         fails on all 3. PASS. Place is carried by the dying
+                         body's own senses (rays, proprio); x, y is no sense.
   OPTIONS PROOF (measured 2026-11-15, `python -m
   experiments.tests.test_jack_env_options 300`, seeds 153/154/155): (a)
   explicit defaults == JackEnv() byte for byte; (b) dr100-eat == 100*homeo-dr
@@ -210,8 +230,9 @@ PROOF (measured 2026-11-15, `python -m experiments.tests.test_jack_env 300`):
   float64 actions; a float32 action (what SB3 emits) rounds the 8-vector and
   drifts the reward sum by ~1e-9..4e-3 in 300 decisions — a different action,
   not a different world.
-  Observation width 74. The terminal observation of a death step is the
-  RESPAWNED body (W0 respawns inside decide); the dead body's is not kept.
+  Observation width 74. By default the terminal observation of a death step
+  is the RESPAWNED body (W0 respawns inside decide); `terminal_obs="dying"`
+  (J9) returns the dying body's instead.
 SPEED (measured): one env on the box, nice 19, 400 random decisions:
   38.8 decisions/s wall (38.9 per CPU-second) -> 1M decisions ~7.2 h on one
   core. 4-process vector and the Kaggle CPU figure: still owed (J1 step 3).
@@ -225,8 +246,12 @@ import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
 
+from experiments import drives
+from experiments.survival import D_DEATH
+
 SENSES = ("vision", "audio", "touch", "proprio", "needs")
 REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
+TERMINAL_OBS = ("reborn", "dying")
 FLOOR_FOODS = ("obj0", "obj1")
 # J2 item 1, food count: W0's own non-food floor objects that the dial turns
 # into floor food at low d, in this order (obj5 is never food).
@@ -276,7 +301,8 @@ class JackEnv(gym.Env):
                  max_episode_decisions: Optional[int] = None,
                  difficulty: Optional[float] = None,
                  random_needs: Optional[float] = None,
-                 random_layout: bool = False):
+                 random_layout: bool = False,
+                 terminal_obs: str = "reborn"):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -300,6 +326,10 @@ class JackEnv(gym.Env):
                 raise ValueError("random_needs replaces e0; leave e0 = 1.0")
         self.random_needs = None if random_needs is None else float(random_needs)
         self.random_layout = bool(random_layout)
+        if terminal_obs not in TERMINAL_OBS:
+            raise ValueError(f"terminal_obs must be one of {TERMINAL_OBS}, "
+                             f"got {terminal_obs!r}")
+        self.terminal_obs = terminal_obs
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -312,7 +342,6 @@ class JackEnv(gym.Env):
         self._died = False
 
     def _build(self, seed: int) -> None:
-        from experiments import drives
         from experiments.w0 import W0
         sampler = None
         if self.random_layout:
@@ -321,6 +350,7 @@ class JackEnv(gym.Env):
             sampler = self._near_food_spawn
         self.w = W0(seed=seed, j0=self.j0, alpha=self.alpha, lethal=True,
                     diary=self.diary, spawn_sampler=sampler)
+        self.w.capture_dying_obs = self.terminal_obs == "dying"
         self.floor_foods = FLOOR_FOODS
         if self.difficulty is not None:
             # J2 item 1, food count: extras are food before birth is placed.
@@ -532,7 +562,6 @@ class JackEnv(gym.Env):
         return o, self._info()
 
     def step(self, action):
-        from experiments.survival import D_DEATH
         w = self.w
         d_before = w.drives.state.d()
         meals_before = self._meals()
@@ -552,7 +581,6 @@ class JackEnv(gym.Env):
             # run_survival re-applies e0 at every respawn, before the next
             # observe(); same order here (found by the proof: without it the
             # second life lived on the world's default energy).
-            from experiments import drives
             w.drives.state = drives.DriveState(e=self.e0)
         if self._died and self.random_needs is not None:
             self._draw_needs()      # same place e0 is re-applied: before observe()
@@ -563,6 +591,11 @@ class JackEnv(gym.Env):
                            and self._ep_decisions >= self.max_episode_decisions)
         if self._died or self._truncated:
             self._pending_obs = o
+        if self._died and self.terminal_obs == "dying":
+            # J9: the reborn senses above were still observed (same stream
+            # position as the default) and wait for reset(); the transition
+            # that ends the life carries the body that died.
+            o = self._obs(w.dying_obs)
         dr = float(d_before - d_after)
         if self.reward == "homeo-dr":
             r = dr

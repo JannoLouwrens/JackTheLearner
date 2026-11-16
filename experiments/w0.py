@@ -244,6 +244,12 @@ class W0:
         self.deaths = 0
         self.died_this_decision = False
         self.last_death_cause = ""
+        # J9 (ruling 25): when True, `_die` keeps the DYING body's observation
+        # in `dying_obs` before the respawn, via `observe_pure()` — the world's
+        # `_rng` is left exactly where it was, so every later draw (placebo,
+        # noise panel) is the default run's. Default False: byte-identical.
+        self.capture_dying_obs = False
+        self.dying_obs: Optional[Dict[str, np.ndarray]] = None
         self._life_started_at = 0.0
         self.life_lengths: list = []        # sim-seconds, one per COMPLETED life
         self.death_sites: list = []         # (x, y) where each life ended
@@ -333,6 +339,21 @@ class W0:
                 raise RuntimeError(f"modality {k} is {v.shape[0]} wide")
         return obs
 
+    def observe_pure(self) -> Dict[str, np.ndarray]:
+        """`observe()` with no side effect on the world's random stream (J9).
+
+        `observe()` draws from `_rng` (placebo channel; noise-panel texture when
+        a ray hits the panel). This saves and restores that stream around the
+        call, so the NEXT `observe()` draws exactly what it would have drawn —
+        which also means the stochastic channels of this observation are the
+        same values the next observation's will start from (reused, never a
+        second draw). Nothing else in `observe()` writes state."""
+        st = self._rng.get_state()
+        try:
+            return self.observe()
+        finally:
+            self._rng.set_state(st)
+
     # ── one decision ────────────────────────────────────────────────────
     def decide(self, action: np.ndarray) -> None:
         """Apply an 8-vector and advance 0.2 simulated seconds.
@@ -390,6 +411,7 @@ class W0:
         # W0-2. Checked at the decision boundary, AFTER the clock advances, so
         # the recorded life length is the time he actually lived.
         self.died_this_decision = False
+        self.dying_obs = None
         if self.lethal:
             cause = self.death_cause()
             if cause:
@@ -502,6 +524,10 @@ class W0:
         return float(x), float(y)
 
     def _die(self, cause: str) -> None:
+        if self.capture_dying_obs:
+            # J9: the dying body's senses, before `respawn()` moves it, refills
+            # its needs and silences its audio. Stream-neutral (observe_pure).
+            self.dying_obs = self.observe_pure()
         death_xy = (float(self.data.xpos[self.rover_bid][0]),
                     float(self.data.xpos[self.rover_bid][1]))
         self.life_lengths.append(self.sim_seconds - self._life_started_at)
