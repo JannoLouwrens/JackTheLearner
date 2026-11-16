@@ -284,7 +284,7 @@ of lives and do-nothing still dies — is ALREADY met at d = 1: d8 eats ≥ 1 in
 world, the one this card shows no non-privileged policy can live in. The
 rule is not changed here (it is the Director's); INBOX carries the question.
 
-## J2 item 5 — the entry rung `d0` (rule `8af5f2e1`, registered 2026-11-16 00:2x; d0 and d_sus named 04:40, 3 rows owed)
+## J2 item 5 — the entry rung `d0` (rule `8af5f2e1`, registered 2026-11-16 00:2x; d0 and d_sus named 04:40, d=0.5 harvested 05:21, 2 rows owed)
 
 Rule in `experiments/world_card.py` docstring ("THE ENTRY-RUNG RULE"), committed
 before any run. Dial only (`JackEnv(difficulty=d)`, fixed layout, needs
@@ -306,9 +306,19 @@ Kaggle CPU, one kernel per d: d=0.75 `jack-cpu-1794788783`, d=0.5
 |---|---|---|---|---|---|---|---|
 | 1 (J1) | 0/200 | 600 | 110/200 (55%) | 0/200 | 1.16 (meals) | 1.16 | 539 |
 | 0.75 | 0/200 | 600 | 138/200 (69%) | 2/200 (seeds 204, 218: 17 and 11 bouts) | 2.40 | 2.40 | 694 |
-| 0.5 | owed (`jack-cpu-1794788798`, RUNNING 04:40) | | | | | | |
+| 0.5 | 1/200 (seed 214 life 1: 54 bouts, food re-placed onto/next to the resting body) | 606 | 137/200 (68%) | 7/200 (seeds 201 205 207 209 213 216 218: 11–23 bouts) | 3.32 | 3.32 | 759 |
 | 0.25 | owed (`…920`, RUNNING) | | | | | | |
 | 0 | owed (`…935`, RUNNING) | | | | | | |
+
+**Harvest 2 of 4 (2026-11-16 05:21, d = 0.5, `jack-cpu-1794788798`).** d8
+holds the ≥ 50% clause (68%) and a's capped count is 1/200 — exactly AT the
+rule's "≤ 1 of 200" floor-arm bound, so "a still dies" holds as written, with
+no margin: at d = 0.5 the dial's random re-placement alone fed one motionless
+body for 1,800 s. Below d = 0.5 the do-nothing arm is expected to cross the
+bound (d = 0 re-places food instantly); that is what the last two rows test.
+d8's capped share rises 0/200 → 2/200 → 7/200 (d = 1, 0.75, 0.5) while
+"≥ 1 bout" stays flat (55% → 69% → 68%): easing the dial buys longer lives
+for the lucky, not a first meal for more of them.
 
 **`d0` = 1 (today's world), as the rule is written.** The rule takes the
 LARGEST grid d where both clauses hold; d = 1 holds (55% ≥ 50%, a 0/200), so
