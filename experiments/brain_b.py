@@ -182,6 +182,23 @@ Accept  r2lib REPRODUCES iff the 5-seed mean of the metric lies in
         rule with the reason, as rows 1 -> 1b. Row 4 (MountainCar PPO) is not in
         this rule: §5 gives 87.5 +- 4.2 but no accept band.
 
+ROW 2 RESULT (11-16, kernel jack-cpu-1794807554): r2lib per seed -204.6
+-178.5 -210.5 -217.2 -297.0, mean -221.5 (sd 44.6) — MISSES the band
+[-213.2, -162.0]; median -210.5 is inside; seed 4 alone carries the miss.
+r2ctrl -1257.7 -1214.1 -1239.3 -1236.2 -1239.4 (all < -213.2: valid).
+
+THE RULE — row 2b, the re-registration, committed before any run (11-16).
+Why: as rows 1 -> 1b. Seed sd 44.6 makes the 5-seed mean's standard error
+(20.0) close to the band's half-width (25.6): 5 seeds cannot tell "broken"
+from "heavy tail". Row 2 STAYS RECORDED AS A MISS; 2b is a stronger test on
+fresh seeds, not a re-scoring.
+Seeds   r2lib 5..19 (15 fresh); r2ctrl 5..9 (void check only).
+Task, steps, metric, settings: exactly row 2's.
+Accept  band UNCHANGED [-213.2, -162.0] on the 15-seed mean. VOID unless
+        r2ctrl completes and every r2ctrl seed is below -213.2.
+If r2lib misses 2b: the stack is the suspect (SB3 2.9.2 / gymnasium 1.4 /
+Python 3.13 vs the reference's), the stack hunt comes next, not row 4.
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |
@@ -219,6 +236,8 @@ ROW2_ARMS = ("r2lib", "r2ctrl")
 ROW2_SEEDS = (0, 1, 2, 3, 4)
 ROW2_STEPS = 102_400
 ROW2_BAND = (-213.2, -162.0)
+ROW2B_SEEDS = tuple(range(5, 20))
+ROW2B_CTRL_SEEDS = tuple(range(5, 10))
 ROW3_EVAL_EPISODES = 10
 ROW3_SOLVED = 90.0
 ROW1B_SEEDS = tuple(range(5, 20))
@@ -540,7 +559,9 @@ def run_row2_cell(arm: str, seed: int, steps: int = ROW2_STEPS) -> dict:
             "wall_s": round(time.time() - t0, 1), "versions": versions()}
 
 
-def verdict_row2(cells: list) -> dict:
+def verdict_row2(cells: list, seeds=None, ctrl_seeds=None) -> dict:
+    seeds = list(seeds or ROW2_SEEDS)
+    ctrl_seeds = list(ctrl_seeds or seeds)
     by = {}
     for c in cells:
         by.setdefault(c["arm"], []).append(c)
@@ -551,7 +572,7 @@ def verdict_row2(cells: list) -> dict:
         out[arm] = {"seeds": [c["seed"] for c in cs],
                     "per_seed": [round(v, 1) for v in vals],
                     "mean": round(sum(vals) / len(vals), 1),
-                    "complete": [c["seed"] for c in cs] == list(ROW2_SEEDS)}
+                    "complete": [c["seed"] for c in cs] == (ctrl_seeds if arm == "r2ctrl" else seeds)}
     ctrl, lib = out.get("r2ctrl"), out.get("r2lib")
     void = ctrl is None or not ctrl["complete"] or max(ctrl["per_seed"]) >= ROW2_BAND[0]
     ok = (lib is not None and lib["complete"]
@@ -564,20 +585,25 @@ def row2_cells() -> list:
     return [(a, s) for a in ROW2_ARMS for s in ROW2_SEEDS]   # r2lib first
 
 
-def row2_kernel() -> dict:
-    """Submit row 2 (r2lib, r2ctrl x 5 seeds) as one Kaggle CPU kernel."""
+def row2b_cells() -> list:
+    return ([("r2lib", s) for s in ROW2B_SEEDS]
+            + [("r2ctrl", s) for s in ROW2B_CTRL_SEEDS])
+
+
+def row2_kernel(cells=None, name: str = "row2", verdict: str = "verdict_row2(ok)") -> dict:
+    """Submit row 2 (r2lib, r2ctrl x 5 seeds) — or row 2b — as one Kaggle CPU kernel."""
     from experiments.gpu import build_job, result_json, submit
-    body = (_JOB.replace("__CELLS__", repr(row2_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
+    body = (_JOB.replace("__CELLS__", repr(cells or row2_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
             .replace("from experiments.brain_b import run_parallel, verdict_row1",
                      "from experiments.brain_b import run_parallel, verdict_row2")
-            .replace("__VERDICT__", "verdict_row2(ok)"))
+            .replace("__VERDICT__", verdict))
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=3.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_row1.json"])
     if not sub.ok:
-        raise RuntimeError(f"brain_b row2 kernel: {sub.message}")
+        raise RuntimeError(f"brain_b {name} kernel: {sub.message}")
     r = result_json(sub, "brain_b_row1.json")
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "row2.json").write_text(json.dumps(r, indent=1))
+    (OUT / f"{name}.json").write_text(json.dumps(r, indent=1))
     print(json.dumps(r.get("verdict"), indent=1), flush=True)
     return r
 
@@ -594,6 +620,11 @@ def main(argv):
             steps = int(argv[5]) if len(argv) > 5 else ROW1_STEPS
             rec = run_row1_cell(argv[2], int(argv[3]), steps)
         Path(argv[4]).write_text(json.dumps(rec))
+        return 0
+    if len(argv) >= 2 and argv[1] == "row2b-kernel":
+        row2_kernel(row2b_cells(), "row2b",
+                    f"verdict_row2(ok, seeds={list(ROW2B_SEEDS)!r}, "
+                    f"ctrl_seeds={list(ROW2B_CTRL_SEEDS)!r})")
         return 0
     if len(argv) >= 2 and argv[1] == "row2-kernel":
         row2_kernel()
