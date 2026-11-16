@@ -76,6 +76,23 @@ RULE — declared before worlds 400-419 are generated:
   by an adult's label is the ceiling of a material look-up, not his learning),
   nor what each geometry costs in his loop (J6 item 3 times that).
 
+RESULT (worlds 400-419, 11-16; rows /data/tmp/eye_streak/fit_400_20.json):
+STREAK ALIVE. mean HIT seated16 .528, grid16 .517, grid32 .758, streak
+  .900, row256 .907 (sd .04-.09); blind .19-.21, shuffled .20-.22 (both
+  fail, as they must).  streak ahead of seated16 20/20, grid16 20/20, grid32
+  20/20, row256 6/20.  §12's question: grid16 does NOT beat seated16 (-.012,
+  ahead 7/20) - elevation rows buy nothing; azimuth in the floor band does.
+  Food 2-4 m away: .43 / .40 / .65 / .89 / .89; 4-8 m: .24 / .23 / .38 /
+  .73 / .80.  The +8 deg row buys nothing on this ruler (row256 >= streak).
+
+DIAL — declared before worlds 420-429 are generated (EYE_STREAK_ARMS=dial):
+  how many azimuths does the level row need?  row16/32/64/128/256, same
+  frames, same table learner, 10 worlds.  Reported: mean HIT each, and the
+  KNEE = the smallest row within 0.05 mean HIT of row256.  Decides nothing by
+  itself; it sizes the eye the workers build (2 numbers per ray into the
+  brain).  Reading fixed now: if row16 here is not within 0.03 of seated16's
+  registered .528, the dial's frames differ from the race's and it is VOID.
+
     nice -n 19 $PY -m experiments.eye_streak collect <seed> [<seed> ...]
     nice -n 19 $PY -m experiments.eye_streak fit <first_seed> <n_worlds>
 """
@@ -107,6 +124,10 @@ ARMS = {
     "streak": (128, (0.0, 8.0)),
     "row256": (256, (0.0,)),
 }
+# The azimuth dial (rule in the docstring's DIAL section): one level row only.
+if os.environ.get("EYE_STREAK_ARMS") == "dial":
+    ARMS = {f"row{n}": (n, (0.0,)) for n in (16, 32, 64, 128, 256)}
+    OUT = os.environ.get("EYE_STREAK_OUT", "/data/tmp/eye_streak_dial")
 
 
 def ray_dirs(n_az: int, elevs) -> np.ndarray:
@@ -322,6 +343,16 @@ def fit(first: int, n_worlds: int) -> dict:
     sm = {x: {q: round(mean(x, q), 4) for q in keys} for x in ARMS}
     for x in ARMS:
         sm[x]["sd_hit"] = round(float(np.std([r[x]["hit"] for r in res["rows"]], ddof=1)), 4)
+    res["summary"] = sm
+    if "streak" not in ARMS:                    # the azimuth dial: no verdict
+        top = sm["row256"]["hit"]
+        res["knee"] = next(x for x in ARMS if top - sm[x]["hit"] <= 0.05)
+        with open(os.path.join(OUT, f"fit_{first}_{n_worlds}.json"), "w") as f:
+            json.dump(res, f, indent=1)
+        for x in ARMS:
+            print(x, json.dumps(sm[x]))
+        print("KNEE", res["knee"], flush=True)
+        return res
     need = math.ceil(0.8 * n_worlds)
     st = sm["streak"]
     void = (st["hit"] - st["blind_hit"] < 0.10
