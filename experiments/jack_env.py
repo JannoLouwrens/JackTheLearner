@@ -305,6 +305,7 @@ class JackEnv(gym.Env):
                  random_layout: bool = False,
                  terminal_obs: str = "reborn",
                  lazy_contact_audio: bool = False,
+                 multiray_vision: bool = False,
                  integrator: str = "shipped"):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
@@ -336,6 +337,9 @@ class JackEnv(gym.Env):
         # J6(2a), default OFF: identical audio events, force computed only
         # for a contact pair that fires (experiments/fast_sim.py).
         self.lazy_contact_audio = bool(lazy_contact_audio)
+        # J6(3), default OFF: the 16 vision rays in one mj_multiRay call,
+        # identical observations (experiments/tests/test_multiray.py).
+        self.multiray_vision = bool(multiray_vision)
         # J6(4), default OFF: "implicitfast" swaps MuJoCo's integrator (the
         # world ships RK4). A WORLD CHANGE, not an identity: measured in
         # experiments/tests/test_integrator.py. W0.__init__ takes no physics
@@ -368,6 +372,9 @@ class JackEnv(gym.Env):
         if self.lazy_contact_audio:
             from experiments.fast_sim import apply_lazy_contact_audio
             apply_lazy_contact_audio(self.w)
+        if self.multiray_vision:
+            from experiments.fast_sim import apply_multiray_vision
+            apply_multiray_vision(self.w)
         if self.integrator == "implicitfast":
             self.w.model.opt.integrator = self.w.mujoco.mjtIntegrator.mjINT_IMPLICITFAST
         self.floor_foods = FLOOR_FOODS

@@ -1217,13 +1217,13 @@
         "detached:entry_d50.log": 589.54,
         "detached:entry_d75.log": 692.02,
         "detached:h4.log": 1065.43,
-        "detached:launch_f0.log": 32.28,
-        "detached:launch_f1.log": 32.16,
+        "detached:launch_f0.log": 42.99,
+        "detached:launch_f1.log": 42.96,
         "detached:launch_k0.log": 438.03,
         "detached:launch_k1.log": 599.14,
         "detached:launch_k2.log": 600.91,
         "detached:launch_k3.log": 977.8,
-        "detached:launch_k4.log": 128.52,
+        "detached:launch_k4.log": 149.67,
         "detached:lc02_rebuy.log": 765.87,
         "detached:lc02_rebuy2.log": 399.51,
         "detached:lc02_rebuy3.log": 644.6,
@@ -1257,7 +1257,7 @@
         "detached:svs_S1.log": 2461.57,
         "detached:svs_S2.log": 2385.86
       },
-      "used_s": 34688.49
+      "used_s": 34731.15
     }
   },
   "last_child_s": {

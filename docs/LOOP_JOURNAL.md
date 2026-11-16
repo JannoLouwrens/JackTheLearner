@@ -1811,3 +1811,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `jack_env(integrator="implicitfast")`, default OFF (stales nothing). `tests/test_integrator.py` 300 steps × 3 seeds: default untouched 3/3; trajectories part at decision 1 every seed; no warnings/NaN; deaths are integrity: s155 6.32 → 3.44 decisions/life (44 → 78 ends), s153 4.36 → 4.07, s154 34 = 34.
 - Speed 41.0 → 70.1 dec/CPU-s (1.71×); with lazy_contact_audio 108.5 (2.65×). Flipping the world default (playground.py:527) would stale 22 certificates (16 PASS incl. LC.02, W0.PL) — listed for the Director; nothing flipped.
 - Philosophy served: 5 (the loop that makes him gets cheaper), 4 (the price of the speed — a changed injury law — measured, not assumed away).
+
+## 2026-11-16 17:30 · JACK · J8: k3 harvested, f2 launched; J6 (3): batched rays proven identical
+- J8: k3 back (16:43): 16 of 20 B seeds, 1,894 lives, 0 sustained; meals/life fell in 15 of 16 seeds. s315 is the exception: near zero from life 30 to 109, then 4.3 meals/life over its last 6 lives (descriptive; hints that T matters). f2 launched 17:07 into k3's session (k4 f0 f1 f2 busy; f3, e0-e2 wait).
+- J6 (3): `jack_env(multiray_vision=True)`, default OFF, stales nothing. `tests/test_multiray.py` 300 steps × 4 worlds (incl. J8's pilot world with dying obs): identity 4/4, 824 panel noise draws consumed identically, control differs. Speed 39.3 → 39.2 dec/CPU-s: today's eye is 0.057 ms of a decision, so this was never a speed lever. Its value is the one-call retina §12 needs.
+- Philosophy served: 4 (a speed claim checked and found to be ~0, said plainly), 5 (the instrument for his first eye is proven identical before it is used).

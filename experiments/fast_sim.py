@@ -15,6 +15,18 @@ here edits `ContactAudio.py` or `w0.py` (so no standing certificate stales).
     `experiments/tests/test_fast_sim.py` (stream identity incl. every audio
     event field, and a control that must differ).
 
+(b) `multiray_vision` — J6(3): `W0._vision`'s 16 `mj_ray` calls replaced by
+    ONE `mj_multiRay` over the same origin, directions, geom groups,
+    flg_static=1 and bodyexclude=-1, cutoff mjMAXVAL (so the
+    "> RAY_MAX_RANGE reads empty" clause stays where it was). The panel's
+    noise draw happens per ray in the same order k = 0..15, so the world's
+    random stream is consumed identically. MuJoCo 3.2.3 returns the same
+    distance and geom id bit for bit (2,400 rays, 0 differences, 11-16).
+    Proof: `experiments/tests/test_multiray.py`. Speed: today's eye is
+    0.057 ms of a ~20 ms decision, so this is NOT a speed lever for the
+    16-ray eye (<0.3%); its value is the batched call §12's retina needs
+    (16x16 0.10 ms, 32x32 0.34 ms, 5-7x the loop, §12).
+
 Speed table: in `experiments/tests/test_fast_sim.py`'s docstring.
 """
 from __future__ import annotations
@@ -58,6 +70,42 @@ def _lazy_step(self, data) -> None:
         last[pair] = t
         self.events.append(self._make_event(t, pair, pos, force))
     self._prev_pairs = set(by_pair)
+
+
+def _multiray_vision(self) -> np.ndarray:
+    import mujoco
+    from experiments import w0 as W
+    pos = np.array(self.data.xpos[self.rover_bid], dtype=float)
+    pos[2] += W.RAY_Z_OFFSET
+    n = W.N_RAYS
+    if not hasattr(self, "_mr_vec"):
+        self._mr_vec = np.ascontiguousarray(self._ray_dirs, dtype=np.float64).reshape(-1)
+        self._mr_gid = np.zeros(n, dtype=np.int32)
+        self._mr_dist = np.zeros(n, dtype=np.float64)
+    mujoco.mj_multiRay(self.model, self.data, pos, self._mr_vec, W._RAY_GROUPS,
+                       1, -1, self._mr_gid, self._mr_dist, n, mujoco.mjMAXVAL)
+    out = np.empty(W.MODALITIES["vision"], dtype=np.float32)
+    for k in range(n):
+        dist = float(self._mr_dist[k])
+        gid = int(self._mr_gid[k])
+        if dist < 0 or dist > W.RAY_MAX_RANGE or gid < 0:
+            d, t = 1.0, 0.0
+        else:
+            d = dist / W.RAY_MAX_RANGE
+            t = float(self._tex[gid])
+            if gid == self.panel_gid:
+                amp = min(1.0, 2.5 / max(dist, 1e-6))
+                t = 0.5 + amp * (float(self._rng.uniform()) - 0.5)
+        out[2 * k] = d
+        out[2 * k + 1] = t
+    # keep the shipped side effect: _geomid holds the LAST ray's hit
+    self._geomid[0] = self._mr_gid[n - 1]
+    return out
+
+
+def apply_multiray_vision(w) -> None:
+    """Swap the instance's `_vision` for the one-call version (this W0 only)."""
+    w._vision = types.MethodType(_multiray_vision, w)
 
 
 def apply_lazy_contact_audio(w) -> None:

@@ -84,10 +84,9 @@ No seat moves on a pilot; it fixes W and T for the decisive test.
 serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · philosophy 1, 4.
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
 state: (1)-(3) DONE `6f197f94`; prereg FROZEN `f0dc9fd7` (mark sustained, W 1, T 300k, 35 runs); harness #4 PASS (8/8 lives identical). Smoke 25.9 dec/CPU-s.
-state: B harvested k0-k2 (12 of 20 seeds, 300k each, ~118 lives/run): **0 sustained lives in 1,420**; meals/life first 20 → last 20 ≈ 0.68 → 0.17, every death energy (descriptive — §13's lie-still slide as predicted). k3, k4 RUNNING on Kaggle.
-state: 11-16 16:23 f0, f1 LAUNCHED (jack-cpu-1794846172, -1794846240) → 4 sessions busy (k3 k4 f0 f1). f2, f3 wait for a free session.
-state: (6) REGISTERED `da8bc163`: arms `bwhite` (plain SAC draw) and `bpink` (pink β=1 at selection only, pink-noise-rl 2.0.1), seeds 301-305, kernels e0/e1/e2 in `kernel_groups`; box smoke seed 301, 6,000 decisions each: bpink 1,016 pink draws (= decisions after warm-up), bwhite 0 — the swap fires only where it should.
-state: next: as sessions free, launch f2, f3, then e0, e1, e2 (`pilot_b kernel --name X` via launch_detached, one per minute); harvest kN/fN.json; when 20+15 are in, write `docs/research/PILOT_B.md` reading by the rule.
+state: B harvested k0-k3 (16 of 20 seeds, 300k each, 1,894 lives): **0 sustained**; meals/life first 20 → last 20 fell in 15 of 16 seeds (e.g. 0.90 → 0.10); every death energy. Exception s315: near zero over lives 30-109, then 4.3 meals/life and intake 0.65 of drain over its last 6 lives (descriptive; it hints that T matters).
+state: 11-16 17:07 f2 LAUNCHED (jack-cpu-1794848872) when k3 freed a session → 4 busy (k4 f0 f1 f2). (6) REGISTERED `da8bc163` (bwhite / bpink, seeds 301-305, kernels e0-e2; smoke: pink fired 1,016 = post-warm-up decisions, white 0).
+state: next: as sessions free, launch f3, then e0, e1, e2 (`pilot_b kernel --name X` via launch_detached, one per minute); harvest k4/fN.json; when 20+15 are in, write `docs/research/PILOT_B.md` reading by the rule.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
@@ -186,7 +185,8 @@ state: (1) DONE `7f3af75d`: `make_vec` streams == single env (proof test_jack_en
 state: (2a) DONE `403def65`: `lazy_contact_audio` identical (29,805 audio events field for field), 40.8 → 51.8 dec/CPU-s, stales nothing.
 state: (4) MEASURED 11-16 16:45 (`jack_env(integrator="implicitfast")`, default OFF, stales nothing; `tests/test_integrator.py`): default untouched 3/3; a WORLD CHANGE — trajectories part at decision 1 on all 3 seeds, no warnings/NaN; deaths are injury: s155 life 6.32 → 3.44 decisions (44 → 78 ends), s153 4.36 → 4.07, s154 34 = 34 ends. Speed 41.0 → 70.1 (1.71×), with (2a) 108.5 dec/CPU-s (2.65×).
 state: (4) re-cert if the world default flipped (playground.py:527, scratch worktree minus baseline): 22 certificates — 16 PASS (BA.01 HR.7 LC.02 LF.02 PG.1 PG.2 PG.3 PG.5 PG.8 PS.01 PS.03 SM.01 SO.02 T2.08 VO.01 W0.PL), 5 FAIL, 1 VOID; full list in the test docstring. Director rules; no default flipped.
-state: next: (3) mj_multiRay — also his first eye (§12) — (16 rays + 16×16 / 32×32 [depth, material] grid, identity test); 4-process + implicitfast rows ride the first free Kaggle CPU kernel after J8.
+state: (3) DONE 11-16 17:25: `jack_env(multiray_vision=True)` (`fast_sim.apply_multiray_vision`), default OFF, stales nothing; `tests/test_multiray.py` identity 4/4 PASS (3 default + J8's pilot world with dying obs; 824 panel noise draws consumed identically), control differs. Speed 39.3 → 39.2 dec/CPU-s: the 16-ray eye is 0.057 ms of a decision, so (3) is not a speed lever; it is the batched call the §12 retina ("Next up" 3) builds on.
+state: next: the speed table's Kaggle CPU column (vec4, lazy audio, implicitfast) rides the first free Kaggle CPU session after J8; then the order is done.
 
 ### J10 — The walking layer starts now, by reproducing a published walk (owner, 11-15 19:18)
 part: Body and movement · stage: 1 side job (stage 3's part, independent of the brain) · step: 3 (reproduce) · prior: §4 "Reproduce first", "Take as-is"
