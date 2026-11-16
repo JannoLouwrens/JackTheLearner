@@ -1793,3 +1793,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J5 harvested `speed colab2` (Colab T4, 1.44 h): compiled 25.9 grad steps/s = 51.8 decisions/s = 0.54 h/100k (9.8× uncompiled; record's 20–50 met); bf16-mixed 4.17 dec/s (slower, no bf16 cores on T4); 3 runs sharing a T4 5.86 summed (1.11×, the 2 vCPUs limit). `ca4dcf00`.
 - Costs redone: 3 known-answer rows × 3 seeds ≈ 7 T4-h (was 47); one 1M-decision life ≈ 5.4 T4-h of learning but ≈ 13 serial with his 28 ms/decision simulator — the simulator (J6) now prices A, not the learner.
 - Philosophy served: 3 (the plan's pacing number measured, not assumed), 6 (free compute: A's known-answer rows now fit in one free GPU week).
+
+## 2026-11-16 15:45 · JACK · J6 (2a): contact sound computed only when it fires — same world, 1.27× faster (`403def65`)
+- J8: k1–k4 still on Kaggle (watchers alive, nothing to harvest, no free session for f0); J3 waits for a Kaggle CPU session; J9/J5 DONE → J6.
+- `jack_env(lazy_contact_audio=True)`: ContactAudio's per-sub-step `mj_contactForce` for all ~24 contacts was thrown away for every already-touching/refractory pair; now pairs come from one array read and force/centroid are computed only for a firing pair, same indices, same order. Patched per instance from `experiments/fast_sim.py`; ContactAudio.py and w0.py untouched → `run stale`: 0 jack_env lines.
+- Proof `experiments/tests/test_fast_sim.py`: 3 seeds × 300 steps, 144 life/cap ends, obs/reward/flags AND 29,805 audio events identical field for field; shifted-action control differs. Box 40.8 → 51.8 dec/CPU-s (1.27×).
+- Philosophy served: 5 (the loop that makes him gets faster with his world proven unchanged), 4 (identity tested with a control that must fail).

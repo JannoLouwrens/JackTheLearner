@@ -12,6 +12,11 @@
     actions (run back to back in one process; box load shared).
 
 argv: [N steps] [j0,alpha]. Hand calibration (identity is cal-independent).
+
+Box results 11-16 15:40 (300 steps x 3 seeds, e0 0.05, cap 40, load ~1.6):
+identity 3/3 PASS (144 life/cap ends; 29,805 audio events equal field for
+field), control differs. Speed (2a alone): shipped 40.8 dec/CPU-s, lazy 51.8
+dec/CPU-s = 1.27x (30-step smoke at load 1.5: 38.1 -> 47.1, 1.24x).
 """
 import sys
 import time
