@@ -1913,3 +1913,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Azimuth dial (rule `e583c41e` before worlds 420–429; frames identical on world 400): row 16/32/64/128/256 = .540/.696/.856/.909/.925, knee 128. The second (+8°) row buys nothing.
 - Handed on by INBOX: build `row128` as the retina; proposed forager gate needs a ruling against ruling 23. No ledger row, no seat moved.
 - Philosophy served: 1 (a sense that reaches his food), 3 (the planned grid was an assumption; it lost), 4 (two controls that failed, rule before worlds).
+
+## 2026-11-16 23:25 · JACK · J8: f2 harvested — the pilot's floor gate failed, the pilot is VOID
+- f2 json had landed 22:41 (freed a session) → launched e1 23:22 (jack-cpu-1794871379). In flight: f3, e0, e1, W1.04.
+- Floor runs crossing the sustained mark at W 1: 4 of 12 in (noop_s302, noop_s304, held8_s304, blr0_s304) vs the frozen ≤ 1 → VOID, decided (f3 can only add). noop_s304 ate 36 meals by contact again (born on food); held8 20, blr0 19.
+- 4 sustained in 1,198 floor lives (0.0033/life); B 0 in 2,350 (7.8 expected, P(0) ≈ 0.0004). PILOT_B.md §Seen at f2; Results regenerated (32/35). INBOX to the Director: W ≥ 2 and the cost curriculum need a ruling.
+- Philosophy served: 4 (a gate that could fail did fail; it is reported as VOID, not loosened).
