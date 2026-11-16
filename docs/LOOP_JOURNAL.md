@@ -1781,3 +1781,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J6: `experiments/sim_profile.py` — 28 ms/decision; mj_step×40 under the shipped RK4 = 15–16 ms (54–58%), Python 12.6 ms. Zero-Python ceiling only 1.9×; implicitfast physics 3.9× cheaper. §4's 500–2,000 needs (2) AND (4).
 - Philosophy served: 4 (the row's verdict read by its rule, and the reference itself measured), 5 (the simulator's real cost found before anyone optimises the wrong half).
 - 14:52 addendum (J8): LC.02 re-buy #1 PASSED but was stamped DIRTY (my untracked sim_profile.py sat in the tree at launch — launch after committing); #2 VOID under a foreign pytest load ~5 (arms_cleared 0); #3 clean PASS `fbd47305`, default_cal back. k0 harvested: 4 B seeds × 300k, 0 sustained lives, meals per life 0.7 → 0.2 (descriptive). k4 launched on Kaggle 14:50.
+
+## 2026-11-16 15:10 · SYSTEM · S7 (2): detached launches from a clean worktree
+- `scripts/launch_detached.sh` takes `JACK_REPO`: must be a `git worktree` of the repo (else exit 2); child cwd = worktree; CPU day billed to main's `cpu_budget.json`. `9a322df6`.
+- Planted `scripts/test_launch_detached_repo.sh`: 3/3 PASS; against the previous launcher 2/3 FAIL (cwd, refusal). Launcher history prose trimmed to offset (net +18, the ordered test).
+- Open caveat: a registered run inside a worktree writes the worktree's ledger; receipts still need the hand symlink J1 used. Next: S7 (3), (4).
+- Philosophy served: 5 (stage-1 kernels can launch beside a live owner session without a hand-built worktree).
