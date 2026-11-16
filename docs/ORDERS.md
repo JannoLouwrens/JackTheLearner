@@ -241,10 +241,11 @@ commit). The dashboard's Watch tab reads both.
 **Step 3:** the most recent RECORDED life, no picking (record poses if none are).
 serves: M8 · philosophy 1 (he can be known).
 **done when:** step 1: the mp4 exists and plays. Order done: steps 2–3.
-state: step 1 DONE (`scripts/life_video.py`): seed 153 random life, 294 s, died of hunger,
-1 meal → 41 s mp4, 854x480 H.264 12 fps, 1.6 MB, ~105 s wall at nice 19. Encoder is the
-static ffmpeg at /data/stt/bin (box has no system ffmpeg). Poses already recorded per
-decision (qpos+mocap) and replayed, so step 3 reuses it. Next: step 2 (overlay + json).
+state: steps 1–2 DONE (`070cea18`, `10b72b29`): seed 153 random life, 4:54, died of hunger, 1 meal
+→ 41 s mp4 (1.66 MB, ~105 s wall, nice 19) with fed/unhurt/wet bars, age and a moment banner;
+`latest.json` beside it (title, template summary, 8 facts, 6 events). World has no thirst or
+temperature yet — the overlay shows the three needs it has and the summary says so.
+Next: step 3 (most recent RECORDED life; poses already replayed per decision).
 
 ### S7 — Another session's uncommitted files must not kill a run
 part: (machine) · stage: — · step: —

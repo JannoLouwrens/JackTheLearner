@@ -1639,3 +1639,8 @@ Philosophy served: 4 (the instrument that will choose his brain must pass a same
 Verified the predecessor's claim: #1's recorded hash 1b9ed0cf = `80f63594`'s `__init__.py`; kept #3 out of that file so the pin stays meaningful.
 #1 interim at ~350/1000: S1 0.040, S2 0.017, uncorrected control 0.060/0.063 — INCOMPLETE, not a reading.
 Philosophy served: 4 (the instrument that will choose his brain now refuses to judge when its floor arms succeed or its ceiling fails).
+
+## 2026-11-16 03:15 · SYSTEM · S6 step 2: the life film now shows his needs and comes with its description (`10b72b29`)
+`scripts/life_video.py` draws fed / unhurt / wet bars, his age in the life and a 2 s banner per moment on every frame, and writes `/data/jack-video/latest.json` (title, template summary, 8 facts, ≤ 60 events with film-time and life-time, source) — no model; the dashboard's Watch tab already reads it.
+Seed 153: 4:54, died of hunger, 1 meal, hurt once → 41 s, 1.66 MB, 105 s wall at nice 19 (unchanged). The order asked for thirst and temperature; the world has neither, so the film shows the three needs it has and says so. Next: step 3.
+Philosophy served: 1 (he can be known — the owner can watch a life and read what happened in it).
