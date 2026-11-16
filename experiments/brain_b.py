@@ -12,8 +12,8 @@ pins exactly: stable-baselines3==2.9.2, sb3-contrib==2.9.2, sbx-rl==0.28.0,
 rl-zoo3==2.9.2, gymnasium==1.4.0, mujoco==3.17.0, dm-control==1.0.50,
 shimmy==2.0.1, pink-noise-rl==2.0.1 (+ torch 2.15.0+cpu, jax/jaxlib 0.11.2,
 flax 0.12.12 as resolved). The project venv is not touched. On Kaggle the
-same pins are pip-installed over Kaggle's image; each cell records the
-versions it actually ran with.
+pins row 1 imports are pip-installed over Kaggle's image (Python 3.13 there,
+3.12 here — a stated difference); each cell records the versions it ran with.
 
 Sources
 - SAC: Haarnoja et al. 2018 (arXiv 1801.01290, 1812.05905); code SB3
@@ -81,6 +81,10 @@ ROW1_ARMS = ("lib", "ours", "ctrl")
 PINS = ["stable-baselines3==2.9.2", "sb3-contrib==2.9.2", "sbx-rl==0.28.0",
         "rl-zoo3==2.9.2", "gymnasium==1.4.0", "mujoco==3.17.0",
         "dm-control==1.0.50", "shimmy==2.0.1", "pink-noise-rl==2.0.1"]
+# Row 1 on Kaggle installs only what row 1 imports: Kaggle's image is Python
+# 3.13 and dm-control's `labmaze` has no 3.13 wheel (kernel jack-cpu-1794791632
+# died in pip on it, 11-16 01:14, before any cell ran). Same pinned versions.
+ROW1_KERNEL_PINS = ["stable-baselines3==2.9.2", "sbx-rl==0.28.0", "gymnasium==1.4.0"]
 CHILD_TIMEOUT_S = int(5.0 * 3600)
 REMOTE_TIMEOUT_S = int(6.0 * 3600)
 
@@ -219,7 +223,7 @@ def row1_kernel() -> dict:
     """Submit row 1 (3 arms x 5 seeds) as one Kaggle CPU kernel; write the
     cells and verdict to OUT/row1.json."""
     from experiments.gpu import build_job, result_json, submit
-    body = _JOB.replace("__CELLS__", repr(row1_cells())).replace("__PINS__", repr(PINS))
+    body = _JOB.replace("__CELLS__", repr(row1_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=3.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_row1.json"])
     if not sub.ok:
