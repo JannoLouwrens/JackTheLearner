@@ -1733,3 +1733,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Harness #4 PASS on the box: seed 301 run twice, 20,000 decisions (≈15k SAC updates) → 8 lives each, identical field for field. 38.05 decisions/s, 25.06/CPU-s. Box-only scope stated.
 - Machine note: `launch_detached` counts a poller younger than 60 s as busy, so the 2-busy cap refuses back-to-back kernel launches — wait a minute between them. Not a bug, a cadence.
 - Philosophy served: 4 (the analysis frozen before the runs exist; a seed reproduces its run), 1 (the first plain published learner living hundreds of lives in his world).
+
+## 2026-11-16 11:25 · JACK · J3 row 4 stack hunt: the published code, run here, misses the same band; row 4c VOID on its control
+- J8 k0–k3 still RUNNING on Kaggle (no free session for k4) → advanced J3 per the order of work.
+- Public runs' stack read from the wandb store (run 2guwltm4): py3.9.16, SB3 1.7.0a12, gym 0.21, torch 1.12, numpy 1.23.1. Source diff vs ours (env step, Zoo VecNormalize gamma, PPO rollouts/timeouts, VecNormalize): no behavioural line.
+- Row 4c rule `aa209cd5`, `experiments/row4_stack.py`: that exact stack built at /data/venvs/sb3-17 (box has py3.9), 20 seeds + lr-0 ctrl ×5, box, 2 workers, ~112 s/cell.
+- Published code: 82.3 ± 11.6, seed 11 solves then collapses (42.1), two partial (68.7, 69.2) — misses 4b's band [82.4, 92.6] itself. Ours vs it: Mann-Whitney p 0.66, collapses 4/20 vs 1/20 Fisher p 0.34. The store's 10-seed sd 4.2 understates the recipe.
+- VOID by the rule: lr-0 ctrl seed 0 = 98.0 — a frozen initial policy solves the task. Per-seed control clause is brittle here; next rule (4d, same-against-same) states the control on its distribution, before running.
+- Philosophy served: 4 (a miss chased to its cause with a test that could have failed; the VOID recorded, not reinterpreted), 3 (the published number was itself measured).

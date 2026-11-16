@@ -112,12 +112,11 @@ never-trains control failing; one Kaggle CPU kernel per arm. A failing arm
 is set aside with its numbers, not deleted, and may return repaired.
 serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has rows 1–4 inside their ranges and one row pair per in-house arm, pass or fail.
-state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/brain_b.py` = SBX SAC + layer_norm (`1d12bb9a`).
-state: row 1 PASSED on 1b (15 seeds): lib −309.3, ours −302.0, ctrl −1227.7; lib vs reference MW p 0.011. Row 3 REPRODUCES 5/5 (lib) and 3b 5/5 (Brain B, eval 94.9–96.0); ctrl 0/5 both.
-state: row 2 (5 seeds) MISSED −221.5; row 2b (15 fresh seeds, band unchanged) REPRODUCES: r2lib mean −199.5 ± 24.1 in [−213.2, −162.0]; ctrl ≈ −1239 valid (`5d794fba`).
-state: row 4 (rule `5d794fba`, jack-cpu-1794809416) MISSED: 87.4 92.9 84.0 82.1 44.9, mean 78.2 vs [80.6, 94.4]; seed 4 solved then collapsed late; ctrl −1…−8 valid.
-state: row 4b (rule `9147eef5`, band STRICTER [82.4, 92.6], jack-cpu-1794810241) MISSED: 15-seed mean 72.6 ± 25.7, median 84.9; seeds 6, 7, 19 solved then collapsed (4 of 20 across 4+4b; public sd 4.2 fits none); ctrl valid. Row 4 NOT reproduced.
-state: next (the rule's own): stack hunt for row 4 — diff our SB3 2.9.2 / gymnasium 1.4 / VecNormalize wiring against the public runs' versions and Zoo exp_manager; one changed factor per test, rule first. Not row 5. Then (4) the in-house tanh-AWR arm on rows 1 and 3.
+state: (1)(2) DONE `1d12bb9a`. Row 1 PASSED (1b, 15 seeds: ours −302.0); row 2b REPRODUCES (−199.5); row 3 / 3b REPRODUCE 5/5 (`5d794fba`).
+state: row 4 MISSED (78.2) and 4b MISSED stricter (15-seed 72.6 ± 25.7): 4 of 20 seeds solve then collapse to saturated actions (−30…−100); public store 10 seeds 81.6–93.2, none collapse.
+state: 11-16 stack hunt: public runs' stack read from wandb (run 2guwltm4 requirements.txt: py3.9, SB3 1.7.0a12, gym 0.21, torch 1.12, numpy 1.23.1). Source diff vs ours (env step, Zoo VecNormalize gamma, PPO rollouts/timeouts, VecNormalize) = no behavioural line; only an RNG-only reset_noise call.
+state: row 4c (rule `aa209cd5`, that exact stack at /data/venvs/sb3-17, box) VOID: lr-0 ctrl seed 0 = 98.0 (a frozen init solves the task). Data: published code 82.3 ± 11.6 on 20 seeds, 1 collapse + 2 partial — misses 4b's band itself; vs ours MW p 0.66, collapses 4/20 vs 1/20 Fisher p 0.34. KNOWN_ANSWERS §"Row 4c".
+state: next: register row 4d BEFORE running — same-against-same, ours (2.9.2) vs public stack, ≥ 20 fresh seeds each on box (~112 s/cell, 2 workers); control stated on its distribution (e.g. ≤ 1 of 10 lr-0 seeds ≥ 60), not per-seed. Then (4) the in-house tanh-AWR arm on rows 1 and 3.
 
 ### J9 — What death looks like: the dying body's last observation (before brain A touches his world)
 part: His world (the interface) · stage: 1 (ready-list item 3) · step: 2 (combine) · prior: §5 "next observation at episode ends", §8 self-check 8; INBOX code review 11-15 17:02

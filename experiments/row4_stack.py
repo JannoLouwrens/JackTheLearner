@@ -50,6 +50,14 @@ Reading (decided now):
   Also reported: Fisher exact, ours 4/20 collapses vs r4pub k/20.
 VOID unless r4pubctrl completes and every r4pubctrl seed is below 60.
 
+ROW 4C RESULT (11-16, box, 25 cells x ~112 s): r4pub 86.0 82.4 82.7 78.9 83.9
+91.4 80.1 88.6 93.5 82.0 88.3 42.1 92.4 68.7 88.9 84.0 85.9 84.4 69.2 92.0 —
+mean 82.3 (sd 11.6), 1 of 20 < 60 (seed 11 solved then collapsed). r4pubctrl
+98.0 -2.1 -1.6 -8.6 -0.7: seed 0's frozen initial policy solves every episode
+-> the control clause BREACHED -> VOID. (The data alone reads C: <= 1
+collapse, mean 0.3 below the band.) Ours (rows 4+4b, 20 seeds) vs r4pub:
+Mann-Whitney p 0.66, Fisher on collapses 4/20 vs 1/20 p 0.34.
+
 Usage: python -m experiments.row4_stack run OUTDIR   (all cells, 2 workers)
        python -m experiments.row4_stack cell ARM SEED OUTDIR
 """

@@ -24,6 +24,8 @@ Rules are in that file's docstring, committed before each run.
 | 4 | MountainCarContinuous-v0 | control `r4ctrl`, must fail | 20,000 | VOID unless every seed < 80.6 | −1.0 −7.8 −2.2 −6.2 −4.9 | 0–4 | holds |
 | 4b | MountainCarContinuous-v0 | re-registration, 15 fresh seeds, `r4lib` (rule `9147eef5`) | 20,000 | STRICTER: formula at k 15 → 82.4…92.6 (k 5 band reported only) | 72.6 ± 25.7 (86.4 18.0 22.3 84.9 72.4 85.1 92.3 79.7 66.5 92.0 82.6 90.1 87.3 92.7 35.9; median 84.9; seeds 6, 7, 19 solved then collapsed; Kaggle jack-cpu-1794810241) | 5–19 | **MISSES** → stack hunt |
 | 4b | MountainCarContinuous-v0 | control `r4ctrl`, must fail | 20,000 | VOID unless every seed < 82.4 | 18.7 −1.5 −4.4 −9.5 −6.3 | 5–9 | holds |
+| 4c | MountainCarContinuous-v0 | stack hunt: same entry under the PUBLIC store's own stack (py3.9, SB3 1.7.0, gym 0.21.0, torch 1.12.0, numpy 1.23.1; `r4pub`, rule `aa209cd5`, `experiments/row4_stack.py`, box) | 20,000 | reading A ≥ 3/20 collapse (< 60) / B ≤ 1 and mean in 82.6…92.4 / C otherwise | 82.3 ± 11.6, median 84.2 (86.0 82.4 82.7 78.9 83.9 91.4 80.1 88.6 93.5 82.0 88.3 42.1 92.4 68.7 88.9 84.0 85.9 84.4 69.2 92.0); 1/20 < 60 (seed 11 solved then collapsed), 2 more partial; vs ours (rows 4+4b, 20 seeds, 74.0 ± 23.9, 4/20): Mann-Whitney p 0.66, Fisher collapses p 0.34 | 0–19 | **VOID** (control) — data: C |
+| 4c | MountainCarContinuous-v0 | control `r4pubctrl` lr 0, must fail | 20,000 | VOID unless every seed < 60 | **98.0** −2.1 −1.6 −8.6 −0.7 — seed 0's frozen initial policy solves every episode (98 each, 191–430 steps) | 0–4 | **BREACHED** |
 
 ## Row 1 — the miss, and what it is not (11-16)
 
@@ -98,3 +100,30 @@ So the two SBX departures named before the run (std starts ≈ 1; noise held
 per 32-step rollout rather than gSDE) did not cost the sparse-reward row:
 B may use its own exploration as built; the pink-noise fallback is not
 triggered. Rows 1b and 3b are both reproduced by B; owed: rows 2 and 4 (PPO).
+
+## Row 4c — the stack hunt (11-16)
+
+**What was diffed.** The public store's runs (wandb `openrlbenchmark/sb3`, run
+`2guwltm4` requirements.txt) used Python 3.9.16, SB3 1.7.0a12, rl-zoo3 1.7.0a12,
+gym 0.21.0, torch 1.12.0, numpy 1.23.1. Source diff against ours (SB3 2.9.2,
+gymnasium 1.4.0): the MountainCarContinuous step function is identical; rl-zoo3
+1.7.0 copies gamma into VecNormalize as 2.9.2 does and its ppo.yml entry is the
+same; PPO rollouts, timeout bootstrap and VecNormalize are behaviourally equal.
+The one behavioural line, SB3 1.7's per-minibatch `reset_noise` in PPO.train,
+only consumes RNG.
+
+**What the machine said.** The published stack itself, run here on 20 seeds,
+gives 82.3 ± 11.6 — the same solve-then-collapse failure (seed 11: 42.1) and
+two partial ones (68.7, 69.2). It would itself miss row 4b's band
+[82.4, 92.6]. Against ours it is indistinguishable at 20 seeds (Mann-Whitney
+p 0.66; collapses 4/20 vs 1/20, Fisher p 0.34). The store's 10-seed sd 4.2
+understates the recipe's spread: our band, built from it, is narrower than the
+published code can meet on this machine.
+
+**Why it is VOID anyway.** The registered control (`lr 0`, every seed < 60)
+breached: seed 0's untrained initial policy solves MountainCarContinuous on
+every episode (98.0). A frozen random network that pushes with the velocity's
+sign solves this task; ours drew 0 of 10 such inits, the public stack 1 of 5.
+A per-seed "every control below" clause is brittle on a task a lucky init can
+solve; the next rule must state its control on the control's distribution,
+written before it runs, not relaxed after it.
