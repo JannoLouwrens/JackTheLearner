@@ -1919,3 +1919,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Floor runs crossing the sustained mark at W 1: 4 of 12 in (noop_s302, noop_s304, held8_s304, blr0_s304) vs the frozen ≤ 1 → VOID, decided (f3 can only add). noop_s304 ate 36 meals by contact again (born on food); held8 20, blr0 19.
 - 4 sustained in 1,198 floor lives (0.0033/life); B 0 in 2,350 (7.8 expected, P(0) ≈ 0.0004). PILOT_B.md §Seen at f2; Results regenerated (32/35). INBOX to the Director: W ≥ 2 and the cost curriculum need a ruling.
 - Philosophy served: 4 (a gate that could fail did fail; it is reported as VOID, not loosened).
+
+## 2026-11-16 23:45 · JACK · J8: the pink-noise arm's kernel died at import — pinned and relaunched
+- e1 (bpink, seeds 301-304) launched 23:22 came back at 23:24 with 0 lives in 4/4 cells: `No module named 'pink'` — KERNEL_PINS lacked pink-noise-rl (the box smoke had it in jack-std).
+- Added pink-noise-rl==2.0.1 (§5's pin, numpy-only) `85838831`; failed result kept as e1_nopink_failed.json; e1 relaunched 23:38 (jack-cpu-1794872304). e2 also carries bpink — same fix covers it.
+- In flight: f3, W1.04, e0, e1. 32/35 core runs in; pilot already VOID on the floor gate.
+- Philosophy served: 3 (the exploration default is raced, not assumed — a dead arm would have let white noise win by forfeit).
