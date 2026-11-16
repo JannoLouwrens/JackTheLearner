@@ -252,6 +252,7 @@ from experiments.survival import D_DEATH
 SENSES = ("vision", "audio", "touch", "proprio", "needs")
 REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
 TERMINAL_OBS = ("reborn", "dying")
+INTEGRATORS = ("shipped", "implicitfast")  # J6(4); shipped = RK4
 FLOOR_FOODS = ("obj0", "obj1")
 # J2 item 1, food count: W0's own non-food floor objects that the dial turns
 # into floor food at low d, in this order (obj5 is never food).
@@ -303,7 +304,8 @@ class JackEnv(gym.Env):
                  random_needs: Optional[float] = None,
                  random_layout: bool = False,
                  terminal_obs: str = "reborn",
-                 lazy_contact_audio: bool = False):
+                 lazy_contact_audio: bool = False,
+                 integrator: str = "shipped"):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -334,6 +336,14 @@ class JackEnv(gym.Env):
         # J6(2a), default OFF: identical audio events, force computed only
         # for a contact pair that fires (experiments/fast_sim.py).
         self.lazy_contact_audio = bool(lazy_contact_audio)
+        # J6(4), default OFF: "implicitfast" swaps MuJoCo's integrator (the
+        # world ships RK4). A WORLD CHANGE, not an identity: measured in
+        # experiments/tests/test_integrator.py. W0.__init__ takes no physics
+        # step, so setting it after construction equals a native build.
+        if integrator not in INTEGRATORS:
+            raise ValueError(f"integrator must be one of {INTEGRATORS}, "
+                             f"got {integrator!r}")
+        self.integrator = integrator
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -358,6 +368,8 @@ class JackEnv(gym.Env):
         if self.lazy_contact_audio:
             from experiments.fast_sim import apply_lazy_contact_audio
             apply_lazy_contact_audio(self.w)
+        if self.integrator == "implicitfast":
+            self.w.model.opt.integrator = self.w.mujoco.mjtIntegrator.mjINT_IMPLICITFAST
         self.floor_foods = FLOOR_FOODS
         if self.difficulty is not None:
             # J2 item 1, food count: extras are food before birth is placed.

@@ -182,12 +182,11 @@ which standing world certificates each non-identical option would stale
 that list; do not flip any default.
 serves: M2→M3 · PLAN stage 1 line 1, "honest limits" 1 · philosophy 5, 6.
 **done when:** the speed table and the re-certification list are committed.
-state: open — ordered 11-15 16:57. 11-16: item (3) now also serves his first eye (§12: a ray retina from the same one call) — measure 16 rays AND a 16×16 and 32×32 [depth, material] grid.
-state: (1) DONE `7f3af75d` 11-16 13:50: `jack_env.make_vec(n, seeds=…)` (AsyncVectorEnv, SAME_STEP autoreset, terminal obs in info["final_obs"]); proof `experiments/tests/test_jack_env_vec.py` PASS: 3 seeds × 300 steps, 144 ends, streams == single env exactly (reborn + dying 6/6), controls differ 2/2. World untouched → stales nothing (`run stale`: 0 jack_env lines).
-state: box speed at load 3.8: single 35.3 dec/wall-s, vec2 56.2 (1.59×), per CPU-s unchanged (35.9 vs 33.3). Hand cal j0=alpha=1.0 (default_cal refuses while LC.02 stale; identity is cal-independent).
-state: profile `experiments/sim_profile.py` (11-16 14:15, box): 28 ms/decision = mj_step×40 under the shipped **RK4** 15–16 ms (54–58%) + Python 12.6 ms (ContactAudio ~27%, drives.substep ~12%). Zero-Python ceiling only 61–66 /CPU-s (1.9×); implicitfast physics 3.9–4.2 ms (RK4 costs 3.9×) → ~60 with today's Python, ~240 ceiling with both. §4's 500–2,000 needs (2) AND (4).
-state: (2a) DONE `403def65` 11-16 15:40: `lazy_contact_audio` (experiments/fast_sim.py; ContactAudio.py/w0.py untouched) — force+pos only for a pair that fires. Proof `tests/test_fast_sim.py` 3/3 PASS (144 ends, 29,805 audio events equal field for field), control differs; box 40.8 → 51.8 dec/CPU-s (1.27×). Stales nothing.
-state: next: (4) implicitfast measured alone + identity diff (a world change: report the difference, list stales on a scratch worktree), then (3) mj_multiRay; drives.substep is already vectorised (low yield). 4-process row rides the first free Kaggle CPU kernel after J8.
+state: (1) DONE `7f3af75d`: `make_vec` streams == single env (proof test_jack_env_vec PASS), stales nothing; box vec2 1.59× wall, per CPU-s unchanged. Profile (`sim_profile.py`): RK4 mj_step×40 = 54–58% of a 28 ms decision, ContactAudio ~27%.
+state: (2a) DONE `403def65`: `lazy_contact_audio` identical (29,805 audio events field for field), 40.8 → 51.8 dec/CPU-s, stales nothing.
+state: (4) MEASURED 11-16 16:45 (`jack_env(integrator="implicitfast")`, default OFF, stales nothing; `tests/test_integrator.py`): default untouched 3/3; a WORLD CHANGE — trajectories part at decision 1 on all 3 seeds, no warnings/NaN; deaths are injury: s155 life 6.32 → 3.44 decisions (44 → 78 ends), s153 4.36 → 4.07, s154 34 = 34 ends. Speed 41.0 → 70.1 (1.71×), with (2a) 108.5 dec/CPU-s (2.65×).
+state: (4) re-cert if the world default flipped (playground.py:527, scratch worktree minus baseline): 22 certificates — 16 PASS (BA.01 HR.7 LC.02 LF.02 PG.1 PG.2 PG.3 PG.5 PG.8 PS.01 PS.03 SM.01 SO.02 T2.08 VO.01 W0.PL), 5 FAIL, 1 VOID; full list in the test docstring. Director rules; no default flipped.
+state: next: (3) mj_multiRay — also his first eye (§12) — (16 rays + 16×16 / 32×32 [depth, material] grid, identity test); 4-process + implicitfast rows ride the first free Kaggle CPU kernel after J8.
 
 ### J10 — The walking layer starts now, by reproducing a published walk (owner, 11-15 19:18)
 part: Body and movement · stage: 1 side job (stage 3's part, independent of the brain) · step: 3 (reproduce) · prior: §4 "Reproduce first", "Take as-is"

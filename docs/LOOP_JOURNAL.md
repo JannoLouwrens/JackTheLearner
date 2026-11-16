@@ -1805,3 +1805,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Two sessions freed → floor kernels f0, f1 launched 16:23 (4 Kaggle CPU sessions busy: k3 k4 f0 f1; f2, f3 wait).
 - (6) `da8bc163`: `bwhite` (SBX plain SAC draw) and `bpink` (pink β=1 at selection only, pink-noise-rl 2.0.1; SBX's losses untouched) in `pilot_b`, seeds 301–305, kernels e0–e2. Box smoke 6,000 decisions each: pink fired 1,016 times (= post-warm-up decisions), white 0.
 - Philosophy served: 3 (B's default exploration is raced against the field's newer evidence before the decisive test fixes it), 4 (the swap's reach checked with a counter that could have read wrong).
+
+## 2026-11-16 16:45 · JACK · J6 (4): implicitfast measured — 1.71× faster (2.65× with lazy audio), but a world change that hurts the body differently
+- J8: k3 k4 f0 f1 all RUNNING on Kaggle (4/4 sessions; k3 at 7.3 h of its 9.5 h watcher) → nothing to launch; J3 also waits for a session → J6.
+- `jack_env(integrator="implicitfast")`, default OFF (stales nothing). `tests/test_integrator.py` 300 steps × 3 seeds: default untouched 3/3; trajectories part at decision 1 every seed; no warnings/NaN; deaths are integrity: s155 6.32 → 3.44 decisions/life (44 → 78 ends), s153 4.36 → 4.07, s154 34 = 34.
+- Speed 41.0 → 70.1 dec/CPU-s (1.71×); with lazy_contact_audio 108.5 (2.65×). Flipping the world default (playground.py:527) would stale 22 certificates (16 PASS incl. LC.02, W0.PL) — listed for the Director; nothing flipped.
+- Philosophy served: 5 (the loop that makes him gets cheaper), 4 (the price of the speed — a changed injury law — measured, not assumed away).
