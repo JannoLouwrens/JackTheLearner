@@ -1787,3 +1787,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Planted `scripts/test_launch_detached_repo.sh`: 3/3 PASS; against the previous launcher 2/3 FAIL (cwd, refusal). Launcher history prose trimmed to offset (net +18, the ordered test).
 - Open caveat: a registered run inside a worktree writes the worktree's ledger; receipts still need the hand symlink J1 used. Next: S7 (3), (4).
 - Philosophy served: 5 (stage-1 kernels can launch beside a live owner session without a hand-built worktree).
+
+## 2026-11-16 15:40 · JACK · J5 DONE: brain A compiled runs at the record's speed on a T4
+- J8: k1–k4 all RUNNING on Kaggle at 15:23 (k1–k3 at 6.0 h, k0 took 4.6 h — slower; 9 h limit ≈ 18:24). Nothing to harvest, no session free → next order.
+- J5 harvested `speed colab2` (Colab T4, 1.44 h): compiled 25.9 grad steps/s = 51.8 decisions/s = 0.54 h/100k (9.8× uncompiled; record's 20–50 met); bf16-mixed 4.17 dec/s (slower, no bf16 cores on T4); 3 runs sharing a T4 5.86 summed (1.11×, the 2 vCPUs limit). `ca4dcf00`.
+- Costs redone: 3 known-answer rows × 3 seeds ≈ 7 T4-h (was 47); one 1M-decision life ≈ 5.4 T4-h of learning but ≈ 13 serial with his 28 ms/decision simulator — the simulator (J6) now prices A, not the learner.
+- Philosophy served: 3 (the plan's pacing number measured, not assumed), 6 (free compute: A's known-answer rows now fit in one free GPU week).

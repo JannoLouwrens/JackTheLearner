@@ -84,7 +84,7 @@ state: (1)-(3) DONE `6f197f94` (pilot_b.py, harness sustained mark, rule); (4) b
 state: 11-16 09:24 prereg FROZEN `f0dc9fd7`: `docs/research/prereg/pilot_b_vs_{blr0,floor}.json` (mark sustained, W 1, T 300k; manifest asserted = kernel_groups' 35 runs).
 state: k0 HARVESTED 14:15 (kaggle 4.6 h, 18 dec/CPU-s): seeds 301-304, 474 lives, **0 sustained**, meals/life first 20 → last 20 ≈ 0.7 → 0.2, every death energy (descriptive; verdict waits for 20+15). k1-k3 RUNNING. LC.02 re-bought clean `fbd47305` (default_cal works) → k4 LAUNCHED 14:50 jack-cpu-1794840642, RUNNING.
 state: harness #4 PASS on the box: seed 301 ×2, 20k decisions → 8/8 lives identical field for field (row in HARNESS_CHECKS.md); 38.05 decisions/s.
-state: next: as k1-k3 free (≤4 sessions), launch f0-f3 one per minute (`pilot_b kernel --name fN` via launch_detached); harvest kN.json; then (6) register the two exploration arms.
+state: 15:23 Kaggle: k1-k4 all RUNNING (k1-k3 at 6.0 h vs k0's 4.6 h — slower, watch the 9 h limit ~18:24). next: as k1-k3 free (≤4 sessions), launch f0-f3 one per minute (`pilot_b kernel --name fN` via launch_detached); harvest kN.json; then (6) register the two exploration arms.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
@@ -158,11 +158,9 @@ run, written beside the estimates. (4) A's "ours beside theirs" table (none
 changed yet). Do not wire it to his world.
 serves: M3, M5 · PLAN stage 1 lines 3–4 · objective 3 (the GPU-able order) · philosophy 2, 3.
 **done when:** the pin, the two speed figures and the two cost lines are committed.
-state: (1) DONE: `experiments/brain_a/README.md` — dreamerv3 `e01491fa…` (MIT), runner sheeprl 0.8.5 `dreamer_v3_5_1M` (Apache-2.0); line diff vs official `size1m` in the README.
-state: (2) T4 as shipped (Colab, uncompiled): 2.64 grad steps/s = 5.28 decisions/s = 5.26 h/100k, GPU 27% busy. Kaggle CPU kernel HARVESTED 11-16 13:26 (`1cfb0966`): 0.853 grad steps/s = 1.71 decisions/s = 16.3 h/100k (4 threads 0.831, no gain) — the T4 is only 3.1× a free CPU kernel.
-state: (3) cost at T4 speed: 3 known-answer rows × 3 seeds ≈ 47 T4-h; one 1M-decision life ≈ 53 T4-h (ratio 512). On CPU kernels the same rows ≈ 150 kernel-h, each run past the 9 h kernel limit.
-state: LAUNCHED 13:28 `speed colab2` on a Colab T4 (session ladder-1794835683, ~1.6 h): compiled (budget 2,100 s), `bf16-mixed` (1,500 s), 3 default runs sharing the T4 (seeds 42–44, summed); watcher writes `/data/jack-logs/brain_a/speed_colab2.json`, log `speed_colab6.log` (`speed_colab5.log` = a Colab ReadTimeout, nothing ran).
-state: next: harvest speed_colab2.json into the README table; redo the two cost lines with the fastest arm (compiled / bf16 / 3-per-T4 device-seconds per 100k); then J5 is DONE. Scratch venvs `/data/venvs/jack-a-probe` (smoke only) may be deleted after.
+state: DONE `ca4dcf00` 11-16 15:40. (1) pin in README. (2) T4 uncompiled 2.64 grad steps/s = 5.28 dec/s; **compiled 25.9 = 51.8 dec/s = 0.54 h/100k** (9.8×, inside the record's 20–50); bf16 4.17 dec/s (slower); 3 runs/T4 5.86 summed (2 vCPUs limit). Kaggle CPU 1.71 dec/s.
+state: (3) at compiled speed: 3 known-answer rows × 3 seeds ≈ 7 T4-h (5 seeds ≈ 12); one 1M-decision life ≈ 5.4 T4-h of learning, ≈ 13 serial with his 28 ms/decision simulator → J6 now sets A's price.
+state: next for A (a new order, not J5): the §2 rows with `algo.compile.enabled=True` when Kaggle GPU opens 11-21. Scratch venv `/data/venvs/jack-a-probe` may be deleted.
 
 ### J6 — Make the simulator fast, once, and say what it costs to re-certify
 part: His world (the instrument's speed) · stage: 1 · step: 2 (combine) · prior: §4 "Take as-is"; INBOX measurement 11-15 15:55
