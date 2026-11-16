@@ -175,6 +175,72 @@ def test_3_pipeline_separates_ceiling_from_floor_and_floor_is_futile():
     assert compare(floor, _calib_runs("floor", 20, 13), n_perm=200, rng=0).decision == "FUTILE"
 
 
+
+# ---- #11: analysis frozen and hashed; `judge` refuses without it -----------
+def _prereg_setup():
+    import shutil, tempfile
+    from pathlib import Path
+    from experiments.harness import prereg
+    d = Path(tempfile.mkdtemp())
+    for n in prereg.ANALYSIS_FILES:
+        shutil.copy(prereg.HERE / n, d / n)
+    ids = {"A": [f"a{i}" for i in range(20)], "B": [f"b{i}" for i in range(20)]}
+    runs = {arm: {rid: [(1000, 6)] * 3 for rid in ids[arm]} for arm in ids}
+    pre = d / "prereg.json"
+    prereg.freeze(pre, question="A vs B", launched=ids, W=3, T=60_000, n_perm=200, root=d)
+    return prereg, d, pre, runs
+
+
+def test_11_frozen_judge_runs():
+    prereg, d, pre, runs = _prereg_setup()
+    v = prereg.judge(pre, runs, require_committed=False, root=d)
+    assert v.decision == "NOT_DISTINGUISHED"   # identical arms, all cross at 3000
+
+
+def test_11_refuses_when_analysis_code_moved():
+    prereg, d, pre, runs = _prereg_setup()
+    with open(d / "__init__.py", "a") as f:
+        f.write("\n# one byte of drift\n")
+    try:
+        prereg.judge(pre, runs, require_committed=False, root=d)
+    except prereg.Refused as e:
+        assert "__init__.py" in str(e)
+    else:
+        raise AssertionError("moved analysis code was not refused")
+
+
+def test_11_refuses_without_preregistration_or_uncommitted():
+    prereg, d, pre, runs = _prereg_setup()
+    for kw, path in ((dict(require_committed=False), d / "missing.json"),
+                     (dict(require_committed=True), pre)):   # temp file: not in git
+        try:
+            prereg.judge(path, runs, root=d, **kw)
+        except prereg.Refused:
+            pass
+        else:
+            raise AssertionError(f"judge ran without a committed pre-registration ({path})")
+
+
+def test_11_runs_must_balance_the_frozen_manifest():
+    prereg, d, pre, runs = _prereg_setup()
+    del runs["B"]["b7"]
+    try:
+        prereg.judge(pre, runs, require_committed=False, root=d)
+    except ValueError as e:
+        assert "b7" in str(e)
+    else:
+        raise AssertionError("a dropped run was not caught")
+
+
+
+def test_logrank_all_tied_identical_arms_not_distinguished():
+    # every run in both arms crosses at 3000: zero log-rank variance (SciPy NaN)
+    from experiments.harness import compare, logrank_stat, perm_logrank
+    tied = [Outcome(3000.0, True)] * 20
+    assert logrank_stat(tied, tied) == 0.0
+    assert perm_logrank(tied[:10], tied[:10], 200, 0) == 1.0
+    assert compare(tied, list(tied), n_perm=200, rng=0).decision == "NOT_DISTINGUISHED"
+
 if __name__ == "__main__":
     import sys
     fails = 0

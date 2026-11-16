@@ -95,10 +95,19 @@ def _censored(outs):
 
 
 def logrank_stat(a, b) -> float:
-    """|log-rank Z| between two lists of Outcome; 0 if no events at all."""
+    """|log-rank Z| between two lists of Outcome; 0 if no events at all.
+
+    Also 0 when the log-rank variance is zero (SciPy returns NaN): e.g. every
+    run in both arms crosses at the same decision count. Zero variance means
+    the pooled data cannot tell the arms apart. Found 11-16 by check #11's
+    identical-arms test: before this, NaN made every permutation a non-hit,
+    p = 1/(n_perm+1), and two identical arms read A_DIFFERS.
+    """
     if not any(o.event for o in a) and not any(o.event for o in b):
         return 0.0
-    return abs(float(stats.logrank(_censored(a), _censored(b)).statistic))
+    with np.errstate(invalid="ignore", divide="ignore"):
+        z = float(stats.logrank(_censored(a), _censored(b)).statistic)
+    return abs(z) if math.isfinite(z) else 0.0
 
 
 def perm_logrank(a, b, n_perm: int = 2000, rng=None) -> float:
