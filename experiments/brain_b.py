@@ -49,6 +49,40 @@ Accept     an arm REPRODUCES iff its 5-seed mean lies in [-314.7, -282.1]
            above -282.1.
 A miss means the build is broken (ORDERS J3): fix it, do not go on to row 3.
 
+ROW 1 RESULT (11-16, kernel jack-cpu-1794791696): lib -319.5 +- 34.8
+(per seed -312.5 -281.8 -305.6 -321.8 -376.0) MISSES; ours -285.9 +- 10.0
+(in band, does not count); ctrl -1227.6 (holds). Verdict: lib MISSES.
+Reference re-pulled 11-16 from the Open RL Benchmark store itself
+(/data/jack-logs/brain_b/orb/, summary in KNOWN_ANSWERS.md): 14 finished
+runs, -298.3 +- 9.9, range [-315.1, -283.5] — §5's number is right. Two of
+our five lib seeds fall below the reference's worst. By 4-episode blocks the
+loss is in BOTH phases: lib seed 4 learns ~1 block late (eps 13-16: -757 vs
+reference -277 mean) and collapses once after learning (eps 21-24: -903);
+lib eps 21-100 average -170.6 vs reference -156.8 (range -178.0..-131.4).
+Reference stack (run configs): Python 3.8, SB3 1.x, gym 0.21, Jan 2023.
+Ours: Python 3.13 on Kaggle, SB3 2.9.2, gymnasium 1.4.0, torch 2.11.0+cpu.
+
+=============================================================================
+THE RULE — row 1b, the re-registration, committed before any run (11-16).
+=============================================================================
+Why re-register: the row-1 rule took 5 seeds. Our lib's seed-level sd was
+34.8, so the 5-seed mean's standard error (15.6) is the band's half-width
+(16.3): a build that matched our lib's spread would miss about a third of
+the time even if its centre were right. 5 seeds cannot tell "broken" from
+"heavy tail". Row 1 STAYS RECORDED AS A MISS; row 1b is a stronger test on
+fresh seeds, not a re-scoring.
+Seeds      5..19 (15 fresh seeds; none of row 1's).
+Task, steps, metric, arms (lib, ours), settings: exactly row 1's.
+ctrl       seeds 5..9 (it never learns; 5 seeds suffice for the void check).
+Accept     band UNCHANGED [-314.7, -282.1] on the 15-seed mean. lib first;
+           ours counts only if lib reproduces. VOID if ctrl's mean >= -314.7.
+Secondary  (reported, does not decide): two-sided Mann-Whitney U of lib's
+           15 per-seed means against the reference's 14 (p reported); the
+           count of lib seeds below the reference's worst (-315.1).
+If lib misses 1b: the stack is the suspect, not the seed count. Next step
+is the stack hunt — SB3 1.8 / gym 0.21 / Python 3.8 (the reference's) vs
+ours, one difference at a time — before row 3.
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |
@@ -78,6 +112,8 @@ ROW1_SEEDS = (0, 1, 2, 3, 4)
 ROW1_STEPS = 20_000
 ROW1_BAND = (-314.7, -282.1)
 ROW1_ARMS = ("lib", "ours", "ctrl")
+ROW1B_SEEDS = tuple(range(5, 20))
+ROW1B_CTRL_SEEDS = tuple(range(5, 10))
 PINS = ["stable-baselines3==2.9.2", "sb3-contrib==2.9.2", "sbx-rl==0.28.0",
         "rl-zoo3==2.9.2", "gymnasium==1.4.0", "mujoco==3.17.0",
         "dm-control==1.0.50", "shimmy==2.0.1", "pink-noise-rl==2.0.1"]
@@ -144,19 +180,22 @@ def run_row1_cell(arm: str, seed: int, steps: int = ROW1_STEPS) -> dict:
             "versions": versions()}
 
 
-def verdict_row1(cells: list) -> dict:
+def verdict_row1(cells: list, seeds=None, ctrl_seeds=None) -> dict:
     lo, hi = ROW1_BAND
+    seeds = list(seeds or ROW1_SEEDS)
+    ctrl_seeds = list(ctrl_seeds or seeds)
     by = {}
     for c in cells:
         by.setdefault(c["arm"], []).append(c)
     out = {}
     for arm, cs in by.items():
-        seeds = sorted(c["seed"] for c in cs)
+        got = sorted(c["seed"] for c in cs)
         m = sum(c["mean_return"] for c in cs) / len(cs)
         sd = (sum((c["mean_return"] - m) ** 2 for c in cs) / max(1, len(cs) - 1)) ** .5
-        complete = (seeds == list(ROW1_SEEDS)
+        want = ctrl_seeds if arm == "ctrl" else seeds
+        complete = (sorted(c["seed"] for c in cs) == sorted(want)
                     and all(c["episodes"] == ROW1_STEPS // 200 for c in cs))
-        out[arm] = {"seeds": seeds, "mean": round(m, 1), "sd": round(sd, 1),
+        out[arm] = {"seeds": got, "mean": round(m, 1), "sd": round(sd, 1),
                     "per_seed": [round(c["mean_return"], 1) for c in sorted(cs, key=lambda c: c["seed"])],
                     "in_band": lo <= m <= hi, "complete": complete}
     ctrl = out.get("ctrl")
@@ -208,7 +247,7 @@ os.chdir("/tmp/jack")
 from experiments.brain_b import run_parallel, verdict_row1
 r = run_parallel(__CELLS__, os.environ["JACK_OUT"])
 ok = [c for c in r if "error" not in c]
-json.dump({"cells": r, "verdict": verdict_row1(ok) if ok else None},
+json.dump({"cells": r, "verdict": __VERDICT__ if ok else None},
           open(os.path.join(os.environ["JACK_OUT"], "brain_b_row1.json"), "w"))
 print("DONE", flush=True)
 '''
@@ -223,7 +262,8 @@ def row1_kernel() -> dict:
     """Submit row 1 (3 arms x 5 seeds) as one Kaggle CPU kernel; write the
     cells and verdict to OUT/row1.json."""
     from experiments.gpu import build_job, result_json, submit
-    body = _JOB.replace("__CELLS__", repr(row1_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
+    body = (_JOB.replace("__CELLS__", repr(row1_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
+            .replace("__VERDICT__", "verdict_row1(ok)"))
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=3.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_row1.json"])
     if not sub.ok:
@@ -235,11 +275,38 @@ def row1_kernel() -> dict:
     return r
 
 
+def row1b_cells() -> list:
+    # lib first, then ours, then ctrl (row 1b rule)
+    return ([("lib", s) for s in ROW1B_SEEDS] + [("ours", s) for s in ROW1B_SEEDS]
+            + [("ctrl", s) for s in ROW1B_CTRL_SEEDS])
+
+
+def row1b_kernel() -> dict:
+    """Submit row 1b (lib, ours x 15 fresh seeds; ctrl x 5) as one Kaggle CPU
+    kernel; write cells and verdict to OUT/row1b.json."""
+    from experiments.gpu import build_job, result_json, submit
+    body = (_JOB.replace("__CELLS__", repr(row1b_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
+            .replace("__VERDICT__", f"verdict_row1(ok, seeds={list(ROW1B_SEEDS)!r}, "
+                                    f"ctrl_seeds={list(ROW1B_CTRL_SEEDS)!r})"))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=3.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_row1.json"])
+    if not sub.ok:
+        raise RuntimeError(f"brain_b row1b kernel: {sub.message}")
+    r = result_json(sub, "brain_b_row1.json")
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / "row1b.json").write_text(json.dumps(r, indent=1))
+    print(json.dumps(r.get("verdict"), indent=1), flush=True)
+    return r
+
+
 def main(argv):
     if len(argv) >= 5 and argv[1] == "cell":      # cell <arm> <seed> <out.json> [steps]
         steps = int(argv[5]) if len(argv) > 5 else ROW1_STEPS
         rec = run_row1_cell(argv[2], int(argv[3]), steps)
         Path(argv[4]).write_text(json.dumps(rec))
+        return 0
+    if len(argv) >= 2 and argv[1] == "row1b-kernel":
+        row1b_kernel()
         return 0
     if len(argv) >= 2 and argv[1] == "row1-kernel":
         row1_kernel()
