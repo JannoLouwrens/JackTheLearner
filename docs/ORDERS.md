@@ -93,7 +93,7 @@ state: items 1–4 DONE 11-15/16: reward dr100-eat/-pos + truncation (`14e637c4`
 state: item 5 RULE `8af5f2e1` (world_card docstring ENTRY-RUNG RULE), Kaggle CPU one kernel per d.
 state: 04:40 d=0.75 HARVESTED: d8 eats ≥1 bout in 138/200 (69%), 2/200 capped, 2.40 bouts/life, life 694 s; a 0/200 capped. ⇒ **d0 = 1 as written** (d=1 already holds, 55%) and **d_sus = 0.75** — both fixed whatever the rest show. Table in WORLD_CARD.md J2 item 5.
 state: 05:35 d=0.5 HARVESTED (`4b3634d8`): d8 ≥1 bout 137/200 (68%), capped 7/200, 3.32 bouts/life; do-nothing capped 1/200 (seed 214) = exactly AT the ≤1 bound. d0, d_sus unchanged.
-state: owed: d=0.25 (`…920`), d=0 (`…935`) RUNNING (watchers 466790/466895 alive 05:35) → world_card/entry_dXX.jsonl. Next: harvest both (`/tmp`-free: tally rows a/d8 per jsonl as in WORLD_CARD), then J2 DONE. The d0=1 finding re-raises the INBOX flag: the rule's lower clause cannot name a teachable rung — Director's call.
+state: 05:39 d=0.25 HARVESTED (`34671a75`): do-nothing capped 6/200 → "a still dies" FAILS there; d8 ≥1 bout 142/200 (71%), capped 13/200, 5.04 bouts/life. Owed: d=0 (`…935`, watcher 466895, Kaggle RUNNING 05:40) → /data/jack-logs/world_card/entry_d00.jsonl; tally a/d8 as in WORLD_CARD, then J2 DONE. INBOX flag stands (d0=1 is not a teachable rung) — Director's call.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
@@ -119,7 +119,8 @@ state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/
 state: row 1 PASSED on 1b (15 seeds): lib −309.3, ours −302.0, ctrl −1227.7; lib vs reference MW p 0.011 (~11 pts under the 2022 stack), ours p 0.42.
 state: 05:08 row 3 HARVESTED: r3lib REPRODUCES 5/5 (eval 93.5–95.5), ctrl 0/5 (max −0.3). KNOWN_ANSWERS.md.
 state: 05:35 row 3b REPRODUCES (`96a4916c`): Brain B eval 96.0 96.0 94.9 95.2 95.5, 5/5 >90; SBX ctrl 0/5 (max −0.0). B's SBX exploration as built stands; pink-noise fallback not triggered. B now holds rows 1b and 3b.
-state: next: row 2 rule — read the Zoo `ppo.yml` Pendulum-v1 entry verbatim (GitHub), commit it + band −213.2…−162.0 (last-100-episode training return, §5) in brain_b.py, then one Kaggle CPU kernel; row 4 (MountainCar PPO, 20k) can share the kernel.
+state: 05:47 row 2 (PPO Pendulum, Zoo `ppo.yml` verbatim from pinned rl-zoo3 2.9.2, rule `7df7160e`) MISSES: r2lib −204.6 −178.5 −210.5 −217.2 −297.0, mean −221.5 vs band −213.2…−162.0; ctrl (lr 0) ≈ −1237 valid. Seed sd 44.6 ≈ band half-width, as row 1.
+state: row 2b RULE `c442a757` (15 fresh seeds 5..19, band unchanged) RUNNING jack-cpu-1794808095 (log /data/jack-logs/brain_b/row2b.log → row2b.json). Next: harvest; a 2b miss → stack hunt, not row 4. Row 4 (MountainCar PPO 20k): §5 gives 87.5 ± 4.2 but no accept band — its rule must name one.
 
 ### J4 — The harness checks itself before it judges anyone (§8's thirteen)
 part: His brain (the instrument that chooses it) · stage: 1 · step: 3 (reproduce) · prior: §8 "Reproduce first", ruling 19

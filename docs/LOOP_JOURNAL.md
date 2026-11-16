@@ -1681,3 +1681,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Finding: easing the dial lengthens lucky lives (capped 0→2→7 of 200) but not first meals (55→69→68%).
 - J3 row 3b (jack-cpu-1794805793): Brain B (SBX SAC + LN) eval 94.9–96.0, 5/5 >90 vs rule ≥3/5; SBX ctrl 0/5. The two SBX departures named before the run did not cost the sparse row. Next: row 2 (PPO) rule.
 - Philosophy served: 4 (rules read as written, controls held), 3 (B now reproduces two published rows), 5 (his world's dial measured).
+
+## 2026-11-16 05:50 · JACK · J3 row 2 (PPO Pendulum) MISSES, 2b registered and running; J2 d=0.25 harvested
+- J3 row 2 rule `7df7160e`: rl-zoo3 2.9.2 `ppo.yml` Pendulum-v1 entry read verbatim from the pinned package (4×1024 → 102,400 steps, gSDE freq 4). Kaggle jack-cpu-1794807554: r2lib −204.6 −178.5 −210.5 −217.2 −297.0, mean −221.5 vs band −213.2…−162.0 → MISS; ctrl (lr 0) ≈ −1237, valid.
+- Same shape as row 1: seed sd 44.6 makes the 5-seed SE (20) ≈ the band half-width (25.6). Row 2b `c442a757` (15 fresh seeds, band unchanged) launched jack-cpu-1794808095; a 2b miss → stack hunt.
+- J2 d=0.25 (jack-cpu-1794788920): do-nothing capped 6/200 (statue fed by re-placement; rule's ≤1 bound broken); d8 71% ≥1 bout, 13/200 capped. First meals flat 55→71% across the dial, capped lives 0→13. d=0 still running.
+- Philosophy served: 4 (the miss recorded as a miss, the re-test stronger, the band untouched), 3 (the reference brain must reproduce before it judges anything).
