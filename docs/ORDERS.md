@@ -115,10 +115,10 @@ recurrent) are next week's. (4) The same rows 1 and 3 on the in-house arm
 (`cores.py` tanh-AWR) through a thin adapter: suspect or candidate.
 serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has rows 1–4 inside their ranges and the in-house arm's rows, pass or fail.
-state: 11-16 01:15 (1) DONE: `/data/venvs/jack-std` built, §5 pins exact (torch 2.15.0+cpu, jax 0.11.2 resolved). (2) `experiments/brain_b.py` = SBX SAC + layer_norm, docstring with sources and ours-beside-theirs (`1d12bb9a`).
-state: (3) row 1 RULE committed before any run (`1d12bb9a`): Pendulum Zoo entry 20k, seeds 0–4, mean of all 100 training episodes in [−314.7, −282.1]; lib first, ours counts only if lib reproduces; ctrl (never trains) must fail — box ctrl 5 seeds −1227.6, holds. Box smoke: lib 28 ms/update, ours ~5 min per 20k.
-state: 11-16 02:10 row 1 harvested: lib MISSES (−319.5 ± 34.8; seeds −312.5 −281.8 −305.6 −321.8 −376.0), ours −285.9 in band (not judged), ctrl −1227.6 holds. Reference re-pulled from the ORB store itself: 14 runs −298.3 ± 9.9, worst −315.1 — §5 right; 2 of our 5 lib seeds below its worst (late learn + one post-learn collapse). `KNOWN_ANSWERS.md` (`c7ba411f`).
-state: row 1b RE-REGISTERED before any run (`c7ba411f`, brain_b docstring): 5 seeds can't split broken from heavy tail (lib SE 15.6 ≈ band half-width 16.3); 15 fresh seeds 5–19, band unchanged, lib then ours, ctrl 5–9. RUNNING: jack-cpu-1794795073 (~2 h), watcher detached → /data/jack-logs/brain_b/row1b.json. next: harvest 1b; lib in band → judge ours, go to row 3's rule; lib misses → stack hunt (SB3 1.x/gym 0.21/Py3.8 vs ours, one difference at a time) before row 3.
+state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/brain_b.py` = SBX SAC + layer_norm (`1d12bb9a`).
+state: row 1 (5 seeds) lib MISSED −319.5 (recorded, `c7ba411f`); row 1b re-registered before running, 15 fresh seeds 5–19, band unchanged.
+state: 04:35 row 1b HARVESTED: lib −309.3 ± 13.7 REPRODUCES, ours −302.0 ± 22.2 REPRODUCES, ctrl −1227.7 (valid) → row 1 PASSED. Secondary: lib vs reference Mann-Whitney p 0.011 (5/15 below ref worst; ~11 pts under the 2022 stack), ours p 0.42. KNOWN_ANSWERS.md.
+state: next: row 3 — commit its RULE in brain_b.py first (sparse MountainCarContinuous-v0, SB3 SAC gSDE Zoo entry 50k steps, >90 on ≥3 of 5 seeds, control that must fail), then one Kaggle CPU kernel like row1b_kernel; SBX/pink variant only after lib passes. Row 2 (PPO) beside it.
 
 ### J4 — The harness checks itself before it judges anyone (§8's thirteen)
 part: His brain (the instrument that chooses it) · stage: 1 · step: 3 (reproduce) · prior: §8 "Reproduce first", ruling 19
@@ -139,10 +139,7 @@ that will pay it (they need B, from J3). Result table →
 `docs/research/HARNESS_CHECKS.md`. No ledger spec; this is the instrument.
 serves: M3 · PLAN stage 1 "the test harness passes its own thirteen checks" · philosophy 4.
 **done when:** the six checks pass as tests and the seven owed are listed.
-state: 11-16 (1) outcome code + permutation log-rank + Fisher/Boschloo (`42495306`). PASS: #10, #12 (Fisher 0.0996, Boschloo 0.0433), #13, #3 (`calibration.py`). #2,#4–#9 listed owed. Tests `python -m tests.test_harness` (26 PASS). Table `docs/research/HARNESS_CHECKS.md`.
-state: 03:25 #1 tallied on sha 1b9ed0cf: S1 0.040, S2 0.028, uncorrected control 0.073/0.065 → PASS, not VOID. #11 PASS (`b79cca33`): `experiments/harness/prereg.py` freeze()/judge() — judge refuses with no prereg, moved code, uncommitted prereg, unbalanced runs; 3 mutations red.
-state: #11's test found a real bug: identical all-tied arms → NaN log-rank → p=1/(n+1) → A_DIFFERS. Fixed in `logrank_stat` (0 on zero variance); old code fails 2 tests. File sha now a814799b, so #1 RE-RUNNING detached on it (1,000 × S1/S2, ~1 h, `/data/jack-logs/harness/svs2_S{1,2}.jsonl`).
-state: next: `python -m experiments.harness.same_vs_same tally /data/jack-logs/harness/svs2_S1.jsonl /data/jack-logs/harness/svs2_S2.jsonl`; check hash a814799b in its header line; PASS → row 1 PASS in HARNESS_CHECKS, J4 DONE. FAIL → fix in the harness.
+state: DONE 11-16 04:35. #1 PASS on a814799b (S1 0.040, S2 0.028; uncorrected control 0.073/0.065 → valid); #3, #10, #11, #12, #13 PASS (`42495306`, `b79cca33`); #2, #4–#9 listed owed in the module and HARNESS_CHECKS.md, paid with B (Next up 3).
 
 ### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
 part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7

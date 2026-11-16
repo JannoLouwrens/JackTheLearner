@@ -1656,3 +1656,9 @@ Philosophy served: 4 (the instrument that will choose his brain failed a test th
 Found: sheeprl's own DMC example notes the official config uses train ratio 256 where the paper says 512 — logged in ours-beside-theirs. Owed: line diff of sheeprl `_1M` vs official `size1m` before any known-answer run.
 Next: step 2 speed on one Kaggle CPU kernel (no Colab route from this box).
 Philosophy served: 2, 3 (a brain from published code, never weights, pinned before it is raced).
+
+## 2026-11-16 04:35 · JACK · J3 row 1 PASSED on its 15-seed re-registration; J4 DONE (#1 PASS on the fixed code). J2's four kernels still RUNNING on Kaggle at 04:23
+J3 row 1b (jack-cpu-1794795073): lib −309.3 ± 13.7 and Brain B −302.0 ± 22.2 both inside [−314.7, −282.1]; control −1227.7 → valid. First published number any learner here has reproduced.
+Caveat on the record: lib vs the reference's 14 runs, Mann-Whitney p 0.011, 5/15 seeds under the reference's worst — our PyTorch stack sits ~11 pts below the 2022 one; B is p 0.42. Next: row 3's rule, then its kernel.
+J4 #1 tally on a814799b (header hash checked): S1 0.040, S2 0.028, uncorrected control 0.073/0.065 → PASS. Six checks pass, seven listed owed → DONE.
+Philosophy served: 3, 4 (a brain from published code met a published number under a rule fixed before the run; the harness passed a test that could fail).

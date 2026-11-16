@@ -83,6 +83,11 @@ If lib misses 1b: the stack is the suspect, not the seed count. Next step
 is the stack hunt — SB3 1.8 / gym 0.21 / Python 3.8 (the reference's) vs
 ours, one difference at a time — before row 3.
 
+ROW 1b RESULT (11-16, kernel jack-cpu-1794795073): lib -309.3 +- 13.7
+REPRODUCES; ours -302.0 +- 22.2 REPRODUCES; ctrl -1227.7 (valid). Secondary:
+Mann-Whitney vs the reference's 14 runs lib p = 0.011, ours p = 0.42; below
+the reference's worst lib 5/15, ours 2/15. Next: row 3.
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |
