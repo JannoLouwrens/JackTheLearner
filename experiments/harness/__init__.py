@@ -26,6 +26,7 @@ The thirteen self-checks (§8 "Reproduce first") and who pays each:
     #12 tools on a known case: 4/15 vs 0/15 -> Fisher 0.100, Boschloo 0.043
   OWED IN J4 (no learner needed):
     #1  same-against-same, >= 1,000 repetitions through `compare`
+        (experiments/harness/same_vs_same.py, rule in its docstring)
     #3  floor and ceiling calibration arms
     #11 analysis script frozen and hashed (`analysis_hash`)
     #13 runs analysed = runs launched (`check_runs_accounted`)
@@ -129,3 +130,36 @@ def boschloo_p(sa: int, na: int, sb: int, nb: int) -> float:
 def analysis_hash() -> str:
     """sha256 of this file — check #11 freezes it in the pre-registration."""
     return hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+
+
+@dataclass(frozen=True)
+class Verdict:
+    decision: str    # "A_DIFFERS" | "NOT_DISTINGUISHED" | "FUTILE"
+    look: int        # 1 or 2: the look at which it stopped
+    p1: float        # look-1 permutation p
+    p2: float        # look-2 permutation p (nan if stopped at look 1)
+
+
+def compare(a, b, n_perm: int = 2000, rng=None,
+            alpha: float = LOOK_ALPHA, looks=LOOKS) -> Verdict:
+    """Ruling 19's primary test, two looks: A against B on lists of Outcome.
+
+    Look 1 on the first looks[0] runs of each arm: p <= alpha -> differs;
+    futility (ruling 19): <= 1 run past the mark in BOTH arms -> FUTILE.
+    Else look 2 on the first looks[1] runs: p <= alpha -> differs, else
+    NOT_DISTINGUISHED. `alpha` is a parameter only so that check #1's
+    must-fail control can run an uncorrected (0.05 per look) version
+    through the same code.
+    """
+    rng = np.random.default_rng(rng)
+    n1, n2 = looks
+    if len(a) < n2 or len(b) < n2:
+        raise ValueError(f"need {n2} runs per arm")
+    a1, b1 = a[:n1], b[:n1]
+    p1 = perm_logrank(a1, b1, n_perm, rng)
+    if p1 <= alpha:
+        return Verdict("A_DIFFERS", 1, p1, float("nan"))
+    if sum(o.event for o in a1) <= 1 and sum(o.event for o in b1) <= 1:
+        return Verdict("FUTILE", 1, p1, float("nan"))
+    p2 = perm_logrank(a[:n2], b[:n2], n_perm, rng)
+    return Verdict("A_DIFFERS" if p2 <= alpha else "NOT_DISTINGUISHED", 2, p1, p2)

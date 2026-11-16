@@ -91,6 +91,17 @@ def test_logrank_identical_arms_zero_and_separated_arms_small_p():
     assert perm_logrank(fast, list(fast), n_perm=200, rng=0) > 0.5
 
 
+def test_compare_two_looks_and_futility():
+    from experiments.harness import compare
+    fast = [Outcome(1000.0 + i, True) for i in range(20)]
+    slow = [Outcome(float(T), False) for _ in range(20)]
+    v = compare(fast, slow, n_perm=500, rng=0)
+    assert v.decision == "A_DIFFERS" and v.look == 1
+    assert compare(slow, list(slow), n_perm=100, rng=0).decision == "FUTILE"
+    v = compare(fast, list(fast), n_perm=200, rng=0)
+    assert v.decision == "NOT_DISTINGUISHED" and v.look == 2
+
+
 if __name__ == "__main__":
     import sys
     fails = 0
