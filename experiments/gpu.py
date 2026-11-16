@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
-from .protocol import is_code_dirt
+from .protocol import is_code_dirt, porcelain_path
 
 COLAB = "/data/venvs/colab/bin/colab"
 KAGGLE = "/data/venvs/kaggle/bin/kaggle"
@@ -316,6 +316,48 @@ def offending_dirt(porcelain_lines) -> list:
     return [ln for ln in porcelain_lines if is_code_dirt(ln)]
 
 
+_EXP_TEXT: Optional[str] = None
+
+
+def reaches_vm(path: str, root: Optional[Path] = None) -> bool:
+    """Could the remote job load this file? S7(1), after 11-15: a dashboard
+    file nobody imports ended D1.0's 5.9 GPU-h slice at a unit boundary.
+
+    Everything under `experiments/` counts (the job body is built there). Any
+    other path counts only if some `experiments/**/*.py` names it — the module
+    stem for a `.py`, the file name otherwise (`test_*.py` proofs are not job
+    code and are not read, or this guard's own test would name its fixtures).
+    Conservative by construction: a
+    false mention keeps the old refusal; only a file no experiment code names
+    (dashboard/*, a status script) stops being fatal."""
+    if not path or path.startswith("experiments/"):
+        return True
+    global _EXP_TEXT
+    if _EXP_TEXT is None or root is not None:
+        base = root or Path(__file__).parent.parent
+        _EXP_TEXT = "\n".join(p.read_text(errors="ignore")
+                              for p in (base / "experiments").rglob("*.py")
+                              if not p.name.startswith("test_"))
+    p = Path(path)
+    return (p.stem if p.suffix == ".py" else p.name) in _EXP_TEXT
+
+
+def split_dirt(porcelain_lines, root: Optional[Path] = None) -> tuple[list, list]:
+    """(fatal, foreign): code dirt the VM could load vs dirt it never sees.
+    The foreign list is named in the submission row, never fatal."""
+    fatal, foreign = [], []
+    for ln in offending_dirt(porcelain_lines):
+        (fatal if reaches_vm(porcelain_path(ln), root) else foreign).append(ln)
+    return fatal, foreign
+
+
+def _foreign_dirt() -> list:
+    p = subprocess.run(["git", "-C", str(Path(__file__).parent.parent), "status",
+                        "--porcelain", "--untracked-files=no"],
+                       capture_output=True, text=True)
+    return split_dirt(p.stdout.splitlines())[1] if p.returncode == 0 else []
+
+
 def assert_ref_is_current(ref: str = "main") -> None:
     """Refuse to ship a job whose code is not the code being tested.
 
@@ -338,7 +380,7 @@ def assert_ref_is_current(ref: str = "main") -> None:
 
     rc, dirty = git("status", "--porcelain", "--untracked-files=no")
     if rc == 0 and dirty:
-        offending = offending_dirt(dirty.splitlines())
+        offending = split_dirt(dirty.splitlines())[0]
         if offending:
             raise RuntimeError(
                 "Uncommitted changes to tracked files -- the GPU would run "
@@ -1384,6 +1426,9 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
                             # for registered runs — so pilot spend is summable
                             # separately (overseer 20th-audit B2).
                             "spec_phase": os.environ.get("JACK_SPEC_PHASE", ""),
+                            # S7(1): uncommitted files the VM never loads —
+                            # named, not fatal.
+                            "foreign_dirt": _foreign_dirt(),
                             # sha of the exact kernel a kaggle push would send,
                             # recorded so a later reattach can prove the kernel
                             # it recovers ran THIS code (overseer 20th-audit B1).
