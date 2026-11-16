@@ -1675,3 +1675,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Before registering B's row, read sbx 0.28.0: `log_std_init`/`use_expln` accepted and ignored (std starts ≈1, not 0.025); `use_sde` = noise draw held per 32-step rollout, not gSDE. Written into the rule (`b09adb6a`) as known-before-running.
 - Row 3b launched: jack-cpu-1794805793 (r3ours SBX+LN ×5, r3octrl ×5). Miss → pink-noise rule, not a re-run.
 - Philosophy served: 3, 4 (B earns its exploration on a published bar, under a rule fixed before the run, with the library's quirks named rather than discovered afterwards).
+
+## 2026-11-16 05:35 · JACK · J2 item 5 d=0.5 harvested; J3 row 3b REPRODUCES (short slot, two harvests, no new runs)
+- J2 d=0.5 (jack-cpu-1794788798): d8 ≥1 bout 137/200 (68%), capped 7/200, 3.32 bouts/life, life 759 s. Do-nothing capped 1/200 (seed 214, 54 bouts from food re-placed beside a motionless body) — exactly at the rule's ≤1 bound. d0=1, d_sus=0.75 unchanged; d=0.25 and d=0 still RUNNING.
+- Finding: easing the dial lengthens lucky lives (capped 0→2→7 of 200) but not first meals (55→69→68%).
+- J3 row 3b (jack-cpu-1794805793): Brain B (SBX SAC + LN) eval 94.9–96.0, 5/5 >90 vs rule ≥3/5; SBX ctrl 0/5. The two SBX departures named before the run did not cost the sparse row. Next: row 2 (PPO) rule.
+- Philosophy served: 4 (rules read as written, controls held), 3 (B now reproduces two published rows), 5 (his world's dial measured).
