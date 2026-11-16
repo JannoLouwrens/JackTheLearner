@@ -2,11 +2,7 @@
 # launch_detached.sh LOGFILE CMD [ARGS...] — detach a long-running job and
 # PROVE it survived its imports before reporting success.
 #
-# This is the mechanical form of the LESSONS rule "verify the artifact ~10 s
-# after launch" (overseer 21st audit B1). Four detached launches in 24 h died
-# at import with exit 0 at the launch site and a 0-byte log, and three
-# iterations idled waiting on processes that did not exist. The failure modes
-# it closes, each of which has actually happened here:
+# Closes four failure modes that each happened (LESSONS "verify the artifact"):
 #   - died at import from a wrong cwd  -> cwd is pinned to the repo
 #   - traceback into a severed stderr  -> 2>&1 into the log
 #   - reaped with the launching session -> setsid
@@ -18,7 +14,18 @@
 # hours: a job that legitimately finishes in under 15 s is reported DEAD —
 # read the printed log tail to tell success from a crash.
 set -u
-REPO=/home/opc/jackthelearner
+MAIN=/home/opc/jackthelearner
+# JACK_REPO (S7 step 2): launch from a clean `git worktree` of this repo, so
+# another session's uncommitted files in the main tree cannot reach the run.
+# Anything that is not a worktree of MAIN is refused; the CPU day budget stays
+# MAIN's file (a per-worktree budget would split the day's limit).
+REPO="${JACK_REPO:-$MAIN}"
+if [ "$REPO" != "$MAIN" ]; then
+    common=$(git -C "$REPO" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+    [ "$common" = "$MAIN/.git" ] || { echo "REFUSED: JACK_REPO=$REPO is not a worktree of $MAIN" >&2; exit 2; }
+    export JACK_CPU_BUDGET="${JACK_CPU_BUDGET:-$MAIN/experiments/cpu_budget.json}"
+fi
+export JACK_REPO="$REPO"
 [ $# -ge 2 ] || { echo "usage: launch_detached.sh LOGFILE CMD [ARGS...]" >&2; exit 2; }
 LOG=$1; shift
 cd "$REPO" || { echo "REFUSED: cannot cd $REPO" >&2; exit 2; }
@@ -42,19 +49,10 @@ admit_msg=$("$PYBIN" -m experiments.cpu_budget admit "$LABEL" "${JACK_DETACHED_E
 # only; the run.py lane guard cannot see past `cpu_budget wrap`).
 setsid nice -n 19 env -u JACK_ITER_DEADLINE JACK_DETACHED_LANE="launch_detached.sh $LOG" "$PYBIN" -m experiments.cpu_budget wrap "$LABEL" "$@" >> "$LOG" 2>&1 < /dev/null &
 pid=$!
-# DECLARE IT. A detached run is compute this system MEANT to leave behind, and
-# the loop's leftover check (scripts/lib_procwatch.sh, 52nd audit B2) must be
-# able to tell it from the orphan that cost 1.26 core-hours. Undeclared is not
-# fatal — it prints a LEFTOVER line naming this command, which is the correct
-# failure direction for a guard that never kills.
-. "$REPO/scripts/lib_procwatch.sh" 2>/dev/null && proc_declare "$pid" "launch_detached $LOG: $*" 2>/dev/null
-# AND CLAIM THE RESULT, not just the process (67th audit B2). When the caller
-# names the spec this launch is buying (JACK_AWAITING_SPEC=LF.01 ...), an
-# AWAITING row is written beside the pid declaration; `run next` then refuses
-# to select new work while that row has neither a ledger entry nor a live pid.
-# A launch without the env var behaves exactly as before — but a registered
-# run launched without it is a handoff that exists only in prose, which is
-# the scar this closes.
+# DECLARE IT, so lib_procwatch's leftover check can tell it from an orphan.
+. "$MAIN/scripts/lib_procwatch.sh" 2>/dev/null && proc_declare "$pid" "launch_detached $LOG: $*" 2>/dev/null
+# AND CLAIM THE RESULT: JACK_AWAITING_SPEC=<id> writes an AWAITING row; `run
+# next` refuses new work while it has neither a ledger entry nor a live pid.
 if [ -n "${JACK_AWAITING_SPEC:-}" ]; then
     proc_await "$JACK_AWAITING_SPEC" "$pid" "launch_detached $LOG" 2>/dev/null \
         && echo "AWAITING $JACK_AWAITING_SPEC since $(date -u +%FT%T) pid=$pid"
