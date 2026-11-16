@@ -73,13 +73,20 @@ if PIP:
     INSTALL = "full"
     if r.returncode != 0:
         print("PIP_FULL_FAILED", (r.stdout + r.stderr)[-3000:], flush=True)
-        INSTALL = "no-deps runner + listed deps"
-        r1 = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "--no-deps", PIP[0]],
+        # measured on Colab 11-16 (Python 3.13): dm_control's dependency `labmaze` has no wheel and
+        # does not build. The control suite does not import it, so: the pinned runner with its own
+        # dependencies, then dm_control without `labmaze`.
+        INSTALL = "runner full; dm_control --no-deps + its deps minus labmaze"
+        r1 = subprocess.run([sys.executable, "-m", "pip", "install", "-q", PIP[0]],
                             capture_output=True, text=True)
-        r2 = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "hydra-core>=1.3.2,<1.4",
-                             "lightning>=2.6.1", "torchmetrics>=1.0", "python-dotenv", "rich", "tensorboard",
-                             "gymnasium>=1.1,<2"] + PIP[1:], capture_output=True, text=True)
-        print("PIP_FALLBACK", r1.returncode, r2.returncode, (r1.stderr + r2.stdout + r2.stderr)[-3000:], flush=True)
+        r2 = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "--no-deps"] + PIP[1:],
+                            capture_output=True, text=True)
+        r3 = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "dm-env", "dm-tree", "mujoco", "glfw",
+                             "lxml", "pyopengl", "pyparsing", "absl-py", "scipy", "tqdm", "protobuf", "requests"],
+                            capture_output=True, text=True)
+        print("PIP_FALLBACK", r1.returncode, r2.returncode, r3.returncode,
+              (r1.stderr + r2.stderr + r3.stderr)[-3000:], flush=True)
+        r2.returncode = r2.returncode or r3.returncode
         if r1.returncode or r2.returncode:
             raise SystemExit("pip install failed on both paths")
 os.environ["MUJOCO_GL"] = "disable"   # vectors only: no renderer is imported
