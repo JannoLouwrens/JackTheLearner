@@ -1821,3 +1821,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J8: k4 f0 f1 f2 hold all 4 Kaggle CPU sessions (watchers alive) → nothing to launch or harvest; J3 and J6 also wait for a session; J9, J5 done → J10.
 - Rule `c4dfd21c` first (`experiments/humanoid_floor.py`), then run on the box (3 CPU-s, nice 19): random 109.9 (SD 30.3) in 23.47 steps, zero 198.5 (SD 3.2) in 40.3 steps, 100 episodes each → REPRODUCES. Labelled honestly: §4's reference is an earlier on-box measurement, not a paper figure; this is the floor walking rows are read against, not a published reproduction.
 - Philosophy served: 3 (the walking layer starts from a measured floor, not an assumed one), 4 (rule committed before the run; the reference's provenance stated).
+
+## 2026-11-16 17:55 · JACK · J10 (2): the 2018 walking recipe's code found and pinned; it fits one kernel only at its released size
+- J8: k4 f0 f1 f2 still hold all 4 Kaggle CPU sessions (watchers alive, nothing exited) → nothing to launch/harvest; J3, J6 wait on a session; J9, J5 done → J10 (2).
+- Published code: `VincentYu68/SymmetryCurriculumLocomotion@b50478f8` (no licence file; code only). Needs DART 6.3.0 + pydart2 compiled from source, TF1 (Python ≤ 3.7), MPI 8 workers.
+- Found a setting gap before touching anything: the released humanoid script trains 5 M samples; the paper reports 10–30 M. Arithmetic: 4 Kaggle cores ≈ 3.5–6.3 h for 5 M (fits), 7–37 h for the paper's range (does not).
+- Rule drafted in KNOWN_ANSWERS §Row J10-2, not yet committed; next is a build-only smoke on Kaggle (does DART compile there?) then the rule, then the kernel.
+- Philosophy served: 3 (the walking layer is built from a published recipe, its differences listed before it runs), 6 (sized to free compute before spending any).

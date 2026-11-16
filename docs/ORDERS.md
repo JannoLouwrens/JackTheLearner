@@ -205,7 +205,8 @@ KEEPS LEARNING (§4 arm c); the frozen layer (arm b) is a scored reference only.
 serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked in parallel from now" · philosophy 1, 2.
 **done when:** rows (1) and (2) are in `KNOWN_ANSWERS.md`, pass or fail.
 state: (1) DONE 11-16 17:40 (rule `c4dfd21c`, `experiments/humanoid_floor.py`): Humanoid-v5 floor, 100 eps each — random 109.9 (SD 30.3) in 23.47 steps, zero 198.5 (SD 3.2) in 40.3 steps → REPRODUCES §4's line (which is an earlier on-box measurement, not a paper; its ± is the per-episode SD). Ran on the box (3 CPU-s) because all 4 Kaggle CPU sessions held J8. Row J10-1 in KNOWN_ANSWERS.
-state: next: (2) Yu et al. 2018's CPU recipe — pin the published code + settings, rule first (accept band from §4 long form, never-trains control), one Kaggle CPU kernel when a session frees after J8/J3/J6.
+state: (2) PINNED 11-16 17:55 (KNOWN_ANSWERS §Row J10-2): `VincentYu68/SymmetryCurriculumLocomotion@b50478f8`; needs DART 6.3.0 + pydart2 from source, TF1 (py≤3.7), MPI. Released script = 5 M samples (paper 10–30 M), `-np 8`; on 4 Kaggle cores ≈ 3.5–6.3 h + compile → fits one kernel; the paper's 30 M does not.
+state: next: commit the rule (draft in §Row J10-2: released script unmodified at 5 M, `-np 4`, iteration-0 control, accept = walks unaided + symmetry ≈ 0.01) as `experiments/yu2018_walk.py` with a Kaggle build-only smoke first (does DART compile?), then the kernel when a session frees.
 
 ### J7 — Close what is in flight (cut down 11-16: two days of state lines bought one harvest)
 part: His world, needs and lessons · stage: 1 · step: repairs (PLAN "continues")

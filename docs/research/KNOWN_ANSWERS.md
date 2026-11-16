@@ -170,3 +170,42 @@ threshold is moved; rows 4, 4b, 4d stay MISSES. No further extension exists
 in the rule. Whether row 4 is closed as "the reference does not reproduce
 its own number" or re-registered at a size that can show ±5 is the
 Director's (INBOX, 11-16 14:15).
+
+## Row J10-2 — Yu, Turk & Liu 2018 (arXiv:1801.08093): PIN and pre-flight, not yet run (11-16 17:55)
+
+Published code, code only (no weights in it): `github.com/VincentYu68/SymmetryCurriculumLocomotion`
+at `b50478f8eca673730e3ce1a5441b1948b31a5187` (2019-01-31, last commit; repo
+has no licence file — code read and run, not redistributed). Entry point
+`siggraph_script/run_script_humanoid.sh`: `mpirun -np 8 python3
+baselines/baselines/siggraph/humanoid_walk.py --seed 0`, env
+`DartHumanWalker-v1`, PPO1 + `MlpMirrorPolicy` + staged helping forces
+(`train_mirror_sig`).
+
+Stack it needs (from `prereq_install.sh`): DART **v6.3.0 built from source**
+with the repo's patched `external/lcp.cpp`; `pydart2` built from source with
+the repo's `pydart2_draw.cpp`; the bundled `dart-env` (a forked gym) and
+bundled `baselines` (`tensorflow >= 1.0.0`, TF1 graph API → Python ≤ 3.7;
+Kaggle's image is 3.11, so a separate 3.7 env inside the kernel); MPI
+(`libopenmpi-dev`, `mpi4py`). Tested by the authors on Ubuntu 16.04/18.04.
+
+Settings that already differ before we touch anything:
+| setting | paper | released script |
+|---|---|---|
+| total samples | 10–30 M (500–1,500 iters × 20k) | `num_timesteps=5,000,000` |
+| workers | 8 threads on a 16-vCPU EC2 node | `mpirun -np 8` |
+| our kernel | — | Kaggle CPU: 4 cores, 12 h cap |
+
+Pre-flight cost (arithmetic, not measured): paper 25–45 s/iteration on 8
+threads; on 4 cores ≈ 50–90 s → the released 5 M (250 iters) ≈ 3.5–6.3 h,
+the paper's 10–30 M ≈ 7–37 h. Plus the DART + pydart2 compile (unmeasured,
+expect tens of minutes). So: the RELEASED script fits one kernel; the
+paper's upper budget does not.
+
+The rule (not yet committed — next slot, before any kernel): run the
+released script unmodified at 5 M on one Kaggle CPU kernel, `-np 4`
+(the one forced change, listed); the never-trains control = the same
+policy evaluated at iteration 0 (and the ablation without helping forces
+if time allows); accept iff the final policy walks UNAIDED (forces at 0)
+for a full rollout and its symmetry index is within the published class
+(≈ 0.01; Table 2 walk 0.0082). A build that will not compile on Kaggle is
+recorded here as such, not worked around with a different simulator.
