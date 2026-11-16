@@ -302,7 +302,8 @@ class JackEnv(gym.Env):
                  difficulty: Optional[float] = None,
                  random_needs: Optional[float] = None,
                  random_layout: bool = False,
-                 terminal_obs: str = "reborn"):
+                 terminal_obs: str = "reborn",
+                 lazy_contact_audio: bool = False):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -330,6 +331,9 @@ class JackEnv(gym.Env):
             raise ValueError(f"terminal_obs must be one of {TERMINAL_OBS}, "
                              f"got {terminal_obs!r}")
         self.terminal_obs = terminal_obs
+        # J6(2a), default OFF: identical audio events, force computed only
+        # for a contact pair that fires (experiments/fast_sim.py).
+        self.lazy_contact_audio = bool(lazy_contact_audio)
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -351,6 +355,9 @@ class JackEnv(gym.Env):
         self.w = W0(seed=seed, j0=self.j0, alpha=self.alpha, lethal=True,
                     diary=self.diary, spawn_sampler=sampler)
         self.w.capture_dying_obs = self.terminal_obs == "dying"
+        if self.lazy_contact_audio:
+            from experiments.fast_sim import apply_lazy_contact_audio
+            apply_lazy_contact_audio(self.w)
         self.floor_foods = FLOOR_FOODS
         if self.difficulty is not None:
             # J2 item 1, food count: extras are food before birth is placed.
