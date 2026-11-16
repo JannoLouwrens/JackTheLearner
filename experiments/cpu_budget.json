@@ -1176,12 +1176,16 @@
         "PG.8": 15.43,
         "T0.30": 37.5,
         "W0.DIAG": 661.97,
-        "detached:entry_d00.log": 31.37,
-        "detached:entry_d25.log": 31.16,
-        "detached:entry_d50.log": 31.1,
-        "detached:entry_d75.log": 30.75
+        "detached:entry_d00.log": 132.45,
+        "detached:entry_d25.log": 132.15,
+        "detached:entry_d50.log": 132.75,
+        "detached:entry_d75.log": 132.19,
+        "detached:row1.log": 344.2,
+        "detached:row1b.log": 31.07,
+        "detached:svs_S1.log": 600.01,
+        "detached:svs_S2.log": 600.01
       },
-      "used_s": 1135.52
+      "used_s": 3115.97
     }
   },
   "last_child_s": {
