@@ -118,7 +118,7 @@ serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosop
 state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/brain_b.py` = SBX SAC + layer_norm (`1d12bb9a`).
 state: row 1 (5 seeds) lib MISSED −319.5 (recorded, `c7ba411f`); row 1b re-registered before running, 15 fresh seeds 5–19, band unchanged.
 state: 04:24 row 1b HARVESTED: lib −309.3 ± 13.7 REPRODUCES, ours −302.0 ± 22.2 REPRODUCES, ctrl −1227.7 (valid) → row 1 PASSED. Secondary: lib vs reference Mann-Whitney p 0.011 (5/15 below ref worst; ~11 pts under the 2022 stack), ours p 0.42. KNOWN_ANSWERS.md.
-state: next: row 3 — commit its RULE in brain_b.py first (sparse MountainCarContinuous-v0, SB3 SAC gSDE Zoo entry 50k steps, >90 on ≥3 of 5 seeds, control that must fail), then one Kaggle CPU kernel like row1b_kernel; SBX/pink variant only after lib passes. Row 2 (PPO) beside it.
+state: 04:26 row 3 RULE committed before any run (`824b0a2a`, brain_b docstring): Zoo SAC gSDE entry unmodified, 50k, 10 deterministic eval eps, >90 on ≥3/5; ctrl (no gradient step) must fail on all 5. RUNNING jack-cpu-1794803164, watcher detached → /data/jack-logs/brain_b/row3.json (~1 h). next: harvest; pass → KNOWN_ANSWERS row 3, then register the SBX variant's rule and row 2; miss → stack hunt.
 
 ### J4 — The harness checks itself before it judges anyone (§8's thirteen)
 part: His brain (the instrument that chooses it) · stage: 1 · step: 3 (reproduce) · prior: §8 "Reproduce first", ruling 19

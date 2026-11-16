@@ -13,7 +13,7 @@ Rules are in that file's docstring, committed before each run.
 | 1b | Pendulum-v1 | Brain B `ours` (SBX SAC + LayerNorm) | 20,000 | same band | −302.0 ± 22.2 (SE 5.7) | 5–19 | **REPRODUCES** |
 | 1b | Pendulum-v1 | control `ctrl`, must fail | 20,000 | VOID if ≥ −314.7 | −1227.7 ± 58.8 | 5–9 | holds |
 | 2 | Pendulum-v1 | PPO, Zoo entry | 102,400 | −187.6 ± 17.0; accept −213.2…−162.0 | — | — | — |
-| 3 | MountainCarContinuous-v0 | SB3 SAC gSDE Zoo entry; then any SBX/pink variant | 50,000 | > 90 on ≥ 3 of 5 | — | — | — |
+| 3 | MountainCarContinuous-v0 | SB3 SAC gSDE Zoo entry unmodified (`r3lib`; rule in `brain_b.py`, `824b0a2a`); SBX/pink variant after | 50,000 | deterministic eval > 90 on ≥ 3 of 5 | running (Kaggle jack-cpu-1794803164) | 0–4 | — |
 | 4 | MountainCarContinuous-v0 | PPO, Zoo entry | 20,000 | 87.5 ± 4.2 | — | — | — |
 
 ## Row 1 — the miss, and what it is not (11-16)
