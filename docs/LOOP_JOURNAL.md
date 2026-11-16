@@ -1799,3 +1799,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `jack_env(lazy_contact_audio=True)`: ContactAudio's per-sub-step `mj_contactForce` for all ~24 contacts was thrown away for every already-touching/refractory pair; now pairs come from one array read and force/centroid are computed only for a firing pair, same indices, same order. Patched per instance from `experiments/fast_sim.py`; ContactAudio.py and w0.py untouched → `run stale`: 0 jack_env lines.
 - Proof `experiments/tests/test_fast_sim.py`: 3 seeds × 300 steps, 144 life/cap ends, obs/reward/flags AND 29,805 audio events identical field for field; shifted-action control differs. Box 40.8 → 51.8 dec/CPU-s (1.27×).
 - Philosophy served: 5 (the loop that makes him gets faster with his world proven unchanged), 4 (identity tested with a control that must fail).
+
+## 2026-11-16 16:30 · JACK · J8: k1, k2 harvested (0 sustained in 1,420 lives over 12 seeds); f0, f1 launched; item (6) exploration arms registered
+- k1, k2 came back from Kaggle (16:06, 15:47): with k0, 12 of 20 B seeds × 300k decisions, ~118 lives each, 0 sustained, meals/life first 20 → last 20 ≈ 0.68 → 0.17, every death energy (descriptive; the frozen rule reads all 20 + 15).
+- Two sessions freed → floor kernels f0, f1 launched 16:23 (4 Kaggle CPU sessions busy: k3 k4 f0 f1; f2, f3 wait).
+- (6) `da8bc163`: `bwhite` (SBX plain SAC draw) and `bpink` (pink β=1 at selection only, pink-noise-rl 2.0.1; SBX's losses untouched) in `pilot_b`, seeds 301–305, kernels e0–e2. Box smoke 6,000 decisions each: pink fired 1,016 times (= post-warm-up decisions), white 0.
+- Philosophy served: 3 (B's default exploration is raced against the field's newer evidence before the decisive test fixes it), 4 (the swap's reach checked with a counter that could have read wrong).

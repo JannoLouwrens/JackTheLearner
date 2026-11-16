@@ -83,11 +83,11 @@ exploration is the right default for the decisive test.
 No seat moves on a pilot; it fixes W and T for the decisive test.
 serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · philosophy 1, 4.
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
-state: (1)-(3) DONE `6f197f94` (pilot_b.py, harness sustained mark, rule); (4) builder `5d66b69b`; smoke 40.2 decisions/s wall, 25.9/CPU-s → T 300,000 stands.
-state: 11-16 09:24 prereg FROZEN `f0dc9fd7`: `docs/research/prereg/pilot_b_vs_{blr0,floor}.json` (mark sustained, W 1, T 300k; manifest asserted = kernel_groups' 35 runs).
-state: k0 HARVESTED 14:15 (kaggle 4.6 h, 18 dec/CPU-s): seeds 301-304, 474 lives, **0 sustained**, meals/life first 20 → last 20 ≈ 0.7 → 0.2, every death energy (descriptive; verdict waits for 20+15). k1-k3 RUNNING. LC.02 re-bought clean `fbd47305` (default_cal works) → k4 LAUNCHED 14:50 jack-cpu-1794840642, RUNNING.
-state: harness #4 PASS on the box: seed 301 ×2, 20k decisions → 8/8 lives identical field for field (row in HARNESS_CHECKS.md); 38.05 decisions/s.
-state: 15:23 Kaggle: k1-k4 all RUNNING (k1-k3 at 6.0 h vs k0's 4.6 h — slower, watch the 9 h limit ~18:24). next: as k1-k3 free (≤4 sessions), launch f0-f3 one per minute (`pilot_b kernel --name fN` via launch_detached); harvest kN.json; then (6) register the two exploration arms.
+state: (1)-(3) DONE `6f197f94`; prereg FROZEN `f0dc9fd7` (mark sustained, W 1, T 300k, 35 runs); harness #4 PASS (8/8 lives identical). Smoke 25.9 dec/CPU-s.
+state: B harvested k0-k2 (12 of 20 seeds, 300k each, ~118 lives/run): **0 sustained lives in 1,420**; meals/life first 20 → last 20 ≈ 0.68 → 0.17, every death energy (descriptive — §13's lie-still slide as predicted). k3, k4 RUNNING on Kaggle.
+state: 11-16 16:23 f0, f1 LAUNCHED (jack-cpu-1794846172, -1794846240) → 4 sessions busy (k3 k4 f0 f1). f2, f3 wait for a free session.
+state: (6) REGISTERED `da8bc163`: arms `bwhite` (plain SAC draw) and `bpink` (pink β=1 at selection only, pink-noise-rl 2.0.1), seeds 301-305, kernels e0/e1/e2 in `kernel_groups`; box smoke seed 301, 6,000 decisions each: bpink 1,016 pink draws (= decisions after warm-up), bwhite 0 — the swap fires only where it should.
+state: next: as sessions free, launch f2, f3, then e0, e1, e2 (`pilot_b kernel --name X` via launch_detached, one per minute); harvest kN/fN.json; when 20+15 are in, write `docs/research/PILOT_B.md` reading by the rule.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
