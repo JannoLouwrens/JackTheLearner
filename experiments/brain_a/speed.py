@@ -65,8 +65,23 @@ DEV = __DEV__
 RUNS = __RUNS__
 BASE = __BASE__
 PIP = __PIP__
+INSTALL = "none"
 if PIP:
-    subprocess.run([sys.executable, "-m", "pip", "install", "-q"] + PIP, check=True)
+    # the full pinned install first; if the resolver refuses on this image, say why and install the
+    # same pinned runner without its optional video/GUI dependencies (the image's own are used)
+    r = subprocess.run([sys.executable, "-m", "pip", "install", "-q"] + PIP, capture_output=True, text=True)
+    INSTALL = "full"
+    if r.returncode != 0:
+        print("PIP_FULL_FAILED", (r.stdout + r.stderr)[-3000:], flush=True)
+        INSTALL = "no-deps runner + listed deps"
+        r1 = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "--no-deps", PIP[0]],
+                            capture_output=True, text=True)
+        r2 = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "hydra-core>=1.3.2,<1.4",
+                             "lightning>=2.6.1", "torchmetrics>=1.0", "python-dotenv", "rich", "tensorboard",
+                             "gymnasium>=1.1,<2"] + PIP[1:], capture_output=True, text=True)
+        print("PIP_FALLBACK", r1.returncode, r2.returncode, (r1.stderr + r2.stdout + r2.stderr)[-3000:], flush=True)
+        if r1.returncode or r2.returncode:
+            raise SystemExit("pip install failed on both paths")
 os.environ["MUJOCO_GL"] = "disable"   # vectors only: no renderer is imported
 WORK = os.environ.get("JACK_OUT") or os.getcwd()
 os.makedirs(WORK, exist_ok=True)
@@ -74,7 +89,7 @@ os.makedirs(WORK, exist_ok=True)
 
 def _versions():
     import importlib.metadata as md, platform
-    v = {"python": platform.python_version(), "cpus": os.cpu_count()}
+    v = {"python": platform.python_version(), "cpus": os.cpu_count(), "install": INSTALL}
     for p in ("sheeprl", "torch", "lightning", "dm_control", "mujoco", "numpy", "gymnasium"):
         try:
             v[p] = md.version(p)
