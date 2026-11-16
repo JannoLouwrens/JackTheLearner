@@ -284,7 +284,7 @@ of lives and do-nothing still dies — is ALREADY met at d = 1: d8 eats ≥ 1 in
 world, the one this card shows no non-privileged policy can live in. The
 rule is not changed here (it is the Director's); INBOX carries the question.
 
-## J2 item 5 — the entry rung `d0` (rule `8af5f2e1`, registered 2026-11-16 00:2x; d0 and d_sus named 04:40, d=0.5 harvested 05:21, 2 rows owed)
+## J2 item 5 — the entry rung `d0` (rule `8af5f2e1`, registered 2026-11-16 00:2x; d0 and d_sus named 04:40, d=0.5 harvested 05:21, d=0.25 05:39, 1 row owed)
 
 Rule in `experiments/world_card.py` docstring ("THE ENTRY-RUNG RULE"), committed
 before any run. Dial only (`JackEnv(difficulty=d)`, fixed layout, needs
@@ -307,7 +307,7 @@ Kaggle CPU, one kernel per d: d=0.75 `jack-cpu-1794788783`, d=0.5
 | 1 (J1) | 0/200 | 600 | 110/200 (55%) | 0/200 | 1.16 (meals) | 1.16 | 539 |
 | 0.75 | 0/200 | 600 | 138/200 (69%) | 2/200 (seeds 204, 218: 17 and 11 bouts) | 2.40 | 2.40 | 694 |
 | 0.5 | 1/200 (seed 214 life 1: 54 bouts, food re-placed onto/next to the resting body) | 606 | 137/200 (68%) | 7/200 (seeds 201 205 207 209 213 216 218: 11–23 bouts) | 3.32 | 3.32 | 759 |
-| 0.25 | owed (`…920`, RUNNING) | | | | | | |
+| 0.25 | 6/200 (seeds 205 206×2 211 215 218; 5–108 bouts) — **over the ≤ 1 bound** | 636 | 142/200 (71%) | 13/200 (11–36 bouts) | 5.04 | 5.04 | 823 |
 | 0 | owed (`…935`, RUNNING) | | | | | | |
 
 **Harvest 2 of 4 (2026-11-16 05:21, d = 0.5, `jack-cpu-1794788798`).** d8
@@ -319,6 +319,15 @@ bound (d = 0 re-places food instantly); that is what the last two rows test.
 d8's capped share rises 0/200 → 2/200 → 7/200 (d = 1, 0.75, 0.5) while
 "≥ 1 bout" stays flat (55% → 69% → 68%): easing the dial buys longer lives
 for the lucky, not a first meal for more of them.
+
+**Harvest 3 of 4 (2026-11-16 05:39, d = 0.25, `jack-cpu-1794788920`).** The
+do-nothing arm crosses the bound: 6/200 lives reach the 1,800 s cap without
+moving (four of them on 108 bouts — food re-placed onto the resting body), so
+"a still dies" FAILS at d = 0.25, as the d = 0.5 note predicted. d8: 142/200
+(71%) eat ≥ 1 bout, 13/200 capped, 5.04 bouts/life, mean life 823 s. The
+first-meal share stays flat (55 → 69 → 68 → 71%) while capped lives climb
+(0 → 2 → 7 → 13 of 200). Below 0.5 the dial feeds a statue, so a rung there
+cannot tell a learner from luck. d0 and d_sus unchanged; d = 0 owed (`…935`).
 
 **`d0` = 1 (today's world), as the rule is written.** The rule takes the
 LARGEST grid d where both clauses hold; d = 1 holds (55% ≥ 50%, a 0/200), so
