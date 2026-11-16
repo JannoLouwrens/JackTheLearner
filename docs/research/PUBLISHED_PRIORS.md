@@ -11,53 +11,19 @@
 ## 1. Which whole brain, and how to test brains fairly (2026-11-15; serves M2, M3, order J1)
 
 **Already known**
-- One Dreamer configuration learned 150+ tasks in 8 domains from scratch, incl.
-  Minecraft diamonds with a first-person image plus health/hunger scalars
-  (DreamerV3, Nature 2025). DayDreamer learned on real robots in 1–8 hours
-  (~57k–72k decisions, inf) where SAC, Rainbow and PPO failed.
-- Replay learners collect food on ray/lidar tasks in ~60k–170k decisions
-  (Banana DQN ~138k, community result; lidar Goal SAC/TD3 ~100k). PPO needs
-  0.8–2M on the same tasks. Sparse or homeostatic versions: 2–50M and more.
-- At 25–50k steps Crafter agents eat in 2–9% of episodes; at 40–50k steps
-  Animal-AI agents sit inside the random range. **40,000 decisions is below
-  every published foraging budget, whatever the design.**
-- Avalon (3-D survival): with a curriculum 0.716, without 0.001. That gap is
-  larger than any gap between architectures in the record.
-- Tiny or no replay: SAC/PPO score 0.04–0.07 of normal across 50 tasks.
-  White action noise vs correlated noise on the closest sparse task with an
-  action cost (MountainCarContinuous, PPO): 0 vs ~94.
-- Drive-before-minus-drive-after is the published homeostatic reward and the
-  best of five forms in the one comparison; but only the discount separates
-  eating from not eating, so a 4 s horizon leaves almost no signal.
-- Detecting a one-standard-deviation difference takes ~20 seeds. Two
-  seeds rank nothing.
-- No large from-scratch result exists for active inference, predictive coding
-  or curiosity-only agents. Naively bigger networks get worse (BBF, AdA).
+- One Dreamer configuration learned 150+ tasks in 8 domains from scratch, incl. Minecraft diamonds with a first-person image plus health/hunger scalars (DreamerV3, Nature 2025). DayDreamer learned on real robots in 1–8 hours (~57k–72k decisions, inf) where SAC, Rainbow and PPO failed.
+- Replay learners collect food on ray/lidar tasks in ~60k–170k decisions (Banana DQN ~138k, community result; lidar Goal SAC/TD3 ~100k). PPO needs 0.8–2M on the same tasks. Sparse or homeostatic versions: 2–50M and more.
+- At 25–50k steps Crafter agents eat in 2–9% of episodes; at 40–50k steps Animal-AI agents sit inside the random range. **40,000 decisions is below every published foraging budget, whatever the design.**
+- Avalon (3-D survival): with a curriculum 0.716, without 0.001. That gap is larger than any gap between architectures in the record.
+- Tiny or no replay: SAC/PPO score 0.04–0.07 of normal across 50 tasks. White action noise vs correlated noise on the closest sparse task with an action cost (MountainCarContinuous, PPO): 0 vs ~94.
+- Drive-before-minus-drive-after is the published homeostatic reward and the best of five forms in the one comparison; but only the discount separates eating from not eating, so a 4 s horizon leaves almost no signal.
+- Detecting a one-standard-deviation difference takes ~20 seeds. Two seeds rank nothing.
+- No large from-scratch result exists for active inference, predictive coding or curiosity-only agents. Naively bigger networks get worse (BBF, AdA).
 
 **Candidates**
-- **A. Dreamer-style recurrent world model — recommended main brain.** One
-  encoder per sense into one GRU state; trained mostly to predict its own next
-  sensations; actor and critic learn in imagined 15-step futures. Strengths:
-  broadest from-scratch record; uses extra senses and words where model-free
-  agents get worse (Dynalang); scales with size without retuning; replay built
-  in. Weaknesses: compute per step (~2,100 min vs 15 for tuned PPO at 1M
-  steps on Craftax-classic); long memory; high-joint bodies; small details.
-  Needs: action-conditioned dynamics, imagination, a large replay trained
-  hundreds of times per step, the full robustness kit (symlog, two-hot, KL
-  balance, scale-down-only return normalisation). Smallest published: `size1m`
-  preset (no published score), 8M/12M with scores. **Our nets are 10–100×
-  smaller than any published Dreamer score, and nobody has published its speed
-  on a T4, a CPU or Apple silicon.** Expect on the rover: first meals in
-  10^4–10^5 decisions, regular foraging by 10^5–10^6 (inf).
-- **B. Replay-based model-free actor-critic (SAC family, LayerNorm, optional
-  small GRU) — the cheap control.** Most direct evidence on our current task.
-  Needs: whole-run replay (never under ~50k), batch 256, about one update per
-  decision, stochastic actor, observation normalisation. Weak at: sample
-  efficiency vs world models (10–200×), getting worse with added senses.
-  Expect on the rover: improvement by 10k–50k, reliable by 100k–200k (inf).
-- **C. Decoder-free latent world model (TD-MPC2 lineage) — for the human-like
-  body later.** Best published efficiency on Humanoid/Dog; no discrete actions,
-  no memory, needs informative reward. Not a whole-creature candidate today.
+- **A. Dreamer-style recurrent world model — recommended main brain.** One encoder per sense into one GRU state; trained mostly to predict its own next sensations; actor and critic learn in imagined 15-step futures. Strengths: broadest from-scratch record; uses extra senses and words where model-free agents get worse (Dynalang); scales with size without retuning; replay built in. Weaknesses: compute per step (~2,100 min vs 15 for tuned PPO at 1M steps on Craftax-classic); long memory; high-joint bodies; small details. Needs: action-conditioned dynamics, imagination, a large replay trained hundreds of times per step, the full robustness kit (symlog, two-hot, KL balance, scale-down-only return normalisation). Smallest published: `size1m` preset (no published score), 8M/12M with scores. **Our nets are 10–100× smaller than any published Dreamer score, and nobody has published its speed on a T4, a CPU or Apple silicon.** Expect on the rover: first meals in 10^4–10^5 decisions, regular foraging by 10^5–10^6 (inf).
+- **B. Replay-based model-free actor-critic (SAC family, LayerNorm, optional small GRU) — the cheap control.** Most direct evidence on our current task. Needs: whole-run replay (never under ~50k), batch 256, about one update per decision, stochastic actor, observation normalisation. Weak at: sample efficiency vs world models (10–200×), getting worse with added senses. Expect on the rover: improvement by 10k–50k, reliable by 100k–200k (inf).
+- **C. Decoder-free latent world model (TD-MPC2 lineage) — for the human-like body later.** Best published efficiency on Humanoid/Dog; no discrete actions, no memory, needs informative reward. Not a whole-creature candidate today.
 - Watch list only: transformer world models (best Crafter numbers, too costly).
 
 **Ours beside theirs**
@@ -494,6 +460,41 @@ Long form: `/data/jack-research/reports/Porting Dreamer to Apple MLX.md` (62-ite
 
 **Not verified:** Kaggle's glibc and driver for MLX; the optax first-step-LR semantics (rung 3 settles it); the dependency versions of the published runs (unrecorded); rental speeds (scaled from one 3080 Ti figure); the 1e-4 unroll tolerance; whether owners' devices other than Macs can use MLX.
 
-## 12. His eye: sight from his own camera, and a sense added later (2026-11-16; serves the decisive test in PLAN, M-eye, stage 3; answers the INBOX `RESEARCH:` line on his eye)
+## 12. His eye, and a sense added later (2026-11-16; serves PLAN's decisive test, stage 3; answers the INBOX `RESEARCH:` line)
 
-**Question.** What does the record say about giving a small from-scratch agent sight: the resolution and frame cost learners need, losses with no decoder, the cost of rendering, richer rays as a cheaper first eye, and how "a sense added later against present from birth" has been tested? *(Skeleton, 04:10 UTC; the findings land in this slot.)*
+Long form: `/data/jack-research/reports/PRIORS section 12.md`.
+
+**Already known**
+- Dreamer's eye is 64x64x3 everywhere (V1-V3; Minecraft, Crafter). Vision runs use the 200M-class size, `size1m` only proprio; the size ablation is 12M-400M, bigger better. **No 1M-from-pixels, T4 or CPU pixel result exists.**
+- DreamerV3, DMC task mean (official score files): proprio 456/675/758 at 100k/250k/500k; pixels 381/522/675/787 at 100k/250k/500k/1M: ~2x the steps; small targets lose most (reacher_hard 339 vs 949 at 500k).
+- SAC on raw pixels fails (walker 42 vs 948 from state, 500k, CURL T1). Random shift alone repairs it (DrQ 921 vs 964); no auxiliary loss beats it (Li 2022).
+- Cost: DrQ-v2 96 fps, DreamerV2 24 fps on a V100: 3 / 12 GPU-h per 1M steps.
+- Dreamer with image gradients cut dies (V2 T2: 0.25 -> 0.01, worse on 51 of 55 games). Replacements that hold: R2-Dreamer (2026; Barlow Twins, no augmentation; Walker 4.4 h vs 7.0 h, curves only), MuDreamer (784.7 vs 739.6 on 20 DMC tasks; with video backgrounds 517 vs 84), TD-MPC (Cup Catch 933 at 100k). Contrastive is worse (TPC 222 vs 737).
+- Depth beats colour for getting around: Habitat PointNav SPL blind 0.42, RGB 0.46, depth 0.79 at 75M steps; RGB caught up at 2.5B (0.92).
+- "What if Eye" (2025, MuJoCo, PPO): navigation evolved ~10 eyes of 4 receptors; detection needed two 15x15 eyes.
+- Measured here, one ARM core: `mj_multiRay` 16x16 0.10 ms, 32x32 0.34, 64x64 1.27 (distance, geom id, normal; 5-7x our `mj_ray` loop). GL 64x64: 14-16 ms tuned, ~20 ms floor even depth-only. MuJoCo >= 3.5.0 has a GL-free camera rangefinder (one ray per pixel). GPU batch renderers are CUDA-only: none on the Mac, T4 untested.
+- **Nobody has compared a sense added at step N with the same sense from birth in RL.** Nearest: a pathway degraded early is never used later (Kleinman 2023, up to 20% lost) unless a cross-sense reconstruction loss exists; adding a modality lowered accuracy (Kinetics 72.6 -> 71.4); OpenAI Five added observations with zero outgoing weights, "without loss", never compared with from-birth; resets restore plasticity (SAC IQM 501 -> 656).
+
+**Candidates**
+- **A. Ray retina, 16x16 to 32x32, [depth, material] in one `mj_multiRay` call.** 3,000-10,000 frames/s per core on every machine, no GL, no login session on the Mac. Support: depth-over-RGB, the 15x15 detection eye. Weak: no colour or shading; not a human eye. Expect: usable by both brains at today's budgets (inf).
+- **B. 64x64 RGB camera, random shift (B), decoder or Barlow loss (A).** The published default. 10-20 ms/frame on CPU; ~2x the steps at 200M size, unknown at 1M.
+- **C. Both: rays from birth, camera added later** (the decisive test's added sense).
+
+**Ours beside theirs**
+
+| setting | published | ours | cost |
+|---|---|---|---|
+| eye | 64x64 RGB, or depth | 16 rays, 1 row (`w0.py:96`) | no elevation |
+| ray call | one batched call | `mj_ray` loop (`w0.py:260`) | 5-7x slower |
+| pixel size | Dreamer >= 12M | `size1m` | below record |
+| SAC pixels | shift + CNN | none | must add |
+| new input | zero outgoing weights | not built | old skills at risk |
+
+**Known-answer check** (GPU only; nothing pixel-sized fits a CPU kernel): DrQ walker_walk 921 at 500k; TD-MPC Cup Catch 933 +- 24 at 100k; R2-Dreamer at 0.63x Dreamer's wall-clock.
+
+**What the record does NOT answer**
+- Added later vs from birth: arms from-birth / zero-init at N / random-init / constant placeholder / reset at N / placebo noise sense; measure use (a task only that sense solves; ablate it), cost to old skills at N, catch-up. ~60 kernel-h (6 arms, 5 seeds, 200k decisions; inf) with the ray retina. Predicted: Dreamer catches up (it reconstructs the sense); SAC under-uses it, more so at late N.
+- Does 16x16 depth+material beat 16 rays at telling food from wall? 5 seeds, CPU.
+- `size1m` from 64x64 on the T4: speed, and whether it learns.
+
+**Not verified:** R2-Dreamer and TD-MPC2 pixel scores (curves); DreamerV3's size table; Mac render speed (unpublished); Achille's loss size (figures); Safety Gym / Animal-AI rays vs pixels (none found).
