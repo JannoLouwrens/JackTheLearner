@@ -247,18 +247,70 @@ class PilotLives(_Wrapper):
         return self._life_row(info, "unfinished")
 
 
-def make_b(venv, seed: int, T: int, lr: float = 3e-4):
-    """Brain B with §1/§5's settings (table above). lr=0 is the floor arm."""
+def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True):
+    """Brain B with §1/§5's settings (table above). lr=0 is the floor arm;
+    use_sde=False is the item-6 exploration arms' plain SAC sampling."""
     from sbx import SAC
     return SAC("MlpPolicy", venv, learning_rate=lr, buffer_size=max(int(T), 50_000),
                batch_size=256, tau=0.005, gamma=GAMMA, learning_starts=WARMUP,
                train_freq=TRAIN_FREQ, gradient_steps=TRAIN_FREQ, ent_coef=0.1,
-               use_sde=True, seed=seed, verbose=0,
+               use_sde=use_sde, seed=seed, verbose=0,
                policy_kwargs=dict(layer_norm=True, net_arch=[256, 256]))
 
 
+# ---- J8 item 6: two REPORTED-ONLY exploration arms (ruling 28) -------------
+# Registered 11-16 16:30 in their own commit, after the 20 + 15 were launched.
+# Source: FIELD_WATCH N1, arXiv:2611.11868 (30 seeds, sparse tasks: gSDE
+# learned slower than white noise, z -0.75; pink +0.35); pink noise for
+# off-policy RL is Eberhard et al. 2023 (ICLR), code `pink-noise-rl` 2.0.1
+# (already pinned in jack-std, brain_b.PINS). Same world, T, seeds 301..305,
+# learner and every other setting as arm `b`; ONLY action selection differs:
+#   bwhite  SBX's plain SAC sampling (use_sde=False): a fresh N(0,1) draw
+#           every decision -> a = tanh(mu + sigma * eps_t), eps iid.
+#   bpink   same squashed Gaussian, but eps_t is a unit-variance pink (beta 1)
+#           signal per action dim, `pink.cnrl.ColoredNoiseProcess`, seq_len =
+#           LIFE_CAP (the paper's "episode length"; regenerated every 9,000
+#           decisions, not reset at a death — the paper's SB3 noise behaves the
+#           same), rng seeded by the run seed. Applied ONLY in the policy's
+#           `_predict` (the action the body takes); SBX's jitted actor/critic
+#           losses draw their own Gaussian samples, so the update is untouched.
+# Warm-up (5,000 uniform random decisions) is the same for all three. These
+# arms choose nothing and move no seat: they report, beside `b` (row 3b's held
+# draw per 32 decisions), whether row 3b's exploration is the right default
+# for the decisive test. Read the same way as `b` (sustained mark, W 1..3).
+EXPLORE_ARMS = ("bwhite", "bpink")
+EXPLORE_SEEDS = tuple(range(301, 306))
+
+
+def _pink_selection(model, seed: int) -> None:
+    """Swap the action-selection draw of an SBX SAC for pink noise (bpink)."""
+    import jax
+    import jax.numpy as jnp
+    from pink.cnrl import ColoredNoiseProcess
+    from sbx.common.policies import BaseJaxPolicy
+    pol = model.policy
+    gen = ColoredNoiseProcess(beta=1.0, size=(pol.action_space.shape[0], LIFE_CAP),
+                              rng=np.random.default_rng(seed))
+
+    @jax.jit
+    def _loc_std(actor_state, obs):
+        base = actor_state.apply_fn(actor_state.params, obs).distribution
+        return base.loc, base.stddev()
+
+    def _predict(observation, deterministic=False):
+        if deterministic:
+            return BaseJaxPolicy.select_action(pol.actor_state, observation)
+        loc, std = _loc_std(pol.actor_state, observation)
+        eps = jnp.asarray(gen.sample(), dtype=loc.dtype)
+        pol.n_pink = getattr(pol, "n_pink", 0) + 1
+        return jnp.tanh(loc + std * eps)
+
+    pol._predict = _predict
+
+
 def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b") -> dict:
-    """One learning run of T decisions; returns the per-life log + timing."""
+    """One learning run of T decisions; returns the per-life log + timing.
+    arm "bwhite"/"bpink" = the item-6 exploration arms (block above)."""
     _single_thread()
     from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
     holder = {}
@@ -271,7 +323,9 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b") -> dict:
     venv = VecNormalize(DummyVecEnv([_mk]), norm_obs=True, norm_reward=False,
                         clip_obs=10.0)
     venv.seed(seed)
-    model = make_b(venv, seed, T, lr)
+    model = make_b(venv, seed, T, lr, use_sde=(arm not in EXPLORE_ARMS))
+    if arm == "bpink":
+        _pink_selection(model, seed)
     t_wall, t_cpu = time.time(), time.process_time()
     model.learn(total_timesteps=int(T), progress_bar=False)
     wall, cpu = time.time() - t_wall, time.process_time() - t_cpu
@@ -285,6 +339,7 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b") -> dict:
             "cpu_s": round(cpu, 1),
             "decisions_per_s": round(model.num_timesteps / wall, 2),
             "decisions_per_cpu_s": round(model.num_timesteps / cpu, 2),
+            "pink_draws": int(getattr(model.policy, "n_pink", 0)),
             "lives": lives}
 
 
@@ -337,6 +392,8 @@ def run_cell(arm: str, seed: int, T: int = T_RUN) -> dict:
         return run_b(seed, T)
     if arm == "blr0":
         return run_b(seed, T, lr=0.0, arm="blr0")
+    if arm in EXPLORE_ARMS:
+        return run_b(seed, T, arm=arm)
     if arm in ("noop", "held8"):
         return run_floor(arm, seed, T)
     raise ValueError(f"unknown arm {arm!r}")
@@ -357,6 +414,10 @@ def kernel_groups() -> dict:
     floor = [(a, s) for s in FLOOR_SEEDS for a in FLOOR_ARMS]
     for i in range(4):
         groups[f"f{i}"] = floor[4 * i:4 * i + 4]
+    # item 6 (reported only): e0 white 301-304, e1 pink 301-304, e2 both 305
+    groups["e0"] = [("bwhite", s) for s in EXPLORE_SEEDS[:4]]
+    groups["e1"] = [("bpink", s) for s in EXPLORE_SEEDS[:4]]
+    groups["e2"] = [("bwhite", EXPLORE_SEEDS[4]), ("bpink", EXPLORE_SEEDS[4])]
     return groups
 
 
@@ -433,7 +494,7 @@ def main(argv):
     p.add_argument("cmd", choices=["smoke", "cell", "kernel"])
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--decisions", type=int, default=20_000)
-    p.add_argument("--arm", default="b")
+    p.add_argument("--arm", default="b")  # b, blr0, noop, held8, bwhite, bpink
     p.add_argument("--out", default=None)
     p.add_argument("--name", default=None)
     a = p.parse_args(argv)
