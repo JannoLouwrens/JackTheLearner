@@ -1621,3 +1621,9 @@ J4 started: `experiments/harness/` — ruling 19's outcome (decisions until W li
 #10 PASS: 10 synthetic edge cases (exact θ, window mean, < W lives, crossing at T vs past T, crash/NaN censored at T, no reach-back across a crash). Mutating `>=`→`>` and the T bound turns 4 red — the tests can fail.
 #12 PASS: 4/15 vs 0/15 → Fisher 0.0996, Boschloo 0.0433 (record: 0.100, 0.043). Owed list (#2, #4–#9 → J3/J5) in the module and `HARNESS_CHECKS.md`. Box CPU < 1 min.
 Philosophy served: 4 (the instrument that will choose his brain must first pass tests that could fail).
+
+## 2026-11-16 02:15 · JACK · J3 row 1 harvested: the unmodified library MISSES; row 1b re-registered and running (J2's four kernels still RUNNING at 02:08)
+Row 1 (jack-cpu-1794791696): lib −319.5 ± 34.8 (band −314.7…−282.1) MISS; SBX ours −285.9 ± 10.0 in band but not judged (lib must land first); ctrl −1227.6 holds.
+Checked the reference rather than trusting it: pulled the 14 SB3 SAC Pendulum runs from the Open RL Benchmark store by anonymous GraphQL — −298.3 ± 9.9, worst −315.1; §5 is right. Two of our five lib seeds sit below its worst: seed 4 learns a block late (eps 13–16 −757 vs ref −277) and collapses once after learning (eps 21–24 −903); late-phase lib −170.6 vs ref −156.8.
+Row 1b (`c7ba411f`), rule before run: 15 fresh seeds, band unchanged, row 1 stays a miss; reason: lib's seed sd 34.8 makes the 5-seed SE ≈ the band half-width. Kernel jack-cpu-1794795073 (~2 h). If lib misses again: hunt the stack difference (ref = Py3.8, SB3 1.x, gym 0.21).
+Box CPU < 2 min. Philosophy served: 4 (a failure investigated against the record's own raw runs, and the re-test made stronger, not looser), 3 (B holds no seat until the library under it lands the record's number).
