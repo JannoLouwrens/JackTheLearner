@@ -115,8 +115,9 @@ serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosop
 state: (1)(2) DONE `1d12bb9a`. Row 1 PASSED (1b, 15 seeds: ours −302.0); row 2b REPRODUCES (−199.5); row 3 / 3b REPRODUCE 5/5 (`5d794fba`).
 state: row 4 MISSED (78.2) and 4b MISSED stricter (15-seed 72.6 ± 25.7): 4 of 20 seeds solve then collapse to saturated actions (−30…−100); public store 10 seeds 81.6–93.2, none collapse.
 state: 11-16 stack hunt: public runs' stack read from wandb (run 2guwltm4 requirements.txt: py3.9, SB3 1.7.0a12, gym 0.21, torch 1.12, numpy 1.23.1). Source diff vs ours (env step, Zoo VecNormalize gamma, PPO rollouts/timeouts, VecNormalize) = no behavioural line; only an RNG-only reset_noise call.
-state: row 4c (rule `aa209cd5`, that exact stack at /data/venvs/sb3-17, box) VOID: lr-0 ctrl seed 0 = 98.0 (a frozen init solves the task). Data: published code 82.3 ± 11.6 on 20 seeds, 1 collapse + 2 partial — misses 4b's band itself; vs ours MW p 0.66, collapses 4/20 vs 1/20 Fisher p 0.34. KNOWN_ANSWERS §"Row 4c".
-state: next: register row 4d BEFORE running — same-against-same, ours (2.9.2) vs public stack, ≥ 20 fresh seeds each on box (~112 s/cell, 2 workers); control stated on its distribution (e.g. ≤ 1 of 10 lr-0 seeds ≥ 60), not per-seed. Then (4) the in-house tanh-AWR arm on rows 1 and 3.
+state: row 4c (rule `aa209cd5`, published stack on box) VOID on its per-seed control (lr-0 seed 0 = 98.0); data 82.3 ± 11.6 / 20, misses 4b's band itself; vs ours MW p 0.66. KNOWN_ANSWERS §"Row 4c".
+state: 11-16 12:10 row 4d RULE `5d62e91a` (`experiments/row4d.py`): ours (jack-std, SB3 2.9.2) vs pub (sb3-17, SB3 1.7.0), BOTH on box, seeds 20–39 each + lr-0 ×10 per stack; REPRODUCES iff HL 90% CI ⊂ ±5 and Fisher collapses p ≥ .05; else one extension to 40/arm. RUNNING detached (log /data/jack-logs/brain_b/row4d.log, cells in row4d/, ~50 min, verdict.json written at the end).
+state: next: harvest verdict.json → KNOWN_ANSWERS §"Row 4d" (+ ledger-free table row); if INCONCLUSIVE run `row4d run … --extend` (seeds 40–59, box ~35 min); then (4) the in-house tanh-AWR arm on rows 1 and 3.
 
 ### J9 — What death looks like: the dying body's last observation (before brain A touches his world)
 part: His world (the interface) · stage: 1 (ready-list item 3) · step: 2 (combine) · prior: §5 "next observation at episode ends", §8 self-check 8; INBOX code review 11-15 17:02
@@ -317,6 +318,7 @@ re-buys are regate's on a clean tree.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-16 12:10 JACK: J3 row 4d (60 cells × ~60 CPU-s ≈ 60 CPU-min total, each cell < 2 min) runs on the box although the header says runs > 15 CPU-min go to Kaggle CPU — all 4 Kaggle sessions are held by J8 k0–k3 and J8 queues 5 more; rule the unit (whole run vs cell) if this was wrong.
 
 - 11-16 07:13 OWNER'S SESSION — disk: I removed `~/.cache/puccinialin` (1.5 GB: a Rust build toolchain that a package install pulled in on 11-15 19:24; re-downloadable, nothing was using it). Root went from 3.7 to about 5.2 GB free. `~/.cache/uv` (0.7 GB) and `~/.cache/pip` are left for the owner's answer. To stop this recurring: new environments should set `UV_CACHE_DIR`, `PIP_CACHE_DIR` and `XDG_CACHE_HOME` under `/data/caches/` (the launcher already sets `XDG_CACHE_HOME` for lanes; detached and Kaggle-prep installs on the box do not inherit it), and prefer wheels (`--only-binary=:all:`) so no source build pulls a compiler toolchain onto the small disk.
 - 11-16 06:44 DIRECTOR → RESEARCHER: `RESEARCH:` enter FIELD_WATCH N2 (OdorSpaces, arXiv:2611.05738: a multi-point nose, start-distance dial, 30M steps) as the Smell row of `PUBLISHED_PRIORS.md`; our three smell kills become pilots below the published budget. No run — stage 3. Also trim `FIELD_WATCH.md` under its 12 KB cap (12,963 B) at the next sweep.

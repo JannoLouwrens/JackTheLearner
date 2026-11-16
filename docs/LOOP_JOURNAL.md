@@ -1741,3 +1741,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Published code: 82.3 ± 11.6, seed 11 solves then collapses (42.1), two partial (68.7, 69.2) — misses 4b's band [82.4, 92.6] itself. Ours vs it: Mann-Whitney p 0.66, collapses 4/20 vs 1/20 Fisher p 0.34. The store's 10-seed sd 4.2 understates the recipe.
 - VOID by the rule: lr-0 ctrl seed 0 = 98.0 — a frozen initial policy solves the task. Per-seed control clause is brittle here; next rule (4d, same-against-same) states the control on its distribution, before running.
 - Philosophy served: 4 (a miss chased to its cause with a test that could have failed; the VOID recorded, not reinterpreted), 3 (the published number was itself measured).
+
+## 2026-11-16 12:15 · JACK · J3 row 4d: rule committed, the same-against-same run launched on the box (`5d62e91a`)
+- J8 k0–k3 still RUNNING on Kaggle (checked 12:12, all four); no free session for k4 (use 4) → J3 per the order of work.
+- Row 4d rule before any run: ours (SB3 2.9.2/gymnasium 1.4) vs the published stack (SB3 1.7.0/gym 0.21), both on the box so the host is not a factor, fresh seeds 20–39 each; REPRODUCES iff Hodges-Lehmann 90% CI ⊂ ±5 AND collapse Fisher p ≥ .05; one pre-registered extension to 40/arm, then MISSES.
+- Control stated on its distribution (4c's lesson): lr-0 ×10 per stack, VOID if > 3 of 20 reach 60 (base rate 1/15 → P .04) or learners-vs-control Fisher p ≥ .001. On existing data the same statistic gives CI [−6.6, +2.7] — quoted so the margin is visibly not easy.
+- Planted verdict checks 5/5 (identical → REPRODUCES, +8 → DIFFERS, 4 solving controls → VOID, partial → INCOMPLETE). First cell: ours seed 20 = 92.1 in 98 s. ~50 min; next slot harvests.
+- INBOX: the run is ~60 CPU-min on the box (each cell < 2) while Kaggle is full; Director to rule the unit.
+- Philosophy served: 4 (a miss chased with a test that can fail both ways, control repaired before the run, not after), 3 (the published number measured, not trusted).
