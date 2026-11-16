@@ -1,7 +1,7 @@
 # Brain A — a Dreamer-style world model: source pin (J5 step 1)
 
 PLAN part "His brain", stage 1, step 2 (combine). Prior: `docs/research/PUBLISHED_PRIORS.md` §2, §9 row 7.
-**Code only, never weights.** Nothing here has been run yet; no speed is known (§2: "measured nowhere").
+**Code only, never weights.** Run so far: a speed pilot only (below); no score has been read from it.
 Brain A is a candidate for one of his parts, so every line of it learns from zero.
 
 ## The pins (checked against GitHub and PyPI on 2026-11-16)
@@ -15,8 +15,40 @@ Brain A is a candidate for one of his parts, so every line of it learns from zer
 `dreamer_v3_5_1M.yaml` at `v0.8.5` reads, in full beyond its parent: `dense_units: 64`,
 `cnn_channels_multiplier: 4`, `world_model.discrete_size: 4`,
 `recurrent_model.recurrent_state_size: 512`, `recurrent_model.hidden_size: 64` — its header
-says "the 1M model of the official implementation (`size1m`)". Not yet diffed line by line
-against `configs.yaml` `size1m` at `e01491f`: that diff is owed before any known-answer run.
+says "the 1M model of the official implementation (`size1m`)".
+
+## Line diff: sheeprl `dreamer_v3_5_1M` vs official `size1m` (done 2026-11-16)
+
+Left: `dreamerv3/configs.yaml` at `e01491f` (`defaults` + `size1m` + `dmc_proprio`), fetched from
+GitHub. Right: the configuration sheeprl 0.8.5 actually resolved in our box smoke
+(`<log_dir>/config.yaml`), not the yaml read by eye.
+
+**Identical (every agent value):** size — deter 512, hidden 64, classes 4, units 64, depth 4;
+stoch 32; 8 GRU blocks; dyn/img/obs layers 1/2/1; latent unimix 0.01; free nats 1.0; encoder and
+decoder 3 layers, kernel 5, mults [2,3,4,4], symlog, bspace 8; reward and continue heads 1 layer;
+255 bins; actor and critic 3 layers, min/max std 0.1/1.0, actor outscale 0.01, critic outscale 0;
+loss scales rec 1, rew 1, con 1, dyn 1, rep 0.1, policy 1, value 1, repval 0.3; LaProp lr 4e-5,
+betas 0.9/0.999, eps 1e-20, AGC 0.3, warm-up 1000, no weight decay; imagination 15; horizon 333
+(gamma 0.996997); lambda 0.95; entropy 3e-4; slow critic rate 0.02 every 1, slowreg 1; return
+normalisation percentiles 5/95, rate 0.01, limit 1; `contdisc`, `reward_grad`, `repval_loss`,
+`repval_grad` on; batch 16 x 64; replay context 1; online replay queue on.
+
+**Different — these are what a known-answer run must set or disclose:**
+
+| setting | official `dmc_proprio` at `e01491f` | sheeprl 0.8.5 (shipped DMC example + `_1M`) | note |
+|---|---|---|---|
+| train ratio | **1024** | 512 (`replay_ratio: 0.5`) | the example file's comment says "official has 256" — that is `dmc_vision`; proprio is 1024 |
+| action repeat | **1** (`env.dmc.repeat: 1`) | 2 | the 2023 paper's score files used 2 |
+| environments | 16 (`run.envs`) | 16 in the example (we use 4, the 2023 protocol) | — |
+| compute precision | `bfloat16` | `32-true` | sheeprl offers `bf16-mixed`; not the default |
+| replay capacity | 5e6 | 500,000 (the whole example run) | no difference below 500k decisions |
+| prefill | none named | `learning_starts: 1024` | — |
+| compiled | `jax.jit: True` | `algo.compile.enabled: False` | measured as the second speed arm |
+| actor unimix (discrete actions only) | key present, 0.01 | 0.01; the file says official does not apply it | irrelevant to continuous actions; not checked in `agent.py` |
+
+So the size preset is exact; the *run recipe* differs in ratio and action repeat, and the
+published 2023 scores (ratio 512, repeat 2, 4 envs, v1 agent, size S) match neither file. A
+known-answer row states which of the three recipes it runs.
 
 ## Why these and not the others (§2)
 
@@ -45,11 +77,39 @@ nobody discovers them later:
 | environments | 4 | 16 | 1 in his world (DMC rows: as published) | — |
 | agent version | v1 (2023 score files) | v2 | v2 | REINFORCE actor needed for death; whether the v2 tables are the 2023 runs is unresolved (§2 "Not verified") |
 
+## Speed, measured (J5 step 2) — `experiments/brain_a/speed.py`
+
+A speed pilot: one seed, no score read from it. Unmodified runner, `dreamer_v3_5_1M`, DMC
+cartpole-swingup from vectors, 4 envs, action repeat 2, train ratio 512, `32-true`. A decision =
+one policy step of one environment. Raw result: `/data/jack-logs/brain_a/speed_colab.json`.
+
+| machine | arm | gradient steps/s | decisions/s | wall per 100k decisions | note |
+|---|---|---|---|---|---|
+| Colab T4 (2 vCPU, torch 2.14.1+cu130, py 3.13) | default (not compiled) | **2.64** (runner's own timer 2.67) | **5.28** | **5.26 h** | GPU 27% busy, 475 MiB: the Python loop on 2 vCPUs is the limit, not the T4. One 95 s interval (steps 2000→2500) — thin |
+| same | `algo.compile.enabled=True` | not measured | — | — | no training step logged in 520 s: compilation ate the whole budget |
+| this box (ARM, nice 19, 1 thread) | default | 0.64 | 1.28 | 21.6 h | 109 s smoke |
+| Kaggle CPU kernel | 4 threads; 1 thread | owed | owed | owed | `jack-cpu-1794813567` RUNNING at 07:41; watcher writes `speed_kaggle-cpu.json` |
+
+**The record's arithmetic was 20–50 gradient steps/s on a T4 for `size1m`; the unmodified port
+does 2.6 — 8 to 19 times slower.** The achieved ratio is the configured one (the runner enforces
+it synchronously); environment stepping alone runs at ~1,150 decisions/s, so learning is >99% of
+the wall clock.
+
+Install note: on Python 3.13 (Colab and Kaggle) `pip install dm_control` fails building
+`labmaze`; the probe installs dm_control without it (the control suite does not import it).
+
+## What that costs (J5 step 3) — at the measured 2.64 steps/s, uncompiled
+
+- §2's first three known-answer rows (cartpole_balance, cartpole_swingup, ball_in_cup_catch to
+  200K env steps = 100k decisions each, 3 seeds, ratio 512): 9 runs × 5.26 h = **≈ 47 T4-hours**
+  (the estimate on record was 25–60) — more than one week of Kaggle's 30 h. Five seeds: ≈ 79.
+- One 1M-decision life in his world (action repeat 1, ratio 512 → 500k gradient steps):
+  **≈ 53 T4-hours**; at the official proprio ratio 1024, ≈ 105. Per life, per seed.
+- So on free T4s as shipped, A is not affordable for a 20-seed test. What must be measured
+  before any known-answer run: the compiled arm with a budget that outlasts compilation
+  (≥ 30 min), `bf16-mixed`, and several runs sharing one T4 (the GPU sat 73% idle).
+
 ## What comes next in J5
 
-2. Speed, unmodified runner, smallest preset, DMC cartpole-swingup: decisions/s, achieved
-   train ratio, wall-clock per 100k decisions — on a T4 (Colab now; Kaggle GPU opens 11-21)
-   and on one Kaggle CPU kernel. Arithmetic on record (±2×): T4 `size1m` 20–50 gradient
-   steps/s; 4-core CPU 0.5–2.
-3. T4-hours for §2's first three known-answer rows (estimate 25–60) and for one 1M-decision life.
-4. Fill the table above with what actually changed. Do not wire A to his world in J5.
+4. Harvest the Kaggle CPU row. Then the compiled / `bf16-mixed` / 3-runs-per-T4 arms on Colab,
+   25 min of training each, and re-do the two cost lines. Do not wire A to his world in J5.

@@ -1195,13 +1195,20 @@
         "detached:row3.log": 30.18,
         "detached:row3b.log": 12.06,
         "detached:row4.log": 10.54,
-        "detached:row4b.log": 11.15,
+        "detached:row4b.log": 127.73,
+        "detached:speed_colab.log": 2.7,
+        "detached:speed_colab2.log": 2.76,
+        "detached:speed_colab3.log": 2.96,
+        "detached:speed_colab4.log": 4.62,
+        "detached:speed_kcpu.log": 1.54,
+        "detached:speed_kcpu2.log": 1.18,
+        "detached:speed_kcpu3.log": 21.14,
         "detached:svs2_S1.log": 2490.37,
         "detached:svs2_S2.log": 2417.71,
         "detached:svs_S1.log": 2461.57,
         "detached:svs_S2.log": 2385.86
       },
-      "used_s": 15075.3
+      "used_s": 15228.78
     }
   },
   "last_child_s": {

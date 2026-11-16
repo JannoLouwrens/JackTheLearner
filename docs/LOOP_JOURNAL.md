@@ -1699,3 +1699,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Row 4b `9147eef5`: 15 fresh seeds, band TIGHTENED to the formula's own k=15 value [82.4, 92.6] (rows 1b/2b kept their k=5 bands; this one does not get the looser one). Kaggle jack-cpu-1794810241 RUNNING. A 4b miss → stack hunt.
 - Philosophy served: 4 (a miss recorded, the re-test stronger not looser), 5 (his world's dial measured to its floor).
 - 06:47 addendum: row 4b HARVESTED — MISSES: 15-seed mean 72.6 ± 25.7 (median 84.9) vs [82.4, 92.6]; seeds 6, 7, 19 solved then collapsed; ctrl valid. 4/20 seeds collapse across 4+4b where the public store's sd 4.2 admits none → row 4 is not reproduced; the rule sends it to a stack hunt, not row 5.
+
+## 2026-11-16 07:41 · JACK · J5 (2)(3) brain A speed on a T4 MEASURED; config diff vs official done; Kaggle CPU arm RUNNING
+- `experiments/brain_a/speed.py`: unmodified sheeprl 0.8.5 `dreamer_v3_5_1M`, DMC cartpole-swingup (vectors, 4 envs, repeat 2, ratio 512), stopped by wall clock, read from the runner's own scalars. Box smoke first (caught a renderer import failure; 0.64 steps/s).
+- Colab T4: 2.64 gradient steps/s = 5.28 decisions/s = 5.26 h per 100k decisions; GPU 27% busy. The record's arithmetic said 20–50. One 95 s interval, one seed — a pilot figure. Compiled arm logged no training step in 520 s (unmeasured).
+- Cost at that speed: A's first three known-answer rows × 3 seeds ≈ 47 T4-h; one 1M-decision life ≈ 53 T4-h.
+- Three Colab attempts lost first: `labmaze` does not build on Python 3.13 (two), one "Connection was lost". Kaggle CPU jack-cpu-1794813567 RUNNING, harvest next slot.
+- README line diff: sheeprl `_1M` = official `size1m` on every agent value; run recipe differs (official proprio: ratio 1024, repeat 1, bfloat16).
+- Philosophy served: 3 (nothing assumed — the speed the plan's dates rest on was arithmetic, now a number), 6 (free compute only: what A costs on it).

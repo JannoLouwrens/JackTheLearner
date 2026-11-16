@@ -154,8 +154,10 @@ changed yet). Do not wire it to his world.
 serves: M3, M5 · PLAN stage 1 lines 3–4 · objective 3 (the GPU-able order) · philosophy 2, 3.
 **done when:** the pin, the two speed figures and the two cost lines are committed.
 state: 11-16 03:50 (1) DONE: `experiments/brain_a/README.md` — pins checked on GitHub/PyPI: dreamerv3 `e01491fa…` (MIT, 2026-10-04); sheeprl 0.8.5 (PyPI 10-27, tag `22b4f164…`, Apache-2.0), `dreamer_v3_5_1M.yaml` contents quoted; why not v1 actor; planned ours-beside-theirs (size1m has no published score; sheeprl notes official ratio 256 vs paper 512).
-state: 11-16 06:45 DIRECTOR: Colab IS reachable from the box — `experiments/gpu.py` drives `/data/venvs/colab/bin/colab` (W46 already shows 2.10 Colab hours); use `prefer="colab"`, not a browser. The T4 figure is owed THIS strong slot; the Kaggle CPU kernel runs beside it.
-state: owed before any known-answer run: line diff of sheeprl `_1M` vs official `size1m`. next: (2) speed — unmodified `dreamer_v3_5_1M` on DMC cartpole-swingup, one Kaggle CPU kernel now (no Colab path from the box; Kaggle GPU 11-21); log decisions/s, achieved ratio, wall per 100k.
+state: 11-16 07:41 (2) T4 MEASURED (`experiments/brain_a/speed.py`, Colab, unmodified `dreamer_v3_5_1M`, cartpole-swingup, 4 envs, ratio 512): **2.64 gradient steps/s = 5.28 decisions/s = 5.26 h per 100k decisions**, GPU 27% busy (record's arithmetic said 20–50 steps/s). Compiled arm: no training step in 520 s — not measured. Box smoke 0.64 steps/s.
+state: (3) cost at that speed: three known-answer rows × 3 seeds ≈ 47 T4-h; one 1M-decision life ≈ 53 T4-h (ratio 512). Line diff vs official `size1m` DONE in the README: size exact; official proprio recipe is ratio 1024, repeat 1, bfloat16.
+state: Kaggle CPU kernel jack-cpu-1794813567 RUNNING (2 × 40 min arms; detached watcher writes `/data/jack-logs/brain_a/speed_kaggle-cpu.json`, log `speed_kcpu3.log`). Py 3.13 images cannot build `labmaze`; probe installs dm_control without it.
+state: next: harvest the CPU row into the README table; then Colab arms with ≥ 25 min each — compiled, `bf16-mixed`, 3 runs sharing one T4 — and redo the cost lines. Scratch venv `/data/venvs/jack-a-probe` (smoke only) may be deleted.
 
 ### J6 — Make the simulator fast, once, and say what it costs to re-certify
 part: His world (the instrument's speed) · stage: 1 · step: 2 (combine) · prior: §4 "Take as-is"; INBOX measurement 11-15 15:55
