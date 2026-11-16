@@ -80,7 +80,10 @@ exploration is the right default for the decisive test.
 No seat moves on a pilot; it fixes W and T for the decisive test.
 serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · philosophy 1, 4.
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
-state: open — ordered 11-16 06:41.
+state: 11-16 08:30 (1)(2)(3) DONE `6f197f94`: `experiments/pilot_b.py` (B = SBX SAC+LN in `JackEnv(d 0.75, dr100-eat, random_needs 1/6, random_layout)`, life = episode, cap 9,000 truncated + new body); harness `outcome_sustained` + prereg `mark="sustained"`, 8 tests, 34/34 pass.
+state: box smoke seed 0, 20k WITH learning: 40.2 decisions/s wall, 25.9 per CPU-s (JAX ~1.55 cores) → 300k = 3.2 CPU-h/run, T = 300,000 stands. 1 of 8 lives capped+sustained (23 meals) — one seed, anecdote.
+state: RULE committed in pilot_b.py docstring + `docs/research/PILOT_B.md`: B ×20 (seeds 301–320), noop/held8/blr0 ×5 (301–305), floor gate ≤ 1/15 at W=1, readings SUSTAINED (≥5/20 at W=1) / EATS BUT STARVES / DOES NOT LEARN; W,T fix stated.
+state: next: (4) Kaggle kernel builder in pilot_b.py (like `brain_b.row3_kernel`, pins sbx/sb3/gymnasium + mujoco 3.17.0 for W0; 4 cells per kernel, child timeout ~8.5 h), B in 5 kernels + floor in 4 (≤ 4 concurrent); harness #4 (seed 301 twice, 20k, box) beside it. Note: `prereg.freeze` takes two arms — freeze B vs blr0 before the launch.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5

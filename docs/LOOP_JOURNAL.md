@@ -1707,3 +1707,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Three Colab attempts lost first: `labmaze` does not build on Python 3.13 (two), one "Connection was lost". Kaggle CPU jack-cpu-1794813567 RUNNING, harvest next slot.
 - README line diff: sheeprl `_1M` = official `size1m` on every agent value; run recipe differs (official proprio: ratio 1024, repeat 1, bfloat16).
 - Philosophy served: 3 (nothing assumed — the speed the plan's dates rest on was arithmetic, now a number), 6 (free compute only: what A costs on it).
+
+## 2026-11-16 08:30 · JACK · J8 (1)(2)(3): brain B wired into his world, smoked, rule committed (`6f197f94`)
+- `experiments/pilot_b.py`: unmodified SBX SAC + LayerNorm at d0 = 0.75 (dr100-eat, random needs 1/6, random layout), one life per episode, cap 9,000 = truncated then a new body in the same world; §1/§5 settings with the one stated departure (ent_coef 0.1 fixed, row 3b's exploration).
+- Box smoke seed 0, 20,000 decisions with learning: 40.2 decisions/s wall, 25.9 per CPU-second → 300k decisions = 3.2 CPU-h per run, 4 per Kaggle kernel fits. 1 of 8 lives capped and sustained (23 meals) — one seed, anecdote.
+- Harness: ruling 22's sustained mark (capped AND intake ≥ basal drain, W consecutive) + prereg `mark=`; 8 edge-case tests incl. a planted case where θ=5 crosses and sustained must not; 34/34 pass.
+- Rule (before any kernel): B ×20, three floor arms ×5, floor gate ≤ 1/15, three readings, W/T fix. Next: kernel builder + launch.
+- Smoke found JAX ignores the single-thread flags (~1.55 cores) — sized by CPU-seconds.
+- Philosophy served: 4 (the mark and its must-fail case written before any run), 1 (the first plain published learner living in his world).
