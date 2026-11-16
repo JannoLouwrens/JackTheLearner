@@ -224,7 +224,7 @@ launch and a design step, not a leftover slot.)
 serves: M2 · philosophy 4 (a failure is fixed, not filed).
 **done when:** nothing is in flight and `NE.01`, `W1.04` each have a new ledger row.
 state: (a) DONE 11-16 19:45: all launched step-3 kernels exited; 7/10 cells × 60 lives in FORAGER_RACE.md §PILOT (dreamer-xs s154 never launched, wm-latent+ring launches died pre-push). Frozen tally on the cells' own stamp (only w0.py moved, J9): INCOMPLETE, control holds; ppo-needs / ppo-lp NOT LEARNING (ppo-lp passes s154 only); learners 13–17 floor meals vs random 22–27, apples 0. `/data/tmp/wt_forager3` removed.
-state: (c) clause applied `eaa9302`, not run. next: (c) `NE.01` once (~30 CPU-min → detached, nice 19), then (e) `W1.04` (~41 CPU-min, detached).
+state: (c) `NE.01` LAUNCHED 19:39 detached (`/data/jack-logs/j7/ne01.log`, worker pid 2097328, burning CPU). next: harvest its ledger row (`run status | grep NE.01`), render; then (e) `W1.04` once (~41 CPU-min, detached).
 
 **Paused or closed by the record (ruling 20):** `D1.0` (no more GPU to the
 57M arena; cached units stay in `/data/d10_units/873e861e…`), `T2.01` (re-
