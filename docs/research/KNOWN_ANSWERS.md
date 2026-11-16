@@ -13,7 +13,9 @@ Rules are in that file's docstring, committed before each run.
 | 1b | Pendulum-v1 | Brain B `ours` (SBX SAC + LayerNorm) | 20,000 | same band | −302.0 ± 22.2 (SE 5.7) | 5–19 | **REPRODUCES** |
 | 1b | Pendulum-v1 | control `ctrl`, must fail | 20,000 | VOID if ≥ −314.7 | −1227.7 ± 58.8 | 5–9 | holds |
 | 2 | Pendulum-v1 | PPO, Zoo entry | 102,400 | −187.6 ± 17.0; accept −213.2…−162.0 | — | — | — |
-| 3 | MountainCarContinuous-v0 | SB3 SAC gSDE Zoo entry unmodified (`r3lib`; rule in `brain_b.py`, `824b0a2a`); SBX/pink variant after | 50,000 | deterministic eval > 90 on ≥ 3 of 5 | running (Kaggle jack-cpu-1794803164) | 0–4 | — |
+| 3 | MountainCarContinuous-v0 | SB3 SAC gSDE Zoo entry unmodified (`r3lib`; rule `824b0a2a`) | 50,000 | deterministic eval > 90 on ≥ 3 of 5 (public 9/10 in 93.4–95.3) | 94.8 94.5 95.5 95.0 93.5 — 5 of 5 | 0–4 | **REPRODUCES** |
+| 3 | MountainCarContinuous-v0 | control `r3ctrl` (no gradient step), must fail | 50,000 | VOID if > 90 on any seed | −0.3 −2.8 −3.5 −0.9 −0.8 — 0 of 5 | 0–4 | holds |
+| 3b | MountainCarContinuous-v0 | Brain B `r3ours`: SBX SAC + LayerNorm, Zoo numbers (rule `b09adb6a`); ctrl `r3octrl` | 50,000 | same bar | running (Kaggle jack-cpu-1794805793) | 0–4 | — |
 | 4 | MountainCarContinuous-v0 | PPO, Zoo entry | 20,000 | 87.5 ± 4.2 | — | — | — |
 
 ## Row 1 — the miss, and what it is not (11-16)
@@ -59,3 +61,19 @@ it; lib over all 20 seeds (rows 1 + 1b) is −311.9. Brain B (SBX) is not
 distinguishable from the reference. Read: the build is not broken (the rule
 the order set is met), and the residual lib-vs-reference shift is a stack
 difference to remember when row 3 compares SB3 numbers, not a reason to stop.
+
+## Row 3 — the library reproduces; Brain B's exploration is a different recipe (11-16, kernel jack-cpu-1794803164)
+
+`r3lib` (SB3 SAC, Zoo gSDE entry unmodified) solved all 5 seeds, deterministic
+eval 93.5–95.5 — inside the public store's 93.4–95.3; first training episode
+above 90 at episode 2–4; 352–459 training episodes in 50k steps. Control
+(uniform random, no gradient step): −3.5 … −0.3, 0 of 5. Stack on the kernel:
+Python 3.13, SB3 2.9.2, torch 2.11.0+cpu, gymnasium 1.4.0.
+
+Before row 3b ran, the SBX source was read (sbx 0.28.0): `SACPolicy` accepts
+`log_std_init` and `use_expln` and **silently ignores both** — the actor's
+log-std is a state-dependent head (initial std ≈ 1, not exp(−3.67) = 0.025);
+and SBX's `use_sde` holds one noise draw between `reset_noise()` calls (every
+32-step rollout here), which is not gSDE's state-dependent noise matrix. So
+row 3b tests whether B as built explores well enough for sparse reward under
+the Zoo's numbers; a miss sends B to the pink-noise rule (§5), not a re-run.

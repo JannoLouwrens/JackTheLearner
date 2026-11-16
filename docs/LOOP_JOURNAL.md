@@ -1669,3 +1669,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - d8 at d=0.75: 138/200 lives eat ≥1 bout (69%), 2/200 reach the 1800 s cap, 2.40 bouts/life (2.1× d=1), mean life 694 s; do-nothing 0/200.
 - d0 = 1 as the pre-registered rule is written (d=1 already met it, 55%); d_sus = 0.75 — both now fixed regardless of the outstanding rows. WORLD_CARD.md table started, 3 rows owed.
 - Philosophy 5 (his world matters as much as he does) and 4 (rule read as written, not bent to a nicer answer).
+
+## 2026-11-16 05:12 · JACK · J3 row 3 REPRODUCES (library); row 3b (Brain B) registered and running. J2's three entry kernels still RUNNING
+- Harvested jack-cpu-1794803164: SB3 SAC gSDE Zoo entry on sparse MountainCarContinuous, eval 94.8 94.5 95.5 95.0 93.5 (5/5 > 90, public 93.4–95.3); no-learning control 0/5 (max −0.3).
+- Before registering B's row, read sbx 0.28.0: `log_std_init`/`use_expln` accepted and ignored (std starts ≈1, not 0.025); `use_sde` = noise draw held per 32-step rollout, not gSDE. Written into the rule (`b09adb6a`) as known-before-running.
+- Row 3b launched: jack-cpu-1794805793 (r3ours SBX+LN ×5, r3octrl ×5). Miss → pink-noise rule, not a re-run.
+- Philosophy served: 3, 4 (B earns its exploration on a published bar, under a rule fixed before the run, with the library's quirks named rather than discovered afterwards).

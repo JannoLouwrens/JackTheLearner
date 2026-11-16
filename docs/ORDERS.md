@@ -116,9 +116,10 @@ recurrent) are next week's. (4) The same rows 1 and 3 on the in-house arm
 serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has rows 1–4 inside their ranges and the in-house arm's rows, pass or fail.
 state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/brain_b.py` = SBX SAC + layer_norm (`1d12bb9a`).
-state: row 1 (5 seeds) lib MISSED −319.5 (recorded, `c7ba411f`); row 1b re-registered before running, 15 fresh seeds 5–19, band unchanged.
-state: 04:24 row 1b HARVESTED: lib −309.3 ± 13.7 REPRODUCES, ours −302.0 ± 22.2 REPRODUCES, ctrl −1227.7 (valid) → row 1 PASSED. Secondary: lib vs reference Mann-Whitney p 0.011 (5/15 below ref worst; ~11 pts under the 2022 stack), ours p 0.42. KNOWN_ANSWERS.md.
-state: 04:26 row 3 RULE committed before any run (`824b0a2a`, brain_b docstring): Zoo SAC gSDE entry unmodified, 50k, 10 deterministic eval eps, >90 on ≥3/5; ctrl (no gradient step) must fail on all 5. RUNNING jack-cpu-1794803164, watcher detached → /data/jack-logs/brain_b/row3.json (~1 h). next: harvest; pass → KNOWN_ANSWERS row 3, then register the SBX variant's rule and row 2; miss → stack hunt.
+state: row 1 PASSED on 1b (15 seeds): lib −309.3, ours −302.0, ctrl −1227.7; lib vs reference MW p 0.011 (~11 pts under the 2022 stack), ours p 0.42.
+state: 05:08 row 3 HARVESTED: r3lib REPRODUCES 5/5 (eval 93.5–95.5), ctrl 0/5 (max −0.3). KNOWN_ANSWERS.md.
+state: row 3b RULE `b09adb6a` before any run: Brain B (SBX+LN) with the Zoo numbers, same bar, SBX ctrl. Found first: sbx ignores log_std_init/use_expln (init std ≈1) and its use_sde holds a noise draw 32 steps, not gSDE. RUNNING jack-cpu-1794805793 → /data/jack-logs/brain_b/row3b.json.
+state: next: harvest 3b; pass → B may use it, then row 2 (PPO) rule; miss → pink-noise-per-life rule (§5), not a re-run.
 
 ### J4 — The harness checks itself before it judges anyone (§8's thirteen)
 part: His brain (the instrument that chooses it) · stage: 1 · step: 3 (reproduce) · prior: §8 "Reproduce first", ruling 19
