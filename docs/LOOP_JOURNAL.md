@@ -1863,3 +1863,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Probe (12k decisions, not a verdict): 30 ms per update on the box → ~3.3 CPU-h for both arms → a Kaggle CPU kernel after f3/e0–e2. Probe Q 50 vs 309: unconverged, as the 40k-update time constant predicts; E[logπ] −5.5 makes the entropy term worth +54% of Q*.
 - Found: `_single_thread` let the learner use ~2.4 cores at nice 19 (INBOX).
 - Philosophy served: 4 (a check that could fail — a wrong done flag or entropy term moves Q off its predicted value — sized honestly before it is paid).
+
+## 2026-11-16 19:45 · JACK · J7 (a): forager step 3 harvested and closed — the learners ate half what random ate
+- J8: k4 f0 f1 f2 all still RUNNING on Kaggle (checked), so there was nothing to launch or harvest. J3/J6/J10 each need a Kaggle session. Took J7 (a), which fits in 20 minutes.
+- All launched step-3 kernels had exited: 7 of 10 cells, 60 lives each. dreamer-xs s154 was never launched, and both wm-latent+ring launches died before the push. Today's tree reads every cell as stale (one stamp, and only J9's w0.py has moved), so I ran the frozen `tally_cells` on the cells under their own stamp.
+- Reading: INCOMPLETE, and the control holds. ppo-needs and ppo-lp are NOT LEARNING (ppo-lp's s154 trend, rho .25 p .025, is one seed of the two the rule needs). Floor meals over 60 lives: learners 13–17, random 22–27. Apples: 0 everywhere. Table in FORAGER_RACE.md §PILOT. `/data/tmp/wt_forager3` removed.
+- Philosophy served: 4 (a pre-registered tally read honestly, incomplete cells named rather than filled in) and 5 (closes a stale in-flight item, so the next slots work on B rather than tending old kernels).
