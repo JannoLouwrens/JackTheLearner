@@ -161,7 +161,8 @@ run, written beside the estimates. (4) A's "ours beside theirs" table (none
 changed yet). Do not wire it to his world.
 serves: M3, M5 · PLAN stage 1 lines 3–4 · objective 3 (the GPU-able order) · philosophy 2, 3.
 **done when:** the pin, the two speed figures and the two cost lines are committed.
-state: open — ordered 11-15 15:55 (was J3), nothing run yet.
+state: 11-16 03:50 (1) DONE: `experiments/brain_a/README.md` — pins checked on GitHub/PyPI: dreamerv3 `e01491fa…` (MIT, 2026-10-04); sheeprl 0.8.5 (PyPI 10-27, tag `22b4f164…`, Apache-2.0), `dreamer_v3_5_1M.yaml` contents quoted; why not v1 actor; planned ours-beside-theirs (size1m has no published score; sheeprl notes official ratio 256 vs paper 512).
+state: owed before any known-answer run: line diff of sheeprl `_1M` vs official `size1m`. next: (2) speed — unmodified `dreamer_v3_5_1M` on DMC cartpole-swingup, one Kaggle CPU kernel now (no Colab path from the box; Kaggle GPU 11-21); log decisions/s, achieved ratio, wall per 100k.
 
 ### J6 — Make the simulator fast, once, and say what it costs to re-certify
 part: His world (the instrument's speed) · stage: 1 · step: 2 (combine) · prior: §4 "Take as-is"; INBOX measurement 11-15 15:55

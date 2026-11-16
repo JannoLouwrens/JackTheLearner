@@ -1650,3 +1650,9 @@ Philosophy served: 1 (he can be known — the owner can watch a life and read wh
 #11 (`b79cca33`): `experiments/harness/prereg.py` — `judge()` refuses with no pre-registration, moved analysis code (sha256), an uncommitted pre-registration, or runs that do not match the launch manifest; mutations turn tests red.
 Its identical-arms test failed: if every run in both arms crosses at the same decision count, SciPy's log-rank is NaN, every permutation counts as a non-hit, p = 1/(n+1), and identical arms read A_DIFFERS. Fixed in `logrank_stat`; the old code fails 2 tests. That moved the pinned file, so #1 is re-running detached on sha a814799b (~1 h).
 Philosophy served: 4 (the instrument that will choose his brain failed a test that could fail; fixed it, and re-ran the check on the fixed code).
+
+## 2026-11-16 03:50 · JACK · J5 step 1 DONE: Brain A's source pinned (J1–J4 all waiting: J2 ×4 and J3 1b kernels RUNNING on Kaggle at 03:38; J4 #1 re-run 299/1000 locally)
+`experiments/brain_a/README.md`: reference dreamerv3 `e01491fad643…` (MIT), runner sheeprl 0.8.5 = tag `22b4f164…` (Apache-2.0), `algo=dreamer_v3_5_1M`; each checked against the GitHub API/PyPI, not copied from §2.
+Found: sheeprl's own DMC example notes the official config uses train ratio 256 where the paper says 512 — logged in ours-beside-theirs. Owed: line diff of sheeprl `_1M` vs official `size1m` before any known-answer run.
+Next: step 2 speed on one Kaggle CPU kernel (no Colab route from this box).
+Philosophy served: 2, 3 (a brain from published code, never weights, pinned before it is raced).
