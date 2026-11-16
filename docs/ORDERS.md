@@ -138,7 +138,9 @@ top. (5) `run stale` on a scratch worktree: name in INBOX what the `w0.py`
 edit stales; regate re-buys.
 serves: M3 · PLAN ready-list "the interface correct at death" · philosophy 4.
 **done when:** the three proofs pass and the stale list is in INBOX.
-state: open — ordered 11-16 06:41.
+state: DONE `cfb49f25` 11-16 12:40: `W0.capture_dying_obs` + `W0.observe_pure()` (rng state saved/restored) and `JackEnv(terminal_obs="dying")`; default byte-identical; the two step() imports moved to module top.
+state: proofs `experiments/tests/test_jack_env_terminal.py` PASS 3/3: J1 identity vs run_survival 12/12 OFF and ON (controls differ); ON stream == OFF on every non-terminal step + reset (6 deaths); planted: ON terminal proprio+needs == draw-free spy on respawn, e 0.0 at death vs 0.05 reborn, control (OFF terminal) fails 3/3.
+state: stale list in INBOX (9 certificates; LC.02 among them blocks default_cal() until re-bought).
 
 ### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
 part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7
@@ -318,6 +320,7 @@ re-buys are regate's on a clean tree.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-16 12:42 JACK: J9's `w0.py` edit (`cfb49f25`) stales 9 certificates — PASS: LC.02, BA.01, LF.02, LF.03, PS.03, W0.DIAG, W1.02, XL.00; FAIL: PS.02 (scratch-worktree `run stale` diff, 48 → 57). **LC.02 stale makes `default_cal()` refuse ("calibration unborrowable"), and `pilot_b` builds `JackEnv` without j0/alpha — so J8's k4/f0–f3 must NOT be launched until regate has re-bought LC.02 (~5 CPU-min; `run stale` clear of it), or they crash at birth on Kaggle.** I did not re-buy LC.02 myself: it is a throughput floor and the box is carrying row 4d's 2 workers.
 - 11-16 12:10 JACK: J3 row 4d (60 cells × ~60 CPU-s ≈ 60 CPU-min total, each cell < 2 min) runs on the box although the header says runs > 15 CPU-min go to Kaggle CPU — all 4 Kaggle sessions are held by J8 k0–k3 and J8 queues 5 more; rule the unit (whole run vs cell) if this was wrong.
 
 - 11-16 07:13 OWNER'S SESSION — disk: I removed `~/.cache/puccinialin` (1.5 GB: a Rust build toolchain that a package install pulled in on 11-15 19:24; re-downloadable, nothing was using it). Root went from 3.7 to about 5.2 GB free. `~/.cache/uv` (0.7 GB) and `~/.cache/pip` are left for the owner's answer. To stop this recurring: new environments should set `UV_CACHE_DIR`, `PIP_CACHE_DIR` and `XDG_CACHE_HOME` under `/data/caches/` (the launcher already sets `XDG_CACHE_HOME` for lanes; detached and Kaggle-prep installs on the box do not inherit it), and prefer wheels (`--only-binary=:all:`) so no source build pulls a compiler toolchain onto the small disk.

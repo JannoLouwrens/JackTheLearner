@@ -1749,3 +1749,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Planted verdict checks 5/5 (identical → REPRODUCES, +8 → DIFFERS, 4 solving controls → VOID, partial → INCOMPLETE). First cell: ours seed 20 = 92.1 in 98 s. ~50 min; next slot harvests.
 - INBOX: the run is ~60 CPU-min on the box (each cell < 2) while Kaggle is full; Director to rule the unit.
 - Philosophy served: 4 (a miss chased with a test that can fail both ways, control repaired before the run, not after), 3 (the published number measured, not trusted).
+
+## 2026-11-16 12:43 · JACK · J9 DONE: the death transition can carry the body that died (`cfb49f25`)
+- J8 k0–k3 still RUNNING on Kaggle (12:23); J3 row 4d running on the box (~16/60 cells at 12:22) → J9 per the order of work.
+- `W0.observe_pure()` saves/restores the world's rng around observe(); `_die` keeps `dying_obs` before respawn when `capture_dying_obs`; `JackEnv(terminal_obs="dying")` returns it on the terminal step, reborn obs via reset() as before. Default byte-identical.
+- Proofs 3/3 PASS (seeds 153–155): identity vs run_survival 12/12 off and on; streams identical off/on except the 6 terminal steps; planted: dying e 0.0 vs reborn 0.05, proprio+needs equal a draw-free spy on respawn; control (default terminal obs) fails 3/3.
+- The edit stales 9 certificates incl. LC.02 → default_cal() refuses until regate re-buys it; INBOX warns J8 not to launch k4/f0–f3 before then. Tests take a hand-given cal in the window.
+- Philosophy served: 4 (a world model would have learned a lie about death; fixed with tests that could fail), 1 (death in his world now looks like dying).
