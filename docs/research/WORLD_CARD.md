@@ -284,7 +284,7 @@ of lives and do-nothing still dies — is ALREADY met at d = 1: d8 eats ≥ 1 in
 world, the one this card shows no non-privileged policy can live in. The
 rule is not changed here (it is the Director's); INBOX carries the question.
 
-## J2 item 5 — the entry rung `d0` (rule `8af5f2e1`, registered 2026-11-16 00:2x; RUNNING)
+## J2 item 5 — the entry rung `d0` (rule `8af5f2e1`, registered 2026-11-16 00:2x; d0 and d_sus named 04:40, 3 rows owed)
 
 Rule in `experiments/world_card.py` docstring ("THE ENTRY-RUNG RULE"), committed
 before any run. Dial only (`JackEnv(difficulty=d)`, fixed layout, needs
@@ -299,4 +299,24 @@ d with ≥ 1 capped d8 life) with the capped share per d.
 Kaggle CPU, one kernel per d: d=0.75 `jack-cpu-1794788783`, d=0.5
 `jack-cpu-1794788798`, d=0.25 and d=0 launched 00:28 (logs
 `/data/jack-logs/world_card/entry_dXX.log`, lives → `entry_dXX.jsonl`).
-Table owed at harvest.
+
+**Harvest 1 of 4 (2026-11-16 04:33, d = 0.75).** Table so far (200 lives per cell):
+
+| d | a: lives capped | a: mean life s | d8: lives ≥ 1 bout | d8: capped | d8: bouts/life | d8: eats(all)/life | d8: mean life s |
+|---|---|---|---|---|---|---|---|
+| 1 (J1) | 0/200 | 600 | 110/200 (55%) | 0/200 | 1.16 (meals) | 1.16 | 539 |
+| 0.75 | 0/200 | 600 | 138/200 (69%) | 2/200 (seeds 204, 218: 17 and 11 bouts) | 2.40 | 2.40 | 694 |
+| 0.5 | owed (`jack-cpu-1794788798`, RUNNING 04:40) | | | | | | |
+| 0.25 | owed (`…920`, RUNNING) | | | | | | |
+| 0 | owed (`…935`, RUNNING) | | | | | | |
+
+**`d0` = 1 (today's world), as the rule is written.** The rule takes the
+LARGEST grid d where both clauses hold; d = 1 holds (55% ≥ 50%, a 0/200), so
+no harvest still out can move it. The rung it names is the world in which no
+non-privileged policy lives (J1) — the INBOX flag stands: the rule's
+lower clause (random eats once) is too weak to name a teachable entry.
+**`d_sus` = 0.75**, also fixed now: d = 1 has 0/200 capped d8 lives, d = 0.75
+has 2/200, and 0.75 is the next grid point down. Two capped lives in 200 is a
+first sign, not a sustaining world: d8 at 0.75 still dies of hunger 198/200,
+mean life 694 s (+29% on d = 1), bouts/life 2.1× d = 1; every seed (20/20) has
+≥ 5 of 10 lives that eat. The three outstanding rows fill the shares only.

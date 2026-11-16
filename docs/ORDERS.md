@@ -89,11 +89,11 @@ succeeds). The gate that moves d on success is a later order; judging stays
 on fixed layouts at d = 1. Learner-side settings belong to J3/J5.
 serves: M2 · PLAN stage 1 lines 2, 5 · philosophy 5 (his world matters as much as he does).
 **done when:** options and tests are committed and `WORLD_CARD.md` names `d0` with its table.
-state: items 1, 3, 4 DONE 11-15: reward options dr100-eat/-pos + truncation (`14e637c4`); dial meal/regrowth (`9c4341db`), spawn distance (`de2a4efc`); proofs test_jack_env_options/_dial/_spawn PASS, J1 identity PASS.
-state: 22:45 item 1 DONE — food count (`c73a8fdb`): obj2..4 become floor food at low d (up to 5 at d=0; 4-object seed worlds max 4). `test_jack_env_foodcount` PASS; spawn proof re-pointed at all foods, PASS; dial + J1 identity PASS. Caveat for 5: at d=0 a body resting on food eats every decision (seed 153: 84 eats/400) — world_card's floor_meals counts obj0+obj1 only; count all `floor_foods` and read contact-eats.
-state: 23:05 item 2 needs (`b800a247`): `random_needs=s` (trp_env s=1/6), proof PASS.
-state: 11-16 item 2 DONE — `random_layout=True` (`55cc10f0`): foods re-placed at random legal grid cells every life, body by today's rule or the dial's; proof `test_jack_env_layout` PASS 3 seeds (off byte-identical, control FAILS on today's world). Caveat: at d=0 the body lands exactly 0.44 m (one cell) from a food. next: item 5 (d0) — but its rule is met at d=1 already (J1 flag, INBOX); measure with the rule as written AND report the d at which random also sustains ≥1 life, counting all floor foods and contact-eats.
-state: 11-16 00:29 item 5 RULE committed before any run (`8af5f2e1`, world_card docstring "ENTRY-RUNG RULE"): d0 = largest d in {1 (J1 rows), .75, .5, .25, 0} where d8 eats ≥1 floor bout in ≥50% of lives and a caps ≤1/200; d_sus (≥1 capped d8 life) beside it; new per-life floor_eats_all + floor_bouts. RUNNING on Kaggle CPU, one kernel per d: jack-cpu-1794788783 (.75), …798 (.5), …920 (.25), …935 (0); watchers detached, lives → /data/jack-logs/world_card/entry_dXX.jsonl. next: harvest the four, table + d0 + d_sus into WORLD_CARD.md's J2 item 5 section; then J2 DONE.
+state: items 1–4 DONE 11-15/16: reward dr100-eat/-pos + truncation (`14e637c4`); dial meal/regrowth/spawn/food count (`9c4341db`, `de2a4efc`, `c73a8fdb`); `random_needs` (`b800a247`), `random_layout` (`55cc10f0`); all proofs PASS, J1 identity PASS.
+state: item 5 RULE `8af5f2e1` (world_card docstring ENTRY-RUNG RULE), Kaggle CPU one kernel per d.
+state: 04:40 d=0.75 HARVESTED: d8 eats ≥1 bout in 138/200 (69%), 2/200 capped, 2.40 bouts/life, life 694 s; a 0/200 capped. ⇒ **d0 = 1 as written** (d=1 already holds, 55%) and **d_sus = 0.75** — both fixed whatever the rest show. Table in WORLD_CARD.md J2 item 5.
+state: owed: rows d=0.5 (`jack-cpu-1794788798`), 0.25 (…920), 0 (…935), all RUNNING 04:40 on Kaggle (4 h+), watchers alive (pids 465880/466790/466895) → entry_dXX.jsonl.
+state: next: harvest the three into the table (shares only; same script as 04:40 slot), then J2 DONE. The d0=1 finding re-raises the INBOX flag: the rule's lower clause cannot name a teachable rung — Director's call.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5

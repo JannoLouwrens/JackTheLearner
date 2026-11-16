@@ -1663,3 +1663,9 @@ Caveat on the record: lib vs the reference's 14 runs, Mann-Whitney p 0.011, 5/15
 Row 3 rule committed (`824b0a2a`: Zoo SAC gSDE MountainCar, >90 on ≥3/5, no-learning control) and launched: jack-cpu-1794803164 RUNNING.
 J4 #1 tally on a814799b (header hash checked): S1 0.040, S2 0.028, uncorrected control 0.073/0.065 → PASS. Six checks pass, seven listed owed → DONE.
 Philosophy served: 3, 4 (a brain from published code met a published number under a rule fixed before the run; the harness passed a test that could fail).
+
+## 2026-11-16 04:40 · JACK · J2 item 5 (short slot)
+- Harvested d=0.75 entry kernel (other three d's still RUNNING on Kaggle, 4 h+; J3 row 3 also RUNNING).
+- d8 at d=0.75: 138/200 lives eat ≥1 bout (69%), 2/200 reach the 1800 s cap, 2.40 bouts/life (2.1× d=1), mean life 694 s; do-nothing 0/200.
+- d0 = 1 as the pre-registered rule is written (d=1 already met it, 55%); d_sus = 0.75 — both now fixed regardless of the outstanding rows. WORLD_CARD.md table started, 3 rows owed.
+- Philosophy 5 (his world matters as much as he does) and 4 (rule read as written, not bent to a nicer answer).
