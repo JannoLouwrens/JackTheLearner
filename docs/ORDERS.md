@@ -292,7 +292,7 @@ him / bench / parent rig). (2) `gpu.py` reattach does its own pin-swap
 proof; watcher timeout from RUNNING. (3) `BD.01`, `LC.08` budget re-class
 (ruling 14). (4) **S4** — six PASSes gated on a seed average that admits a
 failing seed. (5) `T0.13`'s dead clauses. (6) `LC.02`'s salt replay excludes
-wall-clock metrics. (7) D52 scout retry. `T0.33`→`T0.34`, `T0.12`→`T0.24`
+wall-clock metrics. (7) D52 scout retry. (8) `XL.00` re-buy adds a planted positive its negative claim must catch (queue row, 11-16). `T0.33`→`T0.34`, `T0.12`→`T0.24`
 re-buys are regate's on a clean tree.
 
 ---
