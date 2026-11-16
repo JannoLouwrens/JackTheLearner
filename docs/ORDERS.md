@@ -117,7 +117,7 @@ serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosop
 **done when:** `KNOWN_ANSWERS.md` has rows 1–4 inside their ranges and the in-house arm's rows, pass or fail.
 state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/brain_b.py` = SBX SAC + layer_norm (`1d12bb9a`).
 state: row 1 (5 seeds) lib MISSED −319.5 (recorded, `c7ba411f`); row 1b re-registered before running, 15 fresh seeds 5–19, band unchanged.
-state: 04:35 row 1b HARVESTED: lib −309.3 ± 13.7 REPRODUCES, ours −302.0 ± 22.2 REPRODUCES, ctrl −1227.7 (valid) → row 1 PASSED. Secondary: lib vs reference Mann-Whitney p 0.011 (5/15 below ref worst; ~11 pts under the 2022 stack), ours p 0.42. KNOWN_ANSWERS.md.
+state: 04:24 row 1b HARVESTED: lib −309.3 ± 13.7 REPRODUCES, ours −302.0 ± 22.2 REPRODUCES, ctrl −1227.7 (valid) → row 1 PASSED. Secondary: lib vs reference Mann-Whitney p 0.011 (5/15 below ref worst; ~11 pts under the 2022 stack), ours p 0.42. KNOWN_ANSWERS.md.
 state: next: row 3 — commit its RULE in brain_b.py first (sparse MountainCarContinuous-v0, SB3 SAC gSDE Zoo entry 50k steps, >90 on ≥3 of 5 seeds, control that must fail), then one Kaggle CPU kernel like row1b_kernel; SBX/pink variant only after lib passes. Row 2 (PPO) beside it.
 
 ### J4 — The harness checks itself before it judges anyone (§8's thirteen)
@@ -139,7 +139,7 @@ that will pay it (they need B, from J3). Result table →
 `docs/research/HARNESS_CHECKS.md`. No ledger spec; this is the instrument.
 serves: M3 · PLAN stage 1 "the test harness passes its own thirteen checks" · philosophy 4.
 **done when:** the six checks pass as tests and the seven owed are listed.
-state: DONE 11-16 04:35. #1 PASS on a814799b (S1 0.040, S2 0.028; uncorrected control 0.073/0.065 → valid); #3, #10, #11, #12, #13 PASS (`42495306`, `b79cca33`); #2, #4–#9 listed owed in the module and HARNESS_CHECKS.md, paid with B (Next up 3).
+state: DONE 11-16 04:24. #1 PASS on a814799b (S1 0.040, S2 0.028; uncorrected control 0.073/0.065 → valid); #3, #10, #11, #12, #13 PASS (`42495306`, `b79cca33`); #2, #4–#9 listed owed in the module and HARNESS_CHECKS.md, paid with B (Next up 3).
 
 ### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
 part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7
