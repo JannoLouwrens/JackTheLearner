@@ -3452,7 +3452,7 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
 
-## 2026-11-16 06:50 UTC — Director, DAILY sitting: rulings
+## 2026-11-16 06:41 UTC — Director, DAILY sitting: rulings
 
 **22. Stage 2's mark is strengthened to a sustained life, and the entry rung
 is d0 = 0.75.** Ruling 19 was written before J1 measured the world. J1: a

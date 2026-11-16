@@ -1,10 +1,10 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-16 06:50 UTC
+Director sitting: 2026-11-16 06:41 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5). **One state+journal commit per slot,
 not one per step.** Machine problems go under INBOX, one line each. Rulings
-22–27 cited here are in `docs/DECISIONS_RESOLVED.md` under 2026-11-16 06:50.
+22–27 cited here are in `docs/DECISIONS_RESOLVED.md` under 2026-11-16 06:41.
 
 **`docs/PLAN.md` binds every order (owner, 11-15).** Research → combine →
 reproduce → test the last 10% → put it in him. We are in **stage 1: the
@@ -66,14 +66,15 @@ says 4 runs do not fit one 9-hour kernel, the rule says the T that does and
 why — for every arm); 20 seeds of B; floor arms 5 seeds each — held-8
 random, do-nothing, B with learning rate 0; ceiling = J1's row e. Per life
 log (decisions, floor meals, seconds lived, capped or cause of death). Read
-through `experiments/harness` (`prereg.freeze` first): primary = ruling
-22's sustained mark; the old 5-meal mark reported beside it; floor arms
+through `experiments/harness` (`prereg.freeze` first). FIRST add ruling
+22's sustained mark to the harness as a second outcome (life capped AND
+intake ≥ basal drain; edge-case tests like #10's) — primary = that mark; the old 5-meal mark reported beside it; floor arms
 ≤ 1 success in total or VOID. (4) Kaggle CPU, 4 runs per kernel. (5) Pay
 harness checks #2 and #4–#9 where B's logs allow, rows in `HARNESS_CHECKS.md`.
 No seat moves on a pilot; it fixes W and T for the decisive test.
 serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · philosophy 1, 4.
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
-state: open — ordered 11-16 06:50.
+state: open — ordered 11-16 06:41.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
@@ -126,7 +127,7 @@ top. (5) `run stale` on a scratch worktree: name in INBOX what the `w0.py`
 edit stales; regate re-buys.
 serves: M3 · PLAN ready-list "the interface correct at death" · philosophy 4.
 **done when:** the three proofs pass and the stale list is in INBOX.
-state: open — ordered 11-16 06:50.
+state: open — ordered 11-16 06:41.
 
 ### J5 — Brain A (Dreamer): source pinned, speed measured on a T4 (the plan's pacing item)
 part: His brain · stage: 1 · step: 2 (combine) · prior: §2, §9 row 7
@@ -184,7 +185,7 @@ Design note for stage 3 (owner's correction 19:21): inside him the layer
 KEEPS LEARNING (§4 arm c); the frozen layer (arm b) is a scored reference only.
 serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked in parallel from now" · philosophy 1, 2.
 **done when:** rows (1) and (2) are in `KNOWN_ANSWERS.md`, pass or fail.
-state: open — ordered 11-16 06:50.
+state: open — ordered 11-16 06:41.
 
 ### J7 — Close what is in flight (cut down 11-16: two days of state lines bought one harvest)
 part: His world, needs and lessons · stage: 1 · step: repairs (PLAN "continues")
