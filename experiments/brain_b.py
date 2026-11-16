@@ -157,6 +157,31 @@ A miss  B's exploration is not the published one and is not trusted on
        sparse reward. Next is then a later rule (pink noise per life,
        sequence as long as a life, §5 line "never both"), not a re-run.
 
+THE RULE — row 2, the PPO reference on Pendulum, committed before any run (11-16).
+Source  rl-zoo3 2.9.2 `hyperparams/ppo.yml`, entry `Pendulum-v1`, read verbatim
+        from the pinned package in /data/venvs/jack-std (11-16 05:45):
+          n_envs: 4 / n_timesteps: 1e5 / policy: MlpPolicy / n_steps: 1024 /
+          gae_lambda: 0.95 / gamma: 0.9 / n_epochs: 10 / ent_coef: 0.0 /
+          learning_rate: 1e-3 / clip_range: 0.2 / use_sde: True / sde_sample_freq: 4
+        No `normalize` key. 1e5 with 4 envs x 1024 = 102,400 steps (25 rollouts),
+        matching §5's 102,400. Everything not listed: SB3 2.9.2 PPO defaults.
+Arms    r2lib   SB3 PPO (PyTorch) with exactly that entry, make_vec_env(4 envs,
+                DummyVecEnv, Monitor per env), device cpu, one torch thread.
+        r2ctrl  CONTROL THAT MUST FAIL: r2lib with learning_rate = 0.0 (rollouts
+                and the update loop run, the weights never move).
+Seeds   0..4 (5 seeds per arm, §5 table).
+Metric  §5 row 2 "last-100-episode training return": the mean of the model's
+        ep_info_buffer at the end of learn() (SB3 keeps the last 100 finished
+        episodes across the 4 envs; = the logged rollout/ep_rew_mean).
+Accept  r2lib REPRODUCES iff the 5-seed mean of the metric lies in
+        [-213.2, -162.0] (§5: -187.6 +- 17.0). VOID unless r2ctrl completes all
+        5 seeds and every r2ctrl seed is BELOW -213.2. Known before running: §5
+        also quotes -184.5 +- 80.7 for the same config from another seed set; if
+        the seed sd is near 80, a 5-seed mean misses the band by chance often. A
+        miss is recorded as a miss; any re-registration (more seeds) is a new
+        rule with the reason, as rows 1 -> 1b. Row 4 (MountainCar PPO) is not in
+        this rule: §5 gives 87.5 +- 4.2 but no accept band.
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |
@@ -190,6 +215,10 @@ ROW3_SEEDS = (0, 1, 2, 3, 4)
 ROW3_STEPS = 50_000
 ROW3_ARMS = ("r3lib", "r3ctrl")
 ROW3B_ARMS = ("r3ours", "r3octrl")
+ROW2_ARMS = ("r2lib", "r2ctrl")
+ROW2_SEEDS = (0, 1, 2, 3, 4)
+ROW2_STEPS = 102_400
+ROW2_BAND = (-213.2, -162.0)
 ROW3_EVAL_EPISODES = 10
 ROW3_SOLVED = 90.0
 ROW1B_SEEDS = tuple(range(5, 20))
@@ -483,15 +512,91 @@ def row3_kernel(cells=None, name: str = "row3") -> dict:
     return r
 
 
+def make_row2(arm: str, seed: int, steps: int = ROW2_STEPS):
+    """Row 2: the Zoo's Pendulum-v1 PPO entry, unmodified (rule above)."""
+    _single_thread()
+    import torch
+    torch.set_num_threads(1)
+    from stable_baselines3 import PPO
+    from stable_baselines3.common.env_util import make_vec_env
+    if arm not in ROW2_ARMS:
+        raise ValueError(f"arm {arm!r} not in {ROW2_ARMS}")
+    env = make_vec_env("Pendulum-v1", n_envs=4, seed=seed)
+    return PPO("MlpPolicy", env, n_steps=1024, gae_lambda=0.95, gamma=0.9,
+               n_epochs=10, ent_coef=0.0,
+               learning_rate=(0.0 if arm == "r2ctrl" else 1e-3),
+               clip_range=0.2, use_sde=True, sde_sample_freq=4,
+               seed=seed, device="cpu")
+
+
+def run_row2_cell(arm: str, seed: int, steps: int = ROW2_STEPS) -> dict:
+    t0 = time.time()
+    model = make_row2(arm, seed, steps)
+    model.learn(total_timesteps=steps)
+    last = [float(e["r"]) for e in model.ep_info_buffer]
+    return {"row": 2, "arm": arm, "seed": seed, "steps": steps,
+            "timesteps": int(model.num_timesteps), "last_n": len(last),
+            "mean_return": sum(last) / max(1, len(last)), "last_returns": last,
+            "wall_s": round(time.time() - t0, 1), "versions": versions()}
+
+
+def verdict_row2(cells: list) -> dict:
+    by = {}
+    for c in cells:
+        by.setdefault(c["arm"], []).append(c)
+    out = {}
+    for arm, cs in by.items():
+        cs = sorted(cs, key=lambda c: c["seed"])
+        vals = [c["mean_return"] for c in cs]
+        out[arm] = {"seeds": [c["seed"] for c in cs],
+                    "per_seed": [round(v, 1) for v in vals],
+                    "mean": round(sum(vals) / len(vals), 1),
+                    "complete": [c["seed"] for c in cs] == list(ROW2_SEEDS)}
+    ctrl, lib = out.get("r2ctrl"), out.get("r2lib")
+    void = ctrl is None or not ctrl["complete"] or max(ctrl["per_seed"]) >= ROW2_BAND[0]
+    ok = (lib is not None and lib["complete"]
+          and ROW2_BAND[0] <= lib["mean"] <= ROW2_BAND[1])
+    out["verdict"] = "VOID" if void else ("r2lib REPRODUCES" if ok else "r2lib MISSES")
+    return out
+
+
+def row2_cells() -> list:
+    return [(a, s) for a in ROW2_ARMS for s in ROW2_SEEDS]   # r2lib first
+
+
+def row2_kernel() -> dict:
+    """Submit row 2 (r2lib, r2ctrl x 5 seeds) as one Kaggle CPU kernel."""
+    from experiments.gpu import build_job, result_json, submit
+    body = (_JOB.replace("__CELLS__", repr(row2_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
+            .replace("from experiments.brain_b import run_parallel, verdict_row1",
+                     "from experiments.brain_b import run_parallel, verdict_row2")
+            .replace("__VERDICT__", "verdict_row2(ok)"))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=3.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_row1.json"])
+    if not sub.ok:
+        raise RuntimeError(f"brain_b row2 kernel: {sub.message}")
+    r = result_json(sub, "brain_b_row1.json")
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / "row2.json").write_text(json.dumps(r, indent=1))
+    print(json.dumps(r.get("verdict"), indent=1), flush=True)
+    return r
+
+
 def main(argv):
     if len(argv) >= 5 and argv[1] == "cell":      # cell <arm> <seed> <out.json> [steps]
-        if argv[2] in ROW3_ARMS + ROW3B_ARMS:
+        if argv[2] in ROW2_ARMS:
+            steps = int(argv[5]) if len(argv) > 5 else ROW2_STEPS
+            rec = run_row2_cell(argv[2], int(argv[3]), steps)
+        elif argv[2] in ROW3_ARMS + ROW3B_ARMS:
             steps = int(argv[5]) if len(argv) > 5 else ROW3_STEPS
             rec = run_row3_cell(argv[2], int(argv[3]), steps)
         else:
             steps = int(argv[5]) if len(argv) > 5 else ROW1_STEPS
             rec = run_row1_cell(argv[2], int(argv[3]), steps)
         Path(argv[4]).write_text(json.dumps(rec))
+        return 0
+    if len(argv) >= 2 and argv[1] == "row2-kernel":
+        row2_kernel()
         return 0
     if len(argv) >= 2 and argv[1] == "row3b-kernel":
         row3_kernel(row3b_cells(), "row3b")
