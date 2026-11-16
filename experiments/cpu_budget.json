@@ -1196,6 +1196,11 @@
         "detached:entry_d25.log": 394.31,
         "detached:entry_d50.log": 589.54,
         "detached:entry_d75.log": 692.02,
+        "detached:h4.log": 1065.43,
+        "detached:launch_k0.log": 22.06,
+        "detached:launch_k1.log": 22.0,
+        "detached:launch_k2.log": 11.5,
+        "detached:launch_k3.log": 11.38,
         "detached:row1.log": 344.2,
         "detached:row1b.log": 246.83,
         "detached:row2.log": 9.67,
@@ -1217,7 +1222,7 @@
         "detached:svs_S1.log": 2461.57,
         "detached:svs_S2.log": 2385.86
       },
-      "used_s": 18425.27
+      "used_s": 19557.64
     }
   },
   "last_child_s": {

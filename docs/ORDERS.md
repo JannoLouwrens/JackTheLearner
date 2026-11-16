@@ -80,11 +80,11 @@ exploration is the right default for the decisive test.
 No seat moves on a pilot; it fixes W and T for the decisive test.
 serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · philosophy 1, 4.
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
-state: 11-16 08:30 (1)(2)(3) DONE `6f197f94`: `experiments/pilot_b.py` (B = SBX SAC+LN in `JackEnv(d 0.75, dr100-eat, random_needs 1/6, random_layout)`, life = episode, cap 9,000 truncated + new body); harness `outcome_sustained` + prereg `mark="sustained"`, 8 tests, 34/34 pass.
-state: box smoke seed 0, 20k WITH learning: 40.2 decisions/s wall, 25.9 per CPU-s (JAX ~1.55 cores) → 300k = 3.2 CPU-h/run, T = 300,000 stands. 1 of 8 lives capped+sustained (23 meals) — one seed, anecdote.
-state: RULE committed in pilot_b.py docstring + `docs/research/PILOT_B.md`: B ×20 (seeds 301–320), noop/held8/blr0 ×5 (301–305), floor gate ≤ 1/15 at W=1, readings SUSTAINED (≥5/20 at W=1) / EATS BUT STARVES / DOES NOT LEARN; W,T fix stated.
-state: 11-16 08:55 (4) builder DONE `5d66b69b`: `pilot_b.kernel(name)` / `python -m experiments.pilot_b kernel --name k0..k4|f0..f3` (B 4/kernel; floor interleaved, ≤2 blr0 each), pins sbx 0.28.0/sb3 2.9.2/gym 1.4.0/mujoco 3.17.0, child 8.5 h; test: split = the rule's 35 runs once (35/35 pass). Box plumbing (b/blr0/noop s301, 5,200 decisions, past warm-up): all rc 0, 4/4/2 lives logged.
-state: next: (a) `prereg.freeze` B (k0-k4 run ids) vs blr0, commit the JSON; (b) launch each kernel with `scripts/launch_detached.sh LOG $PY-std -m experiments.pilot_b kernel --name kN` (jack-std venv), ≤ 4 Kaggle sessions at once — k0-k3 first; (c) harness #4 (seed 301 twice, 20k, box) beside it.
+state: (1)-(3) DONE `6f197f94` (pilot_b.py, harness sustained mark, rule); (4) builder `5d66b69b`; smoke 40.2 decisions/s wall, 25.9/CPU-s → T 300,000 stands.
+state: 11-16 09:24 prereg FROZEN `f0dc9fd7`: `docs/research/prereg/pilot_b_vs_{blr0,floor}.json` (mark sustained, W 1, T 300k; manifest asserted = kernel_groups' 35 runs).
+state: LAUNCHED k0-k3 (B seeds 301-316) as Kaggle CPU kernels jack-cpu-1794821007 / -034 / -068 / -097, all RUNNING 09:30; local pollers write /data/jack-logs/pilot_b/kN.json (est ~4-7 h).
+state: harness #4 PASS on the box: seed 301 ×2, 20k decisions → 8/8 lives identical field for field (row in HARNESS_CHECKS.md); 38.05 decisions/s.
+state: next: as kernels free (≤4 sessions), launch k4 then f0-f3 (`launch_detached.sh` waits out the 60 s young-poller busy count — launch one per minute); harvest kN.json; then (6) register the two exploration arms.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5

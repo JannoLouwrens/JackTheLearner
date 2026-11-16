@@ -1726,3 +1726,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `gpu.assert_ref_is_current` now refuses only code dirt the VM could load: anything under `experiments/`, or a file experiment code names. Dashboard files and `scripts/dashboard_status.py` are recorded as `foreign_dirt` in the attempt row instead — the exact dirt that ended D1.0's slice after 5.9 GPU-h on 11-15.
 - The `+dirty` stamp predicate (`offending_dirt`, pinned by T0.22 P15) is unchanged. Planted test 4/4, including the old predicate as the must-fail control.
 - Philosophy served: 5, 6 (free GPU hours no longer lost to a neighbour's uncommitted files).
+
+## 2026-11-16 09:45 · JACK · J8 (3a)(4)(5): pilot frozen, 16 of B's 20 runs launched, harness #4 paid (`f0dc9fd7`)
+- `prereg.freeze` ×2 committed before any kernel: B vs blr0 (check #2) and B vs the pooled floor (gate), mark sustained, W 1, T 300,000; the manifest is asserted equal to `kernel_groups`' 35 runs.
+- Kaggle CPU k0–k3 (B seeds 301–316) RUNNING: jack-cpu-1794821007/-034/-068/-097. k4 + f0–f3 wait for free sessions (cap 4).
+- Harness #4 PASS on the box: seed 301 run twice, 20,000 decisions (≈15k SAC updates) → 8 lives each, identical field for field. 38.05 decisions/s, 25.06/CPU-s. Box-only scope stated.
+- Machine note: `launch_detached` counts a poller younger than 60 s as busy, so the 2-busy cap refuses back-to-back kernel launches — wait a minute between them. Not a bug, a cadence.
+- Philosophy served: 4 (the analysis frozen before the runs exist; a seed reproduces its run), 1 (the first plain published learner living hundreds of lives in his world).
