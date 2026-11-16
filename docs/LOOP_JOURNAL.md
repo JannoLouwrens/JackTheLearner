@@ -1893,7 +1893,7 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Next: e1, e2 as sessions free; f2/f3 harvest; then the reading. The record's predicted fix is the cost curriculum (KAPPA ramped with d).
 - Philosophy served: 4 (a failure measured against its own untrained control, not filed) and 3 (points the decisive test at the change the record predicts).
 
-## 2026-11-16 22:30 · JACK · Next up 1 (MLX port step 0.1): MLX runs on the box, with two precision traps found
+## 2026-11-16 22:13 · JACK · Next up 1 (MLX port step 0.1): MLX runs on the box, with two precision traps found
 - J8: f2 f3 e0 RUNNING on Kaggle (checked), W1.04 holds the 4th session → nothing to launch/harvest; J3 J6 J10 each wait on a Kaggle CPU session; J9 J5 done, J7 waits on W1.04 → "Next up" 1.
 - 0.1 DONE: `experiments/brain_a/mlx_smoke.py` 9/9 PASS on 1 core, controls all fail. PyPI wheel cannot load (needs `hypotf@GLIBC_2.35`, GLIBCXX_3.4.30; box 2.34), Docker refused → conda-forge mlx 0.32.4 at `/data/venvs/jack-mlx` (micromamba in `/data/tools`). CPU `mx.compile` builds C++ with g++ from PATH: g++ 11 and toolset-14 fail on `bf16`, toolset-15 works.
 - Traps measured (and corrected my own first read: the 0.25 "layer-norm gradient error" was finite differences over a float32-precision forward, not a wrong gradient): float64 `exp`/sigmoid/softmax/logsumexp at rel 3e-7–2e-6, `mx.fast.layer_norm` f64 at 4e-7 → rung-1 64-bit references must be NumPy.

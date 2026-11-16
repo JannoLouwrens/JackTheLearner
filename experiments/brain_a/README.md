@@ -143,7 +143,7 @@ Do not wire A to his world before those rows reproduce.
 
 ## MLX port, stage 0 (ORDERS "Next up" 1; PORT report step table)
 
-**0.1 DONE 11-16 22:30** — `mlx_smoke.py`, env `/data/venvs/jack-mlx` (conda-forge `mlx 0.32.4`,
+**0.1 DONE 11-16 22:13** — `mlx_smoke.py`, env `/data/venvs/jack-mlx` (conda-forge `mlx 0.32.4`,
 Python 3.12.16, NumPy 2.5.5), run on 1 core (`taskset -c 0`): 9/9 PASS, every control fails.
 Differs from the report's recipe (it said Debian 12 container + PyPI wheel):
 - the PyPI 0.32.4 aarch64 wheel needs `hypotf@GLIBC_2.35` and `GLIBCXX_3.4.30`; the box has 2.34 /
