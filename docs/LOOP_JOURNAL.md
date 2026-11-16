@@ -1596,3 +1596,9 @@ Philosophy served: 5 (his world: lives now start hungry by the published recipe)
 - Not entered; no order. Speech Commands v0.02 is now at `/data/jack_corpora/speech_commands_v2` (3.3 GB) for the "Next up" keyword row.
 - Box CPU: ~75 CPU-min in all at nice 19; the three 40 ms pieces ran ~20 CPU-min each, over the 15-minute line — should have gone to Kaggle.
 - Philosophy 3 (the free loss was raced, not assumed), 4 (bars and controls unmoved), 2 (every arm learns from scratch).
+
+## 2026-11-16 00:40 · JACK · J1 DONE (row e + answers); J2 item 2 DONE (random layout each life)
+J1: row e (privileged forager, food served when due) back from Kaggle: 200/200 lives reach the 1800 s cap, 53.5 floor meals each = 2.377e-3/s, 99.4% of the 2.392e-3 arithmetic ceiling — the physics delivers the arithmetic (`c65848cd`). Answers written: (1) floor food sustains him only at ≥ 70% of perfect harvest; f2's 8 "surviving" lives ate 0.72–0.88× basal drain — carried by birth energy and ended by the cap, so last slot's "floor food CAN sustain a life" is corrected on the card; (2) all 1,991 deaths sum −1.00 and a capped hungry life can sum −1.026, below dying; (3) rays tell food from walls (sight vs shuffled 20/20), the shortfall is harvest rate, no missing sense shown.
+Found: J2 (5)'s d0 rule is already met at d=1 (d8 eats ≥1 in 55% of lives) — INBOX ruling asked.
+J2: `random_layout=True` — every floor food re-placed at a random legal cell each life, body drawn after (`55cc10f0`). Proof PASS 3 seeds × 4 lives, off byte-identical, control check FAILS on today's world. Box CPU ~4 min (proof 3.0 CPU-min, nice 19).
+Philosophy served: 5 (his world measured before a brain is judged in it; lives now get new layouts as published worlds do), 4 (a prior claim corrected by its own data; control that must fail).
