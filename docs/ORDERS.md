@@ -86,6 +86,7 @@ serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · 
 state: (1)-(3) DONE `6f197f94`; prereg FROZEN `f0dc9fd7` (mark sustained, W 1, T 300k, 35 runs); harness #4 PASS (8/8 lives identical). Smoke 25.9 dec/CPU-s.
 state: B harvested k0-k3 (16 of 20 seeds, 300k each, 1,894 lives): **0 sustained**; meals/life first 20 → last 20 fell in 15 of 16 seeds (e.g. 0.90 → 0.10); every death energy. Exception s315: near zero over lives 30-109, then 4.3 meals/life and intake 0.65 of drain over its last 6 lives (descriptive; it hints that T matters).
 state: 11-16 17:07 f2 LAUNCHED (jack-cpu-1794848872) when k3 freed a session → 4 busy (k4 f0 f1 f2). (6) REGISTERED `da8bc163` (bwhite / bpink, seeds 301-305, kernels e0-e2; smoke: pink fired 1,016 = post-warm-up decisions, white 0).
+state: (5) 11-16 18:45: harness #7 PASS (k0–k3: num_timesteps = Σ life decisions = 300,000 in 16/16; known-positive: drop unfinished life → 16/16 miss); #8 death/cap half PASS (`5382c940` rule; deaths done 1, caps done 0, control caps-as-terminated fails). Rows in HARNESS_CHECKS. 18:22 Kaggle: k4, f0 RUNNING; f1 f2 alive.
 state: next: as sessions free, launch f3, then e0, e1, e2 (`pilot_b kernel --name X` via launch_detached, one per minute); harvest k4/fN.json; when 20+15 are in, write `docs/research/PILOT_B.md` reading by the rule.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)

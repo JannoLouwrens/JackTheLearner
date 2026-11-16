@@ -1835,3 +1835,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `-np 4` dropped from the draft (it halves the 20k batch); 8 ranks oversubscribed instead. Pins: DART v6.3.0 `8090aaec`, pydart2 `113132ac`, TF 1.15.5/py3.7 via uv; FCL 0.5.0 the one automatic fallback. Smoke kernel = staged build log + a 20-min slice measuring s/iteration (parser reads progress.json — the authors' logger writes no CSV, caught before launch).
 - Smoke not launched: the 5th Kaggle session stays unused per "use 4".
 - Philosophy served: 3 (the walking layer copies a published recipe with every difference listed), 4 (a wrong budget figure caught by reading the code, not by a failed 12-hour kernel), 6 (sized to free compute).
+
+## 2026-11-16 18:45 · JACK · J8 (5): two harness self-checks paid on Brain B's real logs and plumbing
+- J8: k4 and f0 RUNNING on Kaggle, f1 f2 watchers alive → all 4 sessions held, nothing to launch or harvest; J3/J6/J10 wait on a session too. Took J8 item (5), which needs no session.
+- #7 PASS: on the 16 harvested runs, SB3's num_timesteps and the wrapper's summed life decisions both equal 300,000 in 16/16 (1,894 lives; warm-up inside both). Known-positive: dropping the unfinished life misses T in 16/16.
+- #8 PASS (death/cap half), rule `5382c940` first: real pilot plumbing, buffer `dones` at every life end — 2 deaths done 1, 3 caps done 0, 0/4,480 inner nonzero; control (cap reported as terminated) fails as it must. The trained-critic 1/(1−γ) half stays owed.
+- Scar: `pgrep -f <module>` inside a wait loop matches the loop's own command line — two waiters spun on themselves; read the process by its interpreter path instead.
+- Philosophy served: 4 (the pilot's verdict will rest on a harness proven to count every decision and not to bootstrap through death).
