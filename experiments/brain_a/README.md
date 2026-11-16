@@ -140,3 +140,27 @@ Install note: on Python 3.13 (Colab and Kaggle) `pip install dm_control` fails b
 J5 is DONE (pin, two speed figures, two cost lines). Next for A, not in J5: the §2 known-answer
 rows with `algo.compile.enabled=True` (≈ 7 T4-h at 3 seeds) when Kaggle GPU opens 11-21.
 Do not wire A to his world before those rows reproduce.
+
+## MLX port, stage 0 (ORDERS "Next up" 1; PORT report step table)
+
+**0.1 DONE 11-16 22:30** — `mlx_smoke.py`, env `/data/venvs/jack-mlx` (conda-forge `mlx 0.32.4`,
+Python 3.12.16, NumPy 2.5.5), run on 1 core (`taskset -c 0`): 9/9 PASS, every control fails.
+Differs from the report's recipe (it said Debian 12 container + PyPI wheel):
+- the PyPI 0.32.4 aarch64 wheel needs `hypotf@GLIBC_2.35` and `GLIBCXX_3.4.30`; the box has 2.34 /
+  3.4.29, and Docker is refused to the worker lane → conda-forge build of the same tag (a different
+  binary: every parity rung run here must also pass on the PyPI wheel on Kaggle);
+- `mx.compile` on CPU JIT-builds C++ with `g++` from PATH; box g++ 11 and gcc-toolset-14 fail
+  (`operator""bf16`), **gcc-toolset-15 works** — the script prepends it. Cold compile 3.7 s (the g++
+  build), warm 0.035 s; JIT cache under `$TMPDIR/mlx` (= `/data/tmp/mlx`).
+Two traps measured (each re-checked every run, so a fixed MLX flips them):
+- `mx.fast.layer_norm`/`rms_norm` on float64 return float64 computed at **float32 precision**
+  (4e-7); the gradient itself matches the primitive norm (f32 3.5e-8; f64 primitive vs central
+  differences 2e-9);
+- float64 **`exp`, `sigmoid`, `softmax`, `logsumexp` are float32-accurate** (rel 3e-7–2e-6);
+  matmul/add/mul/log/log1p/sqrt exact, tanh 4e-16, sum 3e-15.
+  → "64-bit passes" holds for exp-free ops only; rung 1's 64-bit references (symlog/symexp, two-hot,
+  distributions) must be NumPy, never MLX float64.
+
+**Next: 0.2** (one Kaggle CPU session): PyPI `mlx[cpu]==0.32.4` + official `dreamerv3@e01491f` (JAX
+CPU), `debug` preset 200 steps on a dummy 74-in/8-out world, losses + versions logged; run
+`mlx_smoke.py` there too (the PyPI binary's traps may differ).
