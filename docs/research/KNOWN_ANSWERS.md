@@ -14,12 +14,13 @@ Rules are in that file's docstring, committed before each run.
 | 1b | Pendulum-v1 | control `ctrl`, must fail | 20,000 | VOID if ≥ −314.7 | −1227.7 ± 58.8 | 5–9 | holds |
 | 2 | Pendulum-v1 | SB3 PPO, Zoo `ppo.yml` entry unmodified (`r2lib`; rule `7df7160e`) | 102,400 | −187.6 ± 17.0; accept −213.2…−162.0 (5-seed mean of last-100-episode return) | −221.5 ± 44.6 (−204.6 −178.5 −210.5 −217.2 −297.0; Kaggle jack-cpu-1794807554) | 0–4 | **MISS** |
 | 2 | Pendulum-v1 | control `r2ctrl` (learning rate 0), must fail | 102,400 | VOID unless every seed < −213.2 | −1257.7 −1214.1 −1239.3 −1236.2 −1239.4 | 0–4 | holds |
-| 2b | Pendulum-v1 | re-registration, 15 fresh seeds, `r2lib` (rule `c442a757`) | 102,400 | same band, unchanged | RUNNING jack-cpu-1794808095 | 5–19 | — |
+| 2b | Pendulum-v1 | re-registration, 15 fresh seeds, `r2lib` (rule `c442a757`) | 102,400 | same band, unchanged | −199.5 ± 24.1 (SE 6.2; −195.8 −192.7 −195.0 −260.9 −211.6 −228.9 −165.6 −193.2 −173.7 −189.8 −183.3 −177.8 −217.2 −192.7 −214.2; Kaggle jack-cpu-1794808095) | 5–19 | **REPRODUCES** |
+| 2b | Pendulum-v1 | control `r2ctrl`, must fail | 102,400 | VOID unless every seed < −213.2 | −1241.5 −1229.3 −1224.5 −1266.3 −1235.5 | 5–9 | holds |
 | 3 | MountainCarContinuous-v0 | SB3 SAC gSDE Zoo entry unmodified (`r3lib`; rule `824b0a2a`) | 50,000 | deterministic eval > 90 on ≥ 3 of 5 (public 9/10 in 93.4–95.3) | 94.8 94.5 95.5 95.0 93.5 — 5 of 5 | 0–4 | **REPRODUCES** |
 | 3 | MountainCarContinuous-v0 | control `r3ctrl` (no gradient step), must fail | 50,000 | VOID if > 90 on any seed | −0.3 −2.8 −3.5 −0.9 −0.8 — 0 of 5 | 0–4 | holds |
 | 3b | MountainCarContinuous-v0 | Brain B `r3ours`: SBX SAC + LayerNorm, Zoo numbers (rule `b09adb6a`); ctrl `r3octrl` | 50,000 | same bar | 96.0 96.0 94.9 95.2 95.5 — 5 of 5 (Kaggle jack-cpu-1794805793) | 0–4 | **REPRODUCES** |
 | 3b | MountainCarContinuous-v0 | control `r3octrl` (SBX, no gradient step), must fail | 50,000 | VOID if > 90 on any seed | −0.3 −0.1 −20.6 −0.1 −0.0 — 0 of 5 | 0–4 | holds |
-| 4 | MountainCarContinuous-v0 | PPO, Zoo entry | 20,000 | 87.5 ± 4.2 | — | — | — |
+| 4 | MountainCarContinuous-v0 | SB3 PPO, Zoo `ppo.yml` entry unmodified (`r4lib`; rule `5d794fba`), ctrl `r4ctrl` lr 0 | 20,000 | training return 87.5 ± 4.2 (n 10); accept 80.6…94.4 (m ± 3s√(1/5+1/10)) | RUNNING jack-cpu-1794809416 | 0–4 | — |
 
 ## Row 1 — the miss, and what it is not (11-16)
 

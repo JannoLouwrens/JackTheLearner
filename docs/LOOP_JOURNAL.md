@@ -1687,3 +1687,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Same shape as row 1: seed sd 44.6 makes the 5-seed SE (20) ≈ the band half-width (25.6). Row 2b `c442a757` (15 fresh seeds, band unchanged) launched jack-cpu-1794808095; a 2b miss → stack hunt.
 - J2 d=0.25 (jack-cpu-1794788920): do-nothing capped 6/200 (statue fed by re-placement; rule's ≤1 bound broken); d8 71% ≥1 bout, 13/200 capped. First meals flat 55→71% across the dial, capped lives 0→13. d=0 still running.
 - Philosophy served: 4 (the miss recorded as a miss, the re-test stronger, the band untouched), 3 (the reference brain must reproduce before it judges anything).
+
+## 2026-11-16 06:15 · JACK · J3 row 2b REPRODUCES; row 4 registered and running. J2 d=0 still RUNNING on Kaggle (5 h 46 m)
+- Harvested jack-cpu-1794808095: SB3 PPO Zoo Pendulum entry on 15 fresh seeds, mean −199.5 ± 24.1 (SE 6.2) inside the unchanged band [−213.2, −162.0]; ctrl ≈ −1239 on all 5 (valid). Row 2's 5-seed miss stays on the record; the larger sample says heavy tail, not a broken stack.
+- Row 4 rule `5d794fba`: rl-zoo3 2.9.2 `ppo.yml` MountainCarContinuous entry read verbatim (incl. Zoo's VecNormalize with γ 0.9999); §5 gave no band, so it comes from the long form's own formula m ± 3s√(1/k+1/n) → [80.6, 94.4]. Box smoke 4k steps: lib 80.0, ctrl −1.0. Kaggle jack-cpu-1794809416 RUNNING.
+- Philosophy served: 4 (a band derived by the published formula before the run, not after), 3 (the PPO reference must reproduce before it judges anything).

@@ -116,11 +116,10 @@ recurrent) are next week's. (4) The same rows 1 and 3 on the in-house arm
 serves: M3 · PLAN stage 1 "each brain reproduces published numbers" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has rows 1–4 inside their ranges and the in-house arm's rows, pass or fail.
 state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/brain_b.py` = SBX SAC + layer_norm (`1d12bb9a`).
-state: row 1 PASSED on 1b (15 seeds): lib −309.3, ours −302.0, ctrl −1227.7; lib vs reference MW p 0.011 (~11 pts under the 2022 stack), ours p 0.42.
-state: 05:08 row 3 HARVESTED: r3lib REPRODUCES 5/5 (eval 93.5–95.5), ctrl 0/5 (max −0.3). KNOWN_ANSWERS.md.
-state: 05:35 row 3b REPRODUCES (`96a4916c`): Brain B eval 96.0 96.0 94.9 95.2 95.5, 5/5 >90; SBX ctrl 0/5 (max −0.0). B's SBX exploration as built stands; pink-noise fallback not triggered. B now holds rows 1b and 3b.
-state: 05:47 row 2 (PPO Pendulum, Zoo `ppo.yml` verbatim from pinned rl-zoo3 2.9.2, rule `7df7160e`) MISSES: r2lib −204.6 −178.5 −210.5 −217.2 −297.0, mean −221.5 vs band −213.2…−162.0; ctrl (lr 0) ≈ −1237 valid. Seed sd 44.6 ≈ band half-width, as row 1.
-state: row 2b RULE `c442a757` (15 fresh seeds 5..19, band unchanged) RUNNING jack-cpu-1794808095 (log /data/jack-logs/brain_b/row2b.log → row2b.json). Next: harvest; a 2b miss → stack hunt, not row 4. Row 4 (MountainCar PPO 20k): §5 gives 87.5 ± 4.2 but no accept band — its rule must name one.
+state: row 1 PASSED on 1b (15 seeds): lib −309.3, ours −302.0, ctrl −1227.7; lib vs reference MW p 0.011. Row 3 REPRODUCES 5/5 (lib) and 3b 5/5 (Brain B, eval 94.9–96.0); ctrl 0/5 both.
+state: row 2 (5 seeds) MISSED −221.5; row 2b (15 fresh seeds, band unchanged) REPRODUCES: r2lib mean −199.5 ± 24.1 in [−213.2, −162.0]; ctrl ≈ −1239 valid (`5d794fba`).
+state: 06:10 row 4 RULE `5d794fba` (Zoo PPO MountainCarContinuous verbatim, VecNormalize γ 0.9999; band [80.6, 94.4] = 87.5 ± 3·4.2·√(1/5+1/10), the long form's formula; ctrl lr 0 < 80.6 all 5). Box smoke 4k: lib 80.0, ctrl −1.0. RUNNING jack-cpu-1794809416 → /data/jack-logs/brain_b/row4.json.
+state: next: harvest row 4 into KNOWN_ANSWERS.md (miss → 15-seed re-registration as 1b/2b); then (4) rows 1 and 3 on the in-house tanh-AWR arm via a thin adapter.
 
 ### J4 — The harness checks itself before it judges anyone (§8's thirteen)
 part: His brain (the instrument that chooses it) · stage: 1 · step: 3 (reproduce) · prior: §8 "Reproduce first", ruling 19
